@@ -2,8 +2,8 @@
  "character": "silent",
  "schema": 1,
  "source": {
-  "simulator_base": "9ce029b69c324ae13e98951fa5e8fa0d1696a4f0",
-  "model_sha256": "aa7b3a32dc152cdc5d52922b2dcee7f24698f79ee84de623104e529ec69815ae",
+  "simulator_base": "f3f4366038918fcb22d25dd80be15716b91f4697",
+  "model_sha256": "2e9a6b00c7e36a5f4a29cbf2674b050e62e27cb7c76b9eca9cfef01e17f22909",
   "input_files": {
    "agent/src/brain/brain.ts": "b0b822b8571e89d043d4d143731bdd040279ad1490e478a8c645110eeacaf399",
    "agent/src/brain/build-facts.ts": "a81b9f854ebd0e90529ca1e3945da862cc02fc74e4299992f99d6410f15c525e",
@@ -208,7 +208,7 @@
    "knowledge/common/move-model.json": "64ed4e26f04eeee56d4acb1628117d12b63646a668de472cfc0faee4a7ac126f",
    "knowledge/characters/silent/boss-damage.json": "7a3a8b8e1145672246c95be0c6ab6a592f9bf384cb603efe9cff56f37aec119a",
    "knowledge/characters/silent/double-boss.json": "dfea492a4b941bf72813518e59ceb6cb0cca2d1420bdeb9c2fb9cc726797e83b",
-   "knowledge/characters/silent/experience.json": "0fe553e28a4f0401e87bc1fe7c0a67113b6de39d1648d0b2e83fc94f31b68de0",
+   "knowledge/characters/silent/experience.json": "e9d81e858a7077b1d42a3f8ff7c07f4fbaa87fd01f169b9293ddbbb475df8b23",
    "knowledge/characters/silent/fight-value-gates.json": "4eb059c3860ca7e0dfa2afc7cd83ef7547472e94a006cff1818c61102760f8e1",
    "knowledge/characters/silent/fight-value.json": "5f0f5530c561a91bc44e99a5eb69eabe45889e2e444e3bf39883fffc75de45d1",
    "knowledge/characters/silent/monster-records.json": "bace4532daa02a0cbcbcc857ebf25ef78de6dda32b2f1c7827c0aa054dca6f39",
@@ -218,8 +218,8 @@
   },
   "samples": 200,
   "seed": 1,
-  "dataset_sha256": "0f52bd25b67839ba0cd0c1881e257f41c5e6e48e5ae98732d1a291b034ba163d",
-  "sources_sha256": "d8dcc62170dcd60d51131a0f13745149314096db6358349542aa9fe0ba56e2de",
+  "dataset_sha256": "251b738b51ee8190593e1dbf41a8f48a08f5436638f19884a772173c08af5ab7",
+  "sources_sha256": "f0bbf061c0ce59f3e58ac224a0db4c87c216841712a68e42ff520424f913b7f1",
   "versions": {
    "tune": [
     "0a066c2f+dirty",
@@ -278,7 +278,6 @@
     "09ac8004+dirty",
     "0d6c1a82+dirty",
     "0fd8e845+dirty",
-    "10168ac71+dirty",
     "11d759cf+dirty",
     "187c025a+dirty",
     "1a0adbaa+dirty",
@@ -299,12 +298,10 @@
     "4fb81b17+dirty",
     "52aa3fcc+dirty",
     "56c64ff8+dirty",
-    "57b661f07+dirty",
     "5925a43d+dirty",
     "5ff4270d+dirty",
     "60685510+dirty",
     "650a6a84+dirty",
-    "6519b8909+dirty",
     "69a7b441+dirty",
     "6ac57ea6+dirty",
     "6ad5584f+dirty",
@@ -315,7 +312,6 @@
     "722518cd+dirty",
     "72499093+dirty",
     "734c0860+dirty",
-    "7375067d7+dirty",
     "74f82413+dirty",
     "79bee0fc+dirty",
     "7f0c04dd+dirty",
@@ -345,14 +341,12 @@
     "be0ee6df+dirty",
     "c1dd721f+dirty",
     "c70efc8c+dirty",
-    "c7e1e0ed3+dirty",
     "cc1bdc59+dirty",
     "ceb74207+dirty",
     "cecc8317+dirty",
     "cfa8112d+dirty",
     "d07c38fc+dirty",
     "d4026dbb+dirty",
-    "d5ad91e80+dirty",
     "d5f290f4+dirty",
     "d61bf0ec+dirty",
     "da2ccb92+dirty",
@@ -374,30 +368,30 @@
   },
   "completed_max_asc": 10,
   "result_reuse": {
-   "previous_artifact": "785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04",
-   "previous_model_sha256": "2e9a6b00c7e36a5f4a29cbf2674b050e62e27cb7c76b9eca9cfef01e17f22909",
-   "current_model_sha256": "aa7b3a32dc152cdc5d52922b2dcee7f24698f79ee84de623104e529ec69815ae",
+   "previous_artifact": "c2332ff110efe0b0c98de20828e177e168dc35b74a49884656c6beefda9cce31",
+   "previous_model_sha256": "9fe0002e222d97f71be934184905fe6772124f4760fc6e6294cdd34af9a5b9ca",
+   "current_model_sha256": "2e9a6b00c7e36a5f4a29cbf2674b050e62e27cb7c76b9eca9cfef01e17f22909",
    "changed_paths": [
     "knowledge/characters/silent/experience.json"
    ],
-   "reused_fights": 301,
+   "reused_fights": 281,
    "new_replayed_fights": 20,
    "identical_old_inputs_and_order": true,
    "identical_old_turns": true,
-   "checked_replays_except_ms": 4,
+   "checked_replays_except_ms": 3,
    "reason": "Only experience text changed. The backtest captures the solver input before fightLessons/jevExperience; the boss simulator does not read experience text. All numerical source, model data, game-data, historical inputs and seed indices are byte-identical. Historical replays match every non-timing field. Reuse immutable prior results and replay all new fights at the original full-dataset indices.",
    "initial_replay_exit": 130,
-   "initial_replay_preserved": "learner/runs/20261009-171302-silent-boss-calibration/59e05dd0f9f177cb8373af4002ccad554bfb2af86091e9dd35b23c17688fb803/results/results-0.jsonl"
+   "initial_replay_preserved": "learner/runs/20261009-114303-silent-boss-calibration/f28d9fcd355540452ebc2ec583e8c83d44aa6dca486ee679a943d99b22fd2c6a/results/results-0.jsonl"
   },
   "boss_input_scope": {
-   "openings": 321,
+   "openings": 301,
    "a10_hp_asc_sources": {
-    "10": 301
+    "10": 272
    },
    "a10_opening_asc_sources": {
-    "10": 301
+    "10": 272
    },
-   "corrected_first_hit": 45,
+   "corrected_first_hit": 41,
    "a10_move_damage_asc_sources": {
     "10": 48,
     "9": 1
@@ -737,31 +731,11 @@
    "JBX9JLH46KVN:17:1:9955945973",
    "JBX9JLH46KVN:33:1:9962479765",
    "JBX9JLH46KVN:48:5:9987095448",
-   "JBX9JLH46KVN:49:6:9992177910",
-   "RMNXHZKV716Y:17:1:9998597439",
-   "RMNXHZKV716Y:33:1:10006693966",
-   "RMNXHZKV716Y:48:3:10022321280",
-   "RMNXHZKV716Y:49:6:10031105138",
-   "NBJBVSBNPYQB:17:1:10037630655",
-   "NBJBVSBNPYQB:33:1:10045740718",
-   "NBJBVSBNPYQB:48:1:10057113958",
-   "NBJBVSBNPYQB:49:6:10063030394",
-   "AF76L5UTPP8U:17:1:10070673483",
-   "833ZM0MJGWHC:17:1:10081369274",
-   "833ZM0MJGWHC:33:1:10088341779",
-   "833ZM0MJGWHC:48:1:10098155729",
-   "833ZM0MJGWHC:49:6:10106451020",
-   "64R0P0MTZWAX:17:1:10113891375",
-   "64R0P0MTZWAX:33:6:10135399367",
-   "C6Z8ATNBNHZ7:17:1:10142238322",
-   "XW8B5CHJ814J:17:1:10158328241",
-   "XW8B5CHJ814J:33:1:10167771949",
-   "XW8B5CHJ814J:48:4:10187054088",
-   "XW8B5CHJ814J:49:6:10195145889"
+   "JBX9JLH46KVN:49:6:9992177910"
   ],
   "cutoff_ts": "2026-10-06T02:46:11.648000",
   "tune_n": 107,
-  "val_n": 214,
+  "val_n": 194,
   "rule": "first usable actual-outcome boss opening time by whole run, earliest ~2/3; all SL attempts of a run stay together"
  },
  "criteria": {
@@ -779,12 +753,12 @@
  },
  "overall": {
   "t1": {
-   "n": 214,
-   "actual_win": 0.692,
-   "mean_pred": 0.761,
-   "brier": 0.1165,
-   "auc": 0.902,
-   "const_brier": 0.2133,
+   "n": 194,
+   "actual_win": 0.686,
+   "mean_pred": 0.763,
+   "brier": 0.1211,
+   "auc": 0.899,
+   "const_brier": 0.2156,
    "buckets": [
     {
      "bucket": "0–20%",
@@ -794,47 +768,47 @@
     },
     {
      "bucket": "20–40%",
-     "n": 45,
+     "n": 40,
      "pred": 0.351,
-     "actual": 0.111
+     "actual": 0.1
     },
     {
      "bucket": "40–60%",
-     "n": 11,
-     "pred": 0.511,
-     "actual": 0.364
+     "n": 10,
+     "pred": 0.512,
+     "actual": 0.4
     },
     {
      "bucket": "60–80%",
-     "n": 23,
-     "pred": 0.726,
-     "actual": 0.739
+     "n": 20,
+     "pred": 0.72,
+     "actual": 0.7
     },
     {
      "bucket": "80–100%",
-     "n": 135,
-     "pred": 0.924,
-     "actual": 0.904
+     "n": 124,
+     "pred": 0.923,
+     "actual": 0.895
     }
    ],
-   "worst_bucket_n20": 0.24,
+   "worst_bucket_n20": 0.251,
    "won_loss_err": {
-    "n": 143,
+    "n": 129,
     "median": 7,
-    "mean": 5.9,
-    "mae": 11.8,
+    "mean": 5.8,
+    "mae": 11.9,
     "p10": -9,
     "p90": 23,
-    "within5": 0.301
+    "within5": 0.302
    },
    "leak": {
-    "n": 1150,
-    "sim_enemy": 6.32,
-    "actual_enemy": 4.86,
-    "enemy_ratio": 1.302,
-    "sim_loss": 6.23,
+    "n": 1050,
+    "sim_enemy": 6.18,
+    "actual_enemy": 4.92,
+    "enemy_ratio": 1.255,
+    "sim_loss": 6.1,
     "actual_loss": 5.27,
-    "loss_ratio": 1.182
+    "loss_ratio": 1.158
    },
    "platt": {
     "a": 2.0844,
@@ -844,12 +818,12 @@
    "tune_n": 106
   },
   "pre": {
-   "n": 214,
-   "actual_win": 0.692,
-   "mean_pred": 0.763,
-   "brier": 0.117,
-   "auc": 0.891,
-   "const_brier": 0.2133,
+   "n": 194,
+   "actual_win": 0.686,
+   "mean_pred": 0.766,
+   "brier": 0.1227,
+   "auc": 0.887,
+   "const_brier": 0.2156,
    "buckets": [
     {
      "bucket": "0–20%",
@@ -859,9 +833,9 @@
     },
     {
      "bucket": "20–40%",
-     "n": 48,
+     "n": 42,
      "pred": 0.321,
-     "actual": 0.104
+     "actual": 0.095
     },
     {
      "bucket": "40–60%",
@@ -871,35 +845,35 @@
     },
     {
      "bucket": "60–80%",
-     "n": 18,
-     "pred": 0.732,
-     "actual": 0.722
+     "n": 16,
+     "pred": 0.731,
+     "actual": 0.688
     },
     {
      "bucket": "80–100%",
-     "n": 141,
+     "n": 129,
      "pred": 0.928,
-     "actual": 0.894
+     "actual": 0.884
     }
    ],
-   "worst_bucket_n20": 0.217,
+   "worst_bucket_n20": 0.226,
    "won_loss_err": {
-    "n": 143,
+    "n": 129,
     "median": 7,
     "mean": 5.4,
-    "mae": 11.6,
+    "mae": 11.8,
     "p10": -11,
     "p90": 21.5,
-    "within5": 0.266
+    "within5": 0.256
    },
    "leak": {
-    "n": 1150,
-    "sim_enemy": 6.43,
-    "actual_enemy": 4.86,
-    "enemy_ratio": 1.323,
-    "sim_loss": 6.34,
+    "n": 1050,
+    "sim_enemy": 6.29,
+    "actual_enemy": 4.92,
+    "enemy_ratio": 1.28,
+    "sim_loss": 6.22,
     "actual_loss": 5.27,
-    "loss_ratio": 1.203
+    "loss_ratio": 1.18
    },
    "platt": {
     "a": 2.2754,
@@ -913,77 +887,78 @@
   "KAISER_CRAB": {
    "name": "帝王蟹",
    "t1": {
-    "n": 21,
+    "n": 19,
     "missing": 0,
-    "brier": 0.1162,
-    "mean_pred": 0.647,
-    "actual_win": 0.619,
-    "leak_ratio": 1.18,
-    "leak_turns": 103,
+    "brier": 0.1256,
+    "mean_pred": 0.627,
+    "actual_win": 0.579,
+    "leak_ratio": 1.173,
+    "leak_turns": 91,
     "failed": []
    },
    "pre": {
-    "n": 21,
+    "n": 19,
     "missing": 0,
-    "brier": 0.1384,
-    "mean_pred": 0.656,
-    "actual_win": 0.619,
-    "leak_ratio": 1.183,
-    "leak_turns": 103,
+    "brier": 0.1504,
+    "mean_pred": 0.635,
+    "actual_win": 0.579,
+    "leak_ratio": 1.178,
+    "leak_turns": 91,
     "failed": []
    }
   },
   "THE_KIN": {
    "name": "同族",
    "t1": {
-    "n": 15,
+    "n": 13,
     "missing": 0,
-    "brier": 0.1492,
-    "mean_pred": 0.811,
-    "actual_win": 0.867,
-    "leak_ratio": 1.306,
-    "leak_turns": 89,
+    "brier": 0.1719,
+    "mean_pred": 0.788,
+    "actual_win": 0.846,
+    "leak_ratio": 1.364,
+    "leak_turns": 77,
     "failed": [
      "brier",
      "leak"
     ]
    },
    "pre": {
-    "n": 15,
+    "n": 13,
     "missing": 0,
-    "brier": 0.1512,
-    "mean_pred": 0.83,
-    "actual_win": 0.867,
-    "leak_ratio": 1.284,
-    "leak_turns": 89,
+    "brier": 0.1743,
+    "mean_pred": 0.81,
+    "actual_win": 0.846,
+    "leak_ratio": 1.321,
+    "leak_turns": 77,
     "failed": [
-     "brier"
+     "brier",
+     "leak"
     ]
    }
   },
   "QUEEN": {
    "name": "女王",
    "t1": {
-    "n": 15,
+    "n": 12,
     "missing": 0,
-    "brier": 0.2569,
-    "mean_pred": 0.683,
-    "actual_win": 0.333,
-    "leak_ratio": 1.117,
-    "leak_turns": 57,
+    "brier": 0.2795,
+    "mean_pred": 0.753,
+    "actual_win": 0.417,
+    "leak_ratio": 1.028,
+    "leak_turns": 53,
     "failed": [
      "brier",
      "gap"
     ]
    },
    "pre": {
-    "n": 15,
+    "n": 12,
     "missing": 0,
-    "brier": 0.2319,
-    "mean_pred": 0.638,
-    "actual_win": 0.333,
-    "leak_ratio": 1.266,
-    "leak_turns": 57,
+    "brier": 0.2641,
+    "mean_pred": 0.717,
+    "actual_win": 0.417,
+    "leak_ratio": 1.208,
+    "leak_turns": 53,
     "failed": [
      "brier",
      "gap"
@@ -993,13 +968,13 @@
   "AEONGLASS": {
    "name": "永世沙漏",
    "t1": {
-    "n": 15,
+    "n": 12,
     "missing": 0,
-    "brier": 0.1617,
-    "mean_pred": 0.684,
-    "actual_win": 0.533,
-    "leak_ratio": 3.625,
-    "leak_turns": 79,
+    "brier": 0.1921,
+    "mean_pred": 0.65,
+    "actual_win": 0.417,
+    "leak_ratio": 2.927,
+    "leak_turns": 64,
     "failed": [
      "brier",
      "gap",
@@ -1007,13 +982,13 @@
     ]
    },
    "pre": {
-    "n": 15,
+    "n": 12,
     "missing": 0,
-    "brier": 0.152,
-    "mean_pred": 0.688,
-    "actual_win": 0.533,
-    "leak_ratio": 3.468,
-    "leak_turns": 79,
+    "brier": 0.1799,
+    "mean_pred": 0.654,
+    "actual_win": 0.417,
+    "leak_ratio": 2.84,
+    "leak_turns": 64,
     "failed": [
      "brier",
      "gap",
@@ -1024,49 +999,47 @@
   "CEREMONIAL_BEAST": {
    "name": "仪式兽",
    "t1": {
-    "n": 20,
+    "n": 19,
     "missing": 0,
-    "brier": 0.0595,
-    "mean_pred": 0.803,
-    "actual_win": 0.8,
-    "leak_ratio": 1.038,
-    "leak_turns": 116,
+    "brier": 0.0626,
+    "mean_pred": 0.793,
+    "actual_win": 0.789,
+    "leak_ratio": 1.028,
+    "leak_turns": 111,
     "failed": []
    },
    "pre": {
-    "n": 20,
+    "n": 19,
     "missing": 0,
-    "brier": 0.0644,
-    "mean_pred": 0.813,
-    "actual_win": 0.8,
-    "leak_ratio": 1.087,
-    "leak_turns": 116,
+    "brier": 0.0678,
+    "mean_pred": 0.803,
+    "actual_win": 0.789,
+    "leak_ratio": 1.074,
+    "leak_turns": 111,
     "failed": []
    }
   },
   "KNOWLEDGE_DEMON": {
    "name": "知识恶魔",
    "t1": {
-    "n": 20,
+    "n": 17,
     "missing": 0,
-    "brier": 0.0618,
-    "mean_pred": 0.782,
-    "actual_win": 0.8,
-    "leak_ratio": 1.275,
-    "leak_turns": 116,
+    "brier": 0.063,
+    "mean_pred": 0.794,
+    "actual_win": 0.824,
+    "leak_ratio": 1.242,
+    "leak_turns": 99,
     "failed": []
    },
    "pre": {
-    "n": 20,
+    "n": 17,
     "missing": 0,
-    "brier": 0.0508,
-    "mean_pred": 0.782,
-    "actual_win": 0.8,
-    "leak_ratio": 1.303,
-    "leak_turns": 116,
-    "failed": [
-     "leak"
-    ]
+    "brier": 0.0518,
+    "mean_pred": 0.795,
+    "actual_win": 0.824,
+    "leak_ratio": 1.269,
+    "leak_turns": 99,
+    "failed": []
    }
   },
   "LAGAVULIN_MATRIARCH": {
@@ -1095,36 +1068,36 @@
   "SOUL_FYSH": {
    "name": "灵魂异鱼",
    "t1": {
-    "n": 17,
+    "n": 16,
     "missing": 0,
-    "brier": 0.064,
+    "brier": 0.0678,
     "mean_pred": 0.929,
-    "actual_win": 0.882,
-    "leak_ratio": 0.882,
-    "leak_turns": 101,
+    "actual_win": 0.875,
+    "leak_ratio": 0.873,
+    "leak_turns": 95,
     "failed": []
    },
    "pre": {
-    "n": 17,
+    "n": 16,
     "missing": 0,
-    "brier": 0.072,
-    "mean_pred": 0.942,
-    "actual_win": 0.882,
-    "leak_ratio": 0.871,
-    "leak_turns": 101,
+    "brier": 0.0764,
+    "mean_pred": 0.94,
+    "actual_win": 0.875,
+    "leak_ratio": 0.862,
+    "leak_turns": 95,
     "failed": []
    }
   },
   "TEST_SUBJECT": {
    "name": "实验体",
    "t1": {
-    "n": 12,
+    "n": 10,
     "missing": 0,
-    "brier": 0.1729,
+    "brier": 0.1531,
     "mean_pred": 0.351,
-    "actual_win": 0.167,
-    "leak_ratio": 3.39,
-    "leak_turns": 40,
+    "actual_win": 0.1,
+    "leak_ratio": 3.413,
+    "leak_turns": 29,
     "failed": [
      "brier",
      "gap",
@@ -1132,15 +1105,14 @@
     ]
    },
    "pre": {
-    "n": 12,
+    "n": 10,
     "missing": 0,
-    "brier": 0.1627,
+    "brier": 0.1388,
     "mean_pred": 0.321,
-    "actual_win": 0.167,
-    "leak_ratio": 3.35,
-    "leak_turns": 40,
+    "actual_win": 0.1,
+    "leak_ratio": 3.333,
+    "leak_turns": 29,
     "failed": [
-     "brier",
      "gap",
      "leak"
     ]
@@ -1178,23 +1150,23 @@
   "VANTOM": {
    "name": "墨影幻灵",
    "t1": {
-    "n": 17,
+    "n": 14,
     "missing": 0,
-    "brier": 0.1075,
-    "mean_pred": 0.925,
-    "actual_win": 0.824,
-    "leak_ratio": 1.011,
-    "leak_turns": 96,
+    "brier": 0.1274,
+    "mean_pred": 0.926,
+    "actual_win": 0.786,
+    "leak_ratio": 1.018,
+    "leak_turns": 78,
     "failed": []
    },
    "pre": {
-    "n": 17,
+    "n": 14,
     "missing": 0,
-    "brier": 0.1002,
-    "mean_pred": 0.915,
-    "actual_win": 0.824,
-    "leak_ratio": 0.997,
-    "leak_turns": 96,
+    "brier": 0.1182,
+    "mean_pred": 0.913,
+    "actual_win": 0.786,
+    "leak_ratio": 0.992,
+    "leak_turns": 78,
     "failed": []
    }
   },
@@ -1234,25 +1206,25 @@
  "trusted_b3": [
   "KAISER_CRAB",
   "CEREMONIAL_BEAST",
+  "KNOWLEDGE_DEMON",
   "LAGAVULIN_MATRIARCH",
   "SOUL_FYSH",
   "VANTOM",
   "WATERFALL_GIANT"
  ],
  "low_trust_b2": {
-  "THE_KIN": "校准 Brier 0.149，高于整体 0.117 的 1.25 倍 0.146; 模拟每回合被打穿的血是实际的 1.31 倍",
-  "QUEEN": "校准 Brier 0.257，高于整体 0.117 的 1.25 倍 0.146; 偏乐观：预测平均胜率 68%，实际 33%",
-  "AEONGLASS": "校准 Brier 0.162，高于整体 0.117 的 1.25 倍 0.146; 偏乐观：预测平均胜率 68%，实际 53%; 模拟每回合被打穿的血是实际的 3.62 倍",
-  "TEST_SUBJECT": "校准 Brier 0.173，高于整体 0.117 的 1.25 倍 0.146; 偏乐观：预测平均胜率 35%，实际 17%; 模拟每回合被打穿的血是实际的 3.39 倍",
-  "THE_INSATIABLE": "校准 Brier 0.157，高于整体 0.117 的 1.25 倍 0.146; 模拟每回合被打穿的血是实际的 1.44 倍"
+  "THE_KIN": "校准 Brier 0.172，高于整体 0.121 的 1.25 倍 0.151; 模拟每回合被打穿的血是实际的 1.36 倍",
+  "QUEEN": "校准 Brier 0.280，高于整体 0.121 的 1.25 倍 0.151; 偏乐观：预测平均胜率 75%，实际 42%",
+  "AEONGLASS": "校准 Brier 0.192，高于整体 0.121 的 1.25 倍 0.151; 偏乐观：预测平均胜率 65%，实际 42%; 模拟每回合被打穿的血是实际的 2.93 倍",
+  "TEST_SUBJECT": "校准 Brier 0.153，高于整体 0.121 的 1.25 倍 0.151; 偏乐观：预测平均胜率 35%，实际 10%; 模拟每回合被打穿的血是实际的 3.41 倍",
+  "THE_INSATIABLE": "校准 Brier 0.157，高于整体 0.121 的 1.25 倍 0.151; 模拟每回合被打穿的血是实际的 1.44 倍"
  },
  "low_confidence_b3": {
-  "THE_KIN": "校准 Brier 0.151，高于整体 0.117 的 1.25 倍 0.146",
-  "QUEEN": "校准 Brier 0.232，高于整体 0.117 的 1.25 倍 0.146; 偏乐观：预测平均胜率 64%，实际 33%",
-  "AEONGLASS": "校准 Brier 0.152，高于整体 0.117 的 1.25 倍 0.146; 偏乐观：预测平均胜率 69%，实际 53%; 模拟每回合被打穿的血是实际的 3.47 倍",
-  "KNOWLEDGE_DEMON": "模拟每回合被打穿的血是实际的 1.30 倍",
-  "TEST_SUBJECT": "校准 Brier 0.163，高于整体 0.117 的 1.25 倍 0.146; 偏乐观：预测平均胜率 32%，实际 17%; 模拟每回合被打穿的血是实际的 3.35 倍",
-  "THE_INSATIABLE": "校准 Brier 0.180，高于整体 0.117 的 1.25 倍 0.146; 模拟每回合被打穿的血是实际的 1.47 倍"
+  "THE_KIN": "校准 Brier 0.174，高于整体 0.123 的 1.25 倍 0.153; 模拟每回合被打穿的血是实际的 1.32 倍",
+  "QUEEN": "校准 Brier 0.264，高于整体 0.123 的 1.25 倍 0.153; 偏乐观：预测平均胜率 72%，实际 42%",
+  "AEONGLASS": "校准 Brier 0.180，高于整体 0.123 的 1.25 倍 0.153; 偏乐观：预测平均胜率 65%，实际 42%; 模拟每回合被打穿的血是实际的 2.84 倍",
+  "TEST_SUBJECT": "偏乐观：预测平均胜率 32%，实际 10%; 模拟每回合被打穿的血是实际的 3.33 倍",
+  "THE_INSATIABLE": "校准 Brier 0.180，高于整体 0.123 的 1.25 倍 0.153; 模拟每回合被打穿的血是实际的 1.47 倍"
  },
  "ascension_low": {
   "b2": {},
@@ -1260,10 +1232,10 @@
  },
  "stage_low": {
   "b2": {
-   "49": "F49独立战：校准 Brier 0.161，高于整体 0.117 的 1.25 倍 0.146; 偏乐观：预测平均胜率 39%，实际 0%; 模拟每回合被打穿的血是实际的 3.63 倍"
+   "49": "F49独立战：校准 Brier 0.163，高于整体 0.121 的 1.25 倍 0.151; 偏乐观：预测平均胜率 39%，实际 0%; 模拟每回合被打穿的血是实际的 2.74 倍"
   },
   "b3": {
-   "49": "F49独立战：偏乐观：预测平均胜率 33%，实际 0%; 模拟每回合被打穿的血是实际的 3.71 倍"
+   "49": "F49独立战：偏乐观：预测平均胜率 34%，实际 0%; 模拟每回合被打穿的血是实际的 3.01 倍"
   }
  },
  "stage_metrics": {
@@ -1323,10 +1295,10 @@
      }
     },
     "val": {
-     "n": 14,
+     "n": 10,
      "actual_win": 0.0,
-     "mean_pred": 0.393,
-     "brier": 0.1612,
+     "mean_pred": 0.394,
+     "brier": 0.1633,
      "auc": null,
      "const_brier": 0.0,
      "buckets": [
@@ -1338,13 +1310,13 @@
       },
       {
        "bucket": "20–40%",
-       "n": 11,
+       "n": 8,
        "pred": 0.351,
        "actual": 0.0
       },
       {
        "bucket": "40–60%",
-       "n": 2,
+       "n": 1,
        "pred": 0.504,
        "actual": 0.0
       },
@@ -1366,13 +1338,13 @@
       "n": 0
      },
      "leak": {
-      "n": 29,
-      "sim_enemy": 12.64,
-      "actual_enemy": 3.48,
-      "enemy_ratio": 3.629,
-      "sim_loss": 11.84,
-      "actual_loss": 3.97,
-      "loss_ratio": 2.986
+      "n": 20,
+      "sim_enemy": 11.53,
+      "actual_enemy": 4.2,
+      "enemy_ratio": 2.744,
+      "sim_loss": 11.53,
+      "actual_loss": 4.9,
+      "loss_ratio": 2.352
      }
     }
    }
@@ -1433,10 +1405,10 @@
      }
     },
     "val": {
-     "n": 14,
+     "n": 10,
      "actual_win": 0.0,
-     "mean_pred": 0.333,
-     "brier": 0.1127,
+     "mean_pred": 0.338,
+     "brier": 0.1166,
      "auc": null,
      "const_brier": 0.0,
      "buckets": [
@@ -1448,7 +1420,7 @@
       },
       {
        "bucket": "20–40%",
-       "n": 13,
+       "n": 9,
        "pred": 0.321,
        "actual": 0.0
       },
@@ -1476,13 +1448,13 @@
       "n": 0
      },
      "leak": {
-      "n": 29,
-      "sim_enemy": 12.92,
-      "actual_enemy": 3.48,
-      "enemy_ratio": 3.711,
-      "sim_loss": 12.46,
-      "actual_loss": 3.97,
-      "loss_ratio": 3.141
+      "n": 20,
+      "sim_enemy": 12.63,
+      "actual_enemy": 4.2,
+      "enemy_ratio": 3.007,
+      "sim_loss": 12.63,
+      "actual_loss": 4.9,
+      "loss_ratio": 2.579
      }
     }
    }
@@ -1526,12 +1498,12 @@
      "gap": null
     },
     "A10": {
-     "n": 214,
-     "gap": 0.06900000000000006,
-     "brier": 0.1165,
-     "mean_pred": 0.761,
-     "actual_win": 0.692,
-     "leak_ratio": 1.302
+     "n": 194,
+     "gap": 0.07699999999999996,
+     "brier": 0.1211,
+     "mean_pred": 0.763,
+     "actual_win": 0.686,
+     "leak_ratio": 1.255
     }
    }
   },
@@ -1572,12 +1544,12 @@
      "gap": null
     },
     "A10": {
-     "n": 214,
-     "gap": 0.07100000000000006,
-     "brier": 0.117,
-     "mean_pred": 0.763,
-     "actual_win": 0.692,
-     "leak_ratio": 1.323
+     "n": 194,
+     "gap": 0.07999999999999996,
+     "brier": 0.1227,
+     "mean_pred": 0.766,
+     "actual_win": 0.686,
+     "leak_ratio": 1.28
     }
    }
   }
@@ -1710,18 +1682,12 @@
    "5X2GHKJ89PN1:33:1:2026-10-06T10:33:31.935Z",
    "5X2GHKJ89PN1:48:6:2026-10-06T11:09:49.060Z",
    "61E2QS63Y9WU:17:1:2026-10-07T05:33:29.123Z",
-   "64R0P0MTZWAX:17:1:2026-10-09T06:56:19.687Z",
-   "64R0P0MTZWAX:33:6:2026-10-09T07:25:18.075Z",
    "6EV5V6PJJS9D:17:1:2026-10-05T07:41:18.142Z",
    "6EV5V6PJJS9D:33:1:2026-10-05T07:56:56.150Z",
    "751FN9QM9MHQ:17:6:2026-10-07T10:42:44.791Z",
    "75X1BARMNZ03:17:1:2026-10-05T06:36:11.978Z",
    "7X0W3U8TVA2A:17:1:2026-10-07T20:17:36.613Z",
    "7ZUC4VPMDS41:17:6:2026-10-07T01:03:26.982Z",
-   "833ZM0MJGWHC:17:1:2026-10-09T06:05:21.845Z",
-   "833ZM0MJGWHC:33:1:2026-10-09T06:18:34.450Z",
-   "833ZM0MJGWHC:48:1:2026-10-09T06:31:39.399Z",
-   "833ZM0MJGWHC:49:6:2026-10-09T06:38:08.583Z",
    "8CFMW9SAGFWQ:17:1:2026-10-05T08:21:15.371Z",
    "8JRE1C4H4Z2W:17:1:2026-10-07T07:54:34.197Z",
    "8JRE1C4H4Z2W:33:6:2026-10-07T08:17:09.496Z",
@@ -1747,7 +1713,6 @@
    "AD3QSC3P41JU:33:1:2026-10-08T06:39:45.264Z",
    "AD3QSC3P41JU:48:1:2026-10-08T06:50:57.694Z",
    "AD3QSC3P41JU:49:6:2026-10-08T06:53:39.265Z",
-   "AF76L5UTPP8U:17:1:2026-10-09T05:43:32.789Z",
    "ARKQLHG6RS4W:17:1:2026-10-05T06:56:33.322Z",
    "ARKQLHG6RS4W:33:6:2026-10-05T07:23:58.553Z",
    "BJLTVSYXCSGS:17:1:2026-10-08T07:35:40.817Z",
@@ -1756,7 +1721,6 @@
    "BVF22RSFVBS9:17:1:2026-10-06T14:14:28.658Z",
    "C48LLXBGKXQ9:17:2:2026-10-04T14:02:08.849Z",
    "C48LLXBGKXQ9:33:6:2026-10-04T14:35:40.360Z",
-   "C6Z8ATNBNHZ7:17:1:2026-10-09T07:41:07.433Z",
    "CNKR125PFHJ5:17:1:2026-10-08T11:27:50.303Z",
    "CNKR125PFHJ5:33:1:2026-10-08T11:38:44.122Z",
    "CSBR5CRDWQNB:17:1:2026-10-04T22:21:24.247Z",
@@ -1849,10 +1813,6 @@
    "MGA0CZDDKC0P:17:6:2026-10-05T21:13:29.926Z",
    "MTQ0EUBJ3R6T:17:1:2026-10-07T20:46:07.247Z",
    "NB8KCF6HRGVF:17:1:2026-10-06T09:50:52.852Z",
-   "NBJBVSBNPYQB:17:1:2026-10-09T04:48:50.641Z",
-   "NBJBVSBNPYQB:33:1:2026-10-09T05:03:21.681Z",
-   "NBJBVSBNPYQB:48:1:2026-10-09T05:14:55.975Z",
-   "NBJBVSBNPYQB:49:6:2026-10-09T05:19:01.220Z",
    "NEWRFAYKTQHR:17:1:2026-10-08T01:53:04.623Z",
    "NHA2KW0RB7VP:17:1:2026-10-07T14:53:29.825Z",
    "NHA2KW0RB7VP:33:6:2026-10-07T15:19:58.531Z",
@@ -1884,10 +1844,6 @@
    "R3AJCGQGGMR4:33:2:2026-10-08T13:53:21.571Z",
    "RC61MFQM63Y6:17:1:2026-10-07T17:02:37.562Z",
    "RC61MFQM63Y6:33:6:2026-10-07T17:26:17.485Z",
-   "RMNXHZKV716Y:17:1:2026-10-09T03:51:29.578Z",
-   "RMNXHZKV716Y:33:1:2026-10-09T04:08:03.615Z",
-   "RMNXHZKV716Y:48:3:2026-10-09T04:25:24.536Z",
-   "RMNXHZKV716Y:49:6:2026-10-09T04:32:36.656Z",
    "S9UZAK0JP0C0:17:2:2026-10-06T03:11:06.964Z",
    "S9UZAK0JP0C0:33:6:2026-10-06T04:00:23.106Z",
    "SADL3CGYTGSR:17:1:2026-10-05T12:35:49.835Z",
@@ -1952,10 +1908,6 @@
    "XTSV1U9JD34T:33:2:2026-10-07T18:47:55.731Z",
    "XTSV1U9JD34T:48:1:2026-10-07T18:59:36.955Z",
    "XTSV1U9JD34T:49:6:2026-10-07T19:05:16.704Z",
-   "XW8B5CHJ814J:17:1:2026-10-09T08:07:55.754Z",
-   "XW8B5CHJ814J:33:1:2026-10-09T08:23:45.263Z",
-   "XW8B5CHJ814J:48:4:2026-10-09T08:48:42.035Z",
-   "XW8B5CHJ814J:49:6:2026-10-09T08:53:21.758Z",
    "XYYQYBRM2A01:17:1:2026-10-04T20:35:20.432Z",
    "XYYQYBRM2A01:33:6:2026-10-04T21:05:41.430Z",
    "XZUJR08FW801:17:1:2026-10-09T02:21:26.301Z",
@@ -1987,7 +1939,7 @@
   ],
   "max_asc": 10,
   "trigger": "20-new-bosses",
-  "artifact": "e918959162ed7c88e3f8d995163e1a65d77963b8533a7a26050fbfa222261491",
+  "artifact": "785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04",
   "rule": "ascension or 20 new actual-outcome boss attempts; scheduler tick at :13/:43 and learner finish events"
  }
 }
