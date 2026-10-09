@@ -412,3 +412,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 10:25 [运维 codex] 经验125（20261009-093152-experience-update）完整外部tsc/vitest exit0，固定lived5f290f425fa1d84b0502e7d28ccc2b807b8d8a4/树588d4310e2566a0a74d32840fe9bc580b7156a0b、302文件3435例过2跳核实。唯一S1.exp125、已有18数据shipped/56原CLI及741源原件SHA保持，关闭本批完整检查pending；原18冲突/merged-null/failed及旧exp100失败不改，三原提案沿自动链。回执paper/materials/silent/20261009-1024-checks-experience125/closure.json。
 
 - 2026-10-09 10:26 运维codex10:24经验125收件箱文字更正：10:25结案收件箱行“原18冲突”应为“原5记录文件冲突”，系旧模板转录笔误；原行保留，closure/manifest/decision-log/ops-handoff原核实均为5。完整tsc/vitest exit0、302文件3435例过2跳及唯一S1.exp125结案不变；本次只追加更正，无新合入、版本、台账或补测。回执paper/materials/silent/20261009-1024-checks-experience125/record-correction.json。
+
+- 2026-10-09 10:45 运维codex：E6DYYXRX7GVE复盘闭环完成，24546字节原追加及14条原CLI已纳入；无新增纯bug，两个原提案沿自动strategy-proposal链。源1472条原字节、28项数字、101个首帧及追加前修订/失败历史保留；论文--no-raw单次刷新、五校验通过、台账0问题；回执paper/materials/silent/20261009-1033-events/paper-snapshot.json。

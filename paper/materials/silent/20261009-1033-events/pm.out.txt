@@ -1,0 +1,25 @@
+## 复盘回报
+
+- 已追加：E6DYYXRX7GVE（A10，第45层，灵魂枢纽 SOUL_NEXUS：T6剩3血0挡对17攻击阵亡，毒结算后敌剩40血）。
+- 新的纯 bug：
+  - 无。
+- 写成「未记录」的项：E6DYYXRX7GVE：完整dirty源码；F33首试退出／末轮结算；部分逐源毛伤、总需伤及末击过量；完整方案执行率；受控反事实；F45T4预测差1血的原因；boss时钟及实打／估值比；未访楼层资源；Jev缓存及实际费用。
+- 学习账本：E6DYYXRX7GVE：新增无；更新 silent-0020、silent-0125、silent-0278、silent-0005、silent-0011、silent-0046、silent-0057、silent-0142、silent-0259（均为支持证据，无确认的老错重犯）；`ledger.py check`退出码0。
+- 代码提案：
+  - silent-proposal-75bcaaf827438b5c：F33重打T2、F45T1—T2；关联账本0125／0057／0005，交strategy-proposal验证护栏血价、生成重问和能力兑现。缺整场对照，保留阈值。
+  - silent-proposal-b0f2de4891312928：F33首试T11、F45T6；关联账本0278／0011，交strategy-proposal接入已核六毒预算。无早喝胜率对照，不制定饮用门槛。两提案尚未实现。
+
+```json
+{"task":"postmortem","appended":["E6DYYXRX7GVE"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0020","silent-0125","silent-0278","silent-0005","silent-0011","silent-0046","silent-0057","silent-0142","silent-0259"],"repeats":[],"check":0},"code_proposals":["silent-proposal-75bcaaf827438b5c","silent-proposal-b0f2de4891312928"],"implementation_domains":["combat","potion","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-101302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11e6f-7a65-71e1-a8e6-e680015ff02b
+轮数：1；工具调用：command_execution×60
+token：输入 233.8k、输出 39.6k（其中推理 9335）、cache 读 4767.6k、cache 写 0（命中 95.3%）
+成本：未提供
+耗时：1246.0 s（墙钟）
+时间：首个事件 3.5 s、模型首个输出 8.6 s、首次工具 12.8 s、末次工具结束 1228.0 s；工具内共 88.8 s，其余（模型生成、推理、网络）1153.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×33；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T10-13-04-01a11e6f-7a65-71e1-a8e6-e680015ff02b.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-101302-postmortem.jsonl
