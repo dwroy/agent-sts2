@@ -534,3 +534,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 23:49 [运维 codex] Roy全历史核心组合首份结果已核实并写入双收件箱：四类候选及完整矩阵/模板见 `paper/materials/silent/20261009-2335-events/core-builds/summary.md`，原报告SHA cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d。现有herdr通知动作已调用一次，但去重回执failed/rc2，未确认发送成功；失败原件保留，按既有普通工具修复链核查，不重派学习或把报告标已上线。
 
 - 2026-10-10 00:01 [运维 codex] 23:35事件发布核实：经验140/141仅原数据已顺次合入live/main并登记S1.exp140/141及32所属数据shipped；最新经验2026-10-09.30、201 active，原失败/冲突保留，完整外部检查待原批续验。策略221053的有限0351子项及纯bug0338/0254/0272已实际live，外部完整307文件3456例过2跳均0，现有S1.apotheosis2/S1.fix46和4所属项登记main；宽提案仍waiting、原exp100失败保持。女王B4 rejected未合入。核心首份报告已双回报，herdr通知failed/rc2回执保留待工具核查；回执paper/materials/silent/20261009-2335-events/publication-registration.json。
+
+- 2026-10-10 00:18 [运维 codex] 经验140当前树完整外部检查exit1：307文件3460例通过、2跳、2失败。失败是Fast两处旧测试契约，与经验数据无已证实因果；已核对watcher现有自有树修补，沿原拥有者续办，保持Fast/对局和原失败，不重复派发。实际部署与新完整通过仍待验收。paper/materials/silent/20261009-2335-events/experience140/external-failure-decision.json。

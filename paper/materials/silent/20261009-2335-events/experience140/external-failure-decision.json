@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-10-10 00:18",
+  "batch": "20261009-214302-experience-update",
+  "result": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-214302-experience-update.fallback-b674fd8888a9232b9058678bc9b333afbf04991e.checks.log",
+    "merged": "6365c734f02d8cb9e9a5262cd381f457d53a6186",
+    "tree": "b674fd8888a9232b9058678bc9b333afbf04991e",
+    "commits": [
+      "2ff36c373e736214e7d143c161c7f917f06887ef"
+    ]
+  },
+  "original_log": "ops/codex-ops/learner/20261009-214302-experience-update.fallback-b674fd8888a9232b9058678bc9b333afbf04991e.checks.log",
+  "log_sha256": "582fb57bee333aebbd6c2d1e4a0d2b06800f083997c72ad3d638cc4dbcc6c819",
+  "files_passed": 307,
+  "tests_passed": 3460,
+  "tests_skipped": 2,
+  "tests_failed": 2,
+  "failures": [
+    "brain-codex.test.ts old assertion prohibits service_tier",
+    "run-config.test.ts compares fixtures with different log paths"
+  ],
+  "decision": "Keep Fast and current experience; use existing active owner test-contract repair, no duplicate source edit or learner task.",
+  "owner": "watcher / fix/strategy-fast-test-contract",
+  "owner_worktree": "/home/dw/Projects/agent-sts2/.worktrees/strategy-proposal-concurrency",
+  "observed_owner_patch_sha256": "0819ef3cfc2080d42a7b836ae8456c564f7b5299558be36d24d1681b381e591c",
+  "owner_source_commit_and_deployment_not_yet_verified": true,
+  "required_closeout": "Verify owner source/actual live ancestry and obtain a new pinned full tsc+vitest result. Do not overwrite this rc1.",
+  "experience_data_failure_not_established": true,
+  "no_rollback": true,
+  "original_failures_preserved": true,
+  "precommit_failure": {
+    "exit": 2,
+    "stage": "whitespace check",
+    "raw_originals_preserved": true,
+    "paths": [
+      "paper/materials/silent/20261009-2335-events/experience140/external-failure.log",
+      "paper/materials/silent/20261009-2335-events/experience140/existing-owner-test-contract.patch"
+    ],
+    "cause": "Raw log EOF blank and raw patch empty context-line prefix; no original bytes trimmed.",
+    "sha256": {
+      "paper/materials/silent/20261009-2335-events/experience140/external-failure.log": "582fb57bee333aebbd6c2d1e4a0d2b06800f083997c72ad3d638cc4dbcc6c819",
+      "paper/materials/silent/20261009-2335-events/experience140/existing-owner-test-contract.patch": "0819ef3cfc2080d42a7b836ae8456c564f7b5299558be36d24d1681b381e591c"
+    }
+  }
+}
