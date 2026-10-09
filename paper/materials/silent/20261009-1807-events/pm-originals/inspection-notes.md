@@ -1,0 +1,1 @@
+核验期间保留extract.py、details.py初稿、details.txt部分输出及后续v2；inspect.py命名遮蔽标准库已通过python3 -I避开。verify-v1.err为原始空药槽未过滤occupied导致的断言失败，verify-v2检查已通过。早期路径agent/src/combat-plan.ts不存在，正确路径为agent/src/reflex/combat-plan.ts。牌面弱化数复核发现拳11→7错误，按只追加规则保存勘误，correction.json可追溯。无源码修改、提交、推送或运行play。
