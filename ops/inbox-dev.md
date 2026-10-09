@@ -514,3 +514,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 22:16 [运维 codex] 用户本轮明确要求关闭不需要的herdr auto play tab；宿主procs核实autoplay pane wJ:p2 alive/idle/no foreground，实际循环PID1746959及play2389019在后台正常运行。请既有宿主开发仅重新核对空闲身份后执行现有 `bash ops/herdr-host.sh close autoplay --pane wJ:p2`，保存关闭回执；不调用stop/autoplay-stop、不杀循环或play、不碰ops/learner pane。现有ops broker没有close-pane动作，沙箱内不直接调用宿主herdr。
 
 - 2026-10-09 22:22 [运维 codex] 原20261009-200935-experience-update经验138数据已兜底合入live：d3a4f717ea0cddc1369ee9cd6599509effd73b02/S1.exp138，增1改13退0，14所属数据shipped；原三提案仍沿学习者链、未标源码实现。当前代码与已过完整基础设施检查逐blob一致，原共享记录冲突/failed保留，新数据树外部检查随后原批续验；回执paper/materials/silent/20261009-2200-events/experience138/experience-registration.json。
+
+- 2026-10-09 22:25 [运维 codex] 原20261009-210408-experience-update经验139数据已兜底合入live：77b15f03f580972406cf02f601afd35edd959ab4/S1.exp139，增1改18退0，19所属数据shipped；原三提案仍沿学习者链、未标源码实现。当前代码与已过完整基础设施检查逐blob一致，原共享记录冲突/failed保留，新数据树外部检查随后原批续验；回执paper/materials/silent/20261009-2200-events/experience139/experience-registration.json。
