@@ -1,0 +1,92 @@
+{
+  "state": "published",
+  "batch": "20261009-200935-experience-update",
+  "source": "19b98aa159ff7a451a8cbe34e91565899244a8e1",
+  "version": "S1.exp138",
+  "source_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 251,
+    "cases": 2627,
+    "retried": false
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "d8a129e9da9a4e429abef1234762155c23e99fe7",
+  "parent_blob": "57d42f573817b707ac27fb98433e9e418fe9e295",
+  "actual_code": "bbd2fab041236a99a5ad8dfaf2c30db1bfc88c0b",
+  "publication": "d3a4f717ea0cddc1369ee9cd6599509effd73b02",
+  "publication_tree": "62698c62145e084af2fa08913913024fefc45fc6",
+  "version_entry": {
+    "name": "S1.exp138",
+    "family": "Silent",
+    "commit": "bbd2fab041236a99a5ad8dfaf2c30db1bfc88c0b",
+    "source": "decision-log 2026-10-09 22:20: 原20261009-200935-experience-update经验共享记录冲突兜底；只源19b98aa1 experience.json，2026-10-09.27，原变化{'added': 1, 'updated': 13, 'retired': 0, 'active': 199}，原证据与限制见原report.md。源251文件2627例tsc/vitest0，当前代码与当前基础设施完整检查固定fd4c8659736828708789598b7bd1bb9049c6cf94/树5a2890da17c285c15b2c1f913acf90491e133f0f完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；原三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"
+  },
+  "main_code_sync": "6e064d02a4719725a0cdb05226906e80efc54889",
+  "main_record": "901c26b0fd86b0e05d09666ce943e802f20334ad",
+  "record_line": "- 2026-10-09 22:20 运维codex22:00经验138兜底：源19b98aa159ff7a451a8cbe34e91565899244a8e1原18项共享记录冲突及failed/merged-null保持；空闲非阻塞锁内从liveab090c3e4029315d3ff0afdef7bb0225805cbb51只集成已测experience原blob，actual bbd2fab041236a99a5ad8dfaf2c30db1bfc88c0b，本次刷新保存a3d1ec2d4f7ad74e39da7145cbea6963e354a1a1，各刷新SHA保持。当前代码与当前基础设施完整检查固定fd4c8659736828708789598b7bd1bb9049c6cf94/树5a2890da17c285c15b2c1f913acf90491e133f0f逐blob一致，原完整304文件3439例过2跳保持，不冒报新数据树完整通过；源过时工具/任务/文档路径不覆盖当前live，保持其他活任务与exp工作树。经验2026-10-09.27/增1改13退0/199 active，唯一S1.exp138，源251文件2627例tsc/vitest0、三提案沿原自动链，main机械同步及14所属数据shipped随后登记，原批独立完整外部续验。原43CLI/8support/65755字节第138节、原初稿/校验失败及上一轮经验137完整结案保持，无重复复盘论文刷新，A10审计结案与exp100旧失败保持；回执paper/materials/silent/20261009-2200-events/experience138。\n",
+  "live_before": "ab090c3e4029315d3ff0afdef7bb0225805cbb51",
+  "preserved_refresh": "a3d1ec2d4f7ad74e39da7145cbea6963e354a1a1",
+  "refresh_sha256": {
+    "notes/fight-value-backtest-silent.md": "997c5268d8c415c8fb02ad6e6b4369d8a8b622926b12a44adf2a5d6aa6bd41a6"
+  },
+  "code_equivalence": {
+    "data_only": true,
+    "current_code_test_task_blobs_identical": true,
+    "current_tested_pin": "fd4c8659736828708789598b7bd1bb9049c6cf94",
+    "retained_complete_checks": {
+      "actor": "agent-sts2-watcher direct developer fix",
+      "started_at": "2026-10-09T21:58:55.364236+08:00",
+      "completed_at": "2026-10-09T22:10:19.017116+08:00",
+      "rc": 0,
+      "live": "fd4c8659736828708789598b7bd1bb9049c6cf94",
+      "tree": "5a2890da17c285c15b2c1f913acf90491e133f0f",
+      "source": "27c261281",
+      "head_unchanged_during_checks": true,
+      "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+      "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261009-core-dispatch-recovery/tests/host-full-1.log",
+      "kind": "standalone outside-sandbox full tsc+vitest acceptance, not a learner run",
+      "old_failures_preserved": true
+    },
+    "post_data_merge_sandbox_repeated": false,
+    "new_data_tree_full_passed": false,
+    "previous_exp100_full_failure_preserved": true,
+    "source_code_differences_from_actual": [
+      "agent/tests/core-build-jobs.test.ts",
+      "agent/tests/core_build_jobs_test.py",
+      "agent/tests/learner-jobs.test.ts",
+      "agent/tests/learner-strategy.test.ts",
+      "agent/tests/ops-rollout-file.test.ts",
+      "docs/codex-ops.md",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/silent-a10-regression.md",
+      "learner/tasks/silent-historical-core-builds.md",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-do.sh",
+      "ops/codex-ops-learn.py",
+      "ops/codex-ops-learner.sh",
+      "ops/codex/herdr.ts",
+      "ops/codex/lib.ts",
+      "ops/codex/main.ts",
+      "ops/codex/rollout-file.ts",
+      "ops/core_build_jobs.py",
+      "ops/learner_checks.py",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ]
+  },
+  "full_external_passed": false
+}
