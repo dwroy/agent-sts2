@@ -1,0 +1,1 @@
+Initial all-fight replay was interrupted through its own execution session (exit 130) after confirming that only experience text changed. All partial results and logs are preserved; the frozen dataset remains unchanged. Continue with audited prior results and full replays of the 20 new keys.

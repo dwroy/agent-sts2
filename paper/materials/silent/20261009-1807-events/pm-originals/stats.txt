@@ -1,0 +1,90 @@
+labels Counter({('code', 'combat/plan-continue'): 390, ('jev', 'combat/plan-choice'): 149, ('code', 'combat/plan'): 148, ('jev', 'combat/plan-choice+potion'): 129, ('jev', 'selection/choose'): 79, ('code', 'reward/claim'): 56, ('code', 'map/route-follow'): 43, ('code', 'combat/lethal'): 41, ('code', 'combat/least-loss'): 26, ('code', 'combat/end_turn'): 25, ('code', 'reward/proceed'): 22, ('codex', 'reward/card'): 21, ('codex', 'rest/plan'): 10, ('code', 'rest/proceed'): 10, ('code', 'event/leave'): 9, ('codex', 'shop/buy'): 9, ('code', 'selection/curse'): 6, ('codex', 'event/choose'): 5, ('code', 'shop/open'): 4, ('codex', 'shop/plan'): 4, ('code', 'shop/leave'): 4, ('code', 'combat/mod-lethal'): 4, ('code', 'chest/open'): 3, ('code', 'chest/relic'): 3, ('code', 'chest/proceed'): 3, ('codex', 'selection/upgrade'): 3, ('codex', 'event/plan'): 2, ('code', 'map/route-only'): 2, ('codex', 'event/act-plan'): 2, ('codex', 'map/route-follow'): 2, ('jev', 'selection/take into my hand'): 2, ('codex', 'map/route-plan'): 1, ('codex', 'selection/remove'): 1, ('codex', 'selection/enchant'): 1, ('code', 'combat/potion-now'): 1, ('code', 'selection/free-card'): 1, ('code', 'combat/phase-setup'): 1, ('code', 'run/finalize'): 1})
+jev 359 low 46 low_floor Counter({49: 20, 48: 10, 33: 3, 35: 3, 22: 2, 45: 2, 2: 1, 6: 1, 28: 1, 30: 1, 31: 1, 36: 1})
+choices 278
+ranks Counter({'1': 165, "- (rollout's best line": 48, '2': 36, '3': 10, '4': 8, 'none': 4, '8': 2, '6': 2, "1 [ending now kills by what the mod's lethal flag does not count: 40 HP lost in all": 1, '7': 1, '9': 1})
+code combat turns 190
+times 2026-10-09T07:55:01.218Z 2026-10-09T08:53:21.760Z
+latency sums {'plan': 301367, 'jev': 166070, 'action': 586383, 'deepseek': 780833, 'planner': 255130, 'pre': 39252}
+GUARD 317278 42 5 Jev chose plan 6/6 (刀刃之舞, 带毒刺击 -> 巨斧机器人, 带毒刺击 -> 巨斧机器人) with confidence 0.58; code rank 6; HP guard: plan 6 (刀刃之舞, 带毒刺击 -> 巨斧机器人, 带毒刺击 -> 巨斧机器人; hp -22) is more than 8 HP over the cheapest line, playing plan 1 (突然一拳+ -> 巨斧机器人, 后空翻, 带毒刺击 -> 巨斧机器人, 带毒刺击 -> 巨斧机器人; hp -10) instead
+GUARD 317442 48 2 Jev chose plan 1/7 (打击 -> 实验体 #C69, 必备工具) with confidence 0.82; code rank 1; HP guard: plan 1 (打击 -> 实验体 #C69, 必备工具; hp -16) is more than 8 HP over the cheapest line, playing plan 3 (必备工具, 后空翻; hp -13) instead
+GUARD 317512 48 2 Jev chose plan 1/7 (打击 -> 实验体 #C69, 必备工具) with confidence 0.94; code rank 1; HP guard: plan 1 (打击 -> 实验体 #C69, 必备工具; hp -16) is more than 8 HP over the cheapest line, playing plan 3 (必备工具, 后空翻; hp -13) instead; SL explore (T2, the 13th latest question before attempt 2's death on T12): playing 打击 -> 实验体 #C69, 后空翻, 打击 -> 实验体 #C69 instead of 必备工具, 后空翻, played on this board in attempt 2 (the best untried line by the question's ranking, among those the rollout does not see dying more often)
+GUARD 317567 48 2 Jev chose plan 1/7 (打击 -> 实验体 #C69, 必备工具) with confidence 0.94; code rank 1; HP guard: plan 1 (打击 -> 实验体 #C69, 必备工具; hp -16) is more than 8 HP over the cheapest line, playing plan 3 (必备工具, 后空翻; hp -13) instead
+potions
+316566 2 6 None {"action": "claim_reward", "option_index": 0} claiming Gold (11金币)
+316567 2 6 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316588 3 4 None {"action": "claim_reward", "option_index": 0} claiming Gold (8金币)
+316589 3 4 None {"action": "claim_reward", "option_index": 0} claiming Potion (火焰药水)
+316590 3 4 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316595 4 None None {"action": "claim_reward", "option_index": 0} claiming Potion (缚魂药水)
+316600 5 1 None {"action": "use_potion", "option_index": 0, "target_index": 0} continuing the Jev-chosen plan: potion 火焰药水 -> 小啃兽
+316601 5 1 None {"action": "use_potion", "option_index": 1} continuing the Jev-chosen plan: potion 缚魂药水
+316607 5 2 None {"action": "claim_reward", "option_index": 0} claiming Gold (14金币)
+316608 5 2 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316638 6 6 None {"action": "claim_reward", "option_index": 0} claiming Gold (13金币)
+316639 6 6 None {"action": "claim_reward", "option_index": 0} claiming Potion (消亡粉末)
+316640 6 6 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316655 8 2 None {"action": "use_potion", "option_index": 0, "target_index": 0} continuing the Jev-chosen plan: potion 消亡粉末 -> 异蛙寄生虫
+316680 8 8 None {"action": "claim_reward", "option_index": 0} claiming Gold (31金币)
+316681 8 8 None {"action": "claim_reward", "option_index": 0} claiming Potion (痊愈药水)
+316682 8 8 None {"action": "claim_reward", "option_index": 0} claiming Relic (意外光滑的石头)
+316683 8 8 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316687 9 1 None {"action": "use_potion", "option_index": 0} Jev chose to drink 痊愈药水, then re-plan (confidence 0.97)
+316712 9 5 None {"action": "claim_reward", "option_index": 0} claiming Gold (13金币)
+316713 9 5 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316742 12 4 None {"action": "claim_reward", "option_index": 0} claiming Gold (10金币)
+316743 12 4 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316777 14 6 None {"action": "claim_reward", "option_index": 0} claiming Gold (26金币)
+316778 14 6 None {"action": "claim_reward", "option_index": 0} claiming Relic (地精之角)
+316779 14 6 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316787 15 None None {"action": "buy_potion", "option_index": 2} Codex plan XW8B5CHJ814J:F15:shop#5 step 4: buy 罐装幽灵 (104g)
+316839 17 11 None {"action": "claim_reward", "option_index": 0} claiming Gold (75金币)
+316840 17 11 None {"action": "claim_reward", "option_index": 0} claiming Potion (力量药水)
+316841 17 11 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316851 19 1 None {"action": "use_potion", "option_index": 1} continuing the Jev-chosen plan: potion 力量药水
+316856 19 2 None {"action": "claim_reward", "option_index": 0} claiming Gold (15金币)
+316857 19 2 None {"action": "claim_reward", "option_index": 0} claiming Potion (格挡药水)
+316858 19 2 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316866 20 1 None {"action": "use_potion", "option_index": 1} continuing the Jev-chosen plan: potion 格挡药水
+316879 20 4 None {"action": "claim_reward", "option_index": 0} claiming Gold (9金币)
+316880 20 4 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316886 21 None None {"action": "buy_potion", "option_index": 2} Codex plan XW8B5CHJ814J:F21:shop#8 step 2: buy 能力药水 (49g)
+316894 22 1 None {"action": "use_potion", "option_index": 1} Jev chose to drink 能力药水, then re-plan (confidence 0.17)
+316922 22 5 None {"action": "claim_reward", "option_index": 0} claiming Gold (9金币)
+316923 22 5 None {"action": "claim_reward", "option_index": 0} claiming Potion (固化药水)
+316924 22 5 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316952 28 1 None {"action": "use_potion", "option_index": 1} Jev chose plan 1/3 (potion 固化药水) with confidence 0.33; code rank 1
+316971 28 4 None {"action": "claim_reward", "option_index": 0} claiming Gold (11金币)
+316972 28 4 None {"action": "claim_reward", "option_index": 0} claiming Potion (明晰提取物)
+316973 28 4 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+316979 29 1 None {"action": "use_potion", "option_index": 1} Jev chose to drink 明晰提取物, then re-plan (confidence 0.91)
+317007 29 6 None {"action": "claim_reward", "option_index": 0} claiming Gold (28金币)
+317008 29 6 None {"action": "claim_reward", "option_index": 0} claiming Relic (红面具)
+317009 29 6 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+317031 30 3 None {"action": "claim_reward", "option_index": 0} claiming Gold (9金币)
+317032 30 3 None {"action": "claim_reward", "option_index": 0} claiming Potion (能力药水)
+317033 30 3 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+317043 31 1 None {"action": "use_potion", "option_index": 1} Jev chose to drink 能力药水, then re-plan (confidence 0.23)
+317077 31 7 None {"action": "claim_reward", "option_index": 0} claiming Gold (14金币)
+317078 31 7 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+317147 33 13 1 {"action": "use_potion", "option_index": 0} no playable cards and 18 incoming at 11 HP: drinking 罐装幽灵 first
+317149 33 13 None {"action": "claim_reward", "option_index": 0} claiming Gold (75金币)
+317150 33 13 None {"action": "claim_reward", "option_index": 0} claiming Potion (力量药水)
+317151 33 13 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+317158 35 1 None {"action": "use_potion", "option_index": 0} Jev chose plan 1/7 (potion 力量药水, 背刺 -> 虔诚雕刻师, 带毒刺击 -> 虔诚雕刻师, 切割 -> 虔诚雕刻师, 后空翻, 灵动步法+) with confidence 0.92; code rank 1
+317198 35 7 None {"action": "claim_reward", "option_index": 0} claiming Gold (14金币)
+317199 35 7 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+317220 36 3 None {"action": "claim_reward", "option_index": 0} claiming Gold (15金币)
+317221 36 3 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+317236 37 None None {"action": "claim_reward", "option_index": 0} claiming Potion (癫狂之触)
+317257 42 1 None {"action": "use_potion", "option_index": 0} continuing the Jev-chosen plan: potion 癫狂之触
+317308 42 9 None {"action": "claim_reward", "option_index": 0} claiming Gold (10金币)
+317309 42 9 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+317315 43 None None {"action": "buy_potion", "option_index": 1} Codex plan XW8B5CHJ814J:F43:shop#15 step 2: buy 速度药水 (49g)
+317339 45 4 None {"action": "use_potion", "option_index": 0} continuing the Jev-chosen plan: potion 速度药水
+317356 45 7 None {"action": "claim_reward", "option_index": 0} claiming Gold (15金币)
+317357 45 7 None {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+317363 46 None None {"action": "buy_potion", "option_index": 1} Codex plan XW8B5CHJ814J:F46:shop#17 step 2: buy 格挡药水 (49g)
+317383 48 3 1 {"action": "use_potion", "option_index": 0} continuing the Jev-chosen plan: potion 格挡药水
+317440 48 1 2 {"action": "use_potion", "option_index": 0} continuing the Jev-chosen plan: potion 格挡药水
+317510 48 1 3 {"action": "use_potion", "option_index": 0} continuing the Jev-chosen plan: potion 格挡药水
+317565 48 1 4 {"action": "use_potion", "option_index": 0} continuing the Jev-chosen plan: potion 格挡药水
