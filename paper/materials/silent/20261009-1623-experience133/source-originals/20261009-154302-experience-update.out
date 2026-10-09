@@ -1,0 +1,98 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.21 → 2026-10-09.22；提交：a8bd4e484（分支 exp-silent）；合入：未合入，预检发现20个记录文件冲突，已保留 live 刷新提交 da4d8ab7c，待运维兜底。
+- 条数：新增1、更新21（加证据21、只改数字0）、退役0；active 196 → 197，共51201字符；A8适用183条／47471字符，A9适用184条／47755字符。
+- 机制推理（局数为支持／反例）：
+  - 能力兑现 — 换战须重建，计划不等实建 — 165／0 — 833ZM0MJGWHC
+  - 力量与敏捷 — 逐击、逐挡牌核算，被动挡另计 — 166／0 — LYBHQ1X230ZB
+  - 毒雾 — 叠层后轮初补毒 — 82／0 — 833ZM0MJGWHC
+  - 触媒 — 增加结算次数，各结减1 — 59／0 — 833ZM0MJGWHC
+  - 毒性爆发 — 即时毒结与轮末分账 — 10／0 — 833ZM0MJGWHC
+  - 实验体 — 换阶段清敌增益，保留玩家能力 — 18／0 — 833ZM0MJGWHC
+  - 悔恨 — 按留手数量直接失血 — 3／0 — 833ZM0MJGWHC
+  - 萎靡 — 自身减力须合算激怒增力 — 21／0 — 833ZM0MJGWHC
+  - 遗忘之魂 — 消耗步骤额外伤害另计 — 5／0 — 833ZM0MJGWHC
+  - 沙漏 — 制品、凋萎与交接资源合核 — 24／0 — 833ZM0MJGWHC
+  - 蜃景 — 按当前毒给挡，遗物挡另计 — 21／0 — 833ZM0MJGWHC
+  - 加湿器 — 实际HEAL增上限，锻造不触发 — 7／0 — 833ZM0MJGWHC
+  - 卷轴纸伤 — 按漏伤击数降低上限 — 7／0 — 833ZM0MJGWHC
+  - 毒药水 — 先加毒，饮用当步不扣本体血 — 44／0 — 833ZM0MJGWHC
+  - 连续boss — 接续真实余血余药 — 16／0 — 833ZM0MJGWHC
+  - 跨幕回复 — 已见按缺失HP的80%向下取整 — 48／0 — 833ZM0MJGWHC
+  - 凋萎 — 持牌伤与攻击、格挡共同核算 — 24／0 — 833ZM0MJGWHC
+  - 音叉 — 计数9→10另给7挡 — 8／0 — 833ZM0MJGWHC
+  - 肌肉药 — 本轮5临时力量，次轮撤 — 2／0 — 833ZM0MJGWHC
+  - 蜥蜴尾巴 — 毒清场取消攻击不等复活消耗 — 5／0 — 833ZM0MJGWHC
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件／2627用例／退出0，未重跑；gitleaks通过。
+- 切片大小：中位减少4字（2645→2641）；最大5501字（改前5565）。
+- 学习账本：新增silent-0341；改成proposed：silent-0019、0020、0021、0125、0012、0011、0027、0037、0028、0079、0034、0053、0060、0024、0228、0010、0204、0221、0278、0243、0072、0330、0340、0341；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.22",
+  "commit": "a8bd4e4841b030df8038bbed8e38a893559a2cc7",
+  "merged": null,
+  "added": 1,
+  "updated": 21,
+  "retired": 0,
+  "active": 197,
+  "mechanisms": [
+    "silent-deck-burst-observation",
+    "silent-strength-weak-observation",
+    "silent-noxious-fumes-growth",
+    "silent-accelerant-triggers",
+    "silent-outbreak-immediate-poison",
+    "silent-test-subject-phase-reset",
+    "silent-regret-hand-loss",
+    "silent-malaise-x-debuff",
+    "silent-forgotten-soul-exhaust-damage",
+    "silent-aeonglass-artifact-growth-sl",
+    "silent-mirage-poison-card-block",
+    "silent-stone-humidifier-rest-growth",
+    "silent-scroll-paper-cuts-unblocked",
+    "silent-poison-potion-observed-application",
+    "silent-double-boss-resource-handoff",
+    "silent-act-transition-missing-hp-heal",
+    "silent-wither-end-turn-loss",
+    "silent-tuning-fork-skill-block",
+    "silent-flex-potion-temporary-strength",
+    "silent-lizard-tail-observed-revival"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": ["silent-0341"],
+    "proposed": [
+      "silent-0019", "silent-0020", "silent-0021", "silent-0125",
+      "silent-0012", "silent-0011", "silent-0027", "silent-0037",
+      "silent-0028", "silent-0079", "silent-0034", "silent-0053",
+      "silent-0060", "silent-0024", "silent-0228", "silent-0010",
+      "silent-0204", "silent-0221", "silent-0278", "silent-0243",
+      "silent-0072", "silent-0330", "silent-0340", "silent-0341"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-06a5222fa99aa98e",
+    "silent-proposal-f9794186c0f1383d",
+    "silent-proposal-9fc182a932a2cc9e",
+    "silent-proposal-2856d9cc71288ad7"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-154303-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11f9d-9e08-7cd2-8769-5cd55ae2415f
+轮数：1；工具调用：command_execution×66
+token：输入 248.9k、输出 48.7k（其中推理 14.8k）、cache 读 6946.2k、cache 写 0（命中 96.5%）
+成本：未提供
+耗时：1898.8 s（墙钟）
+时间：首个事件 4.0 s、模型首个输出 9.3 s、首次工具 13.3 s、末次工具结束 1814.7 s；工具内共 1364.4 s，其余（模型生成、推理、网络）530.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×47；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T15-43-05-01a11f9d-9e08-7cd2-8769-5cd55ae2415f.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-154303-experience-update.jsonl
