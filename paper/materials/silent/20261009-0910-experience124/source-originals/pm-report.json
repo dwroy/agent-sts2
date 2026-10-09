@@ -1,0 +1,42 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "SDY5T9XCSQN2"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "SDY5T9XCSQN2",
+      "where": "agent/src/sl/explore.ts:896",
+      "what": "SL残血指标仍纳入巨兽自爆占位体HP；既有silent-0250，fix-queue未列同项",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0019",
+      "silent-0017",
+      "silent-0250",
+      "silent-0050",
+      "silent-0125",
+      "silent-0211",
+      "silent-0079"
+    ],
+    "repeats": [
+      "silent-0250",
+      "silent-0079"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-e972b5909856ce15",
+    "silent-proposal-466419f5023c7533"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-081301-postmortem/report.md"
+}

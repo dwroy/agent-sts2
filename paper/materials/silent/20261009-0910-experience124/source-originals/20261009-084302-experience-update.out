@@ -1,0 +1,33 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.12 → 2026-10-09.13；提交：7339da354b6708ef3d53648e5fc44715066caf53（分支 exp-silent）；合入：未合入（预检发现18处历史记录／数据冲突；已保存刷新，待调用方／运维兜底）。
+- 条数：新增0、更新8（加证据8、只改数字0）、退役0；active193→193；正文51,884字符。A8适用180条／48,238字，A9适用181条／48,522字。
+- 机制推理：
+
+  - 输出窗口 — 本体进度与后续生存分核（观察） — 支持155／反例0局 — SDY5T9XCSQN2。
+  - 力量逐段 — 每段增伤，敌挡与毒另核 — 支持156／反例0局 — SDY5T9XCSQN2。
+  - 刺击施毒 — 直伤、毒结算与回复分账 — 支持31／反例0局 — SDY5T9XCSQN2。
+  - 巨兽阶段 — 本体结束后仍须活过自爆 — 支持26／反例0局 — SDY5T9XCSQN2。
+  - 骇鳗阈值 — 眩晕后仍有活力与易伤威胁 — 支持10／反例0局 — SDY5T9XCSQN2。
+  - 胆小盾 — 攻击后补挡，毒退场另核 — 支持26／反例0局 — SDY5T9XCSQN2。
+
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件／2627用例／退出0；未重跑。
+- 切片大小：中位下降2字，最大5686字。
+- 学习账本：新增无；改成 proposed：silent-0019、silent-0020、silent-0021、silent-0125、silent-0006、silent-0012、silent-0030、silent-0017、silent-0079、silent-0050、silent-0211；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-09.13","commit":"7339da354b6708ef3d53648e5fc44715066caf53","merged":null,"added":0,"updated":8,"retired":0,"active":193,"mechanisms":["长战输出与后续生存（观察）","力量逐段与已建属性","刺击施毒、实结与回复","巨兽本体与自爆分阶段","骇鳗活力、易伤与阈值","胆小盾、直伤与毒退场"],"tests":{"tsc":0,"vitest":0,"cases":2627},"ledger":{"added":[],"proposed":["silent-0019","silent-0020","silent-0021","silent-0125","silent-0006","silent-0012","silent-0030","silent-0017","silent-0079","silent-0050","silent-0211"],"retired":[],"check":0},"code_proposals":["silent-proposal-77f4c1fa9a61379c","silent-proposal-c906f8532e2a4d27","silent-proposal-e274be970fe1fb93"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-084302-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11e1d-1669-7401-b30c-09ac48216031
+轮数：1；工具调用：command_execution×62 file_change×8
+token：输入 191.0k、输出 52.4k（其中推理 23.6k）、cache 读 8059.3k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：1661.9 s（墙钟）
+时间：首个事件 3.2 s、模型首个输出 8.2 s、首次工具 10.7 s、末次工具结束 1614.3 s；工具内共 1507.8 s，其余（模型生成、推理、网络）150.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×54 wait×8；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T08-43-05-01a11e1d-1669-7401-b30c-09ac48216031.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-084302-experience-update.jsonl
