@@ -620,3 +620,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-10 00:01 [运维 codex] 23:35事件发布核实：经验140/141仅原数据已顺次合入live/main并登记S1.exp140/141及32所属数据shipped；最新经验2026-10-09.30、201 active，原失败/冲突保留，完整外部检查待原批续验。策略221053的有限0351子项及纯bug0338/0254/0272已实际live，外部完整307文件3456例过2跳均0，现有S1.apotheosis2/S1.fix46和4所属项登记main；宽提案仍waiting、原exp100失败保持。女王B4 rejected未合入。核心首份报告已双回报，herdr通知failed/rc2回执保留待工具核查；回执paper/materials/silent/20261009-2335-events/publication-registration.json。
 
 - 2026-10-10 00:18 [运维 codex] 经验140当前树完整外部检查exit1：307文件3460例通过、2跳、2失败。失败是Fast两处旧测试契约，与经验数据无已证实因果；已核对watcher现有自有树修补，沿原拥有者续办，保持Fast/对局和原失败，不重复派发。实际部署与新完整通过仍待验收。paper/materials/silent/20261009-2335-events/experience140/external-failure-decision.json。
+
+- 2026-10-10 00:21 [运维 codex] 221053两批已实际上线的四项实现已机械同步main 1db3ea25d5，固定沙箱258文件/2654例通过；保持原S1.apotheosis2/S1.fix46与live，不新增游戏知识或重复发布。完整原307文件3456过2跳回执已核实。同步回执paper/materials/silent/20261009-2335-events/code-sync/integration.json。
