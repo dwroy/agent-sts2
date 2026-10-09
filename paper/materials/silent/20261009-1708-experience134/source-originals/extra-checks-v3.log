@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-163856-experience-update/extra-checks.py", line 16, in <module>
+    x=card(N[0],33,6,11,'STRIKE_SILENT');s=next(s['state'] for s in xs if s['ts']>x['ts']);ck('衰朽后1能而两毒牌2费',s['combat']['player']['energy']==1 and all(c['cost']==2 for c in s['combat']['hand'] if c['card_id'] in ['SNAKEBITE','BOUNCING_FLASK']))
+                                                                                                                                                            ^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-163856-experience-update/extra-checks.py", line 16, in <genexpr>
+    x=card(N[0],33,6,11,'STRIKE_SILENT');s=next(s['state'] for s in xs if s['ts']>x['ts']);ck('衰朽后1能而两毒牌2费',s['combat']['player']['energy']==1 and all(c['cost']==2 for c in s['combat']['hand'] if c['card_id'] in ['SNAKEBITE','BOUNCING_FLASK']))
+                                                                                                                                                                ~^^^^^^^^
+KeyError: 'cost'
