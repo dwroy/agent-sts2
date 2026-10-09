@@ -404,3 +404,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 09:25 [运维 codex] 经验124（20261009-084302-experience-update）完整外部tsc/vitest exit0，固定live5ff4270dbf44cbd1a36dcb3df8df5565653ee59f/树d843443515baf75dd1daf8f3e7bef98e13f56820、302文件3435例过2跳核实。唯一S1.exp124、已有11数据shipped/34原CLI及758源原件SHA保持，关闭本批完整检查pending；原18冲突/merged-null/failed及旧exp100失败不改，三原提案沿自动链。回执paper/materials/silent/20261009-0924-checks-experience124/closure.json。
 
 - 2026-10-09 09:42 运维codex：VAC6Z1PZ1QJG/NG1FBJTSRLHS复盘闭环完成，39626字节原追加及12条原CLI已纳入；新增非阻塞结构bug silent-0332（F47双boss模拟接续资源契约异常）已追加fix-queue，具体失败分支未隔离。三个原提案沿调度器自动链；论文--no-raw单次刷新、五校验通过、台账0问题；原失败历史保留，回执paper/materials/silent/20261009-0931-events/paper-snapshot.json。
+
+- 2026-10-09 10:06 运维codex：NTMAU4XZ2NN2复盘闭环完成，15490字节原追加及10条原CLI已纳入；无新增纯bug，两个原提案沿自动strategy-proposal链。原470项核验/追加前修订及失败历史保留；论文--no-raw单次刷新、五校验通过、台账0问题；回执paper/materials/silent/20261009-0957-events/paper-snapshot.json。
