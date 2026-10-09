@@ -102,6 +102,32 @@ class CoreJobs(unittest.TestCase):
         with self.assertRaises(ValueError):
             core.notify(self.batch_id, batch, self.root, self.state_dir)
 
+    def test_failed_notification_preserves_diagnostics_without_resending(self):
+        report, batch = self.report()
+        batch.update(state="done", report=report, accepted_report=core.validate(report, batch, self.root))
+        calls = []
+
+        def reject(argv, **kwargs):
+            calls.append(argv)
+            self.assertTrue(kwargs["capture_output"])
+            return subprocess.CompletedProcess(argv, 2, stdout="native output\n",
+                                               stderr="error: notification argument rejected\n")
+
+        first = core.notify(self.batch_id, batch, self.root, self.state_dir, run=reject)
+        second = core.notify(self.batch_id, batch, self.root, self.state_dir, run=reject)
+        self.assertEqual(first["state"], "failed")
+        self.assertEqual(first["rc"], 2)
+        self.assertEqual(first["stdout"], "native output\n")
+        self.assertEqual(first["stderr"], "error: notification argument rejected\n")
+        self.assertEqual(first, second)
+        self.assertEqual(len(calls), 1)
+        identity = core.hashlib.sha256((core.REQUEST + self.batch_id + first["report"]["sha256"]).encode()).hexdigest()
+        saved = json.loads((self.state_dir / "core-notifications" / (identity + ".json")).read_text())
+        self.assertEqual(saved, first)
+        request = json.loads((self.root / core.REQUEST_FILE).read_text())
+        self.assertEqual(request["result_notification"], first)
+        self.assertEqual(request["old_failure"], "preserve")
+
     def test_dirty_legacy_tree_does_not_block_separate_writers(self):
         legacy = self.root / ".worktrees/codex-dev"
         legacy.mkdir(parents=True)

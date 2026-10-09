@@ -141,9 +141,76 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
     enqueue("learner-checks", message)
 
 
+def preserved_calibration_report(batch_id, batch, root):
+    """Recover only a registered calibration's launch-bound, published completion for rechecks."""
+    from pathlib import Path
+    import datetime as dt
+    import hashlib
+
+    task = "silent-boss-calibration"
+    tree = Path(root, ".worktrees", task).resolve()
+    if (batch.get("task") != "fix-batch" or batch.get("learner_task") != task
+            or batch.get("character") != "silent" or batch.get("state") not in ("failed", "done")
+            or not re.fullmatch(r"silent-calibration-[0-9a-f]{24}", str(batch.get("feature_request", "")))
+            or Path(batch.get("worktree", "")).resolve() != tree
+            or not re.fullmatch(r"[0-9]{8}-[0-9]{6}-fix-batch", batch_id)):
+        return {}, None
+    start = dt.datetime.strptime(batch_id[:15], "%Y%m%d-%H%M%S")
+    runs = tree / "learner/runs"
+    candidates = []
+    try:
+        for launch_path in runs.glob(batch_id[:8] + "-*-" + task + ".jsonl"):
+            if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-" + task + r"\.jsonl", launch_path.name):
+                continue
+            launched = dt.datetime.strptime(launch_path.name[:15], "%Y%m%d-%H%M%S")
+            if not 0 <= (launched - start).total_seconds() <= 60:
+                continue
+            scratch = launch_path.with_suffix("")
+            if launch_path.is_symlink() or scratch.is_symlink():
+                return {}, None
+            with launch_path.open("rb") as handle:
+                line = handle.readline(131073)
+            if len(line) > 131072:
+                return {}, None
+            launch = json.loads(line)
+            params = launch.get("params", {})
+            if (launch.get("type") != "learner_launch" or launch.get("task") != task
+                    or Path(launch.get("cwd", "")).resolve() != tree
+                    or params.get("character") != "silent" or params.get("merge") != "live"
+                    or Path(params.get("project_root", "")).resolve() != Path(root).resolve()
+                    or Path(params.get("worktree", "")).resolve() != tree
+                    or Path(params.get("scratch", "")).resolve() != scratch.resolve()
+                    or Path(params.get("merge_dir", "")).resolve() != Path(root, ".worktrees/live").resolve()):
+                return {}, None
+            path = scratch / "final-report.json"
+            if path.is_symlink() or path.stat().st_size > 1048576:
+                return {}, None
+            raw = path.read_bytes()
+            report = json.loads(raw)
+            tests = report.get("tests", {})
+            fixes = report.get("fixes")
+            commits = [report.get(key) for key in ("base", "merged", "published_commit", "published_tree")]
+            if (report.get("task") != "fix-batch" or report.get("batch", batch_id) != batch_id
+                    or not isinstance(fixes, list) or not fixes
+                    or any(not isinstance(fix, dict) or not re.fullmatch(r"[0-9a-f]{40}", str(fix.get("commit", ""))) or not re.fullmatch(r"[0-9a-f]{40}", str(fix.get("source_parent", ""))) for fix in fixes)
+                    or any(not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{40}", value) for value in commits)
+                    or not isinstance(tests, dict) or any(type(tests.get(key)) is not int or tests[key] != 0 for key in ("tsc", "vitest"))
+                    or not isinstance(report.get("code_proposals"), list)
+                    or any(not isinstance(value, str) for value in report["code_proposals"])):
+                return {}, None
+            candidates.append((report, {"path": str(path), "sha256": hashlib.sha256(raw).hexdigest(),
+                                        "launch": str(launch_path), "launch_sha256": hashlib.sha256(line).hexdigest()}))
+    except (OSError, ValueError, TypeError, AttributeError):
+        return {}, None
+    return candidates[0] if len(candidates) == 1 else ({}, None)
+
+
 def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox):
     """Verify fallback merges and check their pinned live tree without rewriting the original completion."""
     report = read_report(os.path.join(out_dir, batch_id + ".out"))
+    report_proof = None
+    if not report:
+        report, report_proof = preserved_calibration_report(batch_id, batch, root)
     if report.get("task") != batch.get("task"):
         return 2
     # Every reported source must be present; a merged=null report alone proves nothing.
@@ -156,6 +223,8 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox):
         commits.append(report["merged"])
     if not commits or any(not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{7,40}", commit) for commit in commits):
         return 2
+    if report_proof:
+        commits.append(report["published_commit"])
     live = os.path.join(root, ".worktrees", "live")
     with open(os.path.join(root, "ops", "live-merge.lock"), "a", encoding="utf8") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
@@ -163,6 +232,26 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox):
             if subprocess.run(["git", "-C", live, "merge-base", "--is-ancestor", commit, "HEAD"],
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
                 return 2
+        if report_proof:
+            publication = subprocess.run(["git", "-C", live, "rev-parse", report["published_commit"] + "^{tree}"],
+                                         capture_output=True, text=True)
+            if publication.returncode or publication.stdout.strip() != report["published_tree"]:
+                return 2
+            base = subprocess.run(["git", "-C", live, "rev-parse", report["base"] + "^{commit}"],
+                                  capture_output=True, text=True)
+            if base.returncode or base.stdout.strip() != report["base"]:
+                return 2
+            for fix in fixes:
+                source = fix["commit"]
+                parent = subprocess.run(["git", "-C", live, "rev-parse", source + "^"], capture_output=True, text=True)
+                if parent.returncode or parent.stdout.strip() != fix["source_parent"]:
+                    return 2
+                links = [(live, source, report["merged"]),
+                         (live, report["merged"], report["published_commit"]), (batch["worktree"], source, "HEAD")]
+                for path, older, newer in links:
+                    if subprocess.run(["git", "-C", path, "merge-base", "--is-ancestor", older, newer],
+                                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+                        return 2
         pinned = subprocess.run(["git", "-C", live, "rev-parse", "HEAD", "HEAD^{tree}"], capture_output=True, text=True)
         lines = pinned.stdout.splitlines()
         if pinned.returncode or len(lines) != 2 or any(not re.fullmatch(r"[0-9a-f]{40}", line) for line in lines):
@@ -185,7 +274,8 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox):
             except (OSError, subprocess.TimeoutExpired) as error:
                 handle.write(f"{type(error).__name__}: {error}\n")
                 code = 124 if isinstance(error, subprocess.TimeoutExpired) else 1
-        history.append({"rc": code, "log": log, "merged": merged, "tree": tree, "commits": commits})
+        history.append({"rc": code, "log": log, "merged": merged, "tree": tree, "commits": commits,
+                        **({"report_proof": report_proof} if report_proof else {})})
         message = f"批次 {batch_id} 已核实兜底合入 live {merged}，树 {tree}；沙箱外完整 tsc + vitest exit {code}；日志 {log}。"
         if code:
             message += "运维会话决定回滚还是派修复，不自动回滚。"
