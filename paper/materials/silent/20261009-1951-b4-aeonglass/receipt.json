@@ -1,0 +1,492 @@
+{
+  "event": "2026-10-09 19:51 CST fix-done",
+  "recorded_at": "2026-10-09 20:01",
+  "batch": "20261009-180724-fix-batch",
+  "character": "silent",
+  "boss": "AEONGLASS",
+  "mode": "b4",
+  "state": "rejected",
+  "engine_rc": 0,
+  "acceptance_rc": 1,
+  "merged": null,
+  "version": null,
+  "evidence_key": "31b945d5ed7d9926026e8a6668b42ac677fd9638358c2942763ace6c8dc12646",
+  "base": "2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328",
+  "candidate": "436f338f11601fe89d5ef6c8445692706c7d797b",
+  "record_commit": "07f95a1b39206b6d64f9f822a69229a2a0f6a892",
+  "observed_main": "7d84a3ec6adc7ad1c957c5b75115f776e26ca1a0",
+  "observed_live": "eaf3ac162afe487705d5b46ab049871308022173",
+  "candidate_not_ancestor_of_main_or_live": true,
+  "reasons": [
+    "t1 brier worsened",
+    "t1 leak worsened",
+    "pre brier worsened",
+    "pre leak worsened"
+  ],
+  "metrics": {
+    "t1": {
+      "before": {
+        "n": 15,
+        "missing": 0,
+        "brier": 0.1617,
+        "mean_pred": 0.684,
+        "actual_win": 0.533,
+        "leak_ratio": 3.625,
+        "leak_turns": 79,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "after": {
+        "n": 15,
+        "missing": 0,
+        "brier": 0.1834,
+        "mean_pred": 0.606,
+        "actual_win": 0.533,
+        "leak_ratio": 3.927,
+        "leak_turns": 79,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "overall_before": {
+        "n": 216,
+        "actual_win": 0.694,
+        "mean_pred": 0.761,
+        "brier": 0.1158,
+        "auc": 0.901,
+        "const_brier": 0.2122,
+        "buckets": [
+          {
+            "bucket": "0–20%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "20–40%",
+            "n": 45,
+            "pred": 0.351,
+            "actual": 0.111
+          },
+          {
+            "bucket": "40–60%",
+            "n": 11,
+            "pred": 0.511,
+            "actual": 0.364
+          },
+          {
+            "bucket": "60–80%",
+            "n": 24,
+            "pred": 0.728,
+            "actual": 0.75
+          },
+          {
+            "bucket": "80–100%",
+            "n": 136,
+            "pred": 0.923,
+            "actual": 0.904
+          }
+        ],
+        "worst_bucket_n20": 0.24,
+        "won_loss_err": {
+          "n": 145,
+          "median": 7,
+          "mean": 5.8,
+          "mae": 11.7,
+          "p10": -9,
+          "p90": 23,
+          "within5": 0.303
+        },
+        "leak": {
+          "n": 1162,
+          "sim_enemy": 6.29,
+          "actual_enemy": 4.85,
+          "enemy_ratio": 1.297,
+          "sim_loss": 6.19,
+          "actual_loss": 5.25,
+          "loss_ratio": 1.179
+        },
+        "platt": {
+          "a": 2.0844,
+          "b": 0.4502,
+          "c": 0.0
+        },
+        "tune_n": 106
+      },
+      "overall_after": {
+        "n": 216,
+        "actual_win": 0.694,
+        "mean_pred": 0.766,
+        "brier": 0.117,
+        "auc": 0.901,
+        "const_brier": 0.2122,
+        "buckets": [
+          {
+            "bucket": "0–20%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "20–40%",
+            "n": 46,
+            "pred": 0.339,
+            "actual": 0.13
+          },
+          {
+            "bucket": "40–60%",
+            "n": 12,
+            "pred": 0.517,
+            "actual": 0.417
+          },
+          {
+            "bucket": "60–80%",
+            "n": 16,
+            "pred": 0.717,
+            "actual": 0.625
+          },
+          {
+            "bucket": "80–100%",
+            "n": 142,
+            "pred": 0.931,
+            "actual": 0.908
+          }
+        ],
+        "worst_bucket_n20": 0.209,
+        "won_loss_err": {
+          "n": 144,
+          "median": 7.0,
+          "mean": 6.0,
+          "mae": 11.9,
+          "p10": -9,
+          "p90": 23,
+          "within5": 0.299
+        },
+        "leak": {
+          "n": 1162,
+          "sim_enemy": 6.33,
+          "actual_enemy": 4.85,
+          "enemy_ratio": 1.306,
+          "sim_loss": 6.24,
+          "actual_loss": 5.25,
+          "loss_ratio": 1.187
+        },
+        "platt": {
+          "a": 2.3502,
+          "b": 0.5033,
+          "c": 0.0
+        },
+        "tune_n": 106
+      }
+    },
+    "pre": {
+      "before": {
+        "n": 15,
+        "missing": 0,
+        "brier": 0.152,
+        "mean_pred": 0.688,
+        "actual_win": 0.533,
+        "leak_ratio": 3.468,
+        "leak_turns": 79,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "after": {
+        "n": 15,
+        "missing": 0,
+        "brier": 0.168,
+        "mean_pred": 0.616,
+        "actual_win": 0.533,
+        "leak_ratio": 3.754,
+        "leak_turns": 79,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "overall_before": {
+        "n": 216,
+        "actual_win": 0.694,
+        "mean_pred": 0.763,
+        "brier": 0.1164,
+        "auc": 0.889,
+        "const_brier": 0.2122,
+        "buckets": [
+          {
+            "bucket": "0–20%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "20–40%",
+            "n": 48,
+            "pred": 0.321,
+            "actual": 0.104
+          },
+          {
+            "bucket": "40–60%",
+            "n": 7,
+            "pred": 0.539,
+            "actual": 0.571
+          },
+          {
+            "bucket": "60–80%",
+            "n": 19,
+            "pred": 0.732,
+            "actual": 0.737
+          },
+          {
+            "bucket": "80–100%",
+            "n": 142,
+            "pred": 0.927,
+            "actual": 0.894
+          }
+        ],
+        "worst_bucket_n20": 0.217,
+        "won_loss_err": {
+          "n": 145,
+          "median": 5.5,
+          "mean": 5.3,
+          "mae": 11.6,
+          "p10": -11,
+          "p90": 21.5,
+          "within5": 0.269
+        },
+        "leak": {
+          "n": 1162,
+          "sim_enemy": 6.41,
+          "actual_enemy": 4.85,
+          "enemy_ratio": 1.322,
+          "sim_loss": 6.32,
+          "actual_loss": 5.25,
+          "loss_ratio": 1.202
+        },
+        "platt": {
+          "a": 2.2754,
+          "b": 0.5047,
+          "c": 0.0
+        },
+        "tune_n": 106
+      },
+      "overall_after": {
+        "n": 216,
+        "actual_win": 0.694,
+        "mean_pred": 0.767,
+        "brier": 0.1176,
+        "auc": 0.889,
+        "const_brier": 0.2122,
+        "buckets": [
+          {
+            "bucket": "0–20%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "20–40%",
+            "n": 49,
+            "pred": 0.311,
+            "actual": 0.122
+          },
+          {
+            "bucket": "40–60%",
+            "n": 8,
+            "pred": 0.556,
+            "actual": 0.625
+          },
+          {
+            "bucket": "60–80%",
+            "n": 14,
+            "pred": 0.743,
+            "actual": 0.714
+          },
+          {
+            "bucket": "80–100%",
+            "n": 145,
+            "pred": 0.936,
+            "actual": 0.89
+          }
+        ],
+        "worst_bucket_n20": 0.189,
+        "won_loss_err": {
+          "n": 144,
+          "median": 7.0,
+          "mean": 5.5,
+          "mae": 11.7,
+          "p10": -11,
+          "p90": 21.5,
+          "within5": 0.264
+        },
+        "leak": {
+          "n": 1162,
+          "sim_enemy": 6.45,
+          "actual_enemy": 4.85,
+          "enemy_ratio": 1.33,
+          "sim_loss": 6.35,
+          "actual_loss": 5.25,
+          "loss_ratio": 1.209
+        },
+        "platt": {
+          "a": 2.5468,
+          "b": 0.5579,
+          "c": 0.0
+        },
+        "tune_n": 106
+      }
+    }
+  },
+  "existing_baseline_gate_recalculated": {
+    "accepted": false,
+    "reasons": [
+      "t1 brier worsened",
+      "t1 leak worsened",
+      "pre brier worsened",
+      "pre leak worsened"
+    ],
+    "improved": [
+      "t1:gap",
+      "pre:gap"
+    ],
+    "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+    "isolation": {
+      "passed": true,
+      "base": "2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328",
+      "head": "436f338f11601fe89d5ef6c8445692706c7d797b",
+      "output_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+      "candidate_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+      "shared_changes": [
+        "agent/src/reflex/rollout-live.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/tests/boss-sim-silent-aeonglass.test.ts",
+        "agent/tests/fixtures/silent-aeonglass-intensity.json"
+      ],
+      "runner": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/acceptance/source-2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328/agent/tools/boss-sim/isolation.ts",
+      "outputs": [
+        "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/acceptance/before.isolation.json",
+        "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/acceptance/after.isolation.json"
+      ]
+    }
+  },
+  "scheduler_fresh_receipt": {
+    "accepted": false,
+    "reasons": [
+      "t1 brier worsened",
+      "t1 leak worsened",
+      "pre brier worsened",
+      "pre leak worsened"
+    ],
+    "improved": [
+      "t1:gap",
+      "pre:gap"
+    ],
+    "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+    "isolation": {
+      "passed": true,
+      "base": "2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328",
+      "head": "436f338f11601fe89d5ef6c8445692706c7d797b",
+      "output_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+      "candidate_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+      "shared_changes": [
+        "agent/src/reflex/rollout-live.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/tests/boss-sim-silent-aeonglass.test.ts",
+        "agent/tests/fixtures/silent-aeonglass-intensity.json"
+      ],
+      "runner": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/scheduler-isolation/source-2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328/agent/tools/boss-sim/isolation.ts",
+      "outputs": [
+        "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/scheduler-isolation/before.isolation.json",
+        "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/scheduler-isolation/after.isolation.json"
+      ]
+    },
+    "published_validation": "e9058d0217bc713257f2ab5398f0d0726c238514f84ab5e9cce8b5e94b4fc14f"
+  },
+  "validation_digest_is_not_publication": true,
+  "source_checks": {
+    "source_commit": "436f338f11601fe89d5ef6c8445692706c7d797b",
+    "tsc": 0,
+    "vitest": 0,
+    "files": 252,
+    "cases": 2655,
+    "sandbox_log": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/sandbox-source-v2.log",
+    "previous_failed_sandbox_rc": 1,
+    "gitleaks": 0,
+    "revert_failures": 17,
+    "restored_passes": 28
+  },
+  "source_checks_are_sandbox_checks_not_full_external_checks": true,
+  "paired_data_proof": {
+    "split_identical": true,
+    "fights_sha256": "6cc01860360d2c9d2c385b0283db7ac97e586eed11302c236ee3a26b090ae37a",
+    "turns_sha256": "390477a687ba8b68f2c3e8452a8e4d988d0f9961fa060898a31f30ed7214ab12",
+    "sources_sha256": "77c87c495fb23e6755ec9cae62553a34a910335b5f54ad15697eb53233e7ba41",
+    "starts": [
+      "t1",
+      "pre"
+    ],
+    "samples": 200,
+    "seed": "1 + original complete dataset line index * 101",
+    "validation_outcomes_identical": true,
+    "observed_turns_identical": true,
+    "changed_paired_simulation_coverage": 3
+  },
+  "paired_simulation_coverage_reduction_rows": 3,
+  "outer_and_runtime_report_identical": true,
+  "ops_validation_attempts": [
+    {
+      "attempt": 1,
+      "result": "assertion failed before repository writes",
+      "reason": "Incorrectly assumed runtime report omitted boss_sim; read-only recheck proved outer and runtime JSON fully identical. Original reports unchanged."
+    },
+    {
+      "attempt": 2,
+      "result": "verified using actual original reports"
+    }
+  ],
+  "ledger": "Three existing learner CLI rows captured unchanged; no new row, status, shipped or evidence created.",
+  "cooldown": {
+    "batch": "20261009-180724-fix-batch",
+    "outcome": "rejected",
+    "at": 1791546648.35749,
+    "fight_keys": [
+      "25226ZFLNR1J:48:6:2026-10-05T21:59:18.951Z",
+      "2PVLGRBGUX9S:48:6:2026-10-05T17:15:46.948Z",
+      "2SU6XN2AEJRD:48:1:2026-10-05T12:15:36.516Z",
+      "53FLQ68CETW0:48:6:2026-10-05T10:40:03.982Z",
+      "833ZM0MJGWHC:48:1:2026-10-09T06:31:39.399Z",
+      "9Z9H2EXKLF3T:48:3:2026-10-07T19:59:55.149Z",
+      "DPYF2BAA3DKT:48:6:2026-10-06T17:12:21.943Z",
+      "H1T1F8ML9FUE:48:6:2026-10-08T06:10:52.519Z",
+      "HEMND3SMQYB8:48:1:2026-10-08T16:25:15.841Z",
+      "HNX4A2WBC34W:48:3:2026-10-09T10:51:20.599Z",
+      "HSX4HYATB4E2:48:6:2026-10-06T21:51:49.756Z",
+      "JBX9JLH46KVN:48:5:2026-10-09T03:27:40.304Z",
+      "JMH5C51RLN4E:49:6:2026-10-05T23:55:07.271Z",
+      "K3676LU8B0UH:48:2:2026-10-04T22:01:52.752Z",
+      "LRN0HPZ0FZS1:48:1:2026-10-04T16:09:05.418Z",
+      "NBJBVSBNPYQB:48:1:2026-10-09T05:14:55.975Z",
+      "P2M3DFJ4DEZ3:48:6:2026-10-08T17:28:55.842Z",
+      "PD9AYQVMLQW6:49:6:2026-10-07T23:10:58.947Z",
+      "RMNXHZKV716Y:48:3:2026-10-09T04:25:24.536Z",
+      "SADL3CGYTGSR:48:6:2026-10-05T13:22:09.866Z",
+      "SV2GP9NX4HQD:48:6:2026-10-08T22:35:53.176Z",
+      "TXZ6RVMQA09D:48:3:2026-10-07T13:13:28.504Z",
+      "UMVLWER4CD98:48:6:2026-10-06T19:08:26.665Z",
+      "XTSV1U9JD34T:48:1:2026-10-07T18:59:36.955Z",
+      "Z6CFLDR3N4SB:48:2:2026-10-05T14:10:44.549Z",
+      "ZE8F192FKX24:48:2:2026-10-05T04:22:45.888Z"
+    ],
+    "calibration": "e3d153e15fd801272fb6a84dde6fd7dd775e892c0fc9929f7421297f5d3522f5"
+  },
+  "original_history_preserved": true,
+  "host_actions": [],
+  "records_only": true,
+  "no_replay_tests_dispatch_merge_version_play_change": true
+}

@@ -1,0 +1,2 @@
+辅助分析保留：一次旧路线hpOnArrival为null而直接乘75导致TypeError；随后按未知F49处理。一次统计直接访问最终run/finalize的缺失chosen导致KeyError；随后改用get并确认17饮、0丢弃。均为临时分析错误，不列为游戏bug。原脚本extract.py、summarize.py、details.py、audit.py与原始抽取保留。
+追加前核对：F17末毒原草稿误写6，s327655实为12；F2原草稿误将叶／中枝次序颠倒，s327369证中枝先退场。均在唯一正式追加前修正；另一次核对命令括号未闭合SyntaxError，改存verify.py后通过。

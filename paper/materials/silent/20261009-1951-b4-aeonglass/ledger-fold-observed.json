@@ -1,0 +1,88 @@
+{
+  "id": "silent-0236",
+  "ts": "2026-10-07T15:45:54+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "AEONGLASS 整场模拟未逐次增加增强强度的力量增益，未升级已有/后续生成凋萎的持牌伤，且 A10 仍按混合模型每次加入1张而非本角色实见2张。此批只校正已观察进阶的 fullFight，不改变实盘或五回合路径；真实机制与整场预测是否足以过验收分开。",
+  "evidence": [
+    {
+      "run": "LRN0HPZ0FZS1",
+      "floor": 48,
+      "turn": 3,
+      "note": "T3→4 力量0→3，已有3伤凋萎升级为6伤且新增1张；T6→7 力量3→7、凋萎6→9。原始边界字节/hash见 tune-buff-boundary-evidence.json。",
+      "role": "support",
+      "added": "2026-10-07T15:45:54+08:00"
+    },
+    {
+      "run": "25226ZFLNR1J",
+      "floor": 48,
+      "turn": 6,
+      "note": "A10末次T3→4 力量0→4、新增2张6伤凋萎；T6→7力量4→9、全部凋萎6→9。仅 tune 选择机制，val 不调参数。",
+      "role": "support",
+      "added": "2026-10-07T15:45:54+08:00"
+    }
+  ],
+  "first_run": "LRN0HPZ0FZS1",
+  "prior": "no",
+  "prior_note": "此条指 fullFight 模型遗漏；既有 silent-0024 已记录凋萎升级，但其 shipped 状态与实盘规则保持，不倒记旧经验未学会。基准源码固定 m.strength/statusCards 与 generated Wither，不随 intensity 更新。",
+  "status": "rejected",
+  "by": "learner:fix-batch",
+  "where": {
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/runs/20261007-153136-boss-sim-batch/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/proposal.md"
+    ],
+    "commits": [
+      "be703ec1a5fa544ae7fb28745bae80f0e254d452",
+      "436f338f11601fe89d5ef6c8445692706c7d797b"
+    ],
+    "changelog": [
+      "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/paper/materials/silent/boss-sim-b4-aeonglass-20261007-153133-fix-batch.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/paper/materials/silent/boss-sim-b4-aeonglass-20261009-180724-fix-batch.md"
+    ]
+  },
+  "note": "Roy 2026-10-07 B4/B5 授权；20261007-153133-fix-batch；结果以不可变 dispatch_base 验收为准，未上线。",
+  "asc": 0,
+  "history": [
+    {
+      "ts": "2026-10-07T15:45:54+08:00",
+      "by": "learner:fix-batch",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T16:19:10+08:00",
+      "by": "learner:fix-batch",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T17:39:11+08:00",
+      "by": "learner:fix-batch",
+      "status": "rejected"
+    },
+    {
+      "ts": "2026-10-09T19:04:19+08:00",
+      "by": "learner:fix-batch",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-09T19:43:01+08:00",
+      "by": "learner:fix-batch",
+      "status": "rejected"
+    },
+    {
+      "ts": "2026-10-09T19:44:32+08:00",
+      "by": "learner:fix-batch",
+      "status": "rejected"
+    }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+    "Roy 2026-10-07 B4/B5 授权；20261007-153133-fix-batch；结果以不可变 dispatch_base 验收为准，未上线。",
+    "候选源码 be703ec1a5fa544ae7fb28745bae80f0e254d452；原 sandbox 首轮 tsc0/vitest1（2416过，导入检查临时快照软链1失败）留史；整理临时快照后原入口两worker tsc0/vitest0（2417+paths11通过），固定撤码4红/恢复6绿、gitleaks0。冻结before/after目标重放各26行/200样本，仍待全boss整体校准及 dispatch_base 基准验收，不上线。",
+    "20261007-153133-fix-batch silent/AEONGLASS B4：Roy标准授权。LRN0HPZ0FZS1/F48 T3→4、T6→7；25226ZFLNR1J/F48 T3→4、T6→7，9场tune/24个增强边界，原始offset/len/SHA见 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/runs/20261007-153136-boss-sim-batch/tune-buff-boundary-evidence.json。源be703ec1a5fa544ae7fb28745bae80f0e254d452，固定dispatch_base=9895471c588b0afc31bc94cea6f15dd73de75f2b。178场同一冻结数据、107 tune/71 val、200样本/原行号seed、t1/pre；目标val3场16个相同局回合，T1打穿2.171→2.741，pre2.298→2.752；校准Brier .5640→.3912/.5622→.3581、胜率差 .707→.598/.700→.569，仍远超原标准；整体Brier .1228→.1141/.1157→.1052。原基准验收rc1：t1/pre leak worsened; no bias entered/approached its fixed standard。实盘/五回合byte隔离和原沙箱通过，真撤码4红/恢复6绿；同一K3676LU8B0UH no-solve两行保留，SL predicted_death截断不记败。真实模型偏差kind=mechanic rejected，非bug-infra；独立分支保留、未合live、未建版本、不登记accepted/shipped。数据与失败史 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/runs/20261007-153136-boss-sim-batch；验收 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/runs/20261007-153136-boss-sim-batch/acceptance.json；正式报告 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/paper/materials/silent/boss-sim-b4-aeonglass-20261007-153133-fix-batch.md。后续只能用新数据/校准继续，不用val调参。 检查路径：/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/runs/20261007-153136-boss-sim-batch/sandbox-source-v2.log; /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/runs/20261007-153136-boss-sim-batch/mechanism-base-red-v2.log; /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/runs/20261007-153136-boss-sim-batch/mechanism-candidate-green-v2.log; /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/runs/20261007-153136-boss-sim-batch/acceptance.json",
+    "20261009-180724-fix-batch silent/AEONGLASS B4；不可变dispatch_base=2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328。只从本角色原日志重核24个tune边界（LRN0HPZ0FZS1 F48 T3/T6，25226ZFLNR1J F48 T3/T6），原始offset/len/hash与SL截尾见 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/raw-turn-audit.json、mechanic-tune-evidence-withers.json、sl-byte-audit.json。候选源436f338f11601fe89d5ef6c8445692706c7d797b只改fullFight専用字段及获准的两模拟文件；真撤码17红/恢复28绿，原沙箱tsc0/vitest0（252文件2655例），首轮归档扩展名造成import检查失败rc1原日志保留；gitleaks0。配对数据323场107tune/216val、200样本原行号seed、t1/pre，目标两侧全量重放，尚未验收/合入/建版本，旧rejected历史保持。",
+    "20261009-180724-fix-batch silent/AEONGLASS B4 rejected，非 bug-infra。Roy 标准授权；固定 dispatch_base=2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328，候选源=436f338f11601fe89d5ef6c8445692706c7d797b，未合 live/未建版本/未登记 accepted 或 shipped。本角色原日志 LRN0HPZ0FZS1 F48 T3/T6、25226ZFLNR1J F48 T3/T6 等 9 tune 战斗24边界；原始 offset/len/SHA、牌堆/意图/状态和98条SL结局见 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/raw-turn-audit.json、/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/mechanic-tune-evidence-withers.json、/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/mechanic-original-byte-recheck.json、/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/sl-byte-audit.json。25实际目标战斗11胜14死，73 predicted_death截尾不当败局；最终runs15死与TXZ实际won尝试并列保留。两侧相同323实际战斗、107tune/216val、新两场只进两侧val，200样本/原行号seed、T1/pre，校准只在tune拟合。目标两侧各50行，完整两侧各646行（保留K367的两个no-solve），基准控制58行除ms完全一致；全部指标={\"t1\": {\"before\": {\"n\": 15, \"missing\": 0, \"brier\": 0.1617, \"mean_pred\": 0.684, \"actual_win\": 0.533, \"leak_ratio\": 3.625, \"leak_turns\": 79, \"failed\": [\"brier\", \"gap\", \"leak\"]}, \"after\": {\"n\": 15, \"missing\": 0, \"brier\": 0.1834, \"mean_pred\": 0.606, \"actual_win\": 0.533, \"leak_ratio\": 3.927, \"leak_turns\": 79, \"failed\": [\"brier\", \"leak\"]}, \"overall_before\": 0.1158, \"overall_after\": 0.117}, \"pre\": {\"before\": {\"n\": 15, \"missing\": 0, \"brier\": 0.152, \"mean_pred\": 0.688, \"actual_win\": 0.533, \"leak_ratio\": 3.468, \"leak_turns\": 79, \"failed\": [\"brier\", \"gap\", \"leak\"]}, \"after\": {\"n\": 15, \"missing\": 0, \"brier\": 0.168, \"mean_pred\": 0.616, \"actual_win\": 0.533, \"leak_ratio\": 3.754, \"leak_turns\": 79, \"failed\": [\"brier\", \"leak\"]}, \"overall_before\": 0.1164, \"overall_after\": 0.1176}}。原基准验收rc1/reasons=[\"t1 brier worsened\", \"t1 leak worsened\", \"pre brier worsened\", \"pre leak worsened\"]，improved=[\"t1:gap\", \"pre:gap\"]；原固定runner实盘/五回合逐字节隔离=True。最终原沙箱tsc0/vitest0，252文件2655例；撤码17红/恢复28绿、gitleaks0。首轮沙箱rc1（孤立归档.ts导致原import检查失败）、初稿路径/import/no-solve辅助脚本失败及探索中断rc130均留存；归档改后缀恢复，未改原检查/阈值/断言。固定数据、模拟专用源、原检查及全部失败历史=/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch；验收=/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/acceptance.json；正式报告=/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/paper/materials/silent/boss-sim-b4-aeonglass-20261009-180724-fix-batch.md。独立分支保留；只能沿十场新战斗和新校准冷却继续，不用本val调参数或改门槛。",
+    "20261009-180724-fix-batch 覆盖补充：两侧原始逐回合覆盖相同，目标val15场/T2–T7打穿79个局回合均相同；模拟晚期可配对覆盖3行减少，PD9AYQVMLQW6 F49 t1/pre缺T8、RMNXHZKV716Y F48 t1缺T13。完整差异留在 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/paired-outcome-turn-coverage.json 和正式报告；未截短before、未补造after，不称模拟全场覆盖一致。原验收rejected与4项Brier/leak worsened保持，数据及原失败历史不改。"
+  ]
+}

@@ -496,3 +496,9 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 19:12 [运维 codex] R6WDLYS19ZTY复盘闭环：无新纯bug，纳入学习者原1新增观察、12证据更新、1注记更正及13提案关联；三个提案沿原自动链，原文/勘误、66源原件、失败与缺证保持。论文单次--no-raw、五校验通过、台账0问题。本轮无新上线或派发；经验135完整检查已另立结案，记录5eab03fae456ce0c0c028bdd049e80dbd5dfd2a1。复盘回执paper/materials/silent/20261009-1857-events/paper-snapshot.json。
 
 - 2026-10-09 19:30 [运维 codex] 经验136冲突兜底已发布：184302原批源ebcdb689→actual 6b5131921d3f5fe0a29e11b42e27543ebc79f18b→唯一eaf3ac162afe487705d5b46ab049871308022173/S1.exp136，main同步和19所属经验数据shipped已登记06fb30ae6e6c4c56f3ff110334b65e5c83470192。只合原已测数据（增1改17、198 active），当前代码及10项知识刷新保持；源251文件2627例tsc/vitest0，完整外部检查已单次请求，结果pending待原事件结案。原19项冲突、failed/merged-null/retry/初稿/校验失败、诊断pending及813原件SHA保持，原58CLI/8support/72529字节章节不重复，三代码提案沿自动链未标实现。台账/gitleaks通过；全历史构筑仍独立pending，本增量不替代，不改对局/env/调度。回执paper/materials/silent/20261009-1923-experience136/final-verification.json。
+
+- 2026-10-09 19:43 [运维 codex] 给 Roy：S1.exp136完整外部tsc/vitest已核实通过（20261009-184302-experience-update，live eaf3ac162afe487705d5b46ab049871308022173，树b4858e2e4cb991c1d1f282addef5e64ef714a945；302文件3435例通过2跳过），本批pending已结案。原19处预检冲突、failed/merged-null/初稿与19:30待检查回执保持，三提案仍沿原实现链。回执paper/materials/silent/20261009-1939-checks-experience136/closure.json。
+
+- 2026-10-09 19:51 [运维 codex] HNX4A2WBC34W复盘闭环：无新纯bug，纳入学习者9证据更新及9提案关联；三个提案沿原自动链，原文、65源原件、失败与缺证保持。论文单次--no-raw、五校验通过、台账0问题。本轮无新上线或派发；经验136完整检查已另立结案，记录d50ef14aa10bbcec4ab155b812d1116698182d39。复盘回执paper/materials/silent/20261009-1939-events/paper-snapshot.json。
+
+- 2026-10-09 20:01 B4结果：20261009-180724-fix-batch 静默/AEONGLASS拒绝，T1及pre的Brier与leak均变差；候选未合入、无新游戏版本。原失败历史/分支/三条CLI保持，原调度器冷却及有界重试不改；自测252文件2655例通过不能代替验收。报告paper/materials/silent/boss-sim-b4-aeonglass-20261009-180724-fix-batch.md；验收与原件SHA回执paper/materials/silent/20261009-1951-b4-aeonglass/receipt.json。

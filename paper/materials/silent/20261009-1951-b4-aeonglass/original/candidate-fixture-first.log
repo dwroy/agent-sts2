@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/agent
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts (27 tests | 1 failed) 95ms
+     × the live solver and five-turn rollout ignore the dedicated field 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > the live solver and five-turn rollout ignore the dedicated field
+AssertionError: expected '{"lines":[{"plan":{"steps":[],"score"…' to be '{"lines":[{"plan":{"steps":[],"score"…' // Object.is equality
+
+Expected: "{"lines":[{"plan":{"steps":[],"score":0,"outcome":{"winsFight":false,"hpLoss":0,"hpAfter":10000,"dies":false,"blockGained":0,"damageDealt":0,"kills":[],"restocked":[],"enemyHpAfter":[{"index":0,"name":"Boss","hp":10000,"vulnerable":0,"weak":0,"block":0,"artifact":0,"slippery":0,"curlUp":0,"flutter":0,"strengthGained":0,"shrink":0}],"incomingAfterBlock":0,"energyLeft":3,"vulnerableApplied":0,"weakApplied":0,"strengthGained":0,"cardsDrawn":0,"unknownCards":[],"sandpitAfter":null,"startTurnKills":[],"withersAdded":0,"sleepCost":0,"lasting":0,"blockWasted":0}},"tags":["top","damage","safe"],"score":0,"currentValue":0,"oneTurn":{"hpLoss":0,"winProb":1,"turns":15,"modelValue":null,"value":0},"horizon":5,"samples":8,"basis":{"rolloutSamples":8,"horizon":5,"modelN":0,"w":0,"segment":"none","gateN":0},"order":null,"orders":[],"hpLoss":552.4791666666669,"potionCost":0,"laterDrinks":{},"enemyHpLeft":10000,"leaderHpLeft":null,"turnsSurvived":5,"turnsToWin":19,"deaths":0,"turnsToDeath":null,"winProb":1,"wins":0,"value":-552.4791666666669,"valueModelTerminal":null,"modelForecast":{"oneTurn":null,"rollout":null},"perTurn":[{"turn":2,"fighting":8,"loss":{"mean":30,"min":30,"max":30},"dmg":{"mean":0,"min":0,"max":0},"alive":8,"won":0},{"turn":3,"fighting":8,"loss":{"mean":38,"min":38,"max":38},"dmg":{"mean":0,"min":0,"max":0},"alive":8,"won":0},{"turn":4,"fighting":8,"loss":{"mean":0,"min":0,"max":0},"dmg":{"mean":0,"min":0,"max":0},"alive":8,"won":0},{"turn":5,"fighting":8,"loss":{"mean":34,"min":34,"max":34},"dmg":{"mean":0,"min":0,"max":0},"alive":8,"won":0}]}],"orders":[],"horizon":5,"samples":8,"degraded":[],"budgetNeedMs":6.20448800000031,"policyTurns":32,"policyNodes":32}"
+Received: "{"lines":[{"plan":{"steps":[],"score":0,"outcome":{"winsFight":false,"hpLoss":0,"hpAfter":10000,"dies":false,"blockGained":0,"damageDealt":0,"kills":[],"restocked":[],"enemyHpAfter":[{"index":0,"name":"Boss","hp":10000,"vulnerable":0,"weak":0,"block":0,"artifact":0,"slippery":0,"curlUp":0,"flutter":0,"strengthGained":0,"shrink":0}],"incomingAfterBlock":0,"energyLeft":3,"vulnerableApplied":0,"weakApplied":0,"strengthGained":0,"cardsDrawn":0,"unknownCards":[],"sandpitAfter":null,"startTurnKills":[],"withersAdded":0,"sleepCost":0,"lasting":0,"blockWasted":0}},"tags":["top","damage","safe"],"score":0,"currentValue":0,"oneTurn":{"hpLoss":0,"winProb":1,"turns":15,"modelValue":null,"value":0},"horizon":5,"samples":8,"basis":{"rolloutSamples":8,"horizon":5,"modelN":0,"w":0,"segment":"none","gateN":0},"order":null,"orders":[],"hpLoss":552.4791666666669,"potionCost":0,"laterDrinks":{},"enemyHpLeft":10000,"leaderHpLeft":null,"turnsSurvived":5,"turnsToWin":19,"deaths":0,"turnsToDeath":null,"winProb":1,"wins":0,"value":-552.4791666666669,"valueModelTerminal":null,"modelForecast":{"oneTurn":null,"rollout":null},"perTurn":[{"turn":2,"fighting":8,"loss":{"mean":30,"min":30,"max":30},"dmg":{"mean":0,"min":0,"max":0},"alive":8,"won":0},{"turn":3,"fighting":8,"loss":{"mean":38,"min":38,"max":38},"dmg":{"mean":0,"min":0,"max":0},"alive":8,"won":0},{"turn":4,"fighting":8,"loss":{"mean":0,"min":0,"max":0},"dmg":{"mean":0,"min":0,"max":0},"alive":8,"won":0},{"turn":5,"fighting":8,"loss":{"mean":34,"min":34,"max":34},"dmg":{"mean":0,"min":0,"max":0},"alive":8,"won":0}]}],"orders":[],"horizon":5,"samples":8,"degraded":[],"budgetNeedMs":6.970714000000498,"policyTurns":32,"policyNodes":32}"
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts:67:27
+     65|     const digest = (value: RolloutInput) => JSON.stringify(rolloutDeci…
+     66|       (key, field) => ["elapsedMs", "policyMs"].includes(key) ? undefi…
+     67|     expect(digest(built)).toBe(digest(absent));
+       |                           ^
+     68|     expect(digest(exaggerated)).toBe(digest(absent));
+     69|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 passed (27)
+   Start at  18:21:47
+   Duration  942ms (transform 608ms, setup 354ms, import 369ms, tests 95ms, environment 0ms)
+
