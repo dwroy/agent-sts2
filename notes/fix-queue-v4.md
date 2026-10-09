@@ -944,3 +944,8 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 - [ ] **silent-0329**：转录学习者回报，`agent/src/reflex/turn-solver.ts:2330/:2332—2333`饮药分支未接爬行动物饰品所得3临时力量；定位另见`card-model.ts:1279`、`combat-plan.ts:2502`。0DJ6GFZZ0TG9/SILENT A10 F33T2 d305532、s313545→313548及T4 d305541、s313554→313560为学习者证据。T4原同线预测106伤、实净扣136，30差未全部隔离，不声明导致局败或修后必胜。首证本局/prior unknown/observed保持；更早CSBR5CRDWQNB在0063只核机制，旧同线预测预算未核。
 - 沿已注册`silent-proposal-90e0bc4e45916d16`自动strategy-proposal链，由学习者按原提案核验、实现、自测并实际合入；先查共享租约避免重复派发，保留未观察组合与其他角色范围。本局正常结束，非卡死；运维只登记普通队列，不实现机制、不标implemented/shipped或新版本。0330机制及另两提案afe154edb1392350/d779d007d2f17ffd由学习者处理，缺中间帧和整场配对证据的原限制保持。原复盘与一处追加数字归属勘误见`paper/materials/silent/20261009-0530-events/owned-lessons-addition-original.md`，原报告见同目录`pm-originals/report.md`。
+
+## 2026-10-09 09:36 — VAC6Z1PZ1QJG复盘新增非阻塞纯bug（双boss模拟接续资源契约异常）
+
+- [ ] **silent-0332**：转录学习者原回报，VAC6Z1PZ1QJG/A10/F47休息题d309293，`agent/src/sim/boss-sim.ts:311`的`continuationInput`抛出`missing successful first-fight resources`；成功首战样本进入接续时未满足正HP资源契约，单样本异常传播使整题没有可用选项模拟数字（调用路径:334/:340）。缺触发样本，资源缺失与非正HP分支尚未隔离，具体机制根因未知；不根据契约错误猜改游戏规则。首证本局/prior unknown/observed保持。实际丢毒药、42→67并补两药后，对局继续至F48正常阵亡，无卡死；按非阻塞结构bug追加普通队列。
+- 沿已注册`silent-proposal-0b28f52e415d80d1`自动strategy-proposal链，由学习者按原提案定位样本、核验异常隔离和资源契约、自测并实际合入；先查共享租约避免重复派发。另两提案c30583bcb09744c4/4cccba410fdc4dfb及打法、资源发现由学习者处理，运维不添加游戏知识、不标implemented/shipped或新版本。原初稿、抽取错误、未记录限制与完整证据保留，见`paper/materials/silent/20261009-0931-events/pm-originals/report.md`及`inspection-notes.md`。
