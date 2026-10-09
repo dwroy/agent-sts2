@@ -442,3 +442,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 13:15 运维codex记录勘误：12:57登记及12:59收尾行标题误写“经验128”，均应为经验129/S1.exp129/批次20261009-120920-experience-update；行内原源SHA、发布SHA、版本和18项shipped正确。本行追加澄清，原行与历史不改写。
 
 - 2026-10-09 13:24 [运维 codex] RMNXHZKV716Y复盘闭环完成：32590字节原文和23原CLI已核实纳入，非阻塞诊断bug silent-0338已追加队列，三个原提案沿自动学习链。2060条原日志/2112源核验及失败历史保持；论文--no-raw单次刷新、五校验通过、台账0问题。校准8和经验129完整检查已核实通过并结案；回执paper/materials/silent/20261009-1309-events/paper-snapshot.json。
+
+- 2026-10-09 13:45 运维13:37经验130：批次20261009-130838-experience-update原5处记录冲突已兜底，只合已测6e3ac694经验数据；actual 9f572a6d8c63b48af820743db615aa976279e9d5，唯一发布57b661f07711e9aa80eee9fd375d2eb164921b2e/S1.exp130，main登记e6318240b800a31b343dfce7e19951dcc49eb202。源tsc/vitest0、251文件2627例；67原CLI/67136字节原第130节及22所属数据shipped已登记，四代码提案沿原自动链。完整外部单次learner-recheck已启动，固定树d4e1f23ecd556e83d4588b269fd437d59d4b1db8，结果pending，后续learner-checks据实登记；原merged-null/5冲突/out/err留史，知识刷新与当前源码保持，exp100旧失败队列不关闭。无论文刷新或对局/调度/env操作。回执paper/materials/silent/20261009-1337-experience130/final-verification.json。
