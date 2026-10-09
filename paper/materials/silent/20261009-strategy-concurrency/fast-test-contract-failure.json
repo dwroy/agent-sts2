@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-10T00:00:02.591259+08:00",
+  "original_full_failure": "root paper/materials/silent/20261009-strategy-concurrency/tests/host-full-1.json/log",
+  "failures": {
+    "brain-codex": "old no-service_tier expectation contradicted deployed Fast/priority c824f5cb/05771993",
+    "run-config": "two equivalent settings compared config SHA using different temp directories; log path is intentionally part of configuration identity"
+  },
+  "minimal_fix": "assert one priority flag; compare fixture inputs using same directory",
+  "production_code_or_fast_settings_changed": false,
+  "read_path_errors_preserved": "attempted runtime/run-config and agent/agent paths did not exist; actual implementation is agent/src/eye/run-config.ts, read before choosing fixture correction"
+}

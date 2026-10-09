@@ -169,7 +169,7 @@ describe("codex engine", () => {
       "tools.experimental_request_user_input={ enabled = false }", 'history.persistence="none"', "analytics.enabled=false",
       'model_reasoning_effort="xhigh"', 'model_reasoning_summary="auto"',
     ]));
-    expect(settings.some((s) => s.startsWith("service_tier="))).toBe(false);
+    expect(settings.filter((s) => s.startsWith("service_tier="))).toEqual(['service_tier="priority"']);
     const disabled = argv.flatMap((arg, i) => (argv[i - 1] === "--disable" ? [arg] : []));
     expect(disabled).toEqual([...CODEX_DISABLED_FEATURES]);
     for (const feature of ["hooks", "memories", "plugins", "apps", "multi_agent", "shell_tool", "unified_exec"]) expect(disabled).toContain(feature);

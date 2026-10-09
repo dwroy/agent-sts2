@@ -1,0 +1,14 @@
+{
+  "actor": "agent-sts2-watcher approved two-worker strategy architecture",
+  "started_at": "2026-10-09T23:36:55.386574+08:00",
+  "completed_at": "2026-10-09T23:49:06.253902+08:00",
+  "rc": 1,
+  "live": "319037d226ba97557633350ab41943dc99434552",
+  "tree": "15298b080594b42f605ab298a2dd71d079b0298c",
+  "source": "319037d22",
+  "head_unchanged_during_checks": true,
+  "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261009-strategy-concurrency/tests/host-full-1.log",
+  "kind": "standalone outside-sandbox two-worker release acceptance, not a learner run",
+  "old_failures_preserved": true
+}
