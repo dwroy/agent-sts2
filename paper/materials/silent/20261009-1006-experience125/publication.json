@@ -1,0 +1,80 @@
+{
+  "state": "published",
+  "batch": "20261009-093152-experience-update",
+  "source": "9f7cceaf6ef55cf45fba994d16464dc2f692d12f",
+  "version": "S1.exp125",
+  "source_tests": {
+    "exit": 0,
+    "files": 251,
+    "cases": 2627,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-093153-experience-update/test-source.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "0053aa227dc8f28fd8b0a694728d3ffea6e14636",
+  "parent_blob": "281df6a6e7ef173dfd7dc8f1cb3ad1d01900354c",
+  "actual_code": "074068c96c113f918fa6fec7df5bc3cbda177b38",
+  "publication": "d5f290f425fa1d84b0502e7d28ccc2b807b8d8a4",
+  "publication_tree": "588d4310e2566a0a74d32840fe9bc580b7156a0b",
+  "version_entry": {
+    "name": "S1.exp125",
+    "family": "Silent",
+    "commit": "074068c96c113f918fa6fec7df5bc3cbda177b38",
+    "source": "decision-log 2026-10-09 10:11: 原093152经验5项记录/表冲突兜底；只源9f7cceaf experience.json，2026-10-09.13→2026-10-09.14/增0改16退0/193 active，VAC6Z1PZ1QJG/NG1FBJTSRLHS证据。源251文件2627例tsc/vitest0；当前代码与固定5ff4270d/树d8434435完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+  },
+  "main_code_sync": "8f4a7a80213e005400eed5363af5466c97cf58ac",
+  "main_record": "3b5cf0d24ef089b4b1732201b42fe94401aa6b60",
+  "record_line": "- 2026-10-09 10:11 运维codex10:06经验124兜底：源9f7cceaf6ef55cf45fba994d16464dc2f692d12f原5项记录/表冲突/merged-null保留；空闲非阻塞锁内从live9a7dc93194b93f78494028b4ed11100825848797只集成已测experience原blob，actual 074068c96c113f918fa6fec7df5bc3cbda177b38，既有live知识刷新及本次保存8a8759c2468ed69703663a489d2c6ed1b658595b保持。当前代码与固定5ff4270d/树d8434435逐blob一致，原完整302文件3435例过2跳保持，不冒报新数据树完整通过。经验2026-10-09.13→2026-10-09.14/增0改16退0/193 active，唯一S1.exp125，源沙箱251文件2627例tsc/vitest0；三原提案沿自动链，main及18所属数据shipped随后机械登记，原批完整外部独立续验。旧exp100失败不关闭；回执paper/materials/silent/20261009-1006-experience125。\n",
+  "live_before": "9a7dc93194b93f78494028b4ed11100825848797",
+  "preserved_refresh": "8a8759c2468ed69703663a489d2c6ed1b658595b",
+  "refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "67e46426aa6be13e033d4b0b67c60990f58a6ea288f2556088571f72bfa9d174",
+    "knowledge/characters/silent/fight-value-gates.json": "4adbe60838e721df8bd0e7d82587d1775fabb822001f1c5baa7396fb507e14fd",
+    "knowledge/characters/silent/fight-value.json": "7db4a2aa3b23a76584e882d44d07493e26ac834eedc42f22d01c8c27d623ed91",
+    "knowledge/characters/silent/monster-records.json": "2ae96f1f98c47a3fea96bafe335ea1b2f3edc123aabae0457d844b0f6fafa33e",
+    "knowledge/characters/silent/outcome-stats.json": "ec48b2d95327790e3f1e92dbfc90c80c518767bdf9feeab31e69e1eff184a456",
+    "knowledge/characters/silent/room-costs.json": "5fd704be6b991b06a2386403bb8053548c67aea9e1b0f4bbe7083a2e6f16f483",
+    "knowledge/common/card-upgrades.json": "59e65123d915ea4eb0345e027c028422a5e61f75d631792c66e412b90bee0e92",
+    "knowledge/common/monster-db.json": "e8579cf040786aeeeab31f0f7392bbdef4d0613c174b53d33309822c7f6ce160",
+    "knowledge/common/move-model.json": "589ce364c4b837f9a6bde1b213082dcd2f77f640e3f528216c9571bd7797f48a",
+    "notes/fight-value-backtest-silent.md": "1db04442667e5b58f2a682c20ce499ec6812ba7b1025a19761580330aea6a37a"
+  },
+  "code_equivalence": {
+    "data_only": true,
+    "current_code_test_task_blobs_identical": true,
+    "current_tested_pin": "5ff4270dbf44cbd1a36dcb3df8df5565653ee59f",
+    "retained_complete_checks": {
+      "exit": 0,
+      "files": 302,
+      "cases": 3435,
+      "skipped": 2,
+      "tree": "d843443515baf75dd1daf8f3e7bef98e13f56820",
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-084302-experience-update.fallback-d843443515baf75dd1daf8f3e7bef98e13f56820.checks.log",
+      "log_sha256": "296ab665d0d04a537471c22179a0a33fe31a5a38cd91c85cef23bcb698f902d0"
+    },
+    "post_data_merge_sandbox_repeated": false,
+    "new_data_tree_full_passed": false,
+    "previous_exp100_full_failure_preserved": true,
+    "source_code_differences_from_actual": [
+      "docs/codex-ops.md",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ]
+  },
+  "full_external_passed": false
+}
