@@ -1,6 +1,6 @@
 import { asArray, asRecord, bool, num, str } from "../core/util/json.js";
 
-/** VLZ6CCT8AQ0A A10 F35/F43: only these observed plain-to-upgraded pairs. */
+/** VLZ6CCT8AQ0A A10 F35/F43/F45: only these observed plain-to-upgraded pairs. */
 const PAIRS: Record<string, { cost?: [number, number]; vars: Record<string, [number, number]> }> = {
   DEFEND_SILENT: { vars: { Block: [5, 8] } },
   STRIKE_SILENT: { vars: { Damage: [6, 9] } },
@@ -11,6 +11,8 @@ const PAIRS: Record<string, { cost?: [number, number]; vars: Record<string, [num
   PIERCING_WAIL: { vars: { StrengthLoss: [6, 8] } },
   // F43 T2's upgraded draw, paired with this run's plain two-point F45 copies.
   NOXIOUS_FUMES: { vars: { PoisonPerTurn: [2, 3] } },
+  // F43 T4's later draw establishes two extra triggers; F45's plain copy establishes one.
+  ACCELERANT: { vars: { Accelerant: [1, 2] } },
 };
 
 /** No inferred upgrade for modified values, costs, text effects, or cards absent from the paired evidence. */
