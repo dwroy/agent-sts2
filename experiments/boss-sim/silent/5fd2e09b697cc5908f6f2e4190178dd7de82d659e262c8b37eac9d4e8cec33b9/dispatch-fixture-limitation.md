@@ -1,0 +1,1 @@
+补充调度原测试 discover 共44例、18失败，原 dispatch-fixed.log/exit=1 保持。现行 requested_feature 显式要求独占工作树已存在；旧夹具仅mock available_worktree，未建立目录，导致 CalibrationDispatch 的3项派发断言和继承类失败。scratch/test-dispatch-fixtures.py 仅在固定临时夹具创建已规定的目录，原8项校准测试全部通过，覆盖升阶/19与20/角色隔离/幂等/忙树；没有修改生产调度器或仓库测试，也不把44例原失败记成通过。必需source沙箱tsc+vitest258文件2654用例已exit0，Python校准12项exit0。
