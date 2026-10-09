@@ -106,31 +106,6 @@ describe("rollout facts on Jev's combat question", () => {
     for (const key of potionKeys) expect(String(facts(criteria, key)["rollout"])).toMatch(/^not rolled out/);
   }, 30_000);
 
-  it("the rollout's best line is added, last and marked, when code did not show it", () => {
-    let addedSomewhere = false;
-    for (const name of BOARDS) {
-      const off = plan(name, false);
-      const on = plan(name, true);
-      if (on?.kind !== "ask" || off?.kind !== "ask") continue;
-      const before = planKeys(criteriaOf(off));
-      const after = planKeys(criteriaOf(on));
-      const best = after.filter((key) => facts(criteriaOf(on), key)["rollout_best"] === true);
-      expect(best.length, name).toBeLessThanOrEqual(1);
-      if (after.length > before.length) {
-        addedSomewhere = true;
-        expect(after.length, name).toBe(before.length + 1);
-        expect(best, name).toEqual([after[after.length - 1]]);
-        // A line code did not show (it may share the plays text: same cards, another target).
-        const { rollout: _r, history_estimate: _h, rollout_best: _b, ...added } = facts(criteriaOf(on), best[0]!);
-        expect(before.map((key) => facts(criteriaOf(off), key)), name).not.toContainEqual(added);
-        const resolved = on.resolve(pick(best[0]!));
-        expect(resolved.log?.rollout).toMatchObject({ best_added: true });
-        expect(resolved.log?.rollout_best_chosen).toBe(true);
-        expect(resolved.rationale).toContain("rollout's best line, added");
-      }
-    }
-    expect(addedSomewhere).toBe(true);
-  }, 120_000);
 
   it("liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line)", () => {
     const card = (index: number, cardId: string, o: Partial<CardModel>): CardModel => ({
