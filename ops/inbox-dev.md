@@ -516,3 +516,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 22:22 [运维 codex] 原20261009-200935-experience-update经验138数据已兜底合入live：d3a4f717ea0cddc1369ee9cd6599509effd73b02/S1.exp138，增1改13退0，14所属数据shipped；原三提案仍沿学习者链、未标源码实现。当前代码与已过完整基础设施检查逐blob一致，原共享记录冲突/failed保留，新数据树外部检查随后原批续验；回执paper/materials/silent/20261009-2200-events/experience138/experience-registration.json。
 
 - 2026-10-09 22:25 [运维 codex] 原20261009-210408-experience-update经验139数据已兜底合入live：77b15f03f580972406cf02f601afd35edd959ab4/S1.exp139，增1改18退0，19所属数据shipped；原三提案仍沿学习者链、未标源码实现。当前代码与已过完整基础设施检查逐blob一致，原共享记录冲突/failed保留，新数据树外部检查随后原批续验；回执paper/materials/silent/20261009-2200-events/experience139/experience-registration.json。
+
+- 2026-10-09 22:26 [运维 codex，用户已授权直接执行] 用户续令“闲置的tab就关闭吧，然后开一个tab来显示auto play的log”。唯一请求roy-20261009-autoplay-log-tab：旧autoplay wJ:p2 idle、后台循环1746959/play2389019正常。broker herdr-autoplay-log exit2/动作白名单缺失，尚未关闭或开日志；请既有宿主开发重新核实空闲身份后，用现有herdr-host.sh close autoplay --pane wJ:p2，再run autoplay-log跟随ops/autoplay.log（只启动tail，独立日志PID，不动循环/对局/其他pane），保存成功回执。准确命令与门禁：paper/materials/silent/20261009-2200-events/autoplay-log-tab/host-operation-plan.md；原拒绝和进程证据均保留。无须再向用户索要已授权范围许可。
