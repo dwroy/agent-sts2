@@ -1,0 +1,225 @@
+{
+ "id": "silent-0289",
+ "ts": "2026-10-08T11:23:30+08:00",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "坚韧之环即时给挡并建立两次轮初同额挡，施放时的额度须与后来敏捷分账。机制：6局24次普通牌实见基础5加敏后核脆弱、建2次；延迟挡沿施放额度，未知升级/重放/叠层组合不外推。搭配：临时敏捷可进入施放值，轮初挡仍须支付持牌伤及敌攻，不预支尚未活到的轮次。决定胜负的战斗：6支持/0反例，单牌整战因果未控（n=6）。典型案例：79UCJ0K6R9C1 A10本体T2实5、T3/T4轮初各5；T10两敏实7、T11带7仍被三感染9杀死。ZVYUL2YP3518 A10蟹T6预判后6敏实11，T7/T8敏回2仍各11。",
+ "evidence": [
+  {
+   "run": "LLYSRQQ35AVW",
+   "role": "support",
+   "note": "实际施放建立2次轮初格挡；逐帧见ring-delayed.json，临时敏捷快照仅ZVYUL2YP3518隔离。",
+   "added": "2026-10-08T11:23:30+08:00"
+  },
+  {
+   "run": "ZVYUL2YP3518",
+   "role": "support",
+   "note": "实际施放建立2次轮初格挡；逐帧见ring-delayed.json，临时敏捷快照仅ZVYUL2YP3518隔离。",
+   "added": "2026-10-08T11:23:30+08:00"
+  },
+  {
+   "run": "HSX4HYATB4E2",
+   "role": "support",
+   "note": "实际施放建立2次轮初格挡；逐帧见ring-delayed.json，临时敏捷快照仅ZVYUL2YP3518隔离。",
+   "added": "2026-10-08T11:23:30+08:00"
+  },
+  {
+   "run": "TDLBRNA0R05B",
+   "role": "support",
+   "note": "实际施放建立2次轮初格挡；逐帧见ring-delayed.json，临时敏捷快照仅ZVYUL2YP3518隔离。",
+   "added": "2026-10-08T11:23:30+08:00"
+  },
+  {
+   "run": "1913SE84AXQF",
+   "role": "support",
+   "note": "实际施放建立2次轮初格挡；逐帧见ring-delayed.json，临时敏捷快照仅ZVYUL2YP3518隔离。",
+   "added": "2026-10-08T11:23:30+08:00"
+  },
+  {
+   "run": "79UCJ0K6R9C1",
+   "role": "support",
+   "note": "实际施放建立2次轮初格挡；逐帧见ring-delayed.json，临时敏捷快照仅ZVYUL2YP3518隔离。",
+   "added": "2026-10-08T11:23:30+08:00"
+  },
+  {
+   "run": "VAC6Z1PZ1QJG",
+   "floor": 48,
+   "role": "support",
+   "note": "silent-toric-toughness-delayed-block：本批原件seek/时间窗独立复核：F33胜战损68；F48六试67血两药均败，末T12 8血14挡对45、21毒及荆棘后女王152；T10预判临时4敏/脆弱防御7另余像1、次轮回1敏；早建能力/另顺序/原护栏线未实打。细项见关联经验与new-verification.json。",
+   "added": "2026-10-09T09:40:56+08:00"
+  },
+  {
+   "run": "NTMAU4XZ2NN2",
+   "floor": 11,
+   "turn": 4,
+   "note": "附魔坚韧之环实加7挡、建立TORIC_TOUGHNESS_POWER2，T5/T6轮初各7；T5配冲刺再加10成为17挡，对9攻零损。F14虽抽到环未施放，不预支未执行延迟挡。",
+   "role": "support",
+   "added": "2026-10-09T09:54:27+08:00"
+  },
+  {
+   "run": "NBJBVSBNPYQB",
+   "floor": 49,
+   "turn": 3,
+   "role": "support",
+   "note": "末试T3环在99脆弱且无敏捷下牌面3，实挡7→11（3环+1余像），建立TORIC_TOUGHNESS_POWER2；防御再11→15。死亡前没有后两轮，未来轮初环挡未兑现，不预支。",
+   "added": "2026-10-09T14:02:05+08:00"
+  }
+ ],
+ "first_run": "LLYSRQQ35AVW",
+ "prior": "unknown",
+ "prior_note": "早期LLYSRQQ35AVW已有实际施放，但此前没有临时敏撤回后保持原额度的可比决策，不据执行牌效认定已掌握快照机制。",
+ "status": "shipped",
+ "by": "learner:experience-update",
+ "where": {
+  "experience": [
+   "silent-toric-toughness-delayed-block"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-111006-experience-update/proposal-mechanisms.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-093153-experience-update/proposal-mechanisms.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-101302-experience-update/proposal-mechanisms.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261009-134301-postmortem/proposal-saturated-choice.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-140555-experience-update/proposal-mechanisms.md"
+  ],
+  "commits": [
+   "fbf45077466b57210ed1c5377a11896384bbeab0",
+   "74387216c08496ddeb53bb674490f79a1eb2c06e",
+   "d61bf0ec98ea1c87c6a009c33530f8756b6d6ba4",
+   "e51c4b2783ec7e33115d79657bb689a0b7216c08",
+   "9f7cceaf6ef55cf45fba994d16464dc2f692d12f",
+   "074068c96c113f918fa6fec7df5bc3cbda177b38",
+   "d5f290f425fa1d84b0502e7d28ccc2b807b8d8a4",
+   "8f4a7a80213e005400eed5363af5466c97cf58ac",
+   "06b30fc028f8a32ddf2e6e23faab26627f1719d6",
+   "f04518bfa4ae33c92cebc2e0ebf4b5a62ff2e0f5",
+   "e447200f356f2516fda4100024cfb990166c74db",
+   "60930431b57b662329d6c51186f4eb8b06db37f3",
+   "3a71746d3cd52f14d4df4c454f460b519d7eaf44",
+   "92dcf85e6be692fac9ad313d9de6dc10a0fb453b",
+   "c7e1e0ed360c72903c84fb3791cf66c193c369cd",
+   "4e3a124eb204a7fa160dc07928e267471be6e298"
+  ],
+  "changelog": [
+   "## 2026-10-08 静默猎手 第九十五次增量：2 局 A10（version 2026-10-08.12，分支 exp-silent，fbf45077）",
+   "2026-10-09 静默猎手 第一百二十五次增量：2 局 A10（version 2026-10-09.14，分支 exp-silent，9f7cceaf）",
+   "2026-10-09 静默猎手 第一百二十六次增量：1 局 A10（version 2026-10-09.15，分支 exp-silent，06b30fc0）",
+   "## 2026-10-09 静默猎手 第一百三十一次增量：1 局 A10（version 2026-10-09.20，分支 exp-silent，3a71746d）"
+  ],
+  "lessons": [
+   "NTMAU4XZ2NN2",
+   "NBJBVSBNPYQB"
+  ]
+ },
+ "note": "先登记来源以供本次代码提案校验；源提交后登记proposed及提交/变更记录。",
+ "asc": 8,
+ "history": [
+  {
+   "ts": "2026-10-08T11:23:30+08:00",
+   "by": "learner:experience-update",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-08T11:23:34+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T11:27:47+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T11:43:25+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-09T09:40:56+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T09:41:39+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T09:54:27+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T09:56:27+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T10:13:22+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-09T10:22:05+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T10:22:06+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T10:38:44+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T10:54:38+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-09T14:02:05+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T14:04:18+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T14:17:24+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T14:17:25+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T14:29:49+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T14:48:35+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp131",
+ "effect": null,
+ "notes": [
+  "先登记来源以供本次代码提案校验；源提交后登记proposed及提交/变更记录。",
+  "代码提案 silent-proposal-7cfd0f9b6b0fbbda → task=strategy-proposal；Roy-2026-10-07-learning",
+  "本批经验源提交已完成；经验数据发布与独立策略源码实现分开，实际shipped由运维核验登记。",
+  "第95次经验原数据2026-10-08.11→.12/增3改20退0/173 active，源fbf45077唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记25所属经验数据shipped。源248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及20项记录冲突历史不改。0287纯bug保持原观察/提案状态，0289首证LLYSRQQ35AVW/A8不改为本批A10。",
+  "第125批提交前证据/提案预关联；不改变现有状态、首证、prior、claim或版本，提交后再登记proposed。",
+  "代码提案 silent-proposal-829ca94fc68fcbb6 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第125次经验已完成源提交，登记本批经验proposed；保留首证/prior/claim/历史证据与旧版本。实际live数据shipped由运维据完成事件登记，三份源码提案仍pending。",
+  "第一百二十五次经验仅原数据2026-10-09.13→2026-10-09.14，源9f7cceaf增0改16退0/193 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp125。仅18所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；三combat/potion/SL/terminal源码提案沿自动链，不标源码实现。原merged-null/5记录文件冲突及核验/登记初稿失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。",
+  "第126批证据/提案预关联；状态、首证、prior、claim及旧版本保持，提交后登记proposed。",
+  "代码提案 silent-proposal-dd8ccc33fcfd3ee8 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第126次经验已完成源提交，登记本批经验proposed；保留首证/prior/claim/历史证据与旧版本。实际live数据shipped由运维据完成事件登记，两份源码提案仍pending。",
+  "第一百二十六次经验仅原数据2026-10-09.14→2026-10-09.15，源06b30fc0增0改9退0/193 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp126。仅9所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；两combat/potion/terminal源码提案沿自动链，不标源码实现。原merged-null/19记录和论文表冲突及核验/登记初稿失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。",
+  "来源20261009-134301-postmortem；仅追加本角色证据，旧claim/首证/prior/状态/版本保持。",
+  "代码提案 silent-proposal-9cfa5d113016871d → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第131次经验证据/提案预关联；保留旧claim/首证/prior/状态/版本，提交后登记proposed。",
+  "代码提案 silent-proposal-688f83528d939ab0 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第131次经验源提交完成，登记proposed；保持旧claim/prior/首证/全部证据/旧版本历史。源码提案独立strategy-proposal pending，实际live数据shipped由运维据完成事件登记。",
+  "第一百三十一次经验仅原数据2026-10-09.19→2026-10-09.20，源3a71746d增0改23退0/196 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp131。仅24所属经验数据shipped，旧claim/首证/prior/evidence/support/repeat及版本历史保持。四combat/potion/sl/terminal代码提案沿原自动链，不标源码实现。原19项记录/论文冲突、failed/merged-null/out/err和14:35 pending预检拒绝历史保持；本次空闲锁续办保存10项刷新，当前代码与固定57b661f0逐blob一致，新数据树完整外部待原批独立续验，exp100旧完整失败不关闭。"
+ ],
+ "shipped_at": "2026-10-09T14:48:35+08:00"
+}
