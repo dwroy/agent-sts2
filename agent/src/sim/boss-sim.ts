@@ -307,8 +307,19 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
 }
 
 /** Transfer the first sample's resources; no fresh HP, spent potion, or spent revive is restored. */
-export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput): { input: RolloutInput; potions: string[] } {
-  if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) throw new Error("missing successful first-fight resources");
+export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput, sample?: { seed: number; plan: Plan | null }): { input: RolloutInput; potions: string[] } {
+  if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) {
+    // Keep failed samples unavailable, but distinguish missing capture from a nonpositive winning state.
+    // Put the branch and seed first: build-sim facts retain only the start of an error message.
+    const reason = !input.continuation ? "no-continuation" : !first.won ? "not-won" : !first.resources ? "no-resources" : "nonpositive-hp";
+    const details = {
+      won: first.won, died: first.died, turns: first.turns,
+      captureResources: input.captureResources ?? false, continuation: !!input.continuation,
+      resources: first.resources ?? null,
+      steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId, cardIndex: step.cardIndex, target: step.target ?? null })) ?? null,
+    };
+    throw new Error(`missing successful first-fight resources: ${reason}; seed=${sample?.seed ?? "unknown"}; ${JSON.stringify(details)}`);
+  }
   const used = new Set(first.resources.drunkKeys);
   let fairies = (input.solver.player.revives ?? []).filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length
     - first.resources.revives.filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length;
@@ -337,7 +348,7 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
   if (total <= 0) throw new Error("empty second-boss distribution");
   let position = sampleSeed(seed, 0) / 0x100000000 * total;
   const variant = next.variants.find((v) => (position -= v.count) < 0) ?? next.variants.at(-1)!;
-  const transferred = continuationInput(input, first, variant.input);
+  const transferred = continuationInput(input, first, variant.input, { seed, plan });
   const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
   return { ...second,
     turns: first.turns + second.turns, hpLoss: first.hpLoss + second.hpLoss, revived: first.revived + second.revived,
