@@ -1,0 +1,70 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/core-builds-dispatch-recovery/agent
+
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 28ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 27ms
+ ❯ tests/ops-action-list.test.ts (1 test | 1 failed) 11ms
+   × documents every broker action in the request script, including strategy dispatch and fallback checks 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/ops-action-list.test.ts > documents every broker action in the request script, including strategy dispatch and fallback checks
+AssertionError: core-build-notify: expected '#!/usr/bin/env bash\n# The codex ops …' to contain 'core-build-notify'
+
+- Expected
++ Received
+
+- core-build-notify
++ #!/usr/bin/env bash
++ # The codex ops session's way out of its sandbox (docs/codex-ops.md): asks the wake process's broker, which runs outside
++ # the sandbox, to do one allow-listed action, waits for the answer, prints it and exits with its code.
++ #
++ #   bash ops/codex-ops-do.sh <action> [arg]
++ #
++ # Actions (ops/codex/lib.ts ACTIONS, done by ops/codex-ops-actions.sh): procs, stall-check, mod-state, autoplay-start,
++ # autoplay-stop, play-stop, kill <pid>, launch-game, win-procs, win-kill <pid>, postmortem <id,id,...>,
++ # autoplay-reload <old-autoplay-pid> <current-play-pid> (keeps the same play process),
++ # learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event),
++ # strategy-proposal <ids> (dispatches a learner proposal), learner-recheck <batch-id> (full checks after a fallback merge),
++ # boss-sim-check (check B4/B5 triggers with the live scheduler),
++ # codex-brain-cache-probe (one approved frozen double question; no arguments),
++ # eval-metrics <character> <ascension> (writes a new Markdown report under paper/materials/<character>/).
++ # The broker only runs while a wake runs: outside a wake this times out (exit 124).
++ # launch-game waits for the mod for up to ~3 min; eval-metrics has a 10 min broker limit.
+
+ ❯ tests/ops-action-list.test.ts:9:32
+      7|   const actionList = script.split("\n").filter((line) => line.startsWi…
+      8|   for (const action of Object.keys(ACTIONS)) {
+      9|     expect(actionList, action).toContain(action);
+       |                                ^
+     10|   }
+     11|   const guide = readFileSync("../docs/codex-ops.md", "utf8");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 250 passed (252)
+      Tests  2 failed | 2618 passed (2620)
+   Start at  21:20:05
+   Duration  1025.50s (transform 7.03s, setup 12.99s, import 32.13s, tests 943.66s, environment 30ms)
+

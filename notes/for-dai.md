@@ -594,3 +594,15 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 20:28 [运维 codex] 给 Roy：S1.exp137完整外部tsc/vitest已核实通过（20261009-193737-experience-update，live 6e8de8ea4498c0754b727d239aac418cb321be3f，树b3e3ec4caa4dbc5b35852235f029150a4c06ab1c；302文件3435例通过2跳过），本批pending已结案。原19处预检冲突、failed/merged-null/初稿与20:17待检查回执保持，三提案仍沿原实现链。回执paper/materials/silent/20261009-2027-checks-experience137/closure.json。
 
 - 2026-10-09 20:38 [运维 codex] HXCY44VD9QWU、N8A2W8LH39N0复盘闭环完成：新增非阻塞纯bug silent-0344（坚韧之环延迟挡推演）已转录既有修复队列，证据/定位/限制见 learner/runs/20261009-194302-postmortem/proposal-toric.md；三提案沿原自动学习链，尚未标实现。两原复盘30189字节及22原CLI精确纳入，论文单次--no-raw五校验通过、台账0问题，原失败/初稿/缺证保持。经验137完整检查已独立结案（302文件3435过2跳，记录d77d74950a1f568b835a6b67fe66c6116b3b2705）。复盘回执paper/materials/silent/20261009-2027-events/paper-snapshot.json。
+
+- 2026-10-09 22:16 [运维 codex] 全历史构筑215814首次派发在模型前exit3：继承观察者/home/dw/.codex1全局AGENTS被启动检查拒绝；原180局冻结/SHA 85494213d6c411d9ffe725f6b2c83ab2bd496bd9ede920898ac07234e2bd11ab、failed/rc3/out/err及退避完整保留，尚无构筑实质报告，未发原生结果通知。入口已上线，待现有宿主开发/watcher以已有/home/dw/.codex-sts2设置仅本次LEARNER_CODEX_HOME/CODEX_HOME，按learn.lock短事务仅取消原215814环境错误退避后由现有write/core通道去重补派一次；先核实请求/活任务/租约，保留原失败。当前broker fix-batch无法传明确home，本轮不绕过隔离、不改配置凭据或重派第二父任务。独立回执paper/materials/silent/20261009-2200-events/core-failure/closure.json。
+
+- 2026-10-09 22:22 [运维 codex] 原20261009-200935-experience-update经验138数据已兜底合入live：d3a4f717ea0cddc1369ee9cd6599509effd73b02/S1.exp138，增1改13退0，14所属数据shipped；原三提案仍沿学习者链、未标源码实现。当前代码与已过完整基础设施检查逐blob一致，原共享记录冲突/failed保留，新数据树外部检查随后原批续验；回执paper/materials/silent/20261009-2200-events/experience138/experience-registration.json。
+
+- 2026-10-09 22:25 [运维 codex] 原20261009-210408-experience-update经验139数据已兜底合入live：77b15f03f580972406cf02f601afd35edd959ab4/S1.exp139，增1改18退0，19所属数据shipped；原三提案仍沿学习者链、未标源码实现。当前代码与已过完整基础设施检查逐blob一致，原共享记录冲突/failed保留，新数据树外部检查随后原批续验；回执paper/materials/silent/20261009-2200-events/experience139/experience-registration.json。
+
+- 2026-10-09 22:26 [运维 codex，用户已授权直接执行] 用户续令“闲置的tab就关闭吧，然后开一个tab来显示auto play的log”。唯一请求roy-20261009-autoplay-log-tab：旧autoplay wJ:p2 idle、后台循环1746959/play2389019正常。broker herdr-autoplay-log exit2/动作白名单缺失，尚未关闭或开日志；请既有宿主开发重新核实空闲身份后，用现有herdr-host.sh close autoplay --pane wJ:p2，再run autoplay-log跟随ops/autoplay.log（只启动tail，独立日志PID，不动循环/对局/其他pane），保存成功回执。准确命令与门禁：paper/materials/silent/20261009-2200-events/autoplay-log-tab/host-operation-plan.md；原拒绝和进程证据均保留。无须再向用户索要已授权范围许可。
+
+- 2026-10-09 22:31 [运维 codex] 两局54G5683J0E5S/9663Y88TYK73复盘及论文闭环已完成：新非阻塞纯bug silent-0347、0349按原学习者报告转录普通队列；原409件SHA/失败/缺证保持，论文单次刷新五校验通过、台账0问题。经验138/139仅原已测数据已合入live并登记唯一S1.exp138/139和33所属数据shipped，完整新树检查随后原批续验，不标代码提案实现。核心构筑首派模型前exit3保留，并行宿主已沿同一父请求恢复222802/running，未出实质报告或结果通知；用户要求空tab换日志tab仍因宿主动作白名单缺失待执行，具体命令已留收件箱。总回执paper/materials/silent/20261009-2200-events/closure.json。
+
+- 2026-10-09 22:38 [运维 codex] 经验138/139原批完整外部检查已各请求一次，待标准learner-checks结果，未冒报通过。最近宿主快照中autoplay1746959正常并已自然进入下一局play2452652；闲置autoplay wJ:p2关闭和日志tab创建仍受宿主动作白名单缺入口阻挡，已授权操作计划见paper/materials/silent/20261009-2200-events/autoplay-log-tab/host-operation-plan.md，尚未执行。检查请求和最终进程SHA已独立留档，本轮结束，不重复派核心构筑或等待新事件。

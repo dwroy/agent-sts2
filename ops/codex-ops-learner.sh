@@ -18,10 +18,13 @@ if [ "$learner_task" != "$task" ]; then
       && [[ "$worktree" =~ ^$ROOT/\.worktrees/boss-sim-$character-[a-z0-9_]+-[0-9]{8}-[0-9]{6}$ ]] \
       && [ "${7:-}" = "$DIR/learner/$batch.boss-evidence.json" ] || exit 2
   else
-  case "$learner_task" in codex-brain-cache|silent-a10-regression|silent-boss-calibration|codex-only-brain|silent-double-boss|boss-sim-automation) ;; *) exit 2 ;; esac
+  case "$learner_task" in codex-brain-cache|silent-a10-regression|silent-boss-calibration|codex-only-brain|silent-double-boss|boss-sim-automation|silent-historical-core-builds) ;; *) exit 2 ;; esac
   [ "$task" = fix-batch ] && [ "$character" = silent ] \
     && [ "$worktree" = "$ROOT/.worktrees/$learner_task" ] || exit 2
   fi
+fi
+if [ "$learner_task" = silent-historical-core-builds ]; then
+  [ "${7:-}" = "$DIR/learner/$batch.core-input.json" ] || exit 2
 fi
 mkdir -p "$DIR/learner"
 out="$DIR/learner/$batch.out"; err="$DIR/learner/$batch.err"
@@ -29,6 +32,30 @@ export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
 export STS2_WORKSPACE="$ROOT"
 cd "$ROOT" || exit 1
 audit_ready=1
+fresh_tree=0
+if [ "$learner_task" = silent-historical-core-builds ]; then fresh_tree=1
+elif [ "$task" = fix-batch ] && [ "$learner_task" = "$task" ]; then
+  [ "$worktree" = "$ROOT/.worktrees/codex-fix-$character-${batch%-fix-batch}" ] || exit 2
+  fresh_tree=1
+elif [ "$task" = strategy-proposal ]; then
+  [ "$worktree" = "$ROOT/.worktrees/codex-strategy-$character-${batch%-strategy-proposal}" ] || exit 2
+  fresh_tree=1
+fi
+if [ "$fresh_tree" = 1 ]; then
+  [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-(fix-batch|strategy-proposal)$ ]] || exit 2
+  exec 9> "$DIR/learner/${worktree##*/}.lock"
+  flock -w 5 9 || exit 75
+  if [ ! -f "$worktree/.git" ]; then
+    nice -n 19 git worktree add -b "${worktree##*/}" "$worktree" main >> "$out" 2>> "$err" || audit_ready=0
+  fi
+  if [ "$audit_ready" = 1 ] && [ -n "$(git -C "$worktree" status --porcelain)" ]; then
+    echo "worktree has edits; preserve it, never reset a failed candidate" >> "$err"
+    audit_ready=0
+  fi
+  if [ "$audit_ready" = 1 ] && [ ! -e "$worktree/agent/node_modules" ]; then
+    ln -s ../../../agent/node_modules "$worktree/agent/node_modules" || audit_ready=0
+  fi
+fi
 if [ "$task" = ascension-audit ]; then
   level="${7:-}"; previous="${8:-}"
   [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$level" =~ ^[0-9]+$ ]] \
@@ -61,11 +88,14 @@ elif [ -n "${LEARNER_CMD:-}" ]; then
   rc=$?
 else
   args=(--engine codex --task "$learner_task" --character "$character" --cwd "$worktree")
+  if [ "$learner_task" = silent-historical-core-builds ]; then
+    args+=(--set "evidence=${7}" --set "batch=$batch")
+  fi
   [ "$learner_task" != boss-sim-batch ] || args+=(--set "evidence=${7}" --set "batch=$batch")
   if [ "$task" = postmortem ]; then args+=(--set "runs=$runs");
   elif [ "$task" = ascension-audit ]; then
     args+=(--set "runs=$runs" --set "target_ascension=$level" --set "previous_ascension=$previous")
-  else
+  elif [ "$learner_task" != silent-historical-core-builds ]; then
     args+=(--set merge=live)
     [ "$task" = fix-batch ] || args+=(--set "runs=$runs")
   fi

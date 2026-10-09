@@ -59,10 +59,11 @@ def start_learner(argv, root, scripts, state_dir, label):
         with open(pidfile, "w", encoding="utf8") as handle:
             handle.write(str(proc.pid) + "\n")
     return proc.pid, None
-WORKTREES = {"experience-update": "exp", "fix-batch": "codex-dev", "strategy-proposal": "codex-dev"}
+WORKTREES = {"experience-update": "exp", "fix-batch": "codex-fix", "strategy-proposal": "codex-strategy"}
 FEATURE_REQUEST = "notes/silent-boss-calibration-dispatch.json"
 # Explicit, approved templates and paths only; Roy's latest cache request has manual priority.
 FEATURE_REQUESTS = {
+    "silent-historical-core-builds": "notes/silent-historical-core-builds-dispatch.json",
     "codex-brain-cache": "notes/codex-brain-cache-dispatch.json",
     "silent-a10-regression": "notes/silent-a10-regression-dispatch.json",
     "silent-double-boss": "notes/silent-double-boss-dispatch.json",
@@ -88,6 +89,9 @@ def external_writer(worktree):
 
 
 def available(root, task):
+    if task in ("fix-batch", "strategy-proposal"):
+        # Each batch gets a fresh tree; a preserved failed candidate cannot block another job.
+        return os.path.exists(os.path.join(root, ".git"))
     worktree = os.path.join(root, ".worktrees", WORKTREES[task])
     return available_worktree(worktree)
 
@@ -101,7 +105,7 @@ def available_worktree(worktree):
 
 def requested_feature(state, root, scripts, character, reason, alive, stamp, request=None):
     """Dispatch Roy's explicit feature requests with isolated templates and worktrees."""
-    if character != "silent" or reason not in ("ops", "calibration-refresh"):
+    if character != "silent" or reason not in ("ops", "calibration-refresh", "core-builds"):
         return False, None
     learner_task = None
     if request is None:
@@ -117,6 +121,12 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
                     and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,99}", value["request_id"])):
                 request, learner_task = value, candidate
                 break
+    elif (reason == "core-builds" and isinstance(request, dict)
+          and request.get("task") == "silent-historical-core-builds"
+          and request.get("request_id") == "roy-20261009-historical-core-builds"
+          and request.get("state") == "pending" and request.get("authorized_by") == "Roy"
+          and request.get("character") == "silent"):
+        learner_task = "silent-historical-core-builds"
     elif (reason == "calibration-refresh" and isinstance(request, dict)
           and request.get("state") == "pending" and request.get("task") == "silent-boss-calibration"
           and request.get("character") == "silent" and request.get("authorized_by") == "Roy"
@@ -134,20 +144,33 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
         return True, None
     worktree = os.path.join(root, ".worktrees", learner_task)
     if (any(batch.get("worktree") == worktree and batch.get("state") == "running" and alive(batch.get("pid"))
-            for batch in state["batches"].values()) or not available_worktree(worktree)):
+            for batch in state["batches"].values()) or (os.path.exists(worktree) and not available_worktree(worktree))
+            or (learner_task != "silent-historical-core-builds" and not os.path.exists(worktree))):
         return True, None
     batch_id = stamp + "-fix-batch"
     if batch_id in state["batches"]:
         return True, None
     state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
+    extra = []
+    if learner_task == "silent-historical-core-builds":
+        import core_build_jobs
+        evidence = core_build_jobs.freeze(root, state_dir, batch_id, request["request_id"])
+        extra = [evidence]
     pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, "", character,
-                              "fix-batch", worktree, learner_task], root, scripts, state_dir,
+                              "fix-batch", worktree, learner_task, *extra], root, scripts, state_dir,
                              "learner-" + batch_id)
     batch = {"task": "fix-batch", "learner_task": learner_task, "character": character,
              "runs": [], "key": key, "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
              "feature_request": request["request_id"], "proposal_policy": "Roy-2026-10-07-learning"}
     if pane:
         batch["pane"] = pane
+    if extra:
+        batch["core_evidence"] = extra[0]
+        batch["core_evidence_sha256"] = core_build_jobs.digest(extra[0])
+        core_build_jobs.update_request(root, state="running", batch=batch_id,
+                                       dispatch_status="dispatched", worktree=worktree,
+                                       input_manifest=extra[0], input_manifest_sha256=core_build_jobs.digest(extra[0]),
+                                       input_freeze_status="frozen_complete_ended_silent_inventory")
     state["batches"][batch_id] = batch
     return True, (batch_id, pid)
 
@@ -157,7 +180,7 @@ def busy(state, task, alive):
         # The dedicated feature owns its own worktree, not the normal fix/proposal tree.
         if batch.get("learner_task") in FEATURE_REQUESTS or batch.get("boss_sim"):
             continue
-        if WORKTREES.get(batch.get("task")) != WORKTREES[task] or batch.get("state") != "running":
+        if batch.get("task") != task or batch.get("state") != "running":
             continue
         if alive(batch.get("pid")):
             return True
@@ -216,7 +239,12 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
     if busy(state, task, alive) or not available(root, task) or (reason != "ops" and not retryable(state, task, key)):
         return None
     batch_id = stamp + "-" + task
-    worktree = os.path.join(root, ".worktrees", WORKTREES[task])
+    if batch_id in state["batches"]:
+        return None
+    name = WORKTREES[task] if task == "experience-update" else f"{WORKTREES[task]}-{character}-{stamp}"
+    worktree = os.path.join(root, ".worktrees", name)
+    if task != "experience-update" and os.path.exists(worktree) and not available_worktree(worktree):
+        return None
     state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
     pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree],
                               root, scripts, state_dir, "learner-" + batch_id)
@@ -229,6 +257,12 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
 
 
 def check_jobs(state, root, scripts, character, alive, stamp):
+    core = None
+    if character == "silent":
+        import core_build_jobs
+        request = core_build_jobs.pending_request(root)
+        if request:
+            _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
     runs = pending(root, scripts, character)
     experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
     # Load by this file's path so fixed dispatch fixtures need no global Python search path.
@@ -244,6 +278,7 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     from boss_sim_jobs import check
     boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
     return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
+            "core_builds": core,
             "code_proposal": proposal, "boss_sim": boss_sim}
 
 

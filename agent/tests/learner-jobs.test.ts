@@ -52,7 +52,7 @@ print(json.dumps({"a":a,"b":b,"blocked":blocked,"calls":calls}))
     expect(data.b.fixes).toBeNull();
     expect(data.blocked).toBeNull();
     expect(data.calls).toHaveLength(1);
-    expect(data.calls[0].slice(-2)).toEqual(["fix-batch", "/fixture/.worktrees/codex-dev"]);
+    expect(data.calls[0].slice(-2)).toEqual(["fix-batch", "/fixture/.worktrees/codex-fix-silent-first"]);
   });
 
   it("one pending run launches experience-update; busy, completed and early retries do not launch it again", () => {

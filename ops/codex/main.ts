@@ -31,6 +31,7 @@ import { collectSecrets, redactSecrets, secretFilesOf, stamp } from "../../learn
 import { SummaryTracker, findRollout } from "../../learner/lib/summary.js";
 import { archiveCodexTranscripts } from "./archive.js";
 import { herdrWake, runCommand, tuiStateFile } from "./herdr.js";
+import { readRolloutMetadata } from "./rollout-file.js";
 import {
   ACTIONS,
   DEFAULT_WAKE_TIMEOUT_MIN,
@@ -45,7 +46,6 @@ import {
   readQueue,
   readSessionId,
   resumeCommand,
-  sessionGrowth,
   validateRequest,
   wakeMessage,
   type OpsPaths,
@@ -312,7 +312,7 @@ async function wake(dryRun: boolean): Promise<number> {
     }
   }
   const rollout = threadId ? findRollout(learnerCodexHome(env), threadId) : undefined;
-  const growth = rollout ? sessionGrowth(readFileSync(rollout, "utf8")) : undefined;
+  const growth = rollout ? readRolloutMetadata(rollout).growth : undefined;
   const row = {
     ts: new Date().toISOString(),
     kind: session ? "wake" : "init",
@@ -412,7 +412,7 @@ async function wakeHerdr(events: QueuedEvent[], session: string, message: string
       // already moved
     }
   }
-  const growth = result.rollout ? sessionGrowth(readFileSync(result.rollout, "utf8")) : undefined;
+  const growth = result.rollout ? readRolloutMetadata(result.rollout).growth : undefined;
   const row = {
     ts: new Date().toISOString(),
     kind: "wake",
@@ -456,7 +456,7 @@ function growthReport(): number {
     process.stdout.write(`session ${session}: session file not found under the codex home\n`);
     return 1;
   }
-  const g = sessionGrowth(readFileSync(rollout, "utf8"));
+  const g = readRolloutMetadata(rollout).growth;
   process.stdout.write(
     `session ${session}: ${g.turns} turn(s), file ${(g.bytes / 1024).toFixed(0)} KiB, context ${g.contextTokens ?? "?"} / ${g.window ?? "?"} tokens, ${g.compactions} compaction(s)` +
       `${g.weeklyUsedPercent !== undefined ? `, cached weekly limit ${g.weeklyUsedPercent}% used` : ""}` +

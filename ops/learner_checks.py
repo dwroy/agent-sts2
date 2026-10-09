@@ -31,7 +31,7 @@ def read_report(path):
             report = json.loads(block)
         except ValueError:
             continue
-        if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal", "postmortem", "ascension-audit"):
+        if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal", "postmortem", "ascension-audit", "silent-historical-core-builds"):
             return report
     # A report can be the leading JSON object followed by the launcher's summary.
     # Never search prose for braces: embedded examples are not completion reports.
@@ -39,7 +39,7 @@ def read_report(path):
         report, _ = json.JSONDecoder().raw_decode(text.lstrip())
     except ValueError:
         return {}
-    if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal"):
+    if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal", "silent-historical-core-builds"):
         return report
     return {}
 
@@ -48,7 +48,11 @@ def verify_empty_fix(report, batch, root):
     """An empty fix report needs passing checks and Git evidence, not a fabricated merge."""
     tests = report.get("tests")
     base = report.get("base")
-    worktree = os.path.join(root, ".worktrees", "codex-dev")
+    worktree = batch.get("worktree", "")
+    legacy = os.path.join(root, ".worktrees", "codex-dev")
+    normal = re.fullmatch(r"codex-fix-[a-z0-9_]+-[0-9]{8}-[0-9]{6}", os.path.basename(worktree))
+    if worktree != legacy and (not normal or os.path.dirname(worktree) != os.path.join(root, ".worktrees")):
+        return None
     if (report.get("task") != "fix-batch" or batch.get("task") != "fix-batch"
             or report.get("fixes") != [] or report.get("merged") is not None or report.get("commit")
             or not isinstance(tests, dict)
