@@ -1,0 +1,228 @@
+{
+  "timestamp": "2026-10-10 00:21",
+  "scheduler_wake": "2026-10-09 23:35 CST",
+  "events": 15,
+  "originals_verified": 924,
+  "postmortems": [
+    "20261009-214302",
+    "20261009-224301"
+  ],
+  "new_postmortem_bugs": 0,
+  "experiences": [
+    {
+      "number": 140,
+      "batch": "20261009-214302-experience-update",
+      "source": "2ff36c373e736214e7d143c161c7f917f06887ef",
+      "source_blob": "9f97225575c83b19b7f650764262d282b5eafd08",
+      "actual_code": "c1127d3fe1155d745a4fb01899704bb333aa2966",
+      "publication": "7513e4f5b540890ae4d03aa07d130b4b6a9ff7a3",
+      "version": "S1.exp140"
+    },
+    {
+      "number": 141,
+      "batch": "20261009-224302-experience-update",
+      "source": "ae60e1711e2fb8856ded323878bc4901dab624e9",
+      "source_blob": "6270479f660af173a14697f57ab60b6eb1508715",
+      "actual_code": "f704bde92f68928d82ebd3b16245d32d611500ae",
+      "publication": "6365c734f02d8cb9e9a5262cd381f457d53a6186",
+      "version": "S1.exp141"
+    }
+  ],
+  "data_shipped": 32,
+  "existing_implemented_subitems_shipped": 4,
+  "existing_versions": [
+    "S1.apotheosis2",
+    "S1.exp140",
+    "S1.exp141",
+    "S1.fix46"
+  ],
+  "source_full_external_checks": [
+    {
+      "batch": "20261009-200935-experience-update",
+      "checks": {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-200935-experience-update.fallback-824febbe8456f7e592980af7f6b5ac29087df98f.checks.log",
+        "merged": "77b15f03f580972406cf02f601afd35edd959ab4",
+        "tree": "824febbe8456f7e592980af7f6b5ac29087df98f",
+        "commits": [
+          "19b98aa159ff7a451a8cbe34e91565899244a8e1"
+        ]
+      },
+      "log_sha256": "6decc5c5525cbdf1b2e2862f5c704a76f1317fce20ce4a547fa37237fbbc5349",
+      "test_files": [
+        "304"
+      ],
+      "cases": [
+        "3439"
+      ]
+    },
+    {
+      "batch": "20261009-210408-experience-update",
+      "checks": {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-210408-experience-update.fallback-824febbe8456f7e592980af7f6b5ac29087df98f.checks.log",
+        "merged": "77b15f03f580972406cf02f601afd35edd959ab4",
+        "tree": "824febbe8456f7e592980af7f6b5ac29087df98f",
+        "commits": [
+          "7ecf496c09039aab4390f47e69470ddf1b69f5d4"
+        ]
+      },
+      "log_sha256": "d88a945963a998a84a3e6a6c8294f961be2957c2e010188e4bf442938334c396",
+      "test_files": [
+        "304"
+      ],
+      "cases": [
+        "3439"
+      ]
+    },
+    {
+      "batch": "20261009-221053-strategy-proposal",
+      "checks": {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-221053-strategy-proposal.fallback-5e285c696fb286b3df6ef4eee6dc60ba262c448b.checks.log",
+        "merged": "da4271def91f2bc5631a40a4df916fa9afe9f575",
+        "tree": "5e285c696fb286b3df6ef4eee6dc60ba262c448b",
+        "commits": [
+          "f516592fff557ef02c8ece43433706358c3f7fe6",
+          "c6a2c9337e869e1047928f2c7223c1b2956a2514"
+        ]
+      },
+      "log_sha256": "a86e3dedc4c3197f0b024282d03a7cd2e7f07e4fb0fdfff7b80c796f761ce8fb",
+      "test_files": [
+        "307"
+      ],
+      "cases": [
+        "3456"
+      ]
+    },
+    {
+      "batch": "20261009-221053-fix-batch",
+      "checks": {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-221053-fix-batch.fallback-5e285c696fb286b3df6ef4eee6dc60ba262c448b.checks.log",
+        "merged": "da4271def91f2bc5631a40a4df916fa9afe9f575",
+        "tree": "5e285c696fb286b3df6ef4eee6dc60ba262c448b",
+        "commits": [
+          "c1d84804956bedbd29a7f0e81294114e18415b9d",
+          "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+          "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+          "da4271def91f2bc5631a40a4df916fa9afe9f575"
+        ]
+      },
+      "log_sha256": "c83881f0bbdd3c677fc9891e4c5302a5c2f3802160d0a04f693c3ba6eba53c71",
+      "test_files": [
+        "307"
+      ],
+      "cases": [
+        "3456"
+      ]
+    }
+  ],
+  "new_experience_checks": [
+    {
+      "batch": "20261009-214302-experience-update",
+      "action": "learner-recheck",
+      "command": "bash ops/codex-ops-do.sh learner-recheck 20261009-214302-experience-update",
+      "request_issued_once": true,
+      "initial_tool_session": 16734,
+      "request_observed_minute": "2026-10-10 00:01",
+      "state": "completed_standard_result",
+      "current_pinned_tree_results": [
+        {
+          "rc": 1,
+          "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-214302-experience-update.fallback-b674fd8888a9232b9058678bc9b333afbf04991e.checks.log",
+          "merged": "6365c734f02d8cb9e9a5262cd381f457d53a6186",
+          "tree": "b674fd8888a9232b9058678bc9b333afbf04991e",
+          "commits": [
+            "2ff36c373e736214e7d143c161c7f917f06887ef"
+          ]
+        }
+      ],
+      "pending_log_exists": true,
+      "original_failed_rc0_merged_null_preserved": true,
+      "result_processing": "existing learner-checks event path",
+      "observed_log_path": "ops/codex-ops/learner/20261009-214302-experience-update.fallback-b674fd8888a9232b9058678bc9b333afbf04991e.checks.log",
+      "observed_log_sha256": "582fb57bee333aebbd6c2d1e4a0d2b06800f083997c72ad3d638cc4dbcc6c819",
+      "log_snapshot_is_complete": true
+    },
+    {
+      "batch": "20261009-224302-experience-update",
+      "action": "learner-recheck",
+      "command": "bash ops/codex-ops-do.sh learner-recheck 20261009-224302-experience-update",
+      "request_issued_once": true,
+      "initial_tool_session": 52631,
+      "request_observed_minute": "2026-10-10 00:02",
+      "state": "pending_standard_result",
+      "current_pinned_tree_results": [],
+      "pending_log_exists": true,
+      "original_failed_rc0_merged_null_preserved": true,
+      "result_processing": "existing learner-checks event path",
+      "observed_log_path": "ops/codex-ops/learner/20261009-224302-experience-update.fallback-b674fd8888a9232b9058678bc9b333afbf04991e.checks.log",
+      "observed_log_sha256": "8e1fce891326a9b23a85827635ad30adba184abcbb4c6c036d8772be98a794a7",
+      "log_snapshot_is_complete": false
+    }
+  ],
+  "new_full_check_failure": {
+    "batch": "20261009-214302-experience-update",
+    "rc": 1,
+    "failures": 2,
+    "decision": "Existing watcher owner repairs two Fast test contracts; retain Fast and data.",
+    "receipt": "paper/materials/silent/20261009-2335-events/experience140/external-failure-decision.json",
+    "repair_actual_live_and_new_full_checks_not_yet_verified": true
+  },
+  "main_code_sync": {
+    "main_commit": "1db3ea25d5cdd479638aa25f8645ca39890dc002",
+    "record_commit": "4d34fe7d266790c6445a314a273f0c65e7c2995a",
+    "sources": [
+      "f516592fff557ef02c8ece43433706358c3f7fe6",
+      "c1d84804956bedbd29a7f0e81294114e18415b9d",
+      "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26"
+    ],
+    "files": 258,
+    "cases": 2654,
+    "test_sha256": "3a2b6fcec1b3415db09c3cebd0f5968a2d1dfcebd78d7f93e6e893054c591f11"
+  },
+  "core_builds": {
+    "request_id": "roy-20261009-historical-core-builds",
+    "batch": "20261009-222802-fix-batch",
+    "state": "done",
+    "frozen_runs": 181,
+    "A10_pure_codex_runs": 135,
+    "A10_wins": 0,
+    "candidates": [
+      "施毒触媒与持续防御",
+      "叠敏捷多挡与持续输出",
+      "小刀供给增益与逐牌防御",
+      "抽弃循环与遗物攻防收益"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/report.md",
+    "report_sha256": "cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d",
+    "substantive_result_not_production_rule": true,
+    "consumer_adoption_verified": false,
+    "native_notification": {
+      "state": "failed",
+      "rc": 2,
+      "original_receipt": "/home/dw/Projects/agent-sts2/ops/codex-ops/core-notifications/e31642e05c34a680bb55838cefa71f98cfff06a420b1541652a3d40fc78c15ae.json",
+      "sha256": "567a6d7801be73a43b6825448cccccc34c9bffef2fb2a12c2f80a8b77df36fb5",
+      "same_identity_retried": false,
+      "error_text": "Receipt contains no stderr; underlying failure cause not established."
+    },
+    "old_batch": "20261009-215814-fix-batch",
+    "old_failed_rc3_and_original_180_run_input_preserved": true,
+    "new_dispatch_or_retry_by_ops_this_wake": false
+  },
+  "queen_B4": {
+    "batch": "20261009-195051-fix-batch",
+    "state": "rejected",
+    "merged": null,
+    "original_failure_history_and_bounded_retry_preserved": true
+  },
+  "paper": "paper/materials/silent/20261009-2335-events/paper-snapshot.json",
+  "game_knowledge_added_by_ops": false,
+  "foreign_dynamic_outputs_preserved": true,
+  "old_exp100_failure_unchanged": true,
+  "autoplay_stopped_or_restarted_by_ops": false,
+  "no_push": true,
+  "gitleaks_required_before_commit": true
+}
