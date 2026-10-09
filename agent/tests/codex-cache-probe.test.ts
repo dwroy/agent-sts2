@@ -18,7 +18,7 @@ describe("restricted Codex cache probe (offline)", () => {
     expect(config.brain.codex.home).toBe("/home/dw/.codex-brain");
     expect(PROBE_HOME).toBe(config.brain.codex.home);
     expect(config.brain.engines.codex).toMatchObject({ model: "gpt-6.1-sol", effort: "high", timeoutMs: 600_000, tools: false });
-    expect(config.brain.codex).toMatchObject({ mode: "session", schemaFields: "used", summary: "auto", serviceTier: null,
+    expect(config.brain.codex).toMatchObject({ mode: "session", schemaFields: "used", summary: "auto", serviceTier: "priority",
       usage: { required: true, stopPct: 80 } });
   });
 

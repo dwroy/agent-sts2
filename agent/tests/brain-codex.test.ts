@@ -595,13 +595,13 @@ describe("the codex start-up check", () => {
     writeFileSync(installed, "#!/bin/sh\n");
     chmodSync(installed, 0o755);
     const brain = (env: Record<string, string>) => loadConfig({ HOME: home, PATH: "/nonexistent", ...env } as unknown as NodeJS.ProcessEnv).brain;
-    expect(brain({}).codex).toMatchObject({ bin: installed, home: join(home, ".codex"), summary: "auto", serviceTier: null, stallMs: 120_000, firstTokenMs: null, stallRetries: 1 });
+    expect(brain({}).codex).toMatchObject({ bin: installed, home: join(home, ".codex"), summary: "auto", serviceTier: "priority", stallMs: 120_000, firstTokenMs: null, stallRetries: 1 });
     expect(brain({ BRAIN_CODEX_STALL_MS: "off", BRAIN_CODEX_FIRST_TOKEN_MS: "240000", BRAIN_CODEX_STALL_RETRIES: "0" }).codex).toMatchObject({ stallMs: null, firstTokenMs: 240_000, stallRetries: 0 });
     expect(brain({ PATH: join(home, ".local", "node", "bin") }).codex.bin).toBe(installed);
     expect(brain({ BRAIN_CODEX_BIN: "/opt/codex" }).codex.bin).toBe("/opt/codex");
     expect(brain({ CODEX_HOME: "/c" }).codex.home).toBe("/c");
     expect(brain({ CODEX_HOME: "/c", BRAIN_CODEX_HOME: "/b" }).codex.home).toBe("/b");
-    expect(brain({ BRAIN_CODEX_SERVICE_TIER: "default" }).codex.serviceTier).toBeNull();
+    expect(brain({ BRAIN_CODEX_SERVICE_TIER: "default" }).codex.serviceTier).toBe("priority");
     // Defaults: gpt-6.1-sol at xhigh, 10 minutes, no call limit, no tools; BRAIN_ENGINE stays deepseek.
     expect(brain({}).engine).toBe("deepseek");
     expect(brain({}).engines.codex).toMatchObject({ model: "gpt-6.1-sol", effort: "xhigh", timeoutMs: 600_000, maxCalls: null });

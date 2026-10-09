@@ -87,6 +87,9 @@ elif [ -n "${LEARNER_CMD:-}" ]; then
   nice -n 10 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
   rc=$?
 else
+  # Old leased worktrees keep their launcher source; enforce the service policy at the native CLI boundary.
+  export STS2_CODEX_FAST_BIN="${LEARNER_CODEX_BIN:-$(command -v codex)}"
+  export LEARNER_CODEX_BIN="$ROOT/ops/codex-fast.sh"
   args=(--engine codex --task "$learner_task" --character "$character" --cwd "$worktree")
   if [ "$learner_task" = silent-historical-core-builds ]; then
     args+=(--set "evidence=${7}" --set "batch=$batch")
