@@ -434,7 +434,7 @@ def cmd_write(args):
 
 def cmd_request_merge(args):
     if args.branch not in ("codex-dev", "exp-silent"):
-        if not re.fullmatch(r"codex-(fix|strategy)-[a-z0-9_]+-[0-9]{8}-[0-9]{6}", args.branch):
+        if not re.fullmatch(r"codex-(fix|strategy)-[a-z0-9_]+-[0-9]{8}-[0-9]{6}|codex-strategy-[a-z0-9_]+-[0-9]{8}-[0-9]{6}-s2", args.branch):
             return 2
         registered = any(os.path.basename(batch.get("worktree", "")) == args.branch
                          for batch in load_state()["batches"].values())
@@ -446,7 +446,7 @@ def cmd_request_merge(args):
 
 
 def cmd_recheck(args):
-    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)", args.batch):
+    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
         return 2
     # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
     with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:

@@ -19,8 +19,10 @@ with patch.object(m,"available",return_value=True),patch.object(m.subprocess,"Po
  for i in range(10): state["batches"][str(i)]={"task":"postmortem","character":"silent","state":"done","runs":[f"SILENT{i:06}"]}
  state["batches"]["other"]={"character":"ironclad","state":"done","runs":["IRON00000001"]}
  state["batches"]["fix"]={"task":"strategy-proposal","state":"running","pid":99}
+ state["batches"]["second"]={"task":"strategy-proposal","state":"running","pid":98}
  blocked=check("blocked")
  state["batches"]["fix"]["state"]="done"
+ state["batches"]["second"]["state"]="done"
  first=check("ten");duplicate=check("duplicate")
  batch=state["batches"][first[0]];batch.update(state="done")
  consumed=check("consumed")

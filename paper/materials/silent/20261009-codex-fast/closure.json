@@ -1,0 +1,42 @@
+{
+  "request_id": "roy-20261009-all-codex-fast",
+  "completed_at": "2026-10-09 23:35",
+  "state": "configured_and_deployed",
+  "source_commit": "c824f5cbcf2e51a36800cc2d156025bd5862cdb0",
+  "live_commit": "05771993cebb36f5fca9860c6df6b8f3ca6e3bbe",
+  "live_tree": "58cd552558806ae2fde8801ba0e1bca61230a672",
+  "scope": [
+    "play exec",
+    "play app-server thread/start and turn/start",
+    "direct learner exec",
+    "ops init/resume",
+    "ops herdr TUI",
+    "scheduled learner in existing historical worktree"
+  ],
+  "service_tier": "priority",
+  "native_fast_alias": "fast -> priority",
+  "models_and_effort_preserved": true,
+  "native_verified_efforts": [
+    "high",
+    "xhigh"
+  ],
+  "source_tests": {
+    "tsc": 0,
+    "passed_files": 254,
+    "passed_cases": 2635,
+    "sandbox_fixed_exclusions_unchanged": true
+  },
+  "gitleaks_source": 0,
+  "gitleaks_live": 0,
+  "existing_jobs_preserved": true,
+  "runtime_boundary": "Current in-flight processes retain their loaded settings. New learner batches and the next play process use Fast. Ops TUI changes through the existing idle argument-change path.",
+  "current_play_before_deploy": "play-before-deploy.json",
+  "game_knowledge_changed": false,
+  "game_version_created": false,
+  "prior_records_preserved": "b171e5edbd0a1ca89b68ace152f881cc93df3aec",
+  "deployment": "deployment.json",
+  "verification_manifest": "request-and-verification.json",
+  "automatic_tab_closing": "existing close-on-exit mechanism verified; automatic-pane-close.json",
+  "backend_latency_or_cache_improvement_claimed": false,
+  "push_performed": false
+}

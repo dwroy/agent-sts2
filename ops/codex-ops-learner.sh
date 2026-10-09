@@ -42,7 +42,7 @@ elif [ "$task" = strategy-proposal ]; then
   fresh_tree=1
 fi
 if [ "$fresh_tree" = 1 ]; then
-  [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-(fix-batch|strategy-proposal)$ ]] || exit 2
+  [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-(fix-batch|strategy-proposal)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
   exec 9> "$DIR/learner/${worktree##*/}.lock"
   flock -w 5 9 || exit 75
   if [ ! -f "$worktree/.git" ]; then
@@ -54,6 +54,9 @@ if [ "$fresh_tree" = 1 ]; then
   fi
   if [ "$audit_ready" = 1 ] && [ ! -e "$worktree/agent/node_modules" ]; then
     ln -s ../../../agent/node_modules "$worktree/agent/node_modules" || audit_ready=0
+  fi
+  if [ "$audit_ready" = 1 ] && [ -d "$ROOT/data/logdb-venv" ] && [ ! -e "$worktree/data/logdb-venv" ]; then
+    mkdir -p "$worktree/data" && ln -s ../../../data/logdb-venv "$worktree/data/logdb-venv" || audit_ready=0
   fi
 fi
 if [ "$task" = ascension-audit ]; then
@@ -87,7 +90,11 @@ elif [ -n "${LEARNER_CMD:-}" ]; then
   nice -n 10 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
   rc=$?
 else
+  # Old leased worktrees keep their launcher source; enforce the service policy at the native CLI boundary.
+  export STS2_CODEX_FAST_BIN="${LEARNER_CODEX_BIN:-$(command -v codex)}"
+  export LEARNER_CODEX_BIN="$ROOT/ops/codex-fast.sh"
   args=(--engine codex --task "$learner_task" --character "$character" --cwd "$worktree")
+  [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
   if [ "$learner_task" = silent-historical-core-builds ]; then
     args+=(--set "evidence=${7}" --set "batch=$batch")
   fi

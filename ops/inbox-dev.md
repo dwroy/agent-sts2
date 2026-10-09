@@ -522,3 +522,9 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 22:31 [运维 codex] 两局54G5683J0E5S/9663Y88TYK73复盘及论文闭环已完成：新非阻塞纯bug silent-0347、0349按原学习者报告转录普通队列；原409件SHA/失败/缺证保持，论文单次刷新五校验通过、台账0问题。经验138/139仅原已测数据已合入live并登记唯一S1.exp138/139和33所属数据shipped，完整新树检查随后原批续验，不标代码提案实现。核心构筑首派模型前exit3保留，并行宿主已沿同一父请求恢复222802/running，未出实质报告或结果通知；用户要求空tab换日志tab仍因宿主动作白名单缺失待执行，具体命令已留收件箱。总回执paper/materials/silent/20261009-2200-events/closure.json。
 
 - 2026-10-09 22:38 [运维 codex] 经验138/139原批完整外部检查已各请求一次，待标准learner-checks结果，未冒报通过。最近宿主快照中autoplay1746959正常并已自然进入下一局play2452652；闲置autoplay wJ:p2关闭和日志tab创建仍受宿主动作白名单缺入口阻挡，已授权操作计划见paper/materials/silent/20261009-2200-events/autoplay-log-tab/host-operation-plan.md，尚未执行。检查请求和最终进程SHA已独立留档，本轮结束，不重复派核心构筑或等待新事件。
+
+- 2026-10-09 23:22 [roy-20261009-all-codex-fast] Fast 入口源码 c824f5cbcf2e51a36800cc2d156025bd5862cdb0 已在 main，自测通过，实际 live 合入排队等待现有检查锁；模型及推理强度保留，当前对局/learner不中断。证据与原失败：paper/materials/silent/20261009-codex-fast/。核查时 learner 6 tabs=4学习（全历史构筑/经验/修复/策略）+2完整检查，全部有活动进程；已有 close-on-exit 会在检查收尾保存末尾日志后自动关闭，无闲置 learner 要关。旧 autoplay 空闲 pane 的独立 log-tab 请求仍沿原待办，不冒称已关/新开。
+
+- 2026-10-09 23:34 [roy-20261009-codex-quota-one-reset] 已记录 Roy 一次性授权：token 剩余额度低于2%可直接用一次重置券，不重复询问；必须凭新鲜实际账户额度核实，兑换时生成并留存唯一请求标识与回执。当前最新 weekly 采样已用84%/剩16%，尚未使用，未接自动hook。记录 notes/codex-quota-reset-authorization.json。
+
+- 2026-10-09 23:35 [roy-20261009-all-codex-fast 完成] 统一 Fast/priority 已实际合入 live 05771993cebb36f5fca9860c6df6b8f3ca6e3bbe（源 c824f5cbcf2e51a36800cc2d156025bd5862cdb0），覆盖运维、learner、对局；保留各自原模型与推理强度，当前任务正常完成，后续批次/下一局加载。原生 high/xhigh 配置验证与源固定自测通过，原失败及完整字节留痕，知识刷新和其他任务保留，不新增游戏版本。结案与证据：paper/materials/silent/20261009-codex-fast/closure.json。learner tabs 已有自动关闭，完整检查收尾保存日志后关闭；刚核实221053策略 pBH已自动关闭，未强关活动任务。

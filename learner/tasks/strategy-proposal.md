@@ -7,6 +7,7 @@ max_turns: 800
 default.base_branch: main
 default.merge: live
 default.merge_dir: {{project_root}}/.worktrees/live
+default.batch: manual
 ---
 # 任务：依据本角色对局证据提出并实现策略
 
@@ -21,6 +22,7 @@ Dai 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 - 每项提案落盘到 {{scratch}}/proposal.md，写证据局号、层、回合、既有学习账本 id、反例、预期行为及验证方法。没有证据就报告证据不足，不改策略。
 
 ## 1.1 派发提案与补链
+本次调度批次为 {{batch}}。从 {{project_root}}/ops/codex-ops/learn.json 只读对应行，核对角色和工作树；若存在 proposal_ids，只处理这些已领取的 id，不领取其他批次或扩展到整条队列。batch=manual 时保持原手动证据任务。
 只读本次调度 batch 的 proposal_ids / proposal_repair。逐项读取专用队列的角色、证据、账本和保存的 Markdown，不忽略其他待处理 id。补链任务要核对原经验或已追加复盘，补提案与账本链接，不重复写历史复盘。最终每个派来的 id 都有 proposal_results：implemented/duplicate 带实际 live 祖先源码 commit 与理由；waiting 带具体缺数据理由，保留待新局重派。
 
 没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
@@ -33,6 +35,7 @@ Dai 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 - 每项实现单独提交，写明局号、层、回合、账本 id。代码注释英文，模型知识文本中文；铁甲行为若变化说明证据和原因。
 
 ## 3. 验证与记录
+- 保存原源码副本时在 {{scratch}} 使用 .txt/.patch 等材料扩展名，保留原字节；不要把临时副本命名为可执行 .ts，避免导入检查将它误当生产源码。
 - 用固定局面测试，不依赖刷新的知识 JSON，不调 LLM 或网络。源码撤掉时测试必须失败，恢复后通过，两次结果写回报。
 - mkdir -p "{{scratch}}"；export TMPDIR="{{scratch}}"；export PATH=$HOME/.local/node/bin:$PATH；每次代码提交前在 agent/ 跑 bash tools/test-sandbox.sh，退出码为 0。高负载超时重跑一次并报告。
 - 提交前 gitleaks 扫描，git commit（使用本机全局身份，不设仓库级 user.*），Co-Authored-By 写真实引擎和模型；不推送。

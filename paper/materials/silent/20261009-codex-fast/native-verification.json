@@ -1,0 +1,106 @@
+{
+  "cases": [
+    {
+      "input": [
+        "exec",
+        "--ignore-user-config",
+        "--model",
+        "gpt-6.1-sol",
+        "-c",
+        "model_reasoning_effort=\"xhigh\"",
+        "-"
+      ],
+      "native_args": [
+        "exec",
+        "--ignore-user-config",
+        "--model",
+        "gpt-6.1-sol",
+        "-c",
+        "model_reasoning_effort=\"xhigh\"",
+        "-",
+        "-c",
+        "service_tier=\"priority\""
+      ],
+      "passed": true
+    },
+    {
+      "input": [
+        "exec",
+        "resume",
+        "-c",
+        "service_tier=\"default\"",
+        "01a10717-c859-7592-9012-ad4251284920",
+        "-"
+      ],
+      "native_args": [
+        "exec",
+        "resume",
+        "01a10717-c859-7592-9012-ad4251284920",
+        "-",
+        "-c",
+        "service_tier=\"priority\""
+      ],
+      "passed": true
+    },
+    {
+      "input": [
+        "app-server",
+        "--config=service_tier=\"default\"",
+        "--listen",
+        "stdio://"
+      ],
+      "native_args": [
+        "app-server",
+        "--listen",
+        "stdio://",
+        "-c",
+        "service_tier=\"priority\""
+      ],
+      "passed": true
+    },
+    {
+      "input": [
+        "sandbox",
+        "-P",
+        "learner",
+        "--",
+        "sh",
+        "-c",
+        "service_tier=child-literal"
+      ],
+      "native_args": [
+        "sandbox",
+        "-P",
+        "learner",
+        "-c",
+        "service_tier=\"priority\"",
+        "--",
+        "sh",
+        "-c",
+        "service_tier=child-literal"
+      ],
+      "passed": true
+    },
+    {
+      "input": [
+        "--version"
+      ],
+      "native_args": [
+        "--version",
+        "-c",
+        "service_tier=\"priority\""
+      ],
+      "passed": true
+    },
+    {
+      "native_thread_start": {
+        "model": "gpt-6.1-sol",
+        "serviceTier": "priority",
+        "reasoningEffort": "xhigh"
+      },
+      "model_turn_started": false,
+      "passed": true
+    }
+  ],
+  "rc": 0
+}
