@@ -524,7 +524,7 @@ export interface BrainConfig {
     home: string;
     /** BRAIN_CODEX_SUMMARY: the reasoning summary codex asks for (default auto; logged, not shown to the model). */
     summary: "auto" | "concise" | "detailed" | "none";
-    /** BRAIN_CODEX_SERVICE_TIER: e.g. "priority" (Fast: about 2x speed at more usage); null (default) = the standard tier. */
+    /** Fast service tier for every Codex session (Roy 2026-10-09); model and reasoning effort stay separate. */
     serviceTier: string | null;
     /**
      * BRAIN_CODEX_STALL_MS (default 120 s): after the first output token, a run whose stream is silent this long is
@@ -618,6 +618,8 @@ export const DEFAULT_CLAUDE_MAX_CALLS = 150;
  */
 export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
 export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
+/** Codex's model catalog names the priority service tier "Fast". Roy enabled it for all sessions on 2026-10-09. */
+export const CODEX_SERVICE_TIER = "priority";
 
 /** BRAIN_CODEX_TIMEOUT_MS when unset: 10 minutes per call (xhigh on a map / act-plan question takes minutes). */
 export const DEFAULT_CODEX_TIMEOUT_MS = 600_000;
@@ -802,7 +804,6 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const schemaMode: "kind" | "question" = schemaRaw === "question" ? "question" : "kind";
   const summaryRaw = (readEnv(env, "BRAIN_CODEX_SUMMARY") ?? "auto").toLowerCase();
   if (!["auto", "concise", "detailed", "none"].includes(summaryRaw)) problems.push({ field: "BRAIN_CODEX_SUMMARY", message: `expected auto, concise, detailed or none, got "${summaryRaw}"` });
-  const tierRaw = readEnv(env, "BRAIN_CODEX_SERVICE_TIER");
   const stallRaw = readEnv(env, "BRAIN_CODEX_STALL_MS");
   const stallMs = stallRaw === null ? DEFAULT_CODEX_STALL_MS : ["off", "none", "0"].includes(stallRaw.toLowerCase()) ? null : parseInteger(stallRaw, "BRAIN_CODEX_STALL_MS", problems, { min: 1_000, max: 3_600_000 });
   const maxAnswerRaw = readEnv(env, "BRAIN_CODEX_MAX_ANSWER_CHARS");
@@ -856,7 +857,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       bin: resolveCodexBin(env),
       home: resolveCodexHome(env),
       summary: (["auto", "concise", "detailed", "none"].includes(summaryRaw) ? summaryRaw : "auto") as BrainConfig["codex"]["summary"],
-      serviceTier: tierRaw && tierRaw.toLowerCase() !== "default" ? tierRaw : null,
+      serviceTier: CODEX_SERVICE_TIER,
       stallMs,
       firstTokenMs,
       mode: modeRaw === "session" ? "session" : "exec",

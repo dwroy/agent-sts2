@@ -238,6 +238,7 @@ const codexTail = (effort: string): string[] => [
   "-c", 'approval_policy="never"',
   "-c", 'web_search="disabled"',
   "-c", `model_reasoning_effort="${effort}"`,
+  "-c", 'service_tier="priority"',
   "-c", "allow_login_shell=false",
   "-c", "skills.include_instructions=false",
   "-c", "skills.bundled.enabled=false",

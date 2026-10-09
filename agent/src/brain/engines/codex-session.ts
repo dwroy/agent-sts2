@@ -662,6 +662,7 @@ export class CodexSession {
     }, 1_000);
     try {
       const params: Json = { threadId, input: [{ type: "text", text: q.prompt, text_elements: [] }], effort: q.effort, summary: q.summary, model: q.model };
+      if (this.opts.serviceTier) params["serviceTier"] = this.opts.serviceTier;
       if (q.schema) params["outputSchema"] = q.schema;
       const started2 = server.request("turn/start", params, this.timeout("turn")).then((result) => {
         const t2 = isObject(result) && isObject(result["turn"]) ? result["turn"] : null;
