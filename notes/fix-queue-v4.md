@@ -989,3 +989,7 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 ## 2026-10-09 22:16 — 20261009-211301复盘新非阻塞纯 bug（仅转录学习者）
 
 - [ ] **silent-0349**：证据局 9663Y88TYK73；定位 `agent/src/reflex/turn-solver.ts:2684`；学习者原回报“已有虚弱后临时减力直接减显示攻击，末次尖啸方案报损3，实际需损5并死亡。”。完整证据、反例与未知范围见 `learner/runs/20261009-211302-postmortem/report.md`，原提案 silent-proposal-bb7597d8a1fe63ff。不是卡死、崩溃或非法动作，交原学习者提案链；不由运维补机制或实现，不据此宣称该局能赢，不重派或标 shipped。
+
+## 2026-10-09 23:49 — 核心结果原生通知失败（普通工具缺陷）
+
+- [ ] **core-build-notify-222802-rc2**：父请求 roy-20261009-historical-core-builds；现有broker `core-build-notify 20261009-222802-fix-batch` 返回failed/rc2，报告身份实质验收及双收件箱已完成。原去重回执 `ops/codex-ops/core-notifications/e31642e05c34a680bb55838cefa71f98cfff06a420b1541652a3d40fc78c15ae.json` 无stderr，具体herdr失败原因未知；请既有修复链核查失败日志/原生命令与幂等恢复，保留首次失败与同请求+批+SHA身份，确认未发送后方可安全恢复，禁止重复派学习或将失败当成功。本轮不改源码，独立证据 `paper/materials/silent/20261009-2335-events/core-builds/native-notification-receipt.json`。
