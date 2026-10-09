@@ -484,3 +484,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 17:46（17:30事件收尾）核心构筑入口适配单次标准宿主派发实际exit1/`dispatched:null`，未开工；具体等待 `20261008-075538-strategy-proposal` 原拥有者保存四项暂存候选、沿原测试/提交或处置链交接，codex-dev 干净且无活写者后方可由现有 learner 执行。任务范围/固定验收已准备并入队，记录提交51fdc45ab；回执 `paper/materials/silent/20261009-1730-core-entry/final-verification.json`。唯一核心父项仍pending/batch null，通知hook仍pending、0通知；首份实质报告（包括诚实缺证结论）经身份/内容/SHA核实后再用herdr去重提醒Roy，不把入口完成当组合结果。原任务/四候选/失败历史/对局保持。
 
 - 2026-10-09 18:20 [运维 codex] XW8B5CHJ814J复盘闭环：无新纯bug，11已有条目更新和10原提案关联精确纳入，三提案沿原自动链；原39730字节正式文本/勘误、93源原件及原失败/缺证保持，独立校准0342未纳入。论文单次--no-raw、五校验通过、台账0问题；本轮记录/数据，无新上线或派发。回执paper/materials/silent/20261009-1807-events/paper-snapshot.json。
+
+- 2026-10-09 18:25 给 Roy：已核实第九次静默boss定期校准发布 S1.boss-calibration9（actual 1cdf75b19→release 2e037b7bf），73原数据路径同步main，silent-0342仅经CLI登记一次shipped。新20次实结局只扩验证194→214，固定调参/门槛保持；原报告B2/B3可信7/6，F49验证14仍低可信、联合通关未验证，未宣称胜率收益。源/合后沙箱251文件2627例、Python12/调度44通过；完整外部检查pending沿调度器原通道，原失败及10项刷新保持。回执paper/materials/silent/20261009-1820-calibration9/manifest.json。
