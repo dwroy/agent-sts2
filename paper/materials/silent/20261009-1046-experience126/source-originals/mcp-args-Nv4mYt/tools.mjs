@@ -1,0 +1,1 @@
+export function buildTools(ctx) { return [{ name: "kb_state", description: "state", inputSchema: { type: "object", properties: {} }, run: (_i, c) => ({ text: `A${c.ascension} act ${c.act} floor ${c.state?.floor}` }) }]; }

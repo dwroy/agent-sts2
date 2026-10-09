@@ -1,0 +1,32 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.14 → 2026-10-09.15；提交：06b30fc0（分支 exp-silent）；合入：未合入，锁内预检发现 19 份并行记录冲突，刷新提交 604fb43a 已保留。
+- 条数：新增 0、更新 9（加证据 9、只改数字 0）、退役 0；active 193 → 193。总字符 51853；A8 适用 180 条／48198 字，A9 适用 181 条／48482 字。
+- 机制推理：
+  - 生成资源 — 生成节点伤害不等整轮输出 — 158 局 — NTMAU4XZ2NN2
+  - 力量 — 逐击加伤，按现场层数核攻击 — 159 局 — NTMAU4XZ2NN2
+  - 覆甲 — 按剩层给挡 — 15 局 — NTMAU4XZ2NN2
+  - 坚韧之环 — 即时挡与两轮延迟挡分别兑现 — 8 局 — NTMAU4XZ2NN2
+  - 感染 — 先耗挡，再验毒杀与幸存攻击 — 13 局 — NTMAU4XZ2NN2
+  - 致命毒药 — 施毒不等即时扣血 — 38 局 — NTMAU4XZ2NN2
+  - 带毒刺击 — 直伤、毒结算和幸存攻击分账 — 32 局 — NTMAU4XZ2NN2
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 251 文件／2627 用例／退出码 0，未重跑。
+- 切片大小：整体中位减少 9 字，配对差中位减少 1 字；最大 5672 字。
+- 学习账本：新增无；改成 proposed：silent-0019、silent-0020、silent-0021、silent-0125、silent-0012、silent-0016、silent-0289、silent-0286、silent-0007；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无；合入冲突待调用方／运维兜底。
+
+```json
+{"task":"experience-update","version":"2026-10-09.15","commit":"06b30fc028f8a32ddf2e6e23faab26627f1719d6","merged":null,"added":0,"updated":9,"retired":0,"active":193,"mechanisms":["长战/生成资源观察","力量逐击与现场增益","覆甲按剩层给挡","坚韧即时及两轮延迟挡","感染先耗挡再验毒杀","施毒与已结算毒分账","刺击直伤/毒结算/幸存攻击"],"tests":{"tsc":0,"vitest":0,"cases":2627},"ledger":{"added":[],"proposed":["silent-0019","silent-0020","silent-0021","silent-0125","silent-0012","silent-0016","silent-0289","silent-0286","silent-0007"],"retired":[],"check":0},"code_proposals":["silent-proposal-e44a90be36aa8448","silent-proposal-dd8ccc33fcfd3ee8"],"implementation_domains":["combat","potion","terminal"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-101302-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11e6f-7e22-7a13-a01b-d4a4a4ccccba
+轮数：1；工具调用：command_execution×59 file_change×10
+token：输入 197.3k、输出 46.0k（其中推理 17.9k）、cache 读 7646.5k、cache 写 0（命中 97.5%）
+成本：未提供
+耗时：1654.8 s（墙钟）
+时间：首个事件 3.2 s、模型首个输出 9.1 s、首次工具 12.7 s、末次工具结束 1617.7 s；工具内共 1363.3 s，其余（模型生成、推理、网络）288.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×55 wait×1；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T10-13-05-01a11e6f-7e22-7a13-a01b-d4a4a4ccccba.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-101302-experience-update.jsonl
