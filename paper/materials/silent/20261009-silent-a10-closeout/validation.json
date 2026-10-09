@@ -1,0 +1,146 @@
+{
+  "request_id": "observer-20261009-silent-a10-closeout",
+  "validated_at": "2026-10-09 14:21:35 CST",
+  "accepted": true,
+  "method": "Current ascension_audit.finish on an in-memory deep copy with proposal_dispatch.links",
+  "source_batch": "20261007-184216-ascension-audit",
+  "current_request_before": {
+    "key": "silent:A10",
+    "character": "silent",
+    "previous": 9,
+    "level": 10,
+    "anchor_run": "VLZ6CCT8AQ0A",
+    "requested_at": "2026-10-07T07:01:38.049Z",
+    "state": "exhausted",
+    "attempts": 3,
+    "batch": "20261007-184216-ascension-audit",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3",
+    "pid": 2405783,
+    "retry_at": 1791374743.741275,
+    "last_failure": "missing matching completed audit report; missing preserved report inside learner/runs; missing dispatched evidence runs; missing code proposal links; incomplete observed structure coverage; missing string code_proposals array"
+  },
+  "in_memory_batch_result": {
+    "task": "ascension-audit",
+    "learner_task": "ascension-audit",
+    "character": "silent",
+    "runs": [
+      "MGA0CZDDKC0P",
+      "25226ZFLNR1J",
+      "JLN5SK17W4FQ",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "JQPT83P8KDSZ",
+      "4D4J8USKCPAV",
+      "TD1HVGS7H6LB",
+      "PJ2LL9KU7FHD",
+      "S9UZAK0JP0C0"
+    ],
+    "state": "done",
+    "audit_key": "silent:A10",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "attempt": 3,
+    "started": 1791369736.3946202,
+    "pid": 2405783,
+    "pane": "wJ:p50",
+    "rc": 0,
+    "report": {
+      "task": "ascension-audit",
+      "character": "silent",
+      "level": 10,
+      "runs": [
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "S9UZAK0JP0C0"
+      ],
+      "complete": true,
+      "coverage": [
+        "floors",
+        "combat_counts",
+        "healing",
+        "campfires",
+        "rules",
+        "assumptions"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/report.md",
+      "code_proposals": [
+        "silent-proposal-aab73fcff1c56b8e",
+        "silent-proposal-09d5c7776e88d756",
+        "silent-proposal-4cc200cc9747f4a8"
+      ],
+      "implementation_domains": [
+        "structure",
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "missing": [
+        "各局终层之后、F49胜后、其他Boss组合及未来机制未观察。",
+        "部分ascension_effects仅核字段；密度、金币和价格增幅、概率及敌人相对低等级变化未验证。",
+        "初始扣血过程、更低等级药槽对照及全部诅咒交互未知。",
+        "未选营火动作、未见回血遗物及复活交互未知；没有策略因果对照。",
+        "TD1HVGS7H6LB重启后末次SL汇总缺失，不能记读档成功。",
+        "截断尝试真实退出HP与实际死亡未知。",
+        "后战HP曲线、完整药水价、Boss分布及连战模拟校准未独立验证。",
+        "D3阶段与当前Boss身份语义差异仍待实现；实际决策损害未知。",
+        "后五局无F49留出验证，当前上线效果未知。",
+        "路线预测精度、部分资源变化原因及未选行动反事实未知。"
+      ],
+      "ledger": {
+        "added": [
+          "silent-0243"
+        ],
+        "updated": [
+          "silent-0163",
+          "silent-0228",
+          "silent-0020",
+          "silent-0142"
+        ],
+        "check": 0
+      }
+    },
+    "errors": [],
+    "retry_at": 1791374743.741275
+  },
+  "in_memory_request_result": {
+    "key": "silent:A10",
+    "character": "silent",
+    "previous": 9,
+    "level": 10,
+    "anchor_run": "VLZ6CCT8AQ0A",
+    "requested_at": "2026-10-07T07:01:38.049Z",
+    "state": "done",
+    "attempts": 3,
+    "batch": "20261007-184216-ascension-audit",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3",
+    "pid": 2405783,
+    "retry_at": 1791374743.741275,
+    "last_failure": "missing matching completed audit report; missing preserved report inside learner/runs; missing dispatched evidence runs; missing code proposal links; incomplete observed structure coverage; missing string code_proposals array",
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/report.md",
+    "report_sha256": "7d863e883ae045669332fe8d575ee8e9446fbb41ff392932dae0b1a62527dfb2",
+    "code_proposals": [
+      "silent-proposal-aab73fcff1c56b8e",
+      "silent-proposal-09d5c7776e88d756",
+      "silent-proposal-4cc200cc9747f4a8"
+    ]
+  },
+  "collected_events_only": [
+    {
+      "kind": "ascension-audit-done",
+      "message": "独立学习者升阶审计 silent:A10：done；回报 /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-184216-ascension-audit.out；运维只核实登记，不添加游戏知识或阻塞对局。"
+    }
+  ],
+  "collected_inbox_only": [],
+  "actual_enqueue_count": 0,
+  "outer_finish_cli_called": false,
+  "check_jobs_called": false,
+  "other_batches_and_requests_unchanged": true,
+  "coverage_check_means": "Only the report observed scope is complete; all historical unknowns remain unknown."
+}

@@ -1,0 +1,722 @@
+{
+  "task": "ascension-audit",
+  "character": "silent",
+  "level": 10,
+  "runs": [
+    "MGA0CZDDKC0P",
+    "25226ZFLNR1J",
+    "JLN5SK17W4FQ",
+    "JMH5C51RLN4E",
+    "9TG1RP5LFAAK",
+    "JQPT83P8KDSZ",
+    "4D4J8USKCPAV",
+    "TD1HVGS7H6LB",
+    "PJ2LL9KU7FHD",
+    "S9UZAK0JP0C0"
+  ],
+  "complete": true,
+  "coverage": [
+    "floors",
+    "combat_counts",
+    "healing",
+    "campfires",
+    "rules",
+    "assumptions"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/report.md",
+  "code_proposals": [
+    "silent-proposal-aab73fcff1c56b8e",
+    "silent-proposal-09d5c7776e88d756",
+    "silent-proposal-4cc200cc9747f4a8"
+  ],
+  "implementation_domains": [
+    "structure",
+    "combat",
+    "potion",
+    "terminal"
+  ],
+  "missing": [
+    "十局各自终层之后、F49胜后、其他首后Boss组合及未来规则未知；不能从LEVEL_10文本补推。",
+    "LEVEL_01精英密度、LEVEL_03金币减少25%、LEVEL_06移除价格增幅、LEVEL_07稀有/升级频率、LEVEL_08/09相对低等级数值变化只有文本/非受控状态，触发幅度/概率未知。",
+    "初始56/70形成过程、2槽相对更低等级减1、ASCENDERS_BANE首次出现及全部交互未观察。",
+    "未选择营火动作、其他最大HP/遗物（含本批未触发的Pantograph/石炉）/复活交互未知；不推休息与锻造胜率因果。",
+    "TD1HVGS7H6LB F17第1次SL reload.ok=false且超时；后续可见回合重置至T1，末次SL汇总缺失，不能记读档成功。",
+    "截断尝试真实退出HP/实际死亡未知；重启资源另列，不当治疗或新增独立战斗。",
+    "后战HP价值曲线、完整药水持有价、后Boss分布/全部复活接续及连战模拟校准未独立验证；具体实现上线效果未知。",
+    "D3非空F48战后构筑题、实际决策损害与修后效果未知：本批两次F48奖励均空。",
+    "本批两个F49样本都在前五局，后五没有F49留出验证；代码版本/牌组/进场HP不同，无受控升阶或策略比较。",
+    "路线预测精度、部分非战斗资源变化原因、未选路线/未喝药反事实未知；未拟合新参数。"
+  ],
+  "ledger": {
+    "added": [
+      "silent-0243"
+    ],
+    "updated": [
+      "silent-0163",
+      "silent-0228",
+      "silent-0020",
+      "silent-0142"
+    ],
+    "check": 0
+  },
+  "base": "4fb90cc25e68e3e804ad15fa4b3931e8a606678f",
+  "live_source": {
+    "at": "2026-10-07T18:45:06.946307+08:00",
+    "live_commit": "70c8352bc9ea84d18f9bc0f82244b0e1f76405e8",
+    "files": {
+      "agent/src/sim/route-map.ts": {
+        "sha256": "763b2ae1548d06871ee3c8926c464ec66a1d80ecd924df6f003b260e446b99e4",
+        "blob": "4bc1d2b38c3f13b52cb5b4cc0ba97e35bfead8d7"
+      },
+      "agent/src/sim/route-projection.ts": {
+        "sha256": "ad0e4c94d1e4212cc6732d737a861ae08d6134877186ff97d2623f4b15fd5f8c",
+        "blob": "f18d5da9bc8db948560fcfb3b9fe929321b0efe6"
+      },
+      "agent/src/sim/build-sim-facts.ts": {
+        "sha256": "36143a5df4275013bb03d846b7cdc32233aab93e69b1d3ffc4a9f15c767e72ad",
+        "blob": "2303ee385e0e5bee956786e7b2e5be06c68b8461"
+      },
+      "agent/src/brain/build-facts.ts": {
+        "sha256": "dcec555e6adc1ece0a315d379e1a64a052b95a2957ef67d37dcf665c52629827",
+        "blob": "90b8420166cbcda2c0da77cf098efa287f43691a"
+      },
+      "agent/src/memory/run-plan.ts": {
+        "sha256": "b360d38d44ba19b55b9ba733ca4dccaa36cb81771142c05a97558ffd9dccbeab",
+        "blob": "c4ac9f01df08377c828e7c6577997cd76260baf5"
+      },
+      "agent/src/hand/loop.ts": {
+        "sha256": "f38e1db6e1cf61050e3b78930a2eddbe76ef9349cb01a015beea33f9f93a5f1c",
+        "blob": "73c41756c517005eaddd32aad45b0e17c34d43f3"
+      },
+      "agent/src/hand/screens/rest.ts": {
+        "sha256": "518aea18de27a60b39a1473ef0e89ba54da908b57aa085af6577e90643f1cd97",
+        "blob": "a97426fc6f02d5fb9a4c198fd577adcbf56bbf16"
+      },
+      "agent/src/hand/screens/route-plan.ts": {
+        "sha256": "262ccb76eb726cc1bb0c253d0c0e62be6bd39d6ce3a1d37ac89d651e7776390b",
+        "blob": "d608fd8c11357c717fa810f819753f0ead38ca77"
+      },
+      "agent/src/reflex/combat-plan.ts": {
+        "sha256": "9930a14fdc616e711d14fd6eef4877baac0c8a31d03c3c53529347a4efbf5626",
+        "blob": "618479c277d6fea94cdbeabc9105f21612950255"
+      },
+      "agent/src/reflex/potion-cost.ts": {
+        "sha256": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e",
+        "blob": "3949dd140f0ac2ea1dbdf3d0f68d2601c93d2248"
+      },
+      "agent/src/reflex/turn-solver.ts": {
+        "sha256": "3598b08b1a5f705d33a8e03994baf7c77a0e3331ab969f5a255bddf93a1765ac",
+        "blob": "990d8fc360fc0d219631ca616df476c5d809275f"
+      },
+      "agent/src/reflex/continuation-value.ts": {
+        "sha256": "0c7be97b8d9aa62928e7aa8b85f5f7c9ed69879e2806356d978dcce776a9f6f2",
+        "blob": "6a7386b4db9ac011a3ceae229c0ecf3dea333963"
+      },
+      "agent/src/knowledge/double-boss.ts": {
+        "sha256": "46e497cb169d6a7266f55434b9ab90e311894174100fe4b70c9992a4aa418fed",
+        "blob": "0d99ba570125ef3d05e9b8a0dbaacec69f3b436c"
+      },
+      "agent/src/sim/double-boss-start.ts": {
+        "sha256": "971c31be9defa53b0dafb69fed11d6aed5d159d80bee15651821114ec7255fef",
+        "blob": "07f6b935db9c9e0aba49a6d67da8f8d72374f868"
+      },
+      "agent/src/sim/boss-sim.ts": {
+        "sha256": "ef7f84faa402b5fd6e22fde800dcb67ab4f8d7116cea95a1a1de08567813511a",
+        "blob": "e8382e90003676170cec4f48dd2e78a70836e8fa"
+      },
+      "agent/src/sim/boss-lines.ts": {
+        "sha256": "ac5af605bd41d680f9e2b19d6aa24ffb5fe582f976433bc735996c5ae4c690dc",
+        "blob": "4a9084c93cd9b1c282bb3dbf4db74d77df2d1114"
+      },
+      "agent/src/sim/boss-clock.ts": {
+        "sha256": "c32bd789bf6824f916b7d82cedc686d4aaa895acb542d5cc6aa964b95e46f94f",
+        "blob": "bed839377fdf68339577d0826a1d8b4b410b531f"
+      },
+      "agent/src/sl/controller.ts": {
+        "sha256": "76ee2a509bc2f4f903cf218ca1995777da85cd7cc35b94872888d2559f8800de",
+        "blob": "afd9d3f49392a0fa38026727feb094897d05c19f"
+      },
+      "agent/src/sl/reload.ts": {
+        "sha256": "907eb148fb63b9999137396275eb83ed9774ef7ab33b1ebee345d34ead311be9",
+        "blob": "55c1ec99a5c7cd98d51f610af3278d0c49d72d82"
+      },
+      "knowledge/characters/silent/double-boss.json": {
+        "sha256": "dfea492a4b941bf72813518e59ceb6cb0cca2d1420bdeb9c2fb9cc726797e83b",
+        "blob": "1f72032ec4bbb394eeab2289268c04522a3f067c"
+      },
+      "learner/resource_chain.py": {
+        "sha256": "dc11bb66cd379f2fa56ae87daf42dc8c7cdca6d44743acf7ba1648d9f74f150b",
+        "blob": "beac3778323b4441e47e75db47704375e34989e6"
+      }
+    }
+  },
+  "baseline_runs": [
+    "HMVJKM56S4Q8",
+    "F4QKG4J1AJJZ",
+    "G403VCZ3BH1B"
+  ],
+  "sample_boundary": {
+    "target_first_state": "2026-10-05T20:54:59.385Z",
+    "target_last_end": "2026-10-06T04:00:23.109Z",
+    "split": {
+      "first_five": [
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK"
+      ],
+      "last_five": [
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "S9UZAK0JP0C0"
+      ],
+      "F49_in_last_five": 0
+    }
+  },
+  "coverage_table": [
+    {
+      "domain": "floors",
+      "observed": "十局实际逐层房间序列；F17十局、F33五局、F48三局、F49两局；实际幕初F1/18/34，地图rows16/15/14。A9三局重新核验。",
+      "unknown": "十局各自终层之后、F49胜后、其他首后Boss组合及未来规则未知；不能从LEVEL_10文本补推。"
+    },
+    {
+      "domain": "combat_counts",
+      "observed": "125独立战斗，176尝试/51额外；115胜、10实际死亡，51截断重启分列。A9练习事件战单列完成事件战。",
+      "unknown": "TD1HVGS7H6LB F17第1次SL reload.ok=false且超时；后续可见回合重置至T1，末次SL汇总缺失，不能记读档成功。 截断尝试真实退出HP/实际死亡未知；重启资源另列，不当治疗或新增独立战斗。"
+    },
+    {
+      "domain": "healing",
+      "observed": "A10九对/A9五对实跨幕回floor(缺失HP×80%)；A10 HEAL40次净944。赢战损血/战内治疗、跨幕/到火/动作/SL分别保存。",
+      "unknown": "初始56/70形成过程、2槽相对更低等级减1、ASCENDERS_BANE首次出现及全部交互未观察。 未选择营火动作、其他最大HP/遗物（含本批未触发的Pantograph/石炉）/复活交互未知；不推休息与锻造胜率因果。"
+    },
+    {
+      "domain": "campfires",
+      "observed": "A10实际63火：40HEAL、23SMITH；63HEAL选项基础文本符合floor(maxHP×30%)；12次羽毛到火净152另计。",
+      "unknown": "未选择营火动作、其他最大HP/遗物（含本批未触发的Pantograph/石炉）/复活交互未知；不推休息与锻造胜率因果。"
+    },
+    {
+      "domain": "rules",
+      "observed": "6877 A10原始状态全部SILENT+LEVEL_01—10；2046 A9全部SILENT+LEVEL_01—09；两组实际同幕F48胜→F49开战。",
+      "unknown": "十局各自终层之后、F49胜后、其他首后Boss组合及未来规则未知；不能从LEVEL_10文本补推。 LEVEL_01精英密度、LEVEL_03金币减少25%、LEVEL_06移除价格增幅、LEVEL_07稀有/升级频率、LEVEL_08/09相对低等级数值变化只有文本/非受控状态，触发幅度/概率未知。"
+    },
+    {
+      "domain": "assumptions",
+      "observed": "固定live结构/幕末/当前Boss、路线、回血、终局/药水/SL逐项静态对照；D1/D2历史差异当前核心已实现，D3仍有语义缺口，CLI登记完整。",
+      "unknown": "后战HP价值曲线、完整药水持有价、后Boss分布/全部复活接续及连战模拟校准未独立验证；具体实现上线效果未知。 D3非空F48战后构筑题、实际决策损害与修后效果未知：本批两次F48奖励均空。"
+    }
+  ],
+  "summaries": {
+    "MGA0CZDDKC0P": {
+      "max_floor": 17,
+      "observed_floors": 17,
+      "independent_fights": 10,
+      "attempts": 15,
+      "extra_attempts": 5,
+      "won_fights": 9,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 2,
+      "rest_actions": {
+        "HEAL": 2
+      },
+      "rest_heal": 42,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 6
+    },
+    "25226ZFLNR1J": {
+      "max_floor": 48,
+      "observed_floors": 48,
+      "independent_fights": 16,
+      "attempts": 21,
+      "extra_attempts": 5,
+      "won_fights": 15,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 9,
+      "rest_actions": {
+        "SMITH": 1,
+        "HEAL": 8
+      },
+      "rest_heal": 162,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 9
+    },
+    "JLN5SK17W4FQ": {
+      "max_floor": 33,
+      "observed_floors": 33,
+      "independent_fights": 14,
+      "attempts": 20,
+      "extra_attempts": 6,
+      "won_fights": 13,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 7,
+      "rest_actions": {
+        "HEAL": 6,
+        "SMITH": 1
+      },
+      "rest_heal": 127,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 8
+    },
+    "JMH5C51RLN4E": {
+      "max_floor": 49,
+      "observed_floors": 49,
+      "independent_fights": 18,
+      "attempts": 27,
+      "extra_attempts": 9,
+      "won_fights": 17,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 12,
+      "rest_actions": {
+        "SMITH": 11,
+        "HEAL": 1
+      },
+      "rest_heal": 21,
+      "feather_entries": 11,
+      "feather_heal": 131,
+      "sl_log_rows": 13
+    },
+    "9TG1RP5LFAAK": {
+      "max_floor": 49,
+      "observed_floors": 49,
+      "independent_fights": 19,
+      "attempts": 25,
+      "extra_attempts": 6,
+      "won_fights": 18,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 10,
+      "rest_actions": {
+        "SMITH": 4,
+        "HEAL": 6
+      },
+      "rest_heal": 196,
+      "feather_entries": 1,
+      "feather_heal": 21,
+      "sl_log_rows": 11
+    },
+    "JQPT83P8KDSZ": {
+      "max_floor": 25,
+      "observed_floors": 25,
+      "independent_fights": 10,
+      "attempts": 13,
+      "extra_attempts": 3,
+      "won_fights": 9,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 4,
+      "rest_actions": {
+        "HEAL": 4
+      },
+      "rest_heal": 84,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 5
+    },
+    "4D4J8USKCPAV": {
+      "max_floor": 17,
+      "observed_floors": 17,
+      "independent_fights": 11,
+      "attempts": 16,
+      "extra_attempts": 5,
+      "won_fights": 10,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 4,
+      "rest_actions": {
+        "HEAL": 4
+      },
+      "rest_heal": 84,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 6
+    },
+    "TD1HVGS7H6LB": {
+      "max_floor": 17,
+      "observed_floors": 17,
+      "independent_fights": 7,
+      "attempts": 8,
+      "extra_attempts": 1,
+      "won_fights": 6,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 3,
+      "rest_actions": {
+        "HEAL": 3
+      },
+      "rest_heal": 69,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 1
+    },
+    "PJ2LL9KU7FHD": {
+      "max_floor": 17,
+      "observed_floors": 17,
+      "independent_fights": 6,
+      "attempts": 11,
+      "extra_attempts": 5,
+      "won_fights": 5,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 4,
+      "rest_actions": {
+        "SMITH": 2,
+        "HEAL": 2
+      },
+      "rest_heal": 42,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 6
+    },
+    "S9UZAK0JP0C0": {
+      "max_floor": 33,
+      "observed_floors": 33,
+      "independent_fights": 14,
+      "attempts": 20,
+      "extra_attempts": 6,
+      "won_fights": 13,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 8,
+      "rest_actions": {
+        "SMITH": 4,
+        "HEAL": 4
+      },
+      "rest_heal": 117,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 10
+    },
+    "HMVJKM56S4Q8": {
+      "max_floor": 33,
+      "observed_floors": 33,
+      "independent_fights": 16,
+      "attempts": 21,
+      "extra_attempts": 5,
+      "won_fights": 15,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 6,
+      "rest_actions": {
+        "HEAL": 4,
+        "SMITH": 2
+      },
+      "rest_heal": 87,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 9
+    },
+    "F4QKG4J1AJJZ": {
+      "max_floor": 38,
+      "observed_floors": 38,
+      "independent_fights": 17,
+      "attempts": 18,
+      "extra_attempts": 1,
+      "won_fights": 16,
+      "dead_fights": 1,
+      "completed_event_fights": 0,
+      "unknown_fights": 0,
+      "campfires": 6,
+      "rest_actions": {
+        "HEAL": 6
+      },
+      "rest_heal": 126,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 4
+    },
+    "G403VCZ3BH1B": {
+      "max_floor": 48,
+      "observed_floors": 48,
+      "independent_fights": 15,
+      "attempts": 16,
+      "extra_attempts": 1,
+      "won_fights": 14,
+      "dead_fights": 0,
+      "completed_event_fights": 1,
+      "unknown_fights": 0,
+      "campfires": 9,
+      "rest_actions": {
+        "SMITH": 3,
+        "HEAL": 6
+      },
+      "rest_heal": 128,
+      "feather_entries": 0,
+      "feather_heal": 0,
+      "sl_log_rows": 4
+    }
+  },
+  "differences": [
+    {
+      "id": "D1",
+      "status": "historical discrepancy; core currently implemented",
+      "ledger": [
+        "silent-0163"
+      ],
+      "proposal_id": "silent-proposal-aab73fcff1c56b8e",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/proposal-route-unknown.md",
+      "domains": [
+        "structure"
+      ],
+      "code": [
+        "agent/src/sim/route-projection.ts:188",
+        "agent/src/sim/route-map.ts:340"
+      ],
+      "evidence": [
+        {
+          "run": "JMH5C51RLN4E",
+          "floor": 48,
+          "turn": 13,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 243532,
+            "offset": 7443348142,
+            "bytes": 32736,
+            "sha256": "8041d419aca1ca80eed8a33306d5d11ddc01216dc1fb4595f7b40e3bd24fa919"
+          }
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "floor": 49,
+          "turn": 1,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 243534,
+            "offset": 7443430835,
+            "bytes": 41271,
+            "sha256": "d963d86ccbad2a4b8efabb219635a29344b8e59bd47490394d1c2cec1cc0e816"
+          }
+        }
+      ],
+      "impact": "旧后战投影高估资源；当前null/未知传播已实现，本轮不是回归或上线效果评估。"
+    },
+    {
+      "id": "D2",
+      "status": "historical discrepancy; continuous resource/value core currently implemented",
+      "ledger": [
+        "silent-0228"
+      ],
+      "proposal_id": "silent-proposal-09d5c7776e88d756",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/proposal-continuation.md",
+      "domains": [
+        "structure",
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "code": [
+        "agent/src/knowledge/double-boss.ts:46",
+        "agent/src/reflex/combat-plan.ts:3039",
+        "agent/src/reflex/combat-plan.ts:3181",
+        "agent/src/reflex/potion-cost.ts:59",
+        "agent/src/reflex/turn-solver.ts:3112",
+        "agent/src/sim/boss-sim.ts:310",
+        "agent/src/sim/boss-lines.ts:787"
+      ],
+      "evidence": [
+        {
+          "run": "JMH5C51RLN4E",
+          "floor": 48,
+          "turn": 13,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 243532,
+            "offset": 7443348142,
+            "bytes": 32736,
+            "sha256": "8041d419aca1ca80eed8a33306d5d11ddc01216dc1fb4595f7b40e3bd24fa919"
+          }
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "floor": 49,
+          "turn": 1,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 243534,
+            "offset": 7443430835,
+            "bytes": 41271,
+            "sha256": "d963d86ccbad2a4b8efabb219635a29344b8e59bd47490394d1c2cec1cc0e816"
+          }
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "floor": 48,
+          "turn": 16,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 244372,
+            "offset": 7473583198,
+            "bytes": 36239,
+            "sha256": "d8854898e0d09bd38d317909802720316dc2bb54dd667aadd39d8024992c4cde"
+          }
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "floor": 49,
+          "turn": 1,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 244374,
+            "offset": 7473672603,
+            "bytes": 47117,
+            "sha256": "47de770ee042d94670de3e06187697e42be2938d8587400099bda805171065cc"
+          }
+        }
+      ],
+      "impact": "F48首战胜不等于终局，后战消耗余HP/同槽余药；当前已实现核心，参数/全交互与实盘收益未知。"
+    },
+    {
+      "id": "D3",
+      "status": "current static phase/identity semantic discrepancy; decision harm unknown",
+      "ledger": [
+        "silent-0228"
+      ],
+      "proposal_id": "silent-proposal-4cc200cc9747f4a8",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/proposal-boss-phase-facts.md",
+      "domains": [
+        "structure",
+        "terminal",
+        "combat"
+      ],
+      "code": [
+        "agent/src/sim/build-sim-facts.ts:444",
+        "agent/src/sim/build-sim-facts.ts:475",
+        "agent/src/brain/build-facts.ts:44",
+        "agent/src/brain/build-facts.ts:48",
+        "agent/src/brain/build-facts.ts:52",
+        "agent/src/memory/run-plan.ts:138"
+      ],
+      "evidence": [
+        {
+          "run": "JMH5C51RLN4E",
+          "floor": 48,
+          "turn": 13,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 243532,
+            "offset": 7443348142,
+            "bytes": 32736,
+            "sha256": "8041d419aca1ca80eed8a33306d5d11ddc01216dc1fb4595f7b40e3bd24fa919"
+          }
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "floor": 48,
+          "turn": 13,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 243533,
+            "offset": 7443380878,
+            "bytes": 49957,
+            "sha256": "39910180dc8234d17487d60ad2c2232ce96c6b3afa26e043f7abafabf76509cb"
+          }
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "floor": 49,
+          "turn": 1,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 243534,
+            "offset": 7443430835,
+            "bytes": 41271,
+            "sha256": "d963d86ccbad2a4b8efabb219635a29344b8e59bd47490394d1c2cec1cc0e816"
+          }
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "floor": 48,
+          "turn": 16,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 244372,
+            "offset": 7473583198,
+            "bytes": 36239,
+            "sha256": "d8854898e0d09bd38d317909802720316dc2bb54dd667aadd39d8024992c4cde"
+          }
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "floor": 48,
+          "turn": 16,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 244373,
+            "offset": 7473619437,
+            "bytes": 53166,
+            "sha256": "d66f126ad700789e885911a48390a9a49aa2ed0d8879e1575c312d764a999fa7"
+          }
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "floor": 49,
+          "turn": 1,
+          "ref": {
+            "file": "states.jsonl",
+            "line": 244374,
+            "offset": 7473672603,
+            "bytes": 47117,
+            "sha256": "47de770ee042d94670de3e06187697e42be2938d8587400099bda805171065cc"
+          }
+        }
+      ],
+      "impact": "F48战后说明错误宣称本幕结束；F49通用事实/工作记忆复制首Boss且静态距离null；空奖励帧不能证明选牌误导或导致失败。"
+    }
+  ],
+  "verification": {
+    "at": "2026-10-07T18:53:32.723952+08:00",
+    "raw_records_verified": 18125,
+    "checks": {
+      "rest_option_text": 84,
+      "HEAL": 56,
+      "use_potion": 145,
+      "SMITH": 28,
+      "act_heal": 14,
+      "discard_potion": 1,
+      "feather_entry": 12
+    },
+    "errors": [],
+    "current_live_commit": "70c8352bc9ea84d18f9bc0f82244b0e1f76405e8",
+    "changed_since_fixed_live": [],
+    "scope": "raw-byte and formula checks; static predicates, no TypeScript execution or game simulation"
+  },
+  "artifacts": {
+    "manifest": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/manifest.json",
+    "resource_chain": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/resource-chain.md",
+    "run_resource_chains": [
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/MGA0CZDDKC0P.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/25226ZFLNR1J.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/JLN5SK17W4FQ.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/JMH5C51RLN4E.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/9TG1RP5LFAAK.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/JQPT83P8KDSZ.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/4D4J8USKCPAV.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/TD1HVGS7H6LB.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/PJ2LL9KU7FHD.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/S9UZAK0JP0C0.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/HMVJKM56S4Q8.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/F4QKG4J1AJJZ.resource-chain.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/G403VCZ3BH1B.resource-chain.json"
+    ],
+    "static_facts": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/static-facts-evaluation.json"
+  }
+}
