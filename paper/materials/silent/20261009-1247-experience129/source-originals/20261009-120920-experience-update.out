@@ -1,0 +1,42 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.17 → 2026-10-09.18；提交：23d97f26（分支 exp-silent）；合入：未合入。锁内预检有20处冲突，按要求停止；刷新提交63a47792已保留，待调用方兜底。
+- 条数：新增0、更新17（加证据17、只改数字0）、退役0；active 196→196。总字符52099→51694；A8适用182条/47886字，A9适用183条/48170字。
+- 机制推理：
+
+  - 能力兑现 — 未施放及换战能力不预支 — 161支持/0反例 — JBX9JLH46KVN
+  - 力量/敏捷 — 逐击加伤、逐张加挡，不倒补旧挡 — 162/0 — JBX9JLH46KVN
+  - 步法 — 两张升级步法建立6敏捷 — 94/0 — JBX9JLH46KVN
+  - 触媒 — 23毒三次结算66伤 — 57/0 — JBX9JLH46KVN
+  - 毒爆 — 即时93伤、结束再结84伤 — 8/0 — JBX9JLH46KVN
+  - 实验体激怒 — 0费技能仍加3敌力 — 17/0 — JBX9JLH46KVN
+  - 凋萎 — 格挡可吸收持牌伤，毒胜仍损9血 — 21/0 — JBX9JLH46KVN
+  - 沙漏 — 剥制品后启毒，敌成长另核 — 21/0 — JBX9JLH46KVN
+  - 蜃景 — 20毒加6敏捷实得26挡 — 19/0 — JBX9JLH46KVN
+  - 跨幕回复 — 已见A9/A10回复缺失血的80%，向下取整 — 44/0 — JBX9JLH46KVN
+  - 毒药 — 先施毒，饮用当步不扣敌血 — 41/0 — JBX9JLH46KVN
+  - 连续boss — 实血药接续，能力重新建立 — 13/0 — JBX9JLH46KVN
+  - 炼制 — 16次施放仅14次入槽，满槽两次未增药 — 6/0 — JBX9JLH46KVN
+  - 翻滚 — 当前9挡与未来9挡分账 — 21/0 — JBX9JLH46KVN
+  - 卷轴 — 一次漏伤使生命上限减少2 — 6/0 — JBX9JLH46KVN
+
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件/2627用例/退出0，未重跑。
+- 切片大小：配对中位减少40字；整体中位减少20.5字；最大5535字。
+- 学习账本：新增无；改成proposed：silent-0019、silent-0020、silent-0021、silent-0012、silent-0005、silent-0027、silent-0037、silent-0028、silent-0024、silent-0059、silent-0025、silent-0010、silent-0243、silent-0278、silent-0228、silent-0294、silent-0331、silent-0221；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-09.18","commit":"23d97f26a552505be629658c2128a369127a57bc","merged":null,"added":0,"updated":17,"retired":0,"active":196,"mechanisms":["能力拥有与实际兑现观察","力量/敏捷与现场倍率","步法敏捷与多张牌挡","触媒逐次毒结算","毒爆即时毒与结束毒","实验体技能激怒成本","凋萎/格挡与毒胜持牌伤","沙漏制品/敌成长与重打观察","蜃景实时毒量与敏捷牌挡","跨幕缺失血回复","毒药施层与实结","连续boss资源/能力交接观察","炼制施放/入槽与产物兑现","翻滚当前挡与未来挡","卷轴漏击降上限"],"tests":{"tsc":0,"vitest":0,"cases":2627},"ledger":{"added":[],"proposed":["silent-0019","silent-0020","silent-0021","silent-0012","silent-0005","silent-0027","silent-0037","silent-0028","silent-0024","silent-0059","silent-0025","silent-0010","silent-0243","silent-0278","silent-0228","silent-0294","silent-0331","silent-0221"],"retired":[],"check":0},"code_proposals":["silent-proposal-b8804a022bdc5a1a","silent-proposal-4c4506a7b862f164","silent-proposal-b9c8090fae0316df"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-120922-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11ed9-f5e8-7842-a59a-fe217132cbea
+轮数：1；工具调用：command_execution×79
+token：输入 238.5k、输出 63.1k（其中推理 26.7k）、cache 读 13306.4k、cache 写 0（命中 98.2%）
+成本：未提供
+耗时：2259.7 s（墙钟）
+时间：首个事件 3.2 s、模型首个输出 9.0 s、首次工具 11.6 s、末次工具结束 2187.8 s；工具内共 1710.2 s，其余（模型生成、推理、网络）546.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×78 wait×4；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T12-09-23-01a11ed9-f5e8-7842-a59a-fe217132cbea.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-120922-experience-update.jsonl
