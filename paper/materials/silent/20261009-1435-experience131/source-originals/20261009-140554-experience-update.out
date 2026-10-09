@@ -1,0 +1,124 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.19 → 2026-10-09.20；提交：3a71746d（分支 exp-silent）；合入：未合入，预检出现19处记录及论文文件冲突；刷新提交7375067d已保留。
+- 条数：新增0、更新23（加证据23、只改数字0）、退役0；active 196 → 196。正文51224字符；A8适用182条／47443字符，A9适用183条／47727字符。
+- 机制推理（局数为支持／反例）：
+
+  - 能力兑现观察 — 未施放或换战重置的收益不预支 — 163／0 — NBJBVSBNPYQB
+  - 力量与敏捷 — 逐击加伤、逐挡牌加挡 — 164／0 — NBJBVSBNPYQB
+  - 毒雾 — 后续轮初施毒，建立不即时施毒 — 81／0 — NBJBVSBNPYQB
+  - 脆弱 — 折减牌挡，被动挡另算 — 36／0 — NBJBVSBNPYQB
+  - 触媒 — 增加毒结算次数 — 58／0 — NBJBVSBNPYQB
+  - 毒性爆发 — 即时毒伤与轮末毒分账 — 9／0 — NBJBVSBNPYQB
+  - 余像 — 建立后逐牌补挡，首次不触发自身 — 34／0 — NBJBVSBNPYQB
+  - 钗 — 轮初7挡仍须核后续威胁 — 4／0 — NBJBVSBNPYQB
+  - 非凡技艺 — 力敏收益从后续牌兑现 — 6／0 — NBJBVSBNPYQB
+  - 尖啸 — 临时减力，次轮恢复重核 — 78／0 — NBJBVSBNPYQB
+  - 凋萎 — 持牌伤与攻击、格挡共同核算 — 23／0 — NBJBVSBNPYQB
+  - 沙漏观察 — 制品、成长及血价分核 — 23／0 — NBJBVSBNPYQB
+  - 手里剑 — 第三攻击建力，随后攻击受益 — 6／0 — NBJBVSBNPYQB
+  - 女王观察 — 三减益及目标顺序按实盘核验 — 20／0 — NBJBVSBNPYQB
+  - 蜃景 — 实时毒量加敏捷兑现牌挡 — 20／0 — NBJBVSBNPYQB
+  - 精致折扇 — 每第三攻击补4被动挡 — 6／0 — NBJBVSBNPYQB
+  - 同抽重打观察 — 多17伤实际多付5血，未有赢例 — 12／0 — NBJBVSBNPYQB
+  - 坚韧之环 — 未来两轮挡不能抵当轮威胁 — 9／0 — NBJBVSBNPYQB
+  - 连续boss观察 — 实血药接续，能力重新建立 — 15／0 — NBJBVSBNPYQB
+  - 石化蟾蜍 — 新战生石与SL恢复分账 — 7／0 — NBJBVSBNPYQB
+  - 跨幕回复 — 已见A9/A10按缺血80%向下取整 — 46／0 — NBJBVSBNPYQB
+
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件／2627用例／退出0，未重跑；JSON、gitleaks和提案关联检查通过。
+- 切片大小：整体中位下降12.5字符；最大5539字符（原5553）。
+- 学习账本：新增无；改成proposed：silent-0019、0020、0021、0125、0012、0011、0069、0027、0037、0023、0038、0036、0046、0024、0059、0025、0063、0010、0088、0079、0289、0228、0327、0243；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.20",
+  "commit": "3a71746d3cd52f14d4df4c454f460b519d7eaf44",
+  "merged": null,
+  "added": 0,
+  "updated": 23,
+  "retired": 0,
+  "active": 196,
+  "mechanisms": [
+    "计划、候选与能力兑现（观察） — 观察：拥有/计划能力、候选与最终执行分核。 — 163支持/0反例 — NBJBVSBNPYQB",
+    "力量、敏捷与现场倍率 — 力量逐击加伤、敏捷逐挡牌加挡，现场倍率与临时层另核。 — 164支持/0反例 — NBJBVSBNPYQB",
+    "毒雾 — 毒雾普通/升级建2/3层，后续玩家轮初施毒，建立不即时施毒。 — 81支持/0反例 — NBJBVSBNPYQB",
+    "脆弱逐牌挡 — 脆弱逐牌折减牌挡，被动挡另核。 — 36支持/0反例 — NBJBVSBNPYQB",
+    "触媒 — 触媒增加毒结算次数，不倍增毒层；普通/升级建1/2且不即时施毒。 — 58支持/0反例 — NBJBVSBNPYQB",
+    "毒性爆发 — 毒性爆发加毒后立即触发，逐敌核毒和实扣。 — 9支持/0反例 — NBJBVSBNPYQB",
+    "余像 — 余像按建立后实际出牌次数补挡，自身首次不触发自己。 — 34支持/0反例 — NBJBVSBNPYQB",
+    "钗 — 钗在回合开始建立挡，不能代替后续全部防御。 — 4支持/0反例 — NBJBVSBNPYQB",
+    "非凡技艺 — 非凡技艺普通/升级建立1/2力量与敏捷，收益从后续牌兑现。 — 6支持/0反例 — NBJBVSBNPYQB",
+    "尖啸 — 尖啸临时减力，减伤按现场招式/段数和弱核，次轮恢复重核。 — 78支持/0反例 — NBJBVSBNPYQB",
+    "凋萎 — 凋萎持牌伤与攻击/挡同核，毒杀不免除已发生血价。 — 23支持/0反例 — NBJBVSBNPYQB",
+    "沙漏制品、增长与血价（观察） — 观察：沙漏制品、敌成长、凋萎与首boss交接资源合核。 — 23支持/0反例 — NBJBVSBNPYQB",
+    "手里剑 — 手里剑按本回合攻击牌次数建力量，增伤从后续攻击兑现。 — 6支持/0反例 — NBJBVSBNPYQB",
+    "女王减益与目标（观察） — 观察：女王两种击杀序均有赢例，不定固定顺序或提前能力必胜。 — 20支持/0反例 — NBJBVSBNPYQB",
+    "蜃景 — 蜃景按施放时活敌毒总量给牌挡，后来施毒不追补。 — 20支持/0反例 — NBJBVSBNPYQB",
+    "精致折扇 — 精致折扇按攻击牌次数补被动挡，与敏捷牌挡分源。 — 6支持/0反例 — NBJBVSBNPYQB",
+    "女王同抽重打血价（观察） — 观察：女王同抽换线仍核血价，模拟排序不等实际安全。 — 12支持/0反例 — NBJBVSBNPYQB",
+    "坚韧之环 — 坚韧之环即时给挡并建两次轮初同额挡，施放额度与后来的敏捷分账。 — 9支持/0反例 — NBJBVSBNPYQB",
+    "连续boss资源交接（观察） — 观察：A10首boss胜后直接接续实血药，能力换战重建。 — 15支持/0反例 — NBJBVSBNPYQB",
+    "石化蟾蜍 — 石化蟾蜍已见新战空槽生成药水形状的石头，按战分账。 — 7支持/0反例 — NBJBVSBNPYQB",
+    "跨幕缺失血回复 — 已见A9/A10跨幕按缺失HP的80%向下取整回血。 — 46支持/0反例 — NBJBVSBNPYQB"
+  ],
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2627
+  },
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0125",
+      "silent-0012",
+      "silent-0011",
+      "silent-0069",
+      "silent-0027",
+      "silent-0037",
+      "silent-0023",
+      "silent-0038",
+      "silent-0036",
+      "silent-0046",
+      "silent-0024",
+      "silent-0059",
+      "silent-0025",
+      "silent-0063",
+      "silent-0010",
+      "silent-0088",
+      "silent-0079",
+      "silent-0289",
+      "silent-0228",
+      "silent-0327",
+      "silent-0243"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-d08ce39c73ac4019",
+    "silent-proposal-688f83528d939ab0",
+    "silent-proposal-7edb6a4c4fc41c29",
+    "silent-proposal-13d3fe8fd630d97e"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-140555-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11f44-ab50-7671-ae88-1a5840d17e81
+轮数：1；工具调用：command_execution×73 file_change×6
+token：输入 259.0k、输出 48.6k（其中推理 16.0k）、cache 读 7891.8k、cache 写 0（命中 96.8%）
+成本：未提供
+耗时：1749.8 s（墙钟）
+时间：首个事件 3.2 s、模型首个输出 8.3 s、首次工具 11.8 s、末次工具结束 1670.0 s；工具内共 1303.9 s，其余（模型生成、推理、网络）442.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×49；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T14-05-56-01a11f44-ab50-7671-ae88-1a5840d17e81.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-140555-experience-update.jsonl
