@@ -1,0 +1,35 @@
+{
+  "by": "learner:postmortem",
+  "character": "silent",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "XZUJR08FW801"
+    ]
+  },
+  "kind": "bug-infra",
+  "claim": "隐秘匕首HIDDEN_DAGGERS的升级版仍将Cards=2误作抽2，未进入普通版已修的弃两张再生成两张小刀模型。原题可以预支未真实抽到的牌并安排跨弃牌后缀；需要按静默已核实的升级文本、Cards=2/Shivs=2及6伤小刀处理升级分支，弃牌后以真实手牌重算。普通版silent-0153/S1.fix26已修不代表升级版已覆盖，不承诺修正能赢整场。",
+  "first_run": "ENKYQMS9W4ZD",
+  "prior": "no",
+  "prior_runs": [
+    "ENKYQMS9W4ZD"
+  ],
+  "prior_note": "最早已核实的升级版样本ENKY F19T2在本分支学习前就把弃两张题面写抽2；现场五手→施放后四手→弃二加二仍四手，未核实正确可比样本。",
+  "evidence": [
+    {
+      "run": "ENKYQMS9W4ZD",
+      "floor": 19,
+      "turn": 2,
+      "role": "support",
+      "note": "d225859原选隐秘匕首+→翻越撑击+→打击→毒雾+，题面cards_drawn=2；s230426—230429真实文本弃2加2，五手施放后四手、弃两后加两小刀仍四手。最早已核实升级误读。"
+    },
+    {
+      "run": "XZUJR08FW801",
+      "floor": 29,
+      "turn": 1,
+      "role": "support",
+      "note": "第2试d311199原计划cards_drawn=2，含16挡与污浊；s319508—319511九手→八手、弃两打击、生成两小刀仍八手，重问后攻击线未执行原保护/饮药。当前live card-model.ts:921/929/1109及turn-solver.ts:1312仅覆盖普通版。"
+    }
+  ],
+  "note": "来源任务postmortem，批次20261009-104301-postmortem；fix-queue未见升级同项。本次只定位记录，不改代码，不登记implemented/shipped。"
+}

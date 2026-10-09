@@ -1,0 +1,6 @@
+探索记录保留：首次查找selection.ts误用reflex目录，rg报告路径不存在；正确路径为只读live/agent/src/hand/screens/selection.ts。
+一次交互式摘要脚本SyntaxError（列表未闭合）未产生提取文件；随后分析.py完成提取，原工具输出仍留在任务会话。
+一次交互式先验/选牌摘要遇到selection=null的AttributeError；随后显式处理空值完成，无日志或授权记录被覆盖。
+最初方案摘要把questions.plan.criteria误当options，未取得题面；后续直接核实criteria，保留空方案摘要，不以其为空推断缺题。
+notes/fix-queue.md关键词无匹配时rg退出1，这是查找结果，不是代码检查失败。
+本任务未修改任何源码；所有代码定位是当前live参考，不复原9a7dc931+dirty运行源码。

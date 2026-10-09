@@ -1,0 +1,163 @@
+[
+  {
+    "项目": "Jev入出",
+    "已核值": [
+      572079,
+      7449
+    ]
+  },
+  {
+    "项目": "大脑入出缓存推理",
+    "已核值": [
+      3761214,
+      6996,
+      2108800,
+      4745
+    ]
+  },
+  {
+    "项目": "大脑累计延迟",
+    "已核值": 391906
+  },
+  {
+    "项目": "隐秘原题抽牌",
+    "已核值": 2
+  },
+  {
+    "项目": "d311121原题伤害/血损",
+    "已核值": [
+      47,
+      12
+    ]
+  },
+  {
+    "项目": "d311131原题伤害/血损",
+    "已核值": [
+      43,
+      0
+    ]
+  },
+  {
+    "项目": "d311164原题伤害/血损",
+    "已核值": [
+      65,
+      9
+    ]
+  },
+  {
+    "项目": "d311172原题伤害/血损",
+    "已核值": [
+      12,
+      11
+    ]
+  },
+  {
+    "项目": "d311199原题伤害/血损",
+    "已核值": [
+      44,
+      0
+    ]
+  },
+  {
+    "项目": "d311202原题伤害/血损",
+    "已核值": [
+      53,
+      0
+    ]
+  },
+  {
+    "项目": "F16休息估计",
+    "已核值": [
+      52,
+      0.8083,
+      36,
+      10
+    ]
+  },
+  {
+    "项目": "F17饮药估计",
+    "已核值": [
+      0.993,
+      27
+    ]
+  },
+  {
+    "项目": "s319231资源",
+    "已核值": [
+      13,
+      58
+    ]
+  },
+  {
+    "项目": "s319297资源",
+    "已核值": [
+      16,
+      52
+    ]
+  },
+  {
+    "项目": "s319349资源",
+    "已核值": [
+      18,
+      57
+    ]
+  },
+  {
+    "项目": "s319388资源",
+    "已核值": [
+      20,
+      51
+    ]
+  },
+  {
+    "项目": "s319399资源",
+    "已核值": [
+      22,
+      46
+    ]
+  },
+  {
+    "项目": "终牌组",
+    "已核值": [
+      24,
+      5
+    ]
+  },
+  {
+    "项目": "重载耗时",
+    "已核值": [
+      6853,
+      6835,
+      6903
+    ]
+  },
+  {
+    "项目": "终局reload",
+    "已核值": 3
+  },
+  {
+    "源码": "agent/src/reflex/card-model.ts",
+    "行": 921,
+    "内容": "  const hiddenDaggers = character.toLowerCase() === \"silent\" && cardId === \"HIDDEN_DAGGERS\" && !bool(card[\"upgraded\"]) &&"
+  },
+  {
+    "源码": "agent/src/reflex/card-model.ts",
+    "行": 929,
+    "内容": "  const draw = hiddenDaggers || shadowStep || metamorphosis || nextTurnOnly(template, \"Cards\") ? 0 : dyn(card, \"Cards\") ?? 0;"
+  },
+  {
+    "源码": "agent/src/reflex/card-model.ts",
+    "行": 1109,
+    "内容": "    ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),"
+  },
+  {
+    "源码": "agent/src/reflex/turn-solver.ts",
+    "行": 1312,
+    "内容": "  return card.cardId === \"HIDDEN_DAGGERS\" && !card.upgraded && card.discardCount === 2;"
+  },
+  {
+    "源码": "agent/src/reflex/combat-plan.ts",
+    "行": 3269,
+    "内容": "        : `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(\", \") || \"end turn\"}`,"
+  }
+]
