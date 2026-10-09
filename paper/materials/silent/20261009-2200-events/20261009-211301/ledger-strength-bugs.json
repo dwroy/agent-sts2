@@ -1,0 +1,192 @@
+[
+ {
+  "id": "silent-0051",
+  "ts": "2026-10-05T05:34:03+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "未升级萎靡的实际X减力与X虚弱没有建模；求解器会消费剩余能量，却对零X萎靡仍给3分未知技能固定价值。沙虫六次均在零能量施放，自身减益为0；开信刀第三技能的5伤须另计，不能说整步没有任何收益。需依据已观测X=0/1/3状态建模，不猜升级或其他条件。",
+  "evidence": [
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 9,
+    "turn": 3,
+    "role": "support",
+    "note": "最早回溯：未升级萎靡在0能量施放，拳击构装体人工制品1层不变；此前复盘没有登记这个零X模型缺口。",
+    "added": "2026-10-05T05:34:03+08:00"
+   },
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 12,
+    "turn": 3,
+    "role": "support",
+    "note": "1能量施放对海洋混混实际建立−1力量与1虚弱，是此前有效施放的对照。",
+    "added": "2026-10-05T05:34:03+08:00"
+   },
+   {
+    "run": "XYYQYBRM2A01",
+    "floor": 33,
+    "turn": 3,
+    "role": "support",
+    "note": "第1/2/3/4/6次T3、第五次T6均0能量打萎靡；第1次药瓶+萎靡候选常驻价值10，药瓶独用7；实际萎靡自身不改力量/虚弱，第三技能触发开信刀5伤。",
+    "added": "2026-10-05T05:34:03+08:00"
+   },
+   {
+    "run": "XYYQYBRM2A01",
+    "floor": 30,
+    "turn": 1,
+    "role": "support",
+    "note": "3能量萎靡令盛碗虫石力量−6→−9、虚弱1→4；尖啸临时减力恢复后还保留−3力量。",
+    "added": "2026-10-05T05:34:03+08:00"
+   },
+   {
+    "run": "K3676LU8B0UH",
+    "floor": 33,
+    "turn": 4,
+    "role": "repeat",
+    "note": "买来减力的未升级萎靡以0能量施放，力量和虚弱无变化，候选仍给常驻价值3；本局另六次零X也没有自身减益，只有F12 T2的X1成功减力加虚弱。",
+    "added": "2026-10-05T06:28:51+08:00"
+   }
+  ],
+  "first_run": "KAY522KT5NXR",
+  "prior": "partly",
+  "prior_runs": [
+   "KAY522KT5NXR"
+  ],
+  "prior_note": "发现前同角色KAY F9/F14/F15/F17零X没有产生减益，但F12 T3保留1能量成功产生减益；有有效与零效果施放，不能用前一代角色推断。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "XYYQYBRM2A01",
+    "K3676LU8B0UH"
+   ],
+   "commits": [
+    "PLACEHOLDER",
+    "0d7465a0962f4e0234530bb390da6ab0fcd5f8e2",
+    "b129cd20618b81ddb8233ccd0ce79179e8127532",
+    "b9c46d6686a8d7e05915323c6e5f6acdfc476e1a"
+   ]
+  },
+  "note": "新bug；当前live agent/src/reflex/card-model.ts:767/771/772/841/844及turn-solver.ts:1510；fix-queue.md及fix-queue-v4.md未登记。",
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T05:34:03+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T06:22:25+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T06:22:42+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T06:28:51+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T07:12:25+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix5",
+  "effect": null,
+  "notes": [
+   "新bug；当前live agent/src/reflex/card-model.ts:767/771/772/841/844及turn-solver.ts:1510；fix-queue.md及fix-queue-v4.md未登记。",
+   "更正上一条fix-batch登记：commits中的PLACEHOLDER为误写的占位值，并非提交号，应忽略；实际萎靡修复提交为0d7465a0962f4e0234530bb390da6ab0fcd5f8e2。按只追加协议保留原始行；尚未登记shipped。",
+   "依fix-done及交接核实实际合入；保留历史PLACEHOLDER行及学习者更正，提交归因只用实际源码提交。"
+  ],
+  "shipped_at": "2026-10-05T07:12:25+08:00"
+ },
+ {
+  "id": "silent-0144",
+  "ts": "2026-10-06T02:57:35+08:00",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "升级萎靡MALAISE仍被card-model.ts:815的!upgraded条件排除，在方案中按未建模技能赋固定价值；已修silent-0051的原版模型不覆盖它。LLYSRQQ35AVW实测X=0/2/3各施1/3/4减力和虚弱，帝王蟹零X将18攻击降为6、7挡保住63血。应记录为独立的升级覆盖缺口，不把全部推演差额或整场胜利归于此牌。",
+  "evidence": [
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 31,
+    "turn": 1,
+    "role": "support",
+    "note": "最早回溯：零能量升级萎靡指向外骨骼虫EXOSKELETON，所选题面明确unmodelled_cards为萎靡+、常驻价值3；决策ts为2026-10-04T19:22:54.738Z。",
+    "added": "2026-10-06T02:57:35+08:00"
+   },
+   {
+    "run": "LLYSRQQ35AVW",
+    "floor": 33,
+    "turn": 3,
+    "role": "support",
+    "note": "候选升级萎靡未建模、预计损5；实际X0给碾碎爪CRUSHER减1力/1虚弱，18攻击变6、7挡覆盖，63血不变。",
+    "added": "2026-10-06T02:57:35+08:00"
+   },
+   {
+    "run": "LLYSRQQ35AVW",
+    "floor": 38,
+    "turn": 1,
+    "role": "support",
+    "note": "实际X2令拳击构装体PUNCH_CONSTRUCT获得-3力量与3虚弱。",
+    "added": "2026-10-06T02:57:35+08:00"
+   },
+   {
+    "run": "LLYSRQQ35AVW",
+    "floor": 48,
+    "turn": 2,
+    "role": "support",
+    "note": "实际X3令聚合体TORCH_HEAD_AMALGAM力量0→-4、虚弱1→5；13攻击变10，音叉另7挡，69→66血。",
+    "added": "2026-10-06T02:57:35+08:00"
+   }
+  ],
+  "first_run": "KAY522KT5NXR",
+  "prior": "no",
+  "prior_runs": [
+   "KAY522KT5NXR",
+   "VN7RQJMJEFMX"
+  ],
+  "prior_note": "限定为模型先验：按36个更早静默局号流式抽查升级萎靡动作，最早KAY题面已明确未建模，没有模型正确计算升级减益的可比证据；Jev实际选到此牌不等于代码做对。旧0051仅原版、0053为机制观察，本升级缺口尚未登记。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "LLYSRQQ35AVW"
+   ],
+   "commits": [
+    "d48d16129b10e5060dc9d33a1b96e3340c7b82b8",
+    "9af37f370f360a94e36ab9ac268c5950ae9549a8",
+    "473a62f475dc5af126f231061a1c3c33880ed7a9",
+    "054458768f7a9451328739834ecc20f9ce8e48b1"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-06T02:57:35+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T03:52:00+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T04:05:07+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix24",
+  "effect": null,
+  "notes": [
+   "04:00 fix-done实际核实学习者d48d1612升级萎靡模型修复已合入live 9af37f37并发布473a62f4/唯一S1.fix24，main机械同步已测发布；来源LLYSRQQ35AVW SILENT A8 F33 T3/F38 T1/F48 T2，first_run仍KAY522KT5NXR A0 F31 T1。只覆盖学习者观测文本的X+1升级入口，不外推其他模板；撤源3失败1通过/恢复4通过，最终源/合后固定沙箱tsc0、188文件2068例。0051原版及0146帐篷独立状态保持，先验/claim/evidence/repeat不变，不把整场胜负或全部差额归因于此修复。完整外部本批checks_pending等调度器事件，不借经验30结果；原初稿失败保留，不另审。"
+  ],
+  "shipped_at": "2026-10-06T04:05:07+08:00"
+ }
+]

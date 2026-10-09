@@ -1,0 +1,2427 @@
+{
+  "timestamp": "2026-10-09 22:16",
+  "base_head": "ce56ce0f808217c5044ed44def68ded611ebfb3a",
+  "events": [
+    {
+      "batch": "20261009-204301",
+      "task": "postmortem",
+      "run_id": "54G5683J0E5S",
+      "report": {
+        "task": "postmortem",
+        "appended": [
+          "54G5683J0E5S"
+        ],
+        "skipped": [],
+        "bugs": [
+          {
+            "run": "54G5683J0E5S",
+            "where": "agent/src/reflex/rollout-live.ts:831",
+            "what": "组装师攻击召唤未接入五回合推演；活体召唤只读ILLUSION_MOVE",
+            "new": true
+          }
+        ],
+        "ledger": {
+          "added": [
+            "silent-0347",
+            "silent-0348"
+          ],
+          "updated": [
+            "silent-0020",
+            "silent-0125",
+            "silent-0005",
+            "silent-0013",
+            "silent-0046",
+            "silent-0233",
+            "silent-0162",
+            "silent-0312",
+            "silent-0259"
+          ],
+          "repeats": [],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-43156dee9f23ae43",
+          "silent-proposal-4215d1a68ed970e6"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/report.md"
+      },
+      "scheduler": {
+        "runs": [
+          "54G5683J0E5S"
+        ],
+        "pid": 2350529,
+        "started": "2026-10-09 20:43",
+        "state": "done",
+        "reason": "tick",
+        "character": "silent",
+        "proposal_policy": "Roy-2026-10-07-learning",
+        "pane": "wJ:pBB",
+        "rc": 0,
+        "finished": "2026-10-09 21:04",
+        "done": [
+          "54G5683J0E5S"
+        ],
+        "missing": [],
+        "proposal_audit_errors": []
+      },
+      "lesson_bytes": 24207,
+      "original_cli": 15,
+      "support": 14,
+      "proposal_links": 4,
+      "source_audit": {
+        "旧前缀保持": true,
+        "正式追加与草稿一致": true,
+        "标题次数": 1,
+        "逐原始字节核验条目": 3328,
+        "关键数字校验": 241,
+        "关键数字失败": 0,
+        "ledger_check": {
+          "exit": 0,
+          "stdout": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 348 item(s), 0 problem(s)\n",
+          "stderr": ""
+        },
+        "账本条目": [
+          "silent-0005",
+          "silent-0013",
+          "silent-0020",
+          "silent-0046",
+          "silent-0125",
+          "silent-0162",
+          "silent-0233",
+          "silent-0259",
+          "silent-0312",
+          "silent-0347",
+          "silent-0348"
+        ],
+        "提案": [
+          "silent-proposal-43156dee9f23ae43",
+          "silent-proposal-4215d1a68ed970e6"
+        ]
+      },
+      "blocking": false
+    },
+    {
+      "batch": "20261009-211301",
+      "task": "postmortem",
+      "run_id": "9663Y88TYK73",
+      "report": {
+        "task": "postmortem",
+        "appended": [
+          "9663Y88TYK73"
+        ],
+        "skipped": [],
+        "bugs": [
+          {
+            "run": "9663Y88TYK73",
+            "where": "agent/src/reflex/turn-solver.ts:2684",
+            "what": "已有虚弱后临时减力直接减显示攻击，末次尖啸方案报损3，实际需损5并死亡。",
+            "new": true
+          }
+        ],
+        "ledger": {
+          "added": [
+            "silent-0349"
+          ],
+          "updated": [
+            "silent-0019",
+            "silent-0278",
+            "silent-0057",
+            "silent-0255",
+            "silent-0253",
+            "silent-0023",
+            "silent-0027",
+            "silent-0046"
+          ],
+          "repeats": [],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-bb7597d8a1fe63ff",
+          "silent-proposal-69bf16b2dc62dbeb"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion",
+          "sl"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/report.md"
+      },
+      "scheduler": {
+        "runs": [
+          "9663Y88TYK73"
+        ],
+        "pid": 2370322,
+        "started": "2026-10-09 21:13",
+        "state": "done",
+        "reason": "tick",
+        "character": "silent",
+        "proposal_policy": "Roy-2026-10-07-learning",
+        "pane": "wJ:pBD",
+        "rc": 0,
+        "finished": "2026-10-09 21:33",
+        "done": [
+          "9663Y88TYK73"
+        ],
+        "missing": [],
+        "proposal_audit_errors": []
+      },
+      "lesson_bytes": 25822,
+      "original_cli": 18,
+      "support": 14,
+      "proposal_links": 9,
+      "source_audit": {
+        "run": "9663Y88TYK73",
+        "old_prefix_unchanged": true,
+        "appended_draft_equal": true,
+        "heading_count": 1,
+        "ledger_entries": 9,
+        "ledger_check": 0,
+        "proposal_ids": [
+          "silent-proposal-bb7597d8a1fe63ff",
+          "silent-proposal-69bf16b2dc62dbeb"
+        ],
+        "proposal_state": "pending",
+        "reports_agree": true,
+        "new_bug": "silent-0349",
+        "source_checks": 1475
+      },
+      "blocking": false
+    },
+    {
+      "batch": "20261009-200935-experience-update",
+      "task": "experience-update",
+      "number": 138,
+      "report": {
+        "task": "experience-update",
+        "version": "2026-10-09.27",
+        "commit": "19b98aa159ff7a451a8cbe34e91565899244a8e1",
+        "merged": null,
+        "added": 1,
+        "updated": 13,
+        "retired": 0,
+        "active": 199,
+        "mechanisms": [
+          "能力建立与跨战资源（观察）",
+          "力量/敏捷与敌成长",
+          "震荡波",
+          "毒雾",
+          "致命毒药",
+          "仪式兽阈值/SL",
+          "仪式兽昏眩一牌",
+          "异鸟逐击增力",
+          "船夹板",
+          "坚韧之环",
+          "雕像苏醒十力",
+          "闪光贾克斯果增力与易伤（观察）"
+        ],
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 2627
+        },
+        "ledger": {
+          "added": [],
+          "proposed": [
+            "silent-0019",
+            "silent-0020",
+            "silent-0021",
+            "silent-0012",
+            "silent-0015",
+            "silent-0011",
+            "silent-0025",
+            "silent-0133",
+            "silent-0222",
+            "silent-0134",
+            "silent-0242",
+            "silent-0289",
+            "silent-0307",
+            "silent-0345"
+          ],
+          "retired": [],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-330623a7494c416e",
+          "silent-proposal-0259be72ce8eddc1",
+          "silent-proposal-23bab41ff3cb2e72"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion",
+          "sl",
+          "terminal",
+          "structure"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/report.md"
+      },
+      "scheduler": {
+        "task": "experience-update",
+        "character": "silent",
+        "runs": [
+          "HXCY44VD9QWU",
+          "N8A2W8LH39N0"
+        ],
+        "key": "HXCY44VD9QWU,N8A2W8LH39N0",
+        "pid": 2312683,
+        "state": "failed",
+        "reason": "tick",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+        "proposal_policy": "Roy-2026-10-07-learning",
+        "pane": "wJ:pBA",
+        "finished": "2026-10-09 20:42",
+        "rc": 0,
+        "merged": null,
+        "proposal_audit_errors": [],
+        "report": {
+          "task": "experience-update",
+          "version": "2026-10-09.27",
+          "commit": "19b98aa159ff7a451a8cbe34e91565899244a8e1",
+          "merged": null,
+          "added": 1,
+          "updated": 13,
+          "retired": 0,
+          "active": 199,
+          "mechanisms": [
+            "能力建立与跨战资源（观察）",
+            "力量/敏捷与敌成长",
+            "震荡波",
+            "毒雾",
+            "致命毒药",
+            "仪式兽阈值/SL",
+            "仪式兽昏眩一牌",
+            "异鸟逐击增力",
+            "船夹板",
+            "坚韧之环",
+            "雕像苏醒十力",
+            "闪光贾克斯果增力与易伤（观察）"
+          ],
+          "tests": {
+            "tsc": 0,
+            "vitest": 0,
+            "cases": 2627
+          },
+          "ledger": {
+            "added": [],
+            "proposed": [
+              "silent-0019",
+              "silent-0020",
+              "silent-0021",
+              "silent-0012",
+              "silent-0015",
+              "silent-0011",
+              "silent-0025",
+              "silent-0133",
+              "silent-0222",
+              "silent-0134",
+              "silent-0242",
+              "silent-0289",
+              "silent-0307",
+              "silent-0345"
+            ],
+            "retired": [],
+            "check": 0
+          },
+          "code_proposals": [
+            "silent-proposal-330623a7494c416e",
+            "silent-proposal-0259be72ce8eddc1",
+            "silent-proposal-23bab41ff3cb2e72"
+          ],
+          "implementation_domains": [
+            "combat",
+            "potion",
+            "sl",
+            "terminal",
+            "structure"
+          ],
+          "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/report.md"
+        },
+        "retry_at": 1791553369.871822
+      },
+      "source": "19b98aa159ff7a451a8cbe34e91565899244a8e1",
+      "source_blob": "d8a129e9da9a4e429abef1234762155c23e99fe7",
+      "parent_blob": "57d42f573817b707ac27fb98433e9e418fe9e295",
+      "mapping": {
+        "silent-route-hp-observation": [
+          "silent-0019"
+        ],
+        "silent-rest-buffer-observation": [
+          "silent-0020"
+        ],
+        "silent-deck-burst-observation": [
+          "silent-0021"
+        ],
+        "silent-strength-weak-observation": [
+          "silent-0012"
+        ],
+        "silent-shockwave-duration": [
+          "silent-0015"
+        ],
+        "silent-noxious-fumes-growth": [
+          "silent-0011"
+        ],
+        "silent-deadly-poison-application": [
+          "silent-0025"
+        ],
+        "silent-ceremonial-beast-threshold-growth-sl": [
+          "silent-0133"
+        ],
+        "silent-ceremonial-beast-ringing-one-card": [
+          "silent-0222"
+        ],
+        "silent-byrdonis-strength-multihit-observation": [
+          "silent-0134"
+        ],
+        "silent-horn-cleat-second-turn-block": [
+          "silent-0242"
+        ],
+        "silent-toric-toughness-delayed-block": [
+          "silent-0289"
+        ],
+        "silent-bygone-effigy-wake-strength": [
+          "silent-0307"
+        ],
+        "silent-jaxfruit-strength-vulnerable-observation": [
+          "silent-0345"
+        ]
+      },
+      "source_tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 251,
+        "cases": 2627,
+        "retried": false
+      },
+      "conflicts": [
+        "CONFLICT (content): Merge conflict in notes/for-dai.md",
+        "CONFLICT (content): Merge conflict in notes/lessons.md",
+        "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+        "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+        "CONFLICT (content): Merge conflict in paper/data/README.md",
+        "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+        "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+        "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+        "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+        "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+        "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+        "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+        "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+        "CONFLICT (content): Merge conflict in paper/data/summary.json",
+        "CONFLICT (content): Merge conflict in paper/data/verification.json",
+        "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+        "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+        "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+      ],
+      "original_cli": 43,
+      "support": 8,
+      "changelog_bytes": 65755,
+      "source_audit": {
+        "sources": {
+          "HXCY44VD9QWU": {
+            "raw_verified": {
+              "decisions": 370,
+              "states": 375,
+              "run-plans": 2,
+              "sl-attempts": 6
+            },
+            "total": 753
+          },
+          "N8A2W8LH39N0": {
+            "raw_verified": {
+              "decisions": 248,
+              "states": 255,
+              "run-plans": 2,
+              "sl-attempts": 0
+            },
+            "total": 505
+          }
+        },
+        "key_checks": 11,
+        "all_passed": true
+      },
+      "current_code_overwrite": false
+    },
+    {
+      "batch": "20261009-210408-experience-update",
+      "task": "experience-update",
+      "number": 139,
+      "report": {
+        "task": "experience-update",
+        "version": "2026-10-09.28",
+        "commit": "7ecf496c09039aab4390f47e69470ddf1b69f5d4",
+        "merged": null,
+        "added": 1,
+        "updated": 18,
+        "retired": 0,
+        "active": 200,
+        "mechanisms": [
+          "能力兑现与HP护栏取舍（观察）",
+          "力量/敏捷/临时减力",
+          "灵动步法",
+          "致命毒药",
+          "臂甲",
+          "脆弱逐牌折减",
+          "尖啸",
+          "蜃景",
+          "意外光滑的石头",
+          "抱抱先生",
+          "电击高电压（观察）",
+          "再生药水",
+          "跨幕缺失HP回复",
+          "敏捷药水",
+          "速度药水",
+          "巨斧库存与阶段预算",
+          "组装师活体召唤（观察）"
+        ],
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 2627
+        },
+        "ledger": {
+          "added": [],
+          "proposed": [
+            "silent-0019",
+            "silent-0020",
+            "silent-0021",
+            "silent-0125",
+            "silent-0012",
+            "silent-0005",
+            "silent-0025",
+            "silent-0013",
+            "silent-0046",
+            "silent-0010",
+            "silent-0158",
+            "silent-0162",
+            "silent-0233",
+            "silent-0259",
+            "silent-0243",
+            "silent-0276",
+            "silent-0253",
+            "silent-0312",
+            "silent-0348"
+          ],
+          "retired": [],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-3b3c8e2dc8656212",
+          "silent-proposal-5e907442ae7a9650",
+          "silent-proposal-0117c7ae05ed58b0"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion",
+          "sl",
+          "terminal",
+          "structure"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/report.md"
+      },
+      "scheduler": {
+        "task": "experience-update",
+        "character": "silent",
+        "runs": [
+          "54G5683J0E5S"
+        ],
+        "key": "54G5683J0E5S",
+        "pid": 2363663,
+        "state": "failed",
+        "reason": "tick",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+        "proposal_policy": "Roy-2026-10-07-learning",
+        "pane": "wJ:pBC",
+        "finished": "2026-10-09 21:38",
+        "rc": 0,
+        "merged": null,
+        "proposal_audit_errors": [],
+        "report": {
+          "task": "experience-update",
+          "version": "2026-10-09.28",
+          "commit": "7ecf496c09039aab4390f47e69470ddf1b69f5d4",
+          "merged": null,
+          "added": 1,
+          "updated": 18,
+          "retired": 0,
+          "active": 200,
+          "mechanisms": [
+            "能力兑现与HP护栏取舍（观察）",
+            "力量/敏捷/临时减力",
+            "灵动步法",
+            "致命毒药",
+            "臂甲",
+            "脆弱逐牌折减",
+            "尖啸",
+            "蜃景",
+            "意外光滑的石头",
+            "抱抱先生",
+            "电击高电压（观察）",
+            "再生药水",
+            "跨幕缺失HP回复",
+            "敏捷药水",
+            "速度药水",
+            "巨斧库存与阶段预算",
+            "组装师活体召唤（观察）"
+          ],
+          "tests": {
+            "tsc": 0,
+            "vitest": 0,
+            "cases": 2627
+          },
+          "ledger": {
+            "added": [],
+            "proposed": [
+              "silent-0019",
+              "silent-0020",
+              "silent-0021",
+              "silent-0125",
+              "silent-0012",
+              "silent-0005",
+              "silent-0025",
+              "silent-0013",
+              "silent-0046",
+              "silent-0010",
+              "silent-0158",
+              "silent-0162",
+              "silent-0233",
+              "silent-0259",
+              "silent-0243",
+              "silent-0276",
+              "silent-0253",
+              "silent-0312",
+              "silent-0348"
+            ],
+            "retired": [],
+            "check": 0
+          },
+          "code_proposals": [
+            "silent-proposal-3b3c8e2dc8656212",
+            "silent-proposal-5e907442ae7a9650",
+            "silent-proposal-0117c7ae05ed58b0"
+          ],
+          "implementation_domains": [
+            "combat",
+            "potion",
+            "sl",
+            "terminal",
+            "structure"
+          ],
+          "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/report.md"
+        },
+        "retry_at": 1791556700.127908
+      },
+      "source": "7ecf496c09039aab4390f47e69470ddf1b69f5d4",
+      "source_blob": "924d336da79100ad6afd12ca3300a370573cd206",
+      "parent_blob": "d8a129e9da9a4e429abef1234762155c23e99fe7",
+      "mapping": {
+        "silent-route-hp-observation": [
+          "silent-0019"
+        ],
+        "silent-rest-buffer-observation": [
+          "silent-0020"
+        ],
+        "silent-deck-burst-observation": [
+          "silent-0021",
+          "silent-0125"
+        ],
+        "silent-strength-weak-observation": [
+          "silent-0012"
+        ],
+        "silent-footwork-block": [
+          "silent-0005"
+        ],
+        "silent-deadly-poison-application": [
+          "silent-0025"
+        ],
+        "silent-vambrace-opening-block": [
+          "silent-0013"
+        ],
+        "silent-frail-card-block": [
+          "silent-0013"
+        ],
+        "silent-piercing-wail-temporary-strength": [
+          "silent-0046"
+        ],
+        "silent-mirage-poison-card-block": [
+          "silent-0010"
+        ],
+        "silent-smooth-stone-opening-dexterity": [
+          "silent-0158"
+        ],
+        "silent-mr-struggles-turn-start-damage": [
+          "silent-0162"
+        ],
+        "silent-zapbot-high-voltage-growth": [
+          "silent-0233"
+        ],
+        "silent-regen-potion-decay-heal": [
+          "silent-0259"
+        ],
+        "silent-act-transition-missing-hp-heal": [
+          "silent-0243"
+        ],
+        "silent-dexterity-potion-card-block": [
+          "silent-0276"
+        ],
+        "silent-speed-potion-temporary-dexterity": [
+          "silent-0253"
+        ],
+        "silent-axebot-stock-phase-budget": [
+          "silent-0312"
+        ],
+        "silent-fabricator-living-summon-observation": [
+          "silent-0348"
+        ]
+      },
+      "source_tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 251,
+        "cases": 2627,
+        "retried": false
+      },
+      "conflicts": [
+        "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+        "CONFLICT (content): Merge conflict in notes/for-dai.md",
+        "CONFLICT (content): Merge conflict in notes/lessons.md",
+        "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+        "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+        "CONFLICT (content): Merge conflict in paper/data/README.md",
+        "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+        "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+        "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+        "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+        "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+        "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+        "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+        "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+        "CONFLICT (content): Merge conflict in paper/data/summary.json",
+        "CONFLICT (content): Merge conflict in paper/data/verification.json",
+        "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+        "CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md",
+        "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+        "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+      ],
+      "original_cli": 58,
+      "support": 9,
+      "changelog_bytes": 114779,
+      "source_audit": {
+        "checks": 4081,
+        "new_original_records": 1489,
+        "historical_original_records": 10,
+        "parameter_summary": {
+          "silent-footwork-block": {
+            "actions": 1174,
+            "runs": 102
+          },
+          "silent-deadly-poison-application": {
+            "actions": 796,
+            "runs": 45
+          },
+          "silent-piercing-wail-temporary-strength": {
+            "actions": 598,
+            "runs": 79
+          },
+          "silent-mirage-poison-card-block": {
+            "actions": 119,
+            "runs": 23
+          },
+          "silent-dexterity-potion-card-block": {
+            "actions": 95,
+            "runs": 61
+          },
+          "silent-speed-potion-temporary-dexterity": {
+            "actions": 63,
+            "runs": 45
+          },
+          "silent-regen-potion-decay-heal": {
+            "actions": 35,
+            "runs": 23
+          }
+        }
+      },
+      "current_code_overwrite": false
+    }
+  ],
+  "originals": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/append-lessons.sh": {
+      "bytes": 24272,
+      "sha256": "d656316dde4da0997c3f20dc3cb7d4dcea9b94fa4f044892656c3f32d01c6377"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/verify-draft.py": {
+      "bytes": 2860,
+      "sha256": "22265a571fef0b7ff7da72348fc0d535c4443952b082a3623b9bac4f8724dffe"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-final.json": {
+      "bytes": 1008275,
+      "sha256": "da1573f441783a80a44caa235bfac583a79a6f45b98664c66bee8f38cc2fc114"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/analyze-output.txt": {
+      "bytes": 39228,
+      "sha256": "f32f1854452e8163fbd823f5771bff96bc8ed29f43f63ac3e02f6680970f938e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-fabricator.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/10GPK5XGHCK3-decisions.jsonl": {
+      "bytes": 3843327,
+      "sha256": "2fe180882760ff9e76b41d8eabca4fe3acc211986bb0697ee0292b67557a53d0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/final-audit.py": {
+      "bytes": 2486,
+      "sha256": "557a30da04a29bb49c98e4ece2d584c61ad824174b5a120a2118c93b0b0a3b6a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/final-audit.json": {
+      "bytes": 686,
+      "sha256": "1d1e0623e397d3a63ca9cccededf4dacdf3a15f5d64103e35faf3b020161e731"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/proposal-registration.json": {
+      "bytes": 1616,
+      "sha256": "063c77d7c39f5a1022847db88eff44c2f76ccdee48f610fe54c0c1b1b3b05c3e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-stabbot.json": {
+      "bytes": 323199,
+      "sha256": "8a2a9945ca696eedafb571d961e2c24a9d35d4b2c829b35bdd2861fa42c9bd98"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-vambrace.json": {
+      "bytes": 77487,
+      "sha256": "9c84269f07dde0c33b15108bb8c3685f3f9d883678bb026a52dc8b1d23d299a1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/report.md": {
+      "bytes": 1880,
+      "sha256": "8434c1fc8d99876dee1a56a4952ca8f0b6485c39100b9910e7a96f0e76b513ac"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/54G5683J0E5S-run-plans.jsonl": {
+      "bytes": 20367,
+      "sha256": "3463e0238f9de003b18b2d9b266b43a859810d5bbddade1895464a64ead1907d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-temporary.json": {
+      "bytes": 4220336,
+      "sha256": "3615469ed2bb830dcd11c8a6da38f04b7472ac988d2ac243789b916af8639d00"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/write-report.py": {
+      "bytes": 2514,
+      "sha256": "a6e4b1b5c7fc24b34303e28ce56983d1655eca6e8a8a45378031e157766113c7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/postappend-check.txt": {
+      "bytes": 2176,
+      "sha256": "b3d4584428cca7cafe18f67695299610817c34aba552cdd3c456c1e42dea6843"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/54G5683J0E5S-decisions.jsonl": {
+      "bytes": 2324965,
+      "sha256": "99d93d13a597446dad7b36b12467b015c89c5476411e577623e4a0fa7c335005"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-axebot.json": {
+      "bytes": 12531,
+      "sha256": "50f6ccaa91b370563b9789636b7f44fd9046bf251219436d9dd07769637688aa"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/metrics.py": {
+      "bytes": 3421,
+      "sha256": "f7f60a3116188e836c1c7877a4a5473182547b00156eb903ae53d560b67d798c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-updates.json": {
+      "bytes": 3321,
+      "sha256": "09976063d905982e10b5a9559d79f6b3751327336d77a72cd05b1157f6c98217"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/lessons-before.json": {
+      "bytes": 95,
+      "sha256": "fdf77f19baaeba54e83d984dbceebfb7b74e9dcee5d4bb5497c687f25090ec9d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/prepare-append.py": {
+      "bytes": 1897,
+      "sha256": "d6fd44c04212f1cc43dc0beebf90b3a3b2aed985f6b3b7b78af8b23516c93d03"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/54G5683J0E5S-states.jsonl": {
+      "bytes": 21197902,
+      "sha256": "6d087562867896c4913498f2c773aed883cc309e59ef15c86325e8673ef4a4e3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/lessons-preappend.json": {
+      "bytes": 96,
+      "sha256": "7197439964f1dc7aaea114f4c0ea2aef8eb266ea1cd6549c8dc97931b80b894a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/offline-failures.md": {
+      "bytes": 338,
+      "sha256": "3d026fd52ba53cbab74385c3f4cd25b65bb898b7d175c418312a0af789dd7638"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/proposal-fabricator.md": {
+      "bytes": 3251,
+      "sha256": "dd7a92e96469f14c1101f1ed91b836fd2586a77966f0971f6ee00b2d2ebac806"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/lessons-draft.md": {
+      "bytes": 24207,
+      "sha256": "5aeb2fe5256530858a06ffe0f904d9efac6f80caa99a3fc1572f4018c880e9d8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/10GPK5XGHCK3-states.jsonl": {
+      "bytes": 40899153,
+      "sha256": "29a5b125cc5bea73df0e6b0b229705cd3d606fd0e9436667cb5ace351d6abe94"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/lessons-head.md": {
+      "bytes": 4350,
+      "sha256": "cc2ec0e51e9bc20c37a7de6f5eb8dc4d84d4b688be5212d8742af92b835426e2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-summon.json": {
+      "bytes": 71452,
+      "sha256": "6cc39e2932430124b79be261ad56af7668f35978891fc1f696627f2d17de63ea"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-struggles.json": {
+      "bytes": 35801,
+      "sha256": "e9c77e312589093a98e00ee1228d3c3842213e450ad0f76a1fce4411e47b6e70"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-0020.json": {
+      "bytes": 307297,
+      "sha256": "e4018c91973c317456ad6b8054cb9692c4b7ad4ee4138355c166030ca2949eda"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/lessons-tail.md": {
+      "bytes": 11812,
+      "sha256": "c77e5a95ddc340f70da4c67ec3977528d84ecd897f0e5997768364efa194d48e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/proposal-resource-guard.json": {
+      "bytes": 496,
+      "sha256": "765f7b21e9b4104c27fa9954c9288dd01e256cae00fa48a0dfdcc86e909c6c6c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/proposal-fabricator.json": {
+      "bytes": 457,
+      "sha256": "efc75f50f272ade1a71365bf4f44b61af5bd36673ab366e9fbebc603c595788e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/analyze-v2.py": {
+      "bytes": 2242,
+      "sha256": "13c3ff913c9686437551003ea4b7ea0919bda770b4f99110e073ace9f9b591da"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/analyze.py": {
+      "bytes": 2234,
+      "sha256": "c25f78c85e21a0f7ba1f3516045ae4f249da4ec5c001f3d5093c4a95eacdbb73"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/decisions-compact.txt": {
+      "bytes": 237850,
+      "sha256": "76fcfa2117751d88148a5e3d8d5e9b585d96d3c5dbaf9b9007c935a08cd60c75"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/54G5683J0E5S-deepseek-reasoning.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/potion-table.md": {
+      "bytes": 1902,
+      "sha256": "a961fa270ac0bbdbf3d9af674bf9deba74e920d0ce9207fc014b075cd29f33bb"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/states-compact.txt": {
+      "bytes": 238210,
+      "sha256": "922fd28656fd0e7de37fd83defce21e97fda04109c8fe31aa8bca3c2a82de4c1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/report.json": {
+      "bytes": 902,
+      "sha256": "acc6446a5b3db4c130d20af1b0f96fa0983468d4b98eb1d7e2940c0337620d2b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/prior-fabricator.txt": {
+      "bytes": 8199,
+      "sha256": "9e3b05137989a3e7b34e135d2be04fe5cb99a87531e5395b79457927e0373715"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/extract.py": {
+      "bytes": 1570,
+      "sha256": "072e1e3811903f98acf3e5875b5f427222575b135e3adefb89eda4b4dd844eec"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/54G5683J0E5S-sl-attempts.jsonl": {
+      "bytes": 48843,
+      "sha256": "3dcbef4d1ec5f39889be878ed8cc5d4defbb403006f98c5dbe8669bbf427ade6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/metrics-output.txt": {
+      "bytes": 6756,
+      "sha256": "7146c7824e798f8ee005de138ac07c586d4d6603ab67d0c7bc3c9e7314abec98"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/proposal-resource-guard.md": {
+      "bytes": 3149,
+      "sha256": "8026d2d21960d4b4142f50154c98215df5b760c304f4a0b48a3362c696f52309"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/draft-checks.json": {
+      "bytes": 23075,
+      "sha256": "4188f4b36c9e1ed3805ce3084266e132c542389a8bb41f44f81b6e674d021344"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/prior-extract.py": {
+      "bytes": 1422,
+      "sha256": "fd379cb2238101120ddb8df191744e47c7620003df19d7448d941a0276578211"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-check.txt": {
+      "bytes": 94,
+      "sha256": "3ecdd9735a275285157404096018d6417ec0785b3decadc955efe12152e912be"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-update-receipts.json": {
+      "bytes": 876,
+      "sha256": "db83163d9cad085e7ac099e887541666162930997e7b172ef2332c1ac0226b29"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/ledger-0125.json": {
+      "bytes": 162865,
+      "sha256": "3a107697d9458bf56ed39f41570347956248aec280ada90eea33f7edbcd9f3f4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/combat-tables.md": {
+      "bytes": 6141,
+      "sha256": "99bd7ee977c565cdef1a108307f6788f18824c3cd6589f0befb7d59890cc48f4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/54G5683J0E5S-resources.json": {
+      "bytes": 737644,
+      "sha256": "558682282431e718c47e23e3efd5615979b263e8b3db6bd951f2a83438f40105"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem.jsonl": {
+      "bytes": 899720,
+      "sha256": "deea8e06d3228bbbb77a42ab99aa1d992173d719cd359d98755450f6edb0a1e6"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-204301.out": {
+      "bytes": 2546,
+      "sha256": "a47487630d695e962316bceb8dad4ee961d56268d085e4be5ac3335a6d4da477"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-204301.err": {
+      "bytes": 7968,
+      "sha256": "4987b3025ae5c0dd741c39e5e2fc8d68e42d23d83b2b502adf09e71c84630275"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-final.json": {
+      "bytes": 881731,
+      "sha256": "3319266f3c267bb44e0f89c6316083d7e67c0d7ed3b26e76361eb5a2f52a0b5a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-nexus.json": {
+      "bytes": 608107,
+      "sha256": "338f002d06ec65c5957d9ce3d4f0e4854ee9452a9066b994736175a89a5d699e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/proposal-resource-poison-window.json": {
+      "bytes": 607,
+      "sha256": "6bc2d6e7557e9e279e917057a23a4568290f761de182351aa00dc7279829c7ef"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/states-indexed.jsonl": {
+      "bytes": 24833226,
+      "sha256": "47c6758a0354dc8fe456ff10d2c268a4025a2a494c1d8c08676febbcc507d7d5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/draft-head.md": {
+      "bytes": 4705,
+      "sha256": "4e7e5ca61c90ce6c13dbb26cb33a7527bd7108f43bc0118b88eb44ee24cfd534"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/proposal-weak-strength-id.txt": {
+      "bytes": 33,
+      "sha256": "0717900b2eb3e6f8c13e4aa1b0432fc03ebb2e3aa084efebdaf628d97bfb631f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/bug-source.txt": {
+      "bytes": 1540,
+      "sha256": "5978539b52b2b35555ca40689a18200a81d67910ea25e824320cc7d4801b90de"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-potion.json": {
+      "bytes": 1122148,
+      "sha256": "511659f0bd0b6472b38a4d6e766f7ff37e30432cbe2ee28b2414d12d37600880"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/final-audit.json": {
+      "bytes": 371,
+      "sha256": "08aa0f3aeab61e785000f0114df4ffcf7ebe14fbd3218e7ae1be2800fbd65e94"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-updated.txt": {
+      "bytes": 96,
+      "sha256": "ed49afd760e366ee7e3345014ced790d904d0ccdb86873dff7c8c18c48de8bbb"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/report.md": {
+      "bytes": 2074,
+      "sha256": "4c0c8dec87ab69cfbf17bf747f4ade16138d0ff22b2913cd4446f54d807cb7ac"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/brain-summary.txt": {
+      "bytes": 32989,
+      "sha256": "d32db2a3571e4bfefb9e369e044fff05594d66b77a16d06a6899d9f5877cb22d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/append-audit.json": {
+      "bytes": 256,
+      "sha256": "cd7874af225d43daa841644ade598a9e085365bac7a6c1f4f8292af5cd2f88c7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/plans-indexed.jsonl": {
+      "bytes": 14934,
+      "sha256": "8c0fae25004240fb32dc8054dd82ada14ec5cb5621536614e19da54156a68402"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/reasoning-window.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/stats-summary.txt": {
+      "bytes": 4024,
+      "sha256": "8e5cec8e6b4f67f69983cfd625b7fbc927b30b65ca76a02eda1ed2ac24247e6e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/lessons-before.json": {
+      "bytes": 97,
+      "sha256": "5790a2de9019d705f711f59f1cbda6250f1045d055b3699c168e0dffb0fc2add"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/states.jsonl": {
+      "bytes": 26829807,
+      "sha256": "adc3883e595d256b769764e0f7eab21b6ad45df40f433f232e8b77154a69ce1e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/sl.jsonl": {
+      "bytes": 95787,
+      "sha256": "2df6470cad9c88e01be37713cba9960f0675de1ea336d1fee96da56f7bf375d5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/9663Y88TYK73-resources.json": {
+      "bytes": 849081,
+      "sha256": "d46ca478ef8c93393f3fa42476f2a847b6c6649f63eb1bb55a3750aee7aca539"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-accelerant.json": {
+      "bytes": 3661728,
+      "sha256": "0e5bcb145156e492b45e40bf3fa3008c9eb14c40f99bdd87fc1f09ed4ddc8f15"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-afterimage.json": {
+      "bytes": 3302449,
+      "sha256": "0637a7f445f70a491583461ba7f0c2babaabac7ca91a692e022489b3db6be906"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/resource-table.md": {
+      "bytes": 5149,
+      "sha256": "c2abd7710c9302fc730183f4c7cedde8c011145863f6d20eeebf63e5a179af25"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/draft-tail.md": {
+      "bytes": 5004,
+      "sha256": "6b6d368a1af95bf0bbe2263b955511aeba4064e0c45d3d3d3e47897ce8c58eb6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/draft-body.md": {
+      "bytes": 3816,
+      "sha256": "83b8a49d151397b7a846d909113614c9bdd7e27beddb5304ab9b1cf26d959705"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/resources-summary.txt": {
+      "bytes": 24249,
+      "sha256": "61434d60868beea93545a91d1be0610025d7ec7febf178acbd23eeabe4163d31"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/inspect.py": {
+      "bytes": 2608,
+      "sha256": "e9a1231ddc79b1cfe0b8f6211d9fefe7157cc9b7c3d9be2ae265c358b3dc99e9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-added.txt": {
+      "bytes": 12,
+      "sha256": "9bd9ed37aa86185b4101a503b2be161932b255baf2a8d41809714a907747ad26"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-unused.json": {
+      "bytes": 573664,
+      "sha256": "5442418f33be73a43cc9e5969e6c750342b9df37424f33e43348296f5c840608"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-wail-bugs.json": {
+      "bytes": 24566,
+      "sha256": "884910a60537f037a0dc2b8a66c65668d0b0f317bdbc08e4488a6efa6a9c5649"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/proposal-weak-strength.md": {
+      "bytes": 3521,
+      "sha256": "5550629c8d9249d9a71ab70a5f9462e717d058f76449ef9766b4d5998cccfd22"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-weak-bugs.json": {
+      "bytes": 30211,
+      "sha256": "fcaad724c30706f2d137ad0e8e76419acaa3c1f8fdbf365517edc8f70d4f2d16"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/proposal-resource-poison-window-id.txt": {
+      "bytes": 33,
+      "sha256": "d5aa281c429219d264471ca39d88f6a8034aba8609b857e3b2ac0da034c2dae3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/earlier-globe.txt": {
+      "bytes": 137584,
+      "sha256": "1fe0f35da6f96830f2b1154bbca47b2db6c2fdebf6503b31f08e3628348109e4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/build_evidence.py": {
+      "bytes": 5940,
+      "sha256": "4b15753ee83e0dbb064450d9bb13c4a9ec9e92b12f6908c265b2a81e88881c7e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/reasoning-window-candidates.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/draft-end.md": {
+      "bytes": 2842,
+      "sha256": "985e6265f73650b066478a35ab163232668b28bcae4da71922d7e4603f8e52ce"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/sl-indexed.jsonl": {
+      "bytes": 91057,
+      "sha256": "5ec96a71cca3cd2a982ebdf8272807e1d37fc9dd23939ebe29520ed6af0a9cce"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/potion-table.md": {
+      "bytes": 1909,
+      "sha256": "5a883a98cd70862d606fa13fa67bc98dd520eba39f5a8f37e1cc737fc823b154"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/audit.json": {
+      "bytes": 313,
+      "sha256": "700f19d6059a7a76fd63fa104d5fc96fe734f1a5f0fc35747179fb753d464d07"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-poison.txt": {
+      "bytes": 8772,
+      "sha256": "b704fd4c22bd45aee2c41964a284329db95bb5e6a63321360384abb9e86999b9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/report.json": {
+      "bytes": 895,
+      "sha256": "55b829c37e03ee55c8aaab994fc10d75ecaf69bfb447bb089614882baec3372b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/append-result.json": {
+      "bytes": 40,
+      "sha256": "52ec8b1c08faa5684e5128b4adf676a160a0a562843621a2310a9ad858e28327"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/lesson-draft-v1.md": {
+      "bytes": 25794,
+      "sha256": "25015e7f8b8d8c3720eb366662889f0ad88aa4340bc29634d1756eb263147541"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-speed.json": {
+      "bytes": 58010,
+      "sha256": "a73961071d10e843a8ee7be5f7c107d401a4b413f95690129acfe03fdc678770"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-royal.json": {
+      "bytes": 1833783,
+      "sha256": "55a113bae0b1615e1b0668a9a7cd78d93bc7ae044ed4d77a7aeb1c18520ea147"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-globe.json": {
+      "bytes": 322230,
+      "sha256": "55b51d3d660c37d05916b56d4d0fd32ce42c17c32e46204362668c72c6e80164"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/earlier-weak-strength.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-check.txt": {
+      "bytes": 94,
+      "sha256": "7e71510b263639c2adfe844fd5de9f54860fe65d842c2039856e58750712a529"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/extraction-failures.md": {
+      "bytes": 389,
+      "sha256": "eec7a000c0b922faf40b9a2bf88b25f28afb8cfd9bf2e72f6ea702fdf3cf0b4c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/append-lesson.sh": {
+      "bytes": 25887,
+      "sha256": "81a10cf4cbeb87c550fe7b33f372f40c9d633f27dc083fb0c0c50263f5a4efc2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/proposal-weak-strength.json": {
+      "bytes": 519,
+      "sha256": "f275651dfc1b53117a18b4b29c5fc0036dd1577aa43ed39b48967a5b403f3ea4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/decisions-indexed.jsonl": {
+      "bytes": 2584520,
+      "sha256": "270c7c56cd7ebb398dc406f62cfc747fe8e52611ada3a0614d3d7e4beb6122e1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/append-before.json": {
+      "bytes": 97,
+      "sha256": "5790a2de9019d705f711f59f1cbda6250f1045d055b3699c168e0dffb0fc2add"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/plans.jsonl": {
+      "bytes": 15854,
+      "sha256": "d25721406d4e26330a1535ffd433bdda32a84aef7245cef27b105c3086e13e58"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/damage-table.md": {
+      "bytes": 2369,
+      "sha256": "c98f9bd9f38fa5336b593f0cc54c9e091d8223227997cd9f51c4b01ffac75657"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/lesson-draft-v2.md": {
+      "bytes": 25822,
+      "sha256": "93ddb0d04e9c7dd3b904b2730856fd36c4c4ac72f7653867050fbde517785c8a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/decisions.jsonl": {
+      "bytes": 2687158,
+      "sha256": "a261cd5d50c01b13d131621c9c5cf3d8193aac7df3f199de6412e0e578b7a51a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-strength-bugs.json": {
+      "bytes": 7297,
+      "sha256": "10cbf2cb6a64cda30f661e9b58c3a785a89d7bbe035010f72bb5c842716890ec"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/source-audit.json": {
+      "bytes": 267,
+      "sha256": "81da4affb982a9dcd7e5e9260d155dc149fc4e6860b4b9d66a8e2d330aec1041"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-berserker.json": {
+      "bytes": 526326,
+      "sha256": "29d02e870f937fb48458f6aad6cb7299c75646891d63da62a3a1d54eba9f4589"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-galvanic.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/ledger-updates.jsonl": {
+      "bytes": 3708,
+      "sha256": "6913f3326ceda228ed3a39fbe20afc2f890f56028e1d2241e5c066d48d5265b7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/proposal-resource-poison-window.md": {
+      "bytes": 3871,
+      "sha256": "9195a20511611e4bef3baa9f5ead826adfffed4bf1fcf817e4cca07959d53588"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem.jsonl": {
+      "bytes": 1213009,
+      "sha256": "fd6b8d93ac7dc759698165d832bce1bab5b380286e403603d49acafceaa4b493"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-211301.out": {
+      "bytes": 2706,
+      "sha256": "dce5ce2aafe408998a3d942f53be7538818360d02547d08b27aa195730020a28"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-211301.err": {
+      "bytes": 7746,
+      "sha256": "f4b895a8566895de1798ad545a248df5744edec094ab8c5567607f7b7af77d09"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/HXCY44VD9QWU-key-pairs.json": {
+      "bytes": 370260,
+      "sha256": "6c1a5e2b64f53a5f46b9671db9c6bef4e9f43ac8c41a741f89f7912e8eef0a2f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a10-reward.txt": {
+      "bytes": 134101,
+      "sha256": "d793040699f8fa4d040d467406143d6c98e48d1f04335cacd0b71ad22b2095eb"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/proposal-boss-sl.json": {
+      "bytes": 875,
+      "sha256": "4522867a7c0de6321f81f69b3b57cee25be3cdaac2c15a784eab34fc5f935398"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/ledger-results.json": {
+      "bytes": 335,
+      "sha256": "74ae442a719c6af75186a4f207c0e9bbde30c3634baae4b4e68c1f507a930947"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/final-verification.json": {
+      "bytes": 386,
+      "sha256": "cb04828ad6ed4e818f54b5e71f0fbb0cc22cc12a00116648f6ba93a48bf5dee8"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a9-shop.jsonl": {
+      "bytes": 663229,
+      "sha256": "d0757b66837e7bb5ef9508c947eb4f86a24a9b40adda2c8fa0dd2e8f434abc8c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/proposal-boss-sl.md": {
+      "bytes": 5487,
+      "sha256": "addef498178a3c58a504b7e90f91634c88f823d8d946a4a24ed5658f7899c230"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/proposal-mechanisms.md": {
+      "bytes": 5819,
+      "sha256": "33841b308dfeb0652694594360dff909e77fc5abd0e53c13d2d8299534d2dc81"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a10-combat.jsonl": {
+      "bytes": 759956,
+      "sha256": "a88e491c458018a38b87e20f7b759fae0d6acd960549a3c0aacd54e3c318e47e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a10-event.txt": {
+      "bytes": 103779,
+      "sha256": "c974375a6574c931179aa7b20ba3b1a1ffb8803fee187cd4ecd458c8264c139d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/build-report.py": {
+      "bytes": 16680,
+      "sha256": "0caa1ae9c51f126e343bd38ffb751daf579326a21c964d08c273b958a5632558"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/audit.py.log": {
+      "bytes": 45,
+      "sha256": "afa077bb7c4c1d7f3c4fb5018f7e43fc10065db5dedf7b217efdff21d43e6033"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a10-shop.jsonl": {
+      "bytes": 586707,
+      "sha256": "971afc63276a0d05ad870cf9af8985c0879468f1aaf604345cb8f5406b8ffd17"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a9-rest.txt": {
+      "bytes": 94797,
+      "sha256": "c01767074cd46b1039535b47ad5d662811fe51b9ad6e955d5a58c47f772b5668"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/final-ledger.py": {
+      "bytes": 1872,
+      "sha256": "dcf4ae59d40677f61ab7c26d3952fd193895ac80ac80daccebacf2927d0fc991"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/validate.log": {
+      "bytes": 70,
+      "sha256": "05cfbc3b8cb236837c882ec09a5df1ca428d9e0cd1314da884bd81b357d516b3"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/result.json": {
+      "bytes": 1374,
+      "sha256": "713ec4b6584dc44c8d3e4456745fc25563ff983ccc122f5a9dbe37f7900fa1e0"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a9-reward.txt": {
+      "bytes": 121310,
+      "sha256": "6d6127f2d2672428d9580a8f3e399fb54c64230af687f03ada70530ada90155d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a10-reward.txt": {
+      "bytes": 141118,
+      "sha256": "90a1376d9069e07439718e752c046078bdea61ef5f6746275e07f2802dd3146f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sl-draw-comparison.json": {
+      "bytes": 155709,
+      "sha256": "76ae3c6d05def569ff7d38dd8a54373b799b69c6674c65896af8a8a7d489ac58"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/runs.json": {
+      "bytes": 2833,
+      "sha256": "a0e88c5b8e5e4d98811304d926167ac605a161688a7d4d94da0ae97ec6e2b946"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/gitleaks-changelog.log": {
+      "bytes": 78,
+      "sha256": "572ab56734ec2b55a4a74e2990ec29621ae07ea719363608a613923eaa43bf62"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a10-rest.jsonl": {
+      "bytes": 510611,
+      "sha256": "dc83dc0aab7ff96be3e62b901bfca21bef71a49b55f623fbd6455f6c36b1d563"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-other-data-verification.json": {
+      "bytes": 1649,
+      "sha256": "492f977048433c69790f5c3a39d39ef449be5f512e176080ee767ec9ccc199e6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/changelog-section.md": {
+      "bytes": 65754,
+      "sha256": "306fb7734938e7ea910947a907f7e4f6810f784932eff604aa1a2af94c5079c6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/extra.log": {
+      "bytes": 84,
+      "sha256": "6fd7093dcdf2a45922d7db9110606113713006af552c137988c1227c899651c1"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/ledger-check-at-end.log": {
+      "bytes": 94,
+      "sha256": "21094f320bbe599a7efb0e43cc619fa546cbd7c266fd4b88e59e465cab89c494"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/jev-sts2-settle-1791549404872-d8ada1ccd0923.jev-prompts.jsonl": {
+      "bytes": 4717,
+      "sha256": "d7fb4df3d54226508aad5ee7548bcba43aeac3d525175394238fb611252324e4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/verify-sources-v1.py": {
+      "bytes": 4594,
+      "sha256": "65259847cb02618a00405b49001ae49174fdf663d8ae410abf777e8c81ebd73b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a10-map.txt": {
+      "bytes": 124730,
+      "sha256": "c14181364846f462a5c1935b569dfff8565989b1f19192f5eb2b5694a123e54e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-summary.json": {
+      "bytes": 2464,
+      "sha256": "752501e0f2b8234e21b0843eff33d99331fc0cec5edcd8ac4e71b5558692ef5b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a9-rest.jsonl": {
+      "bytes": 515847,
+      "sha256": "c7a25941430581e55aa9badc046cf063464ded97072572b612543a53ebe781e8"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/merge-preview.txt": {
+      "bytes": 6075,
+      "sha256": "0dafa9db74082232e334a465c716ff628f1ffd299b5d9d708bc270bcc4a3aad2"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/verification.json": {
+      "bytes": 422,
+      "sha256": "ca593713bd57248a3157141993eee2f6be1be5be4a65f8c43004f2927bd18546"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/jev-sts2-settle-1791549404651-6974bb7b400d.jev-prompts.jsonl": {
+      "bytes": 9794,
+      "sha256": "98f64b07e33df1703efc652f9ad59366980349e085474d99a4e0dcdd09c5cd8b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a10-reward.jsonl": {
+      "bytes": 490513,
+      "sha256": "4ace91fc0e62108ef2b3640b6087eb555aeea829c986b334f2987e080d495c32"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/verify-sources-v2.py": {
+      "bytes": 4612,
+      "sha256": "280f32beea65c91e32902b892005d58d89938fbec4b862449c79e61c2dbff533"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/report.md": {
+      "bytes": 67141,
+      "sha256": "28b951b54d416e7a2516e4ec8c4638eb5f6d83354f64f94799be4abc8d54c421"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a9-map.txt": {
+      "bytes": 103950,
+      "sha256": "bb2d93ad380dda71e855bffaadf3e269a75ff1ab11234c3d974ee4c291100c2a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a9-map.txt": {
+      "bytes": 106737,
+      "sha256": "5507c6c24d85fb051eb9b39681d3b7da037886198068d593ff8ba028c21b7528"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/changelog-title.txt": {
+      "bytes": 125,
+      "sha256": "01a46c7379fd07cf0d4dcb897945f1536c9047d58b9604e08f524b7068c7c792"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/N8A2W8LH39N0-source-manifest.json": {
+      "bytes": 73573,
+      "sha256": "203c97461a588de32693495057739f025cc3ad1e791041983d5bbe01a11704be"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/jev-sts2-settle-1791549404651-6974bb7b400d.run-config.jsonl": {
+      "bytes": 3082,
+      "sha256": "1ee0d30c8cb0abe860d75a993e8cc7733d0b4033dfd1906ecb222202bd380432"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a10-rest.txt": {
+      "bytes": 118351,
+      "sha256": "70454f6ddf745310497c7b0deb2b4497db69d9f86d33d57f27270aeee0a3061c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/prepare.log": {
+      "bytes": 52,
+      "sha256": "122644690ab83f0c7a0cb4458e77c36c62ce435cf6e221f6c16cb52a41c525a1"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/test-results.json": {
+      "bytes": 83,
+      "sha256": "df86d2d1dd88499c9638ae8ac0012276f575fc06e29b5c21803a962fa7280bac"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/mechanism-state-facts.json": {
+      "bytes": 8194027,
+      "sha256": "9634406a233c5237022b212b57e651747af1edcd775e34904550015a93cfc5da"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/build-report.log": {
+      "bytes": 98,
+      "sha256": "6bb7ce3dd6307486ae99bc039b491f75e38dbd1ed900e1908cea657d463b7d8b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/proposal-resources.json": {
+      "bytes": 736,
+      "sha256": "7a02e845796917d55cda7415582ca3543a285341c2954f74260c03aed1c5e6b7"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a9-shop.txt": {
+      "bytes": 172165,
+      "sha256": "9ae788ee9bc47c0033081c86cbf8623e8d86591378beda1ac64bb452f69a29f0"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/ledger-map.json": {
+      "bytes": 919,
+      "sha256": "a0256f5d2a373aafcbd6ab119555933eee8b0bbd4f3903b6fa950060f356c387"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/register.py": {
+      "bytes": 8051,
+      "sha256": "9bc4244b8ecdcd6d024f25c753474883a4f753d7e8f2b84533175b59937f0b1b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before.json": {
+      "bytes": 4253,
+      "sha256": "7bad4a45b36002851adcafaff92f4942f9d0e5b6bddb4c02be094f0c3a91ce8d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/jev-sts2-settle-1791549404872-d8ada1ccd0923.run-config.jsonl": {
+      "bytes": 3083,
+      "sha256": "4f0d3fc1485d426e55d60e9a23947100bc03c83bfb0a6747d3ef7c5ad460283f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/gitleaks-refresh.log": {
+      "bytes": 80,
+      "sha256": "559f4cfee38d53baad82c47f42f634af08808c9a2b2738a2876d46157b9804e6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/final-ledger-cli.json": {
+      "bytes": 11657,
+      "sha256": "9134e5a257536be8c774a6b85d3313859eb0dc6328bbe709b12ee2d9a0e6775b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/historical-jax-raw-verification.json": {
+      "bytes": 873,
+      "sha256": "b716367bffc28e00db4f0ce48598f37eb04d373babf5ddc13b3ba89305def84c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/register.log": {
+      "bytes": 122,
+      "sha256": "d0a91d9ecd07afa0956c5a5f9725738bc727f5d90e27346e91b6d23e66bd5af3"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/update-summary.json": {
+      "bytes": 879,
+      "sha256": "0e9a72bd071a99e6d5c7ffbc4edab6eaba4a33c0975b6d9a4eb6a41ffa692166"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a10-combat.txt": {
+      "bytes": 164748,
+      "sha256": "5837efd0aef6121fdc2b85334a3957d562b45db2275af5b18d632153186f93cd"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a10-shop.txt": {
+      "bytes": 193458,
+      "sha256": "ed72c1adc8cb40fb388f3514d39450488cb97cd02dcb7391a9dcaea215842e36"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/summarize.py": {
+      "bytes": 4615,
+      "sha256": "1ccaa9eed0e9e9cbf69270a6fe3ace9e50ac32f08670e6abcf0750a3c1402c03"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a10-event.jsonl": {
+      "bytes": 425319,
+      "sha256": "8d5e3418dbf54b1a91d1cf9edca82a6081465f793be6a726246c93f56aa36a60"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/gitleaks-staged.log": {
+      "bytes": 78,
+      "sha256": "cb183ef6608df569f5d4543debb9658d346a4132809ef39fd4e96167ae9999eb"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/prepare.py": {
+      "bytes": 3686,
+      "sha256": "51c85dfa89d588384efe1a3ed90852e579452defd2cb215ba552339135b64066"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/HXCY44VD9QWU-source-manifest.json": {
+      "bytes": 109676,
+      "sha256": "0d59a662b6ea67b7605f3f667b46eecf32d8bf32e270e8f03f26d970232969eb"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before.mts": {
+      "bytes": 655,
+      "sha256": "76e81afb58ae1c784e0afd83ce62a0dee76ad0151104a321dda309bfe0f8d696"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a9-event.txt": {
+      "bytes": 91300,
+      "sha256": "bcc7a6b5c532cfa1ae09d885525baf644cdcfcf85e3c440e3c7819b5702b4467"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/rest-summary.json": {
+      "bytes": 9113,
+      "sha256": "31fafb410a90897e1f6f02b97e1c7685102ff6759bfdc0c7ce266eb76c9d8a43"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/summarize.py.log": {
+      "bytes": 1814,
+      "sha256": "4a87a883025cfe6e358680f72be9126d68cff747d832b666871711c540072402"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a10-map.jsonl": {
+      "bytes": 864446,
+      "sha256": "984548faaabcefed8c11f629b6045ac6b9305c7a8171027e52b3fa192f28c510"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/validate.py": {
+      "bytes": 2763,
+      "sha256": "c3248e615642d98f7388137044782d00f26b3a710f925f3e207e382c7f44256f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a10-combat.txt": {
+      "bytes": 160955,
+      "sha256": "32b642bc45bd4f0b92b27633fbd8dea57a5e2cf6c81072fc2113e00ba94db3b6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/proposal-resources.md": {
+      "bytes": 3782,
+      "sha256": "fba217bc1885c0578c34506f3ece3ac3d19b6fcdaf841475938b443698d678fc"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/mechanism-evidence.json": {
+      "bytes": 26821,
+      "sha256": "358ba47272662d3b78024fae835f85ec486cae2cbc6cb9f8cc1fba68827e8d4e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/update.log": {
+      "bytes": 579,
+      "sha256": "3d839234728c71bc9ce4c61f1081fad71cc1a67acaf1023a9819c481a28a4385"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slices.py": {
+      "bytes": 2316,
+      "sha256": "3d5fcf088e41469ace809cfcdf9589c17ca8367f3a3fe5f51496ddad37ee7a13"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/historical-parameter-summary.json": {
+      "bytes": 1218,
+      "sha256": "4d0b6d8e764fc11ad4568b54748352e1c798a5a42d535efde2637659164c0d2d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/other-knowledge.json": {
+      "bytes": 4515,
+      "sha256": "73f591487791c15d1e5b85167ef230b05d6abe62f20ce5f80d1764a57e645448"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/historical-mechanism-notes.txt": {
+      "bytes": 2287348,
+      "sha256": "f614b6ba71351934ceea532dc02aa72e71519d6bc4ff52283a463e029ccd5585"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/check-experience-final.log": {
+      "bytes": 53,
+      "sha256": "dadc7734b449f5532e27b49ce723cfb0117ca4e755ef2a03976f19820670f44b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/gitleaks-staged.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a9-combat.txt": {
+      "bytes": 125047,
+      "sha256": "459338ecde9ba365986c301502f3e0e890f545c2d2dee58125ff2e77b2161e5c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/live-merge-driver.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slices-after.log": {
+      "bytes": 855,
+      "sha256": "3c38a2ddf0cf911c041a1d38cca695acd21ce9a81b3b6220c15381a0aef26ea5"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/verify-sources.log": {
+      "bytes": 55,
+      "sha256": "d581041fae85a835d33d12b2b316aba7593b0ab44dfaea2ad75b0375fde8feb2"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/jev-sts2-settle-1791549404872-d8ada1ccd0923.states.jsonl": {
+      "bytes": 5571,
+      "sha256": "9bc590f28467639f9171d75a3c1e203e19e38fdd4abc833ccc469fb492c3284b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/baseline-check.json": {
+      "bytes": 564,
+      "sha256": "7cf369b2149cc88fb93b48d80d9a6c681a8a9b6e7788e37ce84c12ece717ac6b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/audit.py": {
+      "bytes": 5722,
+      "sha256": "3dad324c6c912bd9735cf39f9e87b5a8a927cf0dbf94db31f268d03e6c95c0fb"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a10-rest.txt": {
+      "bytes": 121597,
+      "sha256": "d06e9bb4f6e1418412a7b741154cf044f90e344aae06688b24c3dae83d634eab"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/live-merge.log": {
+      "bytes": 8449,
+      "sha256": "b56ecb587e0259fff07ba141143bcbd6421b906a722b5cb9198d288a56c66da6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/merge-live.py": {
+      "bytes": 5548,
+      "sha256": "8a624762f2d88626e5aa9b360cab4454b82bcdbd68c58b75a4c6350ae8664dfa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/verify-sources.py": {
+      "bytes": 4635,
+      "sha256": "b12bae0dc606b9b1ad9b21ebb10839d0ef929c0b363f91175ffb2eb650bad781"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/changelog-append.json": {
+      "bytes": 455,
+      "sha256": "0b40fd9101337e6eaaa42e4d372ee0fbe014563c7fb8a704161fb5c9cfefd723"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sl-summary.json": {
+      "bytes": 818,
+      "sha256": "a6b0cd38561a1a95b65bde02cbb5914868146fa00e3907912dd95ed0a806a14a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/refresh.patch": {
+      "bytes": 619929,
+      "sha256": "2c9f60a1ef59027d03bbe9e417f4c9fa1bdced10ac7fe383492058e4917f4d1e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/changes.json": {
+      "bytes": 66678,
+      "sha256": "14a87cb8e1403c1c7908bf735476da3352553f0017ad7ebfb0a02cb900cb05ac"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/audit.json": {
+      "bytes": 249563465,
+      "sha256": "3d4c9d092901ec82dcc8b9974540afef21003d80ece3ccb9554290b590707975"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after.mts": {
+      "bytes": 653,
+      "sha256": "320dd484e80c594ebf4c2fc8df7ccb01debe221f6b004ee0e84158fa835f8b2b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/ledger-check-final.log": {
+      "bytes": 94,
+      "sha256": "21094f320bbe599a7efb0e43cc619fa546cbd7c266fd4b88e59e465cab89c494"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/ledger-n8.json": {
+      "bytes": 529132,
+      "sha256": "f73005825f35518cc86b8723e5b70f5e49d2b000ff02011d75fb1b23dc78499f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/validation.json": {
+      "bytes": 72,
+      "sha256": "c08535f5ca8b666243b6efd8605ab4a1015c87593d9ded9b82b76e962832bf10"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/test-source.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/extra.py": {
+      "bytes": 4307,
+      "sha256": "fd60bcdb4f1598cec9e0fbb9d3ca1dc02c57a958dc8c41c4b1d67fc6ac45c4ba"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-manifest.json": {
+      "bytes": 9682,
+      "sha256": "9dc48070500fb197131088410d9c403817aa39dcaf67b98464cf05ca0ae60822"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a9-reward.jsonl": {
+      "bytes": 505938,
+      "sha256": "81b4ce6dbd52f016bc418be5c06d42ce304ecf6e2be8efcc2bdb589b7690bc05"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/run-metadata.json": {
+      "bytes": 98729,
+      "sha256": "53ed90f89640fa3a5325cd4a3cca3f1977345df67b2cf7b8ddc314d841bf9ded"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/jev-sts2-settle-1791549404651-6974bb7b400d.states.jsonl": {
+      "bytes": 11798,
+      "sha256": "ea2079600b4717fdcaf8477d9b3a3c886e887f1731456b592b381741b042e683"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a9-rest.txt": {
+      "bytes": 98461,
+      "sha256": "8812cf29e4e0cd7f5608b1200227c5144483621a147ea1bfddb6142381501936"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a9-reward.txt": {
+      "bytes": 126370,
+      "sha256": "ba051d227a7376de740a306cc5322be974d75ebf18305709ef504521be089d9a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/check-experience.log": {
+      "bytes": 53,
+      "sha256": "dadc7734b449f5532e27b49ce723cfb0117ca4e755ef2a03976f19820670f44b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a9-combat.jsonl": {
+      "bytes": 798764,
+      "sha256": "21572b42d85ca9cf11e6a9abc6b4e8f4136eaf11f6e100652ae54fae2c6e5950"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a10-shop.txt": {
+      "bytes": 198997,
+      "sha256": "a8bb2042bfdad7178dbf4fa49650455aac5f8cfce6782a6ef3f3a02ddca6373f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/mechanism-frame-facts.json": {
+      "bytes": 272633,
+      "sha256": "258605088f1d82396f3c413bb75859529b171be4956c5f2347e646c00a1e77ea"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after.json": {
+      "bytes": 4253,
+      "sha256": "d2e69c5403456148dfa430958b0a67cb994878378ff385e7692b092820163adf"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/live-merge.json": {
+      "bytes": 3231,
+      "sha256": "253afa2a5bfd9dcc08d63f4b41c8357496c638a3742b23b19f6e4cebe4cef01c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/verify-sources-v2.log": {
+      "bytes": 412,
+      "sha256": "2a043be6fa078017eae2aa8525a2359e259b594827425ec7c9b8f87b8999b532"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/history-parameters.log": {
+      "bytes": 1016,
+      "sha256": "87327a7aca0b95adadf4305a07d7f5f2f35da5947d94a6d43e828e405be6bf23"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a9-shop.txt": {
+      "bytes": 176053,
+      "sha256": "085c045d8234d304ba92c0de9f992e1882223b9328d25278a251c36cb73ca60b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/N8A2W8LH39N0-key-pairs.json": {
+      "bytes": 223695,
+      "sha256": "2ecce71b275ccfc3b092de620aa8b29c42307129b069e24d74cf1b0f83a5db2f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/verify-sources-v1.log": {
+      "bytes": 247,
+      "sha256": "db472aebbfd050c1d4bb4ed88a76d31789bbc8da595e812c142fbbf036fb5586"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/history-parameters.py": {
+      "bytes": 4839,
+      "sha256": "168ba11fe2ea8be3566526c717d3e9a015eabac9066c9107045262995bb4377b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/update.py": {
+      "bytes": 10257,
+      "sha256": "4f57e4386b06a13d4c25d6ae47d90e7941760ee68fbdf6dbbf777269d62b8e78"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slices-before.log": {
+      "bytes": 855,
+      "sha256": "46f2b9c24c4c81b2658bba379915e6de0729fcba6d624addd3f8e19a0f1ec6ae"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/experience-before.json": {
+      "bytes": 258613,
+      "sha256": "612554305d6e783b0074b8159ffdf54234807a86a37bcec66d1892b6c745bcb9"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/registration-cli.json": {
+      "bytes": 13338,
+      "sha256": "6417366cb53ab327d3f31237e5e56f2e8ab2b99c450a6891aa34f80a3f0b18ab"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/test-source.log": {
+      "bytes": 491,
+      "sha256": "6a164300984f3c943eca540cb02dfef3d323444d959f0bc36caf338a6eddf594"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a9-map.jsonl": {
+      "bytes": 953446,
+      "sha256": "0085631e737e874c188c5cab7eff6690139b3de92c4efc29d745a1560b008ffa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-before-sample-a10-map.txt": {
+      "bytes": 119614,
+      "sha256": "f2234d97acaa8833c19fb2cf75ae9453f8084eebab1f71963cb674885dbba8e1"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/sample-a9-event.jsonl": {
+      "bytes": 520846,
+      "sha256": "97734ce1aac9a38d61552f2db11c8168ab8370767b3949e8a528222ab559a55f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a9-event.txt": {
+      "bytes": 94412,
+      "sha256": "f72fba9d91cbe15d7dcd592094100c5fa22bb0b9deadf1b233f2c7ee8b673a46"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/ledger-hx.json": {
+      "bytes": 394456,
+      "sha256": "7f71ef6aafa00e31005482e2aef93d56ed97b7ba4d65829e481c1152630bbffe"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a9-combat.txt": {
+      "bytes": 129030,
+      "sha256": "72a0678ba918e8730454f513aea15f6808ab83ddb206af04012378551cdb3ea0"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/slice-after-sample-a10-event.txt": {
+      "bytes": 110958,
+      "sha256": "7c808fceba5d7c15fb0a00ee88b310fd22add3fabf7c103a26c6b41f67944585"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/ledger-horn.json": {
+      "bytes": 25911,
+      "sha256": "3920b9cc64ca63a702e27145ef5e37dcd3e9042c7f167da5078ab07a48dea806"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/proposal-mechanisms.json": {
+      "bytes": 920,
+      "sha256": "8b8318536b4ec001222beef3f1f9372b49af9c95144cbbce51f43c6ebcffb809"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/ledger-all.json": {
+      "bytes": 6282473,
+      "sha256": "19e43755ffa8256dae264c87bc23706e0de18c87bb278b97734d3c0a7da1c5b0"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/code-proposals-results.json": {
+      "bytes": 117,
+      "sha256": "9dcf87422072c9524d2740cc0c38da8992f5507faa77b8a0376e7c6172acd256"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/final-ledger.log": {
+      "bytes": 36,
+      "sha256": "78041afde945e0819ee03bd294475a9f3770fa7e9f3f26ba15ceb0ca0333c93f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/historical-parameter-audit.json": {
+      "bytes": 2768402,
+      "sha256": "88d50efc90314de033eb2478d78c388e4b82d5f783cefda7bdbf126c7cf8b7fa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update/source-commit.txt": {
+      "bytes": 41,
+      "sha256": "00d9bf64eaa07804147294bf1310512ce5dbba81498255f45a2207cbf6a09bfd"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update.jsonl": {
+      "bytes": 1097611,
+      "sha256": "8f06abc6a6854c94d7f977716833fbaea283a54a95cb45d2c82989dd3b52d380"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-200935-experience-update.out": {
+      "bytes": 3975,
+      "sha256": "054960c0a93fc646d798c840611341215b1c4a64b5f48e641a08e6ecb6e04f23"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-200935-experience-update.err": {
+      "bytes": 14309,
+      "sha256": "900654592d79e898990ce07daf8ff4666947d675fe6680a0e687980e13fd3a28"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/original-offsets.json": {
+      "bytes": 216750,
+      "sha256": "072810b46aa5019e4434abe4c33a21e1e02c032762aa652b9c8ca58808d284c4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/jev-sts2-settle-1791552682103-af02b31cec3ef.jev-prompts.jsonl": {
+      "bytes": 9794,
+      "sha256": "91ef4390ccf40ea8781253c686e682d8d35eddb9c6cb27ea23e7c6c8650de9f8"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a10-reward.txt": {
+      "bytes": 141862,
+      "sha256": "9b5fc8fed9b5ec0a9ad80a9f17622a0c843832c2299e11ddc201b4616b144a71"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/ledger-results.json": {
+      "bytes": 430,
+      "sha256": "35e3682ca30f1ff6c8bd6f92fc99a976eaa63d46379a1d80cb0cfcee55ba6eb5"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/final-verification.json": {
+      "bytes": 274,
+      "sha256": "a5f72bd1feee6ca5ee400747f2a64f17ada728faf051076d47e3f36704fc7901"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a9-shop.jsonl": {
+      "bytes": 663229,
+      "sha256": "d0757b66837e7bb5ef9508c947eb4f86a24a9b40adda2c8fa0dd2e8f434abc8c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/proposal-mechanisms.md": {
+      "bytes": 8227,
+      "sha256": "b2a48ed296559a04f02961c241e356bf20be3b737fcab9cc7b9531361e850915"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a10-combat.jsonl": {
+      "bytes": 759956,
+      "sha256": "a88e491c458018a38b87e20f7b759fae0d6acd960549a3c0aacd54e3c318e47e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/proposal-summons.md": {
+      "bytes": 4424,
+      "sha256": "77ad0eb3b2a847e8f7a7dc9660a438782899d813f505ae4ec09cc603637d1983"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/proposal-summons.json": {
+      "bytes": 755,
+      "sha256": "601410385ac5d4df838019a03afaae76cc0960847245c6d0ae76c37375a6b2ee"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a10-event.txt": {
+      "bytes": 110958,
+      "sha256": "7c808fceba5d7c15fb0a00ee88b310fd22add3fabf7c103a26c6b41f67944585"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/build-report.py": {
+      "bytes": 17749,
+      "sha256": "7acb46110e2ea522dbefb0a9f20c001e1120a1bfa5bcd4d91481280ba44f7e76"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/audit.py.log": {
+      "bytes": 45,
+      "sha256": "834cda48143fc80624b864f8521a4ba94376a74bfafe1c0e9dc450a6012f2935"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a10-shop.jsonl": {
+      "bytes": 586707,
+      "sha256": "971afc63276a0d05ad870cf9af8985c0879468f1aaf604345cb8f5406b8ffd17"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a9-rest.txt": {
+      "bytes": 98461,
+      "sha256": "8812cf29e4e0cd7f5608b1200227c5144483621a147ea1bfddb6142381501936"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/final-ledger.py": {
+      "bytes": 1648,
+      "sha256": "3053b1d20406cd4bbe9b81732ee586501eef2c2f0bbaa7b23b1e8e1a9d0b9ac6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/test-exp.log": {
+      "bytes": 491,
+      "sha256": "de5a7e9c359f0165977225d072694e8ed3e3d34cca1a6e82204f08b2ec0eebf9"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/result.json": {
+      "bytes": 1590,
+      "sha256": "1b70d4dedb320a0dce80805168af07b35bddde701b5db414ac3ba15745949fa3"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a9-reward.txt": {
+      "bytes": 126370,
+      "sha256": "ba051d227a7376de740a306cc5322be974d75ebf18305709ef504521be089d9a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a10-reward.txt": {
+      "bytes": 142834,
+      "sha256": "059c6ce7b849f066b02de5549a774dd8f3b97da4627df8947acdc6ba7adb510a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/gitleaks-final-proposal-resources.md.log": {
+      "bytes": 76,
+      "sha256": "2223fba5131d0b4da4b25af92354c5650774678e94bc85e95e44948c902c9cb7"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sl-draw-comparison.json": {
+      "bytes": 29825713,
+      "sha256": "de4c41d0d42ab1274194f2bf277df856f3c23de14612d054b2fec9f62ab3fff7"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/runs.json": {
+      "bytes": 2849,
+      "sha256": "ab1ae4154fb4c59d9e22b96a6486293bb46d187eefb2a1b50a3b1260a86b8d81"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/gitleaks-changelog.log": {
+      "bytes": 80,
+      "sha256": "f1611d69e35367376f0eee701cd1c7316bc4c12f5156028682aa024690cc1aed"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a10-rest.jsonl": {
+      "bytes": 510611,
+      "sha256": "dc83dc0aab7ff96be3e62b901bfca21bef71a49b55f623fbd6455f6c36b1d563"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-other-data-verification.json": {
+      "bytes": 1649,
+      "sha256": "492f977048433c69790f5c3a39d39ef449be5f512e176080ee767ec9ccc199e6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/changelog-section.md": {
+      "bytes": 114778,
+      "sha256": "351965ae8b2e93563984daa72d5b7ec50b78b2815629a3b85503d316e245fb32"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/jev-sts2-settle-1791552682382-74098666bfd11.run-config.jsonl": {
+      "bytes": 3083,
+      "sha256": "16c89f6ccfab4e31962774ba520b615cf6e9adc55f34d768604daf6a5b1af284"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a10-map.txt": {
+      "bytes": 124560,
+      "sha256": "59f4f5eb661ff90c0bf6a9338f7b64f3a5d731fbe9ccbc0df36e4a50f8b0e4c4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-summary.json": {
+      "bytes": 2469,
+      "sha256": "9183eb9e9a8c19f8a1a14881acb24c66af880e6e41b14b19d10b46b52aaba1d5"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a9-rest.jsonl": {
+      "bytes": 515847,
+      "sha256": "c7a25941430581e55aa9badc046cf063464ded97072572b612543a53ebe781e8"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/merge-preview.txt": {
+      "bytes": 6854,
+      "sha256": "f7ccdc81676d129cc74a2b3a7b42aa0744ec68b034127d2de035f721969e9d13"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/jev-sts2-settle-1791552682103-af02b31cec3ef.run-config.jsonl": {
+      "bytes": 3083,
+      "sha256": "16496150e0b902ef0adbaf6b4e4536c893f4e3cf66d2eb4cd4c7cf8fac518293"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/verification.json": {
+      "bytes": 736,
+      "sha256": "4720311e416e293f40641dac1fcff9e6ce6ac30a35df11a717bd666db9b16dc5"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a10-reward.jsonl": {
+      "bytes": 486359,
+      "sha256": "6cbaf29ed53b4ce8dc2d07c9f3bffad637d1807269a7c2e2f838d1cf8f3ebe35"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/report.md": {
+      "bytes": 116381,
+      "sha256": "183b80db0489efddf85e193eb02104527d581298246a3f2ade6179995bd8a673"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a9-map.txt": {
+      "bytes": 106737,
+      "sha256": "5507c6c24d85fb051eb9b39681d3b7da037886198068d593ff8ba028c21b7528"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a9-map.txt": {
+      "bytes": 106570,
+      "sha256": "d41818ba0f9d9395ad997c225c68c2304f7d48af3e472e933e81a8afce0184b4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/changelog-title.txt": {
+      "bytes": 125,
+      "sha256": "a88a922b25d11bfb6a633e909959240eeb4c2c4c506841ded1a7c81a2505706f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a10-rest.txt": {
+      "bytes": 121597,
+      "sha256": "d06e9bb4f6e1418412a7b741154cf044f90e344aae06688b24c3dae83d634eab"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sl-compare.py": {
+      "bytes": 2722,
+      "sha256": "8cf7ad2e7c2fd88f2018ec814a3ec6d07c7b2d2b276e86812f2104870509bbb8"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/prepare.log": {
+      "bytes": 52,
+      "sha256": "e29b4afadf7a0260ac0e981f824694512f388dcc1a21c737970c0519c922ab93"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/test-results.json": {
+      "bytes": 83,
+      "sha256": "df86d2d1dd88499c9638ae8ac0012276f575fc06e29b5c21803a962fa7280bac"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/mechanism-state-facts.json": {
+      "bytes": 8243527,
+      "sha256": "755bbfc2994d21e20d5fe14551a1f6e27ea8591af3afaf52f995656381243c02"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/build-report.log": {
+      "bytes": 89,
+      "sha256": "96722e22eeacc77da896711acd49333133a39d3119aaea1f67fe25ba2f0daca4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/proposal-resources.json": {
+      "bytes": 783,
+      "sha256": "316ed1b08dfe30cd6101afcd012e98bb4c53aa7cb8bbe6facb24a84120663b5c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a9-shop.txt": {
+      "bytes": 176053,
+      "sha256": "085c045d8234d304ba92c0de9f992e1882223b9328d25278a251c36cb73ca60b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/ledger-map.json": {
+      "bytes": 1226,
+      "sha256": "0fed52d36b86cf1357ff6a7957cf20bd08a403d02530ec9845c262235af3a2db"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/register.py": {
+      "bytes": 7711,
+      "sha256": "458381b8d075bd8efdaf6aafcb3049546e99ada5eb8be77fb69a019377411755"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/test-exp.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before.json": {
+      "bytes": 4253,
+      "sha256": "5be7ca6cb03e3d70867f09261b78171f0ddc544625d2d7178ac18f136e6e5f73"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/verify.py": {
+      "bytes": 7160,
+      "sha256": "a17bd7c2dfe8d054f19c3f62853e0ed391ef08ac1f30ca95cddff62e9c891b65"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/gitleaks-refresh.log": {
+      "bytes": 80,
+      "sha256": "66d8e19073fa940094468881dbd0d2002a9419c0bc1e7f18c11098bf602c566f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/final-ledger-cli.json": {
+      "bytes": 14474,
+      "sha256": "51f0104c926bc07a20868b49d59653e951fc5d5fd35c3892b47adb3a66d88275"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/register.log": {
+      "bytes": 128,
+      "sha256": "7e99571ea914b905e7442a4238c04dd0cc411bea98f155b1482f04fc3636e5c7"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/update-summary.json": {
+      "bytes": 879,
+      "sha256": "40ed7e8065b9f625611dad02ad9d66fd41ca5cc07129b1ed58c791d55f10141f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/ledger-check-pre.log": {
+      "bytes": 94,
+      "sha256": "3ecdd9735a275285157404096018d6417ec0785b3decadc955efe12152e912be"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a10-combat.txt": {
+      "bytes": 165888,
+      "sha256": "bd24d67154167133610b58605b06053380e1e4168aea092c40899cda350c1b0b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a10-shop.txt": {
+      "bytes": 198997,
+      "sha256": "a8bb2042bfdad7178dbf4fa49650455aac5f8cfce6782a6ef3f3a02ddca6373f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/summarize.py": {
+      "bytes": 4615,
+      "sha256": "ff1a22b46013c2ea54d5d0ef563adb2a616bf0e28f50bfc9d67f173ad0a8f3d7"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/precommit-verification.json": {
+      "bytes": 342,
+      "sha256": "3f6a5cbb3f8fc11902672a83217d3c4a27e2c6f4dc3c2ca26f4874658e80147b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a10-event.jsonl": {
+      "bytes": 425319,
+      "sha256": "8d5e3418dbf54b1a91d1cf9edca82a6081465f793be6a726246c93f56aa36a60"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/retained-draft-correction.md": {
+      "bytes": 926,
+      "sha256": "e813afb3a909e9b647f6abe220a168b77a339c5af4302f7def7bc6f09639d303"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/gitleaks-final-proposal-summons.md.log": {
+      "bytes": 76,
+      "sha256": "0d7578bde82becd7d25f1c46883fc57b2af09921a9b8ce355bbcf8c0d50daabd"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/gitleaks-staged.log": {
+      "bytes": 78,
+      "sha256": "21b03769b22f12b2503ad725becace4a20161358d5f619b43913e963a26d3ba3"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/prepare.py": {
+      "bytes": 3671,
+      "sha256": "8469fcb6e6438d05c24b89803e68511d9671295f4aecb3794910de81377fc30e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/historical-original-offsets.json": {
+      "bytes": 1815,
+      "sha256": "3b3760a79f69f9877772c929d8a4752301a31eff1709b52ed8f44ddd57996969"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before.mts": {
+      "bytes": 655,
+      "sha256": "8a50f1794a66c8b9767cea8c6fe0a792ef12e593504705f2d166ef9cb1ded16d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/jev-sts2-settle-1791552682103-af02b31cec3ef.states.jsonl": {
+      "bytes": 11798,
+      "sha256": "faa44ee883b669a97612d6b9d84a9526a3e78a88e92b10abbac95b75a390fe7d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a9-event.txt": {
+      "bytes": 94412,
+      "sha256": "f72fba9d91cbe15d7dcd592094100c5fa22bb0b9deadf1b233f2c7ee8b673a46"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/rest-summary.json": {
+      "bytes": 9181,
+      "sha256": "d3df2f34e971a0774fdd6ca88a0b13a1eb3914cb9c59d844583e3809718709b9"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/summarize.py.log": {
+      "bytes": 1812,
+      "sha256": "0fbf4ab0f4d230a6ac46eae8f41219293fc146d7cdeb05b1555acb16cf7b2bfd"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a10-map.jsonl": {
+      "bytes": 864446,
+      "sha256": "984548faaabcefed8c11f629b6045ac6b9305c7a8171027e52b3fa192f28c510"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a10-combat.txt": {
+      "bytes": 164748,
+      "sha256": "5837efd0aef6121fdc2b85334a3957d562b45db2275af5b18d632153186f93cd"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/proposal-resources.md": {
+      "bytes": 4141,
+      "sha256": "c5b98c1cd332ae86b131538e534db7cbb6678428802bcf9ea4b9ad1df49effb6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/mechanism-evidence.json": {
+      "bytes": 31241,
+      "sha256": "11e3e02175af37f77ab3e80b6c156a2723efcb440d680731771a99275bab1cdb"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/verify.log": {
+      "bytes": 42,
+      "sha256": "d1ef376145562b1a0f127ec15ff5001c2776ebcce5af8dc2610083b35466bf08"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slices.py": {
+      "bytes": 2316,
+      "sha256": "3d5fcf088e41469ace809cfcdf9589c17ca8367f3a3fe5f51496ddad37ee7a13"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/gitleaks-final-proposal-mechanisms.md.log": {
+      "bytes": 76,
+      "sha256": "23d8d11c22bba6a5000cca6715aec88887234291d2aeff0c767eec7e18d8c7da"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/other-knowledge.json": {
+      "bytes": 5004,
+      "sha256": "2bd7e6bf8853ad192832c49b7a403846405c820708a5d391e42d4e5d2db85eab"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/historical-mechanism-notes.txt": {
+      "bytes": 2300004,
+      "sha256": "d0288d3a29d66eab3261bc0a5539d60e38344ca697ae4501a129646b563738f9"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/gitleaks-staged.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a9-combat.txt": {
+      "bytes": 129030,
+      "sha256": "72a0678ba918e8730454f513aea15f6808ab83ddb206af04012378551cdb3ea0"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slices-after.log": {
+      "bytes": 855,
+      "sha256": "31b896c5acb5dce9b985573ab7385c8ce175a9d70fc76f8a87aca761e38d44cf"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/jev-sts2-settle-1791552682382-74098666bfd11.jev-prompts.jsonl": {
+      "bytes": 4717,
+      "sha256": "1c0fab567fa542c6b954f277926cef2f7fcc26c3da821d30a4095eb63644ea2d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/baseline-check.json": {
+      "bytes": 564,
+      "sha256": "fc0d8d96bbcad29a25aa8104d6d23d42810e10a91acc2f6b3198b0b6f45c87d9"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/audit.py": {
+      "bytes": 5722,
+      "sha256": "3dad324c6c912bd9735cf39f9e87b5a8a927cf0dbf94db31f268d03e6c95c0fb"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/final-experience-check.log": {
+      "bytes": 53,
+      "sha256": "dadc7734b449f5532e27b49ce723cfb0117ca4e755ef2a03976f19820670f44b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a10-rest.txt": {
+      "bytes": 122477,
+      "sha256": "af1714af9ee9ff5bc4c16f1a776c2948d4455c89a5a1bd4f4f13ada1203e357d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/live-merge.log": {
+      "bytes": 9228,
+      "sha256": "a5c10b305d9aba29b7fe4795cb22d1d6f77fb6fb280bebc08e8b2c43e401a227"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/merge-live.py": {
+      "bytes": 5548,
+      "sha256": "8a624762f2d88626e5aa9b360cab4454b82bcdbd68c58b75a4c6350ae8664dfa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-summary.py": {
+      "bytes": 1600,
+      "sha256": "d0e236652dcc5b4b6a5825dee05b9f8fffba477a19eac397510cb928d565297c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/historical-parameters.json": {
+      "bytes": 9133154,
+      "sha256": "d94b242ba31e96317940fab7b45e69fc1db8c3544a947e1164887f39dc4e1620"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/changelog-append.json": {
+      "bytes": 456,
+      "sha256": "924d4a9c3ecf5fae85e4f023ba53dd5bfead6458298917e258474835b9442ba8"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sl-summary.json": {
+      "bytes": 818,
+      "sha256": "a6b0cd38561a1a95b65bde02cbb5914868146fa00e3907912dd95ed0a806a14a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/refresh.patch": {
+      "bytes": 755802,
+      "sha256": "551247e44d3b822f71f83662f6fe2e5ec096d38a28037e5fd7d5fe62543aeb7e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/changes.json": {
+      "bytes": 89244,
+      "sha256": "bc74c5ab3c14bdb0c35475083b30c39cba513811534dabe033672ab97d905599"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/audit.json": {
+      "bytes": 250633371,
+      "sha256": "46a147056132510f607edde927ab2b68c41c753fd5f5a553851f63023f90531e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after.mts": {
+      "bytes": 653,
+      "sha256": "385e5f0f4ff304d84f89e34a119a4127752a3aba2fb175056d4b673d07c5ee23"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/ledger-check-final.log": {
+      "bytes": 94,
+      "sha256": "7e71510b263639c2adfe844fd5de9f54860fe65d842c2039856e58750712a529"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-manifest.json": {
+      "bytes": 9682,
+      "sha256": "f3c1e58e14bc9631f61ccb9d95f307e9b3deefd7b7611fde14cae351b6fa11cc"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a9-reward.jsonl": {
+      "bytes": 505938,
+      "sha256": "81b4ce6dbd52f016bc418be5c06d42ce304ecf6e2be8efcc2bdb589b7690bc05"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/run-metadata.json": {
+      "bytes": 99326,
+      "sha256": "9652012e01d94c9adbc6d8bd14969445cea83c0559db2b7d5566c2581b40ea94"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a9-rest.txt": {
+      "bytes": 98081,
+      "sha256": "0a2713b3ac7843a2e1f0318bcf5ee614d239841976779ccf911247574589db0f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a9-reward.txt": {
+      "bytes": 126098,
+      "sha256": "bab23b6d43fc4d1f88dcfe98ecbb5738bbc57368e02d69393e680acabdaa1731"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/check-experience.log": {
+      "bytes": 53,
+      "sha256": "dadc7734b449f5532e27b49ce723cfb0117ca4e755ef2a03976f19820670f44b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a9-combat.jsonl": {
+      "bytes": 798764,
+      "sha256": "21572b42d85ca9cf11e6a9abc6b4e8f4136eaf11f6e100652ae54fae2c6e5950"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a10-shop.txt": {
+      "bytes": 199843,
+      "sha256": "3ec6830a2afa057d4c94829cc4cc0c4705e5c201a3324cce25ba38dbfa51277d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after.json": {
+      "bytes": 4253,
+      "sha256": "a3e2756aa9a2a2a3dc1f5f5f0afa46a483b7dd3bb0a17b874b9dace7adc37acf"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/ledger-run.json": {
+      "bytes": 1008275,
+      "sha256": "da1573f441783a80a44caa235bfac583a79a6f45b98664c66bee8f38cc2fc114"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/live-merge.json": {
+      "bytes": 3390,
+      "sha256": "fd95b401b6bb81e393e9d3eb252100eae30a1889daaf6e53d69817a8a9e87d0e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/gitleaks-final-report.md.log": {
+      "bytes": 80,
+      "sha256": "89828b49eadb2e3000fdd47927f3588b5fd02903eaf4819e5cd5284a5837af0c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a9-shop.txt": {
+      "bytes": 178520,
+      "sha256": "30b485c97ff9fe7e58ac928e31047d24c827324c06757c5001750bb94cb0c8c9"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/update.py": {
+      "bytes": 10678,
+      "sha256": "4c898a5440d4b45369fc6d48bc0a0da0e89e0f9884ad3aa1f244fed1d908da28"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slices-before.log": {
+      "bytes": 855,
+      "sha256": "3c38a2ddf0cf911c041a1d38cca695acd21ce9a81b3b6220c15381a0aef26ea5"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/experience-before.json": {
+      "bytes": 259647,
+      "sha256": "b32cad3c9900d142e1c21f72f3b78b580fd0171c0194e8f09a4a2ac54d601a75"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/registration-cli.json": {
+      "bytes": 17130,
+      "sha256": "7de9d8e036c7bae739b798f2e41d9f4bd0660781b17c8ea5e610bb29d31614de"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/final-ledger-check.log": {
+      "bytes": 94,
+      "sha256": "7e71510b263639c2adfe844fd5de9f54860fe65d842c2039856e58750712a529"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/merge-driver.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a9-map.jsonl": {
+      "bytes": 953446,
+      "sha256": "0085631e737e874c188c5cab7eff6690139b3de92c4efc29d745a1560b008ffa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/jev-sts2-settle-1791552682382-74098666bfd11.states.jsonl": {
+      "bytes": 5571,
+      "sha256": "659b8c68760b4fa3ff864fee48be1bbee54d6a1a8c2f91358c31dd9ebae5d702"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-before-sample-a10-map.txt": {
+      "bytes": 124730,
+      "sha256": "c14181364846f462a5c1935b569dfff8565989b1f19192f5eb2b5694a123e54e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sample-a9-event.jsonl": {
+      "bytes": 520846,
+      "sha256": "97734ce1aac9a38d61552f2db11c8168ab8370767b3949e8a528222ab559a55f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a9-event.txt": {
+      "bytes": 98822,
+      "sha256": "1913c5763a9f3121b6b191f213740220b6ee6938aa9ddcd20162c5909b39051e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a9-combat.txt": {
+      "bytes": 129540,
+      "sha256": "37d052f72f44a873517b0d258638719e539c069c30f4267d57a0ca37dccca506"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/slice-after-sample-a10-event.txt": {
+      "bytes": 112219,
+      "sha256": "4771f36058a3ed4e93e6122e14186681a79946c052d6b174974c366d201f30c9"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/sl-compare.log": {
+      "bytes": 51,
+      "sha256": "eaba0000d5c42722cac99641e23d8e81b5b323de0e204e23924a4825cb12d0ae"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/proposal-mechanisms.json": {
+      "bytes": 1214,
+      "sha256": "ab2873ff5c1f4d9b6e99d43842edc66fa5819eb25420fd691cd27ee14fd85d4b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/ledger-all.json": {
+      "bytes": 6310522,
+      "sha256": "aa18b1085bdd381f03d792f91352bb7b715dbeaff74074b1025369d6b5f480c4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/code-proposals-results.json": {
+      "bytes": 117,
+      "sha256": "3a135d550afbaf330fd7fe7fdea654b1e19942a4e4b9d7cfe946eec9ccfcf065"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/final-ledger.log": {
+      "bytes": 32,
+      "sha256": "3ef7ffcb565a5131e9d784944b4018a2cc51657338c1c8dcca0492d24e83fe00"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update/source-commit.txt": {
+      "bytes": 41,
+      "sha256": "4266f331834366e2ff418c6e73b84cea9444350e0322361807f97d00ba5fb5c5"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update.jsonl": {
+      "bytes": 2413876,
+      "sha256": "069f58d2305e3133d7d54eff9dbd188e9465e178865d729298d847a63a3a714a"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-210408-experience-update.out": {
+      "bytes": 4644,
+      "sha256": "8ac54a8df60f6b83a0cdfd00b6ff07c53fd7ef6a9a3e522d265c016d2842e17e"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-210408-experience-update.err": {
+      "bytes": 16073,
+      "sha256": "a519ca8232d16af86dd1416c7cac98bd430a55509b4bea2fcc44fb1ebe811914"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-215814-fix-batch.core-input.json": {
+      "bytes": 33876,
+      "sha256": "85494213d6c411d9ffe725f6b2c83ab2bd496bd9ede920898ac07234e2bd11ab"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-215814-fix-batch.out": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-215814-fix-batch.err": {
+      "bytes": 177,
+      "sha256": "b929cde31de68ccb6fcbe29cb84c6c0841d12a498d460e5d82314de3a7e8e366"
+    },
+    "/home/dw/Projects/agent-sts2/paper/materials/silent/20261009-core-dispatch-recovery/first-dispatch-environment-failure.json": {
+      "bytes": 741,
+      "sha256": "163e2f455ab662515ca3c2ed1b2786756515ad8c3d7b9aa8011932776a233edf"
+    },
+    "/home/dw/Projects/agent-sts2/paper/materials/silent/20261009-core-dispatch-recovery/deployment.json": {
+      "bytes": 572,
+      "sha256": "2ac2cb89b8bdfa06e87627a9462477c9400623d0a03428dd40d7a6658613c5b3"
+    },
+    "/home/dw/Projects/agent-sts2/paper/materials/silent/20261009-core-dispatch-recovery/ops-recovery-event.md": {
+      "bytes": 1325,
+      "sha256": "c22cc2ab3b54467e83149e96e35e9e2252e994ed97d821ceb55758078732bb3f"
+    }
+  },
+  "core": {
+    "batch": "20261009-215814-fix-batch",
+    "state": {
+      "task": "fix-batch",
+      "learner_task": "silent-historical-core-builds",
+      "character": "silent",
+      "runs": [],
+      "key": "feature:roy-20261009-historical-core-builds",
+      "pid": 2408026,
+      "state": "failed",
+      "reason": "ops",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds",
+      "feature_request": "roy-20261009-historical-core-builds",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pBG",
+      "core_evidence": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-215814-fix-batch.core-input.json",
+      "core_evidence_sha256": "85494213d6c411d9ffe725f6b2c83ab2bd496bd9ede920898ac07234e2bd11ab",
+      "finished": "2026-10-09 21:58",
+      "rc": 3,
+      "report": {},
+      "acceptance_error": "learner exit 3",
+      "retry_at": 1791557902.9783685
+    },
+    "input_sha256": "85494213d6c411d9ffe725f6b2c83ab2bd496bd9ede920898ac07234e2bd11ab",
+    "frozen_completed_silent_runs": 180,
+    "cause": "Dispatcher inherited observer CODEX_HOME=/home/dw/.codex1; AGENTS precheck refusal before model execution.",
+    "originals_preserved": true,
+    "native_result_notification_sent": false,
+    "entry_implementation_is_live": true,
+    "retry_state": "original cooldown retained; host runner must explicitly use the existing clean learner home before one deduplicated retry",
+    "host_recovery_owner": "existing developer/watcher with host runner",
+    "missing_broker_capability": "fix-batch action cannot pass an explicit per-dispatch LEARNER_CODEX_HOME; no arbitrary host command action",
+    "no_key_env_auth_configuration_read_or_changed": true
+  },
+  "original_cli": 134,
+  "lesson_bytes": 50029,
+  "changelog_bytes": 180534,
+  "queue_additions": 2,
+  "game_knowledge_added_by_ops": false,
+  "source_reports_and_failed_history_kept": true
+}

@@ -1,0 +1,20 @@
+    for (const attack of moved ? moved.attacks : died && died.move !== null ? died.attacks : enemy.attacks) {
+      for (let hit = 0; hit < attack.hits; hit += 1) {
+        if (retaliation > 0 && attackerHp <= 0) break;
+        const shown = shownAttack(attack.damage, enemy.index, player, sim, input);
+        // The shown intent already includes our Vulnerable (MAWLER 14 -> 21, SOUL_FYSH 16 -> 24 in
+        // states.jsonl); only Strength changes made this turn still need the ×1.5.
+        const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
+        let amount = Math.floor(shown + strengthChange);
+        if (sim.tainted > 0) {
+          const tainted = sim.tainted * (player.vulnerable ? 1.5 : 1);
+          // Tainted adds before Weak. Under a Weak already up, the largest base behind the shown number
+          // (4LC3 F31 T3: 3 shown is base 5; Tainted 2 made it floor(7 x 0.75) = 5, Tainted 4 made it 6).
+          amount = enemy.weak > 0 && !enemy.newlyWeak ? Math.floor((Math.ceil((amount + 1) / 0.75) - 1 + tainted) * 0.75) : Math.floor(amount + tainted);
+        }
+        if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
+        if (enemy.newlyShrunk) amount = Math.floor(amount * SHRINK_DAMAGE_FACTOR);
+        if (halvedByColossus) amount = Math.floor(amount * 0.5);
+        if (player.intangible || sim.intangible) amount = Math.min(amount, 1);
+        hits.push({ enemy: enemy.index, amount: Math.max(0, amount) });
+        attackerHp -= retaliation;

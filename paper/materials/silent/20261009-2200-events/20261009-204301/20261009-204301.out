@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：54G5683J0E5S（A10，第44层，组装师及机器人战T3以21血8挡面对毒杀后32攻击阵亡）。
+- 新的纯 bug：
+  - 54G5683J0E5S：组装师攻击召唤未接入五回合推演 — agent/src/reflex/rollout-live.ts:831（新）。
+- 写成「未记录」的项：54G5683J0E5S：完整dirty源码／知识快照、缺帧的内部结算、原线与替线整场反事实、三幕boss时钟与实打、真实总费用。
+- 学习账本：54G5683J0E5S：新增 silent-0347、silent-0348；更新 silent-0020、silent-0125、silent-0005、silent-0013、silent-0046、silent-0233、silent-0162、silent-0312、silent-0259；老错repeat无；`ledger.py check`退出码0。
+- 代码提案：silent-proposal-43156dee9f23ae43（F44T1—T3／0347、0348／召唤接线）；silent-proposal-4215d1a68ed970e6（F42T6及后续资源链／0020、0125／护栏与药水验证）。均关联strategy-proposal、未实现；召唤分布和整场对照证据不足，保留原规则等待验证。
+
+```json
+{"task":"postmortem","appended":["54G5683J0E5S"],"skipped":[],"bugs":[{"run":"54G5683J0E5S","where":"agent/src/reflex/rollout-live.ts:831","what":"组装师攻击召唤未接入五回合推演；活体召唤只读ILLUSION_MOVE","new":true}],"ledger":{"added":["silent-0347","silent-0348"],"updated":["silent-0020","silent-0125","silent-0005","silent-0013","silent-0046","silent-0233","silent-0162","silent-0312","silent-0259"],"repeats":[],"check":0},"code_proposals":["silent-proposal-43156dee9f23ae43","silent-proposal-4215d1a68ed970e6"],"implementation_domains":["combat","potion"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a120b0-4605-7833-9148-476a81798308
+轮数：1；工具调用：command_execution×41
+token：输入 193.8k、输出 34.7k（其中推理 9694）、cache 读 3959.3k、cache 写 0（命中 95.3%）
+成本：未提供
+耗时：1262.3 s（墙钟）
+时间：首个事件 4.5 s、模型首个输出 9.9 s、首次工具 15.7 s、末次工具结束 1221.4 s；工具内共 69.5 s，其余（模型生成、推理、网络）1188.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×31；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T20-43-05-01a120b0-4605-7833-9148-476a81798308.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem.jsonl
