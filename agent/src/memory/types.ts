@@ -485,7 +485,7 @@ export interface ResolvedAction {
    * Extra decision-log fields (combat: the rollout facts' timing, whether Jev picked the rollout's best line,
    * the kill order behind the chosen line's rollout numbers, and the per-target options' focus by key).
    */
-  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string>; boss_sim?: JsonValue; thief?: JsonValue; mech?: JsonValue; sl_explore?: JsonValue };
+  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string>; boss_sim?: JsonValue; thief?: JsonValue; mech?: JsonValue; sl_explore?: JsonValue; selection_audit?: JsonValue };
   /**
    * A DeepSeek one-shot plan this decision made (BUILD_ONESHOT): its reference and steps, logged in the
    * row's `deepseek` record (plan_id, plan, plan_step 1); the later steps are their own rows.

@@ -23,6 +23,7 @@ import { choiceQ } from "./jev/questions.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { silentLossReference } from "./silent-loss-reference.js";
 import { silentSimulationReference } from "./silent-simulation-reference.js";
+import { silentSelectionAudit, type SelectionCandidate } from "./silent-selection-audit.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { ActionExpect } from "../hand/act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../memory/narrow.js";
@@ -4001,9 +4002,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // SL_RETRY_EXPLORE_ANCHOR: a first attempt's recording env (env.slRecord: `played` only) records the same way and changes
   // nothing (no deviate, replay or avoid in it).
   const explore = env.sl?.explore ?? env.slRecord;
+  const selectionAuditOn = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && state.run?.ascension === 10;
   const picks = new WeakMap<ResolvedAction, PickedLine>();
   const notePick = (resolved: ResolvedAction, pick: PickedLine): ResolvedAction => {
-    if (explore) picks.set(resolved, pick);
+    if (explore || selectionAuditOn) picks.set(resolved, pick);
     return resolved;
   };
   const fallback = (why: string, line: Plan = autoTop): ResolvedAction =>
@@ -4075,7 +4077,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const playInstead = (line: ExploreLine<Plan>, mc: PotionMc | undefined, why: string): ResolvedAction => {
         const { guard: _guard, ...rest } = resolved;
         const rationale = `${resolved.rationale}; ${why}`;
-        return mc
+        const out: ResolvedAction = mc
           ? { ...rest, intent: { action: "use_potion", option_index: mc.source.slot }, rationale, apply: () => void (env.screenMemory.combatPlan = null) }
           : {
               ...rest,
@@ -4086,6 +4088,7 @@ function planTurn(env: DecisionEnv): Decision | null {
                 if (pick.guardExtra) recordHpGuard(env, state.turn, pick.guardExtra(line.plan));
               },
             };
+        return notePick(out, { ...asPick(line, mc), via: pick.via });
       };
       let deviate = explore.deviate;
       // SL_RETRY_EXPLORE_REPLAY_DEVIATE: why the replay could not go on here, when the deviation is made here instead.
@@ -4351,7 +4354,22 @@ function planTurn(env: DecisionEnv): Decision | null {
     resolve(answers): ResolvedAction {
       // SL_RETRY_EXPLORE: the resolution as played (a line failed attempts played on the deviation point's board replaced),
       // its log, and the line for the attempt's record. Without env.sl.explore: resolvePlan's, untouched.
-      const { resolved, log: exploreLog, info: exploreInfo } = explored(resolvePlan(answers), questionLabel);
+      const beforeSl = resolvePlan(answers);
+      const { resolved, log: exploreLog, info: exploreInfo } = explored(beforeSl, questionLabel);
+      const answerValue = answers["plan"];
+      const answerLine = answerValue?.type === "choice" ? byKey.get(answerValue.choice) : undefined;
+      const candidate = (pick: PickedLine | undefined): SelectionCandidate | null => {
+        if (!pick) return null;
+        const plan = pick.plan ?? pick.rated ?? null;
+        const forecast = plan && rollout?.available ? rollout.byPlan.get(plan) : undefined;
+        return { text: pick.text, plan, sampled: pick.plan === null && pick.rated != null, ...(forecast ? { rollout: forecast } : {}) };
+      };
+      const answerPlan = answerLine?.plan ?? (answerLine?.potion ? mcShown.find((mc) => mc.source.slot === answerLine.potion!.option_index)?.median : null) ?? null;
+      const selectionAudit = selectionAuditOn ? silentSelectionAudit(state, env.sl?.attempt ?? null, {
+        answer: answerLine ? candidate({ plan: answerLine.plan ?? null, rated: answerPlan, text: answerLine.label, potions: [], wins: answerPlan?.outcome.winsFight ?? false, via: "jev" }) : null,
+        beforeSl: candidate(picks.get(beforeSl)),
+        afterSl: candidate(picks.get(resolved)),
+      }, resolved.intent) : null;
       const noted = (out: ResolvedAction): ResolvedAction => {
         if (exploreInfo) slPoints.set(out, exploreInfo);
         return out;
@@ -4363,7 +4381,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const ruled = enemies.filter((enemy) => (enemy.stunOnStrip ?? []).length > 0);
       const moveRuled = enemies.filter((enemy) => (enemy.moveOnStrip ?? []).length > 0);
       const deathRuled = enemies.filter((enemy) => (enemy.moveOnDeath ?? []).length > 0);
-      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0 && ruled.length === 0 && moveRuled.length === 0 && deathRuled.length === 0 && exploreLog === null) return noted(resolved);
+      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0 && ruled.length === 0 && moveRuled.length === 0 && deathRuled.length === 0 && exploreLog === null && selectionAudit === null) return noted(resolved);
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
       // MECH_RULES: the learned strip-stun rules on the board, the shown lines setting one off, and the chosen line's.
@@ -4446,6 +4464,7 @@ function planTurn(env: DecisionEnv): Decision | null {
             : {}),
           // SL_RETRY_EXPLORE: the deviation point's line, replaced or not, and why (docs/sl.md §11).
           ...(exploreLog !== null ? { sl_explore: exploreLog } : {}),
+          ...(selectionAudit !== null ? { selection_audit: selectionAudit } : {}),
         },
       });
     },
