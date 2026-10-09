@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-104303-experience-update/verify.py", line 49, in <module>
+    S12=[x['state'] for x in S if x['state']['run']['floor']==12];check('再生四次回复14',sum(max(0,z['run']['current_hp']-a['run']['current_hp']) for a,z in zip(S12,S12[1:]))==14)
+                                                                  ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-104303-experience-update/verify.py", line 7, in check
+    assert b,name
+           ^
+AssertionError: 再生四次回复14
