@@ -1,0 +1,446 @@
+{
+  "timestamp": "2026-10-09 16:50",
+  "batch": "20261009-161301",
+  "run": "C6Z8ATNBNHZ7",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "C6Z8ATNBNHZ7"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "C6Z8ATNBNHZ7",
+        "where": "agent/src/reflex/card-model.ts:1620",
+        "what": "狡诈药水确定生成未进入方案模型，旧silent-0256重复，fix-queue-v4已列。",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0019",
+        "silent-0025",
+        "silent-0256",
+        "silent-0005",
+        "silent-0080",
+        "silent-0258",
+        "silent-0278",
+        "silent-0243"
+      ],
+      "repeats": [
+        "silent-0256"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-7f6ac5f447be5acc",
+      "silent-proposal-9e14d9e11b63d153"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/report.md"
+  },
+  "originals": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/C6Z8ATNBNHZ7-resources.json": {
+      "bytes": 605160,
+      "sha256": "b8ecf17fc627c1b37f9d072367ddc83233b479df07735b81090795a342335dc5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/analysis.txt": {
+      "bytes": 39338,
+      "sha256": "3c9d7b95db663746d1379ad02f97676dfdb0c1fc6cd19d08051bd9fdae2ae9df"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/analyze.py": {
+      "bytes": 3527,
+      "sha256": "51f87f6870816dab8761b410b3257ad9e402c999484276c06e0cd21683494bf7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/append-lesson.sh": {
+      "bytes": 18798,
+      "sha256": "4039a5f97d8ed243d938974072dff38ed99c4fa876f2014b07f387857ca4888c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/append-verification.json": {
+      "bytes": 217,
+      "sha256": "4accf20ac63866c04892e3fcd2b49af15f69cd0e5852acc4ed6e5599b9e3ed31"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/appended-section.md": {
+      "bytes": 19245,
+      "sha256": "0a185d1c4f60a80346e63c2869b772f3f88c730b4373bfb929e6262abb0edf9c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316125.json": {
+      "bytes": 14967,
+      "sha256": "f245431297e537979b4804e5f9f0b10df3befc7260e34bc384231a89e0e3498b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316127.json": {
+      "bytes": 6533,
+      "sha256": "09e7b73e7b060a0120ca1fa26a903f07abd3573af72fa3fd16c8b7d4f09df912"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316145.json": {
+      "bytes": 10708,
+      "sha256": "4f6dcb06a716a49b18e9d37a278b2ceb65d2d88fa8af112e2ec5feb8d03d197e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316172.json": {
+      "bytes": 10255,
+      "sha256": "d0d736e4c3628c1c1ca522e2d6a50a4859d3a482608a041b7e31f4d5ece50772"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316175.json": {
+      "bytes": 7101,
+      "sha256": "dd333b82d27c39b829bd37f5fc625c47c5b265b4f0b2c2b2bfbfbf067ed6613d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316179.json": {
+      "bytes": 23021,
+      "sha256": "9babdb70025d65435b719ae18471137b11d0324024aad189da4a36f9b110fb07"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316180.json": {
+      "bytes": 1821,
+      "sha256": "df847277a6f35b83a3bda90ef01b6d3bc523a1907464f8c8869b3cc4e67a8945"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316181.json": {
+      "bytes": 1789,
+      "sha256": "aa87810044a87b313719f745f1b7b18eb1a011a56d107e9fec242711ff613edf"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316182.json": {
+      "bytes": 1656,
+      "sha256": "3b15a0883485933de05715cb9440a7bd5b586ef188a1aee999d1654ae338a3d9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316203.json": {
+      "bytes": 8988,
+      "sha256": "35b64afd5dc5bd4005ff9d0122704e50f694419a59d73806af0b669279e07fb4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316206.json": {
+      "bytes": 30407,
+      "sha256": "4a0c8136271cc21ab7790d5f5d9c09bbd10eeb962b928f2bdd3cbd6ac978f2dc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316230.json": {
+      "bytes": 8936,
+      "sha256": "9f8a8739fb0277f097b3fb099b0e0fe44e4380d3d1ba81b2626ab63a8e36e1c4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316233.json": {
+      "bytes": 7177,
+      "sha256": "6b29a558fd7a266f44ffcb5fd5a4c04984a16dc0a8b402d098e77ba8d3cc6684"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316234.json": {
+      "bytes": 12661,
+      "sha256": "6320b1f973cee55b1bd24e5af1075026c787bd22a8aebbff6a4f14d41b16cca8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316235.json": {
+      "bytes": 11692,
+      "sha256": "6312072f6bca1f3feeed97221e03e6a5235021b13b8afd174d8870b5f2b439c8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316242.json": {
+      "bytes": 37337,
+      "sha256": "dcf9ebed2ef06ab6f8ba4b1dc77e24bbe7f8ec657063cb237235109c33f918e1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316243.json": {
+      "bytes": 1786,
+      "sha256": "031d27706f5f3b05991691fe304ceeb9911b7be8fb0ee1af89f72b703322337e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316247.json": {
+      "bytes": 18440,
+      "sha256": "b559e7e915934986fc072a5b2fc1ce5e880457a991c591d11336f79f225e5baf"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316248.json": {
+      "bytes": 1640,
+      "sha256": "1a06469794de91c8f6b8a920d88ab4cad0fe18d2d0db35e80d709e19e6dc078b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316251.json": {
+      "bytes": 6903,
+      "sha256": "9716ccdb5098ee9d388f549df58c35b260268fea1452821619275b954ce3b034"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316273.json": {
+      "bytes": 8524,
+      "sha256": "ce78f53da1bf293e486a9e1276a11ff146e0aa1fbc20350395e92e77f4ff6e92"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316291.json": {
+      "bytes": 8172,
+      "sha256": "e5a95d0ec90ee4b4b9107fcbf7093a230b5811bb8d202253a54300dec3b44d39"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316294.json": {
+      "bytes": 31558,
+      "sha256": "f6d34565b7fdb6521a6426a07d6d8a85617020be37b6091b01a86800164579d8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316337.json": {
+      "bytes": 5223,
+      "sha256": "b4989762b9548a96b1bec64df8978a96903085f83f3ac0236d63829a4b7d4d0c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316340.json": {
+      "bytes": 10095,
+      "sha256": "d8a468ec45fd5220f82d0d3e3a25adfea7392be7b797cccfd8758379da1cfaca"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316342.json": {
+      "bytes": 2325,
+      "sha256": "627edff1e7176d5a3a18d9ce008d9161012d3431cfbcc4ac807a815d1a1912f8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316369.json": {
+      "bytes": 10956,
+      "sha256": "55b7c9a54ab16ba70ac41ed8674007f1b8081362ddcd14afe05a2c040f47ce4e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316372.json": {
+      "bytes": 6445,
+      "sha256": "ec26605b988fc15eaeac0de0c01abca779a2f9d8553021f39f1337d82c860c1b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316376.json": {
+      "bytes": 32159,
+      "sha256": "a4ac9c9005722e75e6f6c9e17a1d37b82c674c41b6aee02fb0df8366ce6f460b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316377.json": {
+      "bytes": 1794,
+      "sha256": "dd7f1e41ebea23136fdc7656169ee475ce7ac5e77d1dd0854c66c7864d2c866d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316378.json": {
+      "bytes": 1654,
+      "sha256": "091c35ef311645292f5428a4edcd33250c89c7e5df5bd9c58d3202778a7d9cd6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain-decision-316404.json": {
+      "bytes": 9526,
+      "sha256": "1b2dafbf34b5280f0955f66ea9ec707ac42f28229a797f913e4c0a469b4c6249"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/brain.selected.jsonl": {
+      "bytes": 777976,
+      "sha256": "39cafaf1666f8dd995686de745f09e8b9a96565146f0cb3bdddbccf7db93694f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/config.numbered.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/decisions.compact.json": {
+      "bytes": 270102,
+      "sha256": "f3e832d2b8a9ac770b37a11e9c98725144ee1c80241ac0ee41b80bf00d9bfd5a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/decisions.numbered.jsonl": {
+      "bytes": 1597643,
+      "sha256": "192862dd664db4b3871d9e372ed362805849a231eeb1ee756fbb7a883d1df427"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/deepseek-reasoning.selected.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/details.py": {
+      "bytes": 2925,
+      "sha256": "7ee7dc8961e9949c7fb9c0cb8b691e3b78c8f0dbd9741942d9cee46b43fa4eb0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/details.txt": {
+      "bytes": 44728,
+      "sha256": "497c0e220e2395f16baa8f593af8c7c15952fe21d8d647e5c4a54671cde3e1f8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/earlier-lessons-matches.json": {
+      "bytes": 426045,
+      "sha256": "66293b99173153ca5e455e59d379d8ac50fbe892cda51e1704b44e3a7a82add3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/extract-summary.txt": {
+      "bytes": 14008,
+      "sha256": "9c6f78744820725e0b9cd24f9754d5219c6f331ae342aca2885124d4b74a4afd"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/extract.py": {
+      "bytes": 1897,
+      "sha256": "cbf7127116f1446f51ab3f30965b20a2b2d51f802de90e83b14eb8bd2902964b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/facts.py": {
+      "bytes": 3110,
+      "sha256": "bcbe98c885fd5c342c60c7288b314cdffb963bcdb1e4814892620c0d69f7664f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/facts.txt": {
+      "bytes": 26172,
+      "sha256": "4416eb6499109d395365fedf6b4e3604c589be6bf9e43744a3ae57632bb7dbd9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/focus.json": {
+      "bytes": 103949,
+      "sha256": "bf8f370aae6dcf0e824467aec33893239d9f171c9bfeb727fda1150bbf48fe63"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/inspection-notes.md": {
+      "bytes": 1386,
+      "sha256": "2655eea32137f2b23dc022ae411515ac9577f3db534ba9dea302e07c0d4895f9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-0025.json": {
+      "bytes": 51784,
+      "sha256": "da8b1dde871252ad4cb827b302547f1da1eda4bec1175a0136a4fedcd4ebf8ab"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-0256.json": {
+      "bytes": 4251,
+      "sha256": "8645e1a36094966a475216615db6861fc3679a2e8f4beb227a92fb2bcd5e593e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-after.json": {
+      "bytes": 788210,
+      "sha256": "5c9d63ddeccc3400c62ec2ad7ea4c9edc1d24115bea230fa41f5d8c6ee3baa01"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-artifact.json": {
+      "bytes": 656208,
+      "sha256": "ca0e4912c91724f76d034b8b201d5573f9bdaccb0b61282c136f4d740412d5ae"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-check.txt": {
+      "bytes": 94,
+      "sha256": "55f4ac5533f4232ef3c508d499798d89209c2415372a3e88921e827f67f74e9b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-chomper.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-cunning.json": {
+      "bytes": 2631673,
+      "sha256": "a7d6180ab12cf2805c20595de9d6a628020f29f1c1c67e66d5b0e1e733ecc363"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-guard.json": {
+      "bytes": 3016297,
+      "sha256": "9627bb06513b91c9a8ee26906dcfa8d99410b0ab376f0fcee1232b1839082bf0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-history.selected.json": {
+      "bytes": 1083159,
+      "sha256": "7896c3249b6eed420cacae304de0cdf161e60de981db2af54ef0249f85446ef4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-mirage.json": {
+      "bytes": 1752427,
+      "sha256": "2812d4eebc53b7ffd9cf9587dd6281df65d908aac85cb6de35f61226331203c4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-poison.json": {
+      "bytes": 49178,
+      "sha256": "ba52b3bcb8bddc9be69493dee2a25abbaa69a0a06afd60aa9b2ac4e25f66c6a2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/ledger-route.json": {
+      "bytes": 303286,
+      "sha256": "0cff0a5c5abe239388822bf3778b52e499ac42124ed259ed6de47161be408bd6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/lesson-draft-v1.md": {
+      "bytes": 18742,
+      "sha256": "12e427d2514d30b2dc901889f0e9e098aea307f491d3ca15ed571db2c0fd5b8b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/lesson-draft-v2.md": {
+      "bytes": 18733,
+      "sha256": "c34b7524174f7b54b2427c697e1117bdf3b151e51d777aac7505923857b30d2b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/lesson-draft.md": {
+      "bytes": 18733,
+      "sha256": "4b1b20942aa59101861796b209f1a96a50cc3c5165cd356867f24aec81cf4964"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/lessons-before.json": {
+      "bytes": 96,
+      "sha256": "f55988ff1dcd7b480db04ae5e736da0365cf082d5c9ac107244ca88d0a966db5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/plans.numbered.jsonl": {
+      "bytes": 7580,
+      "sha256": "bccf2c8ea062f4f4a47a4b9635f4fddb0bbaac035f0114f9e3f175a5a0684c2c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/proposal-artifact-cli.txt": {
+      "bytes": 33,
+      "sha256": "246e23f40bb39551a5f11244d236b3cd14f40495689416699ce29e11adb3df36"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/proposal-artifact.json": {
+      "bytes": 472,
+      "sha256": "d948c6a509b4fe2d28d66fdf309d429cf5e2573ccdd3864b1e37b67a1156a37b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/proposal-artifact.md": {
+      "bytes": 2647,
+      "sha256": "a629d83f4267ac324797f028854a6606f512a4826891f4a0896664ad2ca2e914"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/proposal-potions-cli.txt": {
+      "bytes": 33,
+      "sha256": "9b00fe507f2149aea796629da17b745f408a7055f514341757716b27af33396f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/proposal-potions.json": {
+      "bytes": 544,
+      "sha256": "6052c264ef210174f0f15a148e8112daca4ccd38a93c069cb66188ce1aa51f61"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/proposal-potions.md": {
+      "bytes": 3774,
+      "sha256": "c32c2d00cafb7ea869d4ec02f77b679664e2392fa9526d1e60868ebb4e07199c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/proposal-registration.json": {
+      "bytes": 1685,
+      "sha256": "1deb5a46f4baaa459862e94a7a6e310b92456287daa7406472b5c7b129212d7b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/question-sample.json": {
+      "bytes": 2927,
+      "sha256": "14d72b88301efbbd6556bd4e23637cc441a31292325fdde8988c3ea9e340ed11"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/report.json": {
+      "bytes": 873,
+      "sha256": "f1a850133251a6371bf39b8dcbe485b95732e33d3258760db741ca5548b0dc67"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/report.md": {
+      "bytes": 2302,
+      "sha256": "f1e4ac63058fa60be511f164c9a3406c0de4f74f4c5db83d2aa3be9637a8b92e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/round-verification.json": {
+      "bytes": 1843,
+      "sha256": "557216106cc81b50e038b8336a1c0e8f5c773edf05c1465bca9f36f20b2a4543"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/rounds.json": {
+      "bytes": 449519,
+      "sha256": "d06a7ddc4f4b01d59dc479ccf80bee15c670beca20dcee9d36f2d015685955bc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/run-config.selected.jsonl": {
+      "bytes": 4873,
+      "sha256": "3a31f6cc9969d81d79b74b4b36e18b666dbc291c18f69b750a4f0e18806a53b9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/sl.numbered.jsonl": {
+      "bytes": 74597,
+      "sha256": "b9af5e0b517feb297800bb5f2ef74313a0d5e47127ba4f7579ee6804319ae32a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/states.selected.jsonl": {
+      "bytes": 15702819,
+      "sha256": "86be17eab24fb87799618b4b7fa6a0cb413674d602c66761ec5f6f2f4b08e83a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/verification.json": {
+      "bytes": 17938,
+      "sha256": "7259930c089a2be4f99720add20b2a29fda2b07aa15d1736c59e1c066607f8fe"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/verify.py": {
+      "bytes": 4616,
+      "sha256": "d25b3dce565a5262fee3bba73e0b77eac3689efa55d8117edc95ca1960f2ae33"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem.jsonl": {
+      "bytes": 1312472,
+      "sha256": "97ab868b36196859d445b73191b32c86b3472126c04122af518c96a70c122cac"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-161301.out": {
+      "bytes": 2818,
+      "sha256": "8b8ce3ed0477474477f8b22ae4fed94a9b67935f26547b176e1083cd16c2b037"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-161301.err": {
+      "bytes": 10894,
+      "sha256": "edea21b63c03ce913ad4b55373ed0d00cf9107539e853c02a8d2f9989144d203"
+    },
+    "/home/dw/Projects/agent-sts2/notes/run-1009-1550-C6Z8ATNBNHZ7.md": {
+      "bytes": 5147,
+      "sha256": "c4e2013aeb00a57fe5e8ebda039efc7ae03ea2e4a4f4fb398998938697f35095"
+    }
+  },
+  "owned_cli": 14,
+  "evidence_update_rows": 8,
+  "first_observation_add_rows": 0,
+  "proposal_link_rows": 6,
+  "support_evidence": 10,
+  "repeat_evidence": 1,
+  "correction_rows": 0,
+  "new_pure_bugs": [],
+  "queue_append": false,
+  "blocking": false,
+  "lesson_append_bytes": 19245,
+  "old_prefix_bytes": 6071133,
+  "old_prefix_sha256": "00cb375ee8b0891a3a4e53f6211b36cc793a77e5f5858cd9cb481e7a238a3b15",
+  "append_verification": {
+    "formal_equals_original_appended_section": true,
+    "original_command_draft_and_two_errata_preserved": true,
+    "draft_v2_not_assumed_formal": true,
+    "old_prefix_preserved": true,
+    "title_count": 1
+  },
+  "source_total_verification_count": 105,
+  "ops_readonly_source_checks_reexecuted": 105,
+  "source_failed_command_history": [
+    {
+      "exit": 2,
+      "command_sha256": "c79c27cc79a76890a677b4cc1692426b8cd8b92875061e639d9bc2978af207e1",
+      "output_excerpt": "rg: logs/run-configs.jsonl: IO error for operation on logs/run-configs.jsonl: No such file or directory (os error 2)\n"
+    },
+    {
+      "exit": 1,
+      "command_sha256": "0b51e2253e71b3d3d3ffc728b06f12684ddd69b92062857611e9f6d9d8c53938",
+      "output_excerpt": "2026-10-09 16:31:39 +0800\n"
+    }
+  ],
+  "source_proposals_original_automatic_chain": true,
+  "no_ops_game_knowledge_added": true,
+  "original_reports_and_streams_kept": true,
+  "manual_parent_and_supplement_retained_in_separate_request_receipt": true
+}

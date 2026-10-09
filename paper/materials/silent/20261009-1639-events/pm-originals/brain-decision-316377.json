@@ -1,0 +1,58 @@
+{
+  "ts": "2026-10-09T07:43:48.045Z",
+  "mode": "play",
+  "screen": "SHOP",
+  "session": "singleplayer/run",
+  "floor": 21,
+  "turn": null,
+  "label": "shop/buy",
+  "decision_id": "1065e546-11da-4f08-94b8-31876d58399e",
+  "decider": "codex",
+  "fingerprint": "{\"actions\":[\"save_and_quit\",\"close_shop_inventory\",\"buy_card\",\"buy_potion\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":61,\"hand\":\"\",\"hp\":44,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"CUNNING_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"C6Z8ATNBNHZ7\",\"screen\":\"SHOP\",\"selection\":\"null:false\",\"shopOpen\":true,\"shopStock\":\"0:true|1:true|2:true|3:true|4:true|5:true|6:false\",\"turn\":null}",
+  "chosen": {
+    "action": "buy_potion",
+    "option_index": 2
+  },
+  "expect": {
+    "option": {
+      "id": "POISON_POTION"
+    },
+    "from": "decision"
+  },
+  "rationale": "Codex plan C6Z8ATNBNHZ7:F21:shop#8 step 2: buy 毒药水 (48g)",
+  "confidence": null,
+  "fallback": false,
+  "reasked": false,
+  "no_jev": false,
+  "reused_answer": false,
+  "request_ids": [],
+  "latency_ms": {
+    "plan": 0,
+    "jev": 0,
+    "action": 30,
+    "planner": 3,
+    "pre": 0
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "deepseek": {
+    "by": "deepseek",
+    "direct": true,
+    "reused": true,
+    "plan_ref": "C6Z8ATNBNHZ7:F21:shop#8",
+    "plan_step": 2,
+    "choice": "buy_potion2"
+  },
+  "sl_attempt": null,
+  "sl_reloads": 0,
+  "run_id": "C6Z8ATNBNHZ7",
+  "observed_ts": "2026-10-09T07:43:48.042Z",
+  "journal": {
+    "choice": "DeepSeek plan C6Z8ATNBNHZ7:F21:shop#8 step 2: buy 毒药水 (48g)",
+    "reason": ""
+  },
+  "result": "completed: Action completed.",
+  "_line": 316377
+}

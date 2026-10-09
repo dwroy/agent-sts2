@@ -1,0 +1,201 @@
+{
+  "ts": "2026-10-09T07:30:52.317Z",
+  "mode": "play",
+  "screen": "MAP",
+  "session": "singleplayer/run",
+  "floor": 1,
+  "turn": null,
+  "label": "map/route-plan",
+  "decision_id": "7c78d6cb-aa88-4367-92da-b2dc6918fd4f",
+  "decider": "codex",
+  "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_map_node\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":99,\"hand\":\"\",\"hp\":56,\"maxHp\":70,\"nodes\":\"0|1\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"C6Z8ATNBNHZ7\",\"screen\":\"MAP\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+  "questions": {
+    "pick": {
+      "type": "choice",
+      "instructions": "规划本幕路线。state.route_map 是本幕完整地图（每个节点的行、列、类型和连线）、你的位置、飞行靴剩余次数和 boss 节点。从 next_nodes 里的一个节点出发，每一步走到下一层（沿连线；有飞行靴时，每跳一次用掉 1 次，可以跳到下一层任意节点），一直走到 boss，按顺序列出每个节点的 id。代码按你的路线逐个节点走，只在路线走不通时再问你；之后的选牌、休息点和事件的最后一问都会附上这条路线按当时 HP 算的事实（各节点到达血量的中位数和 p75、休息点回血或锻造后的血量、到下一个休息点前的连续战斗、下一只精英和 boss 前的血量），你可以在那时保留或修改路线。state.route_map.candidate_routes 是代码按投影列的几条到 boss 的路线，每段的战斗、精英进场和到达休息点、boss 的 HP（事实，不是选项）。只回答 JSON：{\"route\": \"<节点 id，用空格分隔，从下一步一直到 boss，如 r4c1 r5c2 … r16c3>\", \"reason\": \"<30 字以内>\"}",
+      "criteria": {
+        "r1c2": "F2 普通战（沿连线）",
+        "r1c5": "F2 普通战（沿连线）"
+      }
+    }
+  },
+  "chosen": {
+    "action": "choose_map_node",
+    "option_index": 1
+  },
+  "expect": {
+    "node": {
+      "row": 1,
+      "col": 5,
+      "type": "Monster"
+    },
+    "from": "decision"
+  },
+  "rationale": "Codex planned: 商店补强，营火护航一精英，保血备战异鱼。 | route plan: r1c5 普通战 → r2c5 普通战 → r3c5 问号 → r4c6 商店 → r5c6 普通战 → r6c6 休息 → r7c6 精英 → r8c6 问号 → r9c6 宝箱 → r10c5 休息 → r11c6 问号 → r12c6 问号 → r13c6 普通战 → r14c6 问号 → r15c6 休息 → r16c3 Boss",
+  "confidence": null,
+  "fallback": false,
+  "reasked": false,
+  "no_jev": false,
+  "reused_answer": false,
+  "request_ids": [],
+  "latency_ms": {
+    "plan": 133,
+    "jev": 0,
+    "action": 1292,
+    "deepseek": 27780,
+    "planner": 14,
+    "pre": 1
+  },
+  "usage": {
+    "input_tokens": 130046,
+    "output_tokens": 480,
+    "cache_hit_tokens": 0,
+    "reasoning_tokens": 371
+  },
+  "deepseek": {
+    "by": "deepseek",
+    "direct": true,
+    "choice": "",
+    "reason": "商店补强，营火护航一精英，保血备战异鱼。",
+    "latency_ms": 27780,
+    "tokens": 130526,
+    "input_tokens": 130046,
+    "output_tokens": 480,
+    "cache_hit_tokens": 0,
+    "reasoning_tokens": 371,
+    "effort": "",
+    "guide": "",
+    "handbook": "",
+    "memory_chars": 5974,
+    "memory_sections": {
+      "act": 2542,
+      "history": 0,
+      "now": 0,
+      "this_floor": 661,
+      "route": 28,
+      "lookahead": 85,
+      "knowledge": 2658
+    },
+    "brain": {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "attempts": 1,
+      "tool_calls": []
+    }
+  },
+  "sl_attempt": null,
+  "sl_reloads": 0,
+  "run_id": "C6Z8ATNBNHZ7",
+  "observed_ts": "2026-10-09T07:30:24.389Z",
+  "journal": {
+    "choice": "route r1c5 普通战 → r2c5 普通战 → r3c5 问号 → r4c6 商店 → r5c6 普通战 → r6c6 休息 → r7c6 精英 → r8c6 问号 → r9c6 宝箱 → r10c5 休息 → r11c6 问号 → r12c6 问号 → r13c6 普通战 → r14c6 问号 → r15c6 休息 → r16c3 Boss",
+    "reason": "商店补强，营火护航一精英，保血备战异鱼。"
+  },
+  "route_plan": {
+    "runId": "C6Z8ATNBNHZ7",
+    "act": 1,
+    "floor": 1,
+    "hpPct": 0.8,
+    "path": [
+      {
+        "row": 1,
+        "col": 5,
+        "type": "Monster",
+        "hpOnArrival": 0.8
+      },
+      {
+        "row": 2,
+        "col": 5,
+        "type": "Monster",
+        "hpOnArrival": 0.7571428571428571
+      },
+      {
+        "row": 3,
+        "col": 5,
+        "type": "Unknown",
+        "hpOnArrival": 0.7142857142857143
+      },
+      {
+        "row": 4,
+        "col": 6,
+        "type": "Shop",
+        "hpOnArrival": 0.7142857142857143
+      },
+      {
+        "row": 5,
+        "col": 6,
+        "type": "Monster",
+        "hpOnArrival": 0.7142857142857143
+      },
+      {
+        "row": 6,
+        "col": 6,
+        "type": "RestSite",
+        "hpOnArrival": 0.6714285714285714
+      },
+      {
+        "row": 7,
+        "col": 6,
+        "type": "Elite",
+        "hpOnArrival": 0.9714285714285714
+      },
+      {
+        "row": 8,
+        "col": 6,
+        "type": "Unknown",
+        "hpOnArrival": 0.6142857142857143
+      },
+      {
+        "row": 9,
+        "col": 6,
+        "type": "Treasure",
+        "hpOnArrival": 0.6142857142857143
+      },
+      {
+        "row": 10,
+        "col": 5,
+        "type": "RestSite",
+        "hpOnArrival": 0.6142857142857143
+      },
+      {
+        "row": 11,
+        "col": 6,
+        "type": "Unknown",
+        "hpOnArrival": 0.9142857142857143
+      },
+      {
+        "row": 12,
+        "col": 6,
+        "type": "Unknown",
+        "hpOnArrival": 0.9142857142857143
+      },
+      {
+        "row": 13,
+        "col": 6,
+        "type": "Monster",
+        "hpOnArrival": 0.9142857142857143
+      },
+      {
+        "row": 14,
+        "col": 6,
+        "type": "Unknown",
+        "hpOnArrival": 0.8714285714285714
+      },
+      {
+        "row": 15,
+        "col": 6,
+        "type": "RestSite",
+        "hpOnArrival": 0.8714285714285714
+      },
+      {
+        "row": 16,
+        "col": 3,
+        "type": "Boss",
+        "hpOnArrival": 1
+      }
+    ],
+    "summary": "r1c5 普通战 → r2c5 普通战 → r3c5 问号 → r4c6 商店 → r5c6 普通战 → r6c6 休息 → r7c6 精英 → r8c6 问号 → r9c6 宝箱 → r10c5 休息 → r11c6 问号 → r12c6 问号 → r13c6 普通战 → r14c6 问号 → r15c6 休息 → r16c3 Boss"
+  },
+  "result": "completed: Action completed.",
+  "_line": 316127
+}

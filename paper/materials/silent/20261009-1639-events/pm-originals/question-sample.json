@@ -1,0 +1,33 @@
+{
+  "sample": {
+    "_line": 316128,
+    "label": "combat/plan-choice",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "rationale": "Jev chose plan 1/2 (打击 -> 淤泥旋螺, 生存者, 中和 -> 淤泥旋螺) with confidence 0.98; code rank 1",
+    "rollout": {
+      "available": true,
+      "ms": 210,
+      "horizon": 5,
+      "samples": 8,
+      "degraded": [],
+      "lines": 7,
+      "best": "plan1",
+      "best_added": false
+    },
+    "rollout_best_chosen": true
+  },
+  "questions": {
+    "plan": {
+      "type": "choice",
+      "instructions": "Which plan should I play this turn?",
+      "criteria": {
+        "plan1": "{\"plays\":\"打击 -> 淤泥旋螺, then 生存者, then 中和 -> 淤泥旋螺\",\"result\":\"survives with 56/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":9,\"enemies_after\":\"淤泥旋螺 32 HP, Weak 1\",\"block_gained\":8,\"energy_unused\":1,\"hp_after\":56,\"hp_after_pct\":80,\"dmg\":9,\"lethal_now\":\"no\",\"enemy_threat_next\":10,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":2,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 6.8, fight over within 5 turns in 5/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -6.8\",\"rollout_turns\":\"T1 exact: hp -0, dmg 9; T2: hp -4 [0-7], dmg 6.5 [4-8], alive 8/8, won 0/8; T3: hp -2.1 [0-6], dmg 7.9 [6-15], alive 8/8, won 0/8; T4: hp -0.3 [0-2], dmg 5.5 [4-6], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 9.3 [2-14], alive 8/8, won 5/8\",\"history_estimate\":\"further HP loss 7, win 100% (this encounter n=137, typical error ±5.5)\",\"rollout_best\":true}",
+        "plan2": "{\"plays\":\"谋杀 -> 淤泥旋螺, then 中和 -> 淤泥旋螺\",\"result\":\"survives with 50/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":11,\"enemies_after\":\"淤泥旋螺 30 HP, Weak 1\",\"hp_after\":50,\"hp_after_pct\":71,\"dmg\":11,\"lethal_now\":\"no\",\"enemy_threat_next\":10,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 13.6, fight over within 5 turns in 5/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -13.7\",\"rollout_turns\":\"T1 exact: hp -6, dmg 11; T2: hp -4 [0-7], dmg 6.5 [4-8], alive 8/8, won 0/8; T3: hp -1.8 [0-5], dmg 7.5 [6-12], alive 8/8, won 0/8; T4: hp -0.4 [0-2], dmg 6.8 [2-15], alive 8/8, won 0/8; T5: hp -1.3 [0-10], dmg 7.4 [0-14], alive 8/8, won 5/8\",\"history_estimate\":\"further HP loss 13, win 100% (this encounter n=137, typical error ±5.5)\"}"
+      }
+    }
+  }
+}

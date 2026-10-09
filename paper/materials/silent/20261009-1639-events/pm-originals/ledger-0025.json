@@ -1,0 +1,945 @@
+{
+ "id": "silent-0025",
+ "ts": "2026-10-05T00:33:00+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "本局人工制品会延后毒和易伤的启动：永世沙漏进场3层，T3、T4开始毒雾各消耗1层而没有毒，T4突然一拳消掉最后1层，之后主宰+施2易伤并给予玩家2力量，中和+再施虚弱。2力量令切割6→8、投掷匕首9→11；敌人力量从3升7，同有虚弱时同一EBB_MOVE意图18→21。玩家增益和敌方成长同时存在，不能把建立2力量当作已经消除后段威胁。",
+ "evidence": [
+  {
+   "run": "LRN0HPZ0FZS1",
+   "floor": 48,
+   "turn": 4,
+   "note": "回合开始敌人工制品1、力量3；突然一拳后人工制品消失，主宰+后敌易伤2、玩家力量2，中和+后虚弱2。回合末EBB_MOVE为18伤。",
+   "role": "support",
+   "added": "2026-10-05T00:33:00+08:00"
+  },
+  {
+   "run": "LRN0HPZ0FZS1",
+   "floor": 48,
+   "turn": 6,
+   "note": "玩家力量2时切割文本8、投掷匕首11，对应先前6、9；T7敌力量7而有虚弱时EBB_MOVE为21。",
+   "role": "support",
+   "added": "2026-10-05T00:33:00+08:00"
+  },
+  {
+   "run": "LRN0HPZ0FZS1",
+   "floor": 37,
+   "turn": 2,
+   "note": "致命毒药消耗人工制品1层而不施毒；F48毒雾回合开始也先消耗人工制品。",
+   "role": "support",
+   "added": "2026-10-05T01:47:46+08:00"
+  },
+  {
+   "run": "T082DRCUHRRD",
+   "floor": 48,
+   "turn": 10,
+   "note": "致命毒药+加7毒使2→9，无实体使三次毒仅扣3。",
+   "role": "support",
+   "added": "2026-10-05T03:47:26+08:00"
+  },
+  {
+   "run": "K3676LU8B0UH",
+   "floor": 48,
+   "turn": 3,
+   "role": "support",
+   "note": "两次进场永世沙漏均3人工制品；第二次T3药瓶+之前仍3层，之后耗尽并见6毒。不安油灯也在场，不把全部施毒量归给药瓶基础文本。",
+   "added": "2026-10-05T06:28:51+08:00"
+  },
+  {
+   "run": "K3676LU8B0UH",
+   "floor": 48,
+   "turn": 10,
+   "role": "support",
+   "note": "敌同有虚弱时T4单击力量3显示18，T7力量7显示21，T10力量12显示25；敌方成长未被已有玩家8敏捷恒定抵消。",
+   "added": "2026-10-05T06:28:51+08:00"
+  },
+  {
+   "run": "ZE8F192FKX24",
+   "role": "support",
+   "note": "静默复盘与重新抽取日志验证；具体机制、进阶、案例及因果限制见第十五次增量，对应支持局去重。",
+   "added": "2026-10-05T14:20:57+08:00"
+  },
+  {
+   "run": "6EV5V6PJJS9D",
+   "floor": 39,
+   "turn": 1,
+   "role": "support",
+   "note": "三敌各1人工制品；投斧重放带毒刺击+一次动作后拳击人工制品消失、实扣16、建立4毒；T2中和消方柱#1人工制品而不留虚弱。人工制品延后减益，但重复施放仍可建立毒。",
+   "added": "2026-10-05T16:29:41+08:00"
+  },
+  {
+   "run": "6EV5V6PJJS9D",
+   "floor": 39,
+   "turn": 4,
+   "role": "support",
+   "note": "方柱T2/T3/T4各2/4/6力量，意图各9/11/11×2，末轮两只共44攻击，16血10挡阵亡；更早LRN F37见0→2→4、R0 F39见6力11×2，本局不冒记首次敌力成长观察。",
+   "added": "2026-10-05T16:29:41+08:00"
+  },
+  {
+   "run": "R0HEV5E3QT6G",
+   "role": "support",
+   "note": "静默复盘与重新抽取日志支持对应机制/观察；进阶、公式和典型战斗见本节，不作未施能力/未执行路线因果。",
+   "added": "2026-10-05T16:48:42+08:00"
+  },
+  {
+   "run": "9YBKCNBFP0X5",
+   "role": "support",
+   "note": "静默复盘与重新抽取日志支持对应机制/观察；进阶、公式和典型战斗见本节，不作未施能力/未执行路线因果。",
+   "added": "2026-10-05T16:48:42+08:00"
+  },
+  {
+   "run": "53FLQ68CETW0",
+   "floor": 48,
+   "turn": 4,
+   "role": "support",
+   "note": "第2次T1建立毒雾3层；T2／T3开场制品3→2→1，T3尖啸消最后1，T4首次结算3毒。",
+   "added": "2026-10-05T19:04:50+08:00"
+  },
+  {
+   "run": "53FLQ68CETW0",
+   "floor": 48,
+   "turn": 5,
+   "role": "support",
+   "note": "第6次SL前缀未打毒雾，T3后尚2人工制品，T5暴露+清除，T8才实际结算首轮6毒。",
+   "added": "2026-10-05T19:04:50+08:00"
+  },
+  {
+   "run": "2SU6XN2AEJRD",
+   "floor": 48,
+   "turn": 4,
+   "note": "首个稳定决策人工制品实际2层，毒雾T1已建立5层；T2/T3轮首制品2→1→消失，T4轮首才见5毒，建立能力与目标中毒时点分开。",
+   "role": "support",
+   "added": "2026-10-05T21:00:39+08:00"
+  },
+  {
+   "run": "ENKYQMS9W4ZD",
+   "role": "support",
+   "note": "F43 T3结束前方柱4力，T4为6力11×2；虚弱后合32、15血12挡死，末两敌20/33。",
+   "added": "2026-10-05T21:01:44+08:00"
+  },
+  {
+   "run": "SADL3CGYTGSR",
+   "floor": 48,
+   "turn": 2,
+   "note": "末次T1零X萎靡未清2人工制品；药水所取突然一拳再清1，T2扫腿清最后1而没有虚弱，现场11×2。T4突然一拳+实建2虚弱、25→18；T7敌力3→7、同有虚弱单击18→21。",
+   "role": "support",
+   "added": "2026-10-05T22:02:25+08:00"
+  },
+  {
+   "run": "Z6CFLDR3N4SB",
+   "floor": 48,
+   "turn": 3,
+   "note": "第二次T1末沙漏人工制品尚1，T3使用毒药水消掉最后1层，末没有毒；T4扫腿建立6虚弱，来袭25→18。T7/T10敌力量7/12，同有虚弱时单击21/25、两击26/34，未把虚弱当作停止成长。",
+   "role": "support",
+   "added": "2026-10-05T22:33:31+08:00"
+  },
+  {
+   "run": "2PVLGRBGUX9S",
+   "floor": 48,
+   "turn": 2,
+   "note": "首战沙漏3人工制品，突然一拳3→2，第一次升级致命毒药2→1，最后升级毒药1→无；结束前敌445血无毒、下一T3初仍无毒，T2实际扣0。消层与毒兑现分别记。",
+   "role": "support",
+   "added": "2026-10-06T02:00:26+08:00"
+  },
+  {
+   "run": "Y6GM2CHWJBEY",
+   "role": "support",
+   "note": "重新核验silent-deadly-poison-application对应基本机制/观察，具体支持范围见第二十八次增量；综合证据不代表每局都验证本次组合。",
+   "added": "2026-10-06T02:15:42+08:00"
+  },
+  {
+   "run": "1HC609GTLGN3",
+   "role": "support",
+   "note": "重新核验silent-deadly-poison-application对应基本机制/观察，具体支持范围见第二十八次增量；综合证据不代表每局都验证本次组合。",
+   "added": "2026-10-06T02:15:42+08:00"
+  },
+  {
+   "run": "KAY522KT5NXR",
+   "role": "support",
+   "note": "重新核验silent-deadly-poison-application对应基本机制/观察，具体支持范围见第二十八次增量；综合证据不代表每局都验证本次组合。",
+   "added": "2026-10-06T02:15:42+08:00"
+  },
+  {
+   "run": "ZZMYZ5UBCG72",
+   "role": "support",
+   "note": "重新核验silent-deadly-poison-application对应基本机制/观察，具体支持范围见第二十八次增量；综合证据不代表每局都验证本次组合。",
+   "added": "2026-10-06T02:15:42+08:00"
+  },
+  {
+   "run": "10GPK5XGHCK3",
+   "role": "support",
+   "note": "重新核验silent-deadly-poison-application对应基本机制/观察，具体支持范围见第二十八次增量；综合证据不代表每局都验证本次组合。",
+   "added": "2026-10-06T02:15:42+08:00"
+  },
+  {
+   "run": "1NZ8FE5F34R9",
+   "role": "support",
+   "note": "重新核验silent-deadly-poison-application对应基本机制/观察，具体支持范围见第二十八次增量；综合证据不代表每局都验证本次组合。",
+   "added": "2026-10-06T02:15:42+08:00"
+  },
+  {
+   "run": "75X1BARMNZ03",
+   "role": "support",
+   "note": "重新核验silent-deadly-poison-application对应基本机制/观察，具体支持范围见第二十八次增量；综合证据不代表每局都验证本次组合。",
+   "added": "2026-10-06T02:15:42+08:00"
+  },
+  {
+   "run": "ARKQLHG6RS4W",
+   "role": "support",
+   "note": "重新核验silent-deadly-poison-application对应基本机制/观察，具体支持范围见第二十八次增量；综合证据不代表每局都验证本次组合。",
+   "added": "2026-10-06T02:15:42+08:00"
+  },
+  {
+   "run": "LLYSRQQ35AVW",
+   "role": "support",
+   "note": "仅静默A8原始状态/决策与复盘支持对应经验；公式、房型/血档、实际结算和未受控范围见第三十次增量及其审计数据。",
+   "added": "2026-10-06T03:22:25+08:00"
+  },
+  {
+   "run": "25226ZFLNR1J",
+   "floor": 48,
+   "turn": 4,
+   "role": "support",
+   "note": "末次进场人工制品3，T1突然一拳去1、T3中和去1、T4开始毒雾去最后1，T4仍无中毒，T5才有3毒；先建能力不等于目标已启毒。",
+   "added": "2026-10-06T06:26:55+08:00"
+  },
+  {
+   "run": "JMH5C51RLN4E",
+   "role": "support",
+   "note": "静默原始日志可比前后帧与复盘核验；进阶、数字及观察限制见第37节和silent-aeonglass-artifact-growth-sl",
+   "added": "2026-10-06T08:43:31+08:00"
+  },
+  {
+   "run": "UMVLWER4CD98",
+   "floor": 48,
+   "turn": 11,
+   "role": "support",
+   "note": "沙漏进场3人工制品，末试后段已清；玩家燃烧实建2力量，末轮打击6→8、带毒刺击+8→10，后者敌挡33→23而实体血不变，施4毒使8→12再结算12。敌最后力量15且有4虚弱仍两击40，增益、敌挡与已结算毒分开记。",
+   "added": "2026-10-07T03:29:46+08:00"
+  },
+  {
+   "run": "HSX4HYATB4E2",
+   "floor": 48,
+   "turn": 2,
+   "role": "support",
+   "note": "首试先药瓶使3制品耗尽但0毒，末敌498；第二次先暴露清全部制品、药瓶建9毒，中和6与毒9后敌483。其余出牌不同，不把局败判作该规则repeat。",
+   "added": "2026-10-07T06:25:43+08:00"
+  },
+  {
+   "run": "TXZ6RVMQA09D",
+   "floor": 48,
+   "turn": 2,
+   "role": "support",
+   "note": "末试EXPOSE清3人工制品，随后SUCKER_PUNCH建立虚弱；同EBB_MOVE T7未虚弱35、敌力9，T10未虚弱41、敌力15，力量差6对应威胁差6。玩家无持续力量，T3喝药临时3力另计。",
+   "added": "2026-10-07T22:01:02+08:00"
+  },
+  {
+   "run": "Q6M2Y34MWKRE",
+   "floor": 9,
+   "note": "拳击构装体1人工制品由中和虚弱消耗，再上5毒成功；T1本体60→37，T2结算4毒至33，HP2＋挡10对12攻击归零，死亡判断准确。保留记录support，第三条经验已追加勘误改为新紧勒建模bug。",
+   "role": "support",
+   "turn": 1,
+   "added": "2026-10-07T23:13:25+08:00"
+  },
+  {
+   "run": "H1T1F8ML9FUE",
+   "floor": 48,
+   "turn": 3,
+   "role": "support",
+   "note": "第4试迷雾前人工制品2，施后无人工制品且无毒/虚弱，蜃景+实0挡；末试先尖啸再迷雾，人工制品2→1→0，毒仍0而虚弱1建立。s298755—758、298824—827，顺序改变哪种减益兑现，不预支未来毒。",
+   "added": "2026-10-08T14:31:47+08:00"
+  },
+  {
+   "run": "BJLTVSYXCSGS",
+   "floor": 42,
+   "turn": 1,
+   "role": "support",
+   "note": "三敌各1制品；中和先消第一方柱制品，带毒刺击随后建3毒。另两体T2毒雾补层被制品挡住、仍零毒，T3才现4毒，s300537/300539/300543/300550。原首证/版本保持，不把正确制品处理报repeat。",
+   "added": "2026-10-08T16:31:27+08:00"
+  },
+  {
+   "run": "SV2GP9NX4HQD",
+   "floor": 48,
+   "turn": 10,
+   "role": "support",
+   "note": "仅补本条敌方成长子结论：末试T7沙漏9力量、有虚弱EBB_MOVE为26，T10为15力量且仍虚弱，同招30；多6力量多4威胁。玩家3敏捷未关闭敌方成长。本局不补人工制品/主宰等未出现组合，也不改原claim。",
+   "added": "2026-10-09T06:57:19+08:00"
+  },
+  {
+   "run": "JBX9JLH46KVN",
+   "floor": 48,
+   "turn": 3,
+   "role": "support",
+   "note": "末试人工制品3：T2带毒刺击消1，T3迷雾毒/虚弱耗余2，蛇咬和毒药水随后实建13毒。玩家力量药实建2，同时敌力量T4见4、T7见9；旧事实支持，不推额外成长规律。",
+   "added": "2026-10-09T12:04:03+08:00"
+  },
+  {
+   "run": "RMNXHZKV716Y",
+   "floor": 48,
+   "turn": 10,
+   "role": "support",
+   "note": "第三次T10敌15力量且虚弱显示30单击，幽灵后显示1、玩家38→38；T11仍15力量20×2=40，T12增强后T13为22力量且虚弱同单段类型显示36。玩家后段5敏捷/2力量并存，手持凋萎12→15，不能把建立增益当免疫后段风险。",
+   "added": "2026-10-09T13:03:28+08:00"
+  },
+  {
+   "run": "NBJBVSBNPYQB",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "沙漏人工制品3，刺杀消到2；药瓶三次施毒后制品清零、仅留下4毒，本体仍525；随后致命毒药+4→12。T4力量4单击30，T5力量4双击总32；仅支持制品延后施毒及现场增益事实，不套其他boss。",
+   "added": "2026-10-09T14:02:05+08:00"
+  }
+ ],
+ "first_run": "LRN0HPZ0FZS1",
+ "prior": "unknown",
+ "prior_runs": [
+  "C48LLXBGKXQ9",
+  "Y6GM2CHWJBEY"
+ ],
+ "prior_note": "此前静默复盘没有永世沙漏的人工制品与主宰组合，不能据其他角色或其他敌人的数据判断此前已做对。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "LRN0HPZ0FZS1",
+   "K3676LU8B0UH",
+   "6EV5V6PJJS9D",
+   "53FLQ68CETW0",
+   "2SU6XN2AEJRD",
+   "SADL3CGYTGSR",
+   "Z6CFLDR3N4SB",
+   "2PVLGRBGUX9S",
+   "25226ZFLNR1J",
+   "UMVLWER4CD98",
+   "HSX4HYATB4E2",
+   "TXZ6RVMQA09D",
+   "Q6M2Y34MWKRE",
+   "H1T1F8ML9FUE",
+   "BJLTVSYXCSGS",
+   "SV2GP9NX4HQD",
+   "JBX9JLH46KVN",
+   "RMNXHZKV716Y",
+   "NBJBVSBNPYQB"
+  ],
+  "experience": [
+   "silent-deadly-poison-application",
+   "silent-noxious-fumes-growth",
+   "silent-strength-weak-observation",
+   "silent-aeonglass-artifact-growth-sl",
+   "silent-construct-artifact-growth"
+  ],
+  "commits": [
+   "__COMMIT__",
+   "0d469a227c080f8dd460e40352ee10dfee3770b2",
+   "0f34d1c43820371749920bde8e378b598f67fa33",
+   "fe4b466fc17a9bd41a3b1d1a2b82c5d389fd0de1",
+   "5503d1b3ae3719224305d579d9eda0550a93a24c",
+   "b30783318755f721938cbcb3c31d3bf97bff7007",
+   "25a408ef16313502ae378c36900236075ec3b262",
+   "a5604585226af696fdc6e01e19f6959fe73425d0",
+   "5f17e4b397490cefd18d2970852f1ea439a7ca00",
+   "2480e1a3435d40808c972b5247e126f42fd8f6c8",
+   "fc3f9456dea97337055a9162b75e988389397e14",
+   "92bb2c53b549f648ed8cd820dab6d142884cfb9a",
+   "2c81eb76f84443e9ff9e0d54ad0ccb84663417ec",
+   "8c1fadd3dce58719a01b65f61416f17d747636c9",
+   "b76428b2c1ed73f89e18fd56c49ba2f7b7120a75",
+   "959f7f22f6284ce87265b884e471c6fb6265b7fd",
+   "c3f0410c72166b5c3145fe25c12a2974569b4ff6",
+   "df989e0920c4aa6ba49ae9ff27967f127cd4bd2d",
+   "aea750c95b48223254b28b5dc40f847aaaf48fb9",
+   "06a463ca80102dd86656b993b1bd81f020580e84",
+   "0071cc6a86f7674b91439d13ee99e5c117dc3f34",
+   "6c4a855811c5ded1ddf94e264855f85a0bae4522",
+   "256b0eee715750c1851f85274885a0770c85977f",
+   "c02c40a38f476991d68b3ad37a082d8ce30105d5",
+   "5bc320f7ba980bd4e46049ad4b1758975ef7b77f",
+   "0d0c4b690fb372fe0810c99b619c52e239a5c85b",
+   "825c94d558f24991e8766dfecee71a71c216e83b",
+   "363ff3037178c20342c36fc1ab474b5aed96a441",
+   "98f88e06ac849c29af6474c76121f37c2d8019ce",
+   "ae49bbec92df38c3d73ec3570560a76a39a408e2",
+   "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+   "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+   "25a520d92d46d1d644a3ca14a05406a4a1246238",
+   "735ac4411310d375cc52c237997dfefa89989034",
+   "7bcee3ebd8d8f452253c9eedaf7d14b10cc29f17",
+   "1c85d0a7e6f176a528f7043d5019e0fffdcc5752",
+   "eda90a6c02bbb411bb74caed8f11cca718fc31b4",
+   "f6fd58890494aca67a5a3738cf50958fb6e06b6e",
+   "65b1a45b0192b744b6c46f9e7174f3c2156f093c",
+   "28bdbfc6c9de5eb802724351a199e1a20c67b41c",
+   "3cbc6955b270538e452d19118bab91a949305ab3",
+   "4b97f1038ed7acb7073a03629925d297c0da075b",
+   "23080aa4018c2f093cea52a270ba2770a0934b1e",
+   "fcfc0bf95579ad7bc4aae49813b1914caf4413d6",
+   "e8a6fb714b9fde4ed85e5cc76e3fbb839e6b83c7",
+   "8c5d6a30d55f3b8f993c26337f4046944cca98c0",
+   "50de6fefd40afae1f26838de7879198945acbc0b",
+   "98df162d756d3eca8d0b6383f2a2398d624ab074",
+   "1a89c2d481689bf0793c89c53318c247a1ea1997",
+   "dc8a23b705f8eb21b85d9d1d1e584e35ab8d8fe5",
+   "ab065d0a4fc067cb6a6d529da2706ab7ef508f85",
+   "9ede80593818dd8cdbc5a10e28f8cd79edc7b613",
+   "fd4c8e52341c31cad606c0a4b96a43663843e201",
+   "148a9d2a1de7c01fd052aa70bc20feba25405043",
+   "18f23638951e5dea6c0bd557303c20d5ae2a88dd",
+   "ea95403fa46fcee922db190836e719e4ed4f02ad",
+   "0d6c1a82ac0b7ec2b5134e2f650070bdeba7e56a",
+   "b49fa35b8e29188e17565f503d3e0980f1dafa3e",
+   "196f1800b2c3b9bdc522c4d77632f1154662f8c9",
+   "10f0aeb37f8df7975cf823ac0e439f851d9ad07f",
+   "2b1a5f6d491f826ea1bac28f707716d109fb3e65",
+   "3d503d53ccb752d211d045cc3048397c8fdb209a",
+   "b6c4b534a27f1bb95a518a524c49ff4c62d2b11b",
+   "74c48edda9411ad30e44cedf1193acc88253b1a7",
+   "2977ebba7536c274b2bd180d3a87bd1607115d82",
+   "2a43e67c538de7f63d0bfa1d3b9fcb11fe93c380",
+   "7c1d9b204ce64c54933e45dde947bece909a0172",
+   "7972c8b7e732e17ae381dc9df5b61488a91e48ff",
+   "bb7285314f126e372ee61c6a331565a89e5418fa",
+   "f80795ed69be555b6768c489e7df204cd63ff37d",
+   "23d97f26a552505be629658c2128a369127a57bc",
+   "7a89024be1b9e1ecd50730d6152ad3e9a248cd05",
+   "d5ad91e80d76c8634d6bdab8ff47c8d1d2abe03b",
+   "0b9bb7e55134854bf45d51915560dac16e752143",
+   "6e3ac6948f3c62a90c1077708f20012d5ebeb6f4",
+   "9f572a6d8c63b48af820743db615aa976279e9d5",
+   "57b661f07711e9aa80eee9fd375d2eb164921b2e",
+   "86fd84c7cbacc4876ae6691968389d388d148c88",
+   "3a71746d3cd52f14d4df4c454f460b519d7eaf44",
+   "92dcf85e6be692fac9ad313d9de6dc10a0fb453b",
+   "c7e1e0ed360c72903c84fb3791cf66c193c369cd",
+   "4e3a124eb204a7fa160dc07928e267471be6e298"
+  ],
+  "changelog": [
+   "2026-10-05 静默猎手 第一次增量：1 局 A0（version 2026-10-05.1，分支 exp-silent，未提交（沙箱测试阻塞））",
+   "2026-10-05 静默猎手 第二次增量：2 局 A0（version 2026-10-05.2，分支 exp-silent，未提交（沙箱全量测试阻塞））",
+   "2026-10-05 静默猎手 第七次增量：1 局 A1（version 2026-10-05.7，分支 exp-silent，0d469a22）",
+   "2026-10-05 静默猎手 第十五次增量：3 局 A5/A6（version 2026-10-05.15，分支 exp-silent，5503d1b3）",
+   "2026-10-05 静默猎手 第十七次增量：2 局 A6（version 2026-10-05.17，分支 exp-silent，a5604585）",
+   "2026-10-05 静默猎手 第二十次增量：1 局 A6（version 2026-10-05.20，分支 exp-silent，fc3f9456）",
+   "2026-10-05 静默猎手 第二十次增量：1 局 A6（version 2026-10-05.20，分支 exp-silent，92bb2c53）",
+   "2026-10-05 静默猎手 第二十一次增量：1 局 A6（version 2026-10-05.21，分支 exp-silent，b76428b2）",
+   "2026-10-05 静默猎手 第二十二次增量：1 局 A6（version 2026-10-05.22，分支 exp-silent，df989e09）",
+   "2026-10-05 静默猎手 第二十三次增量：1 局 A7（version 2026-10-05.23，分支 exp-silent，0071cc6a）",
+   "2026-10-05 静默猎手 第二十四次增量：1 局 A7（version 2026-10-05.24，分支 exp-silent，c02c40a3）",
+   "2026-10-06 静默猎手 第二十八次增量：1 局 A7（version 2026-10-06.3，分支 exp-silent，825c94d5）",
+   "2026-10-06 静默猎手 第三十次增量：1 局 A8（version 2026-10-06.5，分支 exp-silent，0dba4029）",
+   "2026-10-06 静默猎手 第三十五次增量：1 局 A10（version 2026-10-06.10，分支 exp-silent，7bcee3eb）",
+   "## 2026-10-06 静默猎手 第三十七次增量：1 局 A10（version 2026-10-06.12，分支 exp-silent，65b1a45b）",
+   "2026-10-07 静默猎手 第五十九次增量：1 局 A10（version 2026-10-07.5，分支 exp-silent，23080aa4）",
+   "2026-10-07 静默猎手 第六十三次增量：2 局 A10（version 2026-10-07.9，分支 exp-silent，50de6fef）",
+   "## 2026-10-07 静默猎手 第八十二次增量：2 局 A10（version 2026-10-07.28，分支 exp-silent，ab065d0a）",
+   "## 2026-10-08 静默猎手 第八十三次增量：2 局 A10（version 2026-10-07.29，分支 exp-silent，18f23638）",
+   "2026-10-08 静默猎手 第一百次增量：1 局 A10（version 2026-10-08.17，分支 exp-silent，196f1800）",
+   "## 2026-10-08 静默猎手 第一百零三次增量：2 局 A10（version 2026-10-08.20，分支 exp-silent，b6c4b534）",
+   "## 2026-10-09 静默猎手 第一百二十一次增量：1 局 A10（version 2026-10-09.10，分支 exp-silent，7c1d9b20）",
+   "## 2026-10-09 静默猎手 第一百二十九次增量：1 局 A10（version 2026-10-09.18，分支 exp-silent，23d97f26）",
+   "## 2026-10-09 静默猎手 第一百三十次增量：1 局 A10（version 2026-10-09.19，分支 exp-silent，6e3ac694）",
+   "## 2026-10-09 静默猎手 第一百三十一次增量：1 局 A10（version 2026-10-09.20，分支 exp-silent，3a71746d）"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/proposal-continuation-sl.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261007-224302-postmortem/proposal-combat-phase.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update/proposal-mechanisms.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-wither-visible-piles.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/proposal-windows.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-161301-postmortem/proposal-combat-sl.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-170939-experience-update/proposal-boss-sl.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261009-064302-postmortem/proposal-stage-audit.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-070200-experience-update/proposal-defenses.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-070200-experience-update/proposal-poison-sl.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/proposal-skill-potion-continuation.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-120922-experience-update/proposal-resources.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261009-124302-postmortem/proposal-double-boss.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-130839-experience-update/proposal-boss.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261009-134301-postmortem/proposal-resource-chain.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-140555-experience-update/proposal-boss.md"
+  ]
+ },
+ "asc": 0,
+ "history": [
+  {
+   "ts": "2026-10-05T00:33:00+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-05T01:47:46+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T03:47:26+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T06:28:51+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-05T06:44:39+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T08:02:10+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-05T14:20:57+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T14:38:03+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-05T16:29:41+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-05T16:48:42+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T17:08:51+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-05T19:04:50+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-05T20:06:04+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T20:16:12+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T20:29:50+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-05T21:00:39+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-05T21:01:44+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T21:16:37+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-05T21:35:05+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T22:01:50+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-05T22:02:25+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-05T22:30:45+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T22:33:31+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-05T23:03:33+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-05T23:08:04+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T23:44:31+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-06T02:00:26+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-06T02:15:42+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-06T02:34:16+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-06T03:22:25+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-06T03:45:03+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-06T06:26:55+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-06T06:47:43+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-06T07:03:30+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-06T08:43:31+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-06T08:52:43+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T03:29:46+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T03:56:34+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T04:10:29+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T06:25:43+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T06:47:28+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T06:57:48+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T22:01:02+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T22:50:20+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-07T22:50:20+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-07T23:13:25+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T23:16:36+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T23:19:12+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T23:50:46+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T23:57:03+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T00:15:26+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T00:48:34+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-08T14:31:47+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T14:34:47+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T14:52:13+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T14:52:26+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T15:09:17+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T15:45:49+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-08T16:31:27+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T16:33:17+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T17:22:51+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T17:22:54+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T17:38:38+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T17:47:25+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-09T06:57:19+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T06:59:42+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T07:10:03+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T07:10:04+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T07:10:05+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T07:25:33+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T07:30:51+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-09T12:04:03+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T12:05:50+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T12:23:31+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T12:23:33+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T12:40:06+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T12:57:59+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-09T13:03:28+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T13:05:33+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T13:18:21+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T13:18:24+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T13:33:54+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T13:44:03+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-09T14:02:05+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T14:03:40+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T14:17:23+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T14:17:26+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T14:29:48+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T14:48:35+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp131",
+ "effect": null,
+ "notes": [
+  "第七次静默经验增量：逐局核对机制/观察；支持局去重，反例0。只登记经验proposed，实际合入后交运维按完成事件登记shipped；纯模型缺陷不登记已修。",
+  "按本轮完成事件及锁内实际合入登记；保留学习者证据、先前上线及后续提案历史，固定沙箱自测通过，无额外知识审核。经验版本2026-10-05.7。",
+  "静默经验2026-10-05.15：本角色全部二十局重抽、旧十七局复算一致；固定沙箱tsc0/170文件1973例，新增证据范围与进阶见第十五次增量。只proposed，实际合入交运维按完成事件登记shipped；不登记0099模型bug已修。",
+  "14:35 experience-done确认经验2026-10-05.15实际live合入、S1.exp15唯一；源沙箱tsc0/170文件1973例，合后tsc0/172文件1982例，无重跑，七项知识刷新保留。仅经验条目上线，非机制模型修复；silent-0100的独立S1.strategy2阶段事实代码上线历史保留，0099模型提案未修。完整外部检查待调度器后续事件。",
+  "静默经验.17：旧二十二局日志七数组逐行复算一致，新增两局均A6；公式/逐帧数字、进阶及整战因果限制见第十七次增量。仅proposed，实际合入后由运维据完成事件登记shipped，不登记独立音叉模型bug0108已修。",
+  "17:05 experience-done核实实际live合入及S1.exp17唯一；经验.17新增2/更新17/退役0，源tsc0/173文件1988例、合后tsc0/174文件1993例首过，无新增刷新/冲突，保留fix18七项刷新。仅经验发布，0108独立S1.fix18模型上线不混记；本批独立完整外部检查待其learner-checks，不用fix-batch检查替代。",
+  "人工制品与启毒时点补证；没有早启毒的受控胜局，不登记重复策略错误。",
+  "本批只提交经验与证据链；实际上线后交运维核实并登记shipped，不另设审核。",
+  "本批只提交经验与证据链；实际上线后交运维核实并登记shipped，不另设审核。",
+  "20:25 experience-done核实经验.20最终合入live、S1.exp20唯一；来源53FLQ68CETW0 SILENT A6及旧26局复算，新增2/更新12，最终源与合后tsc0、175文件2003例。源初版/置信度补齐/SL洗牌校正三轮及首次/最终合后均通过；初次合后因记录校正主动回退保留四项刷新、未登记版本，历史完整保留。独立完整外部检查待本批learner-checks；0114普通模型已独立fix20，0117/0118另局复盘不混记本批。",
+  "静默经验.21，ENKYQMS9W4ZD A6及旧27局日志复算；观察/机制分开，药水仅事实；实际合入后交运维登记shipped。",
+  "21:10 experience-done核实静默经验.21实际合入live、main同步已测固定发布、S1.exp21唯一；ENKYQMS9W4ZD SILENT A6及旧27局证据，11项补证更新、无新增/退役。源tsc0/175文件2003例、合后tsc0/176文件2006例，首次通过、未重跑；14账本项覆盖11经验，0117/0118已并入，0119/0120不属本批。独立完整检查待本批learner-checks；同fix-batch额度采样已分阶段合入，成本归集/升级爆发仍在继续，不混记已修。",
+  "静默经验.22：2SU6XN2AEJRD A6及旧28局逐行复算；机制/观察、施毒/同期被动/实伤、净损/实死分账，药水仅事实。仅proposed，实际合入交运维按完成事件核实登记shipped。",
+  "21:50 experience-done核实静默经验.22 df989e09→live aea750c9→发布06a463ca/S1.exp22、main已机械同步固定d5a4f6fc已测树；2SU6XN2AEJRD SILENT A6首战胜/无SL及旧28局逐行复算，新增2/补证更新13/退役0、active88，16账本项覆盖15经验。源两轮tsc0/176文件2006例均通过，因冒泡同期10伤和沙漏12尝试数据校正复测，无失败或负载重跑；合后177文件2010例。0119/0120复盘既有id不重复建账，0115模型修复归独立S1.fix21/代码链，0114不重置；不加药水规则或受控勝因。经验独立完整外部检查待learner-checks，不冒记本轮完整通过。",
+  "静默经验.23：SADL3CGYTGSR A7及旧29局重新抽取、逐行复算；机制/观察、理论需损/死亡截断、已结算毒/未结算层数分账。仅proposed，实际合入交运维按完成事件核实登记shipped；保留旧first_run/prior。",
+  "只补证人工制品延迟毒/虚弱及敌成长；6虚弱实值记录，不在本次拆分不安油灯与人工制品的完整交互规则。",
+  "22:40 experience-done实际上线兜底：经验.23源0071cc6a两轮177文件2012例/tsc0，七项在线知识刷新f72d687f保留、decision-log双方历史保留后实际合入6c4a8558，合后固定沙箱178文件2013例/tsc0无失败或重跑，发布256b0eee及main同步0f08dd3d。按已实际合入登记、不另设审核；完整外部learner-recheck 20261005-220458-experience-update已请求待后续事件，旧成本fix检查不冒记本批通过，原冲突/失败历史保留。只登记学习者已有映射，不添证据或重置0114/0115独立链。",
+  "静默经验.24：Z6CFLDR3N4SB A7与旧30静默局日志逐行复算，按22:31勘误；持有/建立/实际收益、净损/实死分账，机制与整战因果观察区分。不改旧first_run/prior，仅proposed，实际合入后由运维登记shipped。",
+  "23:37 manual exp-silent接力：经验.24原源c02c40a3已随后续.25实际源/合入5bc320f7、发布0d0c4b69生效，按实际S1.exp25登记继承的.24映射；.25源与合后固定沙箱均tsc0/179文件2030例通过，无重跑，main同步3547e8bc。此前.24自身79b415c0合后Inferno指纹断言失败/回退256b0eee及同树重跑锁占用历史保留，未发布独立S1.exp24，不用其失败树登记成功。仅登记学习者已有13项映射，不添证据/知识、不重置0114/0115或未纳入的0127/0128。.24独立完整外部learner-recheck 20261005-224301-experience-update已调用待后续learner-checks，原merged=null回报不改；.25本批8项原proposed/原节交其完成事件处理。",
+  "静默经验2026-10-06.3：旧34局复算一致，本局2PVLGRBGUX9S A7补证；SL六次仅一局，六次抽序共同前15张、第2至第6次前38张。压缩保留来源与原first_run/prior/repeat；各模板/升级子结论局数分开，未来收益不预支。只proposed，实际合入后交运维登记shipped。",
+  "02:26 experience-done机械核实静默经验2026-10-06.3实际合入live并唯一登记S1.exp28；2PVLGRBGUX9S SILENT A7及旧34静默局，源182文件2042例、合后183文件2048例/tsc0首过。仅登记已上线experience文字，first_run/prior/repeat/evidence和旧上线历史保持；科学模板各子分支/普通与升级分别计证据，0138追溯R0HEV5E3QT6G。不将经验上线冒记为推演模型覆盖或受控整场胜负；0136/0137模型覆盖缺口交学习者。完整外部经验checks_pending交后续learner-checks，不借策略3通过、不另审。",
+  "静默经验2026-10-06.5；LLYSRQQ35AVW A8及旧36静默局原始日志复算，具体数字/子公式支持范围、进阶、典型例和因果限制见第三十次增量。只proposed，交运维据实际合入和experience-done登记shipped；不改变first_run/prior/repeat，升级萎靡纯bug0144保持observed，不冒记模型已修。",
+  "03:35 experience-done机械核实第30批经验2026-10-06.5已实际合入live并登记唯一S1.exp30；LLYSRQQ35AVW SILENT A8及旧36本角色完局，草稿/最终源/合后均tsc0、184文件2054例，校正文字后源复测、合后首过。 仅登记学习者已合入experience文字；原first_run/prior/prior_note/evidence/repeat/claim及旧版本历史保持。完整外部checks_pending等调度器后续learner-checks，不借别批结果、不另审。0144升级萎靡模型缺口保持observed，0051旧已修状态保持，不冒记机制代码已覆盖或本次经验导致已结束胜局。",
+  "静默经验2026-10-06.10；旧41局七数组/血档/节点/回复/SL同口径复算，25226ZFLNR1J A10补证；小提琴抽牌封锁与其他效果分账，石头七局76房开场1敏。只proposed交运维核实际合入后登记shipped，保留first_run/prior/旧repeat；无新增药水使用规则，不把六败或早建当整战因果。",
+  "07:00 experience-done机械核实第35批经验2026-10-06.10已实际合入live并登记唯一S1.exp35；来源25226ZFLNR1J SILENT A10及旧41本角色完局。源移除误设角色环境后和合后tsc0/192文件2099例，原失败历史保持。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，旧隐秘匕首模型缺口与S1.fix25独立。完整外部补测留后续事件。",
+  "静默第37次经验增量2026-10-06.12，仅proposed，运维核实际合入后CLI登记shipped；保留first_run/prior/repeat及旧上线历史。新局JMH5C51RLN4E A10、旧43静默局基线复算一致，首轮接管/得挡触发/跨阶段与换战分账；药水使用原句不变，不作单项整战因果外推。",
+  "08:50 experience-done机械核实第37批经验2026-10-06.12已实际合入live并登记唯一S1.exp37；来源JMH5C51RLN4E SILENT A10及旧43本角色完局。源及合后tsc0/194文件2112例首过，七份已提交自动刷新保持。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，连续Boss投影0163保持原observed，与0159/S1.strategy6和0153/S1.fix26独立。完整外部补测留后续事件。",
+  "静默经验2026-10-07.5：只登记proposed；首证/先验/原claim/旧version/repeat保持，交运维核实际合入登记shipped；未确认可避免的同一策略失误，不添repeat。",
+  "04:05 experience-done机械确认20261007-034302-experience-update：源23080aa4→实际live fcfc0bf9→固定发布e8a6fb71/唯一S1.exp59，main已同步经验2026-10-07.5与七项自动知识刷新保存点6635abf7原blob。沿学习者UMVLWER4CD98 SILENT A10及03:31:15路线勘误、本角色历史；新增1更新11（全部补证）退役0、active130/50696字，无新用药规则。源与合后首轮均tsc0/vitest0、214文件2289例通过，无失败或超时重跑。锁内保存七项自动刷新后git预检rc1仅decision-log追加冲突，保留双方有序原文并集；知识重叠/冲突0、其他知识逐blob保持，无源码/生成器/其他角色变更。离线取证初稿从敌方powers读TAINTED_POWER错误，改读实际玩家powers后最终断言通过；空initial-evidence.log、初稿说明/脚本及完整事件流保存，不当生产故障或冒称有独立完整失败日志。源经验blob与合入/固定发布一致。本批仅CLI/by=ops十三项shipped覆盖十二经验主题，既有0204首证UMVL/A10/prior=unknown及全部旧first_run/asc/prior/claim/support/repeat/历史保持；0199/0202独立fix40已shipped、0203/exp58、0200/exp57、0201/strategy9、0172/fix39、0197/fix38及0002旧proposed不重置。完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。",
+  "06:55 experience-done机械确认20261007-063003-experience-update：源50de6fef→实际live 98df162d→固定发布1a89c2d4/唯一S1.exp63，main已同步经验2026-10-07.9及七项锁内知识刷新，无代码/生成器/手写知识/其他角色变动。来源HSX4HYATB4E2/WYB0NCD6W83J A10及有效勘误、本角色历史；新增2更新19全补证退役0、active135/49258字，无新用药规则。初稿源、28项文字更正后定稿源及合后三次沙箱均tsc0/vitest0、214文件2289例通过，无测试失败/超时；预检rc0知识冲突0、其他知识blob保持。仅CLI/by=ops本批24项shipped覆盖21项经验，0211首证沿学习者更正T082DRCUHRRD/A0/prior=yes、原R0先验/23份support/旧首证历史保持；其他claim/首证/先验/repeat不重置。旧attempts断言失败与TD1专用取数修正、初稿32→28项文字更正、台账空evidence拒绝零行及修正、initial-*及全部原件归档保留，不当生产故障或自测失败。0207 exp62及其他旧版本/失败历史保持，原过滤摘要不冒称完整逐例日志，完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。",
+  "第82次静默经验提交前链接，首证/先验/旧上线记录保持，独立strategy-proposal实现；无accepted/shipped。",
+  "代码提案 silent-proposal-47910f82a1fdd98f → task=strategy-proposal；Roy-2026-10-07-learning",
+  "本次是机制/资源链支持证据，未登记repeat，不改变状态或旧上线历史。",
+  "代码提案 silent-proposal-ee1fb17b1f3244d2 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第82次静默经验更新，首证/先验/claim/旧support/repeat/version和全部上线历史保持；仅追加实际核对来源，代码提案独立strategy-proposal实现，未accepted/shipped。旧王室+小血瓶2血与新无小血瓶4血分支、狡诈基本生成与首次满手0257分开。",
+  "经验第82次原数据实际发布.28/156 active；仅按原ledger-map登记本所属经验数据shipped，源原沙箱240文件2525例、实际组合合后242文件2540例tsc/vitest0。首证/prior/claim/support/repeat及旧上线历史保持；三个combat/potion/SL代码提案沿独立策略链，数据发布不等于代码实现；完整外部原批续验另登记。",
+  "代码提案 silent-proposal-38a49e6c97f31eea → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第83次静默经验合并；保留首证、先验、原claim/support/repeat/version及上线历史，只追加核实来源与源提交。独立代码提案pending，未accepted/implemented/shipped。",
+  "经验第83次原数据.28→.29/增2改11退0/158 active实际兜底发布；仅按原ledger-map登记本所属经验数据shipped。源原沙箱241文件2531例、实际合后242文件2540例tsc/vitest0，源和集成原blob相等。原首证/先验/claim/全部support/repeat/旧上线历史保持；两个combat/potion/SL/terminal提案继续独立链，经验文字上线不等于代码实现；原out/err/failed不改，完整外部原批另续验。",
+  "代码提案 silent-proposal-179fd62ad9b2f71b → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第100批提交前关联H1T1F8ML9FUE实帧及14:39勘误；保留首证/prior/claim/support/repeat及旧上线历史，提交后登记proposed。",
+  "代码提案 silent-proposal-b259f9956e08088a → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第100批经验源提交完成；首证/先验/claim/evidence/repeat及旧上线历史保持，实际shipped由运维核live，经验发布不当代码实现。",
+  "第一百次经验原数据2026-10-08.16→.17/增0改17退0/176 active，源196f1800唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记19所属经验数据shipped。源首轮251文件2618例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入722518cd逐blob等价（其固定完整外部302文件3429例通过/2跳过tsc/vitest0已核实），最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，四个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0297纯bug保持原观察/提案状态，不标代码实现。",
+  "代码提案 silent-proposal-b49c2e6f5d25e8ba → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第103批提交前关联两局实帧/勘误；保留首证/prior/claim和历史状态，提交后登记proposed。",
+  "代码提案 silent-proposal-b643d5b644ec7c64 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第103批经验源提交完成；保留首证/prior/claim及历史证据/版本；实际shipped交运维核live，经验发布不当策略代码实现。",
+  "第一百零三次经验仅原数据.19→.20，源b6c4b534增0改22退0/176 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp103。按原学习者ledger-map仅21所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/21冲突/out/err/失败历史保持。",
+  "代码提案 silent-proposal-4a79fe52aef8fde5 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第121批经验/提案预关联；保留首证/prior/claim/status/version及全部历史。旧156局复算与本局实帧核验，提交后另记proposed。",
+  "代码提案 silent-proposal-88803f81438cc2e9 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-9343a6f35cc15d46 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第121批经验已自测提交；实际live数据shipped交运维按完成事件核实，三源码提案pending不标implemented。保留首证/prior/claim/支持/repeat/旧版本历史，0319纯bug只提案关联不改状态。",
+  "第一百二十一次经验仅原数据2026-10-09.9→2026-10-09.10，源7c1d9b20增0改12退0/192 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp121。按原学习者ledger-map仅13所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0319纯bug保持原提案关联与状态，不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/5冲突/out/err/失败历史保持。",
+  "本任务20261009-114302-postmortem核对本角色原始日志；保留旧claim、first_run、prior、status与version。",
+  "代码提案 silent-proposal-0dfe3fba65a366b0 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第129次经验及代码提案预关联；保留旧claim/首证/prior/状态/版本历史，源提交后登记proposed。",
+  "代码提案 silent-proposal-b8804a022bdc5a1a → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第129次经验源提交完成，登记proposed；保持旧claim/prior/首证/全部证据/旧版本历史。源码提案独立strategy-proposal pending，实际live数据shipped由运维据完成事件登记。",
+  "第一百二十九次经验仅原数据2026-10-09.17→2026-10-09.18，源23d97f26增0改17退0/196 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp129。仅18所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；三combat/potion/sl/terminal/structure源码提案沿自动链，不标源码实现。原merged-null/20项记录论文冲突及探索核验失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。",
+  "代码提案 silent-proposal-5153135cd2aab723 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第130次经验提案预关联；已核本角色原日志，保留旧claim/prior/首证/状态/版本，提交后登记proposed。",
+  "代码提案 silent-proposal-d17645643e673587 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第130次经验源提交完成，登记proposed；保持旧claim/prior/首证/全部证据/旧版本历史。源码提案独立strategy-proposal pending，实际live数据shipped由运维据完成事件登记。",
+  "第一百三十次经验仅原数据2026-10-09.18→2026-10-09.19，源6e3ac694增0改22退0/196 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp130。仅22所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；四combat/potion/sl/terminal源码提案沿自动链，不标源码实现。原merged-null/5项记录冲突及探索核验失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。",
+  "来源20261009-134301-postmortem；仅追加本角色证据，旧claim/首证/prior/状态/版本保持。",
+  "代码提案 silent-proposal-2bea0d4492bef67b → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第131次经验证据/提案预关联；保留旧claim/首证/prior/状态/版本，提交后登记proposed。",
+  "代码提案 silent-proposal-7edb6a4c4fc41c29 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第131次经验源提交完成，登记proposed；保持旧claim/prior/首证/全部证据/旧版本历史。源码提案独立strategy-proposal pending，实际live数据shipped由运维据完成事件登记。",
+  "第一百三十一次经验仅原数据2026-10-09.19→2026-10-09.20，源3a71746d增0改23退0/196 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp131。仅24所属经验数据shipped，旧claim/首证/prior/evidence/support/repeat及版本历史保持。四combat/potion/sl/terminal代码提案沿原自动链，不标源码实现。原19项记录/论文冲突、failed/merged-null/out/err和14:35 pending预检拒绝历史保持；本次空闲锁续办保存10项刷新，当前代码与固定57b661f0逐blob一致，新数据树完整外部待原批独立续验，exp100旧完整失败不关闭。"
+ ],
+ "shipped_at": "2026-10-09T14:48:35+08:00"
+}

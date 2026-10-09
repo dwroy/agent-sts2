@@ -1,0 +1,60 @@
+{
+  "ts": "2026-10-09T07:41:42.479Z",
+  "mode": "play",
+  "screen": "MAP",
+  "session": "singleplayer/run",
+  "floor": 18,
+  "turn": null,
+  "label": "map/route-follow",
+  "decision_id": "1e03ace4-d7cc-41f7-9a28-d15c0e6a4b2f",
+  "decider": "codex",
+  "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_map_node\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":220,\"hand\":\"\",\"hp\":66,\"maxHp\":77,\"nodes\":\"0|1|2\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"CUNNING_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"C6Z8ATNBNHZ7\",\"screen\":\"MAP\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+  "chosen": {
+    "action": "choose_map_node",
+    "option_index": 2
+  },
+  "expect": {
+    "node": {
+      "row": 1,
+      "col": 5,
+      "type": "Monster"
+    },
+    "from": "decision"
+  },
+  "rationale": "following the brain's route plan (floor 18): step 1/15 Monster at row 1, col 5; plan r1c5 普通战 → r2c6 问号 → r3c6 商店 → r4c6 普通战 → r5c6 普通战 → r6c5 休息 → r7c6 普通战 → r8c5 宝箱 → r9c4 休息 → r10c4 普通战 → r11c5 休息 → r12c5 问号 → r13c4 普通战 → r14c5 休息 → r15c3 Boss",
+  "confidence": null,
+  "fallback": false,
+  "reasked": false,
+  "no_jev": false,
+  "reused_answer": false,
+  "request_ids": [],
+  "latency_ms": {
+    "plan": 1,
+    "jev": 0,
+    "action": 990,
+    "planner": 0,
+    "pre": 0
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "deepseek": {
+    "by": "deepseek",
+    "direct": true,
+    "reused": true,
+    "plan_ref": "C6Z8ATNBNHZ7:F18:act#7",
+    "plan_step": 2,
+    "choice": "Monster at row 1, col 5"
+  },
+  "sl_attempt": null,
+  "sl_reloads": 0,
+  "run_id": "C6Z8ATNBNHZ7",
+  "observed_ts": "2026-10-09T07:41:42.479Z",
+  "journal": {
+    "choice": "following the brain's route plan (floor 18): step 1/15 Monster at row 1, col 5; plan r1c5 普通战 → r2c6 问号 → r3c6 商店 → r4c6 普通战 → r5c6 普通战 → r6c5 休息 → r7c6 普通战 → r8c5 宝箱 → r9c4 休息 → r10c4 普通战 → r11c5 休息 → r12c5 问号 → r13c4 普通战 → r14c5 休息 → r15c3 Boss",
+    "reason": ""
+  },
+  "result": "completed: Action completed.",
+  "_line": 316342
+}
