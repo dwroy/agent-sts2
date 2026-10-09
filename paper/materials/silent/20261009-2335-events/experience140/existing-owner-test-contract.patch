@@ -1,0 +1,32 @@
+diff --git a/agent/tests/brain-codex.test.ts b/agent/tests/brain-codex.test.ts
+index 9d01cdfc0..64a09fa88 100644
+--- a/agent/tests/brain-codex.test.ts
++++ b/agent/tests/brain-codex.test.ts
+@@ -169,7 +169,7 @@ describe("codex engine", () => {
+       "tools.experimental_request_user_input={ enabled = false }", 'history.persistence="none"', "analytics.enabled=false",
+       'model_reasoning_effort="xhigh"', 'model_reasoning_summary="auto"',
+     ]));
+-    expect(settings.some((s) => s.startsWith("service_tier="))).toBe(false);
++    expect(settings.filter((s) => s.startsWith("service_tier="))).toEqual(['service_tier="priority"']);
+     const disabled = argv.flatMap((arg, i) => (argv[i - 1] === "--disable" ? [arg] : []));
+     expect(disabled).toEqual([...CODEX_DISABLED_FEATURES]);
+     for (const feature of ["hooks", "memories", "plugins", "apps", "multi_agent", "shell_tool", "unified_exec"]) expect(disabled).toContain(feature);
+diff --git a/agent/tests/run-config.test.ts b/agent/tests/run-config.test.ts
+index 99816fcd2..70fa4f255 100644
+--- a/agent/tests/run-config.test.ts
++++ b/agent/tests/run-config.test.ts
+@@ -192,11 +192,12 @@ describe("the row", () => {
+   });
+ 
+   it("records Codex's Fast tier with or without an explicit environment setting", () => {
+-    const { log } = logOf({ ...V4_ENV, BRAIN_ENGINE: "codex", BRAIN_ENGINE_MAP: "codex", BRAIN_CODEX_SERVICE_TIER: "priority", BRAIN_CODEX_MODE: "session" });
++    const dir = temp(); // Both inputs must share the other configuration, including log paths.
++    const { log } = logOf({ ...V4_ENV, BRAIN_ENGINE: "codex", BRAIN_ENGINE_MAP: "codex", BRAIN_CODEX_SERVICE_TIER: "priority", BRAIN_CODEX_MODE: "session" }, dir);
+     const row = log.observe(state("RUNX00000011"))!;
+     expect(Object.keys(row.brain.engines)).toEqual(["codex", "deepseek"]);
+     expect(row.brain.codex).toMatchObject({ mode: "session", service_tier: "priority" });
+-    const standard = logOf({ ...V4_ENV, BRAIN_ENGINE: "codex", BRAIN_ENGINE_MAP: "codex", BRAIN_CODEX_MODE: "session" }).log.observe(state("RUNX00000012"))!;
++    const standard = logOf({ ...V4_ENV, BRAIN_ENGINE: "codex", BRAIN_ENGINE_MAP: "codex", BRAIN_CODEX_MODE: "session" }, dir).log.observe(state("RUNX00000012"))!;
+     expect(standard.brain.codex!.service_tier).toBe("priority");
+     expect(standard.config_sha).toBe(row.config_sha);
+     // Not asked: no codex block.

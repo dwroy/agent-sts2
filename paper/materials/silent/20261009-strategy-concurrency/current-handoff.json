@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-10T00:08:28.637852+08:00",
+  "main_concurrency": "072a8358749fb0a7ce3392e66fbdffa4efd7f5d1",
+  "live_concurrency": "319037d226ba97557633350ab41943dc99434552",
+  "two_actual_workers_proven": "root paper/materials/silent/20261009-strategy-concurrency/two-workers-running.json",
+  "current_branch": "fix/strategy-fast-test-contract",
+  "base_for_test_fix": "7513e4f5b540890ae4d03aa07d130b4b6a9ff7a3",
+  "fast_test_contract_changes": [
+    "brain-codex exact one priority flag instead of outdated no-tier",
+    "run-config keeps hash-equality assertion but shares fixture log directory to isolate tier input"
+  ],
+  "production_code_changed": false,
+  "remaining": [
+    "host target54415",
+    "full precommit host tsc+vitest",
+    "gitleaks and only-two-test commit",
+    "integrate test-only commit under live lock",
+    "post-merge outside supplemental acceptance separate from failed original",
+    "record final closure and notify ops; never start learners"
+  ],
+  "status": "two proposal workers already live and host-verified; fixing only two Fast test contracts after unrelated full failures",
+  "precommit_session": 79440,
+  "host_target": "46 tests passed, fast-target-host-1.log",
+  "full_original": "3460 passed/2 failed/2 skipped on pinned live319037; original root host-full-1 preserved",
+  "source_diff": "4 additions3 deletions, only agent/tests/brain-codex.test.ts and run-config.test.ts",
+  "patch_scan": "fast-gitleaks-patch.json/log pass"
+}

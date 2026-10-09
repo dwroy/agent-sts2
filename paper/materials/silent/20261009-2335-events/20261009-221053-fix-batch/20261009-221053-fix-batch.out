@@ -1,0 +1,91 @@
+## 修 bug 回报
+
+- 合并基线：main → 3db9b61ee8145552b083e7b5ace52a6db09f1893
+- 修复：silent-0338 格挡诊断漏来源（RMNXHZKV716Y/F49/T2，账本 silent-0338）— c1d84804956bedbd29a7f0e81294114e18415b9d — 测试 agent/tests/end-turn-guard-sources.test.ts:F49 T2 — 去掉修复时失败：是
+- 修复：silent-0254 开场死亡误归上一胜战（TXZ6RVMQA09D/F49/T1，账本 silent-0254）— 3b48088dec5fc6eafe576a1296bbdadde43432ee — 测试 agent/tests/report_death_fight_test.py:test_opening_death_without_decisions_is_the_last_fight — 去掉修复时失败：是
+- 修复：silent-0272 商店移除预判误报（9Z9H2EXKLF3T/F37/非战斗，账本 silent-0272）— db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26 — 测试 agent/tests/shop-removal-preview.test.ts:F37: pauses the original commitment and preserves both lists when the real page differs — 去掉修复时失败：是
+- 已被别人修掉的：普通神化 — 772b839f8；子弹时间 — a6ed582e8；懒惰重放 — 790b76d00。
+- 已被别人修掉的：旧日志回调 — ccd8bb8e0；usage 断言 — 1cf049049；SL 时钟夹具 — 3d6340e00；rollout 时钟夹具 — 955941fa5；生产截止 — 9889436c3；裸 JSON 回报 — 6f86ff6b6；安全热交接 — 1bea40ab9；隔离入口、status、日志读取 — e04cffa91。
+- 没修的：silent-0250/0256/0260/0263/0266/0268/0271/0273/0279/0287/0290/0291/0293/0295/0296/0297/0300/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349 — 策略类，沿已有独立 strategy-proposal 链，保留原行为。
+- 没修的：S1.exp100 — 证据不足，缺原失败时冻结输入；当前通过不登记已修。
+- 没修的：silent-0332 — 证据不足，缺触发样本和首战末帧，不吞异常。
+- 没修的：校准完成回报补验交接、三项架构调整、F33 归因、B4/B5、性能与缓存续办 — 太大，保留独立任务和原失败记录。
+- 测试：tsc 退出码 0；合后 vitest 256 文件 / 2648 用例 / 退出码 0；额外 Python 3 例通过。三个提交前检查均通过。component-usage、shop-potions、shop-removal-preview 修正环境、固定源码与夹具后重跑通过，早期失败保留；完整沙箱外套件待调度器。
+- 合入：da4271def91f2bc5631a40a4df916fa9afe9f575，S1.fix46；双通知已追加，账本保持 proposed。
+- 需要 Dai 定的事：无
+
+```json
+{
+  "task": "fix-batch",
+  "base": "3db9b61ee8145552b083e7b5ace52a6db09f1893",
+  "fixes": [
+    {
+      "item": "silent-0338：奥利哈钢回合末格挡诊断漏来源",
+      "commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+      "test": "agent/tests/end-turn-guard-sources.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "silent-0254：无决策开场死亡误归上一胜战",
+      "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "test": "agent/tests/report_death_fight_test.py",
+      "fails_without_fix": true
+    },
+    {
+      "item": "silent-0272：商店移除预判误报现场可选牌",
+      "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+      "test": "agent/tests/shop-removal-preview.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "silent-0250/0256/0260/0263/0266/0268/0271/0273/0279/0287/0290/0291/0293/0295/0296/0297/0300/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349",
+      "reason": "策略类；沿已有独立 strategy-proposal 链，保留原行为，不重复派发。"
+    },
+    {
+      "item": "S1.exp100：addedSomewhere 断言",
+      "reason": "证据不足；缺原失败时冻结模型与触发条件，当前通过不登记已修。"
+    },
+    {
+      "item": "silent-0332：双boss接续资源契约异常",
+      "reason": "证据不足；缺触发样本与首战末帧，不吞异常造模拟数字。"
+    },
+    {
+      "item": "校准154302完成回报补验交接",
+      "reason": "太大；涉及批次身份、源码祖先、固定发布和迟到回执契约，原失败保留。"
+    },
+    {
+      "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+      "reason": "太大；独立架构与归因任务，本普通批次不混入。"
+    },
+    {
+      "item": "B4/B5、性能实测、codex-brain-cache及probe-home续办",
+      "reason": "太大；队列指定独立功能与受控实验批次。"
+    }
+  ],
+  "merged": "da4271def91f2bc5631a40a4df916fa9afe9f575",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2648
+  },
+  "code_proposals": [
+    "silent-proposal-513c9f6b73a09264",
+    "silent-proposal-8651b35d30607b5d"
+  ],
+  "implementation_domains": ["structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/learner/runs/20261009-221100-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a12100-c84e-7830-b70d-1725fef42dfb
+轮数：1；工具调用：command_execution×164 file_change×11
+token：输入 395.1k、输出 81.1k（其中推理 39.4k）、cache 读 19386.0k、cache 写 0（命中 98.0%）
+成本：未提供
+耗时：3583.6 s（墙钟）
+时间：首个事件 4.4 s、模型首个输出 10.0 s、首次工具 12.7 s、末次工具结束 3503.5 s；工具内共 3387.6 s，其余（模型生成、推理、网络）191.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053）；模型的工具调用 exec×131 wait×15；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T22-11-01-01a12100-c84e-7830-b70d-1725fef42dfb.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/learner/runs/20261009-221100-fix-batch.jsonl

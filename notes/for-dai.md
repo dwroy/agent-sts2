@@ -612,3 +612,15 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 23:34 [roy-20261009-codex-quota-one-reset] 已记录 Roy 一次性授权：token 剩余额度低于2%可直接用一次重置券，不重复询问；必须凭新鲜实际账户额度核实，兑换时生成并留存唯一请求标识与回执。当前最新 weekly 采样已用84%/剩16%，尚未使用，未接自动hook。记录 notes/codex-quota-reset-authorization.json。
 
 - 2026-10-09 23:35 [roy-20261009-all-codex-fast 完成] 统一 Fast/priority 已实际合入 live 05771993cebb36f5fca9860c6df6b8f3ca6e3bbe（源 c824f5cbcf2e51a36800cc2d156025bd5862cdb0），覆盖运维、learner、对局；保留各自原模型与推理强度，当前任务正常完成，后续批次/下一局加载。原生 high/xhigh 配置验证与源固定自测通过，原失败及完整字节留痕，知识刷新和其他任务保留，不新增游戏版本。结案与证据：paper/materials/silent/20261009-codex-fast/closure.json。learner tabs 已有自动关闭，完整检查收尾保存日志后关闭；刚核实221053策略 pBH已自动关闭，未强关活动任务。
+
+- 2026-10-09 23:41 [运维 codex | roy-20261009-historical-core-builds 首份实质结果] 原批20261009-222802-fix-batch身份/冻结181局及候选/逐boss矩阵/实际伤害资源/模板/反例限制已核实。纯Codex173局首试6胜、含SL最终10胜；A10纯Codex135局0胜，无合格通杀组合。候选P施毒触媒持续防御/D叠敏捷多挡/S小刀供给增益/R抽弃遗物收益，A10纯Codex成型44/22/12/5局，均0整局胜。简表、最低观察组合与限制：paper/materials/silent/20261009-2335-events/core-builds/summary.md；原完整报告/home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/report.md，SHA256=cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d，输入SHA=cae0078bf43043b3b131afaf5670a4b380f0f96e1414f64a5e289ce7a43040f0。模板尚未上线或验证大脑实际采用，不以局部通过、低阶胜或SL次数冒充稳定胜；原四observed条目及D口径更正、旧失败/退避历史保持，不重复派发/登记/合入。随后经既有core-build-notify发送一次原生通知并另留回执。
+
+- 2026-10-09 23:49 [运维 codex] Roy全历史核心组合首份结果已核实并写入双收件箱：四类候选及完整矩阵/模板见 `paper/materials/silent/20261009-2335-events/core-builds/summary.md`，原报告SHA cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d。现有herdr通知动作已调用一次，但去重回执failed/rc2，未确认发送成功；失败原件保留，按既有普通工具修复链核查，不重派学习或把报告标已上线。
+
+- 2026-10-10 00:01 [运维 codex] 23:35事件发布核实：经验140/141仅原数据已顺次合入live/main并登记S1.exp140/141及32所属数据shipped；最新经验2026-10-09.30、201 active，原失败/冲突保留，完整外部检查待原批续验。策略221053的有限0351子项及纯bug0338/0254/0272已实际live，外部完整307文件3456例过2跳均0，现有S1.apotheosis2/S1.fix46和4所属项登记main；宽提案仍waiting、原exp100失败保持。女王B4 rejected未合入。核心首份报告已双回报，herdr通知failed/rc2回执保留待工具核查；回执paper/materials/silent/20261009-2335-events/publication-registration.json。
+
+- 2026-10-10 00:18 [运维 codex] 经验140当前树完整外部检查exit1：307文件3460例通过、2跳、2失败。失败是Fast两处旧测试契约，与经验数据无已证实因果；已核对watcher现有自有树修补，沿原拥有者续办，保持Fast/对局和原失败，不重复派发。实际部署与新完整通过仍待验收。paper/materials/silent/20261009-2335-events/experience140/external-failure-decision.json。
+
+- 2026-10-10 00:21 [运维 codex] 221053两批已实际上线的四项实现已机械同步main 1db3ea25d5，固定沙箱258文件/2654例通过；保持原S1.apotheosis2/S1.fix46与live，不新增游戏知识或重复发布。完整原307文件3456过2跳回执已核实。同步回执paper/materials/silent/20261009-2335-events/code-sync/integration.json。
+
+- 2026-10-10 00:21 [运维 codex] 23:35轮十五事件已处理并留完整原件：两复盘无新bug，经验140/141实际发布及32数据shipped，四原live实现已同步main并自测通过；原完整检查已核实，两经验续验按原批标准通道请求。经验140新树完整rc1两处Fast旧测试契约，采用现有watcher自有树修复，原失败保持、实际部署及新完整通过待验收。论文668局固定切点刷新五校验通过、台账0问题。核心报告222802覆盖181局、四候选及逐boss矩阵/伤害资源/模板已回报；A10纯Codex135局0胜，尚无目标级通杀证据，报告未变生产规则。原生通知failed/rc2已保留去重回执并排队修复，未冒报送达；旧失败/B4拒绝保持。结案paper/materials/silent/20261009-2335-events/closure.json。

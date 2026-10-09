@@ -1,0 +1,12 @@
+cut at 2026-10-09T16:03:19.367Z: decisions.jsonl 879,137,270 B, deepseek-reasoning.jsonl 377,746,518 B, runs.jsonl 272,839 B, states.jsonl 10,401,099,183 B, fight-plans.jsonl 2,233,957 B, run-plans.jsonl 6,583,295 B, brain.jsonl 355,047,089 B, sl-attempts.jsonl 25,663,120 B, run-config.jsonl 1,124,796 B
+decisions: 323,794 records, 668 runs
+scanning states.jsonl ...
+OK   decisions attributed + unattributed == play records
+OK   decisions_by_label sum == attributed decisions
+OK   escalations rows == records with escalation
+OK   every runs.jsonl id present in runs.csv
+OK   commits == git rev-list --all --count
+rows: runs 668, decisions_by_label 22260, escalations 3600, commits 4439
+/home/dw/Projects/agent-sts2/paper/data/learning-curve-ironclad.csv: 11 row(s)
+/home/dw/Projects/agent-sts2/paper/data/learning-curve-silent.csv: 12 row(s)
+key scan: CLEAN (no sk-<key> patterns)

@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/agent
+
+ ❯ tests/end-turn-guard-sources.test.ts (3 tests | 2 failed) 12ms
+   × F49 T2: explains the six Orichalcum block already included in the ten-HP loss 7ms
+   × reports only triggered sources when existing block suppresses Orichalcum 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/end-turn-guard-sources.test.ts > F49 T2: explains the six Orichalcum block already included in the ten-HP loss
+TypeError: undefined is not iterable (cannot read property Symbol(Symbol.iterator))
+ ❯ tests/end-turn-guard-sources.test.ts:21:38
+     19|   expect(plan.outcome.hpLoss).toBe(10);
+     20|   expect(plan.outcome.dies).toBe(false);
+     21|   expect(plan.outcome.endTurnGuards).toContainEqual({ what: "Orichalcu…
+       |                                      ^
+     22|   expect(endTurnLethalNote(plan, true, 11)).toContain("Orichalcum bloc…
+     23|   expect(endTurnLethalNote(plan, true, 11)).not.toContain("no end-of-t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/end-turn-guard-sources.test.ts > reports only triggered sources when existing block suppresses Orichalcum
+AssertionError: expected undefined to deeply equal [ { …(2) } ]
+
+- Expected:
+[
+  {
+    "amount": 4,
+    "what": "Ripple Basin block when no Attack was played",
+  },
+]
+
++ Received:
+undefined
+
+ ❯ tests/end-turn-guard-sources.test.ts:29:38
+     27|   const plan = endTurn({ block: 1, rippleBasin: 4 });
+     28|   expect(plan.outcome.hpLoss).toBe(11);
+     29|   expect(plan.outcome.endTurnGuards).toEqual([{ what: "Ripple Basin bl…
+       |                                      ^
+     30| });
+     31|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  22:14:05
+   Duration  1.37s (transform 1.03s, setup 323ms, import 903ms, tests 12ms, environment 0ms)
+

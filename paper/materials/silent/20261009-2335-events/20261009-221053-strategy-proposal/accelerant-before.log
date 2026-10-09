@@ -1,0 +1,121 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261009-221053/agent
+
+ ❯ tests/silent-apotheosis-accelerant.test.ts (7 tests | 5 failed) 41ms
+   × matches the observed 1-to-2 pair without establishing poison or changing the source card 12ms
+   × same-line upgrade gives 33 from 12 poison, decrementing on each trigger 12ms
+   × same-line upgrade gives 45 from 16 poison, decrementing on each trigger 3ms
+   × upgrades an identified later draw before playing it in the same line 2ms
+   × carries the pair from the draw pile into later turns and preserves the input snapshot 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-apotheosis-accelerant.test.ts > matches the observed 1-to-2 pair without establishing poison or changing the source card
+AssertionError: expected { index: 2, key: 'c2', …(38) } to match object { upgraded: true, known: true, …(2) }
+(36 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "cost": 1,
+-   "known": true,
+-   "poisonExtraTriggers": 2,
+-   "upgraded": true,
++   "known": false,
++   "poisonExtraTriggers": 1,
++   "upgraded": false,
+  }
+
+ ❯ tests/silent-apotheosis-accelerant.test.ts:34:20
+     32|   const upgraded = applyApotheosisUpgrade(before);
+     33|   const observed = modelHandCard(evidence.upgraded, 5, knowledge, "sil…
+     34|   expect(upgraded).toMatchObject({ upgraded: true, known: true, cost: …
+       |                    ^
+     35|   expect(upgraded.poisonExtraTriggers).toBe(2);
+     36|   expect(upgraded.poison).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-apotheosis-accelerant.test.ts > same-line upgrade gives 33 from 12 poison, decrementing on each trigger
+AssertionError: expected 23 to be 33 // Object.is equality
+
+- Expected
++ Received
+
+- 33
++ 23
+
+ ❯ tests/silent-apotheosis-accelerant.test.ts:48:36
+     46|   const saved = JSON.stringify(input);
+     47|   const plan = replaySteps(input, input.hand.map(step))!;
+     48|   expect(plan.outcome.damageDealt).toBe(turn.damage);
+       |                                    ^
+     49|   expect(plan.outcome.enemyHpAfter[0]).toMatchObject({ hp: turn.after,…
+     50|   expect(plan.outcome.energyLeft).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-apotheosis-accelerant.test.ts > same-line upgrade gives 45 from 16 poison, decrementing on each trigger
+AssertionError: expected 31 to be 45 // Object.is equality
+
+- Expected
++ Received
+
+- 45
++ 31
+
+ ❯ tests/silent-apotheosis-accelerant.test.ts:48:36
+     46|   const saved = JSON.stringify(input);
+     47|   const plan = replaySteps(input, input.hand.map(step))!;
+     48|   expect(plan.outcome.damageDealt).toBe(turn.damage);
+       |                                    ^
+     49|   expect(plan.outcome.enemyHpAfter[0]).toMatchObject({ hp: turn.after,…
+     50|   expect(plan.outcome.energyLeft).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-apotheosis-accelerant.test.ts > upgrades an identified later draw before playing it in the same line
+AssertionError: expected 23 to be 33 // Object.is equality
+
+- Expected
++ Received
+
+- 33
++ 23
+
+ ❯ tests/silent-apotheosis-accelerant.test.ts:63:36
+     61|   Object.assign(input.enemies[0]!, { hp: 177, maxHp: 254, poison: 12, …
+     62|   const plan = replaySteps(input, [step(input.hand[0]!), step(drawing)…
+     63|   expect(plan.outcome.damageDealt).toBe(33);
+       |                                    ^
+     64|   expect(plan.steps.at(-1)?.upgraded).toBe(true);
+     65| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/silent-apotheosis-accelerant.test.ts > carries the pair from the draw pile into later turns and preserves the input snapshot
+AssertionError: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/silent-apotheosis-accelerant.test.ts:80:48
+     78|   expect(records).toHaveLength(3);
+     79|   expect(records[0]!.snap.pw.ACCELERANT_POWER ?? 0).toBe(0);
+     80|   expect(records[1]!.snap.pw.ACCELERANT_POWER).toBe(2);
+       |                                                ^
+     81|   expect(records[2]!.snap.pw.ACCELERANT_POWER).toBe(2);
+     82|   expect(records.map((record) => record.dmg)).toEqual([12, 30, 21]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 2 passed (7)
+   Start at  22:18:01
+   Duration  926ms (transform 639ms, setup 399ms, import 346ms, tests 41ms, environment 0ms)
+

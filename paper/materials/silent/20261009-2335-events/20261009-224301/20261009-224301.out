@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：Q389KW7SVWKH（A10，第48层，实验体 #C72 TEST_SUBJECT 第二阶段；T5以7血14挡对33攻击阵亡）。
+- 新的纯 bug：无；神化+未建模为旧缺口 silent-0322。
+- 写成「未记录」的项：Q389KW7SVWKH：dirty源码、内部逐击及复活时序、前五次SL退出、最终执行最优比例、炸弹实体击杀顺序、策略反事实、第三阶段及F49资源、旧boss时钟、真实费用和Jev缓存。
+- 学习账本：Q389KW7SVWKH：新增 silent-0356；更新 silent-0322、0020、0125、0005、0027、0028、0045、0129、0259、0243、0083（老错 silent-0322）；`ledger.py check` 退出码0。
+- 代码提案：均关联 `strategy-proposal`，尚未实现：
+
+  - `silent-proposal-3964ad8708c64f41`：F35／F37／F48神化+候选，关联 silent-0322 等；缺本局施放对照。
+  - `silent-proposal-89576b46cb2f2689`：F48T2护栏及末试T5饮药，关联 silent-0356、0125、0045；缺提前饮药的受控胜负。
+  - `silent-proposal-503b1fed393150f2`：F33至F48资源链，关联 silent-0020 等；F49未到，单局不足以拟定药价，保留原规则。
+
+```json
+{"task":"postmortem","appended":["Q389KW7SVWKH"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0356"],"updated":["silent-0322","silent-0020","silent-0125","silent-0005","silent-0027","silent-0028","silent-0045","silent-0129","silent-0259","silent-0243","silent-0083"],"repeats":["silent-0322"],"check":0},"code_proposals":["silent-proposal-3964ad8708c64f41","silent-proposal-89576b46cb2f2689","silent-proposal-503b1fed393150f2"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-224302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1211e-1c4b-7d21-8c15-438ee8376106
+轮数：1；工具调用：command_execution×53
+token：输入 240.0k、输出 48.1k（其中推理 16.6k）、cache 读 4857.6k、cache 写 0（命中 95.3%）
+成本：未提供
+耗时：1883.6 s（墙钟）
+时间：首个事件 5.7 s、模型首个输出 10.9 s、首次工具 17.0 s、末次工具结束 1836.4 s；工具内共 99.2 s，其余（模型生成、推理、网络）1778.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×32；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T22-43-03-01a1211e-1c4b-7d21-8c15-438ee8376106.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-224302-postmortem.jsonl

@@ -1,0 +1,15 @@
+{
+  "actor": "agent-sts2-watcher two-worker supplemental test-contract acceptance",
+  "started_at": "2026-10-10T00:30:41.391983+08:00",
+  "completed_at": "2026-10-10T00:39:55.892734+08:00",
+  "rc": 0,
+  "live": "b934d888d536d04b9089290b71e589f9d3193df8",
+  "tree": "ab9dc5ed89b53674d9da459cc5780c1f59913890",
+  "source": "b934d888",
+  "architecture_source": "319037d22",
+  "head_unchanged_during_checks": true,
+  "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261009-strategy-concurrency/tests/host-full-2.log",
+  "kind": "standalone outside-sandbox two-worker release acceptance, not a learner run",
+  "old_failures_preserved": true
+}

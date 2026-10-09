@@ -1,0 +1,127 @@
+{
+  "updated_at": "2026-10-10T00:40:38.373921+08:00",
+  "actor": "agent-sts2-watcher",
+  "status": "two-worker architecture deployed and supplemental live full acceptance passed",
+  "approved_parallelism": 2,
+  "architecture": {
+    "source": "20ebab422",
+    "main": "072a8358749fb0a7ce3392e66fbdffa4efd7f5d1",
+    "live": "319037d226ba97557633350ab41943dc99434552",
+    "claims": "different proposal IDs; each worker exclusive worktree",
+    "dispatch_owner": "existing ops/scheduler",
+    "merge_and_external_checks": "original live-merge.lock serial"
+  },
+  "test_contract_fix": {
+    "source": "4cf9d8805",
+    "main": "f0d004b247597b53388a130654dc83c59ff32c3a",
+    "live": "b934d888d536d04b9089290b71e589f9d3193df8",
+    "changed": "only two test contracts: exact priority flag and shared log-directory fixture; production unchanged"
+  },
+  "verification": {
+    "source_sandbox": {
+      "files": 253,
+      "passed": 2622,
+      "special_guards_passed": 11
+    },
+    "legacy_learning_flow_passed": 24,
+    "python_concurrency_passed": 6,
+    "baseline_expected_failures": 2,
+    "test_fix_target_host_passed": 46,
+    "test_fix_precommit_full": {
+      "files": 309,
+      "passed": 3462,
+      "skipped": 2
+    },
+    "actual_live_full": {
+      "receipt": "tests/host-full-2.json",
+      "files": 309,
+      "passed": 3462,
+      "skipped": 2,
+      "live": "b934d888d536d04b9089290b71e589f9d3193df8",
+      "tree": "ab9dc5ed89b53674d9da459cc5780c1f59913890",
+      "rc": 0,
+      "started_at": "2026-10-10T00:30:41.391983+08:00",
+      "completed_at": "2026-10-10T00:39:55.892734+08:00",
+      "head_unchanged_during_checks": true
+    }
+  },
+  "current_runtime_observation": {
+    "at": "2026-10-10T00:40:15.134102+08:00",
+    "registered_running": [
+      {
+        "batch": "20261009-234302-strategy-proposal",
+        "task": "strategy-proposal",
+        "pid": 2620156,
+        "alive_host": true,
+        "claimed_count": 10,
+        "stderr_mtime": "2026-10-10T00:39:20.920074+08:00"
+      }
+    ],
+    "actual_alive_count": 1,
+    "actual_alive_strategy_count": 1,
+    "queue_count": 13,
+    "note": "Read-only host observation; historical two-worker witness remains23:44; no manual learner scheduling"
+  },
+  "full_check_notification_events": [
+    "1791563995913438238-manual.md"
+  ],
+  "real_two_worker_witness": {
+    "at": "2026-10-09T23:44:16.168927+08:00",
+    "count": 2,
+    "disjoint": true,
+    "total_claimed": 20,
+    "file": "two-workers-running.json"
+  },
+  "limitations": [
+    "Real concurrent launch does not establish twofold useful throughput; later completed learners reported shared-record/source merge conflicts; their original events already queued for ops fallback",
+    "Fast launcher recursive-entry failure at003040 is separate and diagnosed to existing ops/source owner with original evidence; this architecture acceptance does not close that bug",
+    "Original failed full checks, failed/rc0 learner records and every historical evidence limit remain unchanged",
+    "No new timer, observer heartbeat or automatic periodic watcher has been enabled"
+  ],
+  "rollback": "Reduce only STRATEGY_WORKERS from2 to1; keep existing s2 finish/check compatibility and let active workers finish",
+  "game_knowledge_or_game_parameters_changed": false,
+  "source_authorization": "Roy chose two routes in current conversation; developer implements infrastructure, ops dispatches learners",
+  "pushed": false,
+  "artifacts": {
+    "tests/host-full-1.log": {
+      "sha256": "ef524401734c448836c6353a07275728522c5bcc7d563f7982bf702037eb3957",
+      "bytes": 2250
+    },
+    "tests/host-full-1.json": {
+      "sha256": "06b9cef41ae750d5a39f59ba524b6e9a7f19988e61780aaad7ce775c1959bcbc",
+      "bytes": 801
+    },
+    "tests/host-full-2.log": {
+      "sha256": "53b367d4690764fab230658ebff01e40b79199d90141f4e0cfa216bc463d2d42",
+      "bytes": 268
+    },
+    "tests/host-full-2.json": {
+      "sha256": "428c3c19c3fef3d36f240e44cc6b8f1f61ee4cbeb11c78976e3f871be46130aa",
+      "bytes": 845
+    },
+    "two-workers-running.json": {
+      "sha256": "5ce80a24425e3ce0d43d5fc6d361fdfe25f33fe9a7e005b63d09acc74167845e",
+      "bytes": 1929
+    },
+    "fast-test-integration.json": {
+      "sha256": "06153fe9b02b31f80cb3a53881cc96c25bd04ddde3fd6ad67683c6708c675914",
+      "bytes": 3329
+    },
+    "runtime-followup-0037.json": {
+      "sha256": "f92d6e58ff39fde516c4056bf7152155e7ebdde0a1aaad4d186afce1db8ba272",
+      "bytes": 3989
+    },
+    "fast-launcher-diagnostic.md": {
+      "sha256": "b7c5534521d6a4aa14b12a3a977cf0da2904bbcd110c7a5b73b6d854fdbca7e5",
+      "bytes": 1489
+    },
+    "fast-launcher-diagnostic-wake.json": {
+      "sha256": "259b11f8afea23ffce05c3cfa98bd6c0291f14f595ddbf06e37d4c04e2e70a01",
+      "bytes": 159
+    },
+    "runtime-at-close.json": {
+      "sha256": "8d1864a553395ec5703eadd909b06edc6e6ae8af2ecd69812517e877b19dcc42",
+      "bytes": 507
+    }
+  }
+}

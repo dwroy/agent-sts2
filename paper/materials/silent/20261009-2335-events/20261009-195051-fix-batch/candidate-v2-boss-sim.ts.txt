@@ -1,0 +1,745 @@
+/**
+ * Whole boss fight simulator (milestone B1, Dai 2026-09-30): from a fight state, every sample plays the fight to its
+ * end (the boss dead or we are) instead of the rollout's 5-turn window, so what decides a boss fight (a dozen turns of
+ * play, whether the deck out-damages the boss) is simulated rather than extrapolated by the rollout's terminal estimate
+ * or the boss clock. Not wired into play and not shown to Jev or DeepSeek (B2 / B3 will; docs/boss-sim.md).
+ *
+ * It is the rollout's own simulation (src/reflex/rollout.ts simulateFight): the same cards, piles, enemy move model,
+ * status cards, potions (a held potion is a 0-energy card with its cost; 0 in a boss fight, potion-cost.ts) and the
+ * turn solver as the policy, with no horizon, no terminal estimate and no time budget, plus the scripts a long fight
+ * exposes (fightNextMove: the Beast's Plow, the Queen's Amalgam switch, the Matriarch's sleep, death and phase moves,
+ * Multi Claw's growing hits).
+ *
+ * Per line (the start turn's play; B2 compares every candidate line of a turn): `samples` samples, sample i seeded by
+ * sampleSeed(seed, i) whatever the line, so two lines (or two decks) are compared on common random numbers; each
+ * enemy's moves come from its own stream (the same enemy moves for every line while the enemies' histories agree).
+ * A sample stops at the fight's end or after `maxTurns` turns (capped: not a win, counted apart).
+ *
+ * Parallel: BossSimPool runs the (line, sample) pairs on worker threads (at most BOSS_SIM_MAX_WORKERS); every pair is
+ * a pure function of the input, the line and its seed, so the pool's result equals runBossSim's (serial) exactly.
+ */
+
+import { availableParallelism } from "node:os";
+import { Worker } from "node:worker_threads";
+
+import { killOrders, simulateFight, type KillGroup, type KillOrder, type RolloutInput } from "../reflex/rollout.js";
+import { potionCost, potionIdOf } from "../reflex/potion-cost.js";
+import type { Plan } from "../reflex/turn-solver.js";
+import { knowledgeCharacter } from "../knowledge/files.js";
+import { silentBossCalibration } from "./boss-trust.js";
+
+/** The most turns a sample plays (the start turn included): logged A7-A9 boss fights ran 2-24 turns (median 9). */
+export const BOSS_SIM_MAX_TURNS = 30;
+/** Node cap of the policy's solver call each simulated turn (the rollout's fast policy). */
+export const BOSS_SIM_POLICY_NODES = 1500;
+export const BOSS_SIM_SAMPLES = 100;
+export const BOSS_SIM_SEED = 1;
+/**
+ * The policy's damage weight scale (BossSimOptions.damageScale; 1 = the live planner's own weights). B1 chose 0.5 on all
+ * 422 fights (in-sample); B1.5 chose it again on the tune fights only (the earlier 2/3, experiments/boss-sim/split.json),
+ * with the other B1.5 settings: Brier from turn 1 0.180 / 0.155 / 0.160 / 0.171 at 0.3 / 0.5 / 0.7 / 1 (docs/boss-sim.md).
+ */
+export const BOSS_SIM_DAMAGE_SCALE = 0.5;
+/**
+ * The policy's HP weight scale and threat term (BossSimOptions.hpScale, threat; 1 and 0 = the live planner's HP weight).
+ * B1.5 tried them on the tune fights: a heavier HP weight (x1.5, or with the threat term 1-2) matched the logged turns'
+ * HP loss turn by turn (one-turn replay) and cut the whole fight's leak, but the fights got longer and the win forecast
+ * worse (Brier from turn 1 0.175-0.187 against 0.164); kept as knobs, off.
+ */
+export const BOSS_SIM_HP_SCALE = 1;
+export const BOSS_SIM_THREAT = 0;
+/**
+ * B4 (docs/boss-sim.md §13.6): a boss's own threat term, added to the one passed (slimInput), keyed by an enemy id of the
+ * boss; mutable so the backtest can try values (tools/boss-sim/backtest.ts --boss-threat). Empty: 1, 2 and 4 on the
+ * Kaiser Crab and the Queen (with their fixes, branch v4-sim-crabqueen) matched the logged turns better but forecast
+ * worse on the tune fights, so none is set.
+ */
+export const BOSS_POLICY_THREAT: Record<string, number> = {};
+
+/**
+ * B5 (docs/boss-sim.md §14): the policy's one-turn lookahead (rollout policyLookahead) in every whole fight: the enemies'
+ * next attacks forecast from the move model, HP below the next hit's reach counting `lethal` more, the HP weight times
+ * (1 + threat x next attack / HP). Chosen on the tune fights as the grid setting whose play matched the logged turns
+ * best (HP through block on the Kaiser Crab, Queen, Insatiable and Waterfall Giant; out-of-fold Brier within 0.01 of
+ * none), then checked on the validation fights: forecasts the same within noise, the leak 1.15 -> 1.08. Mutable so the
+ * backtest can try values (tools/boss-sim/backtest.ts --lookahead); both 0: off.
+ */
+export const BOSS_SIM_LOOKAHEAD: { lethal: number; threat: number } = { lethal: 1, threat: 1 };
+
+/** The boss's own threat term (BOSS_POLICY_THREAT) for a fight's enemies, 0 when none is set. */
+export function bossPolicyThreat(input: Pick<RolloutInput, "enemies">): number {
+  for (const e of input.enemies) {
+    const own = BOSS_POLICY_THREAT[e.id];
+    if (own !== undefined) return own;
+  }
+  return 0;
+}
+/**
+ * The policy's potion hold share (BossSimOptions.potionHold; 0 = drink whenever it helps): with 0 the policy drank ~80%
+ * of its potions on the start turn (the logged fights 40%). On the tune fights 0.5 and 1 both beat 0 (Brier from turn 1
+ * 0.160 / 0.161 against 0.164).
+ */
+export const BOSS_SIM_POTION_HOLD = 0.5;
+/** Worker threads at most: the machine has 32 cores and the live runs keep some (Dai: at most 24). */
+export const BOSS_SIM_MAX_WORKERS = 24;
+
+export interface BossSimOptions {
+  samples?: number;
+  seed?: number;
+  maxTurns?: number;
+  policyNodes?: number;
+  /** The whole-fight scripts (rollout.ts fightNextMove etc.; default true). False: the rollout's simulation without its horizon. */
+  scripts?: boolean;
+  /**
+   * The policy's damage weight times this (turn-solver SolverInput.damageScale; default BOSS_SIM_DAMAGE_SCALE). The
+   * solver's one-turn weights (a boss's damage 0.8 an HP) are the live planner's; the backtest measures which scale
+   * plays the logged fights' way (docs/boss-sim.md).
+   */
+  damageScale?: number;
+  /** The policy's HP weight times this (turn-solver SolverInput.hpScale; default BOSS_SIM_HP_SCALE). */
+  hpScale?: number;
+  /**
+   * The policy's HP weight also times (1 + threat x the enemies' attack this turn / our HP) (rollout policyThreat;
+   * default BOSS_SIM_THREAT).
+   */
+  threat?: number;
+  /**
+   * What the policy pays for drinking a held potion, as a share of the potion's held value (its HP worth in this act's
+   * boss fight, the potion table: potion-cost.ts holdHp; default BOSS_SIM_POTION_HOLD). The live cost in a boss fight is
+   * 0, so a policy turn drank any potion that helped at all, most of them on the start turn (the logged boss fights drank
+   * half of theirs later); with a share of the held value the policy keeps a potion until a turn it is worth that much.
+   */
+  potionHold?: number;
+  /** The held value of a potion id (default: the potion table at the fight's ascension and act; tests give their own). */
+  holdHp?: (potionId: string, input: RolloutInput) => number | null;
+  /**
+   * A kill order for every line's later turns (the rollout's KillOrder: the policy aims at its first group alive, with
+   * ORDER_FOCUS_BONUS), null for the solver's own targets. B2 runs one per order on the same seeds, as the rollout does.
+   */
+  order?: KillOrder | null;
+}
+
+/** One sample of one line, played to the fight's end. */
+export interface FightSampleResult {
+  resources?: { hp: number; revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
+  sequence?: { firstWon: boolean; firstHp: number | null; firstPotions: string[]; secondBoss: string | null; firstTurns: number; secondWon: boolean | null; secondDied: boolean | null };
+  won: boolean;
+  died: boolean;
+  /** Stopped at maxTurns (or the policy had no line) with the fight still on: neither won nor lost. */
+  capped: boolean;
+  /** A time limit ended it unwon (the Battleworn Dummy; no boss has one). */
+  timeUp: boolean;
+  /** Turns played from the start state, the start turn included (1: the fight ended on it). */
+  turns: number;
+  /** HP lost from the start state to the fight's end: all of it (and the revives' HP) at a death. */
+  hpLoss: number;
+  /** Revives spent (Fairy in a Bottle, Lizard Tail). */
+  revived: number;
+  /** Potion ids drunk, in order. */
+  drunk: string[];
+  /** HP the enemies had left to take off at the end (0 when won): later phases, spawns, a reattaching segment. */
+  enemyHpLeft: number;
+  /**
+   * Per turn played (index 0 = the start turn): HP lost, damage dealt, the enemies' attack shown (the living ones at the
+   * end of our turn) and the HP it took through our block.
+   */
+  lossByTurn: number[];
+  dmgByTurn: number[];
+  incomingByTurn: number[];
+  enemyLossByTurn: number[];
+  /** The living enemies' HP left at the end of each of our turns (B4's per-turn comparison with the log). */
+  enemyHpByTurn?: number[];
+  /**
+   * B2's fight plan: block gained per turn; [turn, id] of each Power played and potion drunk, [turn, id, board index] of
+   * each enemy killed (1 = the start turn).
+   */
+  blockByTurn?: number[];
+  powers?: [number, string][];
+  drinks?: [number, string][];
+  kills?: [number, string, number][];
+  policyTurns: number;
+  policyNodes: number;
+}
+
+export interface Dist {
+  mean: number;
+  median: number;
+  p25: number;
+  p75: number;
+  p90: number;
+  min: number;
+  max: number;
+}
+
+export interface BossSimLineResult {
+  sequence?: { firstWins: number; firstWinSecondDeaths: number; secondUnfinished: number };
+  /** Index of the line in the lines given. */
+  line: number;
+  samples: number;
+  wins: number;
+  deaths: number;
+  capped: number;
+  timeUps: number;
+  winProb: number;
+  /** HP lost to the fight's end over every sample (a death counts all our HP). */
+  hpLoss: Dist;
+  /** Over the won samples only; null without one. */
+  hpLossWon: Dist | null;
+  /** Turns to the fight's end over every sample (a capped sample counts maxTurns). */
+  turns: Dist;
+  turnsWon: Dist | null;
+  /** The turn of death (from the start state, 1 = the start turn): count by turn, and its spread; null without a death. */
+  deathTurns: Record<number, number>;
+  deathTurn: Dist | null;
+  /** Samples that drank each potion (by id). */
+  potions: Record<string, number>;
+  /** Mean HP the enemies had left in the samples not won. */
+  enemyHpLeftUnwon: number | null;
+  /**
+   * Turn by turn (1 = the start turn): samples still fighting it, their mean HP lost and damage dealt that turn, and
+   * the samples alive / won by its end. B2's per-turn plan reads this.
+   */
+  perTurn: { turn: number; fighting: number; loss: number; dmg: number; incoming: number; enemyLoss: number; alive: number; won: number }[];
+  policyTurns: number;
+  policyNodes: number;
+  /** Per sample, by sample index (common random numbers: sample i of every line had the same seed). */
+  outcomes: FightSampleResult[];
+}
+
+export interface BossSimResult {
+  lines: BossSimLineResult[];
+  samples: number;
+  maxTurns: number;
+  seed: number;
+  policyNodes: number;
+  scripts: boolean;
+  damageScale: number;
+  hpScale: number;
+  threat: number;
+  potionHold: number;
+  /** Worker threads used (0: serial). */
+  workers: number;
+  elapsedMs: number;
+}
+
+/** Sample i's seed, the same for every line and every deck compared under `seed` (common random numbers). */
+export function sampleSeed(seed: number, i: number): number {
+  return (Math.imul(seed >>> 0, 0x2c1b3c6d) + Math.imul(i + 1, 0x297a2d39)) >>> 0 || 1;
+}
+
+/** The input a sample needs, without what a whole fight never reads (the terminal's model, gates, move-model data, the plans, the clock). */
+export function slimInput(
+  input: RolloutInput,
+  policyNodes = BOSS_SIM_POLICY_NODES,
+  damageScale = BOSS_SIM_DAMAGE_SCALE,
+  hpScale = BOSS_SIM_HP_SCALE,
+  threat = BOSS_SIM_THREAT,
+  potionHold = BOSS_SIM_POTION_HOLD,
+  holdHp: (potionId: string, input: RolloutInput) => number | null = tableHoldHp,
+): RolloutInput {
+  const { handSize, drawFirst } = input.options ?? {};
+  const policyThreat = threat + bossPolicyThreat(input);
+  // The held potions' cost to the policy: potionHold x their held value (the start line given is played as it is).
+  const hand = potionHold > 0 ? input.solver.hand.map((card) => {
+    const id = card.type === "Potion" ? potionIdOf(card.cardId) : null;
+    const hold = id ? holdHp(id, input) : null;
+    return hold !== null && hold > 0 ? { ...card, potionCost: Math.max(card.potionCost ?? 0, potionHold * hold) } : card;
+  }) : input.solver.hand;
+  return {
+    ...input,
+    // Frozen Silent tuning fights observed this at A2/4/7/8/9 only; A10 ended before the buff was observable.
+    ...(knowledgeCharacter() === "silent" && [2, 4, 7, 8, 9].includes(input.meta.asc) && input.enemies.some((e) => e.id === "QUEEN")
+      ? { fightQueenTorchStrength: 1 } : {}),
+    ...(input.continuation ? { continuation: { ...input.continuation, variants: input.continuation.variants.map((v) => ({ ...v, input: slimInput(v.input, policyNodes, damageScale, hpScale, threat, potionHold, holdHp) })) } } : {}),
+    solver: hand === input.solver.hand ? input.solver : { ...input.solver, hand },
+    plans: [],
+    model: null,
+    gates: null,
+    mm: {},
+    options: {
+      policyNodes,
+      ...(damageScale !== 1 ? { policyDamageScale: damageScale } : {}),
+      ...(hpScale !== 1 ? { policyHpScale: hpScale } : {}),
+      ...(policyThreat !== 0 ? { policyThreat } : {}),
+      ...(BOSS_SIM_LOOKAHEAD.lethal !== 0 || BOSS_SIM_LOOKAHEAD.threat !== 0 ? { policyLookahead: { ...BOSS_SIM_LOOKAHEAD } } : {}),
+      ...(handSize !== undefined ? { handSize } : {}),
+      ...(drawFirst !== undefined ? { drawFirst } : {}),
+    },
+  };
+}
+
+/** A potion's held value in HP from the potion table (potion-cost.ts), at the fight's ascension and act. */
+export function tableHoldHp(potionId: string, input: RolloutInput): number | null {
+  return potionCost(potionId, input.meta.asc, input.meta.act, "elite").holdHp;
+}
+
+/** One sample of one line to the fight's end. `input` as slimInput makes it (options.policyNodes is the policy's cap). */
+function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number, maxTurns: number, scripts: boolean, order: KillOrder | null): FightSampleResult {
+  const { records, policyTurns, policyNodes } = simulateFight(input, plan, maxTurns, seed, scripts, order);
+  const startHp = input.solver.player.hp;
+  const lossCap = startHp + (input.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0);
+  const last = records[records.length - 1];
+  const won = last?.won === true;
+  const died = last?.died === true;
+  const timeUp = !won && !died && last?.timeUp === true;
+  const lost = records.reduce((sum, r) => sum + r.loss, 0);
+  const enemyHpLeft = won || !last ? 0 : last.hpLeft ? Object.values(last.hpLeft).reduce((sum, hp) => sum + hp, 0) : last.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
+  return {
+    won,
+    ...(last?.resources ? { resources: { ...last.resources, drunkKeys: records.flatMap((r) => r.resources?.drunkKeys ?? []) } } : {}),
+    died,
+    capped: !won && !died && !timeUp,
+    timeUp,
+    turns: records.length,
+    hpLoss: died ? lossCap : Math.min(lossCap, Math.max(0, lost)),
+    revived: records.reduce((sum, r) => sum + (r.revived ?? 0), 0),
+    drunk: records.flatMap((r) => r.drunk ?? []),
+    enemyHpLeft: Math.round(enemyHpLeft * 10) / 10,
+    lossByTurn: records.map((r) => Math.round(r.loss * 10) / 10),
+    dmgByTurn: records.map((r) => Math.round(r.dmg * 10) / 10),
+    incomingByTurn: records.map((r) => r.snap.E.reduce((sum, e) => sum + (e[5] ? e[7] : 0), 0)),
+    enemyLossByTurn: records.map((r) => Math.round(r.enemyPart * 10) / 10),
+    enemyHpByTurn: records.map((r) => (r.hpLeft ? Object.values(r.hpLeft).reduce((sum, hp) => sum + hp, 0) : r.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0))),
+    blockByTurn: records.map((r) => Math.round(r.blockGained ?? 0)),
+    powers: records.flatMap((r, t) => (r.powers ?? []).map((id): [number, string] => [t + 1, id])),
+    drinks: records.flatMap((r, t) => (r.drunk ?? []).map((id): [number, string] => [t + 1, id])),
+    kills: killsOf(input, records),
+    policyTurns,
+    policyNodes,
+  };
+}
+
+/** Transfer the first sample's resources; no fresh HP, spent potion, or spent revive is restored. */
+export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput): { input: RolloutInput; potions: string[] } {
+  if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) throw new Error("missing successful first-fight resources");
+  const used = new Set(first.resources.drunkKeys);
+  let fairies = (input.solver.player.revives ?? []).filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length
+    - first.resources.revives.filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length;
+  const remaining = input.continuation.potions.filter((p) => {
+    if (used.has(p.key)) return false;
+    if (p.id === "FAIRY_IN_A_BOTTLE" && fairies > 0) { fairies -= 1; return false; }
+    return true;
+  });
+  const keys = new Set(remaining.map((p) => p.key));
+  const hand = template.solver.hand.filter((p) => p.type !== "Potion" || keys.has(p.cardId));
+  const randomPotions = template.randomPotions?.filter((p) => keys.has(`POTION:${p.potionId}:${p.slot}`));
+  return { potions: [...keys], input: { ...template, continuation: undefined,
+    solver: { ...template.solver, hand, player: { ...template.solver.player, hp: first.resources.hp, revives: first.resources.revives.slice() }, continuationValue: undefined },
+    piles: { ...template.piles, handBase: hand.map(() => null) }, potions: keys.size, ...(randomPotions ? { randomPotions } : {}),
+  } };
+}
+
+/** Each successful first fight continues on that very sample's remaining resources. */
+export function fightSample(input: RolloutInput, plan: Plan | null, seed: number, maxTurns = BOSS_SIM_MAX_TURNS, scripts = true, order: KillOrder | null = null): FightSampleResult {
+  const first = singleFightSample(input, plan, seed, maxTurns, scripts, order);
+  const next = input.continuation;
+  if (!next) return first;
+  const initial = { firstWon: first.won, firstHp: first.resources?.hp ?? null, firstPotions: [] as string[], secondBoss: null as string | null, firstTurns: first.turns, secondWon: null as boolean | null, secondDied: null as boolean | null };
+  if (!first.won) return { ...first, sequence: initial };
+  const total = next.variants.reduce((s,v) => s + v.count, 0);
+  if (total <= 0) throw new Error("empty second-boss distribution");
+  let position = sampleSeed(seed, 0) / 0x100000000 * total;
+  const variant = next.variants.find((v) => (position -= v.count) < 0) ?? next.variants.at(-1)!;
+  const transferred = continuationInput(input, first, variant.input);
+  const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
+  return { ...second,
+    turns: first.turns + second.turns, hpLoss: first.hpLoss + second.hpLoss, revived: first.revived + second.revived,
+    drunk: [...first.drunk, ...second.drunk], policyTurns: first.policyTurns + second.policyTurns, policyNodes: first.policyNodes + second.policyNodes,
+    lossByTurn: [...first.lossByTurn, ...second.lossByTurn], dmgByTurn: [...first.dmgByTurn, ...second.dmgByTurn],
+    incomingByTurn: [...first.incomingByTurn, ...second.incomingByTurn], enemyLossByTurn: [...first.enemyLossByTurn, ...second.enemyLossByTurn],
+    enemyHpByTurn: [...(first.enemyHpByTurn ?? []), ...(second.enemyHpByTurn ?? [])], blockByTurn: [...(first.blockByTurn ?? []), ...(second.blockByTurn ?? [])],
+    powers: [...(first.powers ?? []), ...(second.powers ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
+    drinks: [...(first.drinks ?? []), ...(second.drinks ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
+    kills: [...(first.kills ?? []), ...(second.kills ?? []).map(([t,id,index]): [number,string,number] => [t+first.turns,id,index])],
+    sequence: { ...initial, firstPotions: transferred.potions, secondBoss: variant.boss, secondWon: second.won, secondDied: second.died },
+  };
+}
+
+/** The turn (1 = the start turn) each enemy alive at the start was first down at the end of our turn, its id and board index. */
+function killsOf(input: RolloutInput, records: { snap: { E: [number, string, number, number, number, boolean, ...unknown[]][] } }[]): [number, string, number][] {
+  const out: [number, string, number][] = [];
+  const alive = new Set(input.solver.enemies.filter((e) => e.hp > 0).map((e) => e.index));
+  records.forEach((r, t) => {
+    for (const e of r.snap.E) {
+      if (alive.has(e[0]) && !e[5]) {
+        alive.delete(e[0]);
+        out.push([t + 1, e[1], e[0]]);
+      }
+    }
+  });
+  return out;
+}
+
+/**
+ * The same fight state with the hand dealt again from the sample's own shuffle (B1.5): the hand's cards (their base
+ * versions, before our Strength and Weak) go back into the draw pile and the start turn draws as many again, played by
+ * the policy (simulateFight with no line). `fresh`: a pre-fight start (B3), every card in the draw pile (the discard
+ * pile too) and the hand empty; `hp`: the HP to start from (the HP the fight is entered with). Potions stay held.
+ */
+export function redealInput(input: RolloutInput, opts: { fresh?: boolean; hp?: number } = {}): RolloutInput {
+  const s = input.solver;
+  const cards = s.hand.map((card, i) => [card, input.piles.handBase[i] ?? null] as const).filter(([card]) => card.type !== "Potion");
+  const back = cards.map(([card, base]) => base ?? card);
+  const potions = s.hand.filter((card) => card.type === "Potion");
+  const hp = opts.hp !== undefined ? Math.max(1, Math.min(s.player.maxHp, opts.hp)) : s.player.hp;
+  return {
+    ...input,
+    solver: { ...s, hand: potions, cardsPlayedThisTurn: 0, player: { ...s.player, hp } },
+    plans: [],
+    piles: {
+      draw: opts.fresh ? [...input.piles.draw, ...input.piles.discard, ...back] : [...input.piles.draw, ...back],
+      discard: opts.fresh ? [] : input.piles.discard.slice(),
+      handBase: potions.map(() => null),
+    },
+    options: { ...input.options, drawFirst: cards.length },
+  };
+}
+
+/** Quantile with linear interpolation (numpy's default), of sorted values. */
+export function quantile(sorted: number[], q: number): number {
+  if (sorted.length === 0) return NaN;
+  const at = (sorted.length - 1) * q;
+  const lo = Math.floor(at);
+  const hi = Math.ceil(at);
+  return sorted[lo]! + (sorted[hi]! - sorted[lo]!) * (at - lo);
+}
+
+export function dist(values: number[]): Dist {
+  const sorted = values.slice().sort((a, b) => a - b);
+  const r = (x: number) => Math.round(x * 100) / 100;
+  return {
+    mean: r(sorted.reduce((sum, x) => sum + x, 0) / Math.max(1, sorted.length)),
+    median: r(quantile(sorted, 0.5)),
+    p25: r(quantile(sorted, 0.25)),
+    p75: r(quantile(sorted, 0.75)),
+    p90: r(quantile(sorted, 0.9)),
+    min: sorted[0] ?? NaN,
+    max: sorted[sorted.length - 1] ?? NaN,
+  };
+}
+
+function perTurnOf(outcomes: FightSampleResult[]): BossSimLineResult["perTurn"] {
+  const longest = Math.max(0, ...outcomes.map((o) => o.turns));
+  const r1 = (x: number) => Math.round(x * 10) / 10;
+  const out: BossSimLineResult["perTurn"] = [];
+  for (let t = 1; t <= longest; t += 1) {
+    const fighting = outcomes.filter((o) => o.turns >= t);
+    out.push({
+      turn: t,
+      fighting: fighting.length,
+      loss: r1(fighting.reduce((sum, o) => sum + (o.lossByTurn[t - 1] ?? 0), 0) / Math.max(1, fighting.length)),
+      dmg: r1(fighting.reduce((sum, o) => sum + (o.dmgByTurn[t - 1] ?? 0), 0) / Math.max(1, fighting.length)),
+      incoming: r1(fighting.reduce((sum, o) => sum + (o.incomingByTurn[t - 1] ?? 0), 0) / Math.max(1, fighting.length)),
+      enemyLoss: r1(fighting.reduce((sum, o) => sum + (o.enemyLossByTurn[t - 1] ?? 0), 0) / Math.max(1, fighting.length)),
+      alive: outcomes.filter((o) => !(o.died && o.turns <= t)).length,
+      won: outcomes.filter((o) => o.won && o.turns <= t).length,
+    });
+  }
+  return out;
+}
+
+/** A line's numbers from its samples (by sample index). */
+export function summarizeLine(line: number, outcomes: FightSampleResult[]): BossSimLineResult {
+  const won = outcomes.filter((o) => o.won);
+  const dead = outcomes.filter((o) => o.died);
+  const deathTurns: Record<number, number> = {};
+  for (const o of dead) deathTurns[o.turns] = (deathTurns[o.turns] ?? 0) + 1;
+  const potions: Record<string, number> = {};
+  for (const o of outcomes) for (const id of new Set(o.drunk)) potions[id] = (potions[id] ?? 0) + 1;
+  const unwon = outcomes.filter((o) => !o.won);
+  return {
+    line,
+    ...(outcomes.some((o) => o.sequence) ? { sequence: {
+      firstWins: outcomes.filter((o) => o.sequence?.firstWon).length,
+      firstWinSecondDeaths: outcomes.filter((o) => o.sequence?.firstWon && o.sequence.secondDied).length,
+      secondUnfinished: outcomes.filter((o) => o.sequence?.firstWon && !o.won && !o.died).length,
+    } } : {}),
+    samples: outcomes.length,
+    wins: won.length,
+    deaths: dead.length,
+    capped: outcomes.filter((o) => o.capped).length,
+    timeUps: outcomes.filter((o) => o.timeUp).length,
+    winProb: outcomes.length > 0 ? won.length / outcomes.length : 0,
+    hpLoss: dist(outcomes.map((o) => o.hpLoss)),
+    hpLossWon: won.length > 0 ? dist(won.map((o) => o.hpLoss)) : null,
+    turns: dist(outcomes.map((o) => o.turns)),
+    turnsWon: won.length > 0 ? dist(won.map((o) => o.turns)) : null,
+    deathTurns,
+    deathTurn: dead.length > 0 ? dist(dead.map((o) => o.turns)) : null,
+    potions,
+    enemyHpLeftUnwon: unwon.length > 0 ? Math.round((unwon.reduce((sum, o) => sum + o.enemyHpLeft, 0) / unwon.length) * 10) / 10 : null,
+    perTurn: perTurnOf(outcomes),
+    policyTurns: outcomes.reduce((sum, o) => sum + o.policyTurns, 0),
+    policyNodes: outcomes.reduce((sum, o) => sum + o.policyNodes, 0),
+    outcomes,
+  };
+}
+
+/**
+ * The sim's win rate is over-confident (docs/boss-sim.md B1.5: from turn 1, 0-20% predicted won ~25%): a Platt map per
+ * start point, p' = sigmoid(a + b logit(p)), fitted on the tune fights only (the earlier 2/3; tools/boss-sim/calib.py
+ * --platt) and checked on the later 1/3. "start": the fight's first turn with its hand known; "mid": a later turn (the
+ * backtest's turn 5; B2's starts); "pre": before the fight, the hand not drawn (B3). For absolute win rates; paired
+ * differences (compareLines) come from the raw samples.
+ */
+export const BOSS_SIM_PLATT: Record<"start" | "mid" | "pre", { a: number; b: number }> = {
+  // Refitted after B5 (the Kaiser Crab's faced hit, the policy's one-turn lookahead; docs/boss-sim.md §14) on the same tune
+  // fights. B4's (the Insatiable's Sandpit, the Knowledge Demon's three curses): start (0.7875, 0.5587), mid (0.5682,
+  // 0.8221), pre (0.7573, 0.5783); with the Crab's and the Queen's fixes (branch v4-sim-crabqueen): start (0.6695, 0.602),
+  // mid (0.4478, 0.8537), pre (0.6425, 0.6369). B2's: start (0.5534, 0.5036), mid (0.5624, 0.8224), pre (0.5236, 0.5219);
+  // B1.5's: start (0.7295, 0.498), mid (0.7482, 0.8635), pre (0.7084, 0.5189).
+  start: { a: 0.7496, b: 0.5992 },
+  mid: { a: 0.6491, b: 0.8506 },
+  pre: { a: 0.7007, b: 0.6174 },
+};
+
+/** A line's calibrated win rate (BOSS_SIM_PLATT), its raw rate clipped to half a sample from 0 and 1 first. */
+export function calibratedWinProb(winProb: number, samples: number, start: keyof typeof BOSS_SIM_PLATT, asc = 0): number {
+  const eps = 0.5 / (samples + 1);
+  const p = Math.min(1 - eps, Math.max(eps, winProb));
+  const silent = knowledgeCharacter() === "silent";
+  const fit: { a: number; b: number; c?: number } | null = silent ? silentBossCalibration(start) : BOSS_SIM_PLATT[start];
+  // A missing Silent fit stays raw/low confidence instead of borrowing Ironclad's Platt map.
+  if (!fit) return winProb;
+  const { a, b } = fit;
+  const base = a + b * Math.log(p / (1 - p));
+  const z = Math.max(-30, Math.min(30, silent ? base + (fit.c ?? 0) * (asc - 5) / 5 : base));
+  return 1 / (1 + Math.exp(-z));
+}
+
+/** Line a against line b on the same samples (common random numbers): paired differences and their standard errors. */
+export interface LineComparison {
+  samples: number;
+  /** a's win rate minus b's, and its standard error (paired: sample i of both had the same seed). */
+  winDiff: number;
+  winSe: number;
+  /** a's mean HP lost to the fight's end minus b's (a death = all HP), and its standard error. */
+  hpLossDiff: number;
+  hpLossSe: number;
+  /** Samples a won and b did not, and the other way round. */
+  onlyA: number;
+  onlyB: number;
+}
+
+/** B2 compares a turn's lines, B3 a deck with and without a card: the paired numbers of two lines' samples. */
+export function compareLines(a: BossSimLineResult, b: BossSimLineResult): LineComparison {
+  const n = Math.min(a.outcomes.length, b.outcomes.length);
+  const paired = (f: (o: FightSampleResult) => number) => {
+    const d = Array.from({ length: n }, (_, i) => f(a.outcomes[i]!) - f(b.outcomes[i]!));
+    const mean = d.reduce((sum, x) => sum + x, 0) / Math.max(1, n);
+    const variance = n > 1 ? d.reduce((sum, x) => sum + (x - mean) ** 2, 0) / (n - 1) : 0;
+    return { mean, se: Math.sqrt(variance / Math.max(1, n)) };
+  };
+  const win = paired((o) => (o.won ? 1 : 0));
+  const loss = paired((o) => o.hpLoss);
+  const r = (x: number) => Math.round(x * 10000) / 10000;
+  let onlyA = 0;
+  let onlyB = 0;
+  for (let i = 0; i < n; i += 1) {
+    if (a.outcomes[i]!.won && !b.outcomes[i]!.won) onlyA += 1;
+    if (b.outcomes[i]!.won && !a.outcomes[i]!.won) onlyB += 1;
+  }
+  return { samples: n, winDiff: r(win.mean), winSe: r(win.se), hpLossDiff: r(loss.mean), hpLossSe: r(loss.se), onlyA, onlyB };
+}
+
+function settings(opts: BossSimOptions): Required<BossSimOptions> {
+  return {
+    samples: Math.max(1, Math.floor(opts.samples ?? BOSS_SIM_SAMPLES)),
+    seed: opts.seed ?? BOSS_SIM_SEED,
+    maxTurns: Math.max(1, Math.floor(opts.maxTurns ?? BOSS_SIM_MAX_TURNS)),
+    policyNodes: opts.policyNodes ?? BOSS_SIM_POLICY_NODES,
+    scripts: opts.scripts ?? true,
+    damageScale: opts.damageScale ?? BOSS_SIM_DAMAGE_SCALE,
+    hpScale: opts.hpScale ?? BOSS_SIM_HP_SCALE,
+    threat: opts.threat ?? BOSS_SIM_THREAT,
+    potionHold: opts.potionHold ?? BOSS_SIM_POTION_HOLD,
+    holdHp: opts.holdHp ?? tableHoldHp,
+    order: opts.order ?? null,
+  };
+}
+
+/** Every line to the fight's end, `samples` times each, in this thread. */
+export function runBossSim(input: RolloutInput, lines: (Plan | null)[], opts: BossSimOptions = {}): BossSimResult {
+  const started = performance.now();
+  const s = settings(opts);
+  const slim = slimInput(input, s.policyNodes, s.damageScale, s.hpScale, s.threat, s.potionHold, s.holdHp);
+  const out = lines.map((plan, line) => summarizeLine(line, Array.from({ length: s.samples }, (_, i) => fightSample(slim, plan, sampleSeed(s.seed, i), s.maxTurns, s.scripts, s.order))));
+  return { lines: out, samples: s.samples, maxTurns: s.maxTurns, seed: s.seed, policyNodes: s.policyNodes, scripts: s.scripts, damageScale: s.damageScale, hpScale: s.hpScale, threat: s.threat, potionHold: s.potionHold, workers: 0, elapsedMs: Math.round(performance.now() - started) };
+}
+
+/**
+ * The kill orders a whole fight can follow (two or more kinds of living enemy: the rollout's killOrders over the
+ * enemies grouped by id; the Crab's two parts, The Kin's priest and followers, the Queen and her Amalgam), none for a
+ * single kind. A minion's leader (MINION_POWER on the others) is marked as the rollout's combat-plan groups do.
+ */
+export function fightOrders(input: RolloutInput): KillOrder[] {
+  const groups: KillGroup[] = [];
+  for (const e of input.solver.enemies) {
+    if (e.hp <= 0 || e.maxHp >= 1_000_000) continue;
+    const id = input.enemies.find((x) => x.index === e.index)?.id ?? e.name;
+    const group = groups.find((g) => g.id === id);
+    if (group) {
+      group.indices.push(e.index);
+      group.hp += e.hp;
+    } else groups.push({ id, name: e.name, indices: [e.index], hp: e.hp });
+  }
+  const minion = (g: KillGroup) => g.indices.every((i) => (input.enemies.find((x) => x.index === i)?.powers?.["MINION_POWER"] ?? 0) > 0);
+  if (groups.length >= 2 && groups.filter((g) => !minion(g)).length === 1) for (const g of groups) if (!minion(g)) g.leader = true;
+  return killOrders(groups).orders;
+}
+
+/**
+ * Every line under the solver's own targets and under each kill order (fightOrders; `orders` to give others), all on
+ * the same seeds; per line, the numbers of its best order (win rate, then least HP lost), as the rollout keeps a line's
+ * best order. `order` in the options is ignored. B2 reads `byOrder` for the plan; B3 and the backtest the best.
+ */
+export async function runBestOrder(
+  run: (input: RolloutInput, lines: (Plan | null)[], opts: BossSimOptions) => BossSimResult | Promise<BossSimResult>,
+  input: RolloutInput,
+  lines: (Plan | null)[],
+  opts: BossSimOptions = {},
+  orders: KillOrder[] = fightOrders(input),
+): Promise<{ lines: (BossSimLineResult & { order: string | null })[]; byOrder: { order: string | null; result: BossSimResult }[] }> {
+  const byOrder: { order: string | null; result: BossSimResult }[] = [];
+  for (const order of [null, ...orders]) byOrder.push({ order: order?.label ?? null, result: await run(input, lines, { ...opts, order }) });
+  const best = lines.map((_, i) => {
+    let pick = byOrder[0]!;
+    for (const one of byOrder.slice(1)) {
+      const a = one.result.lines[i]!;
+      const b = pick.result.lines[i]!;
+      if (a.winProb > b.winProb || (a.winProb === b.winProb && a.hpLoss.mean < b.hpLoss.mean)) pick = one;
+    }
+    return { ...pick.result.lines[i]!, order: pick.order };
+  });
+  return { lines: best, byOrder };
+}
+
+/** Worker threads by default: the cores less 4, at most BOSS_SIM_MAX_WORKERS. */
+export function defaultWorkers(): number {
+  return Math.max(1, Math.min(BOSS_SIM_MAX_WORKERS, availableParallelism() - 4));
+}
+
+/** Messages to a worker (boss-sim-worker.ts). */
+export type WorkerRequest =
+  | { type: "input"; job: number; input: RolloutInput; lines: (Plan | null)[]; maxTurns: number; scripts: boolean; order: KillOrder | null }
+  | { type: "run"; job: number; tasks: [line: number, sample: number, seed: number][] }
+  | { type: "drop"; job: number };
+export type WorkerReply = { job: number; results: [line: number, sample: number, result: FightSampleResult][] } | { job: number; error: string };
+
+/**
+ * A pool of worker threads running whole-fight samples. Reuse one pool for many runs (a worker's start-up, the solver
+ * and the knowledge modules loading, is ~0.3 s); close() it when done. Runs are queued one at a time.
+ */
+export class BossSimPool {
+  readonly size: number;
+  private workers: Worker[] = [];
+  private job = 0;
+  private queue: Promise<unknown> = Promise.resolve();
+
+  constructor(size = defaultWorkers()) {
+    this.size = Math.max(1, Math.min(BOSS_SIM_MAX_WORKERS, Math.floor(size)));
+  }
+
+  private start(): Worker[] {
+    if (this.workers.length > 0) return this.workers;
+    // The worker is TypeScript when this module is (tsx, vitest): it loads through tsx too.
+    const ts = import.meta.url.endsWith(".ts");
+    const url = new URL(ts ? "./boss-sim-worker.ts" : "./boss-sim-worker.js", import.meta.url);
+    for (let k = 0; k < this.size; k += 1) {
+      const worker = new Worker(url, ts ? { execArgv: ["--import", "tsx"] } : {});
+      worker.unref();
+      this.workers.push(worker);
+    }
+    return this.workers;
+  }
+
+  /** As runBossSim, on the pool's threads: the same numbers. */
+  run(input: RolloutInput, lines: (Plan | null)[], opts: BossSimOptions = {}): Promise<BossSimResult> {
+    const next = this.queue.then(() => this.runNow(input, lines, opts));
+    this.queue = next.catch(() => undefined);
+    return next;
+  }
+
+  private async runNow(input: RolloutInput, lines: (Plan | null)[], opts: BossSimOptions): Promise<BossSimResult> {
+    const started = performance.now();
+    const s = settings(opts);
+    const workers = this.start();
+    const job = (this.job += 1);
+    const tasks: [number, number, number][] = [];
+    // Sample-major: the lines' samples of one seed go together (a chunk compares its lines on the same seeds).
+    for (let i = 0; i < s.samples; i += 1) for (let line = 0; line < lines.length; line += 1) tasks.push([line, i, sampleSeed(s.seed, i)]);
+    // Small chunks, handed out as workers free up (samples differ a lot in length: a quick death, a 25-turn win).
+    const chunk = Math.max(1, Math.ceil(tasks.length / (workers.length * 6)));
+    const chunks: [number, number, number][][] = [];
+    for (let k = 0; k < tasks.length; k += chunk) chunks.push(tasks.slice(k, k + chunk));
+    const results: FightSampleResult[][] = lines.map(() => new Array<FightSampleResult>(s.samples));
+    const slim = slimInput(input, s.policyNodes, s.damageScale, s.hpScale, s.threat, s.potionHold, s.holdHp);
+    const used = workers.slice(0, Math.min(workers.length, chunks.length));
+    await new Promise<void>((resolve, reject) => {
+      let pending = chunks.length;
+      let failed = false;
+      const give = (worker: Worker) => {
+        const tasksOf = chunks.shift();
+        if (tasksOf) worker.postMessage({ type: "run", job, tasks: tasksOf } satisfies WorkerRequest);
+      };
+      const cleanup = () => {
+        for (const worker of used) {
+          worker.off("message", handlers.get(worker)!);
+          worker.off("error", errors.get(worker)!);
+          worker.postMessage({ type: "drop", job } satisfies WorkerRequest);
+        }
+      };
+      const handlers = new Map<Worker, (reply: WorkerReply) => void>();
+      const errors = new Map<Worker, (error: Error) => void>();
+      for (const worker of used) {
+        const onMessage = (reply: WorkerReply) => {
+          if (reply.job !== job || failed) return;
+          if ("error" in reply) {
+            failed = true;
+            cleanup();
+            reject(new Error(`boss-sim worker: ${reply.error}`));
+            return;
+          }
+          for (const [line, i, result] of reply.results) results[line]![i] = result;
+          pending -= 1;
+          if (pending === 0) {
+            cleanup();
+            resolve();
+          } else give(worker);
+        };
+        const onError = (error: Error) => {
+          if (failed) return;
+          failed = true;
+          cleanup();
+          reject(error);
+        };
+        handlers.set(worker, onMessage);
+        errors.set(worker, onError);
+        worker.on("message", onMessage);
+        worker.on("error", onError);
+        worker.postMessage({ type: "input", job, input: slim, lines, maxTurns: s.maxTurns, scripts: s.scripts, order: s.order } satisfies WorkerRequest);
+        give(worker);
+      }
+    });
+    return {
+      lines: results.map((outcomes, line) => summarizeLine(line, outcomes)),
+      samples: s.samples,
+      maxTurns: s.maxTurns,
+      seed: s.seed,
+      policyNodes: s.policyNodes,
+      scripts: s.scripts,
+      damageScale: s.damageScale,
+      hpScale: s.hpScale,
+      threat: s.threat,
+      potionHold: s.potionHold,
+      workers: used.length,
+      elapsedMs: Math.round(performance.now() - started),
+    };
+  }
+
+  async close(): Promise<void> {
+    const workers = this.workers;
+    this.workers = [];
+    await Promise.all(workers.map((worker) => worker.terminate()));
+  }
+}
