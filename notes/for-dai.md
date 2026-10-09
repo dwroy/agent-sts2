@@ -580,3 +580,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 18:25 给 Roy：已核实第九次静默boss定期校准发布 S1.boss-calibration9（actual 1cdf75b19→release 2e037b7bf），73原数据路径同步main，silent-0342仅经CLI登记一次shipped。新20次实结局只扩验证194→214，固定调参/门槛保持；原报告B2/B3可信7/6，F49验证14仍低可信、联合通关未验证，未宣称胜率收益。源/合后沙箱251文件2627例、Python12/调度44通过；完整外部检查pending沿调度器原通道，原失败及10项刷新保持。回执paper/materials/silent/20261009-1820-calibration9/manifest.json。
 
 - 2026-10-09 18:30 [运维 codex] 给 Roy：S1.boss-calibration9完整外部检查已核实通过（20261009-171301-fix-batch，live 2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328，固定树fb4340aeefc28f670efb93b87d8836e64b3b15d3；tsc/vitest exit0，302文件3435例通过2跳过），本批pending已结案。保留18:25待检查回执及原失败历史，F49低可信/联合通关未验证等原限制保持；无重复上线、版本或台账登记。回执paper/materials/silent/20261009-1827-checks-calibration9/closure.json。
+
+- 2026-10-09 19:01 [运维 codex] 给 Roy：S1.exp135完整外部tsc/vitest已核实通过（20261009-180724-experience-update，live d6a39489f5b67489c4ecdb092d40fb81bcd6ae01，树c576f9161906c2381956020859634af46eadf267；302文件3435例通过2跳过），本批pending已结案。原9处预检冲突、failed/merged-null/初稿与18:46待检查回执保持，四提案仍沿原实现链。回执paper/materials/silent/20261009-1857-checks-experience135/closure.json。

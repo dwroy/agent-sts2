@@ -1,0 +1,16 @@
+{
+  "attempts": [
+    {
+      "exit": 1,
+      "finding": "Some historical closure files contain a list; the initial duplicate predicate assumed a dict.",
+      "corrected_predicate": "Only dict closure objects can contain the batch identifier."
+    },
+    {
+      "exit": 1,
+      "finding": "The physical append-only ledger can interleave independent CLI rows; a contiguous section predicate did not match.",
+      "corrected_predicate": "Verify exact bytes and multiplicities of every original and shipped CLI row in HEAD and physical ledger."
+    }
+  ],
+  "repository_writes_before_failures": 0,
+  "original_evidence_unchanged": true
+}

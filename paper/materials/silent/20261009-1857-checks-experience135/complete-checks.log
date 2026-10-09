@@ -1,0 +1,575 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/check-imports.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 123[2mms[22m[39m
+ [32m✓[39m tests/compute-memo.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 156113[2mms[22m[39m
+     [33m[2m✓[22m[39m the same question and every resolution as without it; the board planned again comes from it, rollout and B2 [33m 110598[2mms[22m[39m
+     [33m[2m✓[22m[39m on a worker pool (one worker): the run comes back too, keyed by the data the workers load, after the pool is built again [33m 11829[2mms[22m[39m
+     [33m[2m✓[22m[39m a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept [33m 16953[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout needs the budget the stored run needed: less, it runs again; enough, it comes from the memo [33m 12892[2mms[22m[39m
+     [33m[2m✓[22m[39m with exactly that budget the same run is cut nowhere and gives the same result; with less, it is cut [33m 3812[2mms[22m[39m
+ [32m✓[39m tests/rollout-live.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 209955[2mms[22m[39m
+     [33m[2m✓[22m[39m every option of a logged board carries the rollout and history facts; the decision log gets the rollout [33m 2049[2mms[22m[39m
+     [33m[2m✓[22m[39m with a modelled potion held, the rollout fact says later turns may use it [33m 709[2mms[22m[39m
+     [33m[2m✓[22m[39m a drink-first potion option says it is not rolled out [33m 309[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout's best line is added, last and marked, when code did not show it [33m 48420[2mms[22m[39m
+     [33m[2m✓[22m[39m up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board) [33m 40655[2mms[22m[39m
+     [33m[2m✓[22m[39m the controlled clock: every logged board's rollout stays inside the budget [33m 19544[2mms[22m[39m
+     [33m[2m✓[22m[39m code's ranking, options and auto-acts are unchanged by the rollout [33m 92163[2mms[22m[39m
+     [33m[2m✓[22m[39m logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left [33m 2242[2mms[22m[39m
+     [33m[2m✓[22m[39m the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it [33m 2283[2mms[22m[39m
+     [33m[2m✓[22m[39m the dead Parafright's hit next turn is in every line's enemy_threat_next [33m 1113[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-b2.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 119069[2mms[22m[39m
+     [33m[2m✓[22m[39m a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's [33m 44971[2mms[22m[39m
+     [33m[2m✓[22m[39m Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often [33m 12071[2mms[22m[39m
+     [33m[2m✓[22m[39m a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch [33m 42369[2mms[22m[39m
+     [33m[2m✓[22m[39m Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks [33m 8587[2mms[22m[39m
+     [33m[2m✓[22m[39m The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would [33m 11067[2mms[22m[39m
+ [32m✓[39m tests/boss-lines-planner.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 93640[2mms[22m[39m
+     [33m[2m✓[22m[39m BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte [33m 17684[2mms[22m[39m
+     [33m[2m✓[22m[39m a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log [33m 5658[2mms[22m[39m
+     [33m[2m✓[22m[39m BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why [33m 5512[2mms[22m[39m
+     [33m[2m✓[22m[39m BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers [33m 30278[2mms[22m[39m
+     [33m[2m✓[22m[39m an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question [33m 31594[2mms[22m[39m
+     [33m[2m✓[22m[39m turn 1: the fight plan from the best line's samples [33m 2753[2mms[22m[39m
+ [32m✓[39m tests/sl-retry-planner.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 67464[2mms[22m[39m
+     [33m[2m✓[22m[39m every logged retry board's decision is 3488dc5's, byte for byte [33m 13130[2mms[22m[39m
+     [33m[2m✓[22m[39m VNKN F25 T3: Burning Pact draws the known Bash+ and Strike; the question says the next 10 cards; the log has sl_retry [33m 11814[2mms[22m[39m
+     [33m[2m✓[22m[39m JW92 F48 T3: Offering draws the known Defend, Twin Strike and Shrug It Off+ [33m 628[2mms[22m[39m
+     [33m[2m✓[22m[39m known draws the pile does not hold: none used, the decision as with the switch off [33m 7207[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout runs 24 samples (frozen clock: the whole schedule); the log says so [33m 19478[2mms[22m[39m
+     [33m[2m✓[22m[39m a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual [33m 6570[2mms[22m[39m
+     [33m[2m✓[22m[39m B2 on a retried boss fight runs the compute's samples a line [33m 1375[2mms[22m[39m
+     [33m[2m✓[22m[39m a retry step that throws leaves the decision exactly as with both switches off [33m 7245[2mms[22m[39m
+ [32m✓[39m tests/sl-explore.test.ts [2m([22m[2m33 tests[22m[2m)[22m[33m 44123[2mms[22m[39m
+     [33m[2m✓[22m[39m recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte [33m 14003[2mms[22m[39m
+     [33m[2m✓[22m[39m VNKN F25 T1: Jev's pick, played there in attempt 2, gives way to the rollout's best untried line; the row says so [33m 7212[2mms[22m[39m
+     [33m[2m✓[22m[39m every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's [33m 7378[2mms[22m[39m
+     [33m[2m✓[22m[39m the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not [33m 14513[2mms[22m[39m
+     [33m[2m✓[22m[39m the Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion [33m 621[2mms[22m[39m
+ [32m✓[39m tests/target-options.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 37577[2mms[22m[39m
+     [33m[2m✓[22m[39m shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap [33m 5934[2mms[22m[39m
+     [33m[2m✓[22m[39m Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage) [33m 3100[2mms[22m[39m
+     [33m[2m✓[22m[39m gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies [33m 3116[2mms[22m[39m
+     [33m[2m✓[22m[39m rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them [33m 2973[2mms[22m[39m
+     [33m[2m✓[22m[39m is deterministic: the same board gives the same options and the same kill-order numbers [33m 5174[2mms[22m[39m
+     [33m[2m✓[22m[39m stays inside the 1500ms time budget with a controlled clock, degrading the samples per order first [33m 2102[2mms[22m[39m
+     [33m[2m✓[22m[39m every logged board: one kind of enemy unchanged; several kinds only move from code's act to Jev's question, never to another act [33m 12500[2mms[22m[39m
+     [33m[2m✓[22m[39m the minion-first order kills the minion; its numbers differ from leader-first; deterministic; one kind of enemy is unchanged [33m 595[2mms[22m[39m
+     [33m[2m✓[22m[39m orders that agree as far as a sample went share it: Leader > Minion > Other and Leader > Other > Minion while the leader lives [33m 723[2mms[22m[39m
+     [33m[2m✓[22m[39m an attacking illusion first (Parafright) gets no "dead by T5" count: it revives (981W F30); it stays a kill-order target [33m 425[2mms[22m[39m
+     [33m[2m✓[22m[39m The Kin (2CCM6XK4PB37 F17): the Priest is the leader; no order kills it in 5 turns, so the orders rank by its HP left [33m 716[2mms[22m[39m
+ [32m✓[39m tests/death-move-planner.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 32765[2mms[22m[39m
+     [33m[2m✓[22m[39m MECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte [33m 10987[2mms[22m[39m
+     [33m[2m✓[22m[39m MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off [33m 8097[2mms[22m[39m
+     [33m[2m✓[22m[39m on, the rule-free board (the Kaiser Crab, its ally-death counts in the DB): as before [33m 1271[2mms[22m[39m
+     [33m[2m✓[22m[39m on, a monster DB without the ally-death counters (built before them): as before [33m 6275[2mms[22m[39m
+     [33m[2m✓[22m[39m on, reading the rules fails: the switch off (fail safe) [33m 1664[2mms[22m[39m
+     [33m[2m✓[22m[39m 0U96U4D9Z3PP F48 T5: the killing lines say Enrage now and Off With Your Head next; hp_lost as without the rule; the Queen carries it; the log records it [33m 361[2mms[22m[39m
+     [33m[2m✓[22m[39m 5GKAR00L5AYV F48 T2 (You Are Mine): no change this turn, the head-chop next [33m 966[2mms[22m[39m
+     [33m[2m✓[22m[39m Y3XT9EBS7U8B F37 T1: a line killing the Turret Operator says the Shield's Smash comes next [33m 3143[2mms[22m[39m
+ [32m✓[39m tests/build-facts-audit.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 19800[2mms[22m[39m
+     [33m[2m✓[22m[39m shop/plan with the boss simulation: facts, not scores; every option still listed [33m 3329[2mms[22m[39m
+     [33m[2m✓[22m[39m rest/plan with the boss simulation: facts, not scores; every option still listed [33m 523[2mms[22m[39m
+     [33m[2m✓[22m[39m selection/remove with the boss simulation: facts, not scores; every option still listed [33m 15209[2mms[22m[39m
+ [32m✓[39m tests/potions-jev-call.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 30140[2mms[22m[39m
+     [33m[2m✓[22m[39m logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies [33m 29491[2mms[22m[39m
+ [32m✓[39m tests/eval.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 26766[2mms[22m[39m
+     [33m[2m✓[22m[39m passes tests/eval_metrics_test.py (without the venv only the algorithm tests run) [33m 18883[2mms[22m[39m
+     [33m[2m✓[22m[39m passes tests/eval_calibration_test.py (without the venv only the algorithm tests run) [33m 7233[2mms[22m[39m
+     [33m[2m✓[22m[39m prints the unchanged bossClock of each logged board, at the HP given, and the estimate at the real length [33m 314[2mms[22m[39m
+     [33m[2m✓[22m[39m tools/eval/strength-sources.ts prints the same ids as JSON [33m 330[2mms[22m[39m
+ [32m✓[39m tests/ops-herdr.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 20903[2mms[22m[39m
+     [33m[2m✓[22m[39m run, reuse, busy, status, stop; only its own labels [33m 2049[2mms[22m[39m
+     [33m[2m✓[22m[39m --close-on-exit: the pane closes when the job ends and its last lines are kept [33m 3331[2mms[22m[39m
+     [33m[2m✓[22m[39m starts the TUI once, prompts, reads the turn's answer and tokens from the session file [33m 884[2mms[22m[39m
+     [33m[2m✓[22m[39m other arguments (a new key file, another effort): the idle TUI is restarted [33m 1237[2mms[22m[39m
+     [33m[2m✓[22m[39m defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent [33m 2359[2mms[22m[39m
+     [33m[2m✓[22m[39m a turn that does not end in time is interrupted with esc (124); the TUI stays [33m 5470[2mms[22m[39m
+     [33m[2m✓[22m[39m a startup dialog (agent_not_ready) defers without answering it [33m 385[2mms[22m[39m
+     [33m[2m✓[22m[39m a post-mortem batch runs in its own pane, reports as before, and the pane closes [33m 3764[2mms[22m[39m
+     [33m[2m✓[22m[39m herdr unavailable: the batch starts with setsid as before [33m 1341[2mms[22m[39m
+ [32m✓[39m tests/loop.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 17174[2mms[22m[39m
+     [33m[2m✓[22m[39m plays through a scripted fight and stops when the run ends [33m 401[2mms[22m[39m
+     [33m[2m✓[22m[39m after an action that fails but went through, logs it and asks again instead of replaying the answer (KFPC F4) [33m 3447[2mms[22m[39m
+     [33m[2m✓[22m[39m honours the decision cap [33m 366[2mms[22m[39m
+     [33m[2m✓[22m[39m drives the game without Jev, resolving every question in code [33m 301[2mms[22m[39m
+     [33m[2m✓[22m[39m does not re-ask Jev while the board is unchanged [33m 3754[2mms[22m[39m
+     [33m[2m✓[22m[39m skips the Jev call when the board moves while it is still planning [33m 3755[2mms[22m[39m
+     [33m[2m✓[22m[39m waits for a pending action to settle before planning again [33m 451[2mms[22m[39m
+     [33m[2m✓[22m[39m the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn) [33m 1206[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps going when more runs were requested [33m 547[2mms[22m[39m
+     [33m[2m✓[22m[39m walks through a shop once instead of flapping open and closed [33m 416[2mms[22m[39m
+     [33m[2m✓[22m[39m skips a card reward once instead of claiming and skipping forever [33m 447[2mms[22m[39m
+     [33m[2m✓[22m[39m reports the running session total when combat ends [33m 360[2mms[22m[39m
+ [32m✓[39m tests/brain-codex.test.ts [2m([22m[2m32 tests[22m[2m)[22m[33m 16244[2mms[22m[39m
+     [33m[2m✓[22m[39m recognises a used-up plan (rest for the process), a rate limit, a lost login and an ignored isolation setting [33m 314[2mms[22m[39m
+     [33m[2m✓[22m[39m after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken [33m 1656[2mms[22m[39m
+     [33m[2m✓[22m[39m a question that stalled twice (and failed) is not billed to the next one: each latency is its own runs (J4S28FRQKD7G's act-plan, 41 s logged as 316 s) [33m 2189[2mms[22m[39m
+     [33m[2m✓[22m[39m before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall [33m 5221[2mms[22m[39m
+     [33m[2m✓[22m[39m stalled twice: the question fails as a timeout and the fallback answers it [33m 2155[2mms[22m[39m
+     [33m[2m✓[22m[39m the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked [33m 1512[2mms[22m[39m
+     [33m[2m✓[22m[39m a call past BRAIN_CODEX_TIMEOUT_MS is killed and DeepSeek answers it [33m 1508[2mms[22m[39m
+ [32m✓[39m tests/sl-loop.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 13006[2mms[22m[39m
+     [33m[2m✓[22m[39m SL_RELOAD_EARLY: every line dies with nothing left to chance: reloaded before the least-loss line's first card; off: after the line [33m 12331[2mms[22m[39m
+ [32m✓[39m tests/passive-pieces-planner.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 17392[2mms[22m[39m
+     [33m[2m✓[22m[39m boards without any relic piece: the same question, view and resolutions on and off; the Fan board's question counts the Fan [33m 17390[2mms[22m[39m
+ [32m✓[39m tests/thief-card-value.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 9952[2mms[22m[39m
+     [33m[2m✓[22m[39m three decks on the same seeds: with the card, without it, with it at 10 HP less; the facts' numbers are the run's [33m 649[2mms[22m[39m
+     [33m[2m✓[22m[39m on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none [33m 9289[2mms[22m[39m
+ [32m✓[39m tests/template-target.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 14290[2mms[22m[39m
+     [33m[2m✓[22m[39m rntv-f30-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's [33m 975[2mms[22m[39m
+     [33m[2m✓[22m[39m rntv-f38-t1-defend-shiv: every line names Shiv's target, no option's first action is refused, nor code's [33m 661[2mms[22m[39m
+     [33m[2m✓[22m[39m F30 T1: Jev's line (小刀, 欺凌, potion, 防御, potion) starts with Shiv at the Mother Louse, as the gate wants it [33m 663[2mms[22m[39m
+     [33m[2m✓[22m[39m the same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte [33m 11668[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-build.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 9671[2mms[22m[39m
+     [33m[2m✓[22m[39m common random numbers: the same deck twice differs by exactly 0; runs repeat sample for sample [33m 574[2mms[22m[39m
+     [33m[2m✓[22m[39m the worker pool gives the serial runner's samples; a mixture takes each sample from one member [33m 419[2mms[22m[39m
+     [33m[2m✓[22m[39m a low-confidence boss (the Kaiser Crab here) is marked, with why; a relic the fight does not model is not simulated [33m 5698[2mms[22m[39m
+     [33m[2m✓[22m[39m rest site: resting projects a higher entry HP; each smith option upgrades its card [33m 896[2mms[22m[39m
+     [33m[2m✓[22m[39m cut short by the clock under 300 samples (of 1000 asked): no numbers, as a failed simulation (Dai 2026-10-02) [33m 629[2mms[22m[39m
+     [33m[2m✓[22m[39m off: DeepSeek's card reward question byte for byte as the screen built it; on: the same question plus the simulation [33m 918[2mms[22m[39m
+ [32m✓[39m tests/run-plan-merge.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 6468[2mms[22m[39m
+     [33m[2m✓[22m[39m one call: the Ancient's option, the act's route and the run plan; all three stored [33m 801[2mms[22m[39m
+     [33m[2m✓[22m[39m RUN_PLAN_MERGE=off: the run plan's own call at the map, then the Ancient's question exactly as the screen built it [33m 651[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing due: the question is byte for byte the same with RUN_PLAN_MERGE on and off [33m 1236[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose run_plan is no plan: the option and the route are used, the plan stays due and is asked on its own two floors on [33m 704[2mms[22m[39m
+     [33m[2m✓[22m[39m an illegal route re-asked by the router: the corrected answer without a run_plan keeps the first answer's plan [33m 613[2mms[22m[39m
+     [33m[2m✓[22m[39m the run start rides on the run's first question (no plan yet) [33m 542[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client reads the run plan from the answer, or from its own object after it [33m 1248[2mms[22m[39m
+     [33m[2m✓[22m[39m the review due at the F4 map rides on the F5 card reward (the route plan restored from the logs): one call, the card, the route and the plan [33m 328[2mms[22m[39m
+ [32m✓[39m tests/logdb.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 9122[2mms[22m[39m
+     [33m[2m✓[22m[39m passes tests/logdb_test.py (without the venv only the extractor tests run) [33m 6415[2mms[22m[39m
+     [33m[2m✓[22m[39m turns failures into isError with the reason [33m 1107[2mms[22m[39m
+     [33m[2m✓[22m[39m answers SQL over the derived tables [33m 783[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses writes and files outside the database [33m 458[2mms[22m[39m
+ [32m✓[39m tests/mech-move-planner.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 10762[2mms[22m[39m
+     [33m[2m✓[22m[39m MECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte [33m 3554[2mms[22m[39m
+     [33m[2m✓[22m[39m MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off [33m 2247[2mms[22m[39m
+     [33m[2m✓[22m[39m on, reading the rules fails: the switch off (fail safe), the Crab's back attack included [33m 2195[2mms[22m[39m
+     [33m[2m✓[22m[39m on, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule) [33m 720[2mms[22m[39m
+     [33m[2m✓[22m[39m NX48MBG3SPRJ F33 T7: a line killing the Rocket counts the Crusher's Enlarging Strike faced (6 + Crab Rage's 6), not from behind [33m 1337[2mms[22m[39m
+     [33m[2m✓[22m[39m Y3XT9EBS7U8B F45 T5 (Stock 1): a killing line says the Axebot is back in Boot Up; its Stock carries the observation; the log records it [33m 363[2mms[22m[39m
+ [32m✓[39m tests/thief.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 10670[2mms[22m[39m
+     [33m[2m✓[22m[39m every logged thief board's decision is the pre-change one, byte for byte [33m 8525[2mms[22m[39m
+     [33m[2m✓[22m[39m T2: what it carries (the card missing since the fight's first frame), turns left, HP; every option's thief fact [33m 305[2mms[22m[39m
+     [33m[2m✓[22m[39m the Merc: gold stolen so far (the fight's first frame's gold less now), where it goes on death [33m 347[2mms[22m[39m
+     [33m[2m✓[22m[39m the Fat Gremlin on its Flee turn: no line kills it (14 HP), none added; killable, a line killing it is among the options [33m 365[2mms[22m[39m
+     [33m[2m✓[22m[39m no thief_context, no thief fact, no thief log [33m 622[2mms[22m[39m
+ [32m✓[39m tests/journal-replay.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 6608[2mms[22m[39m
+     [33m[2m✓[22m[39m gives DeepSeek the same run memory as a loop that never stopped, and follows the saved route plan [33m 1527[2mms[22m[39m
+     [33m[2m✓[22m[39m after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so [33m 2040[2mms[22m[39m
+     [33m[2m✓[22m[39m restarted between the map move and the card reward: the replay notes the node the move chose, so the reward still carries the route review [33m 721[2mms[22m[39m
+     [33m[2m✓[22m[39m a route changed on a card reward is the act's plan after a restart (its map/route-change row carries it) [33m 1331[2mms[22m[39m
+     [33m[2m✓[22m[39m without the replay (the old behaviour) the restarted loop re-plans the route with an empty history [33m 702[2mms[22m[39m
+ [32m✓[39m tests/ops-codex.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 6574[2mms[22m[39m
+     [33m[2m✓[22m[39m round trip: codex-ops-do.sh -> broker -> actions script -> answer and exit code [33m 3270[2mms[22m[39m
+     [33m[2m✓[22m[39m victories, a new ascension, a post-mortem batch with a fake learner, the 10-pending inbox line [33m 1471[2mms[22m[39m
+     [33m[2m✓[22m[39m a failed batch is retried later; dispatch refuses unknown runs and a second batch [33m 1538[2mms[22m[39m
+ [32m✓[39m tests/batch-j.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 7535[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged F33 T1 board (7 energy, 6 Attacks): Shuriken reaches the solver, and the logged six Attacks deal 112 as they did (96 shown then) [33m 3601[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged F33 T2 board: the Wheel reaches the rollout, and the next turn (fight turn 3) loses less with it [33m 2662[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged board with both piles empty: Distilled Chaos and Glowwater are lines of the solve (no "not simulated") [33m 335[2mms[22m[39m
+ [32m✓[39m tests/boss-sim.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 3234[2mms[22m[39m
+     [33m[2m✓[22m[39m is deterministic under a seed, and another seed changes it [33m 500[2mms[22m[39m
+     [33m[2m✓[22m[39m runs on worker threads with exactly the serial numbers [33m 845[2mms[22m[39m
+     [33m[2m✓[22m[39m the live solver and 5-turn rollout give the numbers they gave before B1.5 [32m 300[2mms[22m[39m
+     [33m[2m✓[22m[39m redeal: a pre-fight start has every card in the draw pile, the hand drawn in the sample, the entry HP [33m 486[2mms[22m[39m
+     [33m[2m✓[22m[39m kill orders: one per order of two kinds of enemy, none for one; each line keeps its best order's numbers [33m 494[2mms[22m[39m
+ [32m✓[39m tests/brain-codex-session.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 6652[2mms[22m[39m
+     [33m[2m✓[22m[39m config.toml with anything but model / effort / [tui] (or an instruction source) turns session mode off: exec mode answers [33m 327[2mms[22m[39m
+     [33m[2m✓[22m[39m a stalled turn (silent after its first token) is interrupted, reverted and asked once more [33m 1122[2mms[22m[39m
+     [33m[2m✓[22m[39m a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why [33m 397[2mms[22m[39m
+     [33m[2m✓[22m[39m a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off [33m 359[2mms[22m[39m
+     [33m[2m✓[22m[39m a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process [33m 2188[2mms[22m[39m
+     [33m[2m✓[22m[39m sweeps a dead process's threads (ours only), and deletes its own thread's files at exit [33m 404[2mms[22m[39m
+     [33m[2m✓[22m[39m the server does not keep the process alive; at exit the process removes its thread's files [33m 341[2mms[22m[39m
+ [32m✓[39m tests/build-decider.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 6598[2mms[22m[39m
+     [33m[2m✓[22m[39m a card reward is decided by DeepSeek, logged as decider deepseek with its reason; Jev is not asked [33m 303[2mms[22m[39m
+     [33m[2m✓[22m[39m combat still goes to Jev: no DeepSeek call, even on a near-guess [33m 1822[2mms[22m[39m
+     [33m[2m✓[22m[39m route: planned once by the brain at the first fork, the next fork followed in code; a missing node re-plans [33m 613[2mms[22m[39m
+     [33m[2m✓[22m[39m card reward with a route change: one call for both; the change is its own map/route-change row (a reused plan step); the next map follows it [33m 372[2mms[22m[39m
+     [33m[2m✓[22m[39m card reward with keep (or no route): recorded in the card row only; the next map follows the plan [33m 746[2mms[22m[39m
+     [33m[2m✓[22m[39m route: when the brain fails, code's greedy baseline moves (never shown to the brain); that floor is not asked again [33m 354[2mms[22m[39m
+ [32m✓[39m tests/thief-cost.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 7043[2mms[22m[39m
+     [33m[2m✓[22m[39m every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false) [33m 5489[2mms[22m[39m
+     [33m[2m✓[22m[39m no value computed for this fight (another fight's, or none): no cost, the facts say why, every choice as with the switch off [33m 511[2mms[22m[39m
+     [33m[2m✓[22m[39m the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn [33m 518[2mms[22m[39m
+ [32m✓[39m tests/brain-router.test.ts [2m([22m[2m30 tests[22m[2m)[22m[33m 6079[2mms[22m[39m
+     [33m[2m✓[22m[39m a timeout aborts the engine and falls back [33m 1006[2mms[22m[39m
+     [33m[2m✓[22m[39m two timeouts in a row (a re-ask's too) rest the engine for TIMEOUT_REST_MS: the next question does not wait on it [33m 2012[2mms[22m[39m
+     [33m[2m✓[22m[39m a timeout between answers starts the count over [33m 2010[2mms[22m[39m
+     [33m[2m✓[22m[39m an invalid answer whose re-ask timed out goes to the fallback too; a fallback that fails leaves the unusable answer (then Jev/code) [33m 1006[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-whole.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 2806[2mms[22m[39m
+     [33m[2m✓[22m[39m every answer's resolution and point, recording, deviating and avoiding, as e0fa69b [33m 1977[2mms[22m[39m
+     [33m[2m✓[22m[39m pw7y-a3-t1-replan: code's "only distinct line" ended the turn as a failed one; now Jev's question, the answer kept off [33m 305[2mms[22m[39m
+ [32m✓[39m tests/mech-rules-planner.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 5030[2mms[22m[39m
+     [33m[2m✓[22m[39m with the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte [33m 2123[2mms[22m[39m
+     [33m[2m✓[22m[39m on, but a monster DB without the observed data: the same [33m 1473[2mms[22m[39m
+     [33m[2m✓[22m[39m on, and reading the rules fails: the same (fail safe) [33m 1110[2mms[22m[39m
+ [32m✓[39m tests/batch-c.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 5149[2mms[22m[39m
+     [33m[2m✓[22m[39m Battle Trance cuts Jev's line; the Blood Potion is offered again beside the drawn cards, not drunk by code [33m 1952[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged T3 board: the rollout's best is no longer the Parafright line (logged: Dominate -> Parafright, True Grit) [33m 1407[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained [33m 1498[2mms[22m[39m
+ [32m✓[39m tests/boss-lines.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 3426[2mms[22m[39m
+     [33m[2m✓[22m[39m every line on the same seeds: the same line twice is the same, sample by sample; serial and pool agree [33m 2068[2mms[22m[39m
+     [33m[2m✓[22m[39m the deadline: the samples every line finished, the same ones for every line, and the count in the text [33m 536[2mms[22m[39m
+     [33m[2m✓[22m[39m B2's and B3's pools never hold workers at once: each one starting its workers releases the other's; the released one starts again on its next run [33m 788[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4-shrink.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 3820[2mms[22m[39m
+     [33m[2m✓[22m[39m XC4T F9 T3: a later turn with the beetle alive is shrunk, its hand from the pile at base (unmarked): a Strike hits it for 4, not 2 [33m 2756[2mms[22m[39m
+     [33m[2m✓[22m[39m four logged boards with Weak, Strength or Howl from Beyond [33m 483[2mms[22m[39m
+ [32m✓[39m tests/route-review.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 4831[2mms[22m[39m
+     [33m[2m✓[22m[39m one call for the rest action, its card and the route; the change is its own row, the plan's last step; the next map follows it [33m 678[2mms[22m[39m
+     [33m[2m✓[22m[39m answered by another engine (BRAIN_ENGINE_REST=claude): the rest row, its route change and their rationales name it, not DeepSeek [33m 615[2mms[22m[39m
+     [33m[2m✓[22m[39m a change with another stretch to the next rest site: both rows log it against the kept route; next_rest rides in the question, not the system prefix [33m 568[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client reads the route-plan answer and the rest answer's route and route_reason [33m 536[2mms[22m[39m
+     [33m[2m✓[22m[39m an illegal route-plan answer is re-asked once with its errors; the corrected route is followed [33m 538[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown option key recovered from the reasoning keeps the answer's route and route_reason (batch E) [33m 519[2mms[22m[39m
+     [33m[2m✓[22m[39m a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route [33m 1036[2mms[22m[39m
+ [32m✓[39m tests/batch-i.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 4401[2mms[22m[39m
+     [33m[2m✓[22m[39m logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3) [33m 3111[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged K7G9 F45 T3 board (4 HP, four Burns held, no attack coming, mod says safe): the note names the Burns [33m 636[2mms[22m[39m
+ [32m✓[39m tests/batch-n.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 4393[2mms[22m[39m
+       [33m[2m✓[22m[39m empty reply, plan drafted in the reasoning: bought as planned with one call, the row marked recovered [33m 641[2mms[22m[39m
+       [33m[2m✓[22m[39m an echo reply takes the plan its reasoning drafted (was parsed into a blank race plan) [33m 1843[2mms[22m[39m
+       [33m[2m✓[22m[39m an empty reply takes the plan its reasoning drafted in one call [33m 1763[2mms[22m[39m
+ [32m✓[39m tests/insatiable-sandpit.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 5216[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout's turn 2 starts at Sandpit 4 with up to 3 Escapes drawn, and some samples are eaten by turn 5 [33m 1491[2mms[22m[39m
+     [33m[2m✓[22m[39m off: as before, no count in any later turn and fewer deaths [33m 1706[2mms[22m[39m
+     [33m[2m✓[22m[39m the loop's switch (DecisionEnv.sandpitStart, config SANDPIT_START) wins over rollout-live's default [33m 1770[2mms[22m[39m
+ [32m✓[39m tests/learner-empty-fix.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 2540[2mms[22m[39m
+ [32m✓[39m tests/sl-early-planner.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 5347[2mms[22m[39m
+     [33m[2m✓[22m[39m Z7D7 F28 T6: a random potion (Gambler's Brew) held: its samples are chance, so not early [33m 4479[2mms[22m[39m
+     [33m[2m✓[22m[39m the known order rides with the added cards: the question says so, the log counts them, the solver draws as without them [33m 532[2mms[22m[39m
+ [32m✓[39m tests/potion-mc.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 4420[2mms[22m[39m
+     [33m[2m✓[22m[39m logged boards: the combat question is the same twice (the samples are seeded per board) [33m 2945[2mms[22m[39m
+     [33m[2m✓[22m[39m logged boards holding a random potion: its option has the distribution, the shares and the re-plan note [33m 940[2mms[22m[39m
+     [33m[2m✓[22m[39m with the rollout on, the option's rollout facts are the median sample's line's [33m 400[2mms[22m[39m
+ [32m✓[39m tests/brain-loop.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 4058[2mms[22m[39m
+     [33m[2m✓[22m[39m BRAIN_ENGINE_REST=claude: Claude decides the rest site, DeepSeek is not asked, the row names the engine [33m 676[2mms[22m[39m
+     [33m[2m✓[22m[39m BRAIN_ENGINE_SHOP=claude: the shop plan and every step code plays from it name Claude (decider and rationale) [33m 930[2mms[22m[39m
+     [33m[2m✓[22m[39m a used-up Claude quota falls back to DeepSeek on the same question [33m 442[2mms[22m[39m
+     [33m[2m✓[22m[39m a used-up Claude call budget (BRAIN_CLAUDE_MAX_CALLS) falls back to DeepSeek, which then spends DeepSeek's [33m 383[2mms[22m[39m
+     [33m[2m✓[22m[39m a claude that fails `claude --version` before play: said once as an error, in run-config, and its questions go to DeepSeek without starting it [33m 395[2mms[22m[39m
+     [33m[2m✓[22m[39m DeepSeek as the fallback answers to DEEPSEEK_MAX_CALLS: none left, it is not asked (Jev/code decides) [33m 434[2mms[22m[39m
+     [33m[2m✓[22m[39m DeepSeek as the fallback that answers unusably (DeepSeekAnswerError) is counted [33m 436[2mms[22m[39m
+     [33m[2m✓[22m[39m default configuration: DeepSeek decides and the row carries no brain note (v3's rows) [33m 360[2mms[22m[39m
+ [32m✓[39m tests/oneshot-act-start.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 3952[2mms[22m[39m
+     [33m[2m✓[22m[39m one DeepSeek call for the Ancient and the route; the route's first move is a reused plan step [33m 978[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer without a route: re-asked once; still none: the option is taken and the first map asks for the route [33m 916[2mms[22m[39m
+     [33m[2m✓[22m[39m a random outcome: two calls (the joint question, then the review), the review keeping the route [33m 898[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client reads the answer's route (and cards); the candidate routes ride in the question, not the system prefix [33m 905[2mms[22m[39m
+ [32m✓[39m tests/oneshot-shop.test.ts [2m([22m[2m51 tests[22m[2m)[22m[33m 3195[2mms[22m[39m
+     [33m[2m✓[22m[39m shop: one DeepSeek call; the plan row plays step 1 with the call's tokens, each later step is its own reused row [33m 905[2mms[22m[39m
+     [33m[2m✓[22m[39m shop: a price change under the plan re-asks once, with what was bought [33m 581[2mms[22m[39m
+     [33m[2m✓[22m[39m shop: an invalid plan is logged (paid, not dispatched) and the visit goes step by step [33m 430[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client: the plan is read from DeepSeek's JSON reply (the message is laid out like a choice: memory, state, question, options) [33m 433[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client: an unparseable reply is logged and the visit goes step by step [33m 459[2mms[22m[39m
+ [32m✓[39m tests/brain-codex-usage.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 3199[2mms[22m[39m
+     [33m[2m✓[22m[39m fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program [33m 1121[2mms[22m[39m
+     [33m[2m✓[22m[39m a server that stays up after its answer is killed after the grace; the answer stands [33m 337[2mms[22m[39m
+     [33m[2m✓[22m[39m usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes [33m 348[2mms[22m[39m
+ [32m✓[39m tests/rollout.test.ts [2m([22m[2m86 tests[22m[2m)[22m[33m 3230[2mms[22m[39m
+     [33m[2m✓[22m[39m an illusion killed comes back at full HP: the fight goes on until the real enemy dies (FA82 F27) [33m 312[2mms[22m[39m
+ [32m✓[39m tests/ops-autoplay-reload.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 1053[2mms[22m[39m
+ [32m✓[39m tests/batch-k.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 3338[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged DHGT F33 T1 board with the Shuriken's counter at 2 (a Hellraiser Strike played at the turn's start, attacks_played_this_turn 0): the solver's count is the relic's [33m 3103[2mms[22m[39m
+ [32m✓[39m tests/brain-claude.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 2896[2mms[22m[39m
+     [33m[2m✓[22m[39m an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed [33m 2033[2mms[22m[39m
+ [32m✓[39m tests/ascension-audit-report.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 1047[2mms[22m[39m
+ [32m✓[39m tests/passive-pieces.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 2331[2mms[22m[39m
+     [33m[2m✓[22m[39m Letter Opener (7PWU4CD3QCP3 F48 T4, the Queen's Weak 98): the 3rd Skill deals 5 to every enemy, through block [33m 367[2mms[22m[39m
+     [33m[2m✓[22m[39m the live planner's current turn: the run's pieces with the relics' counters, 0 before the turn's first card; none off [33m 600[2mms[22m[39m
+     [33m[2m✓[22m[39m unset, the solver is as before: the logged boards' plans are the same with the fields absent [33m 713[2mms[22m[39m
+ [32m✓[39m tests/strategy-no-change-path.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 2306[2mms[22m[39m
+ [32m✓[39m tests/ops-mod-state.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 2622[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-canon.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 2586[2mms[22m[39m
+     [33m[2m✓[22m[39m every answer's resolution and point, recording and with a deviation, as 08ec8f9 [33m 1661[2mms[22m[39m
+     [33m[2m✓[22m[39m code's own line ending the turn as a failed attempt's becomes Jev's question (JSA5K8YZ9RXV F48 T1: Demon Form) [33m 541[2mms[22m[39m
+ [32m✓[39m tests/pile-power-cost.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 809[2mms[22m[39m
+     [33m[2m✓[22m[39m the draw pile's Unmovable 3, Demon Form 4, Inflame 2: no sample plays a Power at 1 energy (one played Inflame at 1) [33m 552[2mms[22m[39m
+ [32m✓[39m tests/potion-card-cost.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1066[2mms[22m[39m
+     [33m[2m✓[22m[39m its samples no longer play the Power free; without the relic, as before (Inflame played free) [33m 1051[2mms[22m[39m
+ [32m✓[39m tests/oneshot-rest-event.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 2260[2mms[22m[39m
+     [33m[2m✓[22m[39m rest: one DeepSeek call; the smith and the named card are two rows, the second a reused plan step [33m 514[2mms[22m[39m
+     [33m[2m✓[22m[39m rest: an answer that names no option key falls back to today's two questions [33m 456[2mms[22m[39m
+     [33m[2m✓[22m[39m event: remove 2 named in the answer's cards; both picks are plan steps [33m 654[2mms[22m[39m
+     [33m[2m✓[22m[39m BUILD_ONESHOT=off: the old step-by-step questions [33m 425[2mms[22m[39m
+ [32m✓[39m tests/codex-only-brain.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 1348[2mms[22m[39m
+     [33m[2m✓[22m[39m rest outage resumes the same real screen question and dispatches once [33m 303[2mms[22m[39m
+     [33m[2m✓[22m[39m event outage resumes the same real screen question and dispatches once [33m 352[2mms[22m[39m
+ [32m✓[39m tests/component-usage.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 2544[2mms[22m[39m
+   [33m[2m✓[22m[39m syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures [33m 2542[2mms[22m[39m
+ [32m✓[39m tests/potions-step1.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 731[2mms[22m[39m
+ [32m✓[39m tests/cards-view-memo.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1192[2mms[22m[39m
+   [33m[2m✓[22m[39m 7PWU4CD3QCP3 F47: same board after CARDS_VIEW only reuses an unexecuted answer when safe [33m 354[2mms[22m[39m
+ [32m✓[39m tests/batch-b.test.ts [2m([22m[2m43 tests[22m[2m)[22m[33m 1952[2mms[22m[39m
+     [33m[2m✓[22m[39m the first decision of the turn has the whole cap; after 20 lost this turn, none; a new turn, the whole cap again [33m 1342[2mms[22m[39m
+ [32m✓[39m tests/ascension-audit-path.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 884[2mms[22m[39m
+ [32m✓[39m tests/execution-gate.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 1610[2mms[22m[39m
+     [33m[2m✓[22m[39m refusals that go on (code's baseline refused too) reach the stall note: a decision-time pass does not reset it [33m 345[2mms[22m[39m
+ [32m✓[39m tests/v1mf-bugfix.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1697[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged end-of-turn board (no playable card): the Demise is offered, not dropped by an end turn [33m 620[2mms[22m[39m
+     [33m[2m✓[22m[39m choosing a line with a later drink keeps it in the line; the cut-short board re-plans it (XMK1 F33 T3) [33m 1024[2mms[22m[39m
+ [32m✓[39m tests/combat-jev.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1819[2mms[22m[39m
+     [33m[2m✓[22m[39m RA3Q F14 T1: code led by 7.7 and played its line; now Jev is asked, with no DeepSeek escalation [33m 1069[2mms[22m[39m
+     [33m[2m✓[22m[39m a low-confidence hallway pick below code's rank 1 stands (no fallback to code) [33m 730[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4-fix3.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 1628[2mms[22m[39m
+     [33m[2m✓[22m[39m FSPKJAYY3ET6 F39 T1 without Throwing Axe (block 0): Inflame then Bash loses 6 + the 14 attack [33m 352[2mms[22m[39m
+     [33m[2m✓[22m[39m FSPKJAYY3ET6 F39 T1: Inflame first is Strength +6 and Galvanic's 6 twice (logged 2 -> 8, HP 69 -> 57; 43 at T2) [33m 394[2mms[22m[39m
+     [33m[2m✓[22m[39m not after a card was played this turn, nor on a later turn, nor without the relic [33m 650[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-gaps.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 693[2mms[22m[39m
+ [32m✓[39m tests/learning-ledger.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1446[2mms[22m[39m
+     [33m[2m✓[22m[39m passes tests/learning_ledger_test.py [33m 1317[2mms[22m[39m
+ [32m✓[39m tests/learner-raw-report.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 1493[2mms[22m[39m
+ [32m✓[39m tests/potion-cost.test.ts [2m([22m[2m26 tests[22m[2m)[22m[33m 1433[2mms[22m[39m
+     [33m[2m✓[22m[39m free, the potion-free line's later turns drink the potion; at a high cost they never do [33m 347[2mms[22m[39m
+     [33m[2m✓[22m[39m hallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line [33m 306[2mms[22m[39m
+ [32m✓[39m tests/sl-any-draw.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 868[2mms[22m[39m
+ [32m✓[39m tests/sl-replay-plays.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 1235[2mms[22m[39m
+     [33m[2m✓[22m[39m the cause: attempt 3 knows 烙印+ is Pommel Strike's draw, and attempt 2's line with it played beats attempt 2's line [33m 301[2mms[22m[39m
+     [33m[2m✓[22m[39m SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played: the deviation is made here [33m 334[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4-fix6.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 579[2mms[22m[39m
+     [33m[2m✓[22m[39m YVWAWAPXJXGV F40 T1: the lines before Enthralled is played are the lines after it (logged: every lock gone, energy 8 -> 6), Enthralled first [33m 371[2mms[22m[39m
+ [32m✓[39m tests/rollout-ties.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1261[2mms[22m[39m
+     [33m[2m✓[22m[39m both tagged rollout_tied naming the other, neither rollout_best, the log names them, choosing either counts as the best [33m 1255[2mms[22m[39m
+ [32m✓[39m tests/batch-h.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 1046[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged F21 T2 board (Battle Trance drawn, 3 energy): a line keeping energy for Pael's Tear is offered and says so [33m 416[2mms[22m[39m
+ [32m✓[39m tests/batch-g.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 534[2mms[22m[39m
+ [32m✓[39m tests/ops-stall-recovery.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1051[2mms[22m[39m
+     [33m[2m✓[22m[39m requires repeated unreachable requests and stale decisions, and clears on recovery [33m 319[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps real stuck-loop, gate and silence alerts [33m 653[2mms[22m[39m
+ [32m✓[39m tests/batch-e.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 1381[2mms[22m[39m
+     [33m[2m✓[22m[39m "Inferno, Defend, Defend, then Flex" (logged 62.5 vs 64.1, marked best, Jev drank it): the same numbers as without, and it says so; still an option [33m 722[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-potion.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 909[2mms[22m[39m
+     [33m[2m✓[22m[39m attempt 4 T1: off, Powdered Demise added to attempt 2's cards (as live); on, a line with other cards [33m 559[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4-fix2.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 797[2mms[22m[39m
+     [33m[2m✓[22m[39m ZRYR5WLG6E9K F39 T1: Skewer is X hits; the logged line deals 58 as it did (planned 70: one 8 x1.5 hit at X = 0) [33m 388[2mms[22m[39m
+ [32m✓[39m tests/card-conditions.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 878[2mms[22m[39m
+ [32m✓[39m tests/run-config.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 695[2mms[22m[39m
+     [33m[2m✓[22m[39m the loop writes one row on the run's first state, next to its decision log [33m 569[2mms[22m[39m
+ [32m✓[39m tests/learner.test.ts [2m([22m[2m47 tests[22m[2m)[22m[33m 529[2mms[22m[39m
+ [32m✓[39m tests/jev-prompt-log.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 605[2mms[22m[39m
+     [33m[2m✓[22m[39m one row per Jev request next to the decision log, with the decision row's decision_id and request id [33m 367[2mms[22m[39m
+ [32m✓[39m tests/mod-client.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 478[2mms[22m[39m
+     [33m[2m✓[22m[39m times out instead of hanging [33m 313[2mms[22m[39m
+ [32m✓[39m tests/jev-retry.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 465[2mms[22m[39m
+ [32m✓[39m tests/cost-accounting.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 167[2mms[22m[39m
+ [32m✓[39m tests/silent-bullet-time.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 474[2mms[22m[39m
+ [32m✓[39m tests/screens.test.ts [2m([22m[2m153 tests[22m[2m)[22m[33m 513[2mms[22m[39m
+ [32m✓[39m tests/learner-self-check.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 428[2mms[22m[39m
+ [32m✓[39m tests/giant-blast-terminal.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 438[2mms[22m[39m
+ [32m✓[39m tests/inferno-planner.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 444[2mms[22m[39m
+ [32m✓[39m tests/turn-solver.test.ts [2m([22m[2m137 tests[22m[2m)[22m[33m 423[2mms[22m[39m
+ [32m✓[39m tests/turn-start-settle.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 378[2mms[22m[39m
+ [32m✓[39m tests/silent-permafrost.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 405[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-automation.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 200[2mms[22m[39m
+ [32m✓[39m tests/batch-m.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 345[2mms[22m[39m
+ [32m✓[39m tests/silent-double-boss.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 344[2mms[22m[39m
+ [32m✓[39m tests/batch-l.test.ts [2m([22m[2m26 tests[22m[2m)[22m[33m 319[2mms[22m[39m
+ [32m✓[39m tests/event-settle.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 309[2mms[22m[39m
+   [33m[2m✓[22m[39m JJ75S331VUKX F31: completed stable event clicks wait out old options without another brain call [33m 308[2mms[22m[39m
+ [32m✓[39m tests/silent-tough-bandages.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 143[2mms[22m[39m
+ [32m✓[39m tests/silent-tent-rest.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 137[2mms[22m[39m
+ [32m✓[39m tests/radiant-tincture.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 142[2mms[22m[39m
+ [32m✓[39m tests/learner-check-locks.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 103[2mms[22m[39m
+ [32m✓[39m tests/silent-tuning-fork.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 296[2mms[22m[39m
+ [32m✓[39m tests/sl-early.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 124[2mms[22m[39m
+ [32m✓[39m tests/sl-giant-judge.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 151[2mms[22m[39m
+ [32m✓[39m tests/silent-daughter-wind.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 144[2mms[22m[39m
+ [32m✓[39m tests/prefix-facts.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 247[2mms[22m[39m
+ [32m✓[39m tests/silent-wither-replay.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 140[2mms[22m[39m
+ [32m✓[39m tests/learning-ledger-metadata.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 95[2mms[22m[39m
+ [32m✓[39m tests/outcome-asc.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 172[2mms[22m[39m
+ [32m✓[39m tests/fight-plan.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 275[2mms[22m[39m
+ [32m✓[39m tests/learner-fallback-checks.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+ [32m✓[39m tests/multi-character.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 216[2mms[22m[39m
+ [32m✓[39m tests/jev-experience.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 145[2mms[22m[39m
+ [32m✓[39m tests/learner-jobs.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 205[2mms[22m[39m
+ [32m✓[39m tests/silent-humidifier-rest.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 117[2mms[22m[39m
+ [32m✓[39m tests/batch-f.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 221[2mms[22m[39m
+ [32m✓[39m tests/silent-dodge-roll.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 122[2mms[22m[39m
+ [32m✓[39m tests/mechanics-step1.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 218[2mms[22m[39m
+ [32m✓[39m tests/run-journal.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 172[2mms[22m[39m
+ [32m✓[39m tests/silent-phantom-blades.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 122[2mms[22m[39m
+ [32m✓[39m tests/silent-phase-reference.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+ [32m✓[39m tests/waterfall-giant.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 103[2mms[22m[39m
+ [32m✓[39m tests/silent-loss-reference.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 107[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-second.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 220[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-b4.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 117[2mms[22m[39m
+ [32m✓[39m tests/shop-potions.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 114[2mms[22m[39m
+ [32m✓[39m tests/deepseek-cache-layout.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 101[2mms[22m[39m
+ [32m✓[39m tests/silent-hidden-daggers.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 99[2mms[22m[39m
+ [32m✓[39m tests/thief-rollout.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 170[2mms[22m[39m
+ [32m✓[39m tests/asc-band-facts.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32m✓[39m tests/silent-paels-legion.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 172[2mms[22m[39m
+ [32m✓[39m tests/silent-serpent-form.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 181[2mms[22m[39m
+ [32m✓[39m tests/monster-db-context.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 88[2mms[22m[39m
+ [32m✓[39m tests/ledger-rerelease.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 127[2mms[22m[39m
+ [32m✓[39m tests/silent-reward-addition.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 181[2mms[22m[39m
+ [32m✓[39m tests/sl-sandpit-judge.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 158[2mms[22m[39m
+ [32m✓[39m tests/jev-context.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 158[2mms[22m[39m
+ [32m✓[39m tests/discovery.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 148[2mms[22m[39m
+ [32m✓[39m tests/rollout-live-clock.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m tests/brain-knowledge.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 153[2mms[22m[39m
+ [32m✓[39m tests/silent-sloth-replay.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 132[2mms[22m[39m
+ [32m✓[39m tests/boss-damage-attempts.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32m✓[39m tests/silent-tungsten-rod.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 166[2mms[22m[39m
+ [32m✓[39m tests/death-move-rules.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 149[2mms[22m[39m
+ [32m✓[39m tests/silent-stun-gap.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 74[2mms[22m[39m
+ [32m✓[39m tests/fight-value-observe.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/silent-simulation-reference.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 147[2mms[22m[39m
+ [32m✓[39m tests/boss-clock.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 110[2mms[22m[39m
+ [32m✓[39m tests/monster-db.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 117[2mms[22m[39m
+ [32m✓[39m tests/file-escalation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 125[2mms[22m[39m
+ [32m✓[39m tests/ledger-repeats.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 119[2mms[22m[39m
+ [32m✓[39m tests/silent-frail-dexterity.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+ [32m✓[39m tests/boss-damage-tools.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 113[2mms[22m[39m
+ [32m✓[39m tests/batch-d.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 129[2mms[22m[39m
+ [32m✓[39m tests/outcome-stats.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 127[2mms[22m[39m
+ [32m✓[39m tests/deepseek-consistency.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 111[2mms[22m[39m
+ [32m✓[39m tests/gkb-render.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m tests/rest-pantograph.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-facts.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 137[2mms[22m[39m
+ [32m✓[39m tests/route-projection.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 114[2mms[22m[39m
+ [32m✓[39m tests/jev-cost.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m tests/experience.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 115[2mms[22m[39m
+ [32m✓[39m tests/learner-strategy.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m tests/route-event.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m tests/tsconfig-scope.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m tests/potion-equivalents.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 99[2mms[22m[39m
+ [32m✓[39m tests/deepseek.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 100[2mms[22m[39m
+ [32m✓[39m tests/silent-flechettes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m tests/silent-candle-rest.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+ [32m✓[39m tests/sl-draws-offtop.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 85[2mms[22m[39m
+ [32m✓[39m tests/silent-route-relic.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m tests/card-value.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m tests/sl.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32m✓[39m tests/monster-terminal-hp.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 64[2mms[22m[39m
+ [32m✓[39m tests/brain-deepseek.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+ [32m✓[39m tests/silent-snecko-fumes.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-gaps.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m tests/silent-vambrace-frail.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m tests/silent-caltrops.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/mech-rules.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m tests/mittens-exhaust.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m tests/free-offer.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32m✓[39m tests/asc-amounts.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/silent-fasten.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/silent-mirage.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m tests/silent-lethal-continuation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+ [32m✓[39m tests/mech-move-rules.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m tests/silent-precise-cut.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m tests/silent-anticipate.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/silent-poison.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/sl-draws-pommel.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-builder.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m tests/silent-poison-held.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+ [32m✓[39m tests/codex-cache-engine.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m tests/silent-burst.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m tests/sl-revive-judge.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m tests/sl-judge-bounds.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-b5.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+ [32m✓[39m tests/paths.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m tests/act-route-candidates.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/sl-retry.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32m✓[39m tests/lizard-tail.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 56[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-guides.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-guides.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m tests/third-party.test.ts [2m([22m[2m5 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m[32m 56[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-where.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m tests/deepseek-prompt-dump.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-experience.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m tests/sandbox-entry.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m tests/codex-cache-probe.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/silent-expertise.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32m✓[39m tests/record.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/gkb-tools.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/rollout-deadline.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/sl-inferno-judge.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/silent-haze.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/mcp-server.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/learner-character.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-phase.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/silent-upgraded-wave.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/silent-single-action-weak.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/silent-build-win-ties.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/silent-fasten-upgrade.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/silent-maul.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/silent-envenom.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/silent-snakebite.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/silent-shadowmeld.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m tests/silent-upgraded-malaise.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/fight-value.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m tests/silent-obscura-summon.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m tests/silent-corrosive-wave.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m tests/silent-rest-sim-hp.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m tests/silent-malaise.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/silent-single-action-block.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/silent-afterimage.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m tests/silent-metamorphosis.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/enchant-text.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m tests/silent-footwork.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/lock.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/silent-shadow-step.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m tests/silent-knife-trap.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m tests/silent-poison-coverage.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/silent-regret.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/brain-specs.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m tests/damage.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/silent-precise-cut-strength.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/silent-finale-selection.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/silent-sl-poison-stun.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m tests/silent-slippery-poison.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/route-next-rest.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m tests/silent-expose.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m tests/learner-learning-flow.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/silent-calculated-gamble.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m tests/learner-paths.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m tests/ops-mod-state-broker.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/knowledge-text.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/config.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/route-chain.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/run-plan.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m tests/silent-phase-sequences.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/thief-facts.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/deck-profile.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/brain-codex-usage-contract.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/codex-cache-observation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/outcome-stats-refresh.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/questions.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-clock.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m tests/silent-potion-provenance.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/route-map.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/schema.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/legacy-brain-notes.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/silent-poison-cap.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m tests/boss-trust.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-facts.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/game-data-cache.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/subscription-usage.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/route-boss-unknown.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-facts.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/ops-eval-metrics.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-calibration.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-calibration-cli.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/reward-special.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/move-model-damage.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/learner-live-tasks.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/silent-poison-dominance.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/silent-upgrade-preview.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/learning-roles.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/ops-action-list.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-cards.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-calibration-board.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/pricing.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-cards.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/combat-rationale.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m302 passed[39m[22m[90m (302)[39m
+[2m      Tests [22m [1m[32m3435 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (3437)[39m
+[2m   Start at [22m 18:46:40
+[2m   Duration [22m 638.86s[2m (transform 7.66s, setup 14.18s, import 40.81s, tests 1187.14s, environment 31ms)[22m
+
