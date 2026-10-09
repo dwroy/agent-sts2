@@ -1,0 +1,61 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.23 → 2026-10-09.24；提交：05212bb1e（分支 exp-silent）；合入：未合入，live 预检发现 9 处记录文件冲突，已停止，待运维续办。
+- 条数：新增 0、更新 18（加证据 18、只改数字 0）、退役 0；active 197 → 197，总长 50,457 字；A8 适用 183 条／46,736 字，A9 适用 184 条／47,020 字；置信度高 129、中 42、低 26。
+- 机制推理（主题支持／反例局数）：  
+  能力兑现 — 换战重建，持有不等于生效 — 168／0 — XW8B5CHJ814J  
+  力量／敏捷 — 逐击加伤、逐牌加挡，再核倍率 — 169／0 — XW8B5CHJ814J  
+  灵动步法 — 6 敏使双挡从 10 增至 22 — 99／0 — XW8B5CHJ814J  
+  毒雾 — 建立后轮初施毒，死亡后的收益不预支 — 83／0 — XW8B5CHJ814J  
+  速行者 — 4 层抽两张实际造成 8 伤 — 7／0 — XW8B5CHJ814J  
+  异蛇头骨 — 5 层毒雾实际补 6 毒 — 9／0 — XW8B5CHJ814J  
+  铜质鳞片 — 实际攻击逐击反伤，致死首击仍反 3 — 16／0 — XW8B5CHJ814J  
+  蜥蜴尾巴 — 首 boss 已消耗，后战不能再计可用 — 6／0 — XW8B5CHJ814J  
+  光滑石头 — 新战重新提供 1 敏捷 — 12／0 — XW8B5CHJ814J  
+  脆弱 — 后空翻 6→4，锁住的牌挡不预支 — 37／0 — XW8B5CHJ814J  
+  实验体激怒 — 技能各加 3 力、能力不加；已更正混用尝试的案例 — 19／0 — XW8B5CHJ814J  
+  女王减益 — 三种 99 减益与魂缚按当前盘面核算 — 21／0 — XW8B5CHJ814J  
+  SL 血价 — 同死亡率换线仍实际多损 6 血 — 13／0 — XW8B5CHJ814J  
+  连战资源 — 7 血空药直接接第二战，无回血 — 17／0 — XW8B5CHJ814J  
+  跨幕回复 — 缺失 HP 的 80% 向下取整，连 boss 不适用 — 51／0 — XW8B5CHJ814J  
+  投斧 — 首牌重放使速行者建立 4 层 — 5／0 — XW8B5CHJ814J
+- 改了的手写知识：无。
+- 测试：tsc 退出 0；vitest 251 文件／2,627 用例／退出 0；勘误后补跑经验检查 31 用例次，退出 0，无失败重跑。
+- 切片大小：整体中位 2,669→2,644（下降 25 字）；最大 5,685→5,669。
+- 学习账本：新增无；改成 proposed：silent-0019、0020、0021、0125、0012、0005、0011、0045、0087、0129、0340、0158、0069、0027、0028、0079、0228、0243、0092；退役无；`ledger.py check` 退出 0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.24",
+  "commit": "05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051",
+  "merged": null,
+  "added": 0,
+  "updated": 18,
+  "retired": 0,
+  "active": 197,
+  "mechanisms": ["能力实际兑现（观察）", "力量/敏捷与现场倍率", "灵动步法", "毒雾", "速行者", "异蛇头骨", "铜质鳞片", "蜥蜴尾巴", "意外光滑的石头", "脆弱与可打牌", "实验体激怒与阶段重置", "女王减益与锁牌", "女王SL即时血价（观察）", "连战资源（观察）", "跨幕回复", "投斧"],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": ["silent-0019", "silent-0020", "silent-0021", "silent-0125", "silent-0012", "silent-0005", "silent-0011", "silent-0045", "silent-0087", "silent-0129", "silent-0340", "silent-0158", "silent-0069", "silent-0027", "silent-0028", "silent-0079", "silent-0228", "silent-0243", "silent-0092"],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": ["silent-proposal-b517ecdd0b495734", "silent-proposal-74da9d904891c36d", "silent-proposal-af2b7910ff27577d", "silent-proposal-64d569ae20c4ff1e"],
+  "implementation_domains": ["combat", "potion", "sl", "terminal", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-180727-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a12021-d1e0-7370-ae0c-dec5d80519f9
+轮数：1；工具调用：command_execution×69 file_change×5
+token：输入 221.8k、输出 50.6k（其中推理 17.6k）、cache 读 9228.4k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：1864.8 s（墙钟）
+时间：首个事件 4.1 s、模型首个输出 10.3 s、首次工具 14.0 s、末次工具结束 1775.7 s；工具内共 1545.1 s，其余（模型生成、推理、网络）315.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×60；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T18-07-29-01a12021-d1e0-7370-ae0c-dec5d80519f9.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-180727-experience-update.jsonl

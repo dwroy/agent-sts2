@@ -1,0 +1,70 @@
+git rev-parse exp-silent
+05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051
+git rev-parse HEAD
+2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328
+git status --short
+git diff --cached --name-only
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+git rev-parse HEAD
+2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328
+git merge-base 2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328 05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051
+26bd83afde20a0b5a90770a1ab21e6016b96dd95
+git diff --name-only 26bd83afde20a0b5a90770a1ab21e6016b96dd95 05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051 -- knowledge
+knowledge/characters/silent/experience.json
+git diff --name-only 26bd83afde20a0b5a90770a1ab21e6016b96dd95 2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328 -- knowledge
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/boss-trust.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git merge-tree --write-tree 2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328 05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051
+aa09b4443d2a31ca544c1beb795761981a5a0188
+100644 edf2115433636b2419a68cb55e52bcee227ed1ae 1	eval/versions.json
+100644 8fafe35da83016d14841e71f58a51ec1548122d2 2	eval/versions.json
+100644 e515e24a1a79978c8c7544442a512230bce62d36 3	eval/versions.json
+100644 f5bf5d78e6512a72ac553e3a4f6f87ae2d32dfdd 1	notes/fix-queue-v4.md
+100644 abf69b4b5a4da639fdc8d9d9b17ff0910830e19d 2	notes/fix-queue-v4.md
+100644 9656e5eaeb1463109fe7345f47501a290780d4d4 3	notes/fix-queue-v4.md
+100644 290ea6a0b34d4fdb5b95b398a7adb19eecf1b196 1	notes/for-dai.md
+100644 14e8c75b124138872e3d864d8bf6247a1aa432d9 2	notes/for-dai.md
+100644 fb06dac5f1388f4f7dc576ca4bfce6bead354703 3	notes/for-dai.md
+100644 51de780a39783f03701e6ae621980f568e2a25e5 1	notes/ops-handoff.md
+100644 46441e63d5266b1ae851770ffe8f7f5fb597cbf7 2	notes/ops-handoff.md
+100644 a10630c576b6b257a92fe39d642692299d805ef8 3	notes/ops-handoff.md
+100644 9d037176dcf4f782edcb36f730b34ae564d293ee 1	notes/silent-historical-core-builds-dispatch.json
+100644 97ff9301ec5d87bf8a7209bfb6ef00430a6eb4ce 3	notes/silent-historical-core-builds-dispatch.json
+100644 571db7a5141787b93175f493a50571eaf04059d0 1	ops/inbox-dev.md
+100644 c1d42393580703fdcf48b9389a5b5a6ac188d21c 2	ops/inbox-dev.md
+100644 f67fe93cd6322c7160c525f80bb9cbed3a86f65e 3	ops/inbox-dev.md
+100644 ba6c1464722178baab04d28bcf8749a38a38ef5b 1	paper/materials/decision-log.md
+100644 33d3f7229e5598f237d0239be61b1f1c9443205a 2	paper/materials/decision-log.md
+100644 3186f797ba51f587cd3d136a7b120a0fe978df49 3	paper/materials/decision-log.md
+100644 8d87f800cacc4f9580c89f7ffe0f7d63538b8e9e 1	paper/materials/experience-changelog-silent.md
+100644 d30b13170a44f2cd04d7a82b18200fa69de09579 2	paper/materials/experience-changelog-silent.md
+100644 4d11fc72e7a439cf8f0aed680b8d4a3f8d6e5432 3	paper/materials/experience-changelog-silent.md
+100644 d6b436e7272771b8a3cf88e121c7c3593faefc8a 1	paper/materials/learning/ledger.jsonl
+100644 964b609f88dc7988a61011d34b2cb6ed2c8d009b 2	paper/materials/learning/ledger.jsonl
+100644 1387a10051e5953910fe3cb21a3c5744a85f3230 3	paper/materials/learning/ledger.jsonl
+
+Auto-merging eval/versions.json
+CONFLICT (content): Merge conflict in eval/versions.json
+Auto-merging notes/fix-queue-v4.md
+CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
+Auto-merging notes/for-dai.md
+CONFLICT (content): Merge conflict in notes/for-dai.md
+Auto-merging notes/ops-handoff.md
+CONFLICT (content): Merge conflict in notes/ops-handoff.md
+CONFLICT (modify/delete): notes/silent-historical-core-builds-dispatch.json deleted in 2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328 and modified in 05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051.  Version 05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051 of notes/silent-historical-core-builds-dispatch.json left in tree.
+Auto-merging ops/inbox-dev.md
+CONFLICT (content): Merge conflict in ops/inbox-dev.md
+Auto-merging paper/materials/decision-log.md
+CONFLICT (content): Merge conflict in paper/materials/decision-log.md
+Auto-merging paper/materials/experience-changelog-silent.md
+CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md
+Auto-merging paper/materials/learning/ledger.jsonl
+CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl
