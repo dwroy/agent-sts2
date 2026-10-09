@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：RZ6YAC7K89NM（A10，第12层，邪教徒战T4以4血9挡对15攻击阵亡，潮湿邪教徒剩6血）。
+- 新的纯 bug：无。已有随机施毒缺口复现：`agent/src/reflex/turn-solver.ts:2284`（fix-queue-v4已有，silent-0295）。
+- 写成「未记录」的项：完整脏知识数据、逐击毛伤及部分归零过程、完整最优执行比例、受控整场反事实、药水表加载原因、后续资源、boss实战及时钟比值、部分预测输出、缓存及实际费用。
+- 学习账本：新增无；更新 silent-0019、silent-0125、silent-0295、silent-0005、silent-0006、silent-0083；老错 silent-0295；`ledger.py check`退出码0。
+- 代码提案：silent-proposal-b6fc6d4c9f260247（F12T1／silent-0295，随机毒预算）；silent-proposal-8638feced6bd16f9（F6—F12／其余五条账本，护栏与资源兑现）。均关联独立 strategy-proposal，待实现；整场证据不足，保留护栏及持药参数。
+
+```json
+{"task":"postmortem","appended":["RZ6YAC7K89NM"],"skipped":[],"bugs":[{"run":"RZ6YAC7K89NM","where":"agent/src/reflex/turn-solver.ts:2284","what":"已有随机施毒缺口复现：F12T1总伤32吻合，但两敌剩血预测29/30、实际23/36；本局未伪标确定斩杀。","new":false}],"ledger":{"added":[],"updated":["silent-0019","silent-0125","silent-0295","silent-0005","silent-0006","silent-0083"],"repeats":["silent-0295"],"check":0},"code_proposals":["silent-proposal-b6fc6d4c9f260247","silent-proposal-8638feced6bd16f9"],"implementation_domains":["combat","potion","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11de6-20c2-7783-8ad5-1b9bc5f4b59e
+轮数：1；工具调用：command_execution×50
+token：输入 223.5k、输出 33.2k（其中推理 8272）、cache 读 4738.8k、cache 写 0（命中 95.5%）
+成本：未提供
+耗时：895.1 s（墙钟）
+时间：首个事件 3.7 s、模型首个输出 7.8 s、首次工具 10.4 s、末次工具结束 866.2 s；工具内共 60.4 s，其余（模型生成、推理、网络）831.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×33；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T07-43-03-01a11de6-20c2-7783-8ad5-1b9bc5f4b59e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem.jsonl
