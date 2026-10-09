@@ -6,7 +6,7 @@
   "character": "silent",
   "accepted_at": "2026-10-09 16:47",
   "batch": null,
-  "dispatch_status": "entry_adaptation_prepared_waiting_original_codex_dev_owner",
+  "dispatch_status": "entry_adaptation_blocked_by_preserved_original_codex_dev_candidate",
   "linked_request_ids": [
     "roy-20261009-historical-core-builds-paper-trace",
     "roy-20261009-historical-core-builds-result-notify"
@@ -119,7 +119,7 @@
   "source_result_notify": "notes/watcher-20261009-core-build-result-notify.json",
   "source_result_notify_sha256": "203b6fb762c201c3d41baca607d9a0c3cd58bc19b234dd12b18e26690bb65630",
   "entry_adaptation": {
-    "state": "queued_not_dispatched",
+    "state": "prepared_queued_host_dispatch_refused_dirty_owner",
     "authorized_at": "2026-10-09 17:30",
     "accepted_at": "2026-10-09 17:41",
     "task": "fix-batch",
@@ -145,7 +145,15 @@
       "Roy native notification with persistent request/batch/SHA dedup",
       "parent paper trace preserved"
     ],
-    "dispatch_attempt": null
+    "dispatch_attempt": {
+      "receipt": "paper/materials/silent/20261009-1730-core-entry/dispatch-attempt.json",
+      "receipt_sha256": "ae38b28f83a458fb1a228a9de6a22a75446709638e243b5264e37a74ca21ae57",
+      "attempts": 1,
+      "exit": 1,
+      "dispatched": null,
+      "timestamp": "2026-10-09 17:44:39 CST"
+    },
+    "verified_owner_preserved_at": "2026-10-09 17:46"
   },
   "result_notification": {
     "state": "pending_hook_not_installed",
@@ -169,5 +177,5 @@
     "successful_notifications": 0,
     "attempts": []
   },
-  "latest_receipt": "paper/materials/silent/20261009-1730-core-entry/preparation.json"
+  "latest_receipt": "paper/materials/silent/20261009-1730-core-entry/final-verification.json"
 }

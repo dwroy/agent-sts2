@@ -975,3 +975,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 ## 2026-10-09 17:42 — Roy 高优先：全历史核心构筑入口与实质报告通知适配
 
 - **core-builds-entry-adaptation**：父请求 `roy-20261009-historical-core-builds`，17:30 补充 `roy-20261009-historical-core-builds-result-notify` 已授权现有 learner 做最小任务/调度适配，关联 paper-trace；任务稿与验收见 `paper/materials/silent/20261009-1730-core-entry/entry-adaptation-task.md`。补独立全历史模板、FEATURE_REQUESTS 路由、wrapper 白名单/专用干净租约及标准完成/完整检查通道，并在首份身份/SHA/候选/boss矩阵/伤害资源/构筑模板/限制核实后的实质报告接宿主 herdr 原生通知，父 request+batch+报告SHA 只一次并留成功/失败回执。纯入口与通知不造游戏知识/版本，当前 hook pending、核心学习 batch null，不用单卡增量替代。准备已完成；普通 `codex-dev` 仍归旧 `20261008-075538-strategy-proposal` 的四项暂存候选，源完整沙箱重跑124及原报告保持。先由原候选拥有者沿其原测试/提交/处置链作保存交接，干净且无宿主写者才允许普通 fix learner 接此任务；禁止 reset/clean、混提交旧源码、抢其他功能树/活租约。现有 broker 将单次尝试，实际结果另记，不等待外部完成。
+
+- 2026-10-09 17:46 **core-builds-entry-adaptation 派发回执**：标准宿主fix-batch仅尝试一次，exit1 / dispatched:null；准备稿已提交51fdc45ab，原拥有者/四暂存候选与failed历史SHA保持。准确释放条件及原件回执 `paper/materials/silent/20261009-1730-core-entry/final-verification.json`。无新adapter/core batch，通知hook pending，按原串行闭环等原候选保存交接后安排，不重复派发其他feature。

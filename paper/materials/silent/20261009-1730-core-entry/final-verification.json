@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-10-09 17:46",
+  "parent_request_id": "roy-20261009-historical-core-builds",
+  "linked_request_ids": [
+    "roy-20261009-historical-core-builds-paper-trace",
+    "roy-20261009-historical-core-builds-result-notify"
+  ],
+  "preparation_commit": "51fdc45ab5e38e7a90f0a757baae134e98c47b8a",
+  "state": "prepared_queued_but_no_safe_existing_learner_dispatch",
+  "adapter_batch": null,
+  "core_study_batch": null,
+  "host_dispatch_attempts": 1,
+  "host_dispatch_exit": 1,
+  "host_response": {
+    "dispatched": null
+  },
+  "owner_batch": "20261008-075538-strategy-proposal",
+  "owner_head": "07ea18676886c0492c98dee8b1fb2e1862942dd3",
+  "owner_current_failed_history_unchanged": true,
+  "four_staged_candidate_physical_and_index_bytes_unchanged": true,
+  "candidate_patch_sha256": "03e0c6dc38393b486f918d7ca9fc178cdda41bd4313b42e80e3a1fa0f8957b50",
+  "safe_entry_blocker": "Existing normal fix/proposal worktree codex-dev contains four staged files owned by the original failed 20261008-075538-strategy-proposal; wrapper/FEATURE_REQUESTS have no core-study or safe continuation override. A dedicated core task/worktree/route and report notification hook have not been installed.",
+  "waiting_for_owner_and_condition": "Original 20261008-075538-strategy-proposal owner must preserve/hand off the four staged candidate files and original failed checks; resume that existing candidate through its existing self-test/commit/integration path or provide an explicit preserved disposition. Only then can the ordinary fix worktree be synchronized to current main with a clean index and no host learner. No reset/clean, foreign source commit, unrelated feature lease reuse, or duplicate core-study launch.",
+  "work_spec": "paper/materials/silent/20261009-1730-core-entry/entry-adaptation-task.md",
+  "work_spec_sha256": "283280c89d85b25ab7c079329aec89a4720f736db1b42c23297847a78725dcdf",
+  "entry_code_observation": [
+    {
+      "path": "ops/learner_jobs.py",
+      "main_sha256": "ae5ab2e79713650f7d2eba20b8874f94d852412e0139753134ff81f7d0f17756",
+      "live_sha256": "4999dc850a2eec7e13a714f60ef8407b9f70eb7492826778d7c32d81add1f79e"
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "main_sha256": "5c61cf68e43d200d6dd4f3e173c05c7c872d5ea3db98e7afa701db6b05e8e85b",
+      "live_sha256": "4d9f4a31731647c6fbe1eb641f38de0b52ced3514ca0a8252a401cc097bfdf9c"
+    },
+    {
+      "path": "ops/codex-ops-learn.py",
+      "main_sha256": "1e723b8babdbe9396e627af20eb94e7a9dcced091602891e4848c343496c1463",
+      "live_sha256": "1e723b8babdbe9396e627af20eb94e7a9dcced091602891e4848c343496c1463"
+    }
+  ],
+  "notification_hook_installed": false,
+  "notification_attempts": 0,
+  "substantive_report": null,
+  "no_core_task_repeated": true,
+  "no_old_candidate_cleared_committed_or_game_knowledge_added": true,
+  "active_task_or_service_interrupted": false,
+  "observer_transcript_archive_state": "pending",
+  "parent_after_sha256": "d9b727b84de82617c176c2fcd23d33da3b52e1a4a38243853cd253ccd038606a",
+  "next_event_action": "Resolve original owner preservation/disposition in the existing serialized workflow; once ordinary tree is clean/unleased, run existing learner on archived adaptation. After source/self-test/actual live/full check acceptance, dispatch unique parent and then verify/report/notify substantive result exactly once. Do not wait or poll during this wake."
+}
