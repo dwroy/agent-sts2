@@ -1,0 +1,162 @@
+{
+  "20261007-154303-ascension-audit": {
+    "task": "ascension-audit",
+    "learner_task": "ascension-audit",
+    "character": "silent",
+    "runs": [
+      "MGA0CZDDKC0P",
+      "25226ZFLNR1J",
+      "JLN5SK17W4FQ",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "JQPT83P8KDSZ",
+      "4D4J8USKCPAV",
+      "TD1HVGS7H6LB",
+      "PJ2LL9KU7FHD",
+      "S9UZAK0JP0C0"
+    ],
+    "state": "failed",
+    "audit_key": "silent:A10",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-1",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "attempt": 1,
+    "started": 1791358983.0995092,
+    "pid": 1967474,
+    "pane": "wJ:p5N",
+    "rc": 0,
+    "report": {},
+    "errors": [
+      "missing matching completed audit report",
+      "missing preserved report inside learner/runs",
+      "missing dispatched evidence runs",
+      "missing code proposal links",
+      "incomplete observed structure coverage",
+      "missing string code_proposals array"
+    ],
+    "retry_at": 1791364260.4478152
+  },
+  "20261007-171303-ascension-audit": {
+    "task": "ascension-audit",
+    "learner_task": "ascension-audit",
+    "character": "silent",
+    "runs": [
+      "MGA0CZDDKC0P",
+      "25226ZFLNR1J",
+      "JLN5SK17W4FQ",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "JQPT83P8KDSZ",
+      "4D4J8USKCPAV",
+      "TD1HVGS7H6LB",
+      "PJ2LL9KU7FHD",
+      "S9UZAK0JP0C0"
+    ],
+    "state": "failed",
+    "audit_key": "silent:A10",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "attempt": 2,
+    "started": 1791364383.164644,
+    "pid": 2208167,
+    "pane": "wJ:p5T",
+    "rc": 0,
+    "report": {
+      "task": "ascension-audit",
+      "character": "silent",
+      "level": 10,
+      "runs": [
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "S9UZAK0JP0C0"
+      ],
+      "complete": true,
+      "coverage": [
+        "floors",
+        "combat_counts",
+        "healing",
+        "campfires",
+        "rules",
+        "assumptions"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/report.md",
+      "code_proposals": [
+        "silent-proposal-aab73fcff1c56b8e",
+        "silent-proposal-09d5c7776e88d756",
+        "silent-proposal-4cc200cc9747f4a8"
+      ],
+      "implementation_domains": [
+        "structure",
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "missing": [
+        "A10 F49胜后的状态、其后层数、其他首后Boss组合、其他角色/未观察进阶未知；每局终层之后均未观察。",
+        "LEVEL_01精英密度、LEVEL_03减金25%、LEVEL_06移除价格增幅、LEVEL_07稀有/升级频率、LEVEL_08/09相对低等级改变只有文本或非受控状态，未验证触发数量/概率。",
+        "初始56/70扣血过程、药槽减1的低等级对照、全部诅咒交互未观察；有实际2槽及ASCENDERS_BANE，不以A10数字补推。",
+        "未选营火动作/多动作组合、未见最大HP与回血遗物（含本批未触发的石炉/Pantograph等）交互未知；回血与锻造没有受控整战比较。",
+        "TD1HVGS7H6LB F17读档超时失败，后续重启尝试可见而末次SL汇总缺失；不记读档成功，截断战斗不当实际死亡。",
+        "完整后战HP价值曲线、其他药水价、复活/遗物接续和二Boss分布未独立验证；当前模型另含未在本任务取证的局，连战模拟未校准。",
+        "D3非空F48战后构筑题、实盘决策损害及修后效果未知；样本早于当前live，两个实到F49证据均在前五，后五未触达。",
+        "路线代价预测精度、未分类非战斗资源变化的全部因果、未选路线/未喝药的反事实未知；本次未拟合、模拟、改源码、策略知识、ops prompt或发布版本。"
+      ],
+      "ledger": {
+        "added": [],
+        "updated": [
+          "silent-0163",
+          "silent-0228",
+          "silent-0020",
+          "silent-0142"
+        ],
+        "check": 0
+      }
+    },
+    "errors": [
+      "missing preserved report inside learner/runs"
+    ],
+    "retry_at": 1791369526.9110446
+  },
+  "20261007-184216-ascension-audit": {
+    "task": "ascension-audit",
+    "learner_task": "ascension-audit",
+    "character": "silent",
+    "runs": [
+      "MGA0CZDDKC0P",
+      "25226ZFLNR1J",
+      "JLN5SK17W4FQ",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "JQPT83P8KDSZ",
+      "4D4J8USKCPAV",
+      "TD1HVGS7H6LB",
+      "PJ2LL9KU7FHD",
+      "S9UZAK0JP0C0"
+    ],
+    "state": "failed",
+    "audit_key": "silent:A10",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "attempt": 3,
+    "started": 1791369736.3946202,
+    "pid": 2405783,
+    "pane": "wJ:p50",
+    "rc": 0,
+    "report": {},
+    "errors": [
+      "missing matching completed audit report",
+      "missing preserved report inside learner/runs",
+      "missing dispatched evidence runs",
+      "missing code proposal links",
+      "incomplete observed structure coverage",
+      "missing string code_proposals array"
+    ],
+    "retry_at": 1791374743.741275
+  }
+}
