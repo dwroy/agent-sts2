@@ -203,11 +203,12 @@ export const SELECTION_SCREEN_CARDS = 25;
  * The eligible cards the selection screen will list (`listed`: a copy among its first SELECTION_SCREEN_CARDS eligible
  * copies in deck order) and those it will not (`unlisted`). Without the deck's own list, every eligible card is listed.
  */
-export function selectableCards(state: GameState, cards: DeckCard[], follow: DeckFollowUp): { listed: DeckCard[]; unlisted: DeckCard[] } {
+export function selectableCards(state: GameState, cards: DeckCard[], follow: DeckFollowUp): { listed: DeckCard[]; unlisted: DeckCard[]; preview: CardIdentity[] } {
   const eligible = eligibleCards(cards, follow);
   const raws = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
-  if (raws.length === 0) return { listed: eligible, unlisted: [] };
+  if (raws.length === 0) return { listed: eligible, unlisted: [], preview: eligible.flatMap((card) => Array.from({ length: card.count }, () => card.identity)) };
   const listed = new Set<DeckCard>();
+  const preview: CardIdentity[] = [];
   let copies = 0;
   for (const raw of raws) {
     const identity = cardIdentity(raw);
@@ -216,12 +217,22 @@ export function selectableCards(state: GameState, cards: DeckCard[], follow: Dec
     copies += 1;
     if (copies > SELECTION_SCREEN_CARDS) break;
     listed.add(card);
+    preview.push(identity);
   }
-  return { listed: eligible.filter((card) => listed.has(card)), unlisted: eligible.filter((card) => !listed.has(card)) };
+  return { listed: eligible.filter((card) => listed.has(card)), unlisted: eligible.filter((card) => !listed.has(card)), preview };
+}
+
+/** silent-0272: the observed Silent A10 shop page reordered cards relative to the deck. */
+export function unverifiedRemovalPreview(state: GameState): boolean {
+  const run = asRecord(state.run?.raw);
+  return state.screen === "SHOP" && str(run["character_id"]) === "SILENT" && numOrNull(run["ascension"]) === 10;
 }
 
 /** The note on a question whose follow-up screen will not list some eligible cards (none when it lists them all). */
-export function unlistedNote(unlisted: DeckCard[], task: DeckTask): Record<string, JsonValue> {
+export function unlistedNote(unlisted: DeckCard[], task: DeckTask, unverified = false): Record<string, JsonValue> {
+  if (unverified) return {
+    selection_screen_prediction: `移除名单尚未现场核实；按牌组顺序预测未列出的牌：${unlisted.map((card) => card.name).join("、") || "无"}。此预测不能证明牌不可选，实际移除页可能重排；进入选牌页后按现场名单核对。`,
+  };
   if (unlisted.length === 0) return {};
   return {
     not_on_selection_screen: `the game's ${task} screen lists only the first ${SELECTION_SCREEN_CARDS} eligible cards in deck order; these cannot be picked there: ${unlisted.map((card) => `${card.name}${card.count > 1 ? ` x${card.count}` : ""}`).join(", ")}`,
@@ -256,6 +267,8 @@ export interface PendingPick {
   names: string[];
   /** The plan step the next selection is. */
   step: number;
+  /** Predicted copies, checked against the actual shop removal page before executing the commitment. */
+  selectionPreview?: CardIdentity[];
   /**
    * The event page it was named on (eventPage): another page of the event before the selection means the
    * selection did not come (the game resolved it itself), so the card is dropped there.

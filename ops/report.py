@@ -97,6 +97,23 @@ def hp_of(record, states):
     return hp
 
 
+def load_run_states(path, run_id, wanted):
+    """Stream one run's frames, including fights with no action decision."""
+    states = {}
+    with open(path, encoding="utf8") as handle:
+        for line in handle:
+            if line[7:31] not in wanted and run_id not in line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            state = entry.get("state") or {}
+            if entry.get("ts") in wanted or state.get("run_id") == run_id:
+                states[entry["ts"]] = state
+    return states
+
+
 def fights_of(recs, states, died=False):
     """Fights: consecutive COMBAT records on one floor. A fight's end HP is the next non-combat frame's (the reward
     screen) less the post-combat heals (POST_COMBAT_HEAL), so the damage after the last combat decision counts: the
@@ -126,13 +143,26 @@ def fights_of(recs, states, died=False):
                 current["hp_end"] = end
         fights.append(current)
 
-    for r in recs:
+    # State-only frames can open a fight before the first decision, or end it without an action.
+    # Keep them out of decision counts and the final action trace.
+    decision_times = {r["ts"] for r in recs}
+    timeline = [(r, False) for r in recs]
+    for ts, state in states.items():
+        if ts in decision_times:
+            continue
+        combat = state.get("combat")
+        screen = "COMBAT" if state.get("in_combat") and combat else state.get("screen")
+        if not screen:
+            continue
+        timeline.append(({"ts": ts, "screen": screen, "floor": (state.get("run") or {}).get("floor")}, True))
+    for r, state_only in sorted(timeline, key=lambda row: row[0]["ts"]):
         if r["screen"] != "COMBAT":
             # A card pick inside the fight (Toasty Mittens' exhaust each turn, a potion's or Choices Paradox's
             # card, Headbutt) is part of it: a CARD_SELECTION row on the fight's floor, in combat, does not end
             # it (2XWM from F19, 7XK6 F42/F48: every turn became its own "-0" fight).
             if current and r["screen"] == "CARD_SELECTION" and r.get("floor") == current["floor"] and in_combat(r, states):
-                current["records"].append(r)
+                if not state_only:
+                    current["records"].append(r)
                 continue
             if current:
                 close(r)
@@ -141,16 +171,19 @@ def fights_of(recs, states, died=False):
         st = states.get(r["ts"]) or {}
         combat = st.get("combat") or {}
         enemies = [e.get("name") or e.get("enemy_id") for e in combat.get("enemies", []) if e.get("is_alive", True)]
+        enemy_ids = [e.get("enemy_id") for e in combat.get("enemies", []) if e.get("is_alive", True)]
         hp = (combat.get("player") or {}).get("current_hp")
         if current is None or current["floor"] != r["floor"]:
             # Straight into another fight (no frame between): the last combat frame's HP stands.
             if current:
                 close(None)
-            current = {"floor": r["floor"], "enemies": set(), "hp_start": hp, "hp_end": hp, "records": []}
+            current = {"floor": r["floor"], "enemies": set(), "enemy_ids": set(), "hp_start": hp, "hp_end": hp, "records": []}
         current["enemies"].update(enemies)
+        current["enemy_ids"].update(enemy_ids)
         if hp is not None:
             current["hp_end"] = hp
-        current["records"].append(r)
+        if not state_only:
+            current["records"].append(r)
     if current:
         # The run's last fight with nothing after it: the run died in it (0 HP), or it is still going.
         if died:
@@ -231,19 +264,9 @@ def main():
     last_ts = recs[-1]["ts"] if recs else ""
     own_end = any(r.get("screen") == "GAME_OVER" for r in recs)
     tail = [] if own_end else [r for r in decisions if r["ts"] > last_ts and r.get("screen") == "GAME_OVER"][:1]
-    # Stream: states.jsonl is hundreds of MB. Every line starts with {"ts":"<24-char ISO ts>", so only
-    # the lines this report looks up are parsed.
+    # Include the same run's state-only frames: automatic opening deaths have no COMBAT decision.
     wanted = {r["ts"] for r in tail + recs}
-    states = {}
-    with open(STATES, encoding="utf8") as handle:
-        for line in handle:
-            if line[7:31] not in wanted:
-                continue
-            try:
-                entry = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-            states[entry["ts"]] = entry["state"]
+    states = load_run_states(STATES, run_id, wanted)
     run_char = next((run_character(states[r["ts"]]["run"]) for r in recs if (states.get(r["ts"]) or {}).get("run")), None)
 
     floors = [r["floor"] for r in recs if r.get("floor") is not None]
@@ -378,6 +401,8 @@ def main():
                 "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out, "ds_tokens_in": ds_in, "ds_tokens_out": ds_out, "ds_cache_hit": ds_hit,
                 "deciders": dict(by_decider),
                 "death_fight": None if victory or not fights else sorted(x for x in fights[-1]["enemies"] if x),
+                "death_fight_floor": None if victory or not fights else fights[-1]["floor"],
+                "death_enemy_ids": None if victory or not fights else sorted(x for x in fights[-1]["enemy_ids"] if x),
                 **ablation_arm(),
             }, ensure_ascii=False) + "\n")
     return run_char

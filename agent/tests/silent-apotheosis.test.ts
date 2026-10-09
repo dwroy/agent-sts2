@@ -96,7 +96,8 @@ it("carries upgrades in the draw/discard piles without changing the input deck o
 });
 
 it("keeps missing or modified upgrades visibly unknown and every unobserved scope unchanged", () => {
-  const unknown = models("plain45").find((entry) => entry.cardId === "ACCELERANT")!;
+  const rawUnknown = evidence.frames.plain45.hand.find((entry) => entry.card_id === "ACCELERANT")!;
+  const unknown = modelHandCard({ ...rawUnknown, energy_cost: 0 }, rawUnknown.index, knowledge, "silent", 10);
   expect(applyApotheosisUpgrade(unknown)).toMatchObject({ upgraded: false, known: false });
   const plain = evidence.frames.before43.hand.find((entry) => entry.card_id === "FASTEN")!;
   expect(applyApotheosisUpgrade(modelHandCard({ ...plain, energy_cost: 0 }, 0, knowledge, "silent", 10)).known).toBe(false);
