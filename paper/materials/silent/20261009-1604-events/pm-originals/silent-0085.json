@@ -1,0 +1,207 @@
+{
+ "id": "silent-0085",
+ "ts": "2026-10-05T10:26:12+08:00",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "苦无KUNAI在本局每第三次攻击后给予1敏捷，同回合第六次攻击可再触发；先制打击和小刀帮助累计攻击次数。知识恶魔战T5第三/第六次攻击各加1，灵动步法另加2，敏捷2→6；T7防御5→11并实增11挡，仍对30攻击损19。下一场开局没有继承上一场6敏捷，末战只建立灵动步法2敏捷。",
+ "evidence": [
+  {
+   "run": "F9PP859XZ3RJ",
+   "floor": 33,
+   "turn": 4,
+   "note": "攻击计数2→3时敏捷1→2。",
+   "role": "support",
+   "added": "2026-10-05T10:26:12+08:00"
+  },
+  {
+   "run": "F9PP859XZ3RJ",
+   "floor": 33,
+   "turn": 5,
+   "note": "第三次攻击敏捷2→3，灵动步法3→5，第六次攻击5→6；先制打击生成小刀参与累计。",
+   "role": "support",
+   "added": "2026-10-05T10:26:12+08:00"
+  },
+  {
+   "run": "F9PP859XZ3RJ",
+   "floor": 33,
+   "turn": 7,
+   "note": "防御文本11、实挡11，对30攻击损19；末战仅有2敏捷，不能带入旧战增益。",
+   "role": "support",
+   "added": "2026-10-05T10:26:12+08:00"
+  },
+  {
+   "run": "YF0LXT1QSTGG",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "末试灵动步法+建3敏捷，第三攻击苦无再3→4，之后防御+/斗篷/防御实给12+10+9=31挡；T5第三小刀再5→6敏捷，既有23挡不倒补，能力与格挡时点分开。",
+   "added": "2026-10-07T17:59:51+08:00"
+  },
+  {
+   "run": "9R916WW0V65N",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "s295427—295432三攻加1敏捷，步法再加2，防御8及重放16；末试后空翻8/生存者11，已有挡不倒补；T2第三刀5→6敏仍挡0。既有机制support，独立前瞻模型遗漏另建bug。",
+   "added": "2026-10-08T12:03:09+08:00"
+  }
+ ],
+ "first_run": "F9PP859XZ3RJ",
+ "prior": "unknown",
+ "prior_note": "检索静默既有账本和更早复盘，未见苦无/KUNAI的同类局面；不引用铁甲战士遗物经验。",
+ "status": "shipped",
+ "by": "learner:postmortem",
+ "where": {
+  "lessons": [
+   "F9PP859XZ3RJ",
+   "YF0LXT1QSTGG",
+   "9R916WW0V65N"
+  ],
+  "experience": [
+   "silent-kunai-attack-count-dexterity"
+  ],
+  "commits": [
+   "e6ec56538c8fd8a048d49889df5f4d0ec8003716",
+   "2a946ca5ec6bbad250bd43df599d77a84a9c0f05",
+   "ad20957345fa54777705dd00a75ab4d60d1d4b49",
+   "c10209e14d2a1a2f3463555fa088684ccdecf856",
+   "31914e4ba652d6e8466a4a99f04128005166ecf2",
+   "3958e5616ae5a13318da4e4397d2805ec1f919c9",
+   "64e82e9874e55823fd524491ecfbae2aa643e7ad",
+   "5925a43d773d5eecf4442ee4e3e60d39d98ec99d",
+   "e969eb007240e6c9d0a9bfd0f6799738b3d08b9a"
+  ],
+  "changelog": [
+   "2026-10-05 静默猎手 第十二次增量：1 局 A4（version 2026-10-05.12，分支 exp-silent，e6ec5653）",
+   "2026-10-07 静默猎手 第七十七次增量：2 局 A10（version 2026-10-07.23，分支 exp-silent，ad209573）",
+   "## 2026-10-08 静默猎手 第九十六次增量：1 局 A10（version 2026-10-08.13，分支 exp-silent，3958e561）"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261007-174301-postmortem/proposal-phase-poison-delivery.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-184216-experience-update/proposal-mechanisms-sl-resources.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-020232-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-050618-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-064305-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-114303-postmortem/proposal-kunai.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-kunai.md"
+  ]
+ },
+ "note": "仅登记本局实际计数与格挡，不从单局定固定构筑优先级。",
+ "asc": 4,
+ "history": [
+  {
+   "ts": "2026-10-05T10:26:12+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-05T10:41:52+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T10:50:58+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T17:59:51+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T18:01:08+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T18:57:26+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-07T19:11:49+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T20:51:44+08:00",
+   "by": "ops:codex",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-08T00:34:44+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T01:32:46+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T02:23:37+08:00",
+   "by": "learner:strategy-proposal"
+  },
+  {
+   "ts": "2026-10-08T05:18:48+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T06:56:36+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T12:03:09+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T12:05:30+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T12:18:44+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T12:19:13+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T12:31:59+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T12:40:26+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp96",
+ "effect": null,
+ "notes": [
+  "仅登记本局实际计数与格挡，不从单局定固定构筑优先级。",
+  "经验2026-10-05.12已自测提交，登记proposed；实际合入后由运维根据experience-done完成事件登记shipped。本次F9PP859XZ3RJ A4逐帧核对；机制范围/典型案例及统计口径见第十二次增量。涂毒2局中仅A4一局验证普通逐击，升级仅支持建层，不登记bug0081/0082为已修。",
+  "运维核实20261005-102754-experience-update已实际合入live并同步main，经验.11→.12；仅机械解决决定日志冲突，保留七项live刷新数据和已有版本。学习者及合后固定沙箱自测通过，按对应经验批次登记；计算下注/涂毒代码模型bug0081/0082不作已修。",
+  "来源20261007-174301-postmortem；只追加本角色核实证据，不改变当前状态、首证、先验或旧上线历史。",
+  "代码提案 silent-proposal-a46bdb7fe711d79a → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-c59f592f1427a67e → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第77批静默经验仅关联核实证据及源提交；保留claim、先验、旧repeat及历史版本，未登记implemented/shipped。各子公式独立分母，不把整战死亡当机制反例。",
+  "20:34兜底将经验.23/.24累计到.25原blob，真实合入后登记唯一S1.exp79；这里只登记该条经验数据的实际发布，出牌/药水/SL代码提案独立续办，未宣称实现；首证、先验、claim及所有旧历史保持。",
+  "本次20261008-000408逐项处置及限制见report.md；本地1项离线源码、1项实际live重复、8项证据不足。尚未新合入live，不登记shipped，保留旧首证/先验/支持/重复与既往上线历史。",
+  "本批20261008-010309逐项处置见proposal.md/report.md；仅懒惰额度有本地已测源码，其余9项具体缺口保留waiting。此行登记proposed和链接，不冒报live实现或shipped；保留原首证、先验、证据和既往上线历史。",
+  "20261008-020231逐项复核：silent-proposal-a46bdb7fe711d79a waiting；YF F48阶段新212血/毒清空、零毒触媒无收益和后取得敏捷不补23挡可核。源码已有相关子模型，但缺已建/持有/未派发能力跨抽弃重规划的分阶段统一事实记录；六试同局不足拟能力先手/终局权重，不认领完整展示提案。；仅提案处置，原机制状态/已上线版本及历史证据保持。",
+  "20261008-050618-strategy-proposal逐项复核；本角色原始日志核验、固定子机制13例通过；silent-proposal-a46bdb7fe711d79a仍waiting，具体缺帧/联合调用/完整结局限制见proposal.md；未改生产策略，无新增源码/版本/live合入，不标shipped。",
+  "20261008-064303策略批复核，相关派发提案均waiting；完整原帧及逐项缺口见本次proposal.md/report.md。关联提案：silent-proposal-a46bdb7fe711d79a。没有源码实现/合入，不重复添加历史证据或修改首证/claim/prior。",
+  "代码提案 silent-proposal-8df611363cd82fc9 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "提交前关联本批经验来源；保持首证/prior/claim/旧上线历史，提交后再登记proposed。",
+  "代码提案 silent-proposal-3ee015a5b3aa4ae8 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "本批经验已提交；首证/prior/claim和旧上线历史保持。经验数据发布与策略代码实现分账，由运维核实实际合入再登记shipped。",
+  "第96次经验原数据2026-10-08.12→.12/增2改17退0/175 active，源3958e561唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记18所属经验数据shipped。源首轮中断130原件保留、重试248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0290/0291纯bug保持原观察/提案状态，不标代码实现；0292首证LRN0HPZ0FZS1/A0及partly先验保持。"
+ ],
+ "shipped_at": "2026-10-08T12:40:26+08:00"
+}

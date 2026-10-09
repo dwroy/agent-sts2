@@ -464,3 +464,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 15:19 [运维 codex] 833ZM0MJGWHC复盘闭环完成：24260字节原文、19原CLI（2新项、10旧证据更新、7提案关联）核实纳入；非阻塞复活误核销bug0339单次入普通队列，三提案沿原自动链。61源原件SHA、1865/1867源核验及1867只读复核、原离线失败/草稿修正历史保持；论文--no-raw单次刷新、五校验过、台账0问题。144301正常done/rc0、attempts=1，15:01误标现场及恢复回执保持，无重派或重启。回执paper/materials/silent/20261009-1512-events/paper-snapshot.json。
 
 - 2026-10-09 15:27 运维15:19/20261009-143947-experience-update：原3处共享记录冲突已核实，源6276c272经验.21（0新增16更新196 active）自测tsc/vitest0、251文件2627例。单次锁内预检实见report.py及live知识刷新运行，安全释放锁，本轮未实际合入/上线版本/shipped/请求完整补测；live/main仍.20，待下次已有完成事件空闲锁续办，不等待、不重试或复派。原51所属CLI及58667字节第132节已提交ef187e6e；7support和三提案原链接不重复登记，17所属数据shipped/唯一S1.exp132在实际发布后补，随后原批单次learner-recheck。778原件SHA、原failed/merged-null/3冲突/out/err与校正失败历史保持；台账0问题，复盘/论文、对局/调度/env均未改。回执paper/materials/silent/20261009-1519-experience132/pending.json。
+
+- 2026-10-09 16:13 [运维 codex] 64R0P0MTZWAX复盘闭环完成：20612字节原文、14原CLI（7支持证据更新、7提案关联）精确纳入，无新纯bug；三项提案沿原自动策略链。57源原件SHA、1916原核验及只读复核和原未记录限制保持；论文单次--no-raw、五校验通过、账本0问题。154301 done/rc0、attempts1；经验132待合事项独立沿15:19回执续办，无复派/重启或对局/env改动。回执paper/materials/silent/20261009-1604-events/paper-snapshot.json。
