@@ -160,3 +160,5 @@ Roy 2026-10-09 授权的全历史核心构筑学习使用 `silent-historical-cor
 | ops/herdr-host.sh、ops/herdr-exec.sh | 通用的 herdr 托管（workspace、pane、run、stop、status） |
 | ops/codex/herdr.ts | 经 herdr TUI 叫醒：就绪判断、提交、按会话文件判断完成和记 token |
 | agent/tests/ops-herdr.test.ts、tests/fixtures-herdr/fake-herdr.py | TUI 参数、读屏和会话文件、托管脚本、herdr 叫醒、托管的学习者批次（假 herdr） |
+
+Roy 2026-10-09 授权策略提案先开两路：一个正常派发回调可领取最多两批，每批至多10条，先排除活批已领取的proposal_ids；第二批用实际派发时间戳加 `-s2` 区分，不伪造未来时间。每批独立工作树和租约，任务显式带batch只读自身领取清单；重复任务key不并发重派，补链同一请求不重复。`code_proposal` 回执保持首批接口，完整批次在 learn.json。ops/既有调度器派发，watcher不启动学习；live合入/完整检查仍用原锁串行。新树只连接已有node_modules和logdb-venv，不安装依赖。策略并发上限常量STRATEGY_WORKERS=2；降回1只影响新派发，不中断已跑批。
