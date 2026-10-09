@@ -1030,3 +1030,7 @@ A10开场332个敌人部件的HP/开场取A10记录；48项攻击定义取A10，
 这是Roy已授权新功能的周期刷新，账本kind=fight、status=proposed；不是bug-infra。只调整静默统计映射/可信数据，未新增出牌、药水、SL或终局策略规则，未改变费用/药水/保血/目标/SL阈值；不产生新的策略代码提案，已有校准实现cdf75af64fb5b118a5a808ecb3b05e2a05991c36的实际live祖先关系在锁内核实。
 
 本批账本 `silent-0364`（fight/proposed，来源任务20261010-024304-silent-boss-calibration）；完整新来源与封存报告目录 `experiments/boss-sim/silent/5fd2e09b697cc5908f6f2e4190178dd7de82d659e262c8b37eac9d4e8cec33b9/`。实际发布回执在任务scratch/report.md。
+
+## live刷新与固定模型范围
+
+首次发布预检exit1发现9项知识输入已刷新，先保存为e5a1051acb72efe2b473e96c055bddc21f8e528a，未合入校准。343实际开场不变，但全部343战的后续转移统计、其中54战（A10知识恶魔22、实验体15、女王17）的招式输入不同，不能宣称新输入已通过同一验证。按原固定模型口径，本表只验证源4666bd99286e15174c46fbaa5a7689936b9121d9/模型a16714b6349b4d4c79bbc91c3875c979607f80da1e619b59f5a0a82e45210a5a；合入保留全部live刷新，不把旧表当作新数值验证，新模型留待下次定期校准。agent/src和boss工具与live逐文件无差异。完整范围、SHA、数值差异与原失败日志：`experiments/boss-sim/silent/880d4161c6d924d3f5944b05782792c75ddb9bc1eb05ca4e6b21e6d0a49da417/`。账本仍silent-0364/proposed。
