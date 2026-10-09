@@ -191,7 +191,8 @@ def notify(batch_id, batch, root, state_dir, run=subprocess.run):
         result = run(["herdr", "notification", "show", "--body", names + "；报告 " + accepted["path"],
                       "--sound", "done", "静默核心组合学习已有结果"], capture_output=True, text=True, timeout=20)
         receipt = {"state": "sent" if result.returncode == 0 else "failed", "rc": result.returncode,
-                   "batch": batch_id, "report": accepted, "at": time.time()}
+                   "batch": batch_id, "report": accepted, "at": time.time(),
+                   "stdout": result.stdout or "", "stderr": result.stderr or ""}
     except (OSError, subprocess.SubprocessError) as error:
         receipt = {"state": "uncertain", "error": str(error), "batch": batch_id, "report": accepted, "at": time.time()}
     atomic_json(path, receipt)
