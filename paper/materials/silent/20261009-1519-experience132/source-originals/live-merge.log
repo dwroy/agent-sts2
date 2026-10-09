@@ -1,0 +1,41 @@
+git rev-parse exp-silent
+6276c27246376faa0822b2ec1e7ae1bbddf0f161
+git rev-parse HEAD
+c7e1e0ed360c72903c84fb3791cf66c193c369cd
+git status --short
+git diff --cached --name-only
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+git rev-parse HEAD
+c7e1e0ed360c72903c84fb3791cf66c193c369cd
+git merge-base c7e1e0ed360c72903c84fb3791cf66c193c369cd 6276c27246376faa0822b2ec1e7ae1bbddf0f161
+3a71746d3cd52f14d4df4c454f460b519d7eaf44
+git diff --name-only 3a71746d3cd52f14d4df4c454f460b519d7eaf44 6276c27246376faa0822b2ec1e7ae1bbddf0f161 -- knowledge
+knowledge/characters/silent/experience.json
+git diff --name-only 3a71746d3cd52f14d4df4c454f460b519d7eaf44 c7e1e0ed360c72903c84fb3791cf66c193c369cd -- knowledge
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git merge-tree --write-tree c7e1e0ed360c72903c84fb3791cf66c193c369cd 6276c27246376faa0822b2ec1e7ae1bbddf0f161
+17f6505cefa7db918b690942e5f6da8f80cc8ced
+100644 447de998b0f316a651278a50ad693cacf2338144 1	notes/for-dai.md
+100644 14e8c75b124138872e3d864d8bf6247a1aa432d9 2	notes/for-dai.md
+100644 cd8d321e8ce39f7e2568a28f3088800cba6bec1b 3	notes/for-dai.md
+100644 705a1ef1cbdca76eef7bc013d9c898e6cd6d3af2 1	ops/inbox-dev.md
+100644 c1d42393580703fdcf48b9389a5b5a6ac188d21c 2	ops/inbox-dev.md
+100644 69eaae7bd7eb62a01b05c02d7912d9d696df9b12 3	ops/inbox-dev.md
+100644 302d655063e61c458b24b0fa0f1e6cac459e65d3 1	paper/materials/decision-log.md
+100644 eec87fcd8f3c79ac2af42e1e0058851cf0178e7a 2	paper/materials/decision-log.md
+100644 fc0ef55c89a48aea961018cdf9566e31d89d1ab2 3	paper/materials/decision-log.md
+
+Auto-merging notes/for-dai.md
+CONFLICT (content): Merge conflict in notes/for-dai.md
+Auto-merging ops/inbox-dev.md
+CONFLICT (content): Merge conflict in ops/inbox-dev.md
+Auto-merging paper/materials/decision-log.md
+CONFLICT (content): Merge conflict in paper/materials/decision-log.md
