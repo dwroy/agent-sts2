@@ -1,0 +1,366 @@
+{
+  "timestamp": "2026-10-09 19:44",
+  "batch": "20261009-191301",
+  "run": "HNX4A2WBC34W",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "HNX4A2WBC34W"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0024",
+        "silent-0125",
+        "silent-0020",
+        "silent-0005",
+        "silent-0023",
+        "silent-0027",
+        "silent-0253",
+        "silent-0243",
+        "silent-0011"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-4370d729d23af191",
+      "silent-proposal-f517079a4b9bfd58",
+      "silent-proposal-375abad75e39788d"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/report.md"
+  },
+  "originals": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/HNX4A2WBC34W-resources.json": {
+      "bytes": 984267,
+      "sha256": "b49b1cf668782199deedcd0e2d25cb75c3d114e2989d7ba445be1335e0686457"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/analysis-failures.md": {
+      "bytes": 610,
+      "sha256": "db2aa233c4f76a6643945dfed33a37cc60064ae00ce8d40b3545dcbd267647a5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/append-before.json": {
+      "bytes": 248,
+      "sha256": "c48d692001ce33eac9258117dab10f47a4d3c4a2fc85b953e3f72664c85b1179"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/append-lesson.sh": {
+      "bytes": 23072,
+      "sha256": "3f53a0b2fbe67003dfc09476b7446309b3c5a727cec8c64d0f57e79d8dd5eedc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/append-verification.json": {
+      "bytes": 149,
+      "sha256": "a54f49129db98c8af8a1d1e65c6e18bac75ecc37c2ca87d11510b085ac65db34"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/audit.py": {
+      "bytes": 2765,
+      "sha256": "3abd5e5b3cd50abdf8045316d5e7373a3fbd7048bd92a6921c61dcd87f1a42fc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/brain-compact.jsonl": {
+      "bytes": 19532,
+      "sha256": "0bac8826c7c9e2f34c2e8d0484787ea7b46cb292f189e5d015c7bfa195e41cca"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/brain-summary.jsonl": {
+      "bytes": 42171,
+      "sha256": "b1c9701f80d0000bbba662b5d2e2460c3f675592df932e327bdc22dd858ac23b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/changes-summary.jsonl": {
+      "bytes": 34647,
+      "sha256": "1f2c37795e7f4424a79cbdc6f6f55aa6ed99bf43accaff8ed22c1cbc1c275b77"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/choices.jsonl": {
+      "bytes": 329893,
+      "sha256": "b0920a113c98d34f8359247e639a4002c7001f654d354a262278d6bbe00f6d92"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/combat-budget-cli.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/combat-budget-cli.out": {
+      "bytes": 33,
+      "sha256": "49bb7585ec41c89b74603ebdeb26b56e29ccd07f9f6ec0d7132a283e0c659583"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/combat-budget.json": {
+      "bytes": 604,
+      "sha256": "ce32f9cafc073246788bc85c79fda4bdaf1e30a5ea76e97acf1ef4f093c30cf5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/combat-budget.md": {
+      "bytes": 3206,
+      "sha256": "943ab8d77c0d5a0178780a82884cc91fbaa87f71cf6f31ccad5a6e6e3d92584c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/combats-summary.jsonl": {
+      "bytes": 12022,
+      "sha256": "59b0e007e64118bfd26d0258a50d28156cf00fee4c570a0be77d6879f6dd1cd4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/decisions.jsonl": {
+      "bytes": 3709528,
+      "sha256": "76a44b14f7de80945ec8e129417f5b4023ca393f4c020bebccdca21784ea5e7b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/deepseek-reasoning.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/details.py": {
+      "bytes": 3328,
+      "sha256": "86ec2d32338dcaa0d004958bd55e88e02f200a6d60de9cd5002660ee3052d54b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/existing-run-ledger.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/extract.py": {
+      "bytes": 1869,
+      "sha256": "5b5e044c6ae08dbb790aa4a775fa520f64535ea4d6126db14d4aecebaa27e155"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/finalize-report.py": {
+      "bytes": 3362,
+      "sha256": "18b4d62c82d4bc6b2c199d712eec845d603c74b239e79bed58ffdab271f49b32"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/guard-summary.jsonl": {
+      "bytes": 1691,
+      "sha256": "a4331501ad740924967067598fb76b1e1c9471b1ade33c49964afc52435e12ee"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/hp-guard-tradeoffs-cli.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/hp-guard-tradeoffs-cli.out": {
+      "bytes": 33,
+      "sha256": "b95b502dc780750ed6217b2853d0672338b40e07c66797e61899333b25e64800"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/hp-guard-tradeoffs.json": {
+      "bytes": 523,
+      "sha256": "60b94e6d5af956c4213ce7ace70c934e9e9c083004b5c18d4e267ee27053ec38"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/hp-guard-tradeoffs.md": {
+      "bytes": 3152,
+      "sha256": "eb9f5495615694fc90f90b66c18865c6afec7f01e7823f6e96ca6b371db5e846"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-aeon.json": {
+      "bytes": 586183,
+      "sha256": "393dfe38130af22028c9f1d3fd000e224fac325e8b1906d57c545da037713b63"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-after.json": {
+      "bytes": 1283428,
+      "sha256": "f6d411263e5fc61babf1c33d33ad39460b9a9317e0aa13bead2ed181eeea80e3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-before.json": {
+      "bytes": 1680146,
+      "sha256": "d0230ec6321bafd0d84028572e050eebccf54c8f59cf1d2bfdf10501f71688a3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-check.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-check.out": {
+      "bytes": 94,
+      "sha256": "df3d6b9aafb5fcbecd3b853bc307b7f36cd1fb16963d8f742d5000cf2cf8d2bc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-check.rc": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-cli.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-cli.out": {
+      "bytes": 108,
+      "sha256": "b6b0d4b1490786f13e46ec45c6a341acee0f00aa1e4eca5499032effd55b8abe"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-guard.json": {
+      "bytes": 3128827,
+      "sha256": "af3d2fdf978bcec90e9d2a77af58119ab531141a431ec559746aaecb9d33fdb5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-poison.json": {
+      "bytes": 3528186,
+      "sha256": "354ec6966f376706cc89c80006cb9eba988b99df47323f8bd50d2dd04ad980a9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-updates.jsonl": {
+      "bytes": 6779,
+      "sha256": "2659ba6058d293319888684232871ce7bf7756170d6847fee1d8216310009eee"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/ledger-waste.json": {
+      "bytes": 3240779,
+      "sha256": "8f2792457e6505ff39fa1f8231c2422ab24ad92e91bec236502309b8466cba0d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/lesson-draft.md": {
+      "bytes": 23007,
+      "sha256": "a87446a44598c1eb7993acac63b9895daa4ff7053961d0f14b3ecbff1816bdd8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/potion-decisions.jsonl": {
+      "bytes": 6818,
+      "sha256": "fcfed6c54f7eddbb150dda2068b6d323a4cdec2c1c97ebfb2923d1f0e64fc646"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/potion-resource-chain-cli.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/potion-resource-chain-cli.out": {
+      "bytes": 33,
+      "sha256": "7f0177328d20d102f69299f7133cbc471baf5651f107c589e36f64ab3d42daa6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/potion-resource-chain.json": {
+      "bytes": 603,
+      "sha256": "6ebf35813e17b6083b76386f47698656a3873e224516b089572b33037cf4260e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/potion-resource-chain.md": {
+      "bytes": 3289,
+      "sha256": "e88c6f04881fcafdbf8e7b56f8399360e7c8f5f32b2028e2011d076e2ed1b6f1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/prepare-ledger.py": {
+      "bytes": 3995,
+      "sha256": "21fd10e8bbed60ddebdbd0ea2e09520075e06c5afb93d06273ce1d66d961af86"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/prepare-proposals.py": {
+      "bytes": 8761,
+      "sha256": "8bbb0eb189e830912bcf8eed69b71137c2064c0d3304a034042065f5bad99cb4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/proposal-verification.json": {
+      "bytes": 207,
+      "sha256": "a6ad76ffd4d2afea05c65f6cd6d76533480683925ac29598904562fcc2dfc909"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/report.json": {
+      "bytes": 682,
+      "sha256": "984b542fa63cd22906f0ad1f5cfa1557d119d4f35136a4604382e46919f9fae3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/report.md": {
+      "bytes": 2031,
+      "sha256": "ee03e625b9ad5a05acab39358f29bc5f69e26be5e44ffee160e4198b4999f49b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/run-plans.jsonl": {
+      "bytes": 18020,
+      "sha256": "03f41b43979bafaf700bb42d9c76cd4c918e6acfe7d7a34abb1c93596b0b3ec8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/runs.jsonl": {
+      "bytes": 467,
+      "sha256": "ae28046cc26306afe362aafc7859f277f9c516ecab23aa9a24e34cd0284bd30a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/sl-attempts.jsonl": {
+      "bytes": 221097,
+      "sha256": "be4de2ab07144e9d3bc26519f39737847d9b07fded52f6813368b1f508d9bb52"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/sl-summary.jsonl": {
+      "bytes": 2530,
+      "sha256": "4861083110bb303fca822b54b857e2648ac95f99ddaf839df95a9962e18c107b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/source-manifest.json": {
+      "bytes": 393218,
+      "sha256": "254b1732c0ccd5623d02ebe0873cc32c5eb9adee80e855c6e2f4a9c487d5cdb8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/states.jsonl": {
+      "bytes": 34076257,
+      "sha256": "0638835a29a837d0c74a01a9a1c2be939706582b99260c8dcc0527deb80e0831"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/summarize.py": {
+      "bytes": 2379,
+      "sha256": "a8acc9aa9c2e6afff79558794075eede2c5589429bcc395f69fa9f049c133716"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/turns-audit.jsonl": {
+      "bytes": 21885,
+      "sha256": "ea7af27ab81e257fd5cdd59def11a66355b52a201e306fabf8c99853833a9715"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/turns.jsonl": {
+      "bytes": 357203,
+      "sha256": "4549e8ee6d163b7fd2a397c4558bffd409865b27f67f772dd46b7486ee466428"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/verification.json": {
+      "bytes": 132,
+      "sha256": "478a39da5ed1f699622f9f32e51a9b9e6c2b329027545154699745d949cf28f8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/verify.py": {
+      "bytes": 2829,
+      "sha256": "741d21a113ee87f89b5b4bf2c48931c1fc14dad69aa96f841a63fa6feb177d88"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem/write-draft.py": {
+      "bytes": 21058,
+      "sha256": "0dfff00daa6dc5cbaa3d69f012f068b076ac9ed561da66d921694025b17776bb"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-191302-postmortem.jsonl": {
+      "bytes": 1149221,
+      "sha256": "98a9206e7308026889c3db699e2ef4090602253c68d5539c33f82d3822e5e46f"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-191301.out": {
+      "bytes": 2582,
+      "sha256": "2b1279efcf64cdd1ce1ccc1876b0fbbba8c91e5c8e6a868d91236e8d828dd8f4"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-191301.err": {
+      "bytes": 10183,
+      "sha256": "357162dcfa0c2b83a64dacbc51b4b577a5add7d0b6a199ae126623250bf35556"
+    },
+    "/home/dw/Projects/agent-sts2/notes/run-1009-1851-HNX4A2WBC34W.md": {
+      "bytes": 6277,
+      "sha256": "cf3615dfe6c843deb46b7bcaaaf4f5714da27d57262125c6f005c3ec62fafd0d"
+    }
+  },
+  "owned_cli": 18,
+  "first_observation_add_rows": 0,
+  "evidence_update_rows": 9,
+  "correction_note_rows": 0,
+  "proposal_link_rows": 9,
+  "support_evidence": 16,
+  "repeat_evidence": 0,
+  "new_pure_bugs": [],
+  "queue_append": false,
+  "blocking": false,
+  "lesson_append_bytes": 23007,
+  "original_draft_bytes": 23007,
+  "original_erratum_bytes": 0,
+  "old_physical_prefix_bytes": 6156174,
+  "old_physical_prefix_sha256": "20a50a354fb09a46cfa143135193e9a8a4d22e5f5e597f13775cf808bfdbf226",
+  "index_prefix_bytes": 6156170,
+  "index_prefix_sha256": "b40e897dbd1d51f57f6127e7ac2999823327750cc53ffbbfd354fcf0ce2606e0",
+  "nonowned_physical_prefix_difference_not_staged": true,
+  "append_verification": {
+    "old_prefix_unchanged": true,
+    "append_matches_draft": true,
+    "title_count": 1,
+    "append_bytes": 23007,
+    "source_records_reverified": 1779
+  },
+  "source_raw_records_reverified": 1779,
+  "source_raw_counts": {
+    "runs.jsonl": 1,
+    "decisions.jsonl": 850,
+    "run-plans.jsonl": 9,
+    "sl-attempts.jsonl": 7,
+    "states.jsonl": 912
+  },
+  "resource_entries_reverified": 23,
+  "source_original_verification_kept": true,
+  "source_failed_command_history": [
+    {
+      "exit": 1,
+      "command_sha256": "c2c4066b0c298f839f35dca2f12766b132dd67b35009901898d7b165ab6a137b",
+      "output_excerpt": "error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw/Projects/agent-sts2: rg: /home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-184303-experience-update/mech-move-tNflfW: No such file or directory (os error 2)\n\n"
+    },
+    {
+      "exit": 1,
+      "command_sha256": "21efa23c7ba76cae397bc8cc3f574c1834288fe1928f982ca52e8de73709ce9e",
+      "output_excerpt": "53)]\nENEMY 327504 8 1 [(0, 'WRIGGLER', 20), (1, 'WRIGGLER', 19), (2, 'WRIGGLER', 18), (3, 'WRIGGLER', 21)]\nENEMY 327508 8 1 [(0, 'WRIGGLER', 12), (1, 'WRIGGLER', 8), (2, 'WRIGGLER', 13)]\nENEMY 327515 8 3 [(0, 'WRIGGLER', 12), (1, 'WRIGGLER', 13)]\nENEMY 327517 8 3 [(0, 'WRIGGLER', 13)]\nENEMY 327664 19 1 [(0, 'EXOSKELETON', 29), (1, 'EXOSKELETON', 30), (2, 'EXOSKELETON', 26)]\nENEMY 327671 19 2 [(0, 'EXOSKELETON', 20), (1, 'EXOSKELETON', 17)]\nENEMY 327676 19 3 [(0, 'EXOSKELETON', 20)]\nENEMY 327717 21 1 [(0, 'EXOSKELETON', 26), (1, 'EXOSKELETON', 29), (2, 'EXOSKELETON', 28), (3, 'EXOSKELETON', 27)]\nENEMY 327722 21 1 [(0, 'EXOSKELETON', 17), (1, 'EXOSKELETON', 19), (2, 'EXOSKELETON', 18)]\nENEMY 327729 21 2 [(0, 'EXOSKELETON', 2), (1, 'EXOSKELETON', 8)]\nENEMY 327730 21 3 [(0, 'EXOSKELETON', 8)]\nENEMY 327762 28 1 [(0, 'ENTOMANCER', 165)]\nENEMY 327804 30 1 [(0, 'CHOMPER', 66), (1, 'CHOMPER', 64)]\nENEMY 327812 30 2 [(0, 'CHOMPER', 54)]\nENEMY 327949 35 1 [(0, 'LIVING_SHIELD', 65), (1, 'TURRET_OPERATOR', 51)]\nENEMY 327955 35 1 [(0, 'LIVING_SHIELD', 15)]\nTraceback (most recent call last):\n  File \"<stdin>\", line 16, in <module>\nTypeError: unsupported operand type(s) for *: 'NoneType' and 'int'\n"
+    },
+    {
+      "exit": 1,
+      "command_sha256": "9a75983a29c8abcbcc5fd9d1d9aab2147cb8f50d6dd58542084003ff288dfe0e",
+      "output_excerpt": "urnHpLoss?: number;\n.worktrees/live/agent/src/reflex/turn-solver.ts:541:   * loss (CLAY_BLOCK), ours or an enemy hit's; `clayPending` is what this turn's losses so far already owe\n.worktrees/live/agent/src/reflex/turn-solver.ts:739:  heldPenalty: number;\n.worktrees/live/agent/src/reflex/turn-solver.ts:892:  withersAdded: number;\n.worktrees/live/agent/src/reflex/turn-solver.ts:974:  heldDamage?: number;\n.worktrees/live/agent/src/reflex/turn-solver.ts:975:  /** With heldDamage: the cards it comes from, by name (\"毒素 ×2\", \"Wither added by this turn's cards\"). */\n.worktrees/live/agent/src/reflex/turn-solver.ts:976:  heldDamageFrom?: string[];\n.worktrees/live/agent/src/reflex/turn-solver.ts:1192:    const penalty = card.heldPenalty * hpWeight;\n.worktrees/live/agent/src/reflex/turn-solver.ts:1202:  const strikes = pile.filter((card) => card.strike && card.playable && !(card.heldPenalty > 0)).length;\n.worktrees/live/agent/src/reflex/turn-solver.ts:1261:  if (isJunk(card)) return -(card.heldPenalty ?? 0) * weights.hp;\n.worktrees/live/agent/src/reflex/turn-solver.ts:1374: * turn, -9\"; played, it costs nothing and gives 2 energy for a Defend). Only a real loss comes here, so only it sets off\n"
+    },
+    {
+      "exit": 1,
+      "command_sha256": "ee779563953270dad0455014317dbd4cbe1787a366e04dc981195861c62805a3",
+      "output_excerpt": "ss', None)]\nfinaldeck 37 {'STRIKE_SILENT': 5, 'DEFEND_SILENT': 5, 'NEUTRALIZE': 1, 'SURVIVOR': 1, 'ASCENDERS_BANE': 1, 'SKEWER': 1, 'BACKSTAB': 1, 'BACKFLIP': 3, 'DAGGER_SPRAY': 1, 'DEADLY_POISON': 3, 'MALAISE': 2, 'POISONED_STAB': 1, 'DRAMATIC_ENTRANCE': 1, 'AFTERIMAGE': 1, 'BLADE_DANCE': 1, 'FOOTWORK': 1, 'ACCELERANT': 1, 'MIRAGE': 1, 'CORROSIVE_WAVE': 1, 'CALCULATED_GAMBLE': 1, 'NOXIOUS_FUMES': 1, 'LEG_SWEEP': 1, 'EXPOSE': 2}\nrest [(7, 318745, {'action': 'choose_rest_option', 'option_index': 0}), (13, 318808, {'action': 'choose_rest_option', 'option_index': 0}), (16, 318852, {'action': 'choose_rest_option', 'option_index': 0}), (24, 318983, {'action': 'choose_rest_option', 'option_index': 1}), (27, 318996, {'action': 'choose_rest_option', 'option_index': 0}), (29, 319036, {'action': 'choose_rest_option', 'option_index': 1}), (32, 319077, {'action': 'choose_rest_option', 'option_index': 0}), (40, 319274, {'action': 'choose_rest_option', 'option_index': 0}), (44, 319303, {'action': 'choose_rest_option', 'option_index': 0}), (47, 319314, {'action': 'choose_rest_option', 'option_index': 0})]\nTraceback (most recent call last):\n  File \"<stdin>\", line 7, in <module>\nKeyError: 'chosen'\n"
+    },
+    {
+      "exit": 1,
+      "command_sha256": "25afe48d08be891e6f6bbe56526c7364953c204e2510650d6aad8d8aac03d0a7",
+      "output_excerpt": "  File \"<stdin>\", line 12\n    print('firstjevcodex',all(d['deepseek']['brain']['engine']=='codex' for d in D if (d.get('deepseek') or {}).get('brain'))\n         ^\nSyntaxError: '(' was never closed\n"
+    }
+  ],
+  "source_proposals_original_automatic_chain": true,
+  "no_ops_game_knowledge_added": true,
+  "original_reports_and_streams_kept": true
+}
