@@ -1,0 +1,48 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "833ZM0MJGWHC"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "833ZM0MJGWHC",
+      "where": "agent/src/reflex/combat-plan.ts:5004",
+      "what": "卷轴毒杀后误记蜥蜴尾巴已消耗，导致实验体三次可复活T3被判死读档",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0339",
+      "silent-0340"
+    ],
+    "updated": [
+      "silent-0010",
+      "silent-0024",
+      "silent-0027",
+      "silent-0028",
+      "silent-0034",
+      "silent-0125",
+      "silent-0221",
+      "silent-0228",
+      "silent-0243",
+      "silent-0278"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-c232010cd405fe44",
+    "silent-proposal-8c372357c6d94277",
+    "silent-proposal-d83600a499152eac"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-144301-postmortem/report.md"
+}
