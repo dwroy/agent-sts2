@@ -1,0 +1,117 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.25 → 2026-10-09.26；提交：806d6c031（分支 exp-silent）；合入：未合入，预检发现19处记录及论文数据冲突，已停止，交运维兜底。
+- 条数：新增0、更新20（加证据20、只改数字0）、退役0；active 198 → 198。总字符50292 → 49916；A8适用184条／46231字，A9适用185条／46515字。
+- 机制推理（支持／反例局数；典型案例均来自 HNX4A2WBC34W）：
+  - 护栏取舍 — 当轮保血与持续收益需共同核验 — 170／0局 — HNX4A2WBC34W：三次候选合省31血、少32即时伤，整场因果未控。
+  - 力量／敏捷 — 逐攻击段、逐格挡牌兑现 — 171／0局 — HNX4A2WBC34W：三刀各5伤，两挡牌因敏捷合多4挡。
+  - 灵动步法 — 敏捷须由后续挡牌兑现 — 101／0局 — HNX4A2WBC34W：T8两张牌各7挡。
+  - 毒雾 — 后续轮初补毒 — 84／0局 — HNX4A2WBC34W：12毒补至14，三结39。
+  - 致命毒药 — 施毒与扣血分账 — 43／0局 — HNX4A2WBC34W：7＋5＋5使13毒增至30。
+  - 触媒 — 增加结算次数 — 60／0局 — HNX4A2WBC34W：30＋29＋28＝87，仍未击杀。
+  - 余像 — 每次实际出牌补挡 — 36／0局 — HNX4A2WBC34W：七牌7挡，仍实损36。
+  - 凋萎 — 持牌伤与攻击共享格挡预算 — 25／0局 — HNX4A2WBC34W：25攻击＋18持牌伤−7挡＝36。
+  - 金刚杵 — 增伤逐段兑现 — 13／0局 — HNX4A2WBC34W：三刀各4→5。
+  - 萎靡 — 减力、虚弱与后续成长分别核算 — 22／0局 — HNX4A2WBC34W：沙虫重打T3实建−4力／4弱。
+  - 蜃景 — 现场毒量与敏捷共同形成牌挡 — 22／0局 — HNX4A2WBC34W：6毒＋5敏＝11挡。
+  - 速度药水 — 临时5敏捷次轮撤回 — 44／0局 — HNX4A2WBC34W：两挡牌合多10挡。
+  - 毒药水 — 制品可阻止施毒 — 47／0局 — HNX4A2WBC34W：首末加6毒，第二次只耗制品。
+  - 痊愈药水 — 加能抽牌，无直接回血 — 11／0局 — HNX4A2WBC34W：三次均＋1能、＋2牌、HP不变。
+  - 跨幕回复 — 缺血80%向下取整 — 53／0局 — HNX4A2WBC34W：实回32／44。
+  - 沙漏成长与SL — 有限全败不证明所有打法必死 — 25／0局 — HNX4A2WBC34W：三试全败，末敌余130。
+  - 沙虫双预算 — 沙坑、攻击和毒杀分别核算 — 23／0局 — HNX4A2WBC34W：两试一胜，多项选择及后序同时变化。
+  - 雕像苏醒与力量 — 当轮输出、防御取舍分别验收 — 29／0局 — HNX4A2WBC34W：75→32获胜，护栏原线未实打。
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件／2627用例／退出0。最终补验3文件次／31用例次通过，无失败重跑。
+- 切片大小：整体中位减少28.5字，配对差中位−25字；最大5491字。
+- 学习账本：新增无；改成proposed：silent-0019、0020、0021、0125、0012、0005、0011、0025、0027、0023、0024、0049、0053、0010、0253、0278、0240、0243、0018、0307；退役无；`ledger.py check`退出0。
+- 需要Dai定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.26",
+  "commit": "806d6c031b064b8b6bb0a1caa885557b19bc551f",
+  "merged": null,
+  "added": 0,
+  "updated": 20,
+  "retired": 0,
+  "active": 198,
+  "mechanisms": [
+    "护栏与持续收益（观察）",
+    "力量/敏捷与敌成长",
+    "灵动步法",
+    "毒雾",
+    "致命毒药",
+    "触媒",
+    "余像",
+    "凋萎",
+    "金刚杵",
+    "萎靡",
+    "蜃景",
+    "速度药水",
+    "毒药水",
+    "痊愈药水",
+    "跨幕回复",
+    "沙漏成长与SL（观察）",
+    "沙虫双预算（观察）",
+    "雕像苏醒与力量"
+  ],
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2627
+  },
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0125",
+      "silent-0012",
+      "silent-0005",
+      "silent-0011",
+      "silent-0025",
+      "silent-0027",
+      "silent-0023",
+      "silent-0024",
+      "silent-0049",
+      "silent-0053",
+      "silent-0010",
+      "silent-0253",
+      "silent-0278",
+      "silent-0240",
+      "silent-0243",
+      "silent-0018",
+      "silent-0307"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-8fed6e07bfed2a09",
+    "silent-proposal-8ca17ccd5a565791",
+    "silent-proposal-d955e5d3b0942fdf"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-193738-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a12074-5f6a-7c11-8d63-aa31f0f36530
+轮数：1；工具调用：command_execution×70 file_change×5
+token：输入 416.9k、输出 49.4k（其中推理 16.1k）、cache 读 6959.2k、cache 写 0（命中 94.3%）
+成本：未提供
+耗时：1857.0 s（墙钟）
+时间：首个事件 3.5 s、模型首个输出 9.3 s、首次工具 13.9 s、末次工具结束 1776.6 s；工具内共 1342.0 s，其余（模型生成、推理、网络）511.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×48；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T19-37-39-01a12074-5f6a-7c11-8d63-aa31f0f36530.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-193738-experience-update.jsonl
