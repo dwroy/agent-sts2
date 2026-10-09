@@ -1,0 +1,1 @@
+草稿v1尚未追加。逐帧核验修正F12每轮玩家净损为0／0／20／11／7／10／0；v1保留。首次临时inspect.py使用ledger.read_rows的元组格式错误，文件名还碰到标准库inspect；保留旧稿inspect-v1.py及部分inspect.txt，已在后续独立脚本按(n,row)核实开局前账本。首轮只读SL文件名搜索无此文件，实际文件为sl/explore.ts。均为离线抽取过程问题，不作为游戏bug。
