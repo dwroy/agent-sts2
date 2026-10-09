@@ -146,7 +146,15 @@
       "reasoningEffort": "xhigh",
       "model_turn_started": false
     },
-    "source_gitleaks": 0
+    "source_gitleaks": 0,
+    "native_preserves_current_play_high": {
+      "rc": 0,
+      "proof": "native-high-verification.json",
+      "serviceTier": "priority",
+      "model": "gpt-6.1-sol",
+      "reasoningEffort": "high",
+      "model_turn_started": false
+    }
   },
   "tui_config_observation": {
     "checked": [
@@ -157,7 +165,7 @@
     "changed_by_this_task": false,
     "runtime_service_not_inferred": true
   },
-  "status": "main-integrated; live merge waiting on existing lock holder",
+  "status": "completed: main and live launchers configured for Fast",
   "source_final": {
     "agent/src/core/config.ts": "833a8db8a29030f8ce928d6e07f506c81ce68ac1a17593917587363c5655960f",
     "agent/src/brain/engines/codex-session.ts": "875ec2012ef0f9c85074cc4c317b776a2c4016734d6140430cb45c7e11f5e9c7",
@@ -191,7 +199,10 @@
     "native-verification.json": "04beefd75dbe039592c758e5f129d4fd89d2b8d8587a77bebc7c9787daf56d71",
     "failed-wrapper-prefix.sh": "4cd60dff36f13e974da47a1acddc5c7e721c5c3e2c94539162e517bda10b7169",
     "learner-tabs.json": "82499dd6134ed14a50f2e59df46f2db1fe122b75f17a810d09aa09e2b7daadaa",
-    "play-before-deploy.json": "9e35fb6d200ecdfaae3e02da0228b2c92525f75b8963c434a23cc09615406b43"
+    "play-before-deploy.json": "9e35fb6d200ecdfaae3e02da0228b2c92525f75b8963c434a23cc09615406b43",
+    "automatic-pane-close.json": "1bce0fa58742dbce4df5c55bc4799de9c3f74123e88adab563038c6d28ca27f3",
+    "deployment.json": "f3d402e99cec81ea5872ab23faf7e4b31d79c170f16d7057715d466c0d0cbcf1",
+    "native-high-verification.json": "705669b58fe281c4ec6c059ee601e65315d446143ee50c3da083cd3c4572df2c"
   },
   "integration_wait_history": [
     {
@@ -206,5 +217,10 @@
   ],
   "learner_tabs_check": "learner-tabs.json",
   "pending_record_at": "2026-10-09 23:22",
-  "live_integration": "queued on existing live-merge.lock; no in-flight task is interrupted"
+  "live_integration": "queued on existing live-merge.lock; no in-flight task is interrupted",
+  "completed_at": "2026-10-09 23:35",
+  "deployment": "deployment.json",
+  "live_commit": "05771993cebb36f5fca9860c6df6b8f3ca6e3bbe",
+  "live_tree": "58cd552558806ae2fde8801ba0e1bca61230a672",
+  "prior_record_commit": "b171e5edbd0a1ca89b68ace152f881cc93df3aec"
 }
