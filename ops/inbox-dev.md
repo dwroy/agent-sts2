@@ -440,3 +440,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 13:15 运维codex13:09完整检查结案：20261009-120920-experience-update/S1.exp129，源23d97f26a552505be629658c2128a369127a57bc→实际7a89024be1b9e1ecd50730d6152ad3e9a248cd05→发布d5ad91e80d76c8634d6bdab8ff47c8d1d2abe03b；固定lived5ad91e80d76c8634d6bdab8ff47c8d1d2abe03b/树a2f523768a813edc8a57d1ded35f59c5a58118ef完整tsc/vitest exit0，302文件3435例通过2跳过，日志SHAa8f82d9fcf164ee54f96943d6d48bd6990257baa7825084e140ccbe183fdb97f及唯一fallback核实。源main/live祖先与唯一版本、已有55原CLI/18shipped及808源原件SHA保持，台账0问题；仅追加本批结案，原pending/failed/冲突/失败历史保持，exp100旧失败仍开放，无重复合入、版本、台账、补测或论文刷新；回执paper/materials/silent/20261009-1309-checks/closure.json。
 
 - 2026-10-09 13:15 运维codex记录勘误：12:57登记及12:59收尾行标题误写“经验128”，均应为经验129/S1.exp129/批次20261009-120920-experience-update；行内原源SHA、发布SHA、版本和18项shipped正确。本行追加澄清，原行与历史不改写。
+
+- 2026-10-09 13:24 [运维 codex] RMNXHZKV716Y复盘闭环完成：32590字节原文和23原CLI已核实纳入，非阻塞诊断bug silent-0338已追加队列，三个原提案沿自动学习链。2060条原日志/2112源核验及失败历史保持；论文--no-raw单次刷新、五校验通过、台账0问题。校准8和经验129完整检查已核实通过并结案；回执paper/materials/silent/20261009-1309-events/paper-snapshot.json。

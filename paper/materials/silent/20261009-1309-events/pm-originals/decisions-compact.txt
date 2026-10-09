@@ -1,0 +1,981 @@
+d312221 F1 TNone [codex] event/choose {"action": "choose_event_option", "option_index": 1} Codex decided o1: Humidifier turns necessary rests into permanent durability, supporting the high attrition of A10 and consecutive final bosses. | Codex chose 石炉加湿器 (code's fallback order: 0, rank 1 of 3; not shown to Codex)
+d312222 F1 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312223 F1 TNone [codex] map/route-plan {"action": "choose_map_node", "option_index": 1} Codex planned: 先补伤害，休息后打精英，双商店补强并保留血量。 | route plan: r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312224 F2 T1 [code] combat/plan {"action": "play_card", "card_index": 0, "target_index": 0} code plan (only distinct line): 打击 -> 缩小甲虫, 打击 -> 缩小甲虫, 打击 -> 缩小甲虫; hp -0, dmg 18
+d312225 F2 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the code-chosen plan: 打击 -> 缩小甲虫
+d312226 F2 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 缩小甲虫
+d312227 F2 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 0
+d312228 F2 T2 [code] combat/plan {"action": "play_card", "card_index": 1, "target_index": 0} code plan (only distinct line): 打击 -> 缩小甲虫, 中和 -> 缩小甲虫, 打击 -> 缩小甲虫, 生存者; hp -0, dmg 10
+d312229 F2 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the code-chosen plan: 中和 -> 缩小甲虫
+d312230 F2 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the code-chosen plan: 打击 -> 缩小甲虫
+d312231 F2 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the code-chosen plan: 生存者
+d312232 F2 T2 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d312233 F2 T3 [jev] combat/plan-choice {"action": "play_card", "card_index": 0} Jev chose plan 2/3 (防御, 防御, 生存者) with confidence 0.95; code rank 2
+d312234 F2 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312235 F2 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 生存者
+d312236 F2 T3 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 打击 with confidence 0.76
+d312237 F2 T3 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 0
+d312238 F2 T4 [jev] combat/plan-choice {"action": "play_card", "card_index": 0} Jev chose plan 2/2 (防御, 中和 -> 缩小甲虫, 打击 -> 缩小甲虫, 防御) with confidence 0.88; code rank 2
+d312239 F2 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 缩小甲虫
+d312240 F2 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 缩小甲虫
+d312241 F2 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312242 F2 T4 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 0
+d312243 F2 T5 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 2/2 (防御, 防御, 防御) with confidence 0.86; code rank 2
+d312244 F2 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312245 F2 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312246 F2 T5 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 0
+d312247 F2 T6 [code] combat/lethal {"action": "play_card", "card_index": 0, "target_index": 0} lethal: 打击 -> 缩小甲虫, 打击 -> 缩小甲虫
+d312248 F2 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the code-chosen plan: 打击 -> 缩小甲虫
+d312249 F2 T6 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (11金币)
+d312250 F2 T6 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Potion (爆炸安瓿)
+d312251 F2 T6 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312252 F2 T6 [codex] reward/card {"action": "choose_reward_card", "option_index": 2} Codex decided card2: Leg Sweep provides reliable block and sustained weakness now, scales with dexterity later, and has stronger run evidence than the modest damage option. | Codex chose 扫腿 (Skill, 2E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312253 F2 T6 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312254 F2 T6 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 2/16 Monster at row 2, col 2; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312255 F3 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/3 (打击 -> 毛绒伏地虫, 防御, 中和 -> 毛绒伏地虫, 打击 -> 毛绒伏地虫, potion 爆炸安瓿) with confidence 0.59; code rank 1
+d312256 F3 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312257 F3 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 毛绒伏地虫
+d312258 F3 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 毛绒伏地虫
+d312259 F3 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 0} continuing the Jev-chosen plan: potion 爆炸安瓿
+d312260 F3 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 0
+d312261 F3 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/2 (打击 -> 毛绒伏地虫, 打击 -> 毛绒伏地虫, 打击 -> 毛绒伏地虫) with confidence 0.98; code rank 1
+d312262 F3 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 毛绒伏地虫
+d312263 F3 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 毛绒伏地虫
+d312264 F3 T2 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 0
+d312265 F3 T3 [code] combat/plan {"action": "play_card", "card_index": 2, "target_index": 0} code plan (only distinct line): 扫腿 -> 毛绒伏地虫, 打击 -> 毛绒伏地虫; hp -0, dmg 6
+d312266 F3 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the code-chosen plan: 打击 -> 毛绒伏地虫
+d312267 F3 T3 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 0
+d312268 F3 T4 [code] combat/lethal {"action": "play_card", "card_index": 0, "target_index": 0} lethal: 打击 -> 毛绒伏地虫, 打击 -> 毛绒伏地虫
+d312269 F3 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the code-chosen plan: 打击 -> 毛绒伏地虫
+d312270 F3 T4 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (13金币)
+d312271 F3 T4 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312272 F3 T4 [codex] reward/card {"action": "choose_reward_card", "option_index": 1} Codex decided card1: Noxious Fumes supplies group poison and lasting scaling, complements Leg Sweep, and has stronger supported outcomes and boss progress. | Codex chose 毒雾 (Power, 1E) (code's fallback order: 70, rank 1 of 4; not shown to Codex)
+d312273 F3 T4 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312274 F3 T4 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 3/16 Shop at row 3, col 1; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312275 F4 TNone [code] shop/open {"action": "open_shop_inventory"} entering the shop: opening the inventory
+d312276 F4 TNone [codex] shop/plan {"action": "buy_card", "option_index": 3} Codex planned: Haze adds cheap group poison and weakness; All-Out Attack supplies missing immediate AoE for elites and Kin followers. Total 87 gold, preserving 36 for the next shop. | plan RMNXHZKV716Y:F4:shop#1: buy 迷雾 (36g), buy 翻越撑击 (51g), stop shopping; step 1: buy 迷雾 (36g)
+d312277 F4 TNone [codex] shop/buy {"action": "buy_card", "option_index": 1} Codex plan RMNXHZKV716Y:F4:shop#1 step 2: buy 翻越撑击 (51g)
+d312278 F4 TNone [codex] shop/buy {"action": "close_shop_inventory"} Codex plan RMNXHZKV716Y:F4:shop#1 step 3: stop shopping
+d312279 F4 TNone [code] shop/leave {"action": "proceed"} shopping done: back to the map
+d312280 F4 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 4/16 Monster at row 4, col 0; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312281 F5 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/5 (打击 -> 树枝史莱姆（小）, 防御, 翻越撑击) with confidence 0.80; code rank 1
+d312282 F5 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312283 F5 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 翻越撑击
+d312284 F5 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 0
+d312285 F5 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 3/6 (防御, 迷雾, 中和 -> 树枝史莱姆（中）) with confidence 0.98; code rank 3
+d312286 F5 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 迷雾
+d312287 F5 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 树枝史莱姆（中）
+d312288 F5 T2 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -4, dmg 8
+d312289 F5 T3 [code] combat/plan {"action": "play_card", "card_index": 0} code plan (only distinct line): 防御, 防御, 毒雾; hp -0, dmg 6
+d312290 F5 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the code-chosen plan: 防御
+d312291 F5 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the code-chosen plan: 毒雾
+d312292 F5 T3 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 6
+d312293 F5 T4 [code] combat/lethal {"action": "play_card", "card_index": 1, "target_index": 0} lethal: 打击 -> 树枝史莱姆（中）, 打击 -> 树枝史莱姆（中）
+d312294 F5 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the code-chosen plan: 打击 -> 树枝史莱姆（中）
+d312295 F5 T4 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (13金币)
+d312296 F5 T4 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312297 F5 T4 [codex] reward/card {"action": "choose_reward_card", "option_index": 0} Codex decided card0: Piercing Wail provides efficient group and multihit defense for poison scaling; its boss simulation difference is inconclusive, and later-act evidence favors taking it. | Codex chose 尖啸 (Skill, 1E) (code's fallback order: 70, rank 1 of 4; not shown to Codex)
+d312298 F5 T4 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312299 F5 T4 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 5/16 Monster at row 5, col 0; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312300 F6 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 0} Jev chose plan 1/2 (防御, 迷雾) with confidence 0.98; code rank 1
+d312301 F6 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 迷雾
+d312302 F6 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 8
+d312303 F6 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 1} Jev chose plan 1/2 (打击 -> 小啃兽 #2, 打击 -> 小啃兽 #2, 毒雾, 中和 -> 小啃兽 #2) with confidence 0.98; code rank 1
+d312304 F6 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 小啃兽 #2
+d312305 F6 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 毒雾
+d312306 F6 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 1} continuing the Jev-chosen plan: 中和 -> 小啃兽 #2
+d312307 F6 T2 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -12, dmg 6
+d312308 F6 T3 [jev] combat/plan-choice {"action": "play_card", "card_index": 0} Jev chose plan 1/2 (防御, 防御, 生存者) with confidence 0.98; code rank 1
+d312309 F6 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 防御
+d312310 F6 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 生存者
+d312311 F6 T3 [jev] selection/choose {"action": "select_deck_card", "option_index": 1} Jev chose 打击 with confidence 0.38
+d312312 F6 T3 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d312313 F6 T4 [jev] combat/plan-choice {"action": "play_card", "card_index": 0} Jev chose plan 3/3 (翻越撑击, 防御, 防御) with confidence 0.97; code rank - (rollout's best line, added)
+d312314 F6 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312315 F6 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 防御
+d312316 F6 T4 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 10
+d312317 F6 T5 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 1} Jev chose plan 1/3 (打击 -> 小啃兽 #2, 中和 -> 小啃兽 #1, 打击 -> 小啃兽 #2) with confidence 0.82; code rank 1
+d312318 F6 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 小啃兽 #1
+d312319 F6 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 小啃兽 #2
+d312320 F6 T5 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 10
+d312321 F6 T6 [code] combat/lethal {"action": "play_card", "card_index": 1, "target_index": 0} lethal: 打击 -> 小啃兽, 打击 -> 小啃兽
+d312322 F6 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the code-chosen plan: 打击 -> 小啃兽
+d312323 F6 T6 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312324 F6 T6 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (8金币)
+d312325 F6 T6 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Potion (火焰药水)
+d312326 F6 T6 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312327 F6 T6 [codex] reward/card {"action": "choose_reward_card", "option_index": 1} Codex decided card1: Poisoned Stab adds reliable early damage and immediate poison without setup, improving upcoming elite fights while complementing Fumes and Haze. | Codex chose 带毒刺击 (Attack, 1E) (code's fallback order: 70, rank 1 of 4; not shown to Codex)
+d312328 F6 T6 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312329 F6 T6 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 6/16 Monster at row 6, col 0; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312330 F7 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 5} Jev chose plan 1/3 (毒雾, 尖啸, 带毒刺击 -> 方柱构装体, potion 火焰药水 -> 方柱构装体) with confidence 0.64; code rank 1
+d312331 F7 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5} continuing the Jev-chosen plan: 尖啸
+d312332 F7 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 带毒刺击 -> 方柱构装体
+d312333 F7 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 0, "target_index": 0} continuing the Jev-chosen plan: potion 火焰药水 -> 方柱构装体
+d312334 F7 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 3
+d312335 F7 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 2} Jev chose plan 2/2 (迷雾, 打击 -> 方柱构装体) with confidence 0.92; code rank 2
+d312336 F7 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 方柱构装体
+d312337 F7 T2 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -7, dmg 8
+d312338 F7 T3 [code] combat/lethal {"action": "play_card", "card_index": 0, "target_index": 0} lethal: 打击 -> 方柱构装体, 打击 -> 方柱构装体, 中和 -> 方柱构装体, 翻越撑击
+d312339 F7 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the code-chosen plan: 打击 -> 方柱构装体
+d312340 F7 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the code-chosen plan: 中和 -> 方柱构装体
+d312341 F7 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the code-chosen plan: 翻越撑击
+d312342 F7 T3 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d312343 F7 T3 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (12金币)
+d312344 F7 T3 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Potion (能力药水)
+d312345 F7 T3 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312346 F7 T3 [codex] reward/card {"action": "skip_reward_cards"} Codex decided skip: All offered cards reduce simulated boss success. Save deck space for stronger AoE, poison scaling, and dexterity defense. | Codex chose skip the card reward (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312347 F7 T3 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312348 F7 T3 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 7/16 RestSite at row 7, col 0; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312349 F8 TNone [codex] rest/plan {"action": "choose_rest_option", "option_index": 0} Codex decided o0: Heal to 51/75 before the forced elite; maximum HP growth adds lasting durability. Keep the route avoiding another elite and preserving shop access. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 11; not shown to Codex)
+d312350 F8 TNone [code] rest/proceed {"action": "proceed"} nothing to choose at this rest site
+d312351 F8 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 8/16 Elite at row 8, col 0; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312352 F9 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 1/3 (中和 -> 旧日雕像, 防御, 打击 -> 旧日雕像, 打击 -> 旧日雕像) with confidence 0.51; code rank 1
+d312353 F9 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 防御
+d312354 F9 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 旧日雕像
+d312355 F9 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 旧日雕像
+d312356 F9 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/2 (end turn) with confidence 0.58; code rank 1
+d312357 F9 T2 [jev] combat/plan-choice+potion {"action": "use_potion", "option_index": 0} Jev chose to drink 能力药水, then re-plan (confidence 0.38)
+d312358 F9 T2 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 0} Jev chose 必备工具 with confidence 0.27
+d312359 F9 T2 [code] combat/plan {"action": "play_card", "card_index": 1} code plan (only distinct line): 毒雾, 必备工具, 打击 -> 旧日雕像, 翻越撑击; hp -0, dmg 16
+d312360 F9 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the code-chosen plan: 必备工具
+d312361 F9 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 旧日雕像
+d312362 F9 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the code-chosen plan: 翻越撑击
+d312363 F9 T2 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 0
+d312364 F9 T3 [jev] selection/choose {"action": "select_deck_card", "option_index": 4} Jev chose 打击 with confidence 0.81
+d312365 F9 T3 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 5/5 (迷雾, 带毒刺击 -> 旧日雕像) with confidence 1.00; code rank - (rollout's best line, added)
+d312366 F9 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 带毒刺击 -> 旧日雕像
+d312367 F9 T3 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -18, dmg 9
+d312368 F9 T4 [jev] selection/choose {"action": "select_deck_card", "option_index": 1} Jev chose 打击 with confidence 0.89
+d312369 F9 T4 [jev] combat/plan-choice {"action": "play_card", "card_index": 2, "target_index": 0} Jev chose plan 1/3 (扫腿 -> 旧日雕像, 生存者) with confidence 0.97; code rank 1
+d312370 F9 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 生存者
+d312371 F9 T4 [jev] selection/choose {"action": "select_deck_card", "option_index": 2} Jev chose 翻越撑击 with confidence 0.59
+d312372 F9 T4 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 10
+d312373 F9 T5 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 打击 with confidence 0.75
+d312374 F9 T5 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/4 (打击 -> 旧日雕像, 尖啸, 带毒刺击 -> 旧日雕像) with confidence 0.95; code rank 1
+d312375 F9 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 尖啸
+d312376 F9 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 带毒刺击 -> 旧日雕像
+d312377 F9 T5 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -14, dmg 14
+d312378 F9 T6 [jev] selection/choose {"action": "select_deck_card", "option_index": 1} Jev chose 打击 with confidence 0.94
+d312379 F9 T6 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/2 (中和 -> 旧日雕像, 防御, 防御, 防御) with confidence 0.98; code rank 1
+d312380 F9 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312381 F9 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312382 F9 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312383 F9 T6 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -3, dmg 15
+d312384 F9 T7 [jev] selection/choose {"action": "select_deck_card", "option_index": 2} Jev chose 打击 with confidence 0.58
+d312385 F9 T7 [code] combat/lethal {"action": "play_card", "card_index": 0} lethal: 翻越撑击
+d312386 F9 T7 [code] combat/lethal {"action": "end_turn"} lethal:  [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 0 of 16 HP)]
+d312387 F9 T7 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (26金币)
+d312388 F9 T7 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Potion (毒药水)
+d312389 F9 T7 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Relic (铜质鳞片)
+d312390 F9 T7 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312391 F9 T7 [codex] reward/card {"action": "skip_reward_cards"} Codex decided skip: Weakness is already covered; these additions dilute poison setup without clear improvement. Preserve deck space for dexterity, efficient draw, and poison acceleration. | Codex chose skip the card reward (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312392 F9 T7 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312393 F9 T7 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 9/16 Treasure at row 9, col 0; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312394 F10 TNone [code] chest/open {"action": "open_chest"} opening the chest
+d312395 F10 TNone [code] chest/relic {"action": "choose_treasure_relic", "option_index": 0} only one relic offered
+d312396 F10 TNone [code] chest/proceed {"action": "proceed"} chest handled
+d312397 F10 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 1): step 10/16 Unknown at row 10, col 1; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312398 F11 TNone [codex] event/choose {"action": "choose_event_option", "option_index": 1} Codex decided o1: Upcoming rests offset the blood cost; 112 gold provides immediate shop upgrades, while Stone Sword requires risky future elites. | Codex chose 潜水 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+d312399 F11 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312400 F11 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 11/16 Unknown at row 11, col 2; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312401 F12 TNone [codex] event/plan {"action": "choose_event_option", "option_index": 2} Codex decided o2:c14: Drawing two cards makes Fumes setup smoother, finds defense sooner, and improves consistency without enlarging the deck. | Codex chose 读完整本书: enchant 毒雾 (code's fallback order: 0, rank 1 of 10; not shown to Codex)
+d312402 F12 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312403 F12 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 12/16 RestSite at row 12, col 2; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312404 F13 TNone [codex] rest/plan {"action": "choose_rest_option", "option_index": 0} Codex decided o0: Healing secures the next fight, grows maximum HP, and preserves a much healthier Kin entry; upgrading now leaves insufficient survival buffer. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 11; not shown to Codex)
+d312405 F13 TNone [code] rest/proceed {"action": "proceed"} nothing to choose at this rest site
+d312406 F13 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 13/16 Shop at row 13, col 2; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312407 F14 TNone [code] shop/open {"action": "open_shop_inventory"} entering the shop: opening the inventory
+d312408 F14 TNone [codex] shop/plan {"action": "buy_card", "option_index": 5} Codex planned: Shockwave controls Kin followers and adds vulnerability. Removing a Strike improves poison consistency; Dexterity potion supports prolonged boss defense. Total: 235 gold. | plan RMNXHZKV716Y:F14:shop#5: buy 震荡波 (85g), pay 100g to remove 打击, buy 敏捷药水 (50g), stop shopping; step 1: buy 震荡波 (85g)
+d312409 F14 TNone [codex] shop/buy {"action": "remove_card_at_shop"} Codex plan RMNXHZKV716Y:F14:shop#5 step 2: pay 100g to remove 打击
+d312410 F14 TNone [codex] selection/remove {"action": "select_deck_card", "option_index": 0} Codex plan RMNXHZKV716Y:F14:shop#5 step 3: remove 打击 (named with the shop choice)
+d312411 F14 TNone [codex] shop/buy {"action": "buy_potion", "option_index": 1} Codex plan RMNXHZKV716Y:F14:shop#5 step 4: buy 敏捷药水 (50g)
+d312412 F14 TNone [codex] shop/buy {"action": "close_shop_inventory"} Codex plan RMNXHZKV716Y:F14:shop#5 step 5: stop shopping
+d312413 F14 TNone [code] shop/leave {"action": "proceed"} shopping done: back to the map
+d312414 F14 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 1): step 14/16 Monster at row 14, col 3; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312415 F15 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 3/8 (带毒刺击 -> 缩小甲虫, 翻越撑击, 毒雾, potion 敏捷药水) with confidence 0.94; code rank 3
+d312416 F15 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 翻越撑击
+d312417 F15 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 毒雾
+d312418 F15 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 2/3 (end turn) with confidence 0.95; code rank 2
+d312419 F15 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 1} Jev chose plan 1/5 (打击 -> 毛绒伏地虫, 中和 -> 毛绒伏地虫, 迷雾) with confidence 0.91; code rank 1
+d312420 F15 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 1} continuing the Jev-chosen plan: 中和 -> 毛绒伏地虫
+d312421 F15 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 迷雾
+d312422 F15 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/3 (end turn) with confidence 0.82; code rank 1
+d312423 F15 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 6/6 (生存者, 扫腿 -> 缩小甲虫) with confidence 0.90; code rank - (rollout's best line, added)
+d312424 F15 T3 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 防御 with confidence 0.25
+d312425 F15 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 扫腿 -> 缩小甲虫
+d312426 F15 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/3 (end turn) with confidence 0.84; code rank 1
+d312427 F15 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 1} Jev chose plan 1/6 (中和 -> 毛绒伏地虫, 打击 -> 毛绒伏地虫, 打击 -> 毛绒伏地虫, potion 敏捷药水, 防御) with confidence 0.69; code rank 1
+d312428 F15 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 毛绒伏地虫
+d312429 F15 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 毛绒伏地虫
+d312430 F15 T4 [code] combat/plan-continue {"action": "use_potion", "option_index": 1} continuing the Jev-chosen plan: potion 敏捷药水
+d312431 F15 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312432 F15 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312433 F15 T5 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312434 F15 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (7金币)
+d312435 F15 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312436 F15 T5 [codex] reward/card {"action": "choose_reward_card", "option_index": 0} Codex decided card0: Second Piercing Wail protects poison setup against Kin’s multiple attackers, improves simulated boss survival, and remains valuable against later multihit threats. | Codex chose 尖啸 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312437 F15 T5 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312438 F15 T5 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 15/16 RestSite at row 15, col 3; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312439 F16 TNone [codex] rest/plan {"action": "choose_rest_option", "option_index": 0} Codex decided o0: Healing reaches 72/85 and grows maximum HP. Kin’s sustained pressure makes this buffer more valuable than any single upgrade. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 12; not shown to Codex)
+d312440 F16 TNone [code] rest/proceed {"action": "proceed"} nothing to choose at this rest site
+d312441 F16 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 1): step 16/16 Boss at row 16, col 3; plan r1c2 普通战 → r2c2 普通战 → r3c1 商店 → r4c0 普通战 → r5c0 普通战 → r6c0 普通战 → r7c0 休息 → r8c0 精英 → r9c0 宝箱 → r10c1 问号 → r11c2 问号 → r12c2 休息 → r13c2 商店 → r14c3 普通战 → r15c3 休息 → r16c3 Boss
+d312442 F17 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 5/8 (防御, 迷雾) with confidence 0.53; code rank 5
+d312443 F17 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5} continuing the Jev-chosen plan: 迷雾
+d312444 F17 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.95; code rank 1
+d312445 F17 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 4/4 (生存者, 防御, 中和 -> 同族神官, 带毒刺击 -> 同族信徒 #1) with confidence 0.51; code rank - (rollout's best line, added)
+d312446 F17 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 进阶之灾 with confidence 0.17
+d312447 F17 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312448 F17 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 2} continuing the Jev-chosen plan: 中和 -> 同族神官
+d312449 F17 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 带毒刺击 -> 同族信徒 #1
+d312450 F17 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.94; code rank 1
+d312451 F17 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 5/5 (打击 -> 同族信徒 #1, 尖啸, 毒雾) with confidence 0.98; code rank - (rollout's best line, added)
+d312452 F17 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 尖啸
+d312453 F17 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 毒雾
+d312454 F17 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.95; code rank 1
+d312455 F17 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 2} Jev chose plan 4/4 (扫腿 -> 同族神官, 带毒刺击 -> 同族神官, 中和 -> 同族神官) with confidence 0.68; code rank - (rollout's best line, added)
+d312456 F17 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 2} continuing the Jev-chosen plan: 带毒刺击 -> 同族神官
+d312457 F17 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 2} continuing the Jev-chosen plan: 中和 -> 同族神官
+d312458 F17 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.95; code rank 1
+d312459 F17 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2} Jev chose plan 3/4 (防御, 防御, 防御) with confidence 0.98; code rank 3
+d312460 F17 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 防御
+d312461 F17 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 防御
+d312462 F17 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.97; code rank 1
+d312463 F17 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 8/8 (打击 -> 同族信徒 #1, 防御, 打击 -> 同族信徒 #2) with confidence 0.82; code rank - (rollout's best line, added)
+d312464 F17 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 防御
+d312465 F17 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 同族信徒 #2
+d312466 F17 T6 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.97; code rank 1
+d312467 F17 T7 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 3/6 (迷雾, 防御) with confidence 0.74; code rank 3
+d312468 F17 T7 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312469 F17 T7 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312470 F17 T8 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 1} Jev chose plan 3/3 (带毒刺击 -> 同族神官, 打击 -> 同族神官, 中和 -> 同族信徒, 打击 -> 同族神官) with confidence 0.79; code rank - (rollout's best line, added)
+d312471 F17 T8 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 同族神官
+d312472 F17 T8 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 同族信徒
+d312473 F17 T8 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 同族神官
+d312474 F17 T8 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312475 F17 T9 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 7/7 (生存者, 防御) with confidence 0.71; code rank - (rollout's best line, added)
+d312476 F17 T9 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 翻越撑击 with confidence 0.23
+d312477 F17 T9 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312478 F17 T9 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/2 (尖啸) with confidence 0.89; code rank 1
+d312479 F17 T9 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312480 F17 T10 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 3/5 (防御, 防御, 防御) with confidence 0.98; code rank 3
+d312481 F17 T10 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312482 F17 T10 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312483 F17 T10 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312484 F17 T11 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/3 (打击 -> 同族神官, 打击 -> 同族神官, 生存者) with confidence 0.96; code rank 1
+d312485 F17 T11 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 同族神官
+d312486 F17 T11 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 生存者
+d312487 F17 T11 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 防御 with confidence 0.66
+d312488 F17 T11 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 1 of 17 HP)]
+d312489 F17 T11 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (75金币)
+d312490 F17 T11 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Potion (虚弱药水)
+d312491 F17 T11 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312492 F17 T11 [codex] reward/card {"action": "choose_reward_card", "option_index": 1} Codex decided card1: Hunt adds efficient immediate damage and extra reward opportunities to find poison acceleration and dexterity; the other rares demand unsupported attack or shiv synergies. | Codex chose 狩猎 (Attack, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312493 F17 T11 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312494 F17 TNone [code] map/route-only {"action": "choose_map_node", "option_index": 0} one way on: Ancient at row 0, col 3
+d312495 F18 TNone [codex] event/act-plan {"action": "choose_event_option", "option_index": 2} Codex decided o2: 士兵保留长战防御，三火避精英补毒敏。 | Codex chose 佩尔的士兵 (code's fallback order: 0, rank 1 of 3; not shown to Codex)
+d312496 F18 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312497 F18 TNone [codex] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 18): step 1/15 Monster at row 1, col 4; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312498 F19 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/3 (防御, 打击 -> 外骨骼虫 #3, potion 虚弱药水 -> 外骨骼虫 #1) with confidence 0.92; code rank 1
+d312499 F19 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 2} continuing the Jev-chosen plan: 打击 -> 外骨骼虫 #3
+d312500 F19 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 1, "target_index": 0} continuing the Jev-chosen plan: potion 虚弱药水 -> 外骨骼虫 #1
+d312501 F19 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.97; code rank 1
+d312502 F19 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 2} Jev chose plan 3/4 (扫腿 -> 外骨骼虫 #3, 狩猎 -> 外骨骼虫 #2, 中和 -> 外骨骼虫 #2) with confidence 0.99; code rank 3
+d312503 F19 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 狩猎 -> 外骨骼虫 #2
+d312504 F19 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 1} continuing the Jev-chosen plan: 中和 -> 外骨骼虫 #2
+d312505 F19 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312506 F19 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/3 (尖啸, 防御, 毒雾) with confidence 0.99; code rank 1
+d312507 F19 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312508 F19 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 毒雾
+d312509 F19 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312510 F19 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/5 (带毒刺击 -> 外骨骼虫 #1, 打击 -> 外骨骼虫 #1, 打击 -> 外骨骼虫 #3) with confidence 0.80; code rank 1
+d312511 F19 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 外骨骼虫 #1
+d312512 F19 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 2} continuing the Jev-chosen plan: 打击 -> 外骨骼虫 #3
+d312513 F19 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312514 F19 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/4 (迷雾, 防御) with confidence 0.73; code rank 1
+d312515 F19 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312516 F19 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312517 F19 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (15金币)
+d312518 F19 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312519 F19 T5 [codex] reward/card {"action": "choose_reward_card", "option_index": 2} Codex decided card2: Deadly Poison+ adds efficient, upgraded poison damage, strengthens our scaling plan, and leaves the least simulated boss HP. | Codex chose 致命毒药+ (Skill, 1E) (code's fallback order: 70, rank 1 of 4; not shown to Codex)
+d312520 F19 T5 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312521 F19 T5 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 2/15 Unknown at row 2, col 4; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312522 F20 TNone [codex] event/plan {"action": "choose_event_option", "option_index": 1} Codex decided o1: Consolidated defense supports poison scaling and Pael’s Legion; its observed outcomes also favor it over fused Strikes. | Codex chose 融合防御 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+d312523 F20 TNone [codex] selection/remove {"action": "select_deck_card", "option_index": 0} Codex plan RMNXHZKV716Y:F20:event#8 step 2: remove 防御 (named with the event choice)
+d312524 F20 TNone [codex] selection/remove {"action": "select_deck_card", "option_index": 1} Codex plan RMNXHZKV716Y:F20:event#8 step 3: remove 防御 (named with the event choice)
+d312525 F20 TNone [codex] event/plan {"action": "choose_event_option", "option_index": 1} Codex decided o1: Consolidated defense strengthens poison survival and Pael’s Legion synergy; observed event outcomes also favor it. | Codex chose 融合防御 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+d312526 F20 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312527 F20 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 3/15 Monster at row 3, col 4; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312528 F21 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 1/3 (打击 -> 偷窃草蜢, 致命毒药+ -> 偷窃草蜢, 究极防御) with confidence 0.75; code rank 1
+d312529 F21 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 偷窃草蜢
+d312530 F21 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 究极防御
+d312531 F21 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312532 F21 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 1/4 (打击 -> 偷窃草蜢, 带毒刺击 -> 偷窃草蜢, 翻越撑击) with confidence 0.96; code rank 1
+d312533 F21 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 带毒刺击 -> 偷窃草蜢
+d312534 F21 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 翻越撑击
+d312535 F21 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312536 F21 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/2 (打击 -> 偷窃草蜢, 扫腿 -> 偷窃草蜢) with confidence 0.97; code rank 1
+d312537 F21 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 扫腿 -> 偷窃草蜢
+d312538 F21 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312539 F21 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/1 (狩猎 -> 偷窃草蜢, 中和 -> 偷窃草蜢, 生存者, 究极防御) with confidence 0.98; code rank 1
+d312540 F21 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 偷窃草蜢
+d312541 F21 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 生存者
+d312542 F21 T4 [jev] selection/choose {"action": "select_deck_card", "option_index": 1} Jev chose 防御 with confidence 0.76
+d312543 F21 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 究极防御
+d312544 F21 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312545 F21 T5 [code] combat/lethal {"action": "play_card", "card_index": 0, "target_index": 0} lethal: 打击 -> 偷窃草蜢, 打击 -> 偷窃草蜢
+d312546 F21 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 偷窃草蜢
+d312547 F21 T5 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312548 F21 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (13金币)
+d312549 F21 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Potion (迅捷药水)
+d312550 F21 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming SpecialCard (取回你被偷走的牌。)
+d312551 F21 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312552 F21 T5 [codex] reward/card {"action": "skip_reward_cards"} Codex decided skip: These cards dilute poison setup without adding needed scaling; none improves simulated boss progress. Save deck space for acceleration, permanent dexterity, and efficient draw. | Codex chose skip the card reward (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312553 F21 T5 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312554 F21 T5 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 4/15 Unknown at row 4, col 5; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312555 F22 TNone [codex] event/choose {"action": "choose_event_option", "option_index": 1} Codex decided o1: Explore for the stronger reward. The initial health cost is affordable, with only one hallway before Feather healing and a rest. | Codex chose 深入探索 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+d312556 F22 TNone [codex] event/choose {"action": "choose_event_option", "option_index": 1} Codex decided o1: The health cost is affordable with one hallway before Feather healing and rest; pursue the stronger reward to improve this underpowered deck. | Codex chose 深入探索 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+d312557 F22 TNone [codex] event/choose {"action": "choose_event_option", "option_index": 1} Codex decided o1: Permanent extra draw improves poison setup and defensive consistency. Seven HP is affordable before the nearby Feather-assisted rest. | Codex chose 抵达核心 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+d312558 F22 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312559 F22 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 5/15 Monster at row 5, col 6; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312560 F23 T1 [jev] combat/plan-choice+potion {"action": "use_potion", "option_index": 1} Jev chose to drink 迅捷药水, then re-plan (confidence 0.91)
+d312561 F23 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2} Jev chose plan 9/9 (翻越撑击, 致命毒药+ -> 盛碗虫（蜜）, 生存者, 中和 -> 盛碗虫（石）) with confidence 0.91; code rank - (rollout's best line, added)
+d312562 F23 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 2} continuing the Jev-chosen plan: 致命毒药+ -> 盛碗虫（蜜）
+d312563 F23 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 生存者
+d312564 F23 T1 [jev] selection/choose {"action": "select_deck_card", "option_index": 2} Jev chose 打击 with confidence 0.52
+d312565 F23 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 盛碗虫（石）
+d312566 F23 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312567 F23 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 2} Jev chose plan 1/3 (狩猎 -> 盛碗虫（蜜）, 打击 -> 盛碗虫（蜜）, 尖啸) with confidence 0.95; code rank 1
+d312568 F23 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 2} continuing the Jev-chosen plan: 打击 -> 盛碗虫（蜜）
+d312569 F23 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 尖啸
+d312570 F23 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312571 F23 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 1} Jev chose plan 4/4 (扫腿 -> 盛碗虫（丝）, 毒雾) with confidence 0.93; code rank - (rollout's best line, added)
+d312572 F23 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 毒雾
+d312573 F23 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312574 F23 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/4 (翻越撑击, 中和 -> 盛碗虫（石）, 扫腿 -> 盛碗虫（石）) with confidence 0.98; code rank 1
+d312575 F23 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 盛碗虫（石）
+d312576 F23 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 扫腿 -> 盛碗虫（石）
+d312577 F23 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312578 F23 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/4 (迷雾, 生存者) with confidence 0.87; code rank 1
+d312579 F23 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 生存者
+d312580 F23 T5 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 尖啸 with confidence 0.38
+d312581 F23 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312582 F23 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2, "target_index": 0} Jev chose plan 2/6 (打击 -> 盛碗虫（石）, 打击 -> 盛碗虫（丝）) with confidence 0.50; code rank 2
+d312583 F23 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 盛碗虫（丝）
+d312584 F23 T6 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312585 F23 T7 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312586 F23 T7 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (7金币)
+d312587 F23 T7 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Potion (爆炸安瓿)
+d312588 F23 T7 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312589 F23 T7 [codex] reward/card {"action": "skip_reward_cards"} Codex decided skip: Poison and weakness are already covered; these marginal commons dilute access to stronger scaling, dexterity, and defensive upgrades. | Codex chose skip the card reward (code's fallback order: 50, rank 2 of 4; not shown to Codex)
+d312590 F23 T7 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312591 F23 T7 [code] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 18): step 6/15 RestSite at row 6, col 6; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312592 F24 TNone [codex] rest/plan {"action": "choose_rest_option", "option_index": 1} Codex decided o1:c11: Upgrade Haze for stronger group poison, longer weakness, and the largest simulated boss progress. Current HP supports the short route before another rest. | Codex chose 锻造 (SMITH): upgrade 迷雾 (code's fallback order: 6.05, rank 1 of 14; not shown to Codex)
+d312593 F24 TNone [codex] selection/upgrade {"action": "select_deck_card", "option_index": 10} Codex plan RMNXHZKV716Y:F24:rest#9 step 2: upgrade 迷雾 (named with the rest choice)
+d312594 F24 TNone [code] rest/proceed {"action": "proceed"} nothing to choose at this rest site
+d312595 F24 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 7/15 Monster at row 7, col 6; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312596 F25 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 5/7 (翻越撑击, 毒雾, 致命毒药+ -> 猎人杀手) with confidence 0.94; code rank 5
+d312597 F25 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 毒雾
+d312598 F25 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 5, "target_index": 0} Jev chose plan 5/5 (致命毒药+ -> 猎人杀手) with confidence 0.98; code rank - (rollout's best line, added)
+d312599 F25 T1 [jev] combat/plan-choice+potion {"action": "use_potion", "option_index": 1} Jev chose plan 1/3 (potion 爆炸安瓿) with confidence 0.55; code rank 1
+d312600 F25 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312601 F25 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/9 (打击 -> 猎人杀手, 打击 -> 猎人杀手, 中和 -> 猎人杀手, 究极防御) with confidence 0.93; code rank 1
+d312602 F25 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 猎人杀手
+d312603 F25 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 猎人杀手
+d312604 F25 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 究极防御
+d312605 F25 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312606 F25 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/3 (尖啸, 迷雾+) with confidence 0.95; code rank 1
+d312607 F25 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 迷雾+
+d312608 F25 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312609 F25 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 1/9 (中和 -> 猎人杀手, 狩猎 -> 猎人杀手, 究极防御) with confidence 0.62; code rank 1
+d312610 F25 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 狩猎 -> 猎人杀手
+d312611 F25 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 究极防御
+d312612 F25 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312613 F25 T5 [code] combat/lethal {"action": "play_card", "card_index": 2, "target_index": 0} lethal: 打击 -> 猎人杀手
+d312614 F25 T5 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312615 F25 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (9金币)
+d312616 F25 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312617 F25 T5 [codex] reward/card {"action": "choose_reward_card", "option_index": 0} Codex decided card0: Second Noxious Fumes strengthens group poison scaling and setup consistency; supported outcomes favor it. Defensive relics make prolonged fights more viable than simulations suggest. | Codex chose 毒雾 (Power, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312618 F25 T5 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312619 F25 T5 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 8/15 Treasure at row 8, col 6; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312620 F26 TNone [code] chest/open {"action": "open_chest"} opening the chest
+d312621 F26 TNone [code] chest/relic {"action": "choose_treasure_relic", "option_index": 0} only one relic offered
+d312622 F26 TNone [code] chest/proceed {"action": "proceed"} chest handled
+d312623 F26 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 9/15 Unknown at row 9, col 6; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312624 F27 TNone [code] shop/open {"action": "open_shop_inventory"} entering the shop: opening the inventory
+d312625 F27 TNone [codex] shop/plan {"action": "buy_card", "option_index": 5} Codex planned: Production funds expensive poison and defense during setup; discounted Deadly Poison adds efficient damage. Spend 116 gold, preserving 48 for the final shop. | plan RMNXHZKV716Y:F27:shop#10: buy 生产制造 (90g), buy 致命毒药 (26g), stop shopping; step 1: buy 生产制造 (90g)
+d312626 F27 TNone [codex] shop/buy {"action": "buy_card", "option_index": 2} Codex plan RMNXHZKV716Y:F27:shop#10 step 2: buy 致命毒药 (26g)
+d312627 F27 TNone [codex] shop/buy {"action": "close_shop_inventory"} Codex plan RMNXHZKV716Y:F27:shop#10 step 3: stop shopping
+d312628 F27 TNone [code] shop/leave {"action": "proceed"} shopping done: back to the map
+d312629 F27 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 10/15 RestSite at row 10, col 5; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312630 F28 TNone [codex] rest/plan {"action": "choose_rest_option", "option_index": 1} Codex decided o1:c20: Upgrade enchanted Fumes for stronger sustained group damage. Current HP supports two hallways; Feather and the final rest provide recovery before Crab. | Codex chose 锻造 (SMITH): upgrade 毒雾 (code's fallback order: 6.05, rank 1 of 16; not shown to Codex)
+d312631 F28 TNone [codex] selection/upgrade {"action": "select_deck_card", "option_index": 17} Codex plan RMNXHZKV716Y:F28:rest#11 step 2: upgrade 毒雾 (named with the rest choice)
+d312632 F28 TNone [code] rest/proceed {"action": "proceed"} nothing to choose at this rest site
+d312633 F28 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 11/15 Monster at row 11, col 5; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312634 F29 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2} Jev chose plan 1/3 (毒雾, 迷雾+, 生产制造, 致命毒药+ -> 棘刺蟾蜍) with confidence 0.99; code rank 1
+d312635 F29 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 迷雾+
+d312636 F29 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 生产制造
+d312637 F29 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 棘刺蟾蜍
+d312638 F29 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312639 F29 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/7 (震荡波, 生存者) with confidence 0.93; code rank 1
+d312640 F29 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 生存者
+d312641 F29 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 中和 with confidence 0.22
+d312642 F29 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312643 F29 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 2/7 (带毒刺击 -> 棘刺蟾蜍, 防御, 尖啸) with confidence 0.98; code rank 2
+d312644 F29 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312645 F29 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 尖啸
+d312646 F29 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312647 F29 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/1 (翻越撑击, 打击 -> 棘刺蟾蜍, 狩猎 -> 棘刺蟾蜍) with confidence 0.98; code rank 1
+d312648 F29 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 棘刺蟾蜍
+d312649 F29 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 狩猎 -> 棘刺蟾蜍
+d312650 F29 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312651 F29 T5 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312652 F29 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (15金币)
+d312653 F29 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Potion (无色药水)
+d312654 F29 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312655 F29 T5 [codex] reward/card {"action": "skip_reward_cards"} Codex decided skip: These cards dilute poison setup: insufficient draw for Speedster, discard for Untouchable, or shiv synergies. Preserve consistency and seek stronger shop upgrades. | Codex chose skip the card reward (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312656 F29 T5 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312657 F29 T5 [code] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 18): step 12/15 Monster at row 12, col 6; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312658 F30 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 7/7 (尖啸, 究极防御, 带毒刺击 -> 啃咬机 #2) with confidence 0.91; code rank - (rollout's best line, added)
+d312659 F30 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 究极防御
+d312660 F30 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 1} continuing the Jev-chosen plan: 带毒刺击 -> 啃咬机 #2
+d312661 F30 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/2 (end turn) with confidence 0.19; code rank 1
+d312662 F30 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 1} Jev chose plan 5/5 (中和 -> 啃咬机 #2, 狩猎 -> 啃咬机 #1, 致命毒药+ -> 啃咬机 #2, 毒雾+) with confidence 0.98; code rank - (rollout's best line, added)
+d312663 F30 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 狩猎 -> 啃咬机 #1
+d312664 F30 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 致命毒药+ -> 啃咬机 #2
+d312665 F30 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 毒雾+
+d312666 F30 T2 [jev] combat/plan-choice+potion {"action": "use_potion", "option_index": 1} Jev chose to drink 无色药水, then re-plan (confidence 0.96)
+d312667 F30 T2 [code] selection/take into my hand {"action": "select_deck_card", "option_index": 0} code: 闪亮登场 scores 22 vs 延伸 3
+d312668 F30 T2 [code] selection/take into my hand {"action": "select_deck_card", "option_index": 0} code: 闪亮登场 scores 22 vs 延伸 3
+d312669 F30 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 1/1 (闪亮登场) with confidence 1.00; code rank 1
+d312670 F30 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312671 F30 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 1} Jev chose plan 2/8 (打击 -> 啃咬机 #2, 生产制造, 打击 -> 啃咬机 #2, 扫腿 -> 啃咬机 #1) with confidence 0.87; code rank 2
+d312672 F30 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 生产制造
+d312673 F30 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 啃咬机 #2
+d312674 F30 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 扫腿 -> 啃咬机 #1
+d312675 F30 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312676 F30 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/3 (打击 -> 啃咬机 #1, 毒雾, 翻越撑击) with confidence 0.97; code rank 1
+d312677 F30 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 毒雾
+d312678 F30 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 翻越撑击
+d312679 F30 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312680 F30 T5 [code] combat/lethal {"action": "play_card", "card_index": 0, "target_index": 0} lethal: 打击 -> 啃咬机
+d312681 F30 T5 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312682 F30 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (12金币)
+d312683 F30 T5 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312684 F30 T5 [codex] reward/card {"action": "choose_reward_card", "option_index": 0} Codex decided card0: Free hand cycling finds poison powers and timely defenses. Two Wails already cover multihits; unmodeled opening draw strengthens Gamble’s practical value. | Codex chose 计算下注 (Skill, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312685 F30 T5 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312686 F30 T5 [code] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 18): step 13/15 Shop at row 13, col 6; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312687 F31 TNone [code] shop/open {"action": "open_shop_inventory"} entering the shop: opening the inventory
+d312688 F31 TNone [codex] shop/plan {"action": "buy_potion", "option_index": 0} Codex planned: Power Potion offers free defensive or poison acceleration setup against Crab. Bubble Bubble adds only modest damage; filling the empty potion slot provides greater immediate upside. | plan RMNXHZKV716Y:F31:shop#12: buy 能力药水 (51g), stop shopping; step 1: buy 能力药水 (51g)
+d312689 F31 TNone [codex] shop/buy {"action": "close_shop_inventory"} Codex plan RMNXHZKV716Y:F31:shop#12 step 2: stop shopping
+d312690 F31 TNone [code] shop/leave {"action": "proceed"} shopping done: back to the map
+d312691 F31 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 14/15 RestSite at row 14, col 5; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312692 F32 TNone [codex] rest/plan {"action": "choose_rest_option", "option_index": 0} Codex decided o0: Heal to 90/90 before Crab. Thirty immediate HP buys poison-scaling time, outweighs any single upgrade, and adds permanent maximum HP. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 16; not shown to Codex)
+d312693 F32 TNone [code] rest/proceed {"action": "proceed"} nothing to choose at this rest site
+d312694 F32 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 18): step 15/15 Boss at row 15, col 3; plan r1c4 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 问号 → r5c6 普通战 → r6c6 休息 → r7c6 普通战 → r8c6 宝箱 → r9c6 问号 → r10c5 休息 → r11c5 普通战 → r12c6 普通战 → r13c6 商店 → r14c5 休息 → r15c3 Boss
+d312695 F33 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 4/7 (翻越撑击, 致命毒药 -> 碾碎爪, 致命毒药+ -> 碾碎爪) with confidence 0.70; code rank 4
+d312696 F33 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 致命毒药 -> 碾碎爪
+d312697 F33 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 碾碎爪
+d312698 F33 T1 [jev] combat/plan-choice+potion {"action": "use_potion", "option_index": 1} Jev chose to drink 能力药水, then re-plan (confidence 0.72)
+d312699 F33 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 1} Jev chose 必备工具 with confidence 0.30
+d312700 F33 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 4} Jev chose plan 1/1 (必备工具) with confidence 0.91; code rank 1
+d312701 F33 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.86; code rank 1
+d312702 F33 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 6} Jev chose 计算下注 with confidence 0.18
+d312703 F33 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2} Jev chose plan 4/4 (毒雾, 狩猎 -> 碾碎爪, 生产制造, 扫腿 -> 碾碎爪, 打击 -> 碾碎爪, 中和 -> 火箭) with confidence 0.38; code rank - (rollout's best line, added)
+d312704 F33 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 狩猎 -> 碾碎爪
+d312705 F33 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 生产制造
+d312706 F33 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 扫腿 -> 碾碎爪
+d312707 F33 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 碾碎爪
+d312708 F33 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 中和 -> 火箭
+d312709 F33 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.95; code rank 1
+d312710 F33 T3 [jev] selection/choose {"action": "select_deck_card", "option_index": 1} Jev chose 打击 with confidence 0.48
+d312711 F33 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 3/8 (毒雾+, 迷雾+) with confidence 0.99; code rank 3
+d312712 F33 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 3/7 (迷雾+) with confidence 0.67; code rank 3
+d312713 F33 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.66; code rank 1
+d312714 F33 T4 [jev] selection/choose {"action": "select_deck_card", "option_index": 2} Jev chose 计算下注 with confidence 0.33
+d312715 F33 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 2/3 (防御, 尖啸, 防御) with confidence 1.00; code rank 2
+d312716 F33 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 尖啸
+d312717 F33 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312718 F33 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312719 F33 T5 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 震荡波 with confidence 0.20
+d312720 F33 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 3/5 (打击 -> 碾碎爪, 防御, 生存者) with confidence 0.66; code rank 3
+d312721 F33 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312722 F33 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 生存者
+d312723 F33 T5 [jev] selection/choose {"action": "select_deck_card", "option_index": 1} Jev chose 打击 with confidence 0.58
+d312724 F33 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312725 F33 T6 [jev] selection/choose {"action": "select_deck_card", "option_index": 3} Jev chose 打击 with confidence 0.38
+d312726 F33 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2, "target_index": 1} Jev chose plan 2/8 (中和 -> 火箭, 带毒刺击 -> 火箭, 扫腿 -> 碾碎爪) with confidence 0.97; code rank 2
+d312727 F33 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 1} continuing the Jev-chosen plan: 带毒刺击 -> 火箭
+d312728 F33 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 扫腿 -> 碾碎爪
+d312729 F33 T6 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312730 F33 T7 [jev] selection/choose {"action": "select_deck_card", "option_index": 2} Jev chose 生存者 with confidence 0.08
+d312731 F33 T7 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 2/8 (究极防御, 打击 -> 火箭, 防御) with confidence 0.99; code rank 2
+d312732 F33 T7 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 火箭
+d312733 F33 T7 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 防御
+d312734 F33 T7 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312735 F33 T8 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 翻越撑击 with confidence 0.29
+d312736 F33 T8 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2, "target_index": 1} Jev chose plan 1/2 (中和 -> 火箭, 迷雾+) with confidence 0.75; code rank 1
+d312737 F33 T8 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 迷雾+
+d312738 F33 T8 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312739 F33 T9 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 打击 with confidence 0.36
+d312740 F33 T9 [code] combat/lethal {"action": "end_turn"} lethal:  [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 0 of 31 HP)]
+d312741 F33 T9 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (75金币)
+d312742 F33 T9 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312743 F33 T9 [codex] reward/card {"action": "choose_reward_card", "option_index": 1} Codex decided card1: Master Planner makes fourteen skills reusable for free through Survivor and Calculated Gamble, strengthening poison output and sustained defense. | Codex chose 谋划专家 (Power, 2E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312744 F33 T9 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312745 F33 TNone [code] map/route-only {"action": "choose_map_node", "option_index": 0} one way on: Ancient at row 0, col 3
+d312746 F34 TNone [codex] event/act-plan {"action": "choose_event_option", "option_index": 2} Codex decided o2: 悖论无副作用，三火避精英，经商补毒敏。 | Codex chose 选择悖论 (code's fallback order: 0, rank 1 of 3; not shown to Codex)
+d312747 F34 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312748 F34 TNone [codex] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 34): step 1/15 Monster at row 1, col 3; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312749 F35 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 2} Jev chose 余像 with confidence 0.61
+d312750 F35 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 6} Jev chose plan 2/8 (究极防御, 毒雾+, 余像) with confidence 0.99; code rank 2
+d312751 F35 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 6} continuing the Jev-chosen plan: 毒雾+
+d312752 F35 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 5, "target_index": 0} Jev chose plan 1/5 (带毒刺击 -> 咬人卷轴 #1, 生产制造, 致命毒药+ -> 咬人卷轴 #1, 余像) with confidence 0.99; code rank 1
+d312753 F35 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 7} continuing the Jev-chosen plan: 生产制造
+d312754 F35 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 咬人卷轴 #1
+d312755 F35 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5} continuing the Jev-chosen plan: 余像
+d312756 F35 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312757 F35 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/2 (防御, 防御, 翻越撑击, 中和 -> 咬人卷轴 #3) with confidence 0.97; code rank 1
+d312758 F35 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312759 F35 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 翻越撑击
+d312760 F35 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 2} continuing the Jev-chosen plan: 中和 -> 咬人卷轴 #3
+d312761 F35 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312762 F35 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2, "target_index": 0} Jev chose plan 1/3 (扫腿 -> 咬人卷轴 #1, 打击 -> 咬人卷轴 #1) with confidence 0.97; code rank 1
+d312763 F35 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 咬人卷轴 #1
+d312764 F35 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312765 F35 T4 [code] combat/lethal {"action": "play_card", "card_index": 1, "target_index": 1} lethal: 狩猎 -> 咬人卷轴 #2
+d312766 F35 T4 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312767 F35 T4 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (10金币)
+d312768 F35 T4 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312769 F35 T4 [codex] reward/card {"action": "choose_reward_card", "option_index": 0} Codex decided card0: Backflip improves defensive cycling, finds poison powers sooner, and becomes a reusable draw-and-block engine with Master Planner and discard. | Codex chose 后空翻 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312770 F35 T4 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312771 F35 T4 [codex] reward/card {"action": "choose_reward_card", "option_index": 0} Codex decided card0: Upgraded Wail buys poison-scaling turns, strips artifact when necessary, and preserves health against multihits across both bosses. | Codex chose 尖啸+ (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312772 F35 T4 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312773 F35 T4 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 34): step 2/15 Unknown at row 2, col 3; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312774 F36 TNone [codex] event/choose {"action": "choose_event_option", "option_index": 0} Codex decided o0: The 75-HP challenge is most achievable; this slow poison deck cannot reliably clear 150 in three turns. Another potion helps consecutive bosses. | Codex chose 第1档 (code's fallback order: 0, rank 1 of 3; not shown to Codex)
+d312775 F36 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 1} Jev chose 融入暗影 with confidence 0.12
+d312776 F36 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 1/3 (打击 -> 战斗好伙伴V1.0, 毒雾, 致命毒药+ -> 战斗好伙伴V1.0, 中和 -> 战斗好伙伴V1.0) with confidence 0.43; code rank 1
+d312777 F36 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 毒雾
+d312778 F36 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 战斗好伙伴V1.0
+d312779 F36 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 战斗好伙伴V1.0
+d312780 F36 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.42; code rank 1
+d312781 F36 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3, "target_index": 0} Jev chose plan 1/1 (打击 -> 战斗好伙伴V1.0, 毒雾+, 打击 -> 战斗好伙伴V1.0) with confidence 0.62; code rank 1
+d312782 F36 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 毒雾+
+d312783 F36 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3, "target_index": 0} Jev chose plan 3/3 (打击 -> 战斗好伙伴V1.0, 计算下注) with confidence 0.96; code rank - (rollout's best line, added)
+d312784 F36 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 计算下注
+d312785 F36 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2} Jev chose plan 1/2 (生产制造, 打击 -> 战斗好伙伴V1.0, 狩猎 -> 战斗好伙伴V1.0) with confidence 0.98; code rank 1
+d312786 F36 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 战斗好伙伴V1.0
+d312787 F36 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 狩猎 -> 战斗好伙伴V1.0
+d312788 F36 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312789 F36 T3 [code] combat/lethal {"action": "play_card", "card_index": 0, "target_index": 0} lethal: 带毒刺击 -> 战斗好伙伴V1.0, 翻越撑击
+d312790 F36 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the code-chosen plan: 翻越撑击
+d312791 F36 T3 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312792 F36 TNone [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Potion (罐装幽灵)
+d312793 F36 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312794 F36 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 34): step 3/15 Unknown at row 3, col 3; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312795 F37 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 1} Jev chose 终结技 with confidence 0.41
+d312796 F37 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 4} Jev chose plan 1/2 (毒雾, 打击 -> 虔诚雕刻师) with confidence 0.91; code rank 1
+d312797 F37 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 虔诚雕刻师
+d312798 F37 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 5, "target_index": 0} Jev chose plan 1/2 (终结技 -> 虔诚雕刻师) with confidence 0.93; code rank 1
+d312799 F37 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.83; code rank 1
+d312800 F37 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/8 (震荡波, 中和 -> 虔诚雕刻师, 狩猎 -> 虔诚雕刻师, 生产制造, 致命毒药 -> 虔诚雕刻师, 究极防御) with confidence 0.86; code rank 1
+d312801 F37 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 虔诚雕刻师
+d312802 F37 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 狩猎 -> 虔诚雕刻师
+d312803 F37 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 生产制造
+d312804 F37 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 致命毒药 -> 虔诚雕刻师
+d312805 F37 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 究极防御
+d312806 F37 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.94; code rank 1
+d312807 F37 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 4/4 (毒雾+, 打击 -> 虔诚雕刻师, 翻越撑击, 计算下注) with confidence 1.00; code rank - (rollout's best line, added)
+d312808 F37 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 4/4 (翻越撑击, 致命毒药+ -> 虔诚雕刻师) with confidence 0.99; code rank - (rollout's best line, added)
+d312809 F37 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 虔诚雕刻师
+d312810 F37 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.97; code rank 1
+d312811 F37 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 2} Jev chose plan 2/2 (生存者, 迷雾+) with confidence 0.97; code rank 2
+d312812 F37 T4 [jev] selection/choose {"action": "select_deck_card", "option_index": 2} Jev chose 进阶之灾 with confidence 0.63
+d312813 F37 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 迷雾+
+d312814 F37 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.97; code rank 1
+d312815 F37 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/4 (带毒刺击 -> 虔诚雕刻师, 防御, 翻越撑击) with confidence 0.94; code rank 1
+d312816 F37 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 防御
+d312817 F37 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 翻越撑击
+d312818 F37 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.95; code rank 1
+d312819 F37 T6 [code] combat/lethal {"action": "end_turn"} lethal:  [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 0 of 26 HP)]
+d312820 F37 T6 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (15金币)
+d312821 F37 T6 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312822 F37 T6 [codex] reward/card {"action": "choose_reward_card", "option_index": 0} Codex decided card0: Bubble Bubble+ adds efficient poison burst to existing Fumes, accelerating kills and benefiting from Master Planner without needing another upgrade. | Codex chose 咕嘟冒泡+ (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312823 F37 T6 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312824 F37 T6 [code] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 34): step 4/15 Unknown at row 4, col 4; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312825 F38 TNone [codex] event/plan {"action": "choose_event_option", "option_index": 1} Codex decided o1: Forgotten Soul adds free exhaust damage without a curse; existing Wails, Production, Gamble, and Hunt already trigger it. | Codex chose 接受这颗遗忘之魂 (code's fallback order: 0, rank 1 of 20; not shown to Codex)
+d312826 F38 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312827 F38 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 34): step 5/15 Unknown at row 5, col 4; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312828 F39 TNone [code] event/only {"action": "choose_event_option", "option_index": 0} only one unlocked, non-lethal option
+d312829 F39 TNone [codex] event/choose {"action": "choose_event_option", "option_index": 0} Codex decided o0: Craft a power to seek defensive or poison scaling; another attack poorly supports this deck’s plan for consecutive bosses. | Codex chose 装置 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+d312830 F39 TNone [codex] event/choose {"action": "choose_event_option", "option_index": 1} Codex decided o1: Permanent dexterity strengthens plentiful block skills and Pael’s Legion; strength improves attacks. Curiosity offers limited savings with only three existing powers. | Codex chose 专长 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+d312831 F39 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312832 F39 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 34): step 6/15 RestSite at row 6, col 5; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312833 F40 TNone [codex] rest/plan {"action": "choose_rest_option", "option_index": 1} Codex decided o1:c10: No fights precede the next rest. Upgrade Leg Sweep for stronger block, longer weakness, and the best simulated boss progress. | Codex chose 锻造 (SMITH): upgrade 扫腿 (code's fallback order: 6.05, rank 2 of 19; not shown to Codex)
+d312834 F40 TNone [codex] selection/upgrade {"action": "select_deck_card", "option_index": 9} Codex plan RMNXHZKV716Y:F40:rest#16 step 2: upgrade 扫腿 (named with the rest choice)
+d312835 F40 TNone [code] rest/proceed {"action": "proceed"} nothing to choose at this rest site
+d312836 F40 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 34): step 7/15 Treasure at row 7, col 5; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312837 F41 TNone [code] chest/open {"action": "open_chest"} opening the chest
+d312838 F41 TNone [code] chest/relic {"action": "choose_treasure_relic", "option_index": 0} only one relic offered
+d312839 F41 TNone [code] chest/proceed {"action": "proceed"} chest handled
+d312840 F41 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 2} following the brain's route plan (floor 34): step 8/15 RestSite at row 8, col 6; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312841 F42 TNone [codex] rest/plan {"action": "choose_rest_option", "option_index": 0} Codex decided o0: Heal to 94/95 for safer hallways and stronger consecutive-boss reserves. Keep shop access to seek poison acceleration or scalable defense. | Codex chose 休息 (HEAL) (code's fallback order: 1, rank 18 of 18; not shown to Codex)
+d312842 F42 TNone [code] rest/proceed {"action": "proceed"} nothing to choose at this rest site
+d312843 F42 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 34): step 9/15 Unknown at row 9, col 6; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312844 F43 TNone [codex] event/choose {"action": "choose_event_option", "option_index": 2} Codex decided o2: Abundant weakness makes Red Mask replaceable; two relics offer greater upside while preserving both potions and shop gold. | Codex chose 给他红面具 (code's fallback order: 0, rank 1 of 3; not shown to Codex)
+d312845 F43 TNone [code] event/leave {"action": "choose_event_option", "option_index": 0} the event is finished; taking the proceed option
+d312846 F43 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 34): step 10/15 Monster at row 10, col 5; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312847 F44 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 4} Jev chose 精密瞄准 with confidence 0.72
+d312848 F44 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 5/5 (毒雾, 生产制造, 狩猎 -> 遗忘之物, 精密瞄准 -> 遗忘之物) with confidence 0.97; code rank - (rollout's best line, added)
+d312849 F44 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 生产制造
+d312850 F44 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 1} continuing the Jev-chosen plan: 狩猎 -> 遗忘之物
+d312851 F44 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4, "target_index": 1} continuing the Jev-chosen plan: 精密瞄准 -> 遗忘之物
+d312852 F44 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3, "target_index": 0} Jev chose plan 1/3 (打击 -> 失落之物) with confidence 0.94; code rank 1
+d312853 F44 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.96; code rank 1
+d312854 F44 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 6/7 (后空翻, 致命毒药+ -> 失落之物, 带毒刺击 -> 失落之物) with confidence 0.87; code rank 6
+d312855 F44 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 4/6 (致命毒药+ -> 失落之物, 带毒刺击 -> 失落之物) with confidence 0.67; code rank 4
+d312856 F44 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 带毒刺击 -> 失落之物
+d312857 F44 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312858 F44 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 1} Jev chose plan 6/6 (咕嘟冒泡+ -> 遗忘之物, 打击 -> 遗忘之物, 中和 -> 失落之物, 计算下注) with confidence 0.97; code rank - (rollout's best line, added)
+d312859 F44 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 1} continuing the Jev-chosen plan: 打击 -> 遗忘之物
+d312860 F44 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 失落之物
+d312861 F44 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 计算下注
+d312862 F44 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/1 (毒雾+) with confidence 1.00; code rank 1
+d312863 F44 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312864 F44 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/4 (致命毒药 -> 失落之物, 尖啸, 尖啸+) with confidence 0.82; code rank 1
+d312865 F44 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 尖啸
+d312866 F44 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 尖啸+
+d312867 F44 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312868 F44 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 1} Jev chose plan 1/2 (带毒刺击 -> 遗忘之物, 谋划专家) with confidence 0.81; code rank 1
+d312869 F44 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 谋划专家
+d312870 F44 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312871 F44 T6 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312872 F44 T6 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (15金币)
+d312873 F44 T6 [code] reward/claim {"action": "claim_reward", "option_index": 1} claiming Card (将一张牌添加到你的牌组。)
+d312874 F44 T6 [codex] reward/card {"action": "choose_reward_card", "option_index": 2} Codex decided card2: Prepared activates Master Planner’s discarded skills for free and removes Withers, improving poison setup and sustained defense. | Codex chose 早有准备 (Skill, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312875 F44 T6 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312876 F44 T6 [code] map/route-follow {"action": "choose_map_node", "option_index": 1} following the brain's route plan (floor 34): step 11/15 Shop at row 11, col 5; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312877 F45 TNone [code] shop/open {"action": "open_shop_inventory"} entering the shop: opening the inventory
+d312878 F45 TNone [codex] shop/plan {"action": "buy_card", "option_index": 4} Codex planned: Footwork adds sustained defensive scaling; Dodge and Roll benefits twice from dexterity and synergizes with Pael’s Legion. Keep both potions; avoid costly, conditional additions. | plan RMNXHZKV716Y:F45:shop#18: buy 灵动步法 (73g), buy 闪躲翻滚 (48g), stop shopping; step 1: buy 灵动步法 (73g)
+d312879 F45 TNone [codex] shop/buy {"action": "buy_card", "option_index": 3} Codex plan RMNXHZKV716Y:F45:shop#18 step 2: buy 闪躲翻滚 (48g)
+d312880 F45 TNone [codex] shop/buy {"action": "close_shop_inventory"} Codex plan RMNXHZKV716Y:F45:shop#18 step 3: stop shopping
+d312881 F45 TNone [code] shop/leave {"action": "proceed"} shopping done: back to the map
+d312882 F45 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 34): step 12/15 Monster at row 12, col 5; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312883 F46 T1 [code] selection/take into my hand {"action": "select_deck_card", "option_index": 4} code: 精密瞄准 scores 9 vs 子弹时间 3
+d312884 F46 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 1/5 (致命毒药+ -> 史莱姆狂战士, 咕嘟冒泡+ -> 史莱姆狂战士, 生产制造, 精密瞄准 -> 史莱姆狂战士) with confidence 0.87; code rank 1
+d312885 F46 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 咕嘟冒泡+ -> 史莱姆狂战士
+d312886 F46 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 生产制造
+d312887 F46 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4, "target_index": 0} continuing the Jev-chosen plan: 精密瞄准 -> 史莱姆狂战士
+d312888 F46 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 1/2 (谋划专家) with confidence 0.73; code rank 1
+d312889 F46 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.94; code rank 1
+d312890 F46 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 2/6 (早有准备, 生存者, 毒雾, 计算下注) with confidence 0.98; code rank 2
+d312891 F46 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 2} Jev chose 打击 with confidence 0.42
+d312892 F46 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 5} Jev chose plan 3/3 (尖啸, 计算下注) with confidence 0.85; code rank - (rollout's best line, added)
+d312893 F46 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 计算下注
+d312894 F46 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 2/2 (后空翻, 灵动步法) with confidence 0.97; code rank 2
+d312895 F46 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/2 (灵动步法) with confidence 0.97; code rank 1
+d312896 F46 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.98; code rank 1
+d312897 F46 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/1 (疯狂科学, 打击 -> 史莱姆狂战士, 打击 -> 史莱姆狂战士) with confidence 0.95; code rank 1
+d312898 F46 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 史莱姆狂战士
+d312899 F46 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 史莱姆狂战士
+d312900 F46 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.95; code rank 1
+d312901 F46 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/5 (迷雾+, 中和 -> 史莱姆狂战士, 带毒刺击 -> 史莱姆狂战士) with confidence 1.00; code rank 1
+d312902 F46 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 史莱姆狂战士
+d312903 F46 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 带毒刺击 -> 史莱姆狂战士
+d312904 F46 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.97; code rank 1
+d312905 F46 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 1/3 (狩猎 -> 史莱姆狂战士, 致命毒药 -> 史莱姆狂战士) with confidence 0.97; code rank 1
+d312906 F46 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 致命毒药 -> 史莱姆狂战士
+d312907 F46 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312908 F46 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 1/7 (早有准备, 防御, 翻越撑击, 防御) with confidence 0.90; code rank 1
+d312909 F46 T6 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 精密瞄准 with confidence 0.22
+d312910 F46 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/6 (防御, 翻越撑击, 防御) with confidence 0.98; code rank 1
+d312911 F46 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 翻越撑击
+d312912 F46 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 防御
+d312913 F46 T6 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312914 F46 T7 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/2 (打击 -> 史莱姆狂战士, 打击 -> 史莱姆狂战士) with confidence 0.71; code rank 1
+d312915 F46 T7 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 史莱姆狂战士
+d312916 F46 T7 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 1.00; code rank 1
+d312917 F46 T8 [code] combat/lethal {"action": "end_turn"} lethal: 
+d312918 F46 T8 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Gold (13金币)
+d312919 F46 T8 [code] reward/claim {"action": "claim_reward", "option_index": 0} claiming Card (将一张牌添加到你的牌组。)
+d312920 F46 T8 [codex] reward/card {"action": "skip_reward_cards"} Codex decided skip: Already enough poison application. These attacks add cost without solving scaling; preserve access to defensive powers, discard cycling, and existing poison setup. | Codex chose skip the card reward (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+d312921 F46 T8 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d312922 F46 T8 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 34): step 13/15 RestSite at row 13, col 5; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312923 F47 TNone [codex] rest/plan {"action": "choose_rest_option", "option_index": 0} Codex decided o0: Heal to 100/100; 32 immediate HP and maximum-HP growth provide more consecutive-boss buffer than any upgrade. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 20; not shown to Codex)
+d312924 F47 TNone [code] rest/proceed {"action": "proceed"} nothing to choose at this rest site
+d312925 F47 TNone [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 34): step 14/15 Boss at row 14, col 3; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d312926 F48 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 2} Jev chose 突然一拳 with confidence 0.17
+d312927 F48 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 5} Jev chose plan 5/5 (究极防御, 狩猎 -> 永世沙漏, 突然一拳 -> 永世沙漏, potion 毒药水 -> 永世沙漏) with confidence 0.87; code rank 5
+d312928 F48 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5, "target_index": 0} continuing the Jev-chosen plan: 狩猎 -> 永世沙漏
+d312929 F48 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5, "target_index": 0} continuing the Jev-chosen plan: 突然一拳 -> 永世沙漏
+d312930 F48 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 0, "target_index": 0} continuing the Jev-chosen plan: potion 毒药水 -> 永世沙漏
+d312931 F48 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.68; code rank 1
+d312932 F48 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 8/8 (早有准备, 疯狂科学, 扫腿+ -> 永世沙漏) with confidence 0.68; code rank - (rollout's best line, added)
+d312933 F48 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 4} Jev chose 打击 with confidence 0.51
+d312934 F48 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 4, "target_index": 0} Jev chose plan 5/6 (扫腿+ -> 永世沙漏, 致命毒药+ -> 永世沙漏) with confidence 0.88; code rank 5
+d312935 F48 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 4, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 永世沙漏
+d312936 F48 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.80; code rank 1
+d312937 F48 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/1 (灵动步法, 中和 -> 永世沙漏, 毒雾+) with confidence 0.86; code rank 1
+d312938 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 永世沙漏
+d312939 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 毒雾+
+d312940 F48 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/1 (生产制造, 打击 -> 永世沙漏, 翻越撑击) with confidence 0.76; code rank 1
+d312941 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 永世沙漏
+d312942 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 翻越撑击
+d312943 F48 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.78; code rank 1
+d312944 F48 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 4/4 (打击 -> 永世沙漏, 尖啸) with confidence 0.96; code rank 4
+d312945 F48 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 尖啸
+d312946 F48 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 3/3 (end turn) with confidence 0.97; code rank 3
+d312947 F48 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 1/4 (迷雾+, 咕嘟冒泡+ -> 永世沙漏, 计算下注) with confidence 0.70; code rank 1
+d312948 F48 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 咕嘟冒泡+ -> 永世沙漏
+d312949 F48 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 计算下注
+d312950 F48 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.66; code rank 1
+d312951 F48 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 5/6 (闪躲翻滚, 迷雾+) with confidence 0.91; code rank 5
+d312952 F48 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 2/3 (迷雾+) with confidence 0.95; code rank 2
+d312953 F48 T6 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.62; code rank 1
+d312954 F48 T7 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 6/6 (早有准备, 防御, 致命毒药 -> 永世沙漏, 打击 -> 永世沙漏) with confidence 0.87; code rank - (rollout's best line, added)
+d312955 F48 T7 [jev] selection/choose {"action": "select_deck_card", "option_index": 3} Jev chose 打击 with confidence 0.30
+d312956 F48 T7 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 3/3 (尖啸, 防御, 致命毒药 -> 永世沙漏) with confidence 0.81; code rank - (rollout's best line, added)
+d312957 F48 T7 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d312958 F48 T7 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 致命毒药 -> 永世沙漏
+d312959 F48 T7 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.40; code rank 1
+d312960 F48 T8 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 1/7 (疯狂科学, 扫腿+ -> 永世沙漏) with confidence 0.81; code rank 1
+d312961 F48 T8 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 1/2 (扫腿+ -> 永世沙漏) with confidence 0.82; code rank 1
+d312962 F48 T8 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.68; code rank 1
+d312963 F48 T9 [jev] combat/plan-choice+potion {"action": "use_potion", "option_index": 1} Jev chose to drink 罐装幽灵 (confidence 0.20)
+d312964 F48 T9 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/2 (突然一拳 -> 永世沙漏, 带毒刺击 -> 永世沙漏, 防御) with confidence 0.52; code rank 1
+d312965 F48 T9 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 带毒刺击 -> 永世沙漏
+d312966 F48 T9 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 防御
+d312967 F48 T9 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d312968 F48 T10 [jev] combat/plan-choice {"action": "play_card", "card_index": 3, "target_index": 0} Jev chose plan 3/3 (致命毒药+ -> 永世沙漏) with confidence 0.92; code rank - (rollout's best line, added)
+d312969 F48 T10 [jev] combat/plan-choice {"action": "play_card", "card_index": 3, "target_index": 0} Jev chose plan 3/3 (致命毒药+ -> 永世沙漏) with confidence 0.91; code rank - (rollout's best line, added)
+d312970 F48 T10 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -36, dmg 59
+d312971 F48 T11 [code] combat/plan {"action": "play_card", "card_index": 0, "target_index": 0} code plan (only distinct line): 扫腿+ -> 永世沙漏, 防御; hp -6, dmg 61
+d312972 F48 T11 [code] combat/least-loss {"action": "play_card", "card_index": 1} every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg 61): 后空翻
+d312973 F48 T11 [code] combat/least-loss {"action": "end_turn"} every simulated line dies; playing the one that keeps the most HP (-18): end turn
+d312974 F48 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 2} Jev chose 突然一拳 with confidence 0.23
+d312975 F48 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 5} Jev chose plan 6/9 (后空翻, 突然一拳 -> 永世沙漏, 早有准备, 疯狂科学) with confidence 0.77; code rank 6; HP guard: plan 6 (后空翻, 突然一拳 -> 永世沙漏, 早有准备, 疯狂科学; hp -16) is more than 10 HP over the cheapest line, playing plan 1 (究极防御, 后空翻, 早有准备, 疯狂科学; hp -0) instead
+d312976 F48 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 后空翻
+d312977 F48 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 6} Jev chose plan 3/4 (早有准备) with confidence 0.90; code rank 3
+d312978 F48 T1 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 防御 with confidence 0.12
+d312979 F48 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 4, "target_index": 0} Jev chose plan 4/4 (突然一拳 -> 永世沙漏) with confidence 0.96; code rank - (rollout's best line, added)
+d312980 F48 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/2 (end turn) with confidence 0.34; code rank 1
+d312981 F48 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 4, "target_index": 0} Jev chose plan 3/5 (尖啸, 灵动步法, potion 毒药水 -> 永世沙漏, 致命毒药+ -> 永世沙漏) with confidence 0.86; code rank 3; HP guard: plan 3 (尖啸, 灵动步法, potion 毒药水 -> 永世沙漏, 致命毒药+ -> 永世沙漏; hp -21) is more than 10 HP over the cheapest line, playing plan 1 (致命毒药+ -> 永世沙漏, 灵动步法, potion 毒药水 -> 永世沙漏, 尖啸; hp -9) instead
+d312982 F48 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 5} continuing the Jev-chosen plan: 灵动步法
+d312983 F48 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 3/3 (防御) with confidence 0.76; code rank 3
+d312984 F48 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/2 (end turn) with confidence 0.82; code rank 1
+d312985 F48 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/3 (中和 -> 永世沙漏, 毒雾+, 打击 -> 永世沙漏, 翻越撑击, potion 毒药水 -> 永世沙漏) with confidence 0.83; code rank 1
+d312986 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 毒雾+
+d312987 F48 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 1/3 (生产制造, 打击 -> 永世沙漏, 翻越撑击, 带毒刺击 -> 永世沙漏, 打击 -> 永世沙漏, potion 毒药水 -> 永世沙漏) with confidence 0.88; code rank 1
+d312988 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 永世沙漏
+d312989 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 翻越撑击
+d312990 F48 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/3 (带毒刺击 -> 永世沙漏, 打击 -> 永世沙漏, potion 毒药水 -> 永世沙漏) with confidence 0.87; code rank 1
+d312991 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 永世沙漏
+d312992 F48 T3 [code] combat/plan-continue {"action": "use_potion", "option_index": 0, "target_index": 0} continuing the Jev-chosen plan: potion 毒药水 -> 永世沙漏
+d312993 F48 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.66; code rank 1
+d312994 F48 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 4} Jev chose plan 1/9 (计算下注, 迷雾+, 咕嘟冒泡+ -> 永世沙漏) with confidence 0.91; code rank 1
+d312995 F48 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 2/4 (迷雾+, 毒雾) with confidence 0.95; code rank 2
+d312996 F48 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 毒雾
+d312997 F48 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.56; code rank 1
+d312998 F48 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/5 (尖啸+, 迷雾+) with confidence 0.87; code rank 1
+d312999 F48 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 2/2 (迷雾+) with confidence 0.98; code rank 2
+d313000 F48 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.64; code rank 1
+d313001 F48 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 4} Jev chose plan 1/2 (究极防御, 突然一拳 -> 永世沙漏) with confidence 0.80; code rank 1
+d313002 F48 T6 [code] combat/plan-continue {"action": "play_card", "card_index": 4, "target_index": 0} continuing the Jev-chosen plan: 突然一拳 -> 永世沙漏
+d313003 F48 T6 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.40; code rank 1
+d313004 F48 T7 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 2/4 (扫腿+ -> 永世沙漏, 闪躲翻滚) with confidence 0.86; code rank 2
+d313005 F48 T7 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 闪躲翻滚
+d313006 F48 T7 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.16; code rank 1
+d313007 F48 T8 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/3 (疯狂科学, 防御) with confidence 0.76; code rank 1
+d313008 F48 T8 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/1 (防御) with confidence 0.36; code rank 1
+d313009 F48 T8 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.16; code rank 1
+d313010 F48 T9 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 3/3 (end turn) with confidence 0.92; code rank - (rollout's best line, added)
+d313011 F48 T10 [jev] combat/plan-choice+potion {"action": "use_potion", "option_index": 1} Jev chose to drink 罐装幽灵 (confidence 0.35)
+d313012 F48 T10 [jev] combat/play {"action": "use_potion", "option_index": 1} Jev chose p1 (Drink 罐装幽灵) with confidence 0.64
+d313013 F48 T10 [jev] combat/plan-choice {"action": "play_card", "card_index": 0} Jev chose plan 3/3 (谋划专家, 打击 -> 永世沙漏, 中和 -> 永世沙漏) with confidence 0.28; code rank 3
+d313014 F48 T10 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 永世沙漏
+d313015 F48 T10 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 永世沙漏
+d313016 F48 T10 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -19, dmg 47
+d313017 F48 T11 [code] combat/least-loss {"action": "play_card", "card_index": 4} every simulated line dies; playing the one that keeps the most HP (-20): 震荡波
+d313018 F48 T11 [code] combat/least-loss {"action": "end_turn"} every simulated line dies; playing the one that keeps the most HP (-20): end turn
+d313019 F48 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 2} Jev chose 突然一拳 with confidence 0.19
+d313020 F48 T1 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 5} Jev chose plan 6/9 (后空翻, 突然一拳 -> 永世沙漏, 早有准备, 疯狂科学) with confidence 0.92; code rank 6; HP guard: plan 6 (后空翻, 突然一拳 -> 永世沙漏, 早有准备, 疯狂科学; hp -16) is more than 10 HP over the cheapest line, playing plan 1 (究极防御, 后空翻, 早有准备, 疯狂科学; hp -0) instead; SL explore: replaying attempt 1's plays from this board, 究极防御, 狩猎 -> 永世沙漏, 突然一拳 -> 永世沙漏, potion 毒药水 -> 永世沙漏, instead of 究极防御, 后空翻, 早有准备, 疯狂科学 before T10 (its line 究极防御, 狩猎 -> 永世沙漏, 突然一拳 -> 永世沙漏, potion 毒药水 -> 永世沙漏 is not among the options)
+d313021 F48 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5, "target_index": 0} continuing the Jev-chosen plan: 狩猎 -> 永世沙漏
+d313022 F48 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5, "target_index": 0} continuing the Jev-chosen plan: 突然一拳 -> 永世沙漏
+d313023 F48 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 0, "target_index": 0} continuing the Jev-chosen plan: potion 毒药水 -> 永世沙漏
+d313024 F48 T1 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.62; code rank 1
+d313025 F48 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 2/8 (疯狂科学, 扫腿+ -> 永世沙漏) with confidence 0.74; code rank 2; SL explore: replaying attempt 1's plays from this board, 早有准备, instead of 疯狂科学, 扫腿+ -> 永世沙漏 before T10 (its line 早有准备, 疯狂科学, 扫腿+ -> 永世沙漏 is not among the options)
+d313026 F48 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 4} Jev chose 打击 with confidence 0.51
+d313027 F48 T2 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 4, "target_index": 0} Jev chose plan 5/6 (扫腿+ -> 永世沙漏, 致命毒药+ -> 永世沙漏) with confidence 0.76; code rank 5
+d313028 F48 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 4, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 永世沙漏
+d313029 F48 T2 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.70; code rank 1
+d313030 F48 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 2/2 (灵动步法, 毒雾+) with confidence 0.89; code rank - (rollout's best line, added); SL explore: replaying attempt 1's 灵动步法, 中和 -> 永世沙漏, 毒雾+ instead of 灵动步法, 毒雾+ before T10
+d313031 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 中和 -> 永世沙漏
+d313032 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 毒雾+
+d313033 F48 T3 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 1/1 (生产制造, 打击 -> 永世沙漏, 翻越撑击) with confidence 0.76; code rank 1
+d313034 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 打击 -> 永世沙漏
+d313035 F48 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 翻越撑击
+d313036 F48 T3 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.64; code rank 1
+d313037 F48 T4 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 3/4 (打击 -> 永世沙漏, 致命毒药 -> 永世沙漏, 尖啸) with confidence 0.95; code rank 3; SL explore: replaying attempt 1's 打击 -> 永世沙漏, 尖啸 instead of 打击 -> 永世沙漏, 致命毒药 -> 永世沙漏, 尖啸 before T10
+d313038 F48 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 尖啸
+d313039 F48 T4 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 3/3 (end turn) with confidence 0.93; code rank 3
+d313040 F48 T5 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 2/4 (迷雾+, 计算下注, 毒雾) with confidence 0.97; code rank 2; SL explore: replaying attempt 1's 迷雾+, 咕嘟冒泡+ -> 永世沙漏, 计算下注 instead of 迷雾+, 计算下注, 毒雾 before T10
+d313041 F48 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 3, "target_index": 0} continuing the Jev-chosen plan: 咕嘟冒泡+ -> 永世沙漏
+d313042 F48 T5 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 计算下注
+d313043 F48 T5 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.54; code rank 1
+d313044 F48 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1} Jev chose plan 5/6 (闪躲翻滚, 迷雾+) with confidence 0.96; code rank 5
+d313045 F48 T6 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 2/3 (迷雾+) with confidence 0.93; code rank 2
+d313046 F48 T6 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.30; code rank 1
+d313047 F48 T7 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 6/6 (早有准备, 防御, 致命毒药 -> 永世沙漏, 打击 -> 永世沙漏) with confidence 0.84; code rank - (rollout's best line, added)
+d313048 F48 T7 [jev] selection/choose {"action": "select_deck_card", "option_index": 3} Jev chose 打击 with confidence 0.31
+d313049 F48 T7 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0} Jev chose plan 3/3 (尖啸, 防御, 致命毒药 -> 永世沙漏) with confidence 0.88; code rank - (rollout's best line, added)
+d313050 F48 T7 [code] combat/plan-continue {"action": "play_card", "card_index": 0} continuing the Jev-chosen plan: 防御
+d313051 F48 T7 [code] combat/plan-continue {"action": "play_card", "card_index": 0, "target_index": 0} continuing the Jev-chosen plan: 致命毒药 -> 永世沙漏
+d313052 F48 T7 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.00; code rank 1
+d313053 F48 T8 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 3} Jev chose plan 1/7 (疯狂科学, 扫腿+ -> 永世沙漏) with confidence 0.78; code rank 1
+d313054 F48 T8 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 1/2 (扫腿+ -> 永世沙漏) with confidence 0.74; code rank 1
+d313055 F48 T8 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/1 (end turn) with confidence 0.40; code rank 1
+d313056 F48 T9 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/2 (突然一拳 -> 永世沙漏, 带毒刺击 -> 永世沙漏, 防御) with confidence 0.73; code rank 1; SL explore (T9, where the replay of attempt 1's path could not go on): playing 突然一拳 -> 永世沙漏, 防御 instead of 突然一拳 -> 永世沙漏, 带毒刺击 -> 永世沙漏, 防御, played on this board in attempt 1 (the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail); the pick plays a failed attempt's cards here and drinks no potion that attempt did not drink from here on)
+d313057 F48 T9 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 防御
+d313058 F48 T9 [jev] combat/plan-choice+potion {"action": "end_turn"} Jev chose plan 1/2 (带毒刺击 -> 永世沙漏) with confidence 0.41; code rank 1; SL explore (the deviation's turn, T9): playing end turn instead of 带毒刺击 -> 永世沙漏, which ends the turn with the plays attempt 1 had through the deviation point (the best untried line by the question's ranking, among those the rollout does not see dying more often; the pick plays a failed attempt's cards here and drinks no potion that attempt did not drink from here on)
+d313059 F48 T10 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 3/3 (打击 -> 永世沙漏, 致命毒药+ -> 永世沙漏) with confidence 0.64; code rank - (rollout's best line, added)
+d313060 F48 T10 [jev] combat/plan-choice+potion {"action": "play_card", "card_index": 1, "target_index": 0} Jev chose plan 3/3 (打击 -> 永世沙漏, 致命毒药+ -> 永世沙漏) with confidence 0.60; code rank - (rollout's best line, added)
+d313061 F48 T10 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 永世沙漏
+d313062 F48 T10 [jev] combat/plan-choice+potion {"action": "use_potion", "option_index": 1} Jev chose to drink 罐装幽灵 (confidence 0.34)
+d313063 F48 T10 [jev] combat/plan-choice {"action": "end_turn"} Jev chose plan 1/2 (end turn) with confidence 0.90; code rank 1
+d313064 F48 T11 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 0} Jev chose plan 1/3 (扫腿+ -> 永世沙漏, 防御) with confidence 0.97; code rank 1
+d313065 F48 T11 [jev] combat/plan-choice {"action": "play_card", "card_index": 3} Jev chose plan 1/2 (防御) with confidence 0.94; code rank 1
+d313066 F48 T11 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -16, dmg 58
+d313067 F48 T12 [code] combat/least-loss {"action": "play_card", "card_index": 4} every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg 10): 早有准备, 突然一拳 -> 永世沙漏
+d313068 F48 T12 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 凋萎+3 with confidence 0.55
+d313069 F48 T12 [code] combat/plan {"action": "play_card", "card_index": 0, "target_index": 0} code plan (only distinct line): 突然一拳 -> 永世沙漏, 生存者; hp -11, dmg 70
+d313070 F48 T12 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the code-chosen plan: 生存者
+d313071 F48 T12 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 凋萎+3 with confidence 0.86
+d313072 F48 T12 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d313073 F48 T13 [code] combat/lethal {"action": "end_turn"} lethal:  [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 9 of 22 HP)]
+d313074 F48 T13 [code] reward/proceed {"action": "collect_rewards_and_proceed"} no rewards left to claim; advancing with collect_rewards_and_proceed
+d313075 F48 T13 [code] map/route-follow {"action": "choose_map_node", "option_index": 0} following the brain's route plan (floor 34): step 15/15 Boss at row 15, col 3; plan r1c3 普通战 → r2c3 问号 → r3c3 问号 → r4c4 问号 → r5c4 问号 → r6c5 休息 → r7c5 宝箱 → r8c6 休息 → r9c6 问号 → r10c5 普通战 → r11c5 商店 → r12c5 普通战 → r13c5 休息 → r14c3 Boss → r15c3 Boss
+d313076 F49 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 1} Jev chose 猎杀者 with confidence 0.51
+d313077 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 1/10 (生产制造, 迷雾+, 究极防御, 猎杀者 -> 女王, 计算下注, potion 药水形状的石头 -> 女王) with confidence 0.41; code rank 1
+d313078 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 迷雾+
+d313079 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5} continuing the Jev-chosen plan: 究极防御
+d313080 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 6, "target_index": 1} continuing the Jev-chosen plan: 猎杀者 -> 女王
+d313081 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 计算下注
+d313082 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 2, "target_index": 0} Jev chose plan 3/3 (中和 -> 火炬头聚合体) with confidence 0.89; code rank 3
+d313083 F49 T1 [jev] combat/plan-choice {"action": "use_potion", "option_index": 0, "target_index": 1} Jev chose plan 1/2 (potion 药水形状的石头 -> 女王) with confidence 0.30; code rank 1
+d313084 F49 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -2, dmg 12
+d313085 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 3} Jev chose plan 3/6 (早有准备, 毒雾, 致命毒药+ -> 女王, 疯狂科学) with confidence 0.74; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 11 HP)]
+d313086 F49 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 尖啸 with confidence 0.22
+d313087 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 3, "target_index": 1} Jev chose plan 2/5 (毒雾, 致命毒药+ -> 女王, 疯狂科学) with confidence 0.22; code rank 2; HP guard: plan 2 (毒雾, 致命毒药+ -> 女王, 疯狂科学; hp -10) is more than 8 HP over the cheapest line, playing plan 4 (致命毒药+ -> 女王, 扫腿+ -> 女王; hp -2) instead [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 11 HP)]
+d313088 F49 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 4, "target_index": 1} continuing the Jev-chosen plan: 扫腿+ -> 女王
+d313089 F49 T2 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -2, dmg 17
+d313090 F49 T3 [code] combat/least-loss {"action": "play_card", "card_index": 3} every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg 20): 后空翻, 致命毒药 -> 女王, 防御
+d313091 F49 T3 [code] combat/least-loss {"action": "play_card", "card_index": 5} every simulated line dies; playing the one that keeps the most HP (-6): 灵动步法, 防御
+d313092 F49 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the code-chosen plan: 防御
+d313093 F49 T3 [code] combat/least-loss {"action": "end_turn"} every simulated line dies; playing the one that keeps the most HP (-6): end turn
+d313094 F49 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 1} Jev chose 猎杀者 with confidence 0.49
+d313095 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 1/10 (生产制造, 迷雾+, 究极防御, 计算下注, potion 药水形状的石头 -> 女王, 带毒刺击 -> 女王, 中和 -> 女王, 狩猎 -> 女王) with confidence 0.37; code rank 1
+d313096 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 迷雾+
+d313097 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5} continuing the Jev-chosen plan: 究极防御
+d313098 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 计算下注
+d313099 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 2/5 (防御, 中和 -> 女王, 狩猎 -> 女王, potion 药水形状的石头 -> 女王) with confidence 0.44; code rank 2
+d313100 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 中和 -> 女王
+d313101 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 狩猎 -> 女王
+d313102 F49 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 0, "target_index": 1} continuing the Jev-chosen plan: potion 药水形状的石头 -> 女王
+d313103 F49 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 12
+d313104 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 2} Jev chose plan 3/3 (早有准备, 毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学) with confidence 0.23; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 13 HP)]
+d313105 F49 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 谋划专家 with confidence 0.19
+d313106 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 3/3 (毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学) with confidence 0.25; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 13 HP)]
+d313107 F49 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 火炬头聚合体
+d313108 F49 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 疯狂科学
+d313109 F49 T2 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d313110 F49 T3 [code] combat/plan {"action": "play_card", "card_index": 0, "target_index": 0} code plan (only distinct line): 扫腿+ -> 火炬头聚合体, 后空翻; hp -0, dmg 19
+d313111 F49 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the code-chosen plan: 后空翻
+d313112 F49 T3 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 19
+d313113 F49 T4 [code] combat/least-loss {"action": "play_card", "card_index": 0} every simulated line dies; playing the one that keeps the most HP (-10): 灵动步法, 打击 -> 火炬头聚合体, 打击 -> 火炬头聚合体
+d313114 F49 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 火炬头聚合体
+d313115 F49 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 火炬头聚合体
+d313116 F49 T4 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d313117 F49 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 1} Jev chose 猎杀者 with confidence 0.43
+d313118 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 1/10 (生产制造, 迷雾+, 究极防御, 计算下注, potion 药水形状的石头 -> 女王, 带毒刺击 -> 女王, 中和 -> 女王, 狩猎 -> 女王) with confidence 0.37; code rank 1
+d313119 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 迷雾+
+d313120 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5} continuing the Jev-chosen plan: 究极防御
+d313121 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 计算下注
+d313122 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 2/5 (防御, 中和 -> 女王, 狩猎 -> 女王, potion 药水形状的石头 -> 女王) with confidence 0.44; code rank 2
+d313123 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 中和 -> 女王
+d313124 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 狩猎 -> 女王
+d313125 F49 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 0, "target_index": 1} continuing the Jev-chosen plan: potion 药水形状的石头 -> 女王
+d313126 F49 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 12
+d313127 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 2} Jev chose plan 3/3 (早有准备, 毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学) with confidence 0.25; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 13 HP)]; SL explore (T2, the 2nd latest question before attempt 2's death on T4): playing 早有准备, 毒雾, 致命毒药+ -> 女王, 疯狂科学 instead of 早有准备, 毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学, played on this board in attempt 2 (the best untried line by the question's ranking, among those the rollout does not see dying more often)
+d313128 F49 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 谋划专家 with confidence 0.22
+d313129 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 3/3 (毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学) with confidence 0.21; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 13 HP)]; SL explore (the deviation's turn, T2): playing 毒雾, 致命毒药+ -> 女王, 疯狂科学 instead of 毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学, which ends the turn with the plays attempt 2 had through the deviation point (the best untried line by the question's ranking, among those the rollout does not see dying more often)
+d313130 F49 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 致命毒药+ -> 女王
+d313131 F49 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 疯狂科学
+d313132 F49 T2 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d313133 F49 T3 [code] combat/plan {"action": "play_card", "card_index": 0, "target_index": 0} code plan (only distinct line): 扫腿+ -> 火炬头聚合体, 后空翻; hp -0, dmg 19
+d313134 F49 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the code-chosen plan: 后空翻
+d313135 F49 T3 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 19
+d313136 F49 T4 [code] combat/least-loss {"action": "play_card", "card_index": 0} every simulated line dies; playing the one that keeps the most HP (-10): 灵动步法, 打击 -> 火炬头聚合体, 打击 -> 火炬头聚合体
+d313137 F49 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 火炬头聚合体
+d313138 F49 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 火炬头聚合体
+d313139 F49 T4 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d313140 F49 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 1} Jev chose 猎杀者 with confidence 0.43
+d313141 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 1/10 (生产制造, 迷雾+, 究极防御, 计算下注, potion 药水形状的石头 -> 女王, 带毒刺击 -> 女王, 中和 -> 女王, 狩猎 -> 女王) with confidence 0.36; code rank 1; SL explore (T1, the 4th latest question before attempt 2's death on T4): playing 生产制造, 生存者, 究极防御, 猎杀者 -> 女王, 计算下注, potion 药水形状的石头 -> 女王, 中和 -> 女王, 狩猎 -> 女王 instead of 生产制造, 迷雾+, 究极防御, 计算下注, potion 药水形状的石头 -> 女王, 带毒刺击 -> 女王, 中和 -> 女王, 狩猎 -> 女王, played on this board in attempts 1, 2, 3 (the best untried line by the question's ranking, among those the rollout does not see dying more often)
+d313142 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 生存者
+d313143 F49 T1 [jev] selection/choose {"action": "select_deck_card", "option_index": 6} Jev chose 进阶之灾 with confidence 0.46
+d313144 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 2} Jev chose plan 4/10 (迷雾+, 计算下注, potion 药水形状的石头 -> 女王, 带毒刺击 -> 女王, 中和 -> 女王, 狩猎 -> 女王) with confidence 0.64; code rank 4
+d313145 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 计算下注
+d313146 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 1} Jev chose plan 2/7 (带毒刺击 -> 女王, 中和 -> 女王, 狩猎 -> 女王, potion 药水形状的石头 -> 女王) with confidence 0.43; code rank 2
+d313147 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 中和 -> 女王
+d313148 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 狩猎 -> 女王
+d313149 F49 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 0, "target_index": 1} continuing the Jev-chosen plan: potion 药水形状的石头 -> 女王
+d313150 F49 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -8, dmg 15
+d313151 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 3} Jev chose plan 3/3 (早有准备, 尖啸, 毒雾, 致命毒药+ -> 火炬头聚合体) with confidence 0.18; code rank 3
+d313152 F49 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 尖啸 with confidence 0.15
+d313153 F49 T2 [code] combat/least-loss {"action": "play_card", "card_index": 0} every simulated line dies; playing the one that keeps the most HP (-5): 谋划专家, 毒雾
+d313154 F49 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the code-chosen plan: 毒雾
+d313155 F49 T2 [code] combat/least-loss {"action": "end_turn"} every simulated line dies; playing the one that keeps the most HP (-5): end turn
+d313156 F49 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 1} Jev chose 猎杀者 with confidence 0.43
+d313157 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 1/10 (生产制造, 迷雾+, 究极防御, 计算下注, potion 药水形状的石头 -> 女王, 带毒刺击 -> 女王, 中和 -> 女王, 狩猎 -> 女王) with confidence 0.31; code rank 1
+d313158 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 迷雾+
+d313159 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5} continuing the Jev-chosen plan: 究极防御
+d313160 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 计算下注
+d313161 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 2/5 (防御, 中和 -> 女王, 狩猎 -> 女王, potion 药水形状的石头 -> 女王) with confidence 0.41; code rank 2
+d313162 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 中和 -> 女王
+d313163 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 狩猎 -> 女王
+d313164 F49 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 0, "target_index": 1} continuing the Jev-chosen plan: potion 药水形状的石头 -> 女王
+d313165 F49 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 12
+d313166 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 2} Jev chose plan 3/3 (早有准备, 毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学) with confidence 0.19; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 13 HP)]
+d313167 F49 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 谋划专家 with confidence 0.16
+d313168 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 3/3 (毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学) with confidence 0.25; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 13 HP)]; SL explore (T2, the latest question before attempt 2's death on T4 (T2 deviated at 1 other question before)): playing 毒雾, 疯狂科学 instead of 毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学, played on this board in attempts 2, 3 (the best untried line by the question's ranking, among those the rollout does not see dying more often)
+d313169 F49 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 2} continuing the Jev-chosen plan: 疯狂科学
+d313170 F49 T2 [jev] combat/plan-choice {"action": "end_turn"} Jev chose plan 3/3 (致命毒药+ -> 火炬头聚合体) with confidence 0.14; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 13 HP)]; SL explore (the deviation's turn, T2): playing end turn instead of 致命毒药+ -> 火炬头聚合体, which ends the turn with the plays attempts 2, 3 had through the deviation point (the best untried line by the question's ranking, among those the rollout does not see dying more often)
+d313171 F49 T3 [code] combat/plan {"action": "play_card", "card_index": 0, "target_index": 0} code plan (only distinct line): 扫腿+ -> 火炬头聚合体, 后空翻; hp -0, dmg 12
+d313172 F49 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the code-chosen plan: 后空翻
+d313173 F49 T3 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 12
+d313174 F49 T4 [code] combat/least-loss {"action": "play_card", "card_index": 0} every simulated line dies; playing the one that keeps the most HP (-10): 灵动步法, 打击 -> 火炬头聚合体, 打击 -> 火炬头聚合体
+d313175 F49 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 火炬头聚合体
+d313176 F49 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 火炬头聚合体
+d313177 F49 T4 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d313178 F49 T1 [jev] selection/take into my hand {"action": "select_deck_card", "option_index": 1} Jev chose 猎杀者 with confidence 0.47
+d313179 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 1/10 (生产制造, 迷雾+, 究极防御, 计算下注, potion 药水形状的石头 -> 女王, 带毒刺击 -> 女王, 中和 -> 女王, 狩猎 -> 女王) with confidence 0.40; code rank 1
+d313180 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the Jev-chosen plan: 迷雾+
+d313181 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 5} continuing the Jev-chosen plan: 究极防御
+d313182 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 4} continuing the Jev-chosen plan: 计算下注
+d313183 F49 T1 [jev] combat/plan-choice {"action": "play_card", "card_index": 0, "target_index": 1} Jev chose plan 2/5 (防御, 中和 -> 女王, 狩猎 -> 女王, potion 药水形状的石头 -> 女王) with confidence 0.42; code rank 2; SL explore (T1, the 3rd latest question before attempt 2's death on T4 (T1 deviated at 1 other question before)): playing 带毒刺击 -> 女王, 中和 -> 女王, 狩猎 -> 女王, potion 药水形状的石头 -> 女王 instead of 防御, 中和 -> 女王, 狩猎 -> 女王, potion 药水形状的石头 -> 女王, played on this board in attempts 2, 3, 5 (the best untried line by the question's ranking, among those the rollout does not see dying more often)
+d313184 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 中和 -> 女王
+d313185 F49 T1 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 1} continuing the Jev-chosen plan: 狩猎 -> 女王
+d313186 F49 T1 [code] combat/plan-continue {"action": "use_potion", "option_index": 0, "target_index": 1} continuing the Jev-chosen plan: potion 药水形状的石头 -> 女王
+d313187 F49 T1 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -2, dmg 15
+d313188 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 2} Jev chose plan 3/3 (早有准备, 毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学) with confidence 0.23; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 11 HP)]
+d313189 F49 T2 [jev] selection/choose {"action": "select_deck_card", "option_index": 0} Jev chose 谋划专家 with confidence 0.16
+d313190 F49 T2 [jev] combat/plan-choice {"action": "play_card", "card_index": 1} Jev chose plan 3/3 (毒雾, 致命毒药+ -> 火炬头聚合体, 疯狂科学) with confidence 0.22; code rank 3 [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 10 of 11 HP)]
+d313191 F49 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1, "target_index": 0} continuing the Jev-chosen plan: 致命毒药+ -> 火炬头聚合体
+d313192 F49 T2 [code] combat/plan-continue {"action": "play_card", "card_index": 1} continuing the Jev-chosen plan: 疯狂科学
+d313193 F49 T2 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d313194 F49 T3 [code] combat/plan {"action": "play_card", "card_index": 0, "target_index": 0} code plan (only distinct line): 扫腿+ -> 火炬头聚合体, 后空翻; hp -0, dmg 22
+d313195 F49 T3 [code] combat/plan-continue {"action": "play_card", "card_index": 3} continuing the code-chosen plan: 后空翻
+d313196 F49 T3 [code] combat/plan {"action": "end_turn"} code plan (only line): end turn; hp -0, dmg 22
+d313197 F49 T4 [code] combat/least-loss {"action": "play_card", "card_index": 0} every simulated line dies; playing the one that keeps the most HP (-12): 灵动步法, 打击 -> 火炬头聚合体, 打击 -> 火炬头聚合体
+d313198 F49 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 火炬头聚合体
+d313199 F49 T4 [code] combat/plan-continue {"action": "play_card", "card_index": 2, "target_index": 0} continuing the code-chosen plan: 打击 -> 火炬头聚合体
+d313200 F49 T4 [code] combat/end_turn {"action": "end_turn"} no playable cards; ending the turn
+d313201 F49 T4 [code] run/finalize {"action": "continue_game_over"} defeat: saving the result with continue_game_over before stopping
