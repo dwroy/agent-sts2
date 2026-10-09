@@ -1,0 +1,227 @@
+{
+  "task": "fix-batch",
+  "base": "f3f4366038918fcb22d25dd80be15716b91f4697",
+  "fixes": [
+    {
+      "item": "Roy 已授权新功能：静默 boss 模拟校准",
+      "commit": "e7ea26412a65409d1f1d27ff72dd6dc050df98c3",
+      "source_code": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+      "test": [
+        "agent/tools/boss-sim/test_silent_calibration.py",
+        "agent/tests/silent-boss-calibration.test.ts",
+        "agent/tests/silent-boss-calibration-cli.test.ts",
+        "ops/tests/test_silent_calibration_dispatch.py",
+        "agent/tools/test-sandbox.sh"
+      ],
+      "fails_without_fix": null,
+      "fails_without_fix_note": "复用已上线实现的授权校准刷新；未执行撤源对照，不能声称真红。",
+      "ledger_id": "silent-0337",
+      "ledger_kind": "fight",
+      "ledger_status": "proposed"
+    }
+  ],
+  "skipped": [
+    {
+      "item": "未达标 boss / F49 准入",
+      "reason": "样本已满10仍有失败指标，保留低信度，详见boss_table与F49。"
+    },
+    {
+      "item": "A0–4 / A5–9 独立验证",
+      "reason": "固定时间切分后两段验证均0，不能声称样本外可靠性。"
+    }
+  ],
+  "merged": "855a758e1b698573c16605a10a8669a326f93338",
+  "publication": "a0618c990f9f503c5d5de7d4ce1d5da11a04e08a",
+  "publication_tree": "9109872dd6d3732c5232f1f3b6040818e06e6a6e",
+  "tested_tree": "958a3da06e9e33c34668bbc874e2c2738d398edd",
+  "version": "S1.boss-calibration8",
+  "commits": {
+    "existing_implementation": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+    "source": "e7ea26412a65409d1f1d27ff72dd6dc050df98c3",
+    "saved_refresh": "8d8ae86583b84ca339ccf8e6e8a2fc6da1126407",
+    "actual_merge": "855a758e1b698573c16605a10a8669a326f93338",
+    "publication": "a0618c990f9f503c5d5de7d4ce1d5da11a04e08a"
+  },
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 251,
+    "cases": 2627,
+    "source_sandbox": 0,
+    "live_sandbox": 0,
+    "python_fixed": {
+      "exit": 0,
+      "cases": 12
+    },
+    "dispatch_fixed": {
+      "exit": 0,
+      "cases": 45
+    },
+    "gitleaks": 0,
+    "ledger_check": 0,
+    "full_external": "交调度器，尚未执行"
+  },
+  "samples": {
+    "finished_silent_runs": 166,
+    "attempts_including_sl": 760,
+    "usable": 301,
+    "sl_censored_excluded": 458,
+    "missing_opening_actual_excluded": 1,
+    "new_actual_outcomes": 20,
+    "new_won": 13,
+    "new_died": 7,
+    "fixed_tune_keys": 107,
+    "successful_tune_each": 106,
+    "validation_each": 194,
+    "cutoff_utc": "2026-10-06T02:46:11.648000",
+    "reuse": "281旧场输入/回合/数值等价且3条历史重放核实；复用562旧结果，完整重放20新场/40结果。"
+  },
+  "boss_table": [
+    {
+      "boss": "AEONGLASS",
+      "n": 12,
+      "missing": 0,
+      "B2": "brier,gap,leak",
+      "B3": "brier,gap,leak"
+    },
+    {
+      "boss": "CEREMONIAL_BEAST",
+      "n": 19,
+      "missing": 0,
+      "B2": "trusted",
+      "B3": "trusted"
+    },
+    {
+      "boss": "KAISER_CRAB",
+      "n": 19,
+      "missing": 0,
+      "B2": "trusted",
+      "B3": "trusted"
+    },
+    {
+      "boss": "KNOWLEDGE_DEMON",
+      "n": 17,
+      "missing": 0,
+      "B2": "trusted",
+      "B3": "trusted"
+    },
+    {
+      "boss": "LAGAVULIN_MATRIARCH",
+      "n": 20,
+      "missing": 0,
+      "B2": "trusted",
+      "B3": "trusted"
+    },
+    {
+      "boss": "QUEEN",
+      "n": 12,
+      "missing": 0,
+      "B2": "brier,gap",
+      "B3": "brier,gap"
+    },
+    {
+      "boss": "SOUL_FYSH",
+      "n": 16,
+      "missing": 0,
+      "B2": "trusted",
+      "B3": "trusted"
+    },
+    {
+      "boss": "TEST_SUBJECT",
+      "n": 10,
+      "missing": 0,
+      "B2": "brier,gap,leak",
+      "B3": "gap,leak"
+    },
+    {
+      "boss": "THE_INSATIABLE",
+      "n": 22,
+      "missing": 0,
+      "B2": "brier,leak",
+      "B3": "brier,leak"
+    },
+    {
+      "boss": "THE_KIN",
+      "n": 13,
+      "missing": 0,
+      "B2": "brier,leak",
+      "B3": "brier,leak"
+    },
+    {
+      "boss": "VANTOM",
+      "n": 14,
+      "missing": 0,
+      "B2": "trusted",
+      "B3": "trusted"
+    },
+    {
+      "boss": "WATERFALL_GIANT",
+      "n": 20,
+      "missing": 0,
+      "B2": "trusted",
+      "B3": "trusted"
+    }
+  ],
+  "A10": {
+    "validation": 194,
+    "B2_gap_pp": 7.7,
+    "B3_gap_pp": 8.0,
+    "B2_brier": 0.1211,
+    "B3_brier": 0.1227,
+    "B2_leak_ratio": 1.255,
+    "B3_leak_ratio": 1.28,
+    "ascension_term_selected": false,
+    "nearest_A9_damage": "TEST_SUBJECT BIG_POUNCE",
+    "F49": {
+      "actual_events": 13,
+      "usable": 12,
+      "validation": 10,
+      "missing": 0,
+      "trust": "low",
+      "B2": {
+        "predicted": 0.394,
+        "actual": 0.0,
+        "brier": 0.1633,
+        "leak_ratio": 2.744,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "B3": {
+        "predicted": 0.338,
+        "actual": 0.0,
+        "brier": 0.1166,
+        "leak_ratio": 3.007,
+        "failed": [
+          "gap",
+          "leak"
+        ]
+      },
+      "scope": "仅单战；F48→F49联合通关率未验证"
+    }
+  },
+  "refresh": {
+    "entry": "agent/tools/boss-sim/refresh-silent.py",
+    "when": "每小时:13/:43及学习完成事件检查；升阶或新增20次实际结局触发；SL截断不计数",
+    "fixed_split": true,
+    "idempotent_skips_verified": true,
+    "archive": "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04",
+    "old_archive_preserved": true
+  },
+  "reports": [
+    "paper/materials/silent/boss-sim-calibration.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/report.md"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/report.md",
+  "logs": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration",
+  "release_audit": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/release-audit.json",
+  "limitations": [
+    "验证只针对封存模型；合入保存的后续知识刷新未冒称同批校准。",
+    "历史A1 K3676LU8B0UH一次开场两个起点模拟失败，保留错误，拟合106/107。",
+    "原始重放130、日志空行检查2、首次发布辅助脚本1的原记录均保留；最终检查与发布0。"
+  ],
+  "code_proposals": [],
+  "implementation_domains": []
+}

@@ -1,0 +1,832 @@
+{
+  "timestamp": "2026-10-09 12:54",
+  "batch": "20261009-114302-fix-batch",
+  "source": "e7ea26412a65409d1f1d27ff72dd6dc050df98c3",
+  "actual_merge": "855a758e1b698573c16605a10a8669a326f93338",
+  "publication": "a0618c990f9f503c5d5de7d4ce1d5da11a04e08a",
+  "publication_tree": "9109872dd6d3732c5232f1f3b6040818e06e6a6e",
+  "version": "S1.boss-calibration8",
+  "version_entry": {
+    "name": "S1.boss-calibration8",
+    "family": "S1",
+    "commit": "855a758e1b698573c16605a10a8669a326f93338",
+    "source": "decision-log 2026-10-09 12:42:43 CST: Roy授权静默boss定期校准；源e7ea26412a65409d1f1d27ff72dd6dc050df98c3；20新实际结局，固定107调参/194验证；silent-0337；paper/materials/silent/boss-sim-calibration.md"
+  },
+  "main_code_sync": "096278f43484db22b3ae7d23181747069be85035",
+  "paths_equal_source": [
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/README.md",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/audit-inputs.py",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/audit-manifest.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/boss-trust.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/completed.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/extraction.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/fights.jsonl",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/finish-pipeline.sh",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/finish-refresh.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/finish-refresh.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/finish-refresh.py",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/first-hit-audit-identifiers.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/game-data-input.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/idempotency-audit.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/initial-backtest.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/initial-interrupted-results.jsonl",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/initial-interruption.md",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/input-audit-summary.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/input-integrity-extended.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/input-integrity-extended.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/input-integrity.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/input-integrity.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/input-summary.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/input-summary.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/ledger-add.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/ledger-add.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/ledger-id.txt",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/ledger-payload-draft.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/ledger-proposal.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/model-changes.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/model-input-audit.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/new-fights.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/new-replay.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/new-replay.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/opening-audit.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/opening-audit.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/opening-audit.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/opening-source-integrity.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/prepare-records.py",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/prepare-refresh.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/prepare-refresh.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/prepare-refresh.py",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/previous-published-report.md",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/previous-trust.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/provenance.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/publish-live.py",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/published-report.md",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/refresh.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/refresh.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/report-draft-v1.md",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/report.md",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/result-reuse-audit.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/results.jsonl",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/runs-snapshot.jsonl",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/sl-snapshot.jsonl",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-dispatch-fixed.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-dispatch-fixed.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-gitleaks.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-gitleaks.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-gitleaks.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-python-fixed.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-python-fixed.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-sandbox.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-sandbox.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-whitespace-data.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-whitespace-data.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-whitespace-original.exit",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/source-whitespace-original.log",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/sources.jsonl",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/split.json",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/summarize-inputs.py",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/turns.jsonl",
+    "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04/validation-identifiers.json",
+    "knowledge/characters/silent/boss-trust.json",
+    "paper/materials/silent/boss-sim-calibration.md"
+  ],
+  "original_source_cli": 2,
+  "new_shipped_cli": 1,
+  "originals": {
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/first-hit-audit-identifiers.json": {
+      "bytes": 1356,
+      "sha256": "c02352c31e14d1ee04864e1c651172ce316939bc4e5ec1e464f02420c81dea7d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-source-update.log": {
+      "bytes": 12,
+      "sha256": "b0700eb7a469c00eec2c56aca9d55ebcc1603ab941189a3003f80c478b194b09"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-publish-authorized-silent-boss-calibration-validation-r-gitleaks.log": {
+      "bytes": 114,
+      "sha256": "2f4609ffda3c74b0af16ada29560475446a68b4dae0ff590948f47a10b846414"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-publish-authorized-silent-boss-calibration-validation-r-gitleaks.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-publish-v1.exit": {
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-source-update.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/new-replay.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/input-integrity.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-dispatch-fixed.log": {
+      "bytes": 144,
+      "sha256": "4c71944704a071c5f915e5a681f55e4d6f91af9a282c7e305285286063e32562"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-publish.log": {
+      "bytes": 10726,
+      "sha256": "9fb2a45ab3080d62ab807ec075d2177504b90471f6718255293d78f00d2c8914"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-final.json": {
+      "bytes": 7753,
+      "sha256": "3c5f91273db1c2c0165e6731066889f42943e31ffd2467be0dd90807c0110b56"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/initial-interruption.md": {
+      "bytes": 293,
+      "sha256": "fee8e6595116b101c17bab9d3ac292f8f0b73fbec8a9ff11198fe33d42c59cf9"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/validation-identifiers.json": {
+      "bytes": 663,
+      "sha256": "c95677ac74846e6e966f068465eb28196e31d6c031af65dbbe018e48397c45a5"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-id.txt": {
+      "bytes": 12,
+      "sha256": "b0700eb7a469c00eec2c56aca9d55ebcc1603ab941189a3003f80c478b194b09"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-final-check.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-sandbox.log": {
+      "bytes": 492,
+      "sha256": "bc3a874912e9ba81f4d0b362f791c39c54fecc90626aeaa35f906f8a9a61f27e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/input-summary.log": {
+      "bytes": 1028,
+      "sha256": "f25cc7768c7bbfe952f2314de91ab1ecd70800f53b10b3b528fd4b29129eb568"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-register-s1.boss-calibration8-silent-boss-calibration-r-gitleaks.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-gitleaks.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520282119-5c86919074fde.jev-prompts.jsonl": {
+      "bytes": 9794,
+      "sha256": "63fa7ed3ebbbea1cb8f136828ac987057cf8d57514f862aec321f57bfeb7e333"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-publish-authorized-silent-boss-calibration-validation-r-gitleaks.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/opening-audit.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-register-s1.boss-calibration8-silent-boss-calibration-r-gitleaks.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/prepare-records.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-proposal.json": {
+      "bytes": 6101,
+      "sha256": "a43d8ce9798416471e0f8cbd29a32317cd2f7fd91c9a7bcd203c6a6ca1a9efa6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520282119-5c86919074fde.states.jsonl": {
+      "bytes": 11798,
+      "sha256": "13873daa6108879c8ec63f44adf2ba17fcc4d3b8c54fabc05c3e2147aab50ca1"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-sandbox.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-publish-v1.log": {
+      "bytes": 391,
+      "sha256": "d0296fc95a5cc3ddaf2d0f2010772bfe16599519a04e59190b4c56c93ec2b61f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/model-input-audit.json": {
+      "bytes": 69192,
+      "sha256": "05e03074b8570077d6e8f9b73a41c8eb9b7e4bd786ee403f7c70d3572385223a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-source-update.json": {
+      "bytes": 350,
+      "sha256": "e6678bb2dde16e8d275b9dafcd61b91072c58c4d2619effd9d0aed1a6da49731"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/completion-manifest.json": {
+      "bytes": 3907,
+      "sha256": "4da3b4bc2a3617fc9dbcdad07baecc0cc2be5ce9292cc4515f1fe51e0dbcbd64"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/finish-refresh.log": {
+      "bytes": 1859,
+      "sha256": "0b3445bb599e57a73f34ac7eea9f97b50f10634478a94ac1ed4fb8e3f5a9fa81"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-save-live-knowledge-refresh-before-silent-boss-calibrat-gitleaks.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520282119-5c86919074fde.run-config.jsonl": {
+      "bytes": 3236,
+      "sha256": "84ea635c2f8fd46857de2063f6558a73d504735decf295ab78d0126c9ee2a791"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/report.md": {
+      "bytes": 126151,
+      "sha256": "5c8495c26169d855da145544aa5be3d68f521c50b41ea267acd10adb65b1212b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/opening-audit.json": {
+      "bytes": 110865,
+      "sha256": "34c60e362101e17ff06d45acf5ae8ca28aa6b88620ce708076b6c40dd0baee07"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520282180-078e973b72033.jev-prompts.jsonl": {
+      "bytes": 4717,
+      "sha256": "9194e334dd58a3a1324a8d5b5c289247c06448f51293e57f164bbf9e66ca472b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-dispatch-fixed.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/previous-ledger.json": {
+      "bytes": 2385050,
+      "sha256": "48a34302e19e855f3ea71032c5c4a773016aeef5ef77fe991528c4b695cab60b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-whitespace-data.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/audit-inputs.py": {
+      "bytes": 3368,
+      "sha256": "046dd7eda3dad202915f15d4cde686963f4fdf1fc97f10ba1e17f0c62a220272"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520952995-87e914ba11c31.run-config.jsonl": {
+      "bytes": 3146,
+      "sha256": "a876fe93d498107d26fe36e6828701303a81aa1c3fca03e3075949a0cd69eec7"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/new-fights.json": {
+      "bytes": 1191415,
+      "sha256": "1fafca9f85ac5358ba5d18ae980cc2a006952df3842a10d5f7a7a6a9ae95b5c6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/commit-message.txt": {
+      "bytes": 238,
+      "sha256": "217c42ed844fab9ad1a3bcf7d2db1d8c19d15af1a56c6638307d91294c27559e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-final-gitleaks.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/finalize.py": {
+      "bytes": 12535,
+      "sha256": "1d41e0f6aa043ee4306a2fc912b7cb431432d43130802130e102ec868e2b6956"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/publish-live-v1.py": {
+      "bytes": 10120,
+      "sha256": "c8e7c2199ba669e7afd4fcceddd0008c6c64d880f4df60486e946bcdd7df4aab"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-final-gitleaks.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/prepare-refresh.log": {
+      "bytes": 1102,
+      "sha256": "474c63c9136a46e163c7d30061d469c668b98ca085d9a657e4e215993f975e08"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/prepare-refresh.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/publish-live.py": {
+      "bytes": 10136,
+      "sha256": "01a69376d09f17e8d99348fee5ccf8100965fc6097085f98c358a0b5899c9f4d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-gitleaks.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/idempotency-audit.json": {
+      "bytes": 365,
+      "sha256": "bf7797bc2629e93938ea638f4f5b5f2f675500e2ea7c7eebac229dca362be925"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-publish.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520952787-94279a69a692.jev-prompts.jsonl": {
+      "bytes": 9794,
+      "sha256": "a1e62c990c3df19352c171cc3d3b23f3dee57f5b3b7da6db7dab5b903d6f92a4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/opening-source-integrity.json": {
+      "bytes": 836431,
+      "sha256": "3c42e3dd0bb76ddd439d7e3130f55b8872f8c8754b02f63759d7f14b7da14f44"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/refresh.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/new-replay.log": {
+      "bytes": 187,
+      "sha256": "acc213b0fad50bddaaecfa01eee37fb683eb04f656b3508623d281365756ee85"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520952995-87e914ba11c31.states.jsonl": {
+      "bytes": 5571,
+      "sha256": "e284f3e694c6f36cf0ceaa752ba5f200d93ebb42e4d576b3ccaf9952edd3956f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-python-fixed.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/finish-pipeline.sh": {
+      "bytes": 1499,
+      "sha256": "a84ba3e8701aae667c5de3bce9dd3ba5c23a6840e8bdbd09b85fe9680155f3b5"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/input-audit-summary.json": {
+      "bytes": 1110,
+      "sha256": "d3272599925076a0e0f60674737b1ea0392e94520cfb8c20815bc01d9b711c29"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-sandbox.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/preserved-live-tree.txt": {
+      "bytes": 564852,
+      "sha256": "46fc78dc7593f61dc5d42878d82b52892859ad3ed24f568f542acd9ed00a724a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/summarize-inputs.py": {
+      "bytes": 1450,
+      "sha256": "7c4b11ffb162b5f1688dd21e6447b09fc890815dedf35c8bfa51cc79b06ae817"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/prepare-records.py": {
+      "bytes": 8067,
+      "sha256": "bbf3ef311b48cf6e353c5b3425ef14ec57f422da3c7bc223f5fa398c0196f8b8"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/finish-refresh.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520952787-94279a69a692.run-config.jsonl": {
+      "bytes": 3145,
+      "sha256": "21482b126e6c6fee8abf942f460214e4d720a3f05bf536b4468688519c43ff24"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/model-changes.json": {
+      "bytes": 51,
+      "sha256": "a482e36230ca4feb9b5942d7e1ce01913cb60867d08aa8964c080616522e45e3"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/release-audit.json": {
+      "bytes": 884,
+      "sha256": "4452cc262a1b961bacb2180099dac2c56086d156c841363e3f014d6ad3704965"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/final.json": {
+      "bytes": 6518,
+      "sha256": "d368a8ac9cc3cfddebcd595c7020e73824a73678a8cef92bb1ecdc227a78d0d4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-gitleaks.log": {
+      "bytes": 114,
+      "sha256": "579be0e2337a1de28e02ad13e88f4430daa9851bb7c4ff8d072b54a24263e187"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/opening-audit.log": {
+      "bytes": 67,
+      "sha256": "5f8213adc226bc7ac387d7ab5ba24278f5ef1ddbcb9eff63f08175ae3e711599"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520282180-078e973b72033.states.jsonl": {
+      "bytes": 5571,
+      "sha256": "996798897a0cfdd7c10eee82e93fd94fda000948decc0e415ca006d1edce12d7"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-add.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/pipeline.log": {
+      "bytes": 226,
+      "sha256": "6665f91deea8741b75aee6b20a7ff0b3c32e8e6951f77c5de119fbd4d0dbf3fa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-preflight.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/input-integrity.log": {
+      "bytes": 247,
+      "sha256": "e0173a117e1d6e275411e5c2441dabba7212b89d6232bf4ac9d675d437d2d95b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/prepare-refresh.py": {
+      "bytes": 4100,
+      "sha256": "20588481822a810c592d6ac2985ae7e1e3b998fd92cac0618ce3a8f6e10fff2e"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/result-reuse-audit.json": {
+      "bytes": 1121,
+      "sha256": "2c373c7b0b0f90f6e8a55b697914120f222429739581948f407dd6617c692035"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520952995-87e914ba11c31.jev-prompts.jsonl": {
+      "bytes": 4717,
+      "sha256": "c3a3b1e44032c5093d89d8ce875ce7e911552b21085c1b313e68dbd8489f4d4b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/refresh.exit": {
+      "bytes": 4,
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520282180-078e973b72033.run-config.jsonl": {
+      "bytes": 3236,
+      "sha256": "e0fe44ceaa1a3c97e47b15832236b28008ca927a0ce15cbde762af3c94d18aff"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-python-fixed.log": {
+      "bytes": 2079,
+      "sha256": "50e10ced6d208ed1270263fad4ceb04889d965ee758e186f98035f04ea369b37"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-release-state.json": {
+      "bytes": 10940,
+      "sha256": "f560b7c1caa8c93d752707fc7a417c620f0c4109f04c28977614f12db06d7f1a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/report.json": {
+      "bytes": 6518,
+      "sha256": "d368a8ac9cc3cfddebcd595c7020e73824a73678a8cef92bb1ecdc227a78d0d4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/finish-refresh.py": {
+      "bytes": 4365,
+      "sha256": "4c28e569ae51cad8b085b8280888f78d1c91cdc8056e4128b4ec4373e16a75e6"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/report-draft-v1.md": {
+      "bytes": 1207,
+      "sha256": "355bc3c57b63738dfb40a41732c11eabf2346e3929680ba00eb283aa8657a19d"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-final-check.log": {
+      "bytes": 94,
+      "sha256": "8d70b052606736b52c33cf40985496898b10fb5ce50c783a881b2299da9092fb"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-save-live-knowledge-refresh-before-silent-boss-calibrat-gitleaks.log": {
+      "bytes": 113,
+      "sha256": "88bfd3fd6a52a5de537bb6b46fd68a8f74960a10dd58bdcdeeb14c1245d72d40"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-preflight.log": {
+      "bytes": 41,
+      "sha256": "82a2efa82dafe344951264c8a83959f3c91b3c71fb9493cc939159c8148ebaf4"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/results.jsonl": {
+      "bytes": 2655040,
+      "sha256": "4de2d3af8e41be7785dfd8b7782a8c9bd6d33dbce86ededfb213e35060c8d5f2"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-whitespace-data.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/prepare-records.log": {
+      "bytes": 459,
+      "sha256": "fb7332facfe111b13b6192024e0d06a206e40d6d5597210863834e57ef551116"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/jev-sts2-settle-1791520952787-94279a69a692.states.jsonl": {
+      "bytes": 11798,
+      "sha256": "d08a06ac20f6f070213c12983c08b6f279cd6e0c91d08cb8bd11df6363d9cd0c"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/artifact.txt": {
+      "bytes": 65,
+      "sha256": "c4575f1918a504c985ccfb1dcae1f6cb221dd986b34c8642731dce983a60667f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-whitespace-original.exit": {
+      "bytes": 2,
+      "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-commit.log": {
+      "bytes": 9921,
+      "sha256": "b3abdfd571475ce2df4da399f8c418ab0e73714302d7d07d68fcc26b99a86428"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-commit.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-whitespace-original.log": {
+      "bytes": 139,
+      "sha256": "b610ca3af14a240fb0a693e56241db4bd005160ce6178d3184c6656a670c4f3b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/input-integrity-extended.log": {
+      "bytes": 247,
+      "sha256": "e0173a117e1d6e275411e5c2441dabba7212b89d6232bf4ac9d675d437d2d95b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-final-gitleaks.log": {
+      "bytes": 114,
+      "sha256": "7ca906cebe8b44115a7902d88ed84279c9f94e37791888ca415569fd0f4170b8"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/provenance.json": {
+      "bytes": 28075,
+      "sha256": "0307addc7afa25cc20a2b4d0ea1e14078caf1ff9afc407f347aa9be96fb8255f"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/previous-trust.json": {
+      "bytes": 70033,
+      "sha256": "3a5bcdc926240de60faa2902de4fd29b8927fe3e56fb538682d62ca074d3c918"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-payload-draft.json": {
+      "bytes": 5992,
+      "sha256": "90218f897a61dbb5955accb81c61f94752ec0f9079310926912b8dd6451278c7"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/ledger-add.log": {
+      "bytes": 12,
+      "sha256": "b0700eb7a469c00eec2c56aca9d55ebcc1603ab941189a3003f80c478b194b09"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/input-summary.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-sandbox.log": {
+      "bytes": 530,
+      "sha256": "054458944495043c9981c4a6691407f7649d3de88249313601d9f2d2833b5fae"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/input-integrity-extended.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-register-s1.boss-calibration8-silent-boss-calibration-r-gitleaks.log": {
+      "bytes": 109,
+      "sha256": "78416fb3f41b93664bb7687c8529d0cea0b9548f5b057e0248b51fccce1a604a"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/source-commit.txt": {
+      "bytes": 41,
+      "sha256": "6357170b92d0e2238fa9745c75cc666b3f42fc0af85263394aa678e73771e0da"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/live-save-live-knowledge-refresh-before-silent-boss-calibrat-gitleaks.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-114302-fix-batch.out": {
+      "bytes": 7031,
+      "sha256": "d7310782e1cca1f47628812abf3c5a2f0acaeb43c85859ea2e0f9b596743e0c8"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-114302-fix-batch.err": {
+      "bytes": 29748,
+      "sha256": "e8eccc03509e950519490cf275c87a9aa36f0918935458fafd0e24c8c17a983b"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration.jsonl": {
+      "bytes": 3435191,
+      "sha256": "2fc4bcbd63471d73713df8395140a49d166e73ae9243324af3772db93df7fe4c"
+    }
+  },
+  "completion_manifest_sha_verified": 37,
+  "saved_refresh_sha_verified": 8,
+  "source_and_live_sandbox": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 251,
+    "cases": 2627
+  },
+  "python_fixed": 12,
+  "dispatch_fixed": 45,
+  "source_ledger_evidence": 20,
+  "full_external_checks_pending": true,
+  "original_scheduler_state": {
+    "task": "fix-batch",
+    "learner_task": "silent-boss-calibration",
+    "character": "silent",
+    "runs": [],
+    "key": "feature:silent-calibration-af99dd39b9d7e897f7a13702",
+    "pid": 1809347,
+    "state": "done",
+    "reason": "calibration-refresh",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+    "feature_request": "silent-calibration-af99dd39b9d7e897f7a13702",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pAK",
+    "finished": "2026-10-09 12:46",
+    "rc": 0,
+    "merged": "855a758e1b698573c16605a10a8669a326f93338",
+    "proposal_audit_errors": [],
+    "report": {
+      "task": "fix-batch",
+      "base": "f3f4366038918fcb22d25dd80be15716b91f4697",
+      "fixes": [
+        {
+          "item": "Roy 已授权新功能：静默 boss 模拟校准",
+          "commit": "e7ea26412a65409d1f1d27ff72dd6dc050df98c3",
+          "source_code": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+          "test": [
+            "agent/tools/test-sandbox.sh",
+            "agent/tools/boss-sim/test_silent_calibration.py",
+            "agent/tests/silent-boss-calibration.test.ts",
+            "agent/tests/silent-boss-calibration-cli.test.ts",
+            "ops/tests/test_silent_calibration_dispatch.py"
+          ],
+          "fails_without_fix": null,
+          "fails_without_fix_note": "本批是复用已上线实现的校准刷新；未执行撤源对照。",
+          "ledger_id": "silent-0337",
+          "ledger_kind": "fight",
+          "ledger_status": "proposed"
+        }
+      ],
+      "merged": "855a758e1b698573c16605a10a8669a326f93338",
+      "publication": "a0618c990f9f503c5d5de7d4ce1d5da11a04e08a",
+      "publication_tree": "9109872dd6d3732c5232f1f3b6040818e06e6a6e",
+      "tested_tree": "958a3da06e9e33c34668bbc874e2c2738d398edd",
+      "version": "S1.boss-calibration8",
+      "commits": {
+        "existing_implementation": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+        "source": "e7ea26412a65409d1f1d27ff72dd6dc050df98c3",
+        "saved_refresh": "8d8ae86583b84ca339ccf8e6e8a2fc6da1126407",
+        "actual_merge": "855a758e1b698573c16605a10a8669a326f93338",
+        "publication": "a0618c990f9f503c5d5de7d4ce1d5da11a04e08a"
+      },
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 251,
+        "cases": 2627,
+        "source_sandbox": 0,
+        "live_sandbox": 0,
+        "python_fixed": {
+          "exit": 0,
+          "cases": 12
+        },
+        "dispatch_fixed": {
+          "exit": 0,
+          "cases": 45
+        },
+        "gitleaks": 0,
+        "ledger_check": 0,
+        "full_external": "尚未执行，交调度器"
+      },
+      "samples": {
+        "finished_silent_runs": 166,
+        "attempts_including_sl": 760,
+        "usable": 301,
+        "sl_censored_excluded": 458,
+        "missing_opening_actual_excluded": 1,
+        "new_actual_outcomes": 20,
+        "new_won": 13,
+        "new_died": 7,
+        "fixed_tune_keys": 107,
+        "successful_tune_each": 106,
+        "validation_each": 194,
+        "cutoff_utc": "2026-10-06T02:46:11.648000",
+        "reuse": "核实281旧场输入、回合及数值等价，3条历史重放一致；复用562旧结果，完整重放20新场的40个结果。"
+      },
+      "boss_table": [
+        {
+          "boss": "AEONGLASS",
+          "n": 12,
+          "missing": 0,
+          "B2": "brier,gap,leak",
+          "B3": "brier,gap,leak"
+        },
+        {
+          "boss": "CEREMONIAL_BEAST",
+          "n": 19,
+          "missing": 0,
+          "B2": "trusted",
+          "B3": "trusted"
+        },
+        {
+          "boss": "KAISER_CRAB",
+          "n": 19,
+          "missing": 0,
+          "B2": "trusted",
+          "B3": "trusted"
+        },
+        {
+          "boss": "KNOWLEDGE_DEMON",
+          "n": 17,
+          "missing": 0,
+          "B2": "trusted",
+          "B3": "trusted"
+        },
+        {
+          "boss": "LAGAVULIN_MATRIARCH",
+          "n": 20,
+          "missing": 0,
+          "B2": "trusted",
+          "B3": "trusted"
+        },
+        {
+          "boss": "QUEEN",
+          "n": 12,
+          "missing": 0,
+          "B2": "brier,gap",
+          "B3": "brier,gap"
+        },
+        {
+          "boss": "SOUL_FYSH",
+          "n": 16,
+          "missing": 0,
+          "B2": "trusted",
+          "B3": "trusted"
+        },
+        {
+          "boss": "TEST_SUBJECT",
+          "n": 10,
+          "missing": 0,
+          "B2": "brier,gap,leak",
+          "B3": "gap,leak"
+        },
+        {
+          "boss": "THE_INSATIABLE",
+          "n": 22,
+          "missing": 0,
+          "B2": "brier,leak",
+          "B3": "brier,leak"
+        },
+        {
+          "boss": "THE_KIN",
+          "n": 13,
+          "missing": 0,
+          "B2": "brier,leak",
+          "B3": "brier,leak"
+        },
+        {
+          "boss": "VANTOM",
+          "n": 14,
+          "missing": 0,
+          "B2": "trusted",
+          "B3": "trusted"
+        },
+        {
+          "boss": "WATERFALL_GIANT",
+          "n": 20,
+          "missing": 0,
+          "B2": "trusted",
+          "B3": "trusted"
+        }
+      ],
+      "boss_table_note": "trusted表示四项门槛全部通过，其余值为失败指标；VANTOM本批新增准入，详细数值见报告。",
+      "A10": {
+        "validation": 194,
+        "B2_gap_pp": 7.7,
+        "B3_gap_pp": 8.0,
+        "B2_brier": 0.1211,
+        "B3_brier": 0.1227,
+        "B2_leak_ratio": 1.255,
+        "B3_leak_ratio": 1.28,
+        "ascension_term_selected": false,
+        "nearest_A9_damage": "TEST_SUBJECT BIG_POUNCE",
+        "F49": {
+          "actual_events": 13,
+          "usable": 12,
+          "validation": 10,
+          "missing": 0,
+          "trust": "low",
+          "B2": {
+            "predicted": 0.394,
+            "actual": 0,
+            "brier": 0.1633,
+            "leak_ratio": 2.744,
+            "failed": [
+              "brier",
+              "gap",
+              "leak"
+            ]
+          },
+          "B3": {
+            "predicted": 0.338,
+            "actual": 0,
+            "brier": 0.1166,
+            "leak_ratio": 3.007,
+            "failed": [
+              "gap",
+              "leak"
+            ]
+          },
+          "scope": "仅评估单战；F48→F49联合通关率未验证"
+        }
+      },
+      "skipped": [
+        {
+          "item": "未达标 boss / F49 准入",
+          "reason": "数量达到10仍有失败指标，保持低信度，未降低门槛。"
+        },
+        {
+          "item": "A0–4 / A5–9 独立验证",
+          "reason": "固定切分后两段验证均0，不能声称样本外可靠性。"
+        }
+      ],
+      "refresh": {
+        "entry": "agent/tools/boss-sim/refresh-silent.py",
+        "when": "每小时:13/:43及学习完成事件检查；升阶或新增20次实际结局触发，SL截断不计数",
+        "fixed_split": true,
+        "idempotent_skips_verified": true,
+        "archive": "experiments/boss-sim/silent/785eb550c7c9a7d516da9d225057be5642c2d566e798a43b944e95f9b3bfae04",
+        "old_archive_preserved": true
+      },
+      "release_audit": {
+        "task_paths_equal_source": 75,
+        "refresh_blobs_preserved": 8,
+        "archive_hashes_verified": 72,
+        "sealed_result_hashes_verified": 11,
+        "version_unique": true
+      },
+      "limitations": [
+        "验证针对封存模型；保存的后续live知识刷新未冒称同批校准。",
+        "历史A1 K3676LU8B0UH一次开场两个起点模拟失败，保留错误，实际拟合106/107。",
+        "首次发布辅助脚本失败、全量重放主动中断及原日志空行检查记录均保留；最终发布和检查通过。"
+      ],
+      "reports": [
+        "paper/materials/silent/boss-sim-calibration.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/report.md"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration/report.md",
+      "logs": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-114303-silent-boss-calibration",
+      "code_proposals": [],
+      "implementation_domains": []
+    },
+    "checks_pending": true
+  },
+  "original_release_line": "- 2026-10-09 12:42:43 CST Codex学习者：Roy已授权新功能静默boss定期校准刷新；20新实际结局触发，166完局/760尝试/301可用，固定107调参与UTC切点，验证174→194；来源['0DJ6GFZZ0TG9', 'CSLHFCBSC1UM', 'E6DYYXRX7GVE', 'J8PHG72DGD90', 'JBX9JLH46KVN', 'KSX97DF5H3NY', 'SDY5T9XCSQN2', 'SV2GP9NX4HQD', 'VAC6Z1PZ1QJG', 'XZUJR08FW801']，账本silent-0337为fight/proposed待运维核实；复用实现cdf75af64fb5b118a5a808ecb3b05e2a05991c36，本批源e7ea26412a65409d1f1d27ff72dd6dc050df98c3→实际855a758e1b698573c16605a10a8669a326f93338，版本S1.boss-calibration8；B2/B3 Brier=0.1211/0.1227，可信['KAISER_CRAB', 'CEREMONIAL_BEAST', 'KNOWLEDGE_DEMON', 'LAGAVULIN_MATRIARCH', 'SOUL_FYSH', 'VANTOM', 'WATERFALL_GIANT']/['KAISER_CRAB', 'CEREMONIAL_BEAST', 'KNOWLEDGE_DEMON', 'LAGAVULIN_MATRIARCH', 'SOUL_FYSH', 'VANTOM', 'WATERFALL_GIANT']，F49独立限制保留；完整来源/残差/不足见paper/materials/silent/boss-sim-calibration.md与新指纹目录。原阈值与其他角色等价，知识刷新逐blob保持；源/合后固定沙箱tsc+vitest0，Python固定夹具0，完整外部检查交调度器，shipped交运维；不修其他队列、不运行play、不推送。\n",
+  "data_and_archive_only": true,
+  "no_new_version_or_recheck_or_B4_B5_dispatch": true,
+  "no_paper_refresh": true,
+  "original_limits_preserved": [
+    "验证只针对封存模型；合入保存的后续知识刷新未冒称同批校准。",
+    "历史A1 K3676LU8B0UH一次开场两个起点模拟失败，保留错误，拟合106/107。",
+    "原始重放130、日志空行检查2、首次发布辅助脚本1的原记录均保留；最终检查与发布0。"
+  ],
+  "report_prose_variants_preserved_separately": true
+}
