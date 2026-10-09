@@ -1,0 +1,67 @@
+import { afterEach, describe, expect, it } from "vitest";
+import { knowledgeCharacter, setKnowledgeCharacter } from "../src/knowledge/files.js";
+import { slimInput } from "../src/sim/boss-sim.js";
+import { rolloutDecision, simulateFight, type RolloutInput } from "../src/reflex/rollout.js";
+import { solveTurn, type EnemySim } from "../src/reflex/turn-solver.js";
+import { board } from "./boss-sim-fixture.js";
+
+const originalCharacter = knowledgeCharacter();
+afterEach(() => setKnowledgeCharacter(originalCharacter));
+
+function queenBoard(): RolloutInput {
+  const enemy = (index: number, hp: number, attacks: EnemySim["attacks"]): EnemySim => ({
+    index, name: String(index), hp, maxHp: 1000, block: 0, vulnerable: 0, weak: 0,
+    artifact: 0, intangible: false, attacks,
+  });
+  const input = board({ playerHp: 1000, enemies: [
+    { sim: enemy(0, 1000, [{ damage: 8, hits: 3 }]), info: { index: 0, id: "TORCH_HEAD_AMALGAM", move: "BEAM_MOVE", strength: 0, powers: {} } },
+    { sim: enemy(1, 1000, []), info: { index: 1, id: "QUEEN", move: "BURN_BRIGHT_FOR_ME_MOVE", strength: 0, powers: {} } },
+  ], tables: {
+    TORCH_HEAD_AMALGAM: { moves: { BEAM_MOVE: { damage: 8, hits: 3, strength: 0, block: 0 } }, next: { BEAM_MOVE: { BEAM_MOVE: 1 } } },
+    QUEEN: { moves: { BURN_BRIGHT_FOR_ME_MOVE: { damage: 0, hits: 1, strength: 0, block: 20 } }, next: { BURN_BRIGHT_FOR_ME_MOVE: { BURN_BRIGHT_FOR_ME_MOVE: 1 } } },
+  } });
+  input.meta = { ...input.meta, asc: 7, t: 3, enc: "QUEEN+TORCH_HEAD_AMALGAM" };
+  input.solver.player.maxHp = 1000;
+  input.solver.hand = [];
+  input.piles = { handBase: [], draw: [], discard: [] };
+  input.plans = solveTurn(input.solver).plans;
+  return input;
+}
+
+describe("Silent Queen's observed whole-fight ally buff", () => {
+  it("adds one Strength after the Amalgam acts, without buffing the Queen", () => {
+    // ZZMYZ5UBCG72 T3-T7 and 4Y94N8RDPGPM T3-T11: one ally Strength per Burn Bright.
+    const input = { ...queenBoard(), fightQueenTorchStrength: 1 };
+    const records = simulateFight(input, null, 3, 1).records;
+    expect(records.map((r) => r.snap.E.reduce((sum, e) => sum + e[7], 0))).toEqual([24, 27, 30]);
+    expect(records[1]!.snap.E.find((e) => e[1] === "TORCH_HEAD_AMALGAM")![9]["STRENGTH_POWER"]).toBe(1);
+    expect(records[1]!.snap.E.find((e) => e[1] === "QUEEN")![9]["STRENGTH_POWER"] ?? 0).toBe(0);
+  });
+
+  it("does not buff a dead Amalgam", () => {
+    const input = { ...queenBoard(), fightQueenTorchStrength: 1 };
+    input.solver.enemies[0]!.hp = 0;
+    input.plans = solveTurn(input.solver).plans;
+    const records = simulateFight(input, null, 2, 1).records;
+    expect(records[0]!.snap.E.find((e) => e[1] === "TORCH_HEAD_AMALGAM")![9]["STRENGTH_POWER"] ?? 0).toBe(0);
+  });
+
+  it("sets the simulation field only for Silent at the observed ascensions", () => {
+    const input = queenBoard();
+    setKnowledgeCharacter("ironclad");
+    expect(slimInput(input).fightQueenTorchStrength).toBeUndefined();
+    setKnowledgeCharacter("silent");
+    expect(slimInput(input).fightQueenTorchStrength).toBe(1);
+    input.meta.asc = 6;
+    expect(slimInput(input).fightQueenTorchStrength).toBeUndefined();
+  });
+
+  it("leaves the five-turn rollout byte-identical even if the simulation field is present", () => {
+    const input = queenBoard();
+    input.options = { horizon: 5, samples: 1, budgetMs: 1e9, seed: 1, now: () => 0 };
+    const plain = rolloutDecision(input);
+    const marked = rolloutDecision({ ...input, fightQueenTorchStrength: 1 });
+    const stable = (value: typeof plain) => JSON.stringify(value, (key, v) => key === "elapsedMs" || key === "policyMs" ? undefined : v);
+    expect(stable(marked)).toBe(stable(plain));
+  });
+});

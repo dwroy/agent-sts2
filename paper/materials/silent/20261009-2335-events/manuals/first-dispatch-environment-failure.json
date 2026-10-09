@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-09T22:02:29.011257+08:00",
+  "batch": "20261009-215814-fix-batch",
+  "state": "failed",
+  "rc": 3,
+  "cause": "Watcher-initiated dispatcher inherited CODEX_HOME=/home/dw/.codex1; global AGENTS refusal occurred before any model task. This is a dispatch environment mismatch, not a model failure. Existing active learners actually use /home/dw/.codex-sts2.",
+  "existing_learner_home": "/home/dw/.codex-sts2",
+  "global_agents": false,
+  "auth_exists_only": true,
+  "credentials_read": false,
+  "full_silent_run_count": 180,
+  "original_failed_preserved": true,
+  "retry_policy": "Ask existing ops via wake for one recovered retry; cancel only this batch backoff under learn.lock, retain failed/rc/attempt/history/input."
+}

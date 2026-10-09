@@ -1,0 +1,29 @@
+git rev-parse exp-silent
+ae60e1711e2fb8856ded323878bc4901dab624e9
+git rev-parse HEAD
+05771993cebb36f5fca9860c6df6b8f3ca6e3bbe
+git status --short
+ M notes/fight-value-backtest-silent.md
+git diff --cached --name-only
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+git rev-parse HEAD
+05771993cebb36f5fca9860c6df6b8f3ca6e3bbe
+git merge-base 05771993cebb36f5fca9860c6df6b8f3ca6e3bbe ae60e1711e2fb8856ded323878bc4901dab624e9
+3db9b61ee8145552b083e7b5ace52a6db09f1893
+git diff --name-only 3db9b61ee8145552b083e7b5ace52a6db09f1893 ae60e1711e2fb8856ded323878bc4901dab624e9 -- knowledge
+knowledge/characters/silent/experience.json
+git diff --name-only 3db9b61ee8145552b083e7b5ace52a6db09f1893 05771993cebb36f5fca9860c6df6b8f3ca6e3bbe -- knowledge
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/experience.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git rev-parse ae60e1711e2fb8856ded323878bc4901dab624e9:knowledge/characters/silent/experience.json
+6270479f660af173a14697f57ab60b6eb1508715
+git rev-parse 05771993cebb36f5fca9860c6df6b8f3ca6e3bbe:knowledge/characters/silent/experience.json
+924d336da79100ad6afd12ca3300a370573cd206

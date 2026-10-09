@@ -1,0 +1,1773 @@
+/**
+ * What a card in hand does, as numbers the turn solver can simulate.
+ *
+ * Most effects are read generically from the mod's `dynamic_values` (Damage, Block, VulnerablePower,
+ * StrengthPower, HpLoss, Energy, Cards, Repeat, …) plus the raw rules template (`rules_text`), which
+ * says whether damage hits twice or every enemy. A few cards whose vars are ambiguous or conditional
+ * are special-cased by id. Anything we cannot model is still playable in the search, flagged
+ * `known: false`, and valued with a small flat bonus so it neither dominates nor disappears.
+ *
+ * Damage values from the mod already include the player's current Strength and card scaling (see
+ * damage.ts); Strength gained *during* the turn is added by the solver.
+ */
+
+import { cardUpgrade } from "../knowledge/card-upgrades.js";
+import { observedApotheosisUpgrade } from "./silent-apotheosis.js";
+import type { Knowledge } from "../knowledge/index.js";
+import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup } from "../core/util/json.js";
+
+/** Ethereal (「虚无」) by the card's keywords or its rendered text: exhausted at the end of the turn while held. */
+export function etherealText(keywords: readonly string[] | undefined, rendered: string): boolean {
+  return (keywords ?? []).some((keyword) => /ethereal/i.test(keyword)) || /(^|\s)虚无(\s|。|$)|\bEthereal\b/.test(rendered);
+}
+
+/**
+ * A held card of the state is Ethereal (etherealText on its game data and rendered text). A card with neither text nor
+ * game data counts as Ethereal: the SL judge's side of caution (Feel No Pain's end-of-turn block, judge.ts).
+ */
+export function heldCardEthereal(card: Record<string, unknown>, knowledge?: Knowledge): boolean {
+  const info = knowledge?.card(str(card["card_id"]));
+  const rendered = str(card["resolved_rules_text"]) || str(card["rules_text"]) || info?.description || "";
+  if (!rendered && !info) return true;
+  return etherealText(info?.keywords, rendered);
+}
+
+export type TargetMode = "single" | "all" | "random" | "self" | "none";
+
+export interface CardModel {
+  index: number;
+  key: string;
+  cardId: string;
+  name: string;
+  type: string;
+  upgraded: boolean;
+  cost: number;
+  xCost: boolean;
+  /** The observed Silent Malaise upgrade's extra debuff beyond energy spent (silent-0144). */
+  malaiseBonus?: number;
+  playable: boolean;
+  target: TargetMode;
+  validTargets: number[];
+  /** Per hit, before this turn's extra Strength and before Vulnerable/Weak. null = deals no damage. */
+  damage: number | null;
+  hits: number;
+  /** Observed plain Silent Flechettes: remove hits as skills from the observed hand leave (silent-0150/0151). */
+  hitsLoseHandSkills?: boolean;
+  /** Plain Silent Precise Cut: only recorded hand/Strength pairs are verified (silent-0166/0169). */
+  preciseCutHandDamage?: boolean;
+  /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
+  maulIncrease?: number;
+  /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
+  shadowmeld?: boolean;
+  /** Observed Burst: each of the next armed Skills this turn is played once more (silent-0114/0115). */
+  burst?: boolean;
+  burstSkills?: number;
+  /** KV0JHNJCKXLS A10 F33 T1: plain Bullet Time frees the existing hand and stops this turn's draws. */
+  bulletTime?: boolean;
+  /** VLZ6CCT8AQ0A A10: ordinary Apotheosis, with unverified upgrades kept unknown. */
+  apotheosis?: boolean;
+  apotheosisUpgrade?: UpgradeDelta;
+  /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
+  corrosiveWave?: number;
+  block: number;
+  /** 61E2QS63Y9WU A10 F28 T2-T3: upgraded Dodge and Roll captures Block for the next turn. */
+  dodgeRollNextBlock?: boolean;
+  /** DUZUBAJ3A8GP A10 F30 T5, silent-0010: plain Mirage reads living poison at play time. */
+  blockFromPoison?: boolean;
+  /** Block before player modifiers, from the observed enchanted/base dynamic value. */
+  blockBase?: number;
+  /** Debuffs applied to the target (or every enemy for `all`). */
+  vulnerable: number;
+  weak: number;
+  /**
+   * Weak is applied before Vulnerable (card-text order: Uppercut "给予1层虚弱。给予1层易伤。"). Matters
+   * against Artifact, which blocks whichever lands first (UJS25 F28: Chomper's Artifact 1 ate the Weak).
+   */
+  weakFirst?: boolean;
+  /** Permanent Strength for the player. */
+  strength: number;
+  /** Dexterity gained on play, from observed Footwork or Expertise vars (silent-0026/0136). */
+  dexterity?: number;
+  /** Observed Fasten: extra Block for later Silent Defends (silent-0218/0143; VLZ F43 T1). */
+  fasten?: number;
+  /** Dexterity for this turn only, from observed Anticipate (silent-0078 / silent-0080 / silent-0113). */
+  temporaryDexterity?: number;
+  /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
+  afterImage?: number;
+  /** Silent A10 plain Serpent Form: observed four-point power, not damage on establishment. */
+  serpentForm?: number;
+  /** Observed whole-hand discard (Shadow Step or Calculated Gamble). */
+  discardsHand?: boolean;
+  /** Calculated Gamble draws as many cards as it actually discarded (silent-0081). */
+  drawDiscardedHand?: boolean;
+  /** Observed plain Silent Hidden Daggers: discard two before adding two Shivs (silent-0153/0154). */
+  discardCount?: number;
+  /** L704TLETMZBM F48 T3/T4: one chosen discard after this card's draw/effects. */
+  discardAfterDraw?: boolean;
+  /** Fixed draw in the observed Dagger Throw text, used only by the discard relic model. */
+  discardDraw?: number;
+  doubleDamageNext?: boolean;
+  /** Observed poison applications and triggers (silent-0008 / silent-0010 / silent-0011). */
+  poison?: number;
+  poisonRequiresExisting?: boolean;
+  poisonNow?: boolean;
+  poisonPerTurn?: number;
+  poisonExtraTriggers?: number;
+  /** Observed Envenom: poison per unblocked attack hit (silent-0082 / silent-0084). */
+  envenom?: number;
+  /** Observed unupgraded Phantom Blades: extra damage on this turn's first Shiv (silent-0099/0101). */
+  phantomBlades?: number;
+  /** Strength that only lasts this turn (Setup Strike). */
+  tempStrength: number;
+  /** Feel No Pain played: Block per card exhausted from then on this turn. */
+  feelNoPain?: number;
+  /** The card's printed base damage (dynamic Damage base_value): with Weak or Shrink, the solver rounds once from it. */
+  damageBase?: number;
+  /**
+   * `damage` already carries our Shrink (SHRINK_POWER on us): the hand as the game shows it while we are Shrunk (Strike
+   * 6 -> 4, Setup Strike 7 -> 4, Fight Me 5 -> 3: floor(x × 0.7), 3109 of 3114 logged hand numbers). A model built from
+   * the printed number (a pile or deck card, a generated one) does not: the solver shrinks that once, and un-shrinks this
+   * one once the Shrink is gone (its beetle killed mid-turn).
+   */
+  shownShrunk?: boolean;
+  /** Dominate: Strength gained per Vulnerable on the target (after the card's own Vulnerable). */
+  strengthPerVulnerable?: number;
+  /** Strength the target enemy gains (Fight Me). */
+  enemyStrength: number;
+  /** Strength the target enemy loses for this turn only (Mangle): lowers its next attack. */
+  enemyTempStrengthLoss: number;
+  hpLoss: number;
+  energyGain: number;
+  /** Plating gained (Stone Armor): that much block at the end of this turn, and less each later turn. */
+  plating?: number;
+  /** Regen gained (Regen Potion): that much HP at the end of this turn, one less each later turn. */
+  regen?: number;
+  /**
+   * Distilled Chaos: plays this many cards from the top of the draw pile, each the pile's expected card
+   * (`generates`, never put in the hand).
+   */
+  playsTop?: number;
+  /** Cards played immediately by this card, without adding controller actions or spending energy. */
+  immediatePlays?: { card: CardModel; count: number };
+  draw: number;
+  exhausts: boolean;
+  /** Ethereal (「虚无」: Dazed, Clumsy, Ascender's Bane): exhausted at the end of the turn when still in hand. */
+  ethereal?: boolean;
+  /** Conditional behaviour the solver implements by id. */
+  special: "malaise" | "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | "retain_hand" | null;
+  /**
+   * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
+   * played N extra times.
+   */
+  replay?: number;
+  /** Blessing of the Forge: what upgrading each card id changes (upgradeDelta), for the cards it may upgrade. */
+  upgrades?: Record<string, UpgradeDelta>;
+  /**
+   * Soldier's Stew: the damage one replay of each Strike card in the draw and discard piles adds over the
+   * rest of the fight (its lasting value; this turn's Strikes replay in the solver).
+   */
+  laterDamage?: number;
+  /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
+  known: boolean;
+  /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
+  flatValue: number;
+  /**
+   * A potion's cost when drunk, in HP (potion-cost.ts: its held value in the potion table; absent or 0 in a boss
+   * fight, without a value, or with the cost switched off). The solver takes weights.hp x this off a line drinking it.
+   */
+  potionCost?: number;
+  /** HP lost at end of turn if this card is still in hand (Toxic, Burn, Decay, …). */
+  heldPenalty: number;
+  /** Part of heldPenalty that is HP loss ("失去N点生命", Beckon): block does not stop it. */
+  heldHpLoss?: number;
+  /** HP lost per non-potion card left in hand (Regret, R0HEV5E3QT6G F48 attempt 3 T3, silent-0032). */
+  heldHpLossPerCard?: number;
+  /**
+   * Damage the card deals to us when played (Foul Potion; a Power under the Globe Head's Galvanic, playSelfDamageOf): our
+   * block takes it first, the rest is HP lost.
+   */
+  selfDamage?: number;
+  /** Flame Barrier: damage dealt back to the attacker per enemy hit this turn. */
+  retaliate?: number;
+  /**
+   * Thorns gained (Liquid Bronze): damage dealt back to the attacker per enemy attack hit, this turn and every
+   * later turn of the fight (THORNS_POWER stays up).
+   */
+  thorns?: number;
+  /** Damage to every enemy some turns later (The Bomb: 40 after 3 turns); scored, not simulated. */
+  delayedDamage?: number;
+  /**
+   * Inferno: the power's amount. Every HP loss on our turn (its own 1 at the start of each turn, a
+   * Bloodletting, Thorns) deals this much to every enemy.
+   */
+  inferno?: number;
+  /**
+   * A lasting Power's per-turn amount, read from the card's own var (POWER_AMOUNT_VARS: Demon Form's
+   * Strength, Juggernaut's damage, Crimson Mantle's block, Pyre's energy, Rupture's Strength, Inferno's
+   * damage). The rollout carries it into its later turns; unset when the card has no such var.
+   */
+  powerAmount?: number;
+  /** One-Two Punch (special "double_next_attacks"): how many of the next Attacks this turn are played twice (its Attacks var). */
+  nextAttacks?: number;
+  /**
+   * A potion that puts a card into the hand, free this turn (Attack/Skill/Power/Colorless Potion), or the
+   * pile card a pile-card potion takes, or the draw pile's expected card (Gambler's Brew, Glowwater,
+   * Distilled Chaos): the card the solver may then play.
+   */
+  generates?: CardModel;
+  /**
+   * The card a pile-card potion (Liquid Memories, Droplet of Precognition) takes into the hand, as the pile holds
+   * it: set on that potion's `generates` (whose own id is GEN:…), so a line names the pile card it plays.
+   */
+  pileCard?: { cardId: string; upgraded: boolean };
+  /** Gambler's Brew, one way to drink it: the keys of the hand cards it discards (turn-solver "gamble"). */
+  discards?: string[];
+  /**
+   * One Monte Carlo sample of a random potion (potion-mc.ts). `choices`: the cards offered, one taken
+   * (Attack Potion's 3 random Attacks; the solver tries each as `generates`). `drawn`: the cards drawn,
+   * in the order of a sampled pile (Swift Potion, Snecko Oil, Gambler's Brew, Glowwater, Distilled Chaos,
+   * Bottled Potential). `adds`: cards put straight into the hand (Orobic Acid). `sneckoCosts`: Snecko
+   * Oil's random cost for each card in hand after the drink, by card key.
+   */
+  choices?: CardModel[];
+  drawn?: CardModel[];
+  adds?: CardModel[];
+  sneckoCosts?: Record<string, number>;
+  /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
+  demise?: number;
+  /** Shrink applied to the target for this many turns: its attacks deal SHRINK_DAMAGE_FACTOR (Beetle Juice). */
+  shrink?: number;
+  /**
+   * Soulbound (the Queen's Chains of Binding: the first 3 cards drawn each turn): once one Soulbound
+   * card is played, the others cannot be played this turn (88HN: blocked_by_hook in states.jsonl).
+   */
+  soulbound?: boolean;
+  /**
+   * A "play me first" card (Enthralled, 执迷: 「如果这张牌在你的手牌中，你必须优先打出这张牌」, the Blood-Soaked Rose's
+   * 2-cost Eternal curse; isPlayFirst): while one is in the hand no other card can be played, potions can; once it is
+   * played the lock is gone (the solver's play). The cards it locks read blocked_by_hook with it as the preventer and are
+   * playable here (afterPlayFirst).
+   */
+  playFirst?: boolean;
+  /**
+   * Puts a card on top of the draw pile (Headbutt: from the discard pile). A draw later in the same
+   * turn takes that card back into hand (XPA4 T11: Headbutt put Shrug It Off+ on top for next turn, then
+   * Pommel Strike drew it and it was discarded unplayed).
+   */
+  putsOnTop?: boolean;
+  /** Draws an unknown number of cards (Pillage: until a non-Attack); `draw` stays 0. */
+  drawsUntil?: boolean;
+  /**
+   * Exhausts a random card from the hand (True Grit, Ember): a card planned after it may be the one
+   * that goes (PU21 F33 T8: Bash, True Grit, Anger planned 27 damage, Anger was exhausted, 11 dealt).
+   */
+  randomExhaust?: boolean;
+  /**
+   * CARD_CONDITIONS (cardConditionOptions): the card's draw and energy come only when the rest of the hand meets this as
+   * it is played, the solver's simulated hand (turn-solver handConditionMet): "empty", nothing else in hand (Restlessness
+   * 「如果你的手牌为空，则抽{Cards}张牌并获得{Energy}」); "noAttack", no Attack in hand (Impatience 「如果你的手牌中没有攻击
+   * 牌，抽{Cards}张牌」). Absent: unconditional (and every card with the switch off).
+   */
+  handCondition?: "empty" | "noAttack";
+  /** CARD_CONDITIONS, Rage (「打出此牌后，你在这个回合内每打出一张攻击牌，获得{Power}点格挡」): Block for each Attack played after it this turn. */
+  rageBlock?: number;
+  /**
+   * CARD_CONDITIONS, Ashen Strike (「你的消耗牌堆中每有一张牌，伤害增加{ExtraDamage}」): damage per card exhausted earlier in the
+   * line (its shown number has the pile as it is at the decision).
+   */
+  perExhaustDamage?: number;
+  /**
+   * CARD_CONDITIONS, Expect a Fight (「你每拥有一点力量，这张牌就额外获得{CalculationExtra}点格挡」): Block per point of Strength
+   * gained earlier in the line (its shown number has the Strength at the decision).
+   */
+  perStrengthBlock?: number;
+  /**
+   * CARD_CONDITIONS, Tear Asunder (「在本场战斗中，你每失去过一次生命值，这张牌就额外造成一次伤害」): one more hit per HP loss
+   * earlier in the line (its shown CalculatedHits has the fight's losses up to the decision).
+   */
+  hitPerHpLoss?: boolean;
+  text: string;
+}
+
+/**
+ * CARD_CONDITIONS (config.cardConditions; default on; the loop sets it at start, process.env before that): conditional card
+ * effects evaluated on the solver's simulated state when the card is played, not counted every time. Off (tools, tests,
+ * CARD_CONDITIONS=off): the card models and the solver as before (Restlessness's draw and energy every time, Spite's second
+ * hit only after an HP loss in the line, Rage a 3-point unknown, Ashen Strike / Expect a Fight / Tear Asunder at their
+ * decision numbers whatever the line did first).
+ *
+ * Checked on the logs (states.jsonl to 2026-10-04; the frame at each play and the next one):
+ * - Restlessness (心神不宁, colorless, 0 cost, Retain; upgraded: Cards 3, Energy 3): 95 plays in 9 runs (92 at A8+; 68 code's,
+ *   27 Jev's), every one with other cards in hand (1-7 of them; the minimum, 1, three times: a Defend); 0 cards drawn and 0
+ *   energy gained every time (12 under No Draw), the draw pile unchanged, the discard pile +1, the hand the card less (92;
+ *   3 got an enemy's Wither as well). AKK09TEEEXKD F17 T10: "Strike, Defend, Restlessness,
+ *   Strike, True Grit" planned on its 2 energy; after Defend it did nothing and the turn ended with Strike and True Grit
+ *   unplayed (-7), and the SL explore deviations repeated it. No logged play had an empty hand, so the "fires" branch is
+ *   the card's text: the card being played is not in the hand, every other card is (unplayable ones too), potions are not.
+ * - Spite: 441 plays read cleanly (target alive, no block in the way): 2 hits on all 123 where HP had been lost earlier this
+ *   turn (HP below the turn's first frame, or Inferno / Crimson Mantle up at it: their turn-start loss), 1 on all 318
+ *   others. The solver only knew a loss in the line itself (PlayerSim.hpLostThisTurn now carries the earlier ones).
+ * - Rage: all 111 of 114 Attacks played with RAGE_POWER N up gained exactly N Block more (no Dexterity, no Frail; the 3
+ *   others gained more from elsewhere): the solver's RAGE_POWER rule, now also for a Rage played in the line.
+ * - Ashen Strike: the shown CalculatedDamage is 6 + 3 x the exhaust pile + Strength, Weak and Shrink applied (91 of 108 plays
+ *   exactly, 2 more with Vigor in it; 13 of the other 15 in one run, VQKX9AD1YHKS, against a pile read short), dealt as shown;
+ *   a card exhausted earlier in the line raises it.
+ * - Expect a Fight: the shown CalculatedBlock is 15 + 5 x Strength (+ Dexterity, Frail), gained as shown (134 of 134).
+ * - Tear Asunder: the shown CalculatedHits is the fight's HP losses so far; dealt Damage x that (67 of 67 read cleanly).
+ * Already right and kept: Evil Eye (doubled on 135 plays after an exhaust this turn or with Toasty Mittens, single on 487
+ * without), Dismantle (2 hits on 463 of 467 into Vulnerable, 1 on 490 of 490 without), Bully (+2 per Vulnerable), Body Slam
+ * (block at play), Pact's End (18 to all on 16 of 17 with 3+ in the exhaust pile, 0 on 35 of 35 below), Stomp (the shown
+ * cost, 740 of 742).
+ */
+export const cardConditionOptions: { enabled: boolean } = { enabled: process.env["CARD_CONDITIONS"] !== "off" };
+
+/** The hand condition a card's draw and energy wait on (CardModel.handCondition), read from its text; null: none. */
+export function handConditionOf(template: string, rendered = ""): CardModel["handCondition"] | null {
+  const text = `${template} ${rendered}`;
+  if (/如果你的手牌为空|if your hand is empty/i.test(text)) return "empty";
+  if (/如果你的手牌中没有攻击牌|if you have no attacks? in your hand|if your hand (?:has|contains) no attacks?/i.test(text)) return "noAttack";
+  return null;
+}
+
+/** A dynamic value's base (before our Strength/Weak), or null. */
+function dynBase(card: Record<string, unknown>, name: string, enchanted = false): number | null {
+  for (const entry of asArray(card["dynamic_values"])) {
+    const value = asRecord(entry);
+    if (str(value["name"]) === name) return (enchanted ? numOrNull(value["enchanted_value"]) : null) ?? numOrNull(value["base_value"]);
+  }
+  return null;
+}
+
+function dyn(card: Record<string, unknown>, name: string): number | null {
+  for (const entry of asArray(card["dynamic_values"])) {
+    const value = asRecord(entry);
+    if (str(value["name"]) === name) {
+      const current = numOrNull(value["current_value"]);
+      return current ?? numOrNull(value["base_value"]);
+    }
+  }
+  return null;
+}
+
+/**
+ * Our attack damage before Vulnerable, unrounded: Weak takes 25% off and Shrink (SHRINK_POWER on us, the Shrinker Beetle's)
+ * 30%, both multiplied, then Vulnerable, and the game rounds down once. Logged while Shrunk: every hand number is
+ * floor((base + Strength) × 0.7); into Vulnerable all 32 single-hit plays where the two differ took floor(base × 0.7 × 1.5), not
+ * floor(shown × 1.5) (Bash 8 shown 5 dealt 8, not 7; Strike 6 + Strength 2 shown 5 dealt 8); Weak and Shrink together
+ * (on an enemy, the same rule): the Magi Knight's 6 shown 3 = floor(6 × 0.75 × 0.7), not 2. The 0.7 is ×7/10: 90 × 0.7 is
+ * 62.99999999999999 in floating point.
+ */
+export function ourAttackScaled(amount: number, weak: boolean, shrunk: boolean): number {
+  const weakened = weak ? amount * 0.75 : amount;
+  return shrunk ? (weakened * 7) / 10 : weakened;
+}
+
+/**
+ * Vigor (VIGOR_POWER, Akabeko 8): the mod adds it to every Attack's shown damage, per hit (Strike 14,
+ * Sword Boomerang 11x3), but the game spends it on the first Attack played (KFP1 F17 T1: Bash+ and
+ * Sword Boomerang predicted 54 into the sleeping Matriarch, dealt 18, and the waking line won). Taken
+ * off every Attack here; the solver adds it back once (PlayerSim.vigor). Under Weak the shown number
+ * carries it at 0.75, under Shrink at 0.7 too (ourAttackScaled).
+ */
+export function stripVigor(hand: CardModel[], vigor: number, weak: boolean, shrunk = false): void {
+  if (vigor <= 0) return;
+  const shown = Math.floor(ourAttackScaled(vigor, weak, shrunk));
+  for (const card of hand) {
+    if (card.type === "Attack" && card.damage !== null) card.damage = Math.max(0, card.damage - shown);
+  }
+}
+
+/**
+ * UACFSW4VDDLD F33 T5: both Shivs show 14, but after the first one the remaining Shiv shows 5.
+ * Normalize the observed nine-point bonus and report whether it is still available. Unmatched values
+ * stay untouched; an already spent or unobserved bonus is never credited from the power alone.
+ */
+export function stripPhantomBlades(hand: CardModel[], amount: number, strength: number, weak: boolean, shrunk = false): boolean {
+  if (amount !== 9) return false;
+  let armed = false;
+  for (const card of hand) {
+    if (card.cardId !== "SHIV" || card.damage === null || card.damageBase === undefined) continue;
+    const base = card.damageBase + strength;
+    if (card.damage !== Math.floor(ourAttackScaled(base + amount, weak, shrunk))) continue;
+    card.damage = Math.floor(ourAttackScaled(base, weak, shrunk));
+    armed = true;
+  }
+  return armed;
+}
+
+/**
+ * A hand card a power's hook keeps from being played (the mod's unplayable_preventer_id, or BlockedByHook in the raw
+ * reason; logged preventers: CHAINS_OF_BINDING_POWER, SLOTH_POWER, SMOGGY_POWER, RINGING_POWER). A card only short of
+ * energy has neither (6898 logged not_enough_energy cards with preventer null, raw EnergyCostTooHigh).
+ */
+function blockedByHook(card: Record<string, unknown>): boolean {
+  return str(card["unplayable_preventer_id"]) !== "" || /BlockedByHook/.test(str(card["unplayable_reason_raw"]));
+}
+
+/**
+ * The "play me first" cards (CardModel.playFirst): Enthralled. Every logged frame with it in hand (10, runs YVWAWAPXJXGV,
+ * 0YG4ETM3MLHS, HYQW47E7CBSC) has every other hand card blocked_by_hook with unplayable_preventer_id ENTHRALLED and every
+ * potion usable; the frame after it is played has no lock left (energy down by its 2); it is discarded, not exhausted (it
+ * comes back later in the same fight). The other preventers logged (CHAINS_OF_BINDING_POWER, SLOTH_POWER, SMOGGY_POWER,
+ * RINGING_POWER, NORMALITY) are caps that no play lifts.
+ */
+export const PLAY_FIRST_CARDS: ReadonlySet<string> = new Set(["ENTHRALLED"]);
+const PLAY_FIRST_TEXT = /你必须优先打出这张牌|must play this card first/i;
+/** `enabled` off (tools only): no card is "play me first" and the cards it locks stay unplayable, as before. */
+export const playFirstOptions: { enabled: boolean } = { enabled: true };
+
+/** A hand or pile card that must be played before any other while it is in the hand (Enthralled; its id or its text). */
+export function isPlayFirst(cardId: string, text = ""): boolean {
+  return playFirstOptions.enabled && (PLAY_FIRST_CARDS.has(cardId) || PLAY_FIRST_TEXT.test(text));
+}
+
+/**
+ * A mod hand card locked only by a "play me first" card in the hand (preventer ENTHRALLED, raw "BlockedByHook" and at
+ * most "EnergyCostTooHigh" beside it): playable once that card is played, the solver keeping the order. One also
+ * Unplayable by its keyword (a Burn: "HasUnplayableKeyword, BlockedByHook") stays unplayable.
+ */
+export function afterPlayFirst(card: Record<string, unknown>): boolean {
+  if (!playFirstOptions.enabled || !PLAY_FIRST_CARDS.has(str(card["unplayable_preventer_id"]))) return false;
+  const reasons = str(card["unplayable_reason_raw"]).split(",").map((reason) => reason.trim()).filter((reason) => reason !== "");
+  return reasons.every((reason) => reason === "BlockedByHook" || reason === "EnergyCostTooHigh");
+}
+
+/**
+ * Pen Nib (PEN_NIB, 「你每打出的第10张攻击牌将会造成双倍伤害」): when the next Attack is the 10th (its stack at 9), the
+ * mod shows every Attack in hand at double damage, but the game doubles only the one played next (GSG0Q5KP9AAU F33 T2:
+ * stack 9, Dismantle 20, Strike 22, Breakthrough 22 to all; planned 86, dealt 20 + 11 + 11 x2 = 53). Halved here
+ * (rounding down gives back the undoubled number, Weak or not), before stripVigor (the shown number doubles the Vigor
+ * too); the solver doubles the Attack the counter reaches (PlayerSim.penNib).
+ */
+export function stripPenNib(hand: CardModel[], ready: boolean): void {
+  if (!ready) return;
+  for (const card of hand) {
+    if (card.type === "Attack" && card.damage !== null) card.damage = Math.floor(card.damage / 2);
+  }
+}
+
+/**
+ * Rough value of a Power card's lasting effect, in "HP-equivalent" points, for a fight of average
+ * length. Only used to rank it against immediate damage/block; tuned from run logs.
+ */
+const POWER_VALUE: Record<string, number> = {
+  DEMON_FORM: 30,
+  // 5 to every enemy at the start of each turn, +5 each time (5+10+15+20 over four turns); B6AC F33:
+  // at the default 8 it was never played, not even on the Knowledge Demon's 0-damage curse turn.
+  ROLLING_BOULDER: 26,
+  INFLAME: 4, // the Strength itself is simulated; this is only the "earlier is better" nudge
+  FEEL_NO_PAIN: 8,
+  DARK_EMBRACE: 8,
+  BARRICADE: 10,
+  CORRUPTION: 14,
+  CRIMSON_MANTLE: 16,
+  INFERNO: 10,
+  JUGGERNAUT: 14,
+  JUGGLING: 6,
+  PYRE: 16,
+  RUPTURE: 6,
+  STAMPEDE: 12,
+  STONE_ARMOR: 14,
+  UNMOVABLE: 8,
+  VICIOUS: 6,
+  CRUELTY: 8,
+  AGGRESSION: 12,
+  HELLRAISER: 10,
+  TANK: 0,
+};
+
+/** The var holding a lasting Power's per-turn amount (CardModel.powerAmount). */
+const POWER_AMOUNT_VARS: Record<string, string> = {
+  DEMON_FORM: "StrengthPower",
+  JUGGERNAUT: "JuggernautPower",
+  CRIMSON_MANTLE: "CrimsonMantlePower",
+  PYRE: "Energy",
+  RUPTURE: "StrengthPower",
+  INFERNO: "InfernoPower",
+  METALLICIZE: "MetallicizePower",
+  ROLLING_BOULDER: "RollingBoulderPower",
+};
+
+const SPECIAL: Record<string, CardModel["special"]> = {
+  DISMANTLE: "dismantle",
+  // Thrash: 「造成4点伤害两次。消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。」 (solver: hits for its printed
+  // number, then an Attack from the hand is exhausted and its shown damage added to Thrash for later plays; 3SBPKG9603WD).
+  THRASH: "thrash",
+  BODY_SLAM: "body_slam",
+  BULLY: "bully",
+  // Entrench: doubles the block up when it is played (0 block: worth 0; RTF3 F17/F28).
+  ENTRENCH: "double_block",
+  MOLTEN_FIST: "molten_fist",
+  WHIRLWIND: "whirlwind",
+  // Volley: X hits at random enemies (LXB3 F33 T3: counted as one 10-damage hit at X=0, dealt 0).
+  VOLLEY: "whirlwind",
+  SPITE: "spite",
+  FEED: "feed",
+  RUPTURE: "rupture",
+  COLOSSUS: "colossus",
+  FIEND_FIRE: "fiend_fire",
+  STOMP: "stomp",
+  // Apparition: Intangible for the enemy turn, every hit to 1 (1LJF F42 T6: two exhausted unplayed
+  // on the wind-up turn, the Heavy Cleave 45 killed us next turn).
+  APPARITION: "intangible",
+  SECOND_WIND: "second_wind", // exhausts every non-Attack in hand, its Block per card (solver) // costs 1 less per Attack played this turn (the shown cost counts the ones before planning) // exhausts the hand, one hit per card exhausted (solver)
+  DOMINATE: "dominate", // Strength per Vulnerable on the target, after its own Vulnerable (solver)
+  FRANTIC_ESCAPE: "frantic_escape", // The Insatiable: +1 Sandpit (the solver scores the countdown)
+  // Primal Force: 「将手牌中的所有攻击牌变化为巨石」 (upgraded: 巨石+): every Attack in hand becomes a Giant Rock (solver).
+  PRIMAL_FORCE: "primal_force",
+  CRIMSON_MANTLE: "crimson_mantle", // 1 HP at the start of every turn (the solver checks it can afford it)
+  // One-Two Punch: 「在这个回合，你打出的下{Attacks}张攻击牌会被额外打出一次。」 (Attacks 1, upgraded 2): the next
+  // Attacks are played twice (solver duplicateAttacks, as ONE_TWO_PUNCH_POWER once it is up). Unmodelled in hand,
+  // it was a 5-point unknown and the line it doubles read single.
+  ONE_TWO_PUNCH: "double_next_attacks",
+  // Unrelenting: 「造成{Damage}点伤害。 你打出的下一张攻击牌耗能变为0。」: the next Attack costs 0 (solver
+  // freeAttacks, as FREE_ATTACK_POWER once it is up). In hand only its damage was modelled.
+  UNRELENTING: "free_next_attack",
+};
+
+/** A placeholder's inner text is a conditional: a choose / show / cond / plural formatter, or a branch `|` outside any nested placeholder or parentheses. */
+function conditionalPlaceholder(inner: string): boolean {
+  if (/^[A-Za-z_]*:(?:choose\(|show:|cond:|plural:)/.test(inner)) return true;
+  let braces = 0;
+  let parens = 0;
+  for (const ch of inner) {
+    if (ch === "{") braces += 1;
+    else if (ch === "}") braces -= 1;
+    else if (ch === "(") parens += 1;
+    else if (ch === ")") parens -= 1;
+    else if (ch === "|" && braces === 0 && parens === 0) return true;
+  }
+  return false;
+}
+
+/**
+ * A card's rules template with its conditional placeholders taken out: the game's text formatter's choose, show, cond and
+ * plural placeholders and its bare conditionals (「{InCombat: （打出{CalculatedShivs:diff()}张小刀）|}」), whose text the game
+ * shows only when the condition holds. Shiv's 「{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。」 says
+ * 「对所有敌人」 only under Fan of Knives; read as written it made the single-target Shiv an AoE card (RNTVAT76BPV0, 2026-10-03:
+ * played without a target, the gate refused it 18 times on 6 boards, each turn then ended). Plain placeholders
+ * ({Damage:diff()}, {Energy:energyIcons()}, {Cards}) stay; a template without a conditional comes back as it is. Logged
+ * conditionals (states.jsonl to 2026-10-03, every card text; tools/template-target-replay.ts): Shiv's TargetType,
+ * IfUpgraded (True Grit 「{IfUpgraded:show:| 随机}消耗1张牌」, Armaments, Cascade, Dual Wield, Enlightenment, Jackpot, Primal
+ * Force, Splash, Stoke, Storm of Steel), Pact's End's plural and Mad Science's riders (「{Wisdom: 抽{WisdomCards:diff()}张牌|}」,
+ * 「{Expertise:获得{ExpertiseStrength:diff()}点力量。…|}」: a rider the card was not given is in its template all the same).
+ * The game's own reading of the card is the mod's target fields and the rendered text (resolved_rules_text).
+ */
+export function unconditionalText(template: string): string {
+  if (!template.includes("{")) return template;
+  const known = unconditionalTexts.get(template);
+  if (known !== undefined) return known;
+  const text = withoutConditionals(template);
+  if (unconditionalTexts.size < 4096) unconditionalTexts.set(template, text);
+  return text;
+}
+const unconditionalTexts = new Map<string, string>();
+
+function withoutConditionals(template: string): string {
+  let out = "";
+  let i = 0;
+  while (i < template.length) {
+    if (template[i] !== "{") {
+      out += template[i];
+      i += 1;
+      continue;
+    }
+    let depth = 0;
+    let end = i;
+    for (; end < template.length; end += 1) {
+      if (template[end] === "{") depth += 1;
+      else if (template[end] === "}" && --depth === 0) break;
+    }
+    // An unclosed brace: the rest as it is.
+    if (end >= template.length) return out + template.slice(i);
+    if (!conditionalPlaceholder(template.slice(i + 1, end))) out += template.slice(i, end + 1);
+    i = end + 1;
+  }
+  return out;
+}
+
+/**
+ * What a card hits, the mod's target fields first: they are what the play needs (the gate refuses a card that requires a
+ * target played without one), and the template's own condition on the text (Shiv's 「对所有敌人」 shows when its TargetType
+ * is AllEnemies). The text decides only for a card the fields leave open (Self or None: The Bomb's 「对所有敌人造成…」,
+ * Corrosive Wave's), read without its conditional placeholders (unconditionalText).
+ */
+function targetMode(targetType: string, template: string, requiresTarget: boolean): TargetMode {
+  if (targetType === "AllEnemies") return "all";
+  if (targetType === "RandomEnemy") return "random";
+  if (requiresTarget || targetType === "AnyEnemy") return "single";
+  const text = unconditionalText(template);
+  if (text.includes("所有敌人") || /all enemies/i.test(text)) return "all";
+  if (text.includes("随机对敌人") || /random enem/i.test(text)) return "random";
+  if (targetType === "Self" || targetType === "AnyAlly") return "self";
+  return "none";
+}
+
+/**
+ * What holding a status/curse at the end of the turn costs, read from its rendered text: Burn "受到N点
+ * 伤害" meets block, Beckon "失去N点生命" does not (WX16, BG4W: Soul Fysh's Beckon planned as blockable,
+ * died at 8 HP). Also used for draw-pile lines (agent_view), which carry the same text.
+ */
+export function heldPenaltyOf(rendered: string): { heldPenalty: number; heldHpLoss: number } {
+  const held = /回合结束时[^。]*手牌中[^。]*?(?:受到|失去)(\d+)点(?:伤害|生命)/.exec(rendered) ?? /at the end of your turn[^.]*in your hand[^.]*?(?:take|lose) (\d+)/i.exec(rendered);
+  const heldPenalty = held ? Number(held[1]) : 0;
+  const heldHpLoss = held && /失去\d+点生命|lose \d+ hp/i.test(held[0]) ? heldPenalty : 0;
+  return { heldPenalty, heldHpLoss };
+}
+
+/** Whether the card text names Weak before Vulnerable (the game applies them in text order). */
+export function debuffWeakFirst(text: string): boolean {
+  const find = (patterns: RegExp[]): number => {
+    const positions = patterns.map((pattern) => text.search(pattern)).filter((position) => position >= 0);
+    return positions.length > 0 ? Math.min(...positions) : -1;
+  };
+  const weakAt = find([/虚弱/, /WeakPower/, /\bweak\b/i]);
+  const vulnerableAt = find([/易伤/, /VulnerablePower/, /\bvulnerable\b/i]);
+  return weakAt >= 0 && (vulnerableAt < 0 || weakAt < vulnerableAt);
+}
+
+function sentences(text: string): string[] {
+  return text
+    .replace(/\[[^\]]*\]/g, "")
+    .split(/[。.\n]/)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence.length > 0);
+}
+
+/**
+ * HP lost for playing the card, read from a standalone "失去N点生命。" / "Lose N HP." sentence (an
+ * enchant's added cost). Held-penalty text ("回合结束时…手牌中…失去") and triggered clauses are not it.
+ */
+export function playHpLossOf(rendered: string): number {
+  if (heldPenaltyOf(rendered).heldPenalty > 0) return 0;
+  let total = 0;
+  for (const sentence of sentences(rendered)) {
+    const match = /^(?:你)?失去(\d+)点生命$/.exec(sentence) ?? /^lose (\d+) hp$/i.exec(sentence);
+    if (match) total += Number(match[1]);
+  }
+  return total;
+}
+
+/**
+ * Damage to us for playing the card, read from a standalone 「受到N点伤害。」 / "Take N damage." sentence: Galvanic (the
+ * Globe Head's GALVANIC_POWER, 「能力牌被侵蚀为流电」) adds one to every Power in the hand (FSPKJAYY3ET6 F39 T1 Inflame
+ * 「获得3点力量。 受到6点伤害。」). Damage, not HP loss: our block takes it first (logged 30 of 31 plays lost exactly 6 of HP
+ * + block, 13 of them from block: DT1H1URTUAD8 F37 T1 Inflame, block 7 -> 1, HP 87 -> 87; the other was played twice by
+ * Throwing Axe, 12). A held card's end-of-turn damage (Burn 「在你的回合结束时，如果这张牌在你的手牌中，你受到2点伤害」),
+ * Disintegration's 「在你的回合结束时，受到6点伤害」 and an enemy taking damage (「使其受到」, 「该敌人…受到」) are not a
+ * sentence of their own and do not match. Over the logs every card text with such a sentence was a Power under Galvanic.
+ */
+export function playSelfDamageOf(rendered: string): number {
+  if (heldPenaltyOf(rendered).heldPenalty > 0) return 0;
+  let total = 0;
+  for (const sentence of sentences(rendered)) {
+    const match = /^(?:你)?受到(\d+)点伤害$/.exec(sentence) ?? /^take (\d+) damage$/i.exec(sentence);
+    if (match) total += Number(match[1]);
+  }
+  return total;
+}
+
+/** Whether the card's Energy is only gained when it is exhausted (Drum of Battle), not on play. */
+export function energyOnExhaustOnly(template: string, rendered: string): boolean {
+  const exhaustClause = /被消耗时|when (?:this card is )?exhausted/i;
+  const withVar = sentences(template.replace(/\{Energy[^}]*\}/g, "ENERGYVAR")).filter((sentence) => sentence.includes("ENERGYVAR"));
+  if (withVar.length > 0) return withVar.every((sentence) => exhaustClause.test(sentence));
+  const energySentences = sentences(rendered).filter((sentence) => /能量|energy/i.test(sentence));
+  return energySentences.length > 0 && energySentences.every((sentence) => exhaustClause.test(sentence));
+}
+
+/**
+ * Whether every sentence naming a card var (`Energy`, `Cards`) is a "next turn" one: Relax's 「下个回合，
+ * 抽{Cards}张牌并获得{Energy}」 is next turn's income, not this turn's (FN0H F33 T2: "Relax, Bash+"
+ * predicted 13 damage; Relax took all 3 energy, Bash+ was never paid for, 0 dealt).
+ */
+export function nextTurnOnly(template: string, varName: string): boolean {
+  const nextTurn = /下个回合|下回合|next turn/i;
+  const withVar = sentences(template.replace(new RegExp(`\\{${varName}[^}]*\\}`, "g"), "CARDVAR")).filter((sentence) => sentence.includes("CARDVAR"));
+  return withVar.length > 0 && withVar.every((sentence) => nextTurn.test(sentence));
+}
+
+/**
+ * Whether every sentence naming a card var is a "at the start of your turn" one: Demon Form's Strength
+ * comes each later turn, not on play.
+ */
+export function turnStartOnly(template: string, varName: string): boolean {
+  const turnStart = /回合开始时|start of (?:your|each) turn/i;
+  const withVar = sentences(template.replace(new RegExp(`\\{${varName}[^}]*\\}`, "g"), "CARDVAR")).filter((sentence) => sentence.includes("CARDVAR"));
+  return withVar.length > 0 && withVar.every((sentence) => turnStart.test(sentence));
+}
+
+/**
+ * Whether a card or relic text gives the player Strength that lasts past this turn: a sentence (or clause)
+ * with 「获得{StrengthPower}点力量」 / "gain {X} Strength" (a var or a rendered number), not a this-turn one
+ * (Setup Strike, Feeding Frenzy, Monologue), not one given to another player (Blaze, Coordinate) or to the
+ * enemies (Philosopher's Stone). Read from the game data's template so it needs no hand list: Inflame,
+ * Fight Me!, Demon Form, Rupture, Dominate, Brand, Arsenal all say so (RBJ402TKQZ6F: Fight Me! was
+ * missing from the old list and the English-only fallback never matched the Chinese text, so the deck
+ * profile read 「力量来源 无」 the whole run).
+ */
+export function givesLastingStrength(text: string): boolean {
+  const gain = /(?:获得|gains?)\s*(?:\{[A-Za-z]+[^}]*\}|\d+|X)?\s*点?\s*(?:\[[^\]]*\])?\s*(?:力量|Strength)/i;
+  const clauses = stripMarkup(text).split(/[。.\n，,；;]/).map((clause) => clause.trim());
+  return clauses.some(
+    (clause) =>
+      gain.test(clause) &&
+      !/本回合|this turn|另一名玩家|其他玩家|another player|other players?/i.test(clause) &&
+      !/敌人|enem(?:y|ies)/i.test(clause.slice(0, clause.search(gain))),
+  );
+}
+
+/**
+ * Replay N from a card's rendered text, a sentence of its own (「重放1。」 after Soldier's Stew, QUG1DSDARAXU
+ * F23 T5; "Replay 1."), not one that gives Replay to another card (Sword Sage 「君王之剑获得重放1。」).
+ */
+export function replayOf(rendered: string): number {
+  const match = /(?:^|[。\s])重放\s*(\d+)\s*(?:。|$)/.exec(rendered) ?? /(?:^|\.\s+)replay\s+(\d+)\s*(?:\.|$)/i.exec(rendered);
+  return match ? Number(match[1]) : 0;
+}
+
+/** The numbers upgrading a card changes, as CardModel fields (the solver adds them: Blessing of the Forge). */
+export interface UpgradeDelta {
+  damageBase?: number;
+  blockBase?: number;
+  fasten?: number;
+  enemyTempStrengthLoss?: number;
+  poisonPerTurn?: number;
+  poisonExtraTriggers?: number;
+  damage?: number;
+  hits?: number;
+  maulIncrease?: number;
+  block?: number;
+  vulnerable?: number;
+  weak?: number;
+  strength?: number;
+  tempStrength?: number;
+  draw?: number;
+  energyGain?: number;
+  hpLoss?: number;
+  cost?: number;
+  plating?: number;
+  retaliate?: number;
+  powerAmount?: number;
+}
+
+const UPGRADE_FIELDS = ["damage", "hits", "maulIncrease", "block", "vulnerable", "weak", "strength", "tempStrength", "draw", "energyGain", "hpLoss", "cost", "plating", "retaliate", "powerAmount"] as const;
+
+/**
+ * What upgrading this plain card changes, as model fields: the card entry with its dynamic values and
+ * energy cost moved by the logged upgrade differences (knowledge/card-upgrades), modelled both ways.
+ * null for an upgraded card, a card never logged both ways, or one whose upgrade changes no number
+ * (only its text: True Grit's pick, Armaments' whole hand).
+ */
+export function upgradeDelta(entry: unknown, knowledge: Knowledge): UpgradeDelta | null {
+  const card = asRecord(entry);
+  if (bool(card["upgraded"])) return null;
+  const upgrade = cardUpgrade(str(card["card_id"]));
+  if (!upgrade) return null;
+  const moved = (value: unknown, delta: number): unknown => (typeof value === "number" ? value + delta : value);
+  const upgraded: Record<string, unknown> = {
+    ...card,
+    upgraded: true,
+    energy_cost: upgrade.cost && !bool(card["costs_x"]) ? moved(card["energy_cost"], upgrade.cost[1] - upgrade.cost[0]) : card["energy_cost"],
+    dynamic_values: asArray(card["dynamic_values"]).map((raw) => {
+      const value = asRecord(raw);
+      const change = upgrade.vars[str(value["name"])];
+      if (!change) return value;
+      const delta = change[1] - change[0];
+      return { ...value, base_value: moved(value["base_value"], delta), current_value: moved(value["current_value"], delta), enchanted_value: moved(value["enchanted_value"], delta) };
+    }),
+  };
+  const before = modelHandCard(card, 0, knowledge);
+  const after = modelHandCard(upgraded, 0, knowledge);
+  const delta: UpgradeDelta = {};
+  for (const field of UPGRADE_FIELDS) {
+    const change = ((after[field] as number | null | undefined) ?? 0) - ((before[field] as number | null | undefined) ?? 0);
+    if (change !== 0) delta[field] = change;
+  }
+  return Object.keys(delta).length > 0 ? delta : null;
+}
+
+/** The card with an upgrade's numbers added (Blessing of the Forge in the solver). */
+export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
+  const add = (value: number | undefined, change: number | undefined) => (value ?? 0) + (change ?? 0);
+  return {
+    ...card,
+    upgraded: true,
+    name: card.name.endsWith("+") ? card.name : `${card.name}+`,
+    damage: card.damage === null && !delta.damage ? null : add(card.damage ?? 0, delta.damage),
+    ...(card.damageBase !== undefined && (delta.damageBase ?? delta.damage) ? { damageBase: card.damageBase + (delta.damageBase ?? delta.damage)! } : {}),
+    hits: Math.max(0, add(card.hits, delta.hits)),
+    ...(card.maulIncrease !== undefined || delta.maulIncrease !== undefined ? { maulIncrease: add(card.maulIncrease, delta.maulIncrease) } : {}),
+    block: Math.max(0, add(card.block, delta.block)),
+    ...(delta.blockBase !== undefined ? { blockBase: add(card.blockBase, delta.blockBase) } : {}),
+    ...(delta.fasten !== undefined ? { fasten: add(card.fasten, delta.fasten) } : {}),
+    ...(delta.enemyTempStrengthLoss !== undefined ? { enemyTempStrengthLoss: add(card.enemyTempStrengthLoss, delta.enemyTempStrengthLoss) } : {}),
+    ...(delta.poisonPerTurn !== undefined ? { poisonPerTurn: add(card.poisonPerTurn, delta.poisonPerTurn) } : {}),
+    ...(delta.poisonExtraTriggers !== undefined ? { poisonExtraTriggers: add(card.poisonExtraTriggers, delta.poisonExtraTriggers) } : {}),
+    vulnerable: add(card.vulnerable, delta.vulnerable),
+    weak: add(card.weak, delta.weak),
+    strength: add(card.strength, delta.strength),
+    tempStrength: add(card.tempStrength, delta.tempStrength),
+    draw: add(card.draw, delta.draw),
+    energyGain: add(card.energyGain, delta.energyGain),
+    hpLoss: Math.max(0, add(card.hpLoss, delta.hpLoss)),
+    cost: card.xCost ? card.cost : Math.max(0, add(card.cost, delta.cost)),
+    ...(card.plating !== undefined || delta.plating ? { plating: add(card.plating, delta.plating) } : {}),
+    ...(card.retaliate !== undefined || delta.retaliate ? { retaliate: add(card.retaliate, delta.retaliate) } : {}),
+    ...(card.powerAmount !== undefined || delta.powerAmount ? { powerAmount: add(card.powerAmount, delta.powerAmount) } : {}),
+  };
+}
+
+/** Apply only a certified own-character pair; absent coverage must remain visible to the solver. */
+export function applyApotheosisUpgrade(card: CardModel): CardModel {
+  const upgraded = card.type === "Potion" || card.upgraded || card.cardId === "ASCENDERS_BANE" ? card
+    : card.apotheosisUpgrade ? applyUpgrade(card, card.apotheosisUpgrade) : { ...card, known: false };
+  return card.drawn ? { ...upgraded, drawn: card.drawn.map(applyApotheosisUpgrade) } : upgraded;
+}
+
+/** A Strike card (「名字中有打击」: the game data's Strike tag, the same cards as STRIKE in the id). */
+export function isStrikeCard(card: Pick<CardModel, "cardId">): boolean {
+  return /STRIKE/.test(card.cardId) && !card.cardId.startsWith("GEN:");
+}
+
+export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = "", ascension: number | null = null): CardModel {
+  const card = asRecord(entry);
+  const cardId = str(card["card_id"]);
+  const info = knowledge.card(cardId);
+  // The template's text the game shows whatever the card's state (unconditionalText): every reading of it below (the
+  // target, two hits, X hits, next-turn and turn-start vars, Energy on exhaust) sees no conditional's text.
+  const template = unconditionalText(str(card["rules_text"]));
+  const index = numOrNull(card["index"]) ?? fallbackIndex;
+  const requiresTarget = bool(card["requires_target"]);
+  // 2PVLGRBGUX9S F48 first T2, silent-0136: only this resolved Expertise template was observed.
+  // Keep this Silent observation scoped to its character; missing context preserves the prior model.
+  // Mad Science carries all riders' dormant variables, even when it did not receive those riders.
+  const madExpertise = character.toLowerCase() === "silent" && cardId === "MAD_SCIENCE" && !bool(card["upgraded"]) &&
+    dyn(card, "ExpertiseStrength") === 2 && dyn(card, "ExpertiseDexterity") === 2 &&
+    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得2点力量。获得2点敏捷。";
+  const type = madExpertise ? "Power" : info?.type || "";
+  const target = targetMode(str(card["target_type"]), template, requiresTarget);
+
+  let damage = madExpertise ? null : dyn(card, "CalculatedDamage") ?? dyn(card, "Damage");
+  let hits = dyn(card, "CalculatedHits") ?? dyn(card, "Repeat") ?? 1;
+  if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(template)) hits = 2;
+  const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
+  const mirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
+    !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && dyn(card, "CalculationExtra") === 1;
+  let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+  let weak = dyn(card, "WeakPower") ?? 0;
+  let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
+  let tempStrength = 0;
+  let strengthPerVulnerable = 0;
+  const enemyStrength = dyn(card, "EnemyStrength") ?? 0;
+  const enemyTempStrengthLoss = dyn(card, "StrengthLoss") ?? 0;
+  // An X-cost Attack hitting X times (Skewer 「造成{Damage}点伤害X次」, Eradicate, Heavenly Drill) is Whirlwind's
+  // single-target kin: X hits at play time. Without it Skewer was one hit whatever X was (ZRYR5WLG6E9K F39 T1: played
+  // at 0 energy after Unrelenting+, counted 8 x1.5 into Vulnerable; planned 70, dealt 58).
+  // LLYSRQQ35AVW F33 T3 / F38 T1 / F48 T2, silent-0144: upgraded X=0/2/3 applies 1/3/4.
+  const upgradedMalaise = cardId === "MALAISE" && character.toLowerCase() === "silent" && bool(card["upgraded"]) &&
+    /^敌人失去X\+1点力量。给予X\+1层虚弱。(?:魂缚)?消耗。$/.test(str(card["resolved_rules_text"]).replace(/\s+/g, ""));
+  const special = cardId === "MALAISE" && (!bool(card["upgraded"]) || upgradedMalaise) && bool(card["costs_x"]) ? "malaise" :
+    SPECIAL[cardId] ?? (bool(card["costs_x"]) && /伤害X次|damage X times/i.test(`${template} ${str(card["resolved_rules_text"])}`) ? "whirlwind" : null);
+
+  // Ambiguous or conditional vars, by id.
+  switch (cardId) {
+    case "EXPOSE":
+      // ZZMYZ5UBCG72 F48 T2, silent-0066: unupgraded Power=2 applied two Vulnerable.
+      // Block/Artifact removal and the upgrade have no independently verified model here.
+      if (!bool(card["upgraded"])) vulnerable = dyn(card, "Power") ?? vulnerable;
+      break;
+    case "UPPERCUT": {
+      const amount = dyn(card, "Power") ?? 1;
+      vulnerable = amount;
+      weak = amount;
+      break;
+    }
+    case "SETUP_STRIKE":
+      tempStrength = strength;
+      strength = 0;
+      break;
+    case "RUPTURE": // Strength comes later, per HP loss on our turn (solver), not on play
+      strength = 0;
+      break;
+    case "BLAZE": // gives Strength to another player
+      strength = 0;
+      break;
+    case "DOMINATE": // Strength per Vulnerable on the target: the solver counts it at play time
+      strengthPerVulnerable = dyn(card, "StrengthPerVulnerable") ?? 1;
+      strength = 0;
+      break;
+    case "SPITE": // repeats only if we lost HP this turn; the solver decides
+      hits = 1;
+      break;
+    default:
+      break;
+  }
+  // Strength that starts next turn (Demon Form: 「在你的回合开始时，获得{StrengthPower}点力量」) is none this
+  // turn: its value is the power's lasting value (G8YY F30 T2: +3 counted into Squash and Strike, "kills
+  // the Rock" for 19; it took 13).
+  if (strength > 0 && turnStartOnly(template, "StrengthPower")) strength = 0;
+  if (special === "body_slam") damage = dyn(card, "CalculatedDamage") ?? 0;
+  if (special === "whirlwind") hits = 0; // set to X at play time
+
+  // Enchants (VC4L: Corrupted Bash, "…失去2点生命。") add a self-damage sentence with no HpLoss var.
+  const renderedText = str(card["resolved_rules_text"]) || info?.description || "";
+  const hpLoss = dyn(card, "HpLoss") ?? (type === "Power" ? 0 : playHpLossOf(renderedText));
+  // A Power's Energy var is per-turn income from next turn on (Pyre), not energy this turn (24DP);
+  // Drum of Battle's is gained when the card is exhausted, not on play (VC4L F21 T4).
+  // Relax's energy and draw are next turn's (nextTurnOnly), like a Power's income.
+  const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) || nextTurnOnly(template, "Energy") ? 0 : (dyn(card, "Energy") ?? 0);
+  // R0HEV5E3QT6G F29 T2 / F48 T4: the unupgraded Shadow Step has a dormant Cards=3 var, but no draw.
+  const shadowStep = cardId === "SHADOW_STEP" && !bool(card["upgraded"]);
+  const calculatedGamble = cardId === "CALCULATED_GAMBLE" && !bool(card["upgraded"]);
+  const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
+    dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
+  // C48LLXBGKXQ9 F24 T1 / HUVEPWQAHWFU F35 T2, silent-0202: Cards=3 adds random attacks
+  // to the draw pile; none enter the hand now. Their unknown future value remains unmodelled.
+  const metamorphosis = character.toLowerCase() === "silent" && cardId === "METAMORPHOSIS" &&
+    !bool(card["upgraded"]) && dyn(card, "Cards") === 3;
+  // L704TLETMZBM F48 T4: Dagger Throw's fixed draw has no Cards variable in the observed frame.
+  const daggerDraw = character.toLowerCase() === "silent" && cardId === "DAGGER_THROW" && !bool(card["upgraded"]) && /抽1张牌/.test(renderedText.replace(/\s+/g, "")) ? 1 : 0;
+  const draw = hiddenDaggers || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
+  const keywords = info?.keywords ?? [];
+  const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
+
+  // The Bomb (1ZQJ: in hand four turns, never played, scored 0 as unmodelled): 40 to every enemy at
+  // the end of the 3rd turn.
+  const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
+  // KQQELQSZ382Z F17 attempt 6 T7 / KAY522KT5NXR F14 T1, silent-0219: the observed plain card adds seven poison.
+  const snakebite = character.toLowerCase() === "silent" && cardId === "SNAKEBITE" &&
+    !bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7;
+  // DUZUBAJ3A8GP F6 T1 / F27 T4-T5, silent-0234: only the observed plain/upgraded Haze values are wired.
+  const haze = character.toLowerCase() === "silent" && cardId === "HAZE" &&
+    (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
+  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite || haze ? dyn(card, "PoisonPower") ?? 0 : 0;
+  // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
+  const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;
+  // VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills, not two extra plays of one Skill.
+  const burstSkills = dyn(card, "Skills");
+  const burst = cardId === "BURST" && (bool(card["upgraded"]) ? burstSkills === 2 : burstSkills === 1);
+  // 2PVLGRBGUX9S F48 first T11, silent-0137: the observed upgrade establishes three poison per later draw.
+  const corrosiveWave = cardId === "CORROSIVE_WAVE" && (!bool(card["upgraded"]) || dyn(card, "CorrosiveWave") === 3) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
+  // VLZ6CCT8AQ0A A10 F43 T1: upgraded Fasten establishes six; later Defend+ shows 14/18.
+  // Keep the plain model and every unobserved character, level and upgrade value unchanged.
+  const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" ?
+    (!bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4
+      : bool(card["upgraded"]) && ascension === 10 && dyn(card, "ExtraBlock") === 6 ? 6 : 0) : 0;
+  // CA5KE8GFJ9X2 F9 T6 / F13 T1, silent-0229: the observed plain Caltrops establishes three Thorns.
+  const thorns = character.toLowerCase() === "silent" && cardId === "CALTROPS" &&
+    !bool(card["upgraded"]) && dyn(card, "ThornsPower") === 3 ? 3 : 0;
+  // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
+  const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
+  const bulletTime = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BULLET_TIME" &&
+    !bool(card["upgraded"]) && template.replace(/\s+/g, "") === "你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。";
+  const hasModelledEffect =
+    // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
+    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bulletTime;
+  let flatValue = 0;
+  let known = hasModelledEffect;
+  let immediatePlays: CardModel["immediatePlays"];
+  let adds: CardModel[] | undefined;
+  if (hiddenDaggers) {
+    // 10GPK5XGHCK3 F9 T5 / MGA0CZDDKC0P F17 retry T3: these are made, not drawn or played immediately.
+    const shiv = knowledge.card("SHIV");
+    const base = shiv ? dyn({ dynamic_values: shiv.vars }, "Damage") ?? shiv.damage : null;
+    known = shiv !== null && base !== null;
+    if (shiv && base !== null) adds = Array.from({ length: 2 }, (_, i) => modelHandCard({
+      index: i, card_id: "SHIV", name: shiv.name, upgraded: false, energy_cost: 0, playable: true,
+      requires_target: true, target_type: "AnyEnemy", rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
+      dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
+    }, i, knowledge, character));
+  }
+  if (type === "Power") {
+    flatValue = POWER_VALUE[cardId] ?? 8;
+    known = true;
+  } else if (shadowmeld || burst || corrosiveWave > 0 || special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force" || special === "malaise") {
+    known = true; // its whole value is the Sandpit count / the block doubled / the Attacks doubled, scored by the solver
+  } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
+    // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
+    // Status: playing a Beckon is only worth its held penalty (VL2D F17 T9: +5 made it beat Burning Pact).
+    flatValue = 3 + 2 * Math.max(0, num(card["energy_cost"]));
+  }
+  if (cardId === "KNIFE_TRAP") {
+    // C48LLXBGKXQ9 F19 T8 / F33 attempt 1 T1, silent-0002: six Shivs / none, not lasting value.
+    // Only the observed unupgraded replay is modelled; no damage or upgrade rule is guessed.
+    flatValue = 0;
+    const count = dyn(card, "CalculatedShivs");
+    const shiv = knowledge.card("SHIV");
+    const base = shiv ? dyn({ dynamic_values: shiv.vars }, "Damage") ?? shiv.damage : null;
+    known = !bool(card["upgraded"]) && count !== null && Number.isInteger(count) && count >= 0 && (count === 0 || base !== null);
+    if (known && count! > 0 && shiv && base !== null) {
+      immediatePlays = { count: count!, card: modelHandCard({
+        index: -1, card_id: "SHIV", name: shiv.name, upgraded: false, energy_cost: 0, playable: true,
+        requires_target: true, target_type: "AnyEnemy", valid_target_indices: card["valid_target_indices"],
+        rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
+        dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
+      }, -1, knowledge, character) };
+    }
+  }
+  // Enthralled does nothing when played but lift its lock, which the solver plays (CardModel.playFirst): modelled.
+  const playFirst = isPlayFirst(cardId, renderedText);
+  if (playFirst) known = true;
+  // CARD_CONDITIONS: the conditional effects the solver evaluates on its simulated state (cardConditionOptions).
+  const conditions = cardConditionOptions.enabled;
+  const handCondition = conditions && (draw > 0 || energyGain > 0) ? handConditionOf(template, renderedText) : null;
+  const rageBlock = conditions && cardId === "RAGE" ? dyn(card, "Power") ?? 3 : 0;
+  // Rage's whole effect (the Block of the Attacks after it) is simulated: no unknown nudge.
+  if (rageBlock > 0) {
+    known = true;
+    flatValue = 0;
+  }
+  const perExhaustDamage = conditions && cardId === "ASHEN_STRIKE" ? dyn(card, "ExtraDamage") ?? 0 : 0;
+  const perStrengthBlock = conditions && cardId === "EXPECT_A_FIGHT" ? dyn(card, "CalculationExtra") ?? 0 : 0;
+  const hitPerHpLoss = conditions && cardId === "TEAR_ASUNDER";
+
+  // Status/curse cards that hurt at end of turn while held: read the number from the rendered text.
+  const rendered = renderedText;
+  const weakFirst = weak > 0 && vulnerable > 0 && debuffWeakFirst(rendered || template);
+  const { heldPenalty, heldHpLoss } = heldPenaltyOf(rendered);
+  const heldHpLossPerCard = cardId === "REGRET" && /失去相当于[^。]*手牌数量[^。]*生命|lose hp equal to[^.]*cards? in your hand/i.test(rendered) ? 1 : 0;
+  // Galvanic's 「受到6点伤害」 on a Power (turn-solver selfDamage: through block, after the card's own effects).
+  const selfDamage = playSelfDamageOf(rendered);
+  if ((heldPenalty > 0 || heldHpLossPerCard > 0) && (type === "Status" || type === "Curse")) {
+    // Its Damage var is the self-damage, not an attack.
+    damage = null;
+    known = true;
+  }
+
+  const model: CardModel = {
+    index,
+    key: `c${index}`,
+    cardId,
+    name: str(card["name"], info?.name ?? cardId),
+    type,
+    upgraded: bool(card["upgraded"]),
+    cost: num(card["energy_cost"]),
+    xCost: bool(card["costs_x"]),
+    ...(special === "malaise" && upgradedMalaise ? { malaiseBonus: 1 } : {}),
+    // Too expensive now is still in the search (it checks energy itself): energy gained this turn, or a
+    // Touch of Insanity making it free, can pay for it.
+    // The Gambit is never played: after it any unblocked hit is fatal (S780).
+    // The Gambit is in the search now: the solver makes every later unblocked hit fatal and plays it
+    // only when every other line dies (P78Z F17 T11: 3 HP, 17 block of 21, a 0-cost 50 block in hand).
+    // But a card a power's hook locks reads not_enough_energy too when the energy is short as well, the hook named in
+    // unplayable_preventer_id (raw "BlockedByHook, EnergyCostTooHigh"): Chains of Binding once a Soulbound card is
+    // played, Sloth's and Ringing's card cap, Smoggy's one Skill. No energy unlocks it this turn (4JGPCH3WX6JV F48 T2: an
+    // Energy Potion drunk at 0 energy for a Soulbound Defend+, blocked_by_hook after it; the turn ended, 10 HP lost).
+    // A card Enthralled locks (preventer ENTHRALLED) is playable once Enthralled is played: in the search, the solver plays
+    // Enthralled first (HYQW47E7CBSC F38 T4: 5 energy, Bludgeon, Evil Eye, Bash and Strike all blocked_by_hook by it; the
+    // only line was end turn, 13 HP lost).
+    playable: bool(card["playable"]) || (str(card["unplayable_reason"]) === "not_enough_energy" && !blockedByHook(card)) || afterPlayFirst(card),
+    target,
+    validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
+    damage,
+    ...(character.toLowerCase() === "silent" && cardId === "PRECISE_CUT" && !bool(card["upgraded"]) &&
+      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 && [3, 5, 7, 11].includes(damage ?? -1) &&
+      /你的手牌中每有一张牌，此牌的伤害就降低/.test(template) ? { preciseCutHandDamage: true } : {}),
+    ...(immediatePlays ? { immediatePlays } : {}),
+    hits: Math.max(0, Math.round(hits)),
+    ...(character.toLowerCase() === "silent" && cardId === "FLECHETTES" && !bool(card["upgraded"]) &&
+      dyn(card, "CalculatedHits") !== null && /^手牌中每有一张技能牌，造成/.test(template) ? { hitsLoseHandSkills: true } : {}),
+    ...(cardId === "MAUL" && dyn(card, "Increase") !== null ? { maulIncrease: dyn(card, "Increase")! } : {}),
+    ...(shadowmeld ? { shadowmeld: true } : {}),
+    ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
+    ...(bulletTime ? { bulletTime: true } : {}),
+    ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
+    block,
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "DODGE_AND_ROLL" && bool(card["upgraded"]) &&
+      dynBase(card, "Block", true) === 6 && template.replace(/\s+/g, "") === "获得{Block:diff()}点格挡。在下个回合，获得{Block:diff()}点格挡。"
+      ? { dodgeRollNextBlock: true } : {}),
+    ...(mirage ? { blockFromPoison: true } : {}),
+    ...(!madExpertise && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
+    vulnerable,
+    weak,
+    ...(weakFirst ? { weakFirst } : {}),
+    strength,
+    ...(fasten > 0 ? { fasten } : {}),
+    ...(thorns > 0 ? { thorns } : {}),
+    ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
+    ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
+    ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
+    // 5PM6JAQG6FNQ F33 T1, silent-0132: the generated plain power establishes four without hitting.
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "SERPENT_FORM" &&
+      !bool(card["upgraded"]) && dyn(card, "SerpentFormPower") === 4 ? { serpentForm: 4 } : {}),
+    tempStrength,
+    ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
+    ...(!madExpertise && dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),
+    ...(cardId === "FEEL_NO_PAIN" ? { feelNoPain: dyn(card, "Power") ?? 3 } : {}),
+    ...(special === "double_next_attacks" ? { nextAttacks: dyn(card, "Attacks") ?? 1 } : {}),
+    enemyStrength,
+    enemyTempStrengthLoss,
+    // Beckon's HpLoss var is what holding it costs, not a price for playing it (PU21: every Beckon
+    // played was charged 6 HP by the solver).
+    hpLoss: heldPenalty > 0 ? 0 : hpLoss,
+    energyGain,
+    plating: dyn(card, "PlatingPower") ?? 0,
+    draw,
+    exhausts,
+    special,
+    ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
+    ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),
+    ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),
+    ...(character.toLowerCase() === "silent" && !bool(card["upgraded"]) && ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"].includes(cardId) &&
+      /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { discardAfterDraw: true, ...(daggerDraw > 0 ? { discardDraw: daggerDraw } : {}) } : {}),
+    ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
+    ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
+    ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
+    ...(cardId === "ENVENOM" && !bool(card["upgraded"]) && dyn(card, "EnvenomPower") !== null ? { envenom: dyn(card, "EnvenomPower")! } : {}),
+    ...(cardId === "PHANTOM_BLADES" && !bool(card["upgraded"]) && dyn(card, "PhantomBladesPower") === 9 ? { phantomBlades: 9 } : {}),
+    known,
+    flatValue,
+    heldPenalty,
+    heldHpLoss,
+    ...(heldHpLossPerCard > 0 ? { heldHpLossPerCard } : {}),
+    ...(selfDamage > 0 ? { selfDamage } : {}),
+    retaliate: dyn(card, "DamageBack") ?? 0,
+    delayedDamage,
+    inferno: cardId === "INFERNO" ? dyn(card, "InfernoPower") ?? 6 : 0,
+    ...(POWER_AMOUNT_VARS[cardId] && dyn(card, POWER_AMOUNT_VARS[cardId]!) !== null ? { powerAmount: dyn(card, POWER_AMOUNT_VARS[cardId]!)! } : {}),
+    ...(replayOf(rendered) > 0 ? { replay: replayOf(rendered) } : {}),
+    soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
+    ...(playFirst ? { playFirst: true } : {}),
+    ...(etherealText(info?.keywords, rendered) ? { ethereal: true } : {}),
+    putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
+    drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
+    // Thrash's random exhaust takes an Attack and adds its damage (special "thrash", solver), not any card
+    // (MAHA F33 T7: played before Anger, which it ate; the boss was left at 1/321).
+    randomExhaust: special !== "thrash" && /随机消耗|消耗[^。]*随机|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
+    ...(handCondition ? { handCondition } : {}),
+    ...(rageBlock > 0 ? { rageBlock } : {}),
+    ...(perExhaustDamage > 0 ? { perExhaustDamage } : {}),
+    ...(perStrengthBlock > 0 ? { perStrengthBlock } : {}),
+    ...(hitPerHpLoss ? { hitPerHpLoss } : {}),
+    text: str(card["resolved_rules_text"]) || info?.description || "",
+  };
+  if (character.toLowerCase() === "silent" && ascension === 10) {
+    if (cardId === "APOTHEOSIS" && !model.upgraded && model.cost === 2 && !model.xCost &&
+      template === "升级你的全部卡牌。" && str(card["resolved_rules_text"]).replace(/\s+/g, "") === "固有。升级你的全部卡牌。消耗。" && !model.replay) {
+      model.apotheosis = true;
+      model.known = true;
+      model.flatValue = 0;
+      model.exhausts = true;
+    }
+    const rawUpgrade = observedApotheosisUpgrade(card);
+    if (rawUpgrade) {
+      const upgraded = modelHandCard(rawUpgrade, fallbackIndex, knowledge, character, ascension);
+      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn", "poisonExtraTriggers"] as const;
+      model.apotheosisUpgrade = {};
+      for (const field of fields) {
+        const change = (upgraded[field] ?? 0) - (model[field] ?? 0);
+        if (change) model.apotheosisUpgrade[field] = change;
+      }
+    }
+  }
+  return model;
+}
+
+/**
+ * Giant Rock (巨石, what Primal Force turns the hand's Attacks into): 1 energy, 「造成{Damage}点伤害」, Damage 20,
+ * upgraded (巨石+, from Primal Force+) 24 (logged GIANT_ROCK dynamic_values base 20 / 24).
+ */
+export const GIANT_ROCK = { cost: 1, damage: 20, damageUpgraded: 24 };
+
+/**
+ * The Giant Rock an Attack in hand becomes (Primal Force): its hand slot and key, 1 energy, the rock's damage
+ * shown the way the hand shows it (this turn's Strength, our Weak and Shrink, rounded once).
+ */
+export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow: number, weak: boolean, shrunk = false): CardModel {
+  const base = upgraded ? GIANT_ROCK.damageUpgraded : GIANT_ROCK.damage;
+  // The rock's number is its own: whether the attack's showed our Shrink does not carry over.
+  const { shownShrunk: _attackShrunk, ...rest } = attack;
+  return {
+    ...rest,
+    ...(shrunk ? { shownShrunk: true } : {}),
+    key: `${attack.key}>rock`,
+    cardId: "GIANT_ROCK",
+    name: upgraded ? "巨石+" : "巨石",
+    type: "Attack",
+    upgraded,
+    cost: GIANT_ROCK.cost,
+    xCost: false,
+    playable: true,
+    target: "single",
+    damage: Math.floor(ourAttackScaled(base + strengthNow, weak, shrunk)),
+    damageBase: base,
+    hits: 1,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: false,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: `造成${base}点伤害。`,
+  };
+}
+
+/**
+ * A card that is not in the hand (the draw and discard piles, a status an enemy move adds) as a hand card: the
+ * deck's own entry when there is one, else the game data's (its cost and vars: Slimed draws 1, Beckon costs 1;
+ * `cost`: the pile line's own, Frantic Escape's grows with each play), and playable by its text: only an
+ * Unplayable card (Dazed, Wound, Burn, Soot, Wither) or one with no cost is not. Beckon, Slimed, Toxic, Frantic
+ * Escape and Debris cost 1 and can be played away (every Status was unplayable here, so the rollout never
+ * escaped the Insatiable's Sandpit nor cleared a Beckon).
+ */
+export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0, character = "", ascension: number | null = null): CardModel {
+  const info = knowledge.card(cardId);
+  const raw = own ?? {
+    card_id: cardId,
+    upgraded,
+    name: info?.name ?? cardId,
+    dynamic_values: info?.vars ?? [],
+    rules_text: info?.descriptionRaw ?? "",
+    resolved_rules_text: info?.description ?? "",
+    energy_cost: info?.cost ?? 0,
+    costs_x: info?.xCost ?? false,
+  };
+  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character, ascension);
+  const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
+  // The deck's (the game data's) cost, with a relic's change on Powers (pilePowerExtraCost); a line's own cost has it.
+  const relicCost = cost === null ? withPowerExtraCost(model, powerExtraCost) : model;
+  return { ...relicCost, playable: !unplayable && (model.xCost || model.cost >= 0) };
+}
+
+/**
+ * Spiked Gauntlets (「能力牌的耗能增加1」) on the cards modelled off the hand. The hand's entries show it (Demon Form 4,
+ * Inflame 2), and so does every pile line, but the deck's entries do not: logged in all 6 runs holding it (2026-10-03,
+ * every combat frame), all 1,530 Power lines of the draw, discard and exhaust piles at the deck's cost + 1 (Cruelty
+ * [2费], Pyre+ [3费], Unmovable+ [2费]), the deck's 2,354 Power entries at their base. `relics` off (tools only): the
+ * deck's cost, as before.
+ */
+export const pileCostOptions: { relics: boolean } = { relics: true };
+
+/** What a Power off the hand (a pile's, the deck's) costs more with these relics than the deck says (Spiked Gauntlets: 1). */
+export function pilePowerExtraCost(relicIds: readonly string[]): number {
+  return pileCostOptions.relics && relicIds.includes("SPIKED_GAUNTLETS") ? 1 : 0;
+}
+
+/** A card at a relic's cost: a Power (not X, not unplayable) `powerExtraCost` more. */
+export function withPowerExtraCost<T extends { type: string; xCost: boolean; cost: number }>(card: T, powerExtraCost: number): T {
+  return powerExtraCost !== 0 && card.type === "Power" && !card.xCost && card.cost >= 0 ? { ...card, cost: card.cost + powerExtraCost } : card;
+}
+
+/**
+ * Potions as zero-cost "cards" for the turn solver. The mod does not resolve potion numbers (the
+ * description stays a template), so these are STS1-analogue ESTIMATES, to be calibrated from logs.
+ * Unlisted potions are not simulated: Jev is offered "drink first, then re-plan" under T1 (combat-plan).
+ * The random potions (CHOICE_POTIONS, DRAW_POTIONS) are listed with their expected-value models here for
+ * the rollout's later turns; this turn they are simulated by Monte Carlo (potion-mc.ts).
+ */
+const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }> = {
+  FIRE_POTION: { target: "single", damage: 20 },
+  // Foul Potion: 「对所有玩家和敌人造成{Damage}点伤害」, Damage 12 (potion-values.ts). It hits us too
+  // (39J9: two drunk at 22 HP): the line's hp_lost carries it (turn-solver selfDamage, through our block).
+  FOUL_POTION: { target: "all", damage: 12, selfDamage: 12 },
+  // Exhausts any cards in hand: Howl from Beyond (it then replays every turn) and junk (H14T F39 T4:
+  // Ashwater -> Howl was the lethal at 2 HP; unmodelled, every line "died").
+  ASHWATER: { target: "self", special: "ashwater" },
+  // 15 measured (states.jsonl V5S6 F12/F14, 2WUM, W6F4: 26 -> 11, 18 -> 3; potion damage ignores Vulnerable).
+  POTION_SHAPED_ROCK: { target: "single", damage: 15 },
+  EXPLOSIVE_AMPOULE: { target: "all", damage: 10 },
+  BLOCK_POTION: { target: "self", block: 12 },
+  STRENGTH_POTION: { target: "self", strength: 2 },
+  FLEX_POTION: { target: "self", tempStrength: 5 },
+  WEAK_POTION: { target: "single", weak: 3 },
+  FEAR_POTION: { target: "single", vulnerable: 3 },
+  FORTIFIER: { target: "self", special: "triple_block" },
+  SPEED_POTION: { target: "self", special: "temp_dex" }, // +5 Dexterity this turn (STS1 value, estimate)
+  LUCKY_TONIC: { target: "self", special: "buffer" },
+  DUPLICATOR: { target: "self", special: "duplicate_next" }, // the next card is played twice // Buffer 1: the next HP loss is prevented
+  VULNERABLE_POTION: { target: "single", vulnerable: 3 }, // STS2 id (FEAR_POTION is the STS1 name)
+  POTION_OF_BINDING: { target: "all", weak: 1, vulnerable: 1 },
+  // Shackling Potion: 「所有敌人在这个回合失去{StrengthPower}点力量」, StrengthPower 7 (potion-values.ts): every
+  // enemy's attacks this turn 7 less per hit, like Mangle's temporary loss (Artifact takes it). Unmodelled,
+  // VQKX carried it from F11 through four -25 to -29 fights and gave it away at F28.
+  SHACKLING_POTION: { target: "all", enemyTempStrengthLoss: 7 },
+  SHIP_IN_A_BOTTLE: { target: "self", block: 10 },
+  // Liquid Bronze: 「获得{ThornsPower}点荆棘」, THORNS_POWER +3 on each drink (states.jsonl, 24 drinks in 21 runs to
+  // 09-29: 0 -> 3, or 3 -> 6 on a second), up until the fight's end (e.g. Q4JV F17 T1-T13, CWU9 F33 T4-T12): 3
+  // back to the attacker per attack hit, this turn and the later ones (turn-solver retaliate, rollout thorns).
+  // Unmodelled, VTRE listed it "effect not simulated" in 37 questions and V6TW in 29.
+  LIQUID_BRONZE: { target: "self", thorns: 3 },
+  // Stable Serum: 「保留你的手牌{Repeat}回合」 — RETAIN_HAND_POWER 2 on each drink (states.jsonl, 02L4 T9, 0YG4 T1,
+  // 7UJ1 T7, 92MW T1: 2, then 1 on the next turn, gone after): the hand left at the end of this turn and of the next
+  // stays in hand and the next turn draws on top of it (up to 10: 02L4 5 kept + 5 drawn). Nothing this turn; the
+  // rollout keeps the hands (STABLE_SERUM_TURNS). Unmodelled, 66 questions listed it "effect not simulated".
+  STABLE_SERUM: { target: "self", special: "retain_hand" },
+  ENERGY_POTION: { target: "self", energyGain: 2 },
+  SWIFT_POTION: { target: "self", draw: 3 },
+  // Clarity: 「抽{Cards}张牌。在你的下{ClarityPower}个回合开始时，额外抽1张牌」. K7G9 F30 T7 (states.jsonl): hand
+  // 3 -> 4 on the drink, CLARITY_POWER 3 after it. One card now; the three later draws are lasting value
+  // (turn-solver CLARITY_LATER_DRAWS). Unmodelled, it was carried 35 floors in K7G9 (F1-F30, F39-F45).
+  CLARITY: { target: "self", draw: 1, special: "clarity" },
+  // Mazaleth's Gift: Ritual 1 (states.jsonl XMY2 F17 T9: RITUAL_POWER 1), +1 Strength at the end of
+  // each of our turns: a small Demon Form (turn-solver RITUAL_VALUE). Unmodelled, it hung as a
+  // "drink first" option from T1 to T9 of XMY2's act-1 boss.
+  MAZALETHS_GIFT: { target: "self", special: "ritual" },
+  FYSH_OIL: { target: "self", strength: 1 },
+  // Debuff: Artifact negates it like any other (TQX5 T1: drunk into Artifact 3, nothing landed).
+  // Demise 9 measured (states.jsonl DEMISE_POWER amount 9).
+  POWDERED_DEMISE: { target: "single", demise: 9 },
+  // Beetle Juice: 「敌人的攻击在下{Repeat}个回合中造成的伤害减少{DamageDecrease}%」 = SHRINK_POWER 4 on the target,
+  // its attacks 30% less (states.jsonl: intents 23 -> 16, 20 -> 14, 14 -> 9; potion-values.ts). Unmodelled,
+  // W8JD carried it from F29 to the 1-HP turn of F31 ("its effect is in no line's numbers").
+  BEETLE_JUICE: { target: "single", shrink: 4 },
+  // The next Attack deals triple damage (PLC F33: kept from T1 to death with Bludgeon in hand).
+  GIGANTIFICATION_POTION: { target: "self", special: "triple_next_attack" },
+  // A card in hand costs 0 for the rest of the combat, chosen on a combat_hand_select screen ("选择一张
+  // 牌使其免费"). G8AQ T3: made Bludgeon+ free would have been lethal; spent on a 1-cost card instead.
+  TOUCH_OF_INSANITY: { target: "self", special: "free_card" },
+  // +2 Dexterity for the fight (DEXTERITY_POWER 2 in states.jsonl). Worth only the block cards it
+  // raises: KFP1 T3 and 2WUM F33 T3 drank it with no block card left to play, 0 gained that turn.
+  DEXTERITY_POTION: { target: "self", special: "dexterity" },
+  // Heart of Iron: Plating 7 (states.jsonl, 20 drinks from 3MDJ to Z7D7: PLATING_POWER 7 each time,
+  // not Metallicize): block at the end of this turn (turn-solver platingNow) and one less each later turn,
+  // valued by what it can absorb of the later turns' forecast attacks (turn-solver platingAbsorbed).
+  // Unmodelled, KGR6 carried it from F8 to the F27 event that took it, through two 1-3 HP turns.
+  HEART_OF_IRON: { target: "self", plating: 7, special: "plating" },
+  // Snecko Oil: 「抽{Cards}张牌。在本回合随机化你手牌中所有牌的耗能」. Drawn 7 up to the 10-card hand (24DP
+  // 2 -> 9, 24HM 3 -> 10; 5 -> 10 elsewhere), costs 0-3 at random (states.jsonl): the hand's costs at their
+  // expected SNECKO_COST. Unmodelled, K8TC carried it from F6 into the act boss that killed it.
+  SNECKO_OIL: { target: "self", draw: 7, special: "snecko" },
+  // Blood Potion: heals 20% of max HP (RVL2 F30: 25 -> 39 at 74 max; EN55 F8 T9: 7 -> 23 at 80). The
+  // turn's HP loss is net of it (turn-solver BLOOD_POTION_HEAL). Unmodelled it stayed "its effect is in no
+  // line's numbers" from T1 to the 7-HP turn of EN55's fatal elite.
+  BLOOD_POTION: { target: "self", special: "heal" },
+  // Gambler's Brew: 「丢弃任意张牌，然后抽相同数量的牌。」 Every hand card worse than an average draw is
+  // discarded for one (turn-solver "gamble"; the expected draw from the draw pile: expectedDraw). 77UJ
+  // F33 T5 and EN55 F8 T9: carried unmodelled to the death, each time a draw of the pile's block cards
+  // would likely have lived.
+  GAMBLERS_BREW: { target: "self", special: "gamble" },
+  // Glowwater: 「消耗你的手牌。抽{Cards}张牌。」 the hand exhausted, then a new hand of the pile's expected
+  // cards (turn-solver "glowwater"; logged drinks: 5 -> 10 cards, 3 -> 10).
+  GLOWWATER_POTION: { target: "self", special: "glowwater" },
+  // Regen Potion: 「获得{RegenPower}层再生」, REGEN_POWER 5 on the drink (states.jsonl PKB0 F17 T8); Regen heals
+  // its amount at the end of our turn, before the enemy attacks, then drops by 1 (5+4+3+2+1 = 15 over five
+  // turns). This turn's 5 is in the line's HP; the later heals are lasting value (turn-solver
+  // REGEN_LATER_SHARE). Unmodelled, PKB0 F17 T4 read "its effect is in no line's numbers" at 15/80.
+  REGEN_POTION: { target: "self", special: "regen", regen: 5 },
+  // Distilled Chaos: 「打出你抽牌堆顶部的{Repeat}张牌」, 3 cards (YG3H F33 T7: the draw pile 21 -> 18 on the drink,
+  // Strike + 2 Defend played). Each is the draw pile's expected card (expectedDraw), played for free at a
+  // random enemy (turn-solver "chaos"). Unmodelled, YG3H carried it F1-F33 as "neutral: unclassified".
+  DISTILLED_CHAOS: { target: "self", special: "chaos", playsTop: 3 },
+  // Pile-card potions: a card from a pile into the hand (modelPotion builds it from PotionContext).
+  // Liquid Memories: 「将你弃牌堆中的一张牌放入你的手牌。这张牌在本回合可以免费打出」 (PWSD: carried F2-F23 T4).
+  // Droplet of Precognition: 「选择你抽牌堆中的一张牌加入你的手牌」 at its own cost (EGX7: carried F7-F31).
+  LIQUID_MEMORIES: { target: "self" },
+  DROPLET_OF_PRECOGNITION: { target: "self" },
+  // Radiant Tincture: 「获得{Energy}。在你的下{RadiancePower}个回合开始时，额外获得1点能量。」 Energy 1,
+  // RadiancePower 3 (potion-values.ts; states.jsonl Y3XT F48 T7: RADIANCE_POWER 3 on the drink, 2 the next
+  // turn). One energy now; the three later ones are lasting value (turn-solver RADIANCE_LATER_ENERGY) and
+  // the rollout's later turns' energy. Unmodelled, Y3XT's last boss never offered it T1-T3.
+  RADIANT_TINCTURE: { target: "self", energyGain: 1, special: "radiance" },
+  // Cure All: 「获得{Energy}。抽{Cards}张牌。」 Energy 1, draw 2 (potion-values.ts).
+  CURE_ALL: { target: "self", energyGain: 1, draw: 2 },
+  // Bottled Potential: 「将你的所有牌洗入你的抽牌堆。抽{Cards}张牌。」 the hand goes back into the pile (not
+  // exhausted), then 5 cards (turn-solver "bottled"; priced like Glowwater's draw: expectedDraw).
+  BOTTLED_POTENTIAL: { target: "self", special: "bottled" },
+  // Blessing of the Forge: 「在本场战斗中升级你手牌中的所有牌。」 Every card in hand upgraded for the rest of the
+  // fight: each hand card's logged upgrade numbers (upgradeDelta, knowledge/card-upgrades; modelPotion
+  // takes them from PotionContext.upgrades), this turn's plays only (the upgraded cards' later draws are
+  // not counted). Unmodelled, BXAZ offered it 7 times at 0.18-0.49 and QUG1/8V0H drank it at 0.39/0.13.
+  BLESSING_OF_THE_FORGE: { target: "self", special: "forge" },
+  // Soldier's Stew: 「在本场战斗中，所有名字中有“打击”的牌获得重放：1。」 Every Strike card is played once more
+  // for the rest of the fight (turn-solver: this turn's Strikes; laterDamage: one more play of each Strike
+  // in the draw and discard piles, lasting value). The hand then shows 「重放1。」 on each Strike (replayOf).
+  // Unmodelled, QUG1 F23 T4 drank it at 0.08 on a turn with no Strike played.
+  SOLDIERS_STEW: { target: "self", special: "stew" },
+  // Card potions: drinking puts the card in hand (modelPotion builds it from GENERATED_CARD_POTIONS).
+  ATTACK_POTION: { target: "self" },
+  SKILL_POTION: { target: "self" },
+  POWER_POTION: { target: "self" },
+  COLORLESS_POTION: { target: "self" },
+};
+
+/**
+ * The card a card potion adds (「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」): a 0-cost
+ * card of that type, at a conservative value for the best of three offered. Since the Monte Carlo
+ * (potion-mc.ts, Dai 2026-09-28) this turn's option never uses it: only the rollout's later turns (the
+ * potions still held, at their expected value) and the solver-level tests do. Ironclad's pool (game
+ * data, 36 attacks / 30 skills): best-of-3 total damage ~17-18.6, best-of-3 block ~8.3; picks logged
+ * (selection/take into my hand): Bludgeon 32 (X8R8 F17 T11), Uppercut 13, Fight Me 10x2, Demon Form
+ * (power, scored 39). Before this they were only a "drink first" option with no numbers (X8R8 Attack
+ * Potion T1-T10, M9PL Skill Potion to T9).
+ */
+export const GENERATED_CARD_POTIONS: Record<string, { type: string; target: TargetMode; damage?: number; block?: number; flatValue?: number }> = {
+  ATTACK_POTION: { type: "Attack", target: "single", damage: 14 },
+  SKILL_POTION: { type: "Skill", target: "self", block: 7 },
+  POWER_POTION: { type: "Power", target: "self", flatValue: 12 },
+  COLORLESS_POTION: { type: "Skill", target: "self", flatValue: 8 },
+};
+
+/** What the drinker's board adds to a generated card: living enemy indices, Strength now, Weak. */
+export interface PotionContext {
+  /** Character evidence supplied by the caller; no global potion mechanic is inferred. */
+  observedPoison?: number;
+  enemyTargets: number[];
+  strength: number;
+  weak: boolean;
+  /** The pile card a pile-card potion would take (pileCardPick), as a hand card (Strength and Weak in). */
+  discardPick?: CardModel | null;
+  drawPick?: CardModel | null;
+  /** Gambler's Brew, Glowwater and Distilled Chaos: the draw pile's average card (expectedDraw). */
+  expectedDraw?: CardModel | null;
+  /**
+   * The draw and discard piles are both known and empty (Glowwater drew the whole deck): a draw potion draws
+   * nothing (Glowwater still exhausts the hand; Gambler's Brew draws back the cards it discarded).
+   */
+  pilesEmpty?: boolean;
+  /** Blessing of the Forge: what upgrading each plain card id of the deck changes (upgradeDelta). */
+  upgrades?: Record<string, UpgradeDelta>;
+  /** Soldier's Stew: the damage per play of the Strike cards in the draw and discard piles, summed. */
+  strikePileDamage?: number;
+  /**
+   * What a Power a potion makes free this turn costs all the same (potionCardCost: Spiked Gauntlets' +1). Absent: 0.
+   */
+  powerExtraCost?: number;
+}
+
+/**
+ * The cards a potion adds to the hand (Attack / Skill / Power / Colorless Potion, Orobic Acid, Liquid Memories: 「这张牌在
+ * 本回合可以免费打出」) cost 0 this turn, and a relic's change applies on top: Spiked Gauntlets (Powers cost 1 more) leaves
+ * a Power at 1. Checked on the logs (2026-10-03: 549 drinks of these potions and 86 plays of cards adding a free card,
+ * Infernal Blade, Discovery, Distraction; the card at energy_cost 0 every time, played for 0 energy, but the one Power
+ * under Spiked Gauntlets, A4PWRULKG2JT F46 T1: the Power Potion's Demon Form at 1 with 0 energy, never played, discarded at
+ * the end of the turn; under the relic every Power in hand shows its cost + 1, the potions' other cards 0). `relics` off
+ * (tools only): every such card at 0, as before.
+ */
+export const potionCardCostOptions: { relics: boolean } = { relics: true };
+
+/** What a Power a potion makes free costs this turn with these relics (Spiked Gauntlets: 1; else 0). */
+export function potionPowerExtraCost(relicIds: readonly string[]): number {
+  return potionCardCostOptions.relics && relicIds.includes("SPIKED_GAUNTLETS") ? 1 : 0;
+}
+
+/** The cost this turn of a card a potion makes free: 0, a Power `powerExtraCost` more (an X card keeps its X). */
+export function potionCardCost(card: { type: string; xCost: boolean; cost: number }, powerExtraCost = 0): number {
+  if (card.xCost) return card.cost;
+  return card.type === "Power" ? powerExtraCost : 0;
+}
+
+/**
+ * The potions and cards whose card choice offers a card that is free this turn (game text 「这张牌在本回合可以免费打出」,
+ * 「本回合免费打出」): the Attack / Skill / Power / Colorless Potion (1 of 3 random cards), Liquid Memories (a discard pile
+ * card), Discovery, Abundance, Splash. The offer lists each card at its printed cost (Mangle 3, Bludgeon 3); the card is
+ * then free in hand (potionCardCost). Not free: Droplet of Precognition, Seeker Strike, Secret Weapon / Technique, Quasar.
+ */
+export const FREE_OFFER_SOURCES: ReadonlySet<string> = new Set([
+  "ATTACK_POTION", "SKILL_POTION", "POWER_POTION", "COLORLESS_POTION", "LIQUID_MEMORIES", "DISCOVERY", "ABUNDANCE", "SPLASH",
+]);
+
+/**
+ * The expected card of a draw from these pile cards, as one hand card: the pile's mean damage, block,
+ * Vulnerable and Weak (unplayable cards count as nothing), rounded, at its mean cost rounded. An
+ * expected-value model: Gambler's Brew, Glowwater and Distilled Chaos draws are priced by it. null for
+ * an empty pile.
+ */
+export function expectedDraw(pile: CardModel[], slot: number): CardModel | null {
+  if (pile.length === 0) return null;
+  const n = pile.length;
+  const played = pile.filter((card) => card.playable && card.type !== "Status" && card.type !== "Curse");
+  const mean = (value: (card: CardModel) => number) => played.reduce((sum, card) => sum + value(card), 0) / n;
+  const damage = mean((card) => (card.damage ?? 0) * Math.max(1, card.hits));
+  const targets = played.find((card) => card.target === "single")?.validTargets ?? [];
+  return {
+    index: 200 + slot,
+    key: `g${slot}`,
+    cardId: `GEN:GAMBLERS_BREW:${slot}`,
+    name: "an average draw",
+    type: Math.round(damage) > 0 ? "Attack" : "Skill",
+    upgraded: false,
+    cost: Math.round(played.length > 0 ? played.reduce((sum, card) => sum + Math.max(0, card.cost), 0) / played.length : 1),
+    xCost: false,
+    playable: true,
+    target: Math.round(damage) > 0 && targets.length > 0 ? "single" : "self",
+    validTargets: Math.round(damage) > 0 ? targets : [],
+    damage: Math.round(damage) > 0 ? Math.round(damage) : null,
+    hits: 1,
+    block: Math.round(mean((card) => card.block)),
+    vulnerable: Math.round(mean((card) => card.vulnerable)),
+    weak: Math.round(mean((card) => card.weak)),
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: false,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: "",
+  };
+}
+
+/** Potions that take a card from a pile into the hand, and whether it is free this turn. */
+export const PILE_CARD_POTIONS: Record<string, { pile: "discard" | "draw"; free: boolean }> = {
+  LIQUID_MEMORIES: { pile: "discard", free: true },
+  DROPLET_OF_PRECOGNITION: { pile: "draw", free: false },
+};
+
+/**
+ * The pile card a pile-card potion takes: the best one this turn by thisTurnScore (the selection
+ * screen's own rule), at cost 0 when the potion makes it free. null for an empty pile.
+ */
+export function pileCardPick(cards: CardModel[], incoming: number, enemies: number, free: boolean, board: ThisTurnBoard = {}, powerExtraCost = 0): CardModel | null {
+  const playable = cards.filter((card) => card.playable && card.type !== "Status" && card.type !== "Curse" && card.cardId !== "THE_GAMBIT");
+  if (playable.length === 0) return null;
+  // Free this turn: 0, a Power under Spiked Gauntlets 1 (potionCardCost).
+  const scored = playable.map((card) => (free ? { ...card, cost: potionCardCost(card, powerExtraCost) } : card));
+  return scored.reduce((best, card) => (thisTurnScore(card, incoming, enemies, board) > thisTurnScore(best, incoming, enemies, board) ? card : best));
+}
+
+/**
+ * What a card does this turn, in rough HP-equivalent points: damage (every enemy for AoE), block up
+ * to the incoming attack (a little beyond), debuffs, Strength, draw and energy, a power's lasting
+ * value, less its energy cost and HP cost.
+ */
+export function thisTurnScore(card: CardModel, incoming: number, enemies: number, board: ThisTurnBoard = {}): number {
+  // The Gambit: any unblocked attack kills us for the rest of the fight (S780: picked at 79/80 HP from a
+  // Colorless Potion, died to a 9-damage hit). Never worth taking.
+  if (card.cardId === "THE_GAMBIT") return -100;
+  const damage = thisTurnDamage(card, board) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
+  const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
+  const score =
+    damage +
+    block +
+    2.5 * Math.min(card.vulnerable, 3) +
+    1.5 * Math.min(card.weak, 3) +
+    5 * card.strength +
+    2 * card.tempStrength +
+    3 * card.draw +
+    4 * card.energyGain +
+    card.flatValue -
+    2 * Math.max(0, card.cost) -
+    card.hpLoss;
+  return Math.round(score);
+}
+
+
+/** What the board lets a card deal this turn (thisTurnScore). */
+export interface ThisTurnBoard {
+  /** Current draw pile emptiness; unknown piles must not be treated as empty. */
+  drawPileEmpty?: boolean;
+  /**
+   * Cards the exhaust pile can hold this turn: its size now plus the exhausting cards in hand. Pact's
+   * End needs 3 (the solver's PACTS_END_EXHAUST); below that it deals nothing (9LSQ F17 T1, H1FA twice:
+   * an Attack Potion took it over Fight Me with the exhaust pile empty, and it sat in hand).
+   */
+  exhaustReach?: number;
+  /** Most Vulnerable on a living enemy: Bully deals 2 more per stack. */
+  vulnerable?: number;
+}
+
+/** Cards Pact's End needs in the exhaust pile (turn-solver PACTS_END_EXHAUST). */
+const PACTS_END_CARDS = 3;
+/** Bully: extra damage per Vulnerable stack on its target (as in the solver). */
+const BULLY_PER_VULNERABLE = 2;
+
+/** A card's damage per hit this turn on this board. */
+export function thisTurnDamage(card: CardModel, board: ThisTurnBoard = {}): number {
+  // silent-0197: Y6GM2CHWJBEY F17 attempt 2 T1 / VPW8YH7A4QFM F39 T1.
+  if (card.cardId === "GRAND_FINALE" && board.drawPileEmpty === false) return 0;
+  if (card.cardId === "PACTS_END" && board.exhaustReach !== undefined && board.exhaustReach < PACTS_END_CARDS) return 0;
+  if (card.cardId === "BULLY") return (card.damage ?? 0) + BULLY_PER_VULNERABLE * (board.vulnerable ?? 0);
+  return card.damage ?? 0;
+}
+
+
+
+/** Touch of Insanity is only worth drinking for a card costing at least this much. */
+export const FREE_CARD_MIN_COST = 2;
+
+/**
+ * The card Touch of Insanity should make free: the most expensive real card (2+ energy, not X-cost,
+ * not a Status/Curse), ties broken by what it does. The solver and the selection screen use the same
+ * rule, so the plan the solver scored is the one played. null when no card is worth it.
+ */
+export function freeCardPick<T extends CardModel>(cards: T[]): T | null {
+  const worth = (card: CardModel): number => (card.damage ?? 0) * Math.max(1, card.hits) + card.block + card.flatValue + 5 * card.strength;
+  const eligible = cards.filter((card) => card.type !== "Potion" && card.type !== "Status" && card.type !== "Curse" && !card.xCost && card.cost >= FREE_CARD_MIN_COST);
+  if (eligible.length === 0) return null;
+  return eligible.reduce((best, card) => (card.cost > best.cost || (card.cost === best.cost && worth(card) > worth(best)) ? card : best));
+}
+
+export function isModelledPotion(potionId: string): boolean {
+  return potionId in POTION_EFFECTS;
+}
+
+/** The Regen a potion gives (Regen Potion 5), 0 for any other. */
+export function potionRegen(potionId: string): number {
+  return POTION_EFFECTS[potionId]?.regen ?? 0;
+}
+
+/**
+ * `slot` is the potion slot; the card index space is kept apart with 100 + slot (200 + slot for the card
+ * a card potion adds). `ctx` is the board a generated card is played on (targets, Strength, Weak), the
+ * pile cards pile-card potions take and the draw pile's expected card.
+ */
+export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], ctx?: PotionContext): CardModel | null {
+  const effect: (Partial<CardModel> & { target: TargetMode }) | undefined = POTION_EFFECTS[potionId] ?? (potionId === "POISON_POTION" && (ctx?.observedPoison ?? 0) > 0
+    ? { target: "single" as const, poison: ctx!.observedPoison } : undefined);
+  if (!effect) return null;
+  // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew: their cards are priced by the expected draw
+  // (combat-plan gives the draw pile's, else the discard pile's, else the deck's when the piles are unknown). With
+  // both piles empty there is nothing to draw: Glowwater only exhausts the hand (the solver's drawable 0), Distilled
+  // Chaos plays nothing, Gambler's Brew draws back the cards it discarded (no change). Without any context: null.
+  const drawPotion = effect.special === "chaos" || effect.special === "glowwater" || effect.special === "gamble" || effect.special === "bottled";
+  if (drawPotion && !ctx?.expectedDraw && !ctx?.pilesEmpty) return null;
+  if (drawPotion && !ctx?.expectedDraw && effect.special === "gamble") return { ...potionShell(potionId, name, slot, validTargets), ...effect, special: null };
+  const card = GENERATED_CARD_POTIONS[potionId];
+  const pile = PILE_CARD_POTIONS[potionId];
+  const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;
+  // A pile-card potion with nothing to take is not a line.
+  if (pile && !pileCard) return null;
+  // Blessing of the Forge with no card whose upgrade is known: nothing to price it by.
+  if (effect.special === "forge" && Object.keys(ctx?.upgrades ?? {}).length === 0) return null;
+  const generates: CardModel | undefined = effect.special === "gamble" || effect.special === "chaos" || effect.special === "glowwater" || effect.special === "bottled"
+    ? ctx?.expectedDraw ?? undefined
+    : pileCard
+    ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true, pileCard: { cardId: pileCard.cardId, upgraded: pileCard.upgraded } }
+    : card
+    ? {
+        index: 200 + slot,
+        key: `g${slot}`,
+        cardId: `GEN:${potionId}:${slot}`,
+        name: `card from ${name}`,
+        type: card.type,
+        upgraded: false,
+        // Free this turn; a Power under Spiked Gauntlets 1 (potionCardCost).
+        cost: potionCardCost({ type: card.type, xCost: false, cost: 0 }, ctx?.powerExtraCost ?? 0),
+        xCost: false,
+        playable: true,
+        target: card.target,
+        validTargets: card.target === "single" ? (ctx?.enemyTargets ?? validTargets) : [],
+        // Like a hand card's shown number: current Strength in, Weak applied.
+        damage: card.damage === undefined ? null : Math.floor((card.damage + (ctx?.strength ?? 0)) * (ctx?.weak ? 0.75 : 1)),
+        hits: 1,
+        block: card.block ?? 0,
+        vulnerable: 0,
+        weak: 0,
+        strength: 0,
+        tempStrength: 0,
+        enemyStrength: 0,
+        enemyTempStrengthLoss: 0,
+        hpLoss: 0,
+        energyGain: 0,
+        draw: 0,
+        exhausts: false,
+        special: null,
+        known: true,
+        flatValue: card.flatValue ?? 0,
+        heldPenalty: 0,
+        text: "",
+      }
+    : undefined;
+  return {
+    ...potionShell(potionId, name, slot, validTargets),
+    ...effect,
+    ...(generates ? { generates } : {}),
+    ...(effect.special === "forge" ? { upgrades: ctx?.upgrades ?? {} } : {}),
+    ...(effect.special === "stew" ? { laterDamage: ctx?.strikePileDamage ?? 0 } : {}),
+  };
+}
+
+/**
+ * A potion as a 0-cost "card" with no effect yet: the solver plays it as step `POTION:<id>:<slot>`.
+ * modelPotion adds its modelled effect; potion-mc.ts one Monte Carlo sample's. No use cost here (the old useCost
+ * parameter, always 0 since batch K, is gone): since 2026-09-30 a drink's cost is the potion table's held value,
+ * put on the card as potionCost by potion-cost.ts withPotionCost (0 in a boss fight).
+ */
+export function potionShell(potionId: string, name: string, slot: number, validTargets: number[]): CardModel {
+  return {
+    index: 100 + slot,
+    key: `p${slot}`,
+    cardId: `POTION:${potionId}:${slot}`,
+    name: `potion ${name}`,
+    type: "Potion",
+    upgraded: false,
+    cost: 0,
+    xCost: false,
+    playable: true,
+    target: "self",
+    validTargets,
+    damage: null,
+    hits: 1,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: true,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: "",
+  };
+}
+
+/** A potion's modelled effect (POTION_EFFECTS), without the cards it generates; null when unmodelled. */
+export function potionEffect(potionId: string): (Partial<CardModel> & { target: TargetMode }) | null {
+  return POTION_EFFECTS[potionId] ?? null;
+}
+
+/**
+ * Random potions (Dai 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as
+ * "drink now, then re-plan with the real cards", never as a fixed-value line.
+ *
+ * Card-choice potions: 「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」 3 random cards of the
+ * type from the character's pool (Colorless Potion: the colorless pool), one taken, free this turn. Orobic
+ * Acid takes all three (one Attack, one Skill, one Power). Pools: the game data's Common/Uncommon/Rare
+ * cards of that color and type, drawn uniformly (the data carries no offer weights).
+ */
+export const CHOICE_POTIONS: Record<string, { pool: "character" | "colorless"; types: string[]; takeAll: boolean }> = {
+  ATTACK_POTION: { pool: "character", types: ["Attack"], takeAll: false },
+  SKILL_POTION: { pool: "character", types: ["Skill"], takeAll: false },
+  POWER_POTION: { pool: "character", types: ["Power"], takeAll: false },
+  COLORLESS_POTION: { pool: "colorless", types: ["Attack", "Skill", "Power"], takeAll: false },
+  OROBIC_ACID: { pool: "character", types: ["Attack", "Skill", "Power"], takeAll: true },
+};
+
+/**
+ * Draw potions: the cards come from the draw pile in an unknown order (then the discard pile, reshuffled),
+ * so each sample is one shuffled order of the known piles. `cards`: how many the potion draws (Gambler's
+ * Brew: as many as discarded, up to a full hand; Distilled Chaos: plays that many from the top).
+ */
+export const DRAW_POTIONS: Record<string, { cards: number }> = {
+  SWIFT_POTION: { cards: 3 },
+  CLARITY: { cards: 1 },
+  CURE_ALL: { cards: 2 },
+  SNECKO_OIL: { cards: 7 },
+  GAMBLERS_BREW: { cards: 10 },
+  GLOWWATER_POTION: { cards: 10 },
+  DISTILLED_CHAOS: { cards: 3 },
+  BOTTLED_POTENTIAL: { cards: 5 },
+};
+
+/** Which Monte Carlo class a potion is in: "choice" (random cards offered), "draw" (a random pile order), or null. */
+export function randomPotionKind(potionId: string): "choice" | "draw" | null {
+  if (potionId in CHOICE_POTIONS) return "choice";
+  if (potionId in DRAW_POTIONS) return "draw";
+  return null;
+}
+
+/** A plan step that plays the card a potion added (not a hand card: nothing to click until drunk). */
+export function isGeneratedStep(cardId: string): boolean {
+  return cardId.startsWith("GEN:");
+}

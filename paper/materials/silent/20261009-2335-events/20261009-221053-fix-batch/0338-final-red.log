@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/agent
+
+ ❯ tests/end-turn-guard-sources.test.ts (3 tests | 1 failed) 10ms
+   × F49 T2: explains the six Orichalcum block already included in the ten-HP loss 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/end-turn-guard-sources.test.ts > F49 T2: explains the six Orichalcum block already included in the ten-HP loss
+TypeError: undefined is not iterable (cannot read property Symbol(Symbol.iterator))
+ ❯ tests/end-turn-guard-sources.test.ts:21:38
+     19|   expect(plan.outcome.hpLoss).toBe(10);
+     20|   expect(plan.outcome.dies).toBe(false);
+     21|   expect(plan.outcome.endTurnGuards).toContainEqual({ what: "Orichalcu…
+       |                                      ^
+     22|   expect(endTurnLethalNote(plan, true, 11)).toContain("Orichalcum bloc…
+     23|   expect(endTurnLethalNote(plan, true, 11)).not.toContain("no end-of-t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  22:33:40
+   Duration  1.61s (transform 1.24s, setup 356ms, import 1.10s, tests 10ms, environment 0ms)
+

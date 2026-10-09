@@ -1,0 +1,31 @@
+.FE
+======================================================================
+ERROR: test_stream_retains_same_run_frames_without_crossing_runs (__main__.ReportDeathFightTest.test_stream_retains_same_run_frames_without_crossing_runs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/agent/tests/report_death_fight_test.py", line 43, in test_stream_retains_same_run_frames_without_crossing_runs
+    states = report.load_run_states("fixed.jsonl", "TXZ6RVMQA09D", set())
+             ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'report_death_fight' has no attribute 'load_run_states'
+
+======================================================================
+FAIL: test_opening_death_without_decisions_is_the_last_fight (__main__.ReportDeathFightTest.test_opening_death_without_decisions_is_the_last_fight)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/agent/tests/report_death_fight_test.py", line 31, in test_opening_death_without_decisions_is_the_last_fight
+    self.assertEqual([f["floor"] for f in fights], [48, 49])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [48] != [48, 49]
+
+Second list contains 1 additional elements.
+First extra element 1:
+49
+
+- [48]
++ [48, 49]
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+FAILED (failures=1, errors=1)
+report.py selftest ok: DHGT F17 86->33 (reward 39 less Burning Blood 6); death fight ends at 0; brain deciders

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261009-224302-postmortem/final-analysis.py", line 7, in <module>
+    n=d['_seq'];r=d['route_plan'];print('d',n,'开层',r['floor'],'路径',[(x['row'],x['type'],round(x['hpOnArrival']*70,5))for x in r['path']])
+                                                                                                  ~~~~~~~~~~~~~~~~^~~
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'int'

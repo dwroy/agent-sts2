@@ -1,0 +1,4755 @@
+{
+  "files": [
+    {
+      "file": ".gitignore",
+      "sha256": "c638fd1e7bd9bc8b0a01de9953fac17038791b36f8bd4eb2334da7477bf91d1e"
+    },
+    {
+      "file": "AGENTS.md",
+      "sha256": "8980811c244985127d57c7a70844d39a5ff480de39b415a7ec551afb92288ca1"
+    },
+    {
+      "file": "README.md",
+      "sha256": "cbec39926da3725efee8bae182b180917a66e587ade971acb248c4b5728dd894"
+    },
+    {
+      "file": "agent/.env.example",
+      "sha256": "113fa5d42f7392354250369126beb2eb356d58c324c66bca7cc71e840bc0a059"
+    },
+    {
+      "file": "agent/PLAN.md",
+      "sha256": "d0499968568749cf6f53ec8a02ca894a23b187f0981710019f96d4ca443d9466"
+    },
+    {
+      "file": "agent/README.md",
+      "sha256": "8e09e37abf0d342593f60fd1e2b0311612dcfe45c61691e6dcad94f2d1ef9dd8"
+    },
+    {
+      "file": "agent/package-lock.json",
+      "sha256": "0ed7b860e8085eb62d354df0825d7af6f7fc7e6a610284469de8c29ef5f5d676"
+    },
+    {
+      "file": "agent/package.json",
+      "sha256": "a587fd1eb78a07afde35013382a0c3359c63d25c9e5ff9d6c234005ed375bc51"
+    },
+    {
+      "file": "agent/src/brain/brain.ts",
+      "sha256": "b0b822b8571e89d043d4d143731bdd040279ad1490e478a8c645110eeacaf399"
+    },
+    {
+      "file": "agent/src/brain/build-facts.ts",
+      "sha256": "a81b9f854ebd0e90529ca1e3945da862cc02fc74e4299992f99d6410f15c525e"
+    },
+    {
+      "file": "agent/src/brain/engines/claude.ts",
+      "sha256": "6cac56e4b82cb68e86111708a8be93b01528b3c3b5de551a5d6036fcb8c94254"
+    },
+    {
+      "file": "agent/src/brain/engines/codex-cache.ts",
+      "sha256": "128e173d99884bd1b301199b5944b4aa1ad9916d740903d83bcd0e858bd6ceda"
+    },
+    {
+      "file": "agent/src/brain/engines/codex-session.ts",
+      "sha256": "659713dff98ebc286e619371d122c15eeaf5fc5aed2e07296427725f146bb444"
+    },
+    {
+      "file": "agent/src/brain/engines/codex-usage.ts",
+      "sha256": "944102a0a6aa943602e13dde5ae030a9b16e51ca3640cbfc25e5175488af7067"
+    },
+    {
+      "file": "agent/src/brain/engines/codex.ts",
+      "sha256": "5d38d0eb4edd63f4a2cd32142466d27fbe50f62f7cb2c2de160296ebaf4187d3"
+    },
+    {
+      "file": "agent/src/brain/engines/deepseek.ts",
+      "sha256": "448c6518aaa5fa1dea4f3893726883198dc0ef1751c959496ea16dd5788f37c4"
+    },
+    {
+      "file": "agent/src/brain/engines/process.ts",
+      "sha256": "5ec8fb3437222f9f9e6ac5e39487526ed133dd611520f4aaf33f6ba167f0e226"
+    },
+    {
+      "file": "agent/src/brain/knowledge.ts",
+      "sha256": "a2956f4e6808b06d55f0d9c5c284104fb36c46b3339573099b04e24940b11bca"
+    },
+    {
+      "file": "agent/src/brain/labels.ts",
+      "sha256": "29c47f5e90f6ed35531e9f6ca219f14671046a85a03b669e78878c44593b4e2a"
+    },
+    {
+      "file": "agent/src/brain/llm/consistency.ts",
+      "sha256": "812d3250cdc73fcda1c51bbcf081ea5d098a40f01bec18639d71e151a3c39d1b"
+    },
+    {
+      "file": "agent/src/brain/llm/deepseek-message.ts",
+      "sha256": "87e4f28c13a6e6fda5b8dbf8912cf0b52ebd98724bc99c29b51e4dce75184fec"
+    },
+    {
+      "file": "agent/src/brain/llm/deepseek.ts",
+      "sha256": "6e2b98d146033f8706f52d3d76a60ee24e8b33dc0798ea33406a2bdb30499d3c"
+    },
+    {
+      "file": "agent/src/brain/llm/file-escalation.ts",
+      "sha256": "70bacd5862bf0fe015988d050829b4a0e78faa0efc8a0806aea4def31dff68c7"
+    },
+    {
+      "file": "agent/src/brain/message.ts",
+      "sha256": "29cf55dfa160388092de51e20bf802ea75e11fba993df57eaab515c391f37ebc"
+    },
+    {
+      "file": "agent/src/brain/router.ts",
+      "sha256": "3790970939a22473f554251f282bb2b4c1a71f6bc4d0c3a897fe4f34ef66a6d6"
+    },
+    {
+      "file": "agent/src/brain/source.ts",
+      "sha256": "ac540139eb027150ec2fe25f454c78f1a66242f4bd97046d9d61451faac98926"
+    },
+    {
+      "file": "agent/src/brain/specs.ts",
+      "sha256": "6d41a1df26e4bcb4b29967378fab199a9f9abb8423f434be2bf5beb23d78383d"
+    },
+    {
+      "file": "agent/src/brain/tools/kb-tools.ts",
+      "sha256": "2b80d224253353c5b369acfeb4e72106e2adf4e3c360444060620532ca600af8"
+    },
+    {
+      "file": "agent/src/brain/tools/logs-query.ts",
+      "sha256": "8d8adc3c5e1ec0d9deccd6bd816f06804c9114466b32876d7bf9a5a2909c6357"
+    },
+    {
+      "file": "agent/src/brain/tools/mcp-launch.ts",
+      "sha256": "7a2138d7f941cc8caa114f30df0bb3eb9347e50d860d003dbad204f8bb577e09"
+    },
+    {
+      "file": "agent/src/brain/tools/mcp-server.ts",
+      "sha256": "a2a581db5f9ce8d7a7ca7f9cb3efe84b735d72b901427118dce2edd012de47fc"
+    },
+    {
+      "file": "agent/src/brain/tools/registry.ts",
+      "sha256": "2cc8a38dfe3177a85e7dda28059cd1f46e6be58eb5cde5693a754cc1be70b28c"
+    },
+    {
+      "file": "agent/src/brain/tools/types.ts",
+      "sha256": "e38a1f12f82482610bff40fb008a6b05904e57c791036657312743319d7c4f75"
+    },
+    {
+      "file": "agent/src/brain/tools/validate.ts",
+      "sha256": "0ad8ceec84a7ae1749f6f38eeb4d8e4c8a3f7871bd1f99c9638893bbd74d11c5"
+    },
+    {
+      "file": "agent/src/brain/types.ts",
+      "sha256": "5db236d1a0a9d18d3a27641aac6a674d1df0781602714a7f73608c9e532eb942"
+    },
+    {
+      "file": "agent/src/brain/wait.ts",
+      "sha256": "0f99b552825ff8679470d64d8613b4057c86f92e99a82eda759619ab6ea6856b"
+    },
+    {
+      "file": "agent/src/core/cli/doctor.ts",
+      "sha256": "54d9d335f1a74976e5f39657eb23f256e315646310d543330ced198e6fe1009f"
+    },
+    {
+      "file": "agent/src/core/cli/reporter.ts",
+      "sha256": "81d5c4b0253361c6d83106dcf141d3e314352c64bd9852fb56de043a465b196b"
+    },
+    {
+      "file": "agent/src/core/cli/runtime.ts",
+      "sha256": "44eeaf6ea0258388c7b01f68837e124c9f148385909a6b66af33ff5c0535be07"
+    },
+    {
+      "file": "agent/src/core/config.ts",
+      "sha256": "a75d1c47c0506782be46cd5f0ca39ef0b5adfa7da9fbe4603fc2d63c7b38d16b"
+    },
+    {
+      "file": "agent/src/core/index.ts",
+      "sha256": "6b025f92c9c963dc467c0368b2b5f30365128be50079e57bd03fc0580845dd42"
+    },
+    {
+      "file": "agent/src/core/paths.ts",
+      "sha256": "9f60add837acf13966ef8e5ecdf667e28dcc6ee7612ff76f141ddd0455f27b62"
+    },
+    {
+      "file": "agent/src/core/util/data-version.ts",
+      "sha256": "8ad004938a95b2b6b43353cb73372151e03f94d02343a0416140b812ed7800f4"
+    },
+    {
+      "file": "agent/src/core/util/format.ts",
+      "sha256": "77751bafc25435a45278b4c4dd2b301ff22a4a8bb126aa9b2fe6bf7b723e9f75"
+    },
+    {
+      "file": "agent/src/core/util/json.ts",
+      "sha256": "da294432a452d1d300715f7942a871704de28080f5cf4c167236c47982ebf452"
+    },
+    {
+      "file": "agent/src/core/util/lock.ts",
+      "sha256": "5d42d6cbefd3e1a8c79d91395d39418bb5579a7ff107f6ab7219cacb95bc95ed"
+    },
+    {
+      "file": "agent/src/eye/decision-log.ts",
+      "sha256": "cb796cd86057e3409a69f08e8a60bebf1eb9952cc89bcf8bbf56d300d33ad3e1"
+    },
+    {
+      "file": "agent/src/eye/jev-prompt-log.ts",
+      "sha256": "b9a418b2ee95b16ae624e4ad1da820f72c2fc09f09ace5e61c93b2b24c29cccd"
+    },
+    {
+      "file": "agent/src/eye/replay/record.ts",
+      "sha256": "f8896c8602b79271bca7968faf654fe5534813abb0f26202ee9ea6c20611f76a"
+    },
+    {
+      "file": "agent/src/eye/replay/replay.ts",
+      "sha256": "836a303b635752ad2adcbc1838c6fe883d490b1cfed1c739126e14e70846cb67"
+    },
+    {
+      "file": "agent/src/eye/run-config.ts",
+      "sha256": "9ce2ab6bc9c4c9ffa86859bb28d4f390604ab954b68dd79cf062cef367d8b6d2"
+    },
+    {
+      "file": "agent/src/hand/act/dispatch.ts",
+      "sha256": "968c7e64cc4c5a47a3bb6189e2bf2d7e8fd15ee4842d922d4dee7d97236817b5"
+    },
+    {
+      "file": "agent/src/hand/act/gate.ts",
+      "sha256": "4a706cfb259f81dcc3f2f10625486cf52a9d2a6eaf9dd1bfdc995e0a366b0990"
+    },
+    {
+      "file": "agent/src/hand/act/identity.ts",
+      "sha256": "03c74667f80bce553b7e00a9777f3c580ef5297c4af2fc6001bdaccc43bc14ab"
+    },
+    {
+      "file": "agent/src/hand/act/turn-start.ts",
+      "sha256": "c0b307dd5542ab6d4289daf3a12ff3938c770c205cefe0371a3f8f6e4a7c96e5"
+    },
+    {
+      "file": "agent/src/hand/loop.ts",
+      "sha256": "f38e1db6e1cf61050e3b78930a2eddbe76ef9349cb01a015beea33f9f93a5f1c"
+    },
+    {
+      "file": "agent/src/hand/mod/client.ts",
+      "sha256": "5da266db4ce57e07f4dfb246444351ef8479bf98c8eb408f2e89a2e213b7c84c"
+    },
+    {
+      "file": "agent/src/hand/mod/discovery.ts",
+      "sha256": "85bd58d0792e23bd4ad5679eba32c9d7b465c466f0c3cbfcc16bb7b1f1e6ba48"
+    },
+    {
+      "file": "agent/src/hand/mod/schema.ts",
+      "sha256": "72dc4dfeefaa27ee701b49b1318b50380599980234f7623431b20ff479a0b01f"
+    },
+    {
+      "file": "agent/src/hand/screens/act-start.ts",
+      "sha256": "5bba273ec049cd6367020defc1e3ac12915e68c4732095f2dbe0b538e78d0455"
+    },
+    {
+      "file": "agent/src/hand/screens/card-value.ts",
+      "sha256": "c71986fefe8602293ba7e6d262043a2eef85d1c98d54e033f55567f8ab4e2bc6"
+    },
+    {
+      "file": "agent/src/hand/screens/chest.ts",
+      "sha256": "94e5666d4c8b6881bfad3b969106c16192cccfc6e3502c19d8e5ffeffaa3b671"
+    },
+    {
+      "file": "agent/src/hand/screens/event.ts",
+      "sha256": "ed618faf8ff34840ff5d5af600dee0e28067597b1c21e4a6a67eeeb94e9f2be0"
+    },
+    {
+      "file": "agent/src/hand/screens/index.ts",
+      "sha256": "d3fda906096d8e9741b1e33889d05840e9e53ad552ff913461e75c042c071795"
+    },
+    {
+      "file": "agent/src/hand/screens/map.ts",
+      "sha256": "b76007beab23fe5988cd63e4fd7d6d8e69ec748f80793fe6faf9493cdef55e64"
+    },
+    {
+      "file": "agent/src/hand/screens/misc.ts",
+      "sha256": "6246f60aa6d9dd908a8ef2fe2628626e4a0bada03f4fbbfc8196fea5ec4d84b5"
+    },
+    {
+      "file": "agent/src/hand/screens/oneshot.ts",
+      "sha256": "0e8848fda0386d491131ded410baf96a87d6860b0a4399e1a69dc3f51d578a01"
+    },
+    {
+      "file": "agent/src/hand/screens/pick.ts",
+      "sha256": "f9e3b53bbe9d8c335ed8760398fd8c6209cd1d6b15b62f78b09e9677423db7ac"
+    },
+    {
+      "file": "agent/src/hand/screens/potion-discard.ts",
+      "sha256": "5ebfa5f5207b91f296c0df0e27f40340d1b01452cab397a010504fb26ddd6e17"
+    },
+    {
+      "file": "agent/src/hand/screens/rest.ts",
+      "sha256": "518aea18de27a60b39a1473ef0e89ba54da908b57aa085af6577e90643f1cd97"
+    },
+    {
+      "file": "agent/src/hand/screens/reward.ts",
+      "sha256": "53498af1a41ba4b3fc28421677faeb293c638842eb8eadadd036d02e52c148f0"
+    },
+    {
+      "file": "agent/src/hand/screens/route-plan.ts",
+      "sha256": "262ccb76eb726cc1bb0c253d0c0e62be6bd39d6ce3a1d37ac89d651e7776390b"
+    },
+    {
+      "file": "agent/src/hand/screens/route-review.ts",
+      "sha256": "102440a44378fef6648690ad6bbe3a3873853f2cd3a1f53b542ea2308cafdc86"
+    },
+    {
+      "file": "agent/src/hand/screens/selection.ts",
+      "sha256": "61705709dd356b3e76a60096bd56a0dd2dbc7b7508bf257baed1e1d6430972a2"
+    },
+    {
+      "file": "agent/src/hand/screens/shop.ts",
+      "sha256": "7e1e88fbc74e4b9ab98b8c75041cdfe6c169668e87a34cd3781c30b1f90d4bc1"
+    },
+    {
+      "file": "agent/src/hand/screens/silent-reward-addition.ts",
+      "sha256": "bc3f8d2f9de05bd0392b062821e39ffeb08af973e3d3b10bb7d4fcdfad471b50"
+    },
+    {
+      "file": "agent/src/index.ts",
+      "sha256": "9aee86b0b3c0169d8eee0c16193d271d09aeb1f07f6bd2090b32c0624fa13a3b"
+    },
+    {
+      "file": "agent/src/knowledge/boss-phase.ts",
+      "sha256": "4e84d7b11e1d37e04df9375c0a0ddf1285689776d8728353b61135466b32e73b"
+    },
+    {
+      "file": "agent/src/knowledge/card-upgrades.ts",
+      "sha256": "46fe172dc7dd5f36e9b9e0460217f0a9c933b8f740746fdc9c290ace768ff64e"
+    },
+    {
+      "file": "agent/src/knowledge/double-boss.ts",
+      "sha256": "46e497cb169d6a7266f55434b9ab90e311894174100fe4b70c9992a4aa418fed"
+    },
+    {
+      "file": "agent/src/knowledge/enchant-text.ts",
+      "sha256": "7a034321b9ba6a8d89e841b537d1eb02a8de5aa0915828d57b5120047ab0168b"
+    },
+    {
+      "file": "agent/src/knowledge/event-pages.ts",
+      "sha256": "e121bbd24923a4e1af6e94527264b2dabe639a4be40f13fa08e4b9db619416f1"
+    },
+    {
+      "file": "agent/src/knowledge/experience.ts",
+      "sha256": "bebdbf7305a0ad7d8af1361951735cc8166558dac7def23aebf31d869e23f454"
+    },
+    {
+      "file": "agent/src/knowledge/files.ts",
+      "sha256": "cb9f2b0ce6d2f04916ddeb6e884a3ac99f35cdfd827be5d1115d7154e8e9f43d"
+    },
+    {
+      "file": "agent/src/knowledge/index.ts",
+      "sha256": "1702f3f11a2534077ff2d660b10c098aed990d87def8497e6b1f1e267a721b6a"
+    },
+    {
+      "file": "agent/src/knowledge/jev-hints.ts",
+      "sha256": "a5287ef451cd0f91e2a2ec75ab745a7a7cb154867c6b5edeaa0e3f2d6d141d29"
+    },
+    {
+      "file": "agent/src/knowledge/mechanics.ts",
+      "sha256": "ec9a020940d5cc9ad17651b1a69b7d11795a116828f2d63857c63f8e5127ec64"
+    },
+    {
+      "file": "agent/src/knowledge/monster-db.ts",
+      "sha256": "e56258e59c607c7853e5a740ad0ada2facb326d162e352839b458c9505cbc1c2"
+    },
+    {
+      "file": "agent/src/knowledge/move-model.ts",
+      "sha256": "0631ec3cd373fabcf7efb7aaa3b7a42a22b62f90dcd2859ae98935bd0d902c68"
+    },
+    {
+      "file": "agent/src/knowledge/outcome-facts.ts",
+      "sha256": "c0a2e06d40cb97146b13cf956df27c5ea40afe680577e89b0b2af600032fcd67"
+    },
+    {
+      "file": "agent/src/knowledge/outcome-tables.ts",
+      "sha256": "fe124039984c4b9c2918a301fa42003dada2a1482a8a957e60b404abc0e481ce"
+    },
+    {
+      "file": "agent/src/knowledge/potion-equivalents.ts",
+      "sha256": "e187050dce4f813b4e2c530a6cd783b0bdcc3d1ef499f5ed4e2faf5e0c55436f"
+    },
+    {
+      "file": "agent/src/knowledge/potion-values.ts",
+      "sha256": "31708aef8b4e8b731a80c072c38848753171eb3b6ab18d7ed15b301f2b218740"
+    },
+    {
+      "file": "agent/src/knowledge/relic-values.ts",
+      "sha256": "69e0db188188301e0b99ad1dc3e7226ea70587384d4a0f02665229faeff717c9"
+    },
+    {
+      "file": "agent/src/knowledge/render/data.ts",
+      "sha256": "ebce577792d21e68c803c6a800a8cca1459cb762c97ac2ee12aebae6af3c30c7"
+    },
+    {
+      "file": "agent/src/knowledge/render/experience-text.ts",
+      "sha256": "dc84d63625ac52d87d001e88103ff1a0a8ff4fe56418dd2fbe31bd5a2bfcf8f3"
+    },
+    {
+      "file": "agent/src/knowledge/render/facts.ts",
+      "sha256": "b9f62fc1ff5a244950fd7eb7d730a1ef354f7ad8e8f0180a14ae73a1b27e352f"
+    },
+    {
+      "file": "agent/src/knowledge/render/format.ts",
+      "sha256": "e5dafb0fa0c581ff76c33e32847d590a57c16a057c9a37c18c843bdec7ffbc36"
+    },
+    {
+      "file": "agent/src/knowledge/render/knowledge-prefix.ts",
+      "sha256": "5396541933bf76ed9c316249efa64160ef930311e94a1db49995d36743e95022"
+    },
+    {
+      "file": "agent/src/knowledge/render/monster-text.ts",
+      "sha256": "c4231f7489bab518f496117e9982cc2d4e2cc2b75614f6800689e6d027332aac"
+    },
+    {
+      "file": "agent/src/knowledge/render/old-knowledge.ts",
+      "sha256": "baae261eb37d2225e79a6fa981236e12d17b7c466b80580f202a0dd54f66ebc1"
+    },
+    {
+      "file": "agent/src/knowledge/render/potion-text.ts",
+      "sha256": "99d2bad30514e76aa46a2dc920f7ebc8242792cd589d89261b2d0d5458b3e661"
+    },
+    {
+      "file": "agent/src/knowledge/render/stats-text.ts",
+      "sha256": "91354ae54f8723be09ca95ac58a93a650affe8e4aef70dd34c4382ede24d208a"
+    },
+    {
+      "file": "agent/src/knowledge/room-costs.ts",
+      "sha256": "531a2f02ba97906d364658b4fe21f141716dd86a9c6305f2d4ce80ec43031f81"
+    },
+    {
+      "file": "agent/src/memory/ascension-target.ts",
+      "sha256": "524c0695fe558985ad70b26beb13b500b7fac2a627a3503cc42bf3699fc8070e"
+    },
+    {
+      "file": "agent/src/memory/deck-profile.ts",
+      "sha256": "d6640509715174ac2c3affc2ea16423d91cda757a3f73640e685d17385a4a0e1"
+    },
+    {
+      "file": "agent/src/memory/deck.ts",
+      "sha256": "a38484995c36609229459a0b3bac901d698f81f964def923340f0d356d53fdcf"
+    },
+    {
+      "file": "agent/src/memory/fight-plan.ts",
+      "sha256": "a260169f393e724cc3c5737d3336649217dfb0b19cce46be90c588d6ae0c0884"
+    },
+    {
+      "file": "agent/src/memory/journal-replay.ts",
+      "sha256": "69c6ea39a02fbb76ef7ed65fa565440dda0ef1d973f520e4d91571183e4d20fe"
+    },
+    {
+      "file": "agent/src/memory/narrow.ts",
+      "sha256": "aef22caeb263bab54acb8c78f7620fb82c53174485c931c96edc542ce75eb5a7"
+    },
+    {
+      "file": "agent/src/memory/run-brief.ts",
+      "sha256": "4e8257a8d13a9dd7ff2d058fa4dadbd258fb4fb8c2a0d9a0498ab08701b46644"
+    },
+    {
+      "file": "agent/src/memory/run-journal.ts",
+      "sha256": "f5aa005f1e9ed3750dda6a6b49500e9f6551a2bf09b14fda2b015208c7f4734e"
+    },
+    {
+      "file": "agent/src/memory/run-plan-merge.ts",
+      "sha256": "d4742a0587a26e4363176ca81a5d810fdf87926388b44c952a440715febbb712"
+    },
+    {
+      "file": "agent/src/memory/run-plan.ts",
+      "sha256": "ddb97d5afe7d259848629ca39869b5d93d29c576b7c45356ff14ac8b7db17b5e"
+    },
+    {
+      "file": "agent/src/memory/types.ts",
+      "sha256": "2f2c9e3ddea8ba828395e06d87c86116212e7a6688fa3fa8c6b36ec37364b060"
+    },
+    {
+      "file": "agent/src/reflex/card-model.ts",
+      "sha256": "077a61bf969f3e0b1985456cc775c254949fb097fa125200f3c15153d1ef03f6"
+    },
+    {
+      "file": "agent/src/reflex/combat-plan.ts",
+      "sha256": "1de4c2effaf37b3ff8ac4495cd72638423e4c84387d738d98073a8a906f818f9"
+    },
+    {
+      "file": "agent/src/reflex/combat.ts",
+      "sha256": "3695741c2ac880f819404d880cee721d2f339807721c17e348123404519ae509"
+    },
+    {
+      "file": "agent/src/reflex/continuation-value.ts",
+      "sha256": "0c7be97b8d9aa62928e7aa8b85f5f7c9ed69879e2806356d978dcce776a9f6f2"
+    },
+    {
+      "file": "agent/src/reflex/damage.ts",
+      "sha256": "7fd7092922f9e692ead821eac958e9d2b6d013f62f5a131691157d22dc361786"
+    },
+    {
+      "file": "agent/src/reflex/fight-plays.ts",
+      "sha256": "79d9d3b4c60c62fe0a4b43d10e9877e9e227dc6c506264af5c1dfa4e01c67d84"
+    },
+    {
+      "file": "agent/src/reflex/fight-value.ts",
+      "sha256": "e630a01778f0758e2fcec26b0219532cd7cb74a3b2d307b1f6e7395808c148ef"
+    },
+    {
+      "file": "agent/src/reflex/jev-experience.ts",
+      "sha256": "2e00c018939d3b90ca9a5f022f13222b7e8cfba60059c6e26b232311342a9d2f"
+    },
+    {
+      "file": "agent/src/reflex/jev/answers.ts",
+      "sha256": "5f73eb0e7d267bb04754ac92578b44b7e9eba4cff1d85ff49ff91c05a754b729"
+    },
+    {
+      "file": "agent/src/reflex/jev/client.ts",
+      "sha256": "34b56ec932554bddcef67839c3a1bb21d86bf9ff4fc4412f2cfcd6cf585118ff"
+    },
+    {
+      "file": "agent/src/reflex/jev/pricing.ts",
+      "sha256": "c538ad5027da7398fe9a1a9dc065e1fe8612e5baaac5a345b7a374282cb1fb4c"
+    },
+    {
+      "file": "agent/src/reflex/jev/questions.ts",
+      "sha256": "50f7e648d6392c6201625abe2c17969d0453b8fdd6e156a0e0e9435df1c2d3a6"
+    },
+    {
+      "file": "agent/src/reflex/passive-pieces.ts",
+      "sha256": "e2199e79808fee247b5a7798e12b21ae126a1fb8ca66ad1f1293240f1f22647c"
+    },
+    {
+      "file": "agent/src/reflex/permafrost.ts",
+      "sha256": "d6b5707427b7acea5f59edb7a51799efe7ab1d2cb64168510161d755d17760bb"
+    },
+    {
+      "file": "agent/src/reflex/potion-cost.ts",
+      "sha256": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e"
+    },
+    {
+      "file": "agent/src/reflex/potion-mc.ts",
+      "sha256": "f51b92866d0c82ed8b934a4301ca1f693703c65021e6b71a2caf6f58055a8d14"
+    },
+    {
+      "file": "agent/src/reflex/potion-value.ts",
+      "sha256": "dea5f46fd58c10ed57c2d8f4788e73b0fbb7decc2c38d4e5469802ad517e8c0a"
+    },
+    {
+      "file": "agent/src/reflex/rollout-live.ts",
+      "sha256": "f334dfb862580096f3143c4d3ca24bf9feaeb82a26d6c658d00c78e9df51daa4"
+    },
+    {
+      "file": "agent/src/reflex/rollout.ts",
+      "sha256": "e2269430eac3e9b3cfb14ff54031252cb2747eedda05efcdc7f0d856b55d3adc"
+    },
+    {
+      "file": "agent/src/reflex/silent-apotheosis.ts",
+      "sha256": "b2c6301a0bf9a79fa3df41f947e5ccbd80f8a331f51d7efad3159dc005a224b5"
+    },
+    {
+      "file": "agent/src/reflex/silent-loss-reference.ts",
+      "sha256": "713d94462279914dea649b2337e1495a3cc42fd986650099f49f88409bf49c25"
+    },
+    {
+      "file": "agent/src/reflex/silent-phase-reference.ts",
+      "sha256": "529b07f58c1934e1e36e99d4c5888183f01109f60684513d7446b49c06e769e1"
+    },
+    {
+      "file": "agent/src/reflex/silent-simulation-reference.ts",
+      "sha256": "0e863ae4c74220c3a1220162a0cc660d20d7c349de1171fa054c041c568582f6"
+    },
+    {
+      "file": "agent/src/reflex/start-loss.ts",
+      "sha256": "bda105bf162ea693ac35679a4dcf4fabe6a844b6b83eba9bf3ea5ac6c853bc55"
+    },
+    {
+      "file": "agent/src/reflex/thief.ts",
+      "sha256": "363d27dc1cc3d85b407bb714f3c5b8d37e24a48e510685a6a5407124200f0329"
+    },
+    {
+      "file": "agent/src/reflex/turn-solver.ts",
+      "sha256": "263501c99f1cb8a6d17a49667ce326f7358aaaf0ccd4c7f48f90faf790fa527f"
+    },
+    {
+      "file": "agent/src/sim/boss-clock.ts",
+      "sha256": "5a4ce39fe711b234448fbb465f4bb9f7ba258cc57a56904e88aba9b38cfe81e8"
+    },
+    {
+      "file": "agent/src/sim/boss-lines-worker.ts",
+      "sha256": "d3d1a8342a4a38ef361bf420e28d796ac46964fcd6707d52d7a04c00dc3d6dc1"
+    },
+    {
+      "file": "agent/src/sim/boss-lines.ts",
+      "sha256": "ac5af605bd41d680f9e2b19d6aa24ffb5fe582f976433bc735996c5ae4c690dc"
+    },
+    {
+      "file": "agent/src/sim/boss-sim-worker.ts",
+      "sha256": "2a1c494fb6b5811e3708070aecb2bb0c3bb30277b989ee24e0d2cb68e6f4f49a"
+    },
+    {
+      "file": "agent/src/sim/boss-sim.ts",
+      "sha256": "ef7f84faa402b5fd6e22fde800dcb67ab4f8d7116cea95a1a1de08567813511a"
+    },
+    {
+      "file": "agent/src/sim/boss-start.ts",
+      "sha256": "dbda7485a17c8accbff37c095b01e518270577f594113334cfc89427623a849e"
+    },
+    {
+      "file": "agent/src/sim/boss-trust.ts",
+      "sha256": "51343d95717c09e57451fb58975d94a1130291b9b2a3a6a1c92a15b5fef872c2"
+    },
+    {
+      "file": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "7557d781da01014c915d5ee65f1c51af81cfa16f9dbf7ef4ac737c82401c8303"
+    },
+    {
+      "file": "agent/src/sim/build-sim-pool.ts",
+      "sha256": "8abcc8f4c05d232ed027b66eafefb15b2894001867e9529027f49cf5668b4038"
+    },
+    {
+      "file": "agent/src/sim/build-sim-worker.ts",
+      "sha256": "b0d3ac0c7fd47fd7de3cc038bf7969a2b7afb55e848ec0524f1cf9864a691bfd"
+    },
+    {
+      "file": "agent/src/sim/build-sim.ts",
+      "sha256": "3266c265840c2f8d906d25dcde365474af4852979f5712dc22cbb6d2e598a70d"
+    },
+    {
+      "file": "agent/src/sim/compute-memo.ts",
+      "sha256": "36f0e72ea67c9ddcc34d4ce9234ce2b9397be16d8edab0da07da8d9abb802761"
+    },
+    {
+      "file": "agent/src/sim/double-boss-start.ts",
+      "sha256": "971c31be9defa53b0dafb69fed11d6aed5d159d80bee15651821114ec7255fef"
+    },
+    {
+      "file": "agent/src/sim/route-map.ts",
+      "sha256": "763b2ae1548d06871ee3c8926c464ec66a1d80ecd924df6f003b260e446b99e4"
+    },
+    {
+      "file": "agent/src/sim/route-projection.ts",
+      "sha256": "ad0e4c94d1e4212cc6732d737a861ae08d6134877186ff97d2623f4b15fd5f8c"
+    },
+    {
+      "file": "agent/src/sim/silent-build-win-ties.ts",
+      "sha256": "7a232f09e25f9c8fd56cdadea7495ce58b74ab4f8460a68a7ee5af15d01652e3"
+    },
+    {
+      "file": "agent/src/sim/sim-pools.ts",
+      "sha256": "f852fee8b01efdc07bed9d92d32b95c005b1d18447c86d789f1e465f1c158e7c"
+    },
+    {
+      "file": "agent/src/sim/thief-card-hp.ts",
+      "sha256": "3691b49c6f80644be5d128771ec94cc7bdfc03a156648023f51e1ee8ee27fc43"
+    },
+    {
+      "file": "agent/src/sim/thief-card-value.ts",
+      "sha256": "f3b4ee6d1cbd0010b9de7a09c604cdd47a865871532284493fa498355630d9a7"
+    },
+    {
+      "file": "agent/src/sl/attempts.ts",
+      "sha256": "98f1808c9e250538bbbaad6cb5f47680173e7f2331a4e79ece99a05ec2cc0236"
+    },
+    {
+      "file": "agent/src/sl/controller.ts",
+      "sha256": "76ee2a509bc2f4f903cf218ca1995777da85cd7cc35b94872888d2559f8800de"
+    },
+    {
+      "file": "agent/src/sl/draws.ts",
+      "sha256": "757b57ea5e8d130e2204280cc4c5322e7a273cda4e5abca47f03b567b63c3a79"
+    },
+    {
+      "file": "agent/src/sl/elites.ts",
+      "sha256": "9056eed440b4b363e850a85a3b93519f4b3271b03fe751a17ec4dd452a7236e8"
+    },
+    {
+      "file": "agent/src/sl/explore.ts",
+      "sha256": "f2618b42c4708691a4af5c1051f94e6be568686dfdf22e741c5090fe257a5563"
+    },
+    {
+      "file": "agent/src/sl/judge.ts",
+      "sha256": "2059df2d3d9d4ae08fa38010098cdab8b201e487752fe14568a48c20a9b88097"
+    },
+    {
+      "file": "agent/src/sl/random-target.ts",
+      "sha256": "f45267c71283eb16f408303559637534b63ac4d77d4d0a4ccf04f704b61f985d"
+    },
+    {
+      "file": "agent/src/sl/reload.ts",
+      "sha256": "907eb148fb63b9999137396275eb83ed9774ef7ab33b1ebee345d34ead311be9"
+    },
+    {
+      "file": "agent/tests/act-route-candidates.test.ts",
+      "sha256": "b7b12e4ea42c2e99e054ecf008cb0e3d0f507313de38e3db8806821971ead393"
+    },
+    {
+      "file": "agent/tests/act-route-data/plans.json",
+      "sha256": "518780c69e46a6ffbae04fc2f71ab1d871c19774d60e9a109931b9e5867dfcb6"
+    },
+    {
+      "file": "agent/tests/asc-amounts.test.ts",
+      "sha256": "dbc6c0fe0119f396f6a9ddb8e16510836329f1edcd227bd8b15abfdaef2828b1"
+    },
+    {
+      "file": "agent/tests/asc-band-facts.test.ts",
+      "sha256": "9090efcc5d47145a895e6c17a90842d00e04cad883ce9f8465e97dc1f502ede9"
+    },
+    {
+      "file": "agent/tests/ascension-audit-path.test.ts",
+      "sha256": "8750f7c2bf58f4e278583d086e2720f2a2f8202ea2a0be8b29a48b6cd92c6237"
+    },
+    {
+      "file": "agent/tests/ascension-audit-report.test.ts",
+      "sha256": "b9e95d1229fab4201fde9ce1c3243b50f4bee9955b69abff15cf97969daccec4"
+    },
+    {
+      "file": "agent/tests/ascension-audit-second-evidence.json",
+      "sha256": "3f077234d331a1bacc53db680e99208640a0b41555a75539476a83f23963882c"
+    },
+    {
+      "file": "agent/tests/autoplay_reload_test.py",
+      "sha256": "e0403cb85fd3b8ca805869361ff7018c52ce840181871243c1e721088a3b8ec8"
+    },
+    {
+      "file": "agent/tests/batch-b.test.ts",
+      "sha256": "e2abb8a2fcc3cc7129a0456531eaf02104ab2f05879b73622345a565fde5fe6e"
+    },
+    {
+      "file": "agent/tests/batch-c.test.ts",
+      "sha256": "3d20ba69cd79f3ebfb0048e63520146ed65fd2d486cbbeef8404b69250fd32f3"
+    },
+    {
+      "file": "agent/tests/batch-d.test.ts",
+      "sha256": "006a29ac9d8ea8834498bfc3d35a5b0a6eedd3c537ff0aa2d3db44c77066147c"
+    },
+    {
+      "file": "agent/tests/batch-e.test.ts",
+      "sha256": "74226609c13f56db5f5416295e4de3d4aaf546d5050bd4e7f4a5bb5a2086e3fd"
+    },
+    {
+      "file": "agent/tests/batch-f.test.ts",
+      "sha256": "462b8331eaee488951138d2284d9658c628ba1ad491ac008bd0eb19230ccf577"
+    },
+    {
+      "file": "agent/tests/batch-g.test.ts",
+      "sha256": "42219208516f857a0c1da3755a71fac5e5f057399d78867b160c60fb377bea23"
+    },
+    {
+      "file": "agent/tests/batch-h.test.ts",
+      "sha256": "0d74b0feae670cae74e4a0bd4acfd7998e83422e49d1e64bbb5313e6df6e30c4"
+    },
+    {
+      "file": "agent/tests/batch-i.test.ts",
+      "sha256": "85454670727481f7a2075dfb534bc3fd4df23f0c958716fde9332e92c6427820"
+    },
+    {
+      "file": "agent/tests/batch-j.test.ts",
+      "sha256": "6a9b35c4cafd22f46208a9b9680a2d593975097c909a3858c6a8c9618a26e9df"
+    },
+    {
+      "file": "agent/tests/batch-k.test.ts",
+      "sha256": "fb7def167591228ba4d17068045e812bdf41540afb9a3b9a9c56b7f992eddcf4"
+    },
+    {
+      "file": "agent/tests/batch-l.test.ts",
+      "sha256": "6f58bc8afe0bc6b66fda4bc1b52b2b78528cfec3f230ff304f0f14311f6a9dca"
+    },
+    {
+      "file": "agent/tests/batch-m.test.ts",
+      "sha256": "34fc65845f219f920375184a3390e12fc080a3155eedae4e0abc63625de9984d"
+    },
+    {
+      "file": "agent/tests/batch-n.test.ts",
+      "sha256": "d7410040acf19ca72e8dd07bdd4be6488b43bcd8b45d011f4b9307bc47d717b0"
+    },
+    {
+      "file": "agent/tests/boss-clock-knowledge.json",
+      "sha256": "4c4a96b25359d3727406ddfcf46a75deb119c7c4da257e0d8a508b1b320bb137"
+    },
+    {
+      "file": "agent/tests/boss-clock.test.ts",
+      "sha256": "8523a5695ddb68da9c17264d8c1fd80dab272f92136974fdac8d03da8bec74b3"
+    },
+    {
+      "file": "agent/tests/boss-damage-attempts.test.ts",
+      "sha256": "7d5b47bc3adc1f6a7a2e44a3b030db0fbf9a32669d2eabf455f441a028c8b9ad"
+    },
+    {
+      "file": "agent/tests/boss-damage-tools.test.ts",
+      "sha256": "5b7d8b6ed7c3dc3e1b5129ad99a53669889e15dc7c70397d83443f56d423245f"
+    },
+    {
+      "file": "agent/tests/boss-fights/insatiable-a8.json",
+      "sha256": "5d27c08e2aac6d55581209d036cb2c822d0e2349d8f623b1f5fb04a10d807ed9"
+    },
+    {
+      "file": "agent/tests/boss-fights/kaiser-crab-a8.json",
+      "sha256": "a109add58fa7649a91b7526d53fc2a257a15149e0ea970721c9700c9d7626ef1"
+    },
+    {
+      "file": "agent/tests/boss-lines-data/make-pinned.py",
+      "sha256": "fca49f036c97f11b0cf2e017f7c20a6a4ebd6c225f9a12d0e1f0f6071f228708"
+    },
+    {
+      "file": "agent/tests/boss-lines-data/pinned-knowledge.json",
+      "sha256": "ae931e4a962dcf3307d31b2ef8333359bf58bbf16d8cbc9a098c924202bd1d06"
+    },
+    {
+      "file": "agent/tests/boss-lines-planner.test.ts",
+      "sha256": "bd0f8a763a288bac199a9d2c1d20a98c3b8d303df9d010376f6ce2a7587f7f5d"
+    },
+    {
+      "file": "agent/tests/boss-lines.test.ts",
+      "sha256": "740a4cd53deb6a74886e2b98e5091eaca47575eca664ffc0be90b4a0dfa312ae"
+    },
+    {
+      "file": "agent/tests/boss-sim-automation.test.ts",
+      "sha256": "0d0c129d3940b008bda83086aa7b596d2d3ea0f99acd2b04184299da4e18cd9e"
+    },
+    {
+      "file": "agent/tests/boss-sim-b4.test.ts",
+      "sha256": "bc8d09d26792521096db2914f00ce1eb513b7fceca5455310d34e35908e7d9ce"
+    },
+    {
+      "file": "agent/tests/boss-sim-b5.test.ts",
+      "sha256": "3f2271b5f10066a3ae3766b27a7e5de5cf76620fabe2b08b7e698947ea50955e"
+    },
+    {
+      "file": "agent/tests/boss-sim-build-fixture.ts",
+      "sha256": "344cf1f17f02dc2e3ad5e20f58014ceda83b493175c2be2ad1090604dc57a223"
+    },
+    {
+      "file": "agent/tests/boss-sim-build.test.ts",
+      "sha256": "f37246af06cd70e16ff9fb29b19d1dd483d758629c9538548201895da3743ef4"
+    },
+    {
+      "file": "agent/tests/boss-sim-fixture.ts",
+      "sha256": "2319717f19a10b023da81422b4463967d7ed84b377296db529ded56dfa796c84"
+    },
+    {
+      "file": "agent/tests/boss-sim-gaps.test.ts",
+      "sha256": "b67d648683716107d750344c5dab80595b290b1b27311b39649e8acb3ab7045d"
+    },
+    {
+      "file": "agent/tests/boss-sim.test.ts",
+      "sha256": "9f48fd5560ecf9f45037145be286d7ffffc1e0756a66654f1c9d3d1c9ab4bfbc"
+    },
+    {
+      "file": "agent/tests/boss-trust.test.ts",
+      "sha256": "a79b5408bb6c9f4dad6ce26548ef129197738ccd1476e3e26d6af0ddb957a440"
+    },
+    {
+      "file": "agent/tests/boss_damage_attempts_test.py",
+      "sha256": "d5bdcd6937c5d93c9b76ca146e5de201181f17a7cba86b88ff0d037f5f6c89de"
+    },
+    {
+      "file": "agent/tests/brain-claude.test.ts",
+      "sha256": "122c2430cfcc2b7db495f0f47bee559de03af9ca7d0a51daddcd061a6f211a4e"
+    },
+    {
+      "file": "agent/tests/brain-codex-session.test.ts",
+      "sha256": "70db4b08a7f76a42368ac77c4f7641c27c8742f48bb14295563174f73d5f93a0"
+    },
+    {
+      "file": "agent/tests/brain-codex-usage-contract.test.ts",
+      "sha256": "4cec4085c563c4ad9f5a4baa6c16485816c9020dcbf19cc23809013a839465de"
+    },
+    {
+      "file": "agent/tests/brain-codex-usage.test.ts",
+      "sha256": "ed552e9f8af15658b077fa99d15cb879da53e4d8e1b5d7c8ee0747da26e5f92c"
+    },
+    {
+      "file": "agent/tests/brain-codex.test.ts",
+      "sha256": "9b0ebcc28bfc1a708b557e09f80aa75b43d15c5902b3913698a34f4bc3f7eb76"
+    },
+    {
+      "file": "agent/tests/brain-deepseek.test.ts",
+      "sha256": "155c73bc7a36e567f038d6ffb618791e80f579fa8596a2140491a828cfcb71c9"
+    },
+    {
+      "file": "agent/tests/brain-knowledge.test.ts",
+      "sha256": "adf446f46d809f5815ef88fef575988db7e46f01406c8a1f4596a64629eeae99"
+    },
+    {
+      "file": "agent/tests/brain-loop.test.ts",
+      "sha256": "f85ec24f453e40fe9ca062604fce2d2c0fc9e6b94c997c6bc22dfbfbb0662e11"
+    },
+    {
+      "file": "agent/tests/brain-router.test.ts",
+      "sha256": "680bb0582462727789d98a81caddb17a7b8df1b6a7672b1c3f1819b3e9026ffe"
+    },
+    {
+      "file": "agent/tests/brain-source-fixtures.json",
+      "sha256": "61af65e9dc5d465c2f02802154c85eb74ee83395642d0d446648c6e8c62362af"
+    },
+    {
+      "file": "agent/tests/brain-specs.test.ts",
+      "sha256": "958de3a3accab0706df9f86a9ca184e0481f3cd38796c8fc563afbdae4cc6377"
+    },
+    {
+      "file": "agent/tests/build-decider.test.ts",
+      "sha256": "ea02960feaf6f6b97806255ad8492a8c5f9585740f224a89cc0d57e5c76a3e11"
+    },
+    {
+      "file": "agent/tests/build-facts-audit.test.ts",
+      "sha256": "91e8d69e7f47205d0cb26edcfe30b8c2d5a64a384cad1f0fd0fd55b67d216060"
+    },
+    {
+      "file": "agent/tests/calibration-data/boss-clocks.jsonl",
+      "sha256": "013b2f0294202b8ff49a4f8f40d4f04e39370da4858fae89fb14050245b7d446"
+    },
+    {
+      "file": "agent/tests/calibration-data/decisions.jsonl",
+      "sha256": "69bc28df8618505c6a2edcc693a2b6b449b3db338b3a04b6bfb955bb0cfa3cab"
+    },
+    {
+      "file": "agent/tests/calibration-data/make-fixture.py",
+      "sha256": "4adc50d247622e3cf6b608ac287f338660d7d1a14006c42b20bb99ee460dc5b4"
+    },
+    {
+      "file": "agent/tests/calibration-data/runs.jsonl",
+      "sha256": "bf9ab29c302cf0e789af3a1369bbadae83a86be6681a59cb2975b2d50b0e9159"
+    },
+    {
+      "file": "agent/tests/calibration-data/states.jsonl",
+      "sha256": "0c9a55f1d5343c5ec677951dfeecec224f857172588366c7f427aa3738f1208a"
+    },
+    {
+      "file": "agent/tests/card-conditions.test.ts",
+      "sha256": "f14633987153d1da02440e13eaecf9de0a3daad4ef3e89c1048156277e652da1"
+    },
+    {
+      "file": "agent/tests/card-value.test.ts",
+      "sha256": "0d44853a02e4d2360c851e993346580cb34181aa4fb6f76e531c09ae2e66dec3"
+    },
+    {
+      "file": "agent/tests/cards-view-memo.test.ts",
+      "sha256": "d1f91508ae72cd4c70e0ede6844861f82c5b55aa0e7069c87a71aecb19400da1"
+    },
+    {
+      "file": "agent/tests/characters_test.py",
+      "sha256": "a8bb380b964bbba16263966ed23d007a0df8db4bf9220a0bd09bb08d1300e16c"
+    },
+    {
+      "file": "agent/tests/check-imports.test.ts",
+      "sha256": "ae4f81332f8364a40c22d4094082398e8e87901dc8d22e6e3f4b22fda92b0400"
+    },
+    {
+      "file": "agent/tests/codex-cache-engine.test.ts",
+      "sha256": "4e6a6435314f9e6cece5ab4cf70a99e2e992fa56adca52141c870285f334d9a2"
+    },
+    {
+      "file": "agent/tests/codex-cache-observation.test.ts",
+      "sha256": "d567f00abb7ec5c62c573c577bcf338f11eac6b84f41c28b767205b23db96e93"
+    },
+    {
+      "file": "agent/tests/codex-cache-probe.test.ts",
+      "sha256": "c59e5fe962363f84073441e1686d2afeb5ce117fd986d9b3accdc24c9e5bc3b7"
+    },
+    {
+      "file": "agent/tests/codex-cut-data/et3v-f42-rest.json",
+      "sha256": "5002d4c11e70fc2ba4769e8fbcb0b99ac7a8724cf511a096e87d1f0c0efa5f78"
+    },
+    {
+      "file": "agent/tests/codex-only-brain.test.ts",
+      "sha256": "59a35f95ff044486e2a12a5eeecf5c8c56e3621b9e711747e06bee55b3883614"
+    },
+    {
+      "file": "agent/tests/codex_only_stats_test.py",
+      "sha256": "e72570b9b0a93a767e37cd14ead149fe64e6b75670eddf7584b609f000e069e0"
+    },
+    {
+      "file": "agent/tests/combat-jev.test.ts",
+      "sha256": "63e86afb2fc6908a6f1311089c43b86233f0ba49bd50945951a481b541852504"
+    },
+    {
+      "file": "agent/tests/combat-rationale.test.ts",
+      "sha256": "a95838b0a419f7145dcf324f340b7832757b33fa7dbe65c656f1600b64819bb2"
+    },
+    {
+      "file": "agent/tests/component-usage.test.ts",
+      "sha256": "4e43252fa2a4f1050a1ae8d01c907ace49d90b4287a56623ab6fd2937127e6f8"
+    },
+    {
+      "file": "agent/tests/component_usage_test.py",
+      "sha256": "450d4f17ef2c65f8c19911d6f6a199f431623f2a16c52c97b587e9d8dae5b458"
+    },
+    {
+      "file": "agent/tests/compute-memo.test.ts",
+      "sha256": "fd26125a61c79f6b895ae3005ebbb3d67c886393b8810ecf799a6638995f9fa6"
+    },
+    {
+      "file": "agent/tests/config.test.ts",
+      "sha256": "a65386d76366fe02e3ad4e91135c6449c7bae260dc66a4e84f936e8d5aefb768"
+    },
+    {
+      "file": "agent/tests/core-build-jobs.test.ts",
+      "sha256": "58afd22de7fe927990325964b8216f3b65722bf40128258cd7f26e115e876763"
+    },
+    {
+      "file": "agent/tests/core_build_jobs_test.py",
+      "sha256": "f52d341ceaa38f113f0eb04e0b9c7dafae338f3876eb6d984edf43c9a9c19dc7"
+    },
+    {
+      "file": "agent/tests/cost-accounting.test.ts",
+      "sha256": "f24b1ee653345ef4ccefcbfdd3caa7f59bb70e29f6de1adc88997719dd35c4a2"
+    },
+    {
+      "file": "agent/tests/cost_accounting_test.py",
+      "sha256": "265364a1598a500d669b8b4c98dc32b479bfda88459ed5fc63087a87b19e7784"
+    },
+    {
+      "file": "agent/tests/damage.test.ts",
+      "sha256": "2a1eaafe87882902de720c6abe43f74a38a5a7710c73f6626d59f78db4db299a"
+    },
+    {
+      "file": "agent/tests/death-move-data/0u96-f48-t5-queen-kill.json",
+      "sha256": "08d289f562a3cce2b54a859e0ea58ce2dc65f212b647b07da0ccbc975f9eb6d4"
+    },
+    {
+      "file": "agent/tests/death-move-data/5gka-f48-t2-queen-mine.json",
+      "sha256": "385b15a84fa9a6c4d780861b24d68863088e06be84a8f252fcdfe751594f175f"
+    },
+    {
+      "file": "agent/tests/death-move-data/game-data.json",
+      "sha256": "1b98ba6100c676f73d4950b6aebb6f0bcedfba8c761b0df249ad666c54f33b4c"
+    },
+    {
+      "file": "agent/tests/death-move-data/make-fixtures.py",
+      "sha256": "fd208828d6b32604393efb4c714e1c4cfd445c8541fcc11340d5f3af385ea292"
+    },
+    {
+      "file": "agent/tests/death-move-data/nx48-f33-t7-crab.json",
+      "sha256": "56c3473584c9abb69a25d021174ebd0fef45dcb9184ddedea05166c379e41028"
+    },
+    {
+      "file": "agent/tests/death-move-data/pinned-knowledge.json",
+      "sha256": "1bd0a617c63d4170f730c02fe5db1159199f62b347a48492198ed32bb97065c3"
+    },
+    {
+      "file": "agent/tests/death-move-data/y3xt-f37-t1-shield.json",
+      "sha256": "5218a9e7b426faa5e686f40139469b811ef7d80cdac961079457b39e4eebf056"
+    },
+    {
+      "file": "agent/tests/death-move-planner.test.ts",
+      "sha256": "1b3989f139fc991b285529a81dbddc8cf5dc3d05ba9b9dacadba0e0061e71484"
+    },
+    {
+      "file": "agent/tests/death-move-rules.test.ts",
+      "sha256": "0c0b14adc7cf73d68f633b420b8ca3f79894e3e7b14a03b654cbdeeb8e6c06c6"
+    },
+    {
+      "file": "agent/tests/deck-profile.test.ts",
+      "sha256": "b942640591fc31b2484d3f26b772116fda2c948fa43526e2e7fb482f2e164216"
+    },
+    {
+      "file": "agent/tests/deepseek-cache-layout.test.ts",
+      "sha256": "994590b0884e45a27e637e8fa469126be46d8d7f321c5893c6d44d7c09385784"
+    },
+    {
+      "file": "agent/tests/deepseek-consistency.test.ts",
+      "sha256": "f9bb3e6153e278d6e1d5a6f02195fe8f3ae763c4c68e648d64dfaaaba8d20f08"
+    },
+    {
+      "file": "agent/tests/deepseek-prompt-dump.test.ts",
+      "sha256": "cb9348cc0400d941f68fb9fded18f94f559d41890a1b564d9df525213e1d7c72"
+    },
+    {
+      "file": "agent/tests/deepseek.test.ts",
+      "sha256": "ffc2960028ec660ddc57f79ccd23fa52756351a12a2cd2ce3a48fbee12478b39"
+    },
+    {
+      "file": "agent/tests/discovery.test.ts",
+      "sha256": "37ed749f76948bf906f13128039ebef6b604e49c65d744dc8be678f09cc4b4d2"
+    },
+    {
+      "file": "agent/tests/enchant-text.test.ts",
+      "sha256": "cde6a7a1ba3c6bb8003d9d9edbd169f4439a7bfba2360fb0180bdd6f12d91776"
+    },
+    {
+      "file": "agent/tests/eval-data/brain.jsonl",
+      "sha256": "38e5e278263fc16e85ec6662127e468ad3c702e5a91f51991c6fd587d83b8c76"
+    },
+    {
+      "file": "agent/tests/eval-data/decisions.jsonl",
+      "sha256": "dc98f81c238c3f094aa981a94d8b4808ca130e35b671dcd3ac2df1966629bed3"
+    },
+    {
+      "file": "agent/tests/eval-data/deepseek-reasoning.jsonl",
+      "sha256": "b6c72690161ba196b01594d4d0409ba5d710a50de89190e67cd8d7b4ee4e1725"
+    },
+    {
+      "file": "agent/tests/eval-data/make-fixture.py",
+      "sha256": "2b40a82156e31f83ee2e5cbafdec30eca2226cfa9094fabea7ef2ada79073613"
+    },
+    {
+      "file": "agent/tests/eval-data/run-config.jsonl",
+      "sha256": "0d9228b6bf6d8f85c1ac9a9d4c0c7481d4b9a7e92609106b2a04b414a2abf733"
+    },
+    {
+      "file": "agent/tests/eval-data/runs.jsonl",
+      "sha256": "64914d630afa5254611e0610cd776aae2d458f1e57633fe359d903488a950489"
+    },
+    {
+      "file": "agent/tests/eval-data/sl-attempts.jsonl",
+      "sha256": "65e6828a3b1995469e3683035cf6c7ffe8686048bd85fd725a9fc520b4920114"
+    },
+    {
+      "file": "agent/tests/eval-data/states.jsonl",
+      "sha256": "9d8303ccc7e56c8407ef0ab641db38bc09ea91d55fd5b99ac6285a44457cbaa7"
+    },
+    {
+      "file": "agent/tests/eval-data/strength-sets.json",
+      "sha256": "1b9189ca97dead384659624f8b631e3101cd56c11b515c931705c438107ef6ea"
+    },
+    {
+      "file": "agent/tests/eval.test.ts",
+      "sha256": "c42f629fdfc22dd1d0da3abd4ad6a6b0bc65270649364cabb33513a5f5cece01"
+    },
+    {
+      "file": "agent/tests/eval_calibration_test.py",
+      "sha256": "76475313bd1a69599a3da761c5583a5b9e93b0fd43d438a45de1ade3e58f721e"
+    },
+    {
+      "file": "agent/tests/eval_metrics_test.py",
+      "sha256": "e7751618053814a49848db54cbc08568e5151960e2626c4d78407e1e725d3b91"
+    },
+    {
+      "file": "agent/tests/event-settle.test.ts",
+      "sha256": "e6dfa4ccca433ac6cddd97b08b6da541866e8a06edb55d869f4d7fc0b4e3dfdc"
+    },
+    {
+      "file": "agent/tests/execution-gate.test.ts",
+      "sha256": "b3277346e426d1c374b27de30cfe2db527b86fb886580e18c624de6abbadf51d"
+    },
+    {
+      "file": "agent/tests/experience.test.ts",
+      "sha256": "f646fa87aac1528d65fd4d808481d841841a32175a3a9329c3537fce8cf81522"
+    },
+    {
+      "file": "agent/tests/fight-plan.test.ts",
+      "sha256": "799cae08e433d9e02fc05ab0acec4ccc90867612a546863f3d2f801c1c72f9a3"
+    },
+    {
+      "file": "agent/tests/fight-value-observe.test.ts",
+      "sha256": "1587270e61cf613b33c7366fadd05ea8f5d22fe4e28fff2f29b2af6dcba32155"
+    },
+    {
+      "file": "agent/tests/fight-value.test.ts",
+      "sha256": "99624a495aa36cd0b96b8aa68e70adf159ee70b1d6e6a961a13bb536c9e41d8d"
+    },
+    {
+      "file": "agent/tests/fight_value_observe_test.py",
+      "sha256": "986ee812e1fdefbad0d49a5a6d81f47ed80fc827a2c792e640045f38d7887a0f"
+    },
+    {
+      "file": "agent/tests/file-escalation.test.ts",
+      "sha256": "9066a38b654ec194feae691297c358afa0552ca33e95d92b29965d899a69967f"
+    },
+    {
+      "file": "agent/tests/fix-queue-v4-fix2.test.ts",
+      "sha256": "5a1c64a0c28706f084d84d6a4c8a99abf443924d39855b8ca9dc5fec8f601b24"
+    },
+    {
+      "file": "agent/tests/fix-queue-v4-fix3.test.ts",
+      "sha256": "5a0abb99a915689d0bf88915f8c7dd2a471a689ca877dc4c726f2ef74420a066"
+    },
+    {
+      "file": "agent/tests/fix-queue-v4-fix6.test.ts",
+      "sha256": "b62092ff87d950cc323798e8b953715f507cc444ee73162950ce26801218d534"
+    },
+    {
+      "file": "agent/tests/fix-queue-v4-shrink.test.ts",
+      "sha256": "13da4e23fafdc7fd42fbd85f57c96d93aa82bf9a196f3c04c4d71af47b7f0a56"
+    },
+    {
+      "file": "agent/tests/fix-queue-v4.test.ts",
+      "sha256": "3ad375df74213c05f1d8ef2d664adf7efb28c75f34ec3a37af3a8e8ede97a78c"
+    },
+    {
+      "file": "agent/tests/fixtures-herdr/fake-herdr.py",
+      "sha256": "1e2fa9343dfe9093340c79bb36e03470acf86893041334fef7430f5a296061a1"
+    },
+    {
+      "file": "agent/tests/free-offer-data/5lrz-f28-t2-skill-potion.json",
+      "sha256": "850fd65468abe7b56cb45caca8047c5b8789b5719e0b78b39ae1bf8c0ef75e0f"
+    },
+    {
+      "file": "agent/tests/free-offer-data/game-data.json",
+      "sha256": "f6c9651c3458bf667ac28a4d02fdbc3652e46e814a434227d77edae309d8f49d"
+    },
+    {
+      "file": "agent/tests/free-offer-data/make-fixtures.ts",
+      "sha256": "9cafdbe25c2c65094df0d85adb36f985e6f931e9295525826321ddee402979bc"
+    },
+    {
+      "file": "agent/tests/free-offer-data/r1qj-f33-t2-seeker-strike.json",
+      "sha256": "2273fe9b77f35468f455bbdb736a68447b3a05b786bd6cb0715081682c1c63b7"
+    },
+    {
+      "file": "agent/tests/free-offer-data/v6tw-f33-t4-droplet.json",
+      "sha256": "28084196854172c0509c4fee1ae6442d71ae7601fdab5e20ab7238c9232fe09d"
+    },
+    {
+      "file": "agent/tests/free-offer-data/ve97-f48-t5-colorless-potion.json",
+      "sha256": "fecf35b6cf8dd82337f6df370e0c701164100b7633d37e29ea4e5a0b22b4dd6e"
+    },
+    {
+      "file": "agent/tests/free-offer-data/ve97-f48-t5-discovery.json",
+      "sha256": "7ad64e975615b9284fcfe493a9e704a3ba608efa1765e28a65d36475f8473d45"
+    },
+    {
+      "file": "agent/tests/free-offer-data/yn4e-f33-t5-liquid-memories.json",
+      "sha256": "a8a2da0181b77d0755179357419586ef8e2213861e51228849ff185d2054d58e"
+    },
+    {
+      "file": "agent/tests/free-offer.test.ts",
+      "sha256": "fd092e7d26e6c86ee144628db1b7384989e6e00b71271f913ebd570706ca6b79"
+    },
+    {
+      "file": "agent/tests/game-data-cache.test.ts",
+      "sha256": "ed38fea422e06ae0fe5292e1dd1629d16ff7b2337cc77f3861839f6d7160279a"
+    },
+    {
+      "file": "agent/tests/giant-blast-terminal.test.ts",
+      "sha256": "86b73f74fe638fd4cc2fdcccb51fb7bbd94444f2bb8b2832ff908f5ec1654469"
+    },
+    {
+      "file": "agent/tests/gkb-data/knowledge/characters/ironclad/ds-handbook.md",
+      "sha256": "5c96bcaf09fda35b5c944ee68092998a7f9f80425da1b494dd6bdb28a5695103"
+    },
+    {
+      "file": "agent/tests/gkb-data/knowledge/characters/ironclad/experience.json",
+      "sha256": "f58c535af9bae6f9ddf28c9f4d27d38d45a7958ea7731bcffc01fd570041c4d4"
+    },
+    {
+      "file": "agent/tests/gkb-data/knowledge/characters/ironclad/ironclad-guide.md",
+      "sha256": "2606297f9feabd1e2ca0429b4a91b2553e4df6e63bf0cf6c3bbcaf83c6a9b504"
+    },
+    {
+      "file": "agent/tests/gkb-data/knowledge/characters/ironclad/jev-hints.json",
+      "sha256": "d257fb937ff2fde414d7a4a282fd5e2426fa685e5dae113b270c3ae21bfe4349"
+    },
+    {
+      "file": "agent/tests/gkb-data/knowledge/characters/ironclad/outcome-stats.json",
+      "sha256": "e854925bd43fda7ba533151f1ce7de8980815bc56d408ec53dbb286c92dbdf64"
+    },
+    {
+      "file": "agent/tests/gkb-data/knowledge/characters/ironclad/potion-equivalents.json",
+      "sha256": "7413824d015e30b66382c683eeb47c3a27ae8f7dc1478382c1797f3637883bed"
+    },
+    {
+      "file": "agent/tests/gkb-data/knowledge/characters/ironclad/room-costs.json",
+      "sha256": "e349ff701d0e2a8172a5a7ce520fc5646ddfe6d32a78b8ac03db5b07626d5f05"
+    },
+    {
+      "file": "agent/tests/gkb-data/knowledge/common/monster-db.json",
+      "sha256": "d77179e9bf53054c9fb92288190e0b30c8be87bd449c6c9f968218526201fc4c"
+    },
+    {
+      "file": "agent/tests/gkb-data/lessons.md",
+      "sha256": "9a3cd866bcdb2689971090210d6a6a028f74e5b6a9bb0f833a6c71195eff081e"
+    },
+    {
+      "file": "agent/tests/gkb-data/run-logs/runs.jsonl",
+      "sha256": "70519c1e5c6d85ce09e4f780543c834615a28b6f3195d8e791f2fa7e2822dc4e"
+    },
+    {
+      "file": "agent/tests/gkb-render.test.ts",
+      "sha256": "87749ffb6fc3b3c8d1e29ed8690b8309d668b92d58d92446012574a7ad76e24e"
+    },
+    {
+      "file": "agent/tests/gkb-tools.test.ts",
+      "sha256": "800867db20362f4f1810295ea1e8c46e794692d71085303597b1888a94746d20"
+    },
+    {
+      "file": "agent/tests/inferno-planner-data/a8en-f33-t6.json",
+      "sha256": "4c7dceb54ecd7573b6abc81c8ac50cdd81ec28c88b986a6cf6b2405ae0123e0a"
+    },
+    {
+      "file": "agent/tests/inferno-planner-data/c4f1-f33-a1-t6.json",
+      "sha256": "59b61fb736cacf0914206e213645f46ab07d43646e5d685ec0df1803d362e9c4"
+    },
+    {
+      "file": "agent/tests/inferno-planner-data/c4f1-f33-a5-t6.json",
+      "sha256": "53a05028c89023f6de32cc4509c54e9d704aef68623db9f4b9c02712eab19fea"
+    },
+    {
+      "file": "agent/tests/inferno-planner-data/game-data.json",
+      "sha256": "6adc4a49544fa52087c28636c2459529a12cb0d1804c8092ba26023eac9fc03f"
+    },
+    {
+      "file": "agent/tests/inferno-planner-data/jgjs-f24-t2-second.json",
+      "sha256": "f896cc6add88d46afa03805d6b823cb7f1e714e7bac94c63726c8e03df21de92"
+    },
+    {
+      "file": "agent/tests/inferno-planner-data/make-fixtures.ts",
+      "sha256": "315907b68b4746bedf5e8621df46af8e9c8c44d0a567bfd0a001aa684a103d33"
+    },
+    {
+      "file": "agent/tests/inferno-planner-data/pinned-knowledge.json",
+      "sha256": "07beafee4833e3ec10a91bd8e52b0fff2b0452f08a05b7525f05a7e4f49e4f69"
+    },
+    {
+      "file": "agent/tests/inferno-planner.test.ts",
+      "sha256": "7bab68ff5e192af9b66c0a39c136e894a38b3c69fbc91ff585bfb2fb8c6acf2c"
+    },
+    {
+      "file": "agent/tests/insatiable-sandpit.test.ts",
+      "sha256": "91e16af833f1ba79d5198bfddf09044dda5d84a4b4fedd2bc31a0a47ad996f3b"
+    },
+    {
+      "file": "agent/tests/jev-context.test.ts",
+      "sha256": "ec0de0e48c00faae82318189d1908c158f4d8521b7d18c5b592eb441af2b338d"
+    },
+    {
+      "file": "agent/tests/jev-cost.test.ts",
+      "sha256": "2b45d6e1bf848fab752632cc70cee3234b17fe16519a1c92e55a161dea43f42e"
+    },
+    {
+      "file": "agent/tests/jev-experience.test.ts",
+      "sha256": "e9c5b697f3eb738e43134f03dc9b6d219f45dbae89a088619c194ca254c13d2c"
+    },
+    {
+      "file": "agent/tests/jev-prompt-log.test.ts",
+      "sha256": "8cf51059ffffa3e02c165a332496ff83b4da4b844df68cdbb4215d946a44e85a"
+    },
+    {
+      "file": "agent/tests/jev-retry.test.ts",
+      "sha256": "65a69505812960cc0fd1969ace6f6422f80d580c15b77ffccf65e1be4cd56dc3"
+    },
+    {
+      "file": "agent/tests/jev_cost_test.py",
+      "sha256": "e96fe41577b9d8e636c061fac9554661dc1a68a1008c127bf551f7e6fadc9e86"
+    },
+    {
+      "file": "agent/tests/journal-replay.test.ts",
+      "sha256": "19579f44a2fcdd3ddc5514d2b0bda1e6cdbe396ee1a0f2dbe827656d8e3bb41c"
+    },
+    {
+      "file": "agent/tests/knowledge-check-a8w-builder.test.ts",
+      "sha256": "d291b60519cfc3c77360aff7a79e1afbedca2e4524435de9a1d3fb1587459bdf"
+    },
+    {
+      "file": "agent/tests/knowledge-check-a8w-cards.test.ts",
+      "sha256": "0b9b692dc4d7f8152114df1a6f454973a1e210b2bee8b4de8c52e3c4a3b5d4f0"
+    },
+    {
+      "file": "agent/tests/knowledge-check-a8w-experience.test.ts",
+      "sha256": "60ef98262305b632ccc85288569ec4e6b21b5d19196e10661292e17a5f54005a"
+    },
+    {
+      "file": "agent/tests/knowledge-check-a8w-facts.test.ts",
+      "sha256": "720f056989ac465bb13e7a08e84abc442b276f321e5628d60d8a6e065cdfd21f"
+    },
+    {
+      "file": "agent/tests/knowledge-check-a8w-guides.test.ts",
+      "sha256": "2b1f6fecab31cb3c77578707b30360c6d956e28cf5934cbedfd5fc4ee264f5f7"
+    },
+    {
+      "file": "agent/tests/knowledge-check-cards.test.ts",
+      "sha256": "90f30659267d3a81027e4ef8e607b6261fd943ee39e1be28773eef36c639ba5d"
+    },
+    {
+      "file": "agent/tests/knowledge-check-facts.test.ts",
+      "sha256": "62837ddd3547fb768a07df12b6358f3b822df867a1fc9874b7b9948571f97f05"
+    },
+    {
+      "file": "agent/tests/knowledge-check-guides.test.ts",
+      "sha256": "1729a16ace89bfd85bb685cd4153ea4d259e6a83e8714651a2aca93fa2faafe9"
+    },
+    {
+      "file": "agent/tests/knowledge-text.test.ts",
+      "sha256": "c23e3459b8ffd4067c9d4bac9cc016a6d55378b8279e988113bb09f215d78088"
+    },
+    {
+      "file": "agent/tests/learner-character.test.ts",
+      "sha256": "9af1d8e44d66ac5982b4f3d928bc076bfe3ff255ce32d415f1a51859871a1131"
+    },
+    {
+      "file": "agent/tests/learner-check-locks.test.ts",
+      "sha256": "cd3a6d80d4eb45d2be240ec53ef9090dd5898338866ef30f2f7cd46964d7c9bc"
+    },
+    {
+      "file": "agent/tests/learner-empty-fix.test.ts",
+      "sha256": "ba741c702b5a2a490df6151b4c10d0e986c7e9e1f094fffefeadb6327fc677cf"
+    },
+    {
+      "file": "agent/tests/learner-fallback-checks.test.ts",
+      "sha256": "074dab4c5ff0025b6540cdee1a52962fbecd62bb24f98c658b42f20782d22528"
+    },
+    {
+      "file": "agent/tests/learner-jobs.test.ts",
+      "sha256": "ac3c1e7e2570052b0febcfd5a6817615b194ab677334be3fe4738147d1491bd5"
+    },
+    {
+      "file": "agent/tests/learner-learning-flow.test.ts",
+      "sha256": "a38775355a28ae6febd08aded009d14ccc655f349b068fd7e69befabfcd261fd"
+    },
+    {
+      "file": "agent/tests/learner-live-tasks.test.ts",
+      "sha256": "c05b6811c30339a61526b6c084c8708bdf4261227162d5572f1de4b6a1fc90fc"
+    },
+    {
+      "file": "agent/tests/learner-paths.test.ts",
+      "sha256": "9a77c185cfaa5950a42b01b671d59f55875612ac70ed1d896a972677c2736614"
+    },
+    {
+      "file": "agent/tests/learner-raw-report.test.ts",
+      "sha256": "57ebd835bd72b56cf9880faeeaa6a3194358c2871babfa41e4f1b79797752a9c"
+    },
+    {
+      "file": "agent/tests/learner-self-check.test.ts",
+      "sha256": "a8fe96774b0689748340942c5e2863ceaad0e56e3aca3d83782eca083b01ee65"
+    },
+    {
+      "file": "agent/tests/learner-strategy.test.ts",
+      "sha256": "0b41d3a43d9323970b782bd13f13f312189247f6170d90d0d7b6e3fe8a3af4d5"
+    },
+    {
+      "file": "agent/tests/learner.test.ts",
+      "sha256": "166d1c75d5582f5d833e2545ccfcea2f87a10275428ffcdd90cd69b82266fa98"
+    },
+    {
+      "file": "agent/tests/learning-ledger-metadata.test.ts",
+      "sha256": "18dfb45a7e14c8138dba864faa589ee0f0daf950a651b52fc84d3c2bf2efc0d3"
+    },
+    {
+      "file": "agent/tests/learning-ledger.test.ts",
+      "sha256": "f421cdd97975037ff16cd8059493488e6cb235459cd88f45b1e46d0058151e9f"
+    },
+    {
+      "file": "agent/tests/learning-roles.test.ts",
+      "sha256": "6337b56046ba25f316da6ec02df601f271afb603e98d0560c82839f67422ad4f"
+    },
+    {
+      "file": "agent/tests/learning_ledger_test.py",
+      "sha256": "0692a2d43223805ddbf4f1fba660c78fe537a96367a8020192e2f006443e97b7"
+    },
+    {
+      "file": "agent/tests/ledger-repeats.test.ts",
+      "sha256": "fa9d7ac44ab790cadcedaeff1302e82a89de594ea63e3d78c62f240a9b931deb"
+    },
+    {
+      "file": "agent/tests/ledger-rerelease.test.ts",
+      "sha256": "d561459f86b8adef331b4601fcd9b142077d2d8271cadd22d8005a0641d766b9"
+    },
+    {
+      "file": "agent/tests/ledger_repeats_test.py",
+      "sha256": "050b467bdda07f50a732388adb17f13da6f0722847b0c0ea41bbb9be12407ac8"
+    },
+    {
+      "file": "agent/tests/ledger_rerelease_test.py",
+      "sha256": "cab61817b111362bbc3b582b45d5d157725095c081d24a9e6913a9e4d75db21c"
+    },
+    {
+      "file": "agent/tests/legacy-brain-notes.test.ts",
+      "sha256": "985365c091a37f71e5568bc4446d1aaf9f47545e61689c87d53b1a3b2a856755"
+    },
+    {
+      "file": "agent/tests/legacy-brain.ts",
+      "sha256": "e33223e12f87c0dc2c786d2b1d8b960e022b33e834a27e5709ffab33f4bc6e78"
+    },
+    {
+      "file": "agent/tests/lizard-tail-data/2wum-f33.json",
+      "sha256": "bb94be4b6e0d399d2dd66eaa2f8260da2579ff9b24bc0245b5d9e03f189c32ea"
+    },
+    {
+      "file": "agent/tests/lizard-tail-data/7dxa-f23.json",
+      "sha256": "da079c0d175959b411fa0730455ca3b765f87cfc7841d23fff658da6a2a828c9"
+    },
+    {
+      "file": "agent/tests/lizard-tail-data/7kdm-f27.json",
+      "sha256": "e8dbd8788fbaf4b0bc97d848761d646cd4e0710bf385a7e2801f9754794a6ba6"
+    },
+    {
+      "file": "agent/tests/lizard-tail-data/make-fixtures.py",
+      "sha256": "3eadeab55ee67e6b1cf28b4170a223093e89908d1319efe00aa7417a8a7076e0"
+    },
+    {
+      "file": "agent/tests/lizard-tail-data/mzcg-f17.json",
+      "sha256": "554a7789cc75867f9b3274ea7d48e2dc9e5d1f01559bcd30a20e5f6d0aca2c75"
+    },
+    {
+      "file": "agent/tests/lizard-tail-data/u6ru-f33.json",
+      "sha256": "810613b63c6f6752986d681ca56941a005db09673edc951765a7511ee7b713f4"
+    },
+    {
+      "file": "agent/tests/lizard-tail-data/vtreb-f23.json",
+      "sha256": "49abe74781b24905a4c20b1df37dc019e74a1b78a11bdfd89cf8bfe6f65f582a"
+    },
+    {
+      "file": "agent/tests/lizard-tail-data/y8e0-f48.json",
+      "sha256": "92019cdf1cc136962293d24d7f0f4133e96b9013cb3c88718b51cb2418735b64"
+    },
+    {
+      "file": "agent/tests/lizard-tail.test.ts",
+      "sha256": "7cf69fd72a3f144fe936e87b9569707a7c14d340125010679296f8a1d3490014"
+    },
+    {
+      "file": "agent/tests/lock.test.ts",
+      "sha256": "f1ee62fb3e75e8a85d3051f6eab039d151f3080d08f41a01d3114f8c487df834"
+    },
+    {
+      "file": "agent/tests/logdb-data/brain.jsonl",
+      "sha256": "020be9f104642d68ff8d70c508c9076c69bec60ace18722b5fcf599fa60f4e76"
+    },
+    {
+      "file": "agent/tests/logdb-data/decisions.jsonl",
+      "sha256": "64af8f1dc10b40ac8c1c9a62d1a28b113970da055e19813f02a9ac91e210f325"
+    },
+    {
+      "file": "agent/tests/logdb-data/deepseek-reasoning.jsonl",
+      "sha256": "cb8d3449de24a3fb72ba1bc81b322f1cc545d3cfcbf80fb1c7ae2a33573e28d5"
+    },
+    {
+      "file": "agent/tests/logdb-data/fake-query.mjs",
+      "sha256": "d7ddc32e41e35362e3a868c1b6deb72ba88594fca40175858a8a6d3b71ff0589"
+    },
+    {
+      "file": "agent/tests/logdb-data/make-fixture.py",
+      "sha256": "2021b87ef5ddb76d033750976395c2767bf1467d68e4d6a6562e09cb957c4c08"
+    },
+    {
+      "file": "agent/tests/logdb-data/run-config.jsonl",
+      "sha256": "d4b55a4d67db15de7c1caed126f16e9e4f971d3c88e886109c5880ec88f342a9"
+    },
+    {
+      "file": "agent/tests/logdb-data/run-plans.jsonl",
+      "sha256": "df063d611baac6d4c3c67bd5af0b77006d911b7fe45ce706fccc33b602780b18"
+    },
+    {
+      "file": "agent/tests/logdb-data/runs.jsonl",
+      "sha256": "bca6a597f41a1083f5930c8d744dc48b615f4080ac24e96a74b39cf2a354ae91"
+    },
+    {
+      "file": "agent/tests/logdb-data/sl-attempts.jsonl",
+      "sha256": "8075274db85fe81f4fe70615136fc40d1fea4f4a6a5bddd78c7cc75ccb5cb71a"
+    },
+    {
+      "file": "agent/tests/logdb-data/states.jsonl",
+      "sha256": "6c8bec731a971133fdbae1584cb08d8d643f0aa5dbb7c2f2a649483292a69ad5"
+    },
+    {
+      "file": "agent/tests/logdb.test.ts",
+      "sha256": "ce7aa887f413eead7b69b642071ef4802bfe0600d1c134c6c727ec5839a3f144"
+    },
+    {
+      "file": "agent/tests/logdb_test.py",
+      "sha256": "60a539a0dfeadc50974e0c2606d62c5c22ebe824162473fa60a8637d8ba91cea"
+    },
+    {
+      "file": "agent/tests/logged-states/0nzb-f25-t1-after-exhaust.json",
+      "sha256": "98caa791f94e1a2c171c91e8be7d09f1e2a048fdaf8b26d2ae037120cb949943"
+    },
+    {
+      "file": "agent/tests/logged-states/0nzb-f25-t1-brand.json",
+      "sha256": "f0a889f68b1d2cbeed500c7824b9aee11c19cce11b651fbca0abe6b4c7d8ef7a"
+    },
+    {
+      "file": "agent/tests/logged-states/11lc-f17-t2-dup.json",
+      "sha256": "d6de027ab4b56c029fd6c26351d60336b7d3cf923cad17ec8c49f18248c9b7b9"
+    },
+    {
+      "file": "agent/tests/logged-states/2mk4-f8-t2-ask.json",
+      "sha256": "c2249305f446cc38ba56cbde80984a07a0b05c9599280834de8c912cf4f8f427"
+    },
+    {
+      "file": "agent/tests/logged-states/2mk4-f8-t2-back.json",
+      "sha256": "da1ff06b1412629a5a2a7f459427ad4f5b8b38098048f534f35c0d896adfa6e0"
+    },
+    {
+      "file": "agent/tests/logged-states/2mk4-f8-t2-pick.json",
+      "sha256": "3132484d6114155cb7fa8ec187bcc2ef39b199e7e2c7684fce66336426a0172f"
+    },
+    {
+      "file": "agent/tests/logged-states/3sbp-f12-t2-thrash.json",
+      "sha256": "a714dd704dbe1a1661d39da115c89653c2f0aa29e857dc2053edd3958a182516"
+    },
+    {
+      "file": "agent/tests/logged-states/3sbp-f17-t3-flex.json",
+      "sha256": "a0aa56ecec43b66083001f20f15405c47c5edb28317e83d934dc358183650921"
+    },
+    {
+      "file": "agent/tests/logged-states/4lc3-f31-t7-tainted.json",
+      "sha256": "311b85723dbc1588c523b2db0dec3240560921525cb6a1f825bbb466f128c362"
+    },
+    {
+      "file": "agent/tests/logged-states/77uj-f33-t5.json",
+      "sha256": "7948f50cf428b9df8fa60a140a6b66e2bbfbf9dda3e97ee45f17282dfb28437f"
+    },
+    {
+      "file": "agent/tests/logged-states/7kdm-f27-t5-dazed.json",
+      "sha256": "19fa105cca491622ad8ceb10ecf136ff0985961d089522ddaf3d3e2eadf2fa87"
+    },
+    {
+      "file": "agent/tests/logged-states/7xk6-f44-tea-party.json",
+      "sha256": "47c30f37ada5c03083571fd30f4b40c3a9c716e0e138df6bdd3f8e88bf8a60e0"
+    },
+    {
+      "file": "agent/tests/logged-states/8v0h-f17-t2-saturated.json",
+      "sha256": "4a26c5bcb564616a9aac555956d2a069885f4500f2469d09b7c93adcd77d5f01"
+    },
+    {
+      "file": "agent/tests/logged-states/8v0h-f24-t3-mittens.json",
+      "sha256": "47c6a3b626c979cc7da08097d1f9037b239260b6f1ee96dac2d797f6082d9c5b"
+    },
+    {
+      "file": "agent/tests/logged-states/981w-f33-t2-mittens.json",
+      "sha256": "053940a9cf870326578200990f56f6873da137a6ea2db0c8a8ecf6a795ac19f8"
+    },
+    {
+      "file": "agent/tests/logged-states/99x7-f9-t3-draw.json",
+      "sha256": "755923ae317edef1b2a26847dfd6992bd3016f0a2294ef6c1c5f30aed33e2e92"
+    },
+    {
+      "file": "agent/tests/logged-states/9lsq-f17-t1-attack-potion.json",
+      "sha256": "16ec54feebd365d01dd0e87490a8c214d7716b76cb37d8b80022171f071f44c4"
+    },
+    {
+      "file": "agent/tests/logged-states/9q7v-f17-t14-after.json",
+      "sha256": "f1410040425839b995ec8c1b9e2457d46f898774e9b78a696e4dc02a9acfb15f"
+    },
+    {
+      "file": "agent/tests/logged-states/9q7v-f17-t14-ask.json",
+      "sha256": "f44db845c711c73904d7073152eb3fca41db861be46750bef6b729f262b80ccb"
+    },
+    {
+      "file": "agent/tests/logged-states/9vg8-f35-t6.json",
+      "sha256": "7f5b791771e067d5d3c37d10559340fe21212f6c4501237bacdfdc05d80713b4"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-g/arkg-f17-t2-demise.json",
+      "sha256": "9e716373cb314f7c430e356d0d06afa9d88b1c392a239e34c982256168ae414a"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-g/n01x-f2-t2-primal-force.json",
+      "sha256": "2a6c1df0f3e34df05ffe14346f40937b99d1c260188035c1137f76bb54fe35f2"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-g/n01x-f2-t2-rocks.json",
+      "sha256": "1662798c10158fb18aae46c99477c7d894724cfe59f103a3753947a0db88a6cf"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-g/zgz0-f10-map-mailbox.json",
+      "sha256": "351d94cf965ebc1f9c4ddd0f00f497436543e8f2bac9810d939463af72faccff"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-g/zgz0-f11-rest-mailbox.json",
+      "sha256": "637667d27e912f12dce7f85680e7869921f6c4063cafdfa300ac3794ff2e6b9a"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-h/8kd7-f11-t2-after.json",
+      "sha256": "c10196c789deb6b4d9344a4f729ec02acf80117c730b21c7129cd9b0acdb6972"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-h/8kd7-f11-t2-ask.json",
+      "sha256": "81c396dc01cd98c9613d1fab275297de80307c8e3d80dc01ad08e5297de23dce"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-h/8kd7-f11-t2-drink.json",
+      "sha256": "fa0894a85fe2ba79bc7ac5f9f09af7ecd62e3b09278d00fe46b17c7e336a91e1"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-h/8kd7-f11-t2-take.json",
+      "sha256": "c1039e48070f5471b42efd82057409cf797f94f5166733415db6b4044556158d"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-h/arkg-f17-t12-beckons.json",
+      "sha256": "214bae6d89e54da932caed2e25ab7d0ca27caeeba823a9f169924f99e534e30c"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-h/cry9-f18-map-white-beast.json",
+      "sha256": "d02d0f2cddeaf54024106528ed928a568b4d91f3b35979dbc9abe4c9bb1097be"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-h/y36h-f21-t2-paels-tears.json",
+      "sha256": "d2712740a1266d1ba83450eed4ec2f3a384d86a8b38b8a07501f3b798f788940"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-i/7yt0-f12-stone-armor-reward.json",
+      "sha256": "05f75f5d6f5497fa76ec3d3a944794f313cb3432872b0a550f740203b3f92738"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-i/k7g9-f45-t3-burns.json",
+      "sha256": "16b612a4fe4083cf08cc46cbda5e37a7632baf2bce98e8422962bb2cc16c49c5"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-i/v6tw-f33-t2-clay.json",
+      "sha256": "778a910b0ad03a8e28db25916f641549b0a19ef6fd2aa5bd5a530fb4efa86441"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-i/vtre-f19-t1-bronze.json",
+      "sha256": "77ca31b8fb7ead65df46735f8ae5b3589cf94b69613d9121f04637225d41f7c1"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-i/vtre-f33-t5-red-skull.json",
+      "sha256": "b76525011b32d4159a0f611a3db6a7d9bb6b2f157571901e54a6b5d05bd1041d"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-i/vtre-f6-shop.json",
+      "sha256": "d3f4ee7a8d812b6541e81cb9cac6fa0bf5ac8aac316a9198cbc0b1fcd64ebf23"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-j/cj88-f17-t3-brew.json",
+      "sha256": "28948ffd68f19a01b2ec3d5ab14a995beff3904248ebf009bf19a05b8d317f57"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-j/dhgt-f22-t2-serum.json",
+      "sha256": "06065b2c9ce54a1e1a0ed0583bf8389ae91c80cb5e78686bde72e0c54d10df3c"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-j/dhgt-f33-t1-shuriken.json",
+      "sha256": "208630971a619c317979881b9d17d2c3fd04fe32c31d3e5f28b8699cdaca7646"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-j/dhgt-f33-t2-wheel.json",
+      "sha256": "ee3effb5236e4de45fdaf983eeb0390d6f46fd6fad21266da8aa852baf0adbff"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-j/ulqp-f6-t2-glowwater.json",
+      "sha256": "d1eb426238fc4343cd64ce317f41e68932cc4ee079d97fda428b4b74403de2e2"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-k/rtf3-f17-t1-plan.json",
+      "sha256": "afaaddbd8bb2dbfd306d2f4ddb2069e3d71e126e4ffd494fd0b7d6e64e9d7a98"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-l/5lrz-f37-statue.json",
+      "sha256": "0436ccad47ff8d48e08a34bad144b14fb06f981b108304454006af56805f5bb6"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-l/unrl-f33-t8-sandpit.json",
+      "sha256": "00fc5b28ecf5be14c43d8b929282bfea83f90c02f77a29ef5ae9918a529e5e5d"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-m/3rme-f30-t5-toxic.json",
+      "sha256": "363d8ea9334814b046b86e33470a6b398a5e7d08b0690a4707b801d38a4c85e6"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-m/79yr-f30-run-plan-empty.json",
+      "sha256": "262d8855228aa09adcdf9acfcde8ce98d0fb75e028bf474912f2f4451bba1b2c"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-m/79yr-f33-t5-curse.json",
+      "sha256": "b609683fcd6e068ac70f2c23e7e1e8072324a7a36a5ac786355e25b950ac47c3"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-m/79yr-f6-remove.json",
+      "sha256": "da68c75a3320d197403f625896208e4c807d8f889db9c211c8de1a6f4944cb86"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-m/79yr-f6-shop-plan-reply.json",
+      "sha256": "60d0051a2026d5a3c3eb99fafe37a72ac0ef7cbbbbe46da5899356e1809b49cb"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-m/86c3-f25-t5-plating.json",
+      "sha256": "07abe379ef3f38a198352ff3a4877ab4d45f8a772c90aacc2445352586b71847"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-m/nh8a-f21-t1-regen.json",
+      "sha256": "b17446d6d68e244998bbda19a58fd5da8347452fb44538355a42b082b36c8cff"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-m/yvyz-f48-t3-after-strike.json",
+      "sha256": "5cf8fff504de11a9ed715004a0ca602986f731526c8695ea018b3f2ebadb5940"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-m/yvyz-f48-t3-music-box.json",
+      "sha256": "30f334eaa7912e1e7135f9b3461bd5f5bd745f5041af96927d3b8c26653a82d4"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-n/5hhl-f17-t7-beckon.json",
+      "sha256": "295f7d3210e14108ece9f790b96357ddbdc5bb985ff4d268308ea586257fb2d3"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-n/boss-clock-self-damage.json",
+      "sha256": "55cd69697baa14dd6181ffc14f00823fbab891cbc21650a09e84db987427444d"
+    },
+    {
+      "file": "agent/tests/logged-states/batch-n/mzfv-f24-shop-plan-empty.json",
+      "sha256": "2043d96c525cbab495d047b32af525e75838eb76934bc17b2dd0baadab69031c"
+    },
+    {
+      "file": "agent/tests/logged-states/boss-clock-boards.json",
+      "sha256": "68e0c938568e61142a4abd6db0b9b257c35051d19ae5d94b610d5947c9877687"
+    },
+    {
+      "file": "agent/tests/logged-states/bxaz-f17-t1-heart-of-iron.json",
+      "sha256": "88dcf533b4370429f97b1823da503a3de3d1fde739c508d72eed50533624842f"
+    },
+    {
+      "file": "agent/tests/logged-states/bxaz-f17-t5-forge.json",
+      "sha256": "21842c7b46cbed33000bfc6710b396746727d11a53aa08d2790b347963e71294"
+    },
+    {
+      "file": "agent/tests/logged-states/card-conditions/boards.json",
+      "sha256": "94a09266f4400176d95c92bd9351161755160fed9fcb1f9f96c5f73e42371379"
+    },
+    {
+      "file": "agent/tests/logged-states/card-conditions/game-data-extra.json",
+      "sha256": "aa2535c60d4e045937beba85d845f339d736124ea1de7bc654e559e07e44ff0e"
+    },
+    {
+      "file": "agent/tests/logged-states/en55-f8-t9.json",
+      "sha256": "411570360d3ea7db8eb3ee843894dd64805ac1f633a4605e030cc3b0725551d5"
+    },
+    {
+      "file": "agent/tests/logged-states/etyc-f19-t1-blood.json",
+      "sha256": "7f55b80b60f6e40d286e7ae4a01ab876ac3d5fd998863fcbdb4fd9dd298b67c7"
+    },
+    {
+      "file": "agent/tests/logged-states/ez2l-f48-t2.json",
+      "sha256": "0bf45c1fea782b1a3945edf319bba9dc884ff4d846d8a2a4667e547d35e71732"
+    },
+    {
+      "file": "agent/tests/logged-states/fix2/4jgp-f48-t2-chains.json",
+      "sha256": "6d2ab84b182cc196d910e564a08c7d184ab1a06ad41787f70dc4292c2f4cf712"
+    },
+    {
+      "file": "agent/tests/logged-states/fix2/7pwu-f17-boss-reward.json",
+      "sha256": "7585f69b536cb8126474fe01f6afaa6e902596215e4e23e78a157721c9f4387e"
+    },
+    {
+      "file": "agent/tests/logged-states/fix2/8d8d-f48-t1-sai.json",
+      "sha256": "b35508474ad837ceafb6caa702dca0fb3977a9c0e6d51db443a43c26577b9baf"
+    },
+    {
+      "file": "agent/tests/logged-states/fix2/8l29-f33-t4-lost-wisp.json",
+      "sha256": "e0eac748a031cf23a74a394b3c27e55b767ec056d1799789554729d537fa73cd"
+    },
+    {
+      "file": "agent/tests/logged-states/fix2/gsg0-f33-t2-pen-nib.json",
+      "sha256": "e5e9a9482297a680e8468afd0f038b1d84bea527ecf6bde3d4fda41529f5e8fd"
+    },
+    {
+      "file": "agent/tests/logged-states/fix2/gtu2-f33-t1-demon-form.json",
+      "sha256": "b70d2664e4a2912dc1884c13486a80ecf209c5fdd77eada1e354eb4029c88790"
+    },
+    {
+      "file": "agent/tests/logged-states/fix2/jj75-f25-t2-boulder.json",
+      "sha256": "751f109dbef6ca63f04e705e878cede9f5c514ca3096cfbf0f119068b3931da8"
+    },
+    {
+      "file": "agent/tests/logged-states/fix2/zryr-f39-t1-skewer.json",
+      "sha256": "cdbfe7f60f615dc876e10f8b1e13087b26cbc8ca6fcd8a9108304d60585ad993"
+    },
+    {
+      "file": "agent/tests/logged-states/fix3/24hm-f25-t2-thorns-block.json",
+      "sha256": "43b64c234e824c70ad9ec021d134f0c7af5c2f78ec1b81635420aceee23aa706"
+    },
+    {
+      "file": "agent/tests/logged-states/fix3/8l29-f37-t2-galvanic-rupture.json",
+      "sha256": "142927efebafd345651ee1231e4b7939172b3e2d47e6aed335da7426e872d70a"
+    },
+    {
+      "file": "agent/tests/logged-states/fix3/dt1h-f37-t1-galvanic-block.json",
+      "sha256": "4be68c56391050a349a2d0b6072bb653617280b8ce42b7d5019c430732aa0fd8"
+    },
+    {
+      "file": "agent/tests/logged-states/fix3/fspk-f39-t1-galvanic-axe.json",
+      "sha256": "b44e73b01195bdc54e213210aece8a4e5ccfd5599cb38ea7b2049bdc894bcfa1"
+    },
+    {
+      "file": "agent/tests/logged-states/fix3/r6v3-f31-t2-thorns-rupture.json",
+      "sha256": "684ebe6b4bbbd9f81d0bf4d3fd32751c890053e9904f4c74ff4e5d39b577659b"
+    },
+    {
+      "file": "agent/tests/logged-states/fix6/enthralled.json",
+      "sha256": "9bd69aa4585d63eb054968d722ae974fc0dac7b19effa99dfac3a46204da12b4"
+    },
+    {
+      "file": "agent/tests/logged-states/fn0h-f33-t2.json",
+      "sha256": "614248fc8de2df62c878e6d5d08a3db0f856d0588fc97d2410b6306971a28067"
+    },
+    {
+      "file": "agent/tests/logged-states/g8yy-f30-t2.json",
+      "sha256": "3b8ab7511659b7412ab59b13e347ae845051ae3ba9b8229108962f85a2143a4b"
+    },
+    {
+      "file": "agent/tests/logged-states/g8yy-f30-t3.json",
+      "sha256": "8c70a6f8176b3ce64f28efc8c0fe81d0ee8bd41964237b92fa4b19c8c57c5822"
+    },
+    {
+      "file": "agent/tests/logged-states/game-data.json",
+      "sha256": "49cd18394fcd3f00f85ff02f949361fe2ba5c074cc48ef026c64fd12ac9d682f"
+    },
+    {
+      "file": "agent/tests/logged-states/giant-judge/husk.json",
+      "sha256": "60ab25a0dfa9a2c174bb1f56240aee887790d216ddaba6aa22073a84539e90f3"
+    },
+    {
+      "file": "agent/tests/logged-states/heac-f17-t2-saturated.json",
+      "sha256": "8da62462fcd30cdcee8cd861261089fc35d04339e92d41c243d72ed9a76d9dbf"
+    },
+    {
+      "file": "agent/tests/logged-states/heac-f17-t6-saturated.json",
+      "sha256": "9e12f79c165f0c0ae75eef9b0d6fd34ffc83e2265a93fdf0c47766b6705e3b53"
+    },
+    {
+      "file": "agent/tests/logged-states/jsa5-f48-t6-blood-wall.json",
+      "sha256": "3c2f6d05d9eb730dfa777f9e7fb76a2e372ff3ed853ef9e10dc263250731acab"
+    },
+    {
+      "file": "agent/tests/logged-states/k7g9-f45-t1.json",
+      "sha256": "c5f7d570bf494b9da09e64b6361b17464c435213f794b4bf1065a109de053e26"
+    },
+    {
+      "file": "agent/tests/logged-states/k8tc-f17-t5.json",
+      "sha256": "8f34d02f70de3d160738d39364d37e962a06ebf9c12608a0b4af07e6a6b8aa67"
+    },
+    {
+      "file": "agent/tests/logged-states/kgr6-f23-t4.json",
+      "sha256": "be9788dfbc8dfc83c4456b8946dfb5dc758f9870c0c3f019eb8a804b2ba37e6f"
+    },
+    {
+      "file": "agent/tests/logged-states/ky3y-f33-t9-drawn.json",
+      "sha256": "9e304b504f4931d78e8b35c76cf7be807c528b6b223b33726e4c2d3405dd4d9e"
+    },
+    {
+      "file": "agent/tests/logged-states/ky3y-f33-t9-pact.json",
+      "sha256": "45cfd9f30beeee3fed6d84686e9dfade3a425b52d0212e6bf1283dce0b119858"
+    },
+    {
+      "file": "agent/tests/logged-states/ky3y-f33-t9.json",
+      "sha256": "cad007fb670350341cc7d9a601c52ec81e06db28c7e87758f1b5db0bfa5807e0"
+    },
+    {
+      "file": "agent/tests/logged-states/kyc0-f28-t2-decimillipede.json",
+      "sha256": "2515e0bd13a9722f4d9e3fd08adc1c86c11dce6f022e57fe129786db89e9f7e4"
+    },
+    {
+      "file": "agent/tests/logged-states/ly0n-f33-t3-mittens.json",
+      "sha256": "f1bd479e3460f714a5b9b7ab1df39083b457a993698098bd1321154e8985752d"
+    },
+    {
+      "file": "agent/tests/logged-states/ly0n-f33-t5-mittens.json",
+      "sha256": "9918abb39808a033b1c02154f75b9a75fbfdd28fc28194dfb25e8a1235fa7742"
+    },
+    {
+      "file": "agent/tests/logged-states/n95w-f19-t3.json",
+      "sha256": "a416ad2f4ac42df04c1b48f3da8dbf21209f0d302313a7f9f390f9ffbea8e5eb"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/7b0d-f8-rest.json",
+      "sha256": "558ef26a09977bfe50d644f446934907e9c7aeade9837f199a12829d32e21bec"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/8v0h-f22-selfhelp.json",
+      "sha256": "fd8a8eca8aba3c2efaa90bacfc98f63a8af67c3b1e73668a425fb1f6cfc06f7f"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/9grp-f28-rest.json",
+      "sha256": "c69707dd01dd28958dd5ff00df604f8754e32c86ad09b1a42415698a14999633"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/qug1-f22-shop-remove.json",
+      "sha256": "45687324ca8e828c52520f3adbbdcdeb0959383b6c52707048213809bf66c09a"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/u6ru-f18-ancient.json",
+      "sha256": "ff857a9f8ee30fcb515399119b34942d4cdf02f3d86880a45ba166f0808d9ce4"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/u6ru-f22-shop.json",
+      "sha256": "a62dcb9f1173582cdcf71fee1e326252f4486728d43e0960f96a49f9f52b3eda"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/u6ru-f7-doors.json",
+      "sha256": "f3a2214d8065c0e13b3f5a8eb7bf81957aea84ed84a945a5f562eccc8808e96e"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/w2tb-f7-rest.json",
+      "sha256": "9d0fe8a5d466d0b484c028ba99330162cd45b9e8681e1bd55f88e5531898e410"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/xljq-f5-reward.json",
+      "sha256": "d207da57380d0207fa1d2226f691488b2a6fbac7fa5eec91f2df28556183d8f8"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/yql8-f18-cookies.json",
+      "sha256": "ce38bf0f2dc9ee803a9bae9a90c1a4c672ff1acf115e07398f1ff1bc96efda8b"
+    },
+    {
+      "file": "agent/tests/logged-states/oneshot/yql8-f22-holes.json",
+      "sha256": "d51a1b21bf5ef05b7f1df75bcfabefad833fe6072055e3c29de1bb3bb8589859"
+    },
+    {
+      "file": "agent/tests/logged-states/passive/boards.json",
+      "sha256": "e7ceba8989fb074f736bb25ffef2c102634121ec0324e20366ac6e54cc9ea4c8"
+    },
+    {
+      "file": "agent/tests/logged-states/phmv-f20-enchant.json",
+      "sha256": "24d66ffa6cf4e5b8eb9e5f59994f597f0c78a1c42527a82fcd64be4477df1225"
+    },
+    {
+      "file": "agent/tests/logged-states/pkb0-f17-t4a.json",
+      "sha256": "1ae22b94f5290fcc4fb3e44b78f88f41ce97ada440af85c52d417d08bc5a628d"
+    },
+    {
+      "file": "agent/tests/logged-states/pwsd-f23-t3.json",
+      "sha256": "572bb36df40352c3c4c845ee638cedb270bc1dcecd39d3d7759363ab53699077"
+    },
+    {
+      "file": "agent/tests/logged-states/qug1-f23-t3-illusion-dead.json",
+      "sha256": "05cf5fed3e100cf8995798ff2168d649e165cfeadeb94520c6455dffbe76edf5"
+    },
+    {
+      "file": "agent/tests/logged-states/qug1-f23-t4-stew.json",
+      "sha256": "57f254a506481e40437e12467a0057f0a2a3c66eaf7ee30611d24c8b1bcd499e"
+    },
+    {
+      "file": "agent/tests/logged-states/qug1-f23-t5-replay.json",
+      "sha256": "ac789a06ea50958a45c97f4b3823db05553b44390c320cdb69cd012eea1c8395"
+    },
+    {
+      "file": "agent/tests/logged-states/qzqu-f18-route-plan.json",
+      "sha256": "15a86e82751e296c56afeec21d9ac646e80e3b5f066980fb3b09ec2796ab125d"
+    },
+    {
+      "file": "agent/tests/logged-states/ra3q-f14-t1-margin.json",
+      "sha256": "3ca3527c39f69d5f6bd457961f619220f29eda89d63d49d126c10f900d6b2fe9"
+    },
+    {
+      "file": "agent/tests/logged-states/route-rest/mck9-f32-rest.json",
+      "sha256": "84c6c2b17fbaaf07c954cc7d679d47b9351e38638d98b1e6e9a661d2f1aa8af8"
+    },
+    {
+      "file": "agent/tests/logged-states/rtf3-f17-t1-draw.json",
+      "sha256": "afaaddbd8bb2dbfd306d2f4ddb2069e3d71e126e4ffd494fd0b7d6e64e9d7a98"
+    },
+    {
+      "file": "agent/tests/logged-states/sandpit-judge/insatiable.json",
+      "sha256": "d0b8edc5de6936989e5844ce691175595d986412410cfa8703f6adb14d6b4a2e"
+    },
+    {
+      "file": "agent/tests/logged-states/sfce-f1-route-plan.json",
+      "sha256": "ffb05c4887a5d5b09b30b512eb93487e296a93762729dde82b10c72b2aa957f8"
+    },
+    {
+      "file": "agent/tests/logged-states/sfce-f11-shop.json",
+      "sha256": "184bb68d3c80a6d8a9e9c04fbbdc0326095b86f889b69092f1c215bf16f76c21"
+    },
+    {
+      "file": "agent/tests/logged-states/sfce-f15-shop.json",
+      "sha256": "f90aa347ac8547a606506df8a432f6fe97875e158f416d8d1a3ab6d8ba2f16d0"
+    },
+    {
+      "file": "agent/tests/logged-states/sfce-f18-route-plan.json",
+      "sha256": "20d8a3b4b279d0bd67b60a37f8641615eb3f5a7a0ab11a3370c8111fd25c7670"
+    },
+    {
+      "file": "agent/tests/logged-states/shrink/tyzh-f15-t3-inflame.json",
+      "sha256": "aef8f924d1de9e46ac71697f0ebee4a4cf37e40acc23faadf0b0ffe44dbd80d3"
+    },
+    {
+      "file": "agent/tests/logged-states/shrink/ublv-f15-t3-flex.json",
+      "sha256": "2d3e7d74048fcb37098c88007ea350e9839ec7487468ba0a05cf8252efae9ff8"
+    },
+    {
+      "file": "agent/tests/logged-states/shrink/xc4t-f9-t3-shrink.json",
+      "sha256": "bb157baa729a0e43c10f0027725c3ba922eb22d7b6fdfa1b9c3eda256f02a83e"
+    },
+    {
+      "file": "agent/tests/logged-states/v1mf-f19-t1-mittens.json",
+      "sha256": "b6440aca98085467773f7b49ada4c51adef90ca5aa0fe1a6f8bd45666ccb7793"
+    },
+    {
+      "file": "agent/tests/logged-states/v1mf-f33-t2-mittens.json",
+      "sha256": "93764abc5c0b3eaaad8b8413c8c47afc9b9a44299bc63ff246cefcd4572ebf47"
+    },
+    {
+      "file": "agent/tests/logged-states/v1mf-f33-t4-end.json",
+      "sha256": "1eaa7022adaee380391b5f74a3b92120e1fb020c7866e313efc5db936df2d603"
+    },
+    {
+      "file": "agent/tests/logged-states/v1mf-f33-t4.json",
+      "sha256": "4c3d6010727faadf794f8c1431ff152f60b7c3cb7e9b8245256df09a191ca779"
+    },
+    {
+      "file": "agent/tests/logged-states/vnwr-f33-t4-mittens.json",
+      "sha256": "6229c939341174dd7baee610b083f0c1b5ceda139f6f1f28745d0be2f2cfef31"
+    },
+    {
+      "file": "agent/tests/logged-states/vnwr-f33-t6-mittens.json",
+      "sha256": "b87d7ead80ed5bbcb54102b8f66aad68954d3d2ca95a97e085718d498fa8d159"
+    },
+    {
+      "file": "agent/tests/logged-states/w8jd-f31-t3.json",
+      "sha256": "64f92d998c2cdfe8e462a41986706f8a15cd4d055af82f34702972798ec7c4f9"
+    },
+    {
+      "file": "agent/tests/logged-states/x7lu-f7-t1.json",
+      "sha256": "962d08aab105b3b8c5774625c64d81bdf1ae57518f58a4fbbd58ae83af145e2a"
+    },
+    {
+      "file": "agent/tests/logged-states/x8r8-f17-t8.json",
+      "sha256": "7bed8ae15da5fd10780952a285b8285b5f25a50d088da693fcf2cffa8b46d4dc"
+    },
+    {
+      "file": "agent/tests/logged-states/xmk1-f33-t3-ask.json",
+      "sha256": "db3decf379efa4b2b526f72811e7d67975f5847d86bcf8e1a1a589abe6690a47"
+    },
+    {
+      "file": "agent/tests/logged-states/xmk1-f33-t3-cut.json",
+      "sha256": "56758381c04de498206045ed0786d9f57701a832f6689bfccd2949b108cf6bd9"
+    },
+    {
+      "file": "agent/tests/logged-states/xmy2-f17-t1.json",
+      "sha256": "5ecb2e2476aa9b36b29219beceb439e3ec16cb60066d67cc53801cc1eaccd386"
+    },
+    {
+      "file": "agent/tests/logged-states/yg3h-f33-t1.json",
+      "sha256": "af5be5160bb395f60cb918bbb885d1c4b125ec82436c7b81257bc5cbec729710"
+    },
+    {
+      "file": "agent/tests/logged-states/yql8-f17-t8-blast.json",
+      "sha256": "8693754d50937b70098cc6440950d33d37c39a4e33e4c01c56854127a37c1a31"
+    },
+    {
+      "file": "agent/tests/logged-states/yql8-f17-t8-husk.json",
+      "sha256": "8693754d50937b70098cc6440950d33d37c39a4e33e4c01c56854127a37c1a31"
+    },
+    {
+      "file": "agent/tests/logged-states/yql8-f28-potion-courier.json",
+      "sha256": "c4bcf70dc3ca852352203eb172fbea5e0d4e5414c5c8d63f7fb8eb6175d71017"
+    },
+    {
+      "file": "agent/tests/logged-states/zy39-f23-t3b.json",
+      "sha256": "ac29c41b709d99032723f58643fac97d29485b774b0bb77dad3f44a04c9c0b23"
+    },
+    {
+      "file": "agent/tests/logged-states/zy39-f23-t4.json",
+      "sha256": "a7b0f607f9e6f0c1e25ac39295cb24def841f5ef1d7dcfc36e530bb6139489d9"
+    },
+    {
+      "file": "agent/tests/logged.ts",
+      "sha256": "93d47180622583e1909fbb305f625885ddde951573b05852ea67bf90e87bb4ce"
+    },
+    {
+      "file": "agent/tests/loop.test.ts",
+      "sha256": "74c7ca702b644c87a452a842f4607b198c427779c6cdc3ea9b4ca14b82f3c8d0"
+    },
+    {
+      "file": "agent/tests/mcp-server.test.ts",
+      "sha256": "5745d6d02a064d8c22c7ec35dbd3de00b12982651174cf5c8988e1af3fbb94cd"
+    },
+    {
+      "file": "agent/tests/mech-move-data/8l29-f33-t5-crab-alone.json",
+      "sha256": "4651121f05d29dc3e7346b7818af16f882590655500d1e18d38536f41c86492e"
+    },
+    {
+      "file": "agent/tests/mech-move-data/8l29-f39-t3-axebot-stock2.json",
+      "sha256": "31d0e3928a0dcfa6767c3fae877ccde78b38a3146f188e0d0141e1880ff75f5e"
+    },
+    {
+      "file": "agent/tests/mech-move-data/game-data.json",
+      "sha256": "efc277074c4efde980b6509fa13ab8c8a9b2966338dd5208989cf7572ce8b131"
+    },
+    {
+      "file": "agent/tests/mech-move-data/make-fixtures.py",
+      "sha256": "61f0ff5bca585303af2dd996dc8c6aee55d6dde842e81f58b70a332a22cb1d8d"
+    },
+    {
+      "file": "agent/tests/mech-move-data/nx48-f33-t7-crab-death.json",
+      "sha256": "56c3473584c9abb69a25d021174ebd0fef45dcb9184ddedea05166c379e41028"
+    },
+    {
+      "file": "agent/tests/mech-move-data/pinned-knowledge.json",
+      "sha256": "a025bf8b91193ba5d6204f1d9b7d4a48940eec5edbbc5a3e36a7699488bce04c"
+    },
+    {
+      "file": "agent/tests/mech-move-data/y3xt-f45-t5-axebot-stock1.json",
+      "sha256": "d5ae0fa86ac363868bbec8643a95a156abef46eb2c96d5cc6a242d8976361d96"
+    },
+    {
+      "file": "agent/tests/mech-move-planner.test.ts",
+      "sha256": "755307d04ef245c1812370a8cf3f83f1e4eba1a468b5dc0b1178f7773a3f1df3"
+    },
+    {
+      "file": "agent/tests/mech-move-rules.test.ts",
+      "sha256": "f86a5bdc064cd5f2000acede3f800fc5fe6699538f90138ec18c724bda2ac49c"
+    },
+    {
+      "file": "agent/tests/mech-rules-planner.test.ts",
+      "sha256": "e901efc751d356409901caf675e316378a6fe645e818f1ff62a895326480ec3f"
+    },
+    {
+      "file": "agent/tests/mech-rules.test.ts",
+      "sha256": "0700b9c7a2b911a6a2dcde7bdfcf57d73ab83d49d017eeee296240317e8783df"
+    },
+    {
+      "file": "agent/tests/mechanics-step1.test.ts",
+      "sha256": "8e6d4100daca22fcd0af3f7d65255eb5e8880fbe7f1871a90e21a6a714ef5d72"
+    },
+    {
+      "file": "agent/tests/mittens-exhaust.test.ts",
+      "sha256": "fd1c356f337749dcf8bf6849779b371838d5560e237528d9c234e4c3059b0221"
+    },
+    {
+      "file": "agent/tests/mod-client.test.ts",
+      "sha256": "9d01d8fa66733d93567f7abdc31f679a5994db90b437478fad4146167250bc5e"
+    },
+    {
+      "file": "agent/tests/monster-db-context.test.ts",
+      "sha256": "3793569668b47761d4ea75934058d235f0a7522234d0fd07a73e24c42fb08b0b"
+    },
+    {
+      "file": "agent/tests/monster-db.test.ts",
+      "sha256": "44a5bb6cda89daa44e89c5a0311a07c382a901c4217540aadaab1b856a2129bf"
+    },
+    {
+      "file": "agent/tests/monster-terminal-hp.test.ts",
+      "sha256": "5e16362405eb405a42503c7142e057b696ca23d568429d80e2a1638a04b18975"
+    },
+    {
+      "file": "agent/tests/monster_terminal_hp_test.py",
+      "sha256": "02f5b4012d091eab04f44acef105ca9c0185c9284fde003b3e253a783f6f5e44"
+    },
+    {
+      "file": "agent/tests/move-model-damage.test.ts",
+      "sha256": "37d1f35780f1c22bf7fe9711805219655d1e238cbd94b6b7b8e88200abcf1b97"
+    },
+    {
+      "file": "agent/tests/multi-character.test.ts",
+      "sha256": "e759a88ec29dcc3e42098a1b39340a8cc357ff2ef2bc6b9b1564b3ea94027f16"
+    },
+    {
+      "file": "agent/tests/oneshot-act-start.test.ts",
+      "sha256": "d086813941b41d92bd4db8f4510830eb1e44f0ee1a2f28f4307dd14a45069fe9"
+    },
+    {
+      "file": "agent/tests/oneshot-rest-event.test.ts",
+      "sha256": "ce69bc043172ee14beccf03bece43a630493978d34ba954186bb431fb89563eb"
+    },
+    {
+      "file": "agent/tests/oneshot-shop.test.ts",
+      "sha256": "b5ce932956f42f42faa1e3b837b5902b402cd9028fdc45c80b11048226661f45"
+    },
+    {
+      "file": "agent/tests/oneshot-support.ts",
+      "sha256": "6bb8aa5163cf544ab73c451a67216aef5d0ba756415b740643622ea73b1b0f93"
+    },
+    {
+      "file": "agent/tests/ops-action-list.test.ts",
+      "sha256": "e7d54de832dbecfa7044c1139d512624235d8bf318dc2b0b087304df1e2bd2d7"
+    },
+    {
+      "file": "agent/tests/ops-autoplay-reload.test.ts",
+      "sha256": "ebf0e1d7198ccd0ce8c14e1616c85bbc3ab2945300bcd79960237e9a4cfa05e6"
+    },
+    {
+      "file": "agent/tests/ops-codex.test.ts",
+      "sha256": "c87e26228ce7457a5eb303dfd79fece64119a12211755409257ab7971eefcd8a"
+    },
+    {
+      "file": "agent/tests/ops-eval-metrics.test.ts",
+      "sha256": "88d517083f44cd339e02a64e0b33a2cc70ccac212c9b63eff9f2741dc97a83e5"
+    },
+    {
+      "file": "agent/tests/ops-herdr.test.ts",
+      "sha256": "52972f2e4658a9ea17ddb0290688425f8bd5f0e39a16b8fbd4b1b767a85561b8"
+    },
+    {
+      "file": "agent/tests/ops-mod-state-broker.test.ts",
+      "sha256": "1e5107e159bfb95edee0978ec5468c78e6e09d033e059cafa1d2359d5b51453e"
+    },
+    {
+      "file": "agent/tests/ops-mod-state.test.ts",
+      "sha256": "4788daeda2632ab153f122d41891c3b1533f0d0c282fb8e6e210d3281a9ee874"
+    },
+    {
+      "file": "agent/tests/ops-rollout-file.test.ts",
+      "sha256": "dc20d6ebfc0c3d78151397dcd6a11fa607b05b84349250d7eaeff5dec20ad843"
+    },
+    {
+      "file": "agent/tests/ops-stall-recovery.test.ts",
+      "sha256": "07faf734ed2400a2db24154769115a06f55c27ad97e7f91f3346bfea24301efa"
+    },
+    {
+      "file": "agent/tests/ops_eval_metrics_test.py",
+      "sha256": "7e8148e5dcffd6691184d4fc298bb2e55731b032239c9a5ced8a82d2c993915b"
+    },
+    {
+      "file": "agent/tests/outcome-asc.test.ts",
+      "sha256": "f92069a02f77c1e230804e5d9123201babd9b4da0538ebe125d7855e126c8bcf"
+    },
+    {
+      "file": "agent/tests/outcome-stats-refresh.test.ts",
+      "sha256": "d1bee61832ca0c893cb7d1c0ce340ea8e79fad6dba02825c2917e4f687800620"
+    },
+    {
+      "file": "agent/tests/outcome-stats.test.ts",
+      "sha256": "6c77010a67f4166b5a8f0dc10a048d1cb1215c048750f20211d5810c33f7551d"
+    },
+    {
+      "file": "agent/tests/passive-pieces-planner.test.ts",
+      "sha256": "bf4963e2f9135a9325eb7ecf3df163dd3c3c7e18e6b0e4107f5078caf89c2425"
+    },
+    {
+      "file": "agent/tests/passive-pieces.test.ts",
+      "sha256": "ffd15ee4a92ca1914edf859ffd97ddd92d279f73a70e23945a378d90db17b069"
+    },
+    {
+      "file": "agent/tests/paths.test.ts",
+      "sha256": "0fa8924b5aef0c41afdc86c38ad865aafb8bbe3823e8e73cf3662515a0fd2bab"
+    },
+    {
+      "file": "agent/tests/pile-power-cost-data/g1z0-f36-t1-swift-potion.json",
+      "sha256": "07993115ba4eef9c8830144275edd46ec132282986f47e6598fe9e785c89f032"
+    },
+    {
+      "file": "agent/tests/pile-power-cost-data/game-data.json",
+      "sha256": "65ddb3a1dceda45eda4d729572fcb7618b3ba5088638cc4d10f6b860140b5f48"
+    },
+    {
+      "file": "agent/tests/pile-power-cost-data/make-fixtures.ts",
+      "sha256": "87ebd9e634cc007bb2f17b02d8446581f9a807b833083bb433b47d4e39cc6734"
+    },
+    {
+      "file": "agent/tests/pile-power-cost.test.ts",
+      "sha256": "19b4d78e17088c6e7dd2b8027fa35240a64c88766c5d4ed077205ebe0b18b2a7"
+    },
+    {
+      "file": "agent/tests/potion-card-cost-data/a4pw-f46-t1-power-potion.json",
+      "sha256": "dfac39eee84f46e37628291a147afcbdf169b28d61d5a8e43c9d41fd262bd627"
+    },
+    {
+      "file": "agent/tests/potion-card-cost-data/game-data.json",
+      "sha256": "d62c478c5748aa2bb104f9231221ed313dea7320da84f5dde44321783c271ba9"
+    },
+    {
+      "file": "agent/tests/potion-card-cost-data/make-fixtures.ts",
+      "sha256": "640339865a814d8a301969f9cc288d5e3c4862341776891def1ce578a086c307"
+    },
+    {
+      "file": "agent/tests/potion-card-cost.test.ts",
+      "sha256": "53a2ac1bc830e9d2e1dbf07d632e3b502d4e84e7b3349ad738d83f7990f5a031"
+    },
+    {
+      "file": "agent/tests/potion-cost-knowledge.json",
+      "sha256": "67d0f32d646f00e00066730ce729abece095c73a98e0364de93245e3a4f06d88"
+    },
+    {
+      "file": "agent/tests/potion-cost.test.ts",
+      "sha256": "1d3745b11928580194adc2bd791e0b982384a59d9dba74d5bb80d23b818b843e"
+    },
+    {
+      "file": "agent/tests/potion-equivalents.test.ts",
+      "sha256": "76dd5afd34d59abab6eaf789b94e0deee8d57bc8fe3d536835ad8b2201cae118"
+    },
+    {
+      "file": "agent/tests/potion-mc.test.ts",
+      "sha256": "c67a1ab8b5d372ce078e45e5123c91a602be635bd6186d6034cc9c69bd0e7540"
+    },
+    {
+      "file": "agent/tests/potions-jev-call.test.ts",
+      "sha256": "60d5c79784fc499b7dee3c99beca8b691902c211bf01d0f868482b0dcfec8b19"
+    },
+    {
+      "file": "agent/tests/potions-step1.test.ts",
+      "sha256": "0171d96c0d7017dfc0528b711f83fcf248948e0a539cb22e09d7c3b48f11785a"
+    },
+    {
+      "file": "agent/tests/prefix-facts.test.ts",
+      "sha256": "7fe6b88d1798972c19c02eea48a05fe94eea8432d75c41f05cf2355752dd1575"
+    },
+    {
+      "file": "agent/tests/pricing.test.ts",
+      "sha256": "00a7b9a7298cc65b6fb4a17a66f34b330b795187d7b7c6b36ed8fa91c7c14944"
+    },
+    {
+      "file": "agent/tests/questions.test.ts",
+      "sha256": "ab508e25983d2474e432f66d0ba23b612e1b7f280a2d2eaaf9629a9253b67ac9"
+    },
+    {
+      "file": "agent/tests/radiant-tincture.test.ts",
+      "sha256": "f493a01856435988fe20408d83903b43a84fa684a2f1350b69e956f6e4b8539c"
+    },
+    {
+      "file": "agent/tests/record.test.ts",
+      "sha256": "94d68a4dd42cecc2cac72ed54dd8c03c6ecc3176269d8719792ab88d21fe449d"
+    },
+    {
+      "file": "agent/tests/rest-pantograph.test.ts",
+      "sha256": "2512fd8ec33c6bcac0c2dc5c3ae071e164f1dc299ec85945a55eaa82be46993a"
+    },
+    {
+      "file": "agent/tests/reward-special.test.ts",
+      "sha256": "de4d1195aafd660becdca7da26c850035e0bb54363c5e0ea1ced5dbc15dbd79c"
+    },
+    {
+      "file": "agent/tests/rollout-builder/features.json",
+      "sha256": "153352701ae0b87584220f55a00b17ab3702ca898f90a6efbc803d14f7203095"
+    },
+    {
+      "file": "agent/tests/rollout-clock-fixture.ts",
+      "sha256": "672b1a8f72af4909f6c109ff6a95f10df10df4aee1f9ab7572a7440a35ce12d4"
+    },
+    {
+      "file": "agent/tests/rollout-deadline.test.ts",
+      "sha256": "8b69d412748e6bce718345cadcae9ee0593ddad53ffe0fab1848dbc5fd40fa1c"
+    },
+    {
+      "file": "agent/tests/rollout-live-clock.test.ts",
+      "sha256": "80b88e569b912f563bfd769f971cbf47e2aae974f5cb18409626c61a138ad7e1"
+    },
+    {
+      "file": "agent/tests/rollout-live.test.ts",
+      "sha256": "ef11a3c953c4eb7a6ad010fee7c81ed6a5e962774da4cff8365227a2f3efce40"
+    },
+    {
+      "file": "agent/tests/rollout-ties.test.ts",
+      "sha256": "db326bc478794288eb5fb5d663b18f458e88a734b22696174674c40db4c5c485"
+    },
+    {
+      "file": "agent/tests/rollout.test.ts",
+      "sha256": "2a69e75d4b4756b6d9e392ca4bcd7ce308cf5f7150ebc7869e5dc4ca9b783a1e"
+    },
+    {
+      "file": "agent/tests/route-boss-unknown.test.ts",
+      "sha256": "ff483e421a1b0a3e8117c99403c6e929c4e92b5ccdd263c9113def56ee70d171"
+    },
+    {
+      "file": "agent/tests/route-chain.test.ts",
+      "sha256": "fffe9f9cd0cad255df5928a580bf37b01598a72743c940001d2836ee67d8c298"
+    },
+    {
+      "file": "agent/tests/route-event.test.ts",
+      "sha256": "e82cc076cc99cb5fb202573b25455bae71502f9432471c6709940ea247e4292b"
+    },
+    {
+      "file": "agent/tests/route-fixture.ts",
+      "sha256": "a74d1c3563c8a18bffb3472ae0ffe0641b31fbe9508f5d84fe69a4d9c14274e4"
+    },
+    {
+      "file": "agent/tests/route-map.test.ts",
+      "sha256": "f9bffdd92a5e1ab2a135ff319c5cf8b373747f3c9f113f590ec8b7c8e8f0d74a"
+    },
+    {
+      "file": "agent/tests/route-next-rest-data/reviews.json",
+      "sha256": "c75b714390dfa834b4e870312e82f8713417090a873bd74e1a43cca7b3837dc9"
+    },
+    {
+      "file": "agent/tests/route-next-rest.test.ts",
+      "sha256": "ecd807e6b9cc8526e4c17a90592b65bdcbc9f5e07597c780c0070916df2192d6"
+    },
+    {
+      "file": "agent/tests/route-projection.test.ts",
+      "sha256": "a7a6014c9dba2efdf2f837e5302b205a02e00d47b2d5b44bc579336630ed876c"
+    },
+    {
+      "file": "agent/tests/route-review.test.ts",
+      "sha256": "4b41e246ceaaeba9f8605b558197041c12d7a877bf2113d9204cda6124cf1939"
+    },
+    {
+      "file": "agent/tests/run-config.test.ts",
+      "sha256": "2cef73abb277de28351f093d77cf880714ce5d3631e15cd791332719201822df"
+    },
+    {
+      "file": "agent/tests/run-journal.test.ts",
+      "sha256": "6a4cc2df7246e9427f4efc6e98aa15176d2811c2e036b8a7f4c92aa2bd3a59b7"
+    },
+    {
+      "file": "agent/tests/run-plan-merge.test.ts",
+      "sha256": "c569a15294cda764db585ac37eb272e6fba3345653a1943e04988c6f6d82a54f"
+    },
+    {
+      "file": "agent/tests/run-plan.test.ts",
+      "sha256": "404913eeddcfdce418cec74002c65ffe0490ff7fff9e7773347b8ce39c12c744"
+    },
+    {
+      "file": "agent/tests/sandbox-entry.test.ts",
+      "sha256": "6ca449f570e73789245c53f741762445992bb7525b47869b7a7d1326d71446f3"
+    },
+    {
+      "file": "agent/tests/scenarios.ts",
+      "sha256": "e8bf8c81e53611c3bd063011c2a1cfad1497792c5587b670bb36eccb8dd0117a"
+    },
+    {
+      "file": "agent/tests/schema.test.ts",
+      "sha256": "4fc3db89c98e1f0ceffc3f6fed5e417fc41a09276131e6dfcd3f1b06382f0045"
+    },
+    {
+      "file": "agent/tests/screens.test.ts",
+      "sha256": "c1a4b7f703df15d9df0c939442a895699d57c174e4660e43c05b122fcb478129"
+    },
+    {
+      "file": "agent/tests/setup-boss-lines.ts",
+      "sha256": "1a0fbdf99c432e965374aa5e15417414897304e00a2999be19a1042e72803d76"
+    },
+    {
+      "file": "agent/tests/setup-potion-cost.ts",
+      "sha256": "bfd3e03cb77ca71cb0ab8bd4d2d8fcabf601c3588af2b0887732938316eea06f"
+    },
+    {
+      "file": "agent/tests/shop-potions.test.ts",
+      "sha256": "30af1223589a9330a7e1ff24d3278c30da686fa695885c017e6a63cde70c6fd2"
+    },
+    {
+      "file": "agent/tests/silent-afterimage.test.ts",
+      "sha256": "6de9f3a118c868f980292bc98ba0d80dac75d217fb607935ab9a5f1711535d0b"
+    },
+    {
+      "file": "agent/tests/silent-anticipate.test.ts",
+      "sha256": "568a2689c5f3ca1bb17a60fabb6de2cac87c627a84c43b295f7f3e8f5dc24025"
+    },
+    {
+      "file": "agent/tests/silent-apotheosis-evidence.json",
+      "sha256": "7a596cd15b24709efe9ec1b66771fa2e29b89e3b221c9214fdcb1df7e9245b93"
+    },
+    {
+      "file": "agent/tests/silent-apotheosis.test.ts",
+      "sha256": "def9e8917cf513d1a38211addb5e605966ff81c146231b065d05f4ecc48ea009"
+    },
+    {
+      "file": "agent/tests/silent-boss-calibration-board.test.ts",
+      "sha256": "49d24a124467e2be81025b3f91aa7b5a9f7ca80149ec3d4efda48349b43520cb"
+    },
+    {
+      "file": "agent/tests/silent-boss-calibration-cli.test.ts",
+      "sha256": "6137cdcae0b462bdb80ecea04c7f6ecac3de12da81d490b8c60c480bb7152ac5"
+    },
+    {
+      "file": "agent/tests/silent-boss-calibration.test.ts",
+      "sha256": "7fc86da5c755649259a4064aa47fcf66ee38e486009ed5f5a586acc8a8fbc205"
+    },
+    {
+      "file": "agent/tests/silent-boss-clock.test.ts",
+      "sha256": "06c4b33bc490a76d274c228843b524c235a3b556d5b0bfc020838905b89b3655"
+    },
+    {
+      "file": "agent/tests/silent-boss-facts.test.ts",
+      "sha256": "4100e25476d61d58bdcff73e16773b3dd0e3530c72cb2473cecc0530e15c3212"
+    },
+    {
+      "file": "agent/tests/silent-boss-phase-states.json",
+      "sha256": "d78673686b2a4ff74534b430758f6bb94157c4293dea8c48f1217e62d9319332"
+    },
+    {
+      "file": "agent/tests/silent-boss-phase.test.ts",
+      "sha256": "1d0051c45600e4385ab2de9abbae4a2ac76f6c6e1c3b690699dadc960e802159"
+    },
+    {
+      "file": "agent/tests/silent-build-ties-evidence.json",
+      "sha256": "b0de008f179a4a0d90fa1321c3a0287697e3439fc0ec1687138cfa140f9bd2f2"
+    },
+    {
+      "file": "agent/tests/silent-build-win-ties.test.ts",
+      "sha256": "eb2394c4667246a0b117154dd8da5991bbf4c915a007e1e727ffc48f797b24fd"
+    },
+    {
+      "file": "agent/tests/silent-bullet-time-states.json",
+      "sha256": "3ab3d9eb0f6d93d1595e8d89a9c02585d439ae20803d35067e6d2127dd6e88d0"
+    },
+    {
+      "file": "agent/tests/silent-bullet-time.test.ts",
+      "sha256": "516a35388be09110aab38142ea6d4e815cf6c1f6300c65a14368c509dcc82cf8"
+    },
+    {
+      "file": "agent/tests/silent-burst-state.json",
+      "sha256": "10b65abf6258ae59f6af49e562c4faef57d8c98b313b92735fb59dc0429fdd50"
+    },
+    {
+      "file": "agent/tests/silent-burst-upgraded-state.json",
+      "sha256": "ab57301bf8639f6bdc2907879bf3b03445541cdca6746d7a4a86c46dd4bea297"
+    },
+    {
+      "file": "agent/tests/silent-burst.test.ts",
+      "sha256": "d90aa58634543e77365620cccd9b8e3d3cfbd65ac37cee9293ec630c6897e21e"
+    },
+    {
+      "file": "agent/tests/silent-calculated-gamble.test.ts",
+      "sha256": "27fbfba3426d5f3d9f411607a5e635d3b75adb64832029868b8b2c7b4d75028b"
+    },
+    {
+      "file": "agent/tests/silent-caltrops-evidence.json",
+      "sha256": "26d2b932d1ba3a926335c05f3dadf9df7c7f8e860ab568f4fa2d5794c51b24a1"
+    },
+    {
+      "file": "agent/tests/silent-caltrops.test.ts",
+      "sha256": "497379c20aced07fa98d9a3ab57dfd63f19ad5546740d669b19941e2f4ddf19b"
+    },
+    {
+      "file": "agent/tests/silent-candle-rest-evidence.json",
+      "sha256": "db372281d765aa7768dcd0448470b32bf275eb42dea4c255ec820e1eaf9718cd"
+    },
+    {
+      "file": "agent/tests/silent-candle-rest.test.ts",
+      "sha256": "193fff59b726cf58b905fa3be25dab6ba42a6a24442245d51fd637284e68b11e"
+    },
+    {
+      "file": "agent/tests/silent-corrosive-wave.test.ts",
+      "sha256": "dfaa71d8559c422fa144d25404218a0a24e2dd923aa95a9e0a21d69b860098f9"
+    },
+    {
+      "file": "agent/tests/silent-daughter-wind-state.json",
+      "sha256": "9c501496e42ac897c4fc29c6b562d6025ad9df1128e22c80e71c8c8a54f72fb1"
+    },
+    {
+      "file": "agent/tests/silent-daughter-wind.test.ts",
+      "sha256": "85fecdbb3977b2cd0da28b5e8f5e43b7b8df48691d0e67847f552760d05f0b3a"
+    },
+    {
+      "file": "agent/tests/silent-dodge-roll-state.json",
+      "sha256": "14f1ccda2963805576dcb888bfdd38fac6d597a27888cc7ee9a97bee96d1d7e4"
+    },
+    {
+      "file": "agent/tests/silent-dodge-roll.test.ts",
+      "sha256": "c1bd6c50775ebf483a1968fa5225d66daaffcc6d3c567bee69e7340577804b64"
+    },
+    {
+      "file": "agent/tests/silent-double-boss.test.ts",
+      "sha256": "95e48e2ec37ea8074e11c1ed4757f47c02c056c97fe178e09d8e10f5b743a036"
+    },
+    {
+      "file": "agent/tests/silent-envenom.test.ts",
+      "sha256": "48621c24c8adcccce4216bddec12c30c05709a7a52bc6c17ab1057ab1f34958e"
+    },
+    {
+      "file": "agent/tests/silent-expertise-card.json",
+      "sha256": "7685a5849b7a98ae52f9bc83fda79e3c41f55e8189d0e9cf35c3ead7daea4760"
+    },
+    {
+      "file": "agent/tests/silent-expertise.test.ts",
+      "sha256": "316e2ebb626d1aac6513bfbf5646507f38c73abe89831df520e527678508eabe"
+    },
+    {
+      "file": "agent/tests/silent-expose.test.ts",
+      "sha256": "4035507a3ad734527e58ca02ed328e931cd656dcd4f281874fdacd76f0f70cf2"
+    },
+    {
+      "file": "agent/tests/silent-fasten-evidence.json",
+      "sha256": "4971b80f87de2738f31444779dd4c36a36bda0140faaa6d937a932b3fefb653d"
+    },
+    {
+      "file": "agent/tests/silent-fasten-upgrade-evidence.json",
+      "sha256": "8b8f715be88e956e2caf42399e5d0c0fa74dc8afb56b92d9c0e951b6f26b2933"
+    },
+    {
+      "file": "agent/tests/silent-fasten-upgrade.test.ts",
+      "sha256": "d18ba38428372be19952c7f9ff54394f5ad3c28d9a1269bdbfaa61b2602cb094"
+    },
+    {
+      "file": "agent/tests/silent-fasten.test.ts",
+      "sha256": "d106aae92977e0d54a12bcbb2392fe080398d453cceea33ca6e90dca5b462cf7"
+    },
+    {
+      "file": "agent/tests/silent-finale-selection-evidence.json",
+      "sha256": "8847c8499d2f23b8ef4ea735fff5639d31703cb4885a3c8caf6032c98f4bee62"
+    },
+    {
+      "file": "agent/tests/silent-finale-selection.test.ts",
+      "sha256": "5034356213e17086ad204472ba5b568d8ea0f038a356332a5327692c20819f3b"
+    },
+    {
+      "file": "agent/tests/silent-flechettes-evidence.json",
+      "sha256": "a07caa41aed05e7fd5afa2e9fdda472e4e21d87452d1b470aea3b23320fc1eee"
+    },
+    {
+      "file": "agent/tests/silent-flechettes.test.ts",
+      "sha256": "3872acac520d22b2cec2edbf148d57fc4eef1729b9c2e53e8eb0660d70b0cee1"
+    },
+    {
+      "file": "agent/tests/silent-footwork.test.ts",
+      "sha256": "f76580505af7e4d1883008a250e4c90214828687abc8ca1fc543166ebf7a2863"
+    },
+    {
+      "file": "agent/tests/silent-frail-dexterity.test.ts",
+      "sha256": "c6ed1b9d5e2728a295ab7fadbc38a9f155e4496d6b5fc3facb33845946158f13"
+    },
+    {
+      "file": "agent/tests/silent-haze-evidence.json",
+      "sha256": "a9d10f13e28bd8b8b4bcd4accd8905bcf660629ba5cc10e0da884afcac8a4ae9"
+    },
+    {
+      "file": "agent/tests/silent-haze.test.ts",
+      "sha256": "12f082942f55b07e8ae91780c6c0666fbe9e341dd8adc4e9fe1b90884da5d67c"
+    },
+    {
+      "file": "agent/tests/silent-hidden-daggers-evidence.json",
+      "sha256": "8153e2758829734b02d6e3c7ad9d44ae00b3d7bcf98ddc6d5e048c2f4243d511"
+    },
+    {
+      "file": "agent/tests/silent-hidden-daggers.test.ts",
+      "sha256": "56930f71af4f67812a6e1b108b966b8465c28888fd0055acdade03790949d02b"
+    },
+    {
+      "file": "agent/tests/silent-humidifier-rest-evidence.json",
+      "sha256": "fff841c1ad36f4d06f0ff330f6f87d2cc000c6b6345f60c8a8f7805ecd2bccb2"
+    },
+    {
+      "file": "agent/tests/silent-humidifier-rest.test.ts",
+      "sha256": "bfb3b15b51804aa2b105a960e3649fb1f91630cab28001aabb56c9f186ab7f7c"
+    },
+    {
+      "file": "agent/tests/silent-knife-trap.test.ts",
+      "sha256": "aa8d040cc33925348a51daadd4d788279d68ebffa1c91288ea59755f31863792"
+    },
+    {
+      "file": "agent/tests/silent-lethal-continuation.test.ts",
+      "sha256": "81ef5c9d9212049096d144a9f13fc3a82a78017a21dd14edf4a015e3fe8351a4"
+    },
+    {
+      "file": "agent/tests/silent-loss-reference.test.ts",
+      "sha256": "c5d1d8b25d119da2fbb0a3f6daa168df6d49001b20320dc15403d7f5ca97b781"
+    },
+    {
+      "file": "agent/tests/silent-malaise.test.ts",
+      "sha256": "a1255a540e83727328f753820882acf340cd9f94de38a2a47ad09467beaa8cb8"
+    },
+    {
+      "file": "agent/tests/silent-maul.test.ts",
+      "sha256": "afc2c445041791ee7cded9639daa4f852d3ebcc4e7665de6d38db30e36f55dae"
+    },
+    {
+      "file": "agent/tests/silent-metamorphosis-state.json",
+      "sha256": "a3098f188fb410f4a95903c83e358f63d597df5ff085e056d849200ffa55776c"
+    },
+    {
+      "file": "agent/tests/silent-metamorphosis.test.ts",
+      "sha256": "71a078ed6c875c6cd073e48d7bcdc9d4154b7d6562fca2440ae71a56919903ac"
+    },
+    {
+      "file": "agent/tests/silent-mirage-evidence.json",
+      "sha256": "6565dc85626bb7705a18e7d14d327d916a323288ecaad38f3cfca79783a465fe"
+    },
+    {
+      "file": "agent/tests/silent-mirage.test.ts",
+      "sha256": "db1bf329dca4af2e1013c79d502992d995739138d29df71345b036f67790d4de"
+    },
+    {
+      "file": "agent/tests/silent-obscura-summon.test.ts",
+      "sha256": "1aa96b160441227a767a9dec2cd791d205743d2f484b276254fc2350292915f0"
+    },
+    {
+      "file": "agent/tests/silent-paels-legion-evidence.json",
+      "sha256": "768d4ccc72d3e8c03ec27dcc4e390c366a313f0d99594f710f4a38d3e585fa8c"
+    },
+    {
+      "file": "agent/tests/silent-paels-legion.test.ts",
+      "sha256": "acde1e9f386e2e2ffc0f9489e46d6b4b980f4aee2254be95febdc6606b5307ff"
+    },
+    {
+      "file": "agent/tests/silent-permafrost-state.json",
+      "sha256": "a9751c955ab7dad997c72a061aed51839dddae5b7cafc6b77339ba5733d241b7"
+    },
+    {
+      "file": "agent/tests/silent-permafrost.test.ts",
+      "sha256": "bdc6b41eb61a33ee1fbc8329778734fe0bae2e0dabcec9e331d897c12fc8e652"
+    },
+    {
+      "file": "agent/tests/silent-phantom-blades-state.json",
+      "sha256": "a9056faa1a0b3efccba67a662fac9c16867ab4cb9d2326d906a591ae38a92d7f"
+    },
+    {
+      "file": "agent/tests/silent-phantom-blades.test.ts",
+      "sha256": "18881a600c34bef7b55224b7b4678c324104bd6583cad767a96f9a83505be79f"
+    },
+    {
+      "file": "agent/tests/silent-phase-reference.test.ts",
+      "sha256": "765977fff38b52ce11a7dc39f82e5ee8c8ea06138e513a4a597a9ee565a108ad"
+    },
+    {
+      "file": "agent/tests/silent-phase-sequences.test.ts",
+      "sha256": "a2615446f8f1aab13009ddf9540a4c7fd3df57773566ece6da9fb7b6a740b3b5"
+    },
+    {
+      "file": "agent/tests/silent-phase-window-state.json",
+      "sha256": "16a6c5bfb7d147a6572232952e383a29f72c1e0f0f6f79a4c7d86719fbc85de3"
+    },
+    {
+      "file": "agent/tests/silent-poison-cap-evidence.json",
+      "sha256": "8d2792ce4aa55c20aa585fc43d71de268f17d637291bf80f483428929390f978"
+    },
+    {
+      "file": "agent/tests/silent-poison-cap.test.ts",
+      "sha256": "ddc581593c2c4cac029baac83e79777ff9a81049a801cd0dd1e70c9a8a7cf146"
+    },
+    {
+      "file": "agent/tests/silent-poison-coverage-evidence.json",
+      "sha256": "b112c22dcc0996fd0cfb2874c8e772e18dcd18234760ed5c9c5555b508162b8a"
+    },
+    {
+      "file": "agent/tests/silent-poison-coverage.test.ts",
+      "sha256": "7542abfbdf77198d78ad028a0b3a69b7b7819cdcc35b4a26bd2246ea4168eb6b"
+    },
+    {
+      "file": "agent/tests/silent-poison-dominance.test.ts",
+      "sha256": "20c0c8c3317b520bb2ff95ab31a1ffa78b3f719db55752571f8ad4348bf6dcd9"
+    },
+    {
+      "file": "agent/tests/silent-poison-held-evidence.json",
+      "sha256": "ecac8f35737e53ddaca9b56ac85af68e47f6401d03324a91c107e39a97fa0c61"
+    },
+    {
+      "file": "agent/tests/silent-poison-held.test.ts",
+      "sha256": "12af463f3f9c49488b4dcf489a089f3113033152e083d3595cf12ffdb762e696"
+    },
+    {
+      "file": "agent/tests/silent-poison.test.ts",
+      "sha256": "99eec8a389c57ddbec762add68591deee2ea6aa089e640310cb2ea315ed30d46"
+    },
+    {
+      "file": "agent/tests/silent-potion-provenance-evidence.json",
+      "sha256": "83a28c166a264660066e21816a3c10b8a231a0cd2b30b2655fbc565e7d5047f1"
+    },
+    {
+      "file": "agent/tests/silent-potion-provenance.test.ts",
+      "sha256": "4dafd460981a2f405c60a10fef1e73d18e0c53bb17983be96b78997d54edca12"
+    },
+    {
+      "file": "agent/tests/silent-precise-cut-evidence.json",
+      "sha256": "33a59d7e636c91de4f631e77e585ea82af4a38c4ec92b6dba8f8d14448c1e70f"
+    },
+    {
+      "file": "agent/tests/silent-precise-cut-strength-evidence.json",
+      "sha256": "52d24afeb34a1ae4f5632950f8d7e71fb2ab9c9afb3ff129581371344e8f7ad3"
+    },
+    {
+      "file": "agent/tests/silent-precise-cut-strength.test.ts",
+      "sha256": "38e753fd4f8f93e132d9a9dcdc32671e39473846eac37917803e1cef82619dca"
+    },
+    {
+      "file": "agent/tests/silent-precise-cut.test.ts",
+      "sha256": "4d59df4d3e86618fbf35e50d9a424ae4bc8a843539bde93ee7b0d81063018c9a"
+    },
+    {
+      "file": "agent/tests/silent-regret.test.ts",
+      "sha256": "f9ecf286c5d35dc4522b43f14c7c7fbde7dd6349d5574573e79144f8d802d23b"
+    },
+    {
+      "file": "agent/tests/silent-rest-sim-hp-evidence.json",
+      "sha256": "04ec1325137d5fb8e98d77dedd806af3eaef4a849b43dca08397a1ac95cf6ced"
+    },
+    {
+      "file": "agent/tests/silent-rest-sim-hp.test.ts",
+      "sha256": "3ad80566f468758f90d181adad85683c5a6b5e5385a44eb39f169a18e4e83174"
+    },
+    {
+      "file": "agent/tests/silent-reward-addition-evidence.json",
+      "sha256": "df1c933bd4f797159fa84204884848b946c3051d70c3866feb00b686b7f8a77a"
+    },
+    {
+      "file": "agent/tests/silent-reward-addition.test.ts",
+      "sha256": "416bac6d87149a7728dade264816cd2de04186705f1743867c1bc010976567f9"
+    },
+    {
+      "file": "agent/tests/silent-route-relic-evidence.json",
+      "sha256": "cf10e810c0f372e8d36ce55a501ec4663a593f5d5b7d2ebf59dcc8c944428cd1"
+    },
+    {
+      "file": "agent/tests/silent-route-relic.test.ts",
+      "sha256": "4be92c4ba63bf6a14d5a24dc3a53f161a1e58da07e29809e979156f0c17acc63"
+    },
+    {
+      "file": "agent/tests/silent-serpent-form-state.json",
+      "sha256": "3b90e40c038204ec05843a59e1921ec730d1aaa8187df1cea9da7cd7281558db"
+    },
+    {
+      "file": "agent/tests/silent-serpent-form.test.ts",
+      "sha256": "10bdaede7ed95c03249627dba0329c3461e2e337cd370db052242eab174eb273"
+    },
+    {
+      "file": "agent/tests/silent-shadow-step.test.ts",
+      "sha256": "8d9ae3e42b8b610a7361a3a04b50e8304a3cb79159f6ab92092250cda6c6ddbe"
+    },
+    {
+      "file": "agent/tests/silent-shadowmeld.test.ts",
+      "sha256": "9a435ad3a4404b57ee1bb20e0a5fc3fb618dc0d9d1c091257b5511a41f5f692b"
+    },
+    {
+      "file": "agent/tests/silent-simulation-reference-evidence.json",
+      "sha256": "4e93fdce19f2ff47f5af289c9dc60398b4d19d8b8fd4f40b9e1da302fbc372f7"
+    },
+    {
+      "file": "agent/tests/silent-simulation-reference.test.ts",
+      "sha256": "e92f1ce268dd1292014d013f1fc0c3e7ed8d96d5383f1b48ffa74e4ca6d9568b"
+    },
+    {
+      "file": "agent/tests/silent-single-action-block-state.json",
+      "sha256": "b18b4c9cbf26d2878a1c1673d78c8e1cbdb01cb30cfee4963e57b074a2864c80"
+    },
+    {
+      "file": "agent/tests/silent-single-action-block.test.ts",
+      "sha256": "4cd4024a062ab1653388be859b5af9ea81a20e45dbfd084a374b1324238de043"
+    },
+    {
+      "file": "agent/tests/silent-single-action-weak-state.json",
+      "sha256": "dcd6188e4359d429a2e3e8d1683510de74be4ff25baf85a1919bdbcea0121324"
+    },
+    {
+      "file": "agent/tests/silent-single-action-weak.test.ts",
+      "sha256": "16fb71299497aea35f00f208efe5372e43b0b7e548e3e2ed626451d33bb0d060"
+    },
+    {
+      "file": "agent/tests/silent-sl-poison-stun-evidence.json",
+      "sha256": "9709bc47b278424ea94072e74109c4021e694377fce490727dc8a1106af8a026"
+    },
+    {
+      "file": "agent/tests/silent-sl-poison-stun.test.ts",
+      "sha256": "5f8ed101d01c084f1a28936093f5399a81c29a9b528a84d56b30bca3bec762fe"
+    },
+    {
+      "file": "agent/tests/silent-slippery-poison-evidence.json",
+      "sha256": "51bcd43a5c7def63bb24c734c1e38f784cb0dc05c90a36924ca5fc5611e8b1f1"
+    },
+    {
+      "file": "agent/tests/silent-slippery-poison.test.ts",
+      "sha256": "cbd6a74a73fe0cc6debf9859f92932816c0dd169d3664ebac50285fd6ba8c077"
+    },
+    {
+      "file": "agent/tests/silent-sloth-replay-state.json",
+      "sha256": "f20fa28ad58b6ebb47ada990f0bade70b1439ae93f7ec62dbab1cf3269fb52af"
+    },
+    {
+      "file": "agent/tests/silent-sloth-replay.test.ts",
+      "sha256": "d3655b35368e555301b4ee45b111d61ddc934c8155310ccdbceab07dffcbfe67"
+    },
+    {
+      "file": "agent/tests/silent-snakebite-evidence.json",
+      "sha256": "42270ec62faf505bf2e17bc4038e2a97c147bf18be054e8bf175975244a8c371"
+    },
+    {
+      "file": "agent/tests/silent-snakebite.test.ts",
+      "sha256": "3ac766b180f09c4ebaa3fadfc9e8abfc36f3506e89c78a50a4ad27b7421895e3"
+    },
+    {
+      "file": "agent/tests/silent-snecko-fumes.test.ts",
+      "sha256": "71092028408a7251d24446873baa04069be336663e15acd1c00d04d8b6da41af"
+    },
+    {
+      "file": "agent/tests/silent-stun-gap.test.ts",
+      "sha256": "4cf2726f6f2a4d6c3b2d9d47c7d4de7e7695711372d309ecab1f34ba6940c7ee"
+    },
+    {
+      "file": "agent/tests/silent-tent-rest-evidence.json",
+      "sha256": "b39e3f44c8621b4e65cf49c8f5bb928e37ceb94cb8efebac6d5894b0b08d42a0"
+    },
+    {
+      "file": "agent/tests/silent-tent-rest.test.ts",
+      "sha256": "514238658a72bbeb8ba9056f38da4e1fd6b0482268ac98534754405f1946379e"
+    },
+    {
+      "file": "agent/tests/silent-tied-loss-state.json",
+      "sha256": "301f4866044d5c048fa81b7ade5de42345876ea9d8bfe49ceaffa67b911199c5"
+    },
+    {
+      "file": "agent/tests/silent-tough-bandages-state.json",
+      "sha256": "29286715510a6c1f62bf5e65a2da21b7d793aa820c1285e5ceb022c325f5359a"
+    },
+    {
+      "file": "agent/tests/silent-tough-bandages.test.ts",
+      "sha256": "4183021213d5766759d30bb380c8730f07e4cc37099b3bead36b480a162c7f9e"
+    },
+    {
+      "file": "agent/tests/silent-tungsten-rod-evidence.json",
+      "sha256": "f5a32a69e66bfd1771e6b5aa0e756b509bbd27e1b948adad5a639f7c2e20f416"
+    },
+    {
+      "file": "agent/tests/silent-tungsten-rod.test.ts",
+      "sha256": "f6cd3cfc8a7f8f60375c4b495e26ab54f0c6323625811177c3fef139df912306"
+    },
+    {
+      "file": "agent/tests/silent-tuning-fork-state.json",
+      "sha256": "de87597784c6288e0422e72768dfd6ff311044e10239a663259ee89db146dfd1"
+    },
+    {
+      "file": "agent/tests/silent-tuning-fork.test.ts",
+      "sha256": "7fc66c6d589015c19242261b040c892b8235af3c60aed6eb8654746fb77c0fa1"
+    },
+    {
+      "file": "agent/tests/silent-upgrade-preview.test.ts",
+      "sha256": "a2a0aaadec7664b31556ef0f1829e6e2e0a57aa50a9f958e807b74e21d08cca4"
+    },
+    {
+      "file": "agent/tests/silent-upgraded-malaise-cards.json",
+      "sha256": "4fce5cc8217a1329d2b8901c44946bac103d16188a2fda87edf9bc0ad1279636"
+    },
+    {
+      "file": "agent/tests/silent-upgraded-malaise.test.ts",
+      "sha256": "d95c96d2c83c2dd1a2b08516798c1f2f9f0b8ea2587918b079dce1fd67138c40"
+    },
+    {
+      "file": "agent/tests/silent-upgraded-wave-card.json",
+      "sha256": "106e48e87651c45f0ff64eb6dfaf643008c43e73c4fd171358c59c68bb2da3fd"
+    },
+    {
+      "file": "agent/tests/silent-upgraded-wave.test.ts",
+      "sha256": "eb4e05f22dfbea326cfafcc56629ab89c35ee4b1f53e539ab17199eac542810f"
+    },
+    {
+      "file": "agent/tests/silent-vambrace-frail-evidence.json",
+      "sha256": "5058346f8b0c0b7ed423c46c64c05fd4c4f06e62c68e241d4131deba3cf117ab"
+    },
+    {
+      "file": "agent/tests/silent-vambrace-frail.test.ts",
+      "sha256": "5f9285b934e6a0251c1124317aa3e52d32e532e8d4740b57326bf72cea253b62"
+    },
+    {
+      "file": "agent/tests/silent-wither-replay-state.json",
+      "sha256": "9243b1ab03c57fa418c22052f6267d0a233e0de7ca49bdd7e18a10c0efdfbec1"
+    },
+    {
+      "file": "agent/tests/silent-wither-replay.test.ts",
+      "sha256": "92609752a7116f4306d743eec2fbb83f362c73b03562b7b62aa1880108917112"
+    },
+    {
+      "file": "agent/tests/sl-any-draw-data/24uz-f17-t12-shrug.json",
+      "sha256": "7e4de11381f275a1f30b2e739c89047a547e34c4e66d3f631937dbd1273f5724"
+    },
+    {
+      "file": "agent/tests/sl-any-draw-data/game-data.json",
+      "sha256": "4984b749b6f32a63740bd3eaf75bd31e4e2d2971757227371b65153137fe40c1"
+    },
+    {
+      "file": "agent/tests/sl-any-draw-data/make-fixtures.ts",
+      "sha256": "9ff835b2d06d97c2a75257ff684c3bd50a4d5abcd4c4c5b6e3916e8e2130c074"
+    },
+    {
+      "file": "agent/tests/sl-any-draw-data/njsz-f25-t9-battle-trance.json",
+      "sha256": "cd8fff2ac266c5bd8f9dbf5d5dabf7cb2a32772b3b3c29d256b17fb9aeb5482a"
+    },
+    {
+      "file": "agent/tests/sl-any-draw-data/pinned-knowledge.json",
+      "sha256": "a293c100755905240f6107c0be52823a4d93f5e3b79a32af54b0718b2a0df92b"
+    },
+    {
+      "file": "agent/tests/sl-any-draw-data/r764-f33-t10-offering.json",
+      "sha256": "e34b628554cb1ca0074a743c17946be6d37b8523c3b530e7ecd27e6d647c1095"
+    },
+    {
+      "file": "agent/tests/sl-any-draw-data/w5pt-f33-t9-no-draw.json",
+      "sha256": "66e73978d342d38557ead289102911685a8f5fb78767c4f60e6ba096f396f5ae"
+    },
+    {
+      "file": "agent/tests/sl-any-draw.test.ts",
+      "sha256": "a968655d04a32fcb68cb8b19e2d2b7fff8661608c26c257c98719761ec824b3c"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/c4f1-f33.json",
+      "sha256": "e555a1977627071b2de1830d7a7635644beec14ff78d0f4d1e7204d12270d301"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/h1fa-f2.json",
+      "sha256": "6ae955b993dda2d4fed174c3d8b8d648f1684575fc063ccddbe48b4de70611e1"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/jw92-f12.json",
+      "sha256": "ddf545d5237b572b4737fd27e044b5c8a222f257bb6602890ba0cc670aa0b11c"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/m6p7-f29.json",
+      "sha256": "3a248b7ecf4e5727c1e2400f103485c47c3fa700f4a1c40d419273416c770825"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/make-fixtures.ts",
+      "sha256": "eb1d1d509b45a57c0da52c3a892307fc5a74f5a001b080366bbf2274afaa7ca9"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/p68p-f25.json",
+      "sha256": "a76271485884d7c7522bcf8074e3737a70b59a48110bfad9fdef4e33280068f4"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/rjzg-f33.json",
+      "sha256": "40983a85ae4a27d37d00714e026385600041414a7cfca7e701525fd570db8756"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/rntvat-f38.json",
+      "sha256": "174938cfff685112d726d25e80a9be07e2fd3f17dbfb76bdc586c11624bdffce"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/vbhz-f20.json",
+      "sha256": "ad45ebb6c28aae76246700c9249ed3f86cea52abceede6d82919abadefe90e7d"
+    },
+    {
+      "file": "agent/tests/sl-draws-data/vtre-f2.json",
+      "sha256": "ada083065f469c1c417ef82b64f6ac64cc9020c3929c42f43a47005497e76e06"
+    },
+    {
+      "file": "agent/tests/sl-draws-offtop.test.ts",
+      "sha256": "8f4f79731763e02b21fd112fa89a7aa7b5145be8f8fb8f968b4b94d475acc1a8"
+    },
+    {
+      "file": "agent/tests/sl-draws-pommel.test.ts",
+      "sha256": "6eb9d9dc12aa1e62a01fa2aa5cb95348164a186ea8cbd9c2911466a5f70f0495"
+    },
+    {
+      "file": "agent/tests/sl-early-data/5bxm-f31-t6-pommel.json",
+      "sha256": "e9f3b67a7a0f8ed435dc85609c1fe8d2881b06cd7668fd04c5f22d4974601539"
+    },
+    {
+      "file": "agent/tests/sl-early-data/7dxa-f23-t7-calendar.json",
+      "sha256": "ebea63b5cac6c25a3a9457df2764b818f614e5013194698c916514f942c73ba9"
+    },
+    {
+      "file": "agent/tests/sl-early-data/90jg-f17-t12-true-grit.json",
+      "sha256": "bc13019105339fb62593ed9adb36dd46d0616c4b497640dec87c54ce79c205a4"
+    },
+    {
+      "file": "agent/tests/sl-early-data/ejxc-f33-t2-frantic.json",
+      "sha256": "a2ab1a311709ae59dca0e9b936c39f68b1d14c2f3eda524bf710157f6a505dc0"
+    },
+    {
+      "file": "agent/tests/sl-early-data/game-data.json",
+      "sha256": "cde3a79958dc1013588cbffffb6c1a6ebcd8b3f967abe0782fb585c164ce4cb2"
+    },
+    {
+      "file": "agent/tests/sl-early-data/make-fixtures.ts",
+      "sha256": "bc5b0978718fb7fc8e9d0879a7bfe4de8ef4dbc321a9bdf061d3188b2226a1a1"
+    },
+    {
+      "file": "agent/tests/sl-early-data/p57h-f22-t5-certain.json",
+      "sha256": "c892ed6af9f4f10a1a8a1061bbfb914ade10028c06955177a8a7bc9cbe3de62f"
+    },
+    {
+      "file": "agent/tests/sl-early-data/pinned-knowledge.json",
+      "sha256": "811b72a48ca808d6ec3b8c89f141380a93d07e59f337914a67f7ff38a73a0aba"
+    },
+    {
+      "file": "agent/tests/sl-early-data/tmnf-f48-t8-wither.json",
+      "sha256": "92d2869dc448e6ab09d207d883b143ee798bbf15c8c1d64135a187ca10a5187c"
+    },
+    {
+      "file": "agent/tests/sl-early-data/y3xt-f48-t7-remnant.json",
+      "sha256": "f8d15abd429715816221ff164bd348799608a3a9d69215f67fc01efcb227d3a1"
+    },
+    {
+      "file": "agent/tests/sl-early-data/z7d7-f28-t6-gamblers-brew.json",
+      "sha256": "066531477b6435d99a411924cdd87d25e476d2de4e10382b8b137f129ce6c446"
+    },
+    {
+      "file": "agent/tests/sl-early-planner.test.ts",
+      "sha256": "680e9cb44b374afdfbf8c51ee16ad9b043e8ca9040446f1fbe1982e5519782a6"
+    },
+    {
+      "file": "agent/tests/sl-early.test.ts",
+      "sha256": "c98904ffc4b4ae9f9289556aa9ed24d07a1a4da1d411c041a053ac549cb97dc8"
+    },
+    {
+      "file": "agent/tests/sl-explore-b2.test.ts",
+      "sha256": "ccfb7641e2b0a63fa1598dd623177caee07616877001598b5f117c1f7c60542d"
+    },
+    {
+      "file": "agent/tests/sl-explore-canon-data/game-data.json",
+      "sha256": "f1627ead3f12a9ec8c7a5bcac8a50b66a90a028ac5f62292bd1c23b9dd3438c3"
+    },
+    {
+      "file": "agent/tests/sl-explore-canon-data/jsa5-f48-t1-demon-form.json",
+      "sha256": "848a6496d2a6a3777fb2d3a1930f7a3b90b8565a626c94393aa12e6d6c8a1344"
+    },
+    {
+      "file": "agent/tests/sl-explore-canon-data/make-fixtures.ts",
+      "sha256": "5b8b0c87ceb53e0607e83e1b6ac93fa524b26d5257ce14de2a05576b2d295842"
+    },
+    {
+      "file": "agent/tests/sl-explore-canon-data/pinned-knowledge.json",
+      "sha256": "f738cbe15defc14397be456d64f31dc05ccb84b8894911dafc8a16eec1921ecb"
+    },
+    {
+      "file": "agent/tests/sl-explore-canon-data/uk7r-a4-t2-deviation.json",
+      "sha256": "ea23bda114a37b6a030e0bbf85880d0b83b2fd7b2f56ce8f7ab90b292dbadb13"
+    },
+    {
+      "file": "agent/tests/sl-explore-canon-data/uk7r-a4-t2-replan.json",
+      "sha256": "ac0f2e523a6e751962fbcdfd61f7d25020127814cfa32a02771ceb23048935c4"
+    },
+    {
+      "file": "agent/tests/sl-explore-canon-data/uk7r-a5-t1-hemokinesis.json",
+      "sha256": "e9ad302e0b14a4bb2ba58b47ceb848a6310fd24f1fa432646aa6c79c3ce2658a"
+    },
+    {
+      "file": "agent/tests/sl-explore-canon-views.ts",
+      "sha256": "7b0e9da7ef43bad6624798f1bda94e995bf8e67a0cbdb8674deb53fe3e1441e6"
+    },
+    {
+      "file": "agent/tests/sl-explore-canon.test.ts",
+      "sha256": "65fccffd95a936f70b99bfbebb2b5ea259721940fb6ef66fc97f0d3faadf1aba"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/3b4k-rows.json",
+      "sha256": "81ecfb52fabcbbf9edaa42a29784784aa6166fbd599f935f62deb4d1718f06d2"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/abcj-a1-t7.json",
+      "sha256": "36a80e2fcefff22b09adafa2a1e5711bc25e639ed362c9a8d1ae6e821304cc1e"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/abcj-a4-t4.json",
+      "sha256": "73fefd184106e291bdb5596e9f0e23086a689acdd3cd42fbaaba65e25df01baf"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/abcj-a4-t5.json",
+      "sha256": "efbdc198ef7b8c555084d6a18a558ac3c2d6dbeb3518f4dcbd0604a61446aefa"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/abcj-rows.json",
+      "sha256": "34e22acd8df212dfc1f11bad0b85907bb2c2daeb82d14d14613c079c2738851a"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/akk0-rows.json",
+      "sha256": "eac521e78e3b0ac0768dd773b066f83eac633e855bc52b17c46a33aeb36f3c05"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/game-data.json",
+      "sha256": "3dd9498ece5aadb63846c13b3c16085391bf184c5bd062830dec6897f578bf2d"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/make-fixtures.ts",
+      "sha256": "cea179e38c3eef3d84ce5ff19c3d336cf52fad4dbfc984ef9a07e1bc8073b1b9"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/p68p-rows.json",
+      "sha256": "5a326dbfd11deea1abcea0d2c7ce3e350cc1fc7fdd353009b87423da822706e4"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps-data/pinned-knowledge.json",
+      "sha256": "75d65b14d2ecc12b79b87b28de60e08470cfd329b5a4c2ab1ca8c3deffc74bc4"
+    },
+    {
+      "file": "agent/tests/sl-explore-gaps.test.ts",
+      "sha256": "5e704ce3d380fbcec774c4bb7046a5b7624148f352704860defcafd1b7457f25"
+    },
+    {
+      "file": "agent/tests/sl-explore-potion-data/game-data.json",
+      "sha256": "60dc951471bd75896100b81f105c5727c6082f021744fba9f35087e20968f195"
+    },
+    {
+      "file": "agent/tests/sl-explore-potion-data/make-fixtures.ts",
+      "sha256": "3050361ad44c14ea287e3f06cbd00c596ca458bda516387ae095e2e1ab8148c0"
+    },
+    {
+      "file": "agent/tests/sl-explore-potion-data/p68p-a3-t2-deviation.json",
+      "sha256": "291dafdf071c5e57273ddda3f7285add94a8802139e15418901504c2a8dc3818"
+    },
+    {
+      "file": "agent/tests/sl-explore-potion-data/p68p-a4-t1-deviation.json",
+      "sha256": "cb93288785d82547e9baf6e16187103a672911e6db5de6e95b8ad3b56804a101"
+    },
+    {
+      "file": "agent/tests/sl-explore-potion-data/p68p-f48-rows.json",
+      "sha256": "5a326dbfd11deea1abcea0d2c7ce3e350cc1fc7fdd353009b87423da822706e4"
+    },
+    {
+      "file": "agent/tests/sl-explore-potion-data/pinned-knowledge.json",
+      "sha256": "a7edcecfe53acbb7e6b1de5e974f3d7b242cdf32ad5eb8734bddc7f6ce738cc0"
+    },
+    {
+      "file": "agent/tests/sl-explore-potion-views.ts",
+      "sha256": "459df91a1418eb3459e49d5c26842739e9c73de6f065a27f88c3fd51c0728985"
+    },
+    {
+      "file": "agent/tests/sl-explore-potion.test.ts",
+      "sha256": "d3c821e2a39f9464fbfad564c9b2b3290d148259ec7966dd6ae6bddc1ff2f0fb"
+    },
+    {
+      "file": "agent/tests/sl-explore-second.test.ts",
+      "sha256": "19532417f261b1bd9b1f98dd6a3fa4293bdcb1daf93b9e7405a238fc75651f31"
+    },
+    {
+      "file": "agent/tests/sl-explore-where-data/sl-attempts.jsonl",
+      "sha256": "5ace9fc929dd0c9b34b1945228699114da45f303dd406e8505676f321dec5bbb"
+    },
+    {
+      "file": "agent/tests/sl-explore-where.test.ts",
+      "sha256": "caa5faba51a241083f4dc8b400e2dd4de0271ceeb24b5dada9c4a269558dbc06"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole-data/game-data.json",
+      "sha256": "23bf681ae302c8ccbef614f1c647a43b2059cf22fb90ba267be05f4737f98ebe"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole-data/make-fixtures.ts",
+      "sha256": "c5157481748e0566e19f4fca8cbd394b1b337bba3f2510b37220a068774f0583"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole-data/pinned-knowledge.json",
+      "sha256": "3e516a1d0ea852b12a042654c643aec2bc78b9b6fb7d88a3e27d638622f9c7c4"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole-data/pw7y-a3-t1-deviation.json",
+      "sha256": "ad53b7739859f191ee86821031d36530507fa7b45fd7be9f415d893c9a3b1030"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole-data/pw7y-a3-t1-replan.json",
+      "sha256": "1f92f2cc4ae0fb7d2884ca1a9f369d86c049185d1f53be0333a5406276f4f057"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole-data/pw7y-a4-t2-deviation.json",
+      "sha256": "e91da692f0c65d07a9b7bf663914db614e96253e8f474459be9dfd0b75dba701"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole-data/pw7y-a4-t2-replan.json",
+      "sha256": "d0be52b431cee2de97d4109a404231abe39f57245beb6cae75ce393a576e2363"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole-data/pw7y-f48-rows.json",
+      "sha256": "3770ca0101f919c538a5eb7a13cd3aff2f3631a269c82e1f3d22e715a7dada2b"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole-views.ts",
+      "sha256": "7e34534e312018e72c82443c2876ccb5e9ca4ae1765e3074b8d60167f5992613"
+    },
+    {
+      "file": "agent/tests/sl-explore-whole.test.ts",
+      "sha256": "54ae3e1d05da095ce0f91ed64e950d4080f91c2ce2e08337e5d673c114b310a4"
+    },
+    {
+      "file": "agent/tests/sl-explore.test.ts",
+      "sha256": "8031de89d4624bc8cb6c008834e20da176861280e5b680a2c1664fa8a4bf9ce2"
+    },
+    {
+      "file": "agent/tests/sl-giant-judge.test.ts",
+      "sha256": "54c46b4dcef5e4da0b7e391ab231a1d476b6b5e22d5864141a16ae2cefc343e9"
+    },
+    {
+      "file": "agent/tests/sl-inferno-judge-data/boards.json",
+      "sha256": "510cef74b0bc9de94d6d39918d8aac6516984606681bed212918e36240cb6888"
+    },
+    {
+      "file": "agent/tests/sl-inferno-judge-data/game-data.json",
+      "sha256": "33fd613c65487b9c5858d5fa1d231dceccf10f8d293a3022e16be567340bad3a"
+    },
+    {
+      "file": "agent/tests/sl-inferno-judge-data/make-fixtures.ts",
+      "sha256": "065546951b87fa45ff63499a53c684a09ce63c7ce46be6fdc5bc5b8c43910838"
+    },
+    {
+      "file": "agent/tests/sl-inferno-judge.test.ts",
+      "sha256": "9ac556c40a1ef265c1fea9f0fcbe6ad3d6430a5b1f55712af328d4d94763954c"
+    },
+    {
+      "file": "agent/tests/sl-judge-bounds-data/boards.json",
+      "sha256": "15c80dfea688fbc8369676e131e2d6e376f9cc0823b56bb0ada04ebc8f296494"
+    },
+    {
+      "file": "agent/tests/sl-judge-bounds-data/game-data.json",
+      "sha256": "dec0ffa2752475c45af855b4a52d4322ce1978fbb7e27f2563ed78b1b74fa8ba"
+    },
+    {
+      "file": "agent/tests/sl-judge-bounds-data/make-fixtures.ts",
+      "sha256": "7a716a05a40fc48e3dfe373e5cb400cd0addc4bd6e517b9f3c0867946a45474b"
+    },
+    {
+      "file": "agent/tests/sl-judge-bounds.test.ts",
+      "sha256": "8ebc30ba28797d0f78e7f558bf57e10e45cf8f574dadc5831bc45d84ad05f634"
+    },
+    {
+      "file": "agent/tests/sl-loop.test.ts",
+      "sha256": "773acce85488d5d4c6cee05af8eaf440bfa4774df59b35dce93a1c781a2c24de"
+    },
+    {
+      "file": "agent/tests/sl-replay-data/game-data.json",
+      "sha256": "8415c928d6064b27ab2a11056ebae139eddd978e9903078fa1f51d099ffa608d"
+    },
+    {
+      "file": "agent/tests/sl-replay-data/j4s28-a3-t2.json",
+      "sha256": "2c402e684a92fba4a5afc33aeca1a0d3c8597e451dbef98fb00c970a786c6220"
+    },
+    {
+      "file": "agent/tests/sl-replay-data/j4s28-f33-rows.json",
+      "sha256": "015311cbdfa39dfdf156632b4dadf41c558ce6d9353ad7bc715575e5dbf4da78"
+    },
+    {
+      "file": "agent/tests/sl-replay-data/make-fixtures.ts",
+      "sha256": "7c6fa5bdd4431b12e27382aa28cdda2178b398d209a35c6c4dbf066739da896d"
+    },
+    {
+      "file": "agent/tests/sl-replay-data/pinned-knowledge.json",
+      "sha256": "30a61222a905c08e942e276c269611cd35ed6b0088c8255cd7e2e204e384e314"
+    },
+    {
+      "file": "agent/tests/sl-replay-plays.test.ts",
+      "sha256": "dfc86b951db5b7a2fff1b6ab37b3a783fae9d982c4ee9577cd37d1e4adcfdc91"
+    },
+    {
+      "file": "agent/tests/sl-retry-data/game-data.json",
+      "sha256": "2d5e01f715c86ea13041b88239798a3cb4cf2fb7365b09b2d1321e5214751f3c"
+    },
+    {
+      "file": "agent/tests/sl-retry-data/jw92-f48-a2-t3-offering.json",
+      "sha256": "9adbeab3a692e3249d3727e3b0fb1257ef5308b5b0f26c02b9afe4c5068161ee"
+    },
+    {
+      "file": "agent/tests/sl-retry-data/make-fixtures.ts",
+      "sha256": "4f1b23a1391a96862a1f6654eaf5fdc1a490ef0f9098918619cf065c26a84a49"
+    },
+    {
+      "file": "agent/tests/sl-retry-data/pinned-knowledge.json",
+      "sha256": "da16c1b7669654a25a454e52148f79ec33bea4956070e2e5b76fc62b6720d6cb"
+    },
+    {
+      "file": "agent/tests/sl-retry-data/vnkn-f25-a2-t1.json",
+      "sha256": "7aa66ad947b2648580610f933bcb73d8076acf5039d582b8c0caebf9169116b4"
+    },
+    {
+      "file": "agent/tests/sl-retry-data/vnkn-f25-a2-t3-pact.json",
+      "sha256": "a9016c0c7cb34db0f86c88cff92eaad276c56804458d5529d4f63e1e6fd7df85"
+    },
+    {
+      "file": "agent/tests/sl-retry-data/vnkn-f33-a2-t4-shrug.json",
+      "sha256": "e3248630a1724ef123bcc0e6049e0bb3d973890ea2b65e6e06537a28c7ec2cbd"
+    },
+    {
+      "file": "agent/tests/sl-retry-planner.test.ts",
+      "sha256": "ee3bababaec6a17032ac0c5a58f72cde7a4884f58195a2afe4e18da8d145acb8"
+    },
+    {
+      "file": "agent/tests/sl-retry.test.ts",
+      "sha256": "0f6ede824cc706732090131f5bcca6e94ad0c1e6b963d3dfb9b0baee60e2c615"
+    },
+    {
+      "file": "agent/tests/sl-revive-judge-data/boards.json",
+      "sha256": "02265cbcd6dbea9188d6df4027ee9343ee7b9308820cf76021aa63d7056af227"
+    },
+    {
+      "file": "agent/tests/sl-revive-judge-data/game-data.json",
+      "sha256": "f831723fc236d176a95a9ad170ad8d55953fbed3cf65ff82c04c0abfc2a789bf"
+    },
+    {
+      "file": "agent/tests/sl-revive-judge-data/make-fixtures.ts",
+      "sha256": "ad1fff521cda9b226400502dcdbe1e8066b1b618f17538cc8c78e84921750426"
+    },
+    {
+      "file": "agent/tests/sl-revive-judge.test.ts",
+      "sha256": "0b4e931b98b7c3bac18d939684a2031b77471deb53e28c0279deb3aa723b6668"
+    },
+    {
+      "file": "agent/tests/sl-sandpit-judge.test.ts",
+      "sha256": "982c518b6d02cf623377e25abde95d056ebc9bfc52bee62090f60d96821eb209"
+    },
+    {
+      "file": "agent/tests/sl-second-data/7tqf-f33-t4.json",
+      "sha256": "ec7f403f84a985153a2e5abf870ba7faa4bb670604ddfbf3c18c68cc39366e03"
+    },
+    {
+      "file": "agent/tests/sl-second-data/7tqf-rows.json",
+      "sha256": "f38a40784f055f87c5664a70da6e2ec237c5b779a64bbfa76203ed2b4fd039c2"
+    },
+    {
+      "file": "agent/tests/sl-second-data/make-fixtures.ts",
+      "sha256": "87718c6b3195ca2ea3c0e11a63384c8dc1f4d841aec6263bc58cb0357cbccbc1"
+    },
+    {
+      "file": "agent/tests/sl-support.ts",
+      "sha256": "192cd97726a54fe3c256ab7c442d1253c77d09fe836be74dab4eb754f4a1b247"
+    },
+    {
+      "file": "agent/tests/sl.test.ts",
+      "sha256": "970a479bc75a6d8205f27cf1700d7e21db7ce2d06bb941857bd76e3b4c7bd231"
+    },
+    {
+      "file": "agent/tests/strategy-no-change-evidence.json",
+      "sha256": "d2c1c06a8137482bfda8cb5ff2e06f7b286a07febddf2e56b5ea6b8161652207"
+    },
+    {
+      "file": "agent/tests/strategy-no-change-path.test.ts",
+      "sha256": "0ef33b695766198f7a1e954da3301782cb2d951731d1bdcc4244885c099009fb"
+    },
+    {
+      "file": "agent/tests/subscription-usage.test.ts",
+      "sha256": "7c195332f5ca4c768774ffe453e233c64fae95d4ccac6a3e2f229c67dfecc57f"
+    },
+    {
+      "file": "agent/tests/support.ts",
+      "sha256": "ebe2573089d514e7a3fffb1022cc46b9fe29c00b3ed454109dffb9f661879646"
+    },
+    {
+      "file": "agent/tests/target-options.test.ts",
+      "sha256": "53a7bceb145b98822eebb8c20da228f5b666013a0b7c00e3273680b63b3ff605"
+    },
+    {
+      "file": "agent/tests/template-target-data/7dfb-f48-t7-mad-science.json",
+      "sha256": "599bd8aae3be72c8b18f5188a124a9d1f40786358890d09582e188c132cd973e"
+    },
+    {
+      "file": "agent/tests/template-target-data/game-data.json",
+      "sha256": "366ace57845a1c66f87d993b64eb987a34ebc4a6759ea6c92b7f8bdb4da92378"
+    },
+    {
+      "file": "agent/tests/template-target-data/jj75-f48-mad-science-expertise.json",
+      "sha256": "cb5de6ff2a1ad2f547f4046f53508d18ee566c2b706eafea36bcf8b5b1da1218"
+    },
+    {
+      "file": "agent/tests/template-target-data/jw92-f30-t1-primal-force.json",
+      "sha256": "a96adb3df54bc4ab711bee1f3fd20e2b7a9c63a8f1b03f4c4321e6afd2010943"
+    },
+    {
+      "file": "agent/tests/template-target-data/make-fixtures.py",
+      "sha256": "1fb9072cebd5f0483d120880cd2769ffa5bcffaa709a511371e21a4c0f59da48"
+    },
+    {
+      "file": "agent/tests/template-target-data/pinned-knowledge.json",
+      "sha256": "269c7a1c07a810e417b8c2aab819ec7629839e7ca7a07d3c149789af0b2b37c0"
+    },
+    {
+      "file": "agent/tests/template-target-data/pw7y-f44-t1-true-grit.json",
+      "sha256": "10289de3021e156665e766a9718439e39ea21d12af6cd96725867a7b1854910e"
+    },
+    {
+      "file": "agent/tests/template-target-data/rntv-f30-t1-cloak.json",
+      "sha256": "95cccbedcd8bdcac944eb01306a472237b5653c1879be283465d03d05a312b74"
+    },
+    {
+      "file": "agent/tests/template-target-data/rntv-f30-t1-shiv.json",
+      "sha256": "066f13c70d08f1bfba74d0c50fded13905d700c58178ada3355b300dcd29d84e"
+    },
+    {
+      "file": "agent/tests/template-target-data/rntv-f33-t1-shiv.json",
+      "sha256": "8dba9ebb54f036d2d296fd6e3fec997bee0fdb2b3e936fc892b0899816c7a737"
+    },
+    {
+      "file": "agent/tests/template-target-data/rntv-f38-t1-defend-shiv.json",
+      "sha256": "4e157a11541cb3c809527425eb8fed37c38671d007d1b285708b09d0816c84ab"
+    },
+    {
+      "file": "agent/tests/template-target-data/rntv-f38-t1-shiv-code.json",
+      "sha256": "e4d16a2a4bd1e62f01626e57aa5d504d26abf2b792015ff0b263f4a57a5b322e"
+    },
+    {
+      "file": "agent/tests/template-target.test.ts",
+      "sha256": "85b2b6a3e0ca7295d38f8b59ddd936ff3202913740c329dd4d51b8d150916577"
+    },
+    {
+      "file": "agent/tests/thief-card-value.test.ts",
+      "sha256": "3bfe1a3c6d8ecbd129f322288796805fbd2f3de6047a1e6c9a1e629b3aa93f93"
+    },
+    {
+      "file": "agent/tests/thief-cost.test.ts",
+      "sha256": "93f677e6123080170c10b1f956f954e896abd6d1186dd959164d4cf6b254bbe1"
+    },
+    {
+      "file": "agent/tests/thief-data/4lc3-f21-t4-hopper.json",
+      "sha256": "4916e6b307931fcbb6fdcec0621273450d15ea9952f32367bda18b7403156413"
+    },
+    {
+      "file": "agent/tests/thief-data/8v0h-f19-t5-hopper-escape.json",
+      "sha256": "3d43f635e1b128289668122f18993571339d2275e24188731d68adb755120801"
+    },
+    {
+      "file": "agent/tests/thief-data/game-data.json",
+      "sha256": "4772194e7ed242d7f287da04f8c3fba133b684d54051f07f47cfca47b79a1d36"
+    },
+    {
+      "file": "agent/tests/thief-data/jf8n-f9-t3-gremlins.json",
+      "sha256": "028c04057617a247d6e9790c21d94aeb947eecc9f074f212f8c9002874dbf1c0"
+    },
+    {
+      "file": "agent/tests/thief-data/make-fixtures.py",
+      "sha256": "df72f5afa69358a6ea5f65172f98681d3bc34a0ea40cec14234a2864d8452c00"
+    },
+    {
+      "file": "agent/tests/thief-data/pinned-knowledge.json",
+      "sha256": "4451bf18033270d06f812db6ada111c6f805ee962c3e73b8aae730e343b5d612"
+    },
+    {
+      "file": "agent/tests/thief-data/rpc6-f20-t2-hopper.json",
+      "sha256": "d956b871c6535043073ac74b032c65e4d021122fc6b8a2f085e9ab3f4b41ffb4"
+    },
+    {
+      "file": "agent/tests/thief-data/rpc6-f20-t3-hopper.json",
+      "sha256": "e28ce072a610976cafc642074a910f55b425a9bd261e2ab5cf52d1481787cfa9"
+    },
+    {
+      "file": "agent/tests/thief-data/rpc6-f20-t4-hopper.json",
+      "sha256": "3134a146dc3c7657c0b93424e1e8ec44c4d7de0d57830251ba39b0bb5b82576d"
+    },
+    {
+      "file": "agent/tests/thief-data/rpc6-f20-t5-hopper-escape.json",
+      "sha256": "b8d09e4471301440a82f873e06233c4442261f7fc679f38381cb2bcb54f81c69"
+    },
+    {
+      "file": "agent/tests/thief-data/rpc6-f8-t2-merc.json",
+      "sha256": "816be3542c698deb5e4e5c25f7186d7e2958f71d3232cf20ee2c5d3a69b17043"
+    },
+    {
+      "file": "agent/tests/thief-data/rpc6-f8-t4-gremlins.json",
+      "sha256": "eda5ce52dcedda19702e4ed829ebaeaf6fffd8772fabf3a61cb025eebb4adb0b"
+    },
+    {
+      "file": "agent/tests/thief-facts.test.ts",
+      "sha256": "8094fbe7d051a8155aa18a30f5fbd6f7ba16004cf96729c8c58cd9bb3bcc464c"
+    },
+    {
+      "file": "agent/tests/thief-rollout.test.ts",
+      "sha256": "7668c38a9070b41ee9b12acbfed2ac09176621ea4227754035ab9e03070bf374"
+    },
+    {
+      "file": "agent/tests/thief.test.ts",
+      "sha256": "956d87a3df5bbd2e41f270606465e4fc18b5acc019ce83ec78eeb70e63568395"
+    },
+    {
+      "file": "agent/tests/third-party.test.ts",
+      "sha256": "430eb4e44dcc76b6fc96fd48ecf60ea184ea35eee11bb04d6dfbaab116e60bd6"
+    },
+    {
+      "file": "agent/tests/tsconfig-scope.test.ts",
+      "sha256": "da00dd52ec4b113006d114cb82bcf237bb5e5a0c920078c8b0885b7e692cb4c5"
+    },
+    {
+      "file": "agent/tests/turn-solver.test.ts",
+      "sha256": "dd6a159aa3493d931422eafbc971bea665c46764e8baca5cb5a270bd98c47f55"
+    },
+    {
+      "file": "agent/tests/turn-start-settle.test.ts",
+      "sha256": "bd656a8512e2a9d472e288c4647f66d356fbf8942a625127cfd8d6159e0ae551"
+    },
+    {
+      "file": "agent/tests/v1mf-bugfix.test.ts",
+      "sha256": "3cebdc9b8fe1334abd5104f810e13f57db6e67f62ba62549851e608bce460cf4"
+    },
+    {
+      "file": "agent/tests/waterfall-giant.test.ts",
+      "sha256": "8359a28141898d250928dd7406173a5f10339fae12f3c31d2cf3f9c2476dd5ae"
+    },
+    {
+      "file": "agent/tools/act-route-candidates-replay.ts",
+      "sha256": "9c2bf55c787441a5597a6c0d533fc55fe06eff1717a014602fc77e5b09fdc232"
+    },
+    {
+      "file": "agent/tools/bench-board.ts",
+      "sha256": "d73794663a73a51f69b554b5fb8cdb948c498b6daaf3b84d88283a6d33878509"
+    },
+    {
+      "file": "agent/tools/boss-clock-calibrate.ts",
+      "sha256": "57cc7b641ec7fa592f10bc7871f0a58fa06013d6ff3235f12d796c13d2d1dfe2"
+    },
+    {
+      "file": "agent/tools/boss-clock-check.ts",
+      "sha256": "46e596be033a660f43ac72add437d1060b6466cdd8a8d696641b7eb6ee7938be"
+    },
+    {
+      "file": "agent/tools/boss-fights-extract.py",
+      "sha256": "ef31f00c49b27afb71b7e31f56f5aca75efc3898c53c3798d17418a540722ad4"
+    },
+    {
+      "file": "agent/tools/boss-loss-backtest.ts",
+      "sha256": "2fb0e7910370ea6e62e1a3329b7039aca722312c9ab85a477267756226a501bb"
+    },
+    {
+      "file": "agent/tools/boss-sim/acceptance.py",
+      "sha256": "130dd7d6f3ec718ccc6d193895155c35727ecb1d23aeb591736d88419235b81a"
+    },
+    {
+      "file": "agent/tools/boss-sim/audit-calibration-board.ts",
+      "sha256": "216cb7f6c76686f25b543658be32d64f1ca73729f493b63aeb7cb3d937dfeab9"
+    },
+    {
+      "file": "agent/tools/boss-sim/b2-lines-report.py",
+      "sha256": "05bc923ae5d2658ad40a5e31779ee3931da4ff9eef7e9075078213752505ac6c"
+    },
+    {
+      "file": "agent/tools/boss-sim/b2-lines.ts",
+      "sha256": "09f25805c544af6b8cc078fe4ddafc0264885353e622d58371629335b1a3b661"
+    },
+    {
+      "file": "agent/tools/boss-sim/b4-report.py",
+      "sha256": "37dd22e4b1bc7720e5cfd1aeec101533c3a3e12bab34e6cf57c50a17a2a836ef"
+    },
+    {
+      "file": "agent/tools/boss-sim/b5-grid.py",
+      "sha256": "fe3b866901443ba893529b1a65525190e208de977873bb90fa663c1d9e1a1bfd"
+    },
+    {
+      "file": "agent/tools/boss-sim/b5-lines-report.py",
+      "sha256": "fc63c4efc5a9b54fa743dc2004dc6a94b886f2863153337e0cb8b5d828598f56"
+    },
+    {
+      "file": "agent/tools/boss-sim/b5-lines.ts",
+      "sha256": "0e7f287313391826cfc6a9888d3297da8336a83ff402721c12ecf73b8a08bf89"
+    },
+    {
+      "file": "agent/tools/boss-sim/b5-report.py",
+      "sha256": "80e67588bd06c5eafee8198773f365045f8273f932755e715da1990d470d4b56"
+    },
+    {
+      "file": "agent/tools/boss-sim/backtest-board.ts",
+      "sha256": "0146ae6016a4b8063ecac6b762ace0f92cf4f4ec1da23e856912e19c86eff05d"
+    },
+    {
+      "file": "agent/tools/boss-sim/backtest-runner.ts",
+      "sha256": "c66fff9545a6c5c9d0c80276aa5bab31ce9855b98990068749abf0b301ed6e47"
+    },
+    {
+      "file": "agent/tools/boss-sim/backtest.ts",
+      "sha256": "906bcf9f0127ccea4a8782b7e65eb09072765c51e3f61bec62b4e026bccc0eea"
+    },
+    {
+      "file": "agent/tools/boss-sim/bench.ts",
+      "sha256": "598cb335a0635dc647fd282f371d9302229b8bfbf9cc1f4764b2cfead85001d8"
+    },
+    {
+      "file": "agent/tools/boss-sim/build-replay-report.py",
+      "sha256": "64989b0bfd11745d155d71e24cc3181d26345f305ed80b4821165c269bec7ae0"
+    },
+    {
+      "file": "agent/tools/boss-sim/build-replay.ts",
+      "sha256": "004f991da80ec2ec210d83cf0caa4cb0c232fa89f2b70fbdd0dcb02998a61fd0"
+    },
+    {
+      "file": "agent/tools/boss-sim/cadence.py",
+      "sha256": "b6e44fb0c03b945a3c8b7bc2675f0dc5c59014d52347d0637588f2a122afb34e"
+    },
+    {
+      "file": "agent/tools/boss-sim/calib.py",
+      "sha256": "4a695ab1647dba061b5fa8c83bc15ef9ac14b77c807d04f7f5d2cd9badb9866f"
+    },
+    {
+      "file": "agent/tools/boss-sim/calibration-board.ts",
+      "sha256": "d8cdcaee13a727b2bcf53b049ab95e62a340d17c818814ef38028e468af3e3e3"
+    },
+    {
+      "file": "agent/tools/boss-sim/character_extract.py",
+      "sha256": "f41d4334d4873a82a8874c9c36da8d07f2b369c80f50e168ec8cf2803a650518"
+    },
+    {
+      "file": "agent/tools/boss-sim/choices.py",
+      "sha256": "7cf990fa0feff892d402696d35961c9846a99b55d067716b77a2aca472685086"
+    },
+    {
+      "file": "agent/tools/boss-sim/extract.py",
+      "sha256": "b6b7740d8adf1a3d65aaa311c549c516cc18f30952a349d491f9c2f6ca77f461"
+    },
+    {
+      "file": "agent/tools/boss-sim/isolation.ts",
+      "sha256": "7b38ffb486ec92f292705ff024c37784fa219ce5ec233f69d1f264989c43b382"
+    },
+    {
+      "file": "agent/tools/boss-sim/lines.ts",
+      "sha256": "12854c93dc9d6c90d9e20c084215d439ebb044f63ea55ce73a66cedf73959b35"
+    },
+    {
+      "file": "agent/tools/boss-sim/live-check.py",
+      "sha256": "07d86f937d240f4b3c1a2feb98f4853633ac8e7f90d41752dbb03a461627a3c6"
+    },
+    {
+      "file": "agent/tools/boss-sim/pairs.ts",
+      "sha256": "41b2a825a4f4ec9a2b61ce7c3073258a8a1d82a2ca9818b65f5683031cb874fe"
+    },
+    {
+      "file": "agent/tools/boss-sim/per-turn.py",
+      "sha256": "17f1f46eba9bd409800178a90434e1447e437398509a4905422663ee5bc76c8c"
+    },
+    {
+      "file": "agent/tools/boss-sim/pp-calib.py",
+      "sha256": "496b45e68cc530f1597554a8231c98a27241f1425e747b1b26f8d10f488c11fc"
+    },
+    {
+      "file": "agent/tools/boss-sim/pre-fight.ts",
+      "sha256": "f50c1af48a5b2d5d0d158c67026000980fdf2b0511c9faf09b288be17197a467"
+    },
+    {
+      "file": "agent/tools/boss-sim/refresh-silent.py",
+      "sha256": "06d172c6ab677f46fd977400773d8a22e05b6c85cf6ed5f3e4261eff056b0695"
+    },
+    {
+      "file": "agent/tools/boss-sim/report.py",
+      "sha256": "8c2fd9219613fed58cb8deb111f3662f373ac93d3f5943dc47d5138e11553c4b"
+    },
+    {
+      "file": "agent/tools/boss-sim/silent_calibration.py",
+      "sha256": "e0fa002daa3c5847b7401db80c7d86e959b95833af92d433bf6c80ffd1d5e1bd"
+    },
+    {
+      "file": "agent/tools/boss-sim/split.py",
+      "sha256": "8cd0a3be0989930c85d2b2c29d73f06a7dc1b67fcf40ecdfa828053f541efbf0"
+    },
+    {
+      "file": "agent/tools/boss-sim/syn-calib.py",
+      "sha256": "d87a0d2ac9a4b7d181b3a7832826a7cbc20098269f71f65189656dfd90fa747e"
+    },
+    {
+      "file": "agent/tools/boss-sim/synthetic-check.ts",
+      "sha256": "fe4720a3a9f113b2bf96264605e8154fc58ce84dab68d6e671fe6d9c63bdbb96"
+    },
+    {
+      "file": "agent/tools/boss-sim/test_silent_calibration.py",
+      "sha256": "29c445fae7d647d6ddeb6a23ce82c2a08c75b5d09bc460207325e6ce092f433f"
+    },
+    {
+      "file": "agent/tools/boss-sim/trace.ts",
+      "sha256": "ceec4eadb6d34d38685af2d92d79c01b21420666875035e68c015ca9c21ed0cb"
+    },
+    {
+      "file": "agent/tools/boss-sim/trust.py",
+      "sha256": "3a5ff3752f044d85458e580637fc0986af83a0fbb15aaf60c80d2ab93cf9a5ba"
+    },
+    {
+      "file": "agent/tools/boss-sim/turn-replay.ts",
+      "sha256": "9a15ec44063428c2c16dd442acc7e613d6249bcf963c64953d2987a2f761522a"
+    },
+    {
+      "file": "agent/tools/brain-replay.ts",
+      "sha256": "8adfb4fb72f12218c127fb50b4ee281e591b925335d6179928b44419cbf9cc8d"
+    },
+    {
+      "file": "agent/tools/build-facts-replay.ts",
+      "sha256": "84328714271d93fd76450fd3481fd37ceb259785bb8e7aabc756e86513a971e6"
+    },
+    {
+      "file": "agent/tools/card-conditions-frames.py",
+      "sha256": "6cdda12c9dfa9e693a7de0d4f5e1125815e594870e16842dc980596ed905dd3f"
+    },
+    {
+      "file": "agent/tools/card-conditions-replay.ts",
+      "sha256": "0891f9add4d6fd00dfc8e6f607befe78e50f656a780867d4869feb1e05351d50"
+    },
+    {
+      "file": "agent/tools/check-imports.ts",
+      "sha256": "2cae1969641e101d079206ad8f9494d6b37226c31c46346166e2252ab05dbc41"
+    },
+    {
+      "file": "agent/tools/combat-latency-replay.ts",
+      "sha256": "367b6220426982aab87d5290e2eede92e0a7455fe6f4c2cf5d8b45a8be62cc2a"
+    },
+    {
+      "file": "agent/tools/death-move-replay.ts",
+      "sha256": "692589822746a99c0908d3f5a9dffc3bcbe41bc1d4896f61fcce9ca68ce8a7b9"
+    },
+    {
+      "file": "agent/tools/decision-replay.ts",
+      "sha256": "1e94cf83b73c8f8f814bf3408a2e3f420adc62e350f822d72d7189cdb9cdadb8"
+    },
+    {
+      "file": "agent/tools/deepseek-prompt-dump.ts",
+      "sha256": "65e3106447e5921f47de13e05747a168c1677f4dc92fe9543c5a2f89cef058f2"
+    },
+    {
+      "file": "agent/tools/deepseek-prompt-replay.ts",
+      "sha256": "30345d4bf038c6ad524e9b112b6570c3c0ac8748cfb706228ab63c526bd3f2c5"
+    },
+    {
+      "file": "agent/tools/deepseek-reward-prompt-dump.ts",
+      "sha256": "62a6c0585f3a501b5e0e189d3b4e64874b9a9b925832476bca3a1b7bbeb6c62f"
+    },
+    {
+      "file": "agent/tools/deepseek-smoke.ts",
+      "sha256": "ac977562024f1c28616493eef628d669b1047e3c84a613d021884e3060489770"
+    },
+    {
+      "file": "agent/tools/double-boss/fit.ts",
+      "sha256": "5fbaf26df41a40a1cea937cb0c16296c1baf869f8821a5a33a6e407961b93134"
+    },
+    {
+      "file": "agent/tools/double-boss/validate.ts",
+      "sha256": "a6d29c0824f1c9cf2e284f0038d7d05e6eb1879101d398aebe6183b72b19f030"
+    },
+    {
+      "file": "agent/tools/enthralled-replay.ts",
+      "sha256": "69a5c1c9579609d132e3753454ddcf9e009b6a3aa70bf21a9c43b10d4d44e3bc"
+    },
+    {
+      "file": "agent/tools/fake-mod.mjs",
+      "sha256": "15b5239fe5132b71f5363daae25e7bf5e4db22b903cf46e32c40d2ef5e5864ce"
+    },
+    {
+      "file": "agent/tools/fight-plan-dry.ts",
+      "sha256": "ecdc29dfa48236b4f0c31dd2c496a6ec7a3255537f48c8f3a9f31985c1ec5f9a"
+    },
+    {
+      "file": "agent/tools/free-offer-replay.ts",
+      "sha256": "07b666105c1ec2d8051181463b214e3794635fa0f0f71c411535d05d4566f6e3"
+    },
+    {
+      "file": "agent/tools/gate-replay.ts",
+      "sha256": "2960f6183493f63d02297007d37cf11a5987019529041c45ae90a240773d26e1"
+    },
+    {
+      "file": "agent/tools/giant-replay.ts",
+      "sha256": "f6e25c7c7bc0a13ec458e3d9966fea7ac84e999033145be38829c472192745ad"
+    },
+    {
+      "file": "agent/tools/gkb-dump.ts",
+      "sha256": "2ded4b4a43982ec0dcc9728f6caf793b98d6130e69a6b2b251f757bbb67c3e2f"
+    },
+    {
+      "file": "agent/tools/gkb-measure.ts",
+      "sha256": "a83a348fde7ee3b634cec63d7252ffce89fdfb5d68db99cfc983cf3e22234a4e"
+    },
+    {
+      "file": "agent/tools/inferno-planner-replay.ts",
+      "sha256": "a980e52e6d1f8bb75bd56705efb6d0e12ce480ede2bb2721cd52a49f4ab03cdc"
+    },
+    {
+      "file": "agent/tools/insatiable-lines.py",
+      "sha256": "31afc22be7acaed4dba1a715a04555da730022da2f7be9e77a8fcc10f5151db2"
+    },
+    {
+      "file": "agent/tools/insatiable-replay.ts",
+      "sha256": "098f0ff0c54ace8ee92288aae9acb0d4994cd7b1f0f7f865e53966cc1c919f03"
+    },
+    {
+      "file": "agent/tools/jev-context-eval.ts",
+      "sha256": "6d97966e8b83b7722d01f3dae31dcf4e9ee71654ace25e42b4bdf936a2c83f4e"
+    },
+    {
+      "file": "agent/tools/jev-potion-replay.ts",
+      "sha256": "97140771f1bbd4fc7239056a208ed03ccc131ca9309a00946a1a45928abf8f08"
+    },
+    {
+      "file": "agent/tools/jev-prompt-dump.ts",
+      "sha256": "524f2592d9ba815a9632198959ee9d7a659601220a624967d314493c60ad4ea0"
+    },
+    {
+      "file": "agent/tools/knowledge-slice.ts",
+      "sha256": "bddadf2479b78c38f6d4835c57e8efdbdd534024c3ddc091b62f56f927b65322"
+    },
+    {
+      "file": "agent/tools/living-death-moves-replay.ts",
+      "sha256": "2336bf61850950e373879471fe477df8113f2a497a08caa54e37d2a38f61565a"
+    },
+    {
+      "file": "agent/tools/lizard-tail-replay.ts",
+      "sha256": "db6413fbac07eefe85598e0a8167f2dbe061a8ae9fcfa8db607ee074c77204df"
+    },
+    {
+      "file": "agent/tools/logdb/component_usage.py",
+      "sha256": "77158bcf34e85c765ea1a99905c363dc8a3021910f94912710a84d933bb25f16"
+    },
+    {
+      "file": "agent/tools/logdb/extract.py",
+      "sha256": "57fd2d330e4c5ac9d5b284bb4addda240eab246d15abf9ba48e7a5e1b4304545"
+    },
+    {
+      "file": "agent/tools/logdb/query.py",
+      "sha256": "b7a46e3f788da68663583a90c69fc6064e0f244ea9ba25dc96fc07c41684f67e"
+    },
+    {
+      "file": "agent/tools/logdb/requirements.txt",
+      "sha256": "e9c02b7acc611bd2acbaa41fef6b8db7313aa045bf15ef6e1b6653c2d2f237c1"
+    },
+    {
+      "file": "agent/tools/logdb/sync.py",
+      "sha256": "15440e9581f5fdb3387c1938c783f3a2b85bdccb47417efdd44ed31b00f5a8dd"
+    },
+    {
+      "file": "agent/tools/logdb/views.sql",
+      "sha256": "31858edfd5c82d5d5759980daad9f020fa87a465fb2c0f980c3388ae9a2b5d57"
+    },
+    {
+      "file": "agent/tools/mech-move-replay.ts",
+      "sha256": "597a13a610adc7a9387829a15329c51d6c69dac120817786207fb66cb70400d5"
+    },
+    {
+      "file": "agent/tools/mech-rules-replay.ts",
+      "sha256": "8b82971c043789f77347ad7a69a7ff0a3170ac266e92202bb5eafd3d9acca5aa"
+    },
+    {
+      "file": "agent/tools/mechanics-align.ts",
+      "sha256": "56d7a182ad4e1c4b7124891b4518116216b57e9d33e4c456686096436cdcefed"
+    },
+    {
+      "file": "agent/tools/mechanics-residuals.ts",
+      "sha256": "063fdd8cf6a716d9a9ee0676eddc6a24569f97ab573210057ab6a06119a50927"
+    },
+    {
+      "file": "agent/tools/passive-pieces-check.py",
+      "sha256": "fe7bb77bcfb21955785fea7e6753559ea15282123114d8268884065127367b7a"
+    },
+    {
+      "file": "agent/tools/passive-pieces-planner-replay.ts",
+      "sha256": "f356d97e02f61e9e005e57db19ee18b1a258cee3451317e6a23935cc3556de8b"
+    },
+    {
+      "file": "agent/tools/passive-pieces-replay.ts",
+      "sha256": "35c75dde6b54b0b2443eb9eb02def0f683f72ff3ac8ecface354cc1a17247d0c"
+    },
+    {
+      "file": "agent/tools/pile-cost-replay.ts",
+      "sha256": "1cf9a7973e37f616a275e832f80480137b604cb77beab83ab45aad473f2266e7"
+    },
+    {
+      "file": "agent/tools/plan-digests.ts",
+      "sha256": "68896f8af1845c688e48695b76f019eec297e20dfe9f58179eacf37330de0e3f"
+    },
+    {
+      "file": "agent/tools/potion-card-cost-replay.ts",
+      "sha256": "fe8a11159e8834593caaa2ac67a19add4f8dc008921db07c3f49db53c6122690"
+    },
+    {
+      "file": "agent/tools/potion-cost-replay.ts",
+      "sha256": "49a5b26e2ef6088610b8fd16a881012030c7fa103b62555de7efb4bf7e692724"
+    },
+    {
+      "file": "agent/tools/potion-drink-audit.py",
+      "sha256": "beb75aed704ef0b0db0600195a07b46f94174a3167f4d66b932ab16aeba98431"
+    },
+    {
+      "file": "agent/tools/potion-mc-measure.ts",
+      "sha256": "0dfc4e10864752244b7e2e17cccad9271f1b6a637e536ba5ce0462cbc121db7a"
+    },
+    {
+      "file": "agent/tools/restructure-check/boards.json",
+      "sha256": "66f10f6dc76f6e9d6be8670bbb139e386c467eaa4634d288a08bd3c346f3d689"
+    },
+    {
+      "file": "agent/tools/restructure-check/builders.sh",
+      "sha256": "7ead9277165e555b1ef33274896b131b62a6d1b79c7b422eeb67126ce5aeae55"
+    },
+    {
+      "file": "agent/tools/restructure-check/compare.py",
+      "sha256": "3f380be0dde879afb92f7094bb27b7927cedd17a1505caab08be12fafedc3919"
+    },
+    {
+      "file": "agent/tools/restructure-check/digests.ts",
+      "sha256": "b5b30495ea4296a2f5867c7a92fda16e7badbe79259038cb00b7690d1e4a4cc3"
+    },
+    {
+      "file": "agent/tools/restructure-check/path-map.py",
+      "sha256": "821b7d15fc2ce06e3f899e315c3864967e66804993b8ffba564f8a4f9aa48759"
+    },
+    {
+      "file": "agent/tools/restructure-check/prefix.ts",
+      "sha256": "f572caa7d83625ccd0ff0a0dd8544dfe672a80062333dd4640e643a2e359b307"
+    },
+    {
+      "file": "agent/tools/restructure-check/rewrite-doc-paths.py",
+      "sha256": "ca39e605dcfbe646e761a3807e846f72927822f850382edae7d9d36a193e8759"
+    },
+    {
+      "file": "agent/tools/restructure-check/rewrite-imports.py",
+      "sha256": "19867eba3475ec4e8edc75bece3bede1d7020fa5b57f946b3caf61e3ee083d02"
+    },
+    {
+      "file": "agent/tools/restructure-check/rewrite-py-cwd.py",
+      "sha256": "7e5d9d97aa0ed352b5ccb6fac7c5abc95fceb56aaf914e81594dcb2025a109a4"
+    },
+    {
+      "file": "agent/tools/restructure-check/rewrite-py-paths.py",
+      "sha256": "b9486a23ccaff6763996508c0d2519f85411b9f3b59ae0592516302c38c99cf6"
+    },
+    {
+      "file": "agent/tools/restructure-check/rewrite-test-paths.py",
+      "sha256": "effbd8979a7402da01600831a010faac68b79982f2e95bf13313ee8ad8dcbe3e"
+    },
+    {
+      "file": "agent/tools/restructure-check/run-all.sh",
+      "sha256": "a63d32af36c2df86adc7a4c29f8d4a2385b5ef19d59bbf941ada7f07855a9f66"
+    },
+    {
+      "file": "agent/tools/restructure-check/select-boards.py",
+      "sha256": "bcb79a6ad4aebab0df95d47ba5afc32378d93059386d3157b2ed7b35a1aa6030"
+    },
+    {
+      "file": "agent/tools/restructure-check/third-party-map.py",
+      "sha256": "a8df3876675f30a3af19aacff7d145f8c219546a04253bfb87bd9526aaaa2edd"
+    },
+    {
+      "file": "agent/tools/rollout-backtest.ts",
+      "sha256": "d3ec14afbc9a06d534bfaed80dd77ce6b6f684363b999e9bd7bc430499a44cf3"
+    },
+    {
+      "file": "agent/tools/route-chain-replay.ts",
+      "sha256": "8f0a6573507b816ebf075e20aa501ce1c617fdf218a1d3f3e32e86ba7ccc6f1b"
+    },
+    {
+      "file": "agent/tools/route-replay.ts",
+      "sha256": "9a2e46acbb71c2dd9b6f090378504ebc70ccc21e97eeb0eb245fccc4a37be7ac"
+    },
+    {
+      "file": "agent/tools/route-review-next-rest-replay.ts",
+      "sha256": "ac661986548b7ab849d6b806944e14d3fbee1b8c2af97861625912e3d33d64e3"
+    },
+    {
+      "file": "agent/tools/run-plan-dry.ts",
+      "sha256": "428a7d34d189a404089466fc1ab95b4b7b03302557582441123715c9d9cf736e"
+    },
+    {
+      "file": "agent/tools/run-plan-merge-estimate.py",
+      "sha256": "75923154e1105da1dd3be745c4904687a241714958341b62d0d893f55661af26"
+    },
+    {
+      "file": "agent/tools/shrink-lines.py",
+      "sha256": "019f3ff23cda5a4c8b1488418c09b15c5da62ad334f08346bde2467772d97094"
+    },
+    {
+      "file": "agent/tools/shrink-replay.ts",
+      "sha256": "f61d4850357fe3906b2f825883ac2ba32de1d204192a59394692c2ee645d3125"
+    },
+    {
+      "file": "agent/tools/sl-any-draw-pile-check.ts",
+      "sha256": "95e27d91fe9c23b81823823a983a622c94b46ce09db54899b8098d6d393c5b68"
+    },
+    {
+      "file": "agent/tools/sl-any-draw-replay.ts",
+      "sha256": "8454d331bb2e08034311f225da92000e91004060e440f607128585421ca7f4e7"
+    },
+    {
+      "file": "agent/tools/sl-any-draw-summary.py",
+      "sha256": "ca6b2f442b5b35901073b0cc5e6c8c4ff4c3965b7ad8e2d28eac2c7db0ffa79a"
+    },
+    {
+      "file": "agent/tools/sl-draws-replay.ts",
+      "sha256": "ea0182b35231cc647319a2c5162261985592327b19b7d8c20f7423d75e749be9"
+    },
+    {
+      "file": "agent/tools/sl-early-replay.ts",
+      "sha256": "09a742e68fd6a27624d7015ba909180ef43f953280a1abde23c80e6641ee7417"
+    },
+    {
+      "file": "agent/tools/sl-early-summary.py",
+      "sha256": "6b42e48e70163c4cda5d042e8f9e3d4d621615a781c31da20ab917cfaddf3c99"
+    },
+    {
+      "file": "agent/tools/sl-explore-gaps-replay.ts",
+      "sha256": "36aec22bd5733e72532195075185cc26c6f692ff82897e17fb71e5ea0d4e48eb"
+    },
+    {
+      "file": "agent/tools/sl-explore-gaps.ts",
+      "sha256": "9e01a389a0bda88eb8ab2ec60620ac1c92a15fcfe8631fc2bdeb9fb32dbcaa87"
+    },
+    {
+      "file": "agent/tools/sl-explore-potion-replay.ts",
+      "sha256": "c093739f4b4eca34442d2f85e9e7c64c5ced56e19da7f2f7c64db1f83b10fccf"
+    },
+    {
+      "file": "agent/tools/sl-explore-replay.ts",
+      "sha256": "64044f9ee797077f5566c7cf5c93a1821ebf355ffd79da74e70787ec48c2b55f"
+    },
+    {
+      "file": "agent/tools/sl-explore-where-replay.ts",
+      "sha256": "8a9bf931500559d577430450f8ce7122b47b5c113856d23ca918ddc994d3aa0a"
+    },
+    {
+      "file": "agent/tools/sl-giant-replay.ts",
+      "sha256": "8fa95fa8969dae4abbf4e29788f3675f55a30110fbb636383ae5980a1e0ae7ac"
+    },
+    {
+      "file": "agent/tools/sl-giant-summary.py",
+      "sha256": "3f1e4d06712f1c25f8c1624d0c934a58c909e97fe1ea293b032dc7403416cb4c"
+    },
+    {
+      "file": "agent/tools/sl-judge-bounds-replay.ts",
+      "sha256": "482d69cddd6e28982d6cf3a8aba3782656a3f8138522bb61aa6892ee6d6437bc"
+    },
+    {
+      "file": "agent/tools/sl-judge-bounds-summary.py",
+      "sha256": "e8dfedca16f27897d39ca145e70bdb9b4abcc68d39109922c55c1bcedd75c1ce"
+    },
+    {
+      "file": "agent/tools/sl-replay-reach.ts",
+      "sha256": "40a3241ad705810fdf1e50f4f323f767e1efbc547744bebccff67ac047e97eda"
+    },
+    {
+      "file": "agent/tools/sl-retry-identity.ts",
+      "sha256": "f6319e17fb7e71d849c600c53eed8b98140b4a58ee2f3a9b7df080543347e063"
+    },
+    {
+      "file": "agent/tools/sl-retry-replay.ts",
+      "sha256": "2701b6daca474e3cbf211edaf5954a144fd2f0b0bcefa4b81c93f9387ffd0998"
+    },
+    {
+      "file": "agent/tools/sl-retry-summary.py",
+      "sha256": "f261520bfaebd12a994e0cedaad5b2054a334ed4894210650ca29c1b07ba4440"
+    },
+    {
+      "file": "agent/tools/sl-revive-replay.ts",
+      "sha256": "e660088f79b1e8f3976d82b9c561e869170b531b0d988be8a6debbc237ff6c7f"
+    },
+    {
+      "file": "agent/tools/sl-start-loss-replay.ts",
+      "sha256": "bf69ba5b6b4c67452f61173a5320df9b50b8dc84ce37ddea85ac0c2c7b3b18fa"
+    },
+    {
+      "file": "agent/tools/sl-start-loss-summary.py",
+      "sha256": "da334dd3c0aa2cc98f0f1098fc76122334ab678ddb16b2770e3b4b7a1664ea7d"
+    },
+    {
+      "file": "agent/tools/solver-replay.ts",
+      "sha256": "d11243763c35d7cf3fec758cc8f09412790a1c7db1ed38a9d4bb36dd9ec32265"
+    },
+    {
+      "file": "agent/tools/src-layout.ts",
+      "sha256": "851441e86485bef4ec28e950e145d09e10c115651012a773fc60fa4401a2f19f"
+    },
+    {
+      "file": "agent/tools/target-options-measure.ts",
+      "sha256": "060fe42bd14a87e4d15c9ced7f9a045e3c8292b2b79cb7be8c8e096fa6e22529"
+    },
+    {
+      "file": "agent/tools/template-target-replay.ts",
+      "sha256": "de0149aea2fc940f2c797a3b5ab1dc1cbe457ef8a0e51451b16aa8acf8d8e7cb"
+    },
+    {
+      "file": "agent/tools/test-sandbox.sh",
+      "sha256": "1a0231e0631091468f337f7290bdcf6f503b763f41b0e22bc70f518827e57567"
+    },
+    {
+      "file": "agent/tools/thief-card-values.ts",
+      "sha256": "df76aeba5b1d90725c986528a23f8c117f3e758b00cee6b8e80a9ab58da503e8"
+    },
+    {
+      "file": "agent/tools/thief-facts-replay.ts",
+      "sha256": "c1b5140dd88edb1573747e5aa8205a8fa47ebf6935ceece46f80d9b57e5d0a3a"
+    },
+    {
+      "file": "agent/tools/turn-start-settle.py",
+      "sha256": "ae6658c96338bb4384ecbde10f6325a19769d48d4c9cc925693e9181c073c80d"
+    },
+    {
+      "file": "agent/tsconfig.json",
+      "sha256": "4fbe5b7528d98c132b9228f439d2775e552213e1d5251996383e5363a58dd1b2"
+    },
+    {
+      "file": "agent/tsconfig.test.json",
+      "sha256": "d4628f2551fdb64db204ad3cc631dbe4397ac060740abf286ed2da8ab71f9cce"
+    },
+    {
+      "file": "agent/tsconfig.tools.json",
+      "sha256": "733e02ed9df52b07328e47190d03e5aaf3482e5abe44055970bb3ad38dc69144"
+    },
+    {
+      "file": "agent/vitest.config.ts",
+      "sha256": "5852d531cbf81c915dbdbb962f47e50661507469d61c22204afd649460e2c46e"
+    },
+    {
+      "file": "docs/boss-sim.md",
+      "sha256": "0c49a665548819ac1c0fb87f68c19134b760805fd52ce5e6441f3556f7fae7f8"
+    },
+    {
+      "file": "docs/codex-only-brain.md",
+      "sha256": "11ef9a8784b8d9cbca385a0f32570db752a6ba5d6a146a18c98ce0f70ad22429"
+    },
+    {
+      "file": "docs/codex-ops.md",
+      "sha256": "3f702411b27d7637f67d5aaad680b765a82d3b8236a99e44af44302cfd2696bf"
+    },
+    {
+      "file": "docs/eval.md",
+      "sha256": "1a6e4d085f8c442c90db87f7a16b4be4d3ca7328f6d12b8c00b276475ccbde54"
+    },
+    {
+      "file": "docs/layout.md",
+      "sha256": "da420fa63627b937183c0b89b409c1c00d85ba4da27ac5f6eb0c9aac01f95469"
+    },
+    {
+      "file": "docs/learning-code-proposals.md",
+      "sha256": "7a045a36f079072fd3265c5a97d2c696814c384b09111308a950b1823879bb8f"
+    },
+    {
+      "file": "docs/learning-protocol.md",
+      "sha256": "1cbcfaea475a4e2f7c7e4d96b9bf572349b80ffb0e9d4111d29708168af651ec"
+    },
+    {
+      "file": "docs/logdb.md",
+      "sha256": "0df5fbdf50453e001ff4fe61f0ca54cfba102cfb9abb5aaeb5de94c45a3425bb"
+    },
+    {
+      "file": "docs/mechanics-learning.md",
+      "sha256": "f7ef6e4614f619a12e07e8e8f6277738f931862163ae0cc8b31611c7bc3e54c8"
+    },
+    {
+      "file": "docs/path-map.tsv",
+      "sha256": "d19cc3e1881d87d687d12d8dbdc914f63a4d9e03c381ac7332fc5df623e75155"
+    },
+    {
+      "file": "docs/potion-equivalents.md",
+      "sha256": "2befc48ed54a6cfc55f5e9870bb05cbb6709d2cd56cba2df3b4c816c2385f226"
+    },
+    {
+      "file": "docs/sl.md",
+      "sha256": "c0bfefdeec4a3ac189acea4c190164f077c1d9718ca49c30eaf18812341ff66d"
+    },
+    {
+      "file": "docs/thief.md",
+      "sha256": "83fb023f499816cb23b72190bcdf53351e11786f599e50684a338ea7e299f7f8"
+    },
+    {
+      "file": "docs/third-party.md",
+      "sha256": "84c524c00b35a010f4e193f69aa2cb57498b8d8759ac429782683ca5aca244d4"
+    },
+    {
+      "file": "docs/upstream-files.tsv",
+      "sha256": "e0c66d5c5764016fe0e98f836e975d818f2ce87bd3a1ff5c2167ab255cffc3ee"
+    },
+    {
+      "file": "docs/v4-architecture.md",
+      "sha256": "0816cba5c3afde2c54cfa4dc79152a01bef5fe5fc430e12835ea55384c8efddb"
+    },
+    {
+      "file": "docs/v4-build-facts.md",
+      "sha256": "e9cf393185b1664dbc35fe100ae9bc0754b45182c0f51682792ea41595d7eaf5"
+    },
+    {
+      "file": "docs/v4-go-live.md",
+      "sha256": "56c80ccf266f1e32b5e6410efdbb20a6b93e666c56bd39c8739a99d349e10359"
+    },
+    {
+      "file": "eval/boss-clock-recompute.ts",
+      "sha256": "8d03c11ffbaad69b56c0bee2a580b9c57c2a39f081a7f3808d2e3a9ef4af1825"
+    },
+    {
+      "file": "eval/brain_source.py",
+      "sha256": "004e54fdc3ad72e1cc78b82ec1877f710d68ad34c449e0d10958317a7154856b"
+    },
+    {
+      "file": "eval/calibration.py",
+      "sha256": "9fc05f5fc0cfe9929f0e8d3661dc886b1ddf4e7e58aa4b6a4e443c69671f5be4"
+    },
+    {
+      "file": "eval/codex_cache.py",
+      "sha256": "c2bb628b323966b382d3ad53dbc350d099fb42830e4f869f47022876957b837e"
+    },
+    {
+      "file": "eval/cost-config.json",
+      "sha256": "f120496bb5fa47809210d14df81a0944fefd7a6b174e420adaebc1fee3c0e140"
+    },
+    {
+      "file": "eval/cost.py",
+      "sha256": "525a96e2fccbe170479290767d63ad89f8ee07d71fa5e08ef88cf8f91a3a4e3b"
+    },
+    {
+      "file": "eval/learning-curve.py",
+      "sha256": "ab689118cd2da6aab80c6c5486d75affb8d57c6f501470a8d145f0785ab3f6c4"
+    },
+    {
+      "file": "eval/metrics.py",
+      "sha256": "771487d304e2011768d7808053ee7951413b1914740958ea720c537f1ed6a09b"
+    },
+    {
+      "file": "eval/package.json",
+      "sha256": "ad5492107d879495a007b8089a085481423b027225d4d984d03ce2a2c2ac180a"
+    },
+    {
+      "file": "eval/route-projection-split.py",
+      "sha256": "ffb72be4dbbf7919dc2c9915c9bea12a562ecb5bf5e5114745e9f15c2691c621"
+    },
+    {
+      "file": "eval/strength-sources.ts",
+      "sha256": "8c42ab0c8be313daf97a7c88108fafca7daf10e2a3685c93962f375c7fae2a37"
+    },
+    {
+      "file": "eval/versions.json",
+      "sha256": "c9086a0194505e5439ad3629c9fe0003a4699d0a3154bea113c1eff8374390ef"
+    },
+    {
+      "file": "learner/.gitignore",
+      "sha256": "247681cefffa8448d973f21147c92b38b63f492a98a50aca3b3c490bc97499e1"
+    },
+    {
+      "file": "learner/README.md",
+      "sha256": "42144d7612d4da57bb808ddbb0784e5e42fdfb15c0b82bed2cb4f2ccbc5515c7"
+    },
+    {
+      "file": "learner/code_proposals.py",
+      "sha256": "34517d47df46f50602ab25b65e25f841680568ed5e681e98b96b068e4e86a541"
+    },
+    {
+      "file": "learner/ledger.py",
+      "sha256": "3341f03bab1717292b75107e939084888ca1aa1d77b90653a9a63e68db5d4670"
+    },
+    {
+      "file": "learner/lib/engines.ts",
+      "sha256": "c8dc9f8b3336d100bd27c81b5d9636da079f47086bf859a35b083f72802a0aa4"
+    },
+    {
+      "file": "learner/lib/launcher.ts",
+      "sha256": "5ce9a6763aa6ff561307f44c8672d856842ded1e8aefee4cfb1dc3eb6f526532"
+    },
+    {
+      "file": "learner/lib/runs.ts",
+      "sha256": "c166bda2f4c0724556bdd2f4c32abcb5e35cc3a896f9913717aaf1b7847281c5"
+    },
+    {
+      "file": "learner/lib/summary.ts",
+      "sha256": "6750e097c32d7c79179aafe4ac656edf87e91b5eb7746cfb807ef140f4e4855a"
+    },
+    {
+      "file": "learner/lib/task.ts",
+      "sha256": "7f858b642ba2178c78a1c091ccdcb3e2cd5ecd8c0196fe0cbcc49545d1524ec9"
+    },
+    {
+      "file": "learner/package.json",
+      "sha256": "ad5492107d879495a007b8089a085481423b027225d4d984d03ce2a2c2ac180a"
+    },
+    {
+      "file": "learner/pending.ts",
+      "sha256": "e6756c99693412d3834ed6aef801a958d744fa488eeb71fd76ba7189080c24e8"
+    },
+    {
+      "file": "learner/proposal-ops-prompt.md",
+      "sha256": "6d997c69895bfc91e3bbc37749e3f21d6e8bd1cf8c2e531c7a43c9b2b873c4a7"
+    },
+    {
+      "file": "learner/resource_chain.py",
+      "sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299"
+    },
+    {
+      "file": "learner/run.ts",
+      "sha256": "daf7ff5edecad80b80e5f61f2225cfb4eca982032e2a8d4de8eedf0202a072e8"
+    },
+    {
+      "file": "learner/tasks/ascension-audit.md",
+      "sha256": "023f6126264ed3076c254f22e6bc77dc54d5b905d66a3119d45db9c767a11fc5"
+    },
+    {
+      "file": "learner/tasks/boss-sim-automation.md",
+      "sha256": "111d447d8e8bce459f0498df6191944ef4b875e9f854bac4bd661494a3e46242"
+    },
+    {
+      "file": "learner/tasks/boss-sim-batch.md",
+      "sha256": "da99da010f4c366db7d039ee674d5a397bdafa01f0b8afc64830921c74db6675"
+    },
+    {
+      "file": "learner/tasks/codex-brain-cache.md",
+      "sha256": "bc6c3d3fb8e698fa74e215bdcc8f06b7e90ffc7a05aff2089756d596da469c4c"
+    },
+    {
+      "file": "learner/tasks/codex-only-brain.md",
+      "sha256": "67b0af05e47e074b6c8514005b8247adb40c18e9c55c42c89631fce754c77fae"
+    },
+    {
+      "file": "learner/tasks/experience-asc-audit.md",
+      "sha256": "25965a68e764b233a04a3e166aa1e10550340a74be004f65b0fef3f11d5f9a9b"
+    },
+    {
+      "file": "learner/tasks/experience-update.md",
+      "sha256": "2a7024c41d0729a32c6ddab779648b6383495e5cffb564e1661e2a81e63dbde8"
+    },
+    {
+      "file": "learner/tasks/fix-batch.md",
+      "sha256": "a63c4a0b4003199ca1733db7f904856a8f24ef250b77cc000462013c86ad3877"
+    },
+    {
+      "file": "learner/tasks/mechanics-audit.md",
+      "sha256": "ec85c723345899779737efb7707627b1b89b63e259259bc3dad91c3a981e5162"
+    },
+    {
+      "file": "learner/tasks/postmortem.md",
+      "sha256": "07f98b05af4ca8f7e9c220820ec82306a61553fafb285a3681119af45e9c98dc"
+    },
+    {
+      "file": "learner/tasks/silent-a10-regression.md",
+      "sha256": "85c77cdfec3139cff595418553ce26197a05ed755e14fcb8714f866fdc24817c"
+    },
+    {
+      "file": "learner/tasks/silent-boss-calibration.md",
+      "sha256": "971fcba9b9b7c6aee6b397406a484e75ec3082630732872ab749a1ca1acdda9f"
+    },
+    {
+      "file": "learner/tasks/silent-double-boss.md",
+      "sha256": "41af3f606dacfda339569cac1ddc80e3cb304da662c3277d204754c5ad6956bc"
+    },
+    {
+      "file": "learner/tasks/silent-historical-core-builds.md",
+      "sha256": "2e6664a348bf5566f850cedaaf7426bbac189d2796c95a9ddf92c1bcf6e069ac"
+    },
+    {
+      "file": "learner/tasks/smoke.md",
+      "sha256": "d78409cc3037720d63f67eac0b3c39db75ddc78eb2bd17b553c039098570276b"
+    },
+    {
+      "file": "learner/tasks/strategy-proposal.md",
+      "sha256": "32c5767dc861e04d281b51748c680e94e43735049780f8405bea9ce8be989e91"
+    },
+    {
+      "file": "learner/tests/silent-summon-hp-evidence.json",
+      "sha256": "29b72a1f839aef1d1068453b9d5a7276b6759b3a36f2386d8e89af7443e80875"
+    },
+    {
+      "file": "learner/tests/test_enemy_hp_audit.py",
+      "sha256": "dd8d3caa9a42d7a05fb531ac556074121f8c078b068d641a6cecba61e580bea3"
+    },
+    {
+      "file": "learner/tests/test_resource_chain.py",
+      "sha256": "7a8cac8ef2b6ec06e227320f97a7a299bfdd132691a24dd5725dba4f02f57a9a"
+    },
+    {
+      "file": "ops/ablation-current.json",
+      "sha256": "031f4448949b831c60c25d54f902a52a633d2d4c529ade1ab04521a0d05ce978"
+    },
+    {
+      "file": "ops/ablation.json",
+      "sha256": "5b47bd03d25913c8961b56c169fb5c26c62fc9c5590ec8b5ec0e4e6fb780ef00"
+    },
+    {
+      "file": "ops/answer.sh",
+      "sha256": "e10a2b826e58fa303f98815a1eff676c3fecd9709b8711689efac08b5427cfcc"
+    },
+    {
+      "file": "ops/ascension_audit.py",
+      "sha256": "978e363ddd17e47e6fdb8302cc8b00060be496d4bf046b938e9e1a8b3965406f"
+    },
+    {
+      "file": "ops/auto-relaunch.sh",
+      "sha256": "22181260e03da6cc07654b35207f2f161c16573d95395d745ee9004fa5b595ea"
+    },
+    {
+      "file": "ops/autoplay-reload.py",
+      "sha256": "f95bca8ad0da16eb2b39aeada42be86dd3f37108ebce851ee892a4bb75e8a621"
+    },
+    {
+      "file": "ops/autoplay.log",
+      "sha256": "004aeb9592ead37b2a66353be7720731ed892459004aadac78d89063986ac41e"
+    },
+    {
+      "file": "ops/autoplay.sh",
+      "sha256": "2ae211a37054de21f66fc75b34ea919ba5528638cbb85d26e526d0a7aaf63209"
+    },
+    {
+      "file": "ops/baseline-start.mark",
+      "sha256": "ab16147fdae6b952e586cd7634a0c82517751faca08c9a6bd38a2831fd04511a"
+    },
+    {
+      "file": "ops/boss_sim_jobs.py",
+      "sha256": "ad8dd465e500debe2a5fdbf9f693ef04ca6bb49327e0ea3d776e2922aecae51e"
+    },
+    {
+      "file": "ops/brain-latency.py",
+      "sha256": "2874aa0f002f8f09a35c446d994cef4dadd5a3810eddc4a089875881dfda2a67"
+    },
+    {
+      "file": "ops/brain_wait.py",
+      "sha256": "35cb03280d8d156f3ae2d158053abf2d592138f672f5e1e5461948e6d4e06725"
+    },
+    {
+      "file": "ops/codex-brain-cache-probe.ts",
+      "sha256": "094c940768dc1177166ec70bb138f4f86ced85c07865e14c4d3a13116a72e935"
+    },
+    {
+      "file": "ops/codex-ops-actions.sh",
+      "sha256": "1406ac61126ddc0e278ec3d741cdcc3f28312fecb521cc25fe0ee00f065c2b22"
+    },
+    {
+      "file": "ops/codex-ops-do.sh",
+      "sha256": "7b57d0498ee82620c09698d7918a47d4df9eabf304d20b85c35ad80b61a14f52"
+    },
+    {
+      "file": "ops/codex-ops-learn.py",
+      "sha256": "0bce87285cd73e7317efcf40cc91736c826db3a4dd15321f3b64cff07eac94c7"
+    },
+    {
+      "file": "ops/codex-ops-learner.sh",
+      "sha256": "c0b495e6e0ecf63cef034f280796cc7948cfa0e5b512dcf70a014f4e2117463e"
+    },
+    {
+      "file": "ops/codex-ops.sh",
+      "sha256": "6c9582d947950a7da2f052c94210b6d61f93e9b26b7a89f929d2ce54c8d5dc22"
+    },
+    {
+      "file": "ops/codex/archive.ts",
+      "sha256": "987a3621cedf4d382643d00abf8e5bb5c9ab336294bfe879e74c69240b40766a"
+    },
+    {
+      "file": "ops/codex/herdr.ts",
+      "sha256": "62544c4b8c074c0f5823b600d0426b62f326e360b6888787274c67d2c5bb87ae"
+    },
+    {
+      "file": "ops/codex/lib.ts",
+      "sha256": "edda0b9089838457c0fcd7a78453354e6001d434fcc343dd3d31d6be3320dd9d"
+    },
+    {
+      "file": "ops/codex/main.ts",
+      "sha256": "2624fd57739094b7ea53e6c3c4fe3354271895d2f98596d233b26ac1c9484d0c"
+    },
+    {
+      "file": "ops/codex/package.json",
+      "sha256": "cc611657fd39fa8c4a4e0cb9fd7cd1bedb1845e430231f2c5129ef76403afeda"
+    },
+    {
+      "file": "ops/codex/rollout-file.ts",
+      "sha256": "07afe68eb7a852aa89d5382f20f688bcd12da584ac20466975e8d1c241e985a9"
+    },
+    {
+      "file": "ops/core_build_jobs.py",
+      "sha256": "8c88153f43a131bc5f93e91f92d1721a0a73e4e8820ae4ec92157f038dabc664"
+    },
+    {
+      "file": "ops/corrections.py",
+      "sha256": "40d90daca06f1ff513471d60466a754a5236b032d12ccfa0728777be9253e48b"
+    },
+    {
+      "file": "ops/cost_compare.py",
+      "sha256": "df8b13b7bb3e7255fa5cd7b5639c6002ae6103d1b4eceb441a4829811513318f"
+    },
+    {
+      "file": "ops/experience-pending.py",
+      "sha256": "ca0fe77ff1cf1edff9b26e1622373f7eb291f1e0fc1857606b37bf90a6895a88"
+    },
+    {
+      "file": "ops/experiments.md",
+      "sha256": "e7e78269daf32dafdb4d94d75d567bbe98f8b4ccff4f759d74797651ee492e65"
+    },
+    {
+      "file": "ops/herdr-exec.sh",
+      "sha256": "613ce94e69eebc2ac716b5c0007ca79cddc9af7fd2504c595f51611d6d23f6c0"
+    },
+    {
+      "file": "ops/herdr-host.sh",
+      "sha256": "71198b0c26a18937a752bddf8f180c800bf7f9ffdaff0cc2c5514988b604ca00"
+    },
+    {
+      "file": "ops/inbox-dev.md",
+      "sha256": "8e057db966e6a27dc0f05d8bca598c31fcb6eb96b0534ccfc5f61223b1775dee"
+    },
+    {
+      "file": "ops/learner_checks.py",
+      "sha256": "cc63d6cd5ec2195116ca1177cfe01fd9199cdbede20a4f547507be3f5218eb4d"
+    },
+    {
+      "file": "ops/learner_jobs.py",
+      "sha256": "7f8643bf05dc0e81efbed7b3e1fc29c6a7139c105ff05dec83aedaf129194a06"
+    },
+    {
+      "file": "ops/m1-ready",
+      "sha256": "d73b9b5d05c3419406d74b201c6eb4efd850d7fad0802d85a1a5b92caca3fd7c"
+    },
+    {
+      "file": "ops/metrics.py",
+      "sha256": "5382600976bf0ffe61c4c34eccdb5e41c452e5e3e08b4191c392e96863b837c0"
+    },
+    {
+      "file": "ops/mod-state.py",
+      "sha256": "cde0648cf0770cf18ec2dd971996fea992d3cc7531d099d5b36895ce94c4d13e"
+    },
+    {
+      "file": "ops/ops-session-prompt.md",
+      "sha256": "d6a6b0066a1fa76b85e7d2ad3141a8f9e19d6d8a4897a8d981265b126a7e86ef"
+    },
+    {
+      "file": "ops/ops-session-silent-codex-prompt.md",
+      "sha256": "ef6b00e593f0feee4de27781d67924470eaea2ea3050c6d4686c60a7954f4950"
+    },
+    {
+      "file": "ops/ops-session-silent-prompt.md",
+      "sha256": "1906f785b13c7ae769a9bed3f40989e9a9043f587c5b9f495df5533fdd26390e"
+    },
+    {
+      "file": "ops/ops-session-v4-prompt.md",
+      "sha256": "092d88363f59342ee0aa6ea6afc2e4c4c9829df6162ebf9551bb8cac1dfb5bdd"
+    },
+    {
+      "file": "ops/paper_dataset.py",
+      "sha256": "778977b4855e21411656d4e673280694666d87e60e04bcd124571ace00ee3c1d"
+    },
+    {
+      "file": "ops/paths.py",
+      "sha256": "e629468a5f0c4b69cd0c0a5403481fd949ddb68c70e41a4f984d064252192593"
+    },
+    {
+      "file": "ops/paths.sh",
+      "sha256": "90d28b017a9d3c5ba979181b6cc40e3e1a5da9a67f92a3182f1dbac070737ddc"
+    },
+    {
+      "file": "ops/plan_adherence.py",
+      "sha256": "2a01a48e19d142acd5d569f2232f403e8faf9917590c952caa7b3697c315ac6c"
+    },
+    {
+      "file": "ops/proposal_dispatch.py",
+      "sha256": "93f45bc9a2cd5160e2a63010be7a9f104d6ae09b7e255032f6307c08e5e75731"
+    },
+    {
+      "file": "ops/refresh-costs.py",
+      "sha256": "04fe5221d25d96dbf4403fd114f44595aaea83f753878da527e23a43fb5b1289"
+    },
+    {
+      "file": "ops/refresh.log",
+      "sha256": "f586eb19d520d67bceae65ef713a2d93b23d194b36115beb1adfb4c459e90392"
+    },
+    {
+      "file": "ops/replay-cases.jsonl",
+      "sha256": "980c233a7b105bb308c0e84917961ca53ab7b86f061192acb6e1b8bf5e64b08e"
+    },
+    {
+      "file": "ops/report.py",
+      "sha256": "5e0fb22413cf18c28f2d6215636cad9f88f7a30dd7668462c713ba6df40f4f90"
+    },
+    {
+      "file": "ops/restarts.log",
+      "sha256": "7664aae879e0137b766d30e58b2b39544af3742f9575434f8feb81c4d15cf883"
+    },
+    {
+      "file": "ops/rule-update.mark",
+      "sha256": "a739c9f8c9968c03553730c28210af55c32a2748834e750b889d63dc4e7545ea"
+    },
+    {
+      "file": "ops/run.sh",
+      "sha256": "d6c8e7c8b7598612100b2fa3334a9cd64e9cd60714645286bbacdc7c55299519"
+    },
+    {
+      "file": "ops/sample-subscription-usage.ts",
+      "sha256": "6ba64e959f8c9663b1d7ef286cf69a70b2b68ce2d8454d57a12b900228543141"
+    },
+    {
+      "file": "ops/stall-check.sh",
+      "sha256": "f5b9639f46606dbd73f7f881594bde6d922def21af4a2fffd2736d4a17c4866e"
+    },
+    {
+      "file": "ops/stats.py",
+      "sha256": "081902729957d932ecf839186314293dd5201ca889c8fa08271ecbdb0fe9ac7c"
+    },
+    {
+      "file": "ops/stop-after-a8.log",
+      "sha256": "a727e78013a17272acd04bb877bb067aedc780680e965ba0db9fe6ae75b901e1"
+    },
+    {
+      "file": "ops/stop-after-a8.sh",
+      "sha256": "e22c39a817e4d268f8b8c98e04482b9097de35fa21cb40eccabf35b303bac47c"
+    },
+    {
+      "file": "ops/stop-after-a9.log",
+      "sha256": "e0ed902fa2c87c9128f13bb0661d970bc60ef4051aa21c9467eca1304c87be97"
+    },
+    {
+      "file": "ops/stop-after.sh",
+      "sha256": "86fa9970d27921a82ea48fa87178562b3f7c607dffeb1a580ccf9f3d29225219"
+    },
+    {
+      "file": "ops/stop.sh",
+      "sha256": "20765acadbe73dea8eaaa48ec7e5c5fb2f5f63f4b392b295c0cf25ceece608bd"
+    },
+    {
+      "file": "ops/subscription-usage.ts",
+      "sha256": "7c9a6ca8173c4de55731f128e3629176019fbcd219ed08f8b7c8e80987b10baf"
+    },
+    {
+      "file": "ops/tests/test_boss_sim_automation.py",
+      "sha256": "56f8d85e57092082dc36209c5e0afa95c1f103053038a85c511517c6a17fcd9d"
+    },
+    {
+      "file": "ops/tests/test_codex_cache_probe_broker.py",
+      "sha256": "a6a8903d1b647680635111490bdab9562c16812dbd9f673d0712f8a01a33743a"
+    },
+    {
+      "file": "ops/tests/test_learning_flow.py",
+      "sha256": "7d4912b83c7c3645cc8ff4e2cb22941eb30332825085dd952cd6b28bb29db978"
+    },
+    {
+      "file": "ops/tests/test_silent_calibration_dispatch.py",
+      "sha256": "70e9f387630ea5093c47abb526f6505ee0f1c179b80421fd78b92c47d18c6876"
+    },
+    {
+      "file": "ops/v2-start.mark",
+      "sha256": "dfd346cce55570f1ded781ea4e4fcb9b56ef627eb4918ec4373a7de1721c7b8e"
+    },
+    {
+      "file": "ops/version_compare.py",
+      "sha256": "3764aaf3e92073c75d71a5a0912125368e74690333bba4f37c0cf8505cf5ee7c"
+    },
+    {
+      "file": "ops/wait-run.sh",
+      "sha256": "8676e1918883e7006ac2209b242b27a7dbc8c120f3a1cba8f3b21e38ce810bd6"
+    },
+    {
+      "file": "ops/watch-autoplay.py",
+      "sha256": "f50222492d2e068293a299ad88272178e347e561420b332a942e77bf0269ddd9"
+    },
+    {
+      "file": "ops/watch-escalations.py",
+      "sha256": "4d5c5e4555030ceb62920882eace26f11247336ea7c610dbd1382d866b69f30b"
+    },
+    {
+      "file": "ops/watch-run.py",
+      "sha256": "f758f32ca54dc3503e51f143f76b6c452b10f78a6d771b7a173a1ad93da12156"
+    },
+    {
+      "file": "ops/win-notified",
+      "sha256": "ea19aed007fa4e791ff13f8e8282b73299934a962d1a589f65a63afc4cb3865d"
+    }
+  ],
+  "linked": [
+    "knowledge",
+    "logs",
+    "data",
+    "notes",
+    "paper",
+    "third_party",
+    ".git",
+    "agent/node_modules"
+  ],
+  "excluded": "仅忽略的历史learner/runs输出不进入源码扫描；跟踪代码逐字节相同，experience/其他知识为同文件，只读测试。"
+}
