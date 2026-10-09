@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261009-141302-postmortem/verify.py", line 16, in <module>
+    check('决策总数',len(ds),438);check('状态总数',len(ss),454);check('脑调用数',len(rows('brain')),22);check('脑实际引擎',sorted({r['engine'] for r in rows('brain')}),['codex']);check('SL行',[r['_line'] for r in rows('sl-attempts')],[1373]);check('读档计数',sorted({r.get('sl_reloads') for r in ds}),[0]);check('回退计数',sum(bool(r.get('fallback')) for r in ds),0)
+                                                                                                                                                                                                                                                                   ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '<' not supported between instances of 'NoneType' and 'int'

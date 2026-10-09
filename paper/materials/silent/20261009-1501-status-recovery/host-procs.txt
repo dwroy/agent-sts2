@@ -1,0 +1,26 @@
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+2015623 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-143947-experience-update /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-143947-experience-update.pid 1 - /home/dw/Projects
+2015624 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-143947-experience-update AF76L5UTPP8U silent experience-update /home/dw/Projects/agent-sts2/.worktrees/exp
+2015633 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/exp/learner/run.ts --engine codex --task experience-update --character silent --cwd /home/dw/Projects/agent-st
+2015666 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2019563 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+2019640 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+2019641 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+2019652 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+2020219 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-144301-postmortem /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-144301-postmortem.pid 1 - /home/dw/Projects/agent-sts2/op
+2020220 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-144301 833ZM0MJGWHC silent
+2020230 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/learner/run.ts --engine codex --task postmortem --character silent --cwd /home/dw/Projects/agent-sts2 --set runs=833ZM0MJ
+2020242 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2046733 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+2046745 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2047987 /home/dw/.codex/tmp/arg0/codex-arg023L2bU/codex-linux-sandbox --sandbox-policy-cwd /home/dw/Projects/agent-sts2 --command-cwd /home/dw/Projects/agent-sts2 --permission-profile {"type":"managed","file_system":{"ty
+2048019 bwrap --as-pid-1 --new-session --die-with-parent --ro-bind / / --dev /dev --perms 000 --tmpfs /tmp/codex-daemon-1000 --remount-ro /tmp/codex-daemon-1000 --bind /tmp /tmp --perms 000 --tmpfs /tmp/codex-daemon-1000
+2048020 codex-linux-sandbox --sandbox-policy-cwd /home/dw/Projects/agent-sts2 --command-cwd /home/dw/Projects/agent-sts2 --permission-profile {"type":"managed","file_system":{"type":"restricted","entries":[{"path":{"type
+2048021 /bin/bash -c nice -n 19 python3 - <<'PY' from pathlib import Path import copy,datetime,fcntl,hashlib,json,os,re,subprocess,tempfile,time root=Path('/home/dw/Projects/agent-sts2');arc=root/'paper/materials/silent/
+autoplay.pid: 1746959
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay                                   wJ:p2   yes    no    
+learner-20261009-143947-experience-update  wJ:pAT  yes    yes   2015623:bash 2015624:bash 2015632:tail 2015633:node 2015666:node
+learner-20261009-144301-postmortem         wJ:pAV  yes    yes   2020219:bash 2020220:bash 2020229:tail 2020230:node 2020242:node
+ops                                        wJ:p5   yes    yes   1753575:node 1753583:codex

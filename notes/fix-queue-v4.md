@@ -958,3 +958,16 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 - [ ] **silent-0338**：仅转录学习者回报，静默A10/F49女王战致死差异注记漏列求解器已计入的奥利哈钢回合末挡。末试T2 d313188/d313190预测损10，却写no end-of-turn block；s321678/s321683为11血0挡对16攻击，s321684实1血；T4 sl1362末试判官明确19 incoming vs 1 HP + 0 block + 6 end-of-turn block。只读定位 `agent/src/reflex/turn-solver.ts:2975` 数值已计入、`:3083` endTurnGuards来源表遗漏，`combat-plan.ts:2010`因此错误解释攻击差。首证本局/prior unknown/observed保持；对局正常结束，诊断问题非阻塞，不将阵亡归因此项。
 - 沿已注册 `silent-proposal-8d88108e5417f650` 自动strategy-proposal链，由学习者核验来源表与解释一致性、固定帧/其他角色等价，自测实际合入后登记；数值与动作保持等价，不重复派发或标implemented/shipped。护栏执行链51ea234b4f032110、双boss资源接续5153135cd2aab723沿原自动链；缺整场配对与反事实不替改SL、药价或终局参数。运维只登记纯bug，原草稿修正、未记录范围及失败历史见 `paper/materials/silent/20261009-1309-events/pm-originals/report.md` 与 `intermediate-history.md`。
+
+## 2026-10-09 15:06 — status在PID沙箱误写活复盘lost（普通运维工具缺陷）
+
+- [ ] **ops-status-sandbox-false-lost**：request_id=watcher-20261009-sandbox-status-false-lost-144301。观察者14:56在Codex PID沙箱调用 `bash ops/codex-ops.sh status`，`ops/codex-ops-learn.py:144—156` 的 running_batch使用本PID命名空间的os.kill(pid,0)判活，`:464—476` 的cmd_status调用该函数并save_state，导致宿主仍活的复盘20261009-144301/833ZM0MJGWHC误标lost及写retry_at。这是已发生的状态工具缺陷，不是学习者退出或游戏机制错误。
+- 运维以broker procs真实回执核对wrapper2020219/learner shell2020220/runner2020230与pane wJ:pAV仍活忙；learn.lock非阻塞短事务重读最新值，仅lost→running及移除本次错误retry_at，attempts=1、原batch/PID/pane不变。原retry_at前态未知，不倒填；所有其他learn.json段落逐对象相等，原错误现场及前后原字节另档。没有调用status/finish/check_jobs、派新批、信号或重启。
+- 交既有普通fix-batch学习者核查：固定数据覆盖“宿主活但沙箱PID不可见”、真实已结束批及并行更新；状态查询应保持只读，不因当前命名空间无法观察而改lost/retry_at，真实失联处置沿宿主调度和原正常完成通道。保留原failed/rc/report/retry历史及调度去重，不放宽验收或改游戏参数。源码修改才按原测试/实际合入流程处理，本轮只登记队列，不实现源码或另派新批。
+- 原件和恢复回执：`paper/materials/silent/20261009-1501-status-recovery/recovery.json`，observer incident及learn-after原SHA、最新锁内before/after、宿主procs和工具源SHA均留档；不造游戏知识账本、shipped或版本。
+
+## 2026-10-09 15:16 — 833ZM0MJGWHC复盘新增非阻塞纯bug（复活资源误核销）
+
+- [ ] **silent-0339**：转录学习者原回报，静默A10/F42卷轴T4毒杀后三敌退场且22/77血未降，控制台却记录蜥蜴尾巴已触发；`agent/src/reflex/combat-plan.ts:5004` 将假设复活余血20与实血22容差匹配，`:5054` 战胜入口核销，`:4915` 后续不计复活。F49第3至5次T3末18血7挡对46被判死读档，s323750/323769/323788与末次s323807 fingerprint相同，末次s323808实际到43/87；反证当轮必死，不证明修后整场能赢。原运行源码57b661f07+dirty、相关源码与学习者只读live相等，dirty知识快照未完整保留。首证本局/prior unknown/observed保持；本局正常结束，非卡死。
+- 沿已登记 `silent-proposal-c232010cd405fe44` 自动strategy-proposal链，学习者依据原固定帧核复活使用证据、攻击前毒杀、已真实消耗及SL恢复/未知出口，未观察条件和其他角色保持原边界；运维只登记普通队列，不实施游戏机制、不重复派发或标implemented/shipped。silent-0340机制、連战资源8c372357c6d94277及护栏追溯d83600a499152eac均由学习者沿原链处理，缺整场配对时保留原策略参数。
+- 原报告、草稿修正与完整证据限制保留于 `paper/materials/silent/20261009-1512-events/pm-originals/report.md`、`owned-lessons-addition-original.md` 及 `manifest.json`。之前15:01误标状态恢复已正常接完成通道，当前144301 done/rc0、attempts=1；原错误现场和恢复回执均保持。

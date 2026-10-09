@@ -1,0 +1,19 @@
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+2012105 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+2012117 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2014204 python3 /home/dw/Projects/agent-sts2/ops/report.py 833ZM0MJGWHC
+2014438 bash -c /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh --character silent --fight-value >/dev/null 2>&1
+2014439 bash /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh --character silent
+2014440 bash /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh --character silent --fight-value
+2014451 python3 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-fight-value.py all --character silent
+2015623 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-143947-experience-update /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-143947-experience-update.pid 1 - /home/dw/Projects
+2015624 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-143947-experience-update AF76L5UTPP8U silent experience-update /home/dw/Projects/agent-sts2/.worktrees/exp
+2015633 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/exp/learner/run.ts --engine codex --task experience-update --character silent --cwd /home/dw/Projects/agent-st
+2015666 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2018171 python3 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-outcome-stats.py --character silent
+autoplay.pid: 1746959
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay                                   wJ:p2   yes    no    
+learner-20261009-143947-experience-update  wJ:pAT  yes    yes   2015623:bash 2015624:bash 2015632:tail 2015633:node 2015666:node
+ops                                        wJ:p5   yes    yes   1753575:node 1753583:codex
