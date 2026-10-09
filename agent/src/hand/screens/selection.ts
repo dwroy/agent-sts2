@@ -18,7 +18,7 @@ import { FREE_OFFER_SOURCES, freeCardPick, modelHandCard, potionCardCost, potion
 import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import { exhaustPileSize, facingFightOf, fightPlaysPerTurn } from "../../reflex/combat-plan.js";
-import { planMakerOf, SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
+import { cardIdentity, planMakerOf, SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
 import { cardOutcome } from "../../knowledge/outcome-facts.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
@@ -400,6 +400,22 @@ export function pendingPickStep(env: DecisionEnv, kind: string, prompt: string, 
   if (pending.runId !== str(env.state.raw["run_id"]) || pending.floor !== (env.state.run?.floor ?? null)) return drop();
   if (selectionTask(kind, prompt) !== pending.task || pending.cards.length === 0) return drop();
   if (selected >= max) return null;
+  if (pending.source === "shop" && pending.selectionPreview && selected === 0) {
+    const actual = asArray(asRecord(env.state.raw["selection"])["cards"]).map(asRecord);
+    const remaining = [...pending.selectionPreview];
+    const matches = actual.every((card) => {
+      const at = remaining.findIndex((identity) => sameCard(card, identity));
+      if (at < 0) return false;
+      remaining.splice(at, 1);
+      return true;
+    }) && remaining.length === 0;
+    if (!matches) {
+      env.screenMemory.selectionPreviewMismatch = { runId: pending.runId, floor: pending.floor, task: pending.task,
+        name: pending.names[0] ?? pending.cards[0]!.card_id, ref: pending.ref,
+        predicted: [...pending.selectionPreview], actual: actual.map(cardIdentity) };
+      return drop();
+    }
+  }
   const target = pending.cards[0]!;
   const card = asArray(asRecord(env.state.raw["selection"])["cards"])
     .map(asRecord)
@@ -407,7 +423,9 @@ export function pendingPickStep(env: DecisionEnv, kind: string, prompt: string, 
   if (!card) {
     // Not on the screen (it lists the first 25 eligible cards: oneshot SELECTION_SCREEN_CARDS): the question asked next
     // says which card was named and why it is not there, instead of dropping it silently (fix-queue-v4 #7).
-    env.screenMemory.pickNotOffered = { runId: pending.runId, floor: pending.floor, task: pending.task, name: pending.names[0] ?? target.card_id };
+    env.screenMemory.pickNotOffered = { runId: pending.runId, floor: pending.floor, task: pending.task, name: pending.names[0] ?? target.card_id,
+      ...(pending.selectionPreview ? { actualPage: true } : {}),
+    };
     return drop();
   }
   const index = numOrNull(card["index"]) ?? 0;
@@ -436,8 +454,13 @@ export function pendingPickStep(env: DecisionEnv, kind: string, prompt: string, 
  * question asked instead (this run, floor and task only); empty otherwise.
  */
 export function pickNotOfferedNote(env: DecisionEnv, task: string | null): Record<string, JsonValue> {
+  const mismatch = env.screenMemory.selectionPreviewMismatch;
+  if (mismatch && mismatch.runId === str(env.state.raw["run_id"]) && mismatch.floor === (env.state.run?.floor ?? null) && mismatch.task === task) return {
+    selection_preview_mismatch: `此前计划 ${mismatch.ref} 指定移除 ${mismatch.name}，预测名单与实际页面不一致，原承诺暂停。预测：${mismatch.predicted.map((card) => card.card_id).join("、")}；现场：${mismatch.actual.map((card) => card.card_id).join("、")}。请依据当前完整名单重新选择，执行索引取自当前页面。`,
+  };
   const memo = env.screenMemory.pickNotOffered;
   if (!memo || memo.runId !== str(env.state.raw["run_id"]) || memo.floor !== (env.state.run?.floor ?? null) || memo.task !== task) return {};
+  if (memo.actualPage) return { named_card_not_offered: `此前指定的 ${memo.name} 未在当前${memo.task}页面提供；请从当前完整现场名单重新选择。` };
   return {
     named_card_not_offered: `${memo.name}, named for this ${memo.task} with the choice before, is not on this screen (it lists only the first ${SELECTION_SCREEN_CARDS} eligible cards in deck order): pick among the cards listed here`,
   };

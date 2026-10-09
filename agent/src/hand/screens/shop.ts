@@ -23,7 +23,7 @@ import { annotatePlating } from "../../knowledge/enchant-text.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import type { ResolvedAction } from "../../memory/types.js";
-import { cardLine, deckCards, nextPlanRef, oneshotFailedHere, oneshotOn, planMakerOf, sameCard, selectableCards, unlistedNote, usePlanRef, visitKey, type CardIdentity, type DeckFollowUp } from "./oneshot.js";
+import { cardLine, deckCards, nextPlanRef, oneshotFailedHere, oneshotOn, planMakerOf, sameCard, selectableCards, unlistedNote, unverifiedRemovalPreview, usePlanRef, visitKey, type CardIdentity, type DeckFollowUp } from "./oneshot.js";
 
 /** The shop removal's selection screen, as a one-shot follow-up (which cards it lists: selectableCards). */
 const REMOVAL_FOLLOW: DeckFollowUp = { task: "remove", count: 1, upTo: false, text: "" };
@@ -354,7 +354,7 @@ export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): 
       const card = cards.find((candidate) => candidate.key === target) ?? (byName.length === 1 ? byName[0] : undefined);
       if (!card) return { invalid: `${key}: no such card key in your_cards` };
       // The removal screen lists the first 25 removable cards in deck order only (fix-queue-v4 #7).
-      if (selectableCards(env.state, cards, REMOVAL_FOLLOW).unlisted.includes(card)) return { invalid: `${key}: ${card.name} is not on the removal screen (it lists only the first removable cards in deck order)` };
+      if (!unverifiedRemovalPreview(env.state) && selectableCards(env.state, cards, REMOVAL_FOLLOW).unlisted.includes(card)) return { invalid: `${key}: ${card.name} is not on the removal screen (it lists only the first removable cards in deck order)` };
       steps.push({ kind: "remove", key, name: card.name, price: numOrNull(removal["price"]), card: card.identity });
       continue;
     }
@@ -453,7 +453,10 @@ function advance(env: DecisionEnv, memo: ShopPlan, step: ShopPlanStep): void {
   memo.actions += 1;
   if (step.kind !== "leave") memo.done.push(stepAction(step).text);
   if (step.kind === "remove" && step.card) {
-    env.screenMemory.pendingPick = { ref: memo.ref, runId: memo.runId, floor: memo.floor, source: "shop", task: "remove", cards: [step.card], names: [step.name], step: memo.actions + 1 };
+    env.screenMemory.selectionPreviewMismatch = undefined;
+    env.screenMemory.pendingPick = { ref: memo.ref, runId: memo.runId, floor: memo.floor, source: "shop", task: "remove", cards: [step.card], names: [step.name], step: memo.actions + 1,
+      ...(unverifiedRemovalPreview(env.state) ? { selectionPreview: selectableCards(env.state, deckCards(env.state, env.knowledge), REMOVAL_FOLLOW).preview } : {}),
+    };
   }
 }
 
@@ -517,7 +520,7 @@ function shopPlanQuestion(env: DecisionEnv, inputs: OneshotInputs, previous: Sho
         affordable_now: inputs.removal.affordable,
         text: 'removes one card from the deck: write "remove:<card key>" with the card from state.your_cards',
         ...inputs.removal.facts,
-        ...unlistedNote(selectableCards(state, cards, REMOVAL_FOLLOW).unlisted, "remove"),
+        ...unlistedNote(selectableCards(state, cards, REMOVAL_FOLLOW).unlisted, "remove", unverifiedRemovalPreview(state)),
       },
     });
   }

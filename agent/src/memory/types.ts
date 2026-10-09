@@ -373,7 +373,9 @@ export interface ScreenMemory {
   /** The deck card(s) a one-shot plan named for the selection screen its action opens (screens/oneshot.ts). */
   pendingPick?: import("../hand/screens/oneshot.js").PendingPick;
   /** The card a one-shot plan named that its selection screen did not list (selection.ts pickNotOfferedNote). */
-  pickNotOffered?: { runId: string; floor: number | null; task: string; name: string };
+  pickNotOffered?: { runId: string; floor: number | null; task: string; name: string; actualPage?: boolean };
+  /** The original commitment and both lists when the shop removal preview disagreed with the actual page. */
+  selectionPreviewMismatch?: { runId: string; floor: number | null; task: string; name: string; ref: string; predicted: import("../hand/screens/oneshot.js").CardIdentity[]; actual: import("../hand/screens/oneshot.js").CardIdentity[] };
   /** visitKey of a one-shot question whose answer was unusable: that visit is asked step by step. */
   oneshotFailed?: string;
   /** One-shot plans played in this run (their references count up). */
