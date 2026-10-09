@@ -733,6 +733,7 @@ export interface UpgradeDelta {
   fasten?: number;
   enemyTempStrengthLoss?: number;
   poisonPerTurn?: number;
+  poisonExtraTriggers?: number;
   damage?: number;
   hits?: number;
   maulIncrease?: number;
@@ -802,6 +803,7 @@ export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
     ...(delta.fasten !== undefined ? { fasten: add(card.fasten, delta.fasten) } : {}),
     ...(delta.enemyTempStrengthLoss !== undefined ? { enemyTempStrengthLoss: add(card.enemyTempStrengthLoss, delta.enemyTempStrengthLoss) } : {}),
     ...(delta.poisonPerTurn !== undefined ? { poisonPerTurn: add(card.poisonPerTurn, delta.poisonPerTurn) } : {}),
+    ...(delta.poisonExtraTriggers !== undefined ? { poisonExtraTriggers: add(card.poisonExtraTriggers, delta.poisonExtraTriggers) } : {}),
     vulnerable: add(card.vulnerable, delta.vulnerable),
     weak: add(card.weak, delta.weak),
     strength: add(card.strength, delta.strength),
@@ -1151,7 +1153,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     const rawUpgrade = observedApotheosisUpgrade(card);
     if (rawUpgrade) {
       const upgraded = modelHandCard(rawUpgrade, fallbackIndex, knowledge, character, ascension);
-      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn"] as const;
+      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn", "poisonExtraTriggers"] as const;
       model.apotheosisUpgrade = {};
       for (const field of fields) {
         const change = (upgraded[field] ?? 0) - (model[field] ?? 0);
