@@ -2960,7 +2960,7 @@ export function turnStartAoeAfter(sim: { inferno: number }, input: SolverInput):
  * Ethereal cards exhausted at the end (none after a won fight), Plating up and played this turn, Cloak Clasp's for the
  * cards held, Orichalcum's and Ripple Basin's (the whole-fight sim; with PASSIVE_PIECES, every turn the solver plays).
  */
-function endBlockParts(sim: Sim, input: SolverInput, winsFight: boolean): { etherealBlock: number; platingNow: number; claspBlock: number; blockAtEnd: number } {
+function endBlockParts(sim: Sim, input: SolverInput, winsFight: boolean): { etherealBlock: number; platingNow: number; claspBlock: number; orichalcumBlock: number; blockAtEnd: number } {
   const heldCards = [...sim.hand, ...sim.held];
   // Ethereal cards still in hand are exhausted at the end of the turn: Feel No Pain's Block for each, before the
   // enemies act (7KDMKN16GD6B: Dazed, Clumsy and Ascender's Bane never counted; HP forecasts 9-12 too low).
@@ -2972,9 +2972,10 @@ function endBlockParts(sim: Sim, input: SolverInput, winsFight: boolean): { ethe
   // Orichalcum when the cards left no block (PASSIVE_PIECES: Plating played this turn does not count, as Plating up never
   // did), Ripple Basin when no Attack was played.
   const beforeOrichalcum = sim.block + etherealBlock + (input.player.orichalcumPlating ? 0 : platingNow) + claspBlock;
-  const relicEndBlock = (beforeOrichalcum <= 0 ? (input.player.orichalcum ?? 0) : 0) + (sim.attacksPlayed === 0 ? (input.player.rippleBasin ?? 0) : 0);
+  const orichalcumBlock = beforeOrichalcum <= 0 ? (input.player.orichalcum ?? 0) : 0;
+  const relicEndBlock = orichalcumBlock + (sim.attacksPlayed === 0 ? (input.player.rippleBasin ?? 0) : 0);
   const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock + relicEndBlock;
-  return { etherealBlock, platingNow, claspBlock, blockAtEnd };
+  return { etherealBlock, platingNow, claspBlock, orichalcumBlock, blockAtEnd };
 }
 
 function fightEnded(sim: Sim, input: SolverInput): boolean {
@@ -3029,7 +3030,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       : 0;
   const heldPenalty = wonBeforePoison ? 0 :
     heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + withersAdded * (wither?.damage ?? 0);
-  const { etherealBlock, platingNow, claspBlock, blockAtEnd } = endBlockParts(sim, input, wonBeforePoison);
+  const { etherealBlock, platingNow, claspBlock, orichalcumBlock, blockAtEnd } = endBlockParts(sim, input, wonBeforePoison);
   const disintegration = wonBeforePoison ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   // Reuse the existing block, Buffer, HP-cap and revive arithmetic for this prefix.
@@ -3087,6 +3088,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
         { what: "Plating played this turn, blocking at its end", amount: platingNow },
         { what: "Feel No Pain block for the Ethereal cards exhausted at the end", amount: etherealBlock },
         { what: "Cloak Clasp block for the cards held", amount: claspBlock },
+        { what: "Orichalcum block at the turn's end", amount: orichalcumBlock },
         { what: "Regen healing before the enemy acts", amount: Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp)) },
         { what: "Buffer stacks, each preventing a whole HP loss", amount: sim.buffer },
       ].filter((guard) => guard.amount > 0);
