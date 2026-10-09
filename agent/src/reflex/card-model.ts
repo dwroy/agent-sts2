@@ -919,7 +919,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) || nextTurnOnly(template, "Energy") ? 0 : (dyn(card, "Energy") ?? 0);
   // R0HEV5E3QT6G F29 T2 / F48 T4: the unupgraded Shadow Step has a dormant Cards=3 var, but no draw.
   const shadowStep = cardId === "SHADOW_STEP" && !bool(card["upgraded"]);
-  const calculatedGamble = cardId === "CALCULATED_GAMBLE" && !bool(card["upgraded"]);
+  // AYTX5H4H69E3 A10 F45 T1, silent-0317: Bellows upgrades the hand card; it still discards three and draws three.
+  const upgradedGamble = character.toLowerCase() === "silent" && ascension === 10 && bool(card["upgraded"]) &&
+    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "保留。丢弃你的所有手牌,然后抽相同数量的牌。消耗。";
+  const calculatedGamble = cardId === "CALCULATED_GAMBLE" && (!bool(card["upgraded"]) || upgradedGamble);
   const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
     dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
   // C48LLXBGKXQ9 F24 T1 / HUVEPWQAHWFU F35 T2, silent-0202: Cards=3 adds random attacks
