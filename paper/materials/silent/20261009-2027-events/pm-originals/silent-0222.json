@@ -1,0 +1,233 @@
+{
+ "id": "silent-0222",
+ "ts": "2026-10-07T09:25:32+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "静默已观察仪式兽兽吼后的1层昏眩RINGING_POWER：本轮打出一张牌后，其余手牌即使仍有能量也被blocked_by_hook；斗篷与匕首生成的小刀同样不能继续打。本局末次T14防御给5挡后仍余2能量，但四牌全被阻止；随后毒药水仍可使用，毒2→8实结算8，不能把喝药视作额外出牌。仅确认这些1层窗口，不外推其他层数或另一首选牌的整场胜负。",
+ "evidence": [
+  {
+   "run": "LRN0HPZ0FZS1",
+   "floor": 17,
+   "turn": 8,
+   "role": "support",
+   "note": "最早静默仪式兽实况：首试15:31:40.272Z在1昏眩下选防御，25血0挡→25血5挡、已出牌数1，剩余手牌全部blocked_by_hook；代码结束后实际扣10血。",
+   "added": "2026-10-07T09:25:32+08:00"
+  },
+  {
+   "run": "LRN0HPZ0FZS1",
+   "floor": 17,
+   "turn": 11,
+   "role": "support",
+   "note": "首试15:32:10.927Z在1昏眩下只出斗篷与匕首+给6挡，生成两小刀和其余手牌均blocked_by_hook，随后结束；证明生成牌也不能继续打。",
+   "added": "2026-10-07T09:25:32+08:00"
+  },
+  {
+   "run": "7ZUC4VPMDS41",
+   "floor": 17,
+   "turn": 14,
+   "role": "support",
+   "note": "末次8血3能量、1昏眩、五手牌，防御后5挡、2能量、已出牌数1，余打击/突然一拳/中和/逃脱计划全blocked；仍能喝毒药水使2→8毒，结束后实死、敌58→50余7毒。25攻击减5挡完整需损20，差12血。",
+   "added": "2026-10-07T09:25:32+08:00"
+  },
+  {
+   "run": "MTQ0EUBJ3R6T",
+   "floor": 17,
+   "role": "support",
+   "note": "仪式兽兽吼后昏眩1，T8只实打防御，仍持有攻击却不可继续；下一轮恢复。仅支持本角色已知1层窗口，states288707-288709，决策T8。",
+   "turn": 8,
+   "added": "2026-10-08T05:25:56+08:00"
+  },
+  {
+   "run": "L2TSFU62Z57Z",
+   "floor": 17,
+   "turn": 8,
+   "note": "末试T8开手无防御或药、玩家17血/4能，RINGING1下代码仅打PINPOINT16伤，剩1能量但四张攻击牌全部BlockedByHook，preventer=RINGING_POWER；17跺地攻击致死。限制正确执行，不声称换首牌有胜线。s291790—291792、d285155—285157。",
+   "role": "support",
+   "added": "2026-10-08T07:51:48+08:00"
+  },
+  {
+   "run": "WZL2AMEY85S7",
+   "floor": 17,
+   "turn": 8,
+   "note": "末试1昏眩下代码先出生存者8挡，余2能量，余牌blocked_by_hook；17攻击-8挡完整需损9超过8HP、存活至少差2，21毒+3荆棘后敌133→109仍活。究极防御在牌组但未抽到。d298277/278/279，s305741-744。",
+   "role": "support",
+   "added": "2026-10-08T21:58:29+08:00"
+  }
+ ],
+ "first_run": "LRN0HPZ0FZS1",
+ "prior": "yes",
+ "prior_runs": [
+  "LRN0HPZ0FZS1"
+ ],
+ "prior_note": "独立机制学习前最早该角色仪式兽战已按单牌窗口给方案并正确执行：首试T8选一张防御、T11选一张斗篷与匕首+，然后确认其他牌不可打而结束；第2次T8单斗篷、T11单中和+也遵守限制。不等于首选最优或整战必胜。更早C48/Y6GM决策没有RINGING_POWER。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "7ZUC4VPMDS41",
+   "MTQ0EUBJ3R6T",
+   "L2TSFU62Z57Z",
+   "WZL2AMEY85S7"
+  ],
+  "experience": [
+   "silent-ceremonial-beast-ringing-one-card"
+  ],
+  "commits": [
+   "f5d4caa26a18d18aa518a7362d11a31abfc62e78",
+   "9ce2c8c1d6e9108efce040bb2d399bcd9df75793",
+   "fc8eeaed124d4894845efd748ffaabd280833637",
+   "ed174ac01583b02eb2bd4a50c11f923f93c20c25",
+   "b1a9cbdd01f899373e097ad9fd53b54992f1b96a",
+   "21b5842d0804d4b7a9772f1a417cf2b6024eb7e5",
+   "7f6d5b4b6a1d1563ebf662db806eb9f3d18b6172",
+   "3967a731a828411afce7121b50b3861043c90ab3",
+   "eaa66f7c572d208a94e80b55d984a7033a728c4e",
+   "d516cdce1da2eb4a07b003657059d754aa310578",
+   "775a51367b76aec570e1b49ec8da1436cc7bb89d",
+   "5cff29a8e005363f25ac4218b793d86e592d4a82",
+   "5bb99c795f0a9460ca45bd56803fb8511a462644",
+   "d49b6ad7bfd22a515d1c3f7ddb5c0ba74ee261ca",
+   "049dff244edcc7426913d090cf6ff1e2c2f86512",
+   "c81d3b8ee7926c03dbc94677356726820bf849d9"
+  ],
+  "changelog": [
+   "2026-10-07 静默猎手 第六十九次增量：1 局 A10（version 2026-10-07.15，分支 exp-silent，f5d4caa2）",
+   "## 2026-10-08 静默猎手 第八十九次增量：2 局 A10（version 2026-10-08.6，分支 exp-silent，b1a9cbdd）",
+   "## 2026-10-08 静默猎手 第九十二次增量：2 局 A10（version 2026-10-08.9，分支 exp-silent，eaa66f7c）",
+   "2026-10-08 静默猎手 第一百零九次增量：2 局 A10（version 2026-10-08.26，分支 exp-silent，5bb99c79）"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-051302-postmortem/proposal-sl.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-053105-experience-update/proposal-mechanisms.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-074302-postmortem/proposal-ringing-terminal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-075539-experience-update/proposal-mechanisms.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-075539-experience-update/proposal-sl-trace.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-214301-postmortem/proposal-ringing-budget.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-220306-experience-update/proposal-mechanisms.md"
+  ]
+ },
+ "asc": 0,
+ "history": [
+  {
+   "ts": "2026-10-07T09:25:32+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-07T10:28:51+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T11:06:11+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-08T05:25:56+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T05:27:47+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T05:39:37+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T05:39:38+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T05:58:25+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T06:11:20+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-08T07:51:48+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T07:53:27+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T08:06:22+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T08:06:22+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T08:06:23+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T08:26:01+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T08:41:50+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-08T21:58:29+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T22:00:42+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T22:13:43+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T22:13:43+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T22:26:40+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T22:34:05+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp109",
+ "effect": null,
+ "notes": [
+  "本批仅关联已核实经验/提交/第69节；保留原claim、first_run、asc、prior、既有support/repeat和版本历史；实际合入由运维核实后登记shipped。",
+  "10:51完成通知运维确认固定源f5d4caa26a18d18aa518a7362d11a31abfc62e78→实际live9ce2c8c1d6e9108efce040bb2d399bcd9df75793→发布fc8eeaed124d4894845efd748ffaabd280833637/唯一S1.exp69，main机械同步ed174ac01583b02eb2bd4a50c11f923f93c20c25。原两次锁等待/七旧知识重叠受阻留史，锁内保存新刷新c97ebec8b3fce9f440c4fbd032df1c53f25a5dd9后仅experience；固定合后沙箱tsc0/223文件2338例exit0，最终发布完整外部另经broker请求待learner-checks，不冒称已过。仅CLI追加所属状态，首证/先验/claim/全部support/repeat及历史保持，既有fix42/fix43/exp68不重复登记，对局继续。",
+  "代码提案 silent-proposal-0802f69b28d25079 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第89批经验提案预关联；保留原claim、首证、prior、repeat与旧上线历史，机制局部收益和整战因果分开。",
+  "代码提案 silent-proposal-763a4b9d9f17b815 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第89批经验源提交已完成；只登记本批经验与来源，保留原claim/首证/prior/repeat及全部旧上线历史，学习者不标accepted/shipped；三代码提案交独立strategy-proposal。",
+  "经验第89次原数据2026-10-08.5→.6/增1改20退0/161 active，源b1a9cbdd唯一experience.json净blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源原沙箱245文件2586例tsc/vitest0，源码/测试/任务与实际live逐blob等价，仅合原数据不重复沙箱检查，完整外部另续验。原首证/先验/claim及support/repeat/旧状态历史保持；三个combat/potion/SL/terminal/structure提案沿原自动链，数据上线不等于代码已实现。0125结构/护栏提案不在原经验map中，保留原proposed；原out/err/report/failed/17冲突不改。",
+  "代码提案 silent-proposal-dfbf51502f30c9b1 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第92批经验提交前提案预关联；保留首证/prior/原claim/repeat与旧上线历史，源码交独立strategy-proposal。",
+  "代码提案 silent-proposal-c2888032d1337388 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-8cd3db3bad5f34f1 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第92批源提交已完成；仅追加本批经验去处，原first_run/prior/claim/support/repeat与旧上线版本历史保持。三个代码提案独立strategy-proposal，学习者不标accepted/implemented/shipped。",
+  "第92次经验原数据2026-10-08.8→.9/增1改20退0/168 active，源eaa66f7c唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记22所属经验数据shipped。源247文件2604例tsc/vitest0，当前源码/测试/任务与固定完整通过7ed2bb0a逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，三个combat/potion/SL/terminal/structure代码提案沿原自动链，数据上线不表示代码实现；原out/err/report/failed及20项记录冲突历史不改。",
+  "主经验三；既有单牌限制得到支持，按手牌保血执行不记为Jev漏打或repeat。",
+  "代码提案 silent-proposal-c9eebe66516045f0 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第109批经验预关联；原帧/层/回合见本批numbers-checked、heart-history、audit，旧claim/first_run/prior/状态/版本及repeat历史保持，提交后登记proposed。",
+  "代码提案 silent-proposal-fcdf526c2ff89a96 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第109批源经验已提交；实际数据shipped交运维据live完成事件核实，独立策略提案尚未实现，不覆盖旧claim/首证/prior/证据/旧版本历史。",
+  "第一百零九次经验仅原数据.25→.26，源5bb99c79增0改15退0/185 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp109。按原学习者ledger-map仅17所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/18冲突/out/err/失败历史保持。"
+ ],
+ "shipped_at": "2026-10-08T22:34:05+08:00"
+}

@@ -1,0 +1,1 @@
+本任务探索失败保留说明：一次临时摘要以d[chosen]读取无chosen的地图同步行，出现KeyError: chosen；已用d.get修正。一次以代码自主题读取questions，出现KeyError: questions；仅限Jev选题读取后修正。两次过宽JSON输出被工具截断，完整局内抽取JSONL和summary文件仍保留。无CLI写入校验失败。这些均是离线分析错误，不计游戏纯bug。v1、v2、v3草稿、append脚本、提案Markdown/JSON、原件SHA、资源链和先验抽取均保留。v1中的SCROLL_BOX单数、N8末牌组23及药水选择表述已在正式追加前v3更正；正式章节无因此勘误。

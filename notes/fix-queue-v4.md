@@ -977,3 +977,7 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - **core-builds-entry-adaptation**：父请求 `roy-20261009-historical-core-builds`，17:30 补充 `roy-20261009-historical-core-builds-result-notify` 已授权现有 learner 做最小任务/调度适配，关联 paper-trace；任务稿与验收见 `paper/materials/silent/20261009-1730-core-entry/entry-adaptation-task.md`。补独立全历史模板、FEATURE_REQUESTS 路由、wrapper 白名单/专用干净租约及标准完成/完整检查通道，并在首份身份/SHA/候选/boss矩阵/伤害资源/构筑模板/限制核实后的实质报告接宿主 herdr 原生通知，父 request+batch+报告SHA 只一次并留成功/失败回执。纯入口与通知不造游戏知识/版本，当前 hook pending、核心学习 batch null，不用单卡增量替代。准备已完成；普通 `codex-dev` 仍归旧 `20261008-075538-strategy-proposal` 的四项暂存候选，源完整沙箱重跑124及原报告保持。先由原候选拥有者沿其原测试/提交/处置链作保存交接，干净且无宿主写者才允许普通 fix learner 接此任务；禁止 reset/clean、混提交旧源码、抢其他功能树/活租约。现有 broker 将单次尝试，实际结果另记，不等待外部完成。
 
 - 2026-10-09 17:46 **core-builds-entry-adaptation 派发回执**：标准宿主fix-batch仅尝试一次，exit1 / dispatched:null；准备稿已提交51fdc45ab，原拥有者/四暂存候选与failed历史SHA保持。准确释放条件及原件回执 `paper/materials/silent/20261009-1730-core-entry/final-verification.json`。无新adapter/core batch，通知hook pending，按原串行闭环等原候选保存交接后安排，不重复派发其他feature。
+
+## 2026-10-09 20:30 — 194301复盘新非阻塞纯 bug（学习者定位）
+
+- [ ] **silent-0344，坚韧之环延迟格挡未接入推演**：仅转录学习者，证据 N8A2W8LH39N0 A10 F12 T7—T9。原定位 `agent/src/reflex/card-model.ts:852`（已读即时挡）、`agent/src/reflex/rollout.ts:1948`、`:2599`、`:1764`（两次轮初持续挡缺接线）。学习者原回报“坚韧之环即时格挡已读取，但后两次轮初格挡未接入持续推演；另见rollout.ts:1948、2599、1764。”；完整复盘/缺证限制与提案 `silent-proposal-8e17a61707d2ca02` 见 `learner/runs/20261009-194302-postmortem/proposal-toric.md`，另关联 silent-0289／silent-0345。非卡死/崩溃/非法动作，交原学习者策略链；运维不补游戏机制、参数或实现，不据此断言该局能转胜，完整 dirty 运行源码未复原与未知升级/重放范围保持。不重派、不标已修或 shipped。
