@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-130839-experience-update/validate.py", line 16, in <module>
+    pots=[p for p in A['potions'] if p['run']==N];check('21成功用药含六石',len(pots)==21 and sum((p.get('potion') or {}).get('id')=='POTION_SHAPED_ROCK' for p in pots)==6)
+                                                  ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-130839-experience-update/validate.py", line 5, in check
+    assert ok,label
+           ^^
+AssertionError: 21成功用药含六石

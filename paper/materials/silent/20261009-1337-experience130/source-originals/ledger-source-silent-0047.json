@@ -1,0 +1,165 @@
+{
+  "id": "silent-0047",
+  "ts": "2026-10-05T04:32:57+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局奥利哈钢在结束回合牌面格挡为0时补6挡，但不会把已有格挡再加6。实验体获胜线T4为0挡对尖啸后的12攻击，实际62→56，体现6挡；T13已有27挡对27攻击，保持8血。首战T11虽有潜在回合末6挡，23血+6仍不足34，判死后读档。仅确认本局触发条件与数值。",
+  "evidence": [
+    {
+      "run": "KAY522KT5NXR",
+      "floor": 48,
+      "turn": 4,
+      "note": "第2次末态0挡、12攻击，实际血62→56；6点回合末补挡与血损核对。",
+      "role": "support",
+      "added": "2026-10-05T04:32:57+08:00"
+    },
+    {
+      "run": "KAY522KT5NXR",
+      "floor": 48,
+      "turn": 11,
+      "note": "首战判官明确34来袭对23血+0挡+6回合末挡，确定必死；没有实际结算死亡。",
+      "role": "support",
+      "added": "2026-10-05T04:32:57+08:00"
+    },
+    {
+      "run": "CNKR125PFHJ5",
+      "floor": 33,
+      "turn": 2,
+      "role": "support",
+      "note": "奥利哈钢持有时T2零牌面挡对12攻击实损6，T5零挡对24实损18；T3已有21挡对23只损2，T6已有9挡不额外补6。已有格挡与回合末被动补挡分开；T6死亡为沙坑。",
+      "added": "2026-10-08T20:00:01+08:00"
+    },
+    {
+      "run": "R3AJCGQGGMR4",
+      "floor": 45,
+      "role": "support",
+      "note": "本角色原日志核实silent-orichalcum-zero-block；CNKR125PFHJ5棱柱零挡对20实损14；R3AJCGQGGMR4 A10巨斧T3已有10挡对16实损6、不额补6，T4零挡30攻由奥利哈钢6抵后损24，T5弱后16攻零挡实损10；首试沙虫T6潜在6挡仍不够15血承受24。",
+      "added": "2026-10-08T22:55:28+08:00"
+    }
+  ],
+  "first_run": "KAY522KT5NXR",
+  "prior": "unknown",
+  "prior_runs": [
+    "T082DRCUHRRD"
+  ],
+  "prior_note": "T082已取得奥利哈钢，但其决定胜负的战斗有钗每回合7挡，没有已核对的相同零牌面格挡触发局面。",
+  "status": "shipped",
+  "where": {
+    "lessons": [
+      "KAY522KT5NXR",
+      "CNKR125PFHJ5"
+    ],
+    "experience": [
+      "silent-orichalcum-zero-block"
+    ],
+    "commits": [
+      "6ff9e1a44aaa36ae8a852b8d076572de42d126c7",
+      "a4bf77d2d969e793b8c8a8a0aa7d3d097d2f4cb8",
+      "b3b446b9b089a4c54c0eb4fbe582f684545aac5b",
+      "809a90f424a2668f186e80bea32e41e44865606c",
+      "196a025b3ef4b9009974cbac5d8db326cc33ae7e",
+      "0dd5cb2450875f88c3c7425912cf22aad9286890",
+      "67d2f22af939bb674469b77b0901fe010686e2e2",
+      "bb0239d0f74faea317d81ef684e806207ae78466",
+      "64ed5d5c2ec47d854f41958111d5f746d8916dad",
+      "c2d5a4e7a37b1628fb8015808258da4746f90503",
+      "e849bf93ec4163d8f82b7237adf3aaed31c42b37",
+      "e03976e39cb58ea1360c5a0f8c9dc41689aaac45"
+    ],
+    "changelog": [
+      "2026-10-05 静默猎手 第四次增量：1 局 A0（version 2026-10-05.4，分支 exp-silent，6ff9e1a4）",
+      "2026-10-05 静默猎手 第四次增量：1 局 A0（version 2026-10-05.4，分支 exp-silent，a4bf77d2）",
+      "2026-10-08 静默猎手 第一百零七次增量：1 局 A10（version 2026-10-08.24，分支 exp-silent，196a025b）",
+      "2026-10-08 静默猎手 第一百一十次增量：1 局 A10（version 2026-10-08.27，分支 exp-silent，64ed5d5c）"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261008-194301-postmortem/提案-截止资源与药水未知.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-201303-experience-update/proposal-mechanisms.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-224303-experience-update/proposal-mechanisms.md"
+    ]
+  },
+  "asc": 0,
+  "history": [
+    {
+      "ts": "2026-10-05T04:32:57+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-05T04:46:41+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-05T04:52:52+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-05T05:07:37+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-08T20:00:01+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-08T20:02:12+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-08T20:25:38+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T20:25:41+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T20:38:56+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T20:49:38+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-08T22:55:28+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T22:55:29+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T23:09:38+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T23:20:42+08:00",
+      "by": "ops",
+      "status": "shipped"
+    }
+  ],
+  "version": "S1.exp110",
+  "effect": null,
+  "notes": [
+    "两条经验中的实验体总尝试数更正为6+3+2=11；同一沙箱名单复验通过，追加最终提交出处，保留此前登记历史。",
+    "运维依据experience-done批次20261005-043344-experience-update及live提交祖先关系确认实际合入，登记S1.exp5，不另设审核。本条为2026-10-05.4产出，本批合入live。",
+    "代码提案 silent-proposal-910db627f14d4eba → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第107批经验提案预关联，保留状态/首证/prior/版本及所有历史；逐层回合与原帧见本批numbers-checked/audit。",
+    "代码提案 silent-proposal-39b4e686237c1193 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第107批已提交经验来源；实际live数据shipped交运维核实，不冒称代码提案已实现。",
+    "第一百零七次经验仅原数据.23→.24，源196a025b增1改19退0/184 active，原251文件2627例tsc/vitest0。actual live/main唯一发布S1.exp107；按学习者ledger-map仅19所属经验数据shipped，保留首证/prior/claim/evidence/support/repeat及旧状态历史。三combat/potion/SL/terminal代码提案沿原自动链，不标代码实现；新数据树完整外部待原批独立续验，exp100旧失败及修复队列不关闭。刷新/并行代码、未提交backtest笔记、原17冲突/merged-null/out/err/原数字核验与拼写勘误均保持。",
+    "第110批提案预关联；原帧/层/回合见本批numbers-checked、stock-history、audit，首证/prior/claim/support/repeat/旧状态及版本保持；源提交后登记proposed。",
+    "代码提案 silent-proposal-574d0359cc102419 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第110批经验源已提交；实际数据shipped交运维据live完成事件核实，四独立提案尚未实现，不覆盖旧claim/首证/prior/原support/repeat/旧版本。",
+    "第一百一十次经验仅原数据.26→.27，源64ed5d5c增1改17退0/186 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp110。按原学习者ledger-map仅18所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，五combat/potion/SL/structure代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/20冲突/out/err/失败历史保持。"
+  ],
+  "shipped_at": "2026-10-08T23:20:42+08:00"
+}

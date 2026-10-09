@@ -1,0 +1,352 @@
+[
+ {
+  "id": "silent-0204",
+  "ts": "2026-10-07T03:28:38+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局石炉加湿器STONE_HUMIDIFIER在实际选择休息回血时增加5最大血，并补5当前血：F16基础回复25后51/85→81/90，F47基础回复34后31/115→70/120；F9锻造54/75不变。全局10次回血将最大血70→120，实际净回复合321。只确认这些已发生的休息与锻造，不把进入火堆本身当触发，也不据此规定路线优先级。",
+  "evidence": [
+   {
+    "run": "UMVLWER4CD98",
+    "floor": 16,
+    "role": "support",
+    "note": "休息选项描述回复25并增加5最大血；相邻状态51/85→81/90，实际增加30当前血，额外5与最大血5同时兑现。",
+    "added": "2026-10-07T03:28:38+08:00"
+   },
+   {
+    "run": "UMVLWER4CD98",
+    "floor": 47,
+    "role": "support",
+    "note": "31/115休息后70/120，回复34加5；六次boss均由此70血开场。",
+    "added": "2026-10-07T03:28:38+08:00"
+   },
+   {
+    "run": "UMVLWER4CD98",
+    "floor": 9,
+    "role": "support",
+    "note": "选择锻造中和，54/75保持；不是每次进休息房都增长5。",
+    "added": "2026-10-07T03:28:38+08:00"
+   },
+   {
+    "run": "ULP4TN1GNHMK",
+    "floor": 9,
+    "role": "support",
+    "note": "休息40/70→66/75，基础21及加湿器当前/最大血各5，净回26；F7锻造中和43/70不变。",
+    "added": "2026-10-07T13:26:30+08:00"
+   },
+   {
+    "run": "ULP4TN1GNHMK",
+    "floor": 16,
+    "role": "support",
+    "note": "休息6/75→33/80，基础22及加湿器当前/最大血各5，净回27；F12锻造毒药65/75不变。四营火只两次实际回血，上限70→80，不预支全部回血。",
+    "added": "2026-10-07T13:26:30+08:00"
+   },
+   {
+    "run": "VLZ6CCT8AQ0A",
+    "floor": 44,
+    "note": "八次休息净补26/27/29/30/32/31/33/34合242，每次最大HP+5；F44 33/99→67/104含基础回复29与增长5，F16锻造不增长，F35战内额外减6上限单列。",
+    "role": "support",
+    "added": "2026-10-07T15:59:10+08:00"
+   },
+   {
+    "run": "G33HU22H2543",
+    "floor": 47,
+    "role": "support",
+    "note": "五次实际HEAL在F7/13/27/32/47各提高5上限，HP净补23/27/21/30/32合133，上限70→95；F11/16/25/44四SMITH无回复。事件茶40、幕间20/58、战内精灵各28与SL恢复均另计。",
+    "added": "2026-10-08T00:59:56+08:00"
+   },
+   {
+    "run": "PBUBM0LRTEDD",
+    "role": "support",
+    "note": "本角色实盘核验：silent-stone-humidifier-rest-growth；F49T1神化升级/力敏/暗影/激怒，T3毒与实死；F42/47满血成长、F48/49资源接续及SL见verified/audit。统计与同盘机制不等整战因果。",
+    "added": "2026-10-09T03:24:08+08:00"
+   }
+  ],
+  "first_run": "UMVLWER4CD98",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "已按更早71局静默复盘标题及对应局号流式查decisions和brain；未找到持有加湿器的题面或实际选择记录，无可比的先验休息行为。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "UMVLWER4CD98",
+    "ULP4TN1GNHMK",
+    "VLZ6CCT8AQ0A",
+    "G33HU22H2543"
+   ],
+   "experience": [
+    "silent-stone-humidifier-rest-growth"
+   ],
+   "commits": [
+    "23080aa4018c2f093cea52a270ba2770a0934b1e",
+    "fcfc0bf95579ad7bc4aae49813b1914caf4413d6",
+    "e8a6fb714b9fde4ed85e5cc76e3fbb839e6b83c7",
+    "8c5d6a30d55f3b8f993c26337f4046944cca98c0",
+    "fa87ca9aca5774033a997b58528e6328607cb09c",
+    "0cfb9a2a51cf8eb0e89309325a6a16686fbc5c93",
+    "b0f41f039b136e69485027ecbf9042c23170b4ab",
+    "2b97e69d97d80a51464a8375174cdef4a36c34fc",
+    "91d49f827f3d429955d63f0b11c5944731759264",
+    "7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a",
+    "586ff2db0de4a841555c2e838f3e7f17e8165307",
+    "79bee0fc11793a410218ae50ca43e41474eec19e",
+    "1bf53e5fe631e7a7836001f463f8561d1a875bc6",
+    "cf32a914f24bf03eedaff69156e6db51a16a1341",
+    "a16518c4201bfc324b185cb2b75eb34ff309676e",
+    "f631c31b7a388a663676a7d691c5df0202ca05ea",
+    "3bdb3a37b106e80790bbe177bc05a226729f674c",
+    "f002a94f4f199bd22b603811d5830be71a868859",
+    "5853fdbf630fca6e9c022aa28c54fedd09fc2ecf",
+    "5495da8a4fbe200b4ab5497cd80d720d3d74c8ad",
+    "63ad746f5bcb248ec46fabf63f1e94e436c60359"
+   ],
+   "changelog": [
+    "2026-10-07 静默猎手 第五十九次增量：1 局 A10（version 2026-10-07.5，分支 exp-silent，23080aa4）",
+    "2026-10-07 静默猎手 第七十三次增量：3 局 A10（version 2026-10-07.19，分支 exp-silent，fa87ca9a）",
+    "## 2026-10-07 静默猎手 第七十五次增量：1 局 A10（version 2026-10-07.21，分支 exp-silent，91d49f82）",
+    "2026-10-08 静默猎手 第八十五次增量：2 局 A10（version 2026-10-08.2，分支 exp-silent，cf32a914）",
+    "2026-10-09 静默猎手 第一百一十六次增量：1 局 A10（version 2026-10-09.5，分支 exp-silent，f002a94f）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-mechanisms-and-resources.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-234303-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-004303-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-004303-strategy-proposal/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-014012-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-014012-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-025837-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-031302-experience-update/proposal-mechanisms.md"
+   ]
+  },
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-07T03:28:38+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T03:56:33+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T04:10:29+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T13:26:30+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T14:05:52+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T15:36:50+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T15:59:10+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T16:52:07+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T16:53:46+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T17:14:16+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T18:06:53+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T23:57:34+08:00",
+    "by": "learner:strategy-proposal"
+   },
+   {
+    "ts": "2026-10-08T00:50:28+08:00",
+    "by": "learner:strategy-proposal"
+   },
+   {
+    "ts": "2026-10-08T00:59:56+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T01:47:25+08:00",
+    "by": "learner:strategy-proposal"
+   },
+   {
+    "ts": "2026-10-08T01:49:44+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T01:49:46+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T02:14:46+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T02:41:05+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T03:12:32+08:00",
+    "by": "learner:strategy-proposal"
+   },
+   {
+    "ts": "2026-10-09T03:24:08+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T03:24:09+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T03:50:16+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-09T03:58:36+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp116",
+  "effect": null,
+  "notes": [
+   "静默经验2026-10-07.5：只登记proposed；首证/先验/原claim/旧version/repeat保持，交运维核实际合入登记shipped；未确认可避免的同一策略失误，不添repeat。",
+   "04:05 experience-done机械确认20261007-034302-experience-update：源23080aa4→实际live fcfc0bf9→固定发布e8a6fb71/唯一S1.exp59，main已同步经验2026-10-07.5与七项自动知识刷新保存点6635abf7原blob。沿学习者UMVLWER4CD98 SILENT A10及03:31:15路线勘误、本角色历史；新增1更新11（全部补证）退役0、active130/50696字，无新用药规则。源与合后首轮均tsc0/vitest0、214文件2289例通过，无失败或超时重跑。锁内保存七项自动刷新后git预检rc1仅decision-log追加冲突，保留双方有序原文并集；知识重叠/冲突0、其他知识逐blob保持，无源码/生成器/其他角色变更。离线取证初稿从敌方powers读TAINTED_POWER错误，改读实际玩家powers后最终断言通过；空initial-evidence.log、初稿说明/脚本及完整事件流保存，不当生产故障或冒称有独立完整失败日志。源经验blob与合入/固定发布一致。本批仅CLI/by=ops十三项shipped覆盖十二经验主题，既有0204首证UMVL/A10/prior=unknown及全部旧first_run/asc/prior/claim/support/repeat/历史保持；0199/0202独立fix40已shipped、0203/exp58、0200/exp57、0201/strategy9、0172/fix39、0197/fix38及0002旧proposed不重置。完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。",
+   "第73批已测静默经验关联；新三局原support/repeat已由复盘登记，保持原claim、首证、先验和历史上线版本；新增历史局只补实际验证的机制support。实际合入与shipped由运维据完成事件核实。",
+   "15:31续办完成通知运维兜底源fa87ca9aca5774033a997b58528e6328607cb09c→实际live0cfb9a2a51cf8eb0e89309325a6a16686fbc5c93→发布b0f41f039b136e69485027ecbf9042c23170b4ab/S1.exp73，main机械同步2b97e69d97d80a51464a8375174cdef4a36c34fc，5代码路径与经验blob逐项等于已测组合2eb5dfcbbeaf6d3f50d1f1e1c8c519ac4861fbfb。固定c9组合原沙箱tsc0/231文件2429例exit0；实际发布保留随后B4/B5及A10/B/C/D代码和自动刷新，不冒报最新树合后全套通过，两个原批完整外部独立learner-recheck待事件。源契约228文件2409例与毒229文件2416例/固定红绿通过，之前rollout120秒、usage、SL失败全部留史；经验源两轮224文件2374例。只CLI所属状态追加，首证/先验/claim/support/repeat及其他ID不改，无毒铁甲等价、同型毒滑溜共享引擎缺陷修正原因沿源码说明；没有重置其他已shipped项。",
+   "代码提案 silent-proposal-ebbfe3b97548756d → task=strategy-proposal；Roy-2026-10-07-learning",
+   "17:48机械经验兜底：原.21源91d49f827f3d429955d63f0b11c5944731759264及未独立发布的.20源7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a已实际成为live586ff2db0de4a841555c2e838f3e7f17e8165307祖先，最终发布79bee0fc11793a410218ae50ca43e41474eec19e/唯一S1.exp75，main1bf53e5fe631e7a7836001f463f8561d1a875bc6经验原blob相等。仅对应经验数据已吸收，原第74批28提案11duplicate/17waiting及.21三pending保留、不当代码implemented；0237/0229等纯bug不在本经验shipment范围。源.21原沙箱tsc0/232文件2430例0，.20原230文件2422例0；本轮数据组合无新源码、不冒称最新整套已过，最终完整外部独立原批续验。旧源merged=null/failed/缺array/路径拒绝/冷却/测试历史保留，CLI只这些经验所属项追加shipped，claim/首证/prior/support/repeat/旧历史及并行未发布经验不改，本状态不宣称后续.22或策略源码上线。",
+   "20261007-234302派发核证：silent-proposal-ebbfe3b97548756d；处置详见提案/report，1duplicate/9waiting，无新源码或上线；保留旧首证/先验/支持/重复及shipment历史。",
+   "20261008-004303策略核验；关联silent-proposal-ebbfe3b97548756d均waiting。六局原始证据哈希与前次一致；具体缺数据和已有局部live源码证明见proposal.md。无新增源码/上线，不新增support/repeat，不改首证、claim、既有版本或shipped历史。",
+   "20261008-014012独立核验：六局3432原帧/3306决策与原证据一致；未改源码、未合入。关联silent-proposal-ebbfe3b97548756d；逐项waiting及缺数据见proposal.md/proposal_results.json，不追加重复support/repeat、不标shipped。",
+   "经验第85批证据/提案预链接；首证、先验、原claim、旧repeat与上线历史保留，尚未登记本批上线。",
+   "代码提案 silent-proposal-10f37c0edd3d24a6 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第85批经验已自测并提交；新证据/反例和旧repeat完整保持。是否实际合入由本批合入回执证明，运维据完成事件登记shipped，学习者不标accepted/shipped。",
+   "经验第85次原数据2026-10-08.1→.2/增0改20退0/159 active已实际兜底发布；仅按学习者原ledger-map登记本所属经验数据shipped。源原沙箱242文件2540例tsc/vitest0、合后原入口243文件2554例tsc/vitest0/4workers，净blob同原cf32a914。原首证/先验/claim/全部support/repeat/旧上线历史保持，三个combat/potion/SL/terminal提案走原独立自动链，经验文字上线不等于这些代码已实现，不宣称旧bug修复；原out/err/failed不改，完整外部原批另续验。",
+   "20261008-025836-strategy-proposal复核本批10个派发ID：逐项waiting与缺数据见proposal.md/report.md；六局原状态SHA不变，未新增源码/合入/版本，不重复support/repeat；已有shipped经验不降级。chosen_order为击杀顺序label，单敌无值不当出牌方案缺失证据。",
+   "第116批经验/提案预关联。保留原claim/首证/prior/状态/版本与support/repeat；PBUBM0LRTEDD原始934决策/963帧及旧150局复算，不称单因转胜；提交后登记proposed。",
+   "代码提案 silent-proposal-7d136552bfd11ffc → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第116批经验源已沙箱自测；实际live由完成事件核验，纯bug不改状态，不称代码实现/数据shipped。",
+   "第一百一十六次经验仅原数据2026-10-09.4→2026-10-09.5，源f002a94f增0改17退0/190 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp116。按原学习者ledger-map仅19所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0322仅原提案关联不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/17冲突/out/err/失败历史保持。"
+  ],
+  "shipped_at": "2026-10-09T03:58:36+08:00"
+ },
+ {
+  "id": "silent-0215",
+  "ts": "2026-10-07T07:04:24+08:00",
+  "character": "silent",
+  "kind": "route",
+  "claim": "静默活动石炉加湿器的营火题分列回复与最大血增长，并按当前HEAL／SMITH动作列HP和最大HP条件参考：UMVL F7旧上限内只回18再增长5，F9锻造不增长，F16/44/47回血各增长5。参考最大HP相同仅该指标并列，未知动作不猜，不规定优先级或未来营火保证；沿既有模型、0204机制及0020缓冲观察。",
+  "evidence": [
+   {
+    "run": "UMVLWER4CD98",
+    "floor": 7,
+    "note": "52/70→75/75，文本基础21、增长5；回复截成18，总增23。",
+    "role": "support",
+    "added": "2026-10-07T07:04:24+08:00"
+   },
+   {
+    "run": "UMVLWER4CD98",
+    "floor": 9,
+    "note": "锻造中和，54/75保持；进入营火和SMITH没有增长。",
+    "role": "support",
+    "added": "2026-10-07T07:04:24+08:00"
+   },
+   {
+    "run": "UMVLWER4CD98",
+    "floor": 16,
+    "note": "51/85→81/90，25回复加5增长。",
+    "role": "support",
+    "added": "2026-10-07T07:04:24+08:00"
+   },
+   {
+    "run": "UMVLWER4CD98",
+    "floor": 44,
+    "note": "44/110→82/115，33回复加5增长。",
+    "role": "support",
+    "added": "2026-10-07T07:04:24+08:00"
+   },
+   {
+    "run": "UMVLWER4CD98",
+    "floor": 47,
+    "note": "31/115→70/120，34回复加5增长；六次boss70进场仍全败，不推定路线胜负。",
+    "role": "support",
+    "added": "2026-10-07T07:04:24+08:00"
+   }
+  ],
+  "first_run": "UMVLWER4CD98",
+  "asc": 10,
+  "prior": "partly",
+  "prior_note": "原题面已有HEAL文字与统一hp_after_heal，原局十次执行回血并增长，0204经验已上线；本项新增无需boss模拟的动作表与截断分账，不证明旧大脑不知道增长。",
+  "status": "shipped",
+  "by": "learner:strategy-proposal",
+  "where": {
+   "proposal": [
+    "learner/runs/20261007-070020-strategy-proposal/proposal.md"
+   ],
+   "lessons": [
+    "UMVLWER4CD98"
+   ],
+   "commits": [
+    "2578e7d6f625cc8d8d08d9b14f10ca9e51cc7648",
+    "05800d48a8f2f06ddae16d57c61eece622a00a44",
+    "5c2a0d4d9bd305cd3ebdf8f77773b77d3b7c350a",
+    "73546b73d4b252c4e74a282b484b6b851c60def1"
+   ]
+  },
+  "note": "独立代码参考提案；既有0204/0020首证、状态、版本和历史保持，实际shipped交运维核实后CLI登记。",
+  "history": [
+   {
+    "ts": "2026-10-07T07:04:24+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T07:12:53+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T07:17:49+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T07:24:43+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.strategy10",
+  "effect": null,
+  "notes": [
+   "独立代码参考提案；既有0204/0020首证、状态、版本和历史保持，实际shipped交运维核实后CLI登记。",
+   "独立源码固定十例撤完整rest.ts后9失败1通过、恢复10通过；源沙箱tsc/vitest0、215文件2299例。合后结果待核，旧0204/0020保持。",
+   "实际live已发布5c2a0d4d9bd305cd3ebdf8f77773b77d3b7c350a、唯一S1.strategy10；源及合后tsc/vitest0、各215文件2299例，撤完整生产源码9失败1通过／恢复10通过。只登记proposed，版本正式字段与shipped交运维同步后核实登记；0204/0020及旧历史保持。",
+   "07:20 strategy-done机械确认20261007-070019-strategy-proposal：源2578e7d6→实际live05800d48→固定发布5c2a0d4d/唯一S1.strategy10，已同步main。静默休息题分列回复、最大血增长和HEAL/SMITH动作的HP/最大HP条件参考，复用已有模型，仅同值最大HP指标并列、未知动作不猜，沿学习者UMVLWER4CD98 SILENT A10 F7/9/16/44/47营火证据，无战斗回合；F9实际SMITH不增长，未执行HEAL截断预期更正完整保留；同局五处不计五个独立样本，不另加阈值或声称转胜。源与合后沙箱tsc0/vitest0各215文件2299例，撤完整rest.ts后9失败1通过／恢复10通过；初稿缺state_version失败及修正、离线run_id取数修正、受限config提示、原提案/三行proposed/红绿/自测按字节归档。三源blob与六份3bed40b3已保存刷新同固定发布，知识重叠空、预检0；全部已测代码同固定发布，其他main最新记录/双方decision-log/Roy新boss模拟跨进阶校准队列/并行经验及台账保持，live后台notes及后续刷新不覆盖。CLI/by=ops仅0215 shipped，first_run=UMVLWER4CD98/A10/prior=partly、claim/五support/repeat/历史保持；0204/0020旧首证、先验、版本及未结0213和其他项不代改。完整外部待本批learner-checks，不重复live合并/自测/论文刷新，对局继续。"
+  ],
+  "shipped_at": "2026-10-07T07:24:43+08:00"
+ }
+]

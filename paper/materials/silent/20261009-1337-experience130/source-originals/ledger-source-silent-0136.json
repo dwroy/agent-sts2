@@ -1,0 +1,153 @@
+{
+  "id": "silent-0136",
+  "ts": "2026-10-06T02:00:25+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局专长版疯狂科学MAD_SCIENCE给予2力量和2敏捷：沙漏首战T2由力量1、无敏捷变为力量3、敏捷2，和金刚杵的开场1力量叠加。普通免费打击10→12、升级打击13→15；随后灵动步法+再把敏捷2→5，格挡牌分别收益。只认本次定制模板，不把旧科学的能力减费、格挡抽牌或攻击紧勒移用到本牌。",
+  "evidence": [
+    {
+      "run": "2PVLGRBGUX9S",
+      "floor": 38,
+      "note": "制作能力牌并选择专长，最终可见文本为获得2力量、2敏捷。",
+      "role": "support",
+      "added": "2026-10-06T02:00:25+08:00"
+    },
+    {
+      "run": "2PVLGRBGUX9S",
+      "floor": 48,
+      "turn": 2,
+      "note": "首战16:55:27.578Z施放前力量1、无敏捷，下一决策为力量3、敏捷2；旧三种模板的六次动作另按状态字节seek核对。",
+      "role": "support",
+      "added": "2026-10-06T02:00:25+08:00"
+    },
+    {
+      "run": "P2M3DFJ4DEZ3",
+      "floor": 49,
+      "turn": 1,
+      "role": "support",
+      "note": "本局专长MAD_SCIENCE文本2力量/2敏捷；s310368→310369力量1→3、敏捷6→8，已有0挡不变；不套疯狂科学攻击或抽牌模板。",
+      "added": "2026-10-09T02:06:41+08:00"
+    },
+    {
+      "run": "RMNXHZKV716Y",
+      "floor": 49,
+      "turn": 2,
+      "role": "support",
+      "note": "末试d313192专长MAD_SCIENCE现场文本2力量/2敏捷；s321682→321683力量0→2、敏捷1→3、已有挡0不变。dynamic_values虽含其他模板项，不作为本次8挡抽3或紧勒12伤。",
+      "added": "2026-10-09T13:03:28+08:00"
+    }
+  ],
+  "first_run": "2PVLGRBGUX9S",
+  "prior": "unknown",
+  "prior_runs": [
+    "R0HEV5E3QT6G",
+    "K3676LU8B0UH",
+    "VN7RQJMJEFMX"
+  ],
+  "prior_note": "更早静默科学分别为能力减费、格挡抽3和12伤攻击加当轮紧勒，未找到同一专长模板的动作；非凡技艺虽有类似增益，不能据它判断本定制牌在学习前的执行。",
+  "status": "shipped",
+  "where": {
+    "lessons": [
+      "2PVLGRBGUX9S",
+      "P2M3DFJ4DEZ3",
+      "RMNXHZKV716Y"
+    ],
+    "experience": [
+      "silent-mad-science-custom-strangle"
+    ],
+    "commits": [
+      "825c94d558f24991e8766dfecee71a71c216e83b",
+      "363ff3037178c20342c36fc1ab474b5aed96a441",
+      "98f88e06ac849c29af6474c76121f37c2d8019ce",
+      "ae49bbec92df38c3d73ec3570560a76a39a408e2",
+      "32daefc69239c5d23741f35e2f5ce71bef25ebce",
+      "9af37f370f360a94e36ab9ac268c5950ae9549a8",
+      "473a62f475dc5af126f231061a1c3c33880ed7a9",
+      "054458768f7a9451328739834ecc20f9ce8e48b1",
+      "bdee78cd610fd897c75d3a453cbe671d924edcf9",
+      "63dfc3219ed252457ee52342f6ab0736b817828f",
+      "20cec89a328cc9bd3b415e34f3bd1aac9bc1cd63",
+      "9942d68c1b804c527af79d54ef8ba51123aa1d8a"
+    ],
+    "changelog": [
+      "2026-10-06 静默猎手 第二十八次增量：1 局 A7（version 2026-10-06.3，分支 exp-silent，825c94d5）",
+      "2026-10-09 静默猎手 第一百一十五次增量：1 局 A10（version 2026-10-09.4，分支 exp-silent，bdee78cd）"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261009-014301-postmortem/proposal-double-boss-resources.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-024302-experience-update/proposal-mechanisms.md",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261009-124302-postmortem/proposal-double-boss.md"
+    ]
+  },
+  "asc": 7,
+  "history": [
+    {
+      "ts": "2026-10-06T02:00:25+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-06T02:15:42+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-06T02:34:16+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-06T04:05:07+08:00",
+      "by": "ops"
+    },
+    {
+      "ts": "2026-10-09T02:06:41+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T02:09:17+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T02:52:09+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-09T02:52:10+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-09T03:08:33+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-09T03:18:29+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-09T13:03:28+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T13:05:33+08:00",
+      "by": "learner:postmortem"
+    }
+  ],
+  "version": "S1.exp115",
+  "effect": null,
+  "notes": [
+    "静默经验2026-10-06.3：旧34局复算一致，本局2PVLGRBGUX9S A7补证；SL六次仅一局，六次抽序共同前15张、第2至第6次前38张。压缩保留来源与原first_run/prior/repeat；各模板/升级子结论局数分开，未来收益不预支。只proposed，实际合入后交运维登记shipped。",
+    "02:26 experience-done机械核实静默经验2026-10-06.3实际合入live并唯一登记S1.exp28；2PVLGRBGUX9S SILENT A7及旧34静默局，源182文件2042例、合后183文件2048例/tsc0首过。仅登记已上线experience文字，first_run/prior/repeat/evidence和旧上线历史保持；科学模板各子分支/普通与升级分别计证据，0138追溯R0HEV5E3QT6G。不将经验上线冒记为推演模型覆盖或受控整场胜负；0136/0137模型覆盖缺口交学习者。完整外部经验checks_pending交后续learner-checks，不借策略3通过、不另审。",
+    "04:00 fix-done机械补代码去向：学习者32daefc6的静默专长科学模板建模已合live 9af37f37并发布473a62f4/S1.fix24，证据2PVLGRBGUX9S SILENT A7 F48首T2/T4，对应0136/0138；撤源3失败2通过/恢复5通过。仅已观测专长模板代码覆盖，不冒记四种定制模板都新修；本行只追记代码去向，两个既有shipped/经验版本、首次局号、先验、claim/evidence/repeat保持。首轮7条铁甲回归失败、限定静默后原断言通过历史保留；最终源及合后tsc0、188文件2068例，完整外部本批检查待事件，不另审。",
+    "代码提案 silent-proposal-f78e5877198eb14c → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第115批提案预关联；原claim/首证/prior/状态/版本及support/repeat历史保留。1247决策/1367帧及旧149局复算，提交后登记proposed；层轮明细见verified/audit/history。",
+    "代码提案 silent-proposal-0e0f404b9c683ace → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第115批经验源提交已自测，待运维据实际live完成事件登记shipped；纯bug原状态不改，不称提案源码实现。",
+    "第一百一十五次经验仅原数据2026-10-09.3→2026-10-09.4，源bdee78cd增1改14退0/190 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp115。按原学习者ledger-map仅17所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0319/0268/0320仅原提案关联不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/18冲突/out/err/失败历史保持。",
+    "代码提案 silent-proposal-5153135cd2aab723 → task=strategy-proposal；Roy-2026-10-07-learning"
+  ],
+  "shipped_at": "2026-10-09T03:18:29+08:00"
+}

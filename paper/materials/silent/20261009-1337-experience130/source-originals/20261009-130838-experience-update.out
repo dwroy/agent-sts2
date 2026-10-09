@@ -1,0 +1,100 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.18 → 2026-10-09.19；提交：6e3ac6948f3c62a90c1077708f20012d5ebeb6f4（分支 exp-silent）；合入：未合入。锁内预检发现五处记录/台账冲突，已停止；刷新提交 799a3bdc 已保留，待调用方兜底。
+- 条数：新增 0、更新 22（加证据 22、只改数字 0）、退役 0；active 196 → 196。正文 51694 → 51397 字符；A8 适用 182 条/47625 字符，A9 183 条/47909 字符。
+- 机制推理（局数为主题支持/反例，均非单因实验）：
+
+  - 候选与执行 — 题面省血不等实际收益 — 162/0 — RMNXHZKV716Y
+  - 力量、敏捷与虚弱 — 属性须通过实际攻击或挡牌兑现 — 163/0 — RMNXHZKV716Y
+  - 步法 — 新敏捷不追补已有挡 — 95/0 — RMNXHZKV716Y
+  - 毒雾 — 后续轮初补毒，建立能力不即时施毒 — 80/0 — RMNXHZKV716Y
+  - 脆弱 — 逐牌核挡，不能累加未消费的翻倍预览 — 35/0 — RMNXHZKV716Y
+  - 奥利哈钢 — 零挡回合末补6，仍可能致死 — 4/0 — RMNXHZKV716Y
+  - 凋萎 — 毒杀收尾仍可能先付持牌血价 — 22/0 — RMNXHZKV716Y
+  - 沙漏成长 — 玩家成长、敌力和持牌伤分别核算 — 22/0 — RMNXHZKV716Y
+  - 女王减益 — 三减益及魂缚影响后段预算 — 19/0 — RMNXHZKV716Y
+  - 女王重打 — 同抽前缀不证明单项胜因 — 11/0 — RMNXHZKV716Y
+  - 疯狂科学 — 按现场模板核力敏，不能套其他模板 — 8/0 — RMNXHZKV716Y
+  - 佩尔的士兵 — 只翻倍首张实际牌挡 — 7/0 — RMNXHZKV716Y
+  - 铜质鳞片 — 逐击反伤，全挡仍触发 — 15/0 — RMNXHZKV716Y
+  - 永恒羽毛 — 到火回复与主动休息分账 — 12/0 — RMNXHZKV716Y
+  - 石炉加湿器 — 实际HEAL增上限，锻造不触发 — 6/0 — RMNXHZKV716Y
+  - 连战接续 — 第二boss承接实血药并重建能力 — 14/0 — RMNXHZKV716Y
+  - 罐装幽灵 — 当轮防护兑现，下一轮重新核算 — 7/0 — RMNXHZKV716Y
+  - 石化蟾蜍 — 新战生成石头与SL恢复分账 — 6/0 — RMNXHZKV716Y
+  - 跨幕恢复 — 已见A9/A10按缺失HP的80%取整回复 — 45/0 — RMNXHZKV716Y
+  - 毒药水 — 先施毒，饮用当步不直接扣敌血 — 42/0 — RMNXHZKV716Y
+
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 251 文件/2627 用例/退出码 0，未重跑。
+- 切片大小：整体中位增加 16.5 字；最大 5535 → 5553 字。
+- 学习账本：新增无；改成 proposed：silent-0019、0020、0021、0125、0012、0005、0011、0069、0047、0024、0059、0025、0136、0180、0129、0142、0204、0228、0301、0327、0243、0278；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.19",
+  "commit": "6e3ac6948f3c62a90c1077708f20012d5ebeb6f4",
+  "merged": null,
+  "added": 0,
+  "updated": 22,
+  "retired": 0,
+  "active": 196,
+  "mechanisms": [
+    "候选、能力与最终执行（观察）",
+    "力量逐击/敏捷逐牌与虚弱",
+    "步法敏捷兑现时点",
+    "毒雾轮初补毒",
+    "脆弱逐牌挡与首卡消费",
+    "奥利哈钢零挡末挡",
+    "凋萎持牌伤与毒胜",
+    "沙漏制品/敌成长与SL（观察）",
+    "女王三减益/魂缚与目标（观察）",
+    "女王同抽重打（观察）",
+    "科学现场定制力敏",
+    "佩尔首张牌挡翻倍",
+    "铜质鳞片逐击反伤",
+    "羽毛到火回复",
+    "加湿器HEAL增上限",
+    "连战实际血药接续（观察）",
+    "幽灵当轮无实体",
+    "新战石头与SL恢复",
+    "跨幕缺血回复",
+    "毒药实施毒与实结算"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0019", "silent-0020", "silent-0021", "silent-0125",
+      "silent-0012", "silent-0005", "silent-0011", "silent-0069",
+      "silent-0047", "silent-0024", "silent-0059", "silent-0025",
+      "silent-0136", "silent-0180", "silent-0129", "silent-0142",
+      "silent-0204", "silent-0228", "silent-0301", "silent-0327",
+      "silent-0243", "silent-0278"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-41cad54ac81fe8b1",
+    "silent-proposal-cc3e6ec5e4c6b8aa",
+    "silent-proposal-d17645643e673587",
+    "silent-proposal-b0d7fba5c0acd1dd"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-130839-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11f10-3f0b-7531-8802-e62ad4b49599
+轮数：1；工具调用：command_execution×56 file_change×7
+token：输入 195.4k、输出 47.7k（其中推理 15.2k）、cache 读 6695.7k、cache 写 0（命中 97.2%）
+成本：未提供
+耗时：1698.2 s（墙钟）
+时间：首个事件 3.2 s、模型首个输出 8.1 s、首次工具 10.6 s、末次工具结束 1621.9 s；工具内共 1317.3 s，其余（模型生成、推理、网络）377.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×53；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T13-08-40-01a11f10-3f0b-7531-8802-e62ad4b49599.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-130839-experience-update.jsonl
