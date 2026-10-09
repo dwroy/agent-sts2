@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-09T23:08:27.233301+08:00",
+  "authorisation": "Roy chose 2 concurrent strategy workers in current conversation",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/strategy-proposal-concurrency",
+  "branch": "fix/strategy-proposal-concurrency",
+  "base": "01cd956d942d00099a44d29a7cf063aed4472163",
+  "changes": [
+    "two normal strategy workers with duplicate-key protection",
+    "disjoint proposal_ids, active repair ownership retained",
+    "fill two slots in one existing ops callback; same actual timestamp with -s2 second-slot id",
+    "second-slot bootstrap, registered merge fallback and external-check broker compatibility",
+    "explicit batch task binding and material filenames avoid temporary .ts import failures",
+    "link existing logdb-venv for fresh trees, no dependency install"
+  ],
+  "checks": {
+    "python_2": "6 passed",
+    "target_1": "6 files /13 tests passed",
+    "learning_flow_1": "24 passed",
+    "sandbox_1": "running exec session70798 since23:00; source unchanged during full run",
+    "regression_baseline_red": "two expected failures against git HEAD baseline, source files not altered",
+    "syntax_and_diff": "bash -n and git diff --check pass"
+  },
+  "role": "Only ops/scheduler launches learners; watcher develops and observes",
+  "not_changed": [
+    "game knowledge/rules",
+    "model/effort",
+    "ops session prompts",
+    "timers/services",
+    "active worktrees"
+  ],
+  "remaining": [
+    "finish sandbox and final scan",
+    "commit only owned changes",
+    "integrate main+live under existing live lock preserving parallel data",
+    "request existing ops dispatch and verify two disjoint live workers",
+    "record external complete checks separately"
+  ],
+  "main_now": "c824f5cbc (parallel ops records advanced; own branch base01cd956d9)",
+  "integration_method": "cherry-pick own source/material commit into main (not ff), then live under existing nonblocking lock; source files currently owned only in this development worktree",
+  "role_note": "Never invoke learner write/tick/dispatch directly from watcher. Standard wake only, ops owns startup. Automatic existing scheduler will fill two slots after integration.",
+  "outstanding_compatibility_note": "Current Node broker caches old validation until its next natural wake; S2 root Python completion works immediately, no TUI restart."
+}

@@ -305,7 +305,7 @@ export function validateRequest(raw: unknown): BrokerRequest {
   if (action === "strategy-proposal" && !/^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$/.test(list[0]!)) {
     return { ok: false, error: "strategy-proposal 要 1–10 个 12 位局号" };
   }
-  if (action === "learner-recheck" && !/^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)$/.test(list[0]!)) {
+  if (action === "learner-recheck" && !/^(?:[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal)$/.test(list[0]!)) {
     return { ok: false, error: "learner-recheck 要写入任务的完整批次 id" };
   }
   if (action === "core-build-notify" && !/^[0-9]{8}-[0-9]{6}-fix-batch$/.test(list[0]!)) {

@@ -60,6 +60,7 @@ def start_learner(argv, root, scripts, state_dir, label):
             handle.write(str(proc.pid) + "\n")
     return proc.pid, None
 WORKTREES = {"experience-update": "exp", "fix-batch": "codex-fix", "strategy-proposal": "codex-strategy"}
+STRATEGY_WORKERS = 2  # Roy approved two independent proposal workers on 2026-10-09.
 FEATURE_REQUEST = "notes/silent-boss-calibration-dispatch.json"
 # Explicit, approved templates and paths only; Roy's latest cache request has manual priority.
 FEATURE_REQUESTS = {
@@ -176,6 +177,8 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
 
 
 def busy(state, task, alive):
+    active = 0
+    limit = STRATEGY_WORKERS if task == "strategy-proposal" else 1
     for batch in state["batches"].values():
         # The dedicated feature owns its own worktree, not the normal fix/proposal tree.
         if batch.get("learner_task") in FEATURE_REQUESTS or batch.get("boss_sim"):
@@ -183,7 +186,10 @@ def busy(state, task, alive):
         if batch.get("task") != task or batch.get("state") != "running":
             continue
         if alive(batch.get("pid")):
-            return True
+            active += 1
+            if active >= limit:
+                return True
+            continue
         batch.update(state="lost", retry_at=time.time() + 3600)
     return False
 
@@ -236,6 +242,9 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         handled, result = requested_feature(state, root, scripts, character, reason, alive, stamp)
         if handled:
             return result
+    if task == "strategy-proposal" and any(batch.get("task") == task and batch.get("key") == key
+            and batch.get("state") == "running" and alive(batch.get("pid")) for batch in state["batches"].values()):
+        return None
     if busy(state, task, alive) or not available(root, task) or (reason != "ops" and not retryable(state, task, key)):
         return None
     batch_id = stamp + "-" + task

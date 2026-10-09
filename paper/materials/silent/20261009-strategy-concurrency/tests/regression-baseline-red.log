@@ -1,0 +1,25 @@
+test_two_disjoint_batches_are_filled_and_third_is_blocked (regression_tests.StrategyConcurrency.test_two_disjoint_batches_are_filled_and_third_is_blocked) ... FAIL
+test_old_running_batch_keeps_ownership_while_other_ids_are_claimed (regression_tests.StrategyConcurrency.test_old_running_batch_keeps_ownership_while_other_ids_are_claimed) ... ERROR
+
+======================================================================
+ERROR: test_old_running_batch_keeps_ownership_while_other_ids_are_claimed (regression_tests.StrategyConcurrency.test_old_running_batch_keeps_ownership_while_other_ids_are_claimed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/strategy-proposal-concurrency/ops/tests/test_strategy_concurrency.py", line 63, in test_old_running_batch_keeps_ownership_while_other_ids_are_claimed
+    new = next(b for k, b in self.state['batches'].items() if k != 'old')
+StopIteration
+
+======================================================================
+FAIL: test_two_disjoint_batches_are_filled_and_third_is_blocked (regression_tests.StrategyConcurrency.test_two_disjoint_batches_are_filled_and_third_is_blocked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/strategy-proposal-concurrency/ops/tests/test_strategy_concurrency.py", line 49, in test_two_disjoint_batches_are_filled_and_third_is_blocked
+    self.assertEqual(len(batches), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+FAILED (failures=1, errors=1)
+{"baseline": "01cd956d942d00099a44d29a7cf063aed4472163", "expected_red_checks": 2, "actual_failures": 1, "actual_errors": 1, "source_files_modified_for_red_run": false}

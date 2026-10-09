@@ -26,11 +26,21 @@ def finished_count(root,character):
 
 
 def dispatch(state,root,scripts,character,alive,stamp,dispatch_write):
+    """Fill two slots under the caller's learn.lock, retaining the first-result API."""
+    first = dispatch_one(state,root,scripts,character,alive,stamp,dispatch_write)
+    if first:
+        dispatch_one(state,root,scripts,character,alive,stamp+"-s2",dispatch_write)
+    return first
+
+
+def dispatch_one(state,root,scripts,character,alive,stamp,dispatch_write):
     for ident, repair in state.get('proposal_repairs',{}).items():
         if repair.get('character')!=character or repair.get('state')!='pending' or not repair.get('runs'): continue
         prior=[b for b in state['batches'].values() if b.get('proposal_repair')==ident]
         if any(b.get('state')=='done' for b in prior):
             repair['state']='done';continue
+        if any(b.get('state')=='running' and alive(b.get('pid')) for b in prior):
+            continue
         key='proposal-link-repair:'+ident
         result=dispatch_write(state,root,scripts,'strategy-proposal',character,repair['runs'][:10],key,'proposal',alive,stamp)
         if result: state['batches'][result[0]]['proposal_repair']=ident
@@ -39,14 +49,18 @@ def dispatch(state,root,scripts,character,alive,stamp,dispatch_write):
         lib=library(scripts);items=lib.fold(Path(root,lib.QUEUE))
     except (OSError,ValueError,ImportError): return None
     count=finished_count(root,character)
+    claimed=set()
+    for batch in state['batches'].values():
+        if batch.get('state')!='running' or not batch.get('proposal_ids'): continue
+        if alive(batch.get('pid')):
+            claimed.update(batch['proposal_ids'])
+        else:
+            batch.update(state='lost',retry_at=time.time()+3600)
     ready=[p for p in items.values() if p.get('character')==character and p.get('target_task')=='strategy-proposal'
+           and p['id'] not in claimed
            and (p.get('state')=='pending' or p.get('state')=='waiting' and count>p.get('seen_runs',count))]
     if not ready: return None
     ids=[p['id'] for p in ready[:10]]
-    prior=[b for b in state['batches'].values() if set(b.get('proposal_ids',[])) & set(ids) and b.get('state')=='running']
-    for batch in prior:
-        if alive(batch.get('pid')): return None
-        batch.update(state='lost',retry_at=time.time()+3600)
     runs=list(dict.fromkeys(r for p in ready[:10] for r in p['runs']))[:10]
     key='code-proposals:'+','.join(ids)+':'+str(count)
     result=dispatch_write(state,root,scripts,'strategy-proposal',character,runs,key,'proposal',alive,stamp)

@@ -199,7 +199,7 @@ for row in csv.reader(sys.stdin):
   learner-merge)
     exec python3 "$OPS/codex-ops-learn.py" request-merge --branch "$arg" ;;
   learner-recheck)
-    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)$ ]] || exit 2
+    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
     exec nice -n 19 python3 "$OPS/codex-ops-learn.py" recheck --batch "$arg" ;;
   eval-metrics)
     [ $# -eq 3 ] || { echo "eval-metrics takes character and ascension" >&2; exit 2; }
