@@ -1,0 +1,237 @@
+diff --git a/agent/tests/learner-launch-failures.test.ts b/agent/tests/learner-launch-failures.test.ts
+new file mode 100644
+index 000000000..b0c857ec1
+--- /dev/null
++++ b/agent/tests/learner-launch-failures.test.ts
+@@ -0,0 +1,10 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++
++it("nested Fast launches preserve the native CLI and missing failed reports keep their original failure", () => {
++  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_learner_launch_failures.py"], {
++    encoding: "utf8", timeout: 30_000,
++  });
++  expect(result.status, result.stderr).toBe(0);
++  expect(result.stderr).toContain("Ran 8 tests");
++});
+diff --git a/ops/codex-fast.sh b/ops/codex-fast.sh
+index ce4b2f3c4..8796adb14 100755
+--- a/ops/codex-fast.sh
++++ b/ops/codex-fast.sh
+@@ -3,7 +3,10 @@
+ # Preserve their task source, model, effort, permission profile and sandbox child command.
+ set -eu
+ codex_bin="${STS2_CODEX_FAST_BIN:-$HOME/.local/node/bin/codex}"
+-[ "$codex_bin" != "${BASH_SOURCE[0]}" ] || { echo "recursive Codex Fast launcher" >&2; exit 2; }
++if [ "$codex_bin" = "${BASH_SOURCE[0]}" ] || [ "$codex_bin" -ef "${BASH_SOURCE[0]}" ]; then
++  echo "recursive Codex Fast launcher" >&2
++  exit 2
++fi
+ args=()
+ service_set=0
+ while [ "$#" -gt 0 ]; do
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index 35c9a11f4..a2cb82bcf 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -91,8 +91,18 @@ elif [ -n "${LEARNER_CMD:-}" ]; then
+   rc=$?
+ else
+   # Old leased worktrees keep their launcher source; enforce the service policy at the native CLI boundary.
+-  export STS2_CODEX_FAST_BIN="${LEARNER_CODEX_BIN:-$(command -v codex)}"
+-  export LEARNER_CODEX_BIN="$ROOT/ops/codex-fast.sh"
++  codex_fast_wrapper="$ROOT/ops/codex-fast.sh"
++  codex_fast_native="${LEARNER_CODEX_BIN:-${STS2_CODEX_FAST_BIN:-$(command -v codex)}}"
++  # A completion can dispatch another batch with this wrapper already exported.
++  # Keep its native executable instead of wrapping the wrapper a second time.
++  if [ "$codex_fast_native" = "$codex_fast_wrapper" ] || [ "$codex_fast_native" -ef "$codex_fast_wrapper" ]; then
++    codex_fast_native="${STS2_CODEX_FAST_BIN:-$(command -v codex)}"
++    if [ "$codex_fast_native" = "$codex_fast_wrapper" ] || [ "$codex_fast_native" -ef "$codex_fast_wrapper" ]; then
++      codex_fast_native="$(command -v codex)"
++    fi
++  fi
++  export STS2_CODEX_FAST_BIN="$codex_fast_native"
++  export LEARNER_CODEX_BIN="$codex_fast_wrapper"
+   args=(--engine codex --task "$learner_task" --character "$character" --cwd "$worktree")
+   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
+   if [ "$learner_task" = silent-historical-core-builds ]; then
+diff --git a/ops/learner_checks.py b/ops/learner_checks.py
+index 603531a91..86fa2d6ed 100644
+--- a/ops/learner_checks.py
++++ b/ops/learner_checks.py
+@@ -94,8 +94,12 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
+                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+     task = batch["task"]
+     proposals = proposal_tools()
+-    proposal_errors = proposals.links(report,batch,root,os.path.dirname(__file__))
+-    proposal_errors += proposals.experience_audit(report,batch,root,os.path.dirname(__file__))
++    # An engine/preflight failure has no learning output to repair. Keep its real
++    # exit and stderr; a missing report alone is not a missing gameplay proposal.
++    missing_failed_report = rc != 0 and not report
++    proposal_errors = [] if missing_failed_report else proposals.links(report,batch,root,os.path.dirname(__file__))
++    if not missing_failed_report:
++        proposal_errors += proposals.experience_audit(report,batch,root,os.path.dirname(__file__))
+     empty = verify_empty_fix(report, batch, root) if rc == 0 and not verified else None
+     proposal_only = proposals.no_change(report,batch,root) if rc == 0 and not verified else None
+     if not proposal_errors and rc == 0 and (verified or proposal_only):
+@@ -103,6 +107,9 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
+         except (OSError,ValueError,ImportError) as error: proposal_errors.append(str(error))
+     batch.update(state="done" if rc == 0 and not proposal_errors and (verified or empty or proposal_only) else "failed", rc=rc, merged=merged if verified else None,
+                  proposal_audit_errors=proposal_errors, report=report)
++    if missing_failed_report:
++        batch["completion_failure"] = {"reason": "learner exited without a completion report", "rc": rc,
++                                       "stderr": os.path.join(out_dir, batch_id + ".err")}
+     if proposal_only: batch["no_change_proposals"] = proposal_only
+     if proposal_errors:
+         inbox("学习代码提案链未通过：" + "; ".join(proposal_errors) + "；原产出/合入事实保留，派学习者补链，不自动改游戏知识或回退。")
+@@ -112,7 +119,8 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
+     enqueue({"experience-update": "experience-done", "strategy-proposal": "strategy-done"}.get(task, "fix-done"),
+             f"{task} 批次 {batch_id} 结束：exit {rc}；已核实合入 live：{merged if verified else '无'}。"
+             f"回报：{out_dir}/{batch_id}.out。"
+-            + (f"已核实无新增产出、自测通过，源码与 live {empty['live']} 一致；正常结案，无新增合并或完整补测。"
++            + (f"未取得可验收完成回报，先查原 stderr：{out_dir}/{batch_id}.err；保留失败原件，不把启动或中断失败当作提案缺失。"
++               if missing_failed_report else f"已核实无新增产出、自测通过，源码与 live {empty['live']} 一致；正常结案，无新增合并或完整补测。"
+                if empty else "已核实无源码修改的提案处置；证据不足保留待新局，不冒造合入、版本或补测。" if proposal_only
+                else "学习者自测后自行合入，无需另设审核；未合入时查回报，提交受阻由运维兜底。")
+             + ("；提案链待补：" + "; ".join(proposal_errors) if proposal_errors else ""))
+diff --git a/ops/tests/test_learner_launch_failures.py b/ops/tests/test_learner_launch_failures.py
+new file mode 100644
+index 000000000..9f6183f12
+--- /dev/null
++++ b/ops/tests/test_learner_launch_failures.py
+@@ -0,0 +1,135 @@
++"""Fixed launcher/finish fixtures: no models, credentials, production state or play."""
++import importlib.util
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import tempfile
++import unittest
++from unittest.mock import Mock, patch
++
++REPO = Path(__file__).resolve().parents[2]
++spec = importlib.util.spec_from_file_location("launch_failure_checks", REPO / "ops/learner_checks.py")
++checks = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(checks)
++
++
++class FastLauncher(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        (self.root / "ops").mkdir()
++        (self.root / "agent/node_modules/.bin").mkdir(parents=True)
++        (self.root / "bin").mkdir()
++        for name in ("paths.sh", "codex-ops-learner.sh", "codex-fast.sh"):
++            shutil.copy2(REPO / "ops" / name, self.root / "ops" / name)
++        self.wrapper = self.root / "ops/codex-fast.sh"
++        self.native = self.root / "bin/codex"
++        self.write_executable(self.native, "#!/usr/bin/python3\nimport json,sys\nprint(json.dumps(sys.argv[1:]))\n")
++        self.write_executable(self.root / "agent/node_modules/.bin/tsx",
++                              '#!/bin/bash\nexec "$LEARNER_CODEX_BIN" sandbox -c \'model="fixture"\' '
++                              '-c \'model_reasoning_effort="xhigh"\' -c \'service_tier="default"\' -- /fixture/check\n')
++        (self.root / "ops/codex-ops-learn.py").write_text("# Fixed completion stub; no dispatch or production state.\n")
++        self.env = {"HOME": str(self.root / "home"), "PATH": str(self.root / "bin") + ":/usr/bin:/bin",
++                    "CODEX_OPS_ROOT": str(self.root), "CODEX_OPS_NO_DRAIN": "1"}
++
++    def write_executable(self, path, content):
++        path.write_text(content)
++        path.chmod(0o755)
++
++    def launch(self, **env):
++        result = subprocess.run(["bash", str(self.root / "ops/codex-ops-learner.sh"),
++                                 "20260101-000001-experience-update", "FIXTURE000001", "silent",
++                                 "experience-update", str(self.root)],
++                                env={**self.env, **env}, capture_output=True, text=True, timeout=10)
++        err = self.root / "ops/codex-ops/learner/20260101-000001-experience-update.err"
++        self.assertEqual(result.returncode, 0, result.stderr + (err.read_text() if err.exists() else ""))
++        args = json.loads((err.with_suffix(".out")).read_text())
++        self.assertEqual(args.count('service_tier="priority"'), 1)
++        self.assertNotIn('service_tier="default"', args)
++        self.assertIn('model="fixture"', args)
++        self.assertIn('model_reasoning_effort="xhigh"', args)
++        self.assertEqual(args[-2:], ["--", "/fixture/check"])
++
++    def test_explicit_native_override_is_kept(self):
++        self.launch(LEARNER_CODEX_BIN=str(self.native), STS2_CODEX_FAST_BIN="/unselected/codex")
++
++    def test_nested_dispatch_reuses_the_original_native(self):
++        self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_FAST_BIN=str(self.native))
++
++    def test_already_recursive_environment_recovers_the_native_from_path(self):
++        self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_FAST_BIN=str(self.wrapper))
++
++    def test_symlink_to_wrapper_is_not_treated_as_native(self):
++        alias = self.root / "fast-alias"
++        alias.symlink_to(self.wrapper)
++        self.launch(LEARNER_CODEX_BIN=str(alias), STS2_CODEX_FAST_BIN=str(self.native))
++
++    def test_direct_recursive_native_and_alias_fail_closed(self):
++        alias = self.root / "fast-alias"
++        alias.symlink_to(self.wrapper)
++        for native in (self.wrapper, alias):
++            result = subprocess.run(["bash", str(self.wrapper), "sandbox"],
++                                    env={**self.env, "STS2_CODEX_FAST_BIN": str(native)},
++                                    capture_output=True, text=True, timeout=5)
++            self.assertEqual(result.returncode, 2)
++            self.assertIn("recursive Codex Fast launcher", result.stderr)
++
++
++class MissingReports(unittest.TestCase):
++    def finish(self, rc, report):
++        batch = {"task": "experience-update", "character": "silent",
++                 "proposal_policy": "Roy-2026-10-07-learning"}
++        proposals = Mock()
++        proposals.links.return_value = ["missing string code_proposals array"]
++        proposals.experience_audit.return_value = ["missing source commit for proposal audit"]
++        proposals.no_change.return_value = None
++        events, notices = [], []
++        with patch.object(checks, "read_report", return_value=report), \
++                patch.object(checks, "proposal_tools", return_value=proposals), \
++                patch.object(checks.subprocess, "run", return_value=subprocess.CompletedProcess([], 0)):
++            checks.finish_write_batch("fixed", batch, rc, "/fixture", "/reports",
++                                      lambda kind, message: events.append((kind, message)), notices.append,
++                                      run_checks=False)
++        return batch, proposals, events, notices
++
++    def test_preflight_or_timeout_without_report_does_not_enqueue_gameplay_repair(self):
++        for rc in (3, 124):
++            batch, tools, events, notices = self.finish(rc, {})
++            self.assertEqual(batch["state"], "failed")
++            self.assertEqual(batch["rc"], rc)
++            self.assertEqual(batch["report"], {})
++            self.assertEqual(batch["proposal_audit_errors"], [])
++            self.assertNotIn("proposal_repair_needed", batch)
++            self.assertNotIn("checks_pending", batch)
++            self.assertEqual(batch["completion_failure"]["stderr"], "/reports/fixed.err")
++            tools.links.assert_not_called()
++            tools.experience_audit.assert_not_called()
++            self.assertEqual(notices, [])
++            self.assertIn("/reports/fixed.err", events[0][1])
++
++    def test_zero_exit_without_report_still_fails_the_protocol(self):
++        batch, tools, _, notices = self.finish(0, {})
++        self.assertEqual(batch["state"], "failed")
++        self.assertTrue(batch["proposal_repair_needed"])
++        self.assertNotIn("completion_failure", batch)
++        self.assertTrue(notices)
++        tools.links.assert_called_once()
++        tools.experience_audit.assert_called_once()
++
++    def test_nonzero_exit_with_real_output_keeps_link_audit_and_actual_merge_fact(self):
++        merged = "a" * 40
++        batch, tools, _, notices = self.finish(1, {"task": "experience-update", "merged": merged})
++        self.assertEqual(batch["state"], "failed")
++        self.assertEqual(batch["merged"], merged)
++        self.assertTrue(batch["checks_pending"])
++        self.assertTrue(batch["proposal_repair_needed"])
++        self.assertTrue(notices)
++        tools.links.assert_called_once()
++        tools.experience_audit.assert_called_once()
++
++
++if __name__ == "__main__":
++    unittest.main()

@@ -94,8 +94,12 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
     task = batch["task"]
     proposals = proposal_tools()
-    proposal_errors = proposals.links(report,batch,root,os.path.dirname(__file__))
-    proposal_errors += proposals.experience_audit(report,batch,root,os.path.dirname(__file__))
+    # An engine/preflight failure has no learning output to repair. Keep its real
+    # exit and stderr; a missing report alone is not a missing gameplay proposal.
+    missing_failed_report = rc != 0 and not report
+    proposal_errors = [] if missing_failed_report else proposals.links(report,batch,root,os.path.dirname(__file__))
+    if not missing_failed_report:
+        proposal_errors += proposals.experience_audit(report,batch,root,os.path.dirname(__file__))
     empty = verify_empty_fix(report, batch, root) if rc == 0 and not verified else None
     proposal_only = proposals.no_change(report,batch,root) if rc == 0 and not verified else None
     if not proposal_errors and rc == 0 and (verified or proposal_only):
@@ -103,6 +107,9 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
         except (OSError,ValueError,ImportError) as error: proposal_errors.append(str(error))
     batch.update(state="done" if rc == 0 and not proposal_errors and (verified or empty or proposal_only) else "failed", rc=rc, merged=merged if verified else None,
                  proposal_audit_errors=proposal_errors, report=report)
+    if missing_failed_report:
+        batch["completion_failure"] = {"reason": "learner exited without a completion report", "rc": rc,
+                                       "stderr": os.path.join(out_dir, batch_id + ".err")}
     if proposal_only: batch["no_change_proposals"] = proposal_only
     if proposal_errors:
         inbox("学习代码提案链未通过：" + "; ".join(proposal_errors) + "；原产出/合入事实保留，派学习者补链，不自动改游戏知识或回退。")
@@ -112,7 +119,8 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
     enqueue({"experience-update": "experience-done", "strategy-proposal": "strategy-done"}.get(task, "fix-done"),
             f"{task} 批次 {batch_id} 结束：exit {rc}；已核实合入 live：{merged if verified else '无'}。"
             f"回报：{out_dir}/{batch_id}.out。"
-            + (f"已核实无新增产出、自测通过，源码与 live {empty['live']} 一致；正常结案，无新增合并或完整补测。"
+            + (f"未取得可验收完成回报，先查原 stderr：{out_dir}/{batch_id}.err；保留失败原件，不把启动或中断失败当作提案缺失。"
+               if missing_failed_report else f"已核实无新增产出、自测通过，源码与 live {empty['live']} 一致；正常结案，无新增合并或完整补测。"
                if empty else "已核实无源码修改的提案处置；证据不足保留待新局，不冒造合入、版本或补测。" if proposal_only
                else "学习者自测后自行合入，无需另设审核；未合入时查回报，提交受阻由运维兜底。")
             + ("；提案链待补：" + "; ".join(proposal_errors) if proposal_errors else ""))
