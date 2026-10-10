@@ -9,45 +9,45 @@
     "requires_fresh_actual_account_sample": true
   },
   "maximum_redemptions": 1,
-  "redemptions_completed": 1,
-  "state": "consumed_manually_by_user",
-  "last_verified_at": "2026-10-10T07:55:32.324015+08:00",
+  "redemptions_completed": 0,
+  "state": "authorized_unused",
+  "last_verified_at": "2026-10-09 23:34",
   "quota_sample": {
     "schema_version": 1,
-    "captured_at": "2026-10-09T23:55:02.752Z",
+    "captured_at": "2026-10-09T15:30:02.692Z",
     "provider": "codex",
     "scope": "shared_subscription",
     "source": "account/rateLimits/read",
-    "sample_observed_at": "2026-10-09T23:55:01.980Z",
+    "sample_observed_at": "2026-10-09T15:30:01.655Z",
     "freshness": "fresh",
     "error_code": null,
     "windows": [
       {
         "bucket": "codex/primary",
         "kind": "weekly",
-        "used_percent": 0,
+        "used_percent": 84,
         "window_minutes": 10080,
-        "resets_at": "2026-10-16T23:45:14.000Z",
+        "resets_at": "2026-10-14T03:28:43.000Z",
         "stale": false
       }
     ]
   },
-  "quota_sample_line_sha256": "2a5e3213d3a5941eaac3621dbc69d83896ac63b8f22a52242923ef89d1fa9d71",
+  "quota_sample_line_sha256": "16a508dae9dc850b91f295f1090189ec230fba14ee952da43f55ee74649be98e",
   "observed_windows_with_remaining": [
     {
       "bucket": "codex/primary",
       "kind": "weekly",
-      "used_percent": 0,
+      "used_percent": 84,
       "window_minutes": 10080,
-      "resets_at": "2026-10-16T23:45:14.000Z",
+      "resets_at": "2026-10-14T03:28:43.000Z",
       "stale": false,
-      "remaining_percent": 100
+      "remaining_percent": 16
     }
   ],
   "unreported_windows": "Unknown; do not infer an unreported five-hour quota",
-  "current_action": "Roy reported using the one reset coupon manually; do not redeem again.",
+  "current_action": "No redemption: the reported weekly window has 16% remaining",
   "redemption_idempotency_key": null,
-  "future_execution": "One-coupon authorization has been consumed by Roy. No further automatic redemption under this request.",
+  "future_execution": "Before one authorized redemption, verify a fresh applicable limit below 2% and an available credit; generate and retain a request UUID at that point, reuse it for retries of that same redemption, and preserve its receipt.",
   "automation_hook_installed": false,
   "credentials_read_or_copied": false,
   "game_behavior_changed": false,
@@ -58,13 +58,5 @@
       "field": "redemption_idempotency_key",
       "finding": "Unused generated UUID matched the generic detector; removed premature UUID allocation. No credentials were read or recorded."
     }
-  ],
-  "assistant_redemptions_completed": 0,
-  "manual_use": {
-    "actor": "Roy",
-    "source": "direct user message in this ops session",
-    "user_text": "你授权没有使用，还是我使用的",
-    "observed_at": "2026-10-10T07:55:32.324015+08:00",
-    "provider_redemption_receipt": "unknown; not observed by this assistant"
-  }
+  ]
 }
