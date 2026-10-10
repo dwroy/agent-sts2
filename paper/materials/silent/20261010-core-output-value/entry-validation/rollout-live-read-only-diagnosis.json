@@ -1,0 +1,17 @@
+{
+  "scope": "read-only inspection of last observed module",
+  "last_module": "agent/tests/rollout-live.test.ts",
+  "test_file_sha256": "e826460833562f4cb5bfb87bba5dfea3a469b1c14dd89e67f099cfb28d4e71ad",
+  "clock_fixture_sha256": "672b1a8f72af4909f6c109ff6a95f10df10df4aee1f9ab7572a7440a35ce12d4",
+  "observations": [
+    "uses committed logged JSON boards and local simulator functions",
+    "no direct model, network, or host IPC invocation in the test file",
+    "some synchronous fixtures use an intentionally huge 1e9 rollout budget and mock clocks",
+    "Vitest per-test timers may not preempt a blocked synchronous computation"
+  ],
+  "proven_running_stage": "module-start only",
+  "specific_test_case": null,
+  "cause": null,
+  "cpu_measurement": null,
+  "action": "no test code or fixed exclusion changed; final attempt retains hard wall bound"
+}
