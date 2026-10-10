@@ -1,0 +1,50 @@
+{
+  "recorded_at": "2026-10-10T22:21:51+08:00",
+  "base": "168daaa51c69bea03e7ede64f75f3dfe8095bf8b",
+  "change": "Cover old live scheduler -> current root Fast wrapper -> native CLI without mutating live, leased trees, tasks, or running processes.",
+  "routing": {
+    "exec": "Only explicit default_permissions=learner, using the last override before --, enters learner policy.",
+    "sandbox": "Only explicit -P/--permission-profile learner, using the last override before --, enters learner policy. No model flag added.",
+    "other_calls": "Ops, play, app-server, no-profile calls and inherited LEARNER_* env keep Fast and original model/effort.",
+    "native_boundary": "Learner exec replaces legacy model/effort with gpt-6-astra/xhigh, strips tier, retains isolation flags, emits a static stderr effective-policy line only when replacing old values. Sandbox child arguments after -- remain byte-for-byte argv entries.",
+    "legacy_jsonl": "Older task source may still declare its old model; the native boundary argv and stderr effective policy are the evidence of the actual request."
+  },
+  "checks": {
+    "required": {
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 bash tools/test-sandbox.sh",
+      "cwd": "agent",
+      "exit_code": 0,
+      "tsc": "passed",
+      "main_files": 264,
+      "main_tests": 2670,
+      "paths_files": 1,
+      "paths_tests": 11,
+      "total_files": 265,
+      "total_tests": 2681,
+      "main_start": "22:16:08",
+      "main_duration_s": 333.35,
+      "paths_start": "22:21:42",
+      "paths_duration_s": 2.09,
+      "fixed_exclusions_unchanged": true
+    },
+    "launcher": {
+      "command": "nice -n 19 python3 -B ops/tests/test_learner_launch_failures.py",
+      "exit_code": 0,
+      "tests": 15
+    },
+    "source_whitespace_check": "passed",
+    "gitleaks": {
+      "command": "nice -n 19 gitleaks git --pre-commit --staged --redact --no-banner --no-color",
+      "exit_code": 0,
+      "result": "no leaks found",
+      "log": "gitleaks-final.log"
+    }
+  },
+  "production_changed": false,
+  "processes_restarted": false,
+  "evidence_sha256": {
+    "launcher-tests.log": "6dde7adcdb9ee4470eac7c04e05a4355a8440cb32b89b638e44295b1b4741460",
+    "sandbox-full.log": "24113652e06a87bd73a3a62aaf8112e49c16271abb9bd44233f5873597cb2d1f",
+    "gitleaks-source.log": "1b42178818c7d504d5be38b754ee022f4b642509b9507b5f3473b22b725605e9"
+  }
+}

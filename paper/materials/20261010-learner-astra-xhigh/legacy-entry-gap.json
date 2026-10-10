@@ -1,0 +1,31 @@
+{
+  "observed_at": "2026-10-10T22:13:43.312546+08:00",
+  "issue": "boss-sim-check invokes live scheduler; SCRIPTS uses live/ops and can start legacy Fast wrapper with old model defaults",
+  "main_before_followup": "dcd4b197feaac084235e8a9819fc3f50ea3f7767",
+  "known_paths": [
+    {
+      "path": "ops/codex-ops-actions.sh",
+      "sha256": "6303a45482db2bbe99f74822696b38df5ba1e501b3723935410049500981743a"
+    },
+    {
+      "path": "ops/boss_sim_jobs.py",
+      "sha256": "ad8dd465e500debe2a5fdbf9f693ef04ca6bb49327e0ea3d776e2922aecae51e"
+    },
+    {
+      "path": ".worktrees/live/ops/codex-ops-learn.py",
+      "sha256": "c744fc451a95b465462cf67034e771f85d0bb00ca98895b76e350363dfd05d8a"
+    },
+    {
+      "path": ".worktrees/live/ops/codex-ops-learner.sh",
+      "sha256": "a6827bcd529715e8bdc46e8d39d96d4324497b11966730d4d5d07873967e4a9a"
+    },
+    {
+      "path": "ops/codex-fast.sh",
+      "sha256": "c27f710ccf46e700a5c97ed9dd8fd39cf3a1b8e28e9920d8756205f8d2a2b08e"
+    }
+  ],
+  "current_main_entry": "Astra/xhigh and Fast off already active",
+  "legacy_entry": "not yet covered by initial 168daaa51 commit",
+  "followup": "same isolated settings agent preparing learner-profile-specific compatibility at root CLI boundary; no live merge hijack or process interruption",
+  "live_merge_preserved": true
+}
