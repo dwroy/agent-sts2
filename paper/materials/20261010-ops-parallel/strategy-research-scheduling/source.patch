@@ -1,0 +1,900 @@
+diff --git a/ops/learner_jobs.py b/ops/learner_jobs.py
+index b3ceb3d9c..1c9bb5d8e 100644
+--- a/ops/learner_jobs.py
++++ b/ops/learner_jobs.py
+@@ -237,7 +237,12 @@ def fix_key(root, character):
+     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
+ 
+ 
+-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp):
++def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None):
++    if research_request is not None:
++        from strategy_research_jobs import REQUEST, KEY
++        if (research_request != REQUEST or task != "strategy-proposal" or character != "silent"
++                or reason != "ops" or key != KEY):
++            return None
+     if task == "fix-batch":
+         handled, result = requested_feature(state, root, scripts, character, reason, alive, stamp)
+         if handled:
+@@ -255,13 +260,17 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
+     if task != "experience-update" and os.path.exists(worktree) and not available_worktree(worktree):
+         return None
+     state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
+-    pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree],
+-                              root, scripts, state_dir, "learner-" + batch_id)
++    argv = ["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree]
++    if research_request:
++        argv += [task, research_request]
++    pid, pane = start_learner(argv, root, scripts, state_dir, "learner-" + batch_id)
+     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
+                                  "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
+                                  "proposal_policy": "Roy-2026-10-07-learning"}
+     if pane:
+         state["batches"][batch_id]["pane"] = pane
++    if research_request:
++        state["batches"][batch_id]["research_request"] = research_request
+     return batch_id, pid
+ 
+ 
+@@ -274,6 +283,10 @@ def check_jobs(state, root, scripts, character, alive, stamp):
+             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
+     runs = pending(root, scripts, character)
+     experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
++    # This approved frozen study gets the next slot before automatic proposals.
++    # Its host wrapper waits for the parent's save_state under the existing lock.
++    from strategy_research_jobs import dispatch as dispatch_research
++    research = dispatch_research(state, root, scripts, character, alive, stamp, dispatch_write, STRATEGY_WORKERS)
+     # Load by this file's path so fixed dispatch fixtures need no global Python search path.
+     spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
+     proposals = importlib.util.module_from_spec(spec)
+@@ -282,13 +295,13 @@ def check_jobs(state, root, scripts, character, alive, stamp):
+     # Evidence-linked proposals get the shared writer before a continually refreshed bug queue.
+     key = fix_key(root, character)
+     fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
+-    strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal else None
++    strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal and not research else None
+     calibration = calibration_job(state, root, scripts, character, alive, stamp)
+     from boss_sim_jobs import check
+     boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
+     return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
+             "core_builds": core,
+-            "code_proposal": proposal, "boss_sim": boss_sim}
++            "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research}
+ 
+ 
+ def calibration_job(state, root, scripts, character, alive, stamp):
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index 032087cad..e11d072d6 100755
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -425,8 +425,15 @@ def cmd_write(args):
+         if not runs or len(runs) > 10 or not all(RUN_ID.fullmatch(run) and run in known for run in runs):
+             print("学习批次需要 1–10 个本角色已结束的局号")
+             return 2
+-    result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task != "fix-batch" else [],
+-                            ",".join(runs), "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
++    import strategy_research_jobs
++    stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
++    if args.task == "strategy-proposal" and strategy_research_jobs.manual_matches(state, ROOT, args.character, runs):
++        # A running/done study with these anchors must not become an ordinary ops
++        # batch when the dedicated dispatcher declines a duplicate.
++        result = strategy_research_jobs.dispatch(state, ROOT, SCRIPTS, args.character, alive, stamp, dispatch_write)
++    else:
++        result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task != "fix-batch" else [],
++                                ",".join(runs), "ops", alive, stamp)
+     save_state(state)
+     print(json.dumps({"dispatched": result}, ensure_ascii=False))
+     return 0 if result else 1
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index a2cb82bcf..1262afb42 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -12,6 +12,13 @@ batch="$1"; runs="$2"; character="${3:-silent}"
+ task="${4:-postmortem}"; worktree="${5:-$ROOT}"
+ case "$task" in postmortem|experience-update|fix-batch|strategy-proposal|ascension-audit) ;; *) exit 2 ;; esac
+ learner_task="${6:-$task}"
++research_request=""
++if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
++  [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
++    && [ "$7" = roy-20261010-silent-deck-size-value ] || exit 2
++  research_request="$7"
++  [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-strategy-proposal$ ]] || exit 2
++fi
+ if [ "$learner_task" != "$task" ]; then
+   if [ "$learner_task" = boss-sim-batch ]; then
+     [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [ "$task" = fix-batch ] \
+@@ -32,6 +39,21 @@ export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
+ export STS2_WORKSPACE="$ROOT"
+ cd "$ROOT" || exit 1
+ audit_ready=1
++research_base=""
++# herdr-exec writes its PID before this gate, allowing start_learner to return.
++# The parent then binds the request and saves the batch under the same learn.lock.
++if [ -n "$research_request" ]; then
++  exec 8> "$DIR/learn.lock"
++  if flock -w 120 8; then
++    research_base="$(python3 "$OPS/strategy_research_jobs.py" ready "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err")" || audit_ready=0
++    flock -u 8
++  else
++    echo "research registration lock wait timed out after 120 seconds; no model started" >> "$err"
++    printf '{"request_id":"roy-20261010-silent-deck-size-value","batch":"%s","status":"lock_timeout","timeout_seconds":120}\n' "$batch" > "$DIR/learner/$batch.research-registration.json"
++    audit_ready=0
++  fi
++  exec 8>&-
++fi
+ fresh_tree=0
+ if [ "$learner_task" = silent-historical-core-builds ]; then fresh_tree=1
+ elif [ "$task" = fix-batch ] && [ "$learner_task" = "$task" ]; then
+@@ -41,17 +63,21 @@ elif [ "$task" = strategy-proposal ]; then
+   [ "$worktree" = "$ROOT/.worktrees/codex-strategy-$character-${batch%-strategy-proposal}" ] || exit 2
+   fresh_tree=1
+ fi
+-if [ "$fresh_tree" = 1 ]; then
++if [ "$fresh_tree" = 1 ] && [ "$audit_ready" = 1 ]; then
+   [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-(fix-batch|strategy-proposal)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
+   exec 9> "$DIR/learner/${worktree##*/}.lock"
+   flock -w 5 9 || exit 75
+   if [ ! -f "$worktree/.git" ]; then
+-    nice -n 19 git worktree add -b "${worktree##*/}" "$worktree" main >> "$out" 2>> "$err" || audit_ready=0
++    nice -n 19 git worktree add -b "${worktree##*/}" "$worktree" "${research_base:-main}" >> "$out" 2>> "$err" || audit_ready=0
+   fi
+   if [ "$audit_ready" = 1 ] && [ -n "$(git -C "$worktree" status --porcelain)" ]; then
+     echo "worktree has edits; preserve it, never reset a failed candidate" >> "$err"
+     audit_ready=0
+   fi
++  if [ "$audit_ready" = 1 ] && [ -n "$research_request" ] && [ "$(git -C "$worktree" rev-parse HEAD)" != "$research_base" ]; then
++    echo "research worktree HEAD differs from its registered dispatch baseline; no model started" >> "$err"
++    audit_ready=0
++  fi
+   if [ "$audit_ready" = 1 ] && [ ! -e "$worktree/agent/node_modules" ]; then
+     ln -s ../../../agent/node_modules "$worktree/agent/node_modules" || audit_ready=0
+   fi
+@@ -121,7 +147,9 @@ else
+ fi
+ [ -n "$tailer" ] && { sleep 1; kill "$tailer" 2>/dev/null; }
+ echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
+-python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null
++if [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; then
++  python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null
++fi
+ if [ "${CODEX_OPS_NO_DRAIN:-0}" != 1 ]; then
+   # A hosted batch's pane closes when this script ends: the wake (up to 2 h) must not live in it.
+   if [ -n "${HERDR_HOST_LABEL:-}" ]; then setsid nohup bash "$OPS/codex-ops.sh" drain > /dev/null 2>&1 < /dev/null &
+diff --git a/ops/strategy_research_jobs.py b/ops/strategy_research_jobs.py
+new file mode 100644
+index 000000000..ed7461f93
+--- /dev/null
++++ b/ops/strategy_research_jobs.py
+@@ -0,0 +1,273 @@
++"""Priority and host registration for Roy's one frozen strategy study.
++
++The scheduler holds its existing learn.lock. Completion uses the normal writer;
++this module never creates game proposals or rewrites failed learner batches.
++"""
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import sys
++import time
++
++REQUEST = "roy-20261010-silent-deck-size-value"
++REQUEST_PATH = "notes/strategy-research-silent.json"
++KEY = "strategy-research:" + REQUEST
++
++
++def digest(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++def atomic_json(path, value):
++    path = Path(path)
++    temporary = path.with_name(path.name + "." + str(os.getpid()) + ".tmp")
++    try:
++        temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
++        os.replace(temporary, path)
++    finally:
++        if temporary.exists():
++            temporary.unlink()
++
++
++def runs(value):
++    if (not isinstance(value, list) or not value or any(not isinstance(run, str) or
++            not re.fullmatch(r"[A-Z0-9]{12}", run) for run in value) or len(value) != len(set(value))):
++        raise ValueError("invalid research run set")
++    return set(value)
++
++
++def read_request(root, state):
++    """Validate the unique request and its frozen, ended role inventory."""
++    project = Path(root).resolve()
++    path = project / REQUEST_PATH
++    if not path.resolve().is_relative_to(project):
++        raise ValueError("research request outside project")
++    raw = path.read_bytes()
++    request = json.loads(raw)
++    if not isinstance(request, dict) or any(request.get(key) != value for key, value in {
++            "request_id": REQUEST, "authorized_by": "Roy", "state": state,
++            "task": "strategy-proposal", "character": "silent"}.items()):
++        raise ValueError("research request identity mismatch")
++    if state == "pending" and request.get("batch") is not None:
++        raise ValueError("pending request already has a batch")
++
++    def frozen(field, suffix):
++        relative, expected = request.get(field), request.get(field + "_sha256")
++        if (not isinstance(relative, str) or not relative or not isinstance(expected, str)
++                or not re.fullmatch(r"[0-9a-f]{64}", expected)):
++            raise ValueError("missing frozen artifact identity")
++        artifact = (project / relative).resolve()
++        if not artifact.is_relative_to(project) or artifact.suffix != suffix or not artifact.is_file():
++            raise ValueError("frozen artifact outside project")
++        content = artifact.read_bytes()
++        if digest(content) != expected:
++            raise ValueError("frozen artifact SHA mismatch")
++        return content
++
++    frozen("work_spec", ".md")
++    manifest = json.loads(frozen("input_manifest", ".json"))
++    if not isinstance(manifest, dict) or manifest.get("request_id") != REQUEST or manifest.get("character") != "silent":
++        raise ValueError("frozen manifest identity mismatch")
++    inventory = manifest.get("runs")
++    if not isinstance(inventory, list) or any(not isinstance(row, dict) or
++            row.get("character", "silent") != "silent" or not (row.get("ended") or row.get("ended_at")) for row in inventory):
++        raise ValueError("research inventory must contain ended Silent runs")
++    inventory_ids = runs([row.get("run_id") for row in inventory])
++    anchors = runs(request.get("dispatch_runs"))
++    if (len(anchors) > 10 or not anchors <= inventory_ids or runs(manifest.get("dispatch_runs")) != anchors
++            or manifest.get("run_count") != len(inventory_ids)
++            or request.get("evidence_run_count") != len(inventory_ids)):
++        raise ValueError("research scope or anchors mismatch")
++    sections = request.get("required_sections")
++    if (not isinstance(sections, list) or not sections or any(not isinstance(key, str) or
++            not re.fullmatch(r"[a-z][a-z0-9_]*", key) for key in sections) or len(set(sections)) != len(sections)):
++        raise ValueError("invalid required research sections")
++    for artifact in manifest.get("frozen_artifacts", []):
++        if not isinstance(artifact, dict):
++            raise ValueError("invalid frozen supporting artifact")
++        for field, sha_field in (("path", "sha256"), ("index", "index_sha256")):
++            if field not in artifact and field == "index":
++                continue
++            relative, expected = artifact.get(field), artifact.get(sha_field)
++            if not isinstance(relative, str) or not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{64}", expected):
++                raise ValueError("missing supporting artifact identity")
++            support = (project / relative).resolve()
++            if not support.is_relative_to(project) or digest(support.read_bytes()) != expected:
++                raise ValueError("frozen supporting artifact SHA mismatch")
++    return request, raw
++
++
++def manual_matches(state, root, character, evidence):
++    """The same authorized anchors never fall back to an ordinary ops batch."""
++    if character != "silent":
++        return False
++    try:
++        requested = runs(evidence)
++        for batch in state["batches"].values():
++            if batch.get("research_request") == REQUEST and runs(batch.get("runs")) == requested:
++                return True
++        request = json.loads(Path(root, REQUEST_PATH).read_bytes())
++        return (isinstance(request, dict) and request.get("request_id") == REQUEST
++                and request.get("authorized_by") == "Roy" and request.get("character") == "silent"
++                and request.get("task") == "strategy-proposal" and runs(request.get("dispatch_runs")) == requested)
++    except (OSError, ValueError, TypeError):
++        return False
++
++
++def bound_batch(root, state_dir, batch_id, character, worktree, ident):
++    if ident != REQUEST or character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}-strategy-proposal", batch_id):
++        raise ValueError("research registration identity mismatch")
++    tree = str(Path(root).resolve() / ".worktrees" / ("codex-strategy-silent-" + batch_id.removesuffix("-strategy-proposal")))
++    if worktree != tree:
++        raise ValueError("research registration worktree mismatch")
++    state = json.loads(Path(state_dir, "learn.json").read_bytes())
++    batch = state.get("batches", {}).get(batch_id)
++    if not isinstance(batch, dict) or any(batch.get(key) != value for key, value in {
++            "task": "strategy-proposal", "character": "silent", "research_request": REQUEST,
++            "key": KEY, "reason": "ops", "worktree": tree}.items()):
++        raise ValueError("research registration not saved")
++    if "proposal_ids" in batch or "proposal_repair" in batch:
++        raise ValueError("research registration mixed with proposal queue")
++    return batch
++
++
++def registered(root, state_dir, batch_id, character, worktree, ident):
++    """A failed wrapper may finish only its actual, saved registration."""
++    try:
++        bound_batch(root, state_dir, batch_id, character, worktree, ident)
++        return True
++    except (OSError, ValueError, TypeError, AttributeError):
++        return False
++
++
++def ready(root, state_dir, batch_id, character, worktree, ident):
++    """Called after the host wrapper acquires the scheduler's existing lock."""
++    try:
++        batch = bound_batch(root, state_dir, batch_id, character, worktree, ident)
++        request, _ = read_request(root, "running")
++        base = request.get("dispatch_base")
++        actual = subprocess.run(["git", "-C", root, "cat-file", "-t", str(base)], capture_output=True, text=True)
++        return (isinstance(base, str) and re.fullmatch(r"[0-9a-f]{40}", base) is not None
++                and actual.returncode == 0 and actual.stdout.strip() == "commit"
++                and batch.get("state") == "running" and request.get("batch") == batch_id
++                and request.get("worktree") == worktree and request.get("pane") == batch.get("pane")
++                and base == batch.get("research_dispatch_base")
++                and request.get("input_manifest_sha256") == batch.get("research_input_sha256")
++                and runs(batch.get("runs")) == runs(request.get("dispatch_runs")))
++    except (OSError, ValueError, TypeError, AttributeError):
++        return False
++
++
++def dispatch(state, root, scripts, character, alive, stamp, dispatch_write, limit=2):
++    """Use the next shared slot before automatically selected proposals."""
++    if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp):
++        return None
++    if any(batch.get("research_request") == REQUEST or batch.get("key") == KEY
++           for batch in state["batches"].values()):
++        return None  # Registered failures require explicit ops recovery.
++    active = sum(1 for batch in state["batches"].values() if batch.get("task") == "strategy-proposal"
++                 and batch.get("state") == "running" and alive(batch.get("pid")))
++    if active >= limit:
++        return None  # Full slots are read-only, including null attempts and history.
++    try:
++        request, before = read_request(root, "pending")
++        if request.get("retry_at", 0) > time.time():
++            return None
++        result = subprocess.run(["git", "-C", root, "rev-parse", "main"], capture_output=True, text=True)
++        base = result.stdout.strip()
++        if result.returncode or not re.fullmatch(r"[0-9a-f]{40}", base):
++            return None
++    except (OSError, ValueError, TypeError):
++        return None
++    path = Path(root, REQUEST_PATH)
++    state_dir = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
++    history = state_dir / "strategy-research-history"
++    try:
++        history.mkdir(parents=True, exist_ok=True)
++        snapshot = history / (digest(before) + ".request.json")
++        if not snapshot.exists():
++            snapshot.write_bytes(before)
++        prepared = {**request, "dispatch_base": base}
++        if path.read_bytes() != before:
++            return None
++        atomic_json(path, prepared)
++        prepared_raw = path.read_bytes()
++    except OSError:
++        return None  # No worker has started; the original request remains recoverable.
++    attempt = {"request_id": REQUEST, "at": time.time(), "dispatch_base": base,
++               "before_sha256": digest(before), "prepared_sha256": digest(prepared_raw), "batch": None,
++               "status": "dispatch_not_started"}
++    launched = None
++    try:
++        launched = dispatch_write(state, root, scripts, "strategy-proposal", "silent", request["dispatch_runs"],
++                                  KEY, "ops", alive, stamp, research_request=REQUEST)
++        if launched is None:
++            attempt["status"] = "no_batch_returned"
++            return None
++        batch_id, pid = launched
++        batch = state["batches"].get(batch_id)
++        attempt.update(batch=batch_id, pid=pid, status="registered_binding_failed")
++        if not isinstance(batch, dict) or batch.get("research_request") != REQUEST:
++            raise ValueError("actual research batch registration missing")
++        batch.update(research_dispatch_base=base, research_input_sha256=request["input_manifest_sha256"])
++        current, current_raw = read_request(root, "pending")
++        if current_raw != prepared_raw:
++            raise ValueError("research request changed during dispatch")
++        expected_tree = str(Path(root).resolve() / ".worktrees" / ("codex-strategy-silent-" + stamp))
++        if (batch_id != stamp + "-strategy-proposal" or batch.get("worktree") != expected_tree
++                or batch.get("state") != "running" or batch.get("character") != "silent"
++                or batch.get("reason") != "ops" or runs(batch.get("runs")) != runs(request["dispatch_runs"])):
++            raise ValueError("actual research batch identity mismatch")
++        updated = {**current, "state": "running", "batch": batch_id, "worktree": expected_tree,
++                   "pane": batch.get("pane"), "dispatch_status": "dispatched", "dispatched_at": time.time(),
++                   "research_dispatch_receipt": str(history / (stamp + ".receipt.json"))}
++        atomic_json(path, updated)
++        attempt.update(status="running_bound", after_sha256=digest(path.read_bytes()), worktree=expected_tree,
++                       pane=batch.get("pane"))
++    except (OSError, ValueError, TypeError) as error:
++        attempt["error"] = str(error)
++        if launched and launched[0] in state["batches"]:
++            state["batches"][launched[0]]["research_binding_error"] = str(error)
++    finally:
++        # The actual saved marker prevents duplicate studies after binding failure.
++        if launched and launched[0] in state["batches"]:
++            state["batches"][launched[0]]["research_dispatch_receipt"] = dict(attempt)
++        try:
++            atomic_json(history / (stamp + ".receipt.json"), attempt)
++        except OSError as error:
++            if launched and launched[0] in state["batches"]:
++                state["batches"][launched[0]]["research_receipt_error"] = str(error)
++            sys.stderr.write("research dispatch receipt could not be saved; actual batch remains registered\n")
++    return launched
++
++
++if __name__ == "__main__":
++    if len(sys.argv) != 8 or sys.argv[1] not in ("ready", "registered"):
++        raise SystemExit(2)
++    check = ready if sys.argv[1] == "ready" else registered
++    valid = check(*sys.argv[2:])
++    if sys.argv[1] == "ready":
++        root, state_dir, batch_id, character, tree, ident = sys.argv[2:]
++        request = {}
++        try:
++            request = json.loads(Path(root, REQUEST_PATH).read_bytes())
++        except (OSError, ValueError):
++            pass
++        if not isinstance(request, dict):
++            request = {}
++        receipt = {"request_id": ident, "batch": batch_id, "character": character, "worktree": tree,
++                   "at": time.time(), "status": "registered_bound" if valid else "registration_rejected",
++                   "dispatch_base": request.get("dispatch_base"), "input_sha256": request.get("input_manifest_sha256")}
++        try:
++            atomic_json(Path(state_dir, "learner", batch_id + ".research-registration.json"), receipt)
++        except OSError:
++            valid = False
++            sys.stderr.write("research registration receipt could not be saved; no model started\n")
++        if valid:
++            print(request["dispatch_base"])
++    if not valid:
++        sys.stderr.write("research registration is not saved and bound to the approved frozen request\n")
++    raise SystemExit(0 if valid else 1)
+diff --git a/ops/proposal_dispatch.py b/ops/proposal_dispatch.py
+index 6d40d2434..993f4e036 100644
+--- a/ops/proposal_dispatch.py
++++ b/ops/proposal_dispatch.py
+@@ -138,6 +138,11 @@ def research_proof(report,batch,root):
+     if report.get('research_complete') is not True: return None
+     dispatch_base=request.get('dispatch_base')
+     if not isinstance(dispatch_base,str) or not re.fullmatch('[0-9a-f]{40}',dispatch_base): return None
++    # The dedicated study must match its independently saved dispatch identity;
++    # editing a root request later cannot replace the actual baseline or inputs.
++    if ident=='roy-20261010-silent-deck-size-value' and any(batch.get(key)!=value for key,value in {
++        'research_request':ident,'research_dispatch_base':dispatch_base,
++        'research_input_sha256':request.get('input_manifest_sha256')}.items()): return None
+ 
+     def frozen(field,suffix):
+         raw_path=request.get(field);expected=request.get(field+'_sha256')
+diff --git a/learner/tasks/strategy-proposal.md b/learner/tasks/strategy-proposal.md
+index 336d264cb..7cbbb35a2 100644
+--- a/learner/tasks/strategy-proposal.md
++++ b/learner/tasks/strategy-proposal.md
+@@ -16,7 +16,7 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
+ 工作树：{{worktree}}；基线：{{base_branch}}；日志（只读）：{{logs_dir}}；临时文件只放 {{scratch}}。
+ 
+ ## 1. 开工与证据
+-- 先读 README.md、最新 paper/materials/STATE-*.md、decision-log.md 末尾、docs/learning-protocol.md。先 git status 确认干净，再 git merge --no-edit {{base_branch}}；冲突就停下回报。
++- 先读 README.md、最新 paper/materials/STATE-*.md、decision-log.md 末尾、docs/learning-protocol.md。先 git status 确认干净并核第 1.2 节身份；已绑定纯研究保持 dispatch_base，不合入后续 main。其他提案仍 git merge --no-edit {{base_branch}}；冲突就停下回报。
+ - 只从本角色对局、复盘和 {{character_dir}} 学习。核对 runs.jsonl 角色；不得读取或搬用其他角色知识。共用事实仅用观察得到的数据。
+ - 先按第 1.2 节核对本批是否承接已授权专题；匹配时只按 work_spec 研究，否则读 fix-queue-v4.md 的待定策略项与已有提案，选证据充分、可验证的一项。游戏知识只能从对局里学，不使用自己的预训练知识补结论。
+ - 每项提案落盘到 {{scratch}}/proposal.md，写证据局号、层、回合、既有学习账本 id、反例、预期行为及验证方法。没有证据就报告证据不足，不改策略。
+@@ -28,12 +28,12 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
+ 没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
+ 
+ ## 1.2 仅本批的手动专题研究
+-只读根目录 `{{project_root}}/notes/strategy-research-{{character}}.json`。文件不存在或以下条件不全成立时，保持原提案/补链任务，不将普通队列变成专题：
++只读根目录 `{{project_root}}/notes/strategy-research-{{character}}.json`。learn.json 本批带 research_request 时，文件不存在或任何身份/SHA 条件失配都停止专题回报，不退回普通选题；只有不带 research_request 的普通批次在专题条件不成立时保持原提案/补链任务，不将普通队列变成专题：
+ - learn.json 中本次 {{batch}} 的 task=strategy-proposal、character={{character}}、reason=ops；该行完全没有 proposal_ids 和 proposal_repair 字段，工作树等于 {{worktree}}。
+-- 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state 为 pending 或 running；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
+-- running 请求的 batch 必须等于 {{batch}}。pending 请求只能在 batch=null 时承接：这是运维派发返回后立即绑定的交接窗口，最终验收时必须已变为 running 且 batch={{batch}}。不自行写请求或 learn.json；完成前重读，仍未绑定或身份已变就如实回报，不能冒称专题完成。
++- 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state=running 且 batch={{batch}}；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
++- 专题宿主 wrapper 已在原 learn.lock 上等待登记落盘，模型启动前须有 learn.json 对应实际 research_request 与根请求的 running/batch/worktree 绑定，独立注册回执位于 ops/codex-ops/learner/{{batch}}.research-registration.json。pending/null 只属于派发前状态，不能在模型内将它当已承接专题。不自行写请求或 learn.json，身份未绑定或已变就停止专题回报，不退回普通提案选题。
+ - 将 work_spec 和 input_manifest 路径相对根目录解析（绝对路径也须在根目录内），先核实文件 SHA256 分别等于 work_spec_sha256、input_manifest_sha256，再读取正文。manifest 的 request_id/character 必须匹配，runs 为本角色冻结局号清单，dispatch_runs 必须是其中的子集。required_sections 为非空、无重复的字符串 key 列表。
+-- 请求 dispatch_base 是运维在派发前登记的真实完整 40 位提交；核实它是本树 HEAD 的祖先。开工合并 main 后若只有 notes/paper 等记录快进，可以将当前 HEAD 记为 report.base；dispatch_base 到 HEAD 的实际执行源码、任务模板、验证输入和全部 knowledge 必须零差异，不能自行提交源码/知识再把新 HEAD 自报成无改动基线。不同则保留现场并回报，不能冒称纯研究完成。
++- 请求 dispatch_base 是运维在派发前登记的真实完整 40 位提交；本次宿主登记的纯研究树直接由该提交建立，HEAD 保持等于它，不合入后续 main 的源码、知识或记录。将该 HEAD 记为 report.base，不能自行提交源码/知识再把新 HEAD 自报成无改动基线。验收还对照本批独立登记的 research_dispatch_base/research_input_sha256，实际执行源码、任务模板、验证输入和全部 knowledge 必须保持零差异；不同则保留现场并回报，不能冒称纯研究完成。
+ 
+ 匹配后用 work_spec 的目标、冻结输入和限定字节范围替代 fix-queue 选题，只研究该请求，不领取或补做其他提案。游戏结论仍由你从本角色证据提炼；完整保存假设、支持、反例、未知和结论变化，覆盖每个 required_sections，不用预训练事实补齐。证据不足也须给出有范围和限制的结论，不将“尚不确定”变成已验证规则。
+ 
+diff --git a/ops/tests/test_strategy_research_scheduling.py b/ops/tests/test_strategy_research_scheduling.py
+new file mode 100644
+index 000000000..1768bb92b
+--- /dev/null
++++ b/ops/tests/test_strategy_research_scheduling.py
+@@ -0,0 +1,391 @@
++"""Fixed priority and registration fixtures; no production dispatch or models."""
++import copy
++import fcntl
++import hashlib
++import importlib.util
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import tempfile
++import time
++from types import SimpleNamespace
++import unittest
++from unittest.mock import patch
++
++REPO = Path(__file__).resolve().parents[2]
++IDENT = "roy-20261010-silent-deck-size-value"
++STAMP = "20260101-000001"
++RUNS = ["SILENT000001", "SILENT000002"]
++spec = importlib.util.spec_from_file_location("scheduling_learner_jobs", REPO / "ops/learner_jobs.py")
++jobs = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(jobs)
++
++
++class ResearchScheduling(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        (self.root / "notes").mkdir()
++        (self.root / "paper/frozen").mkdir(parents=True)
++        (self.root / "agent").mkdir()
++        (self.root / "agent/.keep").write_text("fixed fixture\n")
++        self.git("init", "-b", "main")
++        self.git("add", "agent/.keep")
++        self.git("commit", "-m", "Fixed scheduling baseline")
++        self.base = self.git("rev-parse", "main").stdout.strip()
++        self.manifest = {"request_id": IDENT, "character": "silent", "run_count": 2,
++                         "dispatch_runs": RUNS, "runs": [{"run_id": run, "ended_at": "2026-01-01T00:00:00Z"}
++                                                          for run in RUNS]}
++        self.request = {"request_id": IDENT, "authorized_by": "Roy", "state": "pending", "batch": None,
++                        "task": "strategy-proposal", "character": "silent", "dispatch_runs": RUNS,
++                        "evidence_run_count": 2, "required_sections": ["size_outcome", "limitations"],
++                        "work_spec": "paper/frozen/task.md", "input_manifest": "paper/frozen/input.json",
++                        "last_dispatch_attempt": {"dispatched": None, "error": "preserved fixed failure"}}
++        (self.root / self.request["work_spec"]).write_text("Fixed authorized research fixture.\n")
++        self.refresh_manifest()
++        self.request["work_spec_sha256"] = self.digest(self.root / self.request["work_spec"])
++        self.save_request()
++        self.state = {"batches": {}, "proposal_repairs": {}, "ascension": {"silent": 0}}
++        self.launched = []
++        self.launch_action = None
++
++    def git(self, *args):
++        result = subprocess.run(["git", "-C", str(self.root), *args], capture_output=True, text=True)
++        self.assertEqual(result.returncode, 0, result.stderr)
++        return result
++
++    def digest(self, path):
++        return hashlib.sha256(path.read_bytes()).hexdigest()
++
++    def refresh_manifest(self):
++        path = self.root / self.request["input_manifest"]
++        path.write_text(json.dumps(self.manifest))
++        self.request["input_manifest_sha256"] = self.digest(path)
++
++    def save_request(self):
++        self.request_path = self.root / "notes/strategy-research-silent.json"
++        self.request_path.write_text(json.dumps(self.request))
++
++    def read_request(self):
++        return json.loads(self.request_path.read_text())
++
++    def launch(self, argv, root, scripts, state_dir, label):
++        self.launched.append(argv)
++        if self.launch_action:
++            self.launch_action()
++        return 100 + len(self.launched), "fixture:pane"
++
++    def check(self, stamp=STAMP):
++        with patch.object(jobs, "pending", return_value=[]), patch.object(jobs, "fix_key", return_value=None), \
++                patch.object(jobs, "strategy_job", return_value=None), patch.object(jobs, "calibration_job", return_value=None), \
++                patch.object(jobs, "start_learner", side_effect=self.launch), \
++                patch("boss_sim_jobs.check", return_value=None), patch.dict(os.environ, {}, clear=False):
++            with patch.dict(os.environ, {"CODEX_OPS_DIR": str(self.root / "ops/codex-ops")}):
++                return jobs.check_jobs(self.state, str(self.root), str(REPO / "ops"), "silent", lambda pid: True, stamp)
++
++    def active(self, count):
++        for i in range(count):
++            self.state["batches"]["existing-" + str(i)] = {
++                "task": "strategy-proposal", "character": "silent", "pid": 90 + i, "state": "running"}
++
++    def pending_proposal(self):
++        self.state["proposal_repairs"]["fixed-repair"] = {
++            "character": "silent", "state": "pending", "runs": RUNS}
++
++    def test_priority_over_auto_proposal(self):
++        self.active(1)
++        self.pending_proposal()
++        result = self.check()
++        request = self.read_request()
++        self.assertEqual(request["state"], "running")
++        self.assertEqual(request["dispatch_base"], self.base)
++        self.assertEqual(request["batch"], STAMP + "-strategy-proposal")
++        self.assertEqual(result["strategy_research"][0], request["batch"])
++        self.assertEqual(len(self.launched), 1)
++        self.assertEqual(self.launched[0][-2:], ["strategy-proposal", IDENT])
++        self.assertNotIn("proposal_repair", self.state["batches"][request["batch"]])
++
++    def test_second_slot_fills_on_next_tick_without_displacing_research(self):
++        self.pending_proposal()
++        self.check()
++        self.check("20260101-000002")
++        self.check("20260101-000003")
++        self.assertEqual(len(self.launched), 2)
++        self.assertEqual(sum(batch.get("research_request") == IDENT for batch in self.state["batches"].values()), 1)
++        self.assertEqual(sum(batch.get("proposal_repair") == "fixed-repair" for batch in self.state["batches"].values()), 1)
++
++    def test_full_slots_are_read_only(self):
++        self.active(2)
++        self.pending_proposal()
++        before = self.request_path.read_bytes(), copy.deepcopy(self.state)
++        self.check()
++        self.assertEqual(self.request_path.read_bytes(), before[0])
++        self.assertEqual(self.state, before[1])
++        self.assertEqual(self.launched, [])
++        self.assertFalse((self.root / "ops/codex-ops/strategy-research-history").exists())
++
++    def test_registered_and_terminal_requests_do_not_repeat(self):
++        for state in ("running", "done", "failed", "lost"):
++            with self.subTest(state=state):
++                self.state["batches"] = {"prior": {"task": "strategy-proposal", "research_request": IDENT,
++                                                   "state": state, "pid": 99}}
++                self.check()
++                self.assertEqual(self.launched, [])
++        self.state["batches"] = {}
++        for state in ("running", "done"):
++            self.request["state"] = state
++            self.save_request()
++            self.check()
++            self.assertEqual(self.launched, [])
++
++    def test_retry_backoff_and_invalid_frozen_input_do_not_launch(self):
++        original = copy.deepcopy(self.request)
++        for changes in ({"retry_at": time.time() + 3600}, {"authorized_by": "other"},
++                        {"request_id": "other"}, {"character": "ironclad"}, {"task": "fix-batch"},
++                        {"batch": "prior"}, {"dispatch_runs": ["OTHER0000001"]},
++                        {"input_manifest_sha256": "0" * 64}, {"work_spec_sha256": "0" * 64},
++                        {"work_spec": "../outside.md"}, {"evidence_run_count": 3},
++                        {"required_sections": ["size_outcome", "size_outcome"]}):
++            with self.subTest(changes=changes):
++                self.request = {**original, **changes}
++                self.save_request()
++                self.check()
++                self.assertEqual(self.launched, [])
++                self.assertEqual(self.read_request(), self.request)
++
++    def test_changed_request_after_launch_is_preserved_and_registered_batch_deduplicates(self):
++        def replace():
++            value = self.read_request()
++            value["state"] = "done"
++            value["external_update"] = "preserve this concurrent fixture update"
++            self.request_path.write_text(json.dumps(value))
++        self.launch_action = replace
++        result = self.check()
++        self.assertEqual(self.read_request()["state"], "done")
++        batch = self.state["batches"][result["strategy_research"][0]]
++        self.assertEqual(batch["research_request"], IDENT)
++        self.assertIn("research_binding_error", batch)
++        self.launch_action = None
++        self.check("20260101-000002")
++        self.assertEqual(len(self.launched), 1)
++        receipts = list((self.root / "ops/codex-ops/strategy-research-history").glob("*.receipt.json"))
++        self.assertEqual(len(receipts), 1)
++        self.assertEqual(json.loads(receipts[0].read_text())["batch"], result["strategy_research"][0])
++
++    def test_changed_manifest_after_launch_does_not_bind_running(self):
++        self.launch_action = lambda: (self.root / self.request["input_manifest"]).write_text("{}")
++        result = self.check()
++        self.assertEqual(self.read_request()["state"], "pending")
++        self.assertIsNone(self.read_request()["batch"])
++        self.assertIn("research_binding_error", self.state["batches"][result["strategy_research"][0]])
++
++    def test_null_dispatch_keeps_pending_and_original_history(self):
++        self.state["batches"][STAMP + "-strategy-proposal"] = {"state": "done", "task": "strategy-proposal"}
++        self.check()
++        request = self.read_request()
++        self.assertEqual(request["state"], "pending")
++        self.assertIsNone(request["batch"])
++        self.assertEqual(request["last_dispatch_attempt"], self.request["last_dispatch_attempt"])
++        self.assertEqual(self.launched, [])
++
++    def test_atomic_binding_failure_preserves_actual_batch_and_does_not_repeat(self):
++        import strategy_research_jobs as research
++        original = research.atomic_json
++        def fail_binding(path, value):
++            if Path(path) == self.request_path and value.get("state") == "running":
++                raise OSError("fixed atomic binding failure")
++            original(path, value)
++        with patch.object(research, "atomic_json", side_effect=fail_binding):
++            result = self.check()
++        batch = self.state["batches"][result["strategy_research"][0]]
++        self.assertEqual(batch["research_request"], IDENT)
++        self.assertEqual(batch["research_dispatch_receipt"]["batch"], result["strategy_research"][0])
++        self.assertEqual(batch["research_binding_error"], "fixed atomic binding failure")
++        self.assertEqual(self.read_request()["state"], "pending")
++        self.check("20260101-000002")
++        self.assertEqual(len(self.launched), 1)
++
++    def test_receipt_write_failure_does_not_prevent_actual_batch_save(self):
++        import strategy_research_jobs as research
++        original = research.atomic_json
++        def fail_receipt(path, value):
++            if str(path).endswith(".receipt.json"):
++                raise OSError("fixed receipt failure")
++            original(path, value)
++        with patch.object(research, "atomic_json", side_effect=fail_receipt):
++            result = self.check()
++        batch = self.state["batches"][result["strategy_research"][0]]
++        self.assertEqual(batch["research_request"], IDENT)
++        self.assertEqual(batch["research_receipt_error"], "fixed receipt failure")
++        self.assertEqual(batch["research_dispatch_receipt"]["status"], "running_bound")
++        self.check("20260101-000002")
++        self.assertEqual(len(self.launched), 1)
++
++    def test_baseline_is_actual_main_not_checkout_head(self):
++        self.git("branch", "older-checkout")
++        (self.root / "agent/.keep").write_text("new fixed main baseline\n")
++        self.git("add", "agent/.keep")
++        self.git("commit", "-m", "Advance fixed main")
++        main = self.git("rev-parse", "main").stdout.strip()
++        self.git("switch", "older-checkout")
++        self.assertNotEqual(main, self.git("rev-parse", "HEAD").stdout.strip())
++        self.check()
++        self.assertEqual(self.read_request()["dispatch_base"], main)
++
++    def test_manual_cmd_write_routes_exact_anchors_and_deduplicates_running(self):
++        spec = importlib.util.spec_from_file_location("research_manual_ops", REPO / "ops/codex-ops-learn.py")
++        ops = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(ops)
++        args = SimpleNamespace(task="strategy-proposal", character="silent", runs=",".join(RUNS))
++        saved = []
++        with patch.object(ops, "ROOT", str(self.root)), patch.object(ops, "SCRIPTS", str(REPO / "ops")), \
++                patch.object(ops, "load_state", return_value=self.state), \
++                patch.object(ops, "finished_runs", return_value=[{"run_id": run} for run in RUNS]), \
++                patch.object(ops, "save_state", side_effect=lambda state: saved.append(copy.deepcopy(state))), \
++                patch.object(ops, "alive", return_value=True), patch.object(ops, "dispatch_write", jobs.dispatch_write), \
++                patch.object(jobs, "start_learner", side_effect=self.launch), \
++                patch.dict(os.environ, {"CODEX_OPS_DIR": str(self.root / "ops/codex-ops")}):
++            self.assertEqual(ops.cmd_write(args), 0)
++            self.assertEqual(ops.cmd_write(args), 1)
++            self.assertEqual(len(self.launched), 1)
++            request = self.read_request()
++            self.assertEqual(saved[0]["batches"][request["batch"]]["research_request"], IDENT)
++            self.request_path.unlink()
++            self.assertEqual(ops.cmd_write(args), 1)
++            self.assertEqual(len(self.launched), 1)
++
++    def test_outer_state_save_failure_keeps_actual_receipt_and_blocks_second_launch(self):
++        import strategy_research_jobs as research
++        spec = importlib.util.spec_from_file_location("research_failed_save_ops", REPO / "ops/codex-ops-learn.py")
++        ops = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(ops)
++        args = SimpleNamespace(task="strategy-proposal", character="silent", runs=",".join(RUNS))
++        disk_state = {"batches": {}}
++        with patch.object(ops, "ROOT", str(self.root)), patch.object(ops, "SCRIPTS", str(REPO / "ops")), \
++                patch.object(ops, "load_state", side_effect=lambda: copy.deepcopy(disk_state)), \
++                patch.object(ops, "finished_runs", return_value=[{"run_id": run} for run in RUNS]), \
++                patch.object(ops, "save_state", side_effect=OSError("fixed outer state save failure")), \
++                patch.object(ops, "alive", return_value=True), patch.object(ops, "dispatch_write", jobs.dispatch_write), \
++                patch.object(jobs, "start_learner", side_effect=self.launch), \
++                patch.dict(os.environ, {"CODEX_OPS_DIR": str(self.root / "ops/codex-ops")}):
++            with self.assertRaisesRegex(OSError, "outer state save"):
++                ops.cmd_write(args)
++            request = self.read_request()
++            state_dir = self.root / "ops/codex-ops"
++            (state_dir / "learn.json").write_text(json.dumps(disk_state))
++            self.assertFalse(research.ready(str(self.root), str(state_dir), request["batch"], "silent", request["worktree"], IDENT))
++            self.assertFalse(research.registered(str(self.root), str(state_dir), request["batch"], "silent", request["worktree"], IDENT))
++            receipt = json.loads(Path(request["research_dispatch_receipt"]).read_bytes())
++            self.assertEqual(receipt["pid"], 101)
++            self.assertEqual(receipt["batch"], request["batch"])
++            with self.assertRaisesRegex(OSError, "outer state save"):
++                ops.cmd_write(args)
++            self.assertEqual(len(self.launched), 1)
++
++    def test_final_report_matches_independent_registered_baseline_and_input(self):
++        spec = importlib.util.spec_from_file_location("fixed_report_fixture", REPO / "ops/tests/test_strategy_research.py")
++        module = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(module)
++        fixture = module.StrategyResearch("test_bound_clean_report_is_accepted_with_frozen_proof")
++        fixture.setUp()
++        self.addCleanup(fixture.doCleanups)
++        fixture.manifest["request_id"] = IDENT
++        fixture.write_json(fixture.manifest_path, fixture.manifest)
++        fixture.request.update(request_id=IDENT, input_manifest_sha256=fixture.digest(fixture.manifest_path))
++        fixture.write_json(fixture.request_path, fixture.request)
++        fixture.batch.update(research_request=IDENT, research_dispatch_base=fixture.base,
++                             research_input_sha256=fixture.request["input_manifest_sha256"])
++        fixture.report.update(request_id=IDENT, input_sha256=fixture.request["input_manifest_sha256"])
++        self.assertIsNotNone(fixture.accept())
++        for key, value in (("research_request", "other"), ("research_dispatch_base", "0" * 40),
++                           ("research_input_sha256", "0" * 64)):
++            self.assertIsNone(fixture.accept(batch={**fixture.batch, key: value}))
++
++    def test_ordinary_dispatch_argv_and_registry_are_unchanged(self):
++        self.request_path.unlink()
++        self.pending_proposal()
++        result = self.check()
++        self.assertIsNone(result["strategy_research"])
++        self.assertEqual(len(self.launched[0]), 7)
++        batch = self.state["batches"][result["code_proposal"][0]]
++        self.assertEqual(batch["proposal_repair"], "fixed-repair")
++        self.assertNotIn("research_request", batch)
++
++    def test_registered_gate_requires_bound_request_and_saved_batch(self):
++        import strategy_research_jobs as research
++        result = self.check()
++        batch_id = result["strategy_research"][0]
++        tree = self.read_request()["worktree"]
++        state_dir = self.root / "ops/codex-ops"
++        self.assertFalse(research.registered(str(self.root), str(state_dir), batch_id, "silent", tree, IDENT))
++        (state_dir / "learn.json").write_text(json.dumps(self.state))
++        self.assertTrue(research.ready(str(self.root), str(state_dir), batch_id, "silent", tree, IDENT))
++        for key, value in (("batch", "other"), ("character", "ironclad"), ("state", "pending"),
++                           ("dispatch_base", "0" * 40), ("worktree", "/other")):
++            before = self.read_request()
++            self.request_path.write_text(json.dumps({**before, key: value}))
++            self.assertFalse(research.ready(str(self.root), str(state_dir), batch_id, "silent", tree, IDENT))
++            self.request_path.write_text(json.dumps(before))
++
++    def test_host_wrapper_waits_for_registration_before_model_and_finishes_only_registered(self):
++        (self.root / "ops").mkdir(exist_ok=True)
++        for name in ("paths.sh", "codex-ops-learner.sh", "strategy_research_jobs.py"):
++            shutil.copy2(REPO / "ops" / name, self.root / "ops" / name)
++        (self.root / "agent/node_modules").mkdir()
++        (self.root / "ops/codex-ops-learn.py").write_text(
++            'from pathlib import Path\nPath("finish.called").write_text("fixed completion stub")\n')
++        state_dir = self.root / "ops/codex-ops"
++        state_dir.mkdir()
++        lock = (state_dir / "learn.lock").open("w")
++        fcntl.flock(lock, fcntl.LOCK_EX)
++        self.addCleanup(lock.close)
++        batch_id = STAMP + "-strategy-proposal"
++        tree = str(self.root / ".worktrees" / ("codex-strategy-silent-" + STAMP))
++        argv = ["bash", str(self.root / "ops/codex-ops-learner.sh"), batch_id, ",".join(RUNS),
++                "silent", "strategy-proposal", tree, "strategy-proposal", IDENT]
++        env = {"HOME": os.environ["HOME"], "PATH": "/usr/bin:/bin", "CODEX_OPS_ROOT": str(self.root),
++               "CODEX_OPS_NO_DRAIN": "1", "LEARNER_CMD": "printf fixed-model-output"}
++        proc = subprocess.Popen(argv, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
++        self.addCleanup(lambda: proc.kill() if proc.poll() is None else None)
++        time.sleep(0.1)
++        self.assertIsNone(proc.poll())
++        self.assertFalse((state_dir / "learner" / (batch_id + ".out")).exists())
++        self.check()
++        (state_dir / "learn.json").write_text(json.dumps(self.state))
++        (self.root / "agent/.keep").write_text("main advanced after actual dispatch\n")
++        self.git("add", "agent/.keep")
++        self.git("commit", "-m", "Advance main while wrapper waits")
++        fcntl.flock(lock, fcntl.LOCK_UN)
++        stdout, stderr = proc.communicate(timeout=10)
++        self.assertEqual(proc.returncode, 0, stdout + stderr)
++        self.assertTrue((self.root / "finish.called").exists())
++        self.assertEqual((state_dir / "learner" / (batch_id + ".out")).read_text(), "fixed-model-output")
++        self.assertNotEqual(self.git("rev-parse", "main").stdout.strip(), self.base)
++        actual_head = subprocess.run(["git", "-C", tree, "rev-parse", "HEAD"], capture_output=True, text=True)
++        self.assertEqual(actual_head.stdout.strip(), self.base)
++        receipt = json.loads((state_dir / "learner" / (batch_id + ".research-registration.json")).read_text())
++        self.assertEqual(receipt["dispatch_base"], self.base)
++        self.assertEqual(receipt["status"], "registered_bound")
++        (self.root / "finish.called").unlink()
++        (state_dir / "learn.json").write_text('{"batches": {}}')
++        second = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=10)
++        self.assertEqual(second.returncode, 1)
++        self.assertFalse((self.root / "finish.called").exists())
++        self.assertIn("research registration", (state_dir / "learner" / (batch_id + ".err")).read_text())
++
++    def test_wrapper_rejects_unknown_research_marker_and_extra_arguments(self):
++        env = {"HOME": os.environ["HOME"], "PATH": "/usr/bin:/bin", "CODEX_OPS_ROOT": str(self.root),
++               "CODEX_OPS_NO_DRAIN": "1", "LEARNER_CMD": "exit 99"}
++        tree = str(self.root / ".worktrees" / ("codex-strategy-silent-" + STAMP))
++        base = ["bash", str(REPO / "ops/codex-ops-learner.sh"), STAMP + "-strategy-proposal",
++                ",".join(RUNS), "silent", "strategy-proposal", tree, "strategy-proposal"]
++        for extra in (["other"], [IDENT, "extra"]):
++            result = subprocess.run(base + extra, env=env, capture_output=True, text=True, timeout=5)
++            self.assertEqual(result.returncode, 2)
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/agent/tests/strategy-research-scheduling.test.ts b/agent/tests/strategy-research-scheduling.test.ts
+new file mode 100644
+index 000000000..ad5e83229
+--- /dev/null
++++ b/agent/tests/strategy-research-scheduling.test.ts
+@@ -0,0 +1,10 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++
++it("frozen research takes the next slot and starts only after its actual registration is saved", () => {
++  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_strategy_research_scheduling.py"], {
++    encoding: "utf8", timeout: 30_000,
++  });
++  expect(result.status, result.stderr).toBe(0);
++  expect(result.stderr).toContain("Ran 18 tests");
++});
