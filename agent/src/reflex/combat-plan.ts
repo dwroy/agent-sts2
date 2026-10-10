@@ -23,6 +23,7 @@ import { choiceQ } from "./jev/questions.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { silentLossReference } from "./silent-loss-reference.js";
 import { silentSimulationReference } from "./silent-simulation-reference.js";
+import { silentSlResourceComparison } from "./silent-sl-resource-comparison.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { ActionExpect } from "../hand/act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../memory/narrow.js";
@@ -4138,7 +4139,9 @@ function planTurn(env: DecisionEnv): Decision | null {
         }
         const loggedTag = logged ? { logged: true as const } : {};
         const loggedLog: Record<string, JsonValue> = logged ? { logged: true, plays: [...replay.plays!], ...(reordered ? { reordered: true } : {}) } : {};
-        const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog } };
+        const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog,
+          ...silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, ref?.plan ?? null, { original: pick.plan === null && pick.rated != null, replacement: ref !== null && mcAll.has(ref.plan) }),
+        } };
         // SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played here (or they die this turn and the
         // answer does not): the attempt leaves the path here, so it deviates here (the lines failed attempts played on this
         // board), not into a failed attempt's fight.
@@ -4198,6 +4201,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         return parts.join("; ");
       };
       const rep = choice.replacement;
+      const resources = silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, rep?.plan ?? null,
+        { original: pick.plan === null && pick.rated != null, replacement: rep !== null && mcOf.has(rep.plan) });
       // A boss fight with a sub-switch on: what weighed "not worse", and B2's numbers of the two lines when it did
       // (calibrated win rates, the replacement's paired difference to the pick ± its standard error). Off, or out of a boss
       // fight (where neither changes anything): the row as before them.
@@ -4221,7 +4226,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         const turnLog: Record<string, JsonValue> = { ...(pick.canon !== undefined ? { turn: pick.canon } : {}), ...(rep?.canon !== undefined ? { turn_instead: rep.canon } : {}) };
         // SL_RETRY_EXPLORE_WHOLE: the answer ends the turn as a failed attempt's and no shown line keeps it off: said so.
         const failed = whole && !rep && !pick.wins && triedHas(avoid.tried, pick) ? { line: pick.text, reason: choice.reason } : null;
-        const log: JsonValue = { avoid: { point: avoid.point, ...avoided, played_in: avoid.attempts, ...turnLog, ...numbersLog, ...gateLog }, ...(failed ? { avoid_failed: { point: avoid.point, played_in: avoid.attempts, ...failed, ...turnLog } } : {}) };
+        const log: JsonValue = { avoid: { point: avoid.point, ...avoided, played_in: avoid.attempts, ...turnLog, ...numbersLog, ...gateLog, ...resources }, ...(failed ? { avoid_failed: { point: avoid.point, played_in: avoid.attempts, ...failed, ...turnLog } } : {}) };
         if (!rep) return { resolved, log, info: { ...info, avoided, ...(failed ? { avoidFailed: failed } : {}) } };
         // SL_RETRY_EXPLORE_WHOLE: a pick not tried here that may still end the turn as a failed one after its draw.
         const ends = whole && choice.reason.startsWith(MAY_REPEAT) ? "which may end the turn after its draw with the plays" : "which ends the turn with the plays";
@@ -4238,6 +4243,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...(point.replayed !== undefined ? { replayed: point.replayed } : {}),
         ...numbersLog,
         ...gateLog,
+        ...resources,
         ...(point.tried && pick.canon !== undefined ? ({ turn: pick.canon, ...(rep?.canon !== undefined ? { turn_instead: rep.canon } : {}) } as Record<string, JsonValue>) : {}),
         ...fellBackLog,
       };
