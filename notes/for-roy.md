@@ -868,3 +868,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-10 18:42 [输出专题同父续办] 完整测试已见逐文件推进，原独立入口agent承接后台正常时长检查；通过才提交入口、由ops去重派同一专题。新问题仍pending、没有正式学习批，输入204局与历史/阶段测试结果已保留；后续开始/完成回执见paper/materials/silent/20261010-core-output-value/source-check-continuation.json。
 
 - 2026-10-10 18:44 [输出专题入口后台检查真实开始] 同父roy-20261010-silent-core-output-value独立入口检查已于18:44:17实际启动，原树owner=agent:/root/core_output_research_entry并持entry-full-check独占锁；固定sandbox、4worker/nice/1200秒保护，完整结果仍待回执。只在完整0及gitleaks0后提交原四源并发原manual续办更新，agent不合main/live或派发。专题仍pending/batch=null；开始/owner原件paper/materials/silent/20261010-core-output-value/normal-full-check-start/，此前准备记录3433e2f05，原130/124保持。
+
+- 2026-10-10 20:34 [Roy核心输出问题澄清 / roy-20261010-silent-core-output-value] Roy要求跨多回合分析复制是否净增加核心兑现，给具体牌/遗物及观察数量、常见抽牌概率和成型后牌数影响；同父pending/batch=null在learn.lock短事务改绑task-v2，204局输入与旧spec/原件保持、learn.json全等未写，无新任务或重复派发。独立概率讨论只作抽象说明，不作为实盘/游戏知识输入；学习者须核真实抽牌/支付/后继/伤害及支持反例，充分证据沿原experience-update去重沉淀。入口原树恢复wrapper标准项目venv链接后20:31:42完整检查进行中，旧130/124/exit1保留，实际通过/集成/派发另验。回执paper/materials/silent/20261010-core-output-value/multiturn-clarification/request-update-receipt.json；同父续办更新已入既有manual队列，不改游戏规则/参数或打断对局。
