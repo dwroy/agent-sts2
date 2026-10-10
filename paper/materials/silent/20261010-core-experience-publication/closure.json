@@ -35,7 +35,7 @@
     "recheck_cases": 12,
     "all_fixed_suite_cases_passed_across_preserved_runs": true,
     "combined_single_full_vitest_pass_claimed": false,
-    "host_full_suite": "pending standard learner-recheck",
+    "host_full_suite": "running; await standard learner-checks result",
     "combined_unique_files": 262,
     "combined_unique_cases": 2673
   },
@@ -83,8 +83,21 @@
     "batch": "20261010-084219-experience-update",
     "broker_timeout_exit": 124,
     "attempt_receipt": "paper/materials/silent/20261010-core-experience-publication/external-check-request.txt",
-    "state": "pending_existing_ops_wake",
-    "reason": "Direct human TUI turn has no host wake broker; no full external pass claimed",
-    "queue_event": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1791600181267332847-manual.md"
+    "state": "running_await_standard_learner_checks_event",
+    "reason": "Host accepted the sole request and started the pinned full suite; the 15-second client timeout happened while it was still running",
+    "queue_event": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1791600181267332847-manual.md",
+    "started_observation": "paper/materials/silent/20261010-core-experience-publication/external-check-start-observed.json"
+  },
+  "live_record_sync": {
+    "state": "pending_existing_full_check_lock",
+    "owner": "20261010-084219-experience-update learner-recheck",
+    "scope": [
+      "eval/versions.json",
+      "four original CLI histories and notifications",
+      "request status records"
+    ],
+    "runtime_experience_already_published_and_verified": true,
+    "main_records_already_committed": "42ee5bb08d7b623a6a7081ed694d5bae67739e2c",
+    "no_unpublished_runtime_knowledge_or_code": true
   }
 }
