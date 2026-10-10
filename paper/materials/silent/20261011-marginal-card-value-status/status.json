@@ -1,0 +1,76 @@
+{
+  "observed_at": "2026-10-11T00:45:36+08:00",
+  "questions": [
+    "最后的经验什么时候入库呢？",
+    "尤其是新的牌进入后是否会增加核心牌组兑现效率的判断是如何做的？"
+  ],
+  "request_id": "roy-20261010-silent-core-reuse-experience-integration",
+  "request_state": "pending",
+  "request_batch": null,
+  "ordinary_batch_does_not_handle_request": {
+    "batch": "20261010-234302-experience-update",
+    "request_handled": false,
+    "reason": "dispatch_runs mismatch"
+  },
+  "current_exp_owner": {
+    "batch": "20261011-002829-experience-update",
+    "state": "running",
+    "pid": 693555,
+    "pane": "wJ:pFF",
+    "runs": [
+      "BHSVN6X84UMN",
+      "U1QYLX1AE1WX"
+    ]
+  },
+  "live_head": "56268f61928e0330d91293e585efab075839bb4a",
+  "live_experience": {
+    "version": "2026-10-10.8",
+    "sha256": "a7a43f2364b92f44c64c9b6847bf69997b238507574efecdd5ea8ea5fcffe841"
+  },
+  "live_unmerged": [
+    "README.md",
+    "agent/tests/ops-codex.test.ts",
+    "docs/boss-sim.md",
+    "docs/codex-ops.md",
+    "docs/eval.md",
+    "docs/layout.md",
+    "docs/logdb.md",
+    "docs/mechanics-learning.md",
+    "docs/potion-equivalents.md",
+    "docs/sl.md",
+    "docs/thief.md",
+    "docs/v4-architecture.md",
+    "docs/v4-build-facts.md",
+    "docs/v4-go-live.md",
+    "learner/README.md",
+    "notes/for-roy.md",
+    "ops/codex-ops-actions.sh",
+    "ops/inbox-dev.md",
+    "paper/materials/decision-log.md"
+  ],
+  "source_refs": [
+    {
+      "path": "notes/experience-integration-silent.json",
+      "sha256": "f0f5d8fc78220c2615954af219b924f27296d327863d5a6b2a2509f8733fb82c"
+    },
+    {
+      "path": "paper/materials/silent/20261010-core-output-value/result-review/report.md",
+      "sha256": "9c47fea393bdc79c64b388ef8210bfe3ff4cdc6360efbe6b60e892b4153d37fd"
+    },
+    {
+      "path": ".worktrees/exp/learner/runs/20261010-234303-experience-update/experience-integration.json",
+      "sha256": "461296a68719ce762b7f0634458f0796cb9703db38ec315db49c573f751fd7c6"
+    },
+    {
+      "path": "ops/codex-ops/queue/1791641495145618609-manual.md",
+      "sha256": "d09f8ae256e6b1123998cee2e99319e7c35186f29694004802e54e3178e54f6a"
+    }
+  ],
+  "dispatch_action": "Existing unique continuation preserved; active exp lease not changed; no new dispatch.",
+  "publication_eta": null,
+  "limitations": [
+    "Research report is not yet a deployed integrated experience.",
+    "Current boss simulator provides outcome comparisons, not a dedicated core-realization-count metric.",
+    "No claim of a causal benefit from adding a card."
+  ]
+}
