@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -35,6 +35,29 @@ esac
 }
 
 describe("autoplay's log pane", () => {
+  it("reads the existing log pane using the host binary fallback without starting or closing jobs", () => {
+    const root = join(tmp, "read");
+    const ops = join(root, "ops");
+    const dir = join(ops, "codex-ops");
+    const home = join(root, "home");
+    mkdirSync(dir, { recursive: true });
+    mkdirSync(join(home, ".local/bin"), { recursive: true });
+    for (const file of ["autoplay-pane.sh", "paths.sh"]) copyFileSync(join(repo, "ops", file), join(ops, file));
+    writeFileSync(join(dir, "herdr.json"), JSON.stringify({ panes: { "autoplay-log": { pane_id: "wJ:pAB" } } }));
+    const binary = join(home, ".local/bin/herdr");
+    writeFileSync(binary, `#!/bin/bash
+[ "$*" = 'pane read wJ:pAB --source recent-unwrapped --lines 40' ] || exit 2
+printf 'live console decision\\n'
+`);
+    chmodSync(binary, 0o755);
+    const env = { ...process.env, HOME: home, PATH: "/usr/bin:/bin", CODEX_OPS_ROOT: root, CODEX_OPS_DIR: dir };
+    delete env.HERDR_BIN;
+    const result = spawnSync("bash", [join(ops, "autoplay-pane.sh"), "--read"], { env, encoding: "utf8", timeout: 10_000 });
+    expect(result.status, result.stderr).toBe(0);
+    expect(readFileSync(join(dir, "autoplay-log-view.txt"), "utf8")).toBe("live console decision\n");
+    expect(readFileSync(join(dir, "autoplay-log-view.err"), "utf8")).toBe("");
+  });
+
   it("accepts opaque pane IDs and closes only the old idle autoplay tab after launch", () => {
     const { result, calls } = paneFixture("idle", false);
     expect(result.status, result.stderr).toBe(0);
