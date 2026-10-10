@@ -91,8 +91,18 @@ elif [ -n "${LEARNER_CMD:-}" ]; then
   rc=$?
 else
   # Old leased worktrees keep their launcher source; enforce the service policy at the native CLI boundary.
-  export STS2_CODEX_FAST_BIN="${LEARNER_CODEX_BIN:-$(command -v codex)}"
-  export LEARNER_CODEX_BIN="$ROOT/ops/codex-fast.sh"
+  codex_fast_wrapper="$ROOT/ops/codex-fast.sh"
+  codex_fast_native="${LEARNER_CODEX_BIN:-${STS2_CODEX_FAST_BIN:-$(command -v codex)}}"
+  # A completion can dispatch another batch with this wrapper already exported.
+  # Keep its native executable instead of wrapping the wrapper a second time.
+  if [ "$codex_fast_native" = "$codex_fast_wrapper" ] || [ "$codex_fast_native" -ef "$codex_fast_wrapper" ]; then
+    codex_fast_native="${STS2_CODEX_FAST_BIN:-$(command -v codex)}"
+    if [ "$codex_fast_native" = "$codex_fast_wrapper" ] || [ "$codex_fast_native" -ef "$codex_fast_wrapper" ]; then
+      codex_fast_native="$(command -v codex)"
+    fi
+  fi
+  export STS2_CODEX_FAST_BIN="$codex_fast_native"
+  export LEARNER_CODEX_BIN="$codex_fast_wrapper"
   args=(--engine codex --task "$learner_task" --character "$character" --cwd "$worktree")
   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
   if [ "$learner_task" = silent-historical-core-builds ]; then
