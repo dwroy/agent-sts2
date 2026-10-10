@@ -1,0 +1,32 @@
+{
+ "character": "silent",
+ "by": "learner:fix-batch",
+ "kind": "fight",
+ "claim": "Roy授权静默boss固定模型周期刷新：相对live新增35实际结局，221完局/980尝试/399可用；107调参、切点和Platt不动，验证257→292（成功290）；B2/B3 Brier 0.1084/0.1095，可信6/6。F49低可信、低阶各0验证；仅固定7e1193cef模型，不改策略阈值。",
+ "first_run": "8S9RNHFU5XF1",
+ "prior": "unknown",
+ "status": "proposed",
+ "prior_note": "统计校准；Roy架构授权不是游戏事实，不据此认定已理解打法。",
+ "evidence": [
+  {
+   "run": "8S9RNHFU5XF1",
+   "floor": 17,
+   "turn": 1,
+   "role": "support",
+   "note": "A10 CEREMONIAL_BEAST 尝试1 T1–7 实际won；8S9RNHFU5XF1:17:1:11138489544"
+  }
+ ],
+ "where": {
+  "knowledge": [
+   "knowledge/characters/silent/boss-trust.json"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261011-024306-silent-boss-calibration/report.md"
+  ],
+  "changelog": [
+   "paper/materials/silent/boss-sim-calibration.md",
+   "experiments/boss-sim/silent/2cb988d8fcdff4c6d6d3f615c379695a089c0209bf75ce07d52ba1f072f63d15"
+  ]
+ },
+ "note": "来源任务20261011-024306-silent-boss-calibration；全量重提取、固定模型控制核验；授权新功能非bug-infra，只proposed，shipped由运维核实际发布登记。"
+}
