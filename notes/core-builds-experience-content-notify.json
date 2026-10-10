@@ -1,0 +1,35 @@
+{
+  "request_id": "roy-20261010-core-builds-experience-content-notify",
+  "parent_request_id": "roy-20261010-core-builds-experience-integration",
+  "historical_parent_request_id": "roy-20261009-historical-core-builds",
+  "requested_by": "Roy",
+  "requested_at": "2026-10-10 08:54:43 CST",
+  "user_request": "等带核心组合经验入库后，你把这几条经验的内容发给我看看",
+  "character": "silent",
+  "batch": "20261010-084219-experience-update",
+  "state": "pending_actual_experience_integration",
+  "completion_channel": "existing experience-done / learner-checks and ops completion handling; no new learner batch",
+  "delivery_requirements": [
+    "After actual production experience insertion/update and verified live merge, show the final stored entries to Roy.",
+    "Copy complete final experience text, not the old four candidate report summaries; include IDs, conditions, confidence/evidence and limitations as actually stored.",
+    "Expected about four integrated entries; if merged into existing entries or evidence requires a different count, state actual count and mapping.",
+    "Save a stable content snapshot with source experience path/blob SHA, actual batch/live commit/version and ledger IDs.",
+    "Append actual contents and result path to notes/for-dai.md and ops/inbox-dev.md, and provide contents in the user-facing conversation.",
+    "Do not present pending, self-test or dispatch as completed insertion; preserve failures and unknown actual play adoption."
+  ],
+  "ledger_ids": [
+    "silent-0352",
+    "silent-0353",
+    "silent-0354",
+    "silent-0355"
+  ],
+  "deduplication_key": [
+    "request_id",
+    "batch",
+    "actual_experience_blob_sha256"
+  ],
+  "content_snapshot": null,
+  "actual_merge": null,
+  "delivered_at": null,
+  "new_batch_requested": false
+}

@@ -1,0 +1,39 @@
+{
+  "recorded_at": "2026-10-10 08:51:36 CST",
+  "request": "Roy: 看看最新战绩，每20局一段的漏斗率",
+  "scope": "Silent A10 completed, codex-successful-brain-v1, latest completed eligible first, 20 per segment; first and final separated",
+  "command": "nice -n 10 data/logdb-venv/bin/python paper/materials/silent/20261010-a10-funnel-20-run/analyze.py --replay",
+  "files": {
+    "funnel.json": {
+      "sha256": "204d6db5f662f0abfa107e457da68a1bbd9076344cafaf5e69ebee7aca6468bf",
+      "bytes": 388371
+    },
+    "report.md": {
+      "sha256": "0b785e61a66b31fe3d45cb2e5ac33f6697ed8d043e7a88e6b415785c761c7c46",
+      "bytes": 4608
+    },
+    "logdb-manifest.json": {
+      "sha256": "8064bfe49b2728bf5bd6d1c286f321f1018feaaeb9e448bf9d393ab45afcc9c9",
+      "bytes": 284557
+    },
+    "evidence.json": {
+      "sha256": "fa8497391394519936f67bcda28322d30d5b536386cd359f578cbb5ffdb3d4a1",
+      "bytes": 4037297
+    },
+    "analyze.py": {
+      "sha256": "9e2cde7e026ea98cbadbee00b482b3efd07c6b29404679ba4dc61d58732bec8c",
+      "bytes": 14684
+    }
+  },
+  "checks": {
+    "unique_runs": true,
+    "nonoverlapping_windows": true,
+    "monotonic_funnels": true,
+    "first_no_greater_than_final": true,
+    "raw_finished_runs_present_and_final_floor_matches_db": true,
+    "prior_126_run_cutoff_reproduced": true
+  },
+  "initial_analysis_script_parse_error": "First local analysis invocation exited 1: unterminated triple-quoted SQL literal; corrected delimiter, extraction and frozen replay then exit 0. No game/scheduler mutations.",
+  "behavior_change": false,
+  "game_version_registered": false
+}

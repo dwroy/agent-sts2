@@ -6,8 +6,8 @@
   "authorized_at": "2026-10-10T08:34:26+08:00",
   "task": "experience-update",
   "character": "silent",
-  "state": "running",
-  "batch": "20261010-084219-experience-update",
+  "state": "pending",
+  "batch": null,
   "dispatch_runs": [
     "T082DRCUHRRD",
     "HNX4A2WBC34W",
@@ -45,20 +45,17 @@
   "consumer_read_verified": false,
   "actual_play_adoption_verified": false,
   "original_history_preserved": true,
-  "dispatch_status": "dispatched",
+  "dispatch_status": "prepared_queued_broker_unavailable",
   "template_commit": "84e4e3bf3",
   "worktree_template_commit": "ed1f9ab27",
   "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
-  "blocking_condition": null,
-  "last_dispatch_attempt": "paper/materials/silent/20261010-core-experience-integration/dispatch-recovery.json",
+  "blocking_condition": "Await the existing ops scheduler wake broker to claim the unique manual continuation; standard experience task/template/worktree are ready. No owner release or new code adapter is required.",
+  "last_dispatch_attempt": "paper/materials/silent/20261010-core-experience-integration/dispatch-attempt.json",
   "queue_event": "ops/codex-ops/queue/1791592630562366752-manual.md",
   "entry_count_goal": {
     "approximate": 4,
     "granularity": "one integrated construction lesson per historical candidate; merge duplicates into existing entries",
     "not_a_hard_count": "retain evidence and ascension distinctions when necessary, explain exceptions",
     "user_clarification": "这些核心组合经验有多少条实际如何的经验条目，我的理解应该不会很多 4中组合差不多也就4条左右吧？"
-  },
-  "dispatched_at": "2026-10-10T08:43:20.142538+08:00",
-  "wrapper_pid": 3162426,
-  "pane": "wJ:pCZ"
+  }
 }
