@@ -16,6 +16,7 @@ import { doubleBossPreparation } from "../knowledge/double-boss.js";
 import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
 import { fightPlanInput } from "../memory/fight-plan.js";
 import { actOf } from "../memory/run-plan.js";
+import { lizardTailResourceState } from "../memory/relic-resources.js";
 
 /** Act boss floors (acts are 17, 16 and 15 floors). */
 const BOSS_FLOORS = [17, 33, 48];
@@ -79,6 +80,8 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
     ...extra,
   };
   const continuation = doubleBossPreparation(state);
+  const tail = lizardTailResourceState(state, env.screenMemory);
+  if (tail) facts["relic_resources"] = [tail];
   if (continuation) facts["double_boss_preparation"] = {
     objective: "第三幕路线和休息按F48→F49连续两战备战：第一战剩余HP/药水是第二战进场资源，四局观察没有中间营火或回血。",
     projection: "沿用silent-0163/S1.fix27：F48之后路线血量仍未知，不把进F48的血量当进F49血量；连战模拟才传递每条样本实际余量。",

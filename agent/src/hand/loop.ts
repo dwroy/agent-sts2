@@ -624,7 +624,6 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       }
     }
 
-    const brief = buildRunBrief(state, knowledge, notes);
     noteScreenChange(screenMemory, state);
     // Per-fight combat records outlive in-combat screen changes (card choices), not the fight.
     if (!state.in_combat) resetFightMemory(screenMemory);
@@ -705,6 +704,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // The deck and gold at the fight's first frame: a thief's take is that less the run now (strategy/thief.ts).
     noteFightStart(screenMemory, state);
     sl?.observe(state, { journal, screenMemory });
+    // Build after journal restoration and tracking, so the first post-restart question sees the same resource state.
+    const brief = buildRunBrief(state, knowledge, notes, screenMemory);
     // What the brain's tools read for this state (only used when an engine gets tools).
     brain?.setToolContext(toolContextOf(state, state.run ? actOf(state) : undefined, dirname(config.log.decisionLog)));
     const slEnv = sl?.envFor(state);
