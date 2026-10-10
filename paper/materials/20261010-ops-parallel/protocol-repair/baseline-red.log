@@ -1,0 +1,61 @@
+F..FF.F.
+======================================================================
+FAIL: test_already_recursive_environment_recovers_the_native_from_path (__main__.FastLauncher.test_already_recursive_environment_recovers_the_native_from_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmpfputczij/ops/tests/test_learner_launch_failures.py", line 63, in test_already_recursive_environment_recovers_the_native_from_path
+    self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_FAST_BIN=str(self.wrapper))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmpfputczij/ops/tests/test_learner_launch_failures.py", line 48, in launch
+    self.assertEqual(result.returncode, 0, result.stderr + (err.read_text() if err.exists() else ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : recursive Codex Fast launcher
+
+
+======================================================================
+FAIL: test_nested_dispatch_reuses_the_original_native (__main__.FastLauncher.test_nested_dispatch_reuses_the_original_native)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmpfputczij/ops/tests/test_learner_launch_failures.py", line 60, in test_nested_dispatch_reuses_the_original_native
+    self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_FAST_BIN=str(self.native))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmpfputczij/ops/tests/test_learner_launch_failures.py", line 48, in launch
+    self.assertEqual(result.returncode, 0, result.stderr + (err.read_text() if err.exists() else ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : recursive Codex Fast launcher
+
+
+======================================================================
+FAIL: test_symlink_to_wrapper_is_not_treated_as_native (__main__.FastLauncher.test_symlink_to_wrapper_is_not_treated_as_native)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmpfputczij/ops/tests/test_learner_launch_failures.py", line 68, in test_symlink_to_wrapper_is_not_treated_as_native
+    self.launch(LEARNER_CODEX_BIN=str(alias), STS2_CODEX_FAST_BIN=str(self.native))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmpfputczij/ops/tests/test_learner_launch_failures.py", line 48, in launch
+    self.assertEqual(result.returncode, 0, result.stderr + (err.read_text() if err.exists() else ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : recursive Codex Fast launcher
+
+
+======================================================================
+FAIL: test_preflight_or_timeout_without_report_does_not_enqueue_gameplay_repair (__main__.MissingReports.test_preflight_or_timeout_without_report_does_not_enqueue_gameplay_repair)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmpfputczij/ops/tests/test_learner_launch_failures.py", line 104, in test_preflight_or_timeout_without_report_does_not_enqueue_gameplay_repair
+    self.assertEqual(batch["proposal_audit_errors"], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['missing string code_proposals array', 'm[36 chars]dit'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'missing string code_proposals array'
+
++ []
+- ['missing string code_proposals array',
+-  'missing source commit for proposal audit']
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.370s
+
+FAILED (failures=4)

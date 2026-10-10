@@ -1,0 +1,125 @@
+{
+  "recorded_at": "2026-10-10 12:56:47 CST",
+  "base": "0be5abd3699e43899c8094b5cbbadb101d3bb1d8",
+  "branch": "ops-proposal-protocol-repair-20261010",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010",
+  "scope": "infrastructure only; no game knowledge, model strength, env, credentials or ops prompt changes",
+  "checks": [
+    {
+      "name": "old_source_red_control",
+      "command": "nice -n 19 python3 -B ops/tests/test_learner_launch_failures.py (temporary fixture with base source)",
+      "exit": 1,
+      "expected": "4 failures from 8 cases",
+      "log": "baseline-red.log",
+      "log_sha256": "86c0721cf651fd73fe3e9f0ca4abba67d85e9a554c0b63e9815059f12e38cd4e"
+    },
+    {
+      "name": "launcher_completion_fixed_fixtures",
+      "command": "nice -n 19 python3 -B ops/tests/test_learner_launch_failures.py",
+      "exit": 0,
+      "cases": 8,
+      "log": "targeted-green.log",
+      "log_sha256": "1b5e2e3544bc939d5c6a9c389db5ca925451ad0eeeed0074c710573927106b84"
+    },
+    {
+      "name": "existing_learning_flow",
+      "command": "nice -n 19 python3 -B -m unittest discover -s ops/tests -p test_learning_flow.py",
+      "exit": 0,
+      "cases": 24,
+      "log": "learning-flow.log",
+      "log_sha256": "7ef4434f72fd3f32307be1f2c2a5b4b284872f1cdd79c7db42be166eb04aa200"
+    },
+    {
+      "name": "bash_syntax",
+      "command": "bash -n ops/codex-ops-learner.sh ops/codex-fast.sh",
+      "exit": 0
+    },
+    {
+      "name": "fixed_sandbox",
+      "command": "SANDBOX_WORKERS=1 nice -n 19 bash tools/test-sandbox.sh",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010/agent",
+      "session": 74583,
+      "exit": 0,
+      "tsc": 0,
+      "vitest_main": {
+        "files": 262,
+        "cases": 2663,
+        "duration_seconds": 858.92
+      },
+      "vitest_paths": {
+        "files": 1,
+        "cases": 11,
+        "duration_seconds": 1.92
+      },
+      "log": "sandbox-checks.log",
+      "log_sha256": "98db89d22f2c51024230c64632259fc0dc66064d0a11c9f78db07b2264010208"
+    },
+    {
+      "name": "source_staged_gitleaks",
+      "command": "gitleaks git --staged --redact --no-banner",
+      "exit": 0,
+      "log": "source-gitleaks.log",
+      "log_sha256": "23e85fa23e049b6906ca3db150370e7b88fb7a466b02880e41a46051b44da65a"
+    },
+    {
+      "name": "full_staged_gitleaks",
+      "command": "gitleaks git --staged --redact --no-banner --report-format json",
+      "exit": 0,
+      "bytes_scanned_approx": 60548,
+      "log": "final-gitleaks.log",
+      "log_sha256": "4068dfac12fbb124ca3cd007d818ca04cd5d4d3db3b70f8631b7e4eb10ddc4e4"
+    },
+    {
+      "name": "source_whitespace",
+      "command": "git diff --cached --check -- <the five source/test files>",
+      "exit": 0
+    }
+  ],
+  "original_failure_files_verified_unchanged": [
+    "ops/codex-ops/learner/20261010-001301-fix-batch.out",
+    "ops/codex-ops/learner/20261010-001301-fix-batch.err",
+    "ops/codex-ops/learner/20261010-003040-fix-batch.out",
+    "ops/codex-ops/learner/20261010-003040-fix-batch.err",
+    "ops/codex-ops/learner/20261010-010750-strategy-proposal.out",
+    "ops/codex-ops/learner/20261010-010750-strategy-proposal.err",
+    "ops/codex-ops/learner/20261010-020327-strategy-proposal.out",
+    "ops/codex-ops/learner/20261010-020327-strategy-proposal.err",
+    "ops/codex-ops/learner/20261010-020327-fix-batch.out",
+    "ops/codex-ops/learner/20261010-020327-fix-batch.err",
+    "ops/codex-ops/learner/20261010-025941-strategy-proposal.out",
+    "ops/codex-ops/learner/20261010-025941-strategy-proposal.err",
+    "ops/codex-ops/learner/20261010-032738-experience-update.out",
+    "ops/codex-ops/learner/20261010-032738-experience-update.err",
+    "ops/codex-ops/learner/20261010-032738-strategy-proposal.out",
+    "ops/codex-ops/learner/20261010-032738-strategy-proposal.err",
+    "ops/codex-ops/learner/20261010-035737-experience-update.out",
+    "ops/codex-ops/learner/20261010-035737-experience-update.err",
+    "ops/codex-ops/learner/20261010-035737-strategy-proposal.out",
+    "ops/codex-ops/learner/20261010-035737-strategy-proposal.err",
+    "ops/codex-ops/learner/20261010-035737-s2-strategy-proposal.out",
+    "ops/codex-ops/learner/20261010-035737-s2-strategy-proposal.err",
+    "ops/codex-ops/learner/20261010-050327-experience-update.out",
+    "ops/codex-ops/learner/20261010-050327-experience-update.err",
+    "ops/codex-ops/learner/20261010-050327-strategy-proposal.out",
+    "ops/codex-ops/learner/20261010-050327-strategy-proposal.err",
+    "ops/codex-ops/learner/20261010-050327-s2-strategy-proposal.out",
+    "ops/codex-ops/learner/20261010-050327-s2-strategy-proposal.err",
+    "ops/codex-ops/learner/20261010-095943-experience-update.out",
+    "ops/codex-ops/learner/20261010-095943-experience-update.err",
+    "ops/codex-ops/learner/20261010-102858-experience-update.out",
+    "ops/codex-ops/learner/20261010-102858-experience-update.err",
+    "ops/codex-ops/learner/20261010-113018-experience-update.out",
+    "ops/codex-ops/learner/20261010-113018-experience-update.err",
+    "ops/codex-ops/learner/20261010-122834-experience-update.out",
+    "ops/codex-ops/learner/20261010-122834-experience-update.err"
+  ],
+  "source_diff_sha256": "44207921bffe46cbca20be4ed4c6f679347eae482fe38cf27e3e42932cc9d77b",
+  "integration": "not merged to main/live; parent ops handles serial integration and host full checks",
+  "historical_state": "no learn.json, queue, proposal or batch history writes from this task; existing pending repair correction requires separate ops receipt",
+  "limitations": [
+    "001301 unreadable glob environment failure is not repaired or bypassed",
+    "no successful model report, missing source commit or merge conflict is fabricated/resolved by this patch",
+    "missing failed report classification is changed only for ordinary write-batch completion; specialized postmortem/ascension/core completion remains unchanged"
+  ],
+  "raw_log_whitespace": "git diff --check reports the original sandbox log final blank line; kept verbatim to preserve test-log SHA"
+}

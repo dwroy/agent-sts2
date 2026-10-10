@@ -3,7 +3,10 @@
 # Preserve their task source, model, effort, permission profile and sandbox child command.
 set -eu
 codex_bin="${STS2_CODEX_FAST_BIN:-$HOME/.local/node/bin/codex}"
-[ "$codex_bin" != "${BASH_SOURCE[0]}" ] || { echo "recursive Codex Fast launcher" >&2; exit 2; }
+if [ "$codex_bin" = "${BASH_SOURCE[0]}" ] || [ "$codex_bin" -ef "${BASH_SOURCE[0]}" ]; then
+  echo "recursive Codex Fast launcher" >&2
+  exit 2
+fi
 args=()
 service_set=0
 while [ "$#" -gt 0 ]; do
