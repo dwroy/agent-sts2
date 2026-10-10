@@ -1743,6 +1743,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     if ((player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw) {
       const id = bandagesDiscard(next, card.discards?.[play], player);
       if (id !== null) discarded.push(id);
+    } else if (card.survivorDiscard) {
+      // RC61 F33 T4: the only remaining Strike is discarded, so it cannot turn us toward Rocket.
+      // Multiple choices remain unresolved until the real selection; never invent Jev's pick.
+      const pool = [...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion");
+      const only = pool.length === 1 && next.drawnInHand === 0 ? pool[0]!.key : undefined;
+      const id = bandagesDiscard(next, only, player);
+      if (id !== null) discarded.push(id);
     }
     if (card.type === "Attack") attackRelics(next, player);
     if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
@@ -1880,7 +1887,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       name: card.name,
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
-      ...(hidden || card.discards || card.discardsHand ? { discards: discarded } : {}),
+      ...(hidden || card.discards || card.discardsHand || card.survivorDiscard ? { discards: discarded } : {}),
       ...(card.type === "Potion" && card.generates?.pileCard ? { takes: card.generates.pileCard } : {}),
       ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },

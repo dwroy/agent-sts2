@@ -104,6 +104,8 @@ export interface CardModel {
   discardCount?: number;
   /** L704TLETMZBM F48 T3/T4: one chosen discard after this card's draw/effects. */
   discardAfterDraw?: boolean;
+  /** silent-0268: plain Survivor consumes its discard without a relic, observed at A6/A10. */
+  survivorDiscard?: boolean;
   /** Fixed draw in the observed Dagger Throw text, used only by the discard relic model. */
   discardDraw?: number;
   doubleDamageNext?: boolean;
@@ -1114,6 +1116,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),
     ...(character.toLowerCase() === "silent" && !bool(card["upgraded"]) && ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"].includes(cardId) &&
       /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { discardAfterDraw: true, ...(daggerDraw > 0 ? { discardDraw: daggerDraw } : {}) } : {}),
+    ...(character.toLowerCase() === "silent" && (ascension === 6 || ascension === 10) && cardId === "SURVIVOR" &&
+      !bool(card["upgraded"]) && /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { survivorDiscard: true } : {}),
     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
     ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
     ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
