@@ -1,0 +1,35 @@
+FF.....F
+======================================================================
+FAIL: test_bound_clean_report_is_accepted_with_frozen_proof (final_research_fixtures.StrategyResearch.test_bound_clean_report_is_accepted_with_frozen_proof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010/ops/tests/test_strategy_research.py", line 89, in test_bound_clean_report_is_accepted_with_frozen_proof
+    self.assertIsNotNone(proof)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_dirty_tree_or_changed_head_never_passes_as_pure_report (final_research_fixtures.StrategyResearch.test_dirty_tree_or_changed_head_never_passes_as_pure_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010/ops/tests/test_strategy_research.py", line 173, in test_dirty_tree_or_changed_head_never_passes_as_pure_report
+    self.assertIsNotNone(self.accept(report={**self.report, 'base': self.git('rev-parse', 'HEAD')}))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_valid_research_finishes_done_with_event_without_fake_merge_checks_or_resolution (final_research_fixtures.StrategyResearch.test_valid_research_finishes_done_with_event_without_fake_merge_checks_or_resolution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010/ops/tests/test_strategy_research.py", line 202, in test_valid_research_finishes_done_with_event_without_fake_merge_checks_or_resolution
+    self.assertEqual(self.batch['state'], 'done')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'failed' != 'done'
+- failed
++ done
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.758s
+
+FAILED (failures=3)

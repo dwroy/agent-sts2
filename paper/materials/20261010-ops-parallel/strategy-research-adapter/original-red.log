@@ -1,0 +1,29 @@
+F....../home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010/ops/learner_checks.py:26: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp57wfmhfi/state/learner/20261010-130001-strategy-proposal.out' mode='r' encoding='utf8'>
+  text = open(path, encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F
+======================================================================
+FAIL: test_bound_clean_report_is_accepted_with_frozen_proof (__main__.StrategyResearch.test_bound_clean_report_is_accepted_with_frozen_proof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010/ops/tests/test_strategy_research.py", line 87, in test_bound_clean_report_is_accepted_with_frozen_proof
+    self.assertIsNotNone(proof)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_valid_research_finishes_done_with_event_without_fake_merge_checks_or_resolution (__main__.StrategyResearch.test_valid_research_finishes_done_with_event_without_fake_merge_checks_or_resolution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010/ops/tests/test_strategy_research.py", line 173, in test_valid_research_finishes_done_with_event_without_fake_merge_checks_or_resolution
+    self.assertEqual(self.batch['state'], 'done')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'failed' != 'done'
+- failed
++ done
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.524s
+
+FAILED (failures=2)
