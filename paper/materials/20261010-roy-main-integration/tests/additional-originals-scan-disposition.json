@@ -1,0 +1,26 @@
+{
+  "initial_scan_exit": 1,
+  "initial_findings": 524,
+  "rule": "generic-api-key",
+  "purpose": "scheduler batch idempotency identifiers and recorded boss evidence SHA256 values, not service credentials",
+  "field_verification": "All originally reported values were traced to exact scheduler or boss-evidence paths. The full rescan excludes only lines that exactly match parsed values at these explicitly verified paths, including unreported benign scheduler identifiers. No other fields are exempted.",
+  "verified_schemas": {
+    "batches.*.key": 1352,
+    "batches.*.report.first_dispatch.evidence_key": 5,
+    "boss_sim_observed.*.eligible.0.key": 5,
+    "boss_sim_observed.*.eligible.1.key": 4,
+    "boss_sim_observed.*.eligible.2.key": 5,
+    "boss_sim_observed.*.eligible.3.key": 5
+  },
+  "paths_and_masked_line_counts": {
+    "notes/watcher-20261009-baseline/learn-after-sandbox-status.json": 272,
+    "paper/materials/silent/20261009-1501-status-recovery/learn-lock-after-original.json": 272,
+    "paper/materials/silent/20261009-1501-status-recovery/learn-lock-before-original.json": 272,
+    "paper/materials/silent/20261009-1501-status-recovery/observer-learn-after-sandbox-status-original.json": 272,
+    "paper/materials/silent/20261009-core-start-recovery/learn-before.json": 288
+  },
+  "rescan": "Default gitleaks on the complete staged patch, masking the verified noncredential fields only in scanner input; committed originals remain exact bytes.",
+  "rescan_exit": 0,
+  "no_project_scanner_configuration_changed": true,
+  "schema_validation_prior_attempts": "Refused unmatched fields until identifying report.first_dispatch, batch.boss_sim and boss_sim_observed.eligible paths. A rescan limited to the 524 reported lines found one more key after scan chunk boundaries changed; the final scan checks all other bytes while masking every verified metadata field."
+}

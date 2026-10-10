@@ -802,3 +802,7 @@ Roy授权 roy-20261010-core-builds-experience-integration/内容回报续办：�
 Roy确认此前名称误写，全部第一方版本控制文本、代码标识和通知引用统一更正；通知文件迁为notes/for-roy.md。旧原件由合并切点b5ea7ebf3d192725e3911fa052572b313915846a及1309文件SHA映射保留，原失败/未知和原验收不倒填。已上线live314提交进入main，旧归档与拒绝实验历史保持。
 
 tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当前对局不打断；这次称呼更正及运维推送入口不造游戏行为版本。推送仍pending：宿主git-push-main动作在下一标准叫醒加载，按指定完整main提交、固定origin和Windows SSH推送，收到远端同SHA回执后才结案。详情paper/materials/20261010-roy-main-integration/。
+
+### 2026-10-10 12:12 同一姓名纠正请求补充留痕
+
+额外110份笔记/论文历史已保存原字节并更正，累计1419文件、7处路径迁名；映射列在name-correction.json，新增原件父提交3c3c27ce35b4af28e4dd76a5684cbd41e366901d。补充材料扫描的generic-key命中已逐结构核实为调度幂等标识与证据SHA，原失败扫描及复核回执保留。代码检查已通过，宿主推送尝试exit124无回执；最终main推送继续沿唯一roy-20261010-name-main-push标准事件完成，远端核实前保持pending。
