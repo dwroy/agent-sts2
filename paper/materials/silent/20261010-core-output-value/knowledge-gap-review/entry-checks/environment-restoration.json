@@ -1,0 +1,39 @@
+{
+  "request_id": "roy-20261010-silent-core-output-value",
+  "restored_at": "2026-10-10T20:31:42.146640+08:00",
+  "exclusive_tree_lock_held": true,
+  "previous_owner": "agent:/root/core_output_research_entry",
+  "previous_state": "source-uncommitted-full-test-failed",
+  "previous_evidence_preserved": true,
+  "symlink": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/data/logdb-venv",
+  "link_value": "../../../data/logdb-venv",
+  "resolved_target": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+  "standard_initializer": "ops/codex-ops-learner.sh:85-86",
+  "initializer_sha256": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+  "existing_fixture": "ops/tests/test_strategy_concurrency.py:test_second_slot_wrapper_links_existing_python_environment",
+  "fixture_sha256": "855518af81d51cc939db14be7398c1a3bb05109cb8b4d122d56e13102f058ebe",
+  "documented_environment": "docs/logdb.md:22-25",
+  "document_sha256": "25a7963d28194c1065fb256146773679806a382b00f7de80b82def1d37852c8a",
+  "root_venv_identity": {
+    "sys_prefix": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+    "sys_base_prefix": "/usr",
+    "python_version": "3.14.4",
+    "duckdb_version": "1.5.6",
+    "executable": "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python"
+  },
+  "pyvenv_cfg_sha256": "61a0ba249deced06917f03cf393f1aa8d7dbec6cfeb8096919c507e14aa8428b",
+  "identity_command": [
+    "nice",
+    "-n",
+    "19",
+    "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+    "-B",
+    "-c",
+    "import duckdb,json,sys; print(json.dumps(dict(sys_prefix=sys.prefix,sys_base_prefix=sys.base_prefix,python_version=sys.version.split()[0],duckdb_version=duckdb.__version__,executable=sys.executable)))"
+  ],
+  "installed_dependencies": false,
+  "configuration_changed": false,
+  "credentials_read_or_changed": false,
+  "fixed_exclusions_changed": false,
+  "production_source_changed_for_environment": false
+}

@@ -1,5 +1,7 @@
 # 小偷：偷窃草蜢和地精佣兵（THIEF_FACTS）
 
+> **阅读范围（2026-10-10 核对）**：本文保留 10-02 铁甲证据、两步实现与当时开关验收；具体行为以 `agent/src/reflex/thief.ts`、`rollout-live.ts`、`combat-plan.ts` 及角色数据为准。历史 DeepSeek 记述保留，当前生产大脑是 Codex；本角色验证不能推为其他角色已验证，见 [架构](v4-architecture.md) 与 [学习协议](learning-protocol.md)。
+
 Roy 2026-10-02 定：**第一步——事实 + 选项覆盖，排序不加代价**。和药水代价的做法一样：代码给事实，Jev 决定。
 全部改动在一个开关 `THIEF_FACTS` 后面（agent/src/core/config.ts，默认开，.env.example 有说明）；关掉时战斗题面、选项、每个答案的处理和
 接入前逐字节相同（agent/tests/thief.test.ts 的 golden，和 420 个日志回合的离线对比，§5）。奖励屏的修复（§4）不在开关后面，是 bug 修复。

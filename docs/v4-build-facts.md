@@ -1,6 +1,8 @@
 # V4 M2 构筑题面：事实字段表（2026-09-30）
 
-原则（v4-dev-brief 第 3 项、v4-architecture §4 M2）：大脑有推理能力，代码只给算得准、能追溯的事实，不替它打分、不排名、不删选项。
+> **当前实现（2026-10-10 核对）**：生产构筑题交给 Codex；`deepseekPick` / `BUILD_DECIDER=deepseek` 是保留的接口名称。题面来源是 `agent/src/brain/build-facts.ts`、`agent/src/hand/screens/pick.ts` 与各屏幕规划器；下表保留早期字段及验收口径，后续字段需看实际请求。当前已加入角色隔离、观察到的双 boss 阶段（boss_phase）、对应 boss 距离及准备信息；B3 可用时由 `agent/src/sim/build-sim.ts` 补充 act_boss_sim。旧日志不补造这些字段，历史验收不代表新角色已验证。
+
+原则（v4-dev-brief 第 3 项、当前 v4-architecture §3；原始设计 §4 M2）：大脑有推理能力，代码只给算得准、能追溯的事实，不替它打分、不排名、不删选项。
 验收测试：`agent/tests/build-facts-audit.test.ts`（固定数据渲染每类题面，断言没有分数型字段和文字；最后一条锁定卡牌奖励题面的原文）。
 
 来源缩写：
@@ -23,18 +25,18 @@
 | `eligible_cards` 里的 `[code remove value 80]`、`target_why` | 一次决策里要选多张牌的选项 | 代码对目标牌的打分 |
 | 删牌服务文字 "a smith/removal is usually strong" | 商店 | 建议 |
 
-这些分数在代码里**照旧存在**，只作没有大脑时的回退（Jev 的问题、代码直接决定）：card-value.ts、shopScore、休息的 heal/smith 分、选牌屏的 selectionScore 都没删；DeepSeek 决策行的 rationale 仍记下代码的回退名次（"code's fallback order … not shown to DeepSeek"），只进日志，不进题面。
+这些启发式仍存在于历史 Jev/代码基线，部分 rationale 保留兼容名称，只进日志、不进大脑题面。生产大脑的失败处理已经改为等待 Codex，不使用这些分数给原题代答，见 [codex-only-brain.md](codex-only-brain.md)。
 
-不在本次范围、照旧带代码分数的：路线问题（`map/*`，pick.ts `ROUTE_SCORED`）和构筑题里附带的路线块（`route_review`、`act_routes`），等 V4 路线工作（v4-brain）换成完整地图后一起去掉。
+早期 M2b 验收时路线尚未同步；当前 map/route-plan 已使用完整地图，附带路线复核由大脑选 keep 或合法新路线，代码给所选路线事实，不给候选分数。原验收范围见 [首次上线记录](v4-go-live.md)。
 
 ## 2. 每类题面里的数字字段
 
-### 所有构筑题共有：`state.facts`（strategy/build-facts.ts）
+### 所有构筑题共有：`state.facts`（agent/src/brain/build-facts.ts）
 
 | 字段 | 含义 | 来源 |
 |---|---|---|
 | `act`、`floor`、`ascension`、`gold` | 幕、层、进阶、金币 | 状态 |
-| `floors_to_act_boss` | 到本幕 boss 层（17/33/48）还有几层 | 确定性计算 |
+| `floors_to_act_boss` | 到下一场 boss 还有几层；基础 17/33/48，已观察双 boss 阶段可指向 49 | 确定性计算 |
 | `hp` | 当前/上限（百分比） | 状态 |
 | `deck_size`、`deck` | 牌组张数、每张牌的名字/费用/文字 | 状态 + 游戏数据 |
 | `deck_profile` | 张数（攻击/技能/能力/诅咒或状态，按游戏的卡牌类型）、升级数、平均费用、力量来源（牌面或遗物文字写明获得持续力量的牌和遗物，壶铃带锻炼次数） | 状态 + 游戏数据；力量来源由 card-model.ts `givesLastingStrength` 按文字判断，列出名字作依据 |
@@ -62,7 +64,7 @@
 
 ### 整局计划搭车：`state.run_plan_task`（RUN_PLAN_MERGE，默认开；notes/run-plan-merge.md）
 
-RUN_PLAN=v1 的整局计划（strategy/run-plan.ts）什么时候到期没变：地图上按 runPlanTrigger（开局、新一幕、掉血 30%、每 8 层）。变的是谁来问：
+RUN_PLAN=v1 的整局计划（agent/src/memory/run-plan.ts）什么时候到期没变：地图上按 runPlanTrigger（开局、新一幕、掉血 30%、每 8 层）。变的是谁来问：
 到期后不再在地图上单独调用一次，而是由下一道大脑直接决策的题带上（任何 decision.deepseek 题：古神 act-plan、选牌、休息、商店、事件、
 路线、一次性计划）；开局的计划在本局第一道题（涅奥）就带上。
 
@@ -70,8 +72,8 @@ RUN_PLAN=v1 的整局计划（strategy/run-plan.ts）什么时候到期没变：
   当时 HP、为什么做的）；题目说明末尾加单独那次的任务说明和格式（run-plan-merge.ts `RUN_PLAN_MERGE_NOTE`），要求在同一个 JSON 里多答
   `"run_plan"`。牌组、遗物、药水、HP、金币、boss 时钟只在 facts 里出现一次。
 - 本题自己的答案照原样解析；`run_plan` 是计划就存（screenMemory.runPlan、run-plans.jsonl 带 `merged_into`、journal），不是就仍待做，
-  下一道题再带。带计划的题思考档位取本题和 run-plan 的较高者（选牌、休息从 high 升到 max）。
-- 仍单独问（和以前同一个调用）：待做满 2 层没有题带走；下一个房间就是本幕 boss；BUILD_DECIDER=jev；BRAIN_ENGINE_RUN_PLAN 单独指定了引擎。
+  下一道题再带。历史 DeepSeek 路径按题型与 run-plan 的较高档位请求；当前 Codex 按实际 BRAIN_CODEX_EFFORT 请求，Fast 不降低强度。
+- 仍单独问（和以前同一个调用）：待做满 2 层没有题带走；下一个房间就是本幕 boss；历史非大脑路径不能搭车时。当前生产强制 Codex，不再因 BRAIN_ENGINE_RUN_PLAN 切换引擎。
 - 没有到期计划的题，和关掉开关（`RUN_PLAN_MERGE=off`）时一样，逐字节不变。决策行的 `run_plan_merge` 记搭车结果（stored / missing /
   error / no_answer）。
 
@@ -143,8 +145,8 @@ RUN_PLAN=v1 的整局计划（strategy/run-plan.ts）什么时候到期没变：
 
 ## 3. 选项有没有在给大脑之前被删
 
-查过的地方（BUILD_DECIDER=deepseek，默认）：
-- **没有按分数截断**：大脑路径（pick.ts `deepseekPick`）一直是全部选项；`codeMargin`（分差大就代码直接决定）、`maxModelOptions`（只给前 N 个）、选牌的 `SKIP_BAR` 过滤只在回退（Jev/代码）路径上，大脑问题不经过它们。默认配置下大脑失败后不会再拿到回退题面（loop.ts：刚失败的问题不再升级给 DeepSeek，预算用完也不升级）。BUILD_DECIDER=jev（非默认的旧基线）时 DeepSeek 作为 Jev 的升级对象，看到的是 Jev 的题面（前 N 个 + 代码分数），未改，留给 Roy 定。
+下列为早期选项审计；当前大脑路径仍保留 BUILD_DECIDER=deepseek 名称，实际引擎由生产路由强制为 Codex：
+- **没有按分数截断**：大脑路径（pick.ts `deepseekPick`）一直是全部选项；`codeMargin`（分差大就代码直接决定）、`maxModelOptions`（只给前 N 个）、选牌的 `SKIP_BAR` 过滤只在回退（Jev/代码）路径上，大脑问题不经过它们。生产大脑故障或无效答案在原题等待 Codex，不改走 Jev/代码；旧基线的选项截断不能作为当前生产大脑的行为。
 - **按合法性去掉、保留**：锁住的事件选项、逐步商店里买不起的物品（仍列在 facts.shop_stock，一次决策里全部列出并标 affordable_now）、禁用的休息选项、已选中或已升级的牌、只有一个合法选项时直接执行。
-- **按确定事实去掉、保留，待 Roy 定**：事件里「一定会死」的选项（游戏标 will_kill_player，或扣血 ≥ 当前血量），列在 facts.left_out_as_lethal。
+- **早期按确定事实去掉的选项**：事件里「一定会死」的选项（游戏标 will_kill_player，或扣血 ≥ 当前血量），列在 facts.left_out_as_lethal。是否调整由学习者按现行证据与授权处理，不因旧「待 Roy 定」阻断已授权规则修改。
 - 宝箱在拿遗物之前没有「跳过」动作（日志里 CHEST 屏只有 choose_treasure_relic），不是被删。

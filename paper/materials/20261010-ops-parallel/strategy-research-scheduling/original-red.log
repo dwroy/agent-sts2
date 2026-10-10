@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_priority_over_auto_proposal (fixed_tests.ResearchScheduling.test_priority_over_auto_proposal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010/ops/tests/test_strategy_research_scheduling.py", line 103, in test_priority_over_auto_proposal
+    self.assertEqual(request["state"], "running")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pending' != 'running'
+- pending
++ running
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.104s
+
+FAILED (failures=1)

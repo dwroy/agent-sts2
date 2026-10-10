@@ -1,0 +1,53 @@
+{
+  "request_id": "roy-20261010-herdr-ops-workspace",
+  "authorization": [
+    "就放在和ops同一个space里，开新的tab就好了",
+    "嗯，以后的都开在同一个space就好了"
+  ],
+  "at": "2026-10-10 17:09:37 CST",
+  "source_base": "9330285ef169e0cfd774dc421c548941e6c69764",
+  "source_sha256": {
+    "ops/herdr-host.sh": "2049d64959be3fee498281fbd8b161e1968d70e6483b5f60fa697ec73204491b",
+    "ops/learner-log-pane.py": "f44db699e1a04415ff8e607991532d57ea8e6696ee433daf20315993dc79abee",
+    "ops/codex/lib.ts": "409ee0eda73fc7e87ee17be712998c071299c1af9e3e162652a6fff206ee0359",
+    "ops/codex-ops-actions.sh": "6303a45482db2bbe99f74822696b38df5ba1e501b3723935410049500981743a",
+    "ops/codex-ops-do.sh": "69f41c06777224962696395ae8a8040d3958c1d8a86f7fb0f144c898afe5d7ed",
+    "agent/tests/ops-herdr.test.ts": "e8fcf0cf2519aff32ac2ebea1e2c0a44764495ee7dca70af1bd35c4e2df43781",
+    "agent/tests/ops-codex.test.ts": "b76cc360f6cefb74695240c4a0858f041f0cceac03738ee47322a71029a52ee0",
+    "docs/codex-ops.md": "2250bef88e1a6375da440956b7fa34f996d265f91d6ad758ce85a8ec028e1fc5"
+  },
+  "scope": "All new herdr-host tabs follow the actual registered ops pane. Owned idle tabs migrate with output preserved; busy jobs stay running. A validated registered live learner log viewer uses the same workspace and closes on wrapper exit.",
+  "preserved": [
+    "learner batch objects",
+    "active learner processes",
+    "autoplay/play processes",
+    "hosting configuration",
+    "game knowledge and game versions"
+  ],
+  "specialist_review": [
+    "terminal/dead/mismatched PID rejection added",
+    "wrong-workspace idle migration added; busy preserved",
+    "default postmortem dispatch labels supported and tested"
+  ],
+  "tests": {
+    "targeted_revised_before_postmortem_extension": {
+      "exit": 0,
+      "files": 2,
+      "tests": 21,
+      "path": "targeted-revised.log"
+    },
+    "full_final": {
+      "state": "running",
+      "command": "SANDBOX_WORKERS=4 nice -n 10 bash agent/tools/test-sandbox.sh",
+      "path": "sandbox-final.log"
+    }
+  },
+  "host_viewer": "pending actual broker receipt; no tab creation claimed",
+  "current_topic": "20261010-164301-strategy-proposal ended normally rc=0 at 17:06:51, verified in learn.json; do not reopen or restart it",
+  "scan": {
+    "helper": "gitleaks-helper-complete.json",
+    "tracked_diff": "gitleaks-diff-complete.json",
+    "exit": 0
+  },
+  "initial_checks": "Two interrupted full runs retained separately; not accepted as passing verification"
+}

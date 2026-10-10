@@ -425,8 +425,17 @@ def cmd_write(args):
         if not runs or len(runs) > 10 or not all(RUN_ID.fullmatch(run) and run in known for run in runs):
             print("学习批次需要 1–10 个本角色已结束的局号")
             return 2
-    result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task != "fix-batch" else [],
-                            ",".join(runs), "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    import strategy_research_jobs
+    stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    if args.task == "strategy-proposal" and strategy_research_jobs.manual_matches(state, ROOT, args.character, runs):
+        # A running/done study with these anchors must not become an ordinary ops
+        # batch when the dedicated dispatcher declines a duplicate.
+        matches = strategy_research_jobs.matching_requests(state, ROOT, args.character, runs)
+        result = strategy_research_jobs.dispatch(state, ROOT, SCRIPTS, args.character, alive, stamp,
+                                                 dispatch_write, ident=matches[0]) if len(matches) == 1 else None
+    else:
+        result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task != "fix-batch" else [],
+                                ",".join(runs), "ops", alive, stamp)
     save_state(state)
     print(json.dumps({"dispatched": result}, ensure_ascii=False))
     return 0 if result else 1

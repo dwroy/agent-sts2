@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-10T14:51:57+08:00",
+  "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "ops/tests/test_strategy_research_scheduling.py",
+        "-v"
+      ],
+      "rc": 0,
+      "log": "paper/materials/20261010-ops-parallel/strategy-research-scheduling-review/final-test_strategy_research_scheduling.log",
+      "log_sha256": "98934a3083d6267c2cd171ac0008dbb63ef53a34684101e758eca03aa2611c91",
+      "tail": "_slot_fills_on_next_tick_without_displacing_research (__main__.ResearchScheduling.test_second_slot_fills_on_next_tick_without_displacing_research) ... ok\ntest_wrapper_rejects_unknown_research_marker_and_extra_arguments (__main__.ResearchScheduling.test_wrapper_rejects_unknown_research_marker_and_extra_arguments) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 2.925s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "ops/tests/test_strategy_research.py",
+        "-v"
+      ],
+      "rc": 0,
+      "log": "paper/materials/20261010-ops-parallel/strategy-research-scheduling-review/final-test_strategy_research.log",
+      "log_sha256": "b3db82e440a0170ba44ea9d9852ed2991715aedc7eedcbaeb738e13d405cb7a9",
+      "tail": "tocol-repair-20261010/ops/learner_checks.py:26: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpt6hl15z4/state/learner/20261010-130001-strategy-proposal.out' mode='r' encoding='utf8'>\n  text = open(path, encoding=\"utf8\").read()\nResourceWarning: Enable tracemalloc to get the object allocation traceback\nok\n\n----------------------------------------------------------------------\nRan 8 tests in 1.446s\n\nOK\n"
+    }
+  ],
+  "binding_recheck": {
+    "unique_request_id": "roy-20261010-silent-deck-size-value",
+    "baseline_accepted": true,
+    "moved_request_baseline_accepted": false,
+    "registered_original_base": "0c34cbca1cd7e0cfc0f69e5224ac96faa921d000",
+    "changed_request_base": "be6e02b6363df91dfb2e21401ad12f10e4d8e236",
+    "passed": true,
+    "scope": "temporary fixed fixture only"
+  },
+  "before": {
+    "ops/strategy_research_jobs.py": "3d7cf06571fbf941e54677d4fe4f21bfba74e4f4d89c3d467eb857af8dffcba3",
+    "ops/learner_jobs.py": "0c4cc051bb3a1ca9d8a014c9d58cae8e6c2478c96aea5a6b2ac78eb92997b05b",
+    "ops/codex-ops-learn.py": "990cd27dda4ae37580afe72eedabcbcc0310713c49a147d4caad50e91b1a3935",
+    "ops/codex-ops-learner.sh": "4c9952eb5440904207793dcbb3c8104e4247227473da65f530da5cc25202ce0d",
+    "ops/proposal_dispatch.py": "eb433c95ab9e5f4d36d6ad344b69a3fde79f9280778942ec15db9b25312b4e2c",
+    "learner/tasks/strategy-proposal.md": "9d32fe1f280a723f7c6151d9619c280dd87a756843c738039ce10b93d9c6057d",
+    "ops/tests/test_strategy_research_scheduling.py": "671ffc95b873c5885203ef7219b336d23be67fd5cca714863468af9ff1424dd4",
+    "ops/tests/test_strategy_research.py": "b0efe82e1a33df0cfbe85d3a05836601bf02551ea1d3760da6a158679e21844d",
+    "agent/tests/strategy-research-scheduling.test.ts": "b992c2881968c9800b4338fdd10017b6e954d327301a17acefe3527dce5695b2"
+  },
+  "after": {
+    "ops/strategy_research_jobs.py": "3d7cf06571fbf941e54677d4fe4f21bfba74e4f4d89c3d467eb857af8dffcba3",
+    "ops/learner_jobs.py": "0c4cc051bb3a1ca9d8a014c9d58cae8e6c2478c96aea5a6b2ac78eb92997b05b",
+    "ops/codex-ops-learn.py": "990cd27dda4ae37580afe72eedabcbcc0310713c49a147d4caad50e91b1a3935",
+    "ops/codex-ops-learner.sh": "4c9952eb5440904207793dcbb3c8104e4247227473da65f530da5cc25202ce0d",
+    "ops/proposal_dispatch.py": "eb433c95ab9e5f4d36d6ad344b69a3fde79f9280778942ec15db9b25312b4e2c",
+    "learner/tasks/strategy-proposal.md": "9d32fe1f280a723f7c6151d9619c280dd87a756843c738039ce10b93d9c6057d",
+    "ops/tests/test_strategy_research_scheduling.py": "671ffc95b873c5885203ef7219b336d23be67fd5cca714863468af9ff1424dd4",
+    "ops/tests/test_strategy_research.py": "b0efe82e1a33df0cfbe85d3a05836601bf02551ea1d3760da6a158679e21844d",
+    "agent/tests/strategy-research-scheduling.test.ts": "b992c2881968c9800b4338fdd10017b6e954d327301a17acefe3527dce5695b2"
+  },
+  "source_unchanged_during_check": true,
+  "scope": "fixed temporary fixtures only; no production dispatch/state/model/host action",
+  "production_integrated": false
+}

@@ -1,0 +1,27 @@
+{
+  "diagnostic": "two-existing-fake-fixtures",
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "timeout",
+    "--signal=TERM",
+    "--kill-after=5s",
+    "45s",
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "tests/ops-herdr.test.ts",
+    "--pool=threads",
+    "--maxWorkers=1",
+    "--reporter=verbose",
+    "--reporter=/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/paper/materials/20261010-core-output-research-entry/phase-reporter.mjs",
+    "-t",
+    "herdr unavailable:|drain:"
+  ],
+  "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent",
+  "start": "2026-10-10T18:33:25.941144+08:00",
+  "finish": "2026-10-10T18:33:28.254357+08:00",
+  "exit_code": 0,
+  "log_sha256": "84ba97591d27f6a03c21e296cd4ea2eaedb12e246fb7bc974fe32684abc63c79"
+}

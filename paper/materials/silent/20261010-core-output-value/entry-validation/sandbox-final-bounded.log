@@ -1,0 +1,21 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent
+
+{"diagnostic":"sandbox-phase","at":"2026-10-10T10:35:49.898Z","phase":"init"}
+{"diagnostic":"sandbox-phase","at":"2026-10-10T10:35:49.951Z","phase":"run-start"}
+{"diagnostic":"sandbox-phase","at":"2026-10-10T10:35:50.278Z","phase":"module-queued","module":"/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/rollout-live.test.ts"}
+{"diagnostic":"sandbox-phase","at":"2026-10-10T10:35:51.798Z","phase":"module-collected","module":"/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/rollout-live.test.ts"}
+{"diagnostic":"sandbox-phase","at":"2026-10-10T10:35:51.800Z","phase":"module-start","module":"/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/rollout-live.test.ts"}
+ ✓ tests/rollout-live.test.ts (14 tests) 144753ms
+     ✓ every option of a logged board carries the rollout and history facts; the decision log gets the rollout  2792ms
+     ✓ with a modelled potion held, the rollout fact says later turns may use it  821ms
+     ✓ up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board)  41834ms
+     ✓ the controlled clock: every logged board's rollout stays inside the budget  16260ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout  73427ms
+     ✓ logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left  2851ms
+     ✓ the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it  2954ms
+     ✓ the dead Parafright's hit next turn is in every line's enemy_threat_next  3134ms
+{"diagnostic":"sandbox-phase","at":"2026-10-10T10:38:16.564Z","phase":"module-end","module":"/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/rollout-live.test.ts"}
+{"diagnostic":"sandbox-phase","at":"2026-10-10T10:38:16.941Z","phase":"module-queued","module":"/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/compute-memo.test.ts"}
+{"diagnostic":"sandbox-phase","at":"2026-10-10T10:38:17.864Z","phase":"module-collected","module":"/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/compute-memo.test.ts"}
+{"diagnostic":"sandbox-phase","at":"2026-10-10T10:38:17.866Z","phase":"module-start","module":"/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/compute-memo.test.ts"}

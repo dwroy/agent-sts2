@@ -82,7 +82,18 @@ for w in ((d or {}).get("result") or {}).get("workspaces", []):
 }
 
 ensure_workspace() {
-  local ws; ws=$(workspace_id)
+  # Follow the live ops pane rather than the first workspace with a matching label.
+  # Multiple workspaces may share that label after a reconnect or migration.
+  local ws ops_pane
+  ops_pane=$(state_get ops)
+  ws=""
+  if [ -n "$ops_pane" ]; then
+    ws=$(pane_json "$ops_pane" | py '
+p = ((d or {}).get("result") or {}).get("pane") or {}
+if p.get("label") == "ops":
+    print(p.get("workspace_id", ""))')
+  fi
+  [ -n "$ws" ] || ws=$(workspace_id)
   if [ -z "$ws" ]; then
     ws=$(h workspace create --cwd "$WS_CWD" --label "$WS_LABEL" --no-focus | py 'print(d["result"]["workspace"]["workspace_id"])') \
       || die "workspace create failed"
@@ -127,6 +138,17 @@ open_pane() {
   ws=$(ensure_workspace) || exit 1
   pane=$(state_get "$label")
   if [ -n "$pane" ] && [ "$(pane_label "$pane")" != "$label" ]; then pane=""; fi
+  if [ -n "$pane" ] && [ "$(pane_json "$pane" | py 'print(d["result"]["pane"].get("workspace_id", ""))')" != "$ws" ]; then
+    pane_busy "$pane"; busy=$?
+    [ $busy -eq 0 ] && die "pane $pane ($label) is busy in another workspace: $(pane_fg "$pane")" 4
+    if [ $busy -eq 1 ]; then
+      # Only migrate idle panes we own; preserve their last output before closing.
+      { echo "=== $(date '+%F %T') $label ($pane) migrated; last lines:"; h pane read "$pane" --source recent-unwrapped --lines 40 2>/dev/null; } >> "$TAIL_LOG_DEFAULT"
+      h pane close "$pane" > /dev/null || die "idle pane close failed ($pane)"
+    fi
+    state_set "$label" ""
+    pane=""
+  fi
   [ -n "$pane" ] || pane=$(find_labelled "$ws" "$label")
   if [ -n "$pane" ]; then
     pane_busy "$pane"; busy=$?

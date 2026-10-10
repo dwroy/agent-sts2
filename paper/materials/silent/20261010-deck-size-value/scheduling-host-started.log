@@ -1,0 +1,32 @@
+3149336 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh --tail-console
+3648282 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261010-144302-experience-update /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261010-144302-experience-update.pid 1 - /home/dw/Projects
+3648283 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261010-144302-experience-update F1TP5W6GF56Q silent experience-update /home/dw/Projects/agent-sts2/.worktrees/exp
+3648293 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/exp/learner/run.ts --engine codex --task experience-update --character silent --cwd /home/dw/Projects/agent-st
+3648328 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3649012 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261010-144302-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261010-144302-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+3649014 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261010-144302-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261010-144302
+3650060 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261010-144302/learner/run.ts --engine codex --task fix-batch --character silent --cwd /home
+3650072 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3701168 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+3701275 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+3701276 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+3701287 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+3715432 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261010-150009-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261010-150009-strategy-proposal.pid 1 - /home/dw/Projects
+3715433 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261010-150009-strategy-proposal VLZ6CCT8AQ0A,8JRE1C4H4Z2W,CA5KE8GFJ9X2,5PM6JAQG6FNQ,61E2QS63Y9WU,DUZUBAJ3A8GP silent strategy-proposal /home/dw/Project
+3715728 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+3715792 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3716527 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-150009/learner/run.ts --engine codex --task strategy-proposal --character silen
+3716539 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3724476 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261010-150327-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261010-150327-strategy-proposal.pid 1 - /home/dw/Projects
+3724477 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261010-150327-strategy-proposal 9SRPBTZYN44H,AYTX5H4H69E3,0B2567HG3T4D,PYE4VXNSLGSS,Y8GDTNWG4R3X,X4M1GPAJGAB9,5BU7ZE1PWLSX,KDBWARERSGYW,TFYU1MY8NEJ1,49
+3724626 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-150327/learner/run.ts --engine codex --task strategy-proposal --character silen
+3724638 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 3149336
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay-log                               wJ:pCY  yes    no    
+learner-20261010-144302-experience-update  wP:pJ   yes    yes   3648282:bash 3648283:bash 3648291:tail 3648293:node 3648328:node
+learner-20261010-144302-fix-batch          wP:pN   yes    yes   3649012:bash 3649014:bash 3650058:tail 3650060:node 3650072:node 3650114:esbuild
+learner-20261010-150009-strategy-proposal  wP:pP   yes    yes   3715432:bash 3715433:bash 3716526:tail 3716527:node 3716539:node 3716547:esbuild
+learner-20261010-150327-strategy-proposal  wP:pQ   yes    yes   3724476:bash 3724477:bash 3724625:tail 3724626:node 3724638:node 3724646:esbuild
+ops                                        wJ:p5   yes    yes   2728520:node 2728527:codex

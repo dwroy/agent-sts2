@@ -1,0 +1,55 @@
+{
+  "request_id": "roy-20261010-silent-core-reuse-value",
+  "checked_at": "2026-10-10T16:29:21+08:00",
+  "original_failed_check": {
+    "exit": 1,
+    "tsc_passed": true,
+    "files_passed": 262,
+    "files_failed": 2,
+    "tests_passed": 2663,
+    "tests_failed": 2,
+    "log": "sandbox-first-failed.log"
+  },
+  "first_failure_reasons": [
+    "Registry sibling import depended on sys.path in isolated completion fixtures.",
+    "New feature worktree lacked existing data/logdb-venv test runtime symlink."
+  ],
+  "corrections": [
+    "Load authorized registry from proposal module own __file__, tested without PYTHONPATH.",
+    "Link existing test venv into dedicated feature worktree.",
+    "Dynamic positive unittest count in Vitest scheduling bridge.",
+    "Unconditional equality of registered and report request identity, with regressions for both topics."
+  ],
+  "read_only_independent_review": {
+    "agent": "/root/proposal_protocol_repair",
+    "conclusion": "No remaining blocking finding after corrections; review is not a full-suite pass.",
+    "production_mutations": false
+  },
+  "focused_python": {
+    "research_and_scheduling": 30,
+    "isolated_completion": 8,
+    "concurrency": 6,
+    "launch_failures": 8
+  },
+  "final_sandbox": "running; actual exit will be recorded separately",
+  "artifacts": {
+    "sandbox-first-failed.log": {
+      "sha256": "4eac71da50a6f0cdd5e73e4afe1fbeb265e24508c95f4cf5beafee5da9b5ef43",
+      "bytes": 87475
+    },
+    "python-tests-final.log": {
+      "sha256": "4cfbaf06c0d9e2192fe0071a7274bcabdc671719fc5625f0d8c4566d2aa63705",
+      "bytes": 678
+    },
+    "isolated-research-tests.log": {
+      "sha256": "062effda74783401db6a718a32badb9be83a02e30ef9d48f3345b0c30b76f97b",
+      "bytes": 476
+    },
+    "code-gitleaks-final.log": {
+      "sha256": "fcd70771db896fd6e5518d86e3087bf7d1e527f86dca7df5c4abb59a7521faed",
+      "bytes": 108
+    }
+  },
+  "history_preserved": true,
+  "gameplay_version_created": false
+}
