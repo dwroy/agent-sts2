@@ -866,3 +866,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-10 18:41 [Roy问题：核心组合如何产生更多输出] 204个已结束静默局的独立学习任务与冻结证据已准备，研究实际伤害、启动/持续输出、资源和生存代价，并提供支持与反例。当前pending、尚未正式派发：入口专项34项/tsc/gitleaks通过，完整测试达到时限，整套结果待核实；已交既有运维事件队列完成检查、集成和同请求派发。新学习tab将放ops同一space；报告完成后经原经验沉淀链去重入库。请求roy-20261010-silent-core-output-value；证据paper/materials/silent/20261010-core-output-value/closure.json。
 
 - 2026-10-10 18:42 [输出专题同父续办] 完整测试已见逐文件推进，原独立入口agent承接后台正常时长检查；通过才提交入口、由ops去重派同一专题。新问题仍pending、没有正式学习批，输入204局与历史/阶段测试结果已保留；后续开始/完成回执见paper/materials/silent/20261010-core-output-value/source-check-continuation.json。
+
+- 2026-10-10 18:44 [输出专题入口后台检查真实开始] 同父roy-20261010-silent-core-output-value独立入口检查已于18:44:17实际启动，原树owner=agent:/root/core_output_research_entry并持entry-full-check独占锁；固定sandbox、4worker/nice/1200秒保护，完整结果仍待回执。只在完整0及gitleaks0后提交原四源并发原manual续办更新，agent不合main/live或派发。专题仍pending/batch=null；开始/owner原件paper/materials/silent/20261010-core-output-value/normal-full-check-start/，此前准备记录3433e2f05，原130/124保持。
