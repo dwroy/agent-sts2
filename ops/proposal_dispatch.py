@@ -1,10 +1,16 @@
 """Mechanical proposal consumption, audit links, and no-change dispositions."""
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import re
 import subprocess
 import time
+
+# Match the completion source comparison, also protecting all character knowledge.
+RESEARCH_SOURCE_PATHS = ['agent/src','agent/tools','agent/tests','agent/package*.json','agent/tsconfig*.json',
+    'agent/vitest*','learner/*.ts','learner/*.py','learner/tasks','ops/*.sh','ops/*.py','ops/codex',
+    'eval/*.py','eval/*.ts','eval/cost-config.json','knowledge/builders','knowledge','ops/tests','tools']
 
 
 def library(scripts):
@@ -104,10 +110,95 @@ def results(report,batch):
     return rows
 
 
+def research_proof(report,batch,root):
+    """Bind an ops-only research report to its authorized, frozen request."""
+    if batch.get('reason')!='ops' or 'proposal_ids' in batch or 'proposal_repair' in batch:
+        return None
+    character=batch.get('character')
+    if not isinstance(character,str) or not re.fullmatch('[a-z][a-z0-9_-]*',character): return None
+    raw_tree=batch.get('worktree')
+    if not isinstance(raw_tree,str) or not raw_tree or not Path(raw_tree).is_absolute(): return None
+    project=Path(root).resolve()
+    tree=Path(raw_tree).resolve()
+    match=re.fullmatch('codex-strategy-'+re.escape(character)+r'-([0-9]{8}-[0-9]{6})',tree.name)
+    if not match or tree.parent!=(project/'.worktrees').resolve(): return None
+    # Manual write dispatches uniquely name their worktree with the batch stamp.
+    batch_id=match[1]+'-strategy-proposal'
+    request_path=project/'notes'/('strategy-research-'+character+'.json')
+    if not request_path.resolve().is_relative_to(project): return None
+    request_raw=request_path.read_bytes()
+    request=json.loads(request_raw)
+    if not isinstance(request,dict) or any(request.get(key)!=value for key,value in {
+        'authorized_by':'Roy','state':'running','task':'strategy-proposal',
+        'character':character,'batch':batch_id}.items()): return None
+    ident=request.get('request_id')
+    if not isinstance(ident,str) or not ident.strip(): return None
+    if any(report.get(key)!=value for key,value in {
+        'task':'strategy-proposal','character':character,'batch':batch_id,'request_id':ident}.items()): return None
+    if report.get('research_complete') is not True: return None
+    dispatch_base=request.get('dispatch_base')
+    if not isinstance(dispatch_base,str) or not re.fullmatch('[0-9a-f]{40}',dispatch_base): return None
+
+    def frozen(field,suffix):
+        raw_path=request.get(field);expected=request.get(field+'_sha256')
+        if not isinstance(raw_path,str) or not isinstance(expected,str) or not re.fullmatch('[0-9a-f]{64}',expected):
+            raise ValueError('missing frozen research artifact')
+        path=(project/raw_path).resolve()
+        if not path.is_relative_to(project) or path.suffix!=suffix or not path.is_file():
+            raise ValueError('research artifact outside the project')
+        raw=path.read_bytes()
+        if hashlib.sha256(raw).hexdigest()!=expected: raise ValueError('research artifact SHA mismatch')
+        return raw,expected
+
+    _,spec_sha=frozen('work_spec','.md')
+    manifest_raw,input_sha=frozen('input_manifest','.json')
+    if report.get('input_sha256')!=input_sha: return None
+    manifest=json.loads(manifest_raw)
+    if not isinstance(manifest,dict) or manifest.get('request_id')!=ident or manifest.get('character')!=character: return None
+    inventory=manifest.get('runs')
+    if not isinstance(inventory,list) or not inventory or any(not isinstance(row,dict) or
+        row.get('character',character)!=character for row in inventory): return None
+
+    def runset(value,allow_empty=False):
+        if not isinstance(value,list) or (not value and not allow_empty) or any(not isinstance(run,str) or
+            not re.fullmatch('[A-Z0-9]{12}',run) for run in value) or len(set(value))!=len(value):
+            raise ValueError('invalid research run set')
+        return set(value)
+
+    frozen_runs=runset([row.get('run_id') for row in inventory])
+    dispatched=runset(batch.get('runs'))
+    if runset(request.get('dispatch_runs'))!=dispatched or runset(report.get('runs'))!=dispatched or not dispatched<=frozen_runs:
+        return None
+    evidence=runset(report.get('evidence_runs'),allow_empty=True)
+    covered=runset(report.get('covered_runs'),allow_empty=True)
+    exclusions=report.get('exclusions')
+    if not isinstance(exclusions,list) or any(not isinstance(row,dict) or
+        not isinstance(row.get('reason'),str) or not row['reason'].strip() for row in exclusions): return None
+    excluded=runset([row.get('run_id') for row in exclusions]) if exclusions else set()
+    if covered & excluded or covered | excluded != frozen_runs or not evidence<=covered: return None
+    sections=request.get('required_sections')
+    if not isinstance(sections,list) or not sections or any(not isinstance(key,str) or
+        not re.fullmatch('[a-z][a-z0-9_]*',key) for key in sections) or len(set(sections))!=len(sections): return None
+    coverage=report.get('coverage')
+    if not isinstance(coverage,dict) or any(coverage.get(key) is not True for key in sections): return None
+    conclusion=report.get('objective_conclusions');limitations=report.get('limitations')
+    if not isinstance(conclusion,str) or not conclusion.strip() or not isinstance(limitations,list) or not limitations or any(
+        not isinstance(item,str) or not item.strip() for item in limitations): return None
+    if report.get('tests')!={'tsc':None,'vitest':None,'cases':None}: return None
+    return {'request_id':ident,'batch':batch_id,'dispatch_base':dispatch_base,'request':str(request_path),
+            'request_sha256':hashlib.sha256(request_raw).hexdigest(),'input_sha256':input_sha,
+            'work_spec_sha256':spec_sha,'required_sections':sections,'evidence_runs':sorted(evidence),
+            'covered_runs':sorted(covered),'exclusions':exclusions}
+
+
 def no_change(report,batch,root):
-    if batch.get('task')!='strategy-proposal' or not (batch.get('proposal_ids') or batch.get('proposal_repair')) or report.get('fixes')!=[] or report.get('merged') is not None:
+    if batch.get('task')!='strategy-proposal' or report.get('fixes')!=[] or report.get('merged') is not None:
         return None
     try:
+        research=None
+        if not (batch.get('proposal_ids') or batch.get('proposal_repair')):
+            research=research_proof(report,batch,root)
+            if not research: return None
         rows=results(report,batch)
         if batch.get('proposal_repair') and not report.get('code_proposals'): return None
         if any(r['state']=='implemented' for r in rows): return None
@@ -121,10 +212,17 @@ def no_change(report,batch,root):
         head=subprocess.check_output(['git','-C',tree,'rev-parse','HEAD'],text=True).strip()
         status=subprocess.check_output(['git','-C',tree,'status','--porcelain'],text=True).strip()
         if head!=base or status: return None
+        if research and (subprocess.run(['git','-C',tree,'merge-base','--is-ancestor',research['dispatch_base'],head],
+            stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode or subprocess.run(
+            ['git','-C',tree,'diff','--quiet',research['dispatch_base'],head,'--',*RESEARCH_SOURCE_PATHS],
+            stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode): return None
         allowed=(resolved_tree/'learner/runs').resolve()
         path=Path(raw_path).resolve()
         if not allowed.is_relative_to(resolved_tree) or not path.is_relative_to(allowed) or path.suffix!='.md' or not path.is_file(): return None
-        return {'base':base,'report':str(path),'dispositions':rows}
+        proof={'base':base,'report':str(path),'dispositions':rows}
+        if research:
+            proof['research']={**research,'report_sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+        return proof
     except (OSError,ValueError,KeyError,RuntimeError,subprocess.SubprocessError): return None
 
 
