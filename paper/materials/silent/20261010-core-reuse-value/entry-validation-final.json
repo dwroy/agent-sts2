@@ -1,0 +1,30 @@
+{
+  "request_id": "roy-20261010-silent-core-reuse-value",
+  "checked_at": "2026-10-10T16:38:04+08:00",
+  "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-reuse-research-20261010",
+  "source_commit": "99c134dd939c55aba25f026ecaea2f624a9ac27c",
+  "main_implementation_commit": "227af8c9b60b3f68dfd2a443689292761c97b573",
+  "command": "SANDBOX_WORKERS=2 nice -n 10 bash tools/test-sandbox.sh",
+  "sandbox": {
+    "exit": 0,
+    "tsc": 0,
+    "vitest": 0,
+    "files": 265,
+    "tests": 2676,
+    "log": "sandbox-final-passed.log",
+    "log_sha256": "cedd370f73a586bed41c1eb89ee50d8b9098d9672d76ada406a3b12377dc60a0",
+    "fixed_exclusions": "agent/tools/test-sandbox.sh unchanged"
+  },
+  "source_diff": {
+    "path": "entry-source.diff",
+    "sha256": "03015a4e319d3e4f0a291dabdf6645fb40730ecf9c48da71162c183ae08f6252"
+  },
+  "gitleaks": {
+    "exit": 0,
+    "log": "code-gitleaks-final.log"
+  },
+  "first_failed_check_preserved": "entry-validation-preliminary.json",
+  "gameplay_behavior_changed": false,
+  "gameplay_version_created": false,
+  "scope": "Only independent registration and completion binding for this approved pure research request; existing gameplay, learner tasks and old research history remain preserved."
+}

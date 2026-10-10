@@ -1,0 +1,27 @@
+3149336 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh --tail-console
+3809693 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+3809812 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+3809813 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+3809824 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+3815567 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261010-155953-experience-update /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261010-155953-experience-update.pid 1 - /home/dw/Projects
+3815568 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261010-155953-experience-update DW8M3G2PV3N7 silent experience-update /home/dw/Projects/agent-sts2/.worktrees/exp
+3815577 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/exp/learner/run.ts --engine codex --task experience-update --character silent --cwd /home/dw/Projects/agent-st
+3815612 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3848134 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261010-161301-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261010-161301-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+3848135 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261010-161301-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261010-161301
+3849837 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261010-161301/learner/run.ts --engine codex --task fix-batch --character silent --cwd /home
+3849849 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3878708 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+3878779 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3885446 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261010-162701-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261010-162701-strategy-proposal.pid 1 - /home/dw/Projects
+3885447 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261010-162701-strategy-proposal 5BU7ZE1PWLSX,KDBWARERSGYW,TFYU1MY8NEJ1,49HL2N70CHMU,F1TP5W6GF56Q,EMRME965K74Q,0DTPVHFXJ319,JYTQSFJ96MG2,DW8M3G2PV3N7,67
+3886174 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-162701/learner/run.ts --engine codex --task strategy-proposal --character silen
+3886199 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 3149336
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay-log                               wJ:pCY  yes    no    
+learner-20261010-155953-experience-update  wP:pX   yes    yes   3815567:bash 3815568:bash 3815576:tail 3815577:node 3815612:node
+learner-20261010-161301-fix-batch          wP:p11  yes    yes   3848134:bash 3848135:bash 3849835:tail 3849837:node 3849849:node 3849900:esbuild
+learner-20261010-162701-strategy-proposal  wP:p12  yes    yes   3885446:bash 3885447:bash 3886173:tail 3886174:node 3886199:node 3886246:esbuild
+ops                                        wJ:p5   yes    yes   2728520:node 2728527:codex
