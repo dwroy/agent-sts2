@@ -1,0 +1,83 @@
+[
+  {
+    "step": "身份清单初读",
+    "exit_code": 1,
+    "error": "TypeError: cannot use dict as a set element (unhashable type: dict)",
+    "resolution": "manifest runs为对象，提取run_id后重核无重复/派发子集；非身份失配"
+  },
+  {
+    "step": "runs角色首断言",
+    "exit_code": 1,
+    "error": "AssertionError: expected silent but raw character is SILENT",
+    "resolution": "大小写规范后204局核实，保持原始字段"
+  },
+  {
+    "step": "日志库只读探查",
+    "exit_code": 2,
+    "error": "未指定--db而默认工作树data/logdb不存在",
+    "resolution": "固定根data/logdb只读connect，threads=1，不sync"
+  },
+  {
+    "step": "候选指令探查",
+    "exit_code": 1,
+    "error": "AttributeError: NoneType object has no attribute get",
+    "resolution": "expect/chosen等允许null，探查改显式空字典"
+  },
+  {
+    "step": "drill-v1",
+    "exit_code": 1,
+    "error": "TypeError: < not supported between NoneType and int",
+    "log": "revisions/drill-v1/drill.log",
+    "resolution": "非战斗turn为空，搜索下一回合明确边界；补真实select_deck_card动作名"
+  },
+  {
+    "step": "analysis-v1",
+    "exit_code": 0,
+    "superseded": true,
+    "artifacts": "revisions/v1",
+    "reason": "候选机制映射改由实际中文名识别，原ID草稿不用于最终结论"
+  },
+  {
+    "step": "analysis-v2",
+    "exit_code": 0,
+    "superseded": true,
+    "artifacts": "revisions/v2",
+    "reason": "原名字可能带升级+，规范后重算，保留原计数"
+  },
+  {
+    "step": "analysis-v3",
+    "exit_code": 0,
+    "log": "analyze.log",
+    "reason": "最终204局/完整窗口核对通过"
+  },
+  {
+    "step": "drill-v4",
+    "exit_code": 0,
+    "log": "drill.log",
+    "reason": "全25次夜魇目标/建立/次轮核对，精选3573帧原件"
+  },
+  {
+    "step": "production-tests",
+    "tsc": null,
+    "vitest": null,
+    "cases": null,
+    "reason": "纯研究，没有源码变化；未做撤源码/恢复测试，不冒报通过"
+  },
+  {
+    "step": "临时缓存清理",
+    "removed": [
+      "eval/__pycache__/brain_source.cpython-314.pyc",
+      "agent/tools/logdb/__pycache__/query.cpython-314.pyc",
+      "agent/tools/logdb/__pycache__/sync.cpython-314.pyc",
+      "agent/tools/logdb/__pycache__/component_usage.cpython-314.pyc",
+      "agent/tools/logdb/__pycache__/extract.cpython-314.pyc"
+    ],
+    "reason": "Python导入自动生成的本工作树缓存已清理；后续禁止写字节码，研究产物只留本批scratch"
+  },
+  {
+    "step": "final-verification-first-launch",
+    "executed": false,
+    "error": "bubblewrap glob scan failed: parallel exp temporary sl-explore-b5Ggzl disappeared",
+    "resolution": "保留错误后重试；不是代码失败或权限审批拒绝"
+  }
+]

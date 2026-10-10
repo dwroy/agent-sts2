@@ -110,27 +110,32 @@ if [ -n "${HERDR_HOST_LABEL:-}" ]; then
   tail -n +1 -F "$out" "$err" 2>/dev/null &
   tailer=$!
 fi
-# Model and effort: the learner's defaults (gpt-6.1-sol, xhigh). LEARNER_CMD overrides the command (tests).
+# Scheduled learners use Astra/xhigh without Fast, including historical leased worktrees.
+# LEARNER_CMD overrides the command for fixed tests only.
 if [ "$audit_ready" != 1 ]; then
   rc=1
 elif [ -n "${LEARNER_CMD:-}" ]; then
   nice -n 10 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
   rc=$?
 else
-  # Old leased worktrees keep their launcher source; enforce the service policy at the native CLI boundary.
-  codex_fast_wrapper="$ROOT/ops/codex-fast.sh"
-  codex_fast_native="${LEARNER_CODEX_BIN:-${STS2_CODEX_FAST_BIN:-$(command -v codex)}}"
-  # A completion can dispatch another batch with this wrapper already exported.
-  # Keep its native executable instead of wrapping the wrapper a second time.
-  if [ "$codex_fast_native" = "$codex_fast_wrapper" ] || [ "$codex_fast_native" -ef "$codex_fast_wrapper" ]; then
-    codex_fast_native="${STS2_CODEX_FAST_BIN:-$(command -v codex)}"
-    if [ "$codex_fast_native" = "$codex_fast_wrapper" ] || [ "$codex_fast_native" -ef "$codex_fast_wrapper" ]; then
-      codex_fast_native="$(command -v codex)"
+  # Preserve old task/launcher source while applying the current learner-only CLI policy.
+  codex_learner_wrapper="$ROOT/ops/codex-learner.sh"
+  codex_legacy_wrapper="$ROOT/ops/codex-fast.sh"
+  is_codex_wrapper() {
+    [ "$1" = "$codex_learner_wrapper" ] || [ "$1" -ef "$codex_learner_wrapper" ] \
+      || [ "$1" = "$codex_legacy_wrapper" ] || [ "$1" -ef "$codex_legacy_wrapper" ]
+  }
+  codex_learner_native="${LEARNER_CODEX_BIN:-${STS2_CODEX_LEARNER_BIN:-${STS2_CODEX_FAST_BIN:-$(command -v codex)}}}"
+  # Completion dispatch inherits the wrapper environment; unwrap both current and legacy wrappers.
+  if is_codex_wrapper "$codex_learner_native"; then
+    codex_learner_native="${STS2_CODEX_LEARNER_BIN:-${STS2_CODEX_FAST_BIN:-$(command -v codex)}}"
+    if is_codex_wrapper "$codex_learner_native"; then
+      codex_learner_native="$(command -v codex)"
     fi
   fi
-  export STS2_CODEX_FAST_BIN="$codex_fast_native"
-  export LEARNER_CODEX_BIN="$codex_fast_wrapper"
-  args=(--engine codex --task "$learner_task" --character "$character" --cwd "$worktree")
+  export STS2_CODEX_LEARNER_BIN="$codex_learner_native"
+  export LEARNER_CODEX_BIN="$codex_learner_wrapper"
+  args=(--engine codex --model gpt-6-astra --effort xhigh --task "$learner_task" --character "$character" --cwd "$worktree")
   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
   if [ "$learner_task" = silent-historical-core-builds ]; then
     args+=(--set "evidence=${7}" --set "batch=$batch")
