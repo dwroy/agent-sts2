@@ -1,0 +1,31 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent
+
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 338ms
+     × all resolve 336ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+Error: ENOENT: no such file or directory, stat '/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261011-011304-silent-boss-calibration/sl-gaps-Abs7WO'
+ ❯ tools/check-imports.ts:28:12
+     26|     if (name === "node_modules" || name.startsWith(".")) return [];
+     27|     const path = join(dir, name);
+     28|     return statSync(path).isDirectory() ? files(path) : CODE.test(name…
+       |            ^
+     29|   });
+     30| }
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 263 passed (264)
+      Tests  1 failed | 2669 passed (2670)
+   Start at  01:21:44
+   Duration  330.28s (transform 14.20s, setup 13.92s, import 41.15s, tests 1228.39s, environment 28ms)
+
