@@ -2148,8 +2148,8 @@ export function loggedLine(input: SolverInput, plays: readonly string[]): Plan |
 export function turnKeys(played: SlExploreEnv["played"], steps: readonly Step[], extra?: { canon: string; text: string }): { canon?: string; loose?: string } {
   if (!played) return {};
   return {
-    canon: turnCanon([...played.canon, ...steps.map(stepPlay), ...(extra ? [extra.canon] : [])]),
-    loose: turnCanon([...played.text, ...steps.map((step) => summaryPlay({ name: step.name, targetName: step.targetName, potion: step.cardId.startsWith("POTION:") })), ...(extra ? [extra.text] : [])]),
+    canon: turnCanon([...played.canon, ...steps.map(stepPlay), ...(extra ? [extra.canon] : [])], played.firstCardReplay),
+    loose: turnCanon([...played.text, ...steps.map((step) => summaryPlay({ name: step.name, targetName: step.targetName, potion: step.cardId.startsWith("POTION:") })), ...(extra ? [extra.text] : [])], played.firstCardReplay),
   };
 }
 
@@ -2179,14 +2179,14 @@ export function followsPlays(steps: readonly Step[], plays: readonly string[], h
  */
 export function turnOpen(played: SlExploreEnv["played"], steps: readonly Step[], hand: readonly CardModel[], extra?: { canon: string }): { open?: boolean; committed?: string } {
   if (!played) return {};
-  if (extra) return { open: true, committed: turnCanon([...played.canon, ...steps.map(stepPlay), extra.canon]) };
+  if (extra) return { open: true, committed: turnCanon([...played.canon, ...steps.map(stepPlay), extra.canon], played.firstCardReplay) };
   const at = steps.findIndex((step) => {
     if (step.cardId.startsWith("POTION:")) return false;
     const card = cardFor(step, hand as CardModel[]);
     return card !== undefined && drawsCards(card);
   });
   const sure = at < 0 ? steps : steps.slice(0, at + 1);
-  return { open: at >= 0, committed: turnCanon([...played.canon, ...sure.map(stepPlay)]) };
+  return { open: at >= 0, committed: turnCanon([...played.canon, ...sure.map(stepPlay)], played.firstCardReplay) };
 }
 
 /**
