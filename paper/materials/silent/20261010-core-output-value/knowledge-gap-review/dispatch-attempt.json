@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-10T20:46:22+08:00",
+  "request_id": "roy-20261010-silent-core-output-value",
+  "command": [
+    "bash",
+    "ops/codex-ops-do.sh",
+    "strategy-proposal",
+    "49HL2N70CHMU,F1TP5W6GF56Q,EMRME965K74Q,0DTPVHFXJ319,JYTQSFJ96MG2,DW8M3G2PV3N7,675CHRV9HVQ3,53NU9DWSTG9H,1M7Z1CTJ3M1J,VT2F13ADA3M3"
+  ],
+  "wait_seconds": 20,
+  "exit_code": 1,
+  "output": "{\"dispatched\": null}\n",
+  "registered_matching_batches": {},
+  "request_state": "pending",
+  "request_batch": null,
+  "running_strategy_records": [
+    {
+      "batch": "20261010-201301-strategy-proposal",
+      "pid": 115992,
+      "pane": "wJ:pE7",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-201301"
+    },
+    {
+      "batch": "20261010-201301-s2-strategy-proposal",
+      "pid": 116249,
+      "pane": "wJ:pE8",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-201301-s2"
+    }
+  ],
+  "host_process_readback": {
+    "command": [
+      "bash",
+      "ops/codex-ops-do.sh",
+      "procs"
+    ],
+    "wait_seconds": 15,
+    "exit_code": 124,
+    "output": "no answer from the broker in 15s (it only runs during a wake)\n"
+  },
+  "limitation": "Two running strategy records observed, but no fresh host PID response. Null dispatch is not attributed conclusively to capacity and is not reported as started. Do not probe PID liveness or use mutating status inside sandbox."
+}
