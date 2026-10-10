@@ -23,6 +23,7 @@ import { choiceQ } from "./jev/questions.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { silentLossReference } from "./silent-loss-reference.js";
 import { silentSimulationReference } from "./silent-simulation-reference.js";
+import { silentHpGuardAudit } from "./silent-hp-guard-audit.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { ActionExpect } from "../hand/act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../memory/narrow.js";
@@ -4322,12 +4323,14 @@ function planTurn(env: DecisionEnv): Decision | null {
       const guardNote = replacement
         ? hpGuardNote(shown.indexOf(picked) + 1, picked, slack, rank, plan)
         : "";
+      const guardAudit = replacement ? silentHpGuardAudit(state, chosen.plan!, picked, plan, slack, rollout) : null;
       return notePick({
         intent: firstIntent(plan, hand, env),
         rationale: `Jev chose ${pickNote(shown, chosen.plan!, picked)} with confidence ${answer.confidence.toFixed(2)}; code rank ${options.includes(picked) ? options.indexOf(picked) + 1 : "- (rollout's best line, added)"}${guardNote}${calcNote}`,
         confidence: answer.confidence,
         fallback: false,
         ...(replacement ? { guard: { kind: "hp" as const, choice: `plan${rank}`, plan: plan.steps.map(stepText).join(", ") || "end turn" } } : {}),
+        ...(guardAudit ? { log: { hp_guard: guardAudit } } : {}),
         apply: () => {
           commit(env, state.turn, plan, hand, escalatedBy ?? "jev");
           if (!hallway) recordHpGuard(env, state.turn, raceKept ? 0 : extra);
@@ -4351,7 +4354,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     resolve(answers): ResolvedAction {
       // SL_RETRY_EXPLORE: the resolution as played (a line failed attempts played on the deviation point's board replaced),
       // its log, and the line for the attempt's record. Without env.sl.explore: resolvePlan's, untouched.
-      const { resolved, log: exploreLog, info: exploreInfo } = explored(resolvePlan(answers), questionLabel);
+      const guarded = resolvePlan(answers);
+      const { resolved, log: exploreLog, info: exploreInfo } = explored(guarded, questionLabel);
       const noted = (out: ResolvedAction): ResolvedAction => {
         if (exploreInfo) slPoints.set(out, exploreInfo);
         return out;
@@ -4428,6 +4432,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       return noted({
         ...resolved,
         log: {
+          ...(guarded.log ?? {}),
+          ...(resolved.log ?? {}),
           ...(rolloutRecord ? { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen, ...(chosenOrder ? { chosen_order: chosenOrder } : {}) } : {}),
           ...(potionsRecord ? { potions: potionsRecord } : {}),
           ...(focusOf.size > 0 ? { focus: Object.fromEntries([...byKey.entries()].filter(([, entry]) => entry.plan && focusOf.has(entry.plan)).map(([key, entry]) => [key, focusOf.get(entry.plan!)!.join(", ")])) } : {}),
