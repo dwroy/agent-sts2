@@ -1829,6 +1829,10 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
     (plan.steps.length > 1 || (plan.steps.length === 1 && via !== "code")) && drawsOrRandom === 0
       ? {
           turn,
+          // YQL8RZ8BWN1E F17 T3, silent-0205: the discard question needs the chosen line's conditional estimates.
+          ...(str(asRecord(env.state.run?.raw)["character_id"]).toLowerCase() === "silent" && env.state.run?.ascension === 10
+            ? { selectionReference: { hp_lost: plan.outcome.hpLoss, damage_dealt: plan.outcome.damageDealt, block_gained: plan.outcome.blockGained } }
+            : {}),
           lethal: plan.outcome.winsFight,
           remaining: plan.steps.slice(1),
           expectedHand: expectedHandAfterFirst(plan, hand, musicBoxArmed(env.state)),

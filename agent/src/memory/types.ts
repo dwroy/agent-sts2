@@ -410,6 +410,8 @@ export interface RememberedMap {
 
 export interface CombatPlanMemo {
   turn: number | null;
+  /** Original full-line estimates shown at an observed Silent discard screen, conditional on completing the line. */
+  selectionReference?: { hp_lost: number; damage_dealt: number; block_gained: number };
   /** The validated line wins the fight; keep its Sandpit exemption across steps. */
   lethal?: boolean;
   remaining: import("../reflex/turn-solver.js").Step[];
