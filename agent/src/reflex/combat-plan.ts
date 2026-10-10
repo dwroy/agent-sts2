@@ -136,8 +136,13 @@ function spawnText(enemy: Record<string, unknown>, asc: number): string | undefi
 }
 
 /** The enemy's powers the solver does not model (MODELLED_ENEMY_POWERS): damage into it is counted at 80%. */
-export function unmodelledEnemyPowers(enemy: Record<string, unknown>): string[] {
-  return asArray(enemy["powers"]).map((power) => str(asRecord(power)["power_id"])).filter((id) => id !== "" && !MODELLED_ENEMY_POWERS.has(id));
+function observedStranglePower(enemy: Record<string, unknown>, character: string, asc?: number): boolean {
+  return character.toLowerCase() === "silent" && (asc === 0 || asc === 10) && powerAmount(enemy, "STRANGLE_POWER") === 2;
+}
+
+export function unmodelledEnemyPowers(enemy: Record<string, unknown>, character = "", asc?: number): string[] {
+  return asArray(enemy["powers"]).map((power) => str(asRecord(power)["power_id"])).filter((id) =>
+    id !== "" && !MODELLED_ENEMY_POWERS.has(id) && !(id === "STRANGLE_POWER" && observedStranglePower(enemy, character, asc)));
 }
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
@@ -729,7 +734,7 @@ export function distinctNames(items: { name: string; id: string }[]): string[] {
   });
 }
 
-export function enemySims(combat: Record<string, unknown>, asc?: number): EnemySim[] {
+export function enemySims(combat: Record<string, unknown>, asc?: number, character = ""): EnemySim[] {
   const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
   const living = asArray(combat["enemies"])
     .map(asRecord)
@@ -745,6 +750,7 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       vulnerable: powerAmount(enemy, "VULNERABLE_POWER"),
       weak: powerAmount(enemy, "WEAK_POWER"),
       ...(powerAmount(enemy, "POISON_POWER") > 0 ? { poison: powerAmount(enemy, "POISON_POWER") } : {}),
+      ...(observedStranglePower(enemy, character, asc) ? { strangle: powerAmount(enemy, "STRANGLE_POWER") } : {}),
       artifact: powerAmount(enemy, "ARTIFACT_POWER"),
       intangible: powerAmount(enemy, "INTANGIBLE_POWER") > 0,
       slippery: powerAmount(enemy, "SLIPPERY_POWER"),
@@ -798,7 +804,7 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
         ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), ctxOf(enemy)) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
         : {}),
-      unmodelled: unmodelledEnemyPowers(enemy).length > 0,
+      unmodelled: unmodelledEnemyPowers(enemy, character, asc).length > 0,
       ...(powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") > 0 ? { timeLimit: powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") } : {}),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
@@ -2816,7 +2822,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const phantomBlades = powerAmount(player, "PHANTOM_BLADES_POWER");
   const phantomBladesArmed = stripPhantomBlades(hand, phantomBlades, powerAmount(player, "STRENGTH_POWER"), powerAmount(player, "WEAK_POWER") > 0, shrunk);
   const ascension = state.run?.ascension ?? 0;
-  const enemies = enemySims(combat, ascension);
+  const character = state.run?.ascension == null ? "" : str(asRecord(state.run.raw)["character_id"]);
+  const enemies = enemySims(combat, ascension, character);
   // MECH_RULES (docs/mechanics-learning.md): the learned strip-stun rules on the enemies carrying such a power (the
   // Thieving Hopper's Flutter): a line stripping the last stack cancels its move this turn in the solver and the rollout.
   const mechRules = learnedStunRules(env);
@@ -3900,7 +3907,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         // MECH_DEATH_MOVE: what an ally's death does to its move, as the logs show it (none with the switch off).
         ...((note): Record<string, string> => (note ? { observed: note } : {}))(deathRuleNote(enemies.find((other) => other.index === (numOrNull(enemy["index"]) ?? i)))),
         // Powers the solver does not model: the options' damage into this enemy is counted at 80% (to stay safe).
-        ...(unmodelledEnemyPowers(enemy).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
+        ...(unmodelledEnemyPowers(enemy, character, ascension).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy, character, ascension).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
       })),
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     ...silentSimulationReference(state, [

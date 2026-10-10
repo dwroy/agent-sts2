@@ -144,6 +144,8 @@ export interface EnemySim {
   weak: number;
   /** Poison remaining before this enemy turn, observed in Silent runs. */
   poison?: number;
+  /** Observed ordinary Strangle: two HP lost after later completed manual cards this turn; null is unverified. */
+  strangle?: number | null;
   artifact: number;
   intangible: boolean;
   /** Slippery N: the next N HP losses are reduced to 1 each. */
@@ -1626,6 +1628,15 @@ function unconditioned(card: CardModel): CardModel {
   return { ...rest, draw: 0, energyGain: 0, drawsUntil: false };
 }
 
+/** Q6/Y6's two-stack loss is verified only without damage-interaction powers. */
+function strangleLossVerified(enemy: Sim["enemies"][number]): boolean {
+  return enemy.block === 0 && enemy.artifact === 0 && !enemy.intangible && !enemy.reflect && !enemy.unmodelled &&
+    !enemy.halved && !(enemy.slippery ?? 0) && enemy.hpLossCap == null && enemy.perHitCap == null &&
+    !(enemy.curlUp ?? 0) && !(enemy.flutter ?? 0) && !(enemy.shrink ?? 0) && !enemy.vulnerable &&
+    !enemy.illusion && !enemy.revives && !enemy.reattach && !(enemy.stock ?? 0) && !enemy.spawnsOnDeath &&
+    !(enemy.asleep ?? 0) && !(enemy.slumber ?? 0) && !(enemy.enrage ?? 0);
+}
+
 /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
 function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim, automatic = false): Sim | null {
   if (sim.pendingSelection) return null;
@@ -1709,6 +1720,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
+  // Snapshot before this play: new establishment does not trigger itself, and Block/Artifact interactions stay unknown.
+  const strangled = next.enemies.filter((enemy) => enemy.alive && (enemy.strangle ?? 0) > 0)
+    .map((enemy) => ({ index: enemy.index, amount: enemy.strangle, verified: strangleLossVerified(enemy) }));
+  const strangleTarget = next.enemies.find((enemy) => enemy.index === target && enemy.alive);
+  const strangleTargetVerified = strangleTarget !== undefined && strangleLossVerified(strangleTarget);
   const unverifiedDodgeReplay = card.dodgeRollNextBlock && plays > 1;
   if (unverifiedDodgeReplay) next.unknown = [...next.unknown, `${card.name}（下回合格挡重放未验证）`];
   if (player.slothDefendReplay && card.type !== "Potion") {
@@ -1868,6 +1884,36 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.cardId === "DARK_EMBRACE") next.darkEmbrace += 1;
   if (!card.known) next.unknown = [...next.unknown, card.name];
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
+
+  if (card.strangle !== undefined && targetEnemy?.alive) {
+    if (card.cardId !== "STRANGLE" || card.type !== "Attack" || card.upgraded) {
+      targetEnemy.strangle = null;
+      next.unknown = [...next.unknown, "紧勒（牌型或升级模板未验证）"];
+    } else if (plays !== 1 || automatic || targetEnemy.strangle !== undefined) {
+      targetEnemy.strangle = null;
+      next.unknown = [...next.unknown, "紧勒（叠加、重放或自动出牌未验证）"];
+    } else if (!strangleTargetVerified || !strangleLossVerified(targetEnemy)) {
+      targetEnemy.strangle = null;
+      next.unknown = [...next.unknown, "紧勒（有挡、减损或特殊交互未验证）"];
+    } else targetEnemy.strangle = card.strangle;
+  }
+  // Q6 F8 T4: Sucker Punch loses 8+2 HP; Survivor's completed discard loses another 2, before end-turn poison.
+  if (card.type !== "Potion") for (const prior of strangled) {
+    const enemy = next.enemies.find((entry) => entry.index === prior.index && entry.alive);
+    if (!enemy) continue;
+    if (card.strangle !== undefined || plays !== 1 || automatic || card.upgraded || !["Attack", "Skill"].includes(card.type)) {
+      enemy.strangle = null;
+      next.unknown = [...next.unknown, "紧勒（后续牌型、升级、叠加、重放或自动出牌未验证）"];
+    } else if (!prior.verified || !strangleLossVerified(enemy) || next.hp <= 0) {
+      next.unknown = [...next.unknown, "紧勒（有挡、减损或特殊交互未验证）"];
+    } else if (prior.amount === 2) {
+      const loss = Math.min(enemy.hp, prior.amount);
+      enemy.hp -= loss;
+      enemy.lostThisTurn += loss;
+      next.damageDealt += loss;
+      if (enemy.hp <= 0) killEnemy(next, enemy);
+    }
+  }
 
   if (card.target === "single" && target !== null) next.facing = target;
   next.steps = [
@@ -3566,7 +3612,7 @@ function simKey(sim: Sim): string {
     + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "")
     + (sim.noDraw ? "#noDraw" : "")
     + (sim.apotheosisApplied ? "#apotheosis" : "");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}${enemy.strangle !== undefined ? `/strangle${enemy.strangle}` : ""}`).join("|");
   const phantomKey = (sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "")
     + (sim.serpentForm !== null ? `#sf${sim.serpentForm}` : "");
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");

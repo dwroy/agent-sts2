@@ -57,6 +57,8 @@ export interface CardModel {
   preciseCutHandDamage?: boolean;
   /** NHA2KW0RB7VP A10: ordinary Precise Cut starts at one in a seven-card hand. */
   preciseCutSevenHand?: boolean;
+  /** Q6/Y6, silent-0260/0261: ordinary Strangle establishes the observed two-stack turn power. */
+  strangle?: number;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
@@ -1073,6 +1075,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "PRECISE_CUT" && !bool(card["upgraded"]) &&
       dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 && damage === 1 &&
       /你的手牌中每有一张牌，此牌的伤害就降低/.test(template) ? { preciseCutSevenHand: true } : {}),
+    ...(character.toLowerCase() === "silent" && (ascension === 0 || ascension === 10) && cardId === "STRANGLE" && !bool(card["upgraded"]) &&
+      dynBase(card, "Damage", true) === 8 && dyn(card, "StranglePower") === 2 &&
+      template.replace(/\s+/g, "") === "造成{Damage:diff()}点伤害。你在这个回合内每出一张牌，该名敌人都会失去{StranglePower:diff()}点生命。"
+      ? { strangle: dyn(card, "StranglePower")! } : {}),
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
     ...(character.toLowerCase() === "silent" && cardId === "FLECHETTES" && !bool(card["upgraded"]) &&
