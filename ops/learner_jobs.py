@@ -237,7 +237,12 @@ def fix_key(root, character):
     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
 
 
-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp):
+def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None):
+    if research_request is not None:
+        from strategy_research_jobs import REQUEST, KEY
+        if (research_request != REQUEST or task != "strategy-proposal" or character != "silent"
+                or reason != "ops" or key != KEY):
+            return None
     if task == "fix-batch":
         handled, result = requested_feature(state, root, scripts, character, reason, alive, stamp)
         if handled:
@@ -255,13 +260,17 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
     if task != "experience-update" and os.path.exists(worktree) and not available_worktree(worktree):
         return None
     state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
-    pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree],
-                              root, scripts, state_dir, "learner-" + batch_id)
+    argv = ["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree]
+    if research_request:
+        argv += [task, research_request]
+    pid, pane = start_learner(argv, root, scripts, state_dir, "learner-" + batch_id)
     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
                                  "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
                                  "proposal_policy": "Roy-2026-10-07-learning"}
     if pane:
         state["batches"][batch_id]["pane"] = pane
+    if research_request:
+        state["batches"][batch_id]["research_request"] = research_request
     return batch_id, pid
 
 
@@ -274,6 +283,10 @@ def check_jobs(state, root, scripts, character, alive, stamp):
             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
     runs = pending(root, scripts, character)
     experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+    # This approved frozen study gets the next slot before automatic proposals.
+    # Its host wrapper waits for the parent's save_state under the existing lock.
+    from strategy_research_jobs import dispatch as dispatch_research
+    research = dispatch_research(state, root, scripts, character, alive, stamp, dispatch_write, STRATEGY_WORKERS)
     # Load by this file's path so fixed dispatch fixtures need no global Python search path.
     spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
     proposals = importlib.util.module_from_spec(spec)
@@ -282,13 +295,13 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     # Evidence-linked proposals get the shared writer before a continually refreshed bug queue.
     key = fix_key(root, character)
     fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
-    strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal else None
+    strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal and not research else None
     calibration = calibration_job(state, root, scripts, character, alive, stamp)
     from boss_sim_jobs import check
     boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
     return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
             "core_builds": core,
-            "code_proposal": proposal, "boss_sim": boss_sim}
+            "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research}
 
 
 def calibration_job(state, root, scripts, character, alive, stamp):

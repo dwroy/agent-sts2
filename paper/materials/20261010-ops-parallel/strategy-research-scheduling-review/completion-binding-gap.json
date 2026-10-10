@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-10T14:49:01+08:00",
+  "status": "confirmed_acceptance_binding_gap",
+  "expected": "Reject when request.dispatch_base differs from persisted batch.research_dispatch_base",
+  "accepted": true,
+  "registered_original_base": "4d3e0ad70683878c2cfc0d2221d1848daa60a377",
+  "changed_request_base": "79bba43e8c4b50c3d4f7ab1e483b0e2e6ba68188",
+  "source_paths": {
+    "ops/proposal_dispatch.py": "eb433c95ab9e5f4d36d6ad344b69a3fde79f9280778942ec15db9b25312b4e2c",
+    "ops/tests/test_strategy_research.py": "b0efe82e1a33df0cfbe85d3a05836601bf02551ea1d3760da6a158679e21844d"
+  },
+  "scope": "Fixed temporary fixture; only artificial ops/fixed.py in tmp Git repo, no project state or game knowledge changed",
+  "command": "python3 -B: import StrategyResearch fixed fixture; commit tmp ops/fixed.py; move root request baseline; call no_change with original persisted batch baseline"
+}

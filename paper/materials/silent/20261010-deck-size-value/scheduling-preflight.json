@@ -1,0 +1,63 @@
+{
+  "request_id": "roy-20261010-silent-deck-size-value",
+  "recorded_at": "2026-10-10T14:36:14.465906+08:00",
+  "current_request_state": "pending",
+  "actual_study_batch": null,
+  "user_followups": [
+    "学习者什么时候启动",
+    "记得 学习者session最好也放到herdr tab上方便我观察"
+  ],
+  "registered_batch_snapshot": [
+    {
+      "batch": "20261010-135713-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "state": "done",
+      "reason": "proposal",
+      "pid": 3524128,
+      "pane": "wP:pD",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-135713-s2",
+      "finished": "2026-10-10 14:28",
+      "rc": 0
+    },
+    {
+      "batch": "20261010-141303-strategy-proposal",
+      "task": "strategy-proposal",
+      "state": "failed",
+      "reason": "proposal",
+      "pid": 3569811,
+      "pane": "wP:pF",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-141303",
+      "finished": "2026-10-10 14:33",
+      "rc": 0
+    },
+    {
+      "batch": "20261010-142903-strategy-proposal",
+      "task": "strategy-proposal",
+      "state": "running",
+      "reason": "proposal",
+      "pid": 3618876,
+      "pane": "wP:pG",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-142903",
+      "finished": null,
+      "rc": null
+    }
+  ],
+  "host_read_only_procs": {
+    "command": "bash ops/codex-ops-do.sh procs",
+    "exit_code": 0,
+    "path": "ops/codex-ops/deck-size-originals/scheduling-procs-1434.log",
+    "sha256": "d89e87efa483f3660a5151ecf8f7b22ddd032503c96c91de3868e7a272bd9d53"
+  },
+  "hosting": {
+    "existing_config": "ops/codex-ops/hosting",
+    "learners": "herdr",
+    "behavior": "Existing hosted learner wrapper tails batch .out/.err and closes pane on completion; no new empty tab created"
+  },
+  "scheduling_gap": "Standard check_jobs automatically filled the freed 14:28 slot with an ordinary 14:29 proposal; it does not read pending strategy-research requests. Runtime manual queue alone does not reserve a slot.",
+  "registration_gap": "Hosted start_learner can start the model before the caller saves learn.json and binds the root research request.",
+  "repair_scope": "Use the existing locked scheduler, dispatch_write and herdr launcher to prioritize the same validated parent at the next available strategy slot; retain two-worker capacity and add topic-only registration proof before model start.",
+  "source_owner": "/root/proposal_protocol_repair, existing exclusive feature worktree .worktrees/ops-proposal-protocol-repair-20261010",
+  "repair_status": "implementation_and_fixed_tests_in_progress",
+  "completion_condition": "Actual host dispatch/PID/pane and identity-bound request, not merely a queue entry",
+  "no_gameplay_conclusion_or_publication": true
+}

@@ -138,6 +138,11 @@ def research_proof(report,batch,root):
     if report.get('research_complete') is not True: return None
     dispatch_base=request.get('dispatch_base')
     if not isinstance(dispatch_base,str) or not re.fullmatch('[0-9a-f]{40}',dispatch_base): return None
+    # The dedicated study must match its independently saved dispatch identity;
+    # editing a root request later cannot replace the actual baseline or inputs.
+    if ident=='roy-20261010-silent-deck-size-value' and any(batch.get(key)!=value for key,value in {
+        'research_request':ident,'research_dispatch_base':dispatch_base,
+        'research_input_sha256':request.get('input_manifest_sha256')}.items()): return None
 
     def frozen(field,suffix):
         raw_path=request.get(field);expected=request.get(field+'_sha256')

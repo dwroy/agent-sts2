@@ -1,0 +1,103 @@
+{
+  "at": "2026-10-10T14:53:32+08:00",
+  "request_id": "roy-20261010-silent-deck-size-value",
+  "review_state": "no_remaining_blocking_findings_for_reviewed_source",
+  "source_manifest": "paper/materials/20261010-ops-parallel/strategy-research-scheduling-review/source-manifest.json",
+  "scope": "read-only independent scheduling/registration/report completion review; only independent materials written",
+  "independent_tests": {
+    "scheduling": 18,
+    "pure_report": 8,
+    "all_rc_zero": true,
+    "source_unchanged_during_tests": true,
+    "binding_recheck": {
+      "unique_request_id": "roy-20261010-silent-deck-size-value",
+      "baseline_accepted": true,
+      "moved_request_baseline_accepted": false,
+      "registered_original_base": "0c34cbca1cd7e0cfc0f69e5224ac96faa921d000",
+      "changed_request_base": "be6e02b6363df91dfb2e21401ad12f10e4d8e236",
+      "passed": true,
+      "scope": "temporary fixed fixture only"
+    },
+    "record": "paper/materials/20261010-ops-parallel/strategy-research-scheduling-review/independent-final-tests.json"
+  },
+  "verified": [
+    {
+      "id": "priority_and_limit",
+      "result": "pass",
+      "evidence": "check_jobs dispatches frozen study before proposals; shared STRATEGY_WORKERS=2; full research slots return before reading/writing request/history; fixed full-slot and priority cases pass"
+    },
+    {
+      "id": "manual_dedup",
+      "result": "pass",
+      "evidence": "cmd_write manual_matches handles exact anchor set against saved research batches or authorized root request; running/done and missing root with saved batch do not fall back to ordinary ops; fixture passes"
+    },
+    {
+      "id": "binding_failure",
+      "result": "pass",
+      "evidence": "actual batch marker + receipt retained on root atomic binding failure/receipt-file failure; outer save failure leaves root bound receipt and gate rejects unsaved batch, second manual dispatch blocked; explicit ops recovery required"
+    },
+    {
+      "id": "baseline_and_gate",
+      "result": "pass",
+      "evidence": "dispatch captures git rev-parse main; wrapper waits existing learn.lock before checkout/model; read_request checks exact identity/frozen inputs; worktree add uses literal dispatch_base and HEAD must match; fixed main advance test keeps old actual source"
+    },
+    {
+      "id": "finish_identity",
+      "result": "pass_after_repair",
+      "evidence": "exact request completion compares research_request/research_dispatch_base/research_input_sha256 with root; independent changed-root-baseline reproduction now rejected; old generic/proposal acceptance tests unchanged"
+    },
+    {
+      "id": "template",
+      "result": "pass_after_clarification",
+      "evidence": "bound pure research retains dispatch_base and skips later main merge; marker-bearing identity/SHA failures stop; ordinary proposals still sync main; final template SHA captured"
+    },
+    {
+      "id": "herdr",
+      "result": "source_verified",
+      "evidence": "existing hosting learners=herdr uses unchanged label/pidfile/close-on-exit and wrapper tails actual batch out/err; gate follows early herdr PID publication; live pane not independently exercised by review"
+    },
+    {
+      "id": "no_game_fabrication",
+      "result": "pass",
+      "evidence": "pure research keeps merged null/tests null/fixes empty, report path and SHA frozen proof, covered_runs + exclusions cover inventory; no merge/version/proposal IDs fabricated"
+    }
+  ],
+  "resolved_findings": [
+    {
+      "id": "R1",
+      "issue": "completion trusted root baseline/input without persisted batch comparison",
+      "status": "fixed and independent unique-request recheck passed",
+      "before_evidence": "paper/materials/20261010-ops-parallel/strategy-research-scheduling-review/completion-binding-gap.json"
+    },
+    {
+      "id": "R2",
+      "issue": "research template could merge later main executable changes and fallback on identity mismatch",
+      "status": "fixed final template reviewed"
+    }
+  ],
+  "remaining_blocking_findings": [],
+  "request_observation": {
+    "path": "notes/strategy-research-silent.json",
+    "sha256": "f91f5a861580d2e5868a4f2dc980d495862a460895130dd1d59a4da8790f0775",
+    "state": "pending",
+    "batch": null,
+    "manifest_sha256": "f816d243230b8e629a9d1ce1a1de42df445a20c978db400b4090de52c1dcc1f3",
+    "frozen_run_count": 195,
+    "manifest_matches_request": true,
+    "work_spec_sha256": "0d1f2efe06bfcfb9b51f9f36531366be6c32934afa7cc39a4d9da9de694e5397",
+    "work_spec_matches_request": true
+  },
+  "limitations": [
+    "This is a source and fixed-fixture review, not integration, deployment or production dispatch. Parent ops owns serial mutation and source owner full sandbox suite result.",
+    "No live host PID, herdr pane or production learner was started by the reviewer; herdr behavior is verified from existing source and parent scheduling preflight.",
+    "If outer learn.json save fails, root can retain running plus actual receipt while no model starts; preserve this incident and recover explicitly under learn.lock. No automatic retry was claimed.",
+    "Source owner full sandbox suite began before final template-only clarifications; all executable/sh/Python/test files match its start snapshot. Reviewer did not run or certify the full sandbox suite."
+  ],
+  "production_changes_by_reviewer": false,
+  "game_knowledge_authored": false,
+  "host_actions_by_reviewer": false,
+  "source_matches_owner_final": true,
+  "full_suite_after_start_changes": [
+    "learner/tasks/strategy-proposal.md"
+  ]
+}

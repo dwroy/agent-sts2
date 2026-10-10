@@ -16,7 +16,7 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 工作树：{{worktree}}；基线：{{base_branch}}；日志（只读）：{{logs_dir}}；临时文件只放 {{scratch}}。
 
 ## 1. 开工与证据
-- 先读 README.md、最新 paper/materials/STATE-*.md、decision-log.md 末尾、docs/learning-protocol.md。先 git status 确认干净，再 git merge --no-edit {{base_branch}}；冲突就停下回报。
+- 先读 README.md、最新 paper/materials/STATE-*.md、decision-log.md 末尾、docs/learning-protocol.md。先 git status 确认干净并核第 1.2 节身份；已绑定纯研究保持 dispatch_base，不合入后续 main。其他提案仍 git merge --no-edit {{base_branch}}；冲突就停下回报。
 - 只从本角色对局、复盘和 {{character_dir}} 学习。核对 runs.jsonl 角色；不得读取或搬用其他角色知识。共用事实仅用观察得到的数据。
 - 先按第 1.2 节核对本批是否承接已授权专题；匹配时只按 work_spec 研究，否则读 fix-queue-v4.md 的待定策略项与已有提案，选证据充分、可验证的一项。游戏知识只能从对局里学，不使用自己的预训练知识补结论。
 - 每项提案落盘到 {{scratch}}/proposal.md，写证据局号、层、回合、既有学习账本 id、反例、预期行为及验证方法。没有证据就报告证据不足，不改策略。
@@ -28,12 +28,12 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
 
 ## 1.2 仅本批的手动专题研究
-只读根目录 `{{project_root}}/notes/strategy-research-{{character}}.json`。文件不存在或以下条件不全成立时，保持原提案/补链任务，不将普通队列变成专题：
+只读根目录 `{{project_root}}/notes/strategy-research-{{character}}.json`。learn.json 本批带 research_request 时，文件不存在或任何身份/SHA 条件失配都停止专题回报，不退回普通选题；只有不带 research_request 的普通批次在专题条件不成立时保持原提案/补链任务，不将普通队列变成专题：
 - learn.json 中本次 {{batch}} 的 task=strategy-proposal、character={{character}}、reason=ops；该行完全没有 proposal_ids 和 proposal_repair 字段，工作树等于 {{worktree}}。
-- 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state 为 pending 或 running；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
-- running 请求的 batch 必须等于 {{batch}}。pending 请求只能在 batch=null 时承接：这是运维派发返回后立即绑定的交接窗口，最终验收时必须已变为 running 且 batch={{batch}}。不自行写请求或 learn.json；完成前重读，仍未绑定或身份已变就如实回报，不能冒称专题完成。
+- 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state=running 且 batch={{batch}}；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
+- 专题宿主 wrapper 已在原 learn.lock 上等待登记落盘，模型启动前须有 learn.json 对应实际 research_request 与根请求的 running/batch/worktree 绑定，独立注册回执位于 ops/codex-ops/learner/{{batch}}.research-registration.json。pending/null 只属于派发前状态，不能在模型内将它当已承接专题。不自行写请求或 learn.json，身份未绑定或已变就停止专题回报，不退回普通提案选题。
 - 将 work_spec 和 input_manifest 路径相对根目录解析（绝对路径也须在根目录内），先核实文件 SHA256 分别等于 work_spec_sha256、input_manifest_sha256，再读取正文。manifest 的 request_id/character 必须匹配，runs 为本角色冻结局号清单，dispatch_runs 必须是其中的子集。required_sections 为非空、无重复的字符串 key 列表。
-- 请求 dispatch_base 是运维在派发前登记的真实完整 40 位提交；核实它是本树 HEAD 的祖先。开工合并 main 后若只有 notes/paper 等记录快进，可以将当前 HEAD 记为 report.base；dispatch_base 到 HEAD 的实际执行源码、任务模板、验证输入和全部 knowledge 必须零差异，不能自行提交源码/知识再把新 HEAD 自报成无改动基线。不同则保留现场并回报，不能冒称纯研究完成。
+- 请求 dispatch_base 是运维在派发前登记的真实完整 40 位提交；本次宿主登记的纯研究树直接由该提交建立，HEAD 保持等于它，不合入后续 main 的源码、知识或记录。将该 HEAD 记为 report.base，不能自行提交源码/知识再把新 HEAD 自报成无改动基线。验收还对照本批独立登记的 research_dispatch_base/research_input_sha256，实际执行源码、任务模板、验证输入和全部 knowledge 必须保持零差异；不同则保留现场并回报，不能冒称纯研究完成。
 
 匹配后用 work_spec 的目标、冻结输入和限定字节范围替代 fix-queue 选题，只研究该请求，不领取或补做其他提案。游戏结论仍由你从本角色证据提炼；完整保存假设、支持、反例、未知和结论变化，覆盖每个 required_sections，不用预训练事实补齐。证据不足也须给出有范围和限制的结论，不将“尚不确定”变成已验证规则。
 
