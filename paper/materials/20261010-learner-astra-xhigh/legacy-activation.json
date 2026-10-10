@@ -1,0 +1,83 @@
+{
+  "recorded_at": "2026-10-10T22:30:47.143738+08:00",
+  "source_commit": "57a4c35a78a0eaf2ad5e0aeadea76d3703b38b69",
+  "main_integration_commit": "7edafb8f5c0fc8235a13566b0eddca5af7355fa1",
+  "state": "active_for_new_learner_invocations_including_legacy_scheduler",
+  "policy": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "xhigh",
+    "fast": false,
+    "scope": "learner only"
+  },
+  "actual_new_batches_evidence": "new-batches-verification.json",
+  "actual_new_batches_verified": 4,
+  "legacy_scheduler_policy": "Root Fast gateway routes only explicit learner permission profiles; learner wrapper replaces legacy model/effort and removes service_tier before native exec. A retained native binary is unwrapped when an old scheduler inherits the new wrapper.",
+  "provider_billing_telemetry_verified": false,
+  "ops_play_policy": "Existing model/effort/Fast retained",
+  "running_processes_restarted": false,
+  "live_worktree_modified_by_this_change": false,
+  "existing_live_merge": "Preserved; active root wrappers cover the old live scheduler without modifying its worktree.",
+  "game_version_created": false,
+  "tests": {
+    "tsc": "passed",
+    "fixed_sandbox_files": 265,
+    "fixed_sandbox_tests": 2681,
+    "launcher_regressions": 15,
+    "source_gitleaks": "passed",
+    "acceptance": "legacy-inheritance/acceptance.json"
+  },
+  "tested_source_files_equal_main_sha256": {
+    "agent/tests/codex-fast.test.ts": "b1c7460349b54b610690fd5be1328199fc2a16275b45ac2568d9dbea55c56ec9",
+    "agent/tests/learner-launch-failures.test.ts": "58dcd330f5cc6368ba1b37793c25af8501d253c65c576091d126c7ec55d72864",
+    "agent/tests/learner.test.ts": "9e0379aa94050c5e591fa88734bafc8ab92238bb5e8e6368980e60fb3c709a51",
+    "docs/codex-fast.md": "0df1e1815930f386a532bf0cf28b5c4462e2594a8efa4b72dd61ec004283e391",
+    "learner/README.md": "fd3dd0f169d51a1c6df052ac22362add230c53c14e0e5280f7973b61f176f6b2",
+    "learner/lib/engines.ts": "3353db4e9035902c929a112b24e19981879b17377af8a4e9714999a77ef30f3c",
+    "learner/lib/task.ts": "0840fe9100874dc0a40154f58d42ef1e103fdabc282a43875a167f1518f56bc5",
+    "ops/codex-fast.sh": "b4b82aa56297c46b0a14d5382987cfe440743b03b05f6421d36d3b54c854fa00",
+    "ops/codex-learner.sh": "98834cc20e6c29edb00b3da194a0ae10b46fddb4cfcd36689b262ed031e93a31",
+    "ops/codex-ops-learner.sh": "fab186106e665a9130802a202101bce7992f7d38bcfca5ddec105de7355cb98c",
+    "ops/codex/lib.ts": "e9761ac0548a60f7f79fc7f1624377c258910de537825ca453a52c3a90ac19c8",
+    "ops/tests/fixtures/legacy-codex-ops-learner.sh": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+    "ops/tests/test_learner_launch_failures.py": "4d9d26241b879ab3c6c0e7b18ff6b082da4fb45622395ca16357178561c5846a",
+    "paper/materials/20261010-learner-astra-xhigh/acceptance.json": "e99777f997b8477007bf086b521f6d15d8c6ba7c1f58d3d8e707b741fcd82866",
+    "paper/materials/20261010-learner-astra-xhigh/cli-capabilities.json": "84ea308c59009f52cf6089c27404db81d0dd167b15442b59f886a27a3bb07e59",
+    "paper/materials/20261010-learner-astra-xhigh/gitleaks-final.log": "8b4ada92ed72d5b38b08b30c1aec2e68da42c5151f9de24b6d715098964e75cf",
+    "paper/materials/20261010-learner-astra-xhigh/gitleaks-source.log": "4635a429aac0902300525ddc9954d91ed986caf5e2e11bf38e54e84870fbf0ca",
+    "paper/materials/20261010-learner-astra-xhigh/launcher-tests.log": "639e74785b329e268d8ffbf2e2a9c1a1a2ec5256f26eac8ed78522b4906754cb",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-entry/acceptance.json": "3d581b17ff030a48e000b2e1977ecf598711f3c8ad17b1d1d7142ce477108c7f",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-entry/gitleaks-final.log": "4edf2b4383ca556d6be8dfb7eb4d97a63e77c45481805d5be05e6f9c31a9c67d",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-entry/gitleaks-source.log": "1b42178818c7d504d5be38b754ee022f4b642509b9507b5f3473b22b725605e9",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-entry/launcher-tests.log": "6dde7adcdb9ee4470eac7c04e05a4355a8440cb32b89b638e44295b1b4741460",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-entry/sandbox-full.log": "24113652e06a87bd73a3a62aaf8112e49c16271abb9bd44233f5873597cb2d1f",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-entry/source-manifest.json": "07d401cc833f4c0cbabe5e0d6c0e9385f252174d018ee32327afa2a718635c3d",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-inheritance/acceptance.json": "a45bf7a299713c203c61026ae53cb849883eb39feb60600a8b4181cd3bdeb583",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-inheritance/gitleaks-final.log": "4f92211f187dc8e83d6c258bac10fa6d73875f4edc98a5772cbb7d415cf902dc",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-inheritance/gitleaks-source.log": "afb2dfbb92a892761a662c03b3de4352d7bea73a3a37325b2a611c0b204235db",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-inheritance/launcher-tests.log": "6514324da0a9fa01323234f37612117ca4a0d945cf05dca12593c49ae2f37a8a",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-inheritance/sandbox-full.log": "fb8b6cda2b123ed88862ce5edba47f6b4c9a67d204bb257a6b889bd56ec090ce",
+    "paper/materials/20261010-learner-astra-xhigh/legacy-inheritance/source-manifest.json": "800cc92a7b5af32e4170a9cefe4cb15ff5e3b98030815e7e05e8fba776703ce0",
+    "paper/materials/20261010-learner-astra-xhigh/sandbox-full.log": "8dc06409b79c68dc4b3761b361c02cd0892bf1a33736ed3fff4e9ae0f7787f8b",
+    "paper/materials/20261010-learner-astra-xhigh/source-manifest.json": "ee1005a087066e2e80105fcdeeb2d30d2d492e5761040fbdc8b87c7a553b0c5e",
+    "paper/materials/20261010-learner-astra-xhigh/targeted-correct-cwd.log": "701832a6e80db2cf4c5a669d6459af7ad461b2bb60dd7e83b495c24d6d08a68b",
+    "paper/materials/20261010-learner-astra-xhigh/targeted-tests.log": "a466141a3d4fdd4c26269aef98f5f52c55a2a168aa1cdf93c779fb0c3c207ae7"
+  },
+  "observation_evidence_sha256": {
+    "legacy-entry-gap.json": "e5bb188d73658fd8edaba9d9b1fadece0882c0b84a44358e864a872fc038ac09",
+    "legacy-live-wrapper-before.txt": "a6827bcd529715e8bdc46e8d39d96d4324497b11966730d4d5d07873967e4a9a",
+    "host-after-activation-procs.log": "c7597d76abb4d1eff3019c6b808d2aab6e85a613a402d0484ce639b456045681",
+    "host-after-activation-procs.json": "334b79fbba58cb19297a2954bf940a873c920602eadf39ecf6c3c602c8fface7",
+    "new-batches-verification.json": "141ebd6da633bdf253ae8c2f6d44aba55cfba1b2f8f6b463d71cbbe680580244"
+  },
+  "previous_activation_record_preserved": true,
+  "previous_failures_and_all_test_logs_preserved": true,
+  "record_checks": {
+    "gitleaks_staged": "exit 0, no leaks found",
+    "diff_check": "passed except two pre-existing trailing spaces in exact captured host process log; raw evidence bytes preserved",
+    "raw_log": "host-after-activation-procs.log",
+    "raw_log_whitespace_lines": [
+      6,
+      27
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "base": "0e8a251588221bf1b45ad2e43b049d195cfeb0e3",
+  "files": {
+    "ops/codex-fast.sh": "b4b82aa56297c46b0a14d5382987cfe440743b03b05f6421d36d3b54c854fa00",
+    "ops/tests/test_learner_launch_failures.py": "4d9d26241b879ab3c6c0e7b18ff6b082da4fb45622395ca16357178561c5846a"
+  },
+  "regression": "Frozen old scheduler inherits LEARNER_CODEX_BIN=new root learner wrapper plus STS2_CODEX_LEARNER_BIN=original native; current Fast entry unwraps the retained native only after exact learner permission classification. Absent or recursive native still fails closed.",
+  "production_changed": false,
+  "processes_restarted": false
+}

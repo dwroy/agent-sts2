@@ -6,5 +6,5 @@ it("nested learner launches preserve the native CLI and learner-only policy and 
     encoding: "utf8", timeout: 30_000,
   });
   expect(result.status, result.stderr).toBe(0);
-  expect(result.stderr).toContain("Ran 10 tests");
+  expect(result.stderr).toContain("Ran 15 tests");
 });
