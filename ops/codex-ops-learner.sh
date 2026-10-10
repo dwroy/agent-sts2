@@ -12,6 +12,13 @@ batch="$1"; runs="$2"; character="${3:-silent}"
 task="${4:-postmortem}"; worktree="${5:-$ROOT}"
 case "$task" in postmortem|experience-update|fix-batch|strategy-proposal|ascension-audit) ;; *) exit 2 ;; esac
 learner_task="${6:-$task}"
+research_request=""
+if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
+  [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
+    && [ "$7" = roy-20261010-silent-deck-size-value ] || exit 2
+  research_request="$7"
+  [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-strategy-proposal$ ]] || exit 2
+fi
 if [ "$learner_task" != "$task" ]; then
   if [ "$learner_task" = boss-sim-batch ]; then
     [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [ "$task" = fix-batch ] \
@@ -32,6 +39,21 @@ export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
 export STS2_WORKSPACE="$ROOT"
 cd "$ROOT" || exit 1
 audit_ready=1
+research_base=""
+# herdr-exec writes its PID before this gate, allowing start_learner to return.
+# The parent then binds the request and saves the batch under the same learn.lock.
+if [ -n "$research_request" ]; then
+  exec 8> "$DIR/learn.lock"
+  if flock -w 120 8; then
+    research_base="$(python3 "$OPS/strategy_research_jobs.py" ready "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err")" || audit_ready=0
+    flock -u 8
+  else
+    echo "research registration lock wait timed out after 120 seconds; no model started" >> "$err"
+    printf '{"request_id":"roy-20261010-silent-deck-size-value","batch":"%s","status":"lock_timeout","timeout_seconds":120}\n' "$batch" > "$DIR/learner/$batch.research-registration.json"
+    audit_ready=0
+  fi
+  exec 8>&-
+fi
 fresh_tree=0
 if [ "$learner_task" = silent-historical-core-builds ]; then fresh_tree=1
 elif [ "$task" = fix-batch ] && [ "$learner_task" = "$task" ]; then
@@ -41,15 +63,19 @@ elif [ "$task" = strategy-proposal ]; then
   [ "$worktree" = "$ROOT/.worktrees/codex-strategy-$character-${batch%-strategy-proposal}" ] || exit 2
   fresh_tree=1
 fi
-if [ "$fresh_tree" = 1 ]; then
+if [ "$fresh_tree" = 1 ] && [ "$audit_ready" = 1 ]; then
   [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-(fix-batch|strategy-proposal)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
   exec 9> "$DIR/learner/${worktree##*/}.lock"
   flock -w 5 9 || exit 75
   if [ ! -f "$worktree/.git" ]; then
-    nice -n 19 git worktree add -b "${worktree##*/}" "$worktree" main >> "$out" 2>> "$err" || audit_ready=0
+    nice -n 19 git worktree add -b "${worktree##*/}" "$worktree" "${research_base:-main}" >> "$out" 2>> "$err" || audit_ready=0
   fi
   if [ "$audit_ready" = 1 ] && [ -n "$(git -C "$worktree" status --porcelain)" ]; then
     echo "worktree has edits; preserve it, never reset a failed candidate" >> "$err"
+    audit_ready=0
+  fi
+  if [ "$audit_ready" = 1 ] && [ -n "$research_request" ] && [ "$(git -C "$worktree" rev-parse HEAD)" != "$research_base" ]; then
+    echo "research worktree HEAD differs from its registered dispatch baseline; no model started" >> "$err"
     audit_ready=0
   fi
   if [ "$audit_ready" = 1 ] && [ ! -e "$worktree/agent/node_modules" ]; then
@@ -121,7 +147,9 @@ else
 fi
 [ -n "$tailer" ] && { sleep 1; kill "$tailer" 2>/dev/null; }
 echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
-python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null
+if [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; then
+  python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null
+fi
 if [ "${CODEX_OPS_NO_DRAIN:-0}" != 1 ]; then
   # A hosted batch's pane closes when this script ends: the wake (up to 2 h) must not live in it.
   if [ -n "${HERDR_HOST_LABEL:-}" ]; then setsid nohup bash "$OPS/codex-ops.sh" drain > /dev/null 2>&1 < /dev/null &
