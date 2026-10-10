@@ -945,6 +945,15 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - [ ] **silent-0329**：转录学习者回报，`agent/src/reflex/turn-solver.ts:2330/:2332—2333`饮药分支未接爬行动物饰品所得3临时力量；定位另见`card-model.ts:1279`、`combat-plan.ts:2502`。0DJ6GFZZ0TG9/SILENT A10 F33T2 d305532、s313545→313548及T4 d305541、s313554→313560为学习者证据。T4原同线预测106伤、实净扣136，30差未全部隔离，不声明导致局败或修后必胜。首证本局/prior unknown/observed保持；更早CSBR5CRDWQNB在0063只核机制，旧同线预测预算未核。
 - 沿已注册`silent-proposal-90e0bc4e45916d16`自动strategy-proposal链，由学习者按原提案核验、实现、自测并实际合入；先查共享租约避免重复派发，保留未观察组合与其他角色范围。本局正常结束，非卡死；运维只登记普通队列，不实现机制、不标implemented/shipped或新版本。0330机制及另两提案afe154edb1392350/d779d007d2f17ffd由学习者处理，缺中间帧和整场配对证据的原限制保持。原复盘与一处追加数字归属勘误见`paper/materials/silent/20261009-0530-events/owned-lessons-addition-original.md`，原报告见同目录`pm-originals/report.md`。
 
+## 2026-10-09 08:05 — Roy 批准的架构调整：全漏斗不回退 + 通用资源价值（Claude 转达，代码由 codex 实现）
+
+背景（观察者统计，纯 Codex A10 115 局，每 40 局一段）：F17 boss 胜率 27/34→28/37→27/32 持平；F33 boss 16/21→12/19→10/18 下降；第二幕路上死亡 6→9→9。下降与 F48/F49 双 boss 优化时间重合，因果未查。Roy 要求：各 boss 胜率同时提升，打法要通用，不能过度针对最后两 boss。以下是架构要求，不含游戏知识，具体参数和打法仍须学习者从对局证据得出。
+
+- [ ] **arch-funnel-guard**：每次改变对局行为的上线后，按 eval/versions.json 版本自动比较本角色当前进阶的逐级转化率（第一幕路上 / F17 boss / 第二幕路上 / F33 boss / 第三幕路上 / F48 / F49；分母为上一级到达数）。任何一级相对上线前出现统计上可信的下降（方法由实现者定，须处理小样本噪声），自动立案交学习者归因；查不清时按回退流程回退该版本并通知 Roy（for-dai.md + inbox-dev.md）。验收只看目标关的做法改为同时看全漏斗。
+- [ ] **arch-learning-priority**：学习者派题（strategy-proposal、B4/B5 之外的打法学习）按"该级损失的期望胜局"排序（整局胜率 = 各级转化率之积，提高前面某级会给后面所有级带来更多局数）。排序依据和每轮选中的级写进台账，供论文核对。
+- [ ] **arch-unified-resource-value**：血量和药水的持有价值改为统一模型，输入为到下一次回血/休息前剩余战斗数、下一个休息点、敌人强度等通用量；双 boss（S1.double-boss1）应成为该模型的一个特例而不是独立规则。只针对单个 boss 的规则必须声明作用范围，并给出对其他各级转化率中性的证据。迁移时保证现有行为在已验证场景下等价或有证据更好；铁甲战士保持等价。
+- [ ] **inv-f33-regression**：归因调查（先做）——F33 boss 胜率下降、第二幕死亡增加是否与 S1.double-boss1 及后续 F48/F49 相关版本有关。对比上线前后在第一、二幕战斗中的用药率、进 F33 时的血量和药水数、死于 F33 时未用药水，按版本分组，结论写证据局号；不足以下结论就写明。结果写 notes/for-dai.md 通知 Roy。
+
 ## 2026-10-09 09:36 — VAC6Z1PZ1QJG复盘新增非阻塞纯bug（双boss模拟接续资源契约异常）
 
 - [ ] **silent-0332**：转录学习者原回报，VAC6Z1PZ1QJG/A10/F47休息题d309293，`agent/src/sim/boss-sim.ts:311`的`continuationInput`抛出`missing successful first-fight resources`；成功首战样本进入接续时未满足正HP资源契约，单样本异常传播使整题没有可用选项模拟数字（调用路径:334/:340）。缺触发样本，资源缺失与非正HP分支尚未隔离，具体机制根因未知；不根据契约错误猜改游戏规则。首证本局/prior unknown/observed保持。实际丢毒药、42→67并补两药后，对局继续至F48正常阵亡，无卡死；按非阻塞结构bug追加普通队列。
@@ -961,7 +970,7 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 ## 2026-10-09 15:06 — status在PID沙箱误写活复盘lost（普通运维工具缺陷）
 
-- [ ] **ops-status-sandbox-false-lost**：request_id=watcher-20261009-sandbox-status-false-lost-144301。观察者14:56在Codex PID沙箱调用 `bash ops/codex-ops.sh status`，`ops/codex-ops-learn.py:144—156` 的 running_batch使用本PID命名空间的os.kill(pid,0)判活，`:464—476` 的cmd_status调用该函数并save_state，导致宿主仍活的复盘20261009-144301/833ZM0MJGWHC误标lost及写retry_at。这是已发生的状态工具缺陷，不是学习者退出或游戏机制错误。
+- [x] **ops-status-sandbox-false-lost（已修，关闭）**：request_id=watcher-20261009-sandbox-status-false-lost-144301。观察者14:56在Codex PID沙箱调用 `bash ops/codex-ops.sh status`，`ops/codex-ops-learn.py:144—156` 的 running_batch使用本PID命名空间的os.kill(pid,0)判活，`:464—476` 的cmd_status调用该函数并save_state，导致宿主仍活的复盘20261009-144301/833ZM0MJGWHC误标lost及写retry_at。这是已发生的状态工具缺陷，不是学习者退出或游戏机制错误。
 - 运维以broker procs真实回执核对wrapper2020219/learner shell2020220/runner2020230与pane wJ:pAV仍活忙；learn.lock非阻塞短事务重读最新值，仅lost→running及移除本次错误retry_at，attempts=1、原batch/PID/pane不变。原retry_at前态未知，不倒填；所有其他learn.json段落逐对象相等，原错误现场及前后原字节另档。没有调用status/finish/check_jobs、派新批、信号或重启。
 - 交既有普通fix-batch学习者核查：固定数据覆盖“宿主活但沙箱PID不可见”、真实已结束批及并行更新；状态查询应保持只读，不因当前命名空间无法观察而改lost/retry_at，真实失联处置沿宿主调度和原正常完成通道。保留原failed/rc/report/retry历史及调度去重，不放宽验收或改游戏参数。源码修改才按原测试/实际合入流程处理，本轮只登记队列，不实现源码或另派新批。
 - 原件和恢复回执：`paper/materials/silent/20261009-1501-status-recovery/recovery.json`，observer incident及learn-after原SHA、最新锁内before/after、宿主procs和工具源SHA均留档；不造游戏知识账本、shipped或版本。
@@ -974,13 +983,18 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 ## 2026-10-09 17:42 — Roy 高优先：全历史核心构筑入口与实质报告通知适配
 
-- **core-builds-entry-adaptation**：父请求 `roy-20261009-historical-core-builds`，17:30 补充 `roy-20261009-historical-core-builds-result-notify` 已授权现有 learner 做最小任务/调度适配，关联 paper-trace；任务稿与验收见 `paper/materials/silent/20261009-1730-core-entry/entry-adaptation-task.md`。补独立全历史模板、FEATURE_REQUESTS 路由、wrapper 白名单/专用干净租约及标准完成/完整检查通道，并在首份身份/SHA/候选/boss矩阵/伤害资源/构筑模板/限制核实后的实质报告接宿主 herdr 原生通知，父 request+batch+报告SHA 只一次并留成功/失败回执。纯入口与通知不造游戏知识/版本，当前 hook pending、核心学习 batch null，不用单卡增量替代。准备已完成；普通 `codex-dev` 仍归旧 `20261008-075538-strategy-proposal` 的四项暂存候选，源完整沙箱重跑124及原报告保持。先由原候选拥有者沿其原测试/提交/处置链作保存交接，干净且无宿主写者才允许普通 fix learner 接此任务；禁止 reset/clean、混提交旧源码、抢其他功能树/活租约。现有 broker 将单次尝试，实际结果另记，不等待外部完成。
+- [x] **core-builds-entry-adaptation（已修，关闭）**：父请求 `roy-20261009-historical-core-builds`，17:30 补充 `roy-20261009-historical-core-builds-result-notify` 已授权现有 learner 做最小任务/调度适配，关联 paper-trace；任务稿与验收见 `paper/materials/silent/20261009-1730-core-entry/entry-adaptation-task.md`。补独立全历史模板、FEATURE_REQUESTS 路由、wrapper 白名单/专用干净租约及标准完成/完整检查通道，并在首份身份/SHA/候选/boss矩阵/伤害资源/构筑模板/限制核实后的实质报告接宿主 herdr 原生通知，父 request+batch+报告SHA 只一次并留成功/失败回执。纯入口与通知不造游戏知识/版本，当前 hook pending、核心学习 batch null，不用单卡增量替代。准备已完成；普通 `codex-dev` 仍归旧 `20261008-075538-strategy-proposal` 的四项暂存候选，源完整沙箱重跑124及原报告保持。先由原候选拥有者沿其原测试/提交/处置链作保存交接，干净且无宿主写者才允许普通 fix learner 接此任务；禁止 reset/clean、混提交旧源码、抢其他功能树/活租约。现有 broker 将单次尝试，实际结果另记，不等待外部完成。
 
 - 2026-10-09 17:46 **core-builds-entry-adaptation 派发回执**：标准宿主fix-batch仅尝试一次，exit1 / dispatched:null；准备稿已提交51fdc45ab，原拥有者/四暂存候选与failed历史SHA保持。准确释放条件及原件回执 `paper/materials/silent/20261009-1730-core-entry/final-verification.json`。无新adapter/core batch，通知hook pending，按原串行闭环等原候选保存交接后安排，不重复派发其他feature。
 
 ## 2026-10-09 20:30 — 194301复盘新非阻塞纯 bug（学习者定位）
 
 - [ ] **silent-0344，坚韧之环延迟格挡未接入推演**：仅转录学习者，证据 N8A2W8LH39N0 A10 F12 T7—T9。原定位 `agent/src/reflex/card-model.ts:852`（已读即时挡）、`agent/src/reflex/rollout.ts:1948`、`:2599`、`:1764`（两次轮初持续挡缺接线）。学习者原回报“坚韧之环即时格挡已读取，但后两次轮初格挡未接入持续推演；另见rollout.ts:1948、2599、1764。”；完整复盘/缺证限制与提案 `silent-proposal-8e17a61707d2ca02` 见 `learner/runs/20261009-194302-postmortem/proposal-toric.md`，另关联 silent-0289／silent-0345。非卡死/崩溃/非法动作，交原学习者策略链；运维不补游戏机制、参数或实现，不据此断言该局能转胜，完整 dirty 运行源码未复原与未知升级/重放范围保持。不重派、不标已修或 shipped。
+
+## 2026-10-09 21:58 — Roy 授权开发直接修复并上线
+
+- 本轮 bug/架构修复由 agent-sts2-watcher 直接实现，不交 learner：源码 e04cffa91，main 3db9b61ee，live 源码 27c261281（含材料 fd4c86597）。核心学习入口、独立 fix/strategy 工作树与旧候选保存交接已完成；并修复 ops 大会话日志超字符串上限、status 沙箱误判写状态。沙箱 252 文件/2620 例及 11 专项例通过；沙箱外完整检查另立记录。
+- 17:46 派发失败与原候选失败原样保留；当前不再要求原拥有者返回或清理 codex-dev，允许授权继任者在隔离副本继续旧候选。旧四暂存文件不应用/不合入；保存交接见 paper/materials/silent/20261009-core-dispatch-recovery/legacy-candidate/handoff.json。以上仅关闭入口与状态工具缺陷，其他游戏提案沿既有学习链。
 
 ## 2026-10-09 22:16 — 20261009-204301复盘新非阻塞纯 bug（仅转录学习者）
 

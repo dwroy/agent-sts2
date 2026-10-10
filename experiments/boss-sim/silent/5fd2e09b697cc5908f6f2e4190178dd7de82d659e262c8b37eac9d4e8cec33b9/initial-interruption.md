@@ -1,0 +1,1 @@
+The initial full replay was interrupted through its own execution session (exit 130). Partial output and logs are retained. Audited immutable results are reused only for upgrade-unreachable historical card graphs; all possibly affected and all new fights are replayed on the current model.

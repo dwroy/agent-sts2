@@ -13,4 +13,4 @@ Jev 优先取 jev-prompts 的逐请求输入/输出（按 request_id 去重，�
 |---|---:|---:|---:|---:|---:|---:|---:|---|
 
 价格配置：Claude $200/月、ChatGPT $500/月（Roy 2026-10-05 20:41）；DeepSeek 按现有论文峰时价格假设；TypeSafe/Jev 输入 $0.042/百万 token、输出 $0/百万 token（Roy 2026-10-05 23:14: TypeSafe usage page, $0.042/MTok input; free output）。
-本次有效订阅重置窗口：4；数据字节切点、缺失源及坏行数见 paper/data/cost-sources.json。
+本次有效订阅重置窗口：5；数据字节切点、缺失源及坏行数见 paper/data/cost-sources.json。
