@@ -830,6 +830,13 @@ export function isStrikeCard(card: Pick<CardModel, "cardId">): boolean {
   return /STRIKE/.test(card.cardId) && !card.cardId.startsWith("GEN:");
 }
 
+/** U1QYLX1AE1WX A10 F46 T4, silent-0394/0396: only the actually played custom template. */
+function observedSilentSapping(card: Record<string, unknown>, character: string, ascension: number | null): boolean {
+  return character.toLowerCase() === "silent" && ascension === 10 && str(card["card_id"]) === "MAD_SCIENCE" &&
+    !bool(card["upgraded"]) && dyn(card, "Damage") === 12 && dyn(card, "SappingWeak") === 2 && dyn(card, "SappingVulnerable") === 2 &&
+    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "造成12点伤害。给予2层虚弱。给予2层易伤。";
+}
+
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = "", ascension: number | null = null): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
@@ -845,17 +852,20 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const madExpertise = character.toLowerCase() === "silent" && cardId === "MAD_SCIENCE" && !bool(card["upgraded"]) &&
     dyn(card, "ExpertiseStrength") === 2 && dyn(card, "ExpertiseDexterity") === 2 &&
     str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得2点力量。获得2点敏捷。";
-  const type = madExpertise ? "Power" : info?.type || "";
+  // U1QYLX1AE1WX A10 F46 T4, silent-0394/0396: the observed Sapping attack used no Block.
+  // Its unplayed Music Box copy and other custom templates remain outside this evidence boundary.
+  const madSapping = observedSilentSapping(card, character, ascension) && str(card["target_type"]) === "AnyEnemy" && requiresTarget;
+  const type = madExpertise ? "Power" : madSapping ? "Attack" : info?.type || "";
   const target = targetMode(str(card["target_type"]), template, requiresTarget);
 
   let damage = madExpertise ? null : dyn(card, "CalculatedDamage") ?? dyn(card, "Damage");
   let hits = dyn(card, "CalculatedHits") ?? dyn(card, "Repeat") ?? 1;
   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(template)) hits = 2;
-  const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
+  const block = madExpertise || madSapping ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
   const mirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && dyn(card, "CalculationExtra") === 1;
-  let vulnerable = dyn(card, "VulnerablePower") ?? 0;
-  let weak = dyn(card, "WeakPower") ?? 0;
+  let vulnerable = madSapping ? dyn(card, "SappingVulnerable")! : dyn(card, "VulnerablePower") ?? 0;
+  let weak = madSapping ? dyn(card, "SappingWeak")! : dyn(card, "WeakPower") ?? 0;
   let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
   let tempStrength = 0;
   let strengthPerVulnerable = 0;
@@ -1081,7 +1091,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       dynBase(card, "Block", true) === 6 && template.replace(/\s+/g, "") === "获得{Block:diff()}点格挡。在下个回合，获得{Block:diff()}点格挡。"
       ? { dodgeRollNextBlock: true } : {}),
     ...(mirage ? { blockFromPoison: true } : {}),
-    ...(!madExpertise && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
+    ...(!madExpertise && !madSapping && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,
     weak,
     ...(weakFirst ? { weakFirst } : {}),
@@ -1235,7 +1245,10 @@ export function offHandCardModel(own: Record<string, unknown> | null, cardId: st
     energy_cost: info?.cost ?? 0,
     costs_x: info?.xCost ?? false,
   };
-  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character, ascension);
+  // The same observed deck entry has card_type=Attack but no target fields. Preserve its learned
+  // single-enemy template even when the id-level catalog describes a different custom card.
+  const target = own && str(own["card_type"]) === "Attack" && observedSilentSapping(own, character, ascension) ? "AnyEnemy" : info?.target ?? "";
+  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: target, requires_target: target === "AnyEnemy", playable: true, index }, index, knowledge, character, ascension);
   const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
   // The deck's (the game data's) cost, with a relic's change on Powers (pilePowerExtraCost); a line's own cost has it.
   const relicCost = cost === null ? withPowerExtraCost(model, powerExtraCost) : model;
