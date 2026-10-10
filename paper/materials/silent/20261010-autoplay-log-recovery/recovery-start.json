@@ -1,0 +1,57 @@
+{
+  "request": "roy-autoplay-log-and-same-save-recovery",
+  "recorded_at": "2026-10-10T07:55:32.324015+08:00",
+  "reset_actor": "Roy (manual)",
+  "assistant_coupon_redemptions": 0,
+  "fresh_quota_sample": {
+    "schema_version": 1,
+    "captured_at": "2026-10-09T23:55:02.752Z",
+    "provider": "codex",
+    "scope": "shared_subscription",
+    "source": "account/rateLimits/read",
+    "sample_observed_at": "2026-10-09T23:55:01.980Z",
+    "freshness": "fresh",
+    "error_code": null,
+    "windows": [
+      {
+        "bucket": "codex/primary",
+        "kind": "weekly",
+        "used_percent": 0,
+        "window_minutes": 10080,
+        "resets_at": "2026-10-16T23:45:14.000Z",
+        "stale": false
+      }
+    ]
+  },
+  "previous_authorization_sha256": "fb28ac203aec3ea5e5e4f122e800343ce9f16482cc9616f56ca3c4f968c86ead",
+  "same_saved_run": "PYE4VXNSLGSS",
+  "last_host_state": {
+    "screen": "REWARD",
+    "floor": 14,
+    "ascension": 10
+  },
+  "old_play_pid": 3022685,
+  "old_loop_pid": 1746959,
+  "diagnosis": "File-only console redirection leaves herdr blank. The existing process retained highest credit balance 500 and still blocks on 416.75189 after weekly quota reset; preserve guard and saved decision, restart only the verified play process via standard ops.",
+  "learning_status": "No active learners; completed tabs auto-close. Latest S1.exp146 full checks exit 0, 203 active entries.",
+  "game_knowledge_changed_by_this_repair": false,
+  "game_version_created_by_this_repair": false,
+  "status": "preparing tested logging repair and controlled recovery",
+  "host_state_before": {
+    "run_id": "PYE4VXNSLGSS",
+    "screen": "REWARD",
+    "floor": 14,
+    "ascension": 10,
+    "hp": 62,
+    "max_hp": 77
+  },
+  "latest_exp_full_checks": {
+    "rc": 0,
+    "files_passed": 312,
+    "tests_passed": 3473,
+    "tests_skipped": 2,
+    "live": "95847179abc80eaa8bcd4d22525b2a19c0a5a812",
+    "tree": "354e7f894f4fd9f0aa41dc719b307605e866e8cb",
+    "log": "ops/codex-ops/learner/20261010-061301-experience-update.fallback-354e7f894f4fd9f0aa41dc719b307605e866e8cb.checks.log"
+  }
+}

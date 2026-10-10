@@ -1,0 +1,62 @@
+{
+  "request_id": "roy-20261009-codex-quota-one-reset",
+  "authorized_at": "2026-10-09 23:34",
+  "authorized_by": "Roy, direct user message in this ops session",
+  "user_text": "授权，如果token额度低于2%，你可以直接使用一次重置券",
+  "scope": "One reset credit for the shared Codex account quota used by this project",
+  "trigger": {
+    "remaining_percent_strictly_below": 2,
+    "requires_fresh_actual_account_sample": true
+  },
+  "maximum_redemptions": 1,
+  "redemptions_completed": 0,
+  "state": "authorized_unused",
+  "last_verified_at": "2026-10-09 23:34",
+  "quota_sample": {
+    "schema_version": 1,
+    "captured_at": "2026-10-09T15:30:02.692Z",
+    "provider": "codex",
+    "scope": "shared_subscription",
+    "source": "account/rateLimits/read",
+    "sample_observed_at": "2026-10-09T15:30:01.655Z",
+    "freshness": "fresh",
+    "error_code": null,
+    "windows": [
+      {
+        "bucket": "codex/primary",
+        "kind": "weekly",
+        "used_percent": 84,
+        "window_minutes": 10080,
+        "resets_at": "2026-10-14T03:28:43.000Z",
+        "stale": false
+      }
+    ]
+  },
+  "quota_sample_line_sha256": "16a508dae9dc850b91f295f1090189ec230fba14ee952da43f55ee74649be98e",
+  "observed_windows_with_remaining": [
+    {
+      "bucket": "codex/primary",
+      "kind": "weekly",
+      "used_percent": 84,
+      "window_minutes": 10080,
+      "resets_at": "2026-10-14T03:28:43.000Z",
+      "stale": false,
+      "remaining_percent": 16
+    }
+  ],
+  "unreported_windows": "Unknown; do not infer an unreported five-hour quota",
+  "current_action": "No redemption: the reported weekly window has 16% remaining",
+  "redemption_idempotency_key": null,
+  "future_execution": "Before one authorized redemption, verify a fresh applicable limit below 2% and an available credit; generate and retain a request UUID at that point, reuse it for retries of that same redemption, and preserve its receipt.",
+  "automation_hook_installed": false,
+  "credentials_read_or_copied": false,
+  "game_behavior_changed": false,
+  "record_scan_history": [
+    {
+      "rc": 1,
+      "rule": "generic-api-key",
+      "field": "redemption_idempotency_key",
+      "finding": "Unused generated UUID matched the generic detector; removed premature UUID allocation. No credentials were read or recorded."
+    }
+  ]
+}
