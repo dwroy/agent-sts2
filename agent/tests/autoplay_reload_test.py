@@ -2,6 +2,7 @@
 import importlib.util
 from pathlib import Path
 import signal
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -113,6 +114,26 @@ class FakeRuntime(MODULE.Runtime):
 
 
 class ReloadTests(unittest.TestCase):
+    def test_accepts_only_the_known_console_flag_and_preserves_terminal_for_takeover(self):
+        runtime = MODULE.Runtime(ROOT, LIVE, ROOT + "/ops/codex-ops")
+        old = row(10, "autoplay")
+        old["argv"] += ("--tail-console",)
+        self.assertEqual(runtime.kind(old), "autoplay")
+        self.assertIsNone(runtime.kind({**old, "argv": old["argv"][:-1] + ("--other",)}))
+        with tempfile.TemporaryDirectory() as directory, tempfile.TemporaryFile() as terminal:
+            runtime.directory = Path(directory)
+            runtime.console_enabled = True
+            runtime.console_output = terminal
+            with patch.object(MODULE.subprocess, "Popen") as popen, patch.object(MODULE, "process", return_value={**row(30, "autoplay"), "uid": runtime.uid}), patch.object(runtime, "wait"):
+                runtime.start(20, old)
+            args, kwargs = popen.call_args
+            self.assertEqual(args[0], ["bash", str(runtime.script), "--tail-console"])
+            self.assertIs(kwargs["stdout"], terminal)
+            self.assertIs(kwargs["stderr"], terminal)
+            self.assertEqual(kwargs["env"]["WAIT_PID"], "20")
+            self.assertTrue(kwargs["start_new_session"])
+            runtime.cleanup()
+
     def execute(self, runtime, old=10, play=20):
         with patch.object(MODULE, "process", side_effect=lambda pid: runtime.processes.get(pid)):
             return MODULE.reload_autoplay(runtime, old, play)
