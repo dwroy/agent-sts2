@@ -117,4 +117,26 @@ exit 75
     const pid = readFileSync(join(ops, "viewer.pid"), "utf8");
     expect(spawnSync("bash", ["-c", 'kill -0 "$1" 2>/dev/null', "check", pid]).status).not.toBe(0);
   });
+
+  it("keeps following writes when the current alias first appears as an empty file", () => {
+    const root = join(tmp, "late-empty");
+    const ops = join(root, "ops");
+    const logs = join(root, "logs");
+    mkdirSync(ops, { recursive: true });
+    mkdirSync(join(logs, "console"), { recursive: true });
+    const result = spawnSync("bash", ["-c", `
+set -eu
+OPS="$1"; LOGS="$2"
+. "$3"
+start_console_tail
+sleep 0.2
+touch "$LOGS/console/run.log"
+ln -s run.log "$LOGS/console/current"
+sleep 1.2
+printf 'decision after initially empty alias\\n' >> "$LOGS/console/run.log"
+sleep 1.2
+`, "late-empty", ops, logs, join(repo, "ops/autoplay-console.sh")], { encoding: "utf8", timeout: 10_000 });
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("decision after initially empty alias");
+  });
 });

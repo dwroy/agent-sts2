@@ -3,7 +3,8 @@
 start_console_tail() {
   mkdir -p "$LOGS/console"
   touch "$OPS/autoplay.log"
-  tail -n 80 -F -- "$OPS/autoplay.log" "$LOGS/console/current" &
+  # Poll by name: the host tail can miss writes after a missing alias first appears empty.
+  tail ---disable-inotify -n 80 -F -- "$OPS/autoplay.log" "$LOGS/console/current" &
   autoplay_console_pid=$!
   trap 'exit 143' TERM
   trap 'stop_console_tail' EXIT
