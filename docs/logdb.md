@@ -1,5 +1,7 @@
 # 日志库（DuckDB 分析库）
 
+> **当前口径（2026-10-10 核对）**：原始 JSONL 保持不变，抽取 schema 以 `agent/tools/logdb/extract.py` 的 TABLES/VERSIONS、视图以 views.sql 为准。旧 DeepSeek/Claude 及回退记录继续可查；当前生产大脑强制 Codex，实际来源、等待与费用见 [codex-only-brain.md](codex-only-brain.md) 和 [eval.md](eval.md)。历史时延/行数是原测量，不能当作当前数据库规模。
+
 V4 知识库里的「日志库」（docs/v4-architecture.md §3）：把 logs/*.jsonl 派生成可以用 SQL 查的表，给复盘、学习者、大脑（`logs_query` 工具）和知识构建脚本用。2026-09-29 Roy 定：用 DuckDB。
 
 ## 1. 设计
@@ -11,7 +13,7 @@ V4 知识库里的「日志库」（docs/v4-architecture.md §3）：把 logs/*.
 - **不抢对局的资源**：sync 把自己设成 `nice 19` + `ionice -c3`，DuckDB 只用 2 个线程、内存上限 2 GB。
 - **并发**：同时只有一个 sync（`sync.lock`，query.py 顺带的同步拿不到锁就跳过）；查询持共享读锁，sync 只在删除/替换分片的那一刻持排他锁，所以查询不会看到一半替换的表。
 - **key 不进库**：进库的自由文本（rationale、模型的简短理由、计划摘要、chosen）都过 `scrub()`，像 key 的串（`sk-…`、`Bearer …`、`api_key: …`）换成 `[REDACTED]`；问题、推理、memory 原文不进库，只存长度和源文件字节偏移。
-- **表 = Parquet 上的视图**：`agent/tools/logdb/views.sql`（`${DB}` 由 query.py 换成库目录）。存储的只有「一行 JSONL 一行记录」的六张表；fights / turns / floors / runs 每次查询时从 frames 现算，所以永远和原始数据一致，改口径只要改 SQL。
+- **表 = Parquet 上的视图**：`agent/tools/logdb/views.sql`（`${DB}` 由 query.py 换成库目录）。存储表按来源保存原始记录的抽取字段，完整清单见 extract.TABLES；fights / turns / floors / runs 每次查询时从 frames 现算，所以永远和原始数据一致，改口径只要改 SQL。
 - **每张表有一个零行分片** `part-0-empty.parquet`，带表的全部列，视图靠它绑定列（各分片按列名合并）。`extract.TABLES` 里表的列变了时，sync 重写这个零行分片（旧分片不动，新列在旧分片上是 NULL），所以给一个源加列不用重建另一个源。
 
 ## 2. 用法
@@ -50,7 +52,7 @@ $P agent/tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一�
 
 **runs_raw** ← runs.jsonl（结束了的局）：`run_id, ended, victory, floor, character, ascension, code, decisions, jev_calls, deepseek_calls, claude_calls, tokens, ds_tokens_in, ds_tokens_out, ds_cache_hit, deciders`（JSON 文本）`, death_fight`（致死怪物中文名列表）`, arm`。
 
-**llm_calls_raw** ← deepseek-reasoning.jsonl（`src = 'deepseek-reasoning'`，`engine = 'deepseek'`）和 brain.jsonl（`src = 'brain'`，V4 路由器 agent/src/brain/router.ts 的 `BrainLogRow`，一行一个问题）：`src, off, len, ts, run_id`（brain 行 2026-09-30 M2 起带 run_id，和 decisions.jsonl 同值；更早的行不带，靠 llm_calls 按时间归局）`, label, label_head, engine, model, effort`（brain 行没有）`, guide`（brain：`system_sha`）`, input_tokens`（brain：`usage.inputTokens`，含缓存命中和缓存写入）`, cache_hit_tokens, output_tokens, reasoning_tokens, cost_usd, latency_ms, attempts`（brain：模型调用次数，含补问；报错为 0）`, tool_calls`（次数）`, fallback_from`（回退前失败的引擎名）`, options`（选项 key）`, choice, reason`（简短理由）`, question_chars, reasoning_chars, memory_chars`（brain：各段长度之和，和 v3 的 memoryChars 一样）`, answer_chars, parse_error`（brain：没有答案也没有引擎错误，即答案解析或校验失败）；只有 brain 行有的：`cache_write_tokens, system_chars, reasks, fallback_kind`（quota / rate_limit / timeout …）`, error_kind, error`（过 scrub，最多 500 字）`, limit_used_pct, limit_resets_at, limit_credits`（codex 套餐用量）`, primary_ms`（首选引擎作为引擎失败、兜底答题时，兜底那行记首选那次的墙钟耗时；这题总耗时 = `latency_ms + primary_ms`；2026-10-03 起才有，更早的行 NULL）`, question_id`（一题一个，首选和兜底两行同值，codex-calls.jsonl 每次运行也带它；2026-10-03 起）。
+**llm_calls_raw** ← deepseek-reasoning.jsonl（`src = 'deepseek-reasoning'`，`engine = 'deepseek'`）和 brain.jsonl（`src = 'brain'`，V4 路由器 agent/src/brain/router.ts 的 `BrainLogRow`，一行一个问题）：`src, off, len, ts, run_id`（brain 行 2026-09-30 M2 起带 run_id，和 decisions.jsonl 同值；更早的行不带，靠 llm_calls 按时间归局）`, label, label_head, engine, model, effort`（当前 brain 行可带，历史缺失为 NULL）`, guide`（brain：`system_sha`）`, input_tokens`（brain：`usage.inputTokens`，含缓存命中和缓存写入）`, cache_hit_tokens, output_tokens, reasoning_tokens, cost_usd, latency_ms, attempts`（brain：模型调用次数，含补问；报错为 0）`, tool_calls`（次数）`, fallback_from`（回退前失败的引擎名）`, options`（选项 key）`, choice, reason`（简短理由）`, question_chars, reasoning_chars, memory_chars`（brain：各段长度之和，和 v3 的 memoryChars 一样）`, answer_chars, parse_error`（brain：没有答案也没有引擎错误，即答案解析或校验失败）；只有 brain 行有的：`cache_write_tokens, system_chars, reasks, fallback_kind`（quota / rate_limit / timeout …）`, error_kind, error`（过 scrub，最多 500 字）`, limit_used_pct, limit_resets_at, limit_credits`（codex 套餐用量）`, primary_ms`（首选引擎作为引擎失败、兜底答题时，兜底那行记首选那次的墙钟耗时；这题总耗时 = `latency_ms + primary_ms`；2026-10-03 起才有，更早的行 NULL）`, question_id`（一题一个，首选和兜底两行同值，codex-calls.jsonl 每次运行也带它；2026-10-03 起）。
 
 **run_plans** ← run-plans.jsonl：`off, len, ts, run_id, floor, trigger, version, archetype, summary, want, avoid, input_tokens, output_tokens, cache_hit_tokens, reasoning_tokens, latency_ms, effort, error`。
 
@@ -85,7 +87,7 @@ $P agent/tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一�
 - 房间类型和 monster-db.json 有 18 个遭遇差 1–2 场（hallway ↔ unknown_room，精英 1 场）：monster-db 用战后下一个地图帧的节点，没有就按怪物类型猜；这里用本层地图帧，没有就用上一层选的节点。死在问号房里的战斗 monster-db 记成走廊，本库记 unknown_room；战后没有本层地图帧时 monster-db 会拿到下一层的节点，本库不会。遭遇的场次、胜率、掉血都一样。
 - deepseek-reasoning.jsonl 从 09-28 11:03 起才有 token（usage）；更早的调用 token 为 NULL（对应决策行的 ds_tokens 里有总数）。label 从 09-24 08:42 起才有。
 - decisions 的 card_id / potion_id 靠 fingerprint 解析，fingerprint 里没有就是 NULL（turns.cards_played 里去掉，cards_n 照算）。
-- brain.jsonl 按 agent/src/brain/router.ts 实际写的 `BrainLogRow` 抽取（2026-09-29 核对，`VERSIONS["brain"]` = 2；样本 agent/tests/logdb-data/brain.jsonl 按真实格式生成，对照过 v4-brain 冒烟实验的 20 行真实记录）。路由器不写 effort；run_id 从 2026-09-30（M2）起写（抽取器本来就读，不用改版本）；usage 是这个问题所有模型调用（含补问）的合计。离线回放、学习者如果也写 logs/brain.jsonl，会按时间归到附近的局，看 label 和时间区分。
+- brain.jsonl 按 agent/src/brain/router.ts 实际写的 `BrainLogRow` 抽取（2026-09-29 核对，`VERSIONS["brain"]` = 2；样本 agent/tests/logdb-data/brain.jsonl 按真实格式生成，对照过 v4-brain 冒烟实验的 20 行真实记录）。当前路由器写所请求的 effort；历史缺失保持 NULL；run_id 从 2026-09-30（M2）起写（抽取器本来就读，不用改版本）；usage 是这个问题所有模型调用（含补问）的合计。离线回放、学习者如果也写 logs/brain.jsonl，会按时间归到附近的局，看 label 和时间区分。
 - 改了抽取器（extract.py）要把对应源的 `VERSIONS` 加 1；改视图（views.sql）不用重建。新加的表要同步一次才有（sync 写它的零行分片）；没同步过的旧库 query.py 会报「no <表> yet: run agent/tools/logdb/sync.py once」。
 
 ## 5. 正确性核对（2026-09-29，354 局）

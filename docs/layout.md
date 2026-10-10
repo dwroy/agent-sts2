@@ -1,6 +1,6 @@
 # 仓库布局
 
-2026-10-04 定的布局（Roy 批准）。旧路径到新路径的逐个文件对照见 [path-map.tsv](path-map.tsv)；模块划分的依据是 [v4-architecture.md](v4-architecture.md) §1（手、眼、小脑、大脑、模拟器、工作记忆、知识库）。
+2026-10-04 定的布局（Roy 批准），2026-10-10 按 main 核对。旧路径到新路径的逐个文件对照见 [path-map.tsv](path-map.tsv)；当前模块职责见 [v4-architecture.md](v4-architecture.md) §1。
 
 路径的写法：项目根目录下的文档（docs/、learner/）里写的是从项目根算起的路径；agent/ 里的代码注释和 README 写的是从 agent/ 算起的路径（src/…、tests/…、tools/…），但数据、知识、日志仍写项目根下的路径（knowledge/…、data/…、logs/…）。代码里的路径一律从模块自己的位置推出项目根（agent/src/core/paths.ts 的 PROJECT_ROOT；Python 用 `Path(__file__).resolve().parents[n]`），不看当前目录；环境变量或配置里给的相对路径（例如 .env 里的 `DECISION_LOG=logs/decisions.jsonl`）也从项目根解析。
 
@@ -8,15 +8,19 @@
 
 **third_party/jev-sts2/**　上游 [DiscreteTom/jev-sts2](https://github.com/DiscreteTom/jev-sts2) 的原样副本，git submodule，钉在 002e873（上游最后一次提交，2026-09-19），永远不改。我们的代码不从这里导入，它只作参照：哪些文件从上游哪个文件来、改了多少，见 [third-party.md](third-party.md)。
 
-**agent/**　我们的 TypeScript 包：package.json、package-lock.json、tsconfig*.json、vitest.config.ts、.env.example、README.md、PLAN.md（上游的设计文档，原样保留，代码注释里的「PLAN.md §x」指它）。运行从这里开始：`cd agent && npx tsx src/index.ts play`，npm 脚本也在这里。.env 放在 agent/.env（不进 git）。依赖装在 agent/node_modules。
+**agent/**　我们的 TypeScript 包：package.json、package-lock.json、tsconfig*.json、vitest.config.ts、.env.example、README.md、PLAN.md（上游早期设计文档，原样保留，代码注释里的「PLAN.md §x」指它）。CLI 入口是 agent/src/index.ts，npm 脚本从 agent/ 运行；开发会话只做检查、shadow、回放，对局由运维在 `.worktrees/live` 启动。.env 放在 agent/.env（不进 git），依赖在 agent/node_modules。
 
-**knowledge/**　知识数据（不是代码）。common/ 放和角色无关的游戏事实：monster-db.json（怪物数据；里面的遭遇战绩是我方记录，以后要拆出去）、move-model.json、event-pages.json、card-upgrades.json。characters/ironclad/ 放铁甲战士自己的打法结果和建议：experience.json、ironclad-guide.md、ds-handbook.md、jev-hints.json、outcome-stats.json、room-costs.json、boss-damage.json、potion-equivalents.json、fight-value.json、fight-value-gates.json、boss-trust.json、sl-elites.json。读哪个角色由 agent/src/knowledge/files.ts 的 `DEFAULT_CHARACTER`（现在是 "ironclad"）一处决定，哪个文件在 common/ 也只在那里列。builders/ 放从日志重建这些数据的脚本：build-*.py、refresh-potion-equivalents.sh、monster-db-check.py，以及每局结束后的刷新入口 refresh.sh（运维原来在 ops/report.py 里拼的那串命令）。
+**knowledge/**　知识数据（不是代码）。common/ 放和角色无关、从观察所得的事实：monster-db.json、move-model.json、event-pages.json、card-upgrades.json。characters/<角色>/ 放该角色的 experience.json、jev-hints.json、outcome-stats.json、room-costs.json、boss-damage.json、potion-equivalents.json、fight-value*.json、boss-trust.json、sl-elites.json 等。怪物战绩已拆到各角色的 monster-records.json，加载时合并共用怪物事实；旧攻略仅在拥有该文件的角色目录读取。agent/src/knowledge/files.ts 根据启动设置/CHARACTER 选角色，缺省才用 DEFAULT_CHARACTER="ironclad"；缺文件不读取别的角色。builders/ 放重建脚本和战后刷新入口 refresh.sh，共用事实先刷新，统计按角色刷新。
 
-**learner/**　离线学习者：run.ts 是入口（`agent/node_modules/.bin/tsx learner/run.ts …`），lib/ 是启动器的代码（原 src/learner），tasks/ 是任务说明。它读 knowledge/ 和 logs/，改 knowledge/characters/ironclad/experience.json。
+**learner/**　离线学习者：run.ts 是入口，lib/ 是启动器代码，tasks/ 是任务说明。按角色复盘、更新 knowledge/characters/<角色>/、实现提案；ledger.py / code_proposals.py 是账本和提案登记 CLI。原始运行记录在 learner/runs/，关键产物另归档进 paper；正常派发由 ops 调度器负责。
+
+**ops/**　对局循环、战后刷新与报告、事件调度及宿主动作。脚本通常从主检出加载，对局源码从 live 加载。ops/codex-ops/ 是不进 git 的队列、learn.json、租约、broker 与会话状态目录；运维 prompt 的更改须先给 Roy 看。
 
 **eval/**　评估：versions.json（代码版本表）、metrics.py、calibration.py 和它们调用的 TS 小程序（原 tools/eval）。
 
-**docs/**　设计和说明文档，包括本文件、path-map.tsv、third-party.md。
+**docs/**　当前说明、历史设计和专题验证记录；入口 README.md，原始 v4 架构保存在 history/，path-map.tsv 保留目录迁移对照。
+
+**paper/**　状态快照、decision-log、讨论、学习账本、冻结证据与论文表。STATE 文件是当时现场快照，旧实验和失败原件保留，补验另存。
 
 **experiments/**　一次性实验的脚本、样本和结论，按实验分目录，保持当时的样子。
 
@@ -36,7 +40,7 @@
 
 **reflex/**（小脑）　战斗：combat-plan.ts（每回合给 Jev 的出题和代码的出牌线）、combat.ts、回合求解器、推演（rollout、rollout-live）、卡牌模型、伤害、药水的代价和蒙特卡洛、被动件、起手损失、偷金贼的事实、Jev 的经验块；jev/ 是 Jev（TypeSafe System One）的客户端、题型、答案解析和计价。
 
-**brain/**（大脑）　构筑、路线、事件这些大题：router.ts（选引擎、兜底、重问）、engines/（DeepSeek、Claude、Codex）、knowledge.ts（全量知识前缀的系统提示）、specs.ts（答案格式）、message.ts、llm/（DeepSeek 客户端和消息）、tools/（kb_* 知识工具、logs_query、给 CLI 引擎用的 MCP 服务器）、build-facts.ts（构筑题的事实）。
+**brain/**（大脑）　构筑、路线、事件这些大题：brain.ts / router.ts（生产强制 Codex、校验、原题等待恢复；历史可配置路由仍保留）、engines/（Codex exec/session、额度和缓存记录，以及旧引擎适配）、knowledge.ts（全量知识前缀）、specs.ts（答案格式）、llm/（历史命名的客户端和消息）、tools/（离线知识/日志查询及 stdio MCP）、build-facts.ts（构筑事实）、wait.ts（等待状态）。
 
 **sim/**（模拟器）　B2 的 boss 整场模拟和它的 worker 池、B3 的构筑模拟、boss 时钟（boss-clock.ts）、路线图和路线投影、boss 信任度、SL 重试的计算缓存；worker 文件和调用它的模块放在一起。
 

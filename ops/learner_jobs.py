@@ -239,9 +239,9 @@ def fix_key(root, character):
 
 def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None):
     if research_request is not None:
-        from strategy_research_jobs import REQUEST, KEY
-        if (research_request != REQUEST or task != "strategy-proposal" or character != "silent"
-                or reason != "ops" or key != KEY):
+        from strategy_research_jobs import REQUEST_PATHS, research_key
+        if (research_request not in REQUEST_PATHS or task != "strategy-proposal" or character != "silent"
+                or reason != "ops" or key != research_key(research_request)):
             return None
     if task == "fix-batch":
         handled, result = requested_feature(state, root, scripts, character, reason, alive, stamp)

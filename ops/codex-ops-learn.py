@@ -430,7 +430,9 @@ def cmd_write(args):
     if args.task == "strategy-proposal" and strategy_research_jobs.manual_matches(state, ROOT, args.character, runs):
         # A running/done study with these anchors must not become an ordinary ops
         # batch when the dedicated dispatcher declines a duplicate.
-        result = strategy_research_jobs.dispatch(state, ROOT, SCRIPTS, args.character, alive, stamp, dispatch_write)
+        matches = strategy_research_jobs.matching_requests(state, ROOT, args.character, runs)
+        result = strategy_research_jobs.dispatch(state, ROOT, SCRIPTS, args.character, alive, stamp,
+                                                 dispatch_write, ident=matches[0]) if len(matches) == 1 else None
     else:
         result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task != "fix-batch" else [],
                                 ",".join(runs), "ops", alive, stamp)

@@ -1,104 +1,104 @@
-# V4 架构（2026-09-29 Roy 定）
+# V4 架构：当前实现
 
-来源：notes/v4-dev-brief.md（V4 方向），加上 09-29 晚和 Roy 的架构讨论（paper/materials/discussions/2026-09-29-v4-architecture.md）。
-Roy 的决定：
-1. **大脑优先用 Claude**，而且是**本地 agent**：通过工具调用查知识库、问模拟器，还能直接下动作。引擎要能方便、无缝地切换（claude / codex / dsh / deepseek）。（22:05）
-2. **自我迭代从大脑里拆出来**，作为离线的学习者；学习者**同样可以切换不同的 agent**。（22:05、22:09）
-3. **修订（22:36）**：对局中的**执行大脑可以不用本地 agent 模式，前提是经验和游戏库数据能整份放进请求 prompt**（放得下就用 DeepSeek JSON + 全量知识前缀；放不下再走工具调用 / agent 模式）。**自我迭代要用 Claude 和 codex，先支持 Claude，用订阅模式（本机登录态）**。下面 §2–§4 按这条修订；第 1 条里「Claude 优先、工具调用、下动作」的 agent 大脑保留为放不下时的路径和离线学习者的形态。
+核对日期：2026-10-10。本文说明 main 的现行代码；运行中的进程采用哪个提交和配置，要看实际 live、`logs/run-config.jsonl` 和调用日志。现场状态见 `paper/materials/STATE-*.md` 及 [decision-log](../paper/materials/decision-log.md)。
 
-A/B/C 三个事实口径（路线投影算法、卡牌统计口径、Jev 的「整场不喝」事实）等新架构完成后再讨论，**V4 开发期间不改这些算法**，只把现有算法包进新接口。
+V4 从 2026-09-29 的模块拆分发展而来。[原始设计](history/v4-architecture-2026-09-29.md) 与 [首次上线方案](v4-go-live.md) 保留历史口径。其中 DeepSeek 默认、Claude 优先、Codex 待实现、v3/v4 分支及人工审核流程已由后续实现和授权更新。当前边界以 [AGENTS.md](../AGENTS.md)、[学习协议](learning-protocol.md) 为准。
 
-## 1. 模块
+## 1. 模块与数据流
 
-对局中（在线）：
+```text
+游戏 mod 的 HTTP 状态 → 眼 → 手的决策循环
+                              ├─ 战斗：小脑 / 求解器 / 推演 / Jev
+                              └─ 路线、构筑、事件、计划：Codex 大脑
+                                    ↑ 模拟事实、角色知识、本局记忆
+                        决定 → 执行闸 → mod 动作 → 新状态
 
-| 模块 | 职责 | 现在对应的代码 |
+原始日志 → 离线学习者 → 经验 / 知识 / 代码提案 → 自测 → live
+    └──────────────────→ 评估、校准、学习账本、论文材料
+```
+
+| 模块 | 当前职责 | 代码入口（项目根下） |
 |---|---|---|
-| 手 action adapter + 执行闸 | 执行动作；执行前核对状态指纹和合法性，过期动作不执行；大脑和小脑的动作都经过它 | agent/src/hand/mod、agent/src/hand/screens、loop.ts |
-| 眼 watcher | 结构化状态（不看画面）；**每个模块看到的输入原文全部落盘**；预测对实际的偏差记录 | agent/src/eye、logs/*.jsonl |
-| 小脑 reflex | 战斗：代码推演 + Jev 挑选；按明确条件升级给大脑 | screens/combat-plan.ts、turn-solver、rollout |
-| 大脑 brain | 本地 agent：路线、构筑、商店、休息、事件、整局计划；能调工具查知识、问模拟器、下动作；以后接小脑的升级 | agent/src/brain（新）；原 agent/src/brain/llm/deepseek.ts |
-| 模拟器 simulator | 算准的事实：战斗推演、路线血量、boss 时钟；作为工具给大脑和小脑 | strategy/route-projection.ts、boss-clock.ts、rollout |
-| 工作记忆 | 本局计划和承诺（如「这瓶药留给 boss」），大脑写、小脑读，只作事实、不作硬过滤 | project/run-journal.ts、run-plan.ts |
-| 知识库 GKB | 游戏事实（观察所得，带 n）、日志库、统计（自动算）、经验（带证据局号） | knowledge、logs、experience.json |
+| 手 hand | 按屏幕出题、执行合法动作；决策时和发送前检查动作身份与状态指纹，过期动作重新规划 | `agent/src/hand/loop.ts`、`hand/mod/`、`hand/act/`、`hand/screens/` |
+| 眼 eye | 记录与回放决策、状态、Jev 原题、每局配置 | `agent/src/eye/` |
+| 小脑 reflex | 战斗候选线、回合求解、抽样推演、药水成本与 Jev 选择；读取 SL 重试信息 | `agent/src/reflex/combat-plan.ts`、`turn-solver.ts`、`rollout*.ts`、`jev/` |
+| 大脑 brain | 路线、选牌、商店、休息、事件、整局计划及已启用的战斗计划；返回结构化答案，由代码校验和执行 | `agent/src/brain/brain.ts`、`router.ts`、`specs.ts`、`engines/codex*.ts` |
+| 模拟器 sim | B2 战斗线整场模拟、B3 构筑对照、boss 时钟、路线血量投影；结果带样本与信度限制 | `agent/src/sim/boss-sim.ts`、`boss-lines.ts`、`build-sim.ts`、`boss-clock.ts`、`route-projection.ts` |
+| 工作记忆 memory | 本局历史、路线、整局/战斗计划与承诺；`RUN_PLAN_MERGE` 可把到期计划附在下一道大脑题里 | `agent/src/memory/` |
+| SL | 终局判断、重载、失败尝试记录、已知抽牌与重试探索 | `agent/src/sl/`；[SL 记录](sl.md) |
+| 知识库 | 加载、按角色/进阶过滤、渲染知识前缀及工具输出 | `agent/src/knowledge/`、根目录 `knowledge/` |
+| 学习者 | 复盘、经验更新、机制/升阶审计、策略提案与实现、纯 bug 修复 | `learner/run.ts`、`learner/lib/`、`learner/tasks/` |
+| 调度与运维 | 持久队列、独立工作树租约、失败重试、完成回报、合入兜底、上线登记与外部完整检查 | `ops/codex-ops-learn.py`、`ops/learner_jobs.py`、`ops/proposal_dispatch.py`；[运维说明](codex-ops.md) |
+| 评估 | 按角色、进阶、版本、实际大脑来源统计；区分首次尝试与 SL，生成费用及学习曲线 | `eval/`、`ops/paper_dataset.py`；[指标说明](eval.md) |
 
-对局外（离线）：
+完整目录说明见 [layout.md](layout.md)。模块存在不代表其中所有实验接口都在生产决策路径上。
 
-| 模块 | 职责 | 现在对应 |
-|---|---|---|
-| 学习者 learner | 复盘、更新经验库、修 bug、改题面；产出新版本。任务写成任务说明文件，由统一的启动脚本交给 claude / codex / dsh 执行，引擎可切换 | 运维会话（ops/ops-session-prompt.md） |
-| 评估 evaluator | 每个版本冻结后跑一批，按代理指标对比；Roy 决定上线 | ops/version_compare.py、ops/metrics.py |
+## 2. 大脑：生产固定 Codex，故障在原题等待
 
-## 2. 大脑：引擎可切换；执行大脑先走「全量知识 + JSON」
+接口仍是 `BrainRequest → BrainEngine.decide → BrainAnswer`。生产入口 `createRouter` 强制 `engine="codex"`、清空分题引擎、关闭回退，并设 `codexOnly=true`。DeepSeek / Claude 适配器和可配置回退路由保留作历史兼容与固定数据回归；生产不能用环境变量切回这些引擎。
 
-接口在 `agent/src/brain/types.ts`：`BrainRequest → BrainEngine.decide → BrainAnswer`。
+`BrainRouter.decideCodex` 校验结构化答案，必要时补问。额度、登录、预检、服务故障、超时、空答案或不合法答案使原题进入等待，恢复后再由 Codex 回答；没有 Jev、代码或其他模型代答的出口。程序故障保留原因并停止该决策。执行闸拒绝大脑动作也不能换一个选项代答。等待心跳、取消、预算扣除和战绩归类见 [codex-only-brain.md](codex-only-brain.md)。
 
-**修订后的主路径（22:36）**：
-- 对局中的执行大脑 = DeepSeek JSON 模式，系统提示最前面放全量知识前缀（§3），前提是实测放得下（总 token、缓存命中、耗时、答案质量都可接受）。这条路径不需要工具服务。
-- **执行大脑也要能切换 LLM（Roy 22:39）**：默认 DeepSeek JSON；可切到 Claude（Opus / Sonnet，用订阅即本机登录态），同样是「全量知识前缀 + 结构化回答」、不带工具，可按问题类型分别指定（如路线用 Opus、选牌用 DeepSeek）。订阅额度用完、限流或超时时自动退回 DeepSeek，并记下原因（对局 24 小时无人值守，不能卡住）。
-- claude 引擎只做订阅（login）认证；执行大脑和离线学习者共用。
-- MCP 服务先只做 stdio 版（学习者、回放用）；进程内 HTTP 版、dsh 引擎、codex 引擎、行动模式都推迟：放不下全量知识、或学习者要接 codex 时再做。
+| 配置 | main 代码的行为 |
+|---|---|
+| `BRAIN_ENGINE`、`BRAIN_ENGINE_<题型>`、`BRAIN_FALLBACK` | 历史解析仍在；生产 `createRouter` 覆盖引擎选择与回退 |
+| `BRAIN_CODEX_MODEL`、`BRAIN_CODEX_EFFORT`、`BRAIN_CODEX_TIMEOUT_MS` | 仍生效；未配置时为 `gpt-6.1-sol` / `xhigh` / 600000 ms；按题型模型覆盖仍在 |
+| `BRAIN_CODEX_MODE` | `exec` 每题起 CLI，`session` 使用 app-server 会话；解析默认 `exec`，实际值看 run-config |
+| `BRAIN_CODEX_HOME`、`BRAIN_CODEX_BIN`、`BRAIN_CODEX_USAGE_*` | 登录目录、程序路径、额度保护和恢复预检 |
+| Fast 服务档位 | 代码固定 `priority`，保留模型和推理强度；exec 与 session 都显式传入，见 [codex-fast.md](codex-fast.md) |
+| `KNOWLEDGE_PREFIX` | `full` 把适用知识整份放进 system；配置解析默认 `off`，运行配置须显式设 `full` |
+| `RUN_PLAN`、`FIGHT_PLAN` | 决定相应计划模块是否启用；解析默认 `off`，不能凭模块存在推断已启用 |
 
-以下是完整设计（含推迟的部分）：
+Codex 大脑关闭工具和项目文档，工作目录使用临时目录；它看到的是代码构造的 system、memory、题面和答案 schema。`brain/tools/` 的 stdio MCP 知识查询可供离线学习者、回放使用，当前生产大脑没有直接通过 `game_act` 操作游戏的行动模式。
 
-- **两种工作方式**：
-  - **决策模式**（M1）：代码在某个屏幕提一个问题；大脑可以先调工具查知识、问事实，再给结构化回答；路由器校验、补问；代码执行。
-  - **行动模式**（M2）：代码把一段流程交给大脑（一个商店、一个事件、一次休息、选路；以后是小脑升级上来的战斗回合），大脑用 `game_state` / `game_act` 工具自己操作。每个动作经执行闸核对合法性和状态指纹；这一段结束（屏幕变了、预算用完、超时）控制权回到代码。
-- **路由器**（agent/src/brain/router.ts）：按配置选引擎；**统一**负责校验（AnswerSpec.validate）、最多一次补问、失败回退、落盘。
-- **切换只改环境变量，不改代码**：
-  - `BRAIN_ENGINE=claude|codex|dsh|deepseek`（开发期默认 deepseek，行为和 v3 完全一致；Claude 验收通过后由 Roy 决定改默认）；
-  - `BRAIN_ENGINE_<前缀>` 按问题类型覆盖，前缀取 label 的第一段大写，如 `BRAIN_ENGINE_MAP=claude`；
-  - `BRAIN_FALLBACK=deepseek`：引擎报错或超时时退回的引擎；
-  - `BRAIN_<ENGINE>_MODEL`、`BRAIN_<ENGINE>_TIMEOUT_MS`、`BRAIN_<ENGINE>_EFFORT` 等各引擎参数。
-- **工具服务**：对局进程内起一个 MCP 服务（HTTP，只监听 127.0.0.1，随机端口 + 一次性 token），工具在进程内运行，能读实时状态、能调执行闸。claude / codex 经 `--mcp-config` 的 http 条目连它；dsh 在进程内注册；DeepSeek 用原生函数调用。离线（学习者、回放）用同一份工具清单的 stdio 版本。
-- **引擎适配器**（agent/src/brain/engines/）：
-  - **claude（优先）**：无头 `claude -p`，`--output-format json`、`--json-schema`、`--system-prompt`（整份替换，不带 Claude Code 自己的提示）、`--mcp-config` 只挂我们的工具服务、`--strict-mcp-config`、`--tools ""` 禁用内置工具；不加载用户 hooks、CLAUDE.md、记忆；工作目录用空的临时目录；子进程环境变量里不带我们的任何 key。认证方式（本机登录的订阅，还是 ANTHROPIC_API_KEY 配 `--bare`）待 Roy 定。
-  - codex：无头 `codex exec`，`--output-schema`、只读沙箱、MCP 连我们的工具服务（codex 待 Roy 安装和登录，先用假程序测试）；
-  - dsh：沿用 jev-sts2-dsh/experiments/dsh 的 arm C，工具注册成 dsh 工具；
-  - deepseek：包住现有 DeepSeekClient；不带工具时和 v3 逐字节相同，带工具时走原生函数调用。
-- **落盘**：每次调用一行写到 `logs/brain.jsonl`：时间、label、引擎、模型、system 的哈希、完整 memory/question/payload、每次工具调用（输入和完整输出）、回答、问题清单、补问次数、token、耗时、成本、回退情况。**key 永远不落盘。**
-- dsh 实验结论（jev-sts2-dsh/experiments/dsh/data/analysis.md，93 题）：JSON 模式格式失败 0%，最快也最便宜；严格工具调用和 dsh 没有更好。所以工具调用的价值在于**按需查知识、问事实、下动作**，不在格式约束。
+保留的 `deepseek`、`ds_*`、`BUILD_DECIDER=deepseek` 名称有兼容用途，不能据此判断某局实际由 DeepSeek 回答。实际成功引擎依据 `brain.jsonl`。
 
-## 3. 工具层和知识库
+## 3. 知识、事实与日志
 
-接口在 `agent/src/brain/tools/types.ts`：`ToolDef { name, description, inputSchema, run(input, ctx) }`。
+角色由 `CHARACTER` / 启动时的 `setKnowledgeCharacter` 决定，缺省才是 `ironclad`。`agent/src/knowledge/files.ts` 统一解析路径：
 
-- 工具分三类：知识库（kb_*，只读、确定性）、模拟器（sim_*，只读、确定性）、游戏（game_state 只读；game_act 经执行闸执行动作，只在行动模式开放）。
-- 日志库（09-29 Roy 定用 DuckDB）：logs/*.jsonl 增量派生成 Parquet 分析库 data/logdb（JSONL 仍是唯一原始记录），表 runs / floors / fights / turns / decisions / llm_calls / run_plans / state_index；查询入口 agent/tools/logdb/query.py，工具 `logs_query`（只读 SQL）。见 docs/logdb.md。
-- 知识文本在程序启动时从数据文件渲染（monster-db.json、experience.json、room-costs.json、outcome-stats.json 每局结束后已自动刷新，所以不另挂 report.py）：
-  - 怪物：只写当前进阶，没有当前进阶数据时按比例推算并标「估」，每个数带 n；
-  - 经验：按主题分块，每条「结论 + 局数 + 一两个典型案例（run id + 一句话）」；
-  - 统计表：各幕各进阶的房间代价（中位数、p75、p90、死亡率）、精英和 boss 战绩、休息点回血和锻造的效果；
-  - 药水换算表（2026-09-30）：每瓶药留到本幕 boss 战值多少血/伤害/格挡，按进阶和幕，带来源和 n（potion-equivalents.json，knowledge/builders/build-potion-equivalents.py 手动重建；docs/potion-equivalents.md）；工具 `kb_potion`，Jev 战斗题的 potion_context 也带手里每瓶药的这一行；
-  - 旧知识：ironclad-guide.md、ds-handbook.md、jev-hints.json 整份放入，标「旧知识、待数据验证」；开头写明「和数据冲突时以数据为准」。
-- 同一套渲染代码既出全量前缀（给不用工具的引擎，或作为常驻摘要），也出单条查询结果（给工具）。
-- 知识加载失败要报错，不能静默给空知识。同一个事实只从一个地方算。
+- `knowledge/common/`：观察所得的共用事实，当前共用文件为 `monster-db.json`、`move-model.json`、`event-pages.json`、`card-upgrades.json`。
+- `knowledge/characters/<角色>/`：该角色的经验、提示、怪物战绩、房间代价、构筑结果、药水换算、信度与 SL 数据。怪物战绩在 `monster-records.json`，读取时与共用怪物事实合并。
+- 缺少角色文件表示尚无这份知识，不回退到另一个角色的数据。新游戏知识只能由学习者从本角色对局证据得出。
 
-## 4. 里程碑
+全量前缀由 `brain/knowledge.ts` 和 `knowledge/render/` 渲染，随进阶、文件变化缓存；牌/遗物/事件选项的结果统计放在题目事实中。构筑题不把代码启发式分数当成大脑建议，路线由大脑在完整地图上规划，代码检查连接、节点及所选路线的投影。字段及历史改造见 [v4-build-facts.md](v4-build-facts.md)。
 
-（22:36 修订后）
+知识加载失败或上下文超长时，当前实现记录原因，用较短的兼容提示再问 Codex；这不能记为读入了全量知识，也不会换引擎。证明某条经验被读入或采用，需要核实际知识版本、题目与调用记录。
 
-| 里程碑 | 内容 | 验收 |
-|---|---|---|
-| M1 执行大脑：全量知识 + JSON | 知识渲染器和全量前缀；实测放不放得下；路由器、deepseek 引擎、统一校验和补问、brain.jsonl、回放工具；claude 引擎（订阅）和 stdio MCP + kb_* 工具（给学习者和对比用） | 默认配置请求和 v3 逐字节相同（测试）；30 个记录的真实问题，旧问法和「全量知识前缀」新问法各跑一遍，报告 token、缓存命中、耗时、成本、答案差异；放不下时给出按需查询方案的数据 |
-| M2 路线和构筑事实 | 完整地图交给大脑自由规划，代码检查合法性（含飞行靴、A10 第二个 boss 节点）并算所选路线的事实；路线修正随选牌、休息、事件最后一问；卡牌事实替代社区分数；删旧的候选路线代码。算法本身（A/B）等讨论后再改 | 回放日志地图：路线 100% 通过检查（或补问一次后通过）；没有代码拍脑袋定的分数 |
-| M3 工作记忆、执行闸、眼 | 留药等承诺作为事实进 Jev 走廊/精英题面（清单第 4 项，C 待讨论）；执行前核对状态指纹；Jev 题面原文落盘；预测对实际记录 | Jev 题面可复现；20 个走廊喝药局面新旧题面对比 |
-| M4 离线学习者、评估 | 学习任务（复盘、经验更新、修 bug）写成任务说明文件，统一启动脚本先支持 Claude（订阅），codex 以后加；评估指标脚本（清单第 7 项） | 交 Roy 决定是否切到 V4 |
+`knowledge/builders/refresh.sh` 是战后刷新入口：先刷新共用事实，再按角色刷新统计和药水表；耗时的 fight-value 构建可单独运行。`logs/*.jsonl` 是原始记录，`data/logdb/` 的 Parquet / DuckDB 视图可增量重建，见 [logdb.md](logdb.md)。
 
-推迟项（放不下全量知识、或需要时再做）：进程内 HTTP MCP、行动模式（game_state / game_act）、dsh 和 codex 对局引擎、小脑升级给大脑。
+| 记录 | 用途 |
+|---|---|
+| `logs/decisions.jsonl`、`states.jsonl`、`runs.jsonl` | 实际动作、观测状态、整局结果 |
+| `logs/brain.jsonl`、`codex-calls.jsonl` | 大脑题号、题面、答案、校验、引擎/模型/用量；system 保存摘要，不能据此声称存有逐题 system 全文 |
+| `logs/jev-prompts.jsonl` | Jev 请求原文 |
+| `logs/run-config.jsonl` | 启动提交、角色/进阶、实际大脑配置、知识前缀摘要与告警 |
+| `logs/brain-wait.json`、`brain-wait.jsonl` | 当前等待标记与等待/恢复/故障历史 |
+| `learner/runs/`、`ops/codex-ops/` | 学习任务、派发状态、原始事件和回执；关键材料另归档进 paper |
 
-## 5. 分支和工作树
+所有记录禁止包含密钥。缺失的帧、反事实和未保存的输入必须标未知。
 
-- `v4`（jev-sts2）：集成分支。各开发项在自己的工作树和分支上做，做完合回 v4：
-  - `v4-brain`（jev-sts2-v4brain）：大脑、路由器、引擎、MCP 服务；
-  - `v4-gkb`（jev-sts2-v4gkb）：知识渲染器和 kb_* 工具（agent/src/brain/tools/registry.ts 的内容）。
-- 定期把 v3 合进 v4（运维会话一直往 v3 合修复），再从 v4 合到各开发分支。
-- 一个工作树同一时间只让一个 agent 改代码。
+## 4. 离线学习与评估
 
-## 6. 规矩（沿用 v4-dev-brief）
+任务说明在 `learner/tasks/*.md`，启动器在 `learner/run.ts`。启动器支持 codex / claude 两种适配；现行生产学习者使用 Codex，默认 `gpt-6.1-sol` / `xhigh`，Fast 启用。Claude 只观察和与 Roy 对话，不修改或审核。用法见 [learner/README.md](../learner/README.md)。
 
-- 每次提交前 tsc（`npx tsc -p tsconfig.json --noEmit`）和 vitest 退出码都是 0（PATH 加 ~/.local/node/bin）；测试用固定数据，不依赖每局刷新的知识数据。
-- `git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit`，不推送。
-- key 不许打印、不许落盘；只改 ~/Projects/sts2-jev；不运行 play；不动 jev-sts2-v3、jev-sts2-step；不读 sts2.dll 或 .pck；杀进程用 PID。
-- node_modules、logs、.cache 是指向 jev-sts2 的软链接，和正在跑的 v3 共用：**不要 npm install**，要加依赖先问。
-- 代码注释用英文，和现有代码一致；给模型的知识文本用中文。
+闭环为：对局证据 → 复盘 → 经验/知识或代码提案 → Codex 学习者实现与自测 → 自行合入 live → 运维核实际合入、登记与外部检查 → 评估。没有独立人工审核闸；未授权的架构调整仍交 Roy。Roy 2026-10-07 已允许学习者在理由与本角色证据充分时修改其原定的出牌、药水、必死/SL、终局价值规则，必须同时保存代码提案、账本链和上线后的双收件箱通知。
+
+学习账本只经 `learner/ledger.py` 追加；代码提案只经 `learner/code_proposals.py` 登记。调度器保存未完成项、派发与实现链接；waiting / 失败保留历史与重试条件。提案结果、自测通过、实际合入、外部检查通过、模型自然采用和收益改善分别核实，见 [learning-code-proposals.md](learning-code-proposals.md)。
+
+机械调度按角色批复盘，经验有待并条目即可派更新；策略提案目前允许两路独立消费者（`STRATEGY_WORKERS=2`），每路持独立工作树租约。升阶结构审计、boss 校准及 Roy 指定专题有持久请求；调度器管理租约/去重，不替学习者补游戏知识。合入、共享状态和完整检查仍串行。
+
+评估按 `eval/versions.json` 的提交祖先及实际配置分组；默认爬塔、指标与学习曲线使用可追溯的纯 Codex 成功脑局，其他来源单列，首次尝试与 SL 分开。评估用于观察结果，不能把相关性当作规则的因果效果，不能把旧角色验证当成新角色验证。
+
+## 5. 分支、工作树与上线
+
+- `main`：代码与文档的集成检出；开发使用 `.worktrees/<功能>` 的独立分支，一个工作树同时只由一个 agent 修改。
+- `live` / `.worktrees/live`：对局运行分支；运维循环从这里启动控制器。主检出的运维脚本和 live 源码须分别核版本，运行中的进程不会因 Git 合入自动热更新。
+- 合入前核 live 未提交的知识刷新，保留并行记录；按任务的 live 合入流程持 `ops/live-merge.lock`，不能覆盖最新数据。
+- 改变对局行为的上线登记 decision-log 和唯一版本，并通知运维；规则变更还需 `notes/for-roy.md`、`ops/inbox-dev.md` 双通知。纯文档同步不新增游戏版本。
+
+## 6. 验证与边界
+
+改代码的自测在 `agent/` 执行 `npx tsc -p tsconfig.json --noEmit` 与 `npx vitest run`；Codex 沙箱用 `bash tools/test-sandbox.sh`，固定排除原因在脚本里。实际合入后调度器在沙箱外补完整检查，失败由运维决定回滚或修复。`tsconfig.test.json` 的历史测试类型错误不代替生产类型检查结果。只改文档、记录或数据不用跑代码全套测试。
+
+开发会话不运行 play、不改运维 prompt、不读游戏二进制；不安装依赖，提交前扫描密钥；Git 使用全局身份，推送只经 Windows `ssh.exe`。其余边界见 [AGENTS.md](../AGENTS.md)。

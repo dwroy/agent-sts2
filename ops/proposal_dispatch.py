@@ -124,7 +124,16 @@ def research_proof(report,batch,root):
     if not match or tree.parent!=(project/'.worktrees').resolve(): return None
     # Manual write dispatches uniquely name their worktree with the batch stamp.
     batch_id=match[1]+'-strategy-proposal'
-    request_path=project/'notes'/('strategy-research-'+character+'.json')
+    registered_ident=batch.get('research_request')
+    registry_spec=importlib.util.spec_from_file_location('proposal_research_registry',
+        Path(__file__).with_name('strategy_research_jobs.py'))
+    registry=importlib.util.module_from_spec(registry_spec);registry_spec.loader.exec_module(registry)
+    REQUEST_PATHS=registry.REQUEST_PATHS;registered_path=registry.request_path
+    if registered_ident is not None:
+        if registered_ident not in REQUEST_PATHS: return None
+        request_path=registered_path(project,registered_ident)
+    else:
+        request_path=project/'notes'/('strategy-research-'+character+'.json')
     if not request_path.resolve().is_relative_to(project): return None
     request_raw=request_path.read_bytes()
     request=json.loads(request_raw)
@@ -133,6 +142,7 @@ def research_proof(report,batch,root):
         'character':character,'batch':batch_id}.items()): return None
     ident=request.get('request_id')
     if not isinstance(ident,str) or not ident.strip(): return None
+    if registered_ident is not None and ident!=registered_ident: return None
     if any(report.get(key)!=value for key,value in {
         'task':'strategy-proposal','character':character,'batch':batch_id,'request_id':ident}.items()): return None
     if report.get('research_complete') is not True: return None
@@ -140,7 +150,7 @@ def research_proof(report,batch,root):
     if not isinstance(dispatch_base,str) or not re.fullmatch('[0-9a-f]{40}',dispatch_base): return None
     # The dedicated study must match its independently saved dispatch identity;
     # editing a root request later cannot replace the actual baseline or inputs.
-    if ident=='roy-20261010-silent-deck-size-value' and any(batch.get(key)!=value for key,value in {
+    if ident in REQUEST_PATHS and any(batch.get(key)!=value for key,value in {
         'research_request':ident,'research_dispatch_base':dispatch_base,
         'research_input_sha256':request.get('input_manifest_sha256')}.items()): return None
 
