@@ -1,0 +1,83 @@
+{
+  "recorded_at": "2026-10-10 14:21 CST",
+  "source_commit": "b3b690aac31413ad89adee45c0f260e84898f805",
+  "baseline_commit": "83db965f5d022e96b3be3e07d65559b7b23db2ae",
+  "source_paths": {
+    "ops/proposal_dispatch.py": "5de94b09d6329767268382bf3be0f0e5d92fe9520fe19393cc3614ff225dfe89",
+    "learner/tasks/strategy-proposal.md": "3101bb2166a3e8c95070bdd0834318c0bdd2b706ee26e126120150a080543378",
+    "ops/tests/test_strategy_research.py": "b0efe82e1a33df0cfbe85d3a05836601bf02551ea1d3760da6a158679e21844d",
+    "agent/tests/strategy-research.test.ts": "e56ed176e72a5656077619a6e85b76f52305d9b2a89c911181ff9630bf13b63c"
+  },
+  "checks": {
+    "full_fixed_sandbox": {
+      "command": "SANDBOX_WORKERS=1 nice -n 19 bash tools/test-sandbox.sh",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010/agent",
+      "session_id": 53399,
+      "exit_code": 0,
+      "tsc_exit_code": 0,
+      "main": {
+        "files": 263,
+        "cases": 2664,
+        "started_at": "2026-10-10 14:02:17 CST",
+        "duration_seconds": 1086.05
+      },
+      "paths": {
+        "files": 1,
+        "cases": 11,
+        "started_at": "2026-10-10 14:20:24 CST",
+        "duration_seconds": 2.79
+      },
+      "total_files": 264,
+      "total_cases": 2675,
+      "log": "full-sandbox.log"
+    },
+    "final_research_python": {
+      "command": "nice -n 19 python3 ops/tests/test_strategy_research.py",
+      "exit_code": 0,
+      "cases": 8,
+      "log": "special-green.log"
+    },
+    "existing_learning_flow": {
+      "exit_code": 0,
+      "cases": 24,
+      "log": "learning-flow.log"
+    },
+    "existing_fast_launcher": {
+      "exit_code": 0,
+      "cases": 8,
+      "log": "launch-regression.log"
+    },
+    "final_source_vitest_bridge": {
+      "exit_code": 0,
+      "files": 1,
+      "cases": 1,
+      "python_cases_inside": 8,
+      "started_at": "2026-10-10 14:11:29 CST",
+      "log": "final-source-vitest-bridge.log"
+    },
+    "original_final_fixture_red": {
+      "exit_code": 1,
+      "cases": 8,
+      "failures": 3,
+      "expected_red": true,
+      "log": "original-red-final-source-guards.log"
+    },
+    "source_gitleaks": {
+      "command": "gitleaks git --staged --redact --no-banner",
+      "exit_code": 0,
+      "log": "source-gitleaks-final.log"
+    },
+    "material_gitleaks": {
+      "command": "gitleaks dir paper/materials/20261010-ops-parallel/strategy-research-adapter --redact --no-banner",
+      "exit_code": 0,
+      "log": "material-gitleaks.log"
+    }
+  },
+  "scope": "Infrastructure only; no state, old failure, game knowledge, model setting, prompt, live/main merge, dispatch or push mutation by this agent.",
+  "test_provenance": "The full suite ran once with one worker. Final Python validator/test hardening landed while it was running; final Python 8-case, old 24-case and final Vitest bridge were independently run after final source changes. Full result is an actual successful run, not claimed as an immutable final-source snapshot.",
+  "limitations": [
+    "Mechanical identity and no-change proof does not verify substantive gameplay conclusions.",
+    "ResourceWarnings from the existing read_report file reader are retained in original successful logs.",
+    "Root ops must record a real dispatch_base before dispatch and bind pending/null to running/actual batch after return."
+  ]
+}

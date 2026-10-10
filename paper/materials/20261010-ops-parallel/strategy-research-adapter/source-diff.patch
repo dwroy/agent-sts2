@@ -1,0 +1,406 @@
+diff --git a/agent/tests/strategy-research.test.ts b/agent/tests/strategy-research.test.ts
+new file mode 100644
+index 000000000..c965ac009
+--- /dev/null
++++ b/agent/tests/strategy-research.test.ts
+@@ -0,0 +1,10 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++
++it("manual research requires its bound request, frozen evidence and a clean report-only tree", () => {
++  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_strategy_research.py"], {
++    encoding: "utf8", timeout: 30_000,
++  });
++  expect(result.status, result.stderr).toBe(0);
++  expect(result.stderr).toContain("Ran 8 tests");
++});
+diff --git a/learner/tasks/strategy-proposal.md b/learner/tasks/strategy-proposal.md
+index 4fd3f7d61..336d264cb 100644
+--- a/learner/tasks/strategy-proposal.md
++++ b/learner/tasks/strategy-proposal.md
+@@ -18,7 +18,7 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
+ ## 1. 开工与证据
+ - 先读 README.md、最新 paper/materials/STATE-*.md、decision-log.md 末尾、docs/learning-protocol.md。先 git status 确认干净，再 git merge --no-edit {{base_branch}}；冲突就停下回报。
+ - 只从本角色对局、复盘和 {{character_dir}} 学习。核对 runs.jsonl 角色；不得读取或搬用其他角色知识。共用事实仅用观察得到的数据。
+-- 读 fix-queue-v4.md 的待定策略项与已有提案，选证据充分、可验证的一项。游戏知识只能从对局里学，不使用自己的预训练知识补结论。
++- 先按第 1.2 节核对本批是否承接已授权专题；匹配时只按 work_spec 研究，否则读 fix-queue-v4.md 的待定策略项与已有提案，选证据充分、可验证的一项。游戏知识只能从对局里学，不使用自己的预训练知识补结论。
+ - 每项提案落盘到 {{scratch}}/proposal.md，写证据局号、层、回合、既有学习账本 id、反例、预期行为及验证方法。没有证据就报告证据不足，不改策略。
+ 
+ ## 1.1 派发提案与补链
+@@ -27,6 +27,20 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
+ 
+ 没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
+ 
++## 1.2 仅本批的手动专题研究
++只读根目录 `{{project_root}}/notes/strategy-research-{{character}}.json`。文件不存在或以下条件不全成立时，保持原提案/补链任务，不将普通队列变成专题：
++- learn.json 中本次 {{batch}} 的 task=strategy-proposal、character={{character}}、reason=ops；该行完全没有 proposal_ids 和 proposal_repair 字段，工作树等于 {{worktree}}。
++- 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state 为 pending 或 running；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
++- running 请求的 batch 必须等于 {{batch}}。pending 请求只能在 batch=null 时承接：这是运维派发返回后立即绑定的交接窗口，最终验收时必须已变为 running 且 batch={{batch}}。不自行写请求或 learn.json；完成前重读，仍未绑定或身份已变就如实回报，不能冒称专题完成。
++- 将 work_spec 和 input_manifest 路径相对根目录解析（绝对路径也须在根目录内），先核实文件 SHA256 分别等于 work_spec_sha256、input_manifest_sha256，再读取正文。manifest 的 request_id/character 必须匹配，runs 为本角色冻结局号清单，dispatch_runs 必须是其中的子集。required_sections 为非空、无重复的字符串 key 列表。
++- 请求 dispatch_base 是运维在派发前登记的真实完整 40 位提交；核实它是本树 HEAD 的祖先。开工合并 main 后若只有 notes/paper 等记录快进，可以将当前 HEAD 记为 report.base；dispatch_base 到 HEAD 的实际执行源码、任务模板、验证输入和全部 knowledge 必须零差异，不能自行提交源码/知识再把新 HEAD 自报成无改动基线。不同则保留现场并回报，不能冒称纯研究完成。
++
++匹配后用 work_spec 的目标、冻结输入和限定字节范围替代 fix-queue 选题，只研究该请求，不领取或补做其他提案。游戏结论仍由你从本角色证据提炼；完整保存假设、支持、反例、未知和结论变化，覆盖每个 required_sections，不用预训练事实补齐。证据不足也须给出有范围和限制的结论，不将“尚不确定”变成已验证规则。
++
++专题纯报告保持 HEAD 等于完整 40 位 base、工作树干净、fixes=[]、merged=null，跳过第 4 节；不制造源码提交、游戏版本、shipped 或成功测试。已证知识只经既有 ledger CLI 登记；需要代码提案时只经 code_proposals CLI 保存真实提案及证据，不伪造 id。经验库沉淀交后续 experience-update，本次报告不冒称已入库或大脑已采用。
++
++除第 6 节的基本字段外，专题最终 JSON 必须带 task=strategy-proposal、character={{character}}、batch={{batch}}、request_id、input_sha256（实际 manifest SHA）、research_complete=true、coverage（所有 required_sections 对应值均为 true）、objective_conclusions（非空结论文本）、limitations（非空字符串列表，即使结论为无充分证据）。runs 只填本批派发锚点；covered_runs 填实际分析的冻结局号，exclusions 填未能分析的逐局 {"run_id":"...","reason":"具体原因"}，两者各自无重复、无交集且并集精确覆盖全部冻结局；evidence_runs 是实际支持结论的 covered_runs 子集，不能用一局或十个锚点冒称全历史。report 必须为 {{scratch}}/report.md 的真实绝对路径且位于本批工作树 learner/runs/ 内；无源码修改的 tests 固定为 {"tsc":null,"vitest":null,"cases":null}，不要照用第 6 节样例的 0。code_proposals / implementation_domains 保留正常 CLI 链接格式，无相关提案填空数组，不将专题 request_id 填成代码提案 id。
++
+ ## 2. 边界与实现
+ - 依据已有证据提出并实现策略；涉及 Roy 尚未授权的架构调整先回报，不猜测批准。不得把待定项当成既定游戏规则。
+ - 怪物血量与伤害按当前进阶从数据库取，第一个样本起就用；房间代价保留 5 个样本门槛。
+diff --git a/ops/proposal_dispatch.py b/ops/proposal_dispatch.py
+index c4ee840b9..6d40d2434 100644
+--- a/ops/proposal_dispatch.py
++++ b/ops/proposal_dispatch.py
+@@ -1,11 +1,17 @@
+ """Mechanical proposal consumption, audit links, and no-change dispositions."""
+ import importlib.util
++import hashlib
+ import json
+ from pathlib import Path
+ import re
+ import subprocess
+ import time
+ 
++# Match the completion source comparison, also protecting all character knowledge.
++RESEARCH_SOURCE_PATHS = ['agent/src','agent/tools','agent/tests','agent/package*.json','agent/tsconfig*.json',
++    'agent/vitest*','learner/*.ts','learner/*.py','learner/tasks','ops/*.sh','ops/*.py','ops/codex',
++    'eval/*.py','eval/*.ts','eval/cost-config.json','knowledge/builders','knowledge','ops/tests','tools']
++
+ 
+ def library(scripts):
+     path=Path(scripts).parent/'learner/code_proposals.py'
+@@ -104,10 +110,95 @@ def results(report,batch):
+     return rows
+ 
+ 
++def research_proof(report,batch,root):
++    """Bind an ops-only research report to its authorized, frozen request."""
++    if batch.get('reason')!='ops' or 'proposal_ids' in batch or 'proposal_repair' in batch:
++        return None
++    character=batch.get('character')
++    if not isinstance(character,str) or not re.fullmatch('[a-z][a-z0-9_-]*',character): return None
++    raw_tree=batch.get('worktree')
++    if not isinstance(raw_tree,str) or not raw_tree or not Path(raw_tree).is_absolute(): return None
++    project=Path(root).resolve()
++    tree=Path(raw_tree).resolve()
++    match=re.fullmatch('codex-strategy-'+re.escape(character)+r'-([0-9]{8}-[0-9]{6})',tree.name)
++    if not match or tree.parent!=(project/'.worktrees').resolve(): return None
++    # Manual write dispatches uniquely name their worktree with the batch stamp.
++    batch_id=match[1]+'-strategy-proposal'
++    request_path=project/'notes'/('strategy-research-'+character+'.json')
++    if not request_path.resolve().is_relative_to(project): return None
++    request_raw=request_path.read_bytes()
++    request=json.loads(request_raw)
++    if not isinstance(request,dict) or any(request.get(key)!=value for key,value in {
++        'authorized_by':'Roy','state':'running','task':'strategy-proposal',
++        'character':character,'batch':batch_id}.items()): return None
++    ident=request.get('request_id')
++    if not isinstance(ident,str) or not ident.strip(): return None
++    if any(report.get(key)!=value for key,value in {
++        'task':'strategy-proposal','character':character,'batch':batch_id,'request_id':ident}.items()): return None
++    if report.get('research_complete') is not True: return None
++    dispatch_base=request.get('dispatch_base')
++    if not isinstance(dispatch_base,str) or not re.fullmatch('[0-9a-f]{40}',dispatch_base): return None
++
++    def frozen(field,suffix):
++        raw_path=request.get(field);expected=request.get(field+'_sha256')
++        if not isinstance(raw_path,str) or not isinstance(expected,str) or not re.fullmatch('[0-9a-f]{64}',expected):
++            raise ValueError('missing frozen research artifact')
++        path=(project/raw_path).resolve()
++        if not path.is_relative_to(project) or path.suffix!=suffix or not path.is_file():
++            raise ValueError('research artifact outside the project')
++        raw=path.read_bytes()
++        if hashlib.sha256(raw).hexdigest()!=expected: raise ValueError('research artifact SHA mismatch')
++        return raw,expected
++
++    _,spec_sha=frozen('work_spec','.md')
++    manifest_raw,input_sha=frozen('input_manifest','.json')
++    if report.get('input_sha256')!=input_sha: return None
++    manifest=json.loads(manifest_raw)
++    if not isinstance(manifest,dict) or manifest.get('request_id')!=ident or manifest.get('character')!=character: return None
++    inventory=manifest.get('runs')
++    if not isinstance(inventory,list) or not inventory or any(not isinstance(row,dict) or
++        row.get('character',character)!=character for row in inventory): return None
++
++    def runset(value,allow_empty=False):
++        if not isinstance(value,list) or (not value and not allow_empty) or any(not isinstance(run,str) or
++            not re.fullmatch('[A-Z0-9]{12}',run) for run in value) or len(set(value))!=len(value):
++            raise ValueError('invalid research run set')
++        return set(value)
++
++    frozen_runs=runset([row.get('run_id') for row in inventory])
++    dispatched=runset(batch.get('runs'))
++    if runset(request.get('dispatch_runs'))!=dispatched or runset(report.get('runs'))!=dispatched or not dispatched<=frozen_runs:
++        return None
++    evidence=runset(report.get('evidence_runs'),allow_empty=True)
++    covered=runset(report.get('covered_runs'),allow_empty=True)
++    exclusions=report.get('exclusions')
++    if not isinstance(exclusions,list) or any(not isinstance(row,dict) or
++        not isinstance(row.get('reason'),str) or not row['reason'].strip() for row in exclusions): return None
++    excluded=runset([row.get('run_id') for row in exclusions]) if exclusions else set()
++    if covered & excluded or covered | excluded != frozen_runs or not evidence<=covered: return None
++    sections=request.get('required_sections')
++    if not isinstance(sections,list) or not sections or any(not isinstance(key,str) or
++        not re.fullmatch('[a-z][a-z0-9_]*',key) for key in sections) or len(set(sections))!=len(sections): return None
++    coverage=report.get('coverage')
++    if not isinstance(coverage,dict) or any(coverage.get(key) is not True for key in sections): return None
++    conclusion=report.get('objective_conclusions');limitations=report.get('limitations')
++    if not isinstance(conclusion,str) or not conclusion.strip() or not isinstance(limitations,list) or not limitations or any(
++        not isinstance(item,str) or not item.strip() for item in limitations): return None
++    if report.get('tests')!={'tsc':None,'vitest':None,'cases':None}: return None
++    return {'request_id':ident,'batch':batch_id,'dispatch_base':dispatch_base,'request':str(request_path),
++            'request_sha256':hashlib.sha256(request_raw).hexdigest(),'input_sha256':input_sha,
++            'work_spec_sha256':spec_sha,'required_sections':sections,'evidence_runs':sorted(evidence),
++            'covered_runs':sorted(covered),'exclusions':exclusions}
++
++
+ def no_change(report,batch,root):
+-    if batch.get('task')!='strategy-proposal' or not (batch.get('proposal_ids') or batch.get('proposal_repair')) or report.get('fixes')!=[] or report.get('merged') is not None:
++    if batch.get('task')!='strategy-proposal' or report.get('fixes')!=[] or report.get('merged') is not None:
+         return None
+     try:
++        research=None
++        if not (batch.get('proposal_ids') or batch.get('proposal_repair')):
++            research=research_proof(report,batch,root)
++            if not research: return None
+         rows=results(report,batch)
+         if batch.get('proposal_repair') and not report.get('code_proposals'): return None
+         if any(r['state']=='implemented' for r in rows): return None
+@@ -121,10 +212,17 @@ def no_change(report,batch,root):
+         head=subprocess.check_output(['git','-C',tree,'rev-parse','HEAD'],text=True).strip()
+         status=subprocess.check_output(['git','-C',tree,'status','--porcelain'],text=True).strip()
+         if head!=base or status: return None
++        if research and (subprocess.run(['git','-C',tree,'merge-base','--is-ancestor',research['dispatch_base'],head],
++            stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode or subprocess.run(
++            ['git','-C',tree,'diff','--quiet',research['dispatch_base'],head,'--',*RESEARCH_SOURCE_PATHS],
++            stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode): return None
+         allowed=(resolved_tree/'learner/runs').resolve()
+         path=Path(raw_path).resolve()
+         if not allowed.is_relative_to(resolved_tree) or not path.is_relative_to(allowed) or path.suffix!='.md' or not path.is_file(): return None
+-        return {'base':base,'report':str(path),'dispositions':rows}
++        proof={'base':base,'report':str(path),'dispositions':rows}
++        if research:
++            proof['research']={**research,'report_sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
++        return proof
+     except (OSError,ValueError,KeyError,RuntimeError,subprocess.SubprocessError): return None
+ 
+ 
+diff --git a/ops/tests/test_strategy_research.py b/ops/tests/test_strategy_research.py
+new file mode 100644
+index 000000000..d4f3d02af
+--- /dev/null
++++ b/ops/tests/test_strategy_research.py
+@@ -0,0 +1,212 @@
++"""Frozen manual research fixtures; no engines, production state or gameplay facts."""
++import copy
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++import unittest
++from unittest.mock import patch
++
++REPO = Path(__file__).resolve().parents[2]
++RUN = 'SILENT000001'
++OTHER = 'SILENT000002'
++SECTIONS = ['size_outcome', 'marginal_value', 'construction_guidance', 'counterexamples', 'limitations']
++
++
++def load(name, path):
++    spec = importlib.util.spec_from_file_location(name, REPO / path)
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++dispatch = load('research_dispatch', 'ops/proposal_dispatch.py')
++checks = load('research_checks', 'ops/learner_checks.py')
++
++
++class StrategyResearch(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        self.batch_id = '20261010-130001-strategy-proposal'
++        self.tree = self.root / '.worktrees/codex-strategy-silent-20261010-130001'
++        self.tree.mkdir(parents=True)
++        self.git('init', '-q')
++        (self.tree / '.gitignore').write_text('learner/runs/\n')
++        (self.tree / 'fixed.txt').write_text('Fixed baseline; no gameplay facts.\n')
++        self.git('add', '.gitignore', 'fixed.txt')
++        self.git('commit', '-q', '-m', 'Fixed research fixture')
++        self.base = self.git('rev-parse', 'HEAD')
++        self.report_path = self.write(self.tree / 'learner/runs/research/report.md', 'Fixed research report.\n')
++        self.spec_path = self.write(self.root / 'paper/materials/fixed/task.md', 'Authorized fixture objective.\n')
++        self.manifest_path = self.root / 'paper/materials/fixed/input.json'
++        self.manifest = {'request_id': 'roy-fixed-research', 'character': 'silent',
++                         'runs': [{'run_id': RUN}, {'run_id': OTHER}], 'log_byte_limits': {'runs.jsonl': 100}}
++        self.write_json(self.manifest_path, self.manifest)
++        self.request_path = self.root / 'notes/strategy-research-silent.json'
++        self.request = {'request_id': self.manifest['request_id'], 'authorized_by': 'Roy', 'state': 'running',
++                        'task': 'strategy-proposal', 'character': 'silent', 'batch': self.batch_id,
++                        'dispatch_base': self.base,
++                        'dispatch_runs': [RUN], 'required_sections': SECTIONS,
++                        'work_spec': str(self.spec_path), 'work_spec_sha256': self.digest(self.spec_path),
++                        'input_manifest': str(self.manifest_path), 'input_manifest_sha256': self.digest(self.manifest_path)}
++        self.write_json(self.request_path, self.request)
++        self.batch = {'task': 'strategy-proposal', 'character': 'silent', 'state': 'running', 'reason': 'ops',
++                      'runs': [RUN], 'worktree': str(self.tree), 'proposal_policy': 'Roy-2026-10-07-learning'}
++        self.report = {'task': 'strategy-proposal', 'character': 'silent', 'batch': self.batch_id,
++                       'base': self.base, 'fixes': [], 'merged': None, 'report': str(self.report_path),
++                       'request_id': self.request['request_id'], 'input_sha256': self.request['input_manifest_sha256'],
++                       'research_complete': True, 'coverage': {key: True for key in SECTIONS},
++                       'objective_conclusions': 'Fixed fixture conclusion, not gameplay knowledge.',
++                       'limitations': ['Fixture evidence only.'], 'evidence_runs': [RUN, OTHER], 'runs': [RUN],
++                       'covered_runs': [RUN, OTHER], 'exclusions': [],
++                       'tests': {'tsc': None, 'vitest': None, 'cases': None},
++                       'code_proposals': [], 'implementation_domains': []}
++
++    def git(self, *args):
++        return subprocess.check_output(['git', '-C', str(self.tree), *args], text=True, stderr=subprocess.DEVNULL).strip()
++
++    def write(self, path, value):
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(value)
++        return path
++
++    def write_json(self, path, value):
++        return self.write(path, json.dumps(value) + '\n')
++
++    def digest(self, path):
++        return hashlib.sha256(path.read_bytes()).hexdigest()
++
++    def accept(self, report=None, batch=None):
++        return dispatch.no_change(self.report if report is None else report,
++                                  self.batch if batch is None else batch, str(self.root))
++
++    def test_bound_clean_report_is_accepted_with_frozen_proof(self):
++        proof = self.accept()
++        self.assertIsNotNone(proof)
++        self.assertEqual(proof['research']['request_id'], self.request['request_id'])
++        self.assertEqual(proof['research']['input_sha256'], self.digest(self.manifest_path))
++        self.assertEqual(proof['research']['report_sha256'], self.digest(self.report_path))
++        self.assertEqual(proof['dispositions'], [])
++        self.assertIsNotNone(self.accept(report={**self.report, 'covered_runs': [RUN], 'evidence_runs': [RUN],
++            'exclusions': [{'run_id': OTHER, 'reason': 'Fixed evidence unavailable.'}]}))
++        self.assertIsNotNone(self.accept(report={**self.report, 'covered_runs': [], 'evidence_runs': [],
++            'objective_conclusions': 'No fixture evidence available; no gameplay conclusion.',
++            'exclusions': [{'run_id': run, 'reason': 'Fixed evidence unavailable.'} for run in (RUN, OTHER)]}))
++        self.write_json(self.request_path, {**self.request, 'work_spec': 'paper/materials/fixed/task.md',
++                                           'input_manifest': 'paper/materials/fixed/input.json'})
++        self.assertIsNotNone(self.accept())
++
++    def test_request_and_batch_identity_mismatches_are_rejected(self):
++        original = copy.deepcopy(self.request)
++        for update in ({'authorized_by': 'Other'}, {'state': 'pending', 'batch': None},
++                       {'batch': '20261010-130002-strategy-proposal'}, {'character': 'ironclad'},
++                       {'task': 'fix-batch'}, {'dispatch_runs': [OTHER]}, {'dispatch_runs': [RUN, RUN]},
++                       {'required_sections': []}, {'required_sections': [SECTIONS[0], SECTIONS[0]]},
++                       {'request_id': ''}, {'dispatch_runs': 'not-an-array'},
++                       {'dispatch_base': None}, {'dispatch_base': self.base[:7]}, {'dispatch_base': '0' * 40}):
++            with self.subTest(update=update):
++                self.write_json(self.request_path, {**original, **update})
++                self.assertIsNone(self.accept())
++        self.write_json(self.request_path, original)
++        for update in ({'reason': 'tick'}, {'proposal_ids': []}, {'proposal_repair': None},
++                       {'character': 'ironclad'}, {'task': 'fix-batch'}, {'runs': [OTHER]},
++                       {'worktree': None}, {'worktree': 123}, {'worktree': ''}, {'worktree': '.worktrees/relative'}):
++            with self.subTest(update=update):
++                self.assertIsNone(self.accept(batch={**self.batch, **update}))
++
++    def test_report_identity_coverage_evidence_and_null_tests_are_required(self):
++        updates = ({'request_id': 'other'}, {'batch': 'other'}, {'character': 'ironclad'},
++                   {'task': 'fix-batch'}, {'research_complete': 1}, {'input_sha256': 'f' * 64},
++                   {'coverage': {SECTIONS[0]: True}}, {'coverage': {key: 1 for key in SECTIONS}},
++                   {'evidence_runs': ['FOREIGN00001']}, {'evidence_runs': [RUN, RUN]}, {'covered_runs': []},
++                   {'runs': [OTHER]}, {'objective_conclusions': ''}, {'limitations': []},
++                   {'covered_runs': [RUN]}, {'covered_runs': [RUN, RUN]},
++                   {'exclusions': [{'run_id': OTHER, 'reason': 'Overlaps covered evidence.'}]},
++                   {'covered_runs': [RUN], 'exclusions': [{'run_id': OTHER, 'reason': ''}]},
++                   {'covered_runs': [RUN], 'exclusions': [{'run_id': OTHER, 'reason': 'Fixed missing data.'}]},
++                   {'base': self.base[:7]}, {'fixes': [{'commit': self.base}]}, {'merged': self.base},
++                   {'tests': {'tsc': 0, 'vitest': 0, 'cases': 0}})
++        for update in updates:
++            with self.subTest(update=update):
++                self.assertIsNone(self.accept(report={**self.report, **update}))
++
++    def test_input_and_spec_actual_sha_role_and_paths_are_checked(self):
++        original = copy.deepcopy(self.request)
++        for update in ({'input_manifest_sha256': '0' * 64}, {'work_spec_sha256': '0' * 64},
++                       {'input_manifest': '/tmp/foreign-input.json'}, {'work_spec': '/tmp/foreign-task.md'}):
++            with self.subTest(update=update):
++                self.write_json(self.request_path, {**original, **update})
++                self.assertIsNone(self.accept())
++        for update in ({'request_id': 'other'}, {'character': 'ironclad'}, {'runs': [{'run_id': 'bad'}]},
++                       {'runs': [{'run_id': RUN, 'character': 'ironclad'}]},
++                       {'runs': [{'run_id': RUN}, {'run_id': RUN}]}):
++            with self.subTest(update=update):
++                self.write_json(self.manifest_path, {**self.manifest, **update})
++                digest = self.digest(self.manifest_path)
++                self.write_json(self.request_path, {**original, 'input_manifest_sha256': digest})
++                self.assertIsNone(self.accept(report={**self.report, 'input_sha256': digest}))
++
++    def test_report_path_escape_and_noncanonical_batch_tree_are_rejected(self):
++        outside = self.write(self.root / 'outside.md', 'Preserved outside the dispatched tree.\n')
++        alias = self.tree / 'learner/runs/research/alias.md'
++        alias.symlink_to(outside)
++        for path in (outside, alias, self.spec_path):
++            with self.subTest(path=path):
++                self.assertIsNone(self.accept(report={**self.report, 'report': str(path)}))
++        self.assertIsNone(self.accept(batch={**self.batch, 'worktree': str(self.root / '.worktrees/live')}))
++
++    def test_dirty_tree_or_changed_head_never_passes_as_pure_report(self):
++        (self.tree / 'dirty.txt').write_text('Uncommitted source candidate.\n')
++        self.assertIsNone(self.accept())
++        (self.tree / 'dirty.txt').unlink()
++        (self.tree / 'fixed.txt').write_text('Changed source.\n')
++        self.git('add', 'fixed.txt')
++        self.git('commit', '-q', '-m', 'Changed fixture source')
++        self.assertIsNone(self.accept())
++        self.write(self.tree / 'notes/fixed.md', 'Record-only fixture update.\n')
++        self.git('add', 'notes/fixed.md')
++        self.git('commit', '-q', '-m', 'Fixed record-only fast-forward')
++        self.assertIsNotNone(self.accept(report={**self.report, 'base': self.git('rev-parse', 'HEAD')}))
++        for path in ('ops/tests/fixed.py', 'tools/fixed.sh', 'agent/src/fixed.ts', 'knowledge/characters/other/fixed.json'):
++            self.write(self.tree / path, 'Committed implementation fixture.\n')
++            self.git('add', path)
++            self.git('commit', '-q', '-m', 'Fixed implementation change')
++            self.assertIsNone(self.accept(report={**self.report, 'base': self.git('rev-parse', 'HEAD')}))
++            self.git('reset', '--hard', 'HEAD^')
++
++    def test_legacy_manual_stays_rejected_and_queue_dispositions_keep_original_path(self):
++        self.request_path.unlink()
++        self.assertIsNone(self.accept())
++        queued = {**self.batch, 'reason': 'proposal', 'proposal_ids': ['fixed-proposal']}
++        report = {**self.report, 'research_complete': False,
++                  'proposal_results': [{'id': 'fixed-proposal', 'state': 'waiting', 'reason': 'Fixed missing data.'}]}
++        proof = self.accept(report=report, batch=queued)
++        self.assertIsNotNone(proof)
++        self.assertNotIn('research', proof)
++        repaired = {**self.batch, 'reason': 'proposal', 'proposal_repair': 'old'}
++        self.assertIsNone(self.accept(batch=repaired))
++        self.assertIsNotNone(self.accept(report={**self.report, 'code_proposals': ['fixed-link']}, batch=repaired))
++
++    def test_valid_research_finishes_done_with_event_without_fake_merge_checks_or_resolution(self):
++        out = self.write(self.root / 'state/learner' / (self.batch_id + '.out'),
++                         '```json\n' + json.dumps(self.report) + '\n```\n')
++        notices, events = [], []
++        request_before = self.request_path.read_bytes()
++        with patch.object(checks, 'proposal_tools', return_value=dispatch):
++            checks.finish_write_batch(self.batch_id, self.batch, 0, str(self.root), str(out.parent),
++                                      lambda kind, message: events.append((kind, message)), notices.append)
++        self.assertEqual(self.batch['state'], 'done')
++        self.assertIsNone(self.batch['merged'])
++        self.assertEqual(events[0][0], 'strategy-done')
++        self.assertEqual(notices, [])
++        self.assertNotIn('checks_pending', self.batch)
++        self.assertNotIn('proposal_repair_needed', self.batch)
++        self.assertEqual(self.request_path.read_bytes(), request_before)
++
++
++if __name__ == '__main__':
++    unittest.main()
