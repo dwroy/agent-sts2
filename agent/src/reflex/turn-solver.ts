@@ -2155,11 +2155,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (card.cardId === "PRECISE_CUT" && !card.upgraded && card.preciseCutHandDamage) {
       const handSize = [...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").length + next.drawnInHand + 1;
       const strengthNow = player.strengthNow ?? 0;
-      const observed = strengthNow === 0 ? (handSize === 5 ? 5 : handSize === 6 ? 3 : null)
+      // NHA2KW0RB7VP F17 T1: seven cards show 1; Slice and Strike leaving show 3 then 5.
+      const observed = strengthNow === 0 ? (handSize === 5 ? 5 : handSize === 6 ? 3 : handSize === 7 && card.preciseCutSevenHand ? 1 : null)
         : strengthNow === -2 ? (handSize === 5 ? 3 : handSize === 4 ? 5 : null)
         : strengthNow === 2 ? (handSize === 5 ? 7 : handSize === 3 ? 11 : null) : null;
       const recordedShown = strengthNow === 2 ? card.damage === 7 || card.damage === 11
-        : (strengthNow === 0 || strengthNow === -2) && (card.damage === 3 || card.damage === 5);
+        : ((strengthNow === 0 || strengthNow === -2) && (card.damage === 3 || card.damage === 5)) ||
+          (strengthNow === 0 && card.preciseCutSevenHand === true && card.damage === 1);
       if (observed !== null && recordedShown && !player.weak && !next.shrunk && next.strength === 0) {
         shown = observed;
       } else {

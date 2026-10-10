@@ -55,6 +55,8 @@ export interface CardModel {
   hitsLoseHandSkills?: boolean;
   /** Plain Silent Precise Cut: only recorded hand/Strength pairs are verified (silent-0166/0169). */
   preciseCutHandDamage?: boolean;
+  /** NHA2KW0RB7VP A10: ordinary Precise Cut starts at one in a seven-card hand. */
+  preciseCutSevenHand?: boolean;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
@@ -1065,8 +1067,12 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
     damage,
     ...(character.toLowerCase() === "silent" && cardId === "PRECISE_CUT" && !bool(card["upgraded"]) &&
-      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 && [3, 5, 7, 11].includes(damage ?? -1) &&
+      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 &&
+      ([3, 5, 7, 11].includes(damage ?? -1) || (ascension === 10 && damage === 1)) &&
       /你的手牌中每有一张牌，此牌的伤害就降低/.test(template) ? { preciseCutHandDamage: true } : {}),
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "PRECISE_CUT" && !bool(card["upgraded"]) &&
+      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 && damage === 1 &&
+      /你的手牌中每有一张牌，此牌的伤害就降低/.test(template) ? { preciseCutSevenHand: true } : {}),
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
     ...(character.toLowerCase() === "silent" && cardId === "FLECHETTES" && !bool(card["upgraded"]) &&
