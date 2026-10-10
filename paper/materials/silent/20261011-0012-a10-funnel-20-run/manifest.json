@@ -1,0 +1,100 @@
+{
+  "recorded_at": "2026-10-11T00:15:52.617251+08:00",
+  "scope": "Read-only Silent A10 funnel; pure successful Codex; latest20 descending and release time cohorts",
+  "source_cutoff": "2026-10-10T16:09:14.442Z",
+  "commands": [
+    "nice -n 19 data/logdb-venv/bin/python paper/materials/silent/20261011-0012-a10-funnel-20-run/analyze.py",
+    "nice -n 19 data/logdb-venv/bin/python paper/materials/silent/20261011-0012-a10-funnel-20-run/analyze.py --replay",
+    "nice -n 19 data/logdb-venv/bin/python paper/materials/silent/20261011-0012-a10-funnel-20-run/supplement.py"
+  ],
+  "source_main_commit": "8410bcffa43722b282ebaec7a20223a7f0dff022",
+  "behavior_changed": false,
+  "scheduler_mutated": false,
+  "database_synced_by_this_task": false,
+  "files": {
+    "analysis.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "analysis.stdout.txt": {
+      "bytes": 18734,
+      "sha256": "ebefb2d0a895704f1eb8380db6554d2c9844f9625ad4adbeee535afd5093619a"
+    },
+    "analyze.py": {
+      "bytes": 5663,
+      "sha256": "f8e11b16275e072c3bf9c1d6bc4314d38c07cbc18b1f3db3c6998e3fb87aa7a7"
+    },
+    "baseline-analyze.py": {
+      "bytes": 14684,
+      "sha256": "9e2cde7e026ea98cbadbee00b482b3efd07c6b29404679ba4dc61d58732bec8c"
+    },
+    "evidence.json": {
+      "bytes": 4728585,
+      "sha256": "5f15824b2555b31f6d32ccecd6f9bcf83e00a8206c813f9e58bc7009d3830de5"
+    },
+    "funnel.json": {
+      "bytes": 459352,
+      "sha256": "658e421330ec164c7b4606b0013b7c08cfa3f60eeb19eedee145614134044d79"
+    },
+    "initial-db-lag/analysis.stderr.txt": {
+      "bytes": 489,
+      "sha256": "966f052397c8dc04aa8ed9f674b5c1df80517dc12293a9e3a94cf17a543dde20"
+    },
+    "initial-db-lag/analysis.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "initial-db-lag/evidence.json": {
+      "bytes": 4727381,
+      "sha256": "3146a6073483fea6279c6f1009def447bc136cda8fd69f9ca681bc454f722a98"
+    },
+    "initial-db-lag/logdb-manifest.json": {
+      "bytes": 304624,
+      "sha256": "e2b6438b339bd35833cab8f91d3f7b3c0f54d10a8b11a83149973e1ec90bc945"
+    },
+    "journal-append.txt": {
+      "bytes": 958,
+      "sha256": "5891a7ca4fd161425cac4b5b61734182f26c4351a696cf76b85b47757c152917"
+    },
+    "logdb-manifest.json": {
+      "bytes": 305984,
+      "sha256": "89b4c51ee2896c5c823baff37eff28d396f809961fa51caeb23f10f93188f91c"
+    },
+    "release-cohorts.json": {
+      "bytes": 15107,
+      "sha256": "008e38ad6a3d2b9fb4dea8d4b4bd9ea2b5ec4415b4179adef1f0723f879c2350"
+    },
+    "release-report.md": {
+      "bytes": 1300,
+      "sha256": "d8761ecaa2ae3d94b45585c633f766a83fe369ee9acf6553cf760ecfd686f056"
+    },
+    "replay.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "replay.stdout.txt": {
+      "bytes": 18734,
+      "sha256": "ebefb2d0a895704f1eb8380db6554d2c9844f9625ad4adbeee535afd5093619a"
+    },
+    "report.md": {
+      "bytes": 5844,
+      "sha256": "429ee35a1ae7dee90a2447d9da2f3cbcba87d652ff8f93b652e0439b8dadcbe9"
+    },
+    "supplement.py": {
+      "bytes": 4823,
+      "sha256": "c46c42023b6db97cc8a2561d21b39fa221cd30d0e667ccbb962bb051ab0aa6cb"
+    },
+    "supplement.stdout.txt": {
+      "bytes": 11705,
+      "sha256": "19e1b27b2feccb29f964f30c0f98ecd5576984eaa3de36ec8a481807bad859b1"
+    },
+    "verification.json": {
+      "bytes": 829,
+      "sha256": "d3ec794cc326bdd601b5b2dd62fab0f4a21a34d583a28091f717b1264311c9e1"
+    },
+    "winner-game-over.json": {
+      "bytes": 351,
+      "sha256": "3325a278272d2c664cc11360ccb02a66adc7074d0828bae5cb4a616171f53df9"
+    }
+  }
+}
