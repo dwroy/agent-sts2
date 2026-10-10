@@ -71,6 +71,7 @@ case "$action" in
     [ -f "$DIR/autoplay.pid" ] && echo "autoplay.pid: $(cat "$DIR/autoplay.pid")"
     [ -f "$ROOT/ops/STOP" ] && echo "ops/STOP present"
     [ -f "$DIR/herdr.json" ] && { echo "herdr panes:"; timeout 20 bash "$OPS/herdr-host.sh" status 2>&1 | tail -n +2; }
+    [ -f "$DIR/herdr.json" ] && timeout 10 bash "$OPS/autoplay-pane.sh" --read || true
     exit 0 ;;
   stall-check)
     exec bash "$ROOT/ops/stall-check.sh" ;;
