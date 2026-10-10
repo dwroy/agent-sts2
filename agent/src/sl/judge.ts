@@ -1409,7 +1409,27 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     // and we lived at 1 where this judge said certain). So with any enemy that may die before the enemy turn ends, an
     // enemy's hits count only when no other one may: its own, up to its own death.
     const dying = new Set([...mayDie.map((entry) => entry.i), ...cut]);
-    const changed = living.map((_, i) => i).filter((i) => !gone.has(i) && hitsOf[i]!.length > 0 && [...dying].some((j) => j !== i));
+    // silent-0326, LWQYSREHMMJ7 A10 F30: attempt 1 T4 and attempt 2 T3 both retain the awakened
+    // beetle's Roll Out after poison kills the rock. Keep only this attack, not the silk's, and
+    // leave other encounters, moves, powers and death sources under the general conservative bound.
+    const beetle = living.findIndex((enemy) => str(enemy["enemy_id"]) === "SLUMBERING_BEETLE");
+    const rock = living.findIndex((enemy) => str(enemy["enemy_id"]) === "BOWLBUG_ROCK");
+    const witnessedPowers: Record<string, readonly string[]> = {
+      BOWLBUG_ROCK: ["IMBALANCED_POWER", "POISON_POWER", "WEAK_POWER"],
+      BOWLBUG_SILK: ["POISON_POWER"],
+      SLUMBERING_BEETLE: ["POISON_POWER", "WEAK_POWER"],
+    };
+    const stableBeetle = silentPoison && numOrNull(run["ascension"]) === 10
+      && living.length === 3 && new Set(living.map((enemy) => str(enemy["enemy_id"]))).size === 3
+      && living.every((enemy) => Array.isArray(enemy["powers"]) && powersOf(enemy).every((power) =>
+        witnessedPowers[str(enemy["enemy_id"])]?.includes(str(power["power_id"]))))
+      && beetle >= 0 && rock >= 0 && living.some((enemy) => str(enemy["enemy_id"]) === "BOWLBUG_SILK")
+      && str(living[beetle]!["move_id"]) === "ROLL_OUT_MOVE" && hitsOf[beetle]!.length === 1 && !gone.has(beetle)
+      && mayDie.length === 1 && mayDie[0]!.i === rock
+      && powerAmount(living[rock]!, "POISON_POWER") >= before[rock]!.hp
+      && ends.sources.length === 0 && retaliation === 0 && cut.length === 0;
+    const changed = living.map((_, i) => i).filter((i) => !gone.has(i) && hitsOf[i]!.length > 0
+      && [...dying].some((j) => j !== i) && !(stableBeetle && i === beetle));
     const keptByEnemy = living.map((_, i) => i).filter((i) => !gone.has(i)).map((i) => (changed.includes(i) ? [] : landing(i)));
     const keptHits = keptByEnemy.flat();
     const kept = keptHits.reduce((sum, hit) => sum + hit, 0);
@@ -1426,7 +1446,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     // The revives again, on what still lands for certain.
     const keptSaved = reviveVeto(keptByEnemy, `, if ${who}`);
     if (keptSaved) return keptSaved;
-    endNote = `; even if ${who}`;
+    endNote = `; even if ${who}${stableBeetle ? "; 静默A10已见：石虫毒死后甲虫滚动攻击仍计入下界（silent-0326）" : ""}`;
   }
   const blastNote = blast ? ` (${blast.name}'s blast: the husk explodes for ${blast.damage} as the turn ends, after the end-of-turn block)` : "";
   const lethal = `${bySandpit ? `${sandpitText} (our count lives: ` : ""}${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${bySandpit ? ")" : ""}${endNote}${reviveNote}`;
