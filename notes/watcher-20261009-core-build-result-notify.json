@@ -1,0 +1,23 @@
+{
+  "request_id": "roy-20261009-historical-core-builds-result-notify",
+  "parent_request_id": "roy-20261009-historical-core-builds",
+  "requested_at": "2026-10-09T17:17:33+08:00",
+  "requested_by": "Roy",
+  "recorded_by": "agent-sts2-watcher",
+  "roy_original": "关于核心组合的学习 有结果了告诉我一下",
+  "parent_current_state": "pending",
+  "parent_current_dispatch_status": "not_dispatched_missing_safe_entry",
+  "parent_current_batch": null,
+  "purpose": "推进父请求实际派发，并在第一份实质学习报告完成后通过现有herdr通道提醒Roy。",
+  "requirements": [
+    "父请求独立模板/FEATURE_REQUESTS路由/wrapper白名单及租约完成通道当前缺失；请ops按既有任务/调度适配授权安排现有learner补最小入口，自测后沿live/标准事件核实，再以同一父请求派全历史学习，不只保留pending。保持已有任务和他人未提交源码，不能清树或抢租约；若无法安全安排须具体报告等待的拥有者/任务/条件及准备步骤。",
+    "第一份实质历史构筑报告完成时，核对任务/报告身份、候选与逐boss矩阵/伤害资源/构筑模板及未知范围，然后在notes/for-dai.md与ops/inbox-dev.md追加简洁结果及报告路径，关联请求/batch/报告SHA。若报告结论是证据不足，也属于实质结果，须通知并说明。",
+    "使用已有herdr notification show原生通知提醒Roy；此CLI命令已只读核实支持title/body/sound(done)。在宿主既有runner完成/ops标准完成事件中执行，通知成功/失败及报告路径留回执；同一父请求+batch+报告SHA只提醒一次，不把任务入口补齐或已派发当作学习成果。",
+    "禁止用并行codex exec resume写watcher同一会话，禁止向watcher或ops TUI输入/打断。通知走herdr通知接口及既有收件箱，不新装cron/heartbeat，不恢复桌面或Claude观察者，不改对局参数/运维prompt。",
+    "当前观察者按Roy消息检查，没有后台定时监督；通知机制未核实实际接入前，不能承诺已开启自动提醒。中途变更按父项paper-trace留痕，原失败和历史pending保留、实际进展独立追加。"
+  ],
+  "notification_cli_verified": "herdr notification show --body <TEXT> --sound done <TITLE>",
+  "observer_timer_enabled": false,
+  "notification_hook_verified": false,
+  "state": "recorded; ops event pending"
+}

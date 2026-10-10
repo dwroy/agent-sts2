@@ -1,0 +1,1478 @@
+{
+  "doc": "Named code versions for tools/eval/metrics.py --group-by version / family (docs/eval.md section 2). A run belongs to the last entry whose commit is an ancestor of (or equal to) the run's code commit (runs.jsonl `code`, `+dirty` stripped); runs older than the first entry are 'before <first name>'. Keep the entries in time order; give each the decision-log line (or tag) that says when it went live. An entry whose commit is null is announced but not live: it is skipped until its commit is filled in (V4: fill in its first playing commit when it goes live, docs/v4-go-live.md). The brain setup of a run (engines, models, knowledge prefix) is not a version: it is in logs/run-config.jsonl, see metrics.py --group-by config.",
+  "versions": [
+    {
+      "name": "baseline",
+      "family": "baseline",
+      "commit": "910671b",
+      "source": "decision-log 2026-09-28 11:12: rollback to the pre-ablation tree 1910898 plus the move model; stage-1 fixes then merged one at a time"
+    },
+    {
+      "name": "V2",
+      "family": "V2",
+      "commit": "189fc29",
+      "source": "tag V2-start; decision-log 2026-09-28 22:19 (V2 = the 10-run window 189fc29..98a16de)"
+    },
+    {
+      "name": "V3-pre",
+      "family": "V3-pre",
+      "commit": "debdecc",
+      "source": "tag V3-pre; decision-log 2026-09-28 23:22"
+    },
+    {
+      "name": "V3",
+      "family": "V3",
+      "commit": "17ac095",
+      "source": "tag V3; decision-log 2026-09-28 23:22 (per-target focus options, kill-order rollouts)"
+    },
+    {
+      "name": "V3.oneshot",
+      "family": "V3",
+      "commit": "0c93138",
+      "source": "decision-log 2026-09-29 12:50 (one-shot DeepSeek decisions for shop, rest site and events)"
+    },
+    {
+      "name": "V3.route-review",
+      "family": "V3",
+      "commit": "ea6ca1c",
+      "source": "decision-log 2026-09-29 16:00 (route review in the card-reward and rest questions; HP-drop re-plan removed)"
+    },
+    {
+      "name": "V4",
+      "family": "V4",
+      "commit": "1c05390",
+      "source": "decision-log 2026-09-30 08:05 (Dai: stop v3, play V4 from worktree jev-sts2-v4run, branch v4-live, A8 x20, DeepSeek + full knowledge prefix)"
+    },
+    {
+      "name": "V4.1",
+      "family": "V4",
+      "commit": "77b5394",
+      "source": "decision-log 2026-09-30 16:07 (Dai: stop the V4 base window after 9 runs, go live with V3-final sync + potion cost / conversion table; A8)"
+    },
+    {
+      "name": "V4.2",
+      "family": "V4",
+      "commit": "531d154",
+      "source": "decision-log 2026-10-01 09:32 (B2 whole-fight numbers on Jev's boss lines for trusted bosses, B3 simulated act-boss facts on build questions, data-based trust list, Insatiable/Knowledge Demon sim fixes, fix-queue-v4 batch; A8)"
+    },
+    {
+      "name": "V4.3",
+      "family": "V4",
+      "commit": "90a73dd",
+      "source": "decision-log 2026-10-02 07:27 (B5: Crab trusted, sim one-turn lookahead; SL on: boss 5 retries, the hardest 5 non-boss fights 3; headline = final result, first attempts logged; A8)"
+    },
+    {
+      "name": "V4.3.thief",
+      "family": "V4",
+      "commit": "8f65d5b",
+      "source": "decision-log 2026-10-02 11:14 (Dai: THIEF_FACTS live mid-V4.3 without waiting for the 20 runs: thief_context and per-option thief facts, the Hopper's and Fat Gremlin's escape in the rollout, a kill-before-it-leaves line kept among the options; the stolen card's return claimed before the card reward and after a skip)"
+    },
+    {
+      "name": "V4.3.mech",
+      "family": "V4",
+      "commit": "5e3ec80",
+      "source": "decision-log 2026-10-02 13:52 (Dai: THIEF_COST on — the stolen card / gold as HP in the ranking; MECH_RULES — mechanics learned from the logs into monster-db observed, the Flutter strip-stun in the solver and rollout, active once the monster DB is refreshed by the new builder; SL_ENABLED on by default; SL fixes 0660f99 back_in_fight, 7564be3 enemy names)"
+    },
+    {
+      "name": "V4.3.mech2",
+      "family": "V4",
+      "commit": "cf22104",
+      "source": "decision-log 2026-10-02 15:32 (MECH_MOVE_RULES: learned move changes on a power's removal — the Axebot's Stock → BOOT_UP — active after the run worktree's next monster-DB refresh; the Kaiser Crab's back attack x1.5 only while both claws live, in the solver, the rollout and the boss simulator)"
+    },
+    {
+      "name": "V4.3.slretry",
+      "family": "V4",
+      "commit": "ff50ea0",
+      "source": "decision-log 2026-10-02 16:44 (SL retries: the earlier attempt's draw order up to the first reshuffle or insertion in the solver, rollout, potion MC and B2; more compute on attempt 2+ (rollout 24 samples, up to 20 s a question / 30 s a turn, potion MC x3, B2 1200); SL_RETRY_KNOWN_DRAWS and SL_RETRY_COMPUTE on; an exact fast Pareto filter in distinctPlans; also SL judge Feel No Pain fix a677f15 and Fruit Juice in the B3 start 7f4759d)"
+    },
+    {
+      "name": "V4.3.fix2",
+      "family": "V4",
+      "commit": "fd90a10",
+      "source": "decision-log 2026-10-02 17:04 (queued bug fixes: no B3 sim after the act boss died, Pen Nib on the counted attack only, Chains of Binding locks, setup guard exception (never applied with FIGHT_PLAN off), Sai 7 block, Lost Wisp 8 AoE per Power, X-cost X hits, wait for Rolling Boulder's turn-start +5)"
+    },
+    {
+      "name": "V4.3.fix3",
+      "family": "V4",
+      "commit": "efa8787",
+      "source": "decision-log 2026-10-02 18:26 (learner mechanics-audit fixes: Galvanic's 6 and Thorns through block, Rupture on every HP loss of our turn at its card's amount (Rupture+ 2), Throwing Axe's first card played twice; residual tool measurement fixes)"
+    },
+    {
+      "name": "V4.4",
+      "family": "V4",
+      "commit": "a23019c",
+      "source": "decision-log 2026-10-02 18:42 (Dai: V4.3 ended early after 12-13 A8 runs, go to A9 now; SL list + Soul Nexus, low-trust boss sim on SL retries only, B3 numbers hidden under 300 samples; A9 x20)"
+    },
+    {
+      "name": "V4.4.sl",
+      "family": "V4",
+      "commit": "491eaeb",
+      "source": "decision-log 2026-10-02 19:49 (SL: reload at the least-loss verdict when certain with nothing random (SL_RELOAD_EARLY); held cards' end-of-turn damage in the judge; end-of-turn relics, Flame Barrier, Beating Remnant, Tungsten Rod exact or refused; known draw order kept through random insertions and moves to the top (planning; the judge only on exact order); Lizard Tail trigger fix 70cee12)"
+    },
+    {
+      "name": "V4.4.runplan",
+      "family": "V4",
+      "commit": "386efb5",
+      "source": "decision-log 2026-10-02 19:53 (RUN_PLAN_MERGE: a due run plan rides on the next DeepSeek question instead of its own call at the map; separate call only after 2 floors without a question or right before the act boss)"
+    },
+    {
+      "name": "V4.4.explore",
+      "family": "V4",
+      "commit": "3c95965",
+      "source": "decision-log 2026-10-02 22:31 (SL_RETRY_EXPLORE: from attempt 3 one Jev decision point per attempt, backtracking from the death, replaces a line a failed attempt played on the same board with the best untried shown line; known draws counted from the pile only (Crossbow's Spite), common prefix kept; a single hittable enemy is not chance)"
+    },
+    {
+      "name": "V4.4.asc",
+      "family": "V4",
+      "commit": "993eeb4",
+      "source": "decision-log 2026-10-02 23:09 (monster amounts estimated at an unlogged ascension like damage (ASC_AMOUNTS: Strength buffs, block, our debuffs, start powers; own pairs, else the room kind's, else all); Knowledge Demon Ponder heal tie to the larger value (A9 sim healed 12 instead of 30))"
+    },
+    {
+      "name": "V4.4.explore2",
+      "family": "V4",
+      "commit": "914515c",
+      "source": "decision-log 2026-10-03 01:16 (explore: B2 win-rate gate on trusted bosses, boss-fight replacements may drink, all-lost points last, attempt 2's path replayed up to the deviation point, pile picks (Seeker Strike) keep the known order; SL judge counts next turn's start HP loss fcc89d8)"
+    },
+    {
+      "name": "V4.4.anydraw",
+      "family": "V4",
+      "commit": "79ef4eb",
+      "source": "decision-log 2026-10-03 03:32 (SL_JUDGE_ANY_DRAW: the draw veto lifted when the death holds with any draw — a drawing card's own HP cost kills first (R764 F33 T10 Offering), nothing can be drawn, or the superset board (every card that could be drawn in hand) still dies with an untruncated exact search)"
+    },
+    {
+      "name": "V4.4.explore3",
+      "family": "V4",
+      "commit": "cab3c3f",
+      "source": "decision-log 2026-10-03 06:22 (least-loss never dies on its own turn 08ec8f9; explore compares turns by an order-insensitive card+target key, attempt 1 counted (SL_RETRY_EXPLORE_CANON), and a deviation turn never ends with a failed attempt's plays (SL_RETRY_EXPLORE_TURN))"
+    },
+    {
+      "name": "V4.4.shrink",
+      "family": "V4",
+      "commit": "b0e9618",
+      "source": "decision-log 2026-10-03 07:33 (our attacks while Shrunk: the player's SHRINK_POWER is -1, so it never applied; now 0.7 exactly once with the game's single floor, hand numbers already shrunk, Strength gained this turn / Body Slam / Vigor shrunk, potions and non-attack damage not, Shrink ends when its beetle dies)"
+    },
+    {
+      "name": "V4.4.whole",
+      "family": "V4",
+      "commit": "f4f4b0d",
+      "source": "decision-log 2026-10-03 10:02 (experience 2026-10-03.1 43553c8; SL_RETRY_EXPLORE_WHOLE: a deviation line that may repeat a failed turn after its draw is replaced, the avoid sees every surviving line, avoid failures logged, a non-differing deviation does not use up its point; a potion's card is free this turn except a Power under Spiked Gauntlets (+1))"
+    },
+    {
+      "name": "V4.5",
+      "family": "V4",
+      "commit": "7956ec2",
+      "source": "decision-log 2026-10-03 11:00 (V4.5 A9 batch start, Dai: 20 runs at A9; experience 2026-10-03.2 d0ef3a0 (Queen head turn, Pantograph heal, act-2 chains); Enthralled played first, the cards it locks playable after it (v4-fix6 8f1106a))"
+    },
+    {
+      "name": "V4.5.exp3",
+      "family": "V4",
+      "commit": "04e1708",
+      "source": "decision-log 2026-10-03 11:21 (experience 2026-10-03.3: 37 reviews, 5 A9; Crab back attack x1.5, Queen passive damage and start-of-turn block not reduced, Three Knights, SL retries win almost only at high entry HP; mid-batch)"
+    },
+    {
+      "name": "V4.5.slact3",
+      "family": "V4",
+      "commit": "e56f773",
+      "source": "decision-log 2026-10-03 11:42 (SL_ACT3_LOW_HP: act-3 non-boss fights entered below 40% HP join SL, certain death only, gate logged per row; card choice scores a free offer (card potions, Liquid Memories, Discovery) at this turn's cost; Powers in the piles +1 under Spiked Gauntlets; mid-batch)"
+    },
+    {
+      "name": "V4.5.route",
+      "family": "V4",
+      "commit": "e770011",
+      "source": "decision-log 2026-10-03 11:48 (route chain penalty to the data: act 2 from the 4th Monster/Elite fight since the last rest site or act start, shops and ? not breaking it, elites included; act 3 no count penalty; act 1 unchanged; route facts state the stretch count; Pantograph rest fact only when the next fight is the boss, with resting's real heal min(heal, max - HP - 25); mid-batch)"
+    },
+    {
+      "name": "V4.5.deathmove",
+      "family": "V4",
+      "commit": "b2f1f38",
+      "source": "decision-log 2026-10-03 12:29 (MECH_DEATH_MOVE: the monster DB learns ally-death move changes from the logs (Queen x Torch Head Amalgam: Enrage the kill turn, Off With Your Head the next 22/22; Living Shield x Turret Operator: Smash 5/5); solver, rollout and B2 apply them; Queen head-chop timing corrected in the guide, boss notes and queen-plan; mid-batch)"
+    },
+    {
+      "name": "V4.5.sl50",
+      "family": "V4",
+      "commit": "e85e11e",
+      "source": "decision-log 2026-10-03 13:48 (SL_ACT3_LOW_HP_PCT default 40 -> 50, Dai; mid-batch)"
+    },
+    {
+      "name": "V4.5.routereview",
+      "family": "V4",
+      "commit": "b3a950a",
+      "source": "decision-log 2026-10-03 14:46 (route review: route_review.next_rest gives the kept route and up to 6 alternatives their stretch to the next rest site (fights, elites, ? rooms, shop, projected HP median/p75) and next elite entry HP; a clearly worse line (same rest floor, no more elites, 10%/15%; or a lower elite entry) is said so; mid-batch)"
+    },
+    {
+      "name": "V4.5.lizard",
+      "family": "V4",
+      "commit": "91e2219",
+      "source": "decision-log 2026-10-03 14:54 (Lizard Tail seen as used when the revive is followed by more damage in the same enemy turn: lethal read + HP rose + <= 50%, the old window, a hit-by-hit match, a fight won in the enemy turn, 0 HP in an enemy-turn read; an SL reload restores it; mid-batch)"
+    },
+    {
+      "name": "V4.5.passive",
+      "family": "V4",
+      "commit": "ebb3710",
+      "source": "decision-log 2026-10-03 15:15 (PASSIVE_PIECES: passive damage/block not cut by Weak/Frail in the boss clock (block at a 0.5 share), the rollout's later turns (Orichalcum, Ripple Basin, Horn Cleat, Letter Opener, Ornamental Fan, Parrying Shield) and B2/B3 (the last three); mid-batch)"
+    },
+    {
+      "name": "V4.5.passive2",
+      "family": "V4",
+      "commit": "e45bdb8",
+      "source": "decision-log 2026-10-03 16:23 (the live solver's current turn counts Orichalcum, Ripple Basin, Letter Opener, Ornamental Fan, Parrying Shield; Plating does not stop Orichalcum; mid-batch)"
+    },
+    {
+      "name": "V4.5.where",
+      "family": "V4",
+      "commit": "e36535c",
+      "source": "decision-log 2026-10-03 16:40 (SL_RETRY_EXPLORE_WHERE: a retry deviates at the turn whose own HP loss plus later losses (halved per turn) is largest over the failed attempts, spread over turns, lost points only break ties; mid-batch)"
+    },
+    {
+      "name": "V4.5.judge",
+      "family": "V4",
+      "commit": "0727c1c",
+      "source": "decision-log 2026-10-03 17:10 (SL judge: the Waterfall Giant husk's blast turn judged by the normal rules (blast = shown DeathBlow), the Insatiable's Sandpit at 1 a certain death through the usual vetoes, Orichalcum counted whatever Plating; mid-batch)"
+    },
+    {
+      "name": "V4.5.gpt",
+      "family": "V4",
+      "commit": "011bfbd",
+      "source": "decision-log 2026-10-03 17:59 (brain switched to codex: gpt-6.1-sol at xhigh through the Codex CLI on the ChatGPT subscription, DeepSeek as fallback, BRAIN_CODEX_MAX_CALLS=80 per run; from run RNTVAT76BPV0, 2026-10-03T09:58:49Z; Jev and the combat planner unchanged)"
+    },
+    {
+      "name": "V4.5.gpt.guard",
+      "family": "V4",
+      "commit": "172f001",
+      "source": "decision-log 2026-10-03 18:31 (codex usage guard: reads account/rateLimits through a short-lived app-server at start and every 3 calls / 10 min; codex off at 80% of any window or at any sign of credit use; BRAIN_CODEX_USAGE_REQUIRED=on fails closed)"
+    },
+    {
+      "name": "V4.5.potionx",
+      "family": "V4",
+      "commit": "61d236c",
+      "source": "decision-log 2026-10-03 18:48 (SL_RETRY_EXPLORE_POTION: a retry line with a failed turn's cards whose potions that attempt drank anyway counts as tried; mid-batch)"
+    },
+    {
+      "name": "V4.5.gpt.stall",
+      "family": "V4",
+      "commit": "0aed6e1",
+      "source": "decision-log 2026-10-03 19:13 (codex stall detector: silent BRAIN_CODEX_STALL_MS after the first token → kill and ask once more, then DeepSeek; per-run trace rows in codex-calls.jsonl; retry notices no longer discard answers; console names the engine)"
+    },
+    {
+      "name": "V4.5.sandpit",
+      "family": "V4",
+      "commit": "25d86e9",
+      "source": "decision-log 2026-10-03 19:25 (SANDPIT_START: the live rollout starts the Insatiable's Sandpit at 4 with 3 Escapes in the draw pile from Liquify Ground on turn 1; mid-batch)"
+    },
+    {
+      "name": "V4.5.gpt.high",
+      "family": "V4",
+      "commit": "25d86e9",
+      "source": "decision-log 2026-10-03 19:38 (brain on codex at effort high, with the usage guard (REQUIRED on, stop 80%) and the stall detector (120 s after the first token, first token 180 s, 1 retry); from run J4S28FRQKD7G, 2026-10-03T11:37:23Z)"
+    },
+    {
+      "name": "V4.5.gpt.session",
+      "family": "V4",
+      "commit": "4719643",
+      "source": "decision-log 2026-10-03 20:47 (codex session mode (one app-server thread, revert per answer, 2000-char answer cut) and the codex schema without route_reason, text fields capped at 600; from run L3G50U6KX5ST, 2026-10-03T12:43:12Z)"
+    },
+    {
+      "name": "V4.5.gpt.schema",
+      "family": "V4",
+      "commit": "8e19a8d",
+      "source": "decision-log 2026-10-03 23:07 (codex schema carries only the fields a question uses (BRAIN_CODEX_SCHEMA_FIELDS=used); a cut session answer whose required fields are complete is accepted (BRAIN_CODEX_ACCEPT_CUT); whitespace-loop cut at 100 blanks; failed-primary time logged; decider names the engine)"
+    },
+    {
+      "name": "V4.5.slreplay",
+      "family": "V4",
+      "commit": "554951d",
+      "source": "decision-log 2026-10-03 23:28 (SL_RETRY_EXPLORE_REPLAY_PLAYS / _REPLAY_DEVIATE: the replay plays the reference attempt's logged plays when its line is not shown, else deviates at the first decided board; SL_RETRY_KNOWN_OFF_TOP / _HAND_ORDER: cards played off the pile top (Distilled Chaos, Havoc, Cascade, Hellraiser) keep the known order)"
+    },
+    {
+      "name": "V4.5.inferno",
+      "family": "V4",
+      "commit": "3dfc2af",
+      "source": "decision-log 2026-10-03 23:48 (SL judge: Inferno's start-of-turn loss counted per copy (fewest copies its amount allows), vetoed when the turn-start draw and sweeps could kill every enemy first)"
+    },
+    {
+      "name": "V4.5.revive",
+      "family": "V4",
+      "commit": "e32c8b7",
+      "source": "decision-log 2026-10-04 01:20 (Lizard Tail tracker counts held-card and next-turn-start losses; the SL judge plays revives out hit by hit over every order (certain only if every order dies); Beating Remnant bound from the known start loss; GAME_OVER never opens a tracked fight; SL_RELOAD_ON_REVIVE switch, off; draw tracker hand exits; engine names in console)"
+    },
+    {
+      "name": "V4.5.inferno2",
+      "family": "V4",
+      "commit": "03eedec",
+      "source": "decision-log 2026-10-04 01:27 (the planner counts Inferno's start loss per copy (shared start-loss helper; solver, rollout, B1-B3); a turn's first action waits for the board to stand still 500 ms with Inferno, 1000 ms with Hellraiser)"
+    },
+    {
+      "name": "V4.6",
+      "family": "V4",
+      "commit": "225ee2d",
+      "source": "decision-log 2026-10-04 07:50 (V4.6 A9 batch, Dai 2026-10-04: brain all GPT-6.1 sol at xhigh (session mode, used-fields schema, accept cut, usage guard 80%), SL_RELOAD_ON_REVIVE off, SL_ACT2_LOW_HP on and every act-3 elite listed, SL_RETRY_EXPLORE_SECOND on, stays at A9; plus every V4.5 mid-batch fix: judge bounds, Disintegration, revive play-out, Inferno per copy in planner and judge, turn-start settle, SL replay / known draws, codex logging)"
+    },
+    {
+      "name": "V4.6.actroute",
+      "family": "V4",
+      "commit": "97965b7",
+      "source": "decision-log 2026-10-04 08:25 (act-start route questions (event/act-plan, map/route-plan) carry candidate_routes: up to 6 distinct routes (3 best by boss-entry HP, safest, most elites, most shops) with fights, elites and entry HP, shops, rests and projected HP (median, per-stretch p75) per stretch; mid-batch)"
+    },
+    {
+      "name": "V4.6.exp4",
+      "family": "V4",
+      "commit": "8ab0878",
+      "source": "decision-log 2026-10-04 08:31 (experience 2026-10-04.1: the 20 A9 V4.5 reviews; act3-a9, Panic Button blocks only the next turn, Fiddle, Lizard Tail mid-enemy-turn, two Infernos -2 at start, Giant blast 3T+14 at A9; mid-batch)"
+    },
+    {
+      "name": "V4.6.asc",
+      "family": "V4",
+      "commit": "c9955eb",
+      "source": "decision-log 2026-10-04 09:39 (experience 2026-10-04.2: ascension audit — 58 mechanism entries [0,20], 69 statistics recomputed on A8+ (A8 and A9 apart), 70 strategy bounded by their data; A9 applies 195 entries, 36,103 characters; mid-batch)"
+    },
+    {
+      "name": "V4.6.ascfacts",
+      "family": "V4",
+      "commit": "75d1d71",
+      "source": "decision-log 2026-10-04 10:30 (data placeholders by ascension band: from A8 the crab / Queen / Sandpit / Giant-block / Matriarch-wake records show A8 and A9 apart; frozen keys {@N:…}; fight-value refresh fixed (silently failing since 10-02); refresh tools write whole files under per-process temp names; mid-batch)"
+    },
+    {
+      "name": "V4.6.outcomeasc",
+      "family": "V4",
+      "commit": "e76bc9d",
+      "source": "decision-log 2026-10-04 11:47 (outcome statistics per ascension: build-outcome-stats.py writes one table per ascension (A8, A9, …); from A9 the questions show A9 rows and baseline, with A8's row appended when A9 has n<5; A8 and below byte-identical; takes effect when the after-run refresh rebuilds outcome-stats.json; mid-batch)"
+    },
+    {
+      "name": "V4.6.memo",
+      "family": "V4",
+      "commit": "8099cdc",
+      "source": "decision-log 2026-10-04 12:00 (SL_RETRY_MEMO: on a retried fight, rollout and B2 results that no clock cut are reused when the same board is planned again (budget at least the stored run's need; a hit is charged to the turn budget as if run); decisions byte-identical on 662 replayed decisions; stage timing (planner, pre, solver / potion MC / rollout / B2 / other, CPU, load1, probe_ms, memo hits) in decision rows; mid-batch)"
+    },
+    {
+      "name": "V4.6.giant",
+      "family": "V4",
+      "commit": "fa29905",
+      "source": "decision-log 2026-10-04 12:16 (rollout: a lone living Waterfall Giant at the horizon is valued by its earliest survivable kill against the growing blast (giantTerminal); a living Giant no longer draws Explode in the 5-turn rollout; the husk on the last simulated turn meets next turn's block; mid-batch)"
+    },
+    {
+      "name": "V4.6.deathonly",
+      "family": "V4",
+      "commit": "334fbb6",
+      "source": "decision-log 2026-10-04 13:31 (the 5-turn rollout keeps death-only moves out of every living enemy's next move: Test Subject Respawn, Decimillipede Reattach / Dead, Fogmog's Eye Revive; mid-batch)"
+    },
+    {
+      "name": "V4.6.explore3",
+      "family": "V4",
+      "commit": "8939eb0",
+      "source": "decision-log 2026-10-04 13:52 (SL explore: SL_RETRY_EXPLORE_REARM (a wasted deviation picks a later point), _REPLAY_ORDER (the reference's logged play order), _TARGET_TURN (exclusions kept off-path on the point's turn), _ANCHOR (the best failed attempt by turn reached then enemy HP; attempt 1 records points), _REPLAY_CODE; mid-batch)"
+    },
+    {
+      "name": "V4.6.axebot",
+      "family": "V4",
+      "commit": "e950e9d",
+      "source": "decision-log 2026-10-04 14:07 (Axebot on the SL hard-fight list: A8 15 fights 2 deaths, A9 11 / 4; mid-batch)"
+    },
+    {
+      "name": "V4.6.routekeep",
+      "family": "V4",
+      "commit": "0b12aa1",
+      "source": "decision-log 2026-10-04 14:31 (codex route field limited to keep or node ids (BRAIN_CODEX_ROUTE_PATTERN), a garbled keep read as keep without re-ask; SL_RETRY_EXPLORE_WASTED: a deviation repeating a failed turn (same turn start, up to upgrades, or reaching a failed board) is wasted, REARM also off the reference path; mid-batch)"
+    },
+    {
+      "name": "V4.6.conditions",
+      "family": "V4",
+      "commit": "972519d",
+      "source": "decision-log 2026-10-04 15:16 (CARD_CONDITIONS: conditional card effects evaluated in the solver where they resolve — Restlessness / Impatience only on an empty / attack-free hand, Spite after any HP lost this turn, Rage block on later Attacks, Ashen Strike / Expect a Fight / Tear Asunder count the line; mid-batch)"
+    },
+    {
+      "name": "V4.6.shiv",
+      "family": "V4",
+      "commit": "7023574",
+      "source": "decision-log 2026-10-04 15:29 (card text: a template's conditional placeholders no longer decide the card, the mod's target fields first — Shiv no longer read as AoE and played without a target, RNTV 18 gate refusals; the SL judge's draw test and the deck profile's Strength sources read Mad Science's template without its riders; codex usage guard: a failed read keeps codex off only until a read works, backoff 30 s / 2 / 5 / 10 min, a 401 first has codex refresh its own token; the same run also starts .env BRAIN_CODEX_SERVICE_TIER=priority, fast mode, decision-log 2026-10-04 15:09; mid-batch, from V4.6 run 9)"
+    },
+    {
+      "name": "S1.climb",
+      "family": "Silent",
+      "commit": "bf3ebb7",
+      "source": "decision-log 2026-10-04 21:39 (first Silent version: multi-character plumbing, CHARACTER=SILENT, TARGET_ASCENSION=climb from A0, empty per-character knowledge, codex learner and codex ops; Ironclad play identical to V4.6.shiv)"
+    },
+    {
+      "name": "S1.exp1",
+      "family": "Silent",
+      "commit": "71b55e0d",
+      "source": "decision-log 2026-10-05 00:16 (Silent experience 2026-10-04.1: 12 entries learned by the codex learner from C48LLXBGKXQ9 — Knife Trap, Footwork, Bouncing Flask poison timing, Finisher, Shockwave, Gorget, The Insatiable, Waterfall Giant, route / rest / deck observations; from Silent run 4)"
+    },
+    {
+      "name": "S1.exp2.fix1",
+      "family": "Silent",
+      "commit": "6c3f7028",
+      "source": "decision-log 2026-10-05 01:51 (Silent experience 2026-10-05.1 from Y6GM2CHWJBEY; codex fix-batch 5805dd1..3556520: fix-batch / learner queue and live merge instructions, character-specific healing removed from the room-cost legend (Ironclad prefix text changes too), deepseek-prompt-dump scans states backward, codex session mode kept for cache hits; merged by the observer after the learner's sandbox could not run the full suite)"
+    },
+    {
+      "name": "S1.fix2",
+      "family": "Silent",
+      "commit": "8118cd4635075954afe85b543017bc9f24ab22d7",
+      "source": "decision-log 2026-10-05 03:18 (C48LLXBGKXQ9: silent-0001 lethal continuation F33 T13; silent-0002 immediate Knife Trap replays F19 T8/F33 T1; silent-0003 character-isolated boss-clock statistics F18/F32; learner self-check and dispatch infrastructure)"
+    },
+    {
+      "name": "S1.exp5",
+      "family": "Silent",
+      "commit": "b3b446b9b089a4c54c0eb4fbe582f684545aac5b",
+      "source": "decision-log 2026-10-05 04:58 (Silent experience 2026-10-05.4: +5/~8/-0 from KAY522KT5NXR A0; six prior Silent runs recomputed; Toasty Mittens, Abrasive, Speedster, Piercing Wail, Orichalcum, Strength/Dexterity, poison, phases, route/rest/SL; actual live .2 to .4 also includes main b887d58c .3; exp a4bf77d2, sandbox tests 138 files/1863 cases; from next Silent run)"
+    },
+    {
+      "name": "S1.fix3",
+      "family": "Silent",
+      "commit": "ccf1fcde1f456c92ab4542710a54338e4bcdcd5c",
+      "source": "decision-log 2026-10-05 05:10 (Silent evidence: Regret silent-0032; Footwork silent-0026; Afterimage silent-0022; Shadow Step silent-0033; living Obscura summons silent-0029; poison silent-0008/0010/0011/0027; retry-contaminated Test Subject phase sequences silent-0041; learner self-tested and merged)"
+    },
+    {
+      "name": "S1.exp6",
+      "family": "Silent",
+      "commit": "c5b9123b6e553cef7f41eb52c6f22c24c41d9947",
+      "source": "decision-log 2026-10-05 05:43 (Silent experience 2026-10-05.5: +3/~7/-0 from E6AVMMVCSRPC A1; seven prior Silent runs recomputed; exp cf3de824; ops fallback preserves both decision-log histories and refresh 2d541005; merged-live sandbox checks passed; next Silent run)"
+    },
+    {
+      "name": "S1.fix4",
+      "family": "Silent",
+      "commit": "41de566285f11e645b61f5a12d40540d26d489f0",
+      "source": "decision-log 2026-10-05 05:56 (outcome statistics reload on character file path/mtime/size changes; infrastructure evidence 4AWDPGCHQPKZ A9, run-wide; fixed data regression; compiler excludes archived learner run artifacts; code 7bc83580 and 2650aed8; inherited S1.exp6 retained)"
+    },
+    {
+      "name": "S1.exp7",
+      "family": "Silent",
+      "commit": "2398da6301dfa22cfbae46b83de499ff5279a995",
+      "source": "decision-log 2026-10-05 06:02 (Silent experience 2026-10-05.6: +3/~9/-0 from XYYQYBRM2A01 A1; eight prior Silent runs recomputed; exp 4f429c0c; ops fallback preserves records, refreshed knowledge and existing S1.fix4; merged-live sandbox tests 147 files/1892 cases passed; next Silent run)"
+    },
+    {
+      "name": "S1.fix5",
+      "family": "Silent",
+      "commit": "b129cd20618b81ddb8233ccd0ce79179e8127532",
+      "source": "decision-log 2026-10-05 06:36（未升级萎靡实际X减力与虚弱；KAY522KT5NXR F9/F12 T3、XYYQYBRM2A01 F30 T1/F33 T3，silent-0051/0053，0d7465a0；统计重犯按首次开局时间，silent-0052，2610945b；保留S1.exp7与刷新数据；合入后沙箱149文件1897用例通过，下一局生效）"
+    },
+    {
+      "name": "S1.fix6",
+      "family": "Silent",
+      "commit": "63c50e945d5905cedc4411da9d7ba3b04e814976",
+      "source": "decision-log 2026-10-05 06:55（撕咬Increase在同方案及后续回合共享，钢笔尖按成长后的每段翻倍；K3676LU8B0UH F48第2次T1/T9/T12，silent-0056/0058，源码8ffd62ef082e59d53440ca9f9eb34184df832157；保留S1.fix5及刷新数据；沙箱150文件1901用例通过，下一局生效）"
+    },
+    {
+      "name": "S1.exp8",
+      "family": "Silent",
+      "commit": "0f34d1c43820371749920bde8e378b598f67fa33",
+      "source": "decision-log 2026-10-05 07:58 (Silent experience 2026-10-05.7; source 0d469a227c080f8dd460e40352ee10dfee3770b2; 来源K3676LU8B0UH A1及静默历史九局复算，新增4/更新13/退役0，active47、12090字; ops fallback preserves refresh and history; fixed sandbox 150 files/1901 cases passed)"
+    },
+    {
+      "name": "S1.exp9",
+      "family": "Silent",
+      "commit": "972303c55c0b1ab55453c8f44d967ccf5f53a3f6",
+      "source": "decision-log 2026-10-05 08:01 (Silent experience 2026-10-05.8; source 267128cdd633134b614d3ff91392a5ec7128d8ff; 来源CSBR5CRDWQNB A2及十局静默历史复算，新增5/更新11/退役0，active52、13861字；源分支自测150文件1901用例通过; ops fallback preserves refresh and history; fixed sandbox 150 files/1901 cases passed)"
+    },
+    {
+      "name": "S1.fix7",
+      "family": "Silent",
+      "commit": "dcc1c8976f28c5383fd786748bfe3c9ccf266929",
+      "source": "decision-log 2026-10-05 08:16 (风的女儿逐攻击补挡；CSBR5CRDWQNB A2 F33第6次T1/T2/T4，silent-0061/0063，学习者源码907a19f8d03ede74ed135c0395d120ed84232358；仅静默持遗物启用，铁甲等价；保留S1.exp9及刷新；合入后固定沙箱151文件1905用例通过，下一局生效)"
+    },
+    {
+      "name": "S1.high",
+      "family": "Silent",
+      "commit": "0811875f",
+      "source": "decision-log 2026-10-05 08:34 (Dai: codex brain back to the standard service tier (BRAIN_CODEX_SERVICE_TIER=priority off) and effort high (was xhigh); learner tasks and the ops session at high too; from the next run)"
+    },
+    {
+      "name": "S1.fix8",
+      "family": "Silent",
+      "commit": "adc02237539d1fb26076e6fadb7d495338c0ebb4",
+      "source": "decision-log 2026-10-05 08:36 (同房间奖励屏combat.player较低终帧补入战损；CSBR5CRDWQNB A2 F17 T9，源码098a54719bae87b909b25174a73ccebd68a17a61；合后沙箱152文件1906用例通过，重建common怪物事实及silent记录，铁甲文件不变且较高回血终点保持原口径；关联silent-0040只上线终帧子项，原boss-damage跨SL拼接仍未修；保留S1.fix7/S1.exp9)"
+    },
+    {
+      "name": "S1.exp10",
+      "family": "Silent",
+      "commit": "002d835ff9a85590e07dbc6c5aaaabeddd015fbc",
+      "source": "decision-log 2026-10-05 08:56 (学习者经验2026-10-05.9；源90ca92012ab870c2549533f52a1594bcc6a12d4e，ZZMYZ5UBCG72 A2及此前11局静默证据；+8/~15/-0，active60、16795字符；合后固定沙箱tsc0、152文件1906用例exit0，不额外审核；保留S1.exp9/S1.fix8，账本20项登记shipped，silent-0066模型bug不变)"
+    },
+    {
+      "name": "S1.fix9",
+      "family": "Silent",
+      "commit": "3fc7a22b9a6fc064c679621009417d4882e35940",
+      "source": "decision-log 2026-10-05 09:03（暴露Power变量易伤：ZZMYZ5UBCG72 F48 T2、Y6GM2CHWJBEY F5 T2，silent-0066，62e1166475a715f84c4bfe8acd102762b5a3e50e；跨SL boss统计拼接：T082DRCUHRRD F48 T1—T11、C48LLXBGKXQ9 F17 T1—T19，silent-0040，3f40af6fffbb37a06e258c0e4b314a9fe8faaede；固定回归撤修复失败、恢复通过，合后沙箱通过；只重建静默boss-damage，下一局生效）"
+    },
+    {
+      "name": "S1.fix10",
+      "family": "Silent",
+      "commit": "f3eacafe801ba5d885abc9220c0fbf5732b80f85",
+      "source": "decision-log 2026-10-05 09:28（融入暗影同方案新增格挡翻倍，10GPK5XGHCK3 F42 T2/T7、1HC609GTLGN3 F17 T8，silent-0075/0077，82c50cc0e41d4206ae272c76a97fbcbe783827a9；腐蚀波本回合实际抽牌施毒，10GPK5XGHCK3 F37 T8/F48 T6/T12，silent-0074/0076，53cc31f453ef441d3770dd7598e3b7f071ea14c5；固定数据撤修复各3失败、恢复各4通过；合后沙箱通过，下一局生效）"
+    },
+    {
+      "name": "S1.exp11",
+      "family": "Silent",
+      "commit": "1b4c4c64c0fc7fd05d36296d038129d5700794bf",
+      "source": "decision-log 2026-10-05 10:20 (Silent experience .9 to 2026-10-05.11; fixed learner source a1d6ccc2d40b744c4ae24fa107239a46d41fea55; includes pending .10 c2ece69c; 1NZ8FE5F34R9 A4 plus thirteen prior Silent runs; learner +1/~13/-0 from .10, active63/21250 chars; preserves all seven latest live refresh blobs; merged sandbox tsc/vitest passed; ops ships both experience batches, not Anticipate bug silent-0078)"
+    },
+    {
+      "name": "S1.fix11",
+      "family": "Silent",
+      "commit": "20c01c06a541ebc0bba0541655fa0e653ce76d12",
+      "source": "decision-log 2026-10-05 10:34（预判未升级本回合敏捷；1NZ8FE5F34R9 A4 F29第1/4次T2及T3，silent-0078/0080，源码cd55a88517ed1d44c3f8bf64e0c9f2ab14ccb2e2；后续格挡5→7，临时增益次回合消失；固定撤源码两例失败，源分支及live沙箱通过；同批五项学习调度/账本工具修复，保留既有经验和修复版本）"
+    },
+    {
+      "name": "S1.exp12",
+      "family": "Silent",
+      "commit": "5f76a9dd7c696064241c48c6db32fdf975faeb3b",
+      "source": "decision-log 2026-10-05 10:50 (学习者静默经验2026-10-05.12；固定源e6ec56538c8fd8a048d49889df5f4d0ec8003716，F9PP859XZ3RJ A4及十四局本角色旧基线；新增4/更新8/退役0，active67、22759字符；保留已有S1.fix11及七项刷新blob；合后固定沙箱tsc0、163文件1951用例通过；12项经验账本由ops登记shipped，计算下注/涂毒代码模型bug0081/0082不在本批修复范围)"
+    },
+    {
+      "name": "S1.exp13",
+      "family": "Silent",
+      "commit": "cea106c969309528bb0633138cd1ac93a8e98c61",
+      "source": "decision-log 2026-10-05 11:56 (静默经验2026-10-05.13，固定源8d420db5c12c1bb050b4b0cc7a6a9af51abca5f5；9YBKCNBFP0X5 A4及十五局静默旧基线；新增3/更新8/退役0、active70/24212字符；异蛇头骨、余像与折扇、敏捷/脆弱、萎靡/成长及女王SL血价；合后固定沙箱tsc0、166文件1959用例通过；账本由运维按完成事件核实shipped)"
+    },
+    {
+      "name": "S1.fix12",
+      "family": "Silent",
+      "commit": "1422362192bfc079f8ab9ea55c1d59802a1456d5",
+      "source": "decision-log 2026-10-05 11:44（计算下注全弃原手牌：T082DRCUHRRD F27 T1、F9PP859XZ3RJ A4 F37 T2，silent-0081，3cd9fc6c；涂毒逐击施毒：F9PP859XZ3RJ A4 F37 T2/T5，silent-0082/0084，e3e7068b；已撤回的两项固定源码经本批复验后实际合入。修复potion-cost测试的刷新数据库依赖，保留原断言，固定铁甲历史夹具和时钟；合后沙箱通过，不改变药水规则；动作清单ed86d537一并合入）"
+    },
+    {
+      "name": "S1.fix13",
+      "family": "Silent",
+      "commit": "a71687ae80d0a51c5adb29f8690e5f3815314454",
+      "source": "decision-log 2026-10-05 11:56（异蛇头骨毒雾后续回合额外施毒：9YBKCNBFP0X5 A4 F25取得遗物、F48第6次T5建立3层毒雾，T6—T9每敌4/7/10/13毒，silent-0086/0087，学习者源码166594ed6b0a0fb206a6cee40bfb208da142d5f1；只给静默持SNECKO_SKULL的毒雾触发额外1，不改能力层数、不扩展直接毒牌/药瓶，铁甲等价；撤源码2失败/恢复2通过，源分支及合后固定沙箱通过，保留S1.fix12与刷新数据）"
+    },
+    {
+      "name": "S1.fix14",
+      "family": "Silent",
+      "commit": "24ce2a6f6c02cc527fafe7343eb509b13efe49ed",
+      "source": "decision-log 2026-10-05 12:29（脆弱下方案内新增敏捷先折减后取整；1LMBFGSMCWKU A4 F48 T3/T6，silent-0089/0091，源码71af970600794f87a993df428cdde14dd7809dd7；T6预测22挡改为18，T3为13挡；撤源码3失败、恢复3通过；源及合后沙箱tsc0、168文件1964例通过；无脆弱或无新增敏捷时铁甲等价，同组合通用缺陷随之修正；保留刷新数据，下一局生效）"
+    },
+    {
+      "name": "S1.exp14",
+      "family": "Silent",
+      "commit": "103fd5ff1d7e592a6ab1b1817e1188b5747fba9c",
+      "source": "decision-log 2026-10-05 12:44（静默经验2026-10-05.14，固定源7cff846db518f2d505f471e2fccd185ab7724c93；1LMBFGSMCWKU A4及十六局静默旧基线；新增1/更新12/退役0、active71/25785字符；投斧重放、脆弱敏捷、毒与女王两种顺序、巨兽自爆及分阶路线/休息；exp固定沙箱tsc0/167文件1961例，合后tsc0/168文件1964例；账本由运维按完成事件核实shipped）"
+    },
+    {
+      "name": "S1.fix15",
+      "family": "Silent",
+      "commit": "2d8983971e88ff65ed5477457315732acef98703",
+      "source": "decision-log 2026-10-05 12:59（事件点击返回completed/stable后仍等待状态变化，避免对旧选项重复问大脑；来源fix-queue-v4的JJ75S331VUKX A8 F31事件屏、turn不适用，源码25ce09bee5576b1adff8baf196fbe8b197a5ef11；撤源码1失败、恢复1通过；源及合后沙箱tsc0、169文件1965例；纯传输修复，角色共用，不改选项/机制/药水/策略，保留知识刷新）"
+    },
+    {
+      "name": "S1.strategy1",
+      "family": "Silent",
+      "commit": "76c82f8dc87e8f0fdd2bc822b18b5d2f5052b6bc",
+      "source": "decision-log 2026-10-05 13:40（学习者时钟事实提案silent-0098，关联silent-0003；源码79f7579e29e39e1dcae9e1ea3bdceb53bf9a734b；ZZMYZ5UBCG72 A2 F34/F48 T1、9YBKCNBFP0X5 A4 F34/F48 T1、1LMBFGSMCWKU A4 F48 T1/T6/T9、CSBR5CRDWQNB A2 F33 T1；未校准静默按当前进阶给本体血量与base/shown攻击参考，第一样本即用，借进阶显式估计、无数据未知；完整构筑校准仍未知，不新增打法阈值；撤源码7失败，恢复15通过；源及合后沙箱tsc0、170文件1973例通过，铁甲分支等价，保留刷新数据与全部记录，下一局生效）"
+    },
+    {
+      "name": "S1.fix16",
+      "family": "Silent",
+      "commit": "ee63d4bb09b28a5b530aa9ac82e704e158651be5",
+      "source": "decision-log 2026-10-05 13:58（CARDS_VIEW覆盖层关闭后保留未执行的大脑答案，仅同指纹、事实与问题时复用；来源fix-queue-v4的7PWU4CD3QCP3 A8 F47火堆、turn不适用，源码518b6880b46db88752f3666ff8471267c3f6638d；撤源码1失败/3通过，恢复4通过；源及合后沙箱tsc0、171文件1977例；通用接口修复，铁甲同样消除旧题重问，不改休息选择/机制/排序/药水策略；无对应bug-infra账本id，保留全部知识刷新）"
+    },
+    {
+      "name": "S1.strategy2",
+      "family": "Silent",
+      "commit": "2b70928af6e2d02f6f683c9b522d601913ed5204",
+      "source": "decision-log 2026-10-05 14:18（静默阶段结束窗口事实及即时损血参考；来源/home/dw/Projects/agent-sts2/learner/runs/20261005-140218-strategy-proposal/proposal.md，UACFSW4VDDLD A6 F48第6次T4，账本silent-0100，源码1d57f9d0，合入2b70928af6e2d02f6f683c9b522d601913ed5204；撤源码3失败/2通过、恢复5通过，源及合后沙箱tsc/vitest0。所有选项保留、相同参考损血标并列，Jev自行选择，不改rollout排名、药水或SL；铁甲分支等价，无生成脚本变化。运维按strategy-done及handoff-ops.md核实实际上线并经ledger.py登记shipped，完整套件交调度器沙箱外补跑。）"
+    },
+    {
+      "name": "S1.exp15",
+      "family": "Silent",
+      "commit": "b30783318755f721938cbcb3c31d3bf97bff7007",
+      "source": "decision-log 2026-10-05 14:33（静默经验2026-10-05.15；固定源5503d1b3ae3719224305d579d9eda0550a93a24c；ZE8F192FKX24 A5、FH2HB2X17F2H/UACFSW4VDDLD A6，二十静默局复算；新增6/更新18/退役0，active77/30027字；滚石、坚固钳子、幻影首刀、疑虑、羊毛剪观察与知识恶魔SL，分阶路线/休息及旧机制更新；exp沙箱tsc0/170文件1973例，合后tsc0/172文件1982例；账本由运维依据完成事件登记shipped）"
+    },
+    {
+      "name": "S1.fix17",
+      "family": "Silent",
+      "commit": "6aa5eb0b22eaed2a649fa9e763ea9c96b5f3fca1",
+      "source": "decision-log 2026-10-05 15:01（幻影之刃首刀增伤模型修复；fix-queue-v4 14:04提案，UACFSW4VDDLD A6 F33首战T2/第2次T5、F48首战T9，账本silent-0099、机制silent-0101；源码d65609ff2bc98ec5ec2e06b558159aba89d93032→合入6aa5eb0b22eaed2a649fa9e763ea9c96b5f3fca1。固定回归撤源码5失败/1通过，恢复6通过；源及合后固定沙箱tsc0/vitest0，无重跑。新建立的9层能力在同方案首小刀补9伤，已生效能力按当前小刀牌面识别首刀是否可用，避免两个14牌面都计增伤，后续推演回合各一次；F33预测20→29/两刀14+5，F48无实体仍各1。只实现已观测未升级9层的伤害，不扩展升级/叠加/完整保留；铁甲既有输入/排名等价，不改药水、保血、路线、休息或SL策略。合前刷新04ae1ccf8512fe99f051d1bba95da13e0cca5a48，知识重叠空、合前后knowledge索引blob逐项一致；无生成脚本改动、不重建。运维据本批fix-done及handoff-ops.md核实实际发布，经ledger.py将0099登记shipped；0101保持已有经验发布历史，调度器沙箱外补完整套件；不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp16",
+      "family": "Silent",
+      "commit": "d668d7885f084d8d950e6e2c067a38740783c892",
+      "source": "decision-log 2026-10-05 15:40（静默经验2026-10-05.16，固定源a9ad012cd1c5ec56e4f1d7935dc0aca8fda088cb；VN7RQJMJEFMX/75X1BARMNZ03 A6及二十局旧基线；新增4/更新11/退役0、active81/32669字符；源首次时序断言失败、完整重跑一次通过，锁内兜底保留双方记录及知识刷新，合后沙箱tsc0/173文件1988例；账本运维实际合入后登记shipped）"
+    },
+    {
+      "name": "S1.fix18",
+      "family": "Silent",
+      "commit": "68a415a9f71beca9549573141248aab2c81fa0d1",
+      "source": "decision-log 2026-10-05 16:50（音叉技能计数格挡模型修复；fix-queue-v4 2026-10-05 16:32提案，6EV5V6PJJS9D A6 F39 T3、T082DRCUHRRD A0 F12 T7，账本silent-0108、机制silent-0072；源码dba8d7caf9f2b44dd2fd11fd8861ecc14be4c09b→合入68a415a9f71beca9549573141248aab2c81fa0d1。固定回归撤源码4失败/1通过、恢复5通过；源及合后固定沙箱tsc0/vitest0，174文件1993例，无重跑。只对静默持音叉启用：技能跨回合计数每10次补7被动格挡，脆弱不折减，F39 T3预测11挡/损21→18挡/损14，弃牌续行不重复计7，后续推演继承计数；铁甲输入等价，不改药水、保血、路线、休息、SL或完整时钟校准。合前刷新提交8da773c8244b0c0c74d6b0f80099505eea5bf18f，合并预检及合后knowledge索引blob逐项一致；无知识生成器改动、不重建。运维依据本批fix-done及handoff-ops.md核实实际发布后，经ledger.py将0108登记shipped；0072保持独立经验发布历史，调度器沙箱外补完整套件；不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp17",
+      "family": "Silent",
+      "commit": "5f17e4b397490cefd18d2970852f1ea439a7ca00",
+      "source": "decision-log 2026-10-05 17:02（静默经验2026-10-05.17；源a5604585226af696fdc6e01e19f6959fe73425d0；ARKQLHG6RS4W/6EV5V6PJJS9D A6，24静默局复算；新增2/更新17/退役0，active83/35518字符；面包能量时序、构装体人工制品/成长、已建能力/毒/被动挡与路线抵达；源tsc0/173文件1988例，合后tsc0/174文件1993例；实际合入后交运维登记21项经验账本shipped，音叉模型修复属独立fix18）"
+    },
+    {
+      "name": "S1.exp18",
+      "family": "Silent",
+      "commit": "ee1f4fd1897685ecc479e38492d548efa6bb1cf2",
+      "source": "decision-log 2026-10-05 17:31（静默经验2026-10-05.18；源ee1f4fd1897685ecc479e38492d548efa6bb1cf2；8CFMW9SAGFWQ A6及25静默局复算；新增1/更新6/退役0，active84/36584字；华丽收场空堆条件、精准/力量/敏捷/幻象机制与路线抵达观察；源tsc0/174文件1993例，合后tsc0/174文件1993例；9项账本仅proposed交运维核实合入后登记shipped）"
+    },
+    {
+      "name": "S1.fix19",
+      "family": "Silent",
+      "commit": "850ac015818ef7633d5d6a028a9e56e7b8ead55a",
+      "source": "decision-log 2026-10-05 18:40（fix-queue-v4 18:06两项升级分支；融入暗影+：2L1BNN9ZJEFU A6 F48第6次T8，silent-0112/0077，38挡/损4；预判+：VN7RQJMJEFMX A6 F30 T1及75X1BARMNZ03 A6 F17 T2，silent-0113/0080，21挡；源码d73a29ad5185ae2669260f3e4b1b9e693a122e97,2184caaab265ebf86c0627aaef39c2e7a170a990,d91f9600286a67480b5044e019dbb1041e2239af，实际合入850ac015818ef7633d5d6a028a9e56e7b8ead55a。固定回归撤源码失败/恢复通过；源及合后沙箱tsc/vitest0。铁甲输入等价，未改策略/药水或生成器；刷新数据保留。附策略任务xhigh过时断言修正，沿Dai 17:26决定；实际shipped交运维据fix-done登记。）"
+    },
+    {
+      "name": "S1.exp19",
+      "family": "Silent",
+      "commit": "f90ad2f1921f61466004217ed9a1b9698bd85491",
+      "source": "decision-log 2026-10-05 19:08（静默经验2026-10-05.19；来源2L1BNN9ZJEFU A6及26静默局复算；固定源83d4e580adbc34810a64f7058812a9be32f835ea；新增0/更新14/退役0，active84/38683字；力量/敏捷/精准/毒雾/速行者/暗影/预判/尖啸/激怒与阶段机制、路线/回血/SL观察；源及合后tsc0/174文件1997例exit0，账本15项仅proposed交运维核实后登记shipped；原测试失败历史保留，S1.fix19升级模型独立归属。）"
+    },
+    {
+      "name": "S1.fix20",
+      "family": "Silent",
+      "commit": "2ec81b9f2f0856cac2cfecf5c65750759c3aafae",
+      "source": "decision-log 2026-10-05 19:29（fix-queue-v4 19:09爆发技能重复提案；53FLQ68CETW0 A6 F48第5次T12及第6次T3→T4，silent-0114/0115，源码dce7dc19c15f8cd1de57a5fffb2011ca1aac2187→合入2ec81b9f2f0856cac2cfecf5c65750759c3aafae；已有BURST_POWER 1与普通Skills=1爆发在本回合重复下一技能一次，重复包含余像触发、只付一次能量，用掉后不重复、下一回合失效；双防御总44挡、损0，旧30挡/损6。固定帧来自原始logs，屏蔽刷新知识文件；撤源码3失败/3通过、恢复6通过；源及合后固定沙箱tsc0、175文件2003例。不扩充升级/未观测层数，不改药水或策略，普通铁甲输入及排名等价；全部知识刷新blob保留，无生成器改动/重建。账本0114仅proposed，交运维依据fix-done核实实际合入后登记shipped，0115为独立机制记录，完整补测由调度器沙箱外执行。）"
+    },
+    {
+      "name": "S1.exp20",
+      "family": "Silent",
+      "commit": "2c81eb76f84443e9ff9e0d54ad0ccb84663417ec",
+      "source": "decision-log 2026-10-05 20:19（静默经验2026-10-05.20；53FLQ68CETW0 A6及旧26局复算；固定源92bb2c53b549f648ed8cd820dab6d142884cfb9a；新增2/更新12/退役0，active86/41093字；爆发/亮片/余像/力敏/凋萎/毒雾与沙漏SL、路线/回血/构筑观察；最终源及合后tsc0/175文件2003例，14项账本仅proposed交运维登记shipped；普通爆发S1.fix20独立归属，升级模型缺口未改。）"
+    },
+    {
+      "name": "S1.exp21",
+      "family": "Silent",
+      "commit": "959f7f22f6284ce87265b884e471c6fb6265b7fd",
+      "source": "decision-log 2026-10-05 21:06（静默经验2026-10-05.21；ENKYQMS9W4ZD A6及旧27局复算；固定源b76428b2c1ed73f89e18fd56c49ba2f7b7120a75；新增0/更新11/退役0，active86/42817字；爆发复制/药瓶/余像/投斧/力量敏捷/沙坑、SL与路线回血构筑观察；源175文件2003例及合后176文件2006例/tsc0，14项账本仅proposed交运维核实后登记shipped；未改代码。）"
+    },
+    {
+      "name": "S1.exp22",
+      "family": "Silent",
+      "commit": "aea750c95b48223254b28b5dc40f847aaaf48fb9",
+      "source": "decision-log 2026-10-05 21:42（静默经验2026-10-05.22；2SU6XN2AEJRD A6首战通关及旧28局复算；固定源df989e0920c4aa6ba49ae9ff27967f127cd4bd2d；新增2/更新13/退役0，active88/45653字；腰带扣/阳伞、毒敏捷/爆发/暗影/凋萎/沙坑，路线回血构筑观察；源176文件2006例、合后177文件2010例/tsc0；16项账本仅proposed交运维核实登记shipped；未改代码。）"
+    },
+    {
+      "name": "S1.fix21",
+      "family": "Silent",
+      "commit": "e7370f88e7f855ae1a57f03ffbf023630ea190d2",
+      "source": "decision-log 2026-10-05 21:42（升级爆发2技能计数；VN7RQJMJEFMX SILENT A6 F27 T6，机制0115，源码dafd280b；撤2失败恢复9通过，源/合后177文件2010例tsc0；铁甲既有输入等价，普通爆发0114已shipped保留）"
+    },
+    {
+      "name": "S1.exp23",
+      "family": "Silent",
+      "commit": "6c4a855811c5ded1ddf94e264855f85a0bae4522",
+      "source": "decision-log experience-done 2026-10-05 22:40（静默经验2026-10-05.23；固定源0071cc6a86f7674b91439d13ee99e5c117dc3f34；SADL3CGYTGSR SILENT A7及旧29局复算，新增2/更新10/退役0，active90/48407字；源两轮tsc0/177文件2012例，数据纠正后复测均通过；运维兜底保留decision-log双方历史、知识刷新f72d687f4981a575f6b82c57e25f12ad58f8dc67，合后tsc0/178文件2013例；15项台账合入后经ledger.py/by=ops登记shipped；完整外部套件交learner-recheck调度器动作，旧TMPDIR/Inferno失败与前阶段检查保留。）"
+    },
+    {
+      "name": "S1.exp25",
+      "family": "Silent",
+      "commit": "5bc320f7ba980bd4e46049ad4b1758975ef7b77f",
+      "source": "decision-log 2026-10-05 23:37（静默经验2026-10-05.25；固定源5bc320f7ba980bd4e46049ad4b1758975ef7b77f；3KME36ADUE4U SILENT A7及旧31局复算；新增1更新7退役0、active93/51696字；甲虫醒后成长/敏捷/临时减力与路线回血观察；源179文件2030例tsc0、合后179文件2030例tsc0；8项账本只proposed交运维据完成事件登记shipped；无源码改动，保留知识刷新。）"
+    },
+    {
+      "name": "S1.fix22",
+      "family": "Silent",
+      "commit": "f4a6173a9e90f57b0adc801ed1c523fce5f3ecf1",
+      "source": "decision-log fix-done 2026-10-06 00:00（silent-0127缺眩晕后继/伤害预测标未知；证据3KME36ADUE4U SILENT A7 F27 T1→T2及53FLQ68CETW0 SILENT A6 F30 T3→T4，固定源码631f94856702772a4bc5e27d38ddfc140fb0d714；学习者撤源5失败/1通过、恢复6通过，最终源/合后tsc0/181文件2037例；0128完整醒来成长机制独立，不冒记实现；已知完整模型保持等价，铁甲缺数据也标未知为通用有效性修复，不混角色知识。另Jev计价80199dcc3f7a66bfceeb7d8c028c6c3bad935b7c按Roy输入$0.042/百万token、输出免费及近30天日志核对；无新bug-infra条目。）"
+    },
+    {
+      "name": "S1.exp26",
+      "family": "Silent",
+      "commit": "c7ca5d01614905357803b9c644f18ff80d9df703",
+      "source": "decision-log experience-done 2026-10-06 01:11（静默经验2026-10-06.1；固定学习者源c2aba14f9a7a51fa3867360ac996a1e57b336463，VLV17NUSFS61 SILENT A7及旧32本角色局复算，新增2/更新13/退役0、active95/53903字；源tsc0/179文件2030例首过，合后tsc0/181文件2038例首过；运维兜底保留双方记录和知识刷新000ab7927ba3e57fa786b7d5f593a6eed290ccd2，15项对应经验台账由ops实际合入后登记shipped；0130重复扣挡源码提案不混记实现，完整外部检查另请求本经验批次learner-recheck。）"
+    },
+    {
+      "name": "S1.exp27",
+      "family": "Silent",
+      "commit": "ce1864a00a18db651ef179b403b40e83db0395e4",
+      "source": "decision-log 2026-10-06 01:26（静默经验2026-10-06.2；源bff7329f4ce6757933e76d8e7409079a88f08156；9YT51CK8RC39 SILENT A7及旧33局复算一致；新增2更新8退役0、active97/55443字；仪式兽阈值与两阶段成长、异鸟逐段增伤、精准/步法/预判/覆甲，路线回血与SL只作观察；源与合后固定沙箱通过；11项账本仅proposed，交运维登记shipped；无源码/生成器改动。）"
+    },
+    {
+      "name": "S1.fix23",
+      "family": "Silent",
+      "commit": "df557706c395046f188623ea2d89340a20fc95ab",
+      "source": "decision-log 2026-10-06 01:29（单行动题重复扣已有格挡；源码779c954876d56d08dab92f89f27345c9788e3d87，VLV17NUSFS61 A7 F48第6次T5、Z6CFLDR3N4SB A7 F48首战T10，silent-0130；另本批仅herdr测试竞态修正，生产脚本不改）"
+    },
+    {
+      "name": "S1.strategy3",
+      "family": "Silent",
+      "commit": "eba51d369487f199b29c2d1b06fdf43d3077c9b4",
+      "source": "decision-log 2026-10-06 02:06（长程并列组即时损血参考；源1dab14da481fe7951d9020dba52ad0ebebb1029b；9YT51CK8RC39 SILENT A7 F17第3/6次T5，silent-0135，既有0079/0080；单回合损血3/12/7、相对差额0/9/4，仅事实及指标排名、不改选项或SL规则；铁甲等价；源和合后固定沙箱通过。）"
+    },
+    {
+      "name": "S1.exp28",
+      "family": "Silent",
+      "commit": "363ff3037178c20342c36fc1ab474b5aed96a441",
+      "source": "decision-log 2026-10-06 02:22（静默经验2026-10-06.3；源825c94d558f24991e8766dfecee71a71c216e83b；2PVLGRBGUX9S SILENT A7及旧34局复算一致；新增0更新14退役0、active97/47357字；专长科学2力2敏捷、腐蚀波升级抽牌3毒、逐牌挡与凋萎分账；路线回血和SL仅观察；源及合后沙箱通过，账本只proposed交运维登记shipped。）"
+    },
+    {
+      "name": "S1.strategy4",
+      "family": "Silent",
+      "commit": "a10be71d74755150bc5eda0e7df48d437efa9848",
+      "source": "decision-log 2026-10-06 02:44（构筑模拟精确胜率指标并列；源939db23df241af81cd729489d1ee4e4a8b7115b8；2L1BNN9ZJEFU SILENT A6 F9休息题／F17 T9与2PVLGRBGUX9S A7 F16休息题，silent-0139，关联0003/0020/0079；相同正数样本量及精确原始与校准胜率均相同才并列，不按四舍五入；原选项/剩血/损血/回合保留，由DeepSeek决定；铁甲等价；源和复测合后固定沙箱通过；首次合后预算1527>1500失败回退，原源码复测一次，历史保留。）"
+    },
+    {
+      "name": "S1.exp30",
+      "family": "Silent",
+      "commit": "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+      "source": "decision-log 2026-10-06 03:28（静默经验2026-10-06.5；源0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd；LLYSRQQ35AVW SILENT A8及旧36局复算，新增1更新24退役0、active101/52601字；帐篷双选、升级萎靡X+1、毒爆发/触媒逐敌截断、临时敏捷与定制科学/格挡分账；A8路线休息构筑仅一局观察，旧低阶不并分母；源及合后沙箱tsc0/184文件2054例；live .3→.5含此前待合.4，无虚构exp29上线时刻；26项账本只proposed交运维登记，0144升级模型缺口未修。）"
+    },
+    {
+      "name": "S1.fix24",
+      "family": "Silent",
+      "commit": "9af37f370f360a94e36ab9ac268c5950ae9549a8",
+      "source": "decision-log 2026-10-06 03:56（fix-queue-v4 02:40/03:00预算缺口、02:31升级腐蚀波/专长科学及03:08升级萎靡；源码9889436c3b332a3984cdb7f850a1349f464182d1,a62cf381f26435693ce30548c9433d219f750b02,32daefc69239c5d23741f35e2f5ce71bef25ebce,d48d16129b10e5060dc9d33a1b96e3340c7b82b8→live 9af37f370f360a94e36ab9ac268c5950ae9549a8；预算1500ms及100ms余量不变，截止前后检查、求解器单调时钟截止、丢弃未完成样本；受控时钟保留原1500ms断言与旧批次G预算/结果断言，旧计时夹具两轮失败及修正后通过历史保留；证据2PVLGRBGUX9S SILENT A7 F48首T11（36→42毒、212→170血，账本silent-0076/0137）、首T2/T4（专长2力2敏捷，账本silent-0136/0138）；仅支持已观测升级3毒和专长2/2模板，不激活科学未启用的伤害/格挡变量，不外推其他模板；逐项撤源码失败、恢复通过，源及合后沙箱tsc/vitest0。升级萎靡证据LLYSRQQ35AVW SILENT A8 F33 T3/F38 T1/F48 T2，X0/2/3实减1/3/4力和虚弱，账本silent-0144（first_run KAY522KT5NXR A0 F31 T1），不关联帐篷0146；仅静默已观测X+1文本启用，不外推X+2等模板。0144经工具追加源码commit和proposed，未标shipped；其他新修无对应bug-infra，不新建/重置旧shipped；代码去向交运维据fix-done登记。铁甲完整且未超时的推演保持数值等价，截止附近会丢弃不完整样本；专长仅在静默角色入口启用，首轮7条铁甲回归失败历史保留，限定角色后原断言通过，铁甲科学及升级萎靡保持等价；其他科学模板保持，升级腐蚀波为静默牌。无策略/药水代价/选项删除/并列规则改动，知识刷新逐blob保留，无生成器改动或重建；完整外部检查由调度器补跑，不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp31",
+      "family": "Silent",
+      "commit": "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+      "source": "decision-log 2026-10-06 04:23（静默经验2026-10-06.6；源16a691d1513abe828ad8dab3a352c2cd693d2f14；HMVJKM56S4Q8 SILENT A9及旧37局复算，新增1更新16退役0、active102/54501字；星图真实进房回血、负属性与毒/敏捷/脆弱分账、A9甲虫成长、同抽序帝王蟹六败的血价观察；A8/A9路线/休息/构筑各一局，低阶不并分母；源及合后固定沙箱通过，账本只proposed交运维登记shipped，无源码或其他角色知识变化。）"
+    },
+    {
+      "name": "S1.exp32",
+      "family": "Silent",
+      "commit": "72a48daa5bbb25b9cb6ce8074f4bb26c2c3a4eac",
+      "source": "decision-log 2026-10-06 04:49（静默经验2026-10-06.7；源69532dfcc6eef838362eaaf235be6eee9641f2b7；F4QKG4J1AJJZ SILENT A9与旧38局复算，新增1更新9退役0、active103/55618字；刀扇容量/群伤及逐刀力量，手套成长/余像未建/毒雾兑现/尖啸制品分账；A8一局/A9两局路线休息观察、帝王蟹SL第2次转胜非单项因果；源和合后沙箱通过，账本只proposed交运维登记shipped；无源码或其他角色知识变化。）"
+    },
+    {
+      "name": "S1.strategy5",
+      "family": "Silent",
+      "commit": "d2febb8fef4387fb0fb035f3d525737dbd8fe583",
+      "source": "decision-log strategy-done 2026-10-06 05:31（学习者silent-0148活动星图进房回血题面观察；源307c538c6e66110635a852093aeba30b20212243，来源2SU6XN2AEJRD SILENT A6 F12 T1及F15/F21/F36/F43事件、HMVJKM56S4Q8 SILENT A9 F31 T1；提案learner/runs/20261006-041302-strategy-proposal/proposal.md。只增加构筑/路线/休息facts观察，原选项和数值投影保持、铁甲等价，六次证据和范围限制由学习者提供；不重复叠加进房回血。撤源码5失败1通过/恢复6通过，源固定沙箱tsc0/189文件2074例、合后固定沙箱tsc0/190文件2094例；原夹具失败、preflight24记录冲突均保留。运维机械兜底，知识刷新与其他源码逐blob保留，0147/0019/0020已有版本不重置；0148实际合入后经ledger.py/by=ops登记shipped，完整外部另请求本批learner-recheck。不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp33",
+      "family": "Silent",
+      "commit": "1b425cb743eeb3cc77c1c36ffeb9d0b1d9346495",
+      "source": "decision-log 2026-10-06 05:55（静默经验2026-10-06.8；源d8feeed3f9c3a66df935f58af92d7e500f40aff4；G403VCZ3BH1B SILENT A9通关及旧39静默局复算，新增2更新16退役0、active105/51806字。飞镖剩余技能计数、白星双奖励血价分账；女王同前36抽序SL第2次转胜，萎靡/尖啸/步法/滚石/毒雾/遗物收益按实际结算，不隔离单项整战因果；开工预算压缩八条、证据和药水原句保留。A8一局/A9三局路线休息观察，各99条49374字；源190文件2094例与合后191文件2095例tsc0/沙箱0，账本仅proposed交运维登记shipped；无源码/生成器或其他角色知识变化。）"
+    },
+    {
+      "name": "S1.fix25",
+      "family": "Silent",
+      "commit": "851e1bafb037482de9d06f018e203343a684535d",
+      "source": "decision-log 2026-10-06 06:09（飞镖同方案内已观测技能离手后减少命中数；源码72c1640b3271352e1a744d3997ede4c5fe10e2bd；9YBKCNBFP0X5 SILENT A4 F43 T4、HMVJKM56S4Q8 SILENT A9 F33第6次T3、G403VCZ3BH1B SILENT A9 F48重打T11；账本silent-0150/0151；仅普通静默牌的原手牌技能离手范围，未知抽牌、升级与其他差额不外推，铁甲分支等价。固定九帧证据，撤源码3失败1通过、恢复4通过；源及合后固定沙箱通过。"
+    },
+    {
+      "name": "S1.exp34",
+      "family": "Silent",
+      "commit": "8fd47b49e44a70b5bca4d2e803a5b1e639499fd4",
+      "source": "decision-log 2026-10-06 06:32（学习者经验2026-10-06.9；固定源c4e3c9ac7c053d567be773d011849503a8a994f3，来源MGA0CZDDKC0P SILENT A10及旧40静默局、第三十四次changelog与learner/runs/20261006-055926-experience-update/handoff-ops.md；新增2更新5退役0、active107/52755字。原机制文字仅学习者从静默局证据得出，隐秘匕首另10GPK5XGHCK3 A3、铭记死亡另R0HEV5E3QT6G A0/E6AVMMVCSRPC A1，仪式兽补F4QKG4J1AJJZ A9；仅experience.json，无源码/生成器/其他角色知识变化。源tsc0/190文件2094例，合后tsc0/192文件2099例，原预检记录冲突历史保留；运维机械兜底，不另审，8项后续CLI登记shipped，不将0154机制经验当0153模型代码修复。）"
+    },
+    {
+      "name": "S1.exp35",
+      "family": "Silent",
+      "commit": "1c85d0a7e6f176a528f7043d5019e0fffdcc5752",
+      "source": "decision-log 2026-10-06 06:54（静默经验2026-10-06.10；源7bcee3ebd8d8f452253c9eedaf7d14b10cc29f17；25226ZFLNR1J SILENT A10及旧41静默局复算，新增2更新9退役0、active109/54484字。小提琴回合内抽牌封锁/能力格挡生成分账，石头七局76房开场1敏捷；制品/毒雾/触媒/敏捷/敌成长/凋萎按实际兑现，六次同35基础抽序0赢无胜因对照。路线/休息/构筑为观察，A8/A9各103条52052字；源与合后固定沙箱通过、首次测试角色环境错误/重跑历史保留；账本仅proposed交运维登记shipped，无新药水规则，无代码/生成器或其他角色知识变化。）"
+    },
+    {
+      "name": "S1.fix26",
+      "family": "Silent",
+      "commit": "995715e80a825a1e316a6b87195a17958002f842",
+      "source": "decision-log 2026-10-06 07:09（Codex学习者修复fix-queue-v4.md 2026-10-06 06:02隐秘匕首Cards语义；源码b7f081fcc26da4506cb775739bb118cb6cbe4ecc，实际合入live 995715e80a825a1e316a6b87195a17958002f842/S1.fix26；来源10GPK5XGHCK3 SILENT A3 F9 T5、MGA0CZDDKC0P SILENT A10 F17首试T2/第6次T3，账本silent-0153（机制0154独立）；固定六帧核对原始只读日志。普通静默隐秘匕首弃两张原手牌后生成两小刀，不抽牌；列弃牌组合参考，由Jev选择，进入选择时清空旧手牌续行。不外推升级、缺牌和重放；缺少生成牌元数据或未验证续行标未知，不增加药水或先手策略；铁甲分支等价。撤整组源码5失败1通过/恢复6通过，撤执行接线1失败5通过；初稿牌型/状态夹具及接线失败、记录预检冲突均保留。源固定沙箱tsc0/193文件2105例，合后tsc0/193文件2105例；无生成器改变，不重建。锁内先提交刷新数据，知识重叠为空；0153仅CLI/by=learner:fix-batch追加proposed，交运维核实际发布后CLI登记shipped。沙箱外完整检查交调度器；不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.strategy6",
+      "family": "Silent",
+      "commit": "03280f7fe2149ae22b5b827dd803ef75ce65fa4d",
+      "source": "decision-log 2026-10-06 07:28（微型帐篷双动作营火的条件HP及单次动作比较口径；来源/home/dw/Projects/agent-sts2/learner/runs/20261006-071302-strategy-proposal/proposal.md，LLYSRQQ35AVW SILENT A8 F24/28/32/40/43/47（回合不适用），账本silent-0159、既有0145/0146/0020；源码57fe209951fc61578435b70e71f19907c40383d2→live实际合入03280f7fe2149ae22b5b827dd803ef75ce65fa4d，合前41bd4a44e4f5148304f072993e04e3685d534616。仅当前未熔化帐篷且HEAL/SMITH均启用时给两种已观测顺序与条件HP，38→59、48→69、满血70→70；只按条件HP标并列，原单次动作HP、route_review、boss_sim、全部选项与DeepSeek选择权保持；不预支或自动执行另一动作、不沿旧索引、不扩展其他营火组合，六火是一局而非六独立样本。铁甲分支等价，无药水代价/过滤/否决/提前或留药规则，无生成器改动。撤生产接线exit1/5失败2通过，恢复exit0/7通过；源及合后固定沙箱tsc0/vitest0，完整外部检查交调度器；初稿夹具配置错误保留。知识刷新及其他live记录保留。账本只proposed/by=learner:strategy-proposal，运维据strategy-done及/home/dw/Projects/agent-sts2/learner/runs/20261006-071302-strategy-proposal/handoff-ops.md核实实际上线后经ledger.py登记shipped。不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp36",
+      "family": "Silent",
+      "commit": "2d5846a2a309fd8b9e7231e96cef923cb07f1778",
+      "source": "decision-log 2026-10-06 07:54（静默经验2026-10-06.11；源2d5846a2a309fd8b9e7231e96cef923cb07f1778；JLN5SK17W4FQ SILENT A10及旧42静默局复算；新增1更新15退役0、active110/56699字。巨兽具体自爆减力、抱抱先生四局轮初自动伤、单侧蟹五局增益与蓄力分账、敏捷/脆弱/士兵休眠、头骨/毒/触媒、反伤/复生按实际兑现。新两重打场8次1赢、帝王蟹六敗无固定击杀顺序或构筑胜因；路线/回血为观察，无新药水规则。源最终及合后固定沙箱通过，完整外部待调度器；19个账本仅proposed交运维核合入登记shipped。）"
+    },
+    {
+      "name": "S1.exp37",
+      "family": "Silent",
+      "commit": "28bdbfc6c9de5eb802724351a199e1a20c67b41c",
+      "source": "decision-log 2026-10-06 08:48（静默经验2026-10-06.12；源65b1a45b0192b744b6c46f9e7174f3c2156f093c；JMH5C51RLN4E SILENT A10及旧43局复算；新增2更新16退役0、active112/54154字，先压7条保留证据/反例/药水句。耳环两局首轮接管边界、势不可当仅本局事件实际触发，步法/暗影/毒雾/触媒/好奇/羽毛/荆棘、阶段留存与换战重置分账。实验体5次1赢后8血进后场沙漏六败，后段/重洗混杂只作观察，无新药水规则/源码改动。源及合后固定沙箱首过；18项账本仅proposed交运维核实际合入登记shipped；完整外部交调度器。）"
+    },
+    {
+      "name": "S1.fix27",
+      "family": "Silent",
+      "commit": "6e9fec36e9eb8098c964114f2f9af097598ae4fc",
+      "source": "decision-log 2026-10-06 09:02（Codex学习者修复fix-queue-v4.md 2026-10-06 08:29连续Boss后场血量投影，源码3fe6251b746cebe816b9db3c0d8aa9d6090bec0a→实际live合入6e9fec36e9eb8098c964114f2f9af097598ae4fc/S1.fix27；账本silent-0163；证据25226ZFLNR1J SILENT A10 F35路线题（回合不适用）、JMH5C51RLN4E SILENT A10 F44路线题（回合不适用）、F48第5次T13胜后8/60及F49 T1进场8/60。未建模的Boss损血向后传为null，后场到达中位数/p75及保存的路线计划、记忆展示未知，不能以零成本沿用前场HP；已观察新战斗从实际HP重新投影。不把单局52损血写成成本，不改房间五样本门槛、路线/休息估值、排名权重、选项或药水规则。铁甲单Boss路线至Boss进场数字和排名等价；共同投影器未使用的Boss战后end/riskAfter现标未知，多Boss路径同样纠正虚假确定值。固定六例撤五个源码文件5失败1通过/恢复6通过；初稿状态夹具缺字段失败保留、修正后通过，非负载超时。源与合后固定沙箱tsc0/vitest0，完整外部检查由调度器后续补跑；知识刷新全部保留、incoming知识为空、无生成器修改。仅decision-log追加冲突按union保留双方原文并验证两份完整历史的有序子序列，其他记录工作区状态保留。silent-0163仅经ledger.py/by=learner:fix-batch追加proposed与源码去向，运维据fix-done及本批handoff-ops.md核实际发布后CLI登记shipped。不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp38",
+      "family": "Silent",
+      "commit": "f90ba577c3111a9cda7bf1cbfebc645c3d036a01",
+      "source": "decision-log 2026-10-06 09:51（静默经验2026-10-06.13；源5f0c0515a9dc4de8696f1172af9da17000a79a65；9TG1RP5LFAAK A10及旧44静默局逐行复算，新增0更新20退役0、active112/54675字。激怒与能力启动、敏捷/余像/暗影/音叉、头骨/毒雾/滚石/空栏敏捷/羽毛、阶段留存与换战重置分账。实验体84→17后女王六败、末实扣35/需630，启动/构筑/路线/SL未隔离胜因只作观察，无新用药规则/源码改动。草稿及最终源/合后沙箱通过；20项账本仅proposed交运维核实际合入登记shipped，0163保持S1.fix27独立代码链；完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp39",
+      "family": "Silent",
+      "commit": "c1f61de9136d1be16bebd8eed60a54e14f9ebba0",
+      "source": "decision-log 2026-10-06 10:17（静默经验2026-10-06.14；源6c787e3ecfafa59af35ec0523b93ba215c86e391；JQPT83P8KDSZ A10及旧45静默局复算，新增2更新10退役0、active114/56688字。污染逐段血价、精确切击局部手数、毒雾/直接施毒/尖啸/折扇/活力分账，棱柱四败同抽局部对照不外推整战胜线，路线/休息/构筑仅观察，无新用药规则。源及合后沙箱通过，12项账本仅proposed交运维核实际合入登记shipped；完整外部交调度器。）"
+    },
+    {
+      "name": "S1.fix28",
+      "family": "Silent",
+      "commit": "4f4d11a7e4ce4d42ce14536817fc63a1d48b8fde",
+      "source": "decision-log 2026-10-06 10:31（fix-queue-v4 2026-10-06 10:07精确切击手牌重算；JQPT83P8KDSZ SILENT A10 F25第二次T3，账本silent-0166（独立机制0169），源码8b9bacbebb20eaaa1133a9945da6c7abfcda745d→实际live 4f4d11a7e4ce4d42ce14536817fc63a1d48b8fde；只补已验证普通牌五手5伤/六手3伤，打击后抵4挡扣1血；其他数量和伤害修正标未知，不补升级公式或归因整场胜负。撤源码5失败1通过/恢复6通过，既有两项回归合计3文件17例；源及合后固定沙箱tsc/vitest0。药水仍零费可选、铁甲及缺角色上下文等价；知识刷新逐blob保留、双方decision-log历史逐行保留；无生成器改动、不重建。0166仅proposed，交运维据fix-done及本批handoff-ops.md核实际合入后CLI登记shipped；调度器沙箱外补完整套件，不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp40",
+      "family": "Silent",
+      "commit": "50014d54985a3a72ca7761476db8761cca3721a1",
+      "source": "decision-log 2026-10-06 10:58 (学习者静默经验2026-10-06.14→.15；固定源26ae625bb01700cc56b7d96084294109e0e97f0b，4D4J8USKCPAV SILENT A10及旧本角色证据/10:24勘误；新增1更新17（12补证5压缩）退役0、active115、49252字；源首轮195文件2118例，合后tsc0/196文件2124例；运维仅兜底decision-log追加冲突、保留原记录和自动刷新，17项账本据实际发布登记shipped；0166独立S1.fix28不重置，不倒算结束局生效)"
+    },
+    {
+      "name": "S1.exp41",
+      "family": "Silent",
+      "commit": "a5cbfe3d9e723b2e7c403b02ef5eac627f78c36b",
+      "source": "decision-log 2026-10-06 11:21（静默经验2026-10-06.16；源27fb17e4f87c658265856e493f816a8de81ac622；TD1HVGS7H6LB A10及旧47静默局，新增0更新10退役0、active115/50181字。敏捷/虚弱/触媒次数/施毒条件/死亡截断/持牌末挡、本体与自爆分账；两次0赢、首试读档失败与重启同局第二次分列，路线/休息/构筑和整战SL只观察。无新用药规则，无源码/生成器改动；源/合后固定沙箱通过，10项账本proposed交运维核实际发布登记shipped，完整外部由调度器补跑。）"
+    },
+    {
+      "name": "S1.fix29",
+      "family": "Silent",
+      "commit": "51eb059e875ca33ec1e24a394ad2ee0db626d38c",
+      "source": "decision-log 2026-10-06 11:41（fix-queue-v4 2026-10-06 11:12支配比较余毒缺口；TD1HVGS7H6LB SILENT A10 F17两次T3，账本silent-0171，源码c9aef94df27d100a7e3d32e100d555248dd6be97→实际live 51eb059e875ca33ec1e24a394ad2ee0db626d38c。已有模型结果19伤/9损/敌201/余毒3与21伤/9损/敌199/余毒0不同，原Jev线未实打，不声称修复后整场获胜。同一仍存活敌人余毒不同时，不认证全轴支配；仅保留两条方案，不给毒加估值权重，不补施毒/结算公式，不改信心或保血阈值、药水或路线。无毒、相同余毒、已结束战斗与已死目标比较等价；具有不同余毒的铁甲局面也保留方案，原因是共用比较器遗漏了已有结果字段，未读取或移植铁甲知识。固定六例撤源码2失败4通过/恢复6通过；最终源与合后沙箱tsc/vitest0，原工具阶段及各次测试历史全部保留。刷新知识逐blob保持、双方记录保持；无生成器改动，不重建。0171仅CLI/by=learner:fix-batch追加proposed及代码去向，交运维据完成事件核实际合入后登记shipped。本批两项工具修复已先发布1103a83d73ab5239b08fed8254d5488451e0327a，当前补入任务进行中新增的机制比较提案。调度器沙箱外补完整套件，不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp42",
+      "family": "Silent",
+      "commit": "8224bcc9ef8f825bbdca7ca6ec3b03535cf81725",
+      "source": "decision-log 2026-10-06 11:47（静默经验2026-10-06.17；源d673c6a7e270ef770f19d9ced3d3edef79f24e31；PJ2LL9KU7FHD A10与旧48静默局同口径复算，新增1更新8退役0、active116/50905字；永冻首次能力7挡、幻影首刀、族母力敏削减、尖啸临时减力及精确切击手牌窗口均本角色实证，六次同场0赢、整战胜因未隔离。原药水句保持，无源码/生成器改动；源/合后固定沙箱通过，十项账本proposed交运维核实际上线CLI登记shipped，完整外部由调度器补跑。）"
+    },
+    {
+      "name": "S1.fix30",
+      "family": "Silent",
+      "commit": "c2dd5064804cb932850a04624020def3b6bddc5f",
+      "source": "decision-log 2026-10-06 11:54（fix-queue-v4 2026-10-06 11:33精确切击力量修正范围补证；PJ2LL9KU7FHD SILENT A10 F17首/末T15与第三次T5，账本silent-0166（0169机制support），源码995a345f935efd6d8ae9f67d16bd2653833344d0→实际live c2dd5064804cb932850a04624020def3b6bddc5f。仅补四个已观测手数/力量读数：-2力量五手3/四手5、+2力量五手7/三手11，未升级CalculationBase13/ExtraDamage2及已核文本。门控内其他手数/力量、虚弱/缩小与方案中新加力量标未知，升级保留原计算，不补通用公式或把局部增伤称整场胜因；药水、保血/信心与路线策略不变，铁甲及缺角色上下文等价。固定六例加原六回归，撤本项两处源码5失败7通过/恢复12通过；初稿四项索引夹具失败保留，规范固定槽位后再冻结源码做红绿。最终源及合后固定沙箱tsc/vitest0；刷新知识逐blob保持、双方记录保持，无生成器改动不重建。0166仅CLI/by=learner:fix-batch追加本项commits与proposed，旧S1.fix28/first_run/prior及repeat历史保持；原补证局开局早于fix28，不算补丁生效后的回归。交运维据完成事件确认实际发布后CLI登记本范围shipped（0171/S1.fix29独立），并同步main及调度器沙箱外完整套件。同节永冻0172未修：日志遗物stack=null且无首次能力已触发字段，需要跨帧/续行/读档重置跟踪，不能把每次能力或每轮均补7；仅首次能力证据、重复/重放未验证，留专项。此前工具发布1103a83d及余毒发布e520a36c/S1.fix29与全部失败历史保留，不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.fix31",
+      "family": "Silent",
+      "commit": "30a60359d279636a43096d4719b2e98926c1f882",
+      "source": "decision-log 2026-10-06 15:31（fix-queue-v4 2026-10-06 15:11毒结算遗漏已读入的伤害上限；D4LJ9QMGFB8Q SILENT A10 F20 T4/T5与4Y94N8RDPGPM SILENT A7 F30 T2，账本silent-0174（机制0175独立），源码084815374e747cccb3e74bb39002beb1be6ca9f6→实际live 30a60359d279636a43096d4719b2e98926c1f882。仅对已观测敌方回合单次毒结算、HARD_TO_KILL_POWER9应用9点上限；其他上限、即时结算及多次触发未外推。A10原11血12毒误报击杀改为扣9留2并计11来袭、24→13；A7原12血14毒改为扣9留3并计6净来袭、82→76；T5剩2仍正常毒杀。不新增保血、用药、路线、选线或时钟规则，不声称修复后的受控整场胜负。无毒、无上限或毒低于9的局面等价；铁甲若具同一毒与9上限组合也修正，因为共用求解器遗漏了已有事实，未读取其他角色知识。固定4例撤源码2失败2通过/恢复4通过；初稿2项击杀名称夹具错误保留，修正后冻结源码做红绿。源及合后沙箱tsc/vitest0，gitleaks0，刷新知识逐blob保留；无生成器改动、不重建。0174仅CLI/by=learner:fix-batch追加proposed和代码去向，原first_run/prior/history保留，交运维据完成事件核实际发布后登记shipped。永冻0172公开状态无首次能力已触发字段，跨帧/续行/重启/SL重置专项仍未实现，不外推重复或每轮7挡。调度器沙箱外补完整套件，不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp43",
+      "family": "Silent",
+      "commit": "9bc79a15954e97f00c333f512f802b473a480f23",
+      "source": "decision-log 2026-10-06 15:48（静默经验2026-10-06.18；源fbd7a45ff75aa66d2c9f52cf8d1b4bcba55a204d；L9SGRBB5R698/D4LJ9QMGFB8Q A10与旧49局复算，四局只进数字；新增2更新9退役0，active118/52421字。三局毒单次9封顶、两局呼唤每张6、敏捷后续兑现与巨兽自爆分账，路线/SL/构筑因果未隔离，无新用药规则、无源码变化；源/合后固定沙箱通过，11账本proposed交运维核实际发布登记shipped，完整外部由调度器补跑。）"
+    },
+    {
+      "name": "S1.fix32",
+      "family": "Silent",
+      "commit": "25937859a683493d7d75276dfd5a2fb74cbd9491",
+      "source": "2026-10-06 16:30 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 15:42钨合金棍逐次减损缺口；源码4367250b5fbf1484ca7ea8f312d13e4ce9d327a2→实际live代码25937859a683493d7d75276dfd5a2fb74cbd9491，eval S1.fix32。证据UJ0K3G10609Y SILENT A10 F48第6次T4/T7/T8、notes/lessons.md:5030，账本silent-0177（机制0178独立）。只对本角色已验证的普通敌方攻击穿透格挡逐击减1：完整余像→防御+→致命毒药+→打击线及结束题由损30/余−1改为损27/余2，T4单击由损15改为14/余29；T8仍致死，不声称修复可赢整场。自身失血、伤害持牌、缓冲或其他减损交互标未验证，不外推其顺序；推演后续回合保留该输入。铁甲及无遗物分支等价，未读取其他角色知识；不新增药水代价、过滤或否决，不改保血、选线、路线或时钟策略。最终固定6例撤两个源码文件6失败/恢复6通过；初稿状态协议字段缺失及空手牌不经求解器的夹具错误保留，修正后冻结夹具做红绿。首轮源沙箱通过后补上缓冲已消耗仍属未验证的边界，最终源tsc0/vitest0、202文件2188例，合后tsc0/vitest0、202文件2188例，无超时重跑。gitleaks0，刷新知识与既有工作区保持；无生成器改动、不重建。0177只经CLI/by=learner:fix-batch追加proposed及源码去向，首次证据、先验和历史保持；交运维据fix-done及learner/runs/20261006-160711-fix-batch/handoff-ops.md核实际发布后CLI登记shipped，完整外部由调度器补跑。永冻0172跨帧/续行/重启/SL首次触发跟踪仍留专项，其他策略与证据不足/性能事项保持；队列不修改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.exp44",
+      "family": "Silent",
+      "commit": "4ff1755188589da29114a6a3ffd3078ca790f89c",
+      "source": "decision-log 2026-10-06 16:34（静默经验2026-10-06.19；源aad6faef5872395489abd80bdbeaa5d0934621b7；0NZXA12NLDMH A10及本角色历史，新增0更新9退役0/active118/53162字。士兵一次消费、涂毒逐击、敏捷与仪式兽阈值、路线/休息/蟹SL分账；实际爪双击30纠正复盘。无新用药规则/源码变化，源及合后固定沙箱通过，12账本proposed交运维登记shipped，完整外部由调度器补跑。）"
+    },
+    {
+      "name": "S1.fix33",
+      "family": "Silent",
+      "commit": "286a20acb4ac43cd5fd6f88235dc493bf28fb96e",
+      "source": "2026-10-06 16:48 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 16:10佩尔的士兵同线翻倍预览未消费；源码19e41a26648542b7ad0bce4e70b55f30be532d49→实际live代码286a20acb4ac43cd5fd6f88235dc493bf28fb96e，eval S1.fix33。证据SADL3CGYTGSR SILENT A7 F48第4次T4与0NZXA12NLDMH SILENT A10 F33第6次T8、原复盘及账本silent-0179（0180机制独立，0123叠加独立）。仅本角色普通防御、零或三敏捷、无虚弱格挡/其他翻倍叠加且原始预览已翻倍的已见输入，复用方案内一次性格挡预览消费：A7打击→两防御由20挡改为10+5=15；A10防御→中和+→防御→打击由32挡/损0改为16+8=24挡/损6/余0，30来袭来自碾碎爪15×2而非蓄力火箭；首挡后stack2和恢复普通的预览不再次消费。未推断休眠周期、跨回合再触发、升级/其他敏捷/叠加公式；方案内新增敏捷标未验证，不把所有尝试失败或整场胜负归于本项。铁甲及无遗物分支等价，不读其他角色知识；不新增药水代价、过滤或否决，不改选线、保血、路线或时钟策略。固定6例撤两个源码文件4失败2通过，恢复6通过；源tsc0/vitest0、203文件2194例，合后tsc0/vitest0、203文件2194例，无超时重跑。gitleaks0，知识刷新及既有工作区保持；无生成器改动、不重建。0179仅经CLI/by=learner:fix-batch追加proposed及源码去向，首次证据、先验、原时间和伤害来源勘误历史保持；交运维据fix-done及learner/runs/20261006-160711-fix-batch/handoff-ops.md核实际发布后CLI登记shipped，完整外部由调度器补跑。永冻0172专项及其他策略、证据不足和性能事项保持；队列不修改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.exp45",
+      "family": "Silent",
+      "commit": "8807bc1442e7525c8d8f52361e8d45925c9436aa",
+      "source": "decision-log 2026-10-06 17:27（静默经验2026-10-06.20；源ab8335ba091e3385036352f04354613cac683cdb；4ANT8D00TP72 A10及本角色历史，新增2更新12退役0/active120/54122字。探寻五问号任务与生成兑现、抢夺八局、爆发挡与触媒毒、沙坑/HP分账；路线/休息与SL仅观察，无新用药规则/源码变化，源及合后固定沙箱通过，15账本proposed交运维核实际上线登记shipped，完整外部由调度器补跑。）"
+    },
+    {
+      "name": "S1.strategy7",
+      "family": "Silent",
+      "commit": "633f33127d3c12473e998d71aca88d7af04cb89d",
+      "source": "decision-log 2026-10-06 18:21（fix-queue-v4 2026-10-06 17:54要求：基础测试修复独立通过后，合入已提交蜡烛事实提案；源码9a865dbe87b4e64a5d50c59b389d99ed73bebb52→实际live代码633f33127d3c12473e998d71aca88d7af04cb89d，账本silent-0186，既有0184/0185/0020保持。证据UJ0K3G10609Y SILENT A10 F29（回合不适用），XBD8Z9XLPCPN A10 F24/28/32（回合不适用）与F19/23/27/30/31/33 T2；仅补休息题现场充能、已见0→5的续火条件、同值充能指标并列及原模拟未覆盖续火收益的事实。正充能再添火/坏stack未知，保留全部原选项、HP、评分、动作及模拟，铁甲等价。原撤接线7失败1通过/恢复8通过及旧合后基线失败/回退历史保留；测试修复先独立合入、合后通过，再合本已提交提案并合后固定沙箱tsc/vitest0。0186保持proposed，交运维据fix-done和handoff-ops.md核实际发布后经ledger.py登记shipped；不另设审核、不新建bug-infra、不补药水/SL/路线血线规则，无生成器改动不重建，刷新和既有notes保持，完整外部由调度器补跑。）"
+    },
+    {
+      "name": "S1.exp47",
+      "family": "Silent",
+      "commit": "a95d92ecee0152abcb433b00b3aa0305d3fa2e43",
+      "source": "decision-log 2026-10-06 18:39（静默经验2026-10-06.22；源0723092c1d575122896945935e5b55d89983c57d；PU80F84P6HPN A10及本角色历史/两段勘误。新增1更新17退役0/active122/56362字；宾邦复制返还/五轮书回血、敏捷/毒/荆棘/朝向/保留实际兑现与SL血价分账；无用药规则/源码变更，源最终及合后沙箱通过。继承第46批.21，原失败/回退不改；账本proposed交运维核实际合入登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp48",
+      "family": "Silent",
+      "commit": "0266b8aa40ea7d648ff42458d618e3e1c10da6ec",
+      "source": "decision-log 2026-10-06 19:05（静默经验2026-10-06.23；源eb27d74600ba881d8c9e19c4c68fcf45f7400640；NB8KCF6HRGVF A10及18:22勘误、本角色历史。新增1更新12退役0/active123/57638字；佩尔之肉第三轮加能量、族母双降/毒、污染技能血价/永久减力、路线及费用兑现观察。7旧知识重叠blob相同保持、双方追加历史保留，无用药规则/源码变化；源/合后固定沙箱tsc/vitest通过，账本proposed交运维核实际合入登记shipped、完整外部交调度器。）"
+    },
+    {
+      "name": "S1.strategy8",
+      "family": "Silent",
+      "commit": "6939209e5ee34533f43b903d70bb8b3f3945df36",
+      "source": "decision-log 2026-10-06 19:32（静默卡奖宾邦复制／五轮书计数与回血条件事实；来源/home/dw/Projects/agent-sts2/learner/runs/20261006-191302-strategy-proposal/proposal.md、fix-queue-v4 08:33授权；PU80F84P6HPN SILENT A10 F28 T7、F30 T7、F31 T6（战后卡奖），账本silent-0190，既有0187/0188保持；源码7f8bb5b980c857b76fad4055e6e4793aaf01b793→实际live代码6939209e5ee34533f43b903d70bb8b3f3945df36。三次各实加两张；计数2→4／1→3时0回血，3→5→0时回20、3→23。只在三件遗物未熔化的本角色卡奖题给已见条件参考、同值指标并列及当前boss_sim单张加牌／未覆盖复制回血的说明；未知计数、瞬时5、超最大HP结果不猜。原选项、HP、评分、动作、模拟和铁甲行为保持，不规定取牌／跳过或整场胜负。撤生产接线7失败3通过、恢复10通过；源及合后固定沙箱tsc/vitest0，gitleaks通过，无负载超时重跑。无生成器改动、不重建；保留刷新知识及既有notes。0190仅proposed，交strategy-done和handoff-ops.md通知运维核实际合入后经ledger.py登记shipped；完整外部由调度器补跑，不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.fix34",
+      "family": "Silent",
+      "commit": "97d59449fabbd64af48c6eb911ade843298efa81",
+      "source": "2026-10-06 19:58 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 19:38单行动题重复折减现场虚弱伤害；源码c39102521f91e1e95b886935cf27cc8c23d0bf65→实际live代码97d59449fabbd64af48c6eb911ade843298efa81，eval S1.fix34。证据VLV17NUSFS61 SILENT A7 F37第2次T5、5X2GHKJ89PN1 SILENT A10 F48第6次T6，notes/lessons.md的对应复盘及账本silent-0191。仅在手牌伤害来自current_value时避免再次乘玩家虚弱；基础值回退和原始伤害解析仍应用虚弱，目标易伤、无实体及逐击扣挡保持。旧刺击3改为本体4，两小刀各2改为3，合本体10；群蛇附加伤分账，不声称修复可赢整场。共用输入路径使铁甲若同样以已含虚弱的当前预览出题也修正重复折减；无虚弱或基础值回退等价，未读取或移植其他角色知识。固定日志投影不读刷新知识、不调用LLM或网络；撤三处源码6失败2通过，恢复8通过，源与合后固定沙箱tsc/vitest0，原日志和红绿历史保留。gitleaks0，提交刷新知识后逐blob保持，没有生成器修改、不重建，不改药水代价/过滤/否决、保血、选线、路线、休息或时钟策略。0191仅经CLI/by=learner:fix-batch追加proposed及代码去向，首次证据/先验/历史保持，交运维据fix-done及learner/runs/20261006-194303-fix-batch/handoff-ops.md核实际发布后CLI登记shipped，完整沙箱外套件由调度器补跑。永冻0172跨帧/续行/重启/SL首次触发专项及证据不足/性能/策略事项保持；队列未修改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.exp49",
+      "family": "Silent",
+      "commit": "74f824130c2b9d60cdda8c398590fee394f7e7db",
+      "source": "decision-log 2026-10-06 19:58（静默经验2026-10-06.24；源664fda4f42109645630ccf2dbc2aab58a786c9e2；5X2GHKJ89PN1 A10及19:29/19:32勘误、本角色历史。新增0更新13退役0/active123/58835字；群蛇名义伤与挡/本体分账、敏捷脆弱、萎靡SL血价/临时减力/魂缚/条件挡/手里剑后续窗口、巨兽自爆与路线回血观察。旧60局完整重算、原用药句/其他角色不变，源/合后固定沙箱tsc/vitest通过；账本proposed交运维核实际合入登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp50",
+      "family": "Silent",
+      "commit": "47b5e6a5368b21a7ca9cfefe9eda60cc01611455",
+      "source": "decision-log 2026-10-06 20:48（静默经验2026-10-06.25；源f13582ed9344a280c01226ad58af2940f1fef00e；TCFAHJ9K19VY A10及20:24勘误、S9UZAK0JP0C0同族获胜重打和本角色历史。新增0更新10退役0/active123/59533字；力量逐击、臂甲首次挡/脆弱、毒触发/施毒/剩血截断、同族SL实血价及赢例、构筑/路线/营火观察；旧61局重算、原用药句/其他角色保持，源/合后固定沙箱tsc/vitest通过。账本proposed交运维核实际合入登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.fix35",
+      "family": "Silent",
+      "commit": "816290acd6e1edc735a17702864efbeb6a2525c1",
+      "source": "2026-10-06 21:08 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 20:29臂甲在脆弱下的待触发识别失败；源码ec1ceef3acbc168cf03c73c9fb38226b4a0b63b8→实际live代码816290acd6e1edc735a17702864efbeb6a2525c1，eval S1.fix35。证据TCFAHJ9K19VY SILENT A10 F17首战T2，notes/lessons.md对应复盘及账本silent-0192；原始11:28:54.636Z→11:29:01.677Z固定状态投影核对防御7、生存者6、末防御3，合16挡对21攻击损5、51→46；旧检测未计脆弱、误关一次消费，沿用7+12+7=26挡并报损0。仅将现场FRAIL_POWER传入已有检测，基准翻倍挡量应用已有0.75系数，继续使用原有单次消费，不新增触发、打法或胜负规则。无脆弱检测保持等价；铁甲若同样持臂甲且脆弱，共用算术也修正漏识别，未读取或移植其他角色知识；叠加、新增敏捷及修复后的受控整场胜负不外推。固定六例撤源码3失败3通过、恢复6通过，相关回归合39例通过；源及合后固定沙箱tsc/vitest0，原红绿及检查日志保留；gitleaks0，live已提交知识逐blob保持，没有生成器修改、不重建。不改药水代价/过滤/否决、保血、选线、路线、休息或时钟策略。0192仅经CLI/by=learner:fix-batch追加proposed及代码去向，首次证据/先验/历史保持；交运维据fix-done及learner/runs/20261006-204304-fix-batch/handoff-ops.md核实际发布后CLI登记shipped，完整沙箱外套件由调度器补跑。永冻0172跨帧/续行/重启/SL首次触发专项及其他证据不足/性能/策略事项保持；队列未修改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.exp51",
+      "family": "Silent",
+      "commit": "02832f5d05ee5d831d4bf9c43097515bc7469553",
+      "source": "decision-log 2026-10-06 21:25（静默经验2026-10-06.26；源d6704d506c5aa52d9fc0af7feea0e75a0949342f；LS8035TB32P3 A10及能力合7张勘误、本角色历史。新增1更新8退役0，124 active/59995字；敏捷逐牌、敌力逐击、涂毒+/触媒实结算、狂战士SL血价/撤毒和高阶观察、构筑/路线/回血分账。旧62局重算、原用药句/其他角色保持，源/合后固定沙箱tsc/vitest通过；账本仅proposed交运维据实际合入登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp52",
+      "family": "Silent",
+      "commit": "7e59494c399356373673b715c4cb853ff0851e80",
+      "source": "decision-log 2026-10-06 22:16（静默经验2026-10-06.27；源810fd2b4c41720994d8de15df554947ec34ec514；L704TLETMZBM A10及21:54理由出处勘误、本角色历史。新增1更新9退役0，125 active/55756字；绷带实际弃牌各3挡，力量逐击/敏捷逐挡、触媒与阶段清毒、尖啸临时撤回、实验体三败/未知重抽不预支、路线/恢复/构筑分账。旧63局完整重算、原药水分句/其他角色保持，源/合后固定沙箱tsc/vitest通过；仅proposed交运维据实际合入CLI登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.fix36",
+      "family": "Silent",
+      "commit": "da78fee9739a8548827094e30cd2594362c526f4",
+      "source": "2026-10-06 22:45 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 21:58结实绷带弃牌格挡缺口；源码3a4c5626434efc909122483769468bba953d63c1→实际live代码da78fee9739a8548827094e30cd2594362c526f4，eval S1.fix36。证据L704TLETMZBM SILENT A10 F48末次T3/T4、notes/lessons.md:5153，账本silent-0193（0194机制独立）。T4投掷匕首弃贪婪、生存者弃暗影步各3挡，12挡/损12修为18挡/损6、总伤害23含毒6；T3计算下注自身离手后弃9张补27挡、已有6到33挡，爆发重放杂技的两次实际弃牌各3挡。固定普通牌文本供已观测单张弃牌，全弃按实际手牌/已抽未知槽位计数，排除打出的牌和药水；只在绷带接线内补读投掷匕首文本中已见抽1，未知弃牌身份留Jev且停止后续推演，实际已知选择可离线重放。未外推升级、回合末弃牌、未知交互或受控整场胜负；铁甲及无绷带行为保持。固定10例撤三个源码8失败2通过/exit1、恢复10通过，相关4文件27例通过；最终源及合后固定沙箱tsc0/vitest0，测试统计及全部初稿夹具/兼容回归失败保留于本批目录；没有高负载超时重跑。gitleaks0、live已提交知识逐blob保持，无生成器改动不重建；不改药水代价/过滤/否决、保血、选线、路线、休息或时钟策略。0193只经CLI/by=learner:fix-batch追加proposed和提交去向，0194及原首次证据/先验/历史保持；交运维据fix-done及learner/runs/20261006-221304-fix-batch/handoff-ops.md核实际发布后CLI登记shipped，完整沙箱外套件由调度器补跑。124项既有修复未重复提交，永冻0172专项及其他证据不足/性能/策略事项保持；队列未修改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.exp53",
+      "family": "Silent",
+      "commit": "8785c28a4b1ca2dc5858b39979ba010042d0b8d5",
+      "source": "decision-log 2026-10-06 23:03（静默经验2026-10-06.28；源6cf1de0efdbbfd4482c7c5f8795d37eff17e3caf；KUZVERN40NGK A10/22:29:59勘误与本角色历史。新增0更新8退役0，125 active/54968字；毒雾/刺击/触媒实结算、毒跨160清力与后段攻击、力敏逐牌/SL血价、构筑/飞靴路线/恢复分账，无新用药规则；旧64局逐行一致，源/合后固定沙箱tsc/vitest通过，十项proposed交运维据实际合入CLI登记shipped，完整外部套件交调度器。）"
+    },
+    {
+      "name": "S1.fix37",
+      "family": "Silent",
+      "commit": "65a7e115afa9baef94f1db0c100fe249ebcaba13",
+      "source": "2026-10-06 23:20 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 22:33 SL判官遗漏毒伤触发阈值眩晕；源码f6ff3a9ce42337972b19ee227b2d51432e929f50→实际live代码65a7e115afa9baef94f1db0c100fe249ebcaba13，eval S1.fix37。来源notes/lessons.md:5162及账本silent-0195，KUZVERN40NGK SILENT A10 F17第3次T5／第5次T6／末次T6-T7。前两次164血6毒/167血12毒、触媒1的11/23毒仅求解器预测，判官按26/28攻击错误读档；末次173血9毒实结算9+8=17到156、玩家仍3血，次轮横冲160与8力量清除，支持毒越阈值取消本轮攻击。仅静默判官沿既有每触发减1毒算法计攻击前毒伤上界，接入已有HP阈值眩晕检查；计数类眩晕仍需原hit，未知后继/SL策略不变，铁甲及无毒等价，不声称修复能赢整场。固定8例撤源码5失败3通过/exit1、恢复8通过，相关6文件56例通过；源及合后固定沙箱tsc0/vitest0，统计与红绿原日志保留，本批无高负载超时重跑，完整外部交调度器。gitleaks0，知识不同blob重叠0、全部live已提交知识blob保持；只合并decision-log冲突并验证双方全部非空历史行保持，后台notes不纳入提交，无生成器变化不重建。0195仅CLI/by=learner:fix-batch proposed/提交去向，first_run/prior/证据/旧历史保持；旧0133/0127不变，交运维据fix-done及learner/runs/20261006-225909-fix-batch/handoff-ops.md确认实际合入后CLI登记shipped。125项旧修复核查不重复提交，永冻0172及策略/证据不足/性能专项保持；队列不修改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.exp54",
+      "family": "Silent",
+      "commit": "3caa860b03e4ed76a2afd81635f9c52c18e456c4",
+      "source": "decision-log 2026-10-06 23:38（静默经验2026-10-06.29；源4cf918b6ffa019945c2f99f2d6428ea5102f63be；BVF22RSFVBS9 A10及本角色历史。新增1更新12退役0、126 active/55756字；石虫完整挡后眩晕32局/0反例、毒组件实际启动/毒跨160、尖啸与甲虫成长、SL血价和路线/营火/构筑观察；无新用药规则，旧65局逐行一致，源/合后固定沙箱tsc/vitest通过；13项proposed交运维据实际合入CLI登记shipped，完整沙箱外检查交调度器。）"
+    },
+    {
+      "name": "S1.exp55",
+      "family": "Silent",
+      "commit": "113c82ecfb44d1becbcd9a3f87529738cd287b8d",
+      "source": "decision-log 2026-10-07 00:34（静默经验2026-10-07.1；源7c37095a2c77d579210790fe2c735e78f708a1e6；ZVYUL2YP3518 A10及勘误、本角色历史。增0改21退0，active126/56138字；技能激怒/能力、阶段清毒与触媒、敏捷/精准/消耗伤、被动挡/临时敏捷、羽毛回复/蜡烛续火、SL与路线/血池观察。旧66局全部一致，无新用药规则、无源码变更；源/合后沙箱tsc/vitest0，22项proposed交运维确认实际合入登记shipped，完整沙箱外套件交调度器。）"
+    },
+    {
+      "name": "S1.exp56",
+      "family": "Silent",
+      "commit": "02b87e7c2365eaf48acc3fe46a0d83c33a80deb5",
+      "source": "decision-log 2026-10-07 01:24（静默经验2026-10-07.2；源63e53c86dd449289f8e1b68decb716c4bf1b3dd4；VPW8YH7A4QFM A10及01:01勘误、本角色历史。增1改14退0，active127/56154字；余像/触媒/尖啸/预判/爆发/毒雾实际启动、王室猛毒与小血瓶组合净−2观察、收场条件和本体输出、路线/回血观察；旧67局全部一致、首帧与操作口径分账，无新用药规则/源码变更；源/合后沙箱tsc/vitest0，15项proposed交运维核实际合入登记shipped，完整沙箱外套件交调度器。）"
+    },
+    {
+      "name": "S1.fix38",
+      "family": "Silent",
+      "commit": "9e20ade95055b14ed77446313fd6e71e2f2ff2d5",
+      "source": "2026-10-07 01:29 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-07 01:07生成牌即时评分遗漏收场使用条件；源码62b0e23f0a45b2f331261947cbc9168dde36e39a→实际live代码9e20ade95055b14ed77446313fd6e71e2f2ff2d5，eval S1.fix38。证据Y6GM2CHWJBEY SILENT A0 F17第2次T1（首证）和VPW8YH7A4QFM SILENT A10 F39 T1，notes/lessons.md对应复盘及01:01勘误、账本silent-0197。两局抽牌堆非空、收场入手playable=false；旧评分分别计180/60，后者代码选过猎杀者15分，生成收场实际0伤。只在静默战内选择评分传入已观察的当前抽牌堆空/非空条件，非空时本体即时伤害计0，所有选择仍可由Jev选择；空堆和未知数据沿旧数值，弃牌堆不冒充抽牌堆。铁甲与其他牌评分保持等价，不读取其他角色知识、不添加药水代价/过滤/否决或提前用药规则，不调整保血、排序、路线、休息、时钟和SL策略；没有受控替代整场，不声称修复能转胜。固定9例撤源码4失败5通过/exit1，恢复新9例及相关3文件189例通过；源tsc0/210文件2254例、合后tsc0/210文件2254例/vitest0。源与合后首轮沙箱通过，无超时重跑。测试初稿误用不存在的ranking字段及空弃牌堆断言已修正，原失败日志保持。刷新提交c951e875d0e3197e418322d6420fc6d0d79b03d6、合前c951e875d0e3197e418322d6420fc6d0d79b03d6，知识不同blob重叠0、合前知识逐blob保持；无生成器改动不重建，gitleaks0。预检与实际合入仅decision-log末尾追加冲突，按共同前缀核对后保留双方全部原文；首次预检停止原日志保持。0197只经CLI/by=learner:fix-batch追加proposed和源码提交去向，first_run/prior/claim/证据/历史保持；交运维据fix-done及learner/runs/20261007-011302-fix-batch/handoff-ops.md核实际发布后CLI登记shipped，完整沙箱外套件由调度器补跑。126项既有修复未重复提交，永冻0172首次触发跨帧/续行/重启/SL专项及其他证据不足/性能/策略事项保持；队列未改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.fix39",
+      "family": "Silent",
+      "commit": "da3250d3646a0530b0febe14e8a1a18766567e76",
+      "source": "2026-10-07 02:04 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 11:33永冻首次能力漏7挡；源码157d635cd9e9880d7396e76a15594c6e7f0b0253→实际live代码da3250d3646a0530b0febe14e8a1a18766567e76，eval S1.fix39。证据25226ZFLNR1J SILENT A10 F29 T1（首次灵动步法0→7挡）及PJ2LL9KU7FHD SILENT A10 F17第3次T4（幻影0→7挡，敏捷药水后两防御各7，合21抵21、57血不变）；账本bug-infra silent-0172、机制silent-0173。0172首证25226/A10、prior=no保持；0173首证10GPK5XGHCK3/A3、prior=yes及既有shipped/S1.exp42不改。只补已观察首次能力7挡，ScreenMemory及日志回放跟踪已用/可用/未知，成功SL重置；跨回合rollout携带剩余触发，续行不重算已有7挡，缺历史/计数/跨越未观察回合保留未知，能力重放触发未验证显式标注未知。固定夹具取两局18帧，不依赖刷新知识；铁甲与无遗物数值等价，不调整保血、留药、时钟、路线、休息、SL阈值或小偷优先级，不过滤或否决任何药水/动作；没有受控替代整场，不声称修复转胜。最终撤6处生产源码6失败6通过/exit1，恢复新12例及相关3文件28例通过；源tsc0/211文件2266例、合后tsc0/211文件2266例/vitest0。合后首轮沙箱通过，无超时重跑。初稿类型导入、断言字段及抽牌夹具错误已修正，失败记录保留。刷新提交0f256b60287f52305c0d0b7dbe1f75b00851822c、合前0f256b60287f52305c0d0b7dbe1f75b00851822c，知识不同blob重叠0，非incoming知识逐blob保留；无生成器改动不重建，gitleaks0。0172仅经CLI/by=learner:fix-batch追加源码提交和proposed；交运维据fix-done及learner/runs/20261007-014302-fix-batch/handoff-ops.md核实际发布后登记shipped，完整外部套件由调度器补跑。127项既有修复未重复提交，mod自愈/缓存缺证、boss性能专项及策略项保持；队列未改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.strategy9",
+      "family": "Silent",
+      "commit": "1f82f78f9965c4ca04944e72bb94b247bf192f04",
+      "source": "decision-log 2026-10-07 02:34（静默休息题逐选项即时HP／路线耗尽／boss模拟输入事实；来源/home/dw/Projects/agent-sts2/learner/runs/20261007-021220-strategy-proposal/proposal.md、fix-queue-v4 2026-10-05 08:33授权，LS8035TB32P3 SILENT A10 F40及F16休息题（回合不适用）、F42末试T8，账本silent-0201，既有0019／0020／0139保持。源码645e405709378608ab1151eeebd0047ad753db29→实际live代码1f82f78f9965c4ca04944e72bb94b247bf192f04；F40实回4→28，两线首次中位耗尽F42／F45，原投影−18.5／−27.9均按1血模拟，不把相同输入或胜率读为即时回血无用；F16保留42／65的正常投影。只为HEAL／SMITH单列当前／动作后HP、增量、未下限投影、实际模拟输入、首次耗尽节点和未来默认回血营火，相同输入HP指标并列；未知保持未知，不预支后续营火或定确定死亡。全部原选项、动作、模拟／校准／样本门槛及铁甲行为保持，无新增药水代价／过滤／否决／提前或留药规则，无统一血线或整战转胜结论。固定9例撤源码6失败3通过exit1、恢复9通过exit0；源及合后固定沙箱tsc/vitest0，gitleaks0，首轮通过、无高负载超时重跑。知识刷新逐blob保持，无生成器改动、不重建。0201仅CLI/by=learner:strategy-proposal proposed；交strategy-done与handoff-ops.md通知运维核实际合入后CLI shipped，完整外部由调度器补跑；不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp57",
+      "family": "Silent",
+      "commit": "b98c24f042896e0a0505d3ba805346c6371882ee",
+      "source": "decision-log 2026-10-07 02:46（静默经验2026-10-07.3；源532af94889f4f9fccf6112a16175b4fe742fb142；DPYF2BAA3DKT/CRK2HNYKSCZC A10及本角色历史。增1改19退0，active128/51683字；重放效果/原始计数观察、毒触发/余像/临时敏捷/逐击虚弱/脆弱/滚石与路线血池，SL首末仅前9次干净抽牌可比；无新用药规则/源码变更，旧68局重算一致，源/合后沙箱tsc/vitest0；22项proposed交运维核实际合入登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.fix40",
+      "family": "Silent",
+      "commit": "0b6e5c94f3bbbe0a936ced995f790987c57c4b88",
+      "source": "decision-log 2026-10-07 03:05（fix-queue-v4 2026-10-07 02:20重放跨回合计数与02:31羽化即时抽牌；源码129853b817c0e985e222b09385a9bfeb0562ec7f/1ab1ba8dc446e5a12dec0396528c9b2a5b478fe8→实际live代码0b6e5c94f3bbbe0a936ced995f790987c57c4b88。来源notes/lessons.md的DPYF2BAA3DKT末次F48 T1/T7、HUVEPWQAHWFU F35 T2及首证C48LLXBGKXQ9 F24 T1；bug-infra silent-0199/silent-0202，独立mechanic silent-0200/silent-0203不冒记shipped。重放仅保存已接受动作的附魔额外次数，跨轮原始累计25加重放1为26，T7串刺达到30后新增9伤凋萎；完整需损35/28血差−7，持牌伤18，原始每轮均值保持25/6，投斧单独计数；续行/重读/重启/SL与失败动作固定覆盖。羽化仅静默已观察普通Cards=3分支不再抽3；随机生成的未来收益保留未建模，无虚构即时抽牌/随机牌收益。铁甲等价，不改保血/留药/时钟/路线/休息/SL阈值/无色估值，不增加药水代价、过滤或否决，全部选项保留，不声称整场转胜。羽化4例撤源码2失败2通过，重放10例撤全部源码9失败1通过；恢复相关回归3文件50例通过，源每提交及合后固定沙箱tsc/vitest0。敏感信息扫描0，知识刷新逐blob保留，无生成器改动不重建；仅decision-log追加冲突保留双方全部非空原文/重复次数。0202第一次where.commits误写a-placeholder已明确无效并CLI追加正式提交勘误，原历史保留；两bug条目仅CLI/by=learner:fix-batch proposed。交运维据fix-done和/home/dw/Projects/agent-sts2/learner/runs/20261007-024302-fix-batch/handoff-ops.md确认实际合入后CLI登记shipped/S1.fix40，完整外部套件交调度器；128项旧修复不重复提交，缓存实测/自愈根因/性能专项与策略待定保持，队列未改，不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp58",
+      "family": "Silent",
+      "commit": "e39f07ec6d2fe4591313eee5c2a02feda17699f9",
+      "source": "decision-log 2026-10-07 03:35（静默经验2026-10-07.4；源9fea0539467459ee040991c616fb9ca3afabc21a；HUVEPWQAHWFU A10及勘误、本角色历史，羽化首证C48LLXBGKXQ9 A0。增1改13退0，active129/50536字；仪式成长、力敏与被动挡、毒雾/余像实际启动、羽化生成/即时抽牌分账、沙虫两试末胜与路线回血/护栏观察。旧70局重算一致，无新用药规则/源码变更；源定稿与合后沙箱tsc/vitest0，15项proposed交运维核实际合入后shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp59",
+      "family": "Silent",
+      "commit": "fcfc0bf95579ad7bc4aae49813b1914caf4413d6",
+      "source": "decision-log 2026-10-07 04:00（静默经验2026-10-07.5；源23080aa4018c2f093cea52a270ba2770a0934b1e；UMVLWER4CD98 A10及理由勘误、本角色历史。增1改11退0，active130/50696字；加湿器回血/上限增长、力敏/音叉/凋萎分账、毒雾实际启动、棱柱重问后整轮验收与路线血池观察；旧71局重算一致，无新用药规则/源码变更，源及合后沙箱tsc/vitest0，13项proposed交运维据实际合入登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp60",
+      "family": "Silent",
+      "commit": "98d2d50895fd836fcbc826b12dff6d46913f12ab",
+      "source": "decision-log 2026-10-07 04:43（静默经验2026-10-07.6；源93e56acb6e8787a994e10debbfc42e7c8c5606fa；TU3XB4CAEDAW,V0383V5S9BCQ A10及勘误、本角色历史。增1改11退0，active131/50163字；弃中和减伤、仪式/临时减力、敏捷/族母削益、群蛇扣挡与毒结算、同抽SL及路线血池观察；旧72局重算一致，无新用药规则/源码变更，源及合后沙箱tsc/vitest0，13项proposed交运维据实际合入登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp61",
+      "family": "Silent",
+      "commit": "34daf93c3f7ed93de7469d58b59ca7811041ca6e",
+      "source": "decision-log 2026-10-07 05:12（静默经验2026-10-07.7；源3da1a93c04efa46f73fc2522af56bb1e4aff726e；8R5CXD5C8PW8 A10及有效勘误、本角色历史。增1改14退0、active132/48258字；灵体保护与仪式增长、空堆75伤/SL多组件、脆弱/虚弱/反伤、能力支付及路线血池观察；旧74局重算一致，无新用药规则/源码改动，源及合后沙箱tsc/vitest0，18项proposed交运维核实际发布后登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp62",
+      "family": "Silent",
+      "commit": "9bf7de2c3b52c6c7ad2bdfb3c10734a91f88438f",
+      "source": "decision-log 2026-10-07 05:51（静默经验2026-10-07.8；源9bf7de2c3b52c6c7ad2bdfb3c10734a91f88438f；QNTW139MGECA A10及有效勘误/补记、本角色历史。增1改11退0、active133/47737字；埋地清盾七局/首证A0、力敏与污染血价/临时减力/阶段清力、羽毛与休息、能力实际支付及路线观察；旧75局重算一致，无新用药规则/源码改动，源及合后沙箱tsc/vitest0，15项proposed交运维核实际发布后登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp63",
+      "family": "Silent",
+      "commit": "98df162d756d3eca8d0b6383f2a2398d624ab074",
+      "source": "decision-log 2026-10-07 06:51（静默经验2026-10-07.9；源50de6fefd40afae1f26838de7879198945acbc0b；HSX4HYATB4E2/WYB0NCD6W83J A10及有效勘误、本角色历史。增2改19退0、active135/49258字；暴露清挡制品两局、胆小盾22局、应急卡牌禁挡、力敏/重放/余像、滚石实际建立、单轮限损与凋萎、SL换线血价及路线观察；旧76局重算一致，无新用药规则/源码改动，定稿源与合后沙箱tsc/vitest0。账本proposed交运维确认实际合入后登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.strategy10",
+      "family": "Silent",
+      "commit": "05800d48a8f2f06ddae16d57c61eece622a00a44",
+      "source": "2026-10-07 07:17 Codex学习者策略事实子项自测后上线：来源/home/dw/Projects/agent-sts2/learner/runs/20261007-070020-strategy-proposal/proposal.md及fix-queue-v4路线／休息待定项；静默活动石炉加湿器休息题分列回复、最大血增长和逐动作条件参考；源码2578e7d6f625cc8d8d08d9b14f10ca9e51cc7648→实际live代码05800d48a8f2f06ddae16d57c61eece622a00a44，eval S1.strategy10。证据UMVLWER4CD98 SILENT A10 F7/9/16/44/47（营火，无战斗回合）、F48末试T11；独立提案silent-0215，既有0204/0020。F7的52/70→75/75为回复18加增长5、总增23，F9锻造54/75不变，F16为51/85→81/90，F44为44/110→82/115，F47为31/115→70/120。十次回血增长5、总回复321来自同一局；同70进boss六次全败，没有替代路线或休息受控胜局。使用既有HEAL结果分账，HEAL/SMITH按当前动作列HP/最大HP，未知动作为null；相同最大HP只在该指标并列。不等待boss模拟即可展示触发和截断，保留原选项/动作/评分/投影/模拟；DeepSeek决定，Jev战斗不变，铁甲等价。不预支未来營火，不定血线或回血优先级，不新增药水代价、过滤、否决、提前或留药规则；怪物当前进阶首样本和房间代价五样本保持。固定十例撤完整生产源码9失败1通过、恢复10通过；首轮夹具缺state_version及F9假设HEAL截断预期校正历史保留。源码与合后固定沙箱tsc0/vitest0，gitleaks0；知识刷新逐blob保持，无生成器改动不重建。学习者仅经项目根ledger.py/by=learner:strategy-proposal登记0215 proposed及提交去向，0204/0020首证/状态/版本保持。交运维据strategy-done及/home/dw/Projects/agent-sts2/learner/runs/20261007-070020-strategy-proposal/handoff-ops.md核实际发布后CLI登记shipped，完整外部套件交调度器；保血/全死权重、固定击杀顺序、巨兽拖延、SL阈值/范围、统一路线/休息血线和完整时钟证据不足，保持待定。不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.exp64",
+      "family": "Silent",
+      "commit": "3527d6115bd479e0cf3b72045a46b7f0e496ea6f",
+      "source": "decision-log 2026-10-07 07:21（静默经验2026-10-07.10；源e9acfb0cdd118f0a5d0544917f43d313e5628bae；87LCSDR5P3DL/TKXQ6L4N9A6U A10及有效勘误、本角色历史。增1改8退0、active136/49920字；毒素付费/末伤先于敌毒、敏捷逐牌与脆弱、毒雾实际轮初、临时减力/敌成长、巨兽本体/自爆、能力未建及路线观察；旧78局重算一致，无新用药规则或源码改动，源与合后tsc/vitest0；11项proposed交运维据完成事件登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp65",
+      "family": "Silent",
+      "commit": "731266e2901d93a4f0377bf85cd97680bac2157f",
+      "source": "decision-log 2026-10-07 07:48（静默经验2026-10-07.11；源3dea02331a006a4723a74ee90246c94c7e12ef9e；02HB4L0C3C67/T3FW7R2R2306 A10及有效勘误、本角色历史。增0改7退0、active136/49822字；骇鳗阈值及活力/易伤、异鸟逐段力量/虚弱、毒雾实结算、营火前血价及未来回复、能力建立与护栏局部观察，旧80局复算一致，无新用药规则或源码变化；源与合后tsc/vitest0，8项proposed交运维据完成事件登记shipped，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.fix41",
+      "family": "Silent",
+      "commit": "c4156ed07219f26d4e74883e193676623ad539a3",
+      "source": "2026-10-07 07:52 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-07 07:04毒杀胜利分支漏算持牌伤；源码2e6fa2e5c68be70efb2ee87bee58f2cb3128bfb2→实际live代码c4156ed07219f26d4e74883e193676623ad539a3，eval S1.fix41。证据TKXQ6L4N9A6U SILENT A10 F22 T6，bug-infra silent-0213；独立毒素机制0214及既有0059不重置。7血0挡留两张各5伤毒素，完整末伤10、余−3，玩家先死亡时不预支11/14毒或敌9+21攻击；安全毒杀仍支付持牌伤，即时攻击胜利维持免末伤，既有移牌/格挡/回血模型保持。共用求解器仅纠正经过回合末的毒终结；铁甲无毒及即时胜利路径等价，若铁甲走同型毒终结也按共用缺陷修正，此差异来自同一结算错误而非新增铁甲知识。不加药水代价/过滤/否决、提前或留药规则，不改保血/时钟/路线/休息/击杀优先/SL阈值或构筑估值，不声称整场转胜。固定9例撤全部生产源码7失败2通过、恢复9通过；初稿字段错误与补回血期间旧源码整套失败日志保留，冻结定稿源及合后沙箱tsc/vitest0，gitleaks0。自动知识刷新逐blob保持，无生成器修改、不重建；学习者仅CLI/by=learner:fix-batch登记0213 proposed与源码提交。交运维据fix-done及learner/runs/20261007-072650-fix-batch/handoff-ops.md确认实际发布后CLI登记shipped，完整外部套件由调度器补跑。130项旧修复不重复提交；自愈根因/缓存实测/性能专项和策略待定保持，boss跨进阶校准留独立专用功能批次。队列未改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.exp66",
+      "family": "Silent",
+      "commit": "5ebc85f07444ec1c3885822392813cf613e72cc4",
+      "source": "decision-log 2026-10-07 08:48（学习者经验2026-10-07.12，固定源cd5ca6dd3c4c514baf83b8492f1b6b649dba85f2；P5HT1272P5SB SILENT A10及旧83静默局，新增0更新12退役0、active136/49049字；本批仅experience.json，附带已测main boss校准派发5项源码/任务；源三轮沙箱tsc0/215文件2299例、合后tsc0/216文件2308例。原decision-log预检冲突及离线路径错误历史保留；运维锁内保留最新刷新后机械兜底，不另审。仅本批14项随后CLI/by=ops shipped，0216—0220纯bug/机制及独立校准任务不代改，不把知识补证当模型修复。）"
+    },
+    {
+      "name": "S1.fix42",
+      "family": "Silent",
+      "commit": "14364072535fae162e24f53de80646ffdd8b9333",
+      "source": "decision-log 2026-10-07 09:19（学习者silent-0216覆盖声明固定源ffa23c2fba13c1fad114bbdc27dbc8c32f2d8fab；撤码6败1过、恢复7过，最终顺序沙箱tsc0/217文件2315例，失败/重复参数/超时及单例复跑原件保留。只四项agent源码/固定证据，不重建知识，不混0217—0219及独立功能。 运维仅因旧知识重叠受阻机械兜底，保存最新七项刷新及双方决定原文/重复次数。固定合后完整外部由learner-recheck补跑，不冒称已通过。）"
+    },
+    {
+      "name": "S1.exp67",
+      "family": "Silent",
+      "commit": "e0d16d1e8fe350151b8cd223184a2618eed136bd",
+      "source": "decision-log 2026-10-07 09:19（静默经验2026-10-07.13，固定源4c9607962ba442e9440fd2fc9a925df077d93a12，增1改6退0、137条49709字；源首轮沙箱tsc0/216文件2308例，仅经验；9项随后CLI登记shipped，纯bug独立。 运维仅因旧知识重叠受阻机械兜底，保存最新七项刷新及双方决定原文/重复次数。固定合后完整外部由learner-recheck补跑，不冒称已通过。）"
+    },
+    {
+      "name": "S1.boss-calibration1",
+      "family": "Silent",
+      "commit": "75ba3f6ec0ef27cdd73f10d1e9e91200437722b4",
+      "source": "2026-10-07 10:17 Codex学习者上线Roy已授权新功能：静默boss模拟校准；源码cdf75af64fb5b118a5a808ecb3b05e2a05991c36→实际live代码75ba3f6ec0ef27cdd73f10d1e9e91200437722b4，eval S1.boss-calibration1；严格已结束SILENT A0–A10：84局、378尝试、160实际结局，218 SL截断不作败局；固定107调参/53后期A10验证。首证C48LLXBGKXQ9；F49来源JMH5C51RLN4E/9TG1RP5LFAAK/ZVYUL2YP3518，完整160场及378尝试逐项来源随报告归档。B2首回合/B3战前独立整体Platt，boss模型固定ff571cf0，逐boss沿原四指标准入，12项验证2–9场均低可信；一场A1开场既有求解器no solve导致两种起点均未参与拟合（实际拟合106、验证53）；A10/F49仅3实际败局、调参2/验证1，验证数量还差9场且仍须通过其余指标。女王Execution/实验体Big Pounce仍由A9估，完整残差/失败指标/来源见paper/materials/silent/boss-sim-calibration.md。固定夹具覆盖隔离/切分/拟合/进阶/不足/阈值/B2B3/刷新，源与合后沙箱tsc/vitest0；源撤映射/范围3失败2通过、恢复7通过，Python12和调度8通过，原日志保留。静默升阶/新增20实结局在:13/:43及学习完成事件检查重跑，旧调参/切点/报告留存、新达标自动入名单；仅写静默boss-trust，其他角色/刷新知识保持，未改策略阈值或修其他队列。账本silent-0223为fight/proposed并附来源提交，shipped交运维据完成事件核实际后CLI登记；完整外部套件交调度器，调度器主检出同步亦交运维。合前a0e4b5e2ed881ead45d0ed8dadb2c1520e2be727、保存刷新None、预检0；不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.fix43",
+      "family": "Silent",
+      "commit": "36db32170f3c5962f2911ab991d65c3cbfba7c3d",
+      "source": "decision-log 2026-10-07 10:16（学习者silent-0217升级关键词/0218勒紧后续格挡/0219蛇咬施毒固定源62ee292c7a66466e996424910338aaea8aae6308,1912b5e0c2c9d87622f6915d8a299f0ef6222588,06bb4617e92d4ea5cf75287186223a5b185e4ae3；分别撤码3败1过/5败2过/4败1过、恢复4/7/5过；最后源沙箱tsc0/220文件2331例。九项agent源码/固定证据，共用升级预览恢复现场关键词，铁甲数字/策略等价，其他两效应仅静默现场证据。初稿失败/勘误/中断130及冲突历史保持。 运维受阻机械兜底保留七项live刷新/fix42/双方记录，固定合后代码a0e4b5e2ed881ead45d0ed8dadb2c1520e2be727/树65460836642e588c4b46f8196ad0d949bc5cef60沙箱tsc0、220文件2331例退出0。唯一版本/CLI后续登记，固定最终发布完整外部经learner-recheck，不冒称已通过。）"
+    },
+    {
+      "name": "S1.exp68",
+      "family": "Silent",
+      "commit": "a0e4b5e2ed881ead45d0ed8dadb2c1520e2be727",
+      "source": "decision-log 2026-10-07 10:16（静默经验2026-10-07.14固定定稿71ddbb8ea08c7af9aed6cd29826d2e3d4c495300，增1改9退0、138条49357字，源初稿/定稿各沙箱tsc0/216文件2308例；仅experience，原11+11 proposed及0221学习者首证追加更正保持。 运维受阻机械兜底保留七项live刷新/fix42/双方记录，固定合后代码a0e4b5e2ed881ead45d0ed8dadb2c1520e2be727/树65460836642e588c4b46f8196ad0d949bc5cef60沙箱tsc0、220文件2331例退出0。唯一版本/CLI后续登记，固定最终发布完整外部经learner-recheck，不冒称已通过。）"
+    },
+    {
+      "name": "S1.exp69",
+      "family": "Silent",
+      "commit": "9ce2c8c1d6e9108efce040bb2d399bcd9df75793",
+      "source": "decision-log 2026-10-07 11:05（静默经验.15固定源f5d4caa26a18d18aa518a7362d11a31abfc62e78，增1改6退0，139条49583字，源tsc0/217文件2315例。运维因锁等待/七旧知识重叠兜底，仅experience，先保存刷新c97ebec8b3fce9f440c4fbd032df1c53f25a5dd9，保留boss校准及全部并行知识。固定合后代码9ce2c8c1d6e9108efce040bb2d399bcd9df75793/树05a24aa65b15310b665e677288bcb9f5601fb5c9沙箱tsc0/223文件2338例exit0，原入口固定排除不改；最终发布完整外部另经learner-recheck，不提前冒称通过。）"
+    },
+    {
+      "name": "V4.codex-only1",
+      "family": "V4",
+      "commit": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+      "source": "decision-log 2026-10-07 11:32: Roy authorized Codex-only waiting and codex-successful-brain-v1 performance/climb policy; global engine/source behavior only"
+    },
+    {
+      "name": "S1.exp70",
+      "family": "Silent",
+      "commit": "2518c73d745023219b3d32820bd31c8f117d0575",
+      "source": "decision-log 2026-10-07 12:23（静默经验.16固定源f688ce9c6ba39a25f2c4b1a9b15e8ccd245f1ace，增0改16退0，139条49073字，源两轮tsc0/224文件2372例。运维整枝4冲突仅经验blob兜底，保留Codex-only最终等待保护/刷新；固定合后代码2518c73d745023219b3d32820bd31c8f117d0575/树05ca4c73b9259d2439ffd67728349eafdc5e034b原入口沙箱tsc0/224文件2374例exit0，最终发布完整外部另经learner-recheck，原失败历史保留。）"
+    },
+    {
+      "name": "S1.exp71",
+      "family": "Silent",
+      "commit": "279389a400d2bc010cd338ba1a55d54a9e733993",
+      "source": "decision-log 2026-10-07 12:53（经验.17源d73417544e071deaff6eb01f73dde3b87f29fa0e增0改10退0/139条，源tsc0/224文件2374例，两锁超时仅已测经验blob兜底；固定合后代码279389a400d2bc010cd338ba1a55d54a9e733993/树8ae05a5bd5df1282cd655b5e83551ea5bdeb3a8d原入口沙箱tsc0/224文件2374例exit0。经验70完整外部2条历史测试note断言失败保留、另派修，不回滚生产Codex-only；经验71完整外部另经broker。）"
+    },
+    {
+      "name": "S1.exp72",
+      "family": "Silent",
+      "commit": "03d50f0b2ae81f6f1b8800c6471c145580eb4668",
+      "source": "decision-log 2026-10-07 13:34（经验.18源908a2ddd93fbce59f9add60bd1b17c2fc2f1a53f增0改9退0/139条，源tsc0/224文件2374例，7知识刷新重叠停止后仅已测经验blob兜底；固定合后代码03d50f0b2ae81f6f1b8800c6471c145580eb4668/树74ce797d1b74e52aab3e7b5d45b738e9e23e9303原入口沙箱tsc0/vitest1（225文件2394例过、真实2000ms截断1失败），同树同断言单worker SL+paths 2文件22例exit0，分次覆盖227文件2406例。保留ccd8bb8e旧helper note修复及exp70/71原完整失败，经验72外部完整另经broker。）"
+    },
+    {
+      "name": "S1.boss-sim-auto1",
+      "family": "Silent",
+      "commit": "4f96f0f2d1a0c5dd06335188385a804f05e8c950",
+      "source": "decision-log 2026-10-07 15:31 Roy 2026-10-07 12:11/12:35 已授权 B4/B5 自动触发、自动验收；源 814fe9793c52751f15caf3a9d9928bb3f2209bea，固定源及合后原沙箱通过；只发布调度/验收框架，尚无 B4/B5 模拟校正。"
+    },
+    {
+      "name": "S1.exp73",
+      "family": "Silent",
+      "commit": "0cfb9a2a51cf8eb0e89309325a6a16686fbc5c93",
+      "source": "decision-log 2026-10-07 15:36（经验.19固定源fa87ca9aca5774033a997b58528e6328607cb09c/141条49280字，增2改10退0，13所属CLI。源两轮tsc0/224文件2374例；最新c9组合2eb5dfcbbeaf6d3f50d1f1e1c8c519ac4861fbfb原沙箱tsc0/231文件2429例0。实际发布保留随后B4/B5及B/C/D并行代码，最终树完整外部另经独立recheck；旧全部失败保持。）"
+    },
+    {
+      "name": "S1.fix44",
+      "family": "Silent",
+      "commit": "0cfb9a2a51cf8eb0e89309325a6a16686fbc5c93",
+      "source": "decision-log 2026-10-07 15:36（滑溜毒HP封顶与层数消耗纯bug，0226，源9c19ce71a149300442b01adcfa50df543bc8a7f1；证据ULP4TN1GNHMK A10F17/首证2SU6XN2AEJRD A6F17，红5败2过绿7过；同批提示契约1cf04904仅测试无另游戏ID。源单worker原沙箱tsc0/229文件2416例，前4worker rollout120s失败保持；c9组合原沙箱tsc0/231文件2429例0。无毒铁甲等价，同型毒/滑溜共享引擎修正原因沿源说明。实际最终完整外部另续验。）"
+    },
+    {
+      "name": "S1.double-boss1",
+      "family": "Silent",
+      "commit": "ac076f8a71f101de62d5345fa6b4fca248fd928c",
+      "source": "2026-10-07 14:08 Codex学习者；静默A10连续两场boss：终局HP与毒药水按F49资源价值、B2/B3实际样本连续传递；4局F49实盘全败，8192固定模拟，前2调参/后2留出；未校准、不改SL、其他角色等价。 源e1a467e18a0dfa8d99046a24ff4c0e1af59278c8；证据JMH5C51RLN4E/9TG1RP5LFAAK/ZVYUL2YP3518/TDLBRNA0R05B，账本silent-0228；详情paper/materials/silent/double-boss.md与learner/runs/20261007-130409-silent-double-boss，源及合后原沙箱通过；B/C/D继续，完整外部检查交调度器。"
+    },
+    {
+      "name": "S1.strategy11",
+      "family": "Silent",
+      "commit": "777f861c27a1a1a89c9aba736709801b5cc3f481",
+      "source": "decision-log 2026-10-07 17:34（源45161a51c2c6b7e4a499b13cf749c4108193bbf5，silent-0239，VLZ6CCT8AQ0A A10 F45 T1/T4；仅推演覆盖/样本/削减/未知牌与排名事实展示，撤源8败3过、恢复新增11及相关87合98过。源原沙箱233文件2441例0；最新live组合3fb758b609376ed56717c4c2b5e227e5c192ac5b原入口tsc0/233文件2441例exit0/1worker，四源码blob相等；预算/目标/药水/SL规则保持，其他角色题面等价。完整外部沿原批独立续验；原失败及原提案处置缺失留史，不把整个预算提案标完成。）"
+    },
+    {
+      "name": "S1.exp75",
+      "family": "Silent",
+      "commit": "586ff2db0de4a841555c2e838f3e7f17e8165307",
+      "source": "decision-log 2026-10-07 18:02（源91d49f827f3d429955d63f0b11c5944731759264/experience 2026-10-07.21；前置.20源7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a一并吸收，未独立发布exp74。第75批增2改15退0/148条，原沙箱tsc0/232文件2430例0；第74批28机制提案链已补11duplicate/17waiting，.21三pending链齐全。只机械合经验数据原blob，无新源码，不宣称最新组合已测；最终完整外部沿原批独立续验，原merged=null/failed/报告路径错误/历史全部保留。原规则改动按学习者报告及提案处理。）"
+    },
+    {
+      "name": "S1.exp76",
+      "family": "Silent",
+      "commit": "81a39018a2077bce45e7da5e4e9685f4a1ac6388",
+      "source": "decision-log 2026-10-07 19:09（源7077d238b77f7e64d26d6bfda2aa48cb63e2f1be/experience 2026-10-07.22，第76批8JRE1C4H4Z2W A10，增0改10退0/148 active；仅已测experience.json原blob，六份并行记录保持。源原沙箱tsc0/233文件2441例0；实际合后原入口tsc0/vitest0/233文件2441例0/1worker。silent-proposal-578e415a259e6835待独立策略实现，不冒标代码implemented；原merged=null/failed/冲突历史保留，完整外部沿原批独立续验。）"
+    },
+    {
+      "name": "S1.boss-calibration2",
+      "family": "S1",
+      "commit": "b0b0e679dbab626af188fec8bb180af74e319e71",
+      "source": "decision-log 2026-10-07 19:32: Roy授权静默boss定期校准；20次新实际boss结局，冻结调参/切点，报告paper/materials/silent/boss-sim-calibration.md；silent-0244"
+    },
+    {
+      "name": "S1.fix45",
+      "family": "Silent",
+      "commit": "0d586e685f4f683ff7de4a7c3eee0717efa16a56",
+      "source": "decision-log 2026-10-07 19:40:31 CST（fix-batch 20261007-173847；CA5KE8GFJ9X2 A10 F9T6/F13T1 silent-0229铁蒺藜新建及持久荆棘；DUZUBAJ3A8GP A10 F6T1/F27T4-5 silent-0234 HAZE群体施毒，首证T082DRCUHRRD A0 F46T4。源db6e32d2ee101af6b53f8228c27165bb41f04811/20b04517393708c73912326bb35d8448d1b3f77e；各自撤源码5败2过/5败1过，恢复7/6过，其他角色及未见参数等价。审计裸JSON/独立工作树报告、策略无源码验收目录三工具修复及rollout固定时钟不另造游戏版本。每源原沙箱入口0，合后固定树tsc0/239文件2511例exit0/2worker；原初稿导入失败及4worker rollout120秒超时留史，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp79",
+      "family": "Silent",
+      "commit": "c10209e14d2a1a2f3463555fa088684ccdecf856",
+      "source": "decision-log 2026-10-07 20:51（源6579082a9e6bc643a0186c5a8a092422d6937f4e/累计前源ad20957345fa54777705dd00a75ab4d60d1d4b49，经验2026-10-07.25/154 active；源原沙箱tsc0/233文件2441例exit0，实际合后原入口tsc0/vitest0/239文件2511例exit0/1worker。仅经验原blob，保留全部并行代码与刷新；.23/.24未单独上线，不造S1.exp77或S1.exp78，所属经验由CLI追加shipped，代码提案独立续办。原失败历史保留，原批完整外部续验。）"
+    },
+    {
+      "name": "S1.exp80",
+      "family": "Silent",
+      "commit": "bcfdfd8a8d419c99d167cb8da52012767d2b70c1",
+      "source": "decision-log 2026-10-07 21:42（源4b6396bd462ca61bb13d082fdc73fdf5d0cf610a/经验前源6579082a9e6bc643a0186c5a8a092422d6937f4e，经验2026-10-07.26/154 active；源原沙箱tsc0/239文件2511例exit0，实际合后原入口tsc0/vitest0/239文件2511例exit0/1worker。仅经验原blob，保留全部并行代码与刷新；仅本源10项所属经验由CLI追加数据shipped，代码提案独立续办。原失败历史保留，原批完整外部续验。）"
+    },
+    {
+      "name": "S1.double-boss-phase1",
+      "family": "Silent",
+      "commit": "a881e27a54e458bd027244db12503e96197d6e51",
+      "source": "decision-log 2026-10-07 22:32（学习者源6f2b90a311644960fcfd1e2b7a4ce96fb41d65b4，原批20261007-203653-strategy-proposal合入冲突兜底；静默A10 F48首战胜利/本幕完成/F49现场Boss事实分列，未知身份保持未知。源原沙箱tsc0/vitest0/240文件2525例，合后原入口tsc0/vitest0/240文件2525例/1worker。仅7源代码及固定夹具原blob，经验.26/全部刷新及并行代码保留；原失败历史保持，原批完整外部续验。）"
+    },
+    {
+      "name": "S1.fasten-upgrade1",
+      "family": "Silent",
+      "commit": "26586d3d7bc61444970b6efad683d023ba92a356",
+      "source": "decision-log 2026-10-07 23:10（学习者源5e80e683daa08ae2569733b3b541cb523d7fe861受阻兜底，静默A10已观察FASTEN升级6点Defend专属持续格挡，传实际进阶给手牌/各堆/牌组模型；其他角色、未观察升级和普通4保持，不声称完整神化传播。源原沙箱tsc0/vitest0/241文件2531例，合后原入口tsc0/vitest0/241文件2531例/1worker；全部并行代码/刷新保留，原批完整外部独立续验。）"
+    },
+    {
+      "name": "S1.exp81",
+      "family": "Silent",
+      "commit": "26586d3d7bc61444970b6efad683d023ba92a356",
+      "source": "decision-log 2026-10-07 23:10（学习者源e7552663cdcbfad33a1e348bdd13842fce7e3c41受阻兜底，静默经验第81次：2026-10-07.26→.27，增1改10退0、155 active；只发布本角色原experience blob，三个代码提案仍独立策略链。源原沙箱tsc0/vitest0/239文件2511例，合后原入口tsc0/vitest0/241文件2531例/1worker；全部并行代码/刷新保留，原批完整外部独立续验。）"
+    },
+    {
+      "name": "S1.mirage-poison1",
+      "family": "Silent",
+      "commit": "9ede80593818dd8cdbc5a10e28f8cd79edc7b613",
+      "source": "decision-log 2026-10-07 23:50（学习者源cf0f2495354d9cf5dcb96dc31a2de0f4c53f441a受阻兜底，静默A10已观察普通MIRAGE按打出时存活敌人当前中毒总量格挡，修正入口静态量；旧FASTEN升级/进阶上下文及其他角色保持，未观察升级/敏捷复合不外推。源原沙箱tsc0/vitest0/241文件2534例，合后原入口tsc0/vitest0/242文件2540例/4workers；三方集成保留FASTEN和全部并行代码/刷新，原批完整外部独立续验。）"
+    },
+    {
+      "name": "S1.exp82",
+      "family": "Silent",
+      "commit": "9ede80593818dd8cdbc5a10e28f8cd79edc7b613",
+      "source": "decision-log 2026-10-07 23:50（学习者源ab065d0a4fc067cb6a6d529da2706ab7ef508f85受阻兜底，静默经验第82次：2026-10-07.27→.28，增1改19退0、156 active；只发布本角色原experience blob，三个代码提案沿独立策略链。源原沙箱tsc0/vitest0/240文件2525例，合后原入口tsc0/vitest0/242文件2540例/4workers；三方集成保留FASTEN和全部并行代码/刷新，原批完整外部独立续验。）"
+    },
+    {
+      "name": "S1.exp83",
+      "family": "Silent",
+      "commit": "ea95403fa46fcee922db190836e719e4ed4f02ad",
+      "source": "decision-log 2026-10-08 00:48（经验第83次原源18f23638951e5dea6c0bd557303c20d5ae2a88dd受阻兜底，.28→.29，增2改11退0、158 active；源原沙箱241文件2531例tsc/vitest0，合后242文件2540例tsc/vitest0/4workers。离线HP分账3f69541b同步成为祖先，15项Python固定夹具0；工具不改对局行为，不新增工具行为版本。全部并行代码/九项c009刷新及后续fight-value记录保留，原两批完整外部续验。）"
+    },
+    {
+      "name": "S1.exp84",
+      "family": "Silent",
+      "commit": "b48108b7e6c12c4256c21b7e64f13ba8f15ac992",
+      "source": "decision-log 2026-10-08 01:38（经验第84次原源4a90d3570607a56e34e1dc6924d74987c06926b5受阻兜底，2026-10-07.29→2026-10-08.1，增1改13退0、159 active；源原沙箱242文件2540例tsc/vitest0，实际合后原入口242文件2540例tsc/vitest0/4workers。只合已测经验blob、保留全部并行代码与生成数据；两个既有代码提案仍pending，不冒报代码实现。原失败历史保留，原批独立完整外部续验。）"
+    },
+    {
+      "name": "S1.boss-calibration3",
+      "family": "S1",
+      "commit": "e6cd55b01bf0f1c8635154f4d842a49de0c7e71c",
+      "source": "decision-log 2026-10-08 02:16: Roy授权静默boss定期校准；21新增实际结局/20可用开场，调参keys/切点冻结；silent-0269；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.sloth-replay1",
+      "family": "Silent",
+      "commit": "a16518c4201bfc324b185cb2b75eb34ff309676e",
+      "source": "decision-log 2026-10-08 02:40: 原策略010309源790b76d0记录冲突受阻兜底；只silent A10已观察懒惰3+普通防御重放1额度，KV0JHNJCKXLS F33末试T8/silent-0245/0247，原提案a0853bed；最后名额及未观察牌/叠加边界未知，不改SL权重/药水/终局规则。源原沙箱243文件2554例0、最终撤碼7红恢复14绿/旧凋萎10绿；合后原入口243文件2554例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp85",
+      "family": "S1",
+      "commit": "a16518c4201bfc324b185cb2b75eb34ff309676e",
+      "source": "decision-log 2026-10-08 02:40: 原经验014011源cf32a914 .1→2026-10-08.2净blob受锁30秒超时/21记录冲突兜底；增0改20退0/159 active，G33HU22H2543/P74C04AEPL1F，22所属台账，3代码提案独立链不冒称实现。源原沙箱242文件2540例0，合后原入口243文件2554例tsc/vitest0；并行代码/校准3/知识刷新保持，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.dodge-roll1",
+      "family": "Silent",
+      "commit": "d17f38562a4bc1ae3d2a7c4b0a9c294e764ef665",
+      "source": "decision-log 2026-10-08 03:05: 已测源82bf5b2b锁受阻兜底，61E2QS63Y9WU A10 F28T2→T3/silent-0232翻滚升级在柔嫩1下捕获3/5延迟格挡，跨重规划保留、属性恢复后仅兑现一次；未知重放/叠加/组合保持。源244文件2568例0，撤码11败/恢复14过；实际合后244文件2568例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp86",
+      "family": "Silent",
+      "commit": "6b9f323bc8e6fcda67a0f8e160f5e679d36d3b21",
+      "source": "decision-log 2026-10-08 03:38: 原024301经验整分支31项冲突兜底，源979ddf17唯一experience.json净blob，2026-10-08.2→.3/159 active/增0改15退0；RC61MFQM63Y6 A10 F33及原学习者历史补证，三个出牌/药水/SL/终局代码提案仍走独立自动链，数据发布不表示代码实现或0268修复。原源243文件2554例0，实际合后244文件2568例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp87",
+      "family": "Silent",
+      "commit": "1c0c1b3ef518713db4a15ab3dafc102a1d62ca7c",
+      "source": "decision-log 2026-10-08 04:19: 原033314经验整分支18项冲突兜底，源dbeb2683唯一experience.json净blob，2026-10-08.3→.4/159 active/增0改21退0；BTSRF7JL1W1Y/XTSV1U9JD34T A10 F33及原学习者历史补证，三个出牌/药水/SL/终局代码提案仍走独立自动链，数据发布不表示代码实现或0268修复。原源244文件2568例0，实际合后244文件2568例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.serpent-form1",
+      "family": "Silent",
+      "commit": "76b00247cf48abd8ec4662db25a5f32951af19cd",
+      "source": "decision-log 2026-10-08 04:41: 033314策略18记录冲突兜底，源de62bf7c净6源码/固定夹具；5PM6JAQG6FNQ A10 F33T1-T3/silent-0132单敌普通群蛇四层，建立无自身伤、一次手动出牌另计4点、已建量跨回合保留；未观察多敌/自动/重放/升级/叠加保持未知。源245文件2586例0、撤源码15败/恢复18过；实际合后245文件2586例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp88",
+      "family": "Silent",
+      "commit": "1ede992e9fb4dda65d86eabe2aed9b66003638c6",
+      "source": "decision-log 2026-10-08 05:29: 原044249经验整分支20项冲突兜底，源54826c26唯一experience.json净blob，2026-10-08.4→.5/160 active/增1改14退0；9Z9H2EXKLF3T A10 F48及原学习者历史补证，两个出牌/药水/SL/终局代码提案仍走独立自动链，数据发布不表示代码实现或0268修复。原源245文件2586例0，实际合后245文件2586例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp89",
+      "family": "Silent",
+      "commit": "21b5842d0804d4b7a9772f1a417cf2b6024eb7e5",
+      "source": "decision-log 2026-10-08 06:09: 原053104经验整分支17项记录冲突兜底，源b1a9cbdd唯一experience.json净blob，2026-10-08.5→.6/161 active/增1改20退0；7X0W3U8TVA2A及MTQ0EUBJ3R6T A10补证，三项combat/potion/SL/terminal/structure代码提案沿原自动链。源245文件2586例tsc/vitest0；源码/测试/任务与实际live逐blob等价，仅合原经验数据并保留刷新，不重复沙箱检查，原批完整外部续验另办，数据发布不表示代码提案实现。"
+    },
+    {
+      "name": "S1.bullet-time1",
+      "family": "Silent",
+      "commit": "d9885488ae1dd57407c12d1c4310459edce800e6",
+      "source": "decision-log 2026-10-08 06:36: 原053104策略源a6ed582e兜底；KV0JHNJCKXLS A10 F33 T1—T5/0246、0248、0249，普通子弹时间当前合法手牌零费和本轮封抽传播，限定静默A10/普通文本，铁甲/未知范围保持等价；源及合后原沙箱tsc/vitest0、246文件2598例，固定撤源码5红/恢复12绿；实际六blob/源祖先，保留17记录冲突及知识刷新，外部完整续验另办。"
+    },
+    {
+      "name": "S1.exp90",
+      "family": "Silent",
+      "commit": "ad42585dcdd8b7b0ca0cce5a8f7bd35ea188ecf4",
+      "source": "decision-log 2026-10-08 06:55: 原061302经验整分支18项记录冲突兜底，源6e94f690唯一experience.json净blob，2026-10-08.6→.7/165 active/增4改9退0；KFRDELW2TH2P A10补证，三项combat/potion/SL/terminal/structure代码提案沿原自动链。源245文件2586例tsc/vitest0；当前源码/测试/任务与已完整外部通过49c01a02逐blob等价，保留子弹时间六路径及刷新。data-only免重复沙箱，未冒报新树通过，完整外部原批另续验；数据发布不表示提案代码实现。"
+    },
+    {
+      "name": "S1.apotheosis1",
+      "family": "Silent",
+      "commit": "6e9acb9d00a758d2bd43e46873a1f7aa54a7a68a",
+      "source": "decision-log 2026-10-08 07:53: 原071204策略源772b839f普通固有神化兜底；VLZ6CCT8AQ0A静默A10 F35/F43、0237/0238，八种已观察普通升级配对及同方案/后续抽牌/本场牌堆传播；未知组合未验证。源及组合原沙箱tsc/vitest0，247文件2604例；接线撤掉5红/恢复6绿，实际源祖先及六blob一致、保留六记录冲突和全部刷新。单局发现样本不冒称盲验/胜率。"
+    },
+    {
+      "name": "S1.exp91",
+      "family": "Silent",
+      "commit": "88afd5dc7fbda9e70dce2c78a572f959ca3d4d71",
+      "source": "decision-log 2026-10-08 08:11: 原071204经验六项并行记录冲突兜底，源1ac1b33b唯一experience.json原blob，2026-10-08.7→.8/167 active/增2改12退0；GXNKW8X1XYJP及ZE8F192FKX24原证据，三个combat/potion/SL/terminal/structure代码提案沿原自动链。源246文件2598例tsc/vitest0；当前源码/测试/任务与完整外部通过903a1efc逐blob等价，298文件3412过/2跳，保留神化六路径及刷新。data-only免重复沙箱，未冒报新树通过，完整外部原批另续验；数据上线不表示代码提案实现。"
+    },
+    {
+      "name": "S1.exp92",
+      "family": "Silent",
+      "commit": "d516cdce1da2eb4a07b003657059d754aa310578",
+      "source": "decision-log 2026-10-08 08:37: 原075538经验20项并行记录冲突兜底，仅源eaa66f7c原experience.json，2026-10-08.8→.9/168 active/增1改20退0；PD9AYQVMLQW6、L2TSFU62Z57Z原证据，三个combat/potion/SL/terminal/structure代码提案沿原自动链。源247文件2604例tsc/vitest0，当前源码/测试/任务与固定完整通过7ed2bb0a逐blob等价（298文件3412过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.boss-calibration4",
+      "family": "S1",
+      "commit": "96aeaf636a2b806c435db89673590f8229b22b58",
+      "source": "decision-log 2026-10-08 09:18: Roy授权静默boss定期校准；20新增实际结局/20可用开场，调参keys/切点冻结；silent-0283；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.exp93",
+      "family": "Silent",
+      "commit": "73f2fda517bce478c95d4f64fa7cf309aa703f05",
+      "source": "decision-log 2026-10-08 09:40: 原085640经验20项并行记录冲突兜底，仅源46d0d2a1原experience.json，2026-10-08.9→.10/169 active/增1改9退0；ZTRGYYMLR8SC原证据，两个combat/potion/SL/terminal代码提案沿原自动链。源247文件2604例tsc/vitest0、最终经验定向1文件10例0，当前源码/测试/任务与固定完整通过f8947651逐blob等价（298文件3412过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.a10-regression1",
+      "family": "Silent",
+      "commit": "0ccb002595cc5a1b2604d8b18427ab5e90aaafe3",
+      "source": "decision-log 2026-10-08 10:00：静默独立A10回退排查；693318ef来源隔离，silent-0285/C48LLXBGKXQ9 A0 F2T1及MGA0CZDDKC0P A10 F2T1；仅Silent非boss药水上下文移除铁甲硬编码统计，原经验/候选/评分/血价/SL及铁甲等价。冻结83局中77Codex，F48 10/50→6/27，原38/45为早8小时完局切点；不声称胜率提升。源原沙箱248文件2608例tsc/vitest0，合后原入口通过，保存全部刷新/并行代码；完整外部检查待调度器。"
+    },
+    {
+      "name": "S1.exp94",
+      "family": "Silent",
+      "commit": "0e27b88ab6dacfc9aa42d8ca3820d2e741b1ce6d",
+      "source": "decision-log 2026-10-08 10:54: 原101301经验21项并行记录冲突兜底，仅源eebcf429原experience.json，2026-10-08.10→.11/170 active/增1改15退0；K2JAGKVJAWZJ原证据，五个combat/potion/SL/terminal代码提案沿原自动链。源247文件2604例tsc/vitest0、最终经验定向1文件10例0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp95",
+      "family": "Silent",
+      "commit": "74387216c08496ddeb53bb674490f79a1eb2c06e",
+      "source": "decision-log 2026-10-08 11:42: 原111006经验20项并行记录冲突兜底，仅源fbf45077原experience.json，2026-10-08.11→.12/173 active/增3改20退0；79UCJ0K6R9C1、NEWRFAYKTQHR等原证据，五个combat/potion/SL代码提案沿原自动链。源248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp96",
+      "family": "Silent",
+      "commit": "64e82e9874e55823fd524491ecfbae2aa643e7ad",
+      "source": "decision-log 2026-10-08 12:39: 原120900经验19项并行记录冲突兜底，仅源3958e561原experience.json，2026-10-08.12→.12/175 active/增2改17退0；9R916WW0V65N及原历史局证据，五个combat/potion/SL代码提案沿原自动链。源首轮中断130原件保留、重试248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp97",
+      "family": "Silent",
+      "commit": "cfe666e2b23f85fe37215c44846b68fb5f12f3fa",
+      "source": "decision-log 2026-10-08 13:31: 原130539经验19项并行记录冲突兜底，仅源3bda3841原experience.json，2026-10-08.13→.14/176 active/增1改15退0；T0DGVABPV60U及原历史局证据，四个combat/potion/SL代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp98",
+      "family": "Silent",
+      "commit": "1a09acb6b414590e23a903c45f7b5ffc0720b722",
+      "source": "decision-log 2026-10-08 14:09: 原133301经验19项并行记录冲突兜底，仅源9d833df6原experience.json，2026-10-08.14→.15/176 active/增0改12退0；G8NHLL09DLBX及原历史局证据，四个combat/potion/SL代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp99",
+      "family": "Silent",
+      "commit": "b015111e067122f13fda492bde6ec3423170107d",
+      "source": "decision-log 2026-10-08 14:37: 原140852经验23项并行记录冲突兜底，仅源47e9a436原experience.json，2026-10-08.15→.16/176 active/增0改16退0；LYBHQ1X230ZB及原历史局证据，四个combat/potion/SL/terminal代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入bea18dc7逐blob等价（其独立原沙箱251文件2618例tsc/vitest0，完整外部尚未核实），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp100",
+      "family": "Silent",
+      "commit": "10f0aeb37f8df7975cf823ac0e439f851d9ad07f",
+      "source": "decision-log 2026-10-08 15:45: 原144109经验19项并行记录冲突兜底，仅源196f1800原experience.json，2026-10-08.16→.17/176 active/增0改17退0；H1T1F8ML9FUE及原历史局证据，四个combat/potion/SL/terminal代码提案沿原自动链。源首轮251文件2618例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入722518cd逐blob等价（其固定完整外部302文件3429例通过/2跳过tsc/vitest0已核实），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp101",
+      "family": "Silent",
+      "commit": "bf4b1cef5e319ccb21cb35d91e848615d5eb9fa8",
+      "source": "decision-log 2026-10-08 16:19: 原153439经验23项记录冲突兜底；只源f2ce6143 experience.json，.17→.18/增0改17退0/176 active，AD3QSC3P41JU证据。源251文件2621例tsc/vitest0；保留隔离probe六路径代码及原合后沙箱，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp102",
+      "family": "Silent",
+      "commit": "3e5637f6583e83c7348101623ac369b63dd1174b",
+      "source": "decision-log 2026-10-08 17:02: 原160331经验32项记录冲突兜底；只源7f51464c experience.json，.18→.19/增0改16退0/176 active，9DAS5L8YM1CN证据。源251文件2621例tsc/vitest0；保留全部当前代码及固定650a6a84完整检查，数据免重复源码自测，完整新树待独立续验；四提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.boss-calibration5",
+      "family": "S1",
+      "commit": "465df69b196ff828dedf250538acba9917c120b5",
+      "source": "decision-log 2026-10-08 16:59:12 CST：Roy授权静默boss定期校准；源0471382514799baa3db44602f56ac35020f30ba6；21新实际结局/固定107调参与134验证；silent-0299；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.exp103",
+      "family": "Silent",
+      "commit": "74c48edda9411ad30e44cedf1193acc88253b1a7",
+      "source": "decision-log 2026-10-08 17:46: 原170939经验21项记录冲突兜底；只源b6c4b534 experience.json，.19→.20/增0改22退0/176 active，BJLTVSYXCSGS/Y5H4CFAQ2WTG证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定187c025a完整检查，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp104",
+      "family": "Silent",
+      "commit": "4a73f63c4955beeacc39e14fed72cf302d307e82",
+      "source": "decision-log 2026-10-08 18:25: 原174751经验21项记录冲突兜底；只源ee6d95ef experience.json，.20→.21/增2改16退0/178 active，SY0WMJNNVRLM证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定2977ebba完整检查，数据免重复源码自测，完整新树待独立续验；五提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp105",
+      "family": "Silent",
+      "commit": "c286f1943ace026b89a708d431d36aef89d4bddb",
+      "source": "decision-log 2026-10-08 19:27: 原183609经验18项记录冲突兜底；只源62d06feb experience.json，.21→.22/增2改14退0/180 active，4XLZURXMD872证据。最终源251文件2627例tsc/vitest0；首轮CHARACTER误设134例失败保持。当前全部代码与固定c70efc8c完整检查等价，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp106",
+      "family": "Silent",
+      "commit": "b2921782dac1f17a52d1c8e75e39ff129d2111b4",
+      "source": "decision-log 2026-10-08 20:17: 原193933经验17项记录冲突兜底；仅源1c782204 experience.json原blob，.22→.23/增3改23退0/183 active，QHK1XQ928TTM、UZ1T7AH49WMB、7BNC8QX746YP证据。源251文件2627例tsc/vitest0；两次数字核验失败原件保持，最终49项核验通过。当前全部代码与固定433144fb完整302文件3435例过2跳检查等价，数据免重复源码自测，新数据树完整外部待独立续验；三原提案沿自动链，不标代码实现。"
+    },
+    {
+      "name": "S1.exp107",
+      "family": "Silent",
+      "commit": "0dd5cb2450875f88c3c7425912cf22aad9286890",
+      "source": "decision-log 2026-10-08 20:48: 原201302经验17项记录冲突兜底；仅源196a025b experience.json原blob，.23→.24/增1改19退0/184 active，CNKR125PFHJ5证据。源251文件2627例tsc/vitest0；原数字核验及拼写勘误原件保持，最终35项核验通过。当前全部代码与固定ad489c8c完整302文件3435例过2跳检查等价，数据免重复源码自测，新数据树完整外部待独立续验；三原提案沿自动链，不标代码实现。"
+    },
+    {
+      "name": "S1.boss-calibration6",
+      "family": "S1",
+      "commit": "f4454686dde188eb7f1e4416a26842afde9dd38d",
+      "source": "decision-log 2026-10-08 21:12:24 CST：Roy授权静默boss定期校准；源b1ca91844cf8307fe59a8fde3151ee6f3bba3651；20新实际结局/固定107调参与154验证；silent-0310；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.exp108",
+      "family": "Silent",
+      "commit": "11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5",
+      "source": "decision-log 2026-10-08 21:43: 静默第108次经验.24→.25，增1改15退0/185 active，证据PF90JTU0UZ5M及本角色历史；源f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c。源251文件2627例、合后251文件2627例，tsc/vitest0；只更新经验前缀，三代码提案独立实现，不标implemented/shipped。"
+    },
+    {"name": "S1.exp109", "family": "Silent", "commit": "d49b6ad7bfd22a515d1c3f7ddb5c0ba74ee261ca", "source": "decision-log 2026-10-08 22:33: 原220305经验18项记录冲突兜底；只源5bb99c79 experience.json，.25→.26/增0改15退0/185 active，2H311EAD34GD/WZL2AMEY85S7证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定9949a5de完整检查，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"},
+    {"name": "S1.exp110", "family": "Silent", "commit": "c2d5a4e7a37b1628fb8015808258da4746f90503", "source": "decision-log 2026-10-08 23:18: 原224301经验20项记录冲突兜底；只源64ed5d5c experience.json，.26→.27/增1改17退0/186 active，R3AJCGQGGMR4证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定049dff24完整检查，数据免重复源码自测，完整新树待独立续验；五提案沿自动链，数据发布不标代码实现。"},
+    {"name": "S1.exp111", "family": "Silent", "commit": "dbc65baab5ad259f07f2b1bc7e672e9979159af6", "source": "decision-log 2026-10-09 00:14: 原234302经验20项记录冲突兜底；只源2c782d78 experience.json，.27→.28/增0改8退0/186 active，M0GY0A4M2F7H证据。源251文件2627例tsc/vitest0；全部当前代码与固定72499093/树476214f6完整检查保持，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现。"},
+    {"name": "S1.exp112", "family": "Silent", "commit": "38dfb55e377349c23435e46aa065de3d9542251f", "source": "decision-log 2026-10-09 00:50: 原001302经验16项记录冲突兜底；只源3ae5a3c2 experience.json，2026-10-08.28→2026-10-09.1/增0改15退0/186 active，Z91JN3S3PQX2证据。源251文件2627例tsc/vitest0；全部当前代码与固定3541bc54/树d4578547完整检查保持，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现。"},
+    {"name": "S1.exp113", "family": "Silent", "commit": "97f004b323b6a0df71f2aa2667fac6b1b627b005", "source": "decision-log 2026-10-09 01:21: 原005053经验4项记录冲突兜底；只源2c381802 experience.json，2026-10-09.1→2026-10-09.2/增2改10退0/188 active，LY83ZMTFVKJH证据。源251文件2627例tsc/vitest0；全部当前代码与固定dd07f4aa/树ff080340完整检查保持，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现；0316原学习者更早首证勘误与原历史保留。"},
+    {"name": "S1.exp114", "family": "Silent", "commit": "60c93049a61bf9fb0c0501a9f03d1b34b6206b3d", "source": "decision-log 2026-10-09 02:23: 原014148经验17项记录/表冲突兜底；只源4aca285e experience.json，2026-10-09.2→2026-10-09.3/增1改22退0/189 active，HEMND3SMQYB8证据。源251文件2627例tsc/vitest0；当前代码与固定8149e4ca/树3f7df7a0完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp115", "family": "Silent", "commit": "63dfc3219ed252457ee52342f6ab0736b817828f", "source": "decision-log 2026-10-09 03:18: 原024302经验18项记录/表冲突兜底；只源bdee78cd experience.json，2026-10-09.3→2026-10-09.4/增1改14退0/190 active，P2M3DFJ4DEZ3证据。源251文件2627例tsc/vitest0；当前代码与固定a7c2a411/树3be0daf4完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp116", "family": "Silent", "commit": "5853fdbf630fca6e9c022aa28c54fedd09fc2ecf", "source": "decision-log 2026-10-09 03:57: 原031301经验17项记录/表冲突兜底；只源f002a94f experience.json，2026-10-09.4→2026-10-09.5/增0改17退0/190 active，PBUBM0LRTEDD证据。源251文件2627例tsc/vitest0；当前代码与固定20cec89a/树6d3900c8完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.boss-calibration7", "family": "S1", "commit": "473a38a1a8d133f0a811f8a3c8ff454ae6363984", "source": "decision-log 2026-10-09 04:14:54 CST：Roy授权静默boss定期校准；源010b22a63c2f05402b7ff027d59f8f94a6d69051；20新实际结局/固定107调参与174验证；silent-0325；paper/materials/silent/boss-sim-calibration.md"},
+    {"name": "S1.exp117", "family": "Silent", "commit": "90577a65353b6fffe151b8eeb49bd472a4c98bf9", "source": "decision-log 2026-10-09 05:01: 原040745经验19项记录/表冲突兜底；只源e6d12c26 experience.json，2026-10-09.5→2026-10-09.6/增1改18退0/191 active，FU8ZUQHBHNV9/456MRNGCPD8E证据。源251文件2627例tsc/vitest0；当前代码与固定3cadc990/树972425de完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp118", "family": "Silent", "commit": "abbb308ce3be824214f3e6a7d2397a3b83b30204", "source": "decision-log 2026-10-09 05:44: 原050454经验18项记录/表冲突兜底；只源832318ee experience.json，2026-10-09.6→2026-10-09.7/增0改15退0/191 active，J8PHG72DGD90证据。源251文件2627例tsc/vitest0；当前代码与固定52aa3fcc/树8dbe7ece完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp119", "family": "Silent", "commit": "9494b301594282bdab23b1c3df46c0691da5317b", "source": "decision-log 2026-10-09 06:15: 原054302经验17项记录/表冲突兜底；只源d4c5065e experience.json，2026-10-09.7→2026-10-09.8/增1改11退0/192 active，0DJ6GFZZ0TG9证据。源251文件2627例tsc/vitest0；当前代码与固定b7404348/树5048a2f7完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp120", "family": "Silent", "commit": "09e8ac8b7b16ba7f7c4d977d30e8e2b807ced3ed", "source": "decision-log 2026-10-09 06:46: 原061302经验20项记录/表冲突兜底；只源01ad28fa experience.json，2026-10-09.8→2026-10-09.9/增0改12退0/192 active，KSX97DF5H3NY证据。源251文件2627例tsc/vitest0；当前代码与固定244d9d6a/树467aae9d完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp121", "family": "Silent", "commit": "7972c8b7e732e17ae381dc9df5b61488a91e48ff", "source": "decision-log 2026-10-09 07:30: 原070159经验5项记录/表冲突兜底；只源7c1d9b20 experience.json，2026-10-09.9→2026-10-09.10/增0改12退0/192 active，SV2GP9NX4HQD证据。源251文件2627例tsc/vitest0；当前代码与固定cfa8112d/树f9100ea0完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp122", "family": "Silent", "commit": "d62fd3c265f0838cd9742b0c7c7569cccc940e7b", "source": "decision-log 2026-10-09 07:57: 原073009经验17项记录/表冲突兜底；只源229e0a0d experience.json，2026-10-09.10→2026-10-09.11/增0改9退0/192 active，CSLHFCBSC1UM证据。源251文件2627例tsc/vitest0；当前代码与固定bb728531/树7d4bfea9完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp123", "family": "Silent", "commit": "d5c1fe3f0c3bf542260cd42765203e3561c96f88", "source": "decision-log 2026-10-09 08:38: 原075759经验17项记录/表冲突兜底；只源6c5a3f61 experience.json，2026-10-09.11→2026-10-09.12/增1改9退0/193 active，RZ6YAC7K89NM证据。源251文件2627例tsc/vitest0；当前代码与固定7123e525/树ffccd203完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp124", "family": "Silent", "commit": "afdb448cd650687ed28e4154ffa92b54c7286eeb", "source": "decision-log 2026-10-09 09:14: 原084302经验18项记录/表冲突兜底；只源7339da35 experience.json，2026-10-09.12→2026-10-09.13/增0改8退0/193 active，SDY5T9XCSQN2证据。源251文件2627例tsc/vitest0；当前代码与固定57a7f485/树15c60476完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp125", "family": "Silent", "commit": "074068c96c113f918fa6fec7df5bc3cbda177b38", "source": "decision-log 2026-10-09 10:11: 原093152经验5项记录/表冲突兜底；只源9f7cceaf experience.json，2026-10-09.13→2026-10-09.14/增0改16退0/193 active，VAC6Z1PZ1QJG/NG1FBJTSRLHS证据。源251文件2627例tsc/vitest0；当前代码与固定5ff4270d/树d8434435完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp126", "family": "Silent", "commit": "f04518bfa4ae33c92cebc2e0ebf4b5a62ff2e0f5", "source": "decision-log 2026-10-09 10:51: 原101302经验19项记录/论文表冲突兜底；只源06b30fc0 experience.json，2026-10-09.14→2026-10-09.15/增0改9退0/193 active，NTMAU4XZ2NN2证据。源251文件2627例tsc/vitest0；当前代码与固定d5f290f4/树588d4310完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；两提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp127", "family": "Silent", "commit": "5f809c22a7d2b8866c6971658a0904d202e11ac4", "source": "decision-log 2026-10-09 11:18: 原104301经验3项运维记录冲突兜底；只源0e7a9db4 experience.json，2026-10-09.15→2026-10-09.16/增1改15退0/194 active，E6DYYXRX7GVE证据。源251文件2627例tsc/vitest0；当前代码与固定e447200f/树458c1995完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp128", "family": "Silent", "commit": "761272f5eccdf5fefc15e41ca02058d137c083a3", "source": "decision-log 2026-10-09 11:58: 原111624经验18项记录/论文冲突兜底；只源9bf2c5a9 experience.json，2026-10-09.16→2026-10-09.17/增2改15退0/196 active，XZUJR08FW801证据。源251文件2627例tsc/vitest0；当前代码与固定6519b890/树728ac938完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案（含更正）沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.boss-calibration8", "family": "S1", "commit": "855a758e1b698573c16605a10a8669a326f93338", "source": "decision-log 2026-10-09 12:42:43 CST: Roy授权静默boss定期校准；源e7ea26412a65409d1f1d27ff72dd6dc050df98c3；20新实际结局，固定107调参/194验证；silent-0337；paper/materials/silent/boss-sim-calibration.md"},
+    {"name": "S1.exp129", "family": "Silent", "commit": "7a89024be1b9e1ecd50730d6152ad3e9a248cd05", "source": "decision-log 2026-10-09 12:57: 原120920经验20项记录/论文冲突兜底；只源23d97f26 experience.json，2026-10-09.17→2026-10-09.18/增0改17退0/196 active，JBX9JLH46KVN证据。源251文件2627例tsc/vitest0；当前代码与固定10168ac7/树50493fbf完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp130", "family": "Silent", "commit": "9f572a6d8c63b48af820743db615aa976279e9d5", "source": "decision-log 2026-10-09 13:43: 原130838经验5项记录冲突兜底；只源6e3ac694 experience.json，2026-10-09.18→2026-10-09.19/增0改22退0/196 active，RMNXHZKV716Y证据。源251文件2627例tsc/vitest0；当前代码与固定d5ad91e8/树a2f52376完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp131", "family": "Silent", "commit": "92dcf85e6be692fac9ad313d9de6dc10a0fb453b", "source": "decision-log 2026-10-09 14:47: 原140554经验19项记录/论文冲突兜底；只源3a71746d experience.json，2026-10-09.19→2026-10-09.20/增0改23退0/196 active，NBJBVSBNPYQB证据。源251文件2627例tsc/vitest0；当前代码与固定57b661f0/树d4e1f23e完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp132", "family": "Silent", "commit": "2e126dc3383508b588fbf54e1b8150be0cf89466", "source": "decision-log 2026-10-09 16:13: 原143947经验3项共享记录冲突兜底；只源6276c272 experience.json，2026-10-09.20→2026-10-09.21/增0改16退0/196 active，AF76L5UTPP8U证据。源251文件2627例tsc/vitest0；当前代码与固定c7e1e0ed/树1e231e8d完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp133", "family": "Silent", "commit": "dfb41f1826e29ed2763caf3127b7e0d4b4dea363", "source": "decision-log 2026-10-09 16:28: 原154302经验20项共享记录冲突兜底；只源a8bd4e48 experience.json，2026-10-09.21→2026-10-09.22/增1改21退0/197 active，833ZM0MJGWHC证据。源251文件2627例tsc/vitest0；当前代码与固定2edf5043/树cbf21ae3完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.exp134", "family": "Silent", "commit": "4bf6f54fc0599d29282d7f5e31d07d55f8b606f2", "source": "decision-log 2026-10-09 17:16: 原163854经验18项共享记录冲突兜底；只源26bd83af experience.json，2026-10-09.22→2026-10-09.23/增0改15退0/197 active，64R0P0MTZWAX/C6Z8ATNBNHZ7证据。源251文件2627例tsc/vitest0；当前代码与固定c308b61e/树ea2b03dc完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
+    {"name": "S1.boss-calibration9", "family": "S1", "commit": "1cdf75b194591c2e4e4c292f9b69c0284d31457e", "source": "decision-log 2026-10-09 18:06:02 CST: Roy授权静默boss定期校准；源351678e8a6aa39a6e78bd7f1abc1ef259d8493c8；20新实际结局，固定107调参/214验证；silent-0342；paper/materials/silent/boss-sim-calibration.md"},
+    {"name": "S1.exp135", "family": "Silent", "commit": "a19db32c5663f70eb460ea35967976c840b9cd8e", "source": "decision-log 2026-10-09 18:45: 原180724经验9项共享记录冲突兜底；只源05212bb1 experience.json，2026-10-09.23→2026-10-09.24/增0改18退0/197 active，XW8B5CHJ814J证据。源251文件2627例tsc/vitest0，更正后3文件次31例tsc/vitest0；当前代码与校准9固定2e037b7b/树fb4340ae完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原初稿/原提案及更正历史分别保留。"},
+    {"name": "S1.exp136", "family": "Silent", "commit": "6b5131921d3f5fe0a29e11b42e27543ebc79f18b", "source": "decision-log 2026-10-09 19:27: 原184302经验19项共享记录冲突兜底；只源ebcdb689 experience.json，2026-10-09.24→2026-10-09.25/增1改17退0/198 active，R6WDLYS19ZTY证据。源251文件2627例tsc/vitest0，另开verbose诊断未确认结束，原pending保留；当前代码与经验135固定d6a39489/树c576f916完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原初稿/校验失败及诊断pending历史分别保留。"},
+    {"name": "S1.exp137", "family": "Silent", "commit": "50439941134c9f355d81a9c4158997c7240f43d0", "source": "decision-log 2026-10-09 20:15: 原193737经验19项共享记录冲突兜底；只源806d6c03 experience.json，2026-10-09.25→2026-10-09.26/增0改20退0/198 active，HNX4A2WBC34W证据。源251文件2627例tsc/vitest0，最终3文件次31例通过；当前代码与经验136固定eaf3ac162afe487705d5b46ab049871308022173/树b4858e2e4cb991c1d1f282addef5e64ef714a945完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"},
+    {"name": "S1.exp138", "family": "Silent", "commit": "bbd2fab041236a99a5ad8dfaf2c30db1bfc88c0b", "source": "decision-log 2026-10-09 22:20: 原20261009-200935-experience-update经验共享记录冲突兜底；只源19b98aa1 experience.json，2026-10-09.27，原变化{'added': 1, 'updated': 13, 'retired': 0, 'active': 199}，原证据与限制见原report.md。源251文件2627例tsc/vitest0，当前代码与当前基础设施完整检查固定fd4c8659736828708789598b7bd1bb9049c6cf94/树5a2890da17c285c15b2c1f913acf90491e133f0f完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；原三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"},
+    {"name": "S1.exp139", "family": "Silent", "commit": "362cad0e4da5c8af935d805e9c3691f6cf65ef8d", "source": "decision-log 2026-10-09 22:23: 原20261009-210408-experience-update经验共享记录冲突兜底；只源7ecf496c experience.json，2026-10-09.28，原变化{'added': 1, 'updated': 18, 'retired': 0, 'active': 200}，原证据与限制见原report.md。源251文件2627例tsc/vitest0，当前代码与当前基础设施完整检查固定fd4c8659736828708789598b7bd1bb9049c6cf94/树5a2890da17c285c15b2c1f913acf90491e133f0f完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；原三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"},
+    {"name": "S1.exp140", "family": "Silent", "commit": "c1127d3fe1155d745a4fb01899704bb333aa2966", "source": "decision-log 2026-10-09 23:58: 原20261009-214302-experience-update兜底，只原源2ff36c373e736214e7d143c161c7f917f06887ef经验2026-10-09.29数据；增0改13退0/200 active，源固定沙箱251文件2627例tsc/vitest0；原失败与重跑、共享记录冲突或重叠保持；当前live源码及刷新保持，新数据树完整外部检查待原批续验。未标代码提案实现。"},
+    {"name": "S1.exp141", "family": "Silent", "commit": "f704bde92f68928d82ebd3b16245d32d611500ae", "source": "decision-log 2026-10-09 23:59: 原20261009-224302-experience-update兜底，只原源ae60e1711e2fb8856ded323878bc4901dab624e9经验2026-10-09.30数据；增1改14退0/201 active，源固定沙箱253文件2631例tsc/vitest0；原失败与重跑、共享记录冲突或重叠保持；当前live源码及刷新保持，新数据树完整外部检查待原批续验。未标代码提案实现。"},
+    {"name": "S1.apotheosis2", "family": "Silent", "commit": "c6a2c9337e869e1047928f2c7223c1b2956a2514", "source": "decision-log 2026-10-09 23:01:43 CST：静默A10神化第九组触媒1→2配对；源f516592fff557ef02c8ece43433706358c3f7fe6；VLZ6CCT8AQ0A F43T1/T4/T5、F45T5；silent-0351/silent-0237/0238/0027。撤源码5失败2通过、恢复4文件27例；源与合后原沙箱通过，其他角色/进阶等价；原10宽提案仍waiting，不承诺整场胜率。"},
+    {"name": "S1.fix46", "family": "Silent", "commit": "57e33ac54d7e145089f554eb784210f9acd63153", "source": "decision-log 2026-10-09 23:07: fix-batch 20261009-221100；silent-0272/源db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26，9Z9H2EXKLF3T A10 F37 turn=null。商店移除预判标为预测，现场完整多重集不一致暂停原承诺并重问；铁甲及未观察进阶保持原预检查。另两纯诊断/统计修复silent-0338/0254不改数值和动作；三项撤源码红/恢复绿，源及合后沙箱tsc/vitest0，合后256文件2648例，Python3例0；完整沙箱外检查待调度器。"},
+    {"name": "S1.exp146", "family": "Silent", "commit": "1e151eb7a12066046b5b79c524eb50061bbd31a5", "source": "decision-log 2026-10-10 06:46：经验146源af086e15e1493d667c07b818ac2bdc466c6bd322，四局A10/188局历史；分支.3→.4/增0改29退0/203 active，live实际.30→.4包括原142—145四批；源258文件2654例/live261文件2665例tsc/vitest0，刷新78d1db6ea8e81ef025adb13a1567d3ea892b83c9保留，账本与四代码提案沿原CLI，数据发布不标源码implemented。"}
+  ]
+}
