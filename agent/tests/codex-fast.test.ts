@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { codexArgs, sessionArgs } from "../src/brain/engines/codex.js";
 import { loadConfig } from "../src/core/config.js";
-import { codexCommand, type EngineRequest } from "../../learner/lib/engines.js";
+import { codexCommand, engineDefaults, type EngineRequest } from "../../learner/lib/engines.js";
 import { initCommand, interactiveArgs, resumeCommand } from "../../ops/codex/lib.js";
 
 const SESSION = "01a10717-c859-7592-9012-ad4251284920";
@@ -22,9 +22,8 @@ describe("Codex Fast policy across session entry points", () => {
     }
   });
 
-  it("passes Fast to learner exec, ops init/resume and interactive ops resume", () => {
+  it("preserves Fast for ops init/resume and interactive ops resume", () => {
     const commands = [
-      codexCommand(request, "TASK", "codex").args,
       initCommand(request, "TASK", "codex").args,
       resumeCommand(request, SESSION, "TASK", "codex").args,
       interactiveArgs(request, SESSION),
@@ -34,6 +33,18 @@ describe("Codex Fast policy across session entry points", () => {
       expect(args).toContain('model_reasoning_effort="xhigh"');
       expect(args).toContain("gpt-6.1-sol");
     }
+  });
+
+  it("keeps learner Astra/xhigh without Fast separate from gameplay and ops", () => {
+    expect(engineDefaults("codex")).toEqual({ model: "gpt-6-astra", effort: "xhigh" });
+    const opsArgs = initCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
+    expect(opsArgs).toContain("gpt-6.1-sol");
+    expect(opsArgs).toContain('service_tier="priority"');
+    const args = codexCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
+    expect(args).toContain("gpt-6-astra");
+    expect(args).toContain('model_reasoning_effort="xhigh"');
+    expect(args).toContain("--ignore-user-config");
+    expect(args.some((arg) => arg.startsWith("service_tier="))).toBe(false);
   });
 
   it("passes Fast through both play transports and preserves their isolation settings", () => {

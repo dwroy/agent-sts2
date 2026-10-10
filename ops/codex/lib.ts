@@ -18,7 +18,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
+import { CODEX_SERVICE_TIER, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
 import { codexCommand, mainCheckout, withCodexKeys, type CommandLine, type EngineRequest } from "../../learner/lib/engines.js";
 import type { TaskTool } from "../../learner/lib/task.js";
 
@@ -118,7 +118,8 @@ export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?:
  * compaction limit; the stdin is the ops prompt alone (not the learner's preamble, which maps a task's tool names).
  */
 export function initCommand(request: EngineRequest, prompt: string, bin: string): CommandLine {
-  const base = codexCommand(request, "", bin);
+  const base = codexCommand({ ...request, model: request.model ?? DEFAULT_CODEX_MODEL,
+    effort: request.effort ?? DEFAULT_CODEX_EFFORT, serviceTier: CODEX_SERVICE_TIER }, "", bin);
   if (base.args.at(-1) !== "-") throw new Error("codexCommand no longer ends with '-'");
   return { command: base.command, args: [...base.args.slice(0, -1), "-c", `model_auto_compact_token_limit=${AUTO_COMPACT_TOKENS}`, "-"], stdin: prompt };
 }
