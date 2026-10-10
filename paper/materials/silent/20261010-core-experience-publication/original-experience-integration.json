@@ -1,0 +1,2073 @@
+{
+  "request_id": "roy-20261010-core-builds-experience-integration",
+  "parent_request_id": "roy-20261009-historical-core-builds",
+  "source_batch": "20261009-222802-fix-batch",
+  "source_report": {
+    "path": ".worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/report.md",
+    "sha256": "cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d",
+    "bytes": 197064
+  },
+  "source_input": {
+    "path": "ops/codex-ops/learner/20261009-222802-fix-batch.core-input.json",
+    "sha256": "cae0078bf43043b3b131afaf5670a4b380f0f96e1414f64a5e289ce7a43040f0",
+    "run_count": 181
+  },
+  "source_template_sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b",
+  "dispatch_runs": [
+    "T082DRCUHRRD",
+    "HNX4A2WBC34W",
+    "1HC609GTLGN3",
+    "25226ZFLNR1J",
+    "KAY522KT5NXR",
+    "YF0LXT1QSTGG",
+    "1LMBFGSMCWKU",
+    "L704TLETMZBM"
+  ],
+  "dispatch_runs_are": "仅原报告案例入口；完整来源181局冻结报告",
+  "source_verification": [
+    {
+      "path": ".worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/report.md",
+      "expected": "cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d",
+      "actual": "cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d",
+      "ok": true,
+      "bytes": 197064
+    },
+    {
+      "path": ".worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/construction-templates.json",
+      "expected": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b",
+      "actual": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b",
+      "ok": true,
+      "bytes": 21646
+    },
+    {
+      "path": ".worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/boss-matrix-complete.json",
+      "expected": "5602ebd75c5d97b7df1be021ee2b71d42650794b234e32768d6d88973254e3bf",
+      "actual": "5602ebd75c5d97b7df1be021ee2b71d42650794b234e32768d6d88973254e3bf",
+      "ok": true,
+      "bytes": 1288963
+    },
+    {
+      "path": ".worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/resource-events.json",
+      "expected": "3ef96560e95420bdbfea36a8bbc10dd47aa617a8fe60e53e1c9704342745c08e",
+      "actual": "3ef96560e95420bdbfea36a8bbc10dd47aa617a8fe60e53e1c9704342745c08e",
+      "ok": true,
+      "bytes": 1679960
+    },
+    {
+      "path": ".worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/first-formation.json",
+      "expected": "783ae0a4a985ba3ee6df6fde84030ba16c6a24d94dc528b1f5be220c8b317b00",
+      "actual": "783ae0a4a985ba3ee6df6fde84030ba16c6a24d94dc528b1f5be220c8b317b00",
+      "ok": true,
+      "bytes": 88197
+    },
+    {
+      "path": ".worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/changes.jsonl",
+      "expected": "df61242c469ef8192a8cfa53471cc9c6c96d83f6080afdb2849ba0ed8434f805",
+      "actual": "df61242c469ef8192a8cfa53471cc9c6c96d83f6080afdb2849ba0ed8434f805",
+      "ok": true,
+      "bytes": 30309
+    },
+    {
+      "path": ".worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/run-inventory.json",
+      "expected": "9db039073f73fb58594d9938aba81129440c51d6569b98b86ad8e2a9a4cfc0f4",
+      "actual": "9db039073f73fb58594d9938aba81129440c51d6569b98b86ad8e2a9a4cfc0f4",
+      "ok": true,
+      "bytes": 478858
+    },
+    {
+      "path": ".worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/verification.json",
+      "expected": "39f2263d5872a69334d4b0d4365c96dedacf75b14989805b8dfdb3b8f98c55aa",
+      "actual": "39f2263d5872a69334d4b0d4365c96dedacf75b14989805b8dfdb3b8f98c55aa",
+      "ok": true,
+      "bytes": 3635
+    },
+    {
+      "path": "ops/codex-ops/learner/20261009-222802-fix-batch.core-input.json",
+      "expected": "cae0078bf43043b3b131afaf5670a4b380f0f96e1414f64a5e289ce7a43040f0",
+      "actual": "cae0078bf43043b3b131afaf5670a4b380f0f96e1414f64a5e289ce7a43040f0",
+      "ok": true,
+      "bytes": 34062
+    },
+    {
+      "path": "paper/materials/silent/20261010-core-experience-integration/source-manifest.json",
+      "expected": "58a1fb4cad8194adef9c72384d0e450e607b9869c1f3a042b10e080af852e80d",
+      "actual": "58a1fb4cad8194adef9c72384d0e450e607b9869c1f3a042b10e080af852e80d",
+      "ok": true,
+      "bytes": 2378
+    },
+    {
+      "path": "paper/materials/silent/20261010-core-experience-integration/task.md",
+      "expected": "2e51bf38edc04664e64b32895029e609ca621c5891141df7fea63ad12c2803ab",
+      "actual": "2e51bf38edc04664e64b32895029e609ca621c5891141df7fea63ad12c2803ab",
+      "ok": true,
+      "bytes": 4200
+    }
+  ],
+  "original_history_manifest": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/original-history-manifest.json",
+  "live_before": {
+    "version": "2026-10-10.4",
+    "sha256": "0aa67575f1bb92960d81fc9ca27e43f638633f2ae151129492096b726860fc3b",
+    "commit": "98c8ce27985782c99e1e71594c103c3b9da3e23d",
+    "entries": [
+      {
+        "id": "silent-knife-trap-count",
+        "status": "active",
+        "sha256": "18979f8f9cd7ac8ead7f77071fc8e7571aa258c4ccf928bc1d6d5a2840214b88"
+      },
+      {
+        "id": "silent-footwork-block",
+        "status": "active",
+        "sha256": "c7db57ec769da81078adf89a0d2391c287a8964b5de7855c6ce5647d0a22b4d1"
+      },
+      {
+        "id": "silent-bouncing-flask-poison",
+        "status": "active",
+        "sha256": "f5f220a0a9fe147dda85c71a03b1e8771ee325f8906d28aa60d9007eee59495a"
+      },
+      {
+        "id": "silent-finisher-attacks",
+        "status": "active",
+        "sha256": "d51ee98ff7b98473e36280a7b20a667d547db18a1cc0b8413ae7a3a7d37e6242"
+      },
+      {
+        "id": "silent-shockwave-duration",
+        "status": "active",
+        "sha256": "6bd31597b613d8cccfd768fae5eb5ee2825a639f2adf71645932bb932168308c"
+      },
+      {
+        "id": "silent-gorget-plating",
+        "status": "active",
+        "sha256": "6619a6d99b5508b1e554ba61326eb35e2702546a88700a2603762ab1f0c89095"
+      },
+      {
+        "id": "silent-strength-weak-observation",
+        "status": "active",
+        "sha256": "9ef598d091b4041029fa2512a4490a78d3bc80157779d92926c23ae1f74ebde5"
+      },
+      {
+        "id": "silent-giant-explosion-window",
+        "status": "active",
+        "sha256": "66cf827c8398f43b2c51602b4e56ad66d7b4d36d9f079b7ae39a07a320cce330"
+      },
+      {
+        "id": "silent-insatiable-dual-clock",
+        "status": "active",
+        "sha256": "a1ccfe8301e470c42684c758143e4f9da0697849fd9ba1f4ffde9b58a1ce229d"
+      },
+      {
+        "id": "silent-route-hp-observation",
+        "status": "active",
+        "sha256": "10b1f8ea1bb29fdb49a73798a0ef9acfe044125b8e235ac692d0f4d9c718087e"
+      },
+      {
+        "id": "silent-rest-buffer-observation",
+        "status": "active",
+        "sha256": "249871954b2a1091d59a001cdd9b9cc60318f1295c2e41ed2d8a518d805ccfd8"
+      },
+      {
+        "id": "silent-deck-burst-observation",
+        "status": "active",
+        "sha256": "6dc0a94e4d02351da4182cedb256ee3b2b20c45014b7ba97b09abddcf0484e44"
+      },
+      {
+        "id": "silent-deadly-poison-application",
+        "status": "active",
+        "sha256": "1287887adac22bfcdb95da7130825145e5ab8a1ce7db366e9de479118dc324a1"
+      },
+      {
+        "id": "silent-noxious-fumes-growth",
+        "status": "active",
+        "sha256": "d3bdad636236343c0476a9418e37e3d6755a313bb2e91879de7cb6a08ab7de0e"
+      },
+      {
+        "id": "silent-bubble-bubble-condition",
+        "status": "active",
+        "sha256": "6fb0426daffe83e43720e185a3028ff22ede24191acaffc52396fea01c67ce13"
+      },
+      {
+        "id": "silent-vambrace-opening-block",
+        "status": "active",
+        "sha256": "e36414d9aecef5ff52060084a1cd4f750cd4112b49765f421b00527887b62fba"
+      },
+      {
+        "id": "silent-frail-card-block",
+        "status": "active",
+        "sha256": "24dfa29f225889d4bceecb8f8fbeed2aacb6cbe4fe1d54da3a23e7fbd279293b"
+      },
+      {
+        "id": "silent-kin-poison-sl-observation",
+        "status": "active",
+        "sha256": "09c585bae70ae8b90472c5f551cdab3b3ea1ba5d159692c3f7697df3969c6e9b"
+      },
+      {
+        "id": "silent-accelerant-triggers",
+        "status": "active",
+        "sha256": "b59c99eaa10a090fd719330b9d8c1b8ea9418e7673ba5b60377674b02924267f"
+      },
+      {
+        "id": "silent-outbreak-immediate-poison",
+        "status": "active",
+        "sha256": "bec1fe7e6af2504c0f9478031de85e740cecb2620ede304590d6993b470f43a9"
+      },
+      {
+        "id": "silent-poisoned-stab-components",
+        "status": "active",
+        "sha256": "de3d45d412aceeb574cefb240663e825ced21abea29a754253864e4403af1e53"
+      },
+      {
+        "id": "silent-well-laid-plans-retention",
+        "status": "active",
+        "sha256": "817793417b3afa506a8c94a1494de01da8488789665928072c185c2fa01180ac"
+      },
+      {
+        "id": "silent-afterimage-per-card-block",
+        "status": "active",
+        "sha256": "b95fff766a0204a0ba78ccbea59d7091faecad4961ffa93e648a9925cdf2cff6"
+      },
+      {
+        "id": "silent-sai-start-block",
+        "status": "active",
+        "sha256": "9d6c46683e1f6d980a5e405ea644efe84a24c84fa12b5d55fae2b412b298ec62"
+      },
+      {
+        "id": "silent-beating-remnant-loss-cap",
+        "status": "active",
+        "sha256": "aef6864238b558cdff8659e27d6ed72ccc0dac6130d6d00f2c474447f8d47232"
+      },
+      {
+        "id": "silent-captains-wheel-third-turn",
+        "status": "active",
+        "sha256": "d6d222d298a40fd5c1202421ab5e3a3f2fd5c4e45d842f12360199ac1b474bb4"
+      },
+      {
+        "id": "silent-test-subject-phase-reset",
+        "status": "active",
+        "sha256": "d9b2804ee98e6eca1e8205a19edfbd5fe6bf7befcb183a30d214af4d2f975fa2"
+      },
+      {
+        "id": "silent-lagavulin-siphon-poison-sl",
+        "status": "active",
+        "sha256": "b34b733bc6244b7c85658aaadc6545152fd164f6195e9eb95ed53f21cc01888f"
+      },
+      {
+        "id": "silent-obscura-summon-growth",
+        "status": "active",
+        "sha256": "7b6697fb79189bab42c76a6157f68ee7748475dd5ed2ee352bfdad9e8e8d1fe2"
+      },
+      {
+        "id": "silent-regret-hand-loss",
+        "status": "active",
+        "sha256": "11e390eff1d4e4c95d904cf3f5aa79354cf8beb67f2fb46ea5bb418308e23e1e"
+      },
+      {
+        "id": "silent-shadow-step-delayed-damage",
+        "status": "active",
+        "sha256": "abbdf8d3f1e6d3cf0d0854f10123ea80e25a9f0d67ee5b396a008e260e7746e9"
+      },
+      {
+        "id": "silent-prowess-strength-dexterity",
+        "status": "active",
+        "sha256": "62c4a6caa343a09029108a3a9f3aaea8d4eb28deb7eb341f4e47c772a436f11c"
+      },
+      {
+        "id": "silent-toasty-mittens-growth",
+        "status": "active",
+        "sha256": "612fc6a42534c6a24aa04e8523f6649bc2f3ccd2b9c5e4b2de4640f978c153e4"
+      },
+      {
+        "id": "silent-abrasive-thorns-dexterity",
+        "status": "active",
+        "sha256": "9416323d504bddf91bc7d1e9a46c01d1401a44259d41890bd3514a08a29ed482"
+      },
+      {
+        "id": "silent-speedster-draw-damage",
+        "status": "active",
+        "sha256": "24cfc2d1ee50170cf3e8431016811c19ad82ab0f698b7cdaec70daba6ae40a53"
+      },
+      {
+        "id": "silent-piercing-wail-temporary-strength",
+        "status": "active",
+        "sha256": "1970e9723c48c0a3cca56ed829c2a866b4f9b31fec52123931aff9b9127ebc33"
+      },
+      {
+        "id": "silent-orichalcum-zero-block",
+        "status": "active",
+        "sha256": "33caa72310c5373dfc9af7d23c044e95a5a9f1f532537d937a58b2fd53605530"
+      },
+      {
+        "id": "silent-ripple-basin-no-attack-block",
+        "status": "active",
+        "sha256": "4a151ad23bab6a060c7602177a84a1fbdcd10f57f3f00137f3d199b1aa26c2ca"
+      },
+      {
+        "id": "silent-vajra-opening-strength",
+        "status": "active",
+        "sha256": "83d8698723506bf9939597cf00e8928f98f1816e5d7110522abfc92ac78c950b"
+      },
+      {
+        "id": "silent-terror-eel-vigor-vulnerable",
+        "status": "active",
+        "sha256": "43b56c51c2c20bf7fa59c75e3b60e27ab4589e995c80c166598c68386f8f3fd5"
+      },
+      {
+        "id": "silent-malaise-x-debuff",
+        "status": "active",
+        "sha256": "80d555b420258758e56ffb95c0b2fe99c45302c17cc28fd098e785fc9eab8b78"
+      },
+      {
+        "id": "silent-accuracy-shiv-scaling",
+        "status": "active",
+        "sha256": "bb2a5913f4c8f3ed78f2dc6a42988710a05a5a62965ca23f98135eaa1c969e10"
+      },
+      {
+        "id": "silent-letter-opener-third-skill",
+        "status": "active",
+        "sha256": "58804fd815b8cc12cb7525a54259c35eeac7a160c20592b2d47f16a67cd5cd72"
+      },
+      {
+        "id": "silent-maul-shared-growth",
+        "status": "active",
+        "sha256": "270fdd4eecc2535a99f0c10efd0977e007348f4d1a11e26c131ea457559681df"
+      },
+      {
+        "id": "silent-wither-end-turn-loss",
+        "status": "active",
+        "sha256": "d7bf7e57703c1fe5d9b1a60ba2aa4fbdf66019c9d1050696533e86bc0d4705cf"
+      },
+      {
+        "id": "silent-forgotten-soul-exhaust-damage",
+        "status": "active",
+        "sha256": "56825ad022c3a92c7b665872426a7378b3e9c7d7ecd5e77194fb4b32e7339e5d"
+      },
+      {
+        "id": "silent-aeonglass-artifact-growth-sl",
+        "status": "active",
+        "sha256": "7904057f540fde4a1470f39017ed2ee6417f2ecfe88d5872580929067a2903f7"
+      },
+      {
+        "id": "silent-daughter-wind-attack-block",
+        "status": "active",
+        "sha256": "5ea0a288abebe4443e560d7971a8ab615a0bab68fa42695c1837c09e69697c78"
+      },
+      {
+        "id": "silent-shuriken-attack-count-strength",
+        "status": "active",
+        "sha256": "34d26ebd32621cd0688a7a09ecf362840fa42d10c98f7638d969b4aa7e360045"
+      },
+      {
+        "id": "silent-reptile-trinket-temporary-strength",
+        "status": "active",
+        "sha256": "49f65b0689de3aaa8bcfdccdc9e2e095475fae0333a91f9254b2d48cdf0963b2"
+      },
+      {
+        "id": "silent-decimillipede-reattach-poison",
+        "status": "active",
+        "sha256": "9a6e515603c59c4ac0874ef5fa180bfa12cf582f62269526d0c7ac361d3f5925"
+      },
+      {
+        "id": "silent-kaiser-crab-facing-sl",
+        "status": "active",
+        "sha256": "ff07768f8cd0acecd83b957ec303c0dd49d519ab86bbfe5cc964612d2f0354f1"
+      },
+      {
+        "id": "silent-expose-vulnerable",
+        "status": "active",
+        "sha256": "e90fa45339561a1f38160dd91fe5a60ecaf3d9a841d5799f2013d2401c2b7ba6"
+      },
+      {
+        "id": "silent-spiked-gauntlets-power-cost",
+        "status": "active",
+        "sha256": "e4c42d071db7a3e3a5f7fb277fe1dc0ad3134c32dfc7e12fb74ddb4ffbe955a3"
+      },
+      {
+        "id": "silent-mummified-hand-free-card",
+        "status": "active",
+        "sha256": "59de7b77eafab15fc1a278977b787211d5399bbbb67d47d59f51f55e5d5d1260"
+      },
+      {
+        "id": "silent-paper-krane-weak-multihit",
+        "status": "active",
+        "sha256": "ed3ca0f5f3b09c1c596cc7ea179cde01a3fa952a970dddd5f8f7a4596337d448"
+      },
+      {
+        "id": "silent-sparkling-rouge-turn-three",
+        "status": "active",
+        "sha256": "4f62636f37f6dd05530e0ab2f7591c6c0f653cf7cb958aa4872d8da570430b9f"
+      },
+      {
+        "id": "silent-tuning-fork-skill-block",
+        "status": "active",
+        "sha256": "54db902f3983020721085aa7414374e879334832cd67c9e2cd54f961461246c3"
+      },
+      {
+        "id": "silent-cloak-clasp-end-turn-hand-block",
+        "status": "active",
+        "sha256": "f81f63647cc5ab537f25e3e2000e481b4a63c7da483b8d7c37414d670800e8fb"
+      },
+      {
+        "id": "silent-queen-poison-main-target",
+        "status": "active",
+        "sha256": "1ad84cae6ee2532c7a7906b92ea5a991079383fc34efc522967fd0631e91f9a5"
+      },
+      {
+        "id": "silent-corrosive-wave-draw-poison",
+        "status": "active",
+        "sha256": "c2e7ad73daf0cda3646b066abd47e33370af59f60c24d0614f7a09a5a5cffa69"
+      },
+      {
+        "id": "silent-shadowmeld-new-block-double",
+        "status": "active",
+        "sha256": "9d7b1c7edd4afcd778ff2f034421f09acae1ba0965180f19476e5057cbf918ce"
+      },
+      {
+        "id": "silent-anticipate-temporary-dexterity",
+        "status": "active",
+        "sha256": "1d9a80cffd52bcb296c1d62b7d357261bee140ae4d1e9a93a7d0cea3d351edc7"
+      },
+      {
+        "id": "silent-devoted-sculptor-ritual-growth",
+        "status": "active",
+        "sha256": "8ca6e2de77c37bf6f5cfa6a376ff21965209f09a6c412bf05117d226bf5c9f51"
+      },
+      {
+        "id": "silent-envenom-unblocked-attack-poison",
+        "status": "active",
+        "sha256": "4fc79cccd40f83f35b5f828a814911bcbaacac870de50cf72cc04e3320f29b06"
+      },
+      {
+        "id": "silent-kunai-attack-count-dexterity",
+        "status": "active",
+        "sha256": "e31234af4de6b980ac3e1e89b4f992e75a807bf36ed3b46089483838c91ce43a"
+      },
+      {
+        "id": "silent-mirage-poison-card-block",
+        "status": "active",
+        "sha256": "2040dc047f442f8d7f99e069e7c5062055f851513a0820e58c3a85fe3b99ad73"
+      },
+      {
+        "id": "silent-snecko-skull-poison-application",
+        "status": "active",
+        "sha256": "674123b8af22c5a8aec99dcaf2eeb647553ebb9ede79cbfe35878690a8ef4e0b"
+      },
+      {
+        "id": "silent-ornamental-fan-attack-block",
+        "status": "active",
+        "sha256": "50915f4663fe11f30c5667b90153a55f73a4c1a023074aff9fb5e064e0414038"
+      },
+      {
+        "id": "silent-queen-poison-window-sl-observation",
+        "status": "active",
+        "sha256": "203b795e62d6a5a9331d5fc5c435f4498910b77207d68c541c15fdf9183bb298"
+      },
+      {
+        "id": "silent-throwing-axe-first-card-replay",
+        "status": "active",
+        "sha256": "7c9f745f82f22167bd83adcdba23d9a0a5d69384a74bacf39224c1b32f0ec5a5"
+      },
+      {
+        "id": "silent-rolling-boulder-start-growth",
+        "status": "active",
+        "sha256": "00e528ed84e8dc57c03fe93ab5e18b5e210c96f6dde66f2ac85e3c9986fdb4aa"
+      },
+      {
+        "id": "silent-sturdy-clamp-retention-cap",
+        "status": "active",
+        "sha256": "c5f1d85edf5704ce710ef9795e552acc1a5073bfeb43fb10d0620978782ed6cf"
+      },
+      {
+        "id": "silent-phantom-blades-first-shiv",
+        "status": "active",
+        "sha256": "6caf5d1b174f6427314ee596a01d7c02e58946ef677a9a8f33c0ec7ae03dc858"
+      },
+      {
+        "id": "silent-doubt-end-turn-weak",
+        "status": "active",
+        "sha256": "b18dd3275de92bb2897159e8db62e1535ed4dcc7dd984a358580e43f2e1b5ae3"
+      },
+      {
+        "id": "silent-precarious-shears-defense-observation",
+        "status": "active",
+        "sha256": "95df7ce94e4f336e55c679b3323c54393316c0529436db5d18b0f3dcfd5e57ba"
+      },
+      {
+        "id": "silent-knowledge-demon-healing-sl-observation",
+        "status": "active",
+        "sha256": "98256fee4eb4c22773938bb785735be0c2d506a8c6e3cc11e2e7693c29f8507a"
+      },
+      {
+        "id": "silent-helical-dart-shiv-dexterity",
+        "status": "active",
+        "sha256": "b4af92d2705f8080b30d1b2c0dc1f2043ed240bf896db54bd62c80bd602394b7"
+      },
+      {
+        "id": "silent-mad-science-custom-strangle",
+        "status": "active",
+        "sha256": "a7d558158f0cdfda00d618518c579f3ac1386e83d8bb12fa348a5f5d03e3afc4"
+      },
+      {
+        "id": "silent-three-knights-output-buffer-observation",
+        "status": "active",
+        "sha256": "fe5e10b13cc97b9ce93c326f1270e35b3aeb2cdacb4eb2a0cdd0a0d99f020a6a"
+      },
+      {
+        "id": "silent-thieving-hopper-poison-sl-observation",
+        "status": "active",
+        "sha256": "5d9dac0b6dd09bcdf72619f48a0a00fcc2a9f2d7ca2212b85e80bd9b09d7ede3"
+      },
+      {
+        "id": "silent-bread-energy-timing",
+        "status": "active",
+        "sha256": "912631f411883fe6815d66c8ddfdaaeea90f257911e697bf29d852bc889f6236"
+      },
+      {
+        "id": "silent-construct-artifact-growth",
+        "status": "active",
+        "sha256": "7749862bc5a2971a68971686425a01f707850d70f848964d2060c8ba6c18870f"
+      },
+      {
+        "id": "silent-grand-finale-empty-draw",
+        "status": "active",
+        "sha256": "9f0c68dfcb5d04f3c0c91d2dbaf258b904851b5bcc8ad1f8df2131a70d623650"
+      },
+      {
+        "id": "silent-burst-next-skills-replay",
+        "status": "active",
+        "sha256": "f082444c119a168d299054aa37b82924381300134a0cc5d8a80da176321fcf6a"
+      },
+      {
+        "id": "silent-glitter-future-reward-replay",
+        "status": "active",
+        "sha256": "9b53280678eedff58293e1353d3927f63c60a46e0d516d15f1f5d1a261ecd8ce"
+      },
+      {
+        "id": "silent-belt-buckle-empty-slots-dexterity",
+        "status": "active",
+        "sha256": "4ba79b01ef7fb8333214fbc0875c2f72b0e399d53bfd86ac22cd1e5f7858384a"
+      },
+      {
+        "id": "silent-lords-parasol-shop-acquisition",
+        "status": "active",
+        "sha256": "6e491109d4254eb39ead9ee58090e6ecfd84040e74e3ab4c8e67ea0642bdf7e2"
+      },
+      {
+        "id": "silent-iron-club-four-card-draw",
+        "status": "active",
+        "sha256": "74a2d6934ab47491a3071f9db18f9d1945226c48ad380b309644413409ef5ea7"
+      },
+      {
+        "id": "silent-paels-legion-card-block-double",
+        "status": "active",
+        "sha256": "6999fb4e046c88a756fe01fa4659ee6912985c6e2955358f3427b5ddb3a42c05"
+      },
+      {
+        "id": "silent-ghost-seed-starter-ethereal",
+        "status": "active",
+        "sha256": "732039b93c5061fea2f6f3663c8a03c25c77b1f9acf9c5d6c8538c88b9de330b"
+      },
+      {
+        "id": "silent-bronze-scales-per-hit-thorns",
+        "status": "active",
+        "sha256": "20504cd034b65de26a63a3d6b0e7d5463c2372d0c63c1e5ada35e56286bffdbb"
+      },
+      {
+        "id": "silent-slumbering-beetle-wake-growth",
+        "status": "active",
+        "sha256": "0e43d723df93099a84bb12785e699fbe468a89fa462d579d7724a1a400af7fb8"
+      },
+      {
+        "id": "silent-diamond-diadem-opening-retention",
+        "status": "active",
+        "sha256": "b2c3efcffc40929663feb402b6143b85230f4f658f307d463ae248d90a842fbe"
+      },
+      {
+        "id": "silent-serpent-form-per-card-damage",
+        "status": "active",
+        "sha256": "a1668cffd0d5747346fc4b3c17f2b27b598b68b3878deb00e93adea8157c765e"
+      },
+      {
+        "id": "silent-ceremonial-beast-threshold-growth-sl",
+        "status": "active",
+        "sha256": "f3c903b2c79a113534f429e779b73385792c40a13a70fe05e6a8f6423a01938c"
+      },
+      {
+        "id": "silent-byrdonis-strength-multihit-observation",
+        "status": "active",
+        "sha256": "f4ddfbc3d155792d1df31874dfbbbf3433b7d00543875646ac3439c01a8570a7"
+      },
+      {
+        "id": "silent-nightmare-next-turn-copies",
+        "status": "active",
+        "sha256": "d0226e4e4bef0e7312dfa7b1caf5c5a7302377be8374fd44eddb56e395152cda"
+      },
+      {
+        "id": "silent-eternal-feather-rest-arrival-heal",
+        "status": "active",
+        "sha256": "30127866497ff2322bfb2c4a146493cf84085105cb5402ba06100ebcabe26d57"
+      },
+      {
+        "id": "silent-fasten-defend-extra-block",
+        "status": "active",
+        "sha256": "2a9028094601da48b803fd4a24ea9b355ce281e43ede066c1ca66eb4988322ac"
+      },
+      {
+        "id": "silent-miniature-tent-two-rest-options",
+        "status": "active",
+        "sha256": "5f855b1d1558e7aec5d07bb7babf1c9ede0c66a2192aa4c83d64a19cfafd5bfa"
+      },
+      {
+        "id": "silent-planisphere-unknown-arrival-heal",
+        "status": "active",
+        "sha256": "36340364e2e140cccbd0acff036aa7829548d0884b65d41148b25062bffcb788"
+      },
+      {
+        "id": "silent-fan-of-knives-capacity",
+        "status": "active",
+        "sha256": "ec49746d4086e12f63e0340a6b8572859048c870122c3c5908bb72881933a6b0"
+      },
+      {
+        "id": "silent-flechettes-remaining-skills",
+        "status": "active",
+        "sha256": "8a9e1c0104dd66c61df2249d8360485b0c3da18637c4a8362100311e0ca5eca3"
+      },
+      {
+        "id": "silent-white-star-double-rewards",
+        "status": "active",
+        "sha256": "6d4e9013e1255fb572ec16535afd0ca1cce8d3579ed424637690b4c606607815"
+      },
+      {
+        "id": "silent-hidden-daggers-discard-shivs",
+        "status": "active",
+        "sha256": "22389217d9b2cf0e863a2fa7e4cc934312b3cf067a38dc0f755faad3e399a128"
+      },
+      {
+        "id": "silent-memento-mori-discard-scaling",
+        "status": "active",
+        "sha256": "257c24bf1cf7f8b345f9f8fc6d1f92f513bc4b2d8d91ae1fb651631b01256404"
+      },
+      {
+        "id": "silent-fiddle-draw-lock",
+        "status": "active",
+        "sha256": "3b3c668853f6c52cdbaa10453b8b7079e9162427052a43f74ac7b31c1dcc3ad6"
+      },
+      {
+        "id": "silent-smooth-stone-opening-dexterity",
+        "status": "active",
+        "sha256": "cb5660081c21b84f8ba290c42e9da8b9ac1444f1ff80538404a607fb2d17eca5"
+      },
+      {
+        "id": "silent-mr-struggles-turn-start-damage",
+        "status": "active",
+        "sha256": "1c2302eae96b902b3f1591dc1d140f37737ec778f3ed9e095e0b86f7ad86b095"
+      },
+      {
+        "id": "silent-whispering-earring-first-turn-control",
+        "status": "active",
+        "sha256": "f23c8665d37daf97f40e34dbd50bdb677acbdf8b6da72d1dbfbdf8cfaa2ff9c5"
+      },
+      {
+        "id": "silent-juggernaut-block-gain-triggers",
+        "status": "active",
+        "sha256": "22d2bf01334f93eb8a6bf6331a8e591b5af3ff11e016d946c2ca1f8230dbf11e"
+      },
+      {
+        "id": "silent-infested-prism-tainted-skill-cost",
+        "status": "active",
+        "sha256": "4f71dbeab943889a7b0d18e1c473dab43276f1d081d81ae7fe87cacf6fb92eab"
+      },
+      {
+        "id": "silent-precise-cut-hand-count-observation",
+        "status": "active",
+        "sha256": "2107f442bf6425fc9b5ebea039902d24c3c6fac765d641b89fda9261c3a00814"
+      },
+      {
+        "id": "silent-fishing-rod-random-upgrade",
+        "status": "active",
+        "sha256": "38d49066eeeed99d13d2beb6acebc9df89070c6dcf34a87bd59707b13c4d10f0"
+      },
+      {
+        "id": "silent-permafrost-first-power-block",
+        "status": "active",
+        "sha256": "33f37c2183094bafc40ac3372dddfbef669dd2b0500092405ad08947dadbe9c0"
+      },
+      {
+        "id": "silent-exoskeleton-poison-hit-cap",
+        "status": "active",
+        "sha256": "4ffca560a0ed3ab91dcd3f6d061708f2ea092767d788f227e05eb4034699a2cb"
+      },
+      {
+        "id": "silent-beckon-held-end-turn-loss",
+        "status": "active",
+        "sha256": "54d29c51b53eaa0471e0b7f576552d5e60a4646d247ed4dc923b5e0fb8fa1c0d"
+      },
+      {
+        "id": "silent-dowsing-rod-question-task",
+        "status": "active",
+        "sha256": "b752783552419022197489d1e79e2e753eab8421029d8d795bd291ceb38de71e"
+      },
+      {
+        "id": "silent-lost-forgotten-possession",
+        "status": "active",
+        "sha256": "23e62805836b62f90bb85426d518b2695a75da653bfb4aa1007b39e49b4554b4"
+      },
+      {
+        "id": "silent-pumpkin-candle-charge-energy",
+        "status": "active",
+        "sha256": "fdad667723fe13d11550bb8dba159f7749da984fe240add6c3eb7b672e1fec5b"
+      },
+      {
+        "id": "silent-bing-bong-tooth-five-rings",
+        "status": "active",
+        "sha256": "27acf2ee2678cb679daf7f118afea221a633f4d85c5694b9cd37cd7acd887b49"
+      },
+      {
+        "id": "silent-paels-flesh-third-turn-energy",
+        "status": "active",
+        "sha256": "c34791eba94e36b5319c2543d72247b22df4a313b57ca98be5ce4eadcbaffaab"
+      },
+      {
+        "id": "silent-berserker-growth-sl-observation",
+        "status": "active",
+        "sha256": "3209a07f383a94e7acd936856de240564db041c59c3710f0eff996495759b99d"
+      },
+      {
+        "id": "silent-tough-bandages-discard-block",
+        "status": "active",
+        "sha256": "79fdf7ebe1b2998aedf8c18acabde80a47da20dc7ff2b4a464938cd36ca674b0"
+      },
+      {
+        "id": "silent-bowlbug-rock-full-block-stun",
+        "status": "active",
+        "sha256": "6ff1ee1fe5c7ecc953331d0819adb5bb161069029968d516decb98b055a4c79e"
+      },
+      {
+        "id": "silent-royal-poison-blood-vial-opening-net",
+        "status": "active",
+        "sha256": "b5c6e4913e6e39333bcb8c93812524adbd26b6901d9e78cd3fe1eb998bd30ce4"
+      },
+      {
+        "id": "silent-replay-effect-counter-observation",
+        "status": "active",
+        "sha256": "1c5a878a280d28481b98313e0d4e1a37700a61e6b9c1ae753387e98051eb443e"
+      },
+      {
+        "id": "silent-metamorphosis-generated-free-attacks",
+        "status": "active",
+        "sha256": "49c9ff34f677fd13278123b2971d3e6548942a38903f061c29cb65f739b9db06"
+      },
+      {
+        "id": "silent-stone-humidifier-rest-growth",
+        "status": "active",
+        "sha256": "40fd795d20dd20b2d6e8e8181cee5986a838f6a1215e24b80ae98da833b25aac"
+      },
+      {
+        "id": "silent-survivor-neutralize-discard",
+        "status": "active",
+        "sha256": "3001bb7765e73f23af9b51d56d08f8f0d3470a43c17b552fb316c43202bd9bec"
+      },
+      {
+        "id": "silent-apparition-player-intangible",
+        "status": "active",
+        "sha256": "d83f3a2af2868fe8a0ebbce96698a0b51053cf1244c14ec8a0470d73d34c7131"
+      },
+      {
+        "id": "silent-tunneler-burrow-block-stun",
+        "status": "active",
+        "sha256": "0196ea55dc3bed30d7dc87001acf9d02c63010892fab53299345e477b79b6785"
+      },
+      {
+        "id": "silent-gardener-skittish-shield",
+        "status": "active",
+        "sha256": "3ba6d55830e74596bb2644d54939215bfa9c3be606b6d50343efe7f3515dcbe4"
+      },
+      {
+        "id": "silent-panic-button-card-block-lock",
+        "status": "active",
+        "sha256": "49cc2b2d234cdbaccd3e732a4c5dc652805cc3c206f36970db380cba56680c24"
+      },
+      {
+        "id": "silent-toxic-paid-exhaust-end-turn-loss",
+        "status": "active",
+        "sha256": "bb5ddeb22e0b29fb3901514d99b5403394e05eabef22db166818d7f98fe4d042"
+      },
+      {
+        "id": "silent-snakebite-retained-poison",
+        "status": "active",
+        "sha256": "a4be9b4b6627caa30f6b9fcbde1b1a96fe14f81f3532457baa59f586cb48d136"
+      },
+      {
+        "id": "silent-scroll-paper-cuts-unblocked",
+        "status": "active",
+        "sha256": "f1ad30aaea9bc1f849c98add491921e2447a48590af7c39fb1c953482eb809b5"
+      },
+      {
+        "id": "silent-ceremonial-beast-ringing-one-card",
+        "status": "active",
+        "sha256": "b0d29b7b7b416c2046f37a4d82be88eb39b968de1e58abf707f6884e68aa0fe0"
+      },
+      {
+        "id": "silent-vantom-slippery-growth",
+        "status": "active",
+        "sha256": "b251ff8c5c542a5c438411708844ae52f6e7f385523faccfc308490b9beb4ddf"
+      },
+      {
+        "id": "silent-vantom-sl-observation",
+        "status": "active",
+        "sha256": "ba3fdd2fd2a79418f20d0a14313b25bc1d30c82bcd8ef92e2563c0738c9a8e97"
+      },
+      {
+        "id": "silent-caltrops-thorns",
+        "status": "active",
+        "sha256": "5c29ebbcb44b2cf381b5da5b97f92359c517d5b6ea93991328e7ec580b0558cd"
+      },
+      {
+        "id": "silent-sewer-clam-pressure-growth",
+        "status": "active",
+        "sha256": "8f292db34f05ff63a5c278cfc94ddce4bdae14ac49e2b08c0dc689bc4e27ec5d"
+      },
+      {
+        "id": "silent-hunter-tender-card-attributes",
+        "status": "active",
+        "sha256": "cb6ccf10a8038a0e44a9b0861a3ea422ad1e2e3fd80fd4bf9e73e19817a0a062"
+      },
+      {
+        "id": "silent-zapbot-high-voltage-growth",
+        "status": "active",
+        "sha256": "af5d14ba86228b4dca1491d77682b05cdeacaef63e7ff3bda174a0a7b4e7809a"
+      },
+      {
+        "id": "silent-haze-group-poison-weak",
+        "status": "active",
+        "sha256": "abdfe642f5f7a6397c4fa60ab7f7ff749849f5f6d4ec39d9a28c9b44498857f3"
+      },
+      {
+        "id": "silent-apotheosis-combat-upgrades",
+        "status": "active",
+        "sha256": "eed035780d1b502f405592a31491b70d95a5d771f4a50822aa81a1e525291cc0"
+      },
+      {
+        "id": "silent-cure-all-energy-draw",
+        "status": "active",
+        "sha256": "a913ddc45b7e8dc052f06472db1c781e5309a389a0467c7b76b3603337a7e576"
+      },
+      {
+        "id": "silent-dark-shackles-temporary-strength",
+        "status": "active",
+        "sha256": "dc02f406bf85fd49eacfe3c0b8bac975a1105c1b082ce45c073c6b850650cce0"
+      },
+      {
+        "id": "silent-horn-cleat-second-turn-block",
+        "status": "active",
+        "sha256": "2394f62c0df327cef6da21cb367a87fa994d3266a7d588420d5d8e067e192df6"
+      },
+      {
+        "id": "silent-fysh-resource-sl-observation",
+        "status": "active",
+        "sha256": "1b02443abcf46d48fc03af6af65d2e697a7975f20f2ed2e9cff1ffad034fe45c"
+      },
+      {
+        "id": "silent-knowledge-demon-sloth-replay-observation",
+        "status": "active",
+        "sha256": "0673c36f41d6e515021c20d7c7af60c842a220b6d534ee98009d8c8d64cf7426"
+      },
+      {
+        "id": "silent-bullet-time-no-draw-observation",
+        "status": "active",
+        "sha256": "e56c08ad5044776ef43569403396e44cf046a6ff56216dade8da5657c897d657"
+      },
+      {
+        "id": "silent-radiant-tincture-energy-window",
+        "status": "active",
+        "sha256": "8e1abd6f1d66a1f8d22ad2fadb30c080cdd3f5561d06a62e667d9a2f729f58c9"
+      },
+      {
+        "id": "silent-speed-potion-temporary-dexterity",
+        "status": "active",
+        "sha256": "f22c8d7aa4b2ceb39eca3a0512a84f3f0e2523d61a728e89f56e69dcb34481a3"
+      },
+      {
+        "id": "silent-cunning-potion-shiv-capacity",
+        "status": "active",
+        "sha256": "2372294ae56938d12bf45c0b8aea9a5cc92d7579b721511ac14172340c685ff0"
+      },
+      {
+        "id": "silent-regen-potion-decay-heal",
+        "status": "active",
+        "sha256": "7039289c64c0884b37f6f51950cf545a4bb73e915ee241e1c1dc48b44c454525"
+      },
+      {
+        "id": "silent-strangle-following-card-hp-loss",
+        "status": "active",
+        "sha256": "6d833079c4c59737dcda8ce5e00f36a4b5d0b9e7a060692f4430aa085b77a5a8"
+      },
+      {
+        "id": "silent-unsettling-lamp-first-debuff",
+        "status": "active",
+        "sha256": "32f134753d696cc4bcf319af531fbe18095f802e5d6dd61a02d3e28fda0fd141"
+      },
+      {
+        "id": "silent-act-transition-missing-hp-heal",
+        "status": "active",
+        "sha256": "1dd852da42653fbc38bfb860716cd984cae568bee6f266d0ec4834bbe7e0bec3"
+      },
+      {
+        "id": "silent-myte-toxic-block-sl-observation",
+        "status": "active",
+        "sha256": "801ec4a61262aef374ecc8d9777b8e02bcfa2b4a4064f2b581ba0c6dee54a86c"
+      },
+      {
+        "id": "silent-dexterity-potion-card-block",
+        "status": "active",
+        "sha256": "914b71fe4e4feac24e6d8c93d7e2694450f53772a291a1b433f7210a839f6813"
+      },
+      {
+        "id": "silent-heart-of-iron-plating",
+        "status": "active",
+        "sha256": "e9cf37bf6d7426107feb039e60a836a7b9692e1ed96571a60f007a31b357bedd"
+      },
+      {
+        "id": "silent-poison-potion-observed-application",
+        "status": "active",
+        "sha256": "899e10997450473e21d1873badf6046c1a2959d5f17c7218e683e1f2d6913775"
+      },
+      {
+        "id": "silent-hand-trick-sly-card-limit",
+        "status": "active",
+        "sha256": "f8ecf9f7aec7b22967cb79cb4fbbb6ad6fbc5dbc9dbace7f22fa9d7cdf6d2e07"
+      },
+      {
+        "id": "silent-dampen-battle-upgrade-observation",
+        "status": "active",
+        "sha256": "00a0762e2a14cc886682cae12a394f39187be65e11dae6b568fb451e7b55ba72"
+      },
+      {
+        "id": "silent-three-knights-revival-blood-price",
+        "status": "active",
+        "sha256": "ade7df8c38ea75c0b31928e46499e8767ab89da3c5a47c3721e9e00249f30569"
+      },
+      {
+        "id": "silent-liquid-bronze-per-hit-thorns",
+        "status": "active",
+        "sha256": "23f32dfee92ce424e7001799d1df87643823cda044b2b92b7077df57e038f97b"
+      },
+      {
+        "id": "silent-tingsha-discard-damage",
+        "status": "active",
+        "sha256": "0b1e6a55f3d2b6574fe35b29ed3ffbeb305fe9c00cc79b932eb6bfd1e5f3b4e3"
+      },
+      {
+        "id": "silent-tungsten-rod-hp-loss-observation",
+        "status": "active",
+        "sha256": "32ea1241df7d4c61a8fd501d310360a158353287599992d5cdf27b52e492a326"
+      },
+      {
+        "id": "silent-infection-end-turn-block",
+        "status": "active",
+        "sha256": "92684f87f3841bee110925a4230db58f9f81e85933f974552edded29f6b47e00"
+      },
+      {
+        "id": "silent-stone-calendar-end-turn-window",
+        "status": "active",
+        "sha256": "975c08dd7767358d4eaa9ff37222db17415708e7a5d747613280960f3318b0f3"
+      },
+      {
+        "id": "silent-toric-toughness-delayed-block",
+        "status": "active",
+        "sha256": "3e63c0e272414d8c813a12106a03c151caf3fa94cbe53941e87b8dad7c4d6d25"
+      },
+      {
+        "id": "silent-battle-trance-draw-lock",
+        "status": "active",
+        "sha256": "b0860678676885207077e62b75e5fb022328457df14d8d6a4106600e28017009"
+      },
+      {
+        "id": "silent-double-boss-resource-handoff",
+        "status": "active",
+        "sha256": "982843b894e7f2bda9d93fedf90c89888b988850560db0ecf1942651c7dfc21b"
+      },
+      {
+        "id": "silent-alchemize-potion-resource-observation",
+        "status": "active",
+        "sha256": "64282f56140d59b8bb1447552b7f4c12f51b9a83ee54019f8f045697b400aeb2"
+      },
+      {
+        "id": "silent-fight-me-upgraded-dual-strength",
+        "status": "active",
+        "sha256": "04d84d27b5efa9634d86df2707cd2348950731b0f29e35e0bf65ea3d201cb56d"
+      },
+      {
+        "id": "silent-ghost-in-a-jar-current-turn",
+        "status": "active",
+        "sha256": "30d622f4bd95eaa6e8a94583420bce5c571d8cfe92dd4e27ce367bbab99d5851"
+      },
+      {
+        "id": "silent-very-hot-cocoa-opening-energy",
+        "status": "active",
+        "sha256": "adcfa23e467ea7ee56e7785b6e110fa3729f4ced52c9f96f7f001a7136de1165"
+      },
+      {
+        "id": "silent-spiny-toad-draw-block-sl",
+        "status": "active",
+        "sha256": "2a2312c8a1e6227a0a7bf7b8390e0235e972d6367c5efae9c11b55dd56b13f63"
+      },
+      {
+        "id": "silent-rainbow-ring-three-card-types",
+        "status": "active",
+        "sha256": "dd7c9bb5dcb55dad37f28f03da7fc8c1c1a1a70c8e8e170188f0fef2a58e33c9"
+      },
+      {
+        "id": "silent-offering-direct-hp-cost",
+        "status": "active",
+        "sha256": "aeb61824975b02cc7f31767bc2add9dcf8055aa58f730837030b70718eab7842"
+      },
+      {
+        "id": "silent-bygone-effigy-wake-strength",
+        "status": "active",
+        "sha256": "b22ee941feedf182918e562533e9956750e518f6cbeadfd3fdb56e4b159b91f5"
+      },
+      {
+        "id": "silent-mercury-hourglass-start-observation",
+        "status": "active",
+        "sha256": "81241ac1cc68b4ed96517b19098a5bd43274b1c7a9b7884df8631e6a07503d55"
+      },
+      {
+        "id": "silent-fortifier-existing-block-triple",
+        "status": "active",
+        "sha256": "ef845d64c5db90ccd8efe6a749bb1efb0ec89e6e87c8543e25a31d6b05fd071e"
+      },
+      {
+        "id": "silent-axebot-stock-phase-budget",
+        "status": "active",
+        "sha256": "322b5be6f62a68f3c3ff8220bbd70bcfb7fae0db370792adf8c3f3308c756dd1"
+      },
+      {
+        "id": "silent-stolen-card-availability-observation",
+        "status": "active",
+        "sha256": "6e873c0e2e1f0d4ce99ac5fbb3d4efc66ed13f4b9a0dc98922e20058b42e9e41"
+      },
+      {
+        "id": "silent-louse-progenitor-strength-growth",
+        "status": "active",
+        "sha256": "079c0462bbe446a75f3fdd96261ac7003a654155d69fdffd22b9be1c897eb47c"
+      },
+      {
+        "id": "silent-calculated-gamble-upgraded-hand-reset",
+        "status": "active",
+        "sha256": "fc41e39e3b83c608030335e022e1a048382d245d70802cb2a60923c95735d41c"
+      },
+      {
+        "id": "silent-unmovable-first-card-block",
+        "status": "active",
+        "sha256": "998b2cd3fa676d81659ec325950b5e18851acc984e7310ecf7bf576c41511ca4"
+      },
+      {
+        "id": "silent-petrified-toad-opening-rock",
+        "status": "active",
+        "sha256": "49f2402fece77f2ef00286d2fa206d0e9758d1d0cab9085f3f20706361a91d1b"
+      },
+      {
+        "id": "silent-flex-potion-temporary-strength",
+        "status": "active",
+        "sha256": "56e34c4960094c5373ec9293f2bdf2591f531b4bbd2ebadac6b9636e79c2fef5"
+      },
+      {
+        "id": "silent-dodge-and-roll-delayed-block",
+        "status": "active",
+        "sha256": "aacdba738dcb180a34ff7736a7128e38f182e0caab928aa3d3dae2dd3c676feb"
+      },
+      {
+        "id": "silent-infinite-blades-start-turn-shiv",
+        "status": "active",
+        "sha256": "50ea68b785ce82e397993c7a3efa11366b04290c7b42368c4e23446a545afb30"
+      },
+      {
+        "id": "silent-foul-potion-slot-replacement-observation",
+        "status": "active",
+        "sha256": "b20901fe2d1d8b35826a4bd1a2f8f3111a07274b6b66c22508d54f6825ab0507"
+      },
+      {
+        "id": "silent-weak-potion-hatching-window-observation",
+        "status": "active",
+        "sha256": "92c605ea31f1da6279d8dcc732d5a7bd24fa0645232a529ff6be0fbc99a2918a"
+      },
+      {
+        "id": "silent-lizard-tail-observed-revival",
+        "status": "active",
+        "sha256": "bfe5b89069d20eeca6d2521615885fb4da5ec9d2cd9495b0235eaf76b3e52bb5"
+      },
+      {
+        "id": "silent-panache-fifth-card-group-damage",
+        "status": "active",
+        "sha256": "61a822d6721c9660dc944275d5901092bbe4af169a802d64941596bee5259953"
+      },
+      {
+        "id": "silent-jaxfruit-strength-vulnerable-observation",
+        "status": "active",
+        "sha256": "b8c17cf0e6ac4e81dfa5ab710be8388a8f7f1dd1c6e95683335885ba869b177e"
+      },
+      {
+        "id": "silent-fabricator-living-summon-observation",
+        "status": "active",
+        "sha256": "37e22171b4739b3a9528315c1ad0cb94eadac9f52113dcd8ea79f80ff4dd15b4"
+      },
+      {
+        "id": "silent-fairy-revival-exit-observation",
+        "status": "active",
+        "sha256": "5426ab97af8d1663c0770bd80bda474eb3648fc66844782e14fbc13a432fba5e"
+      },
+      {
+        "id": "silent-bottled-potential-execution-observation",
+        "status": "active",
+        "sha256": "39618acc0d706f770907051773c772e2bc5297eb0663b3e3e3f74452438679cf"
+      },
+      {
+        "id": "silent-blur-leftover-block-carry",
+        "status": "active",
+        "sha256": "a31b79de64fe087395208121860f6bf4c19bcdeeeb72737b2659402487ce32cb"
+      }
+    ]
+  },
+  "ordinary_previous": {
+    "cutoff": "2026-10-09T20:40:20.444Z",
+    "runs": 188,
+    "ascensions": {
+      "0": 7,
+      "1": 3,
+      "2": 2,
+      "3": 1,
+      "4": 4,
+      "5": 1,
+      "6": 11,
+      "7": 7,
+      "8": 1,
+      "9": 3,
+      "10": 148
+    },
+    "counts": {
+      "fights": 2748,
+      "nexts": 2624,
+      "rests": 1203,
+      "cards": 61991,
+      "ends": 17769,
+      "attempts": 1152,
+      "growth": 5659
+    },
+    "observed_deaths": 178,
+    "independent_fight_recomputed": true,
+    "bands_recomputed": true,
+    "transfers_recomputed": true,
+    "new_runs": 0,
+    "note": "八入口局均已在上一节188局中，普通数字不重复加；全历史构筑来源另为181局冻结报告。"
+  },
+  "diff": {
+    "before": {
+      "active": 203,
+      "chars": 48512,
+      "confidence": {
+        "low": 25,
+        "high": 129,
+        "med": 49
+      },
+      "applicable": {
+        "8": {
+          "entries": 188,
+          "chars": 44716
+        },
+        "9": {
+          "entries": 189,
+          "chars": 45000
+        },
+        "10": {
+          "entries": 201,
+          "chars": 47684
+        }
+      }
+    },
+    "after": {
+      "active": 207,
+      "chars": 50235,
+      "confidence": {
+        "low": 25,
+        "high": 133,
+        "med": 49
+      },
+      "applicable": {
+        "8": {
+          "entries": 189,
+          "chars": 45126
+        },
+        "9": {
+          "entries": 190,
+          "chars": 45410
+        },
+        "10": {
+          "entries": 205,
+          "chars": 49407
+        }
+      }
+    },
+    "added": [
+      "silent-core-poison-defense-observation",
+      "silent-core-dexterity-defense-observation",
+      "silent-core-shiv-defense-observation",
+      "silent-core-discard-relic-observation"
+    ],
+    "updated": [],
+    "retired": [],
+    "unchanged_existing": 203,
+    "compression": [],
+    "skipped_anchors": [],
+    "sha256_after": "16fb0de2d91d5686d3b5f70263ce8d92cfaf9da2b3fa6fb112d84ecd7c5e7f2b"
+  },
+  "mappings": [
+    {
+      "candidate": "P",
+      "ledger": "silent-0352",
+      "experience": "silent-core-poison-defense-observation",
+      "source_batch": "20261009-222802-fix-batch",
+      "source_report_sha256": "cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d",
+      "observed_signature_support": [
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "SADL3CGYTGSR",
+        "3KME36ADUE4U",
+        "VLV17NUSFS61",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "S9UZAK0JP0C0",
+        "UJ0K3G10609Y",
+        "D4LJ9QMGFB8Q",
+        "4ANT8D00TP72",
+        "PU80F84P6HPN",
+        "LS8035TB32P3",
+        "L704TLETMZBM",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT",
+        "TU3XB4CAEDAW",
+        "HSX4HYATB4E2",
+        "YLYLZWHA0GKU",
+        "2K4H3JEJHRSB",
+        "5PM6JAQG6FNQ",
+        "VLZ6CCT8AQ0A",
+        "8JRE1C4H4Z2W",
+        "YF0LXT1QSTGG",
+        "TXZ6RVMQA09D",
+        "P74C04AEPL1F",
+        "XTSV1U9JD34T",
+        "9Z9H2EXKLF3T",
+        "KFRDELW2TH2P",
+        "GXNKW8X1XYJP",
+        "PD9AYQVMLQW6",
+        "H1T1F8ML9FUE",
+        "BJLTVSYXCSGS",
+        "SY0WMJNNVRLM",
+        "QHK1XQ928TTM",
+        "UZ1T7AH49WMB",
+        "CNKR125PFHJ5",
+        "PF90JTU0UZ5M",
+        "R3AJCGQGGMR4",
+        "HEMND3SMQYB8",
+        "456MRNGCPD8E",
+        "JBX9JLH46KVN",
+        "NBJBVSBNPYQB",
+        "833ZM0MJGWHC",
+        "HNX4A2WBC34W",
+        "9663Y88TYK73",
+        "Q389KW7SVWKH"
+      ],
+      "observation_contradicting": [],
+      "original_ledger_counterexamples": [
+        {
+          "run": "HNX4A2WBC34W",
+          "floor": 48,
+          "turn": 8,
+          "note": "A10末试78→0、总扣535→130=405，三试均败；反证通杀。",
+          "role": "contradict",
+          "added": "2026-10-09T23:04:56+08:00"
+        }
+      ],
+      "outcome_counterexamples": [
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "1NZ8FE5F34R9",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "SADL3CGYTGSR",
+        "3KME36ADUE4U",
+        "VLV17NUSFS61",
+        "HMVJKM56S4Q8",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "S9UZAK0JP0C0",
+        "UJ0K3G10609Y",
+        "D4LJ9QMGFB8Q",
+        "4ANT8D00TP72",
+        "PU80F84P6HPN",
+        "LS8035TB32P3",
+        "L704TLETMZBM",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT",
+        "TU3XB4CAEDAW",
+        "HSX4HYATB4E2",
+        "YLYLZWHA0GKU",
+        "2K4H3JEJHRSB",
+        "5PM6JAQG6FNQ",
+        "VLZ6CCT8AQ0A",
+        "8JRE1C4H4Z2W",
+        "YF0LXT1QSTGG",
+        "TXZ6RVMQA09D",
+        "P74C04AEPL1F",
+        "XTSV1U9JD34T",
+        "9Z9H2EXKLF3T",
+        "KFRDELW2TH2P",
+        "GXNKW8X1XYJP",
+        "PD9AYQVMLQW6",
+        "H1T1F8ML9FUE",
+        "BJLTVSYXCSGS",
+        "SY0WMJNNVRLM",
+        "QHK1XQ928TTM",
+        "UZ1T7AH49WMB",
+        "CNKR125PFHJ5",
+        "PF90JTU0UZ5M",
+        "R3AJCGQGGMR4",
+        "HEMND3SMQYB8",
+        "456MRNGCPD8E",
+        "JBX9JLH46KVN",
+        "NBJBVSBNPYQB",
+        "833ZM0MJGWHC",
+        "HNX4A2WBC34W",
+        "9663Y88TYK73",
+        "Q389KW7SVWKH"
+      ],
+      "confidence_interpretation": "high仅指可复算的签名共现与受限观察，不指整套胜率或机制公式在每局独立隔离验证。失败局反证通杀，未反驳本条候选/资源限制观察；原账本contradict角色保持。",
+      "original_prior": "unknown",
+      "proposal": "silent-proposal-ecf0dd74ac09ccad",
+      "source_commit": "d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2",
+      "actual_live": null,
+      "adoption": "真实对局采用待观察",
+      "decision": "四项各一条；与旧单组件/能力启动/连王交接条目互补，不重复重写旧经验。",
+      "proposal_markdown_sha256": "3eb44c1a71a00f80647ec0dd44c398a35621e56c17fe4daf129d61221b49d327",
+      "proposal_registration": {
+        "op": "add",
+        "id": "silent-proposal-ecf0dd74ac09ccad",
+        "ts": "2026-10-10T08:49:08+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0352"
+        ],
+        "runs": [
+          "T082DRCUHRRD",
+          "R0HEV5E3QT6G",
+          "KAY522KT5NXR",
+          "ZZMYZ5UBCG72",
+          "10GPK5XGHCK3",
+          "1NZ8FE5F34R9",
+          "ARKQLHG6RS4W",
+          "6EV5V6PJJS9D",
+          "SADL3CGYTGSR",
+          "3KME36ADUE4U",
+          "VLV17NUSFS61",
+          "LLYSRQQ35AVW",
+          "HMVJKM56S4Q8",
+          "25226ZFLNR1J",
+          "JLN5SK17W4FQ",
+          "JMH5C51RLN4E",
+          "4D4J8USKCPAV",
+          "TD1HVGS7H6LB",
+          "S9UZAK0JP0C0",
+          "UJ0K3G10609Y",
+          "D4LJ9QMGFB8Q",
+          "4ANT8D00TP72",
+          "PU80F84P6HPN",
+          "LS8035TB32P3",
+          "L704TLETMZBM",
+          "ZVYUL2YP3518",
+          "VPW8YH7A4QFM",
+          "DPYF2BAA3DKT",
+          "TU3XB4CAEDAW",
+          "HSX4HYATB4E2",
+          "YLYLZWHA0GKU",
+          "2K4H3JEJHRSB",
+          "5PM6JAQG6FNQ",
+          "VLZ6CCT8AQ0A",
+          "8JRE1C4H4Z2W",
+          "YF0LXT1QSTGG",
+          "TXZ6RVMQA09D",
+          "P74C04AEPL1F",
+          "XTSV1U9JD34T",
+          "9Z9H2EXKLF3T",
+          "KFRDELW2TH2P",
+          "GXNKW8X1XYJP",
+          "PD9AYQVMLQW6",
+          "H1T1F8ML9FUE",
+          "BJLTVSYXCSGS",
+          "SY0WMJNNVRLM",
+          "QHK1XQ928TTM",
+          "UZ1T7AH49WMB",
+          "CNKR125PFHJ5",
+          "PF90JTU0UZ5M",
+          "R3AJCGQGGMR4",
+          "HEMND3SMQYB8",
+          "456MRNGCPD8E",
+          "JBX9JLH46KVN",
+          "NBJBVSBNPYQB",
+          "833ZM0MJGWHC",
+          "HNX4A2WBC34W",
+          "9663Y88TYK73",
+          "Q389KW7SVWKH"
+        ],
+        "source_task": "experience-update",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat"
+        ],
+        "summary": "施毒触媒与持续防御：让已拥有/已建立/实效兑现分账，核实际持续收益与当前血价；本批仅入四类候选观察，缺整战对照不生成固定顺序/阈值。",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/proposal-core-P.md",
+        "experience": [
+          "silent-core-poison-defense-observation"
+        ],
+        "rule_changes": false,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "3eb44c1a71a00f80647ec0dd44c398a35621e56c17fe4daf129d61221b49d327",
+        "state": "pending"
+      }
+    },
+    {
+      "candidate": "D",
+      "ledger": "silent-0353",
+      "experience": "silent-core-dexterity-defense-observation",
+      "source_batch": "20261009-222802-fix-batch",
+      "source_report_sha256": "cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d",
+      "observed_signature_support": [
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "K3676LU8B0UH",
+        "10GPK5XGHCK3",
+        "9YBKCNBFP0X5",
+        "53FLQ68CETW0",
+        "VLV17NUSFS61",
+        "4Y94N8RDPGPM",
+        "25226ZFLNR1J",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "5X2GHKJ89PN1",
+        "LS8035TB32P3",
+        "UMVLWER4CD98",
+        "HSX4HYATB4E2",
+        "5PM6JAQG6FNQ",
+        "XP2SL33HT0D9",
+        "KV0JHNJCKXLS",
+        "WQZVENQ7DTRP",
+        "PD9AYQVMLQW6",
+        "9R916WW0V65N",
+        "T0DGVABPV60U",
+        "PF90JTU0UZ5M",
+        "PBUBM0LRTEDD",
+        "E6DYYXRX7GVE",
+        "JBX9JLH46KVN",
+        "64R0P0MTZWAX",
+        "XW8B5CHJ814J",
+        "R6WDLYS19ZTY",
+        "54G5683J0E5S"
+      ],
+      "observation_contradicting": [],
+      "original_ledger_counterexamples": [
+        {
+          "run": "25226ZFLNR1J",
+          "floor": 48,
+          "turn": 8,
+          "note": "P/D/R共现仍失败，无同条件移除组件对照。",
+          "role": "contradict",
+          "added": "2026-10-09T23:04:56+08:00"
+        },
+        {
+          "run": "4Y94N8RDPGPM",
+          "floor": 33,
+          "turn": 4,
+          "note": "原字节选择card4蛇咬+，不是步法；decisions@549002567及SHA见nightmare-selection-audit。单步法+夜魇代理不证明叠敏捷。",
+          "role": "contradict",
+          "added": "2026-10-09T23:18:31+08:00"
+        },
+        {
+          "run": "4Y94N8RDPGPM",
+          "floor": 48,
+          "turn": 10,
+          "note": "原字节选择card0致命毒药+，不是步法；来源偏移/SHA见nightmare-selection-audit。",
+          "role": "contradict",
+          "added": "2026-10-09T23:18:31+08:00"
+        }
+      ],
+      "outcome_counterexamples": [
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "9YBKCNBFP0X5",
+        "53FLQ68CETW0",
+        "VLV17NUSFS61",
+        "25226ZFLNR1J",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "5X2GHKJ89PN1",
+        "LS8035TB32P3",
+        "UMVLWER4CD98",
+        "HSX4HYATB4E2",
+        "5PM6JAQG6FNQ",
+        "XP2SL33HT0D9",
+        "KV0JHNJCKXLS",
+        "WQZVENQ7DTRP",
+        "PD9AYQVMLQW6",
+        "9R916WW0V65N",
+        "T0DGVABPV60U",
+        "PF90JTU0UZ5M",
+        "PBUBM0LRTEDD",
+        "E6DYYXRX7GVE",
+        "JBX9JLH46KVN",
+        "64R0P0MTZWAX",
+        "XW8B5CHJ814J",
+        "R6WDLYS19ZTY",
+        "54G5683J0E5S"
+      ],
+      "confidence_interpretation": "high仅指可复算的签名共现与受限观察，不指整套胜率或机制公式在每局独立隔离验证。失败局反证通杀，未反驳本条候选/资源限制观察；原账本contradict角色保持。",
+      "original_prior": "unknown",
+      "proposal": "silent-proposal-10b7b00cd54b8173",
+      "source_commit": "d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2",
+      "actual_live": null,
+      "adoption": "真实对局采用待观察",
+      "decision": "四项各一条；与旧单组件/能力启动/连王交接条目互补，不重复重写旧经验。",
+      "proposal_markdown_sha256": "95909b31d9f777d55a12e1c1b3e07151c1c68698d7c7ca0f528a50d61dce551f",
+      "proposal_registration": {
+        "op": "add",
+        "id": "silent-proposal-10b7b00cd54b8173",
+        "ts": "2026-10-10T08:49:35+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0353"
+        ],
+        "runs": [
+          "1HC609GTLGN3",
+          "R0HEV5E3QT6G",
+          "K3676LU8B0UH",
+          "10GPK5XGHCK3",
+          "9YBKCNBFP0X5",
+          "53FLQ68CETW0",
+          "VLV17NUSFS61",
+          "4Y94N8RDPGPM",
+          "25226ZFLNR1J",
+          "JMH5C51RLN4E",
+          "9TG1RP5LFAAK",
+          "5X2GHKJ89PN1",
+          "LS8035TB32P3",
+          "UMVLWER4CD98",
+          "HSX4HYATB4E2",
+          "5PM6JAQG6FNQ",
+          "XP2SL33HT0D9",
+          "KV0JHNJCKXLS",
+          "WQZVENQ7DTRP",
+          "PD9AYQVMLQW6",
+          "9R916WW0V65N",
+          "T0DGVABPV60U",
+          "PF90JTU0UZ5M",
+          "PBUBM0LRTEDD",
+          "E6DYYXRX7GVE",
+          "JBX9JLH46KVN",
+          "64R0P0MTZWAX",
+          "XW8B5CHJ814J",
+          "R6WDLYS19ZTY",
+          "54G5683J0E5S"
+        ],
+        "source_task": "experience-update",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat"
+        ],
+        "summary": "叠敏捷多挡与持续输出：让已拥有/已建立/实效兑现分账，核实际持续收益与当前血价；本批仅入四类候选观察，缺整战对照不生成固定顺序/阈值。",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/proposal-core-D.md",
+        "experience": [
+          "silent-core-dexterity-defense-observation"
+        ],
+        "rule_changes": false,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "95909b31d9f777d55a12e1c1b3e07151c1c68698d7c7ca0f528a50d61dce551f",
+        "state": "pending"
+      }
+    },
+    {
+      "candidate": "S",
+      "ledger": "silent-0354",
+      "experience": "silent-core-shiv-defense-observation",
+      "source_batch": "20261009-222802-fix-batch",
+      "source_report_sha256": "cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d",
+      "observed_signature_support": [
+        "KAY522KT5NXR",
+        "CSBR5CRDWQNB",
+        "10GPK5XGHCK3",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "UACFSW4VDDLD",
+        "75X1BARMNZ03",
+        "ARKQLHG6RS4W",
+        "2L1BNN9ZJEFU",
+        "2SU6XN2AEJRD",
+        "9YT51CK8RC39",
+        "UJ0K3G10609Y",
+        "5X2GHKJ89PN1",
+        "ZVYUL2YP3518",
+        "YF0LXT1QSTGG",
+        "XP2SL33HT0D9",
+        "NHA2KW0RB7VP",
+        "BTSRF7JL1W1Y",
+        "9R916WW0V65N",
+        "T0DGVABPV60U",
+        "J8PHG72DGD90",
+        "VAC6Z1PZ1QJG",
+        "NBJBVSBNPYQB",
+        "C6Z8ATNBNHZ7"
+      ],
+      "observation_contradicting": [],
+      "original_ledger_counterexamples": [
+        {
+          "run": "CSBR5CRDWQNB",
+          "floor": 33,
+          "turn": 4,
+          "note": "六试0赢，实际刀触发与151可见扣血仍不足；silent-0063保留。",
+          "role": "contradict",
+          "added": "2026-10-09T23:04:56+08:00"
+        },
+        {
+          "run": "YF0LXT1QSTGG",
+          "floor": 48,
+          "turn": 5,
+          "note": "A10六试0赢，苦无/步法已兑现仍死亡；silent-0085。",
+          "role": "contradict",
+          "added": "2026-10-09T23:04:56+08:00"
+        }
+      ],
+      "outcome_counterexamples": [
+        "CSBR5CRDWQNB",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "UACFSW4VDDLD",
+        "75X1BARMNZ03",
+        "ARKQLHG6RS4W",
+        "2L1BNN9ZJEFU",
+        "9YT51CK8RC39",
+        "UJ0K3G10609Y",
+        "5X2GHKJ89PN1",
+        "ZVYUL2YP3518",
+        "YF0LXT1QSTGG",
+        "XP2SL33HT0D9",
+        "NHA2KW0RB7VP",
+        "BTSRF7JL1W1Y",
+        "9R916WW0V65N",
+        "T0DGVABPV60U",
+        "J8PHG72DGD90",
+        "VAC6Z1PZ1QJG",
+        "NBJBVSBNPYQB",
+        "C6Z8ATNBNHZ7"
+      ],
+      "confidence_interpretation": "high仅指可复算的签名共现与受限观察，不指整套胜率或机制公式在每局独立隔离验证。失败局反证通杀，未反驳本条候选/资源限制观察；原账本contradict角色保持。",
+      "original_prior": "unknown",
+      "proposal": "silent-proposal-d84f0123c07c4641",
+      "source_commit": "d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2",
+      "actual_live": null,
+      "adoption": "真实对局采用待观察",
+      "decision": "四项各一条；与旧单组件/能力启动/连王交接条目互补，不重复重写旧经验。",
+      "proposal_markdown_sha256": "9505b50bf8a5fdf6a5f8259ca6b994bc4c98e9ba06b608f18cc439c3c099ab34",
+      "proposal_registration": {
+        "op": "add",
+        "id": "silent-proposal-d84f0123c07c4641",
+        "ts": "2026-10-10T08:49:35+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0354"
+        ],
+        "runs": [
+          "KAY522KT5NXR",
+          "CSBR5CRDWQNB",
+          "10GPK5XGHCK3",
+          "F9PP859XZ3RJ",
+          "9YBKCNBFP0X5",
+          "UACFSW4VDDLD",
+          "75X1BARMNZ03",
+          "ARKQLHG6RS4W",
+          "2L1BNN9ZJEFU",
+          "2SU6XN2AEJRD",
+          "9YT51CK8RC39",
+          "UJ0K3G10609Y",
+          "5X2GHKJ89PN1",
+          "ZVYUL2YP3518",
+          "YF0LXT1QSTGG",
+          "XP2SL33HT0D9",
+          "NHA2KW0RB7VP",
+          "BTSRF7JL1W1Y",
+          "9R916WW0V65N",
+          "T0DGVABPV60U",
+          "J8PHG72DGD90",
+          "VAC6Z1PZ1QJG",
+          "NBJBVSBNPYQB",
+          "C6Z8ATNBNHZ7"
+        ],
+        "source_task": "experience-update",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat"
+        ],
+        "summary": "小刀供给增益与逐牌防御：让已拥有/已建立/实效兑现分账，核实际持续收益与当前血价；本批仅入四类候选观察，缺整战对照不生成固定顺序/阈值。",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/proposal-core-S.md",
+        "experience": [
+          "silent-core-shiv-defense-observation"
+        ],
+        "rule_changes": false,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "9505b50bf8a5fdf6a5f8259ca6b994bc4c98e9ba06b608f18cc439c3c099ab34",
+        "state": "pending"
+      }
+    },
+    {
+      "candidate": "R",
+      "ledger": "silent-0355",
+      "experience": "silent-core-discard-relic-observation",
+      "source_batch": "20261009-222802-fix-batch",
+      "source_report_sha256": "cd8b20e83eea9548ca16711d45f35ef2861d3a0c6b134ee8a5b607b3ac3a2a2d",
+      "observed_signature_support": [
+        "1LMBFGSMCWKU",
+        "25226ZFLNR1J",
+        "L704TLETMZBM",
+        "61E2QS63Y9WU",
+        "Y5H4CFAQ2WTG",
+        "54G5683J0E5S"
+      ],
+      "observation_contradicting": [],
+      "original_ledger_counterexamples": [
+        {
+          "run": "L704TLETMZBM",
+          "floor": 48,
+          "turn": 4,
+          "note": "绷带实际弃牌补挡（silent-0194）；三次仍败，不推出必胜/优先。",
+          "role": "contradict",
+          "added": "2026-10-09T23:04:56+08:00"
+        }
+      ],
+      "outcome_counterexamples": [
+        "25226ZFLNR1J",
+        "L704TLETMZBM",
+        "61E2QS63Y9WU",
+        "Y5H4CFAQ2WTG",
+        "54G5683J0E5S"
+      ],
+      "confidence_interpretation": "high仅指可复算的签名共现与受限观察，不指整套胜率或机制公式在每局独立隔离验证。失败局反证通杀，未反驳本条候选/资源限制观察；原账本contradict角色保持。",
+      "original_prior": "unknown",
+      "proposal": "silent-proposal-d74684bd065f0743",
+      "source_commit": "d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2",
+      "actual_live": null,
+      "adoption": "真实对局采用待观察",
+      "decision": "四项各一条；与旧单组件/能力启动/连王交接条目互补，不重复重写旧经验。",
+      "proposal_markdown_sha256": "3425557cf9104b4f2a4eda837fe28116ce6ec7122d1dcab158101865e766cae3",
+      "proposal_registration": {
+        "op": "add",
+        "id": "silent-proposal-d74684bd065f0743",
+        "ts": "2026-10-10T08:49:36+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0355"
+        ],
+        "runs": [
+          "1LMBFGSMCWKU",
+          "25226ZFLNR1J",
+          "L704TLETMZBM",
+          "61E2QS63Y9WU",
+          "Y5H4CFAQ2WTG",
+          "54G5683J0E5S"
+        ],
+        "source_task": "experience-update",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat"
+        ],
+        "summary": "抽弃循环与遗物攻防收益：让已拥有/已建立/实效兑现分账，核实际持续收益与当前血价；本批仅入四类候选观察，缺整战对照不生成固定顺序/阈值。",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/proposal-core-R.md",
+        "experience": [
+          "silent-core-discard-relic-observation"
+        ],
+        "rule_changes": false,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "3425557cf9104b4f2a4eda837fe28116ce6ec7122d1dcab158101865e766cae3",
+        "state": "pending"
+      }
+    }
+  ],
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 259,
+    "cases": 2662,
+    "retried": true,
+    "entry": "未经修改的原tools/test-sandbox.sh；1198份跟踪文件逐SHA相同隔离副本；四线程、固定排除、paths单fork",
+    "source_attempt": {
+      "tsc": 0,
+      "vitest": 1,
+      "files_passed": 257,
+      "cases_passed": 2650,
+      "failed_cases": 1,
+      "reason": "导入检查遍历旧忽略任务失效软链接ENOENT；原日志保留"
+    },
+    "mirror_exit": 0,
+    "source_log": "learner/runs/20261010-084220-experience-update/test-source-1.log",
+    "pass_log": "learner/runs/20261010-084220-experience-update/test-mirror-1.log",
+    "host_full_suite": "待调度器learner-checks"
+  },
+  "merge": {
+    "source": "d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2",
+    "branch": "exp-silent",
+    "merged": null,
+    "refresh": "94ead4ae573dbc956ef3b916bcbca1f85ddf97a1",
+    "pre": "94ead4ae573dbc956ef3b916bcbca1f85ddf97a1",
+    "tests": null,
+    "initial": "98c8ce27985782c99e1e71594c103c3b9da3e23d",
+    "initial_status": " M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/fight-value.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n",
+    "refresh_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "live_knowledge_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/boss-trust.json",
+      "knowledge/characters/silent/experience.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "branch_knowledge_paths": [
+      "knowledge/characters/silent/experience.json"
+    ],
+    "knowledge_overlap": [
+      "knowledge/characters/silent/experience.json"
+    ],
+    "result": "锁内合并预检冲突，按任务停止，不实际合并或硬解",
+    "conflicts": [
+      "CONFLICT (modify/delete): notes/codex-quota-reset-authorization.json deleted in 94ead4ae573dbc956ef3b916bcbca1f85ddf97a1 and modified in d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2.  Version d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2 of notes/codex-quota-reset-authorization.json left in tree.",
+      "CONFLICT (content): Merge conflict in notes/for-dai.md",
+      "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+      "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"
+    ]
+  },
+  "rendered_consumer": {
+    "renderer": "agent/tools/gkb-dump.ts → renderKnowledgeSections",
+    "renders": [
+      {
+        "phase": "before",
+        "character": "silent",
+        "ascension": 10,
+        "act": 3,
+        "exit": 0,
+        "bytes": 307108,
+        "chars": 160993,
+        "sha256": "b38a433111bc7f18cd5d600a88041ce423117fc2ea624600284e655956d19d31",
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/prefix-before-silent-a10.md",
+        "entries": [
+          {
+            "experience": "silent-core-poison-defense-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          },
+          {
+            "experience": "silent-core-dexterity-defense-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          },
+          {
+            "experience": "silent-core-shiv-defense-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          },
+          {
+            "experience": "silent-core-discard-relic-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          }
+        ],
+        "experience_sha256": "0aa67575f1bb92960d81fc9ca27e43f638633f2ae151129492096b726860fc3b"
+      },
+      {
+        "phase": "after",
+        "character": "silent",
+        "ascension": 8,
+        "act": 3,
+        "exit": 0,
+        "bytes": 296859,
+        "chars": 156197,
+        "sha256": "44d2f4d39e1f88b3519efd0e6430c779160a17e5c009df109dcb6b4f7086d406",
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/prefix-after-silent-a8.md",
+        "entries": [
+          {
+            "experience": "silent-core-poison-defense-observation",
+            "expected": true,
+            "actually_in_prefix": true,
+            "lesson_exact": true
+          },
+          {
+            "experience": "silent-core-dexterity-defense-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          },
+          {
+            "experience": "silent-core-shiv-defense-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          },
+          {
+            "experience": "silent-core-discard-relic-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          }
+        ],
+        "experience_sha256": "16fb0de2d91d5686d3b5f70263ce8d92cfaf9da2b3fa6fb112d84ecd7c5e7f2b"
+      },
+      {
+        "phase": "after",
+        "character": "silent",
+        "ascension": 9,
+        "act": 3,
+        "exit": 0,
+        "bytes": 297622,
+        "chars": 156375,
+        "sha256": "f392dd1fa99d6c903b0575f5af2e965e22876093f9b346c8b60c83f18c852aaf",
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/prefix-after-silent-a9.md",
+        "entries": [
+          {
+            "experience": "silent-core-poison-defense-observation",
+            "expected": true,
+            "actually_in_prefix": true,
+            "lesson_exact": true
+          },
+          {
+            "experience": "silent-core-dexterity-defense-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          },
+          {
+            "experience": "silent-core-shiv-defense-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          },
+          {
+            "experience": "silent-core-discard-relic-observation",
+            "expected": false,
+            "actually_in_prefix": false,
+            "lesson_exact": false
+          }
+        ],
+        "experience_sha256": "16fb0de2d91d5686d3b5f70263ce8d92cfaf9da2b3fa6fb112d84ecd7c5e7f2b"
+      },
+      {
+        "phase": "after",
+        "character": "silent",
+        "ascension": 10,
+        "act": 3,
+        "exit": 0,
+        "bytes": 312882,
+        "chars": 163601,
+        "sha256": "4ac62995b4bd4b0427b86c8cab9ee6146c87e9c024e2c7fa01bd4657edfd252f",
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/prefix-after-silent-a10.md",
+        "entries": [
+          {
+            "experience": "silent-core-poison-defense-observation",
+            "expected": true,
+            "actually_in_prefix": true,
+            "lesson_exact": true
+          },
+          {
+            "experience": "silent-core-dexterity-defense-observation",
+            "expected": true,
+            "actually_in_prefix": true,
+            "lesson_exact": true
+          },
+          {
+            "experience": "silent-core-shiv-defense-observation",
+            "expected": true,
+            "actually_in_prefix": true,
+            "lesson_exact": true
+          },
+          {
+            "experience": "silent-core-discard-relic-observation",
+            "expected": true,
+            "actually_in_prefix": true,
+            "lesson_exact": true
+          }
+        ],
+        "experience_sha256": "16fb0de2d91d5686d3b5f70263ce8d92cfaf9da2b3fa6fb112d84ecd7c5e7f2b"
+      }
+    ],
+    "consumer_read_verified": true,
+    "actual_play_adoption_verified": false,
+    "actual_play_adoption": "真实问答记录尚无，待正常对局观察；未运行play或发在线脑题。"
+  },
+  "consumer_read_verified": true,
+  "consumer_read_scope": "固定本角色/进阶的源数据官方渲染；实际live读取只在真实合入后核验。",
+  "actual_live_consumer_read_verified": false,
+  "actual_play_adoption_verified": false,
+  "actual_play_adoption": "无本批新经验真实问答，待正常对局观察。",
+  "original_history_preserved": true,
+  "ledger_state": "proposed；实际shipped交运维核实",
+  "implementation_domains": [
+    "combat"
+  ],
+  "code_proposals": [
+    "silent-proposal-ecf0dd74ac09ccad",
+    "silent-proposal-10b7b00cd54b8173",
+    "silent-proposal-d84f0123c07c4641",
+    "silent-proposal-d74684bd065f0743"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/report.md",
+  "rollback": "源提交的experience差分恢复旧203条；不得覆盖后续知识刷新或并行经验。",
+  "state": "已提交及自测；四项并行记录冲突阻塞实际上线",
+  "actual_live_experience_version": "2026-10-10.4",
+  "actual_live_experience_sha256": "0aa67575f1bb92960d81fc9ca27e43f638633f2ae151129492096b726860fc3b",
+  "live_refresh_preserved": "94ead4ae573dbc956ef3b916bcbca1f85ddf97a1",
+  "changelog_append": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/experience-changelog-silent.md",
+    "prefix_bytes": 6222208,
+    "prefix_sha256": "7efdd10bee3fb03e3a99ac10d43f9dc55d91e71eabb7505e12e8191668f427aa",
+    "append_bytes": 48235,
+    "append_sha256": "06adb22156a6b3b917702b3f69916fc00c7701639b20eed6f199e9651c90e6e4",
+    "after_sha256": "493b7146484b8b44a4a87de702208b165a7228530e546b08dfbf7eaf8d1bf091",
+    "title": "## 2026-10-10 静默猎手 第一百四十七次增量：8 局 A0/A4/A10（全历史181局构筑续办；version 2026-10-10.5，分支 exp-silent，d4e5b126）"
+  },
+  "provenance_correction": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update/provenance-correction.md",
+  "completion_ledger_check": 0
+}

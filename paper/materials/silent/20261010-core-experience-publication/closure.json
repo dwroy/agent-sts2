@@ -1,0 +1,90 @@
+{
+  "batch": "20261010-084219-experience-update",
+  "source": "d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2",
+  "live_before": "fcf7d3c6e21b25c82cb28fee5ca79678593bfc59",
+  "actual_live_merge": "8e74493d92f757a88f15dffb48e2f5336c0cd0ac",
+  "live_tree": "a210345f0967532ceb74b6fa01c94e840b5af788",
+  "experience_version": "2026-10-10.5",
+  "experience_blob_sha256": "16fb0de2d91d5686d3b5f70263ce8d92cfaf9da2b3fa6fb112d84ecd7c5e7f2b",
+  "experience_git_blob": "bf54b016b5ac98617fe8088aa40e9b8e26b6e331",
+  "source_is_live_ancestor": true,
+  "dirty_refresh_paths_preserved": {
+    "knowledge/characters/silent/boss-damage.json": "f76a25367c689fdb75d16e01617fb2eabeabd7cf877ac9b1efaa218f7ae0ceea",
+    "knowledge/characters/silent/fight-value-gates.json": "7faa2d40806ab6472bd68b3d2ad97d9effebbfcecfb0a63aa9bcbe00f05e0818",
+    "knowledge/characters/silent/fight-value.json": "476c68519127ae727101bee89634ad4f77c17b1059732c604b5f67c6867d72e4",
+    "knowledge/characters/silent/monster-records.json": "543b1ade72ecc58502ca479ff5262ee6641b646d9c0cf97d0da25e44ec90a94f",
+    "knowledge/characters/silent/outcome-stats.json": "82af97c775592a81d88ca67bd06a296f106fd499240a0ab41020aff7de6514db",
+    "knowledge/characters/silent/room-costs.json": "4fee58027c6476b38d23fb9d21ba03f48e47b4f420bb901c68aa1e2567c29f3b",
+    "knowledge/common/card-upgrades.json": "24cdf06e70a49b00168a5bf6a7a0eaed316b16b7f9f4183d0da4c66d42b9684d",
+    "knowledge/common/monster-db.json": "df85005de68f3fdc7b4afb3398856fa99fe15982834d674e04b0b7f095d5af81",
+    "knowledge/common/move-model.json": "84758a08b3aa3c05a7901ceb8086006993b1ee0698d65ef09f4979533c9dd560",
+    "notes/fight-value-backtest-silent.md": "244a249932649e066c73755733b94b1c3f1d13235e63d0154f6e91806359ebaa"
+  },
+  "original_failed_batch_not_modified": true,
+  "checks": {
+    "source_tsc": 0,
+    "source_vitest": 0,
+    "source_files": 259,
+    "source_cases": 2662,
+    "combined_tsc": 0,
+    "combined_first_vitest": 1,
+    "combined_first_passed_files": 260,
+    "combined_first_passed_cases": 2661,
+    "environment_recheck": 0,
+    "recheck_files": 2,
+    "recheck_cases": 12,
+    "all_fixed_suite_cases_passed_across_preserved_runs": true,
+    "combined_single_full_vitest_pass_claimed": false,
+    "host_full_suite": "pending standard learner-recheck",
+    "combined_unique_files": 262,
+    "combined_unique_cases": 2673
+  },
+  "verified_at": "2026-10-10T10:42:12+08:00",
+  "release_version": "S1.exp147",
+  "live_prefix_sha256": "f78fdf7665bf2039ef914bc865186dcc14231f75822930651fb903c7065784c3",
+  "consumer_read_verified": true,
+  "actual_play_adoption_verified": false,
+  "ledger_shipped_ids": [
+    "silent-0352",
+    "silent-0353",
+    "silent-0354",
+    "silent-0355"
+  ],
+  "content_snapshot": "paper/materials/silent/20261010-core-experience-publication/contents.md",
+  "content_snapshot_sha256": "042c5f8c1e1d2838068ec465279fa5dba089dd00b95f798891fd4520fb3dfdd9",
+  "mappings": [
+    {
+      "candidate": "P",
+      "ledger": "silent-0352",
+      "experience": "silent-core-poison-defense-observation",
+      "proposal": "silent-proposal-ecf0dd74ac09ccad"
+    },
+    {
+      "candidate": "D",
+      "ledger": "silent-0353",
+      "experience": "silent-core-dexterity-defense-observation",
+      "proposal": "silent-proposal-10b7b00cd54b8173"
+    },
+    {
+      "candidate": "S",
+      "ledger": "silent-0354",
+      "experience": "silent-core-shiv-defense-observation",
+      "proposal": "silent-proposal-d84f0123c07c4641"
+    },
+    {
+      "candidate": "R",
+      "ledger": "silent-0355",
+      "experience": "silent-core-discard-relic-observation",
+      "proposal": "silent-proposal-d74684bd065f0743"
+    }
+  ],
+  "external_check_request": {
+    "action": "learner-recheck",
+    "batch": "20261010-084219-experience-update",
+    "broker_timeout_exit": 124,
+    "attempt_receipt": "paper/materials/silent/20261010-core-experience-publication/external-check-request.txt",
+    "state": "pending_existing_ops_wake",
+    "reason": "Direct human TUI turn has no host wake broker; no full external pass claimed",
+    "queue_event": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1791600181267332847-manual.md"
+  }
+}

@@ -1141,102 +1141,533 @@
       "commit": "0cfb9a2a51cf8eb0e89309325a6a16686fbc5c93",
       "source": "decision-log 2026-10-07 15:36（滑溜毒HP封顶与层数消耗纯bug，0226，源9c19ce71a149300442b01adcfa50df543bc8a7f1；证据ULP4TN1GNHMK A10F17/首证2SU6XN2AEJRD A6F17，红5败2过绿7过；同批提示契约1cf04904仅测试无另游戏ID。源单worker原沙箱tsc0/229文件2416例，前4worker rollout120s失败保持；c9组合原沙箱tsc0/231文件2429例0。无毒铁甲等价，同型毒/滑溜共享引擎修正原因沿源说明。实际最终完整外部另续验。）"
     },
-    {"name": "S1.double-boss1", "family": "Silent", "commit": "ac076f8a71f101de62d5345fa6b4fca248fd928c", "source": "2026-10-07 14:08 Codex学习者；静默A10连续两场boss：终局HP与毒药水按F49资源价值、B2/B3实际样本连续传递；4局F49实盘全败，8192固定模拟，前2调参/后2留出；未校准、不改SL、其他角色等价。 源e1a467e18a0dfa8d99046a24ff4c0e1af59278c8；证据JMH5C51RLN4E/9TG1RP5LFAAK/ZVYUL2YP3518/TDLBRNA0R05B，账本silent-0228；详情paper/materials/silent/double-boss.md与learner/runs/20261007-130409-silent-double-boss，源及合后原沙箱通过；B/C/D继续，完整外部检查交调度器。"},
-    {"name": "S1.strategy11", "family": "Silent", "commit": "777f861c27a1a1a89c9aba736709801b5cc3f481", "source": "decision-log 2026-10-07 17:34（源45161a51c2c6b7e4a499b13cf749c4108193bbf5，silent-0239，VLZ6CCT8AQ0A A10 F45 T1/T4；仅推演覆盖/样本/削减/未知牌与排名事实展示，撤源8败3过、恢复新增11及相关87合98过。源原沙箱233文件2441例0；最新live组合3fb758b609376ed56717c4c2b5e227e5c192ac5b原入口tsc0/233文件2441例exit0/1worker，四源码blob相等；预算/目标/药水/SL规则保持，其他角色题面等价。完整外部沿原批独立续验；原失败及原提案处置缺失留史，不把整个预算提案标完成。）"},
-    {"name": "S1.exp75", "family": "Silent", "commit": "586ff2db0de4a841555c2e838f3e7f17e8165307", "source": "decision-log 2026-10-07 18:02（源91d49f827f3d429955d63f0b11c5944731759264/experience 2026-10-07.21；前置.20源7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a一并吸收，未独立发布exp74。第75批增2改15退0/148条，原沙箱tsc0/232文件2430例0；第74批28机制提案链已补11duplicate/17waiting，.21三pending链齐全。只机械合经验数据原blob，无新源码，不宣称最新组合已测；最终完整外部沿原批独立续验，原merged=null/failed/报告路径错误/历史全部保留。原规则改动按学习者报告及提案处理。）"},
-    {"name": "S1.exp76", "family": "Silent", "commit": "81a39018a2077bce45e7da5e4e9685f4a1ac6388", "source": "decision-log 2026-10-07 19:09（源7077d238b77f7e64d26d6bfda2aa48cb63e2f1be/experience 2026-10-07.22，第76批8JRE1C4H4Z2W A10，增0改10退0/148 active；仅已测experience.json原blob，六份并行记录保持。源原沙箱tsc0/233文件2441例0；实际合后原入口tsc0/vitest0/233文件2441例0/1worker。silent-proposal-578e415a259e6835待独立策略实现，不冒标代码implemented；原merged=null/failed/冲突历史保留，完整外部沿原批独立续验。）"},
-    {"name": "S1.boss-calibration2", "family": "S1", "commit": "b0b0e679dbab626af188fec8bb180af74e319e71", "source": "decision-log 2026-10-07 19:32: Roy授权静默boss定期校准；20次新实际boss结局，冻结调参/切点，报告paper/materials/silent/boss-sim-calibration.md；silent-0244"},
-    {"name": "S1.fix45", "family": "Silent", "commit": "0d586e685f4f683ff7de4a7c3eee0717efa16a56", "source": "decision-log 2026-10-07 19:40:31 CST（fix-batch 20261007-173847；CA5KE8GFJ9X2 A10 F9T6/F13T1 silent-0229铁蒺藜新建及持久荆棘；DUZUBAJ3A8GP A10 F6T1/F27T4-5 silent-0234 HAZE群体施毒，首证T082DRCUHRRD A0 F46T4。源db6e32d2ee101af6b53f8228c27165bb41f04811/20b04517393708c73912326bb35d8448d1b3f77e；各自撤源码5败2过/5败1过，恢复7/6过，其他角色及未见参数等价。审计裸JSON/独立工作树报告、策略无源码验收目录三工具修复及rollout固定时钟不另造游戏版本。每源原沙箱入口0，合后固定树tsc0/239文件2511例exit0/2worker；原初稿导入失败及4worker rollout120秒超时留史，完整外部交调度器。）"},
-    {"name": "S1.exp79", "family": "Silent", "commit": "c10209e14d2a1a2f3463555fa088684ccdecf856", "source": "decision-log 2026-10-07 20:51（源6579082a9e6bc643a0186c5a8a092422d6937f4e/累计前源ad20957345fa54777705dd00a75ab4d60d1d4b49，经验2026-10-07.25/154 active；源原沙箱tsc0/233文件2441例exit0，实际合后原入口tsc0/vitest0/239文件2511例exit0/1worker。仅经验原blob，保留全部并行代码与刷新；.23/.24未单独上线，不造S1.exp77或S1.exp78，所属经验由CLI追加shipped，代码提案独立续办。原失败历史保留，原批完整外部续验。）"},
-    {"name": "S1.exp80", "family": "Silent", "commit": "bcfdfd8a8d419c99d167cb8da52012767d2b70c1", "source": "decision-log 2026-10-07 21:42（源4b6396bd462ca61bb13d082fdc73fdf5d0cf610a/经验前源6579082a9e6bc643a0186c5a8a092422d6937f4e，经验2026-10-07.26/154 active；源原沙箱tsc0/239文件2511例exit0，实际合后原入口tsc0/vitest0/239文件2511例exit0/1worker。仅经验原blob，保留全部并行代码与刷新；仅本源10项所属经验由CLI追加数据shipped，代码提案独立续办。原失败历史保留，原批完整外部续验。）"},
-    {"name": "S1.double-boss-phase1", "family": "Silent", "commit": "a881e27a54e458bd027244db12503e96197d6e51", "source": "decision-log 2026-10-07 22:32（学习者源6f2b90a311644960fcfd1e2b7a4ce96fb41d65b4，原批20261007-203653-strategy-proposal合入冲突兜底；静默A10 F48首战胜利/本幕完成/F49现场Boss事实分列，未知身份保持未知。源原沙箱tsc0/vitest0/240文件2525例，合后原入口tsc0/vitest0/240文件2525例/1worker。仅7源代码及固定夹具原blob，经验.26/全部刷新及并行代码保留；原失败历史保持，原批完整外部续验。）"},
-    {"name": "S1.fasten-upgrade1", "family": "Silent", "commit": "26586d3d7bc61444970b6efad683d023ba92a356", "source": "decision-log 2026-10-07 23:10（学习者源5e80e683daa08ae2569733b3b541cb523d7fe861受阻兜底，静默A10已观察FASTEN升级6点Defend专属持续格挡，传实际进阶给手牌/各堆/牌组模型；其他角色、未观察升级和普通4保持，不声称完整神化传播。源原沙箱tsc0/vitest0/241文件2531例，合后原入口tsc0/vitest0/241文件2531例/1worker；全部并行代码/刷新保留，原批完整外部独立续验。）"},
-    {"name": "S1.exp81", "family": "Silent", "commit": "26586d3d7bc61444970b6efad683d023ba92a356", "source": "decision-log 2026-10-07 23:10（学习者源e7552663cdcbfad33a1e348bdd13842fce7e3c41受阻兜底，静默经验第81次：2026-10-07.26→.27，增1改10退0、155 active；只发布本角色原experience blob，三个代码提案仍独立策略链。源原沙箱tsc0/vitest0/239文件2511例，合后原入口tsc0/vitest0/241文件2531例/1worker；全部并行代码/刷新保留，原批完整外部独立续验。）"},
-    {"name": "S1.mirage-poison1", "family": "Silent", "commit": "9ede80593818dd8cdbc5a10e28f8cd79edc7b613", "source": "decision-log 2026-10-07 23:50（学习者源cf0f2495354d9cf5dcb96dc31a2de0f4c53f441a受阻兜底，静默A10已观察普通MIRAGE按打出时存活敌人当前中毒总量格挡，修正入口静态量；旧FASTEN升级/进阶上下文及其他角色保持，未观察升级/敏捷复合不外推。源原沙箱tsc0/vitest0/241文件2534例，合后原入口tsc0/vitest0/242文件2540例/4workers；三方集成保留FASTEN和全部并行代码/刷新，原批完整外部独立续验。）"},
-    {"name": "S1.exp82", "family": "Silent", "commit": "9ede80593818dd8cdbc5a10e28f8cd79edc7b613", "source": "decision-log 2026-10-07 23:50（学习者源ab065d0a4fc067cb6a6d529da2706ab7ef508f85受阻兜底，静默经验第82次：2026-10-07.27→.28，增1改19退0、156 active；只发布本角色原experience blob，三个代码提案沿独立策略链。源原沙箱tsc0/vitest0/240文件2525例，合后原入口tsc0/vitest0/242文件2540例/4workers；三方集成保留FASTEN和全部并行代码/刷新，原批完整外部独立续验。）"},
-    {"name": "S1.exp83", "family": "Silent", "commit": "ea95403fa46fcee922db190836e719e4ed4f02ad", "source": "decision-log 2026-10-08 00:48（经验第83次原源18f23638951e5dea6c0bd557303c20d5ae2a88dd受阻兜底，.28→.29，增2改11退0、158 active；源原沙箱241文件2531例tsc/vitest0，合后242文件2540例tsc/vitest0/4workers。离线HP分账3f69541b同步成为祖先，15项Python固定夹具0；工具不改对局行为，不新增工具行为版本。全部并行代码/九项c009刷新及后续fight-value记录保留，原两批完整外部续验。）"},
-    {"name": "S1.exp84", "family": "Silent", "commit": "b48108b7e6c12c4256c21b7e64f13ba8f15ac992", "source": "decision-log 2026-10-08 01:38（经验第84次原源4a90d3570607a56e34e1dc6924d74987c06926b5受阻兜底，2026-10-07.29→2026-10-08.1，增1改13退0、159 active；源原沙箱242文件2540例tsc/vitest0，实际合后原入口242文件2540例tsc/vitest0/4workers。只合已测经验blob、保留全部并行代码与生成数据；两个既有代码提案仍pending，不冒报代码实现。原失败历史保留，原批独立完整外部续验。）"},
-    {"name": "S1.boss-calibration3", "family": "S1", "commit": "e6cd55b01bf0f1c8635154f4d842a49de0c7e71c", "source": "decision-log 2026-10-08 02:16: Roy授权静默boss定期校准；21新增实际结局/20可用开场，调参keys/切点冻结；silent-0269；paper/materials/silent/boss-sim-calibration.md"},
-    {"name": "S1.sloth-replay1", "family": "Silent", "commit": "a16518c4201bfc324b185cb2b75eb34ff309676e", "source": "decision-log 2026-10-08 02:40: 原策略010309源790b76d0记录冲突受阻兜底；只silent A10已观察懒惰3+普通防御重放1额度，KV0JHNJCKXLS F33末试T8/silent-0245/0247，原提案a0853bed；最后名额及未观察牌/叠加边界未知，不改SL权重/药水/终局规则。源原沙箱243文件2554例0、最终撤碼7红恢复14绿/旧凋萎10绿；合后原入口243文件2554例tsc/vitest0，完整外部待原批续验。"},
-    {"name": "S1.exp85", "family": "S1", "commit": "a16518c4201bfc324b185cb2b75eb34ff309676e", "source": "decision-log 2026-10-08 02:40: 原经验014011源cf32a914 .1→2026-10-08.2净blob受锁30秒超时/21记录冲突兜底；增0改20退0/159 active，G33HU22H2543/P74C04AEPL1F，22所属台账，3代码提案独立链不冒称实现。源原沙箱242文件2540例0，合后原入口243文件2554例tsc/vitest0；并行代码/校准3/知识刷新保持，完整外部待原批续验。"},
-    {"name": "S1.dodge-roll1", "family": "Silent", "commit": "d17f38562a4bc1ae3d2a7c4b0a9c294e764ef665", "source": "decision-log 2026-10-08 03:05: 已测源82bf5b2b锁受阻兜底，61E2QS63Y9WU A10 F28T2→T3/silent-0232翻滚升级在柔嫩1下捕获3/5延迟格挡，跨重规划保留、属性恢复后仅兑现一次；未知重放/叠加/组合保持。源244文件2568例0，撤码11败/恢复14过；实际合后244文件2568例tsc/vitest0，完整外部待原批续验。"},
-    {"name": "S1.exp86", "family": "Silent", "commit": "6b9f323bc8e6fcda67a0f8e160f5e679d36d3b21", "source": "decision-log 2026-10-08 03:38: 原024301经验整分支31项冲突兜底，源979ddf17唯一experience.json净blob，2026-10-08.2→.3/159 active/增0改15退0；RC61MFQM63Y6 A10 F33及原学习者历史补证，三个出牌/药水/SL/终局代码提案仍走独立自动链，数据发布不表示代码实现或0268修复。原源243文件2554例0，实际合后244文件2568例tsc/vitest0，完整外部待原批续验。"},
-    {"name": "S1.exp87", "family": "Silent", "commit": "1c0c1b3ef518713db4a15ab3dafc102a1d62ca7c", "source": "decision-log 2026-10-08 04:19: 原033314经验整分支18项冲突兜底，源dbeb2683唯一experience.json净blob，2026-10-08.3→.4/159 active/增0改21退0；BTSRF7JL1W1Y/XTSV1U9JD34T A10 F33及原学习者历史补证，三个出牌/药水/SL/终局代码提案仍走独立自动链，数据发布不表示代码实现或0268修复。原源244文件2568例0，实际合后244文件2568例tsc/vitest0，完整外部待原批续验。"},
-    {"name": "S1.serpent-form1", "family": "Silent", "commit": "76b00247cf48abd8ec4662db25a5f32951af19cd", "source": "decision-log 2026-10-08 04:41: 033314策略18记录冲突兜底，源de62bf7c净6源码/固定夹具；5PM6JAQG6FNQ A10 F33T1-T3/silent-0132单敌普通群蛇四层，建立无自身伤、一次手动出牌另计4点、已建量跨回合保留；未观察多敌/自动/重放/升级/叠加保持未知。源245文件2586例0、撤源码15败/恢复18过；实际合后245文件2586例tsc/vitest0，完整外部待原批续验。"},
-    {"name": "S1.exp88", "family": "Silent", "commit": "1ede992e9fb4dda65d86eabe2aed9b66003638c6", "source": "decision-log 2026-10-08 05:29: 原044249经验整分支20项冲突兜底，源54826c26唯一experience.json净blob，2026-10-08.4→.5/160 active/增1改14退0；9Z9H2EXKLF3T A10 F48及原学习者历史补证，两个出牌/药水/SL/终局代码提案仍走独立自动链，数据发布不表示代码实现或0268修复。原源245文件2586例0，实际合后245文件2586例tsc/vitest0，完整外部待原批续验。"},
-    {"name": "S1.exp89", "family": "Silent", "commit": "21b5842d0804d4b7a9772f1a417cf2b6024eb7e5", "source": "decision-log 2026-10-08 06:09: 原053104经验整分支17项记录冲突兜底，源b1a9cbdd唯一experience.json净blob，2026-10-08.5→.6/161 active/增1改20退0；7X0W3U8TVA2A及MTQ0EUBJ3R6T A10补证，三项combat/potion/SL/terminal/structure代码提案沿原自动链。源245文件2586例tsc/vitest0；源码/测试/任务与实际live逐blob等价，仅合原经验数据并保留刷新，不重复沙箱检查，原批完整外部续验另办，数据发布不表示代码提案实现。"},
-    {"name": "S1.bullet-time1", "family": "Silent", "commit": "d9885488ae1dd57407c12d1c4310459edce800e6", "source": "decision-log 2026-10-08 06:36: 原053104策略源a6ed582e兜底；KV0JHNJCKXLS A10 F33 T1—T5/0246、0248、0249，普通子弹时间当前合法手牌零费和本轮封抽传播，限定静默A10/普通文本，铁甲/未知范围保持等价；源及合后原沙箱tsc/vitest0、246文件2598例，固定撤源码5红/恢复12绿；实际六blob/源祖先，保留17记录冲突及知识刷新，外部完整续验另办。"},
-    {"name": "S1.exp90", "family": "Silent", "commit": "ad42585dcdd8b7b0ca0cce5a8f7bd35ea188ecf4", "source": "decision-log 2026-10-08 06:55: 原061302经验整分支18项记录冲突兜底，源6e94f690唯一experience.json净blob，2026-10-08.6→.7/165 active/增4改9退0；KFRDELW2TH2P A10补证，三项combat/potion/SL/terminal/structure代码提案沿原自动链。源245文件2586例tsc/vitest0；当前源码/测试/任务与已完整外部通过49c01a02逐blob等价，保留子弹时间六路径及刷新。data-only免重复沙箱，未冒报新树通过，完整外部原批另续验；数据发布不表示提案代码实现。"},
-    {"name": "S1.apotheosis1", "family": "Silent", "commit": "6e9acb9d00a758d2bd43e46873a1f7aa54a7a68a", "source": "decision-log 2026-10-08 07:53: 原071204策略源772b839f普通固有神化兜底；VLZ6CCT8AQ0A静默A10 F35/F43、0237/0238，八种已观察普通升级配对及同方案/后续抽牌/本场牌堆传播；未知组合未验证。源及组合原沙箱tsc/vitest0，247文件2604例；接线撤掉5红/恢复6绿，实际源祖先及六blob一致、保留六记录冲突和全部刷新。单局发现样本不冒称盲验/胜率。"},
-    {"name": "S1.exp91", "family": "Silent", "commit": "88afd5dc7fbda9e70dce2c78a572f959ca3d4d71", "source": "decision-log 2026-10-08 08:11: 原071204经验六项并行记录冲突兜底，源1ac1b33b唯一experience.json原blob，2026-10-08.7→.8/167 active/增2改12退0；GXNKW8X1XYJP及ZE8F192FKX24原证据，三个combat/potion/SL/terminal/structure代码提案沿原自动链。源246文件2598例tsc/vitest0；当前源码/测试/任务与完整外部通过903a1efc逐blob等价，298文件3412过/2跳，保留神化六路径及刷新。data-only免重复沙箱，未冒报新树通过，完整外部原批另续验；数据上线不表示代码提案实现。"},
-    {"name": "S1.exp92", "family": "Silent", "commit": "d516cdce1da2eb4a07b003657059d754aa310578", "source": "decision-log 2026-10-08 08:37: 原075538经验20项并行记录冲突兜底，仅源eaa66f7c原experience.json，2026-10-08.8→.9/168 active/增1改20退0；PD9AYQVMLQW6、L2TSFU62Z57Z原证据，三个combat/potion/SL/terminal/structure代码提案沿原自动链。源247文件2604例tsc/vitest0，当前源码/测试/任务与固定完整通过7ed2bb0a逐blob等价（298文件3412过/2跳），data-only免重复沙箱，不冒报新树完整通过。"},
+    {
+      "name": "S1.double-boss1",
+      "family": "Silent",
+      "commit": "ac076f8a71f101de62d5345fa6b4fca248fd928c",
+      "source": "2026-10-07 14:08 Codex学习者；静默A10连续两场boss：终局HP与毒药水按F49资源价值、B2/B3实际样本连续传递；4局F49实盘全败，8192固定模拟，前2调参/后2留出；未校准、不改SL、其他角色等价。 源e1a467e18a0dfa8d99046a24ff4c0e1af59278c8；证据JMH5C51RLN4E/9TG1RP5LFAAK/ZVYUL2YP3518/TDLBRNA0R05B，账本silent-0228；详情paper/materials/silent/double-boss.md与learner/runs/20261007-130409-silent-double-boss，源及合后原沙箱通过；B/C/D继续，完整外部检查交调度器。"
+    },
+    {
+      "name": "S1.strategy11",
+      "family": "Silent",
+      "commit": "777f861c27a1a1a89c9aba736709801b5cc3f481",
+      "source": "decision-log 2026-10-07 17:34（源45161a51c2c6b7e4a499b13cf749c4108193bbf5，silent-0239，VLZ6CCT8AQ0A A10 F45 T1/T4；仅推演覆盖/样本/削减/未知牌与排名事实展示，撤源8败3过、恢复新增11及相关87合98过。源原沙箱233文件2441例0；最新live组合3fb758b609376ed56717c4c2b5e227e5c192ac5b原入口tsc0/233文件2441例exit0/1worker，四源码blob相等；预算/目标/药水/SL规则保持，其他角色题面等价。完整外部沿原批独立续验；原失败及原提案处置缺失留史，不把整个预算提案标完成。）"
+    },
+    {
+      "name": "S1.exp75",
+      "family": "Silent",
+      "commit": "586ff2db0de4a841555c2e838f3e7f17e8165307",
+      "source": "decision-log 2026-10-07 18:02（源91d49f827f3d429955d63f0b11c5944731759264/experience 2026-10-07.21；前置.20源7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a一并吸收，未独立发布exp74。第75批增2改15退0/148条，原沙箱tsc0/232文件2430例0；第74批28机制提案链已补11duplicate/17waiting，.21三pending链齐全。只机械合经验数据原blob，无新源码，不宣称最新组合已测；最终完整外部沿原批独立续验，原merged=null/failed/报告路径错误/历史全部保留。原规则改动按学习者报告及提案处理。）"
+    },
+    {
+      "name": "S1.exp76",
+      "family": "Silent",
+      "commit": "81a39018a2077bce45e7da5e4e9685f4a1ac6388",
+      "source": "decision-log 2026-10-07 19:09（源7077d238b77f7e64d26d6bfda2aa48cb63e2f1be/experience 2026-10-07.22，第76批8JRE1C4H4Z2W A10，增0改10退0/148 active；仅已测experience.json原blob，六份并行记录保持。源原沙箱tsc0/233文件2441例0；实际合后原入口tsc0/vitest0/233文件2441例0/1worker。silent-proposal-578e415a259e6835待独立策略实现，不冒标代码implemented；原merged=null/failed/冲突历史保留，完整外部沿原批独立续验。）"
+    },
+    {
+      "name": "S1.boss-calibration2",
+      "family": "S1",
+      "commit": "b0b0e679dbab626af188fec8bb180af74e319e71",
+      "source": "decision-log 2026-10-07 19:32: Roy授权静默boss定期校准；20次新实际boss结局，冻结调参/切点，报告paper/materials/silent/boss-sim-calibration.md；silent-0244"
+    },
+    {
+      "name": "S1.fix45",
+      "family": "Silent",
+      "commit": "0d586e685f4f683ff7de4a7c3eee0717efa16a56",
+      "source": "decision-log 2026-10-07 19:40:31 CST（fix-batch 20261007-173847；CA5KE8GFJ9X2 A10 F9T6/F13T1 silent-0229铁蒺藜新建及持久荆棘；DUZUBAJ3A8GP A10 F6T1/F27T4-5 silent-0234 HAZE群体施毒，首证T082DRCUHRRD A0 F46T4。源db6e32d2ee101af6b53f8228c27165bb41f04811/20b04517393708c73912326bb35d8448d1b3f77e；各自撤源码5败2过/5败1过，恢复7/6过，其他角色及未见参数等价。审计裸JSON/独立工作树报告、策略无源码验收目录三工具修复及rollout固定时钟不另造游戏版本。每源原沙箱入口0，合后固定树tsc0/239文件2511例exit0/2worker；原初稿导入失败及4worker rollout120秒超时留史，完整外部交调度器。）"
+    },
+    {
+      "name": "S1.exp79",
+      "family": "Silent",
+      "commit": "c10209e14d2a1a2f3463555fa088684ccdecf856",
+      "source": "decision-log 2026-10-07 20:51（源6579082a9e6bc643a0186c5a8a092422d6937f4e/累计前源ad20957345fa54777705dd00a75ab4d60d1d4b49，经验2026-10-07.25/154 active；源原沙箱tsc0/233文件2441例exit0，实际合后原入口tsc0/vitest0/239文件2511例exit0/1worker。仅经验原blob，保留全部并行代码与刷新；.23/.24未单独上线，不造S1.exp77或S1.exp78，所属经验由CLI追加shipped，代码提案独立续办。原失败历史保留，原批完整外部续验。）"
+    },
+    {
+      "name": "S1.exp80",
+      "family": "Silent",
+      "commit": "bcfdfd8a8d419c99d167cb8da52012767d2b70c1",
+      "source": "decision-log 2026-10-07 21:42（源4b6396bd462ca61bb13d082fdc73fdf5d0cf610a/经验前源6579082a9e6bc643a0186c5a8a092422d6937f4e，经验2026-10-07.26/154 active；源原沙箱tsc0/239文件2511例exit0，实际合后原入口tsc0/vitest0/239文件2511例exit0/1worker。仅经验原blob，保留全部并行代码与刷新；仅本源10项所属经验由CLI追加数据shipped，代码提案独立续办。原失败历史保留，原批完整外部续验。）"
+    },
+    {
+      "name": "S1.double-boss-phase1",
+      "family": "Silent",
+      "commit": "a881e27a54e458bd027244db12503e96197d6e51",
+      "source": "decision-log 2026-10-07 22:32（学习者源6f2b90a311644960fcfd1e2b7a4ce96fb41d65b4，原批20261007-203653-strategy-proposal合入冲突兜底；静默A10 F48首战胜利/本幕完成/F49现场Boss事实分列，未知身份保持未知。源原沙箱tsc0/vitest0/240文件2525例，合后原入口tsc0/vitest0/240文件2525例/1worker。仅7源代码及固定夹具原blob，经验.26/全部刷新及并行代码保留；原失败历史保持，原批完整外部续验。）"
+    },
+    {
+      "name": "S1.fasten-upgrade1",
+      "family": "Silent",
+      "commit": "26586d3d7bc61444970b6efad683d023ba92a356",
+      "source": "decision-log 2026-10-07 23:10（学习者源5e80e683daa08ae2569733b3b541cb523d7fe861受阻兜底，静默A10已观察FASTEN升级6点Defend专属持续格挡，传实际进阶给手牌/各堆/牌组模型；其他角色、未观察升级和普通4保持，不声称完整神化传播。源原沙箱tsc0/vitest0/241文件2531例，合后原入口tsc0/vitest0/241文件2531例/1worker；全部并行代码/刷新保留，原批完整外部独立续验。）"
+    },
+    {
+      "name": "S1.exp81",
+      "family": "Silent",
+      "commit": "26586d3d7bc61444970b6efad683d023ba92a356",
+      "source": "decision-log 2026-10-07 23:10（学习者源e7552663cdcbfad33a1e348bdd13842fce7e3c41受阻兜底，静默经验第81次：2026-10-07.26→.27，增1改10退0、155 active；只发布本角色原experience blob，三个代码提案仍独立策略链。源原沙箱tsc0/vitest0/239文件2511例，合后原入口tsc0/vitest0/241文件2531例/1worker；全部并行代码/刷新保留，原批完整外部独立续验。）"
+    },
+    {
+      "name": "S1.mirage-poison1",
+      "family": "Silent",
+      "commit": "9ede80593818dd8cdbc5a10e28f8cd79edc7b613",
+      "source": "decision-log 2026-10-07 23:50（学习者源cf0f2495354d9cf5dcb96dc31a2de0f4c53f441a受阻兜底，静默A10已观察普通MIRAGE按打出时存活敌人当前中毒总量格挡，修正入口静态量；旧FASTEN升级/进阶上下文及其他角色保持，未观察升级/敏捷复合不外推。源原沙箱tsc0/vitest0/241文件2534例，合后原入口tsc0/vitest0/242文件2540例/4workers；三方集成保留FASTEN和全部并行代码/刷新，原批完整外部独立续验。）"
+    },
+    {
+      "name": "S1.exp82",
+      "family": "Silent",
+      "commit": "9ede80593818dd8cdbc5a10e28f8cd79edc7b613",
+      "source": "decision-log 2026-10-07 23:50（学习者源ab065d0a4fc067cb6a6d529da2706ab7ef508f85受阻兜底，静默经验第82次：2026-10-07.27→.28，增1改19退0、156 active；只发布本角色原experience blob，三个代码提案沿独立策略链。源原沙箱tsc0/vitest0/240文件2525例，合后原入口tsc0/vitest0/242文件2540例/4workers；三方集成保留FASTEN和全部并行代码/刷新，原批完整外部独立续验。）"
+    },
+    {
+      "name": "S1.exp83",
+      "family": "Silent",
+      "commit": "ea95403fa46fcee922db190836e719e4ed4f02ad",
+      "source": "decision-log 2026-10-08 00:48（经验第83次原源18f23638951e5dea6c0bd557303c20d5ae2a88dd受阻兜底，.28→.29，增2改11退0、158 active；源原沙箱241文件2531例tsc/vitest0，合后242文件2540例tsc/vitest0/4workers。离线HP分账3f69541b同步成为祖先，15项Python固定夹具0；工具不改对局行为，不新增工具行为版本。全部并行代码/九项c009刷新及后续fight-value记录保留，原两批完整外部续验。）"
+    },
+    {
+      "name": "S1.exp84",
+      "family": "Silent",
+      "commit": "b48108b7e6c12c4256c21b7e64f13ba8f15ac992",
+      "source": "decision-log 2026-10-08 01:38（经验第84次原源4a90d3570607a56e34e1dc6924d74987c06926b5受阻兜底，2026-10-07.29→2026-10-08.1，增1改13退0、159 active；源原沙箱242文件2540例tsc/vitest0，实际合后原入口242文件2540例tsc/vitest0/4workers。只合已测经验blob、保留全部并行代码与生成数据；两个既有代码提案仍pending，不冒报代码实现。原失败历史保留，原批独立完整外部续验。）"
+    },
+    {
+      "name": "S1.boss-calibration3",
+      "family": "S1",
+      "commit": "e6cd55b01bf0f1c8635154f4d842a49de0c7e71c",
+      "source": "decision-log 2026-10-08 02:16: Roy授权静默boss定期校准；21新增实际结局/20可用开场，调参keys/切点冻结；silent-0269；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.sloth-replay1",
+      "family": "Silent",
+      "commit": "a16518c4201bfc324b185cb2b75eb34ff309676e",
+      "source": "decision-log 2026-10-08 02:40: 原策略010309源790b76d0记录冲突受阻兜底；只silent A10已观察懒惰3+普通防御重放1额度，KV0JHNJCKXLS F33末试T8/silent-0245/0247，原提案a0853bed；最后名额及未观察牌/叠加边界未知，不改SL权重/药水/终局规则。源原沙箱243文件2554例0、最终撤碼7红恢复14绿/旧凋萎10绿；合后原入口243文件2554例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp85",
+      "family": "S1",
+      "commit": "a16518c4201bfc324b185cb2b75eb34ff309676e",
+      "source": "decision-log 2026-10-08 02:40: 原经验014011源cf32a914 .1→2026-10-08.2净blob受锁30秒超时/21记录冲突兜底；增0改20退0/159 active，G33HU22H2543/P74C04AEPL1F，22所属台账，3代码提案独立链不冒称实现。源原沙箱242文件2540例0，合后原入口243文件2554例tsc/vitest0；并行代码/校准3/知识刷新保持，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.dodge-roll1",
+      "family": "Silent",
+      "commit": "d17f38562a4bc1ae3d2a7c4b0a9c294e764ef665",
+      "source": "decision-log 2026-10-08 03:05: 已测源82bf5b2b锁受阻兜底，61E2QS63Y9WU A10 F28T2→T3/silent-0232翻滚升级在柔嫩1下捕获3/5延迟格挡，跨重规划保留、属性恢复后仅兑现一次；未知重放/叠加/组合保持。源244文件2568例0，撤码11败/恢复14过；实际合后244文件2568例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp86",
+      "family": "Silent",
+      "commit": "6b9f323bc8e6fcda67a0f8e160f5e679d36d3b21",
+      "source": "decision-log 2026-10-08 03:38: 原024301经验整分支31项冲突兜底，源979ddf17唯一experience.json净blob，2026-10-08.2→.3/159 active/增0改15退0；RC61MFQM63Y6 A10 F33及原学习者历史补证，三个出牌/药水/SL/终局代码提案仍走独立自动链，数据发布不表示代码实现或0268修复。原源243文件2554例0，实际合后244文件2568例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp87",
+      "family": "Silent",
+      "commit": "1c0c1b3ef518713db4a15ab3dafc102a1d62ca7c",
+      "source": "decision-log 2026-10-08 04:19: 原033314经验整分支18项冲突兜底，源dbeb2683唯一experience.json净blob，2026-10-08.3→.4/159 active/增0改21退0；BTSRF7JL1W1Y/XTSV1U9JD34T A10 F33及原学习者历史补证，三个出牌/药水/SL/终局代码提案仍走独立自动链，数据发布不表示代码实现或0268修复。原源244文件2568例0，实际合后244文件2568例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.serpent-form1",
+      "family": "Silent",
+      "commit": "76b00247cf48abd8ec4662db25a5f32951af19cd",
+      "source": "decision-log 2026-10-08 04:41: 033314策略18记录冲突兜底，源de62bf7c净6源码/固定夹具；5PM6JAQG6FNQ A10 F33T1-T3/silent-0132单敌普通群蛇四层，建立无自身伤、一次手动出牌另计4点、已建量跨回合保留；未观察多敌/自动/重放/升级/叠加保持未知。源245文件2586例0、撤源码15败/恢复18过；实际合后245文件2586例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp88",
+      "family": "Silent",
+      "commit": "1ede992e9fb4dda65d86eabe2aed9b66003638c6",
+      "source": "decision-log 2026-10-08 05:29: 原044249经验整分支20项冲突兜底，源54826c26唯一experience.json净blob，2026-10-08.4→.5/160 active/增1改14退0；9Z9H2EXKLF3T A10 F48及原学习者历史补证，两个出牌/药水/SL/终局代码提案仍走独立自动链，数据发布不表示代码实现或0268修复。原源245文件2586例0，实际合后245文件2586例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp89",
+      "family": "Silent",
+      "commit": "21b5842d0804d4b7a9772f1a417cf2b6024eb7e5",
+      "source": "decision-log 2026-10-08 06:09: 原053104经验整分支17项记录冲突兜底，源b1a9cbdd唯一experience.json净blob，2026-10-08.5→.6/161 active/增1改20退0；7X0W3U8TVA2A及MTQ0EUBJ3R6T A10补证，三项combat/potion/SL/terminal/structure代码提案沿原自动链。源245文件2586例tsc/vitest0；源码/测试/任务与实际live逐blob等价，仅合原经验数据并保留刷新，不重复沙箱检查，原批完整外部续验另办，数据发布不表示代码提案实现。"
+    },
+    {
+      "name": "S1.bullet-time1",
+      "family": "Silent",
+      "commit": "d9885488ae1dd57407c12d1c4310459edce800e6",
+      "source": "decision-log 2026-10-08 06:36: 原053104策略源a6ed582e兜底；KV0JHNJCKXLS A10 F33 T1—T5/0246、0248、0249，普通子弹时间当前合法手牌零费和本轮封抽传播，限定静默A10/普通文本，铁甲/未知范围保持等价；源及合后原沙箱tsc/vitest0、246文件2598例，固定撤源码5红/恢复12绿；实际六blob/源祖先，保留17记录冲突及知识刷新，外部完整续验另办。"
+    },
+    {
+      "name": "S1.exp90",
+      "family": "Silent",
+      "commit": "ad42585dcdd8b7b0ca0cce5a8f7bd35ea188ecf4",
+      "source": "decision-log 2026-10-08 06:55: 原061302经验整分支18项记录冲突兜底，源6e94f690唯一experience.json净blob，2026-10-08.6→.7/165 active/增4改9退0；KFRDELW2TH2P A10补证，三项combat/potion/SL/terminal/structure代码提案沿原自动链。源245文件2586例tsc/vitest0；当前源码/测试/任务与已完整外部通过49c01a02逐blob等价，保留子弹时间六路径及刷新。data-only免重复沙箱，未冒报新树通过，完整外部原批另续验；数据发布不表示提案代码实现。"
+    },
+    {
+      "name": "S1.apotheosis1",
+      "family": "Silent",
+      "commit": "6e9acb9d00a758d2bd43e46873a1f7aa54a7a68a",
+      "source": "decision-log 2026-10-08 07:53: 原071204策略源772b839f普通固有神化兜底；VLZ6CCT8AQ0A静默A10 F35/F43、0237/0238，八种已观察普通升级配对及同方案/后续抽牌/本场牌堆传播；未知组合未验证。源及组合原沙箱tsc/vitest0，247文件2604例；接线撤掉5红/恢复6绿，实际源祖先及六blob一致、保留六记录冲突和全部刷新。单局发现样本不冒称盲验/胜率。"
+    },
+    {
+      "name": "S1.exp91",
+      "family": "Silent",
+      "commit": "88afd5dc7fbda9e70dce2c78a572f959ca3d4d71",
+      "source": "decision-log 2026-10-08 08:11: 原071204经验六项并行记录冲突兜底，源1ac1b33b唯一experience.json原blob，2026-10-08.7→.8/167 active/增2改12退0；GXNKW8X1XYJP及ZE8F192FKX24原证据，三个combat/potion/SL/terminal/structure代码提案沿原自动链。源246文件2598例tsc/vitest0；当前源码/测试/任务与完整外部通过903a1efc逐blob等价，298文件3412过/2跳，保留神化六路径及刷新。data-only免重复沙箱，未冒报新树通过，完整外部原批另续验；数据上线不表示代码提案实现。"
+    },
+    {
+      "name": "S1.exp92",
+      "family": "Silent",
+      "commit": "d516cdce1da2eb4a07b003657059d754aa310578",
+      "source": "decision-log 2026-10-08 08:37: 原075538经验20项并行记录冲突兜底，仅源eaa66f7c原experience.json，2026-10-08.8→.9/168 active/增1改20退0；PD9AYQVMLQW6、L2TSFU62Z57Z原证据，三个combat/potion/SL/terminal/structure代码提案沿原自动链。源247文件2604例tsc/vitest0，当前源码/测试/任务与固定完整通过7ed2bb0a逐blob等价（298文件3412过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
     {
       "name": "S1.boss-calibration4",
       "family": "S1",
       "commit": "96aeaf636a2b806c435db89673590f8229b22b58",
       "source": "decision-log 2026-10-08 09:18: Roy授权静默boss定期校准；20新增实际结局/20可用开场，调参keys/切点冻结；silent-0283；paper/materials/silent/boss-sim-calibration.md"
     },
-    {"name": "S1.exp93", "family": "Silent", "commit": "73f2fda517bce478c95d4f64fa7cf309aa703f05", "source": "decision-log 2026-10-08 09:40: 原085640经验20项并行记录冲突兜底，仅源46d0d2a1原experience.json，2026-10-08.9→.10/169 active/增1改9退0；ZTRGYYMLR8SC原证据，两个combat/potion/SL/terminal代码提案沿原自动链。源247文件2604例tsc/vitest0、最终经验定向1文件10例0，当前源码/测试/任务与固定完整通过f8947651逐blob等价（298文件3412过/2跳），data-only免重复沙箱，不冒报新树完整通过。"},
-    {"name": "S1.a10-regression1", "family": "Silent", "commit": "0ccb002595cc5a1b2604d8b18427ab5e90aaafe3", "source": "decision-log 2026-10-08 10:00：静默独立A10回退排查；693318ef来源隔离，silent-0285/C48LLXBGKXQ9 A0 F2T1及MGA0CZDDKC0P A10 F2T1；仅Silent非boss药水上下文移除铁甲硬编码统计，原经验/候选/评分/血价/SL及铁甲等价。冻结83局中77Codex，F48 10/50→6/27，原38/45为早8小时完局切点；不声称胜率提升。源原沙箱248文件2608例tsc/vitest0，合后原入口通过，保存全部刷新/并行代码；完整外部检查待调度器。"},
-    {"name": "S1.exp94", "family": "Silent", "commit": "0e27b88ab6dacfc9aa42d8ca3820d2e741b1ce6d", "source": "decision-log 2026-10-08 10:54: 原101301经验21项并行记录冲突兜底，仅源eebcf429原experience.json，2026-10-08.10→.11/170 active/增1改15退0；K2JAGKVJAWZJ原证据，五个combat/potion/SL/terminal代码提案沿原自动链。源247文件2604例tsc/vitest0、最终经验定向1文件10例0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"},
-    {"name": "S1.exp95", "family": "Silent", "commit": "74387216c08496ddeb53bb674490f79a1eb2c06e", "source": "decision-log 2026-10-08 11:42: 原111006经验20项并行记录冲突兜底，仅源fbf45077原experience.json，2026-10-08.11→.12/173 active/增3改20退0；79UCJ0K6R9C1、NEWRFAYKTQHR等原证据，五个combat/potion/SL代码提案沿原自动链。源248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"},
-    {"name": "S1.exp96", "family": "Silent", "commit": "64e82e9874e55823fd524491ecfbae2aa643e7ad", "source": "decision-log 2026-10-08 12:39: 原120900经验19项并行记录冲突兜底，仅源3958e561原experience.json，2026-10-08.12→.12/175 active/增2改17退0；9R916WW0V65N及原历史局证据，五个combat/potion/SL代码提案沿原自动链。源首轮中断130原件保留、重试248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"},
-    {"name": "S1.exp97", "family": "Silent", "commit": "cfe666e2b23f85fe37215c44846b68fb5f12f3fa", "source": "decision-log 2026-10-08 13:31: 原130539经验19项并行记录冲突兜底，仅源3bda3841原experience.json，2026-10-08.13→.14/176 active/增1改15退0；T0DGVABPV60U及原历史局证据，四个combat/potion/SL代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"},
-    {"name": "S1.exp98", "family": "Silent", "commit": "1a09acb6b414590e23a903c45f7b5ffc0720b722", "source": "decision-log 2026-10-08 14:09: 原133301经验19项并行记录冲突兜底，仅源9d833df6原experience.json，2026-10-08.14→.15/176 active/增0改12退0；G8NHLL09DLBX及原历史局证据，四个combat/potion/SL代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"},
-    {"name": "S1.exp99", "family": "Silent", "commit": "b015111e067122f13fda492bde6ec3423170107d", "source": "decision-log 2026-10-08 14:37: 原140852经验23项并行记录冲突兜底，仅源47e9a436原experience.json，2026-10-08.15→.16/176 active/增0改16退0；LYBHQ1X230ZB及原历史局证据，四个combat/potion/SL/terminal代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入bea18dc7逐blob等价（其独立原沙箱251文件2618例tsc/vitest0，完整外部尚未核实），data-only免重复沙箱，不冒报新树完整通过。"},
-    {"name": "S1.exp100", "family": "Silent", "commit": "10f0aeb37f8df7975cf823ac0e439f851d9ad07f", "source": "decision-log 2026-10-08 15:45: 原144109经验19项并行记录冲突兜底，仅源196f1800原experience.json，2026-10-08.16→.17/176 active/增0改17退0；H1T1F8ML9FUE及原历史局证据，四个combat/potion/SL/terminal代码提案沿原自动链。源首轮251文件2618例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入722518cd逐blob等价（其固定完整外部302文件3429例通过/2跳过tsc/vitest0已核实），data-only免重复沙箱，不冒报新树完整通过。"},
-    {"name": "S1.exp101", "family": "Silent", "commit": "bf4b1cef5e319ccb21cb35d91e848615d5eb9fa8", "source": "decision-log 2026-10-08 16:19: 原153439经验23项记录冲突兜底；只源f2ce6143 experience.json，.17→.18/增0改17退0/176 active，AD3QSC3P41JU证据。源251文件2621例tsc/vitest0；保留隔离probe六路径代码及原合后沙箱，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"},
-    {"name": "S1.exp102", "family": "Silent", "commit": "3e5637f6583e83c7348101623ac369b63dd1174b", "source": "decision-log 2026-10-08 17:02: 原160331经验32项记录冲突兜底；只源7f51464c experience.json，.18→.19/增0改16退0/176 active，9DAS5L8YM1CN证据。源251文件2621例tsc/vitest0；保留全部当前代码及固定650a6a84完整检查，数据免重复源码自测，完整新树待独立续验；四提案沿自动链，数据发布不标代码实现。"},
+    {
+      "name": "S1.exp93",
+      "family": "Silent",
+      "commit": "73f2fda517bce478c95d4f64fa7cf309aa703f05",
+      "source": "decision-log 2026-10-08 09:40: 原085640经验20项并行记录冲突兜底，仅源46d0d2a1原experience.json，2026-10-08.9→.10/169 active/增1改9退0；ZTRGYYMLR8SC原证据，两个combat/potion/SL/terminal代码提案沿原自动链。源247文件2604例tsc/vitest0、最终经验定向1文件10例0，当前源码/测试/任务与固定完整通过f8947651逐blob等价（298文件3412过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.a10-regression1",
+      "family": "Silent",
+      "commit": "0ccb002595cc5a1b2604d8b18427ab5e90aaafe3",
+      "source": "decision-log 2026-10-08 10:00：静默独立A10回退排查；693318ef来源隔离，silent-0285/C48LLXBGKXQ9 A0 F2T1及MGA0CZDDKC0P A10 F2T1；仅Silent非boss药水上下文移除铁甲硬编码统计，原经验/候选/评分/血价/SL及铁甲等价。冻结83局中77Codex，F48 10/50→6/27，原38/45为早8小时完局切点；不声称胜率提升。源原沙箱248文件2608例tsc/vitest0，合后原入口通过，保存全部刷新/并行代码；完整外部检查待调度器。"
+    },
+    {
+      "name": "S1.exp94",
+      "family": "Silent",
+      "commit": "0e27b88ab6dacfc9aa42d8ca3820d2e741b1ce6d",
+      "source": "decision-log 2026-10-08 10:54: 原101301经验21项并行记录冲突兜底，仅源eebcf429原experience.json，2026-10-08.10→.11/170 active/增1改15退0；K2JAGKVJAWZJ原证据，五个combat/potion/SL/terminal代码提案沿原自动链。源247文件2604例tsc/vitest0、最终经验定向1文件10例0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp95",
+      "family": "Silent",
+      "commit": "74387216c08496ddeb53bb674490f79a1eb2c06e",
+      "source": "decision-log 2026-10-08 11:42: 原111006经验20项并行记录冲突兜底，仅源fbf45077原experience.json，2026-10-08.11→.12/173 active/增3改20退0；79UCJ0K6R9C1、NEWRFAYKTQHR等原证据，五个combat/potion/SL代码提案沿原自动链。源248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp96",
+      "family": "Silent",
+      "commit": "64e82e9874e55823fd524491ecfbae2aa643e7ad",
+      "source": "decision-log 2026-10-08 12:39: 原120900经验19项并行记录冲突兜底，仅源3958e561原experience.json，2026-10-08.12→.12/175 active/增2改17退0；9R916WW0V65N及原历史局证据，五个combat/potion/SL代码提案沿原自动链。源首轮中断130原件保留、重试248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp97",
+      "family": "Silent",
+      "commit": "cfe666e2b23f85fe37215c44846b68fb5f12f3fa",
+      "source": "decision-log 2026-10-08 13:31: 原130539经验19项并行记录冲突兜底，仅源3bda3841原experience.json，2026-10-08.13→.14/176 active/增1改15退0；T0DGVABPV60U及原历史局证据，四个combat/potion/SL代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp98",
+      "family": "Silent",
+      "commit": "1a09acb6b414590e23a903c45f7b5ffc0720b722",
+      "source": "decision-log 2026-10-08 14:09: 原133301经验19项并行记录冲突兜底，仅源9d833df6原experience.json，2026-10-08.14→.15/176 active/增0改12退0；G8NHLL09DLBX及原历史局证据，四个combat/potion/SL代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价（299文件3416过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp99",
+      "family": "Silent",
+      "commit": "b015111e067122f13fda492bde6ec3423170107d",
+      "source": "decision-log 2026-10-08 14:37: 原140852经验23项并行记录冲突兜底，仅源47e9a436原experience.json，2026-10-08.15→.16/176 active/增0改16退0；LYBHQ1X230ZB及原历史局证据，四个combat/potion/SL/terminal代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入bea18dc7逐blob等价（其独立原沙箱251文件2618例tsc/vitest0，完整外部尚未核实），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp100",
+      "family": "Silent",
+      "commit": "10f0aeb37f8df7975cf823ac0e439f851d9ad07f",
+      "source": "decision-log 2026-10-08 15:45: 原144109经验19项并行记录冲突兜底，仅源196f1800原experience.json，2026-10-08.16→.17/176 active/增0改17退0；H1T1F8ML9FUE及原历史局证据，四个combat/potion/SL/terminal代码提案沿原自动链。源首轮251文件2618例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入722518cd逐blob等价（其固定完整外部302文件3429例通过/2跳过tsc/vitest0已核实），data-only免重复沙箱，不冒报新树完整通过。"
+    },
+    {
+      "name": "S1.exp101",
+      "family": "Silent",
+      "commit": "bf4b1cef5e319ccb21cb35d91e848615d5eb9fa8",
+      "source": "decision-log 2026-10-08 16:19: 原153439经验23项记录冲突兜底；只源f2ce6143 experience.json，.17→.18/增0改17退0/176 active，AD3QSC3P41JU证据。源251文件2621例tsc/vitest0；保留隔离probe六路径代码及原合后沙箱，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp102",
+      "family": "Silent",
+      "commit": "3e5637f6583e83c7348101623ac369b63dd1174b",
+      "source": "decision-log 2026-10-08 17:02: 原160331经验32项记录冲突兜底；只源7f51464c experience.json，.18→.19/增0改16退0/176 active，9DAS5L8YM1CN证据。源251文件2621例tsc/vitest0；保留全部当前代码及固定650a6a84完整检查，数据免重复源码自测，完整新树待独立续验；四提案沿自动链，数据发布不标代码实现。"
+    },
     {
       "name": "S1.boss-calibration5",
       "family": "S1",
       "commit": "465df69b196ff828dedf250538acba9917c120b5",
       "source": "decision-log 2026-10-08 16:59:12 CST：Roy授权静默boss定期校准；源0471382514799baa3db44602f56ac35020f30ba6；21新实际结局/固定107调参与134验证；silent-0299；paper/materials/silent/boss-sim-calibration.md"
     },
-    {"name": "S1.exp103", "family": "Silent", "commit": "74c48edda9411ad30e44cedf1193acc88253b1a7", "source": "decision-log 2026-10-08 17:46: 原170939经验21项记录冲突兜底；只源b6c4b534 experience.json，.19→.20/增0改22退0/176 active，BJLTVSYXCSGS/Y5H4CFAQ2WTG证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定187c025a完整检查，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"},
-    {"name": "S1.exp104", "family": "Silent", "commit": "4a73f63c4955beeacc39e14fed72cf302d307e82", "source": "decision-log 2026-10-08 18:25: 原174751经验21项记录冲突兜底；只源ee6d95ef experience.json，.20→.21/增2改16退0/178 active，SY0WMJNNVRLM证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定2977ebba完整检查，数据免重复源码自测，完整新树待独立续验；五提案沿自动链，数据发布不标代码实现。"},
-    {"name": "S1.exp105", "family": "Silent", "commit": "c286f1943ace026b89a708d431d36aef89d4bddb", "source": "decision-log 2026-10-08 19:27: 原183609经验18项记录冲突兜底；只源62d06feb experience.json，.21→.22/增2改14退0/180 active，4XLZURXMD872证据。最终源251文件2627例tsc/vitest0；首轮CHARACTER误设134例失败保持。当前全部代码与固定c70efc8c完整检查等价，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"},
-    {"name": "S1.exp106", "family": "Silent", "commit": "b2921782dac1f17a52d1c8e75e39ff129d2111b4", "source": "decision-log 2026-10-08 20:17: 原193933经验17项记录冲突兜底；仅源1c782204 experience.json原blob，.22→.23/增3改23退0/183 active，QHK1XQ928TTM、UZ1T7AH49WMB、7BNC8QX746YP证据。源251文件2627例tsc/vitest0；两次数字核验失败原件保持，最终49项核验通过。当前全部代码与固定433144fb完整302文件3435例过2跳检查等价，数据免重复源码自测，新数据树完整外部待独立续验；三原提案沿自动链，不标代码实现。"},
-    {"name": "S1.exp107", "family": "Silent", "commit": "0dd5cb2450875f88c3c7425912cf22aad9286890", "source": "decision-log 2026-10-08 20:48: 原201302经验17项记录冲突兜底；仅源196a025b experience.json原blob，.23→.24/增1改19退0/184 active，CNKR125PFHJ5证据。源251文件2627例tsc/vitest0；原数字核验及拼写勘误原件保持，最终35项核验通过。当前全部代码与固定ad489c8c完整302文件3435例过2跳检查等价，数据免重复源码自测，新数据树完整外部待独立续验；三原提案沿自动链，不标代码实现。"},
-    {"name": "S1.boss-calibration6", "family": "S1", "commit": "f4454686dde188eb7f1e4416a26842afde9dd38d", "source": "decision-log 2026-10-08 21:12:24 CST：Roy授权静默boss定期校准；源b1ca91844cf8307fe59a8fde3151ee6f3bba3651；20新实际结局/固定107调参与154验证；silent-0310；paper/materials/silent/boss-sim-calibration.md"},
-    {"name": "S1.exp108", "family": "Silent", "commit": "11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5", "source": "decision-log 2026-10-08 21:43: 静默第108次经验.24→.25，增1改15退0/185 active，证据PF90JTU0UZ5M及本角色历史；源f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c。源251文件2627例、合后251文件2627例，tsc/vitest0；只更新经验前缀，三代码提案独立实现，不标implemented/shipped。"},
-    {"name": "S1.exp109", "family": "Silent", "commit": "d49b6ad7bfd22a515d1c3f7ddb5c0ba74ee261ca", "source": "decision-log 2026-10-08 22:33: 原220305经验18项记录冲突兜底；只源5bb99c79 experience.json，.25→.26/增0改15退0/185 active，2H311EAD34GD/WZL2AMEY85S7证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定9949a5de完整检查，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"},
-    {"name": "S1.exp110", "family": "Silent", "commit": "c2d5a4e7a37b1628fb8015808258da4746f90503", "source": "decision-log 2026-10-08 23:18: 原224301经验20项记录冲突兜底；只源64ed5d5c experience.json，.26→.27/增1改17退0/186 active，R3AJCGQGGMR4证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定049dff24完整检查，数据免重复源码自测，完整新树待独立续验；五提案沿自动链，数据发布不标代码实现。"},
-    {"name": "S1.exp111", "family": "Silent", "commit": "dbc65baab5ad259f07f2b1bc7e672e9979159af6", "source": "decision-log 2026-10-09 00:14: 原234302经验20项记录冲突兜底；只源2c782d78 experience.json，.27→.28/增0改8退0/186 active，M0GY0A4M2F7H证据。源251文件2627例tsc/vitest0；全部当前代码与固定72499093/树476214f6完整检查保持，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现。"},
-    {"name": "S1.exp112", "family": "Silent", "commit": "38dfb55e377349c23435e46aa065de3d9542251f", "source": "decision-log 2026-10-09 00:50: 原001302经验16项记录冲突兜底；只源3ae5a3c2 experience.json，2026-10-08.28→2026-10-09.1/增0改15退0/186 active，Z91JN3S3PQX2证据。源251文件2627例tsc/vitest0；全部当前代码与固定3541bc54/树d4578547完整检查保持，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现。"},
-    {"name": "S1.exp113", "family": "Silent", "commit": "97f004b323b6a0df71f2aa2667fac6b1b627b005", "source": "decision-log 2026-10-09 01:21: 原005053经验4项记录冲突兜底；只源2c381802 experience.json，2026-10-09.1→2026-10-09.2/增2改10退0/188 active，LY83ZMTFVKJH证据。源251文件2627例tsc/vitest0；全部当前代码与固定dd07f4aa/树ff080340完整检查保持，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现；0316原学习者更早首证勘误与原历史保留。"},
-    {"name": "S1.exp114", "family": "Silent", "commit": "60c93049a61bf9fb0c0501a9f03d1b34b6206b3d", "source": "decision-log 2026-10-09 02:23: 原014148经验17项记录/表冲突兜底；只源4aca285e experience.json，2026-10-09.2→2026-10-09.3/增1改22退0/189 active，HEMND3SMQYB8证据。源251文件2627例tsc/vitest0；当前代码与固定8149e4ca/树3f7df7a0完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp115", "family": "Silent", "commit": "63dfc3219ed252457ee52342f6ab0736b817828f", "source": "decision-log 2026-10-09 03:18: 原024302经验18项记录/表冲突兜底；只源bdee78cd experience.json，2026-10-09.3→2026-10-09.4/增1改14退0/190 active，P2M3DFJ4DEZ3证据。源251文件2627例tsc/vitest0；当前代码与固定a7c2a411/树3be0daf4完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp116", "family": "Silent", "commit": "5853fdbf630fca6e9c022aa28c54fedd09fc2ecf", "source": "decision-log 2026-10-09 03:57: 原031301经验17项记录/表冲突兜底；只源f002a94f experience.json，2026-10-09.4→2026-10-09.5/增0改17退0/190 active，PBUBM0LRTEDD证据。源251文件2627例tsc/vitest0；当前代码与固定20cec89a/树6d3900c8完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.boss-calibration7", "family": "S1", "commit": "473a38a1a8d133f0a811f8a3c8ff454ae6363984", "source": "decision-log 2026-10-09 04:14:54 CST：Roy授权静默boss定期校准；源010b22a63c2f05402b7ff027d59f8f94a6d69051；20新实际结局/固定107调参与174验证；silent-0325；paper/materials/silent/boss-sim-calibration.md"},
-    {"name": "S1.exp117", "family": "Silent", "commit": "90577a65353b6fffe151b8eeb49bd472a4c98bf9", "source": "decision-log 2026-10-09 05:01: 原040745经验19项记录/表冲突兜底；只源e6d12c26 experience.json，2026-10-09.5→2026-10-09.6/增1改18退0/191 active，FU8ZUQHBHNV9/456MRNGCPD8E证据。源251文件2627例tsc/vitest0；当前代码与固定3cadc990/树972425de完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp118", "family": "Silent", "commit": "abbb308ce3be824214f3e6a7d2397a3b83b30204", "source": "decision-log 2026-10-09 05:44: 原050454经验18项记录/表冲突兜底；只源832318ee experience.json，2026-10-09.6→2026-10-09.7/增0改15退0/191 active，J8PHG72DGD90证据。源251文件2627例tsc/vitest0；当前代码与固定52aa3fcc/树8dbe7ece完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp119", "family": "Silent", "commit": "9494b301594282bdab23b1c3df46c0691da5317b", "source": "decision-log 2026-10-09 06:15: 原054302经验17项记录/表冲突兜底；只源d4c5065e experience.json，2026-10-09.7→2026-10-09.8/增1改11退0/192 active，0DJ6GFZZ0TG9证据。源251文件2627例tsc/vitest0；当前代码与固定b7404348/树5048a2f7完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp120", "family": "Silent", "commit": "09e8ac8b7b16ba7f7c4d977d30e8e2b807ced3ed", "source": "decision-log 2026-10-09 06:46: 原061302经验20项记录/表冲突兜底；只源01ad28fa experience.json，2026-10-09.8→2026-10-09.9/增0改12退0/192 active，KSX97DF5H3NY证据。源251文件2627例tsc/vitest0；当前代码与固定244d9d6a/树467aae9d完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp121", "family": "Silent", "commit": "7972c8b7e732e17ae381dc9df5b61488a91e48ff", "source": "decision-log 2026-10-09 07:30: 原070159经验5项记录/表冲突兜底；只源7c1d9b20 experience.json，2026-10-09.9→2026-10-09.10/增0改12退0/192 active，SV2GP9NX4HQD证据。源251文件2627例tsc/vitest0；当前代码与固定cfa8112d/树f9100ea0完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp122", "family": "Silent", "commit": "d62fd3c265f0838cd9742b0c7c7569cccc940e7b", "source": "decision-log 2026-10-09 07:57: 原073009经验17项记录/表冲突兜底；只源229e0a0d experience.json，2026-10-09.10→2026-10-09.11/增0改9退0/192 active，CSLHFCBSC1UM证据。源251文件2627例tsc/vitest0；当前代码与固定bb728531/树7d4bfea9完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp123", "family": "Silent", "commit": "d5c1fe3f0c3bf542260cd42765203e3561c96f88", "source": "decision-log 2026-10-09 08:38: 原075759经验17项记录/表冲突兜底；只源6c5a3f61 experience.json，2026-10-09.11→2026-10-09.12/增1改9退0/193 active，RZ6YAC7K89NM证据。源251文件2627例tsc/vitest0；当前代码与固定7123e525/树ffccd203完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp124", "family": "Silent", "commit": "afdb448cd650687ed28e4154ffa92b54c7286eeb", "source": "decision-log 2026-10-09 09:14: 原084302经验18项记录/表冲突兜底；只源7339da35 experience.json，2026-10-09.12→2026-10-09.13/增0改8退0/193 active，SDY5T9XCSQN2证据。源251文件2627例tsc/vitest0；当前代码与固定57a7f485/树15c60476完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp125", "family": "Silent", "commit": "074068c96c113f918fa6fec7df5bc3cbda177b38", "source": "decision-log 2026-10-09 10:11: 原093152经验5项记录/表冲突兜底；只源9f7cceaf experience.json，2026-10-09.13→2026-10-09.14/增0改16退0/193 active，VAC6Z1PZ1QJG/NG1FBJTSRLHS证据。源251文件2627例tsc/vitest0；当前代码与固定5ff4270d/树d8434435完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp126", "family": "Silent", "commit": "f04518bfa4ae33c92cebc2e0ebf4b5a62ff2e0f5", "source": "decision-log 2026-10-09 10:51: 原101302经验19项记录/论文表冲突兜底；只源06b30fc0 experience.json，2026-10-09.14→2026-10-09.15/增0改9退0/193 active，NTMAU4XZ2NN2证据。源251文件2627例tsc/vitest0；当前代码与固定d5f290f4/树588d4310完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；两提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp127", "family": "Silent", "commit": "5f809c22a7d2b8866c6971658a0904d202e11ac4", "source": "decision-log 2026-10-09 11:18: 原104301经验3项运维记录冲突兜底；只源0e7a9db4 experience.json，2026-10-09.15→2026-10-09.16/增1改15退0/194 active，E6DYYXRX7GVE证据。源251文件2627例tsc/vitest0；当前代码与固定e447200f/树458c1995完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp128", "family": "Silent", "commit": "761272f5eccdf5fefc15e41ca02058d137c083a3", "source": "decision-log 2026-10-09 11:58: 原111624经验18项记录/论文冲突兜底；只源9bf2c5a9 experience.json，2026-10-09.16→2026-10-09.17/增2改15退0/196 active，XZUJR08FW801证据。源251文件2627例tsc/vitest0；当前代码与固定6519b890/树728ac938完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案（含更正）沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.boss-calibration8", "family": "S1", "commit": "855a758e1b698573c16605a10a8669a326f93338", "source": "decision-log 2026-10-09 12:42:43 CST: Roy授权静默boss定期校准；源e7ea26412a65409d1f1d27ff72dd6dc050df98c3；20新实际结局，固定107调参/194验证；silent-0337；paper/materials/silent/boss-sim-calibration.md"},
-    {"name": "S1.exp129", "family": "Silent", "commit": "7a89024be1b9e1ecd50730d6152ad3e9a248cd05", "source": "decision-log 2026-10-09 12:57: 原120920经验20项记录/论文冲突兜底；只源23d97f26 experience.json，2026-10-09.17→2026-10-09.18/增0改17退0/196 active，JBX9JLH46KVN证据。源251文件2627例tsc/vitest0；当前代码与固定10168ac7/树50493fbf完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp130", "family": "Silent", "commit": "9f572a6d8c63b48af820743db615aa976279e9d5", "source": "decision-log 2026-10-09 13:43: 原130838经验5项记录冲突兜底；只源6e3ac694 experience.json，2026-10-09.18→2026-10-09.19/增0改22退0/196 active，RMNXHZKV716Y证据。源251文件2627例tsc/vitest0；当前代码与固定d5ad91e8/树a2f52376完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp131", "family": "Silent", "commit": "92dcf85e6be692fac9ad313d9de6dc10a0fb453b", "source": "decision-log 2026-10-09 14:47: 原140554经验19项记录/论文冲突兜底；只源3a71746d experience.json，2026-10-09.19→2026-10-09.20/增0改23退0/196 active，NBJBVSBNPYQB证据。源251文件2627例tsc/vitest0；当前代码与固定57b661f0/树d4e1f23e完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp132", "family": "Silent", "commit": "2e126dc3383508b588fbf54e1b8150be0cf89466", "source": "decision-log 2026-10-09 16:13: 原143947经验3项共享记录冲突兜底；只源6276c272 experience.json，2026-10-09.20→2026-10-09.21/增0改16退0/196 active，AF76L5UTPP8U证据。源251文件2627例tsc/vitest0；当前代码与固定c7e1e0ed/树1e231e8d完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp133", "family": "Silent", "commit": "dfb41f1826e29ed2763caf3127b7e0d4b4dea363", "source": "decision-log 2026-10-09 16:28: 原154302经验20项共享记录冲突兜底；只源a8bd4e48 experience.json，2026-10-09.21→2026-10-09.22/增1改21退0/197 active，833ZM0MJGWHC证据。源251文件2627例tsc/vitest0；当前代码与固定2edf5043/树cbf21ae3完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.exp134", "family": "Silent", "commit": "4bf6f54fc0599d29282d7f5e31d07d55f8b606f2", "source": "decision-log 2026-10-09 17:16: 原163854经验18项共享记录冲突兜底；只源26bd83af experience.json，2026-10-09.22→2026-10-09.23/增0改15退0/197 active，64R0P0MTZWAX/C6Z8ATNBNHZ7证据。源251文件2627例tsc/vitest0；当前代码与固定c308b61e/树ea2b03dc完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"},
-    {"name": "S1.boss-calibration9", "family": "S1", "commit": "1cdf75b194591c2e4e4c292f9b69c0284d31457e", "source": "decision-log 2026-10-09 18:06:02 CST: Roy授权静默boss定期校准；源351678e8a6aa39a6e78bd7f1abc1ef259d8493c8；20新实际结局，固定107调参/214验证；silent-0342；paper/materials/silent/boss-sim-calibration.md"},
-    {"name": "S1.exp135", "family": "Silent", "commit": "a19db32c5663f70eb460ea35967976c840b9cd8e", "source": "decision-log 2026-10-09 18:45: 原180724经验9项共享记录冲突兜底；只源05212bb1 experience.json，2026-10-09.23→2026-10-09.24/增0改18退0/197 active，XW8B5CHJ814J证据。源251文件2627例tsc/vitest0，更正后3文件次31例tsc/vitest0；当前代码与校准9固定2e037b7b/树fb4340ae完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原初稿/原提案及更正历史分别保留。"},
-    {"name": "S1.exp136", "family": "Silent", "commit": "6b5131921d3f5fe0a29e11b42e27543ebc79f18b", "source": "decision-log 2026-10-09 19:27: 原184302经验19项共享记录冲突兜底；只源ebcdb689 experience.json，2026-10-09.24→2026-10-09.25/增1改17退0/198 active，R6WDLYS19ZTY证据。源251文件2627例tsc/vitest0，另开verbose诊断未确认结束，原pending保留；当前代码与经验135固定d6a39489/树c576f916完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原初稿/校验失败及诊断pending历史分别保留。"},
-    {"name": "S1.exp137", "family": "Silent", "commit": "50439941134c9f355d81a9c4158997c7240f43d0", "source": "decision-log 2026-10-09 20:15: 原193737经验19项共享记录冲突兜底；只源806d6c03 experience.json，2026-10-09.25→2026-10-09.26/增0改20退0/198 active，HNX4A2WBC34W证据。源251文件2627例tsc/vitest0，最终3文件次31例通过；当前代码与经验136固定eaf3ac162afe487705d5b46ab049871308022173/树b4858e2e4cb991c1d1f282addef5e64ef714a945完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"},
-    {"name": "S1.exp138", "family": "Silent", "commit": "bbd2fab041236a99a5ad8dfaf2c30db1bfc88c0b", "source": "decision-log 2026-10-09 22:20: 原20261009-200935-experience-update经验共享记录冲突兜底；只源19b98aa1 experience.json，2026-10-09.27，原变化{'added': 1, 'updated': 13, 'retired': 0, 'active': 199}，原证据与限制见原report.md。源251文件2627例tsc/vitest0，当前代码与当前基础设施完整检查固定fd4c8659736828708789598b7bd1bb9049c6cf94/树5a2890da17c285c15b2c1f913acf90491e133f0f完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；原三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"},
-    {"name": "S1.exp139", "family": "Silent", "commit": "362cad0e4da5c8af935d805e9c3691f6cf65ef8d", "source": "decision-log 2026-10-09 22:23: 原20261009-210408-experience-update经验共享记录冲突兜底；只源7ecf496c experience.json，2026-10-09.28，原变化{'added': 1, 'updated': 18, 'retired': 0, 'active': 200}，原证据与限制见原report.md。源251文件2627例tsc/vitest0，当前代码与当前基础设施完整检查固定fd4c8659736828708789598b7bd1bb9049c6cf94/树5a2890da17c285c15b2c1f913acf90491e133f0f完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；原三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"},
-    {"name": "S1.exp140", "family": "Silent", "commit": "c1127d3fe1155d745a4fb01899704bb333aa2966", "source": "decision-log 2026-10-09 23:58: 原20261009-214302-experience-update兜底，只原源2ff36c373e736214e7d143c161c7f917f06887ef经验2026-10-09.29数据；增0改13退0/200 active，源固定沙箱251文件2627例tsc/vitest0；原失败与重跑、共享记录冲突或重叠保持；当前live源码及刷新保持，新数据树完整外部检查待原批续验。未标代码提案实现。"},
-    {"name": "S1.exp141", "family": "Silent", "commit": "f704bde92f68928d82ebd3b16245d32d611500ae", "source": "decision-log 2026-10-09 23:59: 原20261009-224302-experience-update兜底，只原源ae60e1711e2fb8856ded323878bc4901dab624e9经验2026-10-09.30数据；增1改14退0/201 active，源固定沙箱253文件2631例tsc/vitest0；原失败与重跑、共享记录冲突或重叠保持；当前live源码及刷新保持，新数据树完整外部检查待原批续验。未标代码提案实现。"},
-    {"name": "S1.apotheosis2", "family": "Silent", "commit": "c6a2c9337e869e1047928f2c7223c1b2956a2514", "source": "decision-log 2026-10-09 23:01:43 CST：静默A10神化第九组触媒1→2配对；源f516592fff557ef02c8ece43433706358c3f7fe6；VLZ6CCT8AQ0A F43T1/T4/T5、F45T5；silent-0351/silent-0237/0238/0027。撤源码5失败2通过、恢复4文件27例；源与合后原沙箱通过，其他角色/进阶等价；原10宽提案仍waiting，不承诺整场胜率。"},
-    {"name": "S1.fix46", "family": "Silent", "commit": "57e33ac54d7e145089f554eb784210f9acd63153", "source": "decision-log 2026-10-09 23:07: fix-batch 20261009-221100；silent-0272/源db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26，9Z9H2EXKLF3T A10 F37 turn=null。商店移除预判标为预测，现场完整多重集不一致暂停原承诺并重问；铁甲及未观察进阶保持原预检查。另两纯诊断/统计修复silent-0338/0254不改数值和动作；三项撤源码红/恢复绿，源及合后沙箱tsc/vitest0，合后256文件2648例，Python3例0；完整沙箱外检查待调度器。"}
+    {
+      "name": "S1.exp103",
+      "family": "Silent",
+      "commit": "74c48edda9411ad30e44cedf1193acc88253b1a7",
+      "source": "decision-log 2026-10-08 17:46: 原170939经验21项记录冲突兜底；只源b6c4b534 experience.json，.19→.20/增0改22退0/176 active，BJLTVSYXCSGS/Y5H4CFAQ2WTG证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定187c025a完整检查，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp104",
+      "family": "Silent",
+      "commit": "4a73f63c4955beeacc39e14fed72cf302d307e82",
+      "source": "decision-log 2026-10-08 18:25: 原174751经验21项记录冲突兜底；只源ee6d95ef experience.json，.20→.21/增2改16退0/178 active，SY0WMJNNVRLM证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定2977ebba完整检查，数据免重复源码自测，完整新树待独立续验；五提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp105",
+      "family": "Silent",
+      "commit": "c286f1943ace026b89a708d431d36aef89d4bddb",
+      "source": "decision-log 2026-10-08 19:27: 原183609经验18项记录冲突兜底；只源62d06feb experience.json，.21→.22/增2改14退0/180 active，4XLZURXMD872证据。最终源251文件2627例tsc/vitest0；首轮CHARACTER误设134例失败保持。当前全部代码与固定c70efc8c完整检查等价，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp106",
+      "family": "Silent",
+      "commit": "b2921782dac1f17a52d1c8e75e39ff129d2111b4",
+      "source": "decision-log 2026-10-08 20:17: 原193933经验17项记录冲突兜底；仅源1c782204 experience.json原blob，.22→.23/增3改23退0/183 active，QHK1XQ928TTM、UZ1T7AH49WMB、7BNC8QX746YP证据。源251文件2627例tsc/vitest0；两次数字核验失败原件保持，最终49项核验通过。当前全部代码与固定433144fb完整302文件3435例过2跳检查等价，数据免重复源码自测，新数据树完整外部待独立续验；三原提案沿自动链，不标代码实现。"
+    },
+    {
+      "name": "S1.exp107",
+      "family": "Silent",
+      "commit": "0dd5cb2450875f88c3c7425912cf22aad9286890",
+      "source": "decision-log 2026-10-08 20:48: 原201302经验17项记录冲突兜底；仅源196a025b experience.json原blob，.23→.24/增1改19退0/184 active，CNKR125PFHJ5证据。源251文件2627例tsc/vitest0；原数字核验及拼写勘误原件保持，最终35项核验通过。当前全部代码与固定ad489c8c完整302文件3435例过2跳检查等价，数据免重复源码自测，新数据树完整外部待独立续验；三原提案沿自动链，不标代码实现。"
+    },
+    {
+      "name": "S1.boss-calibration6",
+      "family": "S1",
+      "commit": "f4454686dde188eb7f1e4416a26842afde9dd38d",
+      "source": "decision-log 2026-10-08 21:12:24 CST：Roy授权静默boss定期校准；源b1ca91844cf8307fe59a8fde3151ee6f3bba3651；20新实际结局/固定107调参与154验证；silent-0310；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.exp108",
+      "family": "Silent",
+      "commit": "11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5",
+      "source": "decision-log 2026-10-08 21:43: 静默第108次经验.24→.25，增1改15退0/185 active，证据PF90JTU0UZ5M及本角色历史；源f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c。源251文件2627例、合后251文件2627例，tsc/vitest0；只更新经验前缀，三代码提案独立实现，不标implemented/shipped。"
+    },
+    {
+      "name": "S1.exp109",
+      "family": "Silent",
+      "commit": "d49b6ad7bfd22a515d1c3f7ddb5c0ba74ee261ca",
+      "source": "decision-log 2026-10-08 22:33: 原220305经验18项记录冲突兜底；只源5bb99c79 experience.json，.25→.26/增0改15退0/185 active，2H311EAD34GD/WZL2AMEY85S7证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定9949a5de完整检查，数据免重复源码自测，完整新树待独立续验；三提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp110",
+      "family": "Silent",
+      "commit": "c2d5a4e7a37b1628fb8015808258da4746f90503",
+      "source": "decision-log 2026-10-08 23:18: 原224301经验20项记录冲突兜底；只源64ed5d5c experience.json，.26→.27/增1改17退0/186 active，R3AJCGQGGMR4证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定049dff24完整检查，数据免重复源码自测，完整新树待独立续验；五提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp111",
+      "family": "Silent",
+      "commit": "dbc65baab5ad259f07f2b1bc7e672e9979159af6",
+      "source": "decision-log 2026-10-09 00:14: 原234302经验20项记录冲突兜底；只源2c782d78 experience.json，.27→.28/增0改8退0/186 active，M0GY0A4M2F7H证据。源251文件2627例tsc/vitest0；全部当前代码与固定72499093/树476214f6完整检查保持，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp112",
+      "family": "Silent",
+      "commit": "38dfb55e377349c23435e46aa065de3d9542251f",
+      "source": "decision-log 2026-10-09 00:50: 原001302经验16项记录冲突兜底；只源3ae5a3c2 experience.json，2026-10-08.28→2026-10-09.1/增0改15退0/186 active，Z91JN3S3PQX2证据。源251文件2627例tsc/vitest0；全部当前代码与固定3541bc54/树d4578547完整检查保持，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现。"
+    },
+    {
+      "name": "S1.exp113",
+      "family": "Silent",
+      "commit": "97f004b323b6a0df71f2aa2667fac6b1b627b005",
+      "source": "decision-log 2026-10-09 01:21: 原005053经验4项记录冲突兜底；只源2c381802 experience.json，2026-10-09.1→2026-10-09.2/增2改10退0/188 active，LY83ZMTFVKJH证据。源251文件2627例tsc/vitest0；全部当前代码与固定dd07f4aa/树ff080340完整检查保持，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现；0316原学习者更早首证勘误与原历史保留。"
+    },
+    {
+      "name": "S1.exp114",
+      "family": "Silent",
+      "commit": "60c93049a61bf9fb0c0501a9f03d1b34b6206b3d",
+      "source": "decision-log 2026-10-09 02:23: 原014148经验17项记录/表冲突兜底；只源4aca285e experience.json，2026-10-09.2→2026-10-09.3/增1改22退0/189 active，HEMND3SMQYB8证据。源251文件2627例tsc/vitest0；当前代码与固定8149e4ca/树3f7df7a0完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp115",
+      "family": "Silent",
+      "commit": "63dfc3219ed252457ee52342f6ab0736b817828f",
+      "source": "decision-log 2026-10-09 03:18: 原024302经验18项记录/表冲突兜底；只源bdee78cd experience.json，2026-10-09.3→2026-10-09.4/增1改14退0/190 active，P2M3DFJ4DEZ3证据。源251文件2627例tsc/vitest0；当前代码与固定a7c2a411/树3be0daf4完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp116",
+      "family": "Silent",
+      "commit": "5853fdbf630fca6e9c022aa28c54fedd09fc2ecf",
+      "source": "decision-log 2026-10-09 03:57: 原031301经验17项记录/表冲突兜底；只源f002a94f experience.json，2026-10-09.4→2026-10-09.5/增0改17退0/190 active，PBUBM0LRTEDD证据。源251文件2627例tsc/vitest0；当前代码与固定20cec89a/树6d3900c8完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.boss-calibration7",
+      "family": "S1",
+      "commit": "473a38a1a8d133f0a811f8a3c8ff454ae6363984",
+      "source": "decision-log 2026-10-09 04:14:54 CST：Roy授权静默boss定期校准；源010b22a63c2f05402b7ff027d59f8f94a6d69051；20新实际结局/固定107调参与174验证；silent-0325；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.exp117",
+      "family": "Silent",
+      "commit": "90577a65353b6fffe151b8eeb49bd472a4c98bf9",
+      "source": "decision-log 2026-10-09 05:01: 原040745经验19项记录/表冲突兜底；只源e6d12c26 experience.json，2026-10-09.5→2026-10-09.6/增1改18退0/191 active，FU8ZUQHBHNV9/456MRNGCPD8E证据。源251文件2627例tsc/vitest0；当前代码与固定3cadc990/树972425de完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp118",
+      "family": "Silent",
+      "commit": "abbb308ce3be824214f3e6a7d2397a3b83b30204",
+      "source": "decision-log 2026-10-09 05:44: 原050454经验18项记录/表冲突兜底；只源832318ee experience.json，2026-10-09.6→2026-10-09.7/增0改15退0/191 active，J8PHG72DGD90证据。源251文件2627例tsc/vitest0；当前代码与固定52aa3fcc/树8dbe7ece完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp119",
+      "family": "Silent",
+      "commit": "9494b301594282bdab23b1c3df46c0691da5317b",
+      "source": "decision-log 2026-10-09 06:15: 原054302经验17项记录/表冲突兜底；只源d4c5065e experience.json，2026-10-09.7→2026-10-09.8/增1改11退0/192 active，0DJ6GFZZ0TG9证据。源251文件2627例tsc/vitest0；当前代码与固定b7404348/树5048a2f7完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp120",
+      "family": "Silent",
+      "commit": "09e8ac8b7b16ba7f7c4d977d30e8e2b807ced3ed",
+      "source": "decision-log 2026-10-09 06:46: 原061302经验20项记录/表冲突兜底；只源01ad28fa experience.json，2026-10-09.8→2026-10-09.9/增0改12退0/192 active，KSX97DF5H3NY证据。源251文件2627例tsc/vitest0；当前代码与固定244d9d6a/树467aae9d完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp121",
+      "family": "Silent",
+      "commit": "7972c8b7e732e17ae381dc9df5b61488a91e48ff",
+      "source": "decision-log 2026-10-09 07:30: 原070159经验5项记录/表冲突兜底；只源7c1d9b20 experience.json，2026-10-09.9→2026-10-09.10/增0改12退0/192 active，SV2GP9NX4HQD证据。源251文件2627例tsc/vitest0；当前代码与固定cfa8112d/树f9100ea0完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp122",
+      "family": "Silent",
+      "commit": "d62fd3c265f0838cd9742b0c7c7569cccc940e7b",
+      "source": "decision-log 2026-10-09 07:57: 原073009经验17项记录/表冲突兜底；只源229e0a0d experience.json，2026-10-09.10→2026-10-09.11/增0改9退0/192 active，CSLHFCBSC1UM证据。源251文件2627例tsc/vitest0；当前代码与固定bb728531/树7d4bfea9完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp123",
+      "family": "Silent",
+      "commit": "d5c1fe3f0c3bf542260cd42765203e3561c96f88",
+      "source": "decision-log 2026-10-09 08:38: 原075759经验17项记录/表冲突兜底；只源6c5a3f61 experience.json，2026-10-09.11→2026-10-09.12/增1改9退0/193 active，RZ6YAC7K89NM证据。源251文件2627例tsc/vitest0；当前代码与固定7123e525/树ffccd203完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp124",
+      "family": "Silent",
+      "commit": "afdb448cd650687ed28e4154ffa92b54c7286eeb",
+      "source": "decision-log 2026-10-09 09:14: 原084302经验18项记录/表冲突兜底；只源7339da35 experience.json，2026-10-09.12→2026-10-09.13/增0改8退0/193 active，SDY5T9XCSQN2证据。源251文件2627例tsc/vitest0；当前代码与固定57a7f485/树15c60476完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp125",
+      "family": "Silent",
+      "commit": "074068c96c113f918fa6fec7df5bc3cbda177b38",
+      "source": "decision-log 2026-10-09 10:11: 原093152经验5项记录/表冲突兜底；只源9f7cceaf experience.json，2026-10-09.13→2026-10-09.14/增0改16退0/193 active，VAC6Z1PZ1QJG/NG1FBJTSRLHS证据。源251文件2627例tsc/vitest0；当前代码与固定5ff4270d/树d8434435完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp126",
+      "family": "Silent",
+      "commit": "f04518bfa4ae33c92cebc2e0ebf4b5a62ff2e0f5",
+      "source": "decision-log 2026-10-09 10:51: 原101302经验19项记录/论文表冲突兜底；只源06b30fc0 experience.json，2026-10-09.14→2026-10-09.15/增0改9退0/193 active，NTMAU4XZ2NN2证据。源251文件2627例tsc/vitest0；当前代码与固定d5f290f4/树588d4310完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；两提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp127",
+      "family": "Silent",
+      "commit": "5f809c22a7d2b8866c6971658a0904d202e11ac4",
+      "source": "decision-log 2026-10-09 11:18: 原104301经验3项运维记录冲突兜底；只源0e7a9db4 experience.json，2026-10-09.15→2026-10-09.16/增1改15退0/194 active，E6DYYXRX7GVE证据。源251文件2627例tsc/vitest0；当前代码与固定e447200f/树458c1995完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp128",
+      "family": "Silent",
+      "commit": "761272f5eccdf5fefc15e41ca02058d137c083a3",
+      "source": "decision-log 2026-10-09 11:58: 原111624经验18项记录/论文冲突兜底；只源9bf2c5a9 experience.json，2026-10-09.16→2026-10-09.17/增2改15退0/196 active，XZUJR08FW801证据。源251文件2627例tsc/vitest0；当前代码与固定6519b890/树728ac938完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案（含更正）沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.boss-calibration8",
+      "family": "S1",
+      "commit": "855a758e1b698573c16605a10a8669a326f93338",
+      "source": "decision-log 2026-10-09 12:42:43 CST: Roy授权静默boss定期校准；源e7ea26412a65409d1f1d27ff72dd6dc050df98c3；20新实际结局，固定107调参/194验证；silent-0337；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.exp129",
+      "family": "Silent",
+      "commit": "7a89024be1b9e1ecd50730d6152ad3e9a248cd05",
+      "source": "decision-log 2026-10-09 12:57: 原120920经验20项记录/论文冲突兜底；只源23d97f26 experience.json，2026-10-09.17→2026-10-09.18/增0改17退0/196 active，JBX9JLH46KVN证据。源251文件2627例tsc/vitest0；当前代码与固定10168ac7/树50493fbf完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp130",
+      "family": "Silent",
+      "commit": "9f572a6d8c63b48af820743db615aa976279e9d5",
+      "source": "decision-log 2026-10-09 13:43: 原130838经验5项记录冲突兜底；只源6e3ac694 experience.json，2026-10-09.18→2026-10-09.19/增0改22退0/196 active，RMNXHZKV716Y证据。源251文件2627例tsc/vitest0；当前代码与固定d5ad91e8/树a2f52376完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp131",
+      "family": "Silent",
+      "commit": "92dcf85e6be692fac9ad313d9de6dc10a0fb453b",
+      "source": "decision-log 2026-10-09 14:47: 原140554经验19项记录/论文冲突兜底；只源3a71746d experience.json，2026-10-09.19→2026-10-09.20/增0改23退0/196 active，NBJBVSBNPYQB证据。源251文件2627例tsc/vitest0；当前代码与固定57b661f0/树d4e1f23e完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp132",
+      "family": "Silent",
+      "commit": "2e126dc3383508b588fbf54e1b8150be0cf89466",
+      "source": "decision-log 2026-10-09 16:13: 原143947经验3项共享记录冲突兜底；只源6276c272 experience.json，2026-10-09.20→2026-10-09.21/增0改16退0/196 active，AF76L5UTPP8U证据。源251文件2627例tsc/vitest0；当前代码与固定c7e1e0ed/树1e231e8d完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp133",
+      "family": "Silent",
+      "commit": "dfb41f1826e29ed2763caf3127b7e0d4b4dea363",
+      "source": "decision-log 2026-10-09 16:28: 原154302经验20项共享记录冲突兜底；只源a8bd4e48 experience.json，2026-10-09.21→2026-10-09.22/增1改21退0/197 active，833ZM0MJGWHC证据。源251文件2627例tsc/vitest0；当前代码与固定2edf5043/树cbf21ae3完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.exp134",
+      "family": "Silent",
+      "commit": "4bf6f54fc0599d29282d7f5e31d07d55f8b606f2",
+      "source": "decision-log 2026-10-09 17:16: 原163854经验18项共享记录冲突兜底；只源26bd83af experience.json，2026-10-09.22→2026-10-09.23/增0改15退0/197 active，64R0P0MTZWAX/C6Z8ATNBNHZ7证据。源251文件2627例tsc/vitest0；当前代码与固定c308b61e/树ea2b03dc完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+    },
+    {
+      "name": "S1.boss-calibration9",
+      "family": "S1",
+      "commit": "1cdf75b194591c2e4e4c292f9b69c0284d31457e",
+      "source": "decision-log 2026-10-09 18:06:02 CST: Roy授权静默boss定期校准；源351678e8a6aa39a6e78bd7f1abc1ef259d8493c8；20新实际结局，固定107调参/214验证；silent-0342；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.exp135",
+      "family": "Silent",
+      "commit": "a19db32c5663f70eb460ea35967976c840b9cd8e",
+      "source": "decision-log 2026-10-09 18:45: 原180724经验9项共享记录冲突兜底；只源05212bb1 experience.json，2026-10-09.23→2026-10-09.24/增0改18退0/197 active，XW8B5CHJ814J证据。源251文件2627例tsc/vitest0，更正后3文件次31例tsc/vitest0；当前代码与校准9固定2e037b7b/树fb4340ae完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原初稿/原提案及更正历史分别保留。"
+    },
+    {
+      "name": "S1.exp136",
+      "family": "Silent",
+      "commit": "6b5131921d3f5fe0a29e11b42e27543ebc79f18b",
+      "source": "decision-log 2026-10-09 19:27: 原184302经验19项共享记录冲突兜底；只源ebcdb689 experience.json，2026-10-09.24→2026-10-09.25/增1改17退0/198 active，R6WDLYS19ZTY证据。源251文件2627例tsc/vitest0，另开verbose诊断未确认结束，原pending保留；当前代码与经验135固定d6a39489/树c576f916完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原初稿/校验失败及诊断pending历史分别保留。"
+    },
+    {
+      "name": "S1.exp137",
+      "family": "Silent",
+      "commit": "50439941134c9f355d81a9c4158997c7240f43d0",
+      "source": "decision-log 2026-10-09 20:15: 原193737经验19项共享记录冲突兜底；只源806d6c03 experience.json，2026-10-09.25→2026-10-09.26/增0改20退0/198 active，HNX4A2WBC34W证据。源251文件2627例tsc/vitest0，最终3文件次31例通过；当前代码与经验136固定eaf3ac162afe487705d5b46ab049871308022173/树b4858e2e4cb991c1d1f282addef5e64ef714a945完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"
+    },
+    {
+      "name": "S1.exp138",
+      "family": "Silent",
+      "commit": "bbd2fab041236a99a5ad8dfaf2c30db1bfc88c0b",
+      "source": "decision-log 2026-10-09 22:20: 原20261009-200935-experience-update经验共享记录冲突兜底；只源19b98aa1 experience.json，2026-10-09.27，原变化{'added': 1, 'updated': 13, 'retired': 0, 'active': 199}，原证据与限制见原report.md。源251文件2627例tsc/vitest0，当前代码与当前基础设施完整检查固定fd4c8659736828708789598b7bd1bb9049c6cf94/树5a2890da17c285c15b2c1f913acf90491e133f0f完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；原三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"
+    },
+    {
+      "name": "S1.exp139",
+      "family": "Silent",
+      "commit": "362cad0e4da5c8af935d805e9c3691f6cf65ef8d",
+      "source": "decision-log 2026-10-09 22:23: 原20261009-210408-experience-update经验共享记录冲突兜底；只源7ecf496c experience.json，2026-10-09.28，原变化{'added': 1, 'updated': 18, 'retired': 0, 'active': 200}，原证据与限制见原report.md。源251文件2627例tsc/vitest0，当前代码与当前基础设施完整检查固定fd4c8659736828708789598b7bd1bb9049c6cf94/树5a2890da17c285c15b2c1f913acf90491e133f0f完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；原三提案沿自动链，数据发布不标代码实现，原初稿/校验失败分别保留。"
+    },
+    {
+      "name": "S1.exp140",
+      "family": "Silent",
+      "commit": "c1127d3fe1155d745a4fb01899704bb333aa2966",
+      "source": "decision-log 2026-10-09 23:58: 原20261009-214302-experience-update兜底，只原源2ff36c373e736214e7d143c161c7f917f06887ef经验2026-10-09.29数据；增0改13退0/200 active，源固定沙箱251文件2627例tsc/vitest0；原失败与重跑、共享记录冲突或重叠保持；当前live源码及刷新保持，新数据树完整外部检查待原批续验。未标代码提案实现。"
+    },
+    {
+      "name": "S1.exp141",
+      "family": "Silent",
+      "commit": "f704bde92f68928d82ebd3b16245d32d611500ae",
+      "source": "decision-log 2026-10-09 23:59: 原20261009-224302-experience-update兜底，只原源ae60e1711e2fb8856ded323878bc4901dab624e9经验2026-10-09.30数据；增1改14退0/201 active，源固定沙箱253文件2631例tsc/vitest0；原失败与重跑、共享记录冲突或重叠保持；当前live源码及刷新保持，新数据树完整外部检查待原批续验。未标代码提案实现。"
+    },
+    {
+      "name": "S1.apotheosis2",
+      "family": "Silent",
+      "commit": "c6a2c9337e869e1047928f2c7223c1b2956a2514",
+      "source": "decision-log 2026-10-09 23:01:43 CST：静默A10神化第九组触媒1→2配对；源f516592fff557ef02c8ece43433706358c3f7fe6；VLZ6CCT8AQ0A F43T1/T4/T5、F45T5；silent-0351/silent-0237/0238/0027。撤源码5失败2通过、恢复4文件27例；源与合后原沙箱通过，其他角色/进阶等价；原10宽提案仍waiting，不承诺整场胜率。"
+    },
+    {
+      "name": "S1.fix46",
+      "family": "Silent",
+      "commit": "57e33ac54d7e145089f554eb784210f9acd63153",
+      "source": "decision-log 2026-10-09 23:07: fix-batch 20261009-221100；silent-0272/源db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26，9Z9H2EXKLF3T A10 F37 turn=null。商店移除预判标为预测，现场完整多重集不一致暂停原承诺并重问；铁甲及未观察进阶保持原预检查。另两纯诊断/统计修复silent-0338/0254不改数值和动作；三项撤源码红/恢复绿，源及合后沙箱tsc/vitest0，合后256文件2648例，Python3例0；完整沙箱外检查待调度器。"
+    },
+    {
+      "name": "S1.exp147",
+      "family": "Silent",
+      "commit": "8e74493d92f757a88f15dffb48e2f5336c0cd0ac",
+      "source": "decision-log 2026-10-10 10:42：原20261010-084219-experience-update兜底，源d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2；全历史181局构筑四条综合观察进入经验2026-10-10.5/203→207 active，原203条逐对象保持；silent-0352/0353/0354/0355，未实现四pending代码提案。源259文件2662例tsc/vitest0；合后tsc0、完整首轮260文件2661例过/一个缺既有venv环境失败，接既有环境后失败项+paths两文件12例0，保留原1/不冒报单次完整0。实际Silent/A10前缀四原文全等；宿主完整检查沿原批待续验，实际对局采用/效果未知。"
+    }
   ]
 }
