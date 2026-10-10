@@ -37,8 +37,8 @@ def main(batch):
     ops_pane = registry.get("panes", {}).get("ops", {}).get("pane_id")
     if not ops_pane:
         raise ValueError("ops pane is not registered")
-    herdr = os.environ.get("HERDR_BIN") or shutil.which("herdr")
-    if not herdr:
+    herdr = os.environ.get("HERDR_BIN") or shutil.which("herdr") or str(Path.home() / ".local/bin/herdr")
+    if not shutil.which(herdr):
         raise ValueError("herdr is unavailable")
 
     def info(pane):

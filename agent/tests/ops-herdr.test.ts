@@ -5,7 +5,7 @@
  * wake (exit 75) as no failure. Temp directories and fake commands only: no herdr server, no codex, nothing real starts.
  */
 import { spawnSync } from "node:child_process";
-import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -176,6 +176,9 @@ describe("ops/herdr-host.sh (fake herdr)", () => {
     const opsPane = w.host("open-pane", "ops").stdout.trim();
     const root = join(w.dir, "proj");
     const stateDir = join(root, "ops", "codex-ops");
+    const viewerHome = join(w.dir, "viewer-home");
+    mkdirSync(join(viewerHome, ".local", "bin"), { recursive: true });
+    symlinkSync(FAKE, join(viewerHome, ".local", "bin", "herdr"));
     copyFileSync(HOST, join(root, "ops", "herdr-host.sh"));
     copyFileSync(join(REPO, "ops", "herdr-exec.sh"), join(root, "ops", "herdr-exec.sh"));
     const learnerLabel = `learner-${batch}${/^\d{8}-\d{6}$/.test(batch) ? "-postmortem" : ""}`;
@@ -187,7 +190,7 @@ describe("ops/herdr-host.sh (fake herdr)", () => {
     writeRecord("running", pid);
     writeFileSync(join(stateDir, "learner", `${batch}.out`), "model stdout\n");
     writeFileSync(join(stateDir, "learner", `${batch}.err`), "learner evidence processing\n");
-    const runner = (id: string) => spawnSync("python3", [join(REPO, "ops", "learner-log-pane.py"), id], { env: { ...w.env, CODEX_OPS_ROOT: root }, encoding: "utf8", timeout: 30_000 });
+    const runner = (id: string) => spawnSync("python3", [join(REPO, "ops", "learner-log-pane.py"), id], { env: { ...w.env, HOME: viewerHome, HERDR_BIN: "", PATH: "/usr/bin:/bin", CODEX_OPS_ROOT: root }, encoding: "utf8", timeout: 30_000 });
     const result = runner(batch);
     expect(result.status, result.stderr).toBe(0);
     const receipt = JSON.parse(result.stdout);
