@@ -7,7 +7,7 @@ DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
 herdr_bin="${HERDR_BIN:-$(command -v herdr 2>/dev/null || echo "$HOME/.local/bin/herdr")}"
 read_screen() {
   mkdir -p "$DIR"
-  "$herdr_bin" pane read "$1" --source recent-unwrapped --lines 40 \
+  "$herdr_bin" pane read "$1" --source recent-unwrapped --lines 200 \
     > "$DIR/autoplay-log-view.txt" 2> "$DIR/autoplay-log-view.err"
 }
 if [ "${1:-}" = --read ]; then

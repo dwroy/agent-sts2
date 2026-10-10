@@ -46,7 +46,7 @@ describe("autoplay's log pane", () => {
     writeFileSync(join(dir, "herdr.json"), JSON.stringify({ panes: { "autoplay-log": { pane_id: "wJ:pAB" } } }));
     const binary = join(home, ".local/bin/herdr");
     writeFileSync(binary, `#!/bin/bash
-[ "$*" = 'pane read wJ:pAB --source recent-unwrapped --lines 40' ] || exit 2
+[ "$*" = 'pane read wJ:pAB --source recent-unwrapped --lines 200' ] || exit 2
 printf 'live console decision\\n'
 `);
     chmodSync(binary, 0o755);
