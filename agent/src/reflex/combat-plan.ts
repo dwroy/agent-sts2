@@ -23,6 +23,7 @@ import { choiceQ } from "./jev/questions.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { silentLossReference } from "./silent-loss-reference.js";
 import { silentSimulationReference } from "./silent-simulation-reference.js";
+import { silentSlComparison } from "./silent-sl-comparison.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { ActionExpect } from "../hand/act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../memory/narrow.js";
@@ -4051,6 +4052,12 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...[...mcOf].map(([plan, mc]) => mcLine(plan, mc, [...new Set([mc.source.potionId, ...potionIdsOf(plan)])])),
       ];
       const estimate = (plan: Plan) => (rollout?.available ? rollout.byPlan.get(plan) : undefined);
+      const comparisonOf = (replacement: Plan | null, randomPotion: boolean) => {
+        const original = pick.plan ?? pick.rated ?? null;
+        return silentSlComparison(state,
+          { plan: original, randomPotion: pick.plan === null, rollout: original ? estimate(original) : undefined },
+          { plan: replacement, randomPotion, rollout: replacement ? estimate(replacement) : undefined });
+      };
       const deathShare = (plan: Plan): number | null => {
         const line = estimate(plan);
         return line && line.samples > 0 ? line.deaths / line.samples : null;
@@ -4138,7 +4145,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         }
         const loggedTag = logged ? { logged: true as const } : {};
         const loggedLog: Record<string, JsonValue> = logged ? { logged: true, plays: [...replay.plays!], ...(reordered ? { reordered: true } : {}) } : {};
-        const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog } };
+        const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog,
+          ...comparisonOf(ref?.plan ?? null, ref !== null && mcAll.has(ref.plan)) } };
         // SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played here (or they die this turn and the
         // answer does not): the attempt leaves the path here, so it deviates here (the lines failed attempts played on this
         // board), not into a failed attempt's fight.
@@ -4212,7 +4220,10 @@ function planTurn(env: DecisionEnv): Decision | null {
                 : {}),
             }
           : {};
-      const numbersLog: Record<string, JsonValue> = rep ? { numbers: { original: numbers(Object.keys(gateLog).length > 0 ? rated : pick.plan), replacement: numbers(rep.plan) } } : {};
+      const numbersLog: Record<string, JsonValue> = rep ? {
+        numbers: { original: numbers(Object.keys(gateLog).length > 0 ? rated : pick.plan), replacement: numbers(rep.plan) },
+        ...comparisonOf(rep.plan, mcOf.has(rep.plan)),
+      } : {};
       // A random potion's line (SL_RETRY_EXPLORE_BOSS_POTIONS): its option as Jev's pick of it plays it, drink then re-plan.
       const mc = rep ? mcOf.get(rep.plan) : undefined;
       if (avoid) {
