@@ -1,0 +1,65 @@
+{
+  "review_agent": "/root/queue_receipt_audit",
+  "recorded_at": "2026-10-10T14:40:45.882967+08:00",
+  "status": "awaiting_owner_draft",
+  "sources": {
+    "paper/materials/silent/20261010-deck-size-value/scheduling-preflight.json": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261010-deck-size-value/scheduling-preflight.json",
+      "sha256": "38e7d9ebbe1dd27a7b4da21b3c26ffc398adbf743d5fa41d6f26f1125c102079"
+    },
+    "notes/strategy-research-silent.json": {
+      "path": "/home/dw/Projects/agent-sts2/notes/strategy-research-silent.json",
+      "sha256": "f91f5a861580d2e5868a4f2dc980d495862a460895130dd1d59a4da8790f0775"
+    },
+    "paper/materials/silent/20261010-deck-size-value/input-manifest.json": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261010-deck-size-value/input-manifest.json",
+      "sha256": "f816d243230b8e629a9d1ce1a1de42df445a20c978db400b4090de52c1dcc1f3"
+    },
+    "ops/learner_jobs.py": {
+      "path": "/home/dw/Projects/agent-sts2/ops/learner_jobs.py",
+      "sha256": "f022baf1425c37bab483d2e2cf242f16fa4cfd26a9054541f6f7b1dae53aa5a1"
+    },
+    "ops/codex-ops-learn.py": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+      "sha256": "f22421426e9d4bb688c10267b481dcbd1e9b641e0f78e1567fc8eb68d068384e"
+    },
+    "ops/codex-ops-learner.sh": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh",
+      "sha256": "784f949df78b0ea919f1960d871982d8e3feeb31a595bbdd8dc9a7c8eaf8f539"
+    },
+    "ops/herdr-host.sh": {
+      "path": "/home/dw/Projects/agent-sts2/ops/herdr-host.sh",
+      "sha256": "71198b0c26a18937a752bddf8f180c800bf7f9ffdaff0cc2c5514988b604ca00"
+    }
+  },
+  "scope": "Read-only independent scheduling review; artifacts only in this directory; no dispatch/source/state/queue changes.",
+  "known_preflight": {
+    "request_id": "roy-20261010-silent-deck-size-value",
+    "pending_not_dispatched": true,
+    "frozen_run_count": 195,
+    "manifest_sha256": "f816d243230b8e629a9d1ce1a1de42df445a20c978db400b4090de52c1dcc1f3",
+    "learners_host": "herdr per parent host preflight",
+    "existing_herdr_tail": true,
+    "existing_pane_close_on_exit": true
+  },
+  "required_checks": [
+    "pending research before normal strategy proposals under existing learn.lock",
+    "two strategy workers maximum; full slots have no research side effects",
+    "request/batch dedupe and failed root request binding never starts another learner",
+    "actual main ref equals wrapper fresh tree source",
+    "request not running on null result; model waits for registered proof",
+    "normal proposals/repairs/worker launch remain equivalent",
+    "hosted learner tails existing out/err in actual pane"
+  ],
+  "commands": [
+    "date",
+    "cat paper/materials/silent/20261010-deck-size-value/scheduling-preflight.json",
+    "cat notes/strategy-research-silent.json",
+    "sed selected ranges ops/learner_jobs.py ops/codex-ops-learn.py ops/codex-ops-learner.sh ops/herdr-host.sh"
+  ],
+  "limitations": [
+    "No new scheduler source draft was ready when this preflight was recorded.",
+    "Production PID and herdr identity were not independently rechecked from this sandbox.",
+    "Review completion and any test execution are pending; this is not approval or deployment."
+  ]
+}

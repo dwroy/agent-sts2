@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-10T14:46:39.246598+08:00",
+  "request_id": "roy-20261010-silent-deck-size-value",
+  "request_sha256": "f91f5a861580d2e5868a4f2dc980d495862a460895130dd1d59a4da8790f0775",
+  "request_state": "pending",
+  "request_batch": null,
+  "user_herdr_requirement": "学习者session最好也放到herdr tab上方便我观察",
+  "hosting_file": "learners=herdr\nautoplay=herdr\nops=herdr\n",
+  "registered_running_strategy": [
+    {
+      "batch": "20261010-144302-s2-strategy-proposal",
+      "character": "silent",
+      "state": "running",
+      "pid": 3648629,
+      "pane": "wP:pM",
+      "reason": "proposal",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-144302-s2"
+    }
+  ],
+  "runtime_identity_check": "This snapshot is file-only; host PID identities are not inferred from sandbox /proc.",
+  "status": "scheduling_repair_in_progress_not_dispatched",
+  "source_owner": "/root/proposal_protocol_repair",
+  "review_owner": "/root/queue_receipt_audit",
+  "current_problem": "Ordinary check_jobs refills available slots before consuming the pending research request; existing wrapper can reach model before request and learn state registration.",
+  "existing_visibility": "Existing herdr-host start_learner uses learner-<batch> labels and close-on-exit; wrapper tails the original .out/.err files. No new empty tab or hosting configuration created."
+}
