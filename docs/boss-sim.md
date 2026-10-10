@@ -1,5 +1,7 @@
 # boss 战整场模拟器（里程碑 B1、B1.5、B2、B3、B4、B5）
 
+> **阅读范围（2026-10-10 核对）**：本文按时间保留 B1–B5 和后续校准的设计、回测与限制；早期章节的 DeepSeek、铁甲数据和待实现描述是当时口径，不代表当前引擎或静默验证。现行大脑为 Codex；B2/B3 消费者在 `agent/src/sim/boss-lines.ts` / `build-sim.ts`，逐角色自动批次在 `ops/boss_sim_jobs.py`，静默校准及后续上线见文末和 decision-log。当前模块职责见 [架构](v4-architecture.md)。
+
 2026-09-30 Roy 定：A8 的对局大多死在 boss（F17/F33/F48）。决定 boss 战输赢的有两件事：boss 战十几个回合怎么打，牌组够不够打过 boss。这两件事现在分别靠 5 回合推演和 boss 时钟判断，可推演往后几回合系统性多报掉血，boss 时钟在输局里的实打只有估值的 0.72。下一步要做「boss 战整场规划」（B2）和「构筑按模拟打 boss 的结果判断」（B3），两者共用一个底座，就是这里的**整场模拟器**。B1 只做模拟器本身和它的回测，B1.5 把它修准；两者都**不接进对局，也不改 Jev 或 DeepSeek 的题面**。
 
 **B1.5 结论**（§6；汇总在 experiments/boss-sim/b15-val.md 和 b15-summary.json）：

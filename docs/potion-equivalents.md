@@ -1,5 +1,7 @@
 # 药水换算表（2026-09-30 Roy 定）
 
+> **阅读范围（2026-10-10 核对）**：本文保留药水表的公式、原始样本及历史参数验收；不是跨角色固定策略。当前表在 `knowledge/characters/<角色>/potion-equivalents.json`，构建器支持 `--character`，战后由 `knowledge/builders/refresh.sh` 按角色刷新。大脑消费者为 Codex，战斗/模拟消费者见 `agent/src/reflex/potion-cost.ts`；证据充分的规则变更按 [学习协议](learning-protocol.md) 和 [代码提案闭环](learning-code-proposals.md) 实现/登记。
+
 Roy：用掉的药水不是免费的，而是以后要扣的血。「手里拿着药 = 多了一些血、攻击或格挡。」
 这张表把每瓶药折算成它在**本幕 boss 战**里值多少：**血 / 伤害 / 格挡**三种等价量，放进知识库给 DeepSeek（知识前缀、`kb_potion` 工具）和 Jev（战斗题面）用。
 求解器、推演和 Jev 的出牌题怎么用这张表（药水代价）见 §8（2026-09-30 Roy 定的参数，`agent/src/reflex/potion-cost.ts`）。

@@ -3,7 +3,7 @@
 让一套 agent 架构自动游玩《杀戮尖塔 2》（Slay the Spire 2），并且**靠自己的对局经验变强**：打、复盘、学习、改进、再打。这里同时是研究档案：每一局的日志、每一次改动的来由、每一批的评估都留在仓库里，供论文使用。
 
 - 第一阶段：铁甲战士，A0 到 A7 每级都赢过（每赢一局升一级），A8 打了 232 局赢 13 局，A9 打了 103 局赢 3 局，A9 的三场胜利都是存档读档（SL）之后赢的。截至 2026-10-04 共 480 局。
-- 第二阶段（2026-10-04 起）：静默猎手从 A0 开始，赢一局升一级。这个角色的游戏知识只能由 agent 自己从对局里学，人不提供。规则见 [docs/learning-protocol.md](docs/learning-protocol.md)。
+- 第二阶段（2026-10-04 起）：静默猎手从 A0 爬塔，目前已到 A10。自动升阶与默认战绩只纳入可追溯的纯 Codex 大脑局；首次尝试和 SL 结果分开记。这个角色的游戏知识只能由学习者从本角色对局里学，人不提供。规则见 [docs/learning-protocol.md](docs/learning-protocol.md)。
 
 当前状态以最新的 `paper/materials/STATE-*.md` 为准，每一次决定都记在 [paper/materials/decision-log.md](paper/materials/decision-log.md)。
 
@@ -14,22 +14,22 @@
 ```
            对局中（在线）                                  对局外（离线）
  ┌──────────────────────────────────────┐        ┌───────────────────────────────┐
- │ 眼 eye     结构化状态，所有输入落盘     │  日志   │ 学习者 learner（claude / codex） │
+ │ 眼 eye     结构化状态，题面和动作落盘   │  日志   │ 学习者 learner（Codex）          │
  │ 手 hand    执行闸：合法性、状态指纹     │ ─────▶ │   复盘 → 经验库、知识数据        │
  │ 小脑 reflex 战斗：代码推演 + Jev 挑选   │        │   → 修复提案（带证据局号）       │
- │ 大脑 brain  路线、构筑、事件、整局计划   │ ◀───── │ 评估 evaluator：按版本对比指标   │
- │ 模拟器 sim  boss 整场、路线血量、时钟    │  知识   │ 开发会话：审核、实现、上线、     │
- │ 工作记忆 memory   本局计划和承诺        │        │   和 Roy 调架构                 │
+ │ 大脑 brain  Codex：路线、构筑、计划     │ ◀───── │   自测 → 自行合入 live           │
+ │ 模拟器 sim  boss 整场、路线血量、时钟    │  知识   │ 运维 Codex：核合入、登记、兜底   │
+ │ 工作记忆 memory   本局计划和承诺        │        │ 评估 evaluator：按版本对比指标   │
  │ SL         必死时读档重打、换线         │        └───────────────────────────────┘
  │ 知识库 knowledge  按角色分开的数据       │
  └──────────────────────────────────────┘
 ```
 
-- **Jev**（TypeSafe System One）：在接近的选项之间快速挑选，单次 70 到 500 ms。
+- **Jev**（TypeSafe System One）：参与战斗候选线选择，与代码求解和推演配合。
 - **大脑**：Roy 2026-10-07 授权后仅由 Codex 回答。额度、登录或服务不可用时在原题等待恢复；没有其他引擎、Jev 或代码代答。知识整份放进系统提示。战斗执行继续由 Jev 和代码负责。
-- **SL**：只在真正必死时读档。统计时第一次尝试和 SL 之后的结果分开记。
+- **SL**：在适用战斗的终局判断触发时读档重试，保留失败尝试与探索记录；具体开关、角色名单和判定以代码及角色数据为准。
 
-架构的完整说明见 [docs/v4-architecture.md](docs/v4-architecture.md)，目录怎么分见 [docs/layout.md](docs/layout.md)。
+架构的当前实现见 [docs/v4-architecture.md](docs/v4-architecture.md)，目录怎么分见 [docs/layout.md](docs/layout.md)。[文档索引](docs/README.md) 区分现行说明与历史设计/验证材料。
 
 ## 目录
 
@@ -54,7 +54,9 @@
 ```bash
 export PATH=$HOME/.local/node/bin:$PATH
 cd agent
-npx tsc -p tsconfig.test.json && npx vitest run   # 类型检查 + 测试
+npx tsc -p tsconfig.json --noEmit                # 生产代码类型检查
+npx vitest run                                 # 完整固定数据测试
+# Codex 沙箱内改用 bash tools/test-sandbox.sh（内含 tsc）
 npm run doctor                                    # 检查 mod、Jev、大脑引擎是否可用
 npm run shadow -- --max-decisions 20              # 只决策不动手
 ```
@@ -63,23 +65,25 @@ npm run shadow -- --max-decisions 20              # 只决策不动手
 
 - `CHARACTER`：选哪个角色。
 - `TARGET_ASCENSION`：进阶，可以填固定数字，或者设成随胜利升阶。
-- `BRAIN_ENGINE`／分题引擎／`BRAIN_FALLBACK`：保留历史配置解析；生产大脑固定为 Codex，实际配置写入 run-config。Codex 的模型、超时和额度保护设置仍生效。
+- `BRAIN_ENGINE`／分题引擎／`BRAIN_FALLBACK`：保留历史配置解析；生产大脑固定为 Codex，实际配置写入 run-config。`BRAIN_CODEX_MODEL`、推理强度、超时、额度保护及 `exec|session` 模式仍生效；Fast 档位固定为 `priority`。
+- `KNOWLEDGE_PREFIX=full`：整份适用知识进入系统提示；配置解析默认 `off`，应核实际 run-config，不能只凭文档判断已启用。
 - `SL_*`：读档相关的开关。
 
 学习者：
 
 ```bash
-agent/node_modules/.bin/tsx learner/run.ts --engine claude|codex --task postmortem --set runs=A,B,C --cwd .
+agent/node_modules/.bin/tsx learner/run.ts --engine codex --task postmortem \
+  --character silent --set runs=A,B,C --cwd . --dry-run
 ```
 
-用法、权限和安全见 [learner/README.md](learner/README.md)。
+示例先展示任务而不启动学习者；正常任务由运维调度器派发。用法、权限和安全见 [learner/README.md](learner/README.md)。
 
 ## 谁在这个仓库里工作
 
-- **Roy**：定目标和规则，参与架构调整，审批上线。
-- **开发会话**（Claude 或 Codex）：实现、修复、审核学习者的产出、上线、记录。
-- **运维会话**：管理对局循环、出窗口报告、驱动学习闭环。
-- **学习者**：离线复盘，更新经验和知识，提出修复提案。引擎可以切换。
+- **Roy**：定目标、权限和架构；游戏知识由学习者从对局得出。已授权的学习规则变更自测通过即可上线，再通知 Roy。
+- **Codex 学习者与开发会话**：按各自任务实现、修复、自测和记录。学习者依据本角色证据自行合入 live，不另设审核。
+- **运维 Codex 与调度器**：管理对局循环和学习队列，确认实际合入、登记上线，处理提交/合入失败，并补跑完整检查。
+- **Claude**：只观察和与 Roy 对话，不修改或审核；启动器中的 Claude 适配保留历史兼容。
 
 所有 agent 开工前先读 [AGENTS.md](AGENTS.md)，里面是规矩和边界。
 

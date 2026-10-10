@@ -1,0 +1,89 @@
+{
+  "baseline_main": "ff75feff978a74642c32cd8e5da47a80b8949bf5",
+  "validated_at": "2026-10-10T16:11:31+08:00",
+  "changed_docs": [
+    "README.md",
+    "agent/README.md",
+    "docs/boss-sim.md",
+    "docs/codex-ops.md",
+    "docs/eval.md",
+    "docs/layout.md",
+    "docs/logdb.md",
+    "docs/mechanics-learning.md",
+    "docs/potion-equivalents.md",
+    "docs/sl.md",
+    "docs/thief.md",
+    "docs/v4-architecture.md",
+    "docs/v4-build-facts.md",
+    "docs/v4-go-live.md",
+    "learner/README.md",
+    "docs/README.md",
+    "docs/history/v4-architecture-2026-09-29.md"
+  ],
+  "local_links_checked": 85,
+  "source_checks": {
+    "production-codex-router": {
+      "path": "agent/src/brain/brain.ts",
+      "sha256": "d828d553524eba096e587f02f811a341df6b71c03d95f2583eadd42309e43cff"
+    },
+    "codex-wait": {
+      "path": "agent/src/brain/router.ts",
+      "sha256": "3790970939a22473f554251f282bb2b4c1a71f6bc4d0c3a897fe4f34ef66a6d6"
+    },
+    "config-defaults": {
+      "path": "agent/src/core/config.ts",
+      "sha256": "7139f2ff1f68cb6d42dcf3869b39504fb5c42b2af64f9c0ca06bc1778d6d6e64"
+    },
+    "character-isolation": {
+      "path": "agent/src/knowledge/files.ts",
+      "sha256": "cb9f2b0ce6d2f04916ddeb6e884a3ac99f35cdfd827be5d1115d7154e8e9f43d"
+    },
+    "strategy-concurrency": {
+      "path": "ops/learner_jobs.py",
+      "sha256": "0c4cc051bb3a1ca9d8a014c9d58cae8e6c2478c96aea5a6b2ac78eb92997b05b"
+    },
+    "experience-defaults": {
+      "path": "learner/tasks/experience-update.md",
+      "sha256": "46e507d7187678251f7fe0e0cfa1c10c4902120367ed3984b1579a03de4688d0"
+    },
+    "fix-defaults": {
+      "path": "learner/tasks/fix-batch.md",
+      "sha256": "5a7e4104dd66b5b609313206224f8d92c1883a2bda827715fa2369da2099e919"
+    },
+    "postmortem-defaults": {
+      "path": "learner/tasks/postmortem.md",
+      "sha256": "815a808991436180c876d9f21fed93dfe9660b3e4e5cf3d1476aae0c50b2e70d"
+    },
+    "source-statistics": {
+      "path": "eval/metrics.py",
+      "sha256": "771487d304e2011768d7808053ee7951413b1914740958ea720c537f1ed6a09b"
+    },
+    "boss-stage-facts": {
+      "path": "agent/src/brain/build-facts.ts",
+      "sha256": "00a2c7423e24709d4ef62d7f1db8a6444de4c5fa4549bbb6d9de74f572e688d2"
+    },
+    "actual-brain-config": {
+      "path": "agent/src/eye/run-config.ts",
+      "sha256": "9ce2ab6bc9c4c9ffa86859bb28d4f390604ab954b68dd79cf062cef367d8b6d2"
+    },
+    "brain-effort": {
+      "path": "agent/src/brain/router.ts",
+      "sha256": "3790970939a22473f554251f282bb2b4c1a71f6bc4d0c3a897fe4f34ef66a6d6"
+    },
+    "preserved-plan": {
+      "path": "agent/PLAN.md",
+      "sha256": "d0499968568749cf6f53ec8a02ca894a23b187f0981710019f96d4ca443d9466"
+    }
+  },
+  "original_architecture_sha256": "ea7fb27a67a2c47999d70de398dff68db4e72ba80fe2a293291070523b4e5ddb",
+  "code_or_knowledge_changes": false,
+  "full_code_tests": "not_required_documentation_only",
+  "link_check": "passed",
+  "source_checks_result": "passed",
+  "gitleaks": {
+    "exit_code": 0,
+    "scan_files": 19,
+    "findings": 0,
+    "report": "gitleaks.json"
+  }
+}

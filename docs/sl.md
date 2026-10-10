@@ -1,5 +1,7 @@
 # SL：boss 和难打精英的死亡重打（agent/src/sl/）
 
+> **阅读范围（2026-10-10 核对）**：开头和逐节验收保留铁甲阶段的设计/证据，不是所有角色当前规则的总表。当前大脑为 Codex，战斗执行仍由代码和 Jev 配合；SL 的开关、判定、角色名单和重试预算见 `agent/src/core/config.ts`、`agent/src/sl/`、`knowledge/characters/<角色>/sl-elites.json`。学习者可依本角色证据修改已授权规则，见 [学习协议](learning-protocol.md)；旧章节的审批限制不覆盖该授权。
+
 Roy 2026-10-01/02 定：目标改为让模型快速学习、看能摸到多高的天花板，允许 SL，但做最简单的版本——**只在死亡时用**：
 boss 战、以及按战绩最难打的 5 种非 boss 战斗（knowledge/characters/ironclad/sl-elites.json，不限精英），还有（`SL_ACT3_LOW_HP`，Roy 2026-10-03）低血进场的三幕非 boss 战斗，在「这回合一结束就必死」时不结束回合，回主菜单再「继续」，
 游戏从进房间时的存档把这场战斗从第 1 回合重新开始，换打法再打；赢了接着往下打。不做构筑分叉、不做 boss 实验室，
