@@ -18,7 +18,7 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 ## 1. 开工与证据
 - 先读 README.md、最新 paper/materials/STATE-*.md、decision-log.md 末尾、docs/learning-protocol.md。先 git status 确认干净，再 git merge --no-edit {{base_branch}}；冲突就停下回报。
 - 只从本角色对局、复盘和 {{character_dir}} 学习。核对 runs.jsonl 角色；不得读取或搬用其他角色知识。共用事实仅用观察得到的数据。
-- 读 fix-queue-v4.md 的待定策略项与已有提案，选证据充分、可验证的一项。游戏知识只能从对局里学，不使用自己的预训练知识补结论。
+- 先按第 1.2 节核对本批是否承接已授权专题；匹配时只按 work_spec 研究，否则读 fix-queue-v4.md 的待定策略项与已有提案，选证据充分、可验证的一项。游戏知识只能从对局里学，不使用自己的预训练知识补结论。
 - 每项提案落盘到 {{scratch}}/proposal.md，写证据局号、层、回合、既有学习账本 id、反例、预期行为及验证方法。没有证据就报告证据不足，不改策略。
 
 ## 1.1 派发提案与补链
@@ -26,6 +26,20 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 只读本次调度 batch 的 proposal_ids / proposal_repair。逐项读取专用队列的角色、证据、账本和保存的 Markdown，不忽略其他待处理 id。补链任务要核对原经验或已追加复盘，补提案与账本链接，不重复写历史复盘。最终每个派来的 id 都有 proposal_results：implemented/duplicate 带实际 live 祖先源码 commit 与理由；waiting 带具体缺数据理由，保留待新局重派。
 
 没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
+
+## 1.2 仅本批的手动专题研究
+只读根目录 `{{project_root}}/notes/strategy-research-{{character}}.json`。文件不存在或以下条件不全成立时，保持原提案/补链任务，不将普通队列变成专题：
+- learn.json 中本次 {{batch}} 的 task=strategy-proposal、character={{character}}、reason=ops；该行完全没有 proposal_ids 和 proposal_repair 字段，工作树等于 {{worktree}}。
+- 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state 为 pending 或 running；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
+- running 请求的 batch 必须等于 {{batch}}。pending 请求只能在 batch=null 时承接：这是运维派发返回后立即绑定的交接窗口，最终验收时必须已变为 running 且 batch={{batch}}。不自行写请求或 learn.json；完成前重读，仍未绑定或身份已变就如实回报，不能冒称专题完成。
+- 将 work_spec 和 input_manifest 路径相对根目录解析（绝对路径也须在根目录内），先核实文件 SHA256 分别等于 work_spec_sha256、input_manifest_sha256，再读取正文。manifest 的 request_id/character 必须匹配，runs 为本角色冻结局号清单，dispatch_runs 必须是其中的子集。required_sections 为非空、无重复的字符串 key 列表。
+- 请求 dispatch_base 是运维在派发前登记的真实完整 40 位提交；核实它是本树 HEAD 的祖先。开工合并 main 后若只有 notes/paper 等记录快进，可以将当前 HEAD 记为 report.base；dispatch_base 到 HEAD 的实际执行源码、任务模板、验证输入和全部 knowledge 必须零差异，不能自行提交源码/知识再把新 HEAD 自报成无改动基线。不同则保留现场并回报，不能冒称纯研究完成。
+
+匹配后用 work_spec 的目标、冻结输入和限定字节范围替代 fix-queue 选题，只研究该请求，不领取或补做其他提案。游戏结论仍由你从本角色证据提炼；完整保存假设、支持、反例、未知和结论变化，覆盖每个 required_sections，不用预训练事实补齐。证据不足也须给出有范围和限制的结论，不将“尚不确定”变成已验证规则。
+
+专题纯报告保持 HEAD 等于完整 40 位 base、工作树干净、fixes=[]、merged=null，跳过第 4 节；不制造源码提交、游戏版本、shipped 或成功测试。已证知识只经既有 ledger CLI 登记；需要代码提案时只经 code_proposals CLI 保存真实提案及证据，不伪造 id。经验库沉淀交后续 experience-update，本次报告不冒称已入库或大脑已采用。
+
+除第 6 节的基本字段外，专题最终 JSON 必须带 task=strategy-proposal、character={{character}}、batch={{batch}}、request_id、input_sha256（实际 manifest SHA）、research_complete=true、coverage（所有 required_sections 对应值均为 true）、objective_conclusions（非空结论文本）、limitations（非空字符串列表，即使结论为无充分证据）。runs 只填本批派发锚点；covered_runs 填实际分析的冻结局号，exclusions 填未能分析的逐局 {"run_id":"...","reason":"具体原因"}，两者各自无重复、无交集且并集精确覆盖全部冻结局；evidence_runs 是实际支持结论的 covered_runs 子集，不能用一局或十个锚点冒称全历史。report 必须为 {{scratch}}/report.md 的真实绝对路径且位于本批工作树 learner/runs/ 内；无源码修改的 tests 固定为 {"tsc":null,"vitest":null,"cases":null}，不要照用第 6 节样例的 0。code_proposals / implementation_domains 保留正常 CLI 链接格式，无相关提案填空数组，不将专题 request_id 填成代码提案 id。
 
 ## 2. 边界与实现
 - 依据已有证据提出并实现策略；涉及 Roy 尚未授权的架构调整先回报，不猜测批准。不得把待定项当成既定游戏规则。
