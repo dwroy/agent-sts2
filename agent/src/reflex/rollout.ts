@@ -553,6 +553,8 @@ export interface RolloutEnemy {
   move: string | null;
   strength: number;
   powers: Record<string, number>;
+  /** Observed Silent A10 dead segment: enemy turns until return; null means its stage is unread. */
+  reattachIn?: number | null;
 }
 
 export interface RolloutOptions {
@@ -1084,6 +1086,8 @@ interface SimEnemy {
   alive: boolean;
   /** A dead Decimillipede segment: enemy turns left until it reattaches (while another segment lives). */
   reattachIn?: number;
+  /** Resume the live board's pending reattachment once, using observed successor moves. */
+  resumeReattachMove?: boolean;
   /**
    * An illusion already dead on the decision's board (Parafright on REVIVE_MOVE): enemy turns left until
    * it is back at full HP, its usual move next.
@@ -1401,6 +1405,12 @@ const STUNNED_MOVE = "STUNNED";
 class MissingStunModel extends Error {
   constructor() {
     super("眩晕后继招式或伤害数据缺失，后续预测未知");
+  }
+}
+
+class MissingReattachModel extends Error {
+  constructor() {
+    super("接续等待阶段或复起后继数据缺失，后续预测未知");
   }
 }
 
@@ -2459,13 +2469,28 @@ function applyPlan(
     for (const e of enemies) {
       if (e.alive || e.reattachIn === undefined) continue;
       e.reattachIn -= 1;
-      if (e.reattachIn > 0) continue;
+      if (e.reattachIn > 0) {
+        if (e.resumeReattachMove && e.reattachIn === 1) e.move = "REATTACH_MOVE";
+        continue;
+      }
       e.alive = true;
       e.reattachIn = undefined;
       e.hp = Math.min(e.maxHp, e.base.reattachHp || REATTACH_HP);
       e.block = 0;
       e.vulnerable = 0;
       e.weak = 0;
+      if (e.resumeReattachMove) {
+        // UV5 F27: the returning middle has no old poison/Strength; T4 and T7 show different live moves.
+        // Sample only observed live successors, never leave it idle on REATTACH_MOVE after returning.
+        const table = input.tables[e.id];
+        const next = Object.fromEntries(Object.entries(table?.next["REATTACH_MOVE"] ?? {})
+          .filter(([move, n]) => n > 0 && !DEATH_MOVES[e.id]?.includes(move)));
+        if (!table || Object.keys(next).length === 0 || Object.keys(next).some((move) => !Number.isFinite(table.moves[move]?.damage))) {
+          throw new MissingReattachModel();
+        }
+        e.move = nextMove({ ...table, next: { ...table.next, REATTACH_MOVE: next } }, "REATTACH_MOVE", e.random ?? random);
+        e.resumeReattachMove = false;
+      }
     }
     player.weakTurns = Math.max(0, player.weakTurns - 1);
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
@@ -2665,6 +2690,7 @@ function simulate(
   const byIndex = new Map(input.enemies.map((e) => [e.index, e]));
   const enemies: SimEnemy[] = s.enemies.map((e) => {
     const info = byIndex.get(e.index);
+    if (e.hp <= 0 && e.reattach && info?.reattachIn === null) throw new MissingReattachModel();
     // A Giant husk already on the board: it explodes this turn when its intent shows the blast, else next turn.
     // On the blast turn its Steam Eruption power is gone (only the DeathBlow intent shows the number): the
     // husk is known by its HP alone (YQL8D59999AX F17 T8: simulated as a live 999,999,977-HP enemy, every line
@@ -2717,6 +2743,8 @@ function simulate(
       // Killed before this decision, it revives on this enemy turn (QUG1DSDARAXU F23 T3: the rollout left
       // it out and read "4.9 loss, win 97%"; it came back at 21 HP and T4 cost 12).
       ...(e.illusion && e.hp <= 0 ? { reviveIn: 1 } : {}),
+      ...(e.reattach && e.hp <= 0 && typeof info?.reattachIn === "number"
+        ? { reattachIn: info.reattachIn, resumeReattachMove: true } : {}),
       // A whole fight: a sleeper's Asleep turns, a phase boss's phase (from its max HP) and its growing move's hits.
       ...(fullFight ? { ...fullFightState(info, e, input), random: rng((Math.imul(seed, 0x9e3779b1) ^ Math.imul(e.index + 1, 0x85ebca6b)) >>> 0) } : {}),
     };
@@ -3406,9 +3434,9 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   try {
     return evaluateRollout(input);
   } catch (error) {
-    if (!(error instanceof MissingStunModel)) throw error;
+    if (!(error instanceof MissingStunModel) && !(error instanceof MissingReattachModel)) throw error;
     return { unavailable: error.message, lines: [], orders: [], horizon: 0, samples: 0, elapsedMs: 0,
-      degraded: ["missing stun model"], policyTurns: 0, policyMs: 0, policyNodes: 0 };
+      degraded: [error instanceof MissingStunModel ? "missing stun model" : "missing reattach model"], policyTurns: 0, policyMs: 0, policyNodes: 0 };
   }
 }
 

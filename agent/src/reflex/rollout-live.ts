@@ -796,16 +796,28 @@ export function boardRolloutInput(
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
   const reviving = (e: Record<string, unknown>) => e["is_alive"] === false && (powersOf(e)["ILLUSION_POWER"] ?? 0) > 0 && leaderAlive;
+  // silent-0273: UV5 F27 T3/T6 and 7X0 F31 T5 keep dead segments on the board until they reattach.
+  // Their current attacks/targets stay absent from the live solver; only the rollout restores them.
+  const segment = (e: Record<string, unknown>) => /^DECIMILLIPEDE_SEGMENT_(FRONT|MIDDLE|BACK)$/.test(str(e["enemy_id"]));
+  const segmentAlive = raw.some((e) => segment(e) && e["is_alive"] !== false && Number(e["current_hp"]) > 0);
+  const reattaching = (e: Record<string, unknown>) => asc === 10 &&
+    str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && segmentAlive &&
+    segment(e) && e["is_alive"] === false && e["current_hp"] === 0 && powersOf(e)["REATTACH_POWER"] === 25;
   const enemies: RolloutEnemy[] = raw
     .map((e, i) => ({ e, i }))
-    .filter(({ e }) => e["is_alive"] !== false || reviving(e))
+    .filter(({ e }) => e["is_alive"] !== false || reviving(e) || reattaching(e))
     .map(({ e, i }) => {
       const powers = powersOf(e);
-      return { index: typeof e["index"] === "number" ? e["index"] : i, id: str(e["enemy_id"]), move: e["move_id"] ? str(e["move_id"]) : null, strength: powers["STRENGTH_POWER"] ?? 0, powers };
+      return { index: typeof e["index"] === "number" ? e["index"] : i, id: str(e["enemy_id"]), move: e["move_id"] ? str(e["move_id"]) : null, strength: powers["STRENGTH_POWER"] ?? 0, powers,
+        // DEAD_MOVE is the just-killed stage; REATTACH_MOVE resolves this enemy turn. Unknown stays unknown.
+        ...(reattaching(e) ? { reattachIn: Object.keys(powers).some((id) => id !== "REATTACH_POWER") ? null :
+          e["move_id"] === "REATTACH_MOVE" ? 1 : e["move_id"] === "DEAD_MOVE" ? 2 : null } : {}),
+      };
     });
   const revivers: EnemySim[] = raw
     .map((e, i) => ({ e, i }))
-    .filter(({ e }) => reviving(e) && !solverInput.enemies.some((sim) => sim.index === (typeof e["index"] === "number" ? e["index"] : -1)))
+    .filter(({ e, i }) => (reviving(e) || reattaching(e)) && !solverInput.enemies.some((sim) =>
+      sim.index === (typeof e["index"] === "number" ? e["index"] : reattaching(e) ? i : -1)))
     .map(({ e, i }) => ({
       index: typeof e["index"] === "number" ? e["index"] : i,
       name: str(e["name"], str(e["enemy_id"])),
@@ -816,7 +828,7 @@ export function boardRolloutInput(
       weak: 0,
       artifact: 0,
       intangible: false,
-      illusion: true,
+      ...(reattaching(e) ? { reattach: true, reattachHp: powersOf(e)["REATTACH_POWER"] } : { illusion: true }),
       minion: (powersOf(e)["MINION_POWER"] ?? 0) > 0,
       attacks: [],
     }));
