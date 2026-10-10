@@ -253,6 +253,7 @@ export function initMessage(prompt: string, events: QueuedEvent[], now: Date): s
  */
 export const ACTIONS: Record<string, { args: number; ms: number }> = {
   procs: { args: 0, ms: 30_000 },
+  "learner-log-tab": { args: 1, ms: 60_000 },
   "stall-check": { args: 0, ms: 60_000 },
   "mod-state": { args: 0, ms: 30_000 },
   "autoplay-start": { args: 0, ms: 60_000 },
@@ -308,6 +309,9 @@ export function validateRequest(raw: unknown): BrokerRequest {
   }
   if (action === "learner-recheck" && !/^(?:[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal)$/.test(list[0]!)) {
     return { ok: false, error: "learner-recheck 要写入任务的完整批次 id" };
+  }
+  if (action === "learner-log-tab" && !/^[0-9]{8}-[0-9]{6}(?:-(?:experience-update|fix-batch|strategy-proposal)|-s2-strategy-proposal)?$/.test(list[0]!)) {
+    return { ok: false, error: "learner-log-tab 要已登记的完整学习批次 id" };
   }
   if (action === "core-build-notify" && !/^[0-9]{8}-[0-9]{6}-fix-batch$/.test(list[0]!)) {
     return { ok: false, error: "core-build-notify 要完整核心学习批次 id" };
