@@ -46,7 +46,7 @@ import { distinctNames, drawBoundOf, revivesOf, slAvoidFailedOf, slPointOf, type
 import { heldCardEthereal } from "../reflex/card-model.js";
 import { mantleHpCost } from "../reflex/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
-import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
+import { attemptFrom, createSlLog, giantPhaseAtTurnStart, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlElite, type SlEliteList } from "./elites.js";
 import { boardTried, exploreTarget, playKey, replayPlays, replayPoints, secondPlan, slBoardKey, triedHas, turnCanon, turnRepeats, type ExploreTargetOptions, type SlDeviation, type SlExploreEnv, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays, type SlTurnRepeat } from "./explore.js";
@@ -1301,11 +1301,13 @@ export class SlController {
     const player = asRecord(asRecord(state.raw["combat"])["player"]);
     const living = livingEnemies(state);
     const names = livingNames(living);
+    const giantPhase = giantPhaseAtTurnStart(state);
     const turn: SlTurn = {
       turn: turnNo,
       hp: numOrNull(player["current_hp"]),
       block: numOrNull(player["block"]),
       enemies: living.map((enemy, i) => `${names[i]} ${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`).join(", "),
+      ...(giantPhase ? { giant_phase: giantPhase } : {}),
       plays: [],
     };
     fight.turns.push(turn);
