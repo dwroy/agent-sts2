@@ -15,7 +15,8 @@ learner_task="${6:-$task}"
 research_request=""
 if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
-    && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ]; } || exit 2
+    && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
+      || [ "$7" = roy-20261010-silent-core-output-value ]; } || exit 2
   research_request="$7"
   [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-strategy-proposal$ ]] || exit 2
 fi
