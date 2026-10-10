@@ -1,0 +1,1130 @@
+[
+  {
+    "source_line": 339839,
+    "source_row_sha256": "ba390adcb3f87a3bcd27f62eeaf4f03283f98d4f1c75dfc1e2d3f3e9d75135a8",
+    "ts": "2026-10-10T12:51:59.599Z",
+    "floor": 1,
+    "label": "event/choose",
+    "decider": "codex",
+    "journal": {
+      "choice": "石炉加湿器: 每当你在休息处休息时，将你的最大生命值提升5点。",
+      "reason": "Guaranteed health growth supports A10 attrition and consecutive bosses; its logged runs reached farther. Rest when needed, not merely to trigger it."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "text": "石炉加湿器"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 339841,
+    "source_row_sha256": "d51de34afda7a0447ebfe41cb238e9f5e4fa666dfa1fb084227e982c823f8d51",
+    "ts": "2026-10-10T12:52:13.299Z",
+    "floor": 1,
+    "label": "map/route-plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "route r1c4 普通战 → r2c4 普通战 → r3c5 商店 → r4c6 普通战 → r5c5 普通战 → r6c4 休息 → r7c5 精英 → r8c5 休息 → r9c6 宝箱 → r10c6 问号 → r11c5 普通战 → r12c4 精英 → r13c5 商店 → r14c6 普通战 → r15c6 休息 → r16c3 Boss",
+      "reason": "早店补伤害，三火支撑双精英，避开连续精英。"
+    },
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 2
+    },
+    "expect": {
+      "node": {
+        "row": 1,
+        "col": 4,
+        "type": "Monster"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 339867,
+    "source_row_sha256": "c638d5d2abd295d7f3fbf93e53bad681ed423014d05e7fbd702902d7def61939",
+    "ts": "2026-10-10T12:53:16.249Z",
+    "floor": 2,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "触媒",
+      "reason": "Accelerant offers strong poison scaling; fifteen floors and two shops provide time to find poison sources. Its supported outcome data favors taking it."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "ACCELERANT"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 339889,
+    "source_row_sha256": "1b959ffd3752cbad9b042745d427d4971a6e374084b2a1d38987174e89cfc73b",
+    "ts": "2026-10-10T12:54:02.832Z",
+    "floor": 3,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "先制打击",
+      "reason": "Starter-heavy deck needs immediate damage for elites. Shivs provide an attack bridge and future scaling; delayed energy and modest block address less urgent needs."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "LEADING_STRIKE"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 339893,
+    "source_row_sha256": "2897c05694843da2535d26e28c2e25aa22cf474c437b87aebcb6eda4a94fbd32",
+    "ts": "2026-10-10T12:54:30.339Z",
+    "floor": 4,
+    "label": "shop/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "shop plan: buy 冲刺 (36g), buy 探寻打击 (86g), stop shopping",
+      "reason": "Discounted Dash stabilizes early fights. Seeking Strike adds efficient damage and selective access to defense and future poison engines. Total: 122 gold."
+    },
+    "chosen": {
+      "action": "buy_card",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "DASH"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 339922,
+    "source_row_sha256": "5df57c0f9a05e0dbdc77b0d599e2fc718b071a63472cf48622479a99f4d80936",
+    "ts": "2026-10-10T12:55:29.182Z",
+    "floor": 5,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "翻越撑击",
+      "reason": "Adds missing area damage for multi-enemy elites and synergizes with Survivor. More basic block does not address the deck’s damage weakness."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "FLICK_FLACK"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 339953,
+    "source_row_sha256": "f92281404fffcb517182600c49f02c8cb5a8d079a3b520da3e8d3cc998996f2e",
+    "ts": "2026-10-10T12:56:36.644Z",
+    "floor": 6,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "扫腿",
+      "reason": "Leg Sweep provides repeatable Weak and strong single-card defense for Ringing turns, supporting both immediate survival and future poison scaling."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "LEG_SWEEP"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 339956,
+    "source_row_sha256": "e88edf9f7df56fa9442893a104c2c059f9f7eda741a8ea525f8abcde1db4c3bb",
+    "ts": "2026-10-10T12:56:57.904Z",
+    "floor": 7,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（21）。 提升5点你的最大生命值。",
+      "reason": "Healing provides 26 HP and permanent maximum health before a forced elite; no potions make upgrading unnecessarily risky."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "HEAL"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340017,
+    "source_row_sha256": "3f45163f95a9d223c7bba5fcddecf52cba97177c605bfa156d1e99a5f2815c29",
+    "ts": "2026-10-10T12:58:56.608Z",
+    "floor": 8,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "灵动步法",
+      "reason": "Footwork strengthens existing block cards immediately and scales future defense. Mirage lacks poison support; Tracking is expensive with limited Weak uptime."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "FOOTWORK"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340021,
+    "source_row_sha256": "77084a0db380310fb200158858007aeef11ad5e7ec51de7f66b19a28c2de287d",
+    "ts": "2026-10-10T12:59:19.477Z",
+    "floor": 9,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（22）。 提升5点你的最大生命值。",
+      "reason": "Healing leaves 31/80 and preserves survival to the next campfire. At 4 HP, no upgrade compensates for the immediate risk."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "HEAL"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340028,
+    "source_row_sha256": "c698c6a579e0648d45e862416f9dca0f939ae6f95bdbc9e82a31733c185b685b",
+    "ts": "2026-10-10T12:59:34.010Z",
+    "floor": 11,
+    "label": "event/choose",
+    "decider": "codex",
+    "journal": {
+      "choice": "休息: 回复24点生命。进入战斗。",
+      "reason": "Healing provides a safer buffer; the additional fight offers rewards and an upgraded skill opportunity. Existing gold still supports the upcoming shop."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "text": "休息"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340046,
+    "source_row_sha256": "56a3b0ce2d6d2499ca7fc0b1c2d77cd2103cc5b0bf0c99610fcbc53d35bf516e",
+    "ts": "2026-10-10T13:00:18.744Z",
+    "floor": 11,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "切割",
+      "reason": "Slice adds free damage alongside costly defensive cards and produces the best simulated boss progress. Other rewards dilute urgently needed offense."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "SLICE"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340067,
+    "source_row_sha256": "15b40a6bdd34c66702f30fffd07a64776b604e6bd2e9a1e8b52f2d0a89971488",
+    "ts": "2026-10-10T13:01:16.338Z",
+    "floor": 12,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "致命毒药+",
+      "reason": "Deadly Poison+ activates Accelerant cheaply, preserves energy for defense, and provides the strongest simulated boss improvement with well-supported outcomes."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "DEADLY_POISON+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340070,
+    "source_row_sha256": "e75fdf79143a65d86a00c3e4300f0ea180c7598be584d1757263c63e85a7eecc",
+    "ts": "2026-10-10T13:01:30.526Z",
+    "floor": 13,
+    "label": "event/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "落单变形灵: 获得5点最大生命。",
+      "reason": "Gain permanent health while preserving 115 gold for targeted shop upgrades; random transforms cost too much before the boss."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "text": "落单变形灵"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340074,
+    "source_row_sha256": "37c2201ca1f8f753b887e9194d3ffe808c9c117548aab83fe33d9c10a4e4f50a",
+    "ts": "2026-10-10T13:01:54.320Z",
+    "floor": 14,
+    "label": "shop/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "shop plan: buy 后空翻+ (26g), buy 猎杀者 (49g), stop shopping",
+      "reason": "Backflip+ improves defensive cycling and finds poison components. Predator adds needed damage and next-turn draw. Both strengthen the deck long-term for 75 gold."
+    },
+    "chosen": {
+      "action": "buy_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "BACKFLIP+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340103,
+    "source_row_sha256": "0e3621ec3be4ed10f814c8eef412f8f26839da5b26f6a8a16f3ba9349cef0e7a",
+    "ts": "2026-10-10T13:03:01.951Z",
+    "floor": 15,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "背刺",
+      "reason": "Backstab provides free opening damage, exhausts without burdening later draws, and improves boss simulations. Another Accelerant lacks sufficient poison support."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "BACKSTAB"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340106,
+    "source_row_sha256": "28ab382f22f61c11de6519ab781097b3094fd9600e3badea3a6734397d10dd96",
+    "ts": "2026-10-10T13:03:19.072Z",
+    "floor": 16,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（27）。 提升5点你的最大生命值。",
+      "reason": "Rest gives 32 HP and permanent maximum-health growth. Its 30% simulated boss win rate decisively exceeds every upgrade before the forced boss."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "HEAL"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340168,
+    "source_row_sha256": "c6d3bc93c3382692bf0826c464d8562de6fc85931cacc3743c41c19188d6b34a",
+    "ts": "2026-10-10T13:06:05.972Z",
+    "floor": 17,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "毒性爆发+",
+      "reason": "Outbreak+ supplies essential area poison, synergizes with Accelerant, and immediately triggers existing poison. Its supported outcomes reinforce the deck fit."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "OUTBREAK+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340171,
+    "source_row_sha256": "53dd798bd55e464a636746d55ed057fd55c41edb145dfc4823e1532dd6fae571",
+    "ts": "2026-10-10T13:06:32.459Z",
+    "floor": 18,
+    "label": "event/act-plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "黄金印; route r1c1 普通战 → r2c1 普通战 → r3c0 问号 → r4c0 问号 → r5c0 商店 → r6c0 问号 → r7c0 休息 → r8c0 宝箱 → r9c0 精英 → r10c0 休息 → r11c0 普通战 → r12c0 问号 → r13c0 精英 → r14c0 休息 → r15c3 Boss",
+      "reason": "黄金印支持毒爆兼防御；选三火双精英稳健路线。"
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "text": "黄金印"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340196,
+    "source_row_sha256": "e8622e8fc1ed819d5996ce6c0562f8d9243864ec869d0b318c23d2faddb62e76",
+    "ts": "2026-10-10T13:07:32.238Z",
+    "floor": 19,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "蜃景+",
+      "reason": "Mirage+ provides repeatable, poison-scaling defense for one energy. Existing poison supports it, outcomes favor taking it, and the simulation incompletely models its benefit."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "MIRAGE+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340218,
+    "source_row_sha256": "20a00e081fe846b4ad55f5b3f3e8dfecbf23b7301301899e6139d14d6f977c43",
+    "ts": "2026-10-10T13:08:18.034Z",
+    "floor": 20,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "带毒刺击",
+      "reason": "Poisoned Stab adds inexpensive poison for Accelerant and Mirage, strengthens sustained damage, and provides the best simulated boss improvement."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "POISONED_STAB"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340221,
+    "source_row_sha256": "480988fd15cb4f3254f1401100ad15bc7d17ac997b88bc087a6c346af7b57a48",
+    "ts": "2026-10-10T13:08:45.794Z",
+    "floor": 21,
+    "label": "event/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "呼吸技法: 支付50金币。将2张开悟加入到你的牌组。",
+      "reason": "Preserves gold for Golden Seal’s recurring energy and the upcoming shop; spending nearly everything on one removal undermines the deck’s resource budget."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "text": "呼吸技法"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340248,
+    "source_row_sha256": "380e5c6c6a1681810e04420e4556225c8daf0bb7fe6516ffd4a9cd608be3e6d6",
+    "ts": "2026-10-10T13:09:52.443Z",
+    "floor": 22,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "迷雾+",
+      "reason": "Haze+ adds needed area poison and Weak, supports Accelerant and Mirage, benefits from Enlightenment, and produces the strongest paired boss-simulation improvement."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "HAZE+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340252,
+    "source_row_sha256": "a85080bb226f8ac571bec5e6c052dbbf6527e88b10f69f75192c1158209c29b3",
+    "ts": "2026-10-10T13:10:18.301Z",
+    "floor": 23,
+    "label": "shop/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "shop plan: buy 能量药水 (50g), stop shopping",
+      "reason": "Energy potion offers the strongest simulated boss improvement and enables poison-plus-defense turns. Preserve remaining gold for Golden Seal; skip marginal cards."
+    },
+    "chosen": {
+      "action": "buy_potion",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "ENERGY_POTION"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340264,
+    "source_row_sha256": "0320ec5a33c4a7750f700e9a9f9711a079db19d18375842662231c2464f2c3e0",
+    "ts": "2026-10-10T13:10:53.922Z",
+    "floor": 24,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "skip",
+      "reason": "Preserve poison consistency in this 31-card deck. Extra setup or unscaled shivs dilute key draws; all additions worsen boss simulations."
+    },
+    "chosen": {
+      "action": "skip_reward_cards"
+    },
+    "expect": null,
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340267,
+    "source_row_sha256": "a7f5873554a8a9a8c91d202a1c8a582f55462d15c4d3714d1b5bbede94d689f1",
+    "ts": "2026-10-10T13:11:17.750Z",
+    "floor": 25,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "锻造 (SMITH): upgrade 触媒",
+      "reason": "Accelerant+ substantially strengthens existing poison sources throughout the run. At 72 HP, the upcoming elite has a workable survival buffer."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "SMITH"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340304,
+    "source_row_sha256": "99ceaeb3db69d3f510fa912cff1a52de2118f0c13b9194f1a26a4fd51fe23fcb",
+    "ts": "2026-10-10T13:12:40.201Z",
+    "floor": 27,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "skip",
+      "reason": "These rewards dilute a 31-card deck without improving its poison engine or defensive cycling. Prioritize healing and stronger draw."
+    },
+    "chosen": {
+      "action": "skip_reward_cards"
+    },
+    "expect": null,
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340307,
+    "source_row_sha256": "bfb79fdb586d75bcf3638931f8a336a756117abebdf63aa36e7d8b0a244e90dc",
+    "ts": "2026-10-10T13:12:58.373Z",
+    "floor": 28,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（28）。 提升5点你的最大生命值。",
+      "reason": "Rest reaches 84/100, providing essential protection before the forced elite. Permanent health growth and substantially better boss simulations outweigh any single upgrade."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "HEAL"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340333,
+    "source_row_sha256": "6e77388e1573742bd67c70648dd41ffa7197fd9294d7ede89ddccdb5533a84ef",
+    "ts": "2026-10-10T13:13:52.435Z",
+    "floor": 29,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "偏折+",
+      "reason": "Free upgraded block supports Footwork while preserving energy for poison and Frantic Escape. Other rewards demand excessive energy or unreliable discard support."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "DEFLECT+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340336,
+    "source_row_sha256": "fdd257b1cbd74df274013cde08cac25cb510d1e7754a6cfcff95b0f6719e41aa",
+    "ts": "2026-10-10T13:14:04.739Z",
+    "floor": 30,
+    "label": "event/choose",
+    "decider": "codex",
+    "journal": {
+      "choice": "深入探索: 深入。失去5点生命值",
+      "reason": "70 HP remains sufficient for the forced elite, with a campfire afterward. Pursue the central reward; existing gold already supports Golden Seal."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "text": "深入探索"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340337,
+    "source_row_sha256": "25cfa6d35d5b1b62d92f5aeb0ffd388a90f6aad2bfef41026bd0d19dcdf33d84",
+    "ts": "2026-10-10T13:14:18.412Z",
+    "floor": 30,
+    "label": "event/choose",
+    "decider": "codex",
+    "journal": {
+      "choice": "深入探索: 再深入一点。失去6点生命值。",
+      "reason": "64 HP retains a solid elite buffer, with a campfire afterward. Pursue the deeper reward; existing gold already supports Golden Seal."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "text": "深入探索"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340338,
+    "source_row_sha256": "6b1930f3fec1d3b8e021d79eae2d24e181908f2023287f6bd7569f05d1425fad",
+    "ts": "2026-10-10T13:14:32.872Z",
+    "floor": 30,
+    "label": "event/choose",
+    "decider": "codex",
+    "journal": {
+      "choice": "抵达核心: 失去7点生命值。 获得花粉核心。",
+      "reason": "Recurring draw improves this oversized deck throughout the run. 57 HP retains an elite buffer, with healing afterward; gold is less urgent."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "text": "抵达核心"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340370,
+    "source_row_sha256": "05896f991cef751d79d753fd6d4b17de42f8e6ffec1d834ddf903daa3d9cf818",
+    "ts": "2026-10-10T13:15:52.800Z",
+    "floor": 31,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "弹跳药瓶+",
+      "reason": "Bouncing Flask+ strengthens Accelerant and Mirage, supplies sustained poison, and substantially improves boss simulations. Enlightenment helps its energy cost."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "BOUNCING_FLASK+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340373,
+    "source_row_sha256": "e6a9a792bdf25ae676656e18238dd0a094f26919a07ce3d03688e57ae19c988a",
+    "ts": "2026-10-10T13:16:13.041Z",
+    "floor": 32,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（30）。 提升5点你的最大生命值。",
+      "reason": "Rest reaches 82/105 before the forced boss, outperforms every upgrade in simulations, and helps preserve Lizard Tail for Act 3."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "HEAL"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340406,
+    "source_row_sha256": "b9d29dc8258456aba0b98dba6426645c07aabcdd23602df23c746fadc9ac3819",
+    "ts": "2026-10-10T13:17:32.605Z",
+    "floor": 33,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "skip",
+      "reason": "Existing poison supplies scaling damage; two Enlightenment+ already address expensive hands. These rewards add setup or costly attacks without improving defensive consistency."
+    },
+    "chosen": {
+      "action": "skip_reward_cards"
+    },
+    "expect": null,
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340409,
+    "source_row_sha256": "14ea0c2bf39456eeeeb2c05b51e19ecc00c4fa2aae179f225bfc4f793c04964e",
+    "ts": "2026-10-10T13:18:10.938Z",
+    "floor": 34,
+    "label": "event/act-plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "图章戒指; route r1c5 普通战 → r2c6 普通战 → r3c6 问号 → r4c6 普通战 → r5c6 问号 → r6c6 休息 → r7c5 宝箱 → r8c5 商店 → r9c5 休息 → r10c5 精英 → r11c5 问号 → r12c5 问号 → r13c5 休息 → r14c3 Boss → r15c3 Boss",
+      "reason": "巨额金币补强毒防，三火护航单精英。"
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "text": "图章戒指"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340428,
+    "source_row_sha256": "701afd9d872b75762eafb4ef4ab29c6797dce6fb24fe398bb665a254303231fa",
+    "ts": "2026-10-10T13:19:10.504Z",
+    "floor": 35,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "尖啸+",
+      "reason": "Piercing Wail+ supplies missing burst defense against multihits and groups, buying poison turns while preserving health and revival resources for consecutive bosses."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "PIERCING_WAIL+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340445,
+    "source_row_sha256": "8bc10d1449ab30fc6049b4d5937bf8002b9d8bdb91df49749f042fc8e163aa6d",
+    "ts": "2026-10-10T13:20:06.861Z",
+    "floor": 36,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "skip",
+      "reason": "Unscaled shivs dilute the poison engine; conditional Bubble worsens paired boss progress. Preserve consistency and seek cycling at the shop."
+    },
+    "chosen": {
+      "action": "skip_reward_cards"
+    },
+    "expect": null,
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340448,
+    "source_row_sha256": "fa44c7c576ce60da003c6bd73a721d3b300194048f312f1765755fcd8efc8409",
+    "ts": "2026-10-10T13:20:21.135Z",
+    "floor": 37,
+    "label": "event/choose",
+    "decider": "codex",
+    "journal": {
+      "choice": "接受: 担当今天的判决者",
+      "reason": "Accept the role and advance the event; refusal is explicitly disallowed. Keep three campfires and the shop for consecutive-boss preparation."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "text": "接受"
+      },
+      "from": "decision"
+    },
+    "result": "failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:8080/action: the request timed out"
+  },
+  {
+    "source_line": 340449,
+    "source_row_sha256": "0dadba6e642f13b76cd3f039ed1f476145c0c90d5a0a6fc5a9732d4c11e06242",
+    "ts": "2026-10-10T13:20:50.385Z",
+    "floor": 37,
+    "label": "event/choose",
+    "decider": "codex",
+    "journal": {
+      "choice": "判决：有罪: 回复10点生命。",
+      "reason": "Existing gold already funds the upcoming shop. Take healing rather than adding Regret and spending the shop’s removal on it."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "text": "判决：有罪"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340480,
+    "source_row_sha256": "8ae074f98e7666f5f70a861f34f5adf7762665002d94160a39069d96023925b6",
+    "ts": "2026-10-10T13:22:04.401Z",
+    "floor": 38,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "尖啸+",
+      "reason": "A second upgraded Wail provides efficient multihit protection, buying poison turns and preserving HP and Lizard Tail for consecutive bosses."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "PIERCING_WAIL+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340483,
+    "source_row_sha256": "ba014ef6e4145d43f072338c72ccd58253f112b8c1e18fc6fe57c6184d1b7b21",
+    "ts": "2026-10-10T13:22:24.286Z",
+    "floor": 39,
+    "label": "event/choose",
+    "decider": "codex",
+    "journal": {
+      "choice": "第1档: 与一个75点生命值的假人战斗。随机获取1瓶药水。",
+      "reason": "The 75-HP target is reliable within three turns; larger targets risk failure with this oversized deck. Gain a potion while preserving revival."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "text": "第1档"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340494,
+    "source_row_sha256": "3f13a3982c6654b1c064b9163573c66de0b7829b2044c87fb033d4c51b22d3d2",
+    "ts": "2026-10-10T13:23:03.037Z",
+    "floor": 40,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "锻造 (SMITH): upgrade 灵动步法",
+      "reason": "Upgrade Footwork for sustained defense across both bosses. Current HP is ample, with no fights before the next campfire."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "SMITH"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340503,
+    "source_row_sha256": "fc2cca4b96b09342e5ee9c99cbc9b3c8c007911a771adfc045eb15c8e3557168",
+    "ts": "2026-10-10T13:23:36.508Z",
+    "floor": 42,
+    "label": "shop/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "shop plan: buy 微型帐篷 (188g), buy 红面具 (170g), buy 草莓 (199g), pay 100g to remove 打击, buy 尖啸+ (52g), buy 偏折+ (50g), discard 速度药水, buy 敏捷药水 (50g), stop shopping",
+      "reason": "Tent enables healing plus upgrades; Mask protects both boss openings. Strengthen defense and health, remove Strike, replace temporary dexterity, preserve Golden Seal funding."
+    },
+    "chosen": {
+      "action": "buy_relic",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "MINIATURE_TENT"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340515,
+    "source_row_sha256": "930e5311723dc4733645d87d440c6560afdf4ce5795e681e58f60083084d2c23",
+    "ts": "2026-10-10T13:24:03.578Z",
+    "floor": 43,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "锻造 (SMITH): upgrade 扫腿",
+      "reason": "Upgrade Leg Sweep for stronger block and longer Weak; Miniature Tent still permits healing afterward before the forced elite."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "SMITH"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340555,
+    "source_row_sha256": "5ad7791cc3cc43a0c6e70f94108d61b581d8f2460a8830372a47765547b23a1b",
+    "ts": "2026-10-10T13:26:03.957Z",
+    "floor": 44,
+    "label": "reward/card",
+    "decider": "codex",
+    "journal": {
+      "choice": "肾上腺素+",
+      "reason": "Adrenaline+ supplies free cycling and energy to establish poison scaling while maintaining defense, improving both boss fights without lasting deck dilution."
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "ADRENALINE+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340558,
+    "source_row_sha256": "6b93593fbe07246dd464de884bcde6d81e324e0d2b61b9ade6ca5310114bc025",
+    "ts": "2026-10-10T13:26:25.197Z",
+    "floor": 45,
+    "label": "event/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "读完整本书: enchant 灵动步法+",
+      "reason": "Footwork’s draw enchantment accelerates this oversized deck, finding poison and defensive cards while establishing dexterity for both consecutive bosses."
+    },
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "text": "读完整本书"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340563,
+    "source_row_sha256": "6ca2af9c23eeed7e321e442552be8ebefa9baa4ef607c1da3d7232c288684e7d",
+    "ts": "2026-10-10T13:27:02.090Z",
+    "floor": 46,
+    "label": "shop/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "shop plan: buy 杂技+ (76g), buy 弹跳药瓶+ (78g), buy 赌徒特酿 (76g), stop shopping",
+      "reason": "Acrobatics accelerates setup; another Flask sustains Accelerant and Mirage. Gambler’s Brew rescues poor hands. Preserve 60 gold for Golden Seal across consecutive bosses."
+    },
+    "chosen": {
+      "action": "buy_card",
+      "option_index": 3
+    },
+    "expect": {
+      "option": {
+        "id": "ACROBATICS+"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340569,
+    "source_row_sha256": "0da3eed37516f428019dd72cd75222540bd787ab90bad6bdbba831d792b25f99",
+    "ts": "2026-10-10T13:27:23.219Z",
+    "floor": 47,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（35）。 提升5点你的最大生命值。",
+      "reason": "Enter consecutive bosses at 122/122 with increased maximum HP. Miniature Tent still permits smithing afterward, so healing sacrifices no upgrade."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "HEAL"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "source_line": 340570,
+    "source_row_sha256": "3b537f389997359c4643a548b33a3524b12c80790f7e4cab048a6a071e40bd7b",
+    "ts": "2026-10-10T13:27:46.678Z",
+    "floor": 47,
+    "label": "rest/plan",
+    "decider": "codex",
+    "journal": {
+      "choice": "锻造 (SMITH): upgrade 中和",
+      "reason": "Upgrade Neutralize for longer zero-cost Weak coverage, preserving health across both bosses beyond Bellows’ opening-hand upgrades."
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "SMITH"
+      },
+      "from": "decision"
+    },
+    "result": "completed: Action completed."
+  }
+]
