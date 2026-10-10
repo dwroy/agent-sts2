@@ -91,11 +91,11 @@ case "$action" in
     rm -f "$ROOT/ops/STOP"
     mkdir -p "$DIR"
     pid=""; where=""
-    # hosting autoplay=herdr (docs/codex-ops.md「herdr 托管」): in the herdr pane `autoplay`; the PID file is the same.
+    # The herdr pane follows file logs; a failed/ambiguous pane launch must never start a second loop.
     if [ "$(hosting autoplay CODEX_OPS_AUTOPLAY_HOST setsid)" = herdr ]; then
-      out=$(bash "$OPS/herdr-host.sh" run autoplay --pidfile "$DIR/autoplay.pid" -- bash "$ROOT/ops/autoplay.sh" 2>&1)
-      if [[ "$out" =~ ^([a-zA-Z0-9]+:p[0-9]+)\ ([0-9]+)$ ]]; then pid="${BASH_REMATCH[2]}"; where=" in herdr pane ${BASH_REMATCH[1]} (label autoplay)"
-      else echo "herdr unavailable or refused (${out:0:200}); starting with setsid"; fi
+      out=$(bash "$OPS/autoplay-pane.sh") || { echo "herdr autoplay launch failed; inspect processes before retrying"; exit 1; }
+      if [[ "$out" =~ ^([a-zA-Z0-9]+:p[a-zA-Z0-9]+)\ ([0-9]+)$ ]]; then pid="${BASH_REMATCH[2]}"; where=" in herdr pane ${BASH_REMATCH[1]} (label autoplay-log)"
+      else echo "invalid herdr autoplay receipt: ${out:0:200}; inspect processes before retrying"; exit 1; fi
     fi
     if [ -z "$pid" ]; then
       setsid nohup bash "$ROOT/ops/autoplay.sh" > /dev/null 2>&1 < /dev/null &
