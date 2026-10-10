@@ -21,12 +21,16 @@ import { CODEX_DISABLED_FEATURES, codexEnv } from "../../agent/src/brain/engines
 import { runAgent } from "../../agent/src/brain/engines/process.js";
 import type { McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { PROJECT_ROOT as REPO_ROOT } from "../../agent/src/core/paths.js";
-import { CODEX_SERVICE_TIER, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
+import { resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
 import { MCP_SERVER_NAME } from "../../agent/src/brain/tools/mcp-launch.js";
 import type { TaskTool } from "./task.js";
 
 export const ENGINES = ["claude", "codex"] as const;
 export type EngineName = (typeof ENGINES)[number];
+
+/** Learner-only defaults; gameplay and ops keep their own model and service policy. */
+export const DEFAULT_LEARNER_CODEX_MODEL = "gpt-6-astra";
+export const DEFAULT_LEARNER_CODEX_EFFORT = "xhigh";
 
 export interface EngineRequest {
   engine: EngineName;
@@ -38,6 +42,8 @@ export interface EngineRequest {
   model?: string;
   /** Reasoning effort: claude --effort, codex model_reasoning_effort. */
   effort?: string;
+  /** Explicit Codex tier for non-learner consumers; omitted means no Fast request. */
+  serviceTier?: string;
   maxTurns?: number;
   /** Our stdio MCP tool server (--with-tools). */
   mcp?: McpLaunchSpec;
@@ -248,12 +254,12 @@ export const LEARNER_CODEX_DISABLED_FEATURES = CODEX_DISABLED_FEATURES.filter((f
  * reads the repo's AGENTS.md from the git root down to --cd. Web search is off: game knowledge may come only from
  * the run logs (docs/learning-protocol.md). The shell is not a login shell (no rc files).
  */
-export function codexLearnerConfig(opts: { effort: string }): string[] {
+export function codexLearnerConfig(opts: { effort: string; serviceTier?: string }): string[] {
   return [
     `approval_policy=${toml("never")}`,
     `web_search=${toml("disabled")}`,
     `model_reasoning_effort=${toml(opts.effort)}`,
-    `service_tier=${toml(CODEX_SERVICE_TIER)}`,
+    ...(opts.serviceTier ? [`service_tier=${toml(opts.serviceTier)}`] : []),
     "allow_login_shell=false",
     // No skills catalogue in front of the task (the brain's settings; the 2026-10-04 smoke run had one).
     "skills.include_instructions=false",
@@ -419,16 +425,16 @@ export function codexKeyCheckCommand(request: EngineRequest, files: string[], bi
  * CODEX_HOME), --ignore-rules, --cd, the `learner` permission profile in place of --sandbox (codexPermissions:
  * read-only for tasks that only read, writable cwd + project root + tmp otherwise; key files unreadable), --model, the -c overrides above (approvals never, the reasoning
  * effort), our MCP server as `-c mcp_servers.gkb.*`, the features the learner does not need disabled, and `-` =
- * prompt on stdin. The model and the effort are always sent (launcher defaults: config.ts DEFAULT_CODEX_MODEL /
- * DEFAULT_CODEX_EFFORT). The session is kept (not --ephemeral): `codex exec resume <thread id>` continues it. Codex
+ * prompt on stdin. The model and the effort are always sent (launcher defaults: DEFAULT_LEARNER_CODEX_MODEL /
+ * DEFAULT_LEARNER_CODEX_EFFORT). The session is kept (not --ephemeral): `codex exec resume <thread id>` continues it. Codex
  * has no turn limit flag; the launcher's timeout still applies.
  */
 export function codexCommand(request: EngineRequest, prompt: string, binary = "codex"): CommandLine {
   const writes = request.tools.some((tool) => tool === "Bash" || tool === "Edit" || tool === "Write");
   const args = ["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", request.cwd];
   args.push("-c", `default_permissions=${toml(request.profile ?? LEARNER_PROFILE)}`, ...codexProfileOverrides(request));
-  args.push("--model", request.model ?? DEFAULT_CODEX_MODEL);
-  for (const setting of codexLearnerConfig({ effort: request.effort ?? DEFAULT_CODEX_EFFORT })) args.push("-c", setting);
+  args.push("--model", request.model ?? DEFAULT_LEARNER_CODEX_MODEL);
+  for (const setting of codexLearnerConfig({ effort: request.effort ?? DEFAULT_LEARNER_CODEX_EFFORT, serviceTier: request.serviceTier })) args.push("-c", setting);
   if (request.mcp) {
     const key = `mcp_servers.${MCP_SERVER_NAME}`;
     args.push("-c", `${key}.command=${toml(request.mcp.command)}`, "-c", `${key}.args=${toml(request.mcp.args)}`);
@@ -490,11 +496,11 @@ export function codexChildEnv(env: NodeJS.ProcessEnv, bin: string): Record<strin
 }
 
 /**
- * The engine's defaults under --model / --effort and the task's model.<engine> / effort.<engine>: codex gpt-6.1-sol
- * at xhigh (Roy 2026-10-04); claude the CLI's own.
+ * The engine's defaults under --model / --effort and the task's model.<engine> / effort.<engine>: codex gpt-6-astra
+ * at xhigh without Fast (Roy 2026-10-10); claude the CLI's own.
  */
 export function engineDefaults(engine: EngineName): { model?: string; effort?: string } {
-  return engine === "codex" ? { model: DEFAULT_CODEX_MODEL, effort: DEFAULT_CODEX_EFFORT } : {};
+  return engine === "codex" ? { model: DEFAULT_LEARNER_CODEX_MODEL, effort: DEFAULT_LEARNER_CODEX_EFFORT } : {};
 }
 
 export function engineCommand(request: EngineRequest, prompt: string, binary?: string): CommandLine {

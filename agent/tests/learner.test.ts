@@ -61,7 +61,7 @@ describe("per-engine model and effort in the front matter", () => {
       expect(code).toBe(0);
       return out.join("");
     };
-    expect(await run("codex")).toContain(`--model gpt-6.1-sol -c 'approval_policy="never"' -c 'web_search="disabled"' -c 'model_reasoning_effort="high"'`);
+    expect(await run("codex")).toContain(`--model gpt-6-astra -c 'approval_policy="never"' -c 'web_search="disabled"' -c 'model_reasoning_effort="high"'`);
     expect(await run("codex", ["--effort", "low", "--model", "gpt-x"])).toContain(`--model gpt-x -c 'approval_policy="never"' -c 'web_search="disabled"' -c 'model_reasoning_effort="low"'`);
     const claude = await run("claude");
     expect(claude).toContain("--model sonnet");
@@ -238,7 +238,6 @@ const codexTail = (effort: string): string[] => [
   "-c", 'approval_policy="never"',
   "-c", 'web_search="disabled"',
   "-c", `model_reasoning_effort="${effort}"`,
-  "-c", 'service_tier="priority"',
   "-c", "allow_login_shell=false",
   "-c", "skills.include_instructions=false",
   "-c", "skills.bundled.enabled=false",
@@ -267,10 +266,10 @@ describe("codex command line", () => {
     ]);
   });
 
-  it("a read-only task gets the read-only profile; gpt-6.1-sol at xhigh unless asked; never --sandbox (it cannot mix with a profile)", () => {
+  it("a read-only task gets the read-only profile; gpt-6-astra at xhigh unless asked; never --sandbox (it cannot mix with a profile)", () => {
     const req = request({ engine: "codex", tools: ["Read", "Grep", "Glob"], cwd: ROOT, home: "/h", keyFiles: [] });
     const cmd = codexCommand(req, "x");
-    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, ...profileArgs(req), "--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, ...profileArgs(req), "--model", "gpt-6-astra", ...codexTail("xhigh"), ...disables(), "-"]);
     expect(cmd.args).not.toContain("--sandbox");
     expect(cmd.args).not.toContain("--add-dir");
   });
@@ -460,7 +459,7 @@ if (${JSON.stringify(name)} === "codex" && process.argv[2] === "sandbox") {
   process.exit(0);
 }
 if (${JSON.stringify(name)} === "codex" && process.argv[2] === "debug") {
-  process.stdout.write(JSON.stringify({ models: [{ slug: "gpt-6.1-sol", supported_reasoning_levels: [{ effort: "high" }, { effort: "xhigh" }] }] }) + "\\n");
+  process.stdout.write(JSON.stringify({ models: [{ slug: "gpt-6-astra", supported_reasoning_levels: [{ effort: "high" }, { effort: "xhigh" }] }] }) + "\\n");
   process.exit(0);
 }
 process.stdin.on("data", (chunk) => (stdin += chunk));
@@ -601,7 +600,7 @@ describe("whole runs against fake binaries", () => {
     expect(seen.argv.slice(0, 7)).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", join(project, "wt"), "-c"]);
     expect(seen.argv[7]).toBe('default_permissions="learner"');
     expect(seen.argv[9]).toContain(`${JSON.stringify(join(tmp, "codex-home", "auth.json"))} = "none"`);
-    expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+    expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6-astra", ...codexTail("xhigh"), ...disables(), "-"]);
     expect(seen.argv).not.toContain("--sandbox");
     expect(seen.env).toContain("CODEX_HOME");
     expect(seen.stdin.startsWith("【启动器说明（codex）】")).toBe(true);
@@ -620,7 +619,7 @@ describe("whole runs against fake binaries", () => {
     const summary = lines[lines.length - 1]!;
     expect(summary).toMatchObject({ type: "learner_summary", exit_code: 0, timed_out: false });
     expect(summary["summary"]).toMatchObject({
-      model: "gpt-6.1-sol", sessionId: "th-1", turns: 1, tokens: { input: 400, output: 90, cacheRead: 800, cacheCreation: 0, reasoning: 40 }, result: "三句话。RUN: X",
+      model: "gpt-6-astra", sessionId: "th-1", turns: 1, tokens: { input: 400, output: 90, cacheRead: 800, cacheCreation: 0, reasoning: 40 }, result: "三句话。RUN: X",
       toolCalls: { command_execution: 1 }, isError: false, retries: ["Reconnecting... 1/5 (stream disconnected before completion)"],
     });
     expect((summary["summary"] as { timing: { timeline: unknown[] } }).timing.timeline).toHaveLength(2);

@@ -1,0 +1,32 @@
+{
+  "base": "26cafe42796797050b6ec3fc20945661d7ca5dcf",
+  "changed_files": {
+    "agent/tests/codex-fast.test.ts": "b1c7460349b54b610690fd5be1328199fc2a16275b45ac2568d9dbea55c56ec9",
+    "agent/tests/learner-launch-failures.test.ts": "22b0577ca169ff9c5f316c500043f5851d5db896afc913eb5fc1166557305ffb",
+    "agent/tests/learner.test.ts": "9e0379aa94050c5e591fa88734bafc8ab92238bb5e8e6368980e60fb3c709a51",
+    "docs/codex-fast.md": "b2948dcda1510fa7b605433c2d287648b756b51b22620e1b7db203124c7ded2f",
+    "learner/README.md": "fd3dd0f169d51a1c6df052ac22362add230c53c14e0e5280f7973b61f176f6b2",
+    "learner/lib/engines.ts": "3353db4e9035902c929a112b24e19981879b17377af8a4e9714999a77ef30f3c",
+    "learner/lib/task.ts": "0840fe9100874dc0a40154f58d42ef1e103fdabc282a43875a167f1518f56bc5",
+    "ops/codex-learner.sh": "226633798157b6203d6165806e343f08f217e7cfe8f001d29ac5d27fdef29d13",
+    "ops/codex-ops-learner.sh": "fab186106e665a9130802a202101bce7992f7d38bcfca5ddec105de7355cb98c",
+    "ops/codex/lib.ts": "e9761ac0548a60f7f79fc7f1624377c258910de537825ca453a52c3a90ac19c8",
+    "ops/tests/test_learner_launch_failures.py": "c88207a9dbf685ce19b639a9654daa89e430de864b375fa08ec030d4e3a55b7e"
+  },
+  "unchanged_files": {
+    "agent/src/core/config.ts": "7139f2ff1f68cb6d42dcf3869b39504fb5c42b2af64f9c0ca06bc1778d6d6e64",
+    "agent/src/brain/engines/codex.ts": "e82cc505da2447de23c7a9e3206adf7eda5daa4118f49c927dafaa0db74562e9",
+    "ops/codex-fast.sh": "c27f710ccf46e700a5c97ed9dd8fd39cf3a1b8e28e9920d8756205f8d2a2b08e",
+    "agent/tools/test-sandbox.sh": "1a0231e0631091468f337f7290bdcf6f503b763f41b0e22bc70f518827e57567"
+  },
+  "commands": {
+    "learner": "codex exec --ignore-user-config ... --model gpt-6-astra -c model_reasoning_effort=\"xhigh\" (no service_tier)",
+    "scheduled": "root ops/codex-ops-learner.sh -> leased learner/run.ts --model gpt-6-astra --effort xhigh -> root ops/codex-learner.sh -> native CLI (tier overrides removed)",
+    "ops": "init/resume/TUI retain explicit priority and existing model/effort",
+    "play": "unchanged config/exec/session request code"
+  },
+  "tests_in_progress": false,
+  "production_changed": false,
+  "processes_restarted": false,
+  "unchanged_verified_against_base": true
+}
