@@ -11,6 +11,11 @@
 # instead of starting one, so the loop can be restarted mid-run.
 set -u
 . "$(dirname "$0")/paths.sh"
+if [ "${1:-}" = --tail-console ]; then
+  shift
+  . "$OPS/autoplay-console.sh"
+  start_console_tail
+fi
 # AUTOPLAY_READY: acknowledge WAIT_PID before a reload can retire the old shell.
 if [ -n "${AUTOPLAY_READY:-}" ]; then
   [ -n "${WAIT_PID:-}" ] && kill -0 "$WAIT_PID" 2>/dev/null || exit 1
