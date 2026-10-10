@@ -38,6 +38,8 @@ class Runtime:
         self.uid = os.getuid()
         self.child = None
         self.scratch = None
+        self.console_output = None
+        self.console_enabled = False
 
     def kind(self, row):
         if not row or row["state"] == "Z" or not row["argv"]:
@@ -45,7 +47,8 @@ class Runtime:
         argv = row["argv"]
         def path(arg):
             return (Path(row["cwd"]) / arg).resolve()
-        if Path(argv[0]).name == "bash" and len(argv) == 2 and path(argv[1]) == self.script:
+        if Path(argv[0]).name == "bash" and (len(argv) == 2 or (
+                len(argv) == 3 and argv[2] == "--tail-console")) and path(argv[1]) == self.script:
             return "autoplay"
         if Path(argv[0]).name == "node":
             # npx and tsx launchers also carry "src/index.ts play" in argv; only the Node entry script owns play.
@@ -111,6 +114,15 @@ class Runtime:
         if (self.root / "ops/STOP").exists():
             raise ReloadError("拒绝：ops/STOP 存在")
         subprocess.run(["bash", "-n", str(self.script)], check=True, timeout=3, capture_output=True)
+        old = process(old_pid)
+        if old and old["argv"][-1] == "--tail-console" and self.console_output is None:
+            # Keep the existing terminal open through takeover and any recovery; never stop play for a viewer repair.
+            self.console_output = open(f"/proc/{old_pid}/fd/1", "wb", buffering=0)
+            if not os.isatty(self.console_output.fileno()):
+                self.console_output.close()
+                self.console_output = None
+                raise ReloadError("拒绝：日志循环 stdout 不是原标签页的终端")
+            self.console_enabled = True
 
     def pidfile(self):
         return self.directory / "autoplay.pid"
@@ -153,12 +165,14 @@ class Runtime:
         ready = self.scratch / "ready"
         self.release = self.scratch / "release"
         self.active = self.scratch / "active"
-        self.child = subprocess.Popen(["bash", str(self.script)], cwd=self.root,
+        command = ["bash", str(self.script)] + (["--tail-console"] if self.console_enabled else [])
+        self.child = subprocess.Popen(command, cwd=self.root,
             env={**os.environ, "WAIT_PID": str(play_pid), "AUTOPLAY_READY": str(ready),
                  "AUTOPLAY_RELEASE": str(self.release), "AUTOPLAY_ACTIVE": str(self.active),
                  "AUTOPLAY_RELOAD_PARENT": str(os.getpid()), "AUTOPLAY_RELOAD_OLD": str(old["pid"]),
                  "AUTOPLAY_RELOAD_OLD_START": old["start"]},
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            stdin=subprocess.DEVNULL, stdout=self.console_output if self.console_enabled else subprocess.DEVNULL,
+            stderr=self.console_output if self.console_enabled else subprocess.DEVNULL,
             start_new_session=True)
         def acknowledged():
             if self.child.poll() is not None:
@@ -297,6 +311,9 @@ def main():
     except (ReloadError, OSError, subprocess.SubprocessError) as error:
         print(str(error))
         return 1
+    finally:
+        if runtime.console_output is not None:
+            runtime.console_output.close()
 
 
 if __name__ == "__main__":

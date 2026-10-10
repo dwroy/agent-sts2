@@ -10,6 +10,7 @@ afterAll(() => rmSync(scratch, { recursive: true, force: true }));
 
 describe("autoplay reload with a continuing play process", () => {
   it.each([
+    "accepts_only_the_known_console_flag_and_preserves_terminal_for_takeover",
     "same_play_is_transferred_after_new_shell_acknowledges_and_receipt_pins_versions",
     "rejects_foreign_owners_wrong_paths_and_missing_exact_processes",
     "refuses_report_stop_after_and_duplicate_loops_or_play",

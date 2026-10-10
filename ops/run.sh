@@ -11,6 +11,11 @@ sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
 ts=$(date +%Y%m%d-%H%M%S)
 mkdir -p "$LOGS/console"
 out="$LOGS/console/$ts-$sha.log"
+touch "$out"
+# Follow the current console by name so the terminal viewer switches at each run boundary.
+console_link="$LOGS/console/.current-$$"
+ln -s "$(basename "$out")" "$console_link"
+mv -Tf "$console_link" "$LOGS/console/current"
 echo "$out"
 # A finished run leaves the game on its summary screen, which the loop reads as "run already ended".
 screen=$(curl -s -m 5 http://127.0.0.1:8080/state | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"]["screen"])' 2>/dev/null)

@@ -1,0 +1,139 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-core-experience-20261010/agent
+
+ ❯ tests/learner.test.ts (47 tests | 6 failed) 296ms
+     × codex: the argv, cwd and stdin the fake saw match codexCommand; no key in its env; log framed and summarised 46ms
+     × codex: the start-up check refuses an effort the model does not take (exit 3, nothing run) 37ms
+     × codex: a key file readable under the profile stops the run before it starts (exit 3, names only) 33ms
+     × codex: no login in its home stops the run (exit 3) 32ms
+     × codex: a run refused on the login asks codex to refresh its token once and says to re-run 35ms
+     × claude: summary (turns, tokens, cache, cost, duration) printed, and a key that reached the log is redacted 28ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: the argv, cwd and stdin the fake saw match codexCommand; no key in its env; log framed and summarised
+AssertionError: expected 3 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 3
+
+ ❯ tests/learner.test.ts:599:18
+    597|     const { deps: d, out } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: f…
+    598|     const code = await main(smokeArgs("codex"), d);
+    599|     expect(code).toBe(0);
+       |                  ^
+    600|     const seen = JSON.parse(readFileSync(record, "utf8")) as { argv: s…
+    601|     expect(seen.argv.slice(0, 7)).toEqual(["exec", "--json", "--ignore…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: the start-up check refuses an effort the model does not take (exit 3, nothing run)
+AssertionError: expected 'codex 用不了：`/tmp/learner-test-G9RTxp/b…' to contain 'does not take reasoning effort max'
+
+- Expected
++ Received
+
+- does not take reasoning effort max
++ codex 用不了：`/tmp/learner-test-G9RTxp/bin/codex --version` exited 0: 
++
+
+ ❯ tests/learner.test.ts:644:26
+    642|     const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: f…
+    643|     expect(await main(smokeArgs("codex", ["--effort", "max"]), d)).toB…
+    644|     expect(err.join("")).toContain("does not take reasoning effort max…
+       |                          ^
+    645|     expect(existsSync(record)).toBe(false);
+    646|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: a key file readable under the profile stops the run before it starts (exit 3, names only)
+AssertionError: expected 'codex 用不了：`/tmp/learner-test-G9RTxp/b…' to contain '没能挡住 key 文件，不运行：读得到 /tmp/learner-test…'
+
+- Expected
++ Received
+
+- 没能挡住 key 文件，不运行：读得到 /tmp/learner-test-G9RTxp/codex-home/auth.json
++ codex 用不了：`/tmp/learner-test-G9RTxp/bin/codex --version` exited 0: 
++
+
+ ❯ tests/learner.test.ts:654:26
+    652|     const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: f…
+    653|     expect(await main(smokeArgs("codex"), d)).toBe(3);
+    654|     expect(err.join("")).toContain(`没能挡住 key 文件，不运行：读得到 ${auth}`);
+       |                          ^
+    655|     expect(existsSync(record)).toBe(false);
+    656|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: no login in its home stops the run (exit 3)
+AssertionError: expected 'codex 用不了：`/tmp/learner-test-G9RTxp/b…' to contain 'no codex login'
+
+- Expected
++ Received
+
+- no codex login
++ codex 用不了：`/tmp/learner-test-G9RTxp/bin/codex --version` exited 0: 
++
+
+ ❯ tests/learner.test.ts:662:26
+    660|     const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: f…
+    661|     expect(await main(smokeArgs("codex"), d)).toBe(3);
+    662|     expect(err.join("")).toContain("no codex login");
+       |                          ^
+    663|   });
+    664|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: a run refused on the login asks codex to refresh its token once and says to re-run
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/learner.test.ts:673:23
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > claude: summary (turns, tokens, cache, cost, duration) printed, and a key that reached the log is redacted
+AssertionError: expected '== 学习者 claude / smoke ==\n状态：success；…' to contain '三句话。RUN: X'
+
+- Expected
++ Received
+
+- 三句话。RUN: X
++ == 学习者 claude / smoke ==
++ 状态：success；退出码 0
++ 模型：未记录；会话：未记录
++ 轮数：未记录；工具调用：无
++ token：输入 0、输出 0、cache 读 0、cache 写 0（命中 —）
++ 成本：未提供
++ 耗时：0.0 s（墙钟）
++ 日志：/tmp/learner-test-G9RTxp/runs/20260929-233000-smoke.jsonl
++
+
+ ❯ tests/learner.test.ts:689:18
+    687|     expect(seen.env).not.toContain("ANTHROPIC_API_KEY");
+    688|     const text = out.join("");
+    689|     expect(text).toContain("三句话。RUN: X");
+       |                  ^
+    690|     expect(text).toContain("轮数：3；工具调用：Grep×1 Read×1");
+    691|     expect(text).toContain("cache 读 20.0k、cache 写 5000");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  6 failed | 56 passed (62)
+   Start at  08:34:39
+   Duration  1.31s (transform 563ms, setup 335ms, import 444ms, tests 316ms, environment 0ms)
+
