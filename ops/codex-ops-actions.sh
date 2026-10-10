@@ -54,6 +54,9 @@ hosting() {
 }
 
 case "$action" in
+  learner-log-tab)
+    [ $# -eq 2 ] || exit 2
+    exec nice -n 19 python3 "$OPS/learner-log-pane.py" "$arg" ;;
   git-push-main)
     [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9a-f]{40}$ ]] || exit 2
     exec nice -n 19 python3 "$ROOT/ops/git-push-main.py" "$arg" ;;

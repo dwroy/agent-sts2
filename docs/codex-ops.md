@@ -93,7 +93,7 @@ Roy 授权的静默 boss 校准使用独立模板 `learner/tasks/silent-boss-cal
 
 ## herdr 托管（Roy 2026-10-05）
 
-目的：长跑的进程在 herdr 里看得见、管得了（Mac 上 `herdr --machine xdwin …`）。托管层是通用的（`ops/herdr-host.sh` + pane 侧的 `ops/herdr-exec.sh`），不含项目逻辑：一个 workspace `sts2-run`（cwd 主检出），每个 label 一个 tab；label → pane 记在 `ops/codex-ops/herdr.json`。不碰 `agent-sts2`（wD，Claude rc 会话）、geo-crash、codex-gc1。
+目的：长跑的进程在 herdr 里看得见、管得了（Mac 上 `herdr --machine xdwin …`）。托管层是通用的（`ops/herdr-host.sh` + pane 侧的 `ops/herdr-exec.sh`），不含项目逻辑：新 tab 优先跟随实际 ops pane 所在的 workspace；尚无 ops pane 时使用 `sts2-run`（cwd 主检出）。每个 label 一个 tab；label → pane 记在 `ops/codex-ops/herdr.json`。不碰 `agent-sts2`（wD，Claude rc 会话）、geo-crash、codex-gc1。
 
 ```bash
 bash ops/herdr-host.sh status            # label、pane、在不在、忙不忙、前台 PID
@@ -101,6 +101,8 @@ bash ops/herdr-host.sh run <label> [--pidfile F] [--close-on-exit] [--env K=V]..
 bash ops/herdr-host.sh stop <label>      # ctrl+c、关 pane；只停自己登记的 label
 bash ops/herdr-host.sh attach-hint       # 从 Mac 怎么看
 ```
+
+Roy 2026-10-10 要求学习 tab 与 ops 放在同一 workspace。同名 workspace 不作为实际归属的依据，新学习 tab 通过已登记且仍存活的 ops pane 定位；其他 workspace 的同名闲置 tab 保存最后输出后关闭并重建，忙碌 tab 保持。既有批次继续运行；需要在 ops 旁查看它时，运维用 `bash ops/codex-ops-do.sh learner-log-tab <batch-id>` 打开独立日志 tab，显示该已登记活批的 `.out/.err`，不重启学习者。日志 tab 随已核实 wrapper 结束而关闭；已结束批次、已消失或身份不匹配的 PID 拒绝创建。重复调用复用同一日志 tab。
 
 **开关**：`ops/codex-ops/hosting`，每行 `键=值`（文件，不用改 crontab）；环境变量优先。
 

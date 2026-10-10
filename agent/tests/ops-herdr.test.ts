@@ -5,7 +5,7 @@
  * wake (exit 75) as no failure. Temp directories and fake commands only: no herdr server, no codex, nothing real starts.
  */
 import { spawnSync } from "node:child_process";
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
 
 import { argsHash, composerState, herdrWake, openTurn, rolloutTurn } from "../../ops/codex/herdr.js";
-import { OPS_PROFILE, hostingMode, interactiveArgs, opsRequest, readQueue } from "../../ops/codex/lib.js";
+import { OPS_PROFILE, hostingMode, interactiveArgs, opsRequest, readQueue, validateRequest } from "../../ops/codex/lib.js";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const FAKE = join(REPO, "agent", "tests", "fixtures-herdr", "fake-herdr.py");
@@ -141,6 +141,74 @@ describe("screen and session-file readers", () => {
 });
 
 describe("ops/herdr-host.sh (fake herdr)", () => {
+  it("only permits registered-batch-shaped viewer requests without arbitrary commands or target panes", () => {
+    expect(validateRequest({ action: "learner-log-tab", args: ["20261010-164301-strategy-proposal"] }).ok).toBe(true);
+    for (const args of [["ops"], ["../file"], ["1234"], ["20261010-164301-strategy-proposal", "wJ"]]) {
+      expect(validateRequest({ action: "learner-log-tab", args }).ok).toBe(false);
+    }
+  });
+  it("new learner tabs follow the live ops pane when workspace labels are duplicated", () => {
+    const w = world("ops-workspace");
+    expect(w.host("ensure-workspace").stdout.trim()).toBe("w1");
+    const oldPane = w.host("open-pane", "learner-next").stdout.trim();
+    const busyRun = w.host("run", "learner-active", "--close-on-exit", "--", "sleep", "30");
+    const busyPane = busyRun.stdout.trim();
+    const second = spawnSync(FAKE, ["workspace", "create", "--label", "sts2-test", "--cwd", join(w.dir, "proj")], { env: w.env, encoding: "utf8" });
+    const ops = JSON.parse(second.stdout).result.root_pane;
+    spawnSync(FAKE, ["pane", "rename", ops.pane_id, "ops"], { env: w.env });
+    const registry = join(w.dir, "proj", "ops", "codex-ops", "herdr.json");
+    const registered = JSON.parse(readFileSync(registry, "utf8"));
+    registered.panes.ops = { pane_id: ops.pane_id };
+    writeFileSync(registry, JSON.stringify(registered));
+    expect(w.host("ensure-workspace").stdout.trim()).toBe("w2");
+    const created = w.host("open-pane", "learner-next");
+    expect(created.status, created.stderr).toBe(0);
+    expect(w.state().panes[created.stdout.trim()].ws).toBe("w2");
+    expect(w.state().panes[oldPane]).toBeUndefined();
+    expect(w.host("open-pane", "learner-active").status).toBe(4);
+    expect(w.state().panes[busyPane].ws).toBe("w1");
+    expect(w.state().panes[ops.pane_id].label).toBe("ops");
+    w.host("stop", "learner-active");
+  });
+
+  it.each(["20261010-164301-strategy-proposal", "20261010-164301"])("shows verified live learner %s beside ops and closes its reused viewer on exit", (batch) => {
+    const w = world(`learner-log-view-${batch}`);
+    const opsPane = w.host("open-pane", "ops").stdout.trim();
+    const root = join(w.dir, "proj");
+    const stateDir = join(root, "ops", "codex-ops");
+    copyFileSync(HOST, join(root, "ops", "herdr-host.sh"));
+    copyFileSync(join(REPO, "ops", "herdr-exec.sh"), join(root, "ops", "herdr-exec.sh"));
+    const learnerLabel = `learner-${batch}${/^\d{8}-\d{6}$/.test(batch) ? "-postmortem" : ""}`;
+    mkdirSync(join(stateDir, "learner"));
+    const learner = w.host("run", learnerLabel, "--pidfile", join(stateDir, "learner", `${batch}.pid`), "--close-on-exit", "--", "sleep", "20");
+    expect(learner.status, learner.stderr).toBe(0);
+    const pid = Number(learner.stdout.trim().split(" ")[1]);
+    const writeRecord = (state: string, id: number) => writeFileSync(join(stateDir, "learn.json"), JSON.stringify({ batches: { [batch]: { state, pid: id } } }));
+    writeRecord("running", pid);
+    writeFileSync(join(stateDir, "learner", `${batch}.out`), "model stdout\n");
+    writeFileSync(join(stateDir, "learner", `${batch}.err`), "learner evidence processing\n");
+    const runner = (id: string) => spawnSync("python3", [join(REPO, "ops", "learner-log-pane.py"), id], { env: { ...w.env, CODEX_OPS_ROOT: root }, encoding: "utf8", timeout: 30_000 });
+    const result = runner(batch);
+    expect(result.status, result.stderr).toBe(0);
+    const receipt = JSON.parse(result.stdout);
+    expect(receipt).toMatchObject({ batch, workspace: "w1", ops_pane: opsPane, learner_restarted: false });
+    expect(receipt.screen).toContain("learner evidence processing");
+    const paneCount = Object.keys(w.state().panes).length;
+    expect(runner(batch).status).toBe(0);
+    expect(Object.keys(w.state().panes)).toHaveLength(paneCount);
+    expect(runner("20261010-111111-strategy-proposal").status).toBe(1);
+    expect(Object.keys(w.state().panes)).toHaveLength(paneCount);
+    expect(JSON.parse(readFileSync(join(stateDir, "learn.json"), "utf8")).batches[batch]).toEqual({ state: "running", pid });
+    for (const [state, id] of [["done", pid], ["failed", pid], ["running", 2147483647], ["running", process.pid]] as const) {
+      writeRecord(state, id);
+      expect(runner(batch).status).toBe(1);
+      expect(Object.keys(w.state().panes)).toHaveLength(paneCount);
+    }
+    writeRecord("running", pid);
+    w.host("stop", learnerLabel);
+    waitFor(() => w.state().panes[receipt.pane] === undefined, 15_000);
+  }, 30_000);
+
   it("run, reuse, busy, status, stop; only its own labels", () => {
     const w = world("host");
     expect(w.host("available").status).toBe(0);
