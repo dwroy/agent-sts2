@@ -806,3 +806,7 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 ### 2026-10-10 12:12 同一姓名纠正请求补充留痕
 
 额外110份笔记/论文历史已保存原字节并更正，累计1419文件、7处路径迁名；映射列在name-correction.json，新增原件父提交3c3c27ce35b4af28e4dd76a5684cbd41e366901d。补充材料扫描的generic-key命中已逐结构核实为调度幂等标识与证据SHA，原失败扫描及复核回执保留。代码检查已通过，宿主推送尝试exit124无回执；最终main推送继续沿唯一roy-20261010-name-main-push标准事件完成，远端核实前保持pending。
+
+- 2026-10-10 12:40 运维codex按Roy明确授权开启三路子agent并行：完成回报与实际合入核查、12批复盘/账本/纯bug闭环、Fast启动器与提案协议失败根因修复；每路仅写独立证据目录或独立源码工作树，main/live集成、共享状态/CLI账本/版本/论文生成与推送仍由主ops串行。67条冻结事件SHA和权限范围见paper/materials/20261010-ops-parallel/dispatch.json，原失败/活租约及并行产出保持，不新增游戏知识、不改ops prompt/env/对局。原姓名/main推送请求roy-20261010-name-main-push本轮已经宿主Windows SSH推送0be5abd3699e43899c8094b5cbbadb101d3bb1d8到origin:main并核远端verified=true，旧124保持、不再宣称pending；回执main-push-receipt.json。
+
+- 2026-10-10 12:48 运维codex三路并行核查收口（记录阶段）：12批/12局复盘done、33项原CLI提案验链与SHA全等、ledger368条0问题；只把新普通纯bug silent-0362/0365/0367 去重转录到fix-queue-v4，保留原证据及prior=unknown/observed，不重复提案或补游戏机制。paper_dataset --no-raw输入切点2026-10-10T04:38:45.261Z、679原始局/332024决策，五项守恒检查与key扫描通过，论文快照原件及误用--help默认扫描被中断的历史分别留档。67事件/43唯一写检查批中18个题前rc3（17Fast递归+1glob环境），协议修复仍在独立树全套自测，候选未冒称上线。四核心经验已有S1.exp147/实际源8e74493d/完整检查0；本轮027bd9c57只把已有版本/22原CLI行/通知完成记录机械同步live，10个并行刷新文件SHA保持、不重复shipped/通知或游戏版本。审计/推送成功/补验材料在paper/materials/20261010-ops-parallel/。

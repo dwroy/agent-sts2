@@ -1,0 +1,148 @@
+{
+  "command": "nice -n 19 python3 ops/paper_dataset.py --no-raw",
+  "exit": 0,
+  "input_cut_at": "2026-10-10T04:38:45.261Z",
+  "performance_policy": "codex-successful-brain-v1",
+  "performance": {
+    "runs": 193,
+    "finished": 191,
+    "wins": 11,
+    "first_try_wins": 6,
+    "sl_wins": 5,
+    "win_rate_finished": 0.058,
+    "mean_floor_finished": 33.5,
+    "raw_runs": 679
+  },
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": []
+    },
+    "row_counts": {
+      "runs.csv": 679,
+      "decisions_by_label.csv": 22658,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 4513
+    }
+  },
+  "published_outputs": [
+    {
+      "path": "paper/data/escalations.csv",
+      "size": 1267694,
+      "sha256": "2d573d6ed9324f67b8a2a9b22688bc29cefd740ac7e544bc282be8bd9060d0a3",
+      "changed_since_cut": false
+    },
+    {
+      "path": "paper/data/metrics.md",
+      "size": 1028,
+      "sha256": "577f8903f048d6b1d4a00a5335c4d93a654be38913ba43f7145bf5f1ecf04513",
+      "changed_since_cut": false
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "size": 18055,
+      "sha256": "395dad652e8e42d60c6c53922dc3ca2d24803d807a8fbe8d5b415a91429fb26d",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/cost-ironclad.csv",
+      "size": 75880,
+      "sha256": "ccb2cb28bc601daee28fe2219cee06004f858d4595ee89b9484e90a4a0f0c3ee",
+      "changed_since_cut": false
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "size": 43180,
+      "sha256": "8e230087e6c4f6c5e293026cc68a126f0e4ebc28c393caf99f23be28028eee63",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/verification.json",
+      "size": 517,
+      "sha256": "55732fac72d28cefaf4ba9e6e5047a38c5ea0ac6cfbea47cbf5f73525b089c96",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "size": 1098589,
+      "sha256": "750773f5f9ffd3cd7dfa3cd2a3024d32584a8ae7ac3e056a881d20be2a92458d",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "size": 980473,
+      "sha256": "1e55cd9bd1da0e9339bf8abad663e0a9cb0935489e6e8ef7193538ad1c2658c4",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/fight_plans.csv",
+      "size": 714774,
+      "sha256": "ddc5f40a447c1f035a7a2478f766a1513ee442631855646490243cc7b78889c4",
+      "changed_since_cut": false
+    },
+    {
+      "path": "paper/data/README.md",
+      "size": 14095,
+      "sha256": "eb268ffea72b0920c902e4c28089532035959bb5d01405705a53e188b0247b43",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "size": 682948,
+      "sha256": "364a635caabb98f17025ca0ec70225a15ab39aa6cbf95435731e51ab60199c26",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/learning-curve-ironclad.csv",
+      "size": 103370,
+      "sha256": "45405e24c8358a99d977c28852cf3e705fddc4f1923f9a7b16ff727a849b082b",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "size": 212833,
+      "sha256": "3e93a0c43d615a7a9935e025efb5e1fd72229c1bfc864642c3f46e6c6be0fc34",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "size": 126881,
+      "sha256": "3257ba0468c202cac1670e5fb9b068de323d0c73d1c99fc45423b9083d61708d",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/cost-none.csv",
+      "size": 318,
+      "sha256": "5a93e8a3c93c034e1e5498ea0700e7b19ffe6dd8185d6705d729bccae6fbc766",
+      "changed_since_cut": false
+    },
+    {
+      "path": "paper/data/cost-curve-ironclad.csv",
+      "size": 13168,
+      "sha256": "ce8d7daa03144a79b41c3690b7dfb32ac82b3057afefc8b4d7cb10b48bd82993",
+      "changed_since_cut": false
+    },
+    {
+      "path": "paper/data/summary.json",
+      "size": 290918,
+      "sha256": "856c6cfb7cf9711218921579b3537e7cf4e3f3d98d3473264c1c7a95a364511c",
+      "changed_since_cut": true
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "size": 11985,
+      "sha256": "b2c116b13793275a1365936802c055b0094fd536c427c8d89f1be3809b90e26f",
+      "changed_since_cut": true
+    }
+  ],
+  "key_scan": "CLEAN",
+  "no_new_raw_archive": true,
+  "log": "paper/materials/20261010-ops-parallel/paper-dataset.log",
+  "prior_interrupted_invocation": "paper/materials/20261010-ops-parallel/paper-refresh-interrupted.json",
+  "exclude_preexisting_dynamic_cost_outputs_from_record_commit": true
+}
