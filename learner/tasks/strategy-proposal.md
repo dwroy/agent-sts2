@@ -28,7 +28,7 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
 
 ## 1.2 仅本批的手动专题研究
-只读根目录 `{{project_root}}/notes/strategy-research-{{character}}.json`。learn.json 本批带 research_request 时，文件不存在或任何身份/SHA 条件失配都停止专题回报，不退回普通选题；只有不带 research_request 的普通批次在专题条件不成立时保持原提案/补链任务，不将普通队列变成专题：
+先读取根目录 learn.json 本批的 research_request：`roy-20261010-silent-deck-size-value` 对应根目录 `notes/strategy-research-silent.json`，`roy-20261010-silent-core-reuse-value` 对应根目录 `notes/strategy-research-core-reuse-silent.json`；路径都相对 `{{project_root}}`。这两个专题各自独立绑定；不得读取另一请求来代替本批身份。普通批次仍只读 `notes/strategy-research-{{character}}.json` 并按条件匹配。learn.json 本批带 research_request 时，文件不存在或任何身份/SHA 条件失配都停止专题回报，不退回普通选题；只有不带 research_request 的普通批次在专题条件不成立时保持原提案/补链任务，不将普通队列变成专题：
 - learn.json 中本次 {{batch}} 的 task=strategy-proposal、character={{character}}、reason=ops；该行完全没有 proposal_ids 和 proposal_repair 字段，工作树等于 {{worktree}}。
 - 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state=running 且 batch={{batch}}；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
 - 专题宿主 wrapper 已在原 learn.lock 上等待登记落盘，模型启动前须有 learn.json 对应实际 research_request 与根请求的 running/batch/worktree 绑定，独立注册回执位于 ops/codex-ops/learner/{{batch}}.research-registration.json。pending/null 只属于派发前状态，不能在模型内将它当已承接专题。不自行写请求或 learn.json，身份未绑定或已变就停止专题回报，不退回普通提案选题。

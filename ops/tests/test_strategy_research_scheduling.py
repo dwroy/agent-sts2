@@ -303,6 +303,98 @@ class ResearchScheduling(unittest.TestCase):
         for key, value in (("research_request", "other"), ("research_dispatch_base", "0" * 40),
                            ("research_input_sha256", "0" * 64)):
             self.assertIsNone(fixture.accept(batch={**fixture.batch, key: value}))
+        fixture.manifest["request_id"] = "unknown-research"
+        fixture.write_json(fixture.manifest_path, fixture.manifest)
+        fixture.request.update(request_id="unknown-research", input_manifest_sha256=fixture.digest(fixture.manifest_path))
+        fixture.write_json(fixture.request_path, fixture.request)
+        fixture.report.update(request_id="unknown-research", input_sha256=fixture.request["input_manifest_sha256"])
+        self.assertIsNone(fixture.accept())
+
+    def second_request(self, anchors=None):
+        ident = "roy-20261010-silent-core-reuse-value"
+        anchors = anchors or ["SILENT000003", "SILENT000004"]
+        request = {**self.request, "request_id": ident, "dispatch_runs": anchors,
+                   "input_manifest": "paper/frozen/reuse.json"}
+        manifest = {**self.manifest, "request_id": ident, "dispatch_runs": anchors,
+                    "runs": [{"run_id": run, "ended_at": "2026-01-01T00:00:00Z"} for run in anchors]}
+        path = self.root / request["input_manifest"]
+        path.write_text(json.dumps(manifest))
+        request["input_manifest_sha256"] = self.digest(path)
+        request_path = self.root / "notes/strategy-research-core-reuse-silent.json"
+        request_path.write_text(json.dumps(request))
+        return ident, request_path, request
+
+    def test_completed_first_study_does_not_block_second_or_rewrite_history(self):
+        self.check()
+        old = self.read_request()
+        self.state["batches"][old["batch"]]["state"] = "done"
+        history = copy.deepcopy(self.state["batches"][old["batch"]])
+        before = self.request_path.read_bytes()
+        ident, path, request = self.second_request()
+        result = self.check("20260101-000002")
+        new = json.loads(path.read_bytes())
+        self.assertEqual(result["strategy_research"][0], new["batch"])
+        self.assertEqual(self.state["batches"][new["batch"]]["research_request"], ident)
+        self.assertEqual(self.launched[-1][-1], ident)
+        self.assertEqual(self.request_path.read_bytes(), before)
+        self.assertEqual(self.state["batches"][old["batch"]], history)
+        self.check("20260101-000003")
+        self.assertEqual(len(self.launched), 2)
+
+    def test_manual_identity_selects_its_pending_study_and_preserves_other_request(self):
+        import strategy_research_jobs as research
+        ident, path, request = self.second_request()
+        before = self.request_path.read_bytes()
+        self.assertEqual(research.matching_requests(self.state, self.root, "silent", request["dispatch_runs"]), [ident])
+        with patch.object(jobs, "start_learner", side_effect=self.launch), patch.dict(os.environ, {
+                "CODEX_OPS_DIR": str(self.root / "ops/codex-ops")}):
+            launched = research.dispatch(self.state, str(self.root), str(REPO / "ops"), "silent",
+                                         lambda pid: True, STAMP, jobs.dispatch_write, ident=ident)
+        self.assertIsNotNone(launched)
+        self.assertEqual(self.request_path.read_bytes(), before)
+        self.assertEqual(json.loads(path.read_bytes())["batch"], launched[0])
+        state_dir = self.root / "ops/codex-ops"
+        (state_dir / "learn.json").write_text(json.dumps(self.state))
+        tree = self.state["batches"][launched[0]]["worktree"]
+        self.assertTrue(research.ready(str(self.root), str(state_dir), launched[0], "silent", tree, ident))
+        self.assertFalse(research.ready(str(self.root), str(state_dir), launched[0], "silent", tree, IDENT))
+
+    def test_shared_anchors_remain_ambiguous_instead_of_falling_back_to_ordinary_job(self):
+        import strategy_research_jobs as research
+        ident, _, _ = self.second_request(RUNS)
+        self.assertTrue(research.manual_matches(self.state, self.root, "silent", RUNS))
+        self.assertEqual(research.matching_requests(self.state, self.root, "silent", RUNS), sorted([IDENT, ident]))
+        self.assertFalse(research.manual_matches(self.state, self.root, "silent", ["SILENT000009"]))
+        self.assertFalse(research.manual_matches(self.state, self.root, "ironclad", RUNS))
+
+    def test_new_report_is_bound_to_its_own_path_baseline_and_input(self):
+        spec = importlib.util.spec_from_file_location("reuse_report_fixture", REPO / "ops/tests/test_strategy_research.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        fixture = module.StrategyResearch("test_bound_clean_report_is_accepted_with_frozen_proof")
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        ident = "roy-20261010-silent-core-reuse-value"
+        fixture.manifest["request_id"] = ident
+        fixture.write_json(fixture.manifest_path, fixture.manifest)
+        fixture.request.update(request_id=ident, input_manifest_sha256=fixture.digest(fixture.manifest_path))
+        path = fixture.root / "notes/strategy-research-core-reuse-silent.json"
+        fixture.write_json(path, fixture.request)
+        fixture.batch.update(research_request=ident, research_dispatch_base=fixture.base,
+                             research_input_sha256=fixture.request["input_manifest_sha256"])
+        fixture.report.update(request_id=ident, input_sha256=fixture.request["input_manifest_sha256"])
+        proof = fixture.accept()
+        self.assertIsNotNone(proof)
+        self.assertEqual(proof["research"]["request"], str(path))
+        for key, value in (("research_request", IDENT), ("research_dispatch_base", "0" * 40),
+                           ("research_input_sha256", "0" * 64)):
+            self.assertIsNone(fixture.accept(batch={**fixture.batch, key: value}))
+        fixture.manifest["request_id"] = "unknown-research"
+        fixture.write_json(fixture.manifest_path, fixture.manifest)
+        fixture.request.update(request_id="unknown-research", input_manifest_sha256=fixture.digest(fixture.manifest_path))
+        fixture.write_json(path, fixture.request)
+        fixture.report.update(request_id="unknown-research", input_sha256=fixture.request["input_manifest_sha256"])
+        self.assertIsNone(fixture.accept())
 
     def test_ordinary_dispatch_argv_and_registry_are_unchanged(self):
         self.request_path.unlink()

@@ -1,4 +1,4 @@
-"""Priority and host registration for Roy's one frozen strategy study.
+"""Priority and host registration for Roy's registered frozen strategy studies.
 
 The scheduler holds its existing learn.lock. Completion uses the normal writer;
 this module never creates game proposals or rewrites failed learner batches.
@@ -15,6 +15,23 @@ import time
 REQUEST = "roy-20261010-silent-deck-size-value"
 REQUEST_PATH = "notes/strategy-research-silent.json"
 KEY = "strategy-research:" + REQUEST
+REQUEST_PATHS = {
+    REQUEST: REQUEST_PATH,
+    "roy-20261010-silent-core-reuse-value": "notes/strategy-research-core-reuse-silent.json",
+}
+
+
+def request_path(root, ident):
+    """Only explicitly authorized studies have scheduler paths."""
+    if ident not in REQUEST_PATHS:
+        raise ValueError("unknown research request")
+    return Path(root) / REQUEST_PATHS[ident]
+
+
+def research_key(ident):
+    if ident not in REQUEST_PATHS:
+        raise ValueError("unknown research request")
+    return "strategy-research:" + ident
 
 
 def digest(raw):
@@ -39,16 +56,16 @@ def runs(value):
     return set(value)
 
 
-def read_request(root, state):
+def read_request(root, state, ident=REQUEST):
     """Validate the unique request and its frozen, ended role inventory."""
     project = Path(root).resolve()
-    path = project / REQUEST_PATH
+    path = request_path(project, ident)
     if not path.resolve().is_relative_to(project):
         raise ValueError("research request outside project")
     raw = path.read_bytes()
     request = json.loads(raw)
     if not isinstance(request, dict) or any(request.get(key) != value for key, value in {
-            "request_id": REQUEST, "authorized_by": "Roy", "state": state,
+            "request_id": ident, "authorized_by": "Roy", "state": state,
             "task": "strategy-proposal", "character": "silent"}.items()):
         raise ValueError("research request identity mismatch")
     if state == "pending" and request.get("batch") is not None:
@@ -69,7 +86,7 @@ def read_request(root, state):
 
     frozen("work_spec", ".md")
     manifest = json.loads(frozen("input_manifest", ".json"))
-    if not isinstance(manifest, dict) or manifest.get("request_id") != REQUEST or manifest.get("character") != "silent":
+    if not isinstance(manifest, dict) or manifest.get("request_id") != ident or manifest.get("character") != "silent":
         raise ValueError("frozen manifest identity mismatch")
     inventory = manifest.get("runs")
     if not isinstance(inventory, list) or any(not isinstance(row, dict) or
@@ -100,25 +117,42 @@ def read_request(root, state):
     return request, raw
 
 
-def manual_matches(state, root, character, evidence):
-    """The same authorized anchors never fall back to an ordinary ops batch."""
+def matching_requests(state, root, character, evidence):
+    """Keep registered anchors on their study route, even after completion."""
     if character != "silent":
-        return False
+        return []
     try:
         requested = runs(evidence)
-        for batch in state["batches"].values():
-            if batch.get("research_request") == REQUEST and runs(batch.get("runs")) == requested:
-                return True
-        request = json.loads(Path(root, REQUEST_PATH).read_bytes())
-        return (isinstance(request, dict) and request.get("request_id") == REQUEST
-                and request.get("authorized_by") == "Roy" and request.get("character") == "silent"
-                and request.get("task") == "strategy-proposal" and runs(request.get("dispatch_runs")) == requested)
-    except (OSError, ValueError, TypeError):
-        return False
+    except (ValueError, TypeError):
+        return []
+    matched = set()
+    for batch in state["batches"].values():
+        ident = batch.get("research_request")
+        if ident in REQUEST_PATHS:
+            try:
+                if runs(batch.get("runs")) == requested:
+                    matched.add(ident)
+            except (ValueError, TypeError):
+                continue
+    for ident in REQUEST_PATHS:
+        try:
+            request = json.loads(request_path(root, ident).read_bytes())
+            if (isinstance(request, dict) and request.get("request_id") == ident
+                    and request.get("authorized_by") == "Roy" and request.get("character") == "silent"
+                    and request.get("task") == "strategy-proposal" and runs(request.get("dispatch_runs")) == requested):
+                matched.add(ident)
+        except (OSError, ValueError, TypeError):
+            continue
+    return sorted(matched)
+
+
+def manual_matches(state, root, character, evidence):
+    """Ambiguous or completed research anchors cannot start ordinary jobs."""
+    return bool(matching_requests(state, root, character, evidence))
 
 
 def bound_batch(root, state_dir, batch_id, character, worktree, ident):
-    if ident != REQUEST or character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}-strategy-proposal", batch_id):
+    if ident not in REQUEST_PATHS or character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}-strategy-proposal", batch_id):
         raise ValueError("research registration identity mismatch")
     tree = str(Path(root).resolve() / ".worktrees" / ("codex-strategy-silent-" + batch_id.removesuffix("-strategy-proposal")))
     if worktree != tree:
@@ -126,8 +160,8 @@ def bound_batch(root, state_dir, batch_id, character, worktree, ident):
     state = json.loads(Path(state_dir, "learn.json").read_bytes())
     batch = state.get("batches", {}).get(batch_id)
     if not isinstance(batch, dict) or any(batch.get(key) != value for key, value in {
-            "task": "strategy-proposal", "character": "silent", "research_request": REQUEST,
-            "key": KEY, "reason": "ops", "worktree": tree}.items()):
+            "task": "strategy-proposal", "character": "silent", "research_request": ident,
+            "key": research_key(ident), "reason": "ops", "worktree": tree}.items()):
         raise ValueError("research registration not saved")
     if "proposal_ids" in batch or "proposal_repair" in batch:
         raise ValueError("research registration mixed with proposal queue")
@@ -147,7 +181,7 @@ def ready(root, state_dir, batch_id, character, worktree, ident):
     """Called after the host wrapper acquires the scheduler's existing lock."""
     try:
         batch = bound_batch(root, state_dir, batch_id, character, worktree, ident)
-        request, _ = read_request(root, "running")
+        request, _ = read_request(root, "running", ident)
         base = request.get("dispatch_base")
         actual = subprocess.run(["git", "-C", root, "cat-file", "-t", str(base)], capture_output=True, text=True)
         return (isinstance(base, str) and re.fullmatch(r"[0-9a-f]{40}", base) is not None
@@ -161,11 +195,20 @@ def ready(root, state_dir, batch_id, character, worktree, ident):
         return False
 
 
-def dispatch(state, root, scripts, character, alive, stamp, dispatch_write, limit=2):
+def dispatch(state, root, scripts, character, alive, stamp, dispatch_write, limit=2, ident=None):
     """Use the next shared slot before automatically selected proposals."""
     if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp):
         return None
-    if any(batch.get("research_request") == REQUEST or batch.get("key") == KEY
+    if ident is None:
+        for candidate in REQUEST_PATHS:
+            result = dispatch(state, root, scripts, character, alive, stamp, dispatch_write, limit, candidate)
+            if result is not None:
+                return result
+        return None
+    if ident not in REQUEST_PATHS:
+        return None
+    key = research_key(ident)
+    if any(batch.get("research_request") == ident or batch.get("key") == key
            for batch in state["batches"].values()):
         return None  # Registered failures require explicit ops recovery.
     active = sum(1 for batch in state["batches"].values() if batch.get("task") == "strategy-proposal"
@@ -173,7 +216,7 @@ def dispatch(state, root, scripts, character, alive, stamp, dispatch_write, limi
     if active >= limit:
         return None  # Full slots are read-only, including null attempts and history.
     try:
-        request, before = read_request(root, "pending")
+        request, before = read_request(root, "pending", ident)
         if request.get("retry_at", 0) > time.time():
             return None
         result = subprocess.run(["git", "-C", root, "rev-parse", "main"], capture_output=True, text=True)
@@ -182,7 +225,7 @@ def dispatch(state, root, scripts, character, alive, stamp, dispatch_write, limi
             return None
     except (OSError, ValueError, TypeError):
         return None
-    path = Path(root, REQUEST_PATH)
+    path = request_path(root, ident)
     state_dir = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
     history = state_dir / "strategy-research-history"
     try:
@@ -197,23 +240,23 @@ def dispatch(state, root, scripts, character, alive, stamp, dispatch_write, limi
         prepared_raw = path.read_bytes()
     except OSError:
         return None  # No worker has started; the original request remains recoverable.
-    attempt = {"request_id": REQUEST, "at": time.time(), "dispatch_base": base,
+    attempt = {"request_id": ident, "at": time.time(), "dispatch_base": base,
                "before_sha256": digest(before), "prepared_sha256": digest(prepared_raw), "batch": None,
                "status": "dispatch_not_started"}
     launched = None
     try:
         launched = dispatch_write(state, root, scripts, "strategy-proposal", "silent", request["dispatch_runs"],
-                                  KEY, "ops", alive, stamp, research_request=REQUEST)
+                                  key, "ops", alive, stamp, research_request=ident)
         if launched is None:
             attempt["status"] = "no_batch_returned"
             return None
         batch_id, pid = launched
         batch = state["batches"].get(batch_id)
         attempt.update(batch=batch_id, pid=pid, status="registered_binding_failed")
-        if not isinstance(batch, dict) or batch.get("research_request") != REQUEST:
+        if not isinstance(batch, dict) or batch.get("research_request") != ident:
             raise ValueError("actual research batch registration missing")
         batch.update(research_dispatch_base=base, research_input_sha256=request["input_manifest_sha256"])
-        current, current_raw = read_request(root, "pending")
+        current, current_raw = read_request(root, "pending", ident)
         if current_raw != prepared_raw:
             raise ValueError("research request changed during dispatch")
         expected_tree = str(Path(root).resolve() / ".worktrees" / ("codex-strategy-silent-" + stamp))
@@ -253,7 +296,7 @@ if __name__ == "__main__":
         root, state_dir, batch_id, character, tree, ident = sys.argv[2:]
         request = {}
         try:
-            request = json.loads(Path(root, REQUEST_PATH).read_bytes())
+            request = json.loads(request_path(root, ident).read_bytes())
         except (OSError, ValueError):
             pass
         if not isinstance(request, dict):
