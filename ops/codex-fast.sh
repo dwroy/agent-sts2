@@ -35,8 +35,14 @@ while [ "$#" -gt 0 ]; do
 done
 case "$permission_profile" in
   learner|'"learner"'|"'learner'")
+    learner_wrapper="$(dirname "${BASH_SOURCE[0]}")/codex-learner.sh"
+    # An old scheduler may inherit the new wrapper as its binary from a completed learner.
+    # Unwrap only its already retained native; missing/recursive values fail closed below.
+    if [ "$codex_bin" = "$learner_wrapper" ] || [ "$codex_bin" -ef "$learner_wrapper" ]; then
+      codex_bin="${STS2_CODEX_LEARNER_BIN:-$codex_bin}"
+    fi
     export STS2_CODEX_LEARNER_BIN="$codex_bin"
-    exec "$(dirname "${BASH_SOURCE[0]}")/codex-learner.sh" "${original_args[@]}" ;;
+    exec "$learner_wrapper" "${original_args[@]}" ;;
 esac
 set -- "${original_args[@]}"
 args=()

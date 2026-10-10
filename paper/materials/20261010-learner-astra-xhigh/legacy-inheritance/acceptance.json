@@ -1,0 +1,48 @@
+{
+  "recorded_at": "2026-10-10T22:29:23+08:00",
+  "base": "0e8a251588221bf1b45ad2e43b049d195cfeb0e3",
+  "change": "After exact learner permission classification, unwrap an inherited new learner wrapper using its retained STS2_CODEX_LEARNER_BIN native. Missing/recursive natives still fail closed. No environment-based profile classification.",
+  "checks": {
+    "required": {
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 bash tools/test-sandbox.sh",
+      "cwd": "agent",
+      "exit_code": 0,
+      "tsc": "passed",
+      "main_files": 264,
+      "main_tests": 2670,
+      "paths_files": 1,
+      "paths_tests": 11,
+      "total_files": 265,
+      "total_tests": 2681,
+      "main_start": "22:23:31",
+      "main_duration_s": 342.23,
+      "paths_start": "22:29:14",
+      "paths_duration_s": 2.55,
+      "fixed_exclusions_unchanged": true
+    },
+    "launcher": {
+      "command": "nice -n 19 python3 -B ops/tests/test_learner_launch_failures.py",
+      "exit_code": 0,
+      "tests": 15,
+      "added_subcase": "Frozen original scheduler inherits new wrapper plus original native; native argv is Astra/xhigh, no Fast, static effective-policy stderr retained."
+    },
+    "source_whitespace_check": "passed",
+    "gitleaks": {
+      "command": "nice -n 19 gitleaks git --pre-commit --staged --redact --no-banner --no-color",
+      "exit_code": 0,
+      "result": "no leaks found",
+      "log": "gitleaks-final.log"
+    }
+  },
+  "previous_evidence_preserved": [
+    "../acceptance.json",
+    "../legacy-entry/acceptance.json"
+  ],
+  "production_changed": false,
+  "processes_restarted": false,
+  "evidence_sha256": {
+    "launcher-tests.log": "6514324da0a9fa01323234f37612117ca4a0d945cf05dca12593c49ae2f37a8a",
+    "sandbox-full.log": "fb8b6cda2b123ed88862ce5edba47f6b4c9a67d204bb257a6b889bd56ec090ce",
+    "gitleaks-source.log": "afb2dfbb92a892761a662c03b3de4352d7bea73a3a37325b2a611c0b204235db"
+  }
+}

@@ -114,16 +114,19 @@ class LearnerLauncher(unittest.TestCase):
                               "#!/bin/bash\nprintf '%s\\n' \"$@\" > \"$CODEX_OPS_ROOT/launcher-args\"\n"
                               "exec \"$LEARNER_CODEX_BIN\" exec --ignore-user-config -c 'default_permissions=\"learner\"' "
                               "--model gpt-6.1-sol -c 'model_reasoning_effort=\"high\"' -c 'service_tier=\"priority\"' -\n")
-        result = subprocess.run(["bash", str(self.root / "ops/codex-ops-learner.sh"),
-                                 "20260101-000001-experience-update", "FIXTURE000001", "silent", "experience-update", str(self.root)],
-                                env={**self.env, "LEARNER_CODEX_BIN": str(self.native)}, capture_output=True, text=True, timeout=10)
-        self.assertEqual(result.returncode, 0, result.stderr)
-        base = self.root / "ops/codex-ops/learner/20260101-000001-experience-update"
-        args = json.loads(base.with_suffix(".out").read_text())
-        self.assertEqual(args, ["exec", "--ignore-user-config", "-c", 'default_permissions="learner"', "-",
-                                "--model", "gpt-6-astra", "-c", 'model_reasoning_effort="xhigh"'])
-        self.assertIn("effective model=gpt-6-astra effort=xhigh fast=off", base.with_suffix(".err").read_text())
-        self.assertNotIn("--model", (self.root / "launcher-args").read_text().splitlines())
+        for inherited in ({"LEARNER_CODEX_BIN": str(self.native)},
+                          {"LEARNER_CODEX_BIN": str(self.wrapper), "STS2_CODEX_LEARNER_BIN": str(self.native)}):
+            with self.subTest(inherited=inherited):
+                result = subprocess.run(["bash", str(self.root / "ops/codex-ops-learner.sh"),
+                                         "20260101-000001-experience-update", "FIXTURE000001", "silent", "experience-update", str(self.root)],
+                                        env={**self.env, **inherited}, capture_output=True, text=True, timeout=10)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                base = self.root / "ops/codex-ops/learner/20260101-000001-experience-update"
+                args = json.loads(base.with_suffix(".out").read_text())
+                self.assertEqual(args, ["exec", "--ignore-user-config", "-c", 'default_permissions="learner"', "-",
+                                        "--model", "gpt-6-astra", "-c", 'model_reasoning_effort="xhigh"'])
+                self.assertIn("effective model=gpt-6-astra effort=xhigh fast=off", base.with_suffix(".err").read_text())
+                self.assertNotIn("--model", (self.root / "launcher-args").read_text().splitlines())
 
     def test_precise_learner_profiles_strip_fast_and_preserve_sandbox_child(self):
         for profile in (["-c", 'default_permissions="learner"'], ["--config", "default_permissions='learner'"],
