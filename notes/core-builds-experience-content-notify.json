@@ -1,0 +1,46 @@
+{
+  "request_id": "roy-20261010-core-builds-experience-content-notify",
+  "parent_request_id": "roy-20261010-core-builds-experience-integration",
+  "historical_parent_request_id": "roy-20261009-historical-core-builds",
+  "requested_by": "Roy",
+  "requested_at": "2026-10-10 08:54:43 CST",
+  "user_request": "等带核心组合经验入库后，你把这几条经验的内容发给我看看",
+  "character": "silent",
+  "batch": "20261010-084219-experience-update",
+  "state": "delivered",
+  "completion_channel": "existing experience-done / learner-checks and ops completion handling; no new learner batch",
+  "delivery_requirements": [
+    "After actual production experience insertion/update and verified live merge, show the final stored entries to Roy.",
+    "Copy complete final experience text, not the old four candidate report summaries; include IDs, conditions, confidence/evidence and limitations as actually stored.",
+    "Expected about four integrated entries; if merged into existing entries or evidence requires a different count, state actual count and mapping.",
+    "Save a stable content snapshot with source experience path/blob SHA, actual batch/live commit/version and ledger IDs.",
+    "Append actual contents and result path to notes/for-roy.md and ops/inbox-dev.md, and provide contents in the user-facing conversation.",
+    "Do not present pending, self-test or dispatch as completed insertion; preserve failures and unknown actual play adoption."
+  ],
+  "ledger_ids": [
+    "silent-0352",
+    "silent-0353",
+    "silent-0354",
+    "silent-0355"
+  ],
+  "deduplication_key": [
+    "request_id",
+    "batch",
+    "actual_experience_blob_sha256"
+  ],
+  "content_snapshot": "paper/materials/silent/20261010-core-experience-publication/contents.md",
+  "actual_merge": "8e74493d92f757a88f15dffb48e2f5336c0cd0ac",
+  "delivered_at": "2026-10-10T10:42:12+08:00",
+  "new_batch_requested": false,
+  "content_snapshot_sha256": "042c5f8c1e1d2838068ec465279fa5dba089dd00b95f798891fd4520fb3dfdd9",
+  "actual_experience_blob_sha256": "16fb0de2d91d5686d3b5f70263ce8d92cfaf9da2b3fa6fb112d84ecd7c5e7f2b",
+  "actual_experience_version": "2026-10-10.5",
+  "release_version": "S1.exp147",
+  "delivery_channels": [
+    "notes/for-roy.md",
+    "ops/inbox-dev.md",
+    "current user conversation"
+  ],
+  "consumer_read_verified": true,
+  "actual_play_adoption_verified": false
+}
