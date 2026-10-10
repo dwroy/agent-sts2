@@ -1,0 +1,191 @@
+{
+  "request_id": "roy-20261010-silent-core-output-value",
+  "created_at": "2026-10-10T20:38:29.780286+08:00",
+  "state": "source-tested-committed-ready-for-parent-integration",
+  "source_commit": "56b763e27fbb0aeec5fcf1ab69ce8b2c9c1f07b2",
+  "source_tree": "a2abe9448d3a7277c8c4592c554da9f618c46a29",
+  "source_base": "91ee18aa9c6d851a3114ce75a019ac85a45045d4",
+  "source_branch": "ops-core-output-research-20261010",
+  "source_paths": [
+    "ops/strategy_research_jobs.py",
+    "ops/codex-ops-learner.sh",
+    "learner/tasks/strategy-proposal.md",
+    "ops/tests/test_strategy_research_scheduling.py"
+  ],
+  "source_sha256": {
+    "ops/strategy_research_jobs.py": "4e9ef8b6475859ad85c90747b59f8ea03c677681d610551eab5089e34d98c902",
+    "ops/codex-ops-learner.sh": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+    "learner/tasks/strategy-proposal.md": "fa7833d6162ebecd9c3dd50d0314463417bb025a14569a6b0d8dcdc7bdfcfb2c",
+    "ops/tests/test_strategy_research_scheduling.py": "a87a4842f1d068740105b6e6637ff5952597e58944789896c66896bd7bc09c2c"
+  },
+  "source_tracked_tree_clean": true,
+  "full_sandbox_command": {
+    "argv": [
+      "nice",
+      "-n",
+      "19",
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=5s",
+      "1200s",
+      "bash",
+      "tools/test-sandbox.sh"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent",
+    "environment_overrides": {
+      "SANDBOX_WORKERS": "4",
+      "npm_config_offline": "true",
+      "PATH_prefix": "~/.local/node/bin"
+    },
+    "script_sha256": "1a0231e0631091468f337f7290bdcf6f503b763f41b0e22bc70f518827e57567",
+    "fixed_exclusions_unchanged": true,
+    "hard_wall_seconds": 1200,
+    "nice": 19,
+    "workers": 4,
+    "native_exit": 0,
+    "tsc_exit": 0,
+    "first_vitest_stage": {
+      "test_files_passed": 264,
+      "tests_passed": 2669,
+      "duration_seconds": 350.52
+    },
+    "paths_vitest_stage": {
+      "test_files_passed": 1,
+      "tests_passed": 11,
+      "duration_seconds": 2.98
+    },
+    "total_test_files_passed": 265,
+    "total_tests_passed": 2680,
+    "complete_fixed_sandbox_pass": true,
+    "log_path": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/paper/materials/20261010-core-output-research-entry/venv-restored-full-check-20261010/sandbox-normal.log",
+    "log_sha256": "c09dae9cdc2a7c4e800be09df95653c9072f4da6c9bd195b983bdb931b26c540"
+  },
+  "existing_specialized_checks": {
+    "scheduling": {
+      "exit": 0,
+      "tests": 26
+    },
+    "strategy_research": {
+      "exit": 0,
+      "tests": 8
+    },
+    "specialized_checks_not_repeated": true
+  },
+  "source_gitleaks": {
+    "argv": [
+      "nice",
+      "-n",
+      "19",
+      "gitleaks",
+      "dir",
+      "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/paper/materials/20261010-core-output-research-entry/scan",
+      "--redact",
+      "--no-banner",
+      "--report-format",
+      "json",
+      "--report-path",
+      "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/paper/materials/20261010-core-output-research-entry/venv-restored-full-check-20261010/gitleaks-source-findings.json"
+    ],
+    "exit_code": 0,
+    "log_sha256": "6057fd2f0f37647731b1e2693b4d9b8d669a135641e6e9b9583969c3241227cf",
+    "tested_source_sha256": {
+      "ops/strategy_research_jobs.py": "4e9ef8b6475859ad85c90747b59f8ea03c677681d610551eab5089e34d98c902",
+      "ops/codex-ops-learner.sh": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+      "learner/tasks/strategy-proposal.md": "fa7833d6162ebecd9c3dd50d0314463417bb025a14569a6b0d8dcdc7bdfcfb2c",
+      "ops/tests/test_strategy_research_scheduling.py": "a87a4842f1d068740105b6e6637ff5952597e58944789896c66896bd7bc09c2c"
+    }
+  },
+  "environment_restoration": {
+    "request_id": "roy-20261010-silent-core-output-value",
+    "restored_at": "2026-10-10T20:31:42.146640+08:00",
+    "exclusive_tree_lock_held": true,
+    "previous_owner": "agent:/root/core_output_research_entry",
+    "previous_state": "source-uncommitted-full-test-failed",
+    "previous_evidence_preserved": true,
+    "symlink": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/data/logdb-venv",
+    "link_value": "../../../data/logdb-venv",
+    "resolved_target": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+    "standard_initializer": "ops/codex-ops-learner.sh:85-86",
+    "initializer_sha256": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+    "existing_fixture": "ops/tests/test_strategy_concurrency.py:test_second_slot_wrapper_links_existing_python_environment",
+    "fixture_sha256": "855518af81d51cc939db14be7398c1a3bb05109cb8b4d122d56e13102f058ebe",
+    "documented_environment": "docs/logdb.md:22-25",
+    "document_sha256": "25a7963d28194c1065fb256146773679806a382b00f7de80b82def1d37852c8a",
+    "root_venv_identity": {
+      "sys_prefix": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+      "sys_base_prefix": "/usr",
+      "python_version": "3.14.4",
+      "duckdb_version": "1.5.6",
+      "executable": "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python"
+    },
+    "pyvenv_cfg_sha256": "61a0ba249deced06917f03cf393f1aa8d7dbec6cfeb8096919c507e14aa8428b",
+    "identity_command": [
+      "nice",
+      "-n",
+      "19",
+      "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+      "-B",
+      "-c",
+      "import duckdb,json,sys; print(json.dumps(dict(sys_prefix=sys.prefix,sys_base_prefix=sys.base_prefix,python_version=sys.version.split()[0],duckdb_version=duckdb.__version__,executable=sys.executable)))"
+    ],
+    "installed_dependencies": false,
+    "configuration_changed": false,
+    "credentials_read_or_changed": false,
+    "fixed_exclusions_changed": false,
+    "production_source_changed_for_environment": false
+  },
+  "old_history": {
+    "interrupt_tool_exit": 130,
+    "bounded_native_exit": 124,
+    "previous_normal_native_exit": 1,
+    "previous_failure": "missing standard isolated-worktree data/logdb-venv/bin/python; source and test assertions unchanged",
+    "sealed_artifacts": [
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/paper/materials/20261010-core-output-research-entry",
+        "manifest_sha256": "95ae851b803f284af7cf63a3a126209950a20f28da9b66631b4eab30501ed926",
+        "closure_sha256": "c050b9bf059d8e327314804afe62287372ce1566367aed15214b7675b797d6eb",
+        "files_verified_unchanged": 48
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/paper/materials/20261010-core-output-research-entry/normal-full-check-20261010",
+        "manifest_sha256": "5e9b3386a347a0eb3ae0419789183ebb1432044137e4c78808fa97f7782e881b",
+        "closure_sha256": "542bd80ad75892494de156db1f32026a3df48685a69c9c8b56e970d376f369d2",
+        "files_verified_unchanged": 12
+      }
+    ]
+  },
+  "latest_request_binding": {
+    "request_path": "/home/dw/Projects/agent-sts2/notes/strategy-research-core-output-silent.json",
+    "request_sha256": "2dc675b0650762aac01aa5e96cd08b27d8c4ec1f796af4a329d70b0b072f58d5",
+    "latest_task_path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261010-core-output-value/multiturn-clarification/task-v2.md",
+    "latest_task_sha256": "c8c9df3f337556887519a314a552894c2e61056aadf799aece1b6d86984e45e9",
+    "task_verified_as_current_read_only": true,
+    "instruction": "Ops must re-read current request under existing registration/lease semantics at actual dispatch; do not bind the original task SHA from initial preparation."
+  },
+  "completion_event": {
+    "request_id": "roy-20261010-silent-core-output-value",
+    "kind": "manual",
+    "event_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1791635860191385868-manual.md",
+    "event_sha256": "913ef7b3ae81a02559699d8ae725ff132b2c9b7b8459ed184a2b933e8ed8fb35",
+    "event_bytes": 1055,
+    "parent_continuation_path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261010-core-output-value/host-continuation-receipt.json",
+    "source_commit": "56b763e27fbb0aeec5fcf1ab69ce8b2c9c1f07b2",
+    "research_batch": null,
+    "actual_research_dispatched": false,
+    "state": "source-tested-committed",
+    "created_at": "2026-10-10T20:37:40.199629+08:00"
+  },
+  "parent_continuation_path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261010-core-output-value/host-continuation-receipt.json",
+  "ownership": {
+    "exclusive_check_lock_released": true,
+    "source_handoff_to": "parent /root for integration",
+    "source_further_edits_planned": false,
+    "worktree_retained": true
+  },
+  "actual_research_dispatched": false,
+  "main_live_merged": false,
+  "knowledge_shipped": false,
+  "game_version_created": false,
+  "push_performed": false,
+  "next_action": "Parent ops integrates tested source via existing loop and deduplicates dispatch using the latest request/task-v2; no new parent request."
+}

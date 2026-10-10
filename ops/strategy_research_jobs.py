@@ -18,6 +18,7 @@ KEY = "strategy-research:" + REQUEST
 REQUEST_PATHS = {
     REQUEST: REQUEST_PATH,
     "roy-20261010-silent-core-reuse-value": "notes/strategy-research-core-reuse-silent.json",
+    "roy-20261010-silent-core-output-value": "notes/strategy-research-core-output-silent.json",
 }
 
 

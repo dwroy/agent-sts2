@@ -1,0 +1,104 @@
+{
+  "kind": "ops_abstract_probability_discussion_not_game_evidence",
+  "assumptions": [
+    "Uniform random order of distinct physical cards, sampled without replacement.",
+    "A and B are disjoint labels; count seeing at least one of each.",
+    "Draw window is fixed at five or ten distinct cards; no redraw or shuffle.",
+    "No card effects, energy, retention, timing, survival, or play legality modeled.",
+    "Extra tool row only describes its pre-effect access cost, not total value.",
+    "Seeing both does not establish simultaneous availability or completed execution."
+  ],
+  "rows": [
+    {
+      "label": "baseline",
+      "cards": 20,
+      "A": 1,
+      "B": 1,
+      "draws": {
+        "5": {
+          "numerator": 816,
+          "denominator": 15504,
+          "probability": 0.05263157894736842
+        },
+        "10": {
+          "numerator": 43758,
+          "denominator": 184756,
+          "probability": 0.23684210526315788
+        }
+      }
+    },
+    {
+      "label": "one_extra_A",
+      "cards": 21,
+      "A": 2,
+      "B": 1,
+      "draws": {
+        "5": {
+          "numerator": 1785,
+          "denominator": 20349,
+          "probability": 0.08771929824561403
+        },
+        "10": {
+          "numerator": 119340,
+          "denominator": 352716,
+          "probability": 0.3383458646616541
+        }
+      }
+    },
+    {
+      "label": "one_extra_A_and_B",
+      "cards": 22,
+      "A": 2,
+      "B": 2,
+      "draws": {
+        "5": {
+          "numerator": 3894,
+          "denominator": 26334,
+          "probability": 0.14786967418546365
+        },
+        "10": {
+          "numerator": 320892,
+          "denominator": 646646,
+          "probability": 0.49624060150375937
+        }
+      }
+    },
+    {
+      "label": "extra_tool_before_its_effect",
+      "cards": 21,
+      "A": 1,
+      "B": 1,
+      "draws": {
+        "5": {
+          "numerator": 969,
+          "denominator": 20349,
+          "probability": 0.047619047619047616
+        },
+        "10": {
+          "numerator": 75582,
+          "denominator": 352716,
+          "probability": 0.21428571428571427
+        }
+      }
+    },
+    {
+      "label": "ten_extra_noncore_without_draw_effect",
+      "cards": 30,
+      "A": 1,
+      "B": 1,
+      "draws": {
+        "5": {
+          "numerator": 3276,
+          "denominator": 142506,
+          "probability": 0.022988505747126436
+        },
+        "10": {
+          "numerator": 3108105,
+          "denominator": 30045015,
+          "probability": 0.10344827586206896
+        }
+      }
+    }
+  ],
+  "learned_game_policy": false
+}

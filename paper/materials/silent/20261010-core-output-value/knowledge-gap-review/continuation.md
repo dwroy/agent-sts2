@@ -1,0 +1,5 @@
+request_id=roy-20261010-silent-core-output-value；同父知识核对/入库与论文效果跟踪补充，不新增第二专题。
+Roy已授权把核心成型后的循环效率、增牌边际收益讨论交learner用本角色证据验证入库，并保存最近两轮重要讨论、后续跟踪效果。完整讨论 paper/materials/discussions/2026-10-10-core-cycle-and-marginal-card-value.md；切点live经验2026-10-10.8/208条，部分覆盖但缺完整指导，audit与效果待跟踪清单在 paper/materials/silent/20261010-core-output-value/knowledge-gap-review/。
+入口源56b763e27fbb0aeec5fcf1ab69ce8b2c9c1f07b2已main合入ddecc2f195388d8ba6aa638f6da2537cd4dc9a37；265文件2680例固定沙箱+tsc0和gitleaks0原件SHA已核。原130/124/exit1不改写，未造游戏版本，不需重复开发入口。现行spec是task-v3.md/SHA 1b60d3ca00082efabcc1a798fb8f0fe9a5c58dc677e3eb4950bc788ae5919dbf，输入仍204局/SHA 574484f2634437308d0d42aa5b916a28d471a940155dedcedb630cd5ca23be74。派发时必须读取最新根请求，旧v1/v2与旧完成事件仅历史，不按旧SHA派发。
+本轮标准strategy-proposal返回dispatched:null、rc1；随后宿主procs 15s无回应rc124。当前根请求pending/batch=None，两个策略记录201301与201301-s2仍running，未凭沙箱PID断言死亡或冒称槽位核实。请在现有宿主串行流程核最新实际batch/租约，空位时沿原同父去重标准入口派；若调度器已派只承接该批。learner新tab放ops同一space wJ，不打断现有任务。
+报告需直接回答成型后的有限回合兑现与增牌收益，区分已有经验/支持新增/缺证；经既有experience-update去重落库，不以本对话当知识。实际合入后在effect-followup.json独立填经验ID/账本/版本/live/首个生效局，核消费者和自然采用，再跟踪每20局漏斗及实际核心启动/兑现/伤害/生存；原失败和反例保留，无受控证据不宣称因果提升。双通知Roy，不把派发或报告当上线/收益。
