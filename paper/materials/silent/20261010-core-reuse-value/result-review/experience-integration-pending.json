@@ -1,0 +1,47 @@
+{
+  "request_id": "roy-20261010-silent-core-reuse-experience-integration",
+  "parent_request_id": "roy-20261010-silent-core-reuse-value",
+  "authorized_by": "Roy",
+  "authorization": "既有专题请求的知识沉淀授权；报告验收后经现有experience-update去重入库",
+  "task": "experience-update",
+  "character": "silent",
+  "state": "pending",
+  "batch": null,
+  "accepted_at": "2026-10-10T18:11:16+08:00",
+  "source_batch": "20261010-164301-strategy-proposal",
+  "source_report": {
+    "path": "paper/materials/silent/20261010-core-reuse-value/result-review/report.md",
+    "sha256": "d9bae12a25666791bb44969777f0a24b656209639a2e201e3a388e7020b30d7f",
+    "bytes": 84835
+  },
+  "source_input": {
+    "path": "paper/materials/silent/20261010-core-reuse-value/input-manifest.json",
+    "sha256": "c8560fe798ff37b7b97c2d370736d57157e544d60e700b979f81657c888ce3b2",
+    "run_count": 201
+  },
+  "dispatch_runs": [
+    "ZZMYZ5UBCG72",
+    "C48LLXBGKXQ9",
+    "K3676LU8B0UH",
+    "L704TLETMZBM",
+    "4Y94N8RDPGPM",
+    "KV0JHNJCKXLS",
+    "J8PHG72DGD90",
+    "4XLZURXMD872",
+    "49HL2N70CHMU"
+  ],
+  "dispatch_runs_are": "report_case_anchors_only_not_full_history_scope",
+  "ledger_ids": [
+    "silent-0376"
+  ],
+  "source_code_proposal_ids": [
+    "silent-proposal-9e1bc1225fae0e30"
+  ],
+  "work_spec": "paper/materials/silent/20261010-core-reuse-value/result-review/experience-work-spec.md",
+  "work_spec_sha256": "c29b039efec023e68016338f3de9b725b08571d4016b354bae48b8a70b235bf7",
+  "blocking_condition": "宿主ops串行接收后检查exp租约与未合入旧批，保留旧done入库请求历史，再绑定既有experience-integration-silent入口；不抢树或覆写活任务",
+  "entry_count_goal": {
+    "approximate": 1,
+    "not_a_hard_count": "由learner去重裁定；具体机制与四核心保留原身份"
+  }
+}
