@@ -1,0 +1,356 @@
+{
+  "main_before": "45872b96d8db6052b90fb31a1b8933b0a5d2d676",
+  "live_integrated": "8e74493d92f757a88f15dffb48e2f5336c0cd0ac",
+  "live_unique_commits": 314,
+  "other_source_commits": [
+    {
+      "sha": "be703ec1a5fa544ae7fb28745bae80f0e254d452",
+      "title": "Fix observed Silent Aeonglass whole-fight intensities",
+      "branches": [
+        "boss-sim-silent-aeonglass-20261007-153133"
+      ],
+      "paths": [
+        "agent/src/reflex/rollout-live.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/tests/boss-sim-silent-aeonglass.test.ts"
+      ],
+      "disposition": "preserved rejected calibration experiment"
+    },
+    {
+      "sha": "436f338f11601fe89d5ef6c8445692706c7d797b",
+      "title": "fix(sim): correct observed Silent Aeonglass full-fight intensity",
+      "branches": [
+        "boss-sim-silent-aeonglass-20261009-180724"
+      ],
+      "paths": [
+        "agent/src/reflex/rollout-live.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/tests/boss-sim-silent-aeonglass.test.ts",
+        "agent/tests/fixtures/silent-aeonglass-intensity.json"
+      ],
+      "disposition": "preserved rejected calibration experiment"
+    },
+    {
+      "sha": "452efacf7178c4acf8855ba42d39f70e7082f637",
+      "title": "fix(sim): use observed Silent Queen bases and ally growth in full fights",
+      "branches": [
+        "boss-sim-silent-queen-20261008-015926"
+      ],
+      "paths": [
+        "agent/src/reflex/rollout-live.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/tests/boss-sim-silent-queen-b4.test.ts"
+      ],
+      "disposition": "preserved rejected calibration experiment"
+    },
+    {
+      "sha": "0028f43d9559f6a0e02e717abb9e7acb9e2e8007",
+      "title": "fix(sim): include Queen A10 buff verified from Silent raw frames",
+      "branches": [
+        "boss-sim-silent-queen-20261009-195051"
+      ],
+      "paths": [
+        "agent/src/sim/boss-sim.ts",
+        "agent/tests/boss-sim-silent-queen-buff.test.ts"
+      ],
+      "disposition": "preserved rejected calibration experiment"
+    },
+    {
+      "sha": "fd5adcd7bfcd182e384fdf870933fc35d741bbd9",
+      "title": "fix(sim): limit Queen ally buff to observed tuning ascensions",
+      "branches": [
+        "boss-sim-silent-queen-20261009-195051"
+      ],
+      "paths": [
+        "agent/src/sim/boss-sim.ts",
+        "agent/tests/boss-sim-silent-queen-buff.test.ts"
+      ],
+      "disposition": "preserved rejected calibration experiment"
+    },
+    {
+      "sha": "957e080352d39d6258f6c5c7ab5cf38a9b732073",
+      "title": "fix(sim): model Silent Queen's observed Amalgam Strength buff",
+      "branches": [
+        "boss-sim-silent-queen-20261009-195051"
+      ],
+      "paths": [
+        "agent/src/reflex/rollout.ts",
+        "agent/src/sim/boss-sim.ts",
+        "agent/tests/boss-sim-silent-queen-buff.test.ts"
+      ],
+      "disposition": "preserved rejected calibration experiment"
+    },
+    {
+      "sha": "5460da22721ff3dcc23c08489b7f18bfb0bb4ae3",
+      "title": "docs: preserve cache probe home repair evidence and blocked release",
+      "branches": [
+        "codex-brain-cache"
+      ],
+      "paths": [
+        "learner/runs/20261008-153529-codex-brain-cache/baseline.json",
+        "learner/runs/20261008-153529-codex-brain-cache/completion.json",
+        "learner/runs/20261008-153529-codex-brain-cache/delivery-manifest.json",
+        "learner/runs/20261008-153529-codex-brain-cache/deploy.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/deploy.log",
+        "learner/runs/20261008-153529-codex-brain-cache/fallback-request.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/fallback-request.log",
+        "learner/runs/20261008-153529-codex-brain-cache/frozen-reconstruction.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/frozen-reconstruction.json",
+        "learner/runs/20261008-153529-codex-brain-cache/procs-initial.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/procs-initial.log",
+        "learner/runs/20261008-153529-codex-brain-cache/publication.json",
+        "learner/runs/20261008-153529-codex-brain-cache/python-fixed.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/python-fixed.log",
+        "learner/runs/20261008-153529-codex-brain-cache/records-gitleaks.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/records-gitleaks.log",
+        "learner/runs/20261008-153529-codex-brain-cache/red-green.json",
+        "learner/runs/20261008-153529-codex-brain-cache/report-stage-initial.json",
+        "learner/runs/20261008-153529-codex-brain-cache/report-stage-initial.md",
+        "learner/runs/20261008-153529-codex-brain-cache/report.json",
+        "learner/runs/20261008-153529-codex-brain-cache/report.md",
+        "learner/runs/20261008-153529-codex-brain-cache/restored-green.log",
+        "learner/runs/20261008-153529-codex-brain-cache/root-record-receipts.json",
+        "learner/runs/20261008-153529-codex-brain-cache/roy-notification.md",
+        "learner/runs/20261008-153529-codex-brain-cache/source-commit.log",
+        "learner/runs/20261008-153529-codex-brain-cache/source-gitleaks.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/source-gitleaks.log",
+        "learner/runs/20261008-153529-codex-brain-cache/source-sandbox.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/source-sandbox.log",
+        "learner/runs/20261008-153529-codex-brain-cache/source-validation.json",
+        "learner/runs/20261008-153529-codex-brain-cache/targeted-first.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/targeted-first.log",
+        "learner/runs/20261008-153529-codex-brain-cache/targeted-fixed.exit",
+        "learner/runs/20261008-153529-codex-brain-cache/targeted-fixed.log",
+        "learner/runs/20261008-153529-codex-brain-cache/withdrawn-red.log",
+        "paper/materials/decision-log.md"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "7f658abe742c5b62d14ff9f8047ac11837d10489",
+      "title": "Preserve diagnostics for failed first-fight resource contracts",
+      "branches": [
+        "codex-fix-silent-20261009-231302"
+      ],
+      "paths": [
+        "agent/src/sim/boss-sim.ts",
+        "agent/tests/continuation-diagnostics.test.ts"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "be69855995737d6f381adb10bf248964832da24b",
+      "title": "Audit predicted Silent combat selections before and after SL",
+      "branches": [
+        "codex-strategy-silent-20261009-231302"
+      ],
+      "paths": [
+        "agent/src/memory/types.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/silent-selection-audit.ts",
+        "agent/tests/silent-selection-audit-cases.json",
+        "agent/tests/silent-selection-audit-state.json",
+        "agent/tests/silent-selection-audit.test.ts"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "f34700874c9f48b614991f769532115a0f24f27b",
+      "title": "Show committed Silent follow-up facts during Survivor discard",
+      "branches": [
+        "codex-strategy-silent-20261009-234302"
+      ],
+      "paths": [
+        "agent/src/hand/screens/selection.ts",
+        "agent/src/memory/types.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/tests/silent-discard-followup-evidence.json",
+        "agent/tests/silent-discard-followup.test.ts"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "6b04cabdeaaba33ae485713cea1526d009f72ecd",
+      "title": "Propagate the observed Silent Apotheosis Footwork upgrade",
+      "branches": [
+        "codex-strategy-silent-20261010-001301"
+      ],
+      "paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/silent-apotheosis.ts",
+        "agent/tests/silent-apotheosis-footwork-evidence.json",
+        "agent/tests/silent-apotheosis-footwork.test.ts"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "30f2fc2725947049154f3887612f839e9041cf0b",
+      "title": "Model observed Silent Neutralize upgrades after Apotheosis",
+      "branches": [
+        "codex-strategy-silent-20261010-004302"
+      ],
+      "paths": [
+        "agent/src/reflex/silent-apotheosis.ts",
+        "agent/tests/silent-apotheosis-neutralize-evidence.json",
+        "agent/tests/silent-apotheosis-neutralize.test.ts"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "5b06f6d5870a5d679a346abcce93cbce8576a810",
+      "title": "Propagate observed Silent Apotheosis Footwork upgrade",
+      "branches": [
+        "codex-strategy-silent-20261010-014301"
+      ],
+      "paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/silent-apotheosis.ts",
+        "agent/tests/silent-apotheosis-footwork-evidence.json",
+        "agent/tests/silent-apotheosis-footwork.test.ts"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "7b48971cb0214a277be0aa1fa2c12a49ced0d718",
+      "title": "Show the committed Silent plan during a discard choice",
+      "branches": [
+        "codex-strategy-silent-20261010-021301"
+      ],
+      "paths": [
+        "agent/src/hand/screens/selection.ts",
+        "agent/tests/silent-discard-plan-evidence.json",
+        "agent/tests/silent-discard-plan.test.ts"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "da83011fb81d461a1f15037720276295dc220340",
+      "title": "Model the observed Silent Apotheosis Footwork upgrade",
+      "branches": [
+        "codex-strategy-silent-20261010-024302"
+      ],
+      "paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/silent-apotheosis.ts",
+        "agent/tests/silent-apotheosis-footwork-evidence.json",
+        "agent/tests/silent-apotheosis-footwork.test.ts"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "be0df8cd17319dbae0d51c421ccad62b2cb8228b",
+      "title": "Wire observed Caltrops Thorns into Silent turn and rollout models",
+      "branches": [
+        "fix-batch-20261007-081302",
+        "ops-1610-fix151301",
+        "strategy-proposal-20261007-160418-initial-merge"
+      ],
+      "paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/tests/silent-caltrops-evidence.json",
+        "agent/tests/silent-caltrops.test.ts"
+      ],
+      "disposition": "preserved unaccepted or historical candidate; not production code"
+    },
+    {
+      "sha": "20ebab42216178f075fab65f9d8cd776ab934194",
+      "title": "feat: allow two disjoint strategy proposal workers",
+      "branches": [
+        "fix/strategy-proposal-concurrency"
+      ],
+      "paths": [
+        "agent/tests/learner-strategy.test.ts",
+        "agent/tests/strategy-concurrency.test.ts",
+        "docs/codex-ops.md",
+        "learner/tasks/strategy-proposal.md",
+        "ops/codex-ops-actions.sh",
+        "ops/codex-ops-learn.py",
+        "ops/codex-ops-learner.sh",
+        "ops/codex/lib.ts",
+        "ops/learner_jobs.py",
+        "ops/proposal_dispatch.py",
+        "ops/tests/test_strategy_concurrency.py",
+        "paper/materials/silent/20261009-strategy-concurrency/authorization.json",
+        "paper/materials/silent/20261009-strategy-concurrency/development-handoff.json",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/acceptance.json",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/gitleaks-1.json",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/gitleaks-1.log",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/gitleaks-final.json",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/gitleaks-final.log",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/learning-flow-1.log",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/patch-preparation-failure.json",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/python-1.log",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/python-2.log",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/regression-baseline-red.log",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/sandbox-1.log",
+        "paper/materials/silent/20261009-strategy-concurrency/tests/target-1.log"
+      ],
+      "disposition": "already integrated with adapted production implementation",
+      "production_commits": [
+        "319037d22",
+        "072a83587"
+      ]
+    },
+    {
+      "sha": "51f0fc295ca5d2b0f85946ac4a520d898be02568",
+      "title": "Follow new console files and preserve the terminal during loop reload",
+      "branches": [
+        "ops-autoplay-console-20261010"
+      ],
+      "paths": [
+        "agent/tests/autoplay_reload_test.py",
+        "agent/tests/ops-autoplay-console.test.ts",
+        "agent/tests/ops-autoplay-reload.test.ts",
+        "ops/autoplay-console.sh",
+        "ops/autoplay-reload.py"
+      ],
+      "disposition": "already integrated with equivalent patch"
+    },
+    {
+      "sha": "8bef8e9da87d023f7887b1a4c4d742a24de9d24a",
+      "title": "Capture enough pane history to verify live console output",
+      "branches": [
+        "ops-autoplay-console-20261010"
+      ],
+      "paths": [
+        "agent/tests/ops-autoplay-console.test.ts",
+        "ops/autoplay-pane.sh"
+      ],
+      "disposition": "already integrated with equivalent patch"
+    },
+    {
+      "sha": "9c000c5ff2a54ad0bcdddd395cdbe2a7210c36fc",
+      "title": "Read autoplay log pane through the resolved host binary",
+      "branches": [
+        "ops-autoplay-console-20261010"
+      ],
+      "paths": [
+        "agent/tests/ops-autoplay-console.test.ts",
+        "ops/autoplay-pane.sh",
+        "ops/codex-ops-actions.sh"
+      ],
+      "disposition": "already integrated with equivalent patch"
+    },
+    {
+      "sha": "577b8bb4514d28282146e131d20a4ffff5c2f5ac",
+      "title": "ops: add isolated Codex brain cache dispatch",
+      "branches": [
+        "ops-codex-brain-cache-dispatch"
+      ],
+      "paths": [
+        "docs/codex-ops.md",
+        "learner/tasks/codex-brain-cache.md",
+        "ops/codex-ops-learner.sh",
+        "ops/learner_jobs.py",
+        "ops/tests/test_silent_calibration_dispatch.py"
+      ],
+      "disposition": "already integrated with equivalent patch"
+    }
+  ],
+  "staged_candidates_preserved": [
+    ".worktrees/codex-dev",
+    ".worktrees/ops-0825-gardener"
+  ],
+  "no_worktree_cleared": true
+}

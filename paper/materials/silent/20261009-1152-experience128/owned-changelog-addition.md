@@ -653,6 +653,6 @@ SL同房多试对照（单试跟踪won不当实际读档）。
 | sample-a9-shop | 4097.0/5206 | 4031.0/5197 | -9.0 |
 
 - 整体中位2704.0→2640.5（-63.5字），配对差中位-16.0，最大5662→5561；单片差-121至248。
-- active 196、总正文52099字符，置信度{'low': 27, 'high': 124, 'med': 45}；A8 {'entries': 182, 'chars': 48242}，A9 {'entries': 183, 'chars': 48526}，A10 {'entries': 193, 'chars': 51007}。无合并/压缩/退役；需要Dai定：无。
+- active 196、总正文52099字符，置信度{'low': 27, 'high': 124, 'med': 45}；A8 {'entries': 182, 'chars': 48242}，A9 {'entries': 183, 'chars': 48526}，A10 {'entries': 193, 'chars': 51007}。无合并/压缩/退役；需要Roy定：无。
 
 全部原件/偏移、基线复算、机制/SL参数、初稿/失败、CLI/提案、切片/测试/合入预检及报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-111625-experience-update。

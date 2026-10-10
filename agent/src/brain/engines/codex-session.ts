@@ -1,5 +1,5 @@
 /**
- * Codex session mode (BRAIN_CODEX_MODE=session, Dai 2026-10-03): one long-lived `codex app-server` per play process
+ * Codex session mode (BRAIN_CODEX_MODE=session, Roy 2026-10-03): one long-lived `codex app-server` per play process
  * with one saved thread that holds only our system prompt; every brain question is a turn on it, answered with the
  * strict schema, then `thread/revert` takes the thread back to that base, so answers stay independent and the next
  * question's request is the system prompt plus the new question only. The prompt cache then holds the system prompt

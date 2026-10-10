@@ -105,7 +105,7 @@ lines += ['', '### 切片大小','', '- 固定种子20260929，截止前silent�
 for x in slice_summary['rows']:
     lines.append(f'| {x["sample"]} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["paired_median"]} |')
 lines += ['', f'- 整体中位{slice_summary["before_median"]}→{slice_summary["after_median"]}（{slice_summary["after_median"]-slice_summary["before_median"]:+}字），配对差中位{slice_summary["paired_median"]}，最大{slice_summary["before_max"]}→{slice_summary["after_max"]}；单片差{slice_summary["diff_min"]}至{slice_summary["diff_max"]}。',
- f'- active193，正文51769字符，置信度{U["confidence"]}；A8 {U["applicable"]["8"]}，A9 {U["applicable"]["9"]}，A10 {U["applicable"]["10"]}。无预算合并/退役/压缩；需要Dai定：无。',
+ f'- active193，正文51769字符，置信度{U["confidence"]}；A8 {U["applicable"]["8"]}，A9 {U["applicable"]["9"]}，A10 {U["applicable"]["10"]}。无预算合并/退役/压缩；需要Roy定：无。',
  '', f'原子集/偏移、复算、初稿和失败、参数核验、提案/CLI、切片、测试、合入预检与完整报告保留{O}。','']
 (O/'changelog-section.md').write_text('\n'.join(lines))
 (O/'report.md').write_text('\n'.join(lines))

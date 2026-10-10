@@ -92,7 +92,7 @@ lines += ['','### 切片大小','',
  '','| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for r in V['by_sample']:lines.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
 lines += ['',f'- 整体中位{V["before_median"]}→{V["after_median"]}，变化{V["median_growth"]}字；配对差中位{V["paired_median"]}，最大{V["before_max"]}→{V["after_max"]}，单片最多增{V["max_growth"]}。',
- f'- active{S["after"]["active"]}/正文{S["after"]["chars"]}；high109/med45/low24；A8适用166条/44761字、A9适用167条/45045字、A10适用175条/47948字。无合并/退役，更新案例净压缩366字、新条目438字，需Dai定：无。',
+ f'- active{S["after"]["active"]}/正文{S["after"]["chars"]}；high109/med45/low24；A8适用166条/44761字、A9适用167条/45045字、A10适用175条/47948字。无合并/退役，更新案例净压缩366字、新条目438字，需Roy定：无。',
  '', '原帧/复算/机制/提案/CLI/测试/切片/合入回执：'+str(O.resolve())+'；报告时间'+now+'。','']
 report='\n'.join(lines).replace('战績','战绩').replace('仍敗','仍败')
 (O/'report.md').write_text(report);(O/'changelog-title.txt').write_text(title+'\n')

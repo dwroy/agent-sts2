@@ -108,7 +108,7 @@ f'- JSON/证据角色/12位id/n/范围/预算/旧药水分句/原始机制/git d
 '- 固定种子20260929，从截至本局53,787个静默原始状态样本池抽最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP＝240配对，按state.run.character_id=SILENT过滤。官方knowledge-slice.ts/CHARACTER=silent/setExperienceForTests；结果表和其他知识固定，只替换经验，manifest及逐片原文保留，不冒充V4完整前缀。','',
 '| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for r in S['rows']:out.append(f'| {r["sample"].removeprefix("sample-")} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["delta_median"]} |')
-out+=['',f'- 配对增量中位{S["median_delta"]}、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active130→131、50696→{C["chars"]}字，高62中40低29；'+ '、'.join(f'A{a} {r["entries"]}条{r["chars"]}字' for a,r in C['applicable'].items())+'。需要Dai定：无。','',
+out+=['',f'- 配对增量中位{S["median_delta"]}、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active130→131、50696→{C["chars"]}字，高62中40低29；'+ '、'.join(f'A{a} {r["entries"]}条{r["chars"]}字' for a,r in C['applicable'].items())+'。需要Roy定：无。','',
 f'本节收尾：源{M["source_commit"]}，实际live合入{M["merged"]}，上线登记{M["release_commit"]}/eval {M["eval_version"]}；刷新{M.get("refresh_commit")}、合前{M["base"]}，不同知识blob冲突0，其他知识blob保持。无源码/生成器/手写知识/其他角色/新用药规则改动，不重建；主目录本节/账本由调用方提交。运维交接learner/runs/20261007-042707-experience-update/handoff-ops.md，调用器experience-done通知运维核实际发布后仅CLI登记13项shipped，完整沙箱外交调度器；不停对局、不运行play、不推送。','']
 section='\n'.join(out)
 (O/'changelog-section.md').write_text(section)

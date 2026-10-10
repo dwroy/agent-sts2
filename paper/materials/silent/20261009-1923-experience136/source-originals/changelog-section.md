@@ -587,7 +587,7 @@
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。新增账本[]，proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0253,silent-0330,silent-0280,silent-0235,silent-0129,silent-0221,silent-0132,silent-0160,silent-0161,silent-0168,silent-0106,silent-0243,silent-0343，退役无。只CLI追加、保留旧claim/首证/prior/状态和版本历史；shipped交实际合入后的运维核登记。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新29cd6a323692e1b22d084fb523758b3865ac5810；合前29cd6a323692e1b22d084fb523758b3865ac5810；实际合入None；合后测试None。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -627,6 +627,6 @@
 | sample-a9-shop | 3977.5/5069 | 3868.5/4970 | -103.5 |
 
 - 整体中位2644.0→2661.0（+17.0字），配对差中位-50.0；最大5669→5528，单片差-170至254。
-- active198，总字符50292；置信度{'low': 26, 'high': 129, 'med': 43}；A8 {'entries': 184, 'chars': 46607}，A9 {'entries': 185, 'chars': 46891}，A10 {'entries': 196, 'chars': 49464}。需要Dai定：无。
+- active198，总字符50292；置信度{'low': 26, 'high': 129, 'med': 43}；A8 {'entries': 184, 'chars': 46607}，A9 {'entries': 185, 'chars': 46891}，A10 {'entries': 196, 'chars': 49464}。需要Roy定：无。
 
 全部脚本、原抽取/偏移、基线重算、机制/SL参数、账本/提案CLI、前后经验/切片、测试与合入预检/失败原件保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-184303-experience-update。

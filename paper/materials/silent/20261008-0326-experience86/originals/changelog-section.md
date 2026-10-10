@@ -596,7 +596,7 @@ REST/SHOP/普通EVENT按源节点入血关联下一场（多源可同一战，�
 - CONFLICT (content): Merge conflict in knowledge/common/move-model.json
 - CONFLICT (modify/delete): notes/fight-value-backtest-silent.md deleted in 979ddf170447a370880b8e3ed9d21422d2b598c0 and modified in 22a653f745bae5f177170e3a454ec770b829434f.  Version 22a653f745bae5f177170e3a454ec770b829434f of notes/fight-value-backtest-silent.md left in tree.
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -636,6 +636,6 @@ REST/SHOP/普通EVENT按源节点入血关联下一场（多源可同一战，�
 | a9-reward | 2736.0/3317 | 2944.0/3525 | 208.0 |
 | a9-shop | 3769.0/4965 | 4087.0/5077 | 220.0 |
 
-- 整体中位2736.0→2877.0（+141.0字）；配对增量中位+96.0，单片最多增333，最大5167→5279。active159→159，正文50368→51598，置信{'low': 25, 'high': 91, 'med': 43}；A8适用{'entries': 151, 'chars': 48231}，A9适用{'entries': 152, 'chars': 48515}，A10适用{'entries': 156, 'chars': 50462}。需要Dai定：无。
+- 整体中位2736.0→2877.0（+141.0字）；配对增量中位+96.0，单片最多增333，最大5167→5279。active159→159，正文50368→51598，置信{'low': 25, 'high': 91, 'med': 43}；A8适用{'entries': 151, 'chars': 48231}，A9适用{'entries': 152, 'chars': 48515}，A10适用{'entries': 156, 'chars': 50462}。需要Roy定：无。
 
 完整报告/抽取/原帧/脚本/草稿/失败/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-024302-experience-update；生成时间2026-10-08 03:21:59 +0800。

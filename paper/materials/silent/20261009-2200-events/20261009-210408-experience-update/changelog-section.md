@@ -772,7 +772,7 @@
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。账本新增无，proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0025,silent-0013,silent-0046,silent-0010,silent-0158,silent-0162,silent-0233,silent-0259,silent-0243,silent-0276,silent-0253,silent-0312,silent-0348，退役无；旧claim/首证/prior/历史保持，实际shipped由运维核。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新ee17a8e20d38400846031bc86e05cec071c1380b；合前ee17a8e20d38400846031bc86e05cec071c1380b；实际合入None；合后测试None。
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -813,6 +813,6 @@
 | sample-a9-shop | 4019.0/4940 | 4016.0/5197 | -3.0 |
 
 - 整体中位2739.0→2777.5（+38.5字），配对差中位-3.0；最大5465→5462，单片差范围[-101, 308]。
-- active200、总字符49840，置信度{'low': 25, 'high': 129, 'med': 46}；A8 {'entries': 186, 'chars': 46155}，A9 {'entries': 187, 'chars': 46439}，A10 {'entries': 198, 'chars': 49012}。需要Dai定：无。
+- active200、总字符49840，置信度{'low': 25, 'high': 129, 'med': 46}；A8 {'entries': 186, 'chars': 46155}，A9 {'entries': 187, 'chars': 46439}，A10 {'entries': 198, 'chars': 49012}。需要Roy定：无。
 
 全部原件、前后经验/切片、基线/公式/历史SL、CLI/提案、测试、合入预检与报告保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update。

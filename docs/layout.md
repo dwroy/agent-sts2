@@ -1,6 +1,6 @@
 # 仓库布局
 
-2026-10-04 定的布局（Dai 批准）。旧路径到新路径的逐个文件对照见 [path-map.tsv](path-map.tsv)；模块划分的依据是 [v4-architecture.md](v4-architecture.md) §1（手、眼、小脑、大脑、模拟器、工作记忆、知识库）。
+2026-10-04 定的布局（Roy 批准）。旧路径到新路径的逐个文件对照见 [path-map.tsv](path-map.tsv)；模块划分的依据是 [v4-architecture.md](v4-architecture.md) §1（手、眼、小脑、大脑、模拟器、工作记忆、知识库）。
 
 路径的写法：项目根目录下的文档（docs/、learner/）里写的是从项目根算起的路径；agent/ 里的代码注释和 README 写的是从 agent/ 算起的路径（src/…、tests/…、tools/…），但数据、知识、日志仍写项目根下的路径（knowledge/…、data/…、logs/…）。代码里的路径一律从模块自己的位置推出项目根（agent/src/core/paths.ts 的 PROJECT_ROOT；Python 用 `Path(__file__).resolve().parents[n]`），不看当前目录；环境变量或配置里给的相对路径（例如 .env 里的 `DECISION_LOG=logs/decisions.jsonl`）也从项目根解析。
 

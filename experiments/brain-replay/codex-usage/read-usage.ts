@@ -1,5 +1,5 @@
 /**
- * One read of the codex plan's usage, read only (Dai 2026-10-03): the usage guard's own read (src/brain/engines/
+ * One read of the codex plan's usage, read only (Roy 2026-10-03): the usage guard's own read (src/brain/engines/
  * codex-usage.ts readCodexUsage: account/rateLimits/read through a short-lived `codex app-server` on stdio, codex's
  * login in BRAIN_CODEX_HOME / ~/.codex, which codex reads and we do not), printed as brain.jsonl's `limits` note with
  * the guard's verdict at the configured BRAIN_CODEX_USAGE_STOP_PCT. No model call; no account id is printed.

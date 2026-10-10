@@ -23,7 +23,7 @@ if [ "$screen" = "GAME_OVER" ]; then
   curl -s -m 10 -X POST http://127.0.0.1:8080/action -H 'content-type: application/json' -d '{"action":"return_to_main_menu"}' >/dev/null
   sleep 3
 fi
-# Ablation (Dai 2026-09-27, A8): ops/ablation.json {"arms": [...], "i": n, "total": N} rotates the arms
+# Ablation (Roy 2026-09-27, A8): ops/ablation.json {"arms": [...], "i": n, "total": N} rotates the arms
 # code (no Jev, no DeepSeek), jev (no DeepSeek), ds (DeepSeek without Jev), full. The arm of the run
 # in progress is kept in ops/ablation-current.json until report.py marks it done (a restart keeps it).
 arm=$(python3 - "$OPS" <<'PY'

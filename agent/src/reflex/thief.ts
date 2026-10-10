@@ -1,5 +1,5 @@
 /**
- * Thieves (THIEF_FACTS, docs/thief.md; Dai 2026-10-02: step 1, facts and option coverage, no cost in the ranking).
+ * Thieves (THIEF_FACTS, docs/thief.md; Roy 2026-10-02: step 1, facts and option coverage, no cost in the ranking).
  *
  * Two hallway fights steal from the run, and what they take comes back only if the thief dies before it leaves:
  *  - Thieving Hopper (偷窃草蜢, always alone in the 98 A8+ fights to 2026-10-02): THIEVERY_MOVE on T1 hits and takes one card out of
@@ -32,7 +32,7 @@
  * rollout (rollout.ts RolloutInput.escapes), and a kill line kept among the options. THIEF_FACTS=off: the question as
  * before (tests/thief.test.ts).
  *
- * THIEF_COST (step 2, Dai 2026-10-02, default off; docs/thief.md §7): the loot is HP in the rollout's ranking, like a
+ * THIEF_COST (step 2, Roy 2026-10-02, default off; docs/thief.md §7): the loot is HP in the rollout's ranking, like a
  * potion's cost (deaths first): each thief's loot HP (thiefLoot: the Hopper's card at its act-boss simulated worth,
  * src/sim/thief-card-value.ts, computed once per fight by the loop; the gold at the potion table's gold rate, meta.gold_hp)
  * times the line's samples losing it. Off: every question and choice as with THIEF_FACTS alone (tests/thief-cost.test.ts).
@@ -252,7 +252,7 @@ function actOf(state: GameState): number {
 }
 
 /**
- * Gold in HP (Dai 2026-10-02): gold ÷ the median shop potion price × this act's median held value of the offered
+ * Gold in HP (Roy 2026-10-02): gold ÷ the median shop potion price × this act's median held value of the offered
  * potions at this ascension (potion-equivalents.json meta.gold_hp, knowledge/builders/build-potion-equivalents.py). A table without
  * the rate (one built before it) or unknown gold: no value.
  */

@@ -1,5 +1,5 @@
 /**
- * One-shot build decisions (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Dai 2026-09-29): a rest site (heal, or
+ * One-shot build decisions (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Roy 2026-09-29): a rest site (heal, or
  * smith a named card) and an event option that picks from the deck are decided in one DeepSeek question with
  * the card(s) the follow-up screen takes; code plays both; another screen than expected, or a card it does
  * not offer, is asked as before.

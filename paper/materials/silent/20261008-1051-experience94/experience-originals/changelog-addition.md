@@ -605,7 +605,7 @@ SL按一局同一层为一场；判死/退出与实死分列。首抽受控长�
 - 学习账本仅CLI：新增[]；改proposed silent-0010,silent-0012,silent-0013,silent-0019,silent-0020,silent-0021,silent-0046,silent-0065,silent-0077,silent-0106,silent-0115,silent-0178,silent-0243,silent-0276,silent-0277,silent-0278；退役[]；ledger.py check 0。钨合金棍复用原observed 0178，无新编号；原首证/prior/claim/repeat/上线历史保留，学习者不标accepted/shipped。
 - live实际合入：None；刷新：3a319f300e4c3a6be5369192528007cd26b7f14d；合前：3a319f300e4c3a6be5369192528007cd26b7f14d；合后测试：None；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (modify/delete): notes/silent-a10-regression-dispatch.json deleted in 3a319f300e4c3a6be5369192528007cd26b7f14d and modified in eebcf4297065a97086ea4d430ae698a2b05c3dea.  Version eebcf4297065a97086ea4d430ae698a2b05c3dea of notes/silent-a10-regression-dispatch.json left in tree.
@@ -646,6 +646,6 @@ SL按一局同一层为一场；判死/退出与实死分列。首抽受控长�
 | sample-a9-shop | 4244.0/5043 | 4124.0/4969 | -74.0 |
 
 - 整体切片：{'before_median': 2928.5, 'after_median': 2912.0, 'median_change': -16.5, 'paired_median_change': -19.0, 'before_max': 5290, 'after_max': 5170, 'max_increase': 270}。
-- active170/正文50180，high102/med43/low25；A8适用159条46220字、A9 160条46504字、A10 167条49088字。需要Dai定：无。
+- active170/正文50180，high102/med43/low25；A8适用159条46220字、A9 160条46504字、A10 167条49088字。需要Roy定：无。
 
 原帧/脚本/初稿/机制/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update；报告时间2026-10-08 10:49:30 +0800。

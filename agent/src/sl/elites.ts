@@ -1,6 +1,6 @@
 /**
  * The hard elites that get SL retries (docs/sl.md): knowledge/characters/<id>/sl-elites.json, the top 5 by logged A8-A9
- * death rate (Dai 2026-10-02; the Ironclad's list). A fight is a listed elite when any enemy alive at its start has one
+ * death rate (Roy 2026-10-02; the Ironclad's list). A fight is a listed elite when any enemy alive at its start has one
  * of an entry's enemy ids. A character with no list yet (no file) has no listed fights.
  */
 import { readFileSync } from "node:fs";

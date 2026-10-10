@@ -190,7 +190,7 @@ describe("potions", () => {
       enemies: [enemy({ hp: 60, attacks: [{ damage: 5, hits: 1 }] })],
       fightKind: "monster",
     });
-    // No use cost (Dai: a potion is a 0-cost one-shot card; batch L removed the unused useCost): the drink may
+    // No use cost (Roy: a potion is a 0-cost one-shot card; batch L removed the unused useCost): the drink may
     // score best, and the line without it is kept apart (a potion line never merges with a dry one).
     expect(idle.plans.some((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")))).toBe(true);
   });
@@ -226,7 +226,7 @@ describe("buff potions in a hallway fight (5FMU F15 T1: all four options drank t
   const solve = (fightKind: "monster" | "boss") =>
     solveTurn({ hand: hand(), player: player({ hp: 61, maxHp: 83, energy: 4 }), enemies: enemies(), fightKind, turn: 1 });
 
-  it("a potion's lasting value is full in a hallway fight as in a boss fight (batch K: no keep-the-potion discount, Dai)", () => {
+  it("a potion's lasting value is full in a hallway fight as in a boss fight (batch K: no keep-the-potion discount, Roy)", () => {
     const hallway = solve("monster").plans.find(drinks)!;
     const boss = solve("boss").plans.find(drinks)!;
     expect(boss.outcome.lasting).toBeCloseTo(10);
@@ -237,7 +237,7 @@ describe("buff potions in a hallway fight (5FMU F15 T1: all four options drank t
     const result = solve("monster");
     const surviving = result.plans.filter((plan) => !plan.outcome.dies);
     // (The hallway's best line kept the potion only through a use cost of 15, never passed by the planner and
-    // removed in batch L: a potion is a 0-cost one-shot card, Dai.)
+    // removed in batch L: a potion is a 0-cost one-shot card, Roy.)
     expect(distinctPlans(surviving, 4).some((plan) => !drinks(plan))).toBe(true);
     // Even when every higher-scored pick drinks (a boss fight), a potion-free line is offered.
     const boss = solve("boss").plans.filter((plan) => !plan.outcome.dies);
@@ -1900,7 +1900,7 @@ describe("next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny To
   });
 });
 
-describe("Foul Potion hits us too (Dai 2026-09-28: no ban, Jev decides on exact numbers)", () => {
+describe("Foul Potion hits us too (Roy 2026-09-28: no ban, Jev decides on exact numbers)", () => {
   const foul = modelPotion("FOUL_POTION", "Foul Potion", 0, [])!;
   const lineOf = (plans: ReturnType<typeof solveTurn>["plans"], ids: string[]) =>
     plans.find((plan) => plan.steps.map((step) => step.cardId.split(":")[0] === "POTION" ? step.cardId.split(":")[1] : step.cardId).join(",") === ids.join(","));

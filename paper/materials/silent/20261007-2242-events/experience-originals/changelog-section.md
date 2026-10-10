@@ -244,7 +244,7 @@ A10源节点入血档到下一实战，多源可同战；其他进阶完整行�
 - live实际合入：None；刷新提交：None；刷新后/合前：dc2d91757bdcb8a1e1ccc25948de699683a37085；合后沙箱：None；知识重叠：[]；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -284,4 +284,4 @@ A10源节点入血档到下一实战，多源可同战；其他进阶完整行�
 | a9-reward | 2472.0/3112 | 2474.0/3114 | 2.0 |
 | a9-shop | 3505.0/5335 | 3507.0/5337 | 2.0 |
 
-- 整体中位2703.0→2684.0（-19字），配对增量中位2.0、最大增量293；最大5335→5337。active154→155、正文48612→48539，高84/中45/低26；A8适用147条45345字、A9适用148条45629字、A10适用151条46738字。新增并更新后总字符减少73，未改预算。需要Dai定的知识事项：无。
+- 整体中位2703.0→2684.0（-19字），配对增量中位2.0、最大增量293；最大5335→5337。active154→155、正文48612→48539，高84/中45/低26；A8适用147条45345字、A9适用148条45629字、A10适用151条46738字。新增并更新后总字符减少73，未改预算。需要Roy定的知识事项：无。

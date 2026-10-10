@@ -107,20 +107,20 @@ if not live.get('merged'):lines.append('- 未实际合入，不造上线记录/e
 elif (O/'test-live-results.json').exists():
     t=read('test-live-results')
     lines.append(f'- 合后沙箱实际：tsc退出{t["tsc"]}；vitest {t["files"]}文件/{t["cases"]}用例/退出{t["vitest"]}；'+('重跑一次。' if t['rerun'] else '未重跑。'))
-    lines.append('- 唯一eval版本'+str(live.get('eval_version'))+'；live上线记录提交'+str(live.get('publication'))+'；根decision-log/eval版本及notes/for-dai.md、ops/inbox-dev.md双通知已追加，根记录由调用方提交。实际数据shipped仍交运维核实，本任务未改为accepted/shipped。')
+    lines.append('- 唯一eval版本'+str(live.get('eval_version'))+'；live上线记录提交'+str(live.get('publication'))+'；根decision-log/eval版本及notes/for-roy.md、ops/inbox-dev.md双通知已追加，根记录由调用方提交。实际数据shipped仍交运维核实，本任务未改为accepted/shipped。')
 lines+=['','### 切片大小','',
 '- 固定种子20260929、截至切点state.run.character_id=SILENT最高两阶A9/A10，各20状态×6界面，共240配对；manifest保存池/时间/唯一帧，不足有放回单列。CHARACTER=silent调用官方knowledge-slice.ts，前后冻结同一common/silent/outcome，只换experience。','',
 '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for p in V['pairs']:lines.append(f'| {p["sample"]} | {p["before_median"]}/{p["before_max"]} | {p["after_median"]}/{p["after_max"]} | {p["paired_median"]} |')
 lines+=[f'','- 整体中位'+str(V['before_median'])+'→'+str(V['after_median'])+'、涨'+str(V['median_change'])+'字；配对差中位'+str(V['paired_median'])+'，最大'+str(V['before_max'])+'→'+str(V['after_max'])+'、单片最多增'+str(V['max_change'])+'。',
-'- active185/正文50213字；置信度'+str(S['confidence'])+'；A8适用172条/45825字、A9适用173条/46109字、A10适用182条/49121字。范围沿原机制/统计/策略，不由低阶背景立A10因果。无合并/退役/压缩，需Dai定：无。','',
+'- active185/正文50213字；置信度'+str(S['confidence'])+'；A8适用172条/45825字、A9适用173条/46109字、A10适用182条/49121字。范围沿原机制/统计/策略，不由低阶背景立A10因果。无合并/退役/压缩，需Roy定：无。','',
 '原帧/复算/历史/提案/CLI/测试/切片/合入回执：'+str(O)+'；报告时间'+now+'。','']
 text='\n'.join(lines)
 (O/'changelog-section.md').write_text(text)
 report=['## 经验库更新回报','',f'- 版本：{S["old_version"]} → {S["version"]}；提交：{commit}（分支 exp-silent）；合入：'+str(live.get('merged') or '未合入，'+live.get('result','')),
 '- 条数：新增1、更新15（加证据15、只改数字0）、退役0；active184→185，正文50213字；A8 172条/45825字，A9 173条/46109字。','- 机制推理：']
 report+=['  - '+' — '.join(m) for m in mechanisms]
-report+=['- 改了的手写知识：无。',f'- 测试：tsc退出{tests["tsc"]}；vitest {files}文件/{cases}用例/退出{rc}，未重跑。',f'- 切片大小：整体中位{V["median_change"]:+g}字，配对差中位{V["paired_median"]:+g}字；最大{V["after_max"]}字。','- 学习账本：新增无；改成proposed '+','.join(led['proposed'])+'；退役无；ledger.py check退出0。','- 需要Dai定的事：无。','','```json',json.dumps(result,ensure_ascii=False),'```','','完整变更记录节如下：','',text]
+report+=['- 改了的手写知识：无。',f'- 测试：tsc退出{tests["tsc"]}；vitest {files}文件/{cases}用例/退出{rc}，未重跑。',f'- 切片大小：整体中位{V["median_change"]:+g}字，配对差中位{V["paired_median"]:+g}字；最大{V["after_max"]}字。','- 学习账本：新增无；改成proposed '+','.join(led['proposed'])+'；退役无；ledger.py check退出0。','- 需要Roy定的事：无。','','```json',json.dumps(result,ensure_ascii=False),'```','','完整变更记录节如下：','',text]
 (O/'report.md').write_text('\n'.join(report))
 if sys.argv[1]=='append':
     target=ROOT/'paper/materials/experience-changelog-silent.md'

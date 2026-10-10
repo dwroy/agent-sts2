@@ -1,5 +1,5 @@
 /**
- * The potion table (Dai 2026-09-30; docs/potion-equivalents.md): what each potion held is worth in the act boss
+ * The potion table (Roy 2026-09-30; docs/potion-equivalents.md): what each potion held is worth in the act boss
  * fight at the run's ascension, as HP / damage / block, with its source and n. The same code renders the knowledge
  * prefix block (every potion an Ironclad run can get, one line each) and the kb_potion tool (one potion in detail,
  * or the table). Numbers come from knowledge/characters/ironclad/potion-equivalents.json; a table that does not load throws.

@@ -146,7 +146,7 @@ export function planCharacterSelect(env: DecisionEnv): Decision | null {
     return { kind: "act", label: "character/select", intent: { action: "select_character", option_index: index }, rationale: `selecting ${targetId} (${env.characterPreference?.trim() ? "CHARACTER" : "the default character"})` };
   }
 
-  // 2. The ascension: TARGET_ASCENSION (Dai 2026-09-28: stay on A8 for 10 runs even after a win; a win unlocks the next
+  // 2. The ascension: TARGET_ASCENSION (Roy 2026-09-28: stay on A8 for 10 runs even after a win; a win unlocks the next
   // level and the game then offers it by default), or "climb" (one above this character's highest win; ascension-target.ts).
   // Unset: take what the game offers.
   const raw = process.env["TARGET_ASCENSION"];

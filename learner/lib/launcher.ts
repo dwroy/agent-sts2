@@ -486,7 +486,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       await deps.refreshCodexAuth(binary, learnerCodexHome(deps.env), env as Record<string, string>);
       deps.err("codex 登录被拒：已请 codex 刷新登录令牌，请重新运行这个任务\n");
     } catch (error) {
-      deps.err(`codex 登录被拒，刷新令牌也失败（${error instanceof Error ? error.message.slice(0, 200) : String(error)}）：需要 Dai 重新 \`codex login\`\n`);
+      deps.err(`codex 登录被拒，刷新令牌也失败（${error instanceof Error ? error.message.slice(0, 200) : String(error)}）：需要 Roy 重新 \`codex login\`\n`);
     }
   }
   if (timedOut) return 124;

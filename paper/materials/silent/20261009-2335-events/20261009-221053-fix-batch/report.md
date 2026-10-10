@@ -52,7 +52,7 @@
 - 没修的：B4/B5、性能实测、codex-brain-cache及probe-home续办 — 太大：队列明确指定独立功能/受控实验批次，离线普通fix不调用模型或网络。
 - 测试：tsc 退出码 0；vitest 256 文件 / 2648 用例 / 退出码 0；三个提交前与合后各跑完整沙箱。额外Python 3例通过。重跑component-usage.test.ts、shop-potions.test.ts、shop-removal-preview.test.ts：补既有venv软链、固定检查期间变动的源码/测试、修正夹具初始化后通过，早期失败保留；没有超时用例靠重跑登记成功。沙箱外完整套件待调度器。
 - 合入：da4271def91f2bc5631a40a4df916fa9afe9f575（S1.fix46）
-- 需要 Dai 定的事：无
+- 需要 Roy 定的事：无
 
 ```json
 {
@@ -245,6 +245,6 @@
 - 上述证据原始日志按偏移/索引逐对象核验；0254/0272核验保存在evidence-verification.json，测试均为固定输入，不读刷新知识、不调用真实LLM。原红绿/失败/初稿全部保留。
 - 早期0338-sandbox.log与batch-precommit-1.log的失败涉及venv路径和边跑边改导致的模块缓存混用；final-focused.log工作目录错误也保留。补本树data/logdb-venv软链并固定源码后，0338-precommit-final.log、0254-precommit.log、0272-precommit.log及live-sandbox.log均通过。未加排除、未提高生产预算、未安装依赖。
 - 合前刷新和路径交集见live-overlap.json；现场生成的notes/fight-value-backtest-silent.md不在本分支改动中且按指定stage范围保留。没有修改知识生成脚本，不重建数据。
-- 源码合并 57e33ac54d7e145089f554eb784210f9acd63153，最终发布 da4271def91f2bc5631a40a4df916fa9afe9f575；根notes/for-dai.md及ops/inbox-dev.md已追加双通知，账本仅proposed，实际shipped由运维登记。
-- 策略条目不因人定规则需要审批而推回Dai：已有Roy授权，但本普通批次不混入独立策略实现；原提案链保留，不派下级agent。早期V4历史项沿队列已有关闭记录，不重复实施。
+- 源码合并 57e33ac54d7e145089f554eb784210f9acd63153，最终发布 da4271def91f2bc5631a40a4df916fa9afe9f575；根notes/for-roy.md及ops/inbox-dev.md已追加双通知，账本仅proposed，实际shipped由运维登记。
+- 策略条目不因人定规则需要审批而推回Roy：已有Roy授权，但本普通批次不混入独立策略实现；原提案链保留，不派下级agent。早期V4历史项沿队列已有关闭记录，不重复实施。
 - 本分支只含三项独立源码提交；主检出/main不改代码，不推送、不play、不停对局、不改运维prompt。

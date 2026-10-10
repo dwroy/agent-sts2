@@ -5,7 +5,7 @@ numbers are the deck's it was played in. A character with no finished run gets n
 missing file as "no knowledge yet").
 
 What happened to the runs that made a given choice, one table per ascension (by_ascension; default: A8 and each
-higher ascension with logged runs, each apart with its own baseline: Dai 2026-10-04, A8 and A9 counted separately):
+higher ascension with logged runs, each apart with its own baseline: Roy 2026-10-04, A8 and A9 counted separately):
   cards   per card acquired, by the act it was acquired in: runs, mean final floor, pass rate of that act's
           boss; and the same for runs that were offered it on a card reward in that act and did not take it
   relics  per relic acquired, by act: the same numbers

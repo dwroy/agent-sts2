@@ -794,7 +794,7 @@ SL真正多试按同房max(attempt)>1，首试胜的跟踪不算重打。逐轮�
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新None，合前2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328，实际合入None，合后测试None。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (modify/delete): notes/silent-historical-core-builds-dispatch.json deleted in 2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328 and modified in 05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051.  Version 05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051 of notes/silent-historical-core-builds-dispatch.json left in tree.
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -823,6 +823,6 @@ SL真正多试按同房max(attempt)>1，首试胜的跟踪不算重打。逐轮�
 | sample-a9-shop | 4008.0/5183 | 3977.5/5069 | -25.0 |
 
 - 整体中位2669.0→2644.0（-25.0字）；配对差中位-39.0；最大5685→5669，单片差-114至6。
-- active197，总字符50457；置信度{'low': 26, 'high': 129, 'med': 42}；A8 {'entries': 183, 'chars': 46736}，A9 {'entries': 184, 'chars': 47020}，A10 {'entries': 194, 'chars': 49365}。需要Dai定：无。
+- active197，总字符50457；置信度{'low': 26, 'high': 129, 'med': 42}；A8 {'entries': 183, 'chars': 46736}，A9 {'entries': 184, 'chars': 47020}，A10 {'entries': 194, 'chars': 49365}。需要Roy定：无。
 
 完整复算/原始抽取/前后经验/历史机制/SL逐轮/CLI提案/切片/测试/合入预检及失败原件保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-180727-experience-update。

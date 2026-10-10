@@ -620,6 +620,6 @@ SL重打沿同房/记录尝试/赢尝试口径；本局没有SL，未增加新�
 | sample-a9-shop | 4096.0/5224 | 4087.0/5215 | -9.0 |
 
 - 整体中位2722.0→2713.0（-9.0字），配对差中位-1.0，最大5681→5672；单片差-9至18。
-- active 193，正文51853字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48198}，A9 {'entries': 181, 'chars': 48482}，A10 {'entries': 190, 'chars': 50761}。无合并/退役/压缩，需要Dai定：无。
+- active 193，正文51853字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48198}，A9 {'entries': 181, 'chars': 48482}，A10 {'entries': 190, 'chars': 50761}。无合并/退役/压缩，需要Roy定：无。
 
 全部子集/偏移、旧基线复算、原帧机制、初稿/失败、CLI提案、切片/测试/合入预检和报告保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-101302-experience-update。

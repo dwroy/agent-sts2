@@ -1,5 +1,5 @@
 /**
- * Fix batch K (notes/fix-queue.md "From fix batch J"): pure bugs and Dai's potion rule. One describe per fix; boards are
+ * Fix batch K (notes/fix-queue.md "From fix batch J"): pure bugs and Roy's potion rule. One describe per fix; boards are
  * synthetic or logged fixtures (tests/logged-states/batch-k, out of the rollout-live / potion-mc sweeps), never the
  * refreshing knowledge files.
  */
@@ -64,7 +64,7 @@ function withPotion(fx: Logged, slot: number, potionId: string, name: string, de
   return fx;
 }
 
-describe("1a. Dai: a potion is a 0-cost one-shot card. An unsimulated potion is always an option (it was one only under T1: the cheapest potion-free option losing 12% of HP)", () => {
+describe("1a. Roy: a potion is a 0-cost one-shot card. An unsimulated potion is always an option (it was one only under T1: the cheapest potion-free option losing 12% of HP)", () => {
   afterEach(() => {
     rolloutLiveOptions.enabled = true;
   });
@@ -88,7 +88,7 @@ describe("1a. Dai: a potion is a 0-cost one-shot card. An unsimulated potion is 
   }, 30_000);
 });
 
-describe("1b. Dai: no potion cost in the solver's score. A potion's lasting value (Strength, flat, Plating) counted 25% in hallway fights (POTION_LASTING, \"worth more saved for an elite or the boss\")", () => {
+describe("1b. Roy: no potion cost in the solver's score. A potion's lasting value (Strength, flat, Plating) counted 25% in hallway fights (POTION_LASTING, \"worth more saved for an elite or the boss\")", () => {
   const strengthPotion = () => modelPotion("STRENGTH_POTION", "力量药水", 0, [])!;
   // The same effect as a 0-cost card that exhausts (a one-shot card).
   const strengthCard = () => card(5, "ONE_SHOT_STRENGTH", { type: "Skill", cost: 0, target: "self", validTargets: [], strength: 2, exhausts: true });

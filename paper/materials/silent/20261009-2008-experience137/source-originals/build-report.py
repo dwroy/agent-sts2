@@ -108,7 +108,7 @@ lines += ['', '### 切片大小', '',
 for r in S['rows']:
     lines.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
 lines += ['', f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_growth"]:+}字），配对差中位{S["paired_median"]}；最大{S["before_max"]}→{S["after_max"]}，单片差范围{S["delta_range"]}。',
-    f'- active{U["after"]["active"]}，总字符{U["after"]["chars"]}，置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。需要Dai定：无。',
+    f'- active{U["after"]["active"]}，总字符{U["after"]["chars"]}，置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。需要Roy定：无。',
     '', '全部原抽取/偏移、历史基线/参数/复盘筛读、前后经验/切片、CLI、提案、测试和合入预检/失败原件保存在' + str(O) + '。', '']
 body = '\n'.join(lines)
 (O / 'changelog-section.md').write_text(body)

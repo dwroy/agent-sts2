@@ -80,7 +80,7 @@ lines+=['','- 12条全加证据，纯数字0；勒紧另补历史HSX4HYATB4E2实
 '- 固定种子20260929，从截至本局57548帧静默池、按state.run.character_id=SILENT，抽最高A9/A10每界面各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP＝240配对，均真实界面。官方knowledge-slice.ts/CHARACTER=silent/setExperienceForTests；只切换experience，其他结果表/common冻结。manifest与逐片原文留盘，n/置信度影响排序，不冒充V4完整知识前缀。','','| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for x in S['rows']:lines.append(f'| {x["sample"].removeprefix("sample-")} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["delta"]} |')
 z=C['after'];b=C['before']
-lines+=['',f'- 配对增量中位{S["median_delta"]}字、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active{b["active"]}→{z["active"]}、{b["chars"]}→{z["chars"]}字，高{z["confidence"]["high"]}中{z["confidence"]["med"]}低{z["confidence"]["low"]}；'+ '，'.join(f'A{a} {v["entries"]}条{v["chars"]}字' for a,v in z['by_asc'].items())+'。需要Dai定：无。']
+lines+=['',f'- 配对增量中位{S["median_delta"]}字、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active{b["active"]}→{z["active"]}、{b["chars"]}→{z["chars"]}字，高{z["confidence"]["high"]}中{z["confidence"]["med"]}低{z["confidence"]["low"]}；'+ '，'.join(f'A{a} {v["entries"]}条{v["chars"]}字' for a,v in z['by_asc'].items())+'。需要Roy定：无。']
 text='\n'.join(lines)+'\n'
 (O/'changelog-section.md').write_text(text)
 f=ROOT/'paper/materials/experience-changelog-silent.md';prior=f.read_bytes()

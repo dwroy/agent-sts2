@@ -638,6 +638,6 @@
 
 - 整体切片：{'before_median': 3012.0, 'after_median': 2946.5, 'median_change': -65.5, 'paired_median_change': -2.0, 'before_max': 5201, 'after_max': 5240, 'max_increase': 308}。
 
-- active169/正文51016，high101/med43/low25；A8适用158条47012字、A9 159条47296字、A10 166条49880字。需要Dai定：无。受阻据实交运维续办，保留失败/原稿/日志/工作树，不冒报上线。
+- active169/正文51016，high101/med43/low25；A8适用158条47012字、A9 159条47296字、A10 166条49880字。需要Roy定：无。受阻据实交运维续办，保留失败/原稿/日志/工作树，不冒报上线。
 
 原帧/脚本/初稿/机制/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-085641-experience-update；报告时间2026-10-08 09:17:50 +0800。

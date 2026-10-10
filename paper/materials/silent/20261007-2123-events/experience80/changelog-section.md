@@ -240,7 +240,7 @@ A10源节点入血档到下一实战；多源可同战，其他阶完整行在au
 - CONFLICT (content): Merge conflict in knowledge/common/move-model.json
 - CONFLICT (modify/delete): notes/fight-value-backtest-silent.md deleted in 4b6396bd462ca61bb13d082fdc73fdf5d0cf610a and modified in 31914e4ba652d6e8466a4a99f04128005166ecf2.  Version 31914e4ba652d6e8466a4a99f04128005166ecf2 of notes/fight-value-backtest-silent.md left in tree.
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -279,4 +279,4 @@ A10源节点入血档到下一实战；多源可同战，其他阶完整行在au
 | a9-reward | 2477.0/3117 | 2472.0/3112 | -5.0 |
 | a9-shop | 3510.0/5340 | 3505.0/5335 | -5.0 |
 
-- 整体中位2672.0→2703.0（+31字），配对增量中位-5.0、最大增量31；最大5340→5335字。active154→154、正文49461→48612字，高82/中46/低26；A8适用146条45405字、A9适用147条45689字、A10适用150条46811字。需要Dai定的知识事项：无。
+- 整体中位2672.0→2703.0（+31字），配对增量中位-5.0、最大增量31；最大5340→5335字。active154→154、正文49461→48612字，高82/中46/低26；A8适用146条45405字、A9适用147条45689字、A10适用150条46811字。需要Roy定的知识事项：无。

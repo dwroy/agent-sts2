@@ -55,7 +55,7 @@ for c in C:
     notification.append('| '+c['id']+' | '+(c['before']['lesson'] if c['before'] else '无固化专条；原复盘0225已记录11→33。')+' | '+c['after']['lesson']+' | PF90JTU0UZ5M及条目本角色历史；'+','.join(M[c['id']])+' |')
 notification+=['','预期影响：提供真实血药链、已建敏捷/已结毒和完整持牌伤事实，支持构筑/路线/休息决策；观察不声称因果或胜率提升，不拟强喝/强制SL门槛。证据细节、限制、提案任务及账本见'+str(O/'report.md')+'；提案'+','.join(props)+'。','回退：在live-merge锁内把knowledge/characters/silent/experience.json恢复为源提交父版2026-10-08.24的blob并单独提交/登记新版本，保留所有刷新数据、账本与提案历史；源码独立实现各自回退。','']
 notification='\n'.join(notification)
-for relative in ['notes/for-dai.md','ops/inbox-dev.md']:
+for relative in ['notes/for-roy.md','ops/inbox-dev.md']:
     with (ROOT/relative).open('a') as f:f.write(notification)
 paths=['eval/versions.json','paper/materials/decision-log.md']
 run(['git','add',*paths])
@@ -66,7 +66,7 @@ assert scan.returncode==0,'发布记录gitleaks未通过'
 run(['git','diff','--cached','--check'])
 run(['git','commit','-m','Record Silent experience 2026-10-08.25 release','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>'])
 publication=run(['git','rev-parse','HEAD'])
-state.update(publication=publication,eval_version=name,notifications=['notes/for-dai.md','ops/inbox-dev.md'],result='实际合入、合后沙箱通过、上线登记及Roy双通知完成；数据shipped交运维核实完成事件')
+state.update(publication=publication,eval_version=name,notifications=['notes/for-roy.md','ops/inbox-dev.md'],result='实际合入、合后沙箱通过、上线登记及Roy双通知完成；数据shipped交运维核实完成事件')
 (O/'live-merge.json').write_text(json.dumps(state,ensure_ascii=False,indent=2)+'\n')
 (O/'publication.json').write_text(json.dumps(dict(version=name,source=source,merged=state['merged'],publication=publication,time=now,ledger=ledger,code_proposals=props,tests=live_tests,decision_sha256=hashlib.sha256(line.encode()).hexdigest(),notification_sha256=hashlib.sha256(notification.encode()).hexdigest()),ensure_ascii=False,indent=2)+'\n')
 print('实际发布',publication,name)

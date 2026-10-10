@@ -1,5 +1,5 @@
 /**
- * DeepSeek's prompt layout for its prefix cache (Dai 2026-09-28): the history of one question is a byte
+ * DeepSeek's prompt layout for its prefix cache (Roy 2026-09-28): the history of one question is a byte
  * prefix of the next one's; the state sent to DeepSeek holds one copy of each fact; and the display bugs
  * seen in the F24 card-reward prompt (energy icon paths, relic placeholders, "痛击++", merged Twin Strikes).
  */

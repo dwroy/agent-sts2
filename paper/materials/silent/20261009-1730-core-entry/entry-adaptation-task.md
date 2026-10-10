@@ -22,7 +22,7 @@
 
 在现有 runner 完成/ops 标准事件路径新增明确的报告验收与通知状态，不直接 enqueue 新任务。严格绑定父 request_id、实际 batch、角色 silent、learner_task、租约报告 realpath 与报告 SHA，核实候选/逐 boss 矩阵/伤害资源/构筑模板/证据限制。允许有实质分析的“尚无足够证据”；入口完成、派发成功、空报告、错误任务/批号/角色/路径、过期 SHA 均不得当组合有结果。
 
-ops 核实后在 notes/for-dai.md 和 ops/inbox-dev.md 写简洁候选/矩阵/可用模板或缺证限制摘要，关联 request+batch+报告路径/SHA。通过宿主现有完成路径调用 argv 形式 herdr notification show --body <TEXT> --sound done <TITLE>，不可 shell 拼接、不向 TUI 输入、不 resume watcher 会话。按唯一父请求+batch+报告 SHA 做持久去重；短事务保存通知领取/完成状态，命令后保存 success/failure/rc 和脱敏输出回执，失败原件保留，崩溃后不可无凭据重复通知，不长时间持 learn.lock。通知机制实际通过验收并成为 live 祖先前 notification_hook 必须 pending，不能承诺已开启。测试只用固定报告和 fake herdr，不实际给 Roy 发测试通知。
+ops 核实后在 notes/for-roy.md 和 ops/inbox-dev.md 写简洁候选/矩阵/可用模板或缺证限制摘要，关联 request+batch+报告路径/SHA。通过宿主现有完成路径调用 argv 形式 herdr notification show --body <TEXT> --sound done <TITLE>，不可 shell 拼接、不向 TUI 输入、不 resume watcher 会话。按唯一父请求+batch+报告 SHA 做持久去重；短事务保存通知领取/完成状态，命令后保存 success/failure/rc 和脱敏输出回执，失败原件保留，崩溃后不可无凭据重复通知，不长时间持 learn.lock。通知机制实际通过验收并成为 live 祖先前 notification_hook 必须 pending，不能承诺已开启。测试只用固定报告和 fake herdr，不实际给 Roy 发测试通知。
 
 ## 固定验收与发布
 

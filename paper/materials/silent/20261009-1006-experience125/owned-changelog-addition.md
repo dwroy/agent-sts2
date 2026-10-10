@@ -649,6 +649,6 @@ SL多次重打按独立房/记录尝试/赢尝试统计；仅有预演但未实�
 | sample-a9-shop | 4097.0/5223 | 4096.0/5224 | 1.0 |
 
 - 整体中位2727.0→2722.0（-5.0字），配对差中位-5.0，最大5686→5681；单片差-33至17。
-- active193，正文51769字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48114}，A9 {'entries': 181, 'chars': 48398}，A10 {'entries': 190, 'chars': 50677}。无预算合并/退役/压缩；需要Dai定：无。
+- active193，正文51769字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48114}，A9 {'entries': 181, 'chars': 48398}，A10 {'entries': 190, 'chars': 50677}。无预算合并/退役/压缩；需要Roy定：无。
 
 原子集/偏移、复算、初稿和失败、参数核验、提案/CLI、切片、测试、合入预检与完整报告保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-093153-experience-update。

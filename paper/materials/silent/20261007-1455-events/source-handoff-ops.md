@@ -13,7 +13,7 @@
 - knowledge/common/monster-db.json
 - knowledge/common/move-model.json
 
-请运维据experience-done核定已测源经验blob后兜底，保留live最新的刷新数据和其他改动。本任务未把任何账本标为accepted/shipped；实际发布后由运维经ledger.py登记shipped和eval版本，完整外部套件由调度器补跑。无知识事项需要Dai定。
+请运维据experience-done核定已测源经验blob后兜底，保留live最新的刷新数据和其他改动。本任务未把任何账本标为accepted/shipped；实际发布后由运维经ledger.py登记shipped和eval版本，完整外部套件由调度器补跑。无知识事项需要Roy定。
 
 最终经验blob：e15fce1c71fb0353a004f8f02b4b2d17bc21be8f，SHA256：a179b1a4e4bc0645f1d28a6b7bafdbfbcd7f946ee43990733193bb04b4c56780。冻结定稿沙箱tsc0/vitest0，224文件2374例；初稿1 worker也全部通过，补历史普通触媒/滑溜交互后定稿2 worker重跑，原件保留。切片240配对，整体中位2581→2593、配对增量中位−12，最大5300→5288。
 

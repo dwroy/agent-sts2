@@ -1,5 +1,5 @@
 /**
- * Whole boss fight simulator (milestone B1, Dai 2026-09-30): from a fight state, every sample plays the fight to its
+ * Whole boss fight simulator (milestone B1, Roy 2026-09-30): from a fight state, every sample plays the fight to its
  * end (the boss dead or we are) instead of the rollout's 5-turn window, so what decides a boss fight (a dozen turns of
  * play, whether the deck out-damages the boss) is simulated rather than extrapolated by the rollout's terminal estimate
  * or the boss clock. Not wired into play and not shown to Jev or DeepSeek (B2 / B3 will; docs/boss-sim.md).
@@ -80,7 +80,7 @@ export function bossPolicyThreat(input: Pick<RolloutInput, "enemies">): number {
  * 0.160 / 0.161 against 0.164).
  */
 export const BOSS_SIM_POTION_HOLD = 0.5;
-/** Worker threads at most: the machine has 32 cores and the live runs keep some (Dai: at most 24). */
+/** Worker threads at most: the machine has 32 cores and the live runs keep some (Roy: at most 24). */
 export const BOSS_SIM_MAX_WORKERS = 24;
 
 export interface BossSimOptions {

@@ -673,7 +673,7 @@ def status_delta(last, nxt, first):
 
 # ---------------------------------------------------------------- observed mechanics
 #
-# Rules the game text does not state, mined generically from the logged frames (Dai 2026-10-02: learned from the logs,
+# Rules the game text does not state, mined generically from the logged frames (Roy 2026-10-02: learned from the logs,
 # written into the DB, used by the solver through data-driven rules; docs/mechanics-learning.md). The Thieving Hopper's
 # Flutter says only 「从攻击牌中受到的伤害减少50%」, yet stripping its last stack stuns it and cancels that turn's move
 # (MCK9SMSK40ZY F19 T4: Nab 14 dealt nothing). Nothing below names an enemy or a power: every power, Escape move and

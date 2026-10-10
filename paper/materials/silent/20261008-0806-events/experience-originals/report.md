@@ -605,7 +605,7 @@ SL真正多次尝试按场去重：
 - JSON、字段/角色/局号/反例/预算、旧119局逐行基线、同盘两线/末结算、8局抑制守恒、21跨幕边界、三药全史、240固定配对切片、check-experience missing=[]/0、gitleaks0和diff --check通过。
 - 学习账本只经CLI：新增无；改proposed silent-0005,silent-0006,silent-0011,silent-0016,silent-0019,silent-0020,silent-0021,silent-0027,silent-0030,silent-0079,silent-0087,silent-0243,silent-0278,silent-0280；退役无，ledger.py check0。原first_run/prior/claim/repeat及旧上线历史保留；0279纯bug仍observed，学习者不标accepted/shipped。
 - live实际合入：None；刷新：aa1e21361f65bf891e513002fa69d8f2b60e93b7；合前：aa1e21361f65bf891e513002fa69d8f2b60e93b7；合后测试：None；结果：锁内合并预检冲突，按任务停止、不硬解。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
 - CONFLICT (content): Merge conflict in paper/materials/decision-log.md
@@ -631,7 +631,7 @@ SL真正多次尝试按场去重：
 | a9-reward | 2744.0/3325 | 3006.0/3587 | 262.0 |
 | a9-shop | 3887.0/5042 | 4149.0/5249 | 219.0 |
 
-- 整体中位2966.0→3006.0（+40.0字），配对增量中位0.0、单片最多增564，最大5042→5249。active167/正文52766，置信{'low': 25, 'high': 98, 'med': 44}；A8/A9/A10适用{'8': {'entries': 156, 'chars': 48404}, '9': {'entries': 157, 'chars': 48688}, '10': {'entries': 164, 'chars': 51630}}。需要Dai定：无。合入受阻则按真实结果交运维续办，保留原件，不冒报上线。
+- 整体中位2966.0→3006.0（+40.0字），配对增量中位0.0、单片最多增564，最大5042→5249。active167/正文52766，置信{'low': 25, 'high': 98, 'med': 44}；A8/A9/A10适用{'8': {'entries': 156, 'chars': 48404}, '9': {'entries': 157, 'chars': 48688}, '10': {'entries': 164, 'chars': 51630}}。需要Roy定：无。合入受阻则按真实结果交运维续办，保留原件，不冒报上线。
 
 原帧/脚本/初稿/失败/机制/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-071205-experience-update；报告时间2026-10-08 07:43:51 +0800。
 

@@ -132,7 +132,7 @@ boss 战绩（fights，room = boss；SL 重打合并成一场）：一幕 17/19�
 | BVJT | F33 无厌沙虫 | 沙坑归零被吞，「mod 没标结束回合致死」拒判，5 次重打没用 | 0727c1c（V4.5.judge，17:10） |
 | C4F1 | F33 知识恶魔 第 5 次 | 两层狱火+ 开局扣 2 血，判官按 1 算，第 6 次没用 | 3dfc2af（V4.5.inferno，23:48）；规划器同样问题 03eedec（V4.5.inferno2，01:27） |
 | ET3V | F48 永世沙漏 | 尾巴在 T10 开局（手牌凋萎 + 披风）已触发，追踪漏记，T13 判「还有复活」，boss 只剩 27/535，5 次没用 | e32c8b7（V4.5.revive，01:20） |
-| ET3V | F33 帝王蟹 T5 | 靠瓶中精灵活下来（判官按设计不读档），精灵烧掉；留着精灵 F48 可多一条命 | **待 Dai 定 SL_RELOAD_ON_REVIVE**（开关已在 e32c8b7，默认关） |
+| ET3V | F33 帝王蟹 T5 | 靠瓶中精灵活下来（判官按设计不读档），精灵烧掉；留着精灵 F48 可多一条命 | **待 Roy 定 SL_RELOAD_ON_REVIVE**（开关已在 e32c8b7，默认关） |
 | RJZG | F31 蜂群术士（名单精英） | 47→4，烧掉两版计划都写「preserve Fairy」的精灵，boss 战无复活 | 同上，待 SL_RELOAD_ON_REVIVE |
 | X80A | F42 灵魂枢纽 | 「涟漪盆（本回合没出攻击）格挡不计」三回合整体判不确定；T6 1 血 + 25 格挡对 46，算上涟漪 4 + 覆甲 4 仍死，3 次重打没用 | v4-judge-bounds 修复中 |
 
@@ -143,7 +143,7 @@ boss 战绩（fights，room = boss；SL 重打合并成一场）：一幕 17/19�
 
 ## 六、GPT 段
 
-- **调用量**：大脑 375 题，codex 回答 335（每局 33.5），回退 DeepSeek 40。J4S2 起 codex-calls 记了 364 次运行：answered 326、stalled 38。RNTV 没有逐次记录（for-dai：15 次运行、答 10、真超时 5）。
+- **调用量**：大脑 375 题，codex 回答 335（每局 33.5），回退 DeepSeek 40。J4S2 起 codex-calls 记了 364 次运行：answered 326、stalled 38。RNTV 没有逐次记录（for-roy：15 次运行、答 10、真超时 5）。
 - **每局**：
 
 | 局 | 模式 | codex 运行（答 / 卡） | 卡住类型 | 回退 | 大脑分钟 | codex 单次运行中位 | 额度 used_pct |

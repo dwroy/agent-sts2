@@ -14,6 +14,6 @@ notice=f'\n### {stamp} 静默经验 {name} 已上线，通知 Roy／运维\n\n�
 for c in C['entries']:
  old=c['before'];e=c['after'];notice+=f'- {e["id"]}：旧规则／表述：'+(old['lesson'].split('。机制：')[0].split('。典型案例：')[0] if old else '无本条经验')+'；新规则／表述：'+e['lesson'].split('。机制：')[0].split('。典型案例：')[0]+'；证据 '+','.join(e['evidence'] if not old else [n for n in e['evidence'] if n not in old['evidence']])+'。\n'
 notice+='\n账本：'+','.join(ids)+'；提案：'+','.join(json.load(open(O/'proposal-ids.json')))+'；任务experience-update/20261007-223544→strategy-proposal。预期更准确区分真实容量、开场血价、已建能力/计划及SL双向代价；不宣称本批提高胜率。回退只恢复合入前experience.json原blob并提交，保留刷新/并行代码/本批原日志及CLI历史，另登记回退版本；不直接reset覆盖新游戏数据。\n'
-for path in ['notes/for-dai.md','ops/inbox-dev.md']:
+for path in ['notes/for-roy.md','ops/inbox-dev.md']:
  with (ROOT/path).open('a') as h:h.write(notice)
 (O/'publication.json').write_text(json.dumps(dict(source=source,merged=merged,publication=publication,version=name,ledger=ids),ensure_ascii=False,indent=2)+'\n')

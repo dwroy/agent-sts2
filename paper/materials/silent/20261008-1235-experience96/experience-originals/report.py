@@ -74,7 +74,7 @@ for line in live.get('conflicts',[]):text.append('- '+line)
 text+=['','### 切片大小','', '- 固定种子20260929，从截至切点state.run.character_id=SILENT最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP，共240配对；sample-manifest记录池、时点及唯一帧数。CHARACTER=silent调用官方knowledge-slice.ts，前后冻结同一common/silent/outcome数据，只换经验；最终支持局数字更正后重跑after。','', '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for r in size['by_sample']:text.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
 text.append(f'\n- 整体中位{size["before_median"]}→{size["after_median"]}、增{size["median_growth"]}字；配对差中位+{size["paired_median"]}；最大{size["before_max"]}→{size["after_max"]}，单片最多增{size["max_growth"]}。')
-text.append('- active175/正文52103，high105/med44/low26；A8适用163条47766字、A9适用164条48050字、A10适用172条51011字。没有合并/退役/压缩，预算保持。需要Dai定：无；合入阻塞据实交运维兜底。')
+text.append('- active175/正文52103，high105/med44/low26；A8适用163条47766字、A9适用164条48050字、A10适用172条51011字。没有合并/退役/压缩，预算保持。需要Roy定：无；合入阻塞据实交运维兜底。')
 text.append('\n本批原帧、复算、机制、提案/更正、CLI、测试、切片及合入回执：'+str(O)+'；报告时间'+now+'。')
 out='\n'.join(text)+'\n';(O/'changelog-addition.md').write_text(out);(O/'report.md').write_text(out)
 completion=dict(task='experience-update',version=U['version'],commit=commit,merged=live.get('merged'),added=2,updated=17,retired=0,active=175,mechanisms=mechanisms,tests=dict(tsc=0,vitest=rc,cases=sum(map(int,cases))),ledger=dict(added=[],proposed=proposed,retired=[],check=0),code_proposals=props,implementation_domains=['combat','potion','sl','terminal'],report=str(O/'report.md'))

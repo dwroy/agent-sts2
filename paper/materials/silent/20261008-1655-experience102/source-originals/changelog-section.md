@@ -619,7 +619,7 @@
 - 按任务合入冲突/知识重叠/占用即停，保留刷新和源提交，不硬解覆盖；未实际上线，不造decision/eval/Roy通知，交完成事件由运维兜底，不停对局。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (modify/delete): notes/codex-brain-cache-dispatch.json deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b and modified in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb.  Version 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb of notes/codex-brain-cache-dispatch.json left in tree.
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -670,6 +670,6 @@
 | sample-a9-shop | 3555.0/4810 | 3550.0/4824 | 9.0 |
 
 - 整体中位2491.0→2529.0，涨38.0字；配对差中位14.0，最大4810→4824，单片最多增75。
-- active176/正文49201；high108/med44/low24；A8适用164条/44875字、A9适用165条/45159字、A10适用173条/48109字。未合并/退役、不改预算；需要Dai定：无，合入受阻交运维兜底。
+- active176/正文49201；high108/med44/low24；A8适用164条/44875字、A9适用165条/45159字、A10适用173条/48109字。未合并/退役、不改预算；需要Roy定：无，合入受阻交运维兜底。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-160331-experience-update；报告时间2026-10-08 16:41:32 +0800。

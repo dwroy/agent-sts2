@@ -487,7 +487,7 @@ describe("Waterfall Giant explodes when killed (N7SAK F17: killed on T14 at erup
   });
 });
 
-describe("the rollout policy's later turns hold the potions like 0-cost cards (Dai 2026-09-28)", () => {
+describe("the rollout policy's later turns hold the potions like 0-cost cards (Roy 2026-09-28)", () => {
   it("a Fire Potion kept this turn is drunk by a later policy turn when its best line uses it", () => {
     const fire: CardModel = card(100, "POTION:FIRE_POTION:0", { type: "Potion", cost: 0, damage: 20, exhausts: true });
     const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };

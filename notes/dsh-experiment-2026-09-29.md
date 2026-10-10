@@ -1,6 +1,6 @@
 # DeepSeek 约束决策三方案对比实验（2026-09-29）
 
-Dai 今天批准（含安装 DeepSeek Harness）。实验代码在 worktree `jev-sts2-dsh`（分支 `dsh-exp`，基于 v3 3e41460）的 `experiments/dsh/`；Harness 装在仓库外 `~/tools/`。live bot、v3 和其他 worktree 都没动，live `.env` 和 live 代码没改，没跑 `play`。
+Roy 今天批准（含安装 DeepSeek Harness）。实验代码在 worktree `jev-sts2-dsh`（分支 `dsh-exp`，基于 v3 3e41460）的 `experiments/dsh/`；Harness 装在仓库外 `~/tools/`。live bot、v3 和其他 worktree 都没动，live `.env` 和 live 代码没改，没跑 `play`。
 
 ## 0. 结论先看
 

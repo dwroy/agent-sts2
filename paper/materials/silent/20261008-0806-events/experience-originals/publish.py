@@ -16,6 +16,6 @@ for c in C['entries']:
     b,e=c['before'],c['after'];old=b['lesson'] if b else '原库无该独立条目'
     notice+=f'- {c["id"]}：旧规则/表述：{old}；新规则/表述：{e["lesson"]}；支持{e["n_support"]}/反例{e["n_contradict"]}、asc{e["asc"]}；新增证据'+','.join(c['new_runs'])+'；账本'+','.join(mapping[c['id']])+'。\n'
 notice+='\n预期影响：路线/休息分开赢战血价、实际回复与未来投影；按已建能力/实际版本兑现毒伤和力挡；复活后同盘10血/7挡/8敌血差不当整战胜因，不新增固定药水/SL阈值、不承诺胜率。代码提案'+','.join(ids)+'独立实施。回退：仅三方逆向恢复本次experience差量并登记新回退版本，保留知识刷新及并行代码/记录；不硬重置后续进展。完整旧新/证据/测试/账本在本批report.md/changes.json。\n'
-for path in ['notes/for-dai.md','ops/inbox-dev.md']:
+for path in ['notes/for-roy.md','ops/inbox-dev.md']:
     with (ROOT/path).open('a') as h:h.write(notice)
 (O/'publication.json').write_text(json.dumps(dict(source=source,merged=merged,publication=pub,version=name,ledger=L['proposed']),ensure_ascii=False,indent=2)+'\n');print(name,pub)

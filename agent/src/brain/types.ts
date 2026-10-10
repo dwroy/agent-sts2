@@ -16,7 +16,7 @@ export type EngineName = "deepseek" | "claude" | "codex" | "dsh";
  */
 export type BrainDecider = EngineName | `${EngineName} (for ${EngineName})`;
 
-/** Reasoning effort (claude --effort, codex model_reasoning_effort; xhigh: codex, Dai 2026-10-03). */
+/** Reasoning effort (claude --effort, codex model_reasoning_effort; xhigh: codex, Roy 2026-10-03). */
 export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
 
 /** The answer format for one question kind, shared by every engine. */

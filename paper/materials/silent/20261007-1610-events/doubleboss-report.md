@@ -29,6 +29,6 @@ B/C/D 源 f58add31e0250f2733f9a264f09dfe186ad57824 → live c9b0f8a95c1125377da1
 
 ## 交接与回退
 
-按date在根目录notes/for-dai.md和ops/inbox-dev.md追加双通知，逐项旧/新规则、证据/账本、影响、回退；原根目录并行记录不覆盖。运维核实际A版本后登记silent-0228 shipped，根目录源码已由并行集成接通，仍须核新审计实际batch/PID和外部完整检查。没有实际新批次不称已派发。
+按date在根目录notes/for-roy.md和ops/inbox-dev.md追加双通知，逐项旧/新规则、证据/账本、影响、回退；原根目录并行记录不覆盖。运维核实际A版本后登记silent-0228 shipped，根目录源码已由并行集成接通，仍须核新审计实际batch/PID和外部完整检查。没有实际新批次不称已派发。
 
 A可停用本角色double-boss.json或按第一父撤A merge，保持0163/并行数据；B/C/D机械故障可回退本次ops/learner调度与校验代码并保留Roy授权文档/模板，原入口验证，不回退A和知识刷新。未经证据不加规则。所有初稿、失败、脚本、固定检查树、合入/发布原日志在本scratch保留；唯一根游戏台账silent-0228 fight/proposed由运维核实，不另造基础设施游戏条目。

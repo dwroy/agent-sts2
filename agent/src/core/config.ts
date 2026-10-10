@@ -40,23 +40,23 @@ export interface EnricherConfig {
 
 /** SL (docs/sl.md, src/sl/controller.ts). */
 export interface SlConfig {
-  /** SL_ENABLED (default on: Dai 2026-10-02, "SL is a switch, on by default"; off: no SL at all). */
+  /** SL_ENABLED (default on: Roy 2026-10-02, "SL is a switch, on by default"; off: no SL at all). */
   enabled: boolean;
-  /** SL_BOSS_RETRIES (default 5, Dai 2026-10-02): a boss fight gets at most 1 + this many attempts. */
+  /** SL_BOSS_RETRIES (default 5, Roy 2026-10-02): a boss fight gets at most 1 + this many attempts. */
   bossRetries: number;
-  /** SL_ELITE_RETRIES (default 3, Dai 2026-10-02): the same for the hard fights listed in knowledge/characters/ironclad/sl-elites.json (any room, not only elites), and for SL_ACT3_LOW_HP's fights. */
+  /** SL_ELITE_RETRIES (default 3, Roy 2026-10-02): the same for the hard fights listed in knowledge/characters/ironclad/sl-elites.json (any room, not only elites), and for SL_ACT3_LOW_HP's fights. */
   eliteRetries: number;
   /**
-   * SL_ACT3_LOW_HP (default on, Dai 2026-10-03, option B after the V4.4 A9 window: 7 of the 11 runs that reached act 3 died
+   * SL_ACT3_LOW_HP (default on, Roy 2026-10-03, option B after the V4.4 A9 window: 7 of the 11 runs that reached act 3 died
    * in its hallways, ? rooms and elites, entering at 13-49 HP): an act-3 fight with no boss, entered with HP strictly below
    * SL_ACT3_LOW_HP_PCT percent of max HP, gets SL like a listed hard fight (SL_ELITE_RETRIES, certain death only, every
    * other SL switch as there). The entry HP is the fight's first state's (docs/sl.md §3). Off: as before.
    */
   act3LowHp: boolean;
-  /** SL_ACT3_LOW_HP_PCT (default 50, Dai 2026-10-03: 40 first, then 50): SL_ACT3_LOW_HP's line, percent of max HP at the fight's entry (strictly below; 0..100). */
+  /** SL_ACT3_LOW_HP_PCT (default 50, Roy 2026-10-03: 40 first, then 50): SL_ACT3_LOW_HP's line, percent of max HP at the fight's entry (strictly below; 0..100). */
   act3LowHpPct: number;
   /**
-   * SL_ACT2_LOW_HP (default on, Dai 2026-10-04 after the V4.5 A9 window: PEGLM9PFY97U entered an act-2 hallway at 12/80
+   * SL_ACT2_LOW_HP (default on, Roy 2026-10-04 after the V4.5 A9 window: PEGLM9PFY97U entered an act-2 hallway at 12/80
    * and died untracked): the same rule as SL_ACT3_LOW_HP for an act-2 fight with no boss. Absent (older configs, tests): off.
    */
   act2LowHp?: boolean;
@@ -71,39 +71,39 @@ export interface SlConfig {
    */
   retryMemo?: boolean;
   /**
-   * SL_RETRY_KNOWN_DRAWS (default on, Dai 2026-10-02): on a retry the draw pile's next cards are the order an earlier
+   * SL_RETRY_KNOWN_DRAWS (default on, Roy 2026-10-02): on a retry the draw pile's next cards are the order an earlier
    * attempt saw (the solver, the rollout, the random potions and B2 take them first; Jev is told), until this attempt's
    * draws leave that order (a reshuffle, a card put into the pile, a different card drawn). docs/sl.md §10.
    */
   retryKnownDraws: boolean;
-  /** SL_RETRY_COMPUTE (default on, Dai 2026-10-02): attempts after the first get more rollout samples and time (docs/sl.md §10). */
+  /** SL_RETRY_COMPUTE (default on, Roy 2026-10-02): attempts after the first get more rollout samples and time (docs/sl.md §10). */
   retryCompute: boolean;
   /**
-   * SL_JUDGE_KNOWN_DRAWS (default on, Dai 2026-10-02): the certain-death judge's least-loss tier is not vetoed by a playable
+   * SL_JUDGE_KNOWN_DRAWS (default on, Roy 2026-10-02): the certain-death judge's least-loss tier is not vetoed by a playable
    * card that draws when every draw the planner's lines could make is exactly known from an earlier attempt (docs/sl.md §2.1).
    */
   judgeKnownDraws: boolean;
   /**
-   * SL_JUDGE_ANY_DRAW (default on, Dai 2026-10-03): the least-loss tier's draw veto is lifted when the death holds for every
+   * SL_JUDGE_ANY_DRAW (default on, Roy 2026-10-03): the least-loss tier's draw veto is lifted when the death holds for every
    * draw the turn could make: a drawing card whose own HP cost kills before it draws, or every line dying with the whole
    * draw pile in the hand (the superset board, docs/sl.md §2.3). Off: the veto as before.
    */
   judgeAnyDraw: boolean;
   /**
-   * SL_RELOAD_EARLY (default on, Dai 2026-10-02: "知道必死了就sl", a certain death and never a prediction): the fight is
+   * SL_RELOAD_EARLY (default on, Roy 2026-10-02: "知道必死了就sl", a certain death and never a prediction): the fight is
    * reloaded at the planner's least-loss verdict, before its line is played card by card, when the judge is certain on that
    * board and nothing this turn is left to chance or to what the planner does not model (docs/sl.md §2.2); otherwise at
    * end_turn as before.
    */
   reloadEarly: boolean;
   /**
-   * SL_RELOAD_ON_REVIVE (default off; Dai 2026-10-03, still deciding): a turn end where only a revive held (Fairy in a Bottle,
+   * SL_RELOAD_ON_REVIVE (default off; Roy 2026-10-03, still deciding): a turn end where only a revive held (Fairy in a Bottle,
    * Lizard Tail) would save us is judged as without it, so the fight reloads instead of burning the revive. Off: the judge
    * plays the revives out (docs/sl.md §2.7) and reloads only when they cannot stop the death.
    */
   reloadOnRevive?: boolean;
   /**
-   * SL_RETRY_KNOWN_INSERTS (default on, Dai 2026-10-02): cards added to the draw pile at random places (a status,
+   * SL_RETRY_KNOWN_INSERTS (default on, Roy 2026-10-02): cards added to the draw pile at random places (a status,
    * Metamorphosis) keep the known draw order; the samples put them at random places among the known cards (docs/sl.md §10).
    * Planning only: the certain-death judge never uses an order resting on it.
    */
@@ -114,19 +114,19 @@ export interface SlConfig {
    */
   retryKnownTop: boolean;
   /**
-   * SL_RETRY_EXPLORE (default on, Dai 2026-10-02: "retries must try different play"): attempts 3 and later change the line
+   * SL_RETRY_EXPLORE (default on, Roy 2026-10-02: "retries must try different play"): attempts 3 and later change the line
    * at one decision point a failed attempt played (the latest first, then one further back each attempt) to the best line
    * no failed attempt played there; every other board plays as usual (src/sl/explore.ts, docs/sl.md §11). Off: as before.
    */
   retryExplore: boolean;
   /**
-   * SL_RETRY_EXPLORE_B2 (default on, Dai 2026-10-02; with SL_RETRY_EXPLORE): on a boss B2 is trusted on, B2's win rate gates
+   * SL_RETRY_EXPLORE_B2 (default on, Roy 2026-10-02; with SL_RETRY_EXPLORE): on a boss B2 is trusted on, B2's win rate gates
    * the replacement ("not worse": within 2 paired standard errors of the line replaced, B2's tie rule) instead of the
    * rollout's share of samples dead; low-trust bosses and the listed elites keep the rollout's (docs/sl.md §11.3). Off: as before.
    */
   retryExploreB2: boolean;
   /**
-   * SL_RETRY_EXPLORE_BOSS_POTIONS (default on, Dai 2026-10-02; with SL_RETRY_EXPLORE): in a boss fight (potions cost 0
+   * SL_RETRY_EXPLORE_BOSS_POTIONS (default on, Roy 2026-10-02; with SL_RETRY_EXPLORE): in a boss fight (potions cost 0
    * there, and the line replaced is known to lose) the replacement may drink a potion the line it replaces does not: the
    * shown potion lines and the random potions' Monte Carlo lines are untried lines like the dry ones. A listed elite keeps
    * "no added drink" (docs/sl.md §11.3). Off: as before.
@@ -249,7 +249,7 @@ export interface SlConfig {
    */
   retryExploreWhole: boolean;
   /**
-   * SL_RETRY_EXPLORE_WHERE (default on, 2026-10-03, GQ5H73A1VCL8 F48, Dai: 「确实应该换」; with SL_RETRY_EXPLORE): the deviation
+   * SL_RETRY_EXPLORE_WHERE (default on, 2026-10-03, GQ5H73A1VCL8 F48, Roy: 「确实应该换」; with SL_RETRY_EXPLORE): the deviation
    * point goes where the failed attempts lost their HP, a different turn each attempt: the turns deviated at the fewest times
    * first, of them the one whose weight is the largest (the HP lost on the enemy turn after it, mean over the failed
    * attempts, an attempt's last turn all its HP, plus the later turns' at half a turn each); within the turn its first
@@ -334,7 +334,7 @@ export interface AppConfig {
   runPlan: "off" | "v1";
   runPlanLog: string;
   /**
-   * RUN_PLAN_MERGE (default on; Dai 2026-10-02, strategy/run-plan-merge.ts): with RUN_PLAN=v1 and BUILD_DECIDER=deepseek,
+   * RUN_PLAN_MERGE (default on; Roy 2026-10-02, strategy/run-plan-merge.ts): with RUN_PLAN=v1 and BUILD_DECIDER=deepseek,
    * a due run plan rides on the next DeepSeek question (the act-start Ancient, a card reward, a rest site, a shop, an
    * event) instead of its own call at the map; its own call only when no question carried it within
    * RUN_PLAN_MERGE_FLOORS floors, or the act boss is next. off: the run plan's own call at the map, exactly as before.
@@ -350,7 +350,7 @@ export interface AppConfig {
   /**
    * With BUILD_DECIDER=deepseek, whether a shop visit, a rest site, an event option and the act-start
    * Ancient are decided in one DeepSeek question each, together with the deck card(s) the follow-up screen
-   * takes and the act's route (Dai 2026-09-29; screens/oneshot.ts). `on` (default); `off`: the step-by-step
+   * takes and the act's route (Roy 2026-09-29; screens/oneshot.ts). `on` (default); `off`: the step-by-step
    * questions (one purchase, then the card, per question).
    */
   buildOneshot: "on" | "off";
@@ -374,7 +374,7 @@ export interface AppConfig {
    */
   thiefFacts: boolean;
   /**
-   * THIEF_COST (default on: Dai 2026-10-02, after the offline numbers; docs/thief.md §7): with THIEF_FACTS on, the loot
+   * THIEF_COST (default on: Roy 2026-10-02, after the offline numbers; docs/thief.md §7): with THIEF_FACTS on, the loot
    * a thief may take away is HP in the rollout's ranking, like a potion's cost: the Hopper's stolen card at its act-boss
    * simulated worth (src/sim/thief-card-value.ts, once per fight), the Merc's / Fat Gremlin's gold at the potion table's
    * gold rate (potion-equivalents.json meta.gold_hp). off: questions, options and choices exactly as with THIEF_FACTS alone.
@@ -390,7 +390,7 @@ export interface AppConfig {
    */
   mechRules: boolean;
   /**
-   * MECH_MOVE_RULES (default on; docs/mechanics-learning.md §8, Dai 2026-10-02), with MECH_RULES on: the second learned
+   * MECH_MOVE_RULES (default on; docs/mechanics-learning.md §8, Roy 2026-10-02), with MECH_RULES on: the second learned
    * class, "a power removed or lowered -> the enemy's move changes" (an Axebot's Stock taken on its revive: Boot Up, no
    * attack), in the solver, the rollout, the option's fact, the enemy powers' note and the knowledge prefix; and the Kaiser
    * Crab's back attack needing both claws alive (Surrounded's x1.5 is gone once one claw dies: 152 of 152 logged one-claw
@@ -398,7 +398,7 @@ export interface AppConfig {
    */
   mechMoveRules: boolean;
   /**
-   * MECH_DEATH_MOVE (default on; docs/mechanics-learning.md §9, Dai 2026-10-03), with MECH_RULES on: the class learned from
+   * MECH_DEATH_MOVE (default on; docs/mechanics-learning.md §9, Roy 2026-10-03), with MECH_RULES on: the class learned from
    * the logged multi-enemy fights, "an ally's death changes a survivor's move" (the Torch Head Amalgam dying turns the
    * Queen's Burn Bright For Me into Enrage at once, 21 of 21, and her next move into Off With Your Head, 22 of 22), in the
    * solver (this turn's move), the rollout and the whole-fight boss sim (that enemy turn's move and the next one, the
@@ -407,7 +407,7 @@ export interface AppConfig {
    */
   mechDeathMove: boolean;
   /**
-   * PASSIVE_PIECES (default on; src/reflex/passive-pieces.ts, Dai 2026-10-03): the passive damage and block pieces (Thorns,
+   * PASSIVE_PIECES (default on; src/reflex/passive-pieces.ts, Roy 2026-10-03): the passive damage and block pieces (Thorns,
    * Flame Barrier, Mercury Hourglass, Inferno, Sai, Crimson Mantle, Plating, Orichalcum, Ripple Basin, Horn Cleat, Letter
    * Opener, Ornamental Fan, Parrying Shield) in the rollout's later turns, the whole-fight boss sim and the boss clock, the
    * clock's passive damage not cut by the Queen's Weak; the last five relics in the live solver's current turn too, and
@@ -600,7 +600,7 @@ export interface BrainConfig {
 /** The brain's default Claude model (claude-api skill, 2026-09: the current Sonnet; BRAIN_CLAUDE_MODEL=opus for Opus). */
 export const DEFAULT_CLAUDE_MODEL = "claude-sonnet-5";
 
-/** The current Opus, pinned (Dai 2026-09-29): BRAIN_CLAUDE_MODEL=opus sends this id, so an alias move changes nothing. */
+/** The current Opus, pinned (Roy 2026-09-29): BRAIN_CLAUDE_MODEL=opus sends this id, so an alias move changes nothing. */
 export const CLAUDE_OPUS_MODEL = "claude-opus-5-5";
 
 /** Model aliases the brain pins to a full id before calling the CLI; other names are sent as given. */
@@ -613,7 +613,7 @@ export const DEFAULT_CLAUDE_TIMEOUT_MS = 120_000;
 export const DEFAULT_CLAUDE_MAX_CALLS = 150;
 
 /**
- * The brain's Codex model and effort when BRAIN_CODEX_MODEL / BRAIN_CODEX_EFFORT are unset (Dai 2026-10-03: "gpt6.1 sol
+ * The brain's Codex model and effort when BRAIN_CODEX_MODEL / BRAIN_CODEX_EFFORT are unset (Roy 2026-10-03: "gpt6.1 sol
  * extra high"). Always sent explicitly: the engine ignores ~/.codex/config.toml (engines/codex.ts).
  */
 export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
@@ -656,8 +656,8 @@ export const DEFAULT_CODEX_ACCEPT_CUT = true;
 export const DEFAULT_CODEX_ROUTE_PATTERN = true;
 
 /**
- * The codex usage guard's defaults (engines/codex-usage.ts). Stop at 80% of any window (Dai 2026-10-03: protect the
- * weekly window shared with Dai's own Codex use; past 100% the backend draws on credits). A read (~0.9 s, one
+ * The codex usage guard's defaults (engines/codex-usage.ts). Stop at 80% of any window (Roy 2026-10-03: protect the
+ * weekly window shared with Roy's own Codex use; past 100% the backend draws on credits). A read (~0.9 s, one
  * short-lived app-server) before every third codex call or after 10 minutes: a call at xhigh takes minutes and is about
  * 0.1-0.4% of the weekly window, so the guard costs well under 1% of the brain's time and overshoots by about 1%.
  */
@@ -747,7 +747,7 @@ function maxCallsOf(env: NodeJS.ProcessEnv, name: EngineName, problems: ConfigPr
   if (name === "deepseek") return null;
   const field = `BRAIN_${name.toUpperCase()}_MAX_CALLS`;
   const raw = readEnv(env, field);
-  // Codex: no limit by default (Dai 2026-10-03); a used-up subscription rests it for the process (engines/codex.ts).
+  // Codex: no limit by default (Roy 2026-10-03); a used-up subscription rests it for the process (engines/codex.ts).
   if (raw === null) return name === "claude" ? DEFAULT_CLAUDE_MAX_CALLS : null;
   if (["off", "none"].includes(raw.toLowerCase())) return null;
   return parseInteger(raw, field, problems, { min: 0, max: 1_000_000 });
@@ -1169,7 +1169,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const thiefFactsProblems: ConfigProblem[] = [];
   const thiefFacts = parseOnOff(readEnv(env, "THIEF_FACTS"), "THIEF_FACTS", thiefFactsProblems) ?? true;
   for (const problem of thiefFactsProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
-  // THIEF_COST likewise: an unreadable value warns and the default applies (on: Dai 2026-10-02, after the offline numbers in
+  // THIEF_COST likewise: an unreadable value warns and the default applies (on: Roy 2026-10-02, after the offline numbers in
   // notes/thief-cost-report.md).
   const thiefCostProblems: ConfigProblem[] = [];
   const thiefCost = parseOnOff(readEnv(env, "THIEF_COST"), "THIEF_COST", thiefCostProblems) ?? true;

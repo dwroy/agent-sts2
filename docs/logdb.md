@@ -1,6 +1,6 @@
 # 日志库（DuckDB 分析库）
 
-V4 知识库里的「日志库」（docs/v4-architecture.md §3）：把 logs/*.jsonl 派生成可以用 SQL 查的表，给复盘、学习者、大脑（`logs_query` 工具）和知识构建脚本用。2026-09-29 Dai 定：用 DuckDB。
+V4 知识库里的「日志库」（docs/v4-architecture.md §3）：把 logs/*.jsonl 派生成可以用 SQL 查的表，给复盘、学习者、大脑（`logs_query` 工具）和知识构建脚本用。2026-09-29 Roy 定：用 DuckDB。
 
 ## 1. 设计
 

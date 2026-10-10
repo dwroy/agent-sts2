@@ -1,5 +1,5 @@
 /**
- * The route baseline's fight chain to the data's rule (Dai 2026-10-03, experience route-no-chains): act 2 penalises the
+ * The route baseline's fight chain to the data's rule (Roy 2026-10-03, experience route-no-chains): act 2 penalises the
  * 4th fight between rest sites (shops and "?" rooms do not end the stretch; elites count and pay too), act 3 has no
  * count penalty, act 1 is unchanged; the route facts say the act-2 stretch. Fixed data only: fixed room costs and an
  * empty monster DB for the route values (never the refreshed room-costs.json or monster DB).

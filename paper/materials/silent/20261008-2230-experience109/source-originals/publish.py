@@ -51,7 +51,7 @@ for c in C:
 notification+=['','预期影响：让实际力敏/剩覆甲/毒与荆棘/单牌上限、路线血药链和随机升级事实进入构筑/路线/休息决策；SL同盘付血差额只是观察，不拟强喝/必死/探索阈值，不声称胜率提升。提案'+','.join(proposals)+'，来源experience-update→实现strategy-proposal；账本、证据限制和原始数见'+str(O/'report.md')+'。',
 '回退：持live-merge锁仅恢复knowledge/characters/silent/experience.json为源提交父版2026-10-08.25的blob，单独提交/记录新版本，保留所有刷新知识、并行代码、提案及账本历史；独立源码实现分别回退。','']
 notification='\n'.join(notification)
-for relative in ['notes/for-dai.md','ops/inbox-dev.md']:
+for relative in ['notes/for-roy.md','ops/inbox-dev.md']:
     with (ROOT/relative).open('a') as f:f.write(notification)
 run(['git','add','eval/versions.json','paper/materials/decision-log.md'])
 patch=run(['git','diff','--cached'])
@@ -61,7 +61,7 @@ assert scan.returncode==0,'上线记录gitleaks失败'
 run(['git','diff','--cached','--check'])
 run(['git','commit','-m','Record Silent experience 2026-10-08.26 release','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>'])
 publication=run(['git','rev-parse','HEAD'])
-state.update(publication=publication,eval_version=name,notifications=['notes/for-dai.md','ops/inbox-dev.md'],result='实际合入、合后沙箱通过、上线登记及Roy双通知完成；数据shipped交运维核实')
+state.update(publication=publication,eval_version=name,notifications=['notes/for-roy.md','ops/inbox-dev.md'],result='实际合入、合后沙箱通过、上线登记及Roy双通知完成；数据shipped交运维核实')
 (O/'live-merge.json').write_text(json.dumps(state,ensure_ascii=False,indent=2)+'\n')
 (O/'publication.json').write_text(json.dumps(dict(version=name,source=source,merged=state['merged'],publication=publication,time=now,tests=tests,ledger=ledger,code_proposals=proposals,decision_sha256=hashlib.sha256(line.encode()).hexdigest(),notification_sha256=hashlib.sha256(notification.encode()).hexdigest()),ensure_ascii=False,indent=2)+'\n')
 print('实际发布',publication,name)

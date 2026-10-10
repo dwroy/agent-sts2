@@ -538,7 +538,7 @@ export interface LiveRolloutArgs {
   orders?: KillOrder[];
   ordersDropped?: number;
   /**
-   * The "no potion this fight" line (Dai 2026-09-30): `line` a copy of the potion-free `base` (a shown line), rolled
+   * The "no potion this fight" line (Roy 2026-09-30): `line` a copy of the potion-free `base` (a shown line), rolled
    * out with no potion in its later turns. When the base line's own rollout drinks nothing later in any sample the
    * two are the same line: the copy is dropped (merged) and the base line is the no-potion line.
    */
@@ -618,7 +618,7 @@ const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith(
  * The line a drink line is without its potion(s) when the drink changes nothing: every drink's effect is this
  * turn's alone (turnOnlyDrink), the same card steps (card, hand index, target) and the same outcome (3SBPKG9603WD boss T3: Flex
  * after the last attack, 62.5 vs 64.1 by sampling noise, and Jev drank it). Null when there is none. The drink
- * line stays an option (Dai: potions are never filtered); it is only told apart.
+ * line stays an option (Roy: potions are never filtered); it is only told apart.
  */
 export function noEffectTwin(plan: Plan, plans: Plan[]): Plan | null {
   if (!drinks(plan)) return null;
@@ -686,7 +686,7 @@ const turnLoss = (line: LineEstimate): number => (line.plan.outcome?.hpLoss ?? 0
  * (combat-plan simRanks); this order is the rollout's own, for the low-trust bosses and every other fight.
  *
  * Not saturated, with a leader, its HP left comes first among the lines tied on the value, as above.
- * Potion costs (potion-cost.ts, Dai 2026-09-30): the value has each line's drinks taken off at their cost; when some
+ * Potion costs (potion-cost.ts, Roy 2026-09-30): the value has each line's drinks taken off at their cost; when some
  * line pays one, the fewest deaths within the horizon come first, then the value (a cost never picks a line that dies
  * more often). A saturated board (every line loses all our HP) ranks without costs: a potion kept there has no
  * later. A sample that dies pays no cost either (rollout.ts valueAt). No cost (a boss fight, no potion): as before.
@@ -697,7 +697,7 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
   if (lines.length === 0) return { best: null, saturated: false };
   const saturated = lines.every((line) => line.samples >= SATURATED_MIN_SAMPLES && line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
   // With potion costs in play (some line pays for a drink: potion-cost.ts, never in a boss fight) deaths come first,
-  // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Dai
+  // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Roy
   // 2026-09-30: a drink that keeps us alive is drunk whatever it costs). Without costs, the value alone, as before.
   const costs = lines.some((line) => (line.potionCost ?? 0) > 0 || (line.thiefCost ?? 0) > 0);
   const fewestDead = Math.min(...lines.map((line) => line.deaths));
@@ -752,7 +752,7 @@ export function effectiveFightLoss(line: Pick<LineEstimate, "hpLoss" | "potionCo
 }
 
 /**
- * The rollout's best among the shown options, or the shown options tied for it (Dai 2026-09-29; consistency
+ * The rollout's best among the shown options, or the shown options tied for it (Roy 2026-09-29; consistency
  * #6: in 380 of 2775 flagged questions another option showed the same numbers, and the flag fell on code's
  * first line by float noise). On a board that is not saturated, the eligible lines that read the same as the
  * best (sameShownResult; enemy HP left and damage do not break it): two or more of them shown, none is the

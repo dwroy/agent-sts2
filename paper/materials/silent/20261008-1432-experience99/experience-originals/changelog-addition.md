@@ -605,7 +605,7 @@
 - 合并预检冲突按任务停止，不覆盖刷新/硬解，不造上线decision/eval/Roy通知；源提交和完成事件交运维兜底，对局不停、不运行play。
 - CONFLICT (content): Merge conflict in docs/codex-ops.md
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/codex-ops-learner.sh
@@ -647,6 +647,6 @@
 | sample-a9-shop | 4167.0/5197 | 3584.0/5172 | -30.5 |
 
 - 整体中位3024.0→2551.5、涨-472.5字；配对差中位-163.0，最大5221→5172，单片最多增0。
-- active176、正文50495，high107/med45/low24；A8适用164条/46158字、A9适用165条/46442字、A10适用173条/49403字。本批16条更新去旧重复案例、合计压短930字，逐条见上；未合并/退役，不改预算。需要Dai定：无。
+- active176、正文50495，high107/med45/low24；A8适用164条/46158字、A9适用165条/46442字、A10适用173条/49403字。本批16条更新去旧重复案例、合计压短930字，逐条见上；未合并/退役，不改预算。需要Roy定：无。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-140852-experience-update；报告时间2026-10-08 14:25:17 +0800。

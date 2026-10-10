@@ -263,7 +263,7 @@ A10源节点至下一实际战，源入血档、多源可同战：
 - 源原沙箱入口：tsc 0，vitest 0，233文件/2441例，重跑0次，单worker，固定排除名单不变。完整外部由调度器据实际合入另补。
 - JSON、字符预算、12位局号/角色/计数/进阶、历史七数组/血档/节点/回血/SL、1777逐帧匹配、三组同指纹、力敏/毒/临时减力及末轮完整需损/实死核验、切片冻结、diff --check及gitleaks通过；check-experience退出0、missing=[]。
 - 学习账本仅CLI：新增无；proposed silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0028,silent-0027,silent-0079,silent-0046,silent-0085,silent-0060,silent-0063,silent-0065,silent-0062,silent-0039,silent-0013,silent-0011,silent-0023,silent-0018,silent-0087,silent-0241,silent-0242；退役无；check0。0241全史复算补更早首证10GPK5XGHCK3/A3及普通/升级事实，原UAC首证/未知边界和prior=yes保持历史，当前首证/asc只经CLI追加更正。其余首证/先验/claim/旧repeat及版本保持，未采纳复盘项不改状态，shipped交运维核实际合入。
-- live实际合入：None；刷新后/合前：7ad25e1477cc6db9e40a26a05f8e5b5e0b343fd8；刷新提交：None；合后沙箱：None；结果：锁内合并预检冲突，按任务停止、不硬解：eval/versions.json,notes/fix-queue-v4.md,notes/for-dai.md,notes/lessons.md,notes/ops-handoff.md,ops/inbox-dev.md,paper/data/README.md,paper/data/commits.csv,paper/data/cost-curve-silent.csv,paper/data/cost-silent.csv,paper/data/cost-sources.json,paper/data/cost-unattributed.csv,paper/data/learning-curve-silent.csv,paper/data/runs.csv,paper/data/summary.json,paper/data/verification.json,paper/materials/decision-log.md,paper/materials/experience-changelog-silent.md,paper/materials/learning/ledger.jsonl,paper/materials/silent/cost.md。
+- live实际合入：None；刷新后/合前：7ad25e1477cc6db9e40a26a05f8e5b5e0b343fd8；刷新提交：None；合后沙箱：None；结果：锁内合并预检冲突，按任务停止、不硬解：eval/versions.json,notes/fix-queue-v4.md,notes/for-roy.md,notes/lessons.md,notes/ops-handoff.md,ops/inbox-dev.md,paper/data/README.md,paper/data/commits.csv,paper/data/cost-curve-silent.csv,paper/data/cost-silent.csv,paper/data/cost-sources.json,paper/data/cost-unattributed.csv,paper/data/learning-curve-silent.csv,paper/data/runs.csv,paper/data/summary.json,paper/data/verification.json,paper/materials/decision-log.md,paper/materials/experience-changelog-silent.md,paper/materials/learning/ledger.jsonl,paper/materials/silent/cost.md。
 - 合入预检原件在live-merge.json/merge-tree-locked.txt或merge-live.log；未实际合入则无新eval版本/上线记录/双通知，不冒称shipped。根目录本节由调用方提交，本源只提交experience.json。
 
 ### 切片大小
@@ -285,4 +285,4 @@ A10源节点至下一实际战，源入血档、多源可同战：
 | a9-reward | 2755.0/3395 | 2491.0/3131 | -264.0 |
 | a9-shop | 3803.0/5325 | 3524.0/5044 | -281.0 |
 
-- 整体中位2755.0→2537.0（-218字），配对增量中位-131、最大增量107；整体最大5325→5044字。active148→150，正文50126→48581字，置信度高80/中46/低24；A8适用142条45351字、A9适用143条45635字、A10适用145条46495字。需要Dai定的知识事项：无。
+- 整体中位2755.0→2537.0（-218字），配对增量中位-131、最大增量107；整体最大5325→5044字。active148→150，正文50126→48581字，置信度高80/中46/低24；A8适用142条45351字、A9适用143条45635字、A10适用145条46495字。需要Roy定的知识事项：无。

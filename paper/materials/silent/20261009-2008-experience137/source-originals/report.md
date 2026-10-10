@@ -598,7 +598,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 - 原bash agent/tools/test-sandbox.sh，TMPDIR指定scratch、PATH本机node、SANDBOX_WORKERS=1，固定数据/固定排除名单。tsc 0；vitest 251文件/2627用例/退出0；失败重跑False。最终两处案例/分源文字精确化后，同沙箱入口经验/路径补验记录{'tsc': 0, 'vitest': 0, 'file_runs': 3, 'case_runs': 31}；外部完整套件由调度器按完成事件补跑。
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。新增账本无；proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0011,silent-0025,silent-0027,silent-0023,silent-0024,silent-0049,silent-0053,silent-0010,silent-0253,silent-0278,silent-0240,silent-0243,silent-0018,silent-0307；退役无。仅CLI追加，保留旧claim/首证/prior/状态历史/版本；实际合入后shipped由运维核登记。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新42112f9e3e0b31a868b5a1ffe380c9df1f1aad67；合前42112f9e3e0b31a868b5a1ffe380c9df1f1aad67；实际合入None；合后测试None。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -639,7 +639,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 | sample-a9-shop | 3921.0/4970 | 3881.0/4966 | -31.0 |
 
 - 整体中位2707.5→2679.0（-28.5字），配对差中位-25.0；最大5528→5491，单片差范围[-134, 22]。
-- active198，总字符49916，置信度{'low': 26, 'high': 129, 'med': 43}；A8 {'entries': 184, 'chars': 46231}，A9 {'entries': 185, 'chars': 46515}，A10 {'entries': 196, 'chars': 49088}。需要Dai定：无。
+- active198，总字符49916，置信度{'low': 26, 'high': 129, 'med': 43}；A8 {'entries': 184, 'chars': 46231}，A9 {'entries': 185, 'chars': 46515}，A10 {'entries': 196, 'chars': 49088}。需要Roy定：无。
 
 全部原抽取/偏移、历史基线/参数/复盘筛读、前后经验/切片、CLI、提案、测试和合入预检/失败原件保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-193738-experience-update。
 

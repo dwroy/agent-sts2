@@ -98,7 +98,7 @@ parts += ['', '### 切片大小','', '- 固定种子20260929，截至切点state
 for r in S['pairs']:
     parts.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
 parts += ['',f'- 整体中位{S["before_median"]}→{S["after_median"]}，涨{S["median_change"]}字；配对差中位{S["paired_median"]}，最大{S["before_max"]}→{S["after_max"]}，单片最多增{S["max_change"]}。',
-    f'- active{U["after"]["active"]}/正文{U["after"]["chars"]}；置信度{U["after"]["confidence"]}；'+','.join('A'+a+'适用'+str(v['entries'])+'条/'+str(v['chars'])+'字' for a,v in U['after']['by_asc'].items())+'。未做预算压缩/合并退役，未超预算。需Dai定：无。',
+    f'- active{U["after"]["active"]}/正文{U["after"]["chars"]}；置信度{U["after"]["confidence"]}；'+','.join('A'+a+'适用'+str(v['entries'])+'条/'+str(v['chars'])+'字' for a,v in U['after']['by_asc'].items())+'。未做预算压缩/合并退役，未超预算。需Roy定：无。',
     '', '原帧/复算/机制/提案/CLI/测试/切片/合入回执：'+str(O.resolve())+'；报告时间'+now+'。','']
 report='\n'.join(parts)
 (O/'report.md').write_text(report)

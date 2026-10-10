@@ -181,7 +181,7 @@ describe("3. Thorns through block; Rupture on every HP loss of our turn (proposa
   });
 });
 
-describe("4. Throwing Axe: the fight's first card is played twice (proposal §4, Dai's question)", () => {
+describe("4. Throwing Axe: the fight's first card is played twice (proposal §4, Roy's question)", () => {
   it("FSPKJAYY3ET6 F39 T1: Inflame first is Strength +6 and Galvanic's 6 twice (logged 2 -> 8, HP 69 -> 57; 43 at T2)", () => {
     const { input, result } = solvedBoard(fixture("fspk-f39-t1-galvanic-axe", "t1"));
     expect(input.player.firstCardReplay).toBe(true);

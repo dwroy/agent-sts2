@@ -38,7 +38,7 @@ Roy 要求：
 
 阶段报告及时写 {{scratch}}/report.md 和 report.json，保留原始实验与失败日志。前后表分别列原日志窗口、隔离实验、实际上线后生产窗口：样本局/题数、模型/effort、缓存命中率、输入/缓存/输出、每题 token、耗时分布、费用与可测额度消耗速度，注明不能归因的背景消耗、窗口/样本限制和回退方法。生产数据尚未产生时填待观察而非预测结果；给运维一条可在后续已完成事件执行的取样/统计指令，不轮询或等待新对局。
 
-仅在分配工作树与 {{scratch}} 写实现、测试及报告；根目录报告和通知属于本任务授权记录例外。最终报告追加到根目录 paper/materials/silent/codex-brain-cache-2026-10-08.md（已有则保留原文和历史）；先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加 Roy 的实际结论、原因证据、旧/新传输行为、真实前后结果或测量限制、预期影响和回退方法，不覆盖并行记录。纯缓存传输不创建游戏机制账本或经验条目；最终 code_proposals 可为空字符串数组，implementation_domains 只列实际涉及范围，纯工具可空。若发现独立游戏问题，仅保留证据交原提案流程，本批不实现。
+仅在分配工作树与 {{scratch}} 写实现、测试及报告；根目录报告和通知属于本任务授权记录例外。最终报告追加到根目录 paper/materials/silent/codex-brain-cache-2026-10-08.md（已有则保留原文和历史）；先 date，在根目录 notes/for-roy.md 与 ops/inbox-dev.md 同时追加 Roy 的实际结论、原因证据、旧/新传输行为、真实前后结果或测量限制、预期影响和回退方法，不覆盖并行记录。纯缓存传输不创建游戏机制账本或经验条目；最终 code_proposals 可为空字符串数组，implementation_domains 只列实际涉及范围，纯工具可空。若发现独立游戏问题，仅保留证据交原提案流程，本批不实现。
 
 不读游戏包/key/.env，不改 hooks/config/运维 prompt，不装依赖、不推送、不运行 play、不停对局或调度、不改生产配置，不启动子学习者。后台每项 nice、最多四进程。每次代码提交前在 agent/ 运行原 bash tools/test-sandbox.sh（含 tsc），PATH 加 ~/.local/node/bin，TMPDIR 指向 scratch，SANDBOX_WORKERS≤4；涉及 Python/调度的固定测试也要通过。全局 Git 身份，提交前 gitleaks，提交末尾带实际引擎/模型 Co-Authored-By。
 

@@ -1,5 +1,5 @@
 /**
- * SL_RELOAD_EARLY, SL_JUDGE_KNOWN_DRAWS and SL_RETRY_KNOWN_INSERTS (docs/sl.md §2, §10; Dai 2026-10-02): the early reload's
+ * SL_RELOAD_EARLY, SL_JUDGE_KNOWN_DRAWS and SL_RETRY_KNOWN_INSERTS (docs/sl.md §2, §10; Roy 2026-10-02): the early reload's
  * judge (certain only with nothing left to chance this turn: every random case here must not reload early), the draw
  * veto lifted only by exactly known draws, the draw tracker keeping the known order through cards added at random places
  * (and never calling those draws exact), the samples placing the added cards at random, and the controller. Synthetic

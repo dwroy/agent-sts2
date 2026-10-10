@@ -14,7 +14,7 @@
 - 测试：tsc退出0；vitest 251文件/2627用例/退出0；未重跑。
 - 切片大小：中位-2.0字，最大5686字。
 - 学习账本：新增无；改成 proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0006,silent-0012,silent-0030,silent-0017,silent-0079,silent-0050,silent-0211；退役无；`ledger.py check`退出0。
-- 需要 Dai 定的事：无。
+- 需要 Roy 定的事：无。
 
 ```json
 {"task": "experience-update", "version": "2026-10-09.13", "commit": "7339da354b6708ef3d53648e5fc44715066caf53", "merged": null, "added": 0, "updated": 8, "retired": 0, "active": 193, "mechanisms": ["长战输出与后续生存（观察）", "力量逐段与已建属性", "刺击施毒、实结与回复", "巨兽本体与自爆分阶段", "骇鳗活力、易伤与阈值", "胆小盾、直伤与毒退场"], "tests": {"tsc": 0, "vitest": 0, "cases": 2627}, "ledger": {"added": [], "proposed": ["silent-0019", "silent-0020", "silent-0021", "silent-0125", "silent-0006", "silent-0012", "silent-0030", "silent-0017", "silent-0079", "silent-0050", "silent-0211"], "retired": [], "check": 0}, "code_proposals": ["silent-proposal-77f4c1fa9a61379c", "silent-proposal-c906f8532e2a4d27", "silent-proposal-e274be970fe1fb93"], "implementation_domains": ["combat", "potion", "sl", "terminal"], "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-084302-experience-update/report.md"}
@@ -628,6 +628,6 @@ SL一房多试；实际赢、实际死、判死读档截断分开。
 | sample-a9-reward | 2729.0/3327 | 2727.0/3318 | -2.0 |
 | sample-a9-shop | 4085.0/5225 | 4097.0/5223 | -2.0 |
 - 整体中位2729.0→2727.0（-2.0字），配对差中位0.0，最大5688→5686；单片差-16至42。
-- active193，正文51884字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48238}；A9 {'entries': 181, 'chars': 48522}；A10 {'entries': 190, 'chars': 50792}。无预算合并/退役/压缩，需要Dai定：无。
+- active193，正文51884字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48238}；A9 {'entries': 181, 'chars': 48522}；A10 {'entries': 190, 'chars': 50792}。无预算合并/退役/压缩，需要Roy定：无。
 
 原始子集/偏移、复算/初稿、核验、提案/CLI、切片、测试、合入预检/结果和完整报告保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-084302-experience-update。

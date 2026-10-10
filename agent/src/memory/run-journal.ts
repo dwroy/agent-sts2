@@ -5,11 +5,11 @@
  * the whole run, per run id and in process, from the states actually observed and the decisions actually
  * played: every DeepSeek decision (and Jev's/code's key non-combat picks), every fight with HP before and
  * after, HP and gold per floor, every deck/relic/potion/max-HP change, the route plans and their progress,
- * and the current facts. Nothing is dropped as the run grows: each item is one terse line (Dai
+ * and the current facts. Nothing is dropped as the run grows: each item is one terse line (Roy
  * 2026-09-28: DeepSeek always gets the complete run history). It rides in DeepSeek's *user* message on
  * every question type, so the system prompt stays byte-identical and cached. Jev never sees it.
  *
- * Layout for DeepSeek's prefix cache (Dai 2026-09-28): the sections are ordered from most to least stable
+ * Layout for DeepSeek's prefix cache (Roy 2026-09-28): the sections are ordered from most to least stable
  * and the message is built in that order. `act` (the act's threats and boss) changes three times a run;
  * `history` is one chronological floor-by-floor journal of the floors already left behind, which only
  * ever grows at its end (a floor is written once, when the run has moved past it; no counts, no current
@@ -856,7 +856,7 @@ function fightKey(state: GameState): string {
 
 /**
  * The escalator's free-text reason is its guess, not a fact (VC4L F22: "腐化≈费用归零" was quoted back
- * as memory on the next pick; Corrupted costs 2 HP a play). Labelled unverified, kept whole: Dai
+ * as memory on the next pick; Corrupted costs 2 HP a play). Labelled unverified, kept whole: Roy
  * 2026-09-28, DeepSeek's history is compressed in format only, never cut (audit: a 40-char cap had cut
  * the body of every reason).
  */

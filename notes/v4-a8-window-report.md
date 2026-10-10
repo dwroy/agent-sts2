@@ -66,6 +66,6 @@
 | 锻造界面只列前 25 张牌 | oneshot.ts:328 / selection.ts:351 | 大脑选的牌被静默丢弃、重问 |
 | 药水价值不透明（Jev 看不到胜率项） | rollout.ts:2124 | 题面和排序不一致 |
 | fight-value 构建脚本参数 | tools/build-fight-value.py:148 | v4 已修 aba384c，待 cherry-pick |
-| ops/report.py 接药水换算表刷新 | ops/report.py refresh_knowledge | 待 Dai 授权 |
+| ops/report.py 接药水换算表刷新 | ops/report.py refresh_knowledge | 待 Roy 授权 |
 
-策略类证据（女王墙、镜子事件、持有价值按幕常数、二幕不打精英）在 notes/for-dai.md。
+策略类证据（女王墙、镜子事件、持有价值按幕常数、二幕不打精英）在 notes/for-roy.md。

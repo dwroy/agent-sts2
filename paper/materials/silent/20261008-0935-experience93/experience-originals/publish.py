@@ -17,7 +17,7 @@ notice=f'\n### {stamp} Roy：静默猎手第93次经验上线（{name}）\n\n源
 for c in json.load(open(O/'changes.json'))['entries']:
  b,e=c['before'],c['after'];notice+='- '+c['id']+'：旧规则='+('无独立条目' if b is None else b['lesson'])+'；新规则='+e['lesson']+'\n'
 notice+='\n预期影响：知识前缀按已完成能力/药水层数、弃牌附伤及真实资源核算，不保证单项改变能使整战取胜。出牌、药水、SL、终局源码保持当前版本，拟议覆盖/追踪由独立策略任务按本角色原帧核实；数据发布不等提案实现。回退：逆向撤经验源提交'+source+'的experience.json净补丁，保留知识刷新与并行记录；另登记回退版本，提案与账本历史不删。账本shipped由运维据本实际发布登记。\n'
-append(ROOT/'notes/for-dai.md',notice);append(ROOT/'ops/inbox-dev.md',notice)
+append(ROOT/'notes/for-roy.md',notice);append(ROOT/'ops/inbox-dev.md',notice)
 updates=[dict(id=i,by='learner:experience-update',where=dict(commits=[merged,publication]),version=name,note='第93批经验数据实际合入/合后测试0/唯一版本已登记，原提案独立实现；status仍proposed，交运维据实际完成事件标shipped。') for i in lids]
 data=json.dumps(updates,ensure_ascii=False);(O/'ledger-publication-input.json').write_text(data+'\n');p=subprocess.run(['python3',str(ROOT/'learner/ledger.py'),'update'],input=data,text=True,capture_output=True);(O/'ledger-publication.log').write_text(p.stdout+p.stderr);p.check_returncode()
 (O/'publication.json').write_text(json.dumps(dict(name=name,merged=merged,commit=publication,source=source),ensure_ascii=False,indent=2)+'\n')

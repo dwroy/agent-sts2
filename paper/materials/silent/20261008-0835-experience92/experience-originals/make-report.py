@@ -121,7 +121,7 @@ if (O/'slice-before.json').exists() and (O/'slice-after.json').exists():
     s+='- 整体切片：'+str(slice_summary)+'。\n'
 else:
     s+='- 配对切片尚在验证，最终数值以slice-summary.json为准。\n'
-s+=f'- active{C["active_after"]}/正文{C["chars_after"]}，置信{C["confidence"]}；A8/A9/A10适用{C["applicable"]}。需要Dai定：无。合入受阻按真实结果交运维续办，保留全部证据/失败/原稿，不冒报上线。\n\n'
+s+=f'- active{C["active_after"]}/正文{C["chars_after"]}，置信{C["confidence"]}；A8/A9/A10适用{C["applicable"]}。需要Roy定：无。合入受阻按真实结果交运维续办，保留全部证据/失败/原稿，不冒报上线。\n\n'
 s+='原帧/脚本/初稿/失败/机制/提案/账本/测试/切片/合入回执：'+str(O)+'；报告时间'+stamp+'。\n'
 (O/'changelog-section.md').write_text(s)
 (O/'section-title.txt').write_text(title+'\n')

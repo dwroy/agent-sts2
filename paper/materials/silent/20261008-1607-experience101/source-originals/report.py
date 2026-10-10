@@ -103,7 +103,7 @@ T.extend(['','### 切片大小','',
 for r in size['by_sample']:
     T.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
 T.extend(['',f'- 整体中位{size["before_median"]}→{size["after_median"]}、涨{size["median_growth"]}字；配对差中位{size["paired_median"]}，最大{size["before_max"]}→{size["after_max"]}，单片最多增{size["max_growth"]}。',
-f'- active{z["active"]}/正文{z["chars"]}；high{z["confidence"]["high"]}/med{z["confidence"]["med"]}/low{z["confidence"]["low"]}；'+ '、'.join(f'A{a}适用{v["entries"]}条/{v["chars"]}字' for a,v in z['asc'].items())+'。未合并/退役，不改预算；需要Dai定：无，合入受阻交运维兜底。',
+f'- active{z["active"]}/正文{z["chars"]}；high{z["confidence"]["high"]}/med{z["confidence"]["med"]}/low{z["confidence"]["low"]}；'+ '、'.join(f'A{a}适用{v["entries"]}条/{v["chars"]}字' for a,v in z['asc'].items())+'。未合并/退役，不改预算；需要Roy定：无，合入受阻交运维兜底。',
 '',f'原帧/复算/机制/提案/CLI/测试/切片/合入回执：{O.resolve()}；报告时间{now}。',''])
 section='\n'.join(T)
 (O/'changelog-section.md').write_text(section)

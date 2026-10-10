@@ -48,7 +48,7 @@ print(json.dumps(dict(initial=initial,blocked=blocked,first=first,duplicate=dupl
       cwd: "/fixture/wt", worktree: "/fixture/wt", project_root: "/fixture", logs_dir: "/fixture/logs",
       scratch: "/fixture/scratch", task: "strategy-proposal", ...characterBuiltins("silent"),
     });
-    // Dai's 2026-10-05 learner setting (45e22535); the in-game brain keeps its separate effort.
+    // Roy's 2026-10-05 learner setting (45e22535); the in-game brain keeps its separate effort.
     expect(spec.efforts.codex).toBe("xhigh");
     expect(task.values.merge).toBe("live");
     for (const text of ["knowledge/characters/silent", "账本 id", "flock /fixture/ops/live-merge.lock", "保留刷新数据", "eval/versions.json", "不删选项", "游戏知识只能从对局里学"]) expect(task.prompt).toContain(text);

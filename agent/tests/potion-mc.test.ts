@@ -1,5 +1,5 @@
 /**
- * Random potions by Monte Carlo (Dai 2026-09-28, src/reflex/potion-mc.ts): card-choice potions sample
+ * Random potions by Monte Carlo (Roy 2026-09-28, src/reflex/potion-mc.ts): card-choice potions sample
  * offers from the real card pool, draw potions sample pile orders; every sample's line starts with the
  * drink; the option shows the distribution and says the turn is re-planned after the drink; unsimulated
  * potions carry no numbers; the samples are deterministic per board.

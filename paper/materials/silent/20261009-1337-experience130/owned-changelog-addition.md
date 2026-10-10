@@ -669,6 +669,6 @@ SL分阶汇总：attempt>1的同房分组，真实won尝试单列。
 | sample-a9-shop | 3987.0/5184 | 3996.0/5191 | 12.0 |
 
 - 整体中位2620.0→2636.5（+16.5字），配对差中位+18.0；最大5535→5553，单片差-49至32。
-- active196/正文51397字符；置信度{'low': 27, 'high': 125, 'med': 44}；A8 {'entries': 182, 'chars': 47625}，A9 {'entries': 183, 'chars': 47909}，A10 {'entries': 193, 'chars': 50305}。没有预算压缩/合并/退役；需要Dai定：无。
+- active196/正文51397字符；置信度{'low': 27, 'high': 125, 'med': 44}；A8 {'entries': 182, 'chars': 47625}，A9 {'entries': 183, 'chars': 47909}，A10 {'entries': 193, 'chars': 50305}。没有预算压缩/合并/退役；需要Roy定：无。
 
 原件/偏移/失败/初稿、复算/参数/SL、CLI/提案、切片/测试/合入预检及报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-130839-experience-update。

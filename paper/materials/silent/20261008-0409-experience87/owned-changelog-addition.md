@@ -605,7 +605,7 @@ REST/SHOP/普通EVENT从源节点入血到下一场（多源可同战，源节�
 - 学习账本仅CLI：新增无；proposed silent-0005,silent-0006,silent-0009,silent-0011,silent-0013,silent-0016,silent-0019,silent-0020,silent-0021,silent-0024,silent-0027,silent-0046,silent-0057,silent-0069,silent-0079,silent-0090,silent-0095,silent-0128,silent-0140,silent-0164,silent-0196,silent-0205,silent-0241；退役无；ledger.py check 0。首证/prior/原claim/repeat/历史上线保持，0268/0271未入经验，本任务不改其状态，学习者不标accepted/shipped。
 - live合入：None；刷新：None；合前：047c809e625da861e34469791370f620866dee6f；合后沙箱：None；知识重叠：[]；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -642,6 +642,6 @@ REST/SHOP/普通EVENT从源节点入血到下一场（多源可同战，源节�
 | a9-reward | 2944.0/3525 | 3199.0/3780 | 255.0 |
 | a9-shop | 4087.0/5077 | 4342.0/5248 | 179.5 |
 
-- 整体中位2891.5→3064.0（+172.5字），配对增量中位+167.0，单片最多增429，最大5853→6108。active159、正文53187，置信{'low': 24, 'high': 92, 'med': 43}；A8适用{'entries': 151, 'chars': 49637}，A9适用{'entries': 152, 'chars': 49921}，A10适用{'entries': 156, 'chars': 52051}。需要Dai定：无。
+- 整体中位2891.5→3064.0（+172.5字），配对增量中位+167.0，单片最多增429，最大5853→6108。active159、正文53187，置信{'low': 24, 'high': 92, 'med': 43}；A8适用{'entries': 151, 'chars': 49637}，A9适用{'entries': 152, 'chars': 49921}，A10适用{'entries': 156, 'chars': 52051}。需要Roy定：无。
 
 完整原帧/抽取/草稿/失败/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update；报告时间2026-10-08 03:59:46 +0800。

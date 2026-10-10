@@ -11,4 +11,4 @@
 - 独立silent-0193绷带模型缺口仍observed；本任务没有修代码或改修复队列，不冒标bug shipped。
 - 刷新提交b98f5d7dfa22c2a7504805897134a42e51305b04、合前b98f5d7dfa22c2a7504805897134a42e51305b04，七份刷新保留/知识重叠0，其他知识blob保持；无生成器/手写攻略/其他角色修改，无新用药规则。
 - 主目录第52节和账本只追加，未由学习者提交，交调用方归档；全部脚本、分流、基线、mechanisms、bandages-state-trace、turns、前后经验/固定切片、测试、gitleaks及live-merge.json在本任务目录。
-- 不停对局，不运行play，不推送；需要Dai定：无。
+- 不停对局，不运行play，不推送；需要Roy定：无。

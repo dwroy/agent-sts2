@@ -1,5 +1,5 @@
 /**
- * Random potions by Monte Carlo (Dai 2026-09-28): what a potion whose result is random would do this turn,
+ * Random potions by Monte Carlo (Roy 2026-09-28): what a potion whose result is random would do this turn,
  * as a distribution over samples, for Jev's combat question. Never a fixed value, never auto-drunk.
  *
  *   - Card-choice potions (Attack/Skill/Power/Colorless Potion; Orobic Acid takes all three): each sample

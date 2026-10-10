@@ -79,7 +79,7 @@ f'- live结果：{M.get("reason","实际合入并通过合后固定沙箱")}；�
 '- 固定种子20260929，从截至新局静默states、按state.run.character_id=SILENT筛最高A9/A10，各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP=240配对。官方knowledge-slice.ts、CHARACTER=silent、setExperienceForTests只切换经验JSON；common与其他静默结果表冻结，manifest/原切片留盘，不读其他角色或冒称V4整份前缀。石头/甲虫文字校正后重跑改后切片，属文字定稿核对，无测试失败。',
 '','| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for x in Z['rows']:lines.append(f'| {x["sample"].replace("sample-","")} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["delta_median"]} |')
-lines+=['',f'- 配对增量中位{Z["median_delta"]}字，最大增量{Z["max_delta"]}；总体中位{Z["before_median"]}→{Z["after_median"]}、最大{Z["before_max"]}→{Z["after_max"]}字。active139→139，49583→49073字，高68中45低26；A8 132条45966字、A9 133条46265字。需要Dai定的知识事项：无。','']
+lines+=['',f'- 配对增量中位{Z["median_delta"]}字，最大增量{Z["max_delta"]}；总体中位{Z["before_median"]}→{Z["after_median"]}、最大{Z["before_max"]}→{Z["after_max"]}字。active139→139，49583→49073字，高68中45低26；A8 132条45966字、A9 133条46265字。需要Roy定的知识事项：无。','']
 section='\n'.join(lines);(O/'changelog-section.md').write_text(section)
 old=DEST.read_bytes();assert ('## '+title).encode() not in old
 (O/'changelog-prefix.json').write_text(json.dumps(dict(bytes=len(old),sha256=hashlib.sha256(old).hexdigest()))+'\n')

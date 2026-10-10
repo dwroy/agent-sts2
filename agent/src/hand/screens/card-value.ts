@@ -57,7 +57,7 @@ const TIER: Record<string, number> = {
   BREAKTHROUGH: 62, // AoE 9 for 1 energy, 1 HP; 54 -> 62 (1K5G F14 passed it for Taunt, no AoE at the boss)
   // Sword Boomerang 46 -> 54 (2026-09-30, same rule): A8 Act 1 0.80 (n=45) vs 0.63 (n=43), mean final floor 30.9 vs
   // 25.5; Act 2 (n=8 taken) and A9 (n=10 not taken) too few. Multi-hit for Vantom's Slippery (experience
-  // card-sword-boomerang); whether it counts as the crab's AoE (the AOE set below) is left to Dai.
+  // card-sword-boomerang); whether it counts as the crab's AoE (the AOE set below) is left to Roy.
   IRON_WAVE: 30, BODY_SLAM: 38, THUNDERCLAP: 40, CINDER: 30, DARK_EMBRACE: 42, TREMBLE: 30, SWORD_BOOMERANG: 54,
   // Taunt 62 -> 50 (2026-09-29 knowledge check; experience card-taunt): A8 outcome-stats, taken vs offered and not
   // taken: Act 1 boss pass 0.65 (n=51) vs 0.77 (n=35), mean final floor 26.0 vs 30.0; Act 2 0.22 (n=27) vs 0.32
@@ -99,7 +99,7 @@ const STRENGTH = new Set(["DEMON_FORM", "INFLAME", "RUPTURE", "DOMINATE", "FEED"
 
 /**
  * Whether the run's character has card values (2026-10-04, multi-character): every table in this module is the
- * Ironclad's, hand-written from its card lists and our Ironclad runs. Another character gets none of it (Dai: no
+ * Ironclad's, hand-written from its card lists and our Ironclad runs. Another character gets none of it (Roy: no
  * hand-written play for a new character, it learns its own): no tier, no roles, no boss bonuses. Its card values are
  * neutral instead (cardValue: SKIP_BAR for every card, so no offer falls under the skip bar and none is preferred), and
  * the choice goes to the brain (BUILD_DECIDER) or Jev, as any pick without a clear code answer.

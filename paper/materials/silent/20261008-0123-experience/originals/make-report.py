@@ -82,12 +82,12 @@ lines += ['', '- 13条均增加本局支持；0条只改数字。旧支持/反�
  f'- live实际合入：{merge.get("merged")}；刷新：{merge.get("refresh")}；刷新后/合前：{merge.get("before")}；合后沙箱：{merge.get("after_test")}；知识不同blob重叠：{merge.get("knowledge_overlap",[])}；结果：{merge.get("reason")}。']
 if merge.get('precheck_conflicts'):lines += ['- '+s for s in merge['precheck_conflicts']]
 if not merge.get('merged'):lines += ['- 未实际合入，无本批eval版本/上线记录/双通知，不冒标shipped。按任务预检冲突停止、不硬解；刷新、源提交、原失败历史和并行数据保留，交完成事件由运维兜底。']
-else:lines += ['- 唯一上线版本'+merge['publication']['version']+'，发布'+merge['publication']['publication']+'；decision-log/for-dai/inbox-dev已先date后追加具体旧新表述、证据/账本/任务、预期与回退。仅知识前缀变化，源码提案仍走独立实现任务。']
+else:lines += ['- 唯一上线版本'+merge['publication']['version']+'，发布'+merge['publication']['publication']+'；decision-log/for-roy/inbox-dev已先date后追加具体旧新表述、证据/账本/任务、预期与回退。仅知识前缀变化，源码提案仍走独立实现任务。']
 lines += ['', '### 切片大小','',
  '- 固定种子20260929，从本切点state.run.character_id=SILENT状态抽最高A9/A10各20×COMBAT/REWARD/MAP/EVENT/REST/SHOP=240配对，每格20独立时间戳。CHARACTER=silent调用官方knowledge-slice.ts；测试setter仅固定改前/后experience与同一outcome-stats，其他静默/common文件在exp实际路径逐字节保持（KNOWLEDGE_ROOT本身不改变paths.ts，不以它声称路径重定向）。池/时刻见sample-manifest.json，抽样不含别的角色；本批同配对比较，不是V4整份知识前缀。','',
  '| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for r in S['rows']:lines.append(f'| {r["sample"].replace("sample-","")} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
-lines += [f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_change"]:+g}字）；配对增量中位{S["paired_median_change"]:+g}；单片最大增长{S["max_growth"]}，最大{S["before_max"]}→{S["after_max"]}字。active 158→159、正文47828→47952字；置信度'+str(C['after']['confidence'])+'；A8适用'+str(C['after']['asc']['8'])+'、A9适用'+str(C['after']['asc']['9'])+'、A10适用'+str(C['after']['asc']['10'])+'。需要Dai定的知识事项：无。',
+lines += [f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_change"]:+g}字）；配对增量中位{S["paired_median_change"]:+g}；单片最大增长{S["max_growth"]}，最大{S["before_max"]}→{S["after_max"]}字。active 158→159、正文47828→47952字；置信度'+str(C['after']['confidence'])+'；A8适用'+str(C['after']['asc']['8'])+'、A9适用'+str(C['after']['asc']['9'])+'、A10适用'+str(C['after']['asc']['10'])+'。需要Roy定的知识事项：无。',
  '', f'完整抽取、脚本、原帧、初稿/失败、提案、账本、检查、切片和合入回执：{O}。','']
 text='\n'.join(lines);(O/'changelog-section.md').write_text(text)
 (O/'report.md').write_text('# 静默猎手经验第84批完整报告\n\n'+text)

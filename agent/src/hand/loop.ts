@@ -777,7 +777,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       }
     }
     // THIEF_COST (docs/thief.md §7): a Thieving Hopper's stolen card, worth in HP by the act boss simulation, once per
-    // fight before the question that needs it (up to ~15 s, Dai 2026-10-02); kept in screen memory. Never throws: no
+    // fight before the question that needs it (up to ~15 s, Roy 2026-10-02); kept in screen memory. Never throws: no
     // value, no cost.
     if (!planned && config.thiefFacts && config.thiefCost && options.thiefSim && state.in_combat) {
       const value = await ensureThiefCardValue(env, options.thiefSim);
@@ -1932,7 +1932,7 @@ async function ensureFightPlan(
   const alive = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
   if (alive.length === 0) return;
   const kind = fightKind(combat, env);
-  // From A8 hallway fights kill runs too (棘刺蟾蜍, 地道虫, 啃咬机, 胧光怪, 青蛙骑士): Dai asked for a
+  // From A8 hallway fights kill runs too (棘刺蟾蜍, 地道虫, 啃咬机, 胧光怪, 青蛙骑士): Roy asked for a
   // DeepSeek plan in most fights. The first floors of act 1 stay code-only (starter deck, weak enemies).
   const everyFight = (state.run?.ascension ?? 0) >= ALL_FIGHT_PLANS_FROM_ASCENSION && (state.run?.floor ?? 0) > ALL_FIGHT_PLANS_FROM_FLOOR;
   if (kind !== "elite" && kind !== "boss" && !everyFight) return;

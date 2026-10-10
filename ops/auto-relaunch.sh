@@ -14,7 +14,7 @@
 # line when the count goes back from non-zero to zero. State: ops/.auto-relaunch-fails
 # ("<consecutive fails> <epoch of last relaunch>").
 #
-# Suggested crontab line (not installed; Dai decides). The script sets its own PATH and calls the
+# Suggested crontab line (not installed; Roy decides). The script sets its own PATH and calls the
 # Windows tools by full path, so PATH in the line is only a belt-and-braces default:
 #   * * * * * PATH=/usr/local/bin:/usr/bin:/bin /home/dw/Projects/sts2-jev/ops/auto-relaunch.sh >/dev/null 2>&1
 # With a 1-minute cron a crashed game is relaunched about 3 minutes after it went away.

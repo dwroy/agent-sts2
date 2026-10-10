@@ -74,7 +74,7 @@ f'- JSON、证据角色/12位id/n/范围/预算/旧基线/653指纹/逐帧机制
 '','### 切片大小','', '- 固定种子20260929，截至本局54,458帧静默原始状态池，按state.run.character_id=SILENT抽最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP＝240配对；真实界面独立抽20。官方knowledge-slice.ts/CHARACTER=silent/setExperienceForTests，只换experience、其他知识/结果表固定，样本manifest/逐片输出保留，不冒充V4全部前缀。',
 '','| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for r in S['rows']:rows.append(f'| {r["sample"].replace("sample-","")} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["delta"]} |')
-rows+=['',f'- 配对增量中位{S["median_delta"]}、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active131→132、50163→{C["chars"]}字，高63中40低29；'+ '、'.join(f'A{a} {r["entries"]}条{r["chars"]}字' for a,r in C['applicable'].items())+'。需要Dai定：无。',
+rows+=['',f'- 配对增量中位{S["median_delta"]}、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active131→132、50163→{C["chars"]}字，高63中40低29；'+ '、'.join(f'A{a} {r["entries"]}条{r["chars"]}字' for a,r in C['applicable'].items())+'。需要Roy定：无。',
 '',f'本节收尾：源{commit}，实际live合入{M["merged"]}，上线登记{M.get("release_commit")}/eval {M.get("eval_version")}；刷新{M.get("refresh_commit")}、合前{M.get("base")}，其他知识blob保持，知识不同blob冲突0。无源码/生成器/手写知识/其他角色/新用药规则改动、不重建；主目录本节/账本由调用方提交。运维交接learner/runs/20261007-045607-experience-update/handoff-ops.md，调用器experience-done通知运维核实际发布后仅CLI登记18项shipped，完整外部交调度器；不停对局、不运行play、不推送。','']
 text='\n'.join(rows).replace('活場','活场')
 path=ROOT/'paper/materials/experience-changelog-silent.md';old=path.read_bytes()

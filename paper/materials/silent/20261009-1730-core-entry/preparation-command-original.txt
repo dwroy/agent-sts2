@@ -63,7 +63,7 @@ DRAFT='''# Roy 已授权的核心构筑入口与结果通知适配（待现有 l
 
 在现有 runner 完成/ops 标准事件路径新增明确的报告验收与通知状态，不直接 enqueue 新任务。严格绑定父 request_id、实际 batch、角色 silent、learner_task、租约报告 realpath 与报告 SHA，核实候选/逐 boss 矩阵/伤害资源/构筑模板/证据限制。允许有实质分析的“尚无足够证据”；入口完成、派发成功、空报告、错误任务/批号/角色/路径、过期 SHA 均不得当组合有结果。
 
-ops 核实后在 notes/for-dai.md 和 ops/inbox-dev.md 写简洁候选/矩阵/可用模板或缺证限制摘要，关联 request+batch+报告路径/SHA。通过宿主现有完成路径调用 argv 形式 herdr notification show --body <TEXT> --sound done <TITLE>，不可 shell 拼接、不向 TUI 输入、不 resume watcher 会话。按唯一父请求+batch+报告 SHA 做持久去重；短事务保存通知领取/完成状态，命令后保存 success/failure/rc 和脱敏输出回执，失败原件保留，崩溃后不可无凭据重复通知，不长时间持 learn.lock。通知机制实际通过验收并成为 live 祖先前 notification_hook 必须 pending，不能承诺已开启。测试只用固定报告和 fake herdr，不实际给 Roy 发测试通知。
+ops 核实后在 notes/for-roy.md 和 ops/inbox-dev.md 写简洁候选/矩阵/可用模板或缺证限制摘要，关联 request+batch+报告路径/SHA。通过宿主现有完成路径调用 argv 形式 herdr notification show --body <TEXT> --sound done <TITLE>，不可 shell 拼接、不向 TUI 输入、不 resume watcher 会话。按唯一父请求+batch+报告 SHA 做持久去重；短事务保存通知领取/完成状态，命令后保存 success/failure/rc 和脱敏输出回执，失败原件保留，崩溃后不可无凭据重复通知，不长时间持 learn.lock。通知机制实际通过验收并成为 live 祖先前 notification_hook 必须 pending，不能承诺已开启。测试只用固定报告和 fake herdr，不实际给 Roy 发测试通知。
 
 ## 固定验收与发布
 
@@ -110,6 +110,6 @@ c.append_owned('notes/fix-queue-v4.md',queue)
 line=f'- {t} 运维codex17:30事件：经验134原163854完整外部固定5957f056390032639e701fde18f74e60b21536ce/树0d202738b2e4a1f6e2281490a3bf8b7d69224ed0 tsc+vitest0、302文件3435例过2跳，785原件SHA/实际main-live祖先/唯一S1.exp134及18所属数据shipped核实；原failed/merged-null/retry/18冲突和exp100旧失败保持，独立回执paper/materials/silent/20261009-1730-checks-experience134/closure.json，不重复合入/登记/补测。Roy核心构筑result-notify补充关联唯一父项，已准备全历史模板/路由/wrapper租约/标准完成与实质报告herdr去重通知的完整工作稿和固定验收并加入既有fix队列；普通codex-dev因旧20261008-075538-strategy-proposal四暂存候选/沙箱124未交接而不安全，宿主无该树learner，现有复盘171301与calibration171301活任务保持，须原候选保存处置后干净无租约。父核心学习batch仍null、入口适配batch待单次broker实际返回，通知hook仍pending且未提醒；仅本项准备/证据/记录，不改源码/prompt/对局/env/服务，不造游戏知识/版本/账本/shipped；paper/materials/silent/20261009-1730-core-entry/preparation.json。\n'
 c.append_owned(c.LOG,line)
 notice=f'\n- {t}（17:30事件）经验134完整检查通过：固定5957f056/0d202738，302文件3435例过2跳；原失败历史保持，独立结案 `paper/materials/silent/20261009-1730-checks-experience134/closure.json`。核心构筑唯一父请求已关联Roy“有结果告诉我”补充，入口+通知实现稿/验收已加入普通fix队列，见 `paper/materials/silent/20261009-1730-core-entry/entry-adaptation-task.md`。安全派发当前阻塞是旧策略批20261008-075538在codex-dev的四项暂存候选及未完成沙箱检查；原拥有者保存处置交接后需干净、无活租约才能执行，未清树/抢树。核心学习batch null，通知hook pending；入口或派发不会冒充组合结果。单次broker结果另附。\n'
-for p in ['ops/inbox-dev.md','notes/for-dai.md','notes/ops-handoff.md']:c.append_owned(p,notice)
+for p in ['ops/inbox-dev.md','notes/for-roy.md','notes/ops-handoff.md']:c.append_owned(p,notice)
 for p in [A,C]:c.git('add','--',str(p.relative_to(R)))
 print(json.dumps({'core_preparation':str(A.relative_to(R)),'checks':closure,'staged':c.git('diff','--cached','--stat')},ensure_ascii=False),flush=True)

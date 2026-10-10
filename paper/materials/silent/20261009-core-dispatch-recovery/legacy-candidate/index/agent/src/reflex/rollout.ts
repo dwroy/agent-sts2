@@ -17,7 +17,7 @@
  *        - our draws come from the shuffled draw pile (the discard pile reshuffled in when it runs out);
  *        - our turns are played by the solver itself with a small node cap (the fast policy); the modelled
  *          potions still held are in its hand like 0-energy cards that exist once, each with its cost
- *          (potion-cost.ts, Dai 2026-09-30: its held value in the potion table, taken off the solver's score):
+ *          (potion-cost.ts, Roy 2026-09-30: its held value in the potion table, taken off the solver's score):
  *          drunk when its best line drinks one, gone for the rest of that sample.
  *        - the "no potion this fight" line (options.noPotionLine) holds none in its later turns.
  *   3. At the horizon (or the fight's end) the terminal estimate of the end-of-our-turn state is added:
@@ -605,7 +605,7 @@ export interface RolloutOptions {
   /** The kill-order policy's extra damage weight on its target (default ORDER_FOCUS_BONUS). */
   orderFocusBonus?: number;
   /**
-   * The "no potion this fight" line (Dai 2026-09-30): a potion-free line (its own Plan object, a copy of a shown
+   * The "no potion this fight" line (Roy 2026-09-30): a potion-free line (its own Plan object, a copy of a shown
    * one) rolled out with no potion in its later turns either. Tagged "offered" and "no-potion".
    */
   noPotionLine?: Plan;

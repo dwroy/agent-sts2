@@ -4,7 +4,7 @@
  * RUN_PLAN_REVIEW_FLOORS floors — and code turns it into weights on the build and route decisions.
  * It is strategy only: which cards to look for, avoid or remove, how many block cards the deck needs,
  * how hungry for elites to be, heal or smith at rest sites, what to prepare for the act boss. Card
- * play stays with the turn solver and Jev (Dai: "只是打法建议，出牌还是交给 jev 判断").
+ * play stays with the turn solver and Jev (Roy: "只是打法建议，出牌还是交给 jev 判断").
  *
  * Why: most losses since the fight plan came in were cross-fight decisions no single fight plan
  * sees (entering elites or bosses with empty potion slots, a 3-block-card deck at the Queen, the
@@ -208,7 +208,7 @@ export function runPlanLine(plan: RunPlan | null | undefined): string | null {
   const parts = [plan.archetype, plan.summary].filter(Boolean).join(" — ");
   const want = plan.want.length > 0 ? ` | want ${plan.want.join(", ")}` : "";
   const avoid = plan.avoid.length > 0 ? ` | avoid ${plan.avoid.join(", ")}` : "";
-  // Whole: DeepSeek's own plan is part of its history (Dai 2026-09-28: compress the format, never cut).
+  // Whole: DeepSeek's own plan is part of its history (Roy 2026-09-28: compress the format, never cut).
   return `${parts}${want}${avoid}`.replace(/\s+/g, " ").trim();
 }
 

@@ -1,6 +1,6 @@
 /**
  * Codex as a brain engine: headless `codex exec` (codex-cli 0.160, npm @openai/codex) under this machine's ChatGPT
- * login (`codex login` in ~/.codex: the subscription; Dai 2026-10-03), one process per call. Model and effort are
+ * login (`codex login` in ~/.codex: the subscription; Roy 2026-10-03), one process per call. Model and effort are
  * always sent (default gpt-6.1-sol at xhigh: config.ts DEFAULT_CODEX_MODEL / DEFAULT_CODEX_EFFORT).
  *
  * - Isolation (measured 2026-10-03, experiments/brain-replay/codex-isolation.md): the model sees our system prompt

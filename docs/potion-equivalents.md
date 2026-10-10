@@ -1,8 +1,8 @@
-# 药水换算表（2026-09-30 Dai 定）
+# 药水换算表（2026-09-30 Roy 定）
 
-Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿着药 = 多了一些血、攻击或格挡。」
+Roy：用掉的药水不是免费的，而是以后要扣的血。「手里拿着药 = 多了一些血、攻击或格挡。」
 这张表把每瓶药折算成它在**本幕 boss 战**里值多少：**血 / 伤害 / 格挡**三种等价量，放进知识库给 DeepSeek（知识前缀、`kb_potion` 工具）和 Jev（战斗题面）用。
-求解器、推演和 Jev 的出牌题怎么用这张表（药水代价）见 §8（2026-09-30 Dai 定的参数，`agent/src/reflex/potion-cost.ts`）。
+求解器、推演和 Jev 的出牌题怎么用这张表（药水代价）见 §8（2026-09-30 Roy 定的参数，`agent/src/reflex/potion-cost.ts`）。
 
 - 生成：`data/logdb-venv/bin/python knowledge/builders/build-potion-equivalents.py [--no-sync] [--markdown]` → `knowledge/characters/ironclad/potion-equivalents.json`（约 3 秒；`--markdown` 另外打印 §3 和 §5 的两张表）。公式自检：`python3 knowledge/builders/build-potion-equivalents.py --self-test`（不需要 DuckDB，vitest 也会跑）。
 - 读取：`agent/src/knowledge/potion-equivalents.ts`（`loadPotionEquivalents`、`potionEquivalent(id, act, ascension)`；文件缺失或格式不对抛 `KnowledgeLoadError`）。
@@ -260,11 +260,11 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
   对局里的模型（card-model `potionCardCost`：随机药水的蒙特卡洛牌池、能力药水建模的牌、液态记忆挑的牌）按这一局的遗物算：带刺手甲时
   能力牌 1 费，0 能量时喝能力药水什么也打不出，题面写明「a Power costs 1: Spiked Gauntlets」。
 
-## 8. 药水代价（2026-09-30 Dai 定，已接入）
+## 8. 药水代价（2026-09-30 Roy 定，已接入）
 
 用掉的药水是以后要扣的血。代码：`agent/src/reflex/potion-cost.ts`；开关 `POTION_COST=off`（全部代价归 0，题面和排序回到接入前）。
 
-**Dai 定的参数**：
+**Roy 定的参数**：
 1. 只用公式值（表的现状），不乘「能用上的概率」，不加别的系数。
 2. 表每天重建一次，升进阶时也重建（`knowledge/builders/refresh-potion-equivalents.sh`，见 §9）。
 3. **代价 = 这瓶药在当前进阶、当前幕的持有价值（`hold_hp`，血）**：`potionCost(id, ascension, act, fightKind)`。
@@ -283,13 +283,13 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 - **HP 护栏**、它的每场预算、setup 线和 boss 竞速的比较、随机药水蒙特卡洛的「胜过最佳不用药线」，都比「掉血 + 药水代价」。代码自己的回退线仍是「有不用药的线就不喝」（排序本身已含代价）。
 - **题面**：每个选项 `potion_cost`：「fight HP loss X; potions used N (this turn: 药名 代价; later turns: 药名 in k/8 samples); potion cost Y HP (potion table, this act's held value); total Z」（没有推演时写「this turn HP loss … (no rollout …)」）；随机药水按中位样本那条线写，没模拟的药写「drinking it costs …」。`potion_context.potion_cost` 用一句话说代价的来源（持有价值 = worth 行里的「血」，boss 战为 0），没有数值的药列在 `potion_cost_zero`。原有的 `potion_worth_in_act_boss` 和留药经验块（`potion_experience`）不变。
 
-**boss 战**：代价 0，排序、选项、分数和接入前一模一样（agent/tests/potion-cost.test.ts 用 RTF3 F17 T1 的局面锁住）；题面上每个选项的 `potion_cost` 写 0（boss fight）。**不加「本场不用药」的线**：boss 战里药没有要留到的地方，而加一条选项会改变 boss 题（需要 Dai 确认，见 experiments/potion-cost/summary.md）。
+**boss 战**：代价 0，排序、选项、分数和接入前一模一样（agent/tests/potion-cost.test.ts 用 RTF3 F17 T1 的局面锁住）；题面上每个选项的 `potion_cost` 写 0（boss fight）。**不加「本场不用药」的线**：boss 战里药没有要留到的地方，而加一条选项会改变 boss 题（需要 Roy 确认，见 experiments/potion-cost/summary.md）。
 
-**遗留和要 Dai 定的**：
+**遗留和要 Roy 定的**：
 - boss 战没有「本场不用药」的线（代价 0，加选项会改 boss 题）。要不要加？
 - 「本场不用药」的线取的是代码排名最靠前的不用药选项，不是推演最好的不用药打法（VSRG F27 T4：它 1/8 死，另一条不用药的线 0/8 死，后者被选为最优，排序本身没错）。要按推演挑，就得把每条不用药的线都再推演一遍，推演时间约翻倍。
 - 推演后续回合的自动出牌用的是求解器的单回合分数：减益、伤害的权重比掉血高，所以代价 7.9 血的易伤药水在后续回合仍会在 8/8 个样本里被喝掉，而推演里只省了 2.5 血（VNWR F6 T1）。这正是「本场不用药」那条线要纠正的；要从根上改，得让后续回合按推演的掉血而不是单回合分数决定喝药。
-- 代价按「能用上的概率」打折（§8 旧建议里的 0.7）没有做，Dai 定只用公式值。
+- 代价按「能用上的概率」打折（§8 旧建议里的 0.7）没有做，Roy 定只用公式值。
 
 **以前为什么去掉过代价**：batch K 之前走廊药水的持久部分按 25% 计（`POTION_LASTING`，拍脑袋的数字），d79f14f/94f81aa 去掉了。这次的代价来自日志统计的换算表，单独从分数里扣，药效本身照全额算；「喝药的线永远不会支配（dominates）不喝的同一条线」这条轴保留。
 
@@ -304,7 +304,7 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 
 ## 10. 金币的血（`meta.gold_hp`，2026-10-02，THIEF_COST）
 
-Dai 10-02：小偷（地精佣兵 / 胖地精）带走的金币按「金币 ÷ 药水价格 × 本幕本进阶药水持有价值的中位」折血（docs/thief.md §7.1）。
+Roy 10-02：小偷（地精佣兵 / 胖地精）带走的金币按「金币 ÷ 药水价格 × 本幕本进阶药水持有价值的中位」折血（docs/thief.md §7.1）。
 构建脚本 `gold_rates`：A8+ 日志商店的药水报价（每次进商店取第一帧带价格的药水列表，states.jsonl 按 state_index 的偏移读）——价格取中位，
 持有价值取这批报价的药水在各幕各进阶的 `hold_hp` 的中位，`per_gold` = 两者相除。2026-10-02：价格 51（n=2031，677 次商店；普通 50、
 罕见 75、稀有 100），A8 一 / 二 / 三幕 0.112 / 0.141 / 0.180 血每金币（38 金币 ≈ 4.2 / 5.4 / 6.8 血）。没有报价时不写这一项；

@@ -7,7 +7,7 @@
 
 冲突文件：
 - eval/versions.json
-- notes/for-dai.md
+- notes/for-roy.md
 - notes/ops-handoff.md
 - ops/inbox-dev.md
 - paper/materials/decision-log.md

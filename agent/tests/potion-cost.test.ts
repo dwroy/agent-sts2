@@ -1,5 +1,5 @@
 /**
- * Potion cost (Dai 2026-09-30; src/reflex/potion-cost.ts): a potion drunk before the act boss is HP paid later, at
+ * Potion cost (Roy 2026-09-30; src/reflex/potion-cost.ts): a potion drunk before the act boss is HP paid later, at
  * its held value in the potion table; 0 in a boss fight; deaths first, then the effective loss (HP + potions); a
  * "no potion this fight" line on every question with a potion to drink (not in a boss fight).
  * Fixed data only: the hand-written table tests/gkb-data/knowledge/characters/ironclad/potion-equivalents.json (A8/A9: Block Potion 7/8/9,

@@ -17,7 +17,7 @@
 - 测试：tsc退出0；vitest 251文件/2627用例/退出0，未重跑。
 - 切片大小：整体中位-1字，配对差中位+11字；最大5062字。
 - 学习账本：新增无；改成proposed silent-0005,silent-0012,silent-0017,silent-0019,silent-0020,silent-0021,silent-0007,silent-0011,silent-0027,silent-0185,silent-0209,silent-0211,silent-0214,silent-0079,silent-0278,silent-0225；退役无；ledger.py check退出0。
-- 需要Dai定的事：无。
+- 需要Roy定的事：无。
 
 ```json
 {"task": "experience-update", "version": "2026-10-08.25", "commit": "f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c", "merged": "11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5", "added": 1, "updated": 15, "retired": 0, "active": 185, "mechanisms": ["力量敏捷与步法 — 逐击加力、逐牌加敏，旧挡不补；四敏三防御27，巨兽爆30仍损3 — 步法80/力敏138 — PF90JTU0UZ5M", "毒牌与触媒 — 施毒非即时伤，普通触媒9＋8=17，限伤另核 — 药瓶19/毒药33/触媒53 — PF90JTU0UZ5M", "毒雾 — 实建2层，下一轮四敌各加2毒，生成牌未入牌组 — 69 — PF90JTU0UZ5M", "毒素持牌伤 — 两张10加敌攻19，共29，1血27挡完整需损2仍死 — 20 — PF90JTU0UZ5M", "固化药水 — 当步已有B挡变3B；两次5→15，不沿用至自爆轮 — 16 — PF90JTU0UZ5M", "毒药水 — 按条件加6/7或被制品阻；饮用不扣本体HP — 36 — PF90JTU0UZ5M", "南瓜蜡烛 — 正充能轮初多1能，独立战后扣1，SL恢复不重计新战 — 5 — PF90JTU0UZ5M", "胆小敌挡 — 非致死攻击后补7挡，当前净扣不等敌退场 — 24 — PF90JTU0UZ5M", "巨兽自爆 — 本体结束后仍承爆，虚弱后30不当无弱基础 — 23 — PF90JTU0UZ5M", "能力收益兑现 — 实建/实结与战果分核，末轮多敏仍不能覆盖持牌伤 — 137 — PF90JTU0UZ5M"], "tests": {"tsc": 0, "vitest": 0, "cases": 2627}, "ledger": {"added": [], "proposed": ["silent-0005", "silent-0012", "silent-0017", "silent-0019", "silent-0020", "silent-0021", "silent-0007", "silent-0011", "silent-0027", "silent-0185", "silent-0209", "silent-0211", "silent-0214", "silent-0079", "silent-0278", "silent-0225"], "retired": [], "check": 0}, "code_proposals": ["silent-proposal-67ee9ff5277558ff", "silent-proposal-ac022f51b42a960f", "silent-proposal-f10961933e0f7f14"], "implementation_domains": ["combat", "potion", "sl", "terminal", "structure"], "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update/report.md"}
@@ -599,7 +599,7 @@ SL对照：F21两試1赢，首試T2判死而未实际死，第2試能力药→�
 - 学习账本仅CLI：新增[]；proposed silent-0005,silent-0012,silent-0017,silent-0019,silent-0020,silent-0021,silent-0007,silent-0011,silent-0027,silent-0185,silent-0209,silent-0211,silent-0214,silent-0079,silent-0278,silent-0225；退役[]。16来源账本覆盖16经验，0007关联两毒牌，花园对应0209/0211两主题；0225增加历史证据和原first_run/claim追加更正，prior/旧记录保持。不改accepted/shipped，实际数据shipped交运维核实。
 - live锁内结果：实际合入、合后沙箱通过、上线登记及Roy双通知完成；数据shipped交运维核实完成事件；刷新None；合前7345fa64f3ebfcc1dbaa6d887f6d607ec3f5aab4；实际合入11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5。
 - 合后沙箱实际：tsc退出0；vitest 251文件/2627用例/退出0；未重跑。
-- 唯一eval版本S1.exp108；live上线记录提交9949a5dee4e782c9a700a488de86b4edf1a4dd97；根decision-log/eval版本及notes/for-dai.md、ops/inbox-dev.md双通知已追加，根记录由调用方提交。实际数据shipped仍交运维核实，本任务未改为accepted/shipped。
+- 唯一eval版本S1.exp108；live上线记录提交9949a5dee4e782c9a700a488de86b4edf1a4dd97；根decision-log/eval版本及notes/for-roy.md、ops/inbox-dev.md双通知已追加，根记录由调用方提交。实际数据shipped仍交运维核实，本任务未改为accepted/shipped。
 
 ### 切片大小
 
@@ -621,8 +621,8 @@ SL对照：F21两試1赢，首試T2判死而未实际死，第2試能力药→�
 | sample-a9-shop | 3627.5/4780 | 3668.5/4791 | 24.5 |
 
 - 整体中位2655.0→2654.0、涨-1.0字；配对差中位11.0，最大4899→5062、单片最多增268。
-- active185/正文50213字；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用172条/45825字、A9适用173条/46109字、A10适用182条/49121字。范围沿原机制/统计/策略，不由低阶背景立A10因果。无合并/退役/压缩，需Dai定：无。
+- active185/正文50213字；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用172条/45825字、A9适用173条/46109字、A10适用182条/49121字。范围沿原机制/统计/策略，不由低阶背景立A10因果。无合并/退役/压缩，需Roy定：无。
 
 原帧/复算/历史/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update；报告时间2026-10-08 21:44:04 +0800。
 
-上线登记补记（2026-10-08 21:44:26 +0800）：本节前文“待追加上线记录和eval版本”是21:29报告生成时的真实状态，原文及中间报告保持。合后tsc/vitest均退出0，251文件2627例，未重跑；最终live记录提交9949a5dee4e782c9a700a488de86b4edf1a4dd97，唯一S1.exp108指向实际合入11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5，来源f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c。根decision-log与eval版本已登记，notes/for-dai.md及ops/inbox-dev.md逐条旧/新经验、证据/账本、影响与回退通知已追加；根记录仍由调用方提交，数据shipped交运维核实，三独立策略提案不冒称implemented。第一次发布记录因挂载间原子rename的EXDEV失败，版本/通知尚未写入；publish-first-exdev原日志和初稿保留，锁内直接写入重试退出0、gitleaks0。最终报告/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update/report.md及publication.json已更新，原report-before-publication.md及changelog-section-before-publication.md保持。
+上线登记补记（2026-10-08 21:44:26 +0800）：本节前文“待追加上线记录和eval版本”是21:29报告生成时的真实状态，原文及中间报告保持。合后tsc/vitest均退出0，251文件2627例，未重跑；最终live记录提交9949a5dee4e782c9a700a488de86b4edf1a4dd97，唯一S1.exp108指向实际合入11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5，来源f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c。根decision-log与eval版本已登记，notes/for-roy.md及ops/inbox-dev.md逐条旧/新经验、证据/账本、影响与回退通知已追加；根记录仍由调用方提交，数据shipped交运维核实，三独立策略提案不冒称implemented。第一次发布记录因挂载间原子rename的EXDEV失败，版本/通知尚未写入；publish-first-exdev原日志和初稿保留，锁内直接写入重试退出0、gitleaks0。最终报告/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update/report.md及publication.json已更新，原report-before-publication.md及changelog-section-before-publication.md保持。

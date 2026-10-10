@@ -1,5 +1,5 @@
 /**
- * Potion equivalents (Dai 2026-09-30): a potion drunk is HP paid later, so each potion held is worth some HP,
+ * Potion equivalents (Roy 2026-09-30): a potion drunk is HP paid later, so each potion held is worth some HP,
  * damage or block in the act boss fight. The table is built from the logs by knowledge/builders/build-potion-equivalents.py
  * (formulas and inputs: docs/potion-equivalents.md) into knowledge/characters/ironclad/potion-equivalents.json; this module loads
  * and checks it (a missing or malformed file throws KnowledgeLoadError, never an empty table) and answers
@@ -321,7 +321,7 @@ export const POTION_WORTH_KEY = "potion_worth_in_act_boss";
 
 /**
  * The held potions' worth for Jev's combat question: 「火焰药水：约等于 4.7 血 / 20 伤害 / 4.7 格挡（本幕 boss，A8 公式
- * n=170）」 per potion with a value (Dai 2026-09-30: facts beside each potion, no rule, no change to the options).
+ * n=170）」 per potion with a value (Roy 2026-09-30: facts beside each potion, no rule, no change to the options).
  * A table that does not load is said, not hidden: {potion_worth_error}.
  */
 export function heldPotionWorth(potionIds: string[], act: number | null, ascension: number): Record<string, string | string[]> {

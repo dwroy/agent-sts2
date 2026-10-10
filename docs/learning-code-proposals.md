@@ -18,4 +18,4 @@
 
 所有相关任务最终 JSON 加 `code_proposals`（CLI id列表）与 `implementation_domains`；不涉及这些领域可以为空。消费队列的策略任务还要给每个派来的id一个 `proposal_results`：`implemented`（实际live源码commit）、`duplicate`（已有实际live实现commit）、`waiting`（具体证据不足/待新局原因）。任务先查当前 batch 的 `proposal_ids` / `proposal_repair`，逐项处理。未改源码可保存报告并回报 `fixes=[]`、`merged=null`、完整40位base；机械核工作树未变后正常记处置，**不冒造合入或版本**。waiting保留，新增本角色完局后重派；失败/丢失保存原日志、冷却重试，三次耗尽待运维续派。补链任务也保存请求和重试，不靠再写一次已有复盘。
 
-规则变更实际上线后先 `date`，项目根目录 `notes/for-dai.md` 与 `ops/inbox-dev.md` 同时追加通知 Roy，逐项旧规则、新规则、证据/账本/任务、预期影响、回退方法。自测/上线按原 live 流程，gitleaks、原沙箱入口、合前知识刷新/预检、合后测试和唯一版本均保持。无关角色行为保持等价，不改运维 prompt，不推送、不运行 play。
+规则变更实际上线后先 `date`，项目根目录 `notes/for-roy.md` 与 `ops/inbox-dev.md` 同时追加通知 Roy，逐项旧规则、新规则、证据/账本/任务、预期影响、回退方法。自测/上线按原 live 流程，gitleaks、原沙箱入口、合前知识刷新/预检、合后测试和唯一版本均保持。无关角色行为保持等价，不改运维 prompt，不推送、不运行 play。

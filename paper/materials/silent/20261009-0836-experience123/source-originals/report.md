@@ -16,7 +16,7 @@
 - 测试：tsc退出0；vitest 251文件/2627用例/退出0；重跑一次；首跑提前中断130，无用例结果。
 - 切片大小：中位2729.0→2729.0（+0.0字）；最大5688字。
 - 学习账本：新增silent-0331；改成proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0005,silent-0006,silent-0012,silent-0083,silent-0007,silent-0030,silent-0225；退役无；ledger.py check退出0。
-- 需要 Dai 定的事：无。
+- 需要 Roy 定的事：无。
 
 ```json
 {"task": "experience-update", "version": "2026-10-09.12", "commit": "6c5a3f6122b05afffcec961e34399168e94736c4", "merged": null, "added": 1, "updated": 9, "retired": 0, "active": 193, "mechanisms": ["长战组件兑现（观察）", "步法敏捷逐张牌挡", "力量/敏捷与仪式成长", "随机毒分配与逐敌进度", "致命毒药施毒与实结", "刺击直伤、毒杀与取消攻击", "固化三倍已有挡", "翻滚当前挡与延后挡"], "tests": {"tsc": 0, "vitest": 0, "cases": 2627}, "ledger": {"added": ["silent-0331"], "proposed": ["silent-0019", "silent-0020", "silent-0021", "silent-0125", "silent-0005", "silent-0006", "silent-0012", "silent-0083", "silent-0007", "silent-0030", "silent-0225"], "retired": [], "check": 0}, "code_proposals": ["silent-proposal-c58bdf5753d37c6c", "silent-proposal-0806e77247a0cd9f", "silent-proposal-6daead743e94de61"], "implementation_domains": ["combat", "potion", "terminal"], "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-075800-experience-update/report.md"}
@@ -651,6 +651,6 @@ SL同房多试，判死截断与实际赢/死分开；新局0条、旧汇总不�
 | sample-a9-reward | 2729.0/3331 | 2729.0/3327 | 0.0 |
 | sample-a9-shop | 3908.0/5225 | 4085.0/5225 | 0.0 |
 - 整体中位2729.0→2729.0（+0.0字），配对差中位0.0，最大5670→5688；单片最少-11、最多增加308。
-- active193，正文51873字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48227}；A9 {'entries': 181, 'chars': 48511}；A10 {'entries': 190, 'chars': 50781}。无预算合并/退役/压缩，需要Dai定：无。
+- active193，正文51873字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48227}；A9 {'entries': 181, 'chars': 48511}；A10 {'entries': 190, 'chars': 50781}。无预算合并/退役/压缩，需要Roy定：无。
 
 原始子集/偏移、复算/初稿失败、核验、提案/CLI、切片、测试、合入预检/结果、完整报告全部保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-075800-experience-update。

@@ -603,7 +603,7 @@
 - 账本新增[]，提交后proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0023,silent-0013,silent-0010,silent-0007,silent-0011,silent-0128,silent-0243；退役[]。原claim/首证/prior/support/repeat/旧版本历史保持；实际合入后的数据shipped由运维据完成事件登记，源码提案pending沿独立任务。
 - live锁内结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新3d05e9547eb14400b3fa4c18b1da8efd9817b324；合前3d05e9547eb14400b3fa4c18b1da8efd9817b324；实际合入None。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -643,7 +643,7 @@
 | sample-a9-reward | 2729.0/3301 | 2711.0/3283 | -18.0 |
 | sample-a9-shop | 3888.0/5206 | 3890.0/5207 | 1.0 |
 - 整体中位2737.5→2719.0（-18.5字），配对差中位1.0；最大5657→5639，单片最少-19、最多增加31。
-- active192、正文51464字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47818}；A9 {'entries': 180, 'chars': 48102}；A10 {'entries': 189, 'chars': 50372}。无压缩/合并/退役，需要Dai定：无。
+- active192、正文51464字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47818}；A9 {'entries': 180, 'chars': 48102}；A10 {'entries': 189, 'chars': 50372}。无压缩/合并/退役，需要Roy定：无。
 
 原始子集、字节偏移、复算、核验、提案/CLI、固定切片、测试、合入预检及报告保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-061302-experience-update。
 

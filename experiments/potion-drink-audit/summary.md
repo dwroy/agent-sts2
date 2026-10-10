@@ -3,7 +3,7 @@
 Chosen options that drink, with a potion_cost fact (potion cost live): 1421; outside a boss fight 862.
 
 - Offered by: a solver line 652, the rollout's added best line 3, a random potion's "drink now" 207; flagged rollout_best 634.
-- Paid the table's held value (cost > 0 in the chosen option's total): 837; 0: 25, every one on a board where the line's samples all die or every line loses all our HP (25 of 25): rollout.ts valueAt / pickRolloutBest, no later for the potion there (decision log 2026-09-30 15:24, open for Dai).
+- Paid the table's held value (cost > 0 in the chosen option's total): 837; 0: 25, every one on a board where the line's samples all die or every line loses all our HP (25 of 25): rollout.ts valueAt / pickRolloutBest, no later for the potion there (decision log 2026-09-30 15:24, open for Roy).
 - Saturated boards (every line loses all our HP: ranked without costs): 49 choices in 27 fights, 14 of them won.
 - The run plan's words on potions were in the question (run_plan_on_potions): 772.
 - Death-saving (the chosen line died less often than the no-potion line within the horizon): 99.

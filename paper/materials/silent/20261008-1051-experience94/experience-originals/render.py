@@ -78,7 +78,7 @@ add();add('### 切片大小');add()
 add('- 固定种子20260929，从截至切点state.run.character_id=SILENT最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP，共240配对、每格20独立时点；sample-manifest.json有池与时点。CHARACTER=silent调用官方knowledge-slice.ts，前后冻结同一common/silent/outcome数据；本次before来自新池，不混上一批中位。');add()
 table(['进阶/界面','改前中位/最大','改后中位/最大','配对增量中位'],[(r['sample'],f'{r["before_median"]}/{r["before_max"]}',f'{r["after_median"]}/{r["after_max"]}',r['paired_median_change']) for r in slices['rows']])
 add('- 整体切片：'+str(slices['overall'])+'。')
-add(f'- active170/正文{M["after"]["chars"]}，high102/med43/low25；A8适用159条{M["after"]["by_asc"]["8"]["chars"]}字、A9 160条{M["after"]["by_asc"]["9"]["chars"]}字、A10 167条{M["after"]["by_asc"]["10"]["chars"]}字。需要Dai定：无。')
+add(f'- active170/正文{M["after"]["chars"]}，high102/med43/low25；A8适用159条{M["after"]["by_asc"]["8"]["chars"]}字、A9 160条{M["after"]["by_asc"]["9"]["chars"]}字、A10 167条{M["after"]["by_asc"]["10"]["chars"]}字。需要Roy定：无。')
 add();add('原帧/脚本/初稿/机制/提案/账本/测试/切片/合入回执：'+str(O)+'；报告时间'+stamp+'。')
 section='\n'.join(rows)+'\n'
 (O/'changelog-addition.md').write_text(section)

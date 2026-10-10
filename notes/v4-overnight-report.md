@@ -1,6 +1,6 @@
 # V4 夜间开发汇总（2026-09-29 22:45 → 09-30 早）
 
-给 Dai 早上讨论用。细节都在 paper/materials/decision-log.md（09-29 22:11 以后的条目）和 jev-sts2/docs/ 下。
+给 Roy 早上讨论用。细节都在 paper/materials/decision-log.md（09-29 22:11 以后的条目）和 jev-sts2/docs/ 下。
 
 ## 一句话
 M1–M4 都做完并通过验收，全部在 v4 分支上（jev-sts2），没有上线、没有推送、没碰对局。要上线，先看 jev-sts2/docs/v4-go-live.md，由你定切换方式。

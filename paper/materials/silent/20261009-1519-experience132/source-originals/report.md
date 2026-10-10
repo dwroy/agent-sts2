@@ -20,7 +20,7 @@
 - 测试：tsc 0；vitest 251文件/2627用例/退出0；重跑False。
 - 切片大小：整体中位+1.5字，配对差中位+23字；最大5565字。
 - 学习账本：新增无；改成proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0079,silent-0128,silent-0196,silent-0169,silent-0278,silent-0243,silent-0142,silent-0007,silent-0235,silent-0253,silent-0149；退役无；ledger.py check 0。
-- 需要Dai定的事：无。
+- 需要Roy定的事：无。
 
 ## 2026-10-09 静默猎手 第一百三十二次增量：1 局 A10（version 2026-10-09.21，分支 exp-silent，6276c272）
 
@@ -637,7 +637,7 @@ SL只统计实际多次尝试；本局同族首试won不算重打。A10数字与
 - 原bash agent/tools/test-sandbox.sh，TMPDIR任务scratch、PATH本机node、SANDBOX_WORKERS=1，固定数据和原排除；tsc 0，vitest 251文件/2627例/退出0，重跑False。未改预算或测试，完整外部检查由调度器续验。
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。新增账本无；proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0079,silent-0128,silent-0196,silent-0169,silent-0278,silent-0243,silent-0142,silent-0007,silent-0235,silent-0253,silent-0149；退役无。只CLI追加，旧claim/首证/prior/版本/支持/反例/repeat历史保持，实际数据shipped交运维核完成事件。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新None，合前c7e1e0ed360c72903c84fb3791cf66c193c369cd，实际合入None，合后沙箱None。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
 - CONFLICT (content): Merge conflict in paper/materials/decision-log.md
 - 未实际合入，冲突按任务停止、待调用方/运维据原件兜底。不硬解、不覆盖刷新，不造上线版本/通知，不停对局。
@@ -662,7 +662,7 @@ SL只统计实际多次尝试；本局同族首试won不算重打。A10数字与
 | sample-a9-shop | 3980.0/5171 | 4004.5/5169 | 8.5 |
 
 - 整体中位2624.0→2625.5（+1.5字），配对差中位+23；最大5539→5565，单片差-67至64。
-- active196/正文51120字符；置信度{'low': 27, 'high': 126, 'med': 43}；A8 {'entries': 182, 'chars': 47404}，A9 {'entries': 183, 'chars': 47688}，A10 {'entries': 193, 'chars': 50028}。无预算压缩/合并/退役；需要Dai定：无。
+- active196/正文51120字符；置信度{'low': 27, 'high': 126, 'med': 43}；A8 {'entries': 182, 'chars': 47404}，A9 {'entries': 183, 'chars': 47688}，A10 {'entries': 193, 'chars': 50028}。无预算压缩/合并/退役；需要Roy定：无。
 
 原件/抽取/初稿与失败日志、复算/参数/SL、CLI/提案、切片/测试/合入预检与报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-143948-experience-update。
 

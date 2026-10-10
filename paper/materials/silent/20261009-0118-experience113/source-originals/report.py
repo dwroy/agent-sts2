@@ -82,7 +82,7 @@ new = json.load(open(O / 'slice-after.json'))
 for a, b in zip(old, new):
     lines.append(f'| {a["sample"]} | {a["median"]}/{a["max"]} | {b["median"]}/{b["max"]} | {statistics.median([y-x for x,y in zip(a["sizes"],b["sizes"])])} |')
 summary = json.load(open(O / 'slice-summary.json'))
-lines += ['', '- 整体中位' + str(summary['before_median']) + '→' + str(summary['after_median']) + '（+106.5字）；配对差中位' + str(summary['paired_median']) + '；最大' + str(summary['before_max']) + '→' + str(summary['after_max']) + '，单片最大增加' + str(summary['max_increase']) + '字。', '- active188，正文51768字符，置信度' + str(U['confidence']) + '；A8适用' + str(U['asc']['8']) + '；A9适用' + str(U['asc']['9']) + '；A10适用' + str(U['asc']['10']) + '。无需压缩/改预算，需要Dai定的规则：无。', '', '证据、原始子集/字节偏移、616项核验/历史/失败初稿、CLI、提案、测试和合入回执全部留' + str(O) + '。', '']
+lines += ['', '- 整体中位' + str(summary['before_median']) + '→' + str(summary['after_median']) + '（+106.5字）；配对差中位' + str(summary['paired_median']) + '；最大' + str(summary['before_max']) + '→' + str(summary['after_max']) + '，单片最大增加' + str(summary['max_increase']) + '字。', '- active188，正文51768字符，置信度' + str(U['confidence']) + '；A8适用' + str(U['asc']['8']) + '；A9适用' + str(U['asc']['9']) + '；A10适用' + str(U['asc']['10']) + '。无需压缩/改预算，需要Roy定的规则：无。', '', '证据、原始子集/字节偏移、616项核验/历史/失败初稿、CLI、提案、测试和合入回执全部留' + str(O) + '。', '']
 section = '\n'.join(lines)
 (O / 'changelog-section.md').write_text(section)
 (O / 'report.md').write_text(section)

@@ -110,7 +110,7 @@
 
 原沙箱第一次：tsc0，246文件中1失败245通过、2592例通过1失败；唯一check-imports失败因scratch的.ts备份相对导入，改为.txt存档后定向1例通过，并重跑原入口。最终：tsc0，246文件2593例全过＋paths独立1文件11例，全入口exit0，247文件2604例。不是高负载超时，没有超时重跑；没有放宽断言/排除名单/预算或知识数据。源码/刷新提交前gitleaks均0/CLEAN。源码test-source.log及final日志、所有初稿/失败/红绿原件保留。
 
-上线受阻：在flock ops/live-merge.lock内按任务等待可见builder完成，再把9条刷新knowledge路径提交为78b43d074147e2b74b6e563afcdbaf9f0033abe7（之前c1dd721fe682910095768eb4007cb836b6991152）。分支相对三方基线没有knowledge路径改动。git merge-tree预检exit1，冲突6处：notes/for-dai.md, notes/ops-handoff.md, ops/inbox-dev.md, paper/materials/decision-log.md, paper/materials/experience-changelog-silent.md, paper/materials/learning/ledger.jsonl。为保留并行记录，停止实际merge；live工作树未置冲突状态，HEAD仍是刷新提交，原notes/fight-value-backtest-silent.md后台修改保留。合后测试未执行，不造合入commit/eval版本/实际上线通知或shipped。
+上线受阻：在flock ops/live-merge.lock内按任务等待可见builder完成，再把9条刷新knowledge路径提交为78b43d074147e2b74b6e563afcdbaf9f0033abe7（之前c1dd721fe682910095768eb4007cb836b6991152）。分支相对三方基线没有knowledge路径改动。git merge-tree预检exit1，冲突6处：notes/for-roy.md, notes/ops-handoff.md, ops/inbox-dev.md, paper/materials/decision-log.md, paper/materials/experience-changelog-silent.md, paper/materials/learning/ledger.jsonl。为保留并行记录，停止实际merge；live工作树未置冲突状态，HEAD仍是刷新提交，原notes/fight-value-backtest-silent.md后台修改保留。合后测试未执行，不造合入commit/eval版本/实际上线通知或shipped。
 
 原始证据：evidence-manifest.json/evidence-verification.json/run-metadata.json，32实际run_id与SHA逐项匹配、六局SILENT/A10；fixed-states.json与*.source.md保留。merge-preview.txt/merge-proof.json及刷新gitleaks原件保留。ledger仅根目录CLI两次update与code_proposals.py add，status=proposed/by=learner:strategy-proposal，关联0237/0238和源提交，旧历史未重写。其他角色/未观察范围行为保持等价。
 

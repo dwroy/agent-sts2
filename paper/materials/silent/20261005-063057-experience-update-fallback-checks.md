@@ -7,7 +7,7 @@
 - 合并后的固定沙箱入口：`nice -n 19 bash tools/test-sandbox.sh`，tsc退出0、vitest合计150文件1901用例通过，整个入口退出0；无超时重跑。暂存树：`c603f398ef5152b6e50dbdd83fedd37cd9e1af0c`，MERGE_HEAD为上述源提交。
 - 提交前gitleaks退出0；临时兜底脚本漏用`core.whitespace=cr-at-eol`，将既有CSV的CRLF行尾误判为空白。检查口径已修正，未改CSV格式或仓库配置；相同已测暂存树无需重复测试。
 - 尚未提交live合并：检查错误释放锁后，其他任务已取得`ops/live-merge.lock`，非阻塞取锁失败。本轮不等待，不登记S1.exp8或shipped。
-- `bash ops/codex-ops-do.sh learner-status`、`bash ops/codex-ops-do.sh learner-merge exp-silent`均exit128、输出“（超过 30 秒，已终止）”；兜底请求未确认入队。完整命令及恢复要求已写收件箱、for-dai与ops-handoff。主目录归档源经验、17项proposed及原始自测；保留其他批次未提交账本行。
+- `bash ops/codex-ops-do.sh learner-status`、`bash ops/codex-ops-do.sh learner-merge exp-silent`均exit128、输出“（超过 30 秒，已终止）”；兜底请求未确认入队。完整命令及恢复要求已写收件箱、for-roy与ops-handoff。主目录归档源经验、17项proposed及原始自测；保留其他批次未提交账本行。
 
 ```text
 

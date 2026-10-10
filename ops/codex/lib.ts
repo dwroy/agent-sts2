@@ -1,5 +1,5 @@
 /**
- * The codex ops session's runner, pure parts (Dai 2026-10-04 21:00: the ops session runs on codex, gpt-6.1-sol; Claude
+ * The codex ops session's runner, pure parts (Roy 2026-10-04 21:00: the ops session runs on codex, gpt-6.1-sol; Claude
  * keeps only the dev session). docs/codex-ops.md has the design; ops/codex-ops.sh is the scheduler around it.
  *
  * - One codex session with continuity: created once from the ops prompt (initCommand: `codex exec … -`), then every wake
@@ -44,7 +44,7 @@ export interface OpsPaths {
   schedulerLog: string;
   prompt: string;
   inbox: string;
-  forDai: string;
+  forRoy: string;
 }
 
 export function opsPaths(root: string, env: NodeJS.ProcessEnv = process.env): OpsPaths {
@@ -61,13 +61,13 @@ export function opsPaths(root: string, env: NodeJS.ProcessEnv = process.env): Op
     schedulerLog: join(dir, "scheduler.log"),
     prompt: env["CODEX_OPS_PROMPT"] || join(root, "ops", "ops-session-silent-codex-prompt.md"),
     inbox: join(root, "ops", "inbox-dev.md"),
-    forDai: join(root, "notes", "for-dai.md"),
+    forRoy: join(root, "notes", "for-roy.md"),
   };
 }
 
 /**
  * The scheduler's own files, which run outside the sandbox (cron, the broker).
- * Dai authorised ops and learners to edit them on 2026-10-05; key and git configuration rules still apply.
+ * Roy authorised ops and learners to edit them on 2026-10-05; key and git configuration rules still apply.
  */
 export const SCHEDULER_FILES = [
   "ops/codex",
@@ -88,7 +88,7 @@ export const SCHEDULER_FILES = [
  * The ops profile's rules on top of the learner's write profile: commits in the main checkout and its worktrees
  * (.worktrees/step, live; their git dirs are all under <main checkout>/.git) need .git writable; its hooks and config stay
  * read-only (a hook or core.hooksPath would run in whoever commits next, outside the sandbox). The scheduler's files
- * (SCHEDULER_FILES) were read-only too until Dai, 2026-10-05: codex may change its own broker and scheduler.
+ * (SCHEDULER_FILES) were read-only too until Roy, 2026-10-05: codex may change its own broker and scheduler.
  */
 export function opsExtraRules(root: string): Record<string, "read" | "write" | "none"> {
   const git = join(mainCheckout(root), ".git");
@@ -233,7 +233,7 @@ export function wakeMessage(events: QueuedEvent[], now: Date): string {
   const lines = [`【调度器事件】${localStamp(now)}（CST），共 ${events.length} 件：`, ""];
   events.forEach((event, i) => lines.push(`${i + 1}. [${event.kind}] ${event.text}`, ""));
   lines.push(
-    "按 prompt 处理这些事件。沙箱外的操作用 `bash ops/codex-ops-do.sh <动作> [参数]`。要汇报的写进 ops/inbox-dev.md（给 Dai 定的同时写 notes/for-dai.md），写时间前先跑 `date`。",
+    "按 prompt 处理这些事件。沙箱外的操作用 `bash ops/codex-ops-do.sh <动作> [参数]`。要汇报的写进 ops/inbox-dev.md（给 Roy 定的同时写 notes/for-roy.md），写时间前先跑 `date`。",
     "处理完就结束这一轮，不要 sleep 或轮询等待：调度器有新事件会再叫醒你。最后用一两句话总结这一轮做了什么（这段回答记进 ops/codex-ops/wakes.jsonl，没人实时看）。",
   );
   return lines.join("\n");
@@ -275,6 +275,7 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "eval-metrics": { args: 2, ms: 600_000 },
   "learner-status": { args: 0, ms: 30_000 },
   "scheduler-status": { args: 0, ms: 30_000 },
+  "git-push-main": { args: 1, ms: 500_000 },
 };
 
 /** An argument: a PID or a comma-separated list of run ids (no spaces, no shell characters, no leading dash). */
@@ -310,6 +311,9 @@ export function validateRequest(raw: unknown): BrokerRequest {
   }
   if (action === "core-build-notify" && !/^[0-9]{8}-[0-9]{6}-fix-batch$/.test(list[0]!)) {
     return { ok: false, error: "core-build-notify 要完整核心学习批次 id" };
+  }
+  if (action === "git-push-main" && !/^[0-9a-f]{40}$/.test(list[0]!)) {
+    return { ok: false, error: "git-push-main 要 main 的完整提交 SHA" };
   }
   return { ok: true, action, args: list };
 }

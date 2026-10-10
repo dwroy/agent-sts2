@@ -585,6 +585,6 @@
 | sample-a9-shop | 3757.5/4805 | 4090.5/5138 | 333.0 |
 
 - 整体中位2662.5→2769.0（+106.5字）；配对差中位13.0；最大5096→5475，单片最大增加379字。
-- active188，正文51768字符，置信度{'low': 25, 'high': 116, 'med': 47}；A8适用{'entries': 175, 'chars': 47345}；A9适用{'entries': 176, 'chars': 47629}；A10适用{'entries': 185, 'chars': 50676}。无需压缩/改预算，需要Dai定的规则：无。
+- active188，正文51768字符，置信度{'low': 25, 'high': 116, 'med': 47}；A8适用{'entries': 175, 'chars': 47345}；A9适用{'entries': 176, 'chars': 47629}；A10适用{'entries': 185, 'chars': 50676}。无需压缩/改预算，需要Roy定的规则：无。
 
 证据、原始子集/字节偏移、616项核验/历史/失败初稿、CLI、提案、测试和合入回执全部留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-005054-experience-update。

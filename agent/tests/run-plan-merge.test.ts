@@ -1,5 +1,5 @@
 /**
- * RUN_PLAN_MERGE (Dai 2026-10-02, src/memory/run-plan-merge.ts): a due run plan rides on the next DeepSeek question
+ * RUN_PLAN_MERGE (Roy 2026-10-02, src/memory/run-plan-merge.ts): a due run plan rides on the next DeepSeek question
  * (state.run_plan_task, the answer's run_plan) instead of its own call at the map; its own call only when no question
  * carried it within RUN_PLAN_MERGE_FLOORS floors, or the act boss is next; off: exactly as before.
  *

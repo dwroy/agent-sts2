@@ -662,6 +662,6 @@
 | a9-shop | 4149.0/5249 | 4155.0/4954 | -59.0 |
 
 - 整体切片：{'before_median': 3006.0, 'after_median': 3012.0, 'median_change': 6.0, 'paired_median_change': -7.0, 'before_max': 5249, 'after_max': 5201, 'max_increase': 6}。
-- active168/正文51442，置信{'low': 25, 'high': 100, 'med': 43}；A8/A9/A10适用{'8': {'entries': 157, 'chars': 47080}, '9': {'entries': 158, 'chars': 47364}, '10': {'entries': 165, 'chars': 50306}}。需要Dai定：无。合入受阻按真实结果交运维续办，保留全部证据/失败/原稿，不冒报上线。
+- active168/正文51442，置信{'low': 25, 'high': 100, 'med': 43}；A8/A9/A10适用{'8': {'entries': 157, 'chars': 47080}, '9': {'entries': 158, 'chars': 47364}, '10': {'entries': 165, 'chars': 50306}}。需要Roy定：无。合入受阻按真实结果交运维续办，保留全部证据/失败/原稿，不冒报上线。
 
 原帧/脚本/初稿/失败/机制/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-075539-experience-update；报告时间2026-10-08 08:13:23 +0800。

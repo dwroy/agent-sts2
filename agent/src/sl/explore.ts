@@ -1,5 +1,5 @@
 /**
- * SL_RETRY_EXPLORE (docs/sl.md §11, Dai 2026-10-02: "retries must try different play"): a retried fight's attempts 3 and
+ * SL_RETRY_EXPLORE (docs/sl.md §11, Roy 2026-10-02: "retries must try different play"): a retried fight's attempts 3 and
  * later change the line at one decision point of the failed attempts, so that a retry does not replay the death.
  *
  * Why (A9, 2026-10-02): with the known draws (§10) the same board gives the same rollout (its seed is the board's, not the
@@ -313,13 +313,13 @@ export interface SlExploreEnv {
     fallback?: { point: string; excluded: string[]; attempts: number[]; tried?: SlTried };
   };
   /**
-   * SL_RETRY_EXPLORE_B2 (Dai 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate ("not worse than the line
+   * SL_RETRY_EXPLORE_B2 (Roy 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate ("not worse than the line
    * replaced": ExploreB2.notWorse) instead of the rollout's share of samples dead, in the replacement and the record (the
    * deviation point is still chosen by the rollout's: exploreTarget).
    */
   b2Gate?: boolean;
   /**
-   * SL_RETRY_EXPLORE_BOSS_POTIONS (Dai 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an
+   * SL_RETRY_EXPLORE_BOSS_POTIONS (Roy 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an
    * alternative too (potions cost 0 there, and the line replaced is known to lose): the shown potion lines and the random
    * potions' Monte Carlo lines. Out of a boss fight never (a listed elite's potion costs HP-equivalents).
    */

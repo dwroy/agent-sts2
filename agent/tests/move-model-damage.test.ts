@@ -1,7 +1,7 @@
 /**
  * Next-turn enemy damage (move-model expectedNextDamage / damageForecast / meanMoveDamage) at the run's
  * ascension: the monster DB's base per hit there plus the enemy's Strength, x1.5 while our Vulnerable lasts;
- * the move model's pooled shown average only as the fallback (Dai: monster damage at the current ascension).
+ * the move model's pooled shown average only as the fallback (Roy: monster damage at the current ascension).
  * Fixtures only: the knowledge files are swapped out.
  */
 

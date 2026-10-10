@@ -5,7 +5,7 @@
   - 无。7ZUC4VPMDS41 补证已有中毒八折问题，冲刺少报2伤 — agent/src/reflex/turn-solver.ts:1460（fix-queue 已有，后续S1.fix42已上线）。
 - 写成「未记录」的项：7ZUC4VPMDS41：读档末轮完整伤害／损血、重问及SL后的完整最优线执行比例、未选方案受控整场结果、boss时钟估值及实打比值、零胜模拟赢样本损血中位、Jev缓存。
 - 学习账本：7ZUC4VPMDS41：新增 silent-0222；更新 silent-0216、silent-0021、silent-0079、silent-0020、silent-0019、silent-0133、silent-0006、silent-0007（老错 silent-0216、silent-0079）；`ledger.py check` 退出码0。
-- 需要 Dai 定的事：无。
+- 需要 Roy 定的事：无。
 
 ```json
 {"task":"postmortem","appended":["7ZUC4VPMDS41"],"skipped":[],"bugs":[{"run":"7ZUC4VPMDS41","where":"agent/src/reflex/turn-solver.ts:1460","what":"已有中毒攻击八折问题，本局冲刺少报2伤；后续S1.fix42已上线","new":false}],"ledger":{"added":["silent-0222"],"updated":["silent-0216","silent-0021","silent-0079","silent-0020","silent-0019","silent-0133","silent-0006","silent-0007"],"repeats":["silent-0216","silent-0079"],"check":0}}

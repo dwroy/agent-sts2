@@ -646,6 +646,6 @@ SL按attempt>1取真正多试房，尝试行不当独立局；赢次只认result
 | sample-a9-reward | 2695.0/3276 | 2726.0/3307 | 31.0 |
 | sample-a9-shop | 4053.0/5211 | 4060.0/5216 | 7.0 |
 - 整体中位2696.0→2729.5（+33.5字），配对差中位21.0；最大5660→5705，单片最多增加74、最少变化-10。
-- active191，正文51680字符，置信度{'low': 25, 'high': 120, 'med': 46}；A8 {'entries': 178, 'chars': 48034}；A9 {'entries': 179, 'chars': 48318}；A10 {'entries': 188, 'chars': 50588}。未压缩/合并/退役或改预算；需要Dai定：无。
+- active191，正文51680字符，置信度{'low': 25, 'high': 120, 'med': 46}；A8 {'entries': 178, 'chars': 48034}；A9 {'entries': 179, 'chars': 48318}；A10 {'entries': 188, 'chars': 50588}。未压缩/合并/退役或改预算；需要Roy定：无。
 
 原始证据、复算、失败初稿、提案/CLI、切片、测试与合入回执均留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-040746-experience-update。

@@ -1,5 +1,5 @@
 /**
- * Potions are Jev's call (Dai 2026-09-28): no potion use cost in the solver's score, every modelled
+ * Potions are Jev's call (Roy 2026-09-28): no potion use cost in the solver's score, every modelled
  * potion in the belt on a shown line, code's own auto-acts never drink while a potion-free line
  * survives, and Jev gets potion_context facts.
  */
@@ -253,7 +253,7 @@ describe("Foul Potion is offered (no ban) with its damage to us in the numbers",
   });
 });
 
-describe("a lethal that needs a potion is Jev's call (Dai 2026-09-28)", () => {
+describe("a lethal that needs a potion is Jev's call (Roy 2026-09-28)", () => {
   const line = (name: string, potions: string[], score: number, wins = true): Plan =>
     ({
       steps: [{ cardIndex: 0, cardId: name, upgraded: false, name, target: null }, ...potions.map((id) => ({ cardIndex: -1, cardId: `POTION:${id}:0`, upgraded: false, name: `potion ${id}`, target: null }))],

@@ -76,7 +76,7 @@ lines+=['','### 切片大小','',
 '','| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for v in SS['rows']:lines.append(f'| {v["sample"]} | {v["before_median"]}/{v["before_max"]} | {v["after_median"]}/{v["after_max"]} | {v["paired_median"]} |')
 lines+=['',f'- 整体中位{SS["before_median"]}→{SS["after_median"]}（{SS["after_median"]-SS["before_median"]:+}字），配对差中位{SS["paired_median"]}；最大{SS["before_max"]}→{SS["after_max"]}，单片最多增加{SS["increase_max"]}、最少变化{SS["decrease_min"]}。',
-f'- active{U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8 {U["asc"]["8"]}；A9 {U["asc"]["9"]}；A10 {U["asc"]["10"]}。无需预算压缩/合并/退役；需要Dai定：无。','']
+f'- active{U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8 {U["asc"]["8"]}；A9 {U["asc"]["9"]}；A10 {U["asc"]["10"]}。无需预算压缩/合并/退役；需要Roy定：无。','']
 body='\n'.join(lines)
 (O/'changelog-section.md').write_text(body)
 (O/'report.md').write_text('# 经验库更新报告\n\n'+body)

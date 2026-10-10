@@ -1,6 +1,6 @@
 # 评估指标（eval/metrics.py）
 
-V4 架构 §1 的「评估 evaluator」、§4 的 M4（notes/v4-dev-brief.md 第 7 项）：每个版本冻结后跑一批，按**每局都能算的代理指标**和上一版本对比，Dai 决定上线。脚本建在日志库上（docs/logdb.md），不改任何文件。第一份基线：experiments/eval/baseline-2026-09-29.md。§7 是「眼」的预测对实际（eval/calibration.py），第一份：experiments/eval/calibration-2026-09-30.md；它的三个摘要也是版本表的三行。
+V4 架构 §1 的「评估 evaluator」、§4 的 M4（notes/v4-dev-brief.md 第 7 项）：每个版本冻结后跑一批，按**每局都能算的代理指标**和上一版本对比，Roy 决定上线。脚本建在日志库上（docs/logdb.md），不改任何文件。第一份基线：experiments/eval/baseline-2026-09-29.md。§7 是「眼」的预测对实际（eval/calibration.py），第一份：experiments/eval/calibration-2026-09-30.md；它的三个摘要也是版本表的三行。
 
 ## 1. 用法
 
@@ -90,7 +90,7 @@ version_compare.py 的做法（手列 run id + 按时间窗口）在这里不需
 
 ## 7. 校准：预测对实际（eval/calibration.py）
 
-V4 架构 §1「眼」的「预测对实际的偏差记录」（M3）。**只测量，不改任何预测算法**（路线投影、卡牌口径等 A/B/C 等 Dai 讨论后再定）。
+V4 架构 §1「眼」的「预测对实际的偏差记录」（M3）。**只测量，不改任何预测算法**（路线投影、卡牌口径等 A/B/C 等 Roy 讨论后再定）。
 
 ### 7.1 用法
 

@@ -1,7 +1,7 @@
 /**
- * Potion cost (Dai 2026-09-30): a potion drunk before the act boss is HP paid later. What a drink costs is the
+ * Potion cost (Roy 2026-09-30): a potion drunk before the act boss is HP paid later. What a drink costs is the
  * potion's held value in the potion table (knowledge/characters/ironclad/potion-equivalents.json, docs/potion-equivalents.md: its
- * HP worth in this act's boss fight at this ascension; the formula values as the table has them). Dai's rules:
+ * HP worth in this act's boss fight at this ascension; the formula values as the table has them). Roy's rules:
  *   - the cost is the held value, nothing else: no "a full belt makes the cheapest potion free" or other special
  *     case (a low-value potion costs little anyway), and an elite costs the same as a hallway fight;
  *   - a boss fight costs 0 (that is where the potions are kept for);
@@ -142,7 +142,7 @@ function nameOf(id: string, costs: Map<string, PotionCost>, plan?: Pick<Plan, "s
 }
 
 /**
- * Jev's option fact (Dai 2026-09-30): 「fight HP loss X; potions used N (names); potion cost Y HP (potion table: held
+ * Jev's option fact (Roy 2026-09-30): 「fight HP loss X; potions used N (names); potion cost Y HP (potion table: held
  * value in this act); total Z」. X is the rollout's expected HP lost to the fight's end (this turn's exact loss when
  * there is no rollout: said so), N the potions this turn drinks plus the later turns' expected drinks, Y their expected
  * cost (the rollout's; this turn's drinks at their cost without it), Z = X + Y: what the lines are ranked by, after deaths.

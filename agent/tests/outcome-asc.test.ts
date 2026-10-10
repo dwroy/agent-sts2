@@ -1,5 +1,5 @@
 /**
- * Dai 2026-10-04: outcome statistics by ascension, A8 and A9 apart. knowledge/builders/build-outcome-stats.py writes one table per
+ * Roy 2026-10-04: outcome statistics by ascension, A8 and A9 apart. knowledge/builders/build-outcome-stats.py writes one table per
  * ascension (by_ascension), each over that ascension's runs alone with its own baseline; a run reads its own
  * (knowledge/outcome-tables.ts). At A8, below A8 or without an ascension every text is what it was (A8's table); from
  * A9 up the run's ascension's rows, a row with fewer than 5 runs followed by A8's where A8 has 5 or more, labelled,

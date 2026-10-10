@@ -74,7 +74,7 @@ lines += ['- '+r for r in merge.get('precheck_conflicts',[])]
 lines += ['','### 切片大小','','- 种子20260929，从截止点state.run.character_id=SILENT最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP共240配对，每格20独立时刻；池/时点留sample-manifest.json。CHARACTER=silent调用官方knowledge-slice.ts，前后冻结同一common/silent/outcome快照。新池抽样，不把旧批中位当本批before；V4整份前缀另报本阶总字数。','','| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对增量中位 |','| --- | --- | --- | --- |']
 for b,e in zip(json.load(open(O/'slice-before.json')),json.load(open(O/'slice-after.json'))):
  assert b['sample']==e['sample'];delta=statistics.median(y-x for x,y in zip(b['sizes'],e['sizes']));lines.append(f'| {e["sample"].replace("sample-", "")} | {b["median"]}/{b["max"]} | {e["median"]}/{e["max"]} | {delta} |')
-lines += ['',f'- 整体中位{S["median_before"]}→{S["median_after"]}（{S["median_change"]}字），配对增量中位{S["paired_median"]}，单片最多增{S["max_growth"]}、最大{S["max_before"]}→{S["max_after"]}。active165/正文52792，置信{C["confidence"]}；A8适用{C["by_asc"]["8"]}，A9适用{C["by_asc"]["9"]}，A10适用{C["by_asc"]["10"]}。需要Dai定：无；如合入记录冲突交运维据真实结果续办，不冒报上线。',
+lines += ['',f'- 整体中位{S["median_before"]}→{S["median_after"]}（{S["median_change"]}字），配对增量中位{S["paired_median"]}，单片最多增{S["max_growth"]}、最大{S["max_before"]}→{S["max_after"]}。active165/正文52792，置信{C["confidence"]}；A8适用{C["by_asc"]["8"]}，A9适用{C["by_asc"]["9"]}，A10适用{C["by_asc"]["10"]}。需要Roy定：无；如合入记录冲突交运维据真实结果续办，不冒报上线。',
 '',f'原帧/脚本/初稿/失败/机制/提案/账本/测试/切片/合入回执均在{O}；报告时间{stamp}。']
 text='\n'.join(lines)+'\n';(O/'changelog-section.md').write_text(text);(O/('report.md' if commit!='待提交' else 'report-draft.md')).write_text('# 经验库更新报告\n\n'+text)
 print('报告',len(lines),'行；测试',rc,'；合入',merge.get('merged'))

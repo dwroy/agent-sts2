@@ -1396,7 +1396,7 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
 /**
  * The card a card potion adds (「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」): a 0-cost
  * card of that type, at a conservative value for the best of three offered. Since the Monte Carlo
- * (potion-mc.ts, Dai 2026-09-28) this turn's option never uses it: only the rollout's later turns (the
+ * (potion-mc.ts, Roy 2026-09-28) this turn's option never uses it: only the rollout's later turns (the
  * potions still held, at their expected value) and the solver-level tests do. Ironclad's pool (game
  * data, 36 attacks / 30 skills): best-of-3 total damage ~17-18.6, best-of-3 block ~8.3; picks logged
  * (selection/take into my hand): Bludgeon 32 (X8R8 F17 T11), Uppercut 13, Fight Me 10x2, Demon Form
@@ -1731,7 +1731,7 @@ export function potionEffect(potionId: string): (Partial<CardModel> & { target: 
 }
 
 /**
- * Random potions (Dai 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as
+ * Random potions (Roy 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as
  * "drink now, then re-plan with the real cards", never as a fixed-value line.
  *
  * Card-choice potions: 「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」 3 random cards of the

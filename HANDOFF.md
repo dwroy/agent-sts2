@@ -1,6 +1,6 @@
 # 交接：Jev 代打杀戮尖塔 2（xdwin：Windows 跑游戏，WSL 跑控制器）
 
-来自 Mac 上的 session「JEV 模型快速决策研究」。Dai 已确认分工：你在 xdwin 上负责落地和跑对局，Mac 侧负责协调和盯进度。本文存于 `~/Projects/sts2-jev/HANDOFF.md`，上下文被压缩后回来重读。
+来自 Mac 上的 session「JEV 模型快速决策研究」。Roy 已确认分工：你在 xdwin 上负责落地和跑对局，Mac 侧负责协调和盯进度。本文存于 `~/Projects/sts2-jev/HANDOFF.md`，上下文被压缩后回来重读。
 
 **第 0 步**：确认 `pwd` 是 `/home/dw/Projects/sts2-jev`。不是的话只回一句「交接说明发错 session 了」然后停止。
 
@@ -43,7 +43,7 @@
 - 游戏仍是正式版 v0.107.1，没订阅 mod，游戏没开。
 - Jev key 还没给。
 
-所以先做 1 和 2。从步骤 3 起等 Dai。
+所以先做 1 和 2。从步骤 3 起等 Roy。
 
 1. **装 Node 22 LTS 到用户目录，不用 sudo。**
    - 从 nodejs.org 下官方 linux-x64 tarball，用同目录的 `SHASUMS256.txt` 校验。
@@ -54,8 +54,8 @@
    - 先看 `package.json` 和 lockfile，再 `npm ci`。没有 lockfile 就 `npm install`。
    - 跑 `npm test`。
    - 用 `npm run fake-mod` 起假 mod，另开进程跑 `npm run doctor -- --no-jev`，确认离线链路通。
-3. **【闸：Dai 在 Windows 上操作】**
-   - Dai 要做的：
+3. **【闸：Roy 在 Windows 上操作】**
+   - Roy 要做的：
      1. 关掉这个游戏的 Steam 云存档。
      2. 切到 public-beta，等更新到 v0.111.0。
      3. 订阅 STS2 AI Agent。
@@ -64,23 +64,23 @@
    - 你来核实：看 `release_info.json`，再跑 `curl -s http://127.0.0.1:8080/health`，确认游戏是 v0.111.0、mod 版本号、状态 ready。
    - 不要开 mod 自带的自动游玩，不要在它的 F8 面板里配模型，否则两个控制器会抢操作。
    - 核实完跑 `npm run doctor -- --no-jev`。
-4. **【闸：Dai 给 key】**
+4. **【闸：Roy 给 key】**
    - 把 `TYPESAFE_API_KEY` 写进 `jev-sts2/.env`，权限设 600，确认 `.env` 在 `.gitignore` 里。
    - `JEV_MODEL` 保持钉在 `jev-1.13.0`。
    - key 不许打印，不许写进日志或消息。
-   - 如果 Dai 给的是 OpenRouter 的 key，加一行 `TYPESAFE_BASE_URL=https://openrouter.ai/api`。
+   - 如果 Roy 给的是 OpenRouter 的 key，加一行 `TYPESAFE_BASE_URL=https://openrouter.ai/api`。
    - 然后跑 `npm run doctor`，它会用真 Jev 做一次冒烟测试。
 5. **shadow 模式试跑。**
    - 跑 `npm run shadow -- --max-decisions 20`，只看不动手。
    - 汇总 `logs/decisions.jsonl`：各屏幕 Jev 延迟的 p50 和 p95、置信度分布、有没有回退或报错。
-6. **【闸：Dai 点头】真打一局。**
+6. **【闸：Roy 点头】真打一局。**
    - 跑 `npm run play -- --max-runs 1 --max-minutes 60`。
-   - 遇到教程确认弹窗，程序会停下交给人，这是设计如此。叫 Dai 去点。
+   - 遇到教程确认弹窗，程序会停下交给人，这是设计如此。叫 Roy 去点。
    - 跑完汇报：打到第几层、死因、决策数、Jev 请求数和花费、耗时。
 
 ## 边界
 
-- Steam 账号上的动作全部由 Dai 操作，你只核实。包括切分支、订阅、改云存档、购买。
+- Steam 账号上的动作全部由 Roy 操作，你只核实。包括切分支、订阅、改云存档、购买。
 - 代码只放 `~/Projects/sts2-jev`，别动 `~/Projects` 下的 notes、work、fomo 三个仓库。
 - 不下载来路不明的二进制，npm 依赖以 lockfile 为准。
 - 预算保持 `.env` 的默认上限：MAX_REQUESTS 2000，MAX_TOKENS 20M。按每百万 token $0.042 算，一个会话最多约 $0.84。
@@ -98,5 +98,5 @@
 
 ## 汇报
 
-- **对 Dai**：在你自己的 session 里正常汇报。每过一个闸，说清楚现在卡在谁身上。
+- **对 Roy**：在你自己的 session 里正常汇报。每过一个闸，说清楚现在卡在谁身上。
 - **对 Mac 侧**：完成步骤 2、3、5、6 时，各用 SendMessage 回复来信方发一行进度，也就是交接消息的 from 地址。失败了也要发。

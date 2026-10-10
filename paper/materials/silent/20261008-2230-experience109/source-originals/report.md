@@ -19,7 +19,7 @@
 - 测试：tsc 0；vitest 251文件/2627用例/0；未重跑
 - 切片大小：中位涨3.5字；最大5051字
 - 学习账本：新增无；改成proposed silent-0005,silent-0012,silent-0019,silent-0020,silent-0021,silent-0030,silent-0079,silent-0209,silent-0211,silent-0158,silent-0277,silent-0011,silent-0046,silent-0129,silent-0133,silent-0222,silent-0170；退役无；ledger.py check退出0
-- 需要Dai定的事：无
+- 需要Roy定的事：无
 
 ```json
 {"task": "experience-update", "version": "2026-10-08.26", "commit": "5bb99c795f0a9460ca45bd56803fb8511a462644", "merged": null, "added": 0, "updated": 15, "retired": 0, "active": 185, "mechanisms": ["灵动步法 — 步法普通/升级建立2/3敏捷，后续每张挡牌兑现。 — 81支持/0反例 — 2H311EAD34GD", "力量与敏捷 — 力量逐击加伤，敏捷逐张加牌挡，弱与易伤另核。 — 140支持/0反例 — 2H311EAD34GD,WZL2AMEY85S7", "能力与收益兑现 — 观察：取得能力、实际建立、收益兑现与整战结果分核，不由数量推输出闭环。 — 139支持/0反例 — 2H311EAD34GD,WZL2AMEY85S7", "族母吸取 — 族母吸取压缩直伤/牌挡，已建毒按现场层数结算。 — 19支持/0反例 — 2H311EAD34GD", "胆小补盾 — 花园幽灵鳗胆小使已观察非致死攻击后补对应层数敌挡，实扣与退场分开。 — 25支持/0反例 — 2H311EAD34GD", "意外光滑的石头 — 意外光滑的石头实见开场1敏捷，与步法叠加，收益由随后牌挡兑现。 — 10支持/0反例 — 2H311EAD34GD", "铁心药水 — 铁心药水建立7覆甲，不等即时或全战恒定7挡。 — 21支持/0反例 — SY0WMJNNVRLM,2H311EAD34GD", "毒雾 — 毒雾普通/升级建立2/3层，后续玩家轮初补毒。 — 70支持/0反例 — WZL2AMEY85S7", "尖啸 — 尖啸临时降力按攻击段兑现，次轮恢复须重核。 — 67支持/0反例 — WZL2AMEY85S7", "铜质鳞片 — 铜质鳞片开战建3荆棘，敌每次实际攻击分别反伤，全挡亦触发。 — 14支持/0反例 — WZL2AMEY85S7", "仪式兽阶段阈值 — 仪式兽跨现场阈值清横冲与阶段力量，眩晕不等击杀。 — 22支持/0反例 — WZL2AMEY85S7", "仪式兽昏眩 — 已观察1层昏眩窗口打一张牌后阻止后续牌，余能不等于还能出牌。 — 5支持/0反例 — WZL2AMEY85S7", "钓鱼竿 — 钓鱼竿每三场普通战后随机升级一张牌，不保证核心强化。 — 5支持/0反例 — WZL2AMEY85S7"], "tests": {"tsc": 0, "vitest": 0, "cases": 2627}, "ledger": {"added": [], "proposed": ["silent-0005", "silent-0012", "silent-0019", "silent-0020", "silent-0021", "silent-0030", "silent-0079", "silent-0209", "silent-0211", "silent-0158", "silent-0277", "silent-0011", "silent-0046", "silent-0129", "silent-0133", "silent-0222", "silent-0170"], "retired": [], "check": 0}, "code_proposals": ["silent-proposal-fcdf526c2ff89a96", "silent-proposal-ef192c07f518e37d", "silent-proposal-a3ac35773142c17f"], "implementation_domains": ["combat", "potion", "sl", "structure"], "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-220306-experience-update/report.md"}
@@ -637,6 +637,6 @@ SL实盘对照：族母六试0赢，前五T13/14/13/14/12判死读档，末T12�
 | sample-a9-shop | 3668.5/4791 | 3723.5/4780 | 31.0 |
 
 - 整体中位2674.5→2678.0、涨3.5字；配对差中位20.0，最大5062→5051、单片最多增88。
-- active185/正文50378字符；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用{'entries': 172, 'chars': 45990}；A9适用{'entries': 173, 'chars': 46274}；A10适用{'entries': 182, 'chars': 49286}。没有压缩、预算变更或需Dai定的规则；合入受阻由现行运维兜底流程处理。
+- active185/正文50378字符；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用{'entries': 172, 'chars': 45990}；A9适用{'entries': 173, 'chars': 46274}；A10适用{'entries': 182, 'chars': 49286}。没有压缩、预算变更或需Roy定的规则；合入受阻由现行运维兜底流程处理。
 
 原帧/数字/历史/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-220306-experience-update；报告时间2026-10-08 22:28:02 +0800。

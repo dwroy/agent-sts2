@@ -87,7 +87,7 @@ text+='\n### 切片大小\n\n'
 text+='- 种子20260929，从截止点state.run.character_id=SILENT最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP共240配对；每格20独立时刻、池/时间留manifest。CHARACTER=silent调用官方knowledge-slice.ts，改前/后固定同一common/silent/outcome快照。新池抽样，旧批中位不直接当before；此测是切片，V4整份前缀另报本阶总字数。\n\n'
 before=json.load(open(O/'slice-before.json'));after=json.load(open(O/'slice-after.json'))
 text+=table(['进阶/界面','改前中位/最大','改后中位/最大','配对增量中位'],[[b['sample'].replace('sample-',''),f'{b["median"]}/{b["max"]}',f'{a["median"]}/{a["max"]}',statistics.median(n-o for o,n in zip(b['sizes'],a['sizes']))] for b,a in zip(before,after)])
-text+=f'\n- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_increase"]:+}字），配对增量中位{S["paired_median"]:+}，单片最多增{S["max_increase"]}，最大{S["before_max"]}→{S["after_max"]}。active161/正文52376，置信{C["confidence"]}；A8适用{C["applicable"]["8"]}，A9适用{C["applicable"]["9"]}，A10适用{C["applicable"]["10"]}。需要Dai定：无。\n'
+text+=f'\n- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_increase"]:+}字），配对增量中位{S["paired_median"]:+}，单片最多增{S["max_increase"]}，最大{S["before_max"]}→{S["after_max"]}。active161/正文52376，置信{C["confidence"]}；A8适用{C["applicable"]["8"]}，A9适用{C["applicable"]["9"]}，A10适用{C["applicable"]["10"]}。需要Roy定：无。\n'
 text+='\n原帧/脚本/初稿/失败/机制表/提案/账本/测试/切片/合入回执：'+str(O)+'；报告时间'+stamp+'。\n'
 (O/'changelog-section.md').write_text(text)
 (O/'section-title.txt').write_text(title+'\n')

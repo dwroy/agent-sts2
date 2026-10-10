@@ -1,4 +1,4 @@
-# V4 上线说明（给 Dai）
+# V4 上线说明（给 Roy）
 
 写于 2026-09-30，依据 v4-sync（v4 13ac482：v3 c52587c 已合入，含 M1、M2a、M2b、M3a–c、M4a–c），第 1 节按上线前审查的 7 项修复更新过。本文只是说明：没有改 ops/，没有改运行环境，也没有上线。
 
@@ -209,7 +209,7 @@ $P eval/calibration.py --ascension 9 --since <上线时间> --group-by config --
 - 测试：`npx tsc -p tsconfig.json --noEmit` 为 0；`npx vitest run` 96 个文件、1,556 个测试全过。
 - 上线注意：v4-live 升级到这个版本后，logs/guide-facts 里会多一个 <日期>-prefix-facts.json，每天第一次渲染前缀时写入。
 
-## 6. 药水代价（2026-09-30 Dai 定，分支 v4-potion）
+## 6. 药水代价（2026-09-30 Roy 定，分支 v4-potion）
 
 一句话：用掉的药水按「以后要扣的血」计价。代价 = 这瓶药在当前进阶、当前幕的持有价值（药水换算表 knowledge/characters/ironclad/potion-equivalents.json 的公式值）；boss 战为 0；精英和走廊一样；死亡数永远排第一。细节在 docs/potion-equivalents.md §8。
 
@@ -218,7 +218,7 @@ $P eval/calibration.py --ascension 9 --since <上线时间> --group-by config --
 - 推演：后续回合的自动出牌按同样的代价决定喝不喝；每条线的 value 扣掉本回合和后续回合喝掉的药的期望代价。rollout_best 先比死亡样本数，再比「本场掉血 + 药水代价」；「并列」也按这个合计判定。
 - 题面：每个选项多一项 `potion_cost`（「fight HP loss X; potions used N (…); potion cost Y HP (…); total Z」）；`potion_context.potion_cost` 一句话说代价从哪来。每道有药可喝的非 boss 战斗题多一条「本场不用药」的线（和某个选项一样就并进去、标 `no_potion_fight`），所以选项可能多一个。
 - 走廊里「喝不喝都一样」的题，rollout_best 从喝药的线（以前并列时常落在喝药线上）移到不喝的线；随机药水不再「胜过」不用药的线时，代码直接打自己的线，Jev 少被问一次。
-- boss 战：代价 0，选项、分数、rollout_best 和现在完全一样（测试锁住；离线回放 boss 20 次见下），题面上的 `potion_cost` 都写 0。boss 战不加「本场不用药」的线（要 Dai 确认）。
+- boss 战：代价 0，选项、分数、rollout_best 和现在完全一样（测试锁住；离线回放 boss 20 次见下），题面上的 `potion_cost` 都写 0。boss 战不加「本场不用药」的线（要 Roy 确认）。
 
 **离线回放**（`npx tsx agent/tools/potion-cost-replay.ts` → experiments/potion-cost/summary.md，不调用任何模型）：notes/potion-drinks-2026-09-29.md 附表 A 的 154 次非 boss 战喝药，重算 150 次（3 次是代码开场直接喝果汁、1 次是已修的去重 bug，不涉及排序）。同一个重建局面，推演最优本回合喝药：代价关 104 次 → 代价开 45 次；本回合不喝 24 → 100（其中 20 次推演后续回合会喝，80 次整场不喝）；并列 22 → 5。按附表分类：值得喝 15 次 9 → 9（只有 1 次从「本回合喝」变成「后续回合喝」），小收益 74 次 66 → 23，持平 60 次 28 → 12。「不喝会死」的 10 个局面推演最优全部用药（100%，8 次本回合就喝）。boss 战抽查 20 次：选项、每个选项的推演数字、推演最优和并列 20/20 完全相同。
 
@@ -234,4 +234,4 @@ $P eval/calibration.py --ascension 9 --since <上线时间> --group-by config --
 - 过一幕 / 二幕 boss、终层照常看。
 - 决策日志：`rollout.potion_costs` 为 true 的题是代价在场的题；`rollout.no_potion.key` 是「本场不用药」选项的 key（`merged` 表示并进了原选项），和 `choice` 比就知道 Jev 选了它几次。
 
-**回退条件**：10 局里走廊死亡明显变多（「死时手里的药」上升、或一幕通过率明显低于对照），先 `POTION_COST=off`，再和 Dai 商量。
+**回退条件**：10 局里走廊死亡明显变多（「死时手里的药」上升、或一幕通过率明显低于对照），先 `POTION_COST=off`，再和 Roy 商量。

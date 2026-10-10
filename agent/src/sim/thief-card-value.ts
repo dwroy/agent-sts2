@@ -1,6 +1,6 @@
 /**
- * THIEF_COST (Dai 2026-10-02, docs/thief.md §7): what the card a Thieving Hopper stole is worth, in HP, so the rollout
- * can rank "kill it before it leaves" against HP like a potion's cost. Dai's conversion, with B3's whole-fight boss
+ * THIEF_COST (Roy 2026-10-02, docs/thief.md §7): what the card a Thieving Hopper stole is worth, in HP, so the rollout
+ * can rank "kill it before it leaves" against HP like a potion's cost. Roy's conversion, with B3's whole-fight boss
  * simulator (build-sim.ts, boss-start.ts; docs/boss-sim.md §12):
  *   - this act's boss fought to the end from the synthetic pre-fight start, three decks on the same seeds (common random
  *     numbers): the deck WITH the card at the boss-entry HP (the base), WITHOUT it at that HP, and WITH it at
@@ -15,7 +15,7 @@
  * not positive: the boss is won, or lost, at either HP) gives no conversion at all: no value, no cost, and the facts
  * say why. A value is clamped to [0, THIEF_CARD_CAP_HP] (docs/thief.md §7: why that cap).
  * The entry HP is the B3 one (build-sim-facts routeEntry: the act's route plan projected to the boss from the HP now,
- * else the HP now). A low-trust boss (boss-trust.json, B3's list) is computed all the same and marked: Dai decides.
+ * else the HP now). A low-trust boss (boss-trust.json, B3's list) is computed all the same and marked: Roy decides.
  * Computed once per Hopper fight as soon as its theft is known (loop.ts, THIEF_CARD_BUDGET_MS), kept in screen memory.
  * Never throws: an error is a value with status "error" and no HP.
  */

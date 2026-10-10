@@ -273,7 +273,7 @@ Obscura and Ovicopter are already known (see the end of this note).
 
 **Components:** the solver has no gold or card value. `HEIST` gets the 0.8 cut. `SWIPE` and `ESCAPE_ARTIST` are whitelisted with no effect (`combat-plan.ts:58-60`). No `POWER_NOTES` entry.
 
-**Fix / for Dai:** add a kill bonus (gold/25, or the stolen card's value) while an enemy has `HEIST`/`SWIPE` and shows `FLEE`/`ESCAPE`, and tell Jev. The Fat Gremlin has 14-17 HP and arrives stunned for one turn.
+**Fix / for Roy:** add a kill bonus (gold/25, or the stolen card's value) while an enemy has `HEIST`/`SWIPE` and shows `FLEE`/`ESCAPE`, and tell Jev. The Fat Gremlin has 14-17 HP and arrives stunned for one turn.
 
 ### 12. Relic triggers and our own in-combat powers not read — `bug`, severity LOW-MEDIUM
 

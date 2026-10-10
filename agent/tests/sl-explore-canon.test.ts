@@ -220,7 +220,7 @@ describe("rows from before the record (no turns): rebuilt from their summary whe
 
 /**
  * 08ec8f9's views of the boards (tests/sl-explore-canon-views.ts offViews, captured on 08ec8f9).
- * 2026-10-04 (v4-asc-facts, Dai: experience by ascension): the UK7R boards (A8 and up) whose question carries a counted record
+ * 2026-10-04 (v4-asc-facts, Roy: experience by ascension): the UK7R boards (A8 and up) whose question carries a counted record
  * (a Jev hint's or a lesson's {CRAB_KILLS_EN}, {QUEEN_AMALGAM_EN}, {CRAB_KILL_ORDER}, …) re-pinned: those records now give A8's fights
  * and A9's apart (boss-clock recordBand). With the band switched off (RECORD_BAND_FROM above every ascension) every
  * earlier digest held: nothing else in the decision moved.

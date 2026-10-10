@@ -12,7 +12,7 @@ import { RunJournal } from "../src/memory/run-journal.js";
 import { fightLessons } from "../src/reflex/combat-plan.js";
 import { baseState, combatPayload, runPayload, testKnowledge } from "./scenarios.js";
 
-/** The active lessons' total length in characters (Dai 2026-10-04: 60k; about 40k at 198 entries then). */
+/** The active lessons' total length in characters (Roy 2026-10-04: 60k; about 40k at 198 entries then). */
 const EXPERIENCE_LESSON_CHAR_BUDGET = 60_000;
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -176,7 +176,7 @@ describe("experience.json", () => {
     }
     const active = file.entries.filter((entry) => entry.status === "active");
     expect(active.length).toBeGreaterThanOrEqual(80);
-    // Dai 2026-10-04: a size budget instead of the old 200-entry cap. The V4 brain's knowledge prefix carries every active
+    // Roy 2026-10-04: a size budget instead of the old 200-entry cap. The V4 brain's knowledge prefix carries every active
     // lesson for the run's ascension, so the cost is their length (every question pays it), not their count.
     const chars = active.reduce((sum, entry) => sum + entry.lesson.length, 0);
     expect(chars).toBeLessThanOrEqual(EXPERIENCE_LESSON_CHAR_BUDGET);

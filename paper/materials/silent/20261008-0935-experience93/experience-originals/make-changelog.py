@@ -88,6 +88,6 @@ section('切片大小')
 para('- 固定种子20260929，截至切点state.run.character_id=SILENT最高A9/A10，每阶20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP，共240配对，每格20独立时点。池/时点sample-manifest.json；CHARACTER=silent调用官方knowledge-slice.ts，前后冻结同一common/silent/outcome数据，不混旧批中位。')
 if (O/'slice-summary.json').exists():
  s=json.load(open(O/'slice-summary.json'));table(['进阶/界面','改前中位/最大','改后中位/最大','配对增量中位'],[[r['sample'],f'{r["before_median"]}/{r["before_max"]}',f'{r["after_median"]}/{r["after_max"]}',r['paired_median']] for r in s['rows']]);para('- 整体切片：'+str(s['overall'])+'。')
-para('- active169/正文51016，high101/med43/low25；A8适用158条47012字、A9 159条47296字、A10 166条49880字。需要Dai定：无。受阻据实交运维续办，保留失败/原稿/日志/工作树，不冒报上线。')
+para('- active169/正文51016，high101/med43/low25；A8适用158条47012字、A9 159条47296字、A10 166条49880字。需要Roy定：无。受阻据实交运维续办，保留失败/原稿/日志/工作树，不冒报上线。')
 para('原帧/脚本/初稿/机制/提案/账本/测试/切片/合入回执：'+str(O)+'；报告时间'+stamp+'。')
 (O/'changelog-section.md').write_text('\n'.join(L));(O/'changelog-title.txt').write_text(title+'\n');print('本节',len(L),'行',len('\n'.join(L)),'字符')

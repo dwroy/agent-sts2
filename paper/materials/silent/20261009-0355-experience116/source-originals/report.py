@@ -92,7 +92,7 @@ lines += ['', '### 切片大小', '',
 for b in SS['rows']:
     lines.append(f'| {b["sample"]} | {b["before_median"]}/{b["before_max"]} | {b["after_median"]}/{b["after_max"]} | {b["paired_median"]} |')
 lines += ['', f'- 整体中位{SS["before_median"]}→{SS["after_median"]}（{SS["after_median"]-SS["before_median"]:+}字），配对差中位{SS["paired_median"]}；最大{SS["before_max"]}→{SS["after_max"]}，单片最多增加{SS["increase_max"]}、最少变化{SS["decrease_min"]}。',
-    f'- active{U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8 {U["asc"]["8"]}；A9 {U["asc"]["9"]}；A10 {U["asc"]["10"]}。无预算压缩/合并/退役，未改测试预算；需要Dai定：无。', '', '原始证据、复算、核验/失败初稿、提案/CLI、切片、测试和合入回执均留' + str(O) + '。', '']
+    f'- active{U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8 {U["asc"]["8"]}；A9 {U["asc"]["9"]}；A10 {U["asc"]["10"]}。无预算压缩/合并/退役，未改测试预算；需要Roy定：无。', '', '原始证据、复算、核验/失败初稿、提案/CLI、切片、测试和合入回执均留' + str(O) + '。', '']
 body = '\n'.join(lines)
 (O / 'changelog-section.md').write_text(body)
 (O / 'report.md').write_text('# 经验库更新报告\n\n' + body)

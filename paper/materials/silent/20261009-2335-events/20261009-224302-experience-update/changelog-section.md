@@ -717,6 +717,6 @@ SL天然对照：按同run同floor去重，多次尝试逐阶分列；共同抽�
 | sample-a9-shop | 3999.5/5191 | 3980.5/5189 | -19.0 |
 
 - 整体中位2768.5→2764.0（-4.5字），配对差中位-8.0；最大5469→5433，单片差范围[-88, 263]。
-- active201、总字符49370，置信度{'low': 26, 'high': 129, 'med': 46}；A8 {'entries': 187, 'chars': 45685}，A9 {'entries': 188, 'chars': 45969}，A10 {'entries': 199, 'chars': 48542}。需要Dai定：无。
+- active201、总字符49370，置信度{'low': 26, 'high': 129, 'med': 46}；A8 {'entries': 187, 'chars': 45685}，A9 {'entries': 188, 'chars': 45969}，A10 {'entries': 199, 'chars': 48542}。需要Roy定：无。
 
 全部原件、失败日志、前后经验/切片、数据脚本、历史SL对照、CLI/提案、测试和合入预检保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-224303-experience-update。

@@ -19,7 +19,7 @@ stamp=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %z'],text=True).strip(
 finish=(f'本节收尾（{stamp}）：源{M["source_commit"]}（exp-silent），定稿第三轮tsc0/vitest0/{files}文件{cases}例，前两稿均215文件2299例通过；收尾补A10标签/8胧光与1雾菇口径及旧含药事实4D4J8USKCPAV归属后重测，非失败或高负载超时重跑。最终经验blob与测试冻结/暂存/提交一致。'
 f'锁内刷新7份知识提交{M["refresh_commit"]}、合前{M["base"]}，知识重叠0/不同blob冲突0；merge-tree预检exit1，唯一冲突paper/materials/decision-log.md。按任务第8节停止，不强解/覆盖；未实际合入、未进入合后测试/上线步骤，live经验仍2026-10-07.11，未新增S1.exp66，无MERGE_HEAD，刷新数据与既有notes脏文件保留。'
 '账本仅CLI/by=learner:experience-update将'+','.join(L['proposed'])+'登记proposed，新增/退役无，覆盖12个经验条目、check0；旧first_run/prior/claim/support/repeat/版本与0217/0218独立observed保持，不写accepted/shipped。'
-'主目录本节和账本只追加、不提交，由调用方归档。全部原日志、抽取/校验/初稿失败及更正/三轮源自测/切片/扫描留learner/runs/20261007-075642-experience-update；handoff-ops.md与完成JSON交调用器experience-done通知运维兜底记录冲突、实际合入并登记版本/shipped，完整外部由调度器补跑。无手写知识/源码/生成器/铁甲知识/新药水规则改动，不重建；不停对局、不运行play、不推送。需要Dai定的知识事项：无。')
+'主目录本节和账本只追加、不提交，由调用方归档。全部原日志、抽取/校验/初稿失败及更正/三轮源自测/切片/扫描留learner/runs/20261007-075642-experience-update；handoff-ops.md与完成JSON交调用器experience-done通知运维兜底记录冲突、实际合入并登记版本/shipped，完整外部由调度器补跑。无手写知识/源码/生成器/铁甲知识/新药水规则改动，不重建；不停对局、不运行play、不推送。需要Roy定的知识事项：无。')
 (O/'changelog-finish.md').write_text(finish+'\n')
 with (O/'gitleaks-finish.log').open('w') as h:
     subprocess.run(['nice','-n','19','/home/dw/.local/bin/gitleaks','dir','--redact','--no-banner',str(O/'changelog-finish.md')],stdout=h,stderr=subprocess.STDOUT,check=True)

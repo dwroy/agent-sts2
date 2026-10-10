@@ -1,5 +1,5 @@
 /**
- * The route review's next_rest facts (Dai 2026-10-03, experience route-replan-on-drop): for the kept route and the
+ * The route review's next_rest facts (Roy 2026-10-03, experience route-replan-on-drop): for the kept route and the
  * routes the answer may switch to, the fights and "?" rooms to the next rest site, whether the stretch passes a
  * shop, the projected HP on arriving there and on entering the route's next elite (median and p75, the route
  * projection unchanged); an alternative clearly worse than the kept route says so: on the later of the two rest floors
@@ -299,7 +299,7 @@ describe("which stretches are listed, on the small fixed map", () => {
     expect(clearlyWorse(at(-1, -10), at(5, -2))).toBe(true);
     expect(clearlyWorse(at(-5, -10), at(-1, -2))).toBe(false);
     expect(clearlyWorse(at(60, 50), at(42, 33))).toBe(false);
-    // Wider margins (Dai to choose): 15% median / 20% p75.
+    // Wider margins (Roy to choose): 15% median / 20% p75.
     expect(clearlyWorse(at(34, 30), at(42, 33), { median: 0.15, p75: 0.2 })).toBe(false);
     expect(clearlyWorse(at(29, 30), at(42, 33), { median: 0.15, p75: 0.2 })).toBe(true);
   });

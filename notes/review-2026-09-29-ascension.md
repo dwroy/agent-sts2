@@ -10,7 +10,7 @@ What is live today, from recent decisions.jsonl and runs.jsonl:
 - FIGHT_PLAN is off. fight-plans.jsonl was last written 2026-09-28T06:31Z and no A9 run has a fight plan.
 
 Severity is one of: **now** (affects play at A9 now), **A10** (breaks or misleads at A10), **cosmetic**.
-Tag is **bug** (code or data error) or **strategy** (a play-policy choice for Dai).
+Tag is **bug** (code or data error) or **strategy** (a play-policy choice for Roy).
 
 Ordered by impact.
 
@@ -55,7 +55,7 @@ Ordered by impact.
 - **Consequence at A10:** the clock can say "gap 0" for boss 1 from full HP, but the run needs boss 1 **and** boss 2 on whatever HP and potions are left. No fact ever says how much HP boss 1 costs or what that leaves for boss 2. The run plan's `boss_prep` and `block_target` target one boss.
   - The act-3 pool in the logs is exactly {QUEEN, TEST_SUBJECT, AEONGLASS} (every act_id 2 boss_id in states.jsonl). So even if the mod does not name the second boss, it is one of the two others.
   - Our record there: A8 act-3 bosses 1 win in 12 (RBJ402 Queen); A9 none reached (SK1U died F45).
-- **Fix (policy for Dai):**
+- **Fix (policy for Roy):**
   - At asc ≥ 10 in act 3, make a two-fight clock. Fight 1 uses its DB turns and loss per turn; the projected HP after it is fight 2's entry HP, with no rest assumed until confirmed.
   - Name the second boss when the mod exposes it, else show the worse of the two remaining act-3 bosses.
   - Put both bosses into `act_boss_clock`, the run plan task ("two bosses back to back"), the route facts (`hp_at_boss` should be the HP needed for both) and the act block.
@@ -69,7 +69,7 @@ Ordered by impact.
   - From A4 the belt has 2 slots (the A9 run shows 2 slots).
   - Lesson potion-save-for-boss: "A9 15 局每局走廊喝 4.6 瓶, boss 里 1.1 瓶, 二幕 boss 进场平均 0.8 瓶".
   - Nothing tells Jev that another boss follows immediately.
-- **Fix:** at A10 F48, say so in potion_context ("boss 1 of 2: the second act-3 boss follows with the HP and potions you leave"). Give boss 1 a POTION_LASTING below 1, or an explicit potion split from the run plan. Dai to choose the split rule.
+- **Fix:** at A10 F48, say so in potion_context ("boss 1 of 2: the second act-3 boss follows with the HP and potions you leave"). Give boss 1 a POTION_LASTING below 1, or an explicit potion split from the run plan. Roy to choose the split rule.
 
 ## 4. After boss 1 the clock calls itself stale and may describe the dead boss [A10 | bug, unconfirmed state]
 - **Where:**
@@ -223,7 +223,7 @@ Ordered by impact.
 
 ## 16. Outcome stats are A8-only [now | strategy, low]
 - **Where:** `tools/build-outcome-stats.py:468` defaults to `--ascension 8`, and `ops/wait-run.sh` / `ops/report.py:258-263` call it without the flag. `experience.ts:350` prints "基线 A8 …". Card/relic/event/rest stats are A8 at A9 and A10.
-- **Decision for Dai:** keep A8 (n=150) as the baseline, or add A9 rows once n allows. It is labelled, so this is not wrong, just not current.
+- **Decision for Roy:** keep A8 (n=150) as the baseline, or add A9 rows once n allows. It is labelled, so this is not wrong, just not current.
 
 ## 17. Hand constants that are right at A9 but are not in the DB [cosmetic | bug (rule)]
 - **Where:**

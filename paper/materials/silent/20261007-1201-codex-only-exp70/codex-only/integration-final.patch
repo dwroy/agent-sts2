@@ -161,8 +161,8 @@ index f9e29e0e..a23f51df 100644
  /**
 + * Production Codex-only recovery retries fresh reads and suspends the current question until this guard passes.
 + *
-  * The codex brain's usage guard (Dai 2026-10-03): the ChatGPT plan's rate-limit windows and credits read from codex
-  * itself, so the brain stops before it eats Dai's weekly Codex window (shared with Dai's own Codex use) and never
+  * The codex brain's usage guard (Roy 2026-10-03): the ChatGPT plan's rate-limit windows and credits read from codex
+  * itself, so the brain stops before it eats Roy's weekly Codex window (shared with Roy's own Codex use) and never
   * spends credits. Measured on codex-cli 0.160.0 (experiments/brain-replay/codex-usage.md).
 @@ -505,7 +507,7 @@ export class CodexUsageGuard {
      }

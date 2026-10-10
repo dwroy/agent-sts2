@@ -1,8 +1,8 @@
 # Codex 用量读取与用量守卫（2026-10-03）
 
-codex-cli 0.160.0，家目录 ~/.codex（Dai 的 ChatGPT 登录，prolite 计划），引擎 src/brain/engines/codex.ts，守卫
+codex-cli 0.160.0，家目录 ~/.codex（Roy 的 ChatGPT 登录，prolite 计划），引擎 src/brain/engines/codex.ts，守卫
 src/brain/engines/codex-usage.ts。起因：`codex exec --json` 的事件流不报限额；4 道基准题把周窗口从 0% 推到 1%，一局
-约 70 次调用约占周窗口 9–26%（每次都付约 155k tokens 的完整提示，缓存不命中）；Dai 自己用 Codex 也走这个账户；
+约 70 次调用约占周窗口 9–26%（每次都付约 155k tokens 的完整提示，缓存不命中）；Roy 自己用 Codex 也走这个账户；
 账户有 500 credits，计划用完后可能自动扣 credits（真钱）。
 
 ## 怎么读
@@ -20,7 +20,7 @@ src/brain/engines/codex-usage.ts。起因：`codex exec --json` 的事件流不�
   （engines/process.ts agentEnv），不带任何 key。
 - 不起也不用共享 daemon：`--disable daemon_auto_start`（另关 hooks、memories、plugins、apps 等，见
   CODEX_USAGE_DISABLED_FEATURES），`-c sqlite_home=… -c log_dir=…` 指到 /tmp/jev-brain-codex-state/usage，
-  `analytics.enabled=false`、`check_for_update_on_startup=false`。读前读后对比进程列表：没有新进程；Dai 登录起的
+  `analytics.enabled=false`、`check_for_update_on_startup=false`。读前读后对比进程列表：没有新进程；Roy 登录起的
   managed daemon（`app-server --listen unix:// --managed-daemon`）没碰，一直在跑。
 - 20 s 没读完就杀进程组（负 PID）；回答后 3 s 还不退也杀。
 - 协议的类型定义可以离线生成：`codex app-server generate-ts --out DIR`（不需要登录），见 v2/GetAccountRateLimitsResponse.ts、
@@ -59,7 +59,7 @@ src/brain/engines/codex-usage.ts。起因：`codex exec --json` 的事件流不�
 - `account/rateLimits/read` 的 `supportsLunaReserve`（用完后由后端自动切到 Luna 模型的实验）不发，默认 false。
 - 账户层面的设置（ChatGPT Settings > Usage 的自动充值等）不动。
 - 结论：没有安全、只影响我们的本地开关可用。守卫在 80% 停（离 100% 留 20 个点），并且一见 credits 在用就停。
-  剩余风险：两次读之间（默认最多 3 次调用或 10 分钟）若 Dai 自己把窗口用到 100%，这几次调用可能扣 credits；
+  剩余风险：两次读之间（默认最多 3 次调用或 10 分钟）若 Roy 自己把窗口用到 100%，这几次调用可能扣 credits；
   下一次读时余额下降就会让 codex 停下。
 
 ## 守卫

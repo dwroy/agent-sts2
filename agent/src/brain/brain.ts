@@ -77,7 +77,7 @@ export function createEngine(name: EngineName, config: AppConfig, deepseek: Deep
       // Each codex run's trace (its event timeline, retries, stderr tail; no prompt or answer) next to brain.jsonl.
       return new CodexEngine({ settings, codex: config.brain.codex, traceFile: codexTracePath(config), ...(options.note ? { note: options.note } : {}) });
     case "dsh":
-      // Named in the contract, to come with the offline learner (Dai 2026-09-29).
+      // Named in the contract, to come with the offline learner (Roy 2026-09-29).
       throw new Error(`brain engine ${name} is not implemented yet (implemented: deepseek, claude, codex)`);
   }
 }

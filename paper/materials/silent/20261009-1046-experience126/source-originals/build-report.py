@@ -89,7 +89,7 @@ if merge.get('merged') is None:lines.append('- 未合入，待调用方/运维�
 lines+=['','### 切片大小','', '- 固定种子20260929，从截至本局silent状态抽最高两阶A9/A10各20状态×6界面，共240配对，各池足20。官方knowledge-slice.ts用CHARACTER=silent；冻结common/silent其他知识，只切前后experience，sample-manifest保存各池/原时间戳。','', '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for x in S['rows']:lines.append(f'| {x["sample"]} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["paired_median"]} |')
 lines+=[ '', f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["after_median"]-S["before_median"]:+}字），配对差中位{S["paired_median"]}，最大{S["before_max"]}→{S["after_max"]}；单片差{S["diff_min"]}至{S["diff_max"]}。',
- f'- active {U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8 {U["applicable"]["8"]}，A9 {U["applicable"]["9"]}，A10 {U["applicable"]["10"]}。无合并/退役/压缩，需要Dai定：无。', '', f'全部子集/偏移、旧基线复算、原帧机制、初稿/失败、CLI提案、切片/测试/合入预检和报告保留{O}。','']
+ f'- active {U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8 {U["applicable"]["8"]}，A9 {U["applicable"]["9"]}，A10 {U["applicable"]["10"]}。无合并/退役/压缩，需要Roy定：无。', '', f'全部子集/偏移、旧基线复算、原帧机制、初稿/失败、CLI提案、切片/测试/合入预检和报告保留{O}。','']
 text='\n'.join(lines)
 (O/'changelog-section.md').write_text(text)
 (O/'report.md').write_text(text)

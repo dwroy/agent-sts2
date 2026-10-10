@@ -83,7 +83,7 @@ lines+=['- '+('未实际合入；不造eval上线版本/规则上线通知。按
 '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for r in SS['rows']:lines.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
 s=SS['overall'];lines+=['',f'- 整体中位{s["before_median"]}→{s["after_median"]}（{s["median_change"]:+}字）；配对差中位{s["paired_median"]}；最大{s["before_max"]}→{s["after_max"]}，单片最大增加{s["max_increase"]}字。',
-f'- active{U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8适用{U["asc"]["8"]}；A9适用{U["asc"]["9"]}；A10适用{U["asc"]["10"]}。无需压缩/合并/预算调整，需要Dai定的规则：无。','',
+f'- active{U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8适用{U["asc"]["8"]}；A9适用{U["asc"]["9"]}；A10适用{U["asc"]["10"]}。无需压缩/合并/预算调整，需要Roy定的规则：无。','',
 '证据、脚本、提案、CLI、测试、原失败日志/初稿、合入回执及报告：'+str(O)+'。']
 section='\n'.join(lines)+'\n';(O/'changelog-section.md').write_text(section);(O/'report.md').write_text(section)
 if '--append' in sys.argv:

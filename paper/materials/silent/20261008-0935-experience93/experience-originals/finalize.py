@@ -38,6 +38,6 @@ lines=['## 经验库更新回报','',f'- 版本：2026-10-08.9 → 2026-10-08.10
 f'- 测试：tsc 0；vitest {T["files"]}文件/{T["cases"]}用例/0，无失败重跑；最终经验定向1文件/10例/0。',
 '- 切片大小：中位下降65.5字，配对增量中位−2字；最大5290字，单片最多增加358字。',
 '- 学习账本：新增 '+','.join(added)+'；改成 proposed '+','.join(proposed)+'；退役无；ledger.py check 0。',
-'- 需要 Dai 定的事：无。'+('live有'+str(len(M.get('precheck_conflicts',[])))+'处并行记录冲突，未覆盖，待运维续办。' if not M.get('merged') else ''),
+'- 需要 Roy 定的事：无。'+('live有'+str(len(M.get('precheck_conflicts',[])))+'处并行记录冲突，未覆盖，待运维续办。' if not M.get('merged') else ''),
 '',chr(96)*3+'json',json.dumps(result,ensure_ascii=False,indent=2),chr(96)*3,'']
 (O/'report.md').write_text('\n'.join(lines));print('只追加一节；旧前缀不变；账本check0；报告已保存')

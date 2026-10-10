@@ -1,5 +1,5 @@
 /**
- * B3 (Dai 2026-09-30): each option of a deck-building question against the act boss, by whole fight simulation. The
+ * B3 (Roy 2026-09-30): each option of a deck-building question against the act boss, by whole fight simulation. The
  * current deck and every option's deck (and HP) run on the same seeds (common random numbers) from the synthetic
  * pre-fight start (boss-start.ts), each under every kill order with its best kept (as boss-sim runBestOrder), within a
  * deadline (build-sim-pool.ts). Per option: the calibrated win rate (the "pre" Platt map, boss-sim BOSS_SIM_PLATT), its
@@ -15,7 +15,7 @@ import type { DeckSimRunner } from "./build-sim-pool.js";
 export const BUILD_SIM_SAMPLES = 1000;
 /** Seed of the question's samples (the same for every option: common random numbers). */
 export const BUILD_SIM_SEED = 7;
-/** The simulation's share of a question's time budget (Dai: 10-15 s more per deck-building question). */
+/** The simulation's share of a question's time budget (Roy: 10-15 s more per deck-building question). */
 export const BUILD_SIM_DEADLINE_MS = 11_000;
 /**
  * A boss with a kill order to choose (the Kin, the Queen, the Crab): the current deck runs this many samples under the

@@ -92,6 +92,6 @@ f'- 定稿源固定沙箱tsc0/vitest0，{T["files"]}文件/{T["cases"]}用例；
 '### 切片大小','',
 '- 固定种子20260929，截至本次56189帧静默状态池，按state.run.character_id=SILENT抽最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP，共240配对、真实界面分别抽20。官方knowledge-slice.ts/CHARACTER=silent/setExperienceForTests；只换experience、其他结果表冻结。manifest/逐片原文保留，不冒称V4全部知识前缀。','','| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for x in S['rows']:lines.append(f'| {x["sample"].removeprefix("sample-")} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["median_delta"]} |')
-lines+=['',f'- 配对增量中位{S["median_delta"]}、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active133→135、47737→49258字，高65中41低29；A8 128条46151字，A9 129条46450字，A10 130条47030字。需要Dai定：无。','']
+lines+=['',f'- 配对增量中位{S["median_delta"]}、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active133→135、47737→49258字，高65中41低29；A8 128条46151字，A9 129条46450字，A10 130条47030字。需要Roy定：无。','']
 (O/'changelog-section.md').write_text('\n'.join(lines))
 print(title,T)

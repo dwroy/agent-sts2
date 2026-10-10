@@ -126,7 +126,7 @@ lines += ['', '### 切片大小', '',
 for r in rows:
     lines += [f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |']
 lines += [f'- 整体中位{sl["before_median"]}→{sl["after_median"]}（{sl["median_change"]:+}字），配对差中位{sl["paired_median"]}，最大{sl["before_max"]}→{sl["after_max"]}；单片最少{sl["min_change"]}、最多增加{sl["max_growth"]}。',
-    f'- active192，正文{U["after"]["chars"]}字符，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。没有预算合并/退役，需要Dai定：无。', '',
+    f'- active192，正文{U["after"]["chars"]}字符，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。没有预算合并/退役，需要Roy定：无。', '',
     '原始子集/偏移、复算/初稿失败、核验、提案/CLI、切片、测试、合入预检/结果、报告全部保留' + str(O) + '。', '']
 section = '\n'.join(lines).replace('同無弱', '同无弱').replace('同事并已有', '同一件事并已有')
 (O / 'changelog-section.md').write_text(section)
@@ -142,7 +142,7 @@ short += ['- 改了的手写知识：无。',
     f'- 测试：tsc退出{T["tsc"]}；vitest {T["files"]}文件/{T["cases"]}用例/退出{T["vitest"]}；' + ('重跑过。' if T['rerun'] else '未重跑。'),
     f'- 切片大小：中位{sl["before_median"]}→{sl["after_median"]}（{sl["median_change"]:+}字）；最大{sl["after_max"]}字。',
     '- 学习账本：新增无；改成proposed ' + ','.join(L['proposed']) + '；退役无；ledger.py check退出0。',
-    '- 需要 Dai 定的事：无。', '']
+    '- 需要 Roy 定的事：无。', '']
 result = dict(task='experience-update', version='2026-10-09.11', commit=source, merged=Z.get('merged'), added=0, updated=9, retired=0, active=192, mechanisms=[r['name'] for r in F], tests=dict(tsc=T['tsc'], vitest=T['vitest'], cases=T['cases']), ledger=dict(added=L['added'], proposed=L['proposed'], retired=L['retired'], check=0), code_proposals=P, implementation_domains=['combat', 'potion', 'sl', 'terminal'], report=str(O / 'report.md'))
 (O / 'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
 (O / 'report.md').write_text('\n'.join(short) + '\n```json\n' + json.dumps(result, ensure_ascii=False) + '\n```\n\n' + section)

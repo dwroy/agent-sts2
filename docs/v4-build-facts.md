@@ -44,7 +44,7 @@
 | `your_run_plan` | 大脑自己写的整局计划 | 大脑 |
 | `outcome_stats_basis` | 下面各 `*outcome_stats` 字段的口径、数据文件、生成时间、进阶、总局数、各幕基线通过率（A9 起另有 A8 的基线） | 日志库（outcome-stats.json） |
 
-`*outcome_stats` 的格式（knowledge/outcome-facts.ts），全部原样来自 outcome-stats.json，口径未改。2026-10-04 起（Dai：按进阶分开统计）outcome-stats.json 每个进阶一张表（`by_ascension`：A8、A9，以及有了局的更高进阶；每张表只数这个进阶的局，基线也是这个进阶的），本局读自己进阶的表（knowledge/outcome-tables.ts）：
+`*outcome_stats` 的格式（knowledge/outcome-facts.ts），全部原样来自 outcome-stats.json，口径未改。2026-10-04 起（Roy：按进阶分开统计）outcome-stats.json 每个进阶一张表（`by_ascension`：A8、A9，以及有了局的更高进阶；每张表只数这个进阶的局，基线也是这个进阶的），本局读自己进阶的表（knowledge/outcome-tables.ts）：
 - A8、A8 以下、不知道进阶：读 A8 的表，文字和以前逐字相同（以前的单表文件也照旧读）；
 - A9 起：读本局进阶的表；某一行不足 5 局、而 A8 的同一行够 5 局时（卡牌按「拿了 / 给了没拿」一对看，A8 在 A9 不足的那一边够 5 局），后面括号里另附 A8 的那一行：`（A9 不足5局，另附 A8：…）`，不合并成一个数；A8 也不足 5 局的不附（起始牌从不出现在卡牌奖励里，「给了没拿」各进阶都是空的）；basis 里写 A9 的基线和 A8 的基线；
 - 更高进阶同理，附最近的、够 5 局的低进阶（到 A8 为止）；
@@ -144,7 +144,7 @@ RUN_PLAN=v1 的整局计划（strategy/run-plan.ts）什么时候到期没变：
 ## 3. 选项有没有在给大脑之前被删
 
 查过的地方（BUILD_DECIDER=deepseek，默认）：
-- **没有按分数截断**：大脑路径（pick.ts `deepseekPick`）一直是全部选项；`codeMargin`（分差大就代码直接决定）、`maxModelOptions`（只给前 N 个）、选牌的 `SKIP_BAR` 过滤只在回退（Jev/代码）路径上，大脑问题不经过它们。默认配置下大脑失败后不会再拿到回退题面（loop.ts：刚失败的问题不再升级给 DeepSeek，预算用完也不升级）。BUILD_DECIDER=jev（非默认的旧基线）时 DeepSeek 作为 Jev 的升级对象，看到的是 Jev 的题面（前 N 个 + 代码分数），未改，留给 Dai 定。
+- **没有按分数截断**：大脑路径（pick.ts `deepseekPick`）一直是全部选项；`codeMargin`（分差大就代码直接决定）、`maxModelOptions`（只给前 N 个）、选牌的 `SKIP_BAR` 过滤只在回退（Jev/代码）路径上，大脑问题不经过它们。默认配置下大脑失败后不会再拿到回退题面（loop.ts：刚失败的问题不再升级给 DeepSeek，预算用完也不升级）。BUILD_DECIDER=jev（非默认的旧基线）时 DeepSeek 作为 Jev 的升级对象，看到的是 Jev 的题面（前 N 个 + 代码分数），未改，留给 Roy 定。
 - **按合法性去掉、保留**：锁住的事件选项、逐步商店里买不起的物品（仍列在 facts.shop_stock，一次决策里全部列出并标 affordable_now）、禁用的休息选项、已选中或已升级的牌、只有一个合法选项时直接执行。
-- **按确定事实去掉、保留，待 Dai 定**：事件里「一定会死」的选项（游戏标 will_kill_player，或扣血 ≥ 当前血量），列在 facts.left_out_as_lethal。
+- **按确定事实去掉、保留，待 Roy 定**：事件里「一定会死」的选项（游戏标 will_kill_player，或扣血 ≥ 当前血量），列在 facts.left_out_as_lethal。
 - 宝箱在拿遗物之前没有「跳过」动作（日志里 CHEST 屏只有 choose_treasure_relic），不是被删。

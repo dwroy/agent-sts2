@@ -630,7 +630,7 @@
 - live流程：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新提交69a7b4414cdbaade679427d96af1a2cbbd04062d；合前69a7b4414cdbaade679427d96af1a2cbbd04062d；实际合入None。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -671,6 +671,6 @@
 | sample-a9-shop | 3550.0/4824 | 3570.0/4776 | 13.0 |
 
 - 整体中位2529.0→2569.0，涨40.0字；配对差中位13.0，最大4824→4776，单片最多增67。
-- active176/正文48968；high108/med44/low24；A8适用164条/44642字、A9适用165条/44926字、A10适用173条/47876字。未合并/退役，22条替换/压缩案例净减233字，不改预算。需要Dai定：无。
+- active176/正文48968；high108/med44/low24；A8适用164条/44642字、A9适用165条/44926字、A10适用173条/47876字。未合并/退役，22条替换/压缩案例净减233字，不改预算。需要Roy定：无。
 
 原帧/复算/机制/提案/账本CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-170939-experience-update；报告时间2026-10-08 17:40:26 +0800。

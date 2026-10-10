@@ -616,7 +616,7 @@
 - live流程：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新提交None；合前2977ebba7536c274b2bd180d3a87bd1607115d82；实际合入None。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -657,6 +657,6 @@
 | sample-a9-shop | 3570.0/4776 | 3570.0/4776 | 0.0 |
 
 - 整体中位2569.0→2505.0，变化-64.0字；配对差中位-16.0，最大4776→4776，单片最多增257。
-- active178/正文49040；high109/med45/low24；A8适用166条/44761字、A9适用167条/45045字、A10适用175条/47948字。无合并/退役，更新案例净压缩366字、新条目438字，需Dai定：无。
+- active178/正文49040；high109/med45/low24；A8适用166条/44761字、A9适用167条/45045字、A10适用175条/47948字。无合并/退役，更新案例净压缩366字、新条目438字，需Roy定：无。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update；报告时间2026-10-08 18:20:32 +0800。

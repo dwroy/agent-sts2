@@ -11,7 +11,7 @@
 - 没修的：Codex 大脑缓存命中低及实测对比 — 证据不足：离线禁止真实LLM/网络；未确定固定根因，保留原行为；mod 请求超时约10–13秒自愈 — 证据不足：缺固定可复现根因，不能改游戏/mod或据短暂超时报卡死；boss 整场模拟性能及 CPU 争用 — 太大：独立性能分析；未降低预算、精度或排除测试；出牌、药水、SL、终局、路线、休息策略项 — 策略类：沿现有学习者代码提案交独立 strategy-proposal；已有授权不需新增审批，缺数据保持；B4/B5 自动化及 A10 双boss/四处补强 — 独立已授权功能：既有专项继续，普通纯bug批次不重复实现或派发；silent-0237 神化状态传播 — 独立提案已待办：silent-proposal-89354805ee4d7e77、silent-proposal-283a164780d11e69；当前源码仍缺传播，沿共享租约不重复派发
 - 测试：各源及合后 tsc退出码0；合后 vitest 239文件/2511用例/退出码0。首轮临时.ts初稿被check-imports扫描导致失败，保留并更名.draft；4worker下rollout-live.test.ts:253排名等价用例120秒超时，2worker整套重跑通过（79.549秒），其后每提交前及合后检查均通过。
 - 合入：f9db52c1ed7af16d019e32528953e5ffcc8e08f0；已测代码合并 0d586e685f4f683ff7de4a7c3eee0717efa16a56，版本 S1.fix45，合前知识刷新 4ab2a3399413e24dd66e3ec3957e8a29001e7b90 及全部并行记录保留。
-- 需要 Dai 定的事：无。
+- 需要 Roy 定的事：无。
 
 ```json
 {
@@ -124,7 +124,7 @@
 - 首轮audit-parser-sandbox.log失败、audit-parser-sandbox-retry.log的4worker超时、retry2成功均保持，不改写旧失败。所有临时初稿更名.draft，未增加排除、放宽断言或改变生产预算。
 - live先在锁内提交刷新665de446d6d3b0e62e3817755e4f38c0765391e4；初次因预存生成角色backtest停止未合代码，随后并行运维自行保存；未编辑其文件。最终锁内先保存九份最新刷新为 4ab2a3399413e24dd66e3ec3957e8a29001e7b90。最初记录预检冲突及多轮50秒锁等待保持，最终锁内刷新重叠检查、正式合并、原沙箱检查和上线记录按原流程完成，不停对局、不运行play。
 - 实际合并/检查原件：live-pre-merge.txt、live-merge.log、live-code-merge.txt、live-sandbox.log、live-release.json；刷新/上线gitleaks日志保存。未改知识生成脚本，不需要重建数据。
-- 代码提案 silent-proposal-64053b2a68241a20, silent-proposal-461611b6b36e2d4c只经根code_proposals.py CLI登记，implemented_commit为实际live祖先源码；不代替账本shipped。来源fix-batch、链接strategy-proposal、领域combat。根notes/for-dai.md和ops/inbox-dev.md已同时追加旧/新行为、证据/账本/任务、预期及回退，运维据完成事件核上线并CLI shipped；调度器另补完整外部tsc/vitest。
+- 代码提案 silent-proposal-64053b2a68241a20, silent-proposal-461611b6b36e2d4c只经根code_proposals.py CLI登记，implemented_commit为实际live祖先源码；不代替账本shipped。来源fix-batch、链接strategy-proposal、领域combat。根notes/for-roy.md和ops/inbox-dev.md已同时追加旧/新行为、证据/账本/任务、预期及回退，运维据完成事件核上线并CLI shipped；调度器另补完整外部tsc/vitest。
 
 已修条目与来源提交（不重复修）
 

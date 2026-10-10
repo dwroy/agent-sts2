@@ -1,8 +1,8 @@
 /**
  * TARGET_ASCENSION: the ascension character select holds the run at (hand/screens/misc.ts planCharacterSelect).
  *
- * - A number (Dai 2026-09-28: stay on A8 for 10 runs even after a win): that level, whatever the game offers by default.
- * - "climb" (Dai 2026-10-04, the Silent from A0): per character, one above the highest ascension that character has won
+ * - A number (Roy 2026-09-28: stay on A8 for 10 runs even after a win): that level, whatever the game offers by default.
+ * - "climb" (Roy 2026-10-04, the Silent from A0): per character, one above the highest ascension that character has won
  *   (logs/runs.jsonl `victory` rows of its `character`, any win: first try or after SL), A0 before its first win; capped
  *   at the highest the game offers (character select's max_ascension, when it shows one). A row with no `character` is
  *   an Ironclad run (every run before the field).

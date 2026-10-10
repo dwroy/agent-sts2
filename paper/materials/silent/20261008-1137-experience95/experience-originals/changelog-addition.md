@@ -614,7 +614,7 @@
 - live实际合入：None；锁内刷新提交5fbc51f180bd63067a9b98d951c89944970544e6、合前5fbc51f180bd63067a9b98d951c89944970544e6；刷新知识重叠为空。整分支预检20处并行记录冲突，按任务停止、不实际合并/硬解，保留刷新及原notes/fight-value-backtest-silent.md未提交改动。合后测试未执行，不造上线decision/eval版本或Roy规则通知。源码提交fbf45077466b57210ed1c5377a11896384bbeab0及完成事件交运维兜底。
 
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -654,6 +654,6 @@
 | sample-a9-shop | 4124.0/4969 | 4157.0/4982 | 13.5 |
 
 - 整体切片中位2912.0→2916.0、增4.0字；配对差额中位+13.0；最大5170→5197，单切片最多增40字。
-- active173/正文50115，high104/med43/low26；A8适用162条46155字、A9适用163条46439字、A10适用170条49023字。需要Dai定：无；合入受并行记录冲突阻塞，由运维按源提交兜底，不需要新增知识审批。
+- active173/正文50115，high104/med43/low26；A8适用162条46155字、A9适用163条46439字、A10适用170条49023字。需要Roy定：无；合入受并行记录冲突阻塞，由运维按源提交兜底，不需要新增知识审批。
 
 本批原帧/复算/机制/提案/CLI/测试/切片/合入冲突回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-111006-experience-update；报告时间2026-10-08 11:34:25 +0800。

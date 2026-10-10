@@ -61,7 +61,7 @@ describe("command lines", () => {
     expect(profile).toContain(`"${join(root, ".git")}" = "write"`);
     expect(profile).toContain(`"${join(root, ".git", "hooks")}" = "read"`);
     expect(profile).toContain(`"${join(root, ".git", "config")}" = "read"`);
-    for (const file of SCHEDULER_FILES) expect(profile).not.toContain(`"${join(root, file)}" = "read"`); // Dai 2026-10-05: codex may edit them
+    for (const file of SCHEDULER_FILES) expect(profile).not.toContain(`"${join(root, file)}" = "read"`); // Roy 2026-10-05: codex may edit them
     expect(profile).toContain(`"${join(tmp, "home", ".jev_api_keys")}" = "none"`);
     expect(profile).toContain(`"${join(tmp, "home", ".codex", "auth.json")}" = "none"`);
     expect(profile).toContain('"**/.env" = "none"');
@@ -99,6 +99,9 @@ describe("broker requests", () => {
     expect(validateRequest({ action: "kill", args: ["-9"] }).ok).toBe(false);
     expect(validateRequest({ action: "procs", args: ["x"] }).ok).toBe(false);
     expect(validateRequest("procs").ok).toBe(false);
+    expect(validateRequest({ action: "git-push-main", args: ["a".repeat(40)] }).ok).toBe(true);
+    expect(validateRequest({ action: "git-push-main", args: ["main"] }).ok).toBe(false);
+    expect(validateRequest({ action: "git-push-main", args: ["a".repeat(40), "upstream"] }).ok).toBe(false);
   });
 
   it("every action is implemented by ops/codex-ops-actions.sh and listed by ops/codex-ops-do.sh", () => {

@@ -7,7 +7,7 @@
 - 没修的：缓存命中、mod 超时根因 — 证据不足；可信 boss 模拟性能 — 太大，需专项；策略及 B4/B5、A10 独立功能 — 非本批纯 bug。开工后追加的 rollout 实钟问题待定位，铁蒺藜 `silent-0229` 按队列交下一批。
 - 测试：最终沙箱 tsc 退出码 0；vitest 229 文件 / 2416 用例 / 退出码 0。首轮 `rollout-live.test.ts` 的“code's ranking, options and auto-acts are unchanged by the rollout”超时，单 worker 整套重跑通过；预算、断言和排除名单未改。gitleaks 全通过。
 - 合入：未合入。锁内保留知识刷新提交 `ac321b1f`，仍有 7 项知识数据冲突，按第 5 节停止。运维交接见[handoff-ops.md](/home/dw/Projects/agent-sts2/learner/runs/20261007-141302-fix-batch/handoff-ops.md)。
-- 需要 Dai 定的事：保血、留药、boss 时钟校准方式、路线预估、休息回血或锻造、小偷优先、A10 第二 boss、无色牌估值；本批未改策略。
+- 需要 Roy 定的事：保血、留药、boss 时钟校准方式、路线预估、休息回血或锻造、小偷优先、A10 第二 boss、无色牌估值；本批未改策略。
 
 ```json
 {

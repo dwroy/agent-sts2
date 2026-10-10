@@ -26,7 +26,7 @@
 
 有限实现源码：772b839f8ada31664cb764ea9ad3bdb03da27f64。撤生产接线5败1过；恢复6过。最终原沙箱tsc0/vitest0，247文件2604例，gitleaks0。首次全套唯一失败是scratch备份.ts被导入扫描读入，已改存档后缀，初次失败日志保留。
 
-live三方预检冲突6处：notes/for-dai.md, notes/ops-handoff.md, ops/inbox-dev.md, paper/materials/decision-log.md, paper/materials/experience-changelog-silent.md, paper/materials/learning/ledger.jsonl；刷新数据提交78b43d074147e2b74b6e563afcdbaf9f0033abe7保留，source不是live祖先，未合入/未造版本/未标shipped。
+live三方预检冲突6处：notes/for-roy.md, notes/ops-handoff.md, ops/inbox-dev.md, paper/materials/decision-log.md, paper/materials/experience-changelog-silent.md, paper/materials/learning/ledger.jsonl；刷新数据提交78b43d074147e2b74b6e563afcdbaf9f0033abe7保留，source不是live祖先，未合入/未造版本/未标shipped。
 
 - silent-proposal-89354805ee4d7e77：waiting；账本silent-0237, silent-0238；有限八配对源码772b839f8ada31664cb764ea9ad3bdb03da27f64自测通过但因六记录冲突未合live；本批已实现并固定验证八种观察配对及同方案/后续抽牌传播；完整原提案仍缺触媒升级复合验证、其余卡的真值与持有/施放的统一题面审计，未知修正组合保持未验证，不把有限实现登记为整项完成。
 - silent-proposal-f2bfceddb1898dca：waiting；账本silent-0106, silent-0019, silent-0201；成熟度展示已有45161a51子项；缺同盘同总预算/固定种子的MC先行与分阶段MC曲线及候选稳定性对照，另focus/留药整场实打不存在；不从707ms设新常量。

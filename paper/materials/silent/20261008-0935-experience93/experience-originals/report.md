@@ -14,7 +14,7 @@
 - 测试：tsc 0；vitest 247文件/2604用例/0，无失败重跑；最终经验定向1文件/10例/0。
 - 切片大小：中位下降65.5字，配对增量中位−2字；最大5290字，单片最多增加358字。
 - 学习账本：新增 silent-0284；改成 proposed silent-0012,silent-0013,silent-0019,silent-0020,silent-0021,silent-0046,silent-0125,silent-0149,silent-0277；退役无；ledger.py check 0。
-- 需要 Dai 定的事：无。live有20处并行记录冲突，未覆盖，待运维续办。
+- 需要 Roy 定的事：无。live有20处并行记录冲突，未覆盖，待运维续办。
 
 ```json
 {

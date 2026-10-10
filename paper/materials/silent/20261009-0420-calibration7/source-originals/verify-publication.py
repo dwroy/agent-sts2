@@ -60,7 +60,7 @@ matched = [entry for entry in versions if entry['name'] == state['version']]
 assert len(matched) == 1 and matched[0]['commit'] == state['merged']
 note_key = state['publication']
 notification_counts = {}
-for filename in ['notes/for-dai.md', 'ops/inbox-dev.md']:
+for filename in ['notes/for-roy.md', 'ops/inbox-dev.md']:
     notification_counts[filename] = (ROOT / filename).read_text().count(note_key)
     assert notification_counts[filename] >= 1
 summary = {'source': state['source'], 'merged': state['merged'], 'publication': state['publication'],

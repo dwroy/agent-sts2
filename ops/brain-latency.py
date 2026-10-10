@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Brain call timing by engine (Dai 2026-10-03: time the GPT brain — codex / gpt-6.1-sol — against DeepSeek).
+"""Brain call timing by engine (Roy 2026-10-03: time the GPT brain — codex / gpt-6.1-sol — against DeepSeek).
 
 Reads the log DB's brain rows (llm_calls_raw, src = brain: one row per strategy question and engine, with run_id) through
 tools/logdb/query.py (an incremental sync first unless --no-sync), and codex's own run trace (logs/codex-calls.jsonl).

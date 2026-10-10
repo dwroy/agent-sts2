@@ -1,7 +1,7 @@
 /**
  * SL's certain-death check (docs/sl.md §2): asked only when the loop is about to send `end_turn` in a fight that may
  * be retried. It says "certain" only when every condition below holds; anything it cannot rule out is a veto
- * (Dai 2026-10-02: when unsure, no SL).
+ * (Roy 2026-10-02: when unsure, no SL).
  *
  * Common conditions:
  * - the mod's own flag, combat.end_turn_will_kill_player, is true (the intents against the block up now);
@@ -24,7 +24,7 @@
  *   Attack was played) and Regen reach our HP; with Tungsten Rod, Beating Remnant, Buffer and Intangible the count is
  *   theirs (ownLoss: Buffer's N largest losses and Intangible's 1 a loss at the most they save).
  *
- * Every refusal below stands for something whose effect cannot be bounded from what the board shows (Dai 2026-10-04:
+ * Every refusal below stands for something whose effect cannot be bounded from what the board shows (Roy 2026-10-04:
  * "bound it, or say why it cannot be"); what can be is counted at the most it can save (the most block, the most it may
  * hit the enemies for, the least damage it lets through), and the death judged at that bound
  * (tools/sl-judge-bounds-replay.ts: every logged end_turn board, before and after).
@@ -51,15 +51,15 @@
  * - "least-loss": the turn planner's own verdict on this board, combat/least-loss ending the turn: every simulated
  *   line dies (modelled potions included), no unmodelled potion and no random potion that may live, and the
  *   least-loss line is ending the turn. Vetoed when a playable card draws (the draws are not known), unless
- *   (SL_JUDGE_KNOWN_DRAWS, Dai 2026-10-02) every draw the simulated lines could make is exactly known (`drawsKnown`: the
+ *   (SL_JUDGE_KNOWN_DRAWS, Roy 2026-10-02) every draw the simulated lines could make is exactly known (`drawsKnown`: the
  *   verdict already used the real cards; never the order resting on the added-cards model, draws.ts) and nothing
  *   changes the pile or draws mid-turn unseen.
  *
- * SL_JUDGE_ANY_DRAW (Dai 2026-10-03; docs/sl.md §2.3): the draw veto is also lifted when the death holds for every draw the
+ * SL_JUDGE_ANY_DRAW (Roy 2026-10-03; docs/sl.md §2.3): the draw veto is also lifted when the death holds for every draw the
  * turn could make (anyDrawJudged on the planner's DrawBound): nothing can be drawn, the drawing card's own HP cost kills us
  * before it draws (R764HJWMJQ3V F33 T10, Offering at 5 HP), or every line dies with the whole draw pile in the hand.
  *
- * SL_RELOAD_EARLY (Dai 2026-10-02: "知道必死了就sl", and "我说的是必死 不是推演": a certain death, never a prediction):
+ * SL_RELOAD_EARLY (Roy 2026-10-02: "知道必死了就sl", and "我说的是必死 不是推演": a certain death, never a prediction):
  * the same least-loss verdict taken at the decision that finds it, before its line is played card by card
  * (judgeLeastLossNow), only when nothing this turn is left to chance or to what the planner does not model. Otherwise
  * the end_turn judgment, unchanged.
@@ -125,7 +125,7 @@ export interface JudgeContext {
    */
   revives: readonly string[];
   /**
-   * SL_RELOAD_ON_REVIVE (default off; Dai deciding): a board where only a revive would save us is judged as without it (the
+   * SL_RELOAD_ON_REVIVE (default off; Roy deciding): a board where only a revive would save us is judged as without it (the
    * revive not counted), so a death with nothing else that saves us reloads instead of burning the revive. Absent or false:
    * the revives are played out as above.
    */
@@ -357,7 +357,7 @@ function reviveOutcome(o: {
 
 /**
  * The HP the enemy turn and the held cards take, on our own count (damage through the block and the end-of-turn block,
- * HP loss past them), with Tungsten Rod and Beating Remnant (2026-10-02, Dai: certain death only, so exactly or not at all):
+ * HP loss past them), with Tungsten Rod and Beating Remnant (2026-10-02, Roy: certain death only, so exactly or not at all):
  * - Tungsten Rod (「你每次失去生命时，减少失去的生命值1点」): every HP loss 1 less, in the order the damage comes: the end-of-turn
  *   block first, the held cards' damage in hand order, then each enemy's hits in board order, each one through what is left
  *   of the block; held HP loss each 1 less. On the logged Tungsten Rod turns this is the HP lost 60 times in 62 (the 2 others
@@ -517,7 +517,7 @@ interface EndHit {
 }
 
 /**
- * What hits the enemies after we end the turn and before they act (Dai 2026-10-02: an attacker it kills does not attack, so
+ * What hits the enemies after we end the turn and before they act (Roy 2026-10-02: an attacker it kills does not attack, so
  * the death is not certain): `sources` with their damage (`all` enemies, or one at random), each enemy's poison, or
  * `refuse` when an effect's amount or target is not known. From the logs:
  * - Stone Calendar: 52 to every enemy at the end of turn 7 (its stack counts 1-6 on turns 1-6): W5PTC48C3B1H F33 163 -> 111,
@@ -1148,7 +1148,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // Plating 3, 19 took 10, 9 came; Y3XT9EBS7U8B F45 T4: Plating 4, 18 took 8, 10 came; each less Inferno's 1 at the next
   // turn's start). The other end-of-turn block (Plated Armor, Metallicize, Cloak Clasp, Feel No Pain) never showed the order
   // with Orichalcum in the logs: taken not to stop it either, and so the held cards' damage that may take our block first.
-  // Block counted that does not come only makes fewer deaths certain (Dai: certain only); the rule was "no block at all
+  // Block counted that does not come only makes fewer deaths certain (Roy: certain only); the rule was "no block at all
   // with the end-of-turn block", which could call a death certain that Orichalcum's 6 would have saved.
   if (relics.has("ORICHALCUM") && (block <= 0 || held.damage >= block)) endBlock += ORICHALCUM_BLOCK;
   // Ripple Basin (「如果你在本回合中没有打出过攻击牌，则获得{Block}点格挡」): 4 for each copy at the end of a turn with no Attack
@@ -1609,7 +1609,7 @@ export interface LeastLossNowContext extends Omit<JudgeContext, "label" | "draws
 }
 
 /**
- * SL_RELOAD_EARLY (Dai 2026-10-02: certain death only, never a prediction): the least-loss verdict at the decision that
+ * SL_RELOAD_EARLY (Roy 2026-10-02: certain death only, never a prediction): the least-loss verdict at the decision that
  * finds it, before its line is played. Certain only when every one of these holds; otherwise end_turn judges, unchanged:
  * 1. judgeEndTurn is certain on this board with the least-loss label: the mod's end_turn_will_kill_player, our own count
  *    (Ripple Basin's 4 when no Attack has been played yet, Buffer and Intangible at the most they save: a line that plays

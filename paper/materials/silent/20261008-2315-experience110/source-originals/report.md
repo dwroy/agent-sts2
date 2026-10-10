@@ -22,7 +22,7 @@
 - 测试：tsc 退出0；vitest 251文件/2627用例/退出0；数字勘误后补跑经验测试退出0
 - 切片大小：中位涨2.5字，最大5056字
 - 学习账本：新增无；改成proposed silent-0005,silent-0012,silent-0019,silent-0020,silent-0021,silent-0011,silent-0027,silent-0046,silent-0084,silent-0142,silent-0158,silent-0047,silent-0063,silent-0018,silent-0117,silent-0009,silent-0243,silent-0312；退役无；ledger.py check退出0
-- 需要Dai定的事：无；合入冲突按任务停止，待调用方/运维兜底。
+- 需要Roy定的事：无；合入冲突按任务停止，待调用方/运维兜底。
 
 ```json
 {"task": "experience-update", "version": "2026-10-08.27", "commit": "64ed5d5c2ec47d854f41958111d5f746d8916dad", "merged": null, "added": 1, "updated": 17, "retired": 0, "active": 186, "mechanisms": ["灵动步法 — 步法普通/升级建立2/3敏捷，后续每张挡牌兑现。 — 82支持/0反例 — R3AJCGQGGMR4", "脆弱逐张牌挡 — 脆弱逐张折减牌挡，被动挡另核。 — 29支持/0反例 — R3AJCGQGGMR4", "力量与敏捷 — 力量逐击加伤，敏捷逐张加牌挡，弱与易伤另核。 — 141支持/0反例 — R3AJCGQGGMR4", "能力启动与收益兑现 — 观察：取得能力、实际建立、收益兑现与整战结果分核，不由数量推输出闭环。 — 140支持/0反例 — R3AJCGQGGMR4", "毒雾 — 毒雾普通/升级建立2/3层，后续玩家轮初补毒。 — 71支持/0反例 — R3AJCGQGGMR4", "触媒 — 触媒增加毒结算次数，不倍增毒层；普通/升级建1/2且不即时施毒。 — 54支持/0反例 — R3AJCGQGGMR4", "尖啸 — 尖啸临时降力按攻击段兑现，次轮恢复须重核。 — 68支持/0反例 — R3AJCGQGGMR4", "涂毒 — 涂毒实建后未挡攻击逐击施毒，施毒不等毒伤。 — 8支持/0反例 — R3AJCGQGGMR4", "永恒羽毛 — 永恒羽毛实际到营火才回血，与之后休息/锻造分账。 — 10支持/0反例 — R3AJCGQGGMR4", "意外光滑的石头 — 意外光滑的石头实见开场1敏捷，与步法叠加，收益由随后牌挡兑现。 — 11支持/0反例 — R3AJCGQGGMR4", "奥利哈钢 — 奥利哈钢已见结束回合零挡补6，已有挡不另加6。 — 3支持/0反例 — R3AJCGQGGMR4", "爬行动物饰品 — 观察：爬行动物饰品药水动作建立临时力量，次轮撤临时部分。 — 4支持/0反例 — R3AJCGQGGMR4", "沙坑与攻击双截止 — 沙虫沙坑与攻击分别核，延长不等挡攻击，未来毒不预支。 — 21支持/0反例 — R3AJCGQGGMR4", "同族真实输出与战耗 — 观察：同族毒/能力须实建结算，固定杀序胜因未控。 — 9支持/0反例 — R3AJCGQGGMR4", "跨幕按缺失HP回复 — 已见A9/A10跨幕按缺失HP的80%向下取整回复。 — 32支持/0反例 — R3AJCGQGGMR4", "库存分阶段需求 — 巨斧库存归零恢复不等战斗结束，后体血上限按实况重核，不能固定当前maxHP乘库存。 — 13支持/0反例 — R3AJCGQGGMR4"], "tests": {"tsc": 0, "vitest": 0, "cases": 2627}, "ledger": {"added": [], "proposed": ["silent-0005", "silent-0012", "silent-0019", "silent-0020", "silent-0021", "silent-0011", "silent-0027", "silent-0046", "silent-0084", "silent-0142", "silent-0158", "silent-0047", "silent-0063", "silent-0018", "silent-0117", "silent-0009", "silent-0243", "silent-0312"], "retired": [], "check": 0}, "code_proposals": ["silent-proposal-574d0359cc102419", "silent-proposal-8e5765c4bfbaba5b", "silent-proposal-267864aef9c1f322", "silent-proposal-bc357cb8bcee3b22", "silent-proposal-0337be0b6a07fbdc"], "implementation_domains": ["combat", "potion", "sl", "structure"], "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-224303-experience-update/report.md"}
@@ -651,7 +651,7 @@ REST/SHOP/普通EVENT按节点入口血档关联下一战，多节点可关联�
 - 账本只经CLI：新增[]；proposed silent-0005,silent-0012,silent-0019,silent-0020,silent-0021,silent-0011,silent-0027,silent-0046,silent-0084,silent-0142,silent-0158,silent-0047,silent-0063,silent-0018,silent-0117,silent-0009,silent-0243,silent-0312；retired[]。18账本覆盖18经验，首证/prior/claim/原support/repeat及旧状态/版本历史保持；0312补11旧局支持、0311纯bug不动。实际数据shipped由运维核live完成事件登记，五提案均未实现。
 - live锁内：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新5c3851eca851731f36d4c5e7f06302e58bfbe1ca；合前5c3851eca851731f36d4c5e7f06302e58bfbe1ca；实际合入None。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -692,6 +692,6 @@ REST/SHOP/普通EVENT按节点入口血档关联下一战，多节点可关联�
 | sample-a9-shop | 3723.5/4780 | 3706.5/4785 | 1.0 |
 
 - 整体中位2678.0→2680.5、涨2.5字；配对差中位1.0；最大5051→5056；单片最大增加72。
-- active186，正文50783字符，置信度{'low': 25, 'high': 114, 'med': 47}；A8适用{'entries': 173, 'chars': 46378}；A9适用{'entries': 174, 'chars': 46662}；A10适用{'entries': 183, 'chars': 49691}。无需压缩/合并/预算调整，无需要Dai定的规则。
+- active186，正文50783字符，置信度{'low': 25, 'high': 114, 'med': 47}；A8适用{'entries': 173, 'chars': 46378}；A9适用{'entries': 174, 'chars': 46662}；A10适用{'entries': 183, 'chars': 49691}。无需压缩/合并/预算调整，无需要Roy定的规则。
 
 证据/脚本/切片/提案/CLI/测试/失败日志/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-224303-experience-update；报告时间2026-10-08 23:11:30 +0800。

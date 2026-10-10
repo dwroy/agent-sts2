@@ -173,7 +173,7 @@ def finish(test_exit):
                     f'回退：仅把knowledge/characters/silent/boss-trust.json恢复到{state["before_code"]}中的旧blob，锁内自测/记录新版本，保留所有刷新和历史。'
                     '源及合后沙箱通过，完整外部由调度器补；仅proposed，shipped请运维核实实际发布后经CLI登记。\n')
     run(['date'])
-    for path in (ROOT / 'notes/for-dai.md', ROOT / 'ops/inbox-dev.md'):
+    for path in (ROOT / 'notes/for-roy.md', ROOT / 'ops/inbox-dev.md'):
         with path.open('a') as handle:
             handle.write(notification)
     print(json.dumps(state, ensure_ascii=False), flush=True)

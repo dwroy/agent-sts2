@@ -37,7 +37,7 @@ lines = ['## 修 bug 回报', '', f'- 合并基线：main → {BASE}',
          '- 没修的：mod请求超时自愈 — 证据不足，根因未定位；Codex缓存实测 — 证据不足，离线无法受控实测；boss模拟性能/样本不足 — 太大，需独立专项；策略取舍 — 策略类',
          f'- 测试：源及合后tsc退出码0；最终沙箱vitest {files}文件/{cases}用例/退出码0。羽化源自测213文件2279例；最终源自测214文件2289例。初稿卡牌索引及复活损伤字段断言修正后重跑通过；' + ('合后超时同树重跑一次，详见live-suite-retry.txt' if release.get('timeout_retry') else '无超时重跑') + '。沙箱外完整套件交调度器补跑',
          f'- 合入：live发布 {release["release"]}（代码合入 {release["merged"]}；{release["version"]}；运维交接已落盘）',
-         '- 需要Dai定的事：保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息回血或锻造、小偷优先级、A10第三幕第二boss、无色牌估值、懒惰平均出牌估值']
+         '- 需要Roy定的事：保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息回血或锻造、小偷优先级、A10第三幕第二boss、无色牌估值、懒惰平均出牌估值']
 (SCRATCH / 'report.md').write_text('\n'.join(lines) + '\n\n```json\n' + json.dumps(report, ensure_ascii=False, indent=2) + '\n```\n')
 handoff = (f'本批20261007-024302-fix-batch完成，来源分支{release["branch"]}。\n\n'
            f'- 源码：羽化 {META}；重放累计 {REPLAY}。\n'

@@ -630,6 +630,6 @@
 | sample-a9-reward | 2705.0/3277 | 2729.0/3301 | 24.0 |
 | sample-a9-shop | 3907.0/5195 | 3888.0/5206 | 11.0 |
 - 整体中位2733.0→2746.0（+13.0字），配对差中位0.0；最大5646→5657，单片最少-42、最多增加273。
-- active192、正文51373字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47727}；A9 {'entries': 180, 'chars': 48011}；A10 {'entries': 189, 'chars': 50281}。无预算压缩/合并/退役，不改预算；需要Dai定：无。
+- active192、正文51373字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47727}；A9 {'entries': 180, 'chars': 48011}；A10 {'entries': 189, 'chars': 50281}。无预算压缩/合并/退役，不改预算；需要Roy定：无。
 
 原始子集/偏移、复算、提案与CLI、切片、测试、合入预检/失败及完整报告均保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-054302-experience-update。

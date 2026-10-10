@@ -54,7 +54,7 @@ if (O/'live-merge.json').exists():
  if not m.get('merged'):lines.append('- 未实际合入，不造eval上线版本/规则双通知；保留源、刷新、预检/失败原件交运维兜底，不停对局。')
 lines+=['','### 切片大小','', '- 固定种子20260929，从截止点之前SILENT状态最高两阶A9/A10各20状态×6界面=240配对，manifest留池/时间戳，不足同阶同界面才有放回；CHARACTER=silent调用官方knowledge-slice.ts，冻结common/silent其余知识/统计，只换经验。最终after经验原字节一致，初稿留slices-initial。','','| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for r in S['rows']:lines.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["delta_median"]} |')
-lines+=[f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_increase"]:+}字），配对差中位{S["paired_delta_median"]}；最大{S["before_max"]}→{S["after_max"]}，单片最多增加{S["max_increase"]}、最少变化{S["min_increase"]}。',f'- active191，正文{U["after"]["chars"]}字符，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。未压缩/合并/退役或改预算；需要Dai定：无。','',f'原始证据、复算、失败初稿、提案/CLI、切片、测试与合入回执均留{O}。','']
+lines+=[f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_increase"]:+}字），配对差中位{S["paired_delta_median"]}；最大{S["before_max"]}→{S["after_max"]}，单片最多增加{S["max_increase"]}、最少变化{S["min_increase"]}。',f'- active191，正文{U["after"]["chars"]}字符，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。未压缩/合并/退役或改预算；需要Roy定：无。','',f'原始证据、复算、失败初稿、提案/CLI、切片、测试与合入回执均留{O}。','']
 section='\n'.join(lines)
 (O/'changelog-heading.txt').write_text(heading+'\n');(O/'changelog-section.md').write_text(section)
 (O/'mechanisms.json').write_text(json.dumps(mechanisms,ensure_ascii=False,indent=2)+'\n')

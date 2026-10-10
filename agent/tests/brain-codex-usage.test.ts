@@ -96,7 +96,7 @@ if (argv[0] === "app-server") {
     } else if (msg.method === "account/read") {
       record();
       if (msg.params && msg.params.refreshToken === true) writeFileSync(${JSON.stringify(refreshedFile)}, "1");
-      write(mode.refreshError ? { id: msg.id, error: { code: -32600, message: mode.refreshError } } : { id: msg.id, result: { account: { type: "chatgpt", email: "dai@example.invalid", planType: "promax" }, requiresOpenaiAuth: true } });
+      write(mode.refreshError ? { id: msg.id, error: { code: -32600, message: mode.refreshError } } : { id: msg.id, result: { account: { type: "chatgpt", email: "roy@example.invalid", planType: "promax" }, requiresOpenaiAuth: true } });
     }
   }
   if (mode.linger) setInterval(() => {}, 1000);
@@ -529,7 +529,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and 
     expect(brain.codexUsage!.status().stopped).toMatch(/80% used/);
   });
 
-  it("stops codex when the credit balance falls (credits spent, by us or by Dai's own use)", async () => {
+  it("stops codex when the credit balance falls (credits spent, by us or by Roy's own use)", async () => {
     const { fake, brain, notes } = brainWith("loop-credits", { BRAIN_CODEX_USAGE_EVERY_CALLS: "1" });
     await brain.preflight();
     await ask(brain);

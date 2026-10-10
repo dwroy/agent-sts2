@@ -54,6 +54,9 @@ hosting() {
 }
 
 case "$action" in
+  git-push-main)
+    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9a-f]{40}$ ]] || exit 2
+    exec nice -n 19 python3 "$ROOT/ops/git-push-main.py" "$arg" ;;
   codex-brain-cache-probe)
     [ "$#" -eq 1 ] || { echo "codex-brain-cache-probe takes no arguments"; exit 2; }
     CACHE_WORKTREE="$ROOT/.worktrees/codex-brain-cache"
@@ -180,7 +183,7 @@ for row in csv.reader(sys.stdin):
     [ -n "$row" ] || { echo "no Windows process $arg"; exit 1; }
     image=$(cut -f1 <<< "$row"); session=$(cut -f3 <<< "$row")
     case "${image,,}" in steam.exe|slaythespire2.exe) ;; *) echo "refused: $arg is $image"; exit 2 ;; esac
-    [ "$session" = "Services" ] || { echo "refused: $image $arg runs in session '$session' (only session 0 / Services instances may be closed here; the desktop one is Dai's)"; exit 2; }
+    [ "$session" = "Services" ] || { echo "refused: $image $arg runs in session '$session' (only session 0 / Services instances may be closed here; the desktop one is Roy's)"; exit 2; }
     (cd /mnt/c && "$WIN/taskkill.exe" /PID "$arg" /F 2>&1 | tr -d '\r')
     exit 0 ;;
   postmortem)

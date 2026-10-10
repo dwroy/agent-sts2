@@ -1,5 +1,5 @@
 /**
- * SL_JUDGE_ANY_DRAW (docs/sl.md §2.3; Dai 2026-10-03: SL only on a true certain death, so the draw veto may be lifted only
+ * SL_JUDGE_ANY_DRAW (docs/sl.md §2.3; Roy 2026-10-03: SL only on a true certain death, so the draw veto may be lifted only
  * when the death holds for every draw): the planner's any-draw bound (combat-plan anyDrawBound) and the judge on it, on
  * logged boards (tests/sl-any-draw-data, make-fixtures.ts) and boards made from them, with the knowledge data the planner
  * reads pinned from v4 124fef7 (pinned-knowledge.json) and fake clocks, as tests/sl-early-planner.test.ts does. Nothing

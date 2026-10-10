@@ -3,7 +3,7 @@
  * with its row, column, type and lines, where we stand, the nodes walked, the Winged Boots charges left and the
  * boss node(s) (A10: two). The brain plans any route on it and answers a node sequence; code checks the route
  * (lines, boots, boss, ids) and works out the chosen route's facts with the route projection (no scores, no
- * ranking; the projection itself is route-projection.ts, unchanged). A route review also gets next_rest (Dai
+ * ranking; the projection itself is route-projection.ts, unchanged). A route review also gets next_rest (Roy
  * 2026-10-03): the plan's stretch to its next rest site and, from each next node, the stretch with the most HP on
  * arriving at each of its nearest rest floors, each with its rooms, projected HP there and on entering the route's next
  * elite, compared with the plan on the same floor (nextRestFacts below).
@@ -416,7 +416,7 @@ export function routeFacts(map: RouteMap, ids: string[], start: RouteStart, cost
   return facts;
 }
 
-/* ---- each route's stretch to the next rest site (Dai 2026-10-03) --------------------------------- */
+/* ---- each route's stretch to the next rest site (Roy 2026-10-03) --------------------------------- */
 
 /*
  * A route review weighed a new route without the numbers the kept one had (experience route-replan-on-drop:
@@ -505,7 +505,7 @@ function betterStretch(a: Stretch, b: Stretch): number {
 /**
  * When an alternative is clearly worse than the kept route: the median lower by at least this share of max HP, or the
  * p75 line lower by at least NEXT_REST_CLEAR_P75 (9175 F37: one hallway more, 7 and 16 of 80 lower), or it runs out
- * where the kept route does not (Dai 2026-10-03). Compared at the later of the two routes' next rest floors, each
+ * where the kept route does not (Roy 2026-10-03). Compared at the later of the two routes' next rest floors, each
  * route's HP on arriving there, and said only for a line with no more elites than the kept stretch (an extra elite's
  * cost is already in its counts: 62% of the lines flagged without this rule); and, when both routes meet an elite
  * before the boss, each one's own elite-entry HP (LTKW24N3R9PG F36: 41 against 41).
@@ -814,7 +814,7 @@ export function nextRestVersus(map: RouteMap, kept: string[], changed: string[],
   return { text: parts.join("；"), worse: (rest?.worse ?? false) && after.elites <= before.elites, eliteWorse: elite?.worse ?? false };
 }
 
-/* ---- candidate routes to the boss for the act's plan (Dai 2026-10-04) ------------------------------ */
+/* ---- candidate routes to the boss for the act's plan (Roy 2026-10-04) ------------------------------ */
 
 /*
  * The act-start route questions (event/act-plan with the Ancient, map/route-plan) showed the map and the room costs

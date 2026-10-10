@@ -82,7 +82,7 @@ for s in M.get('precheck_conflicts',[]):text+='- '+s+'\n'
 text+='\n### 切片大小\n\n'
 text+='- 种子20260929，从截止点state.run.character_id=SILENT抽最高A9/A10各20×COMBAT/REWARD/MAP/EVENT/REST/SHOP=240配对，每格20个独立时刻；manifest保留池/时刻。CHARACTER=silent调用官方knowledge-slice.ts，setter固定改前/后experience和同一outcome-stats，其他common/silent快照一致。新池抽样，旧批中位不直接当before；本测为切片而非V4整份前缀。\n\n| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对增量中位 |\n| --- | --- | --- | --- |\n'
 for r in S['rows']:text+=f'| {r["sample"].removeprefix("sample-")} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |\n'
-text+=f'\n- 整体中位{S["before_median"]}→{S["after_median"]}（+{S["median_change"]}字），配对增量中位+{S["paired_median"]}，单片最多增{S["max_growth"]}，最大{S["before_max"]}→{S["after_max"]}。active159、正文{C["chars_after"]}，置信{C["confidence"]}；A8适用{C["applicable"]["8"]}，A9适用{C["applicable"]["9"]}，A10适用{C["applicable"]["10"]}。需要Dai定：无。\n\n完整原帧/抽取/草稿/失败/提案/账本/测试/切片/合入回执：{O}；报告时间{stamp}。\n'
+text+=f'\n- 整体中位{S["before_median"]}→{S["after_median"]}（+{S["median_change"]}字），配对增量中位+{S["paired_median"]}，单片最多增{S["max_growth"]}，最大{S["before_max"]}→{S["after_max"]}。active159、正文{C["chars_after"]}，置信{C["confidence"]}；A8适用{C["applicable"]["8"]}，A9适用{C["applicable"]["9"]}，A10适用{C["applicable"]["10"]}。需要Roy定：无。\n\n完整原帧/抽取/草稿/失败/提案/账本/测试/切片/合入回执：{O}；报告时间{stamp}。\n'
 result=dict(task='experience-update',version='2026-10-08.4',commit=source,merged=M.get('merged'),added=0,updated=21,retired=0,active=159,mechanisms=mechanisms,tests={k:T[k] for k in ['tsc','vitest','cases']},ledger=L,code_proposals=load('proposal-ids.json'),implementation_domains=['combat','potion','sl','terminal'],report=str(O/'report.md'))
 if source:
     assert T['tsc']==T['vitest']==0 and L['check']==0

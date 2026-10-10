@@ -108,7 +108,7 @@ for phase in ['before','after']:
     expected = (O/'experience-before.json').read_bytes() if phase=='before' else (W/'knowledge/characters/silent/experience.json').read_bytes()
     assert expected == (O/f'slice-knowledge-{phase}/characters/silent/experience.json').read_bytes()
 lines += [f'- 整体中位{sl["before_median"]}→{sl["after_median"]}（{sl["median_change"]:+}字），配对差中位{sl["paired_median"]}；最大{sl["before_max"]}→{sl["after_max"]}，单片最少{sl["min_change"]}、最多增加{sl["max_growth"]}。',
-    f'- active192、正文51373字符，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。无预算压缩/合并/退役，不改预算；需要Dai定：无。',
+    f'- active192、正文51373字符，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。无预算压缩/合并/退役，不改预算；需要Roy定：无。',
     '', '原始子集/偏移、复算、提案与CLI、切片、测试、合入预检/失败及完整报告均保存'+str(O)+'。','']
 section = '\n'.join(lines)
 (O/'changelog-heading.txt').write_text(heading+'\n')

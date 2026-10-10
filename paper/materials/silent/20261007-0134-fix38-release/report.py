@@ -29,7 +29,7 @@ text = (f'## 修 bug 回报\n\n- 合并基线：main → {BASE}\n'
         '- 没修的：永冻首次能力7挡（silent-0172） — 太大，跨帧/续行/重启/SL状态专项；mod超时和Codex缓存实测 — 证据不足；boss模拟性能 — 太大；策略项 — 策略类。\n'
         f'- 测试：源与合后tsc退出码0；vitest各{META["live_tests"]["files"]}文件 / {META["live_tests"]["cases"]}用例 / 退出码0，沙箱套件首轮通过、无超时重跑。新测试初稿断言错误两次修正重跑，原失败日志保留。\n'
         f'- 合入：{META["merged"]}；发布{META["release_commit"]} / {META["eval_version"]}，决策日志双方追加原文保留、知识blob保持，运维交接handoff-ops.md。\n'
-        '- 需要 Dai 定的事：保血、留药、boss时钟校准、路线预估、休息点选择、小偷优先、A10第三幕第二boss、无色牌估值；全死排序/巨兽拖延、SL范围、懒惰估值沿原专项。\n')
+        '- 需要 Roy 定的事：保血、留药、boss时钟校准、路线预估、休息点选择、小偷优先、A10第三幕第二boss、无色牌估值；全死排序/巨兽拖延、SL范围、懒惰估值沿原专项。\n')
 (OUT / 'report.md').write_text(text + '\n```json\n' + json.dumps(report, ensure_ascii=False, indent=2) + '\n```\n')
 handoff = (f'# 收场即时评分修复运维交接\n\n任务20261007-011302-fix-batch；来源fix-queue-v4 2026-10-07 01:07、notes/lessons.md:5186及勘误、账本silent-0197。'
            f'源码{META["source_commit"]}（{META["branch"]}），实际live代码{META["merged"]}，发布{META["release_commit"]}，唯一eval {META["eval_version"]}。\n\n'
@@ -41,7 +41,7 @@ handoff = (f'# 收场即时评分修复运维交接\n\n任务20261007-011302-fix
            '初稿误用ranking字段及空弃牌堆断言的两次失败、首次预合并因追加日志冲突停止的历史全部归档；不把初稿失败改写成通过。\n\n'
            f'锁内合前{META["base"]}，本批没有新知识刷新待提交；上一经验发布的知识逐blob保持，知识重叠0，无生成器改动无需重建。'
            'decision-log冲突仅共同前缀后的追加，保留main与live每个原始字节并已核对；未丢经验.2/版本/历史记录或后台未提交notes。四个修复源码/测试blob与已测源一致；gitleaks源、合并历史、发布扫描均0。\n\n'
-           '126项旧修复见already-fixed.md/json；永冻0172跨帧/续行/重启/SL首次触发专项，mod/Codex实测证据不足、模拟性能专项及Dai策略项保持，队列未修改。'
+           '126项旧修复见already-fixed.md/json；永冻0172跨帧/续行/重启/SL首次触发专项，mod/Codex实测证据不足、模拟性能专项及Roy策略项保持，队列未修改。'
            '修复工作树干净，live后台notes原样保留；未停止对局、未运行play、未推送。全部原始证据、测试、预检、发布元数据、核对与回报在本目录。\n')
 (OUT / 'handoff-ops.md').write_text(handoff)
 tests = json.loads((OUT / 'tests.json').read_text())

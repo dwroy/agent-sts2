@@ -98,7 +98,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]) || (playerHp !== null && incoming >= playerHp);
   const hand = handViews({ raw: combat }, knowledge);
   // Foul Potion hurts us too: never offered here either (WY41 F48: drunk at 7 HP; 39J9 before that).
-  // Foul Potion included (Dai 2026-09-28: Jev decides); these per-card options simulate no potion.
+  // Foul Potion included (Roy 2026-09-28: Jev decides); these per-card options simulate no potion.
   const potions = potionViews({ raw: asRecord(state.run?.raw) }, knowledge);
 
   const candidates: Candidate[] = [];

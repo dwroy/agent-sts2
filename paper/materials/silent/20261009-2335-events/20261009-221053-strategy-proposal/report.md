@@ -27,7 +27,7 @@
 
 持有ops/live-merge.lock，按原builder等待命令执行；先保存实际知识刷新，交叉路径预检无重叠，merge-tree预检无冲突后正常merge。本次未修改知识生成脚本，无重建。刷新保存提交若存在见refresh-commit.txt；实际合入前基线见live-before.txt，原状态及merge/测试日志保留。合后通过，无回滚。
 
-先date后追加live decision-log与唯一eval版本；根目录notes/for-dai.md和ops/inbox-dev.md同时追加Roy通知，写旧/新规则、证据/账本/任务、预期影响、源码回退和提案路径。账本只经根目录CLI add/update；新silent-0351仍proposed，实际源码祖先及版本交运维核实shipped。
+先date后追加live decision-log与唯一eval版本；根目录notes/for-roy.md和ops/inbox-dev.md同时追加Roy通知，写旧/新规则、证据/账本/任务、预期影响、源码回退和提案路径。账本只经根目录CLI add/update；新silent-0351仍proposed，实际源码祖先及版本交运维核实shipped。
 
 ## 本批全部派发id
 

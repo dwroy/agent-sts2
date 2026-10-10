@@ -91,7 +91,7 @@ lines += ['', '### 切片大小','', '- 固定种子20260929，从截至切点st
  '', '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对增量中位 |','| --- | --- | --- | --- |']
 for b,a in zip(before,after):lines.append(f'| {b["sample"]} | {b["median"]}/{b["max"]} | {a["median"]}/{a["max"]} | {statistics.median(y-x for x,y in zip(b["sizes"],a["sizes"]))} |')
 lines += ['', f'- 整体切片中位{slice["before_median"]}→{slice["after_median"]}、增{slice["median_change"]}字；配对差额中位+{slice["paired_median_change"]}；最大{slice["before_max"]}→{slice["after_max"]}，单切片最多增{slice["max_increase"]}字。',
- '- active173/正文50115，high104/med43/low26；A8适用162条46155字、A9适用163条46439字、A10适用170条49023字。需要Dai定：无；合入受并行记录冲突阻塞，由运维按源提交兜底，不需要新增知识审批。',
+ '- active173/正文50115，high104/med43/low26；A8适用162条46155字、A9适用163条46439字、A10适用170条49023字。需要Roy定：无；合入受并行记录冲突阻塞，由运维按源提交兜底，不需要新增知识审批。',
  '', f'本批原帧/复算/机制/提案/CLI/测试/切片/合入冲突回执：{O.resolve()}；报告时间{clock}。','']
 text='\n'.join(lines)
 (O/'changelog-addition.md').write_text(text)

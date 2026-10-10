@@ -5,7 +5,7 @@
   - HUVEPWQAHWFU：羽化生成攻击牌到抽牌堆，被误算为即时抽3张牌 — [agent/src/reflex/card-model.ts:893](/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/card-model.ts:893)（新）
 - 写成「未记录」的项：HUVEPWQAHWFU：完整原线执行比例、未选方案的受控整场代价、T5少报5伤的具体原因、boss时钟需要／估计及实打／估值、三幕boss实到／实打、Jev缓存命中。
 - 学习账本：HUVEPWQAHWFU：新增 silent-0202、silent-0203；更新 silent-0005、silent-0011、silent-0023、silent-0046、silent-0048、silent-0067、silent-0083、silent-0125（老错重犯：无）；`ledger.py check` 退出码0。
-- 需要 Dai 定的事：无。
+- 需要 Roy 定的事：无。
 
 ```json
 {"task":"postmortem","appended":["HUVEPWQAHWFU"],"skipped":[],"bugs":[{"run":"HUVEPWQAHWFU","where":"agent/src/reflex/card-model.ts:893","what":"羽化向抽牌堆生成三张攻击牌被误算为即时抽三张牌","new":true}],"ledger":{"added":["silent-0202","silent-0203"],"updated":["silent-0005","silent-0011","silent-0023","silent-0046","silent-0048","silent-0067","silent-0083","silent-0125"],"repeats":[],"check":0}}

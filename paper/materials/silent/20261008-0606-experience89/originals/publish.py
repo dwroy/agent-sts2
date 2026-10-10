@@ -31,7 +31,7 @@ for c in C['entries']:
     fresh=[r for r in z['evidence'] if not b or r not in b['evidence']]
     notice+=f'- {c["id"]}：旧规则／表述：{previous}；新规则／表述（n={z["n_support"]}，asc={z["asc"]}）：{z["lesson"]}；证据'+','.join(fresh)+'；账本'+','.join(mapping[c['id']])+'。\n'
 notice+='\n任务experience-update/20261008-053105→strategy-proposal；提案'+','.join(ids)+'，pending。预期影响：更准确表达已建毒/敏捷/倍率挡、持牌伤/荆棘/生命上限与当前血、赢战后实到资源及跨幕回复，不宣称胜率提升，不设新饮药/留药/SL阈值。回退：三方逆向只恢复本次experience差量至合前blob并登记新回退版本，保留刷新、并行源码/记录和提案历史；不硬重置覆盖后续进展。证据、旧新全文、测试与回执见本批report.md/changes.json。\n'
-for namepath in ['notes/for-dai.md','ops/inbox-dev.md']:
+for namepath in ['notes/for-roy.md','ops/inbox-dev.md']:
     with (ROOT/namepath).open('a') as h:h.write(notice)
 (O/'publication.json').write_text(json.dumps(dict(source=source,merged=merged,publication=pub,version=name,ledger=L['proposed']),ensure_ascii=False,indent=2)+'\n')
 print(name,pub)

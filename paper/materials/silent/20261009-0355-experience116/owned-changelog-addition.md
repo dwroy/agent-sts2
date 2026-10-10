@@ -627,6 +627,6 @@
 | sample-a9-shop | 4052.5/5156 | 4053.0/5211 | 2.0 |
 
 - 整体中位2693.0→2695.0（+2.0字），配对差中位2.0；最大5415→5431，单片最多增加55、最少变化-40。
-- active190，正文51240字符，置信度{'low': 25, 'high': 119, 'med': 46}；A8 {'entries': 177, 'chars': 47594}；A9 {'entries': 178, 'chars': 47878}；A10 {'entries': 187, 'chars': 50148}。无预算压缩/合并/退役，未改测试预算；需要Dai定：无。
+- active190，正文51240字符，置信度{'low': 25, 'high': 119, 'med': 46}；A8 {'entries': 177, 'chars': 47594}；A9 {'entries': 178, 'chars': 47878}；A10 {'entries': 187, 'chars': 50148}。无预算压缩/合并/退役，未改测试预算；需要Roy定：无。
 
 原始证据、复算、核验/失败初稿、提案/CLI、切片、测试和合入回执均留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-031302-experience-update。

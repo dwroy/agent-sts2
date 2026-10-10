@@ -1,7 +1,7 @@
 /**
  * "Discard potion(s), then take this option" where the game lets potions be discarded (an event page, a rest
  * site): an option that gives potions into a belt without room for them loses the extra ones (the reward screen
- * cannot discard), so the decider may free slots first. Code never picks which potions go (Dai: code does not
+ * cannot discard), so the decider may free slots first. Code never picks which potions go (Roy: code does not
  * handle potions for the decider): one extra option per such option, and the answer names the slots.
  *
  * - DeepSeek (the decider, or an escalation): the answer's "discard": [potion slot numbers], 1 to `need` of the

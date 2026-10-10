@@ -83,12 +83,12 @@ lines+=['','### 切片大小','',
 '','| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for p in V['pairs']:lines.append(f'| {p["sample"]} | {p["before_median"]}/{p["before_max"]} | {p["after_median"]}/{p["after_max"]} | {p["paired_median"]} |')
 lines+=['',f'- 整体中位{V["before_median"]}→{V["after_median"]}、涨{V["median_change"]}字；配对差中位{V["paired_median"]}，最大{V["before_max"]}→{V["after_max"]}、单片最多增{V["max_change"]}。',
-f'- active185/正文{U["chars"]}字符；置信度'+str(U['confidence'])+'；A8适用'+str(U['asc']['8'])+'；A9适用'+str(U['asc']['9'])+'；A10适用'+str(U['asc']['10'])+'。没有压缩、预算变更或需Dai定的规则；合入受阻由现行运维兜底流程处理。','', '原帧/数字/历史/提案/CLI/测试/切片/合入回执：'+str(O)+'；报告时间'+now+'。','']
+f'- active185/正文{U["chars"]}字符；置信度'+str(U['confidence'])+'；A8适用'+str(U['asc']['8'])+'；A9适用'+str(U['asc']['9'])+'；A10适用'+str(U['asc']['10'])+'。没有压缩、预算变更或需Roy定的规则；合入受阻由现行运维兜底流程处理。','', '原帧/数字/历史/提案/CLI/测试/切片/合入回执：'+str(O)+'；报告时间'+now+'。','']
 section='\n'.join(lines)
 (O/'changelog-section.md').write_text(section)
 summary=['## 经验库更新回报',f'- 版本：{U["old_version"]} → {U["version"]}；提交：{commit}（分支 exp-silent）；合入：'+str(live.get('merged') or '未合入'),f'- 条数：新增0、更新15（加证据15、只改数字0）、退役0；active185→185，正文{U["chars"]}字符；A8 172条/{U["asc"]["8"]["chars"]}字符，A9 173条/{U["asc"]["9"]["chars"]}字符','- 机制推理：']
 summary+=['  - '+' — '.join(m) for m in mechanisms]
-summary+=['- 改了的手写知识：无',f'- 测试：tsc {tests["tsc"]}；vitest {tests["files"]}文件/{tests["cases"]}用例/{tests["vitest"]}；'+('重跑一次' if tests['rerun'] else '未重跑'),f'- 切片大小：中位涨{V["median_change"]}字；最大{V["after_max"]}字','- 学习账本：新增无；改成proposed '+','.join(ledger['proposed'])+'；退役无；ledger.py check退出'+str(result['ledger']['check']),'- 需要Dai定的事：无','', '```json',json.dumps(result,ensure_ascii=False),'```','',section]
+summary+=['- 改了的手写知识：无',f'- 测试：tsc {tests["tsc"]}；vitest {tests["files"]}文件/{tests["cases"]}用例/{tests["vitest"]}；'+('重跑一次' if tests['rerun'] else '未重跑'),f'- 切片大小：中位涨{V["median_change"]}字；最大{V["after_max"]}字','- 学习账本：新增无；改成proposed '+','.join(ledger['proposed'])+'；退役无；ledger.py check退出'+str(result['ledger']['check']),'- 需要Roy定的事：无','', '```json',json.dumps(result,ensure_ascii=False),'```','',section]
 (O/'report.md').write_text('\n'.join(summary))
 if '--append' in sys.argv:
     path=ROOT/'paper/materials/experience-changelog-silent.md'

@@ -689,7 +689,7 @@ REST/SHOP/EVENT入口血关联下一场；同战可被多节点引用，节点�
 | sample-a9-shop | 3996.0/5191 | 3980.0/5171 | -18.0 |
 
 - 整体中位2636.5→2624.0（-12.5字），配对差中位-6.0；最大5553→5539，单片差-42至13。
-- active196/正文51224字符；置信度{'low': 27, 'high': 126, 'med': 43}；A8 {'entries': 182, 'chars': 47443}，A9 {'entries': 183, 'chars': 47727}，A10 {'entries': 193, 'chars': 50132}。没有预算压缩/合并/退役；需要Dai定：无。
+- active196/正文51224字符；置信度{'low': 27, 'high': 126, 'med': 43}；A8 {'entries': 182, 'chars': 47443}，A9 {'entries': 183, 'chars': 47727}，A10 {'entries': 193, 'chars': 50132}。没有预算压缩/合并/退役；需要Roy定：无。
 
 原件/抽取/失败初稿、复算/参数/SL、CLI/提案、切片/测试/合入预检及报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-140555-experience-update。
 

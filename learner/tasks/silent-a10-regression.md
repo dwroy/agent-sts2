@@ -32,7 +32,7 @@ Roy 2026-10-08 08:36、08:51 明确要求最高优先调查并授权：找到有
 
 涉及出牌、药水、SL、终局价值或结构不一致，按 docs/learning-code-proposals.md 保存提案 Markdown/JSON，并只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记关联证据。已经实现的提案只有实际源码成为 live 祖先才登记 implemented；游戏台账只按原证据及 CLI，不造架构/派发游戏知识或无证据 shipped。
 
-只在分配工作树与 {{scratch}} 写源码、测试和工作报告。最终结论同时保存根目录 paper/materials/silent/a10-regression-2026-10-08.md（存在时保留历史再追加）、{{scratch}}/report.md 和 report.json。先 date，在根目录 ops/inbox-dev.md 写一句给 Roy 的结论；任何实际规则修改上线时，notes/for-dai.md 与收件箱同时追加旧规则、新规则、数据、证据局号、预期影响、回退方法。这些报告、提案 CLI 和通知是本任务明确授权的根目录记录例外，不覆盖无关/并行记录。
+只在分配工作树与 {{scratch}} 写源码、测试和工作报告。最终结论同时保存根目录 paper/materials/silent/a10-regression-2026-10-08.md（存在时保留历史再追加）、{{scratch}}/report.md 和 report.json。先 date，在根目录 ops/inbox-dev.md 写一句给 Roy 的结论；任何实际规则修改上线时，notes/for-roy.md 与收件箱同时追加旧规则、新规则、数据、证据局号、预期影响、回退方法。这些报告、提案 CLI 和通知是本任务明确授权的根目录记录例外，不覆盖无关/并行记录。
 
 不读取游戏包、key/.env，不安装依赖、不推送、不运行 play、不停止对局或调度，不改生产配置或 ops prompt。不启动子学习者。后台统计/测试一律 nice，每个最多四进程；测试只用冻结夹具，不调用真实大脑。
 

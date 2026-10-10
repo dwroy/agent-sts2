@@ -1,6 +1,6 @@
 /**
  * Claude as a brain engine: headless Claude Code (`claude -p`) under this machine's Claude login (the
- * subscription; Dai 2026-09-29), one process per call. Mainly for the offline learner later; also a game engine.
+ * subscription; Roy 2026-09-29), one process per call. Mainly for the offline learner later; also a game engine.
  *
  * - The answer: --json-schema; the CLI returns it as `structured_output` in its --output-format json result,
  *   with usage and total_cost_usd (under the login: the API-price equivalent). The CLI turns the schema into a

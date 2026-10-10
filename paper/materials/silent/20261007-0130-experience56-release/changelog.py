@@ -80,7 +80,7 @@ f'- JSON合法、12位局号/角色/n/范围/预算/药水分句/旧基线断言
 '- 仅learner/ledger.py/by=learner:experience-update把'+','.join(L['proposed'])+'改proposed，覆盖15个经验条目；账本新增/退役无，check0。首证/先验/claim/旧版本/repeat保持，0198本局/unknown及0197 A0/no保持；不写accepted/shipped，交运维核实际合入后登记。主目录变更节/账本只追加不提交。','', '### 切片大小','',
 '- 固定种子20260929，截至本局最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP共240配对，核state.run.character_id=SILENT。官方knowledge-slice.ts/CHARACTER=silent/setExperienceForTests，只替换experience，其他知识/结果表固定；sample-manifest和前后输出归档，不当V4完整前缀大小。提前一次改后切片读压缩稿、结果另存compression-only；报告只用最终定稿配对。','', '| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for x in S['rows']:lines.append(f'| {x["sample"].removeprefix("sample-")} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["delta"]} |')
-lines+=['',f'- 240配对增量中位{S["median_delta"]}、单片最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}、最大{S["before_max"]}→{S["after_max"]}字。active126→127、56138→56154字，高59中40低28；A8 120条52878字、A9 121条53177字、A10 122条53757字。需要Dai定：无。']
+lines+=['',f'- 240配对增量中位{S["median_delta"]}、单片最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}、最大{S["before_max"]}→{S["after_max"]}字。active126→127、56138→56154字，高59中40低28；A8 120条52878字、A9 121条53177字、A10 122条53757字。需要Roy定：无。']
 text='\n'.join(lines)+'\n';(O/'changelog-section.md').write_text(text)
 assert title not in (ROOT/'paper/materials/experience-changelog-silent.md').read_text()
 subprocess.run(['nice','-n','19',str(Path.home()/'.local/bin/gitleaks'),'dir','--redact','--no-banner',str(O/'changelog-section.md')],stdout=(O/'gitleaks-changelog.log').open('w'),stderr=subprocess.STDOUT,check=True)

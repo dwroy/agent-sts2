@@ -1,5 +1,5 @@
 /**
- * Codex benchmark (Dai 2026-10-03): logged A9 brain questions sent to the codex engine exactly as DeepSeek got them.
+ * Codex benchmark (Roy 2026-10-03): logged A9 brain questions sent to the codex engine exactly as DeepSeek got them.
  *
  * The question (memory, question, options, payload) is brain.jsonl's row; the system prompt is the full-knowledge prefix
  * re-rendered (src/brain/knowledge.ts) from a snapshot of the live knowledge files, and taken only when its sha equals the

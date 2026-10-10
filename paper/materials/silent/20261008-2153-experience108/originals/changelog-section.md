@@ -572,7 +572,7 @@ SL对照：F21两試1赢，首試T2判死而未实际死，第2試能力药→�
 - 学习账本仅CLI：新增[]；proposed silent-0005,silent-0012,silent-0017,silent-0019,silent-0020,silent-0021,silent-0007,silent-0011,silent-0027,silent-0185,silent-0209,silent-0211,silent-0214,silent-0079,silent-0278,silent-0225；退役[]。16来源账本覆盖16经验，0007关联两毒牌，花园对应0209/0211两主题；0225增加历史证据和原first_run/claim追加更正，prior/旧记录保持。不改accepted/shipped，实际数据shipped交运维核实。
 - live锁内结果：实际合入、合后沙箱通过、上线登记及Roy双通知完成；数据shipped交运维核实完成事件；刷新None；合前7345fa64f3ebfcc1dbaa6d887f6d607ec3f5aab4；实际合入11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5。
 - 合后沙箱实际：tsc退出0；vitest 251文件/2627用例/退出0；未重跑。
-- 唯一eval版本S1.exp108；live上线记录提交9949a5dee4e782c9a700a488de86b4edf1a4dd97；根decision-log/eval版本及notes/for-dai.md、ops/inbox-dev.md双通知已追加，根记录由调用方提交。实际数据shipped仍交运维核实，本任务未改为accepted/shipped。
+- 唯一eval版本S1.exp108；live上线记录提交9949a5dee4e782c9a700a488de86b4edf1a4dd97；根decision-log/eval版本及notes/for-roy.md、ops/inbox-dev.md双通知已追加，根记录由调用方提交。实际数据shipped仍交运维核实，本任务未改为accepted/shipped。
 
 ### 切片大小
 
@@ -594,6 +594,6 @@ SL对照：F21两試1赢，首試T2判死而未实际死，第2試能力药→�
 | sample-a9-shop | 3627.5/4780 | 3668.5/4791 | 24.5 |
 
 - 整体中位2655.0→2654.0、涨-1.0字；配对差中位11.0，最大4899→5062、单片最多增268。
-- active185/正文50213字；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用172条/45825字、A9适用173条/46109字、A10适用182条/49121字。范围沿原机制/统计/策略，不由低阶背景立A10因果。无合并/退役/压缩，需Dai定：无。
+- active185/正文50213字；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用172条/45825字、A9适用173条/46109字、A10适用182条/49121字。范围沿原机制/统计/策略，不由低阶背景立A10因果。无合并/退役/压缩，需Roy定：无。
 
 原帧/复算/历史/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update；报告时间2026-10-08 21:44:04 +0800。

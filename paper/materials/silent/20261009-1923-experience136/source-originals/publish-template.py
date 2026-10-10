@@ -17,7 +17,7 @@ mapping=json.load(open(O/'ledger-map.json'));lines=['','## '+stamp+' Roy：静�
 for c in C:lines.append('| '+c['id']+' | '+(c['before']['lesson'] if c['before'] else '此前无此条目')+' | '+c['after']['lesson']+' | XW8B5CHJ814J；'+','.join(mapping[c['id']])+' |')
 lines+=['','预期影响：构筑、路线、休息使用核实的力敏/毒、实际与未来挡、连战血药传递，减少预支未执行资源；不保证本局翻胜。缺整战证据的药价/SL/HP参数保留。来源任务experience-update/20261009-180727；独立实现任务strategy-proposal。','', '回退：将live经验恢复为合前'+M['pre']+'中的knowledge/characters/silent/experience.json，单独提交并登记回退版本；并行刷新与历史留存。','']
 body='\n'.join(lines).encode()
-for p in [ROOT/'notes/for-dai.md',ROOT/'ops/inbox-dev.md']:
+for p in [ROOT/'notes/for-roy.md',ROOT/'ops/inbox-dev.md']:
     fd=os.open(p,os.O_WRONLY|os.O_APPEND|os.O_CREAT,0o644)
     try:os.write(fd,body);os.fsync(fd)
     finally:os.close(fd)

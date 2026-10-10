@@ -1,5 +1,5 @@
 /**
- * DeepSeek vs GPT on one logged question (Dai 2026-10-03: "拿一次实际请求看看 ds 和 GPT 分别怎么回答").
+ * DeepSeek vs GPT on one logged question (Roy 2026-10-03: "拿一次实际请求看看 ds 和 GPT 分别怎么回答").
  *
  * The row is a brain.jsonl row that codex answered in live play; the system prompt is re-rendered from a snapshot of the
  * live knowledge files and frozen facts (taken only when its sha equals the row's system_sha), then the same request goes

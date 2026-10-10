@@ -1,6 +1,6 @@
 # 离线学习者（learner）
 
-V4 架构 §1 的「学习者」、§4 的 M4（docs/v4-architecture.md）：把自我迭代从对局里拆出来，三类学习任务（复盘、经验库更新、批量修 bug）写成**与引擎无关的任务说明**，由一个**统一启动器**交给 CLI agent 执行。引擎可切换：**codex（ChatGPT 订阅，gpt-6.1-sol / xhigh；Dai 2026-10-04 定为学习者引擎）** 和 **Claude（订阅，本机登录态）**，两者都跑通过真实冒烟。
+V4 架构 §1 的「学习者」、§4 的 M4（docs/v4-architecture.md）：把自我迭代从对局里拆出来，三类学习任务（复盘、经验库更新、批量修 bug）写成**与引擎无关的任务说明**，由一个**统一启动器**交给 CLI agent 执行。引擎可切换：**codex（ChatGPT 订阅，gpt-6.1-sol / xhigh；Roy 2026-10-04 定为学习者引擎）** 和 **Claude（订阅，本机登录态）**，两者都跑通过真实冒烟。
 
 ```
 learner/
@@ -8,7 +8,7 @@ learner/
   pending.ts          某个角色还没并进经验库的复盘（ops/experience-pending.py 按角色分开的版本）
   tasks/*.md          任务说明（中文，{{占位符}} 参数）
   runs/               每次运行的日志和临时目录（已加 .gitignore）
-  proposal-ops-prompt.md   给 Dai 审的运维 prompt 修改建议（机制推理）
+  proposal-ops-prompt.md   给 Roy 审的运维 prompt 修改建议（机制推理）
 learner/lib/
   task.ts             任务文件解析、占位符替换、参数检查
   engines.ts          claude / codex 命令行、权限、子进程环境
@@ -61,13 +61,13 @@ agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem --s
 缺参数、或 --set 了任务用不到的参数，都直接报错（exit 2），防止拼错。
 
 ### 多角色（2026-10-04）
-- 角色内置参数（由 `--character` 决定，不能 --set）：`{{character}}`（silent）、`{{character_name}}`（静默猎手）、`{{character_dir}}`（knowledge/characters/silent）、`{{experience_path}}`（knowledge/characters/silent/experience.json）、`{{changelog_path}}`（变更记录：铁甲战士仍是 paper/materials/experience-changelog.md，其他角色各有一份 paper/materials/experience-changelog-<id>.md，Dai 2026-10-04）。
+- 角色内置参数（由 `--character` 决定，不能 --set）：`{{character}}`（silent）、`{{character_name}}`（静默猎手）、`{{character_dir}}`（knowledge/characters/silent）、`{{experience_path}}`（knowledge/characters/silent/experience.json）、`{{changelog_path}}`（变更记录：铁甲战士仍是 paper/materials/experience-changelog.md，其他角色各有一份 paper/materials/experience-changelog-<id>.md，Roy 2026-10-04）。
 - 段落：`{{#is_ironclad}}…{{/is_ironclad}}` 只给铁甲战士，`{{^is_ironclad}}…{{/is_ironclad}}` 给其他角色；标记独占一行时连同这一行一起去掉，所以铁甲战士的任务说明和加角色之前逐字相同。
 - front matter `characters: ironclad` 限定任务只给哪些角色用（experience-asc-audit 是铁甲战士 A9 专用）。
 - `--set runs=…` / `run=…` 里的局，runs.jsonl 记的角色（`character`，没有这个字段 = 铁甲战士的旧局）和本次角色不同的，直接报错（exit 2）；runs.jsonl 里没有的局留给任务自己判断。
 - 新角色的经验库从空开始，只从它自己的局学；任务说明不写任何角色的打法。非铁甲战士的复盘标题第二项写角色名：`## <run id>（A0，静默猎手，第N层，死因）`；没有角色名的标题都是铁甲战士的。
 - 每 10 局并一次经验库按角色数：`agent/node_modules/.bin/tsx learner/pending.ts --character silent [--max 10]`（输出和 ops/experience-pending.py 一样：先个数，再逗号分隔的 run id；铁甲战士的结果和那个脚本相同）。
-- **学习节奏按角色（Dai 2026-10-04）**：复盘、待并复盘的计数、每 10 局一批的经验库更新都按角色分开做。运维每次只给**有新复盘的角色**跑：对 runs.jsonl 里出现过的每个角色跑 `ops/experience-pending.py --character <id>`（或 `learner/pending.ts --character <id>`），个数到 10 的才派 `experience-update --character <id>`；没有新复盘的角色不跑。各角色的批次互不混，铁甲战士的批次和以前一样。
+- **学习节奏按角色（Roy 2026-10-04）**：复盘、待并复盘的计数、每 10 局一批的经验库更新都按角色分开做。运维每次只给**有新复盘的角色**跑：对 runs.jsonl 里出现过的每个角色跑 `ops/experience-pending.py --character <id>`（或 `learner/pending.ts --character <id>`），个数到 10 的才派 `experience-update --character <id>`；没有新复盘的角色不跑。各角色的批次互不混，铁甲战士的批次和以前一样。
 - `--with-tools` 的进阶：`--ascension N`（可以是 0），否则 `TARGET_ASCENSION`：数字照用；没设是 9；`climb`（或任何非数字）= 这个角色在 runs.jsonl 里打过的最高进阶，没打过是 0。非铁甲战士时给工具服务器设 `CHARACTER`。
 
 | 任务 | 必填 | 可选（默认） | 工具 | 建议的 --cwd | 会改什么 |
@@ -82,7 +82,7 @@ agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem --s
 - experience-update 加了 v4-dev-brief 第 5 项的**机制推理**（每条机制结论要有推理、证据局数、典型案例；只用 v3 切片认识的 scope；不许写喝药规则）；
 - postmortem 的记录里加了一句「机制：」，给经验更新用；
 - 每个任务末尾都有安全规矩（沿用运维 prompt 的「安全」）和固定的回报格式，回报最后有一个 json 代码块，方便调用方的脚本读。
-- 两个会改分支的任务**默认不合入 v3**（merge=no）：V4 的学习者产出新版本，由评估和 Dai 决定上线；要沿用现在「纯 bug 直接合入 v3」的流程就加 `--set merge=v3`，合入在 `flock ops/v3-merge.lock` 里做。
+- 两个会改分支的任务**默认不合入 v3**（merge=no）：V4 的学习者产出新版本，由评估和 Roy 决定上线；要沿用现在「纯 bug 直接合入 v3」的流程就加 `--set merge=v3`，合入在 `flock ops/v3-merge.lock` 里做。
 - 工作区仓库（notes/、paper/）的提交、fix-queue 划掉条目、decision-log 都留给调用方做，避免和运维会话同时提交。
 
 ### 任务文件格式
@@ -115,7 +115,7 @@ default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用�
 - 程序：`LEARNER_CODEX_BIN`，否则和大脑一样找（PATH，再 ~/.local/node/bin/codex）；登录目录：`LEARNER_CODEX_HOME`，否则 `CODEX_HOME`，否则 ~/.codex；子进程环境 = 去掉 key 的环境 + 大脑的 `codexEnv`（CODEX_HOME、codex 的 trace-safe 日志、程序目录放 PATH 最前）；
 - 运行前做大脑的启动检查 `checkCodex`：`--version`、登录文件在、$CODEX_HOME 里没有 AGENTS.md、模型目录里有这个模型且支持这个 effort；不过就 exit 3；
 - 命令行：`exec --json --ignore-user-config --ignore-rules --cd <cwd> -c default_permissions="learner" -c permissions.learner.filesystem={…} --model <模型>`，`-c approval_policy="never"`、`web_search="disabled"`（游戏知识只能来自对局日志）、`model_reasoning_effort=<effort>`、`allow_login_shell=false`、`skills.include_instructions=false`、`skills.bundled.enabled=false`、不检查更新、不写 history、不发 analytics；大脑关掉的 feature 除了 `shell_tool`、`unified_exec`、`code_mode_host`（学习者要用工具）全部 `--disable`；`-` = 提示走 stdin；
-- **key 隔离（Dai 2026-10-04 批准）**：codex 自带的 read-only / workspace-write 沙箱能读所有文件，所以不用 `--sandbox`，改用 codex 的权限配置 `learner`（engines.ts `codexPermissions`）：
+- **key 隔离（Roy 2026-10-04 批准）**：codex 自带的 read-only / workspace-write 沙箱能读所有文件，所以不用 `--sandbox`，改用 codex 的权限配置 `learner`（engines.ts `codexPermissions`）：
   - 全部可读（`:root`）；只读任务什么都不能写；写任务另外可写工作目录（`:project_roots`）、项目根和临时目录（`:tmpdir`、`:slash_tmp`），等同原来的 workspace-write + `--add-dir <项目根>`；不联网；
   - 两种任务都读不到：~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、codex 的 auth.json（codex 在沙箱外的自己进程里读登录，实测照常登录）、项目根和它所属主检出下所有 `.env` / `*.env`（`**` glob，`glob_scan_max_depth=8`），再加上启动器在磁盘上找到的每个 key 文件的绝对路径（根、agent/、一级子目录、.worktrees/*、.claude/worktrees/* 及其 agent/）；
   - **运行前自检**：每次 codex 运行前，用 `codex sandbox -P learner`（同一份配置）起一个 shell，对每个找到的 key 文件 `head -c 0`，只输出打得开的文件名；有任何一个打得开、或自检本身失败，就 exit 3，只列文件名；
@@ -126,7 +126,7 @@ default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用�
 - `--with-tools`：`-c mcp_servers.gkb.command / .args / .env`，加 `default_tools_approval_mode="approve"`（不加的话 approval_policy=never 会把每次 kb_* 调用都拒掉，实测过）；
 - 超时和 Ctrl-C：agent 在自己的进程组里启动，按 PID 杀整个组（npm 的 node 启动器、codex 本体和它起的 shell 一起停）；
 - 登录被拒（401、令牌过期）：照大脑的做法让 codex 刷新一次令牌（`refreshCodexAuth`），提示重跑，不自动重跑；
-- **没有用量护栏**（Dai 2026-10-04 19:53）；codex 没有轮数上限参数，只靠超时。
+- **没有用量护栏**（Roy 2026-10-04 19:53）；codex 没有轮数上限参数，只靠超时。
 
 **环境变量**：子进程里去掉 `DEEPSEEK_*`、`TYPESAFE_*`、`JEV_*`、`OPENROUTER_*`、`ANTHROPIC_API_KEY`、`ANTHROPIC_AUTH_TOKEN`、`OPENAI_API_KEY`、`CODEX_API_KEY`、名字里带 KEY/TOKEN/SECRET/PASSWORD 的变量，以及上层 Claude Code 会话自己的 `CLAUDECODE`、`CLAUDE_CODE_*`（学习者是一个全新的顶层会话）。例外：claude 引擎保留 `CLAUDE_CODE_OAUTH_TOKEN`（这就是订阅登录态）。`--dry-run` 只列被去掉的变量名，从不打印值。
 
@@ -183,4 +183,4 @@ summary.ts 按真实事件流解析（2026-10-04 实测，codex-cli 0.160）：`
 | 4. 每满 5 局派 agent 在 jev-sts2-exp 更新经验库，然后合入 v3 | 同上 | `--task experience-update --set runs=… --cwd …/jev-sts2-exp --set merge=v3`（任务里已含机制推理，见 proposal-ops-prompt.md） |
 
 好处：任务说明有版本（git 里），每次的提示、全过程、token 和成本都落盘；同一份任务可以换引擎（claude / codex）或换模型对比；权限比 general-purpose 子 agent 窄（只放任务需要的工具，限定在项目目录）。
-要不要切换、什么时候切，由 Dai 决定；切之前运维 prompt 一个字都不用改，启动器可以先并行试跑（例如对已经复盘过的局用 `--dry-run` 看提示，或在临时分支上跑一次经验更新做对比）。
+要不要切换、什么时候切，由 Roy 决定；切之前运维 prompt 一个字都不用改，启动器可以先并行试跑（例如对已经复盘过的局用 `--dry-run` 看提示，或在临时分支上跑一次经验更新做对比）。

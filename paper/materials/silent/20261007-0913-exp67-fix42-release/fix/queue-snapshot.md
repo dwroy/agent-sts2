@@ -57,7 +57,7 @@
 ### V4.3 SL 首次触发（2026-10-02 12:24，JW92 F48 实验体）
 - **SL reload 误判失败**：回到 F48 T1 后第一屏是回合开始弃牌 CARD_SELECTION（actions: select_deck_card, confirm_selection），SL 的 back_in_fight 只认 COMBAT，60 s 超时 → reload.ok=false、give_up 停用本局 SL。实际读档成功、主循环处理弃牌后从 T1 重打并通关。sl-attempts.jsonl 2026-10-02T04:02:32Z 那行；控制台 20261002-110526 第 2138–2160 行。
 - 超时后主循环先执行了 T10 遗留的 least-loss end_turn（12:02:32，"action came back pending"），之后才是弃牌和 T1 计划；需确认 end_turn 没有作用在重载后的 T1 上。
-- **已修（2026-10-02 12:32 确认）**：SL back_in_fight 现在接受战斗内带本场决策的画面（T1 CARD_SELECTION 算回到战斗）——v4 0660f99，合入 v4-live 14ad753（12:31，开发会话按 Dai「这类修复直接上线」合入），下一局起生效。遗留 end_turn 经开发会话核对未发出（decision log 04:01:27Z 记 "not dispatched: SL reload failed…"；"came back pending" 属于随后的弃牌动作），重载后的 T1 未受影响。
+- **已修（2026-10-02 12:32 确认）**：SL back_in_fight 现在接受战斗内带本场决策的画面（T1 CARD_SELECTION 算回到战斗）——v4 0660f99，合入 v4-live 14ad753（12:31，开发会话按 Roy「这类修复直接上线」合入），下一局起生效。遗留 end_turn 经开发会话核对未发出（decision log 04:01:27Z 记 "not dispatched: SL reload failed…"；"came back pending" 属于随后的弃牌动作），重载后的 T1 未受影响。
 
 ### V4.3 第 4–6 局复盘补充（2026-10-02 13:04）
 - **SL previous_attempts 敌人只写名字、不分节**：src/sl/controller.ts:175、:263，出牌目标和敌人列表只写「残杀千足虫」，同题选项是「残杀千足虫 (MIDDLE)」。VNKN F25 赢的关键恰是打后节不打中节，Jev 看不出之前打的是哪一节。不阻塞。
@@ -110,7 +110,7 @@
 - **SL 换线顺序（设计缺口）**：src/sl/explore.ts:241（3c95965）先挑离死亡最近的点；:235 只排除替换线死得更多的点，不排除所有线都 100% 死的点；:16 假设后续尝试沿参考路径走到换线点，但前面的选择没固定，Jev 在 0.5 附近会翻面。证据 R1QJ F33 无厌沙虫：路径 rollout 死亡率 T1 0.33、T2–T4 0.71、T5 起 1.0；第 3 次目标 T8 但 Jev 在 T5 自己翻面、T7 死；第 4 次换 T8（两线都 24/24 死）回到原结局；第 5 次换 T5、第 6 次换 T3，都 T7 死，没有一次撑过原死亡回合 T9。建议从死亡率 <1 的最后一个点倒推，或换线点之前按参考路径重放。不阻塞。
 - **已知抽牌被白丢**（小）：src/sl/draws.ts:448-449 探寻打击从抽牌堆选走一张后整个丢弃已知顺序；R1QJ 6 次 T2 都丢，known_draws 只剩 10 张，而 6 次实际 35 张抽牌顺序完全相同。不阻塞。
 - 已知项复发：为 boss 留的药路上被喝（XPDA F28、610B F31）。run_plan_merge 全 stored，gate_reject 0；漏判只有 610B（已修）。
-- **已修（2026-10-03 01:16 确认）**：SL 换线顺序（所有线全死的点排最后，SL_RETRY_EXPLORE_ORDER）+ 换线点前按第 2 次路径重放（SL_RETRY_EXPLORE_REPLAY）；探寻打击从抽牌堆选牌不再丢已知顺序（SL_RETRY_KNOWN_PICKS，R1QJ T1 已知 5→29 张）。另加 SL_RETRY_EXPLORE_B2（可信 boss 用 B2 胜率把关）、SL_RETRY_EXPLORE_BOSS_POTIONS（boss 战换线可喝药，Dai 定）。v4-live 914515c（01:16），下一局起生效。两条关闭。
+- **已修（2026-10-03 01:16 确认）**：SL 换线顺序（所有线全死的点排最后，SL_RETRY_EXPLORE_ORDER）+ 换线点前按第 2 次路径重放（SL_RETRY_EXPLORE_REPLAY）；探寻打击从抽牌堆选牌不再丢已知顺序（SL_RETRY_KNOWN_PICKS，R1QJ T1 已知 5→29 张）。另加 SL_RETRY_EXPLORE_B2（可信 boss 用 B2 胜率把关）、SL_RETRY_EXPLORE_BOSS_POTIONS（boss 战换线可喝药，Roy 定）。v4-live 914515c（01:16），下一局起生效。两条关闭。
 
 ### V4.4 A9 第 7–9 局复盘补充（2026-10-03 02:23）
 - **SL 判官「有抽牌就不确定」忽略抽牌牌的自身失血**（阻塞 SL）：914515c src/sl/judge.ts:486-487（DRAWS 定义 :301 /抽|draw/i）只要可打牌文字含「抽」就判 not certain，不看该牌自身失血（祭品 HpLoss 6）是否 ≥ 当前血量。证据 R764 F33 知识恶魔 T10：5 血 + 3 格挡、1 能量、手牌只有祭品，恶魔 3/399，来袭 24（控制台 20261003-014109-914515c+dirty.log:1187；states 18:12:43）；实际 T10 开局即必死（最多 64 伤需 67），5 次重打未用。提前读档 :658 facts.draws 一并检查。
@@ -134,7 +134,7 @@
 - 设计缺口：src/screens/map.ts:468-504 只在下一节点不可达时重规划路线，血量骤降不复核（XC4T F8 精英后 36 血仍照计划走普通战）。
 - 观察：「抽什么都会死」判定 4 次全为真死；规划器判全死但 SL 未触发的两处（XC4T F11、8RB3 F46）都是非名单走廊，按设计。巨斧机器人复活规则（Stock → BOOT_UP）生效；A9 启动回合格挡被低估（库 4/10，实际 15），不影响结局。B3PJ 换线被耸肩无视冲掉（79ef4eb，cab3c3f 已修）。run_plan_merge 全 stored，gate_reject 0。
 - **已修（2026-10-03 07:33 确认）**：缩小伤害——SHRINK_POWER≠0 即判缩小，手牌显示伤害照用，只对本回合新加力量、全身撞击、活力、欺凌乘 0.7（游戏取整），药水与非攻击伤害不缩，缩小甲虫死即解除。重放 359 个缩小决策：敌伤精确 326→352/353，错判击杀 3→0。v4-live b0e9618（07:33），下一局起生效。关闭。
-- **更正（2026-10-03 07:33）**：上条「路线不因掉血复核」不准确——复核其实跑了（随卡牌奖励题顺带），XC4T F8（36/80）和 F9（11/80）DeepSeek 两次都答 route keep；是判断问题不是缺复核。开发会话已向 Dai 提议在路线复核事实里加入后续每个节点的预期掉血，待 Dai 定。
+- **更正（2026-10-03 07:33）**：上条「路线不因掉血复核」不准确——复核其实跑了（随卡牌奖励题顺带），XC4T F8（36/80）和 F9（11/80）DeepSeek 两次都答 route keep；是判断问题不是缺复核。开发会话已向 Roy 提议在路线复核事实里加入后续每个节点的预期掉血，待 Roy 定。
 
 ### V4.4 A9 第 16–18 局复盘补充（2026-10-03 08:57）
 - **SL_RETRY_EXPLORE_TURN 在重规划只剩一条线时失效**（不阻塞）：src/screens/combat-plan.ts:3039-3051（43553c8；cab3c3f :3034-3046）avoidsTop 只在有别的不死线时起作用，求解器只给一条线时 avoid 无效且无日志；explore.ts:781 判「没打过」看的是抽牌前几张。证据 PW7Y F48：控制台 20261003-063835-cab3c3f+dirty.log:2039/:2047 第 3 次换线后打回「血墙, 剑柄打击+, 暴走, 踩踏」；:2152/:2157 第 4 次战斗专注+ 抽牌后打回第 2 次整回合（explore.differs=false），白费 2 次重打。
@@ -182,7 +182,7 @@
 - SL 名单缺口：机甲骑士 MECHA_KNIGHT 不在 sl-elites.json（A8+ 2/13，3JHE 后约 3/14）；3JHE 92% 进场 T7 死、SL 没跟踪。建议三幕精英全跟踪或重排名单。
 - 观察：4719643 的 2000 字符 runaway（3JHE 8、C4F1 7）是 choice+reason 写完后的空白循环；6d2ce32 截断 + 311c740 accept-cut 应已覆盖，下一批核对 accepted_from_cut。
 - 小：RJZG decider 已记 codex，但 rationale/控制台仍写「DeepSeek changed the act's route」「DeepSeek decided」。 已修（10-04 确认，v4-live ed03f4c）
-- SL 漏判（最终 boss）：ET3V F48 永世沙漏 T13 判官「not certain: a revive is left (LIZARD_TAIL)」不读档，结束回合即阵亡，余 5 次（控制台 20261003-233142-554951d+dirty.log:2210）；尾巴是否早已用掉或复活后同回合再死待查。另：game over 后又挂了一行 F48 attempt 1 跟踪（sl-attempts 多一行，draws「tracking began after the fight's start (T13)」）。 已修（10-04 确认，v4-live e32c8b7，V4.5.revive；尾巴 T10 开局已被凋萎+披风触发而追踪漏记，T13 死于凋萎回合末伤害；开关 SL_RELOAD_ON_REVIVE 默认关待 Dai）
+- SL 漏判（最终 boss）：ET3V F48 永世沙漏 T13 判官「not certain: a revive is left (LIZARD_TAIL)」不读档，结束回合即阵亡，余 5 次（控制台 20261003-233142-554951d+dirty.log:2210）；尾巴是否早已用掉或复活后同回合再死待查。另：game over 后又挂了一行 F48 attempt 1 跟踪（sl-attempts 多一行，draws「tracking began after the fight's start (T13)」）。 已修（10-04 确认，v4-live e32c8b7，V4.5.revive；尾巴 T10 开局已被凋萎+披风触发而追踪漏记，T13 死于凋萎回合末伤害；开关 SL_RELOAD_ON_REVIVE 默认关待 Roy）
 - SL 漏判：X80A F42 灵魂枢纽（列名精英，最多 4 次）T4/T5/T6 判官「not certain: Ripple Basin (no attack played): its block is not counted here」不读档；T6 1 血 0 格挡对 46 来袭阵亡，4 次未用（控制台 3dfc2af 批次第 1399/1406/1419 行）。建议涟漪盆格挡按实值或上限计入，仍死则判必死；回放排查其他「not certain: X」整体放过。
 ### V4.5.gpt ET3V/7TQF/X80A 复盘补充（10-04）
 - accept-cut 没接住（小）：ET3V F42 rest/plan 两次空白 runaway（105/100 字符），choice o1:c21 + reason 已写完，closeCutAnswer 离线可闭合，fromCut 仍返回 null，回退 DeepSeek（554951d src/brain/engines/codex.ts:1049/:1155），原因待查。
@@ -195,8 +195,8 @@
 - SL explore：换线结果解析成与失败那次相同的出牌（differs:false）时，应改走下一条没试过的线（AKK0 第 3、5 次白打）。 已修（10-04，v4-live 8939eb0，V4.6.explore3）
 - SL explore：报「board not on path」后，应在同一次尝试里于目标回合强制避开被排除的线，不要等下一次才 fallback（ABCJ 第 4 次）。只是出牌顺序不同，局面 hash 也会不同。 已修（10-04，v4-live 8939eb0，V4.6.explore3）
 - SL 参照：重打应锚定最好的那次失败，而不是固定锚第 2 次（ABCJ 第 1 次打到 T10、boss 剩 211，之后再没回去试）。 已修（10-04，v4-live 8939eb0，V4.6.explore3）
-- 判官（瀑布巨兽）：HP 加上能拿到的最大格挡低于下一次自爆（3T+14）且只会越来越差时，应判必死。另外代码在巨兽剩 1–6 血时迟迟不打死它（AKK0 第 1、6 次各白打约 8 回合）。 部分修复（10-04，v4-live fa29905，V4.6.giant：rollout 估值修好；判官「必死」推算按 Dai 规则不做；输定局面仍会拖几回合，待 Dai 定）
-- 药水：rollout 加进来的线会喝掉 run plan 留给 boss 的药（AKK0 F14 强化药；ABCJ F44/F46 两瓶力量药、F30 鲜血药）。 核查无绕过（10-04 开发会话：862 次喝药 837 次付了持有价值，其余 25 次属 09-30 例外；要改就改表和规则，交给 Dai）
+- 判官（瀑布巨兽）：HP 加上能拿到的最大格挡低于下一次自爆（3T+14）且只会越来越差时，应判必死。另外代码在巨兽剩 1–6 血时迟迟不打死它（AKK0 第 1、6 次各白打约 8 回合）。 部分修复（10-04，v4-live fa29905，V4.6.giant：rollout 估值修好；判官「必死」推算按 Roy 规则不做；输定局面仍会拖几回合，待 Roy 定）
+- 药水：rollout 加进来的线会喝掉 run plan 留给 boss 的药（AKK0 F14 强化药；ABCJ F44/F46 两瓶力量药、F30 鲜血药）。 核查无绕过（10-04 开发会话：862 次喝药 837 次付了持有价值，其余 25 次属 09-30 例外；要改就改表和规则，交给 Roy）
 - boss 模拟样本不足：ABCJ 41 次中有 16 次不到 300 个样本（AKK0、V8N5 各 1 次）。
 - 小：codex xhigh 在路线字段里输出乱码（77 次中 3 次，如「keep出来ketøy…」），re-ask 能修好。 已修（10-04，v4-live 0b12aa1，V4.6.routekeep）
 ### V4.6 D4VF/3B4K/4AWD 复盘（10-04）
@@ -210,7 +210,7 @@
 ### 运维 codex 卡死检查误报（2026-10-04 22:16）
 - ~~**非阻塞：进程扫描竞态触发假 stall**~~（已修 9692ea6，2026-10-04 22:2x：判读改认 OK/STALL 行，/proc 竞态静音）。证据局 C48LLXBGKXQ9（SILENT A0），2026-10-04 22:15 调度器消息先报 `/proc/202999/cmdline: No such file or directory`，末行却是 `OK (last decision 4s ago, console quiet 3s)`；22:15 的 broker 复核同样先报 PID 205098/205163 不存在，再报 `OK (last decision 3s ago, console quiet 2s)`。`ops/stall-check.sh:16`（动作输出标 :17）在 pgrep 后打开 cmdline，进程退出时输入重定向报错，后置 `2>/dev/null` 未抑制该错误；`ops/codex-ops.sh:77-79` 合并 stderr 后只看第一行是否以 OK 开头，把此错误当成 stall。autoplay PID 180434、play node PID 180482 均在，控制台 22:15:55 仍出牌/结束回合。建议开发会话抑制正常退出的 /proc 竞态诊断，并按检查的明确 OK / STALL 结果分类；不影响游戏行为。调度器和检查脚本在运维沙箱中只读，交开发会话处理。
 
-### 开发会话转交 codex 学习者（2026-10-04，Dai：改动和优化尽量交给 codex 学习者，Claude 只监控和对话）
+### 开发会话转交 codex 学习者（2026-10-04，Roy：改动和优化尽量交给 codex 学习者，Claude 只监控和对话）
 - **learner/tasks/fix-batch.md 过时**：默认 items 指向 notes/fix-queue.md（现在用的是 fix-queue-v4.md）；合入流程还写「merge = v3」「flock ops/v3-merge.lock」，一个仓库之后对局分支是 live（.worktrees/live）。改成 merge=live 的流程（等知识刷新跑完、先提交刷新过的数据、合入、tsc + vitest、decision-log 一行、eval/versions.json 视是否改打法加版本），并按学习协议：改打法的修复要引证据局号和账本条目。
 - **知识前缀模板里的角色专属文字**：房间代价表说明「战斗房含燃烧之血等战后回血」（agent/src/knowledge/render/ 下），燃烧之血是铁甲战士的遗物；改成和角色无关的说法。注意铁甲的前缀会因此变（prefix sha），记 eval 版本。
 - **agent/tools/deepseek-prompt-dump.ts 跑不了**：整份读 logs/states.jsonl（超 Node 字符串上限 ERR_STRING_TOO_LONG）；改成按偏移从文件尾流式找最后一个战斗局面。
@@ -221,21 +221,21 @@
 - **非阻塞，学习者机制提案待开发审核：刀刃陷阱即时重放漏算**。来源 C48LLXBGKXQ9 复盘第二条、账本 silent-0002 / silent-0004，定位 `agent/src/reflex/card-model.ts:759`、`:820`—`:823`。学习者证据：F19 T8 文本6张小刀的刀刃陷阱被预测0伤，实际杀敌；F33 第1次 T1 文本0张时仍给固定评分、实际0伤。属于从本局机制证据提出的模型缺口，运维不实现或补充规则。
 - **非阻塞，角色隔离提案待开发审核：boss 时钟回退沿用铁甲拟合常量**。来源 C48LLXBGKXQ9 复盘第三条、账本 silent-0003，定位 `agent/src/sim/boss-clock.ts:982`—`:985`、`:235`—`:237`、`:1758`—`:1759`。学习者报告本局32次 act_boss_clock 使用旧角色215场 A8 的拟合和掉血回退常量；本条交开发会话审核数据来源与角色隔离，不由运维调整估值。
 
-### 开发会话转交 codex 学习者：经验库每局一更（Dai 2026-10-04 23:1x）
-- **调度器自动派经验更新**：Dai 定「经验 1 局一更，只要来得及」。ops/codex-ops-learn.py 在一批复盘结束（learner-done）后，若该角色 `ops/experience-pending.py --character <id>` ≥ 1 且没有经验批次在跑，就在 `.worktrees/exp`（分支 exp-silent，从 main 合）派 `learner/run.ts --engine codex --task experience-update --character <id> --set runs=<待并入的局> --set merge=no`；跑完写一行收件箱（「经验批次 <stamp> 完成，待开发会话审核合入」），失败按复盘批次的重试规则。一个时刻只跑一个经验批次；赶不上的局并入下一批。docs/codex-ops.md 和运维 prompt 同步一句。
+### 开发会话转交 codex 学习者：经验库每局一更（Roy 2026-10-04 23:1x）
+- **调度器自动派经验更新**：Roy 定「经验 1 局一更，只要来得及」。ops/codex-ops-learn.py 在一批复盘结束（learner-done）后，若该角色 `ops/experience-pending.py --character <id>` ≥ 1 且没有经验批次在跑，就在 `.worktrees/exp`（分支 exp-silent，从 main 合）派 `learner/run.ts --engine codex --task experience-update --character <id> --set runs=<待并入的局> --set merge=no`；跑完写一行收件箱（「经验批次 <stamp> 完成，待开发会话审核合入」），失败按复盘批次的重试规则。一个时刻只跑一个经验批次；赶不上的局并入下一批。docs/codex-ops.md 和运维 prompt 同步一句。
 - **experience-update.md 过时**：合入一节还写 merge = v3 / ops/v3-merge.lock，改成 live 流程（同 fix-batch 那条）。
 
 ### 静默猎手 Y6GM2CHWJBEY 复盘回报（运维 codex，2026-10-05 00:10）
 - **非阻塞，学习者机制提案待开发审核：毒牌施毒、结算与条件评分缺口**。来源 Y6GM2CHWJBEY 复盘、账本 silent-0008，定位 `agent/src/reflex/card-model.ts:749`。学习者报告毒牌施毒与回合结算未进入推演，空打条件牌仍获得常驻评分；同族战六次 T2 均向没有中毒的目标打出咕嘟冒泡，消耗能量而没有效果。具体机制证据在 silent-0010 / silent-0011；运维只转录有局号的提案，不补充或实现规则。 **已修（S1.fix3，f6c5504a，运维于2026-10-05 05:22核实live合入00fa8f79）。**
 - **已知问题追加证据：boss 时钟角色隔离**。Y6GM2CHWJBEY 再次观察到 `agent/src/sim/boss-clock.ts:982` 的旧角色拟合回退，学习者已将证据追加 silent-0003；属于此前已交开发会话的同一项缺陷，不另开修复。
 
-### 最高优先：学习迭代由 codex 自己闭环（Dai 2026-10-05 00:19）
-Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习者自己闭环」。Claude 只做观察。要做成：
-- **（00:2x 更正，Dai：「codex 学习者自己测试确认没有问题就可以直接合并上线」）学习者自测通过就自己按 live 流程合入（经验和修复任务一律 merge=live），不另设审核；下面原写的运维审核只保留「学习者提交被挡时帮它提交、合入」这一兜底。**
+### 最高优先：学习迭代由 codex 自己闭环（Roy 2026-10-05 00:19）
+Roy：「你（Claude）别参与修改或审核，迭代直接让 codex 学习者自己闭环」。Claude 只做观察。要做成：
+- **（00:2x 更正，Roy：「codex 学习者自己测试确认没有问题就可以直接合并上线」）学习者自测通过就自己按 live 流程合入（经验和修复任务一律 merge=live），不另设审核；下面原写的运维审核只保留「学习者提交被挡时帮它提交、合入」这一兜底。**
 - **谁审核、谁合入（原稿）**：运维 codex 会话接管原来「开发会话」的审核和上线：学习者的经验批次（.worktrees/exp，分支 exp-silent）和修复批次（.worktrees/codex-dev，分支 codex-dev）跑完后，由运维会话按学习协议审核（证据局号、只用本角色数据、台账登记、测试通过），通过就合进 main 和 live、记 decision-log、改打法的加 eval/versions.json 版本、把台账条目改成 accepted / shipped；不通过就把理由写进台账（rejected + note）并退回学习者。学习者产出的提案也由运维会话审核（accepted / rejected）。
 - **谁派活**：调度器（ops/codex-ops-learn.py）每批复盘结束后自动派经验更新（每局一更，同时只跑一批，赶不上的并入下一批）；有 accepted 但没上线的提案、或 fix-queue-v4.md 里没划掉的条目时，自动派 fix-batch（同时只跑一批）。broker（ops/codex-ops-actions.sh）加 `experience-update`、`fix-batch`、`learner-merge <branch>` 一类白名单动作，供运维会话手动触发。
 - **任务说明**：learner/tasks/experience-update.md、fix-batch.md 的「合入」一节改成 live 流程（不再是 merge=v3 / ops/v3-merge.lock）。
-- **文档**：docs/learning-protocol.md、AGENTS.md、docs/codex-ops.md、运维 prompt（ops/ops-session-silent-codex-prompt.md）里「开发会话审核 / 实现 / 合入」改成「运维 codex 会话审核合入、codex 学习者实现」；Claude 会话只观察和与 Dai 对话。运维 prompt 改动属于 Dai 已经定的分工，不用再问。
+- **文档**：docs/learning-protocol.md、AGENTS.md、docs/codex-ops.md、运维 prompt（ops/ops-session-silent-codex-prompt.md）里「开发会话审核 / 实现 / 合入」改成「运维 codex 会话审核合入、codex 学习者实现」；Claude 会话只观察和与 Roy 对话。运维 prompt 改动属于 Roy 已经定的分工，不用再问。
 - 本批修复本身由 codex 学习者实现、自己测试、自己按 live 流程合入（merge=live）。
 
 ### 静默猎手 LRN0HPZ0FZS1 复盘回报（运维 codex，2026-10-05 00:36）
@@ -254,7 +254,7 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 
 ### 静默猎手 KAY522KT5NXR 复盘回报（运维 codex，2026-10-05 04:37）
 - **非阻塞，学习者数据模型提案：跨读档阶段序列使实验体第三阶段血量被截错**。来源 KAY522KT5NXR 复盘首条、账本 silent-0041，定位 `agent/src/knowledge/monster-db.ts:1009`（优先最长阶段序列）、`agent/src/sim/boss-clock.ts:1503`（取前三项），生成来源 `knowledge/builders/build-monster-db.py:410`、`:275`。学习者证据：本局 F34 路线题把 TEST_SUBJECT 写成100/200/100、总400，两次实际阶段均为100→200→300、总600；静默角色记录的最长序列拼接了六次 SL 的100→200重复，前三项因此取成100/200/100。学习者另回溯 R0HEV5E3QT6G F34/F36 同样错误，first_run 记为该局；本条与 silent-0040 的回合拼接问题分开记录。这里只转录学习者的局号、定位和分析，不补机制、不改模型、不另设审核；交学习者实现、自测、上线。既有 silent-0003、silent-0008 的重复证据由学习者追加原账本，不重复开项。 **已修（S1.fix3，4ed3c72d，运维于2026-10-05 05:22核实live合入00fa8f79）。**
-- **broker 加 eval-metrics 动作**（运维 2026-10-05 04:26）：eval/metrics.py 调 eval/strength-sources.ts 时 tsx 在 /tmp/tsx-1000/*.pipe 监听，沙箱拒绝（listen EPERM）。给 ops/codex-ops-actions.sh 加白名单动作（沙箱外跑 eval/metrics.py，参数限定），输出写到 paper/materials/<角色>/ 下。A0 这次由观察者在沙箱外跑了，结果 paper/materials/silent/a0-metrics.md。 2026-10-05 05:22进度：本批fix-batch因ops文件只读跳过；运维权限同样将broker文件设为只读，已交收件箱请Dai安排有相应写权限的执行方。 **已修（2026-10-05 09:33，源ef46d720、main e223fb56、live dac9d941；固定沙箱与假评估器回归通过，下一次叫醒加载eval-metrics <角色id> <进阶>，历史评估请求届时可补跑）。**
+- **broker 加 eval-metrics 动作**（运维 2026-10-05 04:26）：eval/metrics.py 调 eval/strength-sources.ts 时 tsx 在 /tmp/tsx-1000/*.pipe 监听，沙箱拒绝（listen EPERM）。给 ops/codex-ops-actions.sh 加白名单动作（沙箱外跑 eval/metrics.py，参数限定），输出写到 paper/materials/<角色>/ 下。A0 这次由观察者在沙箱外跑了，结果 paper/materials/silent/a0-metrics.md。 2026-10-05 05:22进度：本批fix-batch因ops文件只读跳过；运维权限同样将broker文件设为只读，已交收件箱请Roy安排有相应写权限的执行方。 **已修（2026-10-05 09:33，源ef46d720、main e223fb56、live dac9d941；固定沙箱与假评估器回归通过，下一次叫醒加载eval-metrics <角色id> <进阶>，历史评估请求届时可补跑）。**
 
 ### 主目录自测误收学习者运行夹具（运维 codex，2026-10-05 05:22）
 - **非阻塞，工具问题：TypeScript通配纳入learner/runs临时源码**。定位 `agent/tsconfig.json:23`，include为`../learner/**/*.ts`，没有排除学习者运行产物。证据批次20261005-041302-fix-batch（R0HEV5E3QT6G/KAY522KT5NXR等静默证据的学习任务）：主目录合入S1.fix3后运行`nice -n 19 bash tools/test-sandbox.sh`（cwd=agent），tsc exit 1，343条诊断全部来自`learner/runs/20261005-041302-fix-batch/`中的临时测试和poison-src源码，没有实际源码路径诊断，日志`/tmp/sts2-fix3-main-sandbox-tests.log`。同一暂存合并内容已复制到干净校验工作树验证；原始运行归档保留。交学习者修正编译包含范围，对局未因此停下。 **已修（2026-10-05 06:11运维核实，源码7bc83580，live发布5f74cd50，main已包含于561f2cbd）：排除learner/runs归档源码，保留learner实现编译检查；编译范围回归撤修复失败、恢复通过。本项为纯工具，不单独加对局版本。**
@@ -264,7 +264,7 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 - **非阻塞，纯统计bug：晚写复盘被误计为上线后重犯**。来源 XYYQYBRM2A01 复盘第三条、账本 silent-0052，定位 `learner/ledger.py:280`、`:285`、`:286`。学习者证据：本局2026-10-05 05:05:41.432+08:00结束，运行bb19732f+dirty；silent-0008于05:22:46登记S1.fix3，正常追补repeat时工具只比较入账时间added与shipped_at，误计after-shipping repeat，未检查错误发生时间或实际生效版本。交学习者修正统计口径并保留原始账本历史；本轮dataset沿现脚本生成，暂不据该计数推断上线后效果。既有毒模型silent-0008的证据已由学习者追加，本局早于修复，不重复开毒模型待办。 **已修（S1.fix5，2610945b，运维于2026-10-05 07:12核实最终live发布9e0fda2e包含本项；原证据保留）。**
 
 ### 合入兜底后缺少沙箱外完整检查（运维 codex，2026-10-05 05:44）
-- **非阻塞，调度工具问题**。定位 `ops/learner_checks.py:37`：完成事件回报`merged=null`时直接返回，运维随后按live流程成功兜底合入也没有重新触发完整tsc + vitest。证据批次20261005-051301-experience-update：学习者cf3de824自测通过、因decision-log冲突未合；运维保留记录后合入c5b9123b并登记S1.exp6/live 69630ae6，live沙箱145文件1888用例通过，但无沙箱外补跑动作。请求有broker写权限的学习任务提供按批次校验实际合入、锁内补完整检查并发learner-checks的动作；去重且保留原失败/兜底历史，运维不改宽沙箱出口。已在收件箱及for-dai附这次的完整补跑命令。
+- **非阻塞，调度工具问题**。定位 `ops/learner_checks.py:37`：完成事件回报`merged=null`时直接返回，运维随后按live流程成功兜底合入也没有重新触发完整tsc + vitest。证据批次20261005-051301-experience-update：学习者cf3de824自测通过、因decision-log冲突未合；运维保留记录后合入c5b9123b并登记S1.exp6/live 69630ae6，live沙箱145文件1888用例通过，但无沙箱外补跑动作。请求有broker写权限的学习任务提供按批次校验实际合入、锁内补完整检查并发learner-checks的动作；去重且保留原失败/兜底历史，运维不改宽沙箱出口。已在收件箱及for-roy附这次的完整补跑命令。
 
 ### 单次动作超时触发卡死提醒（运维 codex，2026-10-05 05:51）
 - **非阻塞，监测判读问题**。定位 `ops/stall-check.sh:25`，尾部四行出现`cannot reach the STS2-Agent mod`即追加stuck/unreachable，没有结合持续时间或后续Codex决策。证据局K3676LU8B0UH A1 F36，控制台`logs/console/20261005-050828-ccf1fcde+dirty.log`：05:44:46一次choose_event_option请求超时，05:44:48已开始事件决策；05:50送达的stall提醒仍引用该片段，而本轮检查日志已推进F40，mod为REST且进程存活，stall-check返回OK（决策19秒、控制台6秒）。请学习者依据当前状态与连续失败证据区分单次超时和持续卡住，保留对实际持续无法访问mod的检测；运维本轮只登记，不改只读调度器。
@@ -281,15 +281,15 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 ### 静默猎手 ZZMYZ5UBCG72 复盘回报（运维 codex，2026-10-05 08:16）
 - **非阻塞，学习者机制模型提案：暴露的易伤变量未进入方案模型**。来源本局复盘首条与账本silent-0066，定位`agent/src/reflex/card-model.ts:765`、`:787`、`:847`（学习者只读live定位）。证据ZZMYZ5UBCG72 A2 F48 T2：暴露EXPOSE的观测变量Power=2令聚合体新增2易伤，中和+牌面4伤而实际155→149扣6，选线题仍将暴露列为未建模；当前模型只读VulnerablePower、无EXPOSE映射，未建模零费技能仍计3分。学习者只确认这2伤差额，未独立验证去挡/去人工制品，不据牌面扩充结论；更早Y6GM2CHWJBEY A0 F5 T2已有未建模日志，first_run回溯该局，不称本局新引入。交学习者依据静默证据实现、自测、上线；运维仅转录，不修机制或补知识。其余打法和机制发现留在复盘及账本，没有新的阻塞问题。
 
-### Dai 决定（2026-10-05 08:33）：策略项交给学习者
+### Roy 决定（2026-10-05 08:33）：策略项交给学习者
 - fix-batch 20261005-041302 跳过的策略项（保血 / 留药 / 全死排序、巨兽拖延、boss 时钟校准与样本门槛、路线和休息、SL 范围；见 learner/runs/20261005-041302-fix-batch/handoff-ops.md）交给学习者：新建一个「策略提案」学习任务（learner/tasks/ 下，按学习协议：只用本角色对局证据、引局号、台账登记、自测后按 live 流程自己合入），调度器按需派发（例如每升一级、或攒到一定复盘数时）。改打法的上线照常加 eval 版本。
-- **最高优先，Dai已批准的学习流程任务：策略提案任务及其派发**（运维 codex 2026-10-05 09:33 转交）。落实本节08:33决定：由后续学习者fix-batch建设独立策略提案任务和调度入口，具体策略由该任务的学习者依据本角色对局证据提出并实现；证据局号、学习台账、自测、merge=live及改变打法的eval版本均按学习协议，使用Dai已设的普通模式/high强度。运维已实现eval-metrics并更新fix-batch的旧ops只读说明，key/.env/登录令牌保护保留；本轮发现修复工作树正在使用，不重复派发。此项仍待学习者建设和派发，运维不提供游戏知识。
+- **最高优先，Roy已批准的学习流程任务：策略提案任务及其派发**（运维 codex 2026-10-05 09:33 转交）。落实本节08:33决定：由后续学习者fix-batch建设独立策略提案任务和调度入口，具体策略由该任务的学习者依据本角色对局证据提出并实现；证据局号、学习台账、自测、merge=live及改变打法的eval版本均按学习协议，使用Roy已设的普通模式/high强度。运维已实现eval-metrics并更新fix-batch的旧ops只读说明，key/.env/登录令牌保护保留；本轮发现修复工作树正在使用，不重复派发。此项仍待学习者建设和派发，运维不提供游戏知识。
 
 ### silent-0040 原跨SL统计问题仍待修（运维 codex，2026-10-05 08:43）
 - **非阻塞，既有学习者统计提案，未修**。来源既有账本silent-0040及本批20261005-081301-fix-batch的report.md“没修的”项；`knowledge/builders/build-boss-damage.py`按(run,floor,turn)保留最早帧而未区分SL，学习者原证据T082DRCUHRRD F48的T1—T9取首战、T10取第3次、T11取第6次，累计hp_lost=84，和最终尝试净损80不同；C48LLXBGKXQ9 F17保留首战T19而获胜线T15结束。098a5471/S1.fix8仅修另一个build-monster-db奖励屏较低终帧漏读，没有修本项，相关shipped只登记终帧子项发布。原跨SL条目继续交学习者核对实现，不补额外机制、不将拼接数值当有效整场数据。
 
-### Dai 决定（2026-10-05 08:37）：codex 可以改自己的白名单动作和调度器
-- Dai：「可以让 codex 修改白名单动作脚本，相信 codex」「授权，可以修改 ops/codex/lib.ts 放宽 codex 的自主权限」。运维权限档里调度器和 broker 文件的只读规则已去掉（main e601de00）；学习者 fix-batch 也可以改 ops/codex-ops-actions.sh、ops/codex-ops-do.sh、ops/codex-ops.sh、ops/codex-ops-learn.py、ops/codex/ 等（learner/tasks/fix-batch.md 里「ops/ 只读」对这些文件不再适用，顺手改掉这句）。key、.env、codex 登录令牌、.git hooks/config 的保护不变。
+### Roy 决定（2026-10-05 08:37）：codex 可以改自己的白名单动作和调度器
+- Roy：「可以让 codex 修改白名单动作脚本，相信 codex」「授权，可以修改 ops/codex/lib.ts 放宽 codex 的自主权限」。运维权限档里调度器和 broker 文件的只读规则已去掉（main e601de00）；学习者 fix-batch 也可以改 ops/codex-ops-actions.sh、ops/codex-ops-do.sh、ops/codex-ops.sh、ops/codex-ops-learn.py、ops/codex/ 等（learner/tasks/fix-batch.md 里「ops/ 只读」对这些文件不再适用，顺手改掉这句）。key、.env、codex 登录令牌、.git hooks/config 的保护不变。
 - 待做：eval-metrics 白名单动作（见 04:26 那条）。 **已修（2026-10-05 09:33，源ef46d720、main e223fb56、live dac9d941；固定沙箱与假评估器回归通过，下一次叫醒加载eval-metrics <角色id> <进阶>，历史评估请求届时可补跑）。**
 
 ### 静默猎手 10GPK5XGHCK3 复盘回报（运维 codex，2026-10-05 09:03）
@@ -300,22 +300,22 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 - **非阻塞，学习台账工具问题**。定位`learner/ledger.py:53`（UPDATE_FIELDS）和`:199`（validate_update）：append-only更新接口不接受first_run/asc/prior_note，学习者无法经工具更正最早证据元数据。来源批次20261005-085844-experience-update、固定源c2ece69c，账本silent-0076；学习者回溯T082DRCUHRRD A0 F12 T6只支持腐蚀波建层/时限，实际抽牌施毒首例仍10GPK5XGHCK3 A3 F37 T8/F48 T6。已追加support及note，结构字段仍first_run=10G/A3，check0。交学习者工具任务实现有校验的追加式更正并保留历史，具体来源归属由学习者证据决定；运维不直接修改旧账本或生成CSV。
 
 ### 长检查占用学习状态锁导致兜底动作超时（运维 codex，2026-10-05 09:49）
-- **非阻塞，运维调度工具问题**。定位`ops/codex-ops-learn.py:410`（所有handler先阻塞learn.lock）、`:314`（锁内finish_write_batch）及`ops/learner_checks.py:44`（同步flock live锁后跑完整检查）。证据批次20261005-085844-experience-update、10GPK5XGHCK3：09:39非阻塞live锁busy，随后`bash ops/codex-ops-do.sh learner-merge exp-silent`exit128，输出“（超过 30 秒，已终止）”，未确认manual入队；07:08同动作已有同样超时，07:50曾恢复。request-merge本身仅入队却也需要同一学习状态锁，源码存在长检查争用路径，实际持锁者尚未确认。请学习者核对争用并修复短请求被长检查阻塞的问题，保留状态一致性、工作树占用与重复派发保护；本轮不绕过动作直接写队列，合入步骤已交接收件箱/for-dai。
+- **非阻塞，运维调度工具问题**。定位`ops/codex-ops-learn.py:410`（所有handler先阻塞learn.lock）、`:314`（锁内finish_write_batch）及`ops/learner_checks.py:44`（同步flock live锁后跑完整检查）。证据批次20261005-085844-experience-update、10GPK5XGHCK3：09:39非阻塞live锁busy，随后`bash ops/codex-ops-do.sh learner-merge exp-silent`exit128，输出“（超过 30 秒，已终止）”，未确认manual入队；07:08同动作已有同样超时，07:50曾恢复。request-merge本身仅入队却也需要同一学习状态锁，源码存在长检查争用路径，实际持锁者尚未确认。请学习者核对争用并修复短请求被长检查阻塞的问题，保留状态一致性、工作树占用与重复派发保护；本轮不绕过动作直接写队列，合入步骤已交接收件箱/for-roy。
 
 ### 批次20261005-084301修复完成（运维 codex，2026-10-05 10:00）
 - **已修：08:16暴露提案silent-0066**，学习者源码62e11664、S1.fix9，live最终发布7efeed50d42453e3fa6a6c832214796a7f73b8dd已包含；旧REPLACE占位有追加更正，保留历史。
 - **已修：08:43原跨SL boss统计问题silent-0040**，学习者源码3f40af6f、S1.fix9，保留最后尝试的回合及元数据。先前S1.fix8仅终帧子项的记录和当时“未修”结论保留，本次才完成原跨SL项。
 - **已修：09:03融入暗影及腐蚀波提案**，源码82c50cc0（silent-0075/0077）与53cc31f4（silent-0074/0076）、S1.fix10。运维仅登记学习者实现，没有扩充其机制范围。
-- 四项均为学习者固定数据撤修复失败、恢复通过；合后自测tsc0、156文件1917用例，沙箱外完整检查tsc/vitest exit0、208文件2747通过/2跳过；main同步71e677e2，6项账本shipped。旧任务ops只读跳过项中eval-metrics已另上线；其余调度工具与已批准的策略任务保留队列，不重复要求Dai授权。经验.10仍待manual合入，此处只登记修复发布。
+- 四项均为学习者固定数据撤修复失败、恢复通过；合后自测tsc0、156文件1917用例，沙箱外完整检查tsc/vitest exit0、208文件2747通过/2跳过；main同步71e677e2，6项账本shipped。旧任务ops只读跳过项中eval-metrics已另上线；其余调度工具与已批准的策略任务保留队列，不重复要求Roy授权。经验.10仍待manual合入，此处只登记修复发布。
 
 ### 静默猎手1NZ8FE5F34R9复盘回报（运维 codex，2026-10-05 10:05）
 - **非阻塞，学习者机制模型提案：预判的本回合敏捷未进入同一方案后续格挡**。来源批次20261005-094524复盘及silent-0078（机制证据silent-0080）；定位`agent/src/reflex/card-model.ts:943`（仅对FOOTWORK输出卡牌敏捷）、`:846`（已建模效果判定）和`:860`（未知技能分）、`agent/src/reflex/turn-solver.ts:1802`（消费dexterity），为学习者复盘时只读live定位，不声称与本局45965f49+dirty逐字相同。证据1NZ8FE5F34R9 A4 F29首战T2：预判→防御→毒雾的plan4预测5挡，实际新增本回合2敏捷后防御给7挡；第4次T2亦见7挡，T3两增益消失。只确认新增2挡差额，不将随后追加致命毒药的伤害归本项，不把临时增益沿用后续回合，也不把整场死亡归于2挡。交学习者依静默证据实现、自测、上线，运维仅转录，不修机制、不补知识。
-- 本批无新的角色无关阻塞问题；触媒换防御的即时血价、路线预测与问号风险等分析保留学习者复盘及silent-0079/0019，不另补策略。四次终战均30血进场、前三次判死读档、第4次实际死亡按学习者证据分别记录；无Dai待定事项。
+- 本批无新的角色无关阻塞问题；触媒换防御的即时血价、路线预测与问号风险等分析保留学习者复盘及silent-0079/0019，不另补策略。四次终战均30血进场、前三次判死读档、第4次实际死亡按学习者证据分别记录；无Roy待定事项。
 
 ### 静默猎手F9PP859XZ3RJ复盘回报（运维 codex，2026-10-05 10:29）
 - **非阻塞，学习者机制模型提案：计算下注之后仍推演已弃掉的原手牌**。来源本局复盘及silent-0081；定位`agent/src/reflex/card-model.ts:836/:960`（动态抽牌及discardsHand输出）、`agent/src/reflex/turn-solver.ts:1542`（消费弃手牌标志），为学习者复盘时只读live定位。证据F9PP859XZ3RJ A4 F37 T2计划在计算下注后继续打生存者及毒雾，预测15挡/0损；实际两牌全弃，抽羽化/打击后代码重算，只有偏折7挡、实损2，毒雾T6才建立。回溯T082DRCUHRRD A0 F27 T1已有计划续打原手牌、实际换牌证据，first_run为T082，本局记repeat但未有本项上线，不称学过后重犯。只转录学习者提案，交学习者实现、自测、上线；不把旧暗影步修复视为本牌已修，不由运维修机制或补知识。
 - **非阻塞，学习者机制模型提案：涂毒逐击新增毒未进入推演**。来源本局复盘及silent-0082（机制证据silent-0084）；定位`agent/src/reflex/turn-solver.ts:2001`、`agent/src/reflex/card-model.ts:843/:853/:961`（学习者只读live定位）。证据F9PP859XZ3RJ A4 F37 T5：两次攻击独立确认涂毒各新增1毒，实际5毒、模型仅算直接施毒3，漏2毒；预测24总伤、实际21直伤加5毒。蜃景预测2挡实增6挡的另4挡含同方案牌面更新差额，未独立全归涂毒；KAY522KT5NXR A0 F45 T4仅支持升级涂毒建2层，没有存活目标逐击对照，不作为本bug已验证旧错。交学习者按静默证据实现、自测、上线，运维仅转录，不扩充升级或其他机制结论。
-- 本批没有角色无关的阻塞性纯bug或Dai待定事项；雕刻师仪式、苦无、路线等观察保留复盘及0083/0084/0085/0019，未定位的T7少估5伤等差额保留“未记录”，不据此另开已定位bug；不将新增五条账本全称A4首次遇到，不补打法。
+- 本批没有角色无关的阻塞性纯bug或Roy待定事项；雕刻师仪式、苦无、路线等观察保留复盘及0083/0084/0085/0019，未定位的T7少估5伤等差额保留“未记录”，不据此另开已定位bug；不将新增五条账本全称A4首次遇到，不补打法。
 
 ### 动作清单完整检查失败（运维 codex，2026-10-05 11:02）
 - **已修、待合入live**：观察者补测cf11fab8，tsc0、vitest214文件2758通过/1失败，`agent/tests/ops-codex.test.ts:107`检查`ops/codex-ops-do.sh:7`动作说明缺strategy-proposal。固定源`061d1ca9f3471a952e291efde38cfbeb6a44bd55`（.worktrees/step，step）补齐strategy-proposal/learner-recheck动作说明及docs/codex-ops.md用法；原回归修前失败、修后通过，固定沙箱tsc0、165文件1957用例通过。非阻塞live锁busy，未合入且无新MERGE_HEAD，不等锁、不重试，交接见notes/ops-handoff.md及paper/materials/silent/20261005-1054-broker-action-list-checks.md。
@@ -332,11 +332,11 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 
 ### 静默猎手9YBKCNBFP0X5复盘回报（运维 codex，2026-10-05 11:35）
 - **非阻塞，学习者机制模型提案：异蛇头骨的毒雾额外施毒未进入后续回合推演**。来源批次20261005-111301复盘及silent-0086（机制证据silent-0087）；定位`agent/src/reflex/card-model.ts:972`、`agent/src/reflex/rollout.ts:2520`及`:1728–1731`，为学习者复盘时只读live aafd3e33定位，不声称与本局开局d9a3ea37+dirty逐字相同。学习者证据9YBKCNBFP0X5 A4 F25取得异蛇头骨；F48第6次T5毒雾PoisonPerTurn/能力层数3，T6两敌各4毒，T7/T8/T9各7/10/13，期间未实际打出其他施毒牌；后续回合模型仅读取并增加NOXIOUS_FUMES_POWER的3，未计遗物额外1。只定位后续回合毒雾触发缺口，不将能力改记为4层、不扩展为直接毒牌或随机瓶结论，不把整场失败或T9尚未定位的损失预测差额归于此项。交学习者依据本角色证据实现、自测、上线；运维仅转录，不修机制或补知识。
-- 本批无新的角色无关阻塞问题或Dai待定事项；silent-0009/0079的重复证据、其他敏捷/余像及折扇等机制观察留在学习者复盘与账本，不新增策略、经验或SL名单。
+- 本批无新的角色无关阻塞问题或Roy待定事项；silent-0009/0079的重复证据、其他敏捷/余像及折扇等机制观察留在学习者复盘与账本，不新增策略、经验或SL名单。
 
 ### 静默猎手1LMBFGSMCWKU复盘回报（运维 codex，2026-10-05 11:56）
 - **非阻塞，学习者机制模型提案：脆弱下新增敏捷直接加到折减后牌面格挡，方案高估**。来源批次20261005-114301复盘及silent-0089（机制证据silent-0091）；定位`agent/src/reflex/turn-solver.ts:1804`（将next.tempDex直接加到shown）、`:1812`（速度药水新增5敏捷），为学习者复盘时只读live定位，不声称与本局86b24a1f+dirty逐字相同。学习者证据1LMBFGSMCWKU A4 F48 T6：脆弱96、原3敏捷，速度药水后8敏捷；究极打击→速度药水→防御→残影方案预测22挡/0损，实际两牌各9挡、合18，末另斗篷扣4挡，对25攻击损3，末次重算已预测损3。仅确认两牌合计多估4挡；T3灵动步法后偏折/后空翻另见预测14挡、实际13。旧silent-0026修复的是能力敏捷遗漏，不视作覆盖本组合；更早C48LLXBGKXQ9 F12 T2、XYYQYBRM2A01 F17 T5使用速度药水时无脆弱，不借其推算本项。交学习者依静默证据实现、自测、上线；运维仅转录，不修机制或补知识，不把差额归为整局胜负原因。
-- 本批无新的角色无关阻塞问题或Dai待定事项；其他打法和机制观察保留复盘及账本，五项旧条目均为support、无repeat。学习者已追加药水计数勘误（取得10瓶、使用9次、保留1瓶罐装幽灵），保留原文和更正历史；不由运维修改知识、经验或SL名单。
+- 本批无新的角色无关阻塞问题或Roy待定事项；其他打法和机制观察保留复盘及账本，五项旧条目均为support、无repeat。学习者已追加药水计数勘误（取得10瓶、使用9次、保留1瓶罐装幽灵），保留原文和更正历史；不由运维修改知识、经验或SL名单。
 
 ### 批次20261005-112812修复完成（运维 codex，2026-10-05 12:09）
 - **已修：11:15/11:30固定药水测试数据隔离阻塞**，学习者e78352f7，S1.fix12，live发布991591d3；撤隔离3例失败、恢复26例通过，保留原断言和药水实现，不靠排除/放宽绕过。
@@ -357,7 +357,7 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 - **已修：CARDS_VIEW关闭后火堆重复问大脑**，学习者源码518b6880b46db88752f3666ff8471267c3f6638d，7PWU4CD3QCP3 A8 F47火堆（turn不适用），已合入ee63d4bb09b28a5b530aa9ac82e704e158651be5、发布b05c898c38d9d940f5627e686162295ba0320dd9/S1.fix16。关闭成功后保留未执行答案、指纹/事实/问题均相同才复用；血量或牌组变动、关闭失败均不复用。撤源码1失败/恢复4通过，源及合后沙箱tsc0、171文件1977例，刷新7b607256七项知识blob保留，无对应账本id，不补建/冒用机制条目。main同步固定发布，完整外部检查待调度器后续事件；原已修清单82项及其他未修历史保留。
 
 ### 静默猎手UACFSW4VDDLD复盘提案（运维 codex，2026-10-05 14:04）
-- **非阻塞，学习者机制模型提案：幻影之刃同方案首刀增伤遗漏9点**。来源UACFSW4VDDLD A6 F33首战T2、silent-0099（机制0101），学习者定位`agent/src/reflex/card-model.ts:863`（未建模能力回退8分）及`agent/src/reflex/rollout.ts:1001`（持续能力表未列），运行版本103fd5ff+dirty；只读当前live定位不声称逐字等同运行版本。方案预测20，实际打击10/中和5/首小刀14共29，358→329；敌方结算前3荆棘另329→326，不混入29。仅独立量化新建立能力的同方案首刀增伤，不将保留或跨回合误差、整局失败全归于此。交学习者依本角色证据实现/自测/上线，0099保持observed；运维不修机制，不把本批S1.fix16传输修复标为0099已修。其他阶段结束线和路线选择留学习者复盘/账本，无新纯阻塞bug或Dai待定事项。
+- **非阻塞，学习者机制模型提案：幻影之刃同方案首刀增伤遗漏9点**。来源UACFSW4VDDLD A6 F33首战T2、silent-0099（机制0101），学习者定位`agent/src/reflex/card-model.ts:863`（未建模能力回退8分）及`agent/src/reflex/rollout.ts:1001`（持续能力表未列），运行版本103fd5ff+dirty；只读当前live定位不声称逐字等同运行版本。方案预测20，实际打击10/中和5/首小刀14共29，358→329；敌方结算前3荆棘另329→326，不混入29。仅独立量化新建立能力的同方案首刀增伤，不将保留或跨回合误差、整局失败全归于此。交学习者依本角色证据实现/自测/上线，0099保持observed；运维不修机制，不把本批S1.fix16传输修复标为0099已修。其他阶段结束线和路线选择留学习者复盘/账本，无新纯阻塞bug或Roy待定事项。
 
 ### 阶段结束事实子项上线（运维 codex，2026-10-05 14:30）
 - UACFSW4VDDLD A6 F48第6次T4/silent-0100：学习者固定源1d57f9d0dbbb63603e9ce9768e74cb2021478464已合入2b70928af6e2d02f6f683c9b522d601913ed5204、发布0a066c2f9dd01c0dba7a34b03570e646557bf817/S1.strategy2；单独展示当前阶段结束事实及最低即时损血参考，同值并列，由Jev决定。源及合后固定沙箱tsc0、172文件1982例，撤3失败/恢复5通过；0100已shipped。仅此事实子项完成，整体全死权重、路线/休息阈值、固定顺序、SL及完整时钟校准仍未实现，不将局部上线记作所有策略已修。完整外部检查待调度器事件。

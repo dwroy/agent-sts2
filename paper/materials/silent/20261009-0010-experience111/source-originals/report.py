@@ -31,7 +31,7 @@ lines+=['','### 退役','','- 无；没有本任务代码修复、反例超支�
 for c in V.get('conflicts',[]):lines.append('- '+c)
 lines+=['- '+('未实际合入，不创建eval上线版本/规则上线通知；保留刷新数据、预检及源提交，依用户冲突流程停止，交调用方和运维兜底，不停对局。' if not V.get('merged') else '合后沙箱通过，实际eval/上线记录见live回执，源码提案未实现。'),'','### 切片大小','','- 固定种子20260929，从截至切点SILENT状态抽最高两阶A9/A10各20状态×6界面，共240前后配对；manifest保存池/UTC/唯一帧数，池不足仅有放回补足，不跨角色。CHARACTER=silent调用官方knowledge-slice.ts，common/silent/outcome冻结同份、仅换experience。','','| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for r in SS['rows']:lines.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
-s=SS['overall'];lines+=['',f'- 整体中位{s["before_median"]}→{s["after_median"]}（{s["median_change"]:+}字）；配对差中位{s["paired_median"]}；最大{s["before_max"]}→{s["after_max"]}，单片最大增加{s["max_increase"]}字。',f'- active{U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8适用{U["asc"]["8"]}；A9适用{U["asc"]["9"]}；A10适用{U["asc"]["10"]}。无需合并/压缩/预算调整，需要Dai定的规则：无。','','证据、脚本、CLI、提案、测试、原失败日志/初稿、合入回执及报告：'+str(O)+'。']
+s=SS['overall'];lines+=['',f'- 整体中位{s["before_median"]}→{s["after_median"]}（{s["median_change"]:+}字）；配对差中位{s["paired_median"]}；最大{s["before_max"]}→{s["after_max"]}，单片最大增加{s["max_increase"]}字。',f'- active{U["active"]}，正文{U["chars"]}字符，置信度{U["confidence"]}；A8适用{U["asc"]["8"]}；A9适用{U["asc"]["9"]}；A10适用{U["asc"]["10"]}。无需合并/压缩/预算调整，需要Roy定的规则：无。','','证据、脚本、CLI、提案、测试、原失败日志/初稿、合入回执及报告：'+str(O)+'。']
 section='\n'.join(lines)+'\n';(O/'changelog-section.md').write_text(section);(O/'report.md').write_text(section)
 if '--append' in sys.argv:
  path=ROOT/'paper/materials/experience-changelog-silent.md';before=path.read_bytes();assert ('## '+heading).encode() not in before

@@ -158,7 +158,7 @@ describe("the task files in learner/tasks", () => {
     for (const prompt of [experience, fix]) {
       expect(prompt).toContain("Roy 已授权");
       expect(prompt).toContain("code_proposals");
-      expect(prompt).toContain("notes/for-dai.md 与 ops/inbox-dev.md");
+      expect(prompt).toContain("notes/for-roy.md 与 ops/inbox-dev.md");
     }
   });
 
@@ -549,10 +549,10 @@ describe("--dry-run", () => {
     const dry = deps(env);
     expect(await main(smokeArgs("codex", ["--dry-run"]), dry.deps)).toBe(0);
     expect(dry.out.join("")).toContain("codex exec --json --ignore-user-config --ignore-rules --cd");
-    expect(dry.err.join("")).toContain("codex 未安装：需要 Dai 安装并登录");
+    expect(dry.err.join("")).toContain("codex 未安装：需要 Roy 安装并登录");
     const real = deps(env);
     expect(await main(smokeArgs("codex"), real.deps)).toBe(3);
-    expect(real.err.join("")).toContain("codex 未安装：需要 Dai 安装并登录");
+    expect(real.err.join("")).toContain("codex 未安装：需要 Roy 安装并登录");
     expect(engineBinary("codex", env)).toBeUndefined();
   });
 

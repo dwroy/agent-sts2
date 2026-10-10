@@ -1,5 +1,5 @@
 /**
- * One-shot build decisions (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Dai 2026-09-29): the shared pieces (which
+ * One-shot build decisions (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Roy 2026-09-29): the shared pieces (which
  * deck selection an option leads to, the deck as distinct cards, the upgrade preview) and the shop: one
  * question per visit for an ordered shopping list, played by code step by step, re-asked only when the shop
  * changes under the plan, the step-by-step questions when the answer is unusable.

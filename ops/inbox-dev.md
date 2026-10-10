@@ -1,6 +1,6 @@
 # 开发会话的收件箱（运维 codex 会话和它的调度器写，开发会话读）
 
-只追加，一行一件事：`- YYYY-MM-DD HH:MM [来源] 内容`。来源是 `运维 codex`（会话本身）或 `codex-ops 调度器`（ops/codex-ops.sh 的机械通知）。需要 Dai 定的事同时写在 notes/for-dai.md。见 docs/codex-ops.md。
+只追加，一行一件事：`- YYYY-MM-DD HH:MM [来源] 内容`。来源是 `运维 codex`（会话本身）或 `codex-ops 调度器`（ops/codex-ops.sh 的机械通知）。需要 Roy 定的事同时写在 notes/for-roy.md。见 docs/codex-ops.md。
 
 - 2026-10-04 21:42 [运维 codex] 已开工：autoplay PID 180434，21:41:41 CST 启动，live bf3ebb7c；首局 C48LLXBGKXQ9 已进入静默猎手 A0，run-config 确认 climb，后续由调度器事件驱动。
 - 2026-10-04 22:16 [运维 codex] 22:15 stall 是检查误报：C48LLXBGKXQ9 正常推进，复核 OK，autoplay 180434 / play 180482 均在，未重启。/proc 进程退出报错排在 OK 前，调度器误认；非阻塞缺陷和源码位置已记 notes/fix-queue-v4.md，请开发会话处理只读的检查/调度脚本。
@@ -10,21 +10,21 @@
 - 2026-10-05 04:26 [运维 codex] 通关：KAY522KT5NXR，SILENT A0，第48层，2026-10-05 03:47:45 CST结束；最终boss成功读档1次、第2次尝试赢，属于SL后胜；用时55分45秒（首条决策至结束，55.7分钟）。下一局E6AVMMVCSRPC已于2026-10-05 03:50:28按run-config实际打A1。
 - 2026-10-05 04:26 [运维 codex] A0升级小结：7局，第一次尝试0胜7负、平均30.29层；最终SL后1胜6负、平均37.71层。最终死亡三幕boss3场，同族/二幕沙虫/胧光怪与寄生惧魔各1场；完整逐局表见notes/silent-climb-report.md。
 - 2026-10-05 04:26 [运维 codex] A0学习小结：正式复盘6/7、账本40条；已合入3版经验（12→18→29条）及S1.fix2的silent-0001/0002/0003修复。首胜旧代码5de5d518未包含S1.fix2及第三版经验，A1新代码才包含；账本shipped仍为0，实际合入与登记状态在报告分列。
-- 2026-10-05 04:26 [运维 codex] 需Dai处理：完整评估命令 `nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 0 --md --per-run > /tmp/sts2-a0-climb-metrics.md` exit 1：eval/strength-sources.ts 的 tsx CLI 在 `/tmp/tsx-1000/69.pipe` 监听时被沙箱拒绝（listen EPERM）。当前 broker 动作清单不含评估动作，请 Dai 在沙箱外补跑，或增加 eval-metrics 白名单动作；A0 核心小结已由论文表与原日志核对，见 notes/silent-climb-report.md。
+- 2026-10-05 04:26 [运维 codex] 需Roy处理：完整评估命令 `nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 0 --md --per-run > /tmp/sts2-a0-climb-metrics.md` exit 1：eval/strength-sources.ts 的 tsx CLI 在 `/tmp/tsx-1000/69.pipe` 监听时被沙箱拒绝（listen EPERM）。当前 broker 动作清单不含评估动作，请 Roy 在沙箱外补跑，或增加 eval-metrics 白名单动作；A0 核心小结已由论文表与原日志核对，见 notes/silent-climb-report.md。
 - 2026-10-05 04:43 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：KAY522KT5NXR）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
 - 2026-10-05 04:45 [运维 codex] A0小结补充：沙箱外完整eval exit 0，汇总和七局明细已并入notes/silent-climb-report.md，来源paper/materials/silent/a0-metrics.md（8dc33dfe）；7局，第一次尝试0胜，最终SL后1胜，平均终层30.3/37.7，样本不足的区间保留原注。A0补跑请求已解决，eval-metrics动作待学习者上线。
 - 2026-10-05 05:13 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：E6AVMMVCSRPC）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
-- 2026-10-05 05:25 [运维 codex] 需Dai处理：fix-batch 20261005-041302跳过eval-metrics动作；任务权限及当前运维沙箱均将ops/codex-ops-actions.sh和ops/codex/下的broker实现设为只读，运维无法补该动作。请安排具备相应写权限的授权学习任务；A0完整评估已归档，后续升级小结仍需要该白名单动作。
-- 2026-10-05 05:25 [运维 codex] 需Dai定：fix-batch回报将保血/留药/全死排序、巨兽拖延、boss时钟校准与样本门槛、路线休息和SL范围列为策略项跳过，请确定是否另交学习者处理；游戏知识仍仅来自本角色对局证据。既有全死、留药、复活SL等待定记录继续保留，详见learner/runs/20261005-041302-fix-batch/handoff-ops.md。
+- 2026-10-05 05:25 [运维 codex] 需Roy处理：fix-batch 20261005-041302跳过eval-metrics动作；任务权限及当前运维沙箱均将ops/codex-ops-actions.sh和ops/codex/下的broker实现设为只读，运维无法补该动作。请安排具备相应写权限的授权学习任务；A0完整评估已归档，后续升级小结仍需要该白名单动作。
+- 2026-10-05 05:25 [运维 codex] 需Roy定：fix-batch回报将保血/留药/全死排序、巨兽拖延、boss时钟校准与样本门槛、路线休息和SL范围列为策略项跳过，请确定是否另交学习者处理；游戏知识仍仅来自本角色对局证据。既有全死、留药、复活SL等待定记录继续保留，详见learner/runs/20261005-041302-fix-batch/handoff-ops.md。
 - 2026-10-05 05:43 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：XYYQYBRM2A01）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
-- 2026-10-05 05:44 [运维 codex] 需要Dai安排沙箱外补跑：经验批次20261005-051301-experience-update已由运维兜底上线S1.exp6（live 69630ae6），沙箱检查通过；ops/learner_checks.py:37在原回报merged=null时直接返回，兜底后不自动补完整检查，当前broker白名单没有补跑动作。请在仓库根执行 `flock ops/live-merge.lock bash -c 'cd .worktrees/live/agent && export PATH="$HOME/.local/node/bin:$PATH" && nice -n 19 node_modules/.bin/tsc -p tsconfig.json --noEmit && nice -n 19 node_modules/.bin/vitest run --maxWorkers=2'` 并回传退出码与日志；另请有broker写权限的任务补上兜底后的完整检查动作。
+- 2026-10-05 05:44 [运维 codex] 需要Roy安排沙箱外补跑：经验批次20261005-051301-experience-update已由运维兜底上线S1.exp6（live 69630ae6），沙箱检查通过；ops/learner_checks.py:37在原回报merged=null时直接返回，兜底后不自动补完整检查，当前broker白名单没有补跑动作。请在仓库根执行 `flock ops/live-merge.lock bash -c 'cd .worktrees/live/agent && export PATH="$HOME/.local/node/bin:$PATH" && nice -n 19 node_modules/.bin/tsc -p tsconfig.json --noEmit && nice -n 19 node_modules/.bin/vitest run --maxWorkers=2'` 并回传退出码与日志；另请有broker写权限的任务补上兜底后的完整检查动作。
 - 2026-10-05 05:51 [运维 codex] 卡死提醒已恢复：K3676LU8B0UH A1第36层事件在05:44:46一次动作超时后自行继续，现已到第40层休息点；mod正常，autoplay及对局进程在跑，复查OK（决策距今19秒、控制台6秒）。无需人在游戏或Steam里操作；单次超时触发卡死判读的问题已记修复队列。
 - 2026-10-05 06:21 [运维 codex] 通关：K3676LU8B0UH，SILENT A1，第48层，06:02:02 CST结束；最终boss永世沙漏第一次尝试后成功读档1次、第2次尝试胜，属于SL后胜；用时52分32秒（首条决策至结束，论文表52.5分钟）。下一局CSBR5CRDWQNB已于06:05:11按run-config实际打A2。
 - 2026-10-05 06:21 [运维 codex] A1升级小结：3局，第一次尝试0胜3负、最终SL后1胜2负，平均终层均32.67；成功读档11次，失败为一幕族母和二幕沙虫各1场。A1复盘2/3，按最早证据归属的账本3项silent-0048/0052/0055；本级期间新增15项（含A0回补），已上线经验.3/.4/.5和S1.fix3/fix4，.6在首胜结束后合入、供A2使用。首胜开局S1.fix3/经验.4，不能归因于之后版本；逐局证据、35项shipped条目及A1原CSV行见notes/silent-climb-report.md（样本不足；repeats_after_ship已知误计保留说明）。
-- 2026-10-05 06:21 [运维 codex] 需Dai安排A1完整评估沙箱外补跑：在仓库根执行 `export PATH="$HOME/.local/node/bin:$PATH" && nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 1 --md --per-run > /tmp/sts2-a1-climb-metrics.md 2> /tmp/sts2-a1-climb-metrics.err`；本轮exit 1，eval/strength-sources.ts的tsx CLI监听/tmp/tsx-1000/68.pipe被沙箱拒绝（listen EPERM），当前broker没有eval-metrics动作且实现只读。A1核心小结已完成；请沙箱外补跑后将结果归档paper/materials/silent/a1-metrics.md并回传退出码，未绕过限制。
+- 2026-10-05 06:21 [运维 codex] 需Roy安排A1完整评估沙箱外补跑：在仓库根执行 `export PATH="$HOME/.local/node/bin:$PATH" && nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 1 --md --per-run > /tmp/sts2-a1-climb-metrics.md 2> /tmp/sts2-a1-climb-metrics.err`；本轮exit 1，eval/strength-sources.ts的tsx CLI监听/tmp/tsx-1000/68.pipe被沙箱拒绝（listen EPERM），当前broker没有eval-metrics动作且实现只读。A1核心小结已完成；请沙箱外补跑后将结果归档paper/materials/silent/a1-metrics.md并回传退出码，未绕过限制。
 - 2026-10-05 06:43 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：K3676LU8B0UH）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
-- 2026-10-05 06:44 [运维 codex] A1小结补充：观察者沙箱外完整eval exit 0，汇总和三局明细已并入notes/silent-climb-report.md，来源paper/materials/silent/a1-metrics.md（0cbc1770）；3局，第一次尝试0胜、最终SL后1胜，平均终层32.7，与原小结一致，样本不足区间及缺失指标保留。06:21的A1补跑请求已解决；eval-metrics白名单动作仍等Dai决定执行方。
-- 2026-10-05 07:08 [运维 codex] 需要Dai安排兜底唤醒：经验批次20261005-063057-experience-update（exp-silent，源0d469a22）分支自测及live合并后固定沙箱测试通过（150文件1901用例）；live合并仍未提交，锁被其他任务占用。白名单命令 `bash ops/codex-ops-do.sh learner-merge exp-silent` exit128，输出“（超过 30 秒，已终止）”，未确认事件入队；`bash ops/codex-ops-do.sh learner-status`同样exit128。请在锁释放后补发manual合入兜底事件，恢复步骤及已测暂存树见notes/ops-handoff.md；无需操作游戏或Steam，本批17条账本尚未shipped。
+- 2026-10-05 06:44 [运维 codex] A1小结补充：观察者沙箱外完整eval exit 0，汇总和三局明细已并入notes/silent-climb-report.md，来源paper/materials/silent/a1-metrics.md（0cbc1770）；3局，第一次尝试0胜、最终SL后1胜，平均终层32.7，与原小结一致，样本不足区间及缺失指标保留。06:21的A1补跑请求已解决；eval-metrics白名单动作仍等Roy决定执行方。
+- 2026-10-05 07:08 [运维 codex] 需要Roy安排兜底唤醒：经验批次20261005-063057-experience-update（exp-silent，源0d469a22）分支自测及live合并后固定沙箱测试通过（150文件1901用例）；live合并仍未提交，锁被其他任务占用。白名单命令 `bash ops/codex-ops-do.sh learner-merge exp-silent` exit128，输出“（超过 30 秒，已终止）”，未确认事件入队；`bash ops/codex-ops-do.sh learner-status`同样exit128。请在锁释放后补发manual合入兜底事件，恢复步骤及已测暂存树见notes/ops-handoff.md；无需操作游戏或Steam，本批17条账本尚未shipped。
 - 2026-10-05 07:43 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：CSBR5CRDWQNB）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
 - 2026-10-05 07:49 [运维 codex] 通关：ZZMYZ5UBCG72，静默猎手A2，第48层，07:39:21结束；整局第一次尝试胜，三场boss均attempt=1、成功读档0次，用时50分15秒（首决策至结束）。下一局10GPK5XGHCK3已于07:42:02按climb开打A3。
 - 2026-10-05 07:49 [运维 codex] A2→A3小结：2局，首次尝试1胜1负、最终1胜1负（SL后新增0胜），两种平均终层40.50，共成功读档5次；唯一死亡CSBR在二幕火箭/碾碎爪。A2首次证据发现silent-0061—0065，正式复盘1/2；期间上线S1.fix5/fix6，未提交经验.7已被A3开局配置读取、正式登记仍待兜底。详情及A2学习曲线原行见notes/silent-climb-report.md。
@@ -36,10 +36,10 @@
 - 2026-10-05 08:57 [运维 codex] 通关：10GPK5XGHCK3，静默猎手A3、48层，2026-10-05 08:41:20 CST结束；第一次尝试获胜，SL读档0次，F17/F33/F39/F48受管理战斗均attempt=1且won。用时58分38.065秒（首条决策07:42:42.718至结束08:41:20.783；配置启动计59分18.688秒）。下一局1NZ8FE5F34R9已于08:44:02.649开打，run-config解析target_ascension=4，即A4；climb自动升阶，配置未改。
 - 2026-10-05 08:57 [运维 codex] 沿既有完整补测请求追加经验批次20261005-080501-experience-update：S1.exp10/live 39efdab8b3f79fe78f39a93ed7df9d53fabc58da已兜底发布并同步main 7fdaa01df9edb151af5de03c38409954df88f5e4，合后沙箱tsc0、152文件1906用例通过；原merged=null没有触发沙箱外检查，仍需有权限执行方在live-merge.lock内核对发布祖先，于.worktrees/live/agent运行`PATH=/home/dw/.local/node/bin:$PATH nice -n 19 node_modules/.bin/tsc -p tsconfig.json --noEmit`和`PATH=/home/dw/.local/node/bin:$PATH nice -n 19 node_modules/.bin/vitest run --maxWorkers=4`，归档日志并回传learner-checks；目前无补测白名单动作，运维不绕过沙箱。
 - 2026-10-05 09:13 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：10GPK5XGHCK3）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
-- 2026-10-05 09:44 [运维 codex] 需要Dai安排manual事件：经验批次20261005-085844-experience-update（固定源c2ece69c8c6d342ab7d55e10d8aca6af1ace25bc，自测tsc0/152文件1906用例通过）main已归档32756163，live非阻塞合并锁busy；命令 `bash ops/codex-ops-do.sh learner-merge exp-silent` exit128，完整输出“（超过 30 秒，已终止）”，未确认事件入队。请锁释放后补发manual合入事件，按notes/ops-handoff.md最新节完成固定源合入；本批17项保持proposed，未上线。
+- 2026-10-05 09:44 [运维 codex] 需要Roy安排manual事件：经验批次20261005-085844-experience-update（固定源c2ece69c8c6d342ab7d55e10d8aca6af1ace25bc，自测tsc0/152文件1906用例通过）main已归档32756163，live非阻塞合并锁busy；命令 `bash ops/codex-ops-do.sh learner-merge exp-silent` exit128，完整输出“（超过 30 秒，已终止）”，未确认事件入队。请锁释放后补发manual合入事件，按notes/ops-handoff.md最新节完成固定源合入；本批17项保持proposed，未上线。
 - 2026-10-05 09:49 [运维 codex] A3升级小结：10GPK5XGHCK3仅1局，首次尝试及最终均1胜0负，SL后胜0、重打0，平均终层48；A4首局1NZ8FE5F34R9已于08:44解析A4。
 - 2026-10-05 09:49 [运维 codex] A3无终局败局，主要终局死因不适用；终战T12瓶中精灵复活、T13胜，按首次尝试胜记录。完整评估exit0，掉血推演±2内84/97回合、路线误差绝对值中位2，boss时钟缺失；单局样本。
-- 2026-10-05 09:49 [运维 codex] A3期间学习者登记0066—0073（来源A0/A2）；live正式发布S1.exp8/exp9/fix7/fix8及Dai的S1.high。本局复盘0074—0077在结束后登记，0075/0077来源A0，0076来源字段更正待工具处理；后续.9/.10不归因于本局首胜。
+- 2026-10-05 09:49 [运维 codex] A3期间学习者登记0066—0073（来源A0/A2）；live正式发布S1.exp8/exp9/fix7/fix8及Roy的S1.high。本局复盘0074—0077在结束后登记，0075/0077来源A0，0076来源字段更正待工具处理；后续.9/.10不归因于本局首胜。
 - 2026-10-05 09:49 [运维 codex] 完整表、账本id、44项shipped快照及论文CSV原行已附notes/silent-climb-report.md的A3新节；经验.10 main已归档，live锁busy且合入动作超时，17项仍proposed，已另发manual补事件请求。
 - 2026-10-05 10:20 [运维 codex] 需要安排沙箱外完整补测：经验批次20261005-095918-experience-update已兜底上线S1.exp11/live 536e37d9f86b19ffc7afcfa11d71a41803a7cc09并同步main 085d287ba1c55962a7475a456b28ce4581410fdf，包含此前待上线.10，合后固定沙箱tsc0、157文件1939用例通过；原merged=null未触发自动完整检查，目前没有补测白名单动作。请有权限执行方在ops/live-merge.lock内确认此发布为live祖先，于.worktrees/live/agent运行 `PATH=/home/dw/.local/node/bin:$PATH nice -n 19 node_modules/.bin/tsc -p tsconfig.json --noEmit` 和 `PATH=/home/dw/.local/node/bin:$PATH nice -n 19 node_modules/.bin/vitest run --maxWorkers=4`，归档日志并回传learner-checks；运维不绕过沙箱。原09:44经验.10 manual请求已由本次继承合入完成，无需再合旧源。
 - 2026-10-05 10:43 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：F9PP859XZ3RJ）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
@@ -62,7 +62,7 @@
 - 2026-10-05 16:43 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 2 局（最早 10 局：ARKQLHG6RS4W,6EV5V6PJJS9D）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
 - 2026-10-05 17:13 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：8CFMW9SAGFWQ）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
 - 2026-10-05 18:13 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：2L1BNN9ZJEFU）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
-- 2026-10-05 18:28 [运维 codex] 经验.19候选（2L1BNN9ZJEFU，批次180500）两次自测被learner-strategy.test.ts:49旧high断言挡住，未提交/上线；Dai已改学习任务为xhigh。181301修复批次正在修该断言，候选与失败证据已保留，运维将在修复完成事件后接续提交兜底；对局正常继续，无需改配置或游戏内操作。
+- 2026-10-05 18:28 [运维 codex] 经验.19候选（2L1BNN9ZJEFU，批次180500）两次自测被learner-strategy.test.ts:49旧high断言挡住，未提交/上线；Roy已改学习任务为xhigh。181301修复批次正在修该断言，候选与失败证据已保留，运维将在修复完成事件后接续提交兜底；对局正常继续，无需改配置或游戏内操作。
 - 2026-10-05 18:47 [运维 codex] 已按18:43通知先将exp合入含e87b20f6的main，并正常重派2L1BNN9ZJEFU经验批次20261005-184601（PID1424800）。旧.19候选、第十九节草稿和两次失败证据已完整保存，后续以新批次完成事件处理，对局继续。
 - 2026-10-05 19:13 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 1 局（最早 10 局：53FLQ68CETW0）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
 - 2026-10-05 20:13 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 2 局（最早 10 局：53FLQ68CETW0,ENKYQMS9W4ZD）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
@@ -937,3 +937,9 @@ Roy授权 roy-20261010-core-builds-experience-integration/内容回报续办：�
 - 2026-10-10 10:47 核心组合入库补核：四条已实际live .5，大脑前缀与最终原文已核；main S1.exp147/四shipped/双通知已提交42ee5bb08。完整外部检查已由宿主接收并正在后台执行，客户端15秒124仅为等待超时；结果沿原learner-checks，不重复发检查。当前检查持live-merge锁，live记录副本同步留原事件待锁释放，实际经验已生效。回执paper/materials/silent/20261010-core-experience-publication/closure.json。
 - 2026-10-10 11:30 [codex-ops 调度器] 学习代码提案链未通过：missing string code_proposals array; missing source commit for proposal audit；原产出/合入事实保留，派学习者补链，不自动改游戏知识或回退。
 - 2026-10-10 11:43 [codex-ops 调度器] 静默猎手未并入经验库的复盘满 3 局（最早 10 局：Y8GDTNWG4R3X,X4M1GPAJGAB9,5BU7ZE1PWLSX）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。
+
+## 2026-10-10 11:58 Roy姓名纠正与main集成（roy-20261010-name-main-push）
+
+Roy确认此前名称误写，全部第一方版本控制文本、代码标识和通知引用统一更正；通知文件迁为notes/for-roy.md。旧原件由合并切点b5ea7ebf3d192725e3911fa052572b313915846a及1309文件SHA映射保留，原失败/未知和原验收不倒填。已上线live314提交进入main，旧归档与拒绝实验历史保持。
+
+tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当前对局不打断；这次称呼更正及运维推送入口不造游戏行为版本。推送仍pending：宿主git-push-main动作在下一标准叫醒加载，按指定完整main提交、固定origin和Windows SSH推送，收到远端同SHA回执后才结案。详情paper/materials/20261010-roy-main-integration/。

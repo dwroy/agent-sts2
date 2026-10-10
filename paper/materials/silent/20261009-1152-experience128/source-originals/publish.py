@@ -24,7 +24,7 @@ for c in C:
  notice.append('| '+e['id']+' | '+prior+' | '+e['lesson']+' | XZUJR08FW801；'+','.join(mapids[e['id']])+' |')
 notice += ['', '预期影响：让构筑/路线/休息的知识前缀采用已核赢战血药链、真实机制层数与孵化/换药观察，减少预支未执行资源；不承诺本局转胜。源码由独立任务处理，现有证据不足的喝药/SL/目标门槛保持。来源experience-update任务20261009-111625，提案'+','.join(P)+'。', '', '回退：在live从合前'+M['pre']+'恢复knowledge/characters/silent/experience.json，单独提交并登记回退版本，保留刷新数据。其他角色经验未改。', '']
 body='\n'.join(notice).encode()
-for p in [ROOT/'notes/for-dai.md',ROOT/'ops/inbox-dev.md']:
+for p in [ROOT/'notes/for-roy.md',ROOT/'ops/inbox-dev.md']:
  fd=os.open(str(p),os.O_WRONLY|os.O_APPEND|os.O_CREAT,0o644)
  try:os.write(fd,body);os.fsync(fd)
  finally:os.close(fd)

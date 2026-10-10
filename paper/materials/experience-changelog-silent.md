@@ -2246,7 +2246,7 @@ SL旧十二场全部重抽，以下前缀为首战与获胜尝试（全败时末
 - TMPDIR固定本运行目录、PATH加~/.local/node/bin，bash tools/test-sandbox.sh：tsc0，线程vitest151文件1895用例、paths单fork1文件11用例，合计152文件1906用例、退出0；首次全部通过，无负载超时重跑。完整套件交调度器沙箱外補测。分支提交c2ece69c8c6d342ab7d55e10d8aca6af1ace25bc（exp-silent），英文消息注明version .10与+2/~15/-0、含Co-Authored-By；仅experience.json，分支工作区干净。
 - 学习账本只经learner/ledger.py update：新增0；改成proposed silent-0005,silent-0006,silent-0007,silent-0010,silent-0019,silent-0020,silent-0021,silent-0027,silent-0028,silent-0030,silent-0037,silent-0046,silent-0053,silent-0063,silent-0064,silent-0076,silent-0077，退役0，覆盖全部2新增/15更新条目，复盘纯bug 0074/0075未改状态。ledger.py check退出0，77项0问题；不登记accepted/shipped。0076更早建层/消失证据补T082并在note说明first_run更正范围；CLI不允许更改其原结构字段，已交兜底资料，不另造重复来源。
 - merge=live：持ops/live-merge.lock锁等后台知识刷新，live初始d21ae5e52fb8e7842141ed8c9e8eda0fae09eff1，保存4项刷新数据提交d283e641016e6f250e11ab1b1459d013b6719ad7，与本分支待合入路径无重叠（overlap=[]）。锁内merge-tree --write-tree预检exit1，只冲突eval/versions.json和paper/materials/decision-log.md；按任务停止、不强解/覆盖记录，未执行git merge、合后测试、回滚或经验上线。live仍原经验2026-10-05.9；无新eval版本/上线记录，保留S1.fix9及刷新提交；handoff-ops.md和最终完成JSON供运维按experience-done事件兜底。
-- 主目录本节只追加、账本只经CLI追加、不提交；交调用方归档。没有需要Dai作出的新游戏/架构决定，合入阻塞与账本结构字段更正是运维/工具待办。
+- 主目录本节只追加、账本只经CLI追加、不提交；交调用方归档。没有需要Roy作出的新游戏/架构决定，合入阻塞与账本结构字段更正是运维/工具待办。
 
 ### 切片大小
 - 固定种子20260929、截至本局，仅state.run.character_id=SILENT的真实状态；最高两进阶A2/A3各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP，共240片，每个界面独立无放回20状态，不伪造进阶/界面。状态池A2依次992/177/79/39/28/36，A3依次646/114/47/25/20/25。相同状态改前/后分别CHARACTER=silent knowledge-slice.ts，其他知识数据不变；跨批样本和main知识基线变化不当本次增量。
@@ -3663,7 +3663,7 @@ draws.order只验证记录的牌序（沙漏34、知识恶魔29、狂战士31相
 | a6-reward | 103/20 | 1536.5/2566 | 1883.0/2698 | +204.0 |
 | a6-shop | 24/20 | 2221.5/2827 | 2474.0/3750 | +488.0 |
 
-- 240片配对增量中位+317.0、单片最大增1132；最大3366→4005字，整批中位2023.0→2338.0（分布中位差不等于配对差）。active77、高22/中27/低28、总30027字；A8/A9各70条25357字，实际样本0。无需Dai定预算；未改测试预算、未推送、未停对局、未运行play。
+- 240片配对增量中位+317.0、单片最大增1132；最大3366→4005字，整批中位2023.0→2338.0（分布中位差不等于配对差）。active77、高22/中27/低28、总30027字；A8/A9各70条25357字，实际样本0。无需Roy定预算；未改测试预算、未推送、未停对局、未运行play。
 
 ## 2026-10-05 静默猎手 第十六次增量：2 局 A6（version 2026-10-05.16，分支 exp-silent，a9ad012c）
 
@@ -3845,7 +3845,7 @@ SL真重打旧18场76次8赢→19场80次8赢；新仅草蜢一场4次0赢，首
 | a6-reward | 2241.0/2698 | 2570.0/3054 | +329.0 |
 | a6-shop | 2567.5/3568 | 2856.5/4128 | +356.0 |
 
-240片配对中位增加303.5字，单片最大增加742；最大4005→4747字，整体分布中位2305.0→2657.0。active81，高23/中29/低29，总32669字符；A8/A9各72条27046字符、实际样本0，机制适用范围不是高阶验证声明。无需Dai定预算。
+240片配对中位增加303.5字，单片最大增加742；最大4005→4747字，整体分布中位2305.0→2657.0。active81，高23/中29/低29，总32669字符；A8/A9各72条27046字符、实际样本0，机制适用范围不是高阶验证声明。无需Roy定预算。
 
 ## 2026-10-05 静默猎手 第十七次增量：2 局 A6（version 2026-10-05.17，分支 exp-silent，a5604585）
 
@@ -4051,7 +4051,7 @@ SL真正重打19场80次8赢→20场86次8赢；各阶场/尝试/赢A0 8/33/4、
 | a6-reward | 2973.0/3788 | 3262.0/4348 | +294.0 |
 | a6-shop | 3696.0/4619 | 4067.5/5178 | +241.5 |
 
-240片配对中位+294.0字，单片最大增812；最大4747→5420，分布中位2890.0→3187.0。active83，高25/中30/低28，总35518字符；A8/A9各74条29615字符，实际高阶样本0，不作高阶验证声明。完整输出/时间戳留运行目录；无需Dai定预算。
+240片配对中位+294.0字，单片最大增812；最大4747→5420，分布中位2890.0→3187.0。active83，高25/中30/低28，总35518字符；A8/A9各74条29615字符，实际高阶样本0，不作高阶验证声明。完整输出/时间戳留运行目录；无需Roy定预算。
 
 ## 2026-10-05 静默猎手 第十八次增量：1 局 A6（version 2026-10-05.18，分支 exp-silent，ee1f4fd1）
 
@@ -4222,7 +4222,7 @@ SL真正重打场/尝试/赢A0 8/33/4、A1 3/14/1、A2 1/6/0、A3 0/0/0、A4 2/1
 | a6-reward | 3262.0/4031 | 3384.0/4153 | +122.0 |
 | a6-shop | 4067.5/5178 | 4189.5/5433 | +122.0 |
 
-240片配对中位+122.0字、单片最大增581；最大5420→5542，分布中位3122.5→3309.5。active84、高25/中31/低28，总36584字符，A8/A9各75条30360字符/实际样本0；不作高阶验证声明。无需Dai定预算。
+240片配对中位+122.0字、单片最大增581；最大5420→5542，分布中位3122.5→3309.5。active84、高25/中31/低28，总36584字符，A8/A9各75条30360字符/实际样本0；不作高阶验证声明。无需Roy定预算。
 
 ## 2026-10-05 静默猎手 第十九次增量：1 局 A6（version 2026-10-05.19，分支 exp-silent，83d4e580）
 
@@ -4419,7 +4419,7 @@ SL真正重打由20场86尝试8赢→21场92尝试8赢；按阶场/尝试/赢A0 
 | a6-reward | 2986.0/4542 | 3248.0/4672 | +130.0 |
 | a6-shop | 4188.0/5743 | 4318.0/5995 | +262.0 |
 
-240片配对中位+130.0字、单片最大增639；最大5743→5995、分布中位3384.0→3515.0。active84，高28/中28/低28；总38683字符、A8/A9各75条32030字符/实际样本0，预算内，无需Dai定。
+240片配对中位+130.0字、单片最大增639；最大5743→5995、分布中位3384.0→3515.0。active84，高28/中28/低28；总38683字符、A8/A9各75条32030字符/实际样本0，预算内，无需Roy定。
 
 ## 2026-10-05 静默猎手 第二十次增量：1 局 A6（version 2026-10-05.20，分支 exp-silent，92bb2c53）
 
@@ -4600,7 +4600,7 @@ SL真正重打场/尝试/赢各阶：A0 8/33/4、A1 3/14/1、A2 1/6/0、A3 0/0/0
 - 最初候选账本登记的节标题“2026-10-05 静默猎手 第二十次增量：1 局 A6（version 2026-10-05.20，分支 exp-silent，fc3f9456）”当时仅为运行目录草稿，未追加主目录；本次仅追加这一最终修正版小节，并经CLI补入最终提交与节标题，最初proposed和未发布候选的历史行保留。
 - 最初候选实际合入1eb9875eea80994f5edd15dde29506af8a3e806b，合后tsc0、175文件2003例通过；发现SL洗牌记录需校正后，主动回退到ffaee104a60e845f5352bbfb4c77c213f8b8aa61保留刷新，未登记eval或shipped、未追加主目录草稿。回退原因及完整测试留live-merge-initial.json/test-live-initial.log/deploy-live-initial.log，校正后再合入下列最终源。
 - merge=live：flock锁内等待刷新，刷新提交无，合前ffaee104a60e845f5352bbfb4c77c213f8b8aa61，知识重叠空、预检0，实际合入2c81eb76f84443e9ff9e0d54ad0ccb84663417ec；合后tsc0、175文件2003用例exit0，刷新blob保留，eval S1.exp20。上线记录及运维交接见本运行目录handoff-ops.md，账本交运维确认后登记shipped、调度器沙箱外补完整套件。
-- 主目录仅追加本节及CLI账本，不在主目录提交；无源码/生成器/其他角色知识改动，不启动play、不停对局、不推送。需要Dai定：无。
+- 主目录仅追加本节及CLI账本，不在主目录提交；无源码/生成器/其他角色知识改动，不启动play、不停对局、不推送。需要Roy定：无。
 
 ### 切片大小
 
@@ -4791,7 +4791,7 @@ SL真正重打各阶场/尝试/赢：A0 8/33/4、A1 3/14/1、A2 1/6/0、A3 0/0/0
 - JSON合法、scope/name/证据计数/角色隔离/药水旧句/预算、旧七数组和血档/节点/回血/SL复算、原始机制帧及前29抽序校验均通过，git diff --check0；提交前暂存补丁gitleaks0。源固定沙箱tsc0、175文件2003用例exit0，首次通过、未重跑，不联网、不安装依赖、不改测试预算或排除名单。
 - 英文提交含版本/新增0更新11退役0及Co-Authored-By，源b76428b2c1ed73f89e18fd56c49ba2f7b7120a75；仅experience.json。学习账本只经ledger.py，新增无，14项proposed覆盖11经验更新，新增复盘0117并入沙虫、0118并入爆发；旧first_run/prior保留，不登记accepted/shipped，check0。
 - merge=live：锁内等待刷新，刷新提交无，合前5f30bbbfaac38586dcd79f197b76dfe13e2516d6，知识重叠[]、预检0，实际合入959f7f22f6284ce87265b884e471c6fb6265b7fd，合后tsc/vitest退出码0、176文件/2006用例，发布c3f0410c72166b5c3145fe25c12a2974569b4ff6/S1.exp21；刷新blob保留。实际合入后账本交运维确认登记shipped、完整套件交调度器沙箱外补跑；通知见本运行目录handoff-ops.md及experience-done完成事件。
-- 主目录只追加本节与CLI账本、不提交；无源码/生成器/其他角色知识改动，不运行play、不停对局、不推送。需要Dai定：无。
+- 主目录只追加本节与CLI账本、不提交；无源码/生成器/其他角色知识改动，不运行play、不停对局、不推送。需要Roy定：无。
 
 ### 切片大小
 
@@ -4994,7 +4994,7 @@ SL真正重打的各阶场/尝试/赢仍A0 8/33/4、A1 3/14/1、A2 1/6/0、A3 0/
 - 初版及数据校正最终版两轮完整沙箱入口tsc0、176文件2006用例exit0；复测原因是修正冒泡同期扣血及沙漏总尝试12，未发生测试失败/负载重跑。最终内容SHA256见source-final.sha256；不把初版检查代替最终版。
 - 源df989e0920c4aa6ba49ae9ff27967f127cd4bd2d仅experience.json，英文提交写版本/新增2更新13退役0并带Co-Authored-By。账本16项proposed覆盖15个经验变更；新经验使用复盘已有silent-0119/0120，无新账本id，旧first_run/prior保留；只经ledger.py更新，不写accepted/shipped，check0。
 - merge=live：合前e7370f88e7f855ae1a57f03ffbf023630ea190d2, 刷新无，知识重叠[], 预检0；实际合入aea750c95b48223254b28b5dc40f847aaaf48fb9，合后沙箱退出0, 177文件/2010用例；发布06a463ca80102dd86656b993b1bd81f020580e84/S1.exp22。刷新blob保留，实际合入后由运维核实登记shipped，完整套件交调度器沙箱外补跑；通知见本运行目录handoff-ops.md和experience-done完成事件。
-- 合入阻塞/回退：无。主目录只追加本节与CLI账本，不提交；无源码/生成器改动，不运行play、不停对局、不推送。需要Dai定：无。
+- 合入阻塞/回退：无。主目录只追加本节与CLI账本，不提交；无源码/生成器改动，不运行play、不停对局、不推送。需要Roy定：无。
 
 ### 切片大小
 
@@ -5167,7 +5167,7 @@ A7全部非空战斗血档如下，均来自一局；其余血档、A0—A6旧�
 - 初版及最终两轮固定沙箱tsc0，均177文件2012用例/vitest exit0；第二轮是校正一幕高血Monster4→3后的最终内容复测，无测试失败或负载重跑。固定最终SHA256见source-final.sha256，不将初版测试替代最终内容。
 - 源0071cc6a86f7674b91439d13ee99e5c117dc3f34仅experience.json，英文提交写版本/新增2更新10退役0且带Co-Authored-By。15账本项proposed覆盖12经验变更，新增经验复用复盘0121/0122/0123、无新增账本id；旧first_run/prior保留。0059只保留旧毒杀后仍损血来源，不把新局未毒杀加作窄结论支持。只经ledger.py、不登记accepted/shipped，check0。
 - merge=live：锁内等刷新、刷新7bea7d99ce309d37cbc1715ac169623b9de34df4，合前7bea7d99ce309d37cbc1715ac169623b9de34df4，知识重叠[]、预检1；实际合入未合入，合后沙箱退出未执行、0文件/0例；发布无/无。刷新blob保留；唯一预检冲突paper/materials/decision-log.md，未开始实际git merge、不硬解，不绕过为cherry-pick；未添加eval版本或上线记录，运维据handoff兜底。合入阻塞/回退：锁内合入预检冲突，停止，不硬解。实际合入后交运维按完成事件核实登记shipped，完整套件交调度器沙箱外补跑，运维通知留本运行目录handoff-ops.md，完成回报交调用方发experience-done。
-- 主目录只追加本节与CLI账本、不提交；无源码/生成器改动，不运行play、不停对局、不推送。需要Dai定：无。
+- 主目录只追加本节与CLI账本、不提交；无源码/生成器改动，不运行play、不停对局、不推送。需要Roy定：无。
 
 ### 切片大小
 
@@ -5341,7 +5341,7 @@ n按独立局去重，重打尝试不增加n；综合条目n不是每局都验�
 - JSON合法；角色、scope/name、n/evidence、药水旧句逐字、预算、旧七数组/各阶血档/节点/回血/SL及关键机制实帧校验通过，git diff --check0、暂存补丁gitleaks0。固定数据、未安装依赖、未改预算或排除名单。首轮tsc0，vitest rollout-live时间预算将5轮缩3而断言失败，1失败/177文件通过、2018例通过，退出1；按任务完整重跑一次，tsc0，vitest 179文件/2030用例/exit0。两轮日志保留，不放宽断言/增加排除。
 - 本分支提交c02c40a38f476991d68b3ad37a082d8ce30105d5仅experience.json，英文信息写版本及新增2更新10退役0，带Co-Authored-By。账本新增silent-0129；silent-0019,silent-0020,silent-0021,silent-0124,silent-0006,silent-0024,silent-0025,silent-0125,silent-0063,silent-0077,silent-0120,silent-0126改proposed，覆盖全部12条经验，check0；仅CLI追加，不写accepted/shipped，保留原first_run/prior。
 - merge=live：锁内合前256b0eee715750c1851f85274885a0770c85977f, 刷新提交无，知识重叠[]；预检退出1，锁内合入预检冲突：paper/materials/decision-log.md，停止、不硬解；需要运维兜底集成。实际merged=None，未覆盖刷新数据、未执行有冲突的合并；未合入，所以无合后测试/新eval版本/上线记录，也不将账本标shipped。
-- 运维交接本运行目录handoff-ops.md和完成JSON：需兜底解决decision-log集成冲突并确认实际合入/测试/上线；本任务按要求停下，不硬解。主目录只追加本节与CLI账本，不提交；无生成器改动，不重建，不停对局、不运行play、不推送。需要Dai定的新游戏结论/预算：无；合入阻塞需运维处理。
+- 运维交接本运行目录handoff-ops.md和完成JSON：需兜底解决decision-log集成冲突并确认实际合入/测试/上线；本任务按要求停下，不硬解。主目录只追加本节与CLI账本，不提交；无生成器改动，不重建，不停对局、不运行play、不推送。需要Roy定的新游戏结论/预算：无；合入阻塞需运维处理。
 
 ### 切片大小
 
@@ -5515,7 +5515,7 @@ n按独立局去重，SL不增加n；基础/触发机制可核，构筑/路线/�
 - JSON合法；字段/scope/name/n/角色/药水旧句/预算、旧七数组/血档/节点/回血/SL、九局滚动伤害（含纸鹤）与新步法/尖啸逐帧校验通过；暂存补丁gitleaks退出0、git diff --check0。固定数据，不联网或安装依赖。源沙箱tsc 0、vitest 179文件/2030用例/退出0，重跑：无；日志完整保留。
 - 源提交5bc320f7ba980bd4e46049ad4b1758975ef7b77f仅experience.json，英文提交写版本/新增1更新7退役0并带Co-Authored-By。账本新增[]，proposed ['silent-0019', 'silent-0020', 'silent-0021', 'silent-0006', 'silent-0005', 'silent-0046', 'silent-0107', 'silent-0128']，退役[]，check0；全部8项经验有CLI来源，0128复用复盘id并追加六局历史支持，其他既有first_run/prior保留，0127未并入不动，不写accepted/shipped。
 - merge=live：锁内等后台刷新结束，合前256b0eee715750c1851f85274885a0770c85977f、刷新无、知识重叠[]、预检0；实际合入5bc320f7ba980bd4e46049ad4b1758975ef7b77f、合后测试0。合入结果：成功。预检结果原文merge-tree-locked.txt保留；有冲突按任务停下，不硬解或cherry-pick，刷新数据保留。若未合入则未加eval版本或上线记录，交运维完成事件兜底；开工时.24尚未上线，取得锁时状态按合前对象记录；本任务只登记.25来源，不冒记.24 shipped。
-- 运维通知留本任务handoff-ops.md及完成JSON，由调用方发experience-done；实际合入后由运维按证据登记shipped，完整套件由调度器沙箱外补跑。主目录仅追加本节与CLI账本、不提交；无源码/生成器变更，不重建、不停对局、不运行play、不推送。需要Dai定的新结论/预算：无。
+- 运维通知留本任务handoff-ops.md及完成JSON，由调用方发experience-done；实际合入后由运维按证据登记shipped，完整套件由调度器沙箱外补跑。主目录仅追加本节与CLI账本、不提交；无源码/生成器变更，不重建、不停对局、不运行play、不推送。需要Roy定的新结论/预算：无。
 
 ### 切片大小
 
@@ -5707,7 +5707,7 @@ n按独立局去重，SL不增加n；组合子结论只核明确案例，其他�
 - 源分支首轮固定沙箱bash tools/test-sandbox.sh：tsc退出0；vitest178文件2019例加paths单fork 1文件11例，合179文件2030例，退出0，无重跑。日志test-source.log/test-source.rc；JSON解析、经验字段/角色/证据去重、药水旧分句、旧32局逐行统计、机制原帧均验证通过，gitleaks-source.log退出0。
 - 源提交c2aba14f9a7a51fa3867360ac996a1e57b336463；锁内等刷新完成、保存七份刷新提交341b75fef2cc18a2685113b8d91bebf81c2c7e6b，合前HEAD=341b75fef2cc18a2685113b8d91bebf81c2c7e6b。incoming与刷新知识重叠为空，git merge-tree预检退出1，唯一冲突paper/materials/decision-log.md的并发追加。按任务停止，不硬解；没有实际merge，不存在合后测试/回退，不追加上线或eval版本，不称已合入。证据live-merge.json、merge-tree-locked.txt、merge-live.log；刷新提交gitleaks通过。
 - 账本新增silent-0132，已有14项改成proposed：silent-0019,silent-0020,silent-0021,silent-0006,silent-0005,silent-0016,silent-0013,silent-0048,silent-0010,silent-0011,silent-0069,silent-0079,silent-0131,silent-0009；无retired，ledger.py check退出0（132项0问题）。来源/提交/本节标题已登记；0130不并经验、留observed，既有repeat历史保留。只proposed，实际合入后由运维登记shipped，不另设审核。
-- 运维交接handoff-ops.md及本批experience-done完成回报：需要运维机械兜底保留双方decision-log和七份刷新、合后自测再登记版本与shipped。没有新的Dai待定，未合入属于运维集成阻塞；不停止对局，不运行play，不推送。
+- 运维交接handoff-ops.md及本批experience-done完成回报：需要运维机械兜底保留双方decision-log和七份刷新、合后自测再登记版本与shipped。没有新的Roy待定，未合入属于运维集成阻塞；不停止对局，不运行play，不推送。
 
 ### 切片大小
 
@@ -5893,7 +5893,7 @@ n按独立局去重，SL不增n；综合证据不代表每局验证所有子组�
 - 源固定沙箱tsc 0、vitest 181文件/2038用例/退出0，首次通过、无重跑。JSON/字段/scope/name/证据去重/角色/药水旧分句/预算、旧33局明细与统计、六局阈值及五局逐轮力量、新步法/精准/预判逐帧校验通过；gitleaks0、git diff --check0，固定数据、不联网/安装依赖。
 - 源提交bff7329f4ce6757933e76d8e7409079a88f08156仅experience.json，英文信息带版本/新增2更新8退役0及Co-Authored-By。账本新增[]、proposed ['silent-0019', 'silent-0020', 'silent-0021', 'silent-0006', 'silent-0005', 'silent-0016', 'silent-0054', 'silent-0080', 'silent-0133', 'silent-0134', 'silent-0079']、退役[]、check0；10条经验全部复用来源，另0079将复盘repeat映射新仪式兽条目。0133补另四局、0134补另三局历史支持，first_run/prior及repeat保留，不写accepted/shipped；实际合入由运维据完成事件登记。
 - merge=live：锁内等刷新，刷新提交33d75ef78a7fff6eebaee1ae880fbcc1dcee26ec、合前33d75ef78a7fff6eebaee1ae880fbcc1dcee26ec；知识重叠[]，预检0，实际合入ce1864a00a18db651ef179b403b40e83db0395e4，合后tsc0、vitest 181文件/2038用例/退出0，首次通过。非经验知识blob逐项与合前相同，无生成器变更/重建。上线记录与eval S1.exp27发布提交0c5174f16fbb08539f13fbd307525144e9c80f1a，运维交接handoff-ops.md及最终experience-done回报，完整套件交调度器沙箱外补跑。
-- 主目录仅追加本节与CLI账本，不提交；不停止对局、不运行play、不推送。需要Dai定：无。
+- 主目录仅追加本节与CLI账本，不提交；不停止对局、不运行play、不推送。需要Roy定：无。
 
 ### 切片大小
 
@@ -6098,7 +6098,7 @@ n按独立局去重，SL不增n；综合证据不代表每局都验证全部子�
 - 源提交825c94d558f24991e8766dfecee71a71c216e83b仅silent/experience.json，英文信息含版本/新增0更新14退役0、Co-Authored-By；提交后同步main的集成目标363ff3037178c20342c36fc1ab474b5aed96a441保留本经验blob，新增源码属于另一已发布批次。
 - 账本新增['silent-0138']、改proposed ['silent-0019', 'silent-0020', 'silent-0021', 'silent-0006', 'silent-0005', 'silent-0103', 'silent-0076', 'silent-0023', 'silent-0024', 'silent-0025', 'silent-0049', 'silent-0106', 'silent-0018', 'silent-0136', 'silent-0137', 'silent-0079']、退役[]，ledger.py check退出0。14条全部有来源；0136/0137沿用复盘条目，0103仍只支持攻击紧勒子分支，四模板另138追溯R0HEV5E3QT6G；first_run/prior/repeat历史保留，不写accepted/shipped，实际合入后由运维经CLI登记。
 - merge=live：锁内等刷新，刷新无，合前f75162d80cf20fc2f62cd4846dd415118c275cad；知识重叠[]、预检0，实际合入363ff3037178c20342c36fc1ab474b5aed96a441；合后tsc0、vitest 183文件/2048例/退出0，首次通过无重跑。非经验知识blob逐项保留，live未提交其他notes原处保留；上线记录与eval S1.exp28发布98f88e06ac849c29af6474c76121f37c2d8019ce，运维交接handoff-ops.md及调度器experience-done，完整套件由调度器沙箱外补跑。
-- 主目录仅追加本节与CLI账本，不提交；不停止对局、不运行play、不推送。需要Dai定：无。
+- 主目录仅追加本节与CLI账本，不提交；不停止对局、不运行play、不推送。需要Roy定：无。
 
 ### 切片大小
 
@@ -6294,7 +6294,7 @@ A7全部非空血档如下；A0—A6旧格逐行不变，完整零格、净损�
 - 源固定沙箱tsc 0、vitest 183文件/2048用例/退出0，首次通过无重跑。JSON/字段/scope/name/角色/证据去重/药水旧句/预算、旧35局七数组和数字、复制原帧/毒截断/勒紧叠加/首战SL核验通过，gitleaks0、diff --check0；固定数据，无联网或安装依赖。
 - 源提交8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87仅silent/experience.json，英文信息含版本/新增3更新12退役0及Co-Authored-By。账本新增['silent-0142', 'silent-0143']、改proposed ['silent-0019', 'silent-0020', 'silent-0021', 'silent-0006', 'silent-0005', 'silent-0013', 'silent-0007', 'silent-0030', 'silent-0046', 'silent-0069', 'silent-0090', 'silent-0133', 'silent-0102', 'silent-0140', 'silent-0141']、退役[]、ledger.py check退出0；15条经验都有来源。0140/0141沿用复盘来源，羽毛四历史局与勒紧新观察各另立账本；first_run/prior/repeat及旧shipped历史保留，本轮不写accepted/shipped。
 - merge=live未合入：锁内等刷新、刷新6566b7d308947e1929cb398034dd8f02a1d1cb25、合前6566b7d308947e1929cb398034dd8f02a1d1cb25；知识重叠[]，merge-tree预检退出1，冲突paper/materials/decision-log.md。按任务不硬解、不覆盖双方记录，停止实际merge；刷新和live其他未提交差异保留，没有运行合后测试或新增eval版本/上线登记。运维据本批handoff-ops.md和experience-done回报兜底，源经验可审阅，不冒记已上线。
-- 主目录仅追加本节与CLI账本，不提交；不停止对局、不运行play、不推送。需要Dai定：无；合入记录冲突交运维兜底，不属于新的游戏策略或架构待定。
+- 主目录仅追加本节与CLI账本，不提交；不停止对局、不运行play、不推送。需要Roy定：无；合入记录冲突交运维兜底，不属于新的游戏策略或架构待定。
 
 ### 切片大小
 
@@ -6530,7 +6530,7 @@ REST/SHOP/EVENT按源节点入场血档关联下一战，多源节点可指同�
 - 账本新增[]、改proposed ['silent-0019', 'silent-0020', 'silent-0021', 'silent-0006', 'silent-0005', 'silent-0013', 'silent-0007', 'silent-0011', 'silent-0027', 'silent-0037', 'silent-0053', 'silent-0023', 'silent-0072', 'silent-0090', 'silent-0080', 'silent-0010', 'silent-0138', 'silent-0025', 'silent-0129', 'silent-0046', 'silent-0062', 'silent-0064', 'silent-0133', 'silent-0134', 'silent-0145', 'silent-0146']、退役[]、ledger.py check退出0（146 items、0 problems）。25条经验均有对应来源；帐篷使用复盘0145/0146两条来源，故26账本对应25经验。0053升级X+1与0138科学技能模板2局同步数据版claim，first_run/prior/repeat及旧上线历史保留，0144纯bug仍observed，不写accepted/shipped。
 - merge=live：锁内等刷新，刷新190464022a29cfaf1602ad4066edd0ef1698926b、合前190464022a29cfaf1602ad4066edd0ef1698926b；知识重叠[]、预检0，实际合入3a2a2a48ed594dea69b9c088edfe9259ac89bac8。合后固定沙箱tsc0、vitest184文件/2054例/退出0，首过无重跑；非改动知识blob逐项保留，后来新的未提交刷新/其他notes留原处。无生成器改动、不重建。
 - live经验2026-10-06.3→.5包含此前第29批待合.4，原8f7d061a未合入/记录冲突历史保持，无独立S1.exp29时刻；本次eval唯一S1.exp30，上线记录与版本提交25a520d92d46d1d644a3ca14a05406a4a1246238。第29批来源0140/0141(夜魇)、0142(羽毛)、0143(勒紧)和其余未登记来源交运维按实际集成登记，不由本任务改shipped。
-- 运维通知通过本批handoff-ops.md及最终experience-done完成回报，调度器根据merged祖先确认实际合入，并在沙箱外补跑完整tsc/vitest。本次146项账本校验结果不冒记为全部源码覆盖或外部完整套件已通过。主目录仅追加本节/CLI账本、不提交；不停对局、不运行play、不推送。需要Dai定：无。
+- 运维通知通过本批handoff-ops.md及最终experience-done完成回报，调度器根据merged祖先确认实际合入，并在沙箱外补跑完整tsc/vitest。本次146项账本校验结果不冒记为全部源码覆盖或外部完整套件已通过。主目录仅追加本节/CLI账本、不提交；不停对局、不运行play、不推送。需要Roy定：无。
 
 ### 切片大小
 
@@ -6752,7 +6752,7 @@ REST/SHOP/EVENT按源节点入场血档关联下一战，可重复指同战；A8
 
 240配对中位+160.0字、单片最大增651，最大6204→6174。active101→102，高39中29低33→高40中29低33，总52601→54501字；A8/A9各95条50169→96条52069字，各仅1完局。逐局逐轮压为条目里的典型一句，完整数字留本节/原复盘/audit和机制事实。
 
-本节收尾登记（2026-10-06 04:23:31 +0800）：最终源tsc0、vitest188文件/2068例/退出0，草稿与最终两轮均通过，第二轮因甲虫进阶占位符/累计数文字校正复测、无失败重跑。合后tsc0、vitest188文件/2068例/退出0，首轮通过、无重跑；锁内刷新b5c2bd5f64b39f4f0f0d1d452ae2e8e1178b1562、合前b5c2bd5f64b39f4f0f0d1d452ae2e8e1178b1562、实际合入fef46e7e842ba8216f6220ace845d8e9f4f01d84、上线记录cf6fae73003337e346c73b600d6c3fc0c791c039/唯一S1.exp31。知识incoming仅silent/experience.json、重叠空/预检0、非本次知识blob保留；无源码/生成器变更，不重建。账本新增无、proposed silent-0019,silent-0020,silent-0021,silent-0009,silent-0006,silent-0005,silent-0013,silent-0007,silent-0011,silent-0027,silent-0030,silent-0062,silent-0065,silent-0080,silent-0128,silent-0049,silent-0073,silent-0147、退役无，最终ledger.py check退出0；每一新增/更新经验均映射到来源项，保留first_run/prior/repeat，0147补两真实事件回血/满血0的旧A6证据与观察范围，不改accepted/shipped。源码/刷新/上线补丁gitleaks0；主目录仅追加本节与CLI账本、未提交。完整外部套件交调度器补跑，运维通知与登记来源放本任务handoff-ops.md及experience-done回报；不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾登记（2026-10-06 04:23:31 +0800）：最终源tsc0、vitest188文件/2068例/退出0，草稿与最终两轮均通过，第二轮因甲虫进阶占位符/累计数文字校正复测、无失败重跑。合后tsc0、vitest188文件/2068例/退出0，首轮通过、无重跑；锁内刷新b5c2bd5f64b39f4f0f0d1d452ae2e8e1178b1562、合前b5c2bd5f64b39f4f0f0d1d452ae2e8e1178b1562、实际合入fef46e7e842ba8216f6220ace845d8e9f4f01d84、上线记录cf6fae73003337e346c73b600d6c3fc0c791c039/唯一S1.exp31。知识incoming仅silent/experience.json、重叠空/预检0、非本次知识blob保留；无源码/生成器变更，不重建。账本新增无、proposed silent-0019,silent-0020,silent-0021,silent-0009,silent-0006,silent-0005,silent-0013,silent-0007,silent-0011,silent-0027,silent-0030,silent-0062,silent-0065,silent-0080,silent-0128,silent-0049,silent-0073,silent-0147、退役无，最终ledger.py check退出0；每一新增/更新经验均映射到来源项，保留first_run/prior/repeat，0147补两真实事件回血/满血0的旧A6证据与观察范围，不改accepted/shipped。源码/刷新/上线补丁gitleaks0；主目录仅追加本节与CLI账本、未提交。完整外部套件交调度器补跑，运维通知与登记来源放本任务handoff-ops.md及experience-done回报；不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第三十二次增量：1 局 A9（version 2026-10-06.7，分支 exp-silent，69532dfc）
 
@@ -6962,7 +6962,7 @@ REST/SHOP/EVENT源节点按入场血关联下一战，多源可指同战；A9全
 
 240配对中位+0.0字、单片最大增393，最大片6493→6650。active102→103，高40中29低33→高41中30低32，总54501→55618字；A8/A9各96条52069→97条53186字。逐局逐轮压为典型一句，完整数字留本节及原始子集。
 
-本节收尾登记（2026-10-06 04:50:08 +0800）：经验源69532dfcc6eef838362eaaf235be6eee9641f2b7，最终源tsc0/vitest188文件2068例/退出0；初稿同样188文件2068例通过，支持数正文校正后复测、无失败重跑。为纳入运维同期归档的第31批发布，源提交后再次无冲突合并main，基线集成72a48daa5bbb25b9cb6ce8074f4bb26c2c3a4eac；无源码/生成器变化，七项刷新使用main已发布数据；正式数据切片在相同冻结生成知识上对照。锁内刷新无、合前cf6fae73003337e346c73b600d6c3fc0c791c039；实际合入72a48daa5bbb25b9cb6ce8074f4bb26c2c3a4eac、上线记录a999dba8c53a2dfc22825ba5603cde3f0bebf74b/S1.exp32，合后tsc0/vitest188文件2068例/退出0；首轮通过、无失败重跑。 其他知识blob保留校验True。账本新增无、proposed silent-0019,silent-0020,silent-0021,silent-0057,silent-0006,silent-0023,silent-0043,silent-0011,silent-0046,silent-0062,silent-0149、退役无、最终check0，0149补六静默历史局证据、first_run/prior/repeat保持，不改accepted/shipped。主目录只追加本节与CLI账本、不提交；源/集成/上线补丁及本节/交接gitleaks通过。完整外部套件交调度器，运维通知放本任务handoff-ops.md与experience-done回报；不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾登记（2026-10-06 04:50:08 +0800）：经验源69532dfcc6eef838362eaaf235be6eee9641f2b7，最终源tsc0/vitest188文件2068例/退出0；初稿同样188文件2068例通过，支持数正文校正后复测、无失败重跑。为纳入运维同期归档的第31批发布，源提交后再次无冲突合并main，基线集成72a48daa5bbb25b9cb6ce8074f4bb26c2c3a4eac；无源码/生成器变化，七项刷新使用main已发布数据；正式数据切片在相同冻结生成知识上对照。锁内刷新无、合前cf6fae73003337e346c73b600d6c3fc0c791c039；实际合入72a48daa5bbb25b9cb6ce8074f4bb26c2c3a4eac、上线记录a999dba8c53a2dfc22825ba5603cde3f0bebf74b/S1.exp32，合后tsc0/vitest188文件2068例/退出0；首轮通过、无失败重跑。 其他知识blob保留校验True。账本新增无、proposed silent-0019,silent-0020,silent-0021,silent-0057,silent-0006,silent-0023,silent-0043,silent-0011,silent-0046,silent-0062,silent-0149、退役无、最终check0，0149补六静默历史局证据、first_run/prior/repeat保持，不改accepted/shipped。主目录只追加本节与CLI账本、不提交；源/集成/上线补丁及本节/交接gitleaks通过。完整外部套件交调度器，运维通知放本任务handoff-ops.md与experience-done回报；不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第三十三次增量：1 局 A9（version 2026-10-06.8，分支 exp-silent，d8feeed3）
 
@@ -7183,7 +7183,7 @@ REST/SHOP/EVENT按源节点入血关联后战，多源可指同战；A8旧格相
 240配对增量中位-274.0字、单片最大增量+215，最大片6771→6072字。active103→105、总55618→51806字；高41中30低32→高41中35低29；A8/A9各97条53186→99条49374字。逐局逐轮压为典型一句，完整数字留本节与子集/原文。
 
 
-本节收尾登记（2026-10-06 05:55:20 +0800）：源d8feeed3f9c3a66df935f58af92d7e500f40aff4，源最终沙箱tsc0/190文件2094例/退出0；实际live合入1b425cb743eeb3cc77c1c36ffeb9d0b1d9346495，发布f1d951ec442548711c671cb7f9855a4ade1dc412/唯一S1.exp33，合后tsc0/191文件2095例/退出0，源和合后无失败重跑。合前236286e28e28402175b7eeaf36908c3cb6433f40、刷新无，incoming仅silent/experience.json、知识重叠空/预检0、其他知识blob全部保留；live他人notes/monster-db-check.md与未跟踪fight-value-backtest-silent.md均保持，未混提交。账本新增silent-0152、proposed silent-0019,silent-0020,silent-0021,silent-0006,silent-0005,silent-0013,silent-0011,silent-0046,silent-0053,silent-0093,silent-0094,silent-0060,silent-0063,silent-0071,silent-0068,silent-0125,silent-0062,silent-0151、退役无，最终check0；18个变动经验全有账本来源，first_run/prior/repeat保持，0150纯bug仍observed，不写accepted/shipped。主目录本节及CLI账本只追加不提交；经验源/上线补丁与本节/交接gitleaks退出0。运维交接写至本任务handoff-ops.md，随experience-done完成事件交付，交运维核实际上线后CLI登记19项shipped/S1.exp33，调度器沙箱外补完整套件，未宣称完整外部检查已通过。不停对局、不运行play、不推送；需要Dai定：无。
+本节收尾登记（2026-10-06 05:55:20 +0800）：源d8feeed3f9c3a66df935f58af92d7e500f40aff4，源最终沙箱tsc0/190文件2094例/退出0；实际live合入1b425cb743eeb3cc77c1c36ffeb9d0b1d9346495，发布f1d951ec442548711c671cb7f9855a4ade1dc412/唯一S1.exp33，合后tsc0/191文件2095例/退出0，源和合后无失败重跑。合前236286e28e28402175b7eeaf36908c3cb6433f40、刷新无，incoming仅silent/experience.json、知识重叠空/预检0、其他知识blob全部保留；live他人notes/monster-db-check.md与未跟踪fight-value-backtest-silent.md均保持，未混提交。账本新增silent-0152、proposed silent-0019,silent-0020,silent-0021,silent-0006,silent-0005,silent-0013,silent-0011,silent-0046,silent-0053,silent-0093,silent-0094,silent-0060,silent-0063,silent-0071,silent-0068,silent-0125,silent-0062,silent-0151、退役无，最终check0；18个变动经验全有账本来源，first_run/prior/repeat保持，0150纯bug仍observed，不写accepted/shipped。主目录本节及CLI账本只追加不提交；经验源/上线补丁与本节/交接gitleaks退出0。运维交接写至本任务handoff-ops.md，随experience-done完成事件交付，交运维核实际上线后CLI登记19项shipped/S1.exp33，调度器沙箱外补完整套件，未宣称完整外部检查已通过。不停对局、不运行play、不推送；需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第三十四次增量：1 局 A10（version 2026-10-06.9，分支 exp-silent，c4e3c9ac）
 
@@ -7336,7 +7336,7 @@ A0至A9全部旧格不变，完整全格/零格/局号可由audit.json复算。A
 240配对增量中位+0.0字，单片最大增量+322，最大片5836→6016字。active105→107、总51806→52755字；高41中35低29→高41中37低29；A8/A9各99条49374→101条50323字，A10同101条50323字。逐局逐轮压成典型一句，完整数字留本节/只读子集。
 
 
-本节收尾登记（2026-10-06 06:14:03 +0800）：源c4e3c9ac7c053d567be773d011849503a8a994f3，源固定沙箱tsc0/190文件2094例/退出0、首次通过。锁内等知识刷新、待提交刷新无、incoming仅silent/experience.json、知识重叠空；合前live固定1ee4de7d668835de92ad2b47423a19ffdb4ae4df。git merge-tree --write-tree锁内预检exit1，仅paper/materials/decision-log.md内容冲突，未执行实际git merge、未写MERGE_HEAD、未硬解、不覆盖知识数据。实际merged=null、未跑合后测试、未新增S1.exp34或上线记录；完整预检输出merge-tree-locked.txt及live-merge.json留证，交运维按固定源兜底。live现有notes/monster-db-check.md及未跟踪fight-value-backtest-silent.md保持、不混提交。学习账本新增无；proposed silent-0019,silent-0020,silent-0021,silent-0006,silent-0079,silent-0007,silent-0154,silent-0155；退役无/check0，七个变动经验均有来源，first_run/prior/repeat及原版本历史保留，0153纯bug仍observed、不写accepted/shipped。主目录本节只追加一次及CLI账本不提交；运维交接handoff-ops.md随experience-done完成事件交付，实际合入后由运维登记shipped/发布版本与调度器补全套，不提前报完整外部通过。不停对局、不运行play、不推送；需要Dai定：无，合入冲突由运维兜底。
+本节收尾登记（2026-10-06 06:14:03 +0800）：源c4e3c9ac7c053d567be773d011849503a8a994f3，源固定沙箱tsc0/190文件2094例/退出0、首次通过。锁内等知识刷新、待提交刷新无、incoming仅silent/experience.json、知识重叠空；合前live固定1ee4de7d668835de92ad2b47423a19ffdb4ae4df。git merge-tree --write-tree锁内预检exit1，仅paper/materials/decision-log.md内容冲突，未执行实际git merge、未写MERGE_HEAD、未硬解、不覆盖知识数据。实际merged=null、未跑合后测试、未新增S1.exp34或上线记录；完整预检输出merge-tree-locked.txt及live-merge.json留证，交运维按固定源兜底。live现有notes/monster-db-check.md及未跟踪fight-value-backtest-silent.md保持、不混提交。学习账本新增无；proposed silent-0019,silent-0020,silent-0021,silent-0006,silent-0079,silent-0007,silent-0154,silent-0155；退役无/check0，七个变动经验均有来源，first_run/prior/repeat及原版本历史保留，0153纯bug仍observed、不写accepted/shipped。主目录本节只追加一次及CLI账本不提交；运维交接handoff-ops.md随experience-done完成事件交付，实际合入后由运维登记shipped/发布版本与调度器补全套，不提前报完整外部通过。不停对局、不运行play、不推送；需要Roy定：无，合入冲突由运维兜底。
 
 ## 2026-10-06 静默猎手 第三十五次增量：1 局 A10（version 2026-10-06.10，分支 exp-silent，7bcee3eb）
 
@@ -7523,7 +7523,7 @@ A0至A9全部旧血档不变。以下A10全部非空格，房为死亡率分母�
 240配对增量中位+171.0字，单片最大增量+506，最大片6016→6187字。active107→109、52755→54484字，高42中37低30；A8/A9各103条52052字，A10同。逐局逐轮压成典型一句，完整数字保留本节与只读子集。
 
 
-本节收尾登记（2026-10-06 06:56:02 +0800）：源7bcee3ebd8d8f452253c9eedaf7d14b10cc29f17，最终源tsc0/192文件2099例/退出0；首次测试误设CHARACTER=silent导致默认角色夹具快照失败，移除后重跑一次通过，test-source.log与test-source-retry.log全保留。源提交后无冲突同步main，仅更新既有上线/账本/运维记录，agent/learner/ops/tools/knowledge与已测源无差异。实际live合入1c85d0a7e6f176a528f7043d5019e0fffdcc5752、发布eda90a6c02bbb411bb74caed8f11cca718fc31b4/S1.exp35，合后tsc0/192文件2099例/退出0；合后首次通过。锁内等刷新，知识重叠空/预检0、其他知识blob保留，无生成器变更不重建；合前经验.9及S1.exp34已在live，本批仅S1.exp35。合前现有notes/monster-db-check.md与未跟踪fight-value-backtest-silent.md不混提交。账本新增silent-0158、proposed silent-0005,silent-0006,silent-0011,silent-0019,silent-0020,silent-0021,silent-0024,silent-0025,silent-0027,silent-0156,silent-0157、退役无/check0，11个变动经验全有来源；原first_run/prior/evidence/repeat保持，未并入复盘项不动、不写accepted/shipped。主目录本节只追加及CLI账本不提交；本任务handoff-ops.md随experience-done完成回报交运维核实际合入后经ledger.py登记shipped及补完整外部套件，不提前报完整外部通过。不停对局、不运行play、不推送；需要Dai定：无。
+本节收尾登记（2026-10-06 06:56:02 +0800）：源7bcee3ebd8d8f452253c9eedaf7d14b10cc29f17，最终源tsc0/192文件2099例/退出0；首次测试误设CHARACTER=silent导致默认角色夹具快照失败，移除后重跑一次通过，test-source.log与test-source-retry.log全保留。源提交后无冲突同步main，仅更新既有上线/账本/运维记录，agent/learner/ops/tools/knowledge与已测源无差异。实际live合入1c85d0a7e6f176a528f7043d5019e0fffdcc5752、发布eda90a6c02bbb411bb74caed8f11cca718fc31b4/S1.exp35，合后tsc0/192文件2099例/退出0；合后首次通过。锁内等刷新，知识重叠空/预检0、其他知识blob保留，无生成器变更不重建；合前经验.9及S1.exp34已在live，本批仅S1.exp35。合前现有notes/monster-db-check.md与未跟踪fight-value-backtest-silent.md不混提交。账本新增silent-0158、proposed silent-0005,silent-0006,silent-0011,silent-0019,silent-0020,silent-0021,silent-0024,silent-0025,silent-0027,silent-0156,silent-0157、退役无/check0，11个变动经验全有来源；原first_run/prior/evidence/repeat保持，未并入复盘项不动、不写accepted/shipped。主目录本节只追加及CLI账本不提交；本任务handoff-ops.md随experience-done完成回报交运维核实际合入后经ledger.py登记shipped及补完整外部套件，不提前报完整外部通过。不停对局、不运行play、不推送；需要Roy定：无。
 
 
 ## 2026-10-06 静默猎手 第三十六次增量：1 局 A10（version 2026-10-06.11，分支 exp-silent，2d5846a2）
@@ -7720,7 +7720,7 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 240配对增量中位+262字，单片最大增量+785，最大片6747→7246字。active109→110、54484→56699字，高44中38低28；A8/A9/A10各104条54267字。逐局逐轮压成典型一句，完整数字留本节/只读子集。
 
 
-本节收尾登记（2026-10-06 07:55:39 +0800）：源2d5846a2a309fd8b9e7231e96cef923cb07f1778，源草稿与最终沙箱均退出0，最终tsc0/194文件2112例，非失败复测；同步main与校正文字历史/test-source.log、test-source-final.log、三次改后切片日志保留。实际live fast-forward 2d5846a2a309fd8b9e7231e96cef923cb07f1778、发布141df6140cada59c3ad4960fd69aebf0a0749eeb/S1.exp36；合后tsc0/194文件2112例/退出0，首轮退出0。锁内待提交刷新无、incoming仅静默experience.json、知识重叠空/预检0，合前9c9cce01e08a1ee7b5b061a41d64f0f95afd9f5e及其他知识blob保留；既有未提交运维笔记不混提交，无生成器变更不重建。账本新增无、proposed silent-0005,silent-0006,silent-0017,silent-0046,silent-0013,silent-0123,silent-0007,silent-0087,silent-0027,silent-0129,silent-0064,silent-0062,silent-0065,silent-0021,silent-0019,silent-0020,silent-0160,silent-0161,silent-0162、退役无/check0；16个经验全有来源，新机制沿用0160/0161/0162和原first_run/prior，历史补证追加，不改repeat/旧上线，不写accepted/shipped。主目录本节/CLI账本只追加不提交；本任务handoff-ops.md随experience-done完成回报通知运维核实际合入后CLI登记shipped、由调度器补沙箱外完整套件，不提前冒记外部结果。不停对局、不运行play、不推送；需要Dai定：无。
+本节收尾登记（2026-10-06 07:55:39 +0800）：源2d5846a2a309fd8b9e7231e96cef923cb07f1778，源草稿与最终沙箱均退出0，最终tsc0/194文件2112例，非失败复测；同步main与校正文字历史/test-source.log、test-source-final.log、三次改后切片日志保留。实际live fast-forward 2d5846a2a309fd8b9e7231e96cef923cb07f1778、发布141df6140cada59c3ad4960fd69aebf0a0749eeb/S1.exp36；合后tsc0/194文件2112例/退出0，首轮退出0。锁内待提交刷新无、incoming仅静默experience.json、知识重叠空/预检0，合前9c9cce01e08a1ee7b5b061a41d64f0f95afd9f5e及其他知识blob保留；既有未提交运维笔记不混提交，无生成器变更不重建。账本新增无、proposed silent-0005,silent-0006,silent-0017,silent-0046,silent-0013,silent-0123,silent-0007,silent-0087,silent-0027,silent-0129,silent-0064,silent-0062,silent-0065,silent-0021,silent-0019,silent-0020,silent-0160,silent-0161,silent-0162、退役无/check0；16个经验全有来源，新机制沿用0160/0161/0162和原first_run/prior，历史补证追加，不改repeat/旧上线，不写accepted/shipped。主目录本节/CLI账本只追加不提交；本任务handoff-ops.md随experience-done完成回报通知运维核实际合入后CLI登记shipped、由调度器补沙箱外完整套件，不提前冒记外部结果。不停对局、不运行play、不推送；需要Roy定：无。
 
 
 ## 2026-10-06 静默猎手 第三十七次增量：1 局 A10（version 2026-10-06.12，分支 exp-silent，65b1a45b）
@@ -7956,7 +7956,7 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 240配对增量中位-341字、单片最多+143、最大片6327→5986；active112/正文54154字、高45中38低29，A8/A9各106条51722字（A10相同）。逐轮细节压为典型案例，完整数字保留本節及子集。
 
 
-本节收尾登记（2026-10-06 08:48:43 +0800）：源65b1a45b0192b744b6c46f9e7174f3c2156f093c，实际live合入28bdbfc6c9de5eb802724351a199e1a20c67b41c、发布3cbc6955b270538e452d19118bab91a949305ab3/S1.exp37；源及合后固定沙箱首过tsc0/194文件2112例/退出0、合后首轮退出0，无失败重跑。刷新30cfa6d7a20951ae21d780e74c5e7026166d1ceb、合前30cfa6d7a20951ae21d780e74c5e7026166d1ceb，锁内7份刷新提交、incoming仅静默experience.json、知识重叠空/预检0，其他知识blob保持；未修改源码/生成器，无重建，既有运维笔记不混提交。账本新增无、proposed silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0007,silent-0011,silent-0013,silent-0027,silent-0028,silent-0024,silent-0025,silent-0077,silent-0138,silent-0129,silent-0142,silent-0164,silent-0165、退役无/check0；18变动经验来源覆盖，0164/0165沿用原first_run/prior、耳环补R0历史支持；纯压缩0013/0024不虚增证据，不改repeat/旧上线，不写accepted/shipped。主目录本节/CLI账本只追加不提交；本任务handoff-ops.md随experience-done完成回报通知运维，核实际上线后CLI登记shipped、由调度器补沙箱外完整套件，不提前冒记结果。0163连续Boss确定血量投影bug保持observed、交原修复流程。新增2更新16退役0、active112/54154字，A8/A9/A10各106条51722字；切片配对中位−341、最大6327→5986，无新药水规则。不停对局、不运行play、不推送；需要Dai定：无。
+本节收尾登记（2026-10-06 08:48:43 +0800）：源65b1a45b0192b744b6c46f9e7174f3c2156f093c，实际live合入28bdbfc6c9de5eb802724351a199e1a20c67b41c、发布3cbc6955b270538e452d19118bab91a949305ab3/S1.exp37；源及合后固定沙箱首过tsc0/194文件2112例/退出0、合后首轮退出0，无失败重跑。刷新30cfa6d7a20951ae21d780e74c5e7026166d1ceb、合前30cfa6d7a20951ae21d780e74c5e7026166d1ceb，锁内7份刷新提交、incoming仅静默experience.json、知识重叠空/预检0，其他知识blob保持；未修改源码/生成器，无重建，既有运维笔记不混提交。账本新增无、proposed silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0007,silent-0011,silent-0013,silent-0027,silent-0028,silent-0024,silent-0025,silent-0077,silent-0138,silent-0129,silent-0142,silent-0164,silent-0165、退役无/check0；18变动经验来源覆盖，0164/0165沿用原first_run/prior、耳环补R0历史支持；纯压缩0013/0024不虚增证据，不改repeat/旧上线，不写accepted/shipped。主目录本节/CLI账本只追加不提交；本任务handoff-ops.md随experience-done完成回报通知运维，核实际上线后CLI登记shipped、由调度器补沙箱外完整套件，不提前冒记结果。0163连续Boss确定血量投影bug保持observed、交原修复流程。新增2更新16退役0、active112/54154字，A8/A9/A10各106条51722字；切片配对中位−341、最大6327→5986，无新药水规则。不停对局、不运行play、不推送；需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第三十八次增量：1 局 A10（version 2026-10-06.13，分支 exp-silent，5f0c0515）
 
@@ -8173,7 +8173,7 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 
 本节收尾登记：源提交已实际合入（2026-10-06 09:52:13 +0800）。源提交 `5f0c0515a9dc4de8696f1172af9da17000a79a65`；锁内知识刷新提交/合前基线 `97b8697f6a8e3b669cf40187e7a94138f4b24017`，重叠为空、合并预检退出0、其他知识blob保持；实际合入 `f90ba577c3111a9cda7bf1cbfebc645c3d036a01`，合后首轮 tsc退出0、vitest 195文件/2118用例/退出0，未失败重跑。上线记录提交 `62b4caf85ded558e5d07ef840ae882d82bc7ae2c`，eval版本 `S1.exp38`；源经验与live已核blob相同，没有生成脚本修改，无需重建。源草稿及最终完整复测均通过，完整沙箱外检查仍由调度器补跑，不冒记其结果。
 
-账本新增0、退役0，20项仅经CLI更新为proposed：silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0007,silent-0010,silent-0011,silent-0023,silent-0028,silent-0013,silent-0072,silent-0069,silent-0077,silent-0087,silent-0094,silent-0119,silent-0142,silent-0030,silent-0065；最终 `ledger.py check` 退出0，保留first_run/prior/repeat和既有上线历史，0163仍属于S1.fix27。通过本任务完成事件及 `learner/runs/20261006-092705-experience-update/handoff-ops.md` 将版本、实际合入和来源id交给运维codex，据实际合入用CLI登记shipped；学习者没有写accepted/shipped，不另设审核。主目录变更记录仅追加、账本仅CLI追加，均留调用方提交。active112、54675字，A8/A9各106条52243字；高46中38低28，240配对切片增量中位+81字、最大6027→6207字。手写知识改动无，新增用药规则无，需要Dai定的事无；没有推送、停局或运行play。
+账本新增0、退役0，20项仅经CLI更新为proposed：silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0007,silent-0010,silent-0011,silent-0023,silent-0028,silent-0013,silent-0072,silent-0069,silent-0077,silent-0087,silent-0094,silent-0119,silent-0142,silent-0030,silent-0065；最终 `ledger.py check` 退出0，保留first_run/prior/repeat和既有上线历史，0163仍属于S1.fix27。通过本任务完成事件及 `learner/runs/20261006-092705-experience-update/handoff-ops.md` 将版本、实际合入和来源id交给运维codex，据实际合入用CLI登记shipped；学习者没有写accepted/shipped，不另设审核。主目录变更记录仅追加、账本仅CLI追加，均留调用方提交。active112、54675字，A8/A9各106条52243字；高46中38低28，240配对切片增量中位+81字、最大6027→6207字。手写知识改动无，新增用药规则无，需要Roy定的事无；没有推送、停局或运行play。
 
 ## 2026-10-06 静默猎手 第三十九次增量：1 局 A10（version 2026-10-06.14，分支 exp-silent，6c787e3e）
 
@@ -8373,7 +8373,7 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 240配对增量中位+390字、单片最多+748，最大片7387→8082；active114/正文56688字、高48中38低28，A8/A9/A10各108条54256字。逐轮细节压为案例，完整血档/局号/SL/机制动作保留本节与子集，无新用药规则。
 
 
-本节收尾登记（2026-10-06 10:17:57 +0800）：源 `6c787e3ecfafa59af35ec0523b93ba215c86e391` 实际合入live `c1f61de9136d1be16bebd8eed60a54e14f9ebba0`，发布 `eabdd307b11199de406e5eed5f1dedad0a39f431`/`S1.exp39`。锁内七份刷新提交/合前基线 `b56ada670f3edc8a3236f5141e8fd3cf36c46d8d`，知识重叠空、合并预检0、其他知识blob保持；源及合后固定沙箱tsc0/vitest0，源195文件2118例、合后195文件2118例，首轮退出0，无失败重跑，完整沙箱外检查由调度器补跑。账本新增0/退役0、12项仅CLI登记proposed：silent-0019,silent-0020,silent-0021,silent-0006,silent-0007,silent-0011,silent-0046,silent-0088,silent-0050,silent-0167,silent-0168,silent-0169，最终check退出0；0169最早局/进阶经历史直接帧更正为XYYQYBRM2A01/A1，prior=unknown及旧行保留；0168斗篷扣勘误/prior=yes保留，0166纯bug仍observed。主目录本节及账本由调用方提交。通过本任务experience-done完成回报及 `learner/runs/20261006-100106-experience-update/handoff-ops.md` 将提交/版本/账本id交运维codex，据实际发布CLI登记shipped，不另审、不写accepted/shipped。新增2更新10全补证、只数字0、退役0，active114/56688字、高48中38低28，A8/A9各108条54256字；切片配对中位+390、最大7387→8082。手写知识改动无，无源码/生成器/别角色修改，无新用药规则、不重建；需要Dai定：无。不停对局、不运行play、不推送。
+本节收尾登记（2026-10-06 10:17:57 +0800）：源 `6c787e3ecfafa59af35ec0523b93ba215c86e391` 实际合入live `c1f61de9136d1be16bebd8eed60a54e14f9ebba0`，发布 `eabdd307b11199de406e5eed5f1dedad0a39f431`/`S1.exp39`。锁内七份刷新提交/合前基线 `b56ada670f3edc8a3236f5141e8fd3cf36c46d8d`，知识重叠空、合并预检0、其他知识blob保持；源及合后固定沙箱tsc0/vitest0，源195文件2118例、合后195文件2118例，首轮退出0，无失败重跑，完整沙箱外检查由调度器补跑。账本新增0/退役0、12项仅CLI登记proposed：silent-0019,silent-0020,silent-0021,silent-0006,silent-0007,silent-0011,silent-0046,silent-0088,silent-0050,silent-0167,silent-0168,silent-0169，最终check退出0；0169最早局/进阶经历史直接帧更正为XYYQYBRM2A01/A1，prior=unknown及旧行保留；0168斗篷扣勘误/prior=yes保留，0166纯bug仍observed。主目录本节及账本由调用方提交。通过本任务experience-done完成回报及 `learner/runs/20261006-100106-experience-update/handoff-ops.md` 将提交/版本/账本id交运维codex，据实际发布CLI登记shipped，不另审、不写accepted/shipped。新增2更新10全补证、只数字0、退役0，active114/56688字、高48中38低28，A8/A9各108条54256字；切片配对中位+390、最大7387→8082。手写知识改动无，无源码/生成器/别角色修改，无新用药规则、不重建；需要Roy定：无。不停对局、不运行play、不推送。
 
 登记脚本收尾说明（2026-10-06 10:18:26 +0800）：临时publish.py首轮有括号语法错误，尚未执行/修改任何上线文件；原merge-live.log保留错误与合后测试通过记录。修正后重新取得live-merge.lock，只重跑登记，publish-retry.log确认发布eabdd307b11199de406e5eed5f1dedad0a39f431/S1.exp39；源/合后测试均首轮通过，无测试失败或重跑。
 
@@ -8578,7 +8578,7 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 240配对增量中位-711.5字、单片最多+307，最大片8080→5540；active115/正文49252字、高49中39低27，A8/A9各109条46707字，A10为110条47123字。逐轮细节压为一两个案例，完整分档/局号/SL/机制动作留本节和审计文件；无新用药规则。
 
 
-本节收尾登记（2026-10-06 10:43:37 +0800）：源`26ae625bb01700cc56b7d96084294109e0e97f0b`已提交；锁内incoming仅静默experience、刷新空/知识重叠空，合前live`be0ee6df1395b2373a88e0bf222a6e89312b0945`。仅decision-log内容冲突，merge-tree预检1、流程退出3；依任务冲突停下要求，未实际merge/合后测试/新增eval版本或上线记录，merged=null、live与他人记录/实时知识保持、无MERGE_HEAD/暂存改动。源首轮固定tsc0/vitest0、195文件2118例，JSON/预算/角色证据/旧基线/原药水分句/gitleaks通过；新增1更新17（12补证/0仅数字/5纯压缩）退役0、active115/49252字、A8/A9各109条46707字，配对中位−711.5/最大8080→5540。账本新增silent-0170；proposed更新silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0007,silent-0013,silent-0027,silent-0046,silent-0030,silent-0012,silent-0134,silent-0011,silent-0017,silent-0064,silent-0080，退役0、check0，仅CLI写proposed，first_run/prior/repeat/旧上线保持，钓鱼竿prior=yes依最早A4 F1学前机制规划；0009/0166不重置。主目录本节与账本留调用方提交。固定源、原预检和版本/账本去向已交learner/runs/20261006-102554-experience-update/handoff-ops.md及本任务experience-done回报，待运维保留双方历史兜底合入、合后测通过再登记唯一eval版本/17项shipped，完整外部交调度器。本批未声称上线，不推送、不停对局、不运行play；需要Dai定：无。
+本节收尾登记（2026-10-06 10:43:37 +0800）：源`26ae625bb01700cc56b7d96084294109e0e97f0b`已提交；锁内incoming仅静默experience、刷新空/知识重叠空，合前live`be0ee6df1395b2373a88e0bf222a6e89312b0945`。仅decision-log内容冲突，merge-tree预检1、流程退出3；依任务冲突停下要求，未实际merge/合后测试/新增eval版本或上线记录，merged=null、live与他人记录/实时知识保持、无MERGE_HEAD/暂存改动。源首轮固定tsc0/vitest0、195文件2118例，JSON/预算/角色证据/旧基线/原药水分句/gitleaks通过；新增1更新17（12补证/0仅数字/5纯压缩）退役0、active115/49252字、A8/A9各109条46707字，配对中位−711.5/最大8080→5540。账本新增silent-0170；proposed更新silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0007,silent-0013,silent-0027,silent-0046,silent-0030,silent-0012,silent-0134,silent-0011,silent-0017,silent-0064,silent-0080，退役0、check0，仅CLI写proposed，first_run/prior/repeat/旧上线保持，钓鱼竿prior=yes依最早A4 F1学前机制规划；0009/0166不重置。主目录本节与账本留调用方提交。固定源、原预检和版本/账本去向已交learner/runs/20261006-102554-experience-update/handoff-ops.md及本任务experience-done回报，待运维保留双方历史兜底合入、合后测通过再登记唯一eval版本/17项shipped，完整外部交调度器。本批未声称上线，不推送、不停对局、不运行play；需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第四十一次增量：1 局 A10（version 2026-10-06.16，分支 exp-silent，27fb17e4）
 
@@ -8774,7 +8774,7 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 
 240配对增量中位+91字、单片最多+519，最大片5542→5944；active115/lesson总长50181字、高49中39低27，A8/A9各109条47636字，A10为110条48052字。逐轮数字压为典型一句，完整数据在本节/审计，无新增用药规则。
 
-本节收尾登记（2026-10-06 11:22:50 +0800）：源27fb17e4f87c658265856e493f816a8de81ac622已提交，源首轮tsc0、196文件2124例/退出0。实际合入live a5cbfe3d9e723b2e7c403b02ef5eac627f78c36b，上线记录ef3a3e17a94ff8ef58c3ef7dc9aaf20eb916909d/唯一S1.exp41；合后tsc0、198文件2166例/退出0、首轮退出0。 合前1103a83d73ab5239b08fed8254d5488451e0327a，刷新无，相同重叠0个知识blob保留、不同冲突重叠0；经验路径的live旧版本与本次已测改前快照逐blob相同，属允许的新经验更新，不覆盖并发新数据。初重叠检查误报退出3，随后只读merge-tree确认知识无冲突、仅decision-log追加冲突；第二次合并脚本因历史论文CSV的CRLF被默认空白检查误报而退出1，未提交、已在锁内merge --abort恢复合前HEAD及他人改动，最终检查识别CRLF并通过。两次流程中断/预检及改前blob证明留live-merge-first.json、live-merge-second.json、merge-tree-overlap.txt、merge-whitespace-check.txt、predecessor-proof.json，不当代码或测试失败；测试均首过无失败重跑。追加历史union=True，双方有序完整原文保持，其他知识blob保持，详情live-merge.json。新增0更新10（全补证/只数字0）退役0、active115/50181字、高49中39低27，A8/A9各109条47636字；240配对切片增量中位+91、最大5542→5944，预算与原药水句保持。账本新增无、proposed silent-0005,silent-0006,silent-0017,silent-0019,silent-0020,silent-0021,silent-0007,silent-0010,silent-0027,silent-0072、退役无、check0，首次证据/先验/repeat/旧版本保持、0171纯比较bug不动；仅CLI写proposed，不写accepted/shipped。运维通知/账本实际上线登记交本任务experience-done及learner/runs/20261006-105532-experience-update/handoff-ops.md，完整沙箱外套件由调度器补跑。主目录仅追加本节及CLI账本，未由本任务提交；不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾登记（2026-10-06 11:22:50 +0800）：源27fb17e4f87c658265856e493f816a8de81ac622已提交，源首轮tsc0、196文件2124例/退出0。实际合入live a5cbfe3d9e723b2e7c403b02ef5eac627f78c36b，上线记录ef3a3e17a94ff8ef58c3ef7dc9aaf20eb916909d/唯一S1.exp41；合后tsc0、198文件2166例/退出0、首轮退出0。 合前1103a83d73ab5239b08fed8254d5488451e0327a，刷新无，相同重叠0个知识blob保留、不同冲突重叠0；经验路径的live旧版本与本次已测改前快照逐blob相同，属允许的新经验更新，不覆盖并发新数据。初重叠检查误报退出3，随后只读merge-tree确认知识无冲突、仅decision-log追加冲突；第二次合并脚本因历史论文CSV的CRLF被默认空白检查误报而退出1，未提交、已在锁内merge --abort恢复合前HEAD及他人改动，最终检查识别CRLF并通过。两次流程中断/预检及改前blob证明留live-merge-first.json、live-merge-second.json、merge-tree-overlap.txt、merge-whitespace-check.txt、predecessor-proof.json，不当代码或测试失败；测试均首过无失败重跑。追加历史union=True，双方有序完整原文保持，其他知识blob保持，详情live-merge.json。新增0更新10（全补证/只数字0）退役0、active115/50181字、高49中39低27，A8/A9各109条47636字；240配对切片增量中位+91、最大5542→5944，预算与原药水句保持。账本新增无、proposed silent-0005,silent-0006,silent-0017,silent-0019,silent-0020,silent-0021,silent-0007,silent-0010,silent-0027,silent-0072、退役无、check0，首次证据/先验/repeat/旧版本保持、0171纯比较bug不动；仅CLI写proposed，不写accepted/shipped。运维通知/账本实际上线登记交本任务experience-done及learner/runs/20261006-105532-experience-update/handoff-ops.md，完整沙箱外套件由调度器补跑。主目录仅追加本节及CLI账本，未由本任务提交；不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第四十二次增量：1 局 A10（version 2026-10-06.17，分支 exp-silent，d673c6a7）
 
@@ -8987,7 +8987,7 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 | a9-reward | 3138/4077 | 3300/4239 | 162 |
 | a9-shop | 4310/5322 | 4637/5484 | 162 |
 
-240配对增量中位+23、单片最多+538、最大5944→6191字符。active116、lesson50905字符、高49中40低27；A8/A9各110条48360字符，A10为111条48776。逐轮压成典型一句、完整数据留本节和审计。需要Dai定：无。不停对局、不运行play、不推送。
+240配对增量中位+23、单片最多+538、最大5944→6191字符。active116、lesson50905字符、高49中40低27；A8/A9各110条48360字符，A10为111条48776。逐轮压成典型一句、完整数据留本节和审计。需要Roy定：无。不停对局、不运行play、不推送。
 
 ## 2026-10-06 静默猎手 第四十三次增量：2 局 A10（version 2026-10-06.18，分支 exp-silent，fbd7a45f）
 
@@ -9188,9 +9188,9 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 | a9-reward | 3300.0/4239 | 3428.0/4367 | 128.0 |
 | a9-shop | 4637.0/5484 | 4765.0/5612 | 254.0 |
 
-240配对增量中位+127、单片最多+394、最大6191→6319字符。active118、lesson52421字符、高50中41低27；A8/A9各112条49876字符，A10为113条50292。逐轮压为典型一句、完整数字留本节/审计；需要Dai定：无。
+240配对增量中位+127、单片最多+394、最大6191→6319字符。active118、lesson52421字符、高50中41低27；A8/A9各112条49876字符，A10为113条50292。逐轮压为典型一句、完整数字留本节/审计；需要Roy定：无。
 
-本节收尾登记（2026-10-06 15:49:52 +0800）：源fbd7a45ff75aa66d2c9f52cf8d1b4bcba55a204d已提交；两份草稿固定沙箱均tsc0/200文件2178例/退出0，分别补足第三局毒上限证据与按15:04勘误纠正T10来源，随后最终固定源tsc0/200文件2178例/退出0、合后tsc0/201文件2182例/退出0，均首轮成功，无失败重跑。 实际live合入9bc79a15954e97f00c333f512f802b473a480f23，上线登记da2ccb9230a65ae210b3aafe481d97f66b610141/唯一S1.exp43；合前7deca46c6ef6c1740464ad83f1865855b83893c8，刷新提交7deca46c6ef6c1740464ad83f1865855b83893c8，冲突知识重叠0，其他知识blob逐项保持，追加历史union=False。 新增2更新9（全加证据/只数字0）退役0，active116→118、50905→52421字符、高50中41低27；A8/A9各112条49876字符，A10为113条50292字符。240配对切片中位+127、单片最多+394、最大6191→6319字符。 账本新增无、proposed silent-0175,silent-0176,silent-0005,silent-0006,silent-0017,silent-0050,silent-0007,silent-0011,silent-0021,silent-0019,silent-0020、退役无，ledger.py check最终退出0；所有变化均映射既有条目，0175补9TG历史支持，0176保留T082最早/prior=yes，其他首次局/先验/旧版本/repeat保持，0174独立纯bug的当前状态shipped/S1.fix31来自独立S1.fix31，本批没有写入。 本节正文的源码缺口以本任务exp旧基线为准；等待合入锁期间已核live独立S1.fix31，30a60359代码/b219de68发布与0174 shipped已由运维登记，不再把全局0174固定为observed。实际合入保留该修复，本批只更新经验文字，真实机制条目不作为纯bug退役。仅CLI写proposed、不写accepted/shipped；运维通知由本任务experience-done及learner/runs/20261006-150910-experience-update/handoff-ops.md交接，实际上线账本登记与完整沙箱外检查交运维/调度器，不另设审核。主目录本节旧前缀逐字保留、只追加及CLI账本，未由本任务提交；无源码/生成器/其他角色修改、不重建，不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾登记（2026-10-06 15:49:52 +0800）：源fbd7a45ff75aa66d2c9f52cf8d1b4bcba55a204d已提交；两份草稿固定沙箱均tsc0/200文件2178例/退出0，分别补足第三局毒上限证据与按15:04勘误纠正T10来源，随后最终固定源tsc0/200文件2178例/退出0、合后tsc0/201文件2182例/退出0，均首轮成功，无失败重跑。 实际live合入9bc79a15954e97f00c333f512f802b473a480f23，上线登记da2ccb9230a65ae210b3aafe481d97f66b610141/唯一S1.exp43；合前7deca46c6ef6c1740464ad83f1865855b83893c8，刷新提交7deca46c6ef6c1740464ad83f1865855b83893c8，冲突知识重叠0，其他知识blob逐项保持，追加历史union=False。 新增2更新9（全加证据/只数字0）退役0，active116→118、50905→52421字符、高50中41低27；A8/A9各112条49876字符，A10为113条50292字符。240配对切片中位+127、单片最多+394、最大6191→6319字符。 账本新增无、proposed silent-0175,silent-0176,silent-0005,silent-0006,silent-0017,silent-0050,silent-0007,silent-0011,silent-0021,silent-0019,silent-0020、退役无，ledger.py check最终退出0；所有变化均映射既有条目，0175补9TG历史支持，0176保留T082最早/prior=yes，其他首次局/先验/旧版本/repeat保持，0174独立纯bug的当前状态shipped/S1.fix31来自独立S1.fix31，本批没有写入。 本节正文的源码缺口以本任务exp旧基线为准；等待合入锁期间已核live独立S1.fix31，30a60359代码/b219de68发布与0174 shipped已由运维登记，不再把全局0174固定为observed。实际合入保留该修复，本批只更新经验文字，真实机制条目不作为纯bug退役。仅CLI写proposed、不写accepted/shipped；运维通知由本任务experience-done及learner/runs/20261006-150910-experience-update/handoff-ops.md交接，实际上线账本登记与完整沙箱外检查交运维/调度器，不另设审核。主目录本节旧前缀逐字保留、只追加及CLI账本，未由本任务提交；无源码/生成器/其他角色修改、不重建，不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第四十四次增量：1 局 A10（version 2026-10-06.19，分支 exp-silent，aad6faef）
 
@@ -9390,9 +9390,9 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 | a9-reward | 3428.0/4367 | 3775.0/4714 | 347.0 |
 | a9-shop | 4765.0/5612 | 5112.0/5740 | 258.5 |
 
-240配对增量中位+130、单片最多+478、最大6082→6429字符。active118、lesson53162字符，高51中40低27；A8/A9各112条50617字符，A10为113条51033字符。逐回合细节压成案例一句，完整日志/数字保留本节及审计；需要Dai定：无。
+240配对增量中位+130、单片最多+478、最大6082→6429字符。active118、lesson53162字符，高51中40低27；A8/A9各112条50617字符，A10为113条51033字符。逐回合细节压成案例一句，完整日志/数字保留本节及审计；需要Roy定：无。
 
-本节收尾登记（2026-10-06 16:34:10 +0800）：源aad6faef5872395489abd80bdbeaa5d0934621b7，源固定沙箱首过tsc0/201文件2182例/vitest0；实际live合入4ff1755188589da29114a6a3ffd3078ca790f89c，上线登记f09267bad642eb4dc2987b2b08ad8b2aff231bde/唯一S1.exp44，合后tsc0/202文件2188例/vitest0，合后首轮0。刷新提交无、合前4128aa171248b29c3fe791d4f8ccfdb5500d085a，知识重叠[]/冲突重叠[]、预检0，其他知识blob保持，追加历史union=False。等待锁期间另一批独立钨合金棍修复合入live，源本批仍只有experience文字，合后测试覆盖其实际代码，未替它登记版本/账本或把它混作本次经验修复。新增0更新9（全部加证据/只数字0）退役0；active118、52421→53162字符，高51中40低27；A8/A9各112条50617字符，A10为113条51033字符。240配对切片中位+130、单片最大+478、最大6082→6429字符。账本新增无、proposed silent-0005,silent-0006,silent-0062,silent-0133,silent-0021,silent-0084,silent-0123,silent-0019,silent-0020,silent-0065,silent-0161,silent-0180、退役无、check0；只经CLI写proposed，首次局/先验/旧版本/repeat保持，0180机制并入0123对应原遗物经验，0179纯bug不动。士兵一次消费三局/四倍旧例、涂毒普通逐击四局/升级逐击一局分别核；末T8实际爪双击30、火箭蓄力，24挡/6HP归零纠正只读复盘原描述。生成数据900房与本批899房的唯一差1是TD1 F17重启拆段，保留生成数据与本批口径。运维通知由experience-done及learner/runs/20261006-160711-experience-update/handoff-ops.md交接，运维据实际合入登记shipped，完整沙箱外由调度器补跑，不另审。主目录本节只追加、旧前缀逐字保留与CLI账本未由本任务提交；exp干净，无手写知识/其他角色/源码/生成器修改，不重建、不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾登记（2026-10-06 16:34:10 +0800）：源aad6faef5872395489abd80bdbeaa5d0934621b7，源固定沙箱首过tsc0/201文件2182例/vitest0；实际live合入4ff1755188589da29114a6a3ffd3078ca790f89c，上线登记f09267bad642eb4dc2987b2b08ad8b2aff231bde/唯一S1.exp44，合后tsc0/202文件2188例/vitest0，合后首轮0。刷新提交无、合前4128aa171248b29c3fe791d4f8ccfdb5500d085a，知识重叠[]/冲突重叠[]、预检0，其他知识blob保持，追加历史union=False。等待锁期间另一批独立钨合金棍修复合入live，源本批仍只有experience文字，合后测试覆盖其实际代码，未替它登记版本/账本或把它混作本次经验修复。新增0更新9（全部加证据/只数字0）退役0；active118、52421→53162字符，高51中40低27；A8/A9各112条50617字符，A10为113条51033字符。240配对切片中位+130、单片最大+478、最大6082→6429字符。账本新增无、proposed silent-0005,silent-0006,silent-0062,silent-0133,silent-0021,silent-0084,silent-0123,silent-0019,silent-0020,silent-0065,silent-0161,silent-0180、退役无、check0；只经CLI写proposed，首次局/先验/旧版本/repeat保持，0180机制并入0123对应原遗物经验，0179纯bug不动。士兵一次消费三局/四倍旧例、涂毒普通逐击四局/升级逐击一局分别核；末T8实际爪双击30、火箭蓄力，24挡/6HP归零纠正只读复盘原描述。生成数据900房与本批899房的唯一差1是TD1 F17重启拆段，保留生成数据与本批口径。运维通知由experience-done及learner/runs/20261006-160711-experience-update/handoff-ops.md交接，运维据实际合入登记shipped，完整沙箱外由调度器补跑，不另审。主目录本节只追加、旧前缀逐字保留与CLI账本未由本任务提交；exp干净，无手写知识/其他角色/源码/生成器修改，不重建、不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第四十五次增量：1 局 A10（version 2026-10-06.20，分支 exp-silent，ab8335ba）
 
@@ -9605,10 +9605,10 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 | a9-reward | 3775.0/4714 | 3863.0/4802 | 88.0 |
 | a9-shop | 5112.0/5740 | 5200.0/6230 | 154.5 |
 
-240配对增量中位+74、单片最多+555、最大6430→6586字符。active120、lesson54122字符，高52中41低27；A8/A9各114条51577字符，A10为115条51993字符。逐回合细节压成条目案例，完整数值保留本节与审计；需要Dai定：无。
+240配对增量中位+74、单片最多+555、最大6430→6586字符。active120、lesson54122字符，高52中41低27；A8/A9各114条51577字符，A10为115条51993字符。逐回合细节压成条目案例，完整数值保留本节与审计；需要Roy定：无。
 
 
-本节收尾登记（2026-10-06 17:27:37 +0800）：源ab8335ba091e3385036352f04354613cac683cdb，源首轮固定沙箱tsc0/203文件2194用例/vitest0；实际live合入8807bc1442e7525c8d8f52361e8d45925c9436aa，固定发布56c64ff8c32d6ef1cc0d2febb8252229f7e69133/唯一S1.exp45，合后tsc0/203文件2194用例/vitest0，合后首轮0，无需重跑。刷新823ccc3223dac21d430433235b63d79566d7b362、合前823ccc3223dac21d430433235b63d79566d7b362，知识冲突重叠[]/锁内预检0，其他知识blob逐项保持，追加历史union=False；未改生成器、不重建。新增2更新12（全加证据/只数字0）退役0，active118→120/53162→54122字，高52中41低27，A8/A9各114条51577字、A10为115条51993字；沙虫重复案例压缩，原证据保持。240配对切片中位+74、单片最多+555，最大6430→6586。账本新增无、proposed silent-0005,silent-0006,silent-0017,silent-0027,silent-0115,silent-0046,silent-0011,silent-0010,silent-0021,silent-0018,silent-0019,silent-0020,silent-0181,silent-0182,silent-0183、退役无/check0，只CLI追加，first_run/prior/旧version/repeat保持；181已有误认repeat不另加，183 prior=yes/首局LRN0HPZ0FZS1保持，其他未纳经验或纯bug账本未动。本节SL汇总段“另三条原始SL”更正为“另两条原始SL”：原始9条=沙虫3+失落/遗忘4+巨兽首胜1+盾炮首胜1；重打仍本局两场7次1赢、全角色53场235次17赢。原文保留，数字以本补充和sl-attempts原日志为准。运维由experience-done与learner/runs/20261006-170126-experience-update/handoff-ops.md交接，请据实际合入CLI登记15项shipped/S1.exp45，不另审，完整沙箱外测试由调度器补跑。主目录本节与账本未由本任务提交；原记录前缀逐字保持、仅追加一节，exp工作区干净。无其他手写知识/源码/其他角色改变，无新用药规则，不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾登记（2026-10-06 17:27:37 +0800）：源ab8335ba091e3385036352f04354613cac683cdb，源首轮固定沙箱tsc0/203文件2194用例/vitest0；实际live合入8807bc1442e7525c8d8f52361e8d45925c9436aa，固定发布56c64ff8c32d6ef1cc0d2febb8252229f7e69133/唯一S1.exp45，合后tsc0/203文件2194用例/vitest0，合后首轮0，无需重跑。刷新823ccc3223dac21d430433235b63d79566d7b362、合前823ccc3223dac21d430433235b63d79566d7b362，知识冲突重叠[]/锁内预检0，其他知识blob逐项保持，追加历史union=False；未改生成器、不重建。新增2更新12（全加证据/只数字0）退役0，active118→120/53162→54122字，高52中41低27，A8/A9各114条51577字、A10为115条51993字；沙虫重复案例压缩，原证据保持。240配对切片中位+74、单片最多+555，最大6430→6586。账本新增无、proposed silent-0005,silent-0006,silent-0017,silent-0027,silent-0115,silent-0046,silent-0011,silent-0010,silent-0021,silent-0018,silent-0019,silent-0020,silent-0181,silent-0182,silent-0183、退役无/check0，只CLI追加，first_run/prior/旧version/repeat保持；181已有误认repeat不另加，183 prior=yes/首局LRN0HPZ0FZS1保持，其他未纳经验或纯bug账本未动。本节SL汇总段“另三条原始SL”更正为“另两条原始SL”：原始9条=沙虫3+失落/遗忘4+巨兽首胜1+盾炮首胜1；重打仍本局两场7次1赢、全角色53场235次17赢。原文保留，数字以本补充和sl-attempts原日志为准。运维由experience-done与learner/runs/20261006-170126-experience-update/handoff-ops.md交接，请据实际合入CLI登记15项shipped/S1.exp45，不另审，完整沙箱外测试由调度器补跑。主目录本节与账本未由本任务提交；原记录前缀逐字保持、仅追加一节，exp工作区干净。无其他手写知识/源码/其他角色改变，无新用药规则，不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第四十六次增量：1 局 A10（version 2026-10-06.21，分支 exp-silent，620513af）
 
@@ -9807,10 +9807,10 @@ A0至A9旧分档全不变，以下A10全部非空房格，完整零格/局号/�
 | a9-reward | 3863.0/4802 | 3979.0/4918 | 116.0 |
 | a9-shop | 5200.0/6230 | 5316.0/6346 | 116.0 |
 
-240配对增量中位+89、单片最多+586，总体大小中位3173.0→3360.5、最大6579→6771字符。active121/lesson55094字，高52中42低27；A8/A9各115条52549字，A10为116条52965字。逐回合细节在审计/历史节，新证据压成案例；需要Dai定：无。
+240配对增量中位+89、单片最多+586，总体大小中位3173.0→3360.5、最大6579→6771字符。active121/lesson55094字，高52中42低27；A8/A9各115条52549字，A10为116条52965字。逐回合细节在审计/历史节，新证据压成案例；需要Roy定：无。
 
 
-本节合入受阻登记（2026-10-06 18:05:15 +0800）：源620513afddeae6cf3cfc14cf0adabce4be7f9e40，源首轮固定沙箱tsc0/203文件2194用例/vitest0。尝试实际live合入a6e7c05d33d628ce68ec8d999fbd0e5bfe9a409d；合后首轮及一次完整重跑均tsc0/vitest1，均boss-clock.test.ts的固定ERPH Waterfall Giant用例断言失败（fightTurns实8，要求≥9），不是超时。两轮均202文件/2183例，2182通过、1失败；paths单fork因前池失败未执行。已按任务回退live到合前3599ab0ae3be80d13b77f57f5af8b785cb09c437，保留合前知识/实时工作区，live经验仍2026-10-06.20；未登记S1.exp46或上线记录，未合入，待调用方处理/合入。回退后同固定单例再核仍相同断言失败，证明本次经验回退未消除该失败；不在经验任务修改源码、其他角色数据、生成器或测试来取得通过。新增1更新8（全部补证/只数字0）退役0，分支active120→121/54122→55094字，高52中42低27；A8/A9各115条52549字、A10为116条52965字。240切片配对中位+89、总体中位3173→3360.5、最大6579→6771字。账本新增无、proposed silent-0005,silent-0006,silent-0018,silent-0079,silent-0019,silent-0020,silent-0021,silent-0011,silent-0046,silent-0184,silent-0185、退役无/check0，仅CLI追加，first_run/prior/旧version/repeat保持；0184/0185共映射一蜡烛条目，0079只补去向。运维由experience-done及learner/runs/20261006-174302-experience-update/handoff-ops.md交接测试阻塞与回退，禁止据失败的尝试登记shipped；须实际合入成功后再登记。本节/账本由调用方归档，主目录未由本任务提交；原记录前缀保持，只追加第46节，exp工作区干净。无新用药规则/手写知识/源码变化，不停对局、不运行play、不推送。需要Dai定的知识事项：无；合入测试阻塞交运维排查。
+本节合入受阻登记（2026-10-06 18:05:15 +0800）：源620513afddeae6cf3cfc14cf0adabce4be7f9e40，源首轮固定沙箱tsc0/203文件2194用例/vitest0。尝试实际live合入a6e7c05d33d628ce68ec8d999fbd0e5bfe9a409d；合后首轮及一次完整重跑均tsc0/vitest1，均boss-clock.test.ts的固定ERPH Waterfall Giant用例断言失败（fightTurns实8，要求≥9），不是超时。两轮均202文件/2183例，2182通过、1失败；paths单fork因前池失败未执行。已按任务回退live到合前3599ab0ae3be80d13b77f57f5af8b785cb09c437，保留合前知识/实时工作区，live经验仍2026-10-06.20；未登记S1.exp46或上线记录，未合入，待调用方处理/合入。回退后同固定单例再核仍相同断言失败，证明本次经验回退未消除该失败；不在经验任务修改源码、其他角色数据、生成器或测试来取得通过。新增1更新8（全部补证/只数字0）退役0，分支active120→121/54122→55094字，高52中42低27；A8/A9各115条52549字、A10为116条52965字。240切片配对中位+89、总体中位3173→3360.5、最大6579→6771字。账本新增无、proposed silent-0005,silent-0006,silent-0018,silent-0079,silent-0019,silent-0020,silent-0021,silent-0011,silent-0046,silent-0184,silent-0185、退役无/check0，仅CLI追加，first_run/prior/旧version/repeat保持；0184/0185共映射一蜡烛条目，0079只补去向。运维由experience-done及learner/runs/20261006-174302-experience-update/handoff-ops.md交接测试阻塞与回退，禁止据失败的尝试登记shipped；须实际合入成功后再登记。本节/账本由调用方归档，主目录未由本任务提交；原记录前缀保持，只追加第46节，exp工作区干净。无新用药规则/手写知识/源码变化，不停对局、不运行play、不推送。需要Roy定的知识事项：无；合入测试阻塞交运维排查。
 
 ## 2026-10-06 静默猎手 第四十七次增量：1 局 A10（version 2026-10-06.22，分支 exp-silent，0723092c）
 
@@ -10027,10 +10027,10 @@ A10的41非回血含40锻造+1添火；A8帐篷同火两动作。新局四回血
 | a9-reward | 3979.0/4918 | 4025.0/4964 | 46.0 |
 | a9-shop | 5316.0/6346 | 5362.0/6260 | -45.5 |
 
-240配对增量中位+46、单片最多+252；总体中位3413.0→3372.0、最大6346→6260字。active121→122、总55094→56362字，高52中43低27；A8/A9各116条53707字、A10为117条54123字。数字/局号压短保留，逐回合细节在完整审计，需Dai定知识事项：无。
+240配对增量中位+46、单片最多+252；总体中位3413.0→3372.0、最大6346→6260字。active121→122、总55094→56362字，高52中43低27；A8/A9各116条53707字、A10为117条54123字。数字/局号压短保留，逐回合细节在完整审计，需Roy定知识事项：无。
 
 
-本节收尾（2026-10-06 18:40:02 +0800）：源0723092c1d575122896945935e5b55d89983c57d，源初轮及校正n文字后的最终完整沙箱均tsc0/203文件2194例/vitest0；实际live合入a95d92ecee0152abcb433b00b3aa0305d3fa2e43、合后首轮0、最终0，合后tsc0/204文件2203通过；发布记录0020f8f5e720b274069e0102814ad45056e883fb、eval S1.exp47。合前live为.20、本次.22亦实际包含前批620513af的.21经验；保留第46批失败/回退历史，不追记独立exp46。本批新增1更新17（加证12、纯数字0、只压缩5）退役0、active121→122/55094→56362字；开工13条压481字，数字/局号/证据/用药句保持。切片240配对中位+46、总体中位3413→3372、最大6346→6260字；A8/A9各116条53707字、A10 117条54123字。账本新增无、proposed silent-0005,silent-0006,silent-0017,silent-0018,silent-0019,silent-0020,silent-0021,silent-0057,silent-0007,silent-0011,silent-0027,silent-0030,silent-0046,silent-0049,silent-0024,silent-0065,silent-0107,silent-0129,silent-0187,silent-0188、退役无/check0，first_run/prior/旧版本/repeat保持。刷新无、合前fc17d02d464c803162f551f08dba97a09d91f7c7，知识冲突重叠0；decision-log仅追加冲突以union完整保留双方原文和各自顺序，其他知识blob保持。交运维经experience-done和learner/runs/20261006-181303-experience-update/handoff-ops.md核实际合入后CLI登记shipped，包括机械核实前批0184/0185/0079等继承去向；完整沙箱外检查交调度器，不另审核。主目录变更记录/账本只追加不提交，exp工作区干净；无手写知识/源码/生成器/其他角色/新用药规则变化，不停对局、不运行play、不推送。需Dai定：无。
+本节收尾（2026-10-06 18:40:02 +0800）：源0723092c1d575122896945935e5b55d89983c57d，源初轮及校正n文字后的最终完整沙箱均tsc0/203文件2194例/vitest0；实际live合入a95d92ecee0152abcb433b00b3aa0305d3fa2e43、合后首轮0、最终0，合后tsc0/204文件2203通过；发布记录0020f8f5e720b274069e0102814ad45056e883fb、eval S1.exp47。合前live为.20、本次.22亦实际包含前批620513af的.21经验；保留第46批失败/回退历史，不追记独立exp46。本批新增1更新17（加证12、纯数字0、只压缩5）退役0、active121→122/55094→56362字；开工13条压481字，数字/局号/证据/用药句保持。切片240配对中位+46、总体中位3413→3372、最大6346→6260字；A8/A9各116条53707字、A10 117条54123字。账本新增无、proposed silent-0005,silent-0006,silent-0017,silent-0018,silent-0019,silent-0020,silent-0021,silent-0057,silent-0007,silent-0011,silent-0027,silent-0030,silent-0046,silent-0049,silent-0024,silent-0065,silent-0107,silent-0129,silent-0187,silent-0188、退役无/check0，first_run/prior/旧版本/repeat保持。刷新无、合前fc17d02d464c803162f551f08dba97a09d91f7c7，知识冲突重叠0；decision-log仅追加冲突以union完整保留双方原文和各自顺序，其他知识blob保持。交运维经experience-done和learner/runs/20261006-181303-experience-update/handoff-ops.md核实际合入后CLI登记shipped，包括机械核实前批0184/0185/0079等继承去向；完整沙箱外检查交调度器，不另审核。主目录变更记录/账本只追加不提交，exp工作区干净；无手写知识/源码/生成器/其他角色/新用药规则变化，不停对局、不运行play、不推送。需Roy定：无。
 
 ## 2026-10-06 静默猎手 第四十八次增量：1 局 A10（version 2026-10-06.23，分支 exp-silent，eb27d746）
 
@@ -10243,11 +10243,11 @@ A10的41非回血含40锻造+1添火；A8帐篷同火两动作。新局四回血
 | a9-reward | 4025.0/4964 | 4317.0/5372 | 292.0 |
 | a9-shop | 5362.0/6260 | 5654.0/6420 | 247.5 |
 
-- 240配对增量中位+141，单片最多+408；总体中位3434.0→3513.0、最大6413→6705字。active122→123，总56362→57638字，高53中43低27；A8/A9各117条54983字、A10为118条55399字。逐回合细节压一句，完整数字留审计；需Dai定知识事项：无。
+- 240配对增量中位+141，单片最多+408；总体中位3434.0→3513.0、最大6413→6705字。active122→123，总56362→57638字，高53中43低27；A8/A9各117条54983字、A10为118条55399字。逐回合细节压一句，完整数字留审计；需Roy定知识事项：无。
 
 
 
-本节收尾（2026-10-06 19:05:43 +0800）：源eb27d74600ba881d8c9e19c4c68fcf45f7400640；实际live合入0266b8aa40ea7d648ff42458d618e3e1c10da6ec，上线登记d4026dbbda334bb607f5df269d9bd9a0c6a7fa7d、eval S1.exp48。源首轮及合后首轮固定沙箱均tsc0/vitest0，源204文件2203例、合后204文件2203例，无超时重跑。新增1更新12（补证11、纯数字0、仅压缩1）退役0；active122→123/56362→57638字，高53中43低27，A8/A9各117条54983字、A10 118条55399字。开工压7条58字，数字/案例局号/证据/反例/用药句保持；240切片配对中位+141、总体中位3434→3513、最大6413→6705字。账本新增无、proposed silent-0007,silent-0006,silent-0019,silent-0020,silent-0021,silent-0011,silent-0010,silent-0030,silent-0049,silent-0053,silent-0167,silent-0168,silent-0189、退役无，check0/189项0问题；佩尔之肉0189保留首证LRN0HPZ0FZS1及prior=yes，7支持0反例/33个3/3/4窗口，另补5旧静默证据。其他first_run/prior/旧版本/repeat历史保持。刷新无、合前0020f8f5e720b274069e0102814ad45056e883fb，7重叠刷新文件blob与源完全一致，冲突0；除经验以外全部知识blob保持。decision-log只追加冲突union完整保留双方有序原文；初轮广域diff-check被main原16份测试归档末空行拦下，未改归档字节，重新在锁里检查本次经验/追加历史后提交并合后自测。原失败merge-live.log/rc保留，不称测试失败或负载重跑。运维通知材料为learner/runs/20261006-184302-experience-update/handoff-ops.md和本批experience-done回报，由调度器finish_write_batch自动发事件；交运维核实际合入后CLI登记13项shipped，不另审核，沙箱外完整套件由调度器补跑。主目录第48节/账本仅追加不提交，exp干净；无手写知识/源码/生成器/其他角色变更或新用药规则、不重建，不停对局、不运行play、不推送。需Dai定：无。
+本节收尾（2026-10-06 19:05:43 +0800）：源eb27d74600ba881d8c9e19c4c68fcf45f7400640；实际live合入0266b8aa40ea7d648ff42458d618e3e1c10da6ec，上线登记d4026dbbda334bb607f5df269d9bd9a0c6a7fa7d、eval S1.exp48。源首轮及合后首轮固定沙箱均tsc0/vitest0，源204文件2203例、合后204文件2203例，无超时重跑。新增1更新12（补证11、纯数字0、仅压缩1）退役0；active122→123/56362→57638字，高53中43低27，A8/A9各117条54983字、A10 118条55399字。开工压7条58字，数字/案例局号/证据/反例/用药句保持；240切片配对中位+141、总体中位3434→3513、最大6413→6705字。账本新增无、proposed silent-0007,silent-0006,silent-0019,silent-0020,silent-0021,silent-0011,silent-0010,silent-0030,silent-0049,silent-0053,silent-0167,silent-0168,silent-0189、退役无，check0/189项0问题；佩尔之肉0189保留首证LRN0HPZ0FZS1及prior=yes，7支持0反例/33个3/3/4窗口，另补5旧静默证据。其他first_run/prior/旧版本/repeat历史保持。刷新无、合前0020f8f5e720b274069e0102814ad45056e883fb，7重叠刷新文件blob与源完全一致，冲突0；除经验以外全部知识blob保持。decision-log只追加冲突union完整保留双方有序原文；初轮广域diff-check被main原16份测试归档末空行拦下，未改归档字节，重新在锁里检查本次经验/追加历史后提交并合后自测。原失败merge-live.log/rc保留，不称测试失败或负载重跑。运维通知材料为learner/runs/20261006-184302-experience-update/handoff-ops.md和本批experience-done回报，由调度器finish_write_batch自动发事件；交运维核实际合入后CLI登记13项shipped，不另审核，沙箱外完整套件由调度器补跑。主目录第48节/账本仅追加不提交，exp干净；无手写知识/源码/生成器/其他角色变更或新用药规则、不重建，不停对局、不运行play、不推送。需Roy定：无。
 
 ## 2026-10-06 静默猎手 第四十九次增量：1 局 A10（version 2026-10-06.24，分支 exp-silent，664fda4f）
 
@@ -10463,9 +10463,9 @@ A10的41非回血含40锻造+1添火；A8帐篷同火两动作。新局四回血
 | a9-reward | 4317.0/5372 | 4439.0/5647 | 122.0 |
 | a9-shop | 5654.0/6420 | 5776.0/6674 | 122.0 |
 
-- 240配对增量中位+88.0，单片最多+369；总体中位3504.0→3626.0、最大6420→6674字。active123不变，总57638→58835字，高56中40低27；A8/A9各117条56022字、A10 118条56438字。逐回合细节留审计，经验里压成句；需要Dai定：无。
+- 240配对增量中位+88.0，单片最多+369；总体中位3504.0→3626.0、最大6420→6674字。active123不变，总57638→58835字，高56中40低27；A8/A9各117条56022字、A10 118条56438字。逐回合细节留审计，经验里压成句；需要Roy定：无。
 
-本节收尾（2026-10-06 19:58:09 +0800）：源664fda4f42109645630ccf2dbc2aab58a786c9e2，实际live合入74f824130c2b9d60cdda8c398590fee394f7e7db、上线登记cc1bdc598777acec145622aac6567593c4559dff、eval S1.exp49。源首轮tsc0/204文件2203例，合后首轮tsc0/205文件2213例/vitest0，无负载超时重跑。新增0更新13（全补证、纯数字0）退役0，active123、57638→58835字，高56中40低27；开工11条压88字、数字/案例局号/证据/原用药句保持；A8/A9各117条56022字、A10为118条56438字。240切片配对中位+88、总体中位3504→3626、最大6420→6674字，新61局池重抽状态所以旧第48节样本最大6705不作为本批改前同样本最大。账本新增/退役无，proposed silent-0005,silent-0006,silent-0017,silent-0019,silent-0020,silent-0021,silent-0046,silent-0048,silent-0053,silent-0063,silent-0069,silent-0079,silent-0132、check0，first_run/prior/旧version/repeat保持；silent-0191本任务不动，后续独立修复批次的状态和记录保持。刷新提交无、合前71af5ec9ed690077a94dfb35d91b0b926d05e67c，不同blob知识重叠0，其他知识blob保持；双方decision-log追加历史完整保留。上线登记初稿多一右括号导致Python解析失败、未写任何上线文件；原live-flow-initial.log/rc1及publish-initial.py保持，修正后仅重跑登记，非测试失败或重跑。交接learner/runs/20261006-193318-experience-update/handoff-ops.md及本批experience-done由调用器机械通知运维；仅运维在核实际合入后经CLI将13项标shipped，不另审核，沙箱外完整套件由调度器补跑。主目录本节/账本只追加不提交；无手写知识/源码/生成器/其他角色变化，不重建，不停对局、不运行play、不推送。需Dai定：无。
+本节收尾（2026-10-06 19:58:09 +0800）：源664fda4f42109645630ccf2dbc2aab58a786c9e2，实际live合入74f824130c2b9d60cdda8c398590fee394f7e7db、上线登记cc1bdc598777acec145622aac6567593c4559dff、eval S1.exp49。源首轮tsc0/204文件2203例，合后首轮tsc0/205文件2213例/vitest0，无负载超时重跑。新增0更新13（全补证、纯数字0）退役0，active123、57638→58835字，高56中40低27；开工11条压88字、数字/案例局号/证据/原用药句保持；A8/A9各117条56022字、A10为118条56438字。240切片配对中位+88、总体中位3504→3626、最大6420→6674字，新61局池重抽状态所以旧第48节样本最大6705不作为本批改前同样本最大。账本新增/退役无，proposed silent-0005,silent-0006,silent-0017,silent-0019,silent-0020,silent-0021,silent-0046,silent-0048,silent-0053,silent-0063,silent-0069,silent-0079,silent-0132、check0，first_run/prior/旧version/repeat保持；silent-0191本任务不动，后续独立修复批次的状态和记录保持。刷新提交无、合前71af5ec9ed690077a94dfb35d91b0b926d05e67c，不同blob知识重叠0，其他知识blob保持；双方decision-log追加历史完整保留。上线登记初稿多一右括号导致Python解析失败、未写任何上线文件；原live-flow-initial.log/rc1及publish-initial.py保持，修正后仅重跑登记，非测试失败或重跑。交接learner/runs/20261006-193318-experience-update/handoff-ops.md及本批experience-done由调用器机械通知运维；仅运维在核实际合入后经CLI将13项标shipped，不另审核，沙箱外完整套件由调度器补跑。主目录本节/账本只追加不提交；无手写知识/源码/生成器/其他角色变化，不重建，不停对局、不运行play、不推送。需Roy定：无。
 
 ## 2026-10-06 静默猎手 第五十次增量：1 局 A10（version 2026-10-06.25，分支 exp-silent，f13582ed）
 
@@ -10676,9 +10676,9 @@ A10的41非回血含40锻造+1添火；A8帐篷同火两动作。新局四回血
 | a9-reward | 4439.0/5647 | 4503.0/5711 | 64.0 |
 | a9-shop | 5776.0/6674 | 5840.0/6738 | 64.0 |
 
-- 240配对增量中位+64.0，单片最多+425；总体中位3690.5→3689.0，最大7005→7258字。active123不变、58835→59533字，高56中40低27；A8/A9各117条56428字，A10为118条57136字。逐轮数字留审计，条目压成句；需要Dai定：无。
+- 240配对增量中位+64.0，单片最多+425；总体中位3690.5→3689.0，最大7005→7258字。active123不变、58835→59533字，高56中40低27；A8/A9各117条56428字，A10为118条57136字。逐轮数字留审计，条目压成句；需要Roy定：无。
 
-本节收尾（2026-10-06 20:49:34 +0800）：源f13582ed9344a280c01226ad58af2940f1fef00e，实际live合入47b5e6a5368b21a7ca9cfefe9eda60cc01611455，上线登记08fce29e4e9326927ac1d97f94459ae4a4ee3c70、eval S1.exp50。源草稿与数据定稿均tsc0/vitest0、206文件2221例；定稿重跑是初抽时点修正/补历史胜例，非测试失败或负载超时。合后首轮tsc0/206文件2221例/vitest0，无重跑。新增0更新10（全部补证、纯数字0）退役0；active123、58835→59533字，高56中40低27；开工8条压115字、数字/案例局号/原用药句保持；A8/A9各117条56428字，A10为118条57136字。240配对切片中位+64、总体中位3690.5→3689、最大7005→7258字。旧61局七数组/血档/源节点/回血/SL全一致，新62局985房52实死；本局初24牌序/到手轮同、六次0赢；S9旧局第二次赢补同族，4场20次1赢、多个变量同变，无目标顺序单因；初稿证据断言失败与更正记录保留。账本新增/退役无，proposed silent-0006,silent-0019,silent-0020,silent-0021,silent-0007,silent-0010,silent-0013,silent-0079,silent-0027,silent-0030,silent-0012、check0；first_run/prior/旧version/repeat保持，silent-0192纯bug不改状态。刷新数据提交f3543b91da1a9309e08a814ea45f440c423eed78、合前f3543b91da1a9309e08a814ea45f440c423eed78，知识重叠0、合并无冲突，所有其他知识blob保持；无源码/生成器/手写知识/其他角色变化，不重建、不增用药规则。交接learner/runs/20261006-202705-experience-update/handoff-ops.md及本批experience-done由调用器通知运维；仅运维在核实际合入后经CLI将本批11项登记shipped，不另审核；沙箱外完整套件由调度器补跑。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾（2026-10-06 20:49:34 +0800）：源f13582ed9344a280c01226ad58af2940f1fef00e，实际live合入47b5e6a5368b21a7ca9cfefe9eda60cc01611455，上线登记08fce29e4e9326927ac1d97f94459ae4a4ee3c70、eval S1.exp50。源草稿与数据定稿均tsc0/vitest0、206文件2221例；定稿重跑是初抽时点修正/补历史胜例，非测试失败或负载超时。合后首轮tsc0/206文件2221例/vitest0，无重跑。新增0更新10（全部补证、纯数字0）退役0；active123、58835→59533字，高56中40低27；开工8条压115字、数字/案例局号/原用药句保持；A8/A9各117条56428字，A10为118条57136字。240配对切片中位+64、总体中位3690.5→3689、最大7005→7258字。旧61局七数组/血档/源节点/回血/SL全一致，新62局985房52实死；本局初24牌序/到手轮同、六次0赢；S9旧局第二次赢补同族，4场20次1赢、多个变量同变，无目标顺序单因；初稿证据断言失败与更正记录保留。账本新增/退役无，proposed silent-0006,silent-0019,silent-0020,silent-0021,silent-0007,silent-0010,silent-0013,silent-0079,silent-0027,silent-0030,silent-0012、check0；first_run/prior/旧version/repeat保持，silent-0192纯bug不改状态。刷新数据提交f3543b91da1a9309e08a814ea45f440c423eed78、合前f3543b91da1a9309e08a814ea45f440c423eed78，知识重叠0、合并无冲突，所有其他知识blob保持；无源码/生成器/手写知识/其他角色变化，不重建、不增用药规则。交接learner/runs/20261006-202705-experience-update/handoff-ops.md及本批experience-done由调用器通知运维；仅运维在核实际合入后经CLI将本批11项登记shipped，不另审核；沙箱外完整套件由调度器补跑。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第五十一次增量：1 局 A10（version 2026-10-06.26，分支 exp-silent，d6704d50）
 
@@ -10886,9 +10886,9 @@ A10的41非回血含40锻造+1添火；A8帐篷同火两动作。新局四回血
 | a9-reward | 4503.0/5711 | 4598.0/5806 | 95.0 |
 | a9-shop | 5840.0/6738 | 6000.5/7145 | 103.5 |
 
-- 240配对增量中位+67.0，单片最大增量+451；总体中位3575.0→3613.0、最大6738→7145字。active123→124，59533→59995字，高56中41低27；A8 117条/56591字、A9 118条/56890字、A10 119条/57598字。需要Dai定：无。
+- 240配对增量中位+67.0，单片最大增量+451；总体中位3575.0→3613.0、最大6738→7145字。active123→124，59533→59995字，高56中41低27；A8 117条/56591字、A9 118条/56890字、A10 119条/57598字。需要Roy定：无。
 
-本节收尾（2026-10-06 21:25:02 +0800）：源d6704d506c5aa52d9fc0af7feea0e75a0949342f，实际live合入02832f5d05ee5d831d4bf9c43097515bc7469553，上线登记28e339fa3ff7b39ed7f45397c621f47873b3c795、eval S1.exp51。源首轮tsc0/206文件2221例/vitest0，合后首轮rc=0，最终tsc0/207文件2227例/vitest0；源无重跑，合后无重跑。新增1更新8（全部补证、纯数字0）退役0，active123→124、59533→59995字，高56中41低27；开工7条压303字、原数字/局号序列/用药句保持；A8 117条56591字、A9 118条56890字、A10 119条57598字。240配对中位+67、总体中位3575→3613、最大6738→7145字。旧62局重算逐行一致，63局1003房53实死；本局18房/狂战士4次0赢，前三次未派发结算不补实死/损；初36同序、首试到手轮异、第2/3/4次同轮，SL血价/少敏捷/撤毒与原Jev答分账，无胜次单因。账本新增/退役无，proposed silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0027,silent-0062,silent-0084,silent-0079，check0，first_run/prior/旧version/repeat保持。刷新数据提交无新刷新提交、合前56ad608215e586d3b3d3bb3c2fc0974f7e0fb0b3，不同blob冲突0、其他知识blob和独立臂甲修复/双方decision-log追加历史保持；无源码/生成器/其他角色/手写知识变更，不重建，无新用药规则。交接learner/runs/20261006-205739-experience-update/handoff-ops.md及本批experience-done由调用器通知运维，运维核实际合入后仅CLI登记shipped、不另审核；完整沙箱外套件交调度器。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾（2026-10-06 21:25:02 +0800）：源d6704d506c5aa52d9fc0af7feea0e75a0949342f，实际live合入02832f5d05ee5d831d4bf9c43097515bc7469553，上线登记28e339fa3ff7b39ed7f45397c621f47873b3c795、eval S1.exp51。源首轮tsc0/206文件2221例/vitest0，合后首轮rc=0，最终tsc0/207文件2227例/vitest0；源无重跑，合后无重跑。新增1更新8（全部补证、纯数字0）退役0，active123→124、59533→59995字，高56中41低27；开工7条压303字、原数字/局号序列/用药句保持；A8 117条56591字、A9 118条56890字、A10 119条57598字。240配对中位+67、总体中位3575→3613、最大6738→7145字。旧62局重算逐行一致，63局1003房53实死；本局18房/狂战士4次0赢，前三次未派发结算不补实死/损；初36同序、首试到手轮异、第2/3/4次同轮，SL血价/少敏捷/撤毒与原Jev答分账，无胜次单因。账本新增/退役无，proposed silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0027,silent-0062,silent-0084,silent-0079，check0，first_run/prior/旧version/repeat保持。刷新数据提交无新刷新提交、合前56ad608215e586d3b3d3bb3c2fc0974f7e0fb0b3，不同blob冲突0、其他知识blob和独立臂甲修复/双方decision-log追加历史保持；无源码/生成器/其他角色/手写知识变更，不重建，无新用药规则。交接learner/runs/20261006-205739-experience-update/handoff-ops.md及本批experience-done由调用器通知运维，运维核实际合入后仅CLI登记shipped、不另审核；完整沙箱外套件交调度器。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第五十二次增量：1 局 A10（version 2026-10-06.27，分支 exp-silent，810fd2b4）
 
@@ -11112,7 +11112,7 @@ A10的41非回血含40锻造+1添火；A8帐篷同火两动作。新局四回血
 | a9-reward | 4598.0/5806 | 2761.0/3969 | -1837.0 |
 | a9-shop | 6000.5/7145 | 4198.0/6212 | -1280.0 |
 
-- 240配对增量中位-918.5，单片最大增量+16；总体中位3613.0→2761.0、最大7145→6212字。active124→125、59995→55756字，高56中41低28；A8 118条/52352字、A9 119条/52651字、A10 120条/53359字。需要Dai定：无。
+- 240配对增量中位-918.5，单片最大增量+16；总体中位3613.0→2761.0、最大7145→6212字。active124→125、59995→55756字，高56中41低28；A8 118条/52352字、A9 119条/52651字、A10 120条/53359字。需要Roy定：无。
 
 
 逐轮核算补充：下表从本批重新抽取的状态/决策独立复算；“需”是该轮首战斗决策仍存活敌血之和，“扣”逐帧累计实际敌血减少（含毒，截剩血，阶段刷新/索引重排分别核对，自爆占位体排除），“损”到次轮首/战后/死亡帧的玩家净损；未派发结算记未记录。
@@ -11133,7 +11133,7 @@ A10的41非回血含40锻造+1添火；A8帐篷同火两动作。新局四回血
 
 SL同场对照：首两次同66开战、初24同到手轮，但T3爆发/过牌顺序改变后中后段手牌不同；首试T5扣58/损44、次试T5扣42/损29，次试T6尖啸后零损却T7仍判死。末试T3绷带全弃补27、建立4敏，T4扣23损6、T5只扣6损5，T6三攻击/毒扣43而0挡阵亡。三次0赢，局部伤/血价可核，没有赢次、后抽未固定，不把“改了哪张牌”或“运气”当单因；前两次判死后的末轮结算不补造。
 
-本节收尾（2026-10-06 22:17:43 +0800）：源810fd2b4c41720994d8de15df554947ec34ec514，实际live合入7e59494c399356373673b715c4cb853ff0851e80，上线登记6ac57ea6b407befa1e613cdb8d3e0be4880c3852、eval S1.exp52。源及合后首轮tsc0/vitest0，均207文件/2227用例；无失败重跑。新增1更新9（9加证据、0纯数字）退役0，active124→125、59995→55756字，高56中41低28；开工7条压5165字，完整旧数字归档本节、原证据/反例/范围/药水分句保持。A8 118条52352字、A9 119条52651字、A10 120条53359字；240配对中位−918.5，最大7145→6212字。旧63局七数组/血档/节点/回血/SL全部逐行一致，新64局1021房54实死；新实验体三试0赢、前两判死后结算未派发不补实死，首帧/开战遗物回血分开，初36同序但后段到手轮不同，未施放未知重抽/未走替路线不认胜线。账本新增/退役无，proposed silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0027,silent-0062,silent-0028,silent-0046,silent-0194，最终check0，first_run/prior/旧version/repeat保持，0193独立bug仍observed。刷新提交b98f5d7dfa22c2a7504805897134a42e51305b04、合前b98f5d7dfa22c2a7504805897134a42e51305b04，知识重叠0、其他知识blob保持，无冲突/回退，无源码/生成器/手写知识/其他角色变更、不重建，无新用药规则。交接learner/runs/20261006-215635-experience-update/handoff-ops.md及本批experience-done由调用器通知运维，运维核实际合入后CLI登记本批十项shipped；完整沙箱外套件交调度器。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾（2026-10-06 22:17:43 +0800）：源810fd2b4c41720994d8de15df554947ec34ec514，实际live合入7e59494c399356373673b715c4cb853ff0851e80，上线登记6ac57ea6b407befa1e613cdb8d3e0be4880c3852、eval S1.exp52。源及合后首轮tsc0/vitest0，均207文件/2227用例；无失败重跑。新增1更新9（9加证据、0纯数字）退役0，active124→125、59995→55756字，高56中41低28；开工7条压5165字，完整旧数字归档本节、原证据/反例/范围/药水分句保持。A8 118条52352字、A9 119条52651字、A10 120条53359字；240配对中位−918.5，最大7145→6212字。旧63局七数组/血档/节点/回血/SL全部逐行一致，新64局1021房54实死；新实验体三试0赢、前两判死后结算未派发不补实死，首帧/开战遗物回血分开，初36同序但后段到手轮不同，未施放未知重抽/未走替路线不认胜线。账本新增/退役无，proposed silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0027,silent-0062,silent-0028,silent-0046,silent-0194，最终check0，first_run/prior/旧version/repeat保持，0193独立bug仍observed。刷新提交b98f5d7dfa22c2a7504805897134a42e51305b04、合前b98f5d7dfa22c2a7504805897134a42e51305b04，知识重叠0、其他知识blob保持，无冲突/回退，无源码/生成器/手写知识/其他角色变更、不重建，无新用药规则。交接learner/runs/20261006-215635-experience-update/handoff-ops.md及本批experience-done由调用器通知运维，运维核实际合入后CLI登记本批十项shipped；完整沙箱外套件交调度器。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第五十三次增量：1 局 A10（version 2026-10-06.28，分支 exp-silent，6cf1de0e）
 
@@ -11369,10 +11369,10 @@ SL同场对照：首两次同66开战、初24同到手轮，但T3爆发/过牌�
 | a9-reward | 2761.0/3969 | 2750.0/3958 | -11.0 |
 | a9-shop | 4198.0/6212 | 4111.5/6201 | -11.0 |
 
-- 240配对增量中位-11.0，单片最大增量23；总体中位2761.0→2750.0、最大6212→6201字。active125→125、55756→54968字，高56中41低28；A8 118条/51564字、A9 119条/51863字、A10 120条/52571字。需要Dai定：无。
+- 240配对增量中位-11.0，单片最大增量23；总体中位2761.0→2750.0、最大6212→6201字。active125→125、55756→54968字，高56中41低28；A8 118条/51564字、A9 119条/51863字、A10 120条/52571字。需要Roy定：无。
 
 
-本节收尾（2026-10-06 23:03:54 +0800）：源6cf1de0efdbbfd4482c7c5f8795d37eff17e3caf，实际live合入8785c28a4b1ca2dc5858b39979ba010042d0b8d5，上线登记346fcdae6adf5aca3ed5d1a508fd2f76a8fabd04、eval S1.exp53。源tsc0/vitest0，207文件/2227用例；合后tsc0/vitest0，208文件/2237用例；源及合后均首轮通过，无失败重跑。新增0更新8（8补证、0只数字）退役0，active125→125、55756→54968字，高56中41低28；开工压6条1453字，完整原数字/原文归档本节，全部证据/反例/范围/原含药分句保持。A8 118条51564字、A9 119条51863字、A10 120条52571字；240配对增量中位-11.0，最大6212→6201字。旧64局全部明细/血档/节点/回血/SL逐行一致，新65局1028房55实死；仪式兽六试0赢、五次判死未结算不补毒/损/实死，末实际毒跨160取消当轮攻击，后段仍余102死，少挡换伤付实际血价、不归整战胜因。本局无步法，不加该牌证据；无新用药规则。账本新增/退役无，proposed silent-0005,silent-0006,silent-0011,silent-0019,silent-0020,silent-0021,silent-0027,silent-0030,silent-0079,silent-0133，最终check0，first_run/prior/旧version/repeat保持，0195独立bug本批不改。刷新提交None、合前8aead9fa447e76f6a36bdf0a5d5214ccc5aeb522，知识不同blob重叠0、其他知识blob保持，无回退；追加历史是否union=True，双方旧行有序保留。无源码/生成器/手写知识/其他角色变更，不重建；live已有其他修复保留。交接learner/runs/20261006-223028-experience-update/handoff-ops.md及本批experience-done由调用器通知运维，运维核实际合入后CLI登记十项shipped，完整沙箱外套件交调度器。主目录本节/账本只追加不提交，不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾（2026-10-06 23:03:54 +0800）：源6cf1de0efdbbfd4482c7c5f8795d37eff17e3caf，实际live合入8785c28a4b1ca2dc5858b39979ba010042d0b8d5，上线登记346fcdae6adf5aca3ed5d1a508fd2f76a8fabd04、eval S1.exp53。源tsc0/vitest0，207文件/2227用例；合后tsc0/vitest0，208文件/2237用例；源及合后均首轮通过，无失败重跑。新增0更新8（8补证、0只数字）退役0，active125→125、55756→54968字，高56中41低28；开工压6条1453字，完整原数字/原文归档本节，全部证据/反例/范围/原含药分句保持。A8 118条51564字、A9 119条51863字、A10 120条52571字；240配对增量中位-11.0，最大6212→6201字。旧64局全部明细/血档/节点/回血/SL逐行一致，新65局1028房55实死；仪式兽六试0赢、五次判死未结算不补毒/损/实死，末实际毒跨160取消当轮攻击，后段仍余102死，少挡换伤付实际血价、不归整战胜因。本局无步法，不加该牌证据；无新用药规则。账本新增/退役无，proposed silent-0005,silent-0006,silent-0011,silent-0019,silent-0020,silent-0021,silent-0027,silent-0030,silent-0079,silent-0133，最终check0，first_run/prior/旧version/repeat保持，0195独立bug本批不改。刷新提交None、合前8aead9fa447e76f6a36bdf0a5d5214ccc5aeb522，知识不同blob重叠0、其他知识blob保持，无回退；追加历史是否union=True，双方旧行有序保留。无源码/生成器/手写知识/其他角色变更，不重建；live已有其他修复保留。交接learner/runs/20261006-223028-experience-update/handoff-ops.md及本批experience-done由调用器通知运维，运维核实际合入后CLI登记十项shipped，完整沙箱外套件交调度器。主目录本节/账本只追加不提交，不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-06 静默猎手 第五十四次增量：1 局 A10（version 2026-10-06.29，分支 exp-silent，4cf918b6）
 
@@ -11607,10 +11607,10 @@ SL同场对照：首两次同66开战、初24同到手轮，但T3爆发/过牌�
 | a9-reward | 2750.0/3958 | 2829.0/4037 | 79.0 |
 | a9-shop | 4111.5/6201 | 4237.0/6152 | 46.0 |
 
-- 240配对增量中位79.0，单片最大增量269；总体中位2750.0→2863.0、最大6201→6152字。active125→126、54968→55756字，高57中41低28；A8 119条/52352字、A9 120条/52651字、A10 121条/53359字。需要Dai定：无。
+- 240配对增量中位79.0，单片最大增量269；总体中位2750.0→2863.0、最大6201→6152字。active125→126、54968→55756字，高57中41低28；A8 119条/52352字、A9 120条/52651字、A10 121条/53359字。需要Roy定：无。
 
 
-本节收尾（2026-10-06 23:38:10 +0800）：源4cf918b6ffa019945c2f99f2d6428ea5102f63be，实际live合入3caa860b03e4ed76a2afd81635f9c52c18e456c4，上线登记ad01f74a152250f6d0c0f5e19fd5905d98b165b2、eval S1.exp54。源tsc0/vitest0、208文件/2237用例；合后tsc0/vitest0、209文件/2245用例；源及合后均首轮通过、无失败重跑。新增1更新12（12补证、0只数字）退役0，active125→126、54968→55756字，高57中41低28，A8 119条52352字、A9 120条52651字、A10 121条53359字；240配对中位增量79.0、最大6201→6152。旧65局全部明细/血档/节点/回血/SL逐行一致，新66局1040房56实死。石虫32局59明确窗口0反例，0196的LRN0HPZ0FZS1首证/prior=yes保持；三虫四试0赢、前三次判死未结算不补死、末毒杀石虫取消16但甲虫15仍杀4血0挡；无不同目标胜因，不规定先杀。毒组件跨战重新启动、未来四火未到和低血节点仅观察；无新用药规则/无步法牌新证据。账本新增/退役无，proposed silent-0006,silent-0007,silent-0010,silent-0011,silent-0019,silent-0020,silent-0021,silent-0027,silent-0030,silent-0046,silent-0128,silent-0133,silent-0196，最终check0，first_run/prior/claim/旧version/repeat保持。刷新提交None、合前06b52ef8f3b19d288044acc91ca895fd29a53a7f，知识不同blob冲突0，经验重叠仅为已测改前.28、其他知识blob保持；预检rc1仅双方追加decision-log冲突，union后双方有序原文全部保留、无知识冲突，实际合入后首轮自测通过。无源码/生成器/手写知识/其他角色变更、不重建；live已有S1.fix36/37修复保留。交接learner/runs/20261006-231302-experience-update/handoff-ops.md及调用器experience-done通知运维，运维核实际合入后CLI登记13项shipped、完整沙箱外检查由调度器补跑。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾（2026-10-06 23:38:10 +0800）：源4cf918b6ffa019945c2f99f2d6428ea5102f63be，实际live合入3caa860b03e4ed76a2afd81635f9c52c18e456c4，上线登记ad01f74a152250f6d0c0f5e19fd5905d98b165b2、eval S1.exp54。源tsc0/vitest0、208文件/2237用例；合后tsc0/vitest0、209文件/2245用例；源及合后均首轮通过、无失败重跑。新增1更新12（12补证、0只数字）退役0，active125→126、54968→55756字，高57中41低28，A8 119条52352字、A9 120条52651字、A10 121条53359字；240配对中位增量79.0、最大6201→6152。旧65局全部明细/血档/节点/回血/SL逐行一致，新66局1040房56实死。石虫32局59明确窗口0反例，0196的LRN0HPZ0FZS1首证/prior=yes保持；三虫四试0赢、前三次判死未结算不补死、末毒杀石虫取消16但甲虫15仍杀4血0挡；无不同目标胜因，不规定先杀。毒组件跨战重新启动、未来四火未到和低血节点仅观察；无新用药规则/无步法牌新证据。账本新增/退役无，proposed silent-0006,silent-0007,silent-0010,silent-0011,silent-0019,silent-0020,silent-0021,silent-0027,silent-0030,silent-0046,silent-0128,silent-0133,silent-0196，最终check0，first_run/prior/claim/旧version/repeat保持。刷新提交None、合前06b52ef8f3b19d288044acc91ca895fd29a53a7f，知识不同blob冲突0，经验重叠仅为已测改前.28、其他知识blob保持；预检rc1仅双方追加decision-log冲突，union后双方有序原文全部保留、无知识冲突，实际合入后首轮自测通过。无源码/生成器/手写知识/其他角色变更、不重建；live已有S1.fix36/37修复保留。交接learner/runs/20261006-231302-experience-update/handoff-ops.md及调用器experience-done通知运维，运维核实际合入后CLI登记13项shipped、完整沙箱外检查由调度器补跑。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-07 静默猎手 第五十五次增量：1 局 A10（version 2026-10-07.1，分支 exp-silent，7c37095a）
 
@@ -11857,9 +11857,9 @@ SL同场对照：首两次同66开战、初24同到手轮，但T3爆发/过牌�
 | a9-reward | 2829.0/4037 | 2742.0/3950 | -87.0 |
 | a9-shop | 4237.0/6152 | 4125.5/5748 | -87.0 |
 
-- 240配对增量中位-9.0，单片最大增量355；总体中位2863.0→2854.0，最大6152→5748字。active126→126、55756→56138字，高58中41低27；A8 119条52862字、A9 120条53161字、A10 121条53741字。需要Dai定：无。
+- 240配对增量中位-9.0，单片最大增量355；总体中位2863.0→2854.0，最大6152→5748字。active126→126、55756→56138字，高58中41低27；A8 119条52862字、A9 120条53161字、A10 121条53741字。需要Roy定：无。
 
-本节收尾（2026-10-07 00:34:18 +0800）：源7c37095a2c77d579210790fe2c735e78f708a1e6，实际live合入113c82ecfb44d1becbcd9a3f87529738cd287b8d，上线登记884c9f337d4300fb0bbae53d1764950a8f2c6ffc，eval S1.exp55。源初轮及定稿均tsc0/vitest0、209文件2245用例；定稿因女王首试赢例四→五校正重跑，非失败/超时。合后tsc0/vitest0、209文件2245用例、首轮通过。新增0更新21（21补证、0纯数字）退役0，active126→126、55756→56138字，高58中41低27；A8 119条52862字/A9 120条53161字/A10 121条53741字。开工压5条1196字，旧文/数字/局号/证据/药水分句保持；240配对中位增量−9、最大6152→5748字。旧66局全部明细/血档/节点/回血/SL逐行一致，新67局1059房57实死。实验体六试0赢、五判死未结算不补死/毒；clean40同序但仅前7张同到手轮，新阶段旧毒清、玩家能力留，新212段实扣88仍124，末13血27挡对55差15，临时减力/敏捷与牌挡/被动分别计。羽毛7局55到火、石头8局80房，正充能添火1→6补证；已建组件/前场满血不等于后场输出或血池足够，无替路线/构筑/休息单因。账本新增/退役无、22项proposed为silent-0005,silent-0006,silent-0007,silent-0009,silent-0011,silent-0019,silent-0020,silent-0021,silent-0027,silent-0028,silent-0038,silent-0046,silent-0054,silent-0060,silent-0068,silent-0072,silent-0080,silent-0142,silent-0149,silent-0158,silent-0184,silent-0185，最终check0，首证/先验/claim/旧version/repeat保持，交运维据experience-done登记shipped，不另设审核。刷新提交dab6e7dcf4291d0a5fedb951a6c50bc392c719ba、合前dab6e7dcf4291d0a5fedb951a6c50bc392c719ba，重叠/冲突0、其他知识blob保持；无源码/生成器/其他角色/手写知识变更、不重建，无新用药规则。完整外部套件交调度器，交接learner/runs/20261007-000343-experience-update/handoff-ops.md及完成回报通知运维；主目录本节/账本仅追加不提交，不停对局、不运行play、不推送。需要Dai定：无。
+本节收尾（2026-10-07 00:34:18 +0800）：源7c37095a2c77d579210790fe2c735e78f708a1e6，实际live合入113c82ecfb44d1becbcd9a3f87529738cd287b8d，上线登记884c9f337d4300fb0bbae53d1764950a8f2c6ffc，eval S1.exp55。源初轮及定稿均tsc0/vitest0、209文件2245用例；定稿因女王首试赢例四→五校正重跑，非失败/超时。合后tsc0/vitest0、209文件2245用例、首轮通过。新增0更新21（21补证、0纯数字）退役0，active126→126、55756→56138字，高58中41低27；A8 119条52862字/A9 120条53161字/A10 121条53741字。开工压5条1196字，旧文/数字/局号/证据/药水分句保持；240配对中位增量−9、最大6152→5748字。旧66局全部明细/血档/节点/回血/SL逐行一致，新67局1059房57实死。实验体六试0赢、五判死未结算不补死/毒；clean40同序但仅前7张同到手轮，新阶段旧毒清、玩家能力留，新212段实扣88仍124，末13血27挡对55差15，临时减力/敏捷与牌挡/被动分别计。羽毛7局55到火、石头8局80房，正充能添火1→6补证；已建组件/前场满血不等于后场输出或血池足够，无替路线/构筑/休息单因。账本新增/退役无、22项proposed为silent-0005,silent-0006,silent-0007,silent-0009,silent-0011,silent-0019,silent-0020,silent-0021,silent-0027,silent-0028,silent-0038,silent-0046,silent-0054,silent-0060,silent-0068,silent-0072,silent-0080,silent-0142,silent-0149,silent-0158,silent-0184,silent-0185，最终check0，首证/先验/claim/旧version/repeat保持，交运维据experience-done登记shipped，不另设审核。刷新提交dab6e7dcf4291d0a5fedb951a6c50bc392c719ba、合前dab6e7dcf4291d0a5fedb951a6c50bc392c719ba，重叠/冲突0、其他知识blob保持；无源码/生成器/其他角色/手写知识变更、不重建，无新用药规则。完整外部套件交调度器，交接learner/runs/20261007-000343-experience-update/handoff-ops.md及完成回报通知运维；主目录本节/账本仅追加不提交，不停对局、不运行play、不推送。需要Roy定：无。
 
 ## 2026-10-07 静默猎手 第五十六次增量：1 局 A10（version 2026-10-07.2，分支 exp-silent，63e53c86）
 
@@ -12089,9 +12089,9 @@ SL同场对照：首两次同66开战、初24同到手轮，但T3爆发/过牌�
 | a9-reward | 2742.0/3950 | 2810.0/4018 | 68.0 |
 | a9-shop | 4125.5/5748 | 4193.5/5816 | 68.0 |
 
-- 240配对增量中位39.0、单片最大增量285；总体中位2854.0→2893.0、最大5748→5816字。active126→127、56138→56154字，高59中40低28；A8 120条52878字、A9 121条53177字、A10 122条53757字。需要Dai定：无。
+- 240配对增量中位39.0、单片最大增量285；总体中位2854.0→2893.0、最大5748→5816字。active126→127、56138→56154字，高59中40低28；A8 120条52878字、A9 121条53177字、A10 122条53757字。需要Roy定：无。
 
-本节收尾（2026-10-07 01:26:03 +0800）：源63e53c86dd449289f8e1b68decb716c4bf1b3dd4，实际live合入02b87e7c2365eaf48acc3fe46a0d83c33a80deb5，上线登记714cefc76dc84dbd8368d4702c5d220ece205cb4、eval S1.exp56。源定稿tsc0/vitest0、209文件2245例；初轮提前启动读压缩稿通过，定稿重跑通过，非失败/超时；合后tsc0/vitest0、209文件2245例，首轮通过。新增1更新14（11补证/0只数字/3仅压缩）退役0，active126→127、56138→56154字，高59中40低28；开工四条压1160至54978，旧文/局号/数字/证据/含药分句保持；A8 120条52878字、A9 121条53177字、A10 122条53757字；240配对中位+39、最大5748→5816。旧67局全部七数组/血档/节点/回血/SL一致，新68局1076房58死、本局17房1死，无读档，真正SL63场285次19赢不变。王室猛毒＋小血瓶两窗口净−2、缺独立结算不拆公式；余像/敏捷/牌挡分账，双尖啸当轮省36非永久、触媒毒杀当前爪牙不保本体输出/停召唤；本体六轮扣50仍105，持有未施放组件不预支。首COMBAT与操作帧差异按开场遗物分账，保留原统计口径。账本新增/退役无，proposed silent-0006,silent-0017,silent-0019,silent-0020,silent-0021,silent-0011,silent-0010,silent-0027,silent-0023,silent-0046,silent-0125,silent-0080,silent-0110,silent-0115,silent-0198、最终check0，首证/prior/claim/旧version/repeat保持，0198本局/unknown、0197 A0/no保持；0197本批未修改、后者纯bug由并行独立修复任务推进，见下方状态收尾。刷新8134e4293be1a4ec57247e464d2bc341c53e1fb6、合前8134e4293be1a4ec57247e464d2bc341c53e1fb6，知识重叠/冲突0、其他知识blob保持；无源码/生成器/手写知识/其他角色改动，不重建、无新用药规则。交接learner/runs/20261007-010232-experience-update/handoff-ops.md及调用器experience-done通知运维，运维核实际合入后CLI登记15项shipped、完整沙箱外套件交调度器。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Dai定：无。 收尾更正：前文“0197仍observed/保留observed”指本经验批次未修改；此刻独立learner:fix-batch已将0197推进为proposed、专项提交['62b0e23f0a45b2f331261947cbc9168dde36e39a']。本批不重置或代登记其状态，首证Y6GM2CHWJBEY/A0、prior=no保持；收尾原断言错误耦合并行状态已去除、原日志留存，不当生产代码/测试失败。
+本节收尾（2026-10-07 01:26:03 +0800）：源63e53c86dd449289f8e1b68decb716c4bf1b3dd4，实际live合入02b87e7c2365eaf48acc3fe46a0d83c33a80deb5，上线登记714cefc76dc84dbd8368d4702c5d220ece205cb4、eval S1.exp56。源定稿tsc0/vitest0、209文件2245例；初轮提前启动读压缩稿通过，定稿重跑通过，非失败/超时；合后tsc0/vitest0、209文件2245例，首轮通过。新增1更新14（11补证/0只数字/3仅压缩）退役0，active126→127、56138→56154字，高59中40低28；开工四条压1160至54978，旧文/局号/数字/证据/含药分句保持；A8 120条52878字、A9 121条53177字、A10 122条53757字；240配对中位+39、最大5748→5816。旧67局全部七数组/血档/节点/回血/SL一致，新68局1076房58死、本局17房1死，无读档，真正SL63场285次19赢不变。王室猛毒＋小血瓶两窗口净−2、缺独立结算不拆公式；余像/敏捷/牌挡分账，双尖啸当轮省36非永久、触媒毒杀当前爪牙不保本体输出/停召唤；本体六轮扣50仍105，持有未施放组件不预支。首COMBAT与操作帧差异按开场遗物分账，保留原统计口径。账本新增/退役无，proposed silent-0006,silent-0017,silent-0019,silent-0020,silent-0021,silent-0011,silent-0010,silent-0027,silent-0023,silent-0046,silent-0125,silent-0080,silent-0110,silent-0115,silent-0198、最终check0，首证/prior/claim/旧version/repeat保持，0198本局/unknown、0197 A0/no保持；0197本批未修改、后者纯bug由并行独立修复任务推进，见下方状态收尾。刷新8134e4293be1a4ec57247e464d2bc341c53e1fb6、合前8134e4293be1a4ec57247e464d2bc341c53e1fb6，知识重叠/冲突0、其他知识blob保持；无源码/生成器/手写知识/其他角色改动，不重建、无新用药规则。交接learner/runs/20261007-010232-experience-update/handoff-ops.md及调用器experience-done通知运维，运维核实际合入后CLI登记15项shipped、完整沙箱外套件交调度器。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Roy定：无。 收尾更正：前文“0197仍observed/保留observed”指本经验批次未修改；此刻独立learner:fix-batch已将0197推进为proposed、专项提交['62b0e23f0a45b2f331261947cbc9168dde36e39a']。本批不重置或代登记其状态，首证Y6GM2CHWJBEY/A0、prior=no保持；收尾原断言错误耦合并行状态已去除、原日志留存，不当生产代码/测试失败。
 
 ## 2026-10-07 静默猎手 第五十七次增量：2 局 A10（version 2026-10-07.3，分支 exp-silent，532af948）
 
@@ -12320,9 +12320,9 @@ SL同场对照：首两次同66开战、初24同到手轮，但T3爆发/过牌�
 | a9-reward | 2810.0/4018 | 2689.0/3466 | -121.0 |
 | a9-shop | 4193.5/5816 | 4026.0/5528 | -184.5 |
 
-- 240配对增量中位-127.0、单片最大增量17；总体中位2893.0→2732.0，最大5816→5673字。active127→128、56154→51683字，高61中39低28；A8 121条48407字，A9 122条48706字，A10 123条49286字。需要Dai定：无。
+- 240配对增量中位-127.0、单片最大增量17；总体中位2893.0→2732.0，最大5816→5673字。active127→128、56154→51683字，高61中39低28；A8 121条48407字，A9 122条48706字，A10 123条49286字。需要Roy定：无。
 
-本节收尾（2026-10-07 02:47:47 +0800）：源532af94889f4f9fccf6112a16175b4fe742fb142，实际live合入b98c24f042896e0a0505d3ba805346c6371882ee，上线登记30c527f8479cb91f8d735168fecfa6d388636bcc、eval S1.exp57。新增1更新19（15补证/1只数字/3压缩）退0，active127→128、56154→51683字，高61中39低28；A8 121条48407字/A9 122条48706字/A10 123条49286字，240配对中位−127、最大5816→5673。旧68局全部重算一致，新70局1101房60死、A10三十局387房30死；新沙漏六试0赢，仅前9次干净抽序可比，没有单项因果。三轮前稿测试均tsc0/vitest0、各210文件2254例；首轮期间改SL口径、中间期间改元数据、第三轮发现步法全角括号未命中，计数检查与冻结hash阻止旧稿提交。修为n=40/19更新后第四轮冻结源tsc0/vitest0、210文件2254例；合后tsc0/vitest0、212文件2275例，首轮通过。刷新None、合前c19d0b3db9484e2c3927da1e2006cba023d6403a、不同知识blob冲突0、其他知识保持；锁内预检/实际合并无冲突，历史原文保留。账本新增/退役无，proposed silent-0005,silent-0006,silent-0012,silent-0013,silent-0019,silent-0020,silent-0021,silent-0027,silent-0023,silent-0080,silent-0087,silent-0010,silent-0125,silent-0024,silent-0167,silent-0093,silent-0094,silent-0046,silent-0053,silent-0049,silent-0068,silent-0200、最终check0，首证/prior/claim/旧version/repeat保持；0200机制与0199代码缺口分账，0199未纳入本经验状态变更。无源码/生成器/手写知识/其他角色或药水规则变更，无重建、不停对局、不运行play、不推送；主目录本节/账本只追加不提交。交接learner/runs/20261007-021220-experience-update/handoff-ops.md，调用器experience-done通知运维，运维核实际发布后CLI登记shipped，完整外部套件交调度器。需要Dai定：无。
+本节收尾（2026-10-07 02:47:47 +0800）：源532af94889f4f9fccf6112a16175b4fe742fb142，实际live合入b98c24f042896e0a0505d3ba805346c6371882ee，上线登记30c527f8479cb91f8d735168fecfa6d388636bcc、eval S1.exp57。新增1更新19（15补证/1只数字/3压缩）退0，active127→128、56154→51683字，高61中39低28；A8 121条48407字/A9 122条48706字/A10 123条49286字，240配对中位−127、最大5816→5673。旧68局全部重算一致，新70局1101房60死、A10三十局387房30死；新沙漏六试0赢，仅前9次干净抽序可比，没有单项因果。三轮前稿测试均tsc0/vitest0、各210文件2254例；首轮期间改SL口径、中间期间改元数据、第三轮发现步法全角括号未命中，计数检查与冻结hash阻止旧稿提交。修为n=40/19更新后第四轮冻结源tsc0/vitest0、210文件2254例；合后tsc0/vitest0、212文件2275例，首轮通过。刷新None、合前c19d0b3db9484e2c3927da1e2006cba023d6403a、不同知识blob冲突0、其他知识保持；锁内预检/实际合并无冲突，历史原文保留。账本新增/退役无，proposed silent-0005,silent-0006,silent-0012,silent-0013,silent-0019,silent-0020,silent-0021,silent-0027,silent-0023,silent-0080,silent-0087,silent-0010,silent-0125,silent-0024,silent-0167,silent-0093,silent-0094,silent-0046,silent-0053,silent-0049,silent-0068,silent-0200、最终check0，首证/prior/claim/旧version/repeat保持；0200机制与0199代码缺口分账，0199未纳入本经验状态变更。无源码/生成器/手写知识/其他角色或药水规则变更，无重建、不停对局、不运行play、不推送；主目录本节/账本只追加不提交。交接learner/runs/20261007-021220-experience-update/handoff-ops.md，调用器experience-done通知运维，运维核实际发布后CLI登记shipped，完整外部套件交调度器。需要Roy定：无。
 
 ## 2026-10-07 静默猎手 第五十八次增量：1 局 A10（version 2026-10-07.4，分支 exp-silent，9fea0539）
 
@@ -12540,7 +12540,7 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2689.0/3466 | 2636.0/3413 | -53.0 |
 | a9-shop | 4026.0/5528 | 3973.0/5365 | -172.5 |
 
-- 240配对增量中位-53.0，单片最大增量9；总体中位2732.0→2741.0，最大5528→5365字。active128→129、51683→50536字，高62中39低28；A8 122条47260字、A9 123条47559字、A10 124条48139字。需要Dai定：无。
+- 240配对增量中位-53.0，单片最大增量9；总体中位2732.0→2741.0，最大5528→5365字。active128→129、51683→50536字，高62中39低28；A8 122条47260字、A9 123条47559字、A10 124条48139字。需要Roy定：无。
 
 本节收尾：源9fea0539467459ee040991c616fb9ca3afabc21a，实际live合入e39f07ec6d2fe4591313eee5c2a02feda17699f9，上线登记3ac2445ace29411d2118191ecb924fd37864d7d0/eval S1.exp58；刷新提交60ecfda8549c05360271c250abfcb9a4f6b36fab、合前60ecfda8549c05360271c250abfcb9a4f6b36fab，不同知识blob冲突0、其他已提交知识逐blob保持。无源码/生成器/手写知识或新用药规则、不重建；主目录本节/账本不提交。运维交接learner/runs/20261007-031302-experience-update/handoff-ops.md，调用器experience-done通知运维核实际发布后将15项proposed登记shipped，完整外部交调度器；不停对局、不运行play、不推送。
 
@@ -12756,7 +12756,7 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2636.0/3413 | 2780.0/3557 | 144.0 |
 | a9-shop | 3973.0/5365 | 4117.0/5459 | 94.0 |
 
-- 240配对增量中位50.0，单片最大增量310；总体中位2731.0→2780.0，最大5365→5459字。active129→130、50536→50696字，高62中39低29；A8 123条47420字、A9 124条47719字、A10 125条48299字。需要Dai定：无。
+- 240配对增量中位50.0，单片最大增量310；总体中位2731.0→2780.0，最大5365→5459字。active129→130、50536→50696字，高62中39低29；A8 123条47420字、A9 124条47719字、A10 125条48299字。需要Roy定：无。
 
 本节收尾：源23080aa4018c2f093cea52a270ba2770a0934b1e，实际live合入fcfc0bf95579ad7bc4aae49813b1914caf4413d6，上线登记e8a6fb714b9fde4ed85e5cc76e3fbb839e6b83c7/eval S1.exp59；刷新提交6635abf77ed531da5669f7658d976fd19d8d0db7、合前6635abf77ed531da5669f7658d976fd19d8d0db7，不同知识blob冲突0，其他知识逐blob保持。无源码/生成器/手写知识/其他角色或新用药规则改动，不重建；主目录本节/账本只追加不提交。运维交接learner/runs/20261007-034303-experience-update/handoff-ops.md，调用器experience-done通知运维核实际发布后CLI登记13项shipped，完整外部交调度器；不停对局、不运行play、不推送。
 
@@ -12972,7 +12972,7 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2780.0/3557 | 2713.0/3490 | -67.0 |
 | a9-shop | 4117.0/5459 | 4050.0/5351 | -108.0 |
 
-- 配对增量中位-52.0、最大增量0；总体中位2781.0→2764.0，最大5498→5374字。active130→131、50696→50163字，高62中40低29；A8 124条46887字、A9 125条47186字、A10 126条47766字。需要Dai定：无。
+- 配对增量中位-52.0、最大增量0；总体中位2781.0→2764.0，最大5498→5374字。active130→131、50696→50163字，高62中40低29；A8 124条46887字、A9 125条47186字、A10 126条47766字。需要Roy定：无。
 
 本节收尾：源93e56acb6e8787a994e10debbfc42e7c8c5606fa，实际live合入98d2d50895fd836fcbc826b12dff6d46913f12ab，上线登记09ac8004aabfb0957e8fbacaa018dfd9046dafdd/eval S1.exp60；刷新91bf90220dc7da367ef5b4d074ce98a11feba9d6、合前91bf90220dc7da367ef5b4d074ce98a11feba9d6，不同知识blob冲突0，其他知识blob保持。无源码/生成器/手写知识/其他角色/新用药规则改动，不重建；主目录本节/账本由调用方提交。运维交接learner/runs/20261007-042707-experience-update/handoff-ops.md，调用器experience-done通知运维核实际发布后仅CLI登记13项shipped，完整沙箱外交调度器；不停对局、不运行play、不推送。
 
@@ -13196,7 +13196,7 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2713.0/3490 | 2487.0/3264 | -226.0 |
 | a9-shop | 4050.0/5351 | 3824.0/5075 | -226.0 |
 
-- 配对增量中位-100.0、最大增量2；总体中位2715.0→2646.5，最大5351→5075字。active131→132、50163→48258字，高63中40低29；A8 125条45151字、A9 126条45450字、A10 127条46030字。需要Dai定：无。
+- 配对增量中位-100.0、最大增量2；总体中位2715.0→2646.5，最大5351→5075字。active131→132、50163→48258字，高63中40低29；A8 125条45151字、A9 126条45450字、A10 127条46030字。需要Roy定：无。
 
 本节收尾：源3da1a93c04efa46f73fc2522af56bb1e4aff726e，实际live合入34daf93c3f7ed93de7469d58b59ca7811041ca6e，上线登记60808f9eafe12529e78645616874f23db8e3beb8/eval S1.exp61；刷新02d80d37faef0add27c3fd56023050ebf6a243d5、合前02d80d37faef0add27c3fd56023050ebf6a243d5，其他知识blob保持，知识不同blob冲突0。无源码/生成器/手写知识/其他角色/新用药规则改动、不重建；主目录本节/账本由调用方提交。运维交接learner/runs/20261007-045607-experience-update/handoff-ops.md，调用器experience-done通知运维核实际发布后仅CLI登记18项shipped，完整外部交调度器；不停对局、不运行play、不推送。
 
@@ -13413,7 +13413,7 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2487.0/3264 | 2392.0/3169 | -95.0 |
 | a9-shop | 3824.0/5075 | 3425.0/5090 | 15.0 |
 
-- 配对增量中位-4.0、最大增量288；总体中位2614.0→2661.0，最大5075→5090字。active132→133、48258→47737字，高64中40低29；A8 126条44630字、A9 127条44929字、A10 128条45509字。需要Dai定：无。
+- 配对增量中位-4.0、最大增量288；总体中位2614.0→2661.0，最大5075→5090字。active132→133、48258→47737字，高64中40低29；A8 126条44630字、A9 127条44929字、A10 128条45509字。需要Roy定：无。
 
 本节收尾：源9bf7de2c3b52c6c7ad2bdfb3c10734a91f88438f，实际live合入9bf7de2c3b52c6c7ad2bdfb3c10734a91f88438f，上线登记e33ca6e0146fd5ddf9cc99d1d670135551922764/eval S1.exp62；刷新None、合前7846a6612dcdb8a7ccef7ef982ebbdb9fca5e486，知识冲突0，其他知识blob保持。无源码/生成器/手写知识/其他角色/新用药规则改动，不重建；主目录本节/账本由调用方提交。运维交接learner/runs/20261007-052654-experience-update/handoff-ops.md，调用器experience-done通知运维核实际发布后CLI登记15项shipped，完整沙箱外套件交调度器；不停对局、不运行play、不推送。
 
@@ -13654,7 +13654,7 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2392.0/3169 | 2415.0/3192 | 23.0 |
 | a9-shop | 3425.0/5090 | 3448.0/5217 | 127.0 |
 
-- 配对增量中位136.0、最大增量693；总体中位2661.0→2694.0，最大5090→5298字。active133→135、47737→49258字，高65中41低29；A8 128条46151字，A9 129条46450字，A10 130条47030字。需要Dai定：无。
+- 配对增量中位136.0、最大增量693；总体中位2661.0→2694.0，最大5090→5298字。active133→135、47737→49258字，高65中41低29；A8 128条46151字，A9 129条46450字，A10 130条47030字。需要Roy定：无。
 
 本节收尾（2026-10-07 06:52:11 +0800）：源50de6fefd40afae1f26838de7879198945acbc0b，实际live合入98df162d756d3eca8d0b6383f2a2398d624ab074，上线登记1a89c2d481689bf0793c89c53318c247a1ea1997/eval S1.exp63；刷新077a3512abbc5f314c49591843ebc71daa9618dc、合前077a3512abbc5f314c49591843ebc71daa9618dc、知识重叠/冲突0，其他知识blob保持。源初稿/定稿均tsc0/vitest0/214文件2289例，定稿是初序数字校正后的重跑；合后tsc0/vitest0/214文件2289例、首轮通过，无测试失败或超时重跑。只经账本CLI将silent-0005,silent-0006,silent-0007,silent-0018,silent-0019,silent-0020,silent-0021,silent-0023,silent-0024,silent-0025,silent-0027,silent-0031,silent-0046,silent-0058,silent-0073,silent-0079,silent-0093,silent-0094,silent-0115,silent-0208,silent-0209,silent-0210,silent-0211,silent-0212共24项改proposed，新增/退役无、check0，覆盖21经验条目；0211更早首证更正为T082/A0且prior=yes与原历史保留，其余首证/先验/claim/全部旧支持/repeat/版本保持。不写accepted/shipped，未纳入条目不动。账本CLI空evidence初稿首行被拒且零行落账，修正后成功，原拒绝/更正保留。无源码/生成器/手写知识/其他角色/新用药规则改动、不重建；主目录本节/账本只追加不提交，调用方提交。交接learner/runs/20261007-063003-experience-update/handoff-ops.md，由调用器experience-done通知运维核实际发布后CLI登记shipped，完整沙箱外套件交调度器；不停对局、不运行play、不推送。
 
@@ -13874,7 +13874,7 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2415.0/3192 | 2397.0/3174 | -18.0 |
 | a9-shop | 3448.0/5217 | 3430.0/5199 | -18.0 |
 
-- 配对增量中位0.0、最大增量181；总体中位2696.5→2687.5，最大5302→5293字。active135→136、49258→49920字，高66中41低29；A8 129条46813字、A9 130条47112字、A10 131条47692字。需要Dai定：无。
+- 配对增量中位0.0、最大增量181；总体中位2696.5→2687.5，最大5302→5293字。active135→136、49258→49920字，高66中41低29；A8 129条46813字、A9 130条47112字、A10 131条47692字。需要Roy定：无。
 
 本节收尾（2026-10-07 07:22:46 +0800）：源e9acfb0cdd118f0a5d0544917f43d313e5628bae，实际live合入3527d6115bd479e0cf3b72045a46b7f0e496ea6f，上线登记f8e01696b9fa4dc863ad6377118962d7c1c22710/eval S1.exp64；刷新None、合前5c2a0d4d9bd305cd3ebdf8f77773b77d3b7c350a、知识重叠0/不同blob冲突0、其他知识blob保持。源tsc0/vitest0/214文件2289用例；合后tsc0/vitest0/215文件2299用例，源与合后均首轮通过，无测试失败或超时重跑。仅账本CLI将silent-0005,silent-0006,silent-0011,silent-0017,silent-0019,silent-0020,silent-0021,silent-0046,silent-0057,silent-0059,silent-0214改proposed，新增/退役账本无，覆盖全部9个经验条目、check0；0214首证C48/A0/prior=yes，T082实际付费及CSBR持牌伤/毒杀对子支持保持，其他首证/先验/claim/旧版本/repeat与0213独立状态保持。不写accepted/shipped，未纳入经验不动。无源码/生成器/手写知识/其他角色/新用药规则改动，不重建；主目录本节/账本只追加不提交，由调用方提交。交接learner/runs/20261007-070019-experience-update/handoff-ops.md与完成JSON交调用器experience-done通知运维核实际发布后CLI登记11项shipped，完整沙箱外套件交调度器；不停对局、不运行play、不推送。
 
@@ -14092,7 +14092,7 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2397.0/3174 | 2398.0/3175 | 1.0 |
 | a9-shop | 3430.0/5199 | 3431.0/5200 | 1.0 |
 
-- 配对增量中位-10.0字、最大增量113；总体中位2672.0→2652.5，最大5293→5294字。active136→136、49920→49822字，高66中41低29；A8 129条46715字、A9 130条47014字、A10 131条47594字。需要Dai定：无。
+- 配对增量中位-10.0字、最大增量113；总体中位2672.0→2652.5，最大5293→5294字。active136→136、49920→49822字，高66中41低29；A8 129条46715字、A9 130条47014字、A10 131条47594字。需要Roy定：无。
 
 本节收尾（2026-10-07 07:48:26 +0800）：源3dea02331a006a4723a74ee90246c94c7e12ef9e（exp-silent），实际live合入731266e2901d93a4f0377bf85cd97680bac2157f，上线登记8664bb08ac16aee0f8402805853be8bc38b85cc6/eval S1.exp65；刷新5f8b598debd768517d18c6e3fcc5a5e7871dff5d、合前5f8b598debd768517d18c6e3fcc5a5e7871dff5d、知识重叠0/不同blob冲突0、其他知识blob保持。源tsc0/vitest0/215文件2299用例；合后tsc0/vitest0/215文件2299用例，源与合后均首轮通过，无超时重跑。仅账本CLI将silent-0006,silent-0011,silent-0019,silent-0020,silent-0021,silent-0050,silent-0125,silent-0134改proposed，覆盖7个经验条目、check0；新增/退役账本无。旧first_run/prior/claim/支持/repeat/版本历史保持，0216中毒模型折扣纯bug仍独立observed/首证K367 A1，不由经验更新冒记代码已修。不写accepted/shipped，未纳入条目不动。无源码/生成器/手写知识/其他角色/新药水规则改动，不重建；主目录本节/账本仅追加、不提交，由调用方归档。完整数据/脚本/初稿失败及更正/切片/测试/扫描在learner/runs/20261007-073027-experience-update；handoff-ops.md与完成JSON交调用器experience-done通知运维核实际发布后CLI登记8项shipped，完整沙箱外检查交调度器；不停对局、不运行play、不推送。
 
@@ -14327,9 +14327,9 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2398.0/3175 | 2401.0/3178 | 3.0 |
 | a9-shop | 3431.0/5200 | 3434.0/5203 | 3.0 |
 
-- 配对增量中位0.0字、最大增量42；总体中位2644.0→2641.5，最大5294→5276字。active136→136、49822→49049字，高67中43低26；A8 129条45942字，A9 130条46241字，A10 131条46821字。需要Dai定：无。
+- 配对增量中位0.0字、最大增量42；总体中位2644.0→2641.5，最大5294→5276字。active136→136、49822→49049字，高67中43低26；A8 129条45942字，A9 130条46241字，A10 131条46821字。需要Roy定：无。
 
-本节收尾（2026-10-07 08:26:14 +0800）：源cd5ca6dd3c4c514baf83b8492f1b6b649dba85f2（exp-silent），定稿第三轮tsc0/vitest0/215文件2299例，前两稿均215文件2299例通过；收尾补A10标签/8胧光与1雾菇口径及旧含药事实4D4J8USKCPAV归属后重测，非失败或高负载超时重跑。最终经验blob与测试冻结/暂存/提交一致。锁内刷新7份知识提交f0c9dfbf06624f9137b1a186adb1f47f8a761f53、合前f0c9dfbf06624f9137b1a186adb1f47f8a761f53，知识重叠0/不同blob冲突0；merge-tree预检exit1，唯一冲突paper/materials/decision-log.md。按任务第8节停止，不强解/覆盖；未实际合入、未进入合后测试/上线步骤，live经验仍2026-10-07.11，未新增S1.exp66，无MERGE_HEAD，刷新数据与既有notes脏文件保留。账本仅CLI/by=learner:experience-update将silent-0005,silent-0006,silent-0012,silent-0013,silent-0019,silent-0020,silent-0021,silent-0039,silent-0044,silent-0073,silent-0140,silent-0141,silent-0143,silent-0182登记proposed，新增/退役无，覆盖12个经验条目、check0；旧first_run/prior/claim/support/repeat/版本与0217/0218独立observed保持，不写accepted/shipped。主目录本节和账本只追加、不提交，由调用方归档。全部原日志、抽取/校验/初稿失败及更正/三轮源自测/切片/扫描留learner/runs/20261007-075642-experience-update；handoff-ops.md与完成JSON交调用器experience-done通知运维兜底记录冲突、实际合入并登记版本/shipped，完整外部由调度器补跑。无手写知识/源码/生成器/铁甲知识/新药水规则改动，不重建；不停对局、不运行play、不推送。需要Dai定的知识事项：无。
+本节收尾（2026-10-07 08:26:14 +0800）：源cd5ca6dd3c4c514baf83b8492f1b6b649dba85f2（exp-silent），定稿第三轮tsc0/vitest0/215文件2299例，前两稿均215文件2299例通过；收尾补A10标签/8胧光与1雾菇口径及旧含药事实4D4J8USKCPAV归属后重测，非失败或高负载超时重跑。最终经验blob与测试冻结/暂存/提交一致。锁内刷新7份知识提交f0c9dfbf06624f9137b1a186adb1f47f8a761f53、合前f0c9dfbf06624f9137b1a186adb1f47f8a761f53，知识重叠0/不同blob冲突0；merge-tree预检exit1，唯一冲突paper/materials/decision-log.md。按任务第8节停止，不强解/覆盖；未实际合入、未进入合后测试/上线步骤，live经验仍2026-10-07.11，未新增S1.exp66，无MERGE_HEAD，刷新数据与既有notes脏文件保留。账本仅CLI/by=learner:experience-update将silent-0005,silent-0006,silent-0012,silent-0013,silent-0019,silent-0020,silent-0021,silent-0039,silent-0044,silent-0073,silent-0140,silent-0141,silent-0143,silent-0182登记proposed，新增/退役无，覆盖12个经验条目、check0；旧first_run/prior/claim/support/repeat/版本与0217/0218独立observed保持，不写accepted/shipped。主目录本节和账本只追加、不提交，由调用方归档。全部原日志、抽取/校验/初稿失败及更正/三轮源自测/切片/扫描留learner/runs/20261007-075642-experience-update；handoff-ops.md与完成JSON交调用器experience-done通知运维兜底记录冲突、实际合入并登记版本/shipped，完整外部由调度器补跑。无手写知识/源码/生成器/铁甲知识/新药水规则改动，不重建；不停对局、不运行play、不推送。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第六十七次增量：1 局 A10（version 2026-10-07.13，分支 exp-silent，4c960796）
 
@@ -14547,7 +14547,7 @@ REST/SHOP/EVENT按源入血关联下一更高层第一战，多源可指同战�
 | a9-reward | 2401.0/3178 | 2399.0/3176 | -2.0 |
 | a9-shop | 3434.0/5203 | 3432.0/5201 | -2.0 |
 
-- 配对增量中位4.0字、最大增量360；总体中位2642.0→2656.0、最大5276→5379字。active136→137、49049→49709字，高68中43低26；A8 130条46602字，A9 131条46901字。需要Dai定的知识事项：无。
+- 配对增量中位4.0字、最大增量360；总体中位2642.0→2656.0、最大5276→5379字。active136→137、49049→49709字，高68中43低26；A8 130条46602字，A9 131条46901字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第六十八次增量：1 局 A10（version 2026-10-07.14，分支 exp-silent，71ddbb8e）
 
@@ -14776,7 +14776,7 @@ A10源节点到下一实战（源血档、同战可多源；Ancient排除）：
 | a9-reward | 2399.0/3176 | 2379.0/3156 | -20.0 |
 | a9-shop | 3432.0/5201 | 3574.5/5531 | -20.0 |
 
-- 配对增量中位-20.0字、最大增量350；总体中位2656.0→2634.0、最大5401→5531字。active137→138、49709→49357字，高68中44低26；A8 131条46250字、A9 132条46549字。需要Dai定的知识事项：无。
+- 配对增量中位-20.0字、最大增量350；总体中位2656.0→2634.0、最大5401→5531字。active137→138、49709→49357字，高68中44低26；A8 131条46250字、A9 132条46549字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第六十九次增量：1 局 A10（version 2026-10-07.15，分支 exp-silent，f5d4caa2）
 
@@ -14993,7 +14993,7 @@ A10源节点到下一实战（源入血档、多源可同战、Ancient排除）�
 | a9-reward | 2379.0/3156 | 2402.0/3039 | 23.0 |
 | a9-shop | 3574.5/5531 | 3545.0/5554 | 23.0 |
 
-- 配对增量中位0.0字、最大增量453；总体中位2634.0→2611.0、最大5531→5554字。active138→139、49357→49583字，高68中45低26；A8 132条46476字、A9 133条46775字。需要Dai定的知识事项：无。
+- 配对增量中位0.0字、最大增量453；总体中位2634.0→2611.0、最大5531→5554字。active138→139、49357→49583字，高68中45低26；A8 132条46476字、A9 133条46775字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第七十次增量：2 局 A10（version 2026-10-07.16，分支 exp-silent，f688ce9c）
 
@@ -15238,7 +15238,7 @@ A10源节点到下一实战（源入血分档，多源可同战，Ancient排除�
 | a9-reward | 2402.0/3039 | 2348.0/2970 | -54.0 |
 | a9-shop | 3545.0/5554 | 3497.0/5339 | -54.0 |
 
-- 配对增量中位-6.5字，最大增量71；总体中位2611.0→2594.0、最大5554→5339字。active139→139，49583→49073字，高68中45低26；A8 132条45966字、A9 133条46265字。需要Dai定的知识事项：无。
+- 配对增量中位-6.5字，最大增量71；总体中位2611.0→2594.0、最大5554→5339字。active139→139，49583→49073字，高68中45低26；A8 132条45966字、A9 133条46265字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第七十一次增量：1 局 A10（version 2026-10-07.17，分支 exp-silent，d7341754）
 
@@ -15469,7 +15469,7 @@ A10源节点至下一实战（源入血档，多源可同战，Ancient排除）�
 | a9-reward | 2348.0/2970 | 2331.0/2958 | -17.0 |
 | a9-shop | 3497.0/5339 | 3482.5/5307 | -17.0 |
 
-- 配对增量中位-15.5字、最大增量42字；总体中位2594.0→2571.0、最大5339→5307字。active139→139，49073→48947字，高69中44低26；A8 132条45855字，A9 133条46139字。需要Dai定的知识事项：无。
+- 配对增量中位-15.5字、最大增量42字；总体中位2594.0→2571.0、最大5339→5307字。active139→139，49073→48947字，高69中44低26；A8 132条45855字，A9 133条46139字。需要Roy定的知识事项：无。
 
 - 合入记录澄清：上文“最终锁内预检见merge-tree-locked.txt”是模板引用，本批两次锁等待均超时，没有进入锁内或生成该文件；实际只读最新预检见merge-tree-readonly.txt/live-merge.json，共21处记录/论文数据冲突。没有本批live写入、刷新提交、合入、合后测试或上线记录。
 
@@ -15699,7 +15699,7 @@ A10源节点至下一实战（源入血档、多源可同战、Ancient排除）�
 | a9-reward | 2331.0/2958 | 2324.0/2951 | -7.0 |
 | a9-shop | 3482.5/5307 | 3475.5/5300 | -7.0 |
 
-- 整体中位2571.0→2619.0（+48.0字），配对增量中位-7.0字、最大增量48字；整体最大5307→5300字。active139→139、总字符48947→48917，置信度高69/中45/低25；A8 132条/45825字，A9 133条/46109字。需要Dai定的知识事项：无。
+- 整体中位2571.0→2619.0（+48.0字），配对增量中位-7.0字、最大增量48字；整体最大5307→5300字。active139→139、总字符48947→48917，置信度高69/中45/低25；A8 132条/45825字，A9 133条/46109字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第七十三次增量：3 局 A10（version 2026-10-07.19，分支 exp-silent，fa87ca9a）
 
@@ -15957,7 +15957,7 @@ A10源节点至下一实战，源入血档、多源可同战、Ancient排除：
 | a9-rest | 2171.5/2986 | 2160.5/2989 | 3.0 |
 | a9-reward | 2324.0/2951 | 2284.0/2911 | -40.0 |
 | a9-shop | 3475.5/5300 | 3399.0/5288 | -12.0 |
-- 整体中位2581.0→2593.0（+12.0字），配对增量中位-12.0字、最大增量665字；整体最大5300→5288字。active 139→141、总字数48917→49280，置信度高70/中47/低24；A8 133条/45908字，A9 134条/46192字。需要Dai定的知识事项：无。
+- 整体中位2581.0→2593.0（+12.0字），配对增量中位-12.0字、最大增量665字；整体最大5300→5288字。active 139→141、总字数48917→49280，置信度高70/中47/低24；A8 133条/45908字，A9 134条/46192字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第七十四次增量：4 局 A10（version 2026-10-07.20，分支 exp-silent，7453c2cc）
 
@@ -16263,7 +16263,7 @@ A10源节点至下一实战，按源入血档、多源可同战、Ancient排除�
 | a9-reward | 2284.0/2911 | 2580.0/3207 | 296.0 |
 | a9-shop | 3399.0/5288 | 3613.0/5150 | 165.0 |
 
-- 整体中位2578.0→2598.0（+20.0字），配对增量中位135.0字、最大增量456字；整体最大5288→5150字。active141→146，正文49280→48442字；置信度高77/中45/低24；A8适用138条45070字，A9适用139条45354字，A10适用141条46214字。需要Dai定的知识事项：无。
+- 整体中位2578.0→2598.0（+20.0字），配对增量中位135.0字、最大增量456字；整体最大5288→5150字。active141→146，正文49280→48442字；置信度高77/中45/低24；A8适用138条45070字，A9适用139条45354字，A10适用141条46214字。需要Roy定的知识事项：无。
 
 - A8同房多个休息动作沿第73节口径：9火房、8次回血、7次非回血是房与选择动作分别计，不强求后两者之和等于房数，不新增独立局/房。
 
@@ -16543,7 +16543,7 @@ A10源节点至下一实际战，源入血档、多源可同战：
 | a9-reward | 2580.0/3207 | 2668.0/3308 | 88.0 |
 | a9-shop | 3613.0/5150 | 3701.0/5238 | 88.0 |
 
-- 整体中位2589.0→2668.0（+79.0字），配对增量中位5.5字、最大增量376字；整体最大5150→5238字。active146→148，正文48442→49478字，置信度高78/中45/低25；A8适用140条46248字，A9适用141条46532字，A10适用143条47392字。需要Dai定的知识事项：无。
+- 整体中位2589.0→2668.0（+79.0字），配对增量中位5.5字、最大增量376字；整体最大5150→5238字。active146→148，正文48442→49478字，置信度高78/中45/低25；A8适用140条46248字，A9适用141条46532字，A10适用143条47392字。需要Roy定的知识事项：无。
 
 
 ## 2026-10-07 静默猎手 第七十六次增量：1 局 A10（version 2026-10-07.22，分支 exp-silent，7077d238）
@@ -16780,7 +16780,7 @@ A10源节点至下一实际战，源入血档、多源可同战；A0—A9完整�
 - 原沙箱入口：tsc退出0，vitest退出0，233文件/2441例，重跑0次，单worker。固定排除名单不变，完整外部由调度器在实际合入后另补，不冒称已跑完整外部。
 - JSON、字符预算、12位局号/角色/证据计数/反例/进阶、历史七数组/血档/节点/回血/SL、659逐帧匹配、力敏/余像/毒/临时减力/完整需损及同指纹SL比较、切片冻结、diff --check及gitleaks通过；check-experience退出0、missing=[]。
 - 账本仅CLI：新增无；改成proposed silent-0005,silent-0006,silent-0018,silent-0079,silent-0019,silent-0020,silent-0021,silent-0125,silent-0023,silent-0027,silent-0046,silent-0016；退役无；check退出0。首证/先验/claim/旧repeat与版本保留，提案链及source提交/本标题追加；未采纳复盘条目不改变状态，shipped交运维核实际合入。
-- live实际合入：None；合前/刷新后：70c8352bc9ea84d18f9bc0f82244b0e1f76405e8；刷新提交：70c8352bc9ea84d18f9bc0f82244b0e1f76405e8；合后沙箱：None；结果：锁内合并预检6份并行记录冲突，按任务停止、不覆盖：eval/versions.json,notes/for-dai.md,notes/ops-handoff.md,ops/inbox-dev.md,paper/materials/decision-log.md,paper/materials/learning/ledger.jsonl。
+- live实际合入：None；合前/刷新后：70c8352bc9ea84d18f9bc0f82244b0e1f76405e8；刷新提交：70c8352bc9ea84d18f9bc0f82244b0e1f76405e8；合后沙箱：None；结果：锁内合并预检6份并行记录冲突，按任务停止、不覆盖：eval/versions.json,notes/for-roy.md,notes/ops-handoff.md,ops/inbox-dev.md,paper/materials/decision-log.md,paper/materials/learning/ledger.jsonl。
 - 锁内检查与未覆盖知识的证明见live-merge.json/merge-live.log；未实际合入则不新增eval版本/上线记录，不冒称shipped。原件、初稿及运维交接都在本任务scratch，根记录由调用方提交。
 
 ### 切片大小
@@ -16802,7 +16802,7 @@ A10源节点至下一实际战，源入血档、多源可同战；A0—A9完整�
 | a9-reward | 2668.0/3308 | 2755.0/3395 | 87.0 |
 | a9-shop | 3701.0/5238 | 3803.0/5325 | 87.0 |
 
-- 整体中位2668.0→2755.0（+87.0字），配对增量中位87.0、最大增量229；整体最大5238→5325字。active148→148，正文49478→50126字，置信度高78/中45/低25；A8适用140条46896字、A9适用141条47180字、A10适用143条48040字。需要Dai定的知识事项：无。
+- 整体中位2668.0→2755.0（+87.0字），配对增量中位87.0、最大增量229；整体最大5238→5325字。active148→148，正文49478→50126字，置信度高78/中45/低25；A8适用140条46896字、A9适用141条47180字、A10适用143条48040字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第七十七次增量：2 局 A10（version 2026-10-07.23，分支 exp-silent，ad209573）
 
@@ -17069,7 +17069,7 @@ A10源节点至下一实际战，源入血档、多源可同战：
 - 源原沙箱入口：tsc 0，vitest 0，233文件/2441例，重跑0次，单worker，固定排除名单不变。完整外部由调度器据实际合入另补。
 - JSON、字符预算、12位局号/角色/计数/进阶、历史七数组/血档/节点/回血/SL、1777逐帧匹配、三组同指纹、力敏/毒/临时减力及末轮完整需损/实死核验、切片冻结、diff --check及gitleaks通过；check-experience退出0、missing=[]。
 - 学习账本仅CLI：新增无；proposed silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0028,silent-0027,silent-0079,silent-0046,silent-0085,silent-0060,silent-0063,silent-0065,silent-0062,silent-0039,silent-0013,silent-0011,silent-0023,silent-0018,silent-0087,silent-0241,silent-0242；退役无；check0。0241全史复算补更早首证10GPK5XGHCK3/A3及普通/升级事实，原UAC首证/未知边界和prior=yes保持历史，当前首证/asc只经CLI追加更正。其余首证/先验/claim/旧repeat及版本保持，未采纳复盘项不改状态，shipped交运维核实际合入。
-- live实际合入：None；刷新后/合前：7ad25e1477cc6db9e40a26a05f8e5b5e0b343fd8；刷新提交：None；合后沙箱：None；结果：锁内合并预检冲突，按任务停止、不硬解：eval/versions.json,notes/fix-queue-v4.md,notes/for-dai.md,notes/lessons.md,notes/ops-handoff.md,ops/inbox-dev.md,paper/data/README.md,paper/data/commits.csv,paper/data/cost-curve-silent.csv,paper/data/cost-silent.csv,paper/data/cost-sources.json,paper/data/cost-unattributed.csv,paper/data/learning-curve-silent.csv,paper/data/runs.csv,paper/data/summary.json,paper/data/verification.json,paper/materials/decision-log.md,paper/materials/experience-changelog-silent.md,paper/materials/learning/ledger.jsonl,paper/materials/silent/cost.md。
+- live实际合入：None；刷新后/合前：7ad25e1477cc6db9e40a26a05f8e5b5e0b343fd8；刷新提交：None；合后沙箱：None；结果：锁内合并预检冲突，按任务停止、不硬解：eval/versions.json,notes/fix-queue-v4.md,notes/for-roy.md,notes/lessons.md,notes/ops-handoff.md,ops/inbox-dev.md,paper/data/README.md,paper/data/commits.csv,paper/data/cost-curve-silent.csv,paper/data/cost-silent.csv,paper/data/cost-sources.json,paper/data/cost-unattributed.csv,paper/data/learning-curve-silent.csv,paper/data/runs.csv,paper/data/summary.json,paper/data/verification.json,paper/materials/decision-log.md,paper/materials/experience-changelog-silent.md,paper/materials/learning/ledger.jsonl,paper/materials/silent/cost.md。
 - 合入预检原件在live-merge.json/merge-tree-locked.txt或merge-live.log；未实际合入则无新eval版本/上线记录/双通知，不冒称shipped。根目录本节由调用方提交，本源只提交experience.json。
 
 ### 切片大小
@@ -17091,7 +17091,7 @@ A10源节点至下一实际战，源入血档、多源可同战：
 | a9-reward | 2755.0/3395 | 2491.0/3131 | -264.0 |
 | a9-shop | 3803.0/5325 | 3524.0/5044 | -281.0 |
 
-- 整体中位2755.0→2537.0（-218字），配对增量中位-131、最大增量107；整体最大5325→5044字。active148→150，正文50126→48581字，置信度高80/中46/低24；A8适用142条45351字、A9适用143条45635字、A10适用145条46495字。需要Dai定的知识事项：无。
+- 整体中位2755.0→2537.0（-218字），配对增量中位-131、最大增量107；整体最大5325→5044字。active148→150，正文50126→48581字，置信度高80/中46/低24；A8适用142条45351字、A9适用143条45635字、A10适用145条46495字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第七十八次增量：1 局 A10（version 2026-10-07.24，分支 exp-silent，2a3f0188）
 
@@ -17328,7 +17328,7 @@ A10源节点至下一实际战，源入血档、多源可同战；其他进阶�
 - JSON、60k字预算、12位局号/角色/计数/进阶、旧七数组/房档/节点/回血/SL、615逐帧匹配、三组同指纹、临时力量/敏捷/毒/荆棘限伤/尖啸/呼唤及末轮完整需损核验、切片冻结、diff --check/gitleaks通过；check-experience退出0、missing=[]。
 - 学习账本仅CLI：新增无；proposed silent-0005,silent-0006,silent-0007,silent-0129,silent-0176,silent-0046,silent-0019,silent-0020,silent-0021,silent-0079；退役无；check0。首证/先验/claim/旧support/repeat和旧版本历史保持，已有0079 repeat不重复追加；其他复盘主题未并入的保持原状态，未登记accepted/shipped。
 - live实际合入：None；刷新提交：f17e15ca474fd6b829f5ad85819a3315c359792a；刷新后/合前：f17e15ca474fd6b829f5ad85819a3315c359792a；合后沙箱：None；知识重叠：[]；结果：锁内合并预检冲突，按任务停止、不硬解。
-- 合并预检冲突（20个并行记录文件，未执行实际merge、不硬解）：CONFLICT (content): Merge conflict in eval/versions.json；CONFLICT (content): Merge conflict in notes/fix-queue-v4.md；CONFLICT (content): Merge conflict in notes/for-dai.md；CONFLICT (content): Merge conflict in notes/lessons.md；CONFLICT (content): Merge conflict in notes/ops-handoff.md；CONFLICT (content): Merge conflict in ops/inbox-dev.md；CONFLICT (content): Merge conflict in paper/data/README.md；CONFLICT (content): Merge conflict in paper/data/commits.csv；CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv；CONFLICT (content): Merge conflict in paper/data/cost-silent.csv；CONFLICT (content): Merge conflict in paper/data/cost-sources.json；CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv；CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv；CONFLICT (content): Merge conflict in paper/data/runs.csv；CONFLICT (content): Merge conflict in paper/data/summary.json；CONFLICT (content): Merge conflict in paper/data/verification.json；CONFLICT (content): Merge conflict in paper/materials/decision-log.md；CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md；CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl；CONFLICT (content): Merge conflict in paper/materials/silent/cost.md
+- 合并预检冲突（20个并行记录文件，未执行实际merge、不硬解）：CONFLICT (content): Merge conflict in eval/versions.json；CONFLICT (content): Merge conflict in notes/fix-queue-v4.md；CONFLICT (content): Merge conflict in notes/for-roy.md；CONFLICT (content): Merge conflict in notes/lessons.md；CONFLICT (content): Merge conflict in notes/ops-handoff.md；CONFLICT (content): Merge conflict in ops/inbox-dev.md；CONFLICT (content): Merge conflict in paper/data/README.md；CONFLICT (content): Merge conflict in paper/data/commits.csv；CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv；CONFLICT (content): Merge conflict in paper/data/cost-silent.csv；CONFLICT (content): Merge conflict in paper/data/cost-sources.json；CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv；CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv；CONFLICT (content): Merge conflict in paper/data/runs.csv；CONFLICT (content): Merge conflict in paper/data/summary.json；CONFLICT (content): Merge conflict in paper/data/verification.json；CONFLICT (content): Merge conflict in paper/materials/decision-log.md；CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md；CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl；CONFLICT (content): Merge conflict in paper/materials/silent/cost.md
 - 合入原件保存在live-merge.json、merge-tree-locked.txt/merge-live.log；若未实际合入，无新eval版本/上线记录/双通知，不冒称shipped。根目录本节仅追加，交调用方提交；本源只提交静默experience.json。
 
 ### 切片大小
@@ -17350,7 +17350,7 @@ A10源节点至下一实际战，源入血档、多源可同战；其他进阶�
 | a9-reward | 2491.0/3131 | 2492.0/3132 | 1.0 |
 | a9-shop | 3524.0/5044 | 3530.0/5045 | 1.0 |
 
-- 整体中位2537.0→2547.0（+10字），配对增量中位1.0、最大增量299；整体最大5044→5045字。active150→151，正文48581→48824字，置信度高81/中46/低24；A8适用142条45332字、A9适用143条45616字、A10适用146条46738字。需要Dai定的知识事项：无。
+- 整体中位2537.0→2547.0（+10字），配对增量中位1.0、最大增量299；整体最大5044→5045字。active150→151，正文48581→48824字，置信度高81/中46/低24；A8适用142条45332字、A9适用143条45616字、A10适用146条46738字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第七十九次增量：1 局 A10（version 2026-10-07.25，分支 exp-silent，6579082a）
 
@@ -17598,7 +17598,7 @@ A10源节点入血档到下一实战，多源可同战；其他进阶完整行�
 - JSON/字段顺序/60k字预算、12位局号/角色/支持反例计数、旧七数组/房档/节点/回血/SL、686逐帧/669决策、两组同指纹SL、敏捷/预判/蜃景/覆甲/毒/敌回血/力量/懒惰/子弹/明耀、冻结切片、diff --check/gitleaks及check-experience通过（missing=[]）。
 - 学习账本仅CLI：新增无；proposed silent-0005,silent-0006,silent-0080,silent-0010,silent-0013,silent-0007,silent-0102,silent-0021,silent-0019,silent-0020,silent-0247,silent-0248,silent-0249；退役无；check 0。0249首证/asc及prior_note只追加更正，其余首证/prior/claim/旧support/repeat/version历史保持，未并入纯bug项状态不变，未登记accepted/shipped。
 - live实际合入：None；刷新提交：0aa0af5dcfd88b85102c31ebe68d80da1f0f4954；刷新后/合前：0aa0af5dcfd88b85102c31ebe68d80da1f0f4954；合后沙箱：None；知识重叠：[]；结果：锁内合并预检冲突，按任务停止、不硬解。
-- 合并预检冲突（未执行实际merge、不硬解）：CONFLICT (content): Merge conflict in eval/versions.json；CONFLICT (content): Merge conflict in notes/fix-queue-v4.md；CONFLICT (content): Merge conflict in notes/for-dai.md；CONFLICT (content): Merge conflict in notes/lessons.md；CONFLICT (content): Merge conflict in notes/ops-handoff.md；CONFLICT (content): Merge conflict in ops/inbox-dev.md；CONFLICT (content): Merge conflict in paper/data/README.md；CONFLICT (content): Merge conflict in paper/data/commits.csv；CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv；CONFLICT (content): Merge conflict in paper/data/cost-silent.csv；CONFLICT (content): Merge conflict in paper/data/cost-sources.json；CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv；CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv；CONFLICT (content): Merge conflict in paper/data/runs.csv；CONFLICT (content): Merge conflict in paper/data/summary.json；CONFLICT (content): Merge conflict in paper/data/verification.json；CONFLICT (content): Merge conflict in paper/materials/decision-log.md；CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md；CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl；CONFLICT (content): Merge conflict in paper/materials/silent/cost.md
+- 合并预检冲突（未执行实际merge、不硬解）：CONFLICT (content): Merge conflict in eval/versions.json；CONFLICT (content): Merge conflict in notes/fix-queue-v4.md；CONFLICT (content): Merge conflict in notes/for-roy.md；CONFLICT (content): Merge conflict in notes/lessons.md；CONFLICT (content): Merge conflict in notes/ops-handoff.md；CONFLICT (content): Merge conflict in ops/inbox-dev.md；CONFLICT (content): Merge conflict in paper/data/README.md；CONFLICT (content): Merge conflict in paper/data/commits.csv；CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv；CONFLICT (content): Merge conflict in paper/data/cost-silent.csv；CONFLICT (content): Merge conflict in paper/data/cost-sources.json；CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv；CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv；CONFLICT (content): Merge conflict in paper/data/runs.csv；CONFLICT (content): Merge conflict in paper/data/summary.json；CONFLICT (content): Merge conflict in paper/data/verification.json；CONFLICT (content): Merge conflict in paper/materials/decision-log.md；CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md；CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl；CONFLICT (content): Merge conflict in paper/materials/silent/cost.md
 - 若未实际合入，无新eval版本/上线记录/双通知，不冒标shipped；源提交/失败日志/工作树/初稿均保留，完成事件交运维兜底。根目录本节只追加，交调用方提交。
 
 ### 切片大小
@@ -17620,7 +17620,7 @@ A10源节点入血档到下一实战，多源可同战；其他进阶完整行�
 | a9-reward | 2492.0/3132 | 2477.0/3117 | -15.0 |
 | a9-shop | 3530.0/5045 | 3510.0/5340 | -15.0 |
 
-- 整体中位2547.0→2672.0（+125.0字），配对增量中位0.0、最大增量612；最大5045→5340。active151→154，正文48824→49461字，高82/中46/低26；A8适用146条46254字、A9适用147条46538字、A10适用150条47660字。需要Dai定的知识事项：无。
+- 整体中位2547.0→2672.0（+125.0字），配对增量中位0.0、最大增量612；最大5045→5340。active151→154，正文48824→49461字，高82/中46/低26；A8适用146条46254字、A9适用147条46538字、A10适用150条47660字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第八十次增量：1 局 A10（version 2026-10-07.26，分支 exp-silent，4b6396bd）
 
@@ -17864,7 +17864,7 @@ A10源节点入血档到下一实战；多源可同战，其他阶完整行在au
 - CONFLICT (content): Merge conflict in knowledge/common/move-model.json
 - CONFLICT (modify/delete): notes/fight-value-backtest-silent.md deleted in 4b6396bd462ca61bb13d082fdc73fdf5d0cf610a and modified in 31914e4ba652d6e8466a4a99f04128005166ecf2.  Version 31914e4ba652d6e8466a4a99f04128005166ecf2 of notes/fight-value-backtest-silent.md left in tree.
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -17903,7 +17903,7 @@ A10源节点入血档到下一实战；多源可同战，其他阶完整行在au
 | a9-reward | 2477.0/3117 | 2472.0/3112 | -5.0 |
 | a9-shop | 3510.0/5340 | 3505.0/5335 | -5.0 |
 
-- 整体中位2672.0→2703.0（+31字），配对增量中位-5.0、最大增量31；最大5340→5335字。active154→154、正文49461→48612字，高82/中46/低26；A8适用146条45405字、A9适用147条45689字、A10适用150条46811字。需要Dai定的知识事项：无。
+- 整体中位2672.0→2703.0（+31字），配对增量中位-5.0、最大增量31；最大5340→5335字。active154→154、正文49461→48612字，高82/中46/低26；A8适用146条45405字、A9适用147条45689字、A10适用150条46811字。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第八十一次增量：1 局 A10（version 2026-10-07.27，分支 exp-silent，e7552663）
 
@@ -18151,7 +18151,7 @@ A10源节点入血档到下一实战，多源可同战；其他进阶完整行�
 - live实际合入：None；刷新提交：None；刷新后/合前：dc2d91757bdcb8a1e1ccc25948de699683a37085；合后沙箱：None；知识重叠：[]；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -18191,7 +18191,7 @@ A10源节点入血档到下一实战，多源可同战；其他进阶完整行�
 | a9-reward | 2472.0/3112 | 2474.0/3114 | 2.0 |
 | a9-shop | 3505.0/5335 | 3507.0/5337 | 2.0 |
 
-- 整体中位2703.0→2684.0（-19字），配对增量中位2.0、最大增量293；最大5335→5337。active154→155、正文48612→48539，高84/中45/低26；A8适用147条45345字、A9适用148条45629字、A10适用151条46738字。新增并更新后总字符减少73，未改预算。需要Dai定的知识事项：无。
+- 整体中位2703.0→2684.0（-19字），配对增量中位2.0、最大增量293；最大5335→5337。active154→155、正文48612→48539，高84/中45/低26；A8适用147条45345字、A9适用148条45629字、A10适用151条46738字。新增并更新后总字符减少73，未改预算。需要Roy定的知识事项：无。
 
 ## 2026-10-07 静默猎手 第八十二次增量：2 局 A10（version 2026-10-07.28，分支 exp-silent，ab065d0a）
 
@@ -18503,7 +18503,7 @@ A10源节点入血档到下一实战，多源可同战，其他进阶完整行�
 | a9-reward | 2474.0/3114 | 2409.0/3049 | -65.0 |
 | a9-shop | 3507.0/5337 | 3493.0/5343 | 6.0 |
 
-- 整体中位2701.0→2649.0（-52.0字），配对增量中位0.0、最大增量367；最大5337→5343字。active 155→156、正文48539→48291；置信度{'low': 25, 'high': 85, 'med': 46}；A8适用{'entries': 148, 'chars': 45097}、A9适用{'entries': 149, 'chars': 45381}、A10适用{'entries': 152, 'chars': 46490}。需要Dai定的知识事项：无。
+- 整体中位2701.0→2649.0（-52.0字），配对增量中位0.0、最大增量367；最大5337→5343字。active 155→156、正文48539→48291；置信度{'low': 25, 'high': 85, 'med': 46}；A8适用{'entries': 148, 'chars': 45097}、A9适用{'entries': 149, 'chars': 45381}、A10适用{'entries': 152, 'chars': 46490}。需要Roy定的知识事项：无。
 
 ## 2026-10-08 静默猎手 第八十三次增量：2 局 A10（version 2026-10-07.29，分支 exp-silent，18f23638）
 
@@ -18941,7 +18941,7 @@ A10源节点入血档到下一实战，多源可同战，其他进阶完整行�
 - live实际合入：None；刷新：None；刷新后/合前：fd4c8e52341c31cad606c0a4b96a43663843e201；合后沙箱：None；知识重叠：[]；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -18980,7 +18980,7 @@ A10源节点入血档到下一实战，多源可同战，其他进阶完整行�
 | a9-rest | 2323.5/2871 | 2165.5/2255 | -125.0 |
 | a9-reward | 2409.0/3049 | 2281.0/2921 | -128.0 |
 | a9-shop | 3493.0/5343 | 3354.5/4676 | -128.0 |
-- 整体中位2649.0→2401.0（-248字），配对增量中位-125；单片最大增长258，最大5343→4968字。active 156→158、正文48291→47828字；置信度{'low': 25, 'high': 87, 'med': 46}；A8适用{'entries': 150, 'chars': 44634}、A9适用{'entries': 151, 'chars': 44918}、A10适用{'entries': 154, 'chars': 46027}。需要Dai定的知识事项：无。
+- 整体中位2649.0→2401.0（-248字），配对增量中位-125；单片最大增长258，最大5343→4968字。active 156→158、正文48291→47828字；置信度{'low': 25, 'high': 87, 'med': 46}；A8适用{'entries': 150, 'chars': 44634}、A9适用{'entries': 151, 'chars': 44918}、A10适用{'entries': 154, 'chars': 46027}。需要Roy定的知识事项：无。
 
 完整抽取/脚本/原日志/失败初稿/提案/账本/检查/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update。
 
@@ -19479,7 +19479,7 @@ REST/SHOP/普通EVENT从源节点入血关联下一战；多源可同战，不�
 | a9-rest | 2165.5/2255 | 2144.5/2276 | -13.0 |
 | a9-reward | 2281.0/2921 | 2333.0/2914 | 52.0 |
 | a9-shop | 3354.5/4676 | 3368.5/4694 | 20.5 |
-- 整体中位2405.5→2386.5（-19字）；配对增量中位+2；单片最大增长55，最大4968→4970字。active 158→159、正文47828→47952字；置信度{'low': 25, 'high': 87, 'med': 47}；A8适用{'entries': 151, 'chars': 44758}、A9适用{'entries': 152, 'chars': 45042}、A10适用{'entries': 155, 'chars': 46151}。需要Dai定的知识事项：无。
+- 整体中位2405.5→2386.5（-19字）；配对增量中位+2；单片最大增长55，最大4968→4970字。active 158→159、正文47828→47952字；置信度{'low': 25, 'high': 87, 'med': 47}；A8适用{'entries': 151, 'chars': 44758}、A9适用{'entries': 152, 'chars': 45042}、A10适用{'entries': 155, 'chars': 46151}。需要Roy定的知识事项：无。
 
 完整抽取、脚本、原帧、初稿/失败、提案、账本、检查、切片和合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update。
 
@@ -20141,7 +20141,7 @@ REST/SHOP/普通EVENT从源节点入血关联下一战；多源可同战，不�
 
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -20182,7 +20182,7 @@ REST/SHOP/普通EVENT从源节点入血关联下一战；多源可同战，不�
 | a9-reward | 2333.0/2914 | 2736.0/3317 | 403.0 |
 | a9-shop | 3368.5/4694 | 3769.0/4965 | 271.0 |
 
-- 整体中位2398.5→2736.0（+337.5字）；配对增量中位+276.0，单片最大增长1408，最大4970→5097。active159→159，正文47952→50368字，置信度{'low': 25, 'high': 90, 'med': 44}；A8适用{'entries': 151, 'chars': 47001}、A9适用{'entries': 152, 'chars': 47285}、A10适用{'entries': 156, 'chars': 49232}。需要Dai定：无。
+- 整体中位2398.5→2736.0（+337.5字）；配对增量中位+276.0，单片最大增长1408，最大4970→5097。active159→159，正文47952→50368字，置信度{'low': 25, 'high': 90, 'med': 44}；A8适用{'entries': 151, 'chars': 47001}、A9适用{'entries': 152, 'chars': 47285}、A10适用{'entries': 156, 'chars': 49232}。需要Roy定：无。
 
 完整抽取、原帧/字节偏移、脚本、草稿、提案、账本、测试、切片和合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-014012-experience-update。
 
@@ -20784,7 +20784,7 @@ REST/SHOP/普通EVENT按源节点入血关联下一场（多源可同一战，�
 - CONFLICT (content): Merge conflict in knowledge/common/move-model.json
 - CONFLICT (modify/delete): notes/fight-value-backtest-silent.md deleted in 979ddf170447a370880b8e3ed9d21422d2b598c0 and modified in 22a653f745bae5f177170e3a454ec770b829434f.  Version 22a653f745bae5f177170e3a454ec770b829434f of notes/fight-value-backtest-silent.md left in tree.
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -20824,7 +20824,7 @@ REST/SHOP/普通EVENT按源节点入血关联下一场（多源可同一战，�
 | a9-reward | 2736.0/3317 | 2944.0/3525 | 208.0 |
 | a9-shop | 3769.0/4965 | 4087.0/5077 | 220.0 |
 
-- 整体中位2736.0→2877.0（+141.0字）；配对增量中位+96.0，单片最多增333，最大5167→5279。active159→159，正文50368→51598，置信{'low': 25, 'high': 91, 'med': 43}；A8适用{'entries': 151, 'chars': 48231}，A9适用{'entries': 152, 'chars': 48515}，A10适用{'entries': 156, 'chars': 50462}。需要Dai定：无。
+- 整体中位2736.0→2877.0（+141.0字）；配对增量中位+96.0，单片最多增333，最大5167→5279。active159→159，正文50368→51598，置信{'low': 25, 'high': 91, 'med': 43}；A8适用{'entries': 151, 'chars': 48231}，A9适用{'entries': 152, 'chars': 48515}，A10适用{'entries': 156, 'chars': 50462}。需要Roy定：无。
 
 完整报告/抽取/原帧/脚本/草稿/失败/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-024302-experience-update；生成时间2026-10-08 03:21:59 +0800。
 
@@ -21434,7 +21434,7 @@ REST/SHOP/普通EVENT从源节点入血到下一场（多源可同战，源节�
 - 学习账本仅CLI：新增无；proposed silent-0005,silent-0006,silent-0009,silent-0011,silent-0013,silent-0016,silent-0019,silent-0020,silent-0021,silent-0024,silent-0027,silent-0046,silent-0057,silent-0069,silent-0079,silent-0090,silent-0095,silent-0128,silent-0140,silent-0164,silent-0196,silent-0205,silent-0241；退役无；ledger.py check 0。首证/prior/原claim/repeat/历史上线保持，0268/0271未入经验，本任务不改其状态，学习者不标accepted/shipped。
 - live合入：None；刷新：None；合前：047c809e625da861e34469791370f620866dee6f；合后沙箱：None；知识重叠：[]；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -21471,7 +21471,7 @@ REST/SHOP/普通EVENT从源节点入血到下一场（多源可同战，源节�
 | a9-reward | 2944.0/3525 | 3199.0/3780 | 255.0 |
 | a9-shop | 4087.0/5077 | 4342.0/5248 | 179.5 |
 
-- 整体中位2891.5→3064.0（+172.5字），配对增量中位+167.0，单片最多增429，最大5853→6108。active159、正文53187，置信{'low': 24, 'high': 92, 'med': 43}；A8适用{'entries': 151, 'chars': 49637}，A9适用{'entries': 152, 'chars': 49921}，A10适用{'entries': 156, 'chars': 52051}。需要Dai定：无。
+- 整体中位2891.5→3064.0（+172.5字），配对增量中位+167.0，单片最多增429，最大5853→6108。active159、正文53187，置信{'low': 24, 'high': 92, 'med': 43}；A8适用{'entries': 151, 'chars': 49637}，A9适用{'entries': 152, 'chars': 49921}，A10适用{'entries': 156, 'chars': 52051}。需要Roy定：无。
 
 完整原帧/抽取/草稿/失败/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update；报告时间2026-10-08 03:59:46 +0800。
 
@@ -22064,7 +22064,7 @@ REST/SHOP/普通EVENT从源节点入血到下一场（多源可同战，节点�
 - 学习账本仅CLI：新增无；proposed silent-0005,silent-0006,silent-0011,silent-0019,silent-0020,silent-0021,silent-0024,silent-0027,silent-0034,silent-0077,silent-0079,silent-0123,silent-0129,silent-0180,silent-0221,silent-0243；退役无；ledger.py check 0。原首证/prior/claim/repeat/上线历史保持，0272未进经验不改其状态，学习者不标accepted/shipped。
 - live合入：None；刷新：208c68f7dcae39f1f09aed954fa07b02ef0656ed；合前：208c68f7dcae39f1f09aed954fa07b02ef0656ed；合后沙箱：None；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -22103,7 +22103,7 @@ REST/SHOP/普通EVENT从源节点入血到下一场（多源可同战，节点�
 | a9-reward | 3199.0/3780 | 3281.0/3862 | 82.0 |
 | a9-shop | 4342.0/5248 | 4424.0/5408 | 158.0 |
 
-- 整体中位3064.0→3227.5（+163.5字），配对增量中位+82.0，单片最多增440，最大5248→5408。active160、正文54254，置信{'low': 23, 'high': 93, 'med': 44}；A8适用{'entries': 152, 'chars': 50704}，A9适用{'entries': 153, 'chars': 50988}，A10适用{'entries': 157, 'chars': 53118}。需要Dai定：无。
+- 整体中位3064.0→3227.5（+163.5字），配对增量中位+82.0，单片最多增440，最大5248→5408。active160、正文54254，置信{'low': 23, 'high': 93, 'med': 44}；A8适用{'entries': 152, 'chars': 50704}，A9适用{'entries': 153, 'chars': 50988}，A10适用{'entries': 157, 'chars': 53118}。需要Roy定：无。
 
 完整原帧/脚本/草稿/失败/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-044250-experience-update；报告时间2026-10-08 05:14:14 +0800。
 
@@ -22769,7 +22769,7 @@ REST/SHOP/普通EVENT从源节点入血到下一场（多源可同战，节点�
 | a9-reward | 3281.0/3862 | 2790.0/3371 | -491.0 |
 | a9-shop | 4424.0/5408 | 3931.5/5088 | -491.0 |
 
-- 整体中位3227.5→3012.0（-215.5字），配对增量中位-146.5，单片最多增265，最大5408→5088。active161/正文52376，置信{'low': 24, 'high': 93, 'med': 44}；A8适用{'entries': 152, 'chars': 48524}，A9适用{'entries': 153, 'chars': 48808}，A10适用{'entries': 158, 'chars': 51240}。需要Dai定：无。
+- 整体中位3227.5→3012.0（-215.5字），配对增量中位-146.5，单片最多增265，最大5408→5088。active161/正文52376，置信{'low': 24, 'high': 93, 'med': 44}；A8适用{'entries': 152, 'chars': 48524}，A9适用{'entries': 153, 'chars': 48808}，A10适用{'entries': 158, 'chars': 51240}。需要Roy定：无。
 
 原帧/脚本/初稿/失败/机制表/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-053105-experience-update；报告时间2026-10-08 05:59:22 +0800。
 
@@ -23410,7 +23410,7 @@ SL真正多次尝试按场去重：
 | a9-reward | 2790.0/3371 | 2744.0/3325 | -46.0 |
 | a9-shop | 3931.5/5088 | 3887.0/5042 | -46.0 |
 
-- 整体中位3012.0→2966.0（-46.0字），配对增量中位-46.0，单片最多增513、最大5088→5042。active165/正文52792，置信{'low': 24, 'high': 97, 'med': 44}；A8适用{'entries': 155, 'chars': 48698}，A9适用{'entries': 156, 'chars': 48982}，A10适用{'entries': 162, 'chars': 51656}。需要Dai定：无；如合入记录冲突交运维据真实结果续办，不冒报上线。
+- 整体中位3012.0→2966.0（-46.0字），配对增量中位-46.0，单片最多增513、最大5088→5042。active165/正文52792，置信{'low': 24, 'high': 97, 'med': 44}；A8适用{'entries': 155, 'chars': 48698}，A9适用{'entries': 156, 'chars': 48982}，A10适用{'entries': 162, 'chars': 51656}。需要Roy定：无；如合入记录冲突交运维据真实结果续办，不冒报上线。
 
 原帧/脚本/初稿/失败/机制/提案/账本/测试/切片/合入回执均在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-061302-experience-update；报告时间2026-10-08 06:47:53 +0800。
 
@@ -24021,7 +24021,7 @@ SL真正多次尝试按场去重：
 - JSON、字段/角色/局号/反例/预算、旧119局逐行基线、同盘两线/末结算、8局抑制守恒、21跨幕边界、三药全史、240固定配对切片、check-experience missing=[]/0、gitleaks0和diff --check通过。
 - 学习账本只经CLI：新增无；改proposed silent-0005,silent-0006,silent-0011,silent-0016,silent-0019,silent-0020,silent-0021,silent-0027,silent-0030,silent-0079,silent-0087,silent-0243,silent-0278,silent-0280；退役无，ledger.py check0。原first_run/prior/claim/repeat及旧上线历史保留；0279纯bug仍observed，学习者不标accepted/shipped。
 - live实际合入：None；刷新：aa1e21361f65bf891e513002fa69d8f2b60e93b7；合前：aa1e21361f65bf891e513002fa69d8f2b60e93b7；合后测试：None；结果：锁内合并预检冲突，按任务停止、不硬解。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
 - CONFLICT (content): Merge conflict in paper/materials/decision-log.md
@@ -24047,7 +24047,7 @@ SL真正多次尝试按场去重：
 | a9-reward | 2744.0/3325 | 3006.0/3587 | 262.0 |
 | a9-shop | 3887.0/5042 | 4149.0/5249 | 219.0 |
 
-- 整体中位2966.0→3006.0（+40.0字），配对增量中位0.0、单片最多增564，最大5042→5249。active167/正文52766，置信{'low': 25, 'high': 98, 'med': 44}；A8/A9/A10适用{'8': {'entries': 156, 'chars': 48404}, '9': {'entries': 157, 'chars': 48688}, '10': {'entries': 164, 'chars': 51630}}。需要Dai定：无。合入受阻则按真实结果交运维续办，保留原件，不冒报上线。
+- 整体中位2966.0→3006.0（+40.0字），配对增量中位0.0、单片最多增564，最大5042→5249。active167/正文52766，置信{'low': 25, 'high': 98, 'med': 44}；A8/A9/A10适用{'8': {'entries': 156, 'chars': 48404}, '9': {'entries': 157, 'chars': 48688}, '10': {'entries': 164, 'chars': 51630}}。需要Roy定：无。合入受阻则按真实结果交运维续办，保留原件，不冒报上线。
 
 原帧/脚本/初稿/失败/机制/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-071205-experience-update；报告时间2026-10-08 07:43:51 +0800。
 
@@ -24696,7 +24696,7 @@ SL真正多次尝试按场去重：
 - live实际合入：None；刷新：6fd495ccabba4b740e7f84d57e36aba5988c5f8f；合前：6fd495ccabba4b740e7f84d57e36aba5988c5f8f；合后测试：None；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -24735,7 +24735,7 @@ SL真正多次尝试按场去重：
 | a9-shop | 4149.0/5249 | 4155.0/4954 | -59.0 |
 
 - 整体切片：{'before_median': 3006.0, 'after_median': 3012.0, 'median_change': 6.0, 'paired_median_change': -7.0, 'before_max': 5249, 'after_max': 5201, 'max_increase': 6}。
-- active168/正文51442，置信{'low': 25, 'high': 100, 'med': 43}；A8/A9/A10适用{'8': {'entries': 157, 'chars': 47080}, '9': {'entries': 158, 'chars': 47364}, '10': {'entries': 165, 'chars': 50306}}。需要Dai定：无。合入受阻按真实结果交运维续办，保留全部证据/失败/原稿，不冒报上线。
+- active168/正文51442，置信{'low': 25, 'high': 100, 'med': 43}；A8/A9/A10适用{'8': {'entries': 157, 'chars': 47080}, '9': {'entries': 158, 'chars': 47364}, '10': {'entries': 165, 'chars': 50306}}。需要Roy定：无。合入受阻按真实结果交运维续办，保留全部证据/失败/原稿，不冒报上线。
 
 原帧/脚本/初稿/失败/机制/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-075539-experience-update；报告时间2026-10-08 08:28:18 +0800。
 
@@ -25419,7 +25419,7 @@ SL真正多次尝试按场去重：
 
 - 整体切片：{'before_median': 3012.0, 'after_median': 2946.5, 'median_change': -65.5, 'paired_median_change': -2.0, 'before_max': 5201, 'after_max': 5290, 'max_increase': 358}。
 
-- active169/正文51016，high101/med43/low25；A8适用158条47012字、A9 159条47296字、A10 166条49880字。需要Dai定：无。受阻据实交运维续办，保留失败/原稿/日志/工作树，不冒报上线。
+- active169/正文51016，high101/med43/low25；A8适用158条47012字、A9 159条47296字、A10 166条49880字。需要Roy定：无。受阻据实交运维续办，保留失败/原稿/日志/工作树，不冒报上线。
 
 原帧/脚本/初稿/机制/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-085641-experience-update；报告时间2026-10-08 09:31:46 +0800。
 
@@ -26030,7 +26030,7 @@ SL按一局同一层为一场；判死/退出与实死分列。首抽受控长�
 - 学习账本仅CLI：新增[]；改proposed silent-0010,silent-0012,silent-0013,silent-0019,silent-0020,silent-0021,silent-0046,silent-0065,silent-0077,silent-0106,silent-0115,silent-0178,silent-0243,silent-0276,silent-0277,silent-0278；退役[]；ledger.py check 0。钨合金棍复用原observed 0178，无新编号；原首证/prior/claim/repeat/上线历史保留，学习者不标accepted/shipped。
 - live实际合入：None；刷新：3a319f300e4c3a6be5369192528007cd26b7f14d；合前：3a319f300e4c3a6be5369192528007cd26b7f14d；合后测试：None；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (modify/delete): notes/silent-a10-regression-dispatch.json deleted in 3a319f300e4c3a6be5369192528007cd26b7f14d and modified in eebcf4297065a97086ea4d430ae698a2b05c3dea.  Version eebcf4297065a97086ea4d430ae698a2b05c3dea of notes/silent-a10-regression-dispatch.json left in tree.
@@ -26071,7 +26071,7 @@ SL按一局同一层为一场；判死/退出与实死分列。首抽受控长�
 | sample-a9-shop | 4244.0/5043 | 4124.0/4969 | -74.0 |
 
 - 整体切片：{'before_median': 2928.5, 'after_median': 2912.0, 'median_change': -16.5, 'paired_median_change': -19.0, 'before_max': 5290, 'after_max': 5170, 'max_increase': 270}。
-- active170/正文50180，high102/med43/low25；A8适用159条46220字、A9 160条46504字、A10 167条49088字。需要Dai定：无。
+- active170/正文50180，high102/med43/low25；A8适用159条46220字、A9 160条46504字、A10 167条49088字。需要Roy定：无。
 
 原帧/脚本/初稿/机制/提案/账本/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update；报告时间2026-10-08 10:49:30 +0800。
 ## 2026-10-08 静默猎手 第九十五次增量：2 局 A10（version 2026-10-08.12，分支 exp-silent，fbf45077）
@@ -26690,7 +26690,7 @@ SL按一局同一层为一场；判死/退出与实死分列。首抽受控长�
 - live实际合入：None；锁内刷新提交5fbc51f180bd63067a9b98d951c89944970544e6、合前5fbc51f180bd63067a9b98d951c89944970544e6；刷新知识重叠为空。整分支预检20处并行记录冲突，按任务停止、不实际合并/硬解，保留刷新及原notes/fight-value-backtest-silent.md未提交改动。合后测试未执行，不造上线decision/eval版本或Roy规则通知。源码提交fbf45077466b57210ed1c5377a11896384bbeab0及完成事件交运维兜底。
 
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -26730,7 +26730,7 @@ SL按一局同一层为一场；判死/退出与实死分列。首抽受控长�
 | sample-a9-shop | 4124.0/4969 | 4157.0/4982 | 13.5 |
 
 - 整体切片中位2912.0→2916.0、增4.0字；配对差额中位+13.0；最大5170→5197，单切片最多增40字。
-- active173/正文50115，high104/med43/low26；A8适用162条46155字、A9适用163条46439字、A10适用170条49023字。需要Dai定：无；合入受并行记录冲突阻塞，由运维按源提交兜底，不需要新增知识审批。
+- active173/正文50115，high104/med43/low26；A8适用162条46155字、A9适用163条46439字、A10适用170条49023字。需要Roy定：无；合入受并行记录冲突阻塞，由运维按源提交兜底，不需要新增知识审批。
 
 本批原帧/复算/机制/提案/CLI/测试/切片/合入冲突回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-111006-experience-update；报告时间2026-10-08 11:34:25 +0800。
 
@@ -27384,7 +27384,7 @@ SL多次重打按一场而非多局：
 | sample-a9-shop | 4157.0/4982 | 4272.0/5302 | 217.0 |
 
 - 整体中位2916.0→3099.0、增183.0字；配对差中位+115.0；最大5197→5384，单片最多增618。
-- active175/正文52103，high105/med44/low26；A8适用163条47766字、A9适用164条48050字、A10适用172条51011字。没有合并/退役/压缩，预算保持。需要Dai定：无；合入阻塞据实交运维兜底。
+- active175/正文52103，high105/med44/low26；A8适用163条47766字、A9适用164条48050字、A10适用172条51011字。没有合并/退役/压缩，预算保持。需要Roy定：无；合入阻塞据实交运维兜底。
 
 本批原帧、复算、机制、提案/更正、CLI、测试、切片及合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update；报告时间2026-10-08 12:33:04 +0800。
 
@@ -28033,7 +28033,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 4272.0/5302 | 4186.0/5216 | -107.0 |
 
 - 整体中位3099.0→3043.0，涨幅-56.0字；配对差中位-72.0，最大5384→5226，单片最多增89。
-- active176/正文51417，high107/med45/low24；A8适用164条/47080字、A9适用165条/47364字、A10适用173条/50325字。无合并/退役，压短重复案例见更新逐条字数，预算不改。需要Dai定：无；合入受阻据实交运维兜底。
+- active176/正文51417，high107/med45/low24；A8适用164条/47080字、A9适用165条/47364字、A10适用173条/50325字。无合并/退役，压短重复案例见更新逐条字数，预算不改。需要Roy定：无；合入受阻据实交运维兜底。
 
 本批原帧/复算/机制/CLI/提案/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update；报告时间2026-10-08 13:25:34 +0800。
 
@@ -28674,7 +28674,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 4186.0/5216 | 4167.0/5197 | -12.0 |
 
 - 整体中位3043.0→3024.0，涨幅-19.0字；配对差中位-13.0，最大5226→5221，单片最多增31。
-- active176/正文51425，high107/med45/low24；A8适用164条/47088字、A9适用165条/47372字、A10适用173条/50333字。合并/退役无，更新压短旧案例逐条见上，不改预算。需要Dai定：无；若合入受阻据实交运维兜底。
+- active176/正文51425，high107/med45/low24；A8适用164条/47088字、A9适用165条/47372字、A10适用173条/50333字。合并/退役无，更新压短旧案例逐条见上，不改预算。需要Roy定：无；若合入受阻据实交运维兜底。
 
 本批原帧/复算/机制/CLI/提案/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update；报告时间2026-10-08 13:50:22 +0800。
 
@@ -29285,7 +29285,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 - 合并预检冲突按任务停止，不覆盖刷新/硬解，不造上线decision/eval/Roy通知；源提交和完成事件交运维兜底，对局不停、不运行play。
 - CONFLICT (content): Merge conflict in docs/codex-ops.md
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/codex-ops-learner.sh
@@ -29327,7 +29327,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 4167.0/5197 | 3584.0/5172 | -30.5 |
 
 - 整体中位3024.0→2551.5、涨-472.5字；配对差中位-163.0，最大5221→5172，单片最多增0。
-- active176、正文50495，high107/med45/low24；A8适用164条/46158字、A9适用165条/46442字、A10适用173条/49403字。本批16条更新去旧重复案例、合计压短930字，逐条见上；未合并/退役，不改预算。需要Dai定：无。
+- active176、正文50495，high107/med45/low24；A8适用164条/46158字、A9适用165条/46442字、A10适用173条/49403字。本批16条更新去旧重复案例、合计压短930字，逐条见上；未合并/退役，不改预算。需要Roy定：无。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-140852-experience-update；报告时间2026-10-08 14:25:17 +0800。
 
@@ -29976,7 +29976,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 3584.0/5172 | 3559.0/4967 | -31.0 |
 
 - 整体中位2651.5→2521.5、涨-130.0字；配对差中位-36.0，最大5172→4967，单片最多增0。
-- active176/正文49864；high108/med44/low24；A8适用164条/45527字、A9适用165条/45811字、A10适用173条/48772字。未合并/退役，不改预算；需要Dai定：无，合入受阻交运维兜底。
+- active176/正文49864；high108/med44/low24；A8适用164条/45527字、A9适用165条/45811字、A10适用173条/48772字。未合并/退役，不改预算；需要Roy定：无，合入受阻交运维兜底。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update；报告时间2026-10-08 15:10:46 +0800。
 
@@ -30588,7 +30588,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 - 按任务遇合入冲突/占用停止，原预检/刷新/源提交保留，不硬解或覆盖并行记录；没有实际上线，不造decision/eval/Roy通知，交完成事件由运维兜底，不停对局、不运行play。
 - CONFLICT (modify/delete): notes/codex-brain-cache-dispatch.json deleted in 2b1a5f6d491f826ea1bac28f707716d109fb3e65 and modified in f2ce61432a35dcfc96e9ea651f59712ca6a2021f.  Version f2ce61432a35dcfc96e9ea651f59712ca6a2021f of notes/codex-brain-cache-dispatch.json left in tree.
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -30630,7 +30630,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 3559.0/4967 | 3555.0/4810 | -4.0 |
 
 - 整体中位2521.5→2491.0、涨-30.5字；配对差中位-4.0，最大4967→4810，单片最多增13。
-- active176/正文49391；high108/med44/low24；A8适用164条/45065字、A9适用165条/45349字、A10适用173条/48299字。未合并/退役，不改预算；需要Dai定：无，合入受阻交运维兜底。
+- active176/正文49391；high108/med44/low24；A8适用164条/45065字、A9适用165条/45349字、A10适用173条/48299字。未合并/退役，不改预算；需要Roy定：无，合入受阻交运维兜底。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update；报告时间2026-10-08 16:00:44 +0800。
 
@@ -31255,7 +31255,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 - 按任务合入冲突/知识重叠/占用即停，保留刷新和源提交，不硬解覆盖；未实际上线，不造decision/eval/Roy通知，交完成事件由运维兜底，不停对局。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (modify/delete): notes/codex-brain-cache-dispatch.json deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b and modified in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb.  Version 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb of notes/codex-brain-cache-dispatch.json left in tree.
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -31306,7 +31306,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 3555.0/4810 | 3550.0/4824 | 9.0 |
 
 - 整体中位2491.0→2529.0，涨38.0字；配对差中位14.0，最大4810→4824，单片最多增75。
-- active176/正文49201；high108/med44/low24；A8适用164条/44875字、A9适用165条/45159字、A10适用173条/48109字。未合并/退役、不改预算；需要Dai定：无，合入受阻交运维兜底。
+- active176/正文49201；high108/med44/low24；A8适用164条/44875字、A9适用165条/45159字、A10适用173条/48109字。未合并/退役、不改预算；需要Roy定：无，合入受阻交运维兜底。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-160331-experience-update；报告时间2026-10-08 16:41:32 +0800。
 
@@ -31942,7 +31942,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 - live流程：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新提交69a7b4414cdbaade679427d96af1a2cbbd04062d；合前69a7b4414cdbaade679427d96af1a2cbbd04062d；实际合入None。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -31983,7 +31983,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 3550.0/4824 | 3570.0/4776 | 13.0 |
 
 - 整体中位2529.0→2569.0，涨40.0字；配对差中位13.0，最大4824→4776，单片最多增67。
-- active176/正文48968；high108/med44/low24；A8适用164条/44642字、A9适用165条/44926字、A10适用173条/47876字。未合并/退役，22条替换/压缩案例净减233字，不改预算。需要Dai定：无。
+- active176/正文48968；high108/med44/low24；A8适用164条/44642字、A9适用165条/44926字、A10适用173条/47876字。未合并/退役，22条替换/压缩案例净减233字，不改预算。需要Roy定：无。
 
 原帧/复算/机制/提案/账本CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-170939-experience-update；报告时间2026-10-08 17:40:26 +0800。
 
@@ -32605,7 +32605,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 - live流程：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新提交None；合前2977ebba7536c274b2bd180d3a87bd1607115d82；实际合入None。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -32646,7 +32646,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 3570.0/4776 | 3570.0/4776 | 0.0 |
 
 - 整体中位2569.0→2505.0，变化-64.0字；配对差中位-16.0，最大4776→4776，单片最多增257。
-- active178/正文49040；high109/med45/low24；A8适用166条/44761字、A9适用167条/45045字、A10适用175条/47948字。无合并/退役，更新案例净压缩366字、新条目438字，需Dai定：无。
+- active178/正文49040；high109/med45/low24；A8适用166条/44761字、A9适用167条/45045字、A10适用175条/47948字。无合并/退役，更新案例净压缩366字、新条目438字，需Roy定：无。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update；报告时间2026-10-08 18:20:32 +0800。
 
@@ -33260,7 +33260,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 3570.0/4776 | 3564.0/4770 | -6.0 |
 
 - 整体中位2505.0→2526.0，涨21.0字；配对差中位-6.0，最大4776→4993，单片最多增286。
-- active180/正文49403；置信度{'low': 25, 'high': 110, 'med': 45}；A8适用167条/44885字、A9适用168条/45169字、A10适用177条/48311字。无合并/退役，未超预算；需Dai定：无。
+- active180/正文49403；置信度{'low': 25, 'high': 110, 'med': 45}；A8适用167条/44885字、A9适用168条/45169字、A10适用177条/48311字。无合并/退役，未超预算；需Roy定：无。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update；报告时间2026-10-08 19:19:54 +0800。
 
@@ -33905,7 +33905,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 3564.0/4770 | 3537.0/4765 | -14.0 |
 
 - 整体中位2526.0→2627.0，涨101.0字；配对差中位2.5，最大4993→4915，单片最多增231。
-- active183/正文49620；置信度{'low': 25, 'high': 111, 'med': 47}；A8适用170条/45201字,A9适用171条/45485字,A10适用180条/48528字。未做预算压缩/合并退役，未超预算。需Dai定：无。
+- active183/正文49620；置信度{'low': 25, 'high': 111, 'med': 47}；A8适用170条/45201字,A9适用171条/45485字,A10适用180条/48528字。未做预算压缩/合并退役，未超预算。需Roy定：无。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-193934-experience-update；报告时间2026-10-08 20:10:20 +0800。
 
@@ -34551,7 +34551,7 @@ SL多次尝试按一场而非多局，实赢次数与判死/实死分开：
 | sample-a9-shop | 3537.0/4765 | 3627.5/4780 | 9.0 |
 
 - 整体中位2627.0→2668.0、涨41.0字；配对差中位5.0，最大4915→4899、单片最多增286。
-- active184/正文49905；置信度{'low': 25, 'high': 112, 'med': 47}；A8适用171条/45486字，A9适用172条/45770字，A10适用181条/48813字。新增/更新范围均沿机制或原策略/统计进阶，低阶背景不作A10因果；无预算合并/退役/压缩，需Dai定：无。
+- active184/正文49905；置信度{'low': 25, 'high': 112, 'med': 47}；A8适用171条/45486字，A9适用172条/45770字，A10适用181条/48813字。新增/更新范围均沿机制或原策略/统计进阶，低阶背景不作A10因果；无预算合并/退役/压缩，需Roy定：无。
 
 原帧/复算/机制/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-201303-experience-update；报告时间2026-10-08 20:40:59 +0800。
 
@@ -35147,11 +35147,11 @@ SL对照：F21两試1赢，首試T2判死而未实际死，第2試能力药→�
 | sample-a9-shop | 3627.5/4780 | 3668.5/4791 | 24.5 |
 
 - 整体中位2655.0→2654.0、涨-1.0字；配对差中位11.0，最大4899→5062、单片最多增268。
-- active185/正文50213字；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用172条/45825字、A9适用173条/46109字、A10适用182条/49121字。范围沿原机制/统计/策略，不由低阶背景立A10因果。无合并/退役/压缩，需Dai定：无。
+- active185/正文50213字；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用172条/45825字、A9适用173条/46109字、A10适用182条/49121字。范围沿原机制/统计/策略，不由低阶背景立A10因果。无合并/退役/压缩，需Roy定：无。
 
 原帧/复算/历史/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update；报告时间2026-10-08 21:29:06 +0800。
 
-上线登记补记（2026-10-08 21:44:26 +0800）：本节前文“待追加上线记录和eval版本”是21:29报告生成时的真实状态，原文及中间报告保持。合后tsc/vitest均退出0，251文件2627例，未重跑；最终live记录提交9949a5dee4e782c9a700a488de86b4edf1a4dd97，唯一S1.exp108指向实际合入11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5，来源f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c。根decision-log与eval版本已登记，notes/for-dai.md及ops/inbox-dev.md逐条旧/新经验、证据/账本、影响与回退通知已追加；根记录仍由调用方提交，数据shipped交运维核实，三独立策略提案不冒称implemented。第一次发布记录因挂载间原子rename的EXDEV失败，版本/通知尚未写入；publish-first-exdev原日志和初稿保留，锁内直接写入重试退出0、gitleaks0。最终报告/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update/report.md及publication.json已更新，原report-before-publication.md及changelog-section-before-publication.md保持。
+上线登记补记（2026-10-08 21:44:26 +0800）：本节前文“待追加上线记录和eval版本”是21:29报告生成时的真实状态，原文及中间报告保持。合后tsc/vitest均退出0，251文件2627例，未重跑；最终live记录提交9949a5dee4e782c9a700a488de86b4edf1a4dd97，唯一S1.exp108指向实际合入11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5，来源f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c。根decision-log与eval版本已登记，notes/for-roy.md及ops/inbox-dev.md逐条旧/新经验、证据/账本、影响与回退通知已追加；根记录仍由调用方提交，数据shipped交运维核实，三独立策略提案不冒称implemented。第一次发布记录因挂载间原子rename的EXDEV失败，版本/通知尚未写入；publish-first-exdev原日志和初稿保留，锁内直接写入重试退出0、gitleaks0。最终报告/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update/report.md及publication.json已更新，原report-before-publication.md及changelog-section-before-publication.md保持。
 
 ## 2026-10-08 静默猎手 第一百零九次增量：2 局 A10（version 2026-10-08.26，分支 exp-silent，5bb99c79）
 
@@ -35765,7 +35765,7 @@ SL实盘对照：族母六试0赢，前五T13/14/13/14/12判死读档，末T12�
 | sample-a9-shop | 3668.5/4791 | 3723.5/4780 | 31.0 |
 
 - 整体中位2674.5→2678.0、涨3.5字；配对差中位20.0，最大5062→5051、单片最多增88。
-- active185/正文50378字符；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用{'entries': 172, 'chars': 45990}；A9适用{'entries': 173, 'chars': 46274}；A10适用{'entries': 182, 'chars': 49286}。没有压缩、预算变更或需Dai定的规则；合入受阻由现行运维兜底流程处理。
+- active185/正文50378字符；置信度{'low': 25, 'high': 113, 'med': 47}；A8适用{'entries': 172, 'chars': 45990}；A9适用{'entries': 173, 'chars': 46274}；A10适用{'entries': 182, 'chars': 49286}。没有压缩、预算变更或需Roy定的规则；合入受阻由现行运维兜底流程处理。
 
 原帧/数字/历史/提案/CLI/测试/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-220306-experience-update；报告时间2026-10-08 22:28:02 +0800。
 
@@ -36392,7 +36392,7 @@ REST/SHOP/普通EVENT按节点入口血档关联下一战，多节点可关联�
 - 账本只经CLI：新增[]；proposed silent-0005,silent-0012,silent-0019,silent-0020,silent-0021,silent-0011,silent-0027,silent-0046,silent-0084,silent-0142,silent-0158,silent-0047,silent-0063,silent-0018,silent-0117,silent-0009,silent-0243,silent-0312；retired[]。18账本覆盖18经验，首证/prior/claim/原support/repeat及旧状态/版本历史保持；0312补11旧局支持、0311纯bug不动。实际数据shipped由运维核live完成事件登记，五提案均未实现。
 - live锁内：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新5c3851eca851731f36d4c5e7f06302e58bfbe1ca；合前5c3851eca851731f36d4c5e7f06302e58bfbe1ca；实际合入None。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -36433,7 +36433,7 @@ REST/SHOP/普通EVENT按节点入口血档关联下一战，多节点可关联�
 | sample-a9-shop | 3723.5/4780 | 3706.5/4785 | 1.0 |
 
 - 整体中位2678.0→2680.5、涨2.5字；配对差中位1.0；最大5051→5056；单片最大增加72。
-- active186，正文50783字符，置信度{'low': 25, 'high': 114, 'med': 47}；A8适用{'entries': 173, 'chars': 46378}；A9适用{'entries': 174, 'chars': 46662}；A10适用{'entries': 183, 'chars': 49691}。无需压缩/合并/预算调整，无需要Dai定的规则。
+- active186，正文50783字符，置信度{'low': 25, 'high': 114, 'med': 47}；A8适用{'entries': 173, 'chars': 46378}；A9适用{'entries': 174, 'chars': 46662}；A10适用{'entries': 183, 'chars': 49691}。无需压缩/合并/预算调整，无需要Roy定的规则。
 
 证据/脚本/切片/提案/CLI/测试/失败日志/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-224303-experience-update；报告时间2026-10-08 23:11:30 +0800。
 
@@ -37058,7 +37058,7 @@ A10墨影策略支持3局/3场18试0赢，各五次判死读档、仅末次实�
 | sample-a9-shop | 3706.5/4785 | 3705.5/4784 | -1.0 |
 
 - 整体中位2680.5→2664.0（-16.5字）；配对差中位-3.0；最大5056→5055，单片最大增加3字。
-- active186，正文50734字符，置信度{'low': 25, 'high': 114, 'med': 47}；A8适用{'entries': 173, 'chars': 46345}；A9适用{'entries': 174, 'chars': 46629}；A10适用{'entries': 183, 'chars': 49642}。无需合并/压缩/预算调整，需要Dai定的规则：无。
+- active186，正文50734字符，置信度{'low': 25, 'high': 114, 'med': 47}；A8适用{'entries': 173, 'chars': 46345}；A9适用{'entries': 174, 'chars': 46629}；A10适用{'entries': 183, 'chars': 49642}。无需合并/压缩/预算调整，需要Roy定的规则：无。
 
 证据、脚本、CLI、提案、测试、原失败日志/初稿、合入回执及报告：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-234302-experience-update。
 
@@ -37713,7 +37713,7 @@ F33T5/T11护栏题面合省22血、少26即时伤，实际分别75→72/18→17�
 | sample-a9-shop | 3705.5/4784 | 3757.5/4805 | 22.5 |
 
 - 整体中位2664.0→2674.5（+10.5字）；配对差中位21.0；最大5055→5096，单片最大增加62字。
-- active186，正文50976字符，置信度{'low': 25, 'high': 115, 'med': 46}；A8适用{'entries': 173, 'chars': 46587}；A9适用{'entries': 174, 'chars': 46871}；A10适用{'entries': 183, 'chars': 49884}。无需压缩/合并/预算调整，需要Dai定的规则：无。
+- active186，正文50976字符，置信度{'low': 25, 'high': 115, 'med': 46}；A8适用{'entries': 173, 'chars': 46587}；A9适用{'entries': 174, 'chars': 46871}；A10适用{'entries': 183, 'chars': 49884}。无需压缩/合并/预算调整，需要Roy定的规则：无。
 
 证据、脚本、提案、CLI、测试、原失败日志/初稿、合入回执及报告：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-001303-experience-update。
 
@@ -38304,7 +38304,7 @@ F33T5/T11护栏题面合省22血、少26即时伤，实际分别75→72/18→17�
 | sample-a9-shop | 3757.5/4805 | 4090.5/5138 | 333.0 |
 
 - 整体中位2662.5→2769.0（+106.5字）；配对差中位13.0；最大5096→5475，单片最大增加379字。
-- active188，正文51768字符，置信度{'low': 25, 'high': 116, 'med': 47}；A8适用{'entries': 175, 'chars': 47345}；A9适用{'entries': 176, 'chars': 47629}；A10适用{'entries': 185, 'chars': 50676}。无需压缩/改预算，需要Dai定的规则：无。
+- active188，正文51768字符，置信度{'low': 25, 'high': 116, 'med': 47}；A8适用{'entries': 175, 'chars': 47345}；A9适用{'entries': 176, 'chars': 47629}；A10适用{'entries': 185, 'chars': 50676}。无需压缩/改预算，需要Roy定的规则：无。
 
 证据、原始子集/字节偏移、616项核验/历史/失败初稿、CLI、提案、测试和合入回执全部留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-005054-experience-update。
 
@@ -38977,7 +38977,7 @@ F33T5/T11护栏题面合省22血、少26即时伤，实际分别75→72/18→17�
 | sample-a9-shop | 4090.5/5138 | 4075.0/5172 | 4.0 |
 
 - 整体中位2769.0→2764.0（-5.0字），配对差中位4.0；最大5475→5431，单片最多增加93、减少737字。
-- active189，正文51252字符，置信度{'low': 25, 'high': 118, 'med': 46}；A8适用{'entries': 176, 'chars': 47578}；A9适用{'entries': 177, 'chars': 47862}；A10适用{'entries': 186, 'chars': 50160}。压缩仅女王条目，未合并或退役，无预算变更；需要Dai定：无。
+- active189，正文51252字符，置信度{'low': 25, 'high': 118, 'med': 46}；A8适用{'entries': 176, 'chars': 47578}；A9适用{'entries': 177, 'chars': 47862}；A10适用{'entries': 186, 'chars': 50160}。压缩仅女王条目，未合并或退役，无预算变更；需要Roy定：无。
 
 压缩前女王六案例原文（完整明细留记录，不下发）：
 观察：A4/A7/A10女王重打中毒防主轴是否实际启动及换线血价，比牌组拥有组件更能描述当场缺口；无胜利对照，不称提前建立必胜。机制：持续毒须建立后才逐轮兑现，少挡换攻击会缩短后续结算窗口；死亡模拟全饱和不能区分实际血价。搭配：按已建毒雾/余像/敏捷核后续伤挡，聚合体/女王净扣血分列。决定胜负的战斗：6场36次零赢，各五次读档、仅末次实死；旧A4的37张初始牌序相同，后续重抽/生成未全部受控（n=6）。典型案例：9YBKCNBFP0X5 F48第4/6次T7同手牌/21血/3敏捷、敌126/305且各7毒，换线挡17→9、净扣29→38、损5→13，下一轮聚合体110→95但女王292→298；两线rollout均24/24死，T9分别14血判死/6血实死，仍未杀任一敌人。 VLV17NUSFS61 A7六次均42/77进场，前五次在T5/T5/T6/T5/T5判死；末次T5实死。首与末次T1净扣37→25，基础抽序相同但背刺被跳过、被动随机分配和后轮行为变化，末次T3损24、T4损11、T5理论8只实扣7。第3次较早建立群蛇/毒雾仍未胜，没有“赢的那次”，不能归胜运气或推出换顺序必胜。 5X2GHKJ89PN1 A10六次49/70、T6止、0赢，clean初38牌同序但到手回合不同。第4/5与末次T4同后空翻后7血4挡3费、聚合体159血1力；末改萎靡X3取代扫腿+X1，T5从8余血变2，实付6血，T6光束33→27仍死。候选五轮推演均24/24死，前五判死末项未结算，不计作零战损；无胜线及单因对照。 新核案例：G33HU22H2543 A10首次81入房、77可操作，五读档恢复77和两药，六试0赢；均闪亮先出、同612敌起血，但后续抽弃/护栏/目标有变。第二试药后闪亮线预测/实损8、余像先候选报0但未执行；三次T4护栏候选少损14、多5当轮伤，代价是当轮没建升级毒雾。末T8两余像共6挡，未来层数不预支；无赢次或同盘完整替代线，不归单因或运气。本批案例：XTSV1U9JD34T A10六试均23/97及幽灵，0赢；第二/四试T3换猎杀者净扣31而药瓶线32、均损22，T4挡9/6均不足16；后轮手牌亦变，无单因胜线。 本批案例：9R916WW0V65N A10 六试0赢，前五判死截断、末T2实死；末T1因SL改双防御为后空翻/生存者，实际26挡，不能把原题24挡当同线误差。末T2魂缚/抽弃/重问后转精准三刀撕咬，原题14挡未执行；没有赢的那次或整场换序对照。
@@ -39607,7 +39607,7 @@ SL同场多试表：按attempt>1识别真正重打，attempts行数与实战COMB
 | sample-a9-shop | 4075.0/5172 | 4052.5/5156 | -16.0 |
 
 - 整体中位2709.0→2693.0（-16.0字），配对差中位0.0；最大5431→5415，单片最多增加41、最少变化-25。
-- active190，正文51354字符，置信度{'low': 26, 'high': 118, 'med': 46}；A8 {'entries': 177, 'chars': 47670}；A9 {'entries': 178, 'chars': 47954}；A10 {'entries': 187, 'chars': 50262}。无需预算压缩/合并/退役；需要Dai定：无。
+- active190，正文51354字符，置信度{'low': 26, 'high': 118, 'med': 46}；A8 {'entries': 177, 'chars': 47670}；A9 {'entries': 178, 'chars': 47954}；A10 {'entries': 187, 'chars': 50262}。无需预算压缩/合并/退役；需要Roy定：无。
 
 ## 2026-10-09 静默猎手 第一百一十六次增量：1 局 A10（version 2026-10-09.5，分支 exp-silent，f002a94f）
 
@@ -40237,7 +40237,7 @@ SL同场多试表：按attempt>1识别真正重打，attempts行数与实战COMB
 | sample-a9-shop | 4052.5/5156 | 4053.0/5211 | 2.0 |
 
 - 整体中位2693.0→2695.0（+2.0字），配对差中位2.0；最大5415→5431，单片最多增加55、最少变化-40。
-- active190，正文51240字符，置信度{'low': 25, 'high': 119, 'med': 46}；A8 {'entries': 177, 'chars': 47594}；A9 {'entries': 178, 'chars': 47878}；A10 {'entries': 187, 'chars': 50148}。无预算压缩/合并/退役，未改测试预算；需要Dai定：无。
+- active190，正文51240字符，置信度{'low': 25, 'high': 119, 'med': 46}；A8 {'entries': 177, 'chars': 47594}；A9 {'entries': 178, 'chars': 47878}；A10 {'entries': 187, 'chars': 50148}。无预算压缩/合并/退役，未改测试预算；需要Roy定：无。
 
 原始证据、复算、核验/失败初稿、提案/CLI、切片、测试和合入回执均留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-031302-experience-update。
 
@@ -40911,7 +40911,7 @@ SL按attempt>1取真正多试房，尝试行不当独立局；赢次只认result
 | sample-a9-reward | 2695.0/3276 | 2726.0/3307 | 31.0 |
 | sample-a9-shop | 4053.0/5211 | 4060.0/5216 | 7.0 |
 - 整体中位2696.0→2729.5（+33.5字），配对差中位21.0；最大5660→5705，单片最多增加74、最少变化-10。
-- active191，正文51680字符，置信度{'low': 25, 'high': 120, 'med': 46}；A8 {'entries': 178, 'chars': 48034}；A9 {'entries': 179, 'chars': 48318}；A10 {'entries': 188, 'chars': 50588}。未压缩/合并/退役或改预算；需要Dai定：无。
+- active191，正文51680字符，置信度{'low': 25, 'high': 120, 'med': 46}；A8 {'entries': 178, 'chars': 48034}；A9 {'entries': 179, 'chars': 48318}；A10 {'entries': 188, 'chars': 50588}。未压缩/合并/退役或改预算；需要Roy定：无。
 
 原始证据、复算、失败初稿、提案/CLI、切片、测试与合入回执均留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-040746-experience-update。
 
@@ -41521,7 +41521,7 @@ SL按attempt>1取真正多试房，尝试行不当独立局；赢次只认result
 - JSON合法，15变更与其余条目逐项等价，角色/evidence/n/name/scope/asc、旧153局七数组/血档/转移/回血/SL与16原帧核验通过；check-experience missing=[]退出0；git diff --check0；gitleaks、ledger check结果以下最终回执为准。
 - 账本新增[]，提交后proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0053,silent-0046,silent-0102,silent-0079,silent-0154,silent-0274,silent-0101,silent-0173,silent-0185,silent-0186,silent-0247,silent-0278,silent-0243，退役[]；不标accepted/shipped。0328重复观察保持observed；0186只追加事实更正，旧首证/prior/版本/原证据历史保持，源码三提案pending。
 - live锁内：锁内合并预检冲突，按任务停止，不实际合并或硬解；合前1a6e9084873fda6447914e89f5f90a906230a142；刷新1a6e9084873fda6447914e89f5f90a906230a142；实际合入None。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -41561,7 +41561,7 @@ SL按attempt>1取真正多试房，尝试行不当独立局；赢次只认result
 | sample-a9-reward | 2726.0/3307 | 2705.0/3277 | -21.0 |
 | sample-a9-shop | 4060.0/5216 | 3907.0/5195 | -21.0 |
 - 整体中位2733.0→2733.0（+0.0字），配对差中位-24.0；最大5705→5646，单片变化最少-382、最多+6。
-- active191，正文51116字，置信度{'low': 25, 'high': 121, 'med': 45}；A8 {'entries': 178, 'chars': 47470}；A9 {'entries': 179, 'chars': 47754}；A10 {'entries': 188, 'chars': 50024}。无预算压缩/合并/退役，不改预算；需要Dai定：无。
+- active191，正文51116字，置信度{'low': 25, 'high': 121, 'med': 45}；A8 {'entries': 178, 'chars': 47470}；A9 {'entries': 179, 'chars': 47754}；A10 {'entries': 188, 'chars': 50024}。无预算压缩/合并/退役，不改预算；需要Roy定：无。
 
 完整原始子集、偏移、复算与失败初稿、提案/CLI、切片和测试回执保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-050455-experience-update。
 
@@ -42197,7 +42197,7 @@ SL按attempt>1取真正多试房，尝试行不当独立局；赢次只认result
 | sample-a9-reward | 2705.0/3277 | 2729.0/3301 | 24.0 |
 | sample-a9-shop | 3907.0/5195 | 3888.0/5206 | 11.0 |
 - 整体中位2733.0→2746.0（+13.0字），配对差中位0.0；最大5646→5657，单片最少-42、最多增加273。
-- active192、正文51373字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47727}；A9 {'entries': 180, 'chars': 48011}；A10 {'entries': 189, 'chars': 50281}。无预算压缩/合并/退役，不改预算；需要Dai定：无。
+- active192、正文51373字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47727}；A9 {'entries': 180, 'chars': 48011}；A10 {'entries': 189, 'chars': 50281}。无预算压缩/合并/退役，不改预算；需要Roy定：无。
 
 原始子集/偏移、复算、提案与CLI、切片、测试、合入预检/失败及完整报告均保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-054302-experience-update。
 
@@ -42806,7 +42806,7 @@ SL按attempt>1取真正多试房，尝试行不当独立局；赢次只认result
 - 账本新增[]，提交后proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0023,silent-0013,silent-0010,silent-0007,silent-0011,silent-0128,silent-0243；退役[]。原claim/首证/prior/support/repeat/旧版本历史保持；实际合入后的数据shipped由运维据完成事件登记，源码提案pending沿独立任务。
 - live锁内结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新3d05e9547eb14400b3fa4c18b1da8efd9817b324；合前3d05e9547eb14400b3fa4c18b1da8efd9817b324；实际合入None。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -42846,7 +42846,7 @@ SL按attempt>1取真正多试房，尝试行不当独立局；赢次只认result
 | sample-a9-reward | 2729.0/3301 | 2711.0/3283 | -18.0 |
 | sample-a9-shop | 3888.0/5206 | 3890.0/5207 | 1.0 |
 - 整体中位2737.5→2719.0（-18.5字），配对差中位1.0；最大5657→5639，单片最少-19、最多增加31。
-- active192、正文51464字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47818}；A9 {'entries': 180, 'chars': 48102}；A10 {'entries': 189, 'chars': 50372}。无压缩/合并/退役，需要Dai定：无。
+- active192、正文51464字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47818}；A9 {'entries': 180, 'chars': 48102}；A10 {'entries': 189, 'chars': 50372}。无压缩/合并/退役，需要Roy定：无。
 
 原始子集、字节偏移、复算、核验、提案/CLI、固定切片、测试、合入预检及报告保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-061302-experience-update。
 
@@ -43489,7 +43489,7 @@ SL按attempt>1取真正多试房，尝试行不当独立局；赢次只认result
 | sample-a9-reward | 2711.0/3283 | 2723.0/3295 | 12.0 |
 | sample-a9-shop | 3890.0/5207 | 3902.0/5219 | 12.0 |
 - 整体中位2711.0→2723.0（+12.0字），配对差中位-5.0；最大5639→5664；单片最少-30、最多增加34。
-- active192，正文51439字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47793}；A9 {'entries': 180, 'chars': 48077}；A10 {'entries': 189, 'chars': 50347}。无预算合并/退役/压缩，需要Dai定：无。
+- active192，正文51439字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47793}；A9 {'entries': 180, 'chars': 48077}；A10 {'entries': 189, 'chars': 50347}。无预算合并/退役/压缩，需要Roy定：无。
 
 原始子集/偏移、复算、核验、提案/CLI、切片、测试、合入预检/失败、报告全部保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-070200-experience-update。
 
@@ -44123,7 +44123,7 @@ SL同房多试，判死截断与实际赢/死分开：
 | sample-a9-reward | 2723.0/3295 | 2729.0/3331 | 6.0 |
 | sample-a9-shop | 3902.0/5219 | 3908.0/5225 | 6.0 |
 - 整体中位2723.0→2729.0（+6.0字），配对差中位17.0，最大5664→5670；单片最少0、最多增加73。
-- active192，正文51606字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47960}；A9 {'entries': 180, 'chars': 48244}；A10 {'entries': 189, 'chars': 50514}。没有预算合并/退役，需要Dai定：无。
+- active192，正文51606字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47960}；A9 {'entries': 180, 'chars': 48244}；A10 {'entries': 189, 'chars': 50514}。没有预算合并/退役，需要Roy定：无。
 
 原始子集/偏移、复算/初稿失败、核验、提案/CLI、切片、测试、合入预检/结果、报告全部保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-073010-experience-update。
 
@@ -44756,7 +44756,7 @@ SL同房多试，判死截断与实际赢/死分开；新局0条、旧汇总不�
 | sample-a9-reward | 2729.0/3331 | 2729.0/3327 | 0.0 |
 | sample-a9-shop | 3908.0/5225 | 4085.0/5225 | 0.0 |
 - 整体中位2729.0→2729.0（+0.0字），配对差中位0.0，最大5670→5688；单片最少-11、最多增加308。
-- active193，正文51873字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48227}；A9 {'entries': 181, 'chars': 48511}；A10 {'entries': 190, 'chars': 50781}。无预算合并/退役/压缩，需要Dai定：无。
+- active193，正文51873字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48227}；A9 {'entries': 181, 'chars': 48511}；A10 {'entries': 190, 'chars': 50781}。无预算合并/退役/压缩，需要Roy定：无。
 
 原始子集/偏移、复算/初稿失败、核验、提案/CLI、切片、测试、合入预检/结果、完整报告全部保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-075800-experience-update。
 
@@ -45368,7 +45368,7 @@ SL一房多试；实际赢、实际死、判死读档截断分开。
 | sample-a9-reward | 2729.0/3327 | 2727.0/3318 | -2.0 |
 | sample-a9-shop | 4085.0/5225 | 4097.0/5223 | -2.0 |
 - 整体中位2729.0→2727.0（-2.0字），配对差中位0.0，最大5688→5686；单片差-16至42。
-- active193，正文51884字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48238}；A9 {'entries': 181, 'chars': 48522}；A10 {'entries': 190, 'chars': 50792}。无预算合并/退役/压缩，需要Dai定：无。
+- active193，正文51884字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48238}；A9 {'entries': 181, 'chars': 48522}；A10 {'entries': 190, 'chars': 50792}。无预算合并/退役/压缩，需要Roy定：无。
 
 原始子集/偏移、复算/初稿、核验、提案/CLI、切片、测试、合入预检/结果和完整报告保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-084302-experience-update。
 
@@ -46022,7 +46022,7 @@ SL多次重打按独立房/记录尝试/赢尝试统计；仅有预演但未实�
 | sample-a9-shop | 4097.0/5223 | 4096.0/5224 | 1.0 |
 
 - 整体中位2727.0→2722.0（-5.0字），配对差中位-5.0，最大5686→5681；单片差-33至17。
-- active193，正文51769字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48114}，A9 {'entries': 181, 'chars': 48398}，A10 {'entries': 190, 'chars': 50677}。无预算合并/退役/压缩；需要Dai定：无。
+- active193，正文51769字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48114}，A9 {'entries': 181, 'chars': 48398}，A10 {'entries': 190, 'chars': 50677}。无预算合并/退役/压缩；需要Roy定：无。
 
 原子集/偏移、复算、初稿和失败、参数核验、提案/CLI、切片、测试、合入预检与完整报告保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-093153-experience-update。
 
@@ -46647,7 +46647,7 @@ SL重打沿同房/记录尝试/赢尝试口径；本局没有SL，未增加新�
 | sample-a9-shop | 4096.0/5224 | 4087.0/5215 | -9.0 |
 
 - 整体中位2722.0→2713.0（-9.0字），配对差中位-1.0，最大5681→5672；单片差-9至18。
-- active 193，正文51853字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48198}，A9 {'entries': 181, 'chars': 48482}，A10 {'entries': 190, 'chars': 50761}。无合并/退役/压缩，需要Dai定：无。
+- active 193，正文51853字符，置信度{'low': 26, 'high': 123, 'med': 44}；A8 {'entries': 180, 'chars': 48198}，A9 {'entries': 181, 'chars': 48482}，A10 {'entries': 190, 'chars': 50761}。无合并/退役/压缩，需要Roy定：无。
 
 全部子集/偏移、旧基线复算、原帧机制、初稿/失败、CLI提案、切片/测试/合入预检和报告保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-101302-experience-update。
 
@@ -47291,7 +47291,7 @@ SL同房多试对照（跟踪单试获胜不算实际重打）。
 | sample-a9-shop | 4087.0/5215 | 4097.0/5206 | -9.0 |
 
 - 整体中位2713.0→2704.0（-9.0字），配对差中位-16.0，最大5672→5662；单片差-61至286。
-- active 194，正文51982字符，置信度{'low': 25, 'high': 124, 'med': 45}；A8 {'entries': 181, 'chars': 48327}，A9 {'entries': 182, 'chars': 48611}，A10 {'entries': 191, 'chars': 50890}。无合并/压缩/退役，需要Dai定：无。
+- active 194，正文51982字符，置信度{'low': 25, 'high': 124, 'med': 45}；A8 {'entries': 181, 'chars': 48327}，A9 {'entries': 182, 'chars': 48611}，A10 {'entries': 191, 'chars': 50890}。无合并/压缩/退役，需要Roy定：无。
 
 全部原件、偏移、旧基线复算、机制/SL参数、初稿/失败、CLI、切片/测试/合入预检和报告保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-104303-experience-update。
 
@@ -47949,7 +47949,7 @@ SL同房多试对照（单试跟踪won不当实际读档）。
 | sample-a9-shop | 4097.0/5206 | 4031.0/5197 | -9.0 |
 
 - 整体中位2704.0→2640.5（-63.5字），配对差中位-16.0，最大5662→5561；单片差-121至248。
-- active 196、总正文52099字符，置信度{'low': 27, 'high': 124, 'med': 45}；A8 {'entries': 182, 'chars': 48242}，A9 {'entries': 183, 'chars': 48526}，A10 {'entries': 193, 'chars': 51007}。无合并/压缩/退役；需要Dai定：无。
+- active 196、总正文52099字符，置信度{'low': 27, 'high': 124, 'med': 45}；A8 {'entries': 182, 'chars': 48242}，A9 {'entries': 183, 'chars': 48526}，A10 {'entries': 193, 'chars': 51007}。无合并/压缩/退役；需要Roy定：无。
 
 全部原件/偏移、基线复算、机制/SL参数、初稿/失败、CLI/提案、切片/测试/合入预检及报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-111625-experience-update。
 
@@ -48688,7 +48688,7 @@ SL重打分阶汇总（只有attempt>1的同房分组）。
 | sample-a9-shop | 4031.0/5197 | 3987.0/5184 | -26.0 |
 
 - 整体中位2640.5→2620.0（-20.5字），配对差中位-40.0，最大5561→5535，单片差-93至13。
-- active196/正文51694字符；置信度{'low': 27, 'high': 124, 'med': 45}；A8 {'entries': 182, 'chars': 47886}，A9 {'entries': 183, 'chars': 48170}，A10 {'entries': 193, 'chars': 50602}。无合并/预算压缩/退役，未知整战因果保留限制；需要Dai定：无。
+- active196/正文51694字符；置信度{'low': 27, 'high': 124, 'med': 45}；A8 {'entries': 182, 'chars': 47886}，A9 {'entries': 183, 'chars': 48170}，A10 {'entries': 193, 'chars': 50602}。无合并/预算压缩/退役，未知整战因果保留限制；需要Roy定：无。
 
 全部原件/偏移、旧基线复算、参数/SL明细、初稿/失败、CLI/提案、切片/测试/合入预检和报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-120922-experience-update。
 
@@ -49362,7 +49362,7 @@ SL分阶汇总：attempt>1的同房分组，真实won尝试单列。
 | sample-a9-shop | 3987.0/5184 | 3996.0/5191 | 12.0 |
 
 - 整体中位2620.0→2636.5（+16.5字），配对差中位+18.0；最大5535→5553，单片差-49至32。
-- active196/正文51397字符；置信度{'low': 27, 'high': 125, 'med': 44}；A8 {'entries': 182, 'chars': 47625}，A9 {'entries': 183, 'chars': 47909}，A10 {'entries': 193, 'chars': 50305}。没有预算压缩/合并/退役；需要Dai定：无。
+- active196/正文51397字符；置信度{'low': 27, 'high': 125, 'med': 44}；A8 {'entries': 182, 'chars': 47625}，A9 {'entries': 183, 'chars': 47909}，A10 {'entries': 193, 'chars': 50305}。没有预算压缩/合并/退役；需要Roy定：无。
 
 原件/偏移/失败/初稿、复算/参数/SL、CLI/提案、切片/测试/合入预检及报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-130839-experience-update。
 
@@ -50055,7 +50055,7 @@ REST/SHOP/EVENT入口血关联下一场；同战可被多节点引用，节点�
 | sample-a9-shop | 3996.0/5191 | 3980.0/5171 | -18.0 |
 
 - 整体中位2636.5→2624.0（-12.5字），配对差中位-6.0；最大5553→5539，单片差-42至13。
-- active196/正文51224字符；置信度{'low': 27, 'high': 126, 'med': 43}；A8 {'entries': 182, 'chars': 47443}，A9 {'entries': 183, 'chars': 47727}，A10 {'entries': 193, 'chars': 50132}。没有预算压缩/合并/退役；需要Dai定：无。
+- active196/正文51224字符；置信度{'low': 27, 'high': 126, 'med': 43}；A8 {'entries': 182, 'chars': 47443}，A9 {'entries': 183, 'chars': 47727}，A10 {'entries': 193, 'chars': 50132}。没有预算压缩/合并/退役；需要Roy定：无。
 
 原件/抽取/失败初稿、复算/参数/SL、CLI/提案、切片/测试/合入预检及报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-140555-experience-update。
 ## 2026-10-09 静默猎手 第一百三十二次增量：1 局 A10（version 2026-10-09.21，分支 exp-silent，6276c272）
@@ -50673,7 +50673,7 @@ SL只统计实际多次尝试；本局同族首试won不算重打。A10数字与
 - 原bash agent/tools/test-sandbox.sh，TMPDIR任务scratch、PATH本机node、SANDBOX_WORKERS=1，固定数据和原排除；tsc 0，vitest 251文件/2627例/退出0，重跑False。未改预算或测试，完整外部检查由调度器续验。
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。新增账本无；proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0079,silent-0128,silent-0196,silent-0169,silent-0278,silent-0243,silent-0142,silent-0007,silent-0235,silent-0253,silent-0149；退役无。只CLI追加，旧claim/首证/prior/版本/支持/反例/repeat历史保持，实际数据shipped交运维核完成事件。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新None，合前c7e1e0ed360c72903c84fb3791cf66c193c369cd，实际合入None，合后沙箱None。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
 - CONFLICT (content): Merge conflict in paper/materials/decision-log.md
 - 未实际合入，冲突按任务停止、待调用方/运维据原件兜底。不硬解、不覆盖刷新，不造上线版本/通知，不停对局。
@@ -50698,7 +50698,7 @@ SL只统计实际多次尝试；本局同族首试won不算重打。A10数字与
 | sample-a9-shop | 3980.0/5171 | 4004.5/5169 | 8.5 |
 
 - 整体中位2624.0→2625.5（+1.5字），配对差中位+23；最大5539→5565，单片差-67至64。
-- active196/正文51120字符；置信度{'low': 27, 'high': 126, 'med': 43}；A8 {'entries': 182, 'chars': 47404}，A9 {'entries': 183, 'chars': 47688}，A10 {'entries': 193, 'chars': 50028}。无预算压缩/合并/退役；需要Dai定：无。
+- active196/正文51120字符；置信度{'low': 27, 'high': 126, 'med': 43}；A8 {'entries': 182, 'chars': 47404}，A9 {'entries': 183, 'chars': 47688}，A10 {'entries': 193, 'chars': 50028}。无预算压缩/合并/退役；需要Roy定：无。
 
 原件/抽取/初稿与失败日志、复算/参数/SL、CLI/提案、切片/测试/合入预检与报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-143948-experience-update。
 ## 2026-10-09 静默猎手 第一百三十三次增量：1 局 A10（version 2026-10-09.22，分支 exp-silent，a8bd4e48）
@@ -51342,7 +51342,7 @@ SL只统计实际多次尝试；本局同族首试won不算重打。A10数字与
 - JSON、diff --check、gitleaks staged与check-experience missing=[]核验；ledger.py check 0。账本新增silent-0341；proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0011,silent-0027,silent-0037,silent-0028,silent-0079,silent-0034,silent-0053,silent-0060,silent-0024,silent-0228,silent-0010,silent-0204,silent-0221,silent-0278,silent-0243,silent-0072,silent-0330,silent-0340,silent-0341；退役无。只经CLI追加，旧claim/首证/prior/版本/support/contradict/repeat保持。
 - live锁内结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；合前da4d8ab7c8888aef6357a298433270c65e5b4848；刷新da4d8ab7c8888aef6357a298433270c65e5b4848；实际合入None；合后沙箱None。
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -51383,7 +51383,7 @@ SL只统计实际多次尝试；本局同族首试won不算重打。A10数字与
 | sample-a9-shop | 4004.5/5169 | 3987.0/5155 | -7.0 |
 
 - 整体中位2645.0→2641.0（-4.0字），配对差中位0.0；最大5565→5501，单片差-88至17。
-- active197/正文51201字符；置信度{'low': 26, 'high': 128, 'med': 43}；A8 {'entries': 183, 'chars': 47471}，A9 {'entries': 184, 'chars': 47755}，A10 {'entries': 194, 'chars': 50109}。无合并/压缩/退役，需要Dai定：无。
+- active197/正文51201字符；置信度{'low': 26, 'high': 128, 'med': 43}；A8 {'entries': 183, 'chars': 47471}，A9 {'entries': 184, 'chars': 47755}，A10 {'entries': 194, 'chars': 50109}。无合并/压缩/退役，需要Roy定：无。
 
 原件/抽取/初稿与失败日志、复算/参数/SL、CLI/提案、切片/测试/合入预检与报告留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-154303-experience-update。
 
@@ -52201,7 +52201,7 @@ SL真正多试按每场max(attempt)>1，首试won跟踪不计重打。全历史�
 | sample-a9-shop | 3987.0/5155 | 4008.0/5183 | 20.0 |
 
 - 整体中位2641.0→2669.0（+28.0字），配对差中位11.0；最大5634→5685，单片差-8至59。
-- active197、总字符51253；置信度{'low': 26, 'high': 128, 'med': 43}；A8 {'entries': 183, 'chars': 47523}，A9 {'entries': 184, 'chars': 47807}，A10 {'entries': 194, 'chars': 50161}。无合并/压缩/退役；需要Dai定：无。
+- active197、总字符51253；置信度{'low': 26, 'high': 128, 'med': 43}；A8 {'entries': 183, 'chars': 47523}，A9 {'entries': 184, 'chars': 47807}，A10 {'entries': 194, 'chars': 50161}。无合并/压缩/退役；需要Roy定：无。
 
 原件/抽取/历史基线、初稿/失败日志、血档/节点/SL、CLI/提案、切片/测试/合入预检及报告保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-163856-experience-update。
 
@@ -53000,7 +53000,7 @@ SL真正多试按同房max(attempt)>1，首试胜的跟踪不算重打。逐轮�
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新None，合前2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328，实际合入None，合后测试None。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (modify/delete): notes/silent-historical-core-builds-dispatch.json deleted in 2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328 and modified in 05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051.  Version 05212bb1ef04fea3fa3b3e7f4df65ba5c8fa4051 of notes/silent-historical-core-builds-dispatch.json left in tree.
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -53029,7 +53029,7 @@ SL真正多试按同房max(attempt)>1，首试胜的跟踪不算重打。逐轮�
 | sample-a9-shop | 4008.0/5183 | 3977.5/5069 | -25.0 |
 
 - 整体中位2669.0→2644.0（-25.0字）；配对差中位-39.0；最大5685→5669，单片差-114至6。
-- active197，总字符50457；置信度{'low': 26, 'high': 129, 'med': 42}；A8 {'entries': 183, 'chars': 46736}，A9 {'entries': 184, 'chars': 47020}，A10 {'entries': 194, 'chars': 49365}。需要Dai定：无。
+- active197，总字符50457；置信度{'low': 26, 'high': 129, 'med': 42}；A8 {'entries': 183, 'chars': 46736}，A9 {'entries': 184, 'chars': 47020}，A10 {'entries': 194, 'chars': 49365}。需要Roy定：无。
 
 完整复算/原始抽取/前后经验/历史机制/SL逐轮/CLI提案/切片/测试/合入预检及失败原件保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-180727-experience-update。
 
@@ -53622,7 +53622,7 @@ SL真正多试按同房max(attempt)>1，首试胜的跟踪不算重打。逐轮�
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。新增账本[]，proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0253,silent-0330,silent-0280,silent-0235,silent-0129,silent-0221,silent-0132,silent-0160,silent-0161,silent-0168,silent-0106,silent-0243,silent-0343，退役无。只CLI追加、保留旧claim/首证/prior/状态和版本历史；shipped交实际合入后的运维核登记。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新29cd6a323692e1b22d084fb523758b3865ac5810；合前29cd6a323692e1b22d084fb523758b3865ac5810；实际合入None；合后测试None。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -53662,7 +53662,7 @@ SL真正多试按同房max(attempt)>1，首试胜的跟踪不算重打。逐轮�
 | sample-a9-shop | 3977.5/5069 | 3868.5/4970 | -103.5 |
 
 - 整体中位2644.0→2661.0（+17.0字），配对差中位-50.0；最大5669→5528，单片差-170至254。
-- active198，总字符50292；置信度{'low': 26, 'high': 129, 'med': 43}；A8 {'entries': 184, 'chars': 46607}，A9 {'entries': 185, 'chars': 46891}，A10 {'entries': 196, 'chars': 49464}。需要Dai定：无。
+- active198，总字符50292；置信度{'low': 26, 'high': 129, 'med': 43}；A8 {'entries': 184, 'chars': 46607}，A9 {'entries': 185, 'chars': 46891}，A10 {'entries': 196, 'chars': 49464}。需要Roy定：无。
 
 全部脚本、原抽取/偏移、基线重算、机制/SL参数、账本/提案CLI、前后经验/切片、测试与合入预检/失败原件保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-184303-experience-update。
 
@@ -54266,7 +54266,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 - 原bash agent/tools/test-sandbox.sh，TMPDIR指定scratch、PATH本机node、SANDBOX_WORKERS=1，固定数据/固定排除名单。tsc 0；vitest 251文件/2627用例/退出0；失败重跑False。最终两处案例/分源文字精确化后，同沙箱入口经验/路径补验记录{'tsc': 0, 'vitest': 0, 'file_runs': 3, 'case_runs': 31}；外部完整套件由调度器按完成事件补跑。
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。新增账本无；proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0011,silent-0025,silent-0027,silent-0023,silent-0024,silent-0049,silent-0053,silent-0010,silent-0253,silent-0278,silent-0240,silent-0243,silent-0018,silent-0307；退役无。仅CLI追加，保留旧claim/首证/prior/状态历史/版本；实际合入后shipped由运维核登记。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新42112f9e3e0b31a868b5a1ffe380c9df1f1aad67；合前42112f9e3e0b31a868b5a1ffe380c9df1f1aad67；实际合入None；合后测试None。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -54307,7 +54307,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 | sample-a9-shop | 3921.0/4970 | 3881.0/4966 | -31.0 |
 
 - 整体中位2707.5→2679.0（-28.5字），配对差中位-25.0；最大5528→5491，单片差范围[-134, 22]。
-- active198，总字符49916，置信度{'low': 26, 'high': 129, 'med': 43}；A8 {'entries': 184, 'chars': 46231}，A9 {'entries': 185, 'chars': 46515}，A10 {'entries': 196, 'chars': 49088}。需要Dai定：无。
+- active198，总字符49916，置信度{'low': 26, 'high': 129, 'med': 43}；A8 {'entries': 184, 'chars': 46231}，A9 {'entries': 185, 'chars': 46515}，A10 {'entries': 196, 'chars': 49088}。需要Roy定：无。
 
 全部原抽取/偏移、历史基线/参数/复盘筛读、前后经验/切片、CLI、提案、测试和合入预检/失败原件保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-193738-experience-update。
 
@@ -54889,7 +54889,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 - 原bash agent/tools/test-sandbox.sh、TMPDIR指定scratch、PATH本机node、SANDBOX_WORKERS=1、固定数据及排除名单；tsc 0；vitest 251文件/2627用例/退出0；重跑False。沙箱外完整套件由调度器按完成事件补跑。
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均退出0；ledger.py check 0。新增账本无；改proposed silent-0019,silent-0020,silent-0021,silent-0012,silent-0015,silent-0011,silent-0025,silent-0133,silent-0222,silent-0134,silent-0242,silent-0289,silent-0307,silent-0345；退役无；保留旧claim/first_run/prior及历史。实际shipped由运维核实。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新a8bb1ebe5e3aed093914622da19bab5d40bfaccb；合前a8bb1ebe5e3aed093914622da19bab5d40bfaccb；实际合入None；合后测试None。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -54929,7 +54929,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 | sample-a9-shop | 3881.0/4966 | 4019.0/4940 | 15.0 |
 
 - 整体中位2656.0→2738.5（+82.5字），配对差中位4.0；最大5450→5465，单片差范围[-26, 302]。
-- active199、总字符50021，置信度{'low': 25, 'high': 129, 'med': 45}；A8 {'entries': 185, 'chars': 46336}，A9 {'entries': 186, 'chars': 46620}，A10 {'entries': 197, 'chars': 49193}。预算内，无需Dai另定。
+- active199、总字符50021，置信度{'low': 25, 'high': 129, 'med': 45}；A8 {'entries': 185, 'chars': 46336}，A9 {'entries': 186, 'chars': 46620}，A10 {'entries': 197, 'chars': 49193}。预算内，无需Roy另定。
 
 全部原始抽取/偏移、历史基线/机制、前后经验/切片、CLI和提案、测试及合入预检原件保存于/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update。
 
@@ -55707,7 +55707,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。账本新增无，proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0025,silent-0013,silent-0046,silent-0010,silent-0158,silent-0162,silent-0233,silent-0259,silent-0243,silent-0276,silent-0253,silent-0312,silent-0348，退役无；旧claim/首证/prior/历史保持，实际shipped由运维核。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新ee17a8e20d38400846031bc86e05cec071c1380b；合前ee17a8e20d38400846031bc86e05cec071c1380b；实际合入None；合后测试None。
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -55748,7 +55748,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 | sample-a9-shop | 4019.0/4940 | 4016.0/5197 | -3.0 |
 
 - 整体中位2739.0→2777.5（+38.5字），配对差中位-3.0；最大5465→5462，单片差范围[-101, 308]。
-- active200、总字符49840，置信度{'low': 25, 'high': 129, 'med': 46}；A8 {'entries': 186, 'chars': 46155}，A9 {'entries': 187, 'chars': 46439}，A10 {'entries': 198, 'chars': 49012}。需要Dai定：无。
+- active200、总字符49840，置信度{'low': 25, 'high': 129, 'med': 46}；A8 {'entries': 186, 'chars': 46155}，A9 {'entries': 187, 'chars': 46439}，A10 {'entries': 198, 'chars': 49012}。需要Roy定：无。
 
 全部原件、前后经验/切片、基线/公式/历史SL、CLI/提案、测试、合入预检与报告保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update。
 
@@ -56521,7 +56521,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 - JSON、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。新增无，proposed silent-0019,silent-0020,silent-0021,silent-0057,silent-0012,silent-0046,silent-0013,silent-0253,silent-0023,silent-0027,silent-0025,silent-0255,silent-0243,silent-0278，退役无，旧claim/first_run/prior保留；shipped由运维核实际发布。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新ab090c3e4029315d3ff0afdef7bb0225805cbb51；合前ab090c3e4029315d3ff0afdef7bb0225805cbb51；实际合入None；合后测试None。
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -56562,7 +56562,7 @@ REST/SHOP/普通EVENT入口血档与下一战：n是节点，同一后战可有�
 | sample-a9-shop | 4016.0/5197 | 3999.5/5191 | -6.0 |
 
 - 整体中位2777.5→2768.5（-9.0字），配对差中位-5.0；最大5462→5469，单片差范围[-69, 7]。
-- active200、总字符49723，置信度{'low': 25, 'high': 129, 'med': 46}；A8 {'entries': 186, 'chars': 46038}，A9 {'entries': 187, 'chars': 46322}，A10 {'entries': 198, 'chars': 48895}。需要Dai定：无；合入冲突按既有运维兜底流程。
+- active200、总字符49723，置信度{'low': 25, 'high': 129, 'med': 46}；A8 {'entries': 186, 'chars': 46038}，A9 {'entries': 187, 'chars': 46322}，A10 {'entries': 198, 'chars': 48895}。需要Roy定：无；合入冲突按既有运维兜底流程。
 
 全部原件/失败日志/脚本/前后经验与切片/统计/CLI/提案/测试/合入预检保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-214304-experience-update。
 
@@ -57285,7 +57285,7 @@ SL天然对照：按同run同floor去重，多次尝试逐阶分列；共同抽�
 | sample-a9-shop | 3999.5/5191 | 3980.5/5189 | -19.0 |
 
 - 整体中位2768.5→2764.0（-4.5字），配对差中位-8.0；最大5469→5433，单片差范围[-88, 263]。
-- active201、总字符49370，置信度{'low': 26, 'high': 129, 'med': 46}；A8 {'entries': 187, 'chars': 45685}，A9 {'entries': 188, 'chars': 45969}，A10 {'entries': 199, 'chars': 48542}。需要Dai定：无。
+- active201、总字符49370，置信度{'low': 26, 'high': 129, 'med': 46}；A8 {'entries': 187, 'chars': 45685}，A9 {'entries': 188, 'chars': 45969}，A10 {'entries': 199, 'chars': 48542}。需要Roy定：无。
 
 全部原件、失败日志、前后经验/切片、数据脚本、历史SL对照、CLI/提案、测试和合入预检保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-224303-experience-update。
 
@@ -58083,10 +58083,10 @@ SL多次尝试：同run/floor去重，原记录共同抽牌前缀不等完整同
 - 原bash tools/test-sandbox.sh，TMPDIR指定scratch、PATH本机node，固定数据和原排除名单；tsc 0，vitest 255文件/2637用例/退出0，重跑True。原工作树首轮tsc0/vitest1：253文件2625用例通过，唯一check-imports因旧任务test-checkout/logs/logs悬空路径ENOENT失败，原日志/退出保留。scratch隔离副本1190个跟踪源码/任务文件逐SHA一致，知识为同文件；仅忽略的历史learner/runs产出不进入源码扫描，原测试/脚本/固定排除名单和预算保持。完整外部套件由调度器按完成事件补跑。
 - JSON、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check0。账本新增无、proposed silent-0019,silent-0020,silent-0021,silent-0057,silent-0125,silent-0012,silent-0005,silent-0028,silent-0027,silent-0045,silent-0084,silent-0129,silent-0083,silent-0046,silent-0259,silent-0243,silent-0350,silent-0356、退役无；旧claim/first_run/prior/history保持，实际合入shipped交运维核。
 - 锁内live：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新None；合前6365c734f02d8cb9e9a5262cd381f457d53a6186；实际合入None；合后测试None。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
 - CONFLICT (content): Merge conflict in paper/materials/decision-log.md
-- 按任务冲突停止，不覆盖刷新或硬解，不造上线记录/eval版本。源提交、账本、提案和预检交调用方/运维兜底，未合入；无需Dai重定已授权规则。
+- 按任务冲突停止，不覆盖刷新或硬解，不造上线记录/eval版本。源提交、账本、提案和预检交调用方/运维兜底，未合入；无需Roy重定已授权规则。
 
 ### 切片大小
 
@@ -58108,7 +58108,7 @@ SL多次尝试：同run/floor去重，原记录共同抽牌前缀不等完整同
 | sample-a9-shop | 3980.5/5189 | 3991.5/5160 | 4.0 |
 
 - 整体中位2764.0→2749.0（-15.0字），配对差中位-2.0；最大5433→5437，单片差范围[-55, 238]。
-- active202、总字符49379，置信度{'low': 26, 'high': 129, 'med': 47}；A8 {'entries': 187, 'chars': 45505}，A9 {'entries': 188, 'chars': 45789}，A10 {'entries': 200, 'chars': 48551}。需要Dai定：无。
+- active202、总字符49379，置信度{'low': 26, 'high': 129, 'med': 47}；A8 {'entries': 187, 'chars': 45505}，A9 {'entries': 188, 'chars': 45789}，A10 {'entries': 200, 'chars': 48551}。需要Roy定：无。
 
 全部原件/失败日志/数据脚本/前后经验与切片/CLI/提案/测试及合入预检保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-234304-experience-update。
 
@@ -58906,7 +58906,7 @@ SL：同run/floor去重，TD1跨进程第二试沿旧重建保留；共同记录
 - 锁内live：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新None；合前4cc52f9ab83f9d0fca70c047813ae379cc44c20f；实际合入None；合后测试None。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
 - CONFLICT (content): Merge conflict in paper/data/README.md
@@ -58924,7 +58924,7 @@ SL：同run/floor去重，TD1跨进程第二试沿旧重建保留；共同记录
 - CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md
 - CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl
 - CONFLICT (content): Merge conflict in paper/materials/silent/cost.md
-- 按任务冲突停止、不覆盖刷新/不硬解，不造上线记录/eval版本。源提交、账本、提案及预检交调用方/运维兜底；未合入。无需Dai重定已授权规则。
+- 按任务冲突停止、不覆盖刷新/不硬解，不造上线记录/eval版本。源提交、账本、提案及预检交调用方/运维兜底；未合入。无需Roy重定已授权规则。
 
 ### 切片大小
 
@@ -58946,7 +58946,7 @@ SL：同run/floor去重，TD1跨进程第二试沿旧重建保留；共同记录
 | sample-a9-shop | 3991.5/5160 | 3971.5/4983 | 0.0 |
 
 - 整体中位2749.0→2770.0（+21.0字），配对差中位0.0；最大5437→5437，单片差范围[-177, 21]。
-- active202、总字符49172，置信度{'low': 25, 'high': 129, 'med': 48}；A8 {'entries': 187, 'chars': 45319}，A9 {'entries': 188, 'chars': 45603}，A10 {'entries': 200, 'chars': 48344}。需要Dai定：无。
+- active202、总字符49172，置信度{'low': 25, 'high': 129, 'med': 48}；A8 {'entries': 187, 'chars': 45319}，A9 {'entries': 188, 'chars': 45603}，A10 {'entries': 200, 'chars': 48344}。需要Roy定：无。
 
 全部数据脚本/前后经验/原始偏移/提案/CLI/失败日志/切片/测试及合入预检保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-004303-experience-update。
 
@@ -59661,7 +59661,7 @@ SL：跨进程TD1旧标签缺失重建沿上节；记录多次尝试不冒称每
 
 - {'tsc': 0, 'vitest': 0, 'files': 258, 'cases': 2654, 'retried': True, 'note': '原入口线程池停在RUN后无用例结果，定向中断exit130；1195跟踪文件逐SHA相同副本原入口重跑timeout124。追加--pool参数尝试exit1（重复选项）。单fork经验库10例exit0；单fork全量复验无用例失败但超过600秒截断exit124；最终双fork scratch运行器仅把首池threads换forks，tsc/固定排除名单/预算/全部测试与原入口相同，源脚本与副本跟踪文件未改，最多两测试子进程；完整沙箱可跑集及paths均exit0。日志/失败/适配SHA全部保留；原线程入口没有通过结果，不冒报原线程池成功。完整外部检查由实际合入后的调度器补跑。'}
 - 原bash tools/test-sandbox.sh，固定数据、原排除名单，PATH本机node/TMPDIR本任务scratch/最终SANDBOX_WORKERS=2/paths单fork；无npm install/模拟池。JSON合法、check-experience退出0；提交前gitleaks按实际结果留日志。
-- 合入结果：{'source': 'bc7abf3c6bff9ba34e43c22b9fd665237f1e2369', 'branch': 'exp-silent', 'merged': None, 'refresh': '334d51498e6b552d2370b05b230a13dfc3b765ea', 'pre': '334d51498e6b552d2370b05b230a13dfc3b765ea', 'tests': None, 'initial': '89e1bc6237bac474d0af74d9fe10407ea5b79f3c', 'initial_status': ' M knowledge/characters/silent/monster-records.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n', 'refresh_paths': ['knowledge/characters/silent/monster-records.json', 'knowledge/common/card-upgrades.json', 'knowledge/common/monster-db.json', 'knowledge/common/move-model.json'], 'live_knowledge_paths': ['knowledge/characters/silent/boss-damage.json', 'knowledge/characters/silent/fight-value-gates.json', 'knowledge/characters/silent/fight-value.json', 'knowledge/characters/silent/monster-records.json', 'knowledge/characters/silent/outcome-stats.json', 'knowledge/characters/silent/room-costs.json', 'knowledge/common/card-upgrades.json', 'knowledge/common/monster-db.json', 'knowledge/common/move-model.json'], 'branch_knowledge_paths': ['knowledge/characters/silent/experience.json'], 'knowledge_overlap': [], 'result': '锁内合并预检冲突，按任务停止，不实际合并或硬解', 'conflicts': ['CONFLICT (content): Merge conflict in eval/versions.json', 'CONFLICT (content): Merge conflict in notes/fix-queue-v4.md', 'CONFLICT (content): Merge conflict in notes/for-dai.md', 'CONFLICT (content): Merge conflict in notes/lessons.md', 'CONFLICT (content): Merge conflict in ops/inbox-dev.md', 'CONFLICT (content): Merge conflict in paper/data/README.md', 'CONFLICT (content): Merge conflict in paper/data/commits.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-sources.json', 'CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv', 'CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv', 'CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/runs.csv', 'CONFLICT (content): Merge conflict in paper/data/summary.json', 'CONFLICT (content): Merge conflict in paper/data/verification.json', 'CONFLICT (content): Merge conflict in paper/materials/decision-log.md', 'CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md', 'CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl', 'CONFLICT (content): Merge conflict in paper/materials/silent/cost.md']}
+- 合入结果：{'source': 'bc7abf3c6bff9ba34e43c22b9fd665237f1e2369', 'branch': 'exp-silent', 'merged': None, 'refresh': '334d51498e6b552d2370b05b230a13dfc3b765ea', 'pre': '334d51498e6b552d2370b05b230a13dfc3b765ea', 'tests': None, 'initial': '89e1bc6237bac474d0af74d9fe10407ea5b79f3c', 'initial_status': ' M knowledge/characters/silent/monster-records.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n', 'refresh_paths': ['knowledge/characters/silent/monster-records.json', 'knowledge/common/card-upgrades.json', 'knowledge/common/monster-db.json', 'knowledge/common/move-model.json'], 'live_knowledge_paths': ['knowledge/characters/silent/boss-damage.json', 'knowledge/characters/silent/fight-value-gates.json', 'knowledge/characters/silent/fight-value.json', 'knowledge/characters/silent/monster-records.json', 'knowledge/characters/silent/outcome-stats.json', 'knowledge/characters/silent/room-costs.json', 'knowledge/common/card-upgrades.json', 'knowledge/common/monster-db.json', 'knowledge/common/move-model.json'], 'branch_knowledge_paths': ['knowledge/characters/silent/experience.json'], 'knowledge_overlap': [], 'result': '锁内合并预检冲突，按任务停止，不实际合并或硬解', 'conflicts': ['CONFLICT (content): Merge conflict in eval/versions.json', 'CONFLICT (content): Merge conflict in notes/fix-queue-v4.md', 'CONFLICT (content): Merge conflict in notes/for-roy.md', 'CONFLICT (content): Merge conflict in notes/lessons.md', 'CONFLICT (content): Merge conflict in ops/inbox-dev.md', 'CONFLICT (content): Merge conflict in paper/data/README.md', 'CONFLICT (content): Merge conflict in paper/data/commits.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-sources.json', 'CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv', 'CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv', 'CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/runs.csv', 'CONFLICT (content): Merge conflict in paper/data/summary.json', 'CONFLICT (content): Merge conflict in paper/data/verification.json', 'CONFLICT (content): Merge conflict in paper/materials/decision-log.md', 'CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md', 'CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl', 'CONFLICT (content): Merge conflict in paper/materials/silent/cost.md']}
 
 ### 切片大小
 
@@ -59682,7 +59682,7 @@ SL：跨进程TD1旧标签缺失重建沿上节；记录多次尝试不冒称每
 | sample-a9-shop | 3971.5/4983 | 3962.5/4978 | -5.0 |
 
 - 整体中位2770.0→2750.0（-20.0字），配对差中位-9.0；最大5437→5424，单片差[-230,8]。
-- active202、总字符48778，置信度{'low': 25, 'high': 129, 'med': 48}；A8/A9/A10适用{'8': {'entries': 187, 'chars': 44917}, '9': {'entries': 188, 'chars': 45201}, '10': {'entries': 200, 'chars': 47950}}。需要Dai定：无。
+- active202、总字符48778，置信度{'low': 25, 'high': 129, 'med': 48}；A8/A9/A10适用{'8': {'entries': 187, 'chars': 44917}, '9': {'entries': 188, 'chars': 45201}, '10': {'entries': 200, 'chars': 47950}}。需要Roy定：无。
 
 全部原件/偏移/复算/前后经验/失败初稿/提案/CLI/切片/测试/合入预检保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-014303-experience-update。
 
@@ -60418,7 +60418,7 @@ SL各进阶分开：跨进程TD1旧标签缺失重建沿上节，不冒称每组
 
 - {'tsc': 0, 'vitest': 0, 'files': 258, 'cases': 2654, 'retried': True, 'entry': '未经修改的原tools/test-sandbox.sh，1195跟踪文件逐SHA相同副本，原线程池4worker/原排除/paths单fork', 'original_exits': [124, 124, 1], 'mirror_native_exit': 0, 'mirror_forks_exit': 0, 'diagnostic_cases': 10, 'note': '原目录前两次180/120秒未完成；第三次完整256文件2642例过、1失败为导入检查遍历旧忽略scratch软链接导致ENOENT。旧目录/软链接/失败原件保持，不改源码、排除名单或预算。原脚本镜像完整退出0、258文件2654例；同源码副本两fork完整检查也0。实际合入后调度器补外部完整检查。'}
 - JSON合法；check-experience missing=[]/退出0，原固定测试数据、PATH本机node/TMPDIR任务目录、nice低优先级，无npm install/模拟池。提交前gitleaks日志留盘。
-- 合入结果：{'source': 'c038a34b8ae78bf596371c851207d6dfcb2c3bb0', 'branch': 'exp-silent', 'merged': None, 'refresh': None, 'pre': '157808e1e302fcf56a4c12266e3e999fb6d3c73d', 'tests': None, 'initial': '157808e1e302fcf56a4c12266e3e999fb6d3c73d', 'initial_status': ' M notes/fight-value-backtest-silent.md\n', 'refresh_paths': [], 'live_knowledge_paths': ['knowledge/characters/silent/boss-damage.json', 'knowledge/characters/silent/fight-value-gates.json', 'knowledge/characters/silent/fight-value.json', 'knowledge/characters/silent/monster-records.json', 'knowledge/characters/silent/outcome-stats.json', 'knowledge/characters/silent/room-costs.json', 'knowledge/common/card-upgrades.json', 'knowledge/common/monster-db.json', 'knowledge/common/move-model.json'], 'branch_knowledge_paths': ['knowledge/characters/silent/experience.json'], 'knowledge_overlap': [], 'result': '锁内合并预检冲突，按任务停止，不实际合并或硬解', 'conflicts': ['CONFLICT (content): Merge conflict in eval/versions.json', 'CONFLICT (content): Merge conflict in notes/fix-queue-v4.md', 'CONFLICT (content): Merge conflict in notes/for-dai.md', 'CONFLICT (content): Merge conflict in notes/lessons.md', 'CONFLICT (content): Merge conflict in ops/inbox-dev.md', 'CONFLICT (content): Merge conflict in paper/data/README.md', 'CONFLICT (content): Merge conflict in paper/data/commits.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-sources.json', 'CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv', 'CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv', 'CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/runs.csv', 'CONFLICT (content): Merge conflict in paper/data/summary.json', 'CONFLICT (content): Merge conflict in paper/data/verification.json', 'CONFLICT (content): Merge conflict in paper/materials/decision-log.md', 'CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md', 'CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl', 'CONFLICT (content): Merge conflict in paper/materials/silent/cost.md']}
+- 合入结果：{'source': 'c038a34b8ae78bf596371c851207d6dfcb2c3bb0', 'branch': 'exp-silent', 'merged': None, 'refresh': None, 'pre': '157808e1e302fcf56a4c12266e3e999fb6d3c73d', 'tests': None, 'initial': '157808e1e302fcf56a4c12266e3e999fb6d3c73d', 'initial_status': ' M notes/fight-value-backtest-silent.md\n', 'refresh_paths': [], 'live_knowledge_paths': ['knowledge/characters/silent/boss-damage.json', 'knowledge/characters/silent/fight-value-gates.json', 'knowledge/characters/silent/fight-value.json', 'knowledge/characters/silent/monster-records.json', 'knowledge/characters/silent/outcome-stats.json', 'knowledge/characters/silent/room-costs.json', 'knowledge/common/card-upgrades.json', 'knowledge/common/monster-db.json', 'knowledge/common/move-model.json'], 'branch_knowledge_paths': ['knowledge/characters/silent/experience.json'], 'knowledge_overlap': [], 'result': '锁内合并预检冲突，按任务停止，不实际合并或硬解', 'conflicts': ['CONFLICT (content): Merge conflict in eval/versions.json', 'CONFLICT (content): Merge conflict in notes/fix-queue-v4.md', 'CONFLICT (content): Merge conflict in notes/for-roy.md', 'CONFLICT (content): Merge conflict in notes/lessons.md', 'CONFLICT (content): Merge conflict in ops/inbox-dev.md', 'CONFLICT (content): Merge conflict in paper/data/README.md', 'CONFLICT (content): Merge conflict in paper/data/commits.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/cost-sources.json', 'CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv', 'CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv', 'CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv', 'CONFLICT (content): Merge conflict in paper/data/runs.csv', 'CONFLICT (content): Merge conflict in paper/data/summary.json', 'CONFLICT (content): Merge conflict in paper/data/verification.json', 'CONFLICT (content): Merge conflict in paper/materials/decision-log.md', 'CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md', 'CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl', 'CONFLICT (content): Merge conflict in paper/materials/silent/cost.md']}
 
 ### 切片大小
 
@@ -60439,7 +60439,7 @@ SL各进阶分开：跨进程TD1旧标签缺失重建沿上节，不冒称每组
 | sample-a9-shop | 3962.5/4978 | 3978.5/4992 | 14.0 |
 
 - 整体中位2750.0→2767.0（+17.0字）、配对差中位14.0；最大5424→5442，单片差[-3,240]。
-- active203、总字符49078；置信度{'low': 25, 'high': 129, 'med': 49}；A8/A9/A10适用{'8': {'entries': 188, 'chars': 45217}, '9': {'entries': 189, 'chars': 45501}, '10': {'entries': 201, 'chars': 48250}}。需要Dai定：无。
+- active203、总字符49078；置信度{'low': 25, 'high': 129, 'med': 49}；A8/A9/A10适用{'8': {'entries': 188, 'chars': 45217}, '9': {'entries': 189, 'chars': 45501}, '10': {'entries': 201, 'chars': 48250}}。需要Roy定：无。
 
 所有原件、失败、初稿、偏移、复算、前后经验、提案、CLI、切片、自测与合入现场保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-024302-experience-update。
 
@@ -61198,7 +61198,7 @@ HEAL与SL分阶汇总：
 | sample-a9-shop | 3978.5/4992 | 3948.5/4975 | -27.5 |
 
 - 整体中位2767.0→2780.0（+13.0字），配对差中位-3.0；最大5442→5398。
-- active203、正文48512；置信度{'low': 25, 'high': 129, 'med': 49}；A8/A9/A10适用{'8': {'entries': 188, 'chars': 44716}, '9': {'entries': 189, 'chars': 45000}, '10': {'entries': 201, 'chars': 47684}}。需要Dai定：无。
+- active203、正文48512；置信度{'low': 25, 'high': 129, 'med': 49}；A8/A9/A10适用{'8': {'entries': 188, 'chars': 44716}, '9': {'entries': 189, 'chars': 45000}, '10': {'entries': 201, 'chars': 47684}}。需要Roy定：无。
 
 所有原件、失败、初稿、偏移、复算、前后经验、提案、CLI、切片、自测及合入现场保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-061301-experience-update。
 
@@ -61945,7 +61945,7 @@ A10逐boss矩阵按纯Codex/其他脑来源分开，只读原矩阵重新核分�
 
 - 固定数据、nice低优先级、PATH本机node/TMPDIR任务目录；原沙箱固定排除及paths单fork保持，未npm install。JSON合法、check-experience missing=[]/0、ledger.py check/0、提交前gitleaks/0。
 - 实际自测：{"tsc": 0, "vitest": 0, "files": 259, "cases": 2662, "retried": true, "entry": "未经修改的原tools/test-sandbox.sh；1198份跟踪文件逐SHA相同隔离副本；四线程、固定排除、paths单fork", "source_attempt": {"tsc": 0, "vitest": 1, "files_passed": 257, "cases_passed": 2650, "failed_cases": 1, "reason": "导入检查遍历旧忽略任务失效软链接ENOENT；原日志保留"}, "mirror_exit": 0, "source_log": "learner/runs/20261010-084220-experience-update/test-source-1.log", "pass_log": "learner/runs/20261010-084220-experience-update/test-mirror-1.log", "host_full_suite": "待调度器learner-checks"}。失败/重试原件不覆盖；沙箱外完整检查待原experience-done/learner-checks链，不冒报完整宿主验收。
-- 合入事实：{"source": "d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2", "branch": "exp-silent", "merged": null, "refresh": "94ead4ae573dbc956ef3b916bcbca1f85ddf97a1", "pre": "94ead4ae573dbc956ef3b916bcbca1f85ddf97a1", "tests": null, "initial": "98c8ce27985782c99e1e71594c103c3b9da3e23d", "initial_status": " M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/fight-value.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n", "refresh_paths": ["knowledge/characters/silent/boss-damage.json", "knowledge/characters/silent/fight-value-gates.json", "knowledge/characters/silent/fight-value.json", "knowledge/characters/silent/monster-records.json", "knowledge/characters/silent/outcome-stats.json", "knowledge/characters/silent/room-costs.json", "knowledge/common/card-upgrades.json", "knowledge/common/monster-db.json", "knowledge/common/move-model.json"], "live_knowledge_paths": ["knowledge/characters/silent/boss-damage.json", "knowledge/characters/silent/boss-trust.json", "knowledge/characters/silent/experience.json", "knowledge/characters/silent/fight-value-gates.json", "knowledge/characters/silent/fight-value.json", "knowledge/characters/silent/monster-records.json", "knowledge/characters/silent/outcome-stats.json", "knowledge/characters/silent/room-costs.json", "knowledge/common/card-upgrades.json", "knowledge/common/monster-db.json", "knowledge/common/move-model.json"], "branch_knowledge_paths": ["knowledge/characters/silent/experience.json"], "knowledge_overlap": ["knowledge/characters/silent/experience.json"], "result": "锁内合并预检冲突，按任务停止，不实际合并或硬解", "conflicts": ["CONFLICT (modify/delete): notes/codex-quota-reset-authorization.json deleted in 94ead4ae573dbc956ef3b916bcbca1f85ddf97a1 and modified in d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2.  Version d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2 of notes/codex-quota-reset-authorization.json left in tree.", "CONFLICT (content): Merge conflict in notes/for-dai.md", "CONFLICT (content): Merge conflict in ops/inbox-dev.md", "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"]}。未实际合入时不加eval版本/上线记录/双通知；如因并行记录冲突停止，留原现场和已测source交完成事件，由运维兜底，不硬解、不覆盖刷新。
+- 合入事实：{"source": "d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2", "branch": "exp-silent", "merged": null, "refresh": "94ead4ae573dbc956ef3b916bcbca1f85ddf97a1", "pre": "94ead4ae573dbc956ef3b916bcbca1f85ddf97a1", "tests": null, "initial": "98c8ce27985782c99e1e71594c103c3b9da3e23d", "initial_status": " M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/fight-value.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n", "refresh_paths": ["knowledge/characters/silent/boss-damage.json", "knowledge/characters/silent/fight-value-gates.json", "knowledge/characters/silent/fight-value.json", "knowledge/characters/silent/monster-records.json", "knowledge/characters/silent/outcome-stats.json", "knowledge/characters/silent/room-costs.json", "knowledge/common/card-upgrades.json", "knowledge/common/monster-db.json", "knowledge/common/move-model.json"], "live_knowledge_paths": ["knowledge/characters/silent/boss-damage.json", "knowledge/characters/silent/boss-trust.json", "knowledge/characters/silent/experience.json", "knowledge/characters/silent/fight-value-gates.json", "knowledge/characters/silent/fight-value.json", "knowledge/characters/silent/monster-records.json", "knowledge/characters/silent/outcome-stats.json", "knowledge/characters/silent/room-costs.json", "knowledge/common/card-upgrades.json", "knowledge/common/monster-db.json", "knowledge/common/move-model.json"], "branch_knowledge_paths": ["knowledge/characters/silent/experience.json"], "knowledge_overlap": ["knowledge/characters/silent/experience.json"], "result": "锁内合并预检冲突，按任务停止，不实际合并或硬解", "conflicts": ["CONFLICT (modify/delete): notes/codex-quota-reset-authorization.json deleted in 94ead4ae573dbc956ef3b916bcbca1f85ddf97a1 and modified in d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2.  Version d4e5b126c8bdd4591e1b0ddb293cfef0b0f98fe2 of notes/codex-quota-reset-authorization.json left in tree.", "CONFLICT (content): Merge conflict in notes/for-roy.md", "CONFLICT (content): Merge conflict in ops/inbox-dev.md", "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"]}。未实际合入时不加eval版本/上线记录/双通知；如因并行记录冲突停止，留原现场和已测source交完成事件，由运维兜底，不硬解、不覆盖刷新。
 - 学习账本复用silent-0352/0353/0354/0355，均proposed；旧claim/prior unknown/first_run/反例角色保持，新增阶段共现证据经CLI；source提交及本节链接提交后补。shipped交运维核实际版本，不由学习者改状态。
 
 ### 切片大小
@@ -61969,7 +61969,7 @@ A10逐boss矩阵按纯Codex/其他脑来源分开，只读原矩阵重新核分�
 - 整体中位2780→2876（+96字）；配对差中位0；最大5398→7236。A10奖励/商店中位各+1838，A9各+439；其余六界面话题筛选不带general:deck，故变化0。这是V3切片范围；V4整进阶知识前缀实际包含全部适用条目，不从切片缺席误判没读到。
 - 官方gkb-dump.ts固定Silent/A10/Act3的源数据前缀四条完整lesson与ID实际读取通过，SHA 4ac62995b4bd4b0427b86c8cab9ee6146c87e9c024e2c7fa01bd4657edfd252f；A8/A9只读适用P，D/S/R排除验证通过。前后经验、输出正文/来源知识SHA保存；真实问答采用尚无记录，待观察，不运行play/在线题。
 
-所有原件、初稿、失败、抽取、前后库、逐项映射、CLI、测试、渲染/切片与合入现场保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update。需要Dai定的游戏事项：无。合入阻塞按实际冲突交运维兜底。
+所有原件、初稿、失败、抽取、前后库、逐项映射、CLI、测试、渲染/切片与合入现场保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-084220-experience-update。需要Roy定的游戏事项：无。合入阻塞按实际冲突交运维兜底。
 
 ## 2026-10-10 静默猎手 第一百四十八次增量：1 局 A10（version 2026-10-10.6，分支 exp-silent，e77eb708）
 
@@ -62548,7 +62548,7 @@ A10逐boss矩阵按纯Codex/其他脑来源分开，只读原矩阵重新核分�
 - JSON合法，check-experience missing=[]/0；固定数据/原test-sandbox.sh固定排除与paths单fork，nice低优先级、PATH本机node、TMPDIR本任务目录，无npm install/模拟池；提交前gitleaks原件留盘。
 - 自测：{"tsc": 0, "vitest": 0, "files": 259, "cases": 2662, "retried": true, "entry": "未经修改的原tools/test-sandbox.sh；1198跟踪文件逐SHA相同隔离副本；4线程/原固定排除/paths单fork", "source_attempt": {"tsc": 0, "vitest": 1, "files_passed": 257, "cases_passed": 2650, "failed_cases": 1, "reason": "导入检查遍历旧忽略任务的失效logs/logs软链接ENOENT；保留原件"}, "mirror_exit": 0, "source_log": "learner/runs/20261010-091304-experience-update/test-source-1.log", "pass_log": "learner/runs/20261010-091304-experience-update/test-mirror-1.log", "host_full_suite": "待实际live合入后调度器learner-checks"}
 - 学习账本：{"added": [], "proposed": ["silent-0007", "silent-0010", "silent-0012", "silent-0019", "silent-0020", "silent-0021", "silent-0027", "silent-0037", "silent-0065", "silent-0071", "silent-0085", "silent-0161", "silent-0201", "silent-0227", "silent-0243", "silent-0307"], "retired": [], "check": 0}；实际shipped交运维依据完成事件核实，不由学习者改为accepted/shipped。
-- 合入事实：{"source": "e77eb7083e3c1cc1b08b21709ae600cfd447a715", "branch": "exp-silent", "merged": null, "refresh": "fcf7d3c6e21b25c82cb28fee5ca79678593bfc59", "pre": "fcf7d3c6e21b25c82cb28fee5ca79678593bfc59", "tests": null, "initial": "94ead4ae573dbc956ef3b916bcbca1f85ddf97a1", "initial_status": " M knowledge/characters/silent/monster-records.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n", "refresh_paths": ["knowledge/characters/silent/monster-records.json", "knowledge/common/monster-db.json", "knowledge/common/move-model.json"], "live_knowledge_paths": ["knowledge/characters/silent/boss-damage.json", "knowledge/characters/silent/boss-trust.json", "knowledge/characters/silent/experience.json", "knowledge/characters/silent/fight-value-gates.json", "knowledge/characters/silent/fight-value.json", "knowledge/characters/silent/monster-records.json", "knowledge/characters/silent/outcome-stats.json", "knowledge/characters/silent/room-costs.json", "knowledge/common/card-upgrades.json", "knowledge/common/monster-db.json", "knowledge/common/move-model.json"], "branch_knowledge_paths": ["knowledge/characters/silent/experience.json"], "knowledge_overlap": ["knowledge/characters/silent/experience.json"], "result": "锁内合并预检冲突，按任务停止，不实际合并或硬解", "conflicts": ["CONFLICT (modify/delete): notes/codex-quota-reset-authorization.json deleted in fcf7d3c6e21b25c82cb28fee5ca79678593bfc59 and modified in e77eb7083e3c1cc1b08b21709ae600cfd447a715.  Version e77eb7083e3c1cc1b08b21709ae600cfd447a715 of notes/codex-quota-reset-authorization.json left in tree.", "CONFLICT (content): Merge conflict in notes/for-dai.md", "CONFLICT (content): Merge conflict in ops/inbox-dev.md", "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"]}；冲突依任务停止，保留原source/失败现场与刷新，不硬解。实际合入前不加eval上线版本、上线记录或双通知。
+- 合入事实：{"source": "e77eb7083e3c1cc1b08b21709ae600cfd447a715", "branch": "exp-silent", "merged": null, "refresh": "fcf7d3c6e21b25c82cb28fee5ca79678593bfc59", "pre": "fcf7d3c6e21b25c82cb28fee5ca79678593bfc59", "tests": null, "initial": "94ead4ae573dbc956ef3b916bcbca1f85ddf97a1", "initial_status": " M knowledge/characters/silent/monster-records.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n", "refresh_paths": ["knowledge/characters/silent/monster-records.json", "knowledge/common/monster-db.json", "knowledge/common/move-model.json"], "live_knowledge_paths": ["knowledge/characters/silent/boss-damage.json", "knowledge/characters/silent/boss-trust.json", "knowledge/characters/silent/experience.json", "knowledge/characters/silent/fight-value-gates.json", "knowledge/characters/silent/fight-value.json", "knowledge/characters/silent/monster-records.json", "knowledge/characters/silent/outcome-stats.json", "knowledge/characters/silent/room-costs.json", "knowledge/common/card-upgrades.json", "knowledge/common/monster-db.json", "knowledge/common/move-model.json"], "branch_knowledge_paths": ["knowledge/characters/silent/experience.json"], "knowledge_overlap": ["knowledge/characters/silent/experience.json"], "result": "锁内合并预检冲突，按任务停止，不实际合并或硬解", "conflicts": ["CONFLICT (modify/delete): notes/codex-quota-reset-authorization.json deleted in fcf7d3c6e21b25c82cb28fee5ca79678593bfc59 and modified in e77eb7083e3c1cc1b08b21709ae600cfd447a715.  Version e77eb7083e3c1cc1b08b21709ae600cfd447a715 of notes/codex-quota-reset-authorization.json left in tree.", "CONFLICT (content): Merge conflict in notes/for-roy.md", "CONFLICT (content): Merge conflict in ops/inbox-dev.md", "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"]}；冲突依任务停止，保留原source/失败现场与刷新，不硬解。实际合入前不加eval上线版本、上线记录或双通知。
 
 ### 切片大小
 
@@ -62572,4 +62572,4 @@ A10逐boss矩阵按纯Codex/其他脑来源分开，只读原矩阵重新核分�
 - active/置信度/本阶正文预算：{"active": 207, "chars": 49927, "confidence": {"low": 25, "high": 134, "med": 48}, "by_asc": {"8": {"entries": 189, "chars": 44818}, "9": {"entries": 190, "chars": 45102}, "10": {"entries": 205, "chars": 49099}}}；总49927字符，A8 189条44818字符、A9 190条45102字符，60000预算不改。
 - 官方gkb-dump.ts固定Silent/A8/A9/A10、Act2知识前缀读取验证通过，14条按适用范围核完整文本及官方占位符填值；prefix输出SHA见consumer-render-verification.json。只有离线读取验收，真实问答采用尚待观察，不运行play或发在线脑题。
 
-所有原件、初稿/失败、前后经验、逐项diff、偏移、账本/提案、切片/渲染/测试和合入事实保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-091304-experience-update。需要Dai定的游戏事项：无；若live冲突则交原experience-done/learner-checks完成事件由运维兜底。
+所有原件、初稿/失败、前后经验、逐项diff、偏移、账本/提案、切片/渲染/测试和合入事实保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-091304-experience-update。需要Roy定的游戏事项：无；若live冲突则交原experience-done/learner-checks完成事件由运维兜底。

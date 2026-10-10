@@ -62,7 +62,7 @@ const isRestNode = (type: string): boolean => type === "RestSite" || type === "R
  * - act 1 (unchanged, 200e5f3): hallway/elite fights in a row. A rest site or a shop ends it; ahead (this function,
  *   the projection) a "?" room or a treasure room carries it; walking back from the current node (fightsSoFar) the
  *   chain stops at anything but a fight or a treasure room.
- * - acts 2 and 3 (Dai 2026-10-03, experience route-no-chains): hallway/elite fights since the last rest site or the
+ * - acts 2 and 3 (Roy 2026-10-03, experience route-no-chains): hallway/elite fights since the last rest site or the
  *   act start, as the data counts a stretch between rests. Shops, "?" rooms and treasure rooms do not end it, and a
  *   "?" room is not counted (the map cannot tell its fight from its event). The data (A8+A9 to 10-02, stretches
  *   starting at >= 60% HP) counts the fights the run actually had, "?" fights included; counting only the map's
@@ -480,7 +480,7 @@ export function planMap(env: DecisionEnv): Decision | null {
  * where we stand, the nodes walked, the Winged Boots charges, the boss nodes) and plans any route on it, answering
  * the node sequence from the next node to the boss; code checks it (strategy/route-map.ts checkRoute, through the
  * question's AnswerSpec: one re-ask with the specific errors) and follows it node by node. Code gives no route a score
- * or rank; since Dai 2026-10-04 it lists a few candidate routes with their projected HP as facts (candidate_routes:
+ * or rank; since Roy 2026-10-04 it lists a few candidate routes with their projected HP as facts (candidate_routes:
  * the best by boss-entry HP, the safest, the most elites and shops; the answer may be any route). The chosen route's facts (HP on arrival, rest sites healed or smithed,
  * fights before the next rest, the next elite and the boss) ride on the next question the brain answers (the card
  * reward, rest site or event after this room: route-review.ts), where it keeps or changes the route.
@@ -821,7 +821,7 @@ const STATUE_FIGHT_NODES = new Set(["Monster", "Elite", "Boss", "Unknown"]);
 /**
  * White Beast Statue drops a potion after every fight (「战斗结束后必定掉落药水」; every logged combat reward with
  * it has one) and the reward screen cannot discard, so with a full belt that potion is lost. Code used to discard
- * its weakest-ranked potion on the map (YVWA F35-F47); Dai: code does not handle potions for the decider. An
+ * its weakest-ranked potion on the map (YVWA F35-F47); Roy: code does not handle potions for the decider. An
  * option that travels to a fight node gets a "discard potion(s), then travel" variant (potion-discard.ts, as the
  * Tiny Mailbox's rest) and a "drink <potion>, then travel" variant per potion usable on the map (5LRZ7HJ7YGSY F37:
  * with only keep / discard, Fruit Juice was discarded): the decider says whether and which. Facts only: Fruit Juice

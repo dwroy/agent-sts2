@@ -1,6 +1,6 @@
 # RUN_PLAN_MERGE：整局计划搭下一道大脑题（2026-10-02）
 
-Dai 10-02：「进入新的一幕 为什么不直接先进去，然后一起问ds 选项和 这一幕的所有规划呢」。进新一幕要停两次：先在地图上单独问一次整局
+Roy 10-02：「进入新的一幕 为什么不直接先进去，然后一起问ds 选项和 这一幕的所有规划呢」。进新一幕要停两次：先在地图上单独问一次整局
 计划（TMNFVW6DRQ20 F17 17:17:52 → 17:18:08，16 秒），再在第一个房间问古神的 event/act-plan（中位 94 秒；那道题另行处理）。现在把整局
 计划并进下一道 DeepSeek 题。代码 src/strategy/run-plan-merge.ts，开关 `RUN_PLAN_MERGE`（默认开，off 和以前逐字节相同）。
 不调用任何模型；数字用 `nice python3 tools/run-plan-merge-estimate.py --until 2026-10-02T11:15`（只读日志）可复现。
@@ -77,7 +77,7 @@ route review 的 run_plan_hp。
   是参考。代码在这之间的决定（地图按路线走、领奖励）不读计划。
 - **boss 前**：留着单独问。日志里这 4 次新计划都写了针对这场 boss 的具体打法（GBBB「T1 Inferno; Bash priest for Vulnerable (potion adds
   3)…」，TMNF「hold Block potion + Defends so kill-turn HP+block covers eruption…」），合并的话 boss 战用的是 8 层前的旧计划，而新计划会搭在
-  boss 的选牌题上、到下一张地图又被新一幕的 act 计划替掉，白做一次。这条是本次自己加的，Dai 不要可以删掉 run-plan-merge.ts 里的一行。
+  boss 的选牌题上、到下一张地图又被新一幕的 act 计划替掉，白做一次。这条是本次自己加的，Roy 不要可以删掉 run-plan-merge.ts 里的一行。
 
 ## 5. 测试
 

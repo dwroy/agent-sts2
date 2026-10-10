@@ -1,11 +1,11 @@
 # 运维会话跑在 codex 上（调度器 + 一个可续的 codex 会话）
 
-Dai 2026-10-04 21:00 定：Claude 只观察和与 Dai 对话，不修改或审核；codex 学习者自行实现、自测、合入，运维 codex 确认上线和提交兜底；运维会话改用 codex（gpt-6.1-sol，强度 xhigh，和学习者一样）。codex 没有会话内的定时任务（原来的 Claude 运维 prompt 靠 CronCreate），所以拆成两半：
+Roy 2026-10-04 21:00 定：Claude 只观察和与 Roy 对话，不修改或审核；codex 学习者自行实现、自测、合入，运维 codex 确认上线和提交兜底；运维会话改用 codex（gpt-6.1-sol，强度 xhigh，和学习者一样）。codex 没有会话内的定时任务（原来的 Claude 运维 prompt 靠 CronCreate），所以拆成两半：
 
 - **调度器**（`ops/codex-ops.sh`，cron 或一个 setsid 的 bash 循环）：做所有机械的活，只在需要判断时叫醒 codex。
 - **运维 codex 会话**：只建一次（第一轮 = `ops/ops-session-silent-codex-prompt.md`），以后每次叫醒都是 `codex exec resume <会话 id>`，消息是调度器攒下的事件。会话 id 在 `ops/codex-ops/session-id`。
 
-prompt 的内容沿用 Dai 批准的 `ops/ops-session-silent-prompt.md`，只改了运行方式（定时任务 → 事件；通知开发会话 → 收件箱；沙箱外的操作 → 调度器的动作）。
+prompt 的内容沿用 Roy 批准的 `ops/ops-session-silent-prompt.md`，只改了运行方式（定时任务 → 事件；通知开发会话 → 收件箱；沙箱外的操作 → 调度器的动作）。
 
 ## 怎么启动和停
 
@@ -14,12 +14,12 @@ cd ~/Projects/agent-sts2
 bash ops/codex-ops.sh start          # 预检（codex 能用、ops 权限配置挡住 key 文件），装 cron 块，后台建会话
 bash ops/codex-ops.sh start --loop   # 不用 crontab：同样的时间表由一个 setsid 的 bash 循环跑（PID 在 ops/codex-ops/loop.pid）
 bash ops/codex-ops.sh status         # 调度器、会话大小/上下文/压缩次数、队列、正在跑的叫醒、复盘批次、日志末尾
-bash ops/codex-ops.sh wake "<话>"    # 开发会话或 Dai 给运维会话留话（manual 事件），马上叫醒（后台；--fg 前台等）
+bash ops/codex-ops.sh wake "<话>"    # 开发会话或 Roy 给运维会话留话（manual 事件），马上叫醒（后台；--fg 前台等）
 bash ops/codex-ops.sh pause|unpause  # 暂停：tick 和叫醒都不做
 bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再按 PID 停掉正在跑的叫醒。会话 id 保留，下次 start 接着用
 ```
 
-**cron 还是循环**：默认 cron。cron 由系统服务跑，不依赖任何会话或终端，机器重启后自己恢复（这时 autoplay 也没了，第一次卡死检查会叫醒运维会话去重启对局，正是它该做的）；循环和 autoplay 一样是 setsid 的 bash，WSL 关掉或重启就没了，要再 `start --loop`。systemd --user 不用：这台机器没开 linger，最后一个登录会话退出时 user 服务会停。改 crontab 在 Claude 的 auto 模式里会被当成「持久化」拦下（2026-10-04 实测），所以 `start` 要由 Dai 运行或授权；不方便时用 `--loop`。
+**cron 还是循环**：默认 cron。cron 由系统服务跑，不依赖任何会话或终端，机器重启后自己恢复（这时 autoplay 也没了，第一次卡死检查会叫醒运维会话去重启对局，正是它该做的）；循环和 autoplay 一样是 setsid 的 bash，WSL 关掉或重启就没了，要再 `start --loop`。systemd --user 不用：这台机器没开 linger，最后一个登录会话退出时 user 服务会停。改 crontab 在 Claude 的 auto 模式里会被当成「持久化」拦下（2026-10-04 实测），所以 `start` 要由 Roy 运行或授权；不方便时用 `--loop`。
 
 ## 时间表（调度器做什么、什么时候叫醒 codex）
 
@@ -50,11 +50,11 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 
 ## 权限（codex 的权限配置 "ops"）
 
-照学习者的写任务配置（learner/lib/engines.ts `codexPermissions`，Dai 2026-10-04 批准的做法），名字叫 `ops`（`-c default_permissions="ops"`），每次叫醒都重新传（codex 不把它存在会话里）：
+照学习者的写任务配置（learner/lib/engines.ts `codexPermissions`，Roy 2026-10-04 批准的做法），名字叫 `ops`（`-c default_permissions="ops"`），每次叫醒都重新传（codex 不把它存在会话里）：
 
 - 全部可读；可写：项目根（主检出，含 .worktrees/step、live）、/tmp 和 codex 的临时目录；不联网。
 - 读不到：~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、~/.codex/auth.json、项目里所有 .env / *.env（glob + 磁盘上找到的每个的绝对路径）。
-- ops 额外的（ops/codex/lib.ts `opsExtraRules`）：主检出的 `.git` 可写（codex 默认把可写根里的 .git 设成只读，git 提交会报 index.lock Read-only file system）；`.git/hooks` 和 `.git/config` 只读。Dai 2026-10-05 08:37 授权运维和学习者修改调度器及 broker 文件，main e601de00 已去掉这些文件的只读规则；key、所有 .env 和 codex 登录令牌仍不可读。
+- ops 额外的（ops/codex/lib.ts `opsExtraRules`）：主检出的 `.git` 可写（codex 默认把可写根里的 .git 设成只读，git 提交会报 index.lock Read-only file system）；`.git/hooks` 和 `.git/config` 只读。Roy 2026-10-05 08:37 授权运维和学习者修改调度器及 broker 文件，main e601de00 已去掉这些文件的只读规则；key、所有 .env 和 codex 登录令牌仍不可读。
 
 实测（2026-10-04，`tsx ops/codex/main.ts probe <脚本>` 在 ops 配置下跑 shell）：key 文件和 live 的 .env 读不到；项目根、ops/、live 工作树可写，~ 不可写；git 在工作树里提交成功（加 .git 规则之前失败）；hooks、config、调度器文件写不了；tsc、vitest、python 读日志都能跑；gitleaks 在。沙箱有自己的 PID 命名空间（看不到外面的进程，kill 不到）、不联网（127.0.0.1:8080 也连不上，curl exit 7）、调不了 Windows 程序（cmd.exe 报 UtilBindVsockAnyPort）；嵌套的 codex（学习者）因为不联网也跑不了。
 
@@ -75,6 +75,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | learner-merge <branch> | 发合入兜底事件，由运维执行 live 流程；只接收 codex-dev / exp-silent |
 | learner-recheck <批次 id> | 兜底合入后补跑完整 tsc + vitest；只接收 YYYYMMDD-HHMMSS-experience-update / fix-batch / strategy-proposal 格式的批次 id。锁内核实回报中所有源提交均在 live，固定检查树、去重同批次同树，保留原失败及兜底检查历史；归档日志并发送 learner-checks，失败写收件箱。broker 限时 3700 秒，请求端默认等 3760 秒 |
 | eval-metrics <角色 id> <进阶> | 沙箱外运行完整评估：角色限 ironclad/silent/regent/necrobinder/defect，进阶为 0–999 的整数，不带前导零；固定传 --character、--ascension、--group-by ascension、--md，使用 data/logdb-venv/bin/python，nice 19。结果保存到 paper/materials/<角色>/a<级>-metrics-<时间>.<随机后缀>.md，打印路径；失败保留旧报告，不发布部分或空结果。broker 限时 10 分钟，请求端默认等 11 分钟，CODEX_OPS_DO_WAIT 可显式覆盖 |
+| git-push-main <完整 SHA> | 仅推送当前 main 的指定完整提交到固定项目 origin，使用 Windows ssh.exe；拒绝已移动的 main、其他目的地和额外参数，不 force、不推 upstream，推送后核对远端 main SHA。仅在用户已经授权本次推送、提交通过测试和 gitleaks 后调用；白名单从下一次标准叫醒加载 |
 
 例如 `bash ops/codex-ops-do.sh eval-metrics silent 3`。每次产生独立快照，读取返回的文件后并入升级小结；动作不接收任意路径、额外选项或外部命令。broker 的白名单在叫醒开始时加载，本轮改动从下一次叫醒起生效，不需要重启对局。历史升级评估请求可在动作生效后的事件中补跑。
 
@@ -142,7 +143,7 @@ Roy 2026-10-09 授权的全历史核心构筑学习使用 `silent-historical-cor
 
 长时间运行的 ops 会话日志以分块增量方式读取上下文与当前 turn；不再整份构造 JS 字符串，保留原日志。`status` 只读展示批次，不根据沙箱 PID 可见性写 lost。
 
-`ops/inbox-dev.md`：只追加，一行一件事，`- YYYY-MM-DD HH:MM [运维 codex | codex-ops 调度器] 内容`。开发会话盯着这个文件（Monitor 或它自己的定时任务），转告 Dai；需要 Dai 定的事运维会话同时写 notes/for-dai.md。
+`ops/inbox-dev.md`：只追加，一行一件事，`- YYYY-MM-DD HH:MM [运维 codex | codex-ops 调度器] 内容`。开发会话盯着这个文件（Monitor 或它自己的定时任务），转告 Roy；需要 Roy 定的事运维会话同时写 notes/for-roy.md。
 
 ## 文件
 

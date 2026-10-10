@@ -58,7 +58,7 @@ notification = f'''\n### {stamp} Codex学习者通知Roy：{version} 静默神�
 scan = subprocess.run(['gitleaks', 'stdin', '--redact', '--no-banner'], input=notification, text=True, capture_output=True)
 (OUT / 'gitleaks-notification.log').write_text(scan.stdout + scan.stderr)
 assert scan.returncode == 0
-append(ROOT / 'notes/for-dai.md', notification)
+append(ROOT / 'notes/for-roy.md', notification)
 append(ROOT / 'ops/inbox-dev.md', notification)
 
 item = json.loads((OUT / 'narrow-proposal-item.json').read_text())
@@ -89,7 +89,7 @@ message = 'Record the Silent Apotheosis Accelerant release\n\nCo-Authored-By: Co
 (OUT / 'release-commit-message.txt').write_text(message)
 git('commit', '--file', str(OUT / 'release-commit-message.txt'))
 receipt = dict(source=source, merged=merge, release=git('rev-parse', 'HEAD'), version=version,
-               ledger=ledger_id, code_proposal=proposal_id, notified=['notes/for-dai.md', 'ops/inbox-dev.md'],
+               ledger=ledger_id, code_proposal=proposal_id, notified=['notes/for-roy.md', 'ops/inbox-dev.md'],
                shipped=False)
 (OUT / 'release.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n')
 print(json.dumps(receipt, ensure_ascii=False))

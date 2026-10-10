@@ -15,7 +15,7 @@ index e193d3a1..588cb02a 100644
 +++ b/docs/codex-ops.md
 @@ -56,7 +56,9 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再
  - 读不到：~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、~/.codex/auth.json、项目里所有 .env / *.env（glob + 磁盘上找到的每个的绝对路径）。
- - ops 额外的（ops/codex/lib.ts `opsExtraRules`）：主检出的 `.git` 可写（codex 默认把可写根里的 .git 设成只读，git 提交会报 index.lock Read-only file system）；`.git/hooks` 和 `.git/config` 只读。Dai 2026-10-05 08:37 授权运维和学习者修改调度器及 broker 文件，main e601de00 已去掉这些文件的只读规则；key、所有 .env 和 codex 登录令牌仍不可读。
+ - ops 额外的（ops/codex/lib.ts `opsExtraRules`）：主检出的 `.git` 可写（codex 默认把可写根里的 .git 设成只读，git 提交会报 index.lock Read-only file system）；`.git/hooks` 和 `.git/config` 只读。Roy 2026-10-05 08:37 授权运维和学习者修改调度器及 broker 文件，main e601de00 已去掉这些文件的只读规则；key、所有 .env 和 codex 登录令牌仍不可读。
  
 -Roy 最高优先的 A10 回退排查使用专用模板 `learner/tasks/silent-a10-regression.md`、干净工作树 `.worktrees/silent-a10-regression` 和 `notes/silent-a10-regression-dispatch.json`。请求字段与上述校准相同，`task=silent-a10-regression`；调用既有 `fix-batch` 后据实际批号登记。它优先于其他待派专用请求，保留原任务去重、工作树保护、失败历史及退避，不占用普通修复或策略工作树；没有源码修改的调查不新建游戏版本或补测。
 +Roy 的 Codex 大脑缓存排查使用专用模板 `learner/tasks/codex-brain-cache.md`、干净工作树 `.worktrees/codex-brain-cache` 和 `notes/codex-brain-cache-dispatch.json`。请求含 `state=pending`、`task=codex-brain-cache`、`character=silent`、`authorized_by=Roy` 及唯一 `request_id`；调用既有 `fix-batch` 后登记实际批号并将请求标为 `dispatched`。这项最新高优先手动请求排在其他待派专用请求前，不打断已运行任务；去重、忙/脏树拒绝、失败历史、退避及三次上限保持，shell 入口仅新增这个明确授权的任务名。完成沿 `fix-done` / `learner-checks` 通道；派发不改推理强度或题面，不造游戏台账/版本。学习者负责实际原因、修复与真实前后用量；Roy 本条已授权最多四次同题基线/修复实验；沙箱受限时只经固定自测的专用 broker 动作及下一次唤醒白名单执行，缺入口如实 pending，不另设审批。
@@ -70,7 +70,7 @@ index 00000000..af2b99f1
 +
 +阶段报告及时写 {{scratch}}/report.md 和 report.json，保留原始实验与失败日志。前后表分别列原日志窗口、隔离实验、实际上线后生产窗口：样本局/题数、模型/effort、缓存命中率、输入/缓存/输出、每题 token、耗时分布、费用与可测额度消耗速度，注明不能归因的背景消耗、窗口/样本限制和回退方法。生产数据尚未产生时填待观察而非预测结果；给运维一条可在后续已完成事件执行的取样/统计指令，不轮询或等待新对局。
 +
-+仅在分配工作树与 {{scratch}} 写实现、测试及报告；根目录报告和通知属于本任务授权记录例外。最终报告追加到根目录 paper/materials/silent/codex-brain-cache-2026-10-08.md（已有则保留原文和历史）；先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加 Roy 的实际结论、原因证据、旧/新传输行为、真实前后结果或测量限制、预期影响和回退方法，不覆盖并行记录。纯缓存传输不创建游戏机制账本或经验条目；最终 code_proposals 可为空字符串数组，implementation_domains 只列实际涉及范围，纯工具可空。若发现独立游戏问题，仅保留证据交原提案流程，本批不实现。
++仅在分配工作树与 {{scratch}} 写实现、测试及报告；根目录报告和通知属于本任务授权记录例外。最终报告追加到根目录 paper/materials/silent/codex-brain-cache-2026-10-08.md（已有则保留原文和历史）；先 date，在根目录 notes/for-roy.md 与 ops/inbox-dev.md 同时追加 Roy 的实际结论、原因证据、旧/新传输行为、真实前后结果或测量限制、预期影响和回退方法，不覆盖并行记录。纯缓存传输不创建游戏机制账本或经验条目；最终 code_proposals 可为空字符串数组，implementation_domains 只列实际涉及范围，纯工具可空。若发现独立游戏问题，仅保留证据交原提案流程，本批不实现。
 +
 +不读游戏包/key/.env，不改 hooks/config/运维 prompt，不装依赖、不推送、不运行 play、不停对局或调度、不改生产配置，不启动子学习者。后台每项 nice、最多四进程。每次代码提交前在 agent/ 运行原 bash tools/test-sandbox.sh（含 tsc），PATH 加 ~/.local/node/bin，TMPDIR 指向 scratch，SANDBOX_WORKERS≤4；涉及 Python/调度的固定测试也要通过。全局 Git 身份，提交前 gitleaks，提交末尾带实际引擎/模型 Co-Authored-By。
 +

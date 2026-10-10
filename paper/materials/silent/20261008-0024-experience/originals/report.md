@@ -434,7 +434,7 @@
 - live实际合入：None；刷新：None；刷新后/合前：fd4c8e52341c31cad606c0a4b96a43663843e201；合后沙箱：None；知识重叠：[]；结果：锁内合并预检冲突，按任务停止、不硬解。
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -473,6 +473,6 @@
 | a9-rest | 2323.5/2871 | 2165.5/2255 | -125.0 |
 | a9-reward | 2409.0/3049 | 2281.0/2921 | -128.0 |
 | a9-shop | 3493.0/5343 | 3354.5/4676 | -128.0 |
-- 整体中位2649.0→2401.0（-248字），配对增量中位-125；单片最大增长258，最大5343→4968字。active 156→158、正文48291→47828字；置信度{'low': 25, 'high': 87, 'med': 46}；A8适用{'entries': 150, 'chars': 44634}、A9适用{'entries': 151, 'chars': 44918}、A10适用{'entries': 154, 'chars': 46027}。需要Dai定的知识事项：无。
+- 整体中位2649.0→2401.0（-248字），配对增量中位-125；单片最大增长258，最大5343→4968字。active 156→158、正文48291→47828字；置信度{'low': 25, 'high': 87, 'med': 46}；A8适用{'entries': 150, 'chars': 44634}、A9适用{'entries': 151, 'chars': 44918}、A10适用{'entries': 154, 'chars': 46027}。需要Roy定的知识事项：无。
 
 完整抽取/脚本/原日志/失败初稿/提案/账本/检查/切片/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update。

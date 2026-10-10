@@ -622,7 +622,7 @@ REST/SHOP/普通EVENT按节点入口血档关联下一战，多节点可关联�
 - 账本只经CLI：新增[]；proposed silent-0005,silent-0012,silent-0019,silent-0020,silent-0021,silent-0011,silent-0027,silent-0046,silent-0084,silent-0142,silent-0158,silent-0047,silent-0063,silent-0018,silent-0117,silent-0009,silent-0243,silent-0312；retired[]。18账本覆盖18经验，首证/prior/claim/原support/repeat及旧状态/版本历史保持；0312补11旧局支持、0311纯bug不动。实际数据shipped由运维核live完成事件登记，五提案均未实现。
 - live锁内：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新5c3851eca851731f36d4c5e7f06302e58bfbe1ca；合前5c3851eca851731f36d4c5e7f06302e58bfbe1ca；实际合入None。
 - CONFLICT (content): Merge conflict in eval/versions.json
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -663,6 +663,6 @@ REST/SHOP/普通EVENT按节点入口血档关联下一战，多节点可关联�
 | sample-a9-shop | 3723.5/4780 | 3706.5/4785 | 1.0 |
 
 - 整体中位2678.0→2680.5、涨2.5字；配对差中位1.0；最大5051→5056；单片最大增加72。
-- active186，正文50783字符，置信度{'low': 25, 'high': 114, 'med': 47}；A8适用{'entries': 173, 'chars': 46378}；A9适用{'entries': 174, 'chars': 46662}；A10适用{'entries': 183, 'chars': 49691}。无需压缩/合并/预算调整，无需要Dai定的规则。
+- active186，正文50783字符，置信度{'low': 25, 'high': 114, 'med': 47}；A8适用{'entries': 173, 'chars': 46378}；A9适用{'entries': 174, 'chars': 46662}；A10适用{'entries': 183, 'chars': 49691}。无需压缩/合并/预算调整，无需要Roy定的规则。
 
 证据/脚本/切片/提案/CLI/测试/失败日志/合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-224303-experience-update；报告时间2026-10-08 23:11:30 +0800。

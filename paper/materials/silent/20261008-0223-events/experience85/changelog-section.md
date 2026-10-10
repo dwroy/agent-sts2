@@ -656,7 +656,7 @@
 
 - CONFLICT (content): Merge conflict in eval/versions.json
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -697,6 +697,6 @@
 | a9-reward | 2333.0/2914 | 2736.0/3317 | 403.0 |
 | a9-shop | 3368.5/4694 | 3769.0/4965 | 271.0 |
 
-- 整体中位2398.5→2736.0（+337.5字）；配对增量中位+276.0，单片最大增长1408，最大4970→5097。active159→159，正文47952→50368字，置信度{'low': 25, 'high': 90, 'med': 44}；A8适用{'entries': 151, 'chars': 47001}、A9适用{'entries': 152, 'chars': 47285}、A10适用{'entries': 156, 'chars': 49232}。需要Dai定：无。
+- 整体中位2398.5→2736.0（+337.5字）；配对增量中位+276.0，单片最大增长1408，最大4970→5097。active159→159，正文47952→50368字，置信度{'low': 25, 'high': 90, 'med': 44}；A8适用{'entries': 151, 'chars': 47001}、A9适用{'entries': 152, 'chars': 47285}、A10适用{'entries': 156, 'chars': 49232}。需要Roy定：无。
 
 完整抽取、原帧/字节偏移、脚本、草稿、提案、账本、测试、切片和合入回执：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-014012-experience-update。

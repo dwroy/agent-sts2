@@ -119,7 +119,7 @@ const BOARDS = ["3sbp-f17-t3-flex", "k8tc-f17-t5", "xmy2-f17-t1", "8v0h-f17-t2-s
  * files; the registry is now reset under the mock and those files pinned from 69a33f9's data, the data these digests
  * were captured on. CAPTURE=1 on the current planner (whose off path is the pre-B2 one with the fix-queue changes
  * above) gave every digest unchanged.
- * 2026-10-04 (v4-asc-facts, Dai: experience by ascension): 8v0h and ez2l (A8 and up) whose question carries a counted record
+ * 2026-10-04 (v4-asc-facts, Roy: experience by ascension): 8v0h and ez2l (A8 and up) whose question carries a counted record
  * (a Jev hint's or a lesson's {CRAB_KILLS_EN}, {QUEEN_AMALGAM_EN}, {CRAB_KILL_ORDER}, …) re-pinned: those records now give A8's fights
  * and A9's apart (boss-clock recordBand). With the band switched off (RECORD_BAND_FROM above every ascension) every
  * earlier digest held: nothing else in the decision moved.

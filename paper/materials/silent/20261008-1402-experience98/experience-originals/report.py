@@ -87,7 +87,7 @@ T += ['','### 切片大小','',
 '','| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for r in size['by_sample']:T.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
 T.append(f'\n- 整体中位{size["before_median"]}→{size["after_median"]}，涨幅{size["median_growth"]}字；配对差中位{size["paired_median"]}，最大{size["before_max"]}→{size["after_max"]}，单片最多增{size["max_growth"]}。')
-T.append(f'- active{z["active"]}/正文{z["chars"]}，high{conf["high"]}/med{conf["med"]}/low{conf["low"]}；'+'、'.join(f'A{a}适用{z["asc"][str(a)]["entries"]}条/{z["asc"][str(a)]["chars"]}字' for a in [8,9,10])+'。合并/退役无，更新压短旧案例逐条见上，不改预算。需要Dai定：无；若合入受阻据实交运维兜底。')
+T.append(f'- active{z["active"]}/正文{z["chars"]}，high{conf["high"]}/med{conf["med"]}/low{conf["low"]}；'+'、'.join(f'A{a}适用{z["asc"][str(a)]["entries"]}条/{z["asc"][str(a)]["chars"]}字' for a in [8,9,10])+'。合并/退役无，更新压短旧案例逐条见上，不改预算。需要Roy定：无；若合入受阻据实交运维兜底。')
 T.append('\n本批原帧/复算/机制/CLI/提案/测试/切片/合入回执：'+str(O)+'；报告时间'+now+'。')
 out='\n'.join(T)+'\n';(O/'changelog-addition.md').write_text(out);(O/'report.md').write_text(out)
 completion=dict(task='experience-update',version=U['version'],commit=commit,merged=live.get('merged'),added=0,updated=12,retired=0,active=z['active'],mechanisms=mechanisms,tests=dict(tsc=0,vitest=rc,cases=cases),ledger=dict(added=added,proposed=proposed,retired=[],check=check),code_proposals=props,implementation_domains=['combat','potion','sl'],report=str(O/'report.md'))

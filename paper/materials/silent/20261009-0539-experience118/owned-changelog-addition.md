@@ -605,7 +605,7 @@
 - JSON合法，15变更与其余条目逐项等价，角色/evidence/n/name/scope/asc、旧153局七数组/血档/转移/回血/SL与16原帧核验通过；check-experience missing=[]退出0；git diff --check0；gitleaks、ledger check结果以下最终回执为准。
 - 账本新增[]，提交后proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0053,silent-0046,silent-0102,silent-0079,silent-0154,silent-0274,silent-0101,silent-0173,silent-0185,silent-0186,silent-0247,silent-0278,silent-0243，退役[]；不标accepted/shipped。0328重复观察保持observed；0186只追加事实更正，旧首证/prior/版本/原证据历史保持，源码三提案pending。
 - live锁内：锁内合并预检冲突，按任务停止，不实际合并或硬解；合前1a6e9084873fda6447914e89f5f90a906230a142；刷新1a6e9084873fda6447914e89f5f90a906230a142；实际合入None。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -645,6 +645,6 @@
 | sample-a9-reward | 2726.0/3307 | 2705.0/3277 | -21.0 |
 | sample-a9-shop | 4060.0/5216 | 3907.0/5195 | -21.0 |
 - 整体中位2733.0→2733.0（+0.0字），配对差中位-24.0；最大5705→5646，单片变化最少-382、最多+6。
-- active191，正文51116字，置信度{'low': 25, 'high': 121, 'med': 45}；A8 {'entries': 178, 'chars': 47470}；A9 {'entries': 179, 'chars': 47754}；A10 {'entries': 188, 'chars': 50024}。无预算压缩/合并/退役，不改预算；需要Dai定：无。
+- active191，正文51116字，置信度{'low': 25, 'high': 121, 'med': 45}；A8 {'entries': 178, 'chars': 47470}；A9 {'entries': 179, 'chars': 47754}；A10 {'entries': 188, 'chars': 50024}。无预算压缩/合并/退役，不改预算；需要Roy定：无。
 
 完整原始子集、偏移、复算与失败初稿、提案/CLI、切片和测试回执保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-050455-experience-update。

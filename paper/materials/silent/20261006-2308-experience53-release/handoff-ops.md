@@ -11,4 +11,4 @@
 - CLI账本proposed：silent-0005,silent-0006,silent-0011,silent-0019,silent-0020,silent-0021,silent-0027,silent-0030,silent-0079,silent-0133，最终check0；请据上述实际合入经learner/ledger.py/by=ops登记十项shipped，保留首次证据/先验/claim/全部support和repeat/旧上线历史。学习者未写accepted/shipped；0195独立bug不随本经验冒标上线。
 - 刷新提交None、合前8aead9fa447e76f6a36bdf0a5d5214ccc5aeb522，知识不同blob重叠0、其他知识blob及live既有修复保持；无生成器变动，不重建。
 - 主目录第53节和账本只追加、学习者不提交；全脚本、原始分流、基线、机制证据、逐轮修正和原索引草稿、前后经验/固定切片、源/合后测试、gitleaks和live-merge.json在本任务目录。交调用方归档。
-- 不停对局，不运行play，不推送；需要Dai定：无。
+- 不停对局，不运行play，不推送；需要Roy定：无。

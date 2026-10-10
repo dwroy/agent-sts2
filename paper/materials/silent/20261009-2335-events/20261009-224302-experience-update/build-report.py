@@ -105,7 +105,7 @@ L+=['','### 切片大小','',
     '', '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for b in S['rows']:L.append(f'| {b["sample"]} | {b["before_median"]}/{b["before_max"]} | {b["after_median"]}/{b["after_max"]} | {b["paired_median"]} |')
 L+=['',f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_growth"]:+}字），配对差中位{S["paired_median"]}；最大{S["before_max"]}→{S["after_max"]}，单片差范围{S["delta_range"]}。',
-    f'- active201、总字符{U["after"]["chars"]}，置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。需要Dai定：无。',
+    f'- active201、总字符{U["after"]["chars"]}，置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。需要Roy定：无。',
     '', '全部原件、失败日志、前后经验/切片、数据脚本、历史SL对照、CLI/提案、测试和合入预检保存在'+str(O)+'。','']
 section='\n'.join(L)
 (O/'changelog-section.md').write_text(section)

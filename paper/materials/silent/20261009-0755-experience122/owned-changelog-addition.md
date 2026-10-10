@@ -629,6 +629,6 @@ SL同房多试，判死截断与实际赢/死分开：
 | sample-a9-reward | 2723.0/3295 | 2729.0/3331 | 6.0 |
 | sample-a9-shop | 3902.0/5219 | 3908.0/5225 | 6.0 |
 - 整体中位2723.0→2729.0（+6.0字），配对差中位17.0，最大5664→5670；单片最少0、最多增加73。
-- active192，正文51606字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47960}；A9 {'entries': 180, 'chars': 48244}；A10 {'entries': 189, 'chars': 50514}。没有预算合并/退役，需要Dai定：无。
+- active192，正文51606字符，置信度{'low': 26, 'high': 122, 'med': 44}；A8 {'entries': 179, 'chars': 47960}；A9 {'entries': 180, 'chars': 48244}；A10 {'entries': 189, 'chars': 50514}。没有预算合并/退役，需要Roy定：无。
 
 原始子集/偏移、复算/初稿失败、核验、提案/CLI、切片、测试、合入预检/结果、报告全部保留/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-073010-experience-update。

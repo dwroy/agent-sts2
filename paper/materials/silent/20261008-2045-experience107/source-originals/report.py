@@ -95,7 +95,7 @@ if merge.get('merged') is None:rows.append('- 未实际合入，不造上线记�
 rows += ['', '### 切片大小','', '- 固定种子20260929，从截至切点state.run.character_id=SILENT最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP，240配对。manifest保存池/时间/唯一帧，不足有放回补足单列；CHARACTER=silent运行官方knowledge-slice.ts，前后冻结相同common/silent/outcome，只换经验。','', '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for p in V['pairs']:rows.append('| '+p['sample']+' | '+str(p['before_median'])+'/'+str(p['before_max'])+' | '+str(p['after_median'])+'/'+str(p['after_max'])+' | '+str(p['paired_median'])+' |')
 rows += ['', '- 整体中位'+str(V['before_median'])+'→'+str(V['after_median'])+'、涨'+str(V['median_change'])+'字；配对差中位'+str(V['paired_median'])+'，最大'+str(V['before_max'])+'→'+str(V['after_max'])+'、单片最多增'+str(V['max_change'])+'。',
-'- active184/正文'+str(C['after']['chars'])+'；置信度'+str(C['after']['confidence'])+'；'+ '，'.join('A'+asc+'适用'+str(C['after']['asc'][asc]['entries'])+'条/'+str(C['after']['asc'][asc]['chars'])+'字' for asc in ['8','9','10'])+'。新增/更新范围均沿机制或原策略/统计进阶，低阶背景不作A10因果；无预算合并/退役/压缩，需Dai定：无。','', '原帧/复算/机制/提案/CLI/测试/切片/合入回执：'+str(O)+'；报告时间'+stamp+'。','']
+'- active184/正文'+str(C['after']['chars'])+'；置信度'+str(C['after']['confidence'])+'；'+ '，'.join('A'+asc+'适用'+str(C['after']['asc'][asc]['entries'])+'条/'+str(C['after']['asc'][asc]['chars'])+'字' for asc in ['8','9','10'])+'。新增/更新范围均沿机制或原策略/统计进阶，低阶背景不作A10因果；无预算合并/退役/压缩，需Roy定：无。','', '原帧/复算/机制/提案/CLI/测试/切片/合入回执：'+str(O)+'；报告时间'+stamp+'。','']
 text='\n'.join(rows)
 (O/'report.md').write_text(text)
 (O/'mechanisms.json').write_text(json.dumps(mechanisms,ensure_ascii=False,indent=2)+'\n')

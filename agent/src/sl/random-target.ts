@@ -13,7 +13,7 @@ const RANDOM_ENEMY = /随机(?:对|给予)?(?:一名|一个)?敌人|(?:对|给�
 
 /**
  * The text's only chance is which enemy it hits (Juggernaut's 「对随机敌人造成6点伤害」, Kusarigama's 「就随机对一名敌人造成」,
- * Sword Boomerang's 「随机对敌人造成3点伤害3次」, Tingsha's 「对一名随机敌人」): with one enemy that can be hit, certain (Dai
+ * Sword Boomerang's 「随机对敌人造成3点伤害3次」, Tingsha's 「对一名随机敌人」): with one enemy that can be hit, certain (Roy
  * 2026-10-02: SL judges only what is certain). Anything else random in it is still chance (Stampede's 「随机打出你手牌中的1张
  * 攻击牌攻击随机敌人」: which Attack).
  */

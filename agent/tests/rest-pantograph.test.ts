@@ -1,5 +1,5 @@
 /**
- * Pantograph's real heal of resting at the rest site whose next fight is the act boss (Dai 2026-10-03, experience
+ * Pantograph's real heal of resting at the rest site whose next fight is the act boss (Roy 2026-10-03, experience
  * relic-pantograph): min(heal, max HP - HP - 25), decided from the map path. Fixed data only: the numbers on fixed
  * inputs and a logged board (MCK9SMSK40ZY F32, with the map remembered from F31).
  */

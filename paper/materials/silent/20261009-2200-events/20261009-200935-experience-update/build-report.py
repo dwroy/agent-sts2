@@ -99,7 +99,7 @@ lines += ['', '### 切片大小', '',
     '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |', '| --- | --- | --- | --- |']
 for s in S['rows']:lines.append(f'| {s["sample"]} | {s["before_median"]}/{s["before_max"]} | {s["after_median"]}/{s["after_max"]} | {s["paired_median"]} |')
 lines += ['', f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_growth"]:+}字），配对差中位{S["paired_median"]}；最大{S["before_max"]}→{S["after_max"]}，单片差范围{S["delta_range"]}。',
-    f'- active{U["after"]["active"]}、总字符{U["after"]["chars"]}，置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。预算内，无需Dai另定。',
+    f'- active{U["after"]["active"]}、总字符{U["after"]["chars"]}，置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。预算内，无需Roy另定。',
     '', '全部原始抽取/偏移、历史基线/机制、前后经验/切片、CLI和提案、测试及合入预检原件保存于'+str(O)+'。', '']
 body='\n'.join(lines)
 result=dict(task='experience-update',version=U['version'],commit=source,merged=LIVE.get('merged'),added=U['added'],updated=U['updated'],retired=0,active=U['after']['active'],mechanisms=mechanisms,tests=dict(tsc=T['tsc'],vitest=T['vitest'],cases=T['cases']),ledger={k:L[k] for k in ['added','proposed','retired','check']},code_proposals=P,implementation_domains=['combat','potion','sl','terminal','structure'],report=str(O/'report.md'))

@@ -133,8 +133,8 @@
  ✓ tests/potions-jev-call.test.ts > potion_context on the combat question > slots, act boss and the potion facts are on every plan question 17ms
  ✓ tests/potions-jev-call.test.ts > potion_context on the combat question > each held potion's worth in this act's boss fight (potion-equivalents.json), facts only: the options are the same 28ms
  ✓ tests/potions-jev-call.test.ts > Foul Potion is offered (no ban) with its damage to us in the numbers > a Foul Potion line is shown and its hp_lost includes the 12 to us 9ms
- ✓ tests/potions-jev-call.test.ts > a lethal that needs a potion is Jev's call (Dai 2026-09-28) > potionLethalLines: one line per set of potions spent, fewest potions first; none when a dry lethal exists 1ms
- ✓ tests/potions-jev-call.test.ts > a lethal that needs a potion is Jev's call (Dai 2026-09-28) > synthetic board: only the Fire Potion wins, so code asks; a dry lethal is still auto-played 10ms
+ ✓ tests/potions-jev-call.test.ts > a lethal that needs a potion is Jev's call (Roy 2026-09-28) > potionLethalLines: one line per set of potions spent, fewest potions first; none when a dry lethal exists 1ms
+ ✓ tests/potions-jev-call.test.ts > a lethal that needs a potion is Jev's call (Roy 2026-09-28) > synthetic board: only the Fire Potion wins, so code asks; a dry lethal is still auto-played 10ms
  ✓ tests/potions-jev-call.test.ts > a potion step of a chosen line is checked on the belt, not the hand (178 Jev lines opening with a drink: 7 went on, 93 were asked again) > a line opening with a drink: once the belt shows it drunk (the hand the same), the line goes on 71ms
  ✓ tests/potions-jev-call.test.ts > a potion step of a chosen line is checked on the belt, not the hand (178 Jev lines opening with a drink: 7 went on, 93 were asked again) > a drink in the middle of a line: the card after it is played on 25ms
  ✓ tests/ops-herdr.test.ts > interactive TUI arguments > resume <options> --no-daemon <id>: the exec options minus what only exec has 5ms
@@ -184,10 +184,10 @@
  ✓ tests/sl-early-planner.test.ts > the judge counts held cards' end-of-turn damage (TMNFVW6DRQ20 F48 T8, the end_turn it missed with 5 retries left) > 15 HP + 28 block against the Aeonglass's 19x2 and a held Wither+'s 9: the mod does not flag it, our count does: certain 3ms
  ✓ tests/sl-early-planner.test.ts > the judge counts held cards' end-of-turn damage (TMNFVW6DRQ20 F48 T8, the end_turn it missed with 5 retries left) > without the held card: the mod's veto, as before 2ms
  ✓ tests/sl-early-planner.test.ts > the judge counts held cards' end-of-turn damage (TMNFVW6DRQ20 F48 T8, the end_turn it missed with 5 retries left) > only the held cards make it lethal: anything that could cut the loss or kill an attacker first keeps it uncertain 7ms
- ✓ tests/sl-early-planner.test.ts > the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Dai 2026-10-02) > 7DXA F23 T7: 3 HP + 13 block against 38, flagged lethal, but Stone Calendar's 52 can kill both enemies first: not certain 2ms
- ✓ tests/sl-early-planner.test.ts > the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Dai 2026-10-02) > Stone Calendar's 52 kills nobody who matters: certain, the note says so 1ms
- ✓ tests/sl-early-planner.test.ts > the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Dai 2026-10-02) > Y3XT F48 T7: Beating Remnant caps the turn at 20, 55 HP: our own count survives (the old count said 33) 1ms
- ✓ tests/sl-early-planner.test.ts > the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Dai 2026-10-02) > Beating Remnant at 20 HP or less: exact only with the HP lost so far this turn; with it, the cap less that 1ms
+ ✓ tests/sl-early-planner.test.ts > the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Roy 2026-10-02) > 7DXA F23 T7: 3 HP + 13 block against 38, flagged lethal, but Stone Calendar's 52 can kill both enemies first: not certain 2ms
+ ✓ tests/sl-early-planner.test.ts > the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Roy 2026-10-02) > Stone Calendar's 52 kills nobody who matters: certain, the note says so 1ms
+ ✓ tests/sl-early-planner.test.ts > the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Roy 2026-10-02) > Y3XT F48 T7: Beating Remnant caps the turn at 20, 55 HP: our own count survives (the old count said 33) 1ms
+ ✓ tests/sl-early-planner.test.ts > the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Roy 2026-10-02) > Beating Remnant at 20 HP or less: exact only with the HP lost so far this turn; with it, the cap less that 1ms
  ✓ tests/thief-cost.test.ts > THIEF_COST off: the combat question as with THIEF_FACTS alone (ffed0d4) > every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false) 10444ms
  ✓ tests/insatiable-sandpit.test.ts > SANDPIT_START: the Sandpit Liquify Ground starts, in the 5-turn rollout > turn 2 starts at 4 (off: no count, as before) 39ms
  ✓ tests/thief-cost.test.ts > THIEF_COST on: the Hopper's card > T2: thief_context gives the card's HP and its derivation; each option's loot cost is its value x the samples losing it 320ms
@@ -259,9 +259,9 @@
  ✓ tests/potion-mc.test.ts > (a)/(b)/(d) on Jev's question: always an option, drink now then re-plan > the 10-option cap keeps a slot for every potion option: plan lines make room, never the first or the only dry line 1ms
  ✓ tests/potion-mc.test.ts > (c) unsimulated potions: offered with no invented numbers > Entropic Brew (always an option): 'drink first: <text> (N random potions …), then re-plan', no hp/damage numbers 12ms
  ✓ tests/rollout.test.ts > rollout (offline) > is deterministic under a seeded RNG 269ms
- ✓ tests/batch-k.test.ts > 1a. Dai: a potion is a 0-cost one-shot card. An unsimulated potion is always an option (it was one only under T1: the cheapest potion-free option losing 12% of HP) > the logged RTF3 F17 T1 board, code's own line on it: with Entropic Brew in the empty slot Jev is asked, the Brew an option with no numbers 117ms
- ✓ tests/batch-k.test.ts > 1b. Dai: no potion cost in the solver's score. A potion's lasting value (Strength, flat, Plating) counted 25% in hallway fights (POTION_LASTING, "worth more saved for an elite or the boss") > Strength Potion in a hallway fight: the same lasting value as in a boss fight and as the same effect on a 0-cost one-shot card 3ms
- ✓ tests/batch-k.test.ts > 1b. Dai: no potion cost in the solver's score. A potion's lasting value (Strength, flat, Plating) counted 25% in hallway fights (POTION_LASTING, "worth more saved for an elite or the boss") > Heart of Iron's Plating in a hallway fight: valued like Plating from a card 1ms
+ ✓ tests/batch-k.test.ts > 1a. Roy: a potion is a 0-cost one-shot card. An unsimulated potion is always an option (it was one only under T1: the cheapest potion-free option losing 12% of HP) > the logged RTF3 F17 T1 board, code's own line on it: with Entropic Brew in the empty slot Jev is asked, the Brew an option with no numbers 117ms
+ ✓ tests/batch-k.test.ts > 1b. Roy: no potion cost in the solver's score. A potion's lasting value (Strength, flat, Plating) counted 25% in hallway fights (POTION_LASTING, "worth more saved for an elite or the boss") > Strength Potion in a hallway fight: the same lasting value as in a boss fight and as the same effect on a 0-cost one-shot card 3ms
+ ✓ tests/batch-k.test.ts > 1b. Roy: no potion cost in the solver's score. A potion's lasting value (Strength, flat, Plating) counted 25% in hallway fights (POTION_LASTING, "worth more saved for an elite or the boss") > Heart of Iron's Plating in a hallway fight: valued like Plating from a card 1ms
  ✓ tests/batch-k.test.ts > 2. DHGT6Z3Q7VAP F33 T2 (Kaiser Crab, Surrounded): Jev's line lost 20 as logged; the replay read -29 because the fixture had no facing (a fresh screen memory: the start-of-fight facing, the Rocket) > the fixture carries the facing the run had (T1's last target, Dismantle -> the Crusher): Twin Strike -> Crusher, Molten Fist -> Rocket, Stone Armor loses 20 (30 / 1.5 + floor(3 x 1.5) - 4 Plating) 94ms
  ✓ tests/batch-k.test.ts > 3. Stable Serum in the rollout: cards drawn mid-turn that the line cannot play stay in hand too (they went to the discard pile) > a 3-energy draw-2 card, then the Serum: the 2 cards drawn at 0 energy start turn 2 with the 5 drawn (7 x 20), not in the discard pile (5 x 20) 14ms
  ✓ tests/rollout.test.ts > rollout (offline) > a Decimillipede segment killed alone reattaches: the fight is not over (63CP F25) 300ms
@@ -281,7 +281,7 @@
  ✓ tests/rollout.test.ts > rollout (offline) > reaches decision code only through rollout-live.ts, and that only from the combat question's facts 106ms
  ✓ tests/rollout.test.ts > Waterfall Giant explodes when killed (N7SAK F17: killed on T14 at eruption 51, dead on T15) > the solver: a kill is not a win; the outcome carries the blast at the end of the next turn 2ms
  ✓ tests/rollout.test.ts > Waterfall Giant explodes when killed (N7SAK F17: killed on T14 at eruption 51, dead on T15) > the rollout: the kill line lives only if next turn's hand blocks the blast; a small blast is a win next turn 136ms
- ✓ tests/rollout.test.ts > the rollout policy's later turns hold the potions like 0-cost cards (Dai 2026-09-28) > a Fire Potion kept this turn is drunk by a later policy turn when its best line uses it 3ms
+ ✓ tests/rollout.test.ts > the rollout policy's later turns hold the potions like 0-cost cards (Roy 2026-09-28) > a Fire Potion kept this turn is drunk by a later policy turn when its best line uses it 3ms
  ✓ tests/rollout.test.ts > a phase boss revives into its real later phases (FSPK F48: Test Subject A8 111/212/313, the monster DB) > laterPhaseHps: the phases after the current one, by the nearest phase HP; an unknown reviver gets one at 1.5x 2ms
  ✓ tests/rollout.test.ts > a phase boss revives into its real later phases (FSPK F48: Test Subject A8 111/212/313, the monster DB) > the rollout plays phase 2 at 212 and phase 3 at 313, not one more phase at the current 111 20ms
  ✓ tests/rollout.test.ts > a phase boss revives into its real later phases (FSPK F48: Test Subject A8 111/212/313, the monster DB) > Nemesis: Intangible every other turn in phase 3 (VQKX F48 T6: "win 88%" with Intangible never coming back) 56ms
@@ -634,9 +634,9 @@
  ✓ tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > acknowledges WAIT_PID before entering the loop and refuses a missing or ended play PID 68ms
  ✓ tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > keeps the new shell behind its barrier until the permitted old shell has exited 27ms
  ✓ tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > restores the verified old shell when its broker dies before permitting takeover 22ms
- ✓ tests/fix-queue-v4-fix3.test.ts > 4. Throwing Axe: the fight's first card is played twice (proposal §4, Dai's question) > FSPKJAYY3ET6 F39 T1: Inflame first is Strength +6 and Galvanic's 6 twice (logged 2 -> 8, HP 69 -> 57; 43 at T2) 408ms
- ✓ tests/fix-queue-v4-fix3.test.ts > 4. Throwing Axe: the fight's first card is played twice (proposal §4, Dai's question) > not after a card was played this turn, nor on a later turn, nor without the relic 821ms
- ✓ tests/fix-queue-v4-fix3.test.ts > 4. Throwing Axe: the fight's first card is played twice (proposal §4, Dai's question) > in the solver: a potion first does not take it, the first card does, energy paid once 1ms
+ ✓ tests/fix-queue-v4-fix3.test.ts > 4. Throwing Axe: the fight's first card is played twice (proposal §4, Roy's question) > FSPKJAYY3ET6 F39 T1: Inflame first is Strength +6 and Galvanic's 6 twice (logged 2 -> 8, HP 69 -> 57; 43 at T2) 408ms
+ ✓ tests/fix-queue-v4-fix3.test.ts > 4. Throwing Axe: the fight's first card is played twice (proposal §4, Roy's question) > not after a card was played this turn, nor on a later turn, nor without the relic 821ms
+ ✓ tests/fix-queue-v4-fix3.test.ts > 4. Throwing Axe: the fight's first card is played twice (proposal §4, Roy's question) > in the solver: a potion first does not take it, the first card does, energy paid once 1ms
  ✓ tests/combat-jev.test.ts > combat lines are Jev's > RA3Q F14 T1: code led by 7.7 and played its line; now Jev is asked, with no DeepSeek escalation 698ms
  ✓ tests/potion-cost.test.ts > keeps historical monster transitions and terminal models fixed across knowledge refreshes 53ms
  ✓ tests/potion-cost.test.ts > potionCost(id, ascension, act, fightKind): the table's held value, only > hallway and elite: the held value at this ascension and act (an elite is not discounted) 3ms
@@ -931,7 +931,7 @@
  ✓ tests/screens.test.ts > menus and overlays > continues an existing run by default 0ms
  ✓ tests/screens.test.ts > menus and overlays > starts a new run when RUN_START is new 0ms
  ✓ tests/screens.test.ts > menus and overlays > embarks once a character is chosen 1ms
- ✓ tests/screens.test.ts > menus and overlays > holds the ascension at TARGET_ASCENSION: steps down after a win unlocked the next level, no index (Dai 2026-09-28) 1ms
+ ✓ tests/screens.test.ts > menus and overlays > holds the ascension at TARGET_ASCENSION: steps down after a win unlocked the next level, no index (Roy 2026-09-28) 1ms
  ✓ tests/screens.test.ts > menus and overlays > selects the configured character 0ms
  ✓ tests/screens.test.ts > menus and overlays > confirms a modal 0ms
  ✓ tests/screens.test.ts > menus and overlays > continues past the score screen 0ms
@@ -969,7 +969,7 @@
  ✓ tests/screens.test.ts > combat plan guards (batch 2) > HP guard: a plan losing far more HP than the cheapest one is replaced (DeepSeek 'HP buffer is comfortable') 11ms
  ✓ tests/screens.test.ts > combat plan guards (batch 2) > HP guard leaves a plan within the slack alone 9ms
  ✓ tests/screens.test.ts > combat plan guards (batch 2) > reads Kaiser Crab's Crab Rage and Crimson Mantle's HP cost 1ms
- ✓ tests/screens.test.ts > potions at low HP outside boss fights > offers an unsimulated potion at any HP loss (Dai: a potion is a 0-cost one-shot card; T1, 12% of HP, was the gate until batch K) 27ms
+ ✓ tests/screens.test.ts > potions at low HP outside boss fights > offers an unsimulated potion at any HP loss (Roy: a potion is a 0-cost one-shot card; T1, 12% of HP, was the gate until batch K) 27ms
  ✓ tests/screens.test.ts > potions at low HP outside boss fights > a modelled potion has no use cost: its line is shown at any HP, and code's own line never drinks it 24ms
  ✓ tests/screens.test.ts > hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1) > Jev's potion pick stands at any confidence (the hallway 0.75 bar is gone) 8ms
  ✓ tests/screens.test.ts > hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1) > potion_context: a forced Elite ahead, the belt, the act boss and the run plan are on the combat question 10ms
@@ -1047,7 +1047,7 @@
  ✓ tests/turn-solver.test.ts > enemy powers > Hardened Shell caps the HP lost in a turn 1ms
  ✓ tests/turn-solver.test.ts > potions > uses a damage potion when it completes a lethal; otherwise a potion-free line stays among the plans 1ms
  ✓ tests/turn-solver.test.ts > potions > Dexterity Potion is worth the block cards in hand, nothing without one (KFP1 F17 T3: drunk with only Attacks) 3ms
- ✓ tests/turn-solver.test.ts > buff potions in a hallway fight (5FMU F15 T1: all four options drank the Strength Potion) > a potion's lasting value is full in a hallway fight as in a boss fight (batch K: no keep-the-potion discount, Dai) 152ms
+ ✓ tests/turn-solver.test.ts > buff potions in a hallway fight (5FMU F15 T1: all four options drank the Strength Potion) > a potion's lasting value is full in a hallway fight as in a boss fight (batch K: no keep-the-potion discount, Roy) 152ms
  ✓ tests/inferno-planner.test.ts > the copies counted off the state (strategy/start-loss.ts, the SL judge's count) > two Inferno+ (18): 2; one (9, or 6): 1; 27: 3; none: 0; Crimson Mantle's per copy on top 5ms
  ✓ tests/inferno-planner.test.ts > C4F14F3XPN0N F33 (A9, the Knowledge Demon): two Inferno+ up take 2 at the next turn's start > attempt 5 T6 (15 HP, the Slap 21 next): Breakthrough, Defend, Pillage+ (played, 2 HP after the enemy turn, T7's start took them) now dies; code plays Defend, Pillage+ 29ms
  ✓ tests/turn-solver.test.ts > buff potions in a hallway fight (5FMU F15 T1: all four options drank the Strength Potion) > the options always include a line without the potion 132ms
@@ -1173,8 +1173,8 @@
  ✓ tests/turn-solver.test.ts > next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny Toad's buff turn, 23 -> 16 into 23) > self-damage weighs x3 when the plan ends within 5 of next turn's hit, and drawn Defends are worth nothing 7ms
  ✓ tests/turn-solver.test.ts > next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny Toad's buff turn, 23 -> 16 into 23) > a drawn block card has no draw value on a turn with nothing incoming 0ms
  ✓ tests/turn-solver.test.ts > next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny Toad's buff turn, 23 -> 16 into 23) > with an attack coming this turn the self-damage rule is off 3ms
- ✓ tests/turn-solver.test.ts > Foul Potion hits us too (Dai 2026-09-28: no ban, Jev decides on exact numbers) > its 12 damage to us is in the line's hp_lost, through our block, and 12 to every enemy 1ms
- ✓ tests/turn-solver.test.ts > Foul Potion hits us too (Dai 2026-09-28: no ban, Jev decides on exact numbers) > Intangible caps it at 1 0ms
+ ✓ tests/turn-solver.test.ts > Foul Potion hits us too (Roy 2026-09-28: no ban, Jev decides on exact numbers) > its 12 damage to us is in the line's hp_lost, through our block, and 12 to every enemy 1ms
+ ✓ tests/turn-solver.test.ts > Foul Potion hits us too (Roy 2026-09-28: no ban, Jev decides on exact numbers) > Intangible caps it at 1 0ms
  ✓ tests/turn-solver.test.ts > a potion line never merges with a potion-free line (2CCM6XK4PB37 F15 T2: code drank the Dexterity Potion as the only line) > 0 energy, nothing playable: end turn stays a line next to the Dexterity Potion line 1ms
  ✓ tests/inferno-planner.test.ts > C4F14F3XPN0N F33 (A9, the Knowledge Demon): two Inferno+ up take 2 at the next turn's start > attempt 1 T6 (17 HP): every line's HP lost carries both copies; one copy (INFERNO_POWER 9) takes one less 179ms
  ✓ tests/inferno-planner.test.ts > JGJS7QE62GLD F24 T2 (16 HP, the Spiny Toad): one Inferno up, the second in the hand > playing the second costs 1 more at the next turn's start: every line dies, and least-loss now ends the turn instead of playing it (logged: played, lost on T2) 5ms
@@ -1782,23 +1782,23 @@
  ✓ tests/sl.test.ts > SlController > the reload restores the journal and the Lizard Tail record from the fight's start 2ms
  ✓ tests/sl.test.ts > SlController > describe() is what run-config records 1ms
  ✓ tests/sl.test.ts > previousAttemptsJson > says the same deck and draws come back, and lists each attempt's end, potions and turns 0ms
- ✓ tests/sl.test.ts > configuration > SL is on by default (Dai 2026-10-02), with retries 5 / 3, the sim shown on retries, the log next to the decision log 8ms
- ✓ tests/sl.test.ts > configuration > THIEF_FACTS and THIEF_COST are on by default (Dai 2026-10-02); off turns each off 1ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > an act-3 fight with no boss entered below 40% of max HP is eligible; the reason carries its entry HP 1ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > the line is strict: exactly 40% is not eligible, just under is (integer arithmetic); the percent is configurable 1ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > act 3 only: acts 1, 2 (and anything after 3) are not; without an act_id the floor says it (F34 on) 1ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > SL_ACT2_LOW_HP (Dai 2026-10-04): an act-2 fight with no boss below its line is eligible with its own gate; act 1 never; off or absent as before 1ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > the switch off: not eligible, whatever the HP 0ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > bosses and listed hard fights come first and are unchanged, with the switch on or off, at any HP and act 1ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > the entry HP is the fight's first state: the journal's record of it, else the first state seen, never a later one 2ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > an earlier attempt's logged act3-low-hp gate is kept (a restarted process), in act 3 with the switch on 0ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > an act-3 hallway entered at 30/80: tracked, reloaded on a certain death like a listed fight; every row carries the gate, the retry keeps it 3ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > fight_kind is the room the run chose on the map: a ? room's fight is event, an elite room's elite (the gate as before) 5ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > the attempt cap is SL_ELITE_RETRIES: used up, the turn ends as usual 1ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > entered at exactly 40% (32/80): not tracked, and HP falling below the line later does not make it so; a certain death is not intercepted 2ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > not act 3, or the switch off: a low-HP hallway is not tracked 2ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > boss and listed rows carry gate boss / hard-fight, tracked the same with the switch on or off 3ms
- ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line > a restarted process keeps the logged gate, whatever the HP it first sees; with no row yet, the journal's entry HP decides 2ms
+ ✓ tests/sl.test.ts > configuration > SL is on by default (Roy 2026-10-02), with retries 5 / 3, the sim shown on retries, the log next to the decision log 8ms
+ ✓ tests/sl.test.ts > configuration > THIEF_FACTS and THIEF_COST are on by default (Roy 2026-10-02); off turns each off 1ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > an act-3 fight with no boss entered below 40% of max HP is eligible; the reason carries its entry HP 1ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > the line is strict: exactly 40% is not eligible, just under is (integer arithmetic); the percent is configurable 1ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > act 3 only: acts 1, 2 (and anything after 3) are not; without an act_id the floor says it (F34 on) 1ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > SL_ACT2_LOW_HP (Roy 2026-10-04): an act-2 fight with no boss below its line is eligible with its own gate; act 1 never; off or absent as before 1ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > the switch off: not eligible, whatever the HP 0ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > bosses and listed hard fights come first and are unchanged, with the switch on or off, at any HP and act 1ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > the entry HP is the fight's first state: the journal's record of it, else the first state seen, never a later one 2ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > an earlier attempt's logged act3-low-hp gate is kept (a restarted process), in act 3 with the switch on 0ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > an act-3 hallway entered at 30/80: tracked, reloaded on a certain death like a listed fight; every row carries the gate, the retry keeps it 3ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > fight_kind is the room the run chose on the map: a ? room's fight is event, an elite room's elite (the gate as before) 5ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > the attempt cap is SL_ELITE_RETRIES: used up, the turn ends as usual 1ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > entered at exactly 40% (32/80): not tracked, and HP falling below the line later does not make it so; a certain death is not intercepted 2ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > not act 3, or the switch off: a low-HP hallway is not tracked 2ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > boss and listed rows carry gate boss / hard-fight, tracked the same with the switch on or off 3ms
+ ✓ tests/sl.test.ts > SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line > a restarted process keeps the logged gate, whatever the HP it first sees; with no row yet, the journal's entry HP decides 2ms
  ✓ tests/boss-sim-gaps.test.ts > B2 turn relics > fightRelicsOf: Orichalcum, Ripple Basin, Sturdy Clamp, Ice Cream and Pendulum's turns from its counter 3ms
  ✓ tests/boss-sim-gaps.test.ts > B2 turn relics > the solver's Orichalcum and Ripple Basin (whole fights only): end-of-turn block when the turn left none / played no Attack 13ms
  ✓ tests/boss-sim-gaps.test.ts > B2 turn relics > whole fights: the later turns' solver gets Orichalcum, Pendulum's card, Ice Cream's energy 11ms
@@ -2462,10 +2462,10 @@
  ✓ tests/pricing.test.ts > Jev pricing > counts only input tokens: output is free 0ms
  ✓ tests/knowledge-check-cards.test.ts > card tiers the outcome data contradicts (A8 outcome-stats, n >= 15 each way) > Taunt 62 -> 50, Molten Fist 54 -> 44, Twin Strike 58 -> 64 2ms
  ✓ tests/knowledge-check-cards.test.ts > card tiers the outcome data contradicts (A8 outcome-stats, n >= 15 each way) > Aeonglass: plain True Grit gets no Wither bonus (random exhaust); Burning Pact still does 1ms
- ✓ tests/learning-roles.test.ts > Dai's Codex learning-loop roles > AGENTS.md keeps self-tested learner merges and Claude's observer role 2ms
- ✓ tests/learning-roles.test.ts > Dai's Codex learning-loop roles > docs/learning-protocol.md keeps self-tested learner merges and Claude's observer role 0ms
- ✓ tests/learning-roles.test.ts > Dai's Codex learning-loop roles > docs/codex-ops.md keeps self-tested learner merges and Claude's observer role 0ms
- ✓ tests/learning-roles.test.ts > Dai's Codex learning-loop roles > ops/ops-session-silent-codex-prompt.md keeps self-tested learner merges and Claude's observer role 0ms
+ ✓ tests/learning-roles.test.ts > Roy's Codex learning-loop roles > AGENTS.md keeps self-tested learner merges and Claude's observer role 2ms
+ ✓ tests/learning-roles.test.ts > Roy's Codex learning-loop roles > docs/learning-protocol.md keeps self-tested learner merges and Claude's observer role 0ms
+ ✓ tests/learning-roles.test.ts > Roy's Codex learning-loop roles > docs/codex-ops.md keeps self-tested learner merges and Claude's observer role 0ms
+ ✓ tests/learning-roles.test.ts > Roy's Codex learning-loop roles > ops/ops-session-silent-codex-prompt.md keeps self-tested learner merges and Claude's observer role 0ms
  ✓ tests/silent-upgrade-preview.test.ts > P5HT F24: the upgraded Expose preview retains the observed Exhaust keyword 3ms
  ✓ tests/silent-upgrade-preview.test.ts > preserves displayed decorations before and after an exactly matching template 0ms
  ✓ tests/silent-upgrade-preview.test.ts > an unmatched rendered text keeps its facts and reports the numeric change 0ms

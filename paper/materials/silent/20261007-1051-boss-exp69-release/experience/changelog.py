@@ -71,7 +71,7 @@ f'- live合入结果：{M.get("reason","实际合入且合后固定沙箱通过"
 '- 固定种子20260929，从截至本局states抽state.run.character_id=SILENT的最高A9/A10，每阶20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP＝240配对。官方knowledge-slice.ts/CHARACTER=silent/setExperienceForTests，只换经验JSON；common与静默其他结果表冻结，完整manifest/原切片留盘，不读取其他角色或冒称V4整份前缀。',
 '','| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for x in Z['rows']:lines.append(f'| {x["sample"].replace("sample-","")} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["delta_median"]} |')
-lines+=['',f'- 配对增量中位{Z["delta_median"]}字、最大增量{Z["delta_max"]}；总体中位{Z["before_median"]}→{Z["after_median"]}、最大{Z["before_max"]}→{Z["after_max"]}字。active138→139、49357→49583字，高68中45低26；A8 132条46476字、A9 133条46775字。需要Dai定的知识事项：无。','']
+lines+=['',f'- 配对增量中位{Z["delta_median"]}字、最大增量{Z["delta_max"]}；总体中位{Z["before_median"]}→{Z["after_median"]}、最大{Z["before_max"]}→{Z["after_max"]}字。active138→139、49357→49583字，高68中45低26；A8 132条46476字、A9 133条46775字。需要Roy定的知识事项：无。','']
 section='\n'.join(lines);(O/'changelog-section.md').write_text(section)
 old=DEST.read_bytes();assert ('## '+title).encode() not in old
 (O/'changelog-prefix.json').write_text(json.dumps(dict(bytes=len(old),sha256=hashlib.sha256(old).hexdigest()))+'\n')

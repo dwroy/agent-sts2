@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Play TARGET runs at ascension ASC, then stop (ops/stop-after-a8.sh with the ascension as a parameter; Dai 2026-10-02:
+# Play TARGET runs at ascension ASC, then stop (ops/stop-after-a8.sh with the ascension as a parameter; Roy 2026-10-02:
 # A9 from V4.4). Counts runs at ASC in runs.jsonl that ended after START.
 # When the last one starts (TARGET - 1 finished) it creates ops/STOP, so autoplay.sh exits after that run.
 # Usage: ops/stop-after.sh <START ISO UTC> [TARGET=20] [ASC=9] [CHAR]

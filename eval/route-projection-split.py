@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Route projection against what happened, split the way the act-start route question needs it (Dai 2026-10-04).
+"""Route projection against what happened, split the way the act-start route question needs it (Roy 2026-10-04).
 
 Every logged route plan (decisions.jsonl `route_plan`: map/route-plan, event/act-plan, map/route-change,
 map/route-review) projects the HP on arriving at each node of its path (hpOnArrival x max HP). While the run walked the

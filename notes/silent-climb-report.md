@@ -57,7 +57,7 @@ export PATH="$HOME/.local/node/bin:$PATH"
 nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 0 --md --per-run > /tmp/sts2-a0-climb-metrics.md
 ```
 
-退出码1，报错摘要：`RuntimeError: eval/strength-sources.ts failed`；`Error: listen EPERM: operation not permitted /tmp/tsx-1000/69.pipe`。没有生成完整 eval 指标表；以上核心统计从 runs / SL / run-config 原日志及04:07论文表交叉核对，未伪造力量来源或校准输入。完整命令与补跑请求已写收件箱并同步 notes/for-dai.md。原命令被拒绝后未改代码或尝试扩大沙箱权限。
+退出码1，报错摘要：`RuntimeError: eval/strength-sources.ts failed`；`Error: listen EPERM: operation not permitted /tmp/tsx-1000/69.pipe`。没有生成完整 eval 指标表；以上核心统计从 runs / SL / run-config 原日志及04:07论文表交叉核对，未伪造力量来源或校准输入。完整命令与补跑请求已写收件箱并同步 notes/for-roy.md。原命令被拒绝后未改代码或尝试扩大沙箱权限。
 
 ### A0 完整评估补充（2026-10-05 04:45 CST）
 
@@ -180,7 +180,7 @@ CSV的`items_found=3`按最早证据进阶归属；`items_shipped=10`按登记�
 nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 1 --md --per-run > /tmp/sts2-a1-climb-metrics.md 2> /tmp/sts2-a1-climb-metrics.err
 ```
 
-退出码1：`RuntimeError: eval/strength-sources.ts failed`，tsx CLI监听`/tmp/tsx-1000/68.pipe`被沙箱拒绝（`listen EPERM: operation not permitted`）。当前白名单没有eval-metrics动作，broker与检查脚本只读待办继续保留；本轮不绕过沙箱，完整评估表、力量来源和校准指标均待外部结果。以上核心统计已由runs、SL、run-config、论文表和只读日志库交叉核对；失败命令及A1补跑请求追加到收件箱与notes/for-dai.md。
+退出码1：`RuntimeError: eval/strength-sources.ts failed`，tsx CLI监听`/tmp/tsx-1000/68.pipe`被沙箱拒绝（`listen EPERM: operation not permitted`）。当前白名单没有eval-metrics动作，broker与检查脚本只读待办继续保留；本轮不绕过沙箱，完整评估表、力量来源和校准指标均待外部结果。以上核心统计已由runs、SL、run-config、论文表和只读日志库交叉核对；失败命令及A1补跑请求追加到收件箱与notes/for-roy.md。
 
 ### A1首胜复盘补齐（2026-10-05 06:34 CST）
 
@@ -203,7 +203,7 @@ silent,1,3,1,0,1,32.67,32.67,E6AVMMVCSRPC,K3676LU8B0UH,2026-10-04T19:50:28+00:00
 
 观察者已在沙箱外完成A1完整评估，exit 0；已提交的原始结果为[a1-metrics.md](../paper/materials/silent/a1-metrics.md)，来源提交`0cbc1770b9ba926915d456d7203e793f37d63476`。06:21的A1评估补跑请求已完成，前文沙箱内失败及等待外部结果的记录保留为历史。
 
-以下原样收录完整汇总及三局明细。局数、最终SL后1胜/首次尝试0胜、平均终层32.7与原小结一致；样本不足的区间和boss时钟校准缺失值保留原输出。eval-metrics白名单动作仍待Dai决定由谁添加，不因本次人工补跑完成而关闭该待办。
+以下原样收录完整汇总及三局明细。局数、最终SL后1胜/首次尝试0胜、平均终层32.7与原小结一致；样本不足的区间和boss时钟校准缺失值保留原输出。eval-metrics白名单动作仍待Roy决定由谁添加，不因本次人工补跑完成而关闭该待办。
 
 | 指标 | A1 |
 |---|---|
@@ -315,7 +315,7 @@ silent,2,2,1,1,0,40.5,40.5,CSBR5CRDWQNB,ZZMYZ5UBCG72,2026-10-04T22:05:11+00:00,2
 nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 2 --md --per-run > /tmp/sts2-a2-climb-metrics.md 2> /tmp/sts2-a2-climb-metrics.err
 ```
 
-退出1，`RuntimeError: eval/strength-sources.ts failed`，根因`Error: listen EPERM: operation not permitted /tmp/tsx-1000/69.pipe`。完整eval没有生成；上面的核心统计由runs、SL、run-config及首条决策核对，不伪造力量来源或校准输入。请沙箱外有权限的执行方补跑同一命令，结果归档`paper/materials/silent/a2-metrics.md`；完整命令及请求已追加收件箱和notes/for-dai.md。eval-metrics白名单动作仍沿已有待办，运维不扩大沙箱出口。
+退出1，`RuntimeError: eval/strength-sources.ts failed`，根因`Error: listen EPERM: operation not permitted /tmp/tsx-1000/69.pipe`。完整eval没有生成；上面的核心统计由runs、SL、run-config及首条决策核对，不伪造力量来源或校准输入。请沙箱外有权限的执行方补跑同一命令，结果归档`paper/materials/silent/a2-metrics.md`；完整命令及请求已追加收件箱和notes/for-roy.md。eval-metrics白名单动作仍沿已有待办，运维不扩大沙箱出口。
 
 ## A3升级小结（2026-10-05 09:49 CST；A4升级事件09:35送达）
 
@@ -381,7 +381,7 @@ nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group
 | S1.exp8 | 07:58:16，fe4b466f | 经验.7，源0d469a22，K3676LU8B0UH A1及历史静默局；A3开局已经实际读到未提交的.7，正式提交时间另记 |
 | S1.exp9 | 08:01:37，62faa08a | 经验.8，源267128cd，CSBR5CRDWQNB A2及历史静默局；16项登记，保留当时提案/上线历史 |
 | S1.fix7 | 08:16:47，1b294533 | 学习者源907a19f8，silent-0061，CSBR A2 F33第6次T2的风的女儿攻击补挡证据 |
-| S1.high | 08:34:52，61397e29 | Dai的普通模式/high强度决定，登记源码0811875f；不是学习者学出的游戏规则 |
+| S1.high | 08:34:52，61397e29 | Roy的普通模式/high强度决定，登记源码0811875f；不是学习者学出的游戏规则 |
 | S1.fix8 | 08:36:43，45965f49 | 学习者源098a5471，CSBR A2 F17奖励屏较低终帧统计子项；silent-0040原跨SL统计问题当时仍未修 |
 
 A3起始代码9e0fda2e+dirty、经验.7、Codex xhigh/priority；A4升级首局起始代码45965f49+dirty、经验.8、Codex high且service_tier=null。代码上线按流程供下一局使用；知识前缀可重新读取，逐次实际前缀以brain日志为准。S1.exp10（经验.9）08:56正式发布晚于A3结束，本轮经验.10仍待live锁释放后合入。单局、多次上线和引擎配置差异均保留，不据此归因某个版本导致胜利。

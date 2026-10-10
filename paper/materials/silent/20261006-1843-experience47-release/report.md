@@ -16,7 +16,7 @@
 - 测试：源 tsc 0；vitest 203文件/2194用例/0（校正n文字后完整重跑通过）；合后 tsc 0、vitest 204文件/2203用例/0
 - 切片大小：配对增量中位 +46 字；最大6346→6260字
 - 学习账本：新增无；改成 proposed silent-0005,silent-0006,silent-0017,silent-0018,silent-0019,silent-0020,silent-0021,silent-0057,silent-0007,silent-0011,silent-0027,silent-0030,silent-0046,silent-0049,silent-0024,silent-0065,silent-0107,silent-0129,silent-0187,silent-0188；退役无；ledger.py check 0
-- 需要 Dai 定的事：无
+- 需要 Roy 定的事：无
 
 ```json
 {"task": "experience-update", "version": "2026-10-06.22", "commit": "0723092c1d575122896945935e5b55d89983c57d", "merged": "a95d92ecee0152abcb433b00b3aa0305d3fa2e43", "added": 1, "updated": 17, "retired": 0, "active": 122, "mechanisms": ["复制返还与五轮书回血", "敏捷逐后续挡牌", "力量与虚弱/脆弱", "金刚杵开场力量", "触媒建立与毒触发", "铜质鳞片逐击荆棘", "蟹朝向及剩余预算", "计划妥当保留与兑现", "巨兽双结束线与SL", "构筑兑现观察"], "tests": {"tsc": 0, "vitest": 0, "cases": 2203}, "ledger": {"added": [], "proposed": ["silent-0005", "silent-0006", "silent-0017", "silent-0018", "silent-0019", "silent-0020", "silent-0021", "silent-0057", "silent-0007", "silent-0011", "silent-0027", "silent-0030", "silent-0046", "silent-0049", "silent-0024", "silent-0065", "silent-0107", "silent-0129", "silent-0187", "silent-0188"], "retired": [], "check": 0}}

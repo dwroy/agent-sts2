@@ -11,4 +11,4 @@
 - 机制：敏捷逐牌、敌力逐击/虚弱、升级涂毒逐击2毒、触媒实际结算；构筑启动/狂战士SL/帝王蟹为观察，无新喝药规则。狂战士高阶4局，真正重打仅1场4次0赢；初36同序、第2/3/4次同轮，首试到手轮异；T4多18伤付2血少2敏、撤毒局部少9伤，无胜次单因。
 - 变更记录：主目录paper/materials/experience-changelog-silent.md第51节，只追加且前缀原字节不变；主目录本节和账本由调用方提交。完整数/脚本/原分流/预算草稿失败与更正均在本任务目录。
 - 账本仅CLI/by=learner:experience-update proposed：silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0027,silent-0062,silent-0084,silent-0079；check0。请运维据本次完成事件核实际live后CLI标shipped/S1.exp51，保留first_run/prior/旧版本/repeat；无新增/退役账本。
-- 无手写知识、源码、生成器或其他角色变更，无新纯bug；不重建、不停对局、不运行play、不推送。需要Dai定：无。
+- 无手写知识、源码、生成器或其他角色变更，无新纯bug；不重建、不停对局、不运行play、不推送。需要Roy定：无。

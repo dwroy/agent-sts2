@@ -1,5 +1,5 @@
 /**
- * Act start in one question (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Dai 2026-09-29; M2: the whole map): the
+ * Act start in one question (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Roy 2026-09-29; M2: the whole map): the
  * act-start Ancient's option and the act's route (a node sequence) together, the map from the MAP screen before the
  * Ancient (the EVENT state has none); the route stored as the act's route plan and followed from the first map,
  * whose first move is a step of the plan; one review (keep or change) after an option whose outcome was random; an
@@ -84,7 +84,7 @@ describe("act-start Ancient: its option and the act's route in one question", ()
     expect(String(view["boss"])).toMatch(/（F33 Boss）$/);
     expect(String(view["room_costs"])).toMatch(/^第 2 幕每个房间掉血/);
     expect(legalRoutes(view).length).toBeGreaterThanOrEqual(2);
-    // No code values or ranks; candidate routes as facts (Dai 2026-10-04): a few legal routes to the boss with their
+    // No code values or ranks; candidate routes as facts (Roy 2026-10-04): a few legal routes to the boss with their
     // projected HP (the numbers: tests/act-route-candidates.test.ts, on fixed costs).
     expect(JSON.stringify(view)).not.toMatch(/code_value|code_rank|hp_at_boss|act_routes/);
     const candidates = view["candidate_routes"] as { about: string; routes: string[] };

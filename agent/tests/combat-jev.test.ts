@@ -1,5 +1,5 @@
 /**
- * Combat execution is Jev's (Dai 2026-09-28): with two or more distinct lines Jev is asked even when
+ * Combat execution is Jev's (Roy 2026-09-28): with two or more distinct lines Jev is asked even when
  * code's line leads by 6+ points; no DeepSeek escalation in combat; a low-confidence hallway pick stands;
  * code still plays lethal lines itself.
  */

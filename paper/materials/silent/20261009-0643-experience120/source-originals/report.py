@@ -124,7 +124,7 @@ lines+=['','### 切片大小','',
     '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for r in rows:lines+=[f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |']
 lines+=[f'- 整体中位{sl["before_median"]}→{sl["after_median"]}（{sl["median_change"]:+}字），配对差中位{sl["paired_median"]}；最大{sl["before_max"]}→{sl["after_max"]}，单片最少{sl["min_change"]}、最多增加{sl["max_growth"]}。',
-    f'- active{U["after"]["active"]}、正文{U["after"]["chars"]}字符，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。无压缩/合并/退役，需要Dai定：无。','',
+    f'- active{U["after"]["active"]}、正文{U["after"]["chars"]}字符，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。无压缩/合并/退役，需要Roy定：无。','',
     '原始子集、字节偏移、复算、核验、提案/CLI、固定切片、测试、合入预检及报告保存'+str(O)+'。','']
 section='\n'.join(lines)
 (O/'changelog-section.md').write_text(section)

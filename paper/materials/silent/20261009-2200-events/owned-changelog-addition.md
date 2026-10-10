@@ -577,7 +577,7 @@
 - 原bash agent/tools/test-sandbox.sh、TMPDIR指定scratch、PATH本机node、SANDBOX_WORKERS=1、固定数据及排除名单；tsc 0；vitest 251文件/2627用例/退出0；重跑False。沙箱外完整套件由调度器按完成事件补跑。
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均退出0；ledger.py check 0。新增账本无；改proposed silent-0019,silent-0020,silent-0021,silent-0012,silent-0015,silent-0011,silent-0025,silent-0133,silent-0222,silent-0134,silent-0242,silent-0289,silent-0307,silent-0345；退役无；保留旧claim/first_run/prior及历史。实际shipped由运维核实。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新a8bb1ebe5e3aed093914622da19bab5d40bfaccb；合前a8bb1ebe5e3aed093914622da19bab5d40bfaccb；实际合入None；合后测试None。
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -617,7 +617,7 @@
 | sample-a9-shop | 3881.0/4966 | 4019.0/4940 | 15.0 |
 
 - 整体中位2656.0→2738.5（+82.5字），配对差中位4.0；最大5450→5465，单片差范围[-26, 302]。
-- active199、总字符50021，置信度{'low': 25, 'high': 129, 'med': 45}；A8 {'entries': 185, 'chars': 46336}，A9 {'entries': 186, 'chars': 46620}，A10 {'entries': 197, 'chars': 49193}。预算内，无需Dai另定。
+- active199、总字符50021，置信度{'low': 25, 'high': 129, 'med': 45}；A8 {'entries': 185, 'chars': 46336}，A9 {'entries': 186, 'chars': 46620}，A10 {'entries': 197, 'chars': 49193}。预算内，无需Roy另定。
 
 全部原始抽取/偏移、历史基线/机制、前后经验/切片、CLI和提案、测试及合入预检原件保存于/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-200936-experience-update。
 
@@ -1395,7 +1395,7 @@
 - JSON合法、diff --check、gitleaks staged、check-experience missing=[]均0；ledger.py check 0。账本新增无，proposed silent-0019,silent-0020,silent-0021,silent-0125,silent-0012,silent-0005,silent-0025,silent-0013,silent-0046,silent-0010,silent-0158,silent-0162,silent-0233,silent-0259,silent-0243,silent-0276,silent-0253,silent-0312,silent-0348，退役无；旧claim/首证/prior/历史保持，实际shipped由运维核。
 - 锁内live结果：锁内合并预检冲突，按任务停止，不实际合并或硬解；刷新ee17a8e20d38400846031bc86e05cec071c1380b；合前ee17a8e20d38400846031bc86e05cec071c1380b；实际合入None；合后测试None。
 - CONFLICT (content): Merge conflict in notes/fix-queue-v4.md
-- CONFLICT (content): Merge conflict in notes/for-dai.md
+- CONFLICT (content): Merge conflict in notes/for-roy.md
 - CONFLICT (content): Merge conflict in notes/lessons.md
 - CONFLICT (content): Merge conflict in notes/ops-handoff.md
 - CONFLICT (content): Merge conflict in ops/inbox-dev.md
@@ -1436,6 +1436,6 @@
 | sample-a9-shop | 4019.0/4940 | 4016.0/5197 | -3.0 |
 
 - 整体中位2739.0→2777.5（+38.5字），配对差中位-3.0；最大5465→5462，单片差范围[-101, 308]。
-- active200、总字符49840，置信度{'low': 25, 'high': 129, 'med': 46}；A8 {'entries': 186, 'chars': 46155}，A9 {'entries': 187, 'chars': 46439}，A10 {'entries': 198, 'chars': 49012}。需要Dai定：无。
+- active200、总字符49840，置信度{'low': 25, 'high': 129, 'med': 46}；A8 {'entries': 186, 'chars': 46155}，A9 {'entries': 187, 'chars': 46439}，A10 {'entries': 198, 'chars': 49012}。需要Roy定：无。
 
 全部原件、前后经验/切片、基线/公式/历史SL、CLI/提案、测试、合入预检与报告保存在/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-210409-experience-update。

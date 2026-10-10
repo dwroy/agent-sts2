@@ -6,7 +6,7 @@
 - 没修的：永冻首次能力7挡 — 太大、证据不足；mod超时自愈和Codex缓存实测 — 证据不足；boss模拟性能 — 太大；策略项 — 策略类。详细理由见 [/home/dw/Projects/agent-sts2/learner/runs/20261006-221304-fix-batch/skipped.json](/home/dw/Projects/agent-sts2/learner/runs/20261006-221304-fix-batch/skipped.json)。
 - 测试：源与live各 tsc 退出码 0；vitest 208 文件 / 2237 用例 / 退出码 0。初稿 silent-hidden-daggers 回归已修正并重跑通过，原失败保留；无高负载超时重跑，完整外部套件待调度器补跑。
 - 合入：8aead9fa447e76f6a36bdf0a5d5214ccc5aeb522（S1.fix36；运维交接 /home/dw/Projects/agent-sts2/learner/runs/20261006-221304-fix-batch/handoff-ops.md）
-- 需要 Dai 定的事：保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第三幕第二boss、无色牌及懒惰平均出牌估值。
+- 需要 Roy 定的事：保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第三幕第二boss、无色牌及懒惰平均出牌估值。
 
 ```json
 {
@@ -39,7 +39,7 @@
     },
     {
       "item": "保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第三幕第二boss、无色牌估值、懒惰平均出牌估值",
-      "reason": "策略类：本任务不改，交Dai及独立策略任务；已有事实与机制修复保留。"
+      "reason": "策略类：本任务不改，交Roy及独立策略任务；已有事实与机制修复保留。"
     }
   ],
   "merged": "8aead9fa447e76f6a36bdf0a5d5214ccc5aeb522",

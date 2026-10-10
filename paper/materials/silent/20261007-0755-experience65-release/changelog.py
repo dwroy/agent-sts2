@@ -60,7 +60,7 @@ lines+=['','- 7条全加证据、纯数字0；骇鳗253字、异鸟56字、路�
 '','### 切片大小','',
 '- 固定种子20260929，从截至两局57125帧静默状态池按state.run.character_id=SILENT，抽最高A9/A10每界面各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP＝240配对，均真实界面。官方knowledge-slice.ts、CHARACTER=silent/setExperienceForTests；仅切换experience，其他知识/结果表冻结，manifest和逐片原文留盘。n变化的排序也可改变入选条目，不冒充V4完整前缀。','','| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for x in S['rows']:lines.append(f'| {x["sample"].removeprefix("sample-")} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["delta"]} |')
-lines += ['',f'- 配对增量中位{S["median_delta"]}字、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active136→136、49920→49822字，高66中41低29；A8 129条46715字、A9 130条47014字、A10 131条47594字。需要Dai定：无。']
+lines += ['',f'- 配对增量中位{S["median_delta"]}字、最大增量{S["max_delta"]}；总体中位{S["before_median"]}→{S["after_median"]}，最大{S["before_max"]}→{S["after_max"]}字。active136→136、49920→49822字，高66中41低29；A8 129条46715字、A9 130条47014字、A10 131条47594字。需要Roy定：无。']
 text='\n'.join(lines)+'\n';(O/'changelog-section.md').write_text(text);f=ROOT/'paper/materials/experience-changelog-silent.md';prior=f.read_bytes();(O/'changelog-before.sha256').write_text(hashlib.sha256(prior).hexdigest()+'\n');assert title not in prior.decode()
 with f.open('a') as h:h.write('\n'+text)
 assert f.read_bytes().startswith(prior);print('仅追加第65节',len(text),'字')

@@ -5,7 +5,7 @@
   - ULP4TN1GNHMK：毒结算漏算滑溜限伤及减层，分别多报14、6伤害 — agent/src/reflex/turn-solver.ts:1550（新，fix-queue未见同项）。
 - 写成「未记录」的项：ULP4TN1GNHMK：读档截断轮完整结算、完整最优原线执行比例、旧boss时钟指标、Jev缓存、未选方案及修复后的受控整场结果、各能力／遗物独立收益。
 - 学习账本：ULP4TN1GNHMK：新增 silent-0226、silent-0227；更新 silent-0005、silent-0011、silent-0019、silent-0079、silent-0204、silent-0224（老错 silent-0079）；`ledger.py check` 退出码0。
-- 需要 Dai 定的事：无。
+- 需要 Roy 定的事：无。
 
 ```json
 {"task":"postmortem","appended":["ULP4TN1GNHMK"],"skipped":[],"bugs":[{"run":"ULP4TN1GNHMK","where":"agent/src/reflex/turn-solver.ts:1550","what":"毒结算未应用滑溜的1血上限，也未消费滑溜层数，实测多报14及6伤害","new":true}],"ledger":{"added":["silent-0226","silent-0227"],"updated":["silent-0019","silent-0079","silent-0005","silent-0011","silent-0204","silent-0224"],"repeats":["silent-0079"],"check":0}}

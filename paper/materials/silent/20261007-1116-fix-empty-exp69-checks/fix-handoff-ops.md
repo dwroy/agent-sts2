@@ -16,7 +16,7 @@
 
 原入口bash tools/test-sandbox.sh首轮退出0：tsc通过；线程组219文件2320用例通过，260.26秒；paths组1文件11用例通过，1.76秒；合计220文件2331用例。原日志sandbox.log、退出码sandbox.exit。无失败、超时或重跑。无新修复，因此未重复撤回135项旧源码做红绿；原各批红绿历史沿归档保留。
 
-未修事项见report.json：mod超时根因与Codex缓存受控实测缺证据；boss整场模拟性能需独立专项；策略项交Dai或独立策略任务；静默boss校准与Codex-only大脑沿独立功能任务，不能混入纯bug批。没有读取游戏二进制或凭自己的知识补规则。
+未修事项见report.json：mod超时根因与Codex缓存受控实测缺证据；boss整场模拟性能需独立专项；策略项交Roy或独立策略任务；静默boss校准与Codex-only大脑沿独立功能任务，不能混入纯bug批。没有读取游戏二进制或凭自己的知识补规则。
 
 没有新增源码提交或live合并，merged=null。本分支HEAD等于开工合后基线，工作树干净；已修源码均在live。live有独立boss校准等功能差异，与main基线的SOURCE_PATHS不完全相同；只读调用ops/learner_checks.py verify_empty_fix明确返回None。因此本批完成事件可能被现有严格源码等值守卫判为未核实，请运维据本交接人工核对无新增产出并结案，保留调度历史；不要为取得虚构merged而空合并、覆盖live独立功能或上线main中尚未发布的其他任务骨架。
 

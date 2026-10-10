@@ -102,6 +102,6 @@ DUZUBAJ3A8GP，SILENT A10，F30 T5：首试528→532，末试612→616，先施�
 
 锁可用后按任务锁内流程保存刷新知识、检查重叠、git merge本分支、原入口合后检查。注意live已并行发布上一批勒紧+，本源基线未包含该项：须作三方合并、保留其最新卡模型；不得把本源6个blob整体覆盖到live。保留所有并行数据/记录。若知识重叠或冲突，不覆盖；交运维机械集成。源码patch可由git show本源取得，父基线见上。
 
-实际上线且合后测试通过，才能将本派发项登记implemented、建立唯一eval版本、date后decision-log/根for-dai与inbox双通知；然后运维依据实际版本登记对应账本shipped。当前无实际源码祖先证明，CLI补充提案pending，原消费项waiting。
+实际上线且合后测试通过，才能将本派发项登记implemented、建立唯一eval版本、date后decision-log/根for-roy与inbox双通知；然后运维依据实际版本登记对应账本shipped。当前无实际源码祖先证明，CLI补充提案pending，原消费项waiting。
 
 回退实际本项集成中的源码差异或revert上述源码commit；保留最新勒紧+及其他并行已发布代码。并行知识刷新保留，不停局、不运行play、不推送。

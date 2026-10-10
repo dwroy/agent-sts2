@@ -1,5 +1,5 @@
 /**
- * Act start in one question (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Dai 2026-09-29): the act-start
+ * Act start in one question (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Roy 2026-09-29): the act-start
  * Ancient's options and the act's route are decided together, since an option can change the route
  * (gold for shops, max HP and heals for elites and rests, removals and upgrades for rest use).
  *
@@ -14,7 +14,7 @@
  * still missing or illegal then does not block the option: it is taken, and the first map asks for the route. When
  * the option's outcome was not known in advance (random relics, cards chosen later), the brain reviews the route
  * once at that first map (keep or change; default keep). The map comes with candidate routes to the boss and their
- * projected HP (state.act_route.candidate_routes, Dai 2026-10-04; strategy/route-map.ts candidateRoutesFacts).
+ * projected HP (state.act_route.candidate_routes, Roy 2026-10-04; strategy/route-map.ts candidateRoutesFacts).
  */
 
 import { eventHpCost } from "./event.js";

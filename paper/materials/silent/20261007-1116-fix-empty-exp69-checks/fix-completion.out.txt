@@ -7,7 +7,7 @@
 - 没修的：mod 超时根因、缓存实测 — 证据不足；boss 模拟性能 — 太大；策略项 — 策略类；boss 校准、Codex-only 大脑 — 独立功能任务。
 - 测试：tsc 退出码0；vitest 220文件 / 2331用例 / 退出码0，首轮通过，无重跑。
 - 合入：未合入（无新增修复）。既有135项已在所核 live 0061f599；独立功能源码差异使空批自动核验返回 null，已写[运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261007-104302-fix-batch/handoff-ops.md)，供核对结案。
-- 需要 Dai 定的事：原保血、留药、全死排序／巨兽拖延、SL范围、路线、休息、目标优先及估值策略；已授权独立功能按专用任务执行。
+- 需要 Roy 定的事：原保血、留药、全死排序／巨兽拖延、SL范围、路线、休息、目标优先及估值策略；已授权独立功能按专用任务执行。
 
 ```json
 {"task":"fix-batch","base":"cf31d63c8a96795f263fcb5dc9dabb44617b0cbf","fixes":[],"skipped":[{"item":"mod超时根因、Codex缓存实测","reason":"证据不足"},{"item":"boss模拟性能","reason":"太大，需独立性能专项"},{"item":"保血、留药、全死排序、SL范围、时钟、路线、休息、目标优先、A10第二boss及估值","reason":"策略类"},{"item":"静默boss校准、Codex-only大脑","reason":"独立功能任务，不混入纯bug批"}],"merged":null,"tests":{"tsc":0,"vitest":0,"cases":2331}}

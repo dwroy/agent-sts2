@@ -81,7 +81,7 @@ lines+=['','### 切片大小','',
  '', '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for x in Z['rows']:lines.append(f'| {x["sample"]} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["paired_median"]} |')
 lines+=['',f'- 整体中位{Z["before_median"]}→{Z["after_median"]}（{Z["after_median"]-Z["before_median"]:+}字），配对差中位{Z["paired_median"]:+}；最大{Z["before_max"]}→{Z["after_max"]}，单片差{Z["diff_min"]}至{Z["diff_max"]}。',
- f'- active196/正文{U["chars"]}字符；置信度{U["confidence"]}；A8 {U["applicable"]["8"]}，A9 {U["applicable"]["9"]}，A10 {U["applicable"]["10"]}。没有预算压缩/合并/退役；需要Dai定：无。','',f'原件/偏移/失败/初稿、复算/参数/SL、CLI/提案、切片/测试/合入预检及报告留{O}。','']
+ f'- active196/正文{U["chars"]}字符；置信度{U["confidence"]}；A8 {U["applicable"]["8"]}，A9 {U["applicable"]["9"]}，A10 {U["applicable"]["10"]}。没有预算压缩/合并/退役；需要Roy定：无。','',f'原件/偏移/失败/初稿、复算/参数/SL、CLI/提案、切片/测试/合入预检及报告留{O}。','']
 section='\n'.join(lines);(O/'changelog-section.md').write_text(section)
 result=dict(task='experience-update',version='2026-10-09.19',commit=source,merged=MERGE.get('merged'),added=0,updated=22,retired=0,active=196,mechanisms=list(names.values()),tests=dict(tsc=T['tsc'],vitest=T['vitest'],cases=T['cases']),ledger=L,code_proposals=P,implementation_domains=['combat','potion','sl','terminal'],report=str(O/'report.md'))
 (O/'result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n');(O/'report.md').write_text('# RMNXHZKV716Y 静默经验更新报告\n\n'+section+'\n```json\n'+json.dumps(result,ensure_ascii=False)+'\n```\n')

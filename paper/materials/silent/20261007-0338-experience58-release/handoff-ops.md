@@ -10,4 +10,4 @@
 - 71局1119房61实死；A10三十一局405房31死；旧70局七数组/血档/节点/回血/SL全部逐行一致。真正SL65场293次20赢/A10 32场152次8赢，新沙虫一场两试末胜。31项原始抽序同但首9后插入，已知24张辅助/到手回合/动作同变，无单组件胜因。monster-records1120窗口差1已从TD1 F17重启两窗/一房核明，未覆盖生成数据。
 - 仅经ledger.py将15项改proposed：silent-0203,silent-0005,silent-0006,silent-0019,silent-0020,silent-0021,silent-0125,silent-0011,silent-0023,silent-0046,silent-0048,silent-0067,silent-0080,silent-0083,silent-0018；新增/退役无，check0；首证/prior/claim/旧version/repeat保持。请运维据实际合入与experience-done登记这15项shipped/S1.exp58，不另审核。0202/0199独立S1.fix40已由运维shipped，本批只读确认不修改；0203羽化真实生成独立。
 - 变更记录只追加：## 2026-10-07 静默猎手 第五十八次增量：1 局 A10（version 2026-10-07.4，分支 exp-silent，9fea0539），主目录账本/本节均未提交，交调用方保存；完整沙箱外检查由调度器补跑，ops/learner_checks.py::finish_write_batch确认最终merged祖先后自动发送experience-done。
-- 需要Dai定：无。未运行play、不停对局、不推送。
+- 需要Roy定：无。未运行play、不停对局、不推送。

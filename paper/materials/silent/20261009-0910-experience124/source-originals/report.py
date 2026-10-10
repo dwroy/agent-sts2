@@ -120,7 +120,7 @@ for x,y in zip(b,a):
     diff=[v-u for u,v in zip(x['sizes'],y['sizes'])]
     lines += [f'| {x["sample"]} | {x["median"]}/{x["max"]} | {y["median"]}/{y["max"]} | {statistics.median(diff)} |']
 lines += [f'- 整体中位{sl["before_median"]}→{sl["after_median"]}（{sl["median_increase"]:+}字），配对差中位{sl["paired_median"]}，最大{sl["before_max"]}→{sl["after_max"]}；单片差{sl["min_difference"]}至{sl["max_difference"]}。',
-    f'- active{U["after"]["entries"]}，正文{U["after"]["chars"]}字符，置信度{U["confidence"]}；A8 {U["by_asc"]["8"]}；A9 {U["by_asc"]["9"]}；A10 {U["by_asc"]["10"]}。无预算合并/退役/压缩，需要Dai定：无。',
+    f'- active{U["after"]["entries"]}，正文{U["after"]["chars"]}字符，置信度{U["confidence"]}；A8 {U["by_asc"]["8"]}；A9 {U["by_asc"]["9"]}；A10 {U["by_asc"]["10"]}。无预算合并/退役/压缩，需要Roy定：无。',
     '',f'原始子集/偏移、复算/初稿、核验、提案/CLI、切片、测试、合入预检/结果和完整报告保留{O}。','']
 section='\n'.join(lines)
 (O/'changelog-section.md').write_text(section)
@@ -137,7 +137,7 @@ short += ['- 改了的手写知识：无。',
     f'- 测试：tsc退出{T["tsc"]}；vitest {T["files"]}文件/{T["cases"]}用例/退出{T["vitest"]}；'+('重跑一次。' if T['rerun'] else '未重跑。'),
     f'- 切片大小：中位{sl["median_increase"]:+}字，最大{sl["after_max"]}字。',
     '- 学习账本：新增无；改成 proposed '+','.join(L['proposed'])+'；退役无；`ledger.py check`退出0。',
-    '- 需要 Dai 定的事：无。','']
+    '- 需要 Roy 定的事：无。','']
 result=dict(task='experience-update',version=U['version'],commit=source,merged=Z.get('merged'),added=0,updated=8,retired=0,active=193,mechanisms=[x['name'] for x in mechanisms],tests=dict(tsc=T['tsc'],vitest=T['vitest'],cases=T['cases']),ledger=dict(added=L['added'],proposed=L['proposed'],retired=L['retired'],check=0),code_proposals=P,implementation_domains=['combat','potion','sl','terminal'],report=str(O/'report.md'))
 (O/'report.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
 (O/'report.md').write_text('\n'.join(short)+'\n```json\n'+json.dumps(result,ensure_ascii=False)+'\n```\n\n'+section)

@@ -342,7 +342,7 @@ async function wake(dryRun: boolean): Promise<number> {
       await refreshCodexAuth({ bin, home: learnerCodexHome(env), env: childEnv as Record<string, string>, stateDir: join(STATE, "auth") });
       log("codex login refused: asked codex to refresh its token; the events stay queued for the next tick");
     } catch (error) {
-      log(`codex login refused and the token refresh failed (${error instanceof Error ? error.message.slice(0, 200) : String(error)}): Dai has to run codex login`);
+      log(`codex login refused and the token refresh failed (${error instanceof Error ? error.message.slice(0, 200) : String(error)}): Roy has to run codex login`);
     }
   }
   if (timedOut) return 124;

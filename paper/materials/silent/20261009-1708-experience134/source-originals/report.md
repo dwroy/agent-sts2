@@ -812,7 +812,7 @@ SL真正多试按每场max(attempt)>1，首试won跟踪不计重打。全历史�
 | sample-a9-shop | 3987.0/5155 | 4008.0/5183 | 20.0 |
 
 - 整体中位2641.0→2669.0（+28.0字），配对差中位11.0；最大5634→5685，单片差-8至59。
-- active197、总字符51253；置信度{'low': 26, 'high': 128, 'med': 43}；A8 {'entries': 183, 'chars': 47523}，A9 {'entries': 184, 'chars': 47807}，A10 {'entries': 194, 'chars': 50161}。无合并/压缩/退役；需要Dai定：无。
+- active197、总字符51253；置信度{'low': 26, 'high': 128, 'med': 43}；A8 {'entries': 183, 'chars': 47523}，A9 {'entries': 184, 'chars': 47807}，A10 {'entries': 194, 'chars': 50161}。无合并/压缩/退役；需要Roy定：无。
 
 原件/抽取/历史基线、初稿/失败日志、血档/节点/SL、CLI/提案、切片/测试/合入预检及报告保存/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-163856-experience-update。
 

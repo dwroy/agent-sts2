@@ -100,7 +100,7 @@ lines+=['','### 切片大小','',
     '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for r in S['rows']:lines.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["paired_median"]} |')
 lines+=[f'',f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["after_median"]-S["before_median"]:+}字），配对差中位{S["paired_median"]}；最大{S["before_max"]}→{S["after_max"]}，单片差{S["diff_min"]}至{S["diff_max"]}。',
-    f'- active{U["after"]["active"]}，总字符{U["after"]["chars"]}；置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。需要Dai定：无。',
+    f'- active{U["after"]["active"]}，总字符{U["after"]["chars"]}；置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。需要Roy定：无。',
     '', '全部脚本、原抽取/偏移、基线重算、机制/SL参数、账本/提案CLI、前后经验/切片、测试与合入预检/失败原件保存在'+str(O)+'。','']
 body='\n'.join(lines).replace('历史静默相关复盘131?行的实际筛选计数见下项','历史静默相关复盘筛读见下项').replace('historical-mechanism-notes.txt保存131?行不是计量口径，实际筛读为1321条相关原文','historical-mechanism-notes.txt保存1321条相关原文')
 (O/'changelog-section.md').write_text(body)

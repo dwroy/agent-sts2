@@ -104,7 +104,7 @@ lines+=['','### 切片大小','',
  '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for s in S['rows']:lines.append(f'| {s["sample"]} | {s["before_median"]}/{s["before_max"]} | {s["after_median"]}/{s["after_max"]} | {s["paired_median"]} |')
 lines += ['',f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_growth"]:+}字），配对差中位{S["paired_median"]}；最大{S["before_max"]}→{S["after_max"]}，单片差范围{S["delta_range"]}。',
- f'- active{U["after"]["active"]}、总字符{U["after"]["chars"]}，置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。需要Dai定：无；合入冲突按既有运维兜底流程。',
+ f'- active{U["after"]["active"]}、总字符{U["after"]["chars"]}，置信度{U["after"]["confidence"]}；A8 {U["after"]["by_asc"]["8"]}，A9 {U["after"]["by_asc"]["9"]}，A10 {U["after"]["by_asc"]["10"]}。需要Roy定：无；合入冲突按既有运维兜底流程。',
  '', '全部原件/失败日志/脚本/前后经验与切片/统计/CLI/提案/测试/合入预检保存在'+str(O)+'。','']
 section='\n'.join(lines)
 scan=subprocess.run(['nice','-n','19','gitleaks','stdin','--redact','--no-banner'],input=section,text=True,capture_output=True)

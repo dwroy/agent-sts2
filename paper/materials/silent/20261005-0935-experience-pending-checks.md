@@ -23,7 +23,7 @@ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/agent
    Duration  1.89s (transform 1.41s, setup 354ms, import 1.33s, tests 63ms, environment 0ms)
 ```
 
-本轮非阻塞live锁busy，未启动合并、未跑live组合检查。`bash ops/codex-ops-do.sh learner-merge exp-silent`exit128，完整输出“（超过 30 秒，已终止）”；未确认manual入队。步骤与固定源已写notes/ops-handoff.md最新节，补事件请求已写ops/inbox-dev.md及notes/for-dai.md。本批17项保持proposed，未创建S1.exp11或本批shipped；只归档17行学习者proposed，另5行其他任务台账保留未暂存。
+本轮非阻塞live锁busy，未启动合并、未跑live组合检查。`bash ops/codex-ops-do.sh learner-merge exp-silent`exit128，完整输出“（超过 30 秒，已终止）”；未确认manual入队。步骤与固定源已写notes/ops-handoff.md最新节，补事件请求已写ops/inbox-dev.md及notes/for-roy.md。本批17项保持proposed，未创建S1.exp11或本批shipped；只归档17行学习者proposed，另5行其他任务台账保留未暂存。
 
 账本检查：/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 77 item(s), 0 problem(s)。学习者报告的silent-0076来源结构字段更正和兜底动作争用已转录修复队列，未由运维修游戏机制或改历史。
 

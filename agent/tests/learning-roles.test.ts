@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-describe("Dai's Codex learning-loop roles", () => {
+describe("Roy's Codex learning-loop roles", () => {
   it.each(["AGENTS.md", "docs/learning-protocol.md", "docs/codex-ops.md", "ops/ops-session-silent-codex-prompt.md"])("%s keeps self-tested learner merges and Claude's observer role", (file) => {
     const text = readFileSync(`../${file}`, "utf8");
     expect(text).toContain("不另设审核");

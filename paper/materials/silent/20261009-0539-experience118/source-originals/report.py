@@ -85,7 +85,7 @@ lines+=['', '### 切片大小','', '- 固定种子20260929，截止前SILENT最�
  '', '| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for r in S['rows']:lines.append(f'| {r["sample"]} | {r["before_median"]}/{r["before_max"]} | {r["after_median"]}/{r["after_max"]} | {r["delta_median"]} |')
 lines+=[f'- 整体中位{S["before_median"]}→{S["after_median"]}（{S["median_increase"]:+}字），配对差中位{S["paired_delta_median"]}；最大{S["before_max"]}→{S["after_max"]}，单片变化最少{S["min_increase"]}、最多+{S["max_increase"]}。',
- f'- active{U["after"]["active"]}，正文{U["after"]["chars"]}字，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。无预算压缩/合并/退役，不改预算；需要Dai定：无。', '', f'完整原始子集、偏移、复算与失败初稿、提案/CLI、切片和测试回执保存{O}。','']
+ f'- active{U["after"]["active"]}，正文{U["after"]["chars"]}字，置信度{U["after"]["confidence"]}；A8 {U["after"]["applicable"]["8"]}；A9 {U["after"]["applicable"]["9"]}；A10 {U["after"]["applicable"]["10"]}。无预算压缩/合并/退役，不改预算；需要Roy定：无。', '', f'完整原始子集、偏移、复算与失败初稿、提案/CLI、切片和测试回执保存{O}。','']
 section='\n'.join(lines)
 (O/'changelog-heading.txt').write_text(heading+'\n')
 (O/'changelog-section.md').write_text(section)

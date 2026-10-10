@@ -74,7 +74,7 @@ lines+=['','### 切片大小','',
 '','| 进阶/界面 | 改前中位/最大 | 改后中位/最大 | 配对差中位 |','| --- | --- | --- | --- |']
 for x in Z['rows']:lines.append(f'| {x["sample"]} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["paired_median"]} |')
 lines += ['',f'- 整体中位{Z["before_median"]}→{Z["after_median"]}（{Z["after_median"]-Z["before_median"]:+}字），配对差中位{Z["paired_median"]:+}，最大{Z["before_max"]}→{Z["after_max"]}，单片差{Z["diff_min"]}至{Z["diff_max"]}。',
-f'- active{U["active"]}/正文{U["chars"]}字符；置信度{U["confidence"]}；A8 {U["applicable"]["8"]}，A9 {U["applicable"]["9"]}，A10 {U["applicable"]["10"]}。无合并/预算压缩/退役，未知整战因果保留限制；需要Dai定：无。',
+f'- active{U["active"]}/正文{U["chars"]}字符；置信度{U["confidence"]}；A8 {U["applicable"]["8"]}，A9 {U["applicable"]["9"]}，A10 {U["applicable"]["10"]}。无合并/预算压缩/退役，未知整战因果保留限制；需要Roy定：无。',
 '',f'全部原件/偏移、旧基线复算、参数/SL明细、初稿/失败、CLI/提案、切片/测试/合入预检和报告留{O}。','']
 section='\n'.join(lines);(O/'changelog-section.md').write_text(section)
 report='# JBX9JLH46KVN 静默经验更新报告\n\n'+section

@@ -1,5 +1,5 @@
 /**
- * B2 (Dai 2026-09-30, docs/boss-sim.md §11): in a boss fight, every line Jev is shown (plan lines, potion lines, the
+ * B2 (Roy 2026-09-30, docs/boss-sim.md §11): in a boss fight, every line Jev is shown (plan lines, potion lines, the
  * random potions' "drink now" lines) is played to the fight's end by the whole-fight simulator (boss-sim.ts), all on the
  * same seeds, each under its best kill order. The question then carries each line's calibrated win rate, its paired
  * difference to the best line (± standard error), the HP lost in the samples won, the turns to the end and the turn the
@@ -8,7 +8,7 @@
  * line each turn: the simulation only
  * adds numbers and, every few turns, a fight plan summarised from the best line's winning samples; code never plays the
  * plan. Bosses the simulator is known to get wrong (LOW_TRUST_BOSSES) keep the 5-turn rollout's ranking, and their
- * numbers and plan go to the decision log only, not to Jev's question (V4.2, Dai 2026-10-01).
+ * numbers and plan go to the decision log only, not to Jev's question (V4.2, Roy 2026-10-01).
  *
  * Time: the planner is synchronous, so the samples run on a pool of worker threads (BossLinesPool) that the planner's
  * thread waits on (Atomics.wait on a shared counter; replies read with receiveMessageOnPort). The pool is built at the
@@ -65,7 +65,7 @@ import { firstDoubleBoss } from "../knowledge/double-boss.js";
 export const BOSS_LINES_SAMPLES = 600;
 /** One question's wall-clock limit for the samples. */
 export const BOSS_LINES_DEADLINE_MS = 25_000;
-/** A turn's limit over its questions (a re-plan after a draw asks again): Dai's 20-30 s a boss turn. */
+/** A turn's limit over its questions (a re-plan after a draw asks again): Roy's 20-30 s a boss turn. */
 export const BOSS_LINES_TURN_BUDGET_MS = 30_000;
 /** Less than this left of the turn's budget: no simulation for this question. */
 export const BOSS_LINES_MIN_MS = 3_000;
@@ -79,7 +79,7 @@ export const BOSS_LINES_SEED = 7;
 export const BOSS_LINES_TIE_SE = 2;
 
 /**
- * The ranking's second criterion (V4.2, Dai 2026-10-01): the median HP lost in the samples won, the number the question
+ * The ranking's second criterion (V4.2, Roy 2026-10-01): the median HP lost in the samples won, the number the question
  * shows (it was the mean over every sample, a death counting all our HP). A line with no winning sample comes last.
  */
 export function wonLoss(line: BossSimLineResult): number {
@@ -99,7 +99,7 @@ function envWorkers(): number | null {
 export const bossLinesOptions: {
   enabled: boolean;
   /**
-   * BOSS_SIM_LOW_TRUST: when a low-trust boss's fight is simulated. "retry" (default, Dai 2026-10-02): only on an SL retry,
+   * BOSS_SIM_LOW_TRUST: when a low-trust boss's fight is simulated. "retry" (default, Roy 2026-10-02): only on an SL retry,
    * where SL_RETRY_SHOW_SIM shows its numbers; on a first attempt its numbers only went to the decision log, at up to 25 s
    * a question and most of the machine's cores (Kaiser Crab 80-150 s a fight before it was trusted), which cut the same
    * question's rollout. "always": as before (simulated for the log on every question).
@@ -470,7 +470,7 @@ export interface LinesRank {
 }
 
 /**
- * B2's ranking (Dai): the whole-fight win rate first, ties within `tieSe` standard errors, then the least `second`
+ * B2's ranking (Roy): the whole-fight win rate first, ties within `tieSe` standard errors, then the least `second`
  * (wonLoss, the HP lost when won; the acceptance tool also ranks by the pre-V4.2 mean HP lost to compare).
  */
 export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true, second: (line: BossSimLineResult) => number = wonLoss): LinesRank {

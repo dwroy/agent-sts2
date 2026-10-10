@@ -35,11 +35,11 @@ message = (f'\n## {stamp} — 离线fix-batch三项实际合入 live {merged} / 
            f'- silent-0338：旧诊断漏已计入的奥利哈钢挡，新诊断取原同一计算结果列来源；数值/排名/动作等价。证据RMNXHZKV716Y/A10/F49末试T2，d313188/d313190、s321678/s321683/s321684；账本silent-0338，源{commits["silent-0338"]}，本批CLI {ids[0]}。预期诊断解释一致；回退仅revert此源。\n'
            f'- silent-0254：旧统计只从COMBAT决策开战斗窗口，漏F49无决策开场死亡；新统计纳入同局真实状态帧且不造决策，输出实际死亡层与敌ID。证据TXZ6RVMQA09D/A10/F49T1，s281563/s281565/s281566、d275405；账本silent-0254，源{commits["silent-0254"]}。预期后续局报正确归因，不改打法；回退仅revert此源，不回写历史局报。\n'
            f'- 三项各自撤源码失败/恢复通过，各提交前及合后沙箱tsc/vitest0，合后{release["tests"]["files"]}文件{release["tests"]["cases"]}例、另Python3例0、gitleaks0。刷新数据先保存、交集为空；无知识生成脚本更改。完整沙箱外检查由调度器续跑，原失败/初稿保留。账本已CLI追加commit且仅proposed，请运维依据这些实际live祖先与唯一{release["version"]}登记shipped，勿把实现队列状态当shipped。报告{scratch/"report.md"}。其他策略沿原独立提案链，无新增派发、停对局、play、推送或运维prompt更改。\n')
-for relative in ('notes/for-dai.md','ops/inbox-dev.md'):
+for relative in ('notes/for-roy.md','ops/inbox-dev.md'):
     with (root/relative).open('a') as handle:
         fcntl.flock(handle,fcntl.LOCK_EX)
         handle.write(message)
         handle.flush()
 (scratch/'notifications.txt').write_text(message)
-print(json.dumps({'code_proposals':ids,'notified':['notes/for-dai.md','ops/inbox-dev.md'],
+print(json.dumps({'code_proposals':ids,'notified':['notes/for-roy.md','ops/inbox-dev.md'],
                   'merged':merged,'version':release['version']},ensure_ascii=False))

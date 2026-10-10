@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Rebuild a character's potion table (knowledge/characters/<id>/potion-equivalents.json: what each potion held is worth in the act boss,
-# the potion cost the solver and Jev's question use; docs/potion-equivalents.md) only when it is stale (Dai
+# the potion cost the solver and Jev's question use; docs/potion-equivalents.md) only when it is stale (Roy
 # 2026-09-30: once a day, and when the ascension goes up):
 #   - it was generated before today (local date), or
 #   - it has no numbers for .env's TARGET_ASCENSION.

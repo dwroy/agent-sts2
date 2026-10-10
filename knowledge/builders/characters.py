@@ -1,4 +1,4 @@
-"""Which character a log row belongs to, shared by the builders, ops and the top-level metrics (multi-character, Dai
+"""Which character a log row belongs to, shared by the builders, ops and the top-level metrics (multi-character, Roy
 2026-10-04: the Silent is played next to the Ironclad, and every number we learn stays the character's own).
 
 The knowledge id is the game's character_id lower-cased ("IRONCLAD" -> "ironclad", "SILENT" -> "silent"), the same as

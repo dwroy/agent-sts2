@@ -1,6 +1,6 @@
-# 建议：把「机制推理」加进运维会话的经验库那一段（给 Dai 审）
+# 建议：把「机制推理」加进运维会话的经验库那一段（给 Roy 审）
 
-来源：notes/v4-dev-brief.md 第 5 项「复盘要做机制推理」：更新经验库的方法里加上机制总结——力量、敏捷、各种能力牌和增益怎么起作用、和什么搭配、在哪些战斗里决定了胜负；每条都要有推理、证据（局数）和典型案例。那一项写明「改 ops-session-prompt.md 之前先问 Dai」，所以这里只起草，**ops/ops-session-prompt.md 没有改**。同样的要求已经写进 learner/tasks/experience-update.md（第 4 节），两边用的是同一套文字。
+来源：notes/v4-dev-brief.md 第 5 项「复盘要做机制推理」：更新经验库的方法里加上机制总结——力量、敏捷、各种能力牌和增益怎么起作用、和什么搭配、在哪些战斗里决定了胜负；每条都要有推理、证据（局数）和典型案例。那一项写明「改 ops-session-prompt.md 之前先问 Roy」，所以这里只起草，**ops/ops-session-prompt.md 没有改**。同样的要求已经写进 learner/tasks/experience-update.md（第 4 节），两边用的是同一套文字。
 
 ## 1. 现在的文字（ops/ops-session-prompt.md:79，定时任务 2 第 4 步）
 
@@ -41,7 +41,7 @@
 - 「只用已有 scope」是为了 v3 现在的切片：agent/src/knowledge/experience.ts 的 relevance() 对不认识的 scope 类型返回 null，新类型的条目永远不会下发。V4 的全量前缀会把 general:plan 放进「机制/综合」主题，也不受影响。
 - 「上限 200 不变」：agent/tests/experience.test.ts 限制 active ≤ 200，现在是 198；机制条目多半是给已有的 card:/relic: 条目补推理，而不是新增。
 
-## 5. 需要 Dai 定的事
+## 5. 需要 Roy 定的事
 1. 第 2 节的新文字是否采用（可以改字）。
 2. 第 3 节 a（复盘加「机制：」一句）、c（变更记录方法加一条）是否一起改。
 3. 机制条目多了以后，active 上限 200 是否放宽；或者给机制单开一种 scope（例如 `mechanic:STRENGTH`），这要同时改 v3 的切片代码（relevance 里加这一类、决定在哪些界面下发）和 V4 的主题表，属于代码改动，不在这次范围里。

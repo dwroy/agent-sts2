@@ -24,6 +24,6 @@ for c in C['entries']:
     fresh=e['evidence'] if not old else [n for n in e['evidence'] if n not in old['evidence']]
     notice+=f'- {e["id"]}：旧规则／表述：'+(old['lesson'].split('。机制：')[0].split('。典型案例：')[0] if old else '无本条经验')+'；新规则／表述：'+e['lesson'].split('。机制：')[0].split('。典型案例：')[0]+'；新核证据 '+','.join(fresh)+'。\n'
 notice+='\n账本：'+','.join(ids)+'；代码提案：'+','.join(json.load(open(O/'proposal-ids.json')))+'；任务experience-update/20261008-004303→strategy-proposal。提案pending，未修改出牌/药水/SL/终局源码，未冒标implemented/shipped。预期更准确表达实际增益/朝向取整/能力兑现和SL即时血价与连续资源链，不宣称本批提高胜率。回退只恢复合前experience.json原blob并提交、登记回退版本，保留刷新/并行代码/全部历史；不reset覆盖新游戏数据。完整报告在本任务scratch/report.md。\n'
-for path in ['notes/for-dai.md','ops/inbox-dev.md']:
+for path in ['notes/for-roy.md','ops/inbox-dev.md']:
     with (ROOT/path).open('a') as h:h.write(notice)
 (O/'publication.json').write_text(json.dumps(dict(source=source,merged=merged,publication=publication,version=name,ledger=ids),ensure_ascii=False,indent=2)+'\n')

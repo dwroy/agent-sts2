@@ -50,7 +50,7 @@ notice = (f'\n- {now} [Codex学习者，独立silent-a10-regression] Roy结论�
     '未撤double/fix45/bullet/sloth/经验，既有0268/0271/0273和免费技能费用传播限制留原独立项/待证，不混普通fix或校准批。'
     f'完整报告paper/materials/silent/a10-regression-2026-10-08.md；固定证据/源码/全部已捕获失败{P}；完整外部检查交调度器，未执行就不报通过。\n')
 (P/'roy-notification.md').write_text('date: '+dated+'\n'+notice)
-for path in [ROOT/'notes/for-dai.md',ROOT/'ops/inbox-dev.md']:
+for path in [ROOT/'notes/for-roy.md',ROOT/'ops/inbox-dev.md']:
     with path.open('a') as handle:
         fcntl.flock(handle,fcntl.LOCK_EX); handle.write(notice);handle.flush()
 line = f'\n- {now} Codex学习者独立silent-a10-regression完成：{pub["version"]}，源{pub["source_commit"]}→净live{pub["merged"]}→发布{pub["release_commit"]}；来源隔离silent-0285/{ident}，C48/MGA0 F2T1，源/合后原沙箱均0、248文件2608例；原38/45切点早8小时、实际F48 10/50→6/27，不归因或声称正常波动；五项调查/原件保留，初合继承六派发路径已恢复、净三路径且4711其他路径保持。Roy双通知已追加，shipped/完整外部交运维。\n'

@@ -1,6 +1,6 @@
 # B4: the fixes that went in (the Insatiable and the Knowledge Demon), validation
 
-docs/boss-sim.md §13. Dai, 2026-10-01: only the Insatiable's and the Knowledge Demon's fixes go into v4-sim; the Kaiser
+docs/boss-sim.md §13. Roy, 2026-10-01: only the Insatiable's and the Knowledge Demon's fixes go into v4-sim; the Kaiser
 Crab's and the Queen's wait on branch v4-sim-crabqueen until those bosses are trusted and more fights are logged (their
 numbers: b4-val-crabqueen.md, b4-summary-crabqueen.json).
 

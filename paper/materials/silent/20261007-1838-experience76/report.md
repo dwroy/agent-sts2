@@ -232,7 +232,7 @@ A10源节点至下一实际战，源入血档、多源可同战；A0—A9完整�
 - 原沙箱入口：tsc退出0，vitest退出0，233文件/2441例，重跑0次，单worker。固定排除名单不变，完整外部由调度器在实际合入后另补，不冒称已跑完整外部。
 - JSON、字符预算、12位局号/角色/证据计数/反例/进阶、历史七数组/血档/节点/回血/SL、659逐帧匹配、力敏/余像/毒/临时减力/完整需损及同指纹SL比较、切片冻结、diff --check及gitleaks通过；check-experience退出0、missing=[]。
 - 账本仅CLI：新增无；改成proposed silent-0005,silent-0006,silent-0018,silent-0079,silent-0019,silent-0020,silent-0021,silent-0125,silent-0023,silent-0027,silent-0046,silent-0016；退役无；check退出0。首证/先验/claim/旧repeat与版本保留，提案链及source提交/本标题追加；未采纳复盘条目不改变状态，shipped交运维核实际合入。
-- live实际合入：None；合前/刷新后：70c8352bc9ea84d18f9bc0f82244b0e1f76405e8；刷新提交：70c8352bc9ea84d18f9bc0f82244b0e1f76405e8；合后沙箱：None；结果：锁内合并预检6份并行记录冲突，按任务停止、不覆盖：eval/versions.json,notes/for-dai.md,notes/ops-handoff.md,ops/inbox-dev.md,paper/materials/decision-log.md,paper/materials/learning/ledger.jsonl。
+- live实际合入：None；合前/刷新后：70c8352bc9ea84d18f9bc0f82244b0e1f76405e8；刷新提交：70c8352bc9ea84d18f9bc0f82244b0e1f76405e8；合后沙箱：None；结果：锁内合并预检6份并行记录冲突，按任务停止、不覆盖：eval/versions.json,notes/for-roy.md,notes/ops-handoff.md,ops/inbox-dev.md,paper/materials/decision-log.md,paper/materials/learning/ledger.jsonl。
 - 锁内检查与未覆盖知识的证明见live-merge.json/merge-live.log；未实际合入则不新增eval版本/上线记录，不冒称shipped。原件、初稿及运维交接都在本任务scratch，根记录由调用方提交。
 
 ### 切片大小
@@ -254,4 +254,4 @@ A10源节点至下一实际战，源入血档、多源可同战；A0—A9完整�
 | a9-reward | 2668.0/3308 | 2755.0/3395 | 87.0 |
 | a9-shop | 3701.0/5238 | 3803.0/5325 | 87.0 |
 
-- 整体中位2668.0→2755.0（+87.0字），配对增量中位87.0、最大增量229；整体最大5238→5325字。active148→148，正文49478→50126字，置信度高78/中45/低25；A8适用140条46896字、A9适用141条47180字、A10适用143条48040字。需要Dai定的知识事项：无。
+- 整体中位2668.0→2755.0（+87.0字），配对增量中位87.0、最大增量229；整体最大5238→5325字。active148→148，正文49478→50126字，置信度高78/中45/低25；A8适用140条46896字、A9适用141条47180字、A10适用143条48040字。需要Roy定的知识事项：无。

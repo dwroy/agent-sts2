@@ -1,6 +1,6 @@
 # SL 重打换打法（SL_RETRY_EXPLORE）——机制和离线评估（2026-10-02，10-03 更新，10-03 晚补第 1 次和整回合，再补整回合判）
 
-Dai 10-02 定：重打必须换打法，开关 `SL_RETRY_EXPLORE`，默认开。方法和接入见 docs/sl.md §11。不调用任何模型。
+Roy 10-02 定：重打必须换打法，开关 `SL_RETRY_EXPLORE`，默认开。方法和接入见 docs/sl.md §11。不调用任何模型。
 
 ## 0. 先看这个
 
@@ -71,9 +71,9 @@ SMNJ F48、1YXM F33；B2 关；experiments/sl-explore/explore-whole.{txt,jsonl}�
 
 ### 0.1 10-02 晚 / 10-03 的五个改动（各有子开关，默认开；关掉与 bc8c9bc 相同）
 
-- **B2 门槛**（`SL_RETRY_EXPLORE_B2`，Dai 10-02 晚）：B2 受信任的 boss 上，「替换线不比原线差」按 B2：配对胜率差 ≥ −2 个配对标准误（B2 自己的并列
+- **B2 门槛**（`SL_RETRY_EXPLORE_B2`，Roy 10-02 晚）：B2 受信任的 boss 上，「替换线不比原线差」按 B2：配对胜率差 ≥ −2 个配对标准误（B2 自己的并列
   规则）。没有这样的未试线时照样换成 B2 在未试线里排第一的。低可信 boss、名单战照旧按 rollout。
-- **boss 战可以加药**（`SL_RETRY_EXPLORE_BOSS_POTIONS`，Dai 10-02 晚）：显示的喝药线、随机药水的 MC 线和不喝的线一样排；名单战照旧不加药。
+- **boss 战可以加药**（`SL_RETRY_EXPLORE_BOSS_POTIONS`，Roy 10-02 晚）：显示的喝药线、随机药水的 MC 线和不喝的线一样排；名单战照旧不加药。
 - **全输的点排最后**（`SL_RETRY_EXPLORE_ORDER`，10-03 运维）：记录里每条线每个样本都输（rollout 死亡比例 1；受信任 boss 按 B2 原始胜率 0）的点放到最后。
 - **重放参照路径**（`SL_RETRY_EXPLORE_REPLAY`，10-03 运维）：偏离点之前在第 2 次路上的局面打第 2 次的线（盖过 Jev），保证走到偏离点。
 - **探寻打击挑牌不断已知抽牌**（`SL_RETRY_KNOWN_PICKS`，10-03 运维）：挑走的那张从顺序里拿掉，其余接着用。
