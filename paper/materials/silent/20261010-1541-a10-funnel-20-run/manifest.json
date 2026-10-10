@@ -1,0 +1,61 @@
+{
+  "recorded_at": "2026-10-10T15:44:07.774492+08:00",
+  "scope": "Silent A10 ended; pure successful Codex cohort; newest 20 first",
+  "command": "nice -n 19 data/logdb-venv/bin/python paper/materials/silent/20261010-1541-a10-funnel-20-run/analyze.py",
+  "replay_command": "nice -n 19 data/logdb-venv/bin/python paper/materials/silent/20261010-1541-a10-funnel-20-run/analyze.py --replay",
+  "behavior_change": false,
+  "scheduler_mutation": false,
+  "game_version_registered": false,
+  "checks": {
+    "unique_runs": true,
+    "nonoverlapping_windows": true,
+    "monotonic_funnels": true,
+    "first_no_greater_than_final": true,
+    "raw_finished_runs_present_and_final_floor_matches_db": true,
+    "prior_126_run_cutoff_reproduced": true
+  },
+  "prior_report_check": {
+    "path": "paper/materials/silent/20261010-a10-funnel-20-run/funnel.json",
+    "prior_eligible_runs": 142,
+    "all_prior_funnels_equal": true,
+    "new_eligible_runs": 11
+  },
+  "files": {
+    "analyze.py": {
+      "sha256": "f8e11b16275e072c3bf9c1d6bc4314d38c07cbc18b1f3db3c6998e3fb87aa7a7",
+      "bytes": 5663
+    },
+    "baseline-analyze.py": {
+      "sha256": "9e2cde7e026ea98cbadbee00b482b3efd07c6b29404679ba4dc61d58732bec8c",
+      "bytes": 14684
+    },
+    "evidence.json": {
+      "sha256": "254876f2e65103c2b8aa7455ebd72e1408caaa07b95acb54c0140da5e8220b20",
+      "bytes": 4329044
+    },
+    "funnel.json": {
+      "sha256": "8159c05a883681f0328f3e727a930b11d6beb93f97ceb84148afdc4f1b260e0c",
+      "bytes": 417249
+    },
+    "journal-deltas.json": {
+      "sha256": "c7135412232ea4e36fb0e2e7d4bc133eff3547ed247c0a4958cef4cef02d8950",
+      "bytes": 2723
+    },
+    "logdb-manifest.json": {
+      "sha256": "1a7979ea09cab96083bf7fcdd503d19eafd28c08a0533fef6d4163879baeb3ec",
+      "bytes": 293645
+    },
+    "replay.stdout.log": {
+      "sha256": "72cda45e565a6d097c53bb843ac818426618eba4c4b2078e7006c31b7040c8ef",
+      "bytes": 17012
+    },
+    "report.md": {
+      "sha256": "7381de42379844d58742a35dbd9b5921eaf4e9d0eb8f31bbcb71e71989aedbad",
+      "bytes": 5530
+    },
+    "verification.json": {
+      "sha256": "e7ab358927ef5bff195851c3b107c264699e9a7483b2c24f0b5a3f6f18fca897",
+      "bytes": 962
+    }
+  }
+}
