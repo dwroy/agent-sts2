@@ -1,0 +1,76 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent
+
+DIAG phase=init
+DIAG phase=collected /home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/ops-herdr.test.ts
+DIAG phase=module-start /home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/ops-herdr.test.ts
+DIAG phase=test-ready interactive TUI arguments > resume <options> --no-daemon <id>: the exec options minus what only exec has
+ ↓ tests/ops-herdr.test.ts > interactive TUI arguments > resume <options> --no-daemon <id>: the exec options minus what only exec has
+DIAG phase=test-result interactive TUI arguments > resume <options> --no-daemon <id>: the exec options minus what only exec has
+DIAG phase=test-ready interactive TUI arguments > without a session: a fresh TUI with the same options (throwaway tests)
+ ↓ tests/ops-herdr.test.ts > interactive TUI arguments > without a session: a fresh TUI with the same options (throwaway tests)
+DIAG phase=test-result interactive TUI arguments > without a session: a fresh TUI with the same options (throwaway tests)
+DIAG phase=test-ready screen and session-file readers > composer: the dim placeholder is empty, typed text is not (codex 0.160 screens)
+ ↓ tests/ops-herdr.test.ts > screen and session-file readers > composer: the dim placeholder is empty, typed text is not (codex 0.160 screens)
+DIAG phase=test-result screen and session-file readers > composer: the dim placeholder is empty, typed text is not (codex 0.160 screens)
+DIAG phase=test-ready screen and session-file readers > finds our turn by the marker, its answer and its tokens; another turn before it does not count
+ ↓ tests/ops-herdr.test.ts > screen and session-file readers > finds our turn by the marker, its answer and its tokens; another turn before it does not count
+DIAG phase=test-result screen and session-file readers > finds our turn by the marker, its answer and its tokens; another turn before it does not count
+DIAG phase=test-ready screen and session-file readers > a message steered into a turn already running belongs to that turn
+ ↓ tests/ops-herdr.test.ts > screen and session-file readers > a message steered into a turn already running belongs to that turn
+DIAG phase=test-result screen and session-file readers > a message steered into a turn already running belongs to that turn
+DIAG phase=test-ready screen and session-file readers > hosting mode: env first, then the hosting file, then the default
+ ↓ tests/ops-herdr.test.ts > screen and session-file readers > hosting mode: env first, then the hosting file, then the default
+DIAG phase=test-result screen and session-file readers > hosting mode: env first, then the hosting file, then the default
+DIAG phase=test-ready ops/herdr-host.sh (fake herdr) > only permits registered-batch-shaped viewer requests without arbitrary commands or target panes
+ ↓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > only permits registered-batch-shaped viewer requests without arbitrary commands or target panes
+DIAG phase=test-result ops/herdr-host.sh (fake herdr) > only permits registered-batch-shaped viewer requests without arbitrary commands or target panes
+DIAG phase=test-ready ops/herdr-host.sh (fake herdr) > new learner tabs follow the live ops pane when workspace labels are duplicated
+ ↓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > new learner tabs follow the live ops pane when workspace labels are duplicated
+DIAG phase=test-result ops/herdr-host.sh (fake herdr) > new learner tabs follow the live ops pane when workspace labels are duplicated
+DIAG phase=test-ready ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit
+ ↓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit
+DIAG phase=test-result ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit
+DIAG phase=test-ready ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit
+ ↓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit
+DIAG phase=test-result ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit
+DIAG phase=test-ready ops/herdr-host.sh (fake herdr) > run, reuse, busy, status, stop; only its own labels
+ ↓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > run, reuse, busy, status, stop; only its own labels
+DIAG phase=test-result ops/herdr-host.sh (fake herdr) > run, reuse, busy, status, stop; only its own labels
+DIAG phase=test-ready ops/herdr-host.sh (fake herdr) > --close-on-exit: the pane closes when the job ends and its last lines are kept
+ ↓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > --close-on-exit: the pane closes when the job ends and its last lines are kept
+DIAG phase=test-result ops/herdr-host.sh (fake herdr) > --close-on-exit: the pane closes when the job ends and its last lines are kept
+DIAG phase=test-ready ops/herdr-host.sh (fake herdr) > refuses bad labels and reports an unavailable herdr
+ ↓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > refuses bad labels and reports an unavailable herdr
+DIAG phase=test-result ops/herdr-host.sh (fake herdr) > refuses bad labels and reports an unavailable herdr
+DIAG phase=test-ready wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > starts the TUI once, prompts, reads the turn's answer and tokens from the session file
+ ↓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > starts the TUI once, prompts, reads the turn's answer and tokens from the session file
+DIAG phase=test-result wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > starts the TUI once, prompts, reads the turn's answer and tokens from the session file
+DIAG phase=test-ready wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > other arguments (a new key file, another effort): the idle TUI is restarted
+ ↓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > other arguments (a new key file, another effort): the idle TUI is restarted
+DIAG phase=test-result wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > other arguments (a new key file, another effort): the idle TUI is restarted
+DIAG phase=test-ready wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent
+ ↓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent
+DIAG phase=test-result wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent
+DIAG phase=test-ready wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > a turn that does not end in time is interrupted with esc (124); the TUI stays
+ ↓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > a turn that does not end in time is interrupted with esc (124); the TUI stays
+DIAG phase=test-result wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > a turn that does not end in time is interrupted with esc (124); the TUI stays
+DIAG phase=test-ready wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > a startup dialog (agent_not_ready) defers without answering it
+ ↓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > a startup dialog (agent_not_ready) defers without answering it
+DIAG phase=test-result wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > a startup dialog (agent_not_ready) defers without answering it
+DIAG phase=test-ready hosted learner batch and the scheduler > a post-mortem batch runs in its own pane, reports as before, and the pane closes
+ ✓ tests/ops-herdr.test.ts > hosted learner batch and the scheduler > a post-mortem batch runs in its own pane, reports as before, and the pane closes 3906ms
+DIAG phase=test-result hosted learner batch and the scheduler > a post-mortem batch runs in its own pane, reports as before, and the pane closes
+DIAG phase=test-ready hosted learner batch and the scheduler > herdr unavailable: the batch starts with setsid as before
+ ↓ tests/ops-herdr.test.ts > hosted learner batch and the scheduler > herdr unavailable: the batch starts with setsid as before
+DIAG phase=test-result hosted learner batch and the scheduler > herdr unavailable: the batch starts with setsid as before
+DIAG phase=test-ready hosted learner batch and the scheduler > drain: a deferred wake (exit 75) keeps the events and is not counted as a failure
+ ↓ tests/ops-herdr.test.ts > hosted learner batch and the scheduler > drain: a deferred wake (exit 75) keeps the events and is not counted as a failure
+DIAG phase=test-result hosted learner batch and the scheduler > drain: a deferred wake (exit 75) keeps the events and is not counted as a failure
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 20 skipped (21)
+   Start at  18:32:45
+   Duration  4.96s (transform 715ms, setup 378ms, import 509ms, tests 3.91s, environment 0ms)
+
+DIAG phase=run-end

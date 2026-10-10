@@ -1,0 +1,50 @@
+{
+  "state": "source-ready-full-suite-unresolved",
+  "source_commit": null,
+  "source": {
+    "base": "91ee18aa9c6d851a3114ce75a019ac85a45045d4",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010",
+    "paths": [
+      "ops/strategy_research_jobs.py",
+      "ops/codex-ops-learner.sh",
+      "learner/tasks/strategy-proposal.md",
+      "ops/tests/test_strategy_research_scheduling.py"
+    ],
+    "diff_sha256": "860e336c6c046e2c7fd649265dc1403a590ea6c070de474b271d0accc6870ee1",
+    "source_sha256": {
+      "ops/strategy_research_jobs.py": "4e9ef8b6475859ad85c90747b59f8ea03c677681d610551eab5089e34d98c902",
+      "ops/codex-ops-learner.sh": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+      "learner/tasks/strategy-proposal.md": "fa7833d6162ebecd9c3dd50d0314463417bb025a14569a6b0d8dcdc7bdfcfb2c",
+      "ops/tests/test_strategy_research_scheduling.py": "a87a4842f1d068740105b6e6637ff5952597e58944789896c66896bd7bc09c2c"
+    },
+    "scope": "Registered report-only core output research entry; no production dispatch, gameplay knowledge, merge, or deployment."
+  },
+  "passed_checks": [
+    "research-scheduling 26/26",
+    "research-report 8/8",
+    "bash syntax",
+    "git diff --check",
+    "gitleaks source",
+    "new registration restored witness",
+    "existing fake postmortem fixture",
+    "existing fake fallback/drain fixtures"
+  ],
+  "expected_negative_witness": "withdraw registry mapping in memory: fixture exit 1 (expected)",
+  "full_sandbox": {
+    "original_session_id": 19187,
+    "tool_exit_code": 130,
+    "native_complete_result": null,
+    "log": "sandbox.log",
+    "cause": "unknown, no first file completed",
+    "termination": "Ctrl-C to exact owned test session; no game or learner interruption"
+  },
+  "source_scope": [
+    "registry mapping",
+    "wrapper argument whitelist",
+    "template path mapping",
+    "independent identity/dedup/report-only/registration tests"
+  ],
+  "diagnosis": "all three hypothesized unbounded ops-herdr subprocess fixtures completed under the same sandbox and one worker; no exclusion/harness change justified",
+  "dispatch_or_gameplay_change": false,
+  "history_preserved": true
+}

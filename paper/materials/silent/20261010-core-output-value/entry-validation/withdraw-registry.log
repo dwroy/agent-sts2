@@ -1,0 +1,15 @@
+test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies (withdrawn_output_fixture.ResearchScheduling.test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies) ... ERROR
+
+======================================================================
+ERROR: test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies (withdrawn_output_fixture.ResearchScheduling.test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/ops/tests/test_strategy_research_scheduling.py", line 359, in test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies
+    self.assertEqual(result["strategy_research"][0], request["batch"])
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+----------------------------------------------------------------------
+Ran 1 test in 0.091s
+
+FAILED (errors=1)

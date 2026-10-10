@@ -1,0 +1,191 @@
+diff --git a/learner/tasks/strategy-proposal.md b/learner/tasks/strategy-proposal.md
+index c9458d104..95955c9df 100644
+--- a/learner/tasks/strategy-proposal.md
++++ b/learner/tasks/strategy-proposal.md
+@@ -28,7 +28,7 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
+ 没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
+ 
+ ## 1.2 仅本批的手动专题研究
+-先读取根目录 learn.json 本批的 research_request：`roy-20261010-silent-deck-size-value` 对应根目录 `notes/strategy-research-silent.json`，`roy-20261010-silent-core-reuse-value` 对应根目录 `notes/strategy-research-core-reuse-silent.json`；路径都相对 `{{project_root}}`。这两个专题各自独立绑定；不得读取另一请求来代替本批身份。普通批次仍只读 `notes/strategy-research-{{character}}.json` 并按条件匹配。learn.json 本批带 research_request 时，文件不存在或任何身份/SHA 条件失配都停止专题回报，不退回普通选题；只有不带 research_request 的普通批次在专题条件不成立时保持原提案/补链任务，不将普通队列变成专题：
++先读取根目录 learn.json 本批的 research_request：`roy-20261010-silent-deck-size-value` 对应根目录 `notes/strategy-research-silent.json`，`roy-20261010-silent-core-reuse-value` 对应根目录 `notes/strategy-research-core-reuse-silent.json`，`roy-20261010-silent-core-output-value` 对应根目录 `notes/strategy-research-core-output-silent.json`；路径都相对 `{{project_root}}`。这三个专题各自独立绑定；不得读取另一请求来代替本批身份。普通批次仍只读 `notes/strategy-research-{{character}}.json` 并按条件匹配。learn.json 本批带 research_request 时，文件不存在或任何身份/SHA 条件失配都停止专题回报，不退回普通选题；只有不带 research_request 的普通批次在专题条件不成立时保持原提案/补链任务，不将普通队列变成专题：
+ - learn.json 中本次 {{batch}} 的 task=strategy-proposal、character={{character}}、reason=ops；该行完全没有 proposal_ids 和 proposal_repair 字段，工作树等于 {{worktree}}。
+ - 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state=running 且 batch={{batch}}；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
+ - 专题宿主 wrapper 已在原 learn.lock 上等待登记落盘，模型启动前须有 learn.json 对应实际 research_request 与根请求的 running/batch/worktree 绑定，独立注册回执位于 ops/codex-ops/learner/{{batch}}.research-registration.json。pending/null 只属于派发前状态，不能在模型内将它当已承接专题。不自行写请求或 learn.json，身份未绑定或已变就停止专题回报，不退回普通提案选题。
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index ce2e7a5d7..ec2ba759b 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -15,7 +15,8 @@ learner_task="${6:-$task}"
+ research_request=""
+ if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
+   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
+-    && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ]; } || exit 2
++    && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
++      || [ "$7" = roy-20261010-silent-core-output-value ]; } || exit 2
+   research_request="$7"
+   [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-strategy-proposal$ ]] || exit 2
+ fi
+diff --git a/ops/strategy_research_jobs.py b/ops/strategy_research_jobs.py
+index 44eb9c9d6..91336cbfc 100644
+--- a/ops/strategy_research_jobs.py
++++ b/ops/strategy_research_jobs.py
+@@ -18,6 +18,7 @@ KEY = "strategy-research:" + REQUEST
+ REQUEST_PATHS = {
+     REQUEST: REQUEST_PATH,
+     "roy-20261010-silent-core-reuse-value": "notes/strategy-research-core-reuse-silent.json",
++    "roy-20261010-silent-core-output-value": "notes/strategy-research-core-output-silent.json",
+ }
+ 
+ 
+diff --git a/ops/tests/test_strategy_research_scheduling.py b/ops/tests/test_strategy_research_scheduling.py
+index 650801379..39437900d 100644
+--- a/ops/tests/test_strategy_research_scheduling.py
++++ b/ops/tests/test_strategy_research_scheduling.py
+@@ -16,6 +16,10 @@ from unittest.mock import patch
+ 
+ REPO = Path(__file__).resolve().parents[2]
+ IDENT = "roy-20261010-silent-deck-size-value"
++OUTPUT_IDENT = "roy-20261010-silent-core-output-value"
++OUTPUT_SECTIONS = ["damage_realization", "startup_and_scaling", "sustained_output",
++                   "resource_survival_tradeoffs", "construction_execution_guidance",
++                   "counterexamples", "limitations"]
+ STAMP = "20260101-000001"
+ RUNS = ["SILENT000001", "SILENT000002"]
+ spec = importlib.util.spec_from_file_location("scheduling_learner_jobs", REPO / "ops/learner_jobs.py")
+@@ -324,6 +328,103 @@ class ResearchScheduling(unittest.TestCase):
+         request_path.write_text(json.dumps(request))
+         return ident, request_path, request
+ 
++    def output_request(self, anchors=None):
++        ident = OUTPUT_IDENT
++        anchors = anchors or ["SILENT000005", "SILENT000006"]
++        request = {**self.request, "request_id": ident, "dispatch_runs": anchors,
++                   "input_manifest": "paper/frozen/output.json",
++                   "required_sections": OUTPUT_SECTIONS}
++        manifest = {**self.manifest, "request_id": ident, "dispatch_runs": anchors,
++                    "runs": [{"run_id": run, "ended_at": "2026-01-01T00:00:00Z"} for run in anchors]}
++        path = self.root / request["input_manifest"]
++        path.write_text(json.dumps(manifest))
++        request["input_manifest_sha256"] = self.digest(path)
++        request_path = self.root / "notes/strategy-research-core-output-silent.json"
++        request_path.write_text(json.dumps(request))
++        return ident, request_path, request
++
++    def test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies(self):
++        self.check()
++        first = self.read_request()
++        self.state["batches"][first["batch"]]["state"] = "done"
++        reuse_ident, reuse_path, _ = self.second_request()
++        self.check("20260101-000002")
++        reuse = json.loads(reuse_path.read_bytes())
++        self.state["batches"][reuse["batch"]].update(state="failed", rc=3, retry_at=123)
++        previous_requests = {path: path.read_bytes() for path in (self.request_path, reuse_path)}
++        previous_batches = copy.deepcopy(self.state["batches"])
++        ident, path, _ = self.output_request()
++        result = self.check("20260101-000003")
++        request = json.loads(path.read_bytes())
++        self.assertEqual(result["strategy_research"][0], request["batch"])
++        self.assertEqual(self.launched[-1][-1], ident)
++        self.assertEqual(self.state["batches"][request["batch"]]["research_request"], ident)
++        for old_path, raw in previous_requests.items():
++            self.assertEqual(old_path.read_bytes(), raw)
++        for old_id, old_batch in previous_batches.items():
++            self.assertEqual(self.state["batches"][old_id], old_batch)
++        for terminal_state in ("running", "done", "failed", "lost"):
++            self.state["batches"][request["batch"]]["state"] = terminal_state
++            self.check("20260101-000004")
++            self.assertEqual(len(self.launched), 3)
++        self.assertNotEqual(ident, reuse_ident)
++
++    def test_output_manual_route_rejects_wrong_marker_and_shared_anchors(self):
++        import strategy_research_jobs as research
++        self.request_path.unlink()
++        ident, path, request = self.output_request()
++        self.assertEqual(research.matching_requests(self.state, self.root, "silent", request["dispatch_runs"]), [ident])
++        with patch.object(jobs, "start_learner", side_effect=self.launch), patch.dict(os.environ, {
++                "CODEX_OPS_DIR": str(self.root / "ops/codex-ops")}):
++            launched = research.dispatch(self.state, str(self.root), str(REPO / "ops"), "silent",
++                                         lambda pid: True, STAMP, jobs.dispatch_write, ident=ident)
++        self.assertIsNotNone(launched)
++        state_dir = self.root / "ops/codex-ops"
++        (state_dir / "learn.json").write_text(json.dumps(self.state))
++        tree = self.state["batches"][launched[0]]["worktree"]
++        self.assertTrue(research.ready(str(self.root), str(state_dir), launched[0], "silent", tree, ident))
++        self.assertFalse(research.ready(str(self.root), str(state_dir), launched[0], "silent", tree, IDENT))
++        self.assertFalse(research.ready(str(self.root), str(state_dir), launched[0], "ironclad", tree, ident))
++        reuse_ident, _, _ = self.second_request(request["dispatch_runs"])
++        self.assertEqual(research.matching_requests(self.state, self.root, "silent", request["dispatch_runs"]),
++                         sorted([ident, reuse_ident]))
++        self.assertTrue(research.manual_matches(self.state, self.root, "silent", request["dispatch_runs"]))
++        self.assertFalse(research.manual_matches(self.state, self.root, "ironclad", request["dispatch_runs"]))
++        self.assertEqual(json.loads(path.read_bytes())["batch"], launched[0])
++
++    def test_output_report_uses_own_identity_coverage_and_report_only_contract(self):
++        spec = importlib.util.spec_from_file_location("output_report_fixture", REPO / "ops/tests/test_strategy_research.py")
++        module = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(module)
++        fixture = module.StrategyResearch("test_bound_clean_report_is_accepted_with_frozen_proof")
++        fixture.setUp()
++        self.addCleanup(fixture.doCleanups)
++        ident = OUTPUT_IDENT
++        fixture.manifest["request_id"] = ident
++        fixture.write_json(fixture.manifest_path, fixture.manifest)
++        sections = OUTPUT_SECTIONS
++        fixture.request.update(request_id=ident, required_sections=sections,
++                               input_manifest_sha256=fixture.digest(fixture.manifest_path))
++        path = fixture.root / "notes/strategy-research-core-output-silent.json"
++        fixture.write_json(path, fixture.request)
++        fixture.batch.update(research_request=ident, research_dispatch_base=fixture.base,
++                             research_input_sha256=fixture.request["input_manifest_sha256"])
++        fixture.report.update(request_id=ident, input_sha256=fixture.request["input_manifest_sha256"],
++                              coverage={key: True for key in sections})
++        proof = fixture.accept()
++        self.assertIsNotNone(proof)
++        self.assertEqual(proof["research"]["request"], str(path))
++        for key, value in (("research_request", IDENT), ("research_dispatch_base", "0" * 40),
++                           ("research_input_sha256", "0" * 64), ("proposal_ids", [])):
++            self.assertIsNone(fixture.accept(batch={**fixture.batch, key: value}))
++        for changes in ({"request_id": "roy-20261010-silent-core-reuse-value"},
++                        {"coverage": {"limitations": True}}, {"covered_runs": []},
++                        {"fixes": [{"commit": fixture.base}]}, {"merged": fixture.base},
++                        {"tests": {"tsc": 0, "vitest": 0, "cases": 0}}):
++            self.assertIsNone(fixture.accept(report={**fixture.report, **changes}))
++        (fixture.tree / "dirty.txt").write_text("Preserved uncommitted fixture source.\n")
++        self.assertIsNone(fixture.accept())
++
+     def test_completed_first_study_does_not_block_second_or_rewrite_history(self):
+         self.check()
+         old = self.read_request()
+@@ -422,7 +523,7 @@ class ResearchScheduling(unittest.TestCase):
+             self.assertFalse(research.ready(str(self.root), str(state_dir), batch_id, "silent", tree, IDENT))
+             self.request_path.write_text(json.dumps(before))
+ 
+-    def test_host_wrapper_waits_for_registration_before_model_and_finishes_only_registered(self):
++    def assert_host_wrapper_registration(self, ident=IDENT):
+         (self.root / "ops").mkdir(exist_ok=True)
+         for name in ("paths.sh", "codex-ops-learner.sh", "strategy_research_jobs.py"):
+             shutil.copy2(REPO / "ops" / name, self.root / "ops" / name)
+@@ -437,7 +538,7 @@ class ResearchScheduling(unittest.TestCase):
+         batch_id = STAMP + "-strategy-proposal"
+         tree = str(self.root / ".worktrees" / ("codex-strategy-silent-" + STAMP))
+         argv = ["bash", str(self.root / "ops/codex-ops-learner.sh"), batch_id, ",".join(RUNS),
+-                "silent", "strategy-proposal", tree, "strategy-proposal", IDENT]
++                "silent", "strategy-proposal", tree, "strategy-proposal", ident]
+         env = {"HOME": os.environ["HOME"], "PATH": "/usr/bin:/bin", "CODEX_OPS_ROOT": str(self.root),
+                "CODEX_OPS_NO_DRAIN": "1", "LEARNER_CMD": "printf fixed-model-output"}
+         proc = subprocess.Popen(argv, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+@@ -468,6 +569,14 @@ class ResearchScheduling(unittest.TestCase):
+         self.assertFalse((self.root / "finish.called").exists())
+         self.assertIn("research registration", (state_dir / "learner" / (batch_id + ".err")).read_text())
+ 
++    def test_host_wrapper_waits_for_registration_before_model_and_finishes_only_registered(self):
++        self.assert_host_wrapper_registration()
++
++    def test_output_host_wrapper_accepts_only_its_saved_registration_and_pinned_baseline(self):
++        self.request_path.unlink()
++        self.output_request(RUNS)
++        self.assert_host_wrapper_registration(OUTPUT_IDENT)
++
+     def test_wrapper_rejects_unknown_research_marker_and_extra_arguments(self):
+         env = {"HOME": os.environ["HOME"], "PATH": "/usr/bin:/bin", "CODEX_OPS_ROOT": str(self.root),
+                "CODEX_OPS_NO_DRAIN": "1", "LEARNER_CMD": "exit 99"}
