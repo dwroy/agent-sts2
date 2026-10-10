@@ -2,14 +2,14 @@
 
 Roy 授权的是角色隔离、整体 Platt、时间切分、原准入标准和定期重跑架构；下面样本、实胜败、拟合、残差及准入结论只来自已结束的 SILENT 对局。boss侧参数复用用户准许的既有模型/monster-db（含common），另记来源，不把它当作静默对局样本或校准参数。没有新增打法或策略阈值。
 
-提取：219 局，971 次尝试；395 次有实际结局且取得首回合帧（模拟成功数另列）。冻结到已结束局 `2026-10-10T17:07:00.847Z`；未进入 boss 的局号/版本及完整筛选列表在 extraction.json。提取排除原因：`{"SL predicted_death: censored, no actual win/loss; no observed completed outcome": 574, "SL predicted_death: censored, no actual win/loss; no observed completed outcome; no turn-1 decision with drawn hand": 1, "no turn-1 decision with drawn hand": 1}`。
-可用 195 局，实际结局 `{'won': 288, 'died': 107}`，各进阶场数 `{'0': 16, '1': 6, '2': 5, '3': 3, '4': 9, '5': 3, '6': 22, '7': 17, '8': 3, '9': 7, '10': 304}`。
+提取：220 局，979 次尝试；398 次有实际结局且取得首回合帧（模拟成功数另列）。冻结到已结束局 `2026-10-10T17:59:47.349Z`；未进入 boss 的局号/版本及完整筛选列表在 extraction.json。提取排除原因：`{"SL predicted_death: censored, no actual win/loss; no observed completed outcome": 579, "SL predicted_death: censored, no actual win/loss; no observed completed outcome; no turn-1 decision with drawn hand": 1, "no turn-1 decision with drawn hand": 1}`。
+可用 196 局，实际结局 `{'won': 290, 'died': 108}`，各进阶场数 `{'0': 16, '1': 6, '2': 5, '3': 3, '4': 9, '5': 3, '6': 22, '7': 17, '8': 3, '9': 7, '10': 307}`。
 SL predicted_death 是未实结算的截断样本，来源保留，不标实际败局；同一局全部 boss/SL 共享切分。校准胜率以有实际结局的尝试为条件，存在 SL 截断选择偏差，不是所有初试胜率或允许SL的整局通关率。开场我方资源取日志，boss HP/伤害/招式沿现有 monster-db 按进阶输入、缺级取最近观测，未重拟合 boss 侧。
 
-SL口径：boss房间 397；初试结局 `{'predicted_death': 155, 'won': 234, 'died': 8}`，重试结局 `{'won': 54, 'predicted_death': 420, 'died': 100}`；没有可用实际结局开场的房间 `[{'run_id': 'TD1HVGS7H6LB', 'floor': 17}, {'run_id': 'TXZ6RVMQA09D', 'floor': 49}]`。失败重载仍不能补造实际败局；具体 reload 原记录随来源保留。
+SL口径：boss房间 400；初试结局 `{'predicted_death': 156, 'won': 236, 'died': 8}`，重试结局 `{'won': 54, 'predicted_death': 424, 'died': 101}`；没有可用实际结局开场的房间 `[{'run_id': 'TD1HVGS7H6LB', 'floor': 17}, {'run_id': 'TXZ6RVMQA09D', 'floor': 49}]`。失败重载仍不能补造实际败局；具体 reload 原记录随来源保留。
 
-固定来源/模型：`{"simulator_base": "7e1193cef9467416bc10c8e344a49f4fd98390c7", "model_sha256": "a16714b6349b4d4c79bbc91c3875c979607f80da1e619b59f5a0a82e45210a5a", "samples": 200, "seed": 1, "dataset_sha256": "fe921c67a580f3854b247b1d5702a62fc428d2ae2f5497bdfa50c08b0280c50f", "sources_sha256": "00b5fdd7af5e28289df90eb41484ceda04a5650a4ce2cf9313572cf9426c45ec", "versions": {"tune": ["0a066c2f+dirty", "0d0c4b69+dirty", "103fd5ff+dirty", "141df614+dirty", "1e047a36+dirty", "25a408ef+dirty", "2c81eb76+dirty", "2ec81b9f+dirty", "3a2a2a48+dirty", "3cbc6955+dirty", "3ebbdc6c+dirty", "41bd4a44+dirty", "42ac6c1d+dirty", "452f7bc7+dirty", "45965f49+dirty", "473a62f4+dirty", "48f2bf5a+dirty", "4915e3b3+dirty", "5ae08a3d+dirty", "5de5d518", "5de5d518+dirty", "6566b7d3+dirty", "65d99e74+dirty", "7be569b1+dirty", "7bea7d99+dirty", "7c7f22e3+dirty", "86b24a1f+dirty", "8b268858+dirty", "8d79fd5b+dirty", "9692ea6d+dirty", "9852b39f+dirty", "9988ca8b+dirty", "9e0fda2e+dirty", "a999dba8+dirty", "b9c46d66+dirty", "bb19732f+dirty", "bf3ebb7c", "bf63ab40+dirty", "c4c7ad97+dirty", "ccf1fcde+dirty", "d283e641+dirty", "d9a3ea37+dirty", "ee1f4fd1+dirty", "f1d951ec+dirty"], "val": ["0061f599+dirty", "0068600d+dirty", "03d50f0b+dirty", "03f4ffe0+dirty", "047c809e+dirty", "049dff24+dirty", "0581ecb3+dirty", "099656e5f+dirty", "09ac8004+dirty", "0d6c1a82+dirty", "0fd8e845+dirty", "10168ac71+dirty", "11d759cf+dirty", "157808e1e+dirty", "187c025a+dirty", "1a0adbaa+dirty", "1a5e1217+dirty", "1a89c2d4+dirty", "20cec89a+dirty", "2518c73d+dirty", "261af56e+dirty", "28e339fa+dirty", "2b1a5f6d+dirty", "31914e4b+dirty", "334d51498+dirty", "3541bc54+dirty", "3599ab0a+dirty", "3caa860b+dirty", "3cadc990+dirty", "3d05e954+dirty", "433144fb+dirty", "4cc52f9ab+dirty", "4fb81b17+dirty", "52aa3fcc+dirty", "56c64ff8+dirty", "57b661f07+dirty", "5925a43d+dirty", "5957f0563+dirty", "5ff4270d+dirty", "60685510+dirty", "650a6a84+dirty", "6519b8909+dirty", "69a7b441+dirty", "6ac57ea6+dirty", "6ad5584f+dirty", "6c3d8187+dirty", "6e8de8ea4+dirty", "6fd495cc+dirty", "70c8352b+dirty", "710dc4dc+dirty", "722518cd+dirty", "72499093+dirty", "734c0860+dirty", "7375067d7+dirty", "74f82413+dirty", "77b15f03f+dirty", "79bee0fc+dirty", "7f0c04dd+dirty", "7f6d5b4b+dirty", "8149e4ca+dirty", "8ef00878+dirty", "910604a4+dirty", "91c1db90+dirty", "92376ca3+dirty", "93298980+dirty", "98d2d508+dirty", "9949a5de+dirty", "9a7dc931+dirty", "9e20ade9+dirty", "a340c1ec+dirty", "a73ce7cc+dirty", "a7c2a411+dirty", "a8bb1ebe5+dirty", "aa1e2136+dirty", "ac321b1f+dirty", "ad01f74a+dirty", "b0b0e679+dirty", "b0f41f03+dirty", "b1714285+dirty", "b219de68+dirty", "b8ca9311+dirty", "b934d888d+dirty", "bb728531+dirty", "be0ee6df+dirty", "c1dd721f+dirty", "c308b61e1+dirty", "c70efc8c+dirty", "c7e1e0ed3+dirty", "cc1bdc59+dirty", "ceb74207+dirty", "cecc8317+dirty", "cfa8112d+dirty", "current", "d07c38fc+dirty", "d4026dbb+dirty", "d422c5cec+dirty", "d5ad91e80+dirty", "d5f290f4+dirty", "d61bf0ec+dirty", "d6a39489f+dirty", "da2ccb92+dirty", "dc899f95+dirty", "e33ca6e0+dirty", "e838a975+dirty", "e8a6fb71+dirty", "eabdd307+dirty", "eaf3ac162+dirty", "ebd920b4+dirty", "f0c9dfbf+dirty", "f17e15ca+dirty", "f56da22b+dirty", "f65cbfac+dirty", "f8dd742d+dirty", "f8e01696+dirty", "f9db52c1+dirty", "fd4c8e52+dirty"]}, "completed_max_asc": 10, "boss_input_scope": {"openings": 395, "a10_hp_asc_sources": {"10": 403}, "a10_opening_asc_sources": {"10": 403}, "corrected_first_hit": 58, "a10_move_damage_asc_sources": {"10": 48, "9": 1}, "a10_no_damage_records": ["AEONGLASS:INCREASING_INTENSITY_MOVE", "CEREMONIAL_BEAST:BEAST_CRY_MOVE", "CEREMONIAL_BEAST:STAMP_MOVE", "CEREMONIAL_BEAST:STUNNED", "CRUSHER:ADAPT_MOVE", "KIN_FOLLOWER:POWER_DANCE_MOVE", "KIN_PRIEST:RITUAL_MOVE", "KNOWLEDGE_DEMON:CURSE_OF_KNOWLEDGE_MOVE", "LAGAVULIN_MATRIARCH:SLEEP_MOVE", "LAGAVULIN_MATRIARCH:SOUL_SIPHON_MOVE", "LAGAVULIN_MATRIARCH:STUNNED", "QUEEN:BURN_BRIGHT_FOR_ME_MOVE", "QUEEN:ENRAGE_MOVE", "QUEEN:PUPPET_STRINGS_MOVE", "QUEEN:YOU_ARE_MINE_MOVE", "ROCKET:CHARGE_UP_MOVE", "ROCKET:RECHARGE_MOVE", "SOUL_FYSH:BECKON_MOVE", "SOUL_FYSH:FADE_MOVE", "TEST_SUBJECT:BURNING_GROWL_MOVE", "TEST_SUBJECT:RESPAWN_MOVE", "THE_INSATIABLE:LIQUIFY_GROUND_MOVE", "THE_INSATIABLE:SALIVATE_MOVE", "VANTOM:PREPARE_MOVE", "WATERFALL_GIANT:ABOUT_TO_BLOW_MOVE", "WATERFALL_GIANT:PRESSURIZE_MOVE", "WATERFALL_GIANT:SIPHON_MOVE"]}, "result_reuse": {"previous_artifact": "8cf05a0d42363764802a115f62f90a5f2363881b42e080e5a239ea2a8d696f65", "cache_artifact": "a62860151e8aea17515a16f5c0cd2e09a2fe5e2020c3c17ec0615a24f041602d", "fixed_model_base": "7e1193cef9467416bc10c8e344a49f4fd98390c7", "fixed_model_sha256": "a16714b6349b4d4c79bbc91c3875c979607f80da1e619b59f5a0a82e45210a5a", "verified_model_inputs": 210, "historical_fights": 393, "new_validation_fights": 2, "control_replays": ["C48LLXBGKXQ9:17:2:6263075551", "C48LLXBGKXQ9:33:6:6290069057"], "historical_fights_and_turns_byte_equivalent": true, "seed": 1, "samples": 200, "original_full_dataset_row_indices": true, "scope": "Previous published model pinned exactly; current production model is not revalidated by this refresh.", "reused_fights": 391, "replayed_fights": 4, "control_results_identical_except_ms": true}}`。所有输入文件 SHA256 在同批 provenance.json。筛选读取总日志索引元信息，但没有纳入铁甲对局样本或校准参数，角色统计输入只取静默目录。common monster-db 是用户准许复用的既有模型；它已有的观测数值固定使用，验证的是静默胜率映射，不宣称从零预测未观测 boss 机制。
-固定切点 `2026-10-06T02:46:11.648000`（UTC，与日志ts同口径），调参 107 场、验证 288 场；验证覆盖后期代码，完整版本逐项在来源表。每起点 200 样本，固定 seed=1（逐战seed=1+原始行号×101），模拟策略/费用/药水/保血/目标/SL阈值保持原样。
+固定来源/模型：`{"simulator_base": "7e1193cef9467416bc10c8e344a49f4fd98390c7", "model_sha256": "a16714b6349b4d4c79bbc91c3875c979607f80da1e619b59f5a0a82e45210a5a", "samples": 200, "seed": 1, "dataset_sha256": "3346afff345d93b3173b85b7d6efbb433f80cc305c326c7449d0c34d555c432a", "sources_sha256": "8cac4cef8d8461c3b777eeeb82b48ea28e301dd1d83ec513df28d3ff099107c1", "versions": {"tune": ["0a066c2f+dirty", "0d0c4b69+dirty", "103fd5ff+dirty", "141df614+dirty", "1e047a36+dirty", "25a408ef+dirty", "2c81eb76+dirty", "2ec81b9f+dirty", "3a2a2a48+dirty", "3cbc6955+dirty", "3ebbdc6c+dirty", "41bd4a44+dirty", "42ac6c1d+dirty", "452f7bc7+dirty", "45965f49+dirty", "473a62f4+dirty", "48f2bf5a+dirty", "4915e3b3+dirty", "5ae08a3d+dirty", "5de5d518", "5de5d518+dirty", "6566b7d3+dirty", "65d99e74+dirty", "7be569b1+dirty", "7bea7d99+dirty", "7c7f22e3+dirty", "86b24a1f+dirty", "8b268858+dirty", "8d79fd5b+dirty", "9692ea6d+dirty", "9852b39f+dirty", "9988ca8b+dirty", "9e0fda2e+dirty", "a999dba8+dirty", "b9c46d66+dirty", "bb19732f+dirty", "bf3ebb7c", "bf63ab40+dirty", "c4c7ad97+dirty", "ccf1fcde+dirty", "d283e641+dirty", "d9a3ea37+dirty", "ee1f4fd1+dirty", "f1d951ec+dirty"], "val": ["0061f599+dirty", "0068600d+dirty", "03d50f0b+dirty", "03f4ffe0+dirty", "047c809e+dirty", "049dff24+dirty", "0581ecb3+dirty", "099656e5f+dirty", "09ac8004+dirty", "0d6c1a82+dirty", "0fd8e845+dirty", "10168ac71+dirty", "11d759cf+dirty", "157808e1e+dirty", "187c025a+dirty", "1a0adbaa+dirty", "1a5e1217+dirty", "1a89c2d4+dirty", "20cec89a+dirty", "2518c73d+dirty", "261af56e+dirty", "28e339fa+dirty", "2b1a5f6d+dirty", "31914e4b+dirty", "334d51498+dirty", "3541bc54+dirty", "3599ab0a+dirty", "3caa860b+dirty", "3cadc990+dirty", "3d05e954+dirty", "433144fb+dirty", "4cc52f9ab+dirty", "4fb81b17+dirty", "52aa3fcc+dirty", "56c64ff8+dirty", "57b661f07+dirty", "5925a43d+dirty", "5957f0563+dirty", "5ff4270d+dirty", "60685510+dirty", "650a6a84+dirty", "6519b8909+dirty", "69a7b441+dirty", "6ac57ea6+dirty", "6ad5584f+dirty", "6c3d8187+dirty", "6e8de8ea4+dirty", "6fd495cc+dirty", "70c8352b+dirty", "710dc4dc+dirty", "722518cd+dirty", "72499093+dirty", "734c0860+dirty", "7375067d7+dirty", "74f82413+dirty", "77b15f03f+dirty", "79bee0fc+dirty", "7f0c04dd+dirty", "7f6d5b4b+dirty", "8149e4ca+dirty", "8ef00878+dirty", "910604a4+dirty", "91c1db90+dirty", "92376ca3+dirty", "93298980+dirty", "98d2d508+dirty", "9949a5de+dirty", "9a7dc931+dirty", "9e20ade9+dirty", "a340c1ec+dirty", "a73ce7cc+dirty", "a7c2a411+dirty", "a8bb1ebe5+dirty", "aa1e2136+dirty", "ac321b1f+dirty", "ad01f74a+dirty", "b0b0e679+dirty", "b0f41f03+dirty", "b1714285+dirty", "b219de68+dirty", "b8ca9311+dirty", "b934d888d+dirty", "bb728531+dirty", "be0ee6df+dirty", "c1dd721f+dirty", "c308b61e1+dirty", "c70efc8c+dirty", "c7e1e0ed3+dirty", "cc1bdc59+dirty", "ceb74207+dirty", "cecc8317+dirty", "cfa8112d+dirty", "current", "d07c38fc+dirty", "d4026dbb+dirty", "d422c5cec+dirty", "d5ad91e80+dirty", "d5f290f4+dirty", "d61bf0ec+dirty", "d6a39489f+dirty", "da2ccb92+dirty", "dc899f95+dirty", "e33ca6e0+dirty", "e838a975+dirty", "e8a6fb71+dirty", "eabdd307+dirty", "eaf3ac162+dirty", "ebd920b4+dirty", "f0c9dfbf+dirty", "f17e15ca+dirty", "f56da22b+dirty", "f65cbfac+dirty", "f8dd742d+dirty", "f8e01696+dirty", "f9db52c1+dirty", "fd4c8e52+dirty"]}, "completed_max_asc": 10, "boss_input_scope": {"openings": 398, "a10_hp_asc_sources": {"10": 408}, "a10_opening_asc_sources": {"10": 408}, "corrected_first_hit": 58, "a10_move_damage_asc_sources": {"10": 48, "9": 1}, "a10_no_damage_records": ["AEONGLASS:INCREASING_INTENSITY_MOVE", "CEREMONIAL_BEAST:BEAST_CRY_MOVE", "CEREMONIAL_BEAST:STAMP_MOVE", "CEREMONIAL_BEAST:STUNNED", "CRUSHER:ADAPT_MOVE", "KIN_FOLLOWER:POWER_DANCE_MOVE", "KIN_PRIEST:RITUAL_MOVE", "KNOWLEDGE_DEMON:CURSE_OF_KNOWLEDGE_MOVE", "LAGAVULIN_MATRIARCH:SLEEP_MOVE", "LAGAVULIN_MATRIARCH:SOUL_SIPHON_MOVE", "LAGAVULIN_MATRIARCH:STUNNED", "QUEEN:BURN_BRIGHT_FOR_ME_MOVE", "QUEEN:ENRAGE_MOVE", "QUEEN:PUPPET_STRINGS_MOVE", "QUEEN:YOU_ARE_MINE_MOVE", "ROCKET:CHARGE_UP_MOVE", "ROCKET:RECHARGE_MOVE", "SOUL_FYSH:BECKON_MOVE", "SOUL_FYSH:FADE_MOVE", "TEST_SUBJECT:BURNING_GROWL_MOVE", "TEST_SUBJECT:RESPAWN_MOVE", "THE_INSATIABLE:LIQUIFY_GROUND_MOVE", "THE_INSATIABLE:SALIVATE_MOVE", "VANTOM:PREPARE_MOVE", "WATERFALL_GIANT:ABOUT_TO_BLOW_MOVE", "WATERFALL_GIANT:PRESSURIZE_MOVE", "WATERFALL_GIANT:SIPHON_MOVE"]}, "result_reuse": {"previous_artifact": "8cf05a0d42363764802a115f62f90a5f2363881b42e080e5a239ea2a8d696f65", "cache_artifact": "28f6fa91ac332a3ce8aaca23c7fe316de426f14b8ad508120e79ff1ce32cb000", "fixed_model_base": "7e1193cef9467416bc10c8e344a49f4fd98390c7", "fixed_model_sha256": "a16714b6349b4d4c79bbc91c3875c979607f80da1e619b59f5a0a82e45210a5a", "verified_model_inputs": 210, "historical_fights": 395, "new_validation_fights": 3, "control_replays": ["C48LLXBGKXQ9:17:2:6263075551", "C48LLXBGKXQ9:33:6:6290069057"], "historical_fights_and_turns_byte_equivalent": true, "seed": 1, "samples": 200, "original_full_dataset_row_indices": true, "scope": "Previous published model pinned exactly; current production model is not revalidated by this refresh.", "reused_fights": 393, "replayed_fights": 5, "control_results_identical_except_ms": true}}`。所有输入文件 SHA256 在同批 provenance.json。筛选读取总日志索引元信息，但没有纳入铁甲对局样本或校准参数，角色统计输入只取静默目录。common monster-db 是用户准许复用的既有模型；它已有的观测数值固定使用，验证的是静默胜率映射，不宣称从零预测未观测 boss 机制。
+固定切点 `2026-10-06T02:46:11.648000`（UTC，与日志ts同口径），调参 107 场、验证 291 场；验证覆盖后期代码，完整版本逐项在来源表。每起点 200 样本，固定 seed=1（逐战seed=1+原始行号×101），模拟策略/费用/药水/保血/目标/SL阈值保持原样。
 
 进阶项只作一个整体模型的统计校正，不解释为进阶机制的因果效应；版本、资源和SL选择与进阶共变。某进阶段验证 n=0 时，只有调参残差，没有该段独立的样本外可靠性证据。上线保留后来其他批次的代码修复和知识刷新；本表仅验证所列固定模型，不冒称后续模型版本已通过相同验证，下一次定期重跑固定当时的模型。
 
@@ -19,7 +19,7 @@ A10 的 F48 胜只算该战胜利，不算整局通关；F49 是另一场独立 
 
 ## A10 数值与 F49 范围
 
-数值审计：`{"openings": 395, "a10_hp_asc_sources": {"10": 403}, "a10_opening_asc_sources": {"10": 403}, "corrected_first_hit": 58, "a10_move_damage_asc_sources": {"10": 48, "9": 1}, "a10_no_damage_records": ["AEONGLASS:INCREASING_INTENSITY_MOVE", "CEREMONIAL_BEAST:BEAST_CRY_MOVE", "CEREMONIAL_BEAST:STAMP_MOVE", "CEREMONIAL_BEAST:STUNNED", "CRUSHER:ADAPT_MOVE", "KIN_FOLLOWER:POWER_DANCE_MOVE", "KIN_PRIEST:RITUAL_MOVE", "KNOWLEDGE_DEMON:CURSE_OF_KNOWLEDGE_MOVE", "LAGAVULIN_MATRIARCH:SLEEP_MOVE", "LAGAVULIN_MATRIARCH:SOUL_SIPHON_MOVE", "LAGAVULIN_MATRIARCH:STUNNED", "QUEEN:BURN_BRIGHT_FOR_ME_MOVE", "QUEEN:ENRAGE_MOVE", "QUEEN:PUPPET_STRINGS_MOVE", "QUEEN:YOU_ARE_MINE_MOVE", "ROCKET:CHARGE_UP_MOVE", "ROCKET:RECHARGE_MOVE", "SOUL_FYSH:BECKON_MOVE", "SOUL_FYSH:FADE_MOVE", "TEST_SUBJECT:BURNING_GROWL_MOVE", "TEST_SUBJECT:RESPAWN_MOVE", "THE_INSATIABLE:LIQUIFY_GROUND_MOVE", "THE_INSATIABLE:SALIVATE_MOVE", "VANTOM:PREPARE_MOVE", "WATERFALL_GIANT:ABOUT_TO_BLOW_MOVE", "WATERFALL_GIANT:PRESSURIZE_MOVE", "WATERFALL_GIANT:SIPHON_MOVE"]}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
+数值审计：`{"openings": 398, "a10_hp_asc_sources": {"10": 408}, "a10_opening_asc_sources": {"10": 408}, "corrected_first_hit": 58, "a10_move_damage_asc_sources": {"10": 48, "9": 1}, "a10_no_damage_records": ["AEONGLASS:INCREASING_INTENSITY_MOVE", "CEREMONIAL_BEAST:BEAST_CRY_MOVE", "CEREMONIAL_BEAST:STAMP_MOVE", "CEREMONIAL_BEAST:STUNNED", "CRUSHER:ADAPT_MOVE", "KIN_FOLLOWER:POWER_DANCE_MOVE", "KIN_PRIEST:RITUAL_MOVE", "KNOWLEDGE_DEMON:CURSE_OF_KNOWLEDGE_MOVE", "LAGAVULIN_MATRIARCH:SLEEP_MOVE", "LAGAVULIN_MATRIARCH:SOUL_SIPHON_MOVE", "LAGAVULIN_MATRIARCH:STUNNED", "QUEEN:BURN_BRIGHT_FOR_ME_MOVE", "QUEEN:ENRAGE_MOVE", "QUEEN:PUPPET_STRINGS_MOVE", "QUEEN:YOU_ARE_MINE_MOVE", "ROCKET:CHARGE_UP_MOVE", "ROCKET:RECHARGE_MOVE", "SOUL_FYSH:BECKON_MOVE", "SOUL_FYSH:FADE_MOVE", "TEST_SUBJECT:BURNING_GROWL_MOVE", "TEST_SUBJECT:RESPAWN_MOVE", "THE_INSATIABLE:LIQUIFY_GROUND_MOVE", "THE_INSATIABLE:SALIVATE_MOVE", "VANTOM:PREPARE_MOVE", "WATERFALL_GIANT:ABOUT_TO_BLOW_MOVE", "WATERFALL_GIANT:PRESSURIZE_MOVE", "WATERFALL_GIANT:SIPHON_MOVE"]}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
 
 F49 实际结局 20 次、可用开场 19 场；数量缺口与失败指标分别报告。每场按实际进场资源评估，未验证 F48→F49 联合通关率。
 
@@ -47,7 +47,7 @@ F49 实际结局 20 次、可用开场 19 场；数量缺口与失败指标分�
 
 ## B2 / t1
 
-参与拟合的模拟成功调参 n=106（候选107）；整体验证成功 n=286（候选288），校准 Brier=0.109；Platt={'a': 2.0844, 'b': 0.4502, 'c': 0.0}。失败记录未补造预测或实际胜败。
+参与拟合的模拟成功调参 n=106（候选107）；整体验证成功 n=289（候选291），校准 Brier=0.1088；Platt={'a': 2.0844, 'b': 0.4502, 'c': 0.0}。失败记录未补造预测或实际胜败。
 
 进阶项选择（只看调参）：`{"rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005", "base_tune_residuals": {"A0–4": {"n": 38, "gap": 0.0030000000000000027, "brier": 0.134, "mean_pred": 0.766, "actual_win": 0.763, "leak_ratio": 1.231}, "A5–9": {"n": 52, "gap": -0.01100000000000001, "brier": 0.0832, "mean_pred": 0.797, "actual_win": 0.808, "leak_ratio": 1.198}, "A10": {"n": 16, "gap": 0.026000000000000023, "brier": 0.122, "mean_pred": 0.651, "actual_win": 0.625, "leak_ratio": 1.411}}, "systematic": false, "selected_ascension": false}`。
 
@@ -58,22 +58,22 @@ F49 实际结局 20 次、可用开场 19 场；数量缺口与失败指标分�
 | tune | A10 | 16 | 0.651 | 0.625 | 0.026000000000000023 | 0.122 | 1.411 |
 | val | A0–4 | 0 | None | None | None | None | None |
 | val | A5–9 | 0 | None | None | None | None | None |
-| val | A10 | 286 | 0.771 | 0.717 | 0.05400000000000005 | 0.109 | 1.284 |
+| val | A10 | 289 | 0.769 | 0.716 | 0.05300000000000005 | 0.1088 | 1.287 |
 
 原准入标准：验证≥10、Brier≤整体1.25倍、胜率差≤15个百分点、打穿比0.7–1.3；缺指标也保持低可信。
 
 | boss | 验证 n | 还差 | Brier | 预测/实际 | 打穿比 | 失败指标 | 可信 |
 |---|---|---|---|---|---|---|---|
-| 永世沙漏 (AEONGLASS) | 20 | 0 | 0.1887 | 0.696/0.5 | 3.361 | brier,gap,leak | 低 |
+| 永世沙漏 (AEONGLASS) | 21 | 0 | 0.1856 | 0.68/0.476 | 3.466 | brier,gap,leak | 低 |
 | 仪式兽 (CEREMONIAL_BEAST) | 26 | 0 | 0.0562 | 0.795/0.808 | 1.09 | 无 | 达标 |
 | 帝王蟹 (KAISER_CRAB) | 30 | 0 | 0.1438 | 0.654/0.6 | 1.254 | brier | 低 |
-| 知识恶魔 (KNOWLEDGE_DEMON) | 27 | 0 | 0.071 | 0.783/0.852 | 1.317 | leak | 低 |
+| 知识恶魔 (KNOWLEDGE_DEMON) | 28 | 0 | 0.0721 | 0.78/0.857 | 1.35 | leak | 低 |
 | 乐加维林族母 (LAGAVULIN_MATRIARCH) | 27 | 0 | 0.0549 | 0.862/0.815 | 1.045 | 无 | 达标 |
 | 女王 (QUEEN) | 19 | 0 | 0.2557 | 0.708/0.368 | 1.152 | brier,gap | 低 |
 | 灵魂异鱼 (SOUL_FYSH) | 21 | 0 | 0.0581 | 0.906/0.857 | 0.896 | 无 | 达标 |
 | 实验体 (TEST_SUBJECT) | 15 | 0 | 0.163 | 0.351/0.133 | 2.791 | brier,gap,leak | 低 |
 | 无厌沙虫 (THE_INSATIABLE) | 26 | 0 | 0.1348 | 0.705/0.692 | 1.403 | leak | 低 |
-| 同族 (THE_KIN) | 22 | 0 | 0.1147 | 0.801/0.864 | 1.226 | 无 | 达标 |
+| 同族 (THE_KIN) | 23 | 0 | 0.1109 | 0.802/0.87 | 1.211 | 无 | 达标 |
 | 墨影幻灵 (VANTOM) | 28 | 0 | 0.0667 | 0.933/0.893 | 0.959 | 无 | 达标 |
 | 瀑布巨兽 (WATERFALL_GIANT) | 25 | 0 | 0.0723 | 0.879/0.88 | 0.874 | 无 | 达标 |
 
@@ -83,7 +83,7 @@ F49单独调参/验证指标（同一整体映射）：`{"F49": {"tune": {"n": 2
 
 ## B3 / pre
 
-参与拟合的模拟成功调参 n=106（候选107）；整体验证成功 n=286（候选288），校准 Brier=0.1102；Platt={'a': 2.2754, 'b': 0.5047, 'c': 0.0}。失败记录未补造预测或实际胜败。
+参与拟合的模拟成功调参 n=106（候选107）；整体验证成功 n=289（候选291），校准 Brier=0.1099；Platt={'a': 2.2754, 'b': 0.5047, 'c': 0.0}。失败记录未补造预测或实际胜败。
 
 进阶项选择（只看调参）：`{"rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005", "base_tune_residuals": {"A0–4": {"n": 38, "gap": 0.0030000000000000027, "brier": 0.1347, "mean_pred": 0.766, "actual_win": 0.763, "leak_ratio": 1.289}, "A5–9": {"n": 52, "gap": -0.009000000000000008, "brier": 0.0855, "mean_pred": 0.799, "actual_win": 0.808, "leak_ratio": 1.26}, "A10": {"n": 16, "gap": 0.020000000000000018, "brier": 0.1223, "mean_pred": 0.645, "actual_win": 0.625, "leak_ratio": 1.422}}, "systematic": false, "selected_ascension": false}`。
 
@@ -94,22 +94,22 @@ F49单独调参/验证指标（同一整体映射）：`{"F49": {"tune": {"n": 2
 | tune | A10 | 16 | 0.645 | 0.625 | 0.020000000000000018 | 0.1223 | 1.422 |
 | val | A0–4 | 0 | None | None | None | None | None |
 | val | A5–9 | 0 | None | None | None | None | None |
-| val | A10 | 286 | 0.774 | 0.717 | 0.05700000000000005 | 0.1102 | 1.299 |
+| val | A10 | 289 | 0.773 | 0.716 | 0.05700000000000005 | 0.1099 | 1.302 |
 
 原准入标准：验证≥10、Brier≤整体1.25倍、胜率差≤15个百分点、打穿比0.7–1.3；缺指标也保持低可信。
 
 | boss | 验证 n | 还差 | Brier | 预测/实际 | 打穿比 | 失败指标 | 可信 |
 |---|---|---|---|---|---|---|---|
-| 永世沙漏 (AEONGLASS) | 20 | 0 | 0.1919 | 0.704/0.5 | 3.255 | brier,gap,leak | 低 |
+| 永世沙漏 (AEONGLASS) | 21 | 0 | 0.1877 | 0.686/0.476 | 3.357 | brier,gap,leak | 低 |
 | 仪式兽 (CEREMONIAL_BEAST) | 26 | 0 | 0.061 | 0.801/0.808 | 1.139 | 无 | 达标 |
 | 帝王蟹 (KAISER_CRAB) | 30 | 0 | 0.1697 | 0.668/0.6 | 1.268 | brier | 低 |
-| 知识恶魔 (KNOWLEDGE_DEMON) | 27 | 0 | 0.0598 | 0.785/0.852 | 1.33 | leak | 低 |
+| 知识恶魔 (KNOWLEDGE_DEMON) | 28 | 0 | 0.0617 | 0.781/0.857 | 1.358 | leak | 低 |
 | 乐加维林族母 (LAGAVULIN_MATRIARCH) | 27 | 0 | 0.0486 | 0.86/0.815 | 1.141 | 无 | 达标 |
 | 女王 (QUEEN) | 19 | 0 | 0.2338 | 0.672/0.368 | 1.268 | brier,gap | 低 |
 | 灵魂异鱼 (SOUL_FYSH) | 21 | 0 | 0.0635 | 0.917/0.857 | 0.893 | 无 | 达标 |
 | 实验体 (TEST_SUBJECT) | 15 | 0 | 0.1507 | 0.321/0.133 | 2.725 | brier,gap,leak | 低 |
 | 无厌沙虫 (THE_INSATIABLE) | 26 | 0 | 0.1563 | 0.722/0.692 | 1.454 | brier,leak | 低 |
-| 同族 (THE_KIN) | 22 | 0 | 0.1137 | 0.818/0.864 | 1.203 | 无 | 达标 |
+| 同族 (THE_KIN) | 23 | 0 | 0.1099 | 0.819/0.87 | 1.189 | 无 | 达标 |
 | 墨影幻灵 (VANTOM) | 28 | 0 | 0.0619 | 0.931/0.893 | 0.949 | 无 | 达标 |
 | 瀑布巨兽 (WATERFALL_GIANT) | 25 | 0 | 0.0699 | 0.898/0.88 | 0.841 | 无 | 达标 |
 
@@ -1126,30 +1126,39 @@ F49单独调参/验证指标（同一整体映射）：`{"F49": {"tune": {"n": 2
 | U1QYLX1AE1WX | CRUSHER+ROCKET | 10 | 33 | 1 | 8 | current | val | won |
 | N3YHJMV1ATFR | SOUL_FYSH | 10 | 17 | 1 | 11 | current | val | won |
 | N3YHJMV1ATFR | KNOWLEDGE_DEMON | 10 | 33 | 1 | 10 | current | val | won |
+| G2QCF2R3A57K | KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST | 10 | 17 | 1 | 10 | current | val | won |
+| G2QCF2R3A57K | KNOWLEDGE_DEMON | 10 | 33 | 1 | 11 | current | val | won |
+| G2QCF2R3A57K | AEONGLASS | 10 | 48 | 1 | 4 | current | 排除 | SL predicted_death: censored, no actual win/loss; no observed completed outcome |
+| G2QCF2R3A57K | AEONGLASS | 10 | 48 | 2 | 5 | current | 排除 | SL predicted_death: censored, no actual win/loss; no observed completed outcome |
+| G2QCF2R3A57K | AEONGLASS | 10 | 48 | 3 | 5 | current | 排除 | SL predicted_death: censored, no actual win/loss; no observed completed outcome |
+| G2QCF2R3A57K | AEONGLASS | 10 | 48 | 4 | 4 | current | 排除 | SL predicted_death: censored, no actual win/loss; no observed completed outcome |
+| G2QCF2R3A57K | AEONGLASS | 10 | 48 | 5 | 4 | current | 排除 | SL predicted_death: censored, no actual win/loss; no observed completed outcome |
+| G2QCF2R3A57K | AEONGLASS | 10 | 48 | 6 | 5 | current | val | died |
 
 模拟失败原件：`[{"key": "K3676LU8B0UH:48:2:6525158984", "start": "t1", "error": "board: Error: no solve"}, {"key": "54G5683J0E5S:33:1:10284668504", "start": "t1", "error": "board: Error: no solve"}, {"key": "Y8GDTNWG4R3X:48:6:10587883165", "start": "t1", "error": "board: Error: no solve"}, {"key": "K3676LU8B0UH:48:2:6525158984", "start": "pre", "error": "board: Error: no solve"}, {"key": "54G5683J0E5S:33:1:10284668504", "start": "pre", "error": "board: Error: no solve"}, {"key": "Y8GDTNWG4R3X:48:6:10587883165", "start": "pre", "error": "board: Error: no solve"}]`。
 
-## 本批固定模型验证刷新（20261011-011304-silent-boss-calibration）
+## 本批固定模型验证刷新（20261011-021303-silent-boss-calibration）
 
-相对实际 live 新增 31 次 boss 实际结局，达到20次阈值；最高已结束进阶仍A10。
-严格SILENT已结束219局，971次尝试、395个可用开场，
-397个boss房间。SL预测必死截断不补造败局；来源与排除原因逐行保留。
-107个调参keys、UTC切点2026-10-06T02:46:11.648000、Platt与模型选择保持，验证257→288，
-其中B2/B3各286/286场成功预测；历史3场各两起点no-solve保留（1调参、2验证）。
+相对实际 live 新增 34 次 boss 实际结局，达到20次阈值；最高已结束进阶仍A10。
+严格SILENT已结束220局，979次尝试、398个可用开场，
+400个boss房间。SL预测必死截断不补造败局；来源与排除原因逐行保留。
+107个调参keys、UTC切点2026-10-06T02:46:11.648000、Platt与模型选择保持，验证257→291，
+其中B2/B3各289/289场成功预测；历史3场各两起点no-solve保留（1调参、2验证）。
 
 先用现有character_extract.py冻结日志，指定refresh-silent.py入口额外传--dataset、--results、--provenance，
 保持已发布模型7e1193cef9467416bc10c8e344a49f4fd98390c7，不用当前生产模型重新拟合该实验。
-210项固定模型输入SHA逐项核实；缓存a62860151e8aea17515a16f5c0cd2e09a2fe5e2020c3c17ec0615a24f041602d的393场及回合完全一致，
-复用391场，重放2控制场和2新场，控制战4起点除耗时外完全一致。
+210项固定模型输入SHA逐项核实；缓存28f6fa91ac332a3ce8aaca23c7fe316de426f14b8ad508120e79ff1ce32cb000的395场及回合完全一致，
+复用393场，重放2控制场和3新场，控制战4起点除耗时外完全一致。
 每起点200样本、seed=1和全量原始行号保持。同内容重跑/更新previous后的门槛跳过均不启动模拟或拟合子进程。
-已核969个开场原始offset/len/SHA、SILENT与进阶；缺开场2条保留排除。
+已核977个开场原始offset/len/SHA、SILENT与进阶；缺开场2条保留排除。
 
 | 新增缓存外证据 | A | Boss | F | 尝试 | 回合 | 实际 | 进场/结算HP |
 |---|---|---|---|---|---|---|---|
-| N3YHJMV1ATFR | 10 | SOUL_FYSH | 17 | 1 | T1–11 | won | 55/19 |
-| N3YHJMV1ATFR | 10 | KNOWLEDGE_DEMON | 33 | 1 | T1–10 | won | 40/26 |
+| G2QCF2R3A57K | 10 | KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST | 17 | 1 | T1–10 | won | 63/11 |
+| G2QCF2R3A57K | 10 | KNOWLEDGE_DEMON | 33 | 1 | T1–11 | won | 57/28 |
+| G2QCF2R3A57K | 10 | AEONGLASS | 48 | 6 | T1–5 | died | 26/0 |
 
-相对live的全部31场见new-since-live.json。B2/B3 Brier 0.109/0.1102，
+相对live的全部34场见new-since-live.json。B2/B3 Brier 0.1088/0.1099，
 可信分别6/6项；名单仍须同时满足四指标。
 相对live新增候选B2：[]；
 B3：[]，未实际发布前不得称已准入。
@@ -1192,30 +1201,35 @@ runs索引current以run-config的offset/len/SHA补核；dirty不表示完整源�
 | BHSVN6X84UMN | 2026-10-10T15:03:54.164Z | 56268f61928e0330d91293e585efab075839bb4a | True |
 | U1QYLX1AE1WX | 2026-10-10T15:30:52.535Z | 56268f61928e0330d91293e585efab075839bb4a | True |
 | N3YHJMV1ATFR | 2026-10-10T16:29:24.644Z | 56268f61928e0330d91293e585efab075839bb4a | True |
+| G2QCF2R3A57K | 2026-10-10T17:11:39.650Z | 56268f61928e0330d91293e585efab075839bb4a | True |
 
-本批账本silent-0397（fight/proposed）；实际发布状态与测试回执在scratch/report.md。
+本批账本silent-0398（fight/proposed）；实际发布状态与测试回执在scratch/report.md。
 
-## 本批发布检查与测试回执
+## 本批测试与实际发布状态
 
-2026-10-11 01:32:58 CST：候选完成，自测通过，实际尚未发布。锁内live=56268f61928e0330d91293e585efab075839bb4a，已有他人MERGE_HEAD=a83d9ab675560a177249aa638e99df40bcfb5553、19个冲突。本批未写live，未保存刷新、开始自己的预检或合并；保留他人现场。
-这属于合入阻塞，无需Roy再次授权。完整外部检查交实际合入后的调度器。
+2026-10-11 02:26:48 CST：固定模型候选已完成，尚未发布。锁内live=56268f61928e0330d91293e585efab075839bb4a，他人MERGE_HEAD=a83d9ab675560a177249aa638e99df40bcfb5553，19个未解冲突；本批未改live索引/刷新，未启动自己的合并。
+这是已有合并现场阻塞，无需Roy重新批准；只有原合并拥有者完成/撤回其合并后才能继续本批锁内发布。
+没有本批源码合入可回退，刷新和原冲突全保留；实际源码合入、固定发布commit/tree、新eval版本均null。
+现有live仍为S1.boss-calibration11。本批账本silent-0398只经CLI记fight/proposed及来源提交，shipped交运维确认。
 
-开工工作树干净，基线3c1765d671ddd63db19f310086d7cdd5890e9d3b；git merge --no-edit main仅decision-log追加冲突，保留双方全部历史。
-合main提交b9dd9e4f174da1c22521bf37c7b2b3890392c873；该次提交前沙箱与gitleaks均退出0。
-本批最终tsc0、原固定沙箱265文件2681例通过；Python12校准与调度8固定夹具通过。
-首轮源码自测tsc0、2669通过/1失败：check-imports.test.ts遍历scratch时sl-gaps临时目录被另一测试删除，stat触发ENOENT。
-原日志与exit1完整保留；将TMPDIR改为scratch内.test-tmp，使原导入遍历器跳过动态临时目录，再跑原入口。
-未改生产代码、测试代码、原排除名单或门槛，不冒称首次全过；失败发生在源码自测阶段，没有live合入可回退。
-两控制战四起点除耗时外完全一致；210固定模型输入SHA与969个开场来源校验通过。
-同内容重跑、更新previous后不足20结局均跳过，无模拟或拟合子进程，输出字节不变。
-固定数据测试没有真实LLM调用，原沙箱排除项保留；候选gitleaks0，最终暂存内容另扫。
+开工git status干净，git merge --no-edit main为Already up to date；base=d85a84afe56f8aaee428ef74f89ec6f73cce3717。
+最终原沙箱入口含tsc退出0、265文件/2681用例通过；Python12校准和8调度固定夹具通过。
+生产源码、测试及固定排除名单不变。全套外部检查交实际合入后的调度器，未冒称运行。
+固定模型210输入SHA、398完整开场状态、977来源offset/len/SHA核实，两控制战四起点除耗时外完全一致。
+107调参keys、UTC切点、Platt与模型选择均不变；同内容与更新previous门槛两种幂等检查通过。
+预检判断仍按四指标，A0–4/A5–9各0独立验证且各差10场；F49数量已足、质量仍不达标。
+A10输入审计中48项攻击伤害取A10记录，TEST_SUBJECT/BIG_POUNCE一项沿固定模型的A9估值；不冒称本批已验证其机制。
+A10汇总打穿比B2/B3为1.287/1.302，B3略超1.3；原门槛逐boss分别执行，不能把整体胜率残差合格当作全体可信。
 
-复用实现cdf75af64fb5b118a5a808ecb3b05e2a05991c36已核为live祖先。本批不新增生产代码、机制或策略阈值，
-不改其他角色，不处理silent-0213。只有静默校准数据、报告、实验原件和本批记录变化。
-实际源码合入、固定发布commit/tree及新eval版本均null；silent-0397仅CLI登记fight/proposed及来源提交，未登记shipped。
-现有live仍为S1.boss-calibration11，不把候选称为已发布。固定模型仅验证7e1193cef，不验证后续生产模型变化。
+任务原始refresh命令成功提取，但默认以当前树模型重放；为维持固定已发布模型，中断未发布重放exit130，
+原始部分结果保留在scratch/177c505ffdb8ca493d13b2a563a63f4b4645e2cddd5e41b210ee8caf124a75c8，未消费。
+后续仍用原refresh入口，额外传--dataset/--results/--provenance并用已核固定模型结果。
+一次记录中断原因的前置Python相对路径错误未写文件，独立固定重放继续；错误回执保留，已从正确路径记录。
+最早Python/调度夹具临时目录曾使用默认/tmp，原输出保留；最终在scratch/.test-tmp重跑同固定夹具，均通过。
 
-后续须先由原合并拥有者处理既有冲突，再在live锁内保存刷新（含新增数据）、查双方重叠、预检、合入固定候选源，
-合后沙箱通过并视需要仅重建静默后复测，再登记唯一版本、双通知与运维shipped。
-若本批合后失败须保留日志并只回退本批代码、保留刷新；本次没有自己的合入可回退。
-所有初稿/原始日志保留，最终来源和机器回执见scratch/source-commit.txt、result.json。
+本批只有静默校准数据、来源、论文及记录变化；不修其他队列bug、不改费用/药水/保血/目标/SL阈值。
+code_proposals=[]、implementation_domains=[]。现有实现cdf75af64和固定模型7e1193cef均核为live祖先。
+本表只验证固定模型，不证明后续生产模型变化或整局通关收益。
+
+后续按锁内完整流程先保存刷新含新增数据、检查重叠/预检、合入固定源、合后沙箱测试，再登记唯一eval版本及通知。
+合后失败须保留日志并回退本批合入、保留原刷新。原件与最终源提交回执见scratch/result.json及source-commit.txt。

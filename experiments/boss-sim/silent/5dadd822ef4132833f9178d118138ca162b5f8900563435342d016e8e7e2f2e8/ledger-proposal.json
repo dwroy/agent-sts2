@@ -1,0 +1,46 @@
+{
+ "character": "silent",
+ "by": "learner:fix-batch",
+ "kind": "fight",
+ "claim": "Roy授权静默boss固定模型周期刷新：相对live新增34实际结局，220完局/979尝试/398可用；107调参、切点和Platt不动，验证257→291（成功289）；B2/B3 Brier 0.1088/0.1099，可信6/6。F49低可信、低阶各0验证；仅固定7e1193cef模型，不改策略阈值。",
+ "first_run": "G2QCF2R3A57K",
+ "prior": "unknown",
+ "status": "proposed",
+ "prior_note": "统计校准；Roy架构授权不是游戏事实，不据此认定已理解打法。",
+ "evidence": [
+  {
+   "run": "G2QCF2R3A57K",
+   "floor": 17,
+   "turn": 1,
+   "role": "support",
+   "note": "A10 KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST 尝试1 T1–10 实际won；G2QCF2R3A57K:17:1:11101397586"
+  },
+  {
+   "run": "G2QCF2R3A57K",
+   "floor": 33,
+   "turn": 1,
+   "role": "support",
+   "note": "A10 KNOWLEDGE_DEMON 尝试1 T1–11 实际won；G2QCF2R3A57K:33:1:11109717001"
+  },
+  {
+   "run": "G2QCF2R3A57K",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "A10 AEONGLASS 尝试6 T1–5 实际died；G2QCF2R3A57K:48:6:11131206765"
+  }
+ ],
+ "where": {
+  "knowledge": [
+   "knowledge/characters/silent/boss-trust.json"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261011-021303-silent-boss-calibration/report.md"
+  ],
+  "changelog": [
+   "paper/materials/silent/boss-sim-calibration.md",
+   "experiments/boss-sim/silent/5dadd822ef4132833f9178d118138ca162b5f8900563435342d016e8e7e2f2e8"
+  ]
+ },
+ "note": "来源任务20261011-021303-silent-boss-calibration；全量重提取、固定模型控制核验；授权新功能非bug-infra，只proposed，shipped由运维核实际发布登记。"
+}
