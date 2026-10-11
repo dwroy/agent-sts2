@@ -9,6 +9,7 @@
 #   procs              our processes: autoplay, stop-after, play, report.py, learner runs, the scheduler's wake
 #   stall-check        ops/stall-check.sh
 #   mod-state          GET 127.0.0.1:8080/state (the STS2-Agent mod), complete validated JSON
+#   report-run <id>    recover one finished run's missing report; refuses active play and duplicate side effects
 #   autoplay-start     the ops prompt's start: refuses while autoplay / stop-after / play runs; rm ops/STOP; starts
 #                      ops/autoplay.sh with setsid nohup; prints its PID and live's commit (PID in ops/codex-ops/autoplay.pid)
 #   autoplay-reload <old PID> <play PID>  replace the verified old loop with WAIT_PID; preserve play and return versions
@@ -61,6 +62,9 @@ hosting() {
 }
 
 case "$action" in
+  report-run)
+    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9A-Z]{12}$ ]] || exit 2
+    exec nice -n 19 python3 "$OPS/report_run.py" "$arg" ;;
   ops-assist)
     [ $# -eq 2 ] && [[ "$arg" =~ ^[a-z][a-z0-9-]{0,47}$ ]] || exit 2
     exec nice -n 19 python3 "$OPS/ops_assist.py" dispatch "$arg" ;;
@@ -102,6 +106,9 @@ case "$action" in
     printf '%s' "$out" | python3 "$OPS/mod-state.py" --json
     exit $? ;;
   autoplay-start)
+    mkdir -p "$DIR"
+    exec 7> "$DIR/report-run.lock"
+    flock -n 7 || { echo "report recovery is running; autoplay waits"; exit 75; }
     busy=$(pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh' | grep -v -E '^[0-9]+ (pgrep|grep) ')
     play=$(play_pids)
     if [ -n "$busy" ] || [ -n "$play" ]; then
@@ -118,7 +125,7 @@ case "$action" in
       else echo "invalid herdr autoplay receipt: ${out:0:200}; inspect processes before retrying"; exit 1; fi
     fi
     if [ -z "$pid" ]; then
-      setsid nohup bash "$ROOT/ops/autoplay.sh" > /dev/null 2>&1 < /dev/null &
+      setsid nohup bash "$ROOT/ops/autoplay.sh" 7>&- > /dev/null 2>&1 < /dev/null &
       pid=$!
       echo "$pid" > "$DIR/autoplay.pid"
     fi

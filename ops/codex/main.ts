@@ -178,6 +178,10 @@ async function precheck(bin: string): Promise<string | undefined> {
   const request = opsRequest(ROOT, env);
   const check = await checkCodex({ bin, home: learnerCodexHome(env) }, request.model!, request.effort!, { stateDir: join(STATE, "check") });
   if (!check.ok) return `codex 用不了：${check.error}`;
+  if (request.opsExecution === "host") {
+    log("main ops execution=host (explicit project setting); filesystem key masks are not enforced in this mode");
+    return undefined;
+  }
   const keys = await codexKeyCheck(bin, request, codexChildEnv(env, bin));
   if (!keys.ok) return `ops 权限配置没能挡住 key 文件，不运行：${keys.readable.length > 0 ? `读得到 ${keys.readable.join("、")}` : ""}${keys.error ? `（检查失败：${keys.error}）` : ""}`;
   return undefined;
@@ -193,8 +197,11 @@ async function wake(dryRun: boolean): Promise<number> {
   }
   if (session && events.length === 0) return 0;
   const now = new Date();
-  const message = session ? wakeMessage(events, now) : initMessage(readFileSync(paths.prompt, "utf8"), events, now);
   const request = opsRequest(ROOT, env);
+  const executionNotice = request.opsExecution === "host"
+    ? "【主 ops 当前执行模式】Roy 已授权主 ops 使用宿主权限，当前不是 OS 沙箱；可直接核宿主进程及本地 mod，也可继续用原 broker。旧上下文的沙箱限制描述不适用于本主会话。仍只改本仓库，不读取或输出凭据；学习者与只读辅助保持原沙箱，不能扩大它们的权限。\n\n"
+    : "";
+  const message = executionNotice + (session ? wakeMessage(events, now) : initMessage(readFileSync(paths.prompt, "utf8"), events, now));
   const bin = engineBinary("codex", env);
   const command = session ? resumeCommand(request, session, message, bin ?? "codex") : initCommand(request, message, bin ?? "codex");
   // The first turn always runs headless (it creates the session); later wakes go to the herdr TUI when ops=herdr.

@@ -250,7 +250,7 @@ def decider(record):
     return "code"
 
 
-def main():
+def main(*, code=None):
     """Prints the post-mortem; returns the run's character (knowledge id; None when no state of it names a run)."""
     decisions = [r for r in load(DEC) if r.get("mode") == "play"]
     runs = [run_of(r) for r in decisions]
@@ -382,9 +382,9 @@ def main():
     # Append to the run index once.
     existing = {r.get("run_id") for r in load(RUNS)}
     if ended and run_id not in existing:
-        sha = ""
+        sha = code or ""
         consoles = sorted(os.listdir(os.path.join(ROOT, "logs/console"))) if os.path.isdir(os.path.join(ROOT, "logs/console")) else []
-        if consoles:
+        if consoles and code is None:
             sha = consoles[-1].rsplit("-", 1)[-1].removesuffix(".log")
         character = None
         ascension = None
@@ -444,17 +444,20 @@ def refresh_knowledge(character=None) -> None:
     log = open(os.path.join(ROOT, "ops", "refresh.log"), "a")
     # fight-value (~5 min) is only a reference for Jev's history estimate and is written whole (tmp + rename, ede54d1),
     # so it runs on its own and the next run never waits for it; a run that starts meanwhile reads the previous copy.
-    subprocess.Popen(["bash", "-c", f"{refresh} --fight-value >/dev/null 2>&1"],
-                     stdout=log, stderr=log, start_new_session=True)
+    fight = subprocess.Popen(["bash", "-c", f"{refresh} --fight-value >/dev/null 2>&1"],
+                             stdout=log, stderr=log, start_new_session=True)
     proc = subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
+    result = {"pid": proc.pid, "exit": None, "fight_value_pid": fight.pid, "fight_value": "background"}
     # REFRESH_WAIT=1 (autoplay.sh, 2026-10-04): block until every file the next run reads is written, so the next run reads them fresh
     # (4AWD read the old outcome-stats.json while this was still rebuilding it). Capped; past the cap it keeps going.
     if os.environ.get("REFRESH_WAIT") == "1":
         try:
-            proc.wait(timeout=int(os.environ.get("REFRESH_WAIT_S", "1800")))
+            result["exit"] = proc.wait(timeout=int(os.environ.get("REFRESH_WAIT_S", "1800")))
         except subprocess.TimeoutExpired:
             log.write(f"refresh still running after {os.environ.get('REFRESH_WAIT_S', '1800')} s; next run starts anyway\n")
             log.flush()
+            result["timed_out"] = True
+    return result
 
 
 def refresh_costs() -> None:
