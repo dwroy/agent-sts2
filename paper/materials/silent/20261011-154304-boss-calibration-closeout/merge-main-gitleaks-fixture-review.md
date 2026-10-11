@@ -1,0 +1,1 @@
+Four original scan matches are existing literal test fixtures in agent/tests/learner.test.ts lines 447,711,717,720. All were read in their fake-binary/redaction-test context. Exact fingerprints only are ignored for this rescan; no production or repository scanner exclusions changed. The unfiltered exit1 report is retained.
