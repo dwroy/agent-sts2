@@ -279,6 +279,7 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "eval-metrics": { args: 2, ms: 600_000 },
   "learner-status": { args: 0, ms: 30_000 },
   "scheduler-status": { args: 0, ms: 30_000 },
+  "git-push-main": { args: 1, ms: 500_000 },
 };
 
 /** An argument: a PID or a comma-separated list of run ids (no spaces, no shell characters, no leading dash). */
@@ -320,6 +321,9 @@ export function validateRequest(raw: unknown): BrokerRequest {
   }
   if (action === "core-build-notify" && !/^[0-9]{8}-[0-9]{6}-fix-batch$/.test(list[0]!)) {
     return { ok: false, error: "core-build-notify 要完整核心学习批次 id" };
+  }
+  if (action === "git-push-main" && !/^[0-9a-f]{40}$/.test(list[0]!)) {
+    return { ok: false, error: "git-push-main 要 main 的完整提交 SHA" };
   }
   return { ok: true, action, args: list };
 }

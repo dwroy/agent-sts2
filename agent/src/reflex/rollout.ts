@@ -620,6 +620,8 @@ export interface RolloutOptions {
 }
 
 export interface RolloutInput {
+  /** Verified fresh-fight HP cost already applied to a synthetic board; reapply to transferred entry HP only. */
+  openingHpLoss?: number;
   captureResources?: boolean;
   /** Silent A10 CA5KE8GFJ9X2 F9 T2-T4: the observed Gardener's Skittish returns on later turns. */
   observedGardenerSkittish?: boolean;
@@ -1678,6 +1680,14 @@ function clearPower(e: SimEnemy, power: string): void {
   }
 }
 
+/** 1913 F31 T3-T4: the middle's dead and reattached bodies have neither its old poison nor Strength. */
+function clearObservedReattachPowers(e: SimEnemy): void {
+  if (!e.base.reattach || !e.base.reattachClearsPoisonStrength) return;
+  e.poison = 0;
+  clearPower(e, "POISON_POWER");
+  clearPower(e, "STRENGTH_POWER");
+}
+
 /** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead (with its spawns). */
 function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimEnemy[], fullFight = false): void {
   if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
@@ -1730,6 +1740,7 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     }
   } else {
     e.alive = false;
+    clearObservedReattachPowers(e);
     // An on-death spawn (Phrog Parasite, Gremlin Merc): its spawns join the fight (the rollout called the
     // Phrog's death a win: "over within 5 turns" 0.95 vs 0.47 in the logs, 4LC3YKCZV218 F9 T3 forecast 0,
     // actual 23).
@@ -2123,6 +2134,8 @@ function applyPlan(
   // Stable Serum: the rest of the hand is kept for the next turn instead (Ethereal cards still go).
   const keep = player.retainTurns > 0 && !o.winsFight;
   for (const i of unplayed) if (!hand[i]!.ethereal) (keep ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
+  // These cards were made during the line, so they are absent from the original hand and draw pile.
+  for (const shiv of o.cunningShivsLeft ?? []) (keep ? player.retained : piles.discard).push(shiv);
   player.retainTurns = Math.max(0, player.retainTurns - 1);
   // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
   // outcome), except those an exhaust effect took after they were drawn. Under Stable Serum the ones the line
@@ -2249,7 +2262,8 @@ function applyPlan(
     piles.discard = piles.discard.map(grow);
     player.retained = player.retained.map(grow);
   }
-  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
+  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn)
+    + (o.cunningShivsLeft?.length ?? 0);
   const blockEnd = player.block + o.blockGained;
   // Carry only the solver's observed establishment; replay/stacking stay marked unknown there.
   if (o.serpentFormAfter !== undefined) {
@@ -2468,6 +2482,7 @@ function applyPlan(
       e.block = 0;
       e.vulnerable = 0;
       e.weak = 0;
+      clearObservedReattachPowers(e);
     }
     player.weakTurns = Math.max(0, player.weakTurns - 1);
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
