@@ -409,7 +409,7 @@ export class CodexUsageGuard {
   /** The process-start reading (the first that worked) and the latest. */
   first: CodexUsage | null = null;
   last: CodexUsage | null = null;
-  /** Why codex is stopped for the process (null: it is not). */
+  /** Why codex is paused until a fresh recovery check passes (null: it is not). */
   stopped: string | null = null;
   /** The kind of the stop: quota (a limit or credits), unavailable (BRAIN_CODEX_USAGE_REQUIRED and no reading). */
   stopKind: "quota" | "unavailable" = "quota";
@@ -425,8 +425,10 @@ export class CodexUsageGuard {
   private lastAuthRefreshAt: number | null = null;
   /** The guard's changes (off until a read works, back on, a refreshed token) not yet on a brain.jsonl row. */
   private pendingNotes: string[] = [];
-  /** The highest credit balance this process read (a lower one means credits were spent). */
+  /** The highest credit balance in the current quota epoch (a lower one stops calls). */
   private topBalance: number | null = null;
+  private stoppedUsage: CodexUsage | null = null;
+  private creditRecovery: CodexUsage | null = null;
   private callsSinceRead = 0;
   private lastReadAt: number | null = null;
   private reading: Promise<void> | null = null;
@@ -466,10 +468,14 @@ export class CodexUsageGuard {
    * balance below the highest seen, ordinary usage not allowed, a limit or spend control reached, a window at 100%).
    */
   verdict(usage: CodexUsage): string | null {
-    const pct = this.settings.stopPct;
-    const full = usage.windows.filter((window) => window.usedPct >= 100);
     const balance = usage.credits?.balance ?? null;
     if (balance !== null && this.topBalance !== null && balance < this.topBalance) return `credits are being spent: the balance fell from ${this.topBalance} to ${balance} in this process`;
+    return this.planVerdict(usage);
+  }
+
+  private planVerdict(usage: CodexUsage): string | null {
+    const pct = this.settings.stopPct;
+    const full = usage.windows.filter((window) => window.usedPct >= 100);
     if (usage.ordinaryUsageAllowed === false) return "the plan's included usage is not allowed now (ordinaryUsageAllowed false): further calls would draw on credits";
     if (usage.reachedType) return `a usage limit is reached (${usage.reachedType}): further calls would draw on credits`;
     if (usage.spendControlReached === true) return "spend control is reached: further calls would draw on credits";
@@ -477,6 +483,39 @@ export class CodexUsageGuard {
     const over = usage.windows.filter((window) => window.usedPct >= pct);
     if (over.length > 0) return `${over.map(describeWindow).join("; ")} (BRAIN_CODEX_USAGE_STOP_PCT=${pct})`;
     return null;
+  }
+
+  /** Only full reads can confirm a renewed included-usage window and a stable new credit baseline. */
+  private recoverCreditBaseline(usage: CodexUsage): void {
+    const stopped = this.stoppedUsage;
+    const balance = usage.credits?.balance;
+    if (!this.stopped || !stopped || this.topBalance === null || balance == null || balance < 0
+      || balance >= this.topBalance || !usage.plan || usage.plan !== stopped.plan
+      || usage.ordinaryUsageAllowed !== true || this.planVerdict(usage) !== null) return;
+    // Keep every old bucket visible; a missing limit or a sparse push is not renewal evidence.
+    const pairs = (before: CodexUsage) => before.windows.map((old) => ({ old, next: usage.windows.find((w) => w.name === old.name) }));
+    const comparable = (before: CodexUsage) => before.windows.length > 0 && before.windows.length === usage.windows.length
+      && pairs(before).every(({ old, next }) => next && old.windowMins !== null && old.windowMins === next.windowMins
+        && old.resetsAt !== null && next.resetsAt !== null && Date.parse(next.resetsAt) >= Date.parse(old.resetsAt)
+        && Date.parse(next.resetsAt) > this.now());
+    if (!comparable(stopped)) return;
+    const exhausted = pairs(stopped).filter(({ old }) => old.usedPct >= this.settings.stopPct);
+    if (!exhausted.length || !exhausted.every(({ old, next }) => Date.parse(next!.resetsAt!) > Date.parse(old.resetsAt!)
+      && next!.usedPct < old.usedPct)) return;
+    const candidate = this.creditRecovery;
+    if (candidate && !comparable(candidate)) return;
+    const sameEpoch = candidate && pairs(candidate).every(({ old, next }) => old.resetsAt === next!.resetsAt);
+    const candidateBalance = candidate?.credits?.balance;
+    if (!candidate || !sameEpoch || candidateBalance == null || balance > candidateBalance) {
+      this.creditRecovery = usage;
+      return;
+    }
+    // Never ratchet down a candidate after spending within the new epoch, even across failed reads.
+    if (balance !== candidateBalance || Date.parse(usage.readAt) <= Date.parse(candidate.readAt)) return;
+    const previous = this.topBalance;
+    this.topBalance = balance;
+    this.creditRecovery = null;
+    this.say(`codex usage renewed: included-usage windows advanced and two fresh reads confirmed credit balance ${balance}; previous epoch baseline ${previous} retired`);
   }
 
   /**
@@ -494,6 +533,7 @@ export class CodexUsageGuard {
       return;
     }
     this.unreadable = null;
+    this.recoverCreditBaseline(usage);
     this.last = usage;
     this.first ??= usage;
     const why = this.verdict(usage);
@@ -502,7 +542,7 @@ export class CodexUsageGuard {
     const was = this.blocked;
     this.blocked = null;
     if (why) {
-      this.stop(why, "quota");
+      this.stop(why, "quota", usage);
       return;
     }
     if (was) {
@@ -555,10 +595,11 @@ export class CodexUsageGuard {
     }
   }
 
-  private stop(reason: string, kind: "quota" | "unavailable"): void {
+  private stop(reason: string, kind: "quota" | "unavailable", usage: CodexUsage): void {
     if (this.stopped) return;
     this.stopped = `codex usage guard: ${reason}`;
     this.stopKind = kind;
+    this.stoppedUsage = usage;
   }
 
   /** A read now unless one is in flight (shared): process start, and every due call. */
@@ -582,10 +623,14 @@ export class CodexUsageGuard {
   /** A suspended question requires a fresh reading; no stale stop is cleared before the guard passes. */
   async recover(): Promise<void> {
     await this.refresh();
-    const why = this.unreadable ?? (this.last ? this.verdict(this.last) : "no Codex usage reading");
+    const why = this.unreadable ?? (this.topBalance !== null && this.last?.credits?.balance == null
+      ? "credit balance is missing from the fresh recovery reading"
+      : this.last ? this.verdict(this.last) : "no Codex usage reading");
     if (why) throw new EngineFailure(`codex usage guard: ${why}`, this.unreadable ? "unavailable" : "quota");
     this.stopped = null;
     this.blocked = null;
+    this.stoppedUsage = null;
+    this.creditRecovery = null;
   }
 
   /**
@@ -634,7 +679,7 @@ export class CodexUsageGuard {
     const why = this.verdict(usage);
     const balance = usage.credits?.balance ?? null;
     if (balance !== null && (this.topBalance === null || balance > this.topBalance)) this.topBalance = balance;
-    if (why) this.stop(why, "quota");
+    if (why) this.stop(why, "quota", usage);
   }
 
   /** Readings pushed by the app-server so far (observe). */
