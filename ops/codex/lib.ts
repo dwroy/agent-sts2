@@ -313,8 +313,8 @@ export function validateRequest(raw: unknown): BrokerRequest {
   if (action === "strategy-proposal" && !/^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$/.test(list[0]!)) {
     return { ok: false, error: "strategy-proposal 要 1–10 个 12 位局号" };
   }
-  if (action === "learner-recheck" && !/^(?:[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal)$/.test(list[0]!)) {
-    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id" };
+  if (action === "learner-recheck" && !/^[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)(?::[0-9a-f]{64})?$/.test(list[0]!)) {
+    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id；定向补验追加冒号和清单 SHA256" };
   }
   if (action === "learner-log-tab" && !/^[0-9]{8}-[0-9]{6}(?:-(?:experience-update|fix-batch|strategy-proposal)|-s2-strategy-proposal)?$/.test(list[0]!)) {
     return { ok: false, error: "learner-log-tab 要已登记的完整学习批次 id" };
