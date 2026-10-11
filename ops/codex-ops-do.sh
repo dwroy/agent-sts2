@@ -17,6 +17,7 @@
 # codex-brain-cache-probe (one approved frozen double question; no arguments),
 # eval-metrics <character> <ascension> (writes a new Markdown report under paper/materials/<character>/).
 # git-push-main <sha> (push the current main SHA to origin through Windows SSH and verify the remote).
+# report-run <run-id> (recover an ended run once, including its character refresh; never start play).
 # The broker only runs while a wake runs: outside a wake this times out (exit 124).
 set -u
 . "$(dirname "$0")/paths.sh"
@@ -25,6 +26,7 @@ BROKER="$DIR/broker"
 default_wait=300
 [ "${1:-}" = eval-metrics ] && default_wait=660
 [ "${1:-}" = learner-recheck ] && default_wait=3760
+[ "${1:-}" = report-run ] && default_wait=3760
 [ "${1:-}" = codex-brain-cache-probe ] && default_wait=1320
 [ "${1:-}" = git-push-main ] && default_wait=520
 WAIT="${CODEX_OPS_DO_WAIT:-$default_wait}"
