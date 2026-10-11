@@ -16,6 +16,7 @@ import { playerPowers } from "../memory/narrow.js";
 import { briefJson } from "../memory/run-brief.js";
 import { afterPlayFirst, isPlayFirst, modelHandCard } from "./card-model.js";
 import { resolveDamage } from "./damage.js";
+import { crabPoisonFacts } from "./silent-crab-potion.js";
 import { startTurnHpLossOf } from "./start-loss.js";
 import type { Decision, DecisionEnv, ResolvedAction } from "../memory/types.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
@@ -226,6 +227,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
           action: target === null ? `Drink ${potion.name}` : `Drink ${potion.name} on ${target.name}`,
           text: potion.text,
           simulated: "no: this potion's effect is not in any number here",
+          ...crabPoisonFacts(state, potion.potion_id, targetIndex),
           note: endTurnWouldKill
             ? "emergency: the mod reports that ending the turn would be lethal"
             : "uses a consumable; only worth it if it changes the outcome",
