@@ -218,8 +218,8 @@
   },
   "samples": 200,
   "seed": 1,
-  "dataset_sha256": "4f782f6a047c814c4c33e7a2b44b6e36e6c9361a564dccfc3c663ed64d0f7c81",
-  "sources_sha256": "7f57a0602f2e0ecdd89dc83b4c4dbadcc29bdc7217c5776fb71654b1b0113184",
+  "dataset_sha256": "1f5d68593070e9ed3a5ec1a84df3c905d100e27b3f5ae03732303df4405678c3",
+  "sources_sha256": "b81bb7d6eea76e88b645afbc222cf8d881f4af13cf0c82fd4fbb315f7de4acf4",
   "versions": {
    "tune": [
     "0a066c2f+dirty",
@@ -388,12 +388,12 @@
   },
   "completed_max_asc": 10,
   "boss_input_scope": {
-   "openings": 406,
+   "openings": 407,
    "a10_hp_asc_sources": {
-    "10": 418
+    "10": 419
    },
    "a10_opening_asc_sources": {
-    "10": 418
+    "10": 419
    },
    "corrected_first_hit": 59,
    "a10_move_damage_asc_sources": {
@@ -432,12 +432,12 @@
   },
   "result_reuse": {
    "previous_artifact": "8cf05a0d42363764802a115f62f90a5f2363881b42e080e5a239ea2a8d696f65",
-   "cache_artifact": "e199e4c4112b4edddfae8974ff7ae8aebe5968ec3db51ceabcbe0fa52acce4fc",
+   "cache_artifact": "4033b6b8872e2457558decb76566de3d7a6a3053b933b53033ca9963389e510e",
    "fixed_model_base": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
    "fixed_model_sha256": "a16714b6349b4d4c79bbc91c3875c979607f80da1e619b59f5a0a82e45210a5a",
    "verified_model_inputs": 210,
-   "historical_fights": 403,
-   "new_validation_fights": 3,
+   "historical_fights": 406,
+   "new_validation_fights": 1,
    "control_replays": [
     "C48LLXBGKXQ9:17:2:6263075551",
     "C48LLXBGKXQ9:33:6:6290069057"
@@ -447,8 +447,8 @@
    "samples": 200,
    "original_full_dataset_row_indices": true,
    "scope": "Previous published model pinned exactly; current production model is not revalidated by this refresh.",
-   "reused_fights": 401,
-   "replayed_fights": 5,
+   "reused_fights": 404,
+   "replayed_fights": 3,
    "control_results_identical_except_ms": true
   }
  },
@@ -861,11 +861,12 @@
    "SPC7NVA5K4RL:33:6:11195184504",
    "H9ERYJLBL4UC:17:1:11207344290",
    "H9ERYJLBL4UC:33:2:11216976539",
-   "H9ERYJLBL4UC:48:6:11244464830"
+   "H9ERYJLBL4UC:48:6:11244464830",
+   "6D0M76419BU7:17:6:11260712931"
   ],
   "cutoff_ts": "2026-10-06T02:46:11.648000",
   "tune_n": 107,
-  "val_n": 299,
+  "val_n": 300,
   "rule": "first usable actual-outcome boss opening time by whole run, earliest ~2/3; all SL attempts of a run stay together"
  },
  "criteria": {
@@ -883,12 +884,12 @@
  },
  "overall": {
   "t1": {
-   "n": 297,
-   "actual_win": 0.721,
-   "mean_pred": 0.769,
+   "n": 298,
+   "actual_win": 0.718,
+   "mean_pred": 0.767,
    "brier": 0.1078,
-   "auc": 0.904,
-   "const_brier": 0.2014,
+   "auc": 0.905,
+   "const_brier": 0.2024,
    "buckets": [
     {
      "bucket": "0–20%",
@@ -898,9 +899,9 @@
     },
     {
      "bucket": "20–40%",
-     "n": 58,
+     "n": 59,
      "pred": 0.351,
-     "actual": 0.121
+     "actual": 0.119
     },
     {
      "bucket": "40–60%",
@@ -921,7 +922,7 @@
      "actual": 0.921
     }
    ],
-   "worst_bucket_n20": 0.23,
+   "worst_bucket_n20": 0.232,
    "won_loss_err": {
     "n": 207,
     "median": 5.5,
@@ -932,12 +933,12 @@
     "within5": 0.329
    },
    "leak": {
-    "n": 1603,
-    "sim_enemy": 6.47,
+    "n": 1609,
+    "sim_enemy": 6.45,
     "actual_enemy": 4.94,
-    "enemy_ratio": 1.308,
-    "sim_loss": 6.36,
-    "actual_loss": 5.38,
+    "enemy_ratio": 1.307,
+    "sim_loss": 6.35,
+    "actual_loss": 5.37,
     "loss_ratio": 1.182
    },
    "platt": {
@@ -948,12 +949,12 @@
    "tune_n": 106
   },
   "pre": {
-   "n": 297,
-   "actual_win": 0.721,
-   "mean_pred": 0.772,
+   "n": 298,
+   "actual_win": 0.718,
+   "mean_pred": 0.771,
    "brier": 0.1083,
-   "auc": 0.896,
-   "const_brier": 0.2014,
+   "auc": 0.897,
+   "const_brier": 0.2024,
    "buckets": [
     {
      "bucket": "0–20%",
@@ -963,9 +964,9 @@
     },
     {
      "bucket": "20–40%",
-     "n": 60,
+     "n": 61,
      "pred": 0.321,
-     "actual": 0.1
+     "actual": 0.098
     },
     {
      "bucket": "40–60%",
@@ -986,7 +987,7 @@
      "actual": 0.905
     }
    ],
-   "worst_bucket_n20": 0.221,
+   "worst_bucket_n20": 0.223,
    "won_loss_err": {
     "n": 208,
     "median": 5.0,
@@ -997,13 +998,13 @@
     "within5": 0.274
    },
    "leak": {
-    "n": 1603,
-    "sim_enemy": 6.51,
+    "n": 1609,
+    "sim_enemy": 6.49,
     "actual_enemy": 4.94,
-    "enemy_ratio": 1.316,
-    "sim_loss": 6.41,
-    "actual_loss": 5.38,
-    "loss_ratio": 1.19
+    "enemy_ratio": 1.315,
+    "sim_loss": 6.39,
+    "actual_loss": 5.37,
+    "loss_ratio": 1.189
    },
    "platt": {
     "a": 2.2754,
@@ -1305,23 +1306,23 @@
   "WATERFALL_GIANT": {
    "name": "瀑布巨兽",
    "t1": {
-    "n": 25,
+    "n": 26,
     "missing": 0,
-    "brier": 0.0723,
-    "mean_pred": 0.879,
-    "actual_win": 0.88,
-    "leak_ratio": 0.874,
-    "leak_turns": 148,
+    "brier": 0.0743,
+    "mean_pred": 0.859,
+    "actual_win": 0.846,
+    "leak_ratio": 0.88,
+    "leak_turns": 154,
     "failed": []
    },
    "pre": {
-    "n": 25,
+    "n": 26,
     "missing": 0,
-    "brier": 0.0699,
-    "mean_pred": 0.898,
-    "actual_win": 0.88,
+    "brier": 0.0711,
+    "mean_pred": 0.876,
+    "actual_win": 0.846,
     "leak_ratio": 0.841,
-    "leak_turns": 148,
+    "leak_turns": 154,
     "failed": []
    }
   }
@@ -1642,12 +1643,12 @@
      "gap": null
     },
     "A10": {
-     "n": 297,
-     "gap": 0.04800000000000004,
+     "n": 298,
+     "gap": 0.049000000000000044,
      "brier": 0.1078,
-     "mean_pred": 0.769,
-     "actual_win": 0.721,
-     "leak_ratio": 1.308
+     "mean_pred": 0.767,
+     "actual_win": 0.718,
+     "leak_ratio": 1.307
     }
    }
   },
@@ -1688,12 +1689,12 @@
      "gap": null
     },
     "A10": {
-     "n": 297,
-     "gap": 0.051000000000000045,
+     "n": 298,
+     "gap": 0.05300000000000005,
      "brier": 0.1083,
-     "mean_pred": 0.772,
-     "actual_win": 0.721,
-     "leak_ratio": 1.316
+     "mean_pred": 0.771,
+     "actual_win": 0.718,
+     "leak_ratio": 1.315
     }
    }
   }
@@ -1796,7 +1797,7 @@
  ],
  "refresh": {
   "due": false,
-  "new_completed_boss_attempts": 42,
+  "new_completed_boss_attempts": 43,
   "keys": [
    "01H1533KSS5C:17:6:2026-10-07T04:13:07.549Z",
    "08A0GEAL8KQ5:17:1:2026-10-09T17:53:57.310Z",
@@ -1871,6 +1872,7 @@
    "64R0P0MTZWAX:17:1:2026-10-09T06:56:19.687Z",
    "64R0P0MTZWAX:33:6:2026-10-09T07:25:18.075Z",
    "675CHRV9HVQ3:17:2:2026-10-10T07:45:09.205Z",
+   "6D0M76419BU7:17:6:2026-10-11T04:02:54.080Z",
    "6EV5V6PJJS9D:17:1:2026-10-05T07:41:18.142Z",
    "6EV5V6PJJS9D:33:1:2026-10-05T07:56:56.150Z",
    "751FN9QM9MHQ:17:6:2026-10-07T10:42:44.791Z",
@@ -2208,7 +2210,7 @@
   ],
   "max_asc": 10,
   "trigger": "20-new-bosses",
-  "artifact": "4033b6b8872e2457558decb76566de3d7a6a3053b933b53033ca9963389e510e",
+  "artifact": "a4ec159601f204c960ea47c4dec642b0f6c3f2cdec0dd88ab63ff639288a4019",
   "rule": "ascension or 20 new actual-outcome boss attempts; scheduler tick at :13/:43 and learner finish events"
  }
 }
