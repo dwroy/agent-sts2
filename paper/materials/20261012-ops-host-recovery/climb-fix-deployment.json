@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-12T07:40:09+08:00",
+  "source": "02725b673b336acc7b2e91bc596fd591ad1de6db",
+  "main": "34fa1d2053dfc404e902d2f58dd0ee4dbb6933a0",
+  "live": "e5d0913aecc0af50986de75784943e82df5495d2",
+  "cause": "refresh-potion-equivalents.sh rejected TARGET_ASCENSION=climb with exit 2 after the report was already indexed",
+  "fix": "resolve climb from the latest completed run of the same character; keep fixed numeric mode and builder algorithms unchanged",
+  "evidence": "N1ZEBMHZM4KC summary.ascension=10; original failed receipt preserved; ops resumed only the failed builder with --ascensions 10",
+  "checks": {
+    "tsc": 0,
+    "files": 2,
+    "passed": 9,
+    "gitleaks": 0,
+    "live_dry_run": 0,
+    "live_result": "up to date, today table has A10"
+  },
+  "original_recovery_receipt": "ops/codex-ops/report-runs/N1ZEBMHZM4KC/receipt.json",
+  "gameplay": "pending ops normal resume"
+}
