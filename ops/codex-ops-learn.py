@@ -329,6 +329,11 @@ def ledger_lines(runs):
     ]
 
 
+def account_draining():
+    """A manual account handoff blocks new work, never completion records or checks."""
+    return any(os.path.isfile(os.path.join(DIR, name)) for name in ("LLM_DRAIN", "ACCOUNT_DRAIN"))
+
+
 def cmd_finish(args):
     state = load_state()
     batch = state["batches"].get(args.batch)
@@ -345,7 +350,8 @@ def cmd_finish(args):
     if batch.get("task") == "ascension-audit":
         ascension_audit.finish(state, args.batch, args.rc, ROOT, os.path.join(DIR,"learner"), enqueue, inbox,
                               proposal_check=lambda report, current: proposal_dispatch.links(report, current, ROOT, SCRIPTS))
-        check_jobs(state, ROOT, SCRIPTS, batch["character"], alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        if not account_draining():
+            check_jobs(state, ROOT, SCRIPTS, batch["character"], alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
         save_state(state)
         return 0
     if batch.get("task", "postmortem") != "postmortem":
@@ -362,7 +368,7 @@ def cmd_finish(args):
             finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
         if batch["state"] == "failed":
             batch["retry_at"] = time.time() + RETRY_AFTER_S
-        if batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch"):
+        if not account_draining() and batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch"):
             boss_sim_jobs.check(state, ROOT, SCRIPTS, args.character, alive,
                                 dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner)
         if batch.get("proposal_repair_needed"):
@@ -410,8 +416,9 @@ def cmd_finish(args):
     elif args.rc != 0:
         lines.append("如果 stderr 或回报里是额度或登录错误：decision-log 记一行，复盘往后顺延，对局照常。")
     enqueue("learner-done", "\n".join(lines))
-    check_jobs(state, ROOT, SCRIPTS, batch.get("character", args.character), alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
-    check_ascension_audits(state, batch.get("character", args.character))
+    if not account_draining():
+        check_jobs(state, ROOT, SCRIPTS, batch.get("character", args.character), alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        check_ascension_audits(state, batch.get("character", args.character))
     save_state(state)
     print("\n".join(lines))
     return 0
@@ -549,6 +556,9 @@ def main():
     if args.command in ("request-merge", "recheck", "core-notify", "status"):
         return handler(args) or 0
     with state_lock():
+        if account_draining() and args.command in ("tick", "dispatch", "write", "boss-check"):
+            print(json.dumps({"dispatched": None, "reason": "account_drain", "command": args.command}))
+            return 75
         result = handler(args) or 0
         checks_pending = args.command == "finish" and load_state()["batches"].get(args.batch, {}).get("checks_pending")
     if checks_pending:

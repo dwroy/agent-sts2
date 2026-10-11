@@ -27,7 +27,15 @@ LOG="$DIR/scheduler.log"
 export PATH="$HOME/.local/node/bin:$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
 # Use the same project-isolated login home as scheduled learners. Cron does not
 # inherit a pane's CODEX_HOME; explicit caller overrides remain authoritative.
-export LEARNER_CODEX_HOME="${LEARNER_CODEX_HOME:-${CODEX_HOME:-$HOME/.codex-sts2}}"
+selected_codex_home=""
+if [ -f "$DIR/codex-home" ]; then
+  IFS= read -r selected_codex_home < "$DIR/codex-home" || true
+  if [[ "$selected_codex_home" != /* ]] || [ ! -d "$selected_codex_home" ] || [ ! -f "$selected_codex_home/auth.json" ]; then
+    echo "invalid project Codex home selector; no scheduler action started" >&2
+    exit 3
+  fi
+fi
+export LEARNER_CODEX_HOME="${LEARNER_CODEX_HOME:-${selected_codex_home:-${CODEX_HOME:-$HOME/.codex-sts2}}}"
 export STS2_WORKSPACE="$ROOT"
 TSX="${CODEX_OPS_TSX:-$OPS/../agent/node_modules/.bin/tsx}"
 MAIN="$OPS/codex/main.ts"
@@ -35,7 +43,7 @@ MARK="agent-sts2 codex-ops"
 mkdir -p "$DIR" "$QUEUE"
 
 log() { echo "$(date '+%F %H:%M') $*" >> "$LOG"; }
-paused() { [ -f "$DIR/PAUSE" ]; }
+paused() { [ -f "$DIR/PAUSE" ] || [ -f "$DIR/LLM_DRAIN" ]; }
 
 # enqueue <kind> <text>: one event file, <epoch ns>-<kind>.md (ops/codex/lib.ts readQueue).
 enqueue() {
