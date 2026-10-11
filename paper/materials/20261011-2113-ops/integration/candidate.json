@@ -1,0 +1,38 @@
+{
+  "candidate": "0f30fc82c7203293dc69b2af099415495702785b",
+  "patch_commit": "e43f6f45cd7c4b2965fdb1d5fbb431d004c033bd",
+  "tree": "a9f2dac9a566669b085c01012b11608f7e567a9d",
+  "checks": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "affected",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/silent-shackling-weak.test.ts",
+        "tests/silent-skittish.test.ts",
+        "tests/silent-gardener-skittish.test.ts",
+        "tests/silent-reattach-reset.test.ts",
+        "tests/quantitative.test.ts",
+        "tests/silent-phase-reference.test.ts",
+        "tests/experience.test.ts",
+        "tests/gkb-render.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1"
+      ],
+      "exit": 0
+    }
+  ],
+  "gitleaks": 0
+}
