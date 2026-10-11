@@ -43,6 +43,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 - 事件是 `ops/codex-ops/queue/<纳秒时间>-<类型>.md`，一次叫醒把队列里的全部事件按时间编号成一条消息。成功后事件移到 `delivered/`；失败（退出码非 0、turn 失败、超时）事件留在队列，下一个 tick 重试；连续 3 次失败在收件箱写一行。
 - 串行：`flock ops/codex-ops/wake.lock`，同一时间只有一个叫醒；叫醒期间新来的事件，这次叫醒结束后接着发（一次最多连发 5 轮）。
 - 每次叫醒前：codex 启动检查（版本、登录、模型和强度）+ key 隔离自检（`codex sandbox -P ops` 打开每个 key 文件，打得开就不叫醒，exit 3）。
+- Herdr 暂缓（exit 75）不计为模型失败；但连续暂缓至少 3 次且持续 30 分钟时，现有调度器向 `ops/inbox-dev.md` 写一次健康提醒，供 watcher 排查。`deferred.state` 保存本次起点/次数/是否已通知，成功、非暂缓失败或队列清空后重置；暂停期间不检测。原事件保留，不新增 cron、不重启会话、不自动改派或清除人的输入。
 - 超时 120 分钟（`CODEX_OPS_WAKE_TIMEOUT_MIN`），按进程组停。登录被拒时让 codex 刷新一次令牌，事件留到下次。
 - 记录：每次叫醒的完整事件流在 `ops/codex-ops/wakes/<时间>-wake.jsonl`（第一行是命令和消息），一行摘要进 `wakes.jsonl`（token、上下文大小、压缩次数、最后的回答），调度器日志 `scheduler.log`。写完都做 key 扫描替换。运行时目录 `ops/codex-ops/` 不进 git。
 
