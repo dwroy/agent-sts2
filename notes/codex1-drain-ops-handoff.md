@@ -78,3 +78,13 @@ Roy 最新授权统一 LLM 切换能力，watcher 在独立树 `codex-account-dr
 4. 新ops核221722/214301产物与实际live/检查，完成未完成的知识/实现/校准闭环，再按已授权条件main/push。
 
 旧 ops：**ready_to_drain，原地空闲**。不退出当前session，不再派单、操作进程/flags或轮询等待。
+
+## 2026-10-11 22:37:06 CST：drain 期间收到的完成事件（待继任收尾）
+
+仍为 **ready_to_drain**，旧 ops 不恢复派单、合入或运行操作。本次三个事件即使随后被调度器归档为 delivered，也**不代表运维闭环已完成**。原事件逐字副本、原回报/报告/错误 SHA 和批次状态在 `paper/materials/20261011-codex1-drain-handoff/deferred-2235/pending-closeouts.json`；继任 codex1 ops 从这里去重承接，无需重跑学习。
+
+- **20261011-213504-strategy-proposal**：engine rc0，但调度状态仍 **failed**、merged=null，原 retry_at 保持。报告自述源 `3596d1a2a832c31abb9d6d8a50a68103ac052554`、tsc/vitest0/2709例、live_tests未执行；这些仅是原回报，本 ops 未新验收/合入/造版本。继任核真实固定源、原报告、合入受阻原因及刷新冲突后沿原兜底链收尾，不能把rc0改成已上线。
+- **20261011-221302-strategy-proposal**：done/rc0、fixes为空、merged=null。原事件说明无源码提案处置；继任核实原提案 disposition，证据不足保持waiting，无游戏版本/补测/重复派发。
+- **20261011-221301 / SB5N8GT2Y3VW**：复盘done/rc0，原账本 silent-0005/0011/0062/0065/0161/0278/0385 已由学习者追加。旧 ops 尚未做本批bug分流、lessons/ledger提交和论文表刷新；由继任沿原学习闭环完成，现有动态字节不改写或代填。
+
+本段没有修改 learn.json、原失败/冷却、活批输入/ACK、进程、账号或 flags。量化221722继续原批，完成后main/push授权继续继承。
