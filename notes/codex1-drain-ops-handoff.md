@@ -123,3 +123,11 @@ Roy 最新授权统一 LLM 切换能力，watcher 在独立树 `codex-account-dr
 原回报：新增0、更新20（证据补充）、退役0，active219；tsc/vitest0、287文件2825例，复用了源码SHA相同的隔离检查，原历史链接预检失败保持。锁内预检15项记录/目录冲突后停止，live_tests/实际发布由继任重新核，不能将候选版本号当已生效版本。继任按固定源码范围保留知识刷新与并行记录，核测试复用身份与合入条件后兜底；只在实际live后登记版本、CLI shipped、双通知及原检查通道，不重复研究/注册。
 
 原24个proposed账本ID及3个提案 `silent-proposal-330b05f2e6671108` / `silent-proposal-b4c8266f2419f463` / `silent-proposal-1deef8edf906c64f` 沿原链保留，不在drain中另派。原out/err/report、事件副本、SHA和固定变更路径见 `paper/materials/20261011-codex1-drain-handoff/deferred-2254/pending-closeout.json`。**ready_to_drain**保持，量化父请求及main/push条件授权继续继承。
+
+## 2026-10-12 01:09:11 CST：codex1 新主 ops 已接管（受控验证轮）
+
+本轮已核对并承接原交接与 Roy 完成后 main/push 条件授权；回执 `paper/materials/20261012-0104-codex1-ops-takeover/takeover-receipt.json`，逐项未完成待办 `paper/materials/20261012-0104-codex1-ops-takeover/pending-continuation.json`。原交接、请求、延后事件清单与本轮三批原报告已按 SHA 保存，未把归档、rc0 或批次 done 当成上线或父请求完成。
+
+切换事务观察为 verifying，LLM_DRAIN/PAUSE 仍由控制器拥有；本轮不启动、停止、派发、合入、补测或释放闸。新会话成功后由控制器验 UUID/目标 rollout 并释放自己拥有的闸，再沿原队列续办。224302 策略10提案 waiting；224302 修复源 bc2c40e313cc36682196277c53c50e30744b88c5 未入live，原 failed/rc0/retry 保持；220116 B4 源59287af1c7d76a648172d409c8e00bdb861cb67e 因 t1 gap worsened 维持 rejected。
+
+N1整局报告、SB5复盘闭环、213504/214301/223051固定候选、正式量化221722未完成成果及职责补充、历史源去重和最终条件 main/push 全部继承。启动竞态原请求尚写 actual_batch=null，但224302已有候选，后续核原链关联，不重做或重复派发。无本轮新版本、shipped 或最终发布；不改原ACK、输入、注册、失败历史与队列。
