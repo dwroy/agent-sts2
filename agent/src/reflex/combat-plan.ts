@@ -1811,7 +1811,9 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   slCommitted = plan;
   const first = plan.steps[0];
   // Gambler's Brew draws what it draws: re-planned after it, like a draw.
-  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0);
+  // Made Shivs have synthetic search indices; read the actual hand before sending their actions.
+  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0) +
+    (first && cardFor(first, hand)?.bladeDance ? 1 : 0);
   // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
   // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
   // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
@@ -3022,7 +3024,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
       const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
-        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined
+        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined && !nextCard?.bladeDance
           ? {
               ...kept,
               remaining: memo.remaining.slice(1),
