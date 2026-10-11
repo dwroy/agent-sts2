@@ -1,0 +1,109 @@
+{
+  "run_id": "VLZ6CCT8AQ0A",
+  "character": "silent",
+  "ascension": 10,
+  "evidence": [
+    {
+      "off": 8488362923,
+      "len": 44896,
+      "run_id": "VLZ6CCT8AQ0A",
+      "floor": 43,
+      "turn": 1,
+      "observed": null,
+      "ts": "2026-10-07T07:35:36.294000",
+      "sha256": "2d985d82dc59aba760930a3d049ac32962eeabe948d8fcd82781f43ea07a3873"
+    },
+    {
+      "off": 8489251646,
+      "len": 47974,
+      "run_id": "VLZ6CCT8AQ0A",
+      "floor": 43,
+      "turn": 5,
+      "observed": null,
+      "ts": "2026-10-07T07:36:18.836000",
+      "sha256": "6c8aa1a14afb2d627083599492312284b30a5bfab0d5efab962436735dad469a"
+    }
+  ],
+  "plain": {
+    "index": 13,
+    "card_id": "SNAKEBITE",
+    "name": "蛇咬",
+    "upgraded": false,
+    "card_type": "Skill",
+    "rarity": "Common",
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 2,
+    "star_cost": 0,
+    "rules_text": "给予{PoisonPower:diff()}层中毒。",
+    "resolved_rules_text": "保留。 给予7层中毒。",
+    "dynamic_values": [
+      {
+        "name": "PoisonPower",
+        "base_value": 7,
+        "current_value": 7,
+        "enchanted_value": 7,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ]
+  },
+  "upgraded": {
+    "index": 5,
+    "card_id": "SNAKEBITE",
+    "name": "蛇咬+",
+    "upgraded": true,
+    "target_type": "AnyEnemy",
+    "requires_target": true,
+    "target_index_space": "enemies",
+    "valid_target_indices": [
+      0
+    ],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 2,
+    "star_cost": 0,
+    "rules_text": "给予{PoisonPower:diff()}层中毒。",
+    "resolved_rules_text": "保留。 给予10层中毒。",
+    "dynamic_values": [
+      {
+        "name": "PoisonPower",
+        "base_value": 10,
+        "current_value": 10,
+        "enchanted_value": 10,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  },
+  "apotheosis": {
+    "index": 0,
+    "card_id": "APOTHEOSIS",
+    "name": "神化",
+    "upgraded": false,
+    "target_type": "Self",
+    "requires_target": false,
+    "target_index_space": null,
+    "valid_target_indices": [],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 2,
+    "star_cost": 0,
+    "rules_text": "升级你的全部卡牌。",
+    "resolved_rules_text": "固有。 升级你的全部卡牌。 消耗。",
+    "dynamic_values": [],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  },
+  "limitation": "F43 T5只观察到升级蛇咬在手；未实际施放，不是整场胜负反事实。"
+}
