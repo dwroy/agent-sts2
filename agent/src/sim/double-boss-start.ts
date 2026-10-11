@@ -25,7 +25,8 @@ export function withDoubleBossStart(state: GameState, knowledge: Knowledge, inpu
       const secondState = parseGameState(raw);
       const second = syntheticBossStart(secondState, knowledge, `${boss}_BOSS`, input.solver.player.hp, opts).input;
       const targets = second.solver.enemies.map((e) => e.index);
-      const ctx = { enemyTargets: targets, strength: 0, weak: false, observedPoison: model.poisonPotionAmount };
+      const ctx = { enemyTargets: targets, strength: 0, weak: false, observedPoison: model.poisonPotionAmount,
+        character: str(run["character_id"]), ascension: state.run?.ascension ?? -1 };
       const sources = [];
       const potions = second.solver.hand.slice();
       const relics = asArray(run["relics"]).map((r) => str(asRecord(r)["relic_id"]));

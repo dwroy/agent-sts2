@@ -3132,6 +3132,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
+    character: str(asRecord(state.run?.raw)["character_id"]),
+    ascension: state.run?.ascension ?? -1,
     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
@@ -3908,7 +3910,14 @@ function planTurn(env: DecisionEnv): Decision | null {
       ...mcShown.flatMap((mc) => mc.median ? [{ key: mcKey(mc), plan: mc.median }] : []),
     ], rollout, mcShown),
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
-    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
+    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined),
+      ...(modelledIds.has("CUNNING_POTION") ? { cunning_generation: {
+        hand_cards: hand.length, free_slots: Math.max(0, HAND_LIMIT - hand.length),
+        added_now: Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
+        truncated_now: 3 - Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
+        note: "狡诈生成升级小刀，受每步剩余手位限制；药栏不占手位。先出刀腾位再喝可与连续饮用比较，满手饮用仍耗瓶。未知饮药触发及整战收益未验证。",
+      } } : {}),
+    },
     // THIEF_FACTS: who carries our card or gold, how many turns are left to kill it, its HP and block (thief.ts).
     ...(thiefContext ? { thief_context: thiefContext } : {}),
     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).

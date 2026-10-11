@@ -2121,6 +2121,8 @@ function applyPlan(
   // Stable Serum: the rest of the hand is kept for the next turn instead (Ethereal cards still go).
   const keep = player.retainTurns > 0 && !o.winsFight;
   for (const i of unplayed) if (!hand[i]!.ethereal) (keep ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
+  // These cards were made during the line, so they are absent from the original hand and draw pile.
+  for (const shiv of o.cunningShivsLeft ?? []) (keep ? player.retained : piles.discard).push(shiv);
   player.retainTurns = Math.max(0, player.retainTurns - 1);
   // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
   // outcome), except those an exhaust effect took after they were drawn. Under Stable Serum the ones the line
@@ -2247,7 +2249,8 @@ function applyPlan(
     piles.discard = piles.discard.map(grow);
     player.retained = player.retained.map(grow);
   }
-  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
+  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn)
+    + (o.cunningShivsLeft?.length ?? 0);
   const blockEnd = player.block + o.blockGained;
   // Carry only the solver's observed establishment; replay/stacking stay marked unknown there.
   if (o.serpentFormAfter !== undefined) {

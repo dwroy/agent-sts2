@@ -783,6 +783,8 @@ export interface Step {
 }
 
 export interface Outcome {
+  /** Unplayed Shivs actually made by this line's observed Cunning drinks, for later-turn piles. */
+  cunningShivsLeft?: CardModel[];
   /** Established Serpent Form after this line; absent outside the observed character/ascension. */
   serpentFormAfter?: number | null;
   /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
@@ -2080,7 +2082,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       validTargets: next.enemies.filter((enemy) => enemy.alive).map((enemy) => enemy.index),
       damage: shiv.damageBase === undefined ? shiv.damage : Math.floor(ourAttackScaled(shiv.damageBase + (player.strengthNow ?? 0), player.weak, false)),
     })) : card.adds;
-    addToHand(next, adds, player.handLimit);
+    const cunning = card.cardId.startsWith("POTION:CUNNING_POTION:");
+    addToHand(next, adds, cunning ? (player.handLimit ?? HAND_LIMIT) - next.locked.length : player.handLimit);
   }
   if (card.drawn && card.special !== "gamble" && card.special !== "chaos" && card.special !== "glowwater" && card.special !== "bottled") drawCards(next, card.drawn, player);
   // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn (a sample: its own
@@ -3474,6 +3477,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       weakApplied: sim.weakApplied,
       strengthGained: sim.permStrength,
       cardsDrawn: sim.cardsDrawn,
+      ...(sim.steps.some((step) => step.cardId.startsWith("POTION:CUNNING_POTION:")) ? {
+        cunningShivsLeft: [...sim.hand, ...sim.held, ...sim.locked].filter((entry) =>
+          entry.cardId === "SHIV" && /^p\d+~shiv\d+$/.test(entry.key) && !input.hand.some((original) => original.key === entry.key)),
+      } : {}),
       ...(sim.apotheosisApplied ? { apotheosisApplied: true as const } : {}),
       unknownCards: [
         ...sim.unknown,
