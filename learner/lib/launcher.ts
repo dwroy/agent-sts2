@@ -16,7 +16,8 @@
  *
  * Exit codes: 0 done, 1 the agent failed, 2 usage/task error, 3 engine or tool server unavailable, 124 timeout.
  */
-import { spawn } from "node:child_process";
+import { spawn, type ChildProcess } from "node:child_process";
+import { createHash } from "node:crypto";
 import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, renameSync, rmSync, statSync, writeSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, relative, resolve, sep } from "node:path";
@@ -32,6 +33,7 @@ import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck
 import { SummaryTracker, findRollout, formatSummary, progressLine, rolloutStats } from "./summary.js";
 import { highestAscension, runCharacters } from "./runs.js";
 import { LearnerUsageError, characterBuiltins, loadTask, parseSets, renderTask } from "./task.js";
+import { captureStartupLease, StartupEvidence } from "./startup-recovery.js";
 
 /** This checkout (the launcher's own repository: core/paths.ts PROJECT_ROOT). */
 export const REPO = REPO_ROOT;
@@ -445,11 +447,14 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     prompt,
   });
 
-  const tracker = new SummaryTracker(request.engine, request.model);
+  let tracker = new SummaryTracker(request.engine, request.model);
   const env = request.engine === "codex" ? codexChildEnv(deps.env, binary) : childEnv(deps.env, request.engine);
-  // Its own process group: a timeout or a signal stops the agent and everything it started (codex's npm launcher, its shell commands).
-  const child = spawn(command.command, command.args, { cwd: request.cwd, env, stdio: ["pipe", "pipe", "pipe"], detached: true });
+  const lease = request.engine === "codex" ? captureStartupLease(deps.env, deps.projectRoot, request.cwd) : undefined;
+  const inputSha = createHash("sha256").update(command.stdin).digest("hex");
+  const commandSha = createHash("sha256").update(JSON.stringify([command.command, command.args, request.cwd])).digest("hex");
+  let child: ChildProcess | undefined;
   const stop = (signal: NodeJS.Signals): void => {
+    if (!child) return;
     try {
       if (child.pid !== undefined) process.kill(-child.pid, signal);
       else child.kill(signal);
@@ -462,50 +467,78 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const seconds = Math.round((deps.now().getTime() - started.getTime()) / 1000);
     return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
   };
-  deps.err(`学习者 ${request.engine} / ${prepared.taskName} 已启动（PID ${child.pid ?? "?"}），日志 ${logPath}\n`);
-
   let timedOut = false;
+  let cancelled = false;
   let killTimer: NodeJS.Timeout | undefined;
   const timer = prepared.timeoutMin
     ? setTimeout(() => {
         timedOut = true;
-        deps.err(`[${elapsed()}] 超过 ${prepared.timeoutMin} 分钟，终止 PID ${child.pid}\n`);
+        deps.err(`[${elapsed()}] 超过 ${prepared.timeoutMin} 分钟，终止 PID ${child?.pid ?? "?"}\n`);
         stop("SIGTERM");
         killTimer = setTimeout(() => stop("SIGKILL"), 10_000);
       }, prepared.timeoutMin * 60_000)
     : undefined;
   const onSignal = (): void => {
+    cancelled = true;
     stop("SIGTERM");
+    killTimer ??= setTimeout(() => stop("SIGKILL"), 10_000);
   };
   process.once("SIGINT", onSignal);
   process.once("SIGTERM", onSignal);
 
-  const stdoutDone = new Promise<void>((done) => {
-    const lines = createInterface({ input: child.stdout! });
-    lines.on("line", (line) => {
-      appendFileSync(logPath, `${line}\n`);
-      const event = tracker.feed(line, ms());
-      const progress = event && progressLine(request.engine, event);
-      if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
+  let exitCode: number | null = null;
+  let signal: NodeJS.Signals | null = null;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    // Keep the same command, prompt, environment and outer deadline; never replay a started session.
+    const evidence = new StartupEvidence();
+    tracker = new SummaryTracker(request.engine, request.model);
+    child = spawn(command.command, command.args, { cwd: request.cwd, env, stdio: ["pipe", "pipe", "pipe"], detached: true });
+    const attemptChild = child;
+    const attemptStart = deps.now().toISOString();
+    const identity = { attempt, batch: lease?.batch ?? null, lease: lease?.identity ?? null, input_sha256: inputSha, command_sha256: commandSha };
+    log({ type: "learner_startup_attempt", ts: attemptStart, pid: child.pid ?? null, ...identity });
+    deps.err(`学习者 ${request.engine} / ${prepared.taskName} 已启动（尝试 ${attempt}，PID ${child.pid ?? "?"}），日志 ${logPath}\n`);
+    const stdoutDone = new Promise<void>((done) => {
+      const lines = createInterface({ input: attemptChild.stdout! });
+      lines.on("line", (line) => {
+        evidence.stdout();
+        appendFileSync(logPath, `${line}\n`);
+        const event = tracker.feed(line, ms());
+        const progress = event && progressLine(request.engine, event);
+        if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
+      });
+      lines.on("close", () => done());
     });
-    lines.on("close", () => done());
-  });
-  const stderrDone = new Promise<void>((done) => {
-    const lines = createInterface({ input: child.stderr! });
-    lines.on("line", (line) => log({ type: "learner_stderr", t_ms: ms(), text: line }));
-    lines.on("close", () => done());
-  });
-  child.stdin!.on("error", () => undefined); // the agent may exit before reading everything
-  child.stdin!.end(command.stdin);
+    const stderrDone = new Promise<void>((done) => {
+      const lines = createInterface({ input: attemptChild.stderr! });
+      lines.on("line", (line) => {
+        evidence.stderr(line);
+        log({ type: "learner_stderr", attempt, t_ms: ms(), text: line });
+      });
+      lines.on("close", () => done());
+    });
+    attemptChild.stdin!.on("error", () => undefined); // the agent may exit before reading everything
+    attemptChild.stdin!.end(command.stdin);
 
-  const [exitCode, signal] = await new Promise<[number | null, NodeJS.Signals | null]>((done) => {
-    child.on("error", (error) => {
-      log({ type: "learner_error", message: error.message });
-      done([null, null]);
+    [exitCode, signal] = await new Promise<[number | null, NodeJS.Signals | null]>((done) => {
+      attemptChild.on("error", (error) => {
+        log({ type: "learner_error", message: error.message });
+        evidence.stdout(); // A spawn error is not the observed session-creation failure.
+      });
+      // 'close', unlike 'exit', also waits for the old child's stdio to close.
+      attemptChild.on("close", (code, sig) => done([code, sig]));
     });
-    child.on("close", (code, sig) => done([code, sig]));
-  });
-  await Promise.all([stdoutDone, stderrDone]);
+    await Promise.all([stdoutDone, stderrDone]);
+    child = undefined;
+    const retryable = request.engine === "codex" && exitCode === 1 && signal === null && evidence.transientBeforeSession();
+    log({ type: "learner_startup_exit", ts: deps.now().toISOString(), pid: attemptChild.pid ?? null,
+      ...identity, exit_code: exitCode, signal, timed_out: timedOut, cancelled, retryable });
+    if (!retryable || attempt === 3 || timedOut || cancelled || !lease?.current()) break;
+    await new Promise<void>((done) => setTimeout(done, 250));
+    if (timedOut || cancelled || !lease.current()) break;
+    log({ type: "learner_startup_retry", ts: deps.now().toISOString(), ...identity, next_attempt: attempt + 1 });
+    deps.err(`[${elapsed()}] 会话创建前沙箱目录短暂消失；原进程已退出，批次有效，重试启动 ${attempt + 1}/3\n`);
+  }
   if (timer) clearTimeout(timer);
   if (killTimer) clearTimeout(killTimer);
   process.removeListener("SIGINT", onSignal);
@@ -515,7 +548,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   const summary = tracker.summary;
   const rollout = request.engine === "codex" && summary.sessionId ? findRollout(learnerCodexHome(deps.env), summary.sessionId) : undefined;
   if (rollout) summary.rollout = rolloutStats(rollout);
-  log({ type: "learner_summary", ts: deps.now().toISOString(), exit_code: exitCode, signal, timed_out: timedOut, wall_ms: wallMs, summary });
+  log({ type: "learner_summary", ts: deps.now().toISOString(), exit_code: exitCode, signal, timed_out: timedOut, cancelled, wall_ms: wallMs, summary });
   const redacted = redactSecrets(logPath, collectSecrets(deps.secretFiles, deps.env, stripped));
   deps.out(`${summary.result ? `${summary.result}\n\n` : ""}${formatSummary(summary, { task: prepared.taskName, exitCode, signal, timedOut, wallMs, logPath, redacted })}\n`);
   if (request.engine === "codex" && summary.isError && deps.refreshCodexAuth && AUTH_ERROR.test(summary.errors.join(" "))) {
@@ -528,6 +561,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     }
   }
   if (timedOut) return 124;
+  if (cancelled) return 1;
   return exitCode === 0 && !summary.isError ? 0 : 1;
 }
 

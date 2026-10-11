@@ -1,0 +1,523 @@
+{
+  "run": "6D0M76419BU7",
+  "floor": 12,
+  "turn": 3,
+  "ascension": 10,
+  "source_lines": {
+    "selection": 358451,
+    "after": 358452,
+    "next_turn": 358453
+  },
+  "selection": {
+    "kind": "combat_hand_select",
+    "prompt": "[center]选择[blue]1[/blue]张牌来[gold]丢弃[/gold]。[/center]",
+    "min_select": 1,
+    "max_select": 1,
+    "selected_count": 0,
+    "requires_confirmation": false,
+    "can_confirm": false,
+    "cards": [
+      {
+        "index": 0,
+        "selected": false,
+        "card_id": "SKEWER",
+        "name": "串刺",
+        "upgraded": false,
+        "card_type": "Attack",
+        "rarity": "Uncommon",
+        "costs_x": true,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害X次。",
+        "resolved_rules_text": "造成9点伤害X次。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 8,
+            "current_value": 9,
+            "enchanted_value": 8,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "selected": false,
+        "card_id": "ETERNAL_ARMOR",
+        "name": "永恒铠甲",
+        "upgraded": false,
+        "card_type": "Power",
+        "rarity": "Rare",
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 3,
+        "star_cost": 0,
+        "rules_text": "获得{PlatingPower:diff()}层覆甲。",
+        "resolved_rules_text": "获得9层覆甲。",
+        "dynamic_values": [
+          {
+            "name": "PlatingPower",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "selected": false,
+        "card_id": "DEFLECT",
+        "name": "偏折",
+        "upgraded": false,
+        "card_type": "Skill",
+        "rarity": "Common",
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得4点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "selected": false,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "card_type": "Skill",
+        "rarity": "Basic",
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ]
+      }
+    ]
+  },
+  "combat": {
+    "player": {
+      "current_hp": 13,
+      "max_hp": 70,
+      "block": 8,
+      "energy": 2,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "STRENGTH_POWER",
+          "name": "力量",
+          "amount": 1,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "SERPENT_FORM_POWER",
+          "name": "群蛇形态",
+          "amount": 4,
+          "is_debuff": false
+        },
+        {
+          "index": 2,
+          "power_id": "SMOGGY_POWER",
+          "name": "烟雾弥漫",
+          "amount": 1,
+          "is_debuff": true
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 1,
+      "attacks_played_this_turn": 0,
+      "skills_played_this_turn": 1
+    },
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "SKEWER",
+        "name": "串刺",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": true,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害X次。",
+        "resolved_rules_text": "造成9点伤害X次。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 8,
+            "current_value": 9,
+            "enchanted_value": 8,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "ETERNAL_ARMOR",
+        "name": "永恒铠甲",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 3,
+        "star_cost": 0,
+        "rules_text": "获得{PlatingPower:diff()}层覆甲。",
+        "resolved_rules_text": "获得9层覆甲。",
+        "dynamic_values": [
+          {
+            "name": "PlatingPower",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "not_enough_energy",
+        "unplayable_reason_raw": "EnergyCostTooHigh",
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "DEFLECT",
+        "name": "偏折",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得4点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "GAS_BOMB",
+        "name": "气态炸弹",
+        "current_hp": 8,
+        "max_hp": 8,
+        "base_max_hp": 8,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "MINION_POWER",
+            "name": "爪牙",
+            "amount": 1,
+            "is_debuff": false
+          }
+        ],
+        "intent": "EXPLODE_MOVE",
+        "move_id": "EXPLODE_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "DeathBlow",
+            "label": "9",
+            "damage": 9,
+            "hits": 1,
+            "total_damage": 9,
+            "status_card_count": null
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "enemy_id": "LIVING_FOG",
+        "name": "活雾",
+        "current_hp": 31,
+        "max_hp": 82,
+        "base_max_hp": 82,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [],
+        "intent": "SUPER_GAS_BLAST_MOVE",
+        "move_id": "SUPER_GAS_BLAST_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "9",
+            "damage": 9,
+            "hits": 1,
+            "total_damage": 9,
+            "status_card_count": null
+          }
+        ]
+      }
+    ],
+    "action_readiness": {
+      "can_use_combat_actions": false,
+      "reason": "hand_in_card_selection",
+      "actions_settled": false,
+      "running_action_type": "MegaCrit.Sts2.Core.GameActions.PlayCardAction",
+      "ready_action_type": null,
+      "modal_open": false,
+      "modal_type": null,
+      "player_actions_disabled": false,
+      "is_paused": false,
+      "local_ready_to_end_turn": false,
+      "all_players_ready_to_end_turn": true,
+      "ending_turn_phase_one": false,
+      "ending_turn_phase_two": false,
+      "end_turn_kick": "",
+      "combat_in_progress": true,
+      "combat_over_or_ending": false,
+      "combat_room_mode": "ActiveCombat",
+      "hand_in_card_play": false,
+      "hand_in_card_selection": true,
+      "hand_mode": "SimpleSelect",
+      "local_turn_ready": true,
+      "snapshot_stable": false,
+      "player_action_phase": true
+    }
+  },
+  "after": {
+    "player": {
+      "current_hp": 13,
+      "max_hp": 70,
+      "block": 8,
+      "energy": 2,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "STRENGTH_POWER",
+          "name": "力量",
+          "amount": 1,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "SERPENT_FORM_POWER",
+          "name": "群蛇形态",
+          "amount": 4,
+          "is_debuff": false
+        },
+        {
+          "index": 2,
+          "power_id": "SMOGGY_POWER",
+          "name": "烟雾弥漫",
+          "amount": 1,
+          "is_debuff": true
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 1,
+      "attacks_played_this_turn": 0,
+      "skills_played_this_turn": 1
+    },
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "ETERNAL_ARMOR",
+        "name": "永恒铠甲",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 3,
+        "star_cost": 0,
+        "rules_text": "获得{PlatingPower:diff()}层覆甲。",
+        "resolved_rules_text": "获得9层覆甲。",
+        "dynamic_values": [
+          {
+            "name": "PlatingPower",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "not_enough_energy",
+        "unplayable_reason_raw": "EnergyCostTooHigh",
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "DEFLECT",
+        "name": "偏折",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得4点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "blocked_by_hook",
+        "unplayable_reason_raw": "BlockedByHook",
+        "unplayable_preventer_id": "SMOGGY_POWER",
+        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.SmoggyPower"
+      },
+      {
+        "index": 2,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "blocked_by_hook",
+        "unplayable_reason_raw": "BlockedByHook",
+        "unplayable_preventer_id": "SMOGGY_POWER",
+        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.SmoggyPower"
+      }
+    ]
+  },
+  "next_hp": 3
+}
