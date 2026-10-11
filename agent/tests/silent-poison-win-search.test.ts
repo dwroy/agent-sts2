@@ -1,7 +1,7 @@
 /** XTSV1U9JD34T F48 T8, silent-0271/0228: fixed observed poison finish before F49. */
 import { resolve } from "node:path";
 import { afterEach, expect, it, vi } from "vitest";
-import evidence from "./silent-poison-win-search-evidence.json";
+import evidence from "./silent-poison-win-search-evidence.json" with { type: "json" };
 import { loadConfig } from "../src/core/config.js";
 import { parseGameState } from "../src/hand/mod/schema.js";
 import { makeKnowledge } from "../src/knowledge/index.js";

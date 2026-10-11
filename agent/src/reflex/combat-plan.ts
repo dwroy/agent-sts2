@@ -3132,6 +3132,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
+    // XTSV1U9JD34T F49 T1, silent-0206: a new layer caps the observed incoming attack.
+    // Existing layers stay unmodelled; this does not assign a duration or holding value.
+    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && ascension === 10 && !playerSim.intangible
+      ? { observedGhostInAJar: true } : {}),
     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
@@ -3250,7 +3254,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       env.screenMemory.paelsEyeFight = fightId;
       return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "every line dies: ending the turn with no card played for Pael's Eye's extra turn" };
     }
-    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id) && !mcSources.has(potion.slot));
+    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use &&
+      (!isModelledPotion(potion.potion_id) || (potionContext.observedGhostInAJar && potion.potion_id === "GHOST_IN_A_JAR")) && !mcSources.has(potion.slot));
     // A random potion some sample of which lives: Jev's question, the least-loss line next to it.
     const randomLives = mcSources.size > 0 && randomPotions().some((mc) => mc.plans.some((plan) => plan !== null && !plan.outcome.dies));
     if (potionsNow.length > 0 && !randomLives) return planCombatPerCard(env);
@@ -3512,6 +3517,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     [...options, ...focusOf.keys()].every((plan) => plan === top || beatsOnTargets(top, plan)) &&
     !setupClose &&
     !(drySurvives && drinksPotion(top)) &&
+    // The observed Ghost effect adds a comparison, not a new automatic drinking rule.
+    !(potionContext.observedGhostInAJar && top.steps.some((step) => step.cardId.startsWith("POTION:GHOST_IN_A_JAR:"))) &&
     potionLethal.length === 0 &&
     stopLine === null &&
     !avoidsTop;

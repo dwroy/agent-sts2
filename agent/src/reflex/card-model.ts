@@ -1414,6 +1414,8 @@ export const GENERATED_CARD_POTIONS: Record<string, { type: string; target: Targ
 export interface PotionContext {
   /** Character evidence supplied by the caller; no global potion mechanic is inferred. */
   observedPoison?: number;
+  /** XTSV1U9JD34T F49 T1: one new Intangible layer, with no existing layer. */
+  observedGhostInAJar?: boolean;
   enemyTargets: number[];
   strength: number;
   weak: boolean;
@@ -1621,7 +1623,9 @@ export function potionRegen(potionId: string): number {
  */
 export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], ctx?: PotionContext): CardModel | null {
   const effect: (Partial<CardModel> & { target: TargetMode }) | undefined = POTION_EFFECTS[potionId] ?? (potionId === "POISON_POTION" && (ctx?.observedPoison ?? 0) > 0
-    ? { target: "single" as const, poison: ctx!.observedPoison } : undefined);
+    ? { target: "single" as const, poison: ctx!.observedPoison } : undefined)
+    ?? (potionId === "GHOST_IN_A_JAR" && ctx?.observedGhostInAJar === true
+      ? { target: "self" as const, special: "intangible" as const } : undefined);
   if (!effect) return null;
   // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew: their cards are priced by the expected draw
   // (combat-plan gives the draw pile's, else the discard pile's, else the deck's when the piles are unknown). With
