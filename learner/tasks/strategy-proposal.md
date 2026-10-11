@@ -28,6 +28,7 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
 
 ## 1.2 仅本批的手动专题研究
+本批存在 implementation_request 时跳过本节，按第 1.3 节与宿主附加的不可变任务执行；不能套用纯研究的禁止源码或纯报告完成口径。
 先读取根目录 learn.json 本批的 research_request：`roy-20261010-silent-deck-size-value` 对应根目录 `notes/strategy-research-silent.json`，`roy-20261010-silent-core-reuse-value` 对应根目录 `notes/strategy-research-core-reuse-silent.json`，`roy-20261010-silent-core-output-value` 对应根目录 `notes/strategy-research-core-output-silent.json`；路径都相对 `{{project_root}}`。这三个专题各自独立绑定；不得读取另一请求来代替本批身份。普通批次仍只读 `notes/strategy-research-{{character}}.json` 并按条件匹配。learn.json 本批带 research_request 时，文件不存在或任何身份/SHA 条件失配都停止专题回报，不退回普通选题；只有不带 research_request 的普通批次在专题条件不成立时保持原提案/补链任务，不将普通队列变成专题：
 - learn.json 中本次 {{batch}} 的 task=strategy-proposal、character={{character}}、reason=ops；该行完全没有 proposal_ids 和 proposal_repair 字段，工作树等于 {{worktree}}。
 - 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state=running 且 batch={{batch}}；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
@@ -40,6 +41,11 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 专题纯报告保持 HEAD 等于完整 40 位 base、工作树干净、fixes=[]、merged=null，跳过第 4 节；不制造源码提交、游戏版本、shipped 或成功测试。已证知识只经既有 ledger CLI 登记；需要代码提案时只经 code_proposals CLI 保存真实提案及证据，不伪造 id。经验库沉淀交后续 experience-update，本次报告不冒称已入库或大脑已采用。
 
 除第 6 节的基本字段外，专题最终 JSON 必须带 task=strategy-proposal、character={{character}}、batch={{batch}}、request_id、input_sha256（实际 manifest SHA）、research_complete=true、coverage（所有 required_sections 对应值均为 true）、objective_conclusions（非空结论文本）、limitations（非空字符串列表，即使结论为无充分证据）。runs 只填本批派发锚点；covered_runs 填实际分析的冻结局号，exclusions 填未能分析的逐局 {"run_id":"...","reason":"具体原因"}，两者各自无重复、无交集且并集精确覆盖全部冻结局；evidence_runs 是实际支持结论的 covered_runs 子集，不能用一局或十个锚点冒称全历史。report 必须为 {{scratch}}/report.md 的真实绝对路径且位于本批工作树 learner/runs/ 内；无源码修改的 tests 固定为 {"tsc":null,"vitest":null,"cases":null}，不要照用第 6 节样例的 0。code_proposals / implementation_domains 保留正常 CLI 链接格式，无相关提案填空数组，不将专题 request_id 填成代码提案 id。
+
+## 1.3 已授权实现请求的冻结绑定
+仅当本批 learn.json 带 implementation_request=roy-20261011-silent-core-cycle-quantitative-learning 时适用。必须有本批 `.implementation-registration.json` 和 `.implementation-input.json` 宿主回执，request_id、batch、worktree、task/manifest SHA、原三 proposal_ids 与文件职责一致；任务正文和扩授权已由宿主按原字节附在本题末尾。缺少正文、回执或任何身份失配就停止回报，不退回普通提案或旧纯研究。
+
+只处理本批已领取的三原提案和冻结任务。按正文交付代码、证据校准与消费者验证，允许第 3、4 节的自测/live；watcher 的六文件职责保持，发生路径冲突交 ops 协调。不得修改根请求/旧 done 父请求/提案原文，不另建重复 id，不把框架完成当量化学习完成。最终 JSON 除正常实现字段和逐项 proposal_results 外，必须带 character、batch、request_id、input_sha256、work_spec_sha256；不带 research_complete。无新代码时仍须逐项给真实 waiting/duplicate 理由，不冒造实现、合入或测试。原失败回执保留，宿主输入准备不等同模型已经启动。
 
 ## 2. 边界与实现
 - 依据已有证据提出并实现策略；涉及 Roy 尚未授权的架构调整先回报，不猜测批准。不得把待定项当成既定游戏规则。
