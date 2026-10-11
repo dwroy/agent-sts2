@@ -22,6 +22,8 @@ it("treats resource counts as bounds, including free cycles with a finite action
   expect(abstractCycleBound(0, 0, 0, 8, 2)).toEqual({ energyBound: null, actionBound: 3, combinedBound: 3 });
   expect(abstractCycleBound(10, 1, 0, 0, 1).combinedBound).toBe(0);
   expect(() => abstractCycleBound(1, -1, 0, 1, 1)).toThrow();
+  expect(() => abstractCycleBound(0.3, 0.1, 0, 100, 1)).toThrow();
+  expect(abstractCycleBound(Number.MAX_SAFE_INTEGER, 1, 1, Number.MAX_SAFE_INTEGER, 1).combinedBound).toBe(4503599627370496);
 });
 
 it("separates outcome dispersion from error of the sample mean, and preserves unknowns", () => {

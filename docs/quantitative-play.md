@@ -34,7 +34,7 @@ Roy于2026-10-11批准完整量化升级，并强调游戏随机性造成单次�
 {"method":"cycle-bound","energy":3,"cycleCost":1,"resetCost":1,"actions":100,"componentActions":1}
 ```
 
-在固定费用、每次完整组合后一次回流动作、无额外资源变化的抽象前提下，`k*cycleCost+(k-1)*resetCost<=energy`且`k*componentActions+k-1<=actions`，返回资源上界2。它不证明组合可达；零费无能量上界返回null，仍受动作上界限制，不能证明无限。
+在固定费用、每次完整组合后一次回流动作、无额外资源变化的抽象前提下，`k*cycleCost+(k-1)*resetCost<=energy`且`k*componentActions+k-1<=actions`，返回资源上界2。参数要求非负安全整数，内部整数运算避免浮点向下取整误差；其他单位先由调用者明确换算。它不证明组合可达；零费无能量上界返回null，仍受动作上界限制，不能证明无限。
 
 其他method：`samples`传values；`paired`传base/option数组，每项`{sample,value}`；`calibration`传`{prediction,observation}`的rows，字段见类型定义。损血差为option−base，没有自动“更好”判定。
 

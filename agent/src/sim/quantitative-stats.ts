@@ -77,9 +77,10 @@ export function abstractHandAccess(deck: number, draw: number, components: numbe
 export function abstractCycleBound(energy: number, cycleCost: number, resetCost: number, actions: number, componentActions: number): {
   energyBound: number | null; actionBound: number; combinedBound: number;
 } {
-  if (![energy, cycleCost, resetCost].every((n) => Number.isFinite(n) && n >= 0)
+  if (![energy, cycleCost, resetCost].every((n) => Number.isSafeInteger(n) && n >= 0)
       || !Number.isSafeInteger(actions) || actions < 0 || !Number.isSafeInteger(componentActions) || componentActions < 1) throw new Error("invalid cycle budget");
-  const energyBound = cycleCost + resetCost === 0 ? null : Math.floor((energy + resetCost) / (cycleCost + resetCost));
-  const actionBound = Math.floor((actions + 1) / (componentActions + 1));
+  const e = BigInt(energy), c = BigInt(cycleCost), r = BigInt(resetCost);
+  const energyBound = c + r === 0n ? null : Number((e + r) / (c + r));
+  const actionBound = Number((BigInt(actions) + 1n) / (BigInt(componentActions) + 1n));
   return { energyBound, actionBound, combinedBound: Math.min(energyBound ?? actionBound, actionBound) };
 }
