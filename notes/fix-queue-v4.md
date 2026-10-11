@@ -1033,3 +1033,9 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 - [ ] ascension-up 把目标进阶当实玩级别：LWQYSREHMMJ7 的 run-config:330 同时记录 ascension=10/target_ascension=11，runs:694结局A10；其前SILENT选角帧 max_ascension=10/can_increase=false。ops/codex-ops-learn.py:200–224优先target_ascension生成“这一局打A11”，同一值经ascension_audit.observe造成silent:A11 queued/attempts0；agent/src/eye/run-config.ts:316没有选角max，实际hand/screens/misc.ts:153传入max钳制。应区分请求目标与实际观察进阶，以实际值生成升阶通知/结构审计，保留原错误事件与请求历史，不把目标11当新等级证据，不改变游戏设定、知识、现有对局或人工标审计done。固定输入应覆盖target11/actual10/max10不升阶及真实actual升级才通知。
 - 本轮只登记普通工具缺陷，未改源码/游戏级别/审计历史。证据：paper/materials/20261011-1751-ops-backlog/postmortem-audit.json。
+
+
+## 2026-10-11 19:17:27 CST：已过测试被包装器总时限误触发整套重跑
+
+- [ ] 框架/测试收尾：175450的merge-live.py在1200秒外层时限切断尾部paths后，已完成268文件2703例的原件仍自动整套重跑；独立paths11例补验已过，共269文件2714例，却继续长期持live-merge.lock，181302已测修复排队。重跑非零还会自动reset --merge，不能仅终止其子进程。需由框架拥有者核对现有runner/合后验收入口，保留分段已过覆盖与精确代码树、仅续失败/未运行项，显式区分时限/沙箱限制/真实失败，提供经身份校验且不触发误回退的既有所有者收尾方式；不改游戏知识/断言/预算，不手改原失败回执。证据paper/materials/20261011-1852-ops/core-check-closeout/receipt.json。
+- [ ] 调度公平性核查：watcher19:13冻结registry739项、pending587/waiting100/implemented38/duplicate14；可评估677项中首pending第80位。现有插入序waiting重评可能挤压新项，尚非永久饥饿证明；按真实dispatch/seen_runs/完成局时间核查后交获准框架迭代，不由本轮更改并发、队列状态或任务。原件paper/materials/20261011-ops-health-recovery/queue-observation-1913.json。

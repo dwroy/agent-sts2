@@ -2142,3 +2142,15 @@
 
 - 2026-10-11 18:26 CST [Roy协调] ops拓扑为一个主会话、最多两个只读辅助session；本轮两个临时积压审计已完成，不重复领取。开发独立负责归档修复source62c22f7c7/main1496de4f4及持久broker/辅助入口；ops只在当前live合并和隔离复验后正常纳入已测派单/归档修复。整套已过项目不再无差别重测，仅失败文件/未跑paths单worker复验，原失败/断言/预算保持。264条历史扫描候选仍由开发复核性质，不冒报泄露或全部清洁。
 - 2026-10-11 18:46:12 CST 运维本轮补办：46批49局复盘/114提案SHA核实、论文表717局切点；19冲突actual b8cd47484/S1.fix47，27普通经验批actual4754a8698/S1.exp-backlog1，57条CLI shipped限实际范围；三研究原报告复验，revision3实际派175450且观察到学习者3项经验自合，完成验收仍待原事件；派单/归档/辅助职责actual e597b103a，无工具游戏版本，保留资源争用/误整理及固定沙箱排除失败；生产辅助验收和未合固定源码另立唯一续办，main未纳入他人动态产出。证据paper/materials/20261011-1751-ops-backlog/。
+
+- 2026-10-11 19:00:09 CST [运维 codex] 两只读辅助真实生产验收通过：ops-infra-archive-20261011/wJ:pK8 与ops-infra-herdr-wake-20261011/wJ:pK9，两个Astra session实际重叠73.58秒；各有complete实质报告、rc0、匹配输入SHA与原ops-assist-done事件，槽位已释放，Herdr 18:56:20/25自动关闭并归档末屏。首回执launch-uncertain保留，未重复派发；原完成事件留原队列由调度器处理。回执paper/materials/20261011-1852-ops/assist/production-acceptance.json。辅助只核冻结的基础设施范围，明确未携测试日志及归档源cherry-pick的祖先限制；该核查不产生游戏知识，不重合已上线源或冒作业务发布。
+
+- 2026-10-11 19:03:30 CST [运维 codex] 已关闭旧autoplay日志续办：宿主原生pane read的wJ:pCY末屏含19:02真实COMBAT/REWARD和F13选牌输出，与当前console逐行匹配；原loop3149336/单play2092929、E6DSUVTNVBMH继续。Herdr foreground busy=no并不代表空tab，无需再次reload、另启play或停局。证据paper/materials/20261011-1852-ops/autoplay-log-verified.json。
+
+- 2026-10-11 19:12:08 CST [运维 codex] 本轮新增复盘YBRA3EJ94GBR/3UPY3BP2LVS7已核实done/rc0，28条所属原台账和4个提案文件SHA齐全；只复现既有0324刀刃之舞与0349虚弱取整，未造新机制或重复修复队列。三份无源码strategy处置经现有no_change验收通过，保留waiting、不补版本。当前独立集成树ops-1852-integration已合固定66c22ba7刀刃、32bf133b校准、ce74e24e文档、9a3313a1 deferred告警，单worker合后检查中；生产树未由本阶段改动。该候选将覆盖旧续办17个数据/材料源，余41代码源去同补丁后38组，机械预检33组文本可合、5组有冲突，仅是后续集成前提，不能作为功能验证或上线。回执paper/materials/20261011-1852-ops/。
+
+- 2026-10-11 19:17:27 CST [运维 codex] 核心175450重测收尾核对：原首轮tsc0/268文件2703例+独立paths11例=269文件2714例均通过，日志SHA与live-unique-coverage一致，源码仍3b2791a45且无脏源码；重复整套没有覆盖必要。原scratch merge-live.py对外层1200s/124无分类，自动重跑且重跑非零会git reset --merge到e597b103a，故不能只杀测试子进程；broker现行kill白名单不含检查包装器，未绕过宿主入口、删锁、伪造退出或中断learner/play。完整证据core-check-closeout/receipt.json；原所有者应依据唯一覆盖证明独立收尾，工具问题交既有修复队列。
+
+- 2026-10-11 19:26:35 CST [运维 codex] 已验证的核心经验.13被原175450 scratch合入包装器的第二次1200秒总时限自动回退（live回到e597b103a，首轮268/2703与paths11仍为通过原件），并非运维选择撤回经验；原reset/retry回执、reflog、源码及论文边界独立保存。E6DSUVTNVBMH于18:50:35确实读取.13，但中途回退可能重渲染.12，不把整局当连续.13采用或收益证明。当前ops独立候选b6a70aafb含同一78479fe73经验、刀刃/校准及框架补充，合后唯一271文件2725例/tsc全部覆盖（原缺venv一例失败已补环境后仅补该文件和paths，未重跑整套）。待现有锁内所有者收尾后按正常合入保留刷新，不修改活任务脚本/伪造退出。证据paper/materials/20261011-1852-ops/core-automatic-rollback-observed.json、integration/coverage-complete.json。
+
+- 2026-10-11 19:34:44 CST [运维 codex] 本轮固定候选b6a70aafb已完成271文件2725例/tsc覆盖，唯一30秒取live锁未成功、发布回调未启动；源码未在本轮实际main/live上线，按同一积压请求revision2保存已测可续办结果和原队列事件，不反复轮询等锁。源码/冻结输入/失败、辅助真实双完成、日志显示关闭及新两复盘/论文719局均留痕于paper/materials/20261011-1852-ops/；旧data17中间状态不造版本，41代码源保留固定预检。
