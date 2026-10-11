@@ -311,6 +311,7 @@ export function validateRequest(raw: unknown): BrokerRequest {
     if (!/^(0|[1-9][0-9]{0,2})$/.test(list[1]!)) return { ok: false, error: "eval-metrics 进阶要是 0–999 的整数（不带前导零）" };
   }
   if (action === "strategy-proposal" && list[0] !== "roy-20261011-silent-core-cycle-quantitative-learning"
+    && list[0] !== "ops-20261012-quantitative-continuation"
       && !/^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$/.test(list[0]!)) {
     return { ok: false, error: "strategy-proposal 要 1–10 个 12 位局号或已授权的量化实现请求 id" };
   }
