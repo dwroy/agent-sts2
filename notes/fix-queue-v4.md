@@ -1053,3 +1053,9 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - **core-cycle-implementation-binding-entry**：父请求roy-20261011-silent-core-cycle-quantitative-learning已获Roy实际实现/上线授权；三原提案均pending/无活占用。当前strategy_research_jobs仅注册三个旧pure研究、普通strategy任务无法宿主绑定新task/SHA及同时claim原三ID。仅202201结束后的下一空闲普通工具修复批领取，不改202201活输入；最小适配范围/固定验收见paper/materials/silent/20261011-core-cycle-quantitative-learning/binding-adapter-task.md，SHA e4d01450ba982314400064c3af25176d7e44ab3d3c7eeac2158f18bcf381ed7a。watcher独占quantitative*.ts与交付facts适配，工具适配不填游戏知识、不重开原done综合任务、不造新业务ID/并发或ops prompt。沿既有write/lock/wrapper/完成事件落真实batch+输入回执，实际派出前保持未派发；适配完成后由ops正式派代码学习/校准。具体缺口与职责见同目录ops-ack.json。
 
 - 2026-10-11 20:46:35 CST 上述冻结绑定适配接收不可变补充paper/materials/silent/20261011-core-cycle-quantitative-learning/authorization-upgrade-20261011.md（SHA b998719e1bc75c0b2af67b1fcd862c6bffc4b7707b825e83b58ecf79cd1c1508），原task及9输入不改；以同目录最新ops-ack.json中的watcher六文件职责和随机性验收为边界。原202201已经结束，其874ae603退出夹具源和c519既有push入口交ops合入，不由下一适配批重做；下一批优先只补实现类冻结绑定，实际量化学习另由正式代码批承接，通用框架完成不能关闭父请求。
+
+
+## 2026-10-11 21:24:25 CST：既有宿主补验入口的明确续办
+
+- **host-targeted-check-continuation**（续办既有“框架/测试收尾”，不重复修退出夹具/推送注册）：由主ops交当前204636返回后的下一空闲普通fix-batch，仅基础设施。冻结任务 paper/materials/20261011-2119-ops/host-targeted-check-task.md，SHA 232b3b4e72e1d69c0ae4cbb20ef3794941cb2353e843788cb1825ec43c402bcd；唯一登记notes/host-targeted-check-continuation-request.json。补现有learner-recheck精确batch/source/tree/原日志SHA和已过覆盖绑定、失败/未运行或真正新增受影响项的单worker续验、原件保留及标准learner-checks回执。严禁任意命令逃逸、放宽断言、假称当前沙箱已通过IPC、重复整套已过324文件；不得修改204636活输入或新增调度器。当前只是排队，实际batch=null；需收到正式派发和宿主补验回执才逐层结案。
+- **sandbox-glob-startup-race**：211302策略批thread/start前扫描并行211302-s2工作树临时.aws/.codex路径遭ENOENT，9.3秒退出1、模型token0。原.out/.err/JSONL均保留；这是环境启动失败而非学习或提案缺失。后续由既有基础设施修复链核并行目录创建/移除竞态；不能为修此项放宽沙箱、凭据deny规则或改全局配置，不清旧树。证据paper/materials/20261011-2119-ops/startup-failure.json；原failed/retry及10提案保持，沿原调度器重试。

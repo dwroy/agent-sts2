@@ -1,0 +1,42 @@
+{
+  "batch": "20261011-211302-strategy-proposal",
+  "phase": "before thread/session starts",
+  "exit": 1,
+  "model_tokens": 0,
+  "cause": "sandbox unreadable-glob enumeration saw disappearing sibling worktree temporary .aws/.codex paths",
+  "raw_log": ".worktrees/codex-strategy-silent-20261011-211302/learner/runs/20261011-211313-strategy-proposal.jsonl",
+  "raw_log_sha256": "1fdc45b721854fc4f32eafa38004e15569facea54942ea0846e8167560fa63e3",
+  "diagnostics": [
+    {
+      "type": "learner_stderr",
+      "t_ms": 9286,
+      "text": "2026-10-11T13:13:25.353459Z ERROR codex_core::session: Failed to create session: failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw: rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-211302-s2/.aws: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "t_ms": 9286,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-211302-s2/.codex: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "t_ms": 9297,
+      "text": "Error: thread/start: thread/start failed: error creating thread: failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw: rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-211302-s2/.aws: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "t_ms": 9297,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-211302-s2/.codex: No such file or directory (os error 2) (code -32603)"
+    }
+  ],
+  "no_gameplay_or_proposal_assessment_occurred": true,
+  "original_state_unchanged": true,
+  "retry": "original scheduler, no manual duplicate batch",
+  "out": {
+    "path": "ops/codex-ops/learner/20261011-211302-strategy-proposal.out",
+    "sha256": "2f5060f4b19d350efeb4638abc0471ec403f25420394d5ec6c3f61564bd04061"
+  },
+  "err": {
+    "path": "ops/codex-ops/learner/20261011-211302-strategy-proposal.err",
+    "sha256": "aac75d18895a7bce401a15e1c3015f78c961bbe00b2a91bf69eab778bddf81e1"
+  }
+}
