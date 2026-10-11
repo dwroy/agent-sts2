@@ -1,0 +1,43 @@
+{
+  "keyProbe": {
+    "code": 0,
+    "filesChecked": 9,
+    "noReadableKeys": true,
+    "stderr": ""
+  },
+  "code": 0,
+  "signal": null,
+  "stdout": "READ_ONLY_PROBE_OK\n",
+  "stderr": "",
+  "checks": {
+    "businessReadScope": "Filesystem is fully read-only; task limits reads to frozen evidence",
+    "evidenceRead": true,
+    "forbiddenWrites": [
+      {
+        "path": "/tmp/ops-assist-sandbox-OhOvR4/main/.worktrees/task/ops/codex-ops/assist/jobs/probe/input/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-OhOvR4/main/.worktrees/task/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-OhOvR4/main/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-OhOvR4/main/.worktrees/live/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-OhOvR4/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-OhOvR4/main/ops/codex-ops/broker/probe-write",
+        "absent": true
+      }
+    ],
+    "evidenceUnchanged": true
+  }
+}

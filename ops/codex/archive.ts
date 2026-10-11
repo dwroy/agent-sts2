@@ -12,7 +12,7 @@
  * Incremental: <out>/MANIFEST.json remembers each copy's source, size and mtime; an unchanged source is not copied
  * again. Copies are written 0600 (paper/materials/session/ is out of git and backed up to the Windows drive).
  */
-import { chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
 import { redactSecrets } from "../../learner/lib/launcher.js";
@@ -108,9 +108,16 @@ export function archiveCodexTranscripts(options: ArchiveOptions): ArchiveResult 
       return;
     }
     mkdirSync(join(target, ".."), { recursive: true });
-    copyFileSync(source, target);
-    chmodSync(target, 0o600);
-    result.redacted += redactSecrets(target, options.secrets);
+    const temporaryDir = mkdtempSync(`${target}.archive-`);
+    const temporary = join(temporaryDir, "copy");
+    try {
+      copyFileSync(source, temporary);
+      chmodSync(temporary, 0o600);
+      result.redacted += redactSecrets(temporary, options.secrets);
+      renameSync(temporary, target);
+    } finally {
+      rmSync(temporaryDir, { recursive: true, force: true });
+    }
     manifest[rel] = { source, size: stat.size, mtimeMs: stat.mtimeMs };
     result.copied.push(rel);
   };

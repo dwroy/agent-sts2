@@ -1,0 +1,44 @@
+[
+  {
+    "name": "tsc",
+    "exit": 0,
+    "log": "tsc.log"
+  },
+  {
+    "name": "changed-files-sandbox-eligible",
+    "exit": 0,
+    "files": [
+      "ops-herdr.test.ts",
+      "ops-redaction.test.ts"
+    ],
+    "log": "changed-files.log",
+    "excluded_files_original_exit": 1,
+    "note": "6 files on existing sandbox exclusion list, deferred to host checks; originals retained"
+  },
+  {
+    "name": "learner-launch",
+    "exit": 0,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "-m",
+      "unittest",
+      "ops.tests.test_learner_launch_failures"
+    ]
+  },
+  {
+    "name": "strategy-research",
+    "exit": 0,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "-m",
+      "unittest",
+      "ops.tests.test_strategy_research_scheduling"
+    ]
+  }
+]

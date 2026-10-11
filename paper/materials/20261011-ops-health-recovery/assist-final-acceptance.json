@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-11T18:59:00+08:00",
+  "verified_by": "watcher read-only",
+  "ops_dispatched": true,
+  "jobs": [
+    {
+      "request_id": "ops-infra-herdr-wake-20261011",
+      "state": "completed",
+      "report_status": "complete",
+      "findings": 5,
+      "report_manifest_digest_matches": true,
+      "files": [
+        {
+          "name": "00.txt",
+          "sha256_matches": true
+        },
+        {
+          "name": "01.txt",
+          "sha256_matches": true
+        },
+        {
+          "name": "02.txt",
+          "sha256_matches": true
+        }
+      ],
+      "event_name": "1791716183518750650-ops-assist-done.md",
+      "running_at_ns": 1791716102752079088,
+      "completed_at_ns": 1791716183518707943,
+      "pane_reclaimed": "herdr pane process-info returned pane_not_found for wJ:pK8 and wJ:pK9",
+      "session_id": "01a12a9a-1bd1-7ba0-9d83-ef80e3a02701"
+    },
+    {
+      "request_id": "ops-infra-archive-20261011",
+      "state": "completed",
+      "report_status": "complete",
+      "findings": 7,
+      "report_manifest_digest_matches": true,
+      "files": [
+        {
+          "name": "00.txt",
+          "sha256_matches": true
+        },
+        {
+          "name": "01.txt",
+          "sha256_matches": true
+        },
+        {
+          "name": "02.txt",
+          "sha256_matches": true
+        }
+      ],
+      "event_name": "1791716178596449702-ops-assist-done.md",
+      "running_at_ns": 1791716044721586819,
+      "completed_at_ns": 1791716178596387567,
+      "pane_reclaimed": "herdr pane process-info returned pane_not_found for wJ:pK8 and wJ:pK9",
+      "session_id": "01a12a99-3a07-7073-8b54-5080c0ef7a5e"
+    }
+  ],
+  "real_concurrency_overlap_seconds": 75.844308479,
+  "remaining": "Completion events await the original ops queue; helper completion does not itself close original infrastructure requests."
+}

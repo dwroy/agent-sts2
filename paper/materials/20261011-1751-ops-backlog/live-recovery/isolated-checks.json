@@ -1,0 +1,32 @@
+[
+  {
+    "name": "rollout-live-isolated",
+    "exit": 0,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "tests/rollout-live.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1"
+    ]
+  },
+  {
+    "name": "paths-isolated",
+    "exit": 0,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "tests/paths.test.ts",
+      "--pool=forks",
+      "--maxWorkers=1"
+    ]
+  }
+]

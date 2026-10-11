@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-assist-sessions-20261011/agent
+
+ ❯ tests/rollout-live.test.ts (14 tests | 1 failed) 202749ms
+     × liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line) 1053ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line)
+AssertionError: expected '3-turn rollout (4 samples): expected …' to match /^5-turn rollout/
+
+- Expected:
+/^5-turn rollout/
+
++ Received:
+"3-turn rollout (4 samples): expected further HP loss 14, fight over within 3 turns in 4/4, expected turns to the end (surviving samples) ~3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -14 [cut to fit the time budget: horizon 3, samples 4]"
+
+ ❯ tests/rollout-live.test.ts:133:47
+    131|     expect(r.byPlan.get(r.best!)!.value).toBe(Math.max(...values));
+    132|     expect(r.byPlan.has(worst)).toBe(true);
+    133|     expect(rolloutFacts(worst, r)["rollout"]).toMatch(/^5-turn rollout…
+       |                                               ^
+    134|     // The encounter's own n, and the backed-off segment named as the …
+    135|     const gates = loadFightValueGates()!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 264 passed (265)
+      Tests  1 failed | 2674 passed (2675)
+   Start at  18:13:49
+   Duration  433.90s (transform 13.47s, setup 25.63s, import 55.94s, tests 1590.67s, environment 40ms)
+

@@ -2137,3 +2137,20 @@
 - 2026-10-11 16:53 CST [核心循环量化入库授权] Roy“以上的总结能否学习进入经验库？”已补入唯一 roy-20261010-silent-core-reuse-experience-integration revision3，保留原0374/0376/0385，增加跳过/减牌/过牌数量、整套同手、费用/回流与极限断点验证；只允许learner据静默证据去重入库，不把抽象数字/无限例子作游戏事实。原请求/跟踪/续办事件字节独立留存，新说明task-v3 SHA030337a6；标准broker派发8秒无响应exit124，复核无匹配批次，仍pending/batch null，原唯一续办事件追加最新版，无重复派发或上线。live经验.8/208条和19原冲突保持；入库后交条目原文，读取/采用/最终通关效果分列。回执paper/materials/silent/20261011-core-cycle-quantification/experience-integration/closure.json。
 
 - 2026-10-11 17:16 CST [Roy纠正ops恢复方式] Roy要求仍由ops调度、禁止随意修改框架流程，并授权同一herdr space新开ops tab恢复。自动领取综合入库请求的草稿已独立归档且从工作树撤下，未提交/合入main或live，两个生产learner_jobs.py SHA均bc9117d4。当前Herdr访问被沙箱拒绝，既有broker procs 8秒exit124；未创建新tab、未启动第二ops、未派专题或改游戏。需要宿主核实Herdr agent登记后按既有ops入口恢复；原请求仍pending。证据paper/materials/silent/20261011-experience-integration-dispatch/withdrawal-and-recovery.json。
+
+- 2026-10-11 18:06 CST [ops恢复与297件积压] 原herdr登记已由宿主恢复，broker procs/mod-state均成功，单一autoplay3149336/play1863707、3UPY3BP2LVS7 A10/F17继续。按原experience-update入口正式派唯一核心循环综合入库rev3：20261011-175450-experience-update/PID1919328/wJ:pJ0，根请求已绑定running；无自动领取草稿、重复专题或游戏结论注入。46复盘批49局及114提案原件齐全，根ledger414项0问题；错报实际A11已凭max10/actual10原帧入普通工具队列，胜局用时/SL补记与A10首胜阶段小结完成。live旧19冲突机械整理并保留双侧及8路径配置；首测旧Fast契约11失败已留原件，补齐已批准e9b3a6ceb测试后复验中，尚未声称上线完成。总索引和独立审计：paper/materials/20261011-1751-ops-backlog/。
+
+- 2026-10-11 18:26 CST [Roy协调] ops拓扑为一个主会话、最多两个只读辅助session；本轮两个临时积压审计已完成，不重复领取。开发独立负责归档修复source62c22f7c7/main1496de4f4及持久broker/辅助入口；ops只在当前live合并和隔离复验后正常纳入已测派单/归档修复。整套已过项目不再无差别重测，仅失败文件/未跑paths单worker复验，原失败/断言/预算保持。264条历史扫描候选仍由开发复核性质，不冒报泄露或全部清洁。
+- 2026-10-11 18:46:12 CST 运维本轮补办：46批49局复盘/114提案SHA核实、论文表717局切点；19冲突actual b8cd47484/S1.fix47，27普通经验批actual4754a8698/S1.exp-backlog1，57条CLI shipped限实际范围；三研究原报告复验，revision3实际派175450且观察到学习者3项经验自合，完成验收仍待原事件；派单/归档/辅助职责actual e597b103a，无工具游戏版本，保留资源争用/误整理及固定沙箱排除失败；生产辅助验收和未合固定源码另立唯一续办，main未纳入他人动态产出。证据paper/materials/20261011-1751-ops-backlog/。
+
+- 2026-10-11 19:00:09 CST [运维 codex] 两只读辅助真实生产验收通过：ops-infra-archive-20261011/wJ:pK8 与ops-infra-herdr-wake-20261011/wJ:pK9，两个Astra session实际重叠73.58秒；各有complete实质报告、rc0、匹配输入SHA与原ops-assist-done事件，槽位已释放，Herdr 18:56:20/25自动关闭并归档末屏。首回执launch-uncertain保留，未重复派发；原完成事件留原队列由调度器处理。回执paper/materials/20261011-1852-ops/assist/production-acceptance.json。辅助只核冻结的基础设施范围，明确未携测试日志及归档源cherry-pick的祖先限制；该核查不产生游戏知识，不重合已上线源或冒作业务发布。
+
+- 2026-10-11 19:03:30 CST [运维 codex] 已关闭旧autoplay日志续办：宿主原生pane read的wJ:pCY末屏含19:02真实COMBAT/REWARD和F13选牌输出，与当前console逐行匹配；原loop3149336/单play2092929、E6DSUVTNVBMH继续。Herdr foreground busy=no并不代表空tab，无需再次reload、另启play或停局。证据paper/materials/20261011-1852-ops/autoplay-log-verified.json。
+
+- 2026-10-11 19:12:08 CST [运维 codex] 本轮新增复盘YBRA3EJ94GBR/3UPY3BP2LVS7已核实done/rc0，28条所属原台账和4个提案文件SHA齐全；只复现既有0324刀刃之舞与0349虚弱取整，未造新机制或重复修复队列。三份无源码strategy处置经现有no_change验收通过，保留waiting、不补版本。当前独立集成树ops-1852-integration已合固定66c22ba7刀刃、32bf133b校准、ce74e24e文档、9a3313a1 deferred告警，单worker合后检查中；生产树未由本阶段改动。该候选将覆盖旧续办17个数据/材料源，余41代码源去同补丁后38组，机械预检33组文本可合、5组有冲突，仅是后续集成前提，不能作为功能验证或上线。回执paper/materials/20261011-1852-ops/。
+
+- 2026-10-11 19:17:27 CST [运维 codex] 核心175450重测收尾核对：原首轮tsc0/268文件2703例+独立paths11例=269文件2714例均通过，日志SHA与live-unique-coverage一致，源码仍3b2791a45且无脏源码；重复整套没有覆盖必要。原scratch merge-live.py对外层1200s/124无分类，自动重跑且重跑非零会git reset --merge到e597b103a，故不能只杀测试子进程；broker现行kill白名单不含检查包装器，未绕过宿主入口、删锁、伪造退出或中断learner/play。完整证据core-check-closeout/receipt.json；原所有者应依据唯一覆盖证明独立收尾，工具问题交既有修复队列。
+
+- 2026-10-11 19:26:35 CST [运维 codex] 已验证的核心经验.13被原175450 scratch合入包装器的第二次1200秒总时限自动回退（live回到e597b103a，首轮268/2703与paths11仍为通过原件），并非运维选择撤回经验；原reset/retry回执、reflog、源码及论文边界独立保存。E6DSUVTNVBMH于18:50:35确实读取.13，但中途回退可能重渲染.12，不把整局当连续.13采用或收益证明。当前ops独立候选b6a70aafb含同一78479fe73经验、刀刃/校准及框架补充，合后唯一271文件2725例/tsc全部覆盖（原缺venv一例失败已补环境后仅补该文件和paths，未重跑整套）。待现有锁内所有者收尾后按正常合入保留刷新，不修改活任务脚本/伪造退出。证据paper/materials/20261011-1852-ops/core-automatic-rollback-observed.json、integration/coverage-complete.json。
+
+- 2026-10-11 19:34:44 CST [运维 codex] 本轮固定候选b6a70aafb已完成271文件2725例/tsc覆盖，唯一30秒取live锁未成功、发布回调未启动；源码未在本轮实际main/live上线，按同一积压请求revision2保存已测可续办结果和原队列事件，不反复轮询等锁。源码/冻结输入/失败、辅助真实双完成、日志显示关闭及新两复盘/论文719局均留痕于paper/materials/20261011-1852-ops/；旧data17中间状态不造版本，41代码源保留固定预检。

@@ -1,0 +1,30 @@
+import { closeSync, ftruncateSync, mkdtempSync, openSync, readSync, rmSync, statSync, writeFileSync, writeSync } from 'node:fs';
+import { join } from 'node:path';
+import { performance } from 'node:perf_hooks';
+import { redactSecrets } from './learner/lib/launcher.ts';
+const dir = mkdtempSync(join(process.cwd(), '../large-redaction-fixture-'));
+const path = join(dir, 'oversize.jsonl');
+const secret = 'fixture-only-large-redaction-value';
+const bytes = Buffer.from(secret);
+const size = 540 * 1024 * 1024;
+const offset = 65530;
+const fd = openSync(path, 'wx', 0o600);
+ftruncateSync(fd, size);
+writeSync(fd, bytes, 0, bytes.length, offset);
+writeSync(fd, bytes, 0, bytes.length, size - bytes.length);
+closeSync(fd);
+const started = performance.now();
+try {
+  const count = redactSecrets(path, [secret]);
+  const expectedSize = size + 2 * (Buffer.byteLength('[REDACTED]') - bytes.length);
+  const after = statSync(path).size;
+  const read = openSync(path, 'r');
+  const first = Buffer.alloc(10), last = Buffer.alloc(10);
+  readSync(read, first, 0, first.length, offset);
+  readSync(read, last, 0, last.length, after - 10);
+  closeSync(read);
+  if (count !== 2 || after !== expectedSize || first.toString() !== '[REDACTED]' || last.toString() !== '[REDACTED]') throw new Error('large file redaction failed');
+  const result = { fixture: 'synthetic sparse 540 MiB file, fake values only', original_bytes: size, redactions: count, final_bytes: after, boundary_and_eof_verified: true, elapsed_ms: Math.round(performance.now() - started) };
+  writeFileSync('../large-redaction-result.json', JSON.stringify(result, null, 2) + '\n');
+  console.log(JSON.stringify(result));
+} finally { rmSync(dir, {recursive: true, force: true}); }
