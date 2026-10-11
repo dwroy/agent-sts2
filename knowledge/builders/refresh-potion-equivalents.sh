@@ -42,6 +42,32 @@ target=""
 if [[ -f "$ENV_FILE" ]]; then
   target="$(grep -E '^[[:space:]]*(export[[:space:]]+)?TARGET_ASCENSION=' "$ENV_FILE" | tail -1 | sed -E 's/^[^=]*=//; s/[[:space:]"'"'"']//g; s/#.*$//' || true)"
 fi
+if [[ "$target" = climb ]]; then
+  # A dynamic policy is not an ascension number. Use this character's latest observed completed run,
+  # without predicting the next level or mixing another character's history into the table.
+  target="$(python3 - "$ROOT/logs/runs.jsonl" "$character" <<'PY'
+import json, sys
+target = None
+try:
+    with open(sys.argv[1], encoding="utf8") as handle:
+        for line in handle:
+            try:
+                row = json.loads(line)
+            except ValueError:
+                continue
+            character = str(row.get("character") or "ironclad").lower()
+            ascension = row.get("ascension")
+            if character == sys.argv[2] and type(ascension) is int and ascension >= 0:
+                target = ascension
+except FileNotFoundError:
+    pass
+if target is None:
+    print("refresh-potion-equivalents: climb has no completed run with an observed ascension for " + sys.argv[2], file=sys.stderr)
+    raise SystemExit(2)
+print(target)
+PY
+)"
+fi
 if [[ -n "$target" && ! "$target" =~ ^[0-9]+$ ]]; then
   echo "refresh-potion-equivalents: TARGET_ASCENSION '$target' in $ENV_FILE is not a number" >&2
   exit 2
