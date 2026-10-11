@@ -1,7 +1,7 @@
 {
   "request_id": "ops-20261012-legacy-integration-tests",
   "created_at": "2026-10-12 01:58:16 CST",
-  "state": "queued_in_dispatched_ordinary_fix_batch",
+  "state": "shipped_awaiting_host_checks",
   "actual_batch": "20261012-015818-fix-batch",
   "task": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/learner-repair-task.md",
   "task_sha256": "0d36db9d2b720d2cfd2f7471a7d228704c5a85a14b893f26c10e6d68cdb1be11",
@@ -27,8 +27,8 @@
     "0e0ec068dc06a00e62220e69267a8e604196c589"
   ],
   "source_gameplay_analysis_by": "original learners; ops only mechanical integration",
-  "owner": "next existing Codex learner fix batch",
-  "release_status": "not_merged",
+  "owner": "ops closeout",
+  "release_status": "merged",
   "dispatch": {
     "at": "2026-10-12 02:00:58 CST",
     "batch": "20261012-015818-fix-batch",
@@ -38,5 +38,14 @@
     "route": "original fix-batch broker, ordinary root fix queue",
     "item_specific_model_started": false,
     "note": "宿主批次已登记，不冒称专用冻结任务绑定/本条已修；学习者应从原队列读取具体任务"
+  },
+  "release": {
+    "at": "2026-10-12 02:33:34 CST",
+    "source": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+    "live": "7bf7e0e5dc2b379c72c6c781c2831eaaa58c5ad0",
+    "version": "S1.legacy17-1",
+    "learner_batch": "20261012-015818-fix-batch",
+    "report": "paper/materials/20261012-0226-ops/report.md",
+    "original_five_failures_preserved": true
   }
 }
