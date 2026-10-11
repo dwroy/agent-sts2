@@ -1,11 +1,14 @@
 /** A learned continuation utility, in HP units. Absent outside an observed multi-fight objective. */
 export interface ContinuationValue {
+  /** Observed HP spent before the following fight becomes actionable; no fitted weight is changed. */
+  openingHpLoss?: number;
   /** HP -> additional terminal utility, fitted from fixed character logs and replay samples. */
   hp: [number, number][];
   source: string;
 }
 
 export function continuationUtility(value: ContinuationValue | undefined, hp: number): number {
+  hp -= value?.openingHpLoss ?? 0;
   if (!value || !Number.isFinite(hp) || hp <= 0 || value.hp.length === 0) return 0;
   const points = value.hp;
   if (hp <= points[0]![0]) return points[0]![1];

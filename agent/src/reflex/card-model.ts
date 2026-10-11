@@ -1437,6 +1437,9 @@ export const GENERATED_CARD_POTIONS: Record<string, { type: string; target: Targ
 
 /** What the drinker's board adds to a generated card: living enemy indices, Strength now, Weak. */
 export interface PotionContext {
+  /** Evidence scope for Silent Cunning Potion (SADL A7, F4QK A9, WQZ A10). */
+  character?: string;
+  ascension?: number;
   /** Character evidence supplied by the caller; no global potion mechanic is inferred. */
   observedPoison?: number;
   enemyTargets: number[];
@@ -1645,6 +1648,18 @@ export function potionRegen(potionId: string): number {
  * pile cards pile-card potions take and the draw pile's expected card.
  */
 export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], ctx?: PotionContext): CardModel | null {
+  // silent-0256/0257/0258: made cards occupy hand space; potion slots do not.
+  if (potionId === "CUNNING_POTION") {
+    if (ctx?.character?.toLowerCase() !== "silent" || ![7, 9, 10].includes(ctx.ascension ?? -1)) return null;
+    const adds = Array.from({ length: 3 }, (_, i): CardModel => ({
+      ...potionShell(potionId, name, slot, ctx.enemyTargets),
+      index: 3_000_000 + slot * 3 + i, key: `p${slot}~shiv${i}`, cardId: "SHIV", name: "小刀+",
+      type: "Attack", upgraded: true, target: "single", cost: 0,
+      damage: Math.floor((6 + ctx.strength) * (ctx.weak ? 0.75 : 1)), damageBase: 6,
+      text: "造成6点伤害。消耗。",
+    }));
+    return { ...potionShell(potionId, name, slot, validTargets), adds };
+  }
   const effect: (Partial<CardModel> & { target: TargetMode }) | undefined = POTION_EFFECTS[potionId] ?? (potionId === "POISON_POTION" && (ctx?.observedPoison ?? 0) > 0
     ? { target: "single" as const, poison: ctx!.observedPoison } : undefined);
   if (!effect) return null;

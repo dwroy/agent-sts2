@@ -34,6 +34,7 @@ import { boardRolloutInput, deckModels, enemyTable, fightMetaOf, fightRelicsOf, 
 import { solveTap, type SolveResult, type SolverInput } from "../reflex/turn-solver.js";
 import { asArray, asRecord, str } from "../core/util/json.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
+import { observedRoyalPoisonOpeningLoss } from "./silent-opening.js";
 
 /** Cards drawn on turn 1 without relics. */
 export const OPENING_HAND = 5;
@@ -311,9 +312,17 @@ export function syntheticBossState(state: GameState, knowledge: Knowledge, openi
     });
   }
   const maxHp = typeof run["max_hp"] === "number" ? (run["max_hp"] as number) : entryHp;
-  const hp = Math.max(1, Math.min(maxHp, Math.round(entryHp)));
+  const openingHpLoss = observedRoyalPoisonOpeningLoss(state);
+  const hp = openingHpLoss > 0 ? Math.max(0, Math.min(maxHp, Math.round(entryHp)) - openingHpLoss)
+    : Math.max(1, Math.min(maxHp, Math.round(entryHp)));
   run["current_hp"] = hp;
   const relics = fightStartRelics(run, knowledge);
+  if (openingHpLoss > 0) {
+    const royal = asArray(run["relics"]).map(asRecord).find((r) => str(r["relic_id"]) === "ROYAL_POISON")!;
+    const name = str(royal["name"], knowledge.relic("ROYAL_POISON")?.name ?? "ROYAL_POISON");
+    relics.unmodelled = relics.unmodelled.filter((r) => r !== name);
+    relics.applied.push(`${name}（静默A10已观察组合：开场失去4生命）`);
+  }
   const r = relics.total;
   // Happy Flower's counter as it stands on turn 1 (ticked once): what rollout-live fightRelicsOf reads at a fight frame.
   for (const relic of asArray(run["relics"]).map(asRecord)) {
@@ -489,6 +498,7 @@ export function syntheticBossStart(state: GameState, knowledge: Knowledge, bossI
   const meta = { ...fightMetaOf(s, knowledge, createScreenMemory("COMBAT")), kind: "boss" as const, t: 1 };
   const input: RolloutInput = {
     ...boardInput,
+    ...(observedRoyalPoisonOpeningLoss(state) > 0 ? { openingHpLoss: observedRoyalPoisonOpeningLoss(state) } : {}),
     solver: { ...solver, hand: potions, cardsPlayedThisTurn: 0, turn: 1, player: { ...solver.player, hp: s.run?.current_hp ?? entryHp } },
     plans: [],
     piles: { draw: deckModels(s, knowledge), discard: [], handBase: potions.map(() => null) },
