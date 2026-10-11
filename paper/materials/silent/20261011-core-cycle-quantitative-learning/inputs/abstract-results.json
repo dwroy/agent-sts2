@@ -1,0 +1,770 @@
+{
+  "kind": "ops_abstract_cycle_quantification_not_game_evidence",
+  "learned_game_policy": false,
+  "actual_game_counterfactuals": null,
+  "horizon_turns": 12,
+  "assumptions": [
+    "One reusable core C unless the exact A+B table is being considered.",
+    "Cards are initially uniformly shuffled; turns start with up to five draws and refreshed energy.",
+    "Empty draw pile refills from discard; cards held or resolving are excluded.",
+    "Played C returns to discard; D returns only after its draw effect; other hand cards discard at turn end.",
+    "C is played first when affordable; otherwise play D only if energy remains for one C.",
+    "No retain, exhaust, powers, statuses, costs of acquiring/removing cards, enemy, damage, death or win modeling.",
+    "N-G is steady flow bookkeeping, not an exact finite-turn reshuffle or combo-count predictor.",
+    "Its assumptions fail at small piles, impossible draws, energy limits or unavailable return paths.",
+    "The pair table requires both cards in the same hand, no retain or persistent setup, no draw effects, ample energy.",
+    "Monte Carlo intervals quantify sampling uncertainty in this toy model, not model error or real-game uncertainty."
+  ],
+  "flow_balance": [
+    {
+      "label": "skip",
+      "N": 20,
+      "G": 0,
+      "base_draws_needed_per_equivalent_pass": 20,
+      "equivalent_turns_per_pass": {
+        "fraction": "4",
+        "decimal": 4.0
+      },
+      "equivalent_passes_in_12_turns": {
+        "fraction": "3",
+        "decimal": 3.0
+      },
+      "rate_change": {
+        "fraction": "0",
+        "decimal": 0.0
+      }
+    },
+    {
+      "label": "remove_one_inert",
+      "N": 19,
+      "G": 0,
+      "base_draws_needed_per_equivalent_pass": 19,
+      "equivalent_turns_per_pass": {
+        "fraction": "19/5",
+        "decimal": 3.8
+      },
+      "equivalent_passes_in_12_turns": {
+        "fraction": "60/19",
+        "decimal": 3.1578947368421053
+      },
+      "rate_change": {
+        "fraction": "1/19",
+        "decimal": 0.05263157894736842
+      }
+    },
+    {
+      "label": "remove_five_inert",
+      "N": 15,
+      "G": 0,
+      "base_draws_needed_per_equivalent_pass": 15,
+      "equivalent_turns_per_pass": {
+        "fraction": "3",
+        "decimal": 3.0
+      },
+      "equivalent_passes_in_12_turns": {
+        "fraction": "4",
+        "decimal": 4.0
+      },
+      "rate_change": {
+        "fraction": "1/3",
+        "decimal": 0.3333333333333333
+      }
+    },
+    {
+      "label": "add_one_inert",
+      "N": 21,
+      "G": 0,
+      "base_draws_needed_per_equivalent_pass": 21,
+      "equivalent_turns_per_pass": {
+        "fraction": "21/5",
+        "decimal": 4.2
+      },
+      "equivalent_passes_in_12_turns": {
+        "fraction": "20/7",
+        "decimal": 2.857142857142857
+      },
+      "rate_change": {
+        "fraction": "-1/21",
+        "decimal": -0.047619047619047616
+      }
+    },
+    {
+      "label": "add_one_draw_one",
+      "N": 21,
+      "G": 1,
+      "base_draws_needed_per_equivalent_pass": 20,
+      "equivalent_turns_per_pass": {
+        "fraction": "4",
+        "decimal": 4.0
+      },
+      "equivalent_passes_in_12_turns": {
+        "fraction": "3",
+        "decimal": 3.0
+      },
+      "rate_change": {
+        "fraction": "0",
+        "decimal": 0.0
+      }
+    },
+    {
+      "label": "add_one_draw_two",
+      "N": 21,
+      "G": 2,
+      "base_draws_needed_per_equivalent_pass": 19,
+      "equivalent_turns_per_pass": {
+        "fraction": "19/5",
+        "decimal": 3.8
+      },
+      "equivalent_passes_in_12_turns": {
+        "fraction": "60/19",
+        "decimal": 3.1578947368421053
+      },
+      "rate_change": {
+        "fraction": "1/19",
+        "decimal": 0.05263157894736842
+      }
+    }
+  ],
+  "exact_thinning_without_extra_draw": [
+    {
+      "cards": 30,
+      "actual_start_draw": 5,
+      "expected_plays_in_12_turns": {
+        "fraction": "2",
+        "decimal": 2.0
+      },
+      "reason": "Uniform card labels; only start-turn draw; one C; no draw effects; C affordable."
+    },
+    {
+      "cards": 25,
+      "actual_start_draw": 5,
+      "expected_plays_in_12_turns": {
+        "fraction": "12/5",
+        "decimal": 2.4
+      },
+      "reason": "Uniform card labels; only start-turn draw; one C; no draw effects; C affordable."
+    },
+    {
+      "cards": 20,
+      "actual_start_draw": 5,
+      "expected_plays_in_12_turns": {
+        "fraction": "3",
+        "decimal": 3.0
+      },
+      "reason": "Uniform card labels; only start-turn draw; one C; no draw effects; C affordable."
+    },
+    {
+      "cards": 19,
+      "actual_start_draw": 5,
+      "expected_plays_in_12_turns": {
+        "fraction": "60/19",
+        "decimal": 3.1578947368421053
+      },
+      "reason": "Uniform card labels; only start-turn draw; one C; no draw effects; C affordable."
+    },
+    {
+      "cards": 15,
+      "actual_start_draw": 5,
+      "expected_plays_in_12_turns": {
+        "fraction": "4",
+        "decimal": 4.0
+      },
+      "reason": "Uniform card labels; only start-turn draw; one C; no draw effects; C affordable."
+    },
+    {
+      "cards": 10,
+      "actual_start_draw": 5,
+      "expected_plays_in_12_turns": {
+        "fraction": "6",
+        "decimal": 6.0
+      },
+      "reason": "Uniform card labels; only start-turn draw; one C; no draw effects; C affordable."
+    },
+    {
+      "cards": 5,
+      "actual_start_draw": 5,
+      "expected_plays_in_12_turns": {
+        "fraction": "12",
+        "decimal": 12.0
+      },
+      "reason": "Uniform card labels; only start-turn draw; one C; no draw effects; C affordable."
+    },
+    {
+      "cards": 3,
+      "actual_start_draw": 3,
+      "expected_plays_in_12_turns": {
+        "fraction": "12",
+        "decimal": 12.0
+      },
+      "reason": "Uniform card labels; only start-turn draw; one C; no draw effects; C affordable."
+    },
+    {
+      "cards": 1,
+      "actual_start_draw": 1,
+      "expected_plays_in_12_turns": {
+        "fraction": "12",
+        "decimal": 12.0
+      },
+      "reason": "Uniform card labels; only start-turn draw; one C; no draw effects; C affordable."
+    }
+  ],
+  "exact_two_component_coavailability": [
+    {
+      "cards": 30,
+      "probability_A_and_B_in_same_hand": {
+        "fraction": "2/87",
+        "decimal": 0.022988505747126436
+      },
+      "expected_complete_pair_plays_in_12_turns": {
+        "fraction": "8/29",
+        "decimal": 0.27586206896551724
+      }
+    },
+    {
+      "cards": 20,
+      "probability_A_and_B_in_same_hand": {
+        "fraction": "1/19",
+        "decimal": 0.05263157894736842
+      },
+      "expected_complete_pair_plays_in_12_turns": {
+        "fraction": "12/19",
+        "decimal": 0.631578947368421
+      }
+    },
+    {
+      "cards": 15,
+      "probability_A_and_B_in_same_hand": {
+        "fraction": "2/21",
+        "decimal": 0.09523809523809523
+      },
+      "expected_complete_pair_plays_in_12_turns": {
+        "fraction": "8/7",
+        "decimal": 1.1428571428571428
+      }
+    },
+    {
+      "cards": 10,
+      "probability_A_and_B_in_same_hand": {
+        "fraction": "2/9",
+        "decimal": 0.2222222222222222
+      },
+      "expected_complete_pair_plays_in_12_turns": {
+        "fraction": "8/3",
+        "decimal": 2.6666666666666665
+      }
+    },
+    {
+      "cards": 5,
+      "probability_A_and_B_in_same_hand": {
+        "fraction": "1",
+        "decimal": 1.0
+      },
+      "expected_complete_pair_plays_in_12_turns": {
+        "fraction": "12",
+        "decimal": 12.0
+      }
+    },
+    {
+      "cards": 3,
+      "probability_A_and_B_in_same_hand": {
+        "fraction": "1",
+        "decimal": 1.0
+      },
+      "expected_complete_pair_plays_in_12_turns": {
+        "fraction": "12",
+        "decimal": 12.0
+      }
+    }
+  ],
+  "discrete_card_flow_samples": [
+    {
+      "label": "20_card_baseline",
+      "cards": 20,
+      "draw_two_cards": 0,
+      "draw_card_cost": 0,
+      "core_cost": 1,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 3,
+        "core_draws": 3,
+        "reshuffles": 2,
+        "actual_draws": 60,
+        "actions": 3,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "label": "19_after_removing_inert",
+      "cards": 19,
+      "draw_two_cards": 0,
+      "draw_card_cost": 0,
+      "core_cost": 1,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 3.1534,
+        "core_draws": 3.1534,
+        "reshuffles": 3,
+        "actual_draws": 60,
+        "actions": 3.1534,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        3.1404060367778563,
+        3.1663939632221436
+      ]
+    },
+    {
+      "label": "21_with_one_free_draw_two",
+      "cards": 21,
+      "draw_two_cards": 1,
+      "draw_card_cost": 0,
+      "core_cost": 1,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 3.2508,
+        "core_draws": 3.2508,
+        "reshuffles": 3,
+        "actual_draws": 65.8158,
+        "actions": 6.1587,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        3.238198850805037,
+        3.2634011491949626
+      ]
+    },
+    {
+      "label": "21_with_one_cost_one_draw_two",
+      "cards": 21,
+      "draw_two_cards": 1,
+      "draw_card_cost": 1,
+      "core_cost": 1,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 3.2508,
+        "core_draws": 3.2508,
+        "reshuffles": 3,
+        "actual_draws": 65.8158,
+        "actions": 6.1587,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        3.238198850805037,
+        3.2634011491949626
+      ]
+    },
+    {
+      "label": "20_card_core_cost_three",
+      "cards": 20,
+      "draw_two_cards": 0,
+      "draw_card_cost": 0,
+      "core_cost": 3,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 3,
+        "core_draws": 3,
+        "reshuffles": 2,
+        "actual_draws": 60,
+        "actions": 3,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "label": "21_with_draw_two_and_core_cost_three",
+      "cards": 21,
+      "draw_two_cards": 1,
+      "draw_card_cost": 1,
+      "core_cost": 3,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 2.8569,
+        "core_draws": 2.8569,
+        "reshuffles": 2,
+        "actual_draws": 60,
+        "actions": 2.8569,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        2.8498648483542808,
+        2.863935151645719
+      ]
+    },
+    {
+      "label": "one_card_only",
+      "cards": 1,
+      "draw_two_cards": 0,
+      "draw_card_cost": 0,
+      "core_cost": 1,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 12,
+        "core_draws": 12,
+        "reshuffles": 11,
+        "actual_draws": 12,
+        "actions": 12,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        12.0,
+        12.0
+      ]
+    },
+    {
+      "label": "two_cards_C_and_D_free",
+      "cards": 2,
+      "draw_two_cards": 1,
+      "draw_card_cost": 0,
+      "core_cost": 0,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 24,
+        "core_draws": 24,
+        "reshuffles": 23,
+        "actual_draws": 36,
+        "actions": 36,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        24.0,
+        24.0
+      ]
+    },
+    {
+      "label": "three_cards_energy_3",
+      "cards": 3,
+      "draw_two_cards": 2,
+      "draw_card_cost": 0,
+      "core_cost": 1,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 36,
+        "core_draws": 36,
+        "reshuffles": 35,
+        "actual_draws": 72,
+        "actions": 60,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        36.0,
+        36.0
+      ]
+    },
+    {
+      "label": "three_cards_cost_one_draw",
+      "cards": 3,
+      "draw_two_cards": 2,
+      "draw_card_cost": 1,
+      "core_cost": 1,
+      "energy_per_turn": 3,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 24,
+        "core_draws": 24,
+        "reshuffles": 23,
+        "actual_draws": 48,
+        "actions": 36,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        24.0,
+        24.0
+      ]
+    },
+    {
+      "label": "three_cards_energy_6",
+      "cards": 3,
+      "draw_two_cards": 2,
+      "draw_card_cost": 0,
+      "core_cost": 1,
+      "energy_per_turn": 6,
+      "action_cap": 100,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 72,
+        "core_draws": 72,
+        "reshuffles": 71,
+        "actual_draws": 144,
+        "actions": 132,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        72.0,
+        72.0
+      ]
+    },
+    {
+      "label": "three_cards_free_but_six_actions",
+      "cards": 3,
+      "draw_two_cards": 2,
+      "draw_card_cost": 0,
+      "core_cost": 0,
+      "energy_per_turn": 3,
+      "action_cap": 6,
+      "samples": 10000,
+      "seed_range": [
+        0,
+        9999
+      ],
+      "mean_counts": {
+        "core_plays": 36,
+        "core_draws": 48,
+        "reshuffles": 47,
+        "actual_draws": 96,
+        "actions": 72,
+        "guard_hit": 0
+      },
+      "core_plays_mean_95pct_mc_interval": [
+        36.0,
+        36.0
+      ]
+    }
+  ],
+  "repeatable_free_cycle_witnesses": [
+    {
+      "all_costs_zero": true,
+      "no_action_or_draw_cap": true,
+      "identical_state_return": true,
+      "net_core_plays": 2,
+      "core_component_count": 1,
+      "net_complete_combos": 2,
+      "each_D_draws": 2,
+      "deck_cards": 3,
+      "draw_order_irrelevant_because_all_available_cards_drawn": true,
+      "trace": [
+        {
+          "action": "start",
+          "hand": [
+            "C1",
+            "D1"
+          ],
+          "discard": [
+            "D2"
+          ],
+          "plays": 0
+        },
+        {
+          "action": "C1",
+          "hand": [
+            "D1"
+          ],
+          "discard": [
+            "D2",
+            "C1"
+          ],
+          "plays": 1
+        },
+        {
+          "action": "D1",
+          "hand": [
+            "C1",
+            "D2"
+          ],
+          "discard": [
+            "D1"
+          ],
+          "plays": 1
+        },
+        {
+          "action": "C1",
+          "hand": [
+            "D2"
+          ],
+          "discard": [
+            "D1",
+            "C1"
+          ],
+          "plays": 2
+        },
+        {
+          "action": "D2",
+          "hand": [
+            "C1",
+            "D1"
+          ],
+          "discard": [
+            "D2"
+          ],
+          "plays": 2
+        }
+      ],
+      "meaning": "Positive-output cycle exists in this abstract model only; no actual STS2 combination claimed."
+    },
+    {
+      "all_costs_zero": true,
+      "no_action_or_draw_cap": true,
+      "identical_state_return": true,
+      "net_core_plays": 4,
+      "core_component_count": 2,
+      "net_complete_combos": 2,
+      "each_D_draws": 3,
+      "deck_cards": 4,
+      "draw_order_irrelevant_because_all_available_cards_drawn": true,
+      "trace": [
+        {
+          "action": "start",
+          "hand": [
+            "C1",
+            "C2",
+            "D1"
+          ],
+          "discard": [
+            "D2"
+          ],
+          "plays": 0
+        },
+        {
+          "action": "C1",
+          "hand": [
+            "C2",
+            "D1"
+          ],
+          "discard": [
+            "D2",
+            "C1"
+          ],
+          "plays": 1
+        },
+        {
+          "action": "C2",
+          "hand": [
+            "D1"
+          ],
+          "discard": [
+            "D2",
+            "C1",
+            "C2"
+          ],
+          "plays": 2
+        },
+        {
+          "action": "D1",
+          "hand": [
+            "C1",
+            "C2",
+            "D2"
+          ],
+          "discard": [
+            "D1"
+          ],
+          "plays": 2
+        },
+        {
+          "action": "C1",
+          "hand": [
+            "C2",
+            "D2"
+          ],
+          "discard": [
+            "D1",
+            "C1"
+          ],
+          "plays": 3
+        },
+        {
+          "action": "C2",
+          "hand": [
+            "D2"
+          ],
+          "discard": [
+            "D1",
+            "C1",
+            "C2"
+          ],
+          "plays": 4
+        },
+        {
+          "action": "D2",
+          "hand": [
+            "C1",
+            "C2",
+            "D1"
+          ],
+          "discard": [
+            "D2"
+          ],
+          "plays": 4
+        }
+      ],
+      "meaning": "Positive-output cycle exists in this abstract model only; no actual STS2 combination claimed."
+    }
+  ],
+  "three_card_loop_energy_bound": "k <= floor((E + draw_cost)/(core_cost + draw_cost)), positive denominator; first core already in hand",
+  "three_card_loop_action_bound": "k <= floor((A + 1)/2), one core plus one draw action per extra repetition",
+  "multi_component_loop_bound": {
+    "energy": "complete_combos <= floor((E + draw_cost)/(total_combo_cost + draw_cost))",
+    "actions": "complete_combos <= floor((action_cap + 1)/(component_count + 1))",
+    "assumptions": "All core components initially held; each legal redraw retrieves the full combo and a reusable D; no setup fee, energy gain, retain or other restrictions. These are resource upper bounds for the witness architecture only."
+  },
+  "verification": "Exact pair enumeration, deterministic scenario assertions and no numerical guard hits passed."
+}
