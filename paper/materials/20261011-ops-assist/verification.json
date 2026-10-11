@@ -1,0 +1,82 @@
+{
+  "status": "implemented-tested-not-integrated",
+  "authorization": "Roy 2026-10-11: 好的，这样安排，让ops可以开启一些辅助session",
+  "branch": "fix/ops-assist-sessions-20261011",
+  "base": "acf2611db281456c63915a98b0995d3d04bcd35a",
+  "implementation": {
+    "broker_actions": [
+      "ops-assist <request-id>",
+      "ops-assist-status"
+    ],
+    "max_workers": 2,
+    "explicit_dispatch_only": true,
+    "no_original_event_consumption": true,
+    "no_live_mutation": true,
+    "permission_profile": "learner-derived ops_assist, all filesystem read-only, key/env denied, no network",
+    "read_scope": "Input validation and task instructions restrict evidence/character; other nonsecret business files are OS-readable",
+    "hosting": "Existing learners hosting setting; Herdr terminal panes close through original helper and archive their final output"
+  },
+  "validation": {
+    "sandbox_initial": {
+      "tsc": 0,
+      "files": 265,
+      "tests_passed": 2674,
+      "tests_failed": 1,
+      "log": "tests/sandbox-full-1.log"
+    },
+    "failure": "Existing rollout-live test expected 5 turns; under four-worker resource contention the time-budget fallback produced 3 turns. No game source/test changed.",
+    "targeted_recheck": {
+      "exit": 0,
+      "tests_passed": 1,
+      "log": "tests/rollout-budget-recheck.log"
+    },
+    "paths_followup": {
+      "exit": 0,
+      "tests_passed": 11,
+      "log": "tests/paths-final.log"
+    },
+    "unique_sandbox_coverage": {
+      "files": 266,
+      "tests": 2686
+    },
+    "python_lifecycle": {
+      "exit": 0,
+      "tests": 13,
+      "log": "tests/unit-python-13-final.log"
+    },
+    "broker_contract": {
+      "exit": 0,
+      "tests": 3,
+      "log": "tests/broker-contract-1.log"
+    },
+    "actual_codex_sandbox": {
+      "exit": 0,
+      "write_targets_denied": 6,
+      "key_files_zero_byte_open_denied": 9,
+      "log": "tests/sandbox-probe-host-keys-final.json"
+    },
+    "early_failures_retained": [
+      "tests/unit-ts-1.log",
+      "tests/sandbox-probe-1.json",
+      "tests/sandbox-probe-host-2.json"
+    ],
+    "gitleaks": {
+      "exit": 0,
+      "log": "tests/gitleaks-staged-final.log"
+    },
+    "raw_log_whitespace": "Original Vitest logs retain their emitted final blank line; source/docs pass strict diff check. Logs are not normalized."
+  },
+  "not_performed": [
+    "No real model session dispatched",
+    "No main/live integration",
+    "No play, scheduler/cron or ops prompt changes",
+    "No push"
+  ],
+  "operation": "docs/ops-assist.md; two validated-only infrastructure requests in ops/assist-examples",
+  "limitations": [
+    "Read scope is task-enforced; OS enforces no writes and masks known secrets.",
+    "A lost wrapper with surviving engine descendants retains its slot until a host status/next dispatch reconciles it.",
+    "No automatic retry/dispatch or new wake scheduler; original queue/tick delivers results.",
+    "Herdr and model integration used fixed fake fixtures; production smoke tests belong to parent ops after integration."
+  ]
+}

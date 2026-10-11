@@ -1,0 +1,37 @@
+{
+  "code": 1,
+  "signal": null,
+  "error": "spawnSync /home/dw/.local/node/bin/codex EPERM",
+  "stdout": "",
+  "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\nerror building bubblewrap command: app-server socket directory must be a user-owned directory with mode 0700\n",
+  "checks": {
+    "evidenceRead": false,
+    "forbiddenWrites": [
+      {
+        "path": "/tmp/ops-assist-sandbox-g3EZIB/main/.worktrees/task/ops/codex-ops/assist/jobs/probe/input/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-g3EZIB/main/.worktrees/task/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-g3EZIB/main/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-g3EZIB/main/.worktrees/live/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-g3EZIB/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-g3EZIB/main/ops/codex-ops/broker/probe-write",
+        "absent": true
+      }
+    ],
+    "evidenceUnchanged": true
+  }
+}
