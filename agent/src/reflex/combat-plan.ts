@@ -23,6 +23,7 @@ import { choiceQ } from "./jev/questions.js";
 import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { observedDemonPoison } from "./silent-demon-potion.js";
+import { crabPoisonFacts } from "./silent-crab-potion.js";
 import { carrySilentSkittish } from "./silent-skittish.js";
 import { silentLossReference } from "./silent-loss-reference.js";
 import { silentSimulationReference } from "./silent-simulation-reference.js";
@@ -3904,6 +3905,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               ? "not this turn: which potions it gives is random, so no HP or damage numbers until they are in hand (the re-planned turn simulates them)"
               : "no: this potion's effect is not simulated, so no HP or damage numbers for it",
           offered: UNSIMULATED_OFFERED,
+          ...crabPoisonFacts(state, potion.potion_id, target),
           note: `the cheapest card plan alone: ${hpText(Math.min(...options.map((plan) => plan.outcome.hpLoss)))} this turn`,
           ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : planOffer(potion.potion_id) === true ? { fight_plan: "says now" } : {}),
           ...(costsOn ? { potion_cost: `drinking it costs ${costs.get(potion.potion_id) ? potionCostText(costs.get(potion.potion_id)!) : "0 (no conversion value in the potion table)"}` } : {}),
