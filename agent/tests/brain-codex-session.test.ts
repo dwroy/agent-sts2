@@ -153,7 +153,7 @@ function sessionEngine(fake: { bin: string; state: string }, opts: { env?: Recor
   writeFileSync(join(home, "auth.json"), "{}");
   if (opts.config !== null) writeFileSync(join(home, "config.toml"), opts.config ?? 'model = "gpt-6.1-sol"\nmodel_reasoning_effort = "xhigh"\n[tui]\nscreen_reader_detection_done = true\n');
   if (opts.agents) writeFileSync(join(home, "AGENTS.md"), opts.agents);
-  const cfg = loadConfig({ BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home, BRAIN_LOG: "off", BRAIN_CODEX_MODE: "session", ...(opts.env ?? {}) } as unknown as NodeJS.ProcessEnv);
+  const cfg = loadConfig({ BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home, BRAIN_LOG: "off", BRAIN_CODEX_MODE: "session", ...(opts.env ?? {}) } as unknown as NodeJS.ProcessEnv);
   const traceFile = join(fake.state, "codex-calls.jsonl");
   const notes: string[] = [];
   const stateDir = join(fake.state, "codex-state");
@@ -177,10 +177,10 @@ describe("codex session mode", () => {
     expect(servers.size).toBe(1);
     expect(reqs.map((r) => r.method)).toEqual(["initialize", "thread/list", "thread/start", "turn/start", "thread/revert", "turn/start", "thread/revert"]);
     const start = reqs.find((r) => r.method === "thread/start")!.params;
-    expect(start).toMatchObject({ model: "gpt-6.1-sol", serviceTier: "priority", approvalPolicy: "never", sandbox: "read-only", baseInstructions: "SYSTEM PROMPT v1", ephemeral: false, threadSource: "jev-brain" });
+    expect(start).toMatchObject({ model: "gpt-6.1-sol", serviceTier: "default", approvalPolicy: "never", sandbox: "read-only", baseInstructions: "SYSTEM PROMPT v1", ephemeral: false, threadSource: "jev-brain" });
     expect(start["cwd"].startsWith(sessionCwdRoot(join(fake.state, "codex-state")))).toBe(true);
     const turns = reqs.filter((r) => r.method === "turn/start").map((r) => r.params);
-    expect(turns.map((turn) => turn["serviceTier"])).toEqual(["priority", "priority"]);
+    expect(turns.map((turn) => turn["serviceTier"])).toEqual(["default", "default"]);
     expect(turns[0]).toMatchObject({ threadId: "thr-1", effort: "xhigh", summary: "auto", model: "gpt-6.1-sol", outputSchema: codexSchema(codexKindSchema(pickSpec("rest/plan", options, {}), { fields: "used", reasonLast: false }), { routeReason: "drop", maxFieldChars: 600 }) });
     // A pick that uses no optional field gets choice and reason only (BRAIN_CODEX_SCHEMA_FIELDS=used, the default).
     expect(Object.keys((turns[0]!["outputSchema"] as { properties: object }).properties)).toEqual(["choice", "reason"]);

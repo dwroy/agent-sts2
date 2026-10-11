@@ -15,6 +15,11 @@ checks = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checks)
 
 
+POLICY = ["-c", 'model="gpt-6-astra"', "-c", 'model_reasoning_effort="xhigh"',
+          "-c", 'service_tier="default"', "-c", 'model_context_window=512000',
+          "-c", 'model_auto_compact_token_limit=460800']
+
+
 class LearnerLauncher(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -23,7 +28,7 @@ class LearnerLauncher(unittest.TestCase):
         (self.root / "ops").mkdir()
         (self.root / "agent/node_modules/.bin").mkdir(parents=True)
         (self.root / "bin").mkdir()
-        for name in ("paths.sh", "codex-ops-learner.sh", "codex-fast.sh", "codex-learner.sh"):
+        for name in ("paths.sh", "codex-ops-learner.sh", "codex-fast.sh", "codex-learner.sh", "codex-policy.sh"):
             shutil.copy2(REPO / "ops" / name, self.root / "ops" / name)
         self.wrapper = self.root / "ops/codex-learner.sh"
         self.legacy_wrapper = self.root / "ops/codex-fast.sh"
@@ -49,8 +54,9 @@ class LearnerLauncher(unittest.TestCase):
         err = self.root / "ops/codex-ops/learner/20260101-000001-experience-update.err"
         self.assertEqual(result.returncode, 0, result.stderr + (err.read_text() if err.exists() else ""))
         args = json.loads((err.with_suffix(".out")).read_text())
-        self.assertFalse(any(arg.startswith("service_tier=") for arg in args))
-        self.assertIn('model="fixture"', args)
+        self.assertIn('service_tier="default"', args)
+        self.assertIn("model_context_window=512000", args)
+        self.assertIn('model="gpt-6-astra"', args)
         self.assertIn('model_reasoning_effort="xhigh"', args)
         self.assertEqual(args[-2:], ["--", "/fixture/check"])
         launcher = (self.root / "launcher-args").read_text().splitlines()
@@ -96,9 +102,9 @@ class LearnerLauncher(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             args = json.loads(result.stdout)
             if command[0] == "exec":
-                self.assertEqual(args, ["exec", "--ignore-user-config", "-", "--model", "gpt-6-astra", "-c", 'model_reasoning_effort="xhigh"'])
+                self.assertEqual(args, ["exec", "--ignore-user-config", "-", *POLICY])
             else:
-                self.assertEqual(args, ["sandbox", "--", "/fixture/check", "-c", 'service_tier="child-arg"'])
+                self.assertEqual(args, ["sandbox", *POLICY, "--", "/fixture/check", "-c", 'service_tier="child-arg"'])
 
     def legacy_call(self, command, **env):
         result = subprocess.run(["bash", str(self.legacy_wrapper), *command],
@@ -123,9 +129,7 @@ class LearnerLauncher(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 base = self.root / "ops/codex-ops/learner/20260101-000001-experience-update"
                 args = json.loads(base.with_suffix(".out").read_text())
-                self.assertEqual(args, ["exec", "--ignore-user-config", "-c", 'default_permissions="learner"', "-",
-                                        "--model", "gpt-6-astra", "-c", 'model_reasoning_effort="xhigh"'])
-                self.assertIn("effective model=gpt-6-astra effort=xhigh fast=off", base.with_suffix(".err").read_text())
+                self.assertEqual(args, ["exec", "--ignore-user-config", "-c", 'default_permissions="learner"', "-", *POLICY])
                 self.assertNotIn("--model", (self.root / "launcher-args").read_text().splitlines())
 
     def test_precise_learner_profiles_strip_fast_and_preserve_sandbox_child(self):
@@ -134,32 +138,36 @@ class LearnerLauncher(unittest.TestCase):
             args, err = self.legacy_call(["exec", "--ignore-user-config", *profile, "--model=gpt-6.1-sol",
                                          "-c", 'model="old-model"', "--config=model_reasoning_effort=high", "-"])
             self.assertNotIn('service_tier="priority"', args)
-            self.assertIn("gpt-6-astra", args)
+            self.assertIn('model="gpt-6-astra"', args)
             self.assertIn('model_reasoning_effort="xhigh"', args)
-            self.assertIn("legacy overrides replaced", err)
+            self.assertEqual(err, "")
         child = ["--", "/fixture/check", "--model", "child-model", "-c", 'service_tier="child-tier"']
         for profile in (["-P", "learner"], ["--permission-profile", "learner"], ["--permission-profile=learner"]):
             args, err = self.legacy_call(["sandbox", *profile, "-c", 'permissions.learner.filesystem={}', "-c", 'service_tier="priority"', *child])
-            self.assertEqual(args, ["sandbox", *profile, "-c", 'permissions.learner.filesystem={}', *child])
+            self.assertEqual(args, ["sandbox", *profile, "-c", 'permissions.learner.filesystem={}', *POLICY, *child])
             self.assertEqual(err, "")
 
     def test_last_permission_profile_controls_routing(self):
         for command in (["exec", "-c", 'default_permissions="learner"', "--config=default_permissions=ops"],
                         ["sandbox", "-P", "learner", "--permission-profile=ops"]):
             args, _ = self.legacy_call(command)
-            self.assertEqual(args, [*command, "-c", 'service_tier="priority"'])
+            self.assertEqual(args, [*command, *POLICY])
         for command in (["exec", "--config=default_permissions=ops", "-c", 'default_permissions="learner"'],
                         ["sandbox", "-P", "ops", "--permission-profile=learner"]):
             args, _ = self.legacy_call(command)
             self.assertNotIn('service_tier="priority"', args)
 
-    def test_ops_play_and_child_profile_keep_fast_despite_learner_environment(self):
+    def test_ops_play_and_child_profile_use_same_policy_despite_learner_environment(self):
         for command in (["exec", "--model", "gpt-6.1-sol", "-c", 'default_permissions="ops"'],
                         ["exec", "--model", "gpt-6.1-sol"], ["app-server"],
                         ["sandbox", "-P", "ops", "--", "sh", "-c", 'default_permissions="learner"']):
             args, err = self.legacy_call(command, LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_LEARNER_BIN=str(self.wrapper))
             at = command.index("--") if "--" in command else len(command)
-            self.assertEqual(args, [*command[:at], "-c", 'service_tier="priority"', *command[at:]])
+            prefix = command[:at].copy()
+            if "--model" in prefix:
+                i = prefix.index("--model")
+                del prefix[i:i + 2]
+            self.assertEqual(args, [*prefix, *POLICY, *command[at:]])
             self.assertEqual(err, "")
 
     def test_legacy_routing_fails_closed_for_recursive_native(self):

@@ -131,7 +131,7 @@ function codexHome(name: string, files: Record<string, string> = { "auth.json": 
 }
 
 function config(bin: string, home: string, env: Record<string, string> = {}): ReturnType<typeof loadConfig> {
-  return loadConfig({ BRAIN_CODEX_BIN: bin, BRAIN_CODEX_HOME: home, BRAIN_LOG: "off", ...env } as unknown as NodeJS.ProcessEnv);
+  return loadConfig({ BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_BIN: bin, BRAIN_CODEX_HOME: home, BRAIN_LOG: "off", ...env } as unknown as NodeJS.ProcessEnv);
 }
 
 function engine(bin: string, home: string, env: Record<string, string> = {}): CodexEngine {
@@ -169,7 +169,7 @@ describe("codex engine", () => {
       "tools.experimental_request_user_input={ enabled = false }", 'history.persistence="none"', "analytics.enabled=false",
       'model_reasoning_effort="xhigh"', 'model_reasoning_summary="auto"',
     ]));
-    expect(settings.filter((s) => s.startsWith("service_tier="))).toEqual(['service_tier="priority"']);
+    expect(settings.filter((s) => s.startsWith("service_tier="))).toEqual(['service_tier="default"']);
     const disabled = argv.flatMap((arg, i) => (argv[i - 1] === "--disable" ? [arg] : []));
     expect(disabled).toEqual([...CODEX_DISABLED_FEATURES]);
     for (const feature of ["hooks", "memories", "plugins", "apps", "multi_agent", "shell_tool", "unified_exec"]) expect(disabled).toContain(feature);
@@ -209,7 +209,7 @@ describe("codex engine", () => {
     const answer = await engine(fake.bin, codexHome("models"), { BRAIN_CODEX_MODEL: "gpt-6-astra", BRAIN_CODEX_MODEL_REST: "gpt-6.1-sol", BRAIN_CODEX_EFFORT: "max", BRAIN_CODEX_SERVICE_TIER: "priority", BRAIN_CODEX_SUMMARY: "detailed" }).decide(request());
     const argv = fake.seen()[0]!.argv;
     expect(argv[argv.indexOf("--model") + 1]).toBe("gpt-6.1-sol");
-    expect(argv).toEqual(expect.arrayContaining(['model_reasoning_effort="max"', 'service_tier="priority"', 'model_reasoning_summary="detailed"']));
+    expect(argv).toEqual(expect.arrayContaining(['model_reasoning_effort="max"', 'service_tier="default"', 'model_reasoning_summary="detailed"']));
     expect(answer).toMatchObject({ model: "gpt-6.1-sol", effort: "max" });
   });
 
@@ -595,16 +595,16 @@ describe("the codex start-up check", () => {
     writeFileSync(installed, "#!/bin/sh\n");
     chmodSync(installed, 0o755);
     const brain = (env: Record<string, string>) => loadConfig({ HOME: home, PATH: "/nonexistent", ...env } as unknown as NodeJS.ProcessEnv).brain;
-    expect(brain({}).codex).toMatchObject({ bin: installed, home: join(home, ".codex"), summary: "auto", serviceTier: "priority", stallMs: 120_000, firstTokenMs: null, stallRetries: 1 });
+    expect(brain({}).codex).toMatchObject({ bin: installed, home: join(home, ".codex"), summary: "auto", serviceTier: "default", stallMs: 120_000, firstTokenMs: null, stallRetries: 1 });
     expect(brain({ BRAIN_CODEX_STALL_MS: "off", BRAIN_CODEX_FIRST_TOKEN_MS: "240000", BRAIN_CODEX_STALL_RETRIES: "0" }).codex).toMatchObject({ stallMs: null, firstTokenMs: 240_000, stallRetries: 0 });
     expect(brain({ PATH: join(home, ".local", "node", "bin") }).codex.bin).toBe(installed);
     expect(brain({ BRAIN_CODEX_BIN: "/opt/codex" }).codex.bin).toBe("/opt/codex");
     expect(brain({ CODEX_HOME: "/c" }).codex.home).toBe("/c");
     expect(brain({ CODEX_HOME: "/c", BRAIN_CODEX_HOME: "/b" }).codex.home).toBe("/b");
-    expect(brain({ BRAIN_CODEX_SERVICE_TIER: "default" }).codex.serviceTier).toBe("priority");
-    // Defaults: gpt-6.1-sol at xhigh, 10 minutes, no call limit, no tools; BRAIN_ENGINE stays deepseek.
+    expect(brain({ BRAIN_CODEX_SERVICE_TIER: "default" }).codex.serviceTier).toBe("default");
+    // Defaults: gpt-6-astra at xhigh, 10 minutes, no call limit, no tools; BRAIN_ENGINE stays deepseek.
     expect(brain({}).engine).toBe("deepseek");
-    expect(brain({}).engines.codex).toMatchObject({ model: "gpt-6.1-sol", effort: "xhigh", timeoutMs: 600_000, maxCalls: null });
+    expect(brain({}).engines.codex).toMatchObject({ model: "gpt-6-astra", effort: "xhigh", timeoutMs: 600_000, maxCalls: null });
     expect(brain({ BRAIN_CODEX_EFFORT: "high" }).engines.codex.effort).toBe("high");
     // xhigh is an effort for every engine now; the old values still parse.
     expect(brain({ BRAIN_CLAUDE_EFFORT: "xhigh" }).engines.claude.effort).toBe("xhigh");

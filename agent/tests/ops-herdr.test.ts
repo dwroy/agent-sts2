@@ -70,8 +70,8 @@ describe("interactive TUI arguments", () => {
     expect(args.slice(1, 3)).toEqual(["--cd", root]);
     expect(args).toContain(`default_permissions="${OPS_PROFILE}"`);
     expect(args).toContain('approval_policy="never"');
-    expect(args).toContain('service_tier="priority"');
-    expect(args).toContain("model_auto_compact_token_limit=200000");
+    expect(args).toContain('service_tier="default"');
+    expect(args).toContain("model_auto_compact_token_limit=460800");
     expect(args).toContain("hooks"); // --disable hooks: no hook (herdr's or anyone's) runs in the ops TUI
     expect(args.find((arg) => arg.startsWith(`permissions.${OPS_PROFILE}.filesystem=`))).toContain(`"${join(home, ".jev_api_keys")}" = "none"`);
     expect(() => interactiveArgs(request, "x; rm -rf /")).toThrow();

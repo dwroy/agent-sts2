@@ -1,7 +1,7 @@
 /**
  * Codex as a brain engine: headless `codex exec` (codex-cli 0.160, npm @openai/codex) under this machine's ChatGPT
  * login (`codex login` in ~/.codex: the subscription; Roy 2026-10-03), one process per call. Model and effort are
- * always sent (default gpt-6.1-sol at xhigh: config.ts DEFAULT_CODEX_MODEL / DEFAULT_CODEX_EFFORT).
+ * always sent (default gpt-6-astra at xhigh: config.ts DEFAULT_CODEX_MODEL / DEFAULT_CODEX_EFFORT).
  *
  * - Isolation (measured 2026-10-03, experiments/brain-replay/codex-isolation.md): the model sees our system prompt
  *   (as codex's base instructions: model_instructions_file) and the user message, nothing else, and has no tool.
@@ -54,7 +54,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFil
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join } from "node:path";
 
-import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
+import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
 import type { JsonSchema } from "../tools/types.js";
 import { EngineFailure, labelPrefix, withNotes, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
@@ -231,6 +231,8 @@ export function codexConfig(opts: { systemFile: string; catalogFile: string; sta
     `sqlite_home=${toml(opts.stateDir)}`,
     `log_dir=${toml(join(opts.stateDir, "log"))}`,
     `model_reasoning_effort=${toml(opts.effort)}`,
+    `model_context_window=${CODEX_CONTEXT_WINDOW}`,
+    `model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKENS}`,
     `model_reasoning_summary=${toml(opts.summary)}`,
     ...(opts.serviceTier ? [`service_tier=${toml(opts.serviceTier)}`] : []),
   ];
