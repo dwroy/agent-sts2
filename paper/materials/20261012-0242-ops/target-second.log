@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-021301/agent
+
+ ❯ tests/silent-demon-input.test.ts (23 tests | 1 failed) 118ms
+   × all six fixed drinks enter the actual solver as six poison, despite the spent manual play cap 66ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-demon-input.test.ts > all six fixed drinks enter the actual solver as six poison, despite the spent manual play cap
+AssertionError: expected { index: 101, key: 'p1', …(28) } to match object { poison: 6, known: true, damage: +0 }
+(27 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "damage": 0,
++   "damage": null,
+    "known": true,
+    "poison": 6,
+  }
+
+ ❯ tests/silent-demon-input.test.ts:123:20
+    121|     const input = inputFor(raw);
+    122|     const potion = input.hand.find((c) => c.cardId === "POTION:POISON_…
+    123|     expect(potion).toMatchObject({ poison: 6, known: true, damage: 0 }…
+       |                    ^
+    124|     expect(input.player.maxPlays).toBe(0);
+    125|     const enemy = pair.before.combat.enemies[0]!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 22 passed (23)
+   Start at  02:22:01
+   Duration  2.01s (transform 1.38s, setup 448ms, import 1.22s, tests 118ms, environment 0ms)
+

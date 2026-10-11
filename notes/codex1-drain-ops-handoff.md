@@ -145,3 +145,5 @@ N1整局报告、SB5复盘闭环、213504/214301/223051固定候选、正式量�
 - 2026-10-12 02:22:51 CST 补验续记：011302-fix实际live415982981/tree06e61cfd完整宿主检查343文件3682通过2跳已确认，02:05接续中的host_recheck待办已完成，其余未完成事项保持。N1缺报与缺broker动作情况不变，015818仍running；回执paper/materials/20261012-0222-ops/receipt.json。
 
 - 2026-10-12 02:34:45 CST 015818完成接续：17固定源及测试契约已S1.legacy17-1上线（代码a8b1f8be1，实际live7bf7e0e5d），main源码66283dd99；22项限定上线、0079/0332仅记录审计诊断子项。完整宿主检查待事件。量化有界入口已部署，但本轮旧内存broker拒绝新ID，原续办queued/actual_batch=null，下一wake重载后按既有strategy-proposal动作调用；父四成果及条件推送不关闭。回执paper/materials/20261012-0226-ops/continuation.json。
+
+- 2026-10-12 02:48:02 CST 02:42续记：17源宿主完整361文件3828通过2跳已确认；021301两个输入子项上线S1.demon-input1（live8b886744b），原10宽提案保持waiting，新树宿主检查待回调。量化已沿原续办ID真实派024317/PID2907432/wJ:pMN，9输入/42产物和codex1真实消费已核；活批冻结父/续办请求不再修改，四成果/brain/N1及条件推送仍未完成。索引paper/materials/20261012-0242-ops/continuation.json。

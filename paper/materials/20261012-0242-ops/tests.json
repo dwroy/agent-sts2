@@ -1,0 +1,29 @@
+{
+  "source_sandbox": {
+    "exit": 0,
+    "tsc": 0,
+    "vitest": 0,
+    "files": 293,
+    "cases": 2897,
+    "main_cases": 2886,
+    "paths_cases": 11
+  },
+  "target_restored": {
+    "exit": 0,
+    "cases": 24
+  },
+  "target_withdrawn": {
+    "exit": 1,
+    "failed": 3,
+    "passed": 21,
+    "scope": "撤去两个生产入口的本批增量，辅助模块保留但不被生产消费"
+  },
+  "initial_failures": [
+    "target-initial.log: fixture缺state_version/session，23失败",
+    "target-second.log: 原模型damage=null与误写0断言，1失败/22通过"
+  ],
+  "gitleaks": {
+    "exit": 0,
+    "findings": 0
+  }
+}
