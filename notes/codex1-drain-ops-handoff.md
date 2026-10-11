@@ -1,0 +1,80 @@
+# codex → codex1：主 ops drain 交接
+
+**ready_to_drain** — 2026-10-11 22:34:06 CST。旧 ops 当前事务完成并原地空闲；这不代表全部任务已排空或账号切换完成。
+
+Roy 最新授权统一 LLM 切换能力，watcher 在独立树 `codex-account-drain-20261011` 实现状态/配置切换。旧 ops 不再派学习、研究、辅助或新局；不再停止/重启任何 play/autoplay，不改 session-id、auth、env、cron 或 flags。两 codex1 隔离 home 已通过模型及 key 隔离预检是 watcher 的交付说明，本 ops 未读取凭据或切账号。
+
+## 会话、队列与所有者
+
+- 当前主 ops session：`01a10725-17b7-7702-a5ab-917d414a0c77`；Herdr `wJ:p5`，原宿主 Codex PID `1910306`。保留当前会话，不退出，不跨账号 resume。
+- `ops/codex-ops/queue/`、`learn.json`、原 `learn.lock`/wake 串行与归档仍归原调度器；本交接没有消费、搬走、重登记或改写事件。watcher 排空后使用 codex1 **新会话**接同一队列。
+- 当前 ops 未持有 live-merge/learn 锁；不抢其他活批的锁或工作树。没有新辅助；辅助终态见本交接快照。
+- 自动派发 drain 闸由 watcher 负责；旧 ops 不声称它已安装或全系统已禁派。需覆盖 tick、完成后 check_jobs、手工学习/研究/辅助、新局等原入口；不另开调度器。
+- 精确批次、辅助与队列 SHA 快照：`paper/materials/20261011-codex1-drain-handoff/handoff-snapshot.json`。
+
+待原链处理的队列快照：
+
+- `ops/codex-ops/queue/1791728175910693928-strategy-done.md`
+- `ops/codex-ops/queue/1791728570049453452-strategy-done.md`
+- `ops/codex-ops/queue/1791729051070862365-learner-done.md`
+
+## 当前 play / 父 loop / 原错误
+
+同一局 **N1ZEBMHZM4KC**。当前恢复后的 **play PID `2548521`**，包装链 `2548334 → 2548483 → 2548491 → 2548521`；宿主原回执 `host-procs-after-recovery.log`。旧 ops 不再操作这些进程。
+
+22:23:26，旧 ops 错把 `ops/STOP` 当成仅局末生效的标记；实际 `agent/src/brain/wait.ts` 也监听它，22:23:27 取消 F18 `event/act-plan`，原 play `2493498` 结束，原 loop `3149336` 随后退出。**此为本轮 ops 误操作，不能倒填“全程未中断”。** 存档决策保留；原 console、`logs/brain-wait.jsonl` 不改写，取消 marker 原字节已归档。
+
+22:25:18 撤回本次空 STOP；22:26:56 将取消 marker 原字节留档后清除当前待恢复标记，仅经既有 `autoplay-start` 恢复同一存档。22:27:03 console 明确 `run N1ZEBMHZM4KC in progress: rebuilt ...`；22:27:44 Codex 返回原 F18 决策。没有新 run id、跨号 resume、账号或配置改动。
+
+恢复父 loop **`2548303`** 已通过既有 `autoplay-stop` 收到 **SIGTERM**，动作打印 `stopped autoplay PID 2548303` 并删除原 autoplay.pid。随后宿主仍列出该 Bash 与 play：前台子进程未结束时，Bash TERM trap 可以延后执行，**不能把动作文案当作父进程已消失**。当前 play 保留运行，旧 ops 此后不再动进程或 flags。
+
+**本局报告预计不会由该父 loop 自动生成**：它的 TERM trap 是 `exit 143`，等待返回时退出，正常的后续 `report.py` 和下一局循环都预计不再执行。继任者须等同一局真实结束后，核 console 终态与 `logs/runs.jsonl`，对确实缺失的该局按既有报告闭环补收一次；不得用新开局代替报告，不重复记胜负/复盘。此为明确待办，不宣称已补报。
+
+后续 drain 使用 watcher 可拥有、可核验的标准状态/闸，不再由旧 ops 复用 STOP。快照中 STOP 不存在、autoplay.pid 不存在只是时点信息，不覆写 watcher 后续状态。
+
+原件目录 `paper/materials/20261011-codex1-drain-handoff/`：
+
+- `stop-boundary-receipt.json`：原错误操作意图，已由 correction 推翻，保留原件。
+- `stop-marker-correction.json`、`brain-wait-cancelled-original.json`、`saved-run-before-recovery.json`。
+- `same-run-recovery-intent.json`、`same-run-recovery-start.log`、`stop-next-run-parent.log`。
+- `host-procs-before-stop.log`、`host-procs-after-recovery.log`、`same-run-resumed-console-prefix.log`。
+- `evidence-manifest.json`：逐文件 SHA。恢复不覆盖原失败；最后这些归档/交接步骤无进程或 flags 写入。
+
+## 已启动批次：自然完成，保留租约与输入
+
+| 批次 | wrapper PID | Herdr | 范围 |
+| --- | --- | --- | --- |
+| 20261011-214301-fix-batch | 2447341 | wJ:pKZ | 宿主定向检查入口/main夹具修复 |
+| 20261011-220116-fix-batch | 2492561 | wJ:pK0 | 原独立 B4/B5 校准 |
+| 20261011-221722-strategy-proposal | 2527220 | wJ:pM3 | 正式量化实现，原三提案 |
+| 20261011-223051-experience-update | 2555812 | wJ:pM4 | experience-update |
+| 20261011-223051-strategy-proposal | 2555942 | wJ:pM5 | strategy-proposal |
+
+这是只读 learn.json 时点快照，终态须以原完成事件和宿主身份核实，不能用沙箱 PID 不可见误标 lost。原213504策略批 failed/rc0 与221302策略批完成事件留原队列，不伪改done或自动重派。
+
+**正式量化请求全部继承**：`roy-20261011-silent-core-cycle-quantitative-learning`；canonical `notes/core-cycle-quantitative-learning-request.json`。实际批 `20261011-221722-strategy-proposal` / wrapper2527220 / engine2528940（原 launcher stderr）/ pane `wJ:pM3` / 树 `.worktrees/codex-strategy-silent-20261011-221722`。已核真实模型题面、thread/turn与读证据，回执 `paper/materials/20261011-2212-ops/formal-dispatch-receipt.json`。
+
+原 task/授权/9冻结输入/三原提案已绑定，框架5补充由ops复核，引用进入实际题面。ACK SHA `2be028888ce9afdb6a5b9954fb12c8e47917b4c4d807653aef414fd3687181b7`；**不要改活批绑定的ACK或原输入，不重复派旧研究/同一实现**。旧综合revision3 done保持。
+
+尚待：逐公式/表格/反例 coverage、可复用工具、条件经验、完整核心资格/次数与原三提案消费者、预测-实际身份提取及校准、实际live/版本/CLI账本/双通知/宿主检查，以及自然读取/采用/效果分别验收。框架和入口完成不能关闭父请求。
+
+## main / 待合源 / 测试 / push 授权
+
+交接前 main `1c130a0ce6aa83b360ee7ad3bd08f767c7c87ffe`；观察 live `65e3d10a9b82a03176bafe6a6e61c6ef53f12c12`。交接记录提交会增加 main 提交，不改变这些源码验收切点。
+
+- 入口源fc95760d4实际live2b95b45a；固定树a35bf33d858533b4c0ea73af3c73f896cc2e9e03完整宿主tsc/vitest0，338文件3634过2跳；`20261011-2212-ops/entry-host-checks.json`。只证明此固定树，不扩张到后续代码。
+- 已测依赖及入口增量已进入main3be7be019；1c130a0ce是正式派发记录。部分机械增量不是原source对象祖先，按 `20261011-2144-ops/integration/main-merged.json` 与逐文件证据核，不只看祖先。保留main专有派发/push/Roy命名与live知识刷新。
+- 214301活批负责定向宿主检查入口/main原夹具；221722负责量化实现，最终源/回报待原事件，自测通过的原live闭环可自然收尾。220116 B4依原准入标准，不因rc0强合；旧lost/rejected/冷却历史保持。
+- 历史固定源清单 `paper/materials/20261011-1939-ops/remaining-fixed-sources.json`（当时40源）；接续 `20261011-2018-ops/continuation.json` revision4、`20261011-2057-ops/continuation.json` revision5及2113/2119/2131/2144/2212材料。旧58/41/40是历史切点，部分已有后续窄范围修复吸收；不是仍需整枝合入40次。按 source/补丁/证据去重，不混失败/未完成源。历史264扫描候选归watcher复核，不等于已证实泄漏。
+- 旧ops集成树 `.worktrees/ops-main-dependencies-20261011-2131` 与 `.worktrees/ops-1852-integration` 本轮已核受跟踪文件干净；HEAD可能落后，重用先固定新基线。根目录有大量并行动态记录/知识/账本；只暂存自己的字节，不整体add/reset/stash，不抢学习者树。
+- **完成后 main/push 授权继承，无需再问Roy**：`notes/core-cycle-main-push-request.json`。原四成果和必要验收完成后，安全集成全部相关已验证固定改动，gitleaks/必要受影响和未跑检查通过，再经Windows `ssh.exe`推 `origin/main`并核远端SHA；不force、不推upstream。当前最终push尚未执行、整套未done；既有通过项不盲目整套重跑，失败与补验分别留存。
+- 普通待修 `notes/sandbox-startup-race-recovery-request.json` 尚待专门领取；drain期间不新派，切换完成后由原普通链去重处理。原ENOENT/token0及严格会话前重试条件保持。
+
+## 接续顺序
+
+1. watcher完成并核实统一drain闸与账号隔离配置；旧ops不代改框架，不认为交接等于全系统已禁派。
+2. 让以上活批和本局自然完成，原队列保留；核父loop终态与N1ZEBMHZM4KC的报告缺口，必要时只补收一次，不操作旧ops session。
+3. 排空后以codex1新会话接原队列，禁止跨号resume/重开done综合任务。原Astra/xhigh/default/512000及项目权限约束继承，具体切换以watcher标准能力的验证为准。
+4. 新ops核221722/214301产物与实际live/检查，完成未完成的知识/实现/校准闭环，再按已授权条件main/push。
+
+旧 ops：**ready_to_drain，原地空闲**。不退出当前session，不再派单、操作进程/flags或轮询等待。
