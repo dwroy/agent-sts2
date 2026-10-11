@@ -1,0 +1,667 @@
+{
+  "source": {
+    "run": "U1QYLX1AE1WX",
+    "character": "SILENT",
+    "ascension": 10,
+    "floor": 46,
+    "turn": 4,
+    "ledger": [
+      "silent-0394",
+      "silent-0396"
+    ],
+    "frames": [
+      {
+        "off": 11060836545,
+        "sha256": "0b0848ec48cc51d17cca94291526ca64c19cea29f72b4fab948725b80319ed82"
+      },
+      {
+        "off": 11060888280,
+        "sha256": "fdb9f298d8d25c9301387acf10ce46097a950422aa6907698eaf9f3202ba5ef6"
+      },
+      {
+        "off": 11060939927,
+        "sha256": "e5c520ec86f9dc1cd4f630e630a47673a13eb500c6ef0f2719fef7978edc5a43"
+      },
+      {
+        "off": 11060990052,
+        "sha256": "87b6ec8a12b1aea25df45cf95e7e486dc9e6a4b47a0105f5dbc55e7362f309b3"
+      },
+      {
+        "off": 11061039270,
+        "sha256": "a8cbce7d8b2d948b4bb2e3012012de8e14518e0fe95ba4614399ae57f4f4dd1e"
+      },
+      {
+        "off": 11061089317,
+        "sha256": "bcc509c4c92a8e195849d4fbc9819d5d19ae25155996bbc42f8d65eef48c6b96"
+      }
+    ]
+  },
+  "card": {
+    "index": 6,
+    "card_id": "MAD_SCIENCE",
+    "name": "疯狂科学",
+    "upgraded": false,
+    "target_type": "AnyEnemy",
+    "requires_target": true,
+    "target_index_space": "enemies",
+    "valid_target_indices": [
+      0
+    ],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
+    "resolved_rules_text": "造成12点伤害。 给予2层虚弱。 给予2层易伤。",
+    "dynamic_values": [
+      {
+        "name": "Block",
+        "base_value": 8,
+        "current_value": 11,
+        "enchanted_value": 8,
+        "is_modified": true,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ChokingDamage",
+        "base_value": 6,
+        "current_value": 6,
+        "enchanted_value": 6,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "CuriousReduction",
+        "base_value": 1,
+        "current_value": 1,
+        "enchanted_value": 1,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "Damage",
+        "base_value": 12,
+        "current_value": 12,
+        "enchanted_value": 12,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "EnergizedEnergy",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ExpertiseDexterity",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ExpertiseStrength",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "SappingVulnerable",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "SappingWeak",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ViolenceHits",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "WisdomCards",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  },
+  "defends": [
+    {
+      "index": 3,
+      "card_id": "DEFEND_SILENT",
+      "name": "防御",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "获得{Block:diff()}点格挡。",
+      "resolved_rules_text": "获得8点格挡。",
+      "dynamic_values": [
+        {
+          "name": "Block",
+          "base_value": 5,
+          "current_value": 8,
+          "enchanted_value": 5,
+          "is_modified": true,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    {
+      "index": 4,
+      "card_id": "DEFEND_SILENT",
+      "name": "防御",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "获得{Block:diff()}点格挡。",
+      "resolved_rules_text": "获得8点格挡。",
+      "dynamic_values": [
+        {
+          "name": "Block",
+          "base_value": 5,
+          "current_value": 8,
+          "enchanted_value": 5,
+          "is_modified": true,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    {
+      "index": 5,
+      "card_id": "DEFEND_SILENT",
+      "name": "防御",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "获得{Block:diff()}点格挡。",
+      "resolved_rules_text": "获得8点格挡。",
+      "dynamic_values": [
+        {
+          "name": "Block",
+          "base_value": 5,
+          "current_value": 8,
+          "enchanted_value": 5,
+          "is_modified": true,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    }
+  ],
+  "player": {
+    "current_hp": 27,
+    "max_hp": 90,
+    "block": 0,
+    "energy": 3,
+    "stars": 0,
+    "focus": 0,
+    "powers": [
+      {
+        "index": 0,
+        "power_id": "PLATING_POWER",
+        "name": "覆甲",
+        "amount": 1,
+        "is_debuff": false
+      },
+      {
+        "index": 1,
+        "power_id": "NOXIOUS_FUMES_POWER",
+        "name": "毒雾",
+        "amount": 3,
+        "is_debuff": false
+      },
+      {
+        "index": 2,
+        "power_id": "THORNS_POWER",
+        "name": "荆棘",
+        "amount": 3,
+        "is_debuff": false
+      },
+      {
+        "index": 3,
+        "power_id": "DEXTERITY_POWER",
+        "name": "敏捷",
+        "amount": 3,
+        "is_debuff": false
+      }
+    ],
+    "base_orb_slots": 0,
+    "orb_capacity": 0,
+    "empty_orb_slots": 0,
+    "orbs": [],
+    "pets": [],
+    "pet_missing": false,
+    "cards_played_this_turn": 1,
+    "attacks_played_this_turn": 0,
+    "skills_played_this_turn": 0
+  },
+  "enemy": {
+    "index": 0,
+    "enemy_id": "MECHA_KNIGHT",
+    "name": "机甲骑士",
+    "current_hp": 232,
+    "max_hp": 320,
+    "base_max_hp": 320,
+    "block": 15,
+    "is_alive": true,
+    "is_hittable": true,
+    "powers": [
+      {
+        "index": 0,
+        "power_id": "WEAK_POWER",
+        "name": "虚弱",
+        "amount": 3,
+        "is_debuff": true
+      },
+      {
+        "index": 1,
+        "power_id": "POISON_POWER",
+        "name": "中毒",
+        "amount": 7,
+        "is_debuff": true
+      },
+      {
+        "index": 2,
+        "power_id": "STRENGTH_POWER",
+        "name": "力量",
+        "amount": 5,
+        "is_debuff": false
+      }
+    ],
+    "intent": "HEAVY_CLEAVE_MOVE",
+    "move_id": "HEAVY_CLEAVE_MOVE",
+    "intents": [
+      {
+        "index": 0,
+        "intent_type": "Attack",
+        "label": "33",
+        "damage": 33,
+        "hits": 1,
+        "total_damage": 33,
+        "status_card_count": null
+      }
+    ]
+  },
+  "after": {
+    "player": {
+      "current_hp": 27,
+      "max_hp": 90,
+      "block": 16,
+      "energy": 0,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "PLATING_POWER",
+          "name": "覆甲",
+          "amount": 1,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        },
+        {
+          "index": 2,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        },
+        {
+          "index": 3,
+          "power_id": "DEXTERITY_POWER",
+          "name": "敏捷",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 4,
+      "attacks_played_this_turn": 1,
+      "skills_played_this_turn": 2
+    },
+    "enemy": {
+      "index": 0,
+      "enemy_id": "MECHA_KNIGHT",
+      "name": "机甲骑士",
+      "current_hp": 232,
+      "max_hp": 320,
+      "base_max_hp": 320,
+      "block": 3,
+      "is_alive": true,
+      "is_hittable": true,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 5,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "POISON_POWER",
+          "name": "中毒",
+          "amount": 7,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "STRENGTH_POWER",
+          "name": "力量",
+          "amount": 5,
+          "is_debuff": false
+        },
+        {
+          "index": 3,
+          "power_id": "VULNERABLE_POWER",
+          "name": "易伤",
+          "amount": 2,
+          "is_debuff": true
+        }
+      ],
+      "intent": "HEAVY_CLEAVE_MOVE",
+      "move_id": "HEAVY_CLEAVE_MOVE",
+      "intents": [
+        {
+          "index": 0,
+          "intent_type": "Attack",
+          "label": "33",
+          "damage": 33,
+          "hits": 1,
+          "total_damage": 33,
+          "status_card_count": null
+        }
+      ]
+    },
+    "nextHp": 11
+  },
+  "unplayedCopy": {
+    "index": 5,
+    "card_id": "MAD_SCIENCE",
+    "name": "疯狂科学",
+    "upgraded": false,
+    "target_type": "AnyEnemy",
+    "requires_target": true,
+    "target_index_space": "enemies",
+    "valid_target_indices": [
+      0
+    ],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
+    "resolved_rules_text": "虚无。 造成12点伤害。 给予2层虚弱。 给予2层易伤。",
+    "dynamic_values": [
+      {
+        "name": "Block",
+        "base_value": 8,
+        "current_value": 11,
+        "enchanted_value": 8,
+        "is_modified": true,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ChokingDamage",
+        "base_value": 6,
+        "current_value": 6,
+        "enchanted_value": 6,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "CuriousReduction",
+        "base_value": 1,
+        "current_value": 1,
+        "enchanted_value": 1,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "Damage",
+        "base_value": 12,
+        "current_value": 12,
+        "enchanted_value": 12,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "EnergizedEnergy",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ExpertiseDexterity",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ExpertiseStrength",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "SappingVulnerable",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "SappingWeak",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ViolenceHits",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "WisdomCards",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": false,
+    "can_play_result": false,
+    "unplayable_reason": "not_enough_energy",
+    "unplayable_reason_raw": "EnergyCostTooHigh",
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  },
+  "deckCard": {
+    "index": 29,
+    "card_id": "MAD_SCIENCE",
+    "name": "疯狂科学",
+    "upgraded": false,
+    "card_type": "Attack",
+    "rarity": "Event",
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
+    "resolved_rules_text": "造成12点伤害。 给予2层虚弱。 给予2层易伤。",
+    "dynamic_values": [
+      {
+        "name": "Block",
+        "base_value": 8,
+        "current_value": 8,
+        "enchanted_value": 8,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ChokingDamage",
+        "base_value": 6,
+        "current_value": 6,
+        "enchanted_value": 6,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "CuriousReduction",
+        "base_value": 1,
+        "current_value": 1,
+        "enchanted_value": 1,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "Damage",
+        "base_value": 12,
+        "current_value": 12,
+        "enchanted_value": 12,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "EnergizedEnergy",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ExpertiseDexterity",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ExpertiseStrength",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "SappingVulnerable",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "SappingWeak",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ViolenceHits",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "WisdomCards",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ]
+  }
+}

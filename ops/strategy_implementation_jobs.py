@@ -14,6 +14,7 @@ import time
 from strategy_research_jobs import atomic_json, digest
 
 REQUEST = "roy-20261011-silent-core-cycle-quantitative-learning"
+CONTINUATION = "ops-20261012-quantitative-continuation"
 REQUEST_PATH = "notes/core-cycle-quantitative-learning-request.json"
 DIRECTORY = "paper/materials/silent/20261011-core-cycle-quantitative-learning/"
 TASK_SHA = "3c9355afd6ee7c98ff7cfc9c2e9a45d20fdf025ae701fccd482b1b73aea6079b"
@@ -81,7 +82,21 @@ def read_request(root):
     return request, raw, binding, task, authorization
 
 
-def proposal_inputs(root, scripts):
+def request_context(root, ident):
+    if ident == CONTINUATION:
+        from strategy_implementation_continuation import read
+        return read(root)
+    return read_request(root)
+
+
+def request_path(ident):
+    if ident == CONTINUATION:
+        from strategy_implementation_continuation import PATH
+        return PATH
+    return REQUEST_PATH
+
+
+def proposal_inputs(root, scripts, allow_waiting=False):
     from proposal_dispatch import library
     lib = library(scripts)
     items = lib.fold(Path(root, lib.QUEUE))
@@ -92,7 +107,8 @@ def proposal_inputs(root, scripts):
     for ident in PROPOSALS:
         item = items.get(ident, {})
         if (item.get("character") != "silent" or item.get("target_task") != "strategy-proposal"
-                or item.get("state") != "pending" or item.get("proposal_sha256") != expected[ident]):
+                or item.get("state") not in (("pending", "waiting") if allow_waiting else ("pending",))
+                or item.get("proposal_sha256") != expected[ident]):
             raise ValueError("original implementation proposal is unavailable: " + ident)
         path = Path(item.get("proposal", "")).resolve()
         if not path.is_relative_to(Path(root).resolve()) or digest(path.read_bytes()) != expected[ident]:
@@ -117,17 +133,23 @@ def proposal_inputs(root, scripts):
 
 
 def dispatch(state, root, scripts, character, alive, stamp, dispatch_write, ident):
-    if ident != REQUEST or character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp):
+    if ident not in (REQUEST, CONTINUATION) or character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp):
         raise ValueError("unknown implementation request")
+    continuing = ident == CONTINUATION
+    request, raw, binding, _, _ = request_context(root, ident)
+    if continuing:
+        from strategy_implementation_continuation import registered
+        existing = registered(state, request, binding, alive)
+        if existing is not None:
+            return existing
     # A lost owner's unclosed lease is still a conflict. Recovery belongs to ops.
-    if any(b.get("implementation_request") == ident or
+    if not continuing and any(b.get("implementation_request") == ident or
            b.get("state") == "running" and set(b.get("proposal_ids", [])) & set(PROPOSALS)
            for b in state["batches"].values()):
         raise ValueError("implementation request already registered or proposals leased")
-    request, raw, binding, _, _ = read_request(root)
-    if request.get("state") != "queued_for_ops" or request.get("actual_batches") != []:
+    if not continuing and (request.get("state") != "queued_for_ops" or request.get("actual_batches") != []):
         raise ValueError("implementation request is not awaiting its first dispatch")
-    evidence, identities = proposal_inputs(root, scripts)
+    evidence, identities = proposal_inputs(root, scripts, allow_waiting=continuing)
     base = subprocess.check_output(["git", "-C", str(root), "rev-parse", "main"], text=True).strip()
     if not re.fullmatch(r"[0-9a-f]{40}", base):
         raise ValueError("invalid implementation dispatch baseline")
@@ -149,14 +171,16 @@ def dispatch(state, root, scripts, character, alive, stamp, dispatch_write, iden
     receipt = {"request_id": ident, "batch": batch_id, "pid": pid, "worktree": batch["worktree"],
                "pane": batch.get("pane"), "at": time.time(), "binding": binding, "status": "binding_failed"}
     try:
-        current, current_raw, current_binding, _, _ = read_request(root)
+        current, current_raw, current_binding, _, _ = request_context(root, ident)
         if current_raw != raw or any(current_binding[k] != binding[k] for k in current_binding):
             raise ValueError("implementation request changed during dispatch")
         if (batch.get("implementation_request") != ident or batch_id != stamp + "-strategy-proposal"
                 or batch.get("worktree") != str(Path(root).resolve() / ".worktrees" / ("codex-strategy-silent-" + stamp))):
             raise ValueError("actual implementation batch identity mismatch")
         receipt["status"] = "running_bound"
-        atomic_json(Path(root, REQUEST_PATH), {**current, "state": "running", "actual_batches": [receipt]})
+        atomic_json(Path(root, request_path(ident)), {**current, "state": "running",
+                    **({"actual_batch": batch_id} if continuing else {}),
+                    "actual_batches": [*current.get("actual_batches", []), receipt]})
     except (OSError, ValueError, KeyError, TypeError) as error:
         receipt.update(status="binding_failed", error=str(error))
         batch["implementation_binding_error"] = str(error)
@@ -169,7 +193,7 @@ def dispatch(state, root, scripts, character, alive, stamp, dispatch_write, iden
 
 
 def bound_batch(root, state_dir, batch_id, character, worktree, ident):
-    if ident != REQUEST or character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}-strategy-proposal", batch_id):
+    if ident not in (REQUEST, CONTINUATION) or character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}-strategy-proposal", batch_id):
         raise ValueError("implementation registration identity mismatch")
     tree = str(Path(root).resolve() / ".worktrees" / ("codex-strategy-silent-" + batch_id[:15]))
     batch = json.loads(Path(state_dir, "learn.json").read_bytes()).get("batches", {}).get(batch_id, {})
@@ -184,21 +208,26 @@ def bound_batch(root, state_dir, batch_id, character, worktree, ident):
 
 def ready(root, state_dir, batch_id, character, worktree, ident):
     batch = bound_batch(root, state_dir, batch_id, character, worktree, ident)
-    request, _, binding, _, _ = read_request(root)
+    request, _, binding, _, _ = request_context(root, ident)
     if batch.get("state") != "running" or batch.get("implementation_binding_error") or request.get("state") != "running":
         raise ValueError("implementation registration is not running")
     stored = batch.get("implementation_binding", {})
     if any(stored.get(k) != v for k, v in binding.items()):
         raise ValueError("implementation registration binding changed")
     receipts = request.get("actual_batches", [])
+    if ident == CONTINUATION:
+        receipts = [row for row in receipts if row.get("batch") == batch_id]
     if len(receipts) != 1 or any(receipts[0].get(k) != v for k, v in {
             "batch": batch_id, "worktree": worktree, "pid": batch.get("pid"), "pane": batch.get("pane"),
             "binding": stored, "status": "running_bound"}.items()):
         raise ValueError("implementation request is not bound to this host batch")
-    evidence, identities = proposal_inputs(root, Path(__file__).parent)
+    evidence, identities = proposal_inputs(root, Path(__file__).parent, allow_waiting=ident == CONTINUATION)
     if batch.get("runs") != evidence or stored.get("proposals") != identities:
         raise ValueError("implementation proposals changed before model start")
     state = json.loads(Path(state_dir, "learn.json").read_bytes())
+    if ident == CONTINUATION:
+        from strategy_implementation_continuation import owners, owner_alive
+        owners(state, binding, owner_alive, current=batch_id)
     if any(key != batch_id and value.get("state") == "running" and
            set(value.get("proposal_ids", [])) & set(PROPOSALS) for key, value in state["batches"].items()):
         raise ValueError("implementation proposal lease conflict")
@@ -211,7 +240,7 @@ def ready(root, state_dir, batch_id, character, worktree, ident):
 
 def prepare(root, state_dir, batch_id, character, worktree, ident):
     batch = ready(root, state_dir, batch_id, character, worktree, ident)
-    _, _, binding, task, authorization = read_request(root)
+    _, _, binding, task, authorization = request_context(root, ident)
     head = subprocess.check_output(["git", "-C", worktree, "rev-parse", "HEAD"], text=True).strip()
     if head != batch["implementation_binding"]["dispatch_base"]:
         raise ValueError("implementation worktree differs from registered baseline")
@@ -246,6 +275,9 @@ def report_errors(report, batch, root):
                 "batch": Path(batch.get("worktree", "")).name.removeprefix("codex-strategy-silent-") + "-strategy-proposal",
                 "input_sha256": binding.get("input_manifest_sha256"),
                 "work_spec_sha256": binding.get("work_spec_sha256")}
+    if batch.get("implementation_request") == CONTINUATION:
+        expected.update(continuation_id=CONTINUATION,
+                        continuation_input_sha256=binding.get("continuation", {}).get("ownership_addendum_sha256"))
     if (batch.get("implementation_binding_error") or "research_request" in batch
             or report.get("research_complete") is not None or batch.get("proposal_ids") != PROPOSALS
             or any(report.get(k) != v for k, v in expected.items())):
@@ -256,7 +288,7 @@ def report_errors(report, batch, root):
         receipt = json.loads((directory / (expected["batch"] + ".implementation-input.json")).read_bytes())
         task_path = directory / (expected["batch"] + ".implementation-input") / "strategy-proposal.md"
         if (receipt.get("status") != "input_prepared" or receipt.get("binding") != binding
-                or receipt.get("request_id") != REQUEST or receipt.get("batch") != expected["batch"]
+                or receipt.get("request_id") != batch["implementation_request"] or receipt.get("batch") != expected["batch"]
                 or receipt.get("worktree") != batch.get("worktree") or receipt.get("task_path") != str(task_path)
                 or receipt.get("task_sha256") != digest(task_path.read_bytes())):
             raise ValueError("prepared input receipt mismatch")
