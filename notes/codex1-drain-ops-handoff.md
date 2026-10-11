@@ -88,3 +88,11 @@ Roy 最新授权统一 LLM 切换能力，watcher 在独立树 `codex-account-dr
 - **20261011-221301 / SB5N8GT2Y3VW**：复盘done/rc0，原账本 silent-0005/0011/0062/0065/0161/0278/0385 已由学习者追加。旧 ops 尚未做本批bug分流、lessons/ledger提交和论文表刷新；由继任沿原学习闭环完成，现有动态字节不改写或代填。
 
 本段没有修改 learn.json、原失败/冷却、活批输入/ACK、进程、账号或 flags。量化221722继续原批，完成后main/push授权继续继承。
+
+## 2026-10-11 22:41:48 CST：本局已自然结束，drain 停机告警（不重启）
+
+22:40 原宿主 stall 事件报告 no play / GAME_OVER；原 console 已明确 **N1ZEBMHZM4KC 在22:32:28以defeat结束，F21**。因此原交接中 play2548521/父loop2548303的在途描述是此前时点，当前不再把它当活对局恢复。旧 ops 本轮没有停止/重启进程、操作 flags 或派单；不通过清告警去启动下一局。
+
+只读核对 `logs/runs.jsonl` 尚无此局（0行），`notes/` 也无本局报告；**报告补收待办已确认，未完成**。继任 codex1 ops/watcher 沿既有报告闭环核本局原段＋恢复段并只补收一次，不能新开局代替报告，也不能把恢复段的83决策/20次Jev调用当成整局统计或另一新局。当前无play符合drain约束；不要因通用stall自动重启。父loop的实际退出身份可在标准drain验收时核对，本轮未另查宿主PID。
+
+终局 console 原字节、stall事件副本、SHA与统计范围：`paper/materials/20261011-codex1-drain-handoff/stall-2240/receipt.json`。原错误/恢复历史不变，**ready_to_drain** 保持。
