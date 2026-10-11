@@ -11,6 +11,7 @@
 # learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event),
 # learner-log-tab <batch-id> (display registered learner output in the ops workspace; never restart the learner),
 # strategy-proposal <ids> (dispatches a learner proposal), learner-recheck <batch-id> (full checks after a fallback merge),
+# learner-recheck <batch-id>:<manifest-sha256> (registered, pinned host supplement; preserves original coverage),
 # boss-sim-check (check B4/B5 triggers with the live scheduler),
 # core-build-notify <batch-id> (one native notification after ops verifies the substantive report),
 # codex-brain-cache-probe (one approved frozen double question; no arguments),

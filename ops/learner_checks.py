@@ -213,8 +213,13 @@ def preserved_calibration_report(batch_id, batch, root):
     return candidates[0] if len(candidates) == 1 else ({}, None)
 
 
-def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox):
+def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, continuation=None):
     """Verify fallback merges and check their pinned live tree without rewriting the original completion."""
+    if continuation is not None:
+        spec = importlib.util.spec_from_file_location("learner_check_continuation", os.path.join(os.path.dirname(__file__), "learner_check_continuation.py"))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module.run(batch_id, batch, root, out_dir, continuation, enqueue, inbox)
     report = read_report(os.path.join(out_dir, batch_id + ".out"))
     report_proof = None
     if not report:

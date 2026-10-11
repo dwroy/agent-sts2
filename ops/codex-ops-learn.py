@@ -475,23 +475,42 @@ def cmd_request_merge(args):
 
 
 def cmd_recheck(args):
+    batch_id, separator, continuation = args.batch.partition(":")
+    if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
+        return 2
+    args.batch = batch_id
     if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
         return 2
     # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
     with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:
-        fcntl.flock(checks_lock, fcntl.LOCK_EX)
+        try:
+            fcntl.flock(checks_lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if separator else 0))
+        except BlockingIOError:
+            return 2
         with state_lock():
             state = load_state()
             batch = state["batches"].get(args.batch)
             if not batch or batch.get("state") == "running":
                 return 2
-        result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox)
+            if separator and any(other.get("state") == "running" and other.get("worktree") == batch.get("worktree")
+                                 for other in state["batches"].values()):
+                return 2
+        result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox,
+                                    **({"continuation": continuation} if separator else {}))
         # Reload after the expensive checks: other jobs may have updated the scheduler meanwhile.
         with state_lock():
             state = load_state()
             current = state["batches"].get(args.batch)
             if current is None:
                 return 2
+            if separator:
+                if any(current.get(key) != batch.get(key) for key in ("task", "worktree", "state")):
+                    return 2
+                if "check_supplements" in batch:
+                    current["check_supplements"] = batch["check_supplements"]
+                save_state(state)
+                print(json.dumps({"batch": args.batch, "rc": result, "check_supplements": batch.get("check_supplements", [])}, ensure_ascii=False))
+                return result
             if "fallback_checks" in batch:
                 current["fallback_checks"] = batch["fallback_checks"]
             if batch.get("checks_pending") and result != 2:
