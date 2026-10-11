@@ -1004,6 +1004,7 @@ export interface Plan {
 }
 
 interface Sim {
+  traceDrawn?: number;
   pendingSelection?: boolean;
   noDraw: boolean;
   hand: CardModel[];
@@ -1651,7 +1652,7 @@ function strangleLossVerified(enemy: Sim["enemies"][number]): boolean {
 }
 
 /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
-function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim, automatic = false): Sim | null {
+function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim, automatic = false, audit?: (cost: number, effects: number) => void): Sim | null {
   if (sim.pendingSelection) return null;
   // Apply the observed cap to fixed-line replay and search alike; potion dispatches consume no slot.
   if (player.slothDefendReplay && card.type !== "Potion" && player.maxPlays != null && sim.slothPlays >= player.maxPlays) return null;
@@ -1682,7 +1683,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // A Gambler's Brew way (or a card-choice potion's pick) is a copy of the belt's potion: the potion
   // leaves the hand by its key.
   const hidden = hiddenDaggers(card);
-  next.hand = sim.hand.filter((entry) => entry !== card && !((card.type === "Potion" || hidden) && entry.key === card.key));
+  // L704 F48 T3: an explicit discard choice is a view of the same hand card, not an extra Acrobatics.
+  const selectedDiscard = (player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw && card.discards !== undefined;
+  next.hand = sim.hand.filter((entry) => entry !== card && !((card.type === "Potion" || hidden || selectedDiscard) && entry.key === card.key));
   const discardPool = hidden ? [...next.hand, ...next.held, ...next.locked] : sim.hand;
   const discarded = card.discards ? discardPool.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
   if (hidden) {
@@ -1733,6 +1736,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
+  audit?.(cost, plays);
   // Snapshot before this play: new establishment does not trigger itself, and Block/Artifact interactions stay unknown.
   const strangled = next.enemies.filter((enemy) => enemy.alive && (enemy.strangle ?? 0) > 0)
     .map((enemy) => ({ index: enemy.index, amount: enemy.strangle, verified: strangleLossVerified(enemy) }));
@@ -1885,6 +1889,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     else if (draw) {
       next.hand = [...next.hand, ...Array.from({ length: count }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
       next.cardsDrawn += count;
+      if (next.traceDrawn !== undefined) next.traceDrawn += count;
     }
   } else if (EXHAUST_HAND.has(card.cardId)) {
     // The cards drawn earlier this turn go too (their values stay as draws: what they were is unknown).
@@ -2593,6 +2598,7 @@ function drawCards(sim: Sim, cards: CardModel[], player: PlayerSim, reshuffled =
 
 /** Only cards actually drawn into available hand space trigger the independently observed Wave effect. */
 function poisonDraws(sim: Sim, count: number): void {
+  if (sim.traceDrawn !== undefined) sim.traceDrawn += count;
   if (sim.corrosiveWave <= 0) return;
   for (let i = 0; i < count; i += 1) {
     for (const enemy of sim.enemies) if (enemy.alive) applyDebuff(enemy, "poison", sim.corrosiveWave);
@@ -3719,11 +3725,19 @@ export function drawsCards(card: CardModel): boolean {
 }
 
 /** The plan's steps played from the start of the turn again; null when one is not legal. */
-function replay(input: SolverInput, weights: Weights, steps: Step[]): Plan | null {
+function replay(input: SolverInput, weights: Weights, steps: Step[], trace?: TransitionTrace[]): Plan | null {
   let sim = rootSim(input, weights);
+  if (trace) sim.traceDrawn = 0;
   for (const step of steps) {
     const card = sim.hand.find((entry) => entry.index === step.cardIndex);
-    if (!card) return null;
+    if (!card || (trace && (card.cardId !== step.cardId || card.upgraded !== step.upgraded))) return null;
+    if (trace) {
+      const manual = input.player.slothDefendReplay ? sim.slothPlays : sim.steps.filter((s) => !s.cardId.startsWith("POTION:")).length;
+      if (card.type !== "Potion" && input.player.maxPlays != null && manual >= input.player.maxPlays) return null;
+      if (card.type === "Skill" && input.player.maxSkills != null && sim.skillsPlayed >= input.player.maxSkills) return null;
+      if (card.target === "single" && (step.target === null || !card.validTargets.includes(step.target))) return null;
+      if (sim.enemies.every((e) => !e.alive) || (sim.hp <= 0 && !(input.player.revives?.length))) return null;
+    }
     let chosen = card;
     if ((input.player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw && step.discards) chosen = { ...card, discards: step.discards };
     if (hiddenDaggers(card) && step.discards) {
@@ -3736,8 +3750,13 @@ function replay(input: SolverInput, weights: Weights, steps: Step[]): Plan | nul
       }
       chosen = { ...card, discards };
     }
-    const next = play(sim, chosen, step.target, input.player);
+    let payment = 0;
+    let effects = 0;
+    const next = play(sim, chosen, step.target, input.player, false, trace ? (cost, count) => { payment = cost; effects = count; } : undefined);
     if (!next) return null;
+    if (trace) trace.push({ step: next.steps[next.steps.length - 1] ?? step, payment, effects,
+      type: chosen.type, leavesPool: chosen.exhausts ? "exhaust" : chosen.type === "Power" ? "power" : null,
+      before: traceSnapshot(sim, input.player), after: traceSnapshot(next, input.player) });
     sim = next;
   }
   return evaluate(sim, input, weights);
@@ -3872,6 +3891,35 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
  * No decision code sets it; null is a no-op.
  */
 export const solveTap: { onSolve: ((input: SolverInput, result: SolveResult) => void) | null } = { onSolve: null };
+
+/** Read-only observations of the existing transition; no second mechanics implementation. */
+export interface TransitionSnapshot {
+  energy: number; hp: number; block: number; damage: number; blockGained: number; drawn: number; drawBudget: number;
+  hand: string[]; unknownHand: number; noDraw: boolean; pendingSelection: boolean;
+  dexterity: number; afterImage: number; poisonExtraTriggers: number; duplicateSkills: number;
+  enemies: { index: number; hp: number; poison: number; artifact: number }[];
+  unknown: string[];
+}
+export interface TransitionTrace {
+  step: Step; payment: number; effects: number; type: string;
+  leavesPool: "exhaust" | "power" | null;
+  before: TransitionSnapshot; after: TransitionSnapshot;
+}
+function traceSnapshot(sim: Sim, player: PlayerSim): TransitionSnapshot {
+  return { energy: sim.energy, hp: sim.hp, block: sim.block, damage: sim.damageDealt,
+    blockGained: sim.blockGained, drawn: sim.traceDrawn ?? 0, drawBudget: sim.cardsDrawn,
+    hand: [...sim.hand, ...sim.held, ...sim.locked].filter((c) => c.type !== "Potion").map((c) => c.cardId),
+    unknownHand: sim.drawnInHand, noDraw: sim.noDraw, pendingSelection: sim.pendingSelection === true,
+    dexterity: (player.dexterityNow ?? 0) + sim.tempDex, afterImage: sim.afterImage,
+    poisonExtraTriggers: sim.poisonExtraTriggers, duplicateSkills: sim.duplicateSkills,
+    enemies: sim.enemies.map((e) => ({ index: e.index, hp: e.hp, poison: e.poison ?? 0, artifact: e.artifact })),
+    unknown: [...sim.unknown] };
+}
+export function traceSteps(input: SolverInput, steps: Step[]): { plan: Plan | null; transitions: TransitionTrace[]; complete: boolean; initial: TransitionSnapshot } {
+  const transitions: TransitionTrace[] = [];
+  const plan = replay(input, weightsFor(input), steps, transitions);
+  return { plan, transitions, complete: plan !== null && transitions.length === steps.length, initial: traceSnapshot(rootSim(input, weightsFor(input)), input.player) };
+}
 
 /** Offline tools only (tools/shrink-replay.ts): these exact plays on the solver input, scored as the solver scores a line; null when one cannot be played. */
 export function replaySteps(input: SolverInput, steps: Step[]): Plan | null {

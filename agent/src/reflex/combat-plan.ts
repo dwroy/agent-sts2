@@ -3839,8 +3839,14 @@ function planTurn(env: DecisionEnv): Decision | null {
   };
   const phaseFacts = silentPhaseReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })));
   const lossFacts = silentLossReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })), rolloutTied);
+  const quantitativeCache = new Map<Plan, Record<string, JsonValue>>();
+  const quantified = (plan: Plan): Record<string, JsonValue> => {
+    let facts = quantitativeCache.get(plan);
+    if (!facts) { facts = quantitativeTurnFacts(state, plan, solvedInput); quantitativeCache.set(plan, facts); }
+    return facts;
+  };
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
-    ...quantitativeTurnFacts(state, plan),
+    ...quantified(plan),
     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
     ...simFact(plan),
     ...phaseFacts.get(plan),

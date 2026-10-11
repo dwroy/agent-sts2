@@ -127,6 +127,7 @@ export async function compareOptions(
   options: DeckOption[],
   opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean } = {},
 ): Promise<CompareResult> {
+  if (opts.quantitative && base.meta.asc === 10) base = { ...base, captureCore: true, captureResources: true };
   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
   const decks: Partial<RolloutInput>[] = [{}];
   const stripes: ({ at: number; of: number } | null)[] = [null];
