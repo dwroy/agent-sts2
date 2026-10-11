@@ -66,6 +66,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 
 | 动作 | 做什么 |
 |---|---|
+| ops-assist <request-id> / ops-assist-status | 主 ops 显式派最多2个并发只读辅助 session，或查回执/回收死PID；固定请求/证据、Herdr托管和失败原件，结果回原事件queue，所有修改/合入仍主ops处理。见 [辅助任务模板和边界](ops-assist.md) |
 | procs / stall-check / mod-state | 我们的进程（pgrep）/ ops/stall-check.sh / mod 的 GET /state |
 | autoplay-start | prompt 的开工步骤：有残留的 autoplay / stop-after / 对局就拒绝；删 ops/STOP；setsid nohup ops/autoplay.sh；打印 PID 和 live 的提交号 |
 | autoplay-reload <旧 autoplay PID> <当前 play PID> | 核对属主、精确脚本路径、进程身份和 autoplay.pid；有 report.py、stop-after 或重复进程时拒绝。暂时暂停旧循环，启动带 WAIT_PID 的独立新循环，确认就绪再终止旧循环；确认前失败恢复旧循环。回执给新 PID、ops/live 提交和脚本 SHA256；不停止 play、不改 STOP，不改变 hosting 配置 |

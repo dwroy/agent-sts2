@@ -1,0 +1,36 @@
+{
+  "code": 1,
+  "signal": null,
+  "stdout": "",
+  "stderr": "bwrap: Can't mkdir /home/dw: Read-only file system\n",
+  "checks": {
+    "evidenceRead": false,
+    "forbiddenWrites": [
+      {
+        "path": "/tmp/ops-assist-sandbox-jDVZWJ/main/.worktrees/task/ops/codex-ops/assist/jobs/probe/input/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-jDVZWJ/main/.worktrees/task/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-jDVZWJ/main/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-jDVZWJ/main/.worktrees/live/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-jDVZWJ/probe-write",
+        "absent": true
+      },
+      {
+        "path": "/tmp/ops-assist-sandbox-jDVZWJ/main/ops/codex-ops/broker/probe-write",
+        "absent": true
+      }
+    ],
+    "evidenceUnchanged": true
+  }
+}

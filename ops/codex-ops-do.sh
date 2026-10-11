@@ -7,6 +7,7 @@
 # Actions (ops/codex/lib.ts ACTIONS, done by ops/codex-ops-actions.sh): procs, stall-check, mod-state, autoplay-start,
 # autoplay-stop, play-stop, kill <pid>, launch-game, win-procs, win-kill <pid>, postmortem <id,id,...>,
 # autoplay-reload <old-autoplay-pid> <current-play-pid> (keeps the same play process),
+# ops-assist <request-id> (explicit read-only helper, at most two); ops-assist-status (receipts and PID recovery).
 # learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event),
 # learner-log-tab <batch-id> (display registered learner output in the ops workspace; never restart the learner),
 # strategy-proposal <ids> (dispatches a learner proposal), learner-recheck <batch-id> (full checks after a fallback merge),

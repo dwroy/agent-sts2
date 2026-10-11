@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-assist-sessions-20261011/agent
+
+ ❯ tests/ops-assist.test.ts (2 tests | 1 failed) 48ms
+     × uses the read-only learner profile with only frozen business evidence visible 38ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-assist.test.ts > ops assistant boundary > uses the read-only learner profile with only frozen business evidence visible
+TypeError: toml is not a function
+ ❯ assistOverrides ../ops/codex/assist.ts:25:54
+     23|
+     24| export function assistOverrides(request: EngineRequest): string[] {
+     25|   return ["-c", `permissions.ops_assist.filesystem=${toml(assistFilesy…
+       |                                                      ^
+     26| }
+     27|
+ ❯ tests/ops-assist.test.ts:15:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  18:07:43
+   Duration  3.02s (transform 2.06s, setup 874ms, import 1.86s, tests 48ms, environment 0ms)
+

@@ -254,6 +254,8 @@ export function initMessage(prompt: string, events: QueuedEvent[], now: Date): s
  */
 export const ACTIONS: Record<string, { args: number; ms: number }> = {
   procs: { args: 0, ms: 30_000 },
+  "ops-assist": { args: 1, ms: 90_000 },
+  "ops-assist-status": { args: 0, ms: 30_000 },
   "learner-log-tab": { args: 1, ms: 60_000 },
   "stall-check": { args: 0, ms: 60_000 },
   "mod-state": { args: 0, ms: 30_000 },
@@ -296,6 +298,9 @@ export function validateRequest(raw: unknown): BrokerRequest {
   if (list.length !== spec.args) return { ok: false, error: `${action} 要 ${spec.args} 个参数，给了 ${list.length} 个` };
   const bad = list.find((arg) => !ARG.test(arg));
   if (bad !== undefined) return { ok: false, error: `参数不合格：${bad.slice(0, 40)}` };
+  if (action === "ops-assist" && !/^[a-z][a-z0-9-]{0,47}$/.test(list[0]!)) {
+    return { ok: false, error: "ops-assist 要小写字母开头的任务 id（最多48位小写字母、数字、连字符）" };
+  }
   if (action === "autoplay-reload" && (list.some((arg) => !/^[1-9][0-9]{0,9}$/.test(arg)
       || Number(arg) <= 1 || Number(arg) > 2_147_483_647) || list[0] === list[1])) {
     return { ok: false, error: "autoplay-reload 要两个不同的有效 PID：旧 autoplay、当前 play" };

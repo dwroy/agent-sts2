@@ -54,6 +54,12 @@ hosting() {
 }
 
 case "$action" in
+  ops-assist)
+    [ $# -eq 2 ] && [[ "$arg" =~ ^[a-z][a-z0-9-]{0,47}$ ]] || exit 2
+    exec nice -n 19 python3 "$OPS/ops_assist.py" dispatch "$arg" ;;
+  ops-assist-status)
+    [ $# -eq 1 ] || exit 2
+    exec nice -n 19 python3 "$OPS/ops_assist.py" status ;;
   learner-log-tab)
     [ $# -eq 2 ] || exit 2
     exec nice -n 19 python3 "$OPS/learner-log-pane.py" "$arg" ;;
