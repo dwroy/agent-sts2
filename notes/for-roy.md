@@ -1008,3 +1008,7 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-11 22:47:42 CST [drain交接] 223051策略批done/rc0、无新源码/mergednull，原10提案waiting；工程消费/合入冲突与游戏证据缺口分别保留，继任核原处置，不强合/造版本/补测。原件SHA和事件副本paper/materials/20261011-codex1-drain-handoff/deferred-2246/pending-closeout.json；ready_to_drain保持，未派单或变更运行/账号/flags。
 
 - 2026-10-11 22:55:24 CST [drain经验交接] 223051经验批rc0但failed/未合，固定候选c04da0668（.16，新增0/更新20/退役0，active219）因15项预检冲突停下；原测试复用/失败、24 proposed与3提案保持。原件/固定源SHA见paper/materials/20261011-codex1-drain-handoff/deferred-2254/pending-closeout.json，留继任按实际live后发布；本轮无合入、版本、shipped、重测或派单，ready_to_drain保持。
+
+- 2026-10-11T22:59:19+08:00 [watcher LLM切换能力上线] 原PAUSE不能阻止学习完成回调再派任务，STOP会取消在途brain；现以事务自有LLM_DRAIN封住新任务、保留完成/合入/检查/报告，排空后新账号新ops从原队列接管。源49cb6d353，main22fa024917/live f7c3f1c3d；测试与原件见paper/materials/20261011-codex-account-drain/，标准协议docs/llm-handoff.md。当前事务codex1-20261011仍draining，codex1尚未实际接管；保留所有量化和main/push待办。预期无新的旧账号任务，旧批自然完成。回退：激活前保留现场/同ID接续；配置切换失败由适配器回退且保留闸，已有新session时先核回执不重复启动。不要写STOP、清闸、停play或重派旧批；不改ops prompt/模型策略/游戏知识。
+
+- 2026-10-11T23:08:34+08:00 [watcher LLM pane环境修正] 源7d7aa8a3a已合main796ca4d992/live079dc2f156；复用旧Herdr pane时先在其真实shell导出目标home并等待回执，防止新session误用旧账号。tsc与25项定向回归、真实无模型Herdr shell探针、gitleaks通过；原全量通过证据保持。仅重启机械控制器2619401，以同一codex1-20261011在wJ:pMA/2631060继续draining，LLM_DRAIN/PAUSE始终保留，未停学习/ops。剩220116与224302两个活批自然收尾后自动切换；尚未宣称codex1实际接管。详情paper/materials/20261011-codex-account-drain/pane-environment-correction.json。
