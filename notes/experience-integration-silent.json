@@ -40,16 +40,16 @@
     "silent-proposal-9e1bc1225fae0e30",
     "silent-proposal-3dae3ca702a14057"
   ],
-  "work_spec": "paper/materials/silent/20261010-core-output-value/result-review/experience-work-spec.md",
-  "work_spec_sha256": "a3b4dbdfa5d41e302404cd38c72c9082e92a419948783361bfb13c7096d7f5bf",
-  "blocking_condition": "exp现有活批先完成并释放租约；后续由host标准write入口派本九锚点，旧live合入冲突沿兜底通道保留处理",
+  "work_spec": "paper/materials/silent/20261011-core-cycle-quantification/experience-integration/task-v3.md",
+  "work_spec_sha256": "030337a62c1d43cb18486f53eb760e2235b762fd567d9e8cf6232166aed96360",
+  "blocking_condition": "本轮宿主broker入口8秒无响应(exit124)，未生成匹配批次；现有唯一续办事件已补scope revision3。宿主恢复事件执行后核实最新租约并按同一请求标准派发，保留live既有19项合入冲突。",
   "entry_count_goal": {
     "approximate": 1,
     "not_a_hard_count": "由learner据证据合并综合项，必要时修订既有夜魇项；机制与四核心保留原身份"
   },
-  "scope_revision": 2,
-  "scope_updated_at": "2026-10-10T22:00:47+08:00",
-  "scope_update_authorization": "你的这个回答非常好，同时看看经验库是否有这样的经验结论呢？ 如果没有可以让学习者学习入库；最近这2次我们的对话非常重要，需要你记录进论文材料中。后续关注经验带来的效果",
+  "scope_revision": 3,
+  "scope_updated_at": "2026-10-11T16:51:55.969429+08:00",
+  "scope_update_authorization": "以上的总结能否学习进入经验库？",
   "related_request_ids": [
     "roy-20261010-silent-core-reuse-value",
     "roy-20261010-silent-deck-size-value",
@@ -58,23 +58,40 @@
   "source_manifest": "paper/materials/silent/20261010-core-output-value/result-review/review.json",
   "source_manifest_sha256": "754921a9ec3f0afdd227bb5445f05cb6bf2b494ced4fb956be8afadaaf9f883a",
   "previous_scope": {
-    "path": "paper/materials/silent/20261010-core-reuse-value/result-review/experience-integration-pending.json",
-    "sha256": "c0356e4608c13b9cb6c19f2d5c4b8e21e164b87e469c1dcabe0288175e872617",
+    "path": "paper/materials/silent/20261011-core-cycle-quantification/experience-integration/request-before.json",
+    "sha256": "f0f5d8fc78220c2615954af219b924f27296d327863d5a6b2a2509f8733fb82c",
     "state": "pending",
     "batch": null
   },
   "effect_followup": "paper/materials/silent/20261010-core-output-value/knowledge-gap-review/effect-followup.json",
   "dispatch_status": "not_dispatched",
-  "observed_active_owners": [
-    {
-      "batch": "20261010-214303-experience-update",
-      "state": "running",
-      "pid": 332203,
-      "pane": "wJ:pEG",
-      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
-      "runs": [
-        "U51W81MEBCLZ"
-      ]
-    }
-  ]
+  "observed_active_owners": [],
+  "previous_work_spec": "paper/materials/silent/20261010-core-output-value/result-review/experience-work-spec.md",
+  "previous_work_spec_sha256": "a3b4dbdfa5d41e302404cd38c72c9082e92a419948783361bfb13c7096d7f5bf",
+  "owner_observation": {
+    "at": "2026-10-11T16:51:55.969429+08:00",
+    "source": "read-only latest learn.json registration; host PID identity not checked",
+    "learn_sha256": "4819776aa922a0acba1da654fbcb14561425a298b6308c015a3ce38b369cf3be",
+    "matching_integration_batches": []
+  },
+  "supplemental_discussion": {
+    "path": "paper/materials/silent/20261011-core-cycle-quantification/report.md",
+    "sha256": "e40f3f897838d0873a0117d27e37b462ef4f67630f68b149ef7493457f797785",
+    "commit": "77f031697",
+    "kind": "abstract_hypotheses_not_game_evidence",
+    "validation_required": true
+  },
+  "scope_additions": [
+    "skip/remove/add comparison",
+    "finite-window core and whole-combo counts",
+    "draw/energy/action accounting and interruptions",
+    "extreme cycle feasibility and closed-state proof from observed mechanics",
+    "counterexamples, survival and final-win outcome"
+  ],
+  "last_dispatch_attempt": {
+    "path": "paper/materials/silent/20261011-core-cycle-quantification/experience-integration/dispatch-attempt.json",
+    "exit_code": 124,
+    "at": "2026-10-11T16:53:43.841086+08:00",
+    "batch": null
+  }
 }
