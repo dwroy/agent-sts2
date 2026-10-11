@@ -1,0 +1,74 @@
+## 修 bug 回报
+
+- 合并基线：main → `0e76d455430782373f85d4bbbeda17cedbfc7209`
+- 修复：校准派发夹具缺少必需目录 — `2b09c47d4` — 测试 `agent/tests/calibration-dispatch-fixtures.test.ts:dispatches fixed feature fixtures while retaining missing-tree guards` — 去掉修复时失败：是，退出1；恢复后退出0。
+- 修复：宿主定向补验入口缺失 — `24c2e3a75` — 测试 `agent/tests/learner-check-continuation.test.ts:binds host supplements to original coverage and exact sources without repeating full checks` — 去掉修复时失败：是，退出1；恢复后退出0。
+- 已被别人修掉的：额度恢复 — `e5e2995d6`；实际进阶通知 — `8045d9fbf`；退出夹具 — `874ae603b`；推送注册 — `c519952b3`；冻结实现绑定 — `fc95760d4`。历史项逐条见[完整回报](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-214301/learner/runs/20261011-214313-fix-batch/report.md)及附件。
+- 没修的：机制、策略及架构专题 — 沿独立任务处理；双boss资源契约、历史通知失败、mod超时和调度公平性 — 证据不足；沙箱目录竞态 — 新冻结任务明确交下一批。
+- 测试：tsc退出0；最终vitest **269文件／2692用例／退出0**。首轮 `rollout-live` 排序等价用例失败，单worker完整重跑通过；原失败保留。gitleaks通过。真实宿主IPC补验尚未执行。
+- 合入：**未合入**。锁内预检发现15项记录及目录冲突，按要求停止；知识数据无重叠，未实际merge。
+- 需要 Roy 定的事：无。运维需兜底合入并执行宿主补验。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "0e76d455430782373f85d4bbbeda17cedbfc7209",
+  "fixes": [
+    {
+      "item": "校准派发夹具缺少生产守卫要求的功能工作树目录",
+      "commit": "2b09c47d431a580e9955d157f4dfb0e576186206",
+      "test": "agent/tests/calibration-dispatch-fixtures.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "host-targeted-check-continuation：原宿主失败缺少绑定身份和覆盖的定向补验入口",
+      "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+      "test": "agent/tests/learner-check-continuation.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "机制/策略项 silent-0250,0256,0260,0263,0266,0268,0271,0273,0279,0287,0290,0291,0293,0295,0296,0297,0300,0308,0311,0317,0319,0320,0322,0329,0334,0339,0344,0347,0349,0362,0365,0367",
+      "reason": "策略类：沿已有独立strategy-proposal链处理，本批不重复实现或派发。"
+    },
+    {
+      "item": "silent-0332、core-build-notify-222802-rc2、mod短暂请求超时",
+      "reason": "证据不足：分别缺触发样本、历史stderr及未发送证明、mod根因。"
+    },
+    {
+      "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression、B4/B5、缓存及性能实测",
+      "reason": "太大：独立架构、归因和受控实验任务。"
+    },
+    {
+      "item": "调度公平性核查",
+      "reason": "证据不足：当前快照不能证明永久饥饿。"
+    },
+    {
+      "item": "sandbox-glob-startup-race",
+      "reason": "独立冻结任务明确交下一空闲普通批次，不修改本214301活批输入或租约。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2692,
+    "files": 269
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-214301/learner/runs/20261011-214313-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12b34-1371-7992-8b9e-bb9b2c50405a
+轮数：1；工具调用：command_execution×94 file_change×18
+token：输入 267.9k、输出 78.6k（其中推理 37.8k）、cache 读 20343.7k、cache 写 0（命中 98.7%）
+成本：未提供
+耗时：3408.4 s（墙钟）
+时间：首个事件 13.6 s、模型首个输出 20.2 s、首次工具 23.2 s、末次工具结束 3355.8 s；工具内共 3114.8 s，其余（模型生成、推理、网络）280.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-214301）；模型的工具调用 exec×80 wait×28；/home/dw/.codex-sts2/sessions/2026/10/11/rollout-2026-10-11T21-43-15-01a12b34-1371-7992-8b9e-bb9b2c50405a.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-214301/learner/runs/20261011-214313-fix-batch.jsonl

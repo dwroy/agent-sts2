@@ -96,3 +96,16 @@ Roy 最新授权统一 LLM 切换能力，watcher 在独立树 `codex-account-dr
 只读核对 `logs/runs.jsonl` 尚无此局（0行），`notes/` 也无本局报告；**报告补收待办已确认，未完成**。继任 codex1 ops/watcher 沿既有报告闭环核本局原段＋恢复段并只补收一次，不能新开局代替报告，也不能把恢复段的83决策/20次Jev调用当成整局统计或另一新局。当前无play符合drain约束；不要因通用stall自动重启。父loop的实际退出身份可在标准drain验收时核对，本轮未另查宿主PID。
 
 终局 console 原字节、stall事件副本、SHA与统计范围：`paper/materials/20261011-codex1-drain-handoff/stall-2240/receipt.json`。原错误/恢复历史不变，**ready_to_drain** 保持。
+
+## 2026-10-11 22:44:59 CST：214301与正式量化221722已结束（验收/续办待继任）
+
+**ready_to_drain 保持**；以下两个批次已自然结束，原交接表中的running为历史时点。旧ops只保存原件/待办，不合入、重派或更改活配置。回执 `paper/materials/20261011-codex1-drain-handoff/deferred-2242/pending-closeouts.json`。
+
+- **214301 fix**：engine rc0，但登记仍failed/merged=null，原retry保持。已有固定修复源 **2b09c47d431a580e9955d157f4dfb0e576186206**（校准派单夹具）与 **24c2e3a75b5db6bac76d6c924f86b7fcd9438316**（宿主定向检查入口），本轮核git对象存在且非live祖先。原回报自述tsc/vitest0，269文件2692例；首轮rollout等价失败及后续通过保持，真实宿主IPC未补验。报告说明锁内预检发现15项记录/目录冲突后停止，未实际merge。继任应只取固定增量、保留并行记录/知识刷新；24c2e3a75涉及ops actions/lib/learn/checks等，与watcher账号drain框架有路径相交，先协调并保留双方实现。不要整枝覆盖或因rc0宣布上线。
+- **221722量化实现**：登记done/rc0是本次批次终态，**父四成果未完成**。报告自述已复核300条记录/106端点、57项coverage与抽象重算；源码改动/提交/合入均无，三个原提案变为waiting。生产消费者和完整组合次数/真实校准未做，不能以现有经验或抽象界当全部实现。原报告与关键产物已另存，全部scratch产物SHA见 `quantitative-artifact-manifest.json`，本轮未把它们冒称完整验收通过。
+
+**关键职责续办**：本批因冻结任务中的watcher保留路径/“冲突路径停止”条款停下。此前watcher已明确交付199596dfc+3ee649f69并释放代码编辑路径；原ops交接没有把释放信息明确反映进冻结职责约束。继任先核当前owner与账号切换子任务无新冲突，再以独立补充回执明确相关quantitative/build-sim/combat-plan路径可由本实现学习者接续，保留原ACK/输入SHA和暂停报告，不倒改旧绑定。不需再次索取Roy已给的实现范围授权。
+
+原实现入口目前只接受第一次派发，已有implementation_request登记，且三提案已waiting；**不能删登记、改旧done/failed或强改pending绕过**。drain完成后沿已有获授权修复/恢复链做有界续办，复用此次57项覆盖、原帧/抽象复现，不重派旧全历史研究。当前canonical里的running/actual_execution是派发历史，当前终态以这次原完成事件为准；本旧ops不改冻结ACK或父请求历史。
+
+尚未上线的新知识/实现、main集成及Windows SSH最终push均继续受原完整验收条件约束。沙箱启动竞态专项被214301按原指令留下一批，尚未修复；drain期间不派。
