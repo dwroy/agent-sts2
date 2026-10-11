@@ -166,6 +166,8 @@ export interface EnemySim {
   reattach?: boolean;
   /** REATTACH_POWER amount: the HP a dead segment comes back with (25 on the Decimillipede). */
   reattachHp?: number;
+  /** 1913SE84AXQF A10, silent-0064: the observed middle discards poison and Strength when down. */
+  reattachClearsPoisonStrength?: boolean;
   /**
    * Crab Rage (Kaiser Crab's Rocket / Crusher): when an ally dies this one gains 99 Block and more
    * Strength at once, so killing one part alone is a trap (7Q5G F33: Rocket "lethal", Crusher kept

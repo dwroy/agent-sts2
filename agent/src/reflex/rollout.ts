@@ -1678,6 +1678,14 @@ function clearPower(e: SimEnemy, power: string): void {
   }
 }
 
+/** 1913 F31 T3-T4: the middle's dead and reattached bodies have neither its old poison nor Strength. */
+function clearObservedReattachPowers(e: SimEnemy): void {
+  if (!e.base.reattach || !e.base.reattachClearsPoisonStrength) return;
+  e.poison = 0;
+  clearPower(e, "POISON_POWER");
+  clearPower(e, "STRENGTH_POWER");
+}
+
 /** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead (with its spawns). */
 function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimEnemy[], fullFight = false): void {
   if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
@@ -1730,6 +1738,7 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     }
   } else {
     e.alive = false;
+    clearObservedReattachPowers(e);
     // An on-death spawn (Phrog Parasite, Gremlin Merc): its spawns join the fight (the rollout called the
     // Phrog's death a win: "over within 5 turns" 0.95 vs 0.47 in the logs, 4LC3YKCZV218 F9 T3 forecast 0,
     // actual 23).
@@ -2471,6 +2480,7 @@ function applyPlan(
       e.block = 0;
       e.vulnerable = 0;
       e.weak = 0;
+      clearObservedReattachPowers(e);
     }
     player.weakTurns = Math.max(0, player.weakTurns - 1);
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);

