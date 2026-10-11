@@ -22,6 +22,7 @@
 import { choiceQ } from "./jev/questions.js";
 import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
+import { silentKinBoardFacts, silentKinPlanFacts } from "./silent-kin-progress.js";
 import { observedDemonPoison } from "./silent-demon-potion.js";
 import { crabPoisonFacts } from "./silent-crab-potion.js";
 import { carrySilentSkittish } from "./silent-skittish.js";
@@ -3851,6 +3852,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   };
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
     ...quantified(plan),
+    ...silentKinPlanFacts(state, plan),
     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
     ...simFact(plan),
     ...phaseFacts.get(plan),
@@ -3923,6 +3925,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const deepseekPlan = deepseekPlanLine(env);
   const lessons = fightLessons(state);
   const questionState: Record<string, JsonValue> = {
+    ...silentKinBoardFacts(state),
     run_brief: briefJson(env.brief),
     fight: kind,
     situation: {
