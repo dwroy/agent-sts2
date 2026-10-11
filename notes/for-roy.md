@@ -888,3 +888,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-11 07:55 CST Roy：最新战绩已刷新到03:19结束切点，静默A10纯Codex176局/1次SL后通关/首试0；最新20局入二幕15、二幕boss5、三幕5、首boss2、第二boss1、通关1，二幕途中损失10/15。较上次多6局0胜。控制台03:58记录SPC7NVA5K4RL在F36因Codex7天额度耗尽暂停，尚未结束不计；报告及全20局分段paper/materials/silent/20261011-0754-a10-funnel-20-run/report.md，首次与最终分列、无因果收益判断。
 
 - 2026-10-11 08:04 CST Roy评价目标已记录：以含SL最终通关率为主要结果，报告先列最终胜局/独立已结束局及样本量；首试单列、漏斗仅辅助诊断。中途到达率与终局获胜能力可以取舍，仍需同口径足量数据，不以单次胜利认定稳定提升。现行docs/eval.md；原话paper/materials/discussions/2026-10-11-final-win-objective.md。
+
+- 2026-10-11 10:29 CST [运维codex] 已恢复SPC7NVA5K4RL：10:28:50完成F36选牌，已推进F37并成功处理下一道Codex题；额度已用1%。旧控制进程余额基线阻止自动恢复，已保留原件并重启同存档控制进程，自动循环继续，持久缺陷已入普通修复队列。回执paper/materials/silent/20261011-spc-f36-quota-resume/closure.json。

@@ -1029,3 +1029,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-11 07:55 CST Roy：最新战绩已刷新到03:19结束切点，静默A10纯Codex176局/1次SL后通关/首试0；最新20局入二幕15、二幕boss5、三幕5、首boss2、第二boss1、通关1，二幕途中损失10/15。较上次多6局0胜。控制台03:58记录SPC7NVA5K4RL在F36因Codex7天额度耗尽暂停，尚未结束不计；报告及全20局分段paper/materials/silent/20261011-0754-a10-funnel-20-run/report.md，首次与最终分列、无因果收益判断。
 
 - 2026-10-11 08:04 CST Roy评价目标已记录：以含SL最终通关率为主要结果，报告先列最终胜局/独立已结束局及样本量；首试单列、漏斗仅辅助诊断。中途到达率与终局获胜能力可以取舍，仍需同口径足量数据，不以单次胜利认定稳定提升。现行docs/eval.md；原话paper/materials/discussions/2026-10-11-final-win-objective.md。
+
+- 2026-10-11 10:29 CST [运维codex] Roy授权额度恢复后继续对局；宿主确认原play1009746/autoplay3149336及SPC7NVA5K4RL F36。新鲜额度已用1%、ordinary_usage_allowed=true，旧进程却因历史最高credits416.75189→0持续阻止恢复；经标准broker仅SIGTERM旧play，保存cancelled原件后清终止标记，由原autoplay续原存档、新play1253800。10:28:50 Codex实际完成F36选牌，随后F37事件成功回答，现场EVENT/F37；原记忆/SL历史恢复，未新开独立局。保留旧日志、live未完成合并及配置；控制进程重启沿现有240分钟预算，原等待23390694ms另存。不改源码、额度阈值、模型/游戏知识或版本、不兑换券；持久修复入普通队列。证据paper/materials/silent/20261011-spc-f36-quota-resume/closure.json。
