@@ -43,6 +43,7 @@
  */
 
 import { readFileSync } from "node:fs";
+import type { CoreTurnTrace } from "../sim/core-window.js";
 import { continuationCost, continuationUtility, type ContinuationValue } from "./continuation-value.js";
 
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
@@ -52,7 +53,7 @@ import { bossLossPerTurn, bossProfile, eruptionAt, eruptionSchedule, laterPhaseH
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { solverFieldsOf, type SolverPieces } from "./passive-pieces.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, infernoCopiesOf, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, infernoCopiesOf, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, traceSteps, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 import { KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile } from "../knowledge/files.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
@@ -622,6 +623,8 @@ export interface RolloutOptions {
 }
 
 export interface RolloutInput {
+  /** Opt-in trace of selected lines only; the search and random stream are unchanged. */
+  captureCore?: boolean;
   /** Verified fresh-fight HP cost already applied to a synthetic board; reapply to transferred entry HP only. */
   openingHpLoss?: number;
   captureResources?: boolean;
@@ -1344,6 +1347,7 @@ interface Piles {
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
 export interface TurnRecord {
+  coreTrace?: CoreTurnTrace;
   /** Exact resources after the turn, used only by an observed following-fight objective. */
   resources?: { hp: number; revives: Revive[]; drunkKeys: string[] };
   /** HP lost this turn (our own + the enemy turn), as the solver outcome counts it. */
@@ -2785,6 +2789,7 @@ function simulate(
   const cardPlays = (line: Plan) => line.steps.filter((step) => !isPotion(step)).length;
   // Turn 0: the candidate line as the solver scored it. None (a whole fight from the policy's own start turn): the policy
   // plays it from the hand given, after drawing `drawFirst` cards into it (a pre-fight start's hand is empty).
+  let firstSolver = s;
   let first = plan;
   let firstHand = s.hand;
   let firstBase = input.piles.handBase;
@@ -2808,7 +2813,7 @@ function simulate(
     const { drawPile: _d, knownTop: _k, ...rest } = s;
     // B5: the one-turn lookahead (whole fights, when set) replaces the decision's nextIncoming with the sim's own forecast.
     const ahead = fullFight ? lookaheadOf(opts, enemies, input, player, s.player.hp) : null;
-    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input), ...passiveSolverFields(input, s.player) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes });
+    const solved = solveTurn((firstSolver = { ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input), ...passiveSolverFields(input, s.player) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes }));
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     first = solved.plans[0] ?? null;
@@ -2821,6 +2826,13 @@ function simulate(
     for (const step of line.steps) if (typeof step.target === "number") facing = step.target;
   };
   records.push(applyPlan(0, first, firstHand, firstBase, player, enemies, piles, input, random, powers, fullFight, firstKnown));
+  const capture = (solver: SolverInput, line: Plan, turn: number) => {
+    if (!input.captureCore) return;
+    const traced = traceSteps(solver, line.steps);
+    records[records.length - 1]!.coreTrace = { turn, complete: traced.complete,
+      bandages: solver.player.toughBandagesBlock ?? null, events: traced.transitions };
+  };
+  capture(firstSolver, first, s.turn ?? 1);
   turnTo(first);
   timeUp(0);
   drink(first);
@@ -3023,8 +3035,9 @@ function simulate(
     const drawing = fullFight ? knownDraws(hand, piles, player, targets) : null;
     const played = drawing?.hand ?? hand;
     const potionsNow = fullFight ? sampledPotions(potions, input, seed, h, played, piles, player, targets, drawing?.known) : potions;
-    const solved = solveTurn({ ...rest, ...focus, ...wither, ...scale, hand: [...played, ...potionsNow], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes,
-      ...(Number.isFinite(deadline) ? { deadline: budget.start + deadline, deadlineNow: budget.now } : {}) });
+    const turnSolver: SolverInput = { ...rest, ...focus, ...wither, ...scale, hand: [...played, ...potionsNow], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes,
+      ...(Number.isFinite(deadline) ? { deadline: budget.start + deadline, deadlineNow: budget.now } : {}) };
+    const solved = solveTurn(turnSolver);
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
@@ -3033,6 +3046,7 @@ function simulate(
     const best = solved.plans[0];
     if (!best) break;
     records.push(applyPlan(h, best, [...played, ...potionsNow], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known));
+    capture(turnSolver, best, (s.turn ?? 1) + h);
     turnTo(best);
     witherPlayed += cardPlays(best);
     timeUp(h);

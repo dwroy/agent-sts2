@@ -1,3 +1,4 @@
+import { coreWindow } from "./core-window.js";
 /**
  * Whole boss fight simulator (milestone B1, Dai 2026-09-30): from a fight state, every sample plays the fight to its
  * end (the boss dead or we are) instead of the rollout's 5-turn window, so what decides a boss fight (a dozen turns of
@@ -121,6 +122,7 @@ export interface BossSimOptions {
 
 /** One sample of one line, played to the fight's end. */
 export interface FightSampleResult {
+  coreWindow?: import("./core-window.js").CoreWindowResult;
   resources?: { hp: number; revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
   sequence?: { firstWon: boolean; firstHp: number | null; firstPotions: string[]; secondBoss: string | null; firstTurns: number; secondWon: boolean | null; secondDied: boolean | null };
   won: boolean;
@@ -291,6 +293,7 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
   const enemyHpLeft = won || !last ? 0 : last.hpLeft ? Object.values(last.hpLeft).reduce((sum, hp) => sum + hp, 0) : last.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
   return {
     won,
+    ...(input.captureCore ? { coreWindow: coreWindow(records.flatMap((r) => r.coreTrace ? [r.coreTrace] : [])) } : {}),
     ...(last?.resources ? { resources: { ...last.resources, drunkKeys: records.flatMap((r) => r.resources?.drunkKeys ?? []) } } : {}),
     died,
     capped: !won && !died && !timeUp,
@@ -360,6 +363,7 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
   const transferred = continuationInput(input, first, variant.input, { seed, plan });
   const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
   return { ...second,
+    ...(input.captureCore ? { coreWindow: undefined } : {}),
     turns: first.turns + second.turns, hpLoss: first.hpLoss + transferred.openingHpLoss + second.hpLoss, revived: first.revived + second.revived,
     drunk: [...first.drunk, ...second.drunk], policyTurns: first.policyTurns + second.policyTurns, policyNodes: first.policyNodes + second.policyNodes,
     lossByTurn: [...first.lossByTurn, ...second.lossByTurn], dmgByTurn: [...first.dmgByTurn, ...second.dmgByTurn],
