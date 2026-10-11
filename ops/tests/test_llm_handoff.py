@@ -191,5 +191,21 @@ class Protocol(unittest.TestCase):
         self.assertEqual((logs / "reports").read_text(), "reported\n")
         self.assertFalse((ops / "STOP").exists())
 
+    def test_reused_pane_exports_target_home_before_session_start(self):
+        home = str(self.root / "home with 'quote;$(false)")
+        calls = []
+        def fake_command(args):
+            calls.append(args)
+            if args[1:3] == ["pane", "process-info"]:
+                return json.dumps({"result": {"process_info": {"foreground_process_group_id": 12, "shell_pid": 12}}})
+            self.assertEqual(args[1:4], ["pane", "run", "fixed-pane"])
+            result = subprocess.run(["bash", "-c", args[4]], capture_output=True, text=True, timeout=3)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            return ""
+        with patch("llm_switch.command", side_effect=fake_command):
+            marker = CodexAdapter(self.tx).configure_pane("fixed-pane", home, "target")
+        self.assertEqual(Path(marker).read_text(), home + "\n")
+        self.assertEqual(len(calls), 2)
+
 
 if __name__ == "__main__": unittest.main()

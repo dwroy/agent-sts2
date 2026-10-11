@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import time
 
@@ -36,6 +37,7 @@ def process(pid):
 def snapshot(state):
     active = []
     ops_identity = []
+    ops_pane = None
     complete = True
     try:
         batches = json.loads((RUNTIME / "learn.json").read_text())["batches"]
@@ -48,6 +50,7 @@ def snapshot(state):
                 # A missing PID is not proof of a committed completion/checkpoint.
                 active.append({"kind": "unsettled_batch", "id": ident, "pid": batch.get("pid")})
         agent = json.loads(command(["herdr", "agent", "get", "ops"]))["result"]["agent"]
+        ops_pane = agent["pane_id"]
         info = json.loads(command(["herdr", "pane", "process-info", "--pane", agent["pane_id"]]))["result"]["process_info"]
         ops_pids = {p["pid"] for p in info.get("foreground_processes", [])}
         ops_identity = [p for pid in ops_pids if (p := process(pid))]
@@ -81,6 +84,7 @@ def snapshot(state):
     ready = "ready_to_drain" in checkpoint and state["source"]["session"] in checkpoint
     return {"at": stamp(), "active_workers": active, "ops_idle": idle,
             "checkpoint_ready": ready, "inventory_complete": complete,
+            "ops_pane": ops_pane,
             "ops_identity": [{k: p[k] for k in ("pid", "start_ticks")} for p in ops_identity]}
 
 
@@ -101,10 +105,28 @@ class CodexAdapter:
     def __init__(self, transaction):
         self.transaction = transaction
 
+    def configure_pane(self, pane, home, purpose):
+        # Reusing an idle pane does not apply open-pane --env. Export in its actual shell.
+        # A marker written by that shell proves the command executed before agent start.
+        marker = self.transaction.path.parent / (purpose + "-pane-home")
+        marker.unlink(missing_ok=True)
+        for _ in range(30):
+            info = json.loads(command(["herdr", "pane", "process-info", "--pane", pane]))["result"]["process_info"]
+            if info["foreground_process_group_id"] == info["shell_pid"]: break
+            time.sleep(1)
+        else: raise RuntimeError("ops pane did not return to its shell")
+        script = (" export CODEX_HOME=" + shlex.quote(home) + " LEARNER_CODEX_HOME=" + shlex.quote(home)
+                  + "; printf '%s\\n' \"$CODEX_HOME\" > " + shlex.quote(str(marker)))
+        command(["herdr", "pane", "run", pane, script])
+        for _ in range(30):
+            if marker.is_file() and marker.read_text() == home + "\n": return str(marker)
+            time.sleep(1)
+        raise RuntimeError("ops pane account environment not acknowledged")
+
     def backup(self, state):
         home_file = RUNTIME / "codex-home"
         brain = RUNTIME / "brain-home"
-        return {"selector": home_file.read_text() if home_file.exists() else None,
+        return {"pane": state["snapshot"]["ops_pane"], "selector": home_file.read_text() if home_file.exists() else None,
                 "brain_selector": brain.read_text() if brain.exists() else None, "cron": command(["crontab", "-l"]),
                 "session": (RUNTIME / "session-id").read_text(),
                 "herdr_ops": (RUNTIME / "herdr-ops.json").read_text() if (RUNTIME / "herdr-ops.json").exists() else None}
@@ -119,6 +141,7 @@ class CodexAdapter:
             time.sleep(1)
         else: raise RuntimeError("old ops TUI did not exit; no account configuration changed")
         target = state["target"]
+        pane_receipt = self.configure_pane(state["receipts"]["backup"]["pane"], target["learner_home"], "target")
         (RUNTIME / "codex-home").write_text(target["learner_home"] + "\n")
         (RUNTIME / "brain-home").write_text(target["brain_home"] + "\n")
         updated = cron_home(state["receipts"]["backup"]["cron"], target["learner_home"])
@@ -131,7 +154,7 @@ class CodexAdapter:
             source = RUNTIME / name
             if source.exists(): os.replace(source, archive / name)
         return {"at": stamp(), "learner_home": target["learner_home"], "brain_home": target["brain_home"],
-                "old_session": state["source"]["session"], "cross_account_resume": False}
+                "old_session": state["source"]["session"], "cross_account_resume": False, "pane_environment": pane_receipt}
 
     def rollback(self, state, backup):
         # No model is launched by activate(), so restoring the saved account settings is safe here.
@@ -147,7 +170,8 @@ class CodexAdapter:
         p = subprocess.run(["crontab", "-"], input=restored, text=True, capture_output=True)
         (RUNTIME / "session-id").write_text(backup["session"])
         if backup["herdr_ops"] is not None: (RUNTIME / "herdr-ops.json").write_text(backup["herdr_ops"])
-        return {"configuration_restored": p.returncode == 0, "admission_still_held": True}
+        pane_receipt = self.configure_pane(backup["pane"], state["source"]["learner_home"], "rollback")
+        return {"configuration_restored": p.returncode == 0, "admission_still_held": True, "pane_environment": pane_receipt}
 
     def bootstrap(self, state):
         target = state["target"]

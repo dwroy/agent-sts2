@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { expect, it } from "vitest";
 
-it.each([["test_account_drain.py", 4], ["test_llm_handoff.py", 15]])("validates drain lifecycle: %s", async (file, count) => {
+it.each([["test_account_drain.py", 4], ["test_llm_handoff.py", 16]])("validates drain lifecycle: %s", async (file, count) => {
   const result = await new Promise<{ code: number | null; output: string }>((resolve, reject) => {
     const child = spawn("python3", ["-B", `../ops/tests/${file}`], { stdio: ["ignore", "pipe", "pipe"] });
     let output = "";

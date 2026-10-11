@@ -9,7 +9,7 @@ Roy 2026-10-11 授权：框架把切换 LLM/账号作为标准能力，采用 dr
 1. **预检**：目标 profile 只保存 engine、账号标签、model、effort、service_tier、隔离 home 路径和交接文件路径。凭据只引用已登录位置，不读取或复制到交接。目标模型可用且 key 隔离检查通过，才允许 prepare。
 2. **停止准入**：在原 learn.lock 下设置归本事务所有的 `LLM_DRAIN` 和 `PAUSE`。原 cron/wake、手工派发、完成回调、boss 校准、辅助会话和下一局启动均停止新增工作。已开始的学习仍可完成、合入、检查和写回原事件。
 3. **排空**：等待对局、报告、学习 wrapper（包括模型完成后的宿主检查）、辅助进程和旧账号模型进程自然结束。ops 完成本轮并写 `ready_to_drain` 及原会话 ID 的交接后空闲。PID 不可见不等于完成；未结算批次、身份不符、盘点失败均保持 draining。
-4. **切换**：重新持 wake/learn/assist 锁核验无在途工作。只让已空闲的旧 ops 正常 `/quit`，核 PID 与启动时间确认退出；备份路径选择器、项目 cron 块、旧 session 标识，安装目标配置。修改失败则尝试恢复配置，继续保持准入关闭。
+4. **切换**：重新持 wake/learn/assist 锁核验无在途工作。只让已空闲的旧 ops 正常 `/quit`，核 PID 与启动时间确认退出；备份路径选择器、项目 cron 块、旧 session 标识，安装目标配置。复用 Herdr pane 时在真实 shell 导出目标 home，等该 shell 写回路径回执后才启动新会话（仅传 open-pane --env 不会更新旧 pane）。修改失败则尝试恢复配置及 pane 环境，继续保持准入关闭。
 5. **接管验证**：沿原调度器、broker、权限和 ops prompt 新建会话，通过交接文件恢复任务语义。Codex 跨账号使用新 UUID，不恢复旧账号的加密 session。模型、强度、普通服务档、512k 上下文沿用项目既有策略。
 6. **释放**：新会话成功完成接管轮、UUID 和目标 rollout 校验通过后，只删除本事务仍拥有的标记。原有 PAUSE/STOP 保留；从原事件队列恢复，由新 ops 沿原 broker 收报告、启动下一局和未完成学习。
 
