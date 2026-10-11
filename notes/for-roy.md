@@ -890,3 +890,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-11 08:04 CST Roy评价目标已记录：以含SL最终通关率为主要结果，报告先列最终胜局/独立已结束局及样本量；首试单列、漏斗仅辅助诊断。中途到达率与终局获胜能力可以取舍，仍需同口径足量数据，不以单次胜利认定稳定提升。现行docs/eval.md；原话paper/materials/discussions/2026-10-11-final-win-objective.md。
 
 - 2026-10-11 10:29 CST [运维codex] 已恢复SPC7NVA5K4RL：10:28:50完成F36选牌，已推进F37并成功处理下一道Codex题；额度已用1%。旧控制进程余额基线阻止自动恢复，已保留原件并重启同存档控制进程，自动循环继续，持久缺陷已入普通修复队列。回执paper/materials/silent/20261011-spc-f36-quota-resume/closure.json。
+
+- 2026-10-11 15:30 CST [Codex默认统一] Roy授权“所有 codex 默认配置 aster xhigh normal”“context 上限512k”；旧对局/ops Sol+Fast、learner Astra独立默认改为全入口 gpt-6-astra/xhigh/service_tier=default，context512000、自动压缩460800。main e9b3a6ceb；live在live-merge.lock下仅应用8文件配置补丁，19项原冲突及index条目核对保持一致，未造合入提交。沙箱tsc+2681例、包装器15例、live补丁前后tsc与main/live共10入口参数核对均通过；原生CLI config/read接受512k，服务端容量未实测。新进程/下一调用加载，现有在途对局、learner与TUI不重启。全局两个配置入口原已一致，仅只读核实；不改知识、凭据、运维prompt，不推送。模型配置按run-config分组，不造游戏知识版本。原首测失败/修正、补丁前后SHA和回执见paper/materials/20261011-codex-astra-normal-512k/closure.json；回退须核对after-SHA后仅逆本次补丁并撤源码提交，不动既有合并现场。 预期：新学习/对局/运维统一推理设置、关闭Fast并提高客户端上下文上限；实际生效局界由后续run-config确认，不宣称在途会话已切换。

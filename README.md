@@ -65,7 +65,7 @@ npm run shadow -- --max-decisions 20              # 只决策不动手
 
 - `CHARACTER`：选哪个角色。
 - `TARGET_ASCENSION`：进阶，可以填固定数字，或者设成随胜利升阶。
-- `BRAIN_ENGINE`／分题引擎／`BRAIN_FALLBACK`：保留历史配置解析；生产大脑固定为 Codex，实际配置写入 run-config。`BRAIN_CODEX_MODEL`、推理强度、超时、额度保护及 `exec|session` 模式仍生效；Fast 档位固定为 `priority`。
+- `BRAIN_ENGINE`／分题引擎／`BRAIN_FALLBACK`：保留历史配置解析；生产大脑固定为 Codex，实际配置写入 run-config。`BRAIN_CODEX_MODEL`、推理强度、超时、额度保护及 `exec|session` 模式仍生效；默认统一为 Astra / xhigh / normal（Fast 关闭），context 上限 512000；项目隔离启动器显式传入这些设置。
 - `KNOWLEDGE_PREFIX=full`：整份适用知识进入系统提示；配置解析默认 `off`，应核实际 run-config，不能只凭文档判断已启用。
 - `SL_*`：读档相关的开关。
 

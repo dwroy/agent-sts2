@@ -524,7 +524,7 @@ export interface BrainConfig {
     home: string;
     /** BRAIN_CODEX_SUMMARY: the reasoning summary codex asks for (default auto; logged, not shown to the model). */
     summary: "auto" | "concise" | "detailed" | "none";
-    /** Fast service tier for every Codex session (Roy 2026-10-09); model and reasoning effort stay separate. */
+    /** Normal service tier for every Codex session (Roy 2026-10-11). */
     serviceTier: string | null;
     /**
      * BRAIN_CODEX_STALL_MS (default 120 s): after the first output token, a run whose stream is silent this long is
@@ -613,13 +613,16 @@ export const DEFAULT_CLAUDE_TIMEOUT_MS = 120_000;
 export const DEFAULT_CLAUDE_MAX_CALLS = 150;
 
 /**
- * The brain's Codex model and effort when BRAIN_CODEX_MODEL / BRAIN_CODEX_EFFORT are unset (Roy 2026-10-03: "gpt6.1 sol
- * extra high"). Always sent explicitly: the engine ignores ~/.codex/config.toml (engines/codex.ts).
+ * Shared Codex defaults (Roy 2026-10-11): Astra / xhigh / normal, with a 512k configured context window.
+ * Always sent explicitly: isolated launchers ignore ~/.codex/config.toml.
  */
-export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
+export const DEFAULT_CODEX_MODEL = "gpt-6-astra";
 export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
-/** Codex's model catalog names the priority service tier "Fast". Roy enabled it for all sessions on 2026-10-09. */
-export const CODEX_SERVICE_TIER = "priority";
+/** Explicit normal tier also clears priority inherited from an older session. */
+export const CODEX_SERVICE_TIER = "default";
+export const CODEX_CONTEXT_WINDOW = 512_000;
+/** Leave room for the answer and compaction before reaching the configured context ceiling. */
+export const CODEX_AUTO_COMPACT_TOKENS = 460_800;
 
 /** BRAIN_CODEX_TIMEOUT_MS when unset: 10 minutes per call (xhigh on a map / act-plan question takes minutes). */
 export const DEFAULT_CODEX_TIMEOUT_MS = 600_000;
