@@ -142,6 +142,8 @@ export interface EnemySim {
   block: number;
   vulnerable: number;
   weak: number;
+  /** Silent A10 PLOW_MOVE: observed Shackling under existing Weak, decision turn only. */
+  weakShackling?: true;
   /** Poison remaining before this enemy turn, observed in Silent runs. */
   poison?: number;
   artifact: number;
@@ -166,6 +168,8 @@ export interface EnemySim {
   reattach?: boolean;
   /** REATTACH_POWER amount: the HP a dead segment comes back with (25 on the Decimillipede). */
   reattachHp?: number;
+  /** 1913SE84AXQF A10, silent-0064: the observed middle discards poison and Strength when down. */
+  reattachClearsPoisonStrength?: boolean;
   /**
    * Crab Rage (Kaiser Crab's Rocket / Crusher): when an ally dies this one gains 99 Block and more
    * Strength at once, so killing one part alone is a trap (7Q5G F33: Rocket "lethal", Crusher kept
@@ -783,6 +787,8 @@ export interface Step {
 }
 
 export interface Outcome {
+  /** Unplayed Shivs actually made by this line's observed Cunning drinks, for later-turn piles. */
+  cunningShivsLeft?: CardModel[];
   /** Established Serpent Form after this line; absent outside the observed character/ascension. */
   serpentFormAfter?: number | null;
   /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
@@ -1724,13 +1730,19 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.pendingSelection = true;
     next.unknown = [...next.unknown, `${card.name}（重放弃牌未验证）`];
   }
+  const unverifiedBladeDance = card.bladeDance && (plays > 1 || automatic || card.upgraded || card.cardId !== "BLADE_DANCE" || !card.adds);
+  if (unverifiedBladeDance) {
+    next.pendingSelection = true;
+    next.unknown = [...next.unknown, `${card.name}（自动、重放、升级或缺资料的生成未验证）`];
+  }
   if (card.bulletTime && (plays > 1 || automatic)) next.unknown = [...next.unknown, "子弹时间（自动出牌或重放未验证）"];
   for (let play = 0; play < plays; play += 1) {
     const serpent = next.serpentForm;
     const serpentTargets = next.enemies.filter((enemy) => enemy.alive);
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
-    const effects = unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
+    const effects = unverifiedBladeDance ? { ...card, draw: 0, adds: undefined }
+      : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost, plays === 1 && !automatic);
     // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
     // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
@@ -2075,12 +2087,14 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
   if (card.adds && !next.pendingSelection && (card.discardCount === undefined || hiddenDaggers(card))) {
-    const adds = hiddenDaggers(card) ? card.adds.map((shiv, i) => ({
-      ...shiv, index: 2_000_000 + next.steps.length * 2 + i, key: `${card.key}~shiv${next.steps.length}:${i}`,
+    const adds = hiddenDaggers(card) || card.bladeDance ? card.adds.map((shiv, i) => ({
+      ...shiv, index: card.bladeDance ? 3_000_000 + next.steps.length * 3 + i : 2_000_000 + next.steps.length * 2 + i,
+      key: `${card.key}~shiv${next.steps.length}:${i}`,
       validTargets: next.enemies.filter((enemy) => enemy.alive).map((enemy) => enemy.index),
       damage: shiv.damageBase === undefined ? shiv.damage : Math.floor(ourAttackScaled(shiv.damageBase + (player.strengthNow ?? 0), player.weak, false)),
     })) : card.adds;
-    addToHand(next, adds, player.handLimit);
+    const cunning = card.cardId.startsWith("POTION:CUNNING_POTION:");
+    addToHand(next, adds, cunning ? (player.handLimit ?? HAND_LIMIT) - next.locked.length : player.handLimit);
   }
   if (card.drawn && card.special !== "gamble" && card.special !== "chaos" && card.special !== "glowwater" && card.special !== "bottled") drawCards(next, card.drawn, player);
   // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn (a sample: its own
@@ -2683,6 +2697,18 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
         // states.jsonl); only Strength changes made this turn still need the ×1.5.
         const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
         let amount = Math.floor(shown + strengthChange);
+        // 3UPY3BP2LVS7 F17 T3: shown 16 with Weak is raw 22; Shackling's -7 makes 11, not 9.
+        // Resolve only a unique result from the rounded intent. Ambiguous bases, other loss amounts,
+        // move changes and unobserved multipliers retain their existing path (silent-0349 remains partial).
+        if (enemy.weakShackling && enemy.weak > 0 && !enemy.newlyWeak && !moved && !died &&
+            enemy.strengthDelta === 0 && enemy.tempStrengthLoss === 7 &&
+            enemy.attacks.length === 1 && attack.hits === 1 && Number.isInteger(shown) && shown > 0 &&
+            !player.vulnerable && player.facing == null && !player.surrounded &&
+            !player.colossus && !sim.colossus && !(enemy.shrink ?? 0) && !enemy.newlyShrunk && sim.tainted === 0) {
+          const low = Math.max(0, Math.floor((Math.ceil(shown / 0.75) - 7) * 0.75));
+          const high = Math.max(0, Math.floor((Math.ceil((shown + 1) / 0.75) - 1 - 7) * 0.75));
+          if (low === high) amount = low;
+        }
         if (sim.tainted > 0) {
           const tainted = sim.tainted * (player.vulnerable ? 1.5 : 1);
           // Tainted adds before Weak. Under a Weak already up, the largest base behind the shown number
@@ -3474,6 +3500,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       weakApplied: sim.weakApplied,
       strengthGained: sim.permStrength,
       cardsDrawn: sim.cardsDrawn,
+      ...(sim.steps.some((step) => step.cardId.startsWith("POTION:CUNNING_POTION:")) ? {
+        cunningShivsLeft: [...sim.hand, ...sim.held, ...sim.locked].filter((entry) =>
+          entry.cardId === "SHIV" && /^p\d+~shiv\d+$/.test(entry.key) && !input.hand.some((original) => original.key === entry.key)),
+      } : {}),
       ...(sim.apotheosisApplied ? { apotheosisApplied: true as const } : {}),
       unknownCards: [
         ...sim.unknown,

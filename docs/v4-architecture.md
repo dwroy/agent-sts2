@@ -1,6 +1,6 @@
 # V4 架构：当前实现
 
-核对日期：2026-10-10。本文说明 main 的现行代码；运行中的进程采用哪个提交和配置，要看实际 live、`logs/run-config.jsonl` 和调用日志。现场状态见 `paper/materials/STATE-*.md` 及 [decision-log](../paper/materials/decision-log.md)。
+核对日期：2026-10-11（同步已批准的 Codex 默认配置和 watcher 职责）。本文说明 main 的现行代码；运行中的进程采用哪个提交和配置，要看实际 live、`logs/run-config.jsonl` 和调用日志。现场状态见 `paper/materials/STATE-*.md` 及 [decision-log](../paper/materials/decision-log.md)。
 
 V4 从 2026-09-29 的模块拆分发展而来。[原始设计](history/v4-architecture-2026-09-29.md) 与 [首次上线方案](v4-go-live.md) 保留历史口径。其中 DeepSeek 默认、Claude 优先、Codex 待实现、v3/v4 分支及人工审核流程已由后续实现和授权更新。当前边界以 [AGENTS.md](../AGENTS.md)、[学习协议](learning-protocol.md) 为准。
 
@@ -33,6 +33,8 @@ V4 从 2026-09-29 的模块拆分发展而来。[原始设计](history/v4-archit
 
 完整目录说明见 [layout.md](layout.md)。模块存在不代表其中所有实验接口都在生产决策路径上。
 
+Roy 与 watcher 负责全系统健康观察、阻塞/不稳定/bug 排查修复，以及获批的架构和流程迭代；不接管日常派单或提供游戏知识。ops 与学习者自主完成运行闭环，主 ops 可经既有 broker 显式派最多两个只读辅助 session 核查，见 [ops-assist.md](ops-assist.md)。
+
 ## 2. 大脑：生产固定 Codex，故障在原题等待
 
 接口仍是 `BrainRequest → BrainEngine.decide → BrainAnswer`。生产入口 `createRouter` 强制 `engine="codex"`、清空分题引擎、关闭回退，并设 `codexOnly=true`。DeepSeek / Claude 适配器和可配置回退路由保留作历史兼容与固定数据回归；生产不能用环境变量切回这些引擎。
@@ -42,10 +44,10 @@ V4 从 2026-09-29 的模块拆分发展而来。[原始设计](history/v4-archit
 | 配置 | main 代码的行为 |
 |---|---|
 | `BRAIN_ENGINE`、`BRAIN_ENGINE_<题型>`、`BRAIN_FALLBACK` | 历史解析仍在；生产 `createRouter` 覆盖引擎选择与回退 |
-| `BRAIN_CODEX_MODEL`、`BRAIN_CODEX_EFFORT`、`BRAIN_CODEX_TIMEOUT_MS` | 仍生效；未配置时为 `gpt-6.1-sol` / `xhigh` / 600000 ms；按题型模型覆盖仍在 |
+| `BRAIN_CODEX_MODEL`、`BRAIN_CODEX_EFFORT`、`BRAIN_CODEX_TIMEOUT_MS` | 仍生效；未配置时为 `gpt-6-astra` / `xhigh` / 600000 ms；按题型模型覆盖仍在 |
 | `BRAIN_CODEX_MODE` | `exec` 每题起 CLI，`session` 使用 app-server 会话；解析默认 `exec`，实际值看 run-config |
 | `BRAIN_CODEX_HOME`、`BRAIN_CODEX_BIN`、`BRAIN_CODEX_USAGE_*` | 登录目录、程序路径、额度保护和恢复预检 |
-| Fast 服务档位 | 代码固定 `priority`，保留模型和推理强度；exec 与 session 都显式传入，见 [codex-fast.md](codex-fast.md) |
+| Codex 服务档位和上下文 | 默认 normal（`service_tier="default"`），context 512000、自动压缩 460800；exec 与 session 显式传入，配置上限不等于服务端实测容量，见 [codex-fast.md](codex-fast.md) |
 | `KNOWLEDGE_PREFIX` | `full` 把适用知识整份放进 system；配置解析默认 `off`，运行配置须显式设 `full` |
 | `RUN_PLAN`、`FIGHT_PLAN` | 决定相应计划模块是否启用；解析默认 `off`，不能凭模块存在推断已启用 |
 
@@ -80,7 +82,7 @@ Codex 大脑关闭工具和项目文档，工作目录使用临时目录；它�
 
 ## 4. 离线学习与评估
 
-任务说明在 `learner/tasks/*.md`，启动器在 `learner/run.ts`。启动器支持 codex / claude 两种适配；现行生产学习者使用 Codex，默认 `gpt-6.1-sol` / `xhigh`，Fast 启用。Claude 只观察和与 Roy 对话，不修改或审核。用法见 [learner/README.md](../learner/README.md)。
+任务说明在 `learner/tasks/*.md`，启动器在 `learner/run.ts`。启动器支持 codex / claude 两种适配；现行生产学习者使用 Codex，默认 `gpt-6-astra` / `xhigh` / normal，context 512000、自动压缩 460800。Claude 只观察和与 Roy 对话，不修改或审核。用法见 [learner/README.md](../learner/README.md)。
 
 闭环为：对局证据 → 复盘 → 经验/知识或代码提案 → Codex 学习者实现与自测 → 自行合入 live → 运维核实际合入、登记与外部检查 → 评估。没有独立人工审核闸；未授权的架构调整仍交 Roy。Roy 2026-10-07 已允许学习者在理由与本角色证据充分时修改其原定的出牌、药水、必死/SL、终局价值规则，必须同时保存代码提案、账本链和上线后的双收件箱通知。
 

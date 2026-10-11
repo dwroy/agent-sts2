@@ -67,6 +67,8 @@ export interface CardModel {
   /** VLZ6CCT8AQ0A A10: ordinary Apotheosis, with unverified upgrades kept unknown. */
   apotheosis?: boolean;
   apotheosisUpgrade?: UpgradeDelta;
+  /** The observed Snakebite preview text, alongside its certified numeric upgrade. */
+  apotheosisUpgradeText?: string;
   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
   corrosiveWave?: number;
   block: number;
@@ -232,6 +234,8 @@ export interface CardModel {
   choices?: CardModel[];
   drawn?: CardModel[];
   adds?: CardModel[];
+  /** Silent A10 plain Blade Dance: three observed Shivs, with fresh identities at play time. */
+  bladeDance?: boolean;
   sneckoCosts?: Record<string, number>;
   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
   demise?: number;
@@ -728,6 +732,9 @@ export function replayOf(rendered: string): number {
 
 /** The numbers upgrading a card changes, as CardModel fields (the solver adds them: Blessing of the Forge). */
 export interface UpgradeDelta {
+  /** Certified Silent Apotheosis fields; generic Forge deltas remain unchanged. */
+  dexterity?: number;
+  poison?: number;
   damageBase?: number;
   blockBase?: number;
   fasten?: number;
@@ -804,6 +811,8 @@ export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
     ...(delta.enemyTempStrengthLoss !== undefined ? { enemyTempStrengthLoss: add(card.enemyTempStrengthLoss, delta.enemyTempStrengthLoss) } : {}),
     ...(delta.poisonPerTurn !== undefined ? { poisonPerTurn: add(card.poisonPerTurn, delta.poisonPerTurn) } : {}),
     ...(delta.poisonExtraTriggers !== undefined ? { poisonExtraTriggers: add(card.poisonExtraTriggers, delta.poisonExtraTriggers) } : {}),
+    ...(delta.dexterity !== undefined ? { dexterity: add(card.dexterity, delta.dexterity) } : {}),
+    ...(delta.poison !== undefined ? { poison: add(card.poison, delta.poison) } : {}),
     vulnerable: add(card.vulnerable, delta.vulnerable),
     weak: add(card.weak, delta.weak),
     strength: add(card.strength, delta.strength),
@@ -821,7 +830,8 @@ export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
 /** Apply only a certified own-character pair; absent coverage must remain visible to the solver. */
 export function applyApotheosisUpgrade(card: CardModel): CardModel {
   const upgraded = card.type === "Potion" || card.upgraded || card.cardId === "ASCENDERS_BANE" ? card
-    : card.apotheosisUpgrade ? applyUpgrade(card, card.apotheosisUpgrade) : { ...card, known: false };
+    : card.apotheosisUpgrade ? { ...applyUpgrade(card, card.apotheosisUpgrade),
+      ...(card.apotheosisUpgradeText !== undefined ? { text: card.apotheosisUpgradeText } : {}) } : { ...card, known: false };
   return card.drawn ? { ...upgraded, drawn: card.drawn.map(applyApotheosisUpgrade) } : upgraded;
 }
 
@@ -925,13 +935,18 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const calculatedGamble = cardId === "CALCULATED_GAMBLE" && (!bool(card["upgraded"]) || upgradedGamble);
   const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
     dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
+  // YBRA3EJ94GBR F30 T3 / F33 T10, silent-0324: Cards=3 makes Shivs; it never draws from the pile.
+  const bladeDance = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BLADE_DANCE" &&
+    !bool(card["upgraded"]) && dyn(card, "Cards") === 3 &&
+    template.replace(/\s+/g, "") === "添加{Cards:diff()}张小刀到你的手牌。" &&
+    renderedText.replace(/\s+/g, "") === "添加3张小刀到你的手牌。消耗。";
   // C48LLXBGKXQ9 F24 T1 / HUVEPWQAHWFU F35 T2, silent-0202: Cards=3 adds random attacks
   // to the draw pile; none enter the hand now. Their unknown future value remains unmodelled.
   const metamorphosis = character.toLowerCase() === "silent" && cardId === "METAMORPHOSIS" &&
     !bool(card["upgraded"]) && dyn(card, "Cards") === 3;
   // L704TLETMZBM F48 T4: Dagger Throw's fixed draw has no Cards variable in the observed frame.
   const daggerDraw = character.toLowerCase() === "silent" && cardId === "DAGGER_THROW" && !bool(card["upgraded"]) && /抽1张牌/.test(renderedText.replace(/\s+/g, "")) ? 1 : 0;
-  const draw = hiddenDaggers || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
+  const draw = hiddenDaggers || bladeDance || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 
@@ -939,8 +954,16 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // the end of the 3rd turn.
   const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
   // KQQELQSZ382Z F17 attempt 6 T7 / KAY522KT5NXR F14 T1, silent-0219: the observed plain card adds seven poison.
+  // VLZ6CCT8AQ0A A10 F43 T5: only the observed unmodified two-cost upgraded ten-point preview.
+  const snakebiteValues = asArray(card["dynamic_values"]).map(asRecord);
+  const upgradedSnakebite = ascension === 10 && bool(card["upgraded"]) && num(card["energy_cost"]) === 2 &&
+    !bool(card["costs_x"]) && card["enchantment"] == null && !/重放|replay/i.test(renderedText) &&
+    template === "给予{PoisonPower:diff()}层中毒。" && snakebiteValues.length === 1 &&
+    renderedText.replace(/\s+/g, "") === "保留。给予10层中毒。" &&
+    snakebiteValues[0]?.["name"] === "PoisonPower" &&
+    ["base_value", "current_value", "enchanted_value"].every((field) => snakebiteValues[0]?.[field] === 10);
   const snakebite = character.toLowerCase() === "silent" && cardId === "SNAKEBITE" &&
-    !bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7;
+    ((!bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7) || upgradedSnakebite);
   // DUZUBAJ3A8GP F6 T1 / F27 T4-T5, silent-0234: only the observed plain/upgraded Haze values are wired.
   const haze = character.toLowerCase() === "silent" && cardId === "HAZE" &&
     (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
@@ -966,17 +989,17 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     !bool(card["upgraded"]) && template.replace(/\s+/g, "") === "你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。";
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
-    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bulletTime;
+    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bladeDance || bulletTime;
   let flatValue = 0;
   let known = hasModelledEffect;
   let immediatePlays: CardModel["immediatePlays"];
   let adds: CardModel[] | undefined;
-  if (hiddenDaggers) {
+  if (hiddenDaggers || bladeDance) {
     // 10GPK5XGHCK3 F9 T5 / MGA0CZDDKC0P F17 retry T3: these are made, not drawn or played immediately.
     const shiv = knowledge.card("SHIV");
-    const base = shiv ? dyn({ dynamic_values: shiv.vars }, "Damage") ?? shiv.damage : null;
+    const base = shiv ? (bladeDance ? dynBase({ dynamic_values: shiv.vars }, "Damage") : dyn({ dynamic_values: shiv.vars }, "Damage")) ?? shiv.damage : null;
     known = shiv !== null && base !== null;
-    if (shiv && base !== null) adds = Array.from({ length: 2 }, (_, i) => modelHandCard({
+    if (shiv && base !== null) adds = Array.from({ length: bladeDance ? 3 : 2 }, (_, i) => modelHandCard({
       index: i, card_id: "SHIV", name: shiv.name, upgraded: false, energy_cost: 0, playable: true,
       requires_target: true, target_type: "AnyEnemy", rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
       dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
@@ -1112,6 +1135,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
     ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),
     ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),
+    ...(bladeDance ? { bladeDance: true, ...(adds ? { adds } : {}) } : {}),
     ...(character.toLowerCase() === "silent" && !bool(card["upgraded"]) && ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"].includes(cardId) &&
       /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { discardAfterDraw: true, ...(daggerDraw > 0 ? { discardDraw: daggerDraw } : {}) } : {}),
     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
@@ -1156,7 +1180,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     const rawUpgrade = observedApotheosisUpgrade(card);
     if (rawUpgrade) {
       const upgraded = modelHandCard(rawUpgrade, fallbackIndex, knowledge, character, ascension);
-      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn", "poisonExtraTriggers"] as const;
+      if (cardId === "SNAKEBITE") model.apotheosisUpgradeText = upgraded.text;
+      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn", "poisonExtraTriggers", "dexterity", "poison"] as const;
       model.apotheosisUpgrade = {};
       for (const field of fields) {
         const change = (upgraded[field] ?? 0) - (model[field] ?? 0);
@@ -1412,6 +1437,9 @@ export const GENERATED_CARD_POTIONS: Record<string, { type: string; target: Targ
 
 /** What the drinker's board adds to a generated card: living enemy indices, Strength now, Weak. */
 export interface PotionContext {
+  /** Evidence scope for Silent Cunning Potion (SADL A7, F4QK A9, WQZ A10). */
+  character?: string;
+  ascension?: number;
   /** Character evidence supplied by the caller; no global potion mechanic is inferred. */
   observedPoison?: number;
   enemyTargets: number[];
@@ -1620,6 +1648,18 @@ export function potionRegen(potionId: string): number {
  * pile cards pile-card potions take and the draw pile's expected card.
  */
 export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], ctx?: PotionContext): CardModel | null {
+  // silent-0256/0257/0258: made cards occupy hand space; potion slots do not.
+  if (potionId === "CUNNING_POTION") {
+    if (ctx?.character?.toLowerCase() !== "silent" || ![7, 9, 10].includes(ctx.ascension ?? -1)) return null;
+    const adds = Array.from({ length: 3 }, (_, i): CardModel => ({
+      ...potionShell(potionId, name, slot, ctx.enemyTargets),
+      index: 3_000_000 + slot * 3 + i, key: `p${slot}~shiv${i}`, cardId: "SHIV", name: "小刀+",
+      type: "Attack", upgraded: true, target: "single", cost: 0,
+      damage: Math.floor((6 + ctx.strength) * (ctx.weak ? 0.75 : 1)), damageBase: 6,
+      text: "造成6点伤害。消耗。",
+    }));
+    return { ...potionShell(potionId, name, slot, validTargets), adds };
+  }
   const effect: (Partial<CardModel> & { target: TargetMode }) | undefined = POTION_EFFECTS[potionId] ?? (potionId === "POISON_POTION" && (ctx?.observedPoison ?? 0) > 0
     ? { target: "single" as const, poison: ctx!.observedPoison } : undefined);
   if (!effect) return null;

@@ -6,7 +6,7 @@ Run by ops/codex-ops.sh at :13 and :43 (`tick`); everything here is deterministi
 
   tick       1. victories: runs.jsonl rows of the character with "victory": true not yet in ops/win-notified
                 -> a `victory` event each, and the id is appended to ops/win-notified;
-             2. a new ascension: the character's latest run-config.jsonl row targets a higher ascension than the
+             2. a new ascension: the character's latest run-config.jsonl row observes a higher ascension than the
                 last one seen -> an `ascension-up` event (the per-level summary);
              3. post-mortems: finished runs of the character (in runs.jsonl) without a "## <id>" heading in
                 notes/lessons.md, not dispatched yet -> one learner batch of up to 5 (learner/run.ts --engine codex
@@ -198,10 +198,10 @@ def check_victories(character):
 
 
 def run_ascension(row):
-    value = row.get("target_ascension")
-    if not isinstance(value, int):
-        value = row.get("ascension")
-    return value if isinstance(value, int) else None
+    # The requested target can exceed the character's unlocked maximum. Only the
+    # observed run level is evidence for notifications and structural audits.
+    value = row.get("ascension")
+    return value if type(value) is int and value >= 0 else None
 
 
 def check_ascension(state, character):

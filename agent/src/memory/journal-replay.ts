@@ -29,6 +29,7 @@ import { rememberChosenNode, rememberMap } from "../hand/screens/rest.js";
 import { runPlanLine, type RunPlan } from "./run-plan.js";
 import { noteFightStart } from "../reflex/thief.js";
 import { notePermafrostPlay, observePermafrost } from "../reflex/permafrost.js";
+import { observeSilentSkittish } from "../reflex/silent-skittish.js";
 import { noteFightReplay, observeFightPlays } from "../reflex/fight-plays.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../core/util/json.js";
 import { describeChoice, RunJournal, type JournalChange, type JournalEntry } from "./run-journal.js";
@@ -216,6 +217,8 @@ export interface ReplayResult {
   lizardTail: ScreenMemory["lizardTail"] | null;
   /** Permafrost's first-Power availability in the last observed fight, including accepted plays. */
   permafrost: ScreenMemory["permafrost"] | null;
+  /** Silent Gardener shield consumption from directly observed grants in the last turn. */
+  silentSkittish: ScreenMemory["silentSkittish"] | null;
   /** Silent Wither's sampled manual counts and accepted enchantment replays in the last fight. */
   fightCards: ScreenMemory["fightCards"] | null;
   /** The exhaust pile at the first logged frame of the last combat turn (combat-plan noteTurnStartExhaust). */
@@ -281,6 +284,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     journal.observe(state, { knowledge, screenMemory: memory });
     trackLizardTail(memory, state);
     observePermafrost(memory, state);
+    observeSilentSkittish(memory, state);
     observeFightPlays(memory, state);
     noteTurnStartExhaust(memory, state);
     noteTurnStartHp(memory, state);
@@ -330,7 +334,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     }
   }
   const facing = typeof memory.facing === "number" && memory.facingFight ? { fight: memory.facingFight, index: memory.facing } : null;
-  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, permafrost: memory.permafrost ?? null, fightCards: memory.fightCards ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, turnStartPlayerHp: memory.turnStartPlayerHp ?? null, thiefStart: memory.thiefStart ?? null, thiefCardValue: memory.thiefCardValue ?? null, facing, counts };
+  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, permafrost: memory.permafrost ?? null, silentSkittish: memory.silentSkittish ?? null, fightCards: memory.fightCards ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, turnStartPlayerHp: memory.turnStartPlayerHp ?? null, thiefStart: memory.thiefStart ?? null, thiefCardValue: memory.thiefCardValue ?? null, facing, counts };
 }
 
 /** The journal entry of a logged decision: as logged (`journal`), else re-derived from the row. */

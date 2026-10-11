@@ -96,7 +96,7 @@ if (argv[0] === "app-server") {
     } else if (msg.method === "account/read") {
       record();
       if (msg.params && msg.params.refreshToken === true) writeFileSync(${JSON.stringify(refreshedFile)}, "1");
-      write(mode.refreshError ? { id: msg.id, error: { code: -32600, message: mode.refreshError } } : { id: msg.id, result: { account: { type: "chatgpt", email: "roy@example.invalid", planType: "promax" }, requiresOpenaiAuth: true } });
+      write(mode.refreshError ? { id: msg.id, error: { code: -32600, message: mode.refreshError } } : { id: msg.id, result: { account: { type: "chatgpt", email: "dai@example.invalid", planType: "promax" }, requiresOpenaiAuth: true } });
     }
   }
   if (mode.linger) setInterval(() => {}, 1000);

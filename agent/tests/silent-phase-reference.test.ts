@@ -12,6 +12,7 @@ import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { silentPhaseReference } from "../src/reflex/silent-phase-reference.js";
 import { replaySteps, solveTap, type SolverInput } from "../src/reflex/turn-solver.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
+import { quantitativeTurnFacts } from "../src/sim/quantitative-facts.js";
 
 vi.mock("../src/knowledge/experience.js", async (original) => ({
   ...await original<typeof import("../src/knowledge/experience.js")>(), selectLessons: () => [],
@@ -109,4 +110,11 @@ it("puts the phase facts on the actual Jev choice alongside the original plan nu
   const facts = Object.values(criteria).filter((value): value is string => typeof value === "string").map((value) => JSON.parse(value));
   expect(facts.some((value) => value.current_phase_ends === true && value.phase_end_min_loss === true && value.hp_lost === 0)).toBe(true);
   expect(facts.some((value) => value.current_phase_ends === false && value.phase_end_reference)).toBe(true);
+  expect(facts.some((value) => value.quantitative_turn?.damage_hp === 4 && value.quantitative_turn.complete_combinations === null)).toBe(true);
+});
+
+it("keeps quantitative model adapters out of other characters", () => {
+  const { end } = observed();
+  const raw = rawBoard(); raw.run.character_id = "IRONCLAD";
+  expect(quantitativeTurnFacts(parseGameState(raw), end)).toEqual({});
 });

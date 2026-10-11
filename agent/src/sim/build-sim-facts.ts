@@ -18,6 +18,7 @@
  */
 
 import { cardUpgrade } from "../knowledge/card-upgrades.js";
+import { compactQuantitativeFight, quantitativeEnabled, QUANTITATIVE_LIMITS } from "./quantitative-facts.js";
 import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
 import type { MonsterDb } from "../knowledge/monster-db.js";
 import type { ActionRequest } from "../hand/mod/client.js";
@@ -506,7 +507,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       else if (plan.change !== undefined || plan.mixture) deckOptions.push({ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) });
     }
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}) });
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}), ...(quantitativeEnabled(state) ? { quantitative: true } : {}) });
     if (result.samples === 0) return fail(`${Math.round(now() - started)} ms 内没有跑完一个样本`);
     // Too few samples to tell the options apart (Roy 2026-10-02): R6V3 F22 n=24 and 5DFX F27-F29 n=24 put "+11.6" style
     // deltas in front of the brain, which quoted them. Cut short by the clock under BUILD_SIM_MIN_SHOWN (or under what was
@@ -532,12 +533,18 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
         continue;
       }
       const shown = JSON.parse(v) as Record<string, JsonValue>;
+      const quantified = sims.get(k)?.quantitative;
+      if (quantitativeEnabled(state) && !plan.none && !plan.group && quantified) shown["quantitative_fight"] = compactQuantitativeFight(quantified);
       if (plan.none) shown["boss_sim"] = `${head}${plan.none}`;
       else if (plan.group) {
         shown["boss_sim"] = `${head}按 boss_sim_by_card 每张牌分别算；当前牌组胜率 ${pct(result.base.winCal)}${lowWin ? `，boss 平均剩血 ${Math.round(result.base.bossLeft)}` : ""}（${result.samples} 次模拟，校准后）`;
         shown["boss_sim_by_card"] = Object.fromEntries(plan.group.flatMap((g) => {
           const sim = sims.get(`${plan.key}|${g.key}`);
           return sim ? [[g.key, cardLine(g.verb, g.name, sim, lowWin)]] : [];
+        }));
+        if (quantitativeEnabled(state)) shown["quantitative_fight_by_card"] = Object.fromEntries(plan.group.flatMap((g) => {
+          const quantified = sims.get(`${plan.key}|${g.key}`)?.quantitative;
+          return quantified ? [[g.key, compactQuantitativeFight(quantified)]] : [];
         }));
       } else {
         const sim = sims.get(k);
@@ -564,6 +571,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const b = result.base;
     const ms = Math.round(now() - started);
     const simFacts: Record<string, JsonValue> = {
+      ...(quantitativeEnabled(state) ? { quantitative_uncertainty: QUANTITATIVE_LIMITS } : {}),
       // Not logged at this ascension: HP from the nearest one; damage, buffs and block moved by the measured change
       // between ascensions (monster-db moveDamageAt, amountAt), not the nearest one's as logged.
       boss: `${boss}：${start.boss.parts.map((p) => `${p.name} ${p.hp} 血`).join("、")}${start.boss.exact ? "" : `（A${state.run?.ascension ?? "?"} 没有这个 boss 的日志：数值取最近的 A${start.boss.asc}，伤害、增益和格挡按实测的进阶变化估算）`}`,
@@ -582,6 +590,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor(state.run?.ascension ?? 0) * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
     };
     const record: Record<string, JsonValue> = {
+      ...(quantitativeEnabled(state) ? { quantitative: { base: b.quantitative ?? null,
+        options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.quantitative ?? null])) } } : {}),
       boss: key,
       asc: state.run?.ascension ?? null,
       entry_hp: start.entryHp,

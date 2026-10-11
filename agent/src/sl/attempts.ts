@@ -5,10 +5,42 @@
  */
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
-import type { JsonValue } from "../core/util/json.js";
+import { asArray, asRecord, numOrNull, str, type JsonValue } from "../core/util/json.js";
+import type { GameState } from "../hand/mod/schema.js";
 import type { SlDraws } from "./draws.js";
 import type { SlExploreRecord } from "./explore.js";
 import type { JudgeTier } from "./judge.js";
+
+/** Observed Silent A10 blast state; the displayed HP belongs to the husk, not the defeated body. */
+export interface SlGiantPhase {
+  phase: "blast_pending";
+  enemy_id: "WATERFALL_GIANT";
+  move_id: "EXPLODE_MOVE";
+  raw_hp: number;
+  max_hp: 999999999;
+  body_hp: 0;
+  /** The displayed intent at the turn's first actionable state, not damage already dealt. */
+  incoming_at_turn_start: number;
+}
+
+/** YQL8RZ8BWN1E F17 T10 (states 280160/280161); no inference from enemy names or HP alone. */
+export function giantPhaseAtTurnStart(state: GameState): SlGiantPhase | null {
+  const run = asRecord(state.raw["run"]);
+  if (str(run["character_id"]).toUpperCase() !== "SILENT" || numOrNull(run["ascension"]) !== 10) return null;
+  const living = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] === true);
+  if (living.length !== 1) return null;
+  const enemy = living[0]!;
+  const hp = numOrNull(enemy["current_hp"]);
+  if (str(enemy["enemy_id"]) !== "WATERFALL_GIANT" || numOrNull(enemy["max_hp"]) !== 999999999 ||
+      str(enemy["move_id"]) !== "EXPLODE_MOVE" || hp === null || !Number.isInteger(hp) || hp <= 0 || hp > 999999999) return null;
+  const intents = asArray(enemy["intents"]).map(asRecord);
+  if (intents.length !== 1 || str(intents[0]!["intent_type"]) !== "DeathBlow" || numOrNull(intents[0]!["hits"]) !== 1) return null;
+  const damage = numOrNull(intents[0]!["damage"]);
+  if (damage === null || !Number.isInteger(damage) || damage <= 0 ||
+      asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "STEAM_ERUPTION_POWER")) return null;
+  return { phase: "blast_pending", enemy_id: "WATERFALL_GIANT", move_id: "EXPLODE_MOVE", raw_hp: hp,
+    max_hp: 999999999, body_hp: 0, incoming_at_turn_start: damage };
+}
 
 /** One turn of an attempt: our HP and block and the enemies' HP when the turn began, and what we played. */
 export interface SlTurn {
@@ -17,6 +49,8 @@ export interface SlTurn {
   block: number | null;
   /** "name hp/max" per living enemy. */
   enemies: string;
+  /** Present only for the directly observed Silent A10 blast shape; old rows remain uninterpreted. */
+  giant_phase?: SlGiantPhase;
   /** Cards ("name -> target") and potions ("potion name") in the order they went out. */
   plays: string[];
 }
@@ -146,7 +180,8 @@ const MAX_TURN_LINES = 25;
 
 function turnLine(turn: SlTurn): string {
   const hp = turn.hp === null ? "? HP" : `${turn.hp} HP${turn.block ? ` + ${turn.block} block` : ""}`;
-  return `T${turn.turn}: ${hp}; ${turn.enemies || "no enemies"}; played ${turn.plays.length > 0 ? turn.plays.join(", ") : "nothing"}`;
+  const phase = turn.giant_phase ? `；本体剩血0，自爆仍待结算（轮初显示${turn.giant_phase.incoming_at_turn_start}伤害）；近十亿血是占位血，不代表本体进度或获胜` : "";
+  return `T${turn.turn}: ${hp}; ${turn.enemies || "no enemies"}${phase}; played ${turn.plays.length > 0 ? turn.plays.join(", ") : "nothing"}`;
 }
 
 function endLine(row: SlAttemptRow): string {
