@@ -1,0 +1,28 @@
+from pathlib import Path
+import subprocess,json,datetime,hashlib,sys
+r=Path('/home/dw/Projects/agent-sts2');w=r/'.worktrees/live';o=r/'paper/materials/20261011-1939-ops/integration';candidate='cbfb624449f3d7332bf733f066784f99ac11c86a'
+def g(*a):return subprocess.check_output(['git','-C',str(w),*a])
+def save(n,d):(o/n).write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+coverage=json.loads((r/'paper/materials/20261011-1852-ops/integration/coverage-complete.json').read_text());assert coverage['coverage_complete']
+incremental=json.loads((o/'incremental-checks.json').read_text());assert len(incremental['checks'])==2 and all(c['exit']==0 for c in incremental['checks'])
+assert not g('diff','--name-only',candidate,incremental['candidate'],'--','agent','learner','ops','knowledge','eval/*.py').strip()
+assert not g('ls-files','--unmerged') and not g('diff','--cached','--name-only').strip()
+head=g('rev-parse','HEAD').decode().strip();dirty=g('diff','--name-only').decode().splitlines();before={p:hashlib.sha256((w/p).read_bytes()).hexdigest() for p in dirty};base=g('merge-base',head,candidate).decode().strip();incoming=g('diff','--name-only',base,candidate).decode().splitlines();overlap=sorted(set(dirty)&set(incoming))
+pre={'at':datetime.datetime.now().astimezone().isoformat(),'head':head,'candidate':candidate,'dirty':before,'incoming_overlap':overlap};save('live-preflight.json',pre)
+if overlap:print('pending: refresh overlap',overlap);sys.exit(75)
+p=subprocess.run(['git','-C',str(w),'merge-tree','--write-tree',head,candidate],capture_output=True,text=True);(o/'live-merge-preview.log').write_text(p.stdout+p.stderr)
+if p.returncode:print('pending: preview conflicts');sys.exit(75)
+preview=p.stdout.splitlines()[0]
+codepaths=['agent/src','agent/tests','agent/tools','agent/package.json','agent/tsconfig.json','learner/lib','learner/tasks','learner/*.ts','learner/*.py','ops/*.sh','ops/*.py','ops/codex','ops/tests','knowledge/builders','eval/*.py']
+diff=g('diff','--name-only',candidate,preview,'--',*codepaths).decode().splitlines()
+if diff:save('parallel-code-pending.json',{'paths':diff,'current':head,'preview':preview,'tested':candidate});print('pending: additional parallel code',diff);sys.exit(75)
+with (o/'live-merge.log').open('wb') as h:rc=subprocess.run(['git','-C',str(w),'merge','--no-commit','--no-ff',candidate],stdout=h,stderr=subprocess.STDOUT).returncode
+assert rc==0,rc
+for path,digest in before.items():assert hashlib.sha256((w/path).read_bytes()).hexdigest()==digest,path
+assert g('write-tree').decode().strip()==preview
+with (o/'live-gitleaks.log').open('wb') as h:
+ producer=subprocess.Popen(['git','-C',str(w),'diff','--cached'],stdout=subprocess.PIPE)
+ scanner=subprocess.run(['nice','-n','19','gitleaks','stdin','--redact','--no-banner','--report-format','json','--report-path',str(o/'live-gitleaks.json')],stdin=producer.stdout,stdout=h,stderr=subprocess.STDOUT);producer.stdout.close();prc=producer.wait()
+assert scanner.returncode==0 and prc==0
+subprocess.run(['git','-C',str(w),'commit','-m','Publish verified core experience, calibration and bounded evidence fixes','-m','Preserve refreshed knowledge and restore the already verified core experience source after its wrapper timeout rollback. Candidate passed full sandbox coverage with only the missing-environment fixture and paths isolated followup; exact merged source tree matches tested candidate.','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>'],stdout=subprocess.DEVNULL,check=True)
+save('published.json',{'at':datetime.datetime.now().astimezone().isoformat(),'before':head,'candidate':candidate,'live':g('rev-parse','HEAD').decode().strip(),'tree':preview,'verified_source_tree_identical':True,'refresh_preserved':before,'gitleaks':0,'baseline_coverage':coverage,'incremental_checks':incremental});print('PUBLISHED',g('rev-parse','HEAD').decode().strip(),flush=True)

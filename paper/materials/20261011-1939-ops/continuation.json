@@ -1,0 +1,27 @@
+{
+  "request_id": "ops-20261011-1751-backlog-continuation",
+  "revision": 3,
+  "updated_at": "2026-10-11 19:57:25 CST",
+  "status": "published-current-candidate-remaining-fixed-sources",
+  "actual_live": "d1073a0b36d16e8c496b5f9149410ad6804bc8ba",
+  "live_records": "4425ef1aeda69697bf4741c8d338f3b95586668f",
+  "covered_candidate": "cbfb624449f3d7332bf733f066784f99ac11c86a",
+  "core_request_state": "done",
+  "core_historical_batch_state": "failed preserved",
+  "host_checks": {
+    "batch": "20261011-175450-experience-update",
+    "action": "learner-recheck",
+    "status": "submitted-awaiting-original-event",
+    "response": "paper/materials/20261011-1939-ops/host-recheck-response.log"
+  },
+  "remaining_sources_manifest": "paper/materials/20261011-1939-ops/remaining-fixed-sources.json",
+  "remaining_original_code_sources": 40,
+  "proposal_note": "actual implementations now exist; preserve original report and use original assigned consumer, no duplicate IDs",
+  "main_sync": "needs safe code/knowledge integration preserving main-only repairs; do not overwrite main with entire live tree",
+  "dont_repeat": [
+    "core research and experience integration",
+    "two read-only assistant acceptance tests",
+    "baseline271files2725cases or affected7files143cases without new reason"
+  ],
+  "next": "Use original check/completion events; finish remaining fixed patches with evidence, preserve failed B4/B5 gates, reconcile main-only and live-only code in isolated checkout before authorized Windows SSH push."
+}
