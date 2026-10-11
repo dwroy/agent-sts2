@@ -1012,3 +1012,6 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-11T22:59:19+08:00 [watcher LLM切换能力上线] 原PAUSE不能阻止学习完成回调再派任务，STOP会取消在途brain；现以事务自有LLM_DRAIN封住新任务、保留完成/合入/检查/报告，排空后新账号新ops从原队列接管。源49cb6d353，main22fa024917/live f7c3f1c3d；测试与原件见paper/materials/20261011-codex-account-drain/，标准协议docs/llm-handoff.md。当前事务codex1-20261011仍draining，codex1尚未实际接管；保留所有量化和main/push待办。预期无新的旧账号任务，旧批自然完成。回退：激活前保留现场/同ID接续；配置切换失败由适配器回退且保留闸，已有新session时先核回执不重复启动。不要写STOP、清闸、停play或重派旧批；不改ops prompt/模型策略/游戏知识。
 
 - 2026-10-11T23:08:34+08:00 [watcher LLM pane环境修正] 源7d7aa8a3a已合main796ca4d992/live079dc2f156；复用旧Herdr pane时先在其真实shell导出目标home并等待回执，防止新session误用旧账号。tsc与25项定向回归、真实无模型Herdr shell探针、gitleaks通过；原全量通过证据保持。仅重启机械控制器2619401，以同一codex1-20261011在wJ:pMA/2631060继续draining，LLM_DRAIN/PAUSE始终保留，未停学习/ops。剩220116与224302两个活批自然收尾后自动切换；尚未宣称codex1实际接管。详情paper/materials/20261011-codex-account-drain/pane-environment-correction.json。
+
+- 2026-10-12 01:34 [运维 codex] 已上线S1.exp181（live 6639e2f33）：旧静默经验.15→新.16，64VJC5XT2AT2/SB5N8GT2Y3VW A10证据更新20条、0新增/退役；24所属账本仅经验数据shipped，三原代码提案未整体完成。预期为补充既有适用证据，采用/收益待观察；回退c04da0668这次经验增量，保留并行刷新及原失败历史。
+- 2026-10-12 01:34 [运维 codex] 已上线S1.smoggy-discard1：旧生存者选择中可打标记未展示完成后的烟雾限制，新仅学习者3596d1a2a的静默A10已核完整条件加入限制事实/全部候选，并保留原后继提示；证据6D0M76419BU7 F12T2/T3，账本silent-0407/0205，提案07b7b0af259ece0b。预期改善限定题面，未证自然采用/胜率；撤该四文件独立增量即可回退，不撤经验或刷新。

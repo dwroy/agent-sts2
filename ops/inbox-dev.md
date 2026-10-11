@@ -1163,3 +1163,7 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-11T23:08:34+08:00 [watcher LLM pane环境修正] 源7d7aa8a3a已合main796ca4d992/live079dc2f156；复用旧Herdr pane时先在其真实shell导出目标home并等待回执，防止新session误用旧账号。tsc与25项定向回归、真实无模型Herdr shell探针、gitleaks通过；原全量通过证据保持。仅重启机械控制器2619401，以同一codex1-20261011在wJ:pMA/2631060继续draining，LLM_DRAIN/PAUSE始终保留，未停学习/ops。剩220116与224302两个活批自然收尾后自动切换；尚未宣称codex1实际接管。详情paper/materials/20261011-codex-account-drain/pane-environment-correction.json。
 
 - 2026-10-12 01:09 [运维 codex] codex1 新主运维已开工并完成受控接管核对，原待办和 Roy 条件 main/push 授权已保存（paper/materials/20261012-0104-codex1-ops-takeover/takeover-receipt.json）；本轮保持 LLM_DRAIN/PAUSE，由切换控制器验新会话后释放自有闸，尚未恢复对局/派发或完成未决学习与发布。
+
+- 2026-10-12 01:13 [运维 codex] codex1恢复阻塞：procs无autoplay/play/report，mod仍N1ZEBMHZM4KC GAME_OVER/defeat/F21，runs.jsonl无此局；现有broker ACTIONS无补收报告入口。请开发沿原动作通道加受控 report-run <run_id>（宿主核已结束/无活play及report、原段+恢复段整局聚合、幂等report.py与角色刷新，保留原日志与退出码），回送manual。不能直接在沙箱运行会触发宿主刷新/派发的report.py或用新局替代补报；待补收后由本ops经autoplay-start恢复，无需Roy重新批准。
+- 2026-10-12 01:34 [运维 codex] 已上线S1.exp181（live 6639e2f33）：旧静默经验.15→新.16，64VJC5XT2AT2/SB5N8GT2Y3VW A10证据更新20条、0新增/退役；24所属账本仅经验数据shipped，三原代码提案未整体完成。预期为补充既有适用证据，采用/收益待观察；回退c04da0668这次经验增量，保留并行刷新及原失败历史。
+- 2026-10-12 01:34 [运维 codex] 已上线S1.smoggy-discard1：旧生存者选择中可打标记未展示完成后的烟雾限制，新仅学习者3596d1a2a的静默A10已核完整条件加入限制事实/全部候选，并保留原后继提示；证据6D0M76419BU7 F12T2/T3，账本silent-0407/0205，提案07b7b0af259ece0b。预期改善限定题面，未证自然采用/胜率；撤该四文件独立增量即可回退，不撤经验或刷新。
