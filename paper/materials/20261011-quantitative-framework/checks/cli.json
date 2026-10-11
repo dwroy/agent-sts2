@@ -1,0 +1,68 @@
+[
+  {
+    "input": {
+      "method": "uniform-hand",
+      "deck": 20,
+      "draw": 5,
+      "components": 2,
+      "turns": 12
+    },
+    "exit": 0,
+    "output": "{\"schema\":\"quantitative-v1\",\"method\":\"uniform-hand\",\"result\":{\"probabilityPerHand\":0.05263157894736842,\"expectedQualifyingHands\":0.631578947368421}}\n",
+    "stderr": ""
+  },
+  {
+    "input": {
+      "method": "cycle-bound",
+      "energy": 3,
+      "cycleCost": 1,
+      "resetCost": 1,
+      "actions": 100,
+      "componentActions": 1
+    },
+    "exit": 0,
+    "output": "{\"schema\":\"quantitative-v1\",\"method\":\"cycle-bound\",\"result\":{\"energyBound\":2,\"actionBound\":50,\"combinedBound\":2}}\n",
+    "stderr": ""
+  },
+  {
+    "input": {
+      "method": "samples",
+      "values": [
+        0,
+        10,
+        20
+      ]
+    },
+    "exit": 0,
+    "output": "{\"schema\":\"quantitative-v1\",\"method\":\"samples\",\"result\":{\"n\":3,\"mean\":10,\"sd\":10,\"meanSe\":5.773502691896258,\"p10\":2,\"median\":10,\"p90\":18,\"min\":0,\"max\":20}}\n",
+    "stderr": ""
+  },
+  {
+    "input": {
+      "method": "paired",
+      "base": [
+        {
+          "sample": 1,
+          "value": 8
+        },
+        {
+          "sample": 2,
+          "value": 10
+        }
+      ],
+      "option": [
+        {
+          "sample": 2,
+          "value": 11
+        },
+        {
+          "sample": 1,
+          "value": 9
+        }
+      ]
+    },
+    "exit": 0,
+    "output": "{\"schema\":\"quantitative-v1\",\"method\":\"paired\",\"result\":{\"difference\":{\"n\":2,\"mean\":1,\"sd\":0,\"meanSe\":0,\"p10\":1,\"median\":1,\"p90\":1,\"min\":1,\"max\":1},\"unmatchedBase\":0,\"unmatchedOption\":0}}\n",
+    "stderr": ""
+  }
+]

@@ -31,6 +31,8 @@
 
 架构的当前实现见 [docs/v4-architecture.md](docs/v4-architecture.md)，目录怎么分见 [docs/layout.md](docs/layout.md)。[文档索引](docs/README.md) 区分现行说明与历史设计/验证材料。
 
+费用、伤害、回合和模拟误差的统一计算接口见 [量化计算与校准](docs/quantitative-play.md)：复用现有求解/模拟，区分随机结果波动、均值抽样误差和模型偏差。完整组合的定义与适用条件仍由学习者从对局验证。
+
 ## 目录
 
 | 目录 | 内容 |
