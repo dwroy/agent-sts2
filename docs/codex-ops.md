@@ -1,6 +1,8 @@
 # 运维会话跑在 codex 上（调度器 + 一个可续的 codex 会话）
 
-Dai 2026-10-04 21:00 定：Claude 只观察和与 Dai 对话，不修改或审核；codex 学习者自行实现、自测、合入，运维 codex 确认上线和提交兜底；运维会话改用 codex（gpt-6.1-sol，强度 xhigh，和学习者一样）。codex 没有会话内的定时任务（原来的 Claude 运维 prompt 靠 CronCreate），所以拆成两半：
+2026-10-10 按 main 核对：本页的初次搭建、历史探针及资源测量保留当时口径；当前以调度器代码、learn.json、租约和完成回执为准。Codex Fast 在直接启动、resume、herdr 与学习者 wrapper 中显式设置，见 [codex-fast.md](codex-fast.md)。文档同步不修改 ops-session prompt 或运行中的进程。
+
+Roy 2026-10-04 21:00 定：Claude 只观察和与 Roy 对话，不修改或审核；codex 学习者自行实现、自测、合入，运维 codex 确认上线和提交兜底；运维会话改用 codex（gpt-6.1-sol，强度 xhigh，和学习者一样）。codex 没有会话内的定时任务（原来的 Claude 运维 prompt 靠 CronCreate），所以拆成两半：
 
 - **调度器**（`ops/codex-ops.sh`，cron 或一个 setsid 的 bash 循环）：做所有机械的活，只在需要判断时叫醒 codex。
 - **运维 codex 会话**：只建一次（第一轮 = `ops/ops-session-silent-codex-prompt.md`），以后每次叫醒都是 `codex exec resume <会话 id>`，消息是调度器攒下的事件。会话 id 在 `ops/codex-ops/session-id`。
@@ -31,6 +33,8 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | 随时 | — | `ops/codex-ops.sh wake "<话>"` → `manual` |
 
 学习者跑在调度器这边（沙箱外）：它自己的 codex 要联网，运维会话的沙箱里跑不了。失败批次 1 小时后重派，最多 3 次。经验与修复任务在各自工作树自测通过后自行合入 live，不另设审核。调度器用 learn.lock 串行更新批次状态，按内容去重；收到完成事件后，运维确认实际合入、机械同步 main 和上线账本。学习者提交或合入受阻时运维兜底。
+
+当前学习派发还包括策略提案队列、升阶结构审计、逐角色 boss 自动批次及明确授权专题。`ops/learner_jobs.py` 的 `STRATEGY_WORKERS=2` 允许两路策略消费者，各自独立工作树和租约，提案领取按 id/key 去重；learn.lock 状态事务、live 合入及外部检查仍串行。有待并复盘即可派经验更新，自动策略复核另按升阶或新增 10 局完成复盘触发。代码提案结果、补链、waiting 与失败保留原记录；合入受阻由运维核实际产物兜底，不把 rc0 或排队当成上线。参见 [学习者](../learner/README.md)、[提案闭环](learning-code-proposals.md)。
 
 学习者的沙箱检查用 `bash agent/tools/test-sandbox.sh`（在 agent/ 可用 `bash tools/test-sandbox.sh`）。排除名单与原因固定在脚本里；实际合入 live 后，调度器在沙箱外、live-merge.lock 内跑完整 tsc + vitest。失败写收件箱并发送 learner-checks，运维决定回滚还是派修复；调度器不自动回滚。
 
@@ -88,7 +92,7 @@ Roy 授权的静默 boss 校准使用独立模板 `learner/tasks/silent-boss-cal
 
 ## herdr 托管（Roy 2026-10-05）
 
-目的：长跑的进程在 herdr 里看得见、管得了（Mac 上 `herdr --machine xdwin …`）。托管层是通用的（`ops/herdr-host.sh` + pane 侧的 `ops/herdr-exec.sh`），不含项目逻辑：一个 workspace `sts2-run`（cwd 主检出），每个 label 一个 tab；label → pane 记在 `ops/codex-ops/herdr.json`。不碰 `agent-sts2`（wD，Claude rc 会话）、geo-crash、codex-gc1。
+目的：长跑的进程在 herdr 里看得见、管得了（Mac 上 `herdr --machine xdwin …`）。托管层是通用的（`ops/herdr-host.sh` + pane 侧的 `ops/herdr-exec.sh`），不含项目逻辑：新 tab 优先跟随实际 ops pane 所在的 workspace；尚无 ops pane 时使用 `sts2-run`（cwd 主检出）。每个 label 一个 tab；label → pane 记在 `ops/codex-ops/herdr.json`。不碰 `agent-sts2`（wD，Claude rc 会话）、geo-crash、codex-gc1。
 
 ```bash
 bash ops/herdr-host.sh status            # label、pane、在不在、忙不忙、前台 PID
@@ -96,6 +100,8 @@ bash ops/herdr-host.sh run <label> [--pidfile F] [--close-on-exit] [--env K=V]..
 bash ops/herdr-host.sh stop <label>      # ctrl+c、关 pane；只停自己登记的 label
 bash ops/herdr-host.sh attach-hint       # 从 Mac 怎么看
 ```
+
+Roy 2026-10-10 要求学习 tab 与 ops 放在同一 workspace。同名 workspace 不作为实际归属的依据，新学习 tab 通过已登记且仍存活的 ops pane 定位；其他 workspace 的同名闲置 tab 保存最后输出后关闭并重建，忙碌 tab 保持。既有批次继续运行；需要在 ops 旁查看它时，运维用 `bash ops/codex-ops-do.sh learner-log-tab <batch-id>` 打开独立日志 tab，显示该已登记活批的 `.out/.err`，不重启学习者。日志 tab 随已核实 wrapper 结束而关闭；已结束批次、已消失或身份不匹配的 PID 拒绝创建。重复调用复用同一日志 tab。
 
 **开关**：`ops/codex-ops/hosting`，每行 `键=值`（文件，不用改 crontab）；环境变量优先。
 

@@ -54,7 +54,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFil
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join } from "node:path";
 
-import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
+import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
 import type { JsonSchema } from "../tools/types.js";
 import { EngineFailure, labelPrefix, withNotes, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
@@ -231,6 +231,8 @@ export function codexConfig(opts: { systemFile: string; catalogFile: string; sta
     `sqlite_home=${toml(opts.stateDir)}`,
     `log_dir=${toml(join(opts.stateDir, "log"))}`,
     `model_reasoning_effort=${toml(opts.effort)}`,
+    `model_context_window=${CODEX_CONTEXT_WINDOW}`,
+    `model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKENS}`,
     `model_reasoning_summary=${toml(opts.summary)}`,
     ...(opts.serviceTier ? [`service_tier=${toml(opts.serviceTier)}`] : []),
   ];

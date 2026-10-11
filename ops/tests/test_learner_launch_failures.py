@@ -15,7 +15,12 @@ checks = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checks)
 
 
-class FastLauncher(unittest.TestCase):
+POLICY = ["-c", 'model="gpt-6-astra"', "-c", 'model_reasoning_effort="xhigh"',
+          "-c", 'service_tier="default"', "-c", 'model_context_window=512000',
+          "-c", 'model_auto_compact_token_limit=460800']
+
+
+class LearnerLauncher(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -23,14 +28,16 @@ class FastLauncher(unittest.TestCase):
         (self.root / "ops").mkdir()
         (self.root / "agent/node_modules/.bin").mkdir(parents=True)
         (self.root / "bin").mkdir()
-        for name in ("paths.sh", "codex-ops-learner.sh", "codex-fast.sh"):
+        for name in ("paths.sh", "codex-ops-learner.sh", "codex-fast.sh", "codex-learner.sh", "codex-policy.sh"):
             shutil.copy2(REPO / "ops" / name, self.root / "ops" / name)
-        self.wrapper = self.root / "ops/codex-fast.sh"
+        self.wrapper = self.root / "ops/codex-learner.sh"
+        self.legacy_wrapper = self.root / "ops/codex-fast.sh"
         self.native = self.root / "bin/codex"
         self.write_executable(self.native, "#!/usr/bin/python3\nimport json,sys\nprint(json.dumps(sys.argv[1:]))\n")
         self.write_executable(self.root / "agent/node_modules/.bin/tsx",
-                              '#!/bin/bash\nexec "$LEARNER_CODEX_BIN" sandbox -c \'model="fixture"\' '
-                              '-c \'model_reasoning_effort="xhigh"\' -c \'service_tier="default"\' -- /fixture/check\n')
+                              "#!/bin/bash\nprintf '%s\\n' \"$@\" > \"$CODEX_OPS_ROOT/launcher-args\"\n"
+                              "exec \"$LEARNER_CODEX_BIN\" sandbox -c 'model=\"fixture\"' "
+                              "-c 'model_reasoning_effort=\"xhigh\"' -c 'service_tier=\"priority\"' -- /fixture/check\n")
         (self.root / "ops/codex-ops-learn.py").write_text("# Fixed completion stub; no dispatch or production state.\n")
         self.env = {"HOME": str(self.root / "home"), "PATH": str(self.root / "bin") + ":/usr/bin:/bin",
                     "CODEX_OPS_ROOT": str(self.root), "CODEX_OPS_NO_DRAIN": "1"}
@@ -47,35 +54,130 @@ class FastLauncher(unittest.TestCase):
         err = self.root / "ops/codex-ops/learner/20260101-000001-experience-update.err"
         self.assertEqual(result.returncode, 0, result.stderr + (err.read_text() if err.exists() else ""))
         args = json.loads((err.with_suffix(".out")).read_text())
-        self.assertEqual(args.count('service_tier="priority"'), 1)
-        self.assertNotIn('service_tier="default"', args)
-        self.assertIn('model="fixture"', args)
+        self.assertIn('service_tier="default"', args)
+        self.assertIn("model_context_window=512000", args)
+        self.assertIn('model="gpt-6-astra"', args)
         self.assertIn('model_reasoning_effort="xhigh"', args)
         self.assertEqual(args[-2:], ["--", "/fixture/check"])
+        launcher = (self.root / "launcher-args").read_text().splitlines()
+        self.assertEqual(launcher[launcher.index("--model") + 1], "gpt-6-astra")
+        self.assertEqual(launcher[launcher.index("--effort") + 1], "xhigh")
 
     def test_explicit_native_override_is_kept(self):
-        self.launch(LEARNER_CODEX_BIN=str(self.native), STS2_CODEX_FAST_BIN="/unselected/codex")
+        self.launch(LEARNER_CODEX_BIN=str(self.native), STS2_CODEX_LEARNER_BIN="/unselected/codex")
 
     def test_nested_dispatch_reuses_the_original_native(self):
-        self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_FAST_BIN=str(self.native))
+        self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_LEARNER_BIN=str(self.native))
+
+    def test_legacy_fast_dispatch_keeps_native_and_disables_fast(self):
+        self.launch(LEARNER_CODEX_BIN=str(self.legacy_wrapper), STS2_CODEX_FAST_BIN=str(self.native))
 
     def test_already_recursive_environment_recovers_the_native_from_path(self):
-        self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_FAST_BIN=str(self.wrapper))
+        self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_LEARNER_BIN=str(self.wrapper))
+        self.launch(LEARNER_CODEX_BIN=str(self.legacy_wrapper), STS2_CODEX_FAST_BIN=str(self.legacy_wrapper))
 
-    def test_symlink_to_wrapper_is_not_treated_as_native(self):
-        alias = self.root / "fast-alias"
-        alias.symlink_to(self.wrapper)
-        self.launch(LEARNER_CODEX_BIN=str(alias), STS2_CODEX_FAST_BIN=str(self.native))
+    def test_symlink_to_either_wrapper_is_not_treated_as_native(self):
+        for wrapper in (self.wrapper, self.legacy_wrapper):
+            alias = self.root / (wrapper.name + "-alias")
+            alias.symlink_to(wrapper)
+            self.launch(LEARNER_CODEX_BIN=str(alias), STS2_CODEX_LEARNER_BIN=str(self.native))
 
     def test_direct_recursive_native_and_alias_fail_closed(self):
-        alias = self.root / "fast-alias"
+        alias = self.root / "learner-alias"
         alias.symlink_to(self.wrapper)
-        for native in (self.wrapper, alias):
+        for native in (self.wrapper, self.legacy_wrapper, alias):
             result = subprocess.run(["bash", str(self.wrapper), "sandbox"],
-                                    env={**self.env, "STS2_CODEX_FAST_BIN": str(native)},
+                                    env={**self.env, "STS2_CODEX_LEARNER_BIN": str(native)},
                                     capture_output=True, text=True, timeout=5)
             self.assertEqual(result.returncode, 2)
-            self.assertIn("recursive Codex Fast launcher", result.stderr)
+            self.assertIn("recursive Codex learner launcher", result.stderr)
+
+    def test_old_exec_tiers_removed_without_changing_prompt_or_sandbox_child(self):
+        for command in (["exec", "--ignore-user-config", "--model", "gpt-6-astra", "-c", 'service_tier="priority"',
+                         "--config", 'service_tier="ultrafast"', "--config=service_tier=default", "-"],
+                        ["sandbox", "--config=service_tier=priority", "--", "/fixture/check", "-c", 'service_tier="child-arg"']):
+            result = subprocess.run(["bash", str(self.wrapper), *command],
+                                    env={**self.env, "STS2_CODEX_LEARNER_BIN": str(self.native)},
+                                    capture_output=True, text=True, timeout=5)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            args = json.loads(result.stdout)
+            if command[0] == "exec":
+                self.assertEqual(args, ["exec", "--ignore-user-config", "-", *POLICY])
+            else:
+                self.assertEqual(args, ["sandbox", *POLICY, "--", "/fixture/check", "-c", 'service_tier="child-arg"'])
+
+    def legacy_call(self, command, **env):
+        result = subprocess.run(["bash", str(self.legacy_wrapper), *command],
+                                env={**self.env, "STS2_CODEX_FAST_BIN": str(self.native), **env},
+                                capture_output=True, text=True, timeout=5)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return json.loads(result.stdout), result.stderr
+
+    def test_historical_scheduler_uses_current_root_policy_at_native_boundary(self):
+        # Frozen real scheduler from 26cafe427: no model/effort CLI override and selects root Fast wrapper.
+        shutil.copy2(REPO / "ops/tests/fixtures/legacy-codex-ops-learner.sh", self.root / "ops/codex-ops-learner.sh")
+        self.write_executable(self.root / "agent/node_modules/.bin/tsx",
+                              "#!/bin/bash\nprintf '%s\\n' \"$@\" > \"$CODEX_OPS_ROOT/launcher-args\"\n"
+                              "exec \"$LEARNER_CODEX_BIN\" exec --ignore-user-config -c 'default_permissions=\"learner\"' "
+                              "--model gpt-6.1-sol -c 'model_reasoning_effort=\"high\"' -c 'service_tier=\"priority\"' -\n")
+        for inherited in ({"LEARNER_CODEX_BIN": str(self.native)},
+                          {"LEARNER_CODEX_BIN": str(self.wrapper), "STS2_CODEX_LEARNER_BIN": str(self.native)}):
+            with self.subTest(inherited=inherited):
+                result = subprocess.run(["bash", str(self.root / "ops/codex-ops-learner.sh"),
+                                         "20260101-000001-experience-update", "FIXTURE000001", "silent", "experience-update", str(self.root)],
+                                        env={**self.env, **inherited}, capture_output=True, text=True, timeout=10)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                base = self.root / "ops/codex-ops/learner/20260101-000001-experience-update"
+                args = json.loads(base.with_suffix(".out").read_text())
+                self.assertEqual(args, ["exec", "--ignore-user-config", "-c", 'default_permissions="learner"', "-", *POLICY])
+                self.assertNotIn("--model", (self.root / "launcher-args").read_text().splitlines())
+
+    def test_precise_learner_profiles_strip_fast_and_preserve_sandbox_child(self):
+        for profile in (["-c", 'default_permissions="learner"'], ["--config", "default_permissions='learner'"],
+                        ["--config=default_permissions=learner"]):
+            args, err = self.legacy_call(["exec", "--ignore-user-config", *profile, "--model=gpt-6.1-sol",
+                                         "-c", 'model="old-model"', "--config=model_reasoning_effort=high", "-"])
+            self.assertNotIn('service_tier="priority"', args)
+            self.assertIn('model="gpt-6-astra"', args)
+            self.assertIn('model_reasoning_effort="xhigh"', args)
+            self.assertEqual(err, "")
+        child = ["--", "/fixture/check", "--model", "child-model", "-c", 'service_tier="child-tier"']
+        for profile in (["-P", "learner"], ["--permission-profile", "learner"], ["--permission-profile=learner"]):
+            args, err = self.legacy_call(["sandbox", *profile, "-c", 'permissions.learner.filesystem={}', "-c", 'service_tier="priority"', *child])
+            self.assertEqual(args, ["sandbox", *profile, "-c", 'permissions.learner.filesystem={}', *POLICY, *child])
+            self.assertEqual(err, "")
+
+    def test_last_permission_profile_controls_routing(self):
+        for command in (["exec", "-c", 'default_permissions="learner"', "--config=default_permissions=ops"],
+                        ["sandbox", "-P", "learner", "--permission-profile=ops"]):
+            args, _ = self.legacy_call(command)
+            self.assertEqual(args, [*command, *POLICY])
+        for command in (["exec", "--config=default_permissions=ops", "-c", 'default_permissions="learner"'],
+                        ["sandbox", "-P", "ops", "--permission-profile=learner"]):
+            args, _ = self.legacy_call(command)
+            self.assertNotIn('service_tier="priority"', args)
+
+    def test_ops_play_and_child_profile_use_same_policy_despite_learner_environment(self):
+        for command in (["exec", "--model", "gpt-6.1-sol", "-c", 'default_permissions="ops"'],
+                        ["exec", "--model", "gpt-6.1-sol"], ["app-server"],
+                        ["sandbox", "-P", "ops", "--", "sh", "-c", 'default_permissions="learner"']):
+            args, err = self.legacy_call(command, LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_LEARNER_BIN=str(self.wrapper))
+            at = command.index("--") if "--" in command else len(command)
+            prefix = command[:at].copy()
+            if "--model" in prefix:
+                i = prefix.index("--model")
+                del prefix[i:i + 2]
+            self.assertEqual(args, [*prefix, *POLICY, *command[at:]])
+            self.assertEqual(err, "")
+
+    def test_legacy_routing_fails_closed_for_recursive_native(self):
+        alias = self.root / "legacy-alias"
+        alias.symlink_to(self.legacy_wrapper)
+        for native in (self.wrapper, self.legacy_wrapper, alias):
+            result = subprocess.run(["bash", str(self.legacy_wrapper), "exec", "-c", 'default_permissions="learner"'],
+                                    env={**self.env, "STS2_CODEX_FAST_BIN": str(native)}, capture_output=True, text=True, timeout=5)
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("recursive Codex", result.stderr)
 
 
 class MissingReports(unittest.TestCase):

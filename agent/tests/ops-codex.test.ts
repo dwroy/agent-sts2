@@ -99,6 +99,12 @@ describe("broker requests", () => {
     expect(validateRequest({ action: "kill", args: ["-9"] }).ok).toBe(false);
     expect(validateRequest({ action: "procs", args: ["x"] }).ok).toBe(false);
     expect(validateRequest("procs").ok).toBe(false);
+    expect(validateRequest({ action: "git-push-main", args: ["a".repeat(40)] }).ok).toBe(true);
+    expect(validateRequest({ action: "git-push-main", args: ["main"] }).ok).toBe(false);
+    expect(validateRequest({ action: "git-push-main", args: ["a".repeat(40), "upstream"] }).ok).toBe(false);
+    expect(validateRequest({ action: "learner-log-tab", args: ["20261010-164301-strategy-proposal"] }).ok).toBe(true);
+    expect(validateRequest({ action: "learner-log-tab", args: ["ops"] }).ok).toBe(false);
+    expect(validateRequest({ action: "learner-log-tab", args: ["20261010-164301-strategy-proposal", "wJ"] }).ok).toBe(false);
   });
 
   it("every action is implemented by ops/codex-ops-actions.sh and listed by ops/codex-ops-do.sh", () => {

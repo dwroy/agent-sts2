@@ -54,6 +54,12 @@ hosting() {
 }
 
 case "$action" in
+  learner-log-tab)
+    [ $# -eq 2 ] || exit 2
+    exec nice -n 19 python3 "$OPS/learner-log-pane.py" "$arg" ;;
+  git-push-main)
+    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9a-f]{40}$ ]] || exit 2
+    exec nice -n 19 python3 "$ROOT/ops/git-push-main.py" "$arg" ;;
   codex-brain-cache-probe)
     [ "$#" -eq 1 ] || { echo "codex-brain-cache-probe takes no arguments"; exit 2; }
     CACHE_WORKTREE="$ROOT/.worktrees/codex-brain-cache"

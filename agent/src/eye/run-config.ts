@@ -37,7 +37,7 @@ import type { UsageStatus } from "../brain/engines/codex-usage.js";
 import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
 import type { EngineName } from "../brain/types.js";
 import type { AppConfig } from "../core/config.js";
-import { DEFAULT_CLAUDE_MODEL } from "../core/config.js";
+import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL } from "../core/config.js";
 import { isMenuRunId } from "../memory/journal-replay.js";
 import { str, type JsonValue } from "../core/util/json.js";
 import { resolveJevPromptLog } from "./jev-prompt-log.js";
@@ -119,6 +119,8 @@ export interface RunConfigRow {
     codex?: {
       mode: string;
       service_tier: string | null;
+      context_window?: number;
+      auto_compact_token_limit?: number;
       summary: string;
       stall_ms: number | null;
       first_token_ms: number | null;
@@ -342,6 +344,8 @@ function codexSnapshot(codex: AppConfig["brain"]["codex"]): NonNullable<RunConfi
   return {
     mode: codex.mode,
     service_tier: codex.serviceTier,
+    context_window: CODEX_CONTEXT_WINDOW,
+    auto_compact_token_limit: CODEX_AUTO_COMPACT_TOKENS,
     summary: codex.summary,
     stall_ms: codex.stallMs,
     first_token_ms: codex.firstTokenMs,

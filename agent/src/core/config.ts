@@ -616,10 +616,12 @@ export const DEFAULT_CLAUDE_MAX_CALLS = 150;
  * The brain's Codex model and effort when BRAIN_CODEX_MODEL / BRAIN_CODEX_EFFORT are unset (Dai 2026-10-03: "gpt6.1 sol
  * extra high"). Always sent explicitly: the engine ignores ~/.codex/config.toml (engines/codex.ts).
  */
-export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
+export const DEFAULT_CODEX_MODEL = "gpt-6-astra";
 export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
 /** Codex's model catalog names the priority service tier "Fast". Roy enabled it for all sessions on 2026-10-09. */
-export const CODEX_SERVICE_TIER = "priority";
+export const CODEX_SERVICE_TIER = "default";
+export const CODEX_CONTEXT_WINDOW = 512_000;
+export const CODEX_AUTO_COMPACT_TOKENS = 460_800;
 
 /** BRAIN_CODEX_TIMEOUT_MS when unset: 10 minutes per call (xhigh on a map / act-plan question takes minutes). */
 export const DEFAULT_CODEX_TIMEOUT_MS = 600_000;

@@ -1,0 +1,127 @@
+{
+  "recorded_at": "2026-10-10T15:02:06.736462+08:00",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-proposal-protocol-repair-20261010",
+  "source_base": "f7e75bb48e42890225b3132bb7151165c10ecdc5",
+  "source_commit": "0bfd7db5b8083f35eed96acbd6a94ce1901659fd",
+  "checks": {
+    "original-red": {
+      "exit_code": 1,
+      "log": "original-red.log",
+      "log_sha256": "545394a97614c7608adb5aec63e5d71634a5529c0c07f0030f4c75655ae57a5e"
+    },
+    "completion-binding-red-green": {
+      "exit_code": 0,
+      "log": "completion-binding-red-green.log",
+      "log_sha256": "1a028a1e542629cd994ce6bb10d0d3e380479bdafef710b1889e22cae1bee526"
+    },
+    "scheduling-final": {
+      "exit_code": 0,
+      "log": "scheduling-final.log",
+      "log_sha256": "bcd6038dc0e0a2110c5cc97e38fa70659bbc54917200917e55594edefb4e9504",
+      "python_tests": 18
+    },
+    "old-flow-final": {
+      "exit_code": 0,
+      "log": "old-flow-final.log",
+      "log_sha256": "7cb284e177c1869aac2dab2ed79cea759a750b454700c4ec19b6a76d0f3ecc56",
+      "python_tests": 24
+    },
+    "concurrency": {
+      "exit_code": 0,
+      "log": "concurrency.log",
+      "log_sha256": "3a827d6c1696c6557ff327c32f0ef4f639b0fb12b9c6af0d1b6f353f66cf536d",
+      "python_tests": 6
+    },
+    "research-adapter-final": {
+      "exit_code": 0,
+      "log": "research-adapter-final.log",
+      "log_sha256": "bdfcf77881166bcebea4440fb39ebdde5f8c6f55ddf549ae0c9f906e20f367c1",
+      "python_tests": 8
+    },
+    "fast-launcher": {
+      "exit_code": 0,
+      "log": "fast-launcher.log",
+      "log_sha256": "48e249d657cce337a3416a7a3561de15f90bc38e3b9c0dd59b337dae3675fdf2",
+      "python_tests": 8
+    },
+    "bridge-final": {
+      "exit_code": 0,
+      "log": "bridge-final.log",
+      "log_sha256": "2b846607046091e6a13aebfdf96ef20521605f2b57daa1c7f86822f4d1f2aa4f",
+      "test_files": 2,
+      "test_cases": 2
+    },
+    "gitleaks-preflight": {
+      "exit_code": 0,
+      "log": "gitleaks-preflight.log",
+      "log_sha256": "8deaf1e3743b322f907c448f40f5bcb0f9200b92d7c6c6bc3b9cfb1cdc10b23f"
+    },
+    "gitleaks-final": {
+      "exit_code": 0,
+      "log": "gitleaks-final.log",
+      "log_sha256": "63e3e2ee5de7c825b8742a47d8df426bdc2d4fa8dc506cc22a5677125d2d20c3"
+    },
+    "gitleaks-source": {
+      "exit_code": 0,
+      "log": "gitleaks-source.log",
+      "log_sha256": "fea49be489beffef79ef7cb08b1d1da50c95fcc5c99eecf084591e48cc6424a4"
+    },
+    "shell_syntax": {
+      "command": "bash -n ops/codex-ops-learner.sh",
+      "exit_code": 0
+    },
+    "staged_diff_check": {
+      "command": "git diff --cached --check",
+      "exit_code": 0
+    }
+  },
+  "full_sandbox": {
+    "status": "completed",
+    "session": 27452,
+    "started_at": "2026-10-10T14:49:35+08:00",
+    "command": "SANDBOX_WORKERS=2 nice -n 19 bash tools/test-sandbox.sh",
+    "cwd": "agent",
+    "log": "full-sandbox.log",
+    "exit_code": 0,
+    "tsc_exit_code": 0,
+    "observed_completion_at": "2026-10-10T15:02:06.736462+08:00",
+    "log_sha256": "9d2aff4ea813f1c6d8a1a4160f4b4145a7313ee540bc43ab2a447925f3798cda",
+    "test_files": 265,
+    "test_cases": 2676,
+    "vitest_stages": [
+      {
+        "pool": "threads",
+        "workers": 2,
+        "files": 264,
+        "cases": 2665,
+        "start_at": "2026-10-10T14:49:38+08:00",
+        "duration_seconds": 688.57
+      },
+      {
+        "pool": "forks",
+        "workers": 1,
+        "files": 1,
+        "cases": 11,
+        "start_at": "2026-10-10T15:01:07+08:00",
+        "duration_seconds": 1.75
+      }
+    ]
+  },
+  "full_snapshot_boundary": {
+    "under_test": "source-under-test.json",
+    "final": "source-final.json",
+    "changed_after_start": [
+      "learner/tasks/strategy-proposal.md"
+    ],
+    "execution_source_changed_after_start": false
+  },
+  "independent_review": "paper/materials/20261010-ops-parallel/strategy-research-scheduling-review/review.json",
+  "production_dispatch": false,
+  "root_request_or_learn_json_written_by_subagent": false,
+  "main_live_merge_or_push_by_subagent": false,
+  "raw_material_whitespace": {
+    "exit_code": 2,
+    "command": "git diff --cached --check (record commit only)",
+    "reason": "Original Vitest logs end in blank lines, and archived git patches retain context-line spaces. Raw test and diff bytes are kept unchanged; source diff check was exit 0."
+  }
+}

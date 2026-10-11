@@ -21,7 +21,7 @@ import { CODEX_DISABLED_FEATURES, codexEnv } from "../../agent/src/brain/engines
 import { runAgent } from "../../agent/src/brain/engines/process.js";
 import type { McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { PROJECT_ROOT as REPO_ROOT } from "../../agent/src/core/paths.js";
-import { CODEX_SERVICE_TIER, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
+import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, CODEX_SERVICE_TIER, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
 import { MCP_SERVER_NAME } from "../../agent/src/brain/tools/mcp-launch.js";
 import type { TaskTool } from "./task.js";
 
@@ -254,6 +254,8 @@ export function codexLearnerConfig(opts: { effort: string }): string[] {
     `web_search=${toml("disabled")}`,
     `model_reasoning_effort=${toml(opts.effort)}`,
     `service_tier=${toml(CODEX_SERVICE_TIER)}`,
+    `model_context_window=${CODEX_CONTEXT_WINDOW}`,
+    `model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKENS}`,
     "allow_login_shell=false",
     // No skills catalogue in front of the task (the brain's settings; the 2026-10-04 smoke run had one).
     "skills.include_instructions=false",

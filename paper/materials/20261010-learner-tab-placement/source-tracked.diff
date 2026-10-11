@@ -1,0 +1,184 @@
+diff --git a/agent/tests/ops-codex.test.ts b/agent/tests/ops-codex.test.ts
+index adb18df97..3345c9f85 100644
+--- a/agent/tests/ops-codex.test.ts
++++ b/agent/tests/ops-codex.test.ts
+@@ -102,6 +102,9 @@ describe("broker requests", () => {
+     expect(validateRequest({ action: "git-push-main", args: ["a".repeat(40)] }).ok).toBe(true);
+     expect(validateRequest({ action: "git-push-main", args: ["main"] }).ok).toBe(false);
+     expect(validateRequest({ action: "git-push-main", args: ["a".repeat(40), "upstream"] }).ok).toBe(false);
++    expect(validateRequest({ action: "learner-log-tab", args: ["20261010-164301-strategy-proposal"] }).ok).toBe(true);
++    expect(validateRequest({ action: "learner-log-tab", args: ["ops"] }).ok).toBe(false);
++    expect(validateRequest({ action: "learner-log-tab", args: ["20261010-164301-strategy-proposal", "wJ"] }).ok).toBe(false);
+   });
+ 
+   it("every action is implemented by ops/codex-ops-actions.sh and listed by ops/codex-ops-do.sh", () => {
+diff --git a/agent/tests/ops-herdr.test.ts b/agent/tests/ops-herdr.test.ts
+index e7bd45584..7627af896 100644
+--- a/agent/tests/ops-herdr.test.ts
++++ b/agent/tests/ops-herdr.test.ts
+@@ -5,7 +5,7 @@
+  * wake (exit 75) as no failure. Temp directories and fake commands only: no herdr server, no codex, nothing real starts.
+  */
+ import { spawnSync } from "node:child_process";
+-import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { dirname, join, resolve } from "node:path";
+ import { fileURLToPath } from "node:url";
+@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
+ import { afterAll, describe, expect, it } from "vitest";
+ 
+ import { argsHash, composerState, herdrWake, openTurn, rolloutTurn } from "../../ops/codex/herdr.js";
+-import { OPS_PROFILE, hostingMode, interactiveArgs, opsRequest, readQueue } from "../../ops/codex/lib.js";
++import { OPS_PROFILE, hostingMode, interactiveArgs, opsRequest, readQueue, validateRequest } from "../../ops/codex/lib.js";
+ 
+ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
+ const FAKE = join(REPO, "agent", "tests", "fixtures-herdr", "fake-herdr.py");
+@@ -141,6 +141,53 @@ describe("screen and session-file readers", () => {
+ });
+ 
+ describe("ops/herdr-host.sh (fake herdr)", () => {
++  it("only permits registered-batch-shaped viewer requests without arbitrary commands or target panes", () => {
++    expect(validateRequest({ action: "learner-log-tab", args: ["20261010-164301-strategy-proposal"] }).ok).toBe(true);
++    for (const args of [["ops"], ["../file"], ["1234"], ["20261010-164301-strategy-proposal", "wJ"]]) {
++      expect(validateRequest({ action: "learner-log-tab", args }).ok).toBe(false);
++    }
++  });
++  it("new learner tabs follow the live ops pane when workspace labels are duplicated", () => {
++    const w = world("ops-workspace");
++    expect(w.host("ensure-workspace").stdout.trim()).toBe("w1");
++    const second = spawnSync(FAKE, ["workspace", "create", "--label", "sts2-test", "--cwd", join(w.dir, "proj")], { env: w.env, encoding: "utf8" });
++    const ops = JSON.parse(second.stdout).result.root_pane;
++    spawnSync(FAKE, ["pane", "rename", ops.pane_id, "ops"], { env: w.env });
++    const registry = join(w.dir, "proj", "ops", "codex-ops", "herdr.json");
++    writeFileSync(registry, JSON.stringify({ panes: { ops: { pane_id: ops.pane_id } }, workspace_id: "w1" }));
++    expect(w.host("ensure-workspace").stdout.trim()).toBe("w2");
++    const created = w.host("open-pane", "learner-next");
++    expect(created.status, created.stderr).toBe(0);
++    expect(w.state().panes[created.stdout.trim()].ws).toBe("w2");
++    expect(w.state().panes[ops.pane_id].label).toBe("ops");
++  });
++
++  it("shows registered learner logs beside ops without restarting the learner, and rejects unknown batches", () => {
++    const w = world("learner-log-view");
++    const opsPane = w.host("open-pane", "ops").stdout.trim();
++    const root = join(w.dir, "proj");
++    const stateDir = join(root, "ops", "codex-ops");
++    copyFileSync(HOST, join(root, "ops", "herdr-host.sh"));
++    copyFileSync(join(REPO, "ops", "herdr-exec.sh"), join(root, "ops", "herdr-exec.sh"));
++    const batch = "20261010-164301-strategy-proposal";
++    mkdirSync(join(stateDir, "learner"));
++    writeFileSync(join(stateDir, "learn.json"), JSON.stringify({ batches: { [batch]: { state: "done", pid: 12 } } }));
++    writeFileSync(join(stateDir, "learner", `${batch}.out`), "model stdout\n");
++    writeFileSync(join(stateDir, "learner", `${batch}.err`), "learner evidence processing\n");
++    const runner = (id: string) => spawnSync("python3", [join(REPO, "ops", "learner-log-pane.py"), id], { env: { ...w.env, CODEX_OPS_ROOT: root }, encoding: "utf8", timeout: 30_000 });
++    const result = runner(batch);
++    expect(result.status, result.stderr).toBe(0);
++    const receipt = JSON.parse(result.stdout);
++    expect(receipt).toMatchObject({ batch, workspace: "w1", ops_pane: opsPane, learner_restarted: false });
++    expect(receipt.screen).toContain("learner evidence processing");
++    const paneCount = Object.keys(w.state().panes).length;
++    expect(runner(batch).status).toBe(0);
++    expect(Object.keys(w.state().panes)).toHaveLength(paneCount);
++    expect(runner("20261010-111111-strategy-proposal").status).toBe(1);
++    expect(Object.keys(w.state().panes)).toHaveLength(paneCount);
++    expect(JSON.parse(readFileSync(join(stateDir, "learn.json"), "utf8")).batches[batch]).toEqual({ state: "done", pid: 12 });
++  }, 30_000);
++
+   it("run, reuse, busy, status, stop; only its own labels", () => {
+     const w = world("host");
+     expect(w.host("available").status).toBe(0);
+diff --git a/docs/codex-ops.md b/docs/codex-ops.md
+index 574da5e0d..b40652ce5 100644
+--- a/docs/codex-ops.md
++++ b/docs/codex-ops.md
+@@ -93,7 +93,7 @@ Roy 授权的静默 boss 校准使用独立模板 `learner/tasks/silent-boss-cal
+ 
+ ## herdr 托管（Roy 2026-10-05）
+ 
+-目的：长跑的进程在 herdr 里看得见、管得了（Mac 上 `herdr --machine xdwin …`）。托管层是通用的（`ops/herdr-host.sh` + pane 侧的 `ops/herdr-exec.sh`），不含项目逻辑：一个 workspace `sts2-run`（cwd 主检出），每个 label 一个 tab；label → pane 记在 `ops/codex-ops/herdr.json`。不碰 `agent-sts2`（wD，Claude rc 会话）、geo-crash、codex-gc1。
++目的：长跑的进程在 herdr 里看得见、管得了（Mac 上 `herdr --machine xdwin …`）。托管层是通用的（`ops/herdr-host.sh` + pane 侧的 `ops/herdr-exec.sh`），不含项目逻辑：新 tab 优先跟随实际 ops pane 所在的 workspace；尚无 ops pane 时使用 `sts2-run`（cwd 主检出）。每个 label 一个 tab；label → pane 记在 `ops/codex-ops/herdr.json`。不碰 `agent-sts2`（wD，Claude rc 会话）、geo-crash、codex-gc1。
+ 
+ ```bash
+ bash ops/herdr-host.sh status            # label、pane、在不在、忙不忙、前台 PID
+@@ -102,6 +102,8 @@ bash ops/herdr-host.sh stop <label>      # ctrl+c、关 pane；只停自己登
+ bash ops/herdr-host.sh attach-hint       # 从 Mac 怎么看
+ ```
+ 
++Roy 2026-10-10 要求学习 tab 与 ops 放在同一 workspace。同名 workspace 不作为实际归属的依据，新学习 tab 通过已登记且仍存活的 ops pane 定位。既有批次继续运行；需要在 ops 旁查看它时，运维用 `bash ops/codex-ops-do.sh learner-log-tab <batch-id>` 打开独立日志 tab，显示该已登记批次的 `.out/.err`，不重启学习者。活批的日志 tab 随已核实 wrapper 结束而关闭；已结束批次只显示已有输出。重复调用复用同一日志 tab。
++
+ **开关**：`ops/codex-ops/hosting`，每行 `键=值`（文件，不用改 crontab）；环境变量优先。
+ 
+ | 键 | 值（默认在前） | 环境变量 | 管什么 |
+diff --git a/ops/codex-ops-actions.sh b/ops/codex-ops-actions.sh
+index c17aa8714..1eac38922 100755
+--- a/ops/codex-ops-actions.sh
++++ b/ops/codex-ops-actions.sh
+@@ -54,6 +54,9 @@ hosting() {
+ }
+ 
+ case "$action" in
++  learner-log-tab)
++    [ $# -eq 2 ] || exit 2
++    exec nice -n 19 python3 "$OPS/learner-log-pane.py" "$arg" ;;
+   git-push-main)
+     [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9a-f]{40}$ ]] || exit 2
+     exec nice -n 19 python3 "$ROOT/ops/git-push-main.py" "$arg" ;;
+diff --git a/ops/codex-ops-do.sh b/ops/codex-ops-do.sh
+index ee4e651bc..1061db2a7 100755
+--- a/ops/codex-ops-do.sh
++++ b/ops/codex-ops-do.sh
+@@ -8,6 +8,7 @@
+ # autoplay-stop, play-stop, kill <pid>, launch-game, win-procs, win-kill <pid>, postmortem <id,id,...>,
+ # autoplay-reload <old-autoplay-pid> <current-play-pid> (keeps the same play process),
+ # learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event),
++# learner-log-tab <batch-id> (display registered learner output in the ops workspace; never restart the learner),
+ # strategy-proposal <ids> (dispatches a learner proposal), learner-recheck <batch-id> (full checks after a fallback merge),
+ # boss-sim-check (check B4/B5 triggers with the live scheduler),
+ # core-build-notify <batch-id> (one native notification after ops verifies the substantive report),
+diff --git a/ops/codex/lib.ts b/ops/codex/lib.ts
+index b53b22584..ff065d662 100644
+--- a/ops/codex/lib.ts
++++ b/ops/codex/lib.ts
+@@ -253,6 +253,7 @@ export function initMessage(prompt: string, events: QueuedEvent[], now: Date): s
+  */
+ export const ACTIONS: Record<string, { args: number; ms: number }> = {
+   procs: { args: 0, ms: 30_000 },
++  "learner-log-tab": { args: 1, ms: 60_000 },
+   "stall-check": { args: 0, ms: 60_000 },
+   "mod-state": { args: 0, ms: 30_000 },
+   "autoplay-start": { args: 0, ms: 60_000 },
+@@ -309,6 +310,9 @@ export function validateRequest(raw: unknown): BrokerRequest {
+   if (action === "learner-recheck" && !/^(?:[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal)$/.test(list[0]!)) {
+     return { ok: false, error: "learner-recheck 要写入任务的完整批次 id" };
+   }
++  if (action === "learner-log-tab" && !/^[0-9]{8}-[0-9]{6}(?:-(?:experience-update|fix-batch|strategy-proposal)|-s2-strategy-proposal)?$/.test(list[0]!)) {
++    return { ok: false, error: "learner-log-tab 要已登记的完整学习批次 id" };
++  }
+   if (action === "core-build-notify" && !/^[0-9]{8}-[0-9]{6}-fix-batch$/.test(list[0]!)) {
+     return { ok: false, error: "core-build-notify 要完整核心学习批次 id" };
+   }
+diff --git a/ops/herdr-host.sh b/ops/herdr-host.sh
+index 292012620..7155a5615 100644
+--- a/ops/herdr-host.sh
++++ b/ops/herdr-host.sh
+@@ -82,7 +82,18 @@ for w in ((d or {}).get("result") or {}).get("workspaces", []):
+ }
+ 
+ ensure_workspace() {
+-  local ws; ws=$(workspace_id)
++  # Follow the live ops pane rather than the first workspace with a matching label.
++  # Multiple workspaces may share that label after a reconnect or migration.
++  local ws ops_pane
++  ops_pane=$(state_get ops)
++  ws=""
++  if [ -n "$ops_pane" ]; then
++    ws=$(pane_json "$ops_pane" | py '
++p = ((d or {}).get("result") or {}).get("pane") or {}
++if p.get("label") == "ops":
++    print(p.get("workspace_id", ""))')
++  fi
++  [ -n "$ws" ] || ws=$(workspace_id)
+   if [ -z "$ws" ]; then
+     ws=$(h workspace create --cwd "$WS_CWD" --label "$WS_LABEL" --no-focus | py 'print(d["result"]["workspace"]["workspace_id"])') \
+       || die "workspace create failed"
