@@ -24,7 +24,7 @@ DEPENDENCIES = {
     "tests/brain-codex-session.test.ts": ["agent/src/brain/engines/codex-session.ts", "agent/src/core/config.ts"],
     "tests/quantitative.test.ts": ["agent/src/sim/quantitative-stats.ts", "agent/src/sim/quantitative-facts.ts",
                                    "agent/src/sim/quantitative-calibration.ts", "agent/tools/quantitative.ts"],
-    "tests/strategy-implementation.test.ts": ["ops/strategy_implementation.py", "ops/strategy_research_jobs.py"],
+    "tests/strategy-implementation.test.ts": ["ops/strategy_implementation_jobs.py", "ops/strategy_research_jobs.py"],
 }
 SOURCE_PATHS = ["agent/src", "agent/tests", "agent/tools", "agent/package*.json", "agent/tsconfig*.json",
                 "agent/vitest*", "ops/*.py", "ops/*.sh", "ops/tests", "ops/codex", "learner/*.py",
