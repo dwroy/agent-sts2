@@ -289,6 +289,8 @@ export class RunJournal {
   private relicSnap: Counted | null = null;
   private potionSnap: Counted | null = null;
   private maxHpSnap: number | null = null;
+  private silentHpSnap: { hp: number; maxHp: number; floor: number; act: number; screen: string;
+    turn: number | null; combat: boolean } | null = null;
   private discardFloors = new Set<number>();
   private knowledge: Knowledge | null = null;
   /** Creation counter for the journal's items (history is chronological). */
@@ -327,6 +329,7 @@ export class RunJournal {
       this.trackResources(state);
       this.trackFloor(state);
     }
+    this.trackSilentHpRecovery(state);
     if (context.screenMemory) this.trackRoute(state, context.screenMemory.routePlan);
     if (this.itemSignature() !== items) return "items";
     return floor !== null && JSON.stringify(this.floors.get(floor) ?? null) !== mark ? "mark" : "none";
@@ -519,6 +522,38 @@ export class RunJournal {
     }
   }
 
+  /** MTQ0/7X0/KFR A10, silent-0019/0020/0243: observed recovery is separate from route forecasts. */
+  private trackSilentHpRecovery(state: GameState): void {
+    if (state.run?.ascension !== 10 || str(asRecord(state.run.raw)["character_id"]).toLowerCase() !== "silent") {
+      this.silentHpSnap = null;
+      return;
+    }
+    const { current_hp: hp, max_hp: maxHp, floor } = state.run;
+    // A stale earlier floor must not create a second recovery when the current frame returns.
+    if (floor !== null && floor < this.maxFloor) return;
+    if (hp === null || maxHp === null || floor === null || !Number.isFinite(hp) || !Number.isFinite(maxHp) ||
+        hp < 0 || hp > maxHp || (state.in_combat && state.combat?.current_hp !== hp)) {
+      this.silentHpSnap = null;
+      return;
+    }
+    const before = this.silentHpSnap;
+    const now = { hp, maxHp, floor, act: actOf(state), screen: state.screen, turn: state.turn, combat: state.in_combat };
+    this.silentHpSnap = now;
+    if (!before || hp <= before.hp) return;
+    const sameFloor = before.floor === floor;
+    const rewind = sameFloor && before.combat && now.combat && before.turn !== null && now.turn !== null && now.turn < before.turn;
+    const source = rewind ? "回合回退时恢复，不计路线回血"
+      : before.act !== now.act ? "跨幕边界"
+      : !sameFloor ? "跨层边界，来源未隔离"
+      : sameFloor && (before.screen === "REST" || now.screen === "REST") ? "休息点内"
+      : sameFloor && now.combat && now.turn === 1 && (!before.combat || before.turn === 1) ? "战斗开场"
+      : sameFloor && before.combat && now.combat ? "战斗中"
+      : "来源未隔离";
+    // These labels locate consecutive observations; they do not infer a healing source or formula.
+    this.events.push({ seq: this.nextSeq(), at: this.placeFloor(state), act: now.act, floor,
+      text: `HP增加观测 ${before.hp}/${before.maxHp}→${hp}/${maxHp}（+${hp - before.hp}；${source}；F${before.floor}/${before.screen}→F${floor}/${now.screen}，仅帧间净变化）` });
+  }
+
   private diffDeck(before: Counted, after: Counted, source: string, push: (text: string) => void): void {
     const base = (key: string): string => key.replace(/\+$/, "");
     const ids = new Set([...before.keys(), ...after.keys()].map(base));
@@ -585,6 +620,7 @@ export class RunJournal {
     this.relicSnap = null;
     this.potionSnap = null;
     this.maxHpSnap = null;
+    this.silentHpSnap = null;
     this.discardFloors = new Set();
     this.seq = 0;
     this.maxFloor = 0;
