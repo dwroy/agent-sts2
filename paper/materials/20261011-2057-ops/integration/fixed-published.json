@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-11T21:06:44.716772+08:00",
+  "before": "5c24c3f5434717d8114c739d738e81042a3d5236",
+  "candidate": "b69a893b479f1143bccaeae27c0db7f79c7f28e2",
+  "live": "beaff15009b254fbc86b026be2fbe050226d56d5",
+  "tree": "959f5aa6e3f61ece674a7b23a74f5fcb20dff51c",
+  "verified_source_tree_identical": true,
+  "refresh_preserved": {
+    "notes/fight-value-backtest-silent.md": "5a4f8cf854af56d5e60b24199484c957d62b5ec3e5965660cf3cdfd225f1e1ec"
+  },
+  "gitleaks": 0,
+  "baseline_coverage": {
+    "strategy_source_full_cases": 2702,
+    "fixture_source_full_cases": 2689,
+    "original_failures_preserved": true
+  },
+  "incremental_checks": {
+    "checks": [
+      {
+        "name": "fixed-tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "fixed-affected",
+        "command": [
+          "npx",
+          "vitest",
+          "run",
+          "tests/silent-cunning.test.ts",
+          "tests/silent-opening.test.ts",
+          "tests/silent-reattach-reset.test.ts",
+          "tests/silent-double-boss.test.ts",
+          "tests/silent-lethal-continuation.test.ts",
+          "tests/silent-skittish.test.ts",
+          "tests/silent-gardener-skittish.test.ts",
+          "tests/quantitative.test.ts",
+          "tests/silent-build-win-ties.test.ts",
+          "tests/silent-phase-reference.test.ts",
+          "--pool=threads",
+          "--maxWorkers=1"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "infra-contracts",
+        "command": [
+          "npx",
+          "vitest",
+          "run",
+          "tests/brain-codex-session.test.ts",
+          "tests/ops-codex.test.ts",
+          "--pool=threads",
+          "--maxWorkers=1",
+          "-t",
+          "the exit fixture selects|allows only the listed actions|every action is implemented"
+        ],
+        "exit": 0
+      }
+    ]
+  }
+}
