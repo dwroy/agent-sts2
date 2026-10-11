@@ -2133,3 +2133,5 @@
 - 2026-10-11 16:02 CST [核心兑现与增牌讨论] Roy继续追问新牌影响；核204局learner报告与live208条经验，整理按到手→支付/合法→建立/有效后继→真实产出和生存窗口比较新增/跳过，最终通关为目标；54G复制步法延迟至T7/T9、252封抽但仍有挡作为已学例证。当前模拟有同种子boss结果差，无专门核心次数指标；0374/0376/0385唯一综合入库请求仍pending/batch null，未冒称入库或收益。只记录讨论/实现核对，不新增游戏规则、知识、任务或改对局；原话与来源SHA见paper/materials/discussions/2026-10-11-core-realization-marginal-card-discussion.md。
 
 - 2026-10-11 16:24 CST [核心循环量化与极限讨论] Roy要求量化跳过/减牌/过牌及极限循环；独立抽象模型精确算只基础抽5时12回合核心次数20张3→15张4→5张12，再缩至1张仍12；双组件同手概率另算。12方案各10000固定种子逐张计算，揭示流量近似N−G不能当有限次数，费用及正在结算牌不可回抽可阻断循环；单/双组件零费封闭状态另给动作见证，不冒称实盘无限构筑。仅论文讨论/计算，未加游戏知识、任务、版本或改对局；复现代码、数值、原话和SHA见paper/materials/silent/20261011-core-cycle-quantification/。
+
+- 2026-10-11 16:53 CST [核心循环量化入库授权] Roy“以上的总结能否学习进入经验库？”已补入唯一 roy-20261010-silent-core-reuse-experience-integration revision3，保留原0374/0376/0385，增加跳过/减牌/过牌数量、整套同手、费用/回流与极限断点验证；只允许learner据静默证据去重入库，不把抽象数字/无限例子作游戏事实。原请求/跟踪/续办事件字节独立留存，新说明task-v3 SHA030337a6；标准broker派发8秒无响应exit124，复核无匹配批次，仍pending/batch null，原唯一续办事件追加最新版，无重复派发或上线。live经验.8/208条和19原冲突保持；入库后交条目原文，读取/采用/最终通关效果分列。回执paper/materials/silent/20261011-core-cycle-quantification/experience-integration/closure.json。
