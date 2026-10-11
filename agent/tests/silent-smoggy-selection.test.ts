@@ -7,6 +7,7 @@ import { loadConfig } from "../src/core/config.js";
 import { parseGameState } from "../src/hand/mod/schema.js";
 import { planSelection } from "../src/hand/screens/selection.js";
 import { survivorSmoggyFacts } from "../src/hand/screens/silent-smoggy-selection.js";
+import * as smoggyModule from "../src/hand/screens/silent-smoggy-selection.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
 import { buildRunBrief } from "../src/memory/run-brief.js";
 import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
@@ -51,6 +52,17 @@ function facts(input = raw()): Map<number, Raw> {
   const result = survivorSmoggyFacts(parseGameState(input), true);
   expect(result).not.toBeNull();
   return result as Map<number, Raw>;
+}
+
+function expectQuestionUnchangedWithoutSmoggyFacts(context: DecisionEnv): void {
+  const before = JSON.stringify(planSelection(context));
+  // Keep the shared action provenance for independent discard facts and routing.
+  const disabled = vi.spyOn(smoggyModule, "survivorSmoggyFacts").mockReturnValue(null);
+  try {
+    expect(JSON.stringify(planSelection(context))).toBe(before);
+  } finally {
+    disabled.mockRestore();
+  }
 }
 
 it("F12 T3: the warning matches the actual post-discard blockers, despite both modal flags being true", () => {
@@ -118,17 +130,13 @@ it.each([
   const input = raw(); change(input);
   expect(survivorSmoggyFacts(parseGameState(input), true)).toBeNull();
   const context = env(input);
-  const before = JSON.stringify(planSelection(context));
-  context.screenMemory.cardSource = undefined;
-  expect(JSON.stringify(planSelection(context))).toBe(before);
+  expectQuestionUnchangedWithoutSmoggyFacts(context);
 });
 
 it.each(["IRONCLAD", "NECROBINDER"])("%s questions remain byte-equivalent without reading that character's knowledge", (character) => {
   const input = raw(); input.run.character_id = character;
   const context = env(input);
-  const before = JSON.stringify(planSelection(context));
-  context.screenMemory.cardSource = undefined;
-  expect(JSON.stringify(planSelection(context))).toBe(before);
+  expectQuestionUnchangedWithoutSmoggyFacts(context);
   expect(survivorSmoggyFacts(context.state, true)).toBeNull();
 });
 
@@ -138,7 +146,5 @@ it.each(["missing", "old turn", "old fight", "other card"])("%s source cannot en
   else if (change === "old turn") context.screenMemory.cardSource!.turn = 2;
   else if (change === "old fight") context.screenMemory.cardSource!.fight = "old";
   else context.screenMemory.cardSource!.id = "OTHER";
-  const before = JSON.stringify(planSelection(context));
-  context.screenMemory.cardSource = undefined;
-  expect(JSON.stringify(planSelection(context))).toBe(before);
+  expectQuestionUnchangedWithoutSmoggyFacts(context);
 });

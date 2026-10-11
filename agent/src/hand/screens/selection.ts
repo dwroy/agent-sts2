@@ -20,6 +20,7 @@ import type { GameState } from "../mod/schema.js";
 import { exhaustPileSize, facingFightOf, fightPlaysPerTurn } from "../../reflex/combat-plan.js";
 import { cardIdentity, planMakerOf, SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
 import { cardOutcome } from "../../knowledge/outcome-facts.js";
+import { survivorDiscardFacts } from "./silent-discard-facts.js";
 import { survivorSmoggyFacts } from "./silent-smoggy-selection.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
@@ -192,6 +193,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
+  const source = env.screenMemory.cardSource;
+  const discardFacts = survivorDiscardFacts(state, source?.action === "play_card" && source.id === "SURVIVOR" &&
+    source.turn === state.turn && source.fight === facingFightOf(state));
   const smoggySource = env.screenMemory.cardSource;
   const smoggyFacts = survivorSmoggyFacts(state, smoggySource?.action === "play_card" && smoggySource.id === "SURVIVOR" &&
     smoggySource.turn === state.turn && smoggySource.fight === facingFightOf(state));
@@ -229,6 +233,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         cost: freeSource ? thisTurnModel(card, index).cost : numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
         ...(discardPlan ? { removes_planned_continuation: discardPlan.removes(card) } : {}),
+        ...(discardFacts?.has(index) ? { discard_snapshot: discardFacts.get(index)! } : {}),
         ...(smoggyFacts?.has(index) ? { smoggy_after_discard: smoggyFacts.get(index)! } : {}),
       } satisfies JsonValue,
     };
@@ -325,7 +330,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
   };
   // BUILD_DECIDER=deepseek: out-of-combat deck picks (upgrade, remove, transform, add, enchant, choose) are
   // DeepSeek's call; in-combat picks stay with code and Jev.
-  if (!deepseekDecides(env) || forThisTurn || isExhaust || onTop || discardPlan) {
+  if (!deepseekDecides(env) || forThisTurn || isExhaust || onTop || discardPlan || discardFacts) {
     const decision = buildPickDecision(params);
     if (discardPlan && decision.kind === "ask") {
       const resolve = decision.resolve;
