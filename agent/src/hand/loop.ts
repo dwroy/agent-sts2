@@ -27,6 +27,7 @@ import { deciderLabel, engineLabel } from "../brain/labels.js";
 import { moveModel } from "../knowledge/move-model.js";
 import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, plannerTiming, trackLizardTail } from "../reflex/combat-plan.js";
 import { notePermafrostPlay, observePermafrost } from "../reflex/permafrost.js";
+import { observeSilentSkittish } from "../reflex/silent-skittish.js";
 import { noteFightReplay, observeFightPlays } from "../reflex/fight-plays.js";
 import { computeMemoOptions } from "../sim/compute-memo.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "../memory/fight-plan.js";
@@ -651,6 +652,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
           if (replay.permafrost) screenMemory.permafrost = replay.permafrost;
+          if (replay.silentSkittish) screenMemory.silentSkittish = replay.silentSkittish;
           if (replay.fightCards) screenMemory.fightCards = replay.fightCards;
           // The turn's first logged frame: a card exhausted before the restart still counts this turn (Evil Eye).
           if (replay.turnStartExhaust && !screenMemory.turnStartExhaust) screenMemory.turnStartExhaust = replay.turnStartExhaust;
@@ -697,6 +699,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // marks it is logged (an enemy-turn read is not otherwise), so the journal replay after a restart reads it too.
     const tailSeen = trackLizardTail(screenMemory, state);
     if (observePermafrost(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
+    if (observeSilentSkittish(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
     if (observeFightPlays(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
     if (tailSeen) {
       observedStates.touched(state, observedFp, observedTs);
@@ -1839,6 +1842,7 @@ export function resetFightMemory(screenMemory: ScreenMemory): void {
   screenMemory.facingFight = undefined;
   screenMemory.fightCards = undefined;
   screenMemory.permafrost = undefined;
+  screenMemory.silentSkittish = undefined;
   screenMemory.planBeforeSelection = undefined;
   screenMemory.gambleDiscards = undefined;
   screenMemory.potionTake = undefined;
