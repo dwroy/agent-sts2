@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-11T18:52:47+08:00",
+  "problem": "229 historical exit-75 deferrals were not counted as failures and never alerted; queue stalled for more than a day",
+  "change": "A once-per-episode inbox notice after >=3 deferrals and >=1800 seconds, using the original drain/wake lock; clear on success, other failure, or empty queue; pause untouched",
+  "no_production_actions": [
+    "No new cron or watcher",
+    "No forced session restart or input clearing",
+    "No event consumption or changed gameplay"
+  ],
+  "validation": {
+    "tsc": 0,
+    "sandbox_first": {
+      "files": 267,
+      "passed_tests": 2678,
+      "failed_tests": 3,
+      "log": "sandbox-1.log",
+      "reason": "New fixed integration tests used spawnSync; sandbox returned EPERM. Tests now use async spawn."
+    },
+    "targeted_final": {
+      "files": 1,
+      "passed_tests": 3,
+      "log": "targeted-final.log"
+    },
+    "paths": {
+      "files": 1,
+      "passed_tests": 11,
+      "log": "paths-final.log"
+    },
+    "unique_coverage": {
+      "files": 268,
+      "tests": 2692
+    },
+    "additional_failure_preserved": "targeted-async-2.log: test helper depended on cwd; replaced with import.meta.url"
+  },
+  "production_acceptance": "Not yet observed on a real prolonged deferral; no failure injected into ops"
+}

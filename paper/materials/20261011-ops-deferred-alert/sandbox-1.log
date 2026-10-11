@@ -1,0 +1,106 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/agent
+
+ ❯ tests/ops-deferred.test.ts (3 tests | 3 failed) 248ms
+   × alerts once after three long-running deferrals without consuming events or increasing failures 106ms
+   × requires both age and count, and recovers malformed or future episode state 82ms
+   × clears the episode on success, failure or an empty queue; pause preserves it without alerting 56ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-deferred.test.ts > alerts once after three long-running deferrals without consuming events or increasing failures
+AssertionError: expected Error: spawnSync bash EPERM { …(5) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+Error {
+  "message": "spawnSync bash EPERM",
+  "errno": -1,
+  "code": "EPERM",
+  "syscall": "spawnSync bash",
+  "path": "bash",
+  "spawnargs": [
+    "/home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/ops/codex-ops.sh",
+    "drain",
+  ],
+}
+
+ ❯ Object.drain tests/ops-deferred.test.ts:22:26
+     20|   const drain = (rc = 75) => {
+     21|     const result = spawnSync("bash", [scheduler, "drain"], { env: { ..…
+     22|     expect(result.error).toBeUndefined();
+       |                          ^
+     23|     expect(result.status, result.stderr).toBe(0);
+     24|   };
+ ❯ tests/ops-deferred.test.ts:34:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/ops-deferred.test.ts > requires both age and count, and recovers malformed or future episode state
+AssertionError: expected Error: spawnSync bash EPERM { …(5) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+Error {
+  "message": "spawnSync bash EPERM",
+  "errno": -1,
+  "code": "EPERM",
+  "syscall": "spawnSync bash",
+  "path": "bash",
+  "spawnargs": [
+    "/home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/ops/codex-ops.sh",
+    "drain",
+  ],
+}
+
+ ❯ Object.drain tests/ops-deferred.test.ts:22:26
+     20|   const drain = (rc = 75) => {
+     21|     const result = spawnSync("bash", [scheduler, "drain"], { env: { ..…
+     22|     expect(result.error).toBeUndefined();
+       |                          ^
+     23|     expect(result.status, result.stderr).toBe(0);
+     24|   };
+ ❯ tests/ops-deferred.test.ts:45:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/ops-deferred.test.ts > clears the episode on success, failure or an empty queue; pause preserves it without alerting
+AssertionError: expected Error: spawnSync bash EPERM { …(5) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+Error {
+  "message": "spawnSync bash EPERM",
+  "errno": -1,
+  "code": "EPERM",
+  "syscall": "spawnSync bash",
+  "path": "bash",
+  "spawnargs": [
+    "/home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/ops/codex-ops.sh",
+    "drain",
+  ],
+}
+
+ ❯ Object.drain tests/ops-deferred.test.ts:22:26
+     20|   const drain = (rc = 75) => {
+     21|     const result = spawnSync("bash", [scheduler, "drain"], { env: { ..…
+     22|     expect(result.error).toBeUndefined();
+       |                          ^
+     23|     expect(result.status, result.stderr).toBe(0);
+     24|   };
+ ❯ tests/ops-deferred.test.ts:62:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 266 passed (267)
+      Tests  3 failed | 2678 passed (2681)
+   Start at  18:45:54
+   Duration  308.79s (transform 10.54s, setup 17.35s, import 42.61s, tests 1126.95s, environment 34ms)
+
