@@ -1,0 +1,205 @@
+{
+  "20261011-211301": {
+    "batch": {
+      "runs": [
+        "64VJC5XT2AT2"
+      ],
+      "pid": 2402434,
+      "started": "2026-10-11 21:13",
+      "state": "done",
+      "reason": "tick",
+      "character": "silent",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKT",
+      "rc": 0,
+      "finished": "2026-10-11 21:35",
+      "done": [
+        "64VJC5XT2AT2"
+      ],
+      "missing": [],
+      "proposal_audit_errors": []
+    },
+    "report": {
+      "task": "postmortem",
+      "appended": [
+        "64VJC5XT2AT2"
+      ],
+      "skipped": [],
+      "bugs": [
+        {
+          "run": "64VJC5XT2AT2",
+          "where": "agent/src/sim/boss-sim.ts:319",
+          "what": "F47双boss模拟再次触发首战资源契约异常，属silent-0332旧缺陷；fix-queue.md未列",
+          "new": false
+        }
+      ],
+      "ledger": {
+        "added": [],
+        "updated": [
+          "silent-0385",
+          "silent-0228",
+          "silent-0332",
+          "silent-0125",
+          "silent-0386",
+          "silent-0136",
+          "silent-0005",
+          "silent-0080",
+          "silent-0077",
+          "silent-0016",
+          "silent-0025",
+          "silent-0011",
+          "silent-0024",
+          "silent-0028",
+          "silent-0149",
+          "silent-0120",
+          "silent-0204"
+        ],
+        "repeats": [
+          "silent-0332"
+        ],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-aefc96aa78f5c2ca",
+        "silent-proposal-5aa2672bd7cd1bf4"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion",
+        "terminal",
+        "structure"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261011-211302-postmortem/report.md"
+    },
+    "out_sha256": "253a3bda12c50c0549bb8161dc298824dc6a0146ba3deeb430d2f2e9b5ecd88c"
+  },
+  "20261011-213504-experience-update": {
+    "batch": {
+      "task": "experience-update",
+      "character": "silent",
+      "runs": [
+        "64VJC5XT2AT2"
+      ],
+      "key": "64VJC5XT2AT2",
+      "pid": 2437776,
+      "state": "failed",
+      "reason": "tick",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKX",
+      "finished": "2026-10-11 21:35",
+      "rc": 1,
+      "merged": null,
+      "proposal_audit_errors": [],
+      "report": {},
+      "completion_failure": {
+        "reason": "learner exited without a completion report",
+        "rc": 1,
+        "stderr": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261011-213504-experience-update.err"
+      },
+      "retry_at": 1791729318.171646
+    },
+    "report": {},
+    "out_sha256": "1a2c52220037322a285b9727bf67c9cb474409808a19e376cabad0ce10fecab4"
+  },
+  "20261011-204636-fix-batch": {
+    "batch": {
+      "task": "fix-batch",
+      "character": "silent",
+      "runs": [],
+      "key": "E6DSUVTNVBMH",
+      "pid": 2345092,
+      "state": "done",
+      "reason": "ops",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-204636",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKS",
+      "finished": "2026-10-11 21:38",
+      "rc": 0,
+      "merged": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+      "proposal_audit_errors": [],
+      "report": {
+        "task": "fix-batch",
+        "base": "1ab6efde17f5dfd1e96f24a01fa4c579c41728c0",
+        "fixes": [
+          {
+            "item": "core-cycle-implementation-binding-entry",
+            "commit": "fc95760d4ff8a9cbd45577efdd79b1215bd2cb92",
+            "test": "agent/tests/strategy-implementation.test.ts",
+            "fails_without_fix": true
+          }
+        ],
+        "skipped": [
+          {
+            "item": "机制、出牌、药水、SL、终局及结构提案",
+            "reason": "策略类，保留原独立提案链；逐项见报告和skipped.json。"
+          },
+          {
+            "item": "silent-0332、历史通知恢复、mod短暂超时",
+            "reason": "证据不足，分别缺触发样本、未发送证明及根因。"
+          },
+          {
+            "item": "独立架构、归因、B4/B5、缓存与性能专题",
+            "reason": "太大，按队列20:46限定，本批只补冻结绑定入口。"
+          },
+          {
+            "item": "分段检查收尾、调度公平性",
+            "reason": "独立框架任务或证据不足，保留原历史及续办。"
+          }
+        ],
+        "merged": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 2825,
+          "files": 287
+        },
+        "code_proposals": [],
+        "implementation_domains": [],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-204636/learner/runs/20261011-204644-fix-batch/report.md"
+      },
+      "checks_pending": true
+    },
+    "report": {
+      "task": "fix-batch",
+      "base": "1ab6efde17f5dfd1e96f24a01fa4c579c41728c0",
+      "fixes": [
+        {
+          "item": "core-cycle-implementation-binding-entry",
+          "commit": "fc95760d4ff8a9cbd45577efdd79b1215bd2cb92",
+          "test": "agent/tests/strategy-implementation.test.ts",
+          "fails_without_fix": true
+        }
+      ],
+      "skipped": [
+        {
+          "item": "机制、出牌、药水、SL、终局及结构提案",
+          "reason": "策略类，保留原独立提案链；逐项见报告和skipped.json。"
+        },
+        {
+          "item": "silent-0332、历史通知恢复、mod短暂超时",
+          "reason": "证据不足，分别缺触发样本、未发送证明及根因。"
+        },
+        {
+          "item": "独立架构、归因、B4/B5、缓存与性能专题",
+          "reason": "太大，按队列20:46限定，本批只补冻结绑定入口。"
+        },
+        {
+          "item": "分段检查收尾、调度公平性",
+          "reason": "独立框架任务或证据不足，保留原历史及续办。"
+        }
+      ],
+      "merged": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 2825,
+        "files": 287
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-204636/learner/runs/20261011-204644-fix-batch/report.md"
+    },
+    "out_sha256": "57fe89d7314eed4167f9aac5b5300468961c033ff52a7465b2c23f839a1876a4"
+  }
+}

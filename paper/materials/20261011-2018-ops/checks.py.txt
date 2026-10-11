@@ -1,0 +1,9 @@
+from pathlib import Path
+import subprocess,json,os
+r=Path.cwd();w=r/'.worktrees/ops-1852-integration/agent';o=r/'paper/materials/20261011-2018-ops/integration';p=json.load(open(o/'prepared-final.json'));env=os.environ.copy();env['PATH']=str(Path.home()/'.local/node/bin')+':'+env['PATH'];env['npm_config_offline']='true'
+files=sorted(str(f.relative_to(w)) for f in (w/'tests').glob('silent-apotheosis*.test.ts'))+['tests/silent-blade-dance.test.ts','tests/boss-trust.test.ts'];checks=[]
+for name,cmd in [('tsc',['npx','tsc','-p','tsconfig.json','--noEmit']),('affected',['npx','vitest','run',*files,'--pool=threads','--maxWorkers=1'])]:
+ with (o/(name+'.log')).open('wb') as out:q=subprocess.run(['nice','-n','19',*cmd],cwd=w,env=env,stdout=out,stderr=subprocess.STDOUT)
+ checks.append({'name':name,'command':cmd,'exit':q.returncode});print(name,q.returncode,flush=True)
+ if q.returncode:break
+(o/'incremental-checks.json').write_text(json.dumps({'candidate':p['candidate'],'baseline':'live4425 full324files3566cases passed,2infra failures separately dispatched','source_validation':'Apotheosis original273files2721 unique cases; retained timeout+isolated retry; experience267/2689 and calibration267/2689','checks':checks,'files':files},indent=2)+'\n')

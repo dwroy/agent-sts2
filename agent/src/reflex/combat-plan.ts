@@ -20,7 +20,9 @@
  */
 
 import { choiceQ } from "./jev/questions.js";
+import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
+import { carrySilentSkittish } from "./silent-skittish.js";
 import { silentLossReference } from "./silent-loss-reference.js";
 import { silentSimulationReference } from "./silent-simulation-reference.js";
 import type { ActionRequest } from "../hand/mod/client.js";
@@ -729,7 +731,7 @@ export function distinctNames(items: { name: string; id: string }[]): string[] {
   });
 }
 
-export function enemySims(combat: Record<string, unknown>, asc?: number): EnemySim[] {
+export function enemySims(combat: Record<string, unknown>, asc?: number, character = ""): EnemySim[] {
   const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
   const living = asArray(combat["enemies"])
     .map(asRecord)
@@ -744,6 +746,12 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       block: num(enemy["block"]),
       vulnerable: powerAmount(enemy, "VULNERABLE_POWER"),
       weak: powerAmount(enemy, "WEAK_POWER"),
+      // 3UPY3BP2LVS7 F17 T3, silent-0349: only this observed move and power combination.
+      ...(character.toLowerCase() === "silent" && asc === 10 &&
+        str(enemy["enemy_id"]) === "CEREMONIAL_BEAST" && str(enemy["move_id"]) === "PLOW_MOVE" &&
+        powerAmount(enemy, "WEAK_POWER") > 0 &&
+        asArray(enemy["powers"]).every((entry) => ["WEAK_POWER", "STRENGTH_POWER", "PLOW_POWER", "SHACKLING_POTION_POWER"].includes(str(asRecord(entry)["power_id"])))
+        ? { weakShackling: true as const } : {}),
       ...(powerAmount(enemy, "POISON_POWER") > 0 ? { poison: powerAmount(enemy, "POISON_POWER") } : {}),
       artifact: powerAmount(enemy, "ARTIFACT_POWER"),
       intangible: powerAmount(enemy, "INTANGIBLE_POWER") > 0,
@@ -758,6 +766,9 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       minion: powerAmount(enemy, "MINION_POWER") > 0,
       reattach: powerAmount(enemy, "REATTACH_POWER") > 0,
       reattachHp: powerAmount(enemy, "REATTACH_POWER"),
+      ...(character.toLowerCase() === "silent" && asc === 10 &&
+        str(enemy["enemy_id"]) === "DECIMILLIPEDE_SEGMENT_MIDDLE" && powerAmount(enemy, "REATTACH_POWER") === 25
+        ? { reattachClearsPoisonStrength: true } : {}),
       crabRage: powerAmount(enemy, "CRAB_RAGE_POWER") > 0,
       eruption: powerAmount(enemy, "STEAM_ERUPTION_POWER"),
       sandpit: powerAmount(enemy, "SANDPIT_POWER"),
@@ -1811,7 +1822,9 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   slCommitted = plan;
   const first = plan.steps[0];
   // Gambler's Brew draws what it draws: re-planned after it, like a draw.
-  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0);
+  // Made Shivs have synthetic search indices; read the actual hand before sending their actions.
+  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0) +
+    (first && cardFor(first, hand)?.bladeDance ? 1 : 0);
   // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
   // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
   // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
@@ -1829,6 +1842,10 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
     (plan.steps.length > 1 || (plan.steps.length === 1 && via !== "code")) && drawsOrRandom === 0
       ? {
           turn,
+          // YQL8RZ8BWN1E F17 T3, silent-0205: the discard question needs the chosen line's conditional estimates.
+          ...(str(asRecord(env.state.run?.raw)["character_id"]).toLowerCase() === "silent" && env.state.run?.ascension === 10
+            ? { selectionReference: { hp_lost: plan.outcome.hpLoss, damage_dealt: plan.outcome.damageDealt, block_gained: plan.outcome.blockGained } }
+            : {}),
           lethal: plan.outcome.winsFight,
           remaining: plan.steps.slice(1),
           expectedHand: expectedHandAfterFirst(plan, hand, musicBoxArmed(env.state)),
@@ -2816,7 +2833,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const phantomBlades = powerAmount(player, "PHANTOM_BLADES_POWER");
   const phantomBladesArmed = stripPhantomBlades(hand, phantomBlades, powerAmount(player, "STRENGTH_POWER"), powerAmount(player, "WEAK_POWER") > 0, shrunk);
   const ascension = state.run?.ascension ?? 0;
-  const enemies = enemySims(combat, ascension);
+  const enemies = enemySims(combat, ascension, str(asRecord(state.run?.raw)["character_id"]));
+  carrySilentSkittish(env.screenMemory, state, enemies);
   // MECH_RULES (docs/mechanics-learning.md): the learned strip-stun rules on the enemies carrying such a power (the
   // Thieving Hopper's Flutter): a line stripping the last stack cancels its move this turn in the solver and the rollout.
   const mechRules = learnedStunRules(env);
@@ -3018,7 +3036,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
       const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
-        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined
+        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined && !nextCard?.bladeDance
           ? {
               ...kept,
               remaining: memo.remaining.slice(1),
@@ -3132,6 +3150,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
+    character: str(asRecord(state.run?.raw)["character_id"]),
+    ascension: state.run?.ascension ?? -1,
     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
@@ -3799,6 +3819,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const phaseFacts = silentPhaseReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })));
   const lossFacts = silentLossReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })), rolloutTied);
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
+    ...quantitativeTurnFacts(state, plan),
     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
     ...simFact(plan),
     ...phaseFacts.get(plan),
@@ -3908,7 +3929,14 @@ function planTurn(env: DecisionEnv): Decision | null {
       ...mcShown.flatMap((mc) => mc.median ? [{ key: mcKey(mc), plan: mc.median }] : []),
     ], rollout, mcShown),
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
-    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
+    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined),
+      ...(modelledIds.has("CUNNING_POTION") ? { cunning_generation: {
+        hand_cards: hand.length, free_slots: Math.max(0, HAND_LIMIT - hand.length),
+        added_now: Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
+        truncated_now: 3 - Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
+        note: "狡诈生成升级小刀，受每步剩余手位限制；药栏不占手位。先出刀腾位再喝可与连续饮用比较，满手饮用仍耗瓶。未知饮药触发及整战收益未验证。",
+      } } : {}),
+    },
     // THIEF_FACTS: who carries our card or gold, how many turns are left to kill it, its HP and block (thief.ts).
     ...(thiefContext ? { thief_context: thiefContext } : {}),
     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).

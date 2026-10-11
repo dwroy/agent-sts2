@@ -219,7 +219,7 @@ describe("learning loop (ops/codex-ops-learn.py)", () => {
       { run_id: "SILENT000002", character: "SILENT", ascension: 1, victory: false, floor: 20 },
     ];
     writeFileSync(join(root, "logs", "runs.jsonl"), jsonl(runs));
-    writeFileSync(join(root, "logs", "run-config.jsonl"), jsonl([{ run_id: "SILENT000002", character: "SILENT", target_ascension: 1 }]));
+    writeFileSync(join(root, "logs", "run-config.jsonl"), jsonl([{ run_id: "SILENT000002", character: "SILENT", ascension: 1, target_ascension: 1 }]));
     // The fake learner appends a post-mortem heading per run (it runs in the project root, as the real one).
     // It also adds one learning-ledger item for SILENT000001 through the real helper (learner/ledger.py).
     const item = { character: "silent", kind: "fight", claim: "测试", evidence: [{ run: "SILENT000001", floor: 1 }], first_run: "SILENT000001", prior: "unknown", status: "observed", by: "learner:postmortem", where: { lessons: ["SILENT000001"] } };
@@ -254,7 +254,7 @@ describe("learning loop (ops/codex-ops-learn.py)", () => {
     expect(second).toMatchObject({ victory: [], ascension: [], dispatched: null, pending_notified: false });
 
     // The climb moves to A2: one ascension-up event.
-    writeFileSync(join(root, "logs", "run-config.jsonl"), jsonl([{ run_id: "SILENT000002", character: "SILENT", target_ascension: 1 }, { run_id: "SILENT000003", character: "SILENT", target_ascension: 2 }]));
+    writeFileSync(join(root, "logs", "run-config.jsonl"), jsonl([{ run_id: "SILENT000002", character: "SILENT", ascension: 1, target_ascension: 1 }, { run_id: "SILENT000003", character: "SILENT", ascension: 2, target_ascension: 2 }]));
     const third = JSON.parse(learn(tickEnv, "tick").stdout);
     expect(third.ascension).toHaveLength(1);
     const up = readQueue(join(dir, "queue")).find((e) => e.kind === "ascension-up")!;

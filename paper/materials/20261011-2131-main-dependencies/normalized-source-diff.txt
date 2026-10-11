@@ -1,0 +1,1470 @@
+--- main/README.md
++++ verified-live/README.md
+@@ -30,6 +30,8 @@
+ - **SL**：在适用战斗的终局判断触发时读档重试，保留失败尝试与探索记录；具体开关、角色名单和判定以代码及角色数据为准。
+ 
+ 架构的当前实现见 [docs/v4-architecture.md](docs/v4-architecture.md)，目录怎么分见 [docs/layout.md](docs/layout.md)。[文档索引](docs/README.md) 区分现行说明与历史设计/验证材料。
++
++费用、伤害、回合和模拟误差的统一计算接口见 [量化计算与校准](docs/quantitative-play.md)：复用现有求解/模拟，区分随机结果波动、均值抽样误差和模型偏差。完整组合的定义与适用条件仍由学习者从对局验证。
+ 
+ ## 目录
+ 
+--- main/agent/src/brain/engines/codex-usage.ts
++++ verified-live/agent/src/brain/engines/codex-usage.ts
+@@ -409,7 +409,7 @@
+   /** The process-start reading (the first that worked) and the latest. */
+   first: CodexUsage | null = null;
+   last: CodexUsage | null = null;
+-  /** Why codex is stopped for the process (null: it is not). */
++  /** Why codex is paused until a fresh recovery check passes (null: it is not). */
+   stopped: string | null = null;
+   /** The kind of the stop: quota (a limit or credits), unavailable (BRAIN_CODEX_USAGE_REQUIRED and no reading). */
+   stopKind: "quota" | "unavailable" = "quota";
+@@ -425,8 +425,10 @@
+   private lastAuthRefreshAt: number | null = null;
+   /** The guard's changes (off until a read works, back on, a refreshed token) not yet on a brain.jsonl row. */
+   private pendingNotes: string[] = [];
+-  /** The highest credit balance this process read (a lower one means credits were spent). */
++  /** The highest credit balance in the current quota epoch (a lower one stops calls). */
+   private topBalance: number | null = null;
++  private stoppedUsage: CodexUsage | null = null;
++  private creditRecovery: CodexUsage | null = null;
+   private callsSinceRead = 0;
+   private lastReadAt: number | null = null;
+   private reading: Promise<void> | null = null;
+@@ -466,10 +468,14 @@
+    * balance below the highest seen, ordinary usage not allowed, a limit or spend control reached, a window at 100%).
+    */
+   verdict(usage: CodexUsage): string | null {
++    const balance = usage.credits?.balance ?? null;
++    if (balance !== null && this.topBalance !== null && balance < this.topBalance) return `credits are being spent: the balance fell from ${this.topBalance} to ${balance} in this process`;
++    return this.planVerdict(usage);
++  }
++
++  private planVerdict(usage: CodexUsage): string | null {
+     const pct = this.settings.stopPct;
+     const full = usage.windows.filter((window) => window.usedPct >= 100);
+-    const balance = usage.credits?.balance ?? null;
+-    if (balance !== null && this.topBalance !== null && balance < this.topBalance) return `credits are being spent: the balance fell from ${this.topBalance} to ${balance} in this process`;
+     if (usage.ordinaryUsageAllowed === false) return "the plan's included usage is not allowed now (ordinaryUsageAllowed false): further calls would draw on credits";
+     if (usage.reachedType) return `a usage limit is reached (${usage.reachedType}): further calls would draw on credits`;
+     if (usage.spendControlReached === true) return "spend control is reached: further calls would draw on credits";
+@@ -477,6 +483,39 @@
+     const over = usage.windows.filter((window) => window.usedPct >= pct);
+     if (over.length > 0) return `${over.map(describeWindow).join("; ")} (BRAIN_CODEX_USAGE_STOP_PCT=${pct})`;
+     return null;
++  }
++
++  /** Only full reads can confirm a renewed included-usage window and a stable new credit baseline. */
++  private recoverCreditBaseline(usage: CodexUsage): void {
++    const stopped = this.stoppedUsage;
++    const balance = usage.credits?.balance;
++    if (!this.stopped || !stopped || this.topBalance === null || balance == null || balance < 0
++      || balance >= this.topBalance || !usage.plan || usage.plan !== stopped.plan
++      || usage.ordinaryUsageAllowed !== true || this.planVerdict(usage) !== null) return;
++    // Keep every old bucket visible; a missing limit or a sparse push is not renewal evidence.
++    const pairs = (before: CodexUsage) => before.windows.map((old) => ({ old, next: usage.windows.find((w) => w.name === old.name) }));
++    const comparable = (before: CodexUsage) => before.windows.length > 0 && before.windows.length === usage.windows.length
++      && pairs(before).every(({ old, next }) => next && old.windowMins !== null && old.windowMins === next.windowMins
++        && old.resetsAt !== null && next.resetsAt !== null && Date.parse(next.resetsAt) >= Date.parse(old.resetsAt)
++        && Date.parse(next.resetsAt) > this.now());
++    if (!comparable(stopped)) return;
++    const exhausted = pairs(stopped).filter(({ old }) => old.usedPct >= this.settings.stopPct);
++    if (!exhausted.length || !exhausted.every(({ old, next }) => Date.parse(next!.resetsAt!) > Date.parse(old.resetsAt!)
++      && next!.usedPct < old.usedPct)) return;
++    const candidate = this.creditRecovery;
++    if (candidate && !comparable(candidate)) return;
++    const sameEpoch = candidate && pairs(candidate).every(({ old, next }) => old.resetsAt === next!.resetsAt);
++    const candidateBalance = candidate?.credits?.balance;
++    if (!candidate || !sameEpoch || candidateBalance == null || balance > candidateBalance) {
++      this.creditRecovery = usage;
++      return;
++    }
++    // Never ratchet down a candidate after spending within the new epoch, even across failed reads.
++    if (balance !== candidateBalance || Date.parse(usage.readAt) <= Date.parse(candidate.readAt)) return;
++    const previous = this.topBalance;
++    this.topBalance = balance;
++    this.creditRecovery = null;
++    this.say(`codex usage renewed: included-usage windows advanced and two fresh reads confirmed credit balance ${balance}; previous epoch baseline ${previous} retired`);
+   }
+ 
+   /**
+@@ -494,6 +533,7 @@
+       return;
+     }
+     this.unreadable = null;
++    this.recoverCreditBaseline(usage);
+     this.last = usage;
+     this.first ??= usage;
+     const why = this.verdict(usage);
+@@ -502,7 +542,7 @@
+     const was = this.blocked;
+     this.blocked = null;
+     if (why) {
+-      this.stop(why, "quota");
++      this.stop(why, "quota", usage);
+       return;
+     }
+     if (was) {
+@@ -555,10 +595,11 @@
+     }
+   }
+ 
+-  private stop(reason: string, kind: "quota" | "unavailable"): void {
++  private stop(reason: string, kind: "quota" | "unavailable", usage: CodexUsage): void {
+     if (this.stopped) return;
+     this.stopped = `codex usage guard: ${reason}`;
+     this.stopKind = kind;
++    this.stoppedUsage = usage;
+   }
+ 
+   /** A read now unless one is in flight (shared): process start, and every due call. */
+@@ -582,10 +623,14 @@
+   /** A suspended question requires a fresh reading; no stale stop is cleared before the guard passes. */
+   async recover(): Promise<void> {
+     await this.refresh();
+-    const why = this.unreadable ?? (this.last ? this.verdict(this.last) : "no Codex usage reading");
++    const why = this.unreadable ?? (this.topBalance !== null && this.last?.credits?.balance == null
++      ? "credit balance is missing from the fresh recovery reading"
++      : this.last ? this.verdict(this.last) : "no Codex usage reading");
+     if (why) throw new EngineFailure(`codex usage guard: ${why}`, this.unreadable ? "unavailable" : "quota");
+     this.stopped = null;
+     this.blocked = null;
++    this.stoppedUsage = null;
++    this.creditRecovery = null;
+   }
+ 
+   /**
+@@ -634,7 +679,7 @@
+     const why = this.verdict(usage);
+     const balance = usage.credits?.balance ?? null;
+     if (balance !== null && (this.topBalance === null || balance > this.topBalance)) this.topBalance = balance;
+-    if (why) this.stop(why, "quota");
++    if (why) this.stop(why, "quota", usage);
+   }
+ 
+   /** Readings pushed by the app-server so far (observe). */
+--- main/agent/src/hand/loop.ts
++++ verified-live/agent/src/hand/loop.ts
+@@ -27,6 +27,7 @@
+ import { moveModel } from "../knowledge/move-model.js";
+ import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, plannerTiming, trackLizardTail } from "../reflex/combat-plan.js";
+ import { notePermafrostPlay, observePermafrost } from "../reflex/permafrost.js";
++import { observeSilentSkittish } from "../reflex/silent-skittish.js";
+ import { noteFightReplay, observeFightPlays } from "../reflex/fight-plays.js";
+ import { computeMemoOptions } from "../sim/compute-memo.js";
+ import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "../memory/fight-plan.js";
+@@ -651,6 +652,7 @@
+           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
+           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
+           if (replay.permafrost) screenMemory.permafrost = replay.permafrost;
++          if (replay.silentSkittish) screenMemory.silentSkittish = replay.silentSkittish;
+           if (replay.fightCards) screenMemory.fightCards = replay.fightCards;
+           // The turn's first logged frame: a card exhausted before the restart still counts this turn (Evil Eye).
+           if (replay.turnStartExhaust && !screenMemory.turnStartExhaust) screenMemory.turnStartExhaust = replay.turnStartExhaust;
+@@ -697,6 +699,7 @@
+     // marks it is logged (an enemy-turn read is not otherwise), so the journal replay after a restart reads it too.
+     const tailSeen = trackLizardTail(screenMemory, state);
+     if (observePermafrost(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
++    if (observeSilentSkittish(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
+     if (observeFightPlays(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
+     if (tailSeen) {
+       observedStates.touched(state, observedFp, observedTs);
+@@ -1839,6 +1842,7 @@
+   screenMemory.facingFight = undefined;
+   screenMemory.fightCards = undefined;
+   screenMemory.permafrost = undefined;
++  screenMemory.silentSkittish = undefined;
+   screenMemory.planBeforeSelection = undefined;
+   screenMemory.gambleDiscards = undefined;
+   screenMemory.potionTake = undefined;
+--- main/agent/src/hand/screens/selection.ts
++++ verified-live/agent/src/hand/screens/selection.ts
+@@ -152,6 +152,10 @@
+     .map(asRecord)
+     .filter((card) => !bool(card["selected"]))
+     .filter((card) => !isUpgrade || !bool(card["upgraded"]));
++  // YQL8RZ8BWN1E F17 T3, silent-0205: show the commitment without choosing the discard for Jev.
++  const discardPlan = state.in_combat && kind === "combat_hand_select" && /弃|discard/i.test(prompt) &&
++    str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && state.run?.ascension === 10
++    ? discardPlanFacts(env, candidates) : null;
+ 
+   if (candidates.length === 0) {
+     // Nothing left to pick but the screen still waits for a confirm (VC4LRL945UEF: after two discards
+@@ -220,6 +224,7 @@
+         // A free offer: this turn's cost (the printed one is not paid).
+         cost: freeSource ? thisTurnModel(card, index).cost : numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
+         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
++        ...(discardPlan ? { removes_planned_continuation: discardPlan.removes(card) } : {}),
+       } satisfies JsonValue,
+     };
+     // DeepSeek's view: the value's parts, and that the ranking is a reference ("120 = 80 + 40 ..."; UNRL F14 read
+@@ -275,7 +280,9 @@
+ 
+   const params = {
+     label: `selection/${verb}`,
+-    instructions: forThisTurn
++    instructions: discardPlan
++      ? "选择要弃掉的牌。参考 discard_plan 的剩余动作和候选对后继的影响；原整条预测以完成后继为条件，所有候选都可选。"
++      : forThisTurn
+       ? `Which card should I ${verb}? This card is only for this turn — judge its immediate effect (block against the incoming attack, damage, lethal), not its deck-building rating.`
+       : `Which card should I ${verb}?`,
+     actThreshold: env.thresholds.act,
+@@ -294,6 +301,7 @@
+         selecting: selectingText(selected, min, max),
+         ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}),
+         ...pickNotOfferedNote(env, selectionTask(kind, prompt)),
++        ...(discardPlan ? { discard_plan: discardPlan.context } : {}),
+         ...(forThisTurn
+           ? {
+               note: "this card is only for this turn — judge its immediate effect",
+@@ -312,7 +320,21 @@
+   };
+   // BUILD_DECIDER=deepseek: out-of-combat deck picks (upgrade, remove, transform, add, enchant, choose) are
+   // DeepSeek's call; in-combat picks stay with code and Jev.
+-  if (!deepseekDecides(env) || forThisTurn || isExhaust || onTop) return buildPickDecision(params);
++  if (!deepseekDecides(env) || forThisTurn || isExhaust || onTop || discardPlan) {
++    const decision = buildPickDecision(params);
++    if (discardPlan && decision.kind === "ask") {
++      const resolve = decision.resolve;
++      decision.resolve = (answers) => {
++        const result = resolve(answers);
++        const picked = candidates.find((card) => numOrNull(card["index"]) === result.intent?.option_index);
++        if (result.intent?.action === "select_deck_card" && picked && discardPlan.removes(picked) === true) {
++          result.rationale += "; 此弃牌会移除原计划后继；原整条预测失效，返回战斗后按真实手牌重算";
++        }
++        return result;
++      };
++    }
++    return decision;
++  }
+   // DeepSeek's view (V4 M2): each card's facts (what an upgrade changes, copies already in the deck for an add) and
+   // our runs' outcome statistics for it; code's order stays the fallback's.
+   const copies = new Map<string, number>();
+@@ -333,6 +355,43 @@
+     }),
+     deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: selectingText(selected, min, max), ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}), ...pickNotOfferedNote(env, selectionTask(kind, prompt)) } }) },
+   });
++}
++
++/** Match card copies after hand indices shift; spare equivalent copies can still fulfill the commitment. */
++function discardPlanFacts(env: DecisionEnv, cards: Record<string, unknown>[]): {
++  context: JsonValue; removes: (card: Record<string, unknown>) => boolean | null;
++} {
++  const memo = env.screenMemory.pausedCombatPlan ?? env.screenMemory.combatPlan;
++  if (!memo || memo.turn !== env.state.turn) {
++    return { context: { status: "unknown", reason: "没有本回合可核对的已选方案" }, removes: () => null };
++  }
++  const steps = memo.remaining.filter((step) => !step.cardId.startsWith("POTION:"));
++  const matches = (step: (typeof steps)[number], card: Record<string, unknown>) =>
++    step.cardId === str(card["card_id"]) && step.upgraded === bool(card["upgraded"]) &&
++    (step.cost === undefined || step.cost === numOrNull(card["energy_cost"]));
++  const canComplete = (pool: Record<string, unknown>[]) => {
++    const left = [...pool];
++    // Explicit costs match first, so an unspecified-cost step cannot consume their only copy.
++    for (const step of [...steps].sort((a, b) => Number(b.cost !== undefined) - Number(a.cost !== undefined))) {
++      const at = left.findIndex((card) => matches(step, card));
++      if (at < 0) return false;
++      left.splice(at, 1);
++    }
++    return true;
++  };
++  const complete = canComplete(cards);
++  return {
++    context: {
++      status: complete ? "available" : "unknown",
++      remaining: memo.remaining.map((step) => ({
++        card_id: step.cardId, name: step.name, upgraded: step.upgraded, target: step.targetName,
++        text: truncate(str(cards.find((card) => matches(step, card))?.["resolved_rules_text"]), 160),
++      })),
++      original_full_plan_prediction: memo.selectionReference ?? null,
++      basis: "原整条方案的预测，只有完成后继才适用；这是已选方案的事实，不是固定保留规则。移除所需后继牌会使原预测失效，返回战斗后按真实手牌重算。",
++    },
++    removes: (card) => complete ? !canComplete(cards.filter((entry) => entry !== card)) : null,
++  };
+ }
+ 
+ /** Tools only: `enabled` off scores a free offer at its printed cost, as before (freeOfferSource). */
+--- main/agent/src/memory/journal-replay.ts
++++ verified-live/agent/src/memory/journal-replay.ts
+@@ -29,6 +29,7 @@
+ import { runPlanLine, type RunPlan } from "./run-plan.js";
+ import { noteFightStart } from "../reflex/thief.js";
+ import { notePermafrostPlay, observePermafrost } from "../reflex/permafrost.js";
++import { observeSilentSkittish } from "../reflex/silent-skittish.js";
+ import { noteFightReplay, observeFightPlays } from "../reflex/fight-plays.js";
+ import { asArray, asRecord, num, str, type JsonValue } from "../core/util/json.js";
+ import { describeChoice, RunJournal, type JournalChange, type JournalEntry } from "./run-journal.js";
+@@ -216,6 +217,8 @@
+   lizardTail: ScreenMemory["lizardTail"] | null;
+   /** Permafrost's first-Power availability in the last observed fight, including accepted plays. */
+   permafrost: ScreenMemory["permafrost"] | null;
++  /** Silent Gardener shield consumption from directly observed grants in the last turn. */
++  silentSkittish: ScreenMemory["silentSkittish"] | null;
+   /** Silent Wither's sampled manual counts and accepted enchantment replays in the last fight. */
+   fightCards: ScreenMemory["fightCards"] | null;
+   /** The exhaust pile at the first logged frame of the last combat turn (combat-plan noteTurnStartExhaust). */
+@@ -281,6 +284,7 @@
+     journal.observe(state, { knowledge, screenMemory: memory });
+     trackLizardTail(memory, state);
+     observePermafrost(memory, state);
++    observeSilentSkittish(memory, state);
+     observeFightPlays(memory, state);
+     noteTurnStartExhaust(memory, state);
+     noteTurnStartHp(memory, state);
+@@ -330,7 +334,7 @@
+     }
+   }
+   const facing = typeof memory.facing === "number" && memory.facingFight ? { fight: memory.facingFight, index: memory.facing } : null;
+-  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, permafrost: memory.permafrost ?? null, fightCards: memory.fightCards ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, turnStartPlayerHp: memory.turnStartPlayerHp ?? null, thiefStart: memory.thiefStart ?? null, thiefCardValue: memory.thiefCardValue ?? null, facing, counts };
++  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, permafrost: memory.permafrost ?? null, silentSkittish: memory.silentSkittish ?? null, fightCards: memory.fightCards ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, turnStartPlayerHp: memory.turnStartPlayerHp ?? null, thiefStart: memory.thiefStart ?? null, thiefCardValue: memory.thiefCardValue ?? null, facing, counts };
+ }
+ 
+ /** The journal entry of a logged decision: as logged (`journal`), else re-derived from the row. */
+--- main/agent/src/memory/types.ts
++++ verified-live/agent/src/memory/types.ts
+@@ -271,6 +271,8 @@
+   };
+   /** Silent Permafrost: availability observed since this fight's opening; rebuilt from logged frames/actions. */
+   permafrost?: { fight: string; turn: number; cards: number | null; status: "armed" | "spent" | "unknown" };
++  /** Observed Silent A10 Gardener shield consumption; discarded on turn, counter or roster changes. */
++  silentSkittish?: { key: string; roster: string; cards: number; enemies: Record<string, { hp: number; block: number; spent: boolean }> };
+   /** "fight:turn" in which a card that costs HP was played (Demon Tongue heals the first loss a turn). */
+   demonTongueTurn?: string;
+   /**
+@@ -410,6 +412,8 @@
+ 
+ export interface CombatPlanMemo {
+   turn: number | null;
++  /** Original full-line estimates shown at an observed Silent discard screen, conditional on completing the line. */
++  selectionReference?: { hp_lost: number; damage_dealt: number; block_gained: number };
+   /** The validated line wins the fight; keep its Sandpit exemption across steps. */
+   lethal?: boolean;
+   remaining: import("../reflex/turn-solver.js").Step[];
+--- main/agent/src/reflex/card-model.ts
++++ verified-live/agent/src/reflex/card-model.ts
+@@ -67,6 +67,8 @@
+   /** VLZ6CCT8AQ0A A10: ordinary Apotheosis, with unverified upgrades kept unknown. */
+   apotheosis?: boolean;
+   apotheosisUpgrade?: UpgradeDelta;
++  /** The observed Snakebite preview text, alongside its certified numeric upgrade. */
++  apotheosisUpgradeText?: string;
+   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
+   corrosiveWave?: number;
+   block: number;
+@@ -232,6 +234,8 @@
+   choices?: CardModel[];
+   drawn?: CardModel[];
+   adds?: CardModel[];
++  /** Silent A10 plain Blade Dance: three observed Shivs, with fresh identities at play time. */
++  bladeDance?: boolean;
+   sneckoCosts?: Record<string, number>;
+   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
+   demise?: number;
+@@ -728,6 +732,9 @@
+ 
+ /** The numbers upgrading a card changes, as CardModel fields (the solver adds them: Blessing of the Forge). */
+ export interface UpgradeDelta {
++  /** Certified Silent Apotheosis fields; generic Forge deltas remain unchanged. */
++  dexterity?: number;
++  poison?: number;
+   damageBase?: number;
+   blockBase?: number;
+   fasten?: number;
+@@ -804,6 +811,8 @@
+     ...(delta.enemyTempStrengthLoss !== undefined ? { enemyTempStrengthLoss: add(card.enemyTempStrengthLoss, delta.enemyTempStrengthLoss) } : {}),
+     ...(delta.poisonPerTurn !== undefined ? { poisonPerTurn: add(card.poisonPerTurn, delta.poisonPerTurn) } : {}),
+     ...(delta.poisonExtraTriggers !== undefined ? { poisonExtraTriggers: add(card.poisonExtraTriggers, delta.poisonExtraTriggers) } : {}),
++    ...(delta.dexterity !== undefined ? { dexterity: add(card.dexterity, delta.dexterity) } : {}),
++    ...(delta.poison !== undefined ? { poison: add(card.poison, delta.poison) } : {}),
+     vulnerable: add(card.vulnerable, delta.vulnerable),
+     weak: add(card.weak, delta.weak),
+     strength: add(card.strength, delta.strength),
+@@ -821,7 +830,8 @@
+ /** Apply only a certified own-character pair; absent coverage must remain visible to the solver. */
+ export function applyApotheosisUpgrade(card: CardModel): CardModel {
+   const upgraded = card.type === "Potion" || card.upgraded || card.cardId === "ASCENDERS_BANE" ? card
+-    : card.apotheosisUpgrade ? applyUpgrade(card, card.apotheosisUpgrade) : { ...card, known: false };
++    : card.apotheosisUpgrade ? { ...applyUpgrade(card, card.apotheosisUpgrade),
++      ...(card.apotheosisUpgradeText !== undefined ? { text: card.apotheosisUpgradeText } : {}) } : { ...card, known: false };
+   return card.drawn ? { ...upgraded, drawn: card.drawn.map(applyApotheosisUpgrade) } : upgraded;
+ }
+ 
+@@ -925,13 +935,18 @@
+   const calculatedGamble = cardId === "CALCULATED_GAMBLE" && (!bool(card["upgraded"]) || upgradedGamble);
+   const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
+     dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
++  // YBRA3EJ94GBR F30 T3 / F33 T10, silent-0324: Cards=3 makes Shivs; it never draws from the pile.
++  const bladeDance = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BLADE_DANCE" &&
++    !bool(card["upgraded"]) && dyn(card, "Cards") === 3 &&
++    template.replace(/\s+/g, "") === "添加{Cards:diff()}张小刀到你的手牌。" &&
++    renderedText.replace(/\s+/g, "") === "添加3张小刀到你的手牌。消耗。";
+   // C48LLXBGKXQ9 F24 T1 / HUVEPWQAHWFU F35 T2, silent-0202: Cards=3 adds random attacks
+   // to the draw pile; none enter the hand now. Their unknown future value remains unmodelled.
+   const metamorphosis = character.toLowerCase() === "silent" && cardId === "METAMORPHOSIS" &&
+     !bool(card["upgraded"]) && dyn(card, "Cards") === 3;
+   // L704TLETMZBM F48 T4: Dagger Throw's fixed draw has no Cards variable in the observed frame.
+   const daggerDraw = character.toLowerCase() === "silent" && cardId === "DAGGER_THROW" && !bool(card["upgraded"]) && /抽1张牌/.test(renderedText.replace(/\s+/g, "")) ? 1 : 0;
+-  const draw = hiddenDaggers || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
++  const draw = hiddenDaggers || bladeDance || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
+   const keywords = info?.keywords ?? [];
+   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
+ 
+@@ -939,8 +954,16 @@
+   // the end of the 3rd turn.
+   const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
+   // KQQELQSZ382Z F17 attempt 6 T7 / KAY522KT5NXR F14 T1, silent-0219: the observed plain card adds seven poison.
++  // VLZ6CCT8AQ0A A10 F43 T5: only the observed unmodified two-cost upgraded ten-point preview.
++  const snakebiteValues = asArray(card["dynamic_values"]).map(asRecord);
++  const upgradedSnakebite = ascension === 10 && bool(card["upgraded"]) && num(card["energy_cost"]) === 2 &&
++    !bool(card["costs_x"]) && card["enchantment"] == null && !/重放|replay/i.test(renderedText) &&
++    template === "给予{PoisonPower:diff()}层中毒。" && snakebiteValues.length === 1 &&
++    renderedText.replace(/\s+/g, "") === "保留。给予10层中毒。" &&
++    snakebiteValues[0]?.["name"] === "PoisonPower" &&
++    ["base_value", "current_value", "enchanted_value"].every((field) => snakebiteValues[0]?.[field] === 10);
+   const snakebite = character.toLowerCase() === "silent" && cardId === "SNAKEBITE" &&
+-    !bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7;
++    ((!bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7) || upgradedSnakebite);
+   // DUZUBAJ3A8GP F6 T1 / F27 T4-T5, silent-0234: only the observed plain/upgraded Haze values are wired.
+   const haze = character.toLowerCase() === "silent" && cardId === "HAZE" &&
+     (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
+@@ -966,17 +989,17 @@
+     !bool(card["upgraded"]) && template.replace(/\s+/g, "") === "你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。";
+   const hasModelledEffect =
+     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
+-    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bulletTime;
++    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bladeDance || bulletTime;
+   let flatValue = 0;
+   let known = hasModelledEffect;
+   let immediatePlays: CardModel["immediatePlays"];
+   let adds: CardModel[] | undefined;
+-  if (hiddenDaggers) {
++  if (hiddenDaggers || bladeDance) {
+     // 10GPK5XGHCK3 F9 T5 / MGA0CZDDKC0P F17 retry T3: these are made, not drawn or played immediately.
+     const shiv = knowledge.card("SHIV");
+-    const base = shiv ? dyn({ dynamic_values: shiv.vars }, "Damage") ?? shiv.damage : null;
++    const base = shiv ? (bladeDance ? dynBase({ dynamic_values: shiv.vars }, "Damage") : dyn({ dynamic_values: shiv.vars }, "Damage")) ?? shiv.damage : null;
+     known = shiv !== null && base !== null;
+-    if (shiv && base !== null) adds = Array.from({ length: 2 }, (_, i) => modelHandCard({
++    if (shiv && base !== null) adds = Array.from({ length: bladeDance ? 3 : 2 }, (_, i) => modelHandCard({
+       index: i, card_id: "SHIV", name: shiv.name, upgraded: false, energy_cost: 0, playable: true,
+       requires_target: true, target_type: "AnyEnemy", rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
+       dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
+@@ -1112,6 +1135,7 @@
+     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
+     ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),
+     ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),
++    ...(bladeDance ? { bladeDance: true, ...(adds ? { adds } : {}) } : {}),
+     ...(character.toLowerCase() === "silent" && !bool(card["upgraded"]) && ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"].includes(cardId) &&
+       /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { discardAfterDraw: true, ...(daggerDraw > 0 ? { discardDraw: daggerDraw } : {}) } : {}),
+     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
+@@ -1156,7 +1180,8 @@
+     const rawUpgrade = observedApotheosisUpgrade(card);
+     if (rawUpgrade) {
+       const upgraded = modelHandCard(rawUpgrade, fallbackIndex, knowledge, character, ascension);
+-      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn", "poisonExtraTriggers"] as const;
++      if (cardId === "SNAKEBITE") model.apotheosisUpgradeText = upgraded.text;
++      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn", "poisonExtraTriggers", "dexterity", "poison"] as const;
+       model.apotheosisUpgrade = {};
+       for (const field of fields) {
+         const change = (upgraded[field] ?? 0) - (model[field] ?? 0);
+@@ -1412,6 +1437,9 @@
+ 
+ /** What the drinker's board adds to a generated card: living enemy indices, Strength now, Weak. */
+ export interface PotionContext {
++  /** Evidence scope for Silent Cunning Potion (SADL A7, F4QK A9, WQZ A10). */
++  character?: string;
++  ascension?: number;
+   /** Character evidence supplied by the caller; no global potion mechanic is inferred. */
+   observedPoison?: number;
+   enemyTargets: number[];
+@@ -1620,6 +1648,18 @@
+  * pile cards pile-card potions take and the draw pile's expected card.
+  */
+ export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], ctx?: PotionContext): CardModel | null {
++  // silent-0256/0257/0258: made cards occupy hand space; potion slots do not.
++  if (potionId === "CUNNING_POTION") {
++    if (ctx?.character?.toLowerCase() !== "silent" || ![7, 9, 10].includes(ctx.ascension ?? -1)) return null;
++    const adds = Array.from({ length: 3 }, (_, i): CardModel => ({
++      ...potionShell(potionId, name, slot, ctx.enemyTargets),
++      index: 3_000_000 + slot * 3 + i, key: `p${slot}~shiv${i}`, cardId: "SHIV", name: "小刀+",
++      type: "Attack", upgraded: true, target: "single", cost: 0,
++      damage: Math.floor((6 + ctx.strength) * (ctx.weak ? 0.75 : 1)), damageBase: 6,
++      text: "造成6点伤害。消耗。",
++    }));
++    return { ...potionShell(potionId, name, slot, validTargets), adds };
++  }
+   const effect: (Partial<CardModel> & { target: TargetMode }) | undefined = POTION_EFFECTS[potionId] ?? (potionId === "POISON_POTION" && (ctx?.observedPoison ?? 0) > 0
+     ? { target: "single" as const, poison: ctx!.observedPoison } : undefined);
+   if (!effect) return null;
+--- main/agent/src/reflex/combat-plan.ts
++++ verified-live/agent/src/reflex/combat-plan.ts
+@@ -20,7 +20,9 @@
+  */
+ 
+ import { choiceQ } from "./jev/questions.js";
++import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
+ import { silentPhaseReference } from "./silent-phase-reference.js";
++import { carrySilentSkittish } from "./silent-skittish.js";
+ import { silentLossReference } from "./silent-loss-reference.js";
+ import { silentSimulationReference } from "./silent-simulation-reference.js";
+ import type { ActionRequest } from "../hand/mod/client.js";
+@@ -729,7 +731,7 @@
+   });
+ }
+ 
+-export function enemySims(combat: Record<string, unknown>, asc?: number): EnemySim[] {
++export function enemySims(combat: Record<string, unknown>, asc?: number, character = ""): EnemySim[] {
+   const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
+   const living = asArray(combat["enemies"])
+     .map(asRecord)
+@@ -744,6 +746,12 @@
+       block: num(enemy["block"]),
+       vulnerable: powerAmount(enemy, "VULNERABLE_POWER"),
+       weak: powerAmount(enemy, "WEAK_POWER"),
++      // 3UPY3BP2LVS7 F17 T3, silent-0349: only this observed move and power combination.
++      ...(character.toLowerCase() === "silent" && asc === 10 &&
++        str(enemy["enemy_id"]) === "CEREMONIAL_BEAST" && str(enemy["move_id"]) === "PLOW_MOVE" &&
++        powerAmount(enemy, "WEAK_POWER") > 0 &&
++        asArray(enemy["powers"]).every((entry) => ["WEAK_POWER", "STRENGTH_POWER", "PLOW_POWER", "SHACKLING_POTION_POWER"].includes(str(asRecord(entry)["power_id"])))
++        ? { weakShackling: true as const } : {}),
+       ...(powerAmount(enemy, "POISON_POWER") > 0 ? { poison: powerAmount(enemy, "POISON_POWER") } : {}),
+       artifact: powerAmount(enemy, "ARTIFACT_POWER"),
+       intangible: powerAmount(enemy, "INTANGIBLE_POWER") > 0,
+@@ -758,6 +766,9 @@
+       minion: powerAmount(enemy, "MINION_POWER") > 0,
+       reattach: powerAmount(enemy, "REATTACH_POWER") > 0,
+       reattachHp: powerAmount(enemy, "REATTACH_POWER"),
++      ...(character.toLowerCase() === "silent" && asc === 10 &&
++        str(enemy["enemy_id"]) === "DECIMILLIPEDE_SEGMENT_MIDDLE" && powerAmount(enemy, "REATTACH_POWER") === 25
++        ? { reattachClearsPoisonStrength: true } : {}),
+       crabRage: powerAmount(enemy, "CRAB_RAGE_POWER") > 0,
+       eruption: powerAmount(enemy, "STEAM_ERUPTION_POWER"),
+       sandpit: powerAmount(enemy, "SANDPIT_POWER"),
+@@ -1811,7 +1822,9 @@
+   slCommitted = plan;
+   const first = plan.steps[0];
+   // Gambler's Brew draws what it draws: re-planned after it, like a draw.
+-  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0);
++  // Made Shivs have synthetic search indices; read the actual hand before sending their actions.
++  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0) +
++    (first && cardFor(first, hand)?.bladeDance ? 1 : 0);
+   // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
+   // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
+   // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
+@@ -1829,6 +1842,10 @@
+     (plan.steps.length > 1 || (plan.steps.length === 1 && via !== "code")) && drawsOrRandom === 0
+       ? {
+           turn,
++          // YQL8RZ8BWN1E F17 T3, silent-0205: the discard question needs the chosen line's conditional estimates.
++          ...(str(asRecord(env.state.run?.raw)["character_id"]).toLowerCase() === "silent" && env.state.run?.ascension === 10
++            ? { selectionReference: { hp_lost: plan.outcome.hpLoss, damage_dealt: plan.outcome.damageDealt, block_gained: plan.outcome.blockGained } }
++            : {}),
+           lethal: plan.outcome.winsFight,
+           remaining: plan.steps.slice(1),
+           expectedHand: expectedHandAfterFirst(plan, hand, musicBoxArmed(env.state)),
+@@ -2816,7 +2833,8 @@
+   const phantomBlades = powerAmount(player, "PHANTOM_BLADES_POWER");
+   const phantomBladesArmed = stripPhantomBlades(hand, phantomBlades, powerAmount(player, "STRENGTH_POWER"), powerAmount(player, "WEAK_POWER") > 0, shrunk);
+   const ascension = state.run?.ascension ?? 0;
+-  const enemies = enemySims(combat, ascension);
++  const enemies = enemySims(combat, ascension, str(asRecord(state.run?.raw)["character_id"]));
++  carrySilentSkittish(env.screenMemory, state, enemies);
+   // MECH_RULES (docs/mechanics-learning.md): the learned strip-stun rules on the enemies carrying such a power (the
+   // Thieving Hopper's Flutter): a line stripping the last stack cancels its move this turn in the solver and the rollout.
+   const mechRules = learnedStunRules(env);
+@@ -3018,7 +3036,7 @@
+       const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
+       const potions = beltAfter(next, state.raw);
+       env.screenMemory.combatPlan =
+-        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined
++        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined && !nextCard?.bladeDance
+           ? {
+               ...kept,
+               remaining: memo.remaining.slice(1),
+@@ -3132,6 +3150,8 @@
+   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
+   const potionContext: PotionContext = {
+     ...pileContext,
++    character: str(asRecord(state.run?.raw)["character_id"]),
++    ascension: state.run?.ascension ?? -1,
+     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
+     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
+     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
+@@ -3799,6 +3819,7 @@
+   const phaseFacts = silentPhaseReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })));
+   const lossFacts = silentLossReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })), rolloutTied);
+   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
++    ...quantitativeTurnFacts(state, plan),
+     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
+     ...simFact(plan),
+     ...phaseFacts.get(plan),
+@@ -3908,7 +3929,14 @@
+       ...mcShown.flatMap((mc) => mc.median ? [{ key: mcKey(mc), plan: mc.median }] : []),
+     ], rollout, mcShown),
+     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
+-    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
++    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined),
++      ...(modelledIds.has("CUNNING_POTION") ? { cunning_generation: {
++        hand_cards: hand.length, free_slots: Math.max(0, HAND_LIMIT - hand.length),
++        added_now: Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
++        truncated_now: 3 - Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
++        note: "狡诈生成升级小刀，受每步剩余手位限制；药栏不占手位。先出刀腾位再喝可与连续饮用比较，满手饮用仍耗瓶。未知饮药触发及整战收益未验证。",
++      } } : {}),
++    },
+     // THIEF_FACTS: who carries our card or gold, how many turns are left to kill it, its HP and block (thief.ts).
+     ...(thiefContext ? { thief_context: thiefContext } : {}),
+     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).
+--- main/agent/src/reflex/continuation-value.ts
++++ verified-live/agent/src/reflex/continuation-value.ts
+@@ -1,11 +1,14 @@
+ /** A learned continuation utility, in HP units. Absent outside an observed multi-fight objective. */
+ export interface ContinuationValue {
++  /** Observed HP spent before the following fight becomes actionable; no fitted weight is changed. */
++  openingHpLoss?: number;
+   /** HP -> additional terminal utility, fitted from fixed character logs and replay samples. */
+   hp: [number, number][];
+   source: string;
+ }
+ 
+ export function continuationUtility(value: ContinuationValue | undefined, hp: number): number {
++  hp -= value?.openingHpLoss ?? 0;
+   if (!value || !Number.isFinite(hp) || hp <= 0 || value.hp.length === 0) return 0;
+   const points = value.hp;
+   if (hp <= points[0]![0]) return points[0]![1];
+--- main/agent/src/reflex/rollout-live.ts
++++ verified-live/agent/src/reflex/rollout-live.ts
+@@ -791,7 +791,7 @@
+   asc: number,
+   db: MonsterMoves = monsterMoves(),
+   mm: MoveModelData = moveModelData(),
+-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
++): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
+   const combat = asRecord(state.raw["combat"]);
+   const raw = asArray(combat["enemies"]).map(asRecord);
+   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
+@@ -861,6 +861,7 @@
+     ...(passive ? { passive } : {}),
+     playerPowers: powersOf(asRecord(combat["player"])),
+     ...(skull ? { fumesPoisonBonus: 1 } : {}),
++    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 ? { observedGardenerSkittish: true } : {}),
+     potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
+     handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
+   };
+--- main/agent/src/reflex/rollout.ts
++++ verified-live/agent/src/reflex/rollout.ts
+@@ -620,7 +620,11 @@
+ }
+ 
+ export interface RolloutInput {
++  /** Verified fresh-fight HP cost already applied to a synthetic board; reapply to transferred entry HP only. */
++  openingHpLoss?: number;
+   captureResources?: boolean;
++  /** Silent A10 CA5KE8GFJ9X2 F9 T2-T4: the observed Gardener's Skittish returns on later turns. */
++  observedGardenerSkittish?: boolean;
+   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
+   continuation?: {
+     variants: { boss: string; count: number; input: RolloutInput }[];
+@@ -1674,6 +1678,14 @@
+     const { [power]: _gone, ...rest } = e.powers;
+     e.powers = rest;
+   }
++}
++
++/** 1913 F31 T3-T4: the middle's dead and reattached bodies have neither its old poison nor Strength. */
++function clearObservedReattachPowers(e: SimEnemy): void {
++  if (!e.base.reattach || !e.base.reattachClearsPoisonStrength) return;
++  e.poison = 0;
++  clearPower(e, "POISON_POWER");
++  clearPower(e, "STRENGTH_POWER");
+ }
+ 
+ /** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead (with its spawns). */
+@@ -1728,6 +1740,7 @@
+     }
+   } else {
+     e.alive = false;
++    clearObservedReattachPowers(e);
+     // An on-death spawn (Phrog Parasite, Gremlin Merc): its spawns join the fight (the rollout called the
+     // Phrog's death a win: "over within 5 turns" 0.95 vs 0.47 in the logs, 4LC3YKCZV218 F9 T3 forecast 0,
+     // actual 23).
+@@ -2121,6 +2134,8 @@
+   // Stable Serum: the rest of the hand is kept for the next turn instead (Ethereal cards still go).
+   const keep = player.retainTurns > 0 && !o.winsFight;
+   for (const i of unplayed) if (!hand[i]!.ethereal) (keep ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
++  // These cards were made during the line, so they are absent from the original hand and draw pile.
++  for (const shiv of o.cunningShivsLeft ?? []) (keep ? player.retained : piles.discard).push(shiv);
+   player.retainTurns = Math.max(0, player.retainTurns - 1);
+   // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
+   // outcome), except those an exhaust effect took after they were drawn. Under Stable Serum the ones the line
+@@ -2247,7 +2262,8 @@
+     piles.discard = piles.discard.map(grow);
+     player.retained = player.retained.map(grow);
+   }
+-  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
++  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn)
++    + (o.cunningShivsLeft?.length ?? 0);
+   const blockEnd = player.block + o.blockGained;
+   // Carry only the solver's observed establishment; replay/stacking stay marked unknown there.
+   if (o.serpentFormAfter !== undefined) {
+@@ -2466,6 +2482,7 @@
+       e.block = 0;
+       e.vulnerable = 0;
+       e.weak = 0;
++      clearObservedReattachPowers(e);
+     }
+     player.weakTurns = Math.max(0, player.weakTurns - 1);
+     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
+@@ -2541,7 +2558,7 @@
+ 
+ /** Static per-enemy flags that do not carry into simulated turns (they depend on this turn's board). */
+ function laterTurnSim(base: EnemySim): EnemySim {
+-  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, ...rest } = base;
++  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, weakShackling: _ws, ...rest } = base;
+   return rest;
+ }
+ 
+@@ -2825,6 +2842,8 @@
+       .filter((e) => e.alive)
+       .map((e) => ({
+         ...laterTurnSim(e.base),
++        // Preserve the existing within-turn consumption; only the observed seven-stack Gardener repeats.
++        ...(input.observedGardenerSkittish && input.meta.asc === 10 && e.id === "PHANTASMAL_GARDENER" && e.powers["SKITTISH_POWER"] === 7 ? { skittish: 7 } : {}),
+         intangible: e.intangibleTurns > 0,
+         hp: e.hp,
+         maxHp: e.maxHp,
+--- main/agent/src/reflex/silent-apotheosis.ts
++++ verified-live/agent/src/reflex/silent-apotheosis.ts
+@@ -13,13 +13,29 @@
+   NOXIOUS_FUMES: { vars: { PoisonPerTurn: [2, 3] } },
+   // F43 T4's later draw establishes two extra triggers; F45's plain copy establishes one.
+   ACCELERANT: { vars: { Accelerant: [1, 2] } },
++  // F35 T1's visible pile pair, confirmed by F43 T2's five-damage, two-Weak play at one Strength.
++  NEUTRALIZE: { cost: [0, 0], vars: { Damage: [3, 4], WeakPower: [1, 2] } },
++  // F35/F43 T3's later draw grants three Dexterity; F45's plain copy grants two.
++  FOOTWORK: { vars: { DexterityPower: [2, 3] } },
++  // F43 T4: printed Block changes while the two draws remain unchanged.
++  BACKFLIP: { vars: { Block: [5, 8], Cards: [2, 2] } },
++  // F35 T4 and F43 T5's upgraded draw, paired with F45 T1's ordinary card.
++  SURVIVOR: { vars: { Block: [8, 11] } },
++  // F43 T5: the plain deck stays 6/3; the upgraded draw applies seven damage under Weak and four Poison.
++  POISONED_STAB: { vars: { Damage: [6, 8], PoisonPower: [3, 4] } },
++  // F43 T1's plain deck card and T5's upgraded draw; the card was not played that turn.
++  SNAKEBITE: { cost: [2, 2], vars: { PoisonPower: [7, 10] } },
+ };
+ 
+ /** No inferred upgrade for modified values, costs, text effects, or cards absent from the paired evidence. */
+ export function observedApotheosisUpgrade(card: Record<string, unknown>): Record<string, unknown> | null {
+-  if (bool(card["upgraded"]) || num(card["energy_cost"]) !== 1 || bool(card["costs_x"])) return null;
++  if (bool(card["upgraded"]) || bool(card["costs_x"])) return null;
+   const pair = PAIRS[str(card["card_id"])];
+-  if (!pair || /重放|replay/i.test(str(card["resolved_rules_text"])) || card["enchantment"] != null) return null;
++  if (!pair || num(card["energy_cost"], NaN) !== (pair.cost?.[0] ?? 1) ||
++    /重放|replay/i.test(str(card["resolved_rules_text"])) || card["enchantment"] != null) return null;
++  if (str(card["card_id"]) === "SNAKEBITE" &&
++    (str(card["rules_text"]) !== "给予{PoisonPower:diff()}层中毒。" ||
++      str(card["resolved_rules_text"]).replace(/\s+/g, "") !== "保留。给予7层中毒。")) return null;
+   const values = asArray(card["dynamic_values"]).map(asRecord);
+   if (values.length !== Object.keys(pair.vars).length) return null;
+   for (const [name, [plain]] of Object.entries(pair.vars)) {
+@@ -30,6 +46,7 @@
+   }
+   return {
+     ...card, upgraded: true, energy_cost: pair.cost?.[1] ?? card["energy_cost"],
++    ...(str(card["card_id"]) === "SNAKEBITE" ? { resolved_rules_text: "保留。 给予10层中毒。" } : {}),
+     dynamic_values: values.map((value) => {
+       const [plain, upgraded] = pair.vars[str(value["name"])]!;
+       return { ...value, base_value: upgraded, enchanted_value: upgraded,
+--- main/agent/src/reflex/turn-solver.ts
++++ verified-live/agent/src/reflex/turn-solver.ts
+@@ -142,6 +142,8 @@
+   block: number;
+   vulnerable: number;
+   weak: number;
++  /** Silent A10 PLOW_MOVE: observed Shackling under existing Weak, decision turn only. */
++  weakShackling?: true;
+   /** Poison remaining before this enemy turn, observed in Silent runs. */
+   poison?: number;
+   artifact: number;
+@@ -166,6 +168,8 @@
+   reattach?: boolean;
+   /** REATTACH_POWER amount: the HP a dead segment comes back with (25 on the Decimillipede). */
+   reattachHp?: number;
++  /** 1913SE84AXQF A10, silent-0064: the observed middle discards poison and Strength when down. */
++  reattachClearsPoisonStrength?: boolean;
+   /**
+    * Crab Rage (Kaiser Crab's Rocket / Crusher): when an ally dies this one gains 99 Block and more
+    * Strength at once, so killing one part alone is a trap (7Q5G F33: Rocket "lethal", Crusher kept
+@@ -783,6 +787,8 @@
+ }
+ 
+ export interface Outcome {
++  /** Unplayed Shivs actually made by this line's observed Cunning drinks, for later-turn piles. */
++  cunningShivsLeft?: CardModel[];
+   /** Established Serpent Form after this line; absent outside the observed character/ascension. */
+   serpentFormAfter?: number | null;
+   /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
+@@ -1724,13 +1730,19 @@
+     next.pendingSelection = true;
+     next.unknown = [...next.unknown, `${card.name}（重放弃牌未验证）`];
+   }
++  const unverifiedBladeDance = card.bladeDance && (plays > 1 || automatic || card.upgraded || card.cardId !== "BLADE_DANCE" || !card.adds);
++  if (unverifiedBladeDance) {
++    next.pendingSelection = true;
++    next.unknown = [...next.unknown, `${card.name}（自动、重放、升级或缺资料的生成未验证）`];
++  }
+   if (card.bulletTime && (plays > 1 || automatic)) next.unknown = [...next.unknown, "子弹时间（自动出牌或重放未验证）"];
+   for (let play = 0; play < plays; play += 1) {
+     const serpent = next.serpentForm;
+     const serpentTargets = next.enemies.filter((enemy) => enemy.alive);
+     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
+     // drew); unmet, the card's draw and energy do not happen.
+-    const effects = unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
++    const effects = unverifiedBladeDance ? { ...card, draw: 0, adds: undefined }
++      : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
+     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost, plays === 1 && !automatic);
+     // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
+     // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
+@@ -2075,12 +2087,14 @@
+   }
+   // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
+   if (card.adds && !next.pendingSelection && (card.discardCount === undefined || hiddenDaggers(card))) {
+-    const adds = hiddenDaggers(card) ? card.adds.map((shiv, i) => ({
+-      ...shiv, index: 2_000_000 + next.steps.length * 2 + i, key: `${card.key}~shiv${next.steps.length}:${i}`,
++    const adds = hiddenDaggers(card) || card.bladeDance ? card.adds.map((shiv, i) => ({
++      ...shiv, index: card.bladeDance ? 3_000_000 + next.steps.length * 3 + i : 2_000_000 + next.steps.length * 2 + i,
++      key: `${card.key}~shiv${next.steps.length}:${i}`,
+       validTargets: next.enemies.filter((enemy) => enemy.alive).map((enemy) => enemy.index),
+       damage: shiv.damageBase === undefined ? shiv.damage : Math.floor(ourAttackScaled(shiv.damageBase + (player.strengthNow ?? 0), player.weak, false)),
+     })) : card.adds;
+-    addToHand(next, adds, player.handLimit);
++    const cunning = card.cardId.startsWith("POTION:CUNNING_POTION:");
++    addToHand(next, adds, cunning ? (player.handLimit ?? HAND_LIMIT) - next.locked.length : player.handLimit);
+   }
+   if (card.drawn && card.special !== "gamble" && card.special !== "chaos" && card.special !== "glowwater" && card.special !== "bottled") drawCards(next, card.drawn, player);
+   // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn (a sample: its own
+@@ -2683,6 +2697,18 @@
+         // states.jsonl); only Strength changes made this turn still need the ×1.5.
+         const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
+         let amount = Math.floor(shown + strengthChange);
++        // 3UPY3BP2LVS7 F17 T3: shown 16 with Weak is raw 22; Shackling's -7 makes 11, not 9.
++        // Resolve only a unique result from the rounded intent. Ambiguous bases, other loss amounts,
++        // move changes and unobserved multipliers retain their existing path (silent-0349 remains partial).
++        if (enemy.weakShackling && enemy.weak > 0 && !enemy.newlyWeak && !moved && !died &&
++            enemy.strengthDelta === 0 && enemy.tempStrengthLoss === 7 &&
++            enemy.attacks.length === 1 && attack.hits === 1 && Number.isInteger(shown) && shown > 0 &&
++            !player.vulnerable && player.facing == null && !player.surrounded &&
++            !player.colossus && !sim.colossus && !(enemy.shrink ?? 0) && !enemy.newlyShrunk && sim.tainted === 0) {
++          const low = Math.max(0, Math.floor((Math.ceil(shown / 0.75) - 7) * 0.75));
++          const high = Math.max(0, Math.floor((Math.ceil((shown + 1) / 0.75) - 1 - 7) * 0.75));
++          if (low === high) amount = low;
++        }
+         if (sim.tainted > 0) {
+           const tainted = sim.tainted * (player.vulnerable ? 1.5 : 1);
+           // Tainted adds before Weak. Under a Weak already up, the largest base behind the shown number
+@@ -3474,6 +3500,10 @@
+       weakApplied: sim.weakApplied,
+       strengthGained: sim.permStrength,
+       cardsDrawn: sim.cardsDrawn,
++      ...(sim.steps.some((step) => step.cardId.startsWith("POTION:CUNNING_POTION:")) ? {
++        cunningShivsLeft: [...sim.hand, ...sim.held, ...sim.locked].filter((entry) =>
++          entry.cardId === "SHIV" && /^p\d+~shiv\d+$/.test(entry.key) && !input.hand.some((original) => original.key === entry.key)),
++      } : {}),
+       ...(sim.apotheosisApplied ? { apotheosisApplied: true as const } : {}),
+       unknownCards: [
+         ...sim.unknown,
+--- main/agent/src/sim/boss-sim.ts
++++ verified-live/agent/src/sim/boss-sim.ts
+@@ -272,6 +272,14 @@
+ 
+ /** One sample of one line to the fight's end. `input` as slimInput makes it (options.policyNodes is the policy's cap). */
+ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number, maxTurns: number, scripts: boolean, order: KillOrder | null): FightSampleResult {
++  // TXZ F49: no actionable turn, attack, potion or draw after the observed opening exhausted HP.
++  if ((input.openingHpLoss ?? 0) > 0 && input.solver.player.hp <= 0) return {
++    won: false, died: true, capped: false, timeUp: false, turns: 0, hpLoss: 0, revived: 0, drunk: [],
++    resources: { hp: 0, revives: [], drunkKeys: [] },
++    enemyHpLeft: input.solver.enemies.reduce((sum, e) => sum + Math.max(0, e.hp), 0),
++    lossByTurn: [], dmgByTurn: [], incomingByTurn: [], enemyLossByTurn: [], enemyHpByTurn: [], blockByTurn: [],
++    powers: [], drinks: [], kills: [], policyTurns: 0, policyNodes: 0,
++  };
+   const { records, policyTurns, policyNodes } = simulateFight(input, plan, maxTurns, seed, scripts, order);
+   const startHp = input.solver.player.hp;
+   const lossCap = startHp + (input.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0);
+@@ -307,7 +315,7 @@
+ }
+ 
+ /** Transfer the first sample's resources; no fresh HP, spent potion, or spent revive is restored. */
+-export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput): { input: RolloutInput; potions: string[] } {
++export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput): { input: RolloutInput; potions: string[]; openingHpLoss: number } {
+   if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) throw new Error("missing successful first-fight resources");
+   const used = new Set(first.resources.drunkKeys);
+   let fairies = (input.solver.player.revives ?? []).filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length
+@@ -320,8 +328,9 @@
+   const keys = new Set(remaining.map((p) => p.key));
+   const hand = template.solver.hand.filter((p) => p.type !== "Potion" || keys.has(p.cardId));
+   const randomPotions = template.randomPotions?.filter((p) => keys.has(`POTION:${p.potionId}:${p.slot}`));
+-  return { potions: [...keys], input: { ...template, continuation: undefined,
+-    solver: { ...template.solver, hand, player: { ...template.solver.player, hp: first.resources.hp, revives: first.resources.revives.slice() }, continuationValue: undefined },
++  const openingHpLoss = first.resources.revives.length === 0 ? Math.min(first.resources.hp, template.openingHpLoss ?? 0) : 0;
++  return { potions: [...keys], openingHpLoss, input: { ...template, continuation: undefined,
++    solver: { ...template.solver, hand, player: { ...template.solver.player, hp: first.resources.hp - openingHpLoss, revives: first.resources.revives.slice() }, continuationValue: undefined },
+     piles: { ...template.piles, handBase: hand.map(() => null) }, potions: keys.size, ...(randomPotions ? { randomPotions } : {}),
+   } };
+ }
+@@ -340,7 +349,7 @@
+   const transferred = continuationInput(input, first, variant.input);
+   const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
+   return { ...second,
+-    turns: first.turns + second.turns, hpLoss: first.hpLoss + second.hpLoss, revived: first.revived + second.revived,
++    turns: first.turns + second.turns, hpLoss: first.hpLoss + transferred.openingHpLoss + second.hpLoss, revived: first.revived + second.revived,
+     drunk: [...first.drunk, ...second.drunk], policyTurns: first.policyTurns + second.policyTurns, policyNodes: first.policyNodes + second.policyNodes,
+     lossByTurn: [...first.lossByTurn, ...second.lossByTurn], dmgByTurn: [...first.dmgByTurn, ...second.dmgByTurn],
+     incomingByTurn: [...first.incomingByTurn, ...second.incomingByTurn], enemyLossByTurn: [...first.enemyLossByTurn, ...second.enemyLossByTurn],
+--- main/agent/src/sim/boss-start.ts
++++ verified-live/agent/src/sim/boss-start.ts
+@@ -34,6 +34,7 @@
+ import { solveTap, type SolveResult, type SolverInput } from "../reflex/turn-solver.js";
+ import { asArray, asRecord, str } from "../core/util/json.js";
+ import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
++import { observedRoyalPoisonOpeningLoss } from "./silent-opening.js";
+ 
+ /** Cards drawn on turn 1 without relics. */
+ export const OPENING_HAND = 5;
+@@ -311,9 +312,17 @@
+     });
+   }
+   const maxHp = typeof run["max_hp"] === "number" ? (run["max_hp"] as number) : entryHp;
+-  const hp = Math.max(1, Math.min(maxHp, Math.round(entryHp)));
++  const openingHpLoss = observedRoyalPoisonOpeningLoss(state);
++  const hp = openingHpLoss > 0 ? Math.max(0, Math.min(maxHp, Math.round(entryHp)) - openingHpLoss)
++    : Math.max(1, Math.min(maxHp, Math.round(entryHp)));
+   run["current_hp"] = hp;
+   const relics = fightStartRelics(run, knowledge);
++  if (openingHpLoss > 0) {
++    const royal = asArray(run["relics"]).map(asRecord).find((r) => str(r["relic_id"]) === "ROYAL_POISON")!;
++    const name = str(royal["name"], knowledge.relic("ROYAL_POISON")?.name ?? "ROYAL_POISON");
++    relics.unmodelled = relics.unmodelled.filter((r) => r !== name);
++    relics.applied.push(`${name}（静默A10已观察组合：开场失去4生命）`);
++  }
+   const r = relics.total;
+   // Happy Flower's counter as it stands on turn 1 (ticked once): what rollout-live fightRelicsOf reads at a fight frame.
+   for (const relic of asArray(run["relics"]).map(asRecord)) {
+@@ -489,6 +498,7 @@
+   const meta = { ...fightMetaOf(s, knowledge, createScreenMemory("COMBAT")), kind: "boss" as const, t: 1 };
+   const input: RolloutInput = {
+     ...boardInput,
++    ...(observedRoyalPoisonOpeningLoss(state) > 0 ? { openingHpLoss: observedRoyalPoisonOpeningLoss(state) } : {}),
+     solver: { ...solver, hand: potions, cardsPlayedThisTurn: 0, turn: 1, player: { ...solver.player, hp: s.run?.current_hp ?? entryHp } },
+     plans: [],
+     piles: { draw: deckModels(s, knowledge), discard: [], handBase: potions.map(() => null) },
+--- main/agent/src/sim/build-sim-facts.ts
++++ verified-live/agent/src/sim/build-sim-facts.ts
+@@ -18,6 +18,7 @@
+  */
+ 
+ import { cardUpgrade } from "../knowledge/card-upgrades.js";
++import { compactQuantitativeFight, quantitativeEnabled, QUANTITATIVE_LIMITS } from "./quantitative-facts.js";
+ import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
+ import type { MonsterDb } from "../knowledge/monster-db.js";
+ import type { ActionRequest } from "../hand/mod/client.js";
+@@ -506,7 +507,7 @@
+       else if (plan.change !== undefined || plan.mixture) deckOptions.push({ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) });
+     }
+     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
+-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}) });
++    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}), ...(quantitativeEnabled(state) ? { quantitative: true } : {}) });
+     if (result.samples === 0) return fail(`${Math.round(now() - started)} ms 内没有跑完一个样本`);
+     // Too few samples to tell the options apart (Roy 2026-10-02): R6V3 F22 n=24 and 5DFX F27-F29 n=24 put "+11.6" style
+     // deltas in front of the brain, which quoted them. Cut short by the clock under BUILD_SIM_MIN_SHOWN (or under what was
+@@ -532,12 +533,18 @@
+         continue;
+       }
+       const shown = JSON.parse(v) as Record<string, JsonValue>;
++      const quantified = sims.get(k)?.quantitative;
++      if (quantitativeEnabled(state) && !plan.none && !plan.group && quantified) shown["quantitative_fight"] = compactQuantitativeFight(quantified);
+       if (plan.none) shown["boss_sim"] = `${head}${plan.none}`;
+       else if (plan.group) {
+         shown["boss_sim"] = `${head}按 boss_sim_by_card 每张牌分别算；当前牌组胜率 ${pct(result.base.winCal)}${lowWin ? `，boss 平均剩血 ${Math.round(result.base.bossLeft)}` : ""}（${result.samples} 次模拟，校准后）`;
+         shown["boss_sim_by_card"] = Object.fromEntries(plan.group.flatMap((g) => {
+           const sim = sims.get(`${plan.key}|${g.key}`);
+           return sim ? [[g.key, cardLine(g.verb, g.name, sim, lowWin)]] : [];
++        }));
++        if (quantitativeEnabled(state)) shown["quantitative_fight_by_card"] = Object.fromEntries(plan.group.flatMap((g) => {
++          const quantified = sims.get(`${plan.key}|${g.key}`)?.quantitative;
++          return quantified ? [[g.key, compactQuantitativeFight(quantified)]] : [];
+         }));
+       } else {
+         const sim = sims.get(k);
+@@ -564,6 +571,7 @@
+     const b = result.base;
+     const ms = Math.round(now() - started);
+     const simFacts: Record<string, JsonValue> = {
++      ...(quantitativeEnabled(state) ? { quantitative_uncertainty: QUANTITATIVE_LIMITS } : {}),
+       // Not logged at this ascension: HP from the nearest one; damage, buffs and block moved by the measured change
+       // between ascensions (monster-db moveDamageAt, amountAt), not the nearest one's as logged.
+       boss: `${boss}：${start.boss.parts.map((p) => `${p.name} ${p.hp} 血`).join("、")}${start.boss.exact ? "" : `（A${state.run?.ascension ?? "?"} 没有这个 boss 的日志：数值取最近的 A${start.boss.asc}，伤害、增益和格挡按实测的进阶变化估算）`}`,
+@@ -582,6 +590,8 @@
+       ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor(state.run?.ascension ?? 0) * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
+     };
+     const record: Record<string, JsonValue> = {
++      ...(quantitativeEnabled(state) ? { quantitative: { base: b.quantitative ?? null,
++        options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.quantitative ?? null])) } } : {}),
+       boss: key,
+       asc: state.run?.ascension ?? null,
+       entry_hp: start.entryHp,
+--- main/agent/src/sim/build-sim.ts
++++ verified-live/agent/src/sim/build-sim.ts
+@@ -10,6 +10,8 @@
+ import type { RolloutInput } from "../reflex/rollout.js";
+ import { calibratedWinProb, compareLines, fightOrders, summarizeLine, type BossSimLineResult, type FightSampleResult } from "./boss-sim.js";
+ import type { DeckSimRunner } from "./build-sim-pool.js";
++import type { JsonValue } from "../core/util/json.js";
++import { quantitativeFightFacts } from "./quantitative-facts.js";
+ 
+ /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
+ export const BUILD_SIM_SAMPLES = 1000;
+@@ -39,6 +41,7 @@
+ }
+ 
+ export interface OptionSim {
++  quantitative?: JsonValue;
+   key: string;
+   samples: number;
+   /** Raw and calibrated win rate. */
+@@ -122,7 +125,7 @@
+   runner: DeckSimRunner,
+   base: RolloutInput,
+   options: DeckOption[],
+-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number } = {},
++  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean } = {},
+ ): Promise<CompareResult> {
+   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
+   const decks: Partial<RolloutInput>[] = [{}];
+@@ -166,6 +169,7 @@
+     const d = isBase ? null : compareLines(line, baseLine);
+     return {
+       key,
++      ...(opts.quantitative ? { quantitative: quantitativeFightFacts(line.outcomes, baseLine.outcomes, complete) } : {}),
+       samples: n,
+       win: r4(line.winProb),
+       winCal: r4(base.continuation ? line.winProb : calibratedWinProb(line.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc)),
+--- main/agent/src/sim/double-boss-start.ts
++++ verified-live/agent/src/sim/double-boss-start.ts
+@@ -9,10 +9,14 @@
+ import type { RolloutInput } from "../reflex/rollout.js";
+ import { syntheticBossStart, type SyntheticStartOptions } from "./boss-start.js";
+ import { bossLinesOptions } from "./boss-lines.js";
++import { observedRoyalPoisonOpeningLoss } from "./silent-opening.js";
+ 
+ export function withDoubleBossStart(state: GameState, knowledge: Knowledge, input: RolloutInput, model: DoubleBossModel | null = doubleBossFor(state), opts: SyntheticStartOptions = {}): RolloutInput {
+   if (!model || state.run?.floor == null || state.run.floor > model.firstFloor) return input;
+   const linesEnabled = bossLinesOptions.enabled;
++  const openingHpLoss = observedRoyalPoisonOpeningLoss(state);
++  const value = openingHpLoss > 0 ? { ...model.value, openingHpLoss,
++    source: `${model.value.source}；TXZ6RVMQA09D A10已观察组合：下一战可操作前失去4生命` } : model.value;
+   let variants: NonNullable<RolloutInput["continuation"]>["variants"];
+   // Building a board must not start nested whole-fight simulations, even after a boss becomes trusted.
+   bossLinesOptions.enabled = false;
+@@ -25,7 +29,8 @@
+       const secondState = parseGameState(raw);
+       const second = syntheticBossStart(secondState, knowledge, `${boss}_BOSS`, input.solver.player.hp, opts).input;
+       const targets = second.solver.enemies.map((e) => e.index);
+-      const ctx = { enemyTargets: targets, strength: 0, weak: false, observedPoison: model.poisonPotionAmount };
++      const ctx = { enemyTargets: targets, strength: 0, weak: false, observedPoison: model.poisonPotionAmount,
++        character: str(run["character_id"]), ascension: state.run?.ascension ?? -1 };
+       const sources = [];
+       const potions = second.solver.hand.slice();
+       const relics = asArray(run["relics"]).map((r) => str(asRecord(r)["relic_id"]));
+@@ -56,7 +61,7 @@
+       { enemyTargets: targets, strength: 0, weak: false, observedPoison: model.poisonPotionAmount });
+     if (card && !hand.some((p) => p.cardId === card.cardId)) { hand.push({ ...card, potionCost: model.potionHp["POISON_POTION"] ?? 0 }); handBase.push(null); }
+   }
+-  return { ...input, solver: { ...input.solver, hand, continuationValue: model.value }, piles: { ...input.piles, handBase }, continuation: { variants,
++  return { ...input, solver: { ...input.solver, hand, continuationValue: value }, piles: { ...input.piles, handBase }, continuation: { variants,
+     potions: belt.map((p) => ({ key: `POTION:${str(p["potion_id"])}:${p["index"]}`, id: str(p["potion_id"]) })),
+     source: model.value.source, limitation: model.limitation,
+   } };
+--- main/agent/src/sl/attempts.ts
++++ verified-live/agent/src/sl/attempts.ts
+@@ -5,10 +5,42 @@
+  */
+ import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
+ import { dirname } from "node:path";
+-import type { JsonValue } from "../core/util/json.js";
++import { asArray, asRecord, numOrNull, str, type JsonValue } from "../core/util/json.js";
++import type { GameState } from "../hand/mod/schema.js";
+ import type { SlDraws } from "./draws.js";
+ import type { SlExploreRecord } from "./explore.js";
+ import type { JudgeTier } from "./judge.js";
++
++/** Observed Silent A10 blast state; the displayed HP belongs to the husk, not the defeated body. */
++export interface SlGiantPhase {
++  phase: "blast_pending";
++  enemy_id: "WATERFALL_GIANT";
++  move_id: "EXPLODE_MOVE";
++  raw_hp: number;
++  max_hp: 999999999;
++  body_hp: 0;
++  /** The displayed intent at the turn's first actionable state, not damage already dealt. */
++  incoming_at_turn_start: number;
++}
++
++/** YQL8RZ8BWN1E F17 T10 (states 280160/280161); no inference from enemy names or HP alone. */
++export function giantPhaseAtTurnStart(state: GameState): SlGiantPhase | null {
++  const run = asRecord(state.raw["run"]);
++  if (str(run["character_id"]).toUpperCase() !== "SILENT" || numOrNull(run["ascension"]) !== 10) return null;
++  const living = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] === true);
++  if (living.length !== 1) return null;
++  const enemy = living[0]!;
++  const hp = numOrNull(enemy["current_hp"]);
++  if (str(enemy["enemy_id"]) !== "WATERFALL_GIANT" || numOrNull(enemy["max_hp"]) !== 999999999 ||
++      str(enemy["move_id"]) !== "EXPLODE_MOVE" || hp === null || !Number.isInteger(hp) || hp <= 0 || hp > 999999999) return null;
++  const intents = asArray(enemy["intents"]).map(asRecord);
++  if (intents.length !== 1 || str(intents[0]!["intent_type"]) !== "DeathBlow" || numOrNull(intents[0]!["hits"]) !== 1) return null;
++  const damage = numOrNull(intents[0]!["damage"]);
++  if (damage === null || !Number.isInteger(damage) || damage <= 0 ||
++      asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "STEAM_ERUPTION_POWER")) return null;
++  return { phase: "blast_pending", enemy_id: "WATERFALL_GIANT", move_id: "EXPLODE_MOVE", raw_hp: hp,
++    max_hp: 999999999, body_hp: 0, incoming_at_turn_start: damage };
++}
+ 
+ /** One turn of an attempt: our HP and block and the enemies' HP when the turn began, and what we played. */
+ export interface SlTurn {
+@@ -17,6 +49,8 @@
+   block: number | null;
+   /** "name hp/max" per living enemy. */
+   enemies: string;
++  /** Present only for the directly observed Silent A10 blast shape; old rows remain uninterpreted. */
++  giant_phase?: SlGiantPhase;
+   /** Cards ("name -> target") and potions ("potion name") in the order they went out. */
+   plays: string[];
+ }
+@@ -146,7 +180,8 @@
+ 
+ function turnLine(turn: SlTurn): string {
+   const hp = turn.hp === null ? "? HP" : `${turn.hp} HP${turn.block ? ` + ${turn.block} block` : ""}`;
+-  return `T${turn.turn}: ${hp}; ${turn.enemies || "no enemies"}; played ${turn.plays.length > 0 ? turn.plays.join(", ") : "nothing"}`;
++  const phase = turn.giant_phase ? `；本体剩血0，自爆仍待结算（轮初显示${turn.giant_phase.incoming_at_turn_start}伤害）；近十亿血是占位血，不代表本体进度或获胜` : "";
++  return `T${turn.turn}: ${hp}; ${turn.enemies || "no enemies"}${phase}; played ${turn.plays.length > 0 ? turn.plays.join(", ") : "nothing"}`;
+ }
+ 
+ function endLine(row: SlAttemptRow): string {
+--- main/agent/src/sl/controller.ts
++++ verified-live/agent/src/sl/controller.ts
+@@ -46,7 +46,7 @@
+ import { heldCardEthereal } from "../reflex/card-model.js";
+ import { mantleHpCost } from "../reflex/turn-solver.js";
+ import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
+-import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
++import { attemptFrom, createSlLog, giantPhaseAtTurnStart, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
+ import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
+ import { listedElite, loadSlElites, type SlElite, type SlEliteList } from "./elites.js";
+ import { boardTried, exploreTarget, playKey, replayPlays, replayPoints, secondPlan, slBoardKey, triedHas, turnCanon, turnRepeats, type ExploreTargetOptions, type SlDeviation, type SlExploreEnv, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays, type SlTurnRepeat } from "./explore.js";
+@@ -1301,11 +1301,13 @@
+     const player = asRecord(asRecord(state.raw["combat"])["player"]);
+     const living = livingEnemies(state);
+     const names = livingNames(living);
++    const giantPhase = giantPhaseAtTurnStart(state);
+     const turn: SlTurn = {
+       turn: turnNo,
+       hp: numOrNull(player["current_hp"]),
+       block: numOrNull(player["block"]),
+       enemies: living.map((enemy, i) => `${names[i]} ${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`).join(", "),
++      ...(giantPhase ? { giant_phase: giantPhase } : {}),
+       plays: [],
+     };
+     fight.turns.push(turn);
+--- main/agent/src/sl/explore.ts
++++ verified-live/agent/src/sl/explore.ts
+@@ -73,6 +73,7 @@
+  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
+  */
+ import { createHash } from "node:crypto";
++import type { SlGiantPhase } from "./attempts.js";
+ import type { GameState } from "../hand/mod/schema.js";
+ import { asArray, asRecord, num, numOrNull, str, stableStringify } from "../core/util/json.js";
+ 
+@@ -175,7 +176,7 @@
+    * SL_RETRY_EXPLORE_ANCHOR: why this attempt's path is the reference (the failed attempts with decision points recorded,
+    * each one's last turn and the enemy HP left then, the latest first). Absent with the switch off (attempt 2's path).
+    */
+-  anchor?: { why: string; ranked: { attempt: number; turns: number; enemyHp: number | null }[] };
++  anchor?: { why: string; ranked: { attempt: number; turns: number; enemyHp: number | null; giantPhase?: SlGiantPhase }[] };
+   /** SL_RETRY_EXPLORE_REARM: a point chosen in the attempt after its deviation at `after` (that turn's board) was wasted. */
+   rearmed?: { after: string; turn: number | null; offPath?: true };
+ }
+@@ -583,7 +584,7 @@
+   result: string;
+   explore?: SlExploreRecord | null;
+   /** The attempt's turns as its summary has them (attempts.ts SlTurn): rows without a turn record are rebuilt from it. */
+-  summary?: { turns: readonly { turn: number; hp: number | null; block: number | null; enemies: string; plays: readonly string[] }[] };
++  summary?: { turns: readonly { turn: number; hp: number | null; block: number | null; enemies: string; plays: readonly string[]; giant_phase?: SlGiantPhase }[] };
+ }
+ 
+ /** What failed attempts played on each board, gathered (triedByBoard). */
+@@ -883,7 +884,7 @@
+   rearm?: { reference: number; fromTurn: number; skip: readonly string[] };
+ }
+ 
+-/** The HP the enemies had left on a row's last turn (its summary: "A 12/40, B 30/30" is 42); null when it is not readable. */
++/** Raw displayed HP on the last turn, kept as the legacy tie-break; a husk's HP is not body progress. */
+ export function enemyHpLeft(row: Pick<ExploreRow, "summary">): number | null {
+   const last = row.summary?.turns.at(-1);
+   if (!last) return null;
+@@ -1016,8 +1017,13 @@
+     if (ranked.length > 0) {
+       const first = reference;
+       reference = ranked[0]!;
+-      const list = ranked.map((row) => ({ attempt: row.attempt, turns: row.turns, enemyHp: enemyHpLeft(row) }));
+-      const say = (entry: (typeof list)[number]) => `attempt ${entry.attempt} T${entry.turns}${entry.enemyHp !== null ? ` (enemy HP ${entry.enemyHp})` : ""}`;
++      const list = ranked.map((row) => {
++        const giantPhase = row.summary?.turns.at(-1)?.giant_phase;
++        return { attempt: row.attempt, turns: row.turns, enemyHp: enemyHpLeft(row), ...(giantPhase ? { giantPhase } : {}) };
++      });
++      const say = (entry: (typeof list)[number]) => entry.giantPhase
++        ? `attempt ${entry.attempt} T${entry.turns} (占位血${entry.enemyHp ?? "?"}；本体剩血0；自爆仍待结算，轮初显示${entry.giantPhase.incoming_at_turn_start}伤害；本体结束不等于获胜)`
++        : `attempt ${entry.attempt} T${entry.turns}${entry.enemyHp !== null ? ` (enemy HP ${entry.enemyHp})` : ""}`;
+       const why = reference === first ? `attempt ${reference.attempt}'s path, the failed attempt that lived longest (${list.map(say).join(", ")})` : `attempt ${reference.attempt}'s path, not attempt ${first?.attempt ?? 2}'s: it lived longest (${list.map(say).join(", ")})`;
+       anchor = { why, ranked: list };
+     }
+--- main/docs/codex-ops.md
++++ verified-live/docs/codex-ops.md
+@@ -43,6 +43,7 @@
+ - 事件是 `ops/codex-ops/queue/<纳秒时间>-<类型>.md`，一次叫醒把队列里的全部事件按时间编号成一条消息。成功后事件移到 `delivered/`；失败（退出码非 0、turn 失败、超时）事件留在队列，下一个 tick 重试；连续 3 次失败在收件箱写一行。
+ - 串行：`flock ops/codex-ops/wake.lock`，同一时间只有一个叫醒；叫醒期间新来的事件，这次叫醒结束后接着发（一次最多连发 5 轮）。
+ - 每次叫醒前：codex 启动检查（版本、登录、模型和强度）+ key 隔离自检（`codex sandbox -P ops` 打开每个 key 文件，打得开就不叫醒，exit 3）。
++- Herdr 暂缓（exit 75）不计为模型失败；但连续暂缓至少 3 次且持续 30 分钟时，现有调度器向 `ops/inbox-dev.md` 写一次健康提醒，供 watcher 排查。`deferred.state` 保存本次起点/次数/是否已通知，成功、非暂缓失败或队列清空后重置；暂停期间不检测。原事件保留，不新增 cron、不重启会话、不自动改派或清除人的输入。
+ - 超时 120 分钟（`CODEX_OPS_WAKE_TIMEOUT_MIN`），按进程组停。登录被拒时让 codex 刷新一次令牌，事件留到下次。
+ - 记录：每次叫醒的完整事件流在 `ops/codex-ops/wakes/<时间>-wake.jsonl`（第一行是命令和消息），一行摘要进 `wakes.jsonl`（token、上下文大小、压缩次数、最后的回答），调度器日志 `scheduler.log`。写完都做 key 扫描替换。运行时目录 `ops/codex-ops/` 不进 git。
+ 
+@@ -80,7 +81,6 @@
+ | learner-merge <branch> | 发合入兜底事件，由运维执行 live 流程；只接收 codex-dev / exp-silent |
+ | learner-recheck <批次 id> | 兜底合入后补跑完整 tsc + vitest；只接收 YYYYMMDD-HHMMSS-experience-update / fix-batch / strategy-proposal 格式的批次 id。锁内核实回报中所有源提交均在 live，固定检查树、去重同批次同树，保留原失败及兜底检查历史；归档日志并发送 learner-checks，失败写收件箱。broker 限时 3700 秒，请求端默认等 3760 秒 |
+ | eval-metrics <角色 id> <进阶> | 沙箱外运行完整评估：角色限 ironclad/silent/regent/necrobinder/defect，进阶为 0–999 的整数，不带前导零；固定传 --character、--ascension、--group-by ascension、--md，使用 data/logdb-venv/bin/python，nice 19。结果保存到 paper/materials/<角色>/a<级>-metrics-<时间>.<随机后缀>.md，打印路径；失败保留旧报告，不发布部分或空结果。broker 限时 10 分钟，请求端默认等 11 分钟，CODEX_OPS_DO_WAIT 可显式覆盖 |
+-| git-push-main <完整 SHA> | 仅推送当前 main 的指定完整提交到固定项目 origin，使用 Windows ssh.exe；拒绝已移动的 main、其他目的地和额外参数，不 force、不推 upstream，推送后核对远端 main SHA。仅在用户已经授权本次推送、提交通过测试和 gitleaks 后调用；白名单从下一次标准叫醒加载 |
+ 
+ 例如 `bash ops/codex-ops-do.sh eval-metrics silent 3`。每次产生独立快照，读取返回的文件后并入升级小结；动作不接收任意路径、额外选项或外部命令。broker 的白名单在叫醒开始时加载，本轮改动从下一次叫醒起生效，不需要重启对局。历史升级评估请求可在动作生效后的事件中补跑。
+ 
+--- main/docs/ops-assist.md
++++ verified-live/docs/ops-assist.md
+@@ -4,7 +4,7 @@
+ 
+ 辅助仅审计积压事件、固定源提交及合入前提、已授权请求状态。所有合入、代码/知识/台账修改、上线登记和生产动作仍由主 ops 串行处理。辅助不产生游戏知识，不启动学习者，不再派发，不消费原事件。
+ 
+-Roy与watcher在框架正常运行后负责持续观察、讨论改进计划，以及获批的架构和运行流程迭代；最高权限不作为日常接管运行的理由。辅助任务的拆分、派发、验收和后续生产处理由主ops负责，watcher不亲自代办对局、学习调度或运行处置。本能力的生产验收也由主ops经既有入口执行，watcher核对真实回执。
++Roy与watcher负责整个agent系统的健康：持续观察，排查并修复阻塞、不稳定和bug，验证修复效果，讨论并实施获批的架构和运行流程迭代；最高权限不作为日常接管运行的理由。辅助任务的拆分、派发、验收和后续生产处理由主ops负责，watcher不亲自代办对局、学习调度或运行处置。本能力的生产验收也由主ops经既有入口执行，watcher核对真实回执。
+ 
+ ## 派发
+ 
+--- main/docs/v4-architecture.md
++++ verified-live/docs/v4-architecture.md
+@@ -1,6 +1,6 @@
+ # V4 架构：当前实现
+ 
+-核对日期：2026-10-10。本文说明 main 的现行代码；运行中的进程采用哪个提交和配置，要看实际 live、`logs/run-config.jsonl` 和调用日志。现场状态见 `paper/materials/STATE-*.md` 及 [decision-log](../paper/materials/decision-log.md)。
++核对日期：2026-10-11（同步已批准的 Codex 默认配置和 watcher 职责）。本文说明 main 的现行代码；运行中的进程采用哪个提交和配置，要看实际 live、`logs/run-config.jsonl` 和调用日志。现场状态见 `paper/materials/STATE-*.md` 及 [decision-log](../paper/materials/decision-log.md)。
+ 
+ V4 从 2026-09-29 的模块拆分发展而来。[原始设计](history/v4-architecture-2026-09-29.md) 与 [首次上线方案](v4-go-live.md) 保留历史口径。其中 DeepSeek 默认、Claude 优先、Codex 待实现、v3/v4 分支及人工审核流程已由后续实现和授权更新。当前边界以 [AGENTS.md](../AGENTS.md)、[学习协议](learning-protocol.md) 为准。
+ 
+@@ -33,6 +33,8 @@
+ 
+ 完整目录说明见 [layout.md](layout.md)。模块存在不代表其中所有实验接口都在生产决策路径上。
+ 
++Roy 与 watcher 负责全系统健康观察、阻塞/不稳定/bug 排查修复，以及获批的架构和流程迭代；不接管日常派单或提供游戏知识。ops 与学习者自主完成运行闭环，主 ops 可经既有 broker 显式派最多两个只读辅助 session 核查，见 [ops-assist.md](ops-assist.md)。
++
+ ## 2. 大脑：生产固定 Codex，故障在原题等待
+ 
+ 接口仍是 `BrainRequest → BrainEngine.decide → BrainAnswer`。生产入口 `createRouter` 强制 `engine="codex"`、清空分题引擎、关闭回退，并设 `codexOnly=true`。DeepSeek / Claude 适配器和可配置回退路由保留作历史兼容与固定数据回归；生产不能用环境变量切回这些引擎。
+@@ -42,10 +44,10 @@
+ | 配置 | main 代码的行为 |
+ |---|---|
+ | `BRAIN_ENGINE`、`BRAIN_ENGINE_<题型>`、`BRAIN_FALLBACK` | 历史解析仍在；生产 `createRouter` 覆盖引擎选择与回退 |
+-| `BRAIN_CODEX_MODEL`、`BRAIN_CODEX_EFFORT`、`BRAIN_CODEX_TIMEOUT_MS` | 仍生效；未配置时为 `gpt-6.1-sol` / `xhigh` / 600000 ms；按题型模型覆盖仍在 |
++| `BRAIN_CODEX_MODEL`、`BRAIN_CODEX_EFFORT`、`BRAIN_CODEX_TIMEOUT_MS` | 仍生效；未配置时为 `gpt-6-astra` / `xhigh` / 600000 ms；按题型模型覆盖仍在 |
+ | `BRAIN_CODEX_MODE` | `exec` 每题起 CLI，`session` 使用 app-server 会话；解析默认 `exec`，实际值看 run-config |
+ | `BRAIN_CODEX_HOME`、`BRAIN_CODEX_BIN`、`BRAIN_CODEX_USAGE_*` | 登录目录、程序路径、额度保护和恢复预检 |
+-| Fast 服务档位 | 代码固定 `priority`，保留模型和推理强度；exec 与 session 都显式传入，见 [codex-fast.md](codex-fast.md) |
++| Codex 服务档位和上下文 | 默认 normal（`service_tier="default"`），context 512000、自动压缩 460800；exec 与 session 显式传入，配置上限不等于服务端实测容量，见 [codex-fast.md](codex-fast.md) |
+ | `KNOWLEDGE_PREFIX` | `full` 把适用知识整份放进 system；配置解析默认 `off`，运行配置须显式设 `full` |
+ | `RUN_PLAN`、`FIGHT_PLAN` | 决定相应计划模块是否启用；解析默认 `off`，不能凭模块存在推断已启用 |
+ 
+@@ -80,7 +82,7 @@
+ 
+ ## 4. 离线学习与评估
+ 
+-任务说明在 `learner/tasks/*.md`，启动器在 `learner/run.ts`。启动器支持 codex / claude 两种适配；现行生产学习者使用 Codex，默认 `gpt-6.1-sol` / `xhigh`，Fast 启用。Claude 只观察和与 Roy 对话，不修改或审核。用法见 [learner/README.md](../learner/README.md)。
++任务说明在 `learner/tasks/*.md`，启动器在 `learner/run.ts`。启动器支持 codex / claude 两种适配；现行生产学习者使用 Codex，默认 `gpt-6-astra` / `xhigh` / normal，context 512000、自动压缩 460800。Claude 只观察和与 Roy 对话，不修改或审核。用法见 [learner/README.md](../learner/README.md)。
+ 
+ 闭环为：对局证据 → 复盘 → 经验/知识或代码提案 → Codex 学习者实现与自测 → 自行合入 live → 运维核实际合入、登记与外部检查 → 评估。没有独立人工审核闸；未授权的架构调整仍交 Roy。Roy 2026-10-07 已允许学习者在理由与本角色证据充分时修改其原定的出牌、药水、必死/SL、终局价值规则，必须同时保存代码提案、账本链和上线后的双收件箱通知。
+ 
+--- main/ops/codex-ops-learn.py
++++ verified-live/ops/codex-ops-learn.py
+@@ -6,7 +6,7 @@
+ 
+   tick       1. victories: runs.jsonl rows of the character with "victory": true not yet in ops/win-notified
+                 -> a `victory` event each, and the id is appended to ops/win-notified;
+-             2. a new ascension: the character's latest run-config.jsonl row targets a higher ascension than the
++             2. a new ascension: the character's latest run-config.jsonl row observes a higher ascension than the
+                 last one seen -> an `ascension-up` event (the per-level summary);
+              3. post-mortems: finished runs of the character (in runs.jsonl) without a "## <id>" heading in
+                 notes/lessons.md, not dispatched yet -> one learner batch of up to 5 (learner/run.ts --engine codex
+@@ -198,10 +198,10 @@
+ 
+ 
+ def run_ascension(row):
+-    value = row.get("target_ascension")
+-    if not isinstance(value, int):
+-        value = row.get("ascension")
+-    return value if isinstance(value, int) else None
++    # The requested target can exceed the character's unlocked maximum. Only the
++    # observed run level is evidence for notifications and structural audits.
++    value = row.get("ascension")
++    return value if type(value) is int and value >= 0 else None
+ 
+ 
+ def check_ascension(state, character):
+--- main/ops/codex-ops.sh
++++ verified-live/ops/codex-ops.sh
+@@ -44,6 +44,30 @@
+   log "queued $1"
+ }
+ 
++# A deferred wake is not a failure, but an indefinitely deferred queue needs visibility.
++# Called only while holding wake.lock; notify once per episode and never disturb the TUI.
++note_deferred() {
++  local now first=0 count=0 notified=0
++  now=$(date +%s)
++  if [ -f "$DIR/deferred.state" ]; then
++    read -r first count notified < "$DIR/deferred.state" || true
++    if ! [[ "$first" =~ ^[1-9][0-9]{0,10}$ && "$count" =~ ^(0|[1-9][0-9]{0,8})$ && "$notified" =~ ^[01]$ ]] \
++      || [ "$first" -gt "$now" ]; then
++      first=0; count=0; notified=0
++    fi
++  fi
++  [ "$first" -gt 0 ] || first=$now
++  count=$((count + 1))
++  if [ "$count" -ge 3 ] && [ "$((now - first))" -ge 1800 ] && [ "$notified" -eq 0 ]; then
++    if printf '%s\n' "- $(date '+%F %H:%M') [codex-ops 调度器] 运维队列持续暂缓唤醒 $(( (now - first) / 60 )) 分钟、$count 次（exit 75）。请 watcher 核对 Herdr 会话、未提交输入/对话框和调度日志；这不等于模型失败。原队列保留，未重启或接管运行。见 ops/codex-ops/scheduler.log 与 deferred.state。" >> "$ROOT/ops/inbox-dev.md"; then
++      notified=1
++      log "prolonged deferred queue: $count attempts since $first; inbox notified"
++    fi
++  fi
++  printf '%s %s %s\n' "$first" "$count" "$notified" > "$DIR/deferred.state.tmp"
++  mv "$DIR/deferred.state.tmp" "$DIR/deferred.state"
++}
++
+ # drain [init]: wake while events are queued (at most 5 wakes in a row; events queued meanwhile go in the next one).
+ # "init" also wakes with an empty queue when there is no session yet (start: the first turn = the ops prompt).
+ drain() {
+@@ -55,13 +79,19 @@
+   for i in 1 2 3 4 5; do
+     paused && break
+     if ! ls "$QUEUE"/*.md > /dev/null 2>&1; then
++      rm -f "$DIR/deferred.state"
+       [ "$mode" = init ] && [ ! -s "$DIR/session-id" ] || break
+     fi
+     mode=""
+     nice -n 5 "$TSX" "$MAIN" wake >> "$DIR/wake.out" 2>&1
+     rc=$?
+     # 75: deferred (herdr mode: the ops TUI is busy, shows a dialog or holds a person's unsent text). Not a failure.
+-    if [ $rc -eq 75 ]; then log "wake deferred (ops TUI not ready, see above); the events stay queued for the next tick"; break; fi
++    if [ $rc -eq 75 ]; then
++      note_deferred
++      log "wake deferred (ops TUI not ready, see above); the events stay queued for the next tick"
++      break
++    fi
++    rm -f "$DIR/deferred.state"
+     if [ $rc -ne 0 ]; then
+       echo "$(( $(cat "$DIR/fails" 2>/dev/null || echo 0) + 1 ))" > "$DIR/fails"
+       log "wake failed (exit $rc, $(cat "$DIR/fails") in a row); the events stay queued for the next tick"
+@@ -180,6 +210,7 @@
+   echo "hosting: $( [ -f "$DIR/hosting" ] && grep -v '^#' "$DIR/hosting" | tr '\n' ' ' || echo 'default (ops=exec learners=setsid autoplay=setsid)')${CODEX_OPS_MODE:+; CODEX_OPS_MODE=$CODEX_OPS_MODE}"
+   [ -f "$DIR/herdr.json" ] && timeout 20 bash "$OPS/herdr-host.sh" status 2>&1 | sed 's/^/  /'
+   echo "queue: $(ls "$QUEUE"/*.md 2>/dev/null | wc -l) event(s)$( [ -f "$DIR/fails" ] && echo ", $(cat "$DIR/fails") failed wake(s) in a row")"
++  [ -f "$DIR/deferred.state" ] && echo "deferred episode (first epoch / attempts / notified): $(cat "$DIR/deferred.state")"
+   [ -f "$DIR/stall.state" ] && echo "stall state: $(cat "$DIR/stall.state")"
+   python3 "$OPS/codex-ops-learn.py" status 2>&1 | tail -3
+   echo "--- $LOG"; tail -n 8 "$LOG" 2>/dev/null
+--- main/ops/tests/test_silent_calibration_dispatch.py
++++ verified-live/ops/tests/test_silent_calibration_dispatch.py
+@@ -1,9 +1,7 @@
+ """Fixed dispatch fixtures; no engines, Git mutations or network calls."""
+ import importlib.util
+ import json
+-import os
+ from pathlib import Path
+-import subprocess
+ import tempfile
+ import unittest
+ from unittest.mock import patch
+@@ -145,70 +143,6 @@
+             start.assert_not_called()
+ 
+ 
+-class A10RegressionDispatch(CodexOnlyDispatch):
+-    task = "silent-a10-regression"
+-    request_file = "notes/silent-a10-regression-dispatch.json"
+-
+-    def test_highest_priority_request_precedes_other_pending_features(self):
+-        task = "silent-double-boss"
+-        Path(self.root, jobs.FEATURE_REQUESTS[task]).write_text(json.dumps({
+-            **self.request, "task": task, "request_id": "older-double-boss-request"}))
+-        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
+-            self.assertEqual(self.launch(), ("first-fix-batch", 20))
+-            self.assertEqual(start.call_args.args[0][-1], self.task)
+-            self.assertIsNone(self.launch(stamp="duplicate"))
+-            start.assert_called_once()
+-
+-
+-class CodexBrainCacheDispatch(CodexOnlyDispatch):
+-    task = "codex-brain-cache"
+-    request_file = jobs.FEATURE_REQUESTS[task]
+-
+-    def test_cache_request_precedes_pending_a10_without_interrupting_it(self):
+-        older = "silent-a10-regression"
+-        Path(self.root, jobs.FEATURE_REQUESTS[older]).write_text(json.dumps({
+-            **self.request, "task": older, "request_id": "older-a10-request"}))
+-        self.state["batches"]["a10"] = {
+-            "task": "fix-batch", "learner_task": older, "state": "running", "pid": 40,
+-            "feature_request": "older-a10-request",
+-            "worktree": str(Path(self.root, ".worktrees", older))}
+-        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
+-            self.assertEqual(self.launch(), ("first-fix-batch", 20))
+-            self.assertEqual(start.call_args.args[0][-3:], [
+-                "fix-batch", str(Path(self.root, ".worktrees/codex-brain-cache")), self.task])
+-            self.assertEqual(self.state["batches"]["a10"]["pid"], 40)
+-            self.assertIsNone(self.launch(stamp="duplicate"))
+-            start.assert_called_once()
+-
+-    def test_busy_cache_tree_does_not_fall_back_to_a10_or_normal_fix(self):
+-        older = "silent-a10-regression"
+-        Path(self.root, jobs.FEATURE_REQUESTS[older]).write_text(json.dumps({
+-            **self.request, "task": older, "request_id": "older-a10-request"}))
+-        with patch.object(jobs, "available_worktree", return_value=False), patch.object(jobs, "start_learner") as start:
+-            self.assertIsNone(self.launch())
+-            start.assert_not_called()
+-        self.assertEqual(set(self.state["batches"]), {"old-fix"})
+-
+-    def test_wrapper_accepts_only_authorized_cache_task_scope(self):
+-        wrapper = Path(__file__).parents[1] / "codex-ops-learner.sh"
+-        # Execute only the real argument guards: no learner, finish, filesystem or engine actions.
+-        prefix = wrapper.read_text().split('mkdir -p "$DIR/learner"', 1)[0]
+-        env = {**os.environ, "CODEX_OPS_ROOT": self.root}
+-        for task, character, tree, transport, expected in (
+-                (self.task, "silent", self.task, "fix-batch", 0),
+-                (self.task, "ironclad", self.task, "fix-batch", 2),
+-                (self.task, "silent", "codex-dev", "fix-batch", 2),
+-                (self.task, "silent", self.task, "strategy-proposal", 2),
+-                ("codex-brain-cache-extra", "silent", "codex-brain-cache-extra", "fix-batch", 2)):
+-            with self.subTest(task=task, character=character, tree=tree, transport=transport):
+-                result = subprocess.run([
+-                    "bash", "-c", prefix + '\nprintf "guard-passed\\n"\n', str(wrapper),
+-                    "fixed-batch", "", character, transport, str(Path(self.root, ".worktrees", tree)), task],
+-                    env=env, capture_output=True, text=True, timeout=5)
+-                self.assertEqual(result.returncode, expected, result.stderr)
+-                self.assertEqual(result.stdout, "guard-passed\n" if expected == 0 else "")
+-
+-
+ class NewFeatureDispatch(unittest.TestCase):
+     def test_a_first_then_independent_b4_beside_normal_fixes(self):
+         with tempfile.TemporaryDirectory() as root:

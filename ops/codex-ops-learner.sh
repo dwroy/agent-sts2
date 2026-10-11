@@ -13,11 +13,18 @@ task="${4:-postmortem}"; worktree="${5:-$ROOT}"
 case "$task" in postmortem|experience-update|fix-batch|strategy-proposal|ascension-audit) ;; *) exit 2 ;; esac
 learner_task="${6:-$task}"
 research_request=""
+implementation_request=""
+implementation_task_file=""
 if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
     && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
-      || [ "$7" = roy-20261010-silent-core-output-value ]; } || exit 2
-  research_request="$7"
+      || [ "$7" = roy-20261010-silent-core-output-value ] \
+      || [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ]; } || exit 2
+  if [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ]; then
+    implementation_request="$7"
+  else
+    research_request="$7"
+  fi
   [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-strategy-proposal$ ]] || exit 2
 fi
 if [ "$learner_task" != "$task" ]; then
@@ -51,6 +58,17 @@ if [ -n "$research_request" ]; then
   else
     echo "research registration lock wait timed out after 120 seconds; no model started" >> "$err"
     printf '{"request_id":"%s","batch":"%s","status":"lock_timeout","timeout_seconds":120}\n' "$research_request" "$batch" > "$DIR/learner/$batch.research-registration.json"
+    audit_ready=0
+  fi
+  exec 8>&-
+fi
+if [ -n "$implementation_request" ]; then
+  exec 8> "$DIR/learn.lock"
+  if flock -w 120 8; then
+    research_base="$(python3 "$OPS/strategy_implementation_jobs.py" ready "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err")" || audit_ready=0
+    flock -u 8
+  else
+    echo "implementation registration lock timed out; no model started" >> "$err"
     audit_ready=0
   fi
   exec 8>&-
@@ -102,6 +120,19 @@ if [ "$task" = ascension-audit ]; then
     audit_ready=0
   fi
 fi
+# Prepare the exact task source after the saved registration and tree exist.
+# The launcher records the fully rendered prompt in its normal learner_launch log.
+if [ "$audit_ready" = 1 ] && [ -n "$implementation_request" ]; then
+  exec 8> "$DIR/learn.lock"
+  if flock -w 120 8; then
+    implementation_task_file="$(python3 "$OPS/strategy_implementation_jobs.py" prepare "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err")" || audit_ready=0
+    flock -u 8
+  else
+    echo "implementation input lock timed out; no model started" >> "$err"
+    audit_ready=0
+  fi
+  exec 8>&-
+fi
 # In a herdr pane (ops/herdr-host.sh run, hosting learners=herdr): show the batch's output files live in the pane. The
 # files stay what they were (token accounting reads learner/runs/*.jsonl, the finish step reads $out).
 tailer=""
@@ -135,7 +166,7 @@ else
   fi
   export STS2_CODEX_LEARNER_BIN="$codex_learner_native"
   export LEARNER_CODEX_BIN="$codex_learner_wrapper"
-  args=(--engine codex --model gpt-6-astra --effort xhigh --task "$learner_task" --character "$character" --cwd "$worktree")
+  args=(--engine codex --model gpt-6-astra --effort xhigh --task "${implementation_task_file:-$learner_task}" --character "$character" --cwd "$worktree")
   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
   if [ "$learner_task" = silent-historical-core-builds ]; then
     args+=(--set "evidence=${7}" --set "batch=$batch")
@@ -153,7 +184,8 @@ else
 fi
 [ -n "$tailer" ] && { sleep 1; kill "$tailer" 2>/dev/null; }
 echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
-if [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; then
+if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; } \
+    && { [ -z "$implementation_request" ] || python3 "$OPS/strategy_implementation_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err"; }; then
   python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null
 fi
 if [ "${CODEX_OPS_NO_DRAIN:-0}" != 1 ]; then

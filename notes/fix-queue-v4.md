@@ -1039,3 +1039,29 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 - [ ] 框架/测试收尾：175450的merge-live.py在1200秒外层时限切断尾部paths后，已完成268文件2703例的原件仍自动整套重跑；独立paths11例补验已过，共269文件2714例，却继续长期持live-merge.lock，181302已测修复排队。重跑非零还会自动reset --merge，不能仅终止其子进程。需由框架拥有者核对现有runner/合后验收入口，保留分段已过覆盖与精确代码树、仅续失败/未运行项，显式区分时限/沙箱限制/真实失败，提供经身份校验且不触发误回退的既有所有者收尾方式；不改游戏知识/断言/预算，不手改原失败回执。证据paper/materials/20261011-1852-ops/core-check-closeout/receipt.json。
 - [ ] 调度公平性核查：watcher19:13冻结registry739项、pending587/waiting100/implemented38/duplicate14；可评估677项中首pending第80位。现有插入序waiting重评可能挤压新项，尚非永久饥饿证明；按真实dispatch/seen_runs/完成局时间核查后交获准框架迭代，不由本轮更改并发、队列状态或任务。原件paper/materials/20261011-ops-health-recovery/queue-observation-1913.json。
+
+
+## 2026-10-11 20:22:00 CST：同树宿主完整检查两项失败（普通基础设施修复）
+
+- **host-checks-broker-push-registration**：live 4425ef1aeda69697bf4741c8d338f3b95586668f / tree25b09e499152d7085c5d3e932517156ef5d0d53c 的完整检查，ops-codex.test.ts:102期望git-push-main合法40位SHA通过，实际false。main既有已授权c519952b3含ACTIONS及SHA校验/ops/git-push-main.py，而live只带新增测试、少实现；请复用原已批准入口及来源提交，保留当前assist/deferred/名称改动，不用删断言解决，不改变push授权或直接推送。两份原检查见paper/materials/20261011-2018-ops/*host-original.log。
+- **host-checks-session-exit-fixture**：同树brain-codex-session.test.ts:491子进程退出1，原日志没有stderr，完整两轮均复现（单项约1秒，非25秒预算）。固定fake仅声明gpt-6.1-sol，退出脚本loadConfig没有显式模型，而生产默认已改Astra；请先取得该固定子进程stderr核根因，若为假模型与默认不一致，应令固定夹具自洽，不能降低生产模型、跳过检查或放宽断言。也需确认不存在真实清理回归；保留原失败、角色/参数/游戏源码不动。仅对上述两失败文件单worker隔离复验；已过324文件3566例不无差别重跑。若宿主针对性复验入口不足，写明具体缺口交框架拥有者，不伪报沙箱被排除项目通过。
+- 本轮运维决定保留当前游戏源码和核心经验，不因这两项基础设施/夹具失败回滚知识；本组交既有普通fix-batch，原failed/rc和检查原件不改，无游戏版本。
+
+
+## 2026-10-11 20:44:05 CST：已授权实现类量化学习的冻结绑定入口
+
+- **core-cycle-implementation-binding-entry**：父请求roy-20261011-silent-core-cycle-quantitative-learning已获Roy实际实现/上线授权；三原提案均pending/无活占用。当前strategy_research_jobs仅注册三个旧pure研究、普通strategy任务无法宿主绑定新task/SHA及同时claim原三ID。仅202201结束后的下一空闲普通工具修复批领取，不改202201活输入；最小适配范围/固定验收见paper/materials/silent/20261011-core-cycle-quantitative-learning/binding-adapter-task.md，SHA e4d01450ba982314400064c3af25176d7e44ab3d3c7eeac2158f18bcf381ed7a。watcher独占quantitative*.ts与交付facts适配，工具适配不填游戏知识、不重开原done综合任务、不造新业务ID/并发或ops prompt。沿既有write/lock/wrapper/完成事件落真实batch+输入回执，实际派出前保持未派发；适配完成后由ops正式派代码学习/校准。具体缺口与职责见同目录ops-ack.json。
+
+- 2026-10-11 20:46:35 CST 上述冻结绑定适配接收不可变补充paper/materials/silent/20261011-core-cycle-quantitative-learning/authorization-upgrade-20261011.md（SHA b998719e1bc75c0b2af67b1fcd862c6bffc4b7707b825e83b58ecf79cd1c1508），原task及9输入不改；以同目录最新ops-ack.json中的watcher六文件职责和随机性验收为边界。原202201已经结束，其874ae603退出夹具源和c519既有push入口交ops合入，不由下一适配批重做；下一批优先只补实现类冻结绑定，实际量化学习另由正式代码批承接，通用框架完成不能关闭父请求。
+
+
+## 2026-10-11 21:24:25 CST：既有宿主补验入口的明确续办
+
+- **host-targeted-check-continuation**（续办既有“框架/测试收尾”，不重复修退出夹具/推送注册）：由主ops交当前204636返回后的下一空闲普通fix-batch，仅基础设施。冻结任务 paper/materials/20261011-2119-ops/host-targeted-check-task.md，SHA 232b3b4e72e1d69c0ae4cbb20ef3794941cb2353e843788cb1825ec43c402bcd；唯一登记notes/host-targeted-check-continuation-request.json。补现有learner-recheck精确batch/source/tree/原日志SHA和已过覆盖绑定、失败/未运行或真正新增受影响项的单worker续验、原件保留及标准learner-checks回执。严禁任意命令逃逸、放宽断言、假称当前沙箱已通过IPC、重复整套已过324文件；不得修改204636活输入或新增调度器。当前只是排队，实际batch=null；需收到正式派发和宿主补验回执才逐层结案。
+- **sandbox-glob-startup-race**：211302策略批thread/start前扫描并行211302-s2工作树临时.aws/.codex路径遭ENOENT，9.3秒退出1、模型token0。原.out/.err/JSONL均保留；这是环境启动失败而非学习或提案缺失。后续由既有基础设施修复链核并行目录创建/移除竞态；不能为修此项放宽沙箱、凭据deny规则或改全局配置，不清旧树。证据paper/materials/20261011-2119-ops/startup-failure.json；原failed/retry及10提案保持，沿原调度器重试。
+
+- 2026-10-11 21:43:06 CST **host-targeted-check-continuation补充既有main夹具证据**：main现有ops/tests/test_silent_calibration_dispatch.py的44例有18失败；candidate与原main的该文件及learner_jobs.py逐字相同，原main单例同样失败（不是这次依赖合入新增回归）。夹具只mock available_worktree=True却未建生产既有guard所需feature路径；下一基础设施批据固定证据修夹具，不放宽生产guard或删main独有cache/A10测试。原件paper/materials/20261011-2131-main-dependencies/dispatch-baseline-proof.json；与已登记唯一notes/host-targeted-check-continuation-request.json关联，不新建批次/调度、不改204636活输入。
+
+- 2026-10-11 22:00:05 CST **silent-0332旧项复现补证（不新建缺陷）**：64VJC5XT2AT2 A10 F47 d354609再次missing successful first-fight resources，6123ms后没有boss模拟配对数字，Codex仍正常完成选牌并继续至F49；非卡死。已有v4队列:959，复盘所称fix-queue.md未列不等实际v4队列缺项。原CLI提案silent-proposal-5aa2672bd7cd1bf4负责冻结触发分支/种子/首战末资源诊断；当前缺触发样本，不填造HP/药水或猜机制。原首证/失败历史保持，沿既有策略链。
+
+- 2026-10-11 22:10:05 CST **sandbox-glob-startup-race（同项正式修复范围）**：补213504经验批同类会话前ENOENT原件；固定任务 `paper/materials/20261011-2144-ops/sandbox-startup-race-task.md`，SHA `42fde5efb682e70c7c54dbd0b5f3179c8096320edac9bfd19229fbf088ea26ef`，请求 `notes/sandbox-startup-race-recovery-request.json`。下一个空闲普通fix-batch领取，214301活批不追加任务/不抢租约。核本项目目录生命周期；仅可证明尚未开始session/model/tool的暂时ENOENT允许最多2次附加启动，原child退出后同输入同租约串行恢复，逐次保存错误/退出与唯一终态。权限/凭据deny/全局配置/其他项目不改；非暂时错误、已开始会话、取消/超时/失租约不得重放。准确上游根因仍待核，排队未修复。

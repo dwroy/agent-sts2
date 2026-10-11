@@ -152,6 +152,10 @@ export function planSelection(env: DecisionEnv): Decision | null {
     .map(asRecord)
     .filter((card) => !bool(card["selected"]))
     .filter((card) => !isUpgrade || !bool(card["upgraded"]));
+  // YQL8RZ8BWN1E F17 T3, silent-0205: show the commitment without choosing the discard for Jev.
+  const discardPlan = state.in_combat && kind === "combat_hand_select" && /弃|discard/i.test(prompt) &&
+    str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && state.run?.ascension === 10
+    ? discardPlanFacts(env, candidates) : null;
 
   if (candidates.length === 0) {
     // Nothing left to pick but the screen still waits for a confirm (VC4LRL945UEF: after two discards
@@ -220,6 +224,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         // A free offer: this turn's cost (the printed one is not paid).
         cost: freeSource ? thisTurnModel(card, index).cost : numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
+        ...(discardPlan ? { removes_planned_continuation: discardPlan.removes(card) } : {}),
       } satisfies JsonValue,
     };
     // DeepSeek's view: the value's parts, and that the ranking is a reference ("120 = 80 + 40 ..."; UNRL F14 read
@@ -275,7 +280,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
 
   const params = {
     label: `selection/${verb}`,
-    instructions: forThisTurn
+    instructions: discardPlan
+      ? "选择要弃掉的牌。参考 discard_plan 的剩余动作和候选对后继的影响；原整条预测以完成后继为条件，所有候选都可选。"
+      : forThisTurn
       ? `Which card should I ${verb}? This card is only for this turn — judge its immediate effect (block against the incoming attack, damage, lethal), not its deck-building rating.`
       : `Which card should I ${verb}?`,
     actThreshold: env.thresholds.act,
@@ -294,6 +301,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         selecting: selectingText(selected, min, max),
         ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}),
         ...pickNotOfferedNote(env, selectionTask(kind, prompt)),
+        ...(discardPlan ? { discard_plan: discardPlan.context } : {}),
         ...(forThisTurn
           ? {
               note: "this card is only for this turn — judge its immediate effect",
@@ -312,7 +320,21 @@ export function planSelection(env: DecisionEnv): Decision | null {
   };
   // BUILD_DECIDER=deepseek: out-of-combat deck picks (upgrade, remove, transform, add, enchant, choose) are
   // DeepSeek's call; in-combat picks stay with code and Jev.
-  if (!deepseekDecides(env) || forThisTurn || isExhaust || onTop) return buildPickDecision(params);
+  if (!deepseekDecides(env) || forThisTurn || isExhaust || onTop || discardPlan) {
+    const decision = buildPickDecision(params);
+    if (discardPlan && decision.kind === "ask") {
+      const resolve = decision.resolve;
+      decision.resolve = (answers) => {
+        const result = resolve(answers);
+        const picked = candidates.find((card) => numOrNull(card["index"]) === result.intent?.option_index);
+        if (result.intent?.action === "select_deck_card" && picked && discardPlan.removes(picked) === true) {
+          result.rationale += "; 此弃牌会移除原计划后继；原整条预测失效，返回战斗后按真实手牌重算";
+        }
+        return result;
+      };
+    }
+    return decision;
+  }
   // DeepSeek's view (V4 M2): each card's facts (what an upgrade changes, copies already in the deck for an add) and
   // our runs' outcome statistics for it; code's order stays the fallback's.
   const copies = new Map<string, number>();
@@ -333,6 +355,43 @@ export function planSelection(env: DecisionEnv): Decision | null {
     }),
     deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: selectingText(selected, min, max), ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}), ...pickNotOfferedNote(env, selectionTask(kind, prompt)) } }) },
   });
+}
+
+/** Match card copies after hand indices shift; spare equivalent copies can still fulfill the commitment. */
+function discardPlanFacts(env: DecisionEnv, cards: Record<string, unknown>[]): {
+  context: JsonValue; removes: (card: Record<string, unknown>) => boolean | null;
+} {
+  const memo = env.screenMemory.pausedCombatPlan ?? env.screenMemory.combatPlan;
+  if (!memo || memo.turn !== env.state.turn) {
+    return { context: { status: "unknown", reason: "没有本回合可核对的已选方案" }, removes: () => null };
+  }
+  const steps = memo.remaining.filter((step) => !step.cardId.startsWith("POTION:"));
+  const matches = (step: (typeof steps)[number], card: Record<string, unknown>) =>
+    step.cardId === str(card["card_id"]) && step.upgraded === bool(card["upgraded"]) &&
+    (step.cost === undefined || step.cost === numOrNull(card["energy_cost"]));
+  const canComplete = (pool: Record<string, unknown>[]) => {
+    const left = [...pool];
+    // Explicit costs match first, so an unspecified-cost step cannot consume their only copy.
+    for (const step of [...steps].sort((a, b) => Number(b.cost !== undefined) - Number(a.cost !== undefined))) {
+      const at = left.findIndex((card) => matches(step, card));
+      if (at < 0) return false;
+      left.splice(at, 1);
+    }
+    return true;
+  };
+  const complete = canComplete(cards);
+  return {
+    context: {
+      status: complete ? "available" : "unknown",
+      remaining: memo.remaining.map((step) => ({
+        card_id: step.cardId, name: step.name, upgraded: step.upgraded, target: step.targetName,
+        text: truncate(str(cards.find((card) => matches(step, card))?.["resolved_rules_text"]), 160),
+      })),
+      original_full_plan_prediction: memo.selectionReference ?? null,
+      basis: "原整条方案的预测，只有完成后继才适用；这是已选方案的事实，不是固定保留规则。移除所需后继牌会使原预测失效，返回战斗后按真实手牌重算。",
+    },
+    removes: (card) => complete ? !canComplete(cards.filter((entry) => entry !== card)) : null,
+  };
 }
 
 /** Tools only: `enabled` off scores a free offer at its printed cost, as before (freeOfferSource). */

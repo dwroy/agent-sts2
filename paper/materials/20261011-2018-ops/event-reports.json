@@ -1,0 +1,1694 @@
+{
+  "20261011-191302-fix-batch": {
+    "report": {
+      "task": "fix-batch",
+      "base": "47096796ba5ee42abf7e85dfa0475684cac36392",
+      "fixes": [
+        {
+          "item": "Roy 已授权新功能：静默 boss 模拟校准",
+          "commit": "95d65c8bf56734735366a466bd5a29c0430231c6",
+          "source_implementation": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+          "model_commit": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+          "test": "固定数据校准、角色隔离、B2/B3消费、切分、Platt、准入阈值及幂等检查通过",
+          "fails_without_fix": false,
+          "actual_code_merge": null,
+          "ledger": [
+            "silent-0416"
+          ]
+        }
+      ],
+      "samples": {
+        "finished_silent_runs": 233,
+        "boss_attempts": 1040,
+        "usable": 419,
+        "won": 305,
+        "died": 114,
+        "new_since_live": 55,
+        "new_since_previous_candidate": 1,
+        "tune": 107,
+        "validation": 312,
+        "successful_validation": 310,
+        "fixed_split_model_and_platt": true
+      },
+      "boss_table": {
+        "columns": [
+          "boss",
+          "验证场数",
+          "不足场数",
+          "B2",
+          "B3"
+        ],
+        "rows": [
+          [
+            "同族",
+            25,
+            0,
+            "可信",
+            "可信"
+          ],
+          [
+            "仪式兽",
+            28,
+            0,
+            "可信",
+            "可信"
+          ],
+          [
+            "乐加维林族母",
+            28,
+            0,
+            "可信",
+            "可信"
+          ],
+          [
+            "灵魂异鱼",
+            23,
+            0,
+            "可信",
+            "可信"
+          ],
+          [
+            "墨影幻灵",
+            30,
+            0,
+            "可信",
+            "可信"
+          ],
+          [
+            "瀑布巨兽",
+            28,
+            0,
+            "可信",
+            "可信"
+          ],
+          [
+            "帝王蟹",
+            31,
+            0,
+            "Brier不达标",
+            "Brier不达标"
+          ],
+          [
+            "知识恶魔",
+            31,
+            0,
+            "打穿比不达标",
+            "打穿比不达标"
+          ],
+          [
+            "女王",
+            20,
+            0,
+            "Brier及胜率偏差不达标",
+            "Brier及胜率偏差不达标"
+          ],
+          [
+            "永世沙漏",
+            21,
+            0,
+            "三项质量指标不达标",
+            "三项质量指标不达标"
+          ],
+          [
+            "实验体",
+            17,
+            0,
+            "三项质量指标不达标",
+            "三项质量指标不达标"
+          ],
+          [
+            "无厌沙虫",
+            28,
+            0,
+            "打穿比不达标",
+            "Brier及打穿比不达标"
+          ]
+        ]
+      },
+      "a10": {
+        "validation_n": 310,
+        "brier_b2_b3": [
+          0.1099,
+          0.1086
+        ],
+        "residual_percentage_points_b2_b3": [
+          5.0,
+          5.4
+        ],
+        "leak_ratio_b2_b3": [
+          1.293,
+          1.303
+        ],
+        "f49": "验证18场，数量足够但质量不达标，保持低可信；未验证连续两场boss通关率",
+        "a9_estimate": "固定模型中TEST_SUBJECT/BIG_POUNCE仍沿用A9估值"
+      },
+      "shortage": {
+        "A0–4": "0场独立验证，还差10场",
+        "A5–9": "0场独立验证，还差10场"
+      },
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 267,
+        "cases": 2689,
+        "initial_sandbox_exit": 1,
+        "recheck": "原唯一失败为120秒超时；原断言、原超时单项复验通过，paths续验11例通过，原日志保留",
+        "python_cases": 12,
+        "dispatch_cases": 8,
+        "gitleaks": 0,
+        "live": null,
+        "external_full": null
+      },
+      "skipped": [
+        {
+          "item": "live合入、合后测试及发布登记",
+          "reason": "发布尝试exit 3：ops/live-merge.lock被其他会话持有。未写live，固定源交原完成事件继续锁内流程。"
+        }
+      ],
+      "merged": null,
+      "release_tree": null,
+      "version": null,
+      "existing_live_version": "S1.boss-calibration11",
+      "candidate_tree": "e9bb00e54df1f95e9be9a81ebb5e6f1e90ac563c",
+      "ledger_status": "proposed；未标shipped",
+      "code_proposals": [],
+      "implementation_domains": [],
+      "refresh_entry": "agent/tools/boss-sim/refresh-silent.py",
+      "cadence": "每小时:13/:43及learner完成事件检查；升阶或新增20次实际boss结局触发",
+      "artifact": "experiments/boss-sim/silent/be23f727fd65213b15fdc816c8badfcb8df25594066b8e9701db7582d76bfa28",
+      "calibration_report": "paper/materials/silent/boss-sim-calibration.md",
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261011-191305-silent-boss-calibration/report.md",
+      "all_commits": [
+        "47096796ba5ee42abf7e85dfa0475684cac36392",
+        "95d65c8bf56734735366a466bd5a29c0430231c6",
+        "5d0b40e58f2fce6016c83c2128a492011bf8e43c"
+      ],
+      "worktree_clean": true
+    },
+    "batch": {
+      "task": "fix-batch",
+      "learner_task": "silent-boss-calibration",
+      "character": "silent",
+      "runs": [],
+      "key": "feature:silent-calibration-54c69205f0f6dd620d890db9",
+      "pid": 2133582,
+      "state": "failed",
+      "reason": "calibration-refresh",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+      "feature_request": "silent-calibration-54c69205f0f6dd620d890db9",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKD",
+      "finished": "2026-10-11 19:44",
+      "rc": 0,
+      "merged": null,
+      "proposal_audit_errors": [],
+      "report": {
+        "task": "fix-batch",
+        "base": "47096796ba5ee42abf7e85dfa0475684cac36392",
+        "fixes": [
+          {
+            "item": "Roy 已授权新功能：静默 boss 模拟校准",
+            "commit": "95d65c8bf56734735366a466bd5a29c0430231c6",
+            "source_implementation": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+            "model_commit": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+            "test": "固定数据校准、角色隔离、B2/B3消费、切分、Platt、准入阈值及幂等检查通过",
+            "fails_without_fix": false,
+            "actual_code_merge": null,
+            "ledger": [
+              "silent-0416"
+            ]
+          }
+        ],
+        "samples": {
+          "finished_silent_runs": 233,
+          "boss_attempts": 1040,
+          "usable": 419,
+          "won": 305,
+          "died": 114,
+          "new_since_live": 55,
+          "new_since_previous_candidate": 1,
+          "tune": 107,
+          "validation": 312,
+          "successful_validation": 310,
+          "fixed_split_model_and_platt": true
+        },
+        "boss_table": {
+          "columns": [
+            "boss",
+            "验证场数",
+            "不足场数",
+            "B2",
+            "B3"
+          ],
+          "rows": [
+            [
+              "同族",
+              25,
+              0,
+              "可信",
+              "可信"
+            ],
+            [
+              "仪式兽",
+              28,
+              0,
+              "可信",
+              "可信"
+            ],
+            [
+              "乐加维林族母",
+              28,
+              0,
+              "可信",
+              "可信"
+            ],
+            [
+              "灵魂异鱼",
+              23,
+              0,
+              "可信",
+              "可信"
+            ],
+            [
+              "墨影幻灵",
+              30,
+              0,
+              "可信",
+              "可信"
+            ],
+            [
+              "瀑布巨兽",
+              28,
+              0,
+              "可信",
+              "可信"
+            ],
+            [
+              "帝王蟹",
+              31,
+              0,
+              "Brier不达标",
+              "Brier不达标"
+            ],
+            [
+              "知识恶魔",
+              31,
+              0,
+              "打穿比不达标",
+              "打穿比不达标"
+            ],
+            [
+              "女王",
+              20,
+              0,
+              "Brier及胜率偏差不达标",
+              "Brier及胜率偏差不达标"
+            ],
+            [
+              "永世沙漏",
+              21,
+              0,
+              "三项质量指标不达标",
+              "三项质量指标不达标"
+            ],
+            [
+              "实验体",
+              17,
+              0,
+              "三项质量指标不达标",
+              "三项质量指标不达标"
+            ],
+            [
+              "无厌沙虫",
+              28,
+              0,
+              "打穿比不达标",
+              "Brier及打穿比不达标"
+            ]
+          ]
+        },
+        "a10": {
+          "validation_n": 310,
+          "brier_b2_b3": [
+            0.1099,
+            0.1086
+          ],
+          "residual_percentage_points_b2_b3": [
+            5.0,
+            5.4
+          ],
+          "leak_ratio_b2_b3": [
+            1.293,
+            1.303
+          ],
+          "f49": "验证18场，数量足够但质量不达标，保持低可信；未验证连续两场boss通关率",
+          "a9_estimate": "固定模型中TEST_SUBJECT/BIG_POUNCE仍沿用A9估值"
+        },
+        "shortage": {
+          "A0–4": "0场独立验证，还差10场",
+          "A5–9": "0场独立验证，还差10场"
+        },
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "files": 267,
+          "cases": 2689,
+          "initial_sandbox_exit": 1,
+          "recheck": "原唯一失败为120秒超时；原断言、原超时单项复验通过，paths续验11例通过，原日志保留",
+          "python_cases": 12,
+          "dispatch_cases": 8,
+          "gitleaks": 0,
+          "live": null,
+          "external_full": null
+        },
+        "skipped": [
+          {
+            "item": "live合入、合后测试及发布登记",
+            "reason": "发布尝试exit 3：ops/live-merge.lock被其他会话持有。未写live，固定源交原完成事件继续锁内流程。"
+          }
+        ],
+        "merged": null,
+        "release_tree": null,
+        "version": null,
+        "existing_live_version": "S1.boss-calibration11",
+        "candidate_tree": "e9bb00e54df1f95e9be9a81ebb5e6f1e90ac563c",
+        "ledger_status": "proposed；未标shipped",
+        "code_proposals": [],
+        "implementation_domains": [],
+        "refresh_entry": "agent/tools/boss-sim/refresh-silent.py",
+        "cadence": "每小时:13/:43及learner完成事件检查；升阶或新增20次实际boss结局触发",
+        "artifact": "experiments/boss-sim/silent/be23f727fd65213b15fdc816c8badfcb8df25594066b8e9701db7582d76bfa28",
+        "calibration_report": "paper/materials/silent/boss-sim-calibration.md",
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261011-191305-silent-boss-calibration/report.md",
+        "all_commits": [
+          "47096796ba5ee42abf7e85dfa0475684cac36392",
+          "95d65c8bf56734735366a466bd5a29c0430231c6",
+          "5d0b40e58f2fce6016c83c2128a492011bf8e43c"
+        ],
+        "worktree_clean": true
+      },
+      "retry_at": 1791722644.523444
+    },
+    "out_sha256": "f6328bc1828f30f76ea4ff4c2f27a74b14af50893bebe2418d8457ea368bf02a"
+  },
+  "20261011-191302-strategy-proposal": {
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261011-191302-strategy-proposal",
+      "base": "6b372ea2ac453965aa240c8c1bda1a1fb998cc8d",
+      "runs": [
+        "VLZ6CCT8AQ0A",
+        "8JRE1C4H4Z2W",
+        "CA5KE8GFJ9X2",
+        "5PM6JAQG6FNQ",
+        "61E2QS63Y9WU",
+        "DUZUBAJ3A8GP"
+      ],
+      "fixes": [
+        {
+          "id": "silent-apotheosis-observed-upgrade-pairs",
+          "commit": "6e233ede76e5dd849f0d40760be64e7cdacf78b1",
+          "source_parent": "6b372ea2ac453965aa240c8c1bda1a1fb998cc8d",
+          "ledger": [
+            "silent-0237",
+            "silent-0238"
+          ]
+        }
+      ],
+      "skipped": [],
+      "merged": null,
+      "version": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 0
+      },
+      "test_details": {
+        "sandbox_initial_exit": 1,
+        "sandbox_initial_timeout": 1,
+        "sandbox_retry_exit": 0,
+        "unique_sandbox_cases": 2721,
+        "focused_cases": 45,
+        "focused_removed_source_failed": 22,
+        "focused_restored_exit": 0,
+        "full_host_suite": null
+      },
+      "code_proposals": [
+        "silent-proposal-89354805ee4d7e77",
+        "silent-proposal-f2bfceddb1898dca",
+        "silent-proposal-283a164780d11e69",
+        "silent-proposal-ebbfe3b97548756d",
+        "silent-proposal-e5b87be50f28f311",
+        "silent-proposal-49632bc4878fb597",
+        "silent-proposal-66532328a585941f",
+        "silent-proposal-43a76a31ba7bdcfa",
+        "silent-proposal-5264153a4a4b0e5c",
+        "silent-proposal-bddfa690a84e03d0"
+      ],
+      "implementation_domains": [
+        "combat"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-89354805ee4d7e77",
+          "state": "waiting",
+          "reason": "六项升级覆盖已提交但合入受11个记录冲突阻塞；父项完整执行审计尚未完成，未知升级与属性组合继续保留未知。"
+        },
+        {
+          "id": "silent-proposal-f2bfceddb1898dca",
+          "state": "waiting",
+          "reason": "缺覆盖一致、固定随机输入下的同盘同总预算实验、样本收益曲线及排名稳定性数据。"
+        },
+        {
+          "id": "silent-proposal-283a164780d11e69",
+          "state": "waiting",
+          "reason": "共享本批升级源码尚非live祖先，且完整执行审计未完成，不能登记整项duplicate。"
+        },
+        {
+          "id": "silent-proposal-ebbfe3b97548756d",
+          "state": "waiting",
+          "reason": "十五主题的逐源贡献、状态期限、逐实体及实际资源链仍缺完整联合生产验收；六项升级只完成子范围。"
+        },
+        {
+          "id": "silent-proposal-e5b87be50f28f311",
+          "state": "waiting",
+          "reason": "实际派发、重规划、能力建立及结算的机器关联尚未实现；两份预测审计源码仍非live祖先。这是工程缺口，纯审计无需等待获胜反事实。"
+        },
+        {
+          "id": "silent-proposal-49632bc4878fb597",
+          "state": "waiting",
+          "reason": "来源F13无正敏捷配对样本；属性、逐击、虚弱和独立成长的联合调用未验收，未发现支持新公式的失配。"
+        },
+        {
+          "id": "silent-proposal-66532328a585941f",
+          "state": "waiting",
+          "reason": "缺同入口、完整抽序下不同启动顺序或构筑的整场对照及收益函数；实际执行分账未完整接线。"
+        },
+        {
+          "id": "silent-proposal-43a76a31ba7bdcfa",
+          "state": "waiting",
+          "reason": "缺同入口资源、构筑和完整抽序的另一SL线路对照；负属性与毒的联合生产调用未验收。"
+        },
+        {
+          "id": "silent-proposal-5264153a4a4b0e5c",
+          "state": "waiting",
+          "reason": "召唤、航行、逐实体成长和索引重排缺联合生产验收；另一目标序没有后继实打，不能证明排序收益。"
+        },
+        {
+          "id": "silent-proposal-bddfa690a84e03d0",
+          "state": "waiting",
+          "reason": "缺甲虫提前唤醒、眩晕接续配对帧及同抽序完整另线对照；自然醒和四次失败不足覆盖全部分支或拟合血价。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-191302/learner/runs/20261011-191318-strategy-proposal/report.md"
+    },
+    "batch": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "runs": [
+        "VLZ6CCT8AQ0A",
+        "8JRE1C4H4Z2W",
+        "CA5KE8GFJ9X2",
+        "5PM6JAQG6FNQ",
+        "61E2QS63Y9WU",
+        "DUZUBAJ3A8GP"
+      ],
+      "key": "code-proposals:silent-proposal-89354805ee4d7e77,silent-proposal-f2bfceddb1898dca,silent-proposal-283a164780d11e69,silent-proposal-ebbfe3b97548756d,silent-proposal-e5b87be50f28f311,silent-proposal-49632bc4878fb597,silent-proposal-66532328a585941f,silent-proposal-43a76a31ba7bdcfa,silent-proposal-5264153a4a4b0e5c,silent-proposal-bddfa690a84e03d0:233",
+      "pid": 2133179,
+      "state": "failed",
+      "reason": "proposal",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-191302",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKB",
+      "proposal_ids": [
+        "silent-proposal-89354805ee4d7e77",
+        "silent-proposal-f2bfceddb1898dca",
+        "silent-proposal-283a164780d11e69",
+        "silent-proposal-ebbfe3b97548756d",
+        "silent-proposal-e5b87be50f28f311",
+        "silent-proposal-49632bc4878fb597",
+        "silent-proposal-66532328a585941f",
+        "silent-proposal-43a76a31ba7bdcfa",
+        "silent-proposal-5264153a4a4b0e5c",
+        "silent-proposal-bddfa690a84e03d0"
+      ],
+      "finished": "2026-10-11 19:52",
+      "rc": 0,
+      "merged": null,
+      "proposal_audit_errors": [],
+      "report": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "batch": "20261011-191302-strategy-proposal",
+        "base": "6b372ea2ac453965aa240c8c1bda1a1fb998cc8d",
+        "runs": [
+          "VLZ6CCT8AQ0A",
+          "8JRE1C4H4Z2W",
+          "CA5KE8GFJ9X2",
+          "5PM6JAQG6FNQ",
+          "61E2QS63Y9WU",
+          "DUZUBAJ3A8GP"
+        ],
+        "fixes": [
+          {
+            "id": "silent-apotheosis-observed-upgrade-pairs",
+            "commit": "6e233ede76e5dd849f0d40760be64e7cdacf78b1",
+            "source_parent": "6b372ea2ac453965aa240c8c1bda1a1fb998cc8d",
+            "ledger": [
+              "silent-0237",
+              "silent-0238"
+            ]
+          }
+        ],
+        "skipped": [],
+        "merged": null,
+        "version": null,
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 0
+        },
+        "test_details": {
+          "sandbox_initial_exit": 1,
+          "sandbox_initial_timeout": 1,
+          "sandbox_retry_exit": 0,
+          "unique_sandbox_cases": 2721,
+          "focused_cases": 45,
+          "focused_removed_source_failed": 22,
+          "focused_restored_exit": 0,
+          "full_host_suite": null
+        },
+        "code_proposals": [
+          "silent-proposal-89354805ee4d7e77",
+          "silent-proposal-f2bfceddb1898dca",
+          "silent-proposal-283a164780d11e69",
+          "silent-proposal-ebbfe3b97548756d",
+          "silent-proposal-e5b87be50f28f311",
+          "silent-proposal-49632bc4878fb597",
+          "silent-proposal-66532328a585941f",
+          "silent-proposal-43a76a31ba7bdcfa",
+          "silent-proposal-5264153a4a4b0e5c",
+          "silent-proposal-bddfa690a84e03d0"
+        ],
+        "implementation_domains": [
+          "combat"
+        ],
+        "proposal_results": [
+          {
+            "id": "silent-proposal-89354805ee4d7e77",
+            "state": "waiting",
+            "reason": "六项升级覆盖已提交但合入受11个记录冲突阻塞；父项完整执行审计尚未完成，未知升级与属性组合继续保留未知。"
+          },
+          {
+            "id": "silent-proposal-f2bfceddb1898dca",
+            "state": "waiting",
+            "reason": "缺覆盖一致、固定随机输入下的同盘同总预算实验、样本收益曲线及排名稳定性数据。"
+          },
+          {
+            "id": "silent-proposal-283a164780d11e69",
+            "state": "waiting",
+            "reason": "共享本批升级源码尚非live祖先，且完整执行审计未完成，不能登记整项duplicate。"
+          },
+          {
+            "id": "silent-proposal-ebbfe3b97548756d",
+            "state": "waiting",
+            "reason": "十五主题的逐源贡献、状态期限、逐实体及实际资源链仍缺完整联合生产验收；六项升级只完成子范围。"
+          },
+          {
+            "id": "silent-proposal-e5b87be50f28f311",
+            "state": "waiting",
+            "reason": "实际派发、重规划、能力建立及结算的机器关联尚未实现；两份预测审计源码仍非live祖先。这是工程缺口，纯审计无需等待获胜反事实。"
+          },
+          {
+            "id": "silent-proposal-49632bc4878fb597",
+            "state": "waiting",
+            "reason": "来源F13无正敏捷配对样本；属性、逐击、虚弱和独立成长的联合调用未验收，未发现支持新公式的失配。"
+          },
+          {
+            "id": "silent-proposal-66532328a585941f",
+            "state": "waiting",
+            "reason": "缺同入口、完整抽序下不同启动顺序或构筑的整场对照及收益函数；实际执行分账未完整接线。"
+          },
+          {
+            "id": "silent-proposal-43a76a31ba7bdcfa",
+            "state": "waiting",
+            "reason": "缺同入口资源、构筑和完整抽序的另一SL线路对照；负属性与毒的联合生产调用未验收。"
+          },
+          {
+            "id": "silent-proposal-5264153a4a4b0e5c",
+            "state": "waiting",
+            "reason": "召唤、航行、逐实体成长和索引重排缺联合生产验收；另一目标序没有后继实打，不能证明排序收益。"
+          },
+          {
+            "id": "silent-proposal-bddfa690a84e03d0",
+            "state": "waiting",
+            "reason": "缺甲虫提前唤醒、眩晕接续配对帧及同抽序完整另线对照；自然醒和四次失败不足覆盖全部分支或拟合血价。"
+          }
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-191302/learner/runs/20261011-191318-strategy-proposal/report.md"
+      },
+      "retry_at": 1791723127.6273272
+    },
+    "out_sha256": "9c62bb744005df90ff593a66a59ae86cd4719d24b51fedfae2c465b1b7c08c4c"
+  },
+  "20261011-181302-fix-batch": {
+    "report": {
+      "task": "fix-batch",
+      "base": "66964afda7f9dbbd71ce573c6aba81e900d0e102",
+      "fixes": [
+        {
+          "item": "ascension-up把请求目标误报成实际进阶",
+          "commit": "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+          "test": "agent/tests/ascension-observed.test.ts",
+          "fails_without_fix": true
+        },
+        {
+          "item": "codex-usage-credit-baseline-recovery（复用原提交）",
+          "commit": "e5e2995d659d15af79ec8bba67a4a25c1cb7295f",
+          "test": "agent/tests/codex-usage-recovery.test.ts",
+          "fails_without_fix": true,
+          "reused": true
+        }
+      ],
+      "skipped": [
+        {
+          "item": "已登记独立提案的机制、策略和结构项",
+          "reason": "策略类；沿原strategy-proposal链，逐项见报告及skipped.json"
+        },
+        {
+          "item": "架构、归因、B4/B5及缓存性能实验",
+          "reason": "太大；属于独立功能或实验任务"
+        },
+        {
+          "item": "silent-0332双boss接续资源契约异常",
+          "reason": "证据不足，缺触发样本及首战末帧"
+        },
+        {
+          "item": "core-build-notify-222802-rc2历史通知恢复",
+          "reason": "证据不足，原失败无stderr，无法确认未发送"
+        },
+        {
+          "item": "mod选牌屏等短暂请求超时",
+          "reason": "证据不足，根因未定位"
+        }
+      ],
+      "merged": "935fda33e94cce92877c4c17cd8b73fff4a99fad",
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 271,
+        "cases": 2733
+      },
+      "source_tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 267,
+        "cases": 2702
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-181302/learner/runs/20261011-181316-fix-batch/report.md"
+    },
+    "batch": {
+      "task": "fix-batch",
+      "character": "silent",
+      "runs": [],
+      "key": "1c7391f23cd471af6b491e29dc5f62e69f087adc193e7641a098bd6be0e859d0",
+      "pid": 1982221,
+      "state": "done",
+      "reason": "tick",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-181302",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pK4",
+      "finished": "2026-10-11 19:53",
+      "rc": 0,
+      "merged": "935fda33e94cce92877c4c17cd8b73fff4a99fad",
+      "proposal_audit_errors": [],
+      "report": {
+        "task": "fix-batch",
+        "base": "66964afda7f9dbbd71ce573c6aba81e900d0e102",
+        "fixes": [
+          {
+            "item": "ascension-up把请求目标误报成实际进阶",
+            "commit": "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+            "test": "agent/tests/ascension-observed.test.ts",
+            "fails_without_fix": true
+          },
+          {
+            "item": "codex-usage-credit-baseline-recovery（复用原提交）",
+            "commit": "e5e2995d659d15af79ec8bba67a4a25c1cb7295f",
+            "test": "agent/tests/codex-usage-recovery.test.ts",
+            "fails_without_fix": true,
+            "reused": true
+          }
+        ],
+        "skipped": [
+          {
+            "item": "已登记独立提案的机制、策略和结构项",
+            "reason": "策略类；沿原strategy-proposal链，逐项见报告及skipped.json"
+          },
+          {
+            "item": "架构、归因、B4/B5及缓存性能实验",
+            "reason": "太大；属于独立功能或实验任务"
+          },
+          {
+            "item": "silent-0332双boss接续资源契约异常",
+            "reason": "证据不足，缺触发样本及首战末帧"
+          },
+          {
+            "item": "core-build-notify-222802-rc2历史通知恢复",
+            "reason": "证据不足，原失败无stderr，无法确认未发送"
+          },
+          {
+            "item": "mod选牌屏等短暂请求超时",
+            "reason": "证据不足，根因未定位"
+          }
+        ],
+        "merged": "935fda33e94cce92877c4c17cd8b73fff4a99fad",
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "files": 271,
+          "cases": 2733
+        },
+        "source_tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "files": 267,
+          "cases": 2702
+        },
+        "code_proposals": [],
+        "implementation_domains": [],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-181302/learner/runs/20261011-181316-fix-batch/report.md"
+      },
+      "checks_pending": false,
+      "fallback_checks": [
+        {
+          "rc": 1,
+          "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261011-181302-fix-batch.fallback-25b09e499152d7085c5d3e932517156ef5d0d53c.checks.log",
+          "merged": "4425ef1aeda69697bf4741c8d338f3b95586668f",
+          "tree": "25b09e499152d7085c5d3e932517156ef5d0d53c",
+          "commits": [
+            "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+            "e5e2995d659d15af79ec8bba67a4a25c1cb7295f",
+            "935fda33e94cce92877c4c17cd8b73fff4a99fad"
+          ]
+        }
+      ],
+      "checks": {
+        "rc": 1,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261011-181302-fix-batch.fallback-25b09e499152d7085c5d3e932517156ef5d0d53c.checks.log",
+        "merged": "4425ef1aeda69697bf4741c8d338f3b95586668f",
+        "tree": "25b09e499152d7085c5d3e932517156ef5d0d53c",
+        "commits": [
+          "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+          "e5e2995d659d15af79ec8bba67a4a25c1cb7295f",
+          "935fda33e94cce92877c4c17cd8b73fff4a99fad"
+        ]
+      }
+    },
+    "out_sha256": "cfcc2470403975f7423ef71579beaa07a83f592dbe838c96306466f954e5d521"
+  },
+  "20261011-194302": {
+    "report": {
+      "task": "postmortem",
+      "appended": [
+        "E6DSUVTNVBMH"
+      ],
+      "skipped": [],
+      "bugs": [],
+      "ledger": {
+        "added": [],
+        "updated": [
+          "silent-0125",
+          "silent-0064",
+          "silent-0062",
+          "silent-0386",
+          "silent-0065",
+          "silent-0011",
+          "silent-0016",
+          "silent-0115",
+          "silent-0200",
+          "silent-0253",
+          "silent-0384",
+          "silent-0030",
+          "silent-0010"
+        ],
+        "repeats": [],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-bd5bedb810b52320"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion",
+        "sl",
+        "terminal"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261011-194302-postmortem/report.md"
+    },
+    "batch": {
+      "runs": [
+        "E6DSUVTNVBMH"
+      ],
+      "pid": 2201341,
+      "started": "2026-10-11 19:43",
+      "state": "done",
+      "reason": "tick",
+      "character": "silent",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKE",
+      "rc": 0,
+      "finished": "2026-10-11 20:01",
+      "done": [
+        "E6DSUVTNVBMH"
+      ],
+      "missing": [],
+      "proposal_audit_errors": []
+    },
+    "out_sha256": "2ccca1c80849813e05b2cdb6cdfefee43f4ad218e5c5788c7c3c622c5b85a1b3"
+  },
+  "20261011-194302-strategy-proposal": {
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261011-194302-strategy-proposal",
+      "base": "aa52645d6d7daefaccff1a86a73d5f083b724e85",
+      "runs": [
+        "DUZUBAJ3A8GP",
+        "5PM6JAQG6FNQ",
+        "CA5KE8GFJ9X2",
+        "8JRE1C4H4Z2W",
+        "YF0LXT1QSTGG",
+        "XP2SL33HT0D9"
+      ],
+      "fixes": [],
+      "skipped": [
+        "silent-proposal-c20b5139dd0dff71",
+        "silent-proposal-ae9e692d680e3819",
+        "silent-proposal-52f1e1bd2e7db0ed",
+        "silent-proposal-6dd8bbff876be528",
+        "silent-proposal-578e415a259e6835",
+        "silent-proposal-c0767768bf6a7ab1",
+        "silent-proposal-a46bdb7fe711d79a",
+        "silent-proposal-1044224808015e5c",
+        "silent-proposal-7cbc6005db712ba9"
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [
+        "silent-proposal-c20b5139dd0dff71",
+        "silent-proposal-ae9e692d680e3819",
+        "silent-proposal-246daedaa3021847",
+        "silent-proposal-52f1e1bd2e7db0ed",
+        "silent-proposal-6dd8bbff876be528",
+        "silent-proposal-578e415a259e6835",
+        "silent-proposal-c0767768bf6a7ab1",
+        "silent-proposal-a46bdb7fe711d79a",
+        "silent-proposal-1044224808015e5c",
+        "silent-proposal-7cbc6005db712ba9"
+      ],
+      "implementation_domains": [],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-c20b5139dd0dff71",
+          "state": "waiting",
+          "reason": "缺重复脉动边界及固定A10移动表下毒/挡收益与污染逐击血价的联合验收；新增两局没有棱柱。"
+        },
+        {
+          "id": "silent-proposal-ae9e692d680e3819",
+          "state": "waiting",
+          "reason": "缺遗忘死亡返敏、多来源抢夺与临时属性混合返还的隔离帧；新增两局没有失落/遗忘。"
+        },
+        {
+          "id": "silent-proposal-246daedaa3021847",
+          "state": "duplicate",
+          "reason": "并行集成已将既有园丁源码合入live；已核真实祖先、消费状态与journal恢复接线、静默A10园丁后轮恢复及原固定夹具保持。本批不重复实现，按既有源码去重关闭。",
+          "commit": "d5c8f4d13a1fd6dcede221c47ca1760b82f52c87"
+        },
+        {
+          "id": "silent-proposal-52f1e1bd2e7db0ed",
+          "state": "waiting",
+          "reason": "新增两局复现加压/覆甲序列，但缺覆甲减层条件隔离和固定A10移动表下加压、虚弱、覆甲联合调用验收。"
+        },
+        {
+          "id": "silent-proposal-6dd8bbff876be528",
+          "state": "waiting",
+          "reason": "缺FABRICATE_MOVE生成/首轮成长时序隔离帧及实际调用固定验收；新增两局无电击，现有通用成长接线不能证明全项完成。"
+        },
+        {
+          "id": "silent-proposal-578e415a259e6835",
+          "state": "waiting",
+          "reason": "预测审计候选尚非live祖先，完整派发/重规划/能力结算审计仍待实现及联合验收；缺同资源完整后继支撑调整血价权重。"
+        },
+        {
+          "id": "silent-proposal-c0767768bf6a7ab1",
+          "state": "waiting",
+          "reason": "5604982e13890e0e2bc8bf8246272e8267321c0b预测资源审计未合live；覆盖重放和弃牌后实际执行尚未联合验收，缺本局同资源胜线支持改探索规则。"
+        },
+        {
+          "id": "silent-proposal-a46bdb7fe711d79a",
+          "state": "waiting",
+          "reason": "live阶段参考只覆盖子项；持有→建立→阶段切换→结算→派发联合审计未齐。新增两局未到实验体，无法补全另一阶段/构筑反事实。"
+        },
+        {
+          "id": "silent-proposal-1044224808015e5c",
+          "state": "waiting",
+          "reason": "E6提供同指纹局部反例但无胜局；仍缺XP2同资源完整抽序替线、成长后继及独立整战策略验证，不能启用固定低损血优先规则。"
+        },
+        {
+          "id": "silent-proposal-7cbc6005db712ba9",
+          "state": "waiting",
+          "reason": "已有公式/范围参考不足以标整项duplicate；缺额外触发来源隔离以及条件参考、抽弃重规划到实际兑现的联合验收。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-194302/learner/runs/20261011-194322-strategy-proposal/report.md"
+    },
+    "batch": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "runs": [
+        "DUZUBAJ3A8GP",
+        "5PM6JAQG6FNQ",
+        "CA5KE8GFJ9X2",
+        "8JRE1C4H4Z2W",
+        "YF0LXT1QSTGG",
+        "XP2SL33HT0D9"
+      ],
+      "key": "code-proposals:silent-proposal-c20b5139dd0dff71,silent-proposal-ae9e692d680e3819,silent-proposal-246daedaa3021847,silent-proposal-52f1e1bd2e7db0ed,silent-proposal-6dd8bbff876be528,silent-proposal-578e415a259e6835,silent-proposal-c0767768bf6a7ab1,silent-proposal-a46bdb7fe711d79a,silent-proposal-1044224808015e5c,silent-proposal-7cbc6005db712ba9:234",
+      "pid": 2201863,
+      "state": "done",
+      "reason": "proposal",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-194302",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKG",
+      "proposal_ids": [
+        "silent-proposal-c20b5139dd0dff71",
+        "silent-proposal-ae9e692d680e3819",
+        "silent-proposal-246daedaa3021847",
+        "silent-proposal-52f1e1bd2e7db0ed",
+        "silent-proposal-6dd8bbff876be528",
+        "silent-proposal-578e415a259e6835",
+        "silent-proposal-c0767768bf6a7ab1",
+        "silent-proposal-a46bdb7fe711d79a",
+        "silent-proposal-1044224808015e5c",
+        "silent-proposal-7cbc6005db712ba9"
+      ],
+      "finished": "2026-10-11 20:02",
+      "rc": 0,
+      "merged": null,
+      "proposal_audit_errors": [],
+      "report": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "batch": "20261011-194302-strategy-proposal",
+        "base": "aa52645d6d7daefaccff1a86a73d5f083b724e85",
+        "runs": [
+          "DUZUBAJ3A8GP",
+          "5PM6JAQG6FNQ",
+          "CA5KE8GFJ9X2",
+          "8JRE1C4H4Z2W",
+          "YF0LXT1QSTGG",
+          "XP2SL33HT0D9"
+        ],
+        "fixes": [],
+        "skipped": [
+          "silent-proposal-c20b5139dd0dff71",
+          "silent-proposal-ae9e692d680e3819",
+          "silent-proposal-52f1e1bd2e7db0ed",
+          "silent-proposal-6dd8bbff876be528",
+          "silent-proposal-578e415a259e6835",
+          "silent-proposal-c0767768bf6a7ab1",
+          "silent-proposal-a46bdb7fe711d79a",
+          "silent-proposal-1044224808015e5c",
+          "silent-proposal-7cbc6005db712ba9"
+        ],
+        "merged": null,
+        "tests": {
+          "tsc": null,
+          "vitest": null,
+          "cases": null
+        },
+        "code_proposals": [
+          "silent-proposal-c20b5139dd0dff71",
+          "silent-proposal-ae9e692d680e3819",
+          "silent-proposal-246daedaa3021847",
+          "silent-proposal-52f1e1bd2e7db0ed",
+          "silent-proposal-6dd8bbff876be528",
+          "silent-proposal-578e415a259e6835",
+          "silent-proposal-c0767768bf6a7ab1",
+          "silent-proposal-a46bdb7fe711d79a",
+          "silent-proposal-1044224808015e5c",
+          "silent-proposal-7cbc6005db712ba9"
+        ],
+        "implementation_domains": [],
+        "proposal_results": [
+          {
+            "id": "silent-proposal-c20b5139dd0dff71",
+            "state": "waiting",
+            "reason": "缺重复脉动边界及固定A10移动表下毒/挡收益与污染逐击血价的联合验收；新增两局没有棱柱。"
+          },
+          {
+            "id": "silent-proposal-ae9e692d680e3819",
+            "state": "waiting",
+            "reason": "缺遗忘死亡返敏、多来源抢夺与临时属性混合返还的隔离帧；新增两局没有失落/遗忘。"
+          },
+          {
+            "id": "silent-proposal-246daedaa3021847",
+            "state": "duplicate",
+            "reason": "并行集成已将既有园丁源码合入live；已核真实祖先、消费状态与journal恢复接线、静默A10园丁后轮恢复及原固定夹具保持。本批不重复实现，按既有源码去重关闭。",
+            "commit": "d5c8f4d13a1fd6dcede221c47ca1760b82f52c87"
+          },
+          {
+            "id": "silent-proposal-52f1e1bd2e7db0ed",
+            "state": "waiting",
+            "reason": "新增两局复现加压/覆甲序列，但缺覆甲减层条件隔离和固定A10移动表下加压、虚弱、覆甲联合调用验收。"
+          },
+          {
+            "id": "silent-proposal-6dd8bbff876be528",
+            "state": "waiting",
+            "reason": "缺FABRICATE_MOVE生成/首轮成长时序隔离帧及实际调用固定验收；新增两局无电击，现有通用成长接线不能证明全项完成。"
+          },
+          {
+            "id": "silent-proposal-578e415a259e6835",
+            "state": "waiting",
+            "reason": "预测审计候选尚非live祖先，完整派发/重规划/能力结算审计仍待实现及联合验收；缺同资源完整后继支撑调整血价权重。"
+          },
+          {
+            "id": "silent-proposal-c0767768bf6a7ab1",
+            "state": "waiting",
+            "reason": "5604982e13890e0e2bc8bf8246272e8267321c0b预测资源审计未合live；覆盖重放和弃牌后实际执行尚未联合验收，缺本局同资源胜线支持改探索规则。"
+          },
+          {
+            "id": "silent-proposal-a46bdb7fe711d79a",
+            "state": "waiting",
+            "reason": "live阶段参考只覆盖子项；持有→建立→阶段切换→结算→派发联合审计未齐。新增两局未到实验体，无法补全另一阶段/构筑反事实。"
+          },
+          {
+            "id": "silent-proposal-1044224808015e5c",
+            "state": "waiting",
+            "reason": "E6提供同指纹局部反例但无胜局；仍缺XP2同资源完整抽序替线、成长后继及独立整战策略验证，不能启用固定低损血优先规则。"
+          },
+          {
+            "id": "silent-proposal-7cbc6005db712ba9",
+            "state": "waiting",
+            "reason": "已有公式/范围参考不足以标整项duplicate；缺额外触发来源隔离以及条件参考、抽弃重规划到实际兑现的联合验收。"
+          }
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-194302/learner/runs/20261011-194322-strategy-proposal/report.md"
+      },
+      "no_change_proposals": {
+        "base": "aa52645d6d7daefaccff1a86a73d5f083b724e85",
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-194302/learner/runs/20261011-194322-strategy-proposal/report.md",
+        "dispositions": [
+          {
+            "id": "silent-proposal-c20b5139dd0dff71",
+            "state": "waiting",
+            "reason": "缺重复脉动边界及固定A10移动表下毒/挡收益与污染逐击血价的联合验收；新增两局没有棱柱。"
+          },
+          {
+            "id": "silent-proposal-ae9e692d680e3819",
+            "state": "waiting",
+            "reason": "缺遗忘死亡返敏、多来源抢夺与临时属性混合返还的隔离帧；新增两局没有失落/遗忘。"
+          },
+          {
+            "id": "silent-proposal-246daedaa3021847",
+            "state": "duplicate",
+            "reason": "并行集成已将既有园丁源码合入live；已核真实祖先、消费状态与journal恢复接线、静默A10园丁后轮恢复及原固定夹具保持。本批不重复实现，按既有源码去重关闭。",
+            "commit": "d5c8f4d13a1fd6dcede221c47ca1760b82f52c87"
+          },
+          {
+            "id": "silent-proposal-52f1e1bd2e7db0ed",
+            "state": "waiting",
+            "reason": "新增两局复现加压/覆甲序列，但缺覆甲减层条件隔离和固定A10移动表下加压、虚弱、覆甲联合调用验收。"
+          },
+          {
+            "id": "silent-proposal-6dd8bbff876be528",
+            "state": "waiting",
+            "reason": "缺FABRICATE_MOVE生成/首轮成长时序隔离帧及实际调用固定验收；新增两局无电击，现有通用成长接线不能证明全项完成。"
+          },
+          {
+            "id": "silent-proposal-578e415a259e6835",
+            "state": "waiting",
+            "reason": "预测审计候选尚非live祖先，完整派发/重规划/能力结算审计仍待实现及联合验收；缺同资源完整后继支撑调整血价权重。"
+          },
+          {
+            "id": "silent-proposal-c0767768bf6a7ab1",
+            "state": "waiting",
+            "reason": "5604982e13890e0e2bc8bf8246272e8267321c0b预测资源审计未合live；覆盖重放和弃牌后实际执行尚未联合验收，缺本局同资源胜线支持改探索规则。"
+          },
+          {
+            "id": "silent-proposal-a46bdb7fe711d79a",
+            "state": "waiting",
+            "reason": "live阶段参考只覆盖子项；持有→建立→阶段切换→结算→派发联合审计未齐。新增两局未到实验体，无法补全另一阶段/构筑反事实。"
+          },
+          {
+            "id": "silent-proposal-1044224808015e5c",
+            "state": "waiting",
+            "reason": "E6提供同指纹局部反例但无胜局；仍缺XP2同资源完整抽序替线、成长后继及独立整战策略验证，不能启用固定低损血优先规则。"
+          },
+          {
+            "id": "silent-proposal-7cbc6005db712ba9",
+            "state": "waiting",
+            "reason": "已有公式/范围参考不足以标整项duplicate；缺额外触发来源隔离以及条件参考、抽弃重规划到实际兑现的联合验收。"
+          }
+        ]
+      }
+    },
+    "out_sha256": "fde8a6fbbf3103d543367bd5aaba149c0f8fe9d56d5e79b7c134fe8c13977712"
+  },
+  "20261011-200112-strategy-proposal": {
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261011-200112-strategy-proposal",
+      "base": "014d4263aef1e2ed330591557b183a26a0790b43",
+      "runs": [
+        "VLZ6CCT8AQ0A",
+        "8JRE1C4H4Z2W",
+        "CA5KE8GFJ9X2",
+        "5PM6JAQG6FNQ",
+        "61E2QS63Y9WU",
+        "DUZUBAJ3A8GP"
+      ],
+      "fixes": [],
+      "skipped": [],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [
+        "silent-proposal-89354805ee4d7e77",
+        "silent-proposal-f2bfceddb1898dca",
+        "silent-proposal-283a164780d11e69",
+        "silent-proposal-ebbfe3b97548756d",
+        "silent-proposal-e5b87be50f28f311",
+        "silent-proposal-49632bc4878fb597",
+        "silent-proposal-66532328a585941f",
+        "silent-proposal-43a76a31ba7bdcfa",
+        "silent-proposal-5264153a4a4b0e5c",
+        "silent-proposal-bddfa690a84e03d0"
+      ],
+      "implementation_domains": [],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-89354805ee4d7e77",
+          "state": "waiting",
+          "reason": "六项升级源码6e233ede76e5dd849f0d40760be64e7cdacf78b1已存在但仍非live祖先；对固定live单独预检已可合。本批main基线有15个记录冲突，按任务停止合入；父项实际执行覆盖审计尚未闭环，未知升级/属性组合缺配对输入。"
+        },
+        {
+          "id": "silent-proposal-f2bfceddb1898dca",
+          "state": "waiting",
+          "reason": "缺模型覆盖一致、固定随机输入下的同盘同总预算实验、样本收益曲线和候选排名稳定性；707ms及单局失败不能支持改预算、留药价格或目标规则。"
+        },
+        {
+          "id": "silent-proposal-283a164780d11e69",
+          "state": "waiting",
+          "reason": "与89354805ee4d7e77共用六项升级源码6e233ede76e5dd849f0d40760be64e7cdacf78b1，尚未进入live；实际执行覆盖审计也未闭环，不能凭同源经验标整项duplicate。"
+        },
+        {
+          "id": "silent-proposal-ebbfe3b97548756d",
+          "state": "waiting",
+          "reason": "十五主题仍缺逐源贡献、状态期限、逐实体及实际资源链的完整联合生产验收；六项神化扩展只补子范围且未上线，未选focus/休息也无同盘对照，不据此改权重。"
+        },
+        {
+          "id": "silent-proposal-e5b87be50f28f311",
+          "state": "waiting",
+          "reason": "两份预测审计源码仍非live祖先，首次实际派发、重规划、能力建立和结算的机器关联尚缺实现及固定生产验收；本批基线冲突阻止继续合入。这是工程缺口，纯审计无需等待获胜反事实。"
+        },
+        {
+          "id": "silent-proposal-49632bc4878fb597",
+          "state": "waiting",
+          "reason": "F13无正敏捷配对样本，尚未核出支持新公式的新增失配；力量、逐击、虚弱、独立成长和敏捷的完整联合生产调用未验收。"
+        },
+        {
+          "id": "silent-proposal-66532328a585941f",
+          "state": "waiting",
+          "reason": "持有/计划/实际执行分账未完整接线；调整启动或构筑权重另缺同入口、完整抽序的整场对照和可复现收益函数，空打1能不能确定新的统一阈值。"
+        },
+        {
+          "id": "silent-proposal-43a76a31ba7bdcfa",
+          "state": "waiting",
+          "reason": "吸取后的负属性与毒联合生产调用未验收；改变SL范围或换线偏好缺同入口资源、构筑、完整抽序的受控整场对照。"
+        },
+        {
+          "id": "silent-proposal-5264153a4a4b0e5c",
+          "state": "waiting",
+          "reason": "A10召唤、航行、逐实体成长及index重排缺完整联合生产验收；另一目标序只有预测没有后继实打，不能据此证明排序收益或强制首杀。"
+        },
+        {
+          "id": "silent-proposal-bddfa690a84e03d0",
+          "state": "waiting",
+          "reason": "缺甲虫提前唤醒/眩晕接续的配对帧，以及同抽序完整另线对照；自然醒和四次失败不足覆盖全部分支或拟合输出血价。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-200112/learner/runs/20261011-200124-strategy-proposal/report.md"
+    },
+    "batch": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "runs": [
+        "VLZ6CCT8AQ0A",
+        "8JRE1C4H4Z2W",
+        "CA5KE8GFJ9X2",
+        "5PM6JAQG6FNQ",
+        "61E2QS63Y9WU",
+        "DUZUBAJ3A8GP"
+      ],
+      "key": "code-proposals:silent-proposal-89354805ee4d7e77,silent-proposal-f2bfceddb1898dca,silent-proposal-283a164780d11e69,silent-proposal-ebbfe3b97548756d,silent-proposal-e5b87be50f28f311,silent-proposal-49632bc4878fb597,silent-proposal-66532328a585941f,silent-proposal-43a76a31ba7bdcfa,silent-proposal-5264153a4a4b0e5c,silent-proposal-bddfa690a84e03d0:234",
+      "pid": 2234641,
+      "state": "done",
+      "reason": "proposal",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-200112",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKH",
+      "proposal_ids": [
+        "silent-proposal-89354805ee4d7e77",
+        "silent-proposal-f2bfceddb1898dca",
+        "silent-proposal-283a164780d11e69",
+        "silent-proposal-ebbfe3b97548756d",
+        "silent-proposal-e5b87be50f28f311",
+        "silent-proposal-49632bc4878fb597",
+        "silent-proposal-66532328a585941f",
+        "silent-proposal-43a76a31ba7bdcfa",
+        "silent-proposal-5264153a4a4b0e5c",
+        "silent-proposal-bddfa690a84e03d0"
+      ],
+      "finished": "2026-10-11 20:12",
+      "rc": 0,
+      "merged": null,
+      "proposal_audit_errors": [],
+      "report": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "batch": "20261011-200112-strategy-proposal",
+        "base": "014d4263aef1e2ed330591557b183a26a0790b43",
+        "runs": [
+          "VLZ6CCT8AQ0A",
+          "8JRE1C4H4Z2W",
+          "CA5KE8GFJ9X2",
+          "5PM6JAQG6FNQ",
+          "61E2QS63Y9WU",
+          "DUZUBAJ3A8GP"
+        ],
+        "fixes": [],
+        "skipped": [],
+        "merged": null,
+        "tests": {
+          "tsc": null,
+          "vitest": null,
+          "cases": null
+        },
+        "code_proposals": [
+          "silent-proposal-89354805ee4d7e77",
+          "silent-proposal-f2bfceddb1898dca",
+          "silent-proposal-283a164780d11e69",
+          "silent-proposal-ebbfe3b97548756d",
+          "silent-proposal-e5b87be50f28f311",
+          "silent-proposal-49632bc4878fb597",
+          "silent-proposal-66532328a585941f",
+          "silent-proposal-43a76a31ba7bdcfa",
+          "silent-proposal-5264153a4a4b0e5c",
+          "silent-proposal-bddfa690a84e03d0"
+        ],
+        "implementation_domains": [],
+        "proposal_results": [
+          {
+            "id": "silent-proposal-89354805ee4d7e77",
+            "state": "waiting",
+            "reason": "六项升级源码6e233ede76e5dd849f0d40760be64e7cdacf78b1已存在但仍非live祖先；对固定live单独预检已可合。本批main基线有15个记录冲突，按任务停止合入；父项实际执行覆盖审计尚未闭环，未知升级/属性组合缺配对输入。"
+          },
+          {
+            "id": "silent-proposal-f2bfceddb1898dca",
+            "state": "waiting",
+            "reason": "缺模型覆盖一致、固定随机输入下的同盘同总预算实验、样本收益曲线和候选排名稳定性；707ms及单局失败不能支持改预算、留药价格或目标规则。"
+          },
+          {
+            "id": "silent-proposal-283a164780d11e69",
+            "state": "waiting",
+            "reason": "与89354805ee4d7e77共用六项升级源码6e233ede76e5dd849f0d40760be64e7cdacf78b1，尚未进入live；实际执行覆盖审计也未闭环，不能凭同源经验标整项duplicate。"
+          },
+          {
+            "id": "silent-proposal-ebbfe3b97548756d",
+            "state": "waiting",
+            "reason": "十五主题仍缺逐源贡献、状态期限、逐实体及实际资源链的完整联合生产验收；六项神化扩展只补子范围且未上线，未选focus/休息也无同盘对照，不据此改权重。"
+          },
+          {
+            "id": "silent-proposal-e5b87be50f28f311",
+            "state": "waiting",
+            "reason": "两份预测审计源码仍非live祖先，首次实际派发、重规划、能力建立和结算的机器关联尚缺实现及固定生产验收；本批基线冲突阻止继续合入。这是工程缺口，纯审计无需等待获胜反事实。"
+          },
+          {
+            "id": "silent-proposal-49632bc4878fb597",
+            "state": "waiting",
+            "reason": "F13无正敏捷配对样本，尚未核出支持新公式的新增失配；力量、逐击、虚弱、独立成长和敏捷的完整联合生产调用未验收。"
+          },
+          {
+            "id": "silent-proposal-66532328a585941f",
+            "state": "waiting",
+            "reason": "持有/计划/实际执行分账未完整接线；调整启动或构筑权重另缺同入口、完整抽序的整场对照和可复现收益函数，空打1能不能确定新的统一阈值。"
+          },
+          {
+            "id": "silent-proposal-43a76a31ba7bdcfa",
+            "state": "waiting",
+            "reason": "吸取后的负属性与毒联合生产调用未验收；改变SL范围或换线偏好缺同入口资源、构筑、完整抽序的受控整场对照。"
+          },
+          {
+            "id": "silent-proposal-5264153a4a4b0e5c",
+            "state": "waiting",
+            "reason": "A10召唤、航行、逐实体成长及index重排缺完整联合生产验收；另一目标序只有预测没有后继实打，不能据此证明排序收益或强制首杀。"
+          },
+          {
+            "id": "silent-proposal-bddfa690a84e03d0",
+            "state": "waiting",
+            "reason": "缺甲虫提前唤醒/眩晕接续的配对帧，以及同抽序完整另线对照；自然醒和四次失败不足覆盖全部分支或拟合输出血价。"
+          }
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-200112/learner/runs/20261011-200124-strategy-proposal/report.md"
+      },
+      "no_change_proposals": {
+        "base": "014d4263aef1e2ed330591557b183a26a0790b43",
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-200112/learner/runs/20261011-200124-strategy-proposal/report.md",
+        "dispositions": [
+          {
+            "id": "silent-proposal-89354805ee4d7e77",
+            "state": "waiting",
+            "reason": "六项升级源码6e233ede76e5dd849f0d40760be64e7cdacf78b1已存在但仍非live祖先；对固定live单独预检已可合。本批main基线有15个记录冲突，按任务停止合入；父项实际执行覆盖审计尚未闭环，未知升级/属性组合缺配对输入。"
+          },
+          {
+            "id": "silent-proposal-f2bfceddb1898dca",
+            "state": "waiting",
+            "reason": "缺模型覆盖一致、固定随机输入下的同盘同总预算实验、样本收益曲线和候选排名稳定性；707ms及单局失败不能支持改预算、留药价格或目标规则。"
+          },
+          {
+            "id": "silent-proposal-283a164780d11e69",
+            "state": "waiting",
+            "reason": "与89354805ee4d7e77共用六项升级源码6e233ede76e5dd849f0d40760be64e7cdacf78b1，尚未进入live；实际执行覆盖审计也未闭环，不能凭同源经验标整项duplicate。"
+          },
+          {
+            "id": "silent-proposal-ebbfe3b97548756d",
+            "state": "waiting",
+            "reason": "十五主题仍缺逐源贡献、状态期限、逐实体及实际资源链的完整联合生产验收；六项神化扩展只补子范围且未上线，未选focus/休息也无同盘对照，不据此改权重。"
+          },
+          {
+            "id": "silent-proposal-e5b87be50f28f311",
+            "state": "waiting",
+            "reason": "两份预测审计源码仍非live祖先，首次实际派发、重规划、能力建立和结算的机器关联尚缺实现及固定生产验收；本批基线冲突阻止继续合入。这是工程缺口，纯审计无需等待获胜反事实。"
+          },
+          {
+            "id": "silent-proposal-49632bc4878fb597",
+            "state": "waiting",
+            "reason": "F13无正敏捷配对样本，尚未核出支持新公式的新增失配；力量、逐击、虚弱、独立成长和敏捷的完整联合生产调用未验收。"
+          },
+          {
+            "id": "silent-proposal-66532328a585941f",
+            "state": "waiting",
+            "reason": "持有/计划/实际执行分账未完整接线；调整启动或构筑权重另缺同入口、完整抽序的整场对照和可复现收益函数，空打1能不能确定新的统一阈值。"
+          },
+          {
+            "id": "silent-proposal-43a76a31ba7bdcfa",
+            "state": "waiting",
+            "reason": "吸取后的负属性与毒联合生产调用未验收；改变SL范围或换线偏好缺同入口资源、构筑、完整抽序的受控整场对照。"
+          },
+          {
+            "id": "silent-proposal-5264153a4a4b0e5c",
+            "state": "waiting",
+            "reason": "A10召唤、航行、逐实体成长及index重排缺完整联合生产验收；另一目标序只有预测没有后继实打，不能据此证明排序收益或强制首杀。"
+          },
+          {
+            "id": "silent-proposal-bddfa690a84e03d0",
+            "state": "waiting",
+            "reason": "缺甲虫提前唤醒/眩晕接续的配对帧，以及同抽序完整另线对照；自然醒和四次失败不足覆盖全部分支或拟合输出血价。"
+          }
+        ]
+      }
+    },
+    "out_sha256": "75c27ab1bd1a2188a23b70fcffacd40c19188a78f6babf0a28a71f5ba4fef251"
+  },
+  "20261011-194302-experience-update": {
+    "report": {
+      "task": "experience-update",
+      "version": "2026-10-11.14",
+      "commit": "6ff7dc1755167f87159ac7b02c7d13c9eaf3a0af",
+      "merged": null,
+      "added": 0,
+      "updated": 21,
+      "retired": 0,
+      "active": 219,
+      "mechanisms": [
+        "力量与既有虚弱",
+        "已兑现构筑窗口",
+        "毒雾",
+        "触媒",
+        "余像",
+        "风的女儿",
+        "知识恶魔回血与SL",
+        "仪式兽阈值与成长",
+        "生存者弃牌后继",
+        "昏眩名额",
+        "懒惰名额",
+        "速度药临时敏捷",
+        "铜钹",
+        "坚韧之环",
+        "瀑布巨兽自爆",
+        "尖啸",
+        "金刚杵",
+        "铜质鳞片",
+        "下水道蚌成长"
+      ],
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 2689
+      },
+      "ledger": {
+        "added": [],
+        "proposed": [
+          "silent-0011",
+          "silent-0012",
+          "silent-0017",
+          "silent-0019",
+          "silent-0020",
+          "silent-0021",
+          "silent-0023",
+          "silent-0027",
+          "silent-0046",
+          "silent-0049",
+          "silent-0063",
+          "silent-0079",
+          "silent-0102",
+          "silent-0129",
+          "silent-0133",
+          "silent-0205",
+          "silent-0222",
+          "silent-0231",
+          "silent-0247",
+          "silent-0253",
+          "silent-0284",
+          "silent-0289"
+        ],
+        "retired": [],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-0e1e90a5dff60910",
+        "silent-proposal-0b768dbaf9018032",
+        "silent-proposal-d48a4892c31d855e",
+        "silent-proposal-b5f2e1a1480a419f"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion",
+        "sl",
+        "terminal"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-194303-experience-update/report.md"
+    },
+    "batch": {
+      "task": "experience-update",
+      "character": "silent",
+      "runs": [
+        "YBRA3EJ94GBR",
+        "3UPY3BP2LVS7",
+        "NYQW6JAD30K4"
+      ],
+      "key": "YBRA3EJ94GBR,3UPY3BP2LVS7,NYQW6JAD30K4",
+      "pid": 2201725,
+      "state": "failed",
+      "reason": "tick",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKF",
+      "finished": "2026-10-11 20:13",
+      "rc": 0,
+      "merged": null,
+      "proposal_audit_errors": [],
+      "report": {
+        "task": "experience-update",
+        "version": "2026-10-11.14",
+        "commit": "6ff7dc1755167f87159ac7b02c7d13c9eaf3a0af",
+        "merged": null,
+        "added": 0,
+        "updated": 21,
+        "retired": 0,
+        "active": 219,
+        "mechanisms": [
+          "力量与既有虚弱",
+          "已兑现构筑窗口",
+          "毒雾",
+          "触媒",
+          "余像",
+          "风的女儿",
+          "知识恶魔回血与SL",
+          "仪式兽阈值与成长",
+          "生存者弃牌后继",
+          "昏眩名额",
+          "懒惰名额",
+          "速度药临时敏捷",
+          "铜钹",
+          "坚韧之环",
+          "瀑布巨兽自爆",
+          "尖啸",
+          "金刚杵",
+          "铜质鳞片",
+          "下水道蚌成长"
+        ],
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 2689
+        },
+        "ledger": {
+          "added": [],
+          "proposed": [
+            "silent-0011",
+            "silent-0012",
+            "silent-0017",
+            "silent-0019",
+            "silent-0020",
+            "silent-0021",
+            "silent-0023",
+            "silent-0027",
+            "silent-0046",
+            "silent-0049",
+            "silent-0063",
+            "silent-0079",
+            "silent-0102",
+            "silent-0129",
+            "silent-0133",
+            "silent-0205",
+            "silent-0222",
+            "silent-0231",
+            "silent-0247",
+            "silent-0253",
+            "silent-0284",
+            "silent-0289"
+          ],
+          "retired": [],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-0e1e90a5dff60910",
+          "silent-proposal-0b768dbaf9018032",
+          "silent-proposal-d48a4892c31d855e",
+          "silent-proposal-b5f2e1a1480a419f"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion",
+          "sl",
+          "terminal"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-194303-experience-update/report.md"
+      },
+      "retry_at": 1791724401.425805
+    },
+    "out_sha256": "ee987d16d1579efa1cb21ba3cc83c0e2936c44d6e2b9468e136d587f27fa0806"
+  },
+  "20261011-200112-fix-batch": {
+    "report": {
+      "task": "fix-batch",
+      "base": "014d4263aef1e2ed330591557b183a26a0790b43",
+      "fixes": [],
+      "skipped": [
+        {
+          "item": "出牌、药水、SL、终局及游戏机制/结构条目",
+          "reason": "策略类，沿原 strategy-proposal 链；逐项记录见报告目录 skipped.json。"
+        },
+        {
+          "item": "测试包装器收尾及独立架构、归因、缓存实验",
+          "reason": "太大，交队列指定的独立框架或专项任务。"
+        },
+        {
+          "item": "调度公平性、silent-0332、历史通知恢复、mod瞬时超时",
+          "reason": "证据不足，保留原行为和失败历史。"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 267,
+        "cases": 2689
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-200112/learner/runs/20261011-200124-fix-batch/report.md"
+    },
+    "batch": {
+      "task": "fix-batch",
+      "character": "silent",
+      "runs": [],
+      "key": "cd42758a3c4e5482b3814b06a4b9f913ac9a461cf70c2d2ae4b57d99457b9b56",
+      "pid": 2234752,
+      "state": "failed",
+      "reason": "tick",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-200112",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pKJ",
+      "finished": "2026-10-11 20:17",
+      "rc": 0,
+      "merged": null,
+      "proposal_audit_errors": [],
+      "report": {
+        "task": "fix-batch",
+        "base": "014d4263aef1e2ed330591557b183a26a0790b43",
+        "fixes": [],
+        "skipped": [
+          {
+            "item": "出牌、药水、SL、终局及游戏机制/结构条目",
+            "reason": "策略类，沿原 strategy-proposal 链；逐项记录见报告目录 skipped.json。"
+          },
+          {
+            "item": "测试包装器收尾及独立架构、归因、缓存实验",
+            "reason": "太大，交队列指定的独立框架或专项任务。"
+          },
+          {
+            "item": "调度公平性、silent-0332、历史通知恢复、mod瞬时超时",
+            "reason": "证据不足，保留原行为和失败历史。"
+          }
+        ],
+        "merged": null,
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "files": 267,
+          "cases": 2689
+        },
+        "code_proposals": [],
+        "implementation_domains": [],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-200112/learner/runs/20261011-200124-fix-batch/report.md"
+      },
+      "retry_at": 1791724630.4367213
+    },
+    "out_sha256": "e7ea4deb34c7ee20363cde5634e1ba6c66cbed3fa6750d62e685ce73d4678b5c"
+  }
+}

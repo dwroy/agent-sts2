@@ -1,0 +1,164 @@
+{
+  "at": "2026-10-11 22:16:55 CST",
+  "batch": "20261011-204636-fix-batch",
+  "batch_snapshot": {
+    "task": "fix-batch",
+    "character": "silent",
+    "runs": [],
+    "key": "E6DSUVTNVBMH",
+    "pid": 2345092,
+    "state": "done",
+    "reason": "ops",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-204636",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pKS",
+    "finished": "2026-10-11 21:38",
+    "rc": 0,
+    "merged": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+    "proposal_audit_errors": [],
+    "report": {
+      "task": "fix-batch",
+      "base": "1ab6efde17f5dfd1e96f24a01fa4c579c41728c0",
+      "fixes": [
+        {
+          "item": "core-cycle-implementation-binding-entry",
+          "commit": "fc95760d4ff8a9cbd45577efdd79b1215bd2cb92",
+          "test": "agent/tests/strategy-implementation.test.ts",
+          "fails_without_fix": true
+        }
+      ],
+      "skipped": [
+        {
+          "item": "机制、出牌、药水、SL、终局及结构提案",
+          "reason": "策略类，保留原独立提案链；逐项见报告和skipped.json。"
+        },
+        {
+          "item": "silent-0332、历史通知恢复、mod短暂超时",
+          "reason": "证据不足，分别缺触发样本、未发送证明及根因。"
+        },
+        {
+          "item": "独立架构、归因、B4/B5、缓存与性能专题",
+          "reason": "太大，按队列20:46限定，本批只补冻结绑定入口。"
+        },
+        {
+          "item": "分段检查收尾、调度公平性",
+          "reason": "独立框架任务或证据不足，保留原历史及续办。"
+        }
+      ],
+      "merged": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 2825,
+        "files": 287
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-204636/learner/runs/20261011-204644-fix-batch/report.md"
+    },
+    "checks_pending": false,
+    "fallback_checks": [
+      {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261011-204636-fix-batch.fallback-a35bf33d858533b4c0ea73af3c73f896cc2e9e03.checks.log",
+        "merged": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+        "tree": "a35bf33d858533b4c0ea73af3c73f896cc2e9e03",
+        "commits": [
+          "fc95760d4ff8a9cbd45577efdd79b1215bd2cb92",
+          "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689"
+        ]
+      }
+    ],
+    "checks": {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261011-204636-fix-batch.fallback-a35bf33d858533b4c0ea73af3c73f896cc2e9e03.checks.log",
+      "merged": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+      "tree": "a35bf33d858533b4c0ea73af3c73f896cc2e9e03",
+      "commits": [
+        "fc95760d4ff8a9cbd45577efdd79b1215bd2cb92",
+        "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689"
+      ]
+    }
+  },
+  "source": "fc95760d4ff8a9cbd45577efdd79b1215bd2cb92",
+  "checked_live": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+  "checked_tree": "a35bf33d858533b4c0ea73af3c73f896cc2e9e03",
+  "tsc": 0,
+  "vitest": 0,
+  "files": 338,
+  "passed": 3634,
+  "skipped": 2,
+  "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261011-204636-fix-batch.fallback-a35bf33d858533b4c0ea73af3c73f896cc2e9e03.checks.log",
+  "log_sha256": "fe79dd71aa3d6cd76ed1141b52c8cfde092279174ad06a072a65285e466d9b84",
+  "log_bytes": 97292,
+  "observed_live": "65e3d10a9b82a03176bafe6a6e61c6ef53f12c12",
+  "actual_ancestors_verified": true,
+  "main": "3f94d48f043fb49ea2780902edd7e493faf551ad",
+  "main_source_ancestry": false,
+  "main_integration": "fixed delta integrated in3be7be019;9 files byte-identical, ops/codex-ops-learn.py preserves already tested main-only features",
+  "main_comparison": [
+    {
+      "path": "agent/tests/strategy-implementation.test.ts",
+      "source_sha256": "b0aa2c0bab6428c0a4de47eb6af2f4c5ac72859eb78c0a5899f37f7438973e4d",
+      "main_sha256": "b0aa2c0bab6428c0a4de47eb6af2f4c5ac72859eb78c0a5899f37f7438973e4d",
+      "equal": true
+    },
+    {
+      "path": "learner/tasks/strategy-proposal.md",
+      "source_sha256": "bd98511d87eaa8ae5dd67a5d595830b538af3f326858b71880c1661453d3e48d",
+      "main_sha256": "bd98511d87eaa8ae5dd67a5d595830b538af3f326858b71880c1661453d3e48d",
+      "equal": true
+    },
+    {
+      "path": "ops/codex-ops-actions.sh",
+      "source_sha256": "3dc0ab997027aecce9fef5b23bd07b6332da474bd02f1d11b479cfe3411e6966",
+      "main_sha256": "3dc0ab997027aecce9fef5b23bd07b6332da474bd02f1d11b479cfe3411e6966",
+      "equal": true
+    },
+    {
+      "path": "ops/codex-ops-learn.py",
+      "source_sha256": "cab93815037c21615d9ca72e1b32ce06cca5fdd3ad769549b1fd6f98fe527951",
+      "main_sha256": "75ecc4516a400beb95ebf8808f3011f0548d08515f963b00f08308acf50aae28",
+      "equal": false
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "source_sha256": "fe24bf54a4039b41a3e8bb64c73bbd50a602e1f2cd157015e3308c1295d116f7",
+      "main_sha256": "fe24bf54a4039b41a3e8bb64c73bbd50a602e1f2cd157015e3308c1295d116f7",
+      "equal": true
+    },
+    {
+      "path": "ops/codex/lib.ts",
+      "source_sha256": "a708edfa0bc2444cbd23634647212a6cf4a79c0432676ac27a30e7a2b85ac9fe",
+      "main_sha256": "a708edfa0bc2444cbd23634647212a6cf4a79c0432676ac27a30e7a2b85ac9fe",
+      "equal": true
+    },
+    {
+      "path": "ops/learner_jobs.py",
+      "source_sha256": "f75be00e61fd5b3a8bf6993fbc0b91ceb8cc3f8240ff071962b7312dc15cae1b",
+      "main_sha256": "f75be00e61fd5b3a8bf6993fbc0b91ceb8cc3f8240ff071962b7312dc15cae1b",
+      "equal": true
+    },
+    {
+      "path": "ops/proposal_dispatch.py",
+      "source_sha256": "06607a7c983df847d92a125a7f8fc9dfca50c99baafb8556373fa292b0159e59",
+      "main_sha256": "06607a7c983df847d92a125a7f8fc9dfca50c99baafb8556373fa292b0159e59",
+      "equal": true
+    },
+    {
+      "path": "ops/strategy_implementation_jobs.py",
+      "source_sha256": "ecf8e9176071348c438c69713b3afcdcdf037c0f709a69b3229cab78fac2fae1",
+      "main_sha256": "ecf8e9176071348c438c69713b3afcdcdf037c0f709a69b3229cab78fac2fae1",
+      "equal": true
+    },
+    {
+      "path": "ops/tests/test_strategy_implementation.py",
+      "source_sha256": "1c8d6030c56f5f4d20247e466f63dcc701ee9dee2253977a85ca6b2847a6813f",
+      "main_sha256": "1c8d6030c56f5f4d20247e466f63dcc701ee9dee2253977a85ca6b2847a6813f",
+      "equal": true
+    }
+  ],
+  "fixed_tree_not_future_changes": true,
+  "no_retest_or_merge": true,
+  "parent_complete": false
+}

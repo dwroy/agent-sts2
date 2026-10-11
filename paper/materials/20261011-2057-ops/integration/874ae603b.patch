@@ -1,0 +1,85 @@
+diff --git a/agent/tests/brain-codex-session.test.ts b/agent/tests/brain-codex-session.test.ts
+index 9d8a219ef..f3112eafd 100644
+--- a/agent/tests/brain-codex-session.test.ts
++++ b/agent/tests/brain-codex-session.test.ts
+@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
+ import { afterEach, describe, expect, it } from "vitest";
+ 
+ import { ANSWER_TEXT_KEEP, BlankRun, configTomlProblems, sessionCwdRoot } from "../src/brain/engines/codex-session.js";
+-import { CodexEngine, codexKindSchema, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
++import { CodexEngine, catalogEntry, codexKindSchema, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
+ import { pickSpec, stableSchema } from "../src/brain/specs.js";
+ import type { BrainRequest } from "../src/brain/types.js";
+ import { loadConfig } from "../src/core/config.js";
+@@ -62,7 +62,8 @@ const S = ${JSON.stringify(state)};
+ const script = ${JSON.stringify(script)};
+ const argv = process.argv.slice(2);
+ const counter = (key) => { const f = S + "/" + key; const n = existsSync(f) ? Number(readFileSync(f, "utf8")) + 1 : 1; writeFileSync(f, String(n)); return n; };
+-if (argv[0] === "debug") { console.log(JSON.stringify({ models: [${JSON.stringify(SOL)}] })); process.exit(0); }
++// Flush the catalog before the fake exits, including when stdout is a socket.
++if (argv[0] === "debug") { writeFileSync(1, JSON.stringify({ models: [${JSON.stringify(SOL)}] }) + "\\n"); process.exit(0); }
+ if (argv[0] === "exec") {
+   for await (const _ of process.stdin) {}
+   appendFileSync(S + "/execs", "x\\n");
+@@ -467,7 +468,31 @@ describe("codex session mode", () => {
+   }, 30_000);
+ });
+ 
++function exitFixtureEnv(bin: string, home: string): NodeJS.ProcessEnv {
++  return {
++    BRAIN_CODEX_MODEL: SOL.slug,
++    BRAIN_CODEX_BIN: bin,
++    BRAIN_CODEX_HOME: home,
++    BRAIN_LOG: "off",
++    BRAIN_CODEX_MODE: "session",
++    BRAIN_CODEX_USAGE_EVERY_MIN: "1440",
++    BRAIN_CODEX_USAGE_EVERY_CALLS: "1000",
++  };
++}
++
+ describe("the play process's end", () => {
++  it("the exit fixture selects a model advertised by its fake catalog", async () => {
++    const fake = fakeSession("exit-catalog", { turns: [] });
++    const { spawnSync } = await import("node:child_process");
++    const catalog = spawnSync(fake.bin, ["debug", "models"], { encoding: "utf8", timeout: 5_000 });
++    expect(catalog.status, catalog.stderr).toBe(0);
++    const cfg = loadConfig(exitFixtureEnv(fake.bin, join(fake.state, "home")));
++    expect(cfg.brain.codex.mode).toBe("session");
++    expect(catalogEntry(catalog.stdout, cfg.brain.engines.codex.model!)).toMatchObject({
++      supported_reasoning_levels: expect.arrayContaining([{ effort: cfg.brain.engines.codex.effort }]),
++    });
++  });
++
+   it("the server does not keep the process alive; at exit the process removes its thread's files", async () => {
+     const fake = fakeSession("exit", { turns: [answering({ choice: "a", reason: "x" })] });
+     const home = join(fake.state, "home");
+@@ -476,21 +501,26 @@ describe("the play process's end", () => {
+     const script = join(fake.state, "run.mts");
+     const src = (rel: string): string => JSON.stringify(join(process.cwd(), rel));
+     writeFileSync(script, `
++import { writeFileSync } from "node:fs";
+ import { CodexEngine } from ${src("src/brain/engines/codex.ts")};
+ import { pickSpec } from ${src("src/brain/specs.ts")};
+ import { loadConfig } from ${src("src/core/config.ts")};
+-const cfg = loadConfig({ BRAIN_CODEX_BIN: ${JSON.stringify(fake.bin)}, BRAIN_CODEX_HOME: ${JSON.stringify(home)}, BRAIN_LOG: "off", BRAIN_CODEX_MODE: "session", BRAIN_CODEX_USAGE_EVERY_MIN: "1440", BRAIN_CODEX_USAGE_EVERY_CALLS: "1000" });
+-const engine = new CodexEngine({ settings: cfg.brain.engines.codex, codex: cfg.brain.codex, stateDir: ${JSON.stringify(join(fake.state, "codex-state"))}, traceFile: null });
++const cfg = loadConfig(${JSON.stringify(exitFixtureEnv(fake.bin, home))});
++const engine = new CodexEngine({ settings: cfg.brain.engines.codex, codex: cfg.brain.codex, stateDir: ${JSON.stringify(join(fake.state, "codex-state"))}, traceFile: null, note: (message) => writeFileSync(2, message + "\\n") });
+ const options = { a: "{}", b: "{}" };
+ const answer = await engine.decide({ label: "rest/plan", system: "S", question: "Q", options, payload: {}, spec: pickSpec("rest/plan", options, {}) });
+ console.log(JSON.stringify(answer.answer));
++console.log(JSON.stringify({ mode: answer.native?.mode }));
+ `);
+     const { spawnSync } = await import("node:child_process");
+     const began = Date.now();
+     const run = spawnSync(process.execPath, ["--import", "tsx", script], { cwd: process.cwd(), encoding: "utf8", timeout: 25_000 });
+-    expect(run.status).toBe(0);
++    expect(run.status, run.stderr).toBe(0);
+     expect(Date.now() - began).toBeLessThan(25_000);
+     expect(run.stdout).toContain('{"choice":"a","reason":"x"}');
++    expect(run.stdout).toContain('{"mode":"session"}');
++    expect(fake.requests().some((r) => r.method === "thread/start")).toBe(true);
++    expect(fake.execs()).toBe(0);
+     expect(existsSync(join(fake.state, "sessions", "rollout-x-thr-1.jsonl"))).toBe(false);
+   }, 40_000);
+ });

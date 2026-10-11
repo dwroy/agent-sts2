@@ -6,7 +6,7 @@ Run by ops/codex-ops.sh at :13 and :43 (`tick`); everything here is deterministi
 
   tick       1. victories: runs.jsonl rows of the character with "victory": true not yet in ops/win-notified
                 -> a `victory` event each, and the id is appended to ops/win-notified;
-             2. a new ascension: the character's latest run-config.jsonl row targets a higher ascension than the
+             2. a new ascension: the character's latest run-config.jsonl row observes a higher ascension than the
                 last one seen -> an `ascension-up` event (the per-level summary);
              3. post-mortems: finished runs of the character (in runs.jsonl) without a "## <id>" heading in
                 notes/lessons.md, not dispatched yet -> one learner batch of up to 5 (learner/run.ts --engine codex
@@ -198,10 +198,10 @@ def check_victories(character):
 
 
 def run_ascension(row):
-    value = row.get("target_ascension")
-    if not isinstance(value, int):
-        value = row.get("ascension")
-    return value if isinstance(value, int) else None
+    # The requested target can exceed the character's unlocked maximum. Only the
+    # observed run level is evidence for notifications and structural audits.
+    value = row.get("ascension")
+    return value if type(value) is int and value >= 0 else None
 
 
 def check_ascension(state, character):
@@ -419,6 +419,19 @@ def cmd_finish(args):
 
 def cmd_write(args):
     state = load_state()
+    if getattr(args, "request", ""):
+        import strategy_implementation_jobs
+        if args.task != "strategy-proposal" or args.runs:
+            return 2
+        try:
+            result = strategy_implementation_jobs.dispatch(state, ROOT, SCRIPTS, args.character, alive,
+                dt.datetime.now().strftime("%Y%m%d-%H%M%S"), dispatch_write, args.request)
+        except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+            print(json.dumps({"dispatched": None, "status": "blocked", "error": str(error)}, ensure_ascii=False))
+            return 1
+        save_state(state)
+        print(json.dumps({"dispatched": result}, ensure_ascii=False))
+        return 0 if result else 1
     runs = [run for run in args.runs.split(",") if run] if args.runs else pending(ROOT, SCRIPTS, args.character)
     if args.task in ("experience-update", "strategy-proposal"):
         known = {row["run_id"] for row in finished_runs(args.character)}
@@ -523,6 +536,7 @@ def main():
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default="silent")
     parser.add_argument("--runs", default="")
+    parser.add_argument("--request", default="")
     parser.add_argument("--batch", default="")
     parser.add_argument("--rc", type=int, default=1)
     args = parser.parse_args()

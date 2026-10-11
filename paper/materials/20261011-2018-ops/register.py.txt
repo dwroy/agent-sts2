@@ -1,0 +1,29 @@
+from pathlib import Path
+import json,subprocess,fcntl,os,hashlib
+r=Path.cwd();l=r/'.worktrees/live';o=r/'paper/materials/20261011-2018-ops';pub=json.load(open(o/'integration/published.json'));merged=pub['live'];reports=json.load(open(o/'event-reports.json'));now=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+g=lambda *a:subprocess.check_output(['git','-C',str(l),*a]);assert not g('diff','--cached','--name-only').strip();assert subprocess.run(['git','merge-base','--is-ancestor',merged,'live']).returncode==0
+source='6ff7dc1755167f87159ac7b02c7d13c9eaf3a0af';path='knowledge/characters/silent/experience.json';before=json.loads(g('show',source+'^:'+path));after=json.loads(g('show',source+':'+path));assert (l/path).read_bytes()==g('show',source+':'+path);old={e['id']:e for e in before['entries']};changes=[{'id':e['id'],'before':old[e['id']],'after':e} for e in after['entries'] if e!=old.get(e['id'])];assert len(changes)==21
+(o/'experience-changes.json').write_text(json.dumps(changes,ensure_ascii=False,indent=2)+'\n')
+items=[('S1.exp179',reports['20261011-194302-experience-update']['report']['ledger']['proposed'],source,'静默经验.13→.14，0新增/21更新/0退役、219 active；YBRA3EJ94GBR/3UPY3BP2LVS7/NYQW6JAD30K4三局证据。核心拿/跳/删/替换及有限窗口全文保持，综合项支持225→228；爆发与夜魇核心项未删。只发布文本经验，不把关联代码提案记已实现。'),('S1.apotheosis-upgrades1',['silent-0237','silent-0238'],'6e233ede76e5dd849f0d40760be64e7cdacf78b1','静默A10已观察神化升级传播：旧漏中和/步法/后空翻/生存者/带毒刺击/蛇咬对应转换，新补六项到同线、抽弃堆及已观察属性。证据VLZ6CCT8AQ0A F35T1/3/4、F43T1—5、F45T1/3/5；蛇咬限精确预览，未推实际施放收益。旧候选六源复用，不放宽未知组合、跨角色或未观察进阶。'),('S1.boss-calibration13',['silent-0416'],'95d65c8bf56734735366a466bd5a29c0430231c6','校准12→13：233结束局/1040含SL尝试，419可用、621排除；tune107、validation312。仍用7e1193ce固定模型/2026-10-06切点/原Platt及门槛，6个B2/B3可信boss名单保持，F49低信任；未验证双boss稳定通过，不改B4/B5原失败。')]
+versions=[{'name':name,'family':'Silent','commit':merged,'source':f'{now} 运维兜底：{desc} source {commit}→actual live {merged}；各原源完整自测/分段补验及本轮合后tsc0、10文件55例0。原live完整检查的2基础设施失败保留，专门202201修复；不重复整套已过项，不报新树宿主全绿。'} for name,ids,commit,desc in items]
+record='\n'+''.join('- '+v['source']+' 版本'+v['name']+'。\n' for v in versions)
+notice=f'\n- {now} [Roy/实际上线] live {merged}；本轮三项兜底发布，原件paper/materials/20261011-2018-ops/。\n'
+for v in versions:notice+='  - '+v['name']+'：'+v['source']+'\n'
+notice+='  经验逐项旧→新（账本22项及原报告/版本源见本轮记录；仅增加本角色已核证据）：\n'
+for c in changes:notice+=f'  - {c["id"]}：旧「{c["before"]["lesson"]}」→新「{c["after"]["lesson"]}」。\n'
+notice+='  预期影响：大脑读到三局资源/机制新证据，求解器覆盖六种已观察神化升级，校准样本更新但准入不变；实际采用与通关率收益未验证。回退在live-merge.lock内只逆对应源变更：经验按experience-changes.json逐项保留后来证据，神化只逆两源码及配套夹具，校准只逆boss-trust；不回退并行知识刷新/其他已测修复。此前两个host失败修复批20261011-202201在wJ:pKN运行；固定失败文件单worker复验，未补验成功前不冒报完整检查通过。\n'
+scan=subprocess.run(['gitleaks','stdin','--redact','--no-banner'],input=(record+notice).encode(),capture_output=True);(o/'publication-gitleaks.log').write_bytes(scan.stdout+scan.stderr);assert scan.returncode==0
+app=json.load(open(o/'own-record-appends.json'))
+def append(p,s):
+ with p.open('a+b') as f:fcntl.flock(f,fcntl.LOCK_EX);f.seek(0);old=f.read();assert s.encode() not in old;f.write(s.encode());f.flush();os.fsync(f.fileno())
+ if not p.is_relative_to(l):app[str(p.relative_to(r))]=app.get(str(p.relative_to(r)),'')+s
+for root in [r,l]:
+ p=root/'eval/versions.json'
+ with p.open('r+') as f:
+  fcntl.flock(f,fcntl.LOCK_EX);d=json.load(f);assert not {v['name'] for v in versions}&{v['name'] for v in d['versions']};d['versions']+=versions;f.seek(0);json.dump(d,f,ensure_ascii=False,indent=2);f.write('\n');f.truncate();f.flush();os.fsync(f.fileno())
+ append(root/'paper/materials/decision-log.md',record)
+append(r/'notes/for-roy.md',notice);append(r/'ops/inbox-dev.md',notice);(o/'own-record-appends.json').write_text(json.dumps(app,ensure_ascii=False,indent=2)+'\n');(o/'own-versions.json').write_text(json.dumps(versions,ensure_ascii=False,indent=2)+'\n')
+rows=[{'id':ident,'by':'ops:codex-2018','status':'shipped','version':name,'where':{'commits':[commit,merged]},'note':desc+' 限本轮实际发布范围；原失败与未完成父提案不改，宿主检查见独立处置。'} for name,ids,commit,desc in items for ident in ids];data=''.join(json.dumps(q,ensure_ascii=False)+'\n' for q in rows);(o/'ledger-publication-input.jsonl').write_text(data);p=subprocess.run(['python3','learner/ledger.py','update'],input=data,text=True,capture_output=True);(o/'ledger-publication.log').write_text(p.stdout+p.stderr);assert p.returncode==0,p.stderr
+subprocess.run(['git','-C',str(l),'add','eval/versions.json','paper/materials/decision-log.md'],check=True);patch=g('diff','--cached');scan=subprocess.run(['gitleaks','stdin','--redact','--no-banner'],input=patch,capture_output=True);(o/'live-records-gitleaks.log').write_bytes(scan.stdout+scan.stderr);assert scan.returncode==0
+subprocess.run(['git','-C',str(l),'commit','-m','Record Silent experience, observed upgrade coverage and calibration releases','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>'],check=True,stdout=subprocess.DEVNULL)
+(o/'publication-closeout.json').write_text(json.dumps({'at':now,'actual_live':merged,'live_records':g('rev-parse','HEAD').decode().strip(),'versions':[v['name'] for v in versions],'ledger_rows':len(rows),'host_checks':'two previous failures assigned to202201, new-tree full checks not repeated','baseline_original_failures_preserved':True},indent=2)+'\n');print('recorded',g('rev-parse','HEAD').decode().strip())

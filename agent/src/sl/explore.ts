@@ -73,6 +73,7 @@
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
+import type { SlGiantPhase } from "./attempts.js";
 import type { GameState } from "../hand/mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, stableStringify } from "../core/util/json.js";
 
@@ -175,7 +176,7 @@ export interface SlTarget {
    * SL_RETRY_EXPLORE_ANCHOR: why this attempt's path is the reference (the failed attempts with decision points recorded,
    * each one's last turn and the enemy HP left then, the latest first). Absent with the switch off (attempt 2's path).
    */
-  anchor?: { why: string; ranked: { attempt: number; turns: number; enemyHp: number | null }[] };
+  anchor?: { why: string; ranked: { attempt: number; turns: number; enemyHp: number | null; giantPhase?: SlGiantPhase }[] };
   /** SL_RETRY_EXPLORE_REARM: a point chosen in the attempt after its deviation at `after` (that turn's board) was wasted. */
   rearmed?: { after: string; turn: number | null; offPath?: true };
 }
@@ -583,7 +584,7 @@ export interface ExploreRow {
   result: string;
   explore?: SlExploreRecord | null;
   /** The attempt's turns as its summary has them (attempts.ts SlTurn): rows without a turn record are rebuilt from it. */
-  summary?: { turns: readonly { turn: number; hp: number | null; block: number | null; enemies: string; plays: readonly string[] }[] };
+  summary?: { turns: readonly { turn: number; hp: number | null; block: number | null; enemies: string; plays: readonly string[]; giant_phase?: SlGiantPhase }[] };
 }
 
 /** What failed attempts played on each board, gathered (triedByBoard). */
@@ -883,7 +884,7 @@ export interface ExploreTargetOptions {
   rearm?: { reference: number; fromTurn: number; skip: readonly string[] };
 }
 
-/** The HP the enemies had left on a row's last turn (its summary: "A 12/40, B 30/30" is 42); null when it is not readable. */
+/** Raw displayed HP on the last turn, kept as the legacy tie-break; a husk's HP is not body progress. */
 export function enemyHpLeft(row: Pick<ExploreRow, "summary">): number | null {
   const last = row.summary?.turns.at(-1);
   if (!last) return null;
@@ -1016,8 +1017,13 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     if (ranked.length > 0) {
       const first = reference;
       reference = ranked[0]!;
-      const list = ranked.map((row) => ({ attempt: row.attempt, turns: row.turns, enemyHp: enemyHpLeft(row) }));
-      const say = (entry: (typeof list)[number]) => `attempt ${entry.attempt} T${entry.turns}${entry.enemyHp !== null ? ` (enemy HP ${entry.enemyHp})` : ""}`;
+      const list = ranked.map((row) => {
+        const giantPhase = row.summary?.turns.at(-1)?.giant_phase;
+        return { attempt: row.attempt, turns: row.turns, enemyHp: enemyHpLeft(row), ...(giantPhase ? { giantPhase } : {}) };
+      });
+      const say = (entry: (typeof list)[number]) => entry.giantPhase
+        ? `attempt ${entry.attempt} T${entry.turns} (占位血${entry.enemyHp ?? "?"}；本体剩血0；自爆仍待结算，轮初显示${entry.giantPhase.incoming_at_turn_start}伤害；本体结束不等于获胜)`
+        : `attempt ${entry.attempt} T${entry.turns}${entry.enemyHp !== null ? ` (enemy HP ${entry.enemyHp})` : ""}`;
       const why = reference === first ? `attempt ${reference.attempt}'s path, the failed attempt that lived longest (${list.map(say).join(", ")})` : `attempt ${reference.attempt}'s path, not attempt ${first?.attempt ?? 2}'s: it lived longest (${list.map(say).join(", ")})`;
       anchor = { why, ranked: list };
     }

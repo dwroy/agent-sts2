@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-11T21:16:10.502491+08:00",
+  "before": "1bf7255e3d4931b6d5f3edd722e13a9840fafd61",
+  "candidate": "0f30fc82c7203293dc69b2af099415495702785b",
+  "live": "38cc7403bee1a88ba1618bf27348d675db8e1b64",
+  "tree": "a9f2dac9a566669b085c01012b11608f7e567a9d",
+  "verified_source_tree_identical": true,
+  "refresh_preserved": {
+    "notes/fight-value-backtest-silent.md": "5a4f8cf854af56d5e60b24199484c957d62b5ec3e5965660cf3cdfd225f1e1ec"
+  },
+  "gitleaks": 0,
+  "baseline_coverage": {
+    "strategy_source_full_cases": 2699,
+    "experience_source_full_cases": 2689,
+    "original_failures_preserved": true
+  },
+  "incremental_checks": {
+    "checks": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "affected",
+        "command": [
+          "npx",
+          "vitest",
+          "run",
+          "tests/silent-shackling-weak.test.ts",
+          "tests/silent-skittish.test.ts",
+          "tests/silent-gardener-skittish.test.ts",
+          "tests/silent-reattach-reset.test.ts",
+          "tests/quantitative.test.ts",
+          "tests/silent-phase-reference.test.ts",
+          "tests/experience.test.ts",
+          "tests/gkb-render.test.ts",
+          "--pool=threads",
+          "--maxWorkers=1"
+        ],
+        "exit": 0
+      }
+    ]
+  }
+}
