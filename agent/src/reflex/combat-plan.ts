@@ -1236,6 +1236,9 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if ((o.bufferSpentBySelf ?? 0) > 0) summary["buffer_used_by_own_hp_loss"] = o.bufferSpentBySelf!;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
+  if (o.kusarigamaUnresolved) {
+    summary["result"] = `未计锁镰随机伤害的参考结果：${summary["result"]}；存活、击杀与损血均非保证`;
+  }
   return summary;
 }
 
@@ -2879,7 +2882,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // -1 on us, never above 0: `> 0` never turned it on (XC4TNGZU4KT9 F9 T3 planned 16 and a kill, dealt 14).
     shrunk,
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
-    kusarigama: kusarigamaOf(state.run?.raw),
+    kusarigama: kusarigamaOf(state.run?.raw, ascension),
     ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: relicStack(state.run?.raw, "SHURIKEN") % SHURIKEN_ATTACKS } } : {}),
     // Silent evidence only: CSBR5CRDWQNB F33 attempt 6 T1/T2/T4, ledger silent-0061/0063. Ironclad stays unchanged.
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && relicIds.includes("DAUGHTER_OF_THE_WIND") ? { daughterWindBlock: 1 } : {}),
@@ -5131,7 +5134,9 @@ function relicStack(run: unknown, relicId: string): number {
 }
 
 /** Kusarigama (every 3rd attack in a turn: 6 to a random enemy), with the attacks counted so far. */
-function kusarigamaOf(run: unknown): { every: number; damage: number; count: number } | undefined {
+function kusarigamaOf(run: unknown, ascension: number): PlayerSim["kusarigama"] {
   const relic = asArray(asRecord(run)["relics"]).map(asRecord).find((entry) => str(entry["relic_id"]) === "KUSARIGAMA");
-  return relic ? { every: 3, damage: 6, count: num(relic["stack"]) % 3 } : undefined;
+  return relic ? { every: 3, damage: 6, count: num(relic["stack"]) % 3,
+    ...(str(asRecord(run)["character_id"]).toLowerCase() === "silent" && ascension === 10 ? { deferRandomTarget: true as const } : {}),
+  } : undefined;
 }

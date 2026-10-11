@@ -365,10 +365,10 @@ export interface PlayerSim {
    */
   shrunk?: boolean;
   /**
-   * Kusarigama: every 3rd attack in a turn deals 6 to a random enemy (counted as the lowest-HP one). The
-   * relic's counter (attacks already played this turn) comes from its stack.
+   * Kusarigama: the relic's counter comes from its stack. Legacy callers assume the lowest-HP
+   * target; observed Silent A10 callers defer multi-target damage until the actual target is known.
    */
-  kusarigama?: { every: number; damage: number; count: number };
+  kusarigama?: { every: number; damage: number; count: number; deferRandomTarget?: true };
   /**
    * Shuriken (「你每在同一回合内打出3张攻击牌，获得1点力量」): every 3rd Attack played in a turn gives 1 Strength for
    * the fight, on the Attacks after it. `count`: the Attacks already played this turn (attacks_played_this_turn),
@@ -783,6 +783,8 @@ export interface Step {
 }
 
 export interface Outcome {
+  /** Multi-target Kusarigama damage was omitted; this outcome is conditional, not a bound. */
+  kusarigamaUnresolved?: true;
   /** Established Serpent Form after this line; absent outside the observed character/ascension. */
   serpentFormAfter?: number | null;
   /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
@@ -1064,6 +1066,7 @@ interface Sim {
   plating: number;
   nextTurnBlock: number;
   unknown: string[];
+  kusarigamaUnresolved?: true;
   feedKills: number;
   /** Dazed our hits put into the draw pile this turn (Personal Hive). */
   dazedAdded: number;
@@ -2438,7 +2441,13 @@ function attackRelics(sim: Sim, player: PlayerSim): void {
   const kusa = player.kusarigama;
   if (kusa && kusa.every > 0 && (kusa.count + sim.relicAttacks) % kusa.every === 0) {
     const living = sim.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
-    if (living[0]) hitEnemyRaw(sim, living[0], kusa.damage);
+    // 8S9RNHFU5XF1 F22 T1, silent-0400/0401: the six hit a different enemy, leaving
+    // the planned victim alive to attack. Omit unresolved damage, not a worst-case bound:
+    // death-trigger interactions can be worse. Keep the line and its uncertainty visible.
+    if (kusa.deferRandomTarget && living.length > 1) {
+      sim.kusarigamaUnresolved = true;
+      sim.unknown = [...sim.unknown, "锁镰（随机落点未展开；未计额外伤害，损血与击杀非保证）"];
+    } else if (living[0]) hitEnemyRaw(sim, living[0], kusa.damage);
   }
   // Shuriken: the Strength lands once the 3rd Attack is done, for every Attack after it (and the fight).
   const shuriken = player.shuriken;
@@ -3481,6 +3490,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
         ...(input.player.tungstenRod && !rodVerified && !winsFight ? ["钨合金棍（自身失血或其他减损交互未验证）"] : []),
         ...(input.player.paelsLegionPreview && sim.tempDex !== 0 ? ["佩尔的士兵（方案内新增敏捷组合未验证）"] : []),
       ],
+      ...(sim.kusarigamaUnresolved ? { kusarigamaUnresolved: true as const } : {}),
       sandpitAfter,
       ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunIndexes: stunned.map((enemy) => enemy.index), stunSaved } : {}),
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
@@ -3563,7 +3573,8 @@ function simKey(sim: Sim): string {
     + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "")
     + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "")
     + (sim.noDraw ? "#noDraw" : "")
-    + (sim.apotheosisApplied ? "#apotheosis" : "");
+    + (sim.apotheosisApplied ? "#apotheosis" : "")
+    + (sim.kusarigamaUnresolved ? "#kusarigamaUnresolved" : "");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const phantomKey = (sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "")
     + (sim.serpentForm !== null ? `#sf${sim.serpentForm}` : "");
@@ -3814,7 +3825,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     // replaces) a potion-free line, however close their scores. Otherwise a potion line scoring a hair
     // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
-    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}${sim.pendingSelection ? "|selection" : ""}`;
+    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}${sim.pendingSelection ? "|selection" : ""}${sim.kusarigamaUnresolved ? "|kusarigamaUnresolved" : ""}`;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the line drinking fewer potions (a potion reaching the same end state is a potion
     // wasted, even a costless one in a boss fight), then the shorter plan (fewer steps = fewer chances for the
