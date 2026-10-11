@@ -10,6 +10,8 @@
 import type { RolloutInput } from "../reflex/rollout.js";
 import { calibratedWinProb, compareLines, fightOrders, summarizeLine, type BossSimLineResult, type FightSampleResult } from "./boss-sim.js";
 import type { DeckSimRunner } from "./build-sim-pool.js";
+import type { JsonValue } from "../core/util/json.js";
+import { quantitativeFightFacts } from "./quantitative-facts.js";
 
 /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
 export const BUILD_SIM_SAMPLES = 1000;
@@ -39,6 +41,7 @@ export interface DeckOption {
 }
 
 export interface OptionSim {
+  quantitative?: JsonValue;
   key: string;
   samples: number;
   /** Raw and calibrated win rate. */
@@ -122,7 +125,7 @@ export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number } = {},
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean } = {},
 ): Promise<CompareResult> {
   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
   const decks: Partial<RolloutInput>[] = [{}];
@@ -166,6 +169,7 @@ export async function compareOptions(
     const d = isBase ? null : compareLines(line, baseLine);
     return {
       key,
+      ...(opts.quantitative ? { quantitative: quantitativeFightFacts(line.outcomes, baseLine.outcomes, complete) } : {}),
       samples: n,
       win: r4(line.winProb),
       winCal: r4(base.continuation ? line.winProb : calibratedWinProb(line.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc)),
