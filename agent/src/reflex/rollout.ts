@@ -620,6 +620,8 @@ export interface RolloutOptions {
 }
 
 export interface RolloutInput {
+  /** Verified fresh-fight HP cost already applied to a synthetic board; reapply to transferred entry HP only. */
+  openingHpLoss?: number;
   captureResources?: boolean;
   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
   continuation?: {

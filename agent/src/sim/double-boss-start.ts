@@ -9,10 +9,14 @@ import { randomPotionSource } from "../reflex/combat-plan.js";
 import type { RolloutInput } from "../reflex/rollout.js";
 import { syntheticBossStart, type SyntheticStartOptions } from "./boss-start.js";
 import { bossLinesOptions } from "./boss-lines.js";
+import { observedRoyalPoisonOpeningLoss } from "./silent-opening.js";
 
 export function withDoubleBossStart(state: GameState, knowledge: Knowledge, input: RolloutInput, model: DoubleBossModel | null = doubleBossFor(state), opts: SyntheticStartOptions = {}): RolloutInput {
   if (!model || state.run?.floor == null || state.run.floor > model.firstFloor) return input;
   const linesEnabled = bossLinesOptions.enabled;
+  const openingHpLoss = observedRoyalPoisonOpeningLoss(state);
+  const value = openingHpLoss > 0 ? { ...model.value, openingHpLoss,
+    source: `${model.value.source}；TXZ6RVMQA09D A10已观察组合：下一战可操作前失去4生命` } : model.value;
   let variants: NonNullable<RolloutInput["continuation"]>["variants"];
   // Building a board must not start nested whole-fight simulations, even after a boss becomes trusted.
   bossLinesOptions.enabled = false;
@@ -57,7 +61,7 @@ export function withDoubleBossStart(state: GameState, knowledge: Knowledge, inpu
       { enemyTargets: targets, strength: 0, weak: false, observedPoison: model.poisonPotionAmount });
     if (card && !hand.some((p) => p.cardId === card.cardId)) { hand.push({ ...card, potionCost: model.potionHp["POISON_POTION"] ?? 0 }); handBase.push(null); }
   }
-  return { ...input, solver: { ...input.solver, hand, continuationValue: model.value }, piles: { ...input.piles, handBase }, continuation: { variants,
+  return { ...input, solver: { ...input.solver, hand, continuationValue: value }, piles: { ...input.piles, handBase }, continuation: { variants,
     potions: belt.map((p) => ({ key: `POTION:${str(p["potion_id"])}:${p["index"]}`, id: str(p["potion_id"]) })),
     source: model.value.source, limitation: model.limitation,
   } };
