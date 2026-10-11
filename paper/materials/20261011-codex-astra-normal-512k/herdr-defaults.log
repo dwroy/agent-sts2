@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-astra-normal-512k/agent
+
+ ❯ tests/ops-herdr.test.ts (21 tests | 1 failed | 20 skipped) 12ms
+     × resume <options> --no-daemon <id>: the exec options minus what only exec has 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-herdr.test.ts > interactive TUI arguments > resume <options> --no-daemon <id>: the exec options minus what only exec has
+AssertionError: expected [ 'resume', '--cd', …(69) ] to include 'service_tier="priority"'
+ ❯ tests/ops-herdr.test.ts:73:18
+     71|     expect(args).toContain(`default_permissions="${OPS_PROFILE}"`);
+     72|     expect(args).toContain('approval_policy="never"');
+     73|     expect(args).toContain('service_tier="priority"');
+       |                  ^
+     74|     expect(args).toContain("model_auto_compact_token_limit=200000");
+     75|     expect(args).toContain("hooks"); // --disable hooks: no hook (herd…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 skipped (21)
+   Start at  15:19:56
+   Duration  1.01s (transform 672ms, setup 383ms, import 455ms, tests 12ms, environment 0ms)
+

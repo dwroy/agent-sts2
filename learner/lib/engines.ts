@@ -21,16 +21,16 @@ import { CODEX_DISABLED_FEATURES, codexEnv } from "../../agent/src/brain/engines
 import { runAgent } from "../../agent/src/brain/engines/process.js";
 import type { McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { PROJECT_ROOT as REPO_ROOT } from "../../agent/src/core/paths.js";
-import { resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
+import { CODEX_SERVICE_TIER, CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_MODEL, DEFAULT_CODEX_EFFORT, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
 import { MCP_SERVER_NAME } from "../../agent/src/brain/tools/mcp-launch.js";
 import type { TaskTool } from "./task.js";
 
 export const ENGINES = ["claude", "codex"] as const;
 export type EngineName = (typeof ENGINES)[number];
 
-/** Learner-only defaults; gameplay and ops keep their own model and service policy. */
-export const DEFAULT_LEARNER_CODEX_MODEL = "gpt-6-astra";
-export const DEFAULT_LEARNER_CODEX_EFFORT = "xhigh";
+/** All project launchers share the same Codex defaults. */
+export const DEFAULT_LEARNER_CODEX_MODEL = DEFAULT_CODEX_MODEL;
+export const DEFAULT_LEARNER_CODEX_EFFORT = DEFAULT_CODEX_EFFORT;
 
 export interface EngineRequest {
   engine: EngineName;
@@ -42,7 +42,7 @@ export interface EngineRequest {
   model?: string;
   /** Reasoning effort: claude --effort, codex model_reasoning_effort. */
   effort?: string;
-  /** Explicit Codex tier for non-learner consumers; omitted means no Fast request. */
+  /** Explicit Codex tier; omitted selects the shared normal default. */
   serviceTier?: string;
   maxTurns?: number;
   /** Our stdio MCP tool server (--with-tools). */
@@ -259,7 +259,9 @@ export function codexLearnerConfig(opts: { effort: string; serviceTier?: string 
     `approval_policy=${toml("never")}`,
     `web_search=${toml("disabled")}`,
     `model_reasoning_effort=${toml(opts.effort)}`,
-    ...(opts.serviceTier ? [`service_tier=${toml(opts.serviceTier)}`] : []),
+    `service_tier=${toml(opts.serviceTier ?? CODEX_SERVICE_TIER)}`,
+    `model_context_window=${CODEX_CONTEXT_WINDOW}`,
+    `model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKENS}`,
     "allow_login_shell=false",
     // No skills catalogue in front of the task (the brain's settings; the 2026-10-04 smoke run had one).
     "skills.include_instructions=false",

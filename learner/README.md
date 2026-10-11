@@ -1,6 +1,6 @@
 # 离线学习者（learner）
 
-2026-10-10 按 main 核对。学习者在对局外读本角色日志，复盘、更新经验、提出并实现代码改动。当前生产使用 Codex，默认 `gpt-6-astra` / `xhigh`，关闭 Fast（不请求 `service_tier`，启动器忽略用户配置）。启动器保留 Claude 适配，但现行职责要求 Claude 只观察和与 Roy 对话，不修改或审核。边界见 [学习协议](../docs/learning-protocol.md)，整体职责见 [V4 架构](../docs/v4-architecture.md) §4。
+2026-10-11 按 main 核对。学习者在对局外读本角色日志，复盘、更新经验、提出并实现代码改动。当前生产使用 Codex，默认 `gpt-6-astra` / `xhigh`，normal / 关闭 Fast（显式 `service_tier="default"`），context 上限 512000、自动压缩阈值 460800；启动器仍忽略用户配置。启动器保留 Claude 适配，但现行职责要求 Claude 只观察和与 Roy 对话，不修改或审核。边界见 [学习协议](../docs/learning-protocol.md)，整体职责见 [V4 架构](../docs/v4-architecture.md) §4。
 
 ## 入口与产物
 
@@ -108,7 +108,7 @@ Codex 使用登录态；程序由 LEARNER_CODEX_BIN 覆盖，登录目录由 LEA
 - `--with-tools` 显式挂 `agent/src/brain/tools/mcp-server.ts` 的 gkb，只读知识和日志；工具定义以 registry.ts 及其注册模块为准。服务器不存在报错，不能假称已挂工具。
 - Claude 适配保留订阅登录、restricted、工具白名单、禁止 key/play/push 的规则与 MCP 隔离；适配能力不改变现行角色权限。
 
-调度入口显式传入该模型和强度，并通过 learner 专用 CLI 包装器去掉旧租约工作树传入的 Fast 档位；不会修改旧工作树或打断已运行批次。运维会话和对局的模型、Fast 设置独立保持。
+调度入口显式传入该模型和强度，并通过 learner 专用 CLI 包装器去掉旧租约工作树传入的 Fast 档位；不会修改旧工作树或打断已运行批次。运维和对局同样默认 Astra / xhigh / normal / 512k。
 
 每次运行写 learner/runs/<时间>-<任务>.jsonl：learner_launch（命令、参数、完整任务提示）、引擎事件流及 stderr、learner_summary（退出码、超时、耗时、用量与摘要）。失败原件保留，修复与复验另存；摘要和自然语言回报都要核对实际产物。
 

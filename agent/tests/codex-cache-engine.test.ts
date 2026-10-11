@@ -43,7 +43,7 @@ beforeEach(() => {
 afterEach(async () => { for (const engine of engines) await engine.close(); rmSync(directory, { recursive: true, force: true }); setKnowledgeCharacter(null); });
 
 function engine(physicalCallLimit?: number, beforePhysicalCall?: (call: { mode: "session" | "exec"; questionId?: string }) => void) {
-  const config = loadConfig({ BRAIN_CODEX_BIN: "/fixed/fake-codex", BRAIN_CODEX_HOME: directory, BRAIN_CODEX_MODE: "session", BRAIN_CODEX_EFFORT: "high" });
+  const config = loadConfig({ BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_BIN: "/fixed/fake-codex", BRAIN_CODEX_HOME: directory, BRAIN_CODEX_MODE: "session", BRAIN_CODEX_EFFORT: "high" });
   const instance = new CodexEngine({ settings: config.brain.engines.codex, codex: config.brain.codex, stateDir: directory, traceFile: join(directory, "trace.jsonl"), physicalCallLimit, beforePhysicalCall,
     readUsage: async () => ({ readAt: new Date().toISOString(), ms: 1, plan: null, windows: [{ name: "codex/primary", usedPct: 1, windowMins: 10080, resetsAt: null }], credits: null, ordinaryUsageAllowed: true, reachedType: null, spendControlReached: false }) });
   engines.push(instance); return instance;

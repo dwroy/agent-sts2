@@ -13,12 +13,12 @@ const answer: BrainAnswer = { engine: "codex", model: "gpt-6.1-sol", effort: "hi
   latencyMs: 10, usage: { inputTokens: 100, cacheHitTokens: 80, outputTokens: 10 }, toolCalls: [], raw: "{}", native: { mode: "session", reverted: true } };
 
 describe("restricted Codex cache probe (offline)", () => {
-  it("uses the established isolated brain home with the same full production model/effort/settings", () => {
+  it("uses the established isolated brain home with the fixed historical probe model/effort/settings", () => {
     const config = probeConfig();
     expect(config.brain.codex.home).toBe("/home/dw/.codex-brain");
     expect(PROBE_HOME).toBe(config.brain.codex.home);
     expect(config.brain.engines.codex).toMatchObject({ model: "gpt-6.1-sol", effort: "high", timeoutMs: 600_000, tools: false });
-    expect(config.brain.codex).toMatchObject({ mode: "session", schemaFields: "used", summary: "auto", serviceTier: "priority",
+    expect(config.brain.codex).toMatchObject({ mode: "session", schemaFields: "used", summary: "auto", serviceTier: "default",
       usage: { required: true, stopPct: 80 } });
   });
 

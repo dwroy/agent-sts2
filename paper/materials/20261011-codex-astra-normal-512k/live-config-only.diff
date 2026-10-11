@@ -1,0 +1,338 @@
+diff --git a/agent/src/brain/engines/codex.ts b/agent/src/brain/engines/codex.ts
+index 9d52693ed..82b62c15b 100644
+--- a/agent/src/brain/engines/codex.ts
++++ b/agent/src/brain/engines/codex.ts
+@@ -1,7 +1,7 @@
+ /**
+  * Codex as a brain engine: headless `codex exec` (codex-cli 0.160, npm @openai/codex) under this machine's ChatGPT
+  * login (`codex login` in ~/.codex: the subscription; Roy 2026-10-03), one process per call. Model and effort are
+- * always sent (default gpt-6.1-sol at xhigh: config.ts DEFAULT_CODEX_MODEL / DEFAULT_CODEX_EFFORT).
++ * always sent (default gpt-6-astra at xhigh: config.ts DEFAULT_CODEX_MODEL / DEFAULT_CODEX_EFFORT).
+  *
+  * - Isolation (measured 2026-10-03, experiments/brain-replay/codex-isolation.md): the model sees our system prompt
+  *   (as codex's base instructions: model_instructions_file) and the user message, nothing else, and has no tool.
+@@ -54,7 +54,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFil
+ import { tmpdir } from "node:os";
+ import { dirname, isAbsolute, join } from "node:path";
+ 
+-import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
++import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
+ import type { JsonSchema } from "../tools/types.js";
+ import { EngineFailure, labelPrefix, withNotes, type FailureKind } from "../router.js";
+ import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
+@@ -231,6 +231,8 @@ export function codexConfig(opts: { systemFile: string; catalogFile: string; sta
+     `sqlite_home=${toml(opts.stateDir)}`,
+     `log_dir=${toml(join(opts.stateDir, "log"))}`,
+     `model_reasoning_effort=${toml(opts.effort)}`,
++    `model_context_window=${CODEX_CONTEXT_WINDOW}`,
++    `model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKENS}`,
+     `model_reasoning_summary=${toml(opts.summary)}`,
+     ...(opts.serviceTier ? [`service_tier=${toml(opts.serviceTier)}`] : []),
+   ];
+diff --git a/agent/src/core/config.ts b/agent/src/core/config.ts
+index 3ddb7b0ec..9714a5ed3 100644
+--- a/agent/src/core/config.ts
++++ b/agent/src/core/config.ts
+@@ -524,7 +524,7 @@ export interface BrainConfig {
+     home: string;
+     /** BRAIN_CODEX_SUMMARY: the reasoning summary codex asks for (default auto; logged, not shown to the model). */
+     summary: "auto" | "concise" | "detailed" | "none";
+-    /** Fast service tier for every Codex session (Roy 2026-10-09); model and reasoning effort stay separate. */
++    /** Normal service tier for every Codex session (Roy 2026-10-11). */
+     serviceTier: string | null;
+     /**
+      * BRAIN_CODEX_STALL_MS (default 120 s): after the first output token, a run whose stream is silent this long is
+@@ -613,13 +613,16 @@ export const DEFAULT_CLAUDE_TIMEOUT_MS = 120_000;
+ export const DEFAULT_CLAUDE_MAX_CALLS = 150;
+ 
+ /**
+- * The brain's Codex model and effort when BRAIN_CODEX_MODEL / BRAIN_CODEX_EFFORT are unset (Roy 2026-10-03: "gpt6.1 sol
+- * extra high"). Always sent explicitly: the engine ignores ~/.codex/config.toml (engines/codex.ts).
++ * Shared Codex defaults (Roy 2026-10-11): Astra / xhigh / normal, with a 512k configured context window.
++ * Always sent explicitly: isolated launchers ignore ~/.codex/config.toml.
+  */
+-export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
++export const DEFAULT_CODEX_MODEL = "gpt-6-astra";
+ export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
+-/** Codex's model catalog names the priority service tier "Fast". Roy enabled it for all sessions on 2026-10-09. */
+-export const CODEX_SERVICE_TIER = "priority";
++/** Explicit normal tier also clears priority inherited from an older session. */
++export const CODEX_SERVICE_TIER = "default";
++export const CODEX_CONTEXT_WINDOW = 512_000;
++/** Leave room for the answer and compaction before reaching the configured context ceiling. */
++export const CODEX_AUTO_COMPACT_TOKENS = 460_800;
+ 
+ /** BRAIN_CODEX_TIMEOUT_MS when unset: 10 minutes per call (xhigh on a map / act-plan question takes minutes). */
+ export const DEFAULT_CODEX_TIMEOUT_MS = 600_000;
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index 3aa808ccb..246029f00 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -37,7 +37,7 @@ import type { UsageStatus } from "../brain/engines/codex-usage.js";
+ import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
+ import type { EngineName } from "../brain/types.js";
+ import type { AppConfig } from "../core/config.js";
+-import { DEFAULT_CLAUDE_MODEL } from "../core/config.js";
++import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL } from "../core/config.js";
+ import { isMenuRunId } from "../memory/journal-replay.js";
+ import { str, type JsonValue } from "../core/util/json.js";
+ import { resolveJevPromptLog } from "./jev-prompt-log.js";
+@@ -119,6 +119,8 @@ export interface RunConfigRow {
+     codex?: {
+       mode: string;
+       service_tier: string | null;
++      context_window?: number;
++      auto_compact_token_limit?: number;
+       summary: string;
+       stall_ms: number | null;
+       first_token_ms: number | null;
+@@ -342,6 +344,8 @@ function codexSnapshot(codex: AppConfig["brain"]["codex"]): NonNullable<RunConfi
+   return {
+     mode: codex.mode,
+     service_tier: codex.serviceTier,
++    context_window: CODEX_CONTEXT_WINDOW,
++    auto_compact_token_limit: CODEX_AUTO_COMPACT_TOKENS,
+     summary: codex.summary,
+     stall_ms: codex.stallMs,
+     first_token_ms: codex.firstTokenMs,
+diff --git a/learner/lib/engines.ts b/learner/lib/engines.ts
+index c4dcef59a..7a7234a93 100644
+--- a/learner/lib/engines.ts
++++ b/learner/lib/engines.ts
+@@ -21,16 +21,16 @@ import { CODEX_DISABLED_FEATURES, codexEnv } from "../../agent/src/brain/engines
+ import { runAgent } from "../../agent/src/brain/engines/process.js";
+ import type { McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
+ import { PROJECT_ROOT as REPO_ROOT } from "../../agent/src/core/paths.js";
+-import { resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
++import { CODEX_SERVICE_TIER, CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_MODEL, DEFAULT_CODEX_EFFORT, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
+ import { MCP_SERVER_NAME } from "../../agent/src/brain/tools/mcp-launch.js";
+ import type { TaskTool } from "./task.js";
+ 
+ export const ENGINES = ["claude", "codex"] as const;
+ export type EngineName = (typeof ENGINES)[number];
+ 
+-/** Learner-only defaults; gameplay and ops keep their own model and service policy. */
+-export const DEFAULT_LEARNER_CODEX_MODEL = "gpt-6-astra";
+-export const DEFAULT_LEARNER_CODEX_EFFORT = "xhigh";
++/** All project launchers share the same Codex defaults. */
++export const DEFAULT_LEARNER_CODEX_MODEL = DEFAULT_CODEX_MODEL;
++export const DEFAULT_LEARNER_CODEX_EFFORT = DEFAULT_CODEX_EFFORT;
+ 
+ export interface EngineRequest {
+   engine: EngineName;
+@@ -42,7 +42,7 @@ export interface EngineRequest {
+   model?: string;
+   /** Reasoning effort: claude --effort, codex model_reasoning_effort. */
+   effort?: string;
+-  /** Explicit Codex tier for non-learner consumers; omitted means no Fast request. */
++  /** Explicit Codex tier; omitted selects the shared normal default. */
+   serviceTier?: string;
+   maxTurns?: number;
+   /** Our stdio MCP tool server (--with-tools). */
+@@ -259,7 +259,9 @@ export function codexLearnerConfig(opts: { effort: string; serviceTier?: string
+     `approval_policy=${toml("never")}`,
+     `web_search=${toml("disabled")}`,
+     `model_reasoning_effort=${toml(opts.effort)}`,
+-    ...(opts.serviceTier ? [`service_tier=${toml(opts.serviceTier)}`] : []),
++    `service_tier=${toml(opts.serviceTier ?? CODEX_SERVICE_TIER)}`,
++    `model_context_window=${CODEX_CONTEXT_WINDOW}`,
++    `model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKENS}`,
+     "allow_login_shell=false",
+     // No skills catalogue in front of the task (the brain's settings; the 2026-10-04 smoke run had one).
+     "skills.include_instructions=false",
+diff --git a/ops/codex-fast.sh b/ops/codex-fast.sh
+index 0d6b0129b..17609a6fd 100755
+--- a/ops/codex-fast.sh
++++ b/ops/codex-fast.sh
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env bash
+-# Keep ops/play on Fast; route explicitly identified historical learners to their current policy.
++# Compatibility entry for old Fast launchers; all sessions now use the current shared policy.
+ set -eu
+ codex_bin="${STS2_CODEX_FAST_BIN:-$HOME/.local/node/bin/codex}"
+ if [ "$codex_bin" = "${BASH_SOURCE[0]}" ] || [ "$codex_bin" -ef "${BASH_SOURCE[0]}" ]; then
+@@ -45,26 +45,4 @@ case "$permission_profile" in
+     exec "$learner_wrapper" "${original_args[@]}" ;;
+ esac
+ set -- "${original_args[@]}"
+-args=()
+-service_set=0
+-while [ "$#" -gt 0 ]; do
+-  case "$1" in
+-    --)
+-      args+=(-c 'service_tier="priority"' "$@")
+-      service_set=1
+-      break
+-      ;;
+-    -c|--config)
+-      [ "$#" -ge 2 ] || { echo "missing Codex config value" >&2; exit 2; }
+-      case "$2" in
+-        service_tier=*) shift 2; continue ;;
+-      esac
+-      args+=("$1" "$2")
+-      shift 2
+-      ;;
+-    --config=service_tier=*) shift ;;
+-    *) args+=("$1"); shift ;;
+-  esac
+-done
+-[ "$service_set" = 1 ] || args+=(-c 'service_tier="priority"')
+-exec "$codex_bin" "${args[@]}"
++. "$(dirname "${BASH_SOURCE[0]}")/codex-policy.sh"
+diff --git a/ops/codex-learner.sh b/ops/codex-learner.sh
+index e01a2c094..c985ebd75 100755
+--- a/ops/codex-learner.sh
++++ b/ops/codex-learner.sh
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env bash
+ # Apply the current learner policy at the native boundary, including historical launchers.
+-# Learner exec already uses --ignore-user-config, so an absent tier selects the native default.
++# The shared policy explicitly clears historical Fast, model and context overrides.
+ set -eu
+ codex_bin="${STS2_CODEX_LEARNER_BIN:-$HOME/.local/node/bin/codex}"
+ legacy_wrapper="$(dirname "${BASH_SOURCE[0]}")/codex-fast.sh"
+@@ -9,57 +9,4 @@ if [ "$codex_bin" = "${BASH_SOURCE[0]}" ] || [ "$codex_bin" -ef "${BASH_SOURCE[0
+   echo "recursive Codex learner launcher" >&2
+   exit 2
+ fi
+-args=()
+-command="${1:-}"
+-policy=()
+-if [ "$command" = exec ]; then policy=(--model gpt-6-astra -c 'model_reasoning_effort="xhigh"'); fi
+-legacy_override=0
+-while [ "$#" -gt 0 ]; do
+-  case "$1" in
+-    --) args+=("${policy[@]}" "$@"); policy=(); break ;;
+-    -m|--model)
+-      [ "$#" -ge 2 ] || { echo "missing Codex model" >&2; exit 2; }
+-      if [ "$command" = exec ]; then
+-        [ "$2" = gpt-6-astra ] || legacy_override=1
+-      else args+=("$1" "$2"); fi
+-      shift 2 ;;
+-    --model=*)
+-      if [ "$command" = exec ]; then
+-        [ "${1#--model=}" = gpt-6-astra ] || legacy_override=1
+-      else args+=("$1"); fi
+-      shift ;;
+-    -c|--config)
+-      [ "$#" -ge 2 ] || { echo "missing Codex config value" >&2; exit 2; }
+-      case "$2" in
+-        service_tier=*) shift 2; continue ;;
+-      esac
+-      if [ "$command" = exec ]; then
+-        case "$2" in
+-          model=*|model_reasoning_effort=*)
+-            case "$2" in
+-              model=gpt-6-astra|'model="gpt-6-astra"'|"model='gpt-6-astra'"|model_reasoning_effort=xhigh|'model_reasoning_effort="xhigh"'|"model_reasoning_effort='xhigh'") ;;
+-              *) legacy_override=1 ;;
+-            esac
+-            shift 2; continue ;;
+-        esac
+-      fi
+-      args+=("$1" "$2")
+-      shift 2
+-      ;;
+-    --config=service_tier=*) shift ;;
+-    --config=model=*|--config=model_reasoning_effort=*)
+-      if [ "$command" = exec ]; then
+-        case "${1#--config=}" in
+-          model=gpt-6-astra|'model="gpt-6-astra"'|"model='gpt-6-astra'"|model_reasoning_effort=xhigh|'model_reasoning_effort="xhigh"'|"model_reasoning_effort='xhigh'") ;;
+-          *) legacy_override=1 ;;
+-        esac
+-      else args+=("$1"); fi
+-      shift ;;
+-    *) args+=("$1"); shift ;;
+-  esac
+-done
+-args+=("${policy[@]}")
+-if [ "$legacy_override" = 1 ]; then
+-  echo 'learner CLI policy: effective model=gpt-6-astra effort=xhigh fast=off (legacy overrides replaced)' >&2
+-fi
+-exec "$codex_bin" "${args[@]}"
++. "$(dirname "${BASH_SOURCE[0]}")/codex-policy.sh"
+diff --git a/ops/codex/lib.ts b/ops/codex/lib.ts
+index 251e1e2cf..ed99cf4f2 100644
+--- a/ops/codex/lib.ts
++++ b/ops/codex/lib.ts
+@@ -8,7 +8,7 @@
+  *   web search off, the brain's disabled features minus the shell / code mode) and a permission profile named "ops"
+  *   built like the learner's write profile (codexPermissions: everything readable, the project root + tmp writable, key
+  *   files / every .env / codex's auth.json unreadable, no network). Codex auto-compacts the session at
+- *   AUTO_COMPACT_TOKENS (gpt-6.1-sol's window is 272k).
++ *   AUTO_COMPACT_TOKENS (configured context ceiling: 512k).
+  * - The sandbox has its own PID namespace, no network (not even 127.0.0.1) and no Windows interop (2026-10-04 probes),
+  *   so everything that needs them (process control, the mod's HTTP state, schtasks.exe, the learner's nested codex)
+  *   is an allow-listed broker action (ACTIONS): the model runs `bash ops/codex-ops-do.sh <action> [arg]`, which drops a
+@@ -18,7 +18,7 @@
+ import { existsSync, readdirSync, readFileSync } from "node:fs";
+ import { join } from "node:path";
+ 
+-import { CODEX_SERVICE_TIER, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
++import { CODEX_SERVICE_TIER, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
+ import { codexCommand, mainCheckout, withCodexKeys, type CommandLine, type EngineRequest } from "../../learner/lib/engines.js";
+ import type { TaskTool } from "../../learner/lib/task.js";
+ 
+@@ -26,8 +26,8 @@ import type { TaskTool } from "../../learner/lib/task.js";
+ export const OPS_PROFILE = "ops";
+ /** Tools as the learner names them: with Bash / Edit / Write the profile is the writable one (project root + tmp). */
+ export const OPS_TOOLS: TaskTool[] = ["Read", "Grep", "Glob", "Bash", "Edit", "Write"];
+-/** Codex compacts the session's history above this many tokens (model_auto_compact_token_limit; window 272k). */
+-export const AUTO_COMPACT_TOKENS = 200_000;
++/** Shared compaction threshold below the 512k configured context ceiling. */
++export const AUTO_COMPACT_TOKENS = CODEX_AUTO_COMPACT_TOKENS;
+ /** A wake that runs longer is stopped (process group, SIGTERM then SIGKILL); its events stay queued. */
+ export const DEFAULT_WAKE_TIMEOUT_MIN = 120;
+ 
+@@ -121,7 +121,7 @@ export function initCommand(request: EngineRequest, prompt: string, bin: string)
+   const base = codexCommand({ ...request, model: request.model ?? DEFAULT_CODEX_MODEL,
+     effort: request.effort ?? DEFAULT_CODEX_EFFORT, serviceTier: CODEX_SERVICE_TIER }, "", bin);
+   if (base.args.at(-1) !== "-") throw new Error("codexCommand no longer ends with '-'");
+-  return { command: base.command, args: [...base.args.slice(0, -1), "-c", `model_auto_compact_token_limit=${AUTO_COMPACT_TOKENS}`, "-"], stdin: prompt };
++  return { command: base.command, args: base.args, stdin: prompt };
+ }
+ 
+ /**
+diff --git a/ops/run.sh b/ops/run.sh
+index 8a9e04241..01ac96110 100755
+--- a/ops/run.sh
++++ b/ops/run.sh
+@@ -6,6 +6,8 @@ set -u
+ . "$(dirname "$0")/paths.sh"
+ cd "$LIVE/agent"
+ export STS2_WORKSPACE="$ROOT"
++# Roy 2026-10-11: production Codex defaults apply even with a legacy scheduler environment.
++export BRAIN_CODEX_MODEL=gpt-6-astra BRAIN_CODEX_EFFORT=xhigh
+ export PATH="$HOME/.local/node/bin:$PATH"
+ sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
+ ts=$(date +%Y%m%d-%H%M%S)
+diff --git a/ops/codex-policy.sh b/ops/codex-policy.sh
+new file mode 100644
+index 000000000..eea7abd69
+--- /dev/null
++++ b/ops/codex-policy.sh
+@@ -0,0 +1,25 @@
++# Sourced by the historical launcher names after resolving and checking the native binary.
++# Only normalize Codex arguments; never inspect or rewrite a sandbox child after --.
++args=()
++policy=(-c 'model="gpt-6-astra"' -c 'model_reasoning_effort="xhigh"'
++        -c 'service_tier="default"' -c 'model_context_window=512000'
++        -c 'model_auto_compact_token_limit=460800')
++while [ "$#" -gt 0 ]; do
++  case "$1" in
++    --) args+=("${policy[@]}" "$@"); policy=(); break ;;
++    -m|--model)
++      [ "$#" -ge 2 ] || { echo "missing Codex model" >&2; exit 2; }
++      shift 2 ;;
++    --model=*) shift ;;
++    -c|--config)
++      [ "$#" -ge 2 ] || { echo "missing Codex config value" >&2; exit 2; }
++      case "$2" in
++        model=*|model_reasoning_effort=*|service_tier=*|model_context_window=*|model_auto_compact_token_limit=*) shift 2; continue ;;
++      esac
++      args+=("$1" "$2"); shift 2 ;;
++    --config=model=*|--config=model_reasoning_effort=*|--config=service_tier=*|--config=model_context_window=*|--config=model_auto_compact_token_limit=*) shift ;;
++    *) args+=("$1"); shift ;;
++  esac
++done
++args+=("${policy[@]}")
++exec "$codex_bin" "${args[@]}"
