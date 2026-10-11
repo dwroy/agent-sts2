@@ -1136,3 +1136,12 @@ S1.exp33已由学习者自测合入live，19项经CLI/by=ops登记shipped，0151
 character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
 silent,9,3,1,0,1,39.67,38,HMVJKM56S4Q8,G403VCZ3BH1B,2026-10-05T18:45:41+00:00,2026-10-05T20:51:26+00:00,0,0,29,silent-0010 silent-0018 silent-0024 silent-0025 silent-0037 silent-0064 silent-0069 silent-0072 silent-0076 silent-0079 silent-0090 silent-0102 silent-0103 silent-0106 silent-0129 silent-0133 silent-0134 silent-0135 silent-0136 silent-0137 silent-0138 silent-0139 silent-0140 silent-0141 silent-0142 silent-0143 silent-0144 silent-0145 silent-0146,1,1
 ```
+
+
+## 2026-10-11 18:06 CST：A10 首胜阶段补记（实际未升 A11）
+
+截至首胜10-10 21:35:55，静默A10纯Codex165个独立结束局最终1胜164负（0.61%）、首试0胜；原始172局另列DeepSeek5/混合1/未知1。平均最终31.44层、首试28.70层。首胜7S8HCC0M6G9W使用1次SL，未建立稳定通关或单项经验因果收益；这是A10首胜阶段小结，后续实玩仍A10。完整eval-metrics若另跑须保留本冻结切点与运行口径。
+
+7S8HCC0M6G9W 已于10-10 21:35通关静默A10/F49；F49首试判死后成功读档1次、第二试T10剩50血获胜，用时43分56秒（首末决策）。胜局与牌组已在00:15/00:39报告；下一局LWQYSREHMMJ7请求A11但实际选角上限10、开局/结束均A10，因此不记实际升A11。
+
+来源：paper/materials/20261011-1751-ops-backlog/postmortem-audit.json；原选角帧、首末决策、SL与后续局实际进阶均有字节偏移/SHA。不改写历史目标升级事件。

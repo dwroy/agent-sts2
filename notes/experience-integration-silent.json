@@ -5,8 +5,8 @@
   "authorization": "既有专题请求的知识沉淀授权；报告验收后经现有experience-update去重入库",
   "task": "experience-update",
   "character": "silent",
-  "state": "pending",
-  "batch": null,
+  "state": "running",
+  "batch": "20261011-175450-experience-update",
   "accepted_at": "2026-10-10T18:11:16+08:00",
   "source_batch": "20261010-205441-strategy-proposal",
   "source_report": {
@@ -42,7 +42,7 @@
   ],
   "work_spec": "paper/materials/silent/20261011-core-cycle-quantification/experience-integration/task-v3.md",
   "work_spec_sha256": "030337a62c1d43cb18486f53eb760e2235b762fd567d9e8cf6232166aed96360",
-  "blocking_condition": "本轮宿主broker入口8秒无响应(exit124)，未生成匹配批次；现有唯一续办事件已补scope revision3。宿主恢复事件执行后核实最新租约并按同一请求标准派发，保留live既有19项合入冲突。",
+  "blocking_condition": null,
   "entry_count_goal": {
     "approximate": 1,
     "not_a_hard_count": "由learner据证据合并综合项，必要时修订既有夜魇项；机制与四核心保留原身份"
@@ -64,7 +64,7 @@
     "batch": null
   },
   "effect_followup": "paper/materials/silent/20261010-core-output-value/knowledge-gap-review/effect-followup.json",
-  "dispatch_status": "not_dispatched",
+  "dispatch_status": "dispatched",
   "observed_active_owners": [],
   "previous_work_spec": "paper/materials/silent/20261010-core-output-value/result-review/experience-work-spec.md",
   "previous_work_spec_sha256": "a3b4dbdfa5d41e302404cd38c72c9082e92a419948783361bfb13c7096d7f5bf",
@@ -89,9 +89,24 @@
     "counterexamples, survival and final-win outcome"
   ],
   "last_dispatch_attempt": {
-    "path": "paper/materials/silent/20261011-core-cycle-quantification/experience-integration/dispatch-attempt.json",
-    "exit_code": 124,
-    "at": "2026-10-11T16:53:43.841086+08:00",
-    "batch": null
-  }
+    "path": "paper/materials/20261011-1751-ops-backlog/integration-dispatched.json",
+    "exit_code": 0,
+    "batch": "20261011-175450-experience-update",
+    "pid": 1919328,
+    "pane": "wJ:pJ0",
+    "recorded_at": "2026-10-11T18:15:58.407415+08:00"
+  },
+  "dispatched_at": "2026-10-11T17:56:17.902708+08:00",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+  "pane": "wJ:pJ0",
+  "pid": 1919328,
+  "dispatch_attempt_history": [
+    {
+      "path": "paper/materials/silent/20261011-core-cycle-quantification/experience-integration/dispatch-attempt.json",
+      "exit_code": 124,
+      "at": "2026-10-11T16:53:43.841086+08:00",
+      "batch": null
+    }
+  ],
+  "dispatched_at_note": "17:56:17 is the ops binding/receipt record time; host batch stamp is 20261011-175450."
 }

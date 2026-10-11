@@ -1,0 +1,785 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+ ❯ tests/brain-codex.test.ts (32 tests | 21 failed) 18913ms
+     × runs codex exec with only our context: no user config, hooks, memories, plugins or tools; model and effort explicit 204ms
+     × takes the model and effort per kind and the service tier from the environment 222ms
+     × puts the re-ask after the question and maps an option name to its key 186ms
+     × a free-form task goes without --output-schema and is read from the text 210ms
+     × refuses a call when codex's home holds an AGENTS.md (codex loads it whatever the flags) 311ms
+     × refuses a model the catalog does not list and an effort the model does not take, without substituting 598ms
+     × recognises a used-up plan (rest for the process), a rate limit, a lost login and an ignored isolation setting 343ms
+     × records a tool item the model used (none is offered) 215ms
+     × a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice 155ms
+     × after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken 144ms
+     × a question that stalled twice (and failed) is not billed to the next one: each latency is its own runs (J4S28FRQKD7G's act-plan, 41 s logged as 316 s) 148ms
+     × before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall 153ms
+     × stalled twice: the question fails as a timeout and the fallback answers it 142ms
+     × the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked 124ms
+     × a route review's route garbled as at xhigh ("keep fin? No must exact keep") is read as keep: one call, no re-ask, brain.jsonl notes it 132ms
+     × checks the program, the login file (not read), AGENTS.md, and the model and effort in the catalog 71ms
+     × answers through codex, logging engine, model, effort and tokens; an invalid answer is re-asked once 136ms
+     × a used-up plan: DeepSeek answers, codex is not asked again in this process, and the console hears it once 142ms
+     × a call past BRAIN_CODEX_TIMEOUT_MS is killed and DeepSeek answers it 159ms
+     × the start-up check marks codex unavailable for the run when it fails 67ms
+     × is no longer refused by the router as not implemented 15006ms
+ ❯ tests/brain-codex-session.test.ts (22 tests | 17 failed) 2477ms
+     × one server, one thread with our system prompt; each question a turn with the strict schema, reverted after it 123ms
+     × quoted TUI model state and project trust keep both questions on the same isolated session 105ms
+     × a new thread (the old one deleted) when the system prompt changes or a turn fails 114ms
+     × config.toml with anything but model / effort / [tui] (or an instruction source) turns session mode off: exec mode answers 102ms
+     × a stalled turn (silent after its first token) is interrupted, reverted and asked once more 101ms
+     × a runaway answer (past BRAIN_CODEX_MAX_ANSWER_CHARS) is interrupted, reverted and asked once more 100ms
+     × a whitespace runaway (BRAIN_CODEX_MAX_ANSWER_BLANKS in a row between JSON tokens) is cut at once, long before the length cap; a padded answer is not 108ms
+     × BRAIN_CODEX_ACCEPT_CUT (default on): a cut whose prefix is a whole, valid answer is taken, not asked again; the trace and brain.jsonl say so 123ms
+     × ET3V5177HXSY F42 rest/plan, logged: a whole cut answer to a question with a discard option is taken (it was refused for lacking discard) 109ms
+     × a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why 110ms
+     × a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off 99ms
+     × the answer text a turn keeps is capped (ANSWER_TEXT_KEEP), however long the runaway streamed before the interrupt landed 109ms
+     × a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process 121ms
+     × a broken backend stream restarts the session once (and the question is asked again there) 125ms
+     × sweeps a dead process's threads (ours only), and deletes its own thread's files at exit 119ms
+     × the server does not keep the process alive; at exit the process removes its thread's files 591ms
+     × a pushed window at the stop stops codex before the next due read 152ms
+ ❯ tests/ops-codex.test.ts (12 tests | 1 failed) 5911ms
+     × allows only the listed actions with clean arguments 14ms
+ ❯ tests/learner.test.ts (47 tests | 6 failed) 611ms
+     × codex: the argv, cwd and stdin the fake saw match codexCommand; no key in its env; log framed and summarised 82ms
+     × codex: the start-up check refuses an effort the model does not take (exit 3, nothing run) 71ms
+     × codex: a key file readable under the profile stops the run before it starts (exit 3, names only) 69ms
+     × codex: no login in its home stops the run (exit 3) 77ms
+     × codex: a run refused on the login asks codex to refresh its token once and says to re-run 82ms
+     × claude: summary (turns, tokens, cache, cost, duration) printed, and a key that reached the log is redacted 48ms
+ ❯ tests/brain-codex-usage.test.ts (21 tests | 12 failed) 15901ms
+     × asks a short-lived app-server on stdio, with codex's home and no key, no daemon, and leaves no process behind 98ms
+     × fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program 82ms
+     × a server that stays up after its answer is killed after the grace; the answer stands 15003ms
+     × reads at start and answers through codex; each codex row carries the reading, and the run-config row the guard 66ms
+     × refuses codex at start when a window is at the stop: DeepSeek answers, codex exec never runs 57ms
+     × stops codex mid-run when the window reaches the stop: said once, the rest to DeepSeek, no call goes out past it 66ms
+     × stops codex when the credit balance falls (credits spent, by us or by Dai's own use) 56ms
+     × usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes 58ms
+     × the live case (2026-10-04 07:06Z): a 401 expired token on the read, codex's token refresh through the app-server, the read again: codex answers 60ms
+     × through the router: reads failing send codex's questions to the fallback until the wait is over, then a working read brings codex back 75ms
+     × refreshCodexAuth asks the app-server account/read with refreshToken and keeps nothing of the account 62ms
+     × an engine used without preflight reads before its first call 132ms
+ ❯ tests/run-config.test.ts (14 tests | 1 failed) 15238ms
+     × the loop writes one row on the run's first state, next to its decision log 15006ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 58 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > one server, one thread with our system prompt; each question a turn with the strict schema, reverted after it
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > a new thread (the old one deleted) when the system prompt changes or a turn fails
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > config.toml with anything but model / effort / [tui] (or an instruction source) turns session mode off: exec mode answers
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > a stalled turn (silent after its first token) is interrupted, reverted and asked once more
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > a runaway answer (past BRAIN_CODEX_MAX_ANSWER_CHARS) is interrupted, reverted and asked once more
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > a whitespace runaway (BRAIN_CODEX_MAX_ANSWER_BLANKS in a row between JSON tokens) is cut at once, long before the length cap; a padded answer is not
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > BRAIN_CODEX_ACCEPT_CUT (default on): a cut whose prefix is a whole, valid answer is taken, not asked again; the trace and brain.jsonl say so
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > ET3V5177HXSY F42 rest/plan, logged: a whole cut answer to a question with a discard option is taken (it was refused for lacking discard)
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > the answer text a turn keeps is capped (ANSWER_TEXT_KEEP), however long the runaway streamed before the interrupt landed
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > sweeps a dead process's threads (ours only), and deletes its own thread's files at exit
+ FAIL  tests/brain-codex-session.test.ts > pushed rate limits > a pushed window at the stop stops codex before the next due read
+ FAIL  tests/brain-codex.test.ts > codex engine > runs codex exec with only our context: no user config, hooks, memories, plugins or tools; model and effort explicit
+ FAIL  tests/brain-codex.test.ts > codex engine > takes the model and effort per kind and the service tier from the environment
+ FAIL  tests/brain-codex.test.ts > codex engine > puts the re-ask after the question and maps an option name to its key
+ FAIL  tests/brain-codex.test.ts > codex engine > a free-form task goes without --output-schema and is read from the text
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken
+ FAIL  tests/brain-codex.test.ts > codex's schema holds only the fields the question uses (BRAIN_CODEX_SCHEMA_FIELDS; the A/B of 2026-10-03) > a route review's route garbled as at xhigh ("keep fin? No must exact keep") is read as keep: one call, no re-ask, brain.jsonl notes it
+EngineFailure: codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )
+ ❯ src/brain/engines/codex.ts:858:25
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/58]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > quoted TUI model state and project trust keep both questions on the same isolated session
+ FAIL  tests/brain-codex.test.ts > codex engine > records a tool item the model used (none is offered)
+EngineFailure: codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )
+ ❯ src/brain/engines/codex.ts:858:25
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/58]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > codex session mode > a broken backend stream restarts the session once (and the question is asked again there)
+AssertionError: promise rejected "EngineFailure: codex's model catalog has … { …(2) }" instead of resolving
+ ❯ tests/brain-codex-session.test.ts:435:43
+    433|     const fake = fakeSession("broken", { turns: [broken, answering({ c…
+    434|     const { engine } = sessionEngine(fake);
+    435|     await expect(engine.decide(request())).resolves.toMatchObject({ an…
+       |                                           ^
+    436|     expect(new Set(fake.requests().filter((r) => r.method === "initial…
+    437|     expect(fake.execs()).toBe(0);
+
+Caused by: EngineFailure: codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )
+ ❯ src/brain/engines/codex.ts:858:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { kind: 'unavailable', cooldownMs: 1800000 }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/58]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > the play process's end > the server does not keep the process alive; at exit the process removes its thread's files
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:491:24
+    489|     const began = Date.now();
+    490|     const run = spawnSync(process.execPath, ["--import", "tsx", script…
+    491|     expect(run.status).toBe(0);
+       |                        ^
+    492|     expect(Date.now() - began).toBeLessThan(25_000);
+    493|     expect(run.stdout).toContain('{"choice":"a","reason":"x"}');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the read > asks a short-lived app-server on stdio, with codex's home and no key, no daemon, and leaves no process behind
+Error: codex app-server ended before answering
+ ❯ ChildProcess.settle src/brain/engines/codex-usage.ts:232:62
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the read > fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program
+AssertionError: expected [Function] to throw error including 'account/rateLimits/read failed: chatg…' but got 'codex app-server ended before answeri…'
+
+Expected: "account/rateLimits/read failed: chatgpt authentication required to read rate limits"
+Received: "codex app-server ended before answering"
+
+ ❯ tests/brain-codex-usage.test.ts:219:39
+    217|     const opts = { bin: fake.bin, home: home("read-fail"), env: codexE…
+    218|     fake.setMode({ error: "chatgpt authentication required to read rat…
+    219|     await expect(readCodexUsage(opts)).rejects.toThrow("account/rateLi…
+       |                                       ^
+    220|     fake.setMode({ exitEarly: true });
+    221|     await expect(readCodexUsage(opts)).rejects.toThrow(/ended before a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the read > a server that stays up after its answer is killed after the grace; the answer stands
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/brain-codex-usage.test.ts:233:3
+    231|   });
+    232|
+    233|   it("a server that stays up after its answer is killed after the grac…
+       |   ^
+    234|     const fake = fakeCodex("read-linger");
+    235|     fake.setMode({ linger: true, result: liveResult(7) });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > reads at start and answers through codex; each codex row carries the reading, and the run-config row the guard
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "codex is unavailable for this run: `/tmp/fake-codex-usage-aWXdTP/loop-ok.mjs --version` exited 0: ; its questions go to deepseek (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)",
++ ]
+
+ ❯ tests/brain-codex-usage.test.ts:482:36
+    480|   it("reads at start and answers through codex; each codex row carries…
+    481|     const { fake, cfg, brain, rows, notes } = brainWith("loop-ok", { B…
+    482|     await expect(brain.preflight()).resolves.toEqual([]);
+       |                                    ^
+    483|     expect(fake.servers()).toHaveLength(1);
+    484|     for (let i = 0; i < 3; i += 1) await expect(ask(brain)).resolves.t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > refuses codex at start when a window is at the stop: DeepSeek answers, codex exec never runs
+AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+-   "codex is off for this run: codex usage guard: codex/primary 7-day window 85% used, resets 2026-10-10T09:06:37.000Z (BRAIN_CODEX_USAGE_STOP_PCT=80); its questions go to deepseek",
++   "codex is unavailable for this run: `/tmp/fake-codex-usage-aWXdTP/loop-start-stop.mjs --version` exited 0: ; its questions go to deepseek (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)",
+  ]
+
+ ❯ tests/brain-codex-usage.test.ts:506:22
+    504|     fake.setMode({ result: liveResult(85) });
+    505|     const problems = await brain.preflight();
+    506|     expect(problems).toEqual([`codex is off for this run: codex usage …
+       |                      ^
+    507|     expect(brain.warnings).toEqual(problems);
+    508|     await expect(ask(brain)).resolves.toMatchObject({ choice: "a", bra…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > stops codex mid-run when the window reaches the stop: said once, the rest to DeepSeek, no call goes out past it
+AssertionError: expected { choice: 'a', …(5) } to match object { choice: 'b' }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "choice": "b",
++   "choice": "a",
+  }
+
+ ❯ tests/brain-codex-usage.test.ts:520:29
+    518|     const { fake, brain, rows, notes, deepseek } = brainWith("loop-mid…
+    519|     await brain.preflight();
+    520|     await expect(ask(brain)).resolves.toMatchObject({ choice: "b" });
+       |                             ^
+    521|     fake.setMode({ result: liveResult(80) });
+    522|     await expect(ask(brain)).resolves.toMatchObject({ choice: "a", bra…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > stops codex when the credit balance falls (credits spent, by us or by Dai's own use)
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/brain-codex-usage.test.ts:538:30
+    536|     fake.setMode({ result: liveResult(3, "487.25") });
+    537|     await expect(ask(brain)).resolves.toMatchObject({ choice: "a", bra…
+    538|     expect(fake.execCalls()).toBe(1);
+       |                              ^
+    539|     expect(notes).toEqual([expect.stringContaining("codex usage guard:…
+    540|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "codex is unavailable for this run: `/tmp/fake-codex-usage-aWXdTP/loop-unreadable.mjs --version` exited 0: ; its questions go to deepseek (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)",
++ ]
+
+ ❯ tests/brain-codex-usage.test.ts:545:41
+    543|     const open = brainWith("loop-unreadable", { BRAIN_CODEX_USAGE_EVER…
+    544|     open.fake.setMode({ error: "chatgpt authentication required to rea…
+    545|     await expect(open.brain.preflight()).resolves.toEqual([]);
+       |                                         ^
+    546|     await expect(ask(open.brain)).resolves.toMatchObject({ choice: "b"…
+    547|     await expect(ask(open.brain)).resolves.toMatchObject({ choice: "b"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > the live case (2026-10-04 07:06Z): a 401 expired token on the read, codex's token refresh through the app-server, the read again: codex answers
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "codex is unavailable for this run: `/tmp/fake-codex-usage-aWXdTP/loop-expired.mjs --version` exited 0: ; its questions go to deepseek (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)",
++ ]
+
+ ❯ tests/brain-codex-usage.test.ts:566:36
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > through the router: reads failing send codex's questions to the fallback until the wait is over, then a working read brings codex back
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/brain-codex-usage.test.ts:592:28
+    590|     await expect(router.decide(req)).resolves.toMatchObject({ engine: …
+    591|     // One read so far: the second question went straight to DeepSeek …
+    592|     expect(fake.servers()).toHaveLength(1);
+       |                            ^
+    593|     fake.setMode({ result: liveResult(2) });
+    594|     clock += 16_000;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > refreshCodexAuth asks the app-server account/read with refreshToken and keeps nothing of the account
+AssertionError: promise rejected "Error: codex app-server ended before answ…" instead of resolving
+ ❯ tests/brain-codex-usage.test.ts:606:171
+    604|   it("refreshCodexAuth asks the app-server account/read with refreshTo…
+    605|     const fake = fakeCodex("refresh-direct");
+    606|     await expect(refreshCodexAuth({ bin: fake.bin, home: home("refresh…
+       |                                                                                                                                                                           ^
+    607|     expect(fake.servers()[0]!.requests.map((r) => r.method)).toEqual([…
+    608|     fake.setMode({ refreshError: "refresh token was already used" });
+
+Caused by: Error: codex app-server ended before answering
+ ❯ ChildProcess.settle src/brain/engines/codex-usage.ts:232:62
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/58]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > an engine used without preflight reads before its first call
+AssertionError: expected EngineFailure: codex's model catalog has … { …(2) } to match object { kind: 'quota', …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "kind": "quota",
+-   "message": StringContaining "90% used",
++ EngineFailure {
++   "kind": "unavailable",
+  }
+
+ ❯ tests/brain-codex-usage.test.ts:618:37
+    616|     const engine = new CodexEngine({ settings: cfg.brain.engines.codex…
+    617|     const req = { label: "rest/plan", system: "S", question: "Heal or …
+    618|     await expect(engine.decide(req)).rejects.toMatchObject({ kind: "qu…
+       |                                     ^
+    619|     expect(fake.execCalls()).toBe(0);
+    620|     expect(engine.limits()).toMatchObject({ used_pct: 90 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex engine > refuses a call when codex's home holds an AGENTS.md (codex loads it whatever the flags)
+AssertionError: promise rejected "EngineFailure: codex's model catalog has … { …(2) }" instead of resolving
+ ❯ tests/brain-codex.test.ts:241:60
+    239|     // An empty one is not loaded.
+    240|     const empty = codexHome("agents-empty", { "auth.json": "{}", "AGEN…
+    241|     await expect(engine(fake.bin, empty).decide(request())).resolves.t…
+       |                                                            ^
+    242|   });
+    243|
+
+Caused by: EngineFailure: codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )
+ ❯ src/brain/engines/codex.ts:858:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { kind: 'unavailable', cooldownMs: 1800000 }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex engine > refuses a model the catalog does not list and an effort the model does not take, without substituting
+AssertionError: expected [Function] to throw error including 'gpt-6.1-sol does not take reasoning e…' but got 'codex\'s model catalog has no gpt-6.1…'
+
+Expected: "gpt-6.1-sol does not take reasoning effort xhigh [unavailable] (it takes low, high)"
+Received: "codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )"
+
+ ❯ tests/brain-codex.test.ts:248:76
+    246|     await expect(engine(fake.bin, codexHome("catalog")).decide(request…
+    247|     const effort = fakeCodex("effort", [answered({ choice: "a", reason…
+    248|     await expect(engine(effort.bin, codexHome("effort")).decide(reques…
+       |                                                                            ^
+    249|     expect(fake.calls() + effort.calls()).toBe(0);
+    250|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex engine > recognises a used-up plan (rest for the process), a rate limit, a lost login and an ignored isolation setting
+AssertionError: expected 'unavailable' to be 'quota' // Object.is equality
+
+Expected: "quota"
+Received: "unavailable"
+
+ ❯ tests/brain-codex.test.ts:256:43
+    254|     const error = await engine(quota.bin, codexHome("quota")).decide(r…
+    255|     expect(error).toBeInstanceOf(EngineFailure);
+    256|     expect((error as EngineFailure).kind).toBe("quota");
+       |                                           ^
+    257|     expect((error as EngineFailure).cooldownMs).toBe(Number.POSITIVE_I…
+    258|     const run = { code: 1, signal: null, stderr: "" };
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > a question that stalled twice (and failed) is not billed to the next one: each latency is its own runs (J4S28FRQKD7G's act-plan, 41 s logged as 316 s)
+AssertionError: expected [Function] to throw error matching /^codex stalled \[timeout\]: .* \(2 ru…/ but got 'codex\'s model catalog has no gpt-6.1…'
+
+- Expected:
+/^codex stalled \[timeout\]: .* \(2 run\(s\)\)$/
+
++ Received:
+"codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )"
+
+ ❯ tests/brain-codex.test.ts:340:73
+    338|     const fake = fakeCodex("stall-not-billed", [stall, stall, answered…
+    339|     const { engine: e, trace } = tracedEngine(fake.bin, "stall-not-bil…
+    340|     await expect(e.decide(request({ runId: "RUN1", questionId: "Q1" })…
+       |                                                                         ^
+    341|     const next = await e.decide(request({ runId: "RUN1", questionId: "…
+    342|     const rows = trace();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall
+AssertionError: promise rejected "EngineFailure: codex's model catalog has … { …(2) }" instead of resolving
+ ❯ tests/brain-codex.test.ts:357:38
+    355|     const thinking = fakeCodex("thinking", [[...started, { __sleep: 3_…
+    356|     const { engine: e } = tracedEngine(thinking.bin, "thinking", { BRA…
+    357|     await expect(e.decide(request())).resolves.toMatchObject({ answer:…
+       |                                      ^
+    358|     const capped = fakeCodex("first-token", [[...started, { __sleep: 3…
+    359|     const { engine: f, trace } = tracedEngine(capped.bin, "first-token…
+
+Caused by: EngineFailure: codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )
+ ❯ src/brain/engines/codex.ts:858:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { kind: 'unavailable', cooldownMs: 1800000 }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > stalled twice: the question fails as a timeout and the fallback answers it
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ tests/brain-codex.test.ts:379:26
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked
+AssertionError: expected [Function] to throw error matching /aborted after/ but got 'codex\'s model catalog has no gpt-6.1…'
+
+- Expected:
+/aborted after/
+
++ Received:
+"codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )"
+
+ ❯ tests/brain-codex.test.ts:400:57
+    398|     const controller = new AbortController();
+    399|     setTimeout(() => controller.abort(), 1_500);
+    400|     await expect(e.decide(request(), controller.signal)).rejects.toThr…
+       |                                                         ^
+    401|     const [row] = trace();
+    402|     expect(row).toMatchObject({ outcome: "aborted", thread_id: "t-stal…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > the codex start-up check > checks the program, the login file (not read), AGENTS.md, and the model and effort in the catalog
+AssertionError: expected { ok: false, …(1) } to deeply equal { ok: true, …(1) }
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
+-   "version": "codex-cli 0.160.0",
++   "error": "`/tmp/fake-codex-ygMhL3/check.mjs --version` exited 0: ",
++   "ok": false,
+  }
+
+ ❯ tests/brain-codex.test.ts:583:88
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek > answers through codex, logging engine, model, effort and tokens; an invalid answer is re-asked once
+AssertionError: expected { choice: 'a', …(5) } to match object { choice: 'b', reason: 'smith', …(1) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "brain": {
+-     "attempts": 2,
+-     "engine": "codex",
+-     "model": "gpt-6.1-sol",
+-     "reask_calls": 1,
++     "attempts": 1,
++     "engine": "deepseek",
++     "model": "fake",
+    },
+-   "choice": "b",
+-   "reason": "smith",
++   "choice": "a",
++   "reason": "deepseek says heal",
+  }
+
+ ❯ tests/brain-codex.test.ts:645:20
+    643|     const { brain, rows, deepseek } = brainWith(fake.bin, codexHome("l…
+    644|     const answer = await brain.choose(state, "Heal or smith?", options…
+    645|     expect(answer).toMatchObject({ choice: "b", reason: "smith", brain…
+       |                    ^
+    646|     expect(fake.calls()).toBe(2);
+    647|     expect(fake.seen()[1]!.stdin).toContain("[Re-ask]");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek > a used-up plan: DeepSeek answers, codex is not asked again in this process, and the console hears it once
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/brain-codex.test.ts:660:26
+    658|     const second = await brain.choose(state, "Heal or smith?", options…
+    659|     expect(second.choice).toBe("a");
+    660|     expect(fake.calls()).toBe(1);
+       |                          ^
+    661|     expect(deepseek.calls).toBe(2);
+    662|     expect(rows().map((row) => [row.engine, row.fell_back_from?.engine…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek > a call past BRAIN_CODEX_TIMEOUT_MS is killed and DeepSeek answers it
+AssertionError: expected { choice: 'a', …(5) } to match object { choice: 'a', brain: { …(2) } }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "brain": {
+      "engine": "deepseek",
+      "fell_back_from": {
+        "engine": "codex",
+-       "error": "codex timed out after 1500 ms",
++       "error": "codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )",
+      },
+    },
+    "choice": "a",
+  }
+
+ ❯ tests/brain-codex.test.ts:674:20
+    672|     const answer = await brain.choose(state, "Heal or smith?", options…
+    673|     expect(Date.now() - began).toBeLessThan(10_000);
+    674|     expect(answer).toMatchObject({ choice: "a", brain: { engine: "deep…
+       |                    ^
+    675|     expect(rows()[0]).toMatchObject({ engine: "deepseek", fell_back_fr…
+    676|   }, 30_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek > the start-up check marks codex unavailable for the run when it fails
+AssertionError: expected [ Array(1) ] to deeply equal [ StringMatching{…} ]
+
+- Expected
++ Received
+
+  [
+-   StringMatching /^codex is unavailable for this run: no codex login .*; its questions go to deepseek/,
++   "codex is unavailable for this run: `/tmp/fake-codex-ygMhL3/loop-check.mjs --version` exited 0: ; its questions go to deepseek (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)",
+  ]
+
+ ❯ tests/brain-codex.test.ts:682:22
+    680|     const { brain, deepseek } = brainWith(fake.bin, codexHome("loop-ch…
+    681|     const problems = await brain.preflight();
+    682|     expect(problems).toEqual([expect.stringMatching(/^codex is unavail…
+       |                      ^
+    683|     expect(brain.codexCheck).toMatchObject({ ok: false });
+    684|     const answer = await brain.choose(state, "Heal or smith?", options…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/58]⎯
+
+ FAIL  tests/brain-codex.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek > is no longer refused by the router as not implemented
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/brain-codex.test.ts:690:3
+    688|   });
+    689|
+    690|   it("is no longer refused by the router as not implemented", async ()…
+       |   ^
+    691|     const fake = fakeCodex("router", [answered({ choice: "a", reason: …
+    692|     const cfg = config(fake.bin, codexHome("router"), { BRAIN_ENGINE: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/58]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: the argv, cwd and stdin the fake saw match codexCommand; no key in its env; log framed and summarised
+AssertionError: expected 3 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 3
+
+ ❯ tests/learner.test.ts:601:18
+    599|     const { deps: d, out } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: f…
+    600|     const code = await main(smokeArgs("codex"), d);
+    601|     expect(code).toBe(0);
+       |                  ^
+    602|     const seen = JSON.parse(readFileSync(record, "utf8")) as { argv: s…
+    603|     expect(seen.argv.slice(0, 7)).toEqual(["exec", "--json", "--ignore…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/58]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: the start-up check refuses an effort the model does not take (exit 3, nothing run)
+AssertionError: expected 'codex 用不了：`/tmp/learner-test-n9cgef/b…' to contain 'does not take reasoning effort max'
+
+- Expected
++ Received
+
+- does not take reasoning effort max
++ codex 用不了：`/tmp/learner-test-n9cgef/bin/codex --version` exited 0: 
++
+
+ ❯ tests/learner.test.ts:646:26
+    644|     const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: f…
+    645|     expect(await main(smokeArgs("codex", ["--effort", "max"]), d)).toB…
+    646|     expect(err.join("")).toContain("does not take reasoning effort max…
+       |                          ^
+    647|     expect(existsSync(record)).toBe(false);
+    648|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/58]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: a key file readable under the profile stops the run before it starts (exit 3, names only)
+AssertionError: expected 'codex 用不了：`/tmp/learner-test-n9cgef/b…' to contain '没能挡住 key 文件，不运行：读得到 /tmp/learner-test…'
+
+- Expected
++ Received
+
+- 没能挡住 key 文件，不运行：读得到 /tmp/learner-test-n9cgef/codex-home/auth.json
++ codex 用不了：`/tmp/learner-test-n9cgef/bin/codex --version` exited 0: 
++
+
+ ❯ tests/learner.test.ts:656:26
+    654|     const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: f…
+    655|     expect(await main(smokeArgs("codex"), d)).toBe(3);
+    656|     expect(err.join("")).toContain(`没能挡住 key 文件，不运行：读得到 ${auth}`);
+       |                          ^
+    657|     expect(existsSync(record)).toBe(false);
+    658|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/58]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: no login in its home stops the run (exit 3)
+AssertionError: expected 'codex 用不了：`/tmp/learner-test-n9cgef/b…' to contain 'no codex login'
+
+- Expected
++ Received
+
+- no codex login
++ codex 用不了：`/tmp/learner-test-n9cgef/bin/codex --version` exited 0: 
++
+
+ ❯ tests/learner.test.ts:664:26
+    662|     const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: f…
+    663|     expect(await main(smokeArgs("codex"), d)).toBe(3);
+    664|     expect(err.join("")).toContain("no codex login");
+       |                          ^
+    665|   });
+    666|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/58]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: a run refused on the login asks codex to refresh its token once and says to re-run
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/learner.test.ts:675:23
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/58]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > claude: summary (turns, tokens, cache, cost, duration) printed, and a key that reached the log is redacted
+AssertionError: expected '== 学习者 claude / smoke ==\n状态：success；…' to contain '三句话。RUN: X'
+
+- Expected
++ Received
+
+- 三句话。RUN: X
++ == 学习者 claude / smoke ==
++ 状态：success；退出码 0
++ 模型：未记录；会话：未记录
++ 轮数：未记录；工具调用：无
++ token：输入 0、输出 0、cache 读 0、cache 写 0（命中 —）
++ 成本：未提供
++ 耗时：0.0 s（墙钟）
++ 日志：/tmp/learner-test-n9cgef/runs/20260929-233000-smoke.jsonl
++
+
+ ❯ tests/learner.test.ts:691:18
+    689|     expect(seen.env).not.toContain("ANTHROPIC_API_KEY");
+    690|     const text = out.join("");
+    691|     expect(text).toContain("三句话。RUN: X");
+       |                  ^
+    692|     expect(text).toContain("轮数：3；工具调用：Grep×1 Read×1");
+    693|     expect(text).toContain("cache 读 20.0k、cache 写 5000");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/58]⎯
+
+ FAIL  tests/ops-codex.test.ts > broker requests > allows only the listed actions with clean arguments
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/ops-codex.test.ts:102:85
+    100|     expect(validateRequest({ action: "procs", args: ["x"] }).ok).toBe(…
+    101|     expect(validateRequest("procs").ok).toBe(false);
+    102|     expect(validateRequest({ action: "git-push-main", args: ["a".repea…
+       |                                                                                     ^
+    103|     expect(validateRequest({ action: "git-push-main", args: ["main"] }…
+    104|     expect(validateRequest({ action: "git-push-main", args: ["a".repea…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/58]⎯
+
+ FAIL  tests/run-config.test.ts > in the loop > the loop writes one row on the run's first state, next to its decision log
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/run-config.test.ts:311:3
+    309|
+    310| describe("in the loop", () => {
+    311|   it("the loop writes one row on the run's first state, next to its de…
+       |   ^
+    312|     const deepseek = new FakeDeepSeek(() => "o0");
+    313|     const REST = "7b0d-f8-rest";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/58]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/run-config.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "the loop writes one row on the run's first state, next to its decision log". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  6 failed | 2 passed (8)
+      Tests  58 failed | 116 passed (174)
+     Errors  1 error
+   Start at  18:37:46
+   Duration  126.22s (transform 7.70s, setup 1.70s, import 10.25s, tests 112.42s, environment 2ms)
+
