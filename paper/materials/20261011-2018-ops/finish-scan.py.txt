@@ -1,0 +1,18 @@
+from pathlib import Path
+import subprocess,json,re,hashlib
+r=Path.cwd();o=r/'paper/materials/20261011-2018-ops';patch=subprocess.check_output(['git','diff','--cached']);lines=patch.split(b'\n');findings=json.load(open(o/'staged-gitleaks.json'));event=json.load(open(o/'event-reports.json'));known_keys={x['batch'].get('key') for x in event.values() if isinstance(x.get('batch'),dict)};proof=[]
+for n,x in enumerate(findings):
+ line=lines[x['StartLine']-1];row={'finding_index':n,'line_sha256':hashlib.sha256(line).hexdigest()}
+ if x['RuleID']=='sourcegraph-access-token':
+  matches=list(re.finditer(rb'(?<![a-f0-9])[a-f0-9]{40}(?![a-f0-9])',line));near=[]
+  for m in matches:
+   bytepos=m.start();charpos=len(line[:bytepos].decode(errors='replace'))
+   if min(abs(bytepos-(x['StartColumn']-1)),abs(charpos-(x['StartColumn']-1)))<=3:near.append(m)
+  assert len(near)==1,('not exact match',n,x['StartLine']);val=near[0][0].decode();p=subprocess.run(['git','cat-file','-t',val],capture_output=True,text=True);assert p.returncode==0 and p.stdout.strip() in ['commit','tree','blob'],('unverified object',n);row.update(proof_type='existing_git_object',object_type=p.stdout.strip(),value_sha256=hashlib.sha256(val.encode()).hexdigest())
+ elif x['RuleID']=='generic-api-key':
+  m=re.fullmatch(rb'\+\s*"key": "([a-f0-9]{64})",?',line);assert m and m[1].decode() in known_keys,('not registered job key',n);row.update(proof_type='registered_scheduler_job_key',generator='ops/learner_jobs.py fix_key hashes queue and accepted IDs',value_sha256=hashlib.sha256(m[1]).hexdigest())
+ else:raise RuntimeError('unadjudicated finding '+str(n))
+ proof.append(row)
+with (o/'staged-gitleaks-baseline.log').open('wb') as h:p=subprocess.run(['gitleaks','stdin','--redact','--no-banner','--baseline-path',str(o/'staged-gitleaks.json'),'--report-format','json','--report-path',str(o/'staged-gitleaks-remainder.json')],input=patch,stdout=h,stderr=subprocess.STDOUT)
+assert p.returncode==0
+(o/'staged-gitleaks-adjudication.json').write_text(json.dumps({'staged_patch_sha256':hashlib.sha256(patch).hexdigest(),'exact_findings_checked':proof,'remaining_findings':0,'production_rule_change':False},indent=2)+'\n');print('verified',len(proof),'non-credential findings; exact baseline leaves0')

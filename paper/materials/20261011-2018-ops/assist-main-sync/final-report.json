@@ -1,0 +1,62 @@
+{
+  "character": "silent",
+  "findings": [
+    {
+      "input": "00.txt",
+      "observation": "main 的 lib.ts 使用 forRoy、notes/for-roy.md 和 Roy 提示；git-push-main 已进入 ACTIONS，要求一个完整小写40位SHA，超时500000毫秒，并有专门参数校验。同步须保留姓名更正、记录路径和推送白名单，不能直接用 live 整文件覆盖。"
+    },
+    {
+      "input": "01.txt",
+      "observation": "live 的 lib.ts 仍使用 forDai、notes/for-dai.md，且没有 git-push-main 白名单及专门校验。两端均有 ops-assist、ops-assist-status 及任务ID校验，不能将这些共同功能判作 live 独有或 main 缺失。字段和记录路径更名须连同调用方、提示及历史记录一起核对；未提供全部调用方和记录正文。"
+    },
+    {
+      "input": "02.txt",
+      "observation": "与03.txt分段核对，main.ts 观察到的文本差异为第345行登录失败提示使用 Roy。main 已包含 broker 串行处理、UTF-8流解码及状态JSON截断时明确失败的处理。headless事件移入 delivered 的条件是退出码0、summary无错误且未超时，这只是会话投递条件，不是合入验收。"
+    },
+    {
+      "input": "03.txt",
+      "observation": "live 的 main.ts 保留同样的 broker 和事件处理逻辑，登录失败提示使用 Dai。两端均有防止同一会话双写的返回75分支，以及 herdr deferred 标记；返回75时不进入成功移送事件的分支。同步应保留这些行为，但文件没有提供任何具体事件的实际完成回执。"
+    },
+    {
+      "input": "04.txt",
+      "observation": "main 的 actions.sh 已有 git-push-main 分支，复核参数数量和完整SHA后调用 $ROOT/ops/git-push-main.py；同时保留 assist入口及现有动作校验。ROOT、DIR分别受 CODEX_OPS_ROOT、CODEX_OPS_DIR影响，因此同步评审还须确认实际脚本根目录和状态目录。"
+    },
+    {
+      "input": "05.txt",
+      "observation": "与04.txt分段核对，观察到的文本差异为第195行桌面会话归属提示使用 Dai。live 的 shell 同样存在 git-push-main 分支，但结合01.txt与07.txt，其冻结版本缺少配套白名单和本分支推送脚本；仅凭 shell 分支存在不能认定推送链完整或已经推送。"
+    },
+    {
+      "input": "06.txt",
+      "observation": "main 推送脚本要求完整SHA，检查本地 main 等于该SHA、origin唯一推送URL为 git@github.com:dwroy/agent-sts2.git，指定 Windows OpenSSH，以显式SHA推送 refs/heads/main，未使用强推；随后用 ls-remote 核对远端SHA才返回 verified=true。这证明源码包含这些检查，不证明请求实际执行、远端已更新或 live 已上线。"
+    },
+    {
+      "input": "07.txt",
+      "observation": "索引固定 main=1ab6efde17f5dfd1e96f24a01fa4c579c41728c0、live=4425ef1aeda69697bf4741c8d338f3b95586668f，列出32个基础设施差异路径。三个成对源码路径的blob均不同；ops/git-push-main.py在main有blob，live记为不存在。只有上述四个路径提供正文，其余28个路径只能确认索引记载的blob差异。ongoing_owner记载 batch20261011-202201 正在处理两项host失败，不能据此确认其已完成，也不应重复领取。"
+    },
+    {
+      "input": "08.txt",
+      "observation": "范围文本记载原目标为项目代码进入main并经Windows SSH推送，同时要求保护主检出的并行动态记录，禁止reset、stash、清树或用live覆盖main。它提及live已测源码、经验及assist/deferred，但未附相关测试、共享记录或合入回执。本次据此限定同步建议，不确认这些工作当前已验收。"
+    }
+  ],
+  "input_sha256": "42ef198d185b6304de5529b536ad46820f98a888456c1aaf1c633923b98c6673",
+  "limitations": [
+    "核查仅覆盖 manifest.json 与00.txt至08.txt；冻结切点为 frozen_at_ns=1791721828923432295，之后的分支、文件、请求和运行状态均未验证。complete只表示本次只读核查完成。",
+    "SHA256采用manifest及索引声明值，未独立重算文件摘要；未访问原仓库验证这些提交、blob与实际检出的对应关系。",
+    "缺少共同祖先、提交补丁、补丁等价检查及合入登记。固定源不是main/live祖先不能证明未集成，cherry-pick可能产生不同提交；blob不同也不能单独证明某项修复缺失。",
+    "缺少共享记录正文、暂存及未暂存改动、未跟踪文件、实际状态目录配置和完整接口调用方，无法保证更名迁移或全项目同步无冲突。",
+    "未提供具体原事件ID、完整源提交到集成提交的映射、实际推送回执或远端SHA证据，无法确认原授权请求已完成。queued、rc0、模型完成、delivered及源提交存在均不足以证明合入或上线。",
+    "本次未修改文件、执行git操作、运行测试、调用broker、联网或派发任务；未核查游戏知识、40项游戏源积压或两项host失败的实现。"
+  ],
+  "next_steps": [
+    "由主ops串行补齐当前双端完整SHA、共同祖先、相关路径改动和共享记录快照，并核对原事件ID、固定源SHA、测试回执及合入登记。保留本次冻结SHA作为审计依据；若分支已移动，明确新的集成切点。",
+    "在独立干净集成检出中准备可审阅候选，以三方合并为起点，逐路径核对双方最终内容、补丁等价和登记证据。既有窄范围合入可能使祖先关系不能反映文件覆盖范围，不能只依据merge结果、统一选择ours/theirs或整树覆盖。",
+    "四个已核查路径的候选应保留main的Roy更名、forRoy及记录目标，以及白名单、SHA校验、shell分支、Python脚本组成的完整推送链；同时保留两端已有的assist、deferred留队、会话防双写及状态JSON完整性处理。其余28个差异路径先补全文再决定，保留经主ops核实的双方修复。",
+    "共享记录按原事件或请求ID、原源SHA和来源逐条对账；更名时保留旧路径历史及新路径新增内容，不能只保留一边或机械覆盖。运行队列、回执、会话及日志须保持现有权威状态目录，不能随代码复制重建、回退状态或混入代码提交。",
+    "由主ops在候选上安排必要的接口、类型及隔离回归校验，覆盖记录字段调用方、推送链参数拒绝与固定SHA行为、assist入口和deferred事件保留；推送行为使用隔离替身验证。两项host失败继续由 batch20261011-202201 原负责人处理，本次不重复修复。",
+    "候选通过审阅后，由主ops协调相关写入者，在基线未变且不会覆盖并行记录的前提下串行集成main；遇到冲突保留现场并记录blocked，不reset、stash或清树。登记原源SHA到最终集成SHA的映射，再按既有授权经Windows SSH推送明确的最终main SHA并核对远端。",
+    "分别记录代码集成、远端推送和live运行版本的验收结果；本报告不替代主ops最终核实，也不能作为原事件完成或live上线回执。"
+  ],
+  "request_id": "ops-main-live-sync-20261011-v2",
+  "session_id": "01a12af1-7c56-7773-9e3a-1a4ace449918",
+  "status": "complete"
+}

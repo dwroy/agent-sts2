@@ -1039,3 +1039,17 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 - [ ] 框架/测试收尾：175450的merge-live.py在1200秒外层时限切断尾部paths后，已完成268文件2703例的原件仍自动整套重跑；独立paths11例补验已过，共269文件2714例，却继续长期持live-merge.lock，181302已测修复排队。重跑非零还会自动reset --merge，不能仅终止其子进程。需由框架拥有者核对现有runner/合后验收入口，保留分段已过覆盖与精确代码树、仅续失败/未运行项，显式区分时限/沙箱限制/真实失败，提供经身份校验且不触发误回退的既有所有者收尾方式；不改游戏知识/断言/预算，不手改原失败回执。证据paper/materials/20261011-1852-ops/core-check-closeout/receipt.json。
 - [ ] 调度公平性核查：watcher19:13冻结registry739项、pending587/waiting100/implemented38/duplicate14；可评估677项中首pending第80位。现有插入序waiting重评可能挤压新项，尚非永久饥饿证明；按真实dispatch/seen_runs/完成局时间核查后交获准框架迭代，不由本轮更改并发、队列状态或任务。原件paper/materials/20261011-ops-health-recovery/queue-observation-1913.json。
+
+
+## 2026-10-11 20:22:00 CST：同树宿主完整检查两项失败（普通基础设施修复）
+
+- **host-checks-broker-push-registration**：live 4425ef1aeda69697bf4741c8d338f3b95586668f / tree25b09e499152d7085c5d3e932517156ef5d0d53c 的完整检查，ops-codex.test.ts:102期望git-push-main合法40位SHA通过，实际false。main既有已授权c519952b3含ACTIONS及SHA校验/ops/git-push-main.py，而live只带新增测试、少实现；请复用原已批准入口及来源提交，保留当前assist/deferred/名称改动，不用删断言解决，不改变push授权或直接推送。两份原检查见paper/materials/20261011-2018-ops/*host-original.log。
+- **host-checks-session-exit-fixture**：同树brain-codex-session.test.ts:491子进程退出1，原日志没有stderr，完整两轮均复现（单项约1秒，非25秒预算）。固定fake仅声明gpt-6.1-sol，退出脚本loadConfig没有显式模型，而生产默认已改Astra；请先取得该固定子进程stderr核根因，若为假模型与默认不一致，应令固定夹具自洽，不能降低生产模型、跳过检查或放宽断言。也需确认不存在真实清理回归；保留原失败、角色/参数/游戏源码不动。仅对上述两失败文件单worker隔离复验；已过324文件3566例不无差别重跑。若宿主针对性复验入口不足，写明具体缺口交框架拥有者，不伪报沙箱被排除项目通过。
+- 本轮运维决定保留当前游戏源码和核心经验，不因这两项基础设施/夹具失败回滚知识；本组交既有普通fix-batch，原failed/rc和检查原件不改，无游戏版本。
+
+
+## 2026-10-11 20:44:05 CST：已授权实现类量化学习的冻结绑定入口
+
+- **core-cycle-implementation-binding-entry**：父请求roy-20261011-silent-core-cycle-quantitative-learning已获Roy实际实现/上线授权；三原提案均pending/无活占用。当前strategy_research_jobs仅注册三个旧pure研究、普通strategy任务无法宿主绑定新task/SHA及同时claim原三ID。仅202201结束后的下一空闲普通工具修复批领取，不改202201活输入；最小适配范围/固定验收见paper/materials/silent/20261011-core-cycle-quantitative-learning/binding-adapter-task.md，SHA e4d01450ba982314400064c3af25176d7e44ab3d3c7eeac2158f18bcf381ed7a。watcher独占quantitative*.ts与交付facts适配，工具适配不填游戏知识、不重开原done综合任务、不造新业务ID/并发或ops prompt。沿既有write/lock/wrapper/完成事件落真实batch+输入回执，实际派出前保持未派发；适配完成后由ops正式派代码学习/校准。具体缺口与职责见同目录ops-ack.json。
+
+- 2026-10-11 20:46:35 CST 上述冻结绑定适配接收不可变补充paper/materials/silent/20261011-core-cycle-quantitative-learning/authorization-upgrade-20261011.md（SHA b998719e1bc75c0b2af67b1fcd862c6bffc4b7707b825e83b58ecf79cd1c1508），原task及9输入不改；以同目录最新ops-ack.json中的watcher六文件职责和随机性验收为边界。原202201已经结束，其874ae603退出夹具源和c519既有push入口交ops合入，不由下一适配批重做；下一批优先只补实现类冻结绑定，实际量化学习另由正式代码批承接，通用框架完成不能关闭父请求。

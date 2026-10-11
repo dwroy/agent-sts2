@@ -1,0 +1,54 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+ ❯ tests/ops-codex.test.ts (12 tests | 1 failed) 4827ms
+     × allows only the listed actions with clean arguments 11ms
+ ❯ tests/brain-codex-session.test.ts (22 tests | 1 failed) 8077ms
+     × the server does not keep the process alive; at exit the process removes its thread's files 1037ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-codex-session.test.ts > the play process's end > the server does not keep the process alive; at exit the process removes its thread's files
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:491:24
+    489|     const began = Date.now();
+    490|     const run = spawnSync(process.execPath, ["--import", "tsx", script…
+    491|     expect(run.status).toBe(0);
+       |                        ^
+    492|     expect(Date.now() - began).toBeLessThan(25_000);
+    493|     expect(run.stdout).toContain('{"choice":"a","reason":"x"}');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/ops-codex.test.ts > broker requests > allows only the listed actions with clean arguments
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/ops-codex.test.ts:102:85
+    100|     expect(validateRequest({ action: "procs", args: ["x"] }).ok).toBe(…
+    101|     expect(validateRequest("procs").ok).toBe(false);
+    102|     expect(validateRequest({ action: "git-push-main", args: ["a".repea…
+       |                                                                                     ^
+    103|     expect(validateRequest({ action: "git-push-main", args: ["main"] }…
+    104|     expect(validateRequest({ action: "git-push-main", args: ["a".repea…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 324 passed (326)
+      Tests  2 failed | 3566 passed | 2 skipped (3570)
+   Start at  20:06:50
+   Duration  711.28s (transform 10.91s, setup 23.27s, import 59.44s, tests 1287.25s, environment 40ms)
+
