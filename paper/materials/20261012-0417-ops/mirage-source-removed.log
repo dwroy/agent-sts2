@@ -1,0 +1,53 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-034302-s2/agent
+
+ ❯ tests/silent-upgraded-mirage-zero.test.ts (21 tests | 2 failed) 73ms
+   × removes the invented lasting bonus only when the observed upgraded play still has zero poison 17ms
+   × rechecks poison after earlier cards instead of declaring the whole upgraded template known 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-upgraded-mirage-zero.test.ts > removes the invented lasting bonus only when the observed upgraded play still has zero poison
+AssertionError: expected 5 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 5
+
+ ❯ tests/silent-upgraded-mirage-zero.test.ts:58:26
+     56|   expect(old.lasting).toBeGreaterThan(0);
+     57|   expect(old.unknownCards).toContain("蜃景+");
+     58|   expect(result.lasting).toBe(0);
+       |                          ^
+     59|   expect(result.unknownCards).not.toContain("蜃景+");
+     60|   expect(result.blockGained).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/silent-upgraded-mirage-zero.test.ts > rechecks poison after earlier cards instead of declaring the whole upgraded template known
+AssertionError: expected 5 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 5
+
+ ❯ tests/silent-upgraded-mirage-zero.test.ts:75:55
+     73|   const before = [step(input), step(input, "FIXED_POISON")];
+     74|   const after = [...before].reverse();
+     75|   expect(replaySteps(input, before)!.outcome.lasting).toBe(0);
+       |                                                       ^
+     76|   expect(replaySteps(input, after)).toEqual(replaySteps(prior(input), …
+     77|   expect(replaySteps(input, after)!.outcome.unknownCards).toContain("蜃…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 passed (21)
+   Start at  03:52:18
+   Duration  1.61s (transform 1.17s, setup 309ms, import 1.10s, tests 73ms, environment 0ms)
+
