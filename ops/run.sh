@@ -4,8 +4,22 @@
 # log goes to $ROOT/logs/console/<ts>-<sha>.log. STS2_WORKSPACE: notes/ (lessons.md) and ops/ come from the main checkout.
 set -u
 . "$(dirname "$0")/paths.sh"
+# Drain only at admission. Never use STOP, which cancels an in-flight brain request.
+if [ -f "$ROOT/ops/codex-ops/LLM_DRAIN" ]; then
+  echo "LLM drain: next play deferred" >&2
+  exit 76
+fi
 cd "$LIVE/agent"
 export STS2_WORKSPACE="$ROOT"
+# Selected only by the explicit LLM handoff transaction; existing play keeps its original environment.
+if [ -f "$ROOT/ops/codex-ops/brain-home" ]; then
+  IFS= read -r selected_brain_home < "$ROOT/ops/codex-ops/brain-home" || true
+  if [[ "${selected_brain_home:-}" != /* ]] || [ ! -f "$selected_brain_home/auth.json" ]; then
+    echo "invalid project brain home selector; play not started" >&2
+    exit 3
+  fi
+  export BRAIN_CODEX_HOME="$selected_brain_home"
+fi
 # Roy 2026-10-11: production Codex defaults apply even with a legacy scheduler environment.
 export BRAIN_CODEX_MODEL=gpt-6-astra BRAIN_CODEX_EFFORT=xhigh
 export PATH="$HOME/.local/node/bin:$PATH"
