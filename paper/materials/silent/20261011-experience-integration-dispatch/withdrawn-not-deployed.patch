@@ -1,0 +1,276 @@
+diff --git a/agent/tests/experience-integration-dispatch.test.ts b/agent/tests/experience-integration-dispatch.test.ts
+new file mode 100644
+index 000000000..a62997f4c
+--- /dev/null
++++ b/agent/tests/experience-integration-dispatch.test.ts
+@@ -0,0 +1,10 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++
++it("prioritizes authorized report integration while preserving active work and retry history", () => {
++  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_experience_integration_dispatch.py"], {
++    encoding: "utf8", timeout: 30_000,
++  });
++  expect(result.status, result.stderr).toBe(0);
++  expect(result.stderr).toMatch(/Ran [1-9]\d* tests/);
++});
+diff --git a/ops/learner_jobs.py b/ops/learner_jobs.py
+index 0ba1bc8a2..b8acc1f29 100644
+--- a/ops/learner_jobs.py
++++ b/ops/learner_jobs.py
+@@ -3,6 +3,7 @@ import hashlib
+ import importlib.util
+ import json
+ import os
++from pathlib import Path
+ import re
+ import subprocess
+ import sys
+@@ -214,6 +215,84 @@ def pending(root, scripts, character):
+         return []
+ 
+ 
++def pending_experience_integration(root, character):
++    """Read Roy's approved integration independently of the ops TUI event queue."""
++    if character != "silent":
++        return None
++    project = Path(root).resolve()
++    path = project / "notes/experience-integration-silent.json"
++    try:
++        if not path.resolve().is_relative_to(project):
++            return None
++        raw = path.read_bytes()
++        request = json.loads(raw)
++        expected = {"request_id": "roy-20261010-silent-core-reuse-experience-integration",
++                    "authorized_by": "Roy", "character": character, "task": "experience-update",
++                    "state": "pending", "batch": None}
++        if not isinstance(request, dict) or any(request.get(k) != v for k, v in expected.items()):
++            return None
++        runs = request.get("dispatch_runs")
++        if (not isinstance(runs, list) or not 1 <= len(runs) <= 10
++                or any(not isinstance(run, str) or not RUN_ID.fullmatch(run) for run in runs)
++                or len(set(runs)) != len(runs)):
++            return None
++
++        def frozen(relative, digest):
++            if (not isinstance(relative, str) or not relative.startswith("paper/materials/")
++                    or not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)):
++                raise ValueError("invalid integration artifact")
++            artifact = (project / relative).resolve()
++            if not artifact.is_relative_to(project / "paper/materials"):
++                raise ValueError("integration artifact outside materials")
++            content = artifact.read_bytes()
++            if hashlib.sha256(content).hexdigest() != digest:
++                raise ValueError("integration artifact changed")
++            return content
++
++        frozen(request.get("work_spec"), request.get("work_spec_sha256"))
++        report, source = request.get("source_report"), request.get("source_input")
++        if not isinstance(report, dict) or not isinstance(source, dict):
++            return None
++        frozen(report.get("path"), report.get("sha256"))
++        manifest = json.loads(frozen(source.get("path"), source.get("sha256")))
++        if not isinstance(manifest, dict) or manifest.get("character") != character:
++            return None
++        inventory = manifest.get("runs")
++        if not isinstance(inventory, list):
++            return None
++        ended = {row.get("run_id") for row in inventory if isinstance(row, dict) and row.get("ended")}
++        if not set(runs).issubset(ended):
++            return None
++        return {**request, "request_sha256": hashlib.sha256(raw).hexdigest()}
++    except (OSError, ValueError, TypeError):
++        return None
++
++
++def integration_job(state, root, scripts, character, alive, stamp):
++    """Use the existing writer slot, deduplication, backoff and completion channel."""
++    request = pending_experience_integration(root, character)
++    if request is None:
++        return None
++    # Older manually launched batches used the comma-separated case anchors as key.
++    # Keep that identity so a completed batch or three failed attempts cannot repeat.
++    runs = request["dispatch_runs"]
++    previous = [batch for batch in state["batches"].values()
++                if batch.get("task") == "experience-update" and batch.get("character") == character
++                and (batch.get("experience_integration", {}).get("request_id") == request["request_id"]
++                     or set(batch.get("runs", [])) == set(runs))]
++    if (any(batch.get("state") == "done" for batch in previous) or len(previous) >= 3
++            or any(batch.get("retry_at", 0) > time.time() for batch in previous)):
++        return None
++    result = dispatch_write(state, root, scripts, "experience-update", character, runs,
++                            ",".join(runs), "tick", alive, stamp)
++    if result:
++        state["batches"][result[0]]["experience_integration"] = {
++            "request_id": request["request_id"], "scope_revision": request.get("scope_revision"),
++            "request_sha256": request["request_sha256"], "work_spec": request["work_spec"],
++            "work_spec_sha256": request["work_spec_sha256"], "source_batch": request.get("source_batch")}
++    return result
++
++
+ def fix_key(root, character):
+     path = os.path.join(root, "notes", "fix-queue-v4.md")
+     try:
+@@ -281,8 +360,10 @@ def check_jobs(state, root, scripts, character, alive, stamp):
+         request = core_build_jobs.pending_request(root)
+         if request:
+             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
+-    runs = pending(root, scripts, character)
+-    experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
++    experience = integration_job(state, root, scripts, character, alive, stamp)
++    if experience is None:
++        runs = pending(root, scripts, character)
++        experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+     # This approved frozen study gets the next slot before automatic proposals.
+     # Its host wrapper waits for the parent's save_state under the existing lock.
+     from strategy_research_jobs import dispatch as dispatch_research
+diff --git a/ops/tests/test_experience_integration_dispatch.py b/ops/tests/test_experience_integration_dispatch.py
+new file mode 100644
+index 000000000..4b6092a8f
+--- /dev/null
++++ b/ops/tests/test_experience_integration_dispatch.py
+@@ -0,0 +1,144 @@
++"""Fixed fixtures for report integration priority; no host processes or model calls."""
++import copy
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import tempfile
++import time
++import unittest
++from unittest.mock import patch
++
++REPO = Path(__file__).resolve().parents[2]
++spec = importlib.util.spec_from_file_location("integration_jobs", REPO / "ops/learner_jobs.py")
++jobs = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(jobs)
++RUNS = ["SILENT000001", "SILENT000002"]
++ORDINARY = ["SILENT000003"]
++IDENT = "roy-20261010-silent-core-reuse-experience-integration"
++
++
++class IntegrationDispatch(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        (self.root / "notes").mkdir()
++        (self.root / "paper/materials").mkdir(parents=True)
++        manifest = {"character": "silent", "runs": [{"run_id": r, "ended": "2026-01-01"} for r in RUNS]}
++        def artifact(name, content):
++            relative = "paper/materials/" + name
++            raw = content.encode()
++            (self.root / relative).write_bytes(raw)
++            return {"path": relative, "sha256": hashlib.sha256(raw).hexdigest()}
++        task = artifact("task.md", "Fixed authorized task")
++        self.request = {"request_id": IDENT, "authorized_by": "Roy", "task": "experience-update",
++                        "character": "silent", "state": "pending", "batch": None, "scope_revision": 3,
++                        "dispatch_runs": RUNS, "work_spec": task["path"], "work_spec_sha256": task["sha256"],
++                        "source_report": artifact("report.md", "Fixed report"),
++                        "source_input": artifact("input.json", json.dumps(manifest))}
++        self.path = self.root / "notes/experience-integration-silent.json"
++        self.save()
++        self.state = {"batches": {}}
++        self.launched = []
++
++    def save(self):
++        self.path.write_text(json.dumps(self.request))
++
++    def check(self, stamp="20260101-000001", available=True, character="silent"):
++        def launch(*args):
++            self.launched.append(args[0])
++            return 101, "wJ:pTEST"
++        with patch.object(jobs, "pending", return_value=ORDINARY), \
++                patch.object(jobs, "available", return_value=available), \
++                patch.object(jobs, "start_learner", side_effect=launch), \
++                patch.object(jobs, "fix_key", return_value=None), \
++                patch.object(jobs, "strategy_job", return_value=None), \
++                patch.object(jobs, "calibration_job", return_value=None), \
++                patch("strategy_research_jobs.dispatch", return_value=None), \
++                patch("boss_sim_jobs.check", return_value=None):
++            return jobs.check_jobs(self.state, str(self.root), str(REPO / "ops"), character, lambda pid: True, stamp)
++
++    def test_authorized_request_precedes_new_postmortems_and_keeps_identity(self):
++        before = self.path.read_bytes()
++        result = self.check()
++        batch = self.state["batches"][result["experience"][0]]
++        self.assertEqual(batch["runs"], RUNS)
++        self.assertEqual(batch["pane"], "wJ:pTEST")
++        self.assertEqual(batch["experience_integration"]["request_sha256"], hashlib.sha256(before).hexdigest())
++        self.assertEqual(batch["experience_integration"]["scope_revision"], 3)
++        self.assertEqual(self.path.read_bytes(), before)
++        self.check("20260101-000002")
++        self.assertEqual(len(self.launched), 1)
++
++    def test_active_ordinary_writer_is_preserved_then_request_gets_next_slot(self):
++        original = {"task": "experience-update", "character": "silent", "state": "running",
++                    "pid": 99, "runs": ORDINARY, "key": ",".join(ORDINARY)}
++        self.state["batches"]["ordinary"] = copy.deepcopy(original)
++        self.assertIsNone(self.check()["experience"])
++        self.assertEqual(self.state["batches"]["ordinary"], original)
++        self.state["batches"]["ordinary"]["state"] = "done"
++        result = self.check("20260101-000002")
++        self.assertEqual(self.state["batches"][result["experience"][0]]["runs"], RUNS)
++
++    def test_dirty_or_externally_owned_tree_does_not_launch(self):
++        self.assertIsNone(self.check(available=False)["experience"])
++        self.assertFalse(self.launched)
++
++    def test_completed_integration_is_not_repeated_after_anchor_reordering(self):
++        result = self.check()
++        self.state["batches"][result["experience"][0]]["state"] = "done"
++        self.request["dispatch_runs"] = list(reversed(RUNS))
++        self.save()
++        second = self.check("20260101-000002")
++        self.assertEqual(self.state["batches"][second["experience"][0]]["runs"], ORDINARY)
++
++    def test_old_manual_failure_backoff_and_three_attempt_limit_are_kept(self):
++        prior = {"task": "experience-update", "character": "silent", "state": "failed",
++                 "runs": list(reversed(RUNS)), "key": ",".join(reversed(RUNS)),
++                 "rc": 3, "retry_at": time.time() + 3600}
++        self.state["batches"]["old"] = copy.deepcopy(prior)
++        result = self.check()
++        self.assertEqual(self.state["batches"][result["experience"][0]]["runs"], ORDINARY)
++        self.assertEqual(self.state["batches"]["old"], prior)
++        self.state = {"batches": {str(i): {**prior, "retry_at": 0} for i in range(3)}}
++        result = self.check("20260101-000002")
++        self.assertEqual(self.state["batches"][result["experience"][0]]["runs"], ORDINARY)
++
++    def test_elapsed_backoff_reuses_standard_retry_without_rewriting_failure(self):
++        prior = {"task": "experience-update", "character": "silent", "state": "failed",
++                 "runs": RUNS, "key": ",".join(RUNS), "rc": 3, "retry_at": 0}
++        self.state["batches"]["old"] = copy.deepcopy(prior)
++        result = self.check()
++        self.assertEqual(self.state["batches"][result["experience"][0]]["runs"], RUNS)
++        self.assertEqual(self.state["batches"]["old"], prior)
++
++    def test_invalid_identity_scope_and_artifacts_fall_back_to_ordinary(self):
++        original = copy.deepcopy(self.request)
++        for changes in ({"authorized_by": "other"}, {"request_id": "other"}, {"state": "done"},
++                        {"batch": "existing"}, {"character": "ironclad"}, {"dispatch_runs": []},
++                        {"dispatch_runs": RUNS + RUNS}, {"dispatch_runs": ["SILENT000099"]},
++                        {"work_spec_sha256": "0" * 64}, {"work_spec": "../outside.md"},
++                        {"source_report": {}}, {"task": "fix-batch"}):
++            with self.subTest(changes=changes):
++                self.request = {**original, **changes}
++                self.save()
++                self.state = {"batches": {}}
++                result = self.check()
++                self.assertEqual(self.state["batches"][result["experience"][0]]["runs"], ORDINARY)
++        self.request = original
++        self.save()
++        (self.root / "paper/materials/report.md").write_text("Changed report")
++        self.assertIsNone(jobs.pending_experience_integration(str(self.root), "silent"))
++
++    def test_ironclad_and_missing_request_keep_ordinary_behavior(self):
++        result = self.check(character="ironclad")
++        self.assertEqual(self.state["batches"][result["experience"][0]]["runs"], ORDINARY)
++        self.path.unlink()
++        self.state = {"batches": {}}
++        result = self.check()
++        self.assertEqual(self.state["batches"][result["experience"][0]]["runs"], ORDINARY)
++
++
++if __name__ == "__main__":
++    unittest.main()
