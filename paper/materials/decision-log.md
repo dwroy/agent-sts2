@@ -1811,3 +1811,5 @@
 - 2026-10-11 21:17:38 CST 实际兜底 经验.14→.15：E6DSUVTNVBMH一局A10，0新增/16更新/0退役，219 active；233→234完局。原综合循环框架及爆发/夜魇保留，新增为已有条目的真实证据和边界；三关联代码提案仍不等已实现。报告不完整运行SHA与本局.13→.12中途回退事实保留，不能作为同版本因果样本。 source 884c9f53f815df1bd8cbae7be63c3e86dc92973f；原完整自测2689例，合后tsc0/8文件78例0。 版本S1.exp180。
 - 2026-10-11 21:17:38 CST 实际兜底 仅3UPY3BP2LVS7 A10 F17首试T3已见仪式兽PLOW_MOVE、既有虚弱、7点临时减力且逆取整唯一场景：旧16−7=9、10挡报0损；新逆取整为11、报1损，与实际53→52一致。范围标记后续模拟回合清除；无弱/新弱、歧义取整、多击、多倍率、其他敌/进阶和铁甲保持旧路径。不改药价/SL/排序，silent-0349宽项及旧09bb/bb759提案未整体完成。 source 84e6cde147c3b22d55e08adb4eecfaed262366fb；原完整自测2699例、撤码失败/恢复10例；合后tsc0/8文件78例0。 版本S1.shackling-weak1。
 - 2026-10-11 21:17:38 CST [B4租约丢失] 173019/KNOWLEDGE_DEMON保留lost及原retry_at，一小时后原有界重试；数值门与原基准隔离通过不等当前live发布。c355fc9f源未合入，原受保护派发基线/当前模拟源码已偏离；不重写lost/rc或原件、不提前重派。
+
+- 2026-10-11 21:36:42 CST [fix-batch] core-cycle-implementation-binding-entry：实现类冻结请求独立绑定原三提案、任务/manifest及9份输入SHA、扩授权与文件职责；沿既有write/learn.lock/wrapper/完成事件，保留旧纯研究和失败历史。source fc95760d4ff8a9cbd45577efdd79b1215bd2cb92 → live af11d9bd86745326625efab90078352b9740fc93；源码/合后沙箱通过，工具修复无游戏局号/层/回合和对应bug-infra，无eval版本。正式代码学习由ops经既有strategy-proposal动作传canonical请求id另派，本回报不代表量化学习已启动或完成。
