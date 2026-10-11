@@ -746,6 +746,12 @@ export function enemySims(combat: Record<string, unknown>, asc?: number, charact
       block: num(enemy["block"]),
       vulnerable: powerAmount(enemy, "VULNERABLE_POWER"),
       weak: powerAmount(enemy, "WEAK_POWER"),
+      // 3UPY3BP2LVS7 F17 T3, silent-0349: only this observed move and power combination.
+      ...(character.toLowerCase() === "silent" && asc === 10 &&
+        str(enemy["enemy_id"]) === "CEREMONIAL_BEAST" && str(enemy["move_id"]) === "PLOW_MOVE" &&
+        powerAmount(enemy, "WEAK_POWER") > 0 &&
+        asArray(enemy["powers"]).every((entry) => ["WEAK_POWER", "STRENGTH_POWER", "PLOW_POWER", "SHACKLING_POTION_POWER"].includes(str(asRecord(entry)["power_id"])))
+        ? { weakShackling: true as const } : {}),
       ...(powerAmount(enemy, "POISON_POWER") > 0 ? { poison: powerAmount(enemy, "POISON_POWER") } : {}),
       artifact: powerAmount(enemy, "ARTIFACT_POWER"),
       intangible: powerAmount(enemy, "INTANGIBLE_POWER") > 0,
