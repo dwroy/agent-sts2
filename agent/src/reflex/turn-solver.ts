@@ -146,6 +146,8 @@ export interface EnemySim {
   weakShackling?: true;
   /** Poison remaining before this enemy turn, observed in Silent runs. */
   poison?: number;
+  /** Observed ordinary Strangle: two HP lost after later completed manual cards this turn; null is unverified. */
+  strangle?: number | null;
   artifact: number;
   intangible: boolean;
   /** Slippery N: the next N HP losses are reduced to 1 each. */
@@ -369,10 +371,10 @@ export interface PlayerSim {
    */
   shrunk?: boolean;
   /**
-   * Kusarigama: every 3rd attack in a turn deals 6 to a random enemy (counted as the lowest-HP one). The
-   * relic's counter (attacks already played this turn) comes from its stack.
+   * Kusarigama: the relic's counter comes from its stack. Legacy callers assume the lowest-HP
+   * target; observed Silent A10 callers defer multi-target damage until the actual target is known.
    */
-  kusarigama?: { every: number; damage: number; count: number };
+  kusarigama?: { every: number; damage: number; count: number; deferRandomTarget?: true };
   /**
    * Shuriken (「你每在同一回合内打出3张攻击牌，获得1点力量」): every 3rd Attack played in a turn gives 1 Strength for
    * the fight, on the Attacks after it. `count`: the Attacks already played this turn (attacks_played_this_turn),
@@ -632,6 +634,8 @@ export function reviveThrough(startHp: number, losses: number[], revives: Revive
 export interface SolverInput {
   /** Extra value of HP carried into an observed following fight (character evidence only). */
   continuationValue?: import("./continuation-value.js").ContinuationValue;
+  /** Silent A10's observed first boss: compare dry HP-saving plays before a poison finish. */
+  preservePoisonWinHp?: boolean;
   hand: CardModel[];
   player: PlayerSim;
   enemies: EnemySim[];
@@ -789,10 +793,14 @@ export interface Step {
 export interface Outcome {
   /** Unplayed Shivs actually made by this line's observed Cunning drinks, for later-turn piles. */
   cunningShivsLeft?: CardModel[];
+  /** Multi-target Kusarigama damage was omitted; this outcome is conditional, not a bound. */
+  kusarigamaUnresolved?: true;
   /** Established Serpent Form after this line; absent outside the observed character/ascension. */
   serpentFormAfter?: number | null;
   /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
   winsFight: boolean;
+  /** Scoped search only: the win still requires enemy-turn poison, after held-card damage. */
+  winsAfterPoison?: true;
   /** Waterfall Giant killed this turn: its husk explodes for this much at the end of our next turn. */
   explodesNext?: number;
   /**
@@ -1070,6 +1078,7 @@ interface Sim {
   plating: number;
   nextTurnBlock: number;
   unknown: string[];
+  kusarigamaUnresolved?: true;
   feedKills: number;
   /** Dazed our hits put into the draw pile this turn (Personal Hive). */
   dazedAdded: number;
@@ -1632,6 +1641,15 @@ function unconditioned(card: CardModel): CardModel {
   return { ...rest, draw: 0, energyGain: 0, drawsUntil: false };
 }
 
+/** Q6/Y6's two-stack loss is verified only without damage-interaction powers. */
+function strangleLossVerified(enemy: Sim["enemies"][number]): boolean {
+  return enemy.block === 0 && enemy.artifact === 0 && !enemy.intangible && !enemy.reflect && !enemy.unmodelled &&
+    !enemy.halved && !(enemy.slippery ?? 0) && enemy.hpLossCap == null && enemy.perHitCap == null &&
+    !(enemy.curlUp ?? 0) && !(enemy.flutter ?? 0) && !(enemy.shrink ?? 0) && !enemy.vulnerable &&
+    !enemy.illusion && !enemy.revives && !enemy.reattach && !(enemy.stock ?? 0) && !enemy.spawnsOnDeath &&
+    !(enemy.asleep ?? 0) && !(enemy.slumber ?? 0) && !(enemy.enrage ?? 0);
+}
+
 /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
 function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim, automatic = false): Sim | null {
   if (sim.pendingSelection) return null;
@@ -1715,6 +1733,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
+  // Snapshot before this play: new establishment does not trigger itself, and Block/Artifact interactions stay unknown.
+  const strangled = next.enemies.filter((enemy) => enemy.alive && (enemy.strangle ?? 0) > 0)
+    .map((enemy) => ({ index: enemy.index, amount: enemy.strangle, verified: strangleLossVerified(enemy) }));
+  const strangleTarget = next.enemies.find((enemy) => enemy.index === target && enemy.alive);
+  const strangleTargetVerified = strangleTarget !== undefined && strangleLossVerified(strangleTarget);
   const unverifiedDodgeReplay = card.dodgeRollNextBlock && plays > 1;
   if (unverifiedDodgeReplay) next.unknown = [...next.unknown, `${card.name}（下回合格挡重放未验证）`];
   if (player.slothDefendReplay && card.type !== "Potion") {
@@ -1754,6 +1777,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     }
     if ((player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw) {
       const id = bandagesDiscard(next, card.discards?.[play], player);
+      if (id !== null) discarded.push(id);
+    } else if (card.survivorDiscard) {
+      // RC61 F33 T4: the only remaining Strike is discarded, so it cannot turn us toward Rocket.
+      // Multiple choices remain unresolved until the real selection; never invent Jev's pick.
+      const pool = [...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion");
+      const only = pool.length === 1 && next.drawnInHand === 0 ? pool[0]!.key : undefined;
+      const id = bandagesDiscard(next, only, player);
       if (id !== null) discarded.push(id);
     }
     if (card.type === "Attack") attackRelics(next, player);
@@ -1881,6 +1911,36 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (!card.known) next.unknown = [...next.unknown, card.name];
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
 
+  if (card.strangle !== undefined && targetEnemy?.alive) {
+    if (card.cardId !== "STRANGLE" || card.type !== "Attack" || card.upgraded) {
+      targetEnemy.strangle = null;
+      next.unknown = [...next.unknown, "紧勒（牌型或升级模板未验证）"];
+    } else if (plays !== 1 || automatic || targetEnemy.strangle !== undefined) {
+      targetEnemy.strangle = null;
+      next.unknown = [...next.unknown, "紧勒（叠加、重放或自动出牌未验证）"];
+    } else if (!strangleTargetVerified || !strangleLossVerified(targetEnemy)) {
+      targetEnemy.strangle = null;
+      next.unknown = [...next.unknown, "紧勒（有挡、减损或特殊交互未验证）"];
+    } else targetEnemy.strangle = card.strangle;
+  }
+  // Q6 F8 T4: Sucker Punch loses 8+2 HP; Survivor's completed discard loses another 2, before end-turn poison.
+  if (card.type !== "Potion") for (const prior of strangled) {
+    const enemy = next.enemies.find((entry) => entry.index === prior.index && entry.alive);
+    if (!enemy) continue;
+    if (card.strangle !== undefined || plays !== 1 || automatic || card.upgraded || !["Attack", "Skill"].includes(card.type)) {
+      enemy.strangle = null;
+      next.unknown = [...next.unknown, "紧勒（后续牌型、升级、叠加、重放或自动出牌未验证）"];
+    } else if (!prior.verified || !strangleLossVerified(enemy) || next.hp <= 0) {
+      next.unknown = [...next.unknown, "紧勒（有挡、减损或特殊交互未验证）"];
+    } else if (prior.amount === 2) {
+      const loss = Math.min(enemy.hp, prior.amount);
+      enemy.hp -= loss;
+      enemy.lostThisTurn += loss;
+      next.damageDealt += loss;
+      if (enemy.hp <= 0) killEnemy(next, enemy);
+    }
+  }
+
   if (card.target === "single" && target !== null) next.facing = target;
   next.steps = [
     ...sim.steps,
@@ -1892,7 +1952,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       name: card.name,
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
-      ...(hidden || card.discards || card.discardsHand ? { discards: discarded } : {}),
+      ...(hidden || card.discards || card.discardsHand || card.survivorDiscard ? { discards: discarded } : {}),
       ...(card.type === "Potion" && card.generates?.pileCard ? { takes: card.generates.pileCard } : {}),
       ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },
@@ -2169,11 +2229,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (card.cardId === "PRECISE_CUT" && !card.upgraded && card.preciseCutHandDamage) {
       const handSize = [...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").length + next.drawnInHand + 1;
       const strengthNow = player.strengthNow ?? 0;
-      const observed = strengthNow === 0 ? (handSize === 5 ? 5 : handSize === 6 ? 3 : null)
+      // NHA2KW0RB7VP F17 T1: seven cards show 1; Slice and Strike leaving show 3 then 5.
+      const observed = strengthNow === 0 ? (handSize === 5 ? 5 : handSize === 6 ? 3 : handSize === 7 && card.preciseCutSevenHand ? 1 : null)
         : strengthNow === -2 ? (handSize === 5 ? 3 : handSize === 4 ? 5 : null)
         : strengthNow === 2 ? (handSize === 5 ? 7 : handSize === 3 ? 11 : null) : null;
       const recordedShown = strengthNow === 2 ? card.damage === 7 || card.damage === 11
-        : (strengthNow === 0 || strengthNow === -2) && (card.damage === 3 || card.damage === 5);
+        : ((strengthNow === 0 || strengthNow === -2) && (card.damage === 3 || card.damage === 5)) ||
+          (strengthNow === 0 && card.preciseCutSevenHand === true && card.damage === 1);
       if (observed !== null && recordedShown && !player.weak && !next.shrunk && next.strength === 0) {
         shown = observed;
       } else {
@@ -2452,7 +2514,13 @@ function attackRelics(sim: Sim, player: PlayerSim): void {
   const kusa = player.kusarigama;
   if (kusa && kusa.every > 0 && (kusa.count + sim.relicAttacks) % kusa.every === 0) {
     const living = sim.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
-    if (living[0]) hitEnemyRaw(sim, living[0], kusa.damage);
+    // 8S9RNHFU5XF1 F22 T1, silent-0400/0401: the six hit a different enemy, leaving
+    // the planned victim alive to attack. Omit unresolved damage, not a worst-case bound:
+    // death-trigger interactions can be worse. Keep the line and its uncertainty visible.
+    if (kusa.deferRandomTarget && living.length > 1) {
+      sim.kusarigamaUnresolved = true;
+      sim.unknown = [...sim.unknown, "锁镰（随机落点未展开；未计额外伤害，损血与击杀非保证）"];
+    } else if (living[0]) hitEnemyRaw(sim, living[0], kusa.damage);
   }
   // Shuriken: the Strength lands once the 3rd Attack is done, for every Attack after it (and the fight).
   const shuriken = player.shuriken;
@@ -3457,6 +3525,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     score,
     outcome: {
       winsFight,
+      ...(input.preservePoisonWinHp && winsFight && !wonBeforePoison ? { winsAfterPoison: true as const } : {}),
       hpLoss,
       hpAfter,
       dies,
@@ -3511,6 +3580,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
         ...(input.player.tungstenRod && !rodVerified && !winsFight ? ["钨合金棍（自身失血或其他减损交互未验证）"] : []),
         ...(input.player.paelsLegionPreview && sim.tempDex !== 0 ? ["佩尔的士兵（方案内新增敏捷组合未验证）"] : []),
       ],
+      ...(sim.kusarigamaUnresolved ? { kusarigamaUnresolved: true as const } : {}),
       sandpitAfter,
       ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunIndexes: stunned.map((enemy) => enemy.index), stunSaved } : {}),
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
@@ -3593,8 +3663,9 @@ function simKey(sim: Sim): string {
     + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "")
     + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "")
     + (sim.noDraw ? "#noDraw" : "")
-    + (sim.apotheosisApplied ? "#apotheosis" : "");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
+    + (sim.apotheosisApplied ? "#apotheosis" : "")
+    + (sim.kusarigamaUnresolved ? "#kusarigamaUnresolved" : "");
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}${enemy.strangle !== undefined ? `/strangle${enemy.strangle}` : ""}`).join("|");
   const phantomKey = (sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "")
     + (sim.serpentForm !== null ? `#sf${sim.serpentForm}` : "");
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
@@ -3844,7 +3915,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     // replaces) a potion-free line, however close their scores. Otherwise a potion line scoring a hair
     // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
-    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}${sim.pendingSelection ? "|selection" : ""}`;
+    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}${sim.pendingSelection ? "|selection" : ""}${sim.kusarigamaUnresolved ? "|kusarigamaUnresolved" : ""}`;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the line drinking fewer potions (a potion reaching the same end state is a potion
     // wasted, even a costless one in a boss fight), then the shorter plan (fewer steps = fewer chances for the
@@ -3868,7 +3939,11 @@ export function solveTurn(input: SolverInput): SolveResult {
       timedOut = true;
       return;
     }
-    if (sim.enemies.every((enemy) => !enemy.alive) || plan.outcome.winsFight) return;
+    // XTSV1U9JD34T F48 T8, silent-0271: ending now wins but pays nine held damage.
+    // Keep the existing evaluation and budgets; only extend a surviving poison win
+    // while there is HP to preserve for the observed next boss.
+    const preservePoisonHp = input.preservePoisonWinHp === true && o.winsAfterPoison === true && !o.dies && o.hpLoss > 0;
+    if (sim.enemies.every((enemy) => !enemy.alive) || (o.winsFight && !preservePoisonHp)) return;
     if (ownDeathEnds && sim.hp <= 0) return;
 
     const tried = new Set<string>();
@@ -3876,6 +3951,8 @@ export function solveTurn(input: SolverInput): SolveResult {
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
     const skillsLeft = input.player.maxSkills === null || input.player.maxSkills === undefined ? Infinity : input.player.maxSkills - sim.skillsPlayed;
     for (const card of sim.hand.flatMap((entry) => (hiddenDaggers(entry) ? hiddenDaggerWays(sim, entry) : entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {
+      // A known dry win must not spend a potion merely to optimize its terminal HP.
+      if (preservePoisonHp && card.type === "Potion") continue;
       if (card.type !== "Potion" && playsLeft <= 0) continue;
       if (card.type === "Skill" && skillsLeft <= 0) continue;
       if (input.firstKey !== undefined && sim.steps.length === 0 && card.key !== input.firstKey) continue;

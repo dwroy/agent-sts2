@@ -9,6 +9,8 @@ import type { Knowledge } from "../knowledge/index.js";
 import { UNKNOWN_VALUE } from "../knowledge/potion-values.js";
 import { fillRelicText } from "../knowledge/relic-values.js";
 import type { GameState } from "../hand/mod/schema.js";
+import type { ScreenMemory } from "./types.js";
+import { lizardTailResourceState } from "./relic-resources.js";
 import { asArray, asRecord, numOrNull, str, truncate, type JsonValue } from "../core/util/json.js";
 import {
   deckEntries,
@@ -32,19 +34,22 @@ export interface RunBrief {
   relic_effects: string[];
   potions: string[];
   notes: string[];
+  /** Observed consumable relic state; static effect text does not imply an unused charge. */
+  relic_resources?: Record<string, JsonValue>[];
   /** The run plan's one-line strategy (RUN_PLAN=v1), when there is one. */
   plan?: string;
 }
 
 const MAX_NOTES = 8;
 
-export function buildRunBrief(state: GameState, knowledge: Knowledge, previousNotes: string[] = []): RunBrief {
+export function buildRunBrief(state: GameState, knowledge: Knowledge, previousNotes: string[] = [], memory?: Pick<ScreenMemory, "lizardTail">): RunBrief {
   const entries = deckEntries(state, knowledge);
   const stats: DeckStats = deckStats(entries);
   const run = asRecord(state.run?.raw);
   const hp = state.run?.current_hp ?? null;
   const maxHp = state.run?.max_hp ?? null;
   const hpPct = hp !== null && maxHp !== null && maxHp > 0 ? Math.round((hp / maxHp) * 100) : null;
+  const tail = lizardTailResourceState(state, memory);
 
   return {
     character: state.run?.character_name ?? null,
@@ -59,6 +64,7 @@ export function buildRunBrief(state: GameState, knowledge: Knowledge, previousNo
     relic_effects: describeRunRelicEffects(state, knowledge),
     potions: describeRunPotions(state, knowledge),
     notes: previousNotes.slice(-MAX_NOTES),
+    ...(tail ? { relic_resources: [tail] } : {}),
   };
 }
 
@@ -84,6 +90,7 @@ export function briefJson(brief: RunBrief): Record<string, JsonValue> {
     notes: brief.notes,
   };
   if (brief.plan) json["run_plan"] = brief.plan;
+  if (brief.relic_resources) json["relic_resources"] = brief.relic_resources;
   // Relic and potion text arrives as a template: the mod exposes `{Heal}` where the game shows a
   // number, and there is no rendered variant for relics the way there is for cards. Say so, so the
   // model does not read the placeholder as a literal string.
