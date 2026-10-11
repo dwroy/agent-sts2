@@ -1813,3 +1813,5 @@
 - 2026-10-11 21:17:38 CST [B4租约丢失] 173019/KNOWLEDGE_DEMON保留lost及原retry_at，一小时后原有界重试；数值门与原基准隔离通过不等当前live发布。c355fc9f源未合入，原受保护派发基线/当前模拟源码已偏离；不重写lost/rc或原件、不提前重派。
 
 - 2026-10-11 21:36:42 CST [fix-batch] core-cycle-implementation-binding-entry：实现类冻结请求独立绑定原三提案、任务/manifest及9份输入SHA、扩授权与文件职责；沿既有write/learn.lock/wrapper/完成事件，保留旧纯研究和失败历史。source fc95760d4ff8a9cbd45577efdd79b1215bd2cb92 → live af11d9bd86745326625efab90078352b9740fc93；源码/合后沙箱通过，工具修复无游戏局号/层/回合和对应bug-infra，无eval版本。正式代码学习由ops经既有strategy-proposal动作传canonical请求id另派，本回报不代表量化学习已启动或完成。
+
+- 2026-10-12 01:34:51 CST [codex1兜底实际发布] 固定五源2b09c47d4/24c2e3a75/bc2c40e31/3596d1a2a/c04da0668仅叶提交增量集成265c533c787214851dd5d6b39a379d7deb9e1ed5，live实到ba705e34444c307cfbe01095909c91563e40c3a5，源身份合并保持测试树6c64da6a81cf212be932edc1885225442dc0650b逐字节不变；并行drain/push能力与live回测记录保留。tsc0、292文件2873例及gitleaks0，登记S1.exp181与S1.smoggy-discard1；纯启动恢复/定向宿主入口/夹具修复不造游戏版本。原预检失败/退避不改，宿主补验及main固定增量同步另续，旧B4 rejected未混入。
