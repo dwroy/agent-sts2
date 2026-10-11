@@ -232,6 +232,8 @@ export interface CardModel {
   choices?: CardModel[];
   drawn?: CardModel[];
   adds?: CardModel[];
+  /** Silent A10 plain Blade Dance: three observed Shivs, with fresh identities at play time. */
+  bladeDance?: boolean;
   sneckoCosts?: Record<string, number>;
   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
   demise?: number;
@@ -925,13 +927,18 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const calculatedGamble = cardId === "CALCULATED_GAMBLE" && (!bool(card["upgraded"]) || upgradedGamble);
   const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
     dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
+  // YBRA3EJ94GBR F30 T3 / F33 T10, silent-0324: Cards=3 makes Shivs; it never draws from the pile.
+  const bladeDance = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BLADE_DANCE" &&
+    !bool(card["upgraded"]) && dyn(card, "Cards") === 3 &&
+    template.replace(/\s+/g, "") === "添加{Cards:diff()}张小刀到你的手牌。" &&
+    renderedText.replace(/\s+/g, "") === "添加3张小刀到你的手牌。消耗。";
   // C48LLXBGKXQ9 F24 T1 / HUVEPWQAHWFU F35 T2, silent-0202: Cards=3 adds random attacks
   // to the draw pile; none enter the hand now. Their unknown future value remains unmodelled.
   const metamorphosis = character.toLowerCase() === "silent" && cardId === "METAMORPHOSIS" &&
     !bool(card["upgraded"]) && dyn(card, "Cards") === 3;
   // L704TLETMZBM F48 T4: Dagger Throw's fixed draw has no Cards variable in the observed frame.
   const daggerDraw = character.toLowerCase() === "silent" && cardId === "DAGGER_THROW" && !bool(card["upgraded"]) && /抽1张牌/.test(renderedText.replace(/\s+/g, "")) ? 1 : 0;
-  const draw = hiddenDaggers || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
+  const draw = hiddenDaggers || bladeDance || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 
@@ -966,17 +973,17 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     !bool(card["upgraded"]) && template.replace(/\s+/g, "") === "你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。";
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
-    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bulletTime;
+    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bladeDance || bulletTime;
   let flatValue = 0;
   let known = hasModelledEffect;
   let immediatePlays: CardModel["immediatePlays"];
   let adds: CardModel[] | undefined;
-  if (hiddenDaggers) {
+  if (hiddenDaggers || bladeDance) {
     // 10GPK5XGHCK3 F9 T5 / MGA0CZDDKC0P F17 retry T3: these are made, not drawn or played immediately.
     const shiv = knowledge.card("SHIV");
-    const base = shiv ? dyn({ dynamic_values: shiv.vars }, "Damage") ?? shiv.damage : null;
+    const base = shiv ? (bladeDance ? dynBase({ dynamic_values: shiv.vars }, "Damage") : dyn({ dynamic_values: shiv.vars }, "Damage")) ?? shiv.damage : null;
     known = shiv !== null && base !== null;
-    if (shiv && base !== null) adds = Array.from({ length: 2 }, (_, i) => modelHandCard({
+    if (shiv && base !== null) adds = Array.from({ length: bladeDance ? 3 : 2 }, (_, i) => modelHandCard({
       index: i, card_id: "SHIV", name: shiv.name, upgraded: false, energy_cost: 0, playable: true,
       requires_target: true, target_type: "AnyEnemy", rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
       dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
@@ -1112,6 +1119,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
     ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),
     ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),
+    ...(bladeDance ? { bladeDance: true, ...(adds ? { adds } : {}) } : {}),
     ...(character.toLowerCase() === "silent" && !bool(card["upgraded"]) && ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"].includes(cardId) &&
       /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { discardAfterDraw: true, ...(daggerDraw > 0 ? { discardDraw: daggerDraw } : {}) } : {}),
     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),

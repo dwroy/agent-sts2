@@ -621,6 +621,8 @@ export interface RolloutOptions {
 
 export interface RolloutInput {
   captureResources?: boolean;
+  /** Silent A10 CA5KE8GFJ9X2 F9 T2-T4: the observed Gardener's Skittish returns on later turns. */
+  observedGardenerSkittish?: boolean;
   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
   continuation?: {
     variants: { boss: string; count: number; input: RolloutInput }[];
@@ -2825,6 +2827,8 @@ function simulate(
       .filter((e) => e.alive)
       .map((e) => ({
         ...laterTurnSim(e.base),
+        // Preserve the existing within-turn consumption; only the observed seven-stack Gardener repeats.
+        ...(input.observedGardenerSkittish && input.meta.asc === 10 && e.id === "PHANTASMAL_GARDENER" && e.powers["SKITTISH_POWER"] === 7 ? { skittish: 7 } : {}),
         intangible: e.intangibleTurns > 0,
         hp: e.hp,
         maxHp: e.maxHp,

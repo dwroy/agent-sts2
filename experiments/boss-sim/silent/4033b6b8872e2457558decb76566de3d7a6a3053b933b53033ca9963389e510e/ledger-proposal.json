@@ -1,0 +1,46 @@
+{
+ "character": "silent",
+ "by": "learner:fix-batch",
+ "kind": "fight",
+ "claim": "Roy授权静默boss固定模型周期刷新：相对live新增42实际结局，225完局/999尝试/406可用；107调参、切点和Platt不动，验证257→299（成功297）；B2/B3 Brier 0.1078/0.1083，可信6/6。F49低可信、低阶各0验证；仅固定7e1193cef模型，不改策略阈值。",
+ "first_run": "H9ERYJLBL4UC",
+ "prior": "unknown",
+ "status": "proposed",
+ "prior_note": "统计校准；Roy架构授权不是游戏事实，不据此认定已理解打法。",
+ "evidence": [
+  {
+   "run": "H9ERYJLBL4UC",
+   "floor": 17,
+   "turn": 1,
+   "role": "support",
+   "note": "A10 KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST 尝试1 T1–10 实际won；H9ERYJLBL4UC:17:1:11207344290"
+  },
+  {
+   "run": "H9ERYJLBL4UC",
+   "floor": 33,
+   "turn": 1,
+   "role": "support",
+   "note": "A10 THE_INSATIABLE 尝试2 T1–9 实际won；H9ERYJLBL4UC:33:2:11216976539"
+  },
+  {
+   "run": "H9ERYJLBL4UC",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "A10 TEST_SUBJECT 尝试6 T1–12 实际died；H9ERYJLBL4UC:48:6:11244464830"
+  }
+ ],
+ "where": {
+  "knowledge": [
+   "knowledge/characters/silent/boss-trust.json"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261011-114304-silent-boss-calibration/report.md"
+  ],
+  "changelog": [
+   "paper/materials/silent/boss-sim-calibration.md",
+   "experiments/boss-sim/silent/4033b6b8872e2457558decb76566de3d7a6a3053b933b53033ca9963389e510e"
+  ]
+ },
+ "note": "来源任务20261011-114304-silent-boss-calibration；全量重提取、固定模型控制核验；授权新功能非bug-infra，只proposed，shipped由运维核实际发布登记。"
+}

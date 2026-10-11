@@ -1,0 +1,11 @@
+{
+ "first_exit": 1,
+ "failed_test": "tests/check-imports.test.ts",
+ "error": "ENOENT stat scratch/sl-gaps-Abs7WO while tests remove temporary directories",
+ "old_TMPDIR": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261011-011304-silent-boss-calibration",
+ "new_TMPDIR": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261011-011304-silent-boss-calibration/.test-tmp",
+ "reason": "Keep mutable test temp directories under scratch while the existing import walker skips dot-prefixed directories.",
+ "production_code_changed": false,
+ "exclusion_list_changed": false,
+ "rerun": "Original bash tools/test-sandbox.sh, including tsc and all its fixed tests."
+}

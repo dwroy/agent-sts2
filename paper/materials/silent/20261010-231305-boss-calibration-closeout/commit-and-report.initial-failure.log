@@ -1,0 +1,9 @@
+paper/materials/silent/20261010-231305-boss-calibration-closeout/source-sandbox.log:18: new blank line at EOF.
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261010-231305-silent-boss-calibration/commit-and-report.py", line 25, in <module>
+    subprocess.run(['git', 'diff', '--cached', '--check'], cwd=ROOT, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', 'diff', '--cached', '--check']' returned non-zero exit status 2.
