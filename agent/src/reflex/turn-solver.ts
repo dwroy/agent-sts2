@@ -1724,13 +1724,19 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.pendingSelection = true;
     next.unknown = [...next.unknown, `${card.name}（重放弃牌未验证）`];
   }
+  const unverifiedBladeDance = card.bladeDance && (plays > 1 || automatic || card.upgraded || card.cardId !== "BLADE_DANCE" || !card.adds);
+  if (unverifiedBladeDance) {
+    next.pendingSelection = true;
+    next.unknown = [...next.unknown, `${card.name}（自动、重放、升级或缺资料的生成未验证）`];
+  }
   if (card.bulletTime && (plays > 1 || automatic)) next.unknown = [...next.unknown, "子弹时间（自动出牌或重放未验证）"];
   for (let play = 0; play < plays; play += 1) {
     const serpent = next.serpentForm;
     const serpentTargets = next.enemies.filter((enemy) => enemy.alive);
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
-    const effects = unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
+    const effects = unverifiedBladeDance ? { ...card, draw: 0, adds: undefined }
+      : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost, plays === 1 && !automatic);
     // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
     // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
@@ -2075,8 +2081,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
   if (card.adds && !next.pendingSelection && (card.discardCount === undefined || hiddenDaggers(card))) {
-    const adds = hiddenDaggers(card) ? card.adds.map((shiv, i) => ({
-      ...shiv, index: 2_000_000 + next.steps.length * 2 + i, key: `${card.key}~shiv${next.steps.length}:${i}`,
+    const adds = hiddenDaggers(card) || card.bladeDance ? card.adds.map((shiv, i) => ({
+      ...shiv, index: card.bladeDance ? 3_000_000 + next.steps.length * 3 + i : 2_000_000 + next.steps.length * 2 + i,
+      key: `${card.key}~shiv${next.steps.length}:${i}`,
       validTargets: next.enemies.filter((enemy) => enemy.alive).map((enemy) => enemy.index),
       damage: shiv.damageBase === undefined ? shiv.damage : Math.floor(ourAttackScaled(shiv.damageBase + (player.strengthNow ?? 0), player.weak, false)),
     })) : card.adds;
