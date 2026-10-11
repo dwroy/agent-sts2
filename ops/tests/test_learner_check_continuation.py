@@ -198,6 +198,19 @@ class Continuation(unittest.TestCase):
         self.changed = ["agent/tests/passed.test.ts"]
         self.assertEqual(self.run_check(), 0)
 
+    def test_changed_implementation_module_is_eligible_for_affected_supplement(self):
+        name = "tests/strategy-implementation.test.ts"
+        dependency = "ops/strategy_implementation_jobs.py"
+        self.assertTrue((SOURCE / "strategy_implementation_jobs.py").is_file())
+        (self.live / "agent" / name).write_text('it("fixed binding", () => {});\n')
+        self.changed = [dependency]
+        self.manifest["selection"] = [{"file": name, "tests": [], "reason": "affected"}]
+        self.manifest["inputs"] = [{"path": path, "source": "f" * 40}
+                                   for path in ["agent/" + name, dependency]]
+        self.assertEqual(self.run_check(), 0)
+        self.assertEqual(len(self.calls), 2)
+        self.assertIn(name, self.calls[-1])
+
     def test_unrun_and_newly_affected_files_have_separate_supplement_receipts(self):
         self.assertEqual(self.run_check(), 0)
         self.manifest["selection"] = [{"file": "tests/unrun.test.ts", "tests": [], "reason": "unrun"}]
