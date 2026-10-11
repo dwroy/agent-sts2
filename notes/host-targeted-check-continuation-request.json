@@ -11,5 +11,17 @@
   "task": "paper/materials/20261011-2119-ops/host-targeted-check-task.md",
   "task_sha256": "232b3b4e72e1d69c0ae4cbb20ef3794941cb2353e843788cb1825ec43c402bcd",
   "no_new_scheduler_or_parallel_pool": true,
-  "current_host_verification_complete": false
+  "current_host_verification_complete": false,
+  "additional_evidence": [
+    {
+      "path": "paper/materials/20261011-2131-main-dependencies/affected.log",
+      "sha256": "74ae4eed4164e7d868e7617d180b35ab22da3ce38ba241d946975e0d269910c9",
+      "scope": "already excluded brain-codex-usage sandbox IPC failures, not accepted current-host result"
+    },
+    {
+      "path": "paper/materials/20261011-2131-main-dependencies/dispatch-baseline-proof.json",
+      "sha256": "b788111ede8ded83575d7038d676f13251beae771c2634b79aef170b109c7cfd",
+      "scope": "unchanged main dispatch fixtures omit feature directory despite path-existence guard; keep guard and assert meaningful fixtures"
+    }
+  ]
 }
