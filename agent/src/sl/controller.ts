@@ -46,7 +46,7 @@ import { distinctNames, drawBoundOf, revivesOf, slAvoidFailedOf, slPointOf, type
 import { heldCardEthereal } from "../reflex/card-model.js";
 import { mantleHpCost } from "../reflex/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
-import { attemptFrom, createSlLog, giantPhaseAtTurnStart, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
+import { attemptFrom, createSlLog, giantFinalResources, giantPhaseAtTurnStart, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlElite, type SlEliteList } from "./elites.js";
 import { boardTried, exploreTarget, firstCardReplayScope, playKey, replayPlays, replayPoints, secondPlan, slBoardKey, triedHas, turnCanon, turnRepeats, type ExploreTargetOptions, type SlDeviation, type SlExploreEnv, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays, type SlTurnRepeat } from "./explore.js";
@@ -1124,6 +1124,12 @@ export class SlController {
       ...(drawBound ? { drawBound } : {}),
     });
     fight.verdict = verdict;
+    const turn = fight.turns.at(-1);
+    if (turn?.turn === state.turn && turn.giant_phase) {
+      const resources = giantFinalResources(state, verdict);
+      if (resources) turn.giant_final_resources = resources;
+      else delete turn.giant_final_resources;
+    }
     const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
     if (!verdict.certain) {
       // Said when the mod itself calls the end of turn lethal, or our own count (held cards included) does: the deaths SL
