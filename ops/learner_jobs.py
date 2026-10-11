@@ -237,7 +237,12 @@ def fix_key(root, character):
     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
 
 
-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None):
+def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None):
+    if implementation_request is not None:
+        from strategy_implementation_jobs import REQUEST
+        if (implementation_request != REQUEST or research_request is not None or task != "strategy-proposal"
+                or character != "silent" or reason != "ops" or key != "strategy-implementation:" + REQUEST):
+            return None
     if research_request is not None:
         from strategy_research_jobs import REQUEST_PATHS, research_key
         if (research_request not in REQUEST_PATHS or task != "strategy-proposal" or character != "silent"
@@ -263,6 +268,8 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
     argv = ["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree]
     if research_request:
         argv += [task, research_request]
+    elif implementation_request:
+        argv += [task, implementation_request]
     pid, pane = start_learner(argv, root, scripts, state_dir, "learner-" + batch_id)
     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
                                  "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
@@ -271,6 +278,8 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         state["batches"][batch_id]["pane"] = pane
     if research_request:
         state["batches"][batch_id]["research_request"] = research_request
+    elif implementation_request:
+        state["batches"][batch_id]["implementation_request"] = implementation_request
     return batch_id, pid
 
 
