@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-051302-s2/agent
+
+ ❯ tests/silent-kin-progress.test.ts (16 tests | 2 failed) 1521ms
+   × reaches the actual Jev plan question (v1=false) while preserving options and their numeric rankings 147ms
+   × reaches the actual Jev plan question (v1=true) while preserving options and their numeric rankings 108ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-kin-progress.test.ts > reaches the actual Jev plan question (v1=false) while preserving options and their numeric rankings
+ FAIL  tests/silent-kin-progress.test.ts > reaches the actual Jev plan question (v1=true) while preserving options and their numeric rankings
+AssertionError: expected undefined to match object { hp_sum: 324, living_count: 3 }
+
+- Expected:
+{
+  "hp_sum": 324,
+  "living_count": 3,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-kin-progress.test.ts:109:43
+    107|   const raw = rawAt(292332), current = planned(raw, v1).decision;
+    108|   if (current?.kind !== "ask" || current.questions.plan?.type !== "cho…
+    109|   expect(current.state.kin_current_board).toMatchObject({ hp_sum: 324,…
+       |                                           ^
+    110|   expect(current.state).not.toHaveProperty("experience");
+    111|   expect(current.state.potion_context).not.toHaveProperty("potion_wort…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 14 passed (16)
+   Start at  05:21:01
+   Duration  3.24s (transform 1.29s, setup 334ms, import 1.26s, tests 1.52s, environment 0ms)
+
