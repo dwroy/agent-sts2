@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-11T17:06:23.838034+08:00",
+  "request_id": "roy-20261010-silent-core-reuse-experience-integration",
+  "request_sha256": "ac41037ad2d1eb91c3de2d34d5cb78f1dc066ad84dc2212e0b1a827a46ee07aa",
+  "learn_sha256": "7cd3e38da9a08762fe892285cc4b1d8aa941523f5882cfedce8e99fdc5829c7f",
+  "registered_active_experience": {
+    "20261011-165852-experience-update": {
+      "task": "experience-update",
+      "character": "silent",
+      "runs": [
+        "BSXYMFKN0VJ5"
+      ],
+      "pid": 1796981,
+      "state": "running",
+      "reason": "tick",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pJN"
+    }
+  },
+  "queue_count": 290,
+  "source_sha256": "bc9117d4452b10e7c3ff597401b67a99fee3f3fbe90c3293ccd2dc60a2e02367",
+  "root_causes": [
+    "check_jobs chooses only ordinary pending postmortems, not the approved integration request",
+    "herdr wake defers with exit75: ops pane foreground node/codex is not recognized as the registered ops agent; manual events are not delivered"
+  ],
+  "limits": [
+    "Host process identity was not probed from sandbox; busy foreground is reported by actual host wake logs",
+    "No live merge conflicts, running learners, play, settings or knowledge were changed by diagnosis"
+  ],
+  "repair": "Consume this approved integration through existing check_jobs and experience-update slot before ordinary increments, preserving validations/retries/completion"
+}

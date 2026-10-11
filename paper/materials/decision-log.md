@@ -2135,3 +2135,5 @@
 - 2026-10-11 16:24 CST [核心循环量化与极限讨论] Roy要求量化跳过/减牌/过牌及极限循环；独立抽象模型精确算只基础抽5时12回合核心次数20张3→15张4→5张12，再缩至1张仍12；双组件同手概率另算。12方案各10000固定种子逐张计算，揭示流量近似N−G不能当有限次数，费用及正在结算牌不可回抽可阻断循环；单/双组件零费封闭状态另给动作见证，不冒称实盘无限构筑。仅论文讨论/计算，未加游戏知识、任务、版本或改对局；复现代码、数值、原话和SHA见paper/materials/silent/20261011-core-cycle-quantification/。
 
 - 2026-10-11 16:53 CST [核心循环量化入库授权] Roy“以上的总结能否学习进入经验库？”已补入唯一 roy-20261010-silent-core-reuse-experience-integration revision3，保留原0374/0376/0385，增加跳过/减牌/过牌数量、整套同手、费用/回流与极限断点验证；只允许learner据静默证据去重入库，不把抽象数字/无限例子作游戏事实。原请求/跟踪/续办事件字节独立留存，新说明task-v3 SHA030337a6；标准broker派发8秒无响应exit124，复核无匹配批次，仍pending/batch null，原唯一续办事件追加最新版，无重复派发或上线。live经验.8/208条和19原冲突保持；入库后交条目原文，读取/采用/最终通关效果分列。回执paper/materials/silent/20261011-core-cycle-quantification/experience-integration/closure.json。
+
+- 2026-10-11 17:16 CST [Roy纠正ops恢复方式] Roy要求仍由ops调度、禁止随意修改框架流程，并授权同一herdr space新开ops tab恢复。自动领取综合入库请求的草稿已独立归档且从工作树撤下，未提交/合入main或live，两个生产learner_jobs.py SHA均bc9117d4。当前Herdr访问被沙箱拒绝，既有broker procs 8秒exit124；未创建新tab、未启动第二ops、未派专题或改游戏。需要宿主核实Herdr agent登记后按既有ops入口恢复；原请求仍pending。证据paper/materials/silent/20261011-experience-integration-dispatch/withdrawal-and-recovery.json。
