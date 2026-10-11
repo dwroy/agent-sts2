@@ -80,6 +80,8 @@ export interface CardModel {
   dodgeRollNextBlock?: boolean;
   /** DUZUBAJ3A8GP A10 F30 T5, silent-0010: plain Mirage reads living poison at play time. */
   blockFromPoison?: boolean;
+  /** K2JAGKVJAWZJ A10 F46 T1: only the observed upgraded zero-poison play is known. */
+  observedZeroPoisonMirage?: boolean;
   /** Block before player modifiers, from the observed enchanted/base dynamic value. */
   blockBase?: number;
   /** Debuffs applied to the target (or every enemy for `all`). */
@@ -880,6 +882,17 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const block = madExpertise || madSapping ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
   const mirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && dyn(card, "CalculationExtra") === 1;
+  // Keep the ordinary unknown model until the solver checks poison and modifiers at play time.
+  const mirageValues = asArray(card["dynamic_values"]).map(asRecord);
+  const zeroPoisonMirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
+    bool(card["upgraded"]) && type === "Skill" && card["target_type"] === "Self" && !requiresTarget &&
+    numOrNull(card["energy_cost"]) === 1 && !bool(card["costs_x"]) && card["enchantment"] == null &&
+    str(card["rules_text"]) === "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}" &&
+    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得等量于所有敌人中毒层数总和的格挡。（获得0点格挡）" &&
+    mirageValues.length === 3 && [["CalculatedBlock", 0], ["CalculationBase", 0], ["CalculationExtra", 1]].every(([name, value]) => {
+      const entry = mirageValues.find((v) => v["name"] === name);
+      return entry !== undefined && ["base_value", "current_value", "enchanted_value"].every((field) => entry[field] === value);
+    });
   let vulnerable = madSapping ? dyn(card, "SappingVulnerable")! : dyn(card, "VulnerablePower") ?? 0;
   let weak = madSapping ? dyn(card, "SappingWeak")! : dyn(card, "WeakPower") ?? 0;
   let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
@@ -1128,6 +1141,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       dynBase(card, "Block", true) === 6 && template.replace(/\s+/g, "") === "获得{Block:diff()}点格挡。在下个回合，获得{Block:diff()}点格挡。"
       ? { dodgeRollNextBlock: true } : {}),
     ...(mirage ? { blockFromPoison: true } : {}),
+    ...(zeroPoisonMirage ? { observedZeroPoisonMirage: true } : {}),
     ...(!madExpertise && !madSapping && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,
     weak,
