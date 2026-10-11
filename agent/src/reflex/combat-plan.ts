@@ -22,6 +22,7 @@
 import { choiceQ } from "./jev/questions.js";
 import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
+import { observedDemonPoison } from "./silent-demon-potion.js";
 import { carrySilentSkittish } from "./silent-skittish.js";
 import { silentLossReference } from "./silent-loss-reference.js";
 import { silentSimulationReference } from "./silent-simulation-reference.js";
@@ -3148,10 +3149,12 @@ function planTurn(env: DecisionEnv): Decision | null {
       vulnerable: Math.max(0, ...enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.vulnerable)),
     }, powerExtraCost);
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
+  const demonPoison = observedDemonPoison(state);
   const potionContext: PotionContext = {
     ...pileContext,
     character: str(asRecord(state.run?.raw)["character_id"]),
     ascension: state.run?.ascension ?? -1,
+    ...(demonPoison === null ? {} : { observedPoison: demonPoison }),
     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
