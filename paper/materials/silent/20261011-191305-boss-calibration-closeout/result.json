@@ -1,0 +1,274 @@
+{
+ "task": "fix-batch",
+ "base": "47096796ba5ee42abf7e85dfa0475684cac36392",
+ "fixes": [
+  {
+   "item": "Roy 已授权新功能：静默 boss 模拟校准",
+   "commit": "95d65c8bf56734735366a466bd5a29c0430231c6",
+   "test": "固定沙箱267文件2689例；原120秒超时及原断言复验/paths续验完整留存；Python12/调度8/角色隔离/B2-B3/切分/Platt/阈值/幂等通过",
+   "fails_without_fix": false,
+   "kind": "authorized-feature-calibration-refresh",
+   "source_implementation": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+   "model_commit": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+   "actual_code_merge": null,
+   "actual_data_merge": null,
+   "release_tree": null,
+   "version": null,
+   "ledger": [
+    "silent-0416"
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "item": "live合入及发布登记",
+   "reason": "ops/live-merge.lock忙，publish-live退出3；未写live，未执行合后测试，不发布空版本。固定候选可由原完成事件继续锁内流程。"
+  },
+  {
+   "item": "提高不足项信度",
+   "reason": "A0–4/A5–9各缺10独立验证；F49及6个boss虽足数量但质量不达标，保留低可信。"
+  }
+ ],
+ "merged": null,
+ "release_commit": null,
+ "release_tree": null,
+ "version": null,
+ "candidate_tree": "e9bb00e54df1f95e9be9a81ebb5e6f1e90ac563c",
+ "tests": {
+  "tsc": 0,
+  "vitest": 0,
+  "files": 267,
+  "cases": 2689,
+  "initial_sandbox_exit": 1,
+  "original_failures": [
+   "tests/rollout-live.test.ts > rollout facts on Jev's combat question > code's ranking, options and auto-acts are unchanged by the rollout"
+  ],
+  "retry_exit": 0,
+  "retry_passed": 1,
+  "retry_skipped_already_covered": 13,
+  "paths_continuation_exit": 0,
+  "paths_cases": 11,
+  "python": 0,
+  "python_cases": 12,
+  "dispatch": 0,
+  "dispatch_cases": 8,
+  "controls_compared": 4,
+  "idempotency": true,
+  "assertions_timeouts_and_exclusions_unchanged": true,
+  "external_full": null,
+  "live": null
+ },
+ "ledger": [
+  "silent-0416"
+ ],
+ "ledger_status": "proposed",
+ "code_proposals": [],
+ "implementation_domains": [],
+ "samples": {
+  "finished_runs": 233,
+  "attempts": 1040,
+  "written": 419,
+  "usable_by_asc": {
+   "0": 16,
+   "1": 6,
+   "2": 5,
+   "3": 3,
+   "4": 9,
+   "5": 3,
+   "6": 22,
+   "7": 17,
+   "8": 3,
+   "9": 7,
+   "10": 328
+  },
+  "usable_outcomes": {
+   "won": 305,
+   "died": 114
+  },
+  "exclusions": {
+   "SL predicted_death: censored, no actual win/loss; no observed completed outcome": 619,
+   "SL predicted_death: censored, no actual win/loss; no observed completed outcome; no turn-1 decision with drawn hand": 1,
+   "no turn-1 decision with drawn hand": 1
+  }
+ },
+ "split": {
+  "cutoff_ts": "2026-10-06T02:46:11.648000",
+  "tune_n": 107,
+  "val_n": 312
+ },
+ "boss_trust": [
+  {
+   "boss": "KAISER_CRAB",
+   "validation_n": 31,
+   "missing": 0,
+   "b2": false,
+   "b3": false,
+   "failed_b2": [
+    "brier"
+   ],
+   "failed_b3": [
+    "brier"
+   ]
+  },
+  {
+   "boss": "THE_KIN",
+   "validation_n": 25,
+   "missing": 0,
+   "b2": true,
+   "b3": true,
+   "failed_b2": [],
+   "failed_b3": []
+  },
+  {
+   "boss": "QUEEN",
+   "validation_n": 20,
+   "missing": 0,
+   "b2": false,
+   "b3": false,
+   "failed_b2": [
+    "brier",
+    "gap"
+   ],
+   "failed_b3": [
+    "brier",
+    "gap"
+   ]
+  },
+  {
+   "boss": "AEONGLASS",
+   "validation_n": 21,
+   "missing": 0,
+   "b2": false,
+   "b3": false,
+   "failed_b2": [
+    "brier",
+    "gap",
+    "leak"
+   ],
+   "failed_b3": [
+    "brier",
+    "gap",
+    "leak"
+   ]
+  },
+  {
+   "boss": "CEREMONIAL_BEAST",
+   "validation_n": 28,
+   "missing": 0,
+   "b2": true,
+   "b3": true,
+   "failed_b2": [],
+   "failed_b3": []
+  },
+  {
+   "boss": "KNOWLEDGE_DEMON",
+   "validation_n": 31,
+   "missing": 0,
+   "b2": false,
+   "b3": false,
+   "failed_b2": [
+    "leak"
+   ],
+   "failed_b3": [
+    "leak"
+   ]
+  },
+  {
+   "boss": "LAGAVULIN_MATRIARCH",
+   "validation_n": 28,
+   "missing": 0,
+   "b2": true,
+   "b3": true,
+   "failed_b2": [],
+   "failed_b3": []
+  },
+  {
+   "boss": "SOUL_FYSH",
+   "validation_n": 23,
+   "missing": 0,
+   "b2": true,
+   "b3": true,
+   "failed_b2": [],
+   "failed_b3": []
+  },
+  {
+   "boss": "TEST_SUBJECT",
+   "validation_n": 17,
+   "missing": 0,
+   "b2": false,
+   "b3": false,
+   "failed_b2": [
+    "brier",
+    "gap",
+    "leak"
+   ],
+   "failed_b3": [
+    "brier",
+    "gap",
+    "leak"
+   ]
+  },
+  {
+   "boss": "THE_INSATIABLE",
+   "validation_n": 28,
+   "missing": 0,
+   "b2": false,
+   "b3": false,
+   "failed_b2": [
+    "leak"
+   ],
+   "failed_b3": [
+    "brier",
+    "leak"
+   ]
+  },
+  {
+   "boss": "VANTOM",
+   "validation_n": 30,
+   "missing": 0,
+   "b2": true,
+   "b3": true,
+   "failed_b2": [],
+   "failed_b3": []
+  },
+  {
+   "boss": "WATERFALL_GIANT",
+   "validation_n": 28,
+   "missing": 0,
+   "b2": true,
+   "b3": true,
+   "failed_b2": [],
+   "failed_b3": []
+  }
+ ],
+ "a10": {
+  "t1": {
+   "n": 310,
+   "gap": 0.050000000000000044,
+   "brier": 0.1099,
+   "mean_pred": 0.766,
+   "actual_win": 0.716,
+   "leak_ratio": 1.293
+  },
+  "pre": {
+   "n": 310,
+   "gap": 0.05400000000000005,
+   "brier": 0.1086,
+   "mean_pred": 0.77,
+   "actual_win": 0.716,
+   "leak_ratio": 1.303
+  }
+ },
+ "f49_validation_n": 18,
+ "f49_low": true,
+ "artifact": "be23f727fd65213b15fdc816c8badfcb8df25594066b8e9701db7582d76bfa28",
+ "refresh_entry": "agent/tools/boss-sim/refresh-silent.py --previous <live>/knowledge/characters/silent/boss-trust.json",
+ "cadence": "每小时:13/:43及learner完成事件检查；升阶或新增20次实际boss结局触发，SL截断不计。",
+ "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261011-191305-silent-boss-calibration/report.md",
+ "calibration_report": "paper/materials/silent/boss-sim-calibration.md",
+ "all_commits": [
+  "47096796ba5ee42abf7e85dfa0475684cac36392",
+  "95d65c8bf56734735366a466bd5a29c0430231c6"
+ ],
+ "existing_live_version": "S1.boss-calibration11"
+}
