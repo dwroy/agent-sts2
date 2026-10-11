@@ -2177,3 +2177,5 @@
 
 - 2026-10-11 18:26 CST [Roy协调] ops拓扑为一个主会话、最多两个只读辅助session；本轮两个临时积压审计已完成，不重复领取。开发独立负责归档修复source62c22f7c7/main1496de4f4及持久broker/辅助入口；ops只在当前live合并和隔离复验后正常纳入已测派单/归档修复。整套已过项目不再无差别重测，仅失败文件/未跑paths单worker复验，原失败/断言/预算保持。264条历史扫描候选仍由开发复核性质，不冒报泄露或全部清洁。
 - 2026-10-11 18:46:12 CST 运维本轮补办：46批49局复盘/114提案SHA核实、论文表717局切点；19冲突actual b8cd47484/S1.fix47，27普通经验批actual4754a8698/S1.exp-backlog1，57条CLI shipped限实际范围；三研究原报告复验，revision3实际派175450且观察到学习者3项经验自合，完成验收仍待原事件；派单/归档/辅助职责actual e597b103a，无工具游戏版本，保留资源争用/误整理及固定沙箱排除失败；生产辅助验收和未合固定源码另立唯一续办，main未纳入他人动态产出。证据paper/materials/20261011-1751-ops-backlog/。
+
+- 2026-10-11 19:39:39 CST Codex学习者 / 20261011-191305-silent-boss-calibration：Roy授权静默boss定期校准刷新候选；233完局/1040尝试/419可用，较live55实际结局，107调参/312验证（成功310）、固定模型/Platt/UTC切点不变。新证NYQW6JAD30K4 A10 F17尝试6 T1–13 died并核GAME_OVER/HP0；B2/B3 Brier0.1099/0.1086、可信6/6、A10残差+5.0/+5.4百分点，F49质量及低阶缺样限制保留。原源sandbox exit1失败日志保留、失败项原断言复验及paths续验通过，总267文件/2689例，Python12/调度8通过；账本silent-0416仅fight/proposed。指纹be23f727fd65213b15fdc816c8badfcb8df25594066b8e9701db7582d76bfa28，实际发布以锁内回执为准，不冒造版本/shipped；回执paper/materials/silent/20261011-191305-boss-calibration-closeout/。
