@@ -1,0 +1,34 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-session-health-20261011/agent
+
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 53ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 52ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 263 passed (264)
+      Tests  1 failed | 2671 passed (2672)
+   Start at  17:40:36
+   Duration  362.69s (transform 13.56s, setup 22.33s, import 57.26s, tests 1312.44s, environment 38ms)
+
