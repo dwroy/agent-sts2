@@ -18,6 +18,9 @@ class CalibrationDispatch(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = self.temp.name
+        # Production requires an existing dedicated tree before checking its availability.
+        for task in {self.task, "silent-boss-calibration"}:
+            Path(self.root, ".worktrees", task).mkdir(parents=True, exist_ok=True)
         self.request = {"state": "pending", "task": self.task, "character": "silent",
                         "authorized_by": "Roy", "request_id": "fixed-roy-request"}
         path = Path(self.root, self.request_file)
@@ -48,6 +51,12 @@ class CalibrationDispatch(unittest.TestCase):
         del self.state["batches"]["old-fix"]
         self.assertFalse(jobs.busy(self.state, "fix-batch", lambda pid: True))
         self.assertFalse(jobs.busy(self.state, "strategy-proposal", lambda pid: True))
+
+    def test_missing_feature_directory_refuses_even_if_availability_is_mocked(self):
+        Path(self.root, ".worktrees", self.task).rmdir()
+        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner") as start:
+            self.assertIsNone(self.launch())
+            start.assert_not_called()
 
     def test_dirty_or_other_writer_feature_tree_refuses_without_fallback(self):
         with patch.object(jobs, "available_worktree", return_value=False), patch.object(jobs, "start_learner") as start:
@@ -149,6 +158,7 @@ class NewFeatureDispatch(unittest.TestCase):
             Path(root, "notes").mkdir()
             state = {"batches": {"normal": {"task": "fix-batch", "state": "running", "pid": 10}}}
             for task in ("boss-sim-automation", "silent-double-boss"):
+                Path(root, ".worktrees", task).mkdir(parents=True)
                 Path(root, jobs.FEATURE_REQUESTS[task]).write_text(json.dumps({
                     "state": "pending", "task": task, "character": "silent", "authorized_by": "Roy", "request_id": task}))
             with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
@@ -171,6 +181,7 @@ class NewFeatureDispatch(unittest.TestCase):
             with self.subTest(task=task), tempfile.TemporaryDirectory() as root:
                 Path(root, "notes").mkdir(); path = Path(root, jobs.FEATURE_REQUESTS[task])
                 value = {"state": "pending", "task": task, "character": "silent", "authorized_by": "Roy", "request_id": task}
+                Path(root, ".worktrees", task).mkdir(parents=True)
                 path.write_text(json.dumps(value)); state = {"batches": {}}
                 with patch.object(jobs, "available_worktree", return_value=False), patch.object(jobs, "start_learner") as start:
                     self.assertEqual(jobs.requested_feature(state, root, "/scripts", "silent", "ops", lambda pid: True, "dirty"), (True, None))

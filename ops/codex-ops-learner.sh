@@ -179,6 +179,8 @@ else
     args+=(--set merge=live)
     [ "$task" = fix-batch ] || args+=(--set "runs=$runs")
   fi
+  # The launcher may retry only a proven pre-session failure under this same registration.
+  export LEARNER_BATCH_ID="$batch" LEARNER_STATE_FILE="$DIR/learn.json"
   nice -n 10 "$ROOT/agent/node_modules/.bin/tsx" "$worktree/learner/run.ts" "${args[@]}" > "$out" 2> "$err"
   rc=$?
 fi
