@@ -109,3 +109,9 @@ Roy 最新授权统一 LLM 切换能力，watcher 在独立树 `codex-account-dr
 原实现入口目前只接受第一次派发，已有implementation_request登记，且三提案已waiting；**不能删登记、改旧done/failed或强改pending绕过**。drain完成后沿已有获授权修复/恢复链做有界续办，复用此次57项覆盖、原帧/抽象复现，不重派旧全历史研究。当前canonical里的running/actual_execution是派发历史，当前终态以这次原完成事件为准；本旧ops不改冻结ACK或父请求历史。
 
 尚未上线的新知识/实现、main集成及Windows SSH最终push均继续受原完整验收条件约束。沙箱启动竞态专项被214301按原指令留下一批，尚未修复；drain期间不派。
+
+## 2026-10-11 22:47:42 CST：223051无源码策略批完成（待继任核处置）
+
+`20261011-223051-strategy-proposal` 已done/rc0，fixes为空、merged=null，报告10条原提案均waiting；没有本批新源码或live发布。等待理由同时包含消费者/合入预检冲突和实盘隔离/完整后继缺口，继任须区分工程续办与游戏证据限制，不能统一当纯缺证、强行合入旧候选或标整体duplicate。原 `.out/.err/报告` SHA、事件副本与登记快照见 `paper/materials/20261011-codex1-drain-handoff/deferred-2246/pending-closeout.json`。
+
+原reason=proposal，非本旧ops在drain后手工派发；watcher统一闸需要覆盖自动提案路径，本轮未代改。该事件被调度器归档不表示业务验收已完成。旧ops保持 **ready_to_drain**，不新派/合入/造版本/补测，不改任何进程、flags、账号或冻结输入。
