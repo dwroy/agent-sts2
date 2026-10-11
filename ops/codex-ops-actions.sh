@@ -33,6 +33,13 @@ WIN=/mnt/c/Windows/System32
 STEAM_URI="steam://rungameid/2868840"
 TASK=sts2-launch-desktop
 action="${1:-}"; arg="${2:-}"
+case "$action" in
+  autoplay-start|autoplay-reload|ops-assist|codex-brain-cache-probe)
+    if [ -f "$DIR/LLM_DRAIN" ]; then
+      echo "LLM drain: new work deferred"
+      exit 75
+    fi ;;
+esac
 
 # Our processes (never this script): pid + command line.
 ours() {

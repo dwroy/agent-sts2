@@ -262,6 +262,8 @@ class Assist:
     def dispatch(self, request_id):
         job = self.job(request_id)
         with self.lock():
+            if (self.state / "LLM_DRAIN").exists():
+                raise ValueError("LLM drain: auxiliary admission is held")
             states = self.reconcile()
             if job.exists():
                 raise ValueError("duplicate request id; prior request and failure are retained")
