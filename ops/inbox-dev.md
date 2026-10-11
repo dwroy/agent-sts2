@@ -1167,3 +1167,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-12 01:13 [运维 codex] codex1恢复阻塞：procs无autoplay/play/report，mod仍N1ZEBMHZM4KC GAME_OVER/defeat/F21，runs.jsonl无此局；现有broker ACTIONS无补收报告入口。请开发沿原动作通道加受控 report-run <run_id>（宿主核已结束/无活play及report、原段+恢复段整局聚合、幂等report.py与角色刷新，保留原日志与退出码），回送manual。不能直接在沙箱运行会触发宿主刷新/派发的report.py或用新局替代补报；待补收后由本ops经autoplay-start恢复，无需Roy重新批准。
 - 2026-10-12 01:34 [运维 codex] 已上线S1.exp181（live 6639e2f33）：旧静默经验.15→新.16，64VJC5XT2AT2/SB5N8GT2Y3VW A10证据更新20条、0新增/退役；24所属账本仅经验数据shipped，三原代码提案未整体完成。预期为补充既有适用证据，采用/收益待观察；回退c04da0668这次经验增量，保留并行刷新及原失败历史。
 - 2026-10-12 01:34 [运维 codex] 已上线S1.smoggy-discard1：旧生存者选择中可打标记未展示完成后的烟雾限制，新仅学习者3596d1a2a的静默A10已核完整条件加入限制事实/全部候选，并保留原后继提示；证据6D0M76419BU7 F12T2/T3，账本silent-0407/0205，提案07b7b0af259ece0b。预期改善限定题面，未证自然采用/胜率；撤该四文件独立增量即可回退，不撤经验或刷新。
+
+- 2026-10-12 01:58 [运维 codex] 旧积压17源在合入前发现5项集成测试契约失败，生产仍保留已通过宿主完整检查的6639e2f33；失败现场与具体续修任务已交原fix队列（notes/legacy-integration-tests-request.json），未改游戏规则或强行上线。N1正式补报动作缺口仍按01:13请求待开发接续。

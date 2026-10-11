@@ -2224,3 +2224,7 @@
 - 2026-10-12 01:45:05 CST [旧局报告动作缺口具体化] N1补收与恢复任务写paper/materials/20261012-0111-codex1-resumed/report-recovery-task.md，特别保留整局原段+恢复段、旧实际源码65e3d10a9+dirty及幂等刷新；ops/run.sh:35-40会先离开GAME_OVER且新建console，故autoplay-start不能代替补收。原01:13收件箱请求继续有效，未再次派发或绕过动作白名单。
 
 - 2026-10-12 01:48:35 CST [论文口径更正] 本轮01:27:43及sb5-closeout里“N1缺报未纳入”表述不准确：runs.jsonl仍无N1正式摘要，但paper_dataset已按原console恢复该局SILENT/A10/F21 defeat并纳入722局runs.csv，保留原段+恢复段数据；缺口是正式局报/角色刷新与学习链，不是论文表无此局。原记录保留，纠正回执paper/materials/20261012-0111-codex1-resumed/paper-snapshot-correction.json。
+
+- 2026-10-12 01:54:05 CST [第一批宿主检查完成] 原learner-recheck 20261011-224302-fix-batch动作退出0，固定live6639e2f33/tree0ab50c6e完整tsc/vitest0、343文件3682过2跳；原批failed/rc0保持，独立fallback回执保存first-host-checks.json。此同树已含其余四源固定增量，关联覆盖而不冒填其他批独立检查或重复全套。codex1真实消费回填notes/codex1-runtime-consumption.json，三learner已核、brain仍明确pending。
+- 2026-10-12 01:58:16 CST [旧积压17源集成未上线] 固定候选树bdbbe1370524dd567f4f1cc1f3d2b07abf496f71沙箱tsc0、2文件5失败/306文件3002通过，paths段未执行；失败是原测试共享cardSource阴性控制及unknownCards前提与组合增量不相容，具体根因与修法交学习者，ops未改断言/游戏规则。原失败/补丁/树/原17源保留于paper/materials/20261012-0111-codex1-resumed/legacy-integration，已进原fix队列ops-20261012-legacy-integration-tests；无提交生产代码、合入、版本或shipped，第一批已完整通过的live保持。
+- 2026-10-12 02:00:58 CST [集成测试续修实际派发] 原broker fix-batch退出0，登记20261012-015818-fix-batch/PID2814099/wJ:pMG，独立工作树/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818；原普通修复槽空闲后只派一次，不重复旧活批。根fix队列已含17源冻结补丁/失败树和两文件五断言任务，request回填批号；这只证明宿主普通队列批次已启动，不冒称条目专用绑定、学习完成或17源已上线。后续沿原fix-done收尾，不轮询模型。

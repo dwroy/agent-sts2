@@ -131,3 +131,11 @@ Roy 最新授权统一 LLM 切换能力，watcher 在独立树 `codex-account-dr
 切换事务观察为 verifying，LLM_DRAIN/PAUSE 仍由控制器拥有；本轮不启动、停止、派发、合入、补测或释放闸。新会话成功后由控制器验 UUID/目标 rollout 并释放自己拥有的闸，再沿原队列续办。224302 策略10提案 waiting；224302 修复源 bc2c40e313cc36682196277c53c50e30744b88c5 未入live，原 failed/rc0/retry 保持；220116 B4 源59287af1c7d76a648172d409c8e00bdb861cb67e 因 t1 gap worsened 维持 rejected。
 
 N1整局报告、SB5复盘闭环、213504/214301/223051固定候选、正式量化221722未完成成果及职责补充、历史源去重和最终条件 main/push 全部继承。启动竞态原请求尚写 actual_batch=null，但224302已有候选，后续核原链关联，不重做或重复派发。无本轮新版本、shipped 或最终发布；不改原ACK、输入、注册、失败历史与队列。
+
+## 2026-10-12 01:54:05 CST：解除drain后的实际接续
+
+原控制器已complete并释放自有闸，三个新学习批011302/011302-s2已核codex1目标home内真实session和首模型输出，回填notes/codex1-runtime-consumption.json；brain仍待N1正式报告补收后恢复，不能以学习者消费代替brain消费。补收动作缺口已在收件箱明确请求，具体任务paper/materials/20261012-0111-codex1-resumed/report-recovery-task.md。
+
+第一批五固定增量已实际live6639e2f33/main be4d455ba，S1.exp181/S1.smoggy-discard1及26项CLI上线登记完成，完整宿主343文件3682过2跳；SB5原复盘/14原CLI与论文切片已归档main8227be03a。注意论文表从console已包含N1终态，正式runs.jsonl仍缺摘要，原01:27措辞已另行更正。三无源码批30项waiting保持；B4 rejected保持；量化42旧产物SHA核实、职责补充及有界接续适配任务已进原修复链，旧ACK/注册不改，父四成果及main/push条件仍未完成。旧40源分为17独立增量在测试、5同补丁、6明确新源复用、12范围待核，详本轮legacy-supersession-map；任何候选均不能仅凭本交接冒称已上线。
+
+- 2026-10-12 02:00:58 CST 续记：17独立旧源的候选未上线，沙箱主段2文件5失败/306文件3002通过、paths段未执行，原失败树和补丁已冻结。原broker实派20261012-015818-fix-batch/PID2814099/wJ:pMG沿根普通fix队列续修；未修改游戏规则、断言或生产。最终待办索引paper/materials/20261012-0111-codex1-resumed/continuation.json；N1补报动作和brain恢复、量化父成果/有界接续、12旧范围核对及条件main/push继续保留，不重新索取已有授权。
