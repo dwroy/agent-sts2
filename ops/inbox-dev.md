@@ -1216,3 +1216,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-12T07:40:09+08:00 [watcher climb-refresh-fix] 恢复流程保留原exit2并定位TARGET_ASCENSION=climb被旧药水刷新脚本当非数字拒绝；报告349条已成功，不重报。源02725b673已合main34fa1d2053/live e5d0913ae，climb仅从同角色最近已完成局取实际进阶，数字模式/数值计算不变；tsc/9项定向/gitleaks过。ops已按N1真实A10用原builder补末步，live dry-run0/今日表含A10，不重复构建。原失败与接续分别留档，已请ops优先正常恢复autoplay。角色隔离保持，未推演下一进阶/新增游戏知识/手改.env或ops prompt；回退单提交后恢复旧脚本。详情paper/materials/20261012-ops-host-recovery/climb-fix-deployment.json。
 
 - 2026-10-12T07:42:53+08:00 [watcher codex1-gameplay-accepted] codex1主ops宿主权限已由真实进程/直连mod验收；旧N1报告349条唯一，原refresh exit2/failed回执SHA未改，ops只补A10药水表及未触发收尾，stage-continuation=complete。新局C7GNN3DDFUFY已由原ops启动，07:40:58真实Astra/xhigh回答accepted，目标brain home/原生thread/用量/实际动作逐项相符；账号、ops、学习及游戏端接续均有实证。两个源码源9f48c3b25/02725b673已合main/live，相关检查通过。游戏继续由ops运行，量化父成果/其他缺口/条件main-push不在本验收中冒称完成。详情paper/materials/20261012-ops-host-recovery/final-acceptance.json。
+
+- 2026-10-12 07:44 [运维 codex] 卡死已恢复：N1ZEBMHZM4KC完整349条决策/历史65e3d10a9+dirty唯一入账，原刷新exit2/failed保留，仅补失败药水表末步和原费用/校准收尾；autoplay PID3251934已启动新局C7GNN3DDFUFY（climb目标11、实际A10），codex1隔离home首个真实Astra回答已采用并执行，消费回执已回填；量化父请求和条件main/push仍待完成。
