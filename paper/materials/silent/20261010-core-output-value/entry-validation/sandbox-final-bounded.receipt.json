@@ -1,0 +1,49 @@
+{
+  "argv": [
+    "nice",
+    "-n",
+    "19",
+    "timeout",
+    "--signal=TERM",
+    "--kill-after=5s",
+    "180s",
+    "bash",
+    "tools/test-sandbox.sh",
+    "--reporter=default",
+    "--reporter=/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/paper/materials/20261010-core-output-research-entry/module-phase-reporter.mjs"
+  ],
+  "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent",
+  "start": "2026-10-10T18:35:47.503911+08:00",
+  "wall_timeout_seconds": 180,
+  "timeout_kill_after_seconds": 5,
+  "sandbox_workers": 1,
+  "source_sha256": {
+    "ops/strategy_research_jobs.py": "4e9ef8b6475859ad85c90747b59f8ea03c677681d610551eab5089e34d98c902",
+    "ops/codex-ops-learner.sh": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+    "learner/tasks/strategy-proposal.md": "fa7833d6162ebecd9c3dd50d0314463417bb025a14569a6b0d8dcdc7bdfcfb2c",
+    "ops/tests/test_strategy_research_scheduling.py": "a87a4842f1d068740105b6e6637ff5952597e58944789896c66896bd7bc09c2c"
+  },
+  "script_sha256": "1a0231e0631091468f337f7290bdcf6f503b763f41b0e22bc70f518827e57567",
+  "reporter_sha256": "d9055c668c1f14497ed35f24f82f41bc07d77aa6c591f03b92c7dd7abcafc584",
+  "excluded_tests": "unchanged fixed script exclusions",
+  "finish": "2026-10-10T18:38:47.631593+08:00",
+  "exit_code": 124,
+  "log_sha256": "212cbd1607dd2ee0240f21948400ecf8dd316475fcb8d3aba729a49789c71673",
+  "last_phase": {
+    "diagnostic": "sandbox-phase",
+    "at": "2026-10-10T10:38:17.866Z",
+    "phase": "module-start",
+    "module": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/compute-memo.test.ts"
+  },
+  "phase_events": 9,
+  "tsc_exit_code": 0,
+  "tsc_evidence": "unchanged script set -eu reached first Vitest RUN after tsc",
+  "source_sha256_after": {
+    "ops/strategy_research_jobs.py": "4e9ef8b6475859ad85c90747b59f8ea03c677681d610551eab5089e34d98c902",
+    "ops/codex-ops-learner.sh": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+    "learner/tasks/strategy-proposal.md": "fa7833d6162ebecd9c3dd50d0314463417bb025a14569a6b0d8dcdc7bdfcfb2c",
+    "ops/tests/test_strategy_research_scheduling.py": "a87a4842f1d068740105b6e6637ff5952597e58944789896c66896bd7bc09c2c"
+  },
+  "source_unchanged": true,
+  "full_test_passed": false
+}

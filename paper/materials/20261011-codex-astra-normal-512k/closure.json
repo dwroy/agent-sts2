@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-11 15:30 CST",
+  "request": [
+    "所有 codex 默认配置 aster xhigh normal",
+    "context 上限512k"
+  ],
+  "policy": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "xhigh",
+    "service_tier": "default",
+    "context_window": 512000,
+    "auto_compact_token_limit": 460800
+  },
+  "main_commit": "e9b3a6ceb9d296aa7126c32b4c2e99b6a902896a",
+  "live_deployment": "live-deployment.json",
+  "live_mode": "working-tree config overlay only; existing 19 merge conflicts and index retained",
+  "verification": {
+    "sandbox_tsc": 0,
+    "sandbox_vitest_tests_passed": 2681,
+    "wrapper_python_tests_passed": 15,
+    "live_tsc_before": 0,
+    "live_tsc_after": 0,
+    "effective_entry_configs_verified": 10,
+    "native_config_read": "accepted all policy fields; no model call",
+    "gitleaks_materials": "pass"
+  },
+  "activation": "next gameplay process, learner invocation and ops startup/resume; in-flight processes keep their prior settings",
+  "global_config": "existing .codex and .codex1 shared config already matches; read-only verification, no home files changed",
+  "limits": [
+    "512000 is an accepted client override; no server-capacity experiment performed",
+    "existing live merge remains unfinished; do not describe this as a new live commit",
+    "no gameplay or learner process restarted; no push"
+  ],
+  "version_policy": "Brain model/config groups are tracked by run-config.jsonl, not a new game-code version (eval/versions.json doc).",
+  "rollback": "Reverse only own source commit and the eight-path live-adapted.diff after checking recorded after-SHAs under live-merge.lock; preserve existing index/conflicts/other changes."
+}

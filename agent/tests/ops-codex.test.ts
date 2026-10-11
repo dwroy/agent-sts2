@@ -52,9 +52,9 @@ describe("command lines", () => {
     expect(cmd.args.slice(0, 2)).toEqual(["exec", "--json"]);
     expect(cmd.args).toContain(`default_permissions="${OPS_PROFILE}"`);
     expect(cmd.args).toContain('model_reasoning_effort="xhigh"');
-    expect(cmd.args).toContain('service_tier="priority"');
-    expect(cmd.args).toContain("gpt-6.1-sol");
-    expect(cmd.args).toContain("model_auto_compact_token_limit=200000");
+    expect(cmd.args).toContain('service_tier="default"');
+    expect(cmd.args).toContain("gpt-6-astra");
+    expect(cmd.args).toContain("model_auto_compact_token_limit=460800");
     expect(cmd.args.at(-1)).toBe("-");
     expect(cmd.stdin).toBe("PROMPT");
     const profile = cmd.args.find((arg) => arg.startsWith(`permissions.${OPS_PROFILE}.filesystem=`))!;
@@ -73,9 +73,9 @@ describe("command lines", () => {
     expect(cmd.args).not.toContain("--cd");
     expect(cmd.args.slice(-2)).toEqual([SESSION, "-"]);
     expect(cmd.args).toContain(`default_permissions="${OPS_PROFILE}"`);
-    expect(cmd.args).toContain("model_auto_compact_token_limit=200000");
+    expect(cmd.args).toContain("model_auto_compact_token_limit=460800");
     expect(cmd.stdin).toBe("EVENTS");
-    expect(cmd.args).toContain('service_tier="priority"');
+    expect(cmd.args).toContain('service_tier="default"');
     expect(() => resumeCommand(request(root), "../../etc", "x", "codex")).toThrow();
   });
 

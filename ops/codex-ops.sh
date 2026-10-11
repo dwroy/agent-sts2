@@ -24,7 +24,10 @@ ROOT="${CODEX_OPS_ROOT:-$ROOT}"
 DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
 QUEUE="$DIR/queue"
 LOG="$DIR/scheduler.log"
-export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
+export PATH="$HOME/.local/node/bin:$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
+# Use the same project-isolated login home as scheduled learners. Cron does not
+# inherit a pane's CODEX_HOME; explicit caller overrides remain authoritative.
+export LEARNER_CODEX_HOME="${LEARNER_CODEX_HOME:-${CODEX_HOME:-$HOME/.codex-sts2}}"
 export STS2_WORKSPACE="$ROOT"
 TSX="${CODEX_OPS_TSX:-$OPS/../agent/node_modules/.bin/tsx}"
 MAIN="$OPS/codex/main.ts"
@@ -107,9 +110,9 @@ $out"
 gitleaks_session() {
   local target="$ROOT/paper/materials/session/codex" report="$DIR/gitleaks-session.json" count last
   [ -d "$target" ] || return 0
-  command -v "${CODEX_OPS_GITLEAKS:-gitleaks}" > /dev/null || { log "snapshot: gitleaks not installed"; return 0; }
+  command -v "${CODEX_OPS_GITLEAKS:-gitleaks}" > /dev/null || { log "snapshot: gitleaks not installed"; return 127; }
   nice -n 10 "${CODEX_OPS_GITLEAKS:-gitleaks}" dir "$target" --no-banner --redact --log-level error \
-    --report-format json --report-path "$report" --exit-code 0 > /dev/null 2>&1
+    --report-format json --report-path "$report" --exit-code 0 > /dev/null 2>&1 || return $?
   count=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))))' "$report" 2>/dev/null || echo "?")
   last=$(cat "$DIR/gitleaks-session.count" 2>/dev/null || echo 0)
   echo "$count" > "$DIR/gitleaks-session.count"
@@ -120,14 +123,18 @@ gitleaks_session() {
 }
 
 tick_snapshot() {
-  local rc out
-  out="$DIR/snapshot.log"
+  local rc archive_rc scan_rc out
+  # Preserve previous failures; each retry gets a separate log.
+  mkdir -p "$DIR/snapshots"
+  out="$DIR/snapshots/$(date '+%Y%m%d-%H%M%S')-$$.log"
   { echo "== $(date '+%F %T') paper_dataset.py"; nice -n 10 python3 "$ROOT/ops/paper_dataset.py"; } > "$out" 2>&1
   rc=$?
   nice -n 10 "$TSX" "$MAIN" snapshot-session >> "$out" 2>&1
+  archive_rc=$?
   gitleaks_session >> "$out" 2>&1
-  echo "- $(date '+%F %H:%M') 论文数据快照（codex-ops 调度器）：ops/paper_dataset.py 完整版 exit $rc；运维会话和学习者的 codex 记录替换 key 后复制到 paper/materials/session/codex/（gitleaks：$(cat "$DIR/gitleaks-session.count" 2>/dev/null || echo 未跑) 处）" >> "$ROOT/paper/materials/decision-log.md"
-  [ $rc -eq 0 ] || enqueue snapshot-failed "每日快照 ops/paper_dataset.py 失败（exit $rc）。输出末尾：
+  scan_rc=$?
+  echo "- $(date '+%F %H:%M') 论文数据快照（codex-ops 调度器）：数据 exit $rc；会话脱敏归档 exit $archive_rc；gitleaks exit $scan_rc（结果仅本次 exit 0 时有效）；日志 $out。" >> "$ROOT/paper/materials/decision-log.md"
+  [ $rc -eq 0 ] && [ $archive_rc -eq 0 ] && [ $scan_rc -eq 0 ] || enqueue snapshot-failed "每日快照失败：数据 exit $rc，会话归档 exit $archive_rc，gitleaks exit $scan_rc。日志 $out。输出末尾：
 $(tail -n 15 "$out")"
 }
 

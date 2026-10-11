@@ -48,7 +48,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 
 ### 会话会长多大、会不会压缩
 
-- 每次 resume 都把整段历史发给模型（cache 命中很高）。gpt-6.1-sol 的窗口 272k（codex 报的有效窗口 258.4k）。启动时显式设 `model_auto_compact_token_limit=200000`：上下文超过 20 万 token 时 codex 自动压缩历史（codex 0.160 有这个设置，实测接受、不报警）。
+- 每次 resume 都把整段历史发给模型。当前默认 Astra / xhigh / normal，显式配置窗口 512000、自动压缩阈值 460800；CLI 预留空间后的有效窗口可能更低，配置不能证明服务端的最大能力。
 - 实测（2026-10-04，测试会话，强度 low）：第一轮（只有测试 prompt）上下文 10.5k token；一次带 4 个动作调用的叫醒后 11.8k。正式 prompt 加 AGENTS.md 和开工要读的文档，第一轮估计在 5–8 万；一次普通叫醒（看回报、记 decision-log、提交）增加几千到两万。按每天十来次叫醒，几天到一周会碰到压缩线。
 - `bash ops/codex-ops.sh status` 显示当前上下文、窗口、压缩次数和本周额度用量（从 codex 自己的会话文件读）。压缩会丢细节，所以要紧的状态都写在文件里（decision-log、fix-queue、收件箱、ops/codex-ops/learn.json），不靠会话记忆。
 

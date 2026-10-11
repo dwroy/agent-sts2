@@ -1,0 +1,184 @@
+--- a/agent/src/core/config.ts
++++ b/agent/src/core/config.ts
+@@ -616,10 +616,12 @@
+  * The brain's Codex model and effort when BRAIN_CODEX_MODEL / BRAIN_CODEX_EFFORT are unset (Dai 2026-10-03: "gpt6.1 sol
+  * extra high"). Always sent explicitly: the engine ignores ~/.codex/config.toml (engines/codex.ts).
+  */
+-export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
++export const DEFAULT_CODEX_MODEL = "gpt-6-astra";
+ export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
+ /** Codex's model catalog names the priority service tier "Fast". Roy enabled it for all sessions on 2026-10-09. */
+-export const CODEX_SERVICE_TIER = "priority";
++export const CODEX_SERVICE_TIER = "default";
++export const CODEX_CONTEXT_WINDOW = 512_000;
++export const CODEX_AUTO_COMPACT_TOKENS = 460_800;
+ 
+ /** BRAIN_CODEX_TIMEOUT_MS when unset: 10 minutes per call (xhigh on a map / act-plan question takes minutes). */
+ export const DEFAULT_CODEX_TIMEOUT_MS = 600_000;
+--- a/agent/src/brain/engines/codex.ts
++++ b/agent/src/brain/engines/codex.ts
+@@ -54,7 +54,7 @@
+ import { tmpdir } from "node:os";
+ import { dirname, isAbsolute, join } from "node:path";
+ 
+-import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
++import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
+ import type { JsonSchema } from "../tools/types.js";
+ import { EngineFailure, labelPrefix, withNotes, type FailureKind } from "../router.js";
+ import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
+@@ -231,6 +231,8 @@
+     `sqlite_home=${toml(opts.stateDir)}`,
+     `log_dir=${toml(join(opts.stateDir, "log"))}`,
+     `model_reasoning_effort=${toml(opts.effort)}`,
++    `model_context_window=${CODEX_CONTEXT_WINDOW}`,
++    `model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKENS}`,
+     `model_reasoning_summary=${toml(opts.summary)}`,
+     ...(opts.serviceTier ? [`service_tier=${toml(opts.serviceTier)}`] : []),
+   ];
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -37,7 +37,7 @@
+ import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
+ import type { EngineName } from "../brain/types.js";
+ import type { AppConfig } from "../core/config.js";
+-import { DEFAULT_CLAUDE_MODEL } from "../core/config.js";
++import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL } from "../core/config.js";
+ import { isMenuRunId } from "../memory/journal-replay.js";
+ import { str, type JsonValue } from "../core/util/json.js";
+ import { resolveJevPromptLog } from "./jev-prompt-log.js";
+@@ -119,6 +119,8 @@
+     codex?: {
+       mode: string;
+       service_tier: string | null;
++      context_window?: number;
++      auto_compact_token_limit?: number;
+       summary: string;
+       stall_ms: number | null;
+       first_token_ms: number | null;
+@@ -342,6 +344,8 @@
+   return {
+     mode: codex.mode,
+     service_tier: codex.serviceTier,
++    context_window: CODEX_CONTEXT_WINDOW,
++    auto_compact_token_limit: CODEX_AUTO_COMPACT_TOKENS,
+     summary: codex.summary,
+     stall_ms: codex.stallMs,
+     first_token_ms: codex.firstTokenMs,
+--- a/learner/lib/engines.ts
++++ b/learner/lib/engines.ts
+@@ -21,7 +21,7 @@
+ import { runAgent } from "../../agent/src/brain/engines/process.js";
+ import type { McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
+ import { PROJECT_ROOT as REPO_ROOT } from "../../agent/src/core/paths.js";
+-import { CODEX_SERVICE_TIER, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
++import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, CODEX_SERVICE_TIER, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
+ import { MCP_SERVER_NAME } from "../../agent/src/brain/tools/mcp-launch.js";
+ import type { TaskTool } from "./task.js";
+ 
+@@ -254,6 +254,8 @@
+     `web_search=${toml("disabled")}`,
+     `model_reasoning_effort=${toml(opts.effort)}`,
+     `service_tier=${toml(CODEX_SERVICE_TIER)}`,
++    `model_context_window=${CODEX_CONTEXT_WINDOW}`,
++    `model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKENS}`,
+     "allow_login_shell=false",
+     // No skills catalogue in front of the task (the brain's settings; the 2026-10-04 smoke run had one).
+     "skills.include_instructions=false",
+--- a/ops/codex/lib.ts
++++ b/ops/codex/lib.ts
+@@ -18,7 +18,7 @@
+ import { existsSync, readdirSync, readFileSync } from "node:fs";
+ import { join } from "node:path";
+ 
+-import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
++import { CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
+ import { codexCommand, mainCheckout, withCodexKeys, type CommandLine, type EngineRequest } from "../../learner/lib/engines.js";
+ import type { TaskTool } from "../../learner/lib/task.js";
+ 
+@@ -27,7 +27,7 @@
+ /** Tools as the learner names them: with Bash / Edit / Write the profile is the writable one (project root + tmp). */
+ export const OPS_TOOLS: TaskTool[] = ["Read", "Grep", "Glob", "Bash", "Edit", "Write"];
+ /** Codex compacts the session's history above this many tokens (model_auto_compact_token_limit; window 272k). */
+-export const AUTO_COMPACT_TOKENS = 200_000;
++export const AUTO_COMPACT_TOKENS = CODEX_AUTO_COMPACT_TOKENS;
+ /** A wake that runs longer is stopped (process group, SIGTERM then SIGKILL); its events stay queued. */
+ export const DEFAULT_WAKE_TIMEOUT_MIN = 120;
+ 
+@@ -120,7 +120,7 @@
+ export function initCommand(request: EngineRequest, prompt: string, bin: string): CommandLine {
+   const base = codexCommand(request, "", bin);
+   if (base.args.at(-1) !== "-") throw new Error("codexCommand no longer ends with '-'");
+-  return { command: base.command, args: [...base.args.slice(0, -1), "-c", `model_auto_compact_token_limit=${AUTO_COMPACT_TOKENS}`, "-"], stdin: prompt };
++  return { command: base.command, args: base.args, stdin: prompt };
+ }
+ 
+ /**
+--- a/ops/run.sh
++++ b/ops/run.sh
+@@ -6,6 +6,8 @@
+ . "$(dirname "$0")/paths.sh"
+ cd "$LIVE/agent"
+ export STS2_WORKSPACE="$ROOT"
++# Roy 2026-10-11: production defaults override a legacy scheduler environment.
++export BRAIN_CODEX_MODEL=gpt-6-astra BRAIN_CODEX_EFFORT=xhigh
+ export PATH="$HOME/.local/node/bin:$PATH"
+ sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
+ ts=$(date +%Y%m%d-%H%M%S)
+--- a/ops/codex-fast.sh
++++ b/ops/codex-fast.sh
+@@ -7,26 +7,4 @@
+   echo "recursive Codex Fast launcher" >&2
+   exit 2
+ fi
+-args=()
+-service_set=0
+-while [ "$#" -gt 0 ]; do
+-  case "$1" in
+-    --)
+-      args+=(-c 'service_tier="priority"' "$@")
+-      service_set=1
+-      break
+-      ;;
+-    -c|--config)
+-      [ "$#" -ge 2 ] || { echo "missing Codex config value" >&2; exit 2; }
+-      case "$2" in
+-        service_tier=*) shift 2; continue ;;
+-      esac
+-      args+=("$1" "$2")
+-      shift 2
+-      ;;
+-    --config=service_tier=*) shift ;;
+-    *) args+=("$1"); shift ;;
+-  esac
+-done
+-[ "$service_set" = 1 ] || args+=(-c 'service_tier="priority"')
+-exec "$codex_bin" "${args[@]}"
++. "$(dirname "${BASH_SOURCE[0]}")/codex-policy.sh"
+--- /dev/null
++++ b/ops/codex-policy.sh
+@@ -0,0 +1,25 @@
++# Sourced by the historical launcher names after resolving and checking the native binary.
++# Only normalize Codex arguments; never inspect or rewrite a sandbox child after --.
++args=()
++policy=(-c 'model="gpt-6-astra"' -c 'model_reasoning_effort="xhigh"'
++        -c 'service_tier="default"' -c 'model_context_window=512000'
++        -c 'model_auto_compact_token_limit=460800')
++while [ "$#" -gt 0 ]; do
++  case "$1" in
++    --) args+=("${policy[@]}" "$@"); policy=(); break ;;
++    -m|--model)
++      [ "$#" -ge 2 ] || { echo "missing Codex model" >&2; exit 2; }
++      shift 2 ;;
++    --model=*) shift ;;
++    -c|--config)
++      [ "$#" -ge 2 ] || { echo "missing Codex config value" >&2; exit 2; }
++      case "$2" in
++        model=*|model_reasoning_effort=*|service_tier=*|model_context_window=*|model_auto_compact_token_limit=*) shift 2; continue ;;
++      esac
++      args+=("$1" "$2"); shift 2 ;;
++    --config=model=*|--config=model_reasoning_effort=*|--config=service_tier=*|--config=model_context_window=*|--config=model_auto_compact_token_limit=*) shift ;;
++    *) args+=("$1"); shift ;;
++  esac
++done
++args+=("${policy[@]}")
++exec "$codex_bin" "${args[@]}"

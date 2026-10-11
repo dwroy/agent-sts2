@@ -67,7 +67,7 @@ function fakeCodex(name: string): { bin: string; setMode: (mode: Record<string, 
   const refreshedFile = join(dir, `${name}.refreshed`);
   for (const file of [serverFile, execFile, refreshedFile]) rmSync(file, { force: true });
   writeFileSync(modeFile, JSON.stringify({ result: liveResult() }));
-  const sol = { slug: "gpt-6.1-sol", supported_reasoning_levels: [{ effort: "xhigh" }] };
+  const sol = { slug: "gpt-6-astra", supported_reasoning_levels: [{ effort: "xhigh" }] };
   writeFileSync(bin, `#!${process.execPath}
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { createInterface } from "node:readline";

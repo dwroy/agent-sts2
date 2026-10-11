@@ -1,0 +1,138 @@
+{
+  "request_id": "roy-20261010-silent-core-output-value",
+  "recorded_at": "2026-10-10T18:40:01.563515+08:00",
+  "status": "awaiting-host-full-verification",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010",
+  "branch": "ops-core-output-research-20261010",
+  "base_commit": "91ee18aa9c6d851a3114ce75a019ac85a45045d4",
+  "source_commit": null,
+  "source_committed": false,
+  "source_paths": [
+    "ops/strategy_research_jobs.py",
+    "ops/codex-ops-learner.sh",
+    "learner/tasks/strategy-proposal.md",
+    "ops/tests/test_strategy_research_scheduling.py"
+  ],
+  "source_sha256": {
+    "ops/strategy_research_jobs.py": "4e9ef8b6475859ad85c90747b59f8ea03c677681d610551eab5089e34d98c902",
+    "ops/codex-ops-learner.sh": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+    "learner/tasks/strategy-proposal.md": "fa7833d6162ebecd9c3dd50d0314463417bb025a14569a6b0d8dcdc7bdfcfb2c",
+    "ops/tests/test_strategy_research_scheduling.py": "a87a4842f1d068740105b6e6637ff5952597e58944789896c66896bd7bc09c2c"
+  },
+  "source_diff": "source.diff",
+  "source_diff_sha256": "860e336c6c046e2c7fd649265dc1403a590ea6c070de474b271d0accc6870ee1",
+  "scope": "minimum registry, exact wrapper allow-list, existing template path, and report-only identity/dedup registration fixtures; no gameplay knowledge",
+  "passed_checks": [
+    {
+      "name": "research-scheduling",
+      "exit": 0,
+      "tests": 26,
+      "receipt": "research-scheduling.receipt.json"
+    },
+    {
+      "name": "research-report",
+      "exit": 0,
+      "tests": 8,
+      "receipt": "research-report.receipt.json"
+    },
+    {
+      "name": "bash syntax",
+      "exit": 0
+    },
+    {
+      "name": "git diff --check",
+      "exit": 0
+    },
+    {
+      "name": "source gitleaks",
+      "exit": 0,
+      "receipt": "gitleaks-source.receipt.json"
+    },
+    {
+      "name": "restored registry witness",
+      "exit": 0,
+      "receipt": "restored-registry.receipt.json"
+    },
+    {
+      "name": "existing fake postmortem fixture",
+      "exit": 0,
+      "tests": 1,
+      "receipt": "ops-herdr-single-fixture.receipt.json"
+    },
+    {
+      "name": "existing fake fallback/drain fixtures",
+      "exit": 0,
+      "tests": 2,
+      "receipt": "ops-herdr-fallback-drain.receipt.json"
+    }
+  ],
+  "negative_witness": {
+    "name": "remove only new registry mapping in memory",
+    "expected_exit": 1,
+    "observed_exit": 1,
+    "receipt": "withdraw-registry.receipt.json"
+  },
+  "full_sandbox": {
+    "first_attempt": {
+      "original_session": 19187,
+      "tool_interrupt_exit": 130,
+      "full_result": null,
+      "receipt": "sandbox-interrupted.receipt.json",
+      "log": "sandbox.log"
+    },
+    "final_attempt": {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=5s",
+        "180s",
+        "bash",
+        "tools/test-sandbox.sh",
+        "--reporter=default",
+        "--reporter=/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/paper/materials/20261010-core-output-research-entry/module-phase-reporter.mjs"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent",
+      "start": "2026-10-10T18:35:47.503911+08:00",
+      "finish": "2026-10-10T18:38:47.631593+08:00",
+      "hard_wall_seconds": 180,
+      "exit": 124,
+      "tsc_exit": 0,
+      "tsc_evidence": "unchanged script set -eu reached first Vitest RUN after tsc",
+      "fixed_test_script_sha256": "1a0231e0631091468f337f7290bdcf6f503b763f41b0e22bc70f518827e57567",
+      "reporter_sha256": "d9055c668c1f14497ed35f24f82f41bc07d77aa6c591f03b92c7dd7abcafc584",
+      "log": "sandbox-final-bounded.log",
+      "log_sha256": "212cbd1607dd2ee0240f21948400ecf8dd316475fcb8d3aba729a49789c71673",
+      "receipt": "sandbox-final-bounded.receipt.json",
+      "completed_modules": [
+        {
+          "module": "agent/tests/rollout-live.test.ts",
+          "tests_passed": 14,
+          "tests_total": 14,
+          "duration_ms": 144753,
+          "phase": "module-end",
+          "phase_at": "2026-10-10T10:38:16.564Z"
+        }
+      ],
+      "last_phase": {
+        "diagnostic": "sandbox-phase",
+        "at": "2026-10-10T10:38:17.866Z",
+        "phase": "module-start",
+        "module": "/home/dw/Projects/agent-sts2/.worktrees/ops-core-output-research-20261010/agent/tests/compute-memo.test.ts"
+      },
+      "full_vitest_result": null,
+      "observed_code_failures": null,
+      "classification": "hard wall limit before full suite completed; no hang or code-failure diagnosis",
+      "source_unchanged": true,
+      "exclusions_or_harness_changed": false
+    }
+  },
+  "source_tree_preserved_uncommitted": true,
+  "game_or_learner_interrupted": false,
+  "main_or_live_merged": false,
+  "dispatch_started": false,
+  "history_preserved": true,
+  "next_step": "parent records unique existing host-manual full source verification continuation; integration and same-request deduplicated dispatch depend on complete passing checks; no further test loop in this subtask"
+}

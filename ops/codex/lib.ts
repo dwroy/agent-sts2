@@ -8,7 +8,7 @@
  *   web search off, the brain's disabled features minus the shell / code mode) and a permission profile named "ops"
  *   built like the learner's write profile (codexPermissions: everything readable, the project root + tmp writable, key
  *   files / every .env / codex's auth.json unreadable, no network). Codex auto-compacts the session at
- *   AUTO_COMPACT_TOKENS (gpt-6.1-sol's window is 272k).
+ *   AUTO_COMPACT_TOKENS (configured context ceiling: 512k).
  * - The sandbox has its own PID namespace, no network (not even 127.0.0.1) and no Windows interop (2026-10-04 probes),
  *   so everything that needs them (process control, the mod's HTTP state, schtasks.exe, the learner's nested codex)
  *   is an allow-listed broker action (ACTIONS): the model runs `bash ops/codex-ops-do.sh <action> [arg]`, which drops a
@@ -18,7 +18,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
+import { CODEX_SERVICE_TIER, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
 import { codexCommand, mainCheckout, withCodexKeys, type CommandLine, type EngineRequest } from "../../learner/lib/engines.js";
 import type { TaskTool } from "../../learner/lib/task.js";
 
@@ -26,7 +26,7 @@ import type { TaskTool } from "../../learner/lib/task.js";
 export const OPS_PROFILE = "ops";
 /** Tools as the learner names them: with Bash / Edit / Write the profile is the writable one (project root + tmp). */
 export const OPS_TOOLS: TaskTool[] = ["Read", "Grep", "Glob", "Bash", "Edit", "Write"];
-/** Codex compacts the session's history above this many tokens (model_auto_compact_token_limit; window 272k). */
+/** Shared compaction threshold below the 512k configured context ceiling. */
 export const AUTO_COMPACT_TOKENS = CODEX_AUTO_COMPACT_TOKENS;
 /** A wake that runs longer is stopped (process group, SIGTERM then SIGKILL); its events stay queued. */
 export const DEFAULT_WAKE_TIMEOUT_MIN = 120;
@@ -118,7 +118,8 @@ export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?:
  * compaction limit; the stdin is the ops prompt alone (not the learner's preamble, which maps a task's tool names).
  */
 export function initCommand(request: EngineRequest, prompt: string, bin: string): CommandLine {
-  const base = codexCommand(request, "", bin);
+  const base = codexCommand({ ...request, model: request.model ?? DEFAULT_CODEX_MODEL,
+    effort: request.effort ?? DEFAULT_CODEX_EFFORT, serviceTier: CODEX_SERVICE_TIER }, "", bin);
   if (base.args.at(-1) !== "-") throw new Error("codexCommand no longer ends with '-'");
   return { command: base.command, args: base.args, stdin: prompt };
 }

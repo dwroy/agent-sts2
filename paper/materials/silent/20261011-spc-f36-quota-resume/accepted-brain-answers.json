@@ -1,0 +1,84 @@
+[
+  {
+    "ts": "2026-10-11T02:28:50.252Z",
+    "run_id": "SPC7NVA5K4RL",
+    "question_id": "mv37epc3-1253800-1",
+    "label": "reward/card",
+    "engine": "codex",
+    "accepted": true,
+    "answer": {
+      "choice": "card2",
+      "reason": "Deflect provides free defense, scales with Footwork, and fuels Afterimage and Panache without competing with Maul or poison for energy.",
+      "route": "keep"
+    },
+    "error": null,
+    "limits": {
+      "engine": "codex",
+      "read_at": "2026-10-11T02:28:50.134Z",
+      "read_ms": 0,
+      "plan": "promax",
+      "used_pct": 1,
+      "window": "codex/primary",
+      "window_min": 10080,
+      "resets_at": "2026-10-17T23:53:38.000Z",
+      "credits": 0,
+      "ordinary_usage_allowed": true,
+      "reached_type": null
+    }
+  },
+  {
+    "ts": "2026-10-11T02:29:10.479Z",
+    "run_id": "SPC7NVA5K4RL",
+    "question_id": "mv37epc3-1253800-2",
+    "label": "event/choose",
+    "engine": "codex",
+    "accepted": true,
+    "answer": {
+      "choice": "o0",
+      "reason": "Accept the trial; refusal offers no stated benefit. Seek healing and defensive rewards without adding more expensive setup.",
+      "route": "keep",
+      "run_plan": {
+        "archetype": "Maul and accelerated poison with efficient defensive draw",
+        "want": [
+          "BACKFLIP",
+          "ADRENALINE",
+          "PIERCING_WAIL",
+          "FOOTWORK",
+          "MALAISE",
+          "AFTERIMAGE"
+        ],
+        "avoid": [
+          "LEADING_STRIKE",
+          "METAMORPHOSIS",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "SHADOW_STEP",
+          "INFINITE_BLADES"
+        ],
+        "remove": [
+          "SNAKEBITE",
+          "DEFEND_SILENT"
+        ],
+        "block_target": 11,
+        "elites": "avoid",
+        "rest": "heal",
+        "boss_prep": "Heal aggressively, obtain defensive potions and draw, upgrade Accelerant or Footwork only when safe. Preserve actual remaining resources for the second boss.",
+        "summary": "Immediate survival comes first. Keep the elite-free shop route and seek event healing. Add efficient defensive draw, not more poison sources. Remove redundant Snakebite; replace Defends only after obtaining better block."
+      }
+    },
+    "error": null,
+    "limits": {
+      "engine": "codex",
+      "read_at": "2026-10-11T02:29:10.356Z",
+      "read_ms": 0,
+      "plan": "promax",
+      "used_pct": 1,
+      "window": "codex/primary",
+      "window_min": 10080,
+      "resets_at": "2026-10-17T23:53:38.000Z",
+      "credits": 0,
+      "ordinary_usage_allowed": true,
+      "reached_type": null
+    }
+  }
+]

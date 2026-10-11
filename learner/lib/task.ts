@@ -8,7 +8,7 @@
  *   timeout_min: 120                       (optional defaults for --timeout-min / --max-turns)
  *   max_turns: 400
  *   model.claude: opus                     (optional, per engine: defaults for --model / --effort; codex
- *   model.codex: gpt-6.1-sol                otherwise gets the launcher's gpt-6.1-sol at xhigh)
+ *   model.codex: gpt-6-astra                  otherwise gets the launcher's gpt-6-astra at xhigh)
  *   effort.codex: xhigh
  *   default.code_dir: {{project_root}}/jev-sts2-v3   (a parameter's default; may use the built-ins)
  *   ---

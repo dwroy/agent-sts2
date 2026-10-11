@@ -1,0 +1,50 @@
+{
+  "requested_at_observed": "2026-10-10T22:02:47+08:00",
+  "authorized_by": "Roy",
+  "messages": [
+    "调整learner的模型为astra xhigh",
+    "关闭fast模式",
+    "仅 learner"
+  ],
+  "desired": {
+    "scope": "learner",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "xhigh",
+    "fast": false
+  },
+  "scope_exclusions": [
+    "ops model and Fast policy",
+    "autoplay brain model and Fast policy",
+    "running learner batches"
+  ],
+  "activation": "new learner invocations after integration; no process restart or interruption",
+  "state": "implementation_and_checks_in_progress",
+  "main_before": "abb646f0d745eaab0f41918f7cd4f8eb3f291278",
+  "source_before": [
+    {
+      "path": "learner/lib/engines.ts",
+      "sha256": "20370c890da205c6b598678478c967573f2e7c4bd78864842000195c13d5c62e"
+    },
+    {
+      "path": "learner/lib/launcher.ts",
+      "sha256": "487da4320889330ce0c94b4c105f924cbafa1824d713f1366913f02829c97aec"
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "sha256": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1"
+    },
+    {
+      "path": "ops/codex-fast.sh",
+      "sha256": "c27f710ccf46e700a5c97ed9dd8fd39cf3a1b8e28e9920d8756205f8d2a2b08e"
+    },
+    {
+      "path": "ops/codex/lib.ts",
+      "sha256": "409ee0eda73fc7e87ee17be712998c071299c1af9e3e162652a6fff206ee0359"
+    },
+    {
+      "path": "agent/src/core/config.ts",
+      "sha256": "7139f2ff1f68cb6d42dcf3869b39504fb5c42b2af64f9c0ca06bc1778d6d6e64"
+    }
+  ],
+  "no_game_knowledge_added": true
+}

@@ -17,7 +17,7 @@
  * Exit codes: 0 done, 1 the agent failed, 2 usage/task error, 3 engine or tool server unavailable, 124 timeout.
  */
 import { spawn } from "node:child_process";
-import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, renameSync, rmSync, statSync, writeSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, relative, resolve, sep } from "node:path";
 import { createInterface } from "node:readline";
@@ -277,20 +277,58 @@ export function collectSecrets(files: string[], env: NodeJS.ProcessEnv, stripped
   return [...secrets];
 }
 
-/** Replaces every secret in the file with [REDACTED]; returns how many were found. */
+/** Redacts in bounded byte chunks; long-lived rollouts exceed V8's string limit. */
 export function redactSecrets(path: string, secrets: string[]): number {
   if (secrets.length === 0 || !existsSync(path)) return 0;
-  let text = readFileSync(path, "utf8");
+  const tokens = [...new Set(secrets.filter(Boolean))].map((s) => Buffer.from(s)).sort((a, b) => b.length - a.length);
+  if (tokens.length === 0) return 0;
+  const keep = tokens[0]!.length - 1;
+  const dir = mkdtempSync(`${path}.redact-`);
+  const temporary = join(dir, "redacted");
+  let input: number | undefined;
+  let output: number | undefined;
   let found = 0;
-  for (const secret of secrets) {
-    const parts = text.split(secret);
-    if (parts.length > 1) {
-      found += parts.length - 1;
-      text = parts.join("[REDACTED]");
+  try {
+    input = openSync(path, "r");
+    output = openSync(temporary, "wx", statSync(path).mode & 0o777);
+    const emit = (bytes: Buffer): void => {
+      for (let written = 0; written < bytes.length;) written += writeSync(output!, bytes, written, bytes.length - written);
+    };
+    const chunk = Buffer.alloc(64 * 1024);
+    const replacement = Buffer.from("[REDACTED]");
+    let carry = Buffer.alloc(0);
+    for (;;) {
+      const n = readSync(input, chunk, 0, chunk.length, null);
+      const bytes = Buffer.concat([carry, chunk.subarray(0, n)]);
+      const boundary = n === 0 ? bytes.length : Math.max(0, bytes.length - keep);
+      let start = 0;
+      while (start < boundary) {
+        let next = boundary;
+        let matched: Buffer | undefined;
+        for (const token of tokens) {
+          const at = bytes.indexOf(token, start);
+          if (at >= 0 && at < next) { next = at; matched = token; }
+        }
+        if (!matched) break;
+        emit(bytes.subarray(start, next));
+        emit(replacement);
+        start = next + matched.length;
+        found++;
+      }
+      if (start < boundary) { emit(bytes.subarray(start, boundary)); start = boundary; }
+      carry = Buffer.from(bytes.subarray(start));
+      if (n === 0) break;
     }
+    closeSync(input); input = undefined;
+    closeSync(output); output = undefined;
+    // Leave unchanged logs (including their mtime) alone; failures preserve the original.
+    if (found > 0) renameSync(temporary, path);
+    return found;
+  } finally {
+    if (input !== undefined) closeSync(input);
+    if (output !== undefined) closeSync(output);
+    rmSync(dir, { recursive: true, force: true });
   }
-  if (found > 0) writeFileSync(path, text);
-  return found;
 }
 
 /**

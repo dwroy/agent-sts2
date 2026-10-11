@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "-B",
+    "-c",
+    "import importlib.util, unittest\nfrom pathlib import Path\nspec=importlib.util.spec_from_file_location(\"withdrawn_output_fixture\",Path(\"ops/tests/test_strategy_research_scheduling.py\"))\nmodule=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)\nimport strategy_research_jobs as research\nresearch.REQUEST_PATHS.pop(module.OUTPUT_IDENT)\nsuite=unittest.TestSuite([module.ResearchScheduling(\"test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies\")])\nresult=unittest.TextTestRunner(verbosity=2).run(suite)\nraise SystemExit(0 if result.wasSuccessful() else 1)\n"
+  ],
+  "exit": 1,
+  "expected_exit": 1,
+  "verification": "New output route fixture fails with only the added request mapping removed from the imported module; no working source altered.",
+  "log_sha256": "45572bd4a8537039c64cd849ea86870807a9415509887021986485b357b2d3ba"
+}
