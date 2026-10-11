@@ -628,6 +628,8 @@ export function reviveThrough(startHp: number, losses: number[], revives: Revive
 export interface SolverInput {
   /** Extra value of HP carried into an observed following fight (character evidence only). */
   continuationValue?: import("./continuation-value.js").ContinuationValue;
+  /** Silent A10's observed first boss: compare dry HP-saving plays before a poison finish. */
+  preservePoisonWinHp?: boolean;
   hand: CardModel[];
   player: PlayerSim;
   enemies: EnemySim[];
@@ -787,6 +789,8 @@ export interface Outcome {
   serpentFormAfter?: number | null;
   /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
   winsFight: boolean;
+  /** Scoped search only: the win still requires enemy-turn poison, after held-card damage. */
+  winsAfterPoison?: true;
   /** Waterfall Giant killed this turn: its husk explodes for this much at the end of our next turn. */
   explodesNext?: number;
   /**
@@ -3431,6 +3435,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     score,
     outcome: {
       winsFight,
+      ...(input.preservePoisonWinHp && winsFight && !wonBeforePoison ? { winsAfterPoison: true as const } : {}),
       hpLoss,
       hpAfter,
       dies,
@@ -3838,7 +3843,11 @@ export function solveTurn(input: SolverInput): SolveResult {
       timedOut = true;
       return;
     }
-    if (sim.enemies.every((enemy) => !enemy.alive) || plan.outcome.winsFight) return;
+    // XTSV1U9JD34T F48 T8, silent-0271: ending now wins but pays nine held damage.
+    // Keep the existing evaluation and budgets; only extend a surviving poison win
+    // while there is HP to preserve for the observed next boss.
+    const preservePoisonHp = input.preservePoisonWinHp === true && o.winsAfterPoison === true && !o.dies && o.hpLoss > 0;
+    if (sim.enemies.every((enemy) => !enemy.alive) || (o.winsFight && !preservePoisonHp)) return;
     if (ownDeathEnds && sim.hp <= 0) return;
 
     const tried = new Set<string>();
@@ -3846,6 +3855,8 @@ export function solveTurn(input: SolverInput): SolveResult {
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
     const skillsLeft = input.player.maxSkills === null || input.player.maxSkills === undefined ? Infinity : input.player.maxSkills - sim.skillsPlayed;
     for (const card of sim.hand.flatMap((entry) => (hiddenDaggers(entry) ? hiddenDaggerWays(sim, entry) : entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {
+      // A known dry win must not spend a potion merely to optimize its terminal HP.
+      if (preservePoisonHp && card.type === "Potion") continue;
       if (card.type !== "Potion" && playsLeft <= 0) continue;
       if (card.type === "Skill" && skillsLeft <= 0) continue;
       if (input.firstKey !== undefined && sim.steps.length === 0 && card.key !== input.firstKey) continue;

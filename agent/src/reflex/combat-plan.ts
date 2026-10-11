@@ -3188,7 +3188,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       player: playerSim,
       enemies,
       fightKind: kind,
-      ...(continuation ? { continuationValue: continuation.value } : {}),
+      ...(continuation ? { continuationValue: continuation.value, preservePoisonWinHp: true } : {}),
       turn: state.turn ?? 1,
       cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
       raceEruption,
