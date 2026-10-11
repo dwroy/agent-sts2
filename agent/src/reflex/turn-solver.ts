@@ -1736,6 +1736,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
+  // K2JAGKVJAWZJ F46 T1, silent-0010: this zero-Block play has no unmodelled lasting bonus.
+  // Recheck at play time; later poison, Dexterity and unobserved replays keep the previous model.
+  const zeroPoisonMirage = card.observedZeroPoisonMirage && card.block === 0 && cost === 1 &&
+    plays === 1 && !automatic && !player.frail && (player.dexterityNow ?? 0) === 0 && next.tempDex === 0 &&
+    !player.unmovableArmed && !player.shadowmeldActive && !next.shadowmeld && !next.noBlock &&
+    next.enemies.some((enemy) => enemy.alive) &&
+    next.enemies.every((enemy) => !enemy.alive || (enemy.poison ?? 0) === 0);
   audit?.(cost, plays);
   // Snapshot before this play: new establishment does not trigger itself, and Block/Artifact interactions stay unknown.
   const strangled = next.enemies.filter((enemy) => enemy.alive && (enemy.strangle ?? 0) > 0)
@@ -1769,7 +1776,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
     const effects = unverifiedBladeDance ? { ...card, draw: 0, adds: undefined }
-      : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
+      : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false }
+      : zeroPoisonMirage ? { ...card, flatValue: 0 } : card;
     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost, plays === 1 && !automatic);
     // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
     // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
@@ -1913,7 +1921,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.feelNoPain) next.feelNoPain += card.feelNoPain;
   if (card.cardId === "HELLRAISER") next.hellraiser = true;
   if (card.cardId === "DARK_EMBRACE") next.darkEmbrace += 1;
-  if (!card.known) next.unknown = [...next.unknown, card.name];
+  if (!card.known && !zeroPoisonMirage) next.unknown = [...next.unknown, card.name];
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
 
   if (card.strangle !== undefined && targetEnemy?.alive) {
