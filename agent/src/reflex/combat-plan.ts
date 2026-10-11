@@ -20,6 +20,7 @@
  */
 
 import { choiceQ } from "./jev/questions.js";
+import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { carrySilentSkittish } from "./silent-skittish.js";
 import { silentLossReference } from "./silent-loss-reference.js";
@@ -3807,6 +3808,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const phaseFacts = silentPhaseReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })));
   const lossFacts = silentLossReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })), rolloutTied);
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
+    ...quantitativeTurnFacts(state, plan),
     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
     ...simFact(plan),
     ...phaseFacts.get(plan),

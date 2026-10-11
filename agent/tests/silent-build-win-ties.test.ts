@@ -91,7 +91,7 @@ it("labels each exact tie independently of whether it wins, without moving or re
   expect(slate.map((option) => option.key)).toEqual(options.slice(0, 5).map((option) => option.key));
 });
 
-async function question(character = "SILENT", samples = observed.samples) {
+async function question(character = "SILENT", samples = observed.samples, quantitative?: JsonValue) {
   const raw = structuredClone(fixture.state); raw.run.character_id = character;
   const state = parseGameState(raw);
   const knowledge = makeKnowledge({}, "cache");
@@ -107,11 +107,25 @@ async function question(character = "SILENT", samples = observed.samples) {
     questions: { pick: { type: "choice", instructions: "固定休息题", criteria } },
     resolve: () => ({ intent: { action: "choose_rest_option", option_index: 0 }, rationale: "fixed", confidence: 1, fallback: false }),
     deepseek: { question: "pick", baseline: { kind: "act", label: "rest/choose", intent: { action: "choose_rest_option", option_index: 0 }, rationale: "fixed" }, options: () => entries } };
-  vi.mocked(compareOptions).mockResolvedValue({ ...result, samples, options: [...options,
-    { ...options[0]!, key: "unsupported" }, { ...options[0]!, key: "not_offered" }] });
+  vi.mocked(compareOptions).mockResolvedValue({ ...result, samples, ...(quantitative ? { requested: samples } : {}), base: { ...result.base, quantitative }, options: [...options,
+    { ...options[0]!, key: "unsupported" }, { ...options[0]!, key: "not_offered" }].map((o) => ({ ...o, quantitative })) });
   const outcome = await withBossSim(ask, env, { runner: { run: vi.fn() } });
   return { outcome, ask, criteria: (outcome.decision as AskDecision).questions.pick!.criteria! };
 }
+
+it("sends bounded quantitative summaries to the actual consumer and full statistics to the audit record", async () => {
+  // Synthetic numerical distribution tests transport only; it is not an observed fight result.
+  const quantitative: JsonValue = { samples: 8, capped: 1, raw_win_mc_interval95: [0.1, 0.8],
+    hp_loss: { n: 8, mean: 12, sd: 4, meanSe: 1.4, p10: 5, p90: 19 },
+    turns_won_only: { n: 3, mean: 4, meanSe: 0.5, p10: 3, p90: 5 },
+    paired_hp_loss_difference: { n: 8, mean: -2, meanSe: 0.7, p10: -4, p90: 0 } };
+  const { outcome, criteria } = await question("SILENT", 8, quantitative);
+  expect(JSON.parse(criteria.o0!).quantitative_fight).toMatchObject({ samples: 8, hp_loss: { p10: 5, p90: 19 }, capped: 1 });
+  expect(outcome.record?.quantitative).toMatchObject({ base: quantitative });
+  expect(JSON.parse(criteria.unsupported!)).not.toHaveProperty("quantitative_fight");
+  expect(criteria.not_offered).toBeNull();
+  expect(JSON.parse((await question("IRONCLAD", 8, quantitative)).criteria.o0!)).not.toHaveProperty("quantitative_fight");
+});
 
 it("adds ties to the production DeepSeek question, retaining all options and the original simulation facts", async () => {
   const { outcome, ask, criteria } = await question();
