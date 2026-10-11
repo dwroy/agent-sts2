@@ -2228,3 +2228,9 @@
 - 2026-10-12 01:54:05 CST [第一批宿主检查完成] 原learner-recheck 20261011-224302-fix-batch动作退出0，固定live6639e2f33/tree0ab50c6e完整tsc/vitest0、343文件3682过2跳；原批failed/rc0保持，独立fallback回执保存first-host-checks.json。此同树已含其余四源固定增量，关联覆盖而不冒填其他批独立检查或重复全套。codex1真实消费回填notes/codex1-runtime-consumption.json，三learner已核、brain仍明确pending。
 - 2026-10-12 01:58:16 CST [旧积压17源集成未上线] 固定候选树bdbbe1370524dd567f4f1cc1f3d2b07abf496f71沙箱tsc0、2文件5失败/306文件3002通过，paths段未执行；失败是原测试共享cardSource阴性控制及unknownCards前提与组合增量不相容，具体根因与修法交学习者，ops未改断言/游戏规则。原失败/补丁/树/原17源保留于paper/materials/20261012-0111-codex1-resumed/legacy-integration，已进原fix队列ops-20261012-legacy-integration-tests；无提交生产代码、合入、版本或shipped，第一批已完整通过的live保持。
 - 2026-10-12 02:00:58 CST [集成测试续修实际派发] 原broker fix-batch退出0，登记20261012-015818-fix-batch/PID2814099/wJ:pMG，独立工作树/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818；原普通修复槽空闲后只派一次，不重复旧活批。根fix队列已含17源冻结补丁/失败树和两文件五断言任务，request回填批号；这只证明宿主普通队列批次已启动，不冒称条目专用绑定、学习完成或17源已上线。后续沿原fix-done收尾，不轮询模型。
+
+- 2026-10-12 02:12:20 CST [02:05策略与检查回调] 四个011302/014302及s2策略批经原no_change只读验证，40项均waiting、无源码改动/合入；工程集成待办与缺证限制按学习者原报告保留，不重复resolve/派发。224302-fix宿主回调的6639e2f33/tree0ab50c6e及原日志SHA全部吻合，沿01:54已通过记录确认，不重复补测、版本或shipped。归档paper/materials/20261012-0205-ops。
+
+- 2026-10-12 02:12:20 CST [011302-fix新增增量兜底] 原三修复中夹具/启动恢复与已上线候选patch-id完全相同；仅学习者b534ef631的依赖映射strategy_implementation.py→strategy_implementation_jobs.py及固定回归尚缺，机械重放37195c92b，实际live415982981/tree06e61cfd、main bfe4afe9f，两源码文件一致；来源身份合并保持测试树不变，不导入分支记录。原学习者291文件2853例通过，live/main各原沙箱入口tsc0、相关2例及fork13例0、gitleaks0，保留原full/失败历史；原broker仅请求011302完整宿主检查一次，日志已开始，结果待learner-checks。纯工具修复无游戏版本/学习shipped，不将原failed/rc0改成done。
+
+- 2026-10-12 02:12:20 CST [同因停局复核] broker procs仍无autoplay/play/report，mod为N1ZEBMHZM4KC GAME_OVER/return_to_main_menu，runs.jsonl仍0行；report-run动作仍未提供，沿01:13原收件箱与补收任务继续，不重复汇报或新开局覆盖旧终态。015818修复活批保持，17源/量化父成果/12旧范围及条件main-push仍未完成，brain真实消费仍pending；未操作flags、进程或账号。
