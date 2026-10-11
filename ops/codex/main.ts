@@ -30,7 +30,7 @@ import { codexChildEnv, codexKeyCheck, codexProfileOverrides, engineBinary, lear
 import { collectSecrets, redactSecrets, secretFilesOf, stamp } from "../../learner/lib/launcher.js";
 import { SummaryTracker, findRollout } from "../../learner/lib/summary.js";
 import { archiveCodexTranscripts } from "./archive.js";
-import { herdrWake, runCommand, tuiStateFile } from "./herdr.js";
+import { herdrWake, prepareHerdrPrompt, runCommand, tuiStateFile } from "./herdr.js";
 import { readRolloutMetadata } from "./rollout-file.js";
 import {
   ACTIONS,
@@ -390,7 +390,7 @@ async function wakeHerdr(events: QueuedEvent[], session: string, message: string
       session,
       args,
       codexHome: learnerCodexHome(env),
-      message,
+      message: prepareHerdrPrompt(message, `${logPath}.events.txt`),
       marker: message.split("\n")[0]!,
       stateFile: tuiStateFile(paths.dir),
       timeoutMs: timeoutMin * 60_000,

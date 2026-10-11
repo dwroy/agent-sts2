@@ -30,16 +30,41 @@ export function composerState(ansi: string): ComposerState {
   const lines = ansi.split(/\r?\n/);
   for (let i = lines.length - 1; i >= 0; i--) {
     const line = lines[i]!.replace(/\r/g, "");
-    const at = line.indexOf("› ");
+    const at = line.indexOf("›");
     if (at < 0) continue;
-    // What follows the glyph, without the reset sequences codex puts around it.
-    let rest = line.slice(at + 2);
-    while (rest.startsWith("\u001b[0m")) rest = rest.slice(4);
-    if (rest.replace(/\u001b\[[0-9;]*m/g, "").trim() === "") return "empty";
-    if (/^\u001b\[2m/.test(rest)) return "empty";
+    // Newer themes style the glyph and padding separately. Inspect SGR state at
+    // the first visible character, keeping typed text distinct from dim hints.
+    if (line.slice(0, at).replace(/\u001b\[[0-9;]*m/g, "").trim()) continue;
+    let rest = line.slice(at + 1);
+    let dim = false;
+    for (;;) {
+      const sgr = /^\u001b\[([0-9;]*)m/.exec(rest);
+      if (sgr) {
+        const codes = sgr[1]!.split(";").map(Number);
+        for (let j = 0; j < codes.length; j++) {
+          const code = codes[j];
+          if (code === 38 || code === 48 || code === 58) {
+            j += codes[j + 1] === 2 ? 4 : codes[j + 1] === 5 ? 2 : 0;
+            continue;
+          }
+          if (code === 0 || code === 22) dim = false;
+          else if (code === 2) dim = true;
+        }
+        rest = rest.slice(sgr[0].length);
+      } else if (/^\s/.test(rest)) rest = rest.slice(1);
+      else break;
+    }
+    if (!rest || dim) return "empty";
     return "text";
   }
   return "none";
+}
+
+/** Keep large backlogs off argv (Linux limits each argument to about 128 KiB). */
+export function prepareHerdrPrompt(message: string, file: string): string {
+  if (Buffer.byteLength(message, "utf8") <= 96 * 1024) return message;
+  writeFileSync(file, message, { mode: 0o600 });
+  return `${message.split("\n")[0]}\n\n完整事件消息保存在 ${JSON.stringify(file)}。请先完整读取该文件，再按其中的既有运维规则处理本轮全部事件；文件内容未截断，队列归档仍由调度器完成。`;
 }
 
 export interface TurnTokens {
@@ -294,7 +319,7 @@ export async function herdrWake(o: HerdrWakeOptions): Promise<HerdrWakeResult> {
     const opened = await runCommand("bash", [o.hostScript, "open-pane", o.agent, "--env", `CODEX_HOME=${o.codexHome}`], 90_000, env);
     const pane = opened.stdout.trim().split("\n").pop() ?? "";
     if (opened.code === 4) return { code: 75, reason: `the pane labelled ${o.agent} is busy with something else: ${opened.stderr.trim().slice(-200)}` };
-    if (opened.code !== 0 || !/^[A-Za-z0-9]+:p[0-9]+$/.test(pane)) return { code: 1, reason: `open-pane ${o.agent} failed: ${opened.stderr.trim().slice(-300)}` };
+    if (opened.code !== 0 || !/^[A-Za-z0-9]+:p[A-Za-z0-9]+$/.test(pane)) return { code: 1, reason: `open-pane ${o.agent} failed: ${opened.stderr.trim().slice(-300)}` };
     const started = await h(["agent", "start", o.agent, "--kind", "codex", "--pane", pane, "--timeout", "60000", "--", ...o.args], 90_000);
     if (!started.ok) {
       // agent_not_ready = a dialog at startup (trust, update, login): a person has to look; nothing is answered here.

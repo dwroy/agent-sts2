@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, describe, expect, it } from "vitest";
 
-import { argsHash, composerState, herdrWake, openTurn, rolloutTurn } from "../../ops/codex/herdr.js";
+import { argsHash, composerState, herdrWake, openTurn, prepareHerdrPrompt, rolloutTurn } from "../../ops/codex/herdr.js";
 import { OPS_PROFILE, hostingMode, interactiveArgs, opsRequest, readQueue, validateRequest } from "../../ops/codex/lib.js";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -86,6 +86,30 @@ describe("interactive TUI arguments", () => {
 });
 
 describe("screen and session-file readers", () => {
+  it("recognizes separately styled prompt glyphs without overwriting typed text", () => {
+    const prefix = "\u001b[0m\u001b[1m\u001b[48;2;43;57;43m›\u001b[0m\u001b[48;2;43;57;43m";
+    expect(composerState(`${prefix}       \u001b[0m`)).toBe("empty");
+    expect(composerState(`${prefix} 人尚未发出的文字\u001b[0m`)).toBe("text");
+    expect(composerState(`${prefix} \u001b[2mAsk anything\u001b[0m`)).toBe("empty");
+    expect(composerState(`${prefix} \u001b[2m\u001b[22mtyped`)).toBe("text");
+    expect(composerState("a transcript mentioning › something")).toBe("none");
+  });
+
+  it("preserves a large multilingual backlog in a file and keeps its turn marker", () => {
+    const marker = "【调度器事件】2026-10-11 18:00（CST），共 295 件：";
+    const message = `${marker}\n${"学习完成事件\n".repeat(10000)}`;
+    const file = join(tmp, "large-events.txt");
+    const prompt = prepareHerdrPrompt(message, file);
+    expect(Buffer.byteLength(message)).toBeGreaterThan(128 * 1024);
+    expect(Buffer.byteLength(prompt)).toBeLessThan(4096);
+    expect(prompt.split("\n")[0]).toBe(marker);
+    expect(prompt).toContain(file);
+    expect(readFileSync(file, "utf8")).toBe(message);
+    const unused = join(tmp, "small-events.txt");
+    expect(prepareHerdrPrompt(marker, unused)).toBe(marker);
+    expect(existsSync(unused)).toBe(false);
+  });
+
   it("composer: the dim placeholder is empty, typed text is not (codex 0.160 screens)", () => {
     const placeholder = "\u001b[0m\u001b[1m› \u001b[0m\u001b[2mAsk Codex to do anything\u001b[0m\r";
     const typed = "\u001b[0m\u001b[1m› \u001b[0mhalf typed by a human\r";
