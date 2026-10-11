@@ -75,6 +75,10 @@ def dispatch_one(state,root,scripts,character,alive,stamp,dispatch_write):
 
 
 def links(report,batch,root,scripts):
+    if batch.get('implementation_request'):
+        from strategy_implementation_jobs import report_errors
+        errors = report_errors(report, batch, root)
+        if errors: return errors
     if batch.get('proposal_policy')!='Roy-2026-10-07-learning': return []
     try:
         lib=library(scripts);items=lib.fold(Path(root,lib.QUEUE))

@@ -207,6 +207,9 @@ for row in csv.reader(sys.stdin):
   boss-sim-check)
     CODEX_OPS_ROOT="$ROOT" exec nice -n 19 python3 "$ROOT/.worktrees/live/ops/codex-ops-learn.py" boss-check ;;
   strategy-proposal)
+    if [ $# -eq 2 ] && [ "$arg" = roy-20261011-silent-core-cycle-quantitative-learning ]; then
+      exec python3 "$OPS/codex-ops-learn.py" write --task strategy-proposal --request "$arg"
+    fi
     [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$ ]] || exit 2
     exec python3 "$OPS/codex-ops-learn.py" write --task strategy-proposal --runs "$arg" ;;
   learner-merge)
