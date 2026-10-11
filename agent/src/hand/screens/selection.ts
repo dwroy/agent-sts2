@@ -20,6 +20,7 @@ import type { GameState } from "../mod/schema.js";
 import { exhaustPileSize, facingFightOf, fightPlaysPerTurn } from "../../reflex/combat-plan.js";
 import { cardIdentity, planMakerOf, SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
 import { cardOutcome } from "../../knowledge/outcome-facts.js";
+import { survivorSmoggyFacts } from "./silent-smoggy-selection.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -187,6 +188,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
+  const smoggySource = env.screenMemory.cardSource;
+  const smoggyFacts = survivorSmoggyFacts(state, smoggySource?.action === "play_card" && smoggySource.id === "SURVIVOR" &&
+    smoggySource.turn === state.turn && smoggySource.fight === facingFightOf(state));
   const options: PickOption[] = candidates.map((card, fallbackIndex) => {
     const index = numOrNull(card["index"]) ?? fallbackIndex;
     const cardId = str(card["card_id"]);
@@ -220,6 +224,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         // A free offer: this turn's cost (the printed one is not paid).
         cost: freeSource ? thisTurnModel(card, index).cost : numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
+        ...(smoggyFacts?.has(index) ? { smoggy_after_discard: smoggyFacts.get(index)! } : {}),
       } satisfies JsonValue,
     };
     // DeepSeek's view: the value's parts, and that the ranking is a reference ("120 = 80 + 40 ..."; UNRL F14 read
@@ -284,7 +289,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     options,
     // Exhaust picks happen every turn with Baking Gloves and are low-stakes: code always decides.
     codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : verb === "exhaust" || topDanger ? 0 : 6,
-    maxModelOptions: 4,
+    maxModelOptions: smoggyFacts ? options.length : 4,
     state: {
       run_brief: briefJson(env.brief),
       situation: {
