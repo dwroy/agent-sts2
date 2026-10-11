@@ -1,0 +1,35 @@
+{
+  "recorded_at": "2026-10-11T18:26:25.373861+08:00",
+  "owner_separation": {
+    "ops": "Original live merge, isolated validation, learner dispatch and event closeout",
+    "development": "Archive source62c22f7c7/main1496de4f4 and persistent broker/helper entry in its isolated worktree"
+  },
+  "approved_ops_topology": "one ops main session plus at most two read-only helper sessions",
+  "temporary_helpers": [
+    {
+      "name": "backlog_postmortems",
+      "state": "completed",
+      "project_mutation": false
+    },
+    {
+      "name": "backlog_write_audit",
+      "state": "completed",
+      "project_mutation": false
+    }
+  ],
+  "validation_direction": "After full-suite completion rerun failed files and unrun paths only with one worker; preserve failures, no relaxed assertions or gameplay edits",
+  "live_repairs_to_integrate": [
+    "acf2611db281456c63915a98b0995d3d04bcd35a",
+    "1496de4f4be0dcbc81f618de4c1dc4394afdb144"
+  ],
+  "archive_host_result_reported_by_development": {
+    "source": "62c22f7c7",
+    "sandbox_files": 266,
+    "sandbox_tests": 2684,
+    "real_archive_copied": 930,
+    "unchanged": 1196,
+    "pending_scan_candidates": 264
+  },
+  "candidate_scan_policy": "264 historical scanner candidates await development review; no claim of confirmed secrets or clean archive",
+  "production": "no new gameplay or scheduler instance started by this recovery"
+}

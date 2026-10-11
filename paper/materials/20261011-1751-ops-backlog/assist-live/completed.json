@@ -1,0 +1,57 @@
+{
+  "time": "2026-10-11T18:42:07.203611+08:00",
+  "source": "f59086f5578d499b0fbdb279b39811d00ef732d6",
+  "live": "e597b103a98bb4f42cdc6ec4b8f22bc5f43c4a2c",
+  "tree": "5b6f730d75540388bb0b42b511fbb41e6c47574e",
+  "checks": [
+    {
+      "name": "tsc",
+      "exit": 0,
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ]
+    },
+    {
+      "name": "assist-contract",
+      "exit": 0,
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/ops-assist.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1"
+      ]
+    },
+    {
+      "name": "assist-python",
+      "exit": 0,
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_ops_assist.py",
+        "-v"
+      ]
+    }
+  ],
+  "gitleaks": 0,
+  "production_acceptance": "pending-next-wake"
+}

@@ -1,0 +1,49 @@
+[
+  {
+    "name": "tsc",
+    "exit": 0,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ]
+  },
+  {
+    "name": "assist-contract",
+    "exit": 0,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "tests/ops-assist.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1"
+    ]
+  },
+  {
+    "name": "assist-python",
+    "exit": 0,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_ops_assist.py",
+      "-v"
+    ]
+  }
+]
