@@ -115,3 +115,11 @@ Roy 最新授权统一 LLM 切换能力，watcher 在独立树 `codex-account-dr
 `20261011-223051-strategy-proposal` 已done/rc0，fixes为空、merged=null，报告10条原提案均waiting；没有本批新源码或live发布。等待理由同时包含消费者/合入预检冲突和实盘隔离/完整后继缺口，继任须区分工程续办与游戏证据限制，不能统一当纯缺证、强行合入旧候选或标整体duplicate。原 `.out/.err/报告` SHA、事件副本与登记快照见 `paper/materials/20261011-codex1-drain-handoff/deferred-2246/pending-closeout.json`。
 
 原reason=proposal，非本旧ops在drain后手工派发；watcher统一闸需要覆盖自动提案路径，本轮未代改。该事件被调度器归档不表示业务验收已完成。旧ops保持 **ready_to_drain**，不新派/合入/造版本/补测，不改任何进程、flags、账号或冻结输入。
+
+## 2026-10-11 22:55:24 CST：经验223051候选已完成、未上线（待继任兜底）
+
+`20261011-223051-experience-update` engine rc0，调度登记仍 **failed/merged=null**，原retry不改。固定候选 **c04da0668154abda77278bf614c7e96090297248**（exp-silent，候选经验版本2026-10-11.16）对象已核存在，当前live祖先检查为 **False**；本ops未合入、建版本或标shipped。
+
+原回报：新增0、更新20（证据补充）、退役0，active219；tsc/vitest0、287文件2825例，复用了源码SHA相同的隔离检查，原历史链接预检失败保持。锁内预检15项记录/目录冲突后停止，live_tests/实际发布由继任重新核，不能将候选版本号当已生效版本。继任按固定源码范围保留知识刷新与并行记录，核测试复用身份与合入条件后兜底；只在实际live后登记版本、CLI shipped、双通知及原检查通道，不重复研究/注册。
+
+原24个proposed账本ID及3个提案 `silent-proposal-330b05f2e6671108` / `silent-proposal-b4c8266f2419f463` / `silent-proposal-1deef8edf906c64f` 沿原链保留，不在drain中另派。原out/err/report、事件副本、SHA和固定变更路径见 `paper/materials/20261011-codex1-drain-handoff/deferred-2254/pending-closeout.json`。**ready_to_drain**保持，量化父请求及main/push条件授权继续继承。

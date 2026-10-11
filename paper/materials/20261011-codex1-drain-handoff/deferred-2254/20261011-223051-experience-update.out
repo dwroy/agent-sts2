@@ -1,0 +1,120 @@
+## 经验库更新回报
+
+- 版本：2026-10-11.15 → 2026-10-11.16；提交：`c04da0668154abda77278bf614c7e96090297248`（分支 exp-silent）；合入：未合入。锁内预检发现 15 项冲突，按要求停止，live 仍为 `.15`。
+- 条数：新增 0、更新 20（加证据 20、只改数字 0）、退役 0；active 219 → 219，共 53,943 字符。A8 适用 199 条／48,139 字符；A9 适用 200 条／48,423 字符。置信度 high／med／low：150／43／26。
+- 机制推理（局数为支持／反例）：
+  - 核心兑现 — 已建能力仍需合法后继 — 231／0 — 64VJC5XT2AT2
+  - 力量 — 逐击增伤，其他来源分账 — 231／0 — 64VJC5XT2AT2
+  - 步法 — 敏捷须靠挡牌兑现 — 134／0 — SB5N8GT2Y3VW
+  - 毒雾 — 建立不立即施毒，制品可延迟 — 111／0 — 64VJC5XT2AT2
+  - 覆甲 — 开场层数不能预支到后段 — 19／0 — 64VJC5XT2AT2
+  - 实验体 — 技能激怒与换相重置分别核算 — 25／0 — 64VJC5XT2AT2
+  - 沙漏 — 成长、持牌伤和血价共同核算 — 31／0 — 64VJC5XT2AT2
+  - 双蟹 — 换目标有血价，侧死须重读增益 — 29／0 — SB5N8GT2Y3VW
+  - 融入暗影 — 翻倍后继挡，20 挡仍不足 32 攻 — 22／0 — 64VJC5XT2AT2
+  - 预判 — 临时敏捷次轮撤销 — 25／0 — 64VJC5XT2AT2
+  - 疯狂科学 — 按实际定制模板计收益 — 12／0 — 64VJC5XT2AT2
+  - 阳伞 — 自动取得与计划报价分账 — 4／0 — 64VJC5XT2AT2
+  - 铜质鳞片 — 两击反伤 6，不混作直伤 — 23／0 — SB5N8GT2Y3VW
+  - 加湿器 — 实际回血休息才增加上限 — 10／0 — 64VJC5XT2AT2
+  - 毒药水 — 施毒不立即扣血，侧死不等于胜利 — 56／0 — SB5N8GT2Y3VW
+  - 连续 boss — 按实际出口血药及开场回复接续 — 22／0 — 64VJC5XT2AT2
+  - 尖啸 — 临时减力次轮恢复 — 110／0 — 64VJC5XT2AT2
+  - 凋萎 — 核实际总损血，不补造结算顺序 — 31／0 — 64VJC5XT2AT2
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 287 文件／2,825 用例／退出码 0。使用源码 SHA 一致的隔离副本，无完整套件重跑；原树历史链接预检错误已保留。
+- 切片大小：中位增加 26.5 字，最大 8,372 字。
+- 学习账本：新增无；改成 proposed：silent-0005、0011、0012、0016、0019、0020、0021、0024、0025、0028、0046、0062、0065、0077、0080、0120、0125、0129、0136、0161、0204、0228、0278、0385；退役无；`ledger.py check` 退出码 0。
+- 需要 Roy 定的事：无。合入冲突待运维兜底；变更记录已追加，证据与交付链见[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-223052-experience-update/report.md)。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-11.16",
+  "commit": "c04da0668154abda77278bf614c7e96090297248",
+  "merged": null,
+  "added": 0,
+  "updated": 20,
+  "retired": 0,
+  "active": 219,
+  "mechanisms": [
+    "核心实际兑现",
+    "力量逐击增伤",
+    "步法后继格挡",
+    "毒雾与制品",
+    "有限覆甲",
+    "实验体激怒与换相",
+    "沙漏成长与血价",
+    "双蟹朝向与侧死增益",
+    "融入暗影新增挡翻倍",
+    "预判临时敏捷",
+    "疯狂科学定制模板",
+    "阳伞自动取得",
+    "铜质鳞片逐击反伤",
+    "加湿器回血休息",
+    "毒药水施加与结算",
+    "连续boss资源接续",
+    "尖啸临时减力",
+    "凋萎实际损血"
+  ],
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2825
+  },
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0005",
+      "silent-0011",
+      "silent-0012",
+      "silent-0016",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0024",
+      "silent-0025",
+      "silent-0028",
+      "silent-0046",
+      "silent-0062",
+      "silent-0065",
+      "silent-0077",
+      "silent-0080",
+      "silent-0120",
+      "silent-0125",
+      "silent-0129",
+      "silent-0136",
+      "silent-0161",
+      "silent-0204",
+      "silent-0228",
+      "silent-0278",
+      "silent-0385"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-330b05f2e6671108",
+    "silent-proposal-b4c8266f2419f463",
+    "silent-proposal-1deef8edf906c64f"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-223052-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12b5f-b65b-75e0-83a1-ac1a8eb11e3c
+轮数：1；工具调用：command_execution×64
+token：输入 191.4k、输出 38.7k（其中推理 7648）、cache 读 8116.5k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：1385.0 s（墙钟）
+时间：首个事件 10.9 s、模型首个输出 16.6 s、首次工具 19.9 s、末次工具结束 1325.4 s；工具内共 1339.9 s，其余（模型生成、推理、网络）34.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×58；/home/dw/.codex-sts2/sessions/2026/10/11/rollout-2026-10-11T22-30-55-01a12b5f-b65b-75e0-83a1-ac1a8eb11e3c.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-223052-experience-update.jsonl
