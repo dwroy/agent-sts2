@@ -142,6 +142,8 @@ export interface EnemySim {
   block: number;
   vulnerable: number;
   weak: number;
+  /** Silent A10 PLOW_MOVE: observed Shackling under existing Weak, decision turn only. */
+  weakShackling?: true;
   /** Poison remaining before this enemy turn, observed in Silent runs. */
   poison?: number;
   artifact: number;
@@ -2695,6 +2697,18 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
         // states.jsonl); only Strength changes made this turn still need the ×1.5.
         const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
         let amount = Math.floor(shown + strengthChange);
+        // 3UPY3BP2LVS7 F17 T3: shown 16 with Weak is raw 22; Shackling's -7 makes 11, not 9.
+        // Resolve only a unique result from the rounded intent. Ambiguous bases, other loss amounts,
+        // move changes and unobserved multipliers retain their existing path (silent-0349 remains partial).
+        if (enemy.weakShackling && enemy.weak > 0 && !enemy.newlyWeak && !moved && !died &&
+            enemy.strengthDelta === 0 && enemy.tempStrengthLoss === 7 &&
+            enemy.attacks.length === 1 && attack.hits === 1 && Number.isInteger(shown) && shown > 0 &&
+            !player.vulnerable && player.facing == null && !player.surrounded &&
+            !player.colossus && !sim.colossus && !(enemy.shrink ?? 0) && !enemy.newlyShrunk && sim.tainted === 0) {
+          const low = Math.max(0, Math.floor((Math.ceil(shown / 0.75) - 7) * 0.75));
+          const high = Math.max(0, Math.floor((Math.ceil((shown + 1) / 0.75) - 1 - 7) * 0.75));
+          if (low === high) amount = low;
+        }
         if (sim.tainted > 0) {
           const tainted = sim.tainted * (player.vulnerable ? 1.5 : 1);
           // Tainted adds before Weak. Under a Weak already up, the largest base behind the shown number
