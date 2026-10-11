@@ -1218,3 +1218,6 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-12T07:42:53+08:00 [watcher codex1-gameplay-accepted] codex1主ops宿主权限已由真实进程/直连mod验收；旧N1报告349条唯一，原refresh exit2/failed回执SHA未改，ops只补A10药水表及未触发收尾，stage-continuation=complete。新局C7GNN3DDFUFY已由原ops启动，07:40:58真实Astra/xhigh回答accepted，目标brain home/原生thread/用量/实际动作逐项相符；账号、ops、学习及游戏端接续均有实证。两个源码源9f48c3b25/02725b673已合main/live，相关检查通过。游戏继续由ops运行，量化父成果/其他缺口/条件main-push不在本验收中冒称完成。详情paper/materials/20261012-ops-host-recovery/final-acceptance.json。
 
 - 2026-10-12 07:44 [运维 codex] 卡死已恢复：N1ZEBMHZM4KC完整349条决策/历史65e3d10a9+dirty唯一入账，原刷新exit2/failed保留，仅补失败药水表末步和原费用/校准收尾；autoplay PID3251934已启动新局C7GNN3DDFUFY（climb目标11、实际A10），codex1隔离home首个真实Astra回答已采用并执行，消费回执已回填；量化父请求和条件main/push仍待完成。
+
+- 2026-10-12 07:47 [运维 codex] 07:46卡死告警已核为旧快照：C7GNN3DDFUFY当前F7持续出牌、autoplay/play进程在，原broker stall-check返回OK；无需重启或人工游戏操作。
+- 2026-10-12 07:47 [运维 codex] 学习者批次20261012-074301-strategy-proposal在启动前隔离检查exit3：bubblewrap构建时rg扫描/home/dw/Projects/agent-hearthstone/.aws及.codex报不存在，stdout空、未取得完成回报；请开发会话修隔离入口，勿扩大沙箱权限。原stderr完整留在ops/codex-ops/learner/20261012-074301-strategy-proposal.err，失败/队列保留，不当提案缺失、不另派批次。
