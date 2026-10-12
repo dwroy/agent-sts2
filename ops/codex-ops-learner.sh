@@ -19,6 +19,7 @@ if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
     && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
       || [ "$7" = roy-20261010-silent-core-output-value ] \
+      || [ "$7" = roy-20261012-concrete-core-decklists ] \
       || [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] \
       || [ "$7" = ops-20261012-quantitative-continuation ]; } || exit 2
   if [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] || [ "$7" = ops-20261012-quantitative-continuation ]; then

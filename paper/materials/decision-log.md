@@ -2373,3 +2373,5 @@
 
 - 2026-10-12 13:04:04 CST 运维 codex：处理13:01 fix-done124302，独立核工作树干净、HEAD==原基线dab16152d7、无新增提交/源码，报告fixes空/merged-null。159条历史来源记录的全部提交为实际live祖先，原审核材料SHA一致；学习者tsc0/定向去重12文件106项通过，仅定向、不记完整套件。当前main/live已有165处源码路径差异，原verify_empty_fix仍返回null；保留调度failed/rc0/merged-null及冷却，不伪造合入/版本/空批验收，不改源码或重派，无需提交合入兜底。独立专项及缺证据项沿原任务。
 - 2026-10-12 13:04:04 CST 运维 codex：处理13:01 learner-checks121301-experience-update，已核61f0c04e5为main/live及eecdb847ff858a7026765eb5f15edd147cf7e7a1祖先，树080e49896d15f0b65a84dc6ad3586189d1ee2ccb与注册回执一致，经验blob逐一相同。完整宿主tsc0、385文件4145通过/2跳过，日志SHA及覆盖已归档paper/materials/20261012-1301-ops；向1248补host-completion.json，原失败/待检查历史保留。无须回滚，本轮未重跑测试或派发，未重复S1.exp186/19条shipped，未把3代码提案及量化父请求记完成。
+
+- 2026-10-12 13:38:37 CST [watcher codex] Roy本轮要求具体候选牌表，原ops已去重冻结但新ID缺注册入口。本源仅为roy-20261012-concrete-core-decklists增加既有research路径、wrapper精确白名单和学习模板说明；仍共享2策略槽、冻结SHA/实际登记后启动与纯报告验收，不重开旧任务、不改游戏知识/策略/ops prompt。固定调度29项通过；tsc通过，沙箱首轮3324过/本地Python依赖链接缺失1败，补齐既有环境后仅失败项1及未跑paths11通过，合计334文件3336项，原失败保留、无全套重跑；gitleaks0。验证paper/materials/20261012-core-decklists-entry/validation.json。实际合入和学习者启动另验，不把入口实现当牌表报告完成。
