@@ -1,0 +1,31 @@
+[
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "tests/experience.test.ts",
+      "tests/jev-experience.test.ts",
+      "tests/brain-knowledge.test.ts",
+      "--pool=forks",
+      "--maxWorkers=1"
+    ],
+    "exit": 0
+  }
+]

@@ -1,0 +1,31 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/agent
+
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 1864ms
+     × all resolve 1863ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+Error: ENOENT: no such file or directory, stat '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-224303-experience-update/test-checkout/logs/logs'
+ ❯ tools/check-imports.ts:28:12
+     26|     if (name === "node_modules" || name.startsWith(".")) return [];
+     27|     const path = join(dir, name);
+     28|     return statSync(path).isDirectory() ? files(path) : CODE.test(name…
+       |            ^
+     29|   });
+     30| }
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 335 passed (336)
+      Tests  1 failed | 3361 passed (3362)
+   Start at  15:21:14
+   Duration  1084.37s (transform 8.44s, setup 13.81s, import 41.18s, tests 981.93s, environment 33ms)
+
