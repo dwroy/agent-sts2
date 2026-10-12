@@ -2414,3 +2414,7 @@
 
 - 2026-10-12 15:06:32 CST 运维 codex：处理15:02 learner-checks134303-fix-batch，实际80dbde56c871660e572c9dd15a27390f746ff5bf/tree d9c2acc846c25043d0d38ccf6e4e74daf74b44b3及校准源99c3f6fc主/live祖先已核；本批独立宿主tsc0/388文件4182通过2跳过，原日志SHA另归档并向1445追加calibration-host-completion.json。此前同树策略批检查、校准首次超时/回退与3368分段覆盖保持；无新检查请求、版本、重复shipped或通知。
 - 2026-10-12 15:06:32 CST 运维 codex：144302策略批no_change核通过，owner HEAD=base e52a5a4ac且干净，10提案全waiting，无新源码/提交/合入。687条来源按原偏移/SHA核实；原13文件99例通过，tsc未跑且非完整套件，ops未补测。原ledger-updates.initial与corrections各26共52行按原顺序精确保留，账本物理436/提交范围407项0问题；初选后来改写的updates文件断言不匹配后未写入，已依据每项唯一原CLI行纠正选择。旧核验错误/修正材料保留，不把已有子项或原源码祖先记成本批新产出。证据不足及未完范围沿原队列，未补游戏知识/改配置/重启对局/推送；材料paper/materials/20261012-1502-ops。
+
+- 2026-10-12 15:15:12 CST 运维 codex：处理15:07 experience-done140741，核7acbcd135单路径silent经验.5→.6，+1/加证据更新20/退役0/active224，203条原对象不变；最终报告/映射/测试SHA吻合，1399份跟踪源码与来源提交逐SHA一致（1环境模板未读）。原树失效历史链接失败/同经验SHA隔离副本tsc0及336文件3368通过、6处共享记录冲突原件均保留，不另审学习内容。
+- 2026-10-12 15:15:12 CST 运维 codex：在live-merge.lock内保留a1a0e0aa刷新和两处脏notes，仅重放经验叶；集成tsc0/3文件41通过、gitleaks0，实际live1e5ce46f5a09b249bd049631cdba94d1a2c2bc81/tree36d8a6d15a05e2f9cc5483ae6d315d935048a0c7，main91ea79597dd13b0f6801fd4fe62c25013adcf2b8，source均为祖先且经验blob逐字一致。登记唯一S1.exp187，原逐项变更段按前缀SHA/追加SHA保存；73原CLI行原顺序归档，另用ledger.py追加24限定shipped，物理436/提交407项0问题。4原代码提案73f04480/f5f84ef2/e94918f3/5329ffa5保持原队列，未记实现或父项完成。
+- 2026-10-12 15:15:12 CST 运维 codex：旧新逐项映射/证据/预期/回退已双通知；单次broker learner-recheck140741-experience-update请求完整宿主检查，待后续事件不冒称通过，不重复派发/测试。材料paper/materials/20261012-1507-ops；未编游戏知识、改配置、重启对局或推送，其他角色数据及并行记录保留。

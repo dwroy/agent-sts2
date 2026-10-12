@@ -1,0 +1,25 @@
+{
+  "source_full_cases_reused": 3368,
+  "checks": [
+    {
+      "command": [
+        "node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "node_modules/.bin/vitest",
+        "run",
+        "tests/experience.test.ts",
+        "tests/jev-experience.test.ts",
+        "tests/brain-knowledge.test.ts",
+        "--maxWorkers=1"
+      ],
+      "exit": 0
+    }
+  ]
+}
