@@ -1,0 +1,197 @@
+{
+  "at": "2026-10-12 12:13:50 CST",
+  "resolver_source": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+  "batch": "20261012-104302-strategy-proposal",
+  "proposal_id": "silent-proposal-54bd844abc57bb62",
+  "original_batch": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "runs": [
+      "YBRA3EJ94GBR",
+      "3UPY3BP2LVS7",
+      "NYQW6JAD30K4",
+      "E6DSUVTNVBMH",
+      "64VJC5XT2AT2",
+      "SB5N8GT2Y3VW",
+      "N1ZEBMHZM4KC",
+      "C7GNN3DDFUFY",
+      "F6XY4QJMS5RC",
+      "CMS8QL9E3C5U"
+    ],
+    "key": "silent:A11:238",
+    "pid": 3680094,
+    "state": "done",
+    "reason": "tick",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-104302",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pNN",
+    "strategy_progress": {
+      "ascension": 11,
+      "runs": 238
+    },
+    "finished": "2026-10-12 11:31",
+    "rc": 0,
+    "merged": "f48154c11d41cb82c762a0afd671fe430ef199b8",
+    "proposal_audit_errors": [],
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261012-104302-strategy-proposal",
+      "base": "e4ae8046c7d776882b9b9382a408df4e851d04e7",
+      "runs": [
+        "YBRA3EJ94GBR",
+        "3UPY3BP2LVS7",
+        "NYQW6JAD30K4",
+        "E6DSUVTNVBMH",
+        "64VJC5XT2AT2",
+        "SB5N8GT2Y3VW",
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY",
+        "F6XY4QJMS5RC",
+        "CMS8QL9E3C5U"
+      ],
+      "fixes": [
+        {
+          "id": "silent-0425",
+          "proposal_id": "silent-proposal-54bd844abc57bb62",
+          "commit": "5217167aa8ba0184e733a4e6c7ce3f102690f231",
+          "source_parent": "e4ae8046c7d776882b9b9382a408df4e851d04e7",
+          "summary": "修正普通蛇咬在赌徒替换中的无价值自动弃牌消费"
+        }
+      ],
+      "skipped": [
+        "其他纯施毒牌、升级与额外状态组合未在本批验证，保留原行为；整轮、整战及自然收益未证。"
+      ],
+      "merged": "f48154c11d41cb82c762a0afd671fe430ef199b8",
+      "published_commit": "5d820febbfd41397a0990c222154e54577777153",
+      "version": "S1.snakebite-discard1",
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 3319
+      },
+      "code_proposals": [
+        "silent-proposal-54bd844abc57bb62"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-54bd844abc57bb62",
+          "state": "implemented",
+          "commit": "5217167aa8ba0184e733a4e6c7ce3f102690f231",
+          "reason": "限定已核静默A10普通2费7毒蛇咬范围，旧误判改为Jev全选项比较；源码为实际live祖先。其他组合与自然收益不外推。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-104302/learner/runs/20261012-104318-strategy-proposal/report.md"
+    },
+    "checks_pending": false,
+    "fallback_checks": [
+      {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261012-104302-strategy-proposal.fallback-3d92d3371488b9b1202ee57634be150770c9be84.checks.log",
+        "merged": "5d820febbfd41397a0990c222154e54577777153",
+        "tree": "3d92d3371488b9b1202ee57634be150770c9be84",
+        "commits": [
+          "5217167aa8ba0184e733a4e6c7ce3f102690f231",
+          "f48154c11d41cb82c762a0afd671fe430ef199b8"
+        ]
+      }
+    ],
+    "checks": {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261012-104302-strategy-proposal.fallback-3d92d3371488b9b1202ee57634be150770c9be84.checks.log",
+      "merged": "5d820febbfd41397a0990c222154e54577777153",
+      "tree": "3d92d3371488b9b1202ee57634be150770c9be84",
+      "commits": [
+        "5217167aa8ba0184e733a4e6c7ce3f102690f231",
+        "f48154c11d41cb82c762a0afd671fe430ef199b8"
+      ]
+    }
+  },
+  "report_sha256": "9d752d80543650074892d7a9d7c0a1bb18cfa0d0d9d1e86e6a4bf645592df839",
+  "proof": {
+    "resolution_report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-104302/learner/runs/20261012-104318-strategy-proposal/report.md",
+    "resolution_report_sha256": "0f307a57ca33aff5313a6ee2126e9523b0ff674835cd90a1f3fdec3d8cb6abf4",
+    "resolution_batch": "silent:A11:238"
+  },
+  "before": {
+    "op": "add",
+    "id": "silent-proposal-54bd844abc57bb62",
+    "ts": "2026-10-12T10:32:45+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0425",
+      "silent-0220"
+    ],
+    "runs": [
+      "CMS8QL9E3C5U",
+      "6D0M76419BU7"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion"
+    ],
+    "summary": "纯施毒牌自动弃牌消费遗漏",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261012-101301-postmortem/poison-discard-proposal.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "29bf62978cd5127f911aba0ac48d73e057aec31a91a427f5c0fc79a7bbfd263b",
+    "state": "pending"
+  },
+  "after": {
+    "op": "add",
+    "id": "silent-proposal-54bd844abc57bb62",
+    "ts": "2026-10-12T12:13:50+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0425",
+      "silent-0220"
+    ],
+    "runs": [
+      "CMS8QL9E3C5U",
+      "6D0M76419BU7"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion"
+    ],
+    "summary": "纯施毒牌自动弃牌消费遗漏",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261012-101301-postmortem/poison-discard-proposal.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "29bf62978cd5127f911aba0ac48d73e057aec31a91a427f5c0fc79a7bbfd263b",
+    "state": "implemented",
+    "reason": "限定已核静默A10普通2费7毒蛇咬范围，旧误判改为Jev全选项比较；源码为实际live祖先。其他组合与自然收益不外推。",
+    "commit": "5217167aa8ba0184e733a4e6c7ce3f102690f231",
+    "resolution_report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-104302/learner/runs/20261012-104318-strategy-proposal/report.md",
+    "resolution_report_sha256": "0f307a57ca33aff5313a6ee2126e9523b0ff674835cd90a1f3fdec3d8cb6abf4",
+    "resolution_batch": "silent:A11:238"
+  },
+  "appended": [
+    {
+      "op": "update",
+      "id": "silent-proposal-54bd844abc57bb62",
+      "ts": "2026-10-12T12:13:50+08:00",
+      "state": "implemented",
+      "reason": "限定已核静默A10普通2费7毒蛇咬范围，旧误判改为Jev全选项比较；源码为实际live祖先。其他组合与自然收益不外推。",
+      "commit": "5217167aa8ba0184e733a4e6c7ce3f102690f231",
+      "resolution_report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-104302/learner/runs/20261012-104318-strategy-proposal/report.md",
+      "resolution_report_sha256": "0f307a57ca33aff5313a6ee2126e9523b0ff674835cd90a1f3fdec3d8cb6abf4",
+      "resolution_batch": "silent:A11:238"
+    }
+  ],
+  "append_count": 1,
+  "old_queue_prefix_sha256": "3cfc2f08e1ee2629271e45351edbc6608b7e54529629e228681db52e94fbce7c",
+  "old_prefix_preserved": true,
+  "learn_state_unchanged": true,
+  "active_lease_and_watermark_preserved": true,
+  "new_ids_created": 0,
+  "broader_parent_requests_completed": false
+}
