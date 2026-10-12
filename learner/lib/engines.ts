@@ -458,7 +458,17 @@ export function withCodexKeys(request: EngineRequest, env: NodeJS.ProcessEnv): E
   return { ...request, home, codexHome, keyFiles: codexKeyFiles(request.projectRoot, home, codexHome) };
 }
 
-export type KeyCheck = { ok: true; checked: number } | { ok: false; readable: string[]; error?: string };
+type StartupRetry = { attempts: 1 | 2; reason: "glob_scan_missing_path"; firstError: string };
+export type KeyCheck = ({ ok: true; checked: number } | { ok: false; readable: string[]; error?: string }) & { startupRetry?: StartupRetry };
+
+/** Retry only a sandbox-construction ENOENT before the key probe ran. Never retry readable keys or other errors. */
+export function transientKeyScanFailure(run: { code: number | null; stdout: string; stderr: string }): boolean {
+  const rgErrors = run.stderr.split(/\r?\n/).filter((line) => line.includes("rg:"));
+  return run.code === 1 && run.stdout.trim() === "" && run.stderr.includes("error building bubblewrap command")
+    && run.stderr.includes("ripgrep unreadable glob scan failed") && rgErrors.length > 0
+    && rgErrors.every((line) => line.includes("No such file or directory (os error 2)"))
+    && !/os error (?!2\))\d+|Permission denied/i.test(run.stderr);
+}
 
 /**
  * The pre-check before every codex run: under the run's own profile (`codex sandbox -P learner`), can any existing key
@@ -470,13 +480,23 @@ export async function codexKeyCheck(bin: string, request: EngineRequest, env: Re
   const cmd = codexKeyCheckCommand(request, files, bin);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
+  let startupRetry: StartupRetry | undefined;
   try {
-    const run = await runAgent(cmd.command, cmd.args, { cwd: request.cwd, env, stdin: "", signal: controller.signal });
+    let run = await runAgent(cmd.command, cmd.args, { cwd: request.cwd, env, stdin: "", signal: controller.signal });
+    if (transientKeyScanFailure(run)) {
+      startupRetry = { attempts: 1, reason: "glob_scan_missing_path", firstError: run.stderr.trim().slice(-600) };
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      controller.signal.throwIfAborted();
+      startupRetry.attempts = 2;
+      // Identical command/profile/key paths and the original total timeout budget; no sandbox relaxation.
+      run = await runAgent(cmd.command, cmd.args, { cwd: request.cwd, env, stdin: "", signal: controller.signal });
+    }
+    const retry = startupRetry ? { startupRetry } : {};
     const readable = run.stdout.split("\n").map((line) => line.trim()).filter((line) => files.includes(line));
-    if (run.code !== 0) return { ok: false, readable, error: `codex sandbox exited ${run.code ?? run.signal}: ${run.stderr.trim().split("\n").slice(-2).join(" | ").slice(0, 300)}` };
-    return readable.length === 0 ? { ok: true, checked: files.length } : { ok: false, readable };
+    if (run.code !== 0) return { ok: false, readable, error: `codex sandbox exited ${run.code ?? run.signal}: ${run.stderr.trim().split("\n").slice(-2).join(" | ").slice(0, 300)}`, ...retry };
+    return readable.length === 0 ? { ok: true, checked: files.length, ...retry } : { ok: false, readable, ...retry };
   } catch (error) {
-    return { ok: false, readable: [], error: error instanceof Error ? error.message.slice(0, 300) : String(error) };
+    return { ok: false, readable: [], error: error instanceof Error ? error.message.slice(0, 300) : String(error), ...(startupRetry ? { startupRetry } : {}) };
   } finally {
     clearTimeout(timer);
   }

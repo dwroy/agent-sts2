@@ -231,6 +231,8 @@ export interface HerdrWakeOptions {
   pollMs?: number;
   /** How long a submitted message may take to show up as a turn in the rollout (default 2 min). */
   submitWaitMs?: number;
+  /** Bound a settings reload/name-release race independently from the model turn (default 10 seconds). */
+  retirementWaitMs?: number;
   env?: NodeJS.ProcessEnv;
   log: (text: string) => void;
 }
@@ -300,6 +302,13 @@ export async function herdrWake(o: HerdrWakeOptions): Promise<HerdrWakeResult> {
     const p = info.result?.["process_info"] as { foreground_process_group_id?: number; shell_pid?: number } | undefined;
     return !!p && p.foreground_process_group_id === p.shell_pid;
   };
+  const retired = async (pane: string): Promise<boolean> => {
+    if (!(await shellIdle(pane))) return false;
+    const got = await h(["agent", "get", o.agent], 20_000);
+    // A transport error or another agent owning this name is not proof that the old identity was released.
+    return !got.ok && got.error === "agent_not_found";
+  };
+  const retirementWait = o.retirementWaitMs ?? 10_000;
 
   // A TUI started for another session or with other arguments is restarted, but only while nothing is going on in it.
   if (agent && recorded && (recorded.session !== o.session || recorded.args_hash !== hash || recorded.pane !== agent["pane_id"])) {
@@ -307,8 +316,13 @@ export async function herdrWake(o: HerdrWakeOptions): Promise<HerdrWakeResult> {
     const status = String(agent["agent_status"]);
     if ((status === "idle" || status === "done") && (await screen(pane)) === "empty" && !sessionOpen()) {
       o.log(`herdr: the ops TUI in ${pane} runs with other settings (${recorded.session === o.session ? "arguments" : "session"} changed): restarting it`);
-      await h(["agent", "send-keys", o.agent, "ctrl+c"]); // on an empty composer: quit
-      for (let i = 0; i < 50 && !(await shellIdle(pane)); i++) await sleep(200);
+      const quit = await h(["agent", "send-keys", o.agent, "ctrl+c"]); // on an empty composer: quit
+      if (!quit.ok) return { code: 75, pane, reason: `old ops TUI quit was not acknowledged (${quit.error})` };
+      const retireBy = Date.now() + retirementWait;
+      while (!(await retired(pane))) {
+        if (Date.now() >= retireBy) return { code: 75, pane, reason: "old ops TUI/name is still retiring; events retained" };
+        await sleep(poll);
+      }
       agent = undefined;
     } else {
       o.log(`herdr: the ops TUI runs with other settings but is busy (${status}); using it as it is this time`);
@@ -320,7 +334,16 @@ export async function herdrWake(o: HerdrWakeOptions): Promise<HerdrWakeResult> {
     const pane = opened.stdout.trim().split("\n").pop() ?? "";
     if (opened.code === 4) return { code: 75, reason: `the pane labelled ${o.agent} is busy with something else: ${opened.stderr.trim().slice(-200)}` };
     if (opened.code !== 0 || !/^[A-Za-z0-9]+:p[A-Za-z0-9]+$/.test(pane)) return { code: 1, reason: `open-pane ${o.agent} failed: ${opened.stderr.trim().slice(-300)}` };
-    const started = await h(["agent", "start", o.agent, "--kind", "codex", "--pane", pane, "--timeout", "60000", "--", ...o.args], 90_000);
+    let started = await h(["agent", "start", o.agent, "--kind", "codex", "--pane", pane, "--timeout", "60000", "--", ...o.args], 90_000);
+    const releaseBy = Date.now() + retirementWait;
+    while (!started.ok && started.error === "agent_name_taken") {
+      // The CLI can reject a released name briefly after get reports it absent. Never start over a live process.
+      if (Date.now() >= releaseBy || !(await retired(pane))) {
+        return { code: 75, pane, reason: "ops name is not available or pane is active; events retained" };
+      }
+      await sleep(poll);
+      started = await h(["agent", "start", o.agent, "--kind", "codex", "--pane", pane, "--timeout", "60000", "--", ...o.args], 90_000);
+    }
     if (!started.ok) {
       // agent_not_ready = a dialog at startup (trust, update, login): a person has to look; nothing is answered here.
       return { code: started.error === "agent_not_ready" ? 75 : 1, pane, reason: `herdr agent start failed (${started.error}); see herdr agent read ${o.agent}` };

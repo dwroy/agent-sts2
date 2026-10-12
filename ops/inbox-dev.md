@@ -1221,3 +1221,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 
 - 2026-10-12 07:47 [运维 codex] 07:46卡死告警已核为旧快照：C7GNN3DDFUFY当前F7持续出牌、autoplay/play进程在，原broker stall-check返回OK；无需重启或人工游戏操作。
 - 2026-10-12 07:47 [运维 codex] 学习者批次20261012-074301-strategy-proposal在启动前隔离检查exit3：bubblewrap构建时rg扫描/home/dw/Projects/agent-hearthstone/.aws及.codex报不存在，stdout空、未取得完成回报；请开发会话修隔离入口，勿扩大沙箱权限。原stderr完整留在ops/codex-ops/learner/20261012-074301-strategy-proposal.err，失败/队列保留，不当提案缺失、不另派批次。
+
+- 2026-10-12T08:06:41+08:00 [watcher switch-followup-accepted] 本次切换已知故障补齐：源4fef181d5已合main cbaab8984/live b475be859。Herdr旧逻辑只等shell空闲，现还须名称明确释放，短暂name_taken只在无占用/空闲确认后有限重试，忙/冲突/未知保留队列；学习者旧逻辑首次bubblewrap路径消失即exit3，现仅构建期stdout空且rg纯ENOENT允许同权限/同参数/原总超时内再验一次，持续失败或凭据可读仍拒绝。tsc、沙箱3188+11、Herdr宿主27、启动链宿主54、live增量8及gitleaks通过；真实原策略9文件屏蔽通过，注入首次ENOENT后真实第二次预检也通过。原074301-strategy失败保留，不标完成、不改队列/租约/冷却；已通知原ops接续。08:06主ops和brain均codex1，原对局C7GNN3DDFUFY已过F23商店，stall-check OK，无重启。回退仅revert live b475be859对应补强并回退main源，不覆盖历史失败/运行产物。无游戏规则或ops prompt改动；量化父请求/提案审计/目标实际进阶差异仍沿原任务，详情paper/materials/20261012-switch-followup/deployment.json。

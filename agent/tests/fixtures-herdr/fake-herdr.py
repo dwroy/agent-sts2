@@ -163,6 +163,11 @@ if group == "pane" and cmd == "list":
 if group == "agent" and cmd == "get":
     name, a = agent_of(rest[0])
     if not a:
+        retiring = s.get("retiring", {}).get(rest[0])
+        if retiring and retiring["remaining"] > 0:
+            retiring["remaining"] -= 1
+            out("agent_info", agent=agent_json(rest[0], retiring["agent"]))
+        s.get("retiring", {}).pop(rest[0], None)
         err("agent_not_found", rest[0])
     out("agent_info", agent=agent_json(name, a))
 if group == "agent" and cmd == "start":
@@ -171,6 +176,16 @@ if group == "agent" and cmd == "start":
         err("pane_not_found", pane)
     if os.path.exists(os.path.join(D, "start-blocked")):
         err("agent_not_ready", "blocked at startup")
+    count_path = os.path.join(D, "name-taken-count")
+    if os.path.exists(count_path):
+        count = int(open(count_path).read())
+        if count > 0:
+            open(count_path, "w").write(str(count - 1))
+            if os.path.exists(os.path.join(D, "competing-agent")):
+                s["agents"][name] = {"pane": pane, "argv": ["external"], "status": "idle", "prompts": 0}
+            err("agent_name_taken")
+    if name in s["agents"] or s.get("retiring", {}).get(name, {}).get("remaining", 0) > 0:
+        err("agent_name_taken")
     argv = rest[rest.index("--") + 1:] if "--" in rest else []
     s["agents"][name] = {"pane": pane, "argv": argv, "status": "idle", "prompts": 0}
     out("agent_started", agent=agent_json(name, s["agents"][name]), argv=["codex"] + argv)
@@ -180,6 +195,9 @@ if group == "agent" and cmd == "send-keys":
         err("agent_not_found", rest[0])
     a.setdefault("keys", []).extend(rest[1:])
     if "ctrl+c" in rest[1:] and not os.path.exists(os.path.join(D, "composer")):
+        count_path = os.path.join(D, "retire-get-count")
+        if os.path.exists(count_path):
+            s.setdefault("retiring", {})[name] = {"remaining": int(open(count_path).read()), "agent": a}
         del s["agents"][name]  # ctrl+c on an empty composer quits codex
     out("ok")
 if group == "agent" and cmd == "prompt":

@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-12T08:06:41+08:00",
+  "source": "4fef181d5",
+  "main_integration": "cbaab8984cc568017dd4ba667086c5d834ae6b9e",
+  "live": "b475be859500665d7d7b3c099b2a3d6c608c273d",
+  "verification": "verification.json",
+  "live_typecheck": 0,
+  "live_keycheck_tests": 8,
+  "live_keycheck_exit": 0,
+  "runtime": "runtime-after.json",
+  "ops_notification": "ops-wake-receipt.json",
+  "original_failed_learner_stderr_retained": {
+    "path": "ops/codex-ops/learner/20261012-074301-strategy-proposal.err",
+    "sha256": "2ac42729e430de8974a125f0b75e28abe7aab5606130fbe87644af98414a8ad7",
+    "bytes": 376
+  },
+  "fixes": [
+    "Herdr waits for both idle shell and explicit name release; bounded collision recovery never takes another owner",
+    "Learner precheck retries once only for sandbox-construction ENOENT, with identical policy and total timeout"
+  ],
+  "already_delivered": [
+    "Generic drain/target profile switch and idle shell CODEX_HOME refresh",
+    "Authorized main-ops host execution while learners/assistants remain sandboxed",
+    "One-time terminal-run report recovery with historical code/log provenance",
+    "climb potion refresh resolves observed same-character ascension"
+  ],
+  "limits": [
+    "Herdr retirement scenarios are fixture-tested; no forced production ops restart",
+    "Native key probe used injected first ENOENT then actual sandbox, blocked all 9 files",
+    "Original 074301 strategy failure is not relabelled completed; original queue and cooldown remain ops-owned",
+    "A persistent missing-path or other precheck failure still blocks launch",
+    "Broader quantitative learning/proposal audit and requested-vs-actual ascension issues remain separate original tasks"
+  ],
+  "game": "At 08:06 live C7GNN3DDFUFY passed F23 shop; same autoplay/play/brain processes alive; stall-check OK, last decision 7s"
+}
