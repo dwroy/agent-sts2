@@ -1,0 +1,109 @@
+import hashlib
+import json
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path('/home/dw/Projects/agent-sts2')
+OUT = Path(__file__).resolve().parent
+PRIOR = ROOT / '.worktrees/codex-strategy-silent-20261012-224301-s2/learner/runs/20261012-224313-strategy-proposal'
+
+def save(name, value):
+    (OUT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+def digest(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+# Prior offsets are locators only. Verify all bytes and identities against the original logs.
+indexes = json.loads((PRIOR / 'raw-evidence-union.json').read_text())
+identities = json.loads((OUT / 'runs-identity.json').read_text())
+extra = {i['run_id'] for i in indexes} - set(identities)
+assert extra <= {'Y6GM2CHWJBEY'}, extra
+with (ROOT / 'logs/runs.jsonl').open('rb') as handle:
+    for n, raw in enumerate(handle, 1):
+        row = json.loads(raw)
+        if row.get('run_id') in extra:
+            assert row['character'].lower() == 'silent'
+            assert row['run_id'] not in identities
+            identities[row['run_id']] = [{'line': n, 'row': row, 'sha256': digest(raw)}]
+assert extra <= set(identities)
+save('runs-identity.json', identities)
+states, decisions, sl = {}, {}, []
+manifest = []
+for filename in ['states.jsonl', 'decisions.jsonl', 'sl-attempts.jsonl']:
+    with (ROOT / 'logs' / filename).open('rb') as source, (OUT / ('raw-' + filename)).open('wb') as target:
+        for index in (i for i in indexes if i['file'] == filename):
+            source.seek(index['offset'])
+            raw = source.read(index['bytes'])
+            assert digest(raw) == index['sha256'], index
+            row = json.loads(raw)
+            actual = row['state']['run_id'] if filename == 'states.jsonl' else row['run_id']
+            assert actual == index['run_id'] and actual in identities
+            if filename == 'states.jsonl':
+                assert row['state']['run']['character_id'].lower() == 'silent'
+                if 'line' in index:
+                    states[index['line']] = row
+            elif filename == 'decisions.jsonl':
+                if 'line' in index:
+                    decisions[index['line']] = row
+            else:
+                sl.append(row)
+            manifest.append({**index, 'saved_offset': target.tell()})
+            target.write(raw)
+save('raw-evidence-index.json', manifest)
+checks = []
+used = set()
+
+def state(n):
+    used.add(n)
+    return states[n]['state']
+
+def hp(n):
+    return state(n)['run']['current_hp']
+
+def enemy_hp(n):
+    return sum(e['current_hp'] for e in state(n)['combat']['enemies'] if e['is_alive'])
+
+def pair(a, b):
+    return [hp(a) - hp(b), enemy_hp(a) - enemy_hp(b)]
+
+def check(name, actual, expected):
+    assert actual == expected, (name, actual, expected)
+    checks.append({'name': name, 'actual': actual, 'expected': expected})
+
+check('KEN F5胜战净损', hp(280255) - hp(280285), 37)
+check('KEN两次真实休息', [hp(n) for n in [280336, 280337, 280382, 280383]], [26, 53, 46, 75])
+check('KEN F15零损仍耗两药', [hp(280347), hp(280381), *[sum(p['occupied'] for p in state(n)['run']['potions']) for n in [280347, 280381]]], [46, 46, 2, 0])
+check('TXZ原线T6损血和净扣', pair(281479, 281484), [3, 36])
+check('TXZ替线T6损血和净扣', pair(281535, 281539), [0, 27])
+check('TXZ首胜至第二战开场死亡', [hp(n) for n in [281563, 281564, 281565, 281566]], [4, 4, 4, 0])
+check('WQ原线T9损血和净扣', pair(282075, 282079), [13, 24])
+check('WQ替线T9损血和净扣', pair(282144, 282148), [22, 39])
+check('WQ同盘面T9指纹', states[282075]['fingerprint'], states[282144]['fingerprint'])
+check('WQ原线T7损血和净扣', pair(282066, 282072), [0, 24])
+check('WQ替线T7损血和净扣', pair(282330, 282336), [4, 24])
+def sand(n):
+    return next(p['amount'] for e in state(n)['combat']['enemies'] for p in e['powers'] if p['power_id'] == 'SANDPIT_POWER')
+check('WQ两线T7行动结束沙坑', [sand(n) for n in [282071, 282335]], [4, 5])
+check('Q6实际营火精英胜后及后战死亡', [hp(n) for n in [282869, 282870, 282872, 282912, 282913, 282921]], [36, 57, 57, 2, 2, 0])
+check('1913锻造休息及后继入口', [hp(n) for n in [282706, 282709, 282720, 282721, 282723, 282750, 282755]], [40, 40, 40, 61, 61, 46, 46])
+check('Q6普通紧勒逐牌及毒分账', [enemy_hp(n) for n in range(282887, 282893)], [103, 95, 85, 85, 83, 80])
+check('Y6普通紧勒末态', enemy_hp(210437), 11)
+check('NHA原线T1实损和跨轮净扣', pair(283391, 283397), [1, 8])
+check('NHA第五试T1实损和跨轮净扣', pair(283478, 283483), [7, 24])
+check('NHA第六试T1实损和跨轮净扣', pair(283502, 283507), [7, 24])
+check('NHA末挡原线和替线', [state(n)['combat']['player']['block'] for n in [283396, 283482, 283506]], [14, 8, 8])
+check('NHA蟹T2首试和二试实际损血', [hp(283398) - hp(283400), hp(283418) - hp(283422)], [7, 6])
+by_ts = {}
+for n, row in states.items():
+    for key in ['ts', 'observed_ts']:
+        if row.get(key):
+            by_ts[row[key]] = n
+for i, fixture in enumerate(json.loads((Path.cwd() / 'agent/tests/silent-opening-evidence.json').read_text())):
+    a, b = [by_ts[fixture[k]] for k in ['before_ts', 'after_ts']]
+    check('王室猛毒开场' + str(i), [hp(a), hp(b)], [fixture['before_hp'], fixture['after_hp']])
+    check('王室猛毒尚未出牌' + str(i), state(b)['combat']['player']['cards_played_this_turn'], 0)
+save('focused-states.json', {str(n): states[n] for n in sorted(used)})
+save('focused-decisions.json', {str(n): row for n, row in decisions.items() if n in [275383, 275384, 275385, 275894, 275960, 276139, 277248, 277250, 277272, 277274]})
+save('evidence-checks.json', checks)
+save('evidence-verification.json', {'counts': dict(Counter(i['file'] for i in manifest)), 'bytes': sum(i['bytes'] for i in manifest), 'identities': len(identities), 'checks': len(checks), 'prior_index': str(PRIOR / 'raw-evidence-union.json'), 'scope': '原字节与角色核验；重点固定帧核数值，不将全部索引核验当作全历史因果分析。'})
+print(json.dumps({'rows': len(manifest), 'checks': len(checks), 'identities': len(identities)}, ensure_ascii=False))

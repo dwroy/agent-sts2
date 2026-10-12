@@ -1,0 +1,2049 @@
+{
+  "275383": {
+    "ts": "2026-10-07T13:12:17.785Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 48,
+    "turn": 6,
+    "label": "combat/plan-choice",
+    "decision_id": "15fc6d36-ed83-4cde-b5e6-cbe4dffe9f5e",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:460:0:true\",\"event\":\"\",\"gold\":119,\"hand\":\"0:BUBBLE_BUBBLE:true|1:WITHER:false|2:DODGE_AND_ROLL:true|3:STRIKE_SILENT:true|4:METAMORPHOSIS:true|5:POISONED_STAB:true\",\"hp\":48,\"maxHp\":62,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:7:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1|NOXIOUS_FUMES_POWER:5\",\"rewards\":\"\",\"run\":\"TXZ6RVMQA09D\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"咕嘟冒泡 -> 永世沙漏, then 打击 -> 永世沙漏, then 带毒刺击 -> 永世沙漏\",\"result\":\"survives with 46/62 HP before healing\",\"hp_lost\":2,\"damage_dealt\":42,\"enemies_after\":\"永世沙漏 418 HP, 中毒 29\",\"block_gained\":3,\"withers_added\":1,\"hp_after\":46,\"hp_after_pct\":74,\"dmg\":42,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 41.2, fight over within 5 turns in 14/24, expected turns to the end (surviving samples) ~5.5, dead within 5 turns in 7/24 (~turn 4.7); ranked on -(further loss) - 40 x (1 - win chance): win chance ~61% (fights won in the samples, the others by the end-of-horizon estimate), value -58.8\",\"rollout_turns\":\"T1 exact: hp -2, dmg 42; T2: hp -14.5 [4-26], dmg 64.2 [34-120], alive 24/24, won 0/24; T3: hp -20.7 [9-35], dmg 83.1 [38-144], alive 23/24, won 0/24; T4: hp -0 [0-0], dmg 129.5 [46-192], alive 23/24, won 1/24; T5: hp -6.1 [0-23], dmg 90.6 [13-186], alive 17/24, won 14/24\",\"history_estimate\":\"further HP loss 40, win 63% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 1009/1200，其中死F49 1009、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan2": "{\"plays\":\"咕嘟冒泡 -> 永世沙漏, then 闪躲翻滚, then 带毒刺击 -> 永世沙漏\",\"result\":\"survives with 48/62 HP before healing\",\"hp_lost\":0,\"damage_dealt\":36,\"enemies_after\":\"永世沙漏 424 HP, 中毒 29\",\"block_gained\":7,\"withers_added\":1,\"hp_after\":48,\"hp_after_pct\":77,\"dmg\":36,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":2,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 40, fight over within 5 turns in 15/24, expected turns to the end (surviving samples) ~5.4, dead within 5 turns in 6/24 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~65% (fights won in the samples, the others by the end-of-horizon estimate), value -56\",\"rollout_turns\":\"T1 exact: hp -0, dmg 36; T2: hp -14.5 [4-26], dmg 64.2 [34-120], alive 24/24, won 0/24; T3: hp -20.9 [9-35], dmg 83.4 [38-144], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 131.5 [46-192], alive 24/24, won 1/24; T5: hp -5.6 [0-23], dmg 97 [19-186], alive 18/24, won 15/24\",\"history_estimate\":\"further HP loss 39, win 67% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 1037/1200，其中死F49 1037、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan3": "{\"plays\":\"咕嘟冒泡 -> 永世沙漏, then 羽化\",\"result\":\"survives with 48/62 HP before healing\",\"hp_lost\":0,\"damage_dealt\":27,\"enemies_after\":\"永世沙漏 433 HP, 中毒 26\",\"block_gained\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 7 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"羽化\",\"hp_after\":48,\"hp_after_pct\":77,\"dmg\":27,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 7\",\"block_wasted\":1,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 38.6, fight over within 5 turns in 14/24, expected turns to the end (surviving samples) ~5.7, dead within 5 turns in 6/24 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~62% (fights won in the samples, the others by the end-of-horizon estimate), value -55.7\",\"rollout_turns\":\"T1 exact: hp -0, dmg 27; T2: hp -14.5 [4-26], dmg 59.7 [31-111], alive 24/24, won 0/24; T3: hp -18.9 [8-35], dmg 77.7 [35-135], alive 24/24, won 0/24; T4: hp -0.2 [0-2], dmg 128.2 [43-175], alive 24/24, won 0/24; T5: hp -6.3 [0-23], dmg 112.9 [26-183], alive 18/24, won 14/24\",\"history_estimate\":\"further HP loss 38, win 64% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 970/1200，其中死F49 970、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan4": "{\"plays\":\"羽化\",\"result\":\"survives with 48/62 HP before healing\",\"hp_lost\":0,\"damage_dealt\":18,\"enemies_after\":\"永世沙漏 442 HP, 中毒 17\",\"block_gained\":1,\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 7 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"羽化\",\"hp_after\":48,\"hp_after_pct\":77,\"dmg\":18,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 7\",\"block_wasted\":6,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 47.4, fight over within 5 turns in 2/24, expected turns to the end (surviving samples) ~7, dead within 5 turns in 14/24 (~turn 4.9); ranked on -(further loss) - 40 x (1 - win chance): win chance ~16% (fights won in the samples, the others by the end-of-horizon estimate), value -82.1\",\"rollout_turns\":\"T1 exact: hp -0, dmg 18; T2: hp -20.5 [10-32], dmg 46.2 [22-84], alive 24/24, won 0/24; T3: hp -16.7 [0-35], dmg 60.5 [26-108], alive 23/24, won 0/24; T4: hp -0.3 [0-2], dmg 106.9 [34-148], alive 23/24, won 0/24; T5: hp -14.6 [0-28], dmg 134.6 [57-174], alive 10/24, won 2/24\",\"history_estimate\":\"further HP loss 45, win 21% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 354/1200，其中死F49 354、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan5": "{\"plays\":\"羽化, then 带毒刺击 -> 永世沙漏\",\"result\":\"survives with 45/62 HP before healing\",\"hp_lost\":3,\"damage_dealt\":27,\"enemies_after\":\"永世沙漏 433 HP, 中毒 20\",\"block_gained\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 7 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"羽化\",\"hp_after\":45,\"hp_after_pct\":73,\"dmg\":27,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 7\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 44.6, fight over within 5 turns in 8/24, expected turns to the end (surviving samples) ~5.9, dead within 5 turns in 9/24 (~turn 4.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~40% (fights won in the samples, the others by the end-of-horizon estimate), value -70.2\",\"rollout_turns\":\"T1 exact: hp -3, dmg 27; T2: hp -14.5 [4-26], dmg 50.7 [25-93], alive 24/24, won 0/24; T3: hp -18.9 [8-35], dmg 66.2 [29-117], alive 23/24, won 0/24; T4: hp -0.2 [0-2], dmg 115.7 [37-157], alive 23/24, won 0/24; T5: hp -10.9 [0-35], dmg 128.5 [43-171], alive 15/24, won 8/24\",\"history_estimate\":\"further HP loss 42, win 45% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 600/1200，其中死F49 600、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan6": "{\"plays\":\"咕嘟冒泡 -> 永世沙漏, then 带毒刺击 -> 永世沙漏\",\"result\":\"survives with 45/62 HP before healing\",\"hp_lost\":3,\"damage_dealt\":36,\"enemies_after\":\"永世沙漏 424 HP, 中毒 29\",\"block_gained\":2,\"energy_unused\":1,\"withers_added\":1,\"hp_after\":45,\"hp_after_pct\":73,\"dmg\":36,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 39.9, fight over within 5 turns in 16/24, expected turns to the end (surviving samples) ~5.3, dead within 5 turns in 6/24 (~turn 4.7); ranked on -(further loss) - 40 x (1 - win chance): win chance ~68% (fights won in the samples, the others by the end-of-horizon estimate), value -54.7\",\"rollout_turns\":\"T1 exact: hp -3, dmg 36; T2: hp -14.5 [4-26], dmg 64.2 [34-120], alive 24/24, won 0/24; T3: hp -18.9 [8-35], dmg 83.5 [38-144], alive 23/24, won 0/24; T4: hp -0.2 [0-2], dmg 137.6 [46-184], alive 23/24, won 1/24; T5: hp -5.9 [0-22], dmg 102.1 [19-176], alive 18/24, won 16/24\",\"history_estimate\":\"further HP loss 39, win 69% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 1009/1200，其中死F49 1009、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan6",
+        "probabilities": {
+          "plan5": 0,
+          "plan3": 0.01,
+          "plan6": 0.93,
+          "plan4": 0,
+          "plan1": 0.01,
+          "plan2": 0.05
+        },
+        "confidence": 0.92,
+        "raw": {
+          "type": "choice",
+          "choice": "plan6",
+          "confidence": 0.92,
+          "probabilities": {
+            "plan5": 0,
+            "plan3": 0.01,
+            "plan6": 0.93,
+            "plan4": 0,
+            "plan1": 0.01,
+            "plan2": 0.05
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "BUBBLE_BUBBLE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "AEONGLASS"
+      },
+      "turn": 6,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 6/6 (咕嘟冒泡 -> 永世沙漏, 带毒刺击 -> 永世沙漏) with confidence 0.92; code rank - (rollout's best line, added); SL explore (T6, the 6th latest question before attempt 2's death on T10): playing 咕嘟冒泡 -> 永世沙漏, 羽化 instead of 咕嘟冒泡 -> 永世沙漏, 带毒刺击 -> 永世沙漏, played on this board in attempt 2 (the best untried line by the question's ranking, among those the rollout does not see dying more often)",
+    "confidence": 0.92,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1167e5c587d36a94e19351cfc85c7"
+    ],
+    "latency_ms": {
+      "plan": 33,
+      "jev": 582,
+      "action": 330,
+      "planner": 9205,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 8894,
+      "output_tokens": 66
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 815,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 9,
+      "best": "plan6",
+      "best_added": true
+    },
+    "rollout_best_chosen": true,
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "objective": "F48_F49_continuous",
+      "calibration": "none",
+      "continuation": {
+        "source": "silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B",
+        "limitation": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+      },
+      "ms": 8243,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "AEONGLASS",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 48,
+          "won_loss": null,
+          "order": null,
+          "sequence": {
+            "first_wins": 1009,
+            "won_first_died_second": 1009,
+            "second_unfinished": 0
+          }
+        },
+        "plan2": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 48,
+          "won_loss": null,
+          "order": null,
+          "sequence": {
+            "first_wins": 1037,
+            "won_first_died_second": 1037,
+            "second_unfinished": 0
+          }
+        },
+        "plan3": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 48,
+          "won_loss": null,
+          "order": null,
+          "sequence": {
+            "first_wins": 970,
+            "won_first_died_second": 970,
+            "second_unfinished": 0
+          }
+        },
+        "plan4": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 48,
+          "won_loss": null,
+          "order": null,
+          "sequence": {
+            "first_wins": 354,
+            "won_first_died_second": 354,
+            "second_unfinished": 0
+          }
+        },
+        "plan5": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 48,
+          "won_loss": null,
+          "order": null,
+          "sequence": {
+            "first_wins": 600,
+            "won_first_died_second": 600,
+            "second_unfinished": 0
+          }
+        },
+        "plan6": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 48,
+          "won_loss": null,
+          "order": null,
+          "sequence": {
+            "first_wins": 1009,
+            "won_first_died_second": 1009,
+            "second_unfinished": 0
+          }
+        }
+      },
+      "rollout_own_best": "plan6",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "point": "T6, the 6th latest question before attempt 2's death on T10",
+      "original": "咕嘟冒泡 -> 永世沙漏, 带毒刺击 -> 永世沙漏",
+      "replacement": "咕嘟冒泡 -> 永世沙漏, 羽化",
+      "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+      "played_in": [
+        2
+      ],
+      "replayed": 15,
+      "numbers": {
+        "original": "rollout dead 6/24, further loss 39.9, win ~68%; whole-fight sim win 0%; this turn hp -3, dmg 36",
+        "replacement": "rollout dead 6/24, further loss 38.6, win ~62%; whole-fight sim win 0%; this turn hp -0, dmg 27"
+      },
+      "gate": "rollout",
+      "turn": "BUBBLE_BUBBLE>永世沙漏, POISONED_STAB>永世沙漏",
+      "turn_instead": "BUBBLE_BUBBLE>永世沙漏, METAMORPHOSIS"
+    },
+    "timing": {
+      "planner_ms": 9202,
+      "solve_ms": 1,
+      "mc_ms": 0,
+      "rollout_ms": 815,
+      "boss_sim_ms": 8243,
+      "other_ms": 143,
+      "cpu_ms": 169844,
+      "load1": 19.18,
+      "probe_ms": 2.73,
+      "boss_sim": {
+        "pairs": 6,
+        "sims_done": 7200,
+        "samples": 1200,
+        "workers": 20
+      },
+      "memo": {
+        "hits": 0,
+        "stored": 2
+      }
+    },
+    "sl_attempt": 3,
+    "sl_reloads": 2,
+    "run_id": "TXZ6RVMQA09D",
+    "observed_ts": "2026-10-07T13:12:07.965Z",
+    "journal": {
+      "choice": "咕嘟冒泡 -> 永世沙漏, then 带毒刺击 -> 永世沙漏",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "275384": {
+    "ts": "2026-10-07T13:12:18.672Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 48,
+    "turn": 6,
+    "label": "combat/plan-continue",
+    "decision_id": "4406ff88-4491-4f0e-845b-6009fdbf293f",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:460:0:true\",\"event\":\"\",\"gold\":119,\"hand\":\"0:WITHER:false|1:DODGE_AND_ROLL:true|2:STRIKE_SILENT:true|3:METAMORPHOSIS:true|4:POISONED_STAB:true\",\"hp\":48,\"maxHp\":62,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1|NOXIOUS_FUMES_POWER:5\",\"rewards\":\"\",\"run\":\"TXZ6RVMQA09D\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 3
+    },
+    "expect": {
+      "card": {
+        "id": "METAMORPHOSIS",
+        "upgraded": false
+      },
+      "turn": 6,
+      "from": "line",
+      "hand": "DODGE_AND_ROLL,METAMORPHOSIS,POISONED_STAB,STRIKE_SILENT,WITHER",
+      "enemies": "0:AEONGLASS"
+    },
+    "rationale": "continuing the Jev-chosen plan: 羽化",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 733,
+      "planner": 2,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 3,
+    "sl_reloads": 2,
+    "run_id": "TXZ6RVMQA09D",
+    "observed_ts": "2026-10-07T13:12:18.670Z",
+    "journal": {
+      "choice": "continuing the Jev-chosen plan: 羽化",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "275385": {
+    "ts": "2026-10-07T13:12:19.999Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 48,
+    "turn": 6,
+    "label": "combat/plan",
+    "decision_id": "ca57ee1a-a587-4afb-95d6-ac6b050a415b",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:460:0:true\",\"event\":\"\",\"gold\":119,\"hand\":\"0:WITHER:false|1:DODGE_AND_ROLL:false|2:STRIKE_SILENT:false|3:POISONED_STAB:false|4:WITHER:false\",\"hp\":48,\"maxHp\":62,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:9:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1|NOXIOUS_FUMES_POWER:5\",\"rewards\":\"\",\"run\":\"TXZ6RVMQA09D\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 6,
+      "from": "decision"
+    },
+    "rationale": "code plan (only line): end turn; hp -0, dmg 27",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 771,
+      "planner": 3,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 3,
+    "sl_reloads": 2,
+    "run_id": "TXZ6RVMQA09D",
+    "observed_ts": "2026-10-07T13:12:19.996Z",
+    "journal": {
+      "choice": "code plan (only line): end turn; hp -0, dmg 27",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "275894": {
+    "ts": "2026-10-07T13:45:17.275Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 9,
+    "label": "combat/plan-choice+potion",
+    "decision_id": "2ef38219-ff73-4fcf-851b-c625adc04a86",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:184:0:true\",\"event\":\"\",\"gold\":13,\"hand\":\"0:SNAKEBITE:true|1:FLECHETTES:true|2:STRIKE_SILENT:true|3:DAGGER_SPRAY:true|4:SIDESTEP:true|5:FRANTIC_ESCAPE:true|6:DEFEND_SILENT:true\",\"hp\":26,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"CUNNING_POTION:true:true|CUNNING_POTION:true:true|CUNNING_POTION:true:true\",\"powers\":\"DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"WQZVENQ7DTRP\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":9}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"飞镖 -> 无厌沙虫, then 侧步, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":39,\"enemies_after\":\"无厌沙虫 145 HP, Weak 1, 中毒 23\",\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":39,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~106, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 39; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 0% (the simulation's best line), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan2": "{\"plays\":\"侧步, then 狂乱逃离, then 防御\",\"result\":\"survives with 13/80 HP before healing\",\"hp_lost\":13,\"damage_dealt\":24,\"enemies_after\":\"无厌沙虫 160 HP, Weak 1, 中毒 23\",\"block_gained\":9,\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":13,\"hp_after_pct\":16,\"dmg\":24,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~112, at T5 or at our death), then most turns alive (this line ~2.5), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 24; T2: hp -11.6 [0-22], dmg 28.6 [23-45], alive 13/24, won 0/24; T3: hp -24.5 [0-37], dmg 36.2 [22-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan3": "{\"plays\":\"侧步, then 飞镖 -> 无厌沙虫, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":34,\"enemies_after\":\"无厌沙虫 150 HP, Weak 1, 中毒 23\",\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":34,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~111, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 34; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan4": "{\"plays\":\"打击 -> 无厌沙虫, then 侧步, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":30,\"enemies_after\":\"无厌沙虫 154 HP, Weak 1, 中毒 23\",\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~115, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 30; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan5": "{\"plays\":\"侧步, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":24,\"enemies_after\":\"无厌沙虫 160 HP, Weak 1, 中毒 23\",\"energy_unused\":1,\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":24,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~121, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 24; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "p0": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -13 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
+          "p1": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -13 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
+          "p2": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -13 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "plan5": 0.01,
+          "plan4": 0.01,
+          "plan3": 0.01,
+          "p2": 0.04,
+          "plan1": 0.14,
+          "plan2": 0.67,
+          "p1": 0.03,
+          "p0": 0.09
+        },
+        "confidence": 0.62,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.62,
+          "probabilities": {
+            "plan5": 0.01,
+            "plan4": 0.01,
+            "plan3": 0.01,
+            "p2": 0.04,
+            "plan1": 0.14,
+            "plan2": 0.67,
+            "p1": 0.03,
+            "p0": 0.09
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 4
+    },
+    "expect": {
+      "card": {
+        "id": "SIDESTEP",
+        "upgraded": false
+      },
+      "turn": 9,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/5 (侧步, 狂乱逃离, 防御) with confidence 0.62; code rank 2",
+    "confidence": 0.62,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1169c911972d9800a75b93e23cd47"
+    ],
+    "latency_ms": {
+      "plan": 25,
+      "jev": 542,
+      "action": 250,
+      "planner": 1310,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 7801,
+      "output_tokens": 82
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 311,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 9,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": false,
+    "potions": {
+      "random": [],
+      "unsimulated_offered": [
+        "CUNNING_POTION",
+        "CUNNING_POTION",
+        "CUNNING_POTION"
+      ],
+      "fight_plan_now": false
+    },
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 937,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "THE_INSATIABLE",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan2": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan3": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan4": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan5": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "timing": {
+      "planner_ms": 1307,
+      "solve_ms": 5,
+      "mc_ms": 0,
+      "rollout_ms": 311,
+      "boss_sim_ms": 937,
+      "other_ms": 54,
+      "cpu_ms": 19871,
+      "load1": 13.48,
+      "probe_ms": 2.77,
+      "boss_sim": {
+        "pairs": 5,
+        "sims_done": 6000,
+        "samples": 1200,
+        "workers": 20
+      },
+      "memo": {
+        "hits": 0,
+        "stored": 40
+      }
+    },
+    "sl_attempt": 2,
+    "sl_reloads": 1,
+    "run_id": "WQZVENQ7DTRP",
+    "observed_ts": "2026-10-07T13:45:15.397Z",
+    "journal": {
+      "choice": "侧步, then 狂乱逃离, then 防御",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "275960": {
+    "ts": "2026-10-07T13:47:36.217Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 9,
+    "label": "combat/plan-choice+potion",
+    "decision_id": "8c880109-456d-43b3-887f-04302c922d89",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:184:0:true\",\"event\":\"\",\"gold\":13,\"hand\":\"0:SNAKEBITE:true|1:FLECHETTES:true|2:STRIKE_SILENT:true|3:DAGGER_SPRAY:true|4:SIDESTEP:true|5:FRANTIC_ESCAPE:true|6:DEFEND_SILENT:true\",\"hp\":26,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"CUNNING_POTION:true:true|CUNNING_POTION:true:true|CUNNING_POTION:true:true\",\"powers\":\"DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"WQZVENQ7DTRP\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":9}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"飞镖 -> 无厌沙虫, then 侧步, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":39,\"enemies_after\":\"无厌沙虫 145 HP, Weak 1, 中毒 23\",\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":39,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~106, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 39; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 0% (the simulation's best line), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan2": "{\"plays\":\"侧步, then 狂乱逃离, then 防御\",\"result\":\"survives with 13/80 HP before healing\",\"hp_lost\":13,\"damage_dealt\":24,\"enemies_after\":\"无厌沙虫 160 HP, Weak 1, 中毒 23\",\"block_gained\":9,\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":13,\"hp_after_pct\":16,\"dmg\":24,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~112, at T5 or at our death), then most turns alive (this line ~2.5), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 24; T2: hp -11.6 [0-22], dmg 28.6 [23-45], alive 13/24, won 0/24; T3: hp -24.5 [0-37], dmg 36.2 [22-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan3": "{\"plays\":\"侧步, then 飞镖 -> 无厌沙虫, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":34,\"enemies_after\":\"无厌沙虫 150 HP, Weak 1, 中毒 23\",\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":34,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~111, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 34; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan4": "{\"plays\":\"打击 -> 无厌沙虫, then 侧步, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":30,\"enemies_after\":\"无厌沙虫 154 HP, Weak 1, 中毒 23\",\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~115, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 30; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan5": "{\"plays\":\"侧步, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":24,\"enemies_after\":\"无厌沙虫 160 HP, Weak 1, 中毒 23\",\"energy_unused\":1,\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":24,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~121, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 24; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "p0": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -13 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
+          "p1": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -13 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
+          "p2": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -13 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "p0": 0.07,
+          "plan2": 0.68,
+          "plan3": 0.01,
+          "plan4": 0,
+          "plan5": 0.01,
+          "plan1": 0.17,
+          "p1": 0.03,
+          "p2": 0.03
+        },
+        "confidence": 0.63,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.63,
+          "probabilities": {
+            "p0": 0.07,
+            "plan2": 0.68,
+            "plan3": 0.01,
+            "plan4": 0,
+            "plan5": 0.01,
+            "plan1": 0.17,
+            "p1": 0.03,
+            "p2": 0.03
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "FLECHETTES",
+        "upgraded": false
+      },
+      "target": {
+        "id": "THE_INSATIABLE"
+      },
+      "turn": 9,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/5 (侧步, 狂乱逃离, 防御) with confidence 0.63; code rank 2; SL explore (T9, the 4th latest question before attempt 2's death on T11): playing 飞镖 -> 无厌沙虫, 侧步, 狂乱逃离 instead of 侧步, 狂乱逃离, 防御, played on this board in attempt 2 (the best untried line by the question's ranking, among those the rollout does not see dying more often)",
+    "confidence": 0.63,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1169eafd87288879f2dcb28f109c5"
+    ],
+    "latency_ms": {
+      "plan": 31,
+      "jev": 604,
+      "action": 791,
+      "planner": 45,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 8659,
+      "output_tokens": 82
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 2,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 9,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": false,
+    "potions": {
+      "random": [],
+      "unsimulated_offered": [
+        "CUNNING_POTION",
+        "CUNNING_POTION",
+        "CUNNING_POTION"
+      ],
+      "fight_plan_now": false
+    },
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 21,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "THE_INSATIABLE",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan2": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan3": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan4": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan5": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "point": "T9, the 4th latest question before attempt 2's death on T11",
+      "original": "侧步, 狂乱逃离, 防御",
+      "replacement": "飞镖 -> 无厌沙虫, 侧步, 狂乱逃离",
+      "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+      "played_in": [
+        2
+      ],
+      "replayed": 19,
+      "numbers": {
+        "original": "rollout dead 24/24, further loss 26, win ~0%; whole-fight sim win 0%; this turn hp -13, dmg 24",
+        "replacement": "rollout dead 24/24, further loss 26, win ~0%; whole-fight sim win 0%; this turn hp -22, dmg 39"
+      },
+      "gate": "rollout",
+      "turn": "DEFEND_SILENT, FRANTIC_ESCAPE, SIDESTEP",
+      "turn_instead": "FLECHETTES>无厌沙虫, FRANTIC_ESCAPE, SIDESTEP"
+    },
+    "timing": {
+      "planner_ms": 43,
+      "solve_ms": 8,
+      "mc_ms": 0,
+      "rollout_ms": 2,
+      "boss_sim_ms": 21,
+      "other_ms": 11,
+      "cpu_ms": 55,
+      "load1": 5.13,
+      "probe_ms": 2.7,
+      "memo": {
+        "rollout_ms": 308,
+        "boss_sim_ms": 937,
+        "hits": 40,
+        "stored": 46
+      }
+    },
+    "sl_attempt": 3,
+    "sl_reloads": 2,
+    "run_id": "WQZVENQ7DTRP",
+    "observed_ts": "2026-10-07T13:47:35.536Z",
+    "journal": {
+      "choice": "侧步, then 狂乱逃离, then 防御",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "276139": {
+    "ts": "2026-10-07T13:54:22.373Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 7,
+    "label": "combat/plan-choice+potion",
+    "decision_id": "64c16c85-cdb7-4b7d-ba05-95cda0851041",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:245:0:true\",\"event\":\"\",\"gold\":13,\"hand\":\"0:FRANTIC_ESCAPE:true|1:STRIKE_SILENT:true|2:DEFEND_SILENT:true|3:SHIV:true|4:SURVIVOR:true|5:DEFEND_SILENT:true\",\"hp\":26,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"CUNNING_POTION:true:true|CUNNING_POTION:true:true|CUNNING_POTION:true:true\",\"powers\":\"DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"WQZVENQ7DTRP\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"狂乱逃离, then 防御, then 小刀 -> 无厌沙虫, then 生存者\",\"result\":\"survives with 22/80 HP before healing\",\"hp_lost\":4,\"damage_dealt\":24,\"enemies_after\":\"无厌沙虫 221 HP, Weak 1, 中毒 19\",\"block_gained\":21,\"sandpit_after_enemy_turn\":4,\"hp_after\":22,\"hp_after_pct\":28,\"dmg\":24,\"lethal_now\":\"no\",\"enemy_threat_next\":0,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 25.8, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.3, dead within 5 turns in 23/24 (~turn 3.7); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 23/24), then the fight's progress: least enemy HP left (this line ~126, at T5 or at our death), then most turns alive (this line ~3.8), then least HP lost this turn (this line 4)\",\"rollout_turns\":\"T1 exact: hp -4, dmg 24; T2: hp -0 [0-0], dmg 33.8 [25-38], alive 24/24, won 0/24; T3: hp -14.3 [1-22], dmg 35.5 [24-47], alive 16/24, won 0/24; T4: hp -16 [0-30], dmg 30.6 [23-48], alive 3/24, won 0/24; T5: hp -15 [0-27], dmg 43.3 [22-56], alive 1/24, won 0/24\",\"history_estimate\":\"further HP loss 26, win 2% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (the simulation's best line), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 25.8; potions used 0; potion cost 0 HP (potion table, this act's held value); total 25.8\"}",
+          "plan2": "{\"plays\":\"狂乱逃离, then 打击 -> 无厌沙虫, then 小刀 -> 无厌沙虫, then 生存者\",\"result\":\"survives with 13/80 HP before healing\",\"hp_lost\":13,\"damage_dealt\":30,\"enemies_after\":\"无厌沙虫 215 HP, Weak 1, 中毒 19\",\"block_gained\":12,\"sandpit_after_enemy_turn\":4,\"hp_after\":13,\"hp_after_pct\":16,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":0,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3.6); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~127, at T5 or at our death), then most turns alive (this line ~3.6), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 30; T2: hp -0 [0-0], dmg 33.8 [25-38], alive 24/24, won 0/24; T3: hp -14.6 [1-22], dmg 35.5 [24-47], alive 13/24, won 0/24; T4: hp -17.7 [4-30], dmg 32.1 [23-48], alive 1/24, won 0/24; T5: hp -6 [6-6], dmg 28 [28-28], alive 0/24, won 0/24\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan3": "{\"plays\":\"打击 -> 无厌沙虫, then 防御, then 小刀 -> 无厌沙虫, then 生存者\",\"result\":\"survives with 22/80 HP before healing\",\"hp_lost\":4,\"damage_dealt\":30,\"enemies_after\":\"无厌沙虫 215 HP, Weak 1, 中毒 19\",\"block_gained\":21,\"sandpit_after_enemy_turn\":3,\"hp_after\":22,\"hp_after_pct\":28,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":0,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3.7); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~126, at T5 or at our death), then most turns alive (this line ~3.7), then least HP lost this turn (this line 4)\",\"rollout_turns\":\"T1 exact: hp -4, dmg 30; T2: hp -0 [0-0], dmg 33.8 [25-38], alive 24/24, won 0/24; T3: hp -16.3 [1-30], dmg 33.3 [24-47], alive 16/24, won 0/24; T4: hp -18.1 [0-30], dmg 33.1 [23-47], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan4": "{\"plays\":\"防御, then 小刀 -> 无厌沙虫, then 生存者, then 防御\",\"result\":\"survives with 26/80 HP before healing\",\"hp_lost\":0,\"damage_dealt\":24,\"enemies_after\":\"无厌沙虫 221 HP, Weak 1, 中毒 19\",\"block_gained\":30,\"sandpit_after_enemy_turn\":3,\"hp_after\":26,\"hp_after_pct\":33,\"dmg\":24,\"lethal_now\":\"no\",\"enemy_threat_next\":0,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":5,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.2, dead within 5 turns in 23/24 (~turn 4.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 23/24), then the fight's progress: least enemy HP left (this line ~114, at T5 or at our death), then most turns alive (this line ~4.2), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 24; T2: hp -0 [0-0], dmg 33.8 [25-38], alive 24/24, won 0/24; T3: hp -15.7 [3-22], dmg 33.8 [24-47], alive 24/24, won 0/24; T4: hp -15 [1-30], dmg 33.9 [23-54], alive 5/24, won 0/24; T5: hp -19.6 [0-28], dmg 28.2 [22-33], alive 1/24, won 0/24\",\"history_estimate\":\"further HP loss 26, win 2% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "p0": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -0 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
+          "p1": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -0 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
+          "p2": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -0 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "p2": 0.01,
+          "plan2": 0.01,
+          "plan3": 0.01,
+          "plan1": 0.05,
+          "p1": 0.03,
+          "plan4": 0.85,
+          "p0": 0.04
+        },
+        "confidence": 0.82,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.82,
+          "probabilities": {
+            "p2": 0.01,
+            "plan2": 0.01,
+            "plan3": 0.01,
+            "plan1": 0.05,
+            "p1": 0.03,
+            "plan4": 0.85,
+            "p0": 0.04
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "FRANTIC_ESCAPE",
+        "upgraded": false
+      },
+      "turn": 7,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 4/4 (防御, 小刀 -> 无厌沙虫, 生存者, 防御) with confidence 0.82; code rank 4; SL explore (T7, the 8th latest question before attempt 3's death on T11): playing 狂乱逃离, 防御, 小刀 -> 无厌沙虫, 生存者 instead of 防御, 小刀 -> 无厌沙虫, 生存者, 防御, played on this board in attempts 2, 3, 5 (the best untried line by the question's ranking, among those the rollout does not see dying more often)",
+    "confidence": 0.82,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a116a4e24e748f971a4ea3d4f76ad7"
+    ],
+    "latency_ms": {
+      "plan": 16,
+      "jev": 583,
+      "action": 459,
+      "planner": 50,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 10643,
+      "output_tokens": 74
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 1,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan4",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": true,
+    "potions": {
+      "random": [],
+      "unsimulated_offered": [
+        "CUNNING_POTION",
+        "CUNNING_POTION",
+        "CUNNING_POTION"
+      ],
+      "fight_plan_now": false
+    },
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 19,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "THE_INSATIABLE",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan2": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan3": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        },
+        "plan4": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 26,
+          "won_loss": null,
+          "order": null
+        }
+      },
+      "plan": "no plan wins in most samples: 0/1200 won, the fight ends ~T10",
+      "rollout_own_best": "plan4",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "point": "T7, the 8th latest question before attempt 3's death on T11",
+      "original": "防御, 小刀 -> 无厌沙虫, 生存者, 防御",
+      "replacement": "狂乱逃离, 防御, 小刀 -> 无厌沙虫, 生存者",
+      "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+      "played_in": [
+        2,
+        3,
+        5
+      ],
+      "replayed": 15,
+      "numbers": {
+        "original": "rollout dead 23/24, further loss 26, win ~2%; whole-fight sim win 0%; this turn hp -0, dmg 24",
+        "replacement": "rollout dead 23/24, further loss 25.8, win ~3%; whole-fight sim win 0%; this turn hp -4, dmg 24"
+      },
+      "gate": "rollout",
+      "turn": "DEFEND_SILENT, DEFEND_SILENT, SHIV>无厌沙虫, SURVIVOR",
+      "turn_instead": "DEFEND_SILENT, FRANTIC_ESCAPE, SHIV>无厌沙虫, SURVIVOR"
+    },
+    "timing": {
+      "planner_ms": 48,
+      "solve_ms": 3,
+      "mc_ms": 0,
+      "rollout_ms": 1,
+      "boss_sim_ms": 19,
+      "other_ms": 25,
+      "cpu_ms": 75,
+      "load1": 3.12,
+      "probe_ms": 2.58,
+      "memo": {
+        "rollout_ms": 392,
+        "boss_sim_ms": 1699,
+        "hits": 132,
+        "stored": 90
+      }
+    },
+    "sl_attempt": 6,
+    "sl_reloads": 5,
+    "run_id": "WQZVENQ7DTRP",
+    "observed_ts": "2026-10-07T13:54:21.723Z",
+    "journal": {
+      "choice": "防御, then 小刀 -> 无厌沙虫, then 生存者, then 防御",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "277248": {
+    "ts": "2026-10-07T15:15:15.266Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 1,
+    "label": "combat/plan-choice",
+    "decision_id": "83f2c8a3-fe57-4102-ab68-024eabd6950f",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:209:0:true|1:199:0:true\",\"event\":\"\",\"gold\":99,\"hand\":\"0:SURVIVOR:true|1:PRECISE_CUT:true|2:STRIKE_SILENT:true|3:STRIKE_SILENT:true|4:ECHOING_SLASH:true|5:CLOAK_AND_DAGGER:true|6:MALAISE:true\",\"hp\":30,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"SURROUNDED_POWER:1\",\"rewards\":\"\",\"run\":\"NHA2KW0RB7VP\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 23/80 HP before healing\",\"hp_lost\":7,\"damage_dealt\":21,\"enemies_after\":\"碾碎爪 198 HP, Weak 1; 火箭 189 HP\",\"block_gained\":8,\"hp_after\":23,\"hp_after_pct\":29,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~335, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 21; T2: hp -15 [15-15], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T4: hp -44 [44-44], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan2, plan3, plan4, plan5, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (the best line), no winning sample; the losing samples die most often on T4 (dead in 100%); 202 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan2": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 回响斩击, then 斗篷与匕首\",\"result\":\"survives with 24/80 HP before healing\",\"hp_lost\":6,\"damage_dealt\":21,\"enemies_after\":\"碾碎爪 198 HP; 火箭 189 HP\",\"block_gained\":14,\"cards_drawn\":1,\"hp_after\":24,\"hp_after_pct\":30,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~350, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 6)\",\"rollout_turns\":\"T1 exact: hp -6, dmg 21; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -15 [15-15], dmg 27 [27-27], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan3, plan4, plan5, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 202 of 1200 samples (time limit)\"}",
+          "plan3": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 打击 -> 碾碎爪, then 回响斩击\",\"result\":\"survives with 18/80 HP before healing\",\"hp_lost\":12,\"damage_dealt\":27,\"enemies_after\":\"碾碎爪 192 HP; 火箭 189 HP\",\"block_gained\":8,\"hp_after\":18,\"hp_after_pct\":23,\"dmg\":27,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~341, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 12)\",\"rollout_turns\":\"T1 exact: hp -12, dmg 27; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -9 [9-9], dmg 30 [30-30], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan4, plan5, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 202 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":3,\"tied_hp_loss_extra\":5,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损5。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan4": "{\"plays\":\"精确切击 -> 碾碎爪, then 打击 -> 碾碎爪, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 15/80 HP before healing\",\"hp_lost\":15,\"damage_dealt\":27,\"enemies_after\":\"碾碎爪 192 HP, Weak 1; 火箭 189 HP\",\"hp_after\":15,\"hp_after_pct\":19,\"dmg\":27,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~371, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 15)\",\"rollout_turns\":\"T1 exact: hp -15, dmg 27; T2: hp -15 [15-15], dmg 10 [10-10], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan5, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 202 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":4,\"tied_hp_loss_extra\":8,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损8。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan5": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 斗篷与匕首, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 29/80 HP before healing\",\"hp_lost\":1,\"damage_dealt\":1,\"enemies_after\":\"碾碎爪 208 HP, Weak 1; 火箭 199 HP\",\"block_gained\":14,\"cards_drawn\":1,\"hp_after\":29,\"hp_after_pct\":36,\"dmg\":1,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~358, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 1)\",\"rollout_turns\":\"T1 exact: hp -1, dmg 1; T2: hp -15 [15-15], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -13 [13-13], dmg 27 [27-27], alive 24/24, won 0/24; T4: hp -50 [50-50], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 202 of 1200 samples (time limit)\"}",
+          "plan6": "{\"plays\":\"精确切击 -> 碾碎爪, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 15/80 HP before healing\",\"hp_lost\":15,\"damage_dealt\":21,\"enemies_after\":\"碾碎爪 198 HP, Weak 2; 火箭 189 HP\",\"hp_after\":15,\"hp_after_pct\":19,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":31,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~347, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 15)\",\"rollout_turns\":\"T1 exact: hp -15, dmg 21; T2: hp -13 [13-13], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 202 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":4,\"tied_hp_loss_extra\":8,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损8。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan7": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 23/80 HP before healing\",\"hp_lost\":7,\"damage_dealt\":1,\"enemies_after\":\"碾碎爪 208 HP, Weak 2; 火箭 199 HP\",\"block_gained\":8,\"hp_after\":23,\"hp_after_pct\":29,\"dmg\":1,\"lethal_now\":\"no\",\"enemy_threat_next\":31,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~355, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 1; T2: hp -13 [13-13], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T4: hp -44 [44-44], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan6, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 202 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan8": "{\"focus\":\"碾碎爪\",\"plays\":\"精确切击 -> 碾碎爪, then 打击 -> 碾碎爪, then 打击 -> 碾碎爪, then 回响斩击\",\"result\":\"survives with 10/80 HP before healing\",\"hp_lost\":20,\"damage_dealt\":33,\"enemies_after\":\"碾碎爪 186 HP; 火箭 189 HP\",\"hp_after\":10,\"hp_after_pct\":13,\"dmg\":33,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~365, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 20)\",\"rollout_turns\":\"T1 exact: hp -20, dmg 33; T2: hp -16 [16-16], dmg 10 [10-10], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan6, plan7, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T2 (dead in 100%); 202 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":6,\"tied_hp_loss_extra\":13,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损13。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan9": "{\"plays\":\"精确切击 -> 碾碎爪, then 回响斩击, then 斗篷与匕首\",\"result\":\"survives with 16/80 HP before healing\",\"hp_lost\":14,\"damage_dealt\":21,\"enemies_after\":\"碾碎爪 198 HP; 火箭 189 HP\",\"block_gained\":6,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":16,\"hp_after_pct\":20,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~377, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 21; T2: hp -16 [16-16], dmg 10 [10-10], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan6, plan7, plan8, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 202 of 1200 samples (time limit)\"}",
+          "plan10": "{\"focus\":\"火箭\",\"plays\":\"精确切击 -> 火箭, then 打击 -> 火箭, then 打击 -> 火箭, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 10/80 HP before healing\",\"hp_lost\":20,\"damage_dealt\":33,\"enemies_after\":\"碾碎爪 199 HP; 火箭 176 HP\",\"hp_after\":10,\"hp_after_pct\":13,\"dmg\":33,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~365, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 20)\",\"rollout_turns\":\"T1 exact: hp -20, dmg 33; T2: hp -16 [16-16], dmg 10 [10-10], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan6, plan7, plan8, plan9 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T2 (dead in 100%); 202 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":6,\"tied_hp_loss_extra\":13,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损13。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan5",
+        "probabilities": {
+          "plan4": 0,
+          "plan7": 0.03,
+          "plan6": 0.01,
+          "plan9": 0,
+          "plan3": 0.01,
+          "plan1": 0.28,
+          "plan5": 0.55,
+          "plan2": 0.11,
+          "plan8": 0,
+          "plan10": 0.01
+        },
+        "confidence": 0.5,
+        "raw": {
+          "type": "choice",
+          "choice": "plan5",
+          "confidence": 0.5,
+          "probabilities": {
+            "plan4": 0,
+            "plan7": 0.03,
+            "plan6": 0.01,
+            "plan9": 0,
+            "plan3": 0.01,
+            "plan1": 0.28,
+            "plan5": 0.55,
+            "plan2": 0.11,
+            "plan8": 0,
+            "plan10": 0.01
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SURVIVOR",
+        "upgraded": false
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 5/10 (生存者, 精确切击 -> 碾碎爪, 斗篷与匕首, 萎靡 -> 碾碎爪) with confidence 0.50; code rank 5; SL explore (T1, the 7th latest question before attempt 2's death on T4): playing 生存者, 精确切击 -> 碾碎爪, 回响斩击, 萎靡 -> 碾碎爪 instead of 生存者, 精确切击 -> 碾碎爪, 斗篷与匕首, 萎靡 -> 碾碎爪, played on this board in attempts 1, 2, 3, 4 (the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's))",
+    "confidence": 0.5,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a116eeefb475939804b41830f3e674"
+    ],
+    "latency_ms": {
+      "plan": 24,
+      "jev": 589,
+      "action": 668,
+      "planner": 25114,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 14185,
+      "output_tokens": 99
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 8,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 15,
+      "best": null,
+      "best_added": false,
+      "tied": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7",
+        "plan8",
+        "plan9",
+        "plan10"
+      ],
+      "saturated": true,
+      "orders": 2,
+      "orders_dropped": 0,
+      "best_order": "碾碎爪 > 火箭"
+    },
+    "rollout_best_chosen": true,
+    "chosen_order": "碾碎爪 > 火箭",
+    "focus": {
+      "plan8": "碾碎爪",
+      "plan10": "火箭"
+    },
+    "sl_retry": {
+      "known_draws": 19,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 25001,
+      "samples": 202,
+      "requested": 1200,
+      "timed_out": true,
+      "orders": 2,
+      "workers": 20,
+      "boss": "KAISER_CRAB",
+      "low_trust": false,
+      "best": null,
+      "tied": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7",
+        "plan8",
+        "plan9",
+        "plan10"
+      ],
+      "ranked": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7",
+        "plan8",
+        "plan9",
+        "plan10"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan2": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan3": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan4": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan5": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan6": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan7": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan8": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan9": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan10": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        }
+      },
+      "plan": "T4 play 毒雾; T4 the enemies hit hardest (incoming ~57); no plan wins in most samples: 0/202 won, the fight ends ~T4",
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "point": "T1, the 7th latest question before attempt 2's death on T4",
+      "original": "生存者, 精确切击 -> 碾碎爪, 斗篷与匕首, 萎靡 -> 碾碎爪",
+      "replacement": "生存者, 精确切击 -> 碾碎爪, 回响斩击, 萎靡 -> 碾碎爪",
+      "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+      "played_in": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "replayed": 0,
+      "numbers": {
+        "original": "rollout dead 24/24, further loss 30, win ~0%; whole-fight sim win 0%; this turn hp -1, dmg 1",
+        "replacement": "rollout dead 24/24, further loss 30, win ~0%; whole-fight sim win 0%; this turn hp -7, dmg 21"
+      },
+      "gate": "b2",
+      "b2": {
+        "original": 0,
+        "replacement": 0,
+        "diff": 0,
+        "se": 0
+      },
+      "turn": "CLOAK_AND_DAGGER, MALAISE>碾碎爪, PRECISE_CUT>碾碎爪, SURVIVOR",
+      "turn_instead": "ECHOING_SLASH, MALAISE>碾碎爪, PRECISE_CUT>碾碎爪, SURVIVOR"
+    },
+    "timing": {
+      "planner_ms": 25111,
+      "solve_ms": 39,
+      "mc_ms": 0,
+      "rollout_ms": 8,
+      "boss_sim_ms": 25001,
+      "other_ms": 63,
+      "cpu_ms": 537610,
+      "load1": 24.47,
+      "probe_ms": 3.02,
+      "boss_sim": {
+        "pairs": 30,
+        "sims_done": 6075,
+        "samples": 202,
+        "workers": 20
+      },
+      "memo": {
+        "rollout_ms": 8587,
+        "hits": 12,
+        "stored": 14
+      }
+    },
+    "sl_attempt": 5,
+    "sl_reloads": 4,
+    "run_id": "NHA2KW0RB7VP",
+    "observed_ts": "2026-10-07T15:14:49.538Z",
+    "journal": {
+      "choice": "生存者, then 精确切击 -> 碾碎爪, then 斗篷与匕首, then 萎靡 -> 碾碎爪",
+      "reason": ""
+    },
+    "result": "pending (unstable): Action queued but state is still transitioning."
+  },
+  "277250": {
+    "ts": "2026-10-07T15:15:22.722Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 1,
+    "label": "combat/plan-choice",
+    "decision_id": "27c60f5d-5b5b-4072-9abf-3df07408517f",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:209:0:true|1:199:0:true\",\"event\":\"\",\"gold\":99,\"hand\":\"0:STRIKE_SILENT:true|1:STRIKE_SILENT:true|2:ECHOING_SLASH:true|3:CLOAK_AND_DAGGER:true|4:MALAISE:true\",\"hp\":30,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"SURROUNDED_POWER:1\",\"rewards\":\"\",\"run\":\"NHA2KW0RB7VP\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 23/80 HP before healing\",\"hp_lost\":7,\"damage_dealt\":20,\"enemies_after\":\"碾碎爪 199 HP, Weak 1; 火箭 189 HP\",\"hp_after\":23,\"hp_after_pct\":29,\"dmg\":20,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~336, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 20; T2: hp -15 [15-15], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T4: hp -44 [44-44], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true}",
+          "plan2": "{\"plays\":\"回响斩击, then 斗篷与匕首, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 24/80 HP before healing\",\"hp_lost\":6,\"damage_dealt\":20,\"enemies_after\":\"碾碎爪 199 HP; 火箭 189 HP\",\"block_gained\":6,\"cards_drawn\":1,\"hp_after\":24,\"hp_after_pct\":30,\"dmg\":20,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~351, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 6)\",\"rollout_turns\":\"T1 exact: hp -6, dmg 20; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -15 [15-15], dmg 27 [27-27], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan3": "{\"focus\":\"碾碎爪\",\"plays\":\"打击 -> 碾碎爪, then 回响斩击\",\"result\":\"survives with 18/80 HP before healing\",\"hp_lost\":12,\"damage_dealt\":26,\"enemies_after\":\"碾碎爪 193 HP; 火箭 189 HP\",\"hp_after\":18,\"hp_after_pct\":23,\"dmg\":26,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~342, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 12)\",\"rollout_turns\":\"T1 exact: hp -12, dmg 26; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -9 [9-9], dmg 30 [30-30], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan4": "{\"plays\":\"斗篷与匕首, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 29/80 HP before healing\",\"hp_lost\":1,\"damage_dealt\":0,\"enemies_after\":\"碾碎爪 209 HP, Weak 1; 火箭 199 HP\",\"block_gained\":6,\"cards_drawn\":1,\"hp_after\":29,\"hp_after_pct\":36,\"dmg\":0,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~359, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 1)\",\"rollout_turns\":\"T1 exact: hp -1, dmg 0; T2: hp -15 [15-15], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -13 [13-13], dmg 27 [27-27], alive 24/24, won 0/24; T4: hp -50 [50-50], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan5": "{\"plays\":\"萎靡 -> 碾碎爪\",\"result\":\"survives with 23/80 HP before healing\",\"hp_lost\":7,\"damage_dealt\":0,\"enemies_after\":\"碾碎爪 209 HP, Weak 2; 火箭 199 HP\",\"hp_after\":23,\"hp_after_pct\":29,\"dmg\":0,\"lethal_now\":\"no\",\"enemy_threat_next\":31,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~356, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 0; T2: hp -13 [13-13], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T4: hp -44 [44-44], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan6": "{\"plays\":\"斗篷与匕首\",\"result\":\"survives with 19/80 HP before healing\",\"hp_lost\":11,\"damage_dealt\":0,\"enemies_after\":\"碾碎爪 209 HP; 火箭 199 HP\",\"block_gained\":6,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":19,\"hp_after_pct\":24,\"dmg\":0,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~371, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 11)\",\"rollout_turns\":\"T1 exact: hp -11, dmg 0; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -15 [15-15], dmg 27 [27-27], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan7": "{\"focus\":\"火箭\",\"plays\":\"打击 -> 火箭, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 18/80 HP before healing\",\"hp_lost\":12,\"damage_dealt\":26,\"enemies_after\":\"碾碎爪 199 HP; 火箭 183 HP\",\"hp_after\":18,\"hp_after_pct\":23,\"dmg\":26,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~342, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 12)\",\"rollout_turns\":\"T1 exact: hp -12, dmg 26; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -9 [9-9], dmg 30 [30-30], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "plan4": 0.49,
+          "plan1": 0.37,
+          "plan3": 0,
+          "plan7": 0.01,
+          "plan2": 0.1,
+          "plan6": 0.01,
+          "plan5": 0.02
+        },
+        "confidence": 0.4,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.4,
+          "probabilities": {
+            "plan4": 0.49,
+            "plan1": 0.37,
+            "plan3": 0,
+            "plan7": 0.01,
+            "plan2": 0.1,
+            "plan6": 0.01,
+            "plan5": 0.02
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 2
+    },
+    "expect": {
+      "card": {
+        "id": "ECHOING_SLASH",
+        "upgraded": false
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 4/7 (斗篷与匕首, 萎靡 -> 碾碎爪) with confidence 0.40; code rank 4; SL explore (the deviation's turn, T1): playing 回响斩击, 萎靡 -> 碾碎爪 instead of 斗篷与匕首, 萎靡 -> 碾碎爪, which may end the turn after its draw with the plays attempts 1, 2, 3, 4 had through the deviation point (the pick's turn may end as a failed attempt's after its draw (its plays up to the draw are within one); the best untried line by the question's ranking, among those the rollout does not see dying more often)",
+    "confidence": 0.4,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a116ef0cdc7b7f897f66ace525c624"
+    ],
+    "latency_ms": {
+      "plan": 25,
+      "jev": 578,
+      "action": 245,
+      "planner": 5048,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 9562,
+      "output_tokens": 74
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 5,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 8,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true,
+      "orders": 2,
+      "orders_dropped": 0,
+      "best_order": "碾碎爪 > 火箭"
+    },
+    "rollout_best_chosen": false,
+    "chosen_order": "碾碎爪 > 火箭",
+    "focus": {
+      "plan3": "碾碎爪",
+      "plan7": "火箭"
+    },
+    "sl_retry": {
+      "known_draws": 19,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 8595,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": false,
+      "reason": "no sample finished within 5 s",
+      "ms": 5004,
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "avoid": {
+        "point": "T1, the 7th latest question before attempt 2's death on T4",
+        "original": "斗篷与匕首, 萎靡 -> 碾碎爪",
+        "replacement": "回响斩击, 萎靡 -> 碾碎爪",
+        "reason": "the pick's turn may end as a failed attempt's after its draw (its plays up to the draw are within one); the best untried line by the question's ranking, among those the rollout does not see dying more often",
+        "played_in": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "turn": "CLOAK_AND_DAGGER, MALAISE>碾碎爪, SURVIVOR",
+        "turn_instead": "ECHOING_SLASH, MALAISE>碾碎爪, SURVIVOR",
+        "numbers": {
+          "original": "rollout dead 24/24, further loss 30, win ~0%; this turn hp -1, dmg 0",
+          "replacement": "rollout dead 24/24, further loss 30, win ~0%; this turn hp -7, dmg 20"
+        },
+        "gate": "rollout"
+      }
+    },
+    "timing": {
+      "planner_ms": 5045,
+      "solve_ms": 5,
+      "mc_ms": 0,
+      "rollout_ms": 5,
+      "boss_sim_ms": 5004,
+      "other_ms": 31,
+      "cpu_ms": 98021,
+      "load1": 25.31,
+      "probe_ms": 3.35,
+      "memo": {
+        "rollout_ms": 6171,
+        "hits": 13,
+        "stored": 14
+      }
+    },
+    "sl_attempt": 5,
+    "sl_reloads": 4,
+    "run_id": "NHA2KW0RB7VP",
+    "observed_ts": "2026-10-07T15:15:17.070Z",
+    "journal": {
+      "choice": "斗篷与匕首, then 萎靡 -> 碾碎爪",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "277272": {
+    "ts": "2026-10-07T15:17:54.625Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 1,
+    "label": "combat/plan-choice",
+    "decision_id": "fa026860-5c78-458e-a5b2-26a568da8860",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:209:0:true|1:199:0:true\",\"event\":\"\",\"gold\":99,\"hand\":\"0:SURVIVOR:true|1:PRECISE_CUT:true|2:STRIKE_SILENT:true|3:STRIKE_SILENT:true|4:ECHOING_SLASH:true|5:CLOAK_AND_DAGGER:true|6:MALAISE:true\",\"hp\":30,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"SURROUNDED_POWER:1\",\"rewards\":\"\",\"run\":\"NHA2KW0RB7VP\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 23/80 HP before healing\",\"hp_lost\":7,\"damage_dealt\":21,\"enemies_after\":\"碾碎爪 198 HP, Weak 1; 火箭 189 HP\",\"block_gained\":8,\"hp_after\":23,\"hp_after_pct\":29,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~335, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 21; T2: hp -15 [15-15], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T4: hp -44 [44-44], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan2, plan3, plan4, plan5, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (the best line), no winning sample; the losing samples die most often on T4 (dead in 100%); 165 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan2": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 回响斩击, then 斗篷与匕首\",\"result\":\"survives with 24/80 HP before healing\",\"hp_lost\":6,\"damage_dealt\":21,\"enemies_after\":\"碾碎爪 198 HP; 火箭 189 HP\",\"block_gained\":14,\"cards_drawn\":1,\"hp_after\":24,\"hp_after_pct\":30,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~350, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 6)\",\"rollout_turns\":\"T1 exact: hp -6, dmg 21; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -15 [15-15], dmg 27 [27-27], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan3, plan4, plan5, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 165 of 1200 samples (time limit)\"}",
+          "plan3": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 打击 -> 碾碎爪, then 回响斩击\",\"result\":\"survives with 18/80 HP before healing\",\"hp_lost\":12,\"damage_dealt\":27,\"enemies_after\":\"碾碎爪 192 HP; 火箭 189 HP\",\"block_gained\":8,\"hp_after\":18,\"hp_after_pct\":23,\"dmg\":27,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~341, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 12)\",\"rollout_turns\":\"T1 exact: hp -12, dmg 27; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -9 [9-9], dmg 30 [30-30], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan4, plan5, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 165 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":3,\"tied_hp_loss_extra\":5,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损5。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan4": "{\"plays\":\"精确切击 -> 碾碎爪, then 打击 -> 碾碎爪, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 15/80 HP before healing\",\"hp_lost\":15,\"damage_dealt\":27,\"enemies_after\":\"碾碎爪 192 HP, Weak 1; 火箭 189 HP\",\"hp_after\":15,\"hp_after_pct\":19,\"dmg\":27,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~371, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 15)\",\"rollout_turns\":\"T1 exact: hp -15, dmg 27; T2: hp -15 [15-15], dmg 10 [10-10], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan5, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 165 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":4,\"tied_hp_loss_extra\":8,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损8。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan5": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 斗篷与匕首, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 29/80 HP before healing\",\"hp_lost\":1,\"damage_dealt\":1,\"enemies_after\":\"碾碎爪 208 HP, Weak 1; 火箭 199 HP\",\"block_gained\":14,\"cards_drawn\":1,\"hp_after\":29,\"hp_after_pct\":36,\"dmg\":1,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~358, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 1)\",\"rollout_turns\":\"T1 exact: hp -1, dmg 1; T2: hp -15 [15-15], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -13 [13-13], dmg 27 [27-27], alive 24/24, won 0/24; T4: hp -50 [50-50], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan6, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 165 of 1200 samples (time limit)\"}",
+          "plan6": "{\"plays\":\"精确切击 -> 碾碎爪, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 15/80 HP before healing\",\"hp_lost\":15,\"damage_dealt\":21,\"enemies_after\":\"碾碎爪 198 HP, Weak 2; 火箭 189 HP\",\"hp_after\":15,\"hp_after_pct\":19,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":31,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~347, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 15)\",\"rollout_turns\":\"T1 exact: hp -15, dmg 21; T2: hp -13 [13-13], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan7, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 165 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":4,\"tied_hp_loss_extra\":8,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损8。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan7": "{\"plays\":\"生存者, then 精确切击 -> 碾碎爪, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 23/80 HP before healing\",\"hp_lost\":7,\"damage_dealt\":1,\"enemies_after\":\"碾碎爪 208 HP, Weak 2; 火箭 199 HP\",\"block_gained\":8,\"hp_after\":23,\"hp_after_pct\":29,\"dmg\":1,\"lethal_now\":\"no\",\"enemy_threat_next\":31,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~355, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 1; T2: hp -13 [13-13], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T4: hp -44 [44-44], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan6, plan8, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 165 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan8": "{\"focus\":\"碾碎爪\",\"plays\":\"精确切击 -> 碾碎爪, then 打击 -> 碾碎爪, then 打击 -> 碾碎爪, then 回响斩击\",\"result\":\"survives with 10/80 HP before healing\",\"hp_lost\":20,\"damage_dealt\":33,\"enemies_after\":\"碾碎爪 186 HP; 火箭 189 HP\",\"hp_after\":10,\"hp_after_pct\":13,\"dmg\":33,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~365, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 20)\",\"rollout_turns\":\"T1 exact: hp -20, dmg 33; T2: hp -16 [16-16], dmg 10 [10-10], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan6, plan7, plan9, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T2 (dead in 100%); 165 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":6,\"tied_hp_loss_extra\":13,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损13。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan9": "{\"plays\":\"精确切击 -> 碾碎爪, then 回响斩击, then 斗篷与匕首\",\"result\":\"survives with 16/80 HP before healing\",\"hp_lost\":14,\"damage_dealt\":21,\"enemies_after\":\"碾碎爪 198 HP; 火箭 189 HP\",\"block_gained\":6,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":16,\"hp_after_pct\":20,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~377, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 21; T2: hp -16 [16-16], dmg 10 [10-10], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan6, plan7, plan8, plan10 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T4 (dead in 100%); 165 of 1200 samples (time limit)\"}",
+          "plan10": "{\"focus\":\"火箭\",\"plays\":\"精确切击 -> 火箭, then 打击 -> 火箭, then 打击 -> 火箭, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 10/80 HP before healing\",\"hp_lost\":20,\"damage_dealt\":33,\"enemies_after\":\"碾碎爪 199 HP; 火箭 176 HP\",\"hp_after\":10,\"hp_after_pct\":13,\"dmg\":33,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~365, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 20)\",\"rollout_turns\":\"T1 exact: hp -20, dmg 33; T2: hp -16 [16-16], dmg 10 [10-10], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5, plan6, plan7, plan8, plan9 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T2 (dead in 100%); 165 of 1200 samples (time limit)\",\"tied_hp_loss_rank\":6,\"tied_hp_loss_extra\":13,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan7，单回合模型净损血7；本线多损13。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan5",
+        "probabilities": {
+          "plan7": 0.03,
+          "plan4": 0,
+          "plan5": 0.56,
+          "plan6": 0,
+          "plan2": 0.11,
+          "plan8": 0,
+          "plan1": 0.29,
+          "plan10": 0.01,
+          "plan3": 0,
+          "plan9": 0
+        },
+        "confidence": 0.51,
+        "raw": {
+          "type": "choice",
+          "choice": "plan5",
+          "confidence": 0.51,
+          "probabilities": {
+            "plan7": 0.03,
+            "plan4": 0,
+            "plan5": 0.56,
+            "plan6": 0,
+            "plan2": 0.11,
+            "plan8": 0,
+            "plan1": 0.29,
+            "plan10": 0.01,
+            "plan3": 0,
+            "plan9": 0
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SURVIVOR",
+        "upgraded": false
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 5/10 (生存者, 精确切击 -> 碾碎爪, 斗篷与匕首, 萎靡 -> 碾碎爪) with confidence 0.51; code rank 5; SL explore: replaying attempt 5's 生存者, 精确切击 -> 碾碎爪, 回响斩击, 萎靡 -> 碾碎爪 instead of 生存者, 精确切击 -> 碾碎爪, 斗篷与匕首, 萎靡 -> 碾碎爪 before T2",
+    "confidence": 0.51,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a116f15cd274cba9cbbab35b8c186e"
+    ],
+    "latency_ms": {
+      "plan": 20,
+      "jev": 1048,
+      "action": 640,
+      "planner": 25084,
+      "pre": 2
+    },
+    "usage": {
+      "input_tokens": 14594,
+      "output_tokens": 99
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 6,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 15,
+      "best": null,
+      "best_added": false,
+      "tied": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7",
+        "plan8",
+        "plan9",
+        "plan10"
+      ],
+      "saturated": true,
+      "orders": 2,
+      "orders_dropped": 0,
+      "best_order": "碾碎爪 > 火箭"
+    },
+    "rollout_best_chosen": true,
+    "chosen_order": "碾碎爪 > 火箭",
+    "focus": {
+      "plan8": "碾碎爪",
+      "plan10": "火箭"
+    },
+    "sl_retry": {
+      "known_draws": 19,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 25001,
+      "samples": 165,
+      "requested": 1200,
+      "timed_out": true,
+      "orders": 2,
+      "workers": 20,
+      "boss": "KAISER_CRAB",
+      "low_trust": false,
+      "best": null,
+      "tied": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7",
+        "plan8",
+        "plan9",
+        "plan10"
+      ],
+      "ranked": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7",
+        "plan8",
+        "plan9",
+        "plan10"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan2": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan3": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan4": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan5": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan6": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan7": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan8": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan9": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        },
+        "plan10": {
+          "win": 0,
+          "cal": 0,
+          "d": 0,
+          "se": 0,
+          "loss": 30,
+          "won_loss": null,
+          "order": null
+        }
+      },
+      "plan": "T4 play 毒雾; T4 the enemies hit hardest (incoming ~57); no plan wins in most samples: 0/165 won, the fight ends ~T4",
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T2, the 5th latest question before attempt 5's death on T4 (T2 deviated at 1 other question before)",
+        "reference": 5,
+        "line": "生存者, 精确切击 -> 碾碎爪, 回响斩击, 萎靡 -> 碾碎爪",
+        "original": "生存者, 精确切击 -> 碾碎爪, 斗篷与匕首, 萎靡 -> 碾碎爪",
+        "overridden": true,
+        "reason": "attempt 5's line on this board, replayed to reach T2"
+      }
+    },
+    "timing": {
+      "planner_ms": 25081,
+      "solve_ms": 22,
+      "mc_ms": 0,
+      "rollout_ms": 6,
+      "boss_sim_ms": 25001,
+      "other_ms": 53,
+      "cpu_ms": 543444,
+      "load1": 24.52,
+      "probe_ms": 3.12,
+      "boss_sim": {
+        "pairs": 30,
+        "sims_done": 4950,
+        "samples": 165,
+        "workers": 20
+      },
+      "memo": {
+        "rollout_ms": 8587,
+        "hits": 14,
+        "stored": 20
+      }
+    },
+    "sl_attempt": 6,
+    "sl_reloads": 5,
+    "run_id": "NHA2KW0RB7VP",
+    "observed_ts": "2026-10-07T15:17:28.471Z",
+    "journal": {
+      "choice": "生存者, then 精确切击 -> 碾碎爪, then 斗篷与匕首, then 萎靡 -> 碾碎爪",
+      "reason": ""
+    },
+    "result": "pending (unstable): Action queued but state is still transitioning."
+  },
+  "277274": {
+    "ts": "2026-10-07T15:18:02.267Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 1,
+    "label": "combat/plan-choice",
+    "decision_id": "7d4bf96f-0f98-45f3-938d-bf25cba4e228",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:209:0:true|1:199:0:true\",\"event\":\"\",\"gold\":99,\"hand\":\"0:STRIKE_SILENT:true|1:STRIKE_SILENT:true|2:ECHOING_SLASH:true|3:CLOAK_AND_DAGGER:true|4:MALAISE:true\",\"hp\":30,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"SURROUNDED_POWER:1\",\"rewards\":\"\",\"run\":\"NHA2KW0RB7VP\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 23/80 HP before healing\",\"hp_lost\":7,\"damage_dealt\":20,\"enemies_after\":\"碾碎爪 199 HP, Weak 1; 火箭 189 HP\",\"hp_after\":23,\"hp_after_pct\":29,\"dmg\":20,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~336, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 20; T2: hp -15 [15-15], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T4: hp -44 [44-44], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true}",
+          "plan2": "{\"plays\":\"回响斩击, then 斗篷与匕首, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 24/80 HP before healing\",\"hp_lost\":6,\"damage_dealt\":20,\"enemies_after\":\"碾碎爪 199 HP; 火箭 189 HP\",\"block_gained\":6,\"cards_drawn\":1,\"hp_after\":24,\"hp_after_pct\":30,\"dmg\":20,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~351, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 6)\",\"rollout_turns\":\"T1 exact: hp -6, dmg 20; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -15 [15-15], dmg 27 [27-27], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan3": "{\"focus\":\"碾碎爪\",\"plays\":\"打击 -> 碾碎爪, then 回响斩击\",\"result\":\"survives with 18/80 HP before healing\",\"hp_lost\":12,\"damage_dealt\":26,\"enemies_after\":\"碾碎爪 193 HP; 火箭 189 HP\",\"hp_after\":18,\"hp_after_pct\":23,\"dmg\":26,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~342, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 12)\",\"rollout_turns\":\"T1 exact: hp -12, dmg 26; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -9 [9-9], dmg 30 [30-30], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan4": "{\"plays\":\"斗篷与匕首, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 29/80 HP before healing\",\"hp_lost\":1,\"damage_dealt\":0,\"enemies_after\":\"碾碎爪 209 HP, Weak 1; 火箭 199 HP\",\"block_gained\":6,\"cards_drawn\":1,\"hp_after\":29,\"hp_after_pct\":36,\"dmg\":0,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~359, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 1)\",\"rollout_turns\":\"T1 exact: hp -1, dmg 0; T2: hp -15 [15-15], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -13 [13-13], dmg 27 [27-27], alive 24/24, won 0/24; T4: hp -50 [50-50], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan5": "{\"plays\":\"萎靡 -> 碾碎爪\",\"result\":\"survives with 23/80 HP before healing\",\"hp_lost\":7,\"damage_dealt\":0,\"enemies_after\":\"碾碎爪 209 HP, Weak 2; 火箭 199 HP\",\"hp_after\":23,\"hp_after_pct\":29,\"dmg\":0,\"lethal_now\":\"no\",\"enemy_threat_next\":31,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~356, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 0; T2: hp -13 [13-13], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T4: hp -44 [44-44], dmg 12 [12-12], alive 0/24, won 0/24; T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan6": "{\"plays\":\"斗篷与匕首\",\"result\":\"survives with 19/80 HP before healing\",\"hp_lost\":11,\"damage_dealt\":0,\"enemies_after\":\"碾碎爪 209 HP; 火箭 199 HP\",\"block_gained\":6,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":19,\"hp_after_pct\":24,\"dmg\":0,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~371, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 11)\",\"rollout_turns\":\"T1 exact: hp -11, dmg 0; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -15 [15-15], dmg 27 [27-27], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan7": "{\"focus\":\"火箭\",\"plays\":\"打击 -> 火箭, then 回响斩击, then 萎靡 -> 碾碎爪\",\"result\":\"survives with 18/80 HP before healing\",\"hp_lost\":12,\"damage_dealt\":26,\"enemies_after\":\"碾碎爪 199 HP; 火箭 183 HP\",\"hp_after\":18,\"hp_after_pct\":23,\"dmg\":26,\"lethal_now\":\"no\",\"enemy_threat_next\":32,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~342, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 12)\",\"rollout_turns\":\"T1 exact: hp -12, dmg 26; T2: hp -16 [16-16], dmg 10 [10-10], alive 24/24, won 0/24; T3: hp -9 [9-9], dmg 30 [30-30], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"火箭 > 碾碎爪: further HP loss 30, over 0/24, dead 24/24, 火箭 dead 0/24\",\"history_estimate\":\"further HP loss 30, win 0% (this encounter n=49; estimate from boss fights n=369, typical error ±9.9; few similar states for this encounter)\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "plan7": 0.01,
+          "plan2": 0.1,
+          "plan3": 0,
+          "plan1": 0.38,
+          "plan4": 0.48,
+          "plan5": 0.01,
+          "plan6": 0.02
+        },
+        "confidence": 0.39,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.39,
+          "probabilities": {
+            "plan7": 0.01,
+            "plan2": 0.1,
+            "plan3": 0,
+            "plan1": 0.38,
+            "plan4": 0.48,
+            "plan5": 0.01,
+            "plan6": 0.02
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 2
+    },
+    "expect": {
+      "card": {
+        "id": "ECHOING_SLASH",
+        "upgraded": false
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 4/7 (斗篷与匕首, 萎靡 -> 碾碎爪) with confidence 0.39; code rank 4; SL explore: replaying attempt 5's 回响斩击, 萎靡 -> 碾碎爪 instead of 斗篷与匕首, 萎靡 -> 碾碎爪 before T2",
+    "confidence": 0.39,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a116f17b857fba956c1de4a6e7e2ea"
+    ],
+    "latency_ms": {
+      "plan": 17,
+      "jev": 727,
+      "action": 222,
+      "planner": 5048,
+      "pre": 4
+    },
+    "usage": {
+      "input_tokens": 9971,
+      "output_tokens": 74
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 5,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 8,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true,
+      "orders": 2,
+      "orders_dropped": 0,
+      "best_order": "碾碎爪 > 火箭"
+    },
+    "rollout_best_chosen": false,
+    "chosen_order": "碾碎爪 > 火箭",
+    "focus": {
+      "plan3": "碾碎爪",
+      "plan7": "火箭"
+    },
+    "sl_retry": {
+      "known_draws": 19,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 8592,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": false,
+      "reason": "no sample finished within 5 s",
+      "ms": 5010,
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T2, the 5th latest question before attempt 5's death on T4 (T2 deviated at 1 other question before)",
+        "reference": 5,
+        "line": "回响斩击, 萎靡 -> 碾碎爪",
+        "original": "斗篷与匕首, 萎靡 -> 碾碎爪",
+        "overridden": true,
+        "reason": "attempt 5's line on this board, replayed to reach T2"
+      }
+    },
+    "timing": {
+      "planner_ms": 5045,
+      "solve_ms": 4,
+      "mc_ms": 0,
+      "rollout_ms": 5,
+      "boss_sim_ms": 5010,
+      "other_ms": 25,
+      "cpu_ms": 105217,
+      "load1": 23.9,
+      "probe_ms": 2.88,
+      "memo": {
+        "rollout_ms": 6171,
+        "hits": 15,
+        "stored": 20
+      }
+    },
+    "sl_attempt": 6,
+    "sl_reloads": 5,
+    "run_id": "NHA2KW0RB7VP",
+    "observed_ts": "2026-10-07T15:17:56.471Z",
+    "journal": {
+      "choice": "斗篷与匕首, then 萎靡 -> 碾碎爪",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  }
+}

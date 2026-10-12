@@ -1,0 +1,184 @@
+[
+ {
+  "id": "silent-0309",
+  "ts": "2026-10-08T19:59:01+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局水银沙漏是F29棱柱战胜后奖励11:35:53.563Z取得，F26实得音叉，棱柱战内尚未持有，171→171不作沙漏抵消/阻挡证据。其后F30虱虫和F33沙虫在T1入场未就绪到可行动、无牌药动作间138→135及341→338，玩家HP不变，只支持这两场单敌首行动前净扣3的观察；未隔离其他被动交互或整战独立胜因。",
+  "evidence": [
+   {
+    "run": "CNKR125PFHJ5",
+    "floor": 30,
+    "turn": 1,
+    "role": "support",
+    "note": "s304180未就绪敌138→s304181首次可行动敌135，均玩家37/80；之前无出牌或用药，持有水银沙漏。",
+    "added": "2026-10-08T19:59:01+08:00"
+   },
+   {
+    "run": "CNKR125PFHJ5",
+    "floor": 33,
+    "turn": 1,
+    "role": "support",
+    "note": "s304203未就绪敌341→s304204首次可行动敌338，均玩家53/80，无牌药动作；原始341末121，18轮初被动扣血、56直伤和146毒伤分列。",
+    "added": "2026-10-08T19:59:01+08:00"
+   },
+   {
+    "run": "0DTPVHFXJ319",
+    "role": "support",
+    "note": "本角色日志逐偏移/角色/SHA与实帧核验；观察：水银沙漏已见首次可行动前及后轮初另扣敌3，与毒/荆棘分源。机制：新局有铜鳞/毒时按实际相邻帧分账，未隔离移除遗物整战；不能由初帧已扣又重复预记，其他被动/限伤未知。搭配：逐敌已发生实扣与卡牌伤分别预算，不由持有定胜因。决定胜负的战斗：2支持/0反例，机制观察非整战因果（n=2）。典型案例：0DTPVHFXJ319 F23首次未就绪139→可行动136，后试首帧已136不重复扣；族母T1结19毒后轮初再扣3合22，与铜鳞分源。CNKR125PFHJ5 F30/F33入场各实3",
+    "added": "2026-10-10T15:35:01+08:00"
+   },
+   {
+    "run": "N3YHJMV1ATFR",
+    "role": "support",
+    "note": "N3YHJMV1ATFR F42首试未就绪108/97/89→可行动105/94/86，各扣3；重试首帧已后者不重复扣。F38T6可行动已7/5血各10毒，结束轮毒清场，没有再由沙漏变4/2的帧；按复盘勘误撤重复归因。",
+    "added": "2026-10-11T02:21:02+08:00"
+   },
+   {
+    "run": "KF9HMZKTFC3V",
+    "role": "support",
+    "note": "本角色A10原记录逐字节/角色复验；silent-mercury-hourglass-start-observation。层/回合/数值见本批report.md、proof.json、original-checks.json；未执行替线不补因果。",
+    "added": "2026-10-12T14:28:52+08:00"
+   }
+  ],
+  "first_run": "CNKR125PFHJ5",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "silent账本及本角色更早复盘检索水银沙漏/MERCURY_HOURGLASS均无条目或可比机制段落；未找到学前同条件的实帧处理，不用别的角色或遗物持有本身补先验。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "CNKR125PFHJ5"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-194301-postmortem/提案-截止资源与药水未知.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-201303-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-152555-experience-update/proposal-potion-relic.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-021302-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-140742-experience-update/proposal-controls.md"
+   ],
+   "experience": [
+    "silent-mercury-hourglass-start-observation"
+   ],
+   "commits": [
+    "196a025b3ef4b9009974cbac5d8db326cc33ae7e",
+    "0dd5cb2450875f88c3c7425912cf22aad9286890",
+    "67d2f22af939bb674469b77b0901fe010686e2e2",
+    "bb0239d0f74faea317d81ef684e806207ae78466",
+    "7bf093105182c2fa5d953d38bc379decd496ab54",
+    "6b74ab73613741dc2ca2fe233924f9c931beb756",
+    "7acbcd1351085b2ed87f8c2e2ba02f044c7d9fd6",
+    "1e5ce46f5a09b249bd049631cdba94d1a2c2bc81",
+    "91ea79597dd13b0f6801fd4fe62c25013adcf2b8"
+   ],
+   "changelog": [
+    "2026-10-08 静默猎手 第一百零七次增量：1 局 A10（version 2026-10-08.24，分支 exp-silent，196a025b）",
+    "2026-10-10 静默猎手 第一百五十二次增量：3 局 A10（version 2026-10-10.10，分支 exp-silent，7bf09310）",
+    "2026-10-11 静默猎手 第一百六十八次增量：1 局 A10（version 2026-10-11.3，分支 exp-silent，6b74ab73）",
+    "## 2026-10-12 静默猎手 第一百八十六次增量：1 局 A10（version 2026-10-12.6，分支 exp-silent，7acbcd13）"
+   ]
+  },
+  "note": "新机制仅为首轮已观测净HP变化；F29 s304150→304151棱柱171不变且VITAL_SPARK_POWER3，内部结算无独立帧。后续不同防护／多敌／完整毛伤不外推。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-08T19:59:01+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-08T20:02:12+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T20:03:45+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T20:25:41+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T20:25:41+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T20:38:57+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T20:49:38+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-10T15:35:01+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-10T15:35:58+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-10T15:43:22+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-11T02:21:02+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-11T02:21:05+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-11T02:40:18+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-12T14:28:52+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-12T14:28:55+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-12T14:42:52+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-12T15:15:12+08:00",
+    "by": "ops:codex",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp187",
+  "effect": null,
+  "notes": [
+   "新机制仅为首轮已观测净HP变化；F29 s304150→304151棱柱171不变且VITAL_SPARK_POWER3，内部结算无独立帧。后续不同防护／多敌／完整毛伤不外推。",
+   "代码提案 silent-proposal-910db627f14d4eba → task=strategy-proposal；Roy-2026-10-07-learning",
+   "名称勘误：s304150的VITAL_SPARK_POWER实际名称为活力火花，旧claim泛称生机；只更正中文名，首证/prior/status/evidence及数字保持。lessons已追加勘误；原已注册提案Markdown原字节与SHA保留，任务目录另存名称勘误供实现任务阅读。",
+   "第107批经验提案预关联，保留状态/首证/prior/版本及所有历史；逐层回合与原帧见本批numbers-checked/audit。 原复盘只读；0309棱柱未记录内部抵消说法现由实际获取顺序更正，原claim行完整保留。",
+   "代码提案 silent-proposal-39b4e686237c1193 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第107批已提交经验来源；实际live数据shipped交运维核实，不冒称代码提案已实现。",
+   "第一百零七次经验仅原数据.23→.24，源196a025b增1改19退0/184 active，原251文件2627例tsc/vitest0。actual live/main唯一发布S1.exp107；按学习者ledger-map仅19所属经验数据shipped，保留首证/prior/claim/evidence/support/repeat及旧状态历史。三combat/potion/SL/terminal代码提案沿原自动链，不标代码实现；新数据树完整外部待原批独立续验，exp100旧失败及修复队列不关闭。刷新/并行代码、未提交backtest笔记、原17冲突/merged-null/out/err/原数字核验与拼写勘误均保持。",
+   "第152次静默经验预关联；保留原claim/first_run/prior/support/repeat/版本历史，提交后登记proposed。完整实帧原件与限定见本批报告。",
+   "代码提案 silent-proposal-eac88466597fff6c → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第152次经验源提交已保存并自测；实际live另验，未标accepted/shipped；保留prior/first_run/claim/旧证据/版本。",
+   "静默第168次经验增量预关联；原claim/prior/首证/repeat及发布历史保留，提交后再proposed，未标implemented/shipped。",
+   "代码提案 silent-proposal-b9d2af55bbdea6ce → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第168次经验数据已自测提交；源码提案独立strategy-proposal，经验实际合入/发布由运维据experience-done核实后登记，未标implemented/shipped；保留原首证/prior/claim/历史发布。",
+   "静默第186次经验预关联：保留旧claim、prior、first_run及历史；本局作为后来支持，不改原冻结全历史研究统计。提交后登记proposed。",
+   "代码提案 silent-proposal-e94918f3c77957f9 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "本批静默经验已提交：KF9HMZKTFC3V A10；来源/反例/原帧与机制历史回溯见本批report.md、changes.json及experience-integration.json。只登记proposed，不代表实际live或源码提案实现，运维按完成事件核实后登记shipped。",
+   "20261012-1507接续：仅原学习者2026-10-12.6经验1新增/20加证据更新入库，按experience-integration映射限定范围。原claim/prior/证据不改，不将4待代码提案、完整核心/量化/自然局效果记完成；原失效链接失败、同SHA源tsc/3368通过和6处记录冲突保留，当前集成tsc/41通过，完整宿主检查待回执。"
+  ],
+  "shipped_at": "2026-10-12T15:15:12+08:00"
+ }
+]

@@ -1,0 +1,6 @@
+首次账本寻址读到234301-s2的其他队列报告；未作为本批证据、未处理其提案。改用224301-s2同十ID报告，仅借其索引寻址。
+两次只读sed路径误写：verify-evidence.py及raw-evidence-index.json不存在；正确为verify_evidence.py与raw-evidence-union.json。
+原始索引有补充条目仅带offset/ts、不带line；首次分析脚本KeyError: line。原日志和首版脚本保留。
+第二次分析脚本部分NHA帧无line导致KeyError: 283482；旧union按offset去重时以ts条目覆盖line元数据。按旧原始manifest同offset补回原line，再核同一原字节，不推断不存在的日志。
+rg误查reflex/silent-opening.ts，正确为sim/silent-opening.ts。源码注释等价证明首轮因多行/*正文没有*前缀导致断言失败；原diff保留，补核注释上下文，不扩大为源码等价或历史dirty身份。
+源码注释证明纠正：实际漏识别的是/**单行注释（两处），并非多行正文；最终13文件7字节相同、6文件差异严格限Roy/Dai注释署名。
