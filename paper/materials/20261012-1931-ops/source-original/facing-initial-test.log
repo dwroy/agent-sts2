@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2/agent
+
+ ❯ tests/silent-crusher-facing.test.ts (10 tests | 1 failed) 175ms
+   × does not reuse decision-turn precision after later simulated moves 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-crusher-facing.test.ts > does not reuse decision-turn precision after later simulated moves
+AssertionError: expected 1 to be greater than 1
+ ❯ tests/silent-crusher-facing.test.ts:129:23
+    127|   solveTap.onSolve = (value) => { seen.push(value); };
+    128|   try { simulateFight(input, null, { seed: 1, maxTurns: 3 }); } finall…
+    129|   expect(seen.length).toBeGreaterThan(1);
+       |                       ^
+    130|   for (const turn of seen.slice(1)) expect(turn.enemies[0]!.observedWe…
+    131| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  18:54:26
+   Duration  1.99s (transform 1.37s, setup 306ms, import 1.37s, tests 175ms, environment 0ms)
+

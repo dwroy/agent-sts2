@@ -1,0 +1,109 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-183755-s2-strategy-proposal",
+  "base": "5131744f62198cf2469da2734e4a0da2b751c84e",
+  "runs": [
+    "KEN58SH9SLZ6",
+    "TXZ6RVMQA09D",
+    "WQZVENQ7DTRP",
+    "02HB4L0C3C67",
+    "4D4J8USKCPAV",
+    "F4QKG4J1AJJZ",
+    "JLN5SK17W4FQ",
+    "LS8035TB32P3",
+    "NB8KCF6HRGVF",
+    "S9UZAK0JP0C0"
+  ],
+  "fixes": [
+    {
+      "id": "silent-crusher-facing-rounding",
+      "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+      "summary": "静默A10碾碎爪已观察虚弱/朝向组合保留取整前分数，修正NHA F33T2少报1血。",
+      "ledger": [
+        "silent-0263",
+        "silent-0264"
+      ],
+      "proposal": "silent-proposal-cfecb5580938873d",
+      "state": "committed_not_merged"
+    }
+  ],
+  "skipped": [],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3406
+  },
+  "code_proposals": [
+    "silent-proposal-08eaa60bcc449852",
+    "silent-proposal-92920295a648b540",
+    "silent-proposal-a327449c331efbc1",
+    "silent-proposal-a099e89437e942bb",
+    "silent-proposal-47910f82a1fdd98f",
+    "silent-proposal-f1374df72d8e6a25",
+    "silent-proposal-38a49e6c97f31eea",
+    "silent-proposal-ef0e38a5dbd3bc07",
+    "silent-proposal-cfecb5580938873d",
+    "silent-proposal-7f820c02d39bfaea"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-08eaa60bcc449852",
+      "state": "waiting",
+      "reason": "缺同入口不饮、留药到boss的完整后继；零损已饮分支不能证明不饮也零损，保留持药价。"
+    },
+    {
+      "id": "silent-proposal-92920295a648b540",
+      "state": "waiting",
+      "reason": "缺同抽序、后续动作受控的连续通关对照，不能由少损3校准SL或终局值。"
+    },
+    {
+      "id": "silent-proposal-a327449c331efbc1",
+      "state": "waiting",
+      "reason": "缺完整受控后继和独立后移胜负样本；现候选比较已记录血价/沙坑，不拟固定交换门槛。"
+    },
+    {
+      "id": "silent-proposal-a099e89437e942bb",
+      "state": "waiting",
+      "reason": "缺计划妥当跨轮保留选择、饮药复合触发及完整后继验证；42饮支持容量机制，不证明穿插能救整战。"
+    },
+    {
+      "id": "silent-proposal-47910f82a1fdd98f",
+      "state": "waiting",
+      "reason": "无未知回复/复活组合的中间相位及留药完整后继，无法关闭宽资源/SL提案。"
+    },
+    {
+      "id": "silent-proposal-f1374df72d8e6a25",
+      "state": "waiting",
+      "reason": "缺同入口早饮/留药与同营火条件的完整后继，保持护栏、药价和终局权重。"
+    },
+    {
+      "id": "silent-proposal-38a49e6c97f31eea",
+      "state": "waiting",
+      "reason": "宽机制包仍缺致死轮逐击中间相位及复活/反伤/阈值/SL组合验证；已有局部公式不关闭整包。"
+    },
+    {
+      "id": "silent-proposal-ef0e38a5dbd3bc07",
+      "state": "waiting",
+      "reason": "缺同入口换线、休息/锻造、用药的完整后继；两败路线与不同动作条件不能拟统一门槛。"
+    },
+    {
+      "id": "silent-proposal-cfecb5580938873d",
+      "state": "waiting",
+      "reason": "本批已补足底值并实现限定取整修复，源码ec29ea34b919344b707e57ba472ea210f9c39d62已通过固定红绿及沙箱覆盖；live预检29处记录/知识冲突，未实际合入，不能登记implemented。未观察增益/阶段仍保留旧行为。"
+    },
+    {
+      "id": "silent-proposal-7f820c02d39bfaea",
+      "state": "waiting",
+      "reason": "缺同抽序完整后继、可追溯击杀/存活推进和独立胜负样本，保持探索门槛；本批取整修复不等于SL选择得到验证。"
+    }
+  ],
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2/learner/runs/20261012-183811-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2/learner/runs/20261012-183811-strategy-proposal/report.md",
+  "validation_note": "全套首轮3394通过/1个15000ms超时；同字节源码单worker原脚本定向重跑5通过，后续paths阶段16通过（含重复5），合计去重341文件3406项。原失败保留，不声称首轮全套成功。"
+}

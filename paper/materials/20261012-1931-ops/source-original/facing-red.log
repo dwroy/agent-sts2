@@ -1,0 +1,103 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2/agent
+
+ ❯ tests/silent-crusher-facing.test.ts (10 tests | 9 failed) 177ms
+   × replays the actual turn-away action at states [ 283398, 283399 ] with the observed combined attack 80ms
+   × replays the actual turn-away action at states [ 283418, 283419 ] with the observed combined attack 18ms
+   × replays the actual turn-away action at states [ 283442, 283443 ] with the observed combined attack 9ms
+   × replays the actual turn-away action at states [ 283462, 283463 ] with the observed combined attack 10ms
+   × replays the actual turn-away action at states [ 283483, 283484 ] with the observed combined attack 11ms
+   × replays the actual turn-away action at states [ 283509, 283510 ] with the observed combined attack 14ms
+   × reproduces the two complete observed T2 exits at 15 and 16 block 9ms
+   × preserves no-turn predictions and the independent positive-Strength Weak pair 9ms
+   × does not reuse decision-turn precision after later simulated moves 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-crusher-facing.test.ts > replays the actual turn-away action at states [ 283398, 283399 ] with the observed combined attack
+ FAIL  tests/silent-crusher-facing.test.ts > replays the actual turn-away action at states [ 283418, 283419 ] with the observed combined attack
+ FAIL  tests/silent-crusher-facing.test.ts > replays the actual turn-away action at states [ 283442, 283443 ] with the observed combined attack
+ FAIL  tests/silent-crusher-facing.test.ts > replays the actual turn-away action at states [ 283462, 283463 ] with the observed combined attack
+ FAIL  tests/silent-crusher-facing.test.ts > replays the actual turn-away action at states [ 283483, 283484 ] with the observed combined attack
+ FAIL  tests/silent-crusher-facing.test.ts > replays the actual turn-away action at states [ 283509, 283510 ] with the observed combined attack
+AssertionError: expected undefined to be 1.5 // Object.is equality
+
+- Expected:
+1.5
+
++ Received:
+undefined
+
+ ❯ tests/silent-crusher-facing.test.ts:65:52
+     63| it.each(evidence.pairs)("replays the actual turn-away action at states…
+     64|   const input = inputFor(structuredClone(pair.before));
+     65|   expect(input.enemies[0]!.observedWeakFacingBase).toBe(1.5);
+       |                                                    ^
+     66|   const played = replaySteps(input, [step(input, pair.chosen.card_inde…
+     67|   const incoming = pair.after.combat.enemies.reduce((total, e) => tota…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/silent-crusher-facing.test.ts > reproduces the two complete observed T2 exits at 15 and 16 block
+AssertionError: expected 23 to be 22 // Object.is equality
+
+- Expected
++ Received
+
+- 22
++ 23
+
+ ❯ tests/silent-crusher-facing.test.ts:77:65
+     75| it("reproduces the two complete observed T2 exits at 15 and 16 block",…
+     76|   const first = inputFor(structuredClone(evidence.pairs[0]!.before));
+     77|   expect(replaySteps(first, [step(first, 0)])!.outcome.hpAfter).toBe(e…
+       |                                                                 ^
+     78|   const second = inputFor(structuredClone(evidence.pairs[1]!.before));
+     79|   const played = replaySteps(second, [step(second, 1), step(second, 2)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/silent-crusher-facing.test.ts > preserves no-turn predictions and the independent positive-Strength Weak pair
+AssertionError: expected undefined to be 5.25 // Object.is equality
+
+- Expected:
+5.25
+
++ Received:
+undefined
+
+ ❯ tests/silent-crusher-facing.test.ts:90:84
+     88|   const back = evidence.controls.find((r) => r.ts === "2026-10-06T03:5…
+     89|   for (const entry of [front, back]) {
+     90|     expect(enemySims(entry.state.combat, 10, "silent")[0]!.observedWea…
+       |                                                                                    ^
+     91|   }
+     92|   expect(front.state.combat.enemies[0]!.intents[0]!.damage).toBe(5);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/silent-crusher-facing.test.ts > does not reuse decision-turn precision after later simulated moves
+AssertionError: expected 1.5 to be undefined
+
+- Expected:
+undefined
+
++ Received:
+1.5
+
+ ❯ tests/silent-crusher-facing.test.ts:130:85
+    128|   try { simulateFight(input, null, 3, 1, false); } finally { solveTap.…
+    129|   expect(seen.length).toBeGreaterThan(1);
+    130|   for (const turn of seen.slice(1)) expect(turn.enemies[0]!.observedWe…
+       |                                                                                     ^
+    131| });
+    132|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 1 passed (10)
+   Start at  18:56:59
+   Duration  1.96s (transform 1.35s, setup 302ms, import 1.35s, tests 177ms, environment 0ms)
+

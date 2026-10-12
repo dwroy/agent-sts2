@@ -1,0 +1,35 @@
+{
+  "tsc": 0,
+  "vitest": 0,
+  "cases": 3406,
+  "files": 341,
+  "full_first_attempt": {
+    "exit": 1,
+    "files": 340,
+    "passed": 3394,
+    "failed": 1,
+    "reason": "silent-apotheosis-reference 15000ms timeout"
+  },
+  "retry": {
+    "command": "SANDBOX_WORKERS=1 bash tools/test-sandbox.sh tests/silent-apotheosis-reference.test.ts",
+    "exit": 0,
+    "first_stage": {
+      "files": 1,
+      "cases": 5
+    },
+    "second_stage": {
+      "files": 2,
+      "cases": 16
+    }
+  },
+  "coverage_note": "3395 primary cases with the single failed file rerun, plus 11 paths cases; repeated five cases counted once. First full attempt remains failed. No source or timeout changes between attempts.",
+  "red": {
+    "exit": 1,
+    "failed": 9,
+    "passed": 1
+  },
+  "restored": {
+    "exit": 0,
+    "cases": 10
+  }
+}

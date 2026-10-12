@@ -1,0 +1,1 @@
+前置只读检索中source-verification.json、agent/src/core/step.ts、agent/src/reflex/retain.ts路径不存在；改用实际source-ancestry.json及rg发现的路径。两次读取verify_evidence.py在命令执行前遇bubblewrap glob scan ENOENT（其他工作树临时路径消失）；同权限只读重试成功，无源码执行或测试失败，不修改沙箱配置。
