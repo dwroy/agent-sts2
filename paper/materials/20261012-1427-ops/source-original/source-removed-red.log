@@ -1,0 +1,59 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-134303/agent
+
+ ❯ tests/silent-apotheosis-reference.test.ts (5 tests | 3 failed) 6919ms
+   × reaches the real off Jev criteria and preserves all choices and resolved actions 93ms
+   × reaches the real v1 Jev criteria and preserves all choices and resolved actions 104ms
+   × labels random potion forecasts and unsimulated potions separately in F45's real question 6568ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-apotheosis-reference.test.ts > reaches the real off Jev criteria and preserves all choices and resolved actions
+ FAIL  tests/silent-apotheosis-reference.test.ts > reaches the real v1 Jev criteria and preserves all choices and resolved actions
+AssertionError: expected undefined to match object { Object (deck_copies, hand_copies, ...) }
+
+- Expected:
+{
+  "actual_cast_this_fight": null,
+  "deck_copies": 1,
+  "hand_copies": 1,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-apotheosis-reference.test.ts:92:40
+     90|   for (const key of Object.keys(actual.criteria!)) {
+     91|     const facts = JSON.parse(actual.criteria![key]!);
+     92|     expect(facts.apotheosis_reference).toMatchObject({ deck_copies: 1,…
+       |                                        ^
+     93|     delete facts.apotheosis_reference;
+     94|     expect(facts).toEqual(JSON.parse(previous.criteria![key]!));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/silent-apotheosis-reference.test.ts > labels random potion forecasts and unsimulated potions separately in F45's real question
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/silent-apotheosis-reference.test.ts:118:95
+    116|   const { decision } = planned(rawAt(275722));
+    117|   const facts = Object.values(decision.questions.plan!.criteria!).map(…
+    118|   expect(facts.some((fact) => fact.apotheosis_reference?.forecast_basi…
+       |                                                                                               ^
+    119|   expect(spy.mock.calls.some((call) => call[2] === "potion_median")).t…
+    120|   const state = parseGameState(rawAt(275722));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed (5)
+   Start at  13:55:44
+   Duration  8.59s (transform 1.24s, setup 355ms, import 1.15s, tests 6.92s, environment 0ms)
+
