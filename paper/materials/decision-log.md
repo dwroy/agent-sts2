@@ -2655,3 +2655,6 @@
 
 - 2026-10-13 07:00:10 CST 运维 codex：06:56 strategy-done064302原no_change/干净basee0d25c89及10项waiting核实；74原材料SHA、五类原日志6806+原runs6共6812记录的偏移/字节SHA、六局同角色A10原复盘、10原提案、16源码base/live SHA及8原局部实现祖先已核。已有限定子项不代宽提案implemented/duplicate；不同起点的MC数字不作同盘稳定性对照，历史dirty标记保持，不用当前源码快照冒还原原局完整运行树，未运行或借用生产测试、合入或上线版本。
 - 2026-10-13 07:00:10 CST 运维 codex：26原CLI只加提案/报告链接及说明，按物理顺序归档；物理/限定账本检查0、限定claim/status/version保持。原proposal-history分析勘误及ledger-before.initial字典覆盖误读与正式fold更正保留；自有采集器首次将按ID索引的proposals快照误当数组而TypeError，仅按实际schema核原键/对象，原材料未改。无新源码/待合提交/ship/发布号/补测或量化父要求完成；本轮仅提交回报与自有核验，不生成论文表、补队列知识、重派学习、重启对局、推送或改配置/权限/账号/ops prompt；材料paper/materials/20261013-0656-ops。
+
+- 2026-10-13 07:05:58 CST 运维 codex：07:01 strategy-done064302-s2原no_change/干净basee0d25c89及10waiting已核；130原材料SHA、8086原记录及逐局捕获副本偏移字节SHA、六局原复盘/10原提案/14源码base与捕获livee420的SHA及实际祖先核实。原状态顶层run_id抽取0帧初稿与修正4062帧、账本浅合并初稿及原生fold更正、搜索不存在路径失败均保留；23项机制事实/4组同指纹只作为原证据算术，不计生产测试或完整执行/收益验证。旧dirty树/原移动表未冻结的限制保持，不由当前源码补历史游戏知识。
+- 2026-10-13 07:05:58 CST 运维 codex：30原CLI只加提案/报告链接及限制，按物理顺序归档；物理/限定账本检查0、限定claim/status/version保持，无新源码/待合提交/ship/发布/补测/父项关闭。实际原learner_launch.command与原runtime-identity中Sol61/xhigh/default参数对核，旧题面high标签不作实际模型依据；原生请求model验证仍未知，不由默认/argv代填。自有采集器初次误读runtime_flags字段而KeyError，仅核实际command结构，原事件/回执不改、无再次模型调用。本轮仅归档此完成事件，不生成论文表、补知识或fix条目、复派、停止对局、推送或改配置/模型权限/账号/ops prompt；材料paper/materials/20261013-0701-ops。
