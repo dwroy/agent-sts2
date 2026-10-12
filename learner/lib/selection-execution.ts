@@ -1,4 +1,5 @@
 import { asArray, asRecord, numOrNull, str } from "../../agent/src/core/util/json.js";
+import { selectionObservation } from "./selection-observation.js";
 
 type Row = Record<string, unknown>;
 const lineText = (value: unknown): string => str(value).replace(/, then /g, ", ").trim();
@@ -48,6 +49,7 @@ function observation(row: Row) {
     turn: state.turn ?? null, screen: state.screen ?? null,
     hp: numOrNull(player.current_hp) ?? numOrNull(asRecord(state.run).current_hp),
     block: numOrNull(player.block), energy: numOrNull(player.energy),
+    powers: player.powers ?? null,
     enemies: asArray(combat.enemies).map((item) => {
       const enemy = asRecord(item);
       return { index: enemy.index ?? null, id: enemy.enemy_id ?? null, hp: enemy.current_hp ?? null,
@@ -101,11 +103,16 @@ export function auditSelectionExecution(input: unknown) {
       before: state ? observation(state) : null,
     };
   };
+  const observedActions = decisions.map(action);
+  const linkedActions = observedActions.map((item, index) => ({ ...item,
+    observed_interval: selectionObservation(decisions[index]!, decisions[index + 1], item.before,
+      observedActions[index + 1]?.before ?? null),
+  }));
   const segments = [];
   for (let i = 0; i < decisions.length; i++) {
     const row = decisions[i]!;
     if (!str(row.label).startsWith("combat/plan-choice")) continue;
-    const actions = [action(row)];
+    const actions = [linkedActions[i]!];
     const interruptions: { decision_id: unknown; kind: string }[] = [];
     let boundary: { kind: string; decision_id: unknown } = { kind: "input_exhausted", decision_id: null };
     for (let j = i + 1; j < decisions.length; j++) {
@@ -117,7 +124,7 @@ export function auditSelectionExecution(input: unknown) {
         boundary = { kind: "superseded_by_question", decision_id: next.decision_id }; break;
       }
       if (next.screen === "CARD_SELECTION") interruptions.push({ decision_id: next.decision_id, kind: "card_selection" });
-      actions.push(action(next));
+      actions.push(linkedActions[j]!);
       if (asRecord(next.chosen).action === "end_turn") {
         boundary = { kind: "end_turn_requested", decision_id: next.decision_id }; break;
       }
@@ -134,5 +141,7 @@ export function auditSelectionExecution(input: unknown) {
   return { schema: 1, character: "silent", ascension: 10, run_id: runId, segments,
     limitations: ["同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
       "completed 只代表动作接口回执；pending 不当成已生效。",
+      "连续原决策的前后状态仅记观测差值；能力出现时点、净HP变化不证明单卡因果或完整候选收益；缺失能力列表不当零层。",
+      "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。",
       "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。"] };
 }

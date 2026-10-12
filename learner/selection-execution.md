@@ -17,3 +17,9 @@ nice -n 19 node --import ./agent/node_modules/tsx/dist/loader.mjs \
 `predicted_final_rollout_best` 只比较同一道题里有推演且文字唯一匹配的最终候选，保留全部并列 best；没有这些条件则为 null。SL replacement 优先于可能仍记录原线的旧 journal。原 `rollout_best_chosen` 原样保留。候选 facts 包含原题中的毒、持续增益及推演文本，不解析自然语言来补造数值。
 
 `completed_response` 是单动作接口回执，`queued_unconfirmed` 不证明动作效果。`actual_full_candidate_result` 与 `actual_rollout_best` 均为 null：这个工具提供追溯链，不认证整个候选已经完整执行，也不把整轮净扣归给某个中途被重问替换的候选。没有调整护栏、SL排序、药水持有价或终局规则；其他角色不进入此审计。
+
+`actions[].observed_interval` 依据 8JRE1C4H4Z2W F33 T1/T2/T4/T5 的原帧补充连续决策间观测（silent-0021、silent-0079、silent-0125；原提案 silent-proposal-e5b87be50f28f311）。只有原始决策 `_line` 连续、层与 SL 尝试/重载均已知且一致、两个状态各自唯一匹配、观测时间递增，才记录后端点、玩家净 HP 差和能力列表变化。允许同回合的选牌/重问，或结束回合后的下一回合；其余边界为 unknown。准备输入时必须保留真实原日志行号，不为过滤后的数组重新编号。
+
+能力列表中“未列出”用 null 表示，不伪造零层；缺列表或重复能力 ID 不作比较。敌方只对名单不变且类型各唯一的端点记录 HP/能力变化，索引变化保留前后值；同类重复、召唤或减员时敌方比较留空。`enemy_id` 不是稳定实例 ID，唯一类型比较也不保证中间没有替换。后端点可能属于重问的新候选，观测区间不跨过去执行它。
+
+这些是观测净变化，不是卡牌因果、完整入伤或候选收益；pending/拒绝回执原样保留，`causal_action_result`、`full_candidate_result` 始终 null。末局缺少匹配的下一决策或终态战斗端点时保持 unknown，不能补造死亡截断前的完整伤害。本增量不等于原宽提案全部完成，不校准策略阈值，也不接在线选择器。
