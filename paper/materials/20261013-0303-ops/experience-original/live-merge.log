@@ -1,0 +1,83 @@
+git branch --show-current
+live
+git rev-parse exp-merge-recovery-20261013-000402
+c11569fc726c237f50899fdcc903a61ffe2d744c
+git rev-parse HEAD
+836d53eca46fcf8cf6c65fe0f51d2413e9253ca6
+git status --short
+ M notes/fight-value-backtest-silent.md
+ M notes/monster-db-check.md
+git diff --name-only --diff-filter=U
+git rev-parse -q --verify MERGE_HEAD
+git diff --cached --name-only
+bash -c while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+git rev-parse HEAD
+836d53eca46fcf8cf6c65fe0f51d2413e9253ca6
+git merge-base 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6 c11569fc726c237f50899fdcc903a61ffe2d744c
+dcfff63e2082a16eec0cd588b4ec9efd9b63c3c7
+git diff --name-only dcfff63e2082a16eec0cd588b4ec9efd9b63c3c7 c11569fc726c237f50899fdcc903a61ffe2d744c -- knowledge
+knowledge/builders/build-monster-db.py
+knowledge/builders/build-outcome-stats.py
+knowledge/builders/build-potion-equivalents.py
+knowledge/builders/characters.py
+knowledge/builders/refresh-potion-equivalents.sh
+knowledge/characters/ironclad/potion-equivalents.json
+knowledge/characters/ironclad/sl-elites.json
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/experience.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/potion-equivalents.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git diff --name-only dcfff63e2082a16eec0cd588b4ec9efd9b63c3c7 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6 -- knowledge
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git rev-parse c11569fc726c237f50899fdcc903a61ffe2d744c:knowledge/characters/silent/boss-damage.json
+64d583acfb0122de258368745d6d73a35ad69dc0
+git rev-parse 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6:knowledge/characters/silent/boss-damage.json
+0beee3a15dd1e15d1b293bc1bd5937957ebc5eaf
+git rev-parse c11569fc726c237f50899fdcc903a61ffe2d744c:knowledge/characters/silent/fight-value-gates.json
+25b814e4594f7bd395f76a48b1d68e4f3132e57f
+git rev-parse 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6:knowledge/characters/silent/fight-value-gates.json
+60833665ce41e0e95dbae0975328f8d55c8158e0
+git rev-parse c11569fc726c237f50899fdcc903a61ffe2d744c:knowledge/characters/silent/fight-value.json
+1540dbaaa41031e4c7e6c11b97bd341f382ba8e7
+git rev-parse 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6:knowledge/characters/silent/fight-value.json
+e24ccf80f08466a320fefd79dac5230a6312ed0f
+git rev-parse c11569fc726c237f50899fdcc903a61ffe2d744c:knowledge/characters/silent/monster-records.json
+93eea5d0802edba81859a101f3955f87682c80a5
+git rev-parse 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6:knowledge/characters/silent/monster-records.json
+5ee344dddd523011b75065b03db2cdd1ffca18ef
+git rev-parse c11569fc726c237f50899fdcc903a61ffe2d744c:knowledge/characters/silent/outcome-stats.json
+04891711d36a8b3c9a9eeb6626caaee5850e5b77
+git rev-parse 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6:knowledge/characters/silent/outcome-stats.json
+bbcae91d63b75bfc4965e2fb89b6170cdaba8aff
+git rev-parse c11569fc726c237f50899fdcc903a61ffe2d744c:knowledge/characters/silent/room-costs.json
+1c2f6f8da3ac47c70f21d03f6d87f480d457d628
+git rev-parse 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6:knowledge/characters/silent/room-costs.json
+37c827fd9eb8316e80a7436a8a493150c5909d69
+git rev-parse c11569fc726c237f50899fdcc903a61ffe2d744c:knowledge/common/card-upgrades.json
+8a6f77b658dd649f52cf49259592999ac09102b4
+git rev-parse 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6:knowledge/common/card-upgrades.json
+76a75cc4b81fab3b37ed5fa353a67646f8eaaa91
+git rev-parse c11569fc726c237f50899fdcc903a61ffe2d744c:knowledge/common/monster-db.json
+38fc96f6c1ee9b14f34f047de51e53af40dbb2f1
+git rev-parse 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6:knowledge/common/monster-db.json
+a808223049572896a97c1b723f6b16c9749f4d36
+git rev-parse c11569fc726c237f50899fdcc903a61ffe2d744c:knowledge/common/move-model.json
+d10a9ef200b8ed45c74e1205739b2f2fd9d510b7
+git rev-parse 836d53eca46fcf8cf6c65fe0f51d2413e9253ca6:knowledge/common/move-model.json
+c6ae4f14e7766a7122efa7d5c167ec6cc60a7c75

@@ -1,0 +1,128 @@
+{
+  "base": "301ec89a8dc0cb2902e09918b5fe1ba62865c89a",
+  "live_head": "f791ed9ea8f462723d371eda8c88fce2393c60f0",
+  "commits": [
+    {
+      "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+      "subject": "Model observed Silent Cunning Potion generation and hand capacity",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "15ea09ad75a421d4bd65a820c187c8ee188186c8",
+      "subject": "Model observed Silent Cunning Potion generation and hand capacity",
+      "base_ancestor": false,
+      "live_ancestor": false
+    },
+    {
+      "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+      "subject": "Model observed ordinary Strangle losses for Silent",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "75a27fb2c230dc552761b2ad9da4be8a9a35dec3",
+      "subject": "Model observed seven-card Precise Cut damage for Silent A10",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "fc7042d1df0626e9e726f4bc912d9c6f626d908f",
+      "subject": "Model observed Silent Royal Poison opening HP in continuous fights",
+      "base_ancestor": false,
+      "live_ancestor": false
+    },
+    {
+      "commit": "68711002f15b298b8863d2258ee5da236da151d2",
+      "subject": "Sync tested Silent Crusher facing rounding from live",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8",
+      "subject": "feat(silent): value resources and simulate continuous A10 bosses",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "c09762601e54bfc1ef7a1a8ee50e3285a4fd1e5c",
+      "subject": "Integrate scoped Silent mechanisms and restore checked infrastructure fixes",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "f2c7cc1a7288893bceae0f0b20304a2b1fae5f57",
+      "subject": "Replay tested Silent Crusher facing rounding on current live",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+      "subject": "Fix observed Silent Crusher facing rounding",
+      "base_ancestor": true,
+      "live_ancestor": true
+    }
+  ],
+  "blobs": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "base_sha256": "a4f848f7003b765586428382995bb71ffacb7def0cb8947da7fcb6b07b768ff8",
+      "live_sha256": "d71762da6c3a57c70fd032c0ad2f2ea8936b21a284c6ef5b894934f9eb32fc0c",
+      "same": false
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "base_sha256": "50ca5db4da8a73874b8fb802c186be53a4fc2f2e05937baba91f7f21e335551c",
+      "live_sha256": "f87dfd27fcd1dfa344b736649d51256c9dc4d2b4ba76339aaca0eaea1ba32a4a",
+      "same": false
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "base_sha256": "cf9930aa1e5b6484790411b725f68b43ec4d8e5f0f2745a0fc8259d8d8c7297f",
+      "live_sha256": "bf13016c1b2ba9f96da321dbd2cca87a8053821c53934890549b5b274d1571e0",
+      "same": false
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "base_sha256": "677c03483e97667052aabb1a8aa77e6a4ed89d7d74e839b839d4bee9cf1d38f1",
+      "live_sha256": "28415d72ab06e49376a4c703928365cea1f80881c2aefb9889bcf9dda152ae69",
+      "same": false
+    },
+    {
+      "path": "agent/src/reflex/continuation-value.ts",
+      "base_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+      "live_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+      "same": true
+    },
+    {
+      "path": "agent/src/sl/explore.ts",
+      "base_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+      "live_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+      "same": false
+    },
+    {
+      "path": "agent/src/sim/silent-opening.ts",
+      "base_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+      "live_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+      "same": true
+    },
+    {
+      "path": "agent/src/sim/double-boss-start.ts",
+      "base_sha256": "725cceb3f76da9192c575705cb21645784eeb4a268f498a49d4d6e5984b2f30c",
+      "live_sha256": "725cceb3f76da9192c575705cb21645784eeb4a268f498a49d4d6e5984b2f30c",
+      "same": true
+    },
+    {
+      "path": "agent/src/sim/boss-start.ts",
+      "base_sha256": "1b20bb9d2c604ae5c957de3713e988f6a24efa254705a93486d165b07da32cae",
+      "live_sha256": "6a7b5ea8a90c35c1490ce742114e6cfce072637ac2c95dbe5d1b2ab947a13282",
+      "same": false
+    },
+    {
+      "path": "agent/src/sim/boss-sim.ts",
+      "base_sha256": "c65a655fa7a84d5c82245f0a96280b8ab2041e4d3de87c3c0e99c148bafde4f9",
+      "live_sha256": "bf05fe4baede4e17350edf419a2052e62867ed7e8856af0ba54b68bd447d9c17",
+      "same": false
+    }
+  ]
+}

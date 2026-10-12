@@ -1,0 +1,62 @@
+## 经验库更新回报
+
+- 版本：2026-10-13.1 → 2026-10-13.2；提交：`c11569fc726c237f50899fdcc903a61ffe2d744c`（分支 `exp-merge-recovery-20261013-000402`）；合入：未合入，锁内发现9份知识数据重叠，按第8节停止。
+- 条数：新增1、更新26（加证据18、只改数字0、压缩8）、退役1；active 227 → 227。正文55,154字符；A8适用207条／49,295字符，A9适用208条／49,579字符。
+- 机制推理：
+  - 灵动步法 — 敏捷由后继挡牌兑现，仍须核独立截止 — 145局 — G4PQBCJQ7NP0
+  - 力量与虚弱 — 力量逐击计，临减到期恢复 — 245局 — XRCP2TKYKQBA
+  - 沙虫双截止 — 攻击与沙坑分别核算 — 29局 — G4PQBCJQ7NP0
+  - 构筑窗口（观察）— 持有组件不等已建立或可兑现 — 247局 — G4PQBCJQ7NP0
+  - 致命毒药 — 施毒不是即时伤害或无损胜 — 54局 — XRCP2TKYKQBA
+  - 毒雾 — 启动血价与后轮收益同核 — 116局 — G4PQBCJQ7NP0
+  - 同族SL（观察）— 删挡仍付血价，截断不算已胜 — 18局 — XRCP2TKYKQBA
+  - 磨蚀 — 敏捷、荆棘分别兑现 — 13局 — G4PQBCJQ7NP0
+  - 尖啸 — 临时减力不停止后轮成长 — 119局 — XRCP2TKYKQBA
+  - 开信刀 — 第三技能的群伤单独计 — 4局 — XRCP2TKYKQBA
+  - 佩尔的士兵 — 首张实挡翻倍，随后预览恢复 — 10局 — G4PQBCJQ7NP0
+  - 石炉加湿器 — 实际HEAL才兑现上限与回血 — 11局 — XRCP2TKYKQBA
+  - 抽弃后继（观察）— 候选省血不等完整执行 — 38局 — XRCP2TKYKQBA
+  - 雕像力量 — 苏醒后的攻击按当轮实挡核算 — 34局 — XRCP2TKYKQBA
+  - 水银沙漏 — 轮初实扣分源，不重复预记 — 5局 — G4PQBCJQ7NP0
+  - 虱虫SL（观察）— 成长、毒进度和即时血价同核 — 26局 — G4PQBCJQ7NP0
+  - 紧缠毒胜（观察）— 五个无挡毒胜窗口仍实付紧缠血价 — 5局 — XRCP2TKYKQBA
+- 改了的手写知识：无。
+- 测试：tsc退出0；隔离重跑vitest 343文件／3410用例／退出0；口径更正后补验2文件／21用例／退出0。原目录悬空链接失败保留。
+- 切片大小：总体中位增加40.5字符，最大8,755字符。适用条目已通过离线前缀读回，真实采用待观察。
+- 学习账本：新增silent-0442；改成proposed：silent-0005、0007、0011、0012、0018、0019、0020、0021、0025、0044、0046、0055、0070、0079、0117、0124、0125、0126、0131、0156、0157、0165、0180、0187、0188、0204、0210、0212、0307、0309、0316、0321、0385、0441；退役silent-0442；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。已追加一节变更记录；合入受阻事实及逐项映射见[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-014202-experience-update/report.md)和[独立映射](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-014202-experience-update/experience-integration.json)。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-13.2",
+  "commit": "c11569fc726c237f50899fdcc903a61ffe2d744c",
+  "merged": null,
+  "added": 1,
+  "updated": 26,
+  "retired": 1,
+  "active": 227,
+  "mechanisms": ["灵动步法", "力量与虚弱", "沙虫双截止", "构筑有限窗口（观察）", "致命毒药", "毒雾", "同族成长与SL（观察）", "磨蚀", "尖啸", "开信刀", "佩尔的士兵", "石炉加湿器", "抽弃后继（观察）", "雕像醒后力量", "水银沙漏", "虱虫成长与SL（观察）", "紧缠毒胜血价（观察）"],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3410},
+  "ledger": {
+    "added": ["silent-0442"],
+    "proposed": ["silent-0005", "silent-0007", "silent-0011", "silent-0012", "silent-0018", "silent-0019", "silent-0020", "silent-0021", "silent-0025", "silent-0044", "silent-0046", "silent-0055", "silent-0070", "silent-0079", "silent-0117", "silent-0124", "silent-0125", "silent-0126", "silent-0131", "silent-0156", "silent-0157", "silent-0165", "silent-0180", "silent-0187", "silent-0188", "silent-0204", "silent-0210", "silent-0212", "silent-0307", "silent-0309", "silent-0316", "silent-0321", "silent-0385", "silent-0441"],
+    "retired": ["silent-0442"],
+    "check": 0
+  },
+  "code_proposals": ["silent-proposal-696c2c597d5bd106", "silent-proposal-658e5d108ad7803a", "silent-proposal-834a4505b7a1503d", "silent-proposal-96ac22822157ee91", "silent-proposal-59711726a6a0ad3c"],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-014202-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13135-18b3-74d2-b1ad-668a28e284d6
+轮数：1；工具调用：command_execution×79 file_change×17
+token：输入 298.3k、输出 104.9k（其中推理 59.9k）、cache 读 17492.1k、cache 写 0（命中 98.3%）
+成本：未提供
+耗时：4318.5 s（墙钟）
+时间：首个事件 26.3 s、模型首个输出 32.0 s、首次工具 37.1 s、末次工具结束 3944.7 s；工具内共 2445.1 s，其余（模型生成、推理、网络）1847.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×95；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T01-42-05-01a13135-18b3-74d2-b1ad-668a28e284d6.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-014202-experience-update.jsonl
