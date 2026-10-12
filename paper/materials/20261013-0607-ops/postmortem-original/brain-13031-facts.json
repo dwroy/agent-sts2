@@ -1,0 +1,232 @@
+{
+  "situation": {
+    "screen": "MAP",
+    "floor": 1,
+    "act": 1,
+    "hp": "56/70",
+    "gold": 99
+  },
+  "route_map": {
+    "map_legend": "节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。",
+    "map": [
+      "F1 r0c3 远古（当前） → r1c0 r1c3 r1c6",
+      "F2 r1c0 普通战 → r2c0",
+      "F2 r1c3 普通战 → r2c3 r2c4",
+      "F2 r1c6 普通战 → r2c6",
+      "F3 r2c0 普通战 → r3c0",
+      "F3 r2c3 普通战 → r3c3 r3c4",
+      "F3 r2c4 问号 → r3c5",
+      "F3 r2c6 普通战 → r3c6",
+      "F4 r3c0 普通战 → r4c0",
+      "F4 r3c3 问号 → r4c3",
+      "F4 r3c4 普通战 → r4c5",
+      "F4 r3c5 问号 → r4c5 r4c6",
+      "F4 r3c6 普通战 → r4c6",
+      "F5 r4c0 普通战 → r5c0",
+      "F5 r4c3 普通战 → r5c3",
+      "F5 r4c5 普通战 → r5c5",
+      "F5 r4c6 问号 → r5c5",
+      "F6 r5c0 问号 → r6c0",
+      "F6 r5c3 普通战 → r6c4",
+      "F6 r5c5 商店 → r6c4 r6c6",
+      "F7 r6c0 问号 → r7c0 r7c1",
+      "F7 r6c4 问号 → r7c3 r7c4 r7c5",
+      "F7 r6c6 普通战 → r7c6",
+      "F8 r7c0 普通战 → r8c0",
+      "F8 r7c1 休息 → r8c1",
+      "F8 r7c3 普通战 → r8c2",
+      "F8 r7c4 普通战 → r8c4",
+      "F8 r7c5 商店 → r8c6",
+      "F8 r7c6 休息 → r8c6",
+      "F9 r8c0 普通战 → r9c1",
+      "F9 r8c1 问号 → r9c1",
+      "F9 r8c2 精英 → r9c1",
+      "F9 r8c4 普通战 → r9c4",
+      "F9 r8c6 普通战 → r9c5",
+      "F10 r9c1 宝箱 → r10c0 r10c1 r10c2",
+      "F10 r9c4 宝箱 → r10c4",
+      "F10 r9c5 宝箱 → r10c4 r10c6",
+      "F11 r10c0 普通战 → r11c0",
+      "F11 r10c1 精英 → r11c1",
+      "F11 r10c2 普通战 → r11c3",
+      "F11 r10c4 精英 → r11c3 r11c5",
+      "F11 r10c6 休息 → r11c5 r11c6",
+      "F12 r11c0 休息 → r12c0",
+      "F12 r11c1 休息 → r12c1",
+      "F12 r11c3 问号 → r12c2 r12c4",
+      "F12 r11c5 商店 → r12c5 r12c6",
+      "F12 r11c6 精英 → r12c6",
+      "F13 r12c0 精英 → r13c0",
+      "F13 r12c1 精英 → r13c0",
+      "F13 r12c2 休息 → r13c1",
+      "F13 r12c4 普通战 → r13c4",
+      "F13 r12c5 普通战 → r13c4",
+      "F13 r12c6 休息 → r13c6",
+      "F14 r13c0 普通战 → r14c0",
+      "F14 r13c1 问号 → r14c0",
+      "F14 r13c4 普通战 → r14c4",
+      "F14 r13c6 精英 → r14c6",
+      "F15 r14c0 精英 → r15c0",
+      "F15 r14c4 普通战 → r15c3",
+      "F15 r14c6 问号 → r15c6",
+      "F16 r15c0 休息 → r16c3",
+      "F16 r15c3 休息 → r16c3",
+      "F16 r15c6 休息 → r16c3",
+      "F17 r16c3 Boss（本幕 boss）"
+    ],
+    "position": "你在 r0c3（F1 远古）；下一步可走：r1c0、r1c3、r1c6",
+    "next_nodes": [
+      "r1c0",
+      "r1c3",
+      "r1c6"
+    ],
+    "winged_boots_left": 0,
+    "boss": "r16c3（F17 Boss）",
+    "walked": "r0c3",
+    "candidate_routes": {
+      "about": "代码列出的到 boss 的路线（事实，不是选项）：boss 前 HP 最高的 3 条、最稳的（休息点、精英进场和 boss 前最低的 p75 最高）、精英最多、商店最多的。按休息点分段：每段房间、精英进场、到达休息点和 boss 的 HP（从现在的 HP 56/70 起；中位数；p75 = 这一段的房间都按 p75；休息点按回血算，锻造就少这一次回血）。",
+      "routes": [
+        "【boss 前 HP 第 1；最稳（路上最低点最高）】r1c3 r2c4 r3c5 r4c6 r5c5 r6c6 r7c6 r8c6 r9c5 r10c6 r11c5 r12c5 r13c4 r14c4 r15c3 r16c3：F2–F7 普通战 2、问号 3、商店 1 → F8 休息 50/70（p75 34）；F9–F10 普通战 1、宝箱 1 → F11 休息 67/70（p75 62）；F12–F15 普通战 3、商店 1 → F16 休息 61/70（p75 46）；F17 boss 70/70（p75 70）",
+        "【boss 前 HP 第 2；商店最多（3）】r1c3 r2c4 r3c5 r4c6 r5c5 r6c4 r7c5 r8c6 r9c5 r10c6 r11c5 r12c5 r13c4 r14c4 r15c3 r16c3：F2–F10 普通战 2、问号 4、商店 2、宝箱 1 → F11 休息 50/70（p75 32）；F12–F15 普通战 3、商店 1 → F16 休息 61/70（p75 46）；F17 boss 70/70（p75 70）",
+        "【boss 前 HP 第 3】r1c3 r2c4 r3c5 r4c5 r5c5 r6c6 r7c6 r8c6 r9c5 r10c6 r11c5 r12c5 r13c4 r14c4 r15c3 r16c3：F2–F7 普通战 3、问号 2、商店 1 → F8 休息 47/70（p75 28）；F9–F10 普通战 1、宝箱 1 → F11 休息 65/70（p75 60）；F12–F15 普通战 3、商店 1 → F16 休息 61/70（p75 46）；F17 boss 70/70（p75 70）",
+        "【精英最多（4）】r1c6 r2c6 r3c6 r4c6 r5c5 r6c4 r7c3 r8c2 r9c1 r10c1 r11c1 r12c1 r13c0 r14c0 r15c0 r16c3：F2–F11 普通战 4、精英 2（F9 进场 44/70，p75 20；F11 进场 22/70，p75 耗尽）、问号 2、商店 1、宝箱 1 → F12 休息 耗尽；F13–F15 普通战 1、精英 2（F13 进场 耗尽；F15 进场 耗尽） → F16 休息 耗尽；F17 boss 耗尽"
+      ]
+    },
+    "room_costs": "第 1 幕每个房间掉血（中位数/p75，最大生命 70）：普通战 3/8（logged A10 act-1 Monster rooms, n=1127 incl. 8 deaths）；精英 22/36（logged A10 act-1 Elite rooms, n=213 incl. 16 deaths）；问号 0/2（logged A10 act-1 Unknown rooms, n=632）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。"
+  },
+  "facts": {
+    "act": 1,
+    "floor": 1,
+    "floors_to_act_boss": 16,
+    "ascension": 10,
+    "hp": "56/70 (80%)",
+    "gold": 99,
+    "act_boss": "THE_KIN_BOSS",
+    "deck_size": 13,
+    "deck_profile": "13 张 (攻击 6/技能 6/能力 0/诅咒或状态 1) | 升级 0 | 平均费用 0.77 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+    "deck": [
+      "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+      "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+      "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+      "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+      "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。"
+    ],
+    "relics": [
+      "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+      "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。"
+    ],
+    "potions": [],
+    "potion_slots": "0/2 used",
+    "act_boss_clock": {
+      "boss": "THE_KIN",
+      "boss_hp": 199,
+      "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+      "boss_hp_parts": [
+        "KIN_PRIEST"
+      ],
+      "boss_enemies": [
+        {
+          "enemy": "KIN_PRIEST",
+          "hp": 199,
+          "hp_samples": 30,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "BEAM_MOVE",
+              "per_hit": 3,
+              "hits": 3,
+              "basis": "base",
+              "samples": 69,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "ORB_OF_FRAILTY_MOVE",
+              "per_hit": 9,
+              "hits": 1,
+              "basis": "base",
+              "samples": 90,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "ORB_OF_WEAKNESS_MOVE",
+              "per_hit": 9,
+              "hits": 1,
+              "basis": "base",
+              "samples": 71,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        },
+        {
+          "enemy": "KIN_FOLLOWER",
+          "hp": 63,
+          "hp_samples": 112,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "BOOMERANG_MOVE",
+              "per_hit": 2,
+              "hits": 2,
+              "basis": "base",
+              "samples": 201,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "QUICK_SLASH_MOVE",
+              "per_hit": 5,
+              "hits": 1,
+              "basis": "base",
+              "samples": 247,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        }
+      ],
+      "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+      "deck_damage_per_turn_estimate": null,
+      "hp_loss_per_turn": null,
+      "survivable_turns": null,
+      "gap_per_turn": null,
+      "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+    },
+    "your_run_plan": {
+      "made_on_floor": 1,
+      "archetype": "Early damage and AoE into poison and Dexterity defense",
+      "want": [
+        "DASH",
+        "HAZE",
+        "NOXIOUS_FUMES",
+        "FOOTWORK",
+        "ACCELERANT",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "FINISHER"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Enter healthy with upgraded AoE, sustained poison, Dexterity-backed block, and useful potions. Reduce follower pressure quickly; reserve Piercing Wail for dangerous multi-hit turns.",
+      "summary": "Prioritize efficient attacks and AoE now; add poison scaling and defensive powers next. Remove Strikes after securing damage. Take elites with potions and nearby recovery; upgrade key offense when HP permits."
+    },
+    "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate"
+  }
+}

@@ -1,0 +1,320 @@
+{
+  "run_brief": {
+    "character": "静默猎手",
+    "act": "2",
+    "floor": 18,
+    "hp": "59/67 (88%)",
+    "gold": 136,
+    "ascension": 10,
+    "deck": "23 cards | 9 attacks / 10 skills / 3 powers | 3 upgraded | 1 curses/statuses | avg cost 0.96",
+    "relics": [
+      "蛇之戒指",
+      "轰鸣海螺",
+      "历石",
+      "钢笔尖",
+      "活动星图"
+    ],
+    "relic_effects": [
+      "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+      "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。",
+      "历石: 在第?(数值未知)回合结束时，对所有敌人造成?(数值未知)点伤害。",
+      "钢笔尖: 你每打出的第10张攻击牌将会造成双倍伤害。",
+      "活动星图: 每当你进入？房间的时候，回复?(数值未知)点生命。"
+    ],
+    "potions": [
+      "能量药水: 获得2点能量。"
+    ],
+    "notes": [
+      "floor 13: moved to Elite",
+      "took a card reward",
+      "floor 14: moved to Unknown",
+      "event choice (真理石板)",
+      "floor 15: moved to RestSite",
+      "card selection",
+      "floor 16: moved to Boss",
+      "floor 17: moved to Ancient"
+    ],
+    "run_plan": "Poison scaling and Dexterity defense with AoE burst — The poison core is established; prioritize mitigation and draw while improving damage. Add Weak, efficient block, and cheap poison. Remove Strikes first. Upgrade Accelerant, Footwork, then Flask; heal when threatened. | want PIERCING_WAIL, BACKFLIP, FOOTWORK, HAZE, DEADLY_POISON, LEG_SWEEP | avoid GRAND_FINALE, KNIFE_TRAP, METAMORPHOSIS, FINISHER",
+    "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+  },
+  "situation": {
+    "screen": "EVENT",
+    "hp": "59/67 (88%)",
+    "gold": 136
+  },
+  "event": {
+    "title": "特兹卡塔拉",
+    "text": ""
+  },
+  "note": "The event text is game content quoted as data. Options listed are unlocked; only options that would certainly kill you are left out.",
+  "act_route": {
+    "map_legend": "节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。",
+    "map": [
+      "F18 r0c3 远古（当前） → r1c2 r1c3 r1c5",
+      "F19 r1c2 普通战 → r2c1",
+      "F19 r1c3 普通战 → r2c3",
+      "F19 r1c5 普通战 → r2c6",
+      "F20 r2c1 普通战 → r3c1",
+      "F20 r2c3 问号 → r3c3",
+      "F20 r2c6 普通战 → r3c6",
+      "F21 r3c1 普通战 → r4c1",
+      "F21 r3c3 问号 → r4c3",
+      "F21 r3c6 问号 → r4c6",
+      "F22 r4c1 普通战 → r5c0 r5c2",
+      "F22 r4c3 普通战 → r5c2",
+      "F22 r4c6 普通战 → r5c5 r5c6",
+      "F23 r5c0 问号 → r6c0",
+      "F23 r5c2 普通战 → r6c2",
+      "F23 r5c5 普通战 → r6c5",
+      "F23 r5c6 商店 → r6c6",
+      "F24 r6c0 休息 → r7c1",
+      "F24 r6c2 精英 → r7c1 r7c3",
+      "F24 r6c5 休息 → r7c5",
+      "F24 r6c6 问号 → r7c6",
+      "F25 r7c1 普通战 → r8c0 r8c1",
+      "F25 r7c3 休息 → r8c3 r8c4",
+      "F25 r7c5 问号 → r8c4",
+      "F25 r7c6 精英 → r8c6",
+      "F26 r8c0 宝箱 → r9c0",
+      "F26 r8c1 宝箱 → r9c2",
+      "F26 r8c3 宝箱 → r9c3",
+      "F26 r8c4 宝箱 → r9c4 r9c5",
+      "F26 r8c6 宝箱 → r9c5",
+      "F27 r9c0 休息 → r10c0",
+      "F27 r9c2 休息 → r10c2 r10c3",
+      "F27 r9c3 休息 → r10c3",
+      "F27 r9c4 普通战 → r10c3",
+      "F27 r9c5 商店 → r10c4 r10c5",
+      "F28 r10c0 问号 → r11c0",
+      "F28 r10c2 普通战 → r11c2",
+      "F28 r10c3 精英 → r11c2",
+      "F28 r10c4 普通战 → r11c5",
+      "F28 r10c5 休息 → r11c5",
+      "F29 r11c0 问号 → r12c0",
+      "F29 r11c2 普通战 → r12c1 r12c2 r12c3",
+      "F29 r11c5 精英 → r12c4 r12c5",
+      "F30 r12c0 精英 → r13c0",
+      "F30 r12c1 商店 → r13c0 r13c2",
+      "F30 r12c2 普通战 → r13c2",
+      "F30 r12c3 问号 → r13c4",
+      "F30 r12c4 问号 → r13c4",
+      "F30 r12c5 普通战 → r13c5",
+      "F31 r13c0 普通战 → r14c1",
+      "F31 r13c2 精英 → r14c3",
+      "F31 r13c4 问号 → r14c3",
+      "F31 r13c5 精英 → r14c4",
+      "F32 r14c1 休息 → r15c3",
+      "F32 r14c3 休息 → r15c3",
+      "F32 r14c4 休息 → r15c3",
+      "F33 r15c3 Boss（本幕 boss）"
+    ],
+    "position": "你在 r0c3（F18 远古）；下一步可走：r1c2、r1c3、r1c5",
+    "next_nodes": [
+      "r1c2",
+      "r1c3",
+      "r1c5"
+    ],
+    "winged_boots_left": 0,
+    "boss": "r15c3（F33 Boss）",
+    "walked": "r0c3",
+    "candidate_routes": {
+      "about": "代码列出的到 boss 的路线（事实，不是选项）：boss 前 HP 最高的 3 条、最稳的（休息点、精英进场和 boss 前最低的 p75 最高）、精英最多、商店最多的。按休息点分段：每段房间、精英进场、到达休息点和 boss 的 HP（从现在的 HP 59/67 起；改变 HP 的选项按它的 route_effect 加减；中位数；p75 = 这一段的房间都按 p75；休息点按回血算，锻造就少这一次回血）。",
+      "routes": [
+        "【boss 前 HP 第 1；最稳（路上最低点最高）】r1c5 r2c6 r3c6 r4c6 r5c5 r6c5 r7c5 r8c4 r9c5 r10c5 r11c5 r12c4 r13c4 r14c3 r15c3：F19–F23 普通战 4、问号 1 → F24 休息 19/67（p75 耗尽）；F25–F27 问号 1、商店 1、宝箱 1 → F28 休息 39/67（p75 38）；F29–F31 精英 1（F29 进场 59/67，p75 59）、问号 2 → F32 休息 31/67（p75 14）；F33 boss 51/67（p75 51）",
+        "【boss 前 HP 第 2】r1c2 r2c1 r3c1 r4c1 r5c0 r6c0 r7c1 r8c1 r9c2 r10c2 r11c2 r12c3 r13c4 r14c3 r15c3：F19–F23 普通战 4、问号 1 → F24 休息 19/67（p75 耗尽）；F25–F26 普通战 1、宝箱 1 → F27 休息 29/67（p75 21）；F28–F31 普通战 2、问号 2 → F32 休息 29/67（p75 11）；F33 boss 49/67（p75 49）",
+        "【boss 前 HP 第 3】r1c2 r2c1 r3c1 r4c1 r5c0 r6c0 r7c1 r8c1 r9c2 r10c2 r11c2 r12c1 r13c0 r14c1 r15c3：F19–F23 普通战 4、问号 1 → F24 休息 19/67（p75 耗尽）；F25–F26 普通战 1、宝箱 1 → F27 休息 29/67（p75 21）；F28–F31 普通战 3、商店 1 → F32 休息 19/67（p75 耗尽）；F33 boss 39/67（p75 39）",
+        "【商店最多（2）】r1c5 r2c6 r3c6 r4c6 r5c6 r6c6 r7c6 r8c6 r9c5 r10c5 r11c5 r12c4 r13c4 r14c3 r15c3：F19–F27 普通战 3、精英 1（F25 进场 29/67，p75 3）、问号 2、商店 2、宝箱 1 → F28 休息 1/67（p75 耗尽）；F29–F31 精英 1（F29 进场 21/67，p75 21）、问号 2 → F32 休息 耗尽；F33 boss 耗尽",
+        "【精英最多（3）】r1c5 r2c6 r3c6 r4c6 r5c6 r6c6 r7c6 r8c6 r9c5 r10c5 r11c5 r12c5 r13c5 r14c4 r15c3：F19–F27 普通战 3、精英 1（F25 进场 29/67，p75 3）、问号 2、商店 2、宝箱 1 → F28 休息 1/67（p75 耗尽）；F29–F31 普通战 1、精英 2（F29 进场 21/67，p75 21；F31 进场 耗尽） → F32 休息 耗尽；F33 boss 耗尽"
+      ]
+    },
+    "room_costs": "第 2 幕每个房间掉血（中位数/p75，最大生命 67）：普通战 10/18（logged A10 act-2 Monster rooms, n=624 incl. 31 deaths）；精英 28/43.5（logged A10 act-2 Elite rooms, n=88 incl. 17 deaths）；问号 0/1（logged A10 act-2 Unknown rooms, n=505 incl. 4 deaths）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。"
+  },
+  "facts": {
+    "act": 2,
+    "floor": 18,
+    "floors_to_act_boss": 15,
+    "ascension": 10,
+    "hp": "59/67 (88%)",
+    "gold": 136,
+    "act_boss": "KNOWLEDGE_DEMON_BOSS",
+    "deck_size": 23,
+    "deck_profile": "23 张 (攻击 9/技能 10/能力 3/诅咒或状态 1) | 升级 3 | 平均费用 0.96 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+    "deck": [
+      "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+      "DEFEND_SILENT+ 防御+ (Skill, 1 energy): 获得8点格挡。",
+      "4x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+      "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+      "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+      "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+      "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+      "ECHOING_SLASH+ 回响斩击+ (Attack, 1 energy): 对所有敌人造成13点伤害。 每有一名敌人被击杀，就重复此效果。",
+      "BLADE_DANCE 刀刃之舞 (Skill, 1 energy): 添加3张小刀到你的手牌。 消耗。",
+      "FOOTWORK 灵动步法 (Power, 1 energy): 获得2点敏捷。",
+      "THE_BOMB 炸弹 (Skill, 2 energy): 在3回合结束后，对所有敌人造成40点伤害。",
+      "SLICE 切割 (Attack, 0 energy): 造成6点伤害。",
+      "BOUNCING_FLASK 弹跳药瓶 (Skill, 2 energy): 随机给予敌人3层中毒3次。",
+      "NOXIOUS_FUMES+ 毒雾+ (Power, 1 energy): 在你的回合开始时，给予所有敌人3层中毒。",
+      "ACCELERANT 触媒 (Power, 1 energy): 中毒会额外触发1次。",
+      "BURST 爆发 (Skill, 1 energy): 在这个回合，你打出的下一张技能牌会被额外打出一次。"
+    ],
+    "relics": [
+      "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+      "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。",
+      "历石: 在第?(数值未知)回合结束时，对所有敌人造成?(数值未知)点伤害。",
+      "钢笔尖: 你每打出的第10张攻击牌将会造成双倍伤害。",
+      "活动星图: 每当你进入？房间的时候，回复?(数值未知)点生命。"
+    ],
+    "potions": [
+      "ENERGY_POTION 能量药水: 获得2点能量。"
+    ],
+    "potion_slots": "1/2 used",
+    "act_boss_clock": {
+      "boss": "KNOWLEDGE_DEMON",
+      "boss_hp": 399,
+      "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+      "boss_hp_parts": [
+        "KNOWLEDGE_DEMON"
+      ],
+      "boss_enemies": [
+        {
+          "enemy": "KNOWLEDGE_DEMON",
+          "hp": 399,
+          "hp_samples": 41,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "per_hit": 9,
+              "hits": 3,
+              "basis": "base",
+              "samples": 57,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "PONDER_MOVE",
+              "per_hit": 13,
+              "hits": 1,
+              "basis": "base",
+              "samples": 53,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "SLAP_MOVE",
+              "per_hit": 18,
+              "hits": 1,
+              "basis": "base",
+              "samples": 72,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        }
+      ],
+      "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+      "deck_damage_per_turn_estimate": null,
+      "hp_loss_per_turn": null,
+      "survivable_turns": null,
+      "gap_per_turn": null,
+      "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+    },
+    "your_run_plan": {
+      "made_on_floor": 16,
+      "archetype": "Poison scaling and Dexterity defense with AoE burst",
+      "want": [
+        "PIERCING_WAIL",
+        "BACKFLIP",
+        "FOOTWORK",
+        "HAZE",
+        "DEADLY_POISON",
+        "LEG_SWEEP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "FINISHER"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Establish poison and Dexterity safely. Bomb and Echoing Slash clear followers. Use Forge on Accelerant, Footwork, or Flask; defend through Frail and multihits.",
+      "summary": "The poison core is established; prioritize mitigation and draw while improving damage. Add Weak, efficient block, and cheap poison. Remove Strikes first. Upgrade Accelerant, Footwork, then Flask; heal when threatened."
+    },
+    "event": {
+      "id": "TEZCATARA",
+      "title": "特兹卡塔拉",
+      "option_outcome_stats": {
+        "o0": "A10 选这个选项 n=16 过本幕boss 38% 均终层34.5；遗物 烫嘴可可 第2幕获得 n=16 过本幕boss 38% 均终层34.5",
+        "o1": "A10 选这个选项 n=1(少) 过本幕boss 0% 均终层28；遗物 烘焙手套 第2幕获得 n=1(少) 过本幕boss 0% 均终层28",
+        "o2": "无数据"
+      }
+    },
+    "route_relic_observations": [
+      {
+        "relic_id": "PLANISPHERE",
+        "name": "活动星图",
+        "map_room_type": "Unknown",
+        "observed_hp_gain": 5,
+        "observations": 6,
+        "trigger": "进入地图问号房时，在事件选择或战斗出牌之前回血；问号随后开战也已先回血。",
+        "evidence": [
+          {
+            "run": "2SU6XN2AEJRD",
+            "floor": 12,
+            "turn": 1
+          },
+          {
+            "run": "2SU6XN2AEJRD",
+            "floor": 15,
+            "turn": null
+          },
+          {
+            "run": "2SU6XN2AEJRD",
+            "floor": 21,
+            "turn": null
+          },
+          {
+            "run": "2SU6XN2AEJRD",
+            "floor": 36,
+            "turn": null
+          },
+          {
+            "run": "2SU6XN2AEJRD",
+            "floor": 43,
+            "turn": null
+          },
+          {
+            "run": "HMVJKM56S4Q8",
+            "floor": 31,
+            "turn": 1
+          }
+        ],
+        "projection_note": "这是六次进房实回5的观察。当前血量保持现场值；房间代价按进房前到离房后的净血量变化统计，已包含进房回血，不在路线投影上再加5。现有房间统计没有按是否持有星图区分。",
+        "limits": "满血截断、其他房型及择路收益尚未验证；HMVJKM56S4Q8 F31回5后仅11血离场，F32回血至34仍在F33失败。全部选项保留，由DeepSeek结合房间代价与其他事实选择。"
+      }
+    ],
+    "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+    "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-13T04:47:31，A10 共 217 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 217 局）：到达第1幕的局过第1幕boss 74% (n=217)，到达第2幕的局过第2幕boss 48% (n=161)，到达第3幕的局过第3幕boss 3% (n=77)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+  },
+  "run_plan_task": {
+    "trigger": "act",
+    "due_because": "act 2 begins",
+    "facts": "the deck, relics, potions, HP, gold, act boss and act_boss_clock are in state.facts",
+    "current_plan": {
+      "in": "state.facts.your_run_plan",
+      "made_in_act": 1,
+      "made_on_floor": 16,
+      "hp_then": "96%",
+      "made_because": "review"
+    }
+  }
+}

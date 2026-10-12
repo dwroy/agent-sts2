@@ -1,0 +1,228 @@
+{
+  "run_brief": {
+    "character": "静默猎手",
+    "act": "1",
+    "floor": 13,
+    "hp": "52/70 (74%)",
+    "gold": 29,
+    "ascension": 10,
+    "deck": "21 cards | 9 attacks / 9 skills / 2 powers | 1 upgraded | 1 curses/statuses | avg cost 0.95",
+    "relics": [
+      "蛇之戒指",
+      "轰鸣海螺",
+      "历石",
+      "钢笔尖"
+    ],
+    "relic_effects": [
+      "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+      "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。",
+      "历石: 在第?(数值未知)回合结束时，对所有敌人造成?(数值未知)点伤害。",
+      "钢笔尖: 你每打出的第10张攻击牌将会造成双倍伤害。"
+    ],
+    "potions": [],
+    "notes": [
+      "floor 8: moved to Monster",
+      "took a card reward",
+      "floor 9: moved to Treasure",
+      "floor 10: moved to RestSite",
+      "card selection",
+      "floor 11: moved to Shop",
+      "bought something in a shop",
+      "floor 12: moved to RestSite"
+    ],
+    "run_plan": "AoE burst and Dexterity defense, adding supported poison scaling — Prioritize block, Weak, and draw over more basic attacks. Acquire poison sources before Accelerant. Heal now; upgrade key cards when safe. Keep elites near recovery and preserve boss-entry HP. | want PIERCING_WAIL, BACKFLIP, FOOTWORK, NOXIOUS_FUMES, HAZE, ACCELERANT | avoid GRAND_FINALE, KNIFE_TRAP, METAMORPHOSIS, FINISHER",
+    "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+  },
+  "situation": {
+    "screen": "REST",
+    "hp": "52/70 (74%)",
+    "hp_percent": 74,
+    "upgradable_cards": 20,
+    "next_nodes": [
+      "Elite"
+    ]
+  },
+  "facts": {
+    "act": 1,
+    "floor": 13,
+    "floors_to_act_boss": 4,
+    "ascension": 10,
+    "hp": "52/70 (74%)",
+    "gold": 29,
+    "act_boss": "THE_KIN_BOSS",
+    "deck_size": 21,
+    "deck_profile": "21 张 (攻击 9/技能 9/能力 2/诅咒或状态 1) | 升级 1 | 平均费用 0.95 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+    "deck": [
+      "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+      "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+      "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+      "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+      "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+      "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+      "ECHOING_SLASH+ 回响斩击+ (Attack, 1 energy): 对所有敌人造成13点伤害。 每有一名敌人被击杀，就重复此效果。",
+      "BLADE_DANCE 刀刃之舞 (Skill, 1 energy): 添加3张小刀到你的手牌。 消耗。",
+      "FOOTWORK 灵动步法 (Power, 1 energy): 获得2点敏捷。",
+      "THE_BOMB 炸弹 (Skill, 2 energy): 在3回合结束后，对所有敌人造成40点伤害。",
+      "SLICE 切割 (Attack, 0 energy): 造成6点伤害。",
+      "BOUNCING_FLASK 弹跳药瓶 (Skill, 2 energy): 随机给予敌人3层中毒3次。",
+      "NOXIOUS_FUMES 毒雾 (Power, 1 energy): 在你的回合开始时，给予所有敌人2层中毒。"
+    ],
+    "relics": [
+      "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+      "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。",
+      "历石: 在第?(数值未知)回合结束时，对所有敌人造成?(数值未知)点伤害。",
+      "钢笔尖: 你每打出的第10张攻击牌将会造成双倍伤害。"
+    ],
+    "potions": [],
+    "potion_slots": "0/2 used",
+    "act_boss_clock": {
+      "boss": "THE_KIN",
+      "boss_hp": 199,
+      "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+      "boss_hp_parts": [
+        "KIN_PRIEST"
+      ],
+      "boss_enemies": [
+        {
+          "enemy": "KIN_PRIEST",
+          "hp": 199,
+          "hp_samples": 30,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "BEAM_MOVE",
+              "per_hit": 3,
+              "hits": 3,
+              "basis": "base",
+              "samples": 69,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "ORB_OF_FRAILTY_MOVE",
+              "per_hit": 9,
+              "hits": 1,
+              "basis": "base",
+              "samples": 90,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "ORB_OF_WEAKNESS_MOVE",
+              "per_hit": 9,
+              "hits": 1,
+              "basis": "base",
+              "samples": 71,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        },
+        {
+          "enemy": "KIN_FOLLOWER",
+          "hp": 63,
+          "hp_samples": 112,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "BOOMERANG_MOVE",
+              "per_hit": 2,
+              "hits": 2,
+              "basis": "base",
+              "samples": 201,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "QUICK_SLASH_MOVE",
+              "per_hit": 5,
+              "hits": 1,
+              "basis": "base",
+              "samples": 247,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        }
+      ],
+      "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+      "deck_damage_per_turn_estimate": null,
+      "hp_loss_per_turn": null,
+      "survivable_turns": null,
+      "gap_per_turn": null,
+      "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+    },
+    "act_boss_sim": "boss 模拟没有结果（只跑完 32 次模拟（不足 300 次），选项之间的差噪声太大，不给数字）：act_boss_clock 仍是 boss 时钟的估计",
+    "your_run_plan": {
+      "made_on_floor": 8,
+      "archetype": "AoE burst and Dexterity defense, adding supported poison scaling",
+      "want": [
+        "PIERCING_WAIL",
+        "BACKFLIP",
+        "FOOTWORK",
+        "NOXIOUS_FUMES",
+        "HAZE",
+        "ACCELERANT"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "FINISHER"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Upgrade Footwork and Echoing Slash when safe. Soften followers with Bomb, then chain kills. Bring multihit mitigation, reliable block, and useful potions.",
+      "summary": "Prioritize block, Weak, and draw over more basic attacks. Acquire poison sources before Accelerant. Heal now; upgrade key cards when safe. Keep elites near recovery and preserve boss-entry HP."
+    },
+    "rest_site": {
+      "heal_amount": "21 HP: 21 (30% of max HP, rounded down)",
+      "hp_after_heal": "70/70",
+      "upgradable_cards": [
+        "打击",
+        "打击",
+        "打击",
+        "打击",
+        "打击",
+        "防御",
+        "防御",
+        "防御",
+        "防御",
+        "防御",
+        "中和",
+        "生存者",
+        "冲刺",
+        "刀刃之舞",
+        "灵动步法",
+        "炸弹",
+        "切割",
+        "弹跳药瓶",
+        "毒雾"
+      ],
+      "floors_to_act_boss": 4,
+      "next_nodes": [
+        "Elite"
+      ],
+      "forced_next": "Elite",
+      "forced_elite_ahead": "every path meets an Elite within 3 nodes, with no rest site or shop before it",
+      "hp_band_now": "60-80%",
+      "option_outcome_stats": {
+        "HEAL": "无数据",
+        "SMITH": "无数据"
+      }
+    },
+    "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+    "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-13T04:47:31，A10 共 217 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 217 局）：到达第1幕的局过第1幕boss 74% (n=217)，到达第2幕的局过第2幕boss 48% (n=161)，到达第3幕的局过第3幕boss 3% (n=77)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+  }
+}
