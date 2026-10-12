@@ -15,6 +15,7 @@ import { basename, dirname, join } from "node:path";
 import type { AnswerSet } from "../reflex/jev/answers.js";
 import { classifyJevError, type JevAskResult } from "../reflex/jev/client.js";
 import type { QuestionSet } from "../reflex/jev/questions.js";
+import { compactJevRequest, isJevContextLimitError, type CompactJevRequest } from "../reflex/jev/compact-request.js";
 
 export interface JevPromptMeta {
   /** The decision this request was made for (the decision row's `decision_id`). */
@@ -52,6 +53,8 @@ export interface JevPromptRecord {
   output_tokens: number | null;
   answers?: AnswerSet;
   error?: { kind: string; status: number | null; message: string };
+  /** Present only on the bounded, lossless retry of a context-limit rejection. */
+  transport_encoding?: CompactJevRequest["encoding"];
 }
 
 export interface JevPromptLog {
@@ -103,6 +106,21 @@ export interface JevAsker {
  */
 export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet): Promise<JevAskResult> {
   const started = Date.now();
+  try {
+    return await askOnceLogged(jev, log, meta, state, questions);
+  } catch (error) {
+    if (!isJevContextLimitError(error)) throw error;
+    const compact = compactJevRequest(state, questions);
+    if (!compact) throw error;
+    // Keep the first rejection and the actual retry body in separate joined log rows.
+    // No recursion: another rejection is returned to the existing failure handling.
+    const result = await askOnceLogged(jev, log, meta, compact.state, compact.questions, compact.encoding);
+    return { ...result, latencyMs: Date.now() - started };
+  }
+}
+
+async function askOnceLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet, encoding?: CompactJevRequest["encoding"]): Promise<JevAskResult> {
+  const started = Date.now();
   const base = {
     ts: new Date(started).toISOString(),
     decision_id: meta.decisionId,
@@ -115,6 +133,7 @@ export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta
     jev_context: meta.jevContext,
     call: meta.call,
     request: { model: jev.model, state, questions },
+    ...(encoding ? { transport_encoding: encoding } : {}),
   };
   try {
     const result = await jev.ask(state, questions);
