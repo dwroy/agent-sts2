@@ -1,0 +1,84 @@
+## 经验库更新回报
+
+- 版本：2026-10-12.9 → 2026-10-12.10；提交：`ff5b05f230fe6a8187559d513c7bca12ceb71472`（分支 exp-silent）；合入：未合入，20处共享记录预检冲突，已保留 live 刷新提交。
+- 条数：新增1、更新15（加证据15、只改数字0）、退役0；active 226 → 227；正文54894字。A8适用206条/48864字，A9适用207条/49148字。
+- 机制推理：
+  - 力量与虚弱 — 虚弱不停止成长 — 241局 — 0C3AR6J0Z8LD
+  - 毒雾 — 实建后轮初施毒，眼换手另核 — 113局 — 0C3AR6J0Z8LD
+  - 触媒 — 增加毒结次数，死亡可截断兑现 — 86局 — 0C3AR6J0Z8LD
+  - 余像 — 按实际出牌次数补挡 — 46局 — 0C3AR6J0Z8LD
+  - 萎靡 — 制品可阻减力而留下虚弱 — 28局 — 0C3AR6J0Z8LD
+  - 黑暗镣铐 — 制品可阻止临时减力 — 9局 — 0C3AR6J0Z8LD
+  - 凋萎 — 持牌伤可先致死，未结毒不算伤害 — 33局 — 0C3AR6J0Z8LD
+  - 护喉甲 — 覆甲按剩余层数计 — 20局 — 0C3AR6J0Z8LD
+  - 敏捷药 — 后续两张挡牌共多4挡 — 76局 — 0C3AR6J0Z8LD
+  - 纸伤难愈 — 每次漏击降2生命上限 — 11局 — 0C3AR6J0Z8LD
+  - 跨幕回复 — 缺血80%向下取整 — 87局 — 0C3AR6J0Z8LD
+  - 岩石铠甲+ — 实加6覆甲，单局低置信 — 1局 — 0C3AR6J0Z8LD
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 341文件/3406用例/退出0。原工作树因历史断链失败，同SHA隔离副本完整通过；失败原件保留。
+- 切片大小：中位减少17字；最大8473字。
+- 学习账本：新增 silent-0439；改成 proposed：silent-0005、0011、0012、0013、0016、0019、0020、0021、0023、0024、0025、0027、0053、0079、0221、0241、0243、0385；退役无；`ledger.py check`退出0。
+- 需要 Roy 定的事：无。合入冲突交运维兜底；[完整报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-200523-experience-update/report.md)、[逐项映射](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-200523-experience-update/experience-integration.json)已保存，变更记录仅追加一节。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-12.10",
+  "commit": "ff5b05f230fe6a8187559d513c7bca12ceb71472",
+  "merged": null,
+  "added": 1,
+  "updated": 15,
+  "retired": 0,
+  "active": 227,
+  "mechanisms": [
+    "力量与虚弱不停止成长",
+    "毒雾实建与额外起始施毒",
+    "触媒多次结毒及死亡截断",
+    "余像按实出牌补挡",
+    "萎靡与制品逐效果结算",
+    "黑暗镣铐临减可被制品阻止",
+    "凋萎持牌伤与未结毒分账",
+    "护喉甲覆甲按剩余层数",
+    "敏捷药增益由后继挡牌兑现",
+    "纸伤难愈按漏击降低上限",
+    "跨幕缺血80%向下取整",
+    "岩石铠甲+实加6覆甲"
+  ],
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3406
+  },
+  "ledger": {
+    "added": ["silent-0439"],
+    "proposed": [
+      "silent-0005", "silent-0011", "silent-0012", "silent-0013",
+      "silent-0016", "silent-0019", "silent-0020", "silent-0021",
+      "silent-0023", "silent-0024", "silent-0025", "silent-0027",
+      "silent-0053", "silent-0079", "silent-0221", "silent-0241",
+      "silent-0243", "silent-0385"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-74351d60df8c52f2",
+    "silent-proposal-bcabaa484c0b38e5",
+    "silent-proposal-e3c8ab730def6fdd"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-200523-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a13000-e05d-7231-a2c1-b31ad5665ade
+轮数：1；工具调用：command_execution×96
+token：输入 222.0k、输出 49.4k（其中推理 16.1k）、cache 读 13569.4k、cache 写 0（命中 98.4%）
+成本：未提供
+耗时：2119.1 s（墙钟）
+时间：首个事件 11.6 s、模型首个输出 18.5 s、首次工具 22.4 s、末次工具结束 2085.1 s；工具内共 2400.7 s，其余（模型生成、推理、网络）-293.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×87 wait×3；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T20-05-26-01a13000-e05d-7231-a2c1-b31ad5665ade.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-200523-experience-update.jsonl

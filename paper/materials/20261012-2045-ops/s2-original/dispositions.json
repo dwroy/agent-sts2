@@ -1,0 +1,165 @@
+[
+  {
+    "id": "silent-proposal-c20b5139dd0dff71",
+    "location": "DUZUBAJ3A8GP F27 T4—6",
+    "ledger": [
+      "silent-0168"
+    ],
+    "evidence": "原状态274830—274833污染0→3→3→6，能力牌没有增加此帧污染；T5三技能0→6→12→18，末挡17，下一轮净损9、污染清除、敌本体净扣13。",
+    "counterexample": "技能同时有挡或毒收益；没有同起点完整替线实战，不能因污染而强制少打技能。",
+    "existing": "turn-solver.ts:2034/2819按技能累计火花与逐击污染；rollout.ts:2378接入增长。b2805be4ba44b7375c7908d873889372cc3cfe6c已为live祖先。",
+    "missing": "历史实际移动表及连续模型输入未冻结；当前观测端点不能验收技能收益、跨轮增长、污染清除的完整联合重放。",
+    "validation": "冻结A10手牌/抽序、移动表和逐卡状态，比较HP/挡/毒/敌HP；完整替线另按独立局后移验证。"
+  },
+  {
+    "id": "silent-proposal-ae9e692d680e3819",
+    "location": "5PM6JAQG6FNQ F39 T2、T4—6",
+    "ledger": [
+      "silent-0183",
+      "silent-0005"
+    ],
+    "evidence": "274351/274352/274354两步法使敏捷−4→−2→0；274357/274358失落退场时力量−4→0，274362敏捷又−2。冻结F39的71个遗忘观测没有零血帧。",
+    "counterexample": "末次一次步法只回−2敏，毒杀失落仍不能保住玩家；负属性公式正确不等于已验证所有来源返还。",
+    "existing": "selection-observation.ts按能力端点记变化，名单变化时不凭index推实体或返还；dc0e6080cb20c508d94c006648cc3edf0188d306已上线。",
+    "missing": "没有遗忘死亡返敏、同属性多来源抢夺及临时属性混合返还的相邻观测，不能补全来源模型。",
+    "validation": "冻结抢夺前后、来源退场前后、临时属性到期帧；逐来源核验，击杀顺序另需完整对照。"
+  },
+  {
+    "id": "silent-proposal-52f1e1bd2e7db0ed",
+    "location": "CA5KE8GFJ9X2 F13 T1—5",
+    "ledger": [
+      "silent-0231"
+    ],
+    "evidence": "273238/273247/273252/273258/273263力量0/0/4/4/8、覆甲9/9/8/7/6；喷水11→15→19，施弱后11/14。末2HP/10挡至0HP，净损被零血截断。",
+    "counterexample": "覆甲序列未隔离全部减层触发；实际死亡净损2不等于显示14−10=4。",
+    "existing": "monster-db.ts当前进阶exact直接返回观测HP/攻击，源4ed3c72df30f27b881da637aebf528b97440e0bb；room-costs.ts门槛仍5，源295a90aef9eb6f5b267490294f7733806419c45a。均为live祖先。",
+    "missing": "首样本读取子项已有；仍缺历史实际移动表输入与覆甲独立触发/叠加来源，不能验收完整成长模型。",
+    "validation": "固定数据库调用输入及T1—5轨迹，补可区分覆甲条件；保持房间代价五样本门槛。"
+  },
+  {
+    "id": "silent-proposal-6dd8bbff876be528",
+    "location": "5PM6JAQG6FNQ F38 T3—4",
+    "ledger": [
+      "silent-0233",
+      "silent-0209"
+    ],
+    "evidence": "274308/274313电击力量2→4、攻击17→19，index4→3；F38冻结帧每帧最多一个ZAPBOT，只有类型enemy_id/index等字段。",
+    "counterexample": "先杀爪牙35伤/损3只是未执行候选；index变化不能证明是新实体或稳定身份。",
+    "existing": "rollout.ts把HIGH_VOLTAGE_POWER纳入每个SimEnemy的growth，源b2805be4ba44b7375c7908d873889372cc3cfe6c已上线。",
+    "missing": "缺同种新旧召唤并存/替换的稳定实例身份及实际移动表输入，无法验收新实体不继承旧计数的全部分支。",
+    "validation": "补进入/退场/再召唤的可区分观测与冻结模拟输入；不由单种连续帧推出固定击杀顺序。"
+  },
+  {
+    "id": "silent-proposal-578e415a259e6835",
+    "location": "8JRE1C4H4Z2W F17 T6；F33 T1—11",
+    "ledger": [
+      "silent-0005",
+      "silent-0006",
+      "silent-0018",
+      "silent-0079",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0125",
+      "silent-0023",
+      "silent-0027",
+      "silent-0046",
+      "silent-0016"
+    ],
+    "evidence": "270216/270282完整指纹相同，F33 T2实损3/15，敌净扣10/17；本局consumer66段中21段被重问替代。末T11为5HP、22挡、显示37攻击，最后净损5受零血截断。",
+    "counterexample": "F17 T6抽牌后重问，候选省血不等于整轮省血；末试延至T11仍败。原预测0/24与5/24不能称同死率。",
+    "existing": "候选分层9d8278702dbc581b5015ba7ec9a70dc0fb94cccb、首次派发fdaf787a372880b0438e73bcac7e6d2168b038ed、端点dc0e6080cb20c508d94c006648cc3edf0188d306、终局83512ddcd2c70fd9b983dc38524ff25c8970c1d3均已上线。",
+    "missing": "缺完整候选步骤/中间事件的执行证明、跨重规划资源归因及能力累计收益；当前消费者有意保留未知，不能整项关闭。",
+    "validation": "将首/三试T2、第二试T5、F17 T6及末T11逐段核对；SL恢复单列，补中间事件才归因累计收益。"
+  },
+  {
+    "id": "silent-proposal-c0767768bf6a7ab1",
+    "location": "YF0LXT1QSTGG F48 T1、T5；F33重打",
+    "ledger": [
+      "silent-0079"
+    ],
+    "evidence": "271309/271348同指纹，第二/三试T1实损0/9、敌净扣45/38；本局consumer52段中22段被重问替代。",
+    "counterexample": "第四试T5候选弃牌后没有完整执行，末试恢复挡续步仍败；F33重打有成功反例，不能否定所有探索。",
+    "existing": "66283dd9982bdd7f480da7a4d9bfefea0572a9ac已记录同题原/替线预测资源差，scope=current_turn_prediction且execution=unverified；端点/终局另列。",
+    "missing": "缺覆盖重放、弃牌后完整执行链与受控整战胜线，不能设置探索禁令或血价系数。",
+    "validation": "固定0/9和45/38，保留F33成功及未执行替换反例；按run_id切分后移验证，不能把六次SL当六局。"
+  },
+  {
+    "id": "silent-proposal-a46bdb7fe711d79a",
+    "location": "YF0LXT1QSTGG F48 T3—5",
+    "ledger": [
+      "silent-0021",
+      "silent-0027",
+      "silent-0028",
+      "silent-0085"
+    ],
+    "evidence": "277512/277513敌4/111HP、4毒、15力→212/212HP、0毒、0力；末轮五敏先得23挡，第三小刀后六敏仍23。277527为触媒2、零毒、18HP/23挡/44攻击，最终HP0。",
+    "counterexample": "其他尝试建立毒雾/余像仍败；持有毒组件不是已经施放，零毒本身不能确定整战死因。",
+    "existing": "aad2700abed6dff1d66e87fb36aaa6fedb39adf3已上线；silent-phase-current.ts分列持有与当前已建/毒/阶段HP，poison_damage_already_dealt=null。",
+    "missing": "缺跨阶段伤害来源的完整中间事件及完整候选执行链，不能认证累计兑现或据此改排序。",
+    "validation": "固定111→212、清旧毒、零毒触媒、23挡不倒补；完整事件可用后分别核直伤/毒/额外触发。"
+  },
+  {
+    "id": "silent-proposal-1044224808015e5c",
+    "location": "XP2SL33HT0D9 F33 T1、T3—4",
+    "ledger": [
+      "silent-0079"
+    ],
+    "evidence": "271992/272040同指纹T3实损9/14、净扣24/27；271982/272195同指纹T1实损2/10、净扣25/34，后者还建立力量。",
+    "counterexample": "两线后轮抽弃牌/选择不同且无完整胜线；末试T2零损、T3损4，不能仅按少挡牌数或存活轮数归因。",
+    "existing": "66283dd9982bdd7f480da7a4d9bfefea0572a9ac已把血价/伤害/力量预测分列；没有把零胜并列标为安全。",
+    "missing": "缺相同资源起点的完整替线及独立后续验证，不能启用B2零胜并列时固定低损血优先。",
+    "validation": "冻结9/14、24/27及2/10、25/34，保留成长差；按独立局验证，不由全败样本拟全局惩罚。"
+  },
+  {
+    "id": "silent-proposal-7cbc6005db712ba9",
+    "location": "XP2SL33HT0D9 F33 T2—5",
+    "ledger": [
+      "silent-0021",
+      "silent-0005",
+      "silent-0007",
+      "silent-0063",
+      "silent-0065",
+      "silent-0241",
+      "silent-0242"
+    ],
+    "evidence": "278236/278237/278242爪力量0→−9→0；T2轮初14挡到20且零损。278249/278252/278253火箭57→38→28；四敏脆弱下两轮挡牌各6，末毒后敌153/125、玩家0。",
+    "counterexample": "当轮朝向与虚弱贡献可分列，但已建力敏/毒未带来减员；额外触发未全隔离，混合意图含null不能自行补0。",
+    "existing": "dc0e6080cb20c508d94c006648cc3edf0188d306端点与83512ddcd2c70fd9b983dc38524ff25c8970c1d3终局已上线；不认证完整候选收益。",
+    "missing": "缺联合候选收益、额外触发隔离及混合意图缺值语义；不能用现有局部事实关闭全提案或修改权重。",
+    "validation": "固定57→38→28、14→20、0→−9→0、6挡和3+7毒净扣；额外分支须有本角色相邻帧，未知保持null。"
+  },
+  {
+    "id": "silent-proposal-c59f592f1427a67e",
+    "location": "YF0LXT1QSTGG F48 T1、T4—5；XP2SL33HT0D9 F33 T1—5",
+    "ledger": [
+      "silent-0005",
+      "silent-0006",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0028",
+      "silent-0027",
+      "silent-0079",
+      "silent-0046",
+      "silent-0085",
+      "silent-0060",
+      "silent-0063",
+      "silent-0065",
+      "silent-0062",
+      "silent-0039",
+      "silent-0013",
+      "silent-0011",
+      "silent-0023",
+      "silent-0018",
+      "silent-0087",
+      "silent-0241",
+      "silent-0242"
+    ],
+    "evidence": "两局三个同指纹配对、阶段清毒、临时减力恢复、轮初14挡与死亡截断已重核。两局consumer共110段，其中44段被重问替代。",
+    "counterexample": "两局同存档相关尝试不代表原宽机制包101局的全部子机制验证；本轮没有重新审计两局所有路线、回血和药水。",
+    "existing": "原答/替换/派发/端点/当前阶段/终局等子项均有真实live祖先，见source-proof.json；完整候选结果仍null。",
+    "missing": "局部端点无法闭合宽机制包全部累计收益、跨重规划归因及完整恢复/资源链，保留原提案waiting。",
+    "validation": "按子机制分别列支持/反例与验收分母；继续分列预测、已派发、已建立、已结算、恢复资源，不补未见事件。"
+  }
+]

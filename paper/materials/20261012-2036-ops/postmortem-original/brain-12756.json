@@ -1,0 +1,308 @@
+{
+  "ts": "2026-10-12T11:45:54.817Z",
+  "run_id": "8ZCFND4T35H7",
+  "label": "rest/plan",
+  "engine": "codex",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "system_sha": "aa0dbeaa3487",
+  "system_chars": 182991,
+  "knowledge": {
+    "mode": "full",
+    "ascension": 10,
+    "prefix_sha": "274566cbfb59",
+    "prefix_chars": 180707
+  },
+  "memory": {
+    "act": "第1幕的精英与危险小怪（monster DB 实测；失血 = 赢局 中位/p75；n = 场次）:\n旧日雕像 [精英] A10: HP 132 (n=43) | 43 场 胜率 91% 阵亡 4 | 赢局失血 中位/p75 32/45.5 (n=39) | 招式 旧日雕像: 沉睡 (Sleep) → 苏醒 (Buff) +10力 → 斩击 15 →循环回 斩击\n多尼斯异鸟 [精英] A10: HP 90 (n=35) | 35 场 胜率 97% 阵亡 1 | 赢局失血 中位/p75 21.5/35.2 (n=34) | 招式 多尼斯异鸟: 飞扑 19 → 啄击 4×3 →循环回 飞扑\n花园幽灵鳗×4 [精英] A10: HP 118 (n=36) | 36 场 胜率 94% 阵亡 2 | 赢局失血 中位/p75 13/25 (n=34) | 招式 花园幽灵鳗: 啃咬 5 → 甩动 7 → 猛晃 1×3 → 变大 (Buff) +3力 →循环回 啃咬\n异蛙寄生虫 [精英] A10: HP 67 (n=32) | 32 场 胜率 91% 阵亡 3 | 赢局失血 中位/p75 19/27 (n=29) | 招式 异蛙寄生虫: 感染 (StatusCard) 塞3张状态牌 → 甩动 5×4 →循环回 感染\n鬼祟珊瑚群 [精英] A10: HP 80 (n=25) | 25 场 胜率 96% 阵亡 1 | 赢局失血 中位/p75 19/27.5 (n=24) | 招式 鬼祟珊瑚群: 猛冲 16 → ZOOM_MOVE_2 16 → 惯性 11 +4力 → 穿刺戳击 8×2 →循环回 猛冲\n骇鳗 [精英] A10: HP 150 (n=28) | 28 场 胜率 86% 阵亡 4 | 赢局失血 中位/p75 26/40.2 (n=24) | 招式 骇鳗: 撞击 18 → 撕扯 4×3 →循环回 撞击；其他: STUNNED (Stun), 恐吓 (Debuff)\n劫掠者斧手+劫掠者弩手+劫掠者追踪手 [小怪] A10: HP 65.5 (n=2) | 2 场 胜率 50% 阵亡 1 | 赢局失血 中位/p75 16/16 (n=1) | 招式 劫掠者斧手: SWING_1 6 → SWING_2 6 → 大力挥舞 13 →循环回 SWING_1；劫掠者弩手: 装填 (Defend) → 射击！ 16 →循环回 装填；劫掠者追踪手: 追踪 (Debuff) → 放狗 1×9 →循环回 放狗\n飞蝇菌子+闪光贾克斯果 [小怪] A10: HP 87 (n=25) | 25 场 胜率 96% 阵亡 1 | 赢局失血 中位/p75 9.5/13 (n=24) | 招式 飞蝇菌子: 脆弱孢子 9 → 猛砸 12 → 易伤孢子 (Debuff) →循环回 猛砸；闪光贾克斯果: 能量球 4 +2力 →循环回 能量球\n地精佣兵 [小怪] A10: HP 52 (n=34) | 34 场 胜率 97% 阵亡 1 | 赢局失血 中位/p75 7/12 (n=33) | 招式 地精佣兵: 拿来 8×2 → 双重猛击 7×2 → 嘿嘿 9 +2力 →循环回 拿来\n拳击构装体 [小怪] A10: HP 60 (n=29) | 29 场 胜率 97% 阵亡 1 | 赢局失血 中位/p75 4.5/10.2 (n=28) | 招式 拳击构装体: 准备就绪 (Defend) → 快速拳 6×2 → 强力拳 16 →循环回 准备就绪\n下水道蚌 [小怪] A10: HP 58 (n=35) | 35 场 胜率 97% 阵亡 1 | 赢局失血 中位/p75 4/8.8 (n=34) | 招式 下水道蚌: 喷射 11 → 增压 (Buff) +4力 →循环回 喷射\n钙化邪教徒+潮湿邪教徒 [小怪] A10: HP 93 (n=29) | 29 场 胜率 97% 阵亡 1 | 赢局失血 中位/p75 4/8.5 (n=28) | 招式 钙化邪教徒: 念咒 (Buff) → 黑暗打击 11 →循环回 黑暗打击；潮湿邪教徒: 念咒 (Buff) → 黑暗打击 3 →循环回 黑暗打击\n雾菇 [小怪] A10: HP 78 (n=28) | 28 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 4.5/8 (n=28) | 招式 雾菇: 虚幻孢子 (Summon) → 重击 9 +1力 → HEADBUTT_MOVE 16 →循环回 重击；其他: SWIPE_RANDOM_MOVE 9 +1力\n树叶史莱姆（中）+树叶史莱姆（小）+树枝史莱姆（中）+树枝史莱姆（小） [小怪] A10: HP 87 (n=23) | 23 场 胜率 96% 阵亡 1 | 赢局失血 中位/p75 2.5/7.8 (n=22) | 招式 树叶史莱姆（中）: 黏糊射击 (StatusCard) 塞2张状态牌 → 团块射击 9 →循环回 黏糊射击；树叶史莱姆（小）: 冲撞 4 → 黏液 (StatusCard) 塞1张状态牌 →循环回 冲撞；树枝史莱姆（中）: 黏糊射击 (StatusCard) 塞1张状态牌 → 戳刺扑击 12 →循环回 黏糊射击；树枝史莱姆（小）: 冲撞 5 →循环回 冲撞\n第1幕 boss: THE_KIN_BOSS\nboss 数据库 同族信徒 (THE_KIN) A10: HP 同族信徒 62.5×2 (n=54) + 同族神官 199 (n=27) | 阶段 HP: 63 > 62 (KIN_FOLLOWER) (n=3)\n我方战绩: 27 场，胜率 85% (n=27)，阵亡 4；赢局失血 中位/p75 48/54 (n=23)；赢局回合 11/14.5 (n=23)；每回合失血 4.3/5.2 (n=27)\n同族信徒 招式: 快斩 5 → 回旋镖 2×2 → 力量之舞 (Buff) +3力 →循环回 快斩 | 能力: 爪牙, 力量 3\n同族神官 招式: 脆弱法球 9 → 虚弱法球 9 → 灵魂光束 3×3 → 黑暗仪式 (Buff) +3力 →循环回 脆弱法球 | 能力: 力量 3",
+    "history": "本局历程（已离开的楼层，按层按发生顺序，只追加）: 每层首行 = 层 房间 层末 HP(/上限，变化时标出) ¥金币（房间 怪/精/问/休/店/宝/王/古，·=未知）；其下每行一件事: 决策「标签 [决策者]: 选择 — 未核实理由」（DS=DeepSeek；未核实理由 = DeepSeek 当时所写，不是事实）、「战斗 敌人: HP 战前→战后/上限 药:用掉的药水」、牌组/遗物/药水/上限变化（起始牌组与起始遗物不计）、路线规划。\n第1幕:\nF1 · HP67/81 ¥99\n run-plan [DS]: (start) Efficient area damage transitioning into poison and dexterity defense — Secure efficient attacks and area damage first, then scaling defense and draw. Remove Strikes after obtaining replacements. Fight elites only with adequate damage, potions, and recovery; preserve health for the boss. | want DAGGER_SPRAY, DASH, NOXIOUS_FUMES, FOOTWORK, PIERCING_WAIL, BACKFLIP | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER\n event/choose [DS]: 营养牡蛎: 获得11点最大生命值。 — 未核实理由: Oyster provides immediate health and stronger future rests without deck pollution; observed outcomes also favor it over Fishing Rod.\n +遗物 营养牡蛎(事件); 上限 70→81(事件); HP增加观测 56/70→67/81（+11；来源未隔离；F1/EVENT→F1/EVENT，仅帧间净变化）\n map/route-plan [DS]: route r1c2 普通战 → r2c1 普通战 → r3c2 普通战 → r4c2 问号 → r5c2 问号 → r6c2 问号 → r7c1 普通战 → r8c2 商店 → r9c1 宝箱 → r10c0 问号 → r11c0 休息 → r12c0 普通战 → r13c0 普通战 → r14c0 精英 → r15c0 休息 → r16c3 Boss — 未核实理由: 前三战补强，商店整备，晚精英前后有营火保障。\nF2 怪 HP67 ¥107\n 战斗 毛绒伏地虫: 67→67/81\n 路线规划（第1幕 F1 定，当时 HP 83%）: 怪→怪→怪→问→问→问→怪→店→宝→问→休→怪→怪→精→休→王\n +药 缚魂药水(奖励)\n reward/card [DS]: 猎杀者 — 未核实理由: Predator supplies essential early damage and next-turn draw; this starter deck needs offense more than additional block cards.\n +卡 猎杀者(奖励)\nF3 怪 HP67 ¥119\n 战斗 缩小甲虫: 67→67/81\n reward/card [DS]: 精确切击 — 未核实理由: Precise Cut provides free finishing damage after spending energy, improving early offense without requiring additional setup.\n +卡 精确切击(奖励)\nF4 怪 HP66 ¥134\n 战斗 小啃兽: 67→66/81 药:缚魂药水\n 用药 缚魂药水(战斗); +药 能力药水(奖励)\n reward/card [DS]: 匕首雨 — 未核实理由: Dagger Spray fills our area-damage gap against Kin followers. Simulations and outcomes favor it; healthy HP supports another card-reward fight.\n map/route-change [DS]: route (card-reward review): r4c3 普通战 → r5c2 问号 → r6c2 问号 → r7c1 普通战 → r8c2 商店 → r9c1 宝箱 → r10c0 问号 → r11c0 休息 → r12c0 普通战 → r13c0 普通战 → r14c0 精英 → r15c0 休息 → r16c3 Boss\n +卡 匕首雨(奖励)\n 路线重规划（card-reward review）（第1幕 F4 定，当时 HP 81%）: 怪→问→问→怪→店→宝→问→休→怪→怪→精→休→王\nF5 怪 HP47 ¥149\n 战斗 树枝史莱姆（中）+飞蝇菌子: 66→47/81\n +药 毒药水(奖励)\n reward/card [DS]: 迷雾 — 未核实理由: Haze supplies group poison and weakness against Kin, advances our poison-defense plan, and shows the strongest simulated boss progress.\n +卡 迷雾(奖励)\nF6 问 HP47 ¥149\n event/choose [DS]: 顺走地图: 获得藏宝图。 — 未核实理由: Preserve HP and both useful potions; the map offers substantial future gold despite adding an unplayable draw.\n +卡 藏宝图(事件)\nF7 问 HP56 ¥149\n event/plan [DS]: 吃下: upgrade 迷雾 — 未核实理由: Healing and upgraded Haze strengthen immediate survival; increased group poison and longer weakness directly address the Kin boss.\n HP增加观测 47/81→56/81（+9；来源未隔离；F7/EVENT→F7/CARD_SELECTION，仅帧间净变化）\n selection/upgrade [DS]: DeepSeek plan 8ZCFND4T35H7:F7:event#2 step 2: upgrade 迷雾 (named with the event choice)\n 升级 迷雾(事件)\nF8 怪 HP42 ¥164\n 战斗 藤蔓蹒跚者: 56→42/81\n reward/card [DS]: 弹跳药瓶 — 未核实理由: Bouncing Flask supplies sustained poison damage for elites and the Kin, complementing Haze. Another Precise Cut is redundant; Strangle lacks support.\n +卡 弹跳药瓶(奖励)\nF9 店 HP42 ¥41\n shop/plan [DS]: shop plan: buy 灵动步法 (74g), buy 后空翻 (49g), stop shopping — 未核实理由: Footwork supplies lasting defense for poison turns; Backflip improves block and consistency. Spend 123 gold, saving the remainder rather than adding conditional cards.\n +卡 灵动步法(商店)\n shop/buy [DS]: DeepSeek plan 8ZCFND4T35H7:F9:shop#3 step 2: buy 后空翻 (49g)\n +卡 后空翻(商店)\n shop/buy [DS]: DeepSeek plan 8ZCFND4T35H7:F9:shop#3 step 3: stop shopping\nF10 宝 HP42 ¥76\n chest/relic [code]: only one relic offered\n +遗物 吃不完的糖(宝箱)\nF11 问 HP42 ¥108\n chest/relic [code]: only one relic offered\n +遗物 钨合金棍(宝箱)\n run-plan [DS]: (review) Area poison scaling with dexterity defense and efficient cycling — Heal at the next fire and avoid the optional elite. Prioritize poison scaling, efficient defense, and cycling; remove Strikes. Use safer fights for Candy power rewards without taking unsupported powers. | want NOXIOUS_FUMES, ACCELERANT, PIERCING_WAIL, BACKFLIP, LEG_SWEEP, FOOTWORK | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCURACY\nF12 休 HP66 ¥108\n rest/plan [DS]: 休息: 回复最大生命值的30%（24）。 — 未核实理由: Heal before three fights and bypass the elite; preserve boss HP and potions, with a possible Footwork upgrade at the final camp.\n map/route-change [DS]: route (rest-site review): r12c0 普通战 → r13c0 普通战 → r14c1 普通战 → r15c0 休息 → r16c3 Boss\n HP增加观测 42/81→66/81（+24；休息点内；F12/REST→F12/REST，仅帧间净变化）\n 路线重规划（rest-site review）（第1幕 F12 定，当时 HP 81%）: 怪→怪→怪→休→王\nF13 怪 HP46 ¥118\n 战斗 缩小甲虫+毛绒伏地虫: 66→46/81\n reward/card [DS]: 逃脱计划 — 未核实理由: Free cycling and Footwork-scaled block support our poison cards without adding another expensive commitment.\n +卡 逃脱计划(奖励)\nF14 怪 HP34 ¥131\n 战斗 蛮兽: 46→34/81\n reward/card [DS]: 毒雾 — 未核实理由: Noxious Fumes supplies sustained area poison against Kin and strengthens long-term scaling. Mirage is less reliable before poison is established.\n +卡 毒雾(奖励)\nF15 怪 HP33 ¥145\n 战斗 方柱构装体: 34→33/81 药:能力药水\n 用药 能力药水(战斗)\n reward/card [DS]: skip — 未核实理由: Existing poison is sufficient. More expensive offense dilutes defensive draws, Finisher lacks support, and skipping has the strongest boss simulation.",
+    "now": "",
+    "this_floor": "",
+    "route": "本幕进度（按 F12 的路线）: 已走 4/5 [怪怪怪休] | 下一步 王（预计 HP 100%） | 剩余 1: 王",
+    "lookahead": "距 boss 1 层 | 到 boss 前各路线: 精英 0, 休息 0, 商店 0, 问号 0, 宝箱 0 | 下一个节点强制: Boss"
+  },
+  "question": "What should I do at this rest site? Heal, smith a named card (one option per card that can be upgraded, with what the upgrade changes), or another rest action; code plays the action and the card pick. You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Each smith option names its card: code upgrades that card on the next screen without asking again.",
+  "options": {
+    "o0": "{\"option\":\"休息\",\"kind\":\"HEAL\",\"description\":\"回复最大生命值的30%（24）。\"}",
+    "o1:c0": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 打击\",\"card\":\"打击\",\"copies\":5,\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=10 过本幕boss 80% 均终层29.3 / 给了没拿 无数据；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据\"}",
+    "o1:c5": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 防御\",\"card\":\"防御\",\"copies\":5,\"upgrade\":\"获得5点格挡。 -> 获得8点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=10 过本幕boss 80% 均终层29.3 / 给了没拿 无数据\"}",
+    "o1:c10": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 中和\",\"card\":\"中和\",\"upgrade\":\"造成3点伤害。 给予1层虚弱。 -> 造成4点伤害。 给予2层虚弱。\",\"card_outcome_stats\":\"无数据\"}",
+    "o1:c11": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 生存者\",\"card\":\"生存者\",\"upgrade\":\"获得8点格挡。 丢弃1张牌。 -> 获得11点格挡。 丢弃1张牌。\",\"card_outcome_stats\":\"无数据\"}",
+    "o1:c13": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 猎杀者\",\"card\":\"猎杀者\",\"upgrade\":\"造成15点伤害。 在下个回合抽2张牌。 -> 造成20点伤害。 在下个回合抽2张牌。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=55 过本幕boss 76% 均终层29.7 / 给了没拿 n=48 过本幕boss 77% 均终层34.8；第2幕 拿了 n=4(少) 过本幕boss 50% 均终层38.2 / 给了没拿 n=47 过本幕boss 55% 均终层39.2；第3幕 拿了 n=8 过本幕boss 0% 均终层47.4 / 给了没拿 n=19 过本幕boss 11% 均终层46.6\"}",
+    "o1:c14": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 精确切击\",\"card\":\"精确切击\",\"upgrade\":\"造成13点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。 -> CalculatedDamage 13->16, CalculationBase 13->16\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=23 过本幕boss 83% 均终层29.3 / 给了没拿 n=17 过本幕boss 82% 均终层38.5；第2幕 拿了 n=7 过本幕boss 57% 均终层37.3 / 给了没拿 n=22 过本幕boss 59% 均终层40；第3幕 拿了 无数据 / 给了没拿 n=10 过本幕boss 0% 均终层46.9\"}",
+    "o1:c15": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 匕首雨\",\"card\":\"匕首雨\",\"upgrade\":\"对所有敌人造成4点伤害两次。 -> 对所有敌人造成6点伤害两次。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=81 过本幕boss 78% 均终层31.4 / 给了没拿 n=26 过本幕boss 58% 均终层29.4；第2幕 拿了 n=10 过本幕boss 50% 均终层36.8 / 给了没拿 n=56 过本幕boss 50% 均终层37.5；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=32 过本幕boss 3% 均终层46.5\"}",
+    "o1:c17": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 藏宝图\",\"card\":\"藏宝图\",\"upgrade\":\"不能被打出。 在下一阶段的地图上，标记一个有600额外金币的地点。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=23 过本幕boss 74% 均终层32.8 / 给了没拿 无数据\"}",
+    "o1:c18": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 弹跳药瓶\",\"card\":\"弹跳药瓶\",\"upgrade\":\"随机给予敌人3层中毒3次。 -> 随机给予敌人3层中毒4次。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=36 过本幕boss 92% 均终层34 / 给了没拿 n=10 过本幕boss 80% 均终层35.9；第2幕 拿了 n=23 过本幕boss 57% 均终层38.6 / 给了没拿 n=12 过本幕boss 25% 均终层32.8；第3幕 拿了 n=6 过本幕boss 17% 均终层47 / 给了没拿 n=3(少) 过本幕boss 33% 均终层45.7\"}",
+    "o1:c19": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 灵动步法\",\"card\":\"灵动步法\",\"upgrade\":\"获得2点敏捷。 -> 获得3点敏捷。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=75 过本幕boss 84% 均终层32.8 / 给了没拿 n=1(少) 过本幕boss 0% 均终层9；第2幕 拿了 n=53 过本幕boss 55% 均终层39.2 / 给了没拿 n=2(少) 过本幕boss 50% 均终层39；第3幕 拿了 n=18 过本幕boss 0% 均终层46.9 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48\"}",
+    "o1:c20": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 后空翻\",\"card\":\"后空翻\",\"upgrade\":\"获得5点格挡。 抽2张牌。 -> 获得8点格挡。 抽2张牌。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=95 过本幕boss 78% 均终层32.2 / 给了没拿 n=21 过本幕boss 62% 均终层27.6；第2幕 拿了 n=69 过本幕boss 57% 均终层39.2 / 给了没拿 n=6 过本幕boss 50% 均终层35.5；第3幕 拿了 n=25 过本幕boss 0% 均终层46.8 / 给了没拿 n=4(少) 过本幕boss 0% 均终层48.2\"}",
+    "o1:c21": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 逃脱计划\",\"card\":\"逃脱计划\",\"upgrade\":\"抽1张牌。 如果抽到的是技能牌，则获得3点格挡。 -> 抽1张牌。 如果抽到的是技能牌，则获得5点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=11 过本幕boss 73% 均终层29.7 / 给了没拿 n=26 过本幕boss 77% 均终层32；第2幕 拿了 n=11 过本幕boss 36% 均终层35.1 / 给了没拿 n=15 过本幕boss 60% 均终层38.5；第3幕 拿了 n=9 过本幕boss 11% 均终层47.2 / 给了没拿 n=4(少) 过本幕boss 0% 均终层48.8\"}",
+    "o1:c22": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 毒雾\",\"card\":\"毒雾\",\"upgrade\":\"在你的回合开始时，给予所有敌人2层中毒。 -> 在你的回合开始时，给予所有敌人3层中毒。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=68 过本幕boss 90% 均终层35.3 / 给了没拿 无数据；第2幕 拿了 n=45 过本幕boss 62% 均终层39.9 / 给了没拿 n=2(少) 过本幕boss 100% 均终层47.5；第3幕 拿了 n=12 过本幕boss 0% 均终层47.5 / 给了没拿 n=5 过本幕boss 20% 均终层48.6\"}"
+  },
+  "payload": {
+    "run_brief": {
+      "character": "静默猎手",
+      "act": "1",
+      "floor": 16,
+      "hp": "33/81 (41%)",
+      "gold": 145,
+      "ascension": 10,
+      "deck": "23 cards | 9 attacks / 10 skills / 2 powers | 1 upgraded | 1 curses/statuses | avg cost 0.83",
+      "relics": [
+        "蛇之戒指",
+        "营养牡蛎",
+        "吃不完的糖",
+        "钨合金棍"
+      ],
+      "relic_effects": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "营养牡蛎: 拾起时，将你的最大生命值提升?(数值未知)。",
+        "吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+        "钨合金棍: 你每次失去生命时，减少失去的生命值?(数值未知)点。"
+      ],
+      "potions": [
+        "毒药水: 给予?(数值未知)层中毒。"
+      ],
+      "notes": [
+        "used a rest site",
+        "floor 12: moved to Monster",
+        "floor 13: moved to Monster",
+        "took a card reward",
+        "floor 14: moved to Monster",
+        "card selection",
+        "skipped a card reward",
+        "floor 15: moved to RestSite"
+      ],
+      "run_plan": "Area poison scaling with dexterity defense and efficient cycling — Heal at the next fire and avoid the optional elite. Prioritize poison scaling, efficient defense, and cycling; remove Strikes. Use safer fights for Candy power rewards without taking unsupported powers. | want NOXIOUS_FUMES, ACCELERANT, PIERCING_WAIL, BACKFLIP, LEG_SWEEP, FOOTWORK | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCURACY",
+      "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+    },
+    "situation": {
+      "screen": "REST",
+      "hp": "33/81 (41%)",
+      "hp_percent": 41,
+      "upgradable_cards": 22,
+      "next_nodes": [
+        "Boss"
+      ]
+    },
+    "facts": {
+      "act": 1,
+      "floor": 16,
+      "floors_to_act_boss": 1,
+      "ascension": 10,
+      "hp": "33/81 (41%)",
+      "gold": 145,
+      "act_boss": "THE_KIN_BOSS",
+      "deck_size": 23,
+      "deck_profile": "23 张 (攻击 9/技能 10/能力 2/诅咒或状态 1) | 升级 1 | 平均费用 0.83 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+      "deck": [
+        "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+        "PREDATOR 猎杀者 (Attack, 2 energy): 造成15点伤害。 在下个回合抽2张牌。",
+        "PRECISE_CUT 精确切击 (Attack, 0 energy): 造成13点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。",
+        "DAGGER_SPRAY 匕首雨 (Attack, 1 energy): 对所有敌人造成4点伤害两次。",
+        "HAZE+ 迷雾+ (Skill, 2 energy): 给予所有敌人6层中毒和2层虚弱。",
+        "SPOILS_MAP 藏宝图 (Quest, -1 energy): 不能被打出。 在下一阶段的地图上，标记一个有600额外金币的地点。",
+        "BOUNCING_FLASK 弹跳药瓶 (Skill, 2 energy): 随机给予敌人3层中毒3次。",
+        "FOOTWORK 灵动步法 (Power, 1 energy): 获得2点敏捷。",
+        "BACKFLIP 后空翻 (Skill, 1 energy): 获得5点格挡。 抽2张牌。",
+        "ESCAPE_PLAN 逃脱计划 (Skill, 0 energy): 抽1张牌。 如果抽到的是技能牌，则获得3点格挡。",
+        "NOXIOUS_FUMES 毒雾 (Power, 1 energy): 在你的回合开始时，给予所有敌人2层中毒。"
+      ],
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "营养牡蛎: 拾起时，将你的最大生命值提升?(数值未知)。",
+        "吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+        "钨合金棍: 你每次失去生命时，减少失去的生命值?(数值未知)点。"
+      ],
+      "potions": [
+        "POISON_POTION 毒药水: 给予?(数值未知)层中毒。"
+      ],
+      "potion_slots": "1/2 used",
+      "act_boss_clock": {
+        "boss": "THE_KIN",
+        "boss_hp": 199,
+        "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+        "boss_hp_parts": [
+          "KIN_PRIEST"
+        ],
+        "boss_enemies": [
+          {
+            "enemy": "KIN_PRIEST",
+            "hp": 199,
+            "hp_samples": 27,
+            "hp_from_ascension": 10,
+            "hp_estimated": false,
+            "attacks": [
+              {
+                "move": "BEAM_MOVE",
+                "per_hit": 3,
+                "hits": 3,
+                "basis": "base",
+                "samples": 61,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              },
+              {
+                "move": "ORB_OF_FRAILTY_MOVE",
+                "per_hit": 9,
+                "hits": 1,
+                "basis": "base",
+                "samples": 81,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              },
+              {
+                "move": "ORB_OF_WEAKNESS_MOVE",
+                "per_hit": 9,
+                "hits": 1,
+                "basis": "base",
+                "samples": 63,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              }
+            ]
+          },
+          {
+            "enemy": "KIN_FOLLOWER",
+            "hp": 63,
+            "hp_samples": 87,
+            "hp_from_ascension": 10,
+            "hp_estimated": false,
+            "attacks": [
+              {
+                "move": "BOOMERANG_MOVE",
+                "per_hit": 2,
+                "hits": 2,
+                "basis": "base",
+                "samples": 150,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              },
+              {
+                "move": "QUICK_SLASH_MOVE",
+                "per_hit": 5,
+                "hits": 1,
+                "basis": "base",
+                "samples": 192,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              }
+            ]
+          }
+        ],
+        "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+        "deck_damage_per_turn_estimate": null,
+        "hp_loss_per_turn": null,
+        "survivable_turns": null,
+        "gap_per_turn": null,
+        "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+      },
+      "act_boss_sim": "boss 模拟没有结果（只跑完 112 次模拟（不足 300 次），选项之间的差噪声太大，不给数字）：act_boss_clock 仍是 boss 时钟的估计",
+      "your_run_plan": {
+        "made_on_floor": 11,
+        "archetype": "Area poison scaling with dexterity defense and efficient cycling",
+        "want": [
+          "NOXIOUS_FUMES",
+          "ACCELERANT",
+          "PIERCING_WAIL",
+          "BACKFLIP",
+          "LEG_SWEEP",
+          "FOOTWORK"
+        ],
+        "avoid": [
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 8,
+        "elites": "avoid",
+        "rest": "auto",
+        "boss_prep": "Upgrade Footwork or Dagger Spray; bring sustained area poison, weakness, high HP, and useful potions. Remove threatening followers before Ritual scaling overwhelms defense.",
+        "summary": "Heal at the next fire and avoid the optional elite. Prioritize poison scaling, efficient defense, and cycling; remove Strikes. Use safer fights for Candy power rewards without taking unsupported powers."
+      },
+      "rest_site": {
+        "heal_amount": "24 HP: 24 (30% of max HP, rounded down)",
+        "hp_after_heal": "57/81",
+        "upgradable_cards": [
+          "打击",
+          "打击",
+          "打击",
+          "打击",
+          "打击",
+          "防御",
+          "防御",
+          "防御",
+          "防御",
+          "防御",
+          "中和",
+          "生存者",
+          "猎杀者",
+          "精确切击",
+          "匕首雨",
+          "藏宝图",
+          "弹跳药瓶",
+          "灵动步法",
+          "后空翻",
+          "逃脱计划",
+          "毒雾"
+        ],
+        "floors_to_act_boss": 1,
+        "next_nodes": [
+          "Boss"
+        ],
+        "forced_next": "Boss",
+        "hp_band_now": "40-60%",
+        "option_outcome_stats": {
+          "HEAL": "无数据",
+          "SMITH": "无数据"
+        }
+      },
+      "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+      "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-12T19:28:47，A10 共 206 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 206 局）：到达第1幕的局过第1幕boss 75% (n=206)，到达第2幕的局过第2幕boss 49% (n=155)，到达第3幕的局过第3幕boss 3% (n=76)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+    }
+  },
+  "tools": [],
+  "tool_calls": [],
+  "answer": {
+    "choice": "o0",
+    "reason": "Heal to 57 HP. The forced Kin boss threatens sustained multi-enemy pressure; guaranteed recovery is safer than an upgrade at 33 HP."
+  },
+  "accepted": true,
+  "problems": [],
+  "reasks": 0,
+  "attempts": 1,
+  "latency_ms": 11349,
+  "usage": {
+    "inputTokens": 145322,
+    "cacheHitTokens": 135936,
+    "outputTokens": 171,
+    "reasoningTokens": 121
+  },
+  "question_id": "mv566xki-441488-16",
+  "reasoning_chars": 18,
+  "limits": {
+    "engine": "codex",
+    "read_at": "2026-10-12T11:45:54.137Z",
+    "read_ms": 0,
+    "plan": "pro",
+    "used_pct": 81,
+    "window": "codex/primary",
+    "window_min": 10080,
+    "resets_at": "2026-10-19T04:11:02.000Z",
+    "credits": 57237.995439,
+    "ordinary_usage_allowed": true,
+    "reached_type": null
+  }
+}

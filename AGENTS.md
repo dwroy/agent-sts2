@@ -7,6 +7,8 @@
 
 运维会话还要读 `notes/ops-handoff.md` 全文。学习者以任务说明为准，见 `learner/tasks/`。
 
+Roy指定“学习入库”的要求按 [学习要求闭环](docs/learning-requests.md) 跟进到实际live经验及消费者读回；报告/批次结束不关闭父要求。学习者有不同意见、反证或与旧知识冲突时必须明确记录并经ops→watcher→Roy告知，不强行支持原假设。watcher接续时检查`ops/codex-ops/learning-notices/`未确认通知；不把排队当已送达，不代填其他角色的确认。
+
 ## 学习协议（摘要）
 
 - 游戏知识（机制、牌值、怎么打）只能由学习者从对局证据得出，每一条都要带证据局号。Roy 不提供，开发会话也不能自己加。
