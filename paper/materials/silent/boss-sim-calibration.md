@@ -1290,3 +1290,7 @@ F49单独调参/验证指标（同一整体映射）：`{"F49": {"tune": {"n": 2
 | KF9HMZKTFC3V | AEONGLASS | 10 | 49 | 1 | 6 | current | val | won |
 
 模拟失败原件：`[{"key": "K3676LU8B0UH:48:2:6525158984", "start": "t1", "error": "board: Error: no solve"}, {"key": "54G5683J0E5S:33:1:10284668504", "start": "t1", "error": "board: Error: no solve"}, {"key": "Y8GDTNWG4R3X:48:6:10587883165", "start": "t1", "error": "board: Error: no solve"}, {"key": "K3676LU8B0UH:48:2:6525158984", "start": "pre", "error": "board: Error: no solve"}, {"key": "54G5683J0E5S:33:1:10284668504", "start": "pre", "error": "board: Error: no solve"}, {"key": "Y8GDTNWG4R3X:48:6:10587883165", "start": "pre", "error": "board: Error: no solve"}]`。
+
+## 实际发布补记
+
+2026-10-12 14:28:43 CST：源99c3f6fc11cafffceb123ffa1d2dde17f319f71b实际合入539385d83340fc23bef78f6933838a45d2f88e0a，已测树2eec4cb430b56259a0a44275d183fa0fefd3b290，版本S1.boss-calibration14。原合后整套3356过/1超时退出1并已回退，原件保留；固定候选树单项按原断言/120秒复验通过，未跑paths11项通过，合计336文件3368例覆盖齐全、tsc0。再次合入的树与上述已测树完全相同，未重复整套。账本silent-0435仍proposed，shipped及完整外部检查交运维/调度器；最终发布commit/tree见本批result.json。
