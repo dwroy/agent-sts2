@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-095813/agent
+
+ ❯ tests/compute-memo.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/compute-memo.test.ts [ tests/compute-memo.test.ts ]
+Error: [vitest] There was an error when mocking a module. If you are using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the file. Read more: https://vitest.dev/api/vi.html#vi-mock
+ ❯ tests/compute-memo.test.ts:14:1
+     12|  */
+     13| import { createHash } from "node:crypto";
+     14| import { readFileSync, readdirSync, rmSync, writeFileSync } from "node…
+       | ^
+     15| import { join } from "node:path";
+     16| import { fileURLToPath } from "node:url";
+
+Caused by: ReferenceError: Cannot access '__vi_import_3__' before initialization
+ ❯ tests/compute-memo.test.ts:31:16
+ ❯ tests/compute-memo.test.ts:14:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  10:03:08
+   Duration  595ms (transform 349ms, setup 366ms, import 0ms, tests 0ms, environment 0ms)
+

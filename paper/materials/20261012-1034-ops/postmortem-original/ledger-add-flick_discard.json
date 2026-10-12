@@ -1,0 +1,26 @@
+{
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "静默A10本局药水生成的未升级零费翻越撑击带奇巧、文本全体7伤，被投掷匕首+的选择弃掉后仍观察到自动群伤：石虫20→13，蜜虫3血体消失，能量仍0，没有另发手动出牌。只确认此卡此窗口，归零中间帧和溢出伤害未知，不把删除计划后继的通用标记等同效果丢失。",
+  "evidence": [
+    {
+      "run": "CMS8QL9E3C5U",
+      "floor": 23,
+      "turn": 3,
+      "note": "第3试d357622选弃FLICK_FLACK，s367981→367982石20→13、蜜3体退出、能量0；现场文本奇巧/群7伤，之后d357623结束。没有额外手动play_card或跨轮。",
+      "role": "support"
+    }
+  ],
+  "first_run": "CMS8QL9E3C5U",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "以FLICK_FLACK/翻越撑击/弃检索本角色账本与更早复盘；已有生成/重放及别的弃牌动作，未核到这个已观察弃后自动群伤的同窗数据，故先验unknown。",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "CMS8QL9E3C5U"
+    ]
+  },
+  "note": "来源20261012-101301-postmortem；只追加证据，独立strategy-proposal实现，不登记上线。"
+}
