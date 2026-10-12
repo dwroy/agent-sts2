@@ -14,6 +14,8 @@ import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import * as reference from "../src/reflex/silent-apotheosis-reference.js";
 import { replaySteps, solveTap, type SolverInput } from "../src/reflex/turn-solver.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
+import * as turnSolver from "../src/reflex/turn-solver.js";
+import { withApotheosisPotionFixture } from "./apotheosis-potion-fixture.js";
 
 // Only frozen VLZ observations may enter these consumers.
 vi.mock("node:fs", async (original) => {
@@ -113,7 +115,7 @@ it.each(["off", "v1"] as const)("reaches the real %s Jev criteria and preserves 
 
 it("labels random potion forecasts and unsimulated potions separately in F45's real question", () => {
   const spy = vi.spyOn(reference, "silentApotheosisReference");
-  const { decision } = planned(rawAt(275722));
+  const { decision } = withApotheosisPotionFixture(() => planned(rawAt(275722)));
   const facts = Object.values(decision.questions.plan!.criteria!).map((value) => JSON.parse(value!));
   expect(facts.some((fact) => fact.apotheosis_reference?.forecast_basis === "potion_median")).toBe(true);
   expect(spy.mock.calls.some((call) => call[2] === "potion_median")).toBe(true);
@@ -122,6 +124,32 @@ it("labels random potion forecasts and unsimulated potions separately in F45's r
     planned_plays: null, simulated_upgrade_applied: null, candidate_unmodelled_cards: null,
     forecast_basis: "unsimulated", actual_cast_this_fight: null,
   } });
+});
+
+it.each([0, 10_000])("bounds F45's real potion forecast work with %i ms host pauses", (pause) => {
+  let wall = 0;
+  vi.spyOn(performance, "now").mockImplementation(() => (wall += pause));
+  const solve = turnSolver.solveTurn;
+  const caps: number[] = [];
+  vi.spyOn(turnSolver, "solveTurn").mockImplementation((input) => {
+    if (input.firstKey !== undefined) {
+      caps.push(input.maxNodes!);
+      // Fail before doing unrelated extra searches when the fixture's work clock is removed.
+      expect(caps.reduce((total, cap) => total + cap, 0)).toBeLessThanOrEqual(11_000);
+    }
+    return solve(input);
+  });
+  const oldClock = potionMcOptions.now;
+  const { decision } = withApotheosisPotionFixture(() => planned(rawAt(275722)));
+  expect(potionMcOptions.now).toBe(oldClock);
+  // Keep more than one real sample, the production budget and the existing request contract.
+  expect(caps).toHaveLength(2);
+  expect(potionMcOptions.budgetMs).toBe(400);
+  expect(potionMcOptions.samples).toBe(12);
+  const facts = Object.values(decision.questions.plan!.criteria!).map((value) => JSON.parse(value!));
+  expect(facts.some((fact) => fact.apotheosis_reference?.forecast_basis === "potion_median")).toBe(true);
+  expect(facts.some((fact) => fact.wins_fight_this_turn?.startsWith("0/2 samples") ||
+    fact.wins_fight_this_turn?.startsWith("1/2 samples") || fact.wins_fight_this_turn?.startsWith("2/2 samples"))).toBe(true);
 });
 
 it("keeps missing lists unknown, missing ownership irrelevant, and other scopes unchanged", () => {
