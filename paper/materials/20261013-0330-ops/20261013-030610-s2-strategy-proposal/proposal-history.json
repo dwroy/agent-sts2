@@ -1,0 +1,3401 @@
+{
+  "silent-proposal-e18d3f18e6cac2a0": [
+    {
+      "line": 58,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-07T20:32:13+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0017",
+          "silent-0250",
+          "silent-0011",
+          "silent-0027",
+          "silent-0046"
+        ],
+        "runs": [
+          "YQL8RZ8BWN1E",
+          "L9SGRBB5R698",
+          "PU80F84P6HPN"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "potion",
+          "sl",
+          "terminal"
+        ],
+        "summary": "瀑布巨兽本体／自爆分阶段，纠正SL残血包含不可击杀占位血的指标，并展示自爆阶段毒药水的已观察收益限制；排序改动缺受控后续时保留原行为。",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-201301-postmortem/phase-sl-proposal.md",
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "3cc66ab0b4fb05a0d6d4e62b514b13caf9e157eba4d781f5a60f76276047c821",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 255,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-08T06:36:53+08:00",
+        "state": "waiting",
+        "reason": "原帧确认占位体毒 2→8 而自爆仍 41；SL summary 缺敌身份/阶段结构字段，同轮 30/34/31 自爆缺口无受控排序后续，不能安全把占位血归零后声称排序有效，待阶段与后续资源控制。",
+        "commit": null,
+        "seen_runs": 120,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-c1af3217fb055ad0,silent-proposal-e50a24aadfa84fe6,silent-proposal-990f054036609447,silent-proposal-146a96e9f1d4a770,silent-proposal-e18d3f18e6cac2a0:118"
+      }
+    },
+    {
+      "line": 768,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-10T14:28:28+08:00",
+        "state": "waiting",
+        "reason": "已核YQL F17末T10毒2→8而自爆仍41、26HP/13挡；SL summary仍只有敌显示字符串，没有身份/阶段结构字段；同轮缺口30/34/31缺受控排序后续，不把占位血归零当排序收益。",
+        "commit": null,
+        "seen_runs": 197,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-1697e17b9ae127ca,silent-proposal-7f6b8dd004796c82,silent-proposal-9733bb80f445aeae:195"
+      }
+    },
+    {
+      "line": 821,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-10T16:17:36+08:00",
+        "state": "waiting",
+        "reason": "YQL F17末T10占位体毒2→8而自爆仍41、26HP/13挡可核；SL摘要仍仅有敌显示字符串，缺可靠的角色/敌id/最大HP/阶段结构字段。同存活轮缺口30/34/31没有受控改序后续，不能把占位血归零冒充排序有效。",
+        "commit": null,
+        "seen_runs": 201,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-7a0d3e7d219d6661,silent-proposal-c51468c5e8ba6668:201"
+      }
+    },
+    {
+      "line": 934,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-10T19:56:06+08:00",
+        "state": "waiting",
+        "reason": "并行源a83d9ab675560a177249aa638e99df40bcfb5553包含自爆阶段观测，但live已有未完成合并，该源尚非live祖先；宽项仍缺可靠历史阶段输入、药水收益展示与受控改序后续。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:207"
+      }
+    },
+    {
+      "line": 991,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-10T21:52:45+08:00",
+        "state": "waiting",
+        "reason": "阶段诊断源a83d9ab675560a177249aa638e99df40bcfb5553为live MERGE_HEAD而非HEAD祖先，存在19条未合并路径；宽项仍缺历史阶段结构输入、药水收益展示及受控改序后续。",
+        "commit": null,
+        "seen_runs": 212,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:212"
+      }
+    },
+    {
+      "line": 1053,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-10T22:39:19+08:00",
+        "state": "waiting",
+        "reason": "阶段诊断源码仍是live的MERGE_HEAD而非HEAD祖先，存在19项冲突；宽项另缺历史阶段结构输入、药水收益展示和受控改序后续。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:213"
+      }
+    },
+    {
+      "line": 1107,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-10T23:54:33+08:00",
+        "state": "waiting",
+        "reason": "阶段诊断提交仍非live HEAD祖先且19项冲突未解；另缺历史阶段输入、药水联合展示及改序受控后续。新增首试胜局不能补SL改序对照。",
+        "commit": null,
+        "seen_runs": 216,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:216"
+      }
+    },
+    {
+      "line": 1145,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T00:50:52+08:00",
+        "state": "waiting",
+        "reason": "阶段诊断提交尚非live祖先，19项冲突未解；另缺历史阶段输入、药水联合展示及改序受控后续。",
+        "commit": null,
+        "seen_runs": 218,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:218"
+      }
+    },
+    {
+      "line": 1191,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T02:35:05+08:00",
+        "state": "waiting",
+        "reason": "阶段诊断a83d9ab675560a177249aa638e99df40bcfb5553尚非live祖先，19项冲突未解；另缺历史阶段输入、药水展示与改序受控后续。",
+        "commit": null,
+        "seen_runs": 221,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:220"
+      }
+    },
+    {
+      "line": 1237,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T03:06:15+08:00",
+        "state": "waiting",
+        "reason": "阶段诊断a83d9ab675560a177249aa638e99df40bcfb5553仍是live的MERGE_HEAD、非祖先，19项冲突未解；另缺历史阶段输入、药水联合展示及改序受控后续。",
+        "commit": null,
+        "seen_runs": 222,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:222"
+      }
+    },
+    {
+      "line": 1297,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T04:01:21+08:00",
+        "state": "waiting",
+        "reason": "巨兽诊断a83d9ab675560a177249aa638e99df40bcfb5553仍为MERGE_HEAD且非live祖先，19项冲突未解；另缺历史阶段补全、药水联合展示及改序受控后续。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:223"
+      }
+    },
+    {
+      "line": 1350,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T11:12:21+08:00",
+        "state": "waiting",
+        "reason": "诊断子项a83d9ab675560a177249aa638e99df40bcfb5553仍非live祖先且19项冲突未解；另缺历史阶段补全、药水联合展示和改序对照。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:224"
+      }
+    },
+    {
+      "line": 1419,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T12:14:03+08:00",
+        "state": "waiting",
+        "reason": "阶段诊断子项a83d9ab675560a177249aa638e99df40bcfb5553仍非live祖先，live有19项冲突；另缺旧记录阶段补全、药水联合展示及排序受控后续，整项waiting。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:225"
+      }
+    },
+    {
+      "line": 1489,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T13:40:31+08:00",
+        "state": "waiting",
+        "reason": "阶段候选a83d9ab仍非live祖先，live有19项未解决冲突；缺旧记录阶段补全、药水展示及改序受控后续。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:227"
+      }
+    },
+    {
+      "line": 1620,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T17:12:49+08:00",
+        "state": "waiting",
+        "reason": "阶段候选a83d9ab仍非live祖先且live有19项冲突；缺旧记录阶段补全、药水诊断及改参考路径受控后继。新增胜线无SL改序对照。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:230"
+      }
+    },
+    {
+      "line": 1686,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T18:59:22+08:00",
+        "state": "waiting",
+        "reason": "阶段子项a83d9ab675560a177249aa638e99df40bcfb5553已实live，旧冲突理由撤销；旧记录阶段、用药诊断及改参考排序的受控后继仍未补齐。",
+        "commit": null,
+        "seen_runs": 233,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:232"
+      }
+    },
+    {
+      "line": 1723,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T20:26:16+08:00",
+        "state": "waiting",
+        "reason": "阶段子项a83d9ab675560a177249aa638e99df40bcfb5553已在live；药水阶段说明及参考排序仍缺完整受控验证，不能关闭整项。",
+        "commit": null,
+        "seen_runs": 234,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:234"
+      }
+    },
+    {
+      "line": 1781,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "阶段子项a83d9ab675560a177249aa638e99df40bcfb5553已在live；原排序仍保留，药水阶段展示及改序受控结果未齐，不能关闭父提案。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1876,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "巨兽阶段与限定最终资源子项已是live祖先，旧原始血值同轮排序仍保留；缺YQL阶段药水联合展示及改排序完整受控结果，不能关闭父项；本批记录冲突。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2028,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "巨兽药水展示源码b14880d1b1780d03e4c1c87b5afdc2a1e08fd456已是live祖先；旧占位HP同轮排序仍保留，缺改序完整后继与独立验证。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2134,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "巨兽阶段及药水展示已在live；同轮占位HP排序仍保留，缺新排序完整后继与独立验证。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2181,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "巨兽阶段展示已有，旧占位HP排序仍保留；缺新参考排序的完整后继和独立验证。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2217,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "巨兽阶段/资源展示已有；当前anchorRank仍保留同轮占位HP比较，缺新参考排序的完整后继及独立验证，PU末试胜不能归为改序效果。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2263,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "巨兽阶段及最终资源展示已有live祖先源码；L9 F17 T14、PU T17、YQL T13占位HP原行已核。当前anchorRank仍以原始占位血作同轮比较，改为本体0会改变旧平局选择；缺改序后的完整后继及独立验证，PU末试胜不能归因于新排序，不能把阶段展示当整项完成。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2288,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "巨兽阶段展示已有实现；占位血仍参与参考排序，缺改序后的受控完整后继与独立验证。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ],
+  "silent-proposal-e282a9131b99129a": [
+    {
+      "line": 67,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-07T21:57:55+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0021",
+          "silent-0079",
+          "silent-0125",
+          "silent-0176"
+        ],
+        "runs": [
+          "KEN58SH9SLZ6"
+        ],
+        "source_task": "experience-update",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "sl"
+        ],
+        "summary": "异鱼同指纹SL并核持牌血价、无实体实伤与步法建立窗口；完整反事实不足保留探索规则",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-214301-experience-update/proposal-sl-cost.md",
+        "experience": [
+          "silent-fysh-resource-sl-observation",
+          "silent-deck-burst-observation",
+          "silent-beckon-held-end-turn-loss"
+        ],
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "a88a2a95875b8fa04d80376a10a3ed59ede080db13ccb2a7e14c3ebfc1c34872",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 941,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-10T20:09:07+08:00",
+        "state": "waiting",
+        "reason": "KEN F17T10同盘多损6血只多伤2；T5省血却延后步法。缺同抽序完整后续与独立胜线，不拟交换阈值或关闭探索。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-5927843203da25f7,silent-proposal-e282a9131b99129a,silent-proposal-08eaa60bcc449852,silent-proposal-33ebbb1d904f7511,silent-proposal-92920295a648b540,silent-proposal-4111ed10f08739cb,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-99a2f178e01a391c,silent-proposal-47910f82a1fdd98f:209"
+      }
+    },
+    {
+      "line": 1037,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-10T22:38:55+08:00",
+        "state": "waiting",
+        "reason": "KEN同盘血价及步法延后反例已核；缺同后抽、同后行动的完整后续和独立胜线，保留探索规则。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-e282a9131b99129a,silent-proposal-08eaa60bcc449852,silent-proposal-33ebbb1d904f7511,silent-proposal-92920295a648b540,silent-proposal-4111ed10f08739cb,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-ee1fb17b1f3244d2,silent-proposal-f11a16415cfafe62:213"
+      }
+    },
+    {
+      "line": 1246,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-11T03:25:33+08:00",
+        "state": "waiting",
+        "reason": "KEN F17 T10同盘多2伤付6血，T5省2血却延后步法；后续动作/抽序同变。缺固定后续的整战对照和独立验证，不能拟统一血价或关闭探索。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-e282a9131b99129a,silent-proposal-08eaa60bcc449852,silent-proposal-33ebbb1d904f7511,silent-proposal-92920295a648b540,silent-proposal-4111ed10f08739cb,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-ee1fb17b1f3244d2,silent-proposal-f1374df72d8e6a25:222"
+      }
+    },
+    {
+      "line": 1334,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-11T11:11:49+08:00",
+        "state": "waiting",
+        "reason": "缺固定后续动作/抽序的整战对照；SPC同盘付血后赢战但后续也变，不能拟统一血价或关闭探索。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-e282a9131b99129a,silent-proposal-08eaa60bcc449852,silent-proposal-33ebbb1d904f7511,silent-proposal-92920295a648b540,silent-proposal-4111ed10f08739cb,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-ee1fb17b1f3244d2,silent-proposal-f1374df72d8e6a25:224"
+      }
+    },
+    {
+      "line": 1403,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-11T12:09:17+08:00",
+        "state": "waiting",
+        "reason": "缺固定后抽与后续动作的整战对照；SPC/H9的SL胜线后续也变，不能校准统一血价或关闭探索。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-e282a9131b99129a,silent-proposal-08eaa60bcc449852,silent-proposal-33ebbb1d904f7511,silent-proposal-92920295a648b540,silent-proposal-4111ed10f08739cb,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-ee1fb17b1f3244d2,silent-proposal-f1374df72d8e6a25:225"
+      }
+    },
+    {
+      "line": 1503,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-11T13:53:42+08:00",
+        "state": "waiting",
+        "reason": "同盘局部交换已核，但后轮动作和抽序不同、六试均败；缺固定后继的整战对照，不能校准统一血价或关闭探索。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-e282a9131b99129a,silent-proposal-08eaa60bcc449852,silent-proposal-33ebbb1d904f7511,silent-proposal-92920295a648b540,silent-proposal-4111ed10f08739cb,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-ee1fb17b1f3244d2,silent-proposal-f1374df72d8e6a25:227"
+      }
+    },
+    {
+      "line": 1604,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-11T17:11:22+08:00",
+        "state": "waiting",
+        "reason": "同盘局部交换已复现，KEN六试皆败、后续动作和抽序不固定；新增BS首战SL成功仍未通关，缺可校准统一血价/探索准入的完整后继对照。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-e282a9131b99129a,silent-proposal-08eaa60bcc449852,silent-proposal-33ebbb1d904f7511,silent-proposal-92920295a648b540,silent-proposal-4111ed10f08739cb,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-ee1fb17b1f3244d2,silent-proposal-f1374df72d8e6a25:230"
+      }
+    },
+    {
+      "line": 1785,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "KEN六试全败且后继动作不同；预测与完整执行未联合验收，缺独立局受控后继以拟合血价和探索准入；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1880,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "原预测及派发子项已有live祖先，仍缺持牌血价/能力窗口的完整执行认证和独立局受控后继；不能以框架上线或六试相关记录关闭父项；本批记录冲突。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2032,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "共享持牌预测已有live祖先；T5续问后能力收益和T10换线整战因果仍缺，六次SL不能当六个独立验证局。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2138,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "持牌预测与观测区间已有；能力延迟及换线的整战因果未知，六次相关SL不足拟统一门槛。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2185,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "持牌预测及局部观测已有；换线与能力延迟的整战因果未知，相关六次SL不足拟合统一门槛。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2221,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "KEN持牌预测和局部观测已有，换线/能力延迟整战因果仍未知；六次相关SL不足拟合统一门槛，缺同后继及独立后期局。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2267,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "KEN持牌预测/候选比较及首次派发子项已有实际live祖先，实际整轮字段仍空；T5省血同时延迟能力、T10多血价只加2实伤说明双向成本，但六次重打非独立样本，缺保持后继不变的换线因果与后期独立验证，不能登记完整implemented/duplicate。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2292,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-e282a9131b99129a",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "已有持牌、候选与首次派发诊断，实际整轮字段仍空；缺完整归属、固定后继整战和后期独立局。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ],
+  "silent-proposal-9733bb80f445aeae": [
+    {
+      "line": 61,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-07T20:47:41+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0017",
+          "silent-0019",
+          "silent-0020",
+          "silent-0250"
+        ],
+        "runs": [
+          "YQL8RZ8BWN1E",
+          "L9SGRBB5R698",
+          "PU80F84P6HPN"
+        ],
+        "source_task": "experience-update",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "potion",
+          "sl",
+          "terminal"
+        ],
+        "summary": "巨兽本体与自爆分阶段估值；残壳施毒和SL残血不当本体进度。",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-203654-experience-update/proposal-giant-phase.md",
+        "experience": [
+          "silent-giant-explosion-window",
+          "silent-route-hp-observation",
+          "silent-rest-buffer-observation"
+        ],
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "c0da0af7803a73b361bb98e358c2a5c12b8056a68c28614a592138e7cdd88382",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 771,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-10T14:28:28+08:00",
+        "state": "waiting",
+        "reason": "巨兽本体/自爆分阶段部分已有模型；仍缺可安全识别阶段的SL结构输入与改序完整后续、提前/留毒药对照，不能把本体结束、残壳毒伤或近十亿血差当整场进度。",
+        "commit": null,
+        "seen_runs": 197,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-1697e17b9ae127ca,silent-proposal-7f6b8dd004796c82,silent-proposal-9733bb80f445aeae:195"
+      }
+    },
+    {
+      "line": 822,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-10T16:17:36+08:00",
+        "state": "waiting",
+        "reason": "巨兽本体/自爆已有模型，YQL六次本体T12/12/11/12/12/9结束仍全败，PU存在胜线但不是改序控制实验；缺SL阶段结构输入及提前/留毒药、参考路径改序的完整配对，不把残壳施毒当本体进度。",
+        "commit": null,
+        "seen_runs": 201,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-7a0d3e7d219d6661,silent-proposal-c51468c5e8ba6668:201"
+      }
+    },
+    {
+      "line": 935,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-10T19:56:06+08:00",
+        "state": "waiting",
+        "reason": "同题并行源a83d9ab675560a177249aa638e99df40bcfb5553尚非live祖先，本批草稿已归档避免重复合入；仍缺改序、去药或留药的同抽序完整受控后续。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:207"
+      }
+    },
+    {
+      "line": 992,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-10T21:52:45+08:00",
+        "state": "waiting",
+        "reason": "已有阶段诊断源a83d9ab675560a177249aa638e99df40bcfb5553尚未实际合入live，不重复实现；宽项缺提前/去药/留药与参考路径改序的完整受控后续。",
+        "commit": null,
+        "seen_runs": 212,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:212"
+      }
+    },
+    {
+      "line": 1054,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-10T22:39:19+08:00",
+        "state": "waiting",
+        "reason": "已有巨兽诊断子项尚未实际合入live；缺提前/去药/留药及参考路径改序的完整受控后续。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:213"
+      }
+    },
+    {
+      "line": 1108,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-10T23:54:33+08:00",
+        "state": "waiting",
+        "reason": "巨兽诊断子项仍在未完成合并中；缺提前、去药、留药及参考路径改序的受控整战后续。",
+        "commit": null,
+        "seen_runs": 216,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:216"
+      }
+    },
+    {
+      "line": 1146,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T00:50:52+08:00",
+        "state": "waiting",
+        "reason": "巨兽诊断仍在未完成合并中；缺提前喝、去药、留药及改序的受控整战。",
+        "commit": null,
+        "seen_runs": 218,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:218"
+      }
+    },
+    {
+      "line": 1192,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T02:35:05+08:00",
+        "state": "waiting",
+        "reason": "巨兽诊断子项尚未合入；缺提前喝、去药、留药及改序的受控整战。",
+        "commit": null,
+        "seen_runs": 221,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:220"
+      }
+    },
+    {
+      "line": 1238,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T03:06:15+08:00",
+        "state": "waiting",
+        "reason": "巨兽诊断子项尚未实际合入live；缺提前喝、去药、留药或改序的受控整战。无覆盖整项的live源码祖先，不能登记implemented/duplicate。",
+        "commit": null,
+        "seen_runs": 222,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:222"
+      }
+    },
+    {
+      "line": 1298,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T04:01:21+08:00",
+        "state": "waiting",
+        "reason": "巨兽诊断子项尚未合入live；缺提前喝、去药、留药或改序的受控整战，无覆盖整项的live源码祖先。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:223"
+      }
+    },
+    {
+      "line": 1351,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T11:12:21+08:00",
+        "state": "waiting",
+        "reason": "巨兽诊断子项未实际合入；缺提前喝、去药、留药或改序的受控整战，无覆盖整项的live祖先提交。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:224"
+      }
+    },
+    {
+      "line": 1420,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T12:14:03+08:00",
+        "state": "waiting",
+        "reason": "已有阶段子项未合入live；缺提前喝、去药、留药及改序的受控整战，不能把e18d3f18的部分诊断候选记为本经验整项实现。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:225"
+      }
+    },
+    {
+      "line": 1490,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T13:40:31+08:00",
+        "state": "waiting",
+        "reason": "阶段子项未合入；缺提前喝、不喝、留药及改变参考路径的受控整战，不能登记整项实现。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:227"
+      }
+    },
+    {
+      "line": 1621,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T17:12:49+08:00",
+        "state": "waiting",
+        "reason": "既有阶段子项尚未合入；缺提前喝、不喝、留药及参考改序整战对照。44→33新样本只限定“自爆固定”措辞，不证明留药规则。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:230"
+      }
+    },
+    {
+      "line": 1687,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T18:59:22+08:00",
+        "state": "waiting",
+        "reason": "阶段子项已在live；缺提前喝、不喝、留药及参考改序的受控整战结果。NYQ意图47→35限制了固定自爆的泛化，未证明留药收益。",
+        "commit": null,
+        "seen_runs": 233,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:232"
+      }
+    },
+    {
+      "line": 1724,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T20:26:16+08:00",
+        "state": "waiting",
+        "reason": "阶段记录已上线；仍缺提前喝、不喝、留药及参考改序的受控结果，本批新增局未补巨兽分支。",
+        "commit": null,
+        "seen_runs": 234,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:234"
+      }
+    },
+    {
+      "line": 1782,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "阶段记录已上线；仍缺提前喝、不喝、留药及参考改序的完整对照，末试局部施毒不能证明留药价值；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1877,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "阶段记录已上线，限定末态资源函数不覆盖本局有药场景；缺提前喝、不喝、留药及改序的完整对照，局部2→8毒不能估整战持有价；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2029,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "巨兽阶段药水展示已上线；YQL T10仅证毒2→8而26血/13挡/41来袭不变，缺提前喝、不喝、留药及新参考序的受控整战。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2135,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "YQL T10仅见毒2→8，血挡和41自爆不变；缺提前喝、不喝、留药及改序的受控整战。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2182,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "YQL F17 T10毒2→8但血26/挡13/自爆41不变；缺提前喝、不喝、留药和改序的整战对照。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2218,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "YQL F17 T10毒药仅使毒2→8，血26/挡13/自爆41不变；缺提前喝、不喝、留药及改序的受控整战收益。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2264,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "YQL F17 T10 states280160→280161仅毒2→8，HP26/挡13/自爆41不变，当前巨兽药水观察展示已有40168f4a903ae1d8c48bd03006f8fea19fd3aa3c。缺提前喝/不喝/留药及改SL参考排序的受控整战，不把6毒当减伤或新药价。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2289,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-9733bb80f445aeae",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "YQL毒2→8未改变血26、挡13、来袭41；缺提前喝、不喝、留药及参考改序的整战对照。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ],
+  "silent-proposal-c51468c5e8ba6668": [
+    {
+      "line": 63,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-07T21:00:47+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0019"
+        ],
+        "runs": [
+          "KEN58SH9SLZ6"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "potion"
+        ],
+        "summary": "核对本局七次实际耗药及75/86空栏boss入口；冻结逐槽位收益验证，缺少未饮用/留药整场对照，保留现行药水规则。",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-204301-postmortem/proposal-resources.md",
+        "rule_changes": false,
+        "proposal_sha256": "168cc03750525c56cace3915f22ef4dd1cf768f87b17e70f5228964a168c8469",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 824,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-10T16:17:36+08:00",
+        "state": "waiting",
+        "reason": "KEN七次实际耗药及六次F17 T1 75/86空栏已核；缺F15两瓶不饮用的完整实盘、任一药保留至boss的受控后续以及按随机选牌/重问分段的完整候选收益对照。实际耗药与空栏入口不能给出留药HP价值。",
+        "commit": null,
+        "seen_runs": 201,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-7a0d3e7d219d6661,silent-proposal-c51468c5e8ba6668:201"
+      }
+    },
+    {
+      "line": 936,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-10T19:56:06+08:00",
+        "state": "waiting",
+        "reason": "KEN七次饮用及六次75/86空栏入口已核；缺F15不饮两瓶的完整实盘、留药至boss受控后续，以及随机选牌/重问的完整收益对照。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:207"
+      }
+    },
+    {
+      "line": 993,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-10T21:52:45+08:00",
+        "state": "waiting",
+        "reason": "KEN七次饮用均由槽位消失帧确认；缺F15不饮两瓶或留药至boss的受控分支，以及重问/随机选牌完整收益诊断，不能由空栏失败反推持有价值。",
+        "commit": null,
+        "seen_runs": 212,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:212"
+      }
+    },
+    {
+      "line": 1055,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-10T22:39:19+08:00",
+        "state": "waiting",
+        "reason": "七次实际饮用已核实；缺F15不饮两瓶或任一瓶留至boss的受控分支，不能反推固定持有价值。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:213"
+      }
+    },
+    {
+      "line": 1109,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-10T23:54:33+08:00",
+        "state": "waiting",
+        "reason": "七次实际饮用及槽位耗尽已复核；缺F15不饮两瓶或任一瓶留至boss的受控完整后续，不能拟固定持有价值。",
+        "commit": null,
+        "seen_runs": 216,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:216"
+      }
+    },
+    {
+      "line": 1147,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T00:50:52+08:00",
+        "state": "waiting",
+        "reason": "七次饮用已核实；缺F15不饮两瓶或任一瓶留至boss的完整受控后续。",
+        "commit": null,
+        "seen_runs": 218,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:218"
+      }
+    },
+    {
+      "line": 1193,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T02:35:05+08:00",
+        "state": "waiting",
+        "reason": "七次饮用已核实；缺F15不用两药或任一药保留至boss的受控后续及联合收益诊断。",
+        "commit": null,
+        "seen_runs": 221,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:220"
+      }
+    },
+    {
+      "line": 1239,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T03:06:15+08:00",
+        "state": "waiting",
+        "reason": "只有七次饮用分支；缺F15不饮两瓶或任一瓶留至boss的受控后续。新增胜局持不同两药，不能校准这七次饮用的留药价值。",
+        "commit": null,
+        "seen_runs": 222,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:222"
+      }
+    },
+    {
+      "line": 1299,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T04:01:21+08:00",
+        "state": "waiting",
+        "reason": "只有七次实际饮用分支；缺F15不饮两瓶或任一瓶留到boss的受控后续，不能校准跨战留药价值。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:223"
+      }
+    },
+    {
+      "line": 1352,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T11:12:21+08:00",
+        "state": "waiting",
+        "reason": "只有七次实际饮用分支，缺F15不用两瓶或其中任一瓶留到boss的受控后续及联合收益诊断。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:224"
+      }
+    },
+    {
+      "line": 1421,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T12:14:03+08:00",
+        "state": "waiting",
+        "reason": "只有七次实际饮用分支，缺F15不用两瓶或任一瓶留到boss的受控后续；现有日志未形成逐槽位预测与执行的完整联合核验，保留持有价。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:225"
+      }
+    },
+    {
+      "line": 1491,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T13:40:31+08:00",
+        "state": "waiting",
+        "reason": "七次饮用已离线核对；缺候选到重问执行的完整收益核验，以及F15不用药或留药到boss的受控整战。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:227"
+      }
+    },
+    {
+      "line": 1622,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T17:12:49+08:00",
+        "state": "waiting",
+        "reason": "七次实际消耗已核实；候选、随机选牌、重问到整段收益尚未联立，缺F15不用药或保留到boss的完整分支，不能定持有价。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:230"
+      }
+    },
+    {
+      "line": 1688,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T18:59:22+08:00",
+        "state": "waiting",
+        "reason": "七次饮药逐槽已核；缺F15不饮用或保留到boss的完整对照，随机选牌和重问后的收益审计仍不完整。",
+        "commit": null,
+        "seen_runs": 233,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:232"
+      }
+    },
+    {
+      "line": 1725,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T20:26:16+08:00",
+        "state": "waiting",
+        "reason": "七次饮药逐槽已核；随机选牌和重问后的收益审计未完整接线，缺F15不用药或保留到boss的对照。",
+        "commit": null,
+        "seen_runs": 234,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:234"
+      }
+    },
+    {
+      "line": 1783,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "七次实际饮药已核；随机选牌、重问和整段收益审计未闭环，缺F15不饮用或保留至boss的对照；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1878,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "七次槽位变化及发光水重问、技能药选牌已核；现有消费者只分段且实际整线结果为null，缺F15不喝或保留到boss的完整对照；本批三处记录合入冲突。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2030,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "KEN七次耗药已逐槽核实；F15发光水后重问、技能药有选牌及pending回执，缺整候选收益归属和不喝或留药到boss的完整对照。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2136,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "KEN七次耗药已核；发光水后重问、技能药pending并选牌，缺完整收益及留药对照。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2183,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "KEN七次耗药已核；用药后重问及选牌中断，缺完整方案收益和留药到boss的对照。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2219,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "KEN七次槽位耗药已核，发光后续问及技能药pending后选牌截断原方案；缺完整候选收益和不喝/留到boss的对照。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2265,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "KEN七次实际耗药槽位均由原状态核实；攻击/技能药进入选牌，发光水后另问，F15技能药的中位例取逃脱计划而实际后续另选，原候选不等完整执行。缺逐候选整轮收益归属、F15不喝及任一药留到boss的对照，暂保留持有价值规则。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2290,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "KEN七次实际耗药已核；缺候选到实际选牌及整轮收益归属、F15不喝和留药boss对照。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ],
+  "silent-proposal-efd9f83ee9e1a6dc": [
+    {
+      "line": 50,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-07T19:41:14+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0079",
+          "silent-0176"
+        ],
+        "runs": [
+          "751FN9QM9MHQ"
+        ],
+        "source_task": "experience-update",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "sl",
+          "combat"
+        ],
+        "summary": "静默A10异鱼SL配对血价与真实输出审计，保留未知整战胜因",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-193251-experience-update/proposal-sl-cost.md",
+        "experience": [
+          "silent-fysh-resource-sl-observation",
+          "silent-beckon-held-end-turn-loss"
+        ],
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "0065ae0291ac4675d0a895128c71c68b35602c3eb6b5887b92fca11891c29006",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 249,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-08T06:36:53+08:00",
+        "state": "waiting",
+        "reason": "与 366288801d9150d9 同证据范围但来源任务不同；缺完整同抽序后续及确定弃牌数据，不能把重复 Markdown 当实际源码 duplicate。",
+        "commit": null,
+        "seen_runs": 120,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-c1af3217fb055ad0,silent-proposal-e50a24aadfa84fe6,silent-proposal-990f054036609447,silent-proposal-146a96e9f1d4a770,silent-proposal-e18d3f18e6cac2a0:118"
+      }
+    },
+    {
+      "line": 765,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-10T14:28:28+08:00",
+        "state": "waiting",
+        "reason": "与366288801d9150d9共享证据、来源任务不同；仍缺确定弃牌与完整配对后续，无完整live源码实现可判duplicate。",
+        "commit": null,
+        "seen_runs": 197,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-1697e17b9ae127ca,silent-proposal-7f6b8dd004796c82,silent-proposal-9733bb80f445aeae:195"
+      }
+    },
+    {
+      "line": 818,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-10T16:17:36+08:00",
+        "state": "waiting",
+        "reason": "与366288801d9150d9共享751证据但来源经验任务不同；缺确定弃牌、完整配对后续和逐候选真实血价，未发现整项诊断的实际live源码，重复证据不登记duplicate。",
+        "commit": null,
+        "seen_runs": 201,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-7a0d3e7d219d6661,silent-proposal-c51468c5e8ba6668:201"
+      }
+    },
+    {
+      "line": 931,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-10T19:56:06+08:00",
+        "state": "waiting",
+        "reason": "与366288801d9150d9共享证据但来源任务不同；缺确定弃牌、完整执行链及同随机序后续，不能按相同证据登记源码duplicate。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:207"
+      }
+    },
+    {
+      "line": 988,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-10T21:52:45+08:00",
+        "state": "waiting",
+        "reason": "与366288801d9150d9共享证据、来源任务不同；仍缺确定弃牌成本、完整执行链及整战后续，相同证据不能登记源码duplicate。",
+        "commit": null,
+        "seen_runs": 212,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:212"
+      }
+    },
+    {
+      "line": 1050,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-10T22:39:19+08:00",
+        "state": "waiting",
+        "reason": "共享751局证据不等于源码重复实现；仍缺确定弃牌成本、完整执行链及整战受控后续。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:213"
+      }
+    },
+    {
+      "line": 1104,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-10T23:54:33+08:00",
+        "state": "waiting",
+        "reason": "共享751局证据不等于源码重复实现；仍缺完整执行成本与受控整战，不能登记duplicate。",
+        "commit": null,
+        "seen_runs": 216,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:216"
+      }
+    },
+    {
+      "line": 1142,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T00:50:52+08:00",
+        "state": "waiting",
+        "reason": "共享证据不等于源码重复实现；缺完整执行成本、受控整战及覆盖全项的live祖先提交。",
+        "commit": null,
+        "seen_runs": 218,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:218"
+      }
+    },
+    {
+      "line": 1188,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T02:35:05+08:00",
+        "state": "waiting",
+        "reason": "共享证据不等于源码重复实现；缺完整执行链、受控后续和覆盖全项的live祖先提交。",
+        "commit": null,
+        "seen_runs": 221,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:220"
+      }
+    },
+    {
+      "line": 1234,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T03:06:15+08:00",
+        "state": "waiting",
+        "reason": "共享原提案证据不等于源码已经实现；缺完整执行链、受控后续及覆盖整项的live祖先提交。新首试胜局不填补SL配对。",
+        "commit": null,
+        "seen_runs": 222,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:222"
+      }
+    },
+    {
+      "line": 1294,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T04:01:21+08:00",
+        "state": "waiting",
+        "reason": "与原复盘共享局部证据，仍缺执行全链、受控整战及覆盖整项的live祖先源码；不能据同源标duplicate。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:223"
+      }
+    },
+    {
+      "line": 1347,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T11:12:21+08:00",
+        "state": "waiting",
+        "reason": "与366288801d9150d9同源，仍缺执行全链、受控整战和覆盖整项的live祖先源码，不能标duplicate。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:224"
+      }
+    },
+    {
+      "line": 1416,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T12:14:03+08:00",
+        "state": "waiting",
+        "reason": "仍缺原答到弃牌后最终执行的完整结构化分账和整战受控后续；不存在覆盖整项的live祖先源码，不能因与366288801d9150d9同源标duplicate。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:225"
+      }
+    },
+    {
+      "line": 1486,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T13:40:31+08:00",
+        "state": "waiting",
+        "reason": "缺结构化执行血价和受控整战；无覆盖整项的live祖先源码，不能仅因同源标duplicate。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:227"
+      }
+    },
+    {
+      "line": 1617,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T17:12:49+08:00",
+        "state": "waiting",
+        "reason": "与366同源但整项未实现；结构化执行审计和受控整战仍缺，不能因共享证据标duplicate。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:230"
+      }
+    },
+    {
+      "line": 1683,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T18:59:22+08:00",
+        "state": "waiting",
+        "reason": "与366同源但整项未实现；弃牌后执行诊断和受控整战比较仍缺，不能因共享证据标duplicate。",
+        "commit": null,
+        "seen_runs": 233,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:232"
+      }
+    },
+    {
+      "line": 1720,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T20:26:16+08:00",
+        "state": "waiting",
+        "reason": "同源经验提案仍缺弃牌后的执行诊断和完整受控后继；不能因共享证据标为duplicate。",
+        "commit": null,
+        "seen_runs": 234,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:234"
+      }
+    },
+    {
+      "line": 1778,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "同源预测审计候选未入live，弃牌后执行核验及受控整战仍缺；不能因共享证据标duplicate；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1873,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "与366共享的预测/派发子项已经上线，但未决弃牌后完整结算和受控整战仍缺；不能据共享证据或部分源码将父项标duplicate，且本批合入预检冲突。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2025,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "共享预测及派发子项已有live祖先；缺弃牌后整线归属和更差线准入的受控后继，六次相关SL不足关闭父项。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2131,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "共享预测及派发子项已有；缺弃牌后的完整执行归属和更差线探索的受控后继。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2178,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "已有预测和派发子项，缺弃牌后完整分账与更差B2线的受控后继；相关SL不是独立局。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2214,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "SL预测、派发及区间子项已有live祖先；缺确定弃牌后全轮分账与更差B2线的受控后继，六次相关SL不能作独立局。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2260,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "751的SL成本预测已有live祖先66283dd9982bdd7f480da7a4d9bfefea0572a9ac，持牌pending拆项已有9d8278702dbc581b5015ba7ec9a70dc0fb94cccb；两者不能补出确定弃牌后的全轮分账与更差B2线的受控后继，六次SL仅一独立局，原完整提案仍waiting。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2285,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "已有SL预测和持牌诊断子项，未覆盖整轮实际结果；六次相关SL缺受控胜线。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ],
+  "silent-proposal-366288801d9150d9": [
+    {
+      "line": 46,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-07T19:30:07+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0079",
+          "silent-0176"
+        ],
+        "runs": [
+          "751FN9QM9MHQ"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "sl",
+          "combat"
+        ],
+        "summary": "异鱼SL同盘换线多9伤付5血、多6伤付10血；补配对B2差与手持惩罚的成本审计，缺完整胜线不拟固定门槛。",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-191301-postmortem/proposal-sl-cost.md",
+        "rule_changes": false,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "0ba601d50f1341977ec60627d24994e0755ef1cf396a60832000400c5805c524",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 247,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-08T06:36:53+08:00",
+        "state": "waiting",
+        "reason": "异鱼 T2/T7/T13 同盘局部血价已核；缺各线确定弃呼唤结果及完整同抽序后续，未将保守损血上界改为实际值，未拟探索门槛。",
+        "commit": null,
+        "seen_runs": 120,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-c1af3217fb055ad0,silent-proposal-e50a24aadfa84fe6,silent-proposal-990f054036609447,silent-proposal-146a96e9f1d4a770,silent-proposal-e18d3f18e6cac2a0:118"
+      }
+    },
+    {
+      "line": 763,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-10T14:28:28+08:00",
+        "state": "waiting",
+        "reason": "751 F17 T2/T7/T13的局部血价可核；缺各候选确定弃呼唤结果、同随机序完整后续及独立局验证，保留保守上界与B2探索规则。",
+        "commit": null,
+        "seen_runs": 197,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-1697e17b9ae127ca,silent-proposal-7f6b8dd004796c82,silent-proposal-9733bb80f445aeae:195"
+      }
+    },
+    {
+      "line": 816,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-10T16:17:36+08:00",
+        "state": "waiting",
+        "reason": "751 F17 T2/T7/T13的局部输出/血价已有原始对照，但缺每条候选的确定弃呼唤结果及同随机序完整后续；六次SL均败，不能把保守损血上界当逐线真值或据此限制探索。",
+        "commit": null,
+        "seen_runs": 201,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-7a0d3e7d219d6661,silent-proposal-c51468c5e8ba6668:201"
+      }
+    },
+    {
+      "line": 929,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-10T19:56:06+08:00",
+        "state": "waiting",
+        "reason": "751 F17局部对照已核；缺弃牌逐候选真值、执行终点和完整配对后续，六次SL全败，现有B2/numbers不覆盖完整成本诊断。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:207"
+      }
+    },
+    {
+      "line": 986,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-10T21:52:45+08:00",
+        "state": "waiting",
+        "reason": "751 F17 T2/T7/T13局部配对已复核；缺逐候选确定弃牌成本、完整执行链和同随机序整战后续，现有日志未覆盖完整分账。",
+        "commit": null,
+        "seen_runs": 212,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:212"
+      }
+    },
+    {
+      "line": 1048,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-10T22:39:19+08:00",
+        "state": "waiting",
+        "reason": "已核实T2/T7/T13；缺逐候选确定弃牌成本、完整执行链及同随机序整战验证。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:213"
+      }
+    },
+    {
+      "line": 1102,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-10T23:54:33+08:00",
+        "state": "waiting",
+        "reason": "T2/T7/T13配对已复核；缺未决弃牌后的完整结构化执行成本及同随机序整战后续，现有B2字段仅部分覆盖。",
+        "commit": null,
+        "seen_runs": 216,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:216"
+      }
+    },
+    {
+      "line": 1140,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T00:50:52+08:00",
+        "state": "waiting",
+        "reason": "缺未决弃牌后的完整执行成本记录及同随机序整战后续；B2字段仅部分覆盖。",
+        "commit": null,
+        "seen_runs": 218,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:218"
+      }
+    },
+    {
+      "line": 1186,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T02:35:05+08:00",
+        "state": "waiting",
+        "reason": "缺弃牌重问后的执行成本及受控整战；新增异鱼首试胜局没有SL配对。",
+        "commit": null,
+        "seen_runs": 221,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:220"
+      }
+    },
+    {
+      "line": 1232,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T03:06:15+08:00",
+        "state": "waiting",
+        "reason": "B2配对差已有记录，但完整执行成本链未覆盖；缺同随机序整战对照。新增562GNK4ESMPE异鱼首试胜，无SL同盘配对。",
+        "commit": null,
+        "seen_runs": 222,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:222"
+      }
+    },
+    {
+      "line": 1292,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T04:01:21+08:00",
+        "state": "waiting",
+        "reason": "现有B2差分只覆盖子项；缺完整执行成本链及同盘整战后续，新增L38NLY1XJ7VU没有异鱼场景。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:223"
+      }
+    },
+    {
+      "line": 1345,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T11:12:21+08:00",
+        "state": "waiting",
+        "reason": "B2差分已有部分记录，缺弃牌重问后的完整执行成本及同盘整战后续；新沙虫局不补异鱼对照。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:224"
+      }
+    },
+    {
+      "line": 1414,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T12:14:03+08:00",
+        "state": "waiting",
+        "reason": "B2差和原/换即时数值已有部分日志，缺弃牌重问后的结构化执行分账及同随机序整战后续，不能定额外失血阈值；H9不是异鱼受控对照。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:225"
+      }
+    },
+    {
+      "line": 1484,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T13:40:31+08:00",
+        "state": "waiting",
+        "reason": "751三个配对已核实；缺弃牌后最终执行分账及受控整战，不能定额外损血阈值。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:227"
+      }
+    },
+    {
+      "line": 1615,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T17:12:49+08:00",
+        "state": "waiting",
+        "reason": "三组血价已复核；弃牌重问后执行链尚未结构化闭环，且无同随机序整战对照，不能设额外损血阈值。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:230"
+      }
+    },
+    {
+      "line": 1681,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T18:59:22+08:00",
+        "state": "waiting",
+        "reason": "三组当轮血价已复核；缺弃牌重问后执行归属诊断及同随机序整战对照，不能校准额外损血阈值。",
+        "commit": null,
+        "seen_runs": 233,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:232"
+      }
+    },
+    {
+      "line": 1718,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T20:26:16+08:00",
+        "state": "waiting",
+        "reason": "三组血价已复核；缺弃牌重问后的执行归属及同随机输入整战对照，不能拟合额外损血门槛。",
+        "commit": null,
+        "seen_runs": 234,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:234"
+      }
+    },
+    {
+      "line": 1776,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "三组血价已核；缺弃牌续问后的执行归属诊断和受控完整后继，无法校准准入阈值；本批合入预检冲突。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1871,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "预测审计、资源差及单步回执已是live祖先；751 F17 T7仍有pending弃牌及续步，完整执行/持牌损血归属未认证，缺同随机输入完整后继以校准探索准入；本批三处记录合入冲突。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2023,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "751 F17 T7仍有pending弃牌及续步；缺完整候选收益归属、同随机输入原替整战及独立局校准，不能拟探索血价阈值。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2129,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "751 F17 T7弃牌仍有pending回执；缺完整候选收益归属、同随机输入原替整战及独立局验证。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2176,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "751 F17 T2/T7/T13局部差额已核；缺确定弃牌后的完整收益归属、同随机输入整战及独立局验证。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2212,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "751 F17 T2/T7/T13同指纹资源差已核；T7生存者pending后才选牌，缺确定弃牌后的完整收益归属、相同随机输入整战及独立局验证。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2258,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "751 F17 T2/T7/T13同指纹实损13→18、13→23、8→2及净削9→18、12→18、17→11已核。live已有候选资源/B2/首次派发子项，但actual_turn仍空；T7生存者进入pending后才选弃牌，缺确定弃牌后的全轮收益归属和保持后继/随机输入一致的整战验证，不拟额外血价门槛。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2283,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-366288801d9150d9",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "751 F17配对血价已核；缺确定弃牌后的整轮分账、续问归属及保持后继一致的整战验证。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ],
+  "silent-proposal-85929bdfc8a3fc1b": [
+    {
+      "line": 47,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-07T19:30:07+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0019",
+          "silent-0021",
+          "silent-0005",
+          "silent-0007",
+          "silent-0129",
+          "silent-0176"
+        ],
+        "runs": [
+          "751FN9QM9MHQ"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "potion"
+        ],
+        "summary": "分列未决弃呼唤的保守损血来源及肌肉药水持有价值未知，保留同题无药整战对照；本局不足制定留药或改变弃牌的固定规则。",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-191301-postmortem/proposal-combat-potion-facts.md",
+        "rule_changes": false,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "d42d3f29d0d36b262352160a104dd8b97831ef9d8ecbbd4bce3dba367f9c8d68",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 248,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-08T06:36:53+08:00",
+        "state": "waiting",
+        "reason": "F13 肌肉药的无药整战和留药到 boss 实盘对照缺失，F17 未决弃牌尚无逐候选确定值；holdHp=null 不能记为零价值，保留原药水/护栏规则。",
+        "commit": null,
+        "seen_runs": 120,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-c1af3217fb055ad0,silent-proposal-e50a24aadfa84fe6,silent-proposal-990f054036609447,silent-proposal-146a96e9f1d4a770,silent-proposal-e18d3f18e6cac2a0:118"
+      }
+    },
+    {
+      "line": 764,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-10T14:28:28+08:00",
+        "state": "waiting",
+        "reason": "751 F13 T3无药整战未实际执行、留肌肉药到F17的对照缺失；F17弃呼唤尚无逐候选确定值，holdHp=null不作为零持有价值。",
+        "commit": null,
+        "seen_runs": 197,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-1697e17b9ae127ca,silent-proposal-7f6b8dd004796c82,silent-proposal-9733bb80f445aeae:195"
+      }
+    },
+    {
+      "line": 817,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-10T16:17:36+08:00",
+        "state": "waiting",
+        "reason": "751 F13 T3有药/无药仅模拟对照，没有实打无药整战或保留肌肉药至F17的受控结果；F17弃牌真值逐候选缺失。缺表holdHp=null不等于零持有价值，尚无完整结构分账实现。",
+        "commit": null,
+        "seen_runs": 201,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-7a0d3e7d219d6661,silent-proposal-c51468c5e8ba6668:201"
+      }
+    },
+    {
+      "line": 930,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-10T19:56:06+08:00",
+        "state": "waiting",
+        "reason": "缺751 F13无药实打整战、保留肌肉药至F17的受控后续，以及未决弃牌分账；holdHp=null不能解释为零持有价值。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:207"
+      }
+    },
+    {
+      "line": 987,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-10T21:52:45+08:00",
+        "state": "waiting",
+        "reason": "751 F13 T3有整战无药模拟候选，但没有实际无药整战或留肌肉药至F17的受控后续；缺未决弃牌与持有未知的联合展示，缺表不能赋零持有价值。",
+        "commit": null,
+        "seen_runs": 212,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:212"
+      }
+    },
+    {
+      "line": 1049,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-10T22:39:19+08:00",
+        "state": "waiting",
+        "reason": "缺实际无药整战或留肌肉药至F17的受控后续；未决弃牌、持有未知与整战无药候选的联合诊断未完成。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:213"
+      }
+    },
+    {
+      "line": 1103,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-10T23:54:33+08:00",
+        "state": "waiting",
+        "reason": "缺实际不喝或留肌肉药至boss的受控后续；弃牌条件展示已有局部源码，但联合成本审计未齐备。",
+        "commit": null,
+        "seen_runs": 216,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:216"
+      }
+    },
+    {
+      "line": 1141,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T00:50:52+08:00",
+        "state": "waiting",
+        "reason": "缺实际不喝或留肌肉药至boss的受控后续；联合成本展示尚未齐备。",
+        "commit": null,
+        "seen_runs": 218,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:218"
+      }
+    },
+    {
+      "line": 1187,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T02:35:05+08:00",
+        "state": "waiting",
+        "reason": "缺不喝肌肉药或留至boss的受控后续；已有弃牌参考未覆盖联合分账。",
+        "commit": null,
+        "seen_runs": 221,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:220"
+      }
+    },
+    {
+      "line": 1233,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T03:06:15+08:00",
+        "state": "waiting",
+        "reason": "缺F13不喝肌肉药或保留至boss的完整受控后续；现有弃牌条件参考只覆盖子项，联合分账未覆盖，不能整项判duplicate。",
+        "commit": null,
+        "seen_runs": 222,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:222"
+      }
+    },
+    {
+      "line": 1293,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T04:01:21+08:00",
+        "state": "waiting",
+        "reason": "缺F13不喝肌肉药或留到boss的受控后续；弃牌参考97efc061仅部分覆盖，缺药水联合分账，不能整项判duplicate。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:223"
+      }
+    },
+    {
+      "line": 1346,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T11:12:21+08:00",
+        "state": "waiting",
+        "reason": "缺F13无药实打或留到boss的受控后续，且现有弃牌参考仅部分覆盖，未完成药水联合分账。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:224"
+      }
+    },
+    {
+      "line": 1415,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T12:14:03+08:00",
+        "state": "waiting",
+        "reason": "97efc0618936c6d7783fbf36e79b056b90d65589只覆盖弃牌后继提示，未覆盖完整保守损血来源/药水联合分账；缺F13无药实打及留到boss的后续，保留药水规则。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:225"
+      }
+    },
+    {
+      "line": 1485,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T13:40:31+08:00",
+        "state": "waiting",
+        "reason": "已有弃牌后继提示仅部分覆盖；缺损血与药水联合核验、F13无药实打及留到boss的完整后续。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:227"
+      }
+    },
+    {
+      "line": 1616,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T17:12:49+08:00",
+        "state": "waiting",
+        "reason": "弃牌后继提示已有部分实现；确定/未决损血与药水对照尚未联合验收，缺F13无药或留到boss的完整受控后继。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:230"
+      }
+    },
+    {
+      "line": 1682,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T18:59:22+08:00",
+        "state": "waiting",
+        "reason": "缺F13不用药或留到boss的受控后继；未决损血、未知持有价与无药参考尚未联合验收。",
+        "commit": null,
+        "seen_runs": 233,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:232"
+      }
+    },
+    {
+      "line": 1719,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T20:26:16+08:00",
+        "state": "waiting",
+        "reason": "缺F13实际不用药或留到boss的受控后继；未决损血与持有价值未知的联合生产事实尚未验收。",
+        "commit": null,
+        "seen_runs": 234,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:234"
+      }
+    },
+    {
+      "line": 1777,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "缺确定/未决损血与未知持有价值的联合展示；F13实际无药或留药后继未记录；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1872,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "F13有药/无药预测及实际饮用已核；现有成本字段仍未完成确定/未决损血与未知持有价的联合验收，缺无药或留药整战后继；三处记录冲突阻塞本批工程补齐。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2024,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "751 F13 T3无药或留药整战未实际执行；未知药价和持牌拆项已上线，毒/荆棘、弃牌及药价的完整联合收益尚未认证。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2130,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "751 F13 T3未实际执行无药或留药整战；缺弃牌、毒/荆棘及药价的联合收益验证。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2177,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "751 F13 T3无药整战仅有模型样本，缺实际无药或留药整战及多机制联合收益验证。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2213,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "751 F13 T3整战无药仅有模型8/8样本，实际已饮用；缺实际不喝/留药后继及持牌、毒、荆棘和药价的联合执行验证。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2259,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "751 F13 T3有药plan2和严格整战无药plan5均模型8/8赢、损8，终结均值2.3/2.9轮；plan3后续7/8仍喝药。未知持有价值及持牌保守来源已展示，缺实际无药/留药后继与确定弃牌后毒、荆棘、持牌/药价的联合执行验证，不能把缺表0拟成留药价值。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2284,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "751 F13有药与严格无药仅有模型对照；缺实际无药整战、留药后继及联合兑现核验。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ],
+  "silent-proposal-86a7db08d1a31976": [
+    {
+      "line": 64,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-07T21:00:47+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0079",
+          "silent-0021",
+          "silent-0125",
+          "silent-0005",
+          "silent-0176"
+        ],
+        "runs": [
+          "KEN58SH9SLZ6"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "sl"
+        ],
+        "summary": "验证SL无实体上留呼唤多损6仅增2伤与步法延迟的兑现成本；冻结同指纹对照，补血价/能力拆项，完整后续与新局证据不足时保留现行排序及护栏。",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-204301-postmortem/proposal-combat-sl.md",
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "10de295b469f48281050aeb04a8ad6ccb2906e007d48386a6c8f769cc7600ac6",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 937,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-10T19:56:06+08:00",
+        "state": "waiting",
+        "reason": "KEN T10替线多损6血仅多扣敌2血，T5省2血但步法延迟；缺完整成本与能力兑现执行链、同抽序整战后续及独立验证，不能据此关闭探索或设置阈值。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:207"
+      }
+    },
+    {
+      "line": 994,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-10T21:52:45+08:00",
+        "state": "waiting",
+        "reason": "KEN F17 T10多损6血仅多净扣2，T5省2血却延迟步法；缺完整能力兑现及执行成本链、整战配对后续和独立新局验证，不能设置探索阈值。",
+        "commit": null,
+        "seen_runs": 212,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:212"
+      }
+    },
+    {
+      "line": 1056,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-10T22:39:19+08:00",
+        "state": "waiting",
+        "reason": "T10多6损仅多2净伤已核实；缺能力兑现全链、同随机序整战配对及独立后移验证，不能设置探索阈值。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:213"
+      }
+    },
+    {
+      "line": 1110,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-10T23:54:33+08:00",
+        "state": "waiting",
+        "reason": "T10多损6血仅多扣敌2血已复核；缺能力兑现全链、同随机序整战配对及独立后移同类验证，不能设探索阈值。",
+        "commit": null,
+        "seen_runs": 216,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:216"
+      }
+    },
+    {
+      "line": 1148,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T00:50:52+08:00",
+        "state": "waiting",
+        "reason": "缺能力兑现完整执行链、同随机序整战配对及独立后移同类验证；不能设探索阈值。",
+        "commit": null,
+        "seen_runs": 218,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:218"
+      }
+    },
+    {
+      "line": 1194,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T02:35:05+08:00",
+        "state": "waiting",
+        "reason": "缺能力兑现完整执行链及同随机序整战配对；新增首试胜局不能确定探索阈值。",
+        "commit": null,
+        "seen_runs": 221,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:220"
+      }
+    },
+    {
+      "line": 1240,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T03:06:15+08:00",
+        "state": "waiting",
+        "reason": "缺能力兑现完整执行链、相同随机序完整后续及独立验证；新增异鱼首试胜无该无实体同盘SL对照，不能设探索准入阈值。",
+        "commit": null,
+        "seen_runs": 222,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:222"
+      }
+    },
+    {
+      "line": 1300,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T04:01:21+08:00",
+        "state": "waiting",
+        "reason": "缺能力兑现的完整执行链、相同随机序完整后续及独立验证；新增局未遇无实体异鱼同盘情形，不能定探索准入阈值。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:223"
+      }
+    },
+    {
+      "line": 1353,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T11:12:21+08:00",
+        "state": "waiting",
+        "reason": "缺能力兑现的完整执行链和无实体异鱼同随机序整战验证；新沙虫胜试不能定该场景探索阈值。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:224"
+      }
+    },
+    {
+      "line": 1422,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T12:14:03+08:00",
+        "state": "waiting",
+        "reason": "缺能力建立后完整执行成本与异鱼无实体/呼唤场景的同随机序整战验证；H9不能提供该场景探索准入阈值，保留HP护栏和SL规则。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:225"
+      }
+    },
+    {
+      "line": 1492,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T13:40:31+08:00",
+        "state": "waiting",
+        "reason": "局部配对已核；缺能力建立后完整执行链和同随机序整战，新增局不含该无实体与呼唤场景。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:227"
+      }
+    },
+    {
+      "line": 1623,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T17:12:49+08:00",
+        "state": "waiting",
+        "reason": "当轮配对不能证明全战更优；缺能力建立到后继兑现的完整诊断、同随机序后继及无实体/呼唤场景的新配对，保留探索和护栏。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:230"
+      }
+    },
+    {
+      "line": 1689,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T18:59:22+08:00",
+        "state": "waiting",
+        "reason": "当轮差额不足证明整战更优；缺能力建立到后继兑现的执行审计及同随机序整战对照，新增三局未补无实体与呼唤同盘证据。",
+        "commit": null,
+        "seen_runs": 233,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:232"
+      }
+    },
+    {
+      "line": 1726,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T20:26:16+08:00",
+        "state": "waiting",
+        "reason": "缺无实体与呼唤同盘的完整受控后继，以及能力建立到兑现的执行审计；新增执行截断证据不足以支持SL准入阈值。",
+        "commit": null,
+        "seen_runs": 234,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:234"
+      }
+    },
+    {
+      "line": 1784,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "多2伤花6血与省2血却延迟步法的反向取舍均已核；缺能力兑现执行链和同随机序整战，不支持统一探索阈值；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1879,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "KEN T10多2伤付6血与T5省2血延迟步法均已核；T5续问边界后的能力兑现尚未由消费者认证，缺同随机序完整后继以定探索阈值；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2031,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "KEN T10多2实伤付6血、T5省2血但步法延迟已核；缺能力窗口完整归属、相同后轮条件的受控整战及后期独立局验证。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2137,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "KEN T10多2伤付6血，T5省2血却延后步法；缺能力窗口完整归属和同后轮受控验证。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2184,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "KEN T10多付6血仅多2实伤，T5省2血却延迟步法至T9；缺能力完整收益和受控后继。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2220,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "KEN F17 T10多付6血仅多2实伤；T5省2血却把步法建立从T5延到T9且续问追加小刀，缺完整能力收益、受控后继及独立验证。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2266,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "KEN F17 T10第4/5试同指纹多损6仅多净削2；T5第4/6试省2血、追加小刀后多净削1，却把步法T5延至T9（states280701→280702才建2敏）。缺能力后续完整收益及同后继/独立验证，不从无实体局部6血/2伤写统一探索阈值。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2291,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-86a7db08d1a31976",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "KEN多6血仅多2伤；省2血却延迟步法至T9，缺能力后继受控收益及独立验证。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ],
+  "silent-proposal-131042659448ae74": [
+    {
+      "line": 51,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-07T19:41:14+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0019",
+          "silent-0020",
+          "silent-0021",
+          "silent-0005",
+          "silent-0006",
+          "silent-0007",
+          "silent-0046",
+          "silent-0129",
+          "silent-0176"
+        ],
+        "runs": [
+          "751FN9QM9MHQ"
+        ],
+        "source_task": "experience-update",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "potion"
+        ],
+        "summary": "静默A10逐张敏捷、毒/荆棘限伤、呼唤失血及药水持有价值未知的结构分账",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-193251-experience-update/proposal-combat-potion-facts.md",
+        "experience": [
+          "silent-footwork-block",
+          "silent-strength-weak-observation",
+          "silent-poisoned-stab-components",
+          "silent-bronze-scales-per-hit-thorns",
+          "silent-beckon-held-end-turn-loss",
+          "silent-piercing-wail-temporary-strength",
+          "silent-route-hp-observation",
+          "silent-rest-buffer-observation",
+          "silent-deck-burst-observation"
+        ],
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "b1ff1ca1e5d3da182f25af9b0040780e288a77e627b08c2fee262a17f8f49951",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 250,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-08T06:36:53+08:00",
+        "state": "waiting",
+        "reason": "与 85929bdfc8a3fc1b 相同持有价值和未决弃牌缺口；已有敏捷/毒事实未冒称新增诊断已实现，等待无药/留药和逐线弃牌对照。",
+        "commit": null,
+        "seen_runs": 120,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-c1af3217fb055ad0,silent-proposal-e50a24aadfa84fe6,silent-proposal-990f054036609447,silent-proposal-146a96e9f1d4a770,silent-proposal-e18d3f18e6cac2a0:118"
+      }
+    },
+    {
+      "line": 766,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-10T14:28:28+08:00",
+        "state": "waiting",
+        "reason": "与85929bdfc8a3fc1b共享证据、来源经验任务不同；缺无药/留药实际完整对照和逐线弃牌真值，已有成本字段不等于整项新增诊断实现。",
+        "commit": null,
+        "seen_runs": 197,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-1697e17b9ae127ca,silent-proposal-7f6b8dd004796c82,silent-proposal-9733bb80f445aeae:195"
+      }
+    },
+    {
+      "line": 819,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-10T16:17:36+08:00",
+        "state": "waiting",
+        "reason": "与85929bdfc8a3fc1b共享751证据但来源经验任务不同；敏捷/毒/反伤模型或成本字段不能替代确定弃牌/无药与留药实际完整对照，未确认整项分账及持有未知对照已等价实现。",
+        "commit": null,
+        "seen_runs": 201,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-7a0d3e7d219d6661,silent-proposal-c51468c5e8ba6668:201"
+      }
+    },
+    {
+      "line": 932,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-10T19:56:06+08:00",
+        "state": "waiting",
+        "reason": "缺确定弃牌结构分账、同题无药完整对照及留药至boss实打；已有保守模型和成本字段未覆盖整项提案。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:207"
+      }
+    },
+    {
+      "line": 989,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-10T21:52:45+08:00",
+        "state": "waiting",
+        "reason": "已有局部机制模型未覆盖完整结构分账及持有未知/整战无药对照展示；缺实际无药和留药受控后续，保留药水及弃牌规则。",
+        "commit": null,
+        "seen_runs": 212,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:212"
+      }
+    },
+    {
+      "line": 1051,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-10T22:39:19+08:00",
+        "state": "waiting",
+        "reason": "局部机制未覆盖完整结构分账；缺实际无药和留药受控后续，不能改变弃牌或药水规则。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:213"
+      }
+    },
+    {
+      "line": 1105,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-10T23:54:33+08:00",
+        "state": "waiting",
+        "reason": "机制与弃牌后继展示仅局部实现；缺联合分账、实际无药和跨战留药受控后续。",
+        "commit": null,
+        "seen_runs": 216,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:216"
+      }
+    },
+    {
+      "line": 1143,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T00:50:52+08:00",
+        "state": "waiting",
+        "reason": "已有机制和弃牌展示仅部分覆盖；缺联合分账、实际无药与跨战留药受控后续。",
+        "commit": null,
+        "seen_runs": 218,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:218"
+      }
+    },
+    {
+      "line": 1189,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T02:35:05+08:00",
+        "state": "waiting",
+        "reason": "已有机制仅部分覆盖；缺联合执行分账、无药实打及跨战留药受控后续。",
+        "commit": null,
+        "seen_runs": 221,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:220"
+      }
+    },
+    {
+      "line": 1235,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T03:06:15+08:00",
+        "state": "waiting",
+        "reason": "机制与弃牌条件参考只部分实现；缺联合执行分账、无药实打和跨战留药受控后续。新增局药水与构筑不同，不能替代对照。",
+        "commit": null,
+        "seen_runs": 222,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:222"
+      }
+    },
+    {
+      "line": 1295,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T04:01:21+08:00",
+        "state": "waiting",
+        "reason": "机制和弃牌参考只部分覆盖；缺联合执行分账、无药实打及跨战留药对照，新增局不同场景不能补足。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:223"
+      }
+    },
+    {
+      "line": 1348,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T11:12:21+08:00",
+        "state": "waiting",
+        "reason": "机制及弃牌参考仅部分覆盖；缺联合执行分账、无药实打和跨战留药对照，新局不同药物与构筑不补此缺口。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:224"
+      }
+    },
+    {
+      "line": 1417,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T12:14:03+08:00",
+        "state": "waiting",
+        "reason": "机制和弃牌后继仅部分覆盖；缺已确定/未决损血、药水持有未知与无药整战的联合展示及实际后续验证，不能把部分实现当整项完成。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:225"
+      }
+    },
+    {
+      "line": 1487,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T13:40:31+08:00",
+        "state": "waiting",
+        "reason": "缺确定与未决损血、未知持有价及无药整战的联合验证，既有机制与提示仅部分覆盖。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:227"
+      }
+    },
+    {
+      "line": 1618,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T17:12:49+08:00",
+        "state": "waiting",
+        "reason": "缺确定与未决损血、未知持有价及无药后继的联合验收；部分模型和文字提示不足以关闭整项。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:230"
+      }
+    },
+    {
+      "line": 1684,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T18:59:22+08:00",
+        "state": "waiting",
+        "reason": "确定与未决损血、缺表持有价及无药后继缺联合验收；新增三局未补原F13保药分支。",
+        "commit": null,
+        "seen_runs": 233,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:232"
+      }
+    },
+    {
+      "line": 1721,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T20:26:16+08:00",
+        "state": "waiting",
+        "reason": "确定与未决损血、缺表持有价值及无药后继未完成联合验收；新增局未补原F13保药分支。",
+        "commit": null,
+        "seen_runs": 234,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:234"
+      }
+    },
+    {
+      "line": 1779,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "确定/保守损血、未知持有价及无药参考缺联合消费者验证，原F13保药分支未记录；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1874,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "已有预测日志和药价来源不能替代联合消费者验证；原F13不喝/保药分支未记录，未决弃牌损血拆项未闭环；本批三处记录合入冲突。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2026,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "逐机制与未知药价事实已有；缺敏捷、毒/荆棘、持牌及药价的完整联合消费者验证，F13无药分支只有预测。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2132,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "持牌拆项和未知药价提示已有；无药整战只有模型抽样，缺多机制联合执行验证。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2179,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "持牌拆项及未知药价提示已有；缺敏捷、毒、荆棘、持牌和药水的联合执行验证。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2215,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "持牌拆项和未知药价参考已有；缺敏捷、毒、荆棘、持牌与药水的联合收益归属及实际无药整战。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2261,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "751 F17 T7实际一呼唤失6、全挡仍损6及F13肌肉药建5力量已核；已有持牌/药价参考不是敏捷、毒、荆棘、呼唤和药水的联合实际收益核验。缺同题实际无药整战及完整续问归属，不调整饮药/护栏/弃牌排序。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2286,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-131042659448ae74",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "力量与呼唤失血实录已核；缺敏捷、毒、荆棘、药水的联合兑现链及实际无药分支。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ],
+  "silent-proposal-990f054036609447": [
+    {
+      "line": 56,
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-07T20:12:59+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0102",
+          "silent-0019",
+          "silent-0020"
+        ],
+        "runs": [
+          "KV0JHNJCKXLS"
+        ],
+        "source_task": "experience-update",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "sl"
+        ],
+        "summary": "SL同盘输出血价、敌回血毛/净伤害与路线休息实际资源分账；缺整战对照不设门槛",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-200255-experience-update/proposal-sl-accounting.md",
+        "experience": [
+          "silent-knowledge-demon-healing-sl-observation",
+          "silent-route-hp-observation",
+          "silent-rest-buffer-observation"
+        ],
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "c7fa0a97eea334f338e208a6bae8e709dce021cd3157dd32cb3ca1a45900e053",
+        "state": "pending"
+      }
+    },
+    {
+      "line": 253,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-08T06:36:53+08:00",
+        "state": "waiting",
+        "reason": "知识恶魔去掉毒药后的完整同抽序胜线、毛/净输出与敌回血逐轮配对、SL 截断后的真实后续缺失，不能把当轮零损说成保血收益，待后续控制数据。",
+        "commit": null,
+        "seen_runs": 120,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-c1af3217fb055ad0,silent-proposal-e50a24aadfa84fe6,silent-proposal-990f054036609447,silent-proposal-146a96e9f1d4a770,silent-proposal-e18d3f18e6cac2a0:118"
+      }
+    },
+    {
+      "line": 767,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-10T14:28:28+08:00",
+        "state": "waiting",
+        "reason": "KV F33第4/5试T5去毒少7净伤、下一轮少7毒但当轮同零损；缺同抽序无毒药胜线、敌回血与后续执行配对，不能拟SL/终局新权重。",
+        "commit": null,
+        "seen_runs": 197,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-1697e17b9ae127ca,silent-proposal-7f6b8dd004796c82,silent-proposal-9733bb80f445aeae:195"
+      }
+    },
+    {
+      "line": 820,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-10T16:17:36+08:00",
+        "state": "waiting",
+        "reason": "KV F33第4/5试T5删毒药少7当轮净伤、下一轮少7毒，当轮同零损；缺去毒药同抽序完整胜线、回血与毛/净输出逐线配对及SL截断后的真实后续，不能拟新权重。",
+        "commit": null,
+        "seen_runs": 201,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-7a0d3e7d219d6661,silent-proposal-c51468c5e8ba6668:201"
+      }
+    },
+    {
+      "line": 933,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-10T19:56:06+08:00",
+        "state": "waiting",
+        "reason": "KV F33 T5删毒药少7净输出而当轮同零损；缺同抽序完整胜线、毛输出/回血/净输出联合配对及SL截断后的真实后续。",
+        "commit": null,
+        "seen_runs": 209,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:207"
+      }
+    },
+    {
+      "line": 990,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-10T21:52:45+08:00",
+        "state": "waiting",
+        "reason": "KV F33 T5删毒药净扣36→29、当轮同零损；缺毛输出/回血/净输出联合分账及同抽序整战验证，不能补写SL截断轮结算或拟新权重。",
+        "commit": null,
+        "seen_runs": 212,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:212"
+      }
+    },
+    {
+      "line": 1052,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-10T22:39:19+08:00",
+        "state": "waiting",
+        "reason": "T5同零损、净输出36→29已核实；缺毛输出/回血/净输出联合记录及同抽序整战对照。",
+        "commit": null,
+        "seen_runs": 214,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:213"
+      }
+    },
+    {
+      "line": 1106,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-10T23:54:33+08:00",
+        "state": "waiting",
+        "reason": "已核实T5零损而净输出36→29；缺毛输出、回血、净输出联合审计及同抽序整战后续。",
+        "commit": null,
+        "seen_runs": 216,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:216"
+      }
+    },
+    {
+      "line": 1144,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T00:50:52+08:00",
+        "state": "waiting",
+        "reason": "缺毛输出、回血、净输出联合执行审计及同抽序整战后续；新两局未遇知识恶魔。",
+        "commit": null,
+        "seen_runs": 218,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:218"
+      }
+    },
+    {
+      "line": 1190,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T02:35:05+08:00",
+        "state": "waiting",
+        "reason": "缺毛输出、回血、净输出联合诊断及整战配对；新增两场知识恶魔首试胜没有删毒对照。",
+        "commit": null,
+        "seen_runs": 221,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:220"
+      }
+    },
+    {
+      "line": 1236,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T03:06:15+08:00",
+        "state": "waiting",
+        "reason": "缺毛输出/敌回血/净输出联合执行诊断及删毒后的受控整战；新增562GNK4ESMPE未到知识恶魔，不提供此项新配对。",
+        "commit": null,
+        "seen_runs": 222,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:222"
+      }
+    },
+    {
+      "line": 1296,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T04:01:21+08:00",
+        "state": "waiting",
+        "reason": "缺毛输出/敌回血/净输出联合执行诊断与删毒后的同随机序整战；新增L38NLY1XJ7VU未遇知识恶魔。",
+        "commit": null,
+        "seen_runs": 223,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:223"
+      }
+    },
+    {
+      "line": 1349,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T11:12:21+08:00",
+        "state": "waiting",
+        "reason": "缺毛输出/敌回血/净输出的联合执行诊断与删毒后的受控整战；新增SPC没有知识恶魔。",
+        "commit": null,
+        "seen_runs": 224,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:224"
+      }
+    },
+    {
+      "line": 1418,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T12:14:03+08:00",
+        "state": "waiting",
+        "reason": "缺毛输出、敌回血、下一轮毒和净输出的联合执行诊断，以及删毒/保留毒的同随机序整战；H9没有知识恶魔，不能补该反事实。",
+        "commit": null,
+        "seen_runs": 226,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:225"
+      }
+    },
+    {
+      "line": 1488,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T13:40:31+08:00",
+        "state": "waiting",
+        "reason": "新增34PV第三试获胜但多轮动作改变，不能替代KV删毒与保毒的受控对照；输出、回血和后继毒联合诊断未完成。",
+        "commit": null,
+        "seen_runs": 227,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:227"
+      }
+    },
+    {
+      "line": 1619,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T17:12:49+08:00",
+        "state": "waiting",
+        "reason": "KV删毒没有记录到保血收益；新增P33胜线入口与构筑不同，缺删毒/保毒受控后继及输出、回血、毒的联合执行诊断。",
+        "commit": null,
+        "seen_runs": 230,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:230"
+      }
+    },
+    {
+      "line": 1685,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T18:59:22+08:00",
+        "state": "waiting",
+        "reason": "新增YBRA六试仍败，未补同入口保毒与删毒对照；输出、毒、回血和实际派发的联合诊断未齐。",
+        "commit": null,
+        "seen_runs": 233,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:232"
+      }
+    },
+    {
+      "line": 1722,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T20:26:16+08:00",
+        "state": "waiting",
+        "reason": "缺同入口保毒与删毒的完整受控后继；输出、毒、敌回血与实际执行联合诊断未完成。",
+        "commit": null,
+        "seen_runs": 234,
+        "batch": "code-proposals:silent-proposal-c59f592f1427a67e,silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976:234"
+      }
+    },
+    {
+      "line": 1780,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-11T22:59:01+08:00",
+        "state": "waiting",
+        "reason": "KV同盘删毒未见保血收益；缺输出、毒、回血与执行联合诊断及保毒/删毒受控后继；本批合入冲突。",
+        "commit": null,
+        "seen_runs": 236,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:236"
+      }
+    },
+    {
+      "line": 1875,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-12T09:39:55+08:00",
+        "state": "waiting",
+        "reason": "KV F33 T5净扣36/29、零损和毒20/13已核，预测资源比较已上线；缺毒/回血/续问后实际执行联合归属及保毒/删毒完整受控后继；本批记录冲突。",
+        "commit": null,
+        "seen_runs": 239,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:239"
+      }
+    },
+    {
+      "line": 2027,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-12T18:50:18+08:00",
+        "state": "waiting",
+        "reason": "KV F33 T5净扣36/29、均零损及下一轮毒20/13已核；删毒线随后重问，缺跨续问毒/回血归属及保持后轮条件一致的整战对照。",
+        "commit": null,
+        "seen_runs": 245,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:245"
+      }
+    },
+    {
+      "line": 2133,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-12T21:16:00+08:00",
+        "state": "waiting",
+        "reason": "KV F33 T5实扣36/29且均零损，但删毒后重问、后轮动作改变；缺跨续问归属及受控整战。",
+        "commit": null,
+        "seen_runs": 248,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:248"
+      }
+    },
+    {
+      "line": 2180,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-12T22:58:36+08:00",
+        "state": "waiting",
+        "reason": "KV F33 T5实扣36/29且均零损，删毒后重问、后轮不同；缺跨问归属及相同后继整战。",
+        "commit": null,
+        "seen_runs": 249,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:249"
+      }
+    },
+    {
+      "line": 2216,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-13T00:16:51+08:00",
+        "state": "waiting",
+        "reason": "KV F33 T5删毒后净扣36→29而两线均零损，续问阻止补毒、后轮也变；缺跨问毒/回血归属及相同后继整战。",
+        "commit": null,
+        "seen_runs": 251,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:250"
+      }
+    },
+    {
+      "line": 2262,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-13T01:59:16+08:00",
+        "state": "waiting",
+        "reason": "KV F33 T5首次题273400/273450同指纹，删致命毒药后净削36→29、两线均零损，273451续问阻止补毒且T6改线；缺跨问毒/回血毛净伤归属与保持后继一致的整战，不把删输出称保血收益，也不拟SL门槛。",
+        "commit": null,
+        "seen_runs": 252,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:252"
+      }
+    },
+    {
+      "line": 2287,
+      "row": {
+        "op": "update",
+        "id": "silent-proposal-990f054036609447",
+        "ts": "2026-10-13T02:26:59+08:00",
+        "state": "waiting",
+        "reason": "KV F33 T5删毒两线均零损、净削36→29；缺跨续问毛净伤分账与相同后继整战。",
+        "commit": null,
+        "seen_runs": 254,
+        "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:253"
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-13 03:44:40 CST",
+  "stage": "original snapshot Git table and Git-derived summary/README consistency continuation",
+  "original_dataset_exit": 0,
+  "original_git_check_failed": true,
+  "original_git_rows": 5285,
+  "continued_git_rows": 5288,
+  "fixed_log_cut": "2026-10-12T19:34:00.412Z",
+  "all_jsonl_and_ledger_tables_untouched": true,
+  "original_failed_four_outputs_preserved": "dataset-git-original",
+  "git_ref_snapshot_sha256": "ff282ceb7f0d6039d3448c1c9919c76f91c680d4c4248f68c16cb9fffe71e260",
+  "git_refs_stable_during_phase": true,
+  "function_reused": "ops/paper_dataset.py git_commits/write_csv/write_readme",
+  "updated_paths": {
+    "paper/data/commits.csv": {
+      "sha256": "5226ea4b625f44609c46b16c0eea8788dc432408acca284ea2b38f8f318ab600",
+      "bytes": 796695,
+      "new": false
+    },
+    "paper/data/summary.json": {
+      "sha256": "4af964943d3af6cfc3f2ade1e22b1c49edc141398381202a9f0edbee2bb43d3f",
+      "bytes": 309004,
+      "new": false
+    },
+    "paper/data/verification.json": {
+      "sha256": "6da06abdbb5e063b77503e51d3786c8aeb792a7380110b23f85b6cf62ad98dee",
+      "bytes": 587,
+      "new": false
+    },
+    "paper/data/README.md": {
+      "sha256": "93d5ed0e06126163cd2be760b33c76125659d46539e69f9e6be7939f4446c03f",
+      "bytes": 14133,
+      "new": false
+    }
+  },
+  "main_not_rerun": true,
+  "no_game_knowledge_or_production_script_changes": true,
+  "continued_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true,
+    "runs.jsonl decision-count mismatches": [
+      [
+        "KF9HMZKTFC3V",
+        879,
+        880
+      ]
+    ]
+  }
+}
