@@ -20,8 +20,8 @@ if [ -f "$ROOT/ops/codex-ops/brain-home" ]; then
   fi
   export BRAIN_CODEX_HOME="$selected_brain_home"
 fi
-# Roy 2026-10-11: production Codex defaults apply even with a legacy scheduler environment.
-export BRAIN_CODEX_MODEL=gpt-6-astra BRAIN_CODEX_EFFORT=xhigh
+# Roy 2026-10-12: production Codex defaults apply even with a legacy scheduler environment.
+export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT=xhigh
 export PATH="$HOME/.local/node/bin:$PATH"
 sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
 ts=$(date +%Y%m%d-%H%M%S)

@@ -117,11 +117,12 @@ class Protocol(unittest.TestCase):
         with self.assertRaises(ValueError): cron_home(cron + cron, "/new")
 
     def test_no_implicit_provider_or_model_fallback(self):
-        profile = dict(engine="unknown", account="fixture", model="gpt-6-astra", effort="xhigh", service_tier="default",
+        profile = dict(engine="unknown", account="fixture", model="gpt-6.1-sol", effort="xhigh", service_tier="default",
                        learner_home="/unavailable", brain_home="/unavailable", handoff="notes/test.md")
         with self.assertRaisesRegex(ValueError, "adapter"): validate_profile(profile)
-        profile.update(engine="codex", model="another-model")
-        with self.assertRaisesRegex(ValueError, "model policy"): validate_profile(profile)
+        for old_model in ("gpt-6-astra", "another-model"):
+            profile.update(engine="codex", model=old_model)
+            with self.assertRaisesRegex(ValueError, "model policy"): validate_profile(profile)
 
     def test_auxiliary_dispatch_stops_before_reconcile(self):
         self.tx.begin()

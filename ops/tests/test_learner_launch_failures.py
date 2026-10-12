@@ -15,7 +15,7 @@ checks = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checks)
 
 
-POLICY = ["-c", 'model="gpt-6-astra"', "-c", 'model_reasoning_effort="xhigh"',
+POLICY = ["-c", 'model="gpt-6.1-sol"', "-c", 'model_reasoning_effort="xhigh"',
           "-c", 'service_tier="default"', "-c", 'model_context_window=512000',
           "-c", 'model_auto_compact_token_limit=460800']
 
@@ -56,11 +56,11 @@ class LearnerLauncher(unittest.TestCase):
         args = json.loads((err.with_suffix(".out")).read_text())
         self.assertIn('service_tier="default"', args)
         self.assertIn("model_context_window=512000", args)
-        self.assertIn('model="gpt-6-astra"', args)
+        self.assertIn('model="gpt-6.1-sol"', args)
         self.assertIn('model_reasoning_effort="xhigh"', args)
         self.assertEqual(args[-2:], ["--", "/fixture/check"])
         launcher = (self.root / "launcher-args").read_text().splitlines()
-        self.assertEqual(launcher[launcher.index("--model") + 1], "gpt-6-astra")
+        self.assertEqual(launcher[launcher.index("--model") + 1], "gpt-6.1-sol")
         self.assertEqual(launcher[launcher.index("--effort") + 1], "xhigh")
 
     def test_explicit_native_override_is_kept(self):
@@ -138,7 +138,7 @@ class LearnerLauncher(unittest.TestCase):
             args, err = self.legacy_call(["exec", "--ignore-user-config", *profile, "--model=gpt-6.1-sol",
                                          "-c", 'model="old-model"', "--config=model_reasoning_effort=high", "-"])
             self.assertNotIn('service_tier="priority"', args)
-            self.assertIn('model="gpt-6-astra"', args)
+            self.assertIn('model="gpt-6.1-sol"', args)
             self.assertIn('model_reasoning_effort="xhigh"', args)
             self.assertEqual(err, "")
         child = ["--", "/fixture/check", "--model", "child-model", "-c", 'service_tier="child-tier"']

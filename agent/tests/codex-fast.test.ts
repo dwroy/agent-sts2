@@ -9,15 +9,15 @@ const SESSION = "01a10717-c859-7592-9012-ad4251284920";
 const request: EngineRequest = {
   engine: "codex", cwd: "/tmp/fast-project", projectRoot: "/tmp/fast-project",
   home: "/tmp/fast-home", codexHome: "/tmp/fast-home/.codex", keyFiles: [],
-  model: "gpt-6-astra", effort: "xhigh", tools: ["Read", "Bash"],
+  model: "gpt-6.1-sol", effort: "xhigh", tools: ["Read", "Bash"],
 };
 
 describe("Shared Codex defaults across session entry points", () => {
-  it.each(["IRONCLAD", "SILENT"])("uses Astra/xhigh/normal for %s", (character) => {
+  it.each(["IRONCLAD", "SILENT"])("uses GPT-6.1 Sol/xhigh/normal for %s", (character) => {
     for (const legacyTier of [undefined, "default", "priority"]) {
       const config = loadConfig({ CHARACTER: character, BRAIN_CODEX_SERVICE_TIER: legacyTier });
       expect(config.brain.codex.serviceTier).toBe("default");
-      expect(config.brain.engines.codex.model).toBe("gpt-6-astra");
+      expect(config.brain.engines.codex.model).toBe("gpt-6.1-sol");
       expect(config.brain.engines.codex.effort).toBe("xhigh");
     }
   });
@@ -33,17 +33,17 @@ describe("Shared Codex defaults across session entry points", () => {
       expect(args).toContain("model_auto_compact_token_limit=460800");
       expect(args).toContain('service_tier="default"');
       expect(args).toContain('model_reasoning_effort="xhigh"');
-      expect(args).toContain("gpt-6-astra");
+      expect(args).toContain("gpt-6.1-sol");
     }
   });
 
-  it("shares learner Astra/xhigh/normal with gameplay and ops", () => {
-    expect(engineDefaults("codex")).toEqual({ model: "gpt-6-astra", effort: "xhigh" });
+  it("shares learner GPT-6.1 Sol/xhigh/normal with gameplay and ops", () => {
+    expect(engineDefaults("codex")).toEqual({ model: "gpt-6.1-sol", effort: "xhigh" });
     const opsArgs = initCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
-    expect(opsArgs).toContain("gpt-6-astra");
+    expect(opsArgs).toContain("gpt-6.1-sol");
     expect(opsArgs).toContain('service_tier="default"');
     const args = codexCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
-    expect(args).toContain("gpt-6-astra");
+    expect(args).toContain("gpt-6.1-sol");
     expect(args).toContain('model_reasoning_effort="xhigh"');
     expect(args).toContain("--ignore-user-config");
     expect(args).toContain("model_context_window=512000");

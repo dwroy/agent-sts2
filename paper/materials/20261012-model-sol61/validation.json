@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-12T23:23:28+08:00",
+  "status": "passed_after_environment_repair",
+  "tsc": "passed in sandbox-checks.sh before Vitest",
+  "sandbox": {
+    "files": 343,
+    "tests": 3410,
+    "initial": "341 files / 3398 tests pass; 1 component-usage failure because worktree lacked existing Python environment symlink",
+    "repair": "Link existing ../../../data/logdb-venv; component-usage targeted recheck passed (1 Vitest case / 9 Python cases); standalone paths suite 11 passed because set -e skipped it after initial failure. No production source changed for this repair.",
+    "coverage": "Initial 3398 + repaired 1 + paths 11 = 3410; passing tests not repeated."
+  },
+  "host_affected_cli": {
+    "files": 4,
+    "tests": 112,
+    "models": "fixed fake models only"
+  },
+  "python_launcher_tests": 15,
+  "python_handoff_tests": 16,
+  "model_catalog_preflight": "brain and learner selected codex1 homes both accept gpt-6.1-sol/xhigh; no real model prompt sent",
+  "failed_command_preserved": "First targeted recheck invoked npx from repository root; terminated only verified mistaken npm PID 866554; reran from agent using already installed Vitest by absolute path. Original log preserved. No dependencies installed.",
+  "evidence": {
+    "sandbox-checks.log": "ba1a084c078d4157c92fda2f2c224baf0dc40f52b28a35a66ec1f01f89cc11f9",
+    "component-usage-recheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "component-usage-recheck-v2.log": "ed6e4b510a3b33dfe2dfb1beccfe6333086e3cb8c9efc01089e78c22cc98628f",
+    "paths-checks.log": "1716bc4aaa8f5d383cc816beff0c3e4a98411554499e4a7a420710a4e15b6b22",
+    "host-model-entry-checks.log": "ba072b0c3eab0905579e687833ad7de2b783f1d1f0eaec2990f896fe03829d22",
+    "launcher-checks.log": "499efaad3dbd4fd622259d227492f94f5e5c06e391bc30c6dd4983f08fe3ac69",
+    "handoff-checks.log": "ae514119149b543879fa220cb844e3f229b53db0d857c2e0a5882d0c856e31a0",
+    "preflight.json": "d0aa3dce2b7dc65e3fdc7f51df037e07318a1d1a51f938c079610e285af91123"
+  },
+  "source_scope": "Codex model default and launcher overrides; shared xhigh/default/512k and permission profiles retained; all characters use the requested new model, game knowledge/rules unmodified."
+}

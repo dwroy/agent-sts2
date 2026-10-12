@@ -1,7 +1,7 @@
 # Sourced by the historical launcher names after resolving and checking the native binary.
 # Only normalize Codex arguments; never inspect or rewrite a sandbox child after --.
 args=()
-policy=(-c 'model="gpt-6-astra"' -c 'model_reasoning_effort="xhigh"'
+policy=(-c 'model="gpt-6.1-sol"' -c 'model_reasoning_effort="xhigh"'
         -c 'service_tier="default"' -c 'model_context_window=512000'
         -c 'model_auto_compact_token_limit=460800')
 while [ "$#" -gt 0 ]; do
