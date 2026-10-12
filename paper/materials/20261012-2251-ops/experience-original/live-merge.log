@@ -1,0 +1,76 @@
+git branch --show-current
+live
+git rev-parse exp-silent
+c523ff4accea0ae7a6574842612a159b3f8d781f
+git rev-parse HEAD
+c6ac75226dc8222a980bcf2f7db8ce39db338eee
+git status --short
+ M notes/fight-value-backtest-silent.md
+ M notes/monster-db-check.md
+git diff --name-only --diff-filter=U
+git rev-parse -q --verify MERGE_HEAD
+git diff --cached --name-only
+bash -c while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+git rev-parse HEAD
+c6ac75226dc8222a980bcf2f7db8ce39db338eee
+git merge-base c6ac75226dc8222a980bcf2f7db8ce39db338eee c523ff4accea0ae7a6574842612a159b3f8d781f
+14171416bbea0a9e1508c09a0912b369386cb3a1
+git diff --name-only 14171416bbea0a9e1508c09a0912b369386cb3a1 c523ff4accea0ae7a6574842612a159b3f8d781f -- knowledge
+knowledge/characters/silent/experience.json
+git diff --name-only 14171416bbea0a9e1508c09a0912b369386cb3a1 c6ac75226dc8222a980bcf2f7db8ce39db338eee -- knowledge
+knowledge/builders/build-monster-db.py
+knowledge/builders/build-outcome-stats.py
+knowledge/builders/build-potion-equivalents.py
+knowledge/builders/characters.py
+knowledge/builders/refresh-potion-equivalents.sh
+knowledge/characters/ironclad/potion-equivalents.json
+knowledge/characters/ironclad/sl-elites.json
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/experience.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/potion-equivalents.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git rev-parse c523ff4accea0ae7a6574842612a159b3f8d781f:knowledge/characters/silent/experience.json
+d17232b20e418c5eac4cba9fb20a8675f8f39561
+git rev-parse c6ac75226dc8222a980bcf2f7db8ce39db338eee:knowledge/characters/silent/experience.json
+8cae0d74f47dbac3a9c769167059c65fe9684fed
+git merge-tree --write-tree c6ac75226dc8222a980bcf2f7db8ce39db338eee c523ff4accea0ae7a6574842612a159b3f8d781f
+79c47096bbbb35c1c1695674f649e6169a04a7be
+100644 6fbec4996cd28c8f010d1a62d2124ac656c4ba98 1	eval/versions.json
+100644 e6677fed603fbc8522795d24f14eeba1668d7d19 2	eval/versions.json
+100644 82d90cded7fb2559e108b4591f94a1b2fdb69da2 3	eval/versions.json
+100644 e653a542dd5fb5698053e779ce39ee3f47a515d8 1	notes/for-roy.md
+100644 b37b19fd9a0290040710f72ebe95ee5e061f91e7 2	notes/for-roy.md
+100644 99acf90f2ec073cd5c4a2fd9c88fe220e3d7af36 3	notes/for-roy.md
+100644 5a6c12993dfc389d0f8b618189f81cb89aecee15 1	ops/inbox-dev.md
+100644 eada1dc3d9776e357f9d6bfd8b6388c09b379e4f 2	ops/inbox-dev.md
+100644 af85a2144f07209b6dc17fdc91c3c2d94a17e7e9 3	ops/inbox-dev.md
+100644 4b61baf1340907ffdfb5817df13d7162da759ab2 1	paper/materials/decision-log.md
+100644 1300540e8cdda00173c31e559403c90a67abfd2d 2	paper/materials/decision-log.md
+100644 863c8c2ae60ce465c8aca0ee6c263cd844ee1b73 3	paper/materials/decision-log.md
+100644 dec9d1f55993bedd95cdde914c0c3f20a8842948 1	paper/materials/experience-changelog-silent.md
+100644 d30b13170a44f2cd04d7a82b18200fa69de09579 2	paper/materials/experience-changelog-silent.md
+100644 5f93e498846cb5819f269ea266a7ba33ea7e5bfc 3	paper/materials/experience-changelog-silent.md
+100644 6748da11220020f0522197a3652f32dcde6cb040 1	paper/materials/learning/ledger.jsonl
+100644 8dea3208a9de393af53f9236a5d20c010ad8b0f9 2	paper/materials/learning/ledger.jsonl
+100644 129c71da9e72e92ec99ff649cb4e9d0e06fb9c75 3	paper/materials/learning/ledger.jsonl
+
+Auto-merging eval/versions.json
+CONFLICT (content): Merge conflict in eval/versions.json
+Auto-merging notes/for-roy.md
+CONFLICT (content): Merge conflict in notes/for-roy.md
+Auto-merging ops/inbox-dev.md
+CONFLICT (content): Merge conflict in ops/inbox-dev.md
+Auto-merging paper/materials/decision-log.md
+CONFLICT (content): Merge conflict in paper/materials/decision-log.md
+Auto-merging paper/materials/experience-changelog-silent.md
+CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md
+Auto-merging paper/materials/learning/ledger.jsonl
+CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl
