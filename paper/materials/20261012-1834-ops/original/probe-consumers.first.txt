@@ -1,0 +1,76 @@
+import fs from 'node:fs';
+import { syncBuiltinESMExports } from 'node:module';
+import { fileURLToPath } from 'node:url';
+
+const out = new URL('./', import.meta.url);
+const read = fs.readFileSync.bind(fs);
+const blocked: string[] = [];
+fs.readFileSync = ((path: any, ...args: any[]) => {
+  const name = path instanceof URL ? fileURLToPath(path) : String(path);
+  if (name.includes('/knowledge/')) {
+    blocked.push(name);
+    throw Object.assign(new Error('ENOENT: frozen observations only'), { code: 'ENOENT' });
+  }
+  return (read as any)(path, ...args);
+}) as typeof fs.readFileSync;
+syncBuiltinESMExports();
+
+const { parseGameState } = await import('../../../agent/src/hand/mod/schema.js');
+const { makeKnowledge } = await import('../../../agent/src/knowledge/index.js');
+const { setMonsterDbForTests } = await import('../../../agent/src/knowledge/monster-db.js');
+const { setMoveModelForTests } = await import('../../../agent/src/knowledge/move-model.js');
+const { planCombatTurn } = await import('../../../agent/src/reflex/combat-plan.js');
+const { solveTap, replaySteps } = await import('../../../agent/src/reflex/turn-solver.js');
+const { rolloutLiveOptions } = await import('../../../agent/src/reflex/rollout-live.js');
+const { bossLinesOptions } = await import('../../../agent/src/sim/boss-lines.js');
+const { buildRunBrief } = await import('../../../agent/src/memory/run-brief.js');
+const { createScreenMemory } = await import('../../../agent/src/memory/types.js');
+const { loadConfig } = await import('../../../agent/src/core/config.js');
+rolloutLiveOptions.enabled = false;
+bossLinesOptions.enabled = false;
+setMonsterDbForTests({ monsters: {}, bosses: {}, encounters: {} });
+setMoveModelForTests({});
+
+const cases = [
+  { run: '61E2QS63Y9WU', line: 267612, cards: [['DEFEND_SILENT'], ['PIERCING_WAIL'], ['DEFEND_SILENT']], expected: { damageDealt: 33, hpLoss: 8, blockGained: 6 } },
+  { run: '61E2QS63Y9WU', line: 267696, cards: [['PREDATOR', 1], ['EXTERMINATE']], expected: { damageDealt: 47, hpLoss: 15 } },
+  { run: 'CA5KE8GFJ9X2', line: 267381, cards: [['STRIKE_SILENT', 0], ['DEFEND_SILENT'], ['DEFEND_SILENT'], ['NEUTRALIZE', 0]], expected: { blockGained: 10, hpLoss: 4 } },
+  { run: 'VLZ6CCT8AQ0A', line: 269777, cards: [['PIERCING_WAIL'], ['DEFEND_SILENT']], expected: { blockGained: 12, hpLoss: 39, damageDealt: 3 } },
+  { run: '5PM6JAQG6FNQ', line: 268455, cards: [['BUBBLE_BUBBLE', 0]], expected: { damageDealt: 0, energyLeft: 4 } },
+  { run: 'DUZUBAJ3A8GP', line: 269073, cards: [['ECHOING_SLASH'], ['BURST'], ['STRIKE_SILENT', 0], ['SURVIVOR']], expected: { blockGained: 16, hpLoss: 6 } },
+];
+const results: any[] = [];
+for (const test of cases) {
+  const input = JSON.parse(read(new URL(`audit-input-${test.run}.json`, out), 'utf8'));
+  const decision = input.decisions.find((d: any) => d._line === test.line);
+  const frames = input.states.filter((s: any) => s.observed_ts === decision.observed_ts && s.fingerprint === decision.fingerprint);
+  if (frames.length !== 1) throw new Error('non-unique source state');
+  const raw = frames[0].state;
+  const original = JSON.stringify(raw);
+  const state = parseGameState(raw);
+  const knowledge = makeKnowledge({ cards: raw.run.deck.map((c: any) => ({ id: c.card_id, type: c.card_type })) }, 'cache');
+  const env: any = { state, knowledge, brief: buildRunBrief(state, knowledge), thresholds: loadConfig({}).thresholds,
+    runStart: 'auto', characterPreference: null, allowFtueModals: false, strictJev: true,
+    screenMemory: createScreenMemory(state.screen), shopDiscardPotions: [] };
+  let solver: any;
+  solveTap.onSolve = (value: any) => { solver ??= value; };
+  try { planCombatTurn(env); } finally { solveTap.onSolve = null; }
+  if (!solver) throw new Error(`solver missing: ${test.line}`);
+  const used = new Set<number>();
+  const steps = test.cards.map(([id, target]) => {
+    const card = solver.hand.find((c: any) => c.cardId === id && !used.has(c.index));
+    if (!card) throw new Error(`missing source card ${test.line} ${id}`);
+    used.add(card.index);
+    return { cardIndex: card.index, cardId: card.cardId, name: card.name, upgraded: card.upgraded, target: target ?? null };
+  });
+  const replay = replaySteps(solver, steps);
+  results.push({ run: test.run, decision_line: test.line, state_line: frames[0]._line, floor: decision.floor,
+    turn: decision.turn, cards: test.cards, expected: test.expected, outcome: replay?.outcome ?? null,
+    expected_matches: replay ? Object.entries(test.expected).every(([key, value]) => replay.outcome[key] === value) : false,
+    source_unchanged: JSON.stringify(raw) === original,
+    coverage: '仅已观察动作序列的当前回合；不是整场、自动执行或跨轮的覆盖证明' });
+}
+fs.writeFileSync(new URL('consumer-probes.json', out), JSON.stringify({ results, blocked_knowledge_reads: [...new Set(blocked)] }, null, 2) + '\n');
+process.stdout.write(JSON.stringify(results.map(({ outcome, ...row }) => ({ ...row,
+  actual: outcome && { damageDealt: outcome.damageDealt, hpLoss: outcome.hpLoss, blockGained: outcome.blockGained,
+    energyLeft: outcome.energyLeft, unknownCards: outcome.unknownCards } })), null, 2) + '\n');
