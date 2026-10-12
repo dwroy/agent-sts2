@@ -1,0 +1,45 @@
+import hashlib
+import json
+from pathlib import Path
+
+ROOT = Path('/home/dw/Projects/agent-sts2')
+OUT = Path(__file__).resolve().parent
+RUNS = json.loads((OUT / 'dispatch.json').read_text())['job']['runs']
+TOKENS = [run.encode() for run in RUNS]
+LIMITS = {'states': 280723, 'decisions': 274640, 'sl-attempts': 969,
+          'runs': None, 'run-config': None}
+manifest = {}
+for name, limit in LIMITS.items():
+    source = ROOT / 'logs' / (name + '.jsonl')
+    counts = {run: 0 for run in RUNS}
+    offset = 0
+    with source.open('rb') as handle, (OUT / (name + '.jsonl')).open('wb') as target, \
+            (OUT / (name + '-index.jsonl')).open('w') as index:
+        for number, raw in enumerate(handle, 1):
+            if limit is not None and number > limit:
+                break
+            if any(token in raw for token in TOKENS):
+                row = json.loads(raw)
+                run = row.get('run_id', row.get('runId'))
+                if run in counts:
+                    counts[run] += 1
+                    target.write(raw)
+                    index.write(json.dumps({'line': number, 'offset': offset,
+                        'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest(),
+                        'run_id': run}) + '\n')
+            offset += len(raw)
+    saved = OUT / (name + '.jsonl')
+    manifest[name] = {'source': str(source), 'limit_line': limit, 'scanned_bytes': offset,
+                      'counts': counts, 'sha256': hashlib.sha256(saved.read_bytes()).hexdigest()}
+    print(name, json.dumps(manifest[name], ensure_ascii=False), flush=True)
+notes = Path('notes/lessons.md').read_text().splitlines(keepends=True)
+for run in RUNS:
+    starts = [n for n, text in enumerate(notes) if text.startswith('## ' + run + '（')]
+    assert len(starts) == 1, (run, starts)
+    start = starts[0]
+    end = next((n for n in range(start + 1, len(notes)) if notes[n].startswith('## ')), len(notes))
+    raw = ''.join(notes[start:end]).encode()
+    (OUT / ('review-' + run + '.md')).write_bytes(raw)
+    manifest['review-' + run] = {'source': 'notes/lessons.md', 'start_line': start + 1,
+        'end_line': end, 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()}
+(OUT / 'evidence-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')

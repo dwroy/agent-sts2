@@ -1,0 +1,42 @@
+## 经验库更新回报
+
+- 版本：2026-10-13.3 → 2026-10-13.4；提交：bdbb7a24（分支 exp-merge-recovery-20261013-000402）；合入：e62833a5。正式发布编号待运维统一核号。
+- 条数：新增 2、更新 16（加证据 16、只改数字 0）、退役 0；active 229 → 231，共 55281 字。A8 适用 209 条／49212 字，A9 适用 210 条／49496 字。
+- 机制推理：
+
+  - 连射 — 免费生成仍支付现场 X 能量 — 1 局 — MEXYTC0Z2MQQ
+  - 灵动步法 — 敏捷只兑现于后继挡牌 — 148 局 — MEXYTC0Z2MQQ
+  - 力量与虚弱 — 逐攻击段、逐牌更新属性 — 249 局 — 4ATPGGUBWG8L
+  - 构筑兑现 — 到手、建立和实际收益分账，仍属观察 — 251 局 — 4ATPGGUBWG8L
+  - 致命毒药 — 施毒不等于当步伤害 — 56 局 — MEXYTC0Z2MQQ
+  - 余像 — 建立后实出牌补挡 — 47 局 — 4ATPGGUBWG8L
+  - 烘焙手套 — 永久力量与柔嫩临减分源 — 3 局 — 4ATPGGUBWG8L
+  - 仪式兽阈值 — 跨阈清力不保证收尾 — 25 局 — MEXYTC0Z2MQQ
+  - 多尼斯异鸟 — 成长威胁与胜战耗血同时核算 — 14 局 — MEXYTC0Z2MQQ
+  - 仪式兽昏眩 — 首牌后余能不等于可出牌 — 8 局 — MEXYTC0Z2MQQ
+  - 墨影幻灵 — 滑溜耗层与力量成长分源 — 21 局 — 4ATPGGUBWG8L
+  - 猎人柔嫩 — 后牌不能沿用初始力敏 — 27 局 — 4ATPGGUBWG8L
+  - 肌肉药水 — 临时力量须由当轮攻击兑现 — 6 局 — 4ATPGGUBWG8L
+  - 蜜虫强化 — 蜜虫退场不取消同伴攻击 — 48 局 — 4ATPGGUBWG8L
+  - 技能药水 — 饮药、取牌与实际施放分账，仍属观察 — 1 局 — 4ATPGGUBWG8L
+
+- 改了的手写知识：无。
+- 测试：tsc 0；源 vitest 343 文件／3412 用例／0，live 合后 345 文件／3414 用例／0。重跑过；历史符号链接失败和四线程超时原件已保留。
+- 切片大小：总体中位增加 15 字，最大 8924 字；实际 live 三上下文读回通过，自然采用待观察。
+- 学习账本：新增无；改成 proposed：silent-0005、0007、0019、0020、0021、0023、0025、0043、0079、0133、0134、0222、0227、0232、0330、0385、0426、0443、0447、0448、0449；退役无；`ledger.py check` 退出 0。
+- 需要 Roy 定的事：无。正式编号、shipped 登记和完整宿主检查待运维接续。
+
+```json
+{"task":"experience-update","version":"2026-10-13.4","commit":"bdbb7a24e9c635cbd1dc9252c0315f0b9ee782d9","merged":"e62833a5dd44c13422a03a2d132a947739cdada6","added":2,"updated":16,"retired":0,"active":231,"mechanisms":["连射X支付","灵动步法后继挡","力量与虚弱","构筑兑现观察","致命毒药施毒与结算","余像逐牌挡","烘焙手套永久力量","仪式兽阈值清力","异鸟成长","仪式兽昏眩限牌","墨影滑溜与成长","猎人柔嫩","肌肉药临时力量","蜜虫强化","技能药消费链观察"],"tests":{"tsc":0,"vitest":0,"cases":3412},"ledger":{"added":[],"proposed":["silent-0005","silent-0007","silent-0019","silent-0020","silent-0021","silent-0023","silent-0025","silent-0043","silent-0079","silent-0133","silent-0134","silent-0222","silent-0227","silent-0232","silent-0330","silent-0385","silent-0426","silent-0443","silent-0447","silent-0448","silent-0449"],"retired":[],"check":0},"code_proposals":["silent-proposal-a9869ae468e3ca5d","silent-proposal-875ec2efd80a7cca","silent-proposal-1ef9339f79681fea","silent-proposal-29e469aeebad6dff"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-041243-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a131bf-0d0f-78f0-baa0-35d25ef1e558
+轮数：1；工具调用：command_execution×93
+token：输入 449.6k、输出 181.3k（其中推理 139.7k）、cache 读 19404.7k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：7154.1 s（墙钟）
+时间：首个事件 13.1 s、模型首个输出 18.1 s、首次工具 20.7 s、末次工具结束 6875.4 s；工具内共 5817.4 s，其余（模型生成、推理、网络）1323.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×97 wait×5；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T04-12-46-01a131bf-0d0f-78f0-baa0-35d25ef1e558.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-041243-experience-update.jsonl

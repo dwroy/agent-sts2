@@ -1,0 +1,8 @@
+{
+  "command_exit": 1,
+  "action": "读取gitleaks-final.json并校验",
+  "error": "FileNotFoundError: gitleaks-final.json",
+  "cause": "最终扫描尚未返回时提前读取结果文件",
+  "production_failure": false,
+  "correction": "等待原扫描进程exit0后重新读取，未重复启动扫描"
+}

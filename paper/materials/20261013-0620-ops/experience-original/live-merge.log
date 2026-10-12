@@ -1,0 +1,42 @@
+git rev-parse HEAD
+83d43cc1ee9f66cbcd65d952db00ec8ad8ce1d96
+git status --short
+ M notes/fight-value-backtest-silent.md
+ M notes/monster-db-check.md
+git diff --cached --name-only
+git diff --name-only -- notes/fight-value-backtest.md knowledge
+git rev-parse HEAD
+83d43cc1ee9f66cbcd65d952db00ec8ad8ce1d96
+git merge-base HEAD bdbb7a24e9c635cbd1dc9252c0315f0b9ee782d9
+39f5d913477d2d3ec1834388f66c1793c3feb48b
+git diff --name-only 39f5d913477d2d3ec1834388f66c1793c3feb48b bdbb7a24e9c635cbd1dc9252c0315f0b9ee782d9 -- knowledge
+knowledge/characters/silent/experience.json
+git diff --name-only 39f5d913477d2d3ec1834388f66c1793c3feb48b HEAD -- knowledge
+knowledge/builders/build-monster-db.py
+knowledge/builders/build-outcome-stats.py
+knowledge/builders/build-potion-equivalents.py
+knowledge/builders/characters.py
+knowledge/builders/refresh-potion-equivalents.sh
+knowledge/characters/ironclad/potion-equivalents.json
+knowledge/characters/ironclad/sl-elites.json
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/boss-trust.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/potion-equivalents.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git merge-tree --write-tree HEAD bdbb7a24e9c635cbd1dc9252c0315f0b9ee782d9
+2510186f51eb548819cdb443322dd50b8d10cb6e
+git merge --no-edit exp-merge-recovery-20261013-000402
+Merge made by the 'ort' strategy.
+ knowledge/characters/silent/experience.json | 173 ++++++++++++++++++----------
+ 1 file changed, 115 insertions(+), 58 deletions(-)
+git rev-parse HEAD
+e62833a5dd44c13422a03a2d132a947739cdada6
+git rev-parse HEAD
+e62833a5dd44c13422a03a2d132a947739cdada6
