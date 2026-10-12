@@ -1,0 +1,153 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-140741-strategy-proposal",
+  "base": "e886085ad98ad48a06a76ab2a32ed21bd30a6f49",
+  "runs": [
+    "KF9HMZKTFC3V",
+    "7S8HCC0M6G9W"
+  ],
+  "fixes": [],
+  "source_commit": "dca4d3e13e066ebcba7f5d48fde9e24f824e856f",
+  "merged": "730db1e7b0bf2b313a4cb7193d9568f402cba503",
+  "release_id": "V4-R313",
+  "experience_version": "2026-10-12.14",
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-ecf0dd74ac09ccad",
+    "silent-proposal-9e81dc5f9a4c3bd5",
+    "silent-proposal-f5f84ef2b801ccec",
+    "silent-proposal-5329ffa5661d6ad4",
+    "silent-proposal-2f939cab26967b90"
+  ],
+  "implementation_domains": [
+    "combat",
+    "terminal"
+  ],
+  "proposal_results": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/report.md",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/proposal.md",
+  "learning_result": {
+    "request_id": "roy-20261012-concrete-core-decklists",
+    "revision": 2,
+    "input_sha256": "c8be27b1c67f5e319127325b5729e792302b0c8518e99e154ad6508ee5eb49e5",
+    "outcome": "complete",
+    "coverage": {
+      "candidate-templates": [
+        {
+          "id": "silent-core-poison-defense-observation",
+          "sha256": "33ca666907a73319c55ddc50c48bd0f2974ea2a0bca40dd4c8c502fb4b7f44a4"
+        }
+      ],
+      "upgrade-effects": [
+        {
+          "id": "silent-bouncing-flask-poison",
+          "sha256": "297930d7f871cb6ac4f5b27b8b4c31d7078472bcbee49a010ff7d8038bb91387"
+        },
+        {
+          "id": "silent-accelerant-triggers",
+          "sha256": "80956e6864cd5586fe12bbfe998831fd492a1ede692375b53714fd45e4eaad8b"
+        }
+      ],
+      "core-ablation": [
+        {
+          "id": "silent-deck-burst-observation",
+          "sha256": "5410bc2c2db5faa92e37a5b5455d774c1f4d717601225e3a75415968da6306b1"
+        }
+      ],
+      "effective-dpr": [
+        {
+          "id": "silent-aeonglass-artifact-growth-sl",
+          "sha256": "6bb5e3b8a54ba03072dea359bda3041f93d3f43d7f1836604a4ab74a328cad99"
+        }
+      ],
+      "boss-readiness": [
+        {
+          "id": "silent-aeonglass-artifact-growth-sl",
+          "sha256": "6bb5e3b8a54ba03072dea359bda3041f93d3f43d7f1836604a4ab74a328cad99"
+        },
+        {
+          "id": "silent-core-poison-defense-observation",
+          "sha256": "33ca666907a73319c55ddc50c48bd0f2974ea2a0bca40dd4c8c502fb4b7f44a4"
+        }
+      ],
+      "choice-consumption": [
+        {
+          "id": "silent-deck-burst-observation",
+          "sha256": "5410bc2c2db5faa92e37a5b5455d774c1f4d717601225e3a75415968da6306b1"
+        }
+      ]
+    },
+    "consumer_receipt": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/consumer-receipt.json",
+      "sha256": "4f0b8033c04c73976ed4552593eb7f9c02280d3cc1eddd9a8327835be3b112bd"
+    },
+    "questions": [
+      {
+        "claim": "把步法/蜃景/余像等签名当每条毒防胜线的必要施放，或把10张候选当已证最小核心。",
+        "finding": "KF9 A10 F49胜线未施步法/永恒铠甲；当前10张仅带原14遗物和31血空药的条件模型功能包，未证最小性、26次删除可达性或连续boss。",
+        "evidence": [
+          "KF9HMZKTFC3V F49 T1—6，observed-states.json s370163—370195",
+          "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v1/candidate-templates-increment.json",
+          "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v1/paired-analysis.json"
+        ],
+        "recommendation": "保持原签名统计，限定为候选而非必要条件；将本轮限定经验草稿按原owner接续入库。拒绝照目标张数强删。",
+        "existing_entry_ids": [
+          "silent-core-poison-defense-observation",
+          "silent-deck-burst-observation"
+        ]
+      },
+      {
+        "claim": "重放触媒的当步建立与整战模型后轮层数可等价使用；模拟64/64可代表真实必胜。",
+        "finding": "原帧s370178→370179实付1能量、建触媒2；固定消费者trace亦2，但simulateFight同一步snap只1，B全部64样本受此不一致影响。另药瓶/扫腿的头盔重放各少4挡。",
+        "evidence": [
+          "KF9HMZKTFC3V F49 T2/T3/T5",
+          "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v1/accelerant-persistence-probe.json",
+          "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v1/calibration-probes.json",
+          "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v1/paired-analysis.json"
+        ],
+        "recommendation": "沿既有P1/P2及silent-proposal-f5f84ef2b801ccec、silent-proposal-2f939cab26967b90处理，不另领整队列。最小复核：applyLasting的触媒建立次数与已核trace一致、后轮仍2，已观测重放头盔8挡正确；修正后原8臂同seed复算，并保留本次偏差材料。",
+        "existing_entry_ids": [
+          "silent-accelerant-triggers",
+          "silent-intimidating-helmet-observed-replay-block"
+        ]
+      },
+      {
+        "claim": "KF9末王已结毒子窗口147/回合或净血池535/6可以直接作为严格全场有效DPR。",
+        "finding": "T3—5毒441/3=147是条件窗口；全场六轮逐帧可见528伤，最后7血敌退场缺归零帧。可证下界88/回合，89.17只为通关血池代理；旧六窗口净血池表还未分解回血/退场。",
+        "evidence": [
+          "KF9HMZKTFC3V F49 T1—6，s370163—370195",
+          "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v1/actual-dpr.json",
+          "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v1/actual-six-windows.json"
+        ],
+        "recommendation": "分别保留下界、代理、未知归属和启动后条件效率；末轮即使未手动出牌也计入。若需严格精确DPR，最小缺字段是终局敌HP归零/退场原因、伤害来源和敌回血/召唤分段归属；不能以当前缺口报0伤。",
+        "existing_entry_ids": [
+          "silent-deck-burst-observation",
+          "silent-aeonglass-artifact-growth-sl"
+        ]
+      },
+      {
+        "claim": "同名药瓶再次施放、自动重放次数或coreWindow.complete可以表示完整核心循环。",
+        "finding": "trace的hand只有牌名、cardIndex为每轮手位，双永久药瓶无法据此识别同一实例回返；当前完整毒防组合全为null。trace可完整也不代表触媒持久层数正确。",
+        "evidence": [
+          "KF9HMZKTFC3V F49 T2/T3，双实例来源F2/F22",
+          "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v1/per-sample-metrics.json",
+          "agent/src/sim/core-window.ts@5a120bddf9e4af217a45306b2a5c30f9427f16a5"
+        ],
+        "recommendation": "已完成全分母首次施放、同名再施、实付、效果和存活统计；实例再入手及完整组合继续未知。P1最小补稳定card_instance_id、draw/discard/shuffle事件归属、毒源建立与敌回合后继防守/输出窗口；P2固定读回与自然采用分开。",
+        "existing_entry_ids": [
+          "silent-deck-burst-observation"
+        ]
+      }
+    ],
+    "limitations": [
+      "10张只是受限候选，最小性、删26张的自然可达性及连续boss资格未证。",
+      "原512条件样本的模型偏差保留；完整实例回返及组合归属仍待P1/P2。",
+      "固定live读回证明可读取，自然采用、真实胜率和未来JEV准入仍独立验收。"
+    ]
+  }
+}

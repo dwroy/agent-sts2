@@ -1121,3 +1121,19 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-13 00:16 [运维 codex] Roy统一模型已实际上线V4-R312/V4.codex-sol61-xhigh1：旧gpt-6-astra/xhigh→gpt-6.1-sol/xhigh，default/512k及原codex1 homes/学习沙箱保持；源c06d1019b，main c17a78b6c/live f2df18b3c。旧477局已自然结束，本轮实际保留未结束G4PQBCJQ7NP0，在无在途动作REWARD边界870005→894446接续，23:51真实Sol回答及原生模型/effort已核；新brain UUID01a130ce…和旧线程原件均保存。主ops同UUID/pane当前原生Sol/xhigh/host，启动argv仍旧Astra，唯一空闲验收事件已排队，当前未记全切完成；旧学习进程均自然退出，现有4活批原生Sol/xhigh/workspace-write已核。原231301 owner/thread/r2与未完量化父项保持，没重派或把学习结项。预期影响为模型选择/延迟/费用可能变化，不宣称胜率改善或补游戏知识；回退仅模型源23路径，保留知识刷新/学习与原记录，安全控制器边界接续并登记新发布号。回执notes/model-sol61-runtime-consumption-20261012.json；未改生产.env、ops prompt、账号或push。
 - 2026-10-13 00:38 [运维 codex] 原牌表同owner/thread/r2五条限定经验已实际上线V4-R313/S1.exp195（经验2026-10-12.14），源dca4d3e13，live2e14889f1/maine886085ad；旧五条原文→新增限定原文、证据局/经验ID/账本silent-0440逐项见paper/materials/20261013-0018-ops/release-changes.json，其他222条及自动刷新保持。预计同角色题面可读这些限定，不宣称重放模型已修、自然采用或胜率提升；回退只反向重放固定五条差异，保留后续成果，测后锁内登记新发布号。原7共享记录冲突已避开，原线程实际接续20261013-002708/Sol-xhigh/14deny，并有首个真实回复；live消费者结果/六项覆盖仍待该批回报，量化父项不关闭。两通知已由watcher实际告知Roy、六阶段SHA回执已核。材料paper/materials/20261013-0018-ops。
 - 2026-10-13 00:38 [运维 codex] 同一Roy统一模型请求已核原ops UUID/pane空闲接续：旧3237122退出，新922271启动argv和原生turn_context均gpt-6.1-sol/xhigh，原host权限/账号/home保持；brain与新活批既有真实回答及学习沙箱记录保持。V4-R312模型切换实际验收完成，无重复切换、游戏重启、学习重领或新行为编号；回执notes/model-sol61-runtime-consumption-20261012.json及paper/materials/20261013-0018-ops/ops-idle-refresh-acceptance.json。
+
+
+### 2026-10-13 00:37:25 CST 原学习者：V4-R313 静默具体牌表限定经验已上线并完成固定读回
+
+<!-- silent-core-decklists-live-delivery:r2:V4-R313 -->
+请求roy-20261012-concrete-core-decklists/r2；原owner/thread保持。源dca4d3e13e066ebcba7f5d48fde9e24f824e856f，实际行为提交730db1e7b0bf2b313a4cb7193d9568f402cba503，正式V4-R313/S1.exp195、经验2026-10-12.14；账本silent-0440已由ops登记shipped。实际live源码2e14889f13c1d257b5f1babc5cea97c58e994b90的全量前缀对KF9原始奖励/升级/商店三题均读到五条新增限定，15/15，回执 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/consumer-receipt.json。
+
+逐项旧/新内容：
+- silent-core-poison-defense-observation：旧为施毒/触媒/特定防御签名候选及冻结分母；新补KF9未施步法/铠甲仍胜的限定、10张功能包不是已证最小核心、F2/F6/F22/F44/F46实际取得边界，主题仅新增KF9至64，不改旧181局分母。
+- silent-bouncing-flask-poison：旧有普通/升级次数和单敌实加24毒；新补同局普通→升级、复制来源及限定差6毒算术，升级必要性和营火机会成本未知。
+- silent-accelerant-triggers：旧有触媒额外毒结与普通重放建2；新明确该局后轮仍2、手动/自动效果/能力离牌池分账及未活到结算不得预支。
+- silent-deck-burst-observation：旧为持有/支付/后继与冻结研究限制；新纳入8臂64配对、全分母伤/轮及模型偏差限定；不照10张强删，同名再施/重放不算完整循环。
+- silent-aeonglass-artifact-growth-sl：旧为破制品、成长、实毒和低血入口；新分列可见528/6=88下界、535/6代理、441/3条件毒窗，以及前王出口/复活/SL和连续boss资格。
+
+证据KF9HMZKTFC3V A10 F49T1—6、7S8HCC0M6G9W F49首T12截断/重试T8复活T10胜。五条完整原/新对象与各SHA保存在 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/release-changes.json，原四项异议的ops→watcher→Roy回执已核；不代写ACK。预期使构筑题面核实际组件/支付/可活窗口，减少未证最小核心和未结收益预支；尚无自然采用或真实胜率提升结论。回退仅逆转这五条追加并保留之后并行证据，原changes.json提供精确前后；源码评分和生产路由未改，P1/P2模型修正、理想模板/JEV准入和量化父项继续独立。
+- 2026-10-13 01:25 [运维 codex] 具体牌表限定经验入库/可读子项已完成：原002708同thread/r2，V4-R313/经验.14六项内容SHA及live真实三题×五条15/15核实，宿主完整tsc/394文件4218过2跳；两新通知的watcher→Roy真实回执已齐。模型修正/复算、自然采用/真实胜率和未来JEV仍属未关闭量化父项。普通经验000402源aa27705f尚未合入：与live构筑条目重叠，原exp-silent源和所有失败保持，沿原经验thread/owner实际接续010547/Sol-xhigh/14deny，仅补有界整理与合入/读回；未重派全历史、不覆写live限定。回执paper/materials/20261013-0056-ops/core-task-closure.json、experience-recovery-dispatch.json。

@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-13 01:10:00 CST",
+  "source": "aa27705f654a102944b7aac1294107269c4b8aa7",
+  "source_experience_sha256": "dbb49c40391afb548781cdb762881b899387b74aee7d9dd0eecd82e83c2a6502",
+  "verified_artifacts": 29,
+  "original_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "exit": 0,
+    "files": 343,
+    "cases": 3410,
+    "failed_files": 0,
+    "failed_cases": 0,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-000403-experience-update/test-source-isolated-retry.log",
+    "sha256": "a8c348b82595465e8bc6555628b66bc43c00e4d7b2ea762e9f8eb2a599ec71b0",
+    "rerun": true,
+    "initial_direct": {
+      "tsc": 0,
+      "vitest": 1,
+      "exit": 1,
+      "files": 340,
+      "cases": 3397,
+      "failed_files": 2,
+      "failed_cases": 2,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-000403-experience-update/test-source-direct.log",
+      "sha256": "aa2f3cfbccd4769b414703c1dbbc686e58c04554d2230f3e7e68bcd783e094d2"
+    },
+    "experience_sha256": "dbb49c40391afb548781cdb762881b899387b74aee7d9dd0eecd82e83c2a6502",
+    "entry": "1421份跟踪源码/任务文件逐SHA一致的隔离副本；仅忽略历史learner/runs目录不进入源码扫描，knowledge为同一最终经验。原脚本/固定排除/60000预算/超时均未改，2 workers，TMPDIR限定本批。原树首轮退出1：旧临时目录悬空链接导致check-imports ENOENT，另固定F45题15000ms超时；完整原件保持。隔离副本完整原入口重跑通过。",
+    "host_full_suite": "实际合入后沿原experience-done/learner-checks"
+  },
+  "test_copy_source_files_verified": 1421,
+  "environment_templates_not_read": [],
+  "original_live_conflict": {
+    "actual_live_head": "33f42aee34175987601615b14fc4f08f52dd3c8d",
+    "before_version": "2026-10-12.13",
+    "live_version": "2026-10-12.14",
+    "owned_overlap": [
+      "silent-deck-burst-observation"
+    ],
+    "source_is_live_ancestor": false
+  },
+  "same_thread_recovery_dispatched": "20261013-010547-strategy-proposal",
+  "new_shipped_merge_version_claimed": false
+}

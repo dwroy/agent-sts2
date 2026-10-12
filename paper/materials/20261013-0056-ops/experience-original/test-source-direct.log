@@ -1,0 +1,46 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/agent
+
+ ❯ tests/silent-apotheosis-reference.test.ts (5 tests | 1 failed) 16511ms
+   × labels random potion forecasts and unsimulated potions separately in F45's real question 15466ms
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 1520ms
+     × all resolve 1519ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+Error: ENOENT: no such file or directory, stat '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-224303-experience-update/test-checkout/logs/logs'
+ ❯ tools/check-imports.ts:28:12
+     26|     if (name === "node_modules" || name.startsWith(".")) return [];
+     27|     const path = join(dir, name);
+     28|     return statSync(path).isDirectory() ? files(path) : CODE.test(name…
+       |            ^
+     29|   });
+     30| }
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/silent-apotheosis-reference.test.ts > labels random potion forecasts and unsimulated potions separately in F45's real question
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/silent-apotheosis-reference.test.ts:114:1
+    112| });
+    113|
+    114| it("labels random potion forecasts and unsimulated potions separately …
+       | ^
+    115|   const spy = vi.spyOn(reference, "silentApotheosisReference");
+    116|   const { decision } = planned(rawAt(275722));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 340 passed (342)
+      Tests  2 failed | 3397 passed (3399)
+   Start at  00:14:15
+   Duration  538.23s (transform 8.87s, setup 15.83s, import 46.36s, tests 966.70s, environment 37ms)
+
