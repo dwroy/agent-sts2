@@ -1,0 +1,83 @@
+import collections
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+
+OUT = Path(__file__).resolve().parent
+TREE = OUT.parents[2]
+ROOT = Path('/home/dw/Projects/agent-sts2')
+
+
+def save(name, value):
+    (OUT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+
+batch = json.loads((OUT / 'dispatch.json').read_text())
+env = dict(os.environ, TMPDIR=str(OUT))
+env['PATH'] = str(Path.home() / '.local/node/bin') + ':' + env['PATH']
+summaries = {}
+for run in batch['runs']:
+    with (OUT / (run + '.consumer.json')).open('w') as stdout, (OUT / (run + '.consumer.stderr.txt')).open('w') as stderr:
+        result = subprocess.run(['node', '--import', str(TREE / 'agent/node_modules/tsx/dist/loader.mjs'),
+                                 str(TREE / 'learner/audit-selection.ts'), str(OUT / (run + '.input.json'))],
+                                cwd=TREE, env=env, stdout=stdout, stderr=stderr)
+    summaries[run] = {'exit': result.returncode}
+    save('consumer-summary.json', summaries)
+    if result.returncode:
+        raise SystemExit(result.returncode)
+    data = json.loads((OUT / (run + '.consumer.json')).read_text())
+    summaries[run].update(
+        segments=len(data['segments']),
+        boundaries=dict(collections.Counter(s['boundary']['kind'] for s in data['segments'])),
+        full_result_known=sum(s['actual_full_candidate_result'] is not None for s in data['segments']),
+        observed_intervals=dict(collections.Counter(s['reason'] for s in data['observed_intervals'])),
+        terminal_observations=[s['terminal_observation'] for s in data['observed_actions']
+                               if s['terminal_observation'].get('status') != 'unknown'],
+    )
+    save('consumer-summary.json', summaries)
+    print(run, result.returncode, summaries[run]['segments'], summaries[run]['boundaries'], flush=True)
+
+# Re-read complete bounded source spans, not only the inherited selected offsets.
+manifest = json.loads((OUT / 'raw-addresses.json').read_text())
+spans = []
+for kind in ['states', 'decisions']:
+    with (ROOT / 'logs' / (kind + '.jsonl')).open('rb') as source:
+        for run in batch['runs']:
+            entries = [r for r in manifest if r['kind'] == kind and r['run'] == run]
+            for floor in sorted({r['floor'] for r in entries}):
+                chosen = [r for r in entries if r['floor'] == floor]
+                first = min(chosen, key=lambda r: r['offset'])
+                last = max(chosen, key=lambda r: r['offset'])
+                start, end = first['offset'], last['offset'] + last['length']
+                source.seek(start)
+                raw = source.read(end-start)
+                offset = start
+                found = []
+                for line in raw.splitlines(keepends=True):
+                    row = json.loads(line)
+                    state = row['state'] if kind == 'states' else row
+                    observed_floor = state['run']['floor'] if kind == 'states' else row['floor']
+                    if state['run_id'] == run and observed_floor == floor:
+                        found.append(offset)
+                    offset += len(line)
+                assert sorted(found) == sorted(r['offset'] for r in chosen)
+                spans.append(dict(kind=kind, run=run, floor=floor, start=start, end=end,
+                                  sha256=hashlib.sha256(raw).hexdigest(), rows=len(found)))
+save('bounded-span-verification.json', spans)
+
+run = '5PM6JAQG6FNQ'
+data = json.loads((OUT / (run + '.input.json')).read_text())
+forgotten = [e for r in data['states'] if r['state']['run']['floor'] == 39
+             for e in r['state'].get('combat', {}).get('enemies', []) if e['enemy_id'] == 'THE_FORGOTTEN']
+zapbot_per_frame = [[e for e in r['state'].get('combat', {}).get('enemies', []) if e['enemy_id'] == 'ZAPBOT']
+                   for r in data['states'] if r['state']['run']['floor'] == 38]
+zapbots = [e for frame in zapbot_per_frame for e in frame]
+save('scope-checks.json', {
+    'forgotten_observations': len(forgotten),
+    'forgotten_zero_hp_frames': sum(e['current_hp'] == 0 for e in forgotten),
+    'zapbot_max_per_frame': max(map(len, zapbot_per_frame)),
+    'zapbot_keys': sorted({key for e in zapbots for key in e}),
+    'scope': '仅本批冻结的F38/F39；没有由类型ID或索引推定稳定实例身份，也不声称扫描全历史。',
+})
