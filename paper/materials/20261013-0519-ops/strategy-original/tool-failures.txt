@@ -1,0 +1,5 @@
+沙箱构建期只读命令遇到瞬时路径消失，原操作在相同权限和参数下重试成功，无生产修改：
+1. 开工README/docs读取两次返回bubblewrap构建失败，rg扫描.worktrees/codex-strategy-silent-20261013-044302-s2/.codex时No such file or directory；对应文件后续读取成功。
+2. 最终ledger只读核验首次同类bubblewrap错误；相同核验重试后26条CLI实际追加读回通过。
+3. 只读路径探测不存在agent/src/sim/card-model.ts、agent/src/sim/enemy-model.ts、learner/lib/selection-execution-audit.ts、agent/src/memory/turn.ts，后续使用rg定位实际路径，无生产修改。
+消费者首次tsx IPC socket EPERM原错误堆栈另存consumer.initial-failure.log；同输入Node --import现有tsx loader成功。
