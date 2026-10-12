@@ -24,6 +24,7 @@ import { continueAfterDiscard, DISCARD_ANSWER_NOTE, discardableSlots, discardVar
 import { isLastEventPage } from "../../knowledge/event-pages.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
 import { eventOptionOutcome } from "../../knowledge/outcome-facts.js";
+import { namedCardFacts } from "../../knowledge/card-references.js";
 
 /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
 export function eventHpCost(description: string): { hp: number; maxHp: number } {
@@ -220,6 +221,13 @@ export function planEvent(env: DecisionEnv): Decision | null {
           option: title,
           description: truncate(annotateEnchants(str(option["description"])), 360),
           ...relicFacts(str(option["description"]), env.knowledge),
+          // 64VJC5XT2AT2 F34: preserve the original choice, supply its missing catalogue facts.
+          ...(str(state.run?.raw["character_id"]).toLowerCase() === "silent" ? namedCardFacts(str(option["description"]), env.knowledge, {
+            character: "silent", run: runId, floor, source: `event:${eventId}:o${index}`,
+            modVersion: str(state.raw["mod_version"]) || undefined,
+            cardIds: [str(option["card_id"])].filter(Boolean),
+            previews: [...asArray(option["card_previews"]), option["card_preview"]].map(asRecord).filter((card) => Object.keys(card).length > 0),
+          }) : {}),
           lethal: bool(option["will_kill_player"]),
         } satisfies JsonValue,
       } satisfies PickOption,
