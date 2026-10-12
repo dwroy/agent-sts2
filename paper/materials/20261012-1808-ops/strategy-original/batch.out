@@ -1,0 +1,110 @@
+完成 10 项处置：3 项确认已有 live 实现，7 项因具体证据缺口保留 waiting。定向测试 20 项通过；未运行 tsc 或完整套件。无新增源码、提交或合入，工作树干净。
+
+[逐项提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-174301/learner/runs/20261012-174315-strategy-proposal/proposal.md) · [完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-174301/learner/runs/20261012-174315-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-174301-strategy-proposal",
+  "base": "4758c26f9fd48994b1f0eb7111190533f3d5d22a",
+  "runs": [
+    "NHA2KW0RB7VP",
+    "K3676LU8B0UH",
+    "SADL3CGYTGSR",
+    "G33HU22H2543",
+    "P74C04AEPL1F",
+    "RC61MFQM63Y6",
+    "53FLQ68CETW0"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": 0,
+    "cases": 20
+  },
+  "test_scope": "仅3个既有固定回归文件；未运行tsc或完整vitest",
+  "code_proposals": [
+    "silent-proposal-a5e12fbdb1aca576",
+    "silent-proposal-04b6b430759815ed",
+    "silent-proposal-9952ee8e8df9a0fe",
+    "silent-proposal-9b4049b484730143",
+    "silent-proposal-47be799a87af03be",
+    "silent-proposal-3a5274da3c42672a",
+    "silent-proposal-bc4b92d590f2c4ce",
+    "silent-proposal-f52fbbab4dccc3b4",
+    "silent-proposal-10f37c0edd3d24a6",
+    "silent-proposal-eecf671192557465"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-a5e12fbdb1aca576",
+      "state": "duplicate",
+      "commit": "75a27fb2c230dc552761b2ad9da4be8a9a35dec3",
+      "reason": "七手精确切击已在 live 实现；NHA F17 T1 固定四攻由旧预测27重算为实测31，当前5项回归通过。"
+    },
+    {
+      "id": "silent-proposal-04b6b430759815ed",
+      "state": "waiting",
+      "reason": "七手子项已上线；油灯原帧的stack始终为null，缺跨重规划/恢复后的首次消费状态验证；蟹显示1→2缺可追溯未取整底值，组合机制包不能整项关闭。"
+    },
+    {
+      "id": "silent-proposal-9952ee8e8df9a0fe",
+      "state": "waiting",
+      "reason": "已核NHA同首手14挡/损1与8挡/损7的即时差额；缺同入口换线、保药/路线的完整后继对照，无法据六次全败校准SL、营火或终局门槛。"
+    },
+    {
+      "id": "silent-proposal-9b4049b484730143",
+      "state": "duplicate",
+      "commit": "e784dd9f043bf87c29109573f48975f9903280d3",
+      "reason": "投斧首牌身份修复已在 live；规范键、宽松/cards匹配、药水前缀、续步与控制器恢复的10项固定回归通过。"
+    },
+    {
+      "id": "silent-proposal-47be799a87af03be",
+      "state": "waiting",
+      "reason": "计划后继提示与普通单弃消费均已上线；P74末次T3四个合法弃牌分支缺联合伤害/手数/逐敌存活校准，现有保留手牌事实明确不推演结果，不能整项报duplicate。"
+    },
+    {
+      "id": "silent-proposal-3a5274da3c42672a",
+      "state": "waiting",
+      "reason": "已核群战血价、滑溜下火焰/毒及石虫局部眩晕；缺主怪归零到召唤结束的内部帧及同入口杀序/保药完整后继，不能完成整个群战药水资源包。"
+    },
+    {
+      "id": "silent-proposal-bc4b92d590f2c4ce",
+      "state": "waiting",
+      "reason": "投斧身份与普通生存者单弃子项已在live，旧合入阻塞已解除；仍缺P74全部弃牌后继与G33能力替线的完整验证，组合提案继续waiting。"
+    },
+    {
+      "id": "silent-proposal-f52fbbab4dccc3b4",
+      "state": "waiting",
+      "reason": "跨战真实消耗和回复已能从原帧分账，但缺同入口另路线、休息或用药的完整后继及独立留出局，不能拟合通用资源/SL/终局阈值。"
+    },
+    {
+      "id": "silent-proposal-10f37c0edd3d24a6",
+      "state": "waiting",
+      "reason": "毒/临时减力/格挡和开场扣血已有局部模型；双遗物叠加、复活/回复内部顺序及求解—跨轮—药水—终局联合校准仍不充分，不能整包关闭。"
+    },
+    {
+      "id": "silent-proposal-eecf671192557465",
+      "state": "duplicate",
+      "commit": "bf423c173d3be348a4ad714e1d26516df619ff41",
+      "reason": "普通生存者单弃与绷带解耦已在live；唯一打击移除、未知多选停止及范围外等价的5项固定回归通过。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-174301/learner/runs/20261012-174315-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12f7e-bf50-7710-93ac-446db610f6d2
+轮数：1；工具调用：command_execution×46 file_change×3
+token：输入 142.5k、输出 27.0k（其中推理 5750）、cache 读 3079.6k、cache 写 0（命中 95.6%）
+成本：未提供
+耗时：973.2 s（墙钟）
+时间：首个事件 11.2 s、模型首个输出 22.9 s、首次工具 25.5 s、末次工具结束 928.5 s；工具内共 201.6 s，其余（模型生成、推理、网络）760.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-174301）；模型的工具调用 exec×29；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T17-43-18-01a12f7e-bf50-7710-93ac-446db610f6d2.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-174301/learner/runs/20261012-174315-strategy-proposal.jsonl

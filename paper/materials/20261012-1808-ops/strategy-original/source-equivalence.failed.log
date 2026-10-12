@@ -1,0 +1,2 @@
+初次使用 TypeScript scanner 核源码等价失败：node require('./agent/node_modules/typescript') 报 MODULE_NOT_FOUND，exit 1。未改源码、未安装依赖；改用逐行差分核所有差异仅注释中的 Roy/Dai 文本。该失败不是 vitest 失败。
+逐行检查初稿未包含 /** 单行块注释，combat-plan.ts:579 断言失败；保留该失败，v2 增加 /\* 注释起始匹配后重核。
