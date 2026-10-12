@@ -354,6 +354,49 @@ describe("wake through the herdr TUI (herdr.ts herdrWake, fake herdr)", () => {
     expect(t.logs.some((line) => line.includes("restarting"))).toBe(true);
   }, 30_000);
 
+  it("waits for both shell exit and registry retirement before starting the replacement", async () => {
+    const t = setup("wake-retirement");
+    expect((await herdrWake(t.options)).code).toBe(0);
+    writeFileSync(join(t.fake, "retire-get-count"), "3");
+    const args = [...t.options.args.slice(0, -1), "-c", "x=1", SESSION];
+    const result = await herdrWake({ ...t.options, args });
+    expect(result.code, result.reason).toBe(0);
+    const calls = readFileSync(join(t.fake, "calls.log"), "utf8").trim().split("\n").map((line) => JSON.parse(line) as string[]);
+    expect(calls.filter((call) => call[0] === "agent" && call[1] === "start")).toHaveLength(2);
+    expect(t.state().agents.ops.argv).toEqual(args);
+  }, 30_000);
+
+  it("retries a short name-release race only after rechecking that the pane and name are free", async () => {
+    const t = setup("wake-release-retry");
+    expect((await herdrWake(t.options)).code).toBe(0);
+    writeFileSync(join(t.fake, "name-taken-count"), "2");
+    const args = [...t.options.args.slice(0, -1), "-c", "x=1", SESSION];
+    const result = await herdrWake({ ...t.options, args });
+    expect(result.code, result.reason).toBe(0);
+    const calls = readFileSync(join(t.fake, "calls.log"), "utf8").trim().split("\n").map((line) => JSON.parse(line) as string[]);
+    const starts = calls.filter((call) => call[0] === "agent" && call[1] === "start");
+    expect(starts).toHaveLength(4);
+    expect(starts[1]).toEqual(starts[2]);
+    expect(starts[2]).toEqual(starts[3]);
+    expect(t.state().agents.ops.argv).toEqual(args);
+  }, 30_000);
+
+  it.each(["persistent", "competing"])("defers a %s name conflict without duplicate prompts or another stop", async (kind) => {
+    const t = setup("wake-conflict-" + kind);
+    expect((await herdrWake(t.options)).code).toBe(0);
+    const previous = readFileSync(t.options.stateFile, "utf8");
+    writeFileSync(join(t.fake, "name-taken-count"), "999");
+    if (kind === "competing") writeFileSync(join(t.fake, "competing-agent"), "");
+    const args = [...t.options.args.slice(0, -1), "-c", "x=1", SESSION];
+    const result = await herdrWake({ ...t.options, args, retirementWaitMs: 200, pollMs: 20 });
+    expect(result.code, result.reason).toBe(75);
+    expect(readFileSync(t.options.stateFile, "utf8")).toBe(previous);
+    const calls = readFileSync(join(t.fake, "calls.log"), "utf8").trim().split("\n").map((line) => JSON.parse(line) as string[]);
+    expect(calls.filter((call) => call[0] === "agent" && call[1] === "send-keys")).toHaveLength(1);
+    expect(calls.filter((call) => call[0] === "agent" && call[1] === "prompt")).toHaveLength(1);
+    if (kind === "competing") expect(t.state().agents.ops.argv).toEqual(["external"]);
+  }, 30_000);
+
   it("defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent", async () => {
     const t = setup("wake-busy");
     expect((await herdrWake(t.options)).code).toBe(0);

@@ -1,5 +1,7 @@
 # 运维会话跑在 codex 上（调度器 + 一个可续的 codex 会话）
 
+2026-10-12 切换复查补强：Herdr 因参数变化重建空闲 ops 时，同时核 shell 已返回和旧 agent 名称已释放；短暂 `agent_name_taken` 仅在再次确认 pane 空闲、名称明确不存在后有界重试（默认10秒）。持续占用、其他会话出现或查询异常均保留事件并返回75，不强杀或重复投递。学习者的 key 隔离预检只对“bubblewrap构建阶段、rg明确ENOENT、探针没有stdout”的瞬态失败重试一次；使用完全相同权限/文件清单和原总超时预算，首次错误写入startupRetry回执。凭据可读、权限拒绝、超时或第二次失败仍拒绝启动，不扩大沙箱权限。
+
 2026-10-12 Roy 授权主 ops 使用宿主权限：`ops/codex-ops/execution-mode` 写 `host` 后，下一次空闲唤醒在原 pane、同一账号/session 以 `--sandbox danger-full-access` 重建 TUI；`approval_policy=never` 保持。缺省或 `sandbox` 保留原隔离。环境 `CODEX_OPS_EXECUTION` 可显式覆盖，非法值拒绝启动。只有主 ops 的 init/resume/Herdr 路径读取此设置；学习者、辅助和游戏大脑不继承权限变更。host 模式不再宣称 OS 阻止读取凭据，仍执行不读取/输出 key、仅修改本仓库的项目规则。原 broker 继续可用。
 
 恢复被中断循环遗漏的局末报告可用 `bash ops/codex-ops-do.sh report-run <12位局号>`（host ops 也可直接运行 `nice -n 19 python3 ops/report_run.py <局号>`）。入口拒绝活跃 play/autoplay/report、不同或未结束的 mod 局、LLM_DRAIN/PAUSE；与 autoplay-start 共用锁。冻结该局原段与恢复段全部日志行，记录原文件 SHA/字节范围和 console 历史代码，再调用原 report 实现及角色刷新。成功后同局重复请求返回已有回执，不再记账、刷新或派发；中途已经登记但刷新失败时保留 partial 现场，不能盲目再跑。回执 `ops/codex-ops/report-runs/<局号>/receipt.json` 区分报告、主刷新退出码、后台参考/费用刷新与校准派发，不把后台启动写成已完成。
