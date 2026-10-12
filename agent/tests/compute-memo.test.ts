@@ -11,9 +11,45 @@
  *   the deadline it took (B2) and the budget it needed (the rollout); a hit is charged to the turn as if it had run.
  */
 import { createHash } from "node:crypto";
+import { readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { serialize } from "node:v8";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
+
+const files = await vi.hoisted(async () => {
+  // Setup files import some loaders early; reload them under the fixed file view.
+  vi.resetModules();
+  const { computeMemoFiles } = await import("./compute-memo-files.js");
+  return { dir: computeMemoFiles(), reads: new SharedArrayBuffer(4) };
+});
+
+vi.mock("node:fs", async (importOriginal) => {
+  const original = await importOriginal<typeof import("node:fs")>();
+  const { fixedKnowledgeFs } = await import("./compute-memo-files.js");
+  const { fileURLToPath } = await import("node:url");
+  const root = fileURLToPath(new URL("../../knowledge", import.meta.url));
+  const fixed = fixedKnowledgeFs(original, root, files.dir);
+  return { ...fixed, default: fixed };
+});
+
+vi.mock("node:worker_threads", async (importOriginal) => {
+  const original = await importOriginal<typeof import("node:worker_threads")>();
+  const { fileURLToPath } = await import("node:url");
+  return {
+    ...original,
+    Worker: class extends original.Worker {
+      constructor(entry: URL, options: import("node:worker_threads").WorkerOptions) {
+        super(new URL("./compute-memo-worker.ts", import.meta.url), {
+          ...options,
+          env: { ...process.env, CHARACTER: "ironclad" },
+          workerData: { ...options.workerData, entry: entry.href, fixture: files.dir,
+            knowledgeRoot: fileURLToPath(new URL("../../knowledge", import.meta.url)), fixtureReads: files.reads },
+        });
+      }
+    },
+  };
+});
 
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import type { AskDecision, DecisionEnv } from "../src/memory/types.js";
@@ -27,6 +63,16 @@ import { rolloutDecision, type RolloutInput, type RolloutResult } from "../src/r
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions, rolloutTap } from "../src/reflex/rollout-live.js";
 import { bumpDataVersion } from "../src/core/util/data-version.js";
 import { logged, loggedEnv } from "./logged.js";
+
+// Match the setup's disabled potion costs after resetting the module registry.
+import { potionCostOptions } from "../src/reflex/potion-cost.js";
+import { setKnowledgeCharacter } from "../src/knowledge/files.js";
+potionCostOptions.enabled = false;
+setKnowledgeCharacter("ironclad");
+afterAll(() => {
+  releaseBossLinesPool();
+  rmSync(files.dir, { recursive: true, force: true });
+});
 
 describe("the key", () => {
   it("equal values, equal text, however their strings were built; what JSON merges is told apart", () => {
@@ -62,6 +108,17 @@ describe("the key", () => {
     expect(signature).toMatch(/^[0-9a-f]{32}$/);
     expect(workerDataSignature()).toBe(signature);
     expect(bossLinesPoolData()).toBeNull();
+  });
+
+  it("signs the fixed knowledge contents, including file changes, without reading the live refresh tree", () => {
+    const hash = createHash("sha256");
+    for (const subdir of ["common", "characters/ironclad"]) {
+      const dir = join(files.dir, subdir);
+      for (const name of readdirSync(dir).filter((name) => name.endsWith(".json")).sort()) {
+        hash.update(name).update("\u0000").update(readFileSync(join(dir, name))).update("\u0000");
+      }
+    }
+    expect(workerDataSignature()).toBe(hash.digest("hex").slice(0, 32));
   });
 
   it("the process-wide switches and a test's data swap give another key", () => {
@@ -226,12 +283,43 @@ describe("the planner with the memo (The Kin T5, B2 in this thread)", () => {
     const first = planCombatTurn(retryEnv());
     expect((plannerTiming.last as { boss_sim?: { workers: number } }).boss_sim?.workers).toBe(1);
     expect(bossLinesPoolData()).toBe(workerDataSignature());
+    expect(Atomics.load(new Int32Array(files.reads), 0)).toBeGreaterThan(0);
     // A question with no sample releases the pool (boss-lines.ts); the next one builds it again on the same data.
     releaseBossLinesPool();
     expect(bossLinesPoolData()).toBeNull();
     const again = planCombatTurn(retryEnv());
     expect(timingNow()?.memo).toMatchObject({ rollout_ms: 0, boss_sim_ms: 0, hits: 2 });
     expect(digestOf(again)).toBe(digestOf(first));
+  }, 300_000);
+
+  it("a refresh leaves the running pool's identity intact and a rebuilt pool misses the old memo", () => {
+    setup(() => () => 0);
+    bossLinesOptions.serial = false;
+    bossLinesOptions.workers = 1;
+    planCombatTurn(retryEnv());
+    const started = bossLinesPoolData();
+    expect(started).toBe(workerDataSignature());
+    // Metadata-only fixture refresh changes the cache identity, not the simulation input.
+    const path = join(files.dir, "common/move-model.json");
+    const before = readFileSync(path, "utf8");
+    try {
+      writeFileSync(path, JSON.stringify({ ...JSON.parse(before), fixture_revision: 2 }));
+      const refreshed = workerDataSignature();
+      expect(refreshed).not.toBe(started);
+      expect(bossLinesPoolData()).toBe(started);
+      planCombatTurn(retryEnv());
+      expect(timingNow()?.memo?.boss_sim_ms).toBe(0);
+      releaseBossLinesPool();
+      planCombatTurn(retryEnv());
+      expect(timingNow()?.memo?.boss_sim_ms).toBeUndefined();
+      expect(bossLinesPoolData()).toBe(refreshed);
+      expect((plannerTiming.last as { boss_sim?: { workers: number } }).boss_sim?.workers).toBe(1);
+      planCombatTurn(retryEnv());
+      expect(timingNow()?.memo?.boss_sim_ms).toBe(0);
+    } finally {
+      releaseBossLinesPool();
+      writeFileSync(path, before);
+    }
   }, 300_000);
 
   it("a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept", () => {
