@@ -1,0 +1,359 @@
+{
+  "task": "experience-update",
+  "request_id": "roy-20261010-silent-core-reuse-experience-integration",
+  "request_handled": false,
+  "reason": "state=done且dispatch_runs不匹配；普通两局增量，不承接原专题",
+  "source_batch": "20261012-090028-experience-update",
+  "version_before": "2026-10-12.1",
+  "version_after": "2026-10-12.2",
+  "source_commit": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+  "actual_live": null,
+  "publication_commit": null,
+  "eval_version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 326,
+    "cases": 3231,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-090028-experience-update/test-source-isolated.log",
+    "sha256": "9d7b543de0d2b57eec69310eeead066050c8899b3f9a040a35fe6f93e7d90cd2",
+    "rerun": true,
+    "entry": "1371跟踪源码逐SHA一致的本批隔离副本，知识同文件；原test-sandbox.sh固定排除，1 worker/nice，TMPDIR本批。",
+    "original": {
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-090028-experience-update/test-source.log",
+      "exit": 1,
+      "sha256": "a915eb257cb3269be711d6f1daaf1072f1a1912d4e6e3d3df8cf4a73cb1f7fdb",
+      "files_passed": 324,
+      "cases_passed": 3219,
+      "files_failed": 1,
+      "cases_failed": 1,
+      "failure": "check-imports：旧scratch失效logs/logs链接；游戏断言未失败"
+    },
+    "preflight": {
+      "exit": 1,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-090028-experience-update/source-import-preflight.log",
+      "reason": "历史scratch失效logs/logs链接，保留原件，未跳导入检查"
+    },
+    "experience_sha256": "7830fcbe686dc922ca87e63149f3a7d7211af683d7fbbc9d924cab1095bd747a",
+    "host_full_suite": "待原experience-done/learner-checks"
+  },
+  "failures": [
+    "post-merge-verification-initial-failure.log",
+    "proof-discard-staging-failure.log",
+    "proof-initial-failure.log",
+    "check-source-experience-initial-failure.log",
+    "proof-selection-initial-failure.log",
+    "startup-failure.txt",
+    "startup-failure.txt"
+  ],
+  "diff": "changes.json",
+  "renderer": "consumer-render-verification.json",
+  "actual_play_adoption": false,
+  "items": [
+    {
+      "ledger": [
+        "silent-0012",
+        "silent-0006"
+      ],
+      "experience": "silent-strength-weak-observation",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY"
+      ],
+      "support": 233,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0019"
+      ],
+      "experience": "silent-route-hp-observation",
+      "proposals": [
+        "silent-proposal-b59463613e4db180"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY"
+      ],
+      "support": 238,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0020"
+      ],
+      "experience": "silent-rest-buffer-observation",
+      "proposals": [
+        "silent-proposal-b59463613e4db180"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY"
+      ],
+      "support": 238,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0021",
+        "silent-0385",
+        "silent-0125"
+      ],
+      "experience": "silent-deck-burst-observation",
+      "proposals": [
+        "silent-proposal-b59463613e4db180"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY"
+      ],
+      "support": 233,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0005"
+      ],
+      "experience": "silent-footwork-block",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY"
+      ],
+      "support": 136,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0011"
+      ],
+      "experience": "silent-noxious-fumes-growth",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC"
+      ],
+      "support": 112,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0046"
+      ],
+      "experience": "silent-piercing-wail-temporary-strength",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY"
+      ],
+      "support": 112,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0132"
+      ],
+      "experience": "silent-serpent-form-per-card-damage",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY"
+      ],
+      "support": 16,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0235"
+      ],
+      "experience": "silent-haze-group-poison-weak",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC"
+      ],
+      "support": 28,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0253"
+      ],
+      "experience": "silent-speed-potion-temporary-dexterity",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY"
+      ],
+      "support": 55,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0194"
+      ],
+      "experience": "silent-tough-bandages-discard-block",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "C7GNN3DDFUFY"
+      ],
+      "support": 4,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0205",
+        "silent-0117"
+      ],
+      "experience": "silent-survivor-neutralize-discard",
+      "proposals": [
+        "silent-proposal-954a005a1693a50d"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "C7GNN3DDFUFY"
+      ],
+      "support": 33,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0018",
+        "silent-0117"
+      ],
+      "experience": "silent-insatiable-dual-clock",
+      "proposals": [
+        "silent-proposal-954a005a1693a50d"
+      ],
+      "evidence_added": [
+        "C7GNN3DDFUFY"
+      ],
+      "support": 27,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0072"
+      ],
+      "experience": "silent-cloak-clasp-end-turn-hand-block",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "C7GNN3DDFUFY"
+      ],
+      "support": 5,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0079",
+        "silent-0227"
+      ],
+      "experience": "silent-vantom-sl-observation",
+      "proposals": [
+        "silent-proposal-954a005a1693a50d"
+      ],
+      "evidence_added": [
+        "C7GNN3DDFUFY"
+      ],
+      "support": 8,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0239"
+      ],
+      "experience": "silent-spiny-toad-draw-block-sl",
+      "proposals": [
+        "silent-proposal-954a005a1693a50d"
+      ],
+      "evidence_added": [
+        "C7GNN3DDFUFY"
+      ],
+      "support": 2,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0118"
+      ],
+      "experience": "silent-duplicator-next-card-replay",
+      "proposals": [
+        "silent-proposal-44c28239485779ca"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "ENKYQMS9W4ZD"
+      ],
+      "support": 2,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    },
+    {
+      "ledger": [
+        "silent-0326"
+      ],
+      "experience": "silent-ovicopter-hatch-poison-survivors",
+      "proposals": [
+        "silent-proposal-954a005a1693a50d"
+      ],
+      "evidence_added": [
+        "N1ZEBMHZM4KC",
+        "X4M1GPAJGAB9"
+      ],
+      "support": 2,
+      "contradict": 0,
+      "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+      "actual_live": null
+    }
+  ]
+}

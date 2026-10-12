@@ -1,0 +1,44 @@
+{
+  "source": "42c920f34d9dc1c783ce894659849ab37ed6fd1b",
+  "evidence": {
+    "run": "64VJC5XT2AT2",
+    "floor": 34,
+    "turn": null,
+    "state_offset": 11453224823,
+    "brain_offset": 419039766,
+    "matching_bug_infra": []
+  },
+  "red_green": {
+    "withdrawn_source": "agent/src/hand/screens/event.ts",
+    "test": "agent/tests/named-card-facts.test.ts:64VJC5XT2AT2 F34: delivers WISH facts without changing choices, costs or actions",
+    "without_fix_exit": 1,
+    "without_fix_failed": 1,
+    "restored_exit": 0,
+    "restored_passed": 11
+  },
+  "sandbox": {
+    "tsc": 0,
+    "vitest": 0,
+    "thread_files": 326,
+    "thread_cases": 3231,
+    "fork_files": 1,
+    "fork_cases": 11,
+    "files": 327,
+    "cases": 3242,
+    "reruns": []
+  },
+  "gitleaks": 0,
+  "implementation_scope": "纯资料传递：静默事件消费者与通用有界引用解析；未增加出牌/药水/SL/终局规则或模拟资格。未知项在本题去重并随既有题面日志留痕；全入口扩展与跨局自动派发仍未实现。",
+  "files": {
+    "brain-option-original.json": "e387cbdf44dfba1627b6d277f1c5f80fada00a630936ab56f1b070d54e6197bb",
+    "event-state-original.json": "7bfc8378e5bdf7c5d217a2b4a0424a047a5132cbc362e8f01c7bced5b31faaa5",
+    "card-facts-requirements.json": "56b8f6c9f6f0d7e24f68343c59273ceb4041e2e84f7b41a6bc870660ebf175b5",
+    "source-gitleaks.log": "bc316a6211e58e4ee94655be9083a081f562bc8436e246b090da327faa1b8cb0",
+    "live-merge-preview.txt": "a726a1010d3c9660daac3f2076f8251e58c7d0a2af2781d935250d4535dffcb7",
+    "named-card-restored.log": "1ce692f271e52b0183f8e4125e2453726e2cfc83177dae9344acaf0b02c9d28c",
+    "named-card-without-fix.log": "97f38363c78bd706f3f44b059da47d15515876e2c70440ebfc63437065a56f57",
+    "merge-result.json": "e0989bd3467e9ddd7ed6ff0a8c5ef7b2f18f69a79cf9d13fbc0cfbf2499a0e28",
+    "queue-input.md": "0f173a3a6dc85726802eb5abcd833a9b1b552c65b0449c624a4e56d82e49f7db",
+    "source-sandbox.log": "b649bbd277ce167e5a2300362288f70859119c5a6693ea2e52b38e413c6b014f"
+  }
+}
