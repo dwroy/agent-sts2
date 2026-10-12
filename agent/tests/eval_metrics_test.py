@@ -15,6 +15,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
@@ -338,7 +339,9 @@ class FixtureTest(unittest.TestCase):
         if None in git.resolve(["17ac095", "0c93138"]).values():
             self.skipTest("the V3 commits are not in this repository")
         # The calibration rows are tested in tests/eval_calibration_test.py (with a fixed boss clock, no tsx).
-        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(DATA, "strength-sets.json"), "--no-calibration", "--include-non-codex"]
+        # This fixture predates later releases; do not scan the growing live release history.
+        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(DATA, "strength-sets.json"),
+                "--versions", os.path.join(DATA, "versions.json"), "--no-calibration", "--include-non-codex"]
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(metrics.main(args + ["--json"]), 0)
@@ -369,6 +372,19 @@ class FixtureTest(unittest.TestCase):
         done = subprocess.run([sys.executable, os.path.join(ROOT, "eval", "metrics.py"), *args, "--group-by", "day"], capture_output=True, text=True)
         self.assertEqual(done.returncode, 0, done.stderr)
         self.assertIn("== 2026-09-21 ==", done.stdout)
+
+    def test_cli_does_not_read_the_live_release_table(self):
+        load = metrics.load_versions
+
+        def frozen_versions(path=metrics.VERSIONS_FILE):
+            self.assertEqual(path, os.path.join(DATA, "versions.json"),
+                             "fixed evaluator samples must not traverse unrelated live releases")
+            return load(path)
+
+        # Exercise all existing CLI output assertions with the live table unavailable.
+        with patch.object(metrics, "load_versions", side_effect=frozen_versions) as loads:
+            self.test_cli()
+        self.assertEqual(loads.call_count, 3)
 
 
 if __name__ == "__main__":
