@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-12 12:51:20 CST",
+  "source_full_cases_reused": 3336,
+  "checks": [
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "node_modules/.bin/vitest",
+        "run",
+        "tests/experience.test.ts",
+        "tests/jev-experience.test.ts",
+        "tests/brain-knowledge.test.ts",
+        "--maxWorkers=4",
+        "--reporter=default"
+      ],
+      "rc": 0
+    }
+  ]
+}
