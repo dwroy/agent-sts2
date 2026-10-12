@@ -232,26 +232,7 @@ describe("4. An enchantment named after the card it goes on gets its effect (PHM
 });
 
 describe("Extra: a line aiming only at the illusion is rolled out aiming at it on the later turns too (ZY3992X5VEVS F23 T3-T5)", () => {
-  afterEach(() => {
-    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
-    potionMcOptions.now = null;
-  });
-
-  it("the logged T3 board: the rollout's best is no longer the Parafright line (logged: Dominate -> Parafright, True Grit)", () => {
-    rolloutLiveOptions.budgetMs = 1e9;
-    potionMcOptions.now = () => 0;
-    const fx = logged("zy39-f23-t3b");
-    const decision = planCombatTurn(loggedEnv(fx)) as AskDecision;
-    const criteria = (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria! as Record<string, string>;
-    const facts = Object.values(criteria).map((text) => JSON.parse(text) as Record<string, unknown>);
-    const parafright = facts.filter((f) => /寄生惧魔/.test(String(f["plays"])) && !/胧光怪/.test(String(f["plays"])));
-    expect(parafright.length).toBeGreaterThan(0);
-    for (const f of parafright) {
-      expect(f["rollout_best"]).toBeUndefined();
-      expect(String(f["rollout_kill_order"])).toMatch(/^寄生惧魔 > 胧光怪: .*keep aiming at it first/);
-    }
-    expect(facts.some((f) => f["rollout_best"] === true && /胧光怪/.test(String(f["plays"])))).toBe(true);
-  });
+  // The logged planner regression lives in batch-c-illusion.test.ts with fixed model inputs and a bounded work clock.
 
   it("illusionFocusOrders: only lines that put nothing into another enemy are held to the illusion-first order", () => {
     const orders: KillOrder[] = [
