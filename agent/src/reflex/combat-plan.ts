@@ -24,6 +24,7 @@ import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { silentPhaseCurrentFacts } from "./silent-phase-current.js";
 import { silentPotionReference } from "./silent-potion-reference.js";
+import { silentHeldLossFacts } from "./silent-held-loss.js";
 import { silentKinBoardFacts, silentKinPlanFacts } from "./silent-kin-progress.js";
 import { observedDemonPoison } from "./silent-demon-potion.js";
 import { crabPoisonFacts } from "./silent-crab-potion.js";
@@ -3861,6 +3862,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   };
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
     ...quantified(plan),
+    ...silentHeldLossFacts(state, plan),
     ...silentApotheosisReference(state, plan),
     ...silentKinPlanFacts(state, plan),
     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
