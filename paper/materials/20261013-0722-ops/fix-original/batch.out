@@ -1,0 +1,71 @@
+## 修 bug 回报
+
+- 合并基线：main → `2cea7fb92747a7733abc64c4479d49a48dda3953`
+- 修复（每条一行）：无新增修复；撤掉修复验证不适用。
+- 已被别人修掉的：核实167项、165个唯一提交，逐项提交号见[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-070543/learner/runs/20261013-070603-fix-batch/report.md)。最新论文Git快照竞态 — `16bfe0bd6ecaa91d04a91c01edc94cecc781f71f`；boss-sim home透传 — `5921f8cd045853182c867a6430e75c3fcde00a87`。
+- 没修的：策略及独立结构提案继续原任务；历史通知恢复、目录竞态和超时根因证据不足；专项功能保留独立任务。逐项原因已保存。
+- 测试：tsc退出码0；定向vitest 3文件 / 12用例 / 退出码0，另含固定Python 10例；无重跑。密钥扫描通过，工作区干净，队列未改。
+- 合入：未合入（无新增提交；已修提交均已核为live祖先）。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "2cea7fb92747a7733abc64c4479d49a48dda3953",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类：继续既有strategy-proposal，有限子项不关闭宽提案。"
+    },
+    {
+      "item": "silent-0365：未建模定向药水目标截成前两个",
+      "reason": "独立药水/结构提案：缺口仍在，已有silent-proposal-70c22e94eda8f8a9承接。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed（silent-0446）",
+      "reason": "太大/独立结构提案：原silent-proposal-2d3aa8dfb27dbe3f要求独立实现待确认事务、动作确认和一次性提交。"
+    },
+    {
+      "item": "silent-0332：双boss接续资源异常根因",
+      "reason": "证据不足：已有诊断，缺可重放触发样本，继续原提案链。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2历史失败恢复",
+      "reason": "证据不足：旧失败无stderr，无法证明未发送，保留幂等记录。"
+    },
+    {
+      "item": "sandbox-glob-startup-race上游目录竞态",
+      "reason": "证据不足：有界恢复已修，上游目录创建或删除者未证。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时、历史测试超时因果",
+      "reason": "证据不足：未证明永久饥饿、内部原因或历史负载因果。"
+    },
+    {
+      "item": "具名卡全入口、量化消费者、全漏斗、统一资源价值及其他专项",
+      "reason": "太大/独立功能或策略研究：继续原专用任务和父要求。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 12
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-070543/learner/runs/20261013-070603-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1325d-d836-70d3-8ee6-f0de7610905d
+轮数：1；工具调用：command_execution×35 file_change×2
+token：输入 143.5k、输出 14.3k（其中推理 4669）、cache 读 3063.0k、cache 写 0（命中 95.5%）
+成本：未提供
+耗时：464.3 s（墙钟）
+时间：首个事件 24.2 s、模型首个输出 29.6 s、首次工具 32.5 s、末次工具结束 434.5 s；工具内共 183.8 s，其余（模型生成、推理、网络）256.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-070543）；模型的工具调用 exec×30；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T07-06-13-01a1325d-d836-70d3-8ee6-f0de7610905d.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-070543/learner/runs/20261013-070603-fix-batch.jsonl
