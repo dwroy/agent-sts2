@@ -1,0 +1,917 @@
+{
+  "stage": "live",
+  "kind": "fixed-consumer",
+  "repo": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "code_commit": "699a9ce08fdf6958ae2753ebeabb19f3f045108a",
+  "character": "silent",
+  "ascension": 10,
+  "act": 2,
+  "experience_version": "2026-10-13.1",
+  "experience_sha256": "cfa7a6fbddae2d0cab613da803a25ae420558ffb31fc7f4a368ef0943bb719a5",
+  "knowledge_files": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "sha256": "e130d796beb77311c0b5c6c75fd20a30f82b58d21327280d74767a87b69ac56f"
+    },
+    {
+      "path": "knowledge/characters/silent/boss-trust.json",
+      "sha256": "b1273cdd25932dd82c292eb8f172cf8189076d2515036ee6c362b75e0b4b6808"
+    },
+    {
+      "path": "knowledge/characters/silent/double-boss.json",
+      "sha256": "dfea492a4b941bf72813518e59ceb6cb0cca2d1420bdeb9c2fb9cc726797e83b"
+    },
+    {
+      "path": "knowledge/characters/silent/experience.json",
+      "sha256": "cfa7a6fbddae2d0cab613da803a25ae420558ffb31fc7f4a368ef0943bb719a5"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "sha256": "f3a2e0eae0751953c90f960de3cc28e722c60811bcbcd2cf7f39576c2b357a8e"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "sha256": "b11df8a9edab0db47c306394c0f88578eecf8e185d973bebf054feecad4d2ff0"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "f2340817ef0a09819fc160b37a9937c4178706401004a5548f14af3c8d8a3ca5"
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "sha256": "915160c8bf4ffae1246f5b857b897128aa545497cdcd582738e6d809fe697cb9"
+    },
+    {
+      "path": "knowledge/characters/silent/potion-equivalents.json",
+      "sha256": "5ace4ce0c1dcdaea08ce928618c43a263d61856fcece59680700a1ace85a11e6"
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "sha256": "96a95ace023cb13393d8c7e47768d0d633700f3b71659ff3180a4f89f33edef9"
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "sha256": "7166674c68d14ba3a51e1761fd84b7fc8fcff3a59e413d8a6a1b9f4cbe8459cc"
+    },
+    {
+      "path": "knowledge/common/event-pages.json",
+      "sha256": "e7370a71a8fb446b160c7d19120229237dee4775dc443b7cf92e18d6a02936d5"
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "48f7564ea270ab7494136fb8c7c8fb9a1fa3981e476ff7a7d98ab60ee9cb03f2"
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "sha256": "7497a1cfa087eeb8d1715549b4228e4f60267028ff500e909dfb807fcee5a7fc"
+    }
+  ],
+  "requests": [
+    {
+      "source_run": "47731LKMZRBJ",
+      "source_ts": "2026-10-12T15:17:19.446Z",
+      "source_label": "rest/plan",
+      "source_record_sha256": "8d153fd50b6e1ae763e1d542f4e74bca786c1c6c2b28f87f1ac6173b0200c2ef",
+      "request": {
+        "label": "rest/plan",
+        "question": "What should I do at this rest site? Heal, smith a named card (one option per card that can be upgraded, with what the upgrade changes), or another rest action; code plays the action and the card pick. You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Each smith option names its card: code upgrades that card on the next screen without asking again. boss_sim on an option: this act's boss fought to the end in simulation with the deck (and HP) that option leaves, against your current deck on the same random seeds: the win rate (calibrated on logged boss fights), the difference ± its standard error, the median HP lost in the won fights and the turns. facts.act_boss_sim gives the start, the method and its limits; it replaces the act boss clock.",
+        "memory": {
+          "act": "第2幕的精英与危险小怪（monster DB 实测；失血 = 赢局 中位/p75；n = 场次）:\n残杀千足虫+残杀千足虫+残杀千足虫 [精英] A10: HP 148 (n=24) | 24 场 胜率 71% 阵亡 7 | 赢局失血 中位/p75 27/38 (n=17) | 招式 残杀千足虫: 胀大 7 +2力 → 扭动 6×2 → 紧缠 9 →循环回 胀大；其他: 死亡 (None), 接续 (Heal)；残杀千足虫: 紧缠 9 → 胀大 7 +2力 → 扭动 6×2 →循环回 紧缠；其他: 死亡 (None), 接续 (Heal)；残杀千足虫: 扭动 6×2 → 紧缠 9 → 胀大 7 +2力 →循环回 扭动；其他: 死亡 (None), 接续 (Heal)\n蜂群术士 [精英] A10: HP 165 (n=27) | 27 场 胜率 89% 阵亡 3 | 赢局失血 中位/p75 23.5/29.5 (n=24) | 招式 蜂群术士: 蜜——蜂——！ 3×8 → 矛击！ 20 → 喷射信息素 (Buff) +1力 →循环回 蜜——蜂——！\n感染棱柱 [精英] A10: HP 171 (n=37) | 37 场 胜率 81% 阵亡 7 | 赢局失血 中位/p75 34.5/51 (n=30) | 招式 感染棱柱: 刺击 17 → 辐射 13 → 旋风 6×3 → 脉动 10 →循环回 刺击\n盛碗虫（石）+盛碗虫（丝）+熟睡甲虫 [小怪] A10: HP 179.5 (n=32) | 32 场 胜率 75% 阵亡 8 | 赢局失血 中位/p75 18/28 (n=24) | 招式 盛碗虫（石）: 头槌 16 →循环回 头槌；其他: STUNNED (Stun)；盛碗虫（丝）: 毒性喷吐 (Debuff) → 撕扯 5×2 →循环回 毒性喷吐；熟睡甲虫: 打鼾 (Sleep) →循环回 打鼾；其他: 出击 18 +2力\n胧光怪 [小怪] A10: HP 129 (n=38) | 38 场 胜率 90% 阵亡 4 | 赢局失血 中位/p75 14.5/26.8 (n=34) | 招式 胧光怪: 幻象 (Summon) → 硬化攻击 7 → 起航 (Buff) +3力 →循环回 硬化攻击；其他: 锐利凝视 11\n直飞产卵虫 [小怪] A10: HP 128 (n=35) | 35 场 胜率 83% 阵亡 6 | 赢局失血 中位/p75 12/20 (n=29) | 招式 直飞产卵虫: 产卵 (Summon) → 猛砸 17 → 嫩化 8 →循环回 产卵；其他: 高营养糊糊 (Buff) +4力\n啃咬机×2 [小怪] A10: HP 130.5 (n=34) | 34 场 胜率 88% 阵亡 4 | 赢局失血 中位/p75 18/26.8 (n=30) | 招式 啃咬机: 尖锐鸣叫 (StatusCard) 塞3张状态牌 → 猛夹 9×2 →循环回 尖锐鸣叫\n猎人杀手 [小怪] A10: HP 126 (n=37) | 37 场 胜率 89% 阵亡 4 | 赢局失血 中位/p75 17/24 (n=33) | 招式 猎人杀手: 嫩化黏液 (Debuff) → 啃咬 19 → 刺穿 8×3 →循环回 啃咬\n异螨×2 [小怪] A10: HP 132 (n=39) | 39 场 胜率 90% 阵亡 4 | 赢局失血 中位/p75 14/19 (n=35) | 招式 异螨: 吸吮 6 +3力 → 浓毒 (StatusCard) 塞2张状态牌 → 啃咬 15 →循环回 吸吮\n虱虫之祖 [小怪] A10: HP 140 (n=38) | 38 场 胜率 95% 阵亡 2 | 赢局失血 中位/p75 8.5/17.2 (n=36) | 招式 虱虫之祖: 吐网炮 10 → 蜷身成长 (Buff+Defend) +7力 → 猛扑 16 →循环回 吐网炮\n盛碗虫（卵）+盛碗虫（石）+盛碗虫（丝） [小怪] A10: HP 114 (n=13) | 13 场 胜率 92% 阵亡 1 | 赢局失血 中位/p75 9/17 (n=12) | 招式 盛碗虫（卵）: 啃咬 8 →循环回 啃咬；盛碗虫（石）: 头槌 16 →循环回 头槌；其他: STUNNED (Stun)；盛碗虫（丝）: 毒性喷吐 (Debuff) → 撕扯 5×2 →循环回 毒性喷吐\n第2幕 boss: 无厌沙虫 (THE_INSATIABLE_BOSS)\nboss 数据库 无厌沙虫 (THE_INSATIABLE) A10: HP 无厌沙虫 341 (n=32)\n我方战绩: 32 场，胜率 72% (n=32)，阵亡 9；赢局失血 中位/p75 42/53 (n=23)；赢局回合 9/10 (n=23)；每回合失血 5.5/6.4 (n=32)\n无厌沙虫 招式: 液化地面 (Buff+StatusCard) 塞6张状态牌 → 撕扯 9×2 → 前扑啃咬 31 → 分泌唾液 (Buff) +3力 → THRASH_MOVE_2 9×2 →循环回 撕扯 | 能力: 沙坑 4, 力量 3",
+          "history": "本局历程（已离开的楼层，按层按发生顺序，只追加）: 每层首行 = 层 房间 层末 HP(/上限，变化时标出) ¥金币（房间 怪/精/问/休/店/宝/王/古，·=未知）；其下每行一件事: 决策「标签 [决策者]: 选择 — 未核实理由」（DS=DeepSeek；未核实理由 = DeepSeek 当时所写，不是事实）、「战斗 敌人: HP 战前→战后/上限 药:用掉的药水」、牌组/遗物/药水/上限变化（起始牌组与起始遗物不计）、路线规划。\n第1幕:\nF1 · HP56/70 ¥0\n run-plan [DS]: (start) Efficient early damage transitioning into poison and Dexterity defense — Take efficient damage first, then poison and Dexterity; Accelerant only after reliable poison. Add draw and strong block, remove Strikes after replacements, and attempt elites with upgraded damage, potions, and recovery access. | want DASH, POISONED_STAB, NOXIOUS_FUMES, FOOTWORK, BACKFLIP, ACCELERANT | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER\n event/plan [DS]: 华美发束: 失去所有金币。为第一次卡牌奖励中的所有牌附魔：华彩（华彩: Replay 1: the card is played one extra time (「重放1」)）。 — 未核实理由: Permanent replay on an early reward offers immediate tempo and lasting scaling, justifying the gold cost; favorable outcome data provides limited support.\n +遗物 华美发束(事件)\n map/route-plan [DS]: route r1c5 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 问号 → r5c3 普通战 → r6c2 休息 → r7c2 精英 → r8c2 休息 → r9c1 宝箱 → r10c0 休息 → r11c0 普通战 → r12c0 休息 → r13c0 商店 → r14c0 精英 → r15c0 休息 → r16c3 Boss — 未核实理由: 双精英均有营火缓冲，五火兼顾升级续航，晚店补强。\nF2 怪 HP56 ¥15\n 战斗 小啃兽: 56→56/70\n 路线规划（第1幕 F1 定，当时 HP 80%）: 怪→问→怪→问→怪→休→精→休→宝→休→怪→休→店→精→休→王\n reward/card [DS]: 后空翻 — 未核实理由: Replayed Backflip provides exceptional reusable draw and block with strong Dexterity scaling. Prioritize damage in upcoming rewards.\n +卡 后空翻(奖励)\nF3 问 HP49 ¥116\n event/choose [DS]: 潜水: 获得101金币。失去7点生命. — 未核实理由: 101 gold funds damage or potions at the planned shop. The HP cost is manageable; Stone Sword provides only delayed value.\nF4 怪 HP49 ¥129\n 战斗 树枝史莱姆（小）+树枝史莱姆（中）+树叶史莱姆（小）: 49→49/70\n +药 攻击药水(奖励)\n reward/card [DS]: 隐秘匕首 — 未核实理由: Hidden Daggers adds free damage while replayed Backflip supplies surplus cards to discard, improving early combat without consuming scarce energy.\n +卡 隐秘匕首(奖励)\nF5 问 HP49 ¥144\n 战斗 毛绒伏地虫: 49→49/70\n reward/card [DS]: 突然一拳 — 未核实理由: Sucker Punch adds needed early damage and Weak, with the strongest simulated boss progress. Replayed Backflip already provides defensive draw.\n +卡 突然一拳(奖励)\nF6 怪 HP49 ¥152\n 战斗 墨宝: 49→49/70 药:攻击药水\n 用药 攻击药水(战斗); +药 能量药水(奖励)\n reward/card [DS]: 铭记死亡 — 未核实理由: Memento Mori adds efficient immediate damage, scales with Hidden Daggers and Survivor, and benefits from replayed Backflip assembling those combinations.\n +卡 铭记死亡(奖励)\nF7 休 HP49 ¥152\n rest/plan [DS]: 锻造 (SMITH): upgrade 后空翻 — 未核实理由: Replay amplifies Backflip’s lasting defensive upgrade. At 49 HP with an Energy Potion, smithing is worthwhile before one elite followed by recovery.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F7:rest#2 step 2: upgrade 后空翻 (named with the rest choice)\n 升级 后空翻(休息)\nF8 精 HP25 ¥183\n 战斗 多尼斯异鸟: 49→25/70 药:能量药水\n 用药 能量药水(战斗); +药 迅捷药水(奖励); +遗物 皇家枕头(奖励)\n reward/card [DS]: 华丽收场 — 未核实理由: Grand Finale’s 96% simulated boss win rate dominates; replayed Backflip helps create empty-deck windows while defending.\n +卡 华丽收场(奖励)\nF9 休 HP25 ¥183\n run-plan [DS]: (hp_drop) Draw-discard burst with Grand Finale and Dexterity defense — Build around replayed Backflip and Finale with selective draw, retention, and Dexterity rather than forcing poison. Remove Strikes, avoid duplicate Finale, heal next camp, and retain the planned late elite. | want FOOTWORK, WELL_LAID_PLANS, ACROBATICS, PREPARED, BACKFLIP, PIERCING_WAIL | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCELERANT\n rest/plan [DS]: 锻造 (SMITH): upgrade 华丽收场 — 未核实理由: No combat precedes the next camp. Grand Finale's upgrade shows the strongest simulated boss improvement and supports our draw-discard burst plan.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F9:rest#3 step 2: upgrade 华丽收场 (named with the rest choice)\n 升级 华丽收场(休息)\nF10 宝 HP25 ¥220\n chest/relic [code]: only one relic offered\n +遗物 送货员(宝箱)\nF11 休 HP61 ¥220\n rest/plan [DS]: 休息: 回复最大生命值的30%（21）。 皇家枕头提供+15点生命。 — 未核实理由: Heal to 61 HP now, securing the elite route. The next camp can provide an upgrade if the hallway goes well.\n HP增加观测 25/70→61/70（+36；休息点内；F11/REST→F11/REST，仅帧间净变化）\nF12 怪 HP61 ¥230\n 战斗 缩小甲虫+毛绒伏地虫: 61→61/70 药:迅捷药水\n 用药 迅捷药水(战斗)\n reward/card [DS]: skip — 未核实理由: Preserve Finale consistency. These additions dilute replayed Backflip without providing needed draw control, retention, or defensive scaling.\nF13 休 HP61 ¥230\n rest/plan [DS]: 锻造 (SMITH): upgrade 中和 — 未核实理由: Upgrade Neutralize: free two-turn Weak preserves energy for replayed Backflip and Finale setup. Boss simulations are effectively tied; healing offers little.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F13:rest#5 step 2: upgrade 中和 (named with the rest choice)\n 升级 中和(休息)\nF14 店 HP61 ¥22\n shop/plan [DS]: shop plan: pay 80g to remove 打击, buy 护喉甲 (128g), stop shopping — 未核实理由: Removing a Strike improves Finale consistency; Gorget protects setup every combat without adding cards. Healthy HP and Royal Pillow support the upcoming elite.\n selection/remove [DS]: DeepSeek plan 47731LKMZRBJ:F14:shop#6 step 2: remove 打击 (named with the shop choice)\n -卡 打击(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F14:shop#6 step 3: buy 护喉甲 (128g)\n +遗物 护喉甲(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F14:shop#6 step 4: stop shopping\nF15 精 HP61 ¥52\n 战斗 旧日雕像: 61→61/70\n +遗物 吃不完的糖(奖励)\n reward/card [DS]: 灵动步法 — 未核实理由: Footwork provides missing defensive scaling, amplifies replayed Backflip, and protects Finale setup turns. It also has the best simulated HP outcome.\n +卡 灵动步法(奖励)\nF16 休 HP61 ¥52\n rest/plan [DS]: 锻造 (SMITH): upgrade 灵动步法 — 未核实理由: Upgrade Footwork for lasting defense and replayed Backflip synergy. Boss survival simulations are tied; healing restores only 9 HP.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F16:rest#7 step 2: upgrade 灵动步法 (named with the rest choice)\n 升级 灵动步法(休息)\nF17 王 HP14 ¥127\n 战斗 仪式兽: 61→14/70\n +药 毒药水(奖励)\n reward/card [DS]: 夜魇 — 未核实理由: Nightmare copies Footwork+, replayed Backflip, or Finale+ for powerful scaling. Prioritize its cost upgrade to make setup safer.\n +卡 夜魇(奖励)\n第2幕:\nF18 古 HP58 ¥127\n HP增加观测 14/70→58/70（+44；跨层边界，来源未隔离；F17/MAP→F18/EVENT，仅帧间净变化）\n run-plan [DS]: (act) Controlled Finale burst with replayed draw and Dexterity defense — Control draw and retain Finale for reliable burst. Scale replayed Backflip with Dexterity, add sustained damage, and remove Strikes. Use three camps and the discounted early shop; reassess the late elite if resources deteriorate. | want WELL_LAID_PLANS, ACROBATICS, BACKFLIP, FOOTWORK, SPEEDSTER, PIERCING_WAIL | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCELERANT, BUBBLE_BUBBLE\n event/act-plan [DS]: 佩尔之肉; route r1c4 普通战 → r2c3 商店 → r3c4 普通战 → r4c5 问号 → r5c5 普通战 → r6c6 休息 → r7c5 普通战 → r8c4 宝箱 → r9c4 普通战 → r10c3 休息 → r11c4 问号 → r12c5 精英 → r13c6 问号 → r14c6 休息 → r15c3 Boss — 未核实理由: 额外能量支持过牌与逃离，三火缓冲后挑战精英。\n +遗物 佩尔之肉(事件)\n 路线规划（第2幕 F18 定，当时 HP 83%）: 怪→店→怪→问→怪→休→怪→宝→怪→休→问→精→问→休→王\n map/route-follow [DS]: following the brain's route plan (floor 18): step 1/15 Monster at row 1, col 4; plan r1c4 普通战 → r2c3 商店 → r3c4 普通战 → r4c5 问号 → r5c5 普通战 → r6c6 休息 → r7c5 普通战 → r8c4 宝箱 → r9c4 普通战 → r10c3 休息 → r11c4 问号 → r12c5 精英 → r13c6 问号 → r14c6 休息 → r15c3 Boss\nF19 怪 HP49 ¥138\n 战斗 盛碗虫（石）+盛碗虫（卵）: 58→49/70\n reward/card [DS]: 致命毒药+ — 未核实理由: Deadly Poison+ supplies reliable damage while blocking, offers the strongest boss simulation improvement, and avoids another expensive setup card.\n +卡 致命毒药+(奖励)\nF20 店 HP49 ¥29\n shop/plan [DS]: shop plan: buy 手上技法 (29g), buy 投掷匕首 (40g), buy 速度药水 (40g), stop shopping — 未核实理由: Hand Trick enables free Nightmare via discard; Dagger Throw improves Finale timing. Speed Potion amplifies replayed Backflip and protects setup turns. Total: 109 gold.\n +卡 手上技法(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F20:shop#9 step 2: buy 投掷匕首 (40g)\n +卡 投掷匕首(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F20:shop#9 step 3: buy 速度药水 (40g)\n +药 速度药水(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F20:shop#9 step 4: stop shopping\nF21 怪 HP11 ¥37\n 战斗 地道虫: 49→11/70\n reward/card [DS]: 偏折 — 未核实理由: Deflect provides urgently needed free defense and scales with Footwork. Its boss simulation is effectively tied with skipping.\n map/route-change [DS]: route (card-reward review): r4c5 问号 → r5c5 普通战 → r6c6 休息 → r7c5 普通战 → r8c4 宝箱 → r9c5 休息 → r10c4 普通战 → r11c4 问号 → r12c3 普通战 → r13c2 问号 → r14c3 休息 → r15c3 Boss\n +卡 偏折(奖励)\n 路线重规划（card-reward review）（第2幕 F21 定，当时 HP 16%）: 问→怪→休→怪→宝→休→怪→问→怪→问→休→王\nF22 问 HP11 ¥37\n run-plan [DS]: (hp_drop) Dexterity draw-discard defense with reliable AoE and opportunistic Finale — Use potions proactively to reach the next camp. Heal with Royal Pillow and avoid elites. Replace Strikes with draw or scaling; add reliable damage rather than depending exclusively on Finale. | want BACKFLIP, FOOTWORK, WELL_LAID_PLANS, PIERCING_WAIL, SPEEDSTER, ACROBATICS | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCELERANT, BUBBLE_BUBBLE\n event/choose [DS]: 学习杀灭的技巧: 将一张杀灭添加至你的牌组。 — 未核实理由: Exterminate supplies immediate AoE without waiting for Finale, improving survival against Act Two groups.\n +卡 杀灭(事件)\nF23 怪 HP2 ¥45\n 战斗 猎人杀手: 11→2/70 药:速度药水\n 用药 速度药水(战斗)\n reward/card [DS]: 尖啸 — 未核实理由: Piercing Wail protects setup turns against groups and multihit attacks without requiring additional support. Other powers lack sufficient enablers.\n +卡 尖啸(奖励)\nF24 休 HP38 ¥45\n rest/plan [DS]: 休息: 回复最大生命值的30%（21）。 皇家枕头提供+15点生命。 — 未核实理由: Heal to 38 HP; upgrading at 2 HP risks dying before recovery. Keep the safer route through the nearest campfire.\n HP增加观测 2/70→38/70（+36；休息点内；F24/REST→F24/REST，仅帧间净变化）\nF25 怪 HP5 ¥57\n 战斗 胧光怪+寄生惧魔: 38→5/70\n +药 火焰药水(奖励)\n reward/card [DS]: skip — 未核实理由: Preserve access to Footwork, replayed Backflip, and Escape. None of these additions solves our damage problem; all worsen boss simulations.\nF26 宝 HP5 ¥93\n chest/relic [code]: only one relic offered\n +遗物 铜质鳞片(宝箱)\nF27 休 HP41 ¥93\n rest/plan [DS]: 休息: 回复最大生命值的30%（21）。 皇家枕头提供+15点生命。 — 未核实理由: Heal to 41 HP. At 5 HP, survival before the next camp outweighs every upgrade; keep the elite-free route.\n HP增加观测 5/70→41/70（+36；休息点内；F27/REST→F27/REST，仅帧间净变化）\nF28 怪 HP26 ¥104\n 战斗 棘刺蟾蜍: 41→26/70 药:火焰药水\n 用药 火焰药水(战斗); +药 稳定血清(奖励)\n reward/card [DS]: 扫腿 — 未核实理由: Leg Sweep supplies reliable block and lasting Weak, synergizes with Footwork and Hand Trick, and substantially improves simulated boss survival.\n +卡 扫腿(奖励)\nF29 问 HP26 ¥4\n event/choose [DS]: 旺购的打折货物: 支付100金币。获得1件随机普通遗物。 — 未核实理由: Buy the relic without losing HP. Leaving risks crucial upgrades, and no shop remains before the boss.\n +遗物 弹珠袋(事件)\nF30 怪 HP26 ¥16\n 战斗 啃咬机: 26→26/70 药:稳定血清\n 用药 稳定血清(战斗); +药 明晰提取物(奖励)\n reward/card [DS]: 斗篷与匕首 — 未核实理由: Cloak and Dagger provides repeatable block and damage, benefits from Footwork, and offers the strongest simulated boss improvement.\n +卡 斗篷与匕首(奖励)\nF31 问 HP26 ¥16\n run-plan [DS]: (review) Dexterity draw-discard control with sustained damage and opportunistic Finale — Prioritize reliable scaling and controlled draw over generic block. Remove Strikes and heal before the boss. Treat Finale as opportunistic burst; preserve Escape when needed, while separately covering incoming attacks. | want SPEEDSTER, BACKFLIP, WELL_LAID_PLANS, FOOTWORK, ACROBATICS, NOXIOUS_FUMES | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, BUBBLE_BUBBLE\n event/choose [DS]: 红色: 获得3张铁甲战士的卡牌。 — 未核实理由: Ironclad cards offer self-contained damage, Strength, and exhaust support; Regent cards risk unsupported Star or Forge packages.\n reward/card [DS]: 剑柄打击 — 未核实理由: Pommel Strike provides damage and precise draw control for Finale, with a useful future draw upgrade. Boss simulations are effectively tied with skipping.\n +卡 剑柄打击(奖励)\n reward/card [DS]: skip — 未核实理由: Preserve access to Footwork, replayed Backflip, and Escape. Uppercut adds expensive, redundant Weak; the other skills lack support or risk exhausting Escape.",
+          "now": "",
+          "this_floor": "",
+          "route": "本幕进度（按 F21 的路线）: 已走 11/12 [问怪休怪宝休怪问怪问休] | 下一步 王（预计 HP 100%） | 剩余 1: 王",
+          "lookahead": "距 boss 1 层 | 到 boss 前各路线: 精英 0, 休息 0, 商店 0, 问号 0, 宝箱 0 | 下一个节点强制: Boss"
+        },
+        "payload": {
+          "run_brief": {
+            "character": "静默猎手",
+            "act": "2",
+            "floor": 32,
+            "hp": "26/70 (37%)",
+            "gold": 16,
+            "ascension": 10,
+            "deck": "28 cards | 11 attacks / 15 skills / 1 powers | 5 upgraded | 1 curses/statuses | avg cost 0.89",
+            "relics": [
+              "蛇之戒指",
+              "华美发束",
+              "皇家枕头",
+              "送货员",
+              "护喉甲",
+              "吃不完的糖",
+              "佩尔之肉",
+              "铜质鳞片",
+              "弹珠袋"
+            ],
+            "relic_effects": [
+              "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+              "华美发束: 拾起时，失去所有金币。为你的第一次卡牌奖励中的所有牌附魔：华彩。",
+              "皇家枕头: 在休息时，额外回复?(数值未知)点生命。",
+              "送货员: 商人的卡牌、遗物和药水不再会卖光，并且所有商品打折?(数值未知)%。",
+              "护喉甲: 在每场战斗开始时，获得?(数值未知)层覆甲。",
+              "吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+              "佩尔之肉: 从你的第3回合开始，在回合开始时额外获得1点能量。",
+              "铜质鳞片: 在每场战斗开始时，获得?(数值未知)点荆棘。",
+              "弹珠袋: 在每场战斗开始时，给予所有敌人1层易伤。"
+            ],
+            "potions": [
+              "毒药水: 给予?(数值未知)层中毒。",
+              "明晰提取物: 抽1张牌。在你的下3个回合开始时，额外抽1张牌。"
+            ],
+            "notes": [
+              "floor 28: moved to Unknown",
+              "event choice (欢迎来到旺购百货)",
+              "floor 29: moved to Monster",
+              "card selection",
+              "floor 30: moved to Unknown",
+              "event choice (色彩哲学家)",
+              "skipped a card reward",
+              "floor 31: moved to RestSite"
+            ],
+            "run_plan": "Dexterity draw-discard control with sustained damage and opportunistic Finale — Prioritize reliable scaling and controlled draw over generic block. Remove Strikes and heal before the boss. Treat Finale as opportunistic burst; preserve Escape when needed, while separately covering incoming attacks. | want SPEEDSTER, BACKFLIP, WELL_LAID_PLANS, FOOTWORK, ACROBATICS, NOXIOUS_FUMES | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, BUBBLE_BUBBLE",
+            "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+          },
+          "situation": {
+            "screen": "REST",
+            "hp": "26/70 (37%)",
+            "hp_percent": 37,
+            "upgradable_cards": 23,
+            "next_nodes": [
+              "Boss"
+            ]
+          },
+          "facts": {
+            "act": 2,
+            "floor": 32,
+            "floors_to_act_boss": 1,
+            "ascension": 10,
+            "hp": "26/70 (37%)",
+            "gold": 16,
+            "act_boss": "THE_INSATIABLE_BOSS",
+            "deck_size": 28,
+            "deck_profile": "28 张 (攻击 11/技能 15/能力 1/诅咒或状态 1) | 升级 5 | 平均费用 0.89 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+            "deck": [
+              "4x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+              "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+              "NEUTRALIZE+ 中和+ (Attack, 0 energy): 造成4点伤害。 给予2层虚弱。",
+              "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+              "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+              "BACKFLIP+ 后空翻+ (Skill, 1 energy): 获得8点格挡。 抽2张牌。 重放1。",
+              "HIDDEN_DAGGERS 隐秘匕首 (Skill, 0 energy): 丢弃2张牌。 将2张小刀加入你的手牌。",
+              "SUCKER_PUNCH 突然一拳 (Attack, 1 energy): 造成8点伤害。 给予1层虚弱。",
+              "MEMENTO_MORI 铭记死亡 (Attack, 1 energy): 造成9点伤害。 本回合每丢弃过一张牌，则增加4点额外伤害。",
+              "GRAND_FINALE+ 华丽收场+ (Attack, 0 energy): 只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成75点伤害。",
+              "FOOTWORK+ 灵动步法+ (Power, 1 energy): 获得3点敏捷。",
+              "NIGHTMARE 夜魇 (Skill, 3 energy): 选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+              "DEADLY_POISON+ 致命毒药+ (Skill, 1 energy): 给予7层中毒。",
+              "HAND_TRICK 手上技法 (Skill, 1 energy): 获得7点格挡。 在本回合给你手牌中的一张技能牌添加奇巧。",
+              "DAGGER_THROW 投掷匕首 (Attack, 1 energy): 造成9点伤害。 抽1张牌。 丢弃1张牌。",
+              "DEFLECT 偏折 (Skill, 0 energy): 获得4点格挡。",
+              "EXTERMINATE 杀灭 (Attack, 1 energy): 对所有敌人造成3点伤害4次。",
+              "PIERCING_WAIL 尖啸 (Skill, 1 energy): 所有敌人在本回合失去6点力量。 消耗。",
+              "LEG_SWEEP 扫腿 (Skill, 2 energy): 给予2层虚弱。 获得11点格挡。",
+              "CLOAK_AND_DAGGER 斗篷与匕首 (Skill, 1 energy): 获得6点格挡。 将1张小刀添加到你的手牌。",
+              "POMMEL_STRIKE 剑柄打击 (Attack, 1 energy): 造成9点伤害。 抽1张牌。"
+            ],
+            "relics": [
+              "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+              "华美发束: 拾起时，失去所有金币。为你的第一次卡牌奖励中的所有牌附魔：华彩。",
+              "皇家枕头: 在休息时，额外回复?(数值未知)点生命。",
+              "送货员: 商人的卡牌、遗物和药水不再会卖光，并且所有商品打折?(数值未知)%。",
+              "护喉甲: 在每场战斗开始时，获得?(数值未知)层覆甲。",
+              "吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+              "佩尔之肉: 从你的第3回合开始，在回合开始时额外获得1点能量。",
+              "铜质鳞片: 在每场战斗开始时，获得?(数值未知)点荆棘。",
+              "弹珠袋: 在每场战斗开始时，给予所有敌人1层易伤。"
+            ],
+            "potions": [
+              "POISON_POTION 毒药水: 给予?(数值未知)层中毒。",
+              "CLARITY 明晰提取物: 抽1张牌。在你的下3个回合开始时，额外抽1张牌。"
+            ],
+            "potion_slots": "2/2 used",
+            "act_boss_sim": {
+              "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+              "boss": "无厌沙虫，A10：无厌沙虫 341 血",
+              "entry_hp": "26/70：本幕路线计划到 boss（F33）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+              "current_deck": "胜率 8%（校准后；原始 8%），赢局掉血中位 20，赢局约 10 回合，输的样本中位死在第 7 回合",
+              "samples": "每个选项 328 次（目标 1000，到时间只跑完这些）；所有选项同一组随机种子，按样本配对比较；用时 11.2 秒",
+              "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+              "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+              "relics_at_start": "开场生效：护喉甲、铜质鳞片、弹珠袋",
+              "relics_not_modelled": "蛇之戒指",
+              "low_confidence": "验证集 21 场（战前起点）：校准 Brier 0.182，高于整体 0.120 的 1.25 倍 0.151",
+              "low_win_rate": "当前牌组在模拟里多半打不过（原始胜率 8%，校准后的数不会低于 0.0%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多"
+            },
+            "your_run_plan": {
+              "made_on_floor": 31,
+              "archetype": "Dexterity draw-discard control with sustained damage and opportunistic Finale",
+              "want": [
+                "SPEEDSTER",
+                "BACKFLIP",
+                "WELL_LAID_PLANS",
+                "FOOTWORK",
+                "ACROBATICS",
+                "NOXIOUS_FUMES"
+              ],
+              "avoid": [
+                "GRAND_FINALE",
+                "KNIFE_TRAP",
+                "FINISHER",
+                "BUBBLE_BUBBLE"
+              ],
+              "remove": [
+                "STRIKE_SILENT"
+              ],
+              "block_target": 11,
+              "elites": "avoid",
+              "rest": "heal",
+              "boss_prep": "Heal at the final camp. Establish Footwork and replayed Backflip; preserve payable Frantic Escape. Use Nightmare selectively and potions to protect setup.",
+              "summary": "Prioritize reliable scaling and controlled draw over generic block. Remove Strikes and heal before the boss. Treat Finale as opportunistic burst; preserve Escape when needed, while separately covering incoming attacks."
+            },
+            "rest_site": {
+              "heal_amount": "36 HP: 21 (30% of max HP, rounded down) + 15 (Regal Pillow +15 HP)",
+              "hp_after_heal": "62/70",
+              "upgradable_cards": [
+                "打击",
+                "打击",
+                "打击",
+                "打击",
+                "防御",
+                "防御",
+                "防御",
+                "防御",
+                "防御",
+                "生存者",
+                "隐秘匕首",
+                "突然一拳",
+                "铭记死亡",
+                "夜魇",
+                "手上技法",
+                "投掷匕首",
+                "偏折",
+                "杀灭",
+                "尖啸",
+                "扫腿",
+                "斗篷与匕首",
+                "剑柄打击"
+              ],
+              "floors_to_act_boss": 1,
+              "next_nodes": [
+                "Boss"
+              ],
+              "forced_next": "Boss",
+              "hp_band_now": "<40%",
+              "option_outcome_stats": {
+                "HEAL": "无数据",
+                "SMITH": "无数据"
+              }
+            },
+            "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+            "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-12T21:19:44，A10 共 209 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 209 局）：到达第1幕的局过第1幕boss 75% (n=209)，到达第2幕的局过第2幕boss 48% (n=157)，到达第3幕的局过第3幕boss 3% (n=76)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+          }
+        },
+        "options": {
+          "o0": "{\"option\":\"休息\",\"kind\":\"HEAL\",\"description\":\"回复最大生命值的30%（21）。\\n皇家枕头提供+15点生命。\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.6527445587271129,0.7510627306821499],\"hp_loss\":{\"n\":328,\"mean\":48.00914634146342,\"p10\":28,\"p90\":62,\"meanSe\":0.7470446768731906},\"turns_won_only\":{\"n\":231,\"mean\":10.779220779220775,\"p10\":9,\"p90\":13,\"meanSe\":0.09118293835235801},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":22.56097560975611,\"p10\":3,\"p90\":36,\"meanSe\":0.6886623292713282},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":93,\"missing\":235,\"energy_paid\":{\"n\":93,\"mean\":33.48387096774192,\"p10\":26,\"p90\":40,\"meanSe\":0.6413397805933532},\"manual_actions\":{\"n\":93,\"mean\":38.53763440860215,\"p10\":30,\"p90\":46,\"meanSe\":0.6867406367377854},\"effect_resolutions\":{\"n\":93,\"mean\":40.10752688172043,\"p10\":31,\"p90\":48,\"meanSe\":0.7243288337292173},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":92,\"mean\":3.010869565217391,\"p10\":1,\"p90\":5,\"meanSe\":0.17723695893456454}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":113.51829268292684,\"p10\":74,\"p90\":154,\"meanSe\":1.7391628940959445},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":14.012195121951226,\"p10\":-8.299999999999997,\"p90\":36,\"meanSe\":0.9306926717722647}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个（进场 62 血） 70%（+62.8 ± 2.7），赢局掉血中位 43，约 11 回合；boss 平均剩血 17（当前牌组 107，−90 ± 3.5）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；回血后 HP 62/70，进场血量按它投影\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":62,\"after_action_max_hp\":70,\"immediate_hp_gain\":36,\"projected_boss_hp\":62,\"simulated_entry_hp\":62,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\"}}",
+          "o1:c0": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 打击\",\"card\":\"打击\",\"copies\":4,\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=10 过本幕boss 80% 均终层29.3 / 给了没拿 无数据；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.05972085997971935,0.12061061226416511],\"hp_loss\":{\"n\":328,\"mean\":25.432926829268286,\"p10\":26,\"p90\":26,\"meanSe\":0.12352374295154592},\"turns_won_only\":{\"n\":28,\"mean\":10.25,\"p10\":9,\"p90\":11.3,\"meanSe\":0.1966989481173608},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.015243902439024402,\"p10\":0,\"p90\":0,\"meanSe\":0.07346828406973471},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":142,\"missing\":186,\"energy_paid\":{\"n\":142,\"mean\":23.25352112676057,\"p10\":14.100000000000001,\"p90\":34,\"meanSe\":0.6583819927963922},\"manual_actions\":{\"n\":142,\"mean\":27.169014084507047,\"p10\":17,\"p90\":39,\"meanSe\":0.7267160760695004},\"effect_resolutions\":{\"n\":142,\"mean\":28.218309859154935,\"p10\":17,\"p90\":41,\"meanSe\":0.7696492861636709},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":130,\"mean\":2.9769230769230783,\"p10\":1,\"p90\":5,\"meanSe\":0.1335115317616551}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":79.50000000000004,\"p10\":34,\"p90\":129,\"meanSe\":2.0190873326938643},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.414634146341464,\"p10\":-16,\"p90\":4,\"meanSe\":0.4843875037469955}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 9%（+0.9 ± 0.7），赢局掉血中位 20，约 10 回合；boss 平均剩血 104（当前牌组 107，−2.8 ± 1）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c21\",\"o1:c24\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c21、o1:c24的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c4": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 防御\",\"card\":\"防御\",\"copies\":5,\"upgrade\":\"获得5点格挡。 -> 获得8点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=10 过本幕boss 80% 均终层29.3 / 给了没拿 无数据\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.06995664324295378,0.13448272687611054],\"hp_loss\":{\"n\":328,\"mean\":25.344512195121943,\"p10\":26,\"p90\":26,\"meanSe\":0.13730530205275576},\"turns_won_only\":{\"n\":32,\"mean\":10.468750000000002,\"p10\":9,\"p90\":11,\"meanSe\":0.17951758270431337},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.10365853658536589,\"p10\":0,\"p90\":0,\"meanSe\":0.05345485559978781},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":130,\"missing\":198,\"energy_paid\":{\"n\":130,\"mean\":23.915384615384614,\"p10\":14.9,\"p90\":35,\"meanSe\":0.6885237477015805},\"manual_actions\":{\"n\":130,\"mean\":28.161538461538466,\"p10\":17,\"p90\":39.10000000000001,\"meanSe\":0.7543792913542049},\"effect_resolutions\":{\"n\":130,\"mean\":29.253846153846144,\"p10\":17,\"p90\":41.10000000000001,\"meanSe\":0.7990238184361772},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":119,\"mean\":2.907563025210084,\"p10\":1,\"p90\":5,\"meanSe\":0.13814631175789002}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":83.46036585365853,\"p10\":37,\"p90\":132,\"meanSe\":2.060556444635398},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.201219512195123,\"p10\":-16,\"p90\":4,\"meanSe\":0.4834541330736934}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 10%（+2.1 ± 0.9），赢局掉血中位 20.5，约 11 回合；boss 平均剩血 99（当前牌组 107，−7.9 ± 1.6）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c10": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 生存者\",\"card\":\"生存者\",\"upgrade\":\"获得8点格挡。 丢弃1张牌。 -> 获得11点格挡。 丢弃1张牌。\",\"card_outcome_stats\":\"无数据\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.07773134669360707,0.14478894683184215],\"hp_loss\":{\"n\":328,\"mean\":25.222560975609742,\"p10\":26,\"p90\":26,\"meanSe\":0.1682096394823005},\"turns_won_only\":{\"n\":35,\"mean\":10.4,\"p10\":9,\"p90\":11.600000000000001,\"meanSe\":0.17963548525562872},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.22560975609756104,\"p10\":0,\"p90\":0,\"meanSe\":0.06222611939384819},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":161,\"missing\":167,\"energy_paid\":{\"n\":161,\"mean\":24.167701863354043,\"p10\":15,\"p90\":35,\"meanSe\":0.6029969166024348},\"manual_actions\":{\"n\":161,\"mean\":28.173913043478247,\"p10\":17,\"p90\":40,\"meanSe\":0.6690568369276988},\"effect_resolutions\":{\"n\":161,\"mean\":29.260869565217384,\"p10\":18,\"p90\":41,\"meanSe\":0.7036132201693509},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":148,\"mean\":2.9594594594594583,\"p10\":1,\"p90\":5,\"meanSe\":0.12311396728573376}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":82.98170731707316,\"p10\":34.7,\"p90\":132,\"meanSe\":2.083452052059868},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.256097560975608,\"p10\":-16,\"p90\":5.300000000000011,\"meanSe\":0.5162793965251083}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 11%（+3.1 ± 1），赢局掉血中位 20，约 10 回合；boss 平均剩血 102（当前牌组 107，−5.4 ± 1.4）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c14\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c14的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c13": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 隐秘匕首\",\"card\":\"隐秘匕首\",\"upgrade\":\"丢弃2张牌。 将2张小刀加入你的手牌。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=23 过本幕boss 78% 均终层30 / 给了没拿 n=23 过本幕boss 78% 均终层32；第2幕 拿了 n=8 过本幕boss 25% 均终层32.5 / 给了没拿 n=19 过本幕boss 58% 均终层38.4；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=5 过本幕boss 0% 均终层47.6\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.15310413695644617,0.23817144169526208],\"hp_loss\":{\"n\":328,\"mean\":24.545731707317064,\"p10\":21,\"p90\":26,\"meanSe\":0.22253083188205725},\"turns_won_only\":{\"n\":63,\"mean\":9.968253968253967,\"p10\":9,\"p90\":12,\"meanSe\":0.17812853992961716},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.9024390243902436,\"p10\":-4,\"p90\":0,\"meanSe\":0.23598316720123114},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":80,\"missing\":248,\"energy_paid\":{\"n\":80,\"mean\":24.974999999999998,\"p10\":15.9,\"p90\":34.20000000000002,\"meanSe\":0.8362769739836138},\"manual_actions\":{\"n\":80,\"mean\":28.387500000000006,\"p10\":17,\"p90\":39.10000000000001,\"meanSe\":0.9322787092775163},\"effect_resolutions\":{\"n\":80,\"mean\":29.449999999999996,\"p10\":17,\"p90\":41.10000000000001,\"meanSe\":0.9811353536992137},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":76,\"mean\":2.828947368421053,\"p10\":1,\"p90\":5,\"meanSe\":0.18004693140102446}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":87.93902439024393,\"p10\":40.400000000000006,\"p90\":137,\"meanSe\":2.1365754590928145},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-4.030487804878047,\"p10\":-16,\"p90\":7,\"meanSe\":0.5328201937432437}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 19%（+11.6 ± 2.5），赢局掉血中位 20，约 10 回合；boss 平均剩血 89（当前牌组 107，−18.4 ± 4.2）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；这张牌的升级数值没有记录，按未升级的数值算\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c14": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 突然一拳\",\"card\":\"突然一拳\",\"upgrade\":\"造成8点伤害。 给予1层虚弱。 -> 造成10点伤害。 给予2层虚弱。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=80 过本幕boss 71% 均终层29.1 / 给了没拿 n=39 过本幕boss 85% 均终层34.3；第2幕 拿了 n=18 过本幕boss 39% 均终层36.2 / 给了没拿 n=38 过本幕boss 50% 均终层37.4；第3幕 拿了 n=8 过本幕boss 0% 均终层47 / 给了没拿 n=17 过本幕boss 0% 均终层47.5\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.07773134669360707,0.14478894683184215],\"hp_loss\":{\"n\":328,\"mean\":25.15853658536586,\"p10\":25.700000000000003,\"p90\":26,\"meanSe\":0.1677379263870221},\"turns_won_only\":{\"n\":35,\"mean\":10.114285714285714,\"p10\":9,\"p90\":11,\"meanSe\":0.19563054087593115},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.2896341463414634,\"p10\":0,\"p90\":0,\"meanSe\":0.09188185900078633},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":138,\"missing\":190,\"energy_paid\":{\"n\":138,\"mean\":23.84057971014492,\"p10\":14.700000000000001,\"p90\":34.3,\"meanSe\":0.6707727967067679},\"manual_actions\":{\"n\":138,\"mean\":27.91304347826087,\"p10\":17,\"p90\":39,\"meanSe\":0.7434952421964001},\"effect_resolutions\":{\"n\":138,\"mean\":29.007246376811594,\"p10\":17,\"p90\":41,\"meanSe\":0.7869059841605677},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":126,\"mean\":2.9444444444444446,\"p10\":1,\"p90\":5,\"meanSe\":0.1344267337147392}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":80.75000000000014,\"p10\":35,\"p90\":129,\"meanSe\":1.9950325702519436},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-4.7408536585365875,\"p10\":-15,\"p90\":5.300000000000011,\"meanSe\":0.48376503562225903}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 11%（+3.1 ± 1），赢局掉血中位 19，约 10 回合；boss 平均剩血 97（当前牌组 107，−10.1 ± 1.7）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c10\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c10的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c15": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 铭记死亡\",\"card\":\"铭记死亡\",\"upgrade\":\"造成9点伤害。 本回合每丢弃过一张牌，则增加4点额外伤害。 -> 造成11点伤害。 本回合每丢弃过一张牌，则增加5点额外伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=13 过本幕boss 69% 均终层30.8 / 给了没拿 n=28 过本幕boss 68% 均终层30.5；第2幕 拿了 无数据 / 给了没拿 n=21 过本幕boss 48% 均终层36；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层48 / 给了没拿 n=8 过本幕boss 12% 均终层47.9\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.06226461683115729,0.12409382988152211],\"hp_loss\":{\"n\":328,\"mean\":25.411585365853657,\"p10\":26,\"p90\":26,\"meanSe\":0.13612433630080553},\"turns_won_only\":{\"n\":29,\"mean\":10.275862068965518,\"p10\":9,\"p90\":11.2,\"meanSe\":0.22137363220316575},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.03658536585365853,\"p10\":0,\"p90\":0,\"meanSe\":0.022760098294614436},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":137,\"missing\":191,\"energy_paid\":{\"n\":137,\"mean\":23.19708029197081,\"p10\":14,\"p90\":34,\"meanSe\":0.6638748860483566},\"manual_actions\":{\"n\":137,\"mean\":27.255474452554747,\"p10\":16.6,\"p90\":39,\"meanSe\":0.7412020974597222},\"effect_resolutions\":{\"n\":137,\"mean\":28.335766423357654,\"p10\":17,\"p90\":41,\"meanSe\":0.7868114648788419},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":125,\"mean\":2.984,\"p10\":1,\"p90\":5,\"meanSe\":0.13677577601032218}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":79.07012195121943,\"p10\":32.7,\"p90\":126.60000000000002,\"meanSe\":2.0119852972211483},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.570121951219512,\"p10\":-16,\"p90\":4,\"meanSe\":0.4916736721443725}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 9%（+1.2 ± 0.6），赢局掉血中位 21，约 10 回合；boss 平均剩血 105（当前牌组 107，−2.1 ± 0.6）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c18": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 夜魇\",\"card\":\"夜魇\",\"upgrade\":\"选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。 -> cost 3->2\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=4(少) 过本幕boss 75% 均终层31.5 / 给了没拿 n=18 过本幕boss 100% 均终层38.5；第2幕 拿了 n=5 过本幕boss 100% 均终层48 / 给了没拿 n=9 过本幕boss 89% 均终层44.6\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.0829558732553701,0.15161836920766905],\"hp_loss\":{\"n\":328,\"mean\":25.39024390243903,\"p10\":25.700000000000003,\"p90\":26,\"meanSe\":0.1246330027037097},\"turns_won_only\":{\"n\":37,\"mean\":10.18918918918919,\"p10\":9,\"p90\":12,\"meanSe\":0.20808665698110088},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.05792682926829273,\"p10\":0,\"p90\":0,\"meanSe\":0.08559978576013802},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":82,\"missing\":246,\"energy_paid\":{\"n\":82,\"mean\":23.024390243902435,\"p10\":10.2,\"p90\":33.900000000000006,\"meanSe\":0.907159055441075},\"manual_actions\":{\"n\":82,\"mean\":27.097560975609767,\"p10\":14.2,\"p90\":38.900000000000006,\"meanSe\":1.000091798872536},\"effect_resolutions\":{\"n\":82,\"mean\":28.097560975609756,\"p10\":14.2,\"p90\":40.900000000000006,\"meanSe\":1.059024361117248},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":75,\"mean\":2.7866666666666666,\"p10\":1,\"p90\":5,\"meanSe\":0.1711575148653862}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":81.4085365853658,\"p10\":34,\"p90\":129,\"meanSe\":2.108016873573398},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.423780487804879,\"p10\":-16,\"p90\":3.3000000000000114,\"meanSe\":0.4719523313428202}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 11%（+3.7 ± 1.2），赢局掉血中位 22，约 10 回合；boss 平均剩血 102（当前牌组 107，−4.6 ± 2）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；夜魇的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c20": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 手上技法\",\"card\":\"手上技法\",\"upgrade\":\"获得7点格挡。 在本回合给你手牌中的一张技能牌添加奇巧。 -> 获得10点格挡。 在本回合给你手牌中的一张技能牌添加奇巧。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=10 过本幕boss 100% 均终层36.8 / 给了没拿 n=22 过本幕boss 82% 均终层35.5；第2幕 拿了 n=12 过本幕boss 58% 均终层39.9 / 给了没拿 n=11 过本幕boss 73% 均终层41.5；第3幕 拿了 n=6 过本幕boss 0% 均终层48.5 / 给了没拿 n=4(少) 过本幕boss 0% 均终层46\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.07253951183198357,0.13792683275587572],\"hp_loss\":{\"n\":328,\"mean\":25.3170731707317,\"p10\":26,\"p90\":26,\"meanSe\":0.15506612221422844},\"turns_won_only\":{\"n\":33,\"mean\":10.363636363636365,\"p10\":9,\"p90\":11.8,\"meanSe\":0.25679471601027726},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.13109756097560982,\"p10\":0,\"p90\":0,\"meanSe\":0.04802378656676966},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":134,\"missing\":194,\"energy_paid\":{\"n\":134,\"mean\":23.641791044776117,\"p10\":14.3,\"p90\":35,\"meanSe\":0.6960622353748636},\"manual_actions\":{\"n\":134,\"mean\":27.820895522388057,\"p10\":17,\"p90\":39.7,\"meanSe\":0.7736725844317606},\"effect_resolutions\":{\"n\":134,\"mean\":28.917910447761177,\"p10\":17.3,\"p90\":41,\"meanSe\":0.8172097195163205},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":121,\"mean\":2.917355371900827,\"p10\":1,\"p90\":5,\"meanSe\":0.13665966698773604}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":82.38719512195112,\"p10\":34,\"p90\":131,\"meanSe\":2.0628183470409396},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.246951219512195,\"p10\":-16,\"p90\":5,\"meanSe\":0.5050187901819293}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 10%（+2.4 ± 0.9），赢局掉血中位 21，约 10 回合；boss 平均剩血 103（当前牌组 107，−3.9 ± 1）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c22\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c22的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c21": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 投掷匕首\",\"card\":\"投掷匕首\",\"upgrade\":\"造成9点伤害。 抽1张牌。 丢弃1张牌。 -> 造成12点伤害。 抽1张牌。 丢弃1张牌。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=51 过本幕boss 69% 均终层31.1 / 给了没拿 n=55 过本幕boss 75% 均终层31.1；第2幕 拿了 n=11 过本幕boss 36% 均终层34.8 / 给了没拿 n=49 过本幕boss 59% 均终层39.6；第3幕 拿了 n=5 过本幕boss 0% 均终层44.8 / 给了没拿 n=20 过本幕boss 0% 均终层46.7\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.05972085997971935,0.12061061226416511],\"hp_loss\":{\"n\":328,\"mean\":25.402439024390265,\"p10\":26,\"p90\":26,\"meanSe\":0.1408187536929237},\"turns_won_only\":{\"n\":28,\"mean\":10.285714285714285,\"p10\":9,\"p90\":12,\"meanSe\":0.25643641938735745},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.04573170731707319,\"p10\":0,\"p90\":0,\"meanSe\":0.035123043475014375},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":140,\"missing\":188,\"energy_paid\":{\"n\":140,\"mean\":23.464285714285726,\"p10\":14,\"p90\":35,\"meanSe\":0.6845385925686737},\"manual_actions\":{\"n\":140,\"mean\":27.571428571428587,\"p10\":16.9,\"p90\":39,\"meanSe\":0.7594653050351905},\"effect_resolutions\":{\"n\":140,\"mean\":28.657142857142862,\"p10\":17,\"p90\":41,\"meanSe\":0.8036256119679336},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":128,\"mean\":2.9375000000000004,\"p10\":1,\"p90\":5,\"meanSe\":0.1339098224596728}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":79.34146341463418,\"p10\":32.7,\"p90\":128,\"meanSe\":2.0193776621715527},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.451219512195118,\"p10\":-16,\"p90\":4.300000000000011,\"meanSe\":0.4994516601665977}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 9%（+0.9 ± 0.7），赢局掉血中位 21，约 10 回合；boss 平均剩血 102（当前牌组 107，−4.6 ± 0.8）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c0\",\"o1:c24\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c0、o1:c24的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c22": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 偏折\",\"card\":\"偏折\",\"upgrade\":\"获得4点格挡。 -> 获得7点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=49 过本幕boss 69% 均终层28.2 / 给了没拿 n=61 过本幕boss 80% 均终层33.7；第2幕 拿了 n=29 过本幕boss 45% 均终层37.4 / 给了没拿 n=35 过本幕boss 63% 均终层39.9；第3幕 拿了 n=19 过本幕boss 5% 均终层46.5 / 给了没拿 n=12 过本幕boss 0% 均终层47.2\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.07253951183198357,0.13792683275587572],\"hp_loss\":{\"n\":328,\"mean\":25.286585365853647,\"p10\":26,\"p90\":26,\"meanSe\":0.15674169411698963},\"turns_won_only\":{\"n\":33,\"mean\":10.393939393939396,\"p10\":9,\"p90\":11,\"meanSe\":0.20384278859202581},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.16158536585365865,\"p10\":0,\"p90\":0,\"meanSe\":0.05482907862076193},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":133,\"missing\":195,\"energy_paid\":{\"n\":133,\"mean\":23.58646616541354,\"p10\":14.200000000000001,\"p90\":35,\"meanSe\":0.6959937941780728},\"manual_actions\":{\"n\":133,\"mean\":27.691729323308266,\"p10\":17,\"p90\":40,\"meanSe\":0.7766808444269591},\"effect_resolutions\":{\"n\":133,\"mean\":28.76691729323307,\"p10\":17,\"p90\":42,\"meanSe\":0.8203166965112929},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":121,\"mean\":2.9504132231404956,\"p10\":1,\"p90\":5,\"meanSe\":0.1397810367913931}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":82.5518292682927,\"p10\":34,\"p90\":134,\"meanSe\":2.100972434172044},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.115853658536582,\"p10\":-16,\"p90\":5,\"meanSe\":0.5097468498263431}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 10%（+2.4 ± 0.9），赢局掉血中位 20，约 10 回合；boss 平均剩血 104（当前牌组 107，−3.4 ± 0.9）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c20\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c20的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c23": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 杀灭\",\"card\":\"杀灭\",\"upgrade\":\"对所有敌人造成3点伤害4次。 -> 对所有敌人造成4点伤害4次。\",\"card_outcome_stats\":\"A10 第2幕 拿了 n=13 过本幕boss 46% 均终层38.1 / 给了没拿 无数据\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.0571880142321005,0.117116483542989],\"hp_loss\":{\"n\":328,\"mean\":25.37195121951221,\"p10\":26,\"p90\":26,\"meanSe\":0.15207908576028295},\"turns_won_only\":{\"n\":27,\"mean\":9.925925925925926,\"p10\":9,\"p90\":11,\"meanSe\":0.21959510737940893},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.07621951219512195,\"p10\":0,\"p90\":0,\"meanSe\":0.06383764815082378},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":138,\"missing\":190,\"energy_paid\":{\"n\":138,\"mean\":23.31159420289856,\"p10\":14,\"p90\":35,\"meanSe\":0.6636024515899817},\"manual_actions\":{\"n\":138,\"mean\":27.33333333333334,\"p10\":16.700000000000003,\"p90\":39,\"meanSe\":0.7336736946118347},\"effect_resolutions\":{\"n\":138,\"mean\":28.40579710144928,\"p10\":17,\"p90\":41,\"meanSe\":0.7764952359754608},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":126,\"mean\":2.9682539682539684,\"p10\":1,\"p90\":5,\"meanSe\":0.1365965013549531}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":78.31097560975611,\"p10\":33.7,\"p90\":128,\"meanSe\":1.9459588391734837},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.289634146341461,\"p10\":-16,\"p90\":5,\"meanSe\":0.5121180586377123}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 8%（+0.6 ± 0.6），赢局掉血中位 20，约 10 回合；boss 平均剩血 102（当前牌组 107，−5.3 ± 0.5）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c24\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c24": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 尖啸\",\"card\":\"尖啸\",\"upgrade\":\"所有敌人在本回合失去6点力量。 消耗。 -> 所有敌人在本回合失去8点力量。 消耗。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=65 过本幕boss 72% 均终层29.7 / 给了没拿 n=46 过本幕boss 80% 均终层33；第2幕 拿了 n=75 过本幕boss 53% 均终层38.4 / 给了没拿 n=7 过本幕boss 57% 均终层37.9；第3幕 拿了 n=27 过本幕boss 7% 均终层47 / 给了没拿 n=4(少) 过本幕boss 0% 均终层42.5\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.05972085997971935,0.12061061226416511],\"hp_loss\":{\"n\":328,\"mean\":25.39024390243905,\"p10\":26,\"p90\":26,\"meanSe\":0.1412540921428489},\"turns_won_only\":{\"n\":28,\"mean\":10.250000000000002,\"p10\":9,\"p90\":11,\"meanSe\":0.19669894811736077},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.05792682926829273,\"p10\":0,\"p90\":0,\"meanSe\":0.04185543763321589},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":133,\"missing\":195,\"energy_paid\":{\"n\":133,\"mean\":23.5187969924812,\"p10\":14.200000000000001,\"p90\":34,\"meanSe\":0.6833135916569403},\"manual_actions\":{\"n\":133,\"mean\":27.631578947368425,\"p10\":17,\"p90\":39,\"meanSe\":0.754758103912484},\"effect_resolutions\":{\"n\":133,\"mean\":28.714285714285715,\"p10\":17,\"p90\":41,\"meanSe\":0.7987638139680802},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":121,\"mean\":2.9834710743801653,\"p10\":1,\"p90\":5,\"meanSe\":0.13685943759064673}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":79.4207317073171,\"p10\":34,\"p90\":127,\"meanSe\":1.9982882653662901},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.4268292682926855,\"p10\":-15,\"p90\":4.300000000000011,\"meanSe\":0.47879869500007166}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 9%（+0.9 ± 0.7），赢局掉血中位 19，约 10 回合；boss 平均剩血 105（当前牌组 107，−2.3 ± 1.3）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c0\",\"o1:c21\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c0、o1:c21的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c25\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c25": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 扫腿\",\"card\":\"扫腿\",\"upgrade\":\"给予2层虚弱。 获得11点格挡。 -> 给予3层虚弱。 获得14点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=46 过本幕boss 78% 均终层35.1 / 给了没拿 n=11 过本幕boss 91% 均终层29.4；第2幕 拿了 n=31 过本幕boss 71% 均终层41.2 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第3幕 拿了 n=12 过本幕boss 8% 均终层47.8 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48.5\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.09084913199109931,0.16180603387832468],\"hp_loss\":{\"n\":328,\"mean\":25.146341463414632,\"p10\":24.700000000000003,\"p90\":26,\"meanSe\":0.16575913531092423},\"turns_won_only\":{\"n\":40,\"mean\":10.325000000000001,\"p10\":9,\"p90\":12,\"meanSe\":0.19737865470545018},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.30182926829268253,\"p10\":0,\"p90\":0,\"meanSe\":0.09955890740024106},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":131,\"missing\":197,\"energy_paid\":{\"n\":131,\"mean\":24.305343511450378,\"p10\":14,\"p90\":35,\"meanSe\":0.7291347464908934},\"manual_actions\":{\"n\":131,\"mean\":28.33587786259542,\"p10\":17,\"p90\":40,\"meanSe\":0.8054869589193754},\"effect_resolutions\":{\"n\":131,\"mean\":29.41221374045802,\"p10\":17,\"p90\":42,\"meanSe\":0.8505374784406935},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":120,\"mean\":2.9499999999999997,\"p10\":1,\"p90\":5,\"meanSe\":0.13995297329422318}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":85.07926829268293,\"p10\":35.7,\"p90\":139,\"meanSe\":2.1675370309733153},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-4.655487804878047,\"p10\":-16,\"p90\":6,\"meanSe\":0.48269515448272593}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 12%（+4.6 ± 1.2），赢局掉血中位 20.5，约 10 回合；boss 平均剩血 100（当前牌组 107，−7.3 ± 1.7）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c26\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c26": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 斗篷与匕首\",\"card\":\"斗篷与匕首\",\"upgrade\":\"获得6点格挡。 将1张小刀添加到你的手牌。 -> 获得6点格挡。 将2张小刀添加到你的手牌。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=44 过本幕boss 70% 均终层28.9 / 给了没拿 n=60 过本幕boss 77% 均终层31.2；第2幕 拿了 n=35 过本幕boss 60% 均终层40.9 / 给了没拿 n=28 过本幕boss 43% 均终层36.6；第3幕 拿了 n=7 过本幕boss 0% 均终层47.7 / 给了没拿 n=23 过本幕boss 4% 均终层46.4\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.08557968398144283,0.15502153295039128],\"hp_loss\":{\"n\":328,\"mean\":25.22256097560976,\"p10\":25,\"p90\":26,\"meanSe\":0.15595729236448638},\"turns_won_only\":{\"n\":38,\"mean\":10.394736842105264,\"p10\":9,\"p90\":12,\"meanSe\":0.21181151100390203},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.2256097560975609,\"p10\":0,\"p90\":0,\"meanSe\":0.17195238329112245},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":119,\"missing\":209,\"energy_paid\":{\"n\":119,\"mean\":23.20168067226891,\"p10\":14.8,\"p90\":34,\"meanSe\":0.7309835600717098},\"manual_actions\":{\"n\":119,\"mean\":27.773109243697483,\"p10\":16.8,\"p90\":39,\"meanSe\":0.8368929602510742},\"effect_resolutions\":{\"n\":119,\"mean\":28.806722689075624,\"p10\":17,\"p90\":41,\"meanSe\":0.8843765158627188},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":110,\"mean\":2.927272727272727,\"p10\":1,\"p90\":5,\"meanSe\":0.13952683708425925}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":83.60670731707312,\"p10\":34.7,\"p90\":132.3,\"meanSe\":2.111695724202922},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-5.5609756097560945,\"p10\":-16,\"p90\":4,\"meanSe\":0.478063393404415}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 12%（+4 ± 1.9），赢局掉血中位 20，约 10 回合；boss 平均剩血 98（当前牌组 107，−9.1 ± 3.2）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c27\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}",
+          "o1:c27": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 剑柄打击\",\"card\":\"剑柄打击\",\"upgrade\":\"造成9点伤害。 抽1张牌。 -> 造成10点伤害。 抽2张牌。\",\"card_outcome_stats\":\"A10 第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据\",\"quantitative_fight\":{\"samples\":328,\"raw_win_mc_interval95\":[0.11488095358120684,0.1920169825073719],\"hp_loss\":{\"n\":328,\"mean\":24.911585365853657,\"p10\":23,\"p90\":26,\"meanSe\":0.19813113878885813},\"turns_won_only\":{\"n\":49,\"mean\":9.83673469387755,\"p10\":8,\"p90\":11.200000000000003,\"meanSe\":0.21098033804219726},\"paired_hp_loss_difference\":{\"n\":328,\"mean\":-0.5365853658536586,\"p10\":-2,\"p90\":0,\"meanSe\":0.1986275580982462},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":328,\"valid\":101,\"missing\":227,\"energy_paid\":{\"n\":101,\"mean\":23.24752475247524,\"p10\":14,\"p90\":33,\"meanSe\":0.714822686674788},\"manual_actions\":{\"n\":101,\"mean\":27.970297029702966,\"p10\":17,\"p90\":38,\"meanSe\":0.7967080096139866},\"effect_resolutions\":{\"n\":101,\"mean\":29.04950495049506,\"p10\":17,\"p90\":39,\"meanSe\":0.8430703243541939},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":88,\"mean\":2.8522727272727266,\"p10\":1,\"p90\":5,\"meanSe\":0.1714616711781254}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":328,\"mean\":82.52134146341467,\"p10\":37.7,\"p90\":133.3,\"meanSe\":2.006004288506394},\"potions_used\":{\"n\":328,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":328,\"mean\":-4.097560975609758,\"p10\":-15,\"p90\":6.300000000000011,\"meanSe\":0.5116207394322448}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 8%；选这个 15%（+7.3 ± 2.2），赢局掉血中位 20，约 10 回合；boss 平均剩血 95（当前牌组 107，−12.3 ± 3.7）（328 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_hp_reference\":{\"current_hp\":26,\"after_action_hp\":26,\"after_action_max_hp\":70,\"immediate_hp_gain\":0,\"projected_boss_hp\":26,\"simulated_entry_hp\":26,\"entry_source\":\"route\",\"projection_exhausted_at\":null,\"assumed_future_heal_floors\":[],\"note\":\"这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。\",\"evidence\":\"LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。\",\"entry_hp_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c21\",\"o1:c22\",\"o1:c23\",\"o1:c24\",\"o1:c25\",\"o1:c26\"],\"entry_hp_tie_note\":\"仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。\"}}"
+        },
+        "system": "固定回放：原记录题体，完整知识由生产KnowledgePrompt.apply读回",
+        "runId": "47731LKMZRBJ",
+        "questionId": "mv5a5lwu-677778-33"
+      }
+    },
+    {
+      "source_run": "47731LKMZRBJ",
+      "source_ts": "2026-10-12T15:03:07.573Z",
+      "source_label": "shop/plan",
+      "source_record_sha256": "93b03ae0d3c0d2980990f11c3137405e7262655d0d5070054a5870d7287b7e17",
+      "request": {
+        "label": "shop/plan",
+        "question": "What should I buy in this shop, in what order? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Plan this whole shop visit in ONE answer: an ordered shopping list that code carries out step by step, re-checking each step against the live shop. Reply with JSON only: {\"plan\": [<steps in order>], \"reason\": \"<max 40 words>\"}. A step is an option key (buy_relicN / buy_cardN / buy_potionN), \"remove:<card key>\" to pay for the card removal and remove that card (card keys are state.your_cards), or discard_potionN to empty a potion slot first (buying a potion needs an empty slot). Leaving is implied after the last step; [] buys nothing. Unaffordable items are listed as facts (affordable_now false); gold only goes down in a shop, so the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan (an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).",
+        "memory": {
+          "act": "第2幕的精英与危险小怪（monster DB 实测；失血 = 赢局 中位/p75；n = 场次）:\n残杀千足虫+残杀千足虫+残杀千足虫 [精英] A10: HP 148 (n=24) | 24 场 胜率 71% 阵亡 7 | 赢局失血 中位/p75 27/38 (n=17) | 招式 残杀千足虫: 胀大 7 +2力 → 扭动 6×2 → 紧缠 9 →循环回 胀大；其他: 死亡 (None), 接续 (Heal)；残杀千足虫: 紧缠 9 → 胀大 7 +2力 → 扭动 6×2 →循环回 紧缠；其他: 死亡 (None), 接续 (Heal)；残杀千足虫: 扭动 6×2 → 紧缠 9 → 胀大 7 +2力 →循环回 扭动；其他: 死亡 (None), 接续 (Heal)\n蜂群术士 [精英] A10: HP 165 (n=27) | 27 场 胜率 89% 阵亡 3 | 赢局失血 中位/p75 23.5/29.5 (n=24) | 招式 蜂群术士: 蜜——蜂——！ 3×8 → 矛击！ 20 → 喷射信息素 (Buff) +1力 →循环回 蜜——蜂——！\n感染棱柱 [精英] A10: HP 171 (n=37) | 37 场 胜率 81% 阵亡 7 | 赢局失血 中位/p75 34.5/51 (n=30) | 招式 感染棱柱: 刺击 17 → 辐射 13 → 旋风 6×3 → 脉动 10 →循环回 刺击\n盛碗虫（石）+盛碗虫（丝）+熟睡甲虫 [小怪] A10: HP 179.5 (n=32) | 32 场 胜率 75% 阵亡 8 | 赢局失血 中位/p75 18/28 (n=24) | 招式 盛碗虫（石）: 头槌 16 →循环回 头槌；其他: STUNNED (Stun)；盛碗虫（丝）: 毒性喷吐 (Debuff) → 撕扯 5×2 →循环回 毒性喷吐；熟睡甲虫: 打鼾 (Sleep) →循环回 打鼾；其他: 出击 18 +2力\n胧光怪 [小怪] A10: HP 129 (n=38) | 38 场 胜率 90% 阵亡 4 | 赢局失血 中位/p75 14.5/26.8 (n=34) | 招式 胧光怪: 幻象 (Summon) → 硬化攻击 7 → 起航 (Buff) +3力 →循环回 硬化攻击；其他: 锐利凝视 11\n直飞产卵虫 [小怪] A10: HP 128 (n=35) | 35 场 胜率 83% 阵亡 6 | 赢局失血 中位/p75 12/20 (n=29) | 招式 直飞产卵虫: 产卵 (Summon) → 猛砸 17 → 嫩化 8 →循环回 产卵；其他: 高营养糊糊 (Buff) +4力\n啃咬机×2 [小怪] A10: HP 130.5 (n=34) | 34 场 胜率 88% 阵亡 4 | 赢局失血 中位/p75 18/26.8 (n=30) | 招式 啃咬机: 尖锐鸣叫 (StatusCard) 塞3张状态牌 → 猛夹 9×2 →循环回 尖锐鸣叫\n猎人杀手 [小怪] A10: HP 126 (n=37) | 37 场 胜率 89% 阵亡 4 | 赢局失血 中位/p75 17/24 (n=33) | 招式 猎人杀手: 嫩化黏液 (Debuff) → 啃咬 19 → 刺穿 8×3 →循环回 啃咬\n异螨×2 [小怪] A10: HP 132 (n=39) | 39 场 胜率 90% 阵亡 4 | 赢局失血 中位/p75 14/19 (n=35) | 招式 异螨: 吸吮 6 +3力 → 浓毒 (StatusCard) 塞2张状态牌 → 啃咬 15 →循环回 吸吮\n虱虫之祖 [小怪] A10: HP 140 (n=38) | 38 场 胜率 95% 阵亡 2 | 赢局失血 中位/p75 8.5/17.2 (n=36) | 招式 虱虫之祖: 吐网炮 10 → 蜷身成长 (Buff+Defend) +7力 → 猛扑 16 →循环回 吐网炮\n盛碗虫（卵）+盛碗虫（石）+盛碗虫（丝） [小怪] A10: HP 114 (n=13) | 13 场 胜率 92% 阵亡 1 | 赢局失血 中位/p75 9/17 (n=12) | 招式 盛碗虫（卵）: 啃咬 8 →循环回 啃咬；盛碗虫（石）: 头槌 16 →循环回 头槌；其他: STUNNED (Stun)；盛碗虫（丝）: 毒性喷吐 (Debuff) → 撕扯 5×2 →循环回 毒性喷吐\n第2幕 boss: 无厌沙虫 (THE_INSATIABLE_BOSS)\nboss 数据库 无厌沙虫 (THE_INSATIABLE) A10: HP 无厌沙虫 341 (n=32)\n我方战绩: 32 场，胜率 72% (n=32)，阵亡 9；赢局失血 中位/p75 42/53 (n=23)；赢局回合 9/10 (n=23)；每回合失血 5.5/6.4 (n=32)\n无厌沙虫 招式: 液化地面 (Buff+StatusCard) 塞6张状态牌 → 撕扯 9×2 → 前扑啃咬 31 → 分泌唾液 (Buff) +3力 → THRASH_MOVE_2 9×2 →循环回 撕扯 | 能力: 沙坑 4, 力量 3",
+          "history": "本局历程（已离开的楼层，按层按发生顺序，只追加）: 每层首行 = 层 房间 层末 HP(/上限，变化时标出) ¥金币（房间 怪/精/问/休/店/宝/王/古，·=未知）；其下每行一件事: 决策「标签 [决策者]: 选择 — 未核实理由」（DS=DeepSeek；未核实理由 = DeepSeek 当时所写，不是事实）、「战斗 敌人: HP 战前→战后/上限 药:用掉的药水」、牌组/遗物/药水/上限变化（起始牌组与起始遗物不计）、路线规划。\n第1幕:\nF1 · HP56/70 ¥0\n run-plan [DS]: (start) Efficient early damage transitioning into poison and Dexterity defense — Take efficient damage first, then poison and Dexterity; Accelerant only after reliable poison. Add draw and strong block, remove Strikes after replacements, and attempt elites with upgraded damage, potions, and recovery access. | want DASH, POISONED_STAB, NOXIOUS_FUMES, FOOTWORK, BACKFLIP, ACCELERANT | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER\n event/plan [DS]: 华美发束: 失去所有金币。为第一次卡牌奖励中的所有牌附魔：华彩（华彩: Replay 1: the card is played one extra time (「重放1」)）。 — 未核实理由: Permanent replay on an early reward offers immediate tempo and lasting scaling, justifying the gold cost; favorable outcome data provides limited support.\n +遗物 华美发束(事件)\n map/route-plan [DS]: route r1c5 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 问号 → r5c3 普通战 → r6c2 休息 → r7c2 精英 → r8c2 休息 → r9c1 宝箱 → r10c0 休息 → r11c0 普通战 → r12c0 休息 → r13c0 商店 → r14c0 精英 → r15c0 休息 → r16c3 Boss — 未核实理由: 双精英均有营火缓冲，五火兼顾升级续航，晚店补强。\nF2 怪 HP56 ¥15\n 战斗 小啃兽: 56→56/70\n 路线规划（第1幕 F1 定，当时 HP 80%）: 怪→问→怪→问→怪→休→精→休→宝→休→怪→休→店→精→休→王\n reward/card [DS]: 后空翻 — 未核实理由: Replayed Backflip provides exceptional reusable draw and block with strong Dexterity scaling. Prioritize damage in upcoming rewards.\n +卡 后空翻(奖励)\nF3 问 HP49 ¥116\n event/choose [DS]: 潜水: 获得101金币。失去7点生命. — 未核实理由: 101 gold funds damage or potions at the planned shop. The HP cost is manageable; Stone Sword provides only delayed value.\nF4 怪 HP49 ¥129\n 战斗 树枝史莱姆（小）+树枝史莱姆（中）+树叶史莱姆（小）: 49→49/70\n +药 攻击药水(奖励)\n reward/card [DS]: 隐秘匕首 — 未核实理由: Hidden Daggers adds free damage while replayed Backflip supplies surplus cards to discard, improving early combat without consuming scarce energy.\n +卡 隐秘匕首(奖励)\nF5 问 HP49 ¥144\n 战斗 毛绒伏地虫: 49→49/70\n reward/card [DS]: 突然一拳 — 未核实理由: Sucker Punch adds needed early damage and Weak, with the strongest simulated boss progress. Replayed Backflip already provides defensive draw.\n +卡 突然一拳(奖励)\nF6 怪 HP49 ¥152\n 战斗 墨宝: 49→49/70 药:攻击药水\n 用药 攻击药水(战斗); +药 能量药水(奖励)\n reward/card [DS]: 铭记死亡 — 未核实理由: Memento Mori adds efficient immediate damage, scales with Hidden Daggers and Survivor, and benefits from replayed Backflip assembling those combinations.\n +卡 铭记死亡(奖励)\nF7 休 HP49 ¥152\n rest/plan [DS]: 锻造 (SMITH): upgrade 后空翻 — 未核实理由: Replay amplifies Backflip’s lasting defensive upgrade. At 49 HP with an Energy Potion, smithing is worthwhile before one elite followed by recovery.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F7:rest#2 step 2: upgrade 后空翻 (named with the rest choice)\n 升级 后空翻(休息)\nF8 精 HP25 ¥183\n 战斗 多尼斯异鸟: 49→25/70 药:能量药水\n 用药 能量药水(战斗); +药 迅捷药水(奖励); +遗物 皇家枕头(奖励)\n reward/card [DS]: 华丽收场 — 未核实理由: Grand Finale’s 96% simulated boss win rate dominates; replayed Backflip helps create empty-deck windows while defending.\n +卡 华丽收场(奖励)\nF9 休 HP25 ¥183\n run-plan [DS]: (hp_drop) Draw-discard burst with Grand Finale and Dexterity defense — Build around replayed Backflip and Finale with selective draw, retention, and Dexterity rather than forcing poison. Remove Strikes, avoid duplicate Finale, heal next camp, and retain the planned late elite. | want FOOTWORK, WELL_LAID_PLANS, ACROBATICS, PREPARED, BACKFLIP, PIERCING_WAIL | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCELERANT\n rest/plan [DS]: 锻造 (SMITH): upgrade 华丽收场 — 未核实理由: No combat precedes the next camp. Grand Finale's upgrade shows the strongest simulated boss improvement and supports our draw-discard burst plan.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F9:rest#3 step 2: upgrade 华丽收场 (named with the rest choice)\n 升级 华丽收场(休息)\nF10 宝 HP25 ¥220\n chest/relic [code]: only one relic offered\n +遗物 送货员(宝箱)\nF11 休 HP61 ¥220\n rest/plan [DS]: 休息: 回复最大生命值的30%（21）。 皇家枕头提供+15点生命。 — 未核实理由: Heal to 61 HP now, securing the elite route. The next camp can provide an upgrade if the hallway goes well.\n HP增加观测 25/70→61/70（+36；休息点内；F11/REST→F11/REST，仅帧间净变化）\nF12 怪 HP61 ¥230\n 战斗 缩小甲虫+毛绒伏地虫: 61→61/70 药:迅捷药水\n 用药 迅捷药水(战斗)\n reward/card [DS]: skip — 未核实理由: Preserve Finale consistency. These additions dilute replayed Backflip without providing needed draw control, retention, or defensive scaling.\nF13 休 HP61 ¥230\n rest/plan [DS]: 锻造 (SMITH): upgrade 中和 — 未核实理由: Upgrade Neutralize: free two-turn Weak preserves energy for replayed Backflip and Finale setup. Boss simulations are effectively tied; healing offers little.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F13:rest#5 step 2: upgrade 中和 (named with the rest choice)\n 升级 中和(休息)\nF14 店 HP61 ¥22\n shop/plan [DS]: shop plan: pay 80g to remove 打击, buy 护喉甲 (128g), stop shopping — 未核实理由: Removing a Strike improves Finale consistency; Gorget protects setup every combat without adding cards. Healthy HP and Royal Pillow support the upcoming elite.\n selection/remove [DS]: DeepSeek plan 47731LKMZRBJ:F14:shop#6 step 2: remove 打击 (named with the shop choice)\n -卡 打击(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F14:shop#6 step 3: buy 护喉甲 (128g)\n +遗物 护喉甲(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F14:shop#6 step 4: stop shopping\nF15 精 HP61 ¥52\n 战斗 旧日雕像: 61→61/70\n +遗物 吃不完的糖(奖励)\n reward/card [DS]: 灵动步法 — 未核实理由: Footwork provides missing defensive scaling, amplifies replayed Backflip, and protects Finale setup turns. It also has the best simulated HP outcome.\n +卡 灵动步法(奖励)\nF16 休 HP61 ¥52\n rest/plan [DS]: 锻造 (SMITH): upgrade 灵动步法 — 未核实理由: Upgrade Footwork for lasting defense and replayed Backflip synergy. Boss survival simulations are tied; healing restores only 9 HP.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F16:rest#7 step 2: upgrade 灵动步法 (named with the rest choice)\n 升级 灵动步法(休息)\nF17 王 HP14 ¥127\n 战斗 仪式兽: 61→14/70\n +药 毒药水(奖励)\n reward/card [DS]: 夜魇 — 未核实理由: Nightmare copies Footwork+, replayed Backflip, or Finale+ for powerful scaling. Prioritize its cost upgrade to make setup safer.\n +卡 夜魇(奖励)\n第2幕:\nF18 古 HP58 ¥127\n HP增加观测 14/70→58/70（+44；跨层边界，来源未隔离；F17/MAP→F18/EVENT，仅帧间净变化）\n run-plan [DS]: (act) Controlled Finale burst with replayed draw and Dexterity defense — Control draw and retain Finale for reliable burst. Scale replayed Backflip with Dexterity, add sustained damage, and remove Strikes. Use three camps and the discounted early shop; reassess the late elite if resources deteriorate. | want WELL_LAID_PLANS, ACROBATICS, BACKFLIP, FOOTWORK, SPEEDSTER, PIERCING_WAIL | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCELERANT, BUBBLE_BUBBLE\n event/act-plan [DS]: 佩尔之肉; route r1c4 普通战 → r2c3 商店 → r3c4 普通战 → r4c5 问号 → r5c5 普通战 → r6c6 休息 → r7c5 普通战 → r8c4 宝箱 → r9c4 普通战 → r10c3 休息 → r11c4 问号 → r12c5 精英 → r13c6 问号 → r14c6 休息 → r15c3 Boss — 未核实理由: 额外能量支持过牌与逃离，三火缓冲后挑战精英。\n +遗物 佩尔之肉(事件)\n 路线规划（第2幕 F18 定，当时 HP 83%）: 怪→店→怪→问→怪→休→怪→宝→怪→休→问→精→问→休→王\n map/route-follow [DS]: following the brain's route plan (floor 18): step 1/15 Monster at row 1, col 4; plan r1c4 普通战 → r2c3 商店 → r3c4 普通战 → r4c5 问号 → r5c5 普通战 → r6c6 休息 → r7c5 普通战 → r8c4 宝箱 → r9c4 普通战 → r10c3 休息 → r11c4 问号 → r12c5 精英 → r13c6 问号 → r14c6 休息 → r15c3 Boss\nF19 怪 HP49 ¥138\n 战斗 盛碗虫（石）+盛碗虫（卵）: 58→49/70\n reward/card [DS]: 致命毒药+ — 未核实理由: Deadly Poison+ supplies reliable damage while blocking, offers the strongest boss simulation improvement, and avoids another expensive setup card.\n +卡 致命毒药+(奖励)",
+          "now": "",
+          "this_floor": "",
+          "route": "本幕进度（按 F18 的路线）: 已走 2/15 [怪店] | 下一步 怪（预计 HP 69%） | 剩余 13: 怪→问→怪→休→怪→宝→怪→休→问→精→问→休→王",
+          "lookahead": "距 boss 13 层 | 到 boss 前各路线: 精英 0–3, 休息 2–3, 商店 0–1, 问号 0–3, 宝箱 1 | 下一个节点强制: Monster"
+        },
+        "payload": {
+          "run_brief": {
+            "character": "静默猎手",
+            "act": "2",
+            "floor": 20,
+            "hp": "49/70 (70%)",
+            "gold": 138,
+            "ascension": 10,
+            "deck": "20 cards | 8 attacks / 10 skills / 1 powers | 5 upgraded | 1 curses/statuses | avg cost 0.85",
+            "relics": [
+              "蛇之戒指",
+              "华美发束",
+              "皇家枕头",
+              "送货员",
+              "护喉甲",
+              "吃不完的糖",
+              "佩尔之肉"
+            ],
+            "relic_effects": [
+              "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+              "华美发束: 拾起时，失去所有金币。为你的第一次卡牌奖励中的所有牌附魔：华彩。",
+              "皇家枕头: 在休息时，额外回复?(数值未知)点生命。",
+              "送货员: 商人的卡牌、遗物和药水不再会卖光，并且所有商品打折?(数值未知)%。",
+              "护喉甲: 在每场战斗开始时，获得?(数值未知)层覆甲。",
+              "吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+              "佩尔之肉: 从你的第3回合开始，在回合开始时额外获得1点能量。"
+            ],
+            "potions": [
+              "毒药水: 给予?(数值未知)层中毒。"
+            ],
+            "notes": [
+              "took a card reward",
+              "floor 15: moved to RestSite",
+              "floor 16: moved to Boss",
+              "floor 17: moved to Ancient",
+              "event choice (佩尔)",
+              "floor 18: moved to Monster",
+              "card selection",
+              "floor 19: moved to Shop"
+            ],
+            "run_plan": "Controlled Finale burst with replayed draw and Dexterity defense — Control draw and retain Finale for reliable burst. Scale replayed Backflip with Dexterity, add sustained damage, and remove Strikes. Use three camps and the discounted early shop; reassess the late elite if resources deteriorate. | want WELL_LAID_PLANS, ACROBATICS, BACKFLIP, FOOTWORK, SPEEDSTER, PIERCING_WAIL | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCELERANT, BUBBLE_BUBBLE",
+            "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+          },
+          "situation": {
+            "screen": "SHOP",
+            "gold": 138,
+            "hp": "49/70 (70%)",
+            "potion_slots": "1/2 used",
+            "the_courier": "a slot you buy is restocked at once with a new item (unknown until then); your plan is carried out as written, the restocks are not asked about"
+          },
+          "stock": [
+            {
+              "kind": "relic",
+              "name": "船夹板",
+              "price": 189,
+              "affordable": false
+            },
+            {
+              "kind": "relic",
+              "name": "草莓",
+              "price": 144,
+              "affordable": false
+            },
+            {
+              "kind": "relic",
+              "name": "燃烧木棍",
+              "price": 148,
+              "affordable": false
+            },
+            {
+              "kind": "card",
+              "name": "匕首雨",
+              "type": "Attack",
+              "rarity": "Common",
+              "cost": 1,
+              "price": 41,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "投掷匕首",
+              "type": "Attack",
+              "rarity": "Common",
+              "cost": 1,
+              "price": 40,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "手上技法",
+              "type": "Skill",
+              "rarity": "Uncommon",
+              "cost": 1,
+              "price": 29,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "闪躲翻滚",
+              "type": "Skill",
+              "rarity": "Common",
+              "cost": 1,
+              "price": 38,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "幻影之刃",
+              "type": "Power",
+              "rarity": "Uncommon",
+              "cost": 1,
+              "price": 58,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "拳斗",
+              "type": "Attack",
+              "rarity": "Uncommon",
+              "cost": 1,
+              "price": 69,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "狠揍",
+              "type": "Skill",
+              "rarity": "Rare",
+              "cost": 3,
+              "price": 133,
+              "affordable": true
+            },
+            {
+              "kind": "potion",
+              "name": "技能药水",
+              "price": 41,
+              "affordable": true
+            },
+            {
+              "kind": "potion",
+              "name": "流动铜液",
+              "price": 60,
+              "affordable": true
+            },
+            {
+              "kind": "potion",
+              "name": "速度药水",
+              "price": 40,
+              "affordable": true
+            }
+          ],
+          "deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和+ (Attack, 0E): 造成4点伤害。 给予2层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n后空翻+ (Skill, 1E) [enchanted 华彩: Replay 1: the card is played one extra time (「重放1」)]: 获得8点格挡。 抽2张牌。 重放1。\n隐秘匕首 (Skill, 0E): 丢弃2张牌。 将2张小刀加入你的手牌。\n突然一拳 (Attack, 1E): 造成8点伤害。 给予1层虚弱。\n铭记死亡 (Attack, 1E): 造成9点伤害。 本回合每丢弃过一张牌，则增加4点额外伤害。\n华丽收场+ (Attack, 0E): 只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成75点伤害。\n灵动步法+ (Power, 1E): 获得3点敏捷。\n夜魇 (Skill, 3E): 选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。\n致命毒药+ (Skill, 1E): 给予7层中毒。",
+          "your_cards": {
+            "c0": "打击 ×4 (Attack, 1E): 造成6点伤害。",
+            "c4": "防御 ×5 (Skill, 1E): 获得5点格挡。",
+            "c9": "中和+ (Attack, 0E): 造成4点伤害。 给予2层虚弱。",
+            "c10": "生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。",
+            "c11": "进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。 [Eternal: cannot be removed or transformed]",
+            "c12": "后空翻+ (Skill, 1E): 获得8点格挡。 抽2张牌。 重放1。 [enchanted 华彩: Replay 1: the card is played one extra time (「重放1」)]",
+            "c13": "隐秘匕首 (Skill, 0E): 丢弃2张牌。 将2张小刀加入你的手牌。",
+            "c14": "突然一拳 (Attack, 1E): 造成8点伤害。 给予1层虚弱。",
+            "c15": "铭记死亡 (Attack, 1E): 造成9点伤害。 本回合每丢弃过一张牌，则增加4点额外伤害。",
+            "c16": "华丽收场+ (Attack, 0E): 只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成75点伤害。",
+            "c17": "灵动步法+ (Power, 1E): 获得3点敏捷。",
+            "c18": "夜魇 (Skill, 3E): 选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+            "c19": "致命毒药+ (Skill, 1E): 给予7层中毒。"
+          },
+          "your_cards_outcome_stats": {
+            "c0": "A10 第1幕 拿了 n=10 过本幕boss 80% 均终层29.3 / 给了没拿 无数据；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据",
+            "c4": "A10 第1幕 拿了 n=10 过本幕boss 80% 均终层29.3 / 给了没拿 无数据",
+            "c9": "无数据",
+            "c10": "无数据",
+            "c12": "A10 第1幕 拿了 n=96 过本幕boss 78% 均终层32.1 / 给了没拿 n=21 过本幕boss 62% 均终层27.6；第2幕 拿了 n=69 过本幕boss 57% 均终层39.2 / 给了没拿 n=6 过本幕boss 50% 均终层35.5；第3幕 拿了 n=25 过本幕boss 0% 均终层46.8 / 给了没拿 n=4(少) 过本幕boss 0% 均终层48.2",
+            "c13": "A10 第1幕 拿了 n=23 过本幕boss 78% 均终层30 / 给了没拿 n=23 过本幕boss 78% 均终层32；第2幕 拿了 n=8 过本幕boss 25% 均终层32.5 / 给了没拿 n=19 过本幕boss 58% 均终层38.4；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=5 过本幕boss 0% 均终层47.6",
+            "c14": "A10 第1幕 拿了 n=80 过本幕boss 71% 均终层29.1 / 给了没拿 n=39 过本幕boss 85% 均终层34.3；第2幕 拿了 n=18 过本幕boss 39% 均终层36.2 / 给了没拿 n=38 过本幕boss 50% 均终层37.4；第3幕 拿了 n=8 过本幕boss 0% 均终层47 / 给了没拿 n=17 过本幕boss 0% 均终层47.5",
+            "c15": "A10 第1幕 拿了 n=13 过本幕boss 69% 均终层30.8 / 给了没拿 n=28 过本幕boss 68% 均终层30.5；第2幕 拿了 无数据 / 给了没拿 n=21 过本幕boss 48% 均终层36；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层48 / 给了没拿 n=8 过本幕boss 12% 均终层47.9",
+            "c16": "A10 第1幕 拿了 无数据 / 给了没拿 n=23 过本幕boss 100% 均终层33.5；第2幕 拿了 n=4(少) 过本幕boss 100% 均终层43 / 给了没拿 n=9 过本幕boss 100% 均终层48.2；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48",
+            "c17": "A10 第1幕 拿了 n=76 过本幕boss 84% 均终层32.7 / 给了没拿 n=2(少) 过本幕boss 0% 均终层13；第2幕 拿了 n=53 过本幕boss 55% 均终层39.2 / 给了没拿 n=2(少) 过本幕boss 50% 均终层39；第3幕 拿了 n=18 过本幕boss 0% 均终层46.9 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48",
+            "c18": "A10 第1幕 拿了 n=4(少) 过本幕boss 75% 均终层31.5 / 给了没拿 n=18 过本幕boss 100% 均终层38.5；第2幕 拿了 n=5 过本幕boss 100% 均终层48 / 给了没拿 n=9 过本幕boss 89% 均终层44.6",
+            "c19": "A10 第1幕 拿了 n=107 过本幕boss 83% 均终层33.7 / 给了没拿 n=13 过本幕boss 69% 均终层27.7；第2幕 拿了 n=43 过本幕boss 58% 均终层39 / 给了没拿 n=25 过本幕boss 64% 均终层41.2；第3幕 拿了 n=12 过本幕boss 0% 均终层48.2 / 给了没拿 n=20 过本幕boss 0% 均终层46.8"
+          },
+          "facts": {
+            "act": 2,
+            "floor": 20,
+            "floors_to_act_boss": 13,
+            "ascension": 10,
+            "hp": "49/70 (70%)",
+            "gold": 138,
+            "act_boss": "THE_INSATIABLE_BOSS",
+            "deck_size": 20,
+            "deck_profile": "20 张 (攻击 8/技能 10/能力 1/诅咒或状态 1) | 升级 5 | 平均费用 0.85 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+            "deck": [
+              "4x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+              "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+              "NEUTRALIZE+ 中和+ (Attack, 0 energy): 造成4点伤害。 给予2层虚弱。",
+              "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+              "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+              "BACKFLIP+ 后空翻+ (Skill, 1 energy): 获得8点格挡。 抽2张牌。 重放1。",
+              "HIDDEN_DAGGERS 隐秘匕首 (Skill, 0 energy): 丢弃2张牌。 将2张小刀加入你的手牌。",
+              "SUCKER_PUNCH 突然一拳 (Attack, 1 energy): 造成8点伤害。 给予1层虚弱。",
+              "MEMENTO_MORI 铭记死亡 (Attack, 1 energy): 造成9点伤害。 本回合每丢弃过一张牌，则增加4点额外伤害。",
+              "GRAND_FINALE+ 华丽收场+ (Attack, 0 energy): 只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成75点伤害。",
+              "FOOTWORK+ 灵动步法+ (Power, 1 energy): 获得3点敏捷。",
+              "NIGHTMARE 夜魇 (Skill, 3 energy): 选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+              "DEADLY_POISON+ 致命毒药+ (Skill, 1 energy): 给予7层中毒。"
+            ],
+            "relics": [
+              "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+              "华美发束: 拾起时，失去所有金币。为你的第一次卡牌奖励中的所有牌附魔：华彩。",
+              "皇家枕头: 在休息时，额外回复?(数值未知)点生命。",
+              "送货员: 商人的卡牌、遗物和药水不再会卖光，并且所有商品打折?(数值未知)%。",
+              "护喉甲: 在每场战斗开始时，获得?(数值未知)层覆甲。",
+              "吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+              "佩尔之肉: 从你的第3回合开始，在回合开始时额外获得1点能量。"
+            ],
+            "potions": [
+              "POISON_POTION 毒药水: 给予?(数值未知)层中毒。"
+            ],
+            "potion_slots": "1/2 used",
+            "act_boss_clock": {
+              "boss": "THE_INSATIABLE",
+              "boss_hp": 341,
+              "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+              "boss_hp_parts": [
+                "THE_INSATIABLE"
+              ],
+              "boss_enemies": [
+                {
+                  "enemy": "THE_INSATIABLE",
+                  "hp": 341,
+                  "hp_samples": 32,
+                  "hp_from_ascension": 10,
+                  "hp_estimated": false,
+                  "attacks": [
+                    {
+                      "move": "LUNGING_BITE_MOVE",
+                      "per_hit": 31,
+                      "hits": 1,
+                      "basis": "base",
+                      "samples": 47,
+                      "from_ascension": 10,
+                      "estimated": false,
+                      "scaled_through_ascension": 10
+                    },
+                    {
+                      "move": "THRASH_MOVE",
+                      "per_hit": 9,
+                      "hits": 2,
+                      "basis": "base",
+                      "samples": 48,
+                      "from_ascension": 10,
+                      "estimated": false,
+                      "scaled_through_ascension": 10
+                    },
+                    {
+                      "move": "THRASH_MOVE_2",
+                      "per_hit": 9,
+                      "hits": 2,
+                      "basis": "base",
+                      "samples": 30,
+                      "from_ascension": 10,
+                      "estimated": false,
+                      "scaled_through_ascension": 10
+                    }
+                  ]
+                }
+              ],
+              "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+              "deck_damage_per_turn_estimate": null,
+              "hp_loss_per_turn": null,
+              "survivable_turns": null,
+              "gap_per_turn": null,
+              "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+            },
+            "act_boss_sim": "boss 模拟没有结果（只跑完 152 次模拟（不足 300 次），选项之间的差噪声太大，不给数字）：act_boss_clock 仍是 boss 时钟的估计",
+            "your_run_plan": {
+              "made_on_floor": 18,
+              "archetype": "Controlled Finale burst with replayed draw and Dexterity defense",
+              "want": [
+                "WELL_LAID_PLANS",
+                "ACROBATICS",
+                "BACKFLIP",
+                "FOOTWORK",
+                "SPEEDSTER",
+                "PIERCING_WAIL"
+              ],
+              "avoid": [
+                "GRAND_FINALE",
+                "KNIFE_TRAP",
+                "FINISHER",
+                "ACCELERANT",
+                "BUBBLE_BUBBLE"
+              ],
+              "remove": [
+                "STRIKE_SILENT"
+              ],
+              "block_target": 8,
+              "elites": "normal",
+              "rest": "auto",
+              "boss_prep": "Find retention and controlled draw for Finale; upgrade Nightmare when safe. Bring defensive potions. Play Frantic Escape before sandpit expires while separately blocking attacks.",
+              "summary": "Control draw and retain Finale for reliable burst. Scale replayed Backflip with Dexterity, add sustained damage, and remove Strikes. Use three camps and the discounted early shop; reassess the late elite if resources deteriorate."
+            },
+            "shop_stock": [
+              {
+                "kind": "relic",
+                "name": "船夹板",
+                "price": 189,
+                "affordable": false
+              },
+              {
+                "kind": "relic",
+                "name": "草莓",
+                "price": 144,
+                "affordable": false
+              },
+              {
+                "kind": "relic",
+                "name": "燃烧木棍",
+                "price": 148,
+                "affordable": false
+              },
+              {
+                "kind": "card",
+                "name": "匕首雨",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 1,
+                "price": 41,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "投掷匕首",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 1,
+                "price": 40,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "手上技法",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 29,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "闪躲翻滚",
+                "type": "Skill",
+                "rarity": "Common",
+                "cost": 1,
+                "price": 38,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "幻影之刃",
+                "type": "Power",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 58,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "拳斗",
+                "type": "Attack",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 69,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "狠揍",
+                "type": "Skill",
+                "rarity": "Rare",
+                "cost": 3,
+                "price": 133,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "技能药水",
+                "price": 41,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "流动铜液",
+                "price": 60,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "速度药水",
+                "price": 40,
+                "affordable": true
+              }
+            ],
+            "card_removal": {
+              "price": 120,
+              "affordable_now": true
+            },
+            "potion_belt": "1 of 2 slots empty",
+            "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+            "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-12T21:19:44，A10 共 209 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 209 局）：到达第1幕的局过第1幕boss 75% (n=209)，到达第2幕的局过第2幕boss 48% (n=157)，到达第3幕的局过第3幕boss 3% (n=76)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+          }
+        },
+        "options": {
+          "buy_relic0": "{\"buy\":\"船夹板\",\"kind\":\"relic\",\"price\":189,\"text\":\"在你的第二回合开始时，获得?(数值未知)点格挡。\",\"affordable_now\":false,\"outcome_stats\":\"A10 第1幕获得 n=5 过本幕boss 60% 均终层25.4；第2幕获得 n=1(少) 过本幕boss 0% 均终层33；第3幕获得 n=2(少) 过本幕boss 0% 均终层48.5\"}",
+          "buy_relic1": "{\"buy\":\"草莓\",\"kind\":\"relic\",\"price\":144,\"text\":\"拾起时，将你的最大生命值提升?(数值未知)。\",\"affordable_now\":false,\"outcome_stats\":\"A10 第1幕获得 n=8 过本幕boss 100% 均终层32.1；第2幕获得 n=8 过本幕boss 50% 均终层38.6；第3幕获得 n=4(少) 过本幕boss 25% 均终层48.2\"}",
+          "buy_relic2": "{\"buy\":\"燃烧木棍\",\"kind\":\"relic\",\"price\":148,\"text\":\"每场战斗中你第一次消耗技能牌时，将那张牌的复制品加入你的手牌\",\"affordable_now\":false,\"outcome_stats\":\"无数据\"}",
+          "buy_card0": "{\"buy\":\"匕首雨\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"price\":41,\"text\":\"对所有敌人造成4点伤害两次。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A10 第1幕 拿了 n=82 过本幕boss 78% 均终层31.3 / 给了没拿 n=26 过本幕boss 58% 均终层29.4；第2幕 拿了 n=10 过本幕boss 50% 均终层36.8 / 给了没拿 n=57 过本幕boss 49% 均终层37.3；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=32 过本幕boss 3% 均终层46.5\"}",
+          "buy_card1": "{\"buy\":\"投掷匕首\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"price\":40,\"text\":\"造成9点伤害。 抽1张牌。 丢弃1张牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A10 第1幕 拿了 n=51 过本幕boss 69% 均终层31.1 / 给了没拿 n=55 过本幕boss 75% 均终层31.1；第2幕 拿了 n=11 过本幕boss 36% 均终层34.8 / 给了没拿 n=49 过本幕boss 59% 均终层39.6；第3幕 拿了 n=5 过本幕boss 0% 均终层44.8 / 给了没拿 n=20 过本幕boss 0% 均终层46.7\"}",
+          "buy_card2": "{\"buy\":\"手上技法\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":29,\"text\":\"获得7点格挡。 在本回合给你手牌中的一张技能牌添加奇巧。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A10 第1幕 拿了 n=10 过本幕boss 100% 均终层36.8 / 给了没拿 n=22 过本幕boss 82% 均终层35.5；第2幕 拿了 n=12 过本幕boss 58% 均终层39.9 / 给了没拿 n=11 过本幕boss 73% 均终层41.5；第3幕 拿了 n=6 过本幕boss 0% 均终层48.5 / 给了没拿 n=4(少) 过本幕boss 0% 均终层46\"}",
+          "buy_card3": "{\"buy\":\"闪躲翻滚\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Common\",\"cost\":1,\"price\":38,\"text\":\"获得4点格挡。 在下个回合，获得4点格挡。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A10 第1幕 拿了 n=7 过本幕boss 71% 均终层26.9 / 给了没拿 n=90 过本幕boss 77% 均终层31.2；第2幕 拿了 n=15 过本幕boss 40% 均终层35 / 给了没拿 n=48 过本幕boss 65% 均终层40.1；第3幕 拿了 n=14 过本幕boss 0% 均终层48.1 / 给了没拿 n=19 过本幕boss 0% 均终层47.2\"}",
+          "buy_card4": "{\"buy\":\"幻影之刃\",\"kind\":\"card\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":58,\"text\":\"小刀获得保留。 你在每回合打出的第一张小刀额外造成9点伤害。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 0% 均终层17 / 给了没拿 n=47 过本幕boss 85% 均终层34.5；第2幕 拿了 n=6 过本幕boss 0% 均终层31 / 给了没拿 n=26 过本幕boss 69% 均终层40.9；第3幕 拿了 n=4(少) 过本幕boss 0% 均终层48.2 / 给了没拿 n=10 过本幕boss 10% 均终层47.5\"}",
+          "buy_card5": "{\"buy\":\"拳斗\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":69,\"text\":\"造成7点伤害。 获得等量于所造成伤害的格挡。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 100% 均终层42 / 给了没拿 无数据；第2幕 拿了 n=2(少) 过本幕boss 50% 均终层34 / 给了没拿 无数据；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 无数据\"}",
+          "buy_card6": "{\"buy\":\"狠揍\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Rare\",\"cost\":3,\"price\":133,\"text\":\"打出你弃牌堆中的3张随机攻击牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+          "buy_potion0": "{\"buy\":\"技能药水\",\"kind\":\"potion\",\"price\":41,\"text\":\"从3张随机技能牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+          "buy_potion1": "{\"buy\":\"流动铜液\",\"kind\":\"potion\",\"price\":60,\"text\":\"获得3点荆棘。\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+          "buy_potion2": "{\"buy\":\"速度药水\",\"kind\":\"potion\",\"price\":40,\"text\":\"获得5点敏捷。在你的这个回合结束时，失去5点敏捷。\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+          "remove": "{\"buy\":\"card removal\",\"kind\":\"service\",\"price\":120,\"affordable_now\":true,\"text\":\"removes one card from the deck: write \\\"remove:<card key>\\\" with the card from state.your_cards\",\"not_removable_eternal\":\"进阶之灾\",\"selection_screen_prediction\":\"移除名单尚未现场核实；按牌组顺序预测未列出的牌：无。此预测不能证明牌不可选，实际移除页可能重排；进入选牌页后按现场名单核对。\"}",
+          "discard_potion0": "{\"discard\":\"毒药水\",\"slot\":0,\"text\":\"frees this potion slot\"}",
+          "leave": "{\"end\":\"stop shopping (implied after the last step)\"}"
+        },
+        "system": "固定回放：原记录题体，完整知识由生产KnowledgePrompt.apply读回",
+        "runId": "47731LKMZRBJ",
+        "questionId": "mv5a5lwu-677778-20"
+      }
+    },
+    {
+      "source_run": "47731LKMZRBJ",
+      "source_ts": "2026-10-12T15:16:57.433Z",
+      "source_label": "reward/card",
+      "source_record_sha256": "02805fcd016c669760e4b620539fcb2d18ada6d6fffc1068577d3b4feafa0f7a",
+      "request": {
+        "label": "reward/card",
+        "question": "Which of these card rewards should I take, if any? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. in_deck: copies of that card already in your deck. boss_sim on an option: this act's boss fought to the end in simulation with the deck (and HP) that option leaves, against your current deck on the same random seeds: the win rate (calibrated on logged boss fights), the difference ± its standard error, the median HP lost in the won fights and the turns. facts.act_boss_sim gives the start, the method and its limits; it replaces the act boss clock.",
+        "memory": {
+          "act": "第2幕的精英与危险小怪（monster DB 实测；失血 = 赢局 中位/p75；n = 场次）:\n残杀千足虫+残杀千足虫+残杀千足虫 [精英] A10: HP 148 (n=24) | 24 场 胜率 71% 阵亡 7 | 赢局失血 中位/p75 27/38 (n=17) | 招式 残杀千足虫: 胀大 7 +2力 → 扭动 6×2 → 紧缠 9 →循环回 胀大；其他: 死亡 (None), 接续 (Heal)；残杀千足虫: 紧缠 9 → 胀大 7 +2力 → 扭动 6×2 →循环回 紧缠；其他: 死亡 (None), 接续 (Heal)；残杀千足虫: 扭动 6×2 → 紧缠 9 → 胀大 7 +2力 →循环回 扭动；其他: 死亡 (None), 接续 (Heal)\n蜂群术士 [精英] A10: HP 165 (n=27) | 27 场 胜率 89% 阵亡 3 | 赢局失血 中位/p75 23.5/29.5 (n=24) | 招式 蜂群术士: 蜜——蜂——！ 3×8 → 矛击！ 20 → 喷射信息素 (Buff) +1力 →循环回 蜜——蜂——！\n感染棱柱 [精英] A10: HP 171 (n=37) | 37 场 胜率 81% 阵亡 7 | 赢局失血 中位/p75 34.5/51 (n=30) | 招式 感染棱柱: 刺击 17 → 辐射 13 → 旋风 6×3 → 脉动 10 →循环回 刺击\n盛碗虫（石）+盛碗虫（丝）+熟睡甲虫 [小怪] A10: HP 179.5 (n=32) | 32 场 胜率 75% 阵亡 8 | 赢局失血 中位/p75 18/28 (n=24) | 招式 盛碗虫（石）: 头槌 16 →循环回 头槌；其他: STUNNED (Stun)；盛碗虫（丝）: 毒性喷吐 (Debuff) → 撕扯 5×2 →循环回 毒性喷吐；熟睡甲虫: 打鼾 (Sleep) →循环回 打鼾；其他: 出击 18 +2力\n胧光怪 [小怪] A10: HP 129 (n=38) | 38 场 胜率 90% 阵亡 4 | 赢局失血 中位/p75 14.5/26.8 (n=34) | 招式 胧光怪: 幻象 (Summon) → 硬化攻击 7 → 起航 (Buff) +3力 →循环回 硬化攻击；其他: 锐利凝视 11\n直飞产卵虫 [小怪] A10: HP 128 (n=35) | 35 场 胜率 83% 阵亡 6 | 赢局失血 中位/p75 12/20 (n=29) | 招式 直飞产卵虫: 产卵 (Summon) → 猛砸 17 → 嫩化 8 →循环回 产卵；其他: 高营养糊糊 (Buff) +4力\n啃咬机×2 [小怪] A10: HP 130.5 (n=34) | 34 场 胜率 88% 阵亡 4 | 赢局失血 中位/p75 18/26.8 (n=30) | 招式 啃咬机: 尖锐鸣叫 (StatusCard) 塞3张状态牌 → 猛夹 9×2 →循环回 尖锐鸣叫\n猎人杀手 [小怪] A10: HP 126 (n=37) | 37 场 胜率 89% 阵亡 4 | 赢局失血 中位/p75 17/24 (n=33) | 招式 猎人杀手: 嫩化黏液 (Debuff) → 啃咬 19 → 刺穿 8×3 →循环回 啃咬\n异螨×2 [小怪] A10: HP 132 (n=39) | 39 场 胜率 90% 阵亡 4 | 赢局失血 中位/p75 14/19 (n=35) | 招式 异螨: 吸吮 6 +3力 → 浓毒 (StatusCard) 塞2张状态牌 → 啃咬 15 →循环回 吸吮\n虱虫之祖 [小怪] A10: HP 140 (n=38) | 38 场 胜率 95% 阵亡 2 | 赢局失血 中位/p75 8.5/17.2 (n=36) | 招式 虱虫之祖: 吐网炮 10 → 蜷身成长 (Buff+Defend) +7力 → 猛扑 16 →循环回 吐网炮\n盛碗虫（卵）+盛碗虫（石）+盛碗虫（丝） [小怪] A10: HP 114 (n=13) | 13 场 胜率 92% 阵亡 1 | 赢局失血 中位/p75 9/17 (n=12) | 招式 盛碗虫（卵）: 啃咬 8 →循环回 啃咬；盛碗虫（石）: 头槌 16 →循环回 头槌；其他: STUNNED (Stun)；盛碗虫（丝）: 毒性喷吐 (Debuff) → 撕扯 5×2 →循环回 毒性喷吐\n第2幕 boss: 无厌沙虫 (THE_INSATIABLE_BOSS)\nboss 数据库 无厌沙虫 (THE_INSATIABLE) A10: HP 无厌沙虫 341 (n=32)\n我方战绩: 32 场，胜率 72% (n=32)，阵亡 9；赢局失血 中位/p75 42/53 (n=23)；赢局回合 9/10 (n=23)；每回合失血 5.5/6.4 (n=32)\n无厌沙虫 招式: 液化地面 (Buff+StatusCard) 塞6张状态牌 → 撕扯 9×2 → 前扑啃咬 31 → 分泌唾液 (Buff) +3力 → THRASH_MOVE_2 9×2 →循环回 撕扯 | 能力: 沙坑 4, 力量 3",
+          "history": "本局历程（已离开的楼层，按层按发生顺序，只追加）: 每层首行 = 层 房间 层末 HP(/上限，变化时标出) ¥金币（房间 怪/精/问/休/店/宝/王/古，·=未知）；其下每行一件事: 决策「标签 [决策者]: 选择 — 未核实理由」（DS=DeepSeek；未核实理由 = DeepSeek 当时所写，不是事实）、「战斗 敌人: HP 战前→战后/上限 药:用掉的药水」、牌组/遗物/药水/上限变化（起始牌组与起始遗物不计）、路线规划。\n第1幕:\nF1 · HP56/70 ¥0\n run-plan [DS]: (start) Efficient early damage transitioning into poison and Dexterity defense — Take efficient damage first, then poison and Dexterity; Accelerant only after reliable poison. Add draw and strong block, remove Strikes after replacements, and attempt elites with upgraded damage, potions, and recovery access. | want DASH, POISONED_STAB, NOXIOUS_FUMES, FOOTWORK, BACKFLIP, ACCELERANT | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER\n event/plan [DS]: 华美发束: 失去所有金币。为第一次卡牌奖励中的所有牌附魔：华彩（华彩: Replay 1: the card is played one extra time (「重放1」)）。 — 未核实理由: Permanent replay on an early reward offers immediate tempo and lasting scaling, justifying the gold cost; favorable outcome data provides limited support.\n +遗物 华美发束(事件)\n map/route-plan [DS]: route r1c5 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 问号 → r5c3 普通战 → r6c2 休息 → r7c2 精英 → r8c2 休息 → r9c1 宝箱 → r10c0 休息 → r11c0 普通战 → r12c0 休息 → r13c0 商店 → r14c0 精英 → r15c0 休息 → r16c3 Boss — 未核实理由: 双精英均有营火缓冲，五火兼顾升级续航，晚店补强。\nF2 怪 HP56 ¥15\n 战斗 小啃兽: 56→56/70\n 路线规划（第1幕 F1 定，当时 HP 80%）: 怪→问→怪→问→怪→休→精→休→宝→休→怪→休→店→精→休→王\n reward/card [DS]: 后空翻 — 未核实理由: Replayed Backflip provides exceptional reusable draw and block with strong Dexterity scaling. Prioritize damage in upcoming rewards.\n +卡 后空翻(奖励)\nF3 问 HP49 ¥116\n event/choose [DS]: 潜水: 获得101金币。失去7点生命. — 未核实理由: 101 gold funds damage or potions at the planned shop. The HP cost is manageable; Stone Sword provides only delayed value.\nF4 怪 HP49 ¥129\n 战斗 树枝史莱姆（小）+树枝史莱姆（中）+树叶史莱姆（小）: 49→49/70\n +药 攻击药水(奖励)\n reward/card [DS]: 隐秘匕首 — 未核实理由: Hidden Daggers adds free damage while replayed Backflip supplies surplus cards to discard, improving early combat without consuming scarce energy.\n +卡 隐秘匕首(奖励)\nF5 问 HP49 ¥144\n 战斗 毛绒伏地虫: 49→49/70\n reward/card [DS]: 突然一拳 — 未核实理由: Sucker Punch adds needed early damage and Weak, with the strongest simulated boss progress. Replayed Backflip already provides defensive draw.\n +卡 突然一拳(奖励)\nF6 怪 HP49 ¥152\n 战斗 墨宝: 49→49/70 药:攻击药水\n 用药 攻击药水(战斗); +药 能量药水(奖励)\n reward/card [DS]: 铭记死亡 — 未核实理由: Memento Mori adds efficient immediate damage, scales with Hidden Daggers and Survivor, and benefits from replayed Backflip assembling those combinations.\n +卡 铭记死亡(奖励)\nF7 休 HP49 ¥152\n rest/plan [DS]: 锻造 (SMITH): upgrade 后空翻 — 未核实理由: Replay amplifies Backflip’s lasting defensive upgrade. At 49 HP with an Energy Potion, smithing is worthwhile before one elite followed by recovery.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F7:rest#2 step 2: upgrade 后空翻 (named with the rest choice)\n 升级 后空翻(休息)\nF8 精 HP25 ¥183\n 战斗 多尼斯异鸟: 49→25/70 药:能量药水\n 用药 能量药水(战斗); +药 迅捷药水(奖励); +遗物 皇家枕头(奖励)\n reward/card [DS]: 华丽收场 — 未核实理由: Grand Finale’s 96% simulated boss win rate dominates; replayed Backflip helps create empty-deck windows while defending.\n +卡 华丽收场(奖励)\nF9 休 HP25 ¥183\n run-plan [DS]: (hp_drop) Draw-discard burst with Grand Finale and Dexterity defense — Build around replayed Backflip and Finale with selective draw, retention, and Dexterity rather than forcing poison. Remove Strikes, avoid duplicate Finale, heal next camp, and retain the planned late elite. | want FOOTWORK, WELL_LAID_PLANS, ACROBATICS, PREPARED, BACKFLIP, PIERCING_WAIL | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCELERANT\n rest/plan [DS]: 锻造 (SMITH): upgrade 华丽收场 — 未核实理由: No combat precedes the next camp. Grand Finale's upgrade shows the strongest simulated boss improvement and supports our draw-discard burst plan.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F9:rest#3 step 2: upgrade 华丽收场 (named with the rest choice)\n 升级 华丽收场(休息)\nF10 宝 HP25 ¥220\n chest/relic [code]: only one relic offered\n +遗物 送货员(宝箱)\nF11 休 HP61 ¥220\n rest/plan [DS]: 休息: 回复最大生命值的30%（21）。 皇家枕头提供+15点生命。 — 未核实理由: Heal to 61 HP now, securing the elite route. The next camp can provide an upgrade if the hallway goes well.\n HP增加观测 25/70→61/70（+36；休息点内；F11/REST→F11/REST，仅帧间净变化）\nF12 怪 HP61 ¥230\n 战斗 缩小甲虫+毛绒伏地虫: 61→61/70 药:迅捷药水\n 用药 迅捷药水(战斗)\n reward/card [DS]: skip — 未核实理由: Preserve Finale consistency. These additions dilute replayed Backflip without providing needed draw control, retention, or defensive scaling.\nF13 休 HP61 ¥230\n rest/plan [DS]: 锻造 (SMITH): upgrade 中和 — 未核实理由: Upgrade Neutralize: free two-turn Weak preserves energy for replayed Backflip and Finale setup. Boss simulations are effectively tied; healing offers little.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F13:rest#5 step 2: upgrade 中和 (named with the rest choice)\n 升级 中和(休息)\nF14 店 HP61 ¥22\n shop/plan [DS]: shop plan: pay 80g to remove 打击, buy 护喉甲 (128g), stop shopping — 未核实理由: Removing a Strike improves Finale consistency; Gorget protects setup every combat without adding cards. Healthy HP and Royal Pillow support the upcoming elite.\n selection/remove [DS]: DeepSeek plan 47731LKMZRBJ:F14:shop#6 step 2: remove 打击 (named with the shop choice)\n -卡 打击(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F14:shop#6 step 3: buy 护喉甲 (128g)\n +遗物 护喉甲(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F14:shop#6 step 4: stop shopping\nF15 精 HP61 ¥52\n 战斗 旧日雕像: 61→61/70\n +遗物 吃不完的糖(奖励)\n reward/card [DS]: 灵动步法 — 未核实理由: Footwork provides missing defensive scaling, amplifies replayed Backflip, and protects Finale setup turns. It also has the best simulated HP outcome.\n +卡 灵动步法(奖励)\nF16 休 HP61 ¥52\n rest/plan [DS]: 锻造 (SMITH): upgrade 灵动步法 — 未核实理由: Upgrade Footwork for lasting defense and replayed Backflip synergy. Boss survival simulations are tied; healing restores only 9 HP.\n selection/upgrade [DS]: DeepSeek plan 47731LKMZRBJ:F16:rest#7 step 2: upgrade 灵动步法 (named with the rest choice)\n 升级 灵动步法(休息)\nF17 王 HP14 ¥127\n 战斗 仪式兽: 61→14/70\n +药 毒药水(奖励)\n reward/card [DS]: 夜魇 — 未核实理由: Nightmare copies Footwork+, replayed Backflip, or Finale+ for powerful scaling. Prioritize its cost upgrade to make setup safer.\n +卡 夜魇(奖励)\n第2幕:\nF18 古 HP58 ¥127\n HP增加观测 14/70→58/70（+44；跨层边界，来源未隔离；F17/MAP→F18/EVENT，仅帧间净变化）\n run-plan [DS]: (act) Controlled Finale burst with replayed draw and Dexterity defense — Control draw and retain Finale for reliable burst. Scale replayed Backflip with Dexterity, add sustained damage, and remove Strikes. Use three camps and the discounted early shop; reassess the late elite if resources deteriorate. | want WELL_LAID_PLANS, ACROBATICS, BACKFLIP, FOOTWORK, SPEEDSTER, PIERCING_WAIL | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCELERANT, BUBBLE_BUBBLE\n event/act-plan [DS]: 佩尔之肉; route r1c4 普通战 → r2c3 商店 → r3c4 普通战 → r4c5 问号 → r5c5 普通战 → r6c6 休息 → r7c5 普通战 → r8c4 宝箱 → r9c4 普通战 → r10c3 休息 → r11c4 问号 → r12c5 精英 → r13c6 问号 → r14c6 休息 → r15c3 Boss — 未核实理由: 额外能量支持过牌与逃离，三火缓冲后挑战精英。\n +遗物 佩尔之肉(事件)\n 路线规划（第2幕 F18 定，当时 HP 83%）: 怪→店→怪→问→怪→休→怪→宝→怪→休→问→精→问→休→王\n map/route-follow [DS]: following the brain's route plan (floor 18): step 1/15 Monster at row 1, col 4; plan r1c4 普通战 → r2c3 商店 → r3c4 普通战 → r4c5 问号 → r5c5 普通战 → r6c6 休息 → r7c5 普通战 → r8c4 宝箱 → r9c4 普通战 → r10c3 休息 → r11c4 问号 → r12c5 精英 → r13c6 问号 → r14c6 休息 → r15c3 Boss\nF19 怪 HP49 ¥138\n 战斗 盛碗虫（石）+盛碗虫（卵）: 58→49/70\n reward/card [DS]: 致命毒药+ — 未核实理由: Deadly Poison+ supplies reliable damage while blocking, offers the strongest boss simulation improvement, and avoids another expensive setup card.\n +卡 致命毒药+(奖励)\nF20 店 HP49 ¥29\n shop/plan [DS]: shop plan: buy 手上技法 (29g), buy 投掷匕首 (40g), buy 速度药水 (40g), stop shopping — 未核实理由: Hand Trick enables free Nightmare via discard; Dagger Throw improves Finale timing. Speed Potion amplifies replayed Backflip and protects setup turns. Total: 109 gold.\n +卡 手上技法(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F20:shop#9 step 2: buy 投掷匕首 (40g)\n +卡 投掷匕首(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F20:shop#9 step 3: buy 速度药水 (40g)\n +药 速度药水(商店)\n shop/buy [DS]: DeepSeek plan 47731LKMZRBJ:F20:shop#9 step 4: stop shopping\nF21 怪 HP11 ¥37\n 战斗 地道虫: 49→11/70\n reward/card [DS]: 偏折 — 未核实理由: Deflect provides urgently needed free defense and scales with Footwork. Its boss simulation is effectively tied with skipping.\n map/route-change [DS]: route (card-reward review): r4c5 问号 → r5c5 普通战 → r6c6 休息 → r7c5 普通战 → r8c4 宝箱 → r9c5 休息 → r10c4 普通战 → r11c4 问号 → r12c3 普通战 → r13c2 问号 → r14c3 休息 → r15c3 Boss\n +卡 偏折(奖励)\n 路线重规划（card-reward review）（第2幕 F21 定，当时 HP 16%）: 问→怪→休→怪→宝→休→怪→问→怪→问→休→王\nF22 问 HP11 ¥37\n run-plan [DS]: (hp_drop) Dexterity draw-discard defense with reliable AoE and opportunistic Finale — Use potions proactively to reach the next camp. Heal with Royal Pillow and avoid elites. Replace Strikes with draw or scaling; add reliable damage rather than depending exclusively on Finale. | want BACKFLIP, FOOTWORK, WELL_LAID_PLANS, PIERCING_WAIL, SPEEDSTER, ACROBATICS | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, ACCELERANT, BUBBLE_BUBBLE\n event/choose [DS]: 学习杀灭的技巧: 将一张杀灭添加至你的牌组。 — 未核实理由: Exterminate supplies immediate AoE without waiting for Finale, improving survival against Act Two groups.\n +卡 杀灭(事件)\nF23 怪 HP2 ¥45\n 战斗 猎人杀手: 11→2/70 药:速度药水\n 用药 速度药水(战斗)\n reward/card [DS]: 尖啸 — 未核实理由: Piercing Wail protects setup turns against groups and multihit attacks without requiring additional support. Other powers lack sufficient enablers.\n +卡 尖啸(奖励)\nF24 休 HP38 ¥45\n rest/plan [DS]: 休息: 回复最大生命值的30%（21）。 皇家枕头提供+15点生命。 — 未核实理由: Heal to 38 HP; upgrading at 2 HP risks dying before recovery. Keep the safer route through the nearest campfire.\n HP增加观测 2/70→38/70（+36；休息点内；F24/REST→F24/REST，仅帧间净变化）\nF25 怪 HP5 ¥57\n 战斗 胧光怪+寄生惧魔: 38→5/70\n +药 火焰药水(奖励)\n reward/card [DS]: skip — 未核实理由: Preserve access to Footwork, replayed Backflip, and Escape. None of these additions solves our damage problem; all worsen boss simulations.\nF26 宝 HP5 ¥93\n chest/relic [code]: only one relic offered\n +遗物 铜质鳞片(宝箱)\nF27 休 HP41 ¥93\n rest/plan [DS]: 休息: 回复最大生命值的30%（21）。 皇家枕头提供+15点生命。 — 未核实理由: Heal to 41 HP. At 5 HP, survival before the next camp outweighs every upgrade; keep the elite-free route.\n HP增加观测 5/70→41/70（+36；休息点内；F27/REST→F27/REST，仅帧间净变化）\nF28 怪 HP26 ¥104\n 战斗 棘刺蟾蜍: 41→26/70 药:火焰药水\n 用药 火焰药水(战斗); +药 稳定血清(奖励)\n reward/card [DS]: 扫腿 — 未核实理由: Leg Sweep supplies reliable block and lasting Weak, synergizes with Footwork and Hand Trick, and substantially improves simulated boss survival.\n +卡 扫腿(奖励)\nF29 问 HP26 ¥4\n event/choose [DS]: 旺购的打折货物: 支付100金币。获得1件随机普通遗物。 — 未核实理由: Buy the relic without losing HP. Leaving risks crucial upgrades, and no shop remains before the boss.\n +遗物 弹珠袋(事件)\nF30 怪 HP26 ¥16\n 战斗 啃咬机: 26→26/70 药:稳定血清\n 用药 稳定血清(战斗); +药 明晰提取物(奖励)\n reward/card [DS]: 斗篷与匕首 — 未核实理由: Cloak and Dagger provides repeatable block and damage, benefits from Footwork, and offers the strongest simulated boss improvement.\n +卡 斗篷与匕首(奖励)",
+          "now": "",
+          "this_floor": "本层至今（F31，尚未结束；格式同 history）:\n run-plan [DS]: (review) Dexterity draw-discard control with sustained damage and opportunistic Finale — Prioritize reliable scaling and controlled draw over generic block. Remove Strikes and heal before the boss. Treat Finale as opportunistic burst; preserve Escape when needed, while separately covering incoming attacks. | want SPEEDSTER, BACKFLIP, WELL_LAID_PLANS, FOOTWORK, ACROBATICS, NOXIOUS_FUMES | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, BUBBLE_BUBBLE\n event/choose [DS]: 红色: 获得3张铁甲战士的卡牌。 — 未核实理由: Ironclad cards offer self-contained damage, Strength, and exhaust support; Regent cards risk unsupported Star or Forge packages.\n reward/card [DS]: 剑柄打击 — 未核实理由: Pommel Strike provides damage and precise draw control for Finale, with a useful future draw upgrade. Boss simulations are effectively tied with skipping.\n +卡 剑柄打击(奖励)",
+          "route": "本幕进度（按 F21 的路线）: 已走 10/12 [问怪休怪宝休怪问怪问] | 下一步 休（预计 HP 61%） | 剩余 2: 休→王",
+          "lookahead": "距 boss 2 层 | 到 boss 前各路线: 精英 0, 休息 1, 商店 0, 问号 0, 宝箱 0 | 下一个节点强制: RestSite"
+        },
+        "payload": {
+          "run_brief": {
+            "character": "静默猎手",
+            "act": "2",
+            "floor": 31,
+            "hp": "26/70 (37%)",
+            "gold": 16,
+            "ascension": 10,
+            "deck": "28 cards | 11 attacks / 15 skills / 1 powers | 5 upgraded | 1 curses/statuses | avg cost 0.89",
+            "relics": [
+              "蛇之戒指",
+              "华美发束",
+              "皇家枕头",
+              "送货员",
+              "护喉甲",
+              "吃不完的糖",
+              "佩尔之肉",
+              "铜质鳞片",
+              "弹珠袋"
+            ],
+            "relic_effects": [
+              "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+              "华美发束: 拾起时，失去所有金币。为你的第一次卡牌奖励中的所有牌附魔：华彩。",
+              "皇家枕头: 在休息时，额外回复?(数值未知)点生命。",
+              "送货员: 商人的卡牌、遗物和药水不再会卖光，并且所有商品打折?(数值未知)%。",
+              "护喉甲: 在每场战斗开始时，获得?(数值未知)层覆甲。",
+              "吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+              "佩尔之肉: 从你的第3回合开始，在回合开始时额外获得1点能量。",
+              "铜质鳞片: 在每场战斗开始时，获得?(数值未知)点荆棘。",
+              "弹珠袋: 在每场战斗开始时，给予所有敌人1层易伤。"
+            ],
+            "potions": [
+              "毒药水: 给予?(数值未知)层中毒。",
+              "明晰提取物: 抽1张牌。在你的下3个回合开始时，额外抽1张牌。"
+            ],
+            "notes": [
+              "floor 27: moved to Monster",
+              "took a card reward",
+              "floor 28: moved to Unknown",
+              "event choice (欢迎来到旺购百货)",
+              "floor 29: moved to Monster",
+              "card selection",
+              "floor 30: moved to Unknown",
+              "event choice (色彩哲学家)"
+            ],
+            "run_plan": "Dexterity draw-discard control with sustained damage and opportunistic Finale — Prioritize reliable scaling and controlled draw over generic block. Remove Strikes and heal before the boss. Treat Finale as opportunistic burst; preserve Escape when needed, while separately covering incoming attacks. | want SPEEDSTER, BACKFLIP, WELL_LAID_PLANS, FOOTWORK, ACROBATICS, NOXIOUS_FUMES | avoid GRAND_FINALE, KNIFE_TRAP, FINISHER, BUBBLE_BUBBLE",
+            "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+          },
+          "deck_stats": "28 cards | 11 attacks / 15 skills / 1 powers | 5 upgraded | 1 curses/statuses | avg cost 0.89",
+          "deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和+ (Attack, 0E): 造成4点伤害。 给予2层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n后空翻+ (Skill, 1E) [enchanted 华彩: Replay 1: the card is played one extra time (「重放1」)]: 获得8点格挡。 抽2张牌。 重放1。\n隐秘匕首 (Skill, 0E): 丢弃2张牌。 将2张小刀加入你的手牌。\n突然一拳 (Attack, 1E): 造成8点伤害。 给予1层虚弱。\n铭记死亡 (Attack, 1E): 造成9点伤害。 本回合每丢弃过一张牌，则增加4点额外伤害。\n华丽收场+ (Attack, 0E): 只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成75点伤害。\n灵动步法+ (Power, 1E): 获得3点敏捷。\n夜魇 (Skill, 3E): 选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。\n致命毒药+ (Skill, 1E): 给予7层中毒。\n手上技法 (Skill, 1E): 获得7点格挡。 在本回合给你手牌中的一张技能牌添加奇巧。\n投掷匕首 (Attack, 1E): 造成9点伤害。 抽1张牌。 丢弃1张牌。\n偏折 (Skill, 0E): 获得4点格挡。\n杀灭 (Attack, 1E): 对所有敌人造成3点伤害4次。\n尖啸 (Skill, 1E): 所有敌人在本回合失去6点力量。 消耗。\n扫腿 (Skill, 2E): 给予2层虚弱。 获得11点格挡。\n斗篷与匕首 (Skill, 1E): 获得6点格挡。 将1张小刀添加到你的手牌。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。",
+          "facts": {
+            "act": 2,
+            "floor": 31,
+            "floors_to_act_boss": 2,
+            "ascension": 10,
+            "hp": "26/70 (37%)",
+            "gold": 16,
+            "act_boss": "THE_INSATIABLE_BOSS",
+            "deck_size": 28,
+            "deck_profile": "28 张 (攻击 11/技能 15/能力 1/诅咒或状态 1) | 升级 5 | 平均费用 0.89 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+            "deck": [
+              "4x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+              "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+              "NEUTRALIZE+ 中和+ (Attack, 0 energy): 造成4点伤害。 给予2层虚弱。",
+              "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+              "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+              "BACKFLIP+ 后空翻+ (Skill, 1 energy): 获得8点格挡。 抽2张牌。 重放1。",
+              "HIDDEN_DAGGERS 隐秘匕首 (Skill, 0 energy): 丢弃2张牌。 将2张小刀加入你的手牌。",
+              "SUCKER_PUNCH 突然一拳 (Attack, 1 energy): 造成8点伤害。 给予1层虚弱。",
+              "MEMENTO_MORI 铭记死亡 (Attack, 1 energy): 造成9点伤害。 本回合每丢弃过一张牌，则增加4点额外伤害。",
+              "GRAND_FINALE+ 华丽收场+ (Attack, 0 energy): 只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成75点伤害。",
+              "FOOTWORK+ 灵动步法+ (Power, 1 energy): 获得3点敏捷。",
+              "NIGHTMARE 夜魇 (Skill, 3 energy): 选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+              "DEADLY_POISON+ 致命毒药+ (Skill, 1 energy): 给予7层中毒。",
+              "HAND_TRICK 手上技法 (Skill, 1 energy): 获得7点格挡。 在本回合给你手牌中的一张技能牌添加奇巧。",
+              "DAGGER_THROW 投掷匕首 (Attack, 1 energy): 造成9点伤害。 抽1张牌。 丢弃1张牌。",
+              "DEFLECT 偏折 (Skill, 0 energy): 获得4点格挡。",
+              "EXTERMINATE 杀灭 (Attack, 1 energy): 对所有敌人造成3点伤害4次。",
+              "PIERCING_WAIL 尖啸 (Skill, 1 energy): 所有敌人在本回合失去6点力量。 消耗。",
+              "LEG_SWEEP 扫腿 (Skill, 2 energy): 给予2层虚弱。 获得11点格挡。",
+              "CLOAK_AND_DAGGER 斗篷与匕首 (Skill, 1 energy): 获得6点格挡。 将1张小刀添加到你的手牌。",
+              "POMMEL_STRIKE 剑柄打击 (Attack, 1 energy): 造成9点伤害。 抽1张牌。"
+            ],
+            "relics": [
+              "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+              "华美发束: 拾起时，失去所有金币。为你的第一次卡牌奖励中的所有牌附魔：华彩。",
+              "皇家枕头: 在休息时，额外回复?(数值未知)点生命。",
+              "送货员: 商人的卡牌、遗物和药水不再会卖光，并且所有商品打折?(数值未知)%。",
+              "护喉甲: 在每场战斗开始时，获得?(数值未知)层覆甲。",
+              "吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+              "佩尔之肉: 从你的第3回合开始，在回合开始时额外获得1点能量。",
+              "铜质鳞片: 在每场战斗开始时，获得?(数值未知)点荆棘。",
+              "弹珠袋: 在每场战斗开始时，给予所有敌人1层易伤。"
+            ],
+            "potions": [
+              "POISON_POTION 毒药水: 给予?(数值未知)层中毒。",
+              "CLARITY 明晰提取物: 抽1张牌。在你的下3个回合开始时，额外抽1张牌。"
+            ],
+            "potion_slots": "2/2 used",
+            "act_boss_sim": {
+              "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+              "boss": "无厌沙虫，A10：无厌沙虫 341 血",
+              "entry_hp": "62/70：本幕路线计划到 boss（F33）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+              "current_deck": "胜率 70%（校准后；原始 70%），赢局掉血中位 42，赢局约 11 回合，输的样本中位死在第 10 回合",
+              "samples": "每个选项 1000 次；所有选项同一组随机种子，按样本配对比较；用时 10.6 秒",
+              "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+              "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+              "relics_at_start": "开场生效：护喉甲、铜质鳞片、弹珠袋",
+              "relics_not_modelled": "蛇之戒指",
+              "low_confidence": "验证集 21 场（战前起点）：校准 Brier 0.182，高于整体 0.120 的 1.25 倍 0.151"
+            },
+            "your_run_plan": {
+              "made_on_floor": 31,
+              "archetype": "Dexterity draw-discard control with sustained damage and opportunistic Finale",
+              "want": [
+                "SPEEDSTER",
+                "BACKFLIP",
+                "WELL_LAID_PLANS",
+                "FOOTWORK",
+                "ACROBATICS",
+                "NOXIOUS_FUMES"
+              ],
+              "avoid": [
+                "GRAND_FINALE",
+                "KNIFE_TRAP",
+                "FINISHER",
+                "BUBBLE_BUBBLE"
+              ],
+              "remove": [
+                "STRIKE_SILENT"
+              ],
+              "block_target": 11,
+              "elites": "avoid",
+              "rest": "heal",
+              "boss_prep": "Heal at the final camp. Establish Footwork and replayed Backflip; preserve payable Frantic Escape. Use Nightmare selectively and potions to protect setup.",
+              "summary": "Prioritize reliable scaling and controlled draw over generic block. Remove Strikes and heal before the boss. Treat Finale as opportunistic burst; preserve Escape when needed, while separately covering incoming attacks."
+            },
+            "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+            "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-12T21:19:44，A10 共 209 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 209 局）：到达第1幕的局过第1幕boss 75% (n=209)，到达第2幕的局过第2幕boss 48% (n=157)，到达第3幕的局过第3幕boss 3% (n=76)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+          }
+        },
+        "options": {
+          "card0": "{\"card\":\"上勾拳\",\"type\":\"Attack\",\"rarity\":\"Uncommon\",\"cost\":2,\"text\":\"造成13点伤害。 给予1层虚弱。 给予1层易伤。\",\"in_deck\":0,\"outcome_stats\":\"A10 第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48\",\"quantitative_fight\":{\"samples\":1000,\"raw_win_mc_interval95\":[0.6402544426353417,0.6984444594795697],\"hp_loss\":{\"n\":1000,\"mean\":47.438999999999936,\"p10\":27,\"p90\":62,\"meanSe\":0.45875345637252035},\"turns_won_only\":{\"n\":670,\"mean\":10.10597014925374,\"p10\":8,\"p90\":12,\"meanSe\":0.05737406646449855},\"paired_hp_loss_difference\":{\"n\":1000,\"mean\":-0.31200000000000067,\"p10\":-26,\"p90\":25,\"meanSe\":0.6138594949004859},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":1000,\"valid\":306,\"missing\":694,\"energy_paid\":{\"n\":306,\"mean\":31.777777777777782,\"p10\":24,\"p90\":39,\"meanSe\":0.3503360326683537},\"manual_actions\":{\"n\":306,\"mean\":35.359477124183016,\"p10\":27,\"p90\":43,\"meanSe\":0.3631247874114546},\"effect_resolutions\":{\"n\":306,\"mean\":36.79084967320261,\"p10\":28,\"p90\":45,\"meanSe\":0.3791498039928732},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":300,\"mean\":3.3699999999999988,\"p10\":1,\"p90\":5,\"meanSe\":0.1004965375976669}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":1000,\"mean\":98.75599999999991,\"p10\":63,\"p90\":137,\"meanSe\":0.9228857904324791},\"potions_used\":{\"n\":1000,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":1000,\"mean\":18.390999999999995,\"p10\":-5,\"p90\":42,\"meanSe\":0.5431971853592229}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 70%；选这个 67%（−2.8 ± 2），赢局掉血中位 41，约 10 回合（1000 次模拟，校准后）\"}",
+          "card1": "{\"card\":\"重振精神\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"text\":\"消耗手牌中所有非攻击牌，每张获得5点格挡。\",\"in_deck\":0,\"outcome_stats\":\"无数据\",\"quantitative_fight\":{\"samples\":1000,\"raw_win_mc_interval95\":[0.5733454840711704,0.6338585501638342],\"hp_loss\":{\"n\":1000,\"mean\":50.445000000000064,\"p10\":29,\"p90\":62,\"meanSe\":0.4297576836621617},\"turns_won_only\":{\"n\":604,\"mean\":10.981788079470205,\"p10\":9,\"p90\":13,\"meanSe\":0.05640622764942316},\"paired_hp_loss_difference\":{\"n\":1000,\"mean\":2.6940000000000035,\"p10\":-22.099999999999994,\"p90\":26,\"meanSe\":0.5935964291677644},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":1000,\"valid\":252,\"missing\":748,\"energy_paid\":{\"n\":252,\"mean\":33.21031746031742,\"p10\":24,\"p90\":40,\"meanSe\":0.3851709021914125},\"manual_actions\":{\"n\":252,\"mean\":38.03571428571428,\"p10\":29.1,\"p90\":45,\"meanSe\":0.3886202718994205},\"effect_resolutions\":{\"n\":252,\"mean\":39.54761904761907,\"p10\":31,\"p90\":47,\"meanSe\":0.4112660543501848},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":248,\"mean\":3.3467741935483875,\"p10\":1,\"p90\":5.300000000000011,\"meanSe\":0.11198412254022534}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":1000,\"mean\":116.30100000000007,\"p10\":74,\"p90\":158,\"meanSe\":1.0564812121147968},\"potions_used\":{\"n\":1000,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":1000,\"mean\":15.158999999999997,\"p10\":-7,\"p90\":39.10000000000002,\"meanSe\":0.5634760192095348}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 70%；选这个 60%（−9.4 ± 2.1），赢局掉血中位 45，约 11 回合（1000 次模拟，校准后）\"}",
+          "card2": "{\"card\":\"巨像\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"text\":\"获得4点格挡。 在本回合中，有易伤状态的敌人对你造成的伤害降低50%。\",\"in_deck\":0,\"outcome_stats\":\"A10 第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层33\",\"quantitative_fight\":{\"samples\":1000,\"raw_win_mc_interval95\":[0.5783935161547875,0.6387722504953615],\"hp_loss\":{\"n\":1000,\"mean\":49.95499999999998,\"p10\":29,\"p90\":62,\"meanSe\":0.4323052889600855},\"turns_won_only\":{\"n\":609,\"mean\":11.027914614121507,\"p10\":9,\"p90\":13,\"meanSe\":0.05788185001505798},\"paired_hp_loss_difference\":{\"n\":1000,\"mean\":2.2039999999999993,\"p10\":-22,\"p90\":26,\"meanSe\":0.5874772451027468},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":1000,\"valid\":261,\"missing\":739,\"energy_paid\":{\"n\":261,\"mean\":33.6015325670498,\"p10\":25,\"p90\":41,\"meanSe\":0.38967970303123545},\"manual_actions\":{\"n\":261,\"mean\":38.475095785440615,\"p10\":30,\"p90\":46,\"meanSe\":0.38324563873330053},\"effect_resolutions\":{\"n\":261,\"mean\":40.00000000000003,\"p10\":31,\"p90\":48,\"meanSe\":0.4046954005503932},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":255,\"mean\":3.3176470588235305,\"p10\":1,\"p90\":5,\"meanSe\":0.1101089743473475}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":1000,\"mean\":117.35100000000004,\"p10\":75,\"p90\":158,\"meanSe\":1.0408463672224448},\"potions_used\":{\"n\":1000,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":1000,\"mean\":15.073999999999995,\"p10\":-7,\"p90\":38.10000000000002,\"meanSe\":0.558731334994472}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 70%；选这个 61%（−8.9 ± 2.1），赢局掉血中位 43，约 11 回合（1000 次模拟，校准后）\"}",
+          "skip": "{\"card\":\"skip\",\"note\":\"take no card\",\"quantitative_fight\":{\"samples\":1000,\"raw_win_mc_interval95\":[0.6688303415169653,0.7256542621227547],\"hp_loss\":{\"n\":1000,\"mean\":47.75099999999995,\"p10\":27,\"p90\":62,\"meanSe\":0.44185771152853864},\"turns_won_only\":{\"n\":698,\"mean\":10.709169054441265,\"p10\":9,\"p90\":13,\"meanSe\":0.0524026007265956},\"paired_hp_loss_difference\":{\"n\":1000,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":1000,\"valid\":251,\"missing\":749,\"energy_paid\":{\"n\":251,\"mean\":33.27888446215139,\"p10\":26,\"p90\":40,\"meanSe\":0.3751754561678408},\"manual_actions\":{\"n\":251,\"mean\":38.44621513944222,\"p10\":31,\"p90\":46,\"meanSe\":0.38127535833649284},\"effect_resolutions\":{\"n\":251,\"mean\":40.039840637450204,\"p10\":32,\"p90\":48,\"meanSe\":0.39843521807940613},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{\"FOOTWORK\":{\"n\":247,\"mean\":3.0364372469635654,\"p10\":1,\"p90\":5,\"meanSe\":0.10784324111954426}},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":1000,\"mean\":113.39399999999998,\"p10\":75,\"p90\":153,\"meanSe\":0.9676761654402585},\"potions_used\":{\"n\":1000,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":1000,\"mean\":14.926000000000002,\"p10\":-7,\"p90\":38,\"meanSe\":0.5304827385843348}},\"boss_sim\":\"打本幕 boss（无厌沙虫，A10；低可信，见 facts.act_boss_sim）的模拟：不改变牌组：胜率 70%，赢局掉血中位 42，约 11 回合（1000 次模拟，校准后）\"}"
+        },
+        "system": "固定回放：原记录题体，完整知识由生产KnowledgePrompt.apply读回",
+        "runId": "47731LKMZRBJ",
+        "questionId": "mv5a5lwu-677778-32"
+      }
+    }
+  ],
+  "limits": "原47731接受题体（休息/商店/奖励）通过实际生产KnowledgePrompt.apply离线准备；不调用大脑或执行动作；未重算原题模拟，案例标题装饰省略。"
+}

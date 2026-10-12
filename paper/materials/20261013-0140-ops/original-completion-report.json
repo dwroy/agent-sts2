@@ -1,0 +1,304 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "fixes": [],
+  "merged": "699a9ce08fdf6958ae2753ebeabb19f3f045108a",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 343,
+    "cases": 3410,
+    "reused_from": "aa27705f654a102944b7aac1294107269c4b8aa7",
+    "full_suite_rerun": false,
+    "fixed_consumer": 0,
+    "checks": 51,
+    "check_experience": 0,
+    "ledger_check": 0,
+    "gitleaks": 0
+  },
+  "code_proposals": [
+    "silent-proposal-cdfec2852c0b13a7",
+    "silent-proposal-1d1e05eb932c3065",
+    "silent-proposal-5b7655ae3d92de82"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-cdfec2852c0b13a7",
+      "result": "waiting",
+      "reason": "保留原提案：47731沙虫T3弃逃离后未执行保牌整战替线；截止建模/SL与单动作旧缺陷须由独立strategy-proposal按已有源码祖先核消费者。本接续只合原经验，不抢该实现范围。"
+    },
+    {
+      "id": "silent-proposal-1d1e05eb932c3065",
+      "result": "waiting",
+      "reason": "保留原提案：猎人同首17抽只控制开头，后续牌序与药时并未完全受控；永久步法/临时敏捷/柔嫩/覆甲已有接线不等整个提案兑现。本批无源码修改或新的实际live实现commit。"
+    },
+    {
+      "id": "silent-proposal-5b7655ae3d92de82",
+      "result": "waiting",
+      "reason": "保留原提案：沙虫未饮毒药和未走精英路线的完整反事实未知，不能据失败拟早药/保药/血价阈值。荆棘/施毒/已到回血观察经验已上线，源码实现继续独立。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-experience-000402-merge-recovery-r1/report.md",
+  "experience": {
+    "source_task": "experience-update",
+    "original_source": "aa27705f654a102944b7aac1294107269c4b8aa7",
+    "source": "dcfff63e2082a16eec0cd588b4ec9efd9b63c3c7",
+    "version": "2026-10-13.1",
+    "added": 0,
+    "updated": 13,
+    "retired": 0,
+    "active": 227,
+    "ledger": [
+      "silent-0005",
+      "silent-0007",
+      "silent-0016",
+      "silent-0018",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0110",
+      "silent-0111",
+      "silent-0117",
+      "silent-0129",
+      "silent-0232",
+      "silent-0253",
+      "silent-0278",
+      "silent-0385"
+    ],
+    "release_id": null,
+    "release_registration": "交ops核实际live后分配",
+    "natural_adoption": "待观察"
+  },
+  "handoff": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-experience-000402-merge-recovery-r1/handoff.json",
+  "learning_result": {
+    "request_id": "ops-20261013-experience-000402-merge-recovery",
+    "revision": 1,
+    "input_sha256": "fb4ee3c343ba823bde40bb438d7dad56f7fc0403a035736be38f8c680ed9ed95",
+    "outcome": "complete",
+    "coverage": {
+      "source-reconciliation": [
+        {
+          "id": "silent-accelerant-triggers",
+          "sha256": "80956e6864cd5586fe12bbfe998831fd492a1ede692375b53714fd45e4eaad8b"
+        },
+        {
+          "id": "silent-aeonglass-artifact-growth-sl",
+          "sha256": "6bb5e3b8a54ba03072dea359bda3041f93d3f43d7f1836604a4ab74a328cad99"
+        },
+        {
+          "id": "silent-bouncing-flask-poison",
+          "sha256": "297930d7f871cb6ac4f5b27b8b4c31d7078472bcbee49a010ff7d8038bb91387"
+        },
+        {
+          "id": "silent-bronze-scales-per-hit-thorns",
+          "sha256": "c3be8b8a68662bb0c2efa7db62d13980886c1994b5b454d07cc2014b834d1722"
+        },
+        {
+          "id": "silent-core-poison-defense-observation",
+          "sha256": "33ca666907a73319c55ddc50c48bd0f2974ea2a0bca40dd4c8c502fb4b7f44a4"
+        },
+        {
+          "id": "silent-deadly-poison-application",
+          "sha256": "863a9323d9e180bad010d346808a1530fbb56110804dcfdeac4847af4f857d1d"
+        },
+        {
+          "id": "silent-deck-burst-observation",
+          "sha256": "1a94865b0ab65393444b42acdc6531a163b366f8eca27d3a1bc03402adede7ea"
+        },
+        {
+          "id": "silent-footwork-block",
+          "sha256": "f99d7f5077123fbc0dbd4aa253601f8a62b74811e28ad517065b6271b0b07299"
+        },
+        {
+          "id": "silent-gorget-plating",
+          "sha256": "0a48df4070b9d789fd1f9256a6597b75304da250107e0db13036fa1a68b04c14"
+        },
+        {
+          "id": "silent-grand-finale-empty-draw",
+          "sha256": "1097210c25dfe9b6526c41515388fe8842c13ebec58fae45046d8933ecf2819b"
+        },
+        {
+          "id": "silent-hunter-tender-card-attributes",
+          "sha256": "201f4a05c43659077790d51ce8289a8ffad66020523d772d0e469c6e68e55428"
+        },
+        {
+          "id": "silent-insatiable-dual-clock",
+          "sha256": "5df210ae46e9d67640de446a31abe276743a937b885c7128c50e0aae08b5f12f"
+        },
+        {
+          "id": "silent-poison-potion-observed-application",
+          "sha256": "ebfefa0d9b3c48c654986ed668e6929cb9c10a3214741645c36ef13f140149ad"
+        },
+        {
+          "id": "silent-rest-buffer-observation",
+          "sha256": "62352f75ff57c2371eeefdb5a201b9d26675e54c520d5eb4ae3fab764495ba4a"
+        },
+        {
+          "id": "silent-route-hp-observation",
+          "sha256": "f94db18a3e4d3971957030c349bd911c03be515f3b1c85763052441703385857"
+        },
+        {
+          "id": "silent-speed-potion-temporary-dexterity",
+          "sha256": "09472879d6467bc487fba4d4d6881c2541e9412d78ddd83ad632fb8a2f912160"
+        },
+        {
+          "id": "silent-survivor-neutralize-discard",
+          "sha256": "dd0e56bf52efa85e280274b648870516245831e4919000b70fe63b3680136166"
+        }
+      ],
+      "bounded-evidence": [
+        {
+          "id": "silent-accelerant-triggers",
+          "sha256": "80956e6864cd5586fe12bbfe998831fd492a1ede692375b53714fd45e4eaad8b"
+        },
+        {
+          "id": "silent-aeonglass-artifact-growth-sl",
+          "sha256": "6bb5e3b8a54ba03072dea359bda3041f93d3f43d7f1836604a4ab74a328cad99"
+        },
+        {
+          "id": "silent-bouncing-flask-poison",
+          "sha256": "297930d7f871cb6ac4f5b27b8b4c31d7078472bcbee49a010ff7d8038bb91387"
+        },
+        {
+          "id": "silent-bronze-scales-per-hit-thorns",
+          "sha256": "c3be8b8a68662bb0c2efa7db62d13980886c1994b5b454d07cc2014b834d1722"
+        },
+        {
+          "id": "silent-core-poison-defense-observation",
+          "sha256": "33ca666907a73319c55ddc50c48bd0f2974ea2a0bca40dd4c8c502fb4b7f44a4"
+        },
+        {
+          "id": "silent-deadly-poison-application",
+          "sha256": "863a9323d9e180bad010d346808a1530fbb56110804dcfdeac4847af4f857d1d"
+        },
+        {
+          "id": "silent-deck-burst-observation",
+          "sha256": "1a94865b0ab65393444b42acdc6531a163b366f8eca27d3a1bc03402adede7ea"
+        },
+        {
+          "id": "silent-footwork-block",
+          "sha256": "f99d7f5077123fbc0dbd4aa253601f8a62b74811e28ad517065b6271b0b07299"
+        },
+        {
+          "id": "silent-gorget-plating",
+          "sha256": "0a48df4070b9d789fd1f9256a6597b75304da250107e0db13036fa1a68b04c14"
+        },
+        {
+          "id": "silent-grand-finale-empty-draw",
+          "sha256": "1097210c25dfe9b6526c41515388fe8842c13ebec58fae45046d8933ecf2819b"
+        },
+        {
+          "id": "silent-hunter-tender-card-attributes",
+          "sha256": "201f4a05c43659077790d51ce8289a8ffad66020523d772d0e469c6e68e55428"
+        },
+        {
+          "id": "silent-insatiable-dual-clock",
+          "sha256": "5df210ae46e9d67640de446a31abe276743a937b885c7128c50e0aae08b5f12f"
+        },
+        {
+          "id": "silent-poison-potion-observed-application",
+          "sha256": "ebfefa0d9b3c48c654986ed668e6929cb9c10a3214741645c36ef13f140149ad"
+        },
+        {
+          "id": "silent-rest-buffer-observation",
+          "sha256": "62352f75ff57c2371eeefdb5a201b9d26675e54c520d5eb4ae3fab764495ba4a"
+        },
+        {
+          "id": "silent-route-hp-observation",
+          "sha256": "f94db18a3e4d3971957030c349bd911c03be515f3b1c85763052441703385857"
+        },
+        {
+          "id": "silent-speed-potion-temporary-dexterity",
+          "sha256": "09472879d6467bc487fba4d4d6881c2541e9412d78ddd83ad632fb8a2f912160"
+        },
+        {
+          "id": "silent-survivor-neutralize-discard",
+          "sha256": "dd0e56bf52efa85e280274b648870516245831e4919000b70fe63b3680136166"
+        }
+      ],
+      "live-consumer": [
+        {
+          "id": "silent-accelerant-triggers",
+          "sha256": "80956e6864cd5586fe12bbfe998831fd492a1ede692375b53714fd45e4eaad8b"
+        },
+        {
+          "id": "silent-aeonglass-artifact-growth-sl",
+          "sha256": "6bb5e3b8a54ba03072dea359bda3041f93d3f43d7f1836604a4ab74a328cad99"
+        },
+        {
+          "id": "silent-bouncing-flask-poison",
+          "sha256": "297930d7f871cb6ac4f5b27b8b4c31d7078472bcbee49a010ff7d8038bb91387"
+        },
+        {
+          "id": "silent-bronze-scales-per-hit-thorns",
+          "sha256": "c3be8b8a68662bb0c2efa7db62d13980886c1994b5b454d07cc2014b834d1722"
+        },
+        {
+          "id": "silent-core-poison-defense-observation",
+          "sha256": "33ca666907a73319c55ddc50c48bd0f2974ea2a0bca40dd4c8c502fb4b7f44a4"
+        },
+        {
+          "id": "silent-deadly-poison-application",
+          "sha256": "863a9323d9e180bad010d346808a1530fbb56110804dcfdeac4847af4f857d1d"
+        },
+        {
+          "id": "silent-deck-burst-observation",
+          "sha256": "1a94865b0ab65393444b42acdc6531a163b366f8eca27d3a1bc03402adede7ea"
+        },
+        {
+          "id": "silent-footwork-block",
+          "sha256": "f99d7f5077123fbc0dbd4aa253601f8a62b74811e28ad517065b6271b0b07299"
+        },
+        {
+          "id": "silent-gorget-plating",
+          "sha256": "0a48df4070b9d789fd1f9256a6597b75304da250107e0db13036fa1a68b04c14"
+        },
+        {
+          "id": "silent-grand-finale-empty-draw",
+          "sha256": "1097210c25dfe9b6526c41515388fe8842c13ebec58fae45046d8933ecf2819b"
+        },
+        {
+          "id": "silent-hunter-tender-card-attributes",
+          "sha256": "201f4a05c43659077790d51ce8289a8ffad66020523d772d0e469c6e68e55428"
+        },
+        {
+          "id": "silent-insatiable-dual-clock",
+          "sha256": "5df210ae46e9d67640de446a31abe276743a937b885c7128c50e0aae08b5f12f"
+        },
+        {
+          "id": "silent-poison-potion-observed-application",
+          "sha256": "ebfefa0d9b3c48c654986ed668e6929cb9c10a3214741645c36ef13f140149ad"
+        },
+        {
+          "id": "silent-rest-buffer-observation",
+          "sha256": "62352f75ff57c2371eeefdb5a201b9d26675e54c520d5eb4ae3fab764495ba4a"
+        },
+        {
+          "id": "silent-route-hp-observation",
+          "sha256": "f94db18a3e4d3971957030c349bd911c03be515f3b1c85763052441703385857"
+        },
+        {
+          "id": "silent-speed-potion-temporary-dexterity",
+          "sha256": "09472879d6467bc487fba4d4d6881c2541e9412d78ddd83ad632fb8a2f912160"
+        },
+        {
+          "id": "silent-survivor-neutralize-discard",
+          "sha256": "dd0e56bf52efa85e280274b648870516245831e4919000b70fe63b3680136166"
+        }
+      ]
+    },
+    "consumer_receipt": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-experience-000402-merge-recovery-r1/consumer-receipt.json",
+      "sha256": "16eb8f00f6148934b99991314157b59130c77f7ca92dc2bf54ec6dd10ea44ea1"
+    },
+    "questions": []
+  },
+  "live_record_commit": "e6f69e58391dee96e8a08fd18f0f19e7b9bc3937",
+  "notifications": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-experience-000402-merge-recovery-r1/notifications.json"
+}
