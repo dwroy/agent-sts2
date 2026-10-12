@@ -27,3 +27,7 @@ nice -n 19 node --import ./agent/node_modules/tsx/dist/loader.mjs \
 能力列表中“未列出”用 null 表示，不伪造零层；缺列表或重复能力 ID 不作比较。敌方只对名单不变且类型各唯一的端点记录 HP/能力变化，索引变化保留前后值；同类重复、召唤或减员时敌方比较留空。`enemy_id` 不是稳定实例 ID，唯一类型比较也不保证中间没有替换。后端点可能属于重问的新候选，观测区间不跨过去执行它。
 
 这些是观测净变化，不是卡牌因果、完整入伤或候选收益；pending/拒绝回执原样保留，`causal_action_result`、`full_candidate_result` 始终 null。末局缺少匹配的下一决策或终态战斗端点时保持 unknown，不能补造死亡截断前的完整伤害。本增量不等于原宽提案全部完成，不校准策略阈值，也不接在线选择器。
+
+`observed_actions` 保留全部输入决策的动作与观测，包括没有 `plan-choice` 的代码结束回合。依据 8JRE1C4H4Z2W F33 第六次 T11（decisions 270441→270442、states 276433→276434；silent-0079、silent-0021），`terminal_observation` 专门关联结束回合后尝试号变空的 `run/finalize`。要求原始决策和状态行号各自连续、结束回合回执 completed、同局同层同回合和相同已知重载次数、唯一状态匹配、结束时间等于已核 runs 记录且该局失败、前帧 COMBAT 正血与后帧 GAME_OVER 零血。普通观测区间的尝试号检查保持原样；缺任一条件留 unknown。
+
+该终局端点实际玩家 5→0，敌人 154→130；结算前显示攻击37、当前挡22，其差15仅放 `displayed_attack_reference`。它不把零血截断的实扣5冒充完整入伤，也不把显示算式15冒充已观测伤害。缺意图总伤字段时算式留空；敌人同名单、唯一类型、相同最大血时才比较HP端点，索引变化另列，不认证实例身份；结束页清理能力不当作能力到期。`actual_uncapped_damage`、`causal_action_result`、`full_candidate_result` 始终为 null。本子项只补终局审计，原提案其他范围和策略效果仍须独立验收。
