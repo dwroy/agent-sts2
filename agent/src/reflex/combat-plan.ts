@@ -23,6 +23,7 @@ import { choiceQ } from "./jev/questions.js";
 import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { silentPhaseCurrentFacts } from "./silent-phase-current.js";
+import { silentPotionReference } from "./silent-potion-reference.js";
 import { silentKinBoardFacts, silentKinPlanFacts } from "./silent-kin-progress.js";
 import { observedDemonPoison } from "./silent-demon-potion.js";
 import { crabPoisonFacts } from "./silent-crab-potion.js";
@@ -3973,6 +3974,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     ], rollout, mcShown),
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
     potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined),
+      ...(costsOn ? silentPotionReference(state, costs, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })), rollout) : {}),
       ...(modelledIds.has("CUNNING_POTION") ? { cunning_generation: {
         hand_cards: hand.length, free_slots: Math.max(0, HAND_LIMIT - hand.length),
         added_now: Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
