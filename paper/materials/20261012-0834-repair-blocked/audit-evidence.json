@@ -1,0 +1,373 @@
+{
+  "batch": "20261012-081302-strategy-proposal",
+  "batch_binding": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "runs": [
+      "N1ZEBMHZM4KC"
+    ],
+    "key": "proposal-link-repair:20261012-075824-experience-update",
+    "pid": 3319466,
+    "state": "running",
+    "reason": "proposal",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-081302",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pN3",
+    "proposal_repair": "20261012-075824-experience-update"
+  },
+  "source_batch": {
+    "task": "experience-update",
+    "character": "silent",
+    "runs": [
+      "N1ZEBMHZM4KC"
+    ],
+    "key": "N1ZEBMHZM4KC",
+    "pid": 3282666,
+    "state": "failed",
+    "reason": "tick",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pN1",
+    "finished": "2026-10-12 08:00",
+    "rc": 0,
+    "merged": null,
+    "proposal_audit_errors": [
+      "missing source commit for proposal audit"
+    ],
+    "report": {
+      "task": "experience-update",
+      "status": "blocked",
+      "version": "2026-10-11.16",
+      "commit": null,
+      "merged": null,
+      "added": 0,
+      "updated": 0,
+      "retired": 0,
+      "active": 219,
+      "mechanisms": [],
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": 0
+      },
+      "ledger": {
+        "added": [],
+        "proposed": [],
+        "retired": [],
+        "check": null
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-075826-experience-update/report.md"
+    },
+    "proposal_repair_needed": true,
+    "retry_at": 1791766810.1753743
+  },
+  "repair": {
+    "character": "silent",
+    "runs": [
+      "N1ZEBMHZM4KC"
+    ],
+    "state": "pending",
+    "reason": "experience/proposal link audit failed"
+  },
+  "worktree_base": "4d5325f0cf8fc5a2ab6cc8abf8ee88b30eafe2e4",
+  "worktree_status": {
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "source_artifacts": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-075826-experience-update/report.md",
+      "bytes": 2231,
+      "sha256": "8f6c96251fda14925600bee9f46c0ca1ec4b0f9bccf54d60621a20ed3172c374"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-075826-experience-update/blocked-result.json",
+      "bytes": 834,
+      "sha256": "be7574c701125429d52a655aef132694d2160acf4ca9738ddf5b499c80a5beaf"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-075826-experience-update/merge-index-stages.txt",
+      "bytes": 282,
+      "sha256": "4dacdf931921db2793bd4c6f48c3d7a0b28efc41822e7d77163e97da37a34bba"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-075826-experience-update/merge-status.txt",
+      "bytes": 64383,
+      "sha256": "51e64900f877d6a5728766f063ca9446ec0c5fec3bad77abe676e4254799a5d5"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-075826-experience-update/merge-conflict.diff",
+      "bytes": 4917,
+      "sha256": "d76ad0ee4bf0cc00ac582a9bdf00439099acecbe27d416c9bd2884ae52e2ead8"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-075826-experience-update/experience-before.json",
+      "bytes": 300175,
+      "sha256": "65b85f90982a06e1989bac18e56d1a29794996177c3439c68e9f2a29e060666b"
+    }
+  ],
+  "source_before_matches_original_head": true,
+  "source_blocked_result": {
+    "task": "experience-update",
+    "status": "blocked",
+    "reason": "合并 main 时 experience.json 内容冲突；按任务第 1.2 节停止，保留现场。",
+    "version": "2026-10-11.16",
+    "commit": null,
+    "merged": null,
+    "added": 0,
+    "updated": 0,
+    "retired": 0,
+    "active": 219,
+    "mechanisms": [],
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": 0
+    },
+    "ledger": {
+      "added": [],
+      "proposed": [],
+      "retired": [],
+      "check": null
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-075826-experience-update/report.md",
+    "branch": "exp-silent",
+    "base": "c04da0668154abda77278bf614c7e96090297248",
+    "merge_head": "b6fdbac5d64dd86f6974e96a2efbba08fbca326e",
+    "recorded_at": "2026-10-12T08:00:00+08:00"
+  },
+  "source_tree_current": {
+    "head": {
+      "rc": 0,
+      "stdout": "a5a046d3a016fb1a892726242fdcbe3f90fe577d",
+      "stderr": ""
+    },
+    "merge_head": {
+      "rc": 128,
+      "stdout": "",
+      "stderr": "fatal: Needed a single revision"
+    },
+    "unmerged_experience": {
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "run_identity": {
+    "run_id": "N1ZEBMHZM4KC",
+    "ended": "2026-10-11T14:32:23.350Z",
+    "victory": false,
+    "floor": 21,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "65e3d10a9+dirty",
+    "decisions": 349,
+    "jev_calls": 66,
+    "deepseek_calls": 21,
+    "claude_calls": 0,
+    "tokens": 362485,
+    "ds_tokens_in": 3071742,
+    "ds_tokens_out": 13627,
+    "ds_cache_hit": 1705984,
+    "deciders": {
+      "codex": 27,
+      "code": 164,
+      "jev": 66,
+      "jev-plan": 92
+    },
+    "death_fight": [
+      "幼虫",
+      "直飞产卵虫",
+      "结实的卵"
+    ],
+    "death_fight_floor": 21,
+    "death_enemy_ids": [
+      "OVICOPTER",
+      "TOUGH_EGG"
+    ]
+  },
+  "reference_postmortem_proposals": [
+    {
+      "id": "silent-proposal-5608a3424b54e991",
+      "character": "silent",
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "runs": [
+        "N1ZEBMHZM4KC"
+      ],
+      "ledger": [
+        "silent-0205",
+        "silent-0005",
+        "silent-0235"
+      ],
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-discard.md",
+      "proposal_sha256": "021d77dc551df4955b8b7f60b0d81d1f74dfa94f0e137271f4c0ee8a97434039",
+      "experience": null
+    },
+    {
+      "id": "silent-proposal-23c591483563f267",
+      "character": "silent",
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "runs": [
+        "N1ZEBMHZM4KC"
+      ],
+      "ledger": [
+        "silent-0385",
+        "silent-0118",
+        "silent-0011",
+        "silent-0012",
+        "silent-0046",
+        "silent-0132"
+      ],
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-resources.md",
+      "proposal_sha256": "20722f477b7dc9c5f0d2bfe7cb5cb135c82800f2eff55f150331fa1e887ea48b",
+      "experience": null
+    },
+    {
+      "id": "silent-proposal-b9b93a6c5707f1fc",
+      "character": "silent",
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "runs": [
+        "N1ZEBMHZM4KC"
+      ],
+      "ledger": [
+        "silent-0326"
+      ],
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-sl.md",
+      "proposal_sha256": "25e000e453153ebc9add40c4c076bb73247607799d07b1f87f7c3bab03065b57",
+      "experience": null
+    }
+  ],
+  "reference_postmortem_ledger_rows": [
+    {
+      "op": "update",
+      "id": "silent-0205",
+      "ts": "2026-10-12T07:56:39+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-discard.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-5608a3424b54e991 → task=strategy-proposal；Roy-2026-10-07-learning"
+    },
+    {
+      "op": "update",
+      "id": "silent-0005",
+      "ts": "2026-10-12T07:56:39+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-discard.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-5608a3424b54e991 → task=strategy-proposal；Roy-2026-10-07-learning"
+    },
+    {
+      "op": "update",
+      "id": "silent-0235",
+      "ts": "2026-10-12T07:56:39+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-discard.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-5608a3424b54e991 → task=strategy-proposal；Roy-2026-10-07-learning"
+    },
+    {
+      "op": "update",
+      "id": "silent-0385",
+      "ts": "2026-10-12T07:56:40+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-23c591483563f267 → task=strategy-proposal；Roy-2026-10-07-learning"
+    },
+    {
+      "op": "update",
+      "id": "silent-0118",
+      "ts": "2026-10-12T07:56:40+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-23c591483563f267 → task=strategy-proposal；Roy-2026-10-07-learning"
+    },
+    {
+      "op": "update",
+      "id": "silent-0011",
+      "ts": "2026-10-12T07:56:40+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-23c591483563f267 → task=strategy-proposal；Roy-2026-10-07-learning"
+    },
+    {
+      "op": "update",
+      "id": "silent-0012",
+      "ts": "2026-10-12T07:56:40+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-23c591483563f267 → task=strategy-proposal；Roy-2026-10-07-learning"
+    },
+    {
+      "op": "update",
+      "id": "silent-0046",
+      "ts": "2026-10-12T07:56:40+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-23c591483563f267 → task=strategy-proposal；Roy-2026-10-07-learning"
+    },
+    {
+      "op": "update",
+      "id": "silent-0132",
+      "ts": "2026-10-12T07:56:40+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-23c591483563f267 → task=strategy-proposal；Roy-2026-10-07-learning"
+    },
+    {
+      "op": "update",
+      "id": "silent-0326",
+      "ts": "2026-10-12T07:56:41+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261012-074301-postmortem/proposal-sl.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-b9b93a6c5707f1fc → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  ]
+}
