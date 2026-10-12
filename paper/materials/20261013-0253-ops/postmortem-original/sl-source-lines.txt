@@ -1,0 +1,43 @@
+  untried: ExploreLine<P>[],
+  opts: { prefer?: (line: ExploreLine<P>) => boolean; notWorseOnly?: boolean } = {},
+): ExploreChoice<P> {
+  const { pick } = args;
+  const rated = pick.plan ?? pick.rated ?? null;
+  const b2 = args.b2 && rated !== null && args.b2.win(rated) !== null ? args.b2 : null;
+  /** The gate's pool narrowed to the preferred lines when some are and some are not, and the note saying so. */
+  const narrow = (pool: ExploreLine<P>[]): { pool: ExploreLine<P>[]; note: string } => {
+    const preferred = opts.prefer ? pool.filter(opts.prefer) : [];
+    return preferred.length > 0 && preferred.length < pool.length ? { pool: preferred, note: "; of them, one whose turn cannot end as a failed attempt's after a draw" } : { pool, note: "" };
+  };
+  if (b2) {
+    const notWorse = untried.filter((line) => b2.notWorse(line.plan, rated!) === true);
+    if (opts.notWorseOnly && notWorse.length === 0) return { replacement: null, reason: `B2 rates every such line worse (win rate more than ${b2.rule} below the pick's)`, gate: "b2" };
+    const { pool, note } = narrow(notWorse.length > 0 ? notWorse : untried);
+    const ranked = args.rank(pool.map((line) => line.plan));
+    const replacement = pool.find((line) => line.plan === ranked) ?? pool[0]!;
+    const why =
+      notWorse.length > 0
+        ? `the best untried line by the question's ranking, among those B2 rates no worse (win rate at most ${b2.rule} below the pick's)`
+        : `the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than ${b2.rule} below the pick's; the pick is known to fail)`;
+    return { replacement, reason: `${why}${note}`, gate: "b2" };
+  }
+  const own = pick.plan === null ? null : args.deathShare(pick.plan);
+  const notWorse = own === null ? [] : untried.filter((line) => {
+    const share = args.deathShare(line.plan);
+    return share !== null && share <= own + 1e-9;
+  });
+  if (opts.notWorseOnly && notWorse.length === 0) return { replacement: null, reason: own === null ? "no rollout numbers for the pick" : "every such line dies more often in the rollout", gate: "rollout" };
+  const { pool, note } = narrow(notWorse.length > 0 ? notWorse : untried);
+  const ranked = args.rank(pool.map((line) => line.plan));
+  const replacement = pool.find((line) => line.plan === ranked) ?? pool[0]!;
+  const why =
+    notWorse.length > 0
+      ? "the best untried line by the question's ranking, among those the rollout does not see dying more often"
+      : own === null
+        ? "the best untried line by the question's ranking"
+        : "the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail)";
+  return { replacement, reason: `${why}${note}`, gate: "rollout" };
+}
+
+/**
+ * The question's ranking among `plans` where B2 ranks the boss (combat-plan simRanks): B2's first of them by its `order`;
