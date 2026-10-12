@@ -1,0 +1,46 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "NEPESJXEV9V3"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "NEPESJXEV9V3",
+      "where": "agent/src/sl/draws.ts:568",
+      "what": "抑制改升级标记仍被SL抽序记录为新牌插入并截断前缀；既有silent-0279复发，fix-queue未列。",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0443",
+      "silent-0164",
+      "silent-0279",
+      "silent-0280",
+      "silent-0080",
+      "silent-0031",
+      "silent-0173",
+      "silent-0259"
+    ],
+    "repeats": [
+      "silent-0443",
+      "silent-0279"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-699e7d8b729249cd",
+    "silent-proposal-358c602f03d7205a",
+    "silent-proposal-a51845d3e8ae6358"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-044302-postmortem/report.md"
+}

@@ -1,0 +1,198 @@
+[
+ {
+  "id": "silent-0279",
+  "ts": "2026-10-08T07:06:47+08:00",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "A10三骑士的抑制改变抽牌堆中牌的升级标记时，SL抽序记录用含升级标记的键整堆作差，把同牌改标写成普通牌随机插入和升级牌未入手离堆，错误截断已知前缀。现场四次均有此记录；当前live draws.ts:568、569、602、657、674对应这一身份处理，新bug且fix-queue未见；未证明影响胜负。",
+  "first_run": "GXNKW8X1XYJP",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "更早静默三骑士已见战内降级，但未核到可比较的同牌堆SL身份记录，不能由已会读普通牌推出记录器先验正确。",
+  "status": "proposed",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "GXNKW8X1XYJP"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-064304-postmortem/proposal-dampen-identity.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-144301-s2/learner/runs/20261011-144311-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-144301-s2/learner/runs/20261011-144311-strategy-proposal/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-021301-s2/learner/runs/20261012-021312-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-021301-s2/learner/runs/20261012-021312-strategy-proposal/report.md"
+   ]
+  },
+  "evidence": [
+   {
+    "run": "GXNKW8X1XYJP",
+    "floor": 45,
+    "turn": 2,
+    "role": "support",
+    "note": "sl-attempts:1053—1056四次T2都将BLADE_DANCE/ACCELERANT/OUTBREAK/SUCKER_PUNCH列为inserted，旧+键未入手离堆，clean前缀19/18/19/18；states290201→290206及290214核战内改标/出口恢复，瞬间完整中间帧未记录。",
+    "added": "2026-10-08T07:06:47+08:00"
+   }
+  ],
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-08T07:06:47+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-08T07:08:54+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-11T14:52:57+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-12T02:23:52+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-51fa8bc34774f72d → task=strategy-proposal；Roy-2026-10-07-learning",
+   "20261011-144301-s2-strategy-proposal仅续核已领取silent-proposal-51fa8bc34774f72d/2631859b524e0652。GX F45四试假inserted与clean19/18/19/18、源码升级键作差已复核；live已有19项未解决冲突，按任务停止源码实施/合入。无实现提交/版本/测试/shipped；不是要求新局才能定位。多副本唯一身份和改标瞬间抽序仍须保守处理。",
+   "20261012-021301-s2-strategy-proposal：仅处置本批原ID silent-proposal-51fa8bc34774f72d:waiting。2322原日志字节/99项事实断言与角色/SHA核验；2项已有live源码复用，8项waiting详报告。基线/live静态预检16冲突，未改源码/合入/版本/生产测试，不新增同局support；既有经验shipped不代表父提案实现。"
+  ]
+ },
+ {
+  "id": "silent-0324",
+  "ts": "2026-10-09T03:24:31+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "普通刀刃之舞BLADE_DANCE的Cards=3被当前卡牌模型读为即时抽3，未接生成3张SHIV。FU8ZUQHBHNV9 F8T3技能药水取得的0费可打牌被代码直接结束；T4实付1能量后添三张0费4伤小刀，实际合12伤。更早静默首局同牌候选已报抽3、实际却添三刀。修确定生成及容量/费用传播，不能承诺修后整场获胜。",
+  "evidence": [
+   {
+    "run": "C48LLXBGKXQ9",
+    "floor": 2,
+    "turn": 1,
+    "note": "d205321刀刃之舞候选报cards_drawn=3；d205402/s209322→209323 F6T3普通版实际添三张0费小刀；既往未单独登记该误读。",
+    "role": "support",
+    "added": "2026-10-09T03:24:31+08:00"
+   },
+   {
+    "run": "FU8ZUQHBHNV9",
+    "floor": 8,
+    "turn": 3,
+    "note": "d303671饮技能药水、d303672取刀刃之舞；s311492为0费playable=true，d303673结束仍损24。T4 s311495→311496添三刀，311496→311499各扣4；live card-model.ts:929、1104、1109漏生成。",
+    "role": "support",
+    "added": "2026-10-09T03:24:31+08:00"
+   },
+   {
+    "run": "YBRA3EJ94GBR",
+    "floor": 33,
+    "turn": 10,
+    "role": "repeat",
+    "note": "第6试d352040仍把普通刀刃之舞Cards=3当先抽牌救命；s362200→362201旧牌保留且添三张0费SHIV，随后懒惰3名额用满，三刀尚1能量却被锁，1血9挡对24死亡。只读live card-model.ts:934/1109/1114及combat-plan.ts:4678复核误读；不将原60与实际56差额全归此因或承诺修后赢。",
+    "added": "2026-10-11T17:58:30+08:00"
+   },
+   {
+    "run": "YBRA3EJ94GBR",
+    "floor": 30,
+    "turn": 3,
+    "role": "support",
+    "note": "s361786→361787生成三刀，361787→361790三刀在余像/风的女儿下挡7→9→11→13，敌HP均67；代码原损11重算5，实际25→20。可执行生成牌与受懒惰限制末战分开，非名义12伤实兑。",
+    "added": "2026-10-11T17:58:30+08:00"
+   }
+  ],
+  "first_run": "C48LLXBGKXQ9",
+  "prior": "no",
+  "prior_runs": [
+   "C48LLXBGKXQ9"
+  ],
+  "prior_note": "首局未学习前F2T1模型已把添刀报成抽3，F6T3实盘确认是生成；实际重新观察后能出刀不等于方案模型已正确。未找到学习账本或更早静默复盘的本牌修复。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "FU8ZUQHBHNV9",
+    "YBRA3EJ94GBR"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-031301-postmortem/proposal-blade-generation.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-040746-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261011-174302-postmortem/proposal-blade-generation.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-180211/learner/runs/20261011-180223-strategy-proposal/proposal.md"
+   ],
+   "commits": [
+    "66c22ba7d87b8748690a4183fff838acd346bd3e",
+    "d1073a0b36d16e8c496b5f9149410ad6804bc8ba"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-09T03:24:31+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-09T03:26:15+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T04:22:01+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-11T17:58:30+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-11T18:00:04+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-11T18:13:18+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-11T18:13:20+08:00",
+    "by": "learner:strategy-proposal"
+   },
+   {
+    "ts": "2026-10-11T18:41:50+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-11T18:44:35+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-11T18:50:14+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-11T19:53:02+08:00",
+    "by": "ops:codex-1939",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.blade-dance1",
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-e7ed37db21fc698a → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-c99563720f3efe72 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-e7adad48b46c15d9 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "20261011-180211普通策略批独立复核YBRA3EJ94GBR A10 F30T3及F33末试T10原始10帧，实施范围限定确定生成与当轮后继；F30零伤来自柔嫩后的负力量，不能沿用原提案的敌防御推测。尚未live，不登记shipped。",
+   "代码提案 silent-proposal-a810b416ac79dae0 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "20261011-180211源码已独立提交；YBRA3EJ94GBR A10 F30T3/F33末试T10确定生成修正。撤源码新回归6失败/2通过、恢复14专项通过，沙箱tsc/vitest均0、2691例，gitleaks0。live已有未结束合并且锁未取得，尚未合入、无版本、无shipped；详见本批report.md，交运维按现有流程兜底。",
+   "更正上一条阻塞时点说明：首次5秒锁等待失败；18:40后末次5秒预检实际取得锁，当时live已由其他会话清理至4754a869且无MERGE_HEAD，本任务未修改。释放锁后另批启动f59086f合并；后续20秒锁重查超时。当前状态及未合并路径详见live-final-state.json，不将此前清理或其他合并归为本任务成果。源码66c22ba7d仍待实际live集成，未shipped。",
+   "本批最终回报：完整合入脚本等待live-merge.lock50秒超时exit1，回调未启动；live旧合并已由其他会话清理，不再以旧MERGE_HEAD描述当前阻塞。源码66c22ba7d87b8748690a4183fff838acd346bd3e不是live祖先，本任务未改live、无版本/implemented/shipped；完整报告/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-180211/learner/runs/20261011-180223-strategy-proposal/report.md，运维按原流程兜底。",
+   "静默A10已观察未升级刀刃之舞：旧将Cards3误作抽牌，新为生成三张0费SHIV并保留旧手牌、触发与出牌额度。证据YBRA3EJ94GBR F30T3/F33第六试T10；其他角色/未观察范围等价。 本轮实际发布范围见paper/materials/20261011-1939-ops/；宿主检查/消费者采用/胜率效果分别核实，不改原失败回报。"
+  ],
+  "shipped_at": "2026-10-11T19:53:02+08:00"
+ }
+]

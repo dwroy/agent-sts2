@@ -1,0 +1,6 @@
+
+- 2026-10-13 03:57:14 CST Codex学习者 / 20261013-023515-silent-boss-calibration / Roy已授权新功能静默boss校准刷新：实际数据源5cefc5f443e3c84422589bb6c51c5e7760dba60d→live合入8f1cc509f3feb3a614f893052411cf5d0db4d6cc→发布aaef5b54ad882fe805207509617f91eeae31960f，固定发布树6957a085cb81025ad883765c151cfcd2380fc290，版本S1.boss-calibration15；正式release_id交运维在原锁内核号，silent-0444仍proposed、shipped交运维。
+  - 旧/新可信规则的数据范围：知识恶魔原B2/B3低可信（打穿比1.311/1.315），现验证34场、Brier0.0857/0.0701、预测76.8%/77.0%对实际85.3%、打穿比1.287/1.297，四项全部达标，B2/B3均准入。证据L6745E2ND5CT A10 F33尝试2 T1–12胜、0C3AR6J0Z8LD A10 F33尝试1 T1–10胜。
+  - 无厌沙虫原B2可信（Brier0.1265），现验证33场、Brier0.1532>整体0.1158×1.25=0.1448，退回低可信；B3继续因Brier0.1742和打穿比1.329失败。证据16UDD0430SXT A10 F33尝试1 T1–8胜、47731LKMZRBJ同层尝试1 T1–5死、G4PQBCJQ7NP0同层尝试6 T1–6死。
+  - 预期影响：下一局知识恶魔B2首试可提供可信整场数字，B3去除该boss低信度标签；无厌沙虫B2首试回到原低可信门控，SL仍按原低可信口径。其他名单保持。F49仍低信度；A10残差+4.9/+5.4百分点，低进阶独立验证0。原四项门槛、Platt、107调参keys/切点、费用/药水/保血/目标/SL阈值保持，不声明自然采用或胜率收益。
+  - 限制/回退：本批固定模型7e1193cef，仅原210输入中的43项与实际发布输入不同，新增模块亦不在此固定实验验证范围。完整来源与表见paper/materials/silent/boss-sim-calibration.md及experiments/boss-sim/silent/c57767b8410c45eee3ed68b328ba9b57a9b62f0a3b82fc86061e378efb27f2da/；回退只在live锁内恢复knowledge/characters/silent/boss-trust.json和该报告到合入前e24d63c86fb41008a685247e9b363277ef2ceba5，保留刷新、全部旧档案及其他角色/并行记录，另登记回退版本。源/合后自测通过，完整外部检查交调度器。

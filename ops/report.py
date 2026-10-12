@@ -473,11 +473,22 @@ def boss_sim_check(character):
     """Dispatch only; the child scheduler owns the shared state lock and learner lifecycle."""
     with open(os.path.join(ROOT, "ops", "boss-sim-dispatch.log"), "a") as log:
         try:
+            # This hook bypasses codex-ops.sh; retain its project login selection before dispatch.
+            env = {**os.environ, "CODEX_OPS_ROOT": ROOT}
+            directory = env.get("CODEX_OPS_DIR") or os.path.join(ROOT, "ops/codex-ops")
+            selector = os.path.join(directory, "codex-home")
+            selected_home = ""
+            if os.path.isfile(selector):
+                with open(selector, encoding="utf8") as handle:
+                    selected_home = handle.readline().rstrip("\n")
+                if not os.path.isabs(selected_home) or not os.path.isdir(selected_home) or not os.path.isfile(os.path.join(selected_home, "auth.json")):
+                    raise ValueError("invalid project Codex home selector; no boss scheduler action started")
+            env["LEARNER_CODEX_HOME"] = env.get("LEARNER_CODEX_HOME") or selected_home or env.get("CODEX_HOME") or os.path.expanduser("~/.codex-sts2")
             subprocess.run(["nice", "-n", "19", sys.executable, os.path.join(LIVE, "ops", "codex-ops-learn.py"),
                             "boss-check", "--character", character.lower()],
-                           env={**os.environ, "CODEX_OPS_ROOT": ROOT}, stdout=log, stderr=subprocess.STDOUT,
+                           env=env, stdout=log, stderr=subprocess.STDOUT,
                            timeout=120)
-        except (OSError, subprocess.TimeoutExpired) as error:
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
             log.write(f"{type(error).__name__}: {error}\n")
 
 

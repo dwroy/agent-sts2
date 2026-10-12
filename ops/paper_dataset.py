@@ -394,10 +394,31 @@ def scan_autoplay():
 
 
 # ---------------------------------------------------------------- 6. git
-def git_commits():
-    out = subprocess.run(["git", "-C", JEV, "log", "--all", "--format=%H%x1f%h%x1f%aI%x1f%an%x1f%s"],
+def git_ref_snapshot():
+    """Pin object IDs, including every worktree's pseudo-refs, before exporting or counting history."""
+    out = subprocess.run(["git", "-C", JEV, "show-ref", "--head"],
                          capture_output=True, text=True, check=True).stdout
-    main = set(subprocess.run(["git", "-C", JEV, "rev-list", "upstream/main"], capture_output=True, text=True).stdout.split())
+    refs = {ref: oid for oid, ref in (line.split(" ", 1) for line in out.splitlines())}
+    # show-ref only reports this checkout's HEAD. --all also includes other worktrees' HEAD,
+    # bisect and rewritten refs; capture their tips without walking the commit graph yet.
+    tips = subprocess.run(["git", "-C", JEV, "rev-list", "--all", "--no-walk=unsorted"],
+                          capture_output=True, text=True, check=True).stdout
+    refs.update({"all-tip:" + oid: oid for oid in tips.splitlines()})
+    return refs
+
+
+def git_history(args, refs):
+    # stdin avoids the command-line size limit in repositories with many worktrees.
+    revisions = "".join(oid + "\n" for oid in sorted(set(refs.values())))
+    return subprocess.run(["git", "-C", JEV, *args, "--stdin"], input=revisions,
+                          capture_output=True, text=True, check=True).stdout
+
+
+def git_commits(refs=None):
+    refs = git_ref_snapshot() if refs is None else refs
+    out = git_history(["log", "--format=%H%x1f%h%x1f%aI%x1f%an%x1f%s"], refs)
+    main_oid = refs.get("refs/remotes/upstream/main")
+    main = set(git_history(["rev-list"], {"upstream/main": main_oid}).split()) if main_oid else set()
     rows = []
     for line in out.splitlines():
         full, short, date, author, subject = line.split("\x1f", 4)
@@ -468,7 +489,8 @@ def build():
     consoles = scan_consoles()
     headings, preloop, run_notes = scan_lessons()
     autoplay = scan_autoplay()
-    commits = git_commits()
+    git_refs = git_ref_snapshot()
+    commits = git_commits(git_refs)
 
     # Console outcome -> run: the run with the latest decision inside that console's window.
     console_outcome = {}
@@ -702,22 +724,22 @@ def build():
         "deepseek_reasoning_log": reasoning_info,
         "states_lines_scanned": n_states,
         "console_logs": len(consoles),
-        "commits": {"total": len(commits), "upstream": sum(c["upstream"] for c in commits),
+        "commits": {"total": len(commits), "ref_snapshot": git_refs, "upstream": sum(c["upstream"] for c in commits),
                     "experiment": sum(1 for c in commits if not c["upstream"])},
         "postmortems": {"runs_with_heading": sum(r["has_postmortem"] for r in rows), "preloop_listed": len(preloop)},
     }
     summary["api_cost_total_usd"] = round(summary["api"]["jev"]["cost_usd"] + summary["api"]["deepseek"]["cost_usd"], 4)
-    with open(os.path.join(DATA, "summary.json"), "w", encoding="utf8") as fh:
-        json.dump(summary, fh, ensure_ascii=False, indent=2)
-
     # ------------------------------------------------ verification against sources
     checks = {
         "decisions attributed + unattributed == play records": sum(r["n_decisions"] for r in rows) + totals["unattributed_play"] == totals["play"],
         "decisions_by_label sum == attributed decisions": sum(r["n"] for r in lab_rows) == sum(r["n_decisions"] for r in rows),
         "escalations rows == records with escalation": n_esc == len(esc_rows),
         "every runs.jsonl id present in runs.csv": all(k in {r["run_id"] for r in rows} for k in runs_jsonl),
-        "commits == git rev-list --all --count": n_commits == int(subprocess.run(["git", "-C", JEV, "rev-list", "--all", "--count"], capture_output=True, text=True).stdout.strip()),
+        "commits == git rev-list --all --count": n_commits == int(git_history(["rev-list", "--count"], git_refs).strip()),
     }
+    summary["source_checks_passed"] = all(checks.values())
+    with open(os.path.join(DATA, "summary.json"), "w", encoding="utf8") as fh:
+        json.dump(summary, fh, ensure_ascii=False, indent=2)
     mism = []
     for r in rows:
         rj = runs_jsonl.get(r["run_id"])
@@ -1037,7 +1059,7 @@ def component_costs(root=ROOT, code_root=ROOT):
         return False
 
 
-if __name__ == "__main__":
+def main():
     lim, summ, counts = build()
     if "--no-raw" not in sys.argv:
         raw_snapshot(lim)
@@ -1046,4 +1068,8 @@ if __name__ == "__main__":
     cost_ok = component_costs()
     hits = scan_for_keys()
     print("key scan: " + ("CLEAN (no sk-<key> patterns)" if not hits else "FOUND in " + ", ".join(hits)))
-    sys.exit(1 if hits or not curve_ok or not cost_ok else 0)
+    return 1 if hits or not curve_ok or not cost_ok or summ["source_checks_passed"] is not True else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

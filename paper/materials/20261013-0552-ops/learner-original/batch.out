@@ -1,0 +1,66 @@
+## 修 bug 回报
+
+- 合并基线：main → b1dcf80843740169e1c5f796f2e232c11c50fdee
+- 修复（每条一行）：无新增修复；撤修复失败验证不适用。
+- 已被别人修掉的：paper-dataset-git-consistency-race — 16bfe0bd6ecaa91d04a91c01edc94cecc781f71f
+- 已被别人修掉的：boss-sim-codex-home-preflight — 5921f8cd045853182c867a6430e75c3fcde00a87
+- 已被别人修掉的：silent-0367 已用尾巴状态传递 — a8b1f8be153fe4f3a34146117546c2178f2e446b
+- 已被别人修掉的：历史条目与提交号共167条核查映射，逐项保存在[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-054302/learner/runs/20261013-054324-fix-batch/report.md)。
+- 没修的：既有策略、独立结构／功能提案及缺证问题 — 原因逐项见报告及下方 JSON。
+- 测试：tsc 退出码0；定向 vitest 3文件／12用例／退出码0；嵌套 Python 10例通过，无重跑。未重复完整套件；gitleaks 退出码0。
+- 合入：未合入（无新增修复提交；工作区干净，队列未改）。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "b1dcf80843740169e1c5f796f2e232c11c50fdee",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类：沿既有strategy-proposal；有限子项不关闭整个宽提案。"
+    },
+    {
+      "item": "silent-0365：未建模定向药水目标截成前两个",
+      "reason": "独立药水/结构提案：当前缺口仍在，沿silent-proposal-70c22e94eda8f8a9处理合法目标及题目容量契约。"
+    },
+    {
+      "item": "silent-0332：双boss接续资源异常根因",
+      "reason": "证据不足：已有诊断，旧证据缺可重放触发样本；沿原策略链核实。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed（silent-0446）",
+      "reason": "独立结构提案：silent-proposal-2d3aa8dfb27dbe3f已明确交strategy-proposal实现待确认事务。"
+    },
+    {
+      "item": "历史通知失败恢复、sandbox-glob上游竞态",
+      "reason": "证据不足：诊断及有界恢复已修，旧通知是否已发及目录创建/删除者未证。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时、历史测试超时因果",
+      "reason": "证据不足：未证明永久饥饿或内部/负载根因。"
+    },
+    {
+      "item": "具名卡全入口、量化消费者、全漏斗、统一资源价值及其他专项",
+      "reason": "太大/独立功能或策略研究：继续原专用任务和父要求。"
+    }
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 12},
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-054302/learner/runs/20261013-054324-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13212-1efe-7c91-9e07-fb3789671f3f
+轮数：1；工具调用：command_execution×44
+token：输入 173.4k、输出 16.3k（其中推理 6320）、cache 读 3107.3k、cache 写 0（命中 94.7%）
+成本：未提供
+耗时：561.5 s（墙钟）
+时间：首个事件 28.5 s、模型首个输出 33.0 s、首次工具 35.1 s、末次工具结束 531.5 s；工具内共 208.4 s，其余（模型生成、推理、网络）324.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-054302）；模型的工具调用 exec×29；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T05-43-30-01a13212-1efe-7c91-9e07-fb3789671f3f.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-054302/learner/runs/20261013-054324-fix-batch.jsonl

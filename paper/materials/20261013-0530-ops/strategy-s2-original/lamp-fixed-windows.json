@@ -1,0 +1,6679 @@
+[
+  {
+    "historical_case": {
+      "run": "K3676LU8B0UH",
+      "asc": 1,
+      "floor": 30,
+      "turn": 2,
+      "attempt": 1,
+      "ts": "2026-10-04T21:37:14.015Z",
+      "card": "POISONED_STAB",
+      "text": "造成10点伤害。 给予4层中毒。",
+      "dynamic": {
+        "Damage": 10,
+        "PoisonPower": 4
+      },
+      "before": {},
+      "after": {
+        "POISON_POWER": 8
+      },
+      "base": 4,
+      "actual": 8,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 217009,
+      "ts": "2026-10-04T21:37:14.015Z",
+      "run": "K3676LU8B0UH",
+      "floor": 30,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 42,
+      "max_hp": 77,
+      "energy": 3,
+      "block": 14,
+      "played": 0,
+      "powers": {
+        "STRENGTH_POWER": 2,
+        "REGEN_POWER": 4
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "POISONED_STAB",
+          "upgraded": true,
+          "values": {
+            "Damage": {
+              "base": 8,
+              "current": 10
+            },
+            "PoisonPower": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "values": {
+            "PoisonPower": {
+              "base": 7,
+              "current": 7
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 8
+            }
+          }
+        },
+        {
+          "id": "LEADING_STRIKE",
+          "upgraded": true,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 8
+            },
+            "Shivs": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "SKEWER",
+          "upgraded": true,
+          "values": {
+            "Damage": {
+              "base": 11,
+              "current": 13
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "BOWLBUG_ROCK",
+          "hp": 32,
+          "block": 0,
+          "alive": true,
+          "move": "HEADBUTT_MOVE",
+          "powers": {
+            "IMBALANCED_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "15",
+              "damage": 15,
+              "hits": 1,
+              "total_damage": 15,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "BOWLBUG_NECTAR",
+          "hp": 19,
+          "block": 0,
+          "alive": true,
+          "move": "BUFF_MOVE",
+          "powers": {},
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "SMALL_CAPSULE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STRAWBERRY",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "VEXING_PUZZLEBOX",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "HORN_CLEAT",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BAG_OF_PREPARATION",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "JUZU_BRACELET",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_TEARS",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "EMBER_TEA",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STONE_CRACKER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 217010,
+      "ts": "2026-10-04T21:37:15.142Z",
+      "run": "K3676LU8B0UH",
+      "floor": 30,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 42,
+      "max_hp": 77,
+      "energy": 2,
+      "block": 14,
+      "played": 1,
+      "powers": {
+        "STRENGTH_POWER": 2,
+        "REGEN_POWER": 4
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "values": {
+            "PoisonPower": {
+              "base": 7,
+              "current": 7
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 8
+            }
+          }
+        },
+        {
+          "id": "LEADING_STRIKE",
+          "upgraded": true,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 8
+            },
+            "Shivs": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "SKEWER",
+          "upgraded": true,
+          "values": {
+            "Damage": {
+              "base": 11,
+              "current": 13
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "BOWLBUG_ROCK",
+          "hp": 32,
+          "block": 0,
+          "alive": true,
+          "move": "HEADBUTT_MOVE",
+          "powers": {
+            "IMBALANCED_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "15",
+              "damage": 15,
+              "hits": 1,
+              "total_damage": 15,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "BOWLBUG_NECTAR",
+          "hp": 9,
+          "block": 0,
+          "alive": true,
+          "move": "BUFF_MOVE",
+          "powers": {
+            "POISON_POWER": 8
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "SMALL_CAPSULE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STRAWBERRY",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "VEXING_PUZZLEBOX",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "HORN_CLEAT",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BAG_OF_PREPARATION",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "JUZU_BRACELET",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_TEARS",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "EMBER_TEA",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STONE_CRACKER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "K3676LU8B0UH",
+      "asc": 1,
+      "floor": 38,
+      "turn": 1,
+      "attempt": 1,
+      "ts": "2026-10-04T21:47:42.704Z",
+      "card": "POISONED_STAB",
+      "text": "造成10点伤害。 给予4层中毒。",
+      "dynamic": {
+        "Damage": 10,
+        "PoisonPower": 4
+      },
+      "before": {
+        "POSSESS_STRENGTH_POWER": 1
+      },
+      "after": {
+        "POSSESS_STRENGTH_POWER": 1,
+        "POISON_POWER": 8
+      },
+      "base": 4,
+      "actual": 8,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 217159,
+      "ts": "2026-10-04T21:47:42.704Z",
+      "run": "K3676LU8B0UH",
+      "floor": 38,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 70,
+      "max_hp": 73,
+      "energy": 2,
+      "block": 0,
+      "played": 3,
+      "powers": {
+        "STRENGTH_POWER": 2
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": true,
+          "values": {
+            "Damage": {
+              "base": 8,
+              "current": 10
+            },
+            "PoisonPower": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        },
+        {
+          "id": "FOOTWORK",
+          "upgraded": true,
+          "values": {
+            "DexterityPower": {
+              "base": 3,
+              "current": 3
+            }
+          }
+        },
+        {
+          "id": "BURST",
+          "upgraded": false,
+          "values": {
+            "Skills": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        },
+        {
+          "id": "LEG_SWEEP",
+          "upgraded": true,
+          "values": {
+            "Block": {
+              "base": 14,
+              "current": 14
+            },
+            "WeakPower": {
+              "base": 3,
+              "current": 3
+            }
+          }
+        },
+        {
+          "id": "MAUL",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 7,
+              "current": 9
+            },
+            "Increase": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "DAGGER_THROW",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 9,
+              "current": 11
+            }
+          }
+        },
+        {
+          "id": "NOXIOUS_FUMES",
+          "upgraded": false,
+          "values": {
+            "PoisonPerTurn": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "THE_LOST",
+          "hp": 68,
+          "block": 0,
+          "alive": true,
+          "move": "DEBILITATING_SMOG",
+          "powers": {
+            "POSSESS_STRENGTH_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "THE_FORGOTTEN",
+          "hp": 106,
+          "block": 0,
+          "alive": true,
+          "move": "MIASMA",
+          "powers": {
+            "POSSESS_SPEED_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Defend",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "SMALL_CAPSULE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STRAWBERRY",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "VEXING_PUZZLEBOX",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "HORN_CLEAT",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BAG_OF_PREPARATION",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "JUZU_BRACELET",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_TEARS",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "EMBER_TEA",
+          "counter": null,
+          "stack": 0,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STONE_CRACKER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "CLAWS",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 217160,
+      "ts": "2026-10-04T21:47:45.668Z",
+      "run": "K3676LU8B0UH",
+      "floor": 38,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 70,
+      "max_hp": 73,
+      "energy": 1,
+      "block": 0,
+      "played": 4,
+      "powers": {
+        "STRENGTH_POWER": 2
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "FOOTWORK",
+          "upgraded": true,
+          "values": {
+            "DexterityPower": {
+              "base": 3,
+              "current": 3
+            }
+          }
+        },
+        {
+          "id": "BURST",
+          "upgraded": false,
+          "values": {
+            "Skills": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        },
+        {
+          "id": "LEG_SWEEP",
+          "upgraded": true,
+          "values": {
+            "Block": {
+              "base": 14,
+              "current": 14
+            },
+            "WeakPower": {
+              "base": 3,
+              "current": 3
+            }
+          }
+        },
+        {
+          "id": "MAUL",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 7,
+              "current": 9
+            },
+            "Increase": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "DAGGER_THROW",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 9,
+              "current": 11
+            }
+          }
+        },
+        {
+          "id": "NOXIOUS_FUMES",
+          "upgraded": false,
+          "values": {
+            "PoisonPerTurn": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "THE_LOST",
+          "hp": 58,
+          "block": 0,
+          "alive": true,
+          "move": "DEBILITATING_SMOG",
+          "powers": {
+            "POSSESS_STRENGTH_POWER": 1,
+            "POISON_POWER": 8
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "THE_FORGOTTEN",
+          "hp": 106,
+          "block": 0,
+          "alive": true,
+          "move": "MIASMA",
+          "powers": {
+            "POSSESS_SPEED_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Defend",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "SMALL_CAPSULE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STRAWBERRY",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "VEXING_PUZZLEBOX",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "HORN_CLEAT",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BAG_OF_PREPARATION",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "JUZU_BRACELET",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_TEARS",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "EMBER_TEA",
+          "counter": null,
+          "stack": 0,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STONE_CRACKER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "CLAWS",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "SADL3CGYTGSR",
+      "asc": 7,
+      "floor": 45,
+      "turn": 1,
+      "attempt": 1,
+      "ts": "2026-10-05T13:03:37.539Z",
+      "card": "DEADLY_POISON",
+      "text": "给予5层中毒。",
+      "dynamic": {
+        "PoisonPower": 5
+      },
+      "before": {
+        "POSSESS_SPEED_POWER": 1
+      },
+      "after": {
+        "POSSESS_SPEED_POWER": 1,
+        "POISON_POWER": 10
+      },
+      "base": 5,
+      "actual": 10,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 232562,
+      "ts": "2026-10-05T13:03:37.539Z",
+      "run": "SADL3CGYTGSR",
+      "floor": 45,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 35,
+      "max_hp": 83,
+      "energy": 2,
+      "block": 0,
+      "played": 1,
+      "powers": {
+        "PLATING_POWER": 4
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "BUBBLE_BUBBLE",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 9,
+              "current": 9
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "ACCELERANT",
+          "upgraded": false,
+          "values": {
+            "Accelerant": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        },
+        {
+          "id": "PRODUCTION",
+          "upgraded": false,
+          "values": {
+            "Energy": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "CLUMSY",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "PIERCING_WAIL",
+          "upgraded": false,
+          "values": {
+            "StrengthLoss": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "THE_LOST",
+          "hp": 81,
+          "block": 0,
+          "alive": true,
+          "move": "DEBILITATING_SMOG",
+          "powers": {
+            "POSSESS_STRENGTH_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "THE_FORGOTTEN",
+          "hp": 94,
+          "block": 0,
+          "alive": true,
+          "move": "MIASMA",
+          "powers": {
+            "POSSESS_SPEED_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Defend",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [
+        {
+          "slot": 0,
+          "id": "FLEX_POTION"
+        }
+      ],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "SMALL_CAPSULE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "RAZOR_TOOTH",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "REGAL_PILLOW",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GORGET",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "LETTER_OPENER",
+          "counter": null,
+          "stack": 0,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_LEGION",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "WHITE_STAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STONE_CRACKER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "IRON_CLUB",
+          "counter": null,
+          "stack": 4,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GREMLIN_HORN",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FORGOTTEN_SOUL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 232563,
+      "ts": "2026-10-05T13:03:38.559Z",
+      "run": "SADL3CGYTGSR",
+      "floor": 45,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 35,
+      "max_hp": 83,
+      "energy": 1,
+      "block": 0,
+      "played": 2,
+      "powers": {
+        "PLATING_POWER": 4
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "BUBBLE_BUBBLE",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 9,
+              "current": 9
+            }
+          }
+        },
+        {
+          "id": "ACCELERANT",
+          "upgraded": false,
+          "values": {
+            "Accelerant": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        },
+        {
+          "id": "PRODUCTION",
+          "upgraded": false,
+          "values": {
+            "Energy": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "CLUMSY",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "PIERCING_WAIL",
+          "upgraded": false,
+          "values": {
+            "StrengthLoss": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "THE_LOST",
+          "hp": 81,
+          "block": 0,
+          "alive": true,
+          "move": "DEBILITATING_SMOG",
+          "powers": {
+            "POSSESS_STRENGTH_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "THE_FORGOTTEN",
+          "hp": 94,
+          "block": 0,
+          "alive": true,
+          "move": "MIASMA",
+          "powers": {
+            "POSSESS_SPEED_POWER": 1,
+            "POISON_POWER": 10
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Defend",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [
+        {
+          "slot": 0,
+          "id": "FLEX_POTION"
+        }
+      ],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "SMALL_CAPSULE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "RAZOR_TOOTH",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "REGAL_PILLOW",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GORGET",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "LETTER_OPENER",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_LEGION",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "WHITE_STAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "STONE_CRACKER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "IRON_CLUB",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GREMLIN_HORN",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FORGOTTEN_SOUL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 9,
+      "turn": 2,
+      "attempt": 1,
+      "ts": "2026-10-07T14:47:17.483Z",
+      "card": "DEADLY_POISON",
+      "text": "给予5层中毒。",
+      "dynamic": {
+        "PoisonPower": 5
+      },
+      "before": {},
+      "after": {
+        "POISON_POWER": 10
+      },
+      "base": 5,
+      "actual": 10,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 283036,
+      "ts": "2026-10-07T14:47:17.483Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 9,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 50,
+      "max_hp": 70,
+      "energy": 2,
+      "block": 10,
+      "played": 1,
+      "powers": {
+        "DEXTERITY_POWER": 2
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "values": {
+            "PoisonPower": {
+              "base": 7,
+              "current": 7
+            }
+          }
+        },
+        {
+          "id": "POUNCE",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 14,
+              "current": 14
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "EYE_WITH_TEETH",
+          "hp": 6,
+          "block": 0,
+          "alive": true,
+          "move": "DISTRACT_MOVE",
+          "powers": {
+            "ILLUSION_POWER": 1,
+            "MINION_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "StatusCard",
+              "label": "3",
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": 3
+            }
+          ]
+        },
+        {
+          "id": "FOGMOG",
+          "hp": 56,
+          "block": 0,
+          "alive": true,
+          "move": "SWIPE_MOVE",
+          "powers": {},
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283037,
+      "ts": "2026-10-07T14:47:18.386Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 9,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 50,
+      "max_hp": 70,
+      "energy": 1,
+      "block": 10,
+      "played": 2,
+      "powers": {
+        "DEXTERITY_POWER": 2
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "values": {
+            "PoisonPower": {
+              "base": 7,
+              "current": 7
+            }
+          }
+        },
+        {
+          "id": "POUNCE",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 14,
+              "current": 14
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "EYE_WITH_TEETH",
+          "hp": 6,
+          "block": 0,
+          "alive": true,
+          "move": "DISTRACT_MOVE",
+          "powers": {
+            "ILLUSION_POWER": 1,
+            "MINION_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "StatusCard",
+              "label": "3",
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": 3
+            }
+          ]
+        },
+        {
+          "id": "FOGMOG",
+          "hp": 56,
+          "block": 0,
+          "alive": true,
+          "move": "SWIPE_MOVE",
+          "powers": {
+            "POISON_POWER": 10
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 11,
+      "turn": 1,
+      "attempt": 1,
+      "ts": "2026-10-07T14:48:03.679Z",
+      "card": "DEADLY_POISON",
+      "text": "给予5层中毒。",
+      "dynamic": {
+        "PoisonPower": 5
+      },
+      "before": {},
+      "after": {
+        "POISON_POWER": 10
+      },
+      "base": 5,
+      "actual": 10,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 283060,
+      "ts": "2026-10-07T14:48:03.679Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 11,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 60,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 5,
+      "played": 3,
+      "powers": {
+        "FREE_SKILL_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "PRECISE_CUT",
+          "upgraded": false,
+          "values": {
+            "CalculatedDamage": {
+              "base": 13,
+              "current": 7
+            },
+            "CalculationBase": {
+              "base": 13,
+              "current": 13
+            },
+            "ExtraDamage": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "CLUMSY",
+          "upgraded": false,
+          "values": {}
+        }
+      ],
+      "enemies": [
+        {
+          "id": "VINE_SHAMBLER",
+          "hp": 44,
+          "block": 0,
+          "alive": true,
+          "move": "SWIPE_MOVE",
+          "powers": {},
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "7[font_size=18]×2[/font_size]",
+              "damage": 7,
+              "hits": 2,
+              "total_damage": 14,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283061,
+      "ts": "2026-10-07T14:48:04.978Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 11,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 60,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 5,
+      "played": 4,
+      "powers": {},
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "PRECISE_CUT",
+          "upgraded": false,
+          "values": {
+            "CalculatedDamage": {
+              "base": 13,
+              "current": 9
+            },
+            "CalculationBase": {
+              "base": 13,
+              "current": 13
+            },
+            "ExtraDamage": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "CLUMSY",
+          "upgraded": false,
+          "values": {}
+        }
+      ],
+      "enemies": [
+        {
+          "id": "VINE_SHAMBLER",
+          "hp": 44,
+          "block": 0,
+          "alive": true,
+          "move": "SWIPE_MOVE",
+          "powers": {
+            "POISON_POWER": 10
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "7[font_size=18]×2[/font_size]",
+              "damage": 7,
+              "hits": 2,
+              "total_damage": 14,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 13,
+      "turn": 2,
+      "attempt": 1,
+      "ts": "2026-10-07T14:49:20.890Z",
+      "card": "DEADLY_POISON",
+      "text": "给予5层中毒。",
+      "dynamic": {
+        "PoisonPower": 5
+      },
+      "before": {
+        "TERRITORIAL_POWER": 1,
+        "WEAK_POWER": 2,
+        "STRENGTH_POWER": 1
+      },
+      "after": {
+        "TERRITORIAL_POWER": 1,
+        "WEAK_POWER": 2,
+        "STRENGTH_POWER": 1,
+        "POISON_POWER": 10
+      },
+      "base": 5,
+      "actual": 10,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 283081,
+      "ts": "2026-10-07T14:49:20.890Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 13,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 66,
+      "max_hp": 80,
+      "energy": 3,
+      "block": 0,
+      "played": 0,
+      "powers": {},
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "SURVIVOR",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 8,
+              "current": 8
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "values": {
+            "PoisonPower": {
+              "base": 7,
+              "current": 7
+            }
+          }
+        },
+        {
+          "id": "NEUTRALIZE",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 3,
+              "current": 3
+            },
+            "WeakPower": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "BYRDONIS",
+          "hp": 70,
+          "block": 0,
+          "alive": true,
+          "move": "PECK_MOVE",
+          "powers": {
+            "TERRITORIAL_POWER": 1,
+            "WEAK_POWER": 2,
+            "STRENGTH_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "3[font_size=18]×3[/font_size]",
+              "damage": 3,
+              "hits": 3,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283082,
+      "ts": "2026-10-07T14:49:21.800Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 13,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 66,
+      "max_hp": 80,
+      "energy": 2,
+      "block": 0,
+      "played": 1,
+      "powers": {},
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "SURVIVOR",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 8,
+              "current": 8
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "values": {
+            "PoisonPower": {
+              "base": 7,
+              "current": 7
+            }
+          }
+        },
+        {
+          "id": "NEUTRALIZE",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 3,
+              "current": 3
+            },
+            "WeakPower": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "BYRDONIS",
+          "hp": 70,
+          "block": 0,
+          "alive": true,
+          "move": "PECK_MOVE",
+          "powers": {
+            "TERRITORIAL_POWER": 1,
+            "WEAK_POWER": 2,
+            "STRENGTH_POWER": 1,
+            "POISON_POWER": 10
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "3[font_size=18]×3[/font_size]",
+              "damage": 3,
+              "hits": 3,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 15,
+      "turn": 2,
+      "attempt": 1,
+      "ts": "2026-10-07T14:50:36.211Z",
+      "card": "DEADLY_POISON",
+      "text": "给予7层中毒。",
+      "dynamic": {
+        "PoisonPower": 7
+      },
+      "before": {
+        "STRENGTH_POWER": 2
+      },
+      "after": {
+        "STRENGTH_POWER": 2,
+        "POISON_POWER": 14
+      },
+      "base": 7,
+      "actual": 14,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 283112,
+      "ts": "2026-10-07T14:50:36.211Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 15,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 67,
+      "max_hp": 80,
+      "energy": 3,
+      "block": 13,
+      "played": 0,
+      "powers": {
+        "FRAIL_POWER": 2
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "values": {
+            "PoisonPower": {
+              "base": 7,
+              "current": 7
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 3
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "SNAPPING_JAXFRUIT",
+          "hp": 34,
+          "block": 0,
+          "alive": true,
+          "move": "ENERGY_ORB_MOVE",
+          "powers": {
+            "STRENGTH_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "FLYCONID",
+          "hp": 50,
+          "block": 0,
+          "alive": true,
+          "move": "VULNERABLE_SPORES_MOVE",
+          "powers": {},
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [
+        {
+          "slot": 0,
+          "id": "FLEX_POTION"
+        }
+      ],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283113,
+      "ts": "2026-10-07T14:50:37.124Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 15,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 67,
+      "max_hp": 80,
+      "energy": 2,
+      "block": 13,
+      "played": 1,
+      "powers": {
+        "FRAIL_POWER": 2
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 3
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "SNAPPING_JAXFRUIT",
+          "hp": 34,
+          "block": 0,
+          "alive": true,
+          "move": "ENERGY_ORB_MOVE",
+          "powers": {
+            "STRENGTH_POWER": 2,
+            "POISON_POWER": 14
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "FLYCONID",
+          "hp": 50,
+          "block": 0,
+          "alive": true,
+          "move": "VULNERABLE_SPORES_MOVE",
+          "powers": {},
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [
+        {
+          "slot": 0,
+          "id": "FLEX_POTION"
+        }
+      ],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 17,
+      "turn": 1,
+      "attempt": 1,
+      "ts": "2026-10-07T14:52:08.907Z",
+      "card": "DEADLY_POISON",
+      "text": "给予5层中毒。",
+      "dynamic": {
+        "PoisonPower": 5
+      },
+      "before": {},
+      "after": {
+        "POISON_POWER": 10
+      },
+      "base": 5,
+      "actual": 10,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 283146,
+      "ts": "2026-10-07T14:52:08.907Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 17,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 80,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 0,
+      "played": 4,
+      "powers": {
+        "FREE_SKILL_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "NOXIOUS_FUMES",
+          "upgraded": false,
+          "values": {
+            "PoisonPerTurn": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CEREMONIAL_BEAST",
+          "hp": 231,
+          "block": 0,
+          "alive": true,
+          "move": "STAMP_MOVE",
+          "powers": {},
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283147,
+      "ts": "2026-10-07T14:52:10.167Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 17,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 80,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 0,
+      "played": 5,
+      "powers": {},
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "NOXIOUS_FUMES",
+          "upgraded": false,
+          "values": {
+            "PoisonPerTurn": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CEREMONIAL_BEAST",
+          "hp": 231,
+          "block": 0,
+          "alive": true,
+          "move": "STAMP_MOVE",
+          "powers": {
+            "POISON_POWER": 10
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 19,
+      "turn": 1,
+      "attempt": 1,
+      "ts": "2026-10-07T14:54:23.262Z",
+      "card": "MALAISE",
+      "text": "敌人失去X点力量。给予X层虚弱。 消耗。",
+      "dynamic": {},
+      "before": {
+        "ESCAPE_ARTIST_POWER": 5
+      },
+      "after": {
+        "ESCAPE_ARTIST_POWER": 5,
+        "STRENGTH_POWER": -2,
+        "WEAK_POWER": 2
+      },
+      "base": 1,
+      "actual": [
+        2,
+        2
+      ],
+      "kind": "malaise",
+      "doubled": true
+    },
+    "before": {
+      "line": 283185,
+      "ts": "2026-10-07T14:54:23.262Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 19,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 74,
+      "max_hp": 80,
+      "energy": 1,
+      "block": 7,
+      "played": 2,
+      "powers": {
+        "DEXTERITY_POWER": 2
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "POUNCE",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 14,
+              "current": 14
+            }
+          }
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 7
+            }
+          }
+        },
+        {
+          "id": "MALAISE",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "THIEVING_HOPPER",
+          "hp": 84,
+          "block": 0,
+          "alive": true,
+          "move": "THIEVERY_MOVE",
+          "powers": {
+            "ESCAPE_ARTIST_POWER": 5
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "19",
+              "damage": 19,
+              "hits": 1,
+              "total_damage": 19,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "CardDebuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283186,
+      "ts": "2026-10-07T14:54:24.308Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 19,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 74,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 7,
+      "played": 3,
+      "powers": {
+        "DEXTERITY_POWER": 2
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "POUNCE",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 14,
+              "current": 14
+            }
+          }
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 7
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "THIEVING_HOPPER",
+          "hp": 84,
+          "block": 0,
+          "alive": true,
+          "move": "THIEVERY_MOVE",
+          "powers": {
+            "ESCAPE_ARTIST_POWER": 5,
+            "STRENGTH_POWER": -2,
+            "WEAK_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "12",
+              "damage": 12,
+              "hits": 1,
+              "total_damage": 12,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "CardDebuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 22,
+      "turn": 3,
+      "attempt": 1,
+      "ts": "2026-10-07T14:57:54.058Z",
+      "card": "DEADLY_POISON",
+      "text": "给予5层中毒。",
+      "dynamic": {
+        "PoisonPower": 5
+      },
+      "before": {
+        "IMBALANCED_POWER": 1
+      },
+      "after": {
+        "IMBALANCED_POWER": 1,
+        "POISON_POWER": 10
+      },
+      "base": 5,
+      "actual": 10,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 283240,
+      "ts": "2026-10-07T14:57:54.058Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 22,
+      "turn": 3,
+      "screen": "COMBAT",
+      "hp": 45,
+      "max_hp": 80,
+      "energy": 1,
+      "block": 10,
+      "played": 2,
+      "powers": {},
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "MALAISE",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "BOWLBUG_ROCK",
+          "hp": 26,
+          "block": 0,
+          "alive": true,
+          "move": "STUNNED",
+          "powers": {
+            "IMBALANCED_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Stun",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "BOWLBUG_EGG",
+          "hp": 8,
+          "block": 8,
+          "alive": true,
+          "move": "BITE_MOVE",
+          "powers": {},
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "8",
+              "damage": 8,
+              "hits": 1,
+              "total_damage": 8,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Defend",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283241,
+      "ts": "2026-10-07T14:57:54.972Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 22,
+      "turn": 3,
+      "screen": "COMBAT",
+      "hp": 45,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 10,
+      "played": 3,
+      "powers": {},
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "MALAISE",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "BOWLBUG_ROCK",
+          "hp": 26,
+          "block": 0,
+          "alive": true,
+          "move": "STUNNED",
+          "powers": {
+            "IMBALANCED_POWER": 1,
+            "POISON_POWER": 10
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Stun",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "BOWLBUG_EGG",
+          "hp": 8,
+          "block": 8,
+          "alive": true,
+          "move": "BITE_MOVE",
+          "powers": {},
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "8",
+              "damage": 8,
+              "hits": 1,
+              "total_damage": 8,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Defend",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 25,
+      "turn": 2,
+      "attempt": 1,
+      "ts": "2026-10-07T15:01:00.553Z",
+      "card": "DEADLY_POISON",
+      "text": "给予5层中毒。",
+      "dynamic": {
+        "PoisonPower": 5
+      },
+      "before": {
+        "THORNS_POWER": 5
+      },
+      "after": {
+        "THORNS_POWER": 5,
+        "POISON_POWER": 10
+      },
+      "base": 5,
+      "actual": 10,
+      "kind": "poison",
+      "doubled": true
+    },
+    "before": {
+      "line": 283297,
+      "ts": "2026-10-07T15:01:00.553Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 25,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 44,
+      "max_hp": 80,
+      "energy": 1,
+      "block": 5,
+      "played": 1,
+      "powers": {},
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "PRECISE_CUT",
+          "upgraded": false,
+          "values": {
+            "CalculatedDamage": {
+              "base": 13,
+              "current": 7
+            },
+            "CalculationBase": {
+              "base": 13,
+              "current": 13
+            },
+            "ExtraDamage": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": false,
+          "values": {
+            "PoisonPower": {
+              "base": 5,
+              "current": 5
+            }
+          }
+        },
+        {
+          "id": "CLUMSY",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "NEUTRALIZE",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 3,
+              "current": 3
+            },
+            "WeakPower": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "SPINY_TOAD",
+          "hp": 74,
+          "block": 0,
+          "alive": true,
+          "move": "SPIKE_EXPLOSION_MOVE",
+          "powers": {
+            "THORNS_POWER": 5
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "25",
+              "damage": 25,
+              "hits": 1,
+              "total_damage": 25,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 2,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283298,
+      "ts": "2026-10-07T15:01:01.488Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 25,
+      "turn": 2,
+      "screen": "COMBAT",
+      "hp": 44,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 5,
+      "played": 2,
+      "powers": {},
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "PRECISE_CUT",
+          "upgraded": false,
+          "values": {
+            "CalculatedDamage": {
+              "base": 13,
+              "current": 9
+            },
+            "CalculationBase": {
+              "base": 13,
+              "current": 13
+            },
+            "ExtraDamage": {
+              "base": 2,
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "CLUMSY",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "NEUTRALIZE",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 3,
+              "current": 3
+            },
+            "WeakPower": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "SPINY_TOAD",
+          "hp": 74,
+          "block": 0,
+          "alive": true,
+          "move": "SPIKE_EXPLOSION_MOVE",
+          "powers": {
+            "THORNS_POWER": 5,
+            "POISON_POWER": 10
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "25",
+              "damage": 25,
+              "hits": 1,
+              "total_damage": 25,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 2,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 33,
+      "turn": 1,
+      "attempt": 1,
+      "ts": "2026-10-07T15:06:38.878Z",
+      "card": "MALAISE",
+      "text": "敌人失去X点力量。给予X层虚弱。 消耗。",
+      "dynamic": {},
+      "before": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1
+      },
+      "after": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1,
+        "STRENGTH_POWER": -2,
+        "WEAK_POWER": 2
+      },
+      "base": 1,
+      "actual": [
+        2,
+        2
+      ],
+      "kind": "malaise",
+      "doubled": true
+    },
+    "before": {
+      "line": 283394,
+      "ts": "2026-10-07T15:06:38.878Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 1,
+      "block": 14,
+      "played": 2,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 10,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "MALAISE",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "SHIV",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 209,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283395,
+      "ts": "2026-10-07T15:06:39.932Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 14,
+      "played": 3,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 10,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "SHIV",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 209,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1,
+            "STRENGTH_POWER": -2,
+            "WEAK_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 33,
+      "turn": 1,
+      "attempt": 2,
+      "ts": "2026-10-07T15:08:28.268Z",
+      "card": "MALAISE",
+      "text": "敌人失去X点力量。给予X层虚弱。 消耗。",
+      "dynamic": {},
+      "before": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1
+      },
+      "after": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1,
+        "STRENGTH_POWER": -2,
+        "WEAK_POWER": 2
+      },
+      "base": 1,
+      "actual": [
+        2,
+        2
+      ],
+      "kind": "malaise",
+      "doubled": true
+    },
+    "before": {
+      "line": 283415,
+      "ts": "2026-10-07T15:08:28.268Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 1,
+      "block": 14,
+      "played": 2,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 10,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "MALAISE",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "SHIV",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 209,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283416,
+      "ts": "2026-10-07T15:08:29.295Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 14,
+      "played": 3,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 10,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "SHIV",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 209,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1,
+            "STRENGTH_POWER": -2,
+            "WEAK_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 33,
+      "turn": 1,
+      "attempt": 3,
+      "ts": "2026-10-07T15:10:58.224Z",
+      "card": "MALAISE",
+      "text": "敌人失去X点力量。给予X层虚弱。 消耗。",
+      "dynamic": {},
+      "before": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1
+      },
+      "after": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1,
+        "STRENGTH_POWER": -2,
+        "WEAK_POWER": 2
+      },
+      "base": 1,
+      "actual": [
+        2,
+        2
+      ],
+      "kind": "malaise",
+      "doubled": true
+    },
+    "before": {
+      "line": 283437,
+      "ts": "2026-10-07T15:10:58.224Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 1,
+      "block": 14,
+      "played": 2,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 10,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "MALAISE",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "SHIV",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 209,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283438,
+      "ts": "2026-10-07T15:10:59.296Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 14,
+      "played": 3,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 10,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "SHIV",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 209,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1,
+            "STRENGTH_POWER": -2,
+            "WEAK_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 33,
+      "turn": 1,
+      "attempt": 4,
+      "ts": "2026-10-07T15:13:28.924Z",
+      "card": "MALAISE",
+      "text": "敌人失去X点力量。给予X层虚弱。 消耗。",
+      "dynamic": {},
+      "before": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1
+      },
+      "after": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1,
+        "STRENGTH_POWER": -2,
+        "WEAK_POWER": 2
+      },
+      "base": 1,
+      "actual": [
+        2,
+        2
+      ],
+      "kind": "malaise",
+      "doubled": true
+    },
+    "before": {
+      "line": 283459,
+      "ts": "2026-10-07T15:13:28.924Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 1,
+      "block": 14,
+      "played": 2,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 10,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "MALAISE",
+          "upgraded": false,
+          "values": {}
+        },
+        {
+          "id": "SHIV",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 209,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283460,
+      "ts": "2026-10-07T15:13:29.978Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 14,
+      "played": 3,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 10,
+              "current": 10
+            }
+          }
+        },
+        {
+          "id": "SHIV",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 4,
+              "current": 4
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 209,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1,
+            "STRENGTH_POWER": -2,
+            "WEAK_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 33,
+      "turn": 1,
+      "attempt": 5,
+      "ts": "2026-10-07T15:15:23.569Z",
+      "card": "MALAISE",
+      "text": "敌人失去X点力量。给予X层虚弱。 消耗。",
+      "dynamic": {},
+      "before": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1
+      },
+      "after": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1,
+        "STRENGTH_POWER": -2,
+        "WEAK_POWER": 2
+      },
+      "base": 1,
+      "actual": [
+        2,
+        2
+      ],
+      "kind": "malaise",
+      "doubled": true
+    },
+    "before": {
+      "line": 283481,
+      "ts": "2026-10-07T15:15:23.569Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 1,
+      "block": 8,
+      "played": 2,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "CLOAK_AND_DAGGER",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 6,
+              "current": 6
+            },
+            "Cards": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        },
+        {
+          "id": "MALAISE",
+          "upgraded": false,
+          "values": {}
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 189,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283482,
+      "ts": "2026-10-07T15:15:24.609Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 8,
+      "played": 3,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "CLOAK_AND_DAGGER",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 6,
+              "current": 6
+            },
+            "Cards": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1,
+            "STRENGTH_POWER": -2,
+            "WEAK_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 189,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  },
+  {
+    "historical_case": {
+      "run": "NHA2KW0RB7VP",
+      "asc": 10,
+      "floor": 33,
+      "turn": 1,
+      "attempt": 6,
+      "ts": "2026-10-07T15:18:03.106Z",
+      "card": "MALAISE",
+      "text": "敌人失去X点力量。给予X层虚弱。 消耗。",
+      "dynamic": {},
+      "before": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1
+      },
+      "after": {
+        "BACK_ATTACK_LEFT_POWER": 1,
+        "CRAB_RAGE_POWER": 1,
+        "STRENGTH_POWER": -2,
+        "WEAK_POWER": 2
+      },
+      "base": 1,
+      "actual": [
+        2,
+        2
+      ],
+      "kind": "malaise",
+      "doubled": true
+    },
+    "before": {
+      "line": 283505,
+      "ts": "2026-10-07T15:18:03.106Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 1,
+      "block": 8,
+      "played": 2,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "CLOAK_AND_DAGGER",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 6,
+              "current": 6
+            },
+            "Cards": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        },
+        {
+          "id": "MALAISE",
+          "upgraded": false,
+          "values": {}
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 189,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "after": {
+      "line": 283506,
+      "ts": "2026-10-07T15:18:04.138Z",
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "screen": "COMBAT",
+      "hp": 30,
+      "max_hp": 80,
+      "energy": 0,
+      "block": 8,
+      "played": 3,
+      "powers": {
+        "SURROUNDED_POWER": 1
+      },
+      "ready": {
+        "can_use_combat_actions": true,
+        "reason": "ready",
+        "actions_settled": true,
+        "running_action_type": null,
+        "ready_action_type": null,
+        "modal_open": false,
+        "modal_type": null,
+        "player_actions_disabled": false,
+        "is_paused": false,
+        "local_ready_to_end_turn": false,
+        "all_players_ready_to_end_turn": true,
+        "ending_turn_phase_one": false,
+        "ending_turn_phase_two": false,
+        "end_turn_kick": "",
+        "combat_in_progress": true,
+        "combat_over_or_ending": false,
+        "combat_room_mode": "ActiveCombat",
+        "hand_in_card_play": false,
+        "hand_in_card_selection": false,
+        "hand_mode": "Play",
+        "local_turn_ready": true,
+        "snapshot_stable": true,
+        "player_action_phase": true
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "values": {
+            "Damage": {
+              "base": 6,
+              "current": 6
+            }
+          }
+        },
+        {
+          "id": "CLOAK_AND_DAGGER",
+          "upgraded": false,
+          "values": {
+            "Block": {
+              "base": 6,
+              "current": 6
+            },
+            "Cards": {
+              "base": 1,
+              "current": 1
+            }
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "id": "CRUSHER",
+          "hp": 199,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "powers": {
+            "BACK_ATTACK_LEFT_POWER": 1,
+            "CRAB_RAGE_POWER": 1,
+            "STRENGTH_POWER": -2,
+            "WEAK_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "ROCKET",
+          "hp": 189,
+          "block": 0,
+          "alive": true,
+          "move": "TARGETING_RETICLE_MOVE",
+          "powers": {
+            "BACK_ATTACK_RIGHT_POWER": 1,
+            "CRAB_RAGE_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "potions": [],
+      "relics": [
+        {
+          "relic_id": "RING_OF_THE_SNAKE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "GOLDEN_PEARL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "UNSETTLING_LAMP",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PEAR",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "BLOOD_VIAL",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "PAELS_FLESH",
+          "counter": null,
+          "stack": 1,
+          "is_melted": false
+        },
+        {
+          "relic_id": "AMETHYST_AUBERGINE",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "MR_STRUGGLES",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        },
+        {
+          "relic_id": "FESTIVE_POPPER",
+          "counter": null,
+          "stack": null,
+          "is_melted": false
+        }
+      ]
+    },
+    "lamp_state": [
+      {
+        "relic_id": "UNSETTLING_LAMP",
+        "counter": null,
+        "stack": null,
+        "is_melted": false
+      }
+    ]
+  }
+]

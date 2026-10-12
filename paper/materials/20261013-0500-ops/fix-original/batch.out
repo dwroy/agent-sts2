@@ -1,0 +1,93 @@
+## 修 bug 回报
+
+- 合并基线：main → `39f5d913477d2d3ec1834388f66c1793c3feb48b`
+- 修复（每条一行）：paper-dataset-git-consistency-race — `16bfe0bd6` — 测试 `agent/tests/paper-dataset-git.test.ts:pins Git export and verification to one ref snapshot and fails the CLI on source mismatches` — 去掉修复时失败：是
+- 修复（每条一行）：boss-sim-codex-home-preflight — `5921f8cd0` — 测试 `agent/tests/boss-sim-home.test.ts:passes the project Codex home from the report hook through learner dispatch without weakening preflight` — 去掉修复时失败：是
+- 已被别人修掉的：164 项已核实，逐项提交见[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/report.md)。
+- 没修的：休息超时改线 — 独立结构提案范围较大；其余策略、专项及证据不足条目详见报告和下方 JSON。
+- 测试：沙箱 tsc 退出码 0；Vitest 345 文件 / 3414 用例 / 退出码 0。补充 detached HEAD 回归后重新验证，无超时重跑；gitleaks 通过。
+- 合入：未合入。锁内已提交知识刷新 `954153481`；预检出现 24 个冲突，其中 7 份知识数据，按要求停止，刷新数据保留。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "39f5d913477d2d3ec1834388f66c1793c3feb48b",
+  "fixes": [
+    {
+      "item": "paper-dataset-git-consistency-race",
+      "commit": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+      "test": "agent/tests/paper-dataset-git.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "boss-sim-codex-home-preflight",
+      "commit": "5921f8cd045853182c867a6430e75c3fcde00a87",
+      "test": "agent/tests/boss-sim-home.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类：沿已有strategy-proposal与专用任务；不将有限子项当整个宽提案完成。"
+    },
+    {
+      "item": "具名卡资料全入口扩展、跨局未知项自动派发及量化构筑消费者",
+      "reason": "太大/独立功能：已核事件子项42c920f34已上线；其余入口、跨局未知派发与量化消费者继续原专用任务，不将部分交付当整个父需求完成。"
+    },
+    {
+      "item": "silent-0332 双boss接续资源异常根因",
+      "reason": "证据不足：队列的VAC6Z1PZ1QJG/64VJC5XT2AT2 A10 F47证据未附可重放触发样本；当前源码已保存分支/seed/资源诊断，沿原策略提案核实，不猜填HP/药水。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史失败恢复",
+      "reason": "证据不足：5c92f2aa已补后续失败stdout/stderr回执；旧rc2无stderr，不能证明未发送，保留幂等记录，不重发。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录竞态",
+      "reason": "证据不足：bc2c40e31及4fef181d5已提供会话前有界恢复和预检复验，上游创建/删除者未证，不放宽权限或清旧树。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时",
+      "reason": "证据不足：已有观察未证明永久饥饿或mod内部根因；保留原核查入口。"
+    },
+    {
+      "item": "全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存与性能专项",
+      "reason": "太大/独立功能及策略研究：继续各自已有专用任务，本批不混入。"
+    },
+    {
+      "item": "batch-c 原17.2秒超时的具体宿主时序",
+      "reason": "证据不足：固定测试问题已由5dd8a20c9修复；原17.2秒宿主超时缺少精确时序，不声称已证明负载根因。"
+    },
+    {
+      "item": "host-fixed-test-timeouts-010547 原宿主超时的具体时序/负载原因",
+      "reason": "证据不足：两项固定夹具已由d9881ba5/9e8c9355修复并实际合入，原021302完整宿主检查394文件4220项通过；原010547失败保留，不把修复夹具当作负载因果已证。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed（MEXYTC0Z2MQQ F12，silent-0446）",
+      "reason": "太大/独立结构提案：原silent-proposal-2d3aa8dfb27dbe3f明确要求独立strategy-proposal实现待确认事务、同局/同房动作效果核实、重启回放与一次性提交。本批不以任意dispatch失败或单纯HP变化无条件apply，不混入原结构任务。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3414
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a131bf-6036-7841-a0cb-f5a0c4189512
+轮数：1；工具调用：command_execution×98 file_change×6
+token：输入 246.9k、输出 62.2k（其中推理 35.3k）、cache 读 12563.3k、cache 写 0（命中 98.1%）
+成本：未提供
+耗时：2552.6 s（墙钟）
+时间：首个事件 26.6 s、模型首个输出 31.9 s、首次工具 34.1 s、末次工具结束 2508.9 s；工具内共 2038.1 s，其余（模型生成、推理、网络）487.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242）；模型的工具调用 exec×72 wait×3；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T04-13-08-01a131bf-6036-7841-a0cb-f5a0c4189512.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch.jsonl

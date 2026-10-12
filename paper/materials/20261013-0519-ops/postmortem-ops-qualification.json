@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-13 05:22:37 CST",
+  "original_report_queue_absent_claim": {
+    "run": "NEPESJXEV9V3",
+    "where": "agent/src/sl/draws.ts:568",
+    "what": "抑制改升级标记仍被SL抽序记录为新牌插入并截断前缀；既有silent-0279复发，fix-queue未列。",
+    "new": false
+  },
+  "actual_existing_queue_start_line": 829,
+  "actual_existing_queue_section": "## 2026-10-08 07:21 非阻塞纯 bug：SL抽序把升级改标误判为插牌／旧牌离堆（silent-0279）\n\n- [ ] 学习者复盘GXNKW8X1XYJP／静默A10 F45 T2→T3：sl-attempts1053—1056将原抽牌堆BLADE_DANCE、ACCELERANT、OUTBREAK、SUCKER_PUNCH列为inserted，旧升级键未入手离堆，已知前缀截到19/18/19/18；states290201→290206及290214核战内改标／出口恢复，瞬时完整中间帧未记录。当前draws.ts:568/569整堆作差、:602/:657/:674归新牌／离堆；行号取复盘只读live，运行b1714285+dirty完整源码未保存。正常完局，交普通非阻塞队列，未证明影响胜负。\n- 沿原proposal-dampen-identity.md/json及silent-proposal-51fa8bc34774f72d自动链，实施前核租约及live是否已有实现。仅按原提案在已核角色／进阶及明确改标窗口用同基ID与守恒数量唯一配对版本变化，再处理真实抽取／插入／洗牌；同ID多副本、混合版本、缺帧或同帧多动作仍保守断序。场外牌组与战内实际版本分账，固定原帧验证真假插牌／离堆、歧义、恢复及无抑制路径，不改评分、判死或编造未见抽序。\n",
+  "actual_existing_queue_section_sha256": "bcb0739b28ae79a1b19ef891a9f201952ddc94b6e2e93b76fc759b6c8f6c5103",
+  "ops_correction": "Original nonblocking silent-0279 queue entry already exists from 2026-10-08; preserve learner report, append this queue-state qualification only. No duplicate ordinary fix or game-knowledge implementation.",
+  "existing_proposal": "silent-proposal-51fa8bc34774f72d",
+  "current_learner_proposal": "silent-proposal-a51845d3e8ae6358",
+  "both_original_task_and_current_registered_links_preserved": true
+}

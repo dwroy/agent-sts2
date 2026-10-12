@@ -1,0 +1,120 @@
+{
+ "id": "silent-0443",
+ "ts": "2026-10-13T03:00:08+08:00",
+ "character": "silent",
+ "by": "learner:postmortem",
+ "kind": "fight",
+ "claim": "静默A10本局异蛙寄生虫战中，Jev按短程推演最佳线，在当前预测损血相同的比较里多次放弃仍合法的攻击或能力启动：T1余1能量未建灵动步法，T2/T5各未追加6伤打击，T6生存者后余2能量未打15伤猎杀者，T8只中和而未打投掷匕首。所选线的五轮实胜为0/8，终点估计仍给非零胜率。应分开记录真实完成样本与外推估值，核对当下推进及能力后继；未执行替线、抽弃会改变未来，不将候选伤害相加宣称必胜，也不归已定位纯代码bug。",
+ "evidence": [
+  {
+   "run": "7LXWF33J5SAD",
+   "floor": 9,
+   "turn": 1,
+   "role": "support",
+   "note": "d367747/s378548—549：灵动步法与结束当前均损0，1能量足够能力；结束最佳，五轮0/8胜、外推约92%，实际未建立敏捷。",
+   "added": "2026-10-13T03:00:08+08:00"
+  },
+  {
+   "run": "7LXWF33J5SAD",
+   "floor": 9,
+   "turn": 2,
+   "role": "support",
+   "note": "d367752/s378553—554：中和＋防御＋生存者已13挡，余1能量，打击6与结束均损0，选择结束。",
+   "added": "2026-10-13T03:00:08+08:00"
+  },
+  {
+   "run": "7LXWF33J5SAD",
+   "floor": 9,
+   "turn": 5,
+   "role": "support",
+   "note": "d367765/s378566—567：能力实际建立2敏捷，余1能量；打击6与结束均损0，最佳结束，未追补既有5挡。",
+   "added": "2026-10-13T03:00:08+08:00"
+  },
+  {
+   "run": "7LXWF33J5SAD",
+   "floor": 9,
+   "turn": 6,
+   "role": "support",
+   "note": "d367766/768及s378567—570：猎杀者＋生存者与仅生存者均损10；后余2能量再选结束，前者15伤而后者0，五轮实胜均0/8。实际59→49、母体仍25血。",
+   "added": "2026-10-13T03:00:08+08:00"
+  },
+  {
+   "run": "7LXWF33J5SAD",
+   "floor": 9,
+   "turn": 8,
+   "role": "support",
+   "note": "d367772/773与s378573—575：匕首＋中和与仅中和均预测损21，12伤/3伤；实仅3伤、49→28，未做替线受控整战。",
+   "added": "2026-10-13T03:00:08+08:00"
+  }
+ ],
+ "first_run": "7LXWF33J5SAD",
+ "prior": "unknown",
+ "prior_runs": [
+  "JYTQSFJ96MG2",
+  "UACFSW4VDDLD"
+ ],
+ "prior_note": "检索本角色空过、提前结束、阶段结束、相同损血及卡/敌ID，并按静默标题回看早局。JYT F9T3同损0的7伤与夜魇0伤比较选7伤，但没有结束线；UAC旧0100是当前阶段已可立即结束。没有核到更早与本局相同的余能结束比较，不能判一直做对或做错。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "7LXWF33J5SAD"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261013-024302-postmortem/proposal-combat-terminal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-030611-experience-update/proposal-window.md"
+  ],
+  "experience": [
+   "silent-rollout-endpoint-progress-observation"
+  ],
+  "commits": [
+   "21287d3bb189a6c0d5f61f8920e787fd171a5059",
+   "2781d4e6515ae7f7f68abe89c2f1072e1a14e350",
+   "9a411a54cfad66e4abdea2df71877e73b9e2c924"
+  ],
+  "changelog": [
+   "2026-10-13 静默猎手 第一百九十六次增量：2 局 A10（version 2026-10-13.3，分支 exp-merge-recovery-20261013-000402，21287d3b）"
+  ]
+ },
+ "note": "来源任务postmortem，材料learner/runs/20261013-024302-postmortem；提案经独立strategy-proposal验证，未改源码或上线。",
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-13T03:00:08+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-13T03:03:00+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-13T03:21:42+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-13T03:21:44+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-13T03:36:47+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-13T03:59:18+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp198",
+ "effect": null,
+ "notes": [
+  "来源任务postmortem，材料learner/runs/20261013-024302-postmortem；提案经独立strategy-proposal验证，未改源码或上线。",
+  "代码提案 silent-proposal-7d3864ab972fb05e → task=strategy-proposal；Roy-2026-10-07-learning",
+  "本批经验/提案预关联；原claim/prior/first_run/版本和support/repeat保持，提交后proposed，实际shipped由运维核验。",
+  "代码提案 silent-proposal-3258f2ff8daac28c → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第196次静默经验源提交已完成；原claim/first_run/prior/历史版本保持，只登记本批经验proposed。原始数值/SHA、历史复算与映射见本批report.md及experience-integration.json；实际shipped由运维核完成事件，提案/渲染不当源码实现或自然收益。",
+  "仅030610经验批本次观察/压缩范围实际上线，正式V4-R316/经验2026-10-13.3；旧/新及原角色证据见release-changes.json，200旧对象保持，独立退役0442不标shipped。原源343文件3412覆盖与首轮角色环境失败保留，当前tsc/21项通过；live A8/A9/A10原渲染器27个身份完整读取/排除共72次文本核验。完整宿主检查已单次沿原learner-recheck接续，实际结果另验。四机制提案、自然采用/收益及量化父要求未因此完成。"
+ ],
+ "shipped_at": "2026-10-13T03:59:18+08:00"
+}

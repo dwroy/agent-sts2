@@ -1,0 +1,74 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-2d3aa8dfb27dbe3f",
+    "ts": "2026-10-13T03:32:36+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0446"
+    ],
+    "runs": [
+      "MEXYTC0Z2MQQ"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "structure"
+    ],
+    "summary": "已接受改线在休息dispatch超时但实际完成后丢失；保留待确认事务再一次性提交路线。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-031302-postmortem/proposal-route-timeout.md",
+    "rule_changes": false,
+    "proposal_sha256": "f24a6fb27c4012c4806a25f199f31ac6ac2e42e3d1a0ab1bb02c856da9334729",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-de069b3ead7b8ff9",
+    "ts": "2026-10-13T03:32:37+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0447",
+      "silent-0448"
+    ],
+    "runs": [
+      "MEXYTC0Z2MQQ"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion"
+    ],
+    "summary": "无色生成连射应按剩余能量核兑现；限定三能量和超巨化组合，未知生成不预设早喝必胜。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-031302-postmortem/proposal-generated-volley.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "fa343efed33db46e1473155c6976a8547aae898121cc7c74ef19a0e55958a328",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-7c5436b79af1a301",
+    "ts": "2026-10-13T03:32:38+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0079"
+    ],
+    "runs": [
+      "MEXYTC0Z2MQQ"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl",
+      "terminal"
+    ],
+    "summary": "SL低胜率并列仍有7/5血实际代价；记录完整轮末血价、昏眩额度与后段剩血，不把概率并列或跨眩晕当获胜。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-031302-postmortem/proposal-sl-resource-price.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "cdd6ba96097ca5f295d7cc5aaa45dc61cd74fb97b5d28ef696b4408ab4041d29",
+    "state": "pending"
+  }
+]

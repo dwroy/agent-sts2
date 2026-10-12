@@ -1,0 +1,126 @@
+import bisect
+import hashlib
+import json
+from collections import Counter, defaultdict
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent
+
+def load(name):
+    locations = json.loads((OUT / (name + '.index.json')).read_text())
+    with (OUT / (name + '.raw.jsonl')).open('rb') as reader:
+        for loc in locations:
+            raw = reader.readline()
+            assert len(raw) == loc['bytes'] and hashlib.sha256(raw).hexdigest() == loc['sha256']
+            row = json.loads(raw)
+            row['_line'] = loc['line']
+            yield row
+
+def powers(entries):
+    return {p['power_id']: p.get('amount') for p in entries or []}
+
+def compact(row):
+    state = row['state']
+    run = state.get('run') or {}
+    combat = state.get('combat') or {}
+    player = combat.get('player') or {}
+    hand = combat.get('hand') or []
+    return {'line': row['_line'], 'ts': row['ts'], 'run': state['run_id'],
+            'floor': run.get('floor'), 'turn': state.get('turn'), 'screen': row['screen'],
+            'hp': run.get('current_hp'), 'max_hp': run.get('max_hp'),
+            'energy': player.get('energy'), 'block': player.get('block'),
+            'played': player.get('cards_played_this_turn'), 'powers': powers(player.get('powers')),
+            'ready': combat.get('action_readiness'),
+            'hand': [{'id': c['card_id'], 'upgraded': c.get('upgraded'),
+                      'values': {v['name']: {'base': v.get('base_value'), 'current': v.get('current_value')}
+                                 for v in c.get('dynamic_values') or []}} for c in hand],
+            'enemies': [{'id': e['enemy_id'], 'hp': e['current_hp'], 'block': e.get('block'),
+                         'alive': e.get('is_alive'), 'move': e.get('move_id'),
+                         'powers': powers(e.get('powers')), 'intents': e.get('intents')}
+                        for e in combat.get('enemies') or []],
+            'potions': [{'slot': p['index'], 'id': p['potion_id']} for p in run.get('potions') or []
+                        if p.get('occupied')],
+            'relics': [{k: r.get(k) for k in ['relic_id', 'counter', 'stack', 'is_melted']}
+                       for r in run.get('relics') or []]}
+
+states = defaultdict(list)
+matched = {}
+by_line = {}
+for raw in load('states'):
+    value = compact(raw)
+    states[value['run']].append(value)
+    by_line[value['line']] = value
+    matched[(raw['ts'], raw.get('fingerprint'))] = value
+decisions = list(load('decisions'))
+drinks = []
+for row in decisions:
+    chosen = row.get('chosen') or {}
+    if chosen.get('action') != 'use_potion':
+        continue
+    before = matched.get((row['ts'], row.get('fingerprint')))
+    if before is None:
+        drinks.append({'decision_line': row['_line'], 'run': row['run_id'], 'error': '无精确前帧匹配'})
+        continue
+    own = states[before['run']]
+    position = next(i for i, x in enumerate(own) if x['line'] == before['line'])
+    after = own[position + 1] if position + 1 < len(own) else None
+    slot = chosen.get('potion_index', chosen.get('potion_slot'))
+    potion = next((p['id'] for p in before['potions'] if p['slot'] == slot), None)
+    drinks.append({'decision_line': row['_line'], 'run': row['run_id'], 'floor': row['floor'],
+                   'turn': row['turn'], 'attempt': row.get('sl_attempt'), 'chosen': chosen,
+                   'potion': potion, 'before': before, 'after': after, 'result': row.get('result')})
+cunning = [r for r in drinks if r.get('potion') == 'CUNNING_POTION']
+for case in cunning:
+    a, b = case['before'], case['after']
+    assert b and (a['run'], a['floor'], a['turn']) == (b['run'], b['floor'], b['turn'])
+    added = len(b['hand']) - len(a['hand'])
+    before_shivs = sum(c['id'] == 'SHIV' for c in a['hand'])
+    after_shivs = [c for c in b['hand'] if c['id'] == 'SHIV']
+    assert added == len(after_shivs) - before_shivs == min(3, 10 - len(a['hand']))
+    assert all(c['upgraded'] and c['values']['Damage']['base'] == 6 for c in after_shivs)
+    case['added'] = added
+    case['before_hand'] = len(a['hand'])
+    case['after_hand'] = len(b['hand'])
+resources = {}
+for run in ['KEN58SH9SLZ6', 'TXZ6RVMQA09D', 'WQZVENQ7DTRP', '1913SE84AXQF', 'Q6M2Y34MWKRE']:
+    floors = defaultdict(list)
+    for row in states[run]:
+        floors[row['floor']].append(row)
+    rooms = []
+    for floor, values in floors.items():
+        combat = [v for v in values if v['screen'] == 'COMBAT']
+        if combat:
+            rooms.append({'floor': floor, 'first': combat[0], 'last': values[-1],
+                          'turn_resets': [{'line': b['line'], 'hp_before': a['hp'], 'hp_after': b['hp']}
+                                          for a, b in zip(combat, combat[1:])
+                                          if b['turn'] is not None and a['turn'] is not None and b['turn'] < a['turn']]})
+    transitions = [{'before': a, 'after': b, 'delta_hp': b['hp'] - a['hp']}
+                   for a, b in zip(states[run], states[run][1:])
+                   if a['hp'] is not None and b['hp'] is not None and a['hp'] != b['hp']
+                   and (a['screen'] != 'COMBAT' or b['screen'] != 'COMBAT')]
+    resources[run] = {'combat_rooms': rooms, 'outside_combat_changes': transitions,
+                      'drinks': [r['decision_line'] for r in drinks if r['run'] == run]}
+sl = [{k: r.get(k) for k in ['_line', 'run_id', 'floor', 'attempt', 'result', 'turns', 'end_hp', 'from', 'explore']}
+      for r in load('sl-attempts')]
+windows = {'royal_openings': list(range(281312, 281315)) + list(range(281338, 281341))
+           + list(range(281367, 281370)) + list(range(281399, 281402)) + list(range(281563, 281567)),
+           'strangle_q6': list(range(282887, 282893)),
+           'wq_t9': list(range(282075, 282086)) + list(range(282144, 282157)),
+           'wq_t7': list(range(282330, 282339)),
+           'nha_first': list(range(283391, 283403)),
+           'nha_alternatives': list(range(283478, 283491)) + list(range(283501, 283514)),
+           'crab_rounding': list(range(283398, 283404)) + list(range(283418, 283423)),
+           'lamp_poison': list(range(217009, 217012)) + list(range(283146, 283149)),
+           'lamp_malaise': [283395, 283506]}
+selected = {key: [by_line[n] for n in numbers if n in by_line] for key, numbers in windows.items()}
+for name, data in [('compact-states', dict(states)), ('drinks', drinks), ('cunning-facts', cunning),
+                   ('resource-facts', resources), ('sl-facts', sl), ('fixed-windows', selected)]:
+    (OUT / (name + '.json')).write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+print('狡诈饮用', len(cunning), '局数', len({r['run'] for r in cunning}),
+      '新增分布', dict(Counter(r['added'] for r in cunning)), flush=True)
+for run, value in resources.items():
+    print(run, [(r['floor'], r['first']['hp'], r['last']['hp'], r['last']['screen'])
+                 for r in value['combat_rooms']], flush=True)
+for run, floor in [('TXZ6RVMQA09D', 48), ('WQZVENQ7DTRP', 33), ('NHA2KW0RB7VP', 33)]:
+    print(run, floor, [(r['attempt'], r['result'], r['turns'], r['end_hp'])
+                       for r in sl if r['run_id'] == run and r['floor'] == floor], flush=True)

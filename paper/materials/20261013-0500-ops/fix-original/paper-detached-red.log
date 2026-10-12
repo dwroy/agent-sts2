@@ -1,0 +1,30 @@
+/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/paper_dataset.py:364: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp8z0y26ml/notes/lessons.md' mode='r' encoding='utf8'>
+  text = open(os.path.join(NOTES, "lessons.md"), encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/paper_dataset.py:364: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp3uapp4k8/notes/lessons.md' mode='r' encoding='utf8'>
+  text = open(os.path.join(NOTES, "lessons.md"), encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/paper_dataset.py:364: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmpw_tbsklp/notes/lessons.md' mode='r' encoding='utf8'>
+  text = open(os.path.join(NOTES, "lessons.md"), encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/paper_dataset.py:364: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmpuowwf2x0/notes/lessons.md' mode='r' encoding='utf8'>
+  text = open(os.path.join(NOTES, "lessons.md"), encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/paper_dataset.py:364: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmpkhg5qyey/notes/lessons.md' mode='r' encoding='utf8'>
+  text = open(os.path.join(NOTES, "lessons.md"), encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.
+======================================================================
+FAIL: test_detached_head_of_another_worktree_is_included_in_all_history (test_paper_dataset_git.GitSnapshot.test_detached_head_of_another_worktree_is_included_in_all_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_paper_dataset_git.py", line 138, in test_detached_head_of_another_worktree_is_included_in_all_history
+    self.assertEqual({r["full_hash"] for r in rows}, {self.first, self.second, self.third})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the second set but not the first:
+'2e8ab22e375bc5332f40759b0565f513673fd4cb'
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.343s
+
+FAILED (failures=1)

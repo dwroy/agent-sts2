@@ -1,0 +1,109 @@
+[
+  {
+    "ts": "2026-10-07T05:28:31.690Z",
+    "mode": "play",
+    "screen": "REWARD",
+    "session": "singleplayer/run",
+    "floor": 9,
+    "turn": 4,
+    "label": "map/route-change",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":161,\"hand\":\"\",\"hp\":47,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"1:0:0\",\"potions\":\"VULNERABLE_POTION:true:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"61E2QS63Y9WU\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "rationale": "Codex changed the act's route in reward/card (card-reward review): r9c2 宝箱 → r10c3 精英 → r11c3 休息 → r12c4 普通战 → r13c5 商店 → r14c5 问号 → r15c5 休息 → r16c3 Boss => r9c2 宝箱 → r10c2 普通战 → r11c3 休息 → r12c4 普通战 → r13c5 商店 → r14c5 问号 → r15c5 休息 → r16c3 Boss; next rest: 到 F12 时新路线约 43/70，保留路线约 18/70（p75 38 对 7）；下一只精英：新路线 boss 前没有精英，保留路线 F11 r10c3 进场 47/70（p75 47）",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "reused": true,
+      "plan_ref": "61E2QS63Y9WU:F9:reward#4",
+      "plan_step": 2,
+      "choice": "r9c2 r10c2 r11c3 r12c4 r13c5 r14c5 r15c5 r16c3",
+      "reason": "",
+      "from": "r9c2 宝箱 → r10c3 精英 → r11c3 休息 → r12c4 普通战 → r13c5 商店 → r14c5 问号 → r15c5 休息 → r16c3 Boss",
+      "to": "r9c2 宝箱 → r10c2 普通战 → r11c3 休息 → r12c4 普通战 → r13c5 商店 → r14c5 问号 → r15c5 休息 → r16c3 Boss",
+      "next_rest": "到 F12 时新路线约 43/70，保留路线约 18/70（p75 38 对 7）；下一只精英：新路线 boss 前没有精英，保留路线 F11 r10c3 进场 47/70（p75 47）",
+      "next_rest_worse": false,
+      "next_rest_elite_worse": false
+    },
+    "run_id": "61E2QS63Y9WU",
+    "observed_ts": "2026-10-07T05:28:14.128Z",
+    "journal": {
+      "choice": "route (card-reward review): r9c2 宝箱 → r10c2 普通战 → r11c3 休息 → r12c4 普通战 → r13c5 商店 → r14c5 问号 → r15c5 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "route_plan": {
+      "runId": "61E2QS63Y9WU",
+      "act": 1,
+      "floor": 9,
+      "hpPct": 0.6714285714285714,
+      "path": [
+        {
+          "row": 9,
+          "col": 2,
+          "type": "Treasure",
+          "hpOnArrival": 0.6714285714285714
+        },
+        {
+          "row": 10,
+          "col": 2,
+          "type": "Monster",
+          "hpOnArrival": 0.6714285714285714
+        },
+        {
+          "row": 11,
+          "col": 3,
+          "type": "RestSite",
+          "hpOnArrival": 0.6142857142857143
+        },
+        {
+          "row": 12,
+          "col": 4,
+          "type": "Monster",
+          "hpOnArrival": 0.9142857142857143
+        },
+        {
+          "row": 13,
+          "col": 5,
+          "type": "Shop",
+          "hpOnArrival": 0.8571428571428571
+        },
+        {
+          "row": 14,
+          "col": 5,
+          "type": "Unknown",
+          "hpOnArrival": 0.8571428571428571
+        },
+        {
+          "row": 15,
+          "col": 5,
+          "type": "RestSite",
+          "hpOnArrival": 0.8571428571428571
+        },
+        {
+          "row": 16,
+          "col": 3,
+          "type": "Boss",
+          "hpOnArrival": 1
+        }
+      ],
+      "summary": "r9c2 宝箱 → r10c2 普通战 → r11c3 休息 → r12c4 普通战 → r13c5 商店 → r14c5 问号 → r15c5 休息 → r16c3 Boss",
+      "why": "card-reward review"
+    },
+    "result": "route plan changed (no game action)",
+    "_line": 267517
+  }
+]

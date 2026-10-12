@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<stdin>", line 13, in <module>
+AssertionError
+
+原因：首轮核验脚本用相对 scratch/report.md 匹配根账本里记录的绝对路径，计数变成零；CLI 实际已经成功追加30条。
+修正：核验脚本使用 Path(__file__).resolve().parent，仅重读原30条记录；不重复执行 ledger update、不改原记录。

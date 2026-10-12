@@ -1,0 +1,49 @@
+F 2 need [54, 41, 35, 26, 20, 9] net [13, 6, 9, 6, 11, 9] player [0, 2, 3, 0, 0, 0]
+F 3 need [40, 19, 15, 15] net [21, 4, 0, 15] player [0, 0, 0, 0]
+F 4 need [59, 47, 24, 18] net [12, 23, 6, 18] player [1, 0, 0, 0]
+F 5 need [90, 42, 38, 23, 11] net [48, 4, 15, 12, 11] player [4, 3, 0, 9, 0]
+F 6 need [93, 72, 37, 31, 14] net [21, 35, 6, 17, 14] player [0, 0, 1, 5, 0]
+F 9 need [78, 55, 32, 32, 9] net [23, 23, 0, 23, 9] player [14, 4, 0, 0, 0]
+F 11 need [41, 25, 24] net [16, 1, 24] player [3, 0, 0]
+F 13 need [132, 114, 89, 61, 44, 34, 22] net [18, 25, 28, 17, 10, 12, 22] player [0, 0, 8, 12, 11, 0, 0]
+F 14 need [78, 55, 51, 33] net [23, 4, 18, 33] player [0, 0, 0, 0]
+F 17 need [183, 180, 154, 138, 117, 98, 71, 65, 39, 10, 10] net [3, 26, 16, 21, 19, 27, 6, 26, 29, 0, 10] player [0, 3, 14, 0, 0, 0, 12, 0, 12, 0, 0]
+F 19 need [82, 54, 34, 8] net [28, 20, 26, 8] player [5, 0, 0, 0]
+F 21 need [84, 45, 43, 15] net [39, 2, 28, 15] player [14, 0, 0, 0]
+F 22 need [128, 102, 87, 23] net [26, 15, 64, 23] player [8, 12, 5, 0]
+F 28 need [126, 108, 101, 60, 47] net [18, 7, 41, 13, 42] player [0, 7, 19, 12, 16]
+LOW 8 [(368232, 3, 3, 'selection/choose', 0.34), (368254, 4, 3, 'selection/choose', 0.2), (368295, 6, 1, 'selection/choose', 0.28), (368365, 11, 1, 'combat/plan-choice', 0.34), (368466, 17, 2, 'selection/choose', 0.16), (368468, 17, 2, 'combat/plan-choice', 0.16), (368588, 22, 1, 'selection/choose', 0.14), (368654, 28, 4, 'selection/choose', 0.26)]
+BEST 84 Counter({True: 79, False: 4, None: 1}) explicit 71
+CODE Counter({'combat/plan-continue': 151, 'combat/plan': 49, 'reward/claim': 33, 'map/route-follow': 24, 'selection/exhaust': 17, 'combat/lethal': 16, 'combat/end_turn': 14, 'reward/proceed': 13, 'event/leave': 5, 'rest/proceed': 5, 'chest/open': 3, 'chest/relic': 3, 'chest/proceed': 3, 'shop/open': 1, 'shop/leave': 1, 'map/route-only': 1, 'event/only': 1, 'combat/least-loss': 1, 'run/finalize': 1})
+AUTO 80 turns 64 pure 19 all combat turns 71
+FALLBACK 0 RELOAD Counter({0: 475})
+TOKENS JEV {'input_tokens': 862436, 'output_tokens': 5279, 'cache_hit_tokens': 0}
+BRAIN 25 {'input_tokens': 3768029, 'output_tokens': 24024, 'cache_hit_tokens': 2194048, 'reasoning_tokens': 21759} Counter({'gpt-6.1-sol': 25})
+SECONDS 1863.565
+FIRSTOBS 2026-10-12T18:56:34.891Z
+DRINKS [(368268, 5, 1, {'action': 'use_potion', 'option_index': 0}, 'drink 攻击药水 now (offers 3 random Attack cards, take 1, free this turn), then re-plan the turn with the real cards; example, the median of 12 samples: potion 攻击药水 (take 猎杀者), 猎杀者 -> 闪光贾克斯果'), (368427, 14, 1, {'action': 'use_potion', 'option_index': 0}, 'continuing the Jev-chosen plan: potion 肌肉药水'), (368471, 17, 2, {'action': 'use_potion', 'option_index': 0, 'target_index': 0}, 'continuing the Jev-chosen plan: potion 火焰药水 -> 墨影幻灵'), (368565, 21, 2, {'action': 'use_potion', 'option_index': 0, 'target_index': 0}, 'potion 虚弱药水 -> 偷窃草蜢'), (368643, 28, 2, {'action': 'use_potion', 'option_index': 0}, 'drink 技能药水 now (offers 3 random Skill cards, take 1, free this turn), then re-plan the turn with the real cards; example, the median of 12 samples: potion 技能药水 (take 暴露), 暴露 -> 猎人杀手')]
+HPGUARD []
+FOCUS 368191 2 1 {'plan1': '树枝史莱姆（小）', 'plan7': '树叶史莱姆（小）', 'plan8': '树枝史莱姆（中）'} answer plan9
+FOCUS 368193 2 1 {'plan1': '树叶史莱姆（小）', 'plan3': '树枝史莱姆（中）'} answer plan4
+FOCUS 368197 2 2 {'plan2': '树叶史莱姆（小）', 'plan3': '树枝史莱姆（中）'} answer plan4
+FOCUS 368201 2 3 {'plan1': '树叶史莱姆（小）', 'plan3': '树枝史莱姆（中）'} answer plan2
+FOCUS 368206 2 4 {'plan1': '树叶史莱姆（小）', 'plan3': '树枝史莱姆（中）'} answer plan3
+FOCUS 368207 2 4 {'plan1': '树叶史莱姆（小）', 'plan3': '树枝史莱姆（中）'} answer plan1
+FOCUS 368209 2 5 {'plan1': '树枝史莱姆（中）', 'plan5': '树叶史莱姆（小）'} answer plan1
+FOCUS 368264 5 1 {'plan1': '闪光贾克斯果', 'plan3': '蛇行扼杀者'} answer plan5
+FOCUS 368270 5 1 {'plan1': '闪光贾克斯果', 'plan2': '蛇行扼杀者'} answer plan1
+FOCUS 368272 5 2 {'plan1': '闪光贾克斯果', 'plan10': '蛇行扼杀者'} answer plan1
+FOCUS 368332 9 1 {'plan1': '劫掠者刺客', 'plan2': '劫掠者弩手', 'plan5': '劫掠者暴徒'} answer plan1
+FOCUS 368337 9 1 {'plan1': '劫掠者刺客', 'plan3': '劫掠者弩手', 'plan4': '劫掠者暴徒'} answer plan2
+FOCUS 368341 9 2 {'plan1': '劫掠者刺客', 'plan9': '劫掠者弩手', 'plan10': '劫掠者暴徒'} answer plan1
+FOCUS 368344 9 2 {'plan2': '劫掠者暴徒', 'plan3': '劫掠者弩手'} answer plan1
+FOCUS 368346 9 3 {'plan1': '劫掠者弩手', 'plan2': '劫掠者暴徒'} answer plan4
+FOCUS 368350 9 4 {'plan1': '劫掠者弩手', 'plan4': '劫掠者暴徒'} answer plan1
+FOCUS 368583 22 1 {'plan5': '盛碗虫（石）', 'plan8': '盛碗虫（蜜）', 'plan9': '盛碗虫（丝）'} answer plan6
+FOCUS 368585 22 1 {'plan4': '盛碗虫（石）', 'plan5': '盛碗虫（蜜）', 'plan6': '盛碗虫（丝）'} answer plan7
+FOCUS 368586 22 1 {'plan2': '盛碗虫（石）', 'plan3': '盛碗虫（蜜）', 'plan4': '盛碗虫（丝）'} answer plan5
+FOCUS 368589 22 1 {'plan1': '盛碗虫（石）', 'plan2': '盛碗虫（蜜）', 'plan3': '盛碗虫（丝）'} answer plan4
+FOCUS 368590 22 1 {'plan1': '盛碗虫（石）', 'plan2': '盛碗虫（蜜）', 'plan3': '盛碗虫（丝）'} answer plan2
+FOCUS 368596 22 2 {'plan2': '盛碗虫（石）', 'plan3': '盛碗虫（蜜）', 'plan4': '盛碗虫（丝）'} answer plan2
+FOCUS 368602 22 3 {'plan1': '盛碗虫（蜜）', 'plan2': '盛碗虫（石）', 'plan3': '盛碗虫（丝）'} answer plan1
+FOCUS 368604 22 3 {'plan1': '盛碗虫（石）', 'plan2': '盛碗虫（丝）'} answer plan1

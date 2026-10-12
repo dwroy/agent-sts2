@@ -1,0 +1,51 @@
+## 复盘回报
+
+- 已追加：4ATPGGUBWG8L（A10，第28层，猎人杀手T5以16血0挡对18攻击阵亡，敌剩5血）；已追加F14血池口径勘误。
+- 新的纯 bug：
+  - 4ATPGGUBWG8L：升级刀刃之舞仍误读为抽4 — agent/src/reflex/card-model.ts:970（新，fix-queue未列）。
+- 写成「未记录」的项：4ATPGGUBWG8L：完整运行脏树、部分归零帧和逐击伤害、最终最优整线执行比例、替线及改变用药的整战结果、F29及二幕boss实到、有效boss时钟、纯操作用时、Jev缓存和真实费用。
+- 学习账本：4ATPGGUBWG8L：新增 silent-0449、silent-0450；更新 silent-0443、silent-0043、silent-0232、silent-0023、silent-0005、silent-0426、silent-0227（老错 silent-0443；S1.exp198在本局结束后登记）；`ledger.py check`退出码0。
+- 代码提案（均交独立strategy-proposal实现，未实现）：
+  - F28T1／T4，silent-0443，silent-proposal-91c5d0686d82d536：能力启动、免费推进及终局估值；替线整战未知。
+  - F28T2，silent-0449，silent-proposal-1179faad79d39c8e：技能药生成牌消费链；其他选项及改变饮用时点的结果未知。
+  - F28T3及C48首局证据，silent-0450，silent-proposal-da90ad1f5d85670d：升级刀刃之舞生成边界；本局未实打升级牌，A10生成后继须验证。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["4ATPGGUBWG8L"],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "4ATPGGUBWG8L",
+      "where": "agent/src/reflex/card-model.ts:970",
+      "what": "升级刀刃之舞Cards=4仍误读为抽4，普通版生成修复未覆盖升级边界",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": ["silent-0449", "silent-0450"],
+    "updated": ["silent-0443", "silent-0043", "silent-0232", "silent-0023", "silent-0005", "silent-0426", "silent-0227"],
+    "repeats": ["silent-0443"],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-91c5d0686d82d536",
+    "silent-proposal-1179faad79d39c8e",
+    "silent-proposal-da90ad1f5d85670d"
+  ],
+  "implementation_domains": ["combat", "potion", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-034301-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a131a3-daac-7ad3-a635-e7067aaae52f
+轮数：1；工具调用：command_execution×61
+token：输入 258.6k、输出 47.6k（其中推理 15.0k）、cache 读 7749.2k、cache 写 0（命中 96.8%）
+成本：未提供
+耗时：1777.1 s（墙钟）
+时间：首个事件 21.7 s、模型首个输出 27.2 s、首次工具 33.2 s、末次工具结束 1736.0 s；工具内共 213.8 s，其余（模型生成、推理、网络）1541.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×47；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T03-43-04-01a131a3-daac-7ad3-a635-e7067aaae52f.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261013-034301-postmortem.jsonl

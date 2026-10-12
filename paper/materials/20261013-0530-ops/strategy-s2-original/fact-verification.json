@@ -1,0 +1,336 @@
+{
+  "checks": [
+    {
+      "name": "原始字节读回：decisions",
+      "passed": true,
+      "details": {
+        "rows": 9448
+      }
+    },
+    {
+      "name": "原始字节读回：states",
+      "passed": true,
+      "details": {
+        "rows": 9815
+      }
+    },
+    {
+      "name": "原始字节读回：sl-attempts",
+      "passed": true,
+      "details": {
+        "rows": 78
+      }
+    },
+    {
+      "name": "原始字节读回：run-plans",
+      "passed": true,
+      "details": {
+        "rows": 77
+      }
+    },
+    {
+      "name": "九局42次狡诈生成与容量",
+      "passed": true,
+      "details": {
+        "3": 37,
+        "2": 2,
+        "0": 3
+      }
+    },
+    {
+      "name": "容量为零仍耗瓶且不直接改变HP/能量/敌血",
+      "passed": true,
+      "details": {
+        "drinks": 42
+      }
+    },
+    {
+      "name": "KEN七次饮用",
+      "passed": true,
+      "details": [
+        {
+          "floor": 3,
+          "turn": 2,
+          "potion": "ATTACK_POTION"
+        },
+        {
+          "floor": 4,
+          "turn": 1,
+          "potion": "STABLE_SERUM"
+        },
+        {
+          "floor": 5,
+          "turn": 2,
+          "potion": "SPEED_POTION"
+        },
+        {
+          "floor": 11,
+          "turn": 1,
+          "potion": "WEAK_POTION"
+        },
+        {
+          "floor": 11,
+          "turn": 2,
+          "potion": "ATTACK_POTION"
+        },
+        {
+          "floor": 15,
+          "turn": 1,
+          "potion": "GLOWWATER_POTION"
+        },
+        {
+          "floor": 15,
+          "turn": 1,
+          "potion": "SKILL_POTION"
+        }
+      ]
+    },
+    {
+      "name": "KEN六赢战净损46且F15零损已花两药",
+      "passed": true,
+      "details": {
+        "losses": [
+          0,
+          3,
+          0,
+          37,
+          6,
+          0
+        ]
+      }
+    },
+    {
+      "name": "KEN实际营火回复",
+      "passed": true,
+      "details": {
+        "F12": [
+          26,
+          53,
+          76,
+          81
+        ],
+        "F16": [
+          46,
+          75,
+          81,
+          86
+        ]
+      }
+    },
+    {
+      "name": "TXZ五个出牌前4血成本",
+      "passed": true,
+      "details": {
+        "pairs": [
+          [
+            281312,
+            281313
+          ],
+          [
+            281338,
+            281339
+          ],
+          [
+            281367,
+            281368
+          ],
+          [
+            281399,
+            281400
+          ],
+          [
+            281565,
+            281566
+          ]
+        ]
+      }
+    },
+    {
+      "name": "TXZ第二boss可操作前死亡",
+      "passed": true,
+      "details": {
+        "before": 281565,
+        "after": 281566,
+        "enemy_hp": 111
+      }
+    },
+    {
+      "name": "TXZ T6原线与替线的双向代价",
+      "passed": true,
+      "details": {
+        "original": {
+          "hp_loss": 3,
+          "damage": 36
+        },
+        "replacement": {
+          "hp_loss": 0,
+          "damage": 27
+        }
+      }
+    },
+    {
+      "name": "WQ T9同盘面血价",
+      "passed": true,
+      "details": {
+        "original": {
+          "hp_loss": 13,
+          "damage": 24
+        },
+        "replacement": {
+          "hp_loss": 22,
+          "damage": 39
+        }
+      }
+    },
+    {
+      "name": "WQ T7付血延长沙坑",
+      "passed": true,
+      "details": {
+        "before": 282330,
+        "escape": 282331,
+        "next_turn": 282336
+      }
+    },
+    {
+      "name": "NHA同盘面换线多损6/多净扣16",
+      "passed": true,
+      "details": {
+        "original": {
+          "hp_loss": 1,
+          "damage": 8
+        },
+        "replacement": {
+          "hp_loss": 7,
+          "damage": 24
+        },
+        "repeat": {
+          "hp_loss": 7,
+          "damage": 24
+        }
+      }
+    },
+    {
+      "name": "Q6紧勒逐牌及弃牌完成时点",
+      "passed": true,
+      "details": {
+        "state_lines": [
+          282887,
+          282888,
+          282889,
+          282890,
+          282891,
+          282892
+        ],
+        "total_damage": 23
+      }
+    },
+    {
+      "name": "Q6现场力量与敏捷分源",
+      "passed": true,
+      "details": {
+        "state_lines": [
+          282804,
+          282806,
+          282807,
+          282808
+        ]
+      }
+    },
+    {
+      "name": "Q6赢精英后接走廊死亡",
+      "passed": true,
+      "details": {
+        "F8": [
+          57,
+          2
+        ],
+        "F9": [
+          2,
+          0
+        ]
+      }
+    },
+    {
+      "name": "1913实际入口与未回血锻造",
+      "passed": true,
+      "details": {
+        "F24": 40,
+        "F29": [
+          61,
+          46
+        ],
+        "F31": [
+          46,
+          0
+        ]
+      }
+    },
+    {
+      "name": "六尝试无胜记录：WQZVENQ7DTRP",
+      "passed": true,
+      "details": {
+        "results": [
+          "predicted_death",
+          "predicted_death",
+          "predicted_death",
+          "predicted_death",
+          "predicted_death",
+          "died"
+        ]
+      }
+    },
+    {
+      "name": "六尝试无胜记录：NHA2KW0RB7VP",
+      "passed": true,
+      "details": {
+        "results": [
+          "predicted_death",
+          "predicted_death",
+          "predicted_death",
+          "predicted_death",
+          "predicted_death",
+          "died"
+        ]
+      }
+    },
+    {
+      "name": "油灯窗口缺少消费计数器",
+      "passed": true,
+      "details": {
+        "windows": 17,
+        "runs": [
+          "K3676LU8B0UH",
+          "NHA2KW0RB7VP",
+          "SADL3CGYTGSR"
+        ],
+        "limitation": "只核观察窗口；不从空计数器推定任意重规划/SL恢复时首次负面尚未消耗"
+      }
+    },
+    {
+      "name": "十份原提案字节保持",
+      "passed": true,
+      "details": {
+        "ids": [
+          "silent-proposal-08eaa60bcc449852",
+          "silent-proposal-92920295a648b540",
+          "silent-proposal-a327449c331efbc1",
+          "silent-proposal-a099e89437e942bb",
+          "silent-proposal-47910f82a1fdd98f",
+          "silent-proposal-f1374df72d8e6a25",
+          "silent-proposal-38a49e6c97f31eea",
+          "silent-proposal-ef0e38a5dbd3bc07",
+          "silent-proposal-7f820c02d39bfaea",
+          "silent-proposal-04b6b430759815ed"
+        ]
+      }
+    },
+    {
+      "name": "工作树HEAD和tracked内容保持基线",
+      "passed": true,
+      "details": {
+        "base": "a77d86dff0b917dc731b99ac6bd2721b60100647"
+      }
+    }
+  ],
+  "software_tests_run": false
+}

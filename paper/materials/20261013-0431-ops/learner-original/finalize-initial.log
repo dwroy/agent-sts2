@@ -1,0 +1,17 @@
+fatal: path 'experiments/boss-sim/silent/c57767b8410c45eee3ed68b328ba9b57a9b62f0a3b82fc86061e378efb27f2da/source-supplement.log' does not exist in 'e813a9507f20d8d03f382774774911522612940c'
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261013-023515-silent-boss-calibration/finalize.py", line 28, in <module>
+    assert hashlib.sha256(git('show', publication + ':' + archive + '/' + name)).hexdigest() == expected
+                          ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261013-023515-silent-boss-calibration/finalize.py", line 15, in git
+    return subprocess.check_output(['git', *args], cwd=LIVE)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 473, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               **kwargs).stdout
+               ^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', 'show', 'e813a9507f20d8d03f382774774911522612940c:experiments/boss-sim/silent/c57767b8410c45eee3ed68b328ba9b57a9b62f0a3b82fc86061e378efb27f2da/source-supplement.log']' returned non-zero exit status 128.

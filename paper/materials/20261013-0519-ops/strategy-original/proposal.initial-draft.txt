@@ -1,0 +1,138 @@
+# 静默猎手本批十项策略提案核验
+
+批次：20261013-044302-strategy-proposal；角色silent，六来源局均A10。
+记录时间：2026-10-13T04:55:07+08:00。
+基线：3061b18d2222fb1c754d07465cf2b7d9303b9008；普通队列，main同步返回Already up to date，未绑定专题/implementation_request。
+只处理本批10个原CLI id，原Markdown逐字保存且SHA与队列一致；未创建重复id，未改提案原文。
+
+证据按根logs原偏移重新读取核SHA/角色/进阶；全部素材限定本角色。已上线子项不当整个提案完成。
+
+## silent-proposal-89354805ee4d7e77
+
+原提案：/home/dw/Projects/agent-sts2/learner/runs/20261007-154302-postmortem/proposal-apotheosis.md
+原Markdown SHA256：ab6488e1b2e17415061c372d3efa10dbba468de2574f784088e1a967358df76d
+账本：silent-0237、silent-0238。来源任务：postmortem；实现任务strategy-proposal。
+证据：VLZ6CCT8AQ0A A10 F35/F36/F37/F43 T1四次普通神化实际付2能；F43 T1同后续序列实扣51、损13，旧题43/14；F45 T1持有而未施放。神化动作原决策269598/269625/269648/269706，F43首题269706、重问269707。
+反例/限制：F43已施放仍全场净损57；F45未施放而败。不同敌人/资源与抽序不构成同盘胜负因果。
+现有规则及预期行为：现有模型只传播已观察升级配对，未知组合保留unknown；silentApotheosisReference.actual_cast_this_fight仍为null。预期追加真实施放生命周期与覆盖事实，保留持有/候选/模拟/实际的区别，不强制必打。
+验证方法与缺数据：冻结F35/F43/F45手牌及后续抽牌，验证付能、消耗、不重复升级、场外deck不变与未知标记；另需跨重问、SL恢复、控制器重启的真实连续动作链。普通升级子项源码772b839f8ada31664cb764ea9ad3bdb03da27f64。
+处置：waiting；普通神化升级传播已有live实现；本战实际施放标记仍为空，缺跨重规划/SL/重启生命周期、未知升级和自动动作/属性组合的完整验证，不能关闭整项。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。
+
+## silent-proposal-f2bfceddb1898dca
+
+原提案：/home/dw/Projects/agent-sts2/learner/runs/20261007-154302-postmortem/proposal-budget-and-clock.md
+原Markdown SHA256：fc9f3dfdb7df5f99a57ff6c1a7e7f08f9e5e6514dde8cd1013e04995d912eb26
+账本：silent-0106、silent-0019、silent-0201。来源任务：postmortem；实现任务strategy-proposal。
+证据：VLZ6CCT8AQ0A A10 F45 T1决策269748：随机药水耗707ms、后续范围1轮/1样本、best=null；269754为出牌后的另一盘。F45 T4决策269770：8样本，plan2/3/4明确并列；少损线13损/24伤，攻击线31损/32伤。
+反例/限制：F17/F33首试获胜；F45 T4攻击线未实打，不能将少8伤记成败因。痊愈药水实际能量/抽牌与HP分别核，不按名字预支回血。
+现有规则及预期行为：silentSimulationReference已有时间、样本、范围、best/tied、药水共享预算展示，保留未比较与并列区别。待做同预算配对实验后才评价分阶段MC或最小非药推演预算，不从单局设常数。
+验证方法与缺数据：固定原始盘面及种子、完整模型/知识输入、同总时限，比较候选稳定性、样本收益和预算代价；先独立排除神化覆盖缺口。展示子项源码45161a51c2c6b7e4a499b13cf749c4108193bbf5已为live祖先。
+处置：waiting；缺同状态、同模型覆盖、同随机输入和同总预算的配对收益/样本稳定性曲线；异盘1/12与12/12或707ms不能校准预算、留药、HP护栏或目标规则。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。
+
+## silent-proposal-283a164780d11e69
+
+原提案：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-apotheosis.md
+原Markdown SHA256：78e23dae4213fa5b07bda1a0799bbbe0c94567c889db235b40560f523608e637
+账本：silent-0237、silent-0238。来源任务：experience-update；实现任务strategy-proposal。
+证据：VLZ6CCT8AQ0A A10 F35 T1、F43 T1/T2及F45 T1；与第1项同一组原帧，独立CLI id仍逐项处置。普通神化四次实际施放，run.deck不当永久锻造。
+反例/限制：F43使用神化也损57；F45仅持有未兑现。两提案重复证据只按同一局计，不增加分母。
+现有规则及预期行为：保留silent-apotheosis-combat-upgrades经验链接及0237模型缺口、0238机制两个账本，不新建重复提案。普通升级与触媒/萎靡子项有源码；本战实际施放完整生命周期仍未认证。
+验证方法与缺数据：同第1项固定夹具；触媒传播f516592fff557ef02c8ece43433706358c3f7fe6、限定萎靡修正a11dd870b09f3f1b67fcb5d6c08af6573fd809e0均为live祖先，不能据局部实现登记整项duplicate。
+处置：waiting；与89354805同源的普通升级子项已在live；原提案还要求实际施放/覆盖分账，未知费用、跨轮副效应及自动动作组合缺完整验证，同源经验链接不能关闭整项。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。
+
+## silent-proposal-ebbfe3b97548756d
+
+原提案：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-mechanisms-and-resources.md
+原Markdown SHA256：08eaeed02365ece6b99ec54adb8ead6688d7323d6f59f30c1cb5996f41c552e2
+账本：silent-0005、silent-0016、silent-0049、silent-0071、silent-0143、silent-0046、silent-0053、silent-0027、silent-0011、silent-0021、silent-0106、silent-0204、silent-0020、silent-0019。来源任务：experience-update；实现任务strategy-proposal。
+证据：VLZ6CCT8AQ0A A10 F43 T1实扣51/损13；F45 T4实扣24/损13，T5末端32血20挡对59攻，显示完整缺7血，毒后仍80/21/77，三敌未退场。原末轮结束决策269777及后继状态在本批端点材料定位。
+反例/限制：已有能力/遗物/升级并不保证本战转胜；未建毒雾、无毒敌与耗尽覆甲不可预支。反例0的宽经验计数不能当同一组合实验分母。
+现有规则及预期行为：当前力量、敏捷、勒紧、毒与暂减力路径已存在；拟逐源冻结真实输入和期限，发现实盘不符再补静默对应变换。不新增统一防御/输出常数，不把短暂减力永久化。
+验证方法与缺数据：逐项固定15条经验的原始状态、卡序、当前进阶移动/伤害表及跨轮输出，分别验证已建/持有、当前覆甲、普通/升级、已结算/未来毒。神化只沿专属原id，避免重复。
+处置：waiting；已核分源端点与现有机制路径；仍缺口红、覆甲、临时減力恢复、未来毒联合跨轮调用验证及原15条经验逐项消费者证明，不能用局部公式关闭整包。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。
+
+## silent-proposal-e5b87be50f28f311
+
+原提案：/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem/proposal-combat-sl-audit.md
+原Markdown SHA256：5e713a9a6a50830d4ff7c2aba1c2af90487cc8d03e4881555257b43161632709
+账本：silent-0079、silent-0021、silent-0125、silent-0018。来源任务：postmortem；实现任务strategy-proposal。
+证据：8JRE1C4H4Z2W A10 F33首/第三试T2决策270216/270282同fingerprint；首试实损3/扣10，第三试实损15/扣17，多12血换7伤。末试T11 5血22挡对37，完整需损15、实际净损5为截断。
+反例/限制：末试T2用防御比第四/五试省3血少10伤且延到T11仍败，不能一律否定防御或探索；0/24与5/24死亡样本不应称同死率，原线没有完整赢局。
+现有规则及预期行为：silentSelectionAudit、silentHpGuardAudit、silentSelectionDispatch及离线消费者保留原答、替换预测、首次派发、观测端点，actual_turn/whole_plan_executed仍未知。预期补完整归属和真实中断原因后再独立评价规则，当前选择行为保持。
+验证方法与缺数据：固定首/第三试T2、第二试T5、F17 T6与末试T11；原决策行号及observed_ts+fingerprint联合回连，pending/completed与实际后帧分别核，抽牌重问截断。bade647f9fe4c9103b40e2f26b26296692ad24b7等实际源码祖先只证明子项。
+处置：waiting；候选差、单动作回执与相邻观测已有live子项；仍缺逐次机械重规划原因、跨抽弃牌的完整执行归属和能力分源后继，不能认证整套审计或校准HP/SL阈值。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。
+
+## silent-proposal-49632bc4878fb597
+
+原提案：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-strength-weak-observation.md
+原Markdown SHA256：aac4fddf0f24862a3fb8e289d000a312358c3bb9ee3d624602bf755d0b5409a2
+账本：silent-0005、silent-0231。来源任务：experience-update；实现任务strategy-proposal。
+证据：CA5KE8GFJ9X2 A10 F13 T2/T4加压后敌力4/8，T3/T5未弱喷水15/19、施弱后11/14；T5 2血10挡对14，完整需损4。状态273253/273257/273264/273268。
+反例/限制：虚弱没有关闭后续成长；计划中的步法没有取得，不能补正敏捷或预支牌挡。
+现有规则及预期行为：保持现场属性、逐击取整与数据库当前进阶来源分账，正敏捷样本缺失保持未知；拟验证同一冻结调用各项公式，不加统一权重。
+验证方法与缺数据：冻结该局完整手牌、当前属性、实际出牌前缀、A10移动表与伤害来源；补有正敏捷的可追溯同角色调用证据，再验证四路径联合跨轮。
+处置：waiting；来源局关键战正敏捷样本不足；缺力量、敏捷、虚弱及独立成长四路径的共同冻结调用与跨轮验证，当前蚌端点吻合不足校准统一保血/输出权重。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。
+
+## silent-proposal-66532328a585941f
+
+原提案：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-deck-burst-observation.md
+原Markdown SHA256：56a0a04049f43aa425242d11caa305a1bb869fc6b4fc38d0138e9f6edad44831
+账本：silent-0021、silent-0009。来源任务：experience-update；实现任务strategy-proposal。
+证据：5PM6JAQG6FNQ A10 F39第二试T2咕嘟冒泡，原决策行由action-observed-endpoints定位；能量少1，THE_LOST无毒且血/能力端点不变。末试毒雾未建立。
+反例/限制：同局F33建立雾3/触媒1/群蛇4后赢，但敌人、抽序及资源一起变化；首试F39建立毒雾也败，没有单因对照。
+现有规则及预期行为：保留持有/计划/到手/付能/已建/实际后继分账，现有毒条件不得替代长期构筑收益。预期仅在受控兑现证据足够时提出启动或构筑权重。
+验证方法与缺数据：用本局空打固定帧验证条件与能量成本；不同启动顺序须同入口、完整卡序和实际后继，不借另一敌人胜战拟合阈值。
+处置：waiting；缺同入口HP、构筑和完整抽序下不同启动顺序的整场对照及可复现收益函数；无毒目标空打只确认1能局部代价，不能拟合启动阈值。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。
+
+## silent-proposal-43a76a31ba7bdcfa
+
+原提案：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-lagavulin-siphon-poison-sl.md
+原Markdown SHA256：f4a38e2d7ee0b5d205a3168cc58dfec442046d7be3a89701054b3dcb7fdf0a6c
+账本：silent-0030、silent-0027。来源任务：experience-update；实现任务strategy-proposal。
+证据：61E2QS63Y9WU A10 F17 T5→T6，玩家力2消失、敏捷为−2，敌力2；T6决策267612/267614双防御各3，毒17+16净扣33。状态273503→273504、273507→273508。
+反例/限制：本局60血首试七轮赢，不能由此证明其他入口/构筑同抽SL有胜线，也不混用其他角色阈值。
+现有规则及预期行为：保留吸取、现场负属性、额外毒触发及临减力各自期限，SL候选和实打后继分开。不从一次首试胜利修改SL范围或固定出牌序。
+验证方法与缺数据：冻结同战A10移动表、毒触发、玩家力敏/牌面与后轮调用；SL变更另需完整已知抽序及真正获胜替线，按局号分开发/后移验证。
+处置：waiting；已核吸取、负敏捷挡与毒继续结算；缺完整联合跨轮模型调用和同入口HP/构筑/抽序下可救活的SL替线，本局首试胜利不足改变SL范围或偏好。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。
+
+## silent-proposal-5264153a4a4b0e5c
+
+原提案：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-obscura-summon-growth.md
+原Markdown SHA256：b32fb321d95e941c095993cdde0d011354c689718ffe2a3b2428fe68c444ec02
+账本：silent-0039、silent-0209。来源任务：experience-update；实现任务strategy-proposal。
+证据：61E2QS63Y9WU A10 F23 T4→T5状态273593/273595/273596，本体focus净扣47、损15，PARAFRIGHT仍2血存活，两敌各力3→6。
+反例/限制：focus幻象39伤零损候选未实打，不能当完整胜线；本体伤害高不等于幻象退场。
+现有规则及预期行为：保留全部合法目标和同推演值并列；各实体当前HP/力量/意图、已结算毒与真正退场分列。不强制首杀，不把类型id等同跨帧实体身份。
+验证方法与缺数据：冻结A10召唤脚本和各实体后继，唯一类型同名单时可比较端点；新增实体、复起及同类/索引重排保持未知。目标偏好另需另一focus全程实打。
+处置：waiting；已核实体各长三力与幻象余2仍攻击；缺A10召唤/航行/复起/索引变化的完整跨轮调用和另一focus实打后继，不能从旧召唤子项推出固定首杀收益。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。
+
+## silent-proposal-bddfa690a84e03d0
+
+原提案：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-slumbering-beetle-wake-growth.md
+原Markdown SHA256：b9f90f13d558011142b4bfc459efdfd4680dd297206c182c9c48d86f4c32e780
+账本：silent-0128、silent-0079。来源任务：experience-update；实现任务strategy-proposal。
+证据：DUZUBAJ3A8GP A10 F30第四试T1—T6睡3/2/1后T4醒，T5力2施尖啸→−4，T6恢复成长4力22攻击，1血16挡实际净损1，完整需损6。状态275007/275017/275018/275022/275023。
+反例/限制：末试T4比首/第三试多扣3敌血却多损2血；较多输出没有取得胜局。睡醒自然消层不能覆盖所有提前唤醒与眩晕接续。
+现有规则及预期行为：继续按当前进阶、实见睡眠/覆甲/眩晕/成长分别核对，临时减力不抹掉下一轮增长；无证据不改全死排序、固定杀序或SL阈值。
+验证方法与缺数据：冻结自然醒与当前成长链；另补同抽序、同入口下提前唤醒的完整后继与获胜替线。样本按局号，四试不当四个独立样本。
+处置：waiting；已核自然醒和恢复成长端点；缺提前唤醒/眩晕接续的配对证据及同抽完整获胜替线，四试均败不足校准输出血价或固定杀序。
+拟合/时间切分：本批六局是发现/回归样本，不拟合新权重；同局SL不扩独立分母。后续本角色独立完局按run_id及时间后移、进阶/敌人/资源分层验证，当前不冒称盲测或胜率提升。
+预期影响：让模型与证据范围明确，证据不足保持现有规则。回退：本批没有生产改动；后续实际实现须独立源码回退、保留证据及旧失败，实际live后由ops核版本/shipped。

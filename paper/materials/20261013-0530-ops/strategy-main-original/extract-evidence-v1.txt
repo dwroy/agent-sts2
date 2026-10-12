@@ -1,0 +1,33 @@
+import hashlib
+import json
+from pathlib import Path
+
+root = Path('/home/dw/Projects/agent-sts2')
+out = Path(__file__).parent
+runs = json.loads((out / 'dispatch.json').read_text())['runs']
+needles = [r.encode() for r in runs]
+manifest = {}
+for name in ['states', 'decisions', 'sl-attempts', 'run-config', 'run-plans', 'fight-plans']:
+    source = root / 'logs' / (name + '.jsonl')
+    frozen_bytes = source.stat().st_size
+    offset = 0
+    counts = {r: 0 for r in runs}
+    entries = []
+    with source.open('rb') as handle, (out / (name + '.jsonl')).open('wb') as dest:
+        for line_number, raw in enumerate(handle, 1):
+            if offset + len(raw) > frozen_bytes:
+                break
+            if any(n in raw for n in needles):
+                row = json.loads(raw)
+                run = row.get('run_id') or row.get('run')
+                if run in counts:
+                    counts[run] += 1
+                    dest.write(raw)
+                    entries.append({'run': run, 'line': line_number, 'offset': offset,
+                                    'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()})
+            offset += len(raw)
+    manifest[name] = {'source': str(source), 'frozen_bytes': frozen_bytes,
+                      'counts': counts, 'entries': entries,
+                      'selected_sha256': hashlib.sha256((out / (name + '.jsonl')).read_bytes()).hexdigest()}
+    print(name, json.dumps(counts), flush=True)
+(out / 'evidence-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')

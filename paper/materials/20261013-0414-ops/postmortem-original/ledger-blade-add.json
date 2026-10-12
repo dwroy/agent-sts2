@@ -1,0 +1,42 @@
+{
+  "by": "learner:postmortem",
+  "character": "silent",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "4ATPGGUBWG8L"
+    ]
+  },
+  "kind": "bug-infra",
+  "claim": "升级刀刃之舞BLADE_DANCE的Cards=4仍被读为抽4，普通版已修的生成模型受未升级/Cards=3门槛限制。本局A10F28T3候选误增drawBudget和unknownHand，当前live card-model.ts:970/980/1033可定位；回溯首局A0F9已错报抽4、F12实际保留旧牌并添四SHIV。升级边界此前未单列，不将普通版0324的上线当升级版已覆盖；本局未实际施放，修后整战胜负未知。",
+  "first_run": "C48LLXBGKXQ9",
+  "prior": "no",
+  "prior_runs": [
+    "C48LLXBGKXQ9"
+  ],
+  "prior_note": "静默首局尚未有本角色学习时，F9T1 d205445升级候选已报cards_drawn4；F12T5 s209437→209438实付1费并添四刀，实际重读后能打刀不代表原方案模型正确。普通版silent-0324与升级边界分开。",
+  "evidence": [
+    {
+      "run": "C48LLXBGKXQ9",
+      "floor": 9,
+      "turn": 1,
+      "role": "support",
+      "note": "d205445/plan2刀刃之舞+题面cards_drawn4；s209369文本添加4小刀、Cards4。最早已核升级误读。"
+    },
+    {
+      "run": "C48LLXBGKXQ9",
+      "floor": 12,
+      "turn": 5,
+      "role": "support",
+      "note": "s209437→209438原四手牌中一升级舞消失，三旧牌保留并新增四SHIV，能量3→2。与普通版旧账本区分，first_run回溯。"
+    },
+    {
+      "run": "4ATPGGUBWG8L",
+      "floor": 28,
+      "turn": 3,
+      "role": "support",
+      "note": "s379481/482升级牌文Cards4、添4小刀；d368647 plan2量化actions将BLADE_DANCE记draws4/draw_budget4、unknownHand4；此候选未实际执行。live970/980/1033与启动f791提交blob一致，fix-queue未列。"
+    }
+  ],
+  "note": "来源任务20261013-034301-postmortem；新升级范围bug，保留普通修复0324/S1.blade-dance1；仅通过独立strategy-proposal实现，不冒称本局已经观察A10实际生成或修复可赢。"
+}

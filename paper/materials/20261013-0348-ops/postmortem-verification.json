@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-13 03:58:31 CST",
+  "run_id": "MEXYTC0Z2MQQ",
+  "original_lesson_and_prefix_verified": true,
+  "source_counts": {
+    "runs": 1,
+    "decisions": 391,
+    "states": 405,
+    "run-plans": 3,
+    "sl-attempts": 6,
+    "brain": 17,
+    "run-config": 1,
+    "codex-calls": 17
+  },
+  "source_identities_verified": true,
+  "bugs": [
+    {
+      "run": "MEXYTC0Z2MQQ",
+      "where": "agent/src/hand/loop.ts:1771",
+      "what": "休息动作超时但实际完成后，已接受的新路线未提交，下一地图继续旧路线。",
+      "new": true
+    }
+  ],
+  "bug_is_nonblocking_actual_run_continued": true,
+  "original_cli_rows": 12,
+  "code_proposals": [
+    "silent-proposal-2d3aa8dfb27dbe3f",
+    "silent-proposal-de069b3ead7b8ff9",
+    "silent-proposal-7c5436b79af1a301"
+  ],
+  "ops_did_not_change_game_knowledge": true
+}

@@ -1,0 +1,20 @@
+本批定位/解析初稿与纠正记录（均未修改生产源码）。
+
+1. 初始专用队列定位猜测：
+rg: /home/dw/Projects/agent-sts2/ops/codex-ops/code-proposals/silent.jsonl: No such file or directory
+随后读取learner/code_proposals.py的QUEUE常量，使用paper/materials/learning/code-proposals.jsonl，只折叠本批10个id；原Markdown逐字复制并核SHA。
+
+2. 初始源码路径按根级agent/src文件猜测，未命中；随后rg --files核为agent/src/reflex/及agent/src/sim/。初始测试名不存在：
+sed: can't read agent/tests/silent-candidate-resource.test.ts: No such file or directory
+随后核真实agent/src/reflex/silent-sl-resource-comparison.ts与对应固定测试源码。未运行不存在的测试，也未认定生产检查失败。
+
+3. WQ原历史抽取文件带行号前缀，第一次按普通JSON解析报错：
+json.decoder.JSONDecodeError: Extra data: line 1 column 7 (char 6)
+随后只读检查原首行确认为281570:{...}，本批直接从只读logs捕获真实JSON与原始字节偏移，不依赖失败的历史解析结果。
+
+4. 首次饮药解析误用potion_index/potion_slot，审计结果为狡诈0次；实际chosen字段是action=use_potion和option_index。原脚本、日志和六份产物保存于analysis-initial/，未覆盖。纠正后加入42次/9局断言及容量、升级、基础伤、药栏减少断言；最终37次添3、2次添2、3次添0，且24项固定证据核验全部通过。此初稿错误不作为生产策略缺陷。
+
+5. 实际源码祖先核验同时保留失败的祖先关系：
+15ea09ad75a421d4bd65a820c187c8ee188186c8不是捕获live快照祖先；真实狡诈上线祖先为6403fdcdadc803a092beb5165a068e22bf51c412。
+fc7042d1df0626e9e726f4bc912d9c6f626d908f不是捕获live快照祖先；真实开场成本上线祖先为e8b4bb320ae3068db5ebb6ce8c6fa91a9689178a。
+这些是来源核验的限制，不报告为新源码失败或本批合入。

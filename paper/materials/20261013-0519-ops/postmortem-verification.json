@@ -1,0 +1,129 @@
+{
+  "at": "2026-10-13 05:22:37 CST",
+  "run_id": "NEPESJXEV9V3",
+  "original_lesson_prefix_and_draft_and_unique_header_verified": true,
+  "source_counts": {
+    "decisions.jsonl": 701,
+    "states.jsonl": 818,
+    "runs.jsonl": 1,
+    "run-plans.jsonl": 6,
+    "sl-attempts.jsonl": 9,
+    "run-config.jsonl": 1,
+    "brain.jsonl": 47,
+    "codex-calls.jsonl": 47
+  },
+  "total_original_records_verified": 1630,
+  "unique_extracted_run": {
+    "line": 738,
+    "offset": 309935,
+    "sha256": "dbe674f278bb47dbd0b6d75c47b5e9f0e43c7255d531cc6f8d0122bdfed7010d",
+    "data": {
+      "run_id": "NEPESJXEV9V3",
+      "ended": "2026-10-12T20:41:19.021Z",
+      "victory": false,
+      "floor": 45,
+      "character": "SILENT",
+      "ascension": 10,
+      "code": "current",
+      "decisions": 701,
+      "jev_calls": 152,
+      "deepseek_calls": 47,
+      "claude_calls": 0,
+      "tokens": 1513426,
+      "ds_tokens_in": 7150100,
+      "ds_tokens_out": 43556,
+      "ds_cache_hit": 3833344,
+      "deciders": {
+        "codex": 68,
+        "code": 311,
+        "jev": 152,
+        "jev-plan": 170
+      },
+      "death_fight": [
+        "幽灵骑士",
+        "连枷骑士",
+        "魔法骑士"
+      ],
+      "death_fight_floor": 45,
+      "death_enemy_ids": [
+        "FLAIL_KNIGHT",
+        "MAGI_KNIGHT",
+        "SPECTRAL_KNIGHT"
+      ]
+    }
+  },
+  "historical_dirty_config_preserved": {
+    "commit": "e813a9507f20d8d03f382774774911522612940c",
+    "code": "e813a95+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "source_binding": {
+    "path": "agent/src/sl/draws.ts",
+    "startup_sha256": "757b57ea5e8d130e2204280cc4c5322e7a273cda4e5abca47f03b567b63c3a79",
+    "current_live_sha256": "757b57ea5e8d130e2204280cc4c5322e7a273cda4e5abca47f03b567b63c3a79"
+  },
+  "bugs_as_reported_by_learner": [
+    {
+      "run": "NEPESJXEV9V3",
+      "where": "agent/src/sl/draws.ts:568",
+      "what": "抑制改升级标记仍被SL抽序记录为新牌插入并截断前缀；既有silent-0279复发，fix-queue未列。",
+      "new": false
+    }
+  ],
+  "ops_classification": "Existing nonblocking SL version/instance-identity item; original learner proposals retained, no new ordinary repair or game knowledge.",
+  "nine_sl_records_not_nine_reload_attempts": true,
+  "no_complete_dirty_tree_or_counterfactual_victory_claim": true,
+  "queue_absent_claim_qualified_separately_without_rewriting_original": true,
+  "current_runs_unique_checked_at": "2026-10-13 05:27:12 CST",
+  "current_runs_unique_count": 1,
+  "current_unique_run": {
+    "line": 738,
+    "sha256": "dbe674f278bb47dbd0b6d75c47b5e9f0e43c7255d531cc6f8d0122bdfed7010d",
+    "record": {
+      "run_id": "NEPESJXEV9V3",
+      "ended": "2026-10-12T20:41:19.021Z",
+      "victory": false,
+      "floor": 45,
+      "character": "SILENT",
+      "ascension": 10,
+      "code": "current",
+      "decisions": 701,
+      "jev_calls": 152,
+      "deepseek_calls": 47,
+      "claude_calls": 0,
+      "tokens": 1513426,
+      "ds_tokens_in": 7150100,
+      "ds_tokens_out": 43556,
+      "ds_cache_hit": 3833344,
+      "deciders": {
+        "codex": 68,
+        "code": 311,
+        "jev": 152,
+        "jev-plan": 170
+      },
+      "death_fight": [
+        "幽灵骑士",
+        "连枷骑士",
+        "魔法骑士"
+      ],
+      "death_fight_floor": 45,
+      "death_enemy_ids": [
+        "FLAIL_KNIGHT",
+        "MAGI_KNIGHT",
+        "SPECTRAL_KNIGHT"
+      ]
+    }
+  }
+}

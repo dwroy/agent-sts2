@@ -1,0 +1,247 @@
+[
+ {
+  "id": "silent-0031",
+  "ts": "2026-10-05T02:33:37+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局律动残余的单回合20失血上限保住过血量，但不能免死：胧光怪战T2零挡对22意图实际41→21，T4零挡对28实际21→1，较意图分别少2与8；T6只有1血、零挡，对22+16=38意图仍归零。两次SAIL_MOVE过后敌人力量0→3→6，寄生惧魔同一SLAM_MOVE 16→19→22；T3舵盘18挡覆盖16攻击，但后段没有这个格挡。只记录这局限损、一次性挡与敌成长的组合。",
+  "evidence": [
+   {
+    "run": "1HC609GTLGN3",
+    "floor": 22,
+    "turn": 2,
+    "note": "律动残余BEATING_REMNANT文本每回合最多失20血；寄生惧魔16、胧光怪6，末0挡、41血，下一回合21血。",
+    "role": "support",
+    "added": "2026-10-05T02:33:37+08:00"
+   },
+   {
+    "run": "1HC609GTLGN3",
+    "floor": 22,
+    "turn": 4,
+    "note": "两敌各3力量，意图19+9=28；出牌后0挡、21血，下一回合1血，实损20比意图少8。",
+    "role": "support",
+    "added": "2026-10-05T02:33:37+08:00"
+   },
+   {
+    "run": "1HC609GTLGN3",
+    "floor": 22,
+    "turn": 6,
+    "note": "两敌各6力量、意图22+16；末1血0挡，死亡帧0血、寄生惧魔18血与胧光怪14血，不能把总意图38写成实际承受38。",
+    "role": "support",
+    "added": "2026-10-05T02:33:37+08:00"
+   },
+   {
+    "run": "ARKQLHG6RS4W",
+    "floor": 31,
+    "turn": 4,
+    "role": "support",
+    "note": "蜂群术士T4零挡对28攻击，55→35仅损20，限损少8；末次bossT2零挡对31攻击，27→7仅损20，少11；T4只有6血6挡对33攻击，律动残余虽限损20仍归0。支持单轮限损不免死，不据此给出安全血线。",
+    "added": "2026-10-05T15:57:25+08:00"
+   },
+   {
+    "run": "HSX4HYATB4E2",
+    "floor": 48,
+    "turn": 1,
+    "role": "support",
+    "note": "六次39血零挡对26攻击均只损20到19，律动残余上限兑现。",
+    "added": "2026-10-07T06:25:43+08:00"
+   },
+   {
+    "run": "HSX4HYATB4E2",
+    "floor": 48,
+    "turn": 7,
+    "role": "support",
+    "note": "末次2血19挡对26攻击和18凋萎需25、限至20仍归零，代码预计余血-18；不把上限当回血。",
+    "added": "2026-10-07T06:25:43+08:00"
+   },
+   {
+    "run": "E6DYYXRX7GVE",
+    "floor": 45,
+    "role": "support",
+    "note": "原字节、逐帧及历史复核通过；相关实盘结论见changes.json及verification.json。舵盘提供第三回合18格挡，不能外推成每回合底挡。机制：已见第三回合开始18，后续轮不继续补；与敏捷增加的牌挡分源。搭配：前两轮/后段另需防御，未活到第三轮不预支。决定胜负的战斗：2支持/0反例，无遗物单因胜果（n=2）。典型案例：1HC609GTLGN3胧光怪T3挡18实损0、T4仍损20；E6DYYXRX7GVE灵魂枢纽T3轮初18＋扫腿+在五敏下19=37，对14零损；T6轮初0、末3血对17死，不沿用T3底挡。",
+    "added": "2026-10-09T10:56:34+08:00"
+   },
+   {
+    "run": "VT2F13ADA3M3",
+    "floor": 17,
+    "role": "support",
+    "note": "VT2F13ADA3M3 同族六试T3轮初各实给18挡，此后不每轮重复；首T2已损21、末T11只有牌挡5对18死亡。没有玩家敏捷能力，遗物18挡不归于敏捷成长",
+    "added": "2026-10-10T18:51:44+08:00"
+   },
+   {
+    "run": "G2QCF2R3A57K",
+    "floor": 46,
+    "turn": 10,
+    "role": "support",
+    "note": "T10玩家24HP/15挡另斗篷扣1，对55攻击原需39；主预测封顶20，实际24→4并于T11获胜。F48末次T5仅1HP、完整需损9，未达20上限仍死，不能当作免死。",
+    "added": "2026-10-11T02:25:07+08:00"
+   }
+  ],
+  "first_run": "1HC609GTLGN3",
+  "prior": "unknown",
+  "prior_runs": [
+   "C48LLXBGKXQ9",
+   "Y6GM2CHWJBEY",
+   "LRN0HPZ0FZS1",
+   "T082DRCUHRRD"
+  ],
+  "prior_note": "此前同角色复盘未见律动残余与这组敌人同场，按角色查BEATING_REMNANT／律动残余无条目，不能以其他角色经验判断过去做对与否。",
+  "status": "proposed",
+  "where": {
+   "lessons": [
+    "1HC609GTLGN3",
+    "ARKQLHG6RS4W",
+    "HSX4HYATB4E2",
+    "G2QCF2R3A57K"
+   ],
+   "experience": [
+    "silent-beating-remnant-loss-cap",
+    "silent-captains-wheel-third-turn"
+   ],
+   "commits": [
+    "__COMMIT__",
+    "a5604585226af696fdc6e01e19f6959fe73425d0",
+    "5f17e4b397490cefd18d2970852f1ea439a7ca00",
+    "2480e1a3435d40808c972b5247e126f42fd8f6c8",
+    "50de6fefd40afae1f26838de7879198945acbc0b",
+    "98df162d756d3eca8d0b6383f2a2398d624ab074",
+    "1a89c2d481689bf0793c89c53318c247a1ea1997",
+    "dc8a23b705f8eb21b85d9d1d1e584e35ab8d8fe5",
+    "0e7a9db45f68953aaf1dd2d180e9b6ab5c3ef514",
+    "5f809c22a7d2b8866c6971658a0904d202e11ac4",
+    "6519b89093213125f9a91714dd35dafcedd643d6",
+    "aa580dd2457b7e1319fd5f40e0ae089f8e587210",
+    "b97314f7e789fd62fc3ea16116971b48a317b8cf",
+    "a4225bd503251337fafbb0a4732f1e110d84973d"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第二次增量：2 局 A0（version 2026-10-05.2，分支 exp-silent，未提交（沙箱全量测试阻塞））",
+    "2026-10-05 静默猎手 第十七次增量：2 局 A6（version 2026-10-05.17，分支 exp-silent，a5604585）",
+    "2026-10-07 静默猎手 第六十三次增量：2 局 A10（version 2026-10-07.9，分支 exp-silent，50de6fef）",
+    "2026-10-09 静默猎手 第一百二十七次增量：1 局 A10（version 2026-10-09.16，分支 exp-silent，0e7a9db4）",
+    "2026-10-10 静默猎手 第一百五十七次增量：1 局 A10（version 2026-10-10.15，分支 exp-silent，b97314f7）",
+    "2026-10-11 静默猎手 第一百六十九次增量：1 局 A10（version 2026-10-11.4，分支 exp-silent，a4225bd5）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-104303-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-184302-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261011-021301-postmortem/proposal-resource-handoff.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-024303-experience-update/proposal-defense.md"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T02:33:37+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T03:47:26+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T15:57:25+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T16:48:42+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T17:08:51+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T06:25:43+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T06:47:29+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T06:57:48+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-09T10:56:34+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T10:56:35+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T11:12:38+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-09T11:20:07+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-10T18:51:44+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-10T18:51:45+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-10T19:01:42+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-11T02:25:07+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-11T02:26:36+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-11T02:51:46+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-11T02:51:50+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-11T03:11:53+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   }
+  ],
+  "version": "S1.exp127",
+  "effect": null,
+  "notes": [
+   "静默经验.17：旧二十二局日志七数组逐行复算一致，新增两局均A6；公式/逐帧数字、进阶及整战因果限制见第十七次增量。仅proposed，实际合入后由运维据完成事件登记shipped，不登记独立音叉模型bug0108已修。",
+   "17:05 experience-done核实实际live合入及S1.exp17唯一；经验.17新增2/更新17/退役0，源tsc0/173文件1988例、合后tsc0/174文件1993例首过，无新增刷新/冲突，保留fix18七项刷新。仅经验发布，0108独立S1.fix18模型上线不混记；本批独立完整外部检查待其learner-checks，不用fix-batch检查替代。",
+   "06:55 experience-done机械确认20261007-063003-experience-update：源50de6fef→实际live 98df162d→固定发布1a89c2d4/唯一S1.exp63，main已同步经验2026-10-07.9及七项锁内知识刷新，无代码/生成器/手写知识/其他角色变动。来源HSX4HYATB4E2/WYB0NCD6W83J A10及有效勘误、本角色历史；新增2更新19全补证退役0、active135/49258字，无新用药规则。初稿源、28项文字更正后定稿源及合后三次沙箱均tsc0/vitest0、214文件2289例通过，无测试失败/超时；预检rc0知识冲突0、其他知识blob保持。仅CLI/by=ops本批24项shipped覆盖21项经验，0211首证沿学习者更正T082DRCUHRRD/A0/prior=yes、原R0先验/23份support/旧首证历史保持；其他claim/首证/先验/repeat不重置。旧attempts断言失败与TD1专用取数修正、初稿32→28项文字更正、台账空evidence拒绝零行及修正、initial-*及全部原件归档保留，不当生产故障或自测失败。0207 exp62及其他旧版本/失败历史保持，原过滤摘要不冒称完整逐例日志，完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。",
+   "第127次经验/提案预关联；保持旧首证/prior/claim/状态/版本与原证据，源提交后再登记proposed。",
+   "代码提案 silent-proposal-fa79d41651f0fac1 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第127次经验已完成源提交，登记本批经验proposed；保留首证/prior/claim/历史证据与旧版本。实际live数据shipped由运维据完成事件登记，四份源码提案仍pending。",
+   "第一百二十七次经验仅原数据2026-10-09.15→2026-10-09.16，源0e7a9db4增1改15退0/194 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp127。仅17所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；四combat/potion/sl/terminal源码提案沿自动链，不标源码实现。原merged-null/3项运维记录冲突及核验/登记初稿失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。",
+   "第157次经验预关联；保留原首证/prior/claim/版本，提交后登记proposed，源码未实现。",
+   "代码提案 silent-proposal-f2d89fc17d029329 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第157次经验自测源提交完成；保留旧claim/first_run/prior/证据/历史版本。实际经验合入shipped由运维据完成事件核实，独立策略源码提案不登记implemented。",
+   "来源任务20261011-021301-postmortem；只补本角色证据，保留原claim、prior、状态及上线历史；独立代码提案另由CLI登记。",
+   "代码提案 silent-proposal-2f3be567f843c39d → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第169次静默经验增量预关联；保留原claim/prior/首证/repeat及发布历史，提交后才改proposed。本批普通增量，不承接局号不匹配的专题请求。",
+   "代码提案 silent-proposal-2d32311266a4c312 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第169次经验数据已自测提交；源码提案独立strategy-proposal，经验实际合入/发布由运维据experience-done核实后登记，未标implemented/shipped；保留原首证/prior/claim/历史发布。"
+  ],
+  "shipped_at": "2026-10-09T11:20:07+08:00"
+ }
+]

@@ -1,0 +1,44 @@
+{
+  "task": "fix-batch",
+  "base": "b1dcf80843740169e1c5f796f2e232c11c50fdee",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类：沿既有strategy-proposal；已实现的有限子项不关闭整个宽提案。"
+    },
+    {
+      "item": "silent-0365：未建模定向药水目标截成前两个",
+      "reason": "独立药水/结构提案：当前仍有targets.slice(0, 2)，已有silent-proposal-70c22e94eda8f8a9承接合法目标及题目容量契约，本普通批次不混入原策略实现。"
+    },
+    {
+      "item": "silent-0332：双boss接续资源异常根因",
+      "reason": "证据不足：已有分支/seed/资源诊断，但旧VAC6Z1PZ1QJG、64VJC5XT2AT2 F47缺可重放触发样本；沿原策略链核实，不猜填资源。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed（silent-0446）",
+      "reason": "独立结构提案：silent-proposal-2d3aa8dfb27dbe3f要求待确认事务、同局同房动作核实、重启回放及一次性提交，已明确交独立strategy-proposal。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2历史恢复、sandbox-glob-startup-race上游竞态",
+      "reason": "证据不足：通知失败诊断和会话前有界恢复已修，旧通知是否已发及上游目录创建/删除者未证；保留幂等和失败历史。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时、既有测试超时的精确宿主时序",
+      "reason": "证据不足：未证明永久饥饿或内部/负载根因；固定测试夹具已修不等同历史因果已证。"
+    },
+    {
+      "item": "具名卡全入口/未知派发/量化消费者、全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存性能专项",
+      "reason": "太大/独立功能或策略研究：保留原专用任务和父要求；已核事件子项及工具入口不等同整项完成。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 12
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-054302/learner/runs/20261013-054324-fix-batch/report.md"
+}
