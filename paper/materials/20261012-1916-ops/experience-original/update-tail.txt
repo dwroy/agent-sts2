@@ -1,0 +1,8 @@
+def stats(x):
+    active=[e for e in x['entries'] if e['status']=='active']
+    return dict(active=len(active),chars=sum(len(e['lesson']) for e in active),confidence=dict(collections.Counter(e['confidence'] for e in active)),by_asc={str(a):dict(entries=sum(e['asc'][0]<=a<=e['asc'][1] for e in active),chars=sum(len(e['lesson']) for e in active if e['asc'][0]<=a<=e['asc'][1])) for a in [8,9,10]})
+assert stats(X)['chars']<=60000
+for name,obj in [('changes',changes),('ledger-map',mapping),('stats',dict(before=stats(B),after=stats(X)))]:
+    (O/(name+'.json')).write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n')
+(W/'knowledge/characters/silent/experience.json').write_text(json.dumps(X,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(dict(changes=len(changes),stats=stats(X)),ensure_ascii=False))
