@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-101301-s2/agent
+
+ ❯ tests/silent-phase-current.test.ts (19 tests | 2 failed) 1869ms
+   × reaches the actual Jev question and preserves all criteria (v1=false) 232ms
+   × reaches the actual Jev question and preserves all criteria (v1=true) 639ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-phase-current.test.ts > reaches the actual Jev question and preserves all criteria (v1=false)
+ FAIL  tests/silent-phase-current.test.ts > reaches the actual Jev question and preserves all criteria (v1=true)
+AssertionError: expected undefined to match object { enemy_hp_now: 212, …(2) }
+
+- Expected:
+{
+  "accelerant_established_now": 0,
+  "enemy_hp_now": 212,
+  "poison_now": 0,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-phase-current.test.ts:90:46
+     88|   const raw = rawAt(277513), current = planned(raw, v1);
+     89|   if (current?.kind !== "ask" || current.questions.plan?.type !== "cho…
+     90|   expect(current.state.test_subject_current).toMatchObject({ enemy_hp_…
+       |                                              ^
+     91|   if (v1) expect(current.jevView?.state.test_subject_current).toEqual(…
+     92|   expect(current.state).not.toHaveProperty("experience");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 23 passed (25)
+   Start at  10:25:01
+   Duration  7.46s (transform 2.40s, setup 532ms, import 3.74s, tests 2.70s, environment 2ms)
+

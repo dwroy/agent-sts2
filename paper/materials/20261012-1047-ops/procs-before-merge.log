@@ -1,0 +1,17 @@
+3251934 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh --tail-console
+3538531 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+3538627 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+3538628 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+3538639 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+3680094 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261012-104302-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261012-104302-strategy-proposal.pid 1 - /home/dw/Projects
+3680095 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261012-104302-strategy-proposal YBRA3EJ94GBR,3UPY3BP2LVS7,NYQW6JAD30K4,E6DSUVTNVBMH,64VJC5XT2AT2,SB5N8GT2Y3VW,N1ZEBMHZM4KC,C7GNN3DDFUFY,F6XY4QJMS5RC,CM
+3680722 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-104302/learner/run.ts --engine codex --model gpt-6-astra --effort xhigh --task 
+3680735 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3695944 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+3695955 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 3251934
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay-log                               wJ:pCY  yes    yes   3251934:bash 3251954:tail 3538531:npm exec tsx sr 3538627:sh 3538628:node 3538639:node 3538647:esbuild
+learner-20261012-104302-strategy-proposal  wJ:pNN  yes    yes   3680094:bash 3680095:bash 3680720:tail 3680722:node 3680735:node 3680744:esbuild
+ops                                        wJ:p5   yes    yes   3237114:node 3237122:codex
