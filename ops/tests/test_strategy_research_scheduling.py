@@ -17,6 +17,7 @@ from unittest.mock import patch
 REPO = Path(__file__).resolve().parents[2]
 IDENT = "roy-20261010-silent-deck-size-value"
 OUTPUT_IDENT = "roy-20261010-silent-core-output-value"
+DECKLIST_IDENT = "roy-20261012-concrete-core-decklists"
 OUTPUT_SECTIONS = ["damage_realization", "startup_and_scaling", "sustained_output",
                    "resource_survival_tradeoffs", "construction_execution_guidance",
                    "counterexamples", "limitations"]
@@ -328,8 +329,7 @@ class ResearchScheduling(unittest.TestCase):
         request_path.write_text(json.dumps(request))
         return ident, request_path, request
 
-    def output_request(self, anchors=None):
-        ident = OUTPUT_IDENT
+    def output_request(self, anchors=None, ident=OUTPUT_IDENT):
         anchors = anchors or ["SILENT000005", "SILENT000006"]
         request = {**self.request, "request_id": ident, "dispatch_runs": anchors,
                    "input_manifest": "paper/frozen/output.json",
@@ -339,7 +339,8 @@ class ResearchScheduling(unittest.TestCase):
         path = self.root / request["input_manifest"]
         path.write_text(json.dumps(manifest))
         request["input_manifest_sha256"] = self.digest(path)
-        request_path = self.root / "notes/strategy-research-core-output-silent.json"
+        request_path = self.root / ("notes/strategy-research-core-decklists-silent.json"
+                                    if ident == DECKLIST_IDENT else "notes/strategy-research-core-output-silent.json")
         request_path.write_text(json.dumps(request))
         return ident, request_path, request
 
@@ -576,6 +577,65 @@ class ResearchScheduling(unittest.TestCase):
         self.request_path.unlink()
         self.output_request(RUNS)
         self.assert_host_wrapper_registration(OUTPUT_IDENT)
+
+    def test_decklist_report_waits_for_a_shared_slot_and_never_repeats_old_or_new_studies(self):
+        import strategy_research_jobs as research
+        ident, path, _ = self.output_request(ident=DECKLIST_IDENT)
+        self.request.update(state="done", batch="old-completed-study")
+        self.save_request()
+        old_request = self.request_path.read_bytes()
+        pending = path.read_bytes()
+        self.state["batches"] = {name: {"task": "strategy-proposal", "state": "running", "pid": pid}
+                                 for name, pid in (("owner-one", 11), ("owner-two", 12))}
+        self.check()
+        self.assertEqual(path.read_bytes(), pending)
+        self.assertEqual(self.launched, [])
+        self.state["batches"]["owner-one"]["state"] = "done"
+        self.check("20260101-000002")
+        request = json.loads(path.read_bytes())
+        batch = self.state["batches"][request["batch"]]
+        self.assertEqual(batch["research_request"], ident)
+        self.assertEqual(self.launched[-1][-1], ident)
+        state_dir = self.root / "ops/codex-ops"
+        self.assertFalse(research.ready(str(self.root), str(state_dir), request["batch"], "silent", request["worktree"], ident))
+        (state_dir / "learn.json").write_text(json.dumps(self.state))
+        self.assertTrue(research.ready(str(self.root), str(state_dir), request["batch"], "silent", request["worktree"], ident))
+        for terminal in ("running", "done", "failed", "lost"):
+            batch["state"] = terminal
+            self.check("20260101-000003")
+            self.assertEqual(len(self.launched), 1)
+        self.assertEqual(self.request_path.read_bytes(), old_request)
+
+    def test_decklist_host_wrapper_requires_the_saved_registration_and_pinned_baseline(self):
+        self.request_path.unlink()
+        self.output_request(RUNS, ident=DECKLIST_IDENT)
+        self.assert_host_wrapper_registration(DECKLIST_IDENT)
+
+    def test_decklist_report_requires_its_own_frozen_identity_and_complete_coverage(self):
+        spec = importlib.util.spec_from_file_location("decklist_report_fixture", REPO / "ops/tests/test_strategy_research.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        fixture = module.StrategyResearch("test_bound_clean_report_is_accepted_with_frozen_proof")
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        fixture.manifest["request_id"] = DECKLIST_IDENT
+        fixture.write_json(fixture.manifest_path, fixture.manifest)
+        sections = ["concrete_decklists", "paired_comparisons", "boss_requirements", "limitations"]
+        fixture.request.update(request_id=DECKLIST_IDENT, required_sections=sections,
+                               input_manifest_sha256=fixture.digest(fixture.manifest_path))
+        path = fixture.root / "notes/strategy-research-core-decklists-silent.json"
+        fixture.write_json(path, fixture.request)
+        fixture.batch.update(research_request=DECKLIST_IDENT, research_dispatch_base=fixture.base,
+                             research_input_sha256=fixture.request["input_manifest_sha256"])
+        fixture.report.update(request_id=DECKLIST_IDENT, input_sha256=fixture.request["input_manifest_sha256"],
+                              coverage={key: True for key in sections})
+        proof = fixture.accept()
+        self.assertIsNotNone(proof)
+        self.assertEqual(proof["research"]["request"], str(path))
+        for changes in ({"request_id": OUTPUT_IDENT}, {"input_sha256": "0" * 64},
+                        {"coverage": {"limitations": True}}, {"covered_runs": []},
+                        {"merged": fixture.base}, {"tests": {"tsc": 0, "vitest": 0, "cases": 0}}):
+            self.assertIsNone(fixture.accept(report={**fixture.report, **changes}))
 
     def test_wrapper_rejects_unknown_research_marker_and_extra_arguments(self):
         env = {"HOME": os.environ["HOME"], "PATH": "/usr/bin:/bin", "CODEX_OPS_ROOT": str(self.root),
