@@ -20,6 +20,7 @@ Roy指定“学习入库”的要求按 [学习要求闭环](docs/learning-reque
 ## 规矩
 
 - **记录**：决定和上线都在 `paper/materials/decision-log.md` 追加一行，写之前先跑 `date`，格式和已有的行一致。改变对局行为的上线，还要在 `eval/versions.json` 加一个版本，并通知运维会话。讨论、数据、转录都要落盘，不能丢历史。
+- **发布编号**：对外使用 `eval/versions.json` 的 `release_id`，格式 `V4-R307`（架构代数 + 累计行为发布序号），规则见 [统一发布编号](docs/eval.md#统一发布编号)。ops 在 `ops/live-merge.lock` 内核实际 live 提交后分配；同一发布提交的多个补丁名称共用一号，新行为发布才加一，纯文档/运维记录不加号。保留原 `name/family/commit/source`、旧顺序和经验库日期版本；不按名称末尾数字相加，不重编号历史。学习者沿用原上线流程，由 ops 统一核号。
 - **规则变更通知**：规则实际上线后先 `date`，在项目根目录 `notes/for-roy.md` 和 `ops/inbox-dev.md` 同时追加通知 Roy：逐项旧规则、新规则、证据/账本、预期影响和回退方法。这是已授权的记录例外，保留其他并行记录；只经 CLI 记台账，不修改运维 prompt。
 - **上线**：修复和已批准的改动测完就合进 `live`（对局在 `.worktrees/live` 里跑），下一局生效。合并前先查 live 里刷新过的知识数据有没有和这次合并冲突。
 - **工作树**：一个功能一个工作树。Claude 用 `.claude/worktrees/`，其他 agent 用 `.worktrees/`。主检出只用来集成。同一个工作树同一时间只能有一个 agent 改代码。
