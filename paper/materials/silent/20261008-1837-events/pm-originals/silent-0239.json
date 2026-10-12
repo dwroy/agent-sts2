@@ -1,0 +1,150 @@
+{
+  "id": "silent-0239",
+  "ts": "2026-10-07T16:09:48+08:00",
+  "character": "silent",
+  "kind": "fight",
+  "claim": "静默战斗参考排名应分列推演覆盖、样本、削减和未知牌：VLZ F45 T1药水1/12耗707ms后退化为1回合/1样本、best=null且无并列，续问药水12/12而后续5回合仅3样本；T4的5回合8样本则明确plan2/3/4并列。实现只给Jev事实及范围，保留选择、预算和所有既有药水/SL规则，不由回退封顶或有限全败样本声称实盘必败。",
+  "evidence": [
+    {
+      "run": "VLZ6CCT8AQ0A",
+      "floor": 45,
+      "turn": 1,
+      "role": "support",
+      "note": "decisions269748/269754；1/12、707ms、1回合1样本无best/tied；续问12/12、11ms、5回合3样本具有best但clock削减。",
+      "added": "2026-10-07T16:09:48+08:00"
+    },
+    {
+      "run": "VLZ6CCT8AQ0A",
+      "floor": 45,
+      "turn": 4,
+      "role": "support",
+      "note": "decisions269770；5回合8样本、387ms，无削减，best=null且plan2/3/4明确并列；即时31损32伤与13损24伤分账。",
+      "added": "2026-10-07T16:09:48+08:00"
+    },
+    {
+      "run": "PD9AYQVMLQW6",
+      "floor": 48,
+      "turn": 1,
+      "role": "support",
+      "note": "284407五轮/每顺序6样本/632ms、saturated=true，但所选plan2五轮死亡0/6、赢0/6，预计后续损58；出牌预测损0直扣53，实损0净扣54，T10实赢。",
+      "added": "2026-10-08T07:25:21+08:00"
+    },
+    {
+      "run": "PD9AYQVMLQW6",
+      "floor": 49,
+      "turn": 1,
+      "role": "support",
+      "note": "首试284458五轮各展示线8/8死0/8赢；抽牌重问后实际T10才判死。末试T7 decision284693为24/24死0/24赢，实线后续重問/改牌打到T10。不是固定全线同盘回放，不证明模拟代码错或另有必胜；不拿rollout饱和替代SL确定性判官。",
+      "added": "2026-10-08T07:25:21+08:00"
+    }
+  ],
+  "first_run": "VLZ6CCT8AQ0A",
+  "prior": "partly",
+  "prior_note": "已有silent-0106/0019/0201及silentLossReference，已有英文rollout退化文本和并列字段；本项补结构化范围并撤掉静默全局exact保证，不冒称旧证据首次学习。",
+  "status": "shipped",
+  "by": "learner:strategy-proposal",
+  "where": {
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-160418-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-cure-all-and-budget.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-160418-strategy-proposal/report.md",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/proposal-rollout-boundaries.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-075539-experience-update/proposal-resources.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-075539-experience-update/proposal-sl-trace.md"
+    ],
+    "commits": [
+      "45161a51c2c6b7e4a499b13cf749c4108193bbf5",
+      "777f861c27a1a1a89c9aba736709801b5cc3f481",
+      "05b4f233472928698cd11fee4a8fb182a3da2736",
+      "fb0795dc049d90c961096edaa4b3a1f6aced7a02",
+      "eaa66f7c572d208a94e80b55d984a7033a728c4e",
+      "d516cdce1da2eb4a07b003657059d754aa310578",
+      "775a51367b76aec570e1b49ec8da1436cc7bb89d",
+      "5cff29a8e005363f25ac4218b793d86e592d4a82"
+    ],
+    "lessons": [
+      "PD9AYQVMLQW6"
+    ],
+    "experience": [
+      "silent-aeonglass-artifact-growth-sl"
+    ],
+    "changelog": [
+      "## 2026-10-08 静默猎手 第九十二次增量：2 局 A10（version 2026-10-08.9，分支 exp-silent，eaa66f7c）"
+    ]
+  },
+  "note": "来源代码提案silent-proposal-f2bfceddb1898dca的事实展示子项；预算与目标策略实验仍缺数据，不把整项标为implemented。",
+  "asc": 10,
+  "history": [
+    {
+      "ts": "2026-10-07T16:09:48+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T16:50:28+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T16:53:46+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-07T16:58:31+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T17:34:31+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-08T07:25:21+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-08T07:26:59+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-08T08:06:22+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T08:06:23+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T08:06:23+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T08:26:01+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T08:41:50+08:00",
+      "by": "ops",
+      "status": "shipped"
+    }
+  ],
+  "version": "S1.exp92",
+  "effect": null,
+  "notes": [
+    "来源代码提案silent-proposal-f2bfceddb1898dca的事实展示子项；预算与目标策略实验仍缺数据，不把整项标为implemented。",
+    "已独立提交源码；最终撤实现8失败/3通过，恢复新增11及87相关合98过；最终原沙箱tsc0/233文件2441例通过，gitleaks0；尚待本会话实际合入live。",
+    "代码提案 silent-proposal-7ef28c3cb0160972 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "源已测提交45161a51c2c6b7e4a499b13cf749c4108193bbf5；最终红8败3过、恢复11新增及87相关合98过，原沙箱tsc0/233文件2441例0、gitleaks0。锁内尝试live合入因32路径历史/已提交知识冲突exit1，已merge --abort恢复606855106dfb90ca8ffe27b985ed3c3b3f2424a2；没有实际合入/版本或合后检查，保持proposed，交运维兜底，不冒标shipped。",
+    "17:02策略160418受阻兜底：源45161a51c2c6b7e4a499b13cf749c4108193bbf5已实际成为live777f861c27a1a1a89c9aba736709801b5cc3f481祖先，发布05b4f233472928698cd11fee4a8fb182a3da2736/唯一S1.strategy11，mainfb0795dc049d90c961096edaa4b3a1f6aced7a02四源码blob逐源相等。仅VLZ A10F45T1/T4的推演覆盖/样本/削减/未知及参考排名事实展示子项；不改预算、选项、目标、药水/SL规则，铁甲题面等价。源红8败3过、恢复新增11及相关87合98过；最新组合原入口tsc0/233文件2441例0/1worker。原32路径merge失败及本轮首次离线启动失败/检查历史保持，最终完整外部交160418原批独立learner-recheck，不冒报已通过。派发三个proposal_results缺失留原failed/队列，预算/神化/结构大项未由运维标implemented，仅0239本实现shipped；首证/先验/claim/历史不改。",
+    "仅补覆盖/时间边界的support，保持既有规则与shipped版本，不冒称新增上线。",
+    "代码提案 silent-proposal-9e00f95f7cf1e2d4 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第92批经验提交前提案预关联；保留首证/prior/原claim/repeat与旧上线历史，源码交独立strategy-proposal。",
+    "代码提案 silent-proposal-042ee2299084b528 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "代码提案 silent-proposal-8cd3db3bad5f34f1 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第92批源提交已完成；仅追加本批经验去处，原first_run/prior/claim/support/repeat与旧上线版本历史保持。三个代码提案独立strategy-proposal，学习者不标accepted/implemented/shipped。",
+    "第92次经验原数据2026-10-08.8→.9/增1改20退0/168 active，源eaa66f7c唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记22所属经验数据shipped。源247文件2604例tsc/vitest0，当前源码/测试/任务与固定完整通过7ed2bb0a逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，三个combat/potion/SL/terminal/structure代码提案沿原自动链，数据上线不表示代码实现；原out/err/report/failed及20项记录冲突历史不改。"
+  ],
+  "shipped_at": "2026-10-08T08:41:50+08:00"
+}

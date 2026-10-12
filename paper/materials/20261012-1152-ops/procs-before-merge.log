@@ -1,0 +1,12 @@
+3251934 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh --tail-console
+3749071 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+3749301 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+3749302 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+3749316 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+3843721 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+3843733 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 3251934
+herdr panes:
+label         pane    alive  busy  foreground
+autoplay-log  wJ:pCY  yes    yes   3251934:bash 3251954:tail 3749071:npm exec tsx sr 3749301:sh 3749302:node 3749316:node 3749327:esbuild
+ops           wJ:p5   yes    yes   3237114:node 3237122:codex

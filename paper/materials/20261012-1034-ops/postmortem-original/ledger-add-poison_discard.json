@@ -1,0 +1,35 @@
+{
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "静默可用的纯施毒牌被自动弃牌消费端误当本回合无价值：蛇咬已由card-model给出7毒，但thisTurnScore未读poison，discardPick据非正分自动弃掉；更早致命毒药有同类原话。该缺口独立于旧蛇咬模型修复，需保留已知施毒效果及未知边界，不据此强制留牌或宣称改变整场胜负。",
+  "evidence": [
+    {
+      "run": "6D0M76419BU7",
+      "floor": 12,
+      "turn": 1,
+      "note": "较早6D局d348466饮赌徒，d348467代码弃致命毒药并注明no value this turn；旧复盘只记动作，未登记根因。",
+      "role": "support"
+    },
+    {
+      "run": "CMS8QL9E3C5U",
+      "floor": 19,
+      "turn": 1,
+      "note": "d357514-518饮赌徒后代码弃灾及两蛇咬；s367870两蛇咬各2费可打/7毒、7能量，s367875均离手。F17T1/F19T5实见加7毒。live80a39d selection.ts:967/971-972；card-model.ts:994-999/1620-1631。保留毒牌反事实未知。",
+      "role": "support"
+    }
+  ],
+  "first_run": "6D0M76419BU7",
+  "prior": "no",
+  "prior_runs": [
+    "6D0M76419BU7"
+  ],
+  "prior_note": "本次首次定位前已发生的同类原件6D0M76419BU7 F12T1 d348467同样把可施毒牌标为无价值，当前局再现；已核先验窗口均错误，没有更早受控做对例。first_run取最早已核同类动作，不声称首次实际发生就在本局。",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "CMS8QL9E3C5U"
+    ]
+  },
+  "note": "来源20261012-101301-postmortem；只追加证据，独立strategy-proposal实现，不登记上线。"
+}

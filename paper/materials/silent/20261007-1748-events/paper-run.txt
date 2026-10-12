@@ -1,0 +1,16 @@
+Wed Oct  7 17:54:53 CST 2026
+Wed Oct  7 18:00:37 CST 2026
+PAPER EXIT 0 changed ['paper/data/README.md', 'paper/data/commits.csv', 'paper/data/cost-curve-silent.csv', 'paper/data/cost-silent.csv', 'paper/data/cost-sources.json', 'paper/data/cost-unattributed.csv', 'paper/data/decisions_by_label.csv', 'paper/data/learning-curve-silent.csv', 'paper/data/runs.csv', 'paper/data/summary.json', 'paper/data/verification.json', 'paper/materials/silent/cost.md']
+cut at 2026-10-07T09:54:53.379Z: decisions.jsonl 689,080,514 B, deepseek-reasoning.jsonl 377,746,518 B, runs.jsonl 236,789 B, states.jsonl 8,575,498,311 B, fight-plans.jsonl 2,233,957 B, run-plans.jsonl 5,727,780 B, brain.jsonl 257,733,164 B, sl-attempts.jsonl 15,363,909 B, run-config.jsonl 753,310 B
+decisions: 272,067 records, 586 runs
+scanning states.jsonl ...
+OK   decisions attributed + unattributed == play records
+OK   decisions_by_label sum == attributed decisions
+OK   escalations rows == records with escalation
+OK   every runs.jsonl id present in runs.csv
+OK   commits == git rev-list --all --count
+rows: runs 586, decisions_by_label 19500, escalations 3600, commits 3425
+/home/dw/Projects/agent-sts2/paper/data/learning-curve-ironclad.csv: 11 row(s)
+/home/dw/Projects/agent-sts2/paper/data/learning-curve-silent.csv: 12 row(s)
+key scan: CLEAN (no sk-<key> patterns)
+

@@ -1,0 +1,35 @@
+.F..FF.........................
+======================================================================
+FAIL: test_dedicated_prompt_and_tree_beside_busy_bug_batch (__main__.A10RegressionDispatch.test_dedicated_prompt_and_tree_beside_busy_bug_batch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/ops/tests/test_silent_calibration_dispatch.py", line 35, in test_dedicated_prompt_and_tree_beside_busy_bug_batch
+    self.assertEqual(self.launch(), ("first-fix-batch", 20))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('first-fix-batch', 20)
+
+======================================================================
+FAIL: test_highest_priority_request_precedes_other_pending_features (__main__.A10RegressionDispatch.test_highest_priority_request_precedes_other_pending_features)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/ops/tests/test_silent_calibration_dispatch.py", line 156, in test_highest_priority_request_precedes_other_pending_features
+    self.assertEqual(start.call_args.args[0][-1], self.task)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'silent-double-boss' != 'silent-a10-regression'
+- silent-double-boss
++ silent-a10-regression
+
+
+======================================================================
+FAIL: test_independent_of_running_calibration_and_normal_fixes (__main__.A10RegressionDispatch.test_independent_of_running_calibration_and_normal_fixes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/ops/tests/test_silent_calibration_dispatch.py", line 135, in test_independent_of_running_calibration_and_normal_fixes
+    self.assertEqual(self.launch(), ("first-fix-batch", 20))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('first-fix-batch', 20)
+
+----------------------------------------------------------------------
+Ran 31 tests in 0.039s
+
+FAILED (failures=3)

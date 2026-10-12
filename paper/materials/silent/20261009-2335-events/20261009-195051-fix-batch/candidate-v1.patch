@@ -1,0 +1,50 @@
+diff --git a/agent/src/reflex/rollout.ts b/agent/src/reflex/rollout.ts
+index c058cd61b..caafc997f 100644
+--- a/agent/src/reflex/rollout.ts
++++ b/agent/src/reflex/rollout.ts
+@@ -620,6 +620,8 @@ export interface RolloutOptions {
+ }
+ 
+ export interface RolloutInput {
++  /** Whole fights only: the Silent's observed Queen buff to a living Amalgam (not a self-buff). */
++  fightQueenTorchStrength?: number;
+   captureResources?: boolean;
+   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
+   continuation?: {
+@@ -2326,6 +2328,11 @@ function applyPlan(
+         if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
+         e.vigor += m?.vigor ?? 0;
+         e.strength += m?.strength ?? 0;
++        // Silent tune logs: ZZMYZ5UBCG72 T3-T7, 4Y94N8RDPGPM T3-T11.
++        // The Queen acts after the Amalgam; this gain affects its next attack.
++        if (fullFight && input.fightQueenTorchStrength && e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE") {
++          for (const ally of enemies) if (ally.alive && ally.id === "TORCH_HEAD_AMALGAM") ally.strength += input.fightQueenTorchStrength;
++        }
+         // Ritual, Territorial, High Voltage: Strength at the end of its turn (Cultists' T2 loss was short
+         // 1.3 a turn, Byrdonis 2); a Ritual this move gives starts on its next turn (Incantation gains none).
+         e.strength += e.growth;
+@@ -3027,7 +3034,9 @@ function nextAttacks(enemies: SimEnemy[], input: RolloutInput, playerVulnerable:
+     if (!e.alive || e.explodeAt !== undefined) continue;
+     const table = input.tables[e.id];
+     const now = e.move && table ? table.moves[e.move] : undefined;
+-    const strength = e.strength + (now?.strength ?? 0) + e.growth;
++    const queenBuff = e.id === "TORCH_HEAD_AMALGAM" ? (input.fightQueenTorchStrength ?? 0) * enemies.filter((ally) =>
++      ally.alive && ally.id === "QUEEN" && ally.move === "BURN_BRIGHT_FOR_ME_MOVE").length : 0;
++    const strength = e.strength + (now?.strength ?? 0) + e.growth + queenBuff;
+     let total = 0;
+     for (let k = 0; k < LOOKAHEAD_DRAWS; k += 1) {
+       const u = (k + 0.5) / LOOKAHEAD_DRAWS;
+diff --git a/agent/src/sim/boss-sim.ts b/agent/src/sim/boss-sim.ts
+index e8382e900..8f362c8ab 100644
+--- a/agent/src/sim/boss-sim.ts
++++ b/agent/src/sim/boss-sim.ts
+@@ -247,6 +247,9 @@ export function slimInput(
+   }) : input.solver.hand;
+   return {
+     ...input,
++    // Frozen Silent tuning fights observed this at A2/4/7/8/9/10 only.
++    ...(knowledgeCharacter() === "silent" && [2, 4, 7, 8, 9, 10].includes(input.meta.asc) && input.enemies.some((e) => e.id === "QUEEN")
++      ? { fightQueenTorchStrength: 1 } : {}),
+     ...(input.continuation ? { continuation: { ...input.continuation, variants: input.continuation.variants.map((v) => ({ ...v, input: slimInput(v.input, policyNodes, damageScale, hpScale, threat, potionHold, holdHp) })) } } : {}),
+     solver: hand === input.solver.hand ? input.solver : { ...input.solver, hand },
+     plans: [],

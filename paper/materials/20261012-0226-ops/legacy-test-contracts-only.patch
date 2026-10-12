@@ -1,0 +1,83 @@
+--- a/agent/tests/silent-smoggy-selection.test.ts
++++ b/agent/tests/silent-smoggy-selection.test.ts
+@@ -7,6 +7,7 @@
+ import { parseGameState } from "../src/hand/mod/schema.js";
+ import { planSelection } from "../src/hand/screens/selection.js";
+ import { survivorSmoggyFacts } from "../src/hand/screens/silent-smoggy-selection.js";
++import * as smoggyModule from "../src/hand/screens/silent-smoggy-selection.js";
+ import { makeKnowledge } from "../src/knowledge/index.js";
+ import { buildRunBrief } from "../src/memory/run-brief.js";
+ import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+@@ -51,6 +52,17 @@
+   const result = survivorSmoggyFacts(parseGameState(input), true);
+   expect(result).not.toBeNull();
+   return result as Map<number, Raw>;
++}
++
++function expectQuestionUnchangedWithoutSmoggyFacts(context: DecisionEnv): void {
++  const before = JSON.stringify(planSelection(context));
++  // Keep the shared action provenance for independent discard facts and routing.
++  const disabled = vi.spyOn(smoggyModule, "survivorSmoggyFacts").mockReturnValue(null);
++  try {
++    expect(JSON.stringify(planSelection(context))).toBe(before);
++  } finally {
++    disabled.mockRestore();
++  }
+ }
+ 
+ it("F12 T3: the warning matches the actual post-discard blockers, despite both modal flags being true", () => {
+@@ -118,17 +130,13 @@
+   const input = raw(); change(input);
+   expect(survivorSmoggyFacts(parseGameState(input), true)).toBeNull();
+   const context = env(input);
+-  const before = JSON.stringify(planSelection(context));
+-  context.screenMemory.cardSource = undefined;
+-  expect(JSON.stringify(planSelection(context))).toBe(before);
++  expectQuestionUnchangedWithoutSmoggyFacts(context);
+ });
+ 
+ it.each(["IRONCLAD", "NECROBINDER"])("%s questions remain byte-equivalent without reading that character's knowledge", (character) => {
+   const input = raw(); input.run.character_id = character;
+   const context = env(input);
+-  const before = JSON.stringify(planSelection(context));
+-  context.screenMemory.cardSource = undefined;
+-  expect(JSON.stringify(planSelection(context))).toBe(before);
++  expectQuestionUnchangedWithoutSmoggyFacts(context);
+   expect(survivorSmoggyFacts(context.state, true)).toBeNull();
+ });
+ 
+@@ -138,7 +146,5 @@
+   else if (change === "old turn") context.screenMemory.cardSource!.turn = 2;
+   else if (change === "old fight") context.screenMemory.cardSource!.fight = "old";
+   else context.screenMemory.cardSource!.id = "OTHER";
+-  const before = JSON.stringify(planSelection(context));
+-  context.screenMemory.cardSource = undefined;
+-  expect(JSON.stringify(planSelection(context))).toBe(before);
++  expectQuestionUnchangedWithoutSmoggyFacts(context);
+ });
+--- a/agent/tests/silent-strangle.test.ts
++++ b/agent/tests/silent-strangle.test.ts
+@@ -48,11 +48,12 @@
+   return replaySteps(input, steps)!;
+ }
+ 
+-it("Q6: Strangle, Sucker Punch and completed Survivor deal 23 including three poison, with one HP lost", () => {
++it("Q6: Strangle and Survivor preserve the observed damage while the discard choice remains unresolved", () => {
+   const result = play(inputAt("282887"), [1, 3, 6]).outcome;
+   expect(result).toMatchObject({ damageDealt: 23, hpLoss: 1, hpAfter: 33, blockGained: 8 });
+   expect(result.enemyHpAfter[0]!.hp).toBe(evidence["282892"].state.combat.enemies[0]!.current_hp);
+-  expect(result.unknownCards).toEqual([]);
++  // The damage matches the observed completion, but this prefix has no selected discard.
++  expect(result.unknownCards).toEqual(["弃牌选择未确定"]);
+ });
+ it("Y6: two seven-damage Strikes, nine-damage Strangle and Neutralize deal 29 with no HP lost", () => {
+   const result = play(inputAt("210433"), [0, 1, 3, 6]).outcome;
+@@ -69,7 +70,7 @@
+   // The observed intermediate selection has not triggered; after completion only the end-turn poison remains.
+   expect(evidence["282890"].state.combat.action_readiness.can_use_combat_actions).toBe(false);
+   expect(evidence["282890"].state.combat.enemies[0]!.current_hp).toBe(85);
+-  expect(play(inputAt("282891")).outcome).toMatchObject({ damageDealt: 3, hpLoss: 1 });
++  expect(play(inputAt("282891")).outcome).toMatchObject({ damageDealt: 3, hpLoss: 1, unknownCards: [] });
+   expect(inputAt("282892").enemies[0]!.strangle).toBeUndefined();
+ });
+ it("establishment itself causes no extra HP loss", () => {

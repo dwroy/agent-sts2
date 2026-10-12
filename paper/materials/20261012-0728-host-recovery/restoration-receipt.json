@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-12 07:44:11 CST",
+  "status": "gameplay_restored",
+  "autoplay_started_at": "2026-10-12 07:40:03 CST",
+  "autoplay_pid": 3251934,
+  "pane": "wJ:pCY",
+  "launch_command": "bash ops/codex-ops-do.sh autoplay-start",
+  "launch_code": {
+    "commit": "e5d0913aecc0af50986de75784943e82df5495d2",
+    "code": "e5d0913+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "host_verified_by": {
+    "direct_mod_url": "http://127.0.0.1:8080/state",
+    "state": {
+      "run_id": "C7GNN3DDFUFY",
+      "screen": "EVENT",
+      "character_id": "SILENT",
+      "ascension": 10,
+      "floor": 5
+    },
+    "host_proc_read": [
+      {
+        "pid": 3251934,
+        "role": "autoplay",
+        "cwd": "/home/dw/Projects/agent-sts2"
+      },
+      {
+        "pid": 3252377,
+        "role": "play",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+      }
+    ],
+    "credentials_read": false
+  },
+  "run_config": {
+    "target_ascension": 11,
+    "actual_ascension": 10,
+    "target_mode": "climb"
+  },
+  "brain_receipt": "paper/materials/20261012-0728-host-recovery/brain-consumption-receipt.json",
+  "first_answer_action_console": [
+    "07:40:58 note run plan (rode on event/choose, start): Flexible multihit offense with scaling damage and dexterity defense; want BLADE_DANCE, DASH, FOOTWORK, BACKFLIP, NOXIOUS_FUMES, PIERCING_WAIL; elites normal; rest auto",
+    "07:40:58 note Codex (39.9 s) event/choose: o0 — Two immediate potions support early development; the permanent extra slot provides lasting flexibility, including resource management across consecutive bosses.",
+    "07:40:58 EVENT           event/choose         -> choose_event_option (option_index=0) jev 0 ms | 140389 in"
+  ],
+  "old_run_unique": true,
+  "old_run_decisions": 349,
+  "original_failed_receipt_unchanged": true,
+  "continuation_receipt": "paper/materials/20261012-0728-host-recovery/stage-continuation.json",
+  "parent_complete": false,
+  "final_main_push_complete": false
+}

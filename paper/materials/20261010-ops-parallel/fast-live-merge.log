@@ -1,0 +1,111 @@
+Updating 991d6b4dc..45582a722
+Fast-forward
+ agent/tests/learner-launch-failures.test.ts        |  10 +
+ eval/versions.json                                 |   6 +
+ notes/for-roy.md                                   |  30 ++
+ ops/codex-fast.sh                                  |   5 +-
+ ops/codex-ops-learner.sh                           |  14 +-
+ ops/inbox-dev.md                                   |  30 ++
+ ops/learner_checks.py                              |  14 +-
+ ops/tests/test_learner_launch_failures.py          | 135 ++++++
+ .../protocol-repair/README.md                      |  23 +
+ .../protocol-repair/baseline-red.log               |  61 +++
+ .../protocol-repair/failure-evidence.json          | 505 +++++++++++++++++++++
+ .../20261010-001301-fix-batch.err                  |   1 +
+ .../20261010-001301-fix-batch.out                  |   0
+ .../20261010-003040-fix-batch.err                  |   1 +
+ .../20261010-003040-fix-batch.out                  |   0
+ .../20261010-010750-strategy-proposal.err          |   1 +
+ .../20261010-010750-strategy-proposal.out          |   0
+ .../20261010-020327-fix-batch.err                  |   1 +
+ .../20261010-020327-fix-batch.out                  |   0
+ .../20261010-020327-strategy-proposal.err          |   1 +
+ .../20261010-020327-strategy-proposal.out          |   0
+ .../20261010-025941-strategy-proposal.err          |   1 +
+ .../20261010-025941-strategy-proposal.out          |   0
+ .../20261010-032738-experience-update.err          |   1 +
+ .../20261010-032738-experience-update.out          |   0
+ .../20261010-032738-strategy-proposal.err          |   1 +
+ .../20261010-032738-strategy-proposal.out          |   0
+ .../20261010-035737-experience-update.err          |   1 +
+ .../20261010-035737-experience-update.out          |   0
+ .../20261010-035737-s2-strategy-proposal.err       |   1 +
+ .../20261010-035737-s2-strategy-proposal.out       |   0
+ .../20261010-035737-strategy-proposal.err          |   1 +
+ .../20261010-035737-strategy-proposal.out          |   0
+ .../20261010-050327-experience-update.err          |   1 +
+ .../20261010-050327-experience-update.out          |   0
+ .../20261010-050327-s2-strategy-proposal.err       |   1 +
+ .../20261010-050327-s2-strategy-proposal.out       |   0
+ .../20261010-050327-strategy-proposal.err          |   1 +
+ .../20261010-050327-strategy-proposal.out          |   0
+ .../20261010-095943-experience-update.err          |   1 +
+ .../20261010-095943-experience-update.out          |   0
+ .../20261010-102858-experience-update.err          |   1 +
+ .../20261010-102858-experience-update.out          |   0
+ .../20261010-113018-experience-update.err          |   1 +
+ .../20261010-113018-experience-update.out          |   0
+ .../20261010-122834-experience-update.err          |   1 +
+ .../20261010-122834-experience-update.out          |   0
+ .../protocol-repair/final-gitleaks.json            |   1 +
+ .../protocol-repair/final-gitleaks.log             |   3 +
+ .../protocol-repair/learning-flow.log              |  11 +
+ .../protocol-repair/sandbox-checks.log             |  18 +
+ .../protocol-repair/source-diff.patch              | 237 ++++++++++
+ .../protocol-repair/source-gitleaks.json           |   1 +
+ .../protocol-repair/source-gitleaks.log            |   3 +
+ .../protocol-repair/targeted-green.log             |   5 +
+ .../protocol-repair/validation.json                | 125 +++++
+ paper/materials/decision-log.md                    |   2 +
+ paper/materials/learning/ledger.jsonl              |  19 +
+ 58 files changed, 1270 insertions(+), 6 deletions(-)
+ create mode 100644 agent/tests/learner-launch-failures.test.ts
+ create mode 100644 ops/tests/test_learner_launch_failures.py
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/README.md
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/baseline-red.log
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-evidence.json
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-001301-fix-batch.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-001301-fix-batch.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-003040-fix-batch.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-003040-fix-batch.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-010750-strategy-proposal.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-010750-strategy-proposal.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-020327-fix-batch.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-020327-fix-batch.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-020327-strategy-proposal.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-020327-strategy-proposal.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-025941-strategy-proposal.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-025941-strategy-proposal.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-032738-experience-update.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-032738-experience-update.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-032738-strategy-proposal.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-032738-strategy-proposal.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-035737-experience-update.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-035737-experience-update.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-035737-s2-strategy-proposal.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-035737-s2-strategy-proposal.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-035737-strategy-proposal.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-035737-strategy-proposal.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-050327-experience-update.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-050327-experience-update.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-050327-s2-strategy-proposal.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-050327-s2-strategy-proposal.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-050327-strategy-proposal.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-050327-strategy-proposal.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-095943-experience-update.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-095943-experience-update.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-102858-experience-update.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-102858-experience-update.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-113018-experience-update.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-113018-experience-update.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-122834-experience-update.err
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/failure-originals/20261010-122834-experience-update.out
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/final-gitleaks.json
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/final-gitleaks.log
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/learning-flow.log
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/sandbox-checks.log
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/source-diff.patch
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/source-gitleaks.json
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/source-gitleaks.log
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/targeted-green.log
+ create mode 100644 paper/materials/20261010-ops-parallel/protocol-repair/validation.json

@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-11T23:57:49.006Z",
+  "scenario": "fixed ENOENT injection then real native sandbox key probe; no model invocation",
+  "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-074301",
+  "result": {
+    "ok": true,
+    "checked": 9,
+    "startupRetry": {
+      "attempts": 2,
+      "reason": "glob_scan_missing_path",
+      "firstError": "error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /fixed-home: rg: /fixed-home/other/.aws: No such file or directory (os error 2)"
+    }
+  },
+  "calls": [
+    {
+      "args_sha256": "fb9b26b009d4f268afd0dc9d9663d6c090dc8cf0a8ab4f716ff3880440f8d912"
+    },
+    {
+      "args_sha256": "fb9b26b009d4f268afd0dc9d9663d6c090dc8cf0a8ab4f716ff3880440f8d912"
+    }
+  ],
+  "identical_policy_args": true
+}

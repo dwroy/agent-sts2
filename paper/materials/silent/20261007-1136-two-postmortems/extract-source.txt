@@ -1,0 +1,28 @@
+import json, os, pathlib, re
+P=pathlib.Path('learner/runs/20261007-111301-postmortem')
+def seek_ts(f,target):
+ lo,hi=0,os.fstat(f.fileno()).st_size
+ while hi-lo>200000:
+  mid=(lo+hi)//2; f.seek(mid);f.readline();pos=f.tell();line=f.readline()
+  if not line:hi=mid;continue
+  m=re.search(rb'"ts"\s*:\s*"([^"]+)"',line[:250])
+  if not m:raise ValueError(line[:200])
+  if m[1].decode()<target:lo=pos
+  else:hi=mid
+ f.seek(lo)
+ if lo:f.readline()
+ return lo
+for rid in ['2Y27VAYZDA02','TDLBRNA0R05B']:
+ ds=[json.loads(x) for x in (P/(rid+'-decisions.jsonl')).open()]
+ start,end=ds[0]['ts'],ds[-1]['ts']
+ for name in ['states','deepseek-reasoning']:
+  n=0
+  with open('logs/'+name+'.jsonl','rb') as src, (P/(rid+'-'+name+'.jsonl')).open('wb') as out:
+   offset=seek_ts(src,start)
+   for line in src:
+    row=json.loads(line);ts=row['ts']
+    if ts>end:break
+    if ts<start:continue
+    if name=='states' and (row.get('state',{}).get('run_id')!=rid or row.get('session')!='singleplayer/run'):continue
+    out.write(line);n+=1
+  print(rid,name,'偏移',offset,'条数',n)

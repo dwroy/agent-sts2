@@ -1,0 +1,32 @@
+{
+  "by": "learner:postmortem",
+  "character": "silent",
+  "first_run": "0DJ6GFZZ0TG9",
+  "prior": "unknown",
+  "prior_runs": [],
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "0DJ6GFZZ0TG9"
+    ]
+  },
+  "kind": "bug-infra",
+  "claim": "爬行动物饰品饮药后实际增加本回合3力量，但同线求解器只加药水本身力量，遗物仅在白名单。F33T4肌肉药实际5+3=8，而原始同线报106伤实净扣136；漏接是新定位，30伤差未全部隔离，不声明导致局败或修后必胜。当前live turn-solver.ts:2330/:2332—2333、card-model.ts:1279、combat-plan.ts:2502。",
+  "prior_note": "更早CSBR5CRDWQNB在silent-0063已观察饰品饮火焰药暂加3力；未找到或核实该早局同饮药线的预测预算，不能凭知道机制判定模型学前一直做对或做错。本条首次定位漏接以本局为首证。",
+  "evidence": [
+    {
+      "run": "0DJ6GFZZ0TG9",
+      "floor": 33,
+      "turn": 2,
+      "role": "support",
+      "note": "d305532、s313545→313548：癫狂之触令仅剩速行者0费，饰品实建3力量/REPTILE_TRINKET_POWER3，次轮清除；源码饮药分支没有遗物增力。"
+    },
+    {
+      "run": "0DJ6GFZZ0TG9",
+      "floor": 33,
+      "turn": 4,
+      "role": "support",
+      "note": "d305541完整肌肉药/突然一拳+/杀灭+/串刺+/中和同目标线报损28伤106、敌119/91；s313554→313560实损28净扣136、敌103/77，药5+饰品3实建8力量。没有固定回放，不将30差全归单因。"
+    }
+  ]
+}

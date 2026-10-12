@@ -1,0 +1,47 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "R3AJCGQGGMR4"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "R3AJCGQGGMR4",
+      "where": "agent/src/reflex/rollout.ts:1690",
+      "what": "库存恢复沿用旧maxHp，低报后续本体血量",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0311",
+      "silent-0312"
+    ],
+    "updated": [
+      "silent-0005",
+      "silent-0011",
+      "silent-0018",
+      "silent-0019",
+      "silent-0020",
+      "silent-0027",
+      "silent-0046",
+      "silent-0117",
+      "silent-0142",
+      "silent-0243",
+      "silent-0312"
+    ],
+    "repeats": [
+      "silent-0117"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-d04933cbd408d85b",
+    "silent-proposal-e4263c03267cf4cf"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/report.md"
+}

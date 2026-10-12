@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-12 01:11:04 CST",
+  "record_only": true,
+  "tsc_vitest": "未运行：本轮仅接管归档与追加记录，无代码变更",
+  "gitleaks": {
+    "version": "8.30.1",
+    "command": "git diff --cached --binary | gitleaks stdin --redact --no-banner",
+    "exit_code": 1,
+    "findings": [
+      {
+        "path": "paper/materials/20261012-0104-codex1-ops-takeover/batch-snapshots.json",
+        "line": 190,
+        "field": "key",
+        "digest_of_value": "6a14d9701d57327b4c5af5cf6099fecdee99bffba6b0df102423a9b9af057413",
+        "classification": "调度去重或B4冻结证据的SHA256摘要，已逐项与learn.json登记字段核对；非访问凭据"
+      },
+      {
+        "path": "paper/materials/20261012-0104-codex1-ops-takeover/batch-snapshots.json",
+        "line": 264,
+        "field": "key",
+        "digest_of_value": "9fd94803010ace4db752e76fa5c6e9f2f79852d2c95b37e820e9c0e6446207fb",
+        "classification": "调度去重或B4冻结证据的SHA256摘要，已逐项与learn.json登记字段核对；非访问凭据"
+      },
+      {
+        "path": "paper/materials/20261012-0104-codex1-ops-takeover/batch-snapshots.json",
+        "line": 1128,
+        "field": "key",
+        "digest_of_value": "9fd94803010ace4db752e76fa5c6e9f2f79852d2c95b37e820e9c0e6446207fb",
+        "classification": "调度去重或B4冻结证据的SHA256摘要，已逐项与learn.json登记字段核对；非访问凭据"
+      },
+      {
+        "path": "paper/materials/20261012-0104-codex1-ops-takeover/originals/05-pending-closeouts.json",
+        "line": 11,
+        "field": "key",
+        "digest_of_value": "cd508fcd5053376a5dac132a50000a190b63cdb8338283fca39a90e6e1eb8860",
+        "classification": "调度去重或B4冻结证据的SHA256摘要，已逐项与learn.json登记字段核对；非访问凭据"
+      },
+      {
+        "path": "paper/materials/20261012-0104-codex1-ops-takeover/originals/16-20261011-220116-fix-batch.out",
+        "line": 23,
+        "field": "evidence_key",
+        "digest_of_value": "9fd94803010ace4db752e76fa5c6e9f2f79852d2c95b37e820e9c0e6446207fb",
+        "classification": "调度去重或B4冻结证据的SHA256摘要，已逐项与learn.json登记字段核对；非访问凭据"
+      }
+    ],
+    "derivation": [
+      "ops/learner_jobs.py:217-237 fix_key 对队列文本和accepted id列表求SHA256",
+      "ops/boss_sim_jobs.py:21-22 digest 对规范化证据JSON求SHA256；result.evidence_key须与evidence.key一致"
+    ],
+    "assessment": "5项均为可追溯的非凭据摘要；原扫描非零历史保留，无生产规则修改或全局忽略"
+  },
+  "whitespace": {
+    "initial_exit_code": 2,
+    "scope": "原字节.err归档13行尾随空格",
+    "resolution": "保持源字节及SHA；自写记录和其他文件的严格diff --check退出0，不清洗历史日志"
+  },
+  "preservation": "stage前已核原队列/闸/learn.json/版本/台账及并行脏文件SHA未变，三项追加文件的原前缀SHA未变；live与main引用仍为原切点",
+  "commit_scope": "仅本轮新归档及三文件自有追加字节；已有未提交内容留工作区"
+}

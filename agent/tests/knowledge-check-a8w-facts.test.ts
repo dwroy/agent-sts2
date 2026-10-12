@@ -1,5 +1,5 @@
 /**
- * Knowledge check 2026-09-30 (the A8 window's runs 1-11: RRMY 5LRZ 5PHF UNRL YVYZ Q8XR 3RME NH8A 2WRU 79YR 86C3; Dai's
+ * Knowledge check 2026-09-30 (the A8 window's runs 1-11: RRMY 5LRZ 5PHF UNRL YVYZ Q8XR 3RME NH8A 2WRU 79YR 86C3; Roy's
  * rule: the guide, the handbook, Jev's hints, the card tiers, the boss notes and the experience base are one
  * knowledge base; where our data says otherwise, the data's version with its n; counts filled from the data).
  * See paper/materials/experience-changelog.md「第九次增量」.

@@ -1,0 +1,231 @@
+[
+ {
+  "id": "silent-0119",
+  "ts": "2026-10-05T20:59:31+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局腰带扣在药栏由最后一瓶变为全空时增加2敏捷，与已建立的灵动步法及石头增益叠加。永世沙漏T2敏捷4→6、生存者12→14挡，实际格挡19→33；额外敏捷来自空药栏条件，不是能量药水本身。只记录本局数值，不提出喝药规则。",
+  "evidence": [
+   {
+    "run": "2SU6XN2AEJRD",
+    "floor": 48,
+    "turn": 2,
+    "note": "F46取得腰带扣；F48 T1两瓶时1敏捷、用瓶装潜能后仍1；T2步法+后4，最后能量药水用完空栏6，生存者实补14挡。",
+    "role": "support",
+    "added": "2026-10-05T20:59:31+08:00"
+   },
+   {
+    "run": "9TG1RP5LFAAK",
+    "floor": 49,
+    "turn": 3,
+    "role": "support",
+    "note": "末次喝最后一瓶毒药水，药栏全空、敏捷0→2。此前暗影与滚石已打，但没有后续获得格挡的行动，末挡0不变；2敏捷来自腰带扣，不归毒药水，不提出用药规则。",
+    "added": "2026-10-06T09:26:07+08:00"
+   }
+  ],
+  "first_run": "2SU6XN2AEJRD",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按腰带扣、BELT_BUCKLE、空药检索静默账本及更早静默复盘，没有记录过该遗物与药栏状态变化的可比局面。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "2SU6XN2AEJRD",
+    "9TG1RP5LFAAK"
+   ],
+   "experience": [
+    "silent-belt-buckle-empty-slots-dexterity"
+   ],
+   "commits": [
+    "df989e0920c4aa6ba49ae9ff27967f127cd4bd2d",
+    "aea750c95b48223254b28b5dc40f847aaaf48fb9",
+    "06a463ca80102dd86656b993b1bd81f020580e84",
+    "5f0c0515a9dc4de8696f1172af9da17000a79a65",
+    "f90ba577c3111a9cda7bf1cbfebc645c3d036a01",
+    "62b4caf85ded558e5d07ef840ae882d82bc7ae2c",
+    "ee3f13cdb7b79f9f315d596e1b4c90d77e30f344"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第二十二次增量：1 局 A6（version 2026-10-05.22，分支 exp-silent，df989e09）",
+    "2026-10-06 静默猎手 第三十八次增量：1 局 A10（version 2026-10-06.13，分支 exp-silent，5f0c0515）"
+   ]
+  },
+  "asc": 6,
+  "history": [
+   {
+    "ts": "2026-10-05T20:59:31+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T21:35:06+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T22:01:50+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T09:26:07+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T09:47:05+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T09:59:32+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp38",
+  "effect": null,
+  "notes": [
+   "静默经验.22：2SU6XN2AEJRD A6及旧28局逐行复算；机制/观察、施毒/同期被动/实伤、净损/实死分账，药水仅事实。仅proposed，实际合入交运维按完成事件核实登记shipped。",
+   "21:50 experience-done核实静默经验.22 df989e09→live aea750c9→发布06a463ca/S1.exp22、main已机械同步固定d5a4f6fc已测树；2SU6XN2AEJRD SILENT A6首战胜/无SL及旧28局逐行复算，新增2/补证更新13/退役0、active88，16账本项覆盖15经验。源两轮tsc0/176文件2006例均通过，因冒泡同期10伤和沙漏12尝试数据校正复测，无失败或负载重跑；合后177文件2010例。0119/0120复盘既有id不重复建账，0115模型修复归独立S1.fix21/代码链，0114不重置；不加药水规则或受控勝因。经验独立完整外部检查待learner-checks，不冒记本轮完整通过。",
+   "静默第38次增量2026-10-06.13；9TG1RP5LFAAK A10与旧44静默局逐行复算一致。只登记proposed，实际合入由运维据完成事件核实后CLI登记shipped；first_run/prior/repeat及旧上线历史保持。机制分支、可比帧、阶段/换战、SL与血档分母见变更记录。药水原句保持，无新用药规则，无单项整战胜因外推。",
+   "09:55 experience-done机械核实第38批经验2026-10-06.13已实际合入live并登记唯一S1.exp38；来源9TG1RP5LFAAK SILENT A10及旧44本角色完局。源及合后tsc0/195文件2118例（源草稿通过后最终复测、合后首过），七份已提交自动刷新保持。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，连续Boss投影0163保持原shipped/S1.fix27，与0159/S1.strategy6和0153/S1.fix26独立。完整外部补测留后续事件。"
+  ],
+  "shipped_at": "2026-10-06T09:59:32+08:00"
+ },
+ {
+  "id": "silent-0120",
+  "ts": "2026-10-05T20:59:31+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局领主阳伞在两次打开商店后自动取得库存牌、遗物与药水，并触发附魔及移除选择。F38金币178、F46金币186在自动取得与移除之后均不变；打印的买牌、买药、移除报价不等于实际支出，相关大脑请求因状态变化未派发。仅确认这两次状态变化，不外推药栏溢出规则。",
+  "evidence": [
+   {
+    "run": "2SU6XN2AEJRD",
+    "floor": 38,
+    "note": "F34取领主阳伞，F38打开商店后净增七种新牌、皇家枕头/佛珠手链/扭曲锤子及瓶中船，附魔匕首雨、移除打击；金币178始终不变。",
+    "role": "support",
+    "added": "2026-10-05T20:59:31+08:00"
+   },
+   {
+    "run": "2SU6XN2AEJRD",
+    "floor": 46,
+    "note": "打开商店后净增六种新牌、灯笼/招架盾/腰带扣及瓶装潜能，移除笨拙；买本能反应77金/瓶装潜能97金计划未派发、金币186不变。",
+    "role": "support",
+    "added": "2026-10-05T20:59:31+08:00"
+   },
+   {
+    "run": "Z6CFLDR3N4SB",
+    "floor": 36,
+    "note": "阳伞商店自动取货使牌28→35、遗物11→14；大脑付150金删精确切击请求未派发，随后实际删华丽收场至34牌，金币始终157。",
+    "role": "support",
+    "added": "2026-10-05T22:33:31+08:00"
+   },
+   {
+    "run": "Z6CFLDR3N4SB",
+    "floor": 45,
+    "note": "阳伞自动取货使牌37→44、遗物16→19，删匕首雨至43牌，金币始终121；弃超巨化与花52/24金购物计划均未派发，药栏不变，不把报价76当实际支出。",
+    "role": "support",
+    "added": "2026-10-05T22:33:31+08:00"
+   },
+   {
+    "run": "MCT1GPTL8D35",
+    "floor": 37,
+    "role": "support",
+    "note": "领主阳伞开店自动得七牌/三遗物及技能药水，牌组30→37、移除精确切击后36；全程金币114不变。两条100金移除shop/plan因状态变化未派发，随后selection/remove执行成功；报价不计实际支出，奖励跳过不新增牌，不外推药栏溢出。",
+    "added": "2026-10-07T11:53:07+08:00"
+   }
+  ],
+  "first_run": "2SU6XN2AEJRD",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "以阳伞与LORDS_PARASOL检索静默账本及更早静默复盘未发现此取得与报价不执行的可比记录。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "2SU6XN2AEJRD",
+    "Z6CFLDR3N4SB",
+    "MCT1GPTL8D35"
+   ],
+   "experience": [
+    "silent-lords-parasol-shop-acquisition"
+   ],
+   "commits": [
+    "df989e0920c4aa6ba49ae9ff27967f127cd4bd2d",
+    "aea750c95b48223254b28b5dc40f847aaaf48fb9",
+    "06a463ca80102dd86656b993b1bd81f020580e84",
+    "c02c40a38f476991d68b3ad37a082d8ce30105d5",
+    "5bc320f7ba980bd4e46049ad4b1758975ef7b77f",
+    "0d0c4b690fb372fe0810c99b619c52e239a5c85b",
+    "d73417544e071deaff6eb01f73dde3b87f29fa0e",
+    "279389a400d2bc010cd338ba1a55d54a9e733993",
+    "33f02a6f37dc8dd820cd9d8cbc1ec207cb49624f",
+    "34bfc913e73fec2dd04ce22b680a18a01eefad8b"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第二十二次增量：1 局 A6（version 2026-10-05.22，分支 exp-silent，df989e09）",
+    "2026-10-05 静默猎手 第二十四次增量：1 局 A7（version 2026-10-05.24，分支 exp-silent，c02c40a3）",
+    "2026-10-07 静默猎手 第七十一次增量：1 局 A10（version 2026-10-07.17，分支 exp-silent，d7341754）"
+   ]
+  },
+  "asc": 6,
+  "history": [
+   {
+    "ts": "2026-10-05T20:59:31+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T21:35:06+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T22:01:50+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-05T22:33:31+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T23:08:04+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T23:44:31+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T11:53:07+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T12:26:56+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T12:53:34+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp71",
+  "effect": null,
+  "notes": [
+   "静默经验.22：2SU6XN2AEJRD A6及旧28局逐行复算；机制/观察、施毒/同期被动/实伤、净损/实死分账，药水仅事实。仅proposed，实际合入交运维按完成事件核实登记shipped。旧F9PP859XZ3RJ A4 F34持阳伞后F37死、未到商店，不作取得机制支持；first_run/prior unknown保留。",
+   "21:50 experience-done核实静默经验.22 df989e09→live aea750c9→发布06a463ca/S1.exp22、main已机械同步固定d5a4f6fc已测树；2SU6XN2AEJRD SILENT A6首战胜/无SL及旧28局逐行复算，新增2/补证更新13/退役0、active88，16账本项覆盖15经验。源两轮tsc0/176文件2006例均通过，因冒泡同期10伤和沙漏12尝试数据校正复测，无失败或负载重跑；合后177文件2010例。0119/0120复盘既有id不重复建账，0115模型修复归独立S1.fix21/代码链，0114不重置；不加药水规则或受控勝因。经验独立完整外部检查待learner-checks，不冒记本轮完整通过。",
+   "旧阳伞机制补证，不将未派发计划当实际动作；本条S1.exp22发布在本局中途，不据本局归因发布效果。",
+   "静默经验.24：Z6CFLDR3N4SB A7与旧30静默局日志逐行复算，按22:31勘误；持有/建立/实际收益、净损/实死分账，机制与整战因果观察区分。不改旧first_run/prior，仅proposed，实际合入后由运维登记shipped。",
+   "23:37 manual exp-silent接力：经验.24原源c02c40a3已随后续.25实际源/合入5bc320f7、发布0d0c4b69生效，按实际S1.exp25登记继承的.24映射；.25源与合后固定沙箱均tsc0/179文件2030例通过，无重跑，main同步3547e8bc。此前.24自身79b415c0合后Inferno指纹断言失败/回退256b0eee及同树重跑锁占用历史保留，未发布独立S1.exp24，不用其失败树登记成功。仅登记学习者已有13项映射，不添证据/知识、不重置0114/0115或未纳入的0127/0128。.24独立完整外部learner-recheck 20261005-224301-experience-update已调用待后续learner-checks，原merged=null回报不改；.25本批8项原proposed/原节交其完成事件处理。",
+   "关联第71批已测经验/源提交/变更节；保留原claim、first_run、asc、prior、support/repeat和旧版本历史；仅proposed，实际live合入由运维据完成事件核验后登记shipped。",
+   "12:35完成通知运维确认经验.17固定源d73417544e071deaff6eb01f73dde3b87f29fa0e→实际live279389a400d2bc010cd338ba1a55d54a9e733993→发布33f02a6f37dc8dd820cd9d8cbc1ec207cb49624f/唯一S1.exp71，main机械同步34bfc913e73fec2dd04ce22b680a18a01eefad8b。原两次锁超时及21项记录预检冲突未合入留史，锁内仅原已测experience blob保留Codex-only最终等待保护及全部刷新/notes；固定合后代码279389a400d2bc010cd338ba1a55d54a9e733993/树8ae05a5bd5df1282cd655b5e83551ea5bdeb3a8d沙箱tsc0/224文件2374例exit0，最终发布完整外部经经验71 broker请求待learner-checks，不冒称已过。仅CLI追加所属状态，首证/先验/claim/全部support/repeat及历史保持，Codex-only新架构没有游戏账本ID不伪造，旧autoplay热交接/报告解析工具缺口另由121034学习者补，对局继续。"
+  ],
+  "shipped_at": "2026-10-07T12:53:34+08:00"
+ }
+]

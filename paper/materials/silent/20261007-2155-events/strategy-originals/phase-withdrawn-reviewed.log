@@ -1,0 +1,272 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-boss-phase.test.ts (14 tests | 9 failed) 41ms
+   × F48 reward L243532 marks only the first victory, with no invented map or boss identity 14ms
+   × F48 reward L244372 marks only the first victory, with no invented map or boss identity 2ms
+   × F48 map L243533 reports the displayed second node without guessing its enemy 3ms
+   × F48 map L244373 reports the displayed second node without guessing its enemy 2ms
+   × F49 L243534 uses the observed AEONGLASS and its frozen current-ascension HP 3ms
+   × F49 L244374 uses the observed QUEEN and its frozen current-ascension HP 2ms
+   × keeps an unobserved F49 encounter and post-fight completion unknown 2ms
+   × does not label a refreshed second-boss id stale or guess an ambiguous principal 2ms
+   × retains the existing first-fight identity before it is defeated 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-boss-phase.test.ts > F48 reward L243532 marks only the first victory, with no invented map or boss identity
+ FAIL  tests/silent-boss-phase.test.ts > F48 reward L244372 marks only the first victory, with no invented map or boss identity
+AssertionError: expected { act: 3, floor: 48, …(13) } to match object { act_boss: null, …(3) }
+(12 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "act_boss": null,
+-   "act_boss_clock": null,
+-   "boss_phase": {
+-     "act_complete": false,
+-     "current_boss": null,
+-     "first_boss_defeated": true,
+-     "observed_remaining_boss_nodes": null,
+-     "raw_boss_id": "TEST_SUBJECT_BOSS",
+-     "raw_boss_id_stale": true,
++   "act_boss": "TEST_SUBJECT_BOSS",
++   "act_boss_clock": {
++     "boss": "TEST_SUBJECT",
++     "boss_enemies": [],
++     "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
++     "boss_hp": null,
++     "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
++     "boss_hp_parts": [],
++     "deck_damage_per_turn_estimate": null,
++     "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。",
++     "gap_per_turn": null,
++     "hp_loss_per_turn": null,
++     "survivable_turns": null,
+    },
+-   "floors_to_act_boss": 1,
++   "floors_to_act_boss": 0,
+  }
+
+ ❯ tests/silent-boss-phase.test.ts:37:17
+     35|   const e = env(line);
+     36|   const facts = buildFacts(e);
+     37|   expect(facts).toMatchObject({ act_boss: null, floors_to_act_boss: 1,…
+       |                 ^
+     38|     boss_phase: { first_boss_defeated: true, act_complete: false, obse…
+     39|       current_boss: null, raw_boss_id: "TEST_SUBJECT_BOSS", raw_boss_i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/silent-boss-phase.test.ts > F48 map L243533 reports the displayed second node without guessing its enemy
+ FAIL  tests/silent-boss-phase.test.ts > F48 map L244373 reports the displayed second node without guessing its enemy
+AssertionError: expected { act: 3, floor: 48, …(13) } to match object { act_boss: null, …(2) }
+(24 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "act_boss": null,
+-   "boss_phase": {
+-     "act_complete": false,
+-     "current_boss": null,
+-     "first_boss_defeated": true,
+-     "observed_remaining_boss_nodes": [
+-       {
+-         "col": 3,
+-         "row": 15,
+-         "second": true,
+-       },
+-     ],
+-   },
+-   "floors_to_act_boss": 1,
++   "act_boss": "TEST_SUBJECT_BOSS",
++   "floors_to_act_boss": 0,
+  }
+
+ ❯ tests/silent-boss-phase.test.ts:58:33
+     56|
+     57| it.each([243533, 244373])("F48 map L%i reports the displayed second no…
+     58|   expect(buildFacts(env(line))).toMatchObject({ act_boss: null, floors…
+       |                                 ^
+     59|     boss_phase: { first_boss_defeated: true, act_complete: false,
+     60|       observed_remaining_boss_nodes: [{ row: 15, col: 3, second: true …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/silent-boss-phase.test.ts > F49 L243534 uses the observed AEONGLASS and its frozen current-ascension HP
+AssertionError: expected { act: 3, floor: 49, …(13) } to match object { act_boss: 'AEONGLASS', …(3) }
+(21 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "act_boss": "AEONGLASS",
++   "act_boss": "TEST_SUBJECT_BOSS",
+    "act_boss_clock": {
+-     "boss": "AEONGLASS",
+-     "boss_hp": 535,
++     "boss": "TEST_SUBJECT",
++     "boss_hp": null,
+    },
+-   "boss_phase": {
+-     "act_complete": false,
+-     "current_boss": "AEONGLASS",
+-     "current_boss_basis": "现场敌人",
+-     "first_boss_defeated": true,
+-     "raw_boss_id": "TEST_SUBJECT_BOSS",
+-     "raw_boss_id_stale": true,
+-   },
+-   "floors_to_act_boss": 0,
++   "floors_to_act_boss": null,
+  }
+
+ ❯ tests/silent-boss-phase.test.ts:67:19
+     65|     const e = env(line);
+     66|     const facts = buildFacts(e);
+     67|     expect(facts).toMatchObject({ act_boss: boss, floors_to_act_boss: …
+       |                   ^
+     68|       boss_phase: { current_boss: boss, raw_boss_id: "TEST_SUBJECT_BOS…
+     69|         current_boss_basis: "现场敌人", first_boss_defeated: true, act_com…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/silent-boss-phase.test.ts > F49 L244374 uses the observed QUEEN and its frozen current-ascension HP
+AssertionError: expected { act: 3, floor: 49, …(13) } to match object { act_boss: 'QUEEN', …(3) }
+(21 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "act_boss": "QUEEN",
++   "act_boss": "TEST_SUBJECT_BOSS",
+    "act_boss_clock": {
+-     "boss": "QUEEN",
+-     "boss_hp": 419,
++     "boss": "TEST_SUBJECT",
++     "boss_hp": null,
+    },
+-   "boss_phase": {
+-     "act_complete": false,
+-     "current_boss": "QUEEN",
+-     "current_boss_basis": "现场敌人",
+-     "first_boss_defeated": true,
+-     "raw_boss_id": "TEST_SUBJECT_BOSS",
+-     "raw_boss_id_stale": true,
+-   },
+-   "floors_to_act_boss": 0,
++   "floors_to_act_boss": null,
+  }
+
+ ❯ tests/silent-boss-phase.test.ts:67:19
+     65|     const e = env(line);
+     66|     const facts = buildFacts(e);
+     67|     expect(facts).toMatchObject({ act_boss: boss, floors_to_act_boss: …
+       |                   ^
+     68|       boss_phase: { current_boss: boss, raw_boss_id: "TEST_SUBJECT_BOS…
+     69|         current_boss_basis: "现场敌人", first_boss_defeated: true, act_com…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/silent-boss-phase.test.ts > keeps an unobserved F49 encounter and post-fight completion unknown
+AssertionError: expected { act: 3, floor: 49, …(13) } to match object { act_boss: null, …(2) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "act_boss": null,
+-   "act_boss_clock": null,
+-   "boss_phase": {
+-     "act_complete": false,
+-     "current_boss": null,
++   "act_boss": "TEST_SUBJECT_BOSS",
++   "act_boss_clock": {
++     "boss": "TEST_SUBJECT",
++     "boss_enemies": [],
++     "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
++     "boss_hp": null,
++     "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
++     "boss_hp_parts": [],
++     "deck_damage_per_turn_estimate": null,
++     "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。",
++     "gap_per_turn": null,
++     "hp_loss_per_turn": null,
++     "survivable_turns": null,
+    },
+  }
+
+ ❯ tests/silent-boss-phase.test.ts:79:25
+     77|   const e = env(243534);
+     78|   asRecord(e.state.combat?.raw)["enemies"] = [{ enemy_id: "UNOBSERVED"…
+     79|   expect(buildFacts(e)).toMatchObject({ act_boss: null, act_boss_clock…
+       |                         ^
+     80|     boss_phase: { current_boss: null, act_complete: false } });
+     81|   e.state.in_combat = false;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  tests/silent-boss-phase.test.ts > does not label a refreshed second-boss id stale or guess an ambiguous principal
+AssertionError: expected { act: 3, floor: 49, …(13) } to match object { act_boss: 'AEONGLASS', …(1) }
+(25 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "act_boss": "AEONGLASS",
+-   "boss_phase": {
+-     "raw_boss_id_stale": false,
+-   },
++   "act_boss": "AEONGLASS_BOSS",
+  }
+
+ ❯ tests/silent-boss-phase.test.ts:88:25
+     86|   const e = env(243534);
+     87|   asRecord(e.state.run?.raw)["boss_id"] = "AEONGLASS_BOSS";
+     88|   expect(buildFacts(e)).toMatchObject({ act_boss: "AEONGLASS", boss_ph…
+       |                         ^
+     89|   asRecord(e.state.combat?.raw)["enemies"] = [{ enemy_id: "AEONGLASS" …
+     90|   expect(buildFacts(e)).toMatchObject({ act_boss: null, act_boss_clock…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  tests/silent-boss-phase.test.ts > retains the existing first-fight identity before it is defeated
+AssertionError: expected { act: 3, floor: 48, …(13) } to match object { act_boss: 'TEST_SUBJECT_BOSS', …(2) }
+(24 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "act_boss": "TEST_SUBJECT_BOSS",
+-   "boss_phase": {
+-     "act_complete": false,
+-     "first_boss_defeated": false,
+-     "raw_boss_id_stale": false,
+-   },
+    "floors_to_act_boss": 0,
+  }
+
+ ❯ tests/silent-boss-phase.test.ts:108:25
+    106|   const e = env(243532);
+    107|   e.state.in_combat = true;
+    108|   expect(buildFacts(e)).toMatchObject({ act_boss: "TEST_SUBJECT_BOSS",…
+       |                         ^
+    109|     boss_phase: { first_boss_defeated: false, raw_boss_id_stale: false…
+    110|   expect(actBossDefeated(e.state)).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 5 passed (14)
+   Start at  21:17:03
+   Duration  1.70s (transform 1.26s, setup 394ms, import 1.10s, tests 41ms, environment 0ms)
+

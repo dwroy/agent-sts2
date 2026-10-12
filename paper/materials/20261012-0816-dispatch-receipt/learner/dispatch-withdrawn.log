@@ -1,0 +1,144 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-074301-s2/agent
+
+ ❯ tests/silent-selection-dispatch.test.ts (13 tests | 4 failed) 177ms
+   × the real loop persists its completed first-action receipt beside the unchanged prediction 85ms
+   × a shadow memory application is explicitly undispatched 5ms
+   × an action error stays uncertain even though the action may have applied 4ms
+   × the real identity gate refusal records no dispatch, even with a candidate request 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-selection-dispatch.test.ts > the real loop persists its completed first-action receipt beside the unchanged prediction
+AssertionError: expected { …(26) } to match object { chosen: { …(2) }, …(1) }
+(49 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+    },
+-   "selection_dispatch": {
+-     "actual_turn": null,
+-     "dispatch_status": "returned",
+-     "expected_identity": {
+-       "card": {
+-         "id": "FRANTIC_ESCAPE",
+-       },
+-     },
+-     "gated_action": {
+-       "action": "play_card",
+-       "card_index": 0,
+-     },
+-     "returned_stable": true,
+-     "returned_status": "completed",
+-     "scope": "single_action_receipt",
+-     "state_effect_verified": false,
+-     "whole_plan_executed": null,
+-   },
+  }
+
+ ❯ tests/silent-selection-dispatch.test.ts:60:19
+     58|   expect(rows).toHaveLength(1);
+     59|   expect(rows[0].selection_audit).toEqual(audit());
+     60|   expect(rows[0]).toMatchObject({ chosen: intent, selection_dispatch: {
+       |                   ^
+     61|     scope: "single_action_receipt", dispatch_status: "returned", gated…
+     62|     returned_status: "completed", returned_stable: true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/silent-selection-dispatch.test.ts > a shadow memory application is explicitly undispatched
+AssertionError: expected undefined to match object { …(5) }
+
+- Expected:
+{
+  "dispatch_status": "not_dispatched",
+  "not_dispatched_reason": "shadow",
+  "returned_stable": null,
+  "returned_status": null,
+  "whole_plan_executed": null,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-selection-dispatch.test.ts:71:38
+     69|   const { rows, act } = await runReceipt("shadow");
+     70|   expect(act).not.toHaveBeenCalled();
+     71|   expect(rows[0].selection_dispatch).toMatchObject({ dispatch_status: …
+       |                                      ^
+     72|     returned_status: null, returned_stable: null, whole_plan_executed:…
+     73| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/silent-selection-dispatch.test.ts > an action error stays uncertain even though the action may have applied
+AssertionError: expected undefined to match object { dispatch_status: 'error', …(4) }
+
+- Expected:
+{
+  "actual_turn": null,
+  "dispatch_status": "error",
+  "error_kind": "fatal",
+  "returned_status": null,
+  "state_effect_verified": false,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-selection-dispatch.test.ts:78:38
+     76|   const { rows, act } = await runReceipt("play", true);
+     77|   expect(act).toHaveBeenCalledOnce();
+     78|   expect(rows[0].selection_dispatch).toMatchObject({ dispatch_status: …
+       |                                      ^
+     79|     returned_status: null, state_effect_verified: false, actual_turn: …
+     80| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/silent-selection-dispatch.test.ts > the real identity gate refusal records no dispatch, even with a candidate request
+AssertionError: expected { …(26) } to match object { gate_reject: { …(2) }, …(1) }
+(49 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "gate_reject": {
+      "at": "decision",
+      "kind": "identity",
+    },
+-   "selection_dispatch": {
+-     "actual_turn": null,
+-     "dispatch_status": "not_dispatched",
+-     "expected_identity": {
+-       "card": {
+-         "id": "STRIKE_SILENT",
+-       },
+-     },
+-     "not_dispatched_reason": "gate_refused_decision",
+-     "returned_status": null,
+-   },
+  }
+
+ ❯ tests/silent-selection-dispatch.test.ts:91:19
+     89|   const { rows, act } = await runReceipt("play", false, false, true);
+     90|   expect(act).not.toHaveBeenCalled();
+     91|   expect(rows[0]).toMatchObject({ gate_reject: { at: "decision", kind:…
+       |                   ^
+     92|     dispatch_status: "not_dispatched", not_dispatched_reason: "gate_re…
+     93|     expected_identity: { card: { id: "STRIKE_SILENT" } }, returned_sta…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 9 passed (13)
+   Start at  07:51:46
+   Duration  1.84s (transform 1.28s, setup 273ms, import 1.28s, tests 177ms, environment 0ms)
+

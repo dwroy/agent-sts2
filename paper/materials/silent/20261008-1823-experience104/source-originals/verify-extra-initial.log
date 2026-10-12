@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/verify-extra.py", line 27, in <module>
+    check('第二试零损但次轮仍22血/第三试毒退第一敌',ends[0][1]['run']['current_hp']==9 and ends[0][1]['combat']['enemies'][0]['current_hp']==22 and not ends[1][1]['combat']['enemies'][0]['is_alive'])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/verify-extra.py", line 6, in check
+    assert ok,(name,data)
+           ^^
+AssertionError: ('第二试零损但次轮仍22血/第三试毒退第一敌', None)

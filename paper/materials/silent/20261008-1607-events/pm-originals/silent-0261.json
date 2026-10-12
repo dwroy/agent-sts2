@@ -1,0 +1,91 @@
+{
+  "id": "silent-0261",
+  "ts": "2026-10-07T23:13:01+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "已观察的普通未升级紧勒STRANGLE先造成8攻击再给目标STRANGLE_POWER2；当轮后续攻击和技能完成各另扣目标2血，施放紧勒自身没有额外2，下一轮该层消失。Q6 F8 T4突然一拳8变实扣10、生存者完成弃牌后另扣2；更早Y6在1力量下紧勒9、随后中和4＋2。只认无挡目标与这些时点，不外推升级、叠层、重放或不同模板。",
+  "evidence": [
+    {
+      "run": "Y6GM2CHWJBEY",
+      "floor": 4,
+      "turn": 1,
+      "note": "states:210435—210437甲虫26→17→11；紧勒9建立2层、中和4加逐牌2；玩家1力量。",
+      "role": "support",
+      "added": "2026-10-07T23:13:01+08:00"
+    },
+    {
+      "run": "Q6M2Y34MWKRE",
+      "floor": 8,
+      "turn": 4,
+      "note": "states:282887—282892敌103→95建2、突然一拳→85、生存者弃牌完成→83、3毒→80；T5首帧紧勒层消失。",
+      "role": "support",
+      "added": "2026-10-07T23:13:01+08:00"
+    }
+  ],
+  "first_run": "Y6GM2CHWJBEY",
+  "prior": "yes",
+  "prior_runs": [
+    "Y6GM2CHWJBEY"
+  ],
+  "prior_note": "学习本项之前Y6 F4已实际把紧勒排在后续中和前并兑现2额外失血；这里评价出牌顺序，推演漏算另立bug条目，不把模型预测正确与实盘机制正确混记。",
+  "status": "shipped",
+  "where": {
+    "lessons": [
+      "Q6M2Y34MWKRE"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261007-224302-postmortem/proposal-strangle-bug.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update/proposal-mechanisms.md"
+    ],
+    "experience": [
+      "silent-strangle-following-card-hp-loss"
+    ],
+    "commits": [
+      "18f23638951e5dea6c0bd557303c20d5ae2a88dd",
+      "ea95403fa46fcee922db190836e719e4ed4f02ad",
+      "0d6c1a82ac0b7ec2b5134e2f650070bdeba7e56a",
+      "b49fa35b8e29188e17565f503d3e0980f1dafa3e"
+    ],
+    "changelog": [
+      "## 2026-10-08 静默猎手 第八十三次增量：2 局 A10（version 2026-10-07.29，分支 exp-silent，18f23638）"
+    ]
+  },
+  "note": "与silent-0103的定制疯狂科学每牌6分开，新增普通紧勒数值机制；本局末次复盘勘误补记。",
+  "asc": 0,
+  "history": [
+    {
+      "ts": "2026-10-07T23:13:01+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-07T23:16:38+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-07T23:57:03+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T00:15:26+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T00:48:34+08:00",
+      "by": "ops",
+      "status": "shipped"
+    }
+  ],
+  "version": "S1.exp83",
+  "effect": null,
+  "notes": [
+    "与silent-0103的定制疯狂科学每牌6分开，新增普通紧勒数值机制；本局末次复盘勘误补记。",
+    "代码提案 silent-proposal-1b9e29122364fa68 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "代码提案 silent-proposal-38a49e6c97f31eea → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第83次静默经验合并；保留首证、先验、原claim/support/repeat/version及上线历史，只追加核实来源与源提交。独立代码提案pending，未accepted/implemented/shipped。",
+    "经验第83次原数据.28→.29/增2改11退0/158 active实际兜底发布；仅按原ledger-map登记本所属经验数据shipped。源原沙箱241文件2531例、实际合后242文件2540例tsc/vitest0，源和集成原blob相等。原首证/先验/claim/全部support/repeat/旧上线历史保持；两个combat/potion/SL/terminal提案继续独立链，经验文字上线不等于代码实现；原out/err/failed不改，完整外部原批另续验。"
+  ],
+  "shipped_at": "2026-10-08T00:48:34+08:00"
+}

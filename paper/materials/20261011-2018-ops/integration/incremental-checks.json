@@ -1,0 +1,51 @@
+{
+  "candidate": "0541738ba9b28b43d26bd28939aa5f4b5d69638e",
+  "baseline": "live4425 full324files3566cases passed,2infra failures separately dispatched",
+  "source_validation": "Apotheosis original273files2721 unique cases; retained timeout+isolated retry; experience267/2689 and calibration267/2689",
+  "checks": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "affected",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/silent-apotheosis-accelerant.test.ts",
+        "tests/silent-apotheosis-backflip.test.ts",
+        "tests/silent-apotheosis-footwork.test.ts",
+        "tests/silent-apotheosis-neutralize.test.ts",
+        "tests/silent-apotheosis-poisoned-stab.test.ts",
+        "tests/silent-apotheosis-snakebite.test.ts",
+        "tests/silent-apotheosis-survivor.test.ts",
+        "tests/silent-apotheosis.test.ts",
+        "tests/silent-blade-dance.test.ts",
+        "tests/boss-trust.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1"
+      ],
+      "exit": 0
+    }
+  ],
+  "files": [
+    "tests/silent-apotheosis-accelerant.test.ts",
+    "tests/silent-apotheosis-backflip.test.ts",
+    "tests/silent-apotheosis-footwork.test.ts",
+    "tests/silent-apotheosis-neutralize.test.ts",
+    "tests/silent-apotheosis-poisoned-stab.test.ts",
+    "tests/silent-apotheosis-snakebite.test.ts",
+    "tests/silent-apotheosis-survivor.test.ts",
+    "tests/silent-apotheosis.test.ts",
+    "tests/silent-blade-dance.test.ts",
+    "tests/boss-trust.test.ts"
+  ]
+}

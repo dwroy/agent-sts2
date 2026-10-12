@@ -1,0 +1,42 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "9663Y88TYK73"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "9663Y88TYK73",
+      "where": "agent/src/reflex/turn-solver.ts:2684",
+      "what": "已有虚弱后临时减力直接减显示攻击，末次尖啸方案报损3，实际需损5并死亡。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0349"
+    ],
+    "updated": [
+      "silent-0019",
+      "silent-0278",
+      "silent-0057",
+      "silent-0255",
+      "silent-0253",
+      "silent-0023",
+      "silent-0027",
+      "silent-0046"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-bb7597d8a1fe63ff",
+    "silent-proposal-69bf16b2dc62dbeb"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/report.md"
+}

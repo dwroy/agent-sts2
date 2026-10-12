@@ -1,0 +1,63 @@
+[
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "tests/brain-codex.test.ts",
+      "tests/brain-codex-usage.test.ts",
+      "tests/learner.test.ts",
+      "tests/ops-codex.test.ts",
+      "--maxWorkers=2"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "../ops/tests",
+      "-p",
+      "test_learner_launch_failures.py"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "../ops/tests",
+      "-p",
+      "test_llm_handoff.py"
+    ],
+    "exit": 0
+  }
+]

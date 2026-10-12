@@ -1,0 +1,506 @@
+diff --git a/agent/src/brain/engines/codex.ts b/agent/src/brain/engines/codex.ts
+index fa1b1d6a..6b8948ad 100644
+--- a/agent/src/brain/engines/codex.ts
++++ b/agent/src/brain/engines/codex.ts
+@@ -91,6 +91,8 @@ export interface CodexEngineOptions {
+   now?: () => number;
+   /** Physical turn/exec cap for an isolated, authorized probe; never set by production config. */
+   physicalCallLimit?: number;
++  /** Persist a probe attempt before dispatch. A write failure prevents the call; never used by production. */
++  beforePhysicalCall?: (call: { mode: "session" | "exec"; questionId?: string }) => void;
+ }
+ 
+ /**
+@@ -800,10 +802,11 @@ export class CodexEngine implements BrainEngine {
+   private readonly cacheObserver = new CodexCacheObserver();
+   private readonly physicalBudget: PhysicalCallBudget;
+ 
+-  private notePhysicalCall(): void {
++  private notePhysicalCall(mode: "session" | "exec", req: BrainRequest): void {
+     if (!this.physicalBudget.claim()) {
+       throw new EngineFailure("isolated Codex probe physical-call budget exhausted", "quota");
+     }
++    this.opts.beforePhysicalCall?.({ mode, ...(req.questionId ? { questionId: req.questionId } : {}) });
+     this.usage.noteCall();
+   }
+ 
+@@ -811,6 +814,7 @@ export class CodexEngine implements BrainEngine {
+   readonly usage: CodexUsageGuard;
+ 
+   constructor(private readonly opts: CodexEngineOptions) {
++    if (opts.beforePhysicalCall && opts.physicalCallLimit === undefined) throw new Error("persistent call claims require an isolated probe limit");
+     this.physicalBudget = new PhysicalCallBudget(opts.physicalCallLimit);
+     const { bin, home } = opts.codex;
+     const read = opts.readUsage ?? (() => readCodexUsage({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage") }));
+@@ -1069,7 +1073,7 @@ export class CodexEngine implements BrainEngine {
+       const session = this.sessionFor(c);
+       try {
+         await session.ensureThread(req.system, () => [...configProblems(home).map((problem) => `config.toml: ${problem}`), ...instructionFiles(home)]);
+-        this.notePhysicalCall();
++        this.notePhysicalCall("session", req);
+         turn = await session.ask({ prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars, maxAnswerBlanks });
+       } catch (error) {
+         if (!(error instanceof SessionError || error instanceof RpcError)) throw error;
+@@ -1166,13 +1170,13 @@ export class CodexEngine implements BrainEngine {
+       const stdin = promptWithReask(req);
+       let attempt = 1;
+       let spentMs = spentBeforeMs;
+-      this.notePhysicalCall();
++      this.notePhysicalCall("exec", req);
+       let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
+       spentMs += outcome.ms;
+       // A stalled run: killed and asked once more (the router's BRAIN_CODEX_TIMEOUT_MS still caps the whole call).
+       while (outcome.kind === "stalled" && attempt <= this.opts.codex.stallRetries && !signal?.aborted) {
+         attempt += 1;
+-        this.notePhysicalCall();
++        this.notePhysicalCall("exec", req);
+         outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
+         spentMs += outcome.ms;
+       }
+diff --git a/agent/tests/codex-cache-engine.test.ts b/agent/tests/codex-cache-engine.test.ts
+index 1f0018c6..e47f8d69 100644
+--- a/agent/tests/codex-cache-engine.test.ts
++++ b/agent/tests/codex-cache-engine.test.ts
+@@ -42,9 +42,9 @@ beforeEach(() => {
+ });
+ afterEach(async () => { for (const engine of engines) await engine.close(); rmSync(directory, { recursive: true, force: true }); setKnowledgeCharacter(null); });
+ 
+-function engine(physicalCallLimit?: number) {
++function engine(physicalCallLimit?: number, beforePhysicalCall?: (call: { mode: "session" | "exec"; questionId?: string }) => void) {
+   const config = loadConfig({ BRAIN_CODEX_BIN: "/fixed/fake-codex", BRAIN_CODEX_HOME: directory, BRAIN_CODEX_MODE: "session", BRAIN_CODEX_EFFORT: "high" });
+-  const instance = new CodexEngine({ settings: config.brain.engines.codex, codex: config.brain.codex, stateDir: directory, traceFile: join(directory, "trace.jsonl"), physicalCallLimit,
++  const instance = new CodexEngine({ settings: config.brain.engines.codex, codex: config.brain.codex, stateDir: directory, traceFile: join(directory, "trace.jsonl"), physicalCallLimit, beforePhysicalCall,
+     readUsage: async () => ({ readAt: new Date().toISOString(), ms: 1, plan: null, windows: [{ name: "codex/primary", usedPct: 1, windowMins: 10080, resetsAt: null }], credits: null, ordinaryUsageAllowed: true, reachedType: null, spendControlReached: false }) });
+   engines.push(instance); return instance;
+ }
+@@ -53,6 +53,22 @@ function request(overrides: Partial<BrainRequest> = {}): BrainRequest {
+ }
+ function traces() { return readFileSync(join(directory, "trace.jsonl"), "utf8").trim().split('\n').map(line => JSON.parse(line)); }
+ 
++it("persists a bounded probe claim before sending and refuses dispatch if the persistent ledger fails", async () => {
++  const seen: Record<string, unknown>[] = [];
++  const e = engine(2, call => { seen.push(call); expect(state.turns).toHaveLength(seen.length - 1); });
++  await e.decide(request({ questionId: "cache-probe-repair-1" }));
++  await e.decide(request({ questionId: "cache-probe-repair-2" }));
++  await expect(e.decide(request())).rejects.toThrow(/budget exhausted/);
++  expect(seen).toEqual([{ mode: "session", questionId: "cache-probe-repair-1" }, { mode: "session", questionId: "cache-probe-repair-2" }]);
++  const refused = engine(2, () => { throw new Error("persistent ledger unavailable"); });
++  await expect(refused.decide(request())).rejects.toThrow(/ledger unavailable/);
++  expect(state.turns).toHaveLength(2);
++});
++
++it("never enables a persistent probe callback for the uncapped production engine", () => {
++  expect(() => engine(undefined, () => {})).toThrow(/isolated probe limit/);
++});
++
+ it("preserves full model inputs, model/effort/schema and revert while measuring repeated/dynamic requests", async () => {
+   const e = engine();
+   await e.decide(request()); await e.decide(request()); await e.decide(request({ question: "updated full question" }));
+diff --git a/agent/tests/codex-cache-probe.test.ts b/agent/tests/codex-cache-probe.test.ts
+index 550b50a3..9d890b2b 100644
+--- a/agent/tests/codex-cache-probe.test.ts
++++ b/agent/tests/codex-cache-probe.test.ts
+@@ -1,8 +1,9 @@
+-import { readFileSync, mkdtempSync, rmSync } from "node:fs";
++import { readFileSync, writeFileSync, mkdtempSync, rmSync, existsSync, readdirSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { describe, expect, it, vi } from "vitest";
+-import { doubleQuestion, approvedFixture, probeUsageKnown, preserveProbeResult } from "../../ops/codex-brain-cache-probe.js";
++import { doubleQuestion, approvedFixture, probeUsageKnown, preserveProbeResult, probeConfig, PROBE_HOME,
++  checkProbeHome, approvedHistory, reserveRepairPair, claimProbeCall } from "../../ops/codex-brain-cache-probe.js";
+ import { validateRequest } from "../../ops/codex/lib.js";
+ import { pickSpec } from "../src/brain/specs.js";
+ import type { BrainAnswer, BrainRequest } from "../src/brain/types.js";
+@@ -12,6 +13,78 @@ const answer: BrainAnswer = { engine: "codex", model: "gpt-6.1-sol", effort: "hi
+   latencyMs: 10, usage: { inputTokens: 100, cacheHitTokens: 80, outputTokens: 10 }, toolCalls: [], raw: "{}", native: { mode: "session", reverted: true } };
+ 
+ describe("restricted Codex cache probe (offline)", () => {
++  it("uses the established isolated brain home with the same full production model/effort/settings", () => {
++    const config = probeConfig();
++    expect(config.brain.codex.home).toBe("/home/dw/.codex-brain");
++    expect(PROBE_HOME).toBe(config.brain.codex.home);
++    expect(config.brain.engines.codex).toMatchObject({ model: "gpt-6.1-sol", effort: "high", timeoutMs: 600_000, tools: false });
++    expect(config.brain.codex).toMatchObject({ mode: "session", schemaFields: "used", summary: "auto", serviceTier: null,
++      usage: { required: true, stopPct: 80 } });
++  });
++
++  it("refuses a global-style home before any reservation, and only checks the isolated login's existence", () => {
++    const home = mkdtempSync(join(tmpdir(), "probe-home-"));
++    try {
++      expect(() => checkProbeHome(home)).toThrow(/no existing login/);
++      writeFileSync(join(home, "auth.json"), "invalid fixture deliberately never parsed");
++      writeFileSync(join(home, "AGENTS.md"), "fixture global memory");
++      expect(() => checkProbeHome(home)).toThrow(/home isolation/);
++      expect(existsSync(join(home, "probe-reserved.json"))).toBe(false);
++      rmSync(join(home, "AGENTS.md"));
++      writeFileSync(join(home, "AGENTS.override.md"), "fixture global override");
++      expect(() => checkProbeHome(home)).toThrow(/home isolation/);
++      rmSync(join(home, "AGENTS.override.md"));
++      writeFileSync(join(home, "config.toml"), 'approvals_reviewer = "user"\n');
++      expect(() => checkProbeHome(home)).toThrow(/config.toml/);
++      writeFileSync(join(home, "config.toml"), "");
++      expect(() => checkProbeHome(home)).not.toThrow();
++      expect(readFileSync(join(home, "auth.json"), "utf8")).toBe("invalid fixture deliberately never parsed");
++    } finally { rmSync(home, { recursive: true, force: true }); }
++  });
++
++  it("preserves baseline bytes and caps the independently reserved repair pair across restarts", () => {
++    const old = mkdtempSync(join(tmpdir(), "probe-old-"));
++    const repair = mkdtempSync(join(tmpdir(), "probe-repair-"));
++    // Exact frozen safe failure bytes; no live paths, credentials or game knowledge.
++    const originalReservation = '{"fixture_sha256":"6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98","max_physical_calls":2}';
++    const originalResult = JSON.stringify({ status: "pending", fixture_sha256: "6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98",
++      max_physical_calls: 2, comparison: "baseline session+revert repeated question; production transport is unchanged", results: null, limits_before: null,
++      error: "/home/dw/.codex/AGENTS.md would be loaded into the brain call (codex reads it whatever the flags) [unavailable]" }, null, 2);
++    try {
++      writeFileSync(join(old, "probe-reserved.json"), originalReservation);
++      writeFileSync(join(old, "probe-result.json"), originalResult);
++      const history = approvedHistory(old);
++      expect(history).toMatchObject({ allocated_calls: 2, model_calls_observed: 0 });
++      reserveRepairPair(repair, history);
++      const reservation = readFileSync(join(repair, "probe-reserved.json"), "utf8");
++      expect(JSON.parse(reservation)).toMatchObject({ pair: "repair", max_physical_calls: 2, total_allocated_calls: 4 });
++      expect(() => reserveRepairPair(repair, history)).toThrow(/already reserved/);
++      claimProbeCall(repair, { mode: "session", questionId: "cache-probe-repair-1" });
++      // A fresh invocation has no in-memory state to reset, and retains the first failed/uncertain attempt.
++      claimProbeCall(repair, { mode: "exec", questionId: "cache-probe-repair-2" });
++      expect(() => claimProbeCall(repair, { mode: "session" })).toThrow(/budget exhausted/);
++      expect(readdirSync(repair).filter(name => name.startsWith("probe-physical-claim-"))).toHaveLength(2);
++      expect(readFileSync(join(repair, "probe-reserved.json"), "utf8")).toBe(reservation);
++      expect(readFileSync(join(old, "probe-reserved.json"), "utf8")).toBe(originalReservation);
++      expect(readFileSync(join(old, "probe-result.json"), "utf8")).toBe(originalResult);
++      writeFileSync(join(old, "probe-codex-calls.jsonl"), "");
++      expect(() => approvedHistory(old)).toThrow(/ambiguous/);
++      rmSync(join(old, "probe-codex-calls.jsonl"));
++      writeFileSync(join(old, "probe-result.json"), originalResult + "\n");
++      expect(() => approvedHistory(old)).toThrow(/history differs/);
++    } finally { rmSync(old, { recursive: true, force: true }); rmSync(repair, { recursive: true, force: true }); }
++  });
++
++  it("refuses missing, invalid or ambiguous physical reservation evidence without dispatch", () => {
++    const directory = mkdtempSync(join(tmpdir(), "probe-ledger-"));
++    try {
++      expect(() => claimProbeCall(directory, { mode: "session" })).toThrow();
++      expect(() => reserveRepairPair(directory, {} as ReturnType<typeof approvedHistory>)).toThrow(/unapproved/);
++      writeFileSync(join(directory, "probe-reserved.json"), JSON.stringify({ pair: "repair", max_physical_calls: 4 }));
++      expect(() => claimProbeCall(directory, { mode: "session" })).toThrow(/invalid persistent/);
++      expect(readdirSync(directory)).toEqual(["probe-reserved.json"]);
++    } finally { rmSync(directory, { recursive: true, force: true }); }
++  });
+   it("keeps the original ten-minute per-call timeout and stops before a second call", async () => {
+     vi.useFakeTimers();
+     let calls = 0;
+@@ -65,6 +138,10 @@ describe("restricted Codex cache probe (offline)", () => {
+     expect(results).toHaveLength(2);
+     expect(seen.map(({ questionId, ...r }) => r)).toEqual([request, request]);
+     expect(seen.map(r => r.questionId)).toEqual(["cache-probe-baseline-1", "cache-probe-baseline-2"]);
++    const repaired: BrainRequest[] = [];
++    await doubleQuestion(request, { decide: async r => { repaired.push(r); return answer; } }, new AbortController().signal, "repair");
++    expect(repaired.map(({ questionId, ...r }) => r)).toEqual([request, request]);
++    expect(repaired.map(r => r.questionId)).toEqual(["cache-probe-repair-1", "cache-probe-repair-2"]);
+   });
+ 
+   it("stops at failure, cancellation or unexpected fallback", async () => {
+@@ -75,5 +152,8 @@ describe("restricted Codex cache probe (offline)", () => {
+     await expect(doubleQuestion(request, { decide: async () => { calls += 1; return answer; } }, controller.signal)).rejects.toThrow("cancelled");
+     expect(calls).toBe(1);
+     await expect(doubleQuestion(request, { decide: async () => ({ ...answer, native: { mode: "exec" } }) }, new AbortController().signal)).rejects.toThrow(/session transport/);
++    calls = 0;
++    await expect(doubleQuestion(request, { decide: async () => { calls += 1; return { ...answer, native: { mode: "session", reverted: false } }; } }, new AbortController().signal)).rejects.toThrow(/revert failed/);
++    expect(calls).toBe(1);
+   });
+ });
+diff --git a/ops/codex-brain-cache-probe.ts b/ops/codex-brain-cache-probe.ts
+index 5aa2e674..2c2270df 100644
+--- a/ops/codex-brain-cache-probe.ts
++++ b/ops/codex-brain-cache-probe.ts
+@@ -1,9 +1,10 @@
+-/** One authorized baseline pair. Fixed paths/settings; no game controller and no production state. */
+-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
++/** One authorized repair pair. Fixed paths/settings; no game controller and no production state. */
++import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, openSync, fsyncSync, closeSync } from "node:fs";
+ import { join } from "node:path";
+ import { pathToFileURL } from "node:url";
+ import { randomUUID } from "node:crypto";
+-import { CodexEngine, codexKindSchema, codexSchema, redact } from "../agent/src/brain/engines/codex.js";
++import { CodexEngine, codexKindSchema, codexSchema, redact, instructionFiles, checkCodex } from "../agent/src/brain/engines/codex.js";
++import { configProblems } from "../agent/src/brain/engines/codex-session.js";
+ import { segmentDigest } from "../agent/src/brain/engines/codex-cache.js";
+ import { pickSpec } from "../agent/src/brain/specs.js";
+ import { promptWithReask } from "../agent/src/brain/message.js";
+@@ -13,6 +14,66 @@ import { setKnowledgeCharacter } from "../agent/src/knowledge/files.js";
+ 
+ export const PROBE_DIRECTORY = "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache";
+ export const PROBE_FIXTURE_SHA = "6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98";
++export const REPAIR_DIRECTORY = "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache";
++export const PROBE_HOME = "/home/dw/.codex-brain";
++const BASELINE_RESERVATION_SHA = "7664ba062fdeff1cf1f6d664cb9c2c90604307aa727a039113cb8b4883524396";
++const BASELINE_RESULT_SHA = "6193ec4fc8f31148b7444096db0263eea69bb3cddea8c0c320a0680c2275517f";
++
++export function probeConfig() {
++  return loadConfig({ CHARACTER: "silent", BRAIN_CODEX_BIN: "/home/dw/.local/node/bin/codex", BRAIN_CODEX_HOME: PROBE_HOME,
++    BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_EFFORT: "high", BRAIN_CODEX_TOOLS: "off", BRAIN_CODEX_MODE: "session", BRAIN_CODEX_SCHEMA_FIELDS: "used",
++    BRAIN_CODEX_SERVICE_TIER: "default", BRAIN_CODEX_STALL_RETRIES: "0", BRAIN_CODEX_USAGE_REQUIRED: "on", BRAIN_CODEX_USAGE_STOP_PCT: "80",
++    BRAIN_CODEX_USAGE_EVERY_CALLS: "1", BRAIN_CODEX_USAGE_EVERY_MIN: "10" });
++}
++
++/** Only existence is checked for the login; credentials are neither read nor copied. */
++export function checkProbeHome(home: string): void {
++  const problems = [...instructionFiles(home), ...configProblems(home).map(p => `config.toml: ${p}`)];
++  if (problems.length) throw new Error(`probe home isolation: ${problems.join(", ")}`);
++  if (!existsSync(join(home, "auth.json"))) throw new Error("probe home has no existing login");
++}
++
++/** The failed baseline's two slots remain allocated forever. Changed/unknown history refuses a new pair. */
++export function approvedHistory(directory: string) {
++  const reservation = segmentDigest(readFileSync(join(directory, "probe-reserved.json"), "utf8")).sha256;
++  const result = segmentDigest(readFileSync(join(directory, "probe-result.json"), "utf8")).sha256;
++  if (reservation !== BASELINE_RESERVATION_SHA || result !== BASELINE_RESULT_SHA
++      || existsSync(join(directory, "probe-codex-calls.jsonl"))) throw new Error("baseline history differs or has ambiguous physical calls; preserve it and stop");
++  return { reservation_sha256: reservation, result_sha256: result, allocated_calls: 2, model_calls_observed: 0,
++    evidence: "frozen isolation refusal before decide dispatch; no calls trace", fixture_sha256: PROBE_FIXTURE_SHA };
++}
++
++function writeExclusive(file: string, value: unknown): void {
++  const fd = openSync(file, "wx");
++  try { writeFileSync(fd, JSON.stringify(value, null, 2)); fsyncSync(fd); } finally { closeSync(fd); }
++  const parent = openSync(join(file, ".."), "r");
++  try { fsyncSync(parent); } finally { closeSync(parent); }
++}
++
++export function reserveRepairPair(directory: string, history: ReturnType<typeof approvedHistory>): void {
++  if (history.reservation_sha256 !== BASELINE_RESERVATION_SHA || history.result_sha256 !== BASELINE_RESULT_SHA
++      || history.allocated_calls !== 2 || history.model_calls_observed !== 0 || history.fixture_sha256 !== PROBE_FIXTURE_SHA) throw new Error("unapproved baseline history");
++  if (readdirSync(directory).some(name => /^probe-(reserved|result|codex-calls|physical-claim)/.test(name))) throw new Error("repair pair already reserved or has ambiguous evidence; preserve it and stop");
++  writeExclusive(join(directory, "probe-reserved.json"), { pair: "repair", fixture_sha256: PROBE_FIXTURE_SHA,
++    home: PROBE_HOME, max_physical_calls: 2, total_allocated_calls: 4, baseline: history });
++}
++
++/** Pessimistic, durable dispatch claims survive errors and crashes; never refunded or reopened. */
++export function claimProbeCall(directory: string, call: { mode: "session" | "exec"; questionId?: string }): void {
++  const reservation = JSON.parse(readFileSync(join(directory, "probe-reserved.json"), "utf8"));
++  if (reservation.pair !== "repair" || reservation.max_physical_calls !== 2 || reservation.total_allocated_calls !== 4
++      || reservation.fixture_sha256 !== PROBE_FIXTURE_SHA || reservation.home !== PROBE_HOME
++      || reservation.baseline?.reservation_sha256 !== BASELINE_RESERVATION_SHA || reservation.baseline?.result_sha256 !== BASELINE_RESULT_SHA) throw new Error("invalid persistent probe reservation");
++  const claims = readdirSync(directory).filter(name => name.startsWith("probe-physical-claim-"));
++  if (claims.length >= 2) throw new Error("persistent probe physical-call budget exhausted");
++  const index = claims.length + 1;
++  for (let i = 1; i < index; i += 1) {
++    const previous = JSON.parse(readFileSync(join(directory, `probe-physical-claim-${i}.json`), "utf8"));
++    if (previous.index !== i || previous.fixture_sha256 !== PROBE_FIXTURE_SHA || previous.pair !== "repair") throw new Error("ambiguous persistent call ledger");
++  }
++  writeExclusive(join(directory, `probe-physical-claim-${index}.json`), { pair: "repair", index, ts: new Date().toISOString(),
++    fixture_sha256: PROBE_FIXTURE_SHA, ...call, status: "reserved-before-dispatch; sent/completed status must be reconciled with the raw trace" });
++}
+ 
+ export function approvedFixture(text: string) {
+   if (segmentDigest(text).sha256 !== PROBE_FIXTURE_SHA) throw new Error("probe fixture differs from the approved frozen bytes");
+@@ -20,7 +81,7 @@ export function approvedFixture(text: string) {
+ }
+ 
+ /** Stops after a failure or cancellation; a real engine separately caps all retries/fallbacks at two physical calls. */
+-export async function doubleQuestion(request: BrainRequest, engine: { decide: (r: BrainRequest, s: AbortSignal) => Promise<BrainAnswer> }, signal: AbortSignal) {
++export async function doubleQuestion(request: BrainRequest, engine: { decide: (r: BrainRequest, s: AbortSignal) => Promise<BrainAnswer> }, signal: AbortSignal, pair: "baseline" | "repair" = "baseline") {
+   const results: BrainAnswer[] = [];
+   for (let i = 0; i < 2; i += 1) {
+     if (signal.aborted) throw new Error("probe cancelled");
+@@ -30,13 +91,14 @@ export async function doubleQuestion(request: BrainRequest, engine: { decide: (r
+     const timer = setTimeout(cancel, 600_000);
+     let result: BrainAnswer;
+     try {
+-      result = await engine.decide({ ...request, questionId: `cache-probe-baseline-${i + 1}` }, call.signal);
++      result = await engine.decide({ ...request, questionId: `cache-probe-${pair}-${i + 1}` }, call.signal);
+     } finally {
+       clearTimeout(timer);
+       signal.removeEventListener("abort", cancel);
+     }
+     results.push(result);
+     if (result.native?.["mode"] !== "session") throw new Error("probe did not use the approved session transport");
++    if (result.native?.["reverted"] !== true) throw new Error("probe revert failed; a second question would have polluted context");
+   }
+   return results;
+ }
+@@ -60,41 +122,55 @@ export function preserveProbeResult(directory: string, output: Record<string, un
+ 
+ async function main(): Promise<void> {
+   if (process.argv.length !== 2) throw new Error("codex-brain-cache-probe takes no arguments");
+-  if (existsSync(join(PROBE_DIRECTORY, "probe-reserved.json"))) throw new Error("probe pair already reserved; preserve all existing results and traces");
++  mkdirSync(REPAIR_DIRECTORY, { recursive: true });
++  if (existsSync(join(REPAIR_DIRECTORY, "probe-reserved.json"))) throw new Error("repair pair already reserved; preserve all existing results and traces");
+   setKnowledgeCharacter("silent");
+   const fixture = approvedFixture(readFileSync(join(PROBE_DIRECTORY, "probe-fixture.json"), "utf8"));
+-  const config = loadConfig({ CHARACTER: "silent", BRAIN_CODEX_BIN: "/home/dw/.local/node/bin/codex", BRAIN_CODEX_HOME: "/home/dw/.codex",
+-    BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_EFFORT: "high", BRAIN_CODEX_MODE: "session", BRAIN_CODEX_SCHEMA_FIELDS: "used",
+-    BRAIN_CODEX_SERVICE_TIER: "default", BRAIN_CODEX_STALL_RETRIES: "0", BRAIN_CODEX_USAGE_REQUIRED: "on", BRAIN_CODEX_USAGE_STOP_PCT: "80",
+-    BRAIN_CODEX_USAGE_EVERY_CALLS: "1", BRAIN_CODEX_USAGE_EVERY_MIN: "10" });
++  const config = probeConfig();
+   const spec = pickSpec(fixture.request.label, fixture.request.options!, fixture.request.payload);
+-  const request = { ...fixture.request, runId: "isolated-cache-probe", spec };
++  const request = { ...fixture.request, runId: "isolated-cache-probe-repair", spec };
+   const schema = codexSchema(codexKindSchema(spec, { fields: config.brain.codex.schemaFields, reasonLast: config.brain.codex.reasonLast }), {
+     routeReason: config.brain.codex.routeReason, maxFieldChars: config.brain.codex.maxFieldChars, routePattern: config.brain.codex.routePattern });
+   if (JSON.stringify(schema) !== JSON.stringify(fixture.schema)
+       || segmentDigest(promptWithReask(request)).sha256 !== fixture.segments.user.sha256
+       || segmentDigest(request.system).sha256 !== fixture.segments.system.sha256) throw new Error("probe request/schema reconstruction changed");
+-  const state = join(PROBE_DIRECTORY, "probe-state");
++  const state = join(REPAIR_DIRECTORY, "probe-state");
+   mkdirSync(state, { recursive: true });
+   const engine = new CodexEngine({ settings: config.brain.engines.codex, codex: config.brain.codex, stateDir: state,
+-    traceFile: join(PROBE_DIRECTORY, "probe-codex-calls.jsonl"), physicalCallLimit: 2 });
++    traceFile: join(REPAIR_DIRECTORY, "probe-codex-calls.jsonl"), physicalCallLimit: 2,
++    beforePhysicalCall: call => claimProbeCall(REPAIR_DIRECTORY, call) });
+   const controller = new AbortController();
+   const timeout = setTimeout(() => controller.abort(), 1_200_000);
+   const output: Record<string, unknown> = { status: "pending", fixture_sha256: PROBE_FIXTURE_SHA, max_physical_calls: 2,
+-    comparison: "baseline session+revert repeated question; production transport is unchanged", results: null };
++    total_allocated_calls: 4, home: PROBE_HOME, comparison: "repair of probe home only; session+revert production transport unchanged; baseline refused before any model call", results: null };
+   try {
++    output["baseline"] = approvedHistory(PROBE_DIRECTORY);
++    checkProbeHome(config.brain.codex.home);
++    const check = await checkCodex(config.brain.codex, "gpt-6.1-sol", "high", { stateDir: join(state, "check") });
++    output["cli_check"] = check;
++    if (!check.ok) throw new Error(`probe CLI preflight: ${check.error}`);
+     const stop = await engine.usage.start();
+     output["limits_before"] = engine.limits();
+     if (stop) throw new Error(`probe quota preflight: ${stop.message}`);
+     // O_EXCL persists across wakes/crashes. A retry cannot spend the authorized pair again.
+-    writeFileSync(join(PROBE_DIRECTORY, "probe-reserved.json"), JSON.stringify({ fixture_sha256: PROBE_FIXTURE_SHA, max_physical_calls: 2 }), { flag: "wx" });
+-    output["results"] = await doubleQuestion(request, engine, controller.signal);
++    reserveRepairPair(REPAIR_DIRECTORY, approvedHistory(PROBE_DIRECTORY));
++    output["results"] = await doubleQuestion(request, engine, controller.signal, "repair");
+     output["limits_after"] = engine.limits();
+-    const trace = readFileSync(join(PROBE_DIRECTORY, "probe-codex-calls.jsonl"), "utf8").trim().split('\n').map(line => JSON.parse(line));
++    const trace = readFileSync(join(REPAIR_DIRECTORY, "probe-codex-calls.jsonl"), "utf8").trim().split('\n').map(line => JSON.parse(line));
+     const pair = trace.filter(row => row.mode === "session" && row.outcome === "answered"
+-      && ["cache-probe-baseline-1", "cache-probe-baseline-2"].includes(row.question_id));
++      && ["cache-probe-repair-1", "cache-probe-repair-2"].includes(row.question_id));
+     output["raw_usage"] = pair.map(row => row.usage ?? null);
+     if (!probeUsageKnown(pair)) throw new Error("probe answered but input/cache usage is missing or invalid; cache result remains unknown");
++    if (pair[0].thread_id !== pair[1].thread_id || pair.some(row => !row.turn_id || row.reverted !== true)
++        || readdirSync(REPAIR_DIRECTORY).filter(name => name.startsWith("probe-physical-claim-")).length !== 2
++        || pair.some(row => row.model !== "gpt-6.1-sol" || row.effort !== "high" || row.cache_request?.instructions?.sha256 !== fixture.segments.system.sha256
++          || row.cache_request?.user?.sha256 !== fixture.segments.user.sha256 || row.cache_request?.schema?.sha256 !== segmentDigest(JSON.stringify(fixture.schema)).sha256)) {
++      throw new Error("probe pair did not preserve the approved thread, full inputs, schema, model/effort or physical ledger");
++    }
++    output["measured"] = { input_tokens: pair.reduce((sum, row) => sum + row.usage.inputTokens, 0),
++      cached_input_tokens: pair.reduce((sum, row) => sum + row.usage.cachedInputTokens, 0),
++      cache_hit_ratio: pair.reduce((sum, row) => sum + row.usage.cachedInputTokens, 0) / pair.reduce((sum, row) => sum + row.usage.inputTokens, 0),
++      wall_ms: pair.map(row => row.ms), observation: "two repeated questions validate capability only; no production-window improvement claimed" };
+     output["status"] = "completed";
+   } catch (error) {
+     output["error"] = redact(error instanceof Error ? error.message : String(error));
+@@ -102,7 +178,8 @@ async function main(): Promise<void> {
+   } finally {
+     clearTimeout(timeout);
+     await engine.close();
+-    const resultFile = preserveProbeResult(PROBE_DIRECTORY, output);
++    output["physical_dispatch_claims"] = readdirSync(REPAIR_DIRECTORY).filter(name => name.startsWith("probe-physical-claim-")).length;
++    const resultFile = preserveProbeResult(REPAIR_DIRECTORY, output);
+     console.log(JSON.stringify({ status: output["status"], result: resultFile, error: output["error"] }));
+   }
+ }
+diff --git a/ops/codex-ops-actions.sh b/ops/codex-ops-actions.sh
+index c362e5de..ddc9bc06 100755
+--- a/ops/codex-ops-actions.sh
++++ b/ops/codex-ops-actions.sh
+@@ -57,10 +57,10 @@ case "$action" in
+   codex-brain-cache-probe)
+     [ "$#" -eq 1 ] || { echo "codex-brain-cache-probe takes no arguments"; exit 2; }
+     CACHE_WORKTREE="$ROOT/.worktrees/codex-brain-cache"
+-    CACHE_RUN="$CACHE_WORKTREE/learner/runs/20261008-140043-codex-brain-cache"
++    CACHE_RUN="$CACHE_WORKTREE/learner/runs/20261008-153529-codex-brain-cache"
+     CACHE_RUNNER="$CACHE_WORKTREE/ops/codex-brain-cache-probe.ts"
+-    CACHE_AGENT_TREE="1f30b1faaf55e985640f30e08e64c1d5b8496313"
+-    CACHE_RUNNER_SHA="f4010706221a81836775621518920fe3e43d6e00751e22e6fb0fe19d65bde20c"
++    CACHE_AGENT_TREE="08dd9a59bb69317f447d770fe6207474b4c82c6f"
++    CACHE_RUNNER_SHA="094c940768dc1177166ec70bb138f4f86ced85c07865e14c4d3a13116a72e935"
+     [ "$(sha256sum "$CACHE_RUNNER" | cut -d ' ' -f1)" = "$CACHE_RUNNER_SHA" ] || { echo "probe runner differs from tested source"; exit 2; }
+     git -C "$CACHE_WORKTREE" diff --quiet "$CACHE_AGENT_TREE" HEAD:agent || { echo "probe agent tree differs from tested source"; exit 2; }
+     git -C "$CACHE_WORKTREE" diff --quiet HEAD -- agent/src || { echo "probe source is dirty"; exit 2; }
+diff --git a/ops/tests/test_codex_cache_probe_broker.py b/ops/tests/test_codex_cache_probe_broker.py
+new file mode 100644
+index 00000000..2211e1b8
+--- /dev/null
++++ b/ops/tests/test_codex_cache_probe_broker.py
+@@ -0,0 +1,80 @@
++"""Offline source-gate fixtures. The accepted branch exits before any Node/Codex invocation."""
++import hashlib
++from pathlib import Path
++import re
++import subprocess
++import tempfile
++import unittest
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++class ProbeBrokerGate(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        self.worktree = self.root / ".worktrees/codex-brain-cache"
++        (self.worktree / "ops").mkdir(parents=True)
++        self.runner = REPO / "ops/codex-brain-cache-probe.ts"
++        self.copy = self.worktree / "ops/codex-brain-cache-probe.ts"
++        self.copy.write_bytes(self.runner.read_bytes())
++        source = (REPO / "ops/codex-ops-actions.sh").read_text()
++        case = source.split("  codex-brain-cache-probe)\n", 1)[1].split("  procs)", 1)[0]
++        dispatch = 'exec nice -n 19 node --import "$CACHE_WORKTREE/agent/node_modules/tsx/dist/loader.mjs" "$CACHE_RUNNER" ;;'
++        # Only replace the final dispatch. Every actual shell guard remains unchanged.
++        self.assertEqual(case.count(dispatch), 1)
++        case = case.replace(dispatch, 'echo validated-offline; exit 0 ;;')
++        self.script = self.root / "gate.sh"
++        self.script.write_text('set -u\nROOT="$FIXTURE_ROOT"\ncase "$1" in\n  codex-brain-cache-probe)\n' + case + '\nesac\n')
++        self.bin = self.root / "bin"
++        self.bin.mkdir()
++        fake_git = self.bin / "git"
++        fake_git.write_text('''#!/bin/bash
++if [[ "$*" == *HEAD:agent* ]]; then
++  [[ "${GATE_REJECT:-}" != tree ]]; exit $?
++elif [[ "$*" == *--cached* ]]; then
++  [[ "${GATE_REJECT:-}" != index ]]; exit $?
++else
++  [[ "${GATE_REJECT:-}" != dirty ]]; exit $?
++fi
++''')
++        fake_git.chmod(0o755)
++
++    def run_gate(self, *args, reject=""):
++        env = {"PATH": str(self.bin) + ":/usr/bin:/bin", "FIXTURE_ROOT": str(self.root), "GATE_REJECT": reject}
++        return subprocess.run(["bash", str(self.script), "codex-brain-cache-probe", *args], env=env,
++                              text=True, capture_output=True, timeout=10)
++
++    def test_pins_exact_tested_runner_and_only_fixed_repair_directory(self):
++        source = (REPO / "ops/codex-ops-actions.sh").read_text()
++        expected = re.search(r'CACHE_RUNNER_SHA="([0-9a-f]{64})"', source).group(1)
++        self.assertEqual(expected, hashlib.sha256(self.runner.read_bytes()).hexdigest())
++        self.assertIn('CACHE_RUN="$CACHE_WORKTREE/learner/runs/20261008-153529-codex-brain-cache"', source)
++        result = self.run_gate()
++        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
++        self.assertEqual(result.stdout.strip(), "validated-offline")
++
++    def test_modified_runner_never_reaches_dispatch(self):
++        self.copy.write_bytes(self.copy.read_bytes() + b"\n")
++        result = self.run_gate()
++        self.assertEqual(result.returncode, 2)
++        self.assertIn("runner differs", result.stdout)
++
++    def test_changed_agent_tree_dirty_source_and_dirty_index_never_dispatch(self):
++        for reject, message in (("tree", "tree differs"), ("dirty", "source is dirty"), ("index", "index is dirty")):
++            with self.subTest(reject=reject):
++                result = self.run_gate(reject=reject)
++                self.assertEqual(result.returncode, 2)
++                self.assertIn(message, result.stdout)
++
++    def test_no_arguments_paths_urls_models_or_effort_are_accepted(self):
++        for arg in ("/tmp/question.json", "https://example.com", "--model=other", "xhigh", "repair"):
++            with self.subTest(arg=arg):
++                result = self.run_gate(arg)
++                self.assertEqual(result.returncode, 2)
++                self.assertIn("takes no arguments", result.stdout)
++
++
++if __name__ == "__main__":
++    unittest.main()

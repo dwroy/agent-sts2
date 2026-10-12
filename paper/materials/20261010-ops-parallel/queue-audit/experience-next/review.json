@@ -1,0 +1,116 @@
+{
+  "timestamp": "2026-10-10T12:49:20+08:00",
+  "main": "fc14da83f818b6be985ba6b5d8edb2bc506a16e8",
+  "live": "027bd9c570df19f4734e47059755f6698ca36452",
+  "batch": "20261010-091302-experience-update",
+  "source": "e77eb7083e3c1cc1b08b21709ae600cfd447a715",
+  "source_task": "experience-update",
+  "disposition": "pending mechanical integration; this review performs no merge/registration",
+  "original_batch_state": "failed",
+  "original_rc": 0,
+  "original_merged": null,
+  "scope": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "before_version": "2026-10-10.5",
+  "source_version": "2026-10-10.6",
+  "added": 0,
+  "updated": 14,
+  "retired": 0,
+  "active_before": 207,
+  "active_after": 207,
+  "source_parent_equals_live_experience_bytes": true,
+  "core_entries_unchanged": [
+    "silent-core-poison-defense-observation",
+    "silent-core-dexterity-defense-observation",
+    "silent-core-shiv-defense-observation",
+    "silent-core-discard-relic-observation"
+  ],
+  "exact_ledger_scope": {
+    "silent-0019": [
+      "silent-route-hp-observation"
+    ],
+    "silent-0201": [
+      "silent-rest-buffer-observation",
+      "silent-route-hp-observation"
+    ],
+    "silent-0020": [
+      "silent-rest-buffer-observation"
+    ],
+    "silent-0021": [
+      "silent-deck-burst-observation"
+    ],
+    "silent-0012": [
+      "silent-strength-weak-observation"
+    ],
+    "silent-0007": [
+      "silent-deadly-poison-application"
+    ],
+    "silent-0027": [
+      "silent-accelerant-triggers"
+    ],
+    "silent-0037": [
+      "silent-outbreak-immediate-poison"
+    ],
+    "silent-0065": [
+      "silent-kaiser-crab-facing-sl"
+    ],
+    "silent-0161": [
+      "silent-kaiser-crab-facing-sl"
+    ],
+    "silent-0071": [
+      "silent-sparkling-rouge-turn-three"
+    ],
+    "silent-0085": [
+      "silent-kunai-attack-count-dexterity"
+    ],
+    "silent-0010": [
+      "silent-mirage-poison-card-block"
+    ],
+    "silent-0227": [
+      "silent-vantom-slippery-growth"
+    ],
+    "silent-0307": [
+      "silent-bygone-effigy-wake-strength"
+    ],
+    "silent-0243": [
+      "silent-act-transition-missing-hp-heal"
+    ]
+  },
+  "code_proposal_ids": [
+    "silent-proposal-f70fd0db5ba1a02f",
+    "silent-proposal-46c3b16d26259a51",
+    "silent-proposal-8b00f63a0537cab0",
+    "silent-proposal-c1114e157df07e74"
+  ],
+  "code_proposal_action": "Preserve existing registration/dispatch; data shipping is not source implementation.",
+  "source_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 259,
+    "cases": 2662,
+    "retried": true,
+    "entry": "未经修改的原tools/test-sandbox.sh；1198跟踪文件逐SHA相同隔离副本；4线程/原固定排除/paths单fork",
+    "source_attempt": {
+      "tsc": 0,
+      "vitest": 1,
+      "files_passed": 257,
+      "cases_passed": 2650,
+      "failed_cases": 1,
+      "reason": "导入检查遍历旧忽略任务的失效logs/logs软链接ENOENT；保留原件"
+    },
+    "mirror_exit": 0,
+    "source_log": "learner/runs/20261010-091304-experience-update/test-source-1.log",
+    "pass_log": "learner/runs/20261010-091304-experience-update/test-mirror-1.log",
+    "host_full_suite": "待实际live合入后调度器learner-checks"
+  },
+  "full_host_test_for_this_source": "not present; request original-batch learner-recheck after actual source ancestry/live integration",
+  "planned_next_version": "S1.exp148; still free at cut, not reserved",
+  "limitations": [
+    "Host lease identity not inspected by child",
+    "Later postmortem ledger additions must remain intact",
+    "Offline rendering success does not prove live brain adopted new lessons",
+    "Original failed rc0/null merge and first ENOENT failure remain historical facts",
+    "Current live tree changes require regeneration/recheck before a mutating integration"
+  ]
+}

@@ -1,0 +1,39 @@
+git branch --show-current
+live
+git rev-parse exp-silent
+aa27705f654a102944b7aac1294107269c4b8aa7
+git rev-parse HEAD
+2e14889f13c1d257b5f1babc5cea97c58e994b90
+git status --short
+ M notes/fight-value-backtest-silent.md
+ M notes/monster-db-check.md
+git diff --name-only --diff-filter=U
+git rev-parse -q --verify MERGE_HEAD
+git diff --cached --name-only
+bash -c while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+git rev-parse HEAD
+2e14889f13c1d257b5f1babc5cea97c58e994b90
+git merge-base 2e14889f13c1d257b5f1babc5cea97c58e994b90 aa27705f654a102944b7aac1294107269c4b8aa7
+c06d1019b8dee0110c3627a012bdb865bd7e7a80
+git diff --name-only c06d1019b8dee0110c3627a012bdb865bd7e7a80 aa27705f654a102944b7aac1294107269c4b8aa7 -- knowledge
+knowledge/characters/silent/experience.json
+git diff --name-only c06d1019b8dee0110c3627a012bdb865bd7e7a80 2e14889f13c1d257b5f1babc5cea97c58e994b90 -- knowledge
+knowledge/builders/build-monster-db.py
+knowledge/builders/build-outcome-stats.py
+knowledge/builders/build-potion-equivalents.py
+knowledge/builders/characters.py
+knowledge/builders/refresh-potion-equivalents.sh
+knowledge/characters/ironclad/potion-equivalents.json
+knowledge/characters/ironclad/sl-elites.json
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/experience.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/potion-equivalents.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json

@@ -1,0 +1,92 @@
+{
+ "source_candidates": [],
+ "failures": [
+  {
+   "phase": "extraction wrapper summary",
+   "rc": 1,
+   "log": "extract.log",
+   "reason": "wrong summary field cutoff; extraction/split saved, cutoff_ts verified in extraction-receipt.json"
+  },
+  {
+   "phase": "initial backtest launch from repository root",
+   "rc": 1,
+   "log": "before-backtest.log",
+   "reason": "tsx module unavailable at repository root; rerun uses original entry under agent, no install"
+  },
+  {
+   "phase": "ranking freeze first draft",
+   "rc": null,
+   "input": "ranking-inputs.initial-ts-filter.json",
+   "reason": "timestamp filtering selected only one state; corrected matching uses original decision fingerprint over frozen same-attempt/same-turn state candidates"
+  },
+  {
+   "phase": "ranking dry replay",
+   "rc": 0,
+   "log": "ranking-dry.log",
+   "results": "ranking-boards.initial.jsonl",
+   "reason": "only 2/8 boards reconstruct all original options; incomplete boards remain excluded, no assertion weakened"
+  },
+  {
+   "phase": "report draft coverage wrapper",
+   "rc": 1,
+   "log": "report-draft.initial-failure.log",
+   "reason": "mismatched dictionary/list closing bracket; fixed coverage exported; this file is a diagnostic transcription, not verbatim shell stdout"
+  },
+  {
+   "phase": "ranking exact generated-plan matching",
+   "rc": 0,
+   "log": "ranking-dry.generated.log",
+   "results": "ranking-boards.generated.jsonl",
+   "reason": "exact text matching still yields only 2/8 fully covered option sets; retained without speculative card/draw/potion repair"
+  },
+  {
+   "phase": "ranking summary receipt wrapper",
+   "rc": 1,
+   "reason": "Local variable p was shadowed by paired result; summary itself saved, original replay exited 0. Receipt now reads an explicitly named provenance variable. Original failed command/stdout retained in own launch transcript and will join tool-failures.original.jsonl."
+  },
+  {
+   "phase": "read-only terminal HP audit launcher",
+   "rc": 1,
+   "command_started": false,
+   "reason": "bubblewrap permission glob scan hit disappearing unrelated exp/sl-gaps temporary files; same command retried without changing inputs or code"
+  }
+ ],
+ "mechanic_red_green": "not applicable: no source candidate or production mechanism test is added; fixed raw observations are archived without claiming a red/green code fix",
+ "tune_preview": {
+  "rc": 0,
+  "source_change": false,
+  "validation_used": false,
+  "result": "threat1/2 both worsen Queen tune OOF Brier at t1/pre; no release selection",
+  "receipt": "tune-analysis.preview.receipt.json"
+ },
+ "monitor_diagnostic": {
+  "operation": "terminated only the tool JS read loop, never signaled replay/game/scheduler processes",
+  "time": "2026-10-08T13:13:20.467505+08:00",
+  "result": "finite long Kin simulation verified; original full replay continues and original after-Queen exit0 collected"
+ },
+ "authoritative_before_partition": {
+  "receipt": "before-partition.receipt.json",
+  "source_change": false,
+  "old_stdout_path": "before-backtest.agent.log",
+  "preserved_stdout_path": "before-backtest.serial-original.log",
+  "note": "The original open stdout inode is preserved under its new name. The old waiting coordinator remains idle and cannot overwrite authoritative trust/gate files. The original serial replay is not signaled or claimed successful; complete paired prefix plus two original key-selected runs will supply all466 rows."
+ },
+ "events": [
+  {
+   "phase": "initial paired coverage gate",
+   "rc": 1,
+   "reason": "Scratch finalize helper referenced unfinished original serial results for before trust although assembled authoritative results were complete; original gate rejected coverage mismatch. Original profiles/logs/gate preserved with coverage-path-initial names. Fix only scratch input path and rerun unchanged trust/per-turn/acceptance tools; no production or thresholds altered."
+  },
+  {
+   "phase": "final immutable acceptance",
+   "rc": 1,
+   "coverage": "Full frozen 466 rows each side, global val n126, Queen val n7/leak_turns30, equal metrics",
+   "reasons": [
+    "B5 has not met original B2 trust admission",
+    "no bias entered/approached its fixed standard"
+   ],
+   "isolation": true,
+   "merged": null
+  }
+ ]
+}

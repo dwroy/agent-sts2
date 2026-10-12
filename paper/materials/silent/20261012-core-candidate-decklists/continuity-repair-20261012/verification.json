@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-12T20:45:45+08:00",
+  "source_base": "5fb318eefbcd39516c28a7aefe5009663038f804",
+  "sandbox_full": {
+    "exit": 0,
+    "tsc": 0,
+    "files": 342,
+    "cases": 3408,
+    "log": "learner/runs/continuity-verification-20261012/sandbox-full.log"
+  },
+  "final_learning_python": {
+    "cases": 13,
+    "exit": 0,
+    "log": "learner/runs/continuity-verification-20261012/final-python-v3.log"
+  },
+  "targeted_original": {
+    "exit": 1,
+    "reason": "no registered learning requests still added an empty state field; fixed without relaxing original test",
+    "log": "learner/runs/continuity-verification-20261012/targeted.log"
+  },
+  "targeted_after_fix": {
+    "exit": 0,
+    "log": "learner/runs/continuity-verification-20261012/targeted-after-state-fix.log"
+  },
+  "gitleaks": {
+    "exit": 0,
+    "log": "learner/runs/continuity-verification-20261012/gitleaks.log"
+  },
+  "verification_limits": [
+    "Actual same-thread model response and ops→watcher delivery require production confirmation after merge.",
+    "Initial dry-run failed on sandbox IPC; host v1 lacked STS2_WORKSPACE and correctly refused outside cwd; host v2 with production workspace passed.",
+    "After broad pass, final Python-only changes (receipt evidence validation, pending timeout alert and delivery ACK) were verified by final 13-case fixed suite."
+  ],
+  "sha256": {
+    "learner/runs/continuity-verification-20261012/gitleaks.log": "5cd68cf26a35a75217b317c19e6535e328b2e6a7aad05dee7200e2edfa0e0942",
+    "learner/runs/continuity-verification-20261012/final-python-v2.log": "f14fa4d68125be780e9740d44119802d97d828ad67e5d698da64639170ef5df2",
+    "learner/runs/continuity-verification-20261012/targeted-after-state-fix.log": "45d347d96358e4707e45b0e47567afbd22da06ce7d99d31f2b253acfab972ac0",
+    "learner/runs/continuity-verification-20261012/sandbox-full.log": "072a4e5575784d81ae993912e224fe5841bf32263df495cfe0308c501dc5ee67",
+    "learner/runs/continuity-verification-20261012/final-python-v3.log": "9936e66e782cf94c34b55abede497c9b756a3cc3b43bc06c3d8a8cbbf17b2837",
+    "learner/runs/continuity-verification-20261012/targeted.log": "9e59aece05017bbf25fe91e159f08f3b0c39a4fe0208c14fac759aa5f2adaffd",
+    "learner/runs/continuity-verification-20261012/final-python.log": "c02058f909ea9d0699c8a5cf425e42ab5882dff72be81f9606aaddab4af6cb67"
+  }
+}

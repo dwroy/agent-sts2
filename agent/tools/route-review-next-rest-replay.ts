@@ -1,5 +1,5 @@
 /**
- * The route review's next_rest facts (Dai 2026-10-03) on the logged route reviews: every question that carried
+ * The route review's next_rest facts (Roy 2026-10-03) on the logged route reviews: every question that carried
  * state.route_review in logs/brain.jsonl (card rewards, rest sites, event pages; the brain log starts 09-30), rebuilt
  * from exactly what DeepSeek saw (the map lines, next_nodes, the plan, HP, the room-cost line with its rest relics and
  * boss-start heal), then next_rest computed by the live code (strategy/route-map.ts nextRestFacts, the rest site's
@@ -38,7 +38,7 @@ const { values } = parseArgs({
 
 type Row = Record<string, unknown>;
 const BRAIN = resolve(fromRoot("logs/brain.jsonl"));
-/** The live margins, then the wider ones counted for Dai to compare (15% median / 20% p75). */
+/** The live margins, then the wider ones counted for Roy to compare (15% median / 20% p75). */
 const MARGINS: ClearMargin[] = [NEXT_REST_CLEAR, { median: 0.15, p75: 0.2 }, { median: 0.2, p75: 0.25 }];
 const PY = resolve(fromRoot("data/logdb-venv/bin/python"));
 

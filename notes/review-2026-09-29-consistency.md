@@ -5,7 +5,7 @@ Game text: `.cache/game-data.json`. Tests: 48 files / 783 tests pass; `tsc -p ts
 Scratch reproductions (not in the repo): `/tmp/review-repro/rollout-carry.ts`, `/tmp/review-repro/raw-hits.ts`, `/tmp/review-repro/queen.ts`, `/tmp/review-repro/nextdmg.ts` (run with `npx tsx <file>` from the review worktree).
 
 Severity: **play** = changes what is played or what Jev/DeepSeek is shown on current boards; **latent** = wrong but rare/not yet seen to matter; **cosmetic** = labels/log only.
-Tag: **bug** / **strategy** (Dai's decision area: reported, not prescribed).
+Tag: **bug** / **strategy** (Roy's decision area: reported, not prescribed).
 
 Summary table (details below, ordered by impact):
 
@@ -49,7 +49,7 @@ Summary table (details below, ordered by impact):
 | R13 | Rest heal rounded up in `rest.ts`, four copies of the 30% constant | cosmetic | bug |
 | R14 | Minor text/doc items | cosmetic | bug |
 
-Counts: 37 entries. By severity: **play 22** (20 bug, 2 strategy: S1, R7), **latent 11** (all bug; R11 also has a strategy part), **cosmetic 4** (bug). R3's threshold is also Dai's.
+Counts: 37 entries. By severity: **play 22** (20 bug, 2 strategy: S1, R7), **latent 11** (all bug; R11 also has a strategy part), **cosmetic 4** (bug). R3's threshold is also Roy's.
 
 ---
 
@@ -197,7 +197,7 @@ Counts: 37 entries. By severity: **play 22** (20 bug, 2 strategy: S1, R7), **lat
 
 ## S1. (strategy) Rules that consume rollout deaths inherit the distortions above
 
-- The T1 unsimulated-potion gate (`combat-plan.ts:1704-1705`, `t1Death`) and the HP guard's `guardKeepsPick` (`combat-plan.ts:415-423`, `:1908-1909`) read `rollout.byPlan.get(plan).deaths`. Findings 1 (Ringing: fake 8/8 deaths → potions offered, VQKX9AD1YHKS F17 T5), 2 (a Fairy revive counted as death), 4 (Queen hits x1.9) and 10 feed those counts. Reported for Dai's judgement: whether these rules should wait for the fixes or use a death count that is robust to them.
+- The T1 unsimulated-potion gate (`combat-plan.ts:1704-1705`, `t1Death`) and the HP guard's `guardKeepsPick` (`combat-plan.ts:415-423`, `:1908-1909`) read `rollout.byPlan.get(plan).deaths`. Findings 1 (Ringing: fake 8/8 deaths → potions offered, VQKX9AD1YHKS F17 T5), 2 (a Fairy revive counted as death), 4 (Queen hits x1.9) and 10 feed those counts. Reported for Roy's judgement: whether these rules should wait for the fixes or use a death count that is robust to them.
 
 ---
 
@@ -219,7 +219,7 @@ Reviewed in parallel (scratch scripts `/tmp/rv/route1-4.ts`, `str.ts`, `boss.ts`
 ### R3. The route re-plan trigger compares real HP with a projection that healed at every rest — play, bug (threshold: strategy)
 - `route-projection.ts:82` always heals 30% at a rest; `map.ts:569-579` re-plans when `next.hpOnArrival - hpPct >= 0.3`. Rest vs smith is DeepSeek's call, so a smith below ~70% HP reads as a ~30-point "HP drop".
 - Evidence: KY3YZ0DMRY0G F8 smithed at 68%, then "HP 68% is 31 points below the 99% the plan projected"; also WXMBVL6ZJ000 F11, 0B5YKJFM0E8B F13. Last day: 4 of 15 smiths below 70% triggered an immediate HP-drop re-plan; 4 of the 33 HP-drop re-plans followed a smith.
-- Fix: after a rest decision, re-base the plan's remaining `hpOnArrival` on actual HP (or take out the heal not taken). The 0.3 threshold itself is Dai's.
+- Fix: after a rest decision, re-base the plan's remaining `hpOnArrival` on actual HP (or take out the heal not taken). The 0.3 threshold itself is Roy's.
 
 ### R4. Two "HP at the boss" numbers in one DeepSeek question — play, bug (misleading fact)
 - `boss-clock.ts:660-668` `expectedEntryHp` = HP now + 30% (+15 Regal Pillow) when the pre-boss rest is ahead, no fights taken off (its own doc says "an upper bound"), shown as `expected_entry_hp` (`boss-clock.ts:819`) with no such note; `survivable_turns`, `need`, `gap` derive from it. The route options' `hp_at_boss` (`map.ts:546`) project the fights.
@@ -236,7 +236,7 @@ Reviewed in parallel (scratch scripts `/tmp/rv/route1-4.ts`, `str.ts`, `boss.ts`
 - Fix: a stat-aware nearest lookup with a minimum n, trying ascensions by distance.
 
 ### R7. Chained medians understate path HP cost — play (facts), strategy/modelling
-- `route-projection.ts:102-117`: a sum of medians is not the median of the sum; "?" rooms have median 0 in every cell but mean 2.7 (A8 act 2) and 5.3 (A8 act 3), so "?"-heavy paths look free. Per-act HP lost over non-rest rooms (runs that survived the act): A8 act 1 actual 39.8 vs medians 32.6 vs means 41.5; A8 act 2 68.6 vs 65.3; A9 act 2 (9 run-acts) 49.8 vs 35.9. Reported for Dai (which statistic the projection should chain).
+- `route-projection.ts:102-117`: a sum of medians is not the median of the sum; "?" rooms have median 0 in every cell but mean 2.7 (A8 act 2) and 5.3 (A8 act 3), so "?"-heavy paths look free. Per-act HP lost over non-rest rooms (runs that survived the act): A8 act 1 actual 39.8 vs medians 32.6 vs means 41.5; A8 act 2 68.6 vs 65.3; A9 act 2 (9 run-acts) 49.8 vs 35.9. Reported for Roy (which statistic the projection should chain).
 
 ### R8. "?" rooms break the fight chain in one place but not the other — latent, bug
 - `stateAfter` keeps the chain through "Unknown" (`map.ts:163-166`); `fightsSoFar` ends it at a "?" (`map.ts:227`); the `RouteState`/`FIGHT_CHAIN_PENALTY` docs (`:37-47`) say "?" breaks it. Fix: one rule.
@@ -248,7 +248,7 @@ Reviewed in parallel (scratch scripts `/tmp/rv/route1-4.ts`, `str.ts`, `boss.ts`
 - Floor-based: `map.ts:290`, `journal-replay.ts:355`, `tools/build-room-costs.py:31`; `act_id + 1`: `run-plan.ts:63`, `build-facts`, `experience`, `combat-plan`. They disagree on the F17/F33 map screens (act_id already advanced). Harmless today (stale plan dropped by `available.length < 2`) except `floors_to_act_boss` shows 0 there (`build-facts.ts:42`); a second act boss (A10 `map.second_boss_node`) would break the floor-based act and `BOSS_FLOORS` [17, 33, 48].
 
 ### R11. Map discard-step potion ranks — latent, strategy + bug
-- `map.ts:650-661`: 38 of the game's 66 potions are unranked and default to 5 (discardable), incl. Ghost in a Jar, Fruit Juice, Cure All, Liquid Bronze, Shackling, Soldier's Stew, King's Courage; `FEAR_POTION` is not a game id; the 09-28 baseline restore (910671b) dropped `BEETLE_JUICE:7`, `MAZALETHS_GIFT:7`, `POTION_SHAPED_ROCK:1` that 06ee142 / 0982190 had added. Before the restore Cure All was discarded at rank 5 (7UJ1 F31, 9VG8 F28, 123Z F16/F28), Liquid Bronze (HCBJ F15), Soldier's Stew (9VG8 F26); no discard rows since. The ranks are Dai's; the missing ids and the non-game id are bugs.
+- `map.ts:650-661`: 38 of the game's 66 potions are unranked and default to 5 (discardable), incl. Ghost in a Jar, Fruit Juice, Cure All, Liquid Bronze, Shackling, Soldier's Stew, King's Courage; `FEAR_POTION` is not a game id; the 09-28 baseline restore (910671b) dropped `BEETLE_JUICE:7`, `MAZALETHS_GIFT:7`, `POTION_SHAPED_ROCK:1` that 06ee142 / 0982190 had added. Before the restore Cure All was discarded at rank 5 (7UJ1 F31, 9VG8 F28, 123Z F16/F28), Liquid Bronze (HCBJ F15), Soldier's Stew (9VG8 F26); no discard rows since. The ranks are Roy's; the missing ids and the non-game id are bugs.
 
 ### R12. Knowledge loaders fall back silently — latent, bug
 - `room-costs.ts:25-30`, `monster-db.ts:97-103`, `move-model.ts:21-26`, `card-upgrades.ts:132-136`, `jev-hints.ts:260-265`, `experience.ts:76-92`, `fight-value.ts:75-80`, `boss-clock.ts:111-112` (and `rollout-live.ts:95-101`, `rollout.ts:240-249`, #20) catch and return `{}`/`[]`/`null` with no log line. A plausible trigger: `ops/wait-run.sh` rebuilds the files as the next play process starts, and `move-model.json` (`tools/build-monster-db.py:852`), `build-card-upgrades.py:71`, `build-move-model.py:61` write without a temp file. Fix: log once; write via tmp + `os.replace` as room-costs and monster-db already do.

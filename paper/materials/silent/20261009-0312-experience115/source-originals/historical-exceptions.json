@@ -1,0 +1,586 @@
+[
+  {
+    "run": "VLV17NUSFS61",
+    "floor": 31,
+    "turn": 2,
+    "ts": "2026-10-05T15:07:48.859Z",
+    "card": {
+      "index": 0,
+      "card_id": "FOOTWORK",
+      "name": "灵动步法",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "获得{DexterityPower:diff()}点敏捷。",
+      "resolved_rules_text": "获得2点敏捷。",
+      "dynamic_values": [
+        {
+          "name": "DexterityPower",
+          "base_value": 2,
+          "current_value": 2,
+          "enchanted_value": 2,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    "tender": {
+      "index": 3,
+      "power_id": "TENDER_POWER",
+      "name": "柔嫩",
+      "amount": 1,
+      "is_debuff": true
+    },
+    "before": {
+      "hp": 29,
+      "block": 0,
+      "energy": 2,
+      "powers": {
+        "PLATING_POWER": 3,
+        "NOXIOUS_FUMES_POWER": 3,
+        "ACCELERANT_POWER": 2,
+        "TENDER_POWER": 1,
+        "STRENGTH_POWER": -1,
+        "DEXTERITY_POWER": -1
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 93,
+          "block": 0,
+          "alive": true,
+          "move": "BITE_MOVE",
+          "powers": {
+            "VULNERABLE_POWER": 1,
+            "POISON_POWER": 3,
+            "WEAK_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "12",
+              "damage": 12,
+              "hits": 1,
+              "total_damage": 12,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "after": {
+      "hp": 29,
+      "block": 0,
+      "energy": 1,
+      "powers": {
+        "PLATING_POWER": 3,
+        "NOXIOUS_FUMES_POWER": 3,
+        "ACCELERANT_POWER": 2,
+        "TENDER_POWER": 1,
+        "STRENGTH_POWER": -2
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 93,
+          "block": 0,
+          "alive": true,
+          "move": "BITE_MOVE",
+          "powers": {
+            "VULNERABLE_POWER": 1,
+            "POISON_POWER": 3,
+            "WEAK_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "12",
+              "damage": 12,
+              "hits": 1,
+              "total_damage": 12,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "conclusion": "普通步法现场2敏与柔嫩逐牌−1同时兑现，净+1并伴−1力，非基础机制反例；不把净增1改写为普通步法只加1。"
+  },
+  {
+    "run": "VLV17NUSFS61",
+    "floor": 31,
+    "turn": 3,
+    "ts": "2026-10-05T15:08:02.602Z",
+    "card": {
+      "index": 2,
+      "card_id": "FOOTWORK",
+      "name": "灵动步法",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "获得{DexterityPower:diff()}点敏捷。",
+      "resolved_rules_text": "获得2点敏捷。",
+      "dynamic_values": [
+        {
+          "name": "DexterityPower",
+          "base_value": 2,
+          "current_value": 2,
+          "enchanted_value": 2,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    "tender": {
+      "index": 3,
+      "power_id": "TENDER_POWER",
+      "name": "柔嫩",
+      "amount": 1,
+      "is_debuff": true
+    },
+    "before": {
+      "hp": 29,
+      "block": 12,
+      "energy": 1,
+      "powers": {
+        "PLATING_POWER": 2,
+        "NOXIOUS_FUMES_POWER": 3,
+        "ACCELERANT_POWER": 2,
+        "TENDER_POWER": 1,
+        "STRENGTH_POWER": -2
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 87,
+          "block": 0,
+          "alive": true,
+          "move": "PUNCTURE_MOVE",
+          "powers": {
+            "POISON_POWER": 8,
+            "WEAK_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "5[font_size=18]×3[/font_size]",
+              "damage": 5,
+              "hits": 3,
+              "total_damage": 15,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "after": {
+      "hp": 29,
+      "block": 12,
+      "energy": 0,
+      "powers": {
+        "PLATING_POWER": 2,
+        "NOXIOUS_FUMES_POWER": 3,
+        "ACCELERANT_POWER": 2,
+        "TENDER_POWER": 1,
+        "STRENGTH_POWER": -3,
+        "DEXTERITY_POWER": 1
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 87,
+          "block": 0,
+          "alive": true,
+          "move": "PUNCTURE_MOVE",
+          "powers": {
+            "POISON_POWER": 8,
+            "WEAK_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "5[font_size=18]×3[/font_size]",
+              "damage": 5,
+              "hits": 3,
+              "total_damage": 15,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "conclusion": "普通步法现场2敏与柔嫩逐牌−1同时兑现，净+1并伴−1力，非基础机制反例；不把净增1改写为普通步法只加1。"
+  },
+  {
+    "run": "HSX4HYATB4E2",
+    "floor": 23,
+    "turn": 2,
+    "ts": "2026-10-06T21:21:22.469Z",
+    "card": {
+      "index": 2,
+      "card_id": "FOOTWORK",
+      "name": "灵动步法",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "获得{DexterityPower:diff()}点敏捷。",
+      "resolved_rules_text": "获得2点敏捷。",
+      "dynamic_values": [
+        {
+          "name": "DexterityPower",
+          "base_value": 2,
+          "current_value": 2,
+          "enchanted_value": 2,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    "tender": {
+      "index": 2,
+      "power_id": "TENDER_POWER",
+      "name": "柔嫩",
+      "amount": 1,
+      "is_debuff": true
+    },
+    "before": {
+      "hp": 49,
+      "block": 16,
+      "energy": 4,
+      "powers": {
+        "STRENGTH_POWER": 1,
+        "FASTEN_POWER": 4,
+        "TENDER_POWER": 1,
+        "DEXTERITY_POWER": -1
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 99,
+          "block": 0,
+          "alive": true,
+          "move": "PUNCTURE_MOVE",
+          "powers": {
+            "POISON_POWER": 4
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "8[font_size=18]×3[/font_size]",
+              "damage": 8,
+              "hits": 3,
+              "total_damage": 24,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "after": {
+      "hp": 49,
+      "block": 16,
+      "energy": 3,
+      "powers": {
+        "FASTEN_POWER": 4,
+        "TENDER_POWER": 1
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 99,
+          "block": 0,
+          "alive": true,
+          "move": "PUNCTURE_MOVE",
+          "powers": {
+            "POISON_POWER": 4
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "8[font_size=18]×3[/font_size]",
+              "damage": 8,
+              "hits": 3,
+              "total_damage": 24,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "conclusion": "普通步法现场2敏与柔嫩逐牌−1同时兑现，净+1并伴−1力，非基础机制反例；不把净增1改写为普通步法只加1。"
+  },
+  {
+    "run": "8JRE1C4H4Z2W",
+    "floor": 29,
+    "turn": 3,
+    "ts": "2026-10-07T08:02:54.664Z",
+    "card": {
+      "index": 2,
+      "card_id": "FOOTWORK",
+      "name": "灵动步法",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "获得{DexterityPower:diff()}点敏捷。",
+      "resolved_rules_text": "获得2点敏捷。",
+      "dynamic_values": [
+        {
+          "name": "DexterityPower",
+          "base_value": 2,
+          "current_value": 2,
+          "enchanted_value": 2,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    "tender": {
+      "index": 0,
+      "power_id": "TENDER_POWER",
+      "name": "柔嫩",
+      "amount": 1,
+      "is_debuff": true
+    },
+    "before": {
+      "hp": 59,
+      "block": 0,
+      "energy": 3,
+      "powers": {
+        "TENDER_POWER": 1,
+        "STRENGTH_POWER": 1
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 39,
+          "block": 0,
+          "alive": true,
+          "move": "BITE_MOVE",
+          "powers": {
+            "POISON_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "19",
+              "damage": 19,
+              "hits": 1,
+              "total_damage": 19,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "after": {
+      "hp": 59,
+      "block": 0,
+      "energy": 2,
+      "powers": {
+        "TENDER_POWER": 1,
+        "DEXTERITY_POWER": 1
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 39,
+          "block": 0,
+          "alive": true,
+          "move": "BITE_MOVE",
+          "powers": {
+            "POISON_POWER": 2
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "19",
+              "damage": 19,
+              "hits": 1,
+              "total_damage": 19,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "conclusion": "普通步法现场2敏与柔嫩逐牌−1同时兑现，净+1并伴−1力，非基础机制反例；不把净增1改写为普通步法只加1。"
+  },
+  {
+    "run": "NHA2KW0RB7VP",
+    "floor": 23,
+    "turn": 5,
+    "ts": "2026-10-07T14:59:22.975Z",
+    "card": {
+      "index": 1,
+      "card_id": "FOOTWORK",
+      "name": "灵动步法",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "获得{DexterityPower:diff()}点敏捷。",
+      "resolved_rules_text": "获得2点敏捷。 完美契合。",
+      "dynamic_values": [
+        {
+          "name": "DexterityPower",
+          "base_value": 2,
+          "current_value": 2,
+          "enchanted_value": 2,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    "tender": {
+      "index": 0,
+      "power_id": "TENDER_POWER",
+      "name": "柔嫩",
+      "amount": 1,
+      "is_debuff": true
+    },
+    "before": {
+      "hp": 33,
+      "block": 0,
+      "energy": 4,
+      "powers": {
+        "TENDER_POWER": 1
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 37,
+          "block": 0,
+          "alive": true,
+          "move": "PUNCTURE_MOVE",
+          "powers": {
+            "POISON_POWER": 7,
+            "STRENGTH_POWER": -1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "7[font_size=18]×3[/font_size]",
+              "damage": 7,
+              "hits": 3,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "after": {
+      "hp": 33,
+      "block": 0,
+      "energy": 3,
+      "powers": {
+        "TENDER_POWER": 1,
+        "DEXTERITY_POWER": 1,
+        "STRENGTH_POWER": -1
+      },
+      "enemies": [
+        {
+          "id": "HUNTER_KILLER",
+          "index": 0,
+          "hp": 37,
+          "block": 0,
+          "alive": true,
+          "move": "PUNCTURE_MOVE",
+          "powers": {
+            "POISON_POWER": 7,
+            "STRENGTH_POWER": -1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "7[font_size=18]×3[/font_size]",
+              "damage": 7,
+              "hits": 3,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "conclusion": "普通步法现场2敏与柔嫩逐牌−1同时兑现，净+1并伴−1力，非基础机制反例；不把净增1改写为普通步法只加1。"
+  }
+]

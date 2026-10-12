@@ -1,0 +1,4 @@
+2026-10-08 23:39
+Initial record scan rejected the unchanged archived log: complete-checks.log:634: new blank line at EOF.
+The original log bytes and SHA256 are preserved. Only the raw log uses the blank-at-eof whitespace exception; normal record files still use the default whitespace check.
+This was a record whitespace check, not a code test failure. No tests were rerun.

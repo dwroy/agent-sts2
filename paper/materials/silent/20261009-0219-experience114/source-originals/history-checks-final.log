@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-014148-experience-update/history-checks.py", line 29, in <module>
+    assert any(c['card_id']=='CALCULATED_GAMBLE' and c['upgraded'] for c in z['agent_view']['combat']['exhaust'])
+           ^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-014148-experience-update/history-checks.py", line 29, in <genexpr>
+    assert any(c['card_id']=='CALCULATED_GAMBLE' and c['upgraded'] for c in z['agent_view']['combat']['exhaust'])
+               ~^^^^^^^^^^^
+KeyError: 'card_id'

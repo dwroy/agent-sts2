@@ -1,0 +1,17 @@
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+4110758 bash /home/dw/Projects/agent-sts2/.worktrees/live/ops/herdr-exec.sh learner-20261008-112135-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261008-112135-fix-batch.pid 1 - /home/dw/Projects
+4110759 bash /home/dw/Projects/agent-sts2/.worktrees/live/ops/codex-ops-learner.sh 20261008-112135-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135 boss-sim-batch 
+4110768 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/run.ts --engine codex --task boss-sim-batch --character silent -
+4110780 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+4111558 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+4111717 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+4111718 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+4111729 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+4126979 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+4126994 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 1746959
+herdr panes:
+label                              pane    alive  busy  foreground
+autoplay                           wJ:p2   yes    no    
+learner-20261008-112135-fix-batch  wJ:p85  yes    yes   4110758:bash 4110759:bash 4110767:tail 4110768:node 4110780:node 4110788:esbuild
+ops                                wJ:p5   yes    yes   1753575:node 1753583:codex

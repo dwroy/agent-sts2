@@ -1,0 +1,424 @@
+{
+  "timestamp": "2026-10-08 22:52",
+  "base_head": "cbea24efb2acf5b0fb4deec976e86fa1b0d525be",
+  "batch": "20261008-221301",
+  "runs": [
+    "R3AJCGQGGMR4"
+  ],
+  "originals": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/R3AJCGQGGMR4-resources.json": {
+      "bytes": 852426,
+      "sha256": "feafa3366281164bc64897e38b322f2f8d28d19c7cce55e23feb6f595097b60e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/append-manifest.json": {
+      "bytes": 348,
+      "sha256": "e5cc8dc5a1c6fa978944f9a6bf02a65e815a30c370683d2bbbaf40deb32b8599"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/append-precheck-failure.txt": {
+      "bytes": 760,
+      "sha256": "7476335ae40489f2899a828758f04bddc56a8d2802162eb904a262622954f788"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/append-section.sh": {
+      "bytes": 26062,
+      "sha256": "754becfe2d310a8bfa4dc1c5cfd276289e07dffe445428cb42c70acddede3205"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/audit.py": {
+      "bytes": 3471,
+      "sha256": "6cc90a5b5e6401cd717b62cc0df0d3e847e9c38dbf669b166a8937edd70a3061"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/audit.txt": {
+      "bytes": 193373,
+      "sha256": "2f906b94430f555e909315d6c0c403cfeae573c7e7a15385d274f0140b4fa32c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/brain.jsonl": {
+      "bytes": 1880770,
+      "sha256": "a72178733c51e353bc74ba2433bc4bff809024d56c471ecf1fe4d62dd6dd955a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/build-section.py": {
+      "bytes": 21609,
+      "sha256": "8a207da40798ca21d7dbc1896acbc75475bebed312a7c8f9527d1f22b1723ead"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/decisions.jsonl": {
+      "bytes": 2480993,
+      "sha256": "f595020303f2dbf7819f8a13c47e3d3166e2f112b39618bbc9714f181e0c1dcd"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/deepseek-reasoning.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/extract.py": {
+      "bytes": 1747,
+      "sha256": "474e7a05a18f5b2e779859e81ea5a15da4f0ce2aa3f7d49c8c4ff900ae6cf47d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/extraction.json": {
+      "bytes": 190,
+      "sha256": "7318c4b17f73599650e017e22cf6ba62fe06643b99a6b24e0c04dfaf65df4e9f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-after.json": {
+      "bytes": 1187299,
+      "sha256": "5ad89e94b2582336fdeb9d02121c28ff2ac14d89c3a7fae68db0814316ff8565"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-check.txt": {
+      "bytes": 94,
+      "sha256": "5380bbd37ae4a3c8683bd834dbf1cdbe314d31f4cae4b099c822fa2d47fc40c8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-AXEBOT.json": {
+      "bytes": 3940,
+      "sha256": "37ed0aebe04c0e1b844092d197b76c9fbe66a7dd7adb7cb67e39b085f3a0da54"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-FABRICATOR.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-HP护栏.json": {
+      "bytes": 243552,
+      "sha256": "df7e3fa5618f5900afabb7f56fdd9e115aa0a865e1bf5651a3e7e04119dae336"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-STOCK_POWER.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-final-AXEBOT.json": {
+      "bytes": 3940,
+      "sha256": "37ed0aebe04c0e1b844092d197b76c9fbe66a7dd7adb7cb67e39b085f3a0da54"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-final-NOXIOUS_FUMES.json": {
+      "bytes": 289781,
+      "sha256": "66e3622a2e6f2ca3893c576dde4049e3411dbd6845f1cb66cee8733aa454953f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-final-再拼接.json": {
+      "bytes": 20028,
+      "sha256": "393a8d9c653a79e1f4d3a45b8b919d4f3b361ff7235d81b1b16cf4354a0fe9c6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-final-复生.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-final-库存.json": {
+      "bytes": 7722,
+      "sha256": "23d0a688e2daa3c7bb0f2e00913eb9acdbdc089f1f02f9908d9023379944ea56"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-final-狂乱逃离.json": {
+      "bytes": 181630,
+      "sha256": "da3cca3c01109ce575542748c2c834267592065d66aea116da563cd4df421aba"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-final-血量上限.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-final-触媒.json": {
+      "bytes": 2427051,
+      "sha256": "642d1a2de6e8361d427f7dad797cfc1689e849c27c085a463bdd2c06546f75f2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-复活.json": {
+      "bytes": 1100756,
+      "sha256": "59e6b43683d159ef83f31b4e89c2659a40868c159507edbc1127ab8d7e1cbf22"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-库存.json": {
+      "bytes": 7722,
+      "sha256": "23d0a688e2daa3c7bb0f2e00913eb9acdbdc089f1f02f9908d9023379944ea56"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-战斗结束.json": {
+      "bytes": 34655,
+      "sha256": "db3e3a46987e02bfaeb19e9881a6fe9f827a8d43d78c8cd0200952a6aed2164a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-沙坑.json": {
+      "bytes": 979470,
+      "sha256": "529e602b65efff7be87f2c99968ea6f69547bfc9026718a73557fa1a12d2d362"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-纸伤.json": {
+      "bytes": 9843,
+      "sha256": "0b3d3e13e85034b2db6850af8223b6f7cf41ed8fc9b2fd5490dbd41119064af8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-组装师.json": {
+      "bytes": 838638,
+      "sha256": "b5c9d88c5b1434282ff3109c25e6d91227777eaddd8a14e77095cd0d187be13e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/ledger-search-逃离.json": {
+      "bytes": 398478,
+      "sha256": "98fa40f938692cf6479e3054b799de1145345f9698edf59d49b0da43bf3c7df9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/precheck-append.py": {
+      "bytes": 3071,
+      "sha256": "b5877751497c7f3d9fe2c36f28c923c4457e6e21d7409ad1cbb79a5b41311f07"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/prior-LRN0HPZ0FZS1-F38-decisions.jsonl": {
+      "bytes": 232932,
+      "sha256": "5eca66d8d510c31001ea2c00e65e7d86d9c3507bd9d3bd238b1956e04d6611cf"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/prior-axebot.json": {
+      "bytes": 91082,
+      "sha256": "f3178e59341a0a2cd0ffa31b053578f592a70d63eb4cad45d2bbec841d1c5e20"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/prior-axebot.py": {
+      "bytes": 1768,
+      "sha256": "032af6f5bc289fef73ebd6f6c8a33feb0494fea7cdda689eeb85217e316ea383"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/proposal-escape-context.json": {
+      "bytes": 547,
+      "sha256": "2ec4adc0ba9b1d13dc036e892b634e924e3483ab770b3fb4c50b8fd44215c30f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/proposal-escape-context.md": {
+      "bytes": 3788,
+      "sha256": "5c161ad764159a0c0e7979749310b080a7edfa5f09ce27c5161b5bc2e72267d8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/proposal-stock.json": {
+      "bytes": 609,
+      "sha256": "9bdc61e050c8e286a6707e7305c3e10d1d75fd628d09d46514e0b4eb27bd213d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/proposal-stock.md": {
+      "bytes": 4175,
+      "sha256": "69e5cea4929d8c5fafdbcb0f7470b9d4a7b13e4d629053cebff8276b09658880"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/report.md": {
+      "bytes": 2037,
+      "sha256": "97e35bba99c891eeb5abef1c7203b3a4e2ca3d7b449243deb3985b2e34b3f9cd"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/result.json": {
+      "bytes": 935,
+      "sha256": "4662462604a0824981db0b23506aed082822a9825e945eac8e983a69a2ff59cf"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/run-plans.jsonl": {
+      "bytes": 20684,
+      "sha256": "f368a6ea84e7f4b80a810bdc3c574dde9b51b3e857cd7201b5ba9c2be9d7cab4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/runs.jsonl": {
+      "bytes": 449,
+      "sha256": "a7815ea2a24e7e42fe12932251203ef9b6dfdb48d9ef7a7bccae7244cbabf026"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/section-draft.md": {
+      "bytes": 25997,
+      "sha256": "8f6f259561eb0af749ae2053840e283b0530ba3edfa0351c74026be9a897147c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/silent-0005-before.json": {
+      "bytes": 178864,
+      "sha256": "737121f125e15e7fb751cb94f1a3fcb2e01de2a8049f8169a1bbd89a3197d370"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/silent-0019-before.json": {
+      "bytes": 240870,
+      "sha256": "dbb23677d0710577edf27dd1b002899247b55ac26c57632a06d590182807333c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/silent-0027-before.json": {
+      "bytes": 115287,
+      "sha256": "7e73caab2f722a9a58838ebb667f61755bcef020ed9c310d76d95728e649cd1e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/silent-0117-before.json": {
+      "bytes": 5664,
+      "sha256": "a6a0faee487d4de4ef4586d8798ca1c6164a0524ee5341ac2fb51680773cd830"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/sl-attempts.jsonl": {
+      "bytes": 95014,
+      "sha256": "cffdc073545c4c799a53e75187931ee8e88c9732f46148f9bc3b9cfcad112bfd"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/states.jsonl": {
+      "bytes": 27042793,
+      "sha256": "717deead8508d96052cb5719cd3a3345dc90d9c1df6b9761ee2b7c864e52fc22"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/turn-audit.json": {
+      "bytes": 795072,
+      "sha256": "be2357e759153265b51f8572007de9db0d54f4658ab66b403d3623d6766436da"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/verification.json": {
+      "bytes": 1872,
+      "sha256": "7f7ca28a04b0e42b05c1efb127362499a0b0d4fdc8427c21805e439487c5f5a4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/verify-final.py": {
+      "bytes": 3198,
+      "sha256": "7049b723b80aca4fce25f9e4f931563b752a556353ff254ddb0afede89ee8758"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem.jsonl": {
+      "bytes": 1335701,
+      "sha256": "0cb8f1ccb73a7f5df244436392ca35de9925b7a69486f1b438782f461a4d3709"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-221301.out": {
+      "bytes": 2852,
+      "sha256": "1f74f1c580f62a967b0602b65c6de8de3306b09de3b5891d113d31c16165b551"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-221301.err": {
+      "bytes": 11165,
+      "sha256": "48a10252a18fb2d2ac2e8d8ca80e346017079495a3b51a6ee82d6627c1966cae"
+    },
+    "/home/dw/Projects/agent-sts2/notes/run-1008-2204-R3AJCGQGGMR4.md": {
+      "bytes": 6148,
+      "sha256": "f951f56e7fbb6bfc8c083052734dd4102bf56dc621e640fe49399bfa5d8dc5c7"
+    }
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "R3AJCGQGGMR4"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "R3AJCGQGGMR4",
+        "where": "agent/src/reflex/rollout.ts:1690",
+        "what": "库存恢复沿用旧maxHp，低报后续本体血量",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0311",
+        "silent-0312"
+      ],
+      "updated": [
+        "silent-0005",
+        "silent-0011",
+        "silent-0018",
+        "silent-0019",
+        "silent-0020",
+        "silent-0027",
+        "silent-0046",
+        "silent-0117",
+        "silent-0142",
+        "silent-0243",
+        "silent-0312"
+      ],
+      "repeats": [
+        "silent-0117"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-d04933cbd408d85b",
+      "silent-proposal-e4263c03267cf4cf"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/report.md"
+  },
+  "owned_cli": 21,
+  "evidence_rows": 12,
+  "evidence_update_rows": 10,
+  "first_observation_add_rows": 2,
+  "support_evidence": 16,
+  "repeat_evidence": 1,
+  "repeat_id": "silent-0117",
+  "proposal_link_rows": 8,
+  "correction_rows": 1,
+  "new_pure_bugs": [
+    {
+      "run": "R3AJCGQGGMR4",
+      "where": "agent/src/reflex/rollout.ts:1690",
+      "what": "库存恢复沿用旧maxHp，低报后续本体血量",
+      "new": true
+    }
+  ],
+  "queue_append": true,
+  "lesson_append_bytes": 26923,
+  "lesson_draft_bytes": 25997,
+  "lesson_errata_blocks": 2,
+  "source_learner_verification": {
+    "run": "R3AJCGQGGMR4",
+    "original_states_rechecked": {
+      "306365": {
+        "ts": "2026-10-08T14:00:34.051Z",
+        "floor": 43,
+        "turn": 1,
+        "hp": 51,
+        "max_hp": 75,
+        "block": 10,
+        "enemies": [
+          [
+            "FABRICATOR",
+            155,
+            155
+          ]
+        ]
+      },
+      "306394": {
+        "ts": "2026-10-08T14:01:35.108Z",
+        "floor": 43,
+        "turn": 6,
+        "hp": 6,
+        "max_hp": 75,
+        "block": 0,
+        "enemies": []
+      },
+      "306403": {
+        "ts": "2026-10-08T14:02:43.932Z",
+        "floor": 45,
+        "turn": 1,
+        "hp": 52,
+        "max_hp": 75,
+        "block": 10,
+        "enemies": [
+          [
+            "AXEBOT",
+            77,
+            77
+          ]
+        ]
+      },
+      "306440": {
+        "ts": "2026-10-08T14:04:04.370Z",
+        "floor": 45,
+        "turn": 7,
+        "hp": 9,
+        "max_hp": 75,
+        "block": 0,
+        "enemies": [
+          [
+            "AXEBOT",
+            99,
+            99
+          ]
+        ]
+      },
+      "306443": {
+        "ts": "2026-10-08T14:04:07.265Z",
+        "floor": 45,
+        "turn": 7,
+        "hp": 9,
+        "max_hp": 75,
+        "block": 12,
+        "enemies": [
+          [
+            "AXEBOT",
+            99,
+            99
+          ]
+        ]
+      },
+      "306444": {
+        "ts": "2026-10-08T14:04:10.328Z",
+        "floor": 45,
+        "turn": 7,
+        "hp": 0,
+        "max_hp": 75,
+        "block": 0,
+        "enemies": [
+          [
+            "AXEBOT",
+            87,
+            99
+          ]
+        ]
+      }
+    },
+    "ledger_check": 0,
+    "lessons_prefix_unchanged": true,
+    "single_section_appended": true,
+    "errata": [
+      "T1额外6伤来源不能归三刃回旋镖，来源中间帧未记录",
+      "首段勘误标题22:42:27录入错误，实际date为22:42:33；后段勘误据date现取22:43:01"
+    ],
+    "proposals": [
+      "silent-proposal-d04933cbd408d85b",
+      "silent-proposal-e4263c03267cf4cf"
+    ]
+  },
+  "proposal_registry_not_changed": true,
+  "no_manual_proposal_dispatch": true,
+  "no_ops_game_knowledge_added": true,
+  "physical_lessons_not_reappended": true,
+  "unowned_extra_rows_preserved": 111,
+  "ledger_problems": 0,
+  "no_checks_requested": true,
+  "no_merges": true,
+  "no_versions": true,
+  "no_process_mutations": true
+}

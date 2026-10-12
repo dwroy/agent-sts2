@@ -1,0 +1,39 @@
+{
+  "commands": [
+    "nice -n 19 python3 -B /tmp/sts2-20261009-1639-prepare.py",
+    "nice -n 19 python3 -B /tmp/sts2-20261009-1639-paper.py",
+    "nice -n 19 python3 -B /tmp/sts2-20261009-1639-final.py"
+  ],
+  "paper_command": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/paper_dataset.py",
+    "--no-raw"
+  ],
+  "paper_invocations": 1,
+  "files": [
+    {
+      "command_file": "/tmp/sts2-20261009-1639-prepare.py",
+      "archived": "paper/materials/silent/20261009-1639-events/reproduction/sts2-20261009-1639-prepare.py",
+      "sha256": "7cc7a2c5883573f7c66d31041d6eba1b0ede61d3baf86575d9c979330ec7c6a7"
+    },
+    {
+      "command_file": "/tmp/sts2-20261009-1639-paper.py",
+      "archived": "paper/materials/silent/20261009-1639-events/reproduction/sts2-20261009-1639-paper.py",
+      "sha256": "b681e7f49ad63e5d191d039e0b0970bb5c8f406fb968cfad527738ef9e995e36"
+    },
+    {
+      "command_file": "/tmp/sts2-20261009-1639-final.py",
+      "archived": "paper/materials/silent/20261009-1639-events/reproduction/sts2-20261009-1639-final.py",
+      "sha256": "38d0f20eabcc5fa2a9a1a7a31e25118d673e23027724d888f8998a5a93ed81b8"
+    },
+    {
+      "command_file": "/tmp/sts2-0907-deploy-common.py",
+      "archived": "paper/materials/silent/20261009-1639-events/reproduction/sts2-0907-deploy-common.py",
+      "sha256": "b612c46e6c5313a7ab71b95c6d5017d36a5edef3f01697458d377d190650a860"
+    }
+  ],
+  "warning": "Historical reproduction records. Helpers use original run paths and one-time assertions; do not replay against active shared checkout."
+}

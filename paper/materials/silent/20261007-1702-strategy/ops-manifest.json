@@ -1,0 +1,278 @@
+{
+  "recorded_at": "2026-10-07 17:45",
+  "event": "strategy-done 20261007-160418-strategy-proposal",
+  "publication": {
+    "state": "published",
+    "timestamp": "2026-10-07 17:34",
+    "source": "45161a51c2c6b7e4a499b13cf749c4108193bbf5",
+    "live_before": "606855106dfb90ca8ffe27b985ed3c3b3f2424a2",
+    "preserved_refresh_commit": "baa4428070e53c54dda29f18154c208388df7d87",
+    "refresh_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "refresh_sha256": {
+      "knowledge/characters/silent/boss-damage.json": "898fcae2daac2e0712277f9b5586df32d15bd1cee80d0af1cbbe3706533dd96a",
+      "knowledge/characters/silent/monster-records.json": "0659656848de4128c732646abc954e21521c8bf5c729f20bf9f2c0065b29e33c",
+      "knowledge/characters/silent/outcome-stats.json": "74c218d0caf10b4a8ce693780dc1e38239e76428a70e34289d3b8cd6855e6fba",
+      "knowledge/characters/silent/room-costs.json": "35859b88527775bb3c140dde75d0c71576ddea98ef78c965940c6cadb798ec14",
+      "knowledge/common/card-upgrades.json": "9b9e6c9826a1fd54af858542abb586dc3f2b232cda9eb7b6acddeefbafa2dbe8",
+      "knowledge/common/monster-db.json": "7d874ee7b8877aa24cd000baa133dadccb45579fad8f81ccdfeade06bc80ce25",
+      "knowledge/common/move-model.json": "31f561f5912a82a59d330dc5c72afc407c480bef85a666b0af67006d77f3b4f4"
+    },
+    "untracked_preserved": true,
+    "actual_code": "777f861c27a1a1a89c9aba736709801b5cc3f481",
+    "publication": "05b4f233472928698cd11fee4a8fb182a3da2736",
+    "publication_tree": "10b647a14a05ba1c7024fe63cc178190388ea02b",
+    "version": "S1.strategy11",
+    "main_code_sync": "aa7219ac91bc37ff33967e1bf321c96327c64fd7",
+    "main_publication": "fb0795dc049d90c961096edaa4b3a1f6aced7a02",
+    "checks": {
+      "rc": 0,
+      "started": "2026-10-07T17:17:40+08:00",
+      "duration_sec": 985.5,
+      "commit": "3fb758b609376ed56717c4c2b5e227e5c192ac5b",
+      "tree": "e9fec609478166400cb1a975b903b0d58f4860a4",
+      "workers": 1,
+      "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261007-1702-strategy/combined-sandbox-single-worker.log",
+      "log_sha256": "64774f22c1e291ffab787662fe0adde58f15dfd9f8f176b8ba8e496275c5af3c",
+      "passed_files": 233,
+      "passed_cases": 2441,
+      "command": "nice19 SANDBOX_WORKERS=1 bash tools/test-sandbox.sh --reporter=verbose"
+    },
+    "checked_commit": "3fb758b609376ed56717c4c2b5e227e5c192ac5b",
+    "checked_base": "606855106dfb90ca8ffe27b985ed3c3b3f2424a2",
+    "code_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/silent-simulation-reference.ts",
+      "agent/tests/silent-simulation-reference-evidence.json",
+      "agent/tests/silent-simulation-reference.test.ts"
+    ],
+    "source_blobs": {
+      "agent/src/reflex/combat-plan.ts": "618479c277d6fea94cdbeabc9105f21612950255",
+      "agent/src/reflex/silent-simulation-reference.ts": "4eafd3383a114aa6bb919b563660243ea89eef6c",
+      "agent/tests/silent-simulation-reference-evidence.json": "93eda9de0a89731f680c6ece1c8beb6ff68c7cf0",
+      "agent/tests/silent-simulation-reference.test.ts": "5f0dfd041a78e8972d5384de11eb26973aac6429"
+    },
+    "all_four_source_blobs_equal": true,
+    "one_attempt_this_wake": true,
+    "record_line": "- 2026-10-07 17:34 运维codex17:02策略160418合入受阻兜底实际发布：已测源45161a51c2c6b7e4a499b13cf749c4108193bbf5为live777f861c27a1a1a89c9aba736709801b5cc3f481真实祖先，唯一S1.strategy11指向实际代码；仅四源码/测试文件，逐blob等独立最新组合3fb758b609376ed56717c4c2b5e227e5c192ac5b/树e9fec609478166400cb1a975b903b0d58f4860a4，原入口tsc0/233文件2441例exit0/1worker。静默0239证据VLZ6CCT8AQ0A A10F45T1/T4，源撤实现8败3过/恢复新增11及相关87合98过，只补覆盖/样本/未知与参考排名事实，预算、目标、药水/SL规则及其他角色保持；保留生成刷新baa4428070e53c54dda29f18154c208388df7d87与并行B4B5/双boss/BCD/Codex-only。原32路径merge失败及本轮所有检查原件留史；最终完整外部沿160418原批独立learner-recheck，原failed/回报缺三个proposal_results保持，不将预算/神化/结构提案全标implemented。main随后机械同步，仅0239经CLI shipped，不停对局/调度、不运行play/env不改。\n",
+    "proposal_results": "missing; original failed state and proposal queue retained; only factual display shipped",
+    "full_external_checks": "original-batch independent recheck pending"
+  },
+  "checks": {
+    "rc": 0,
+    "started": "2026-10-07T17:17:40+08:00",
+    "duration_sec": 985.5,
+    "commit": "3fb758b609376ed56717c4c2b5e227e5c192ac5b",
+    "tree": "e9fec609478166400cb1a975b903b0d58f4860a4",
+    "workers": 1,
+    "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261007-1702-strategy/combined-sandbox-single-worker.log",
+    "log_sha256": "64774f22c1e291ffab787662fe0adde58f15dfd9f8f176b8ba8e496275c5af3c",
+    "passed_files": 233,
+    "passed_cases": 2441,
+    "command": "nice19 SANDBOX_WORKERS=1 bash tools/test-sandbox.sh --reporter=verbose"
+  },
+  "external": {
+    "rc": 0,
+    "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261007-1702-strategy/external-recheck.txt",
+    "bytes": 407,
+    "sha256": "9957099af24bd45c4a921ef63d76f6985e80522c7b6918584540fe79f333f4e7",
+    "state": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "runs": [
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "VLZ6CCT8AQ0A"
+      ],
+      "key": "code-proposals:silent-proposal-4cc200cc9747f4a8,silent-proposal-89354805ee4d7e77,silent-proposal-f2bfceddb1898dca:98",
+      "pid": 2046065,
+      "state": "failed",
+      "reason": "proposal",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:p5P",
+      "proposal_ids": [
+        "silent-proposal-4cc200cc9747f4a8",
+        "silent-proposal-89354805ee4d7e77",
+        "silent-proposal-f2bfceddb1898dca"
+      ],
+      "finished": "2026-10-07 17:02",
+      "rc": 0,
+      "merged": null,
+      "proposal_audit_errors": [],
+      "report": {
+        "task": "strategy-proposal",
+        "base": "72747bbefda904d317b271cd737f0e975f474e44",
+        "runs": [
+          "JMH5C51RLN4E",
+          "9TG1RP5LFAAK",
+          "VLZ6CCT8AQ0A"
+        ],
+        "fixes": [
+          {
+            "id": "silent-0239",
+            "commit": "45161a51c2c6b7e4a499b13cf749c4108193bbf5",
+            "merged": false
+          }
+        ],
+        "skipped": [
+          "预算与固定目标策略缺对照",
+          "神化升级传播为独立提案"
+        ],
+        "merged": null,
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 11
+        },
+        "code_proposals": [
+          "silent-proposal-f2bfceddb1898dca"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-160418-strategy-proposal/report.md"
+      },
+      "retry_at": 1791367357.3061955,
+      "fallback_checks": [
+        {
+          "rc": 0,
+          "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-160418-strategy-proposal.fallback-10b647a14a05ba1c7024fe63cc178190388ea02b.checks.log",
+          "merged": "05b4f233472928698cd11fee4a8fb182a3da2736",
+          "tree": "10b647a14a05ba1c7024fe63cc178190388ea02b",
+          "commits": [
+            "45161a51c2c6b7e4a499b13cf749c4108193bbf5"
+          ]
+        }
+      ]
+    },
+    "original_files_unchanged": true,
+    "original_state_unchanged_except_fallback_history": true
+  },
+  "files": {
+    "paper/materials/silent/20261007-1702-strategy/combined-first-complete-summary.json": {
+      "bytes": 545,
+      "sha256": "a5ce80d3c416125e0727fc50d391287942f3a992478311104ea69e0c896f558e"
+    },
+    "paper/materials/silent/20261007-1702-strategy/combined-sandbox-retry.json": {
+      "bytes": 535,
+      "sha256": "35360312d45c417864ccee59a982f9d954765b99a10e2d67632d2f13b6036fb6"
+    },
+    "paper/materials/silent/20261007-1702-strategy/combined-sandbox-retry.log": {
+      "bytes": 422826,
+      "sha256": "fed6aab1b9aa64a1705c996b03f45018b35529efe46d2cced5d759878af0f03e"
+    },
+    "paper/materials/silent/20261007-1702-strategy/combined-sandbox-single-worker.json": {
+      "bytes": 547,
+      "sha256": "196b566bf862cd9afa09ef91025087683ace5706cd0b072b4d2de291f4b9051d"
+    },
+    "paper/materials/silent/20261007-1702-strategy/combined-sandbox-single-worker.log": {
+      "bytes": 423036,
+      "sha256": "64774f22c1e291ffab787662fe0adde58f15dfd9f8f176b8ba8e496275c5af3c"
+    },
+    "paper/materials/silent/20261007-1702-strategy/combined-sandbox.json": {
+      "bytes": 527,
+      "sha256": "ddbbfafae4835dd5a423593a26ca079a591773b141d1ccc2666e5cea82e98e14"
+    },
+    "paper/materials/silent/20261007-1702-strategy/combined-sandbox.log": {
+      "bytes": 348,
+      "sha256": "cb35766b9f02668e9b283d86dfacfe16381a15f4a0c4087433260451c59d494e"
+    },
+    "paper/materials/silent/20261007-1702-strategy/evidence-manifest.json": {
+      "bytes": 829,
+      "sha256": "b5772863229565d4fed4d684d46375b9e63b7a639fb99140f0b0ddd63192d7e8"
+    },
+    "paper/materials/silent/20261007-1702-strategy/external-full-summary.json": {
+      "bytes": 639,
+      "sha256": "e0bb9cf9406344c7ef0f5e1dc2eab3c4256711990746fe5f7bbef8efb2773e53"
+    },
+    "paper/materials/silent/20261007-1702-strategy/external-recheck-before.json": {
+      "bytes": 2410,
+      "sha256": "d2badd62f118ccce980ba998bfed6154f37843fbba2120a36ccce4895c1049ce"
+    },
+    "paper/materials/silent/20261007-1702-strategy/external-recheck-result.json": {
+      "bytes": 2432,
+      "sha256": "c433478abb8fa9aad4b1eaee0d94dd214da940c6b4c69b4a03e773a61d93cd91"
+    },
+    "paper/materials/silent/20261007-1702-strategy/external-recheck.txt": {
+      "bytes": 407,
+      "sha256": "9957099af24bd45c4a921ef63d76f6985e80522c7b6918584540fe79f333f4e7"
+    },
+    "paper/materials/silent/20261007-1702-strategy/handoff-ops.md": {
+      "bytes": 1541,
+      "sha256": "fd792146b555a3467adb5d127d929a337a5592968c1231929a94fc6de71a595a"
+    },
+    "paper/materials/silent/20261007-1702-strategy/live-merge-conflicts.txt": {
+      "bytes": 1038,
+      "sha256": "ede0692e5876269d506735567597b329ed62a61af591284dd86dbbf81b1d4691"
+    },
+    "paper/materials/silent/20261007-1702-strategy/ops-report.md": {
+      "bytes": 2096,
+      "sha256": "0f70a460dd5329eefc4d257ef136bfb033caa91b541f14b541c31f145a04c141"
+    },
+    "paper/materials/silent/20261007-1702-strategy/original-batch.json": {
+      "bytes": 1553,
+      "sha256": "59e183ff6736c1b0ff3a30e96e15679dbdac5ed95b92d967663f0e28ea611b7d"
+    },
+    "paper/materials/silent/20261007-1702-strategy/originals.json": {
+      "bytes": 240893,
+      "sha256": "e906366610f4183f96e9b0d07cbb298d88450ac696f8228e3f34f821f206c50d"
+    },
+    "paper/materials/silent/20261007-1702-strategy/prepare.json": {
+      "bytes": 1601,
+      "sha256": "cb2cad7693096d7480a82a46637e63698791613999f94efbf4d6e908a55f10fc"
+    },
+    "paper/materials/silent/20261007-1702-strategy/procs-initial.txt": {
+      "bytes": 4220,
+      "sha256": "da198f3a10bd6af839e5168992b62a4471892855d7379c443a901d521c418e53"
+    },
+    "paper/materials/silent/20261007-1702-strategy/procs.txt": {
+      "bytes": 4220,
+      "sha256": "da198f3a10bd6af839e5168992b62a4471892855d7379c443a901d521c418e53"
+    },
+    "paper/materials/silent/20261007-1702-strategy/proposal-contract.json": {
+      "bytes": 525,
+      "sha256": "0ffaefe6776376dfd2464da01f7998dea2d8cb462f9e00c4c6c7015c2a2095c1"
+    },
+    "paper/materials/silent/20261007-1702-strategy/proposal.md": {
+      "bytes": 6131,
+      "sha256": "210229b0d0944e94c42b938fa9d29a6c2dc991e398dfd38e3d31cabd6e730444"
+    },
+    "paper/materials/silent/20261007-1702-strategy/publication-preview.txt": {
+      "bytes": 41,
+      "sha256": "abbbc01eb50dbc69b7505cf5a07571364537cb58f161dd355e8545b1641f5f63"
+    },
+    "paper/materials/silent/20261007-1702-strategy/publication.json": {
+      "bytes": 4502,
+      "sha256": "e0264eeeadf5394e04d6de2f0b02244331f4df563c0f399057325d68dcdc8d5a"
+    },
+    "paper/materials/silent/20261007-1702-strategy/report.json": {
+      "bytes": 5870,
+      "sha256": "fe72b904e2eef9c41856fa9be066afdf8baab039f72db594474744ad14f011ca"
+    },
+    "paper/materials/silent/20261007-1702-strategy/report.md": {
+      "bytes": 5652,
+      "sha256": "0bbad68e297a71b08ae0174a09d1f0b8ed16f33c200d0cc5b842ceddf1f3f9ed"
+    },
+    "paper/materials/silent/20261007-1702-strategy/roy-notification.json": {
+      "bytes": 1481,
+      "sha256": "e7e0b540ef38095a9808566547a91506bfe66793106e24631f6b7502ca8efd20"
+    },
+    "paper/materials/silent/20261007-1702-strategy/shipment.json": {
+      "bytes": 392,
+      "sha256": "517037fef9b0786af2fa07c3abd52c2090352f157fb2b8a3248ada3bad6f1009"
+    },
+    "paper/materials/silent/20261007-1702-strategy/source-executable-comparison.json": {
+      "bytes": 672,
+      "sha256": "009215b0df5c7369cbe2283d9d2aec6cbd3adffe61889ee5e7d7002800fa0f29"
+    }
+  }
+}

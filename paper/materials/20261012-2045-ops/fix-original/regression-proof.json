@@ -1,0 +1,39 @@
+{
+  "item": "batch-c-fixed-fixture-timeout",
+  "evidence": "183755-s2-strategy-proposal original timeout; fixed ZY3992X5VEVS F23 T3-T5",
+  "changes": "Only fixed test references, work clock and workload bound; production code untouched",
+  "original_timeout_cause_proven": false,
+  "original_checks": "Full exit 1 retained; same-tree exact single-case supplement 1731.689115ms passed at unchanged 15000ms limit",
+  "red": {
+    "exit": 1,
+    "cases_failed": 2,
+    "fixed_inputs_retained": true,
+    "fixture_implementation_reverted": "budgetMs=1e9 and real work clock (run() without withRolloutFixtureClock)",
+    "policy_turns": 376
+  },
+  "green": {
+    "exit": 0,
+    "files": 2,
+    "cases_passed": 4,
+    "unselected": 25,
+    "policy_turns": 76,
+    "policy_nodes": 6955,
+    "horizon": 3,
+    "samples": 2,
+    "host_pauses_ms": [
+      0,
+      10000
+    ]
+  },
+  "sha256": {
+    "agent/tests/batch-c.test.ts": "9f69160e634c7157edabba53346d5939bc294b6b1cb2574493c7c82695b4f4f2",
+    "agent/tests/batch-c-illusion.test.ts": "cd6273b0e6105126a0065521bd30aa18b39bd4bd8d11796295f67a538630cf6e",
+    "agent/tests/batch-c-illusion-fixture.ts": "de1b8f41373513da756ca93a2ca6557925f093ae984bae3440daba48cd354306",
+    "agent/tests/logged-states/zy39-f23-t3b.json": "ac29c41b709d99032723f58643fac97d29485b774b0bb77dad3f44a04c9c0b23",
+    "agent/tests/logged-states/game-data.json": "49cd18394fcd3f00f85ff02f949361fe2ba5c074cc48ef026c64fd12ac9d682f",
+    "agent/tests/potion-cost-knowledge.json": "67d0f32d646f00e00066730ce729abece095c73a98e0364de93245e3a4f06d88",
+    "agent/tests/sl-early-data/pinned-knowledge.json": "4d71e9c5a62d04dfe3838e5abca63491b9927a8133176f3c7aceb402c06abff2",
+    "agent/tests/rollout-clock-fixture.ts": "672b1a8f72af4909f6c109ff6a95f10df10df4aee1f9ab7572a7440a35ce12d4",
+    "agent/vitest.config.ts": "5852d531cbf81c915dbdbb962f47e50661507469d61c22204afd649460e2c46e"
+  }
+}

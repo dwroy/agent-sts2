@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-134303/agent
+
+ ❯ tests/silent-apotheosis-reference.test.ts (5 tests | 1 failed) 15649ms
+   × labels random potion forecasts and unsimulated potions separately in F45's real question 15314ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-apotheosis-reference.test.ts > labels random potion forecasts and unsimulated potions separately in F45's real question
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/silent-apotheosis-reference.test.ts:114:1
+    112| });
+    113|
+    114| it("labels random potion forecasts and unsimulated potions separately …
+       | ^
+    115|   const spy = vi.spyOn(reference, "silentApotheosisReference");
+    116|   const { decision } = planned(rawAt(275722));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  13:55:53
+   Duration  17.11s (transform 1.10s, setup 275ms, import 1.07s, tests 15.65s, environment 0ms)
+

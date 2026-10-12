@@ -1,0 +1,2026 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index 0c89540f5..625fa8bc2 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -1412,6 +1412,9 @@ export const GENERATED_CARD_POTIONS: Record<string, { type: string; target: Targ
+ 
+ /** What the drinker's board adds to a generated card: living enemy indices, Strength now, Weak. */
+ export interface PotionContext {
++  /** Evidence scope for Silent Cunning Potion (SADL A7, F4QK A9, WQZ A10). */
++  character?: string;
++  ascension?: number;
+   /** Character evidence supplied by the caller; no global potion mechanic is inferred. */
+   observedPoison?: number;
+   enemyTargets: number[];
+@@ -1620,6 +1623,18 @@ export function potionRegen(potionId: string): number {
+  * pile cards pile-card potions take and the draw pile's expected card.
+  */
+ export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], ctx?: PotionContext): CardModel | null {
++  // silent-0256/0257/0258: made cards occupy hand space; potion slots do not.
++  if (potionId === "CUNNING_POTION") {
++    if (ctx?.character?.toLowerCase() !== "silent" || ![7, 9, 10].includes(ctx.ascension ?? -1)) return null;
++    const adds = Array.from({ length: 3 }, (_, i): CardModel => ({
++      ...potionShell(potionId, name, slot, ctx.enemyTargets),
++      index: 3_000_000 + slot * 3 + i, key: `p${slot}~shiv${i}`, cardId: "SHIV", name: "小刀+",
++      type: "Attack", upgraded: true, target: "single", cost: 0,
++      damage: Math.floor((6 + ctx.strength) * (ctx.weak ? 0.75 : 1)), damageBase: 6,
++      text: "造成6点伤害。消耗。",
++    }));
++    return { ...potionShell(potionId, name, slot, validTargets), adds };
++  }
+   const effect: (Partial<CardModel> & { target: TargetMode }) | undefined = POTION_EFFECTS[potionId] ?? (potionId === "POISON_POTION" && (ctx?.observedPoison ?? 0) > 0
+     ? { target: "single" as const, poison: ctx!.observedPoison } : undefined);
+   if (!effect) return null;
+diff --git a/agent/src/reflex/combat-plan.ts b/agent/src/reflex/combat-plan.ts
+index 28623a799..4ba7ff92e 100644
+--- a/agent/src/reflex/combat-plan.ts
++++ b/agent/src/reflex/combat-plan.ts
+@@ -3132,6 +3132,8 @@ function planTurn(env: DecisionEnv): Decision | null {
+   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
+   const potionContext: PotionContext = {
+     ...pileContext,
++    character: str(asRecord(state.run?.raw)["character_id"]),
++    ascension: state.run?.ascension ?? -1,
+     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
+     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
+     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
+@@ -3908,7 +3910,14 @@ function planTurn(env: DecisionEnv): Decision | null {
+       ...mcShown.flatMap((mc) => mc.median ? [{ key: mcKey(mc), plan: mc.median }] : []),
+     ], rollout, mcShown),
+     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
+-    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
++    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined),
++      ...(modelledIds.has("CUNNING_POTION") ? { cunning_generation: {
++        hand_cards: hand.length, free_slots: Math.max(0, HAND_LIMIT - hand.length),
++        added_now: Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
++        truncated_now: 3 - Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
++        note: "狡诈生成升级小刀，受每步剩余手位限制；药栏不占手位。先出刀腾位再喝可与连续饮用比较，满手饮用仍耗瓶。未知饮药触发及整战收益未验证。",
++      } } : {}),
++    },
+     // THIEF_FACTS: who carries our card or gold, how many turns are left to kill it, its HP and block (thief.ts).
+     ...(thiefContext ? { thief_context: thiefContext } : {}),
+     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).
+diff --git a/agent/src/reflex/rollout.ts b/agent/src/reflex/rollout.ts
+index 0c0f69748..0a579e9e4 100644
+--- a/agent/src/reflex/rollout.ts
++++ b/agent/src/reflex/rollout.ts
+@@ -2121,6 +2121,8 @@ function applyPlan(
+   // Stable Serum: the rest of the hand is kept for the next turn instead (Ethereal cards still go).
+   const keep = player.retainTurns > 0 && !o.winsFight;
+   for (const i of unplayed) if (!hand[i]!.ethereal) (keep ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
++  // These cards were made during the line, so they are absent from the original hand and draw pile.
++  for (const shiv of o.cunningShivsLeft ?? []) (keep ? player.retained : piles.discard).push(shiv);
+   player.retainTurns = Math.max(0, player.retainTurns - 1);
+   // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
+   // outcome), except those an exhaust effect took after they were drawn. Under Stable Serum the ones the line
+@@ -2247,7 +2249,8 @@ function applyPlan(
+     piles.discard = piles.discard.map(grow);
+     player.retained = player.retained.map(grow);
+   }
+-  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
++  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn)
++    + (o.cunningShivsLeft?.length ?? 0);
+   const blockEnd = player.block + o.blockGained;
+   // Carry only the solver's observed establishment; replay/stacking stay marked unknown there.
+   if (o.serpentFormAfter !== undefined) {
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index b981f2469..99a73c758 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -783,6 +783,8 @@ export interface Step {
+ }
+ 
+ export interface Outcome {
++  /** Unplayed Shivs actually made by this line's observed Cunning drinks, for later-turn piles. */
++  cunningShivsLeft?: CardModel[];
+   /** Established Serpent Form after this line; absent outside the observed character/ascension. */
+   serpentFormAfter?: number | null;
+   /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
+@@ -2080,7 +2082,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
+       validTargets: next.enemies.filter((enemy) => enemy.alive).map((enemy) => enemy.index),
+       damage: shiv.damageBase === undefined ? shiv.damage : Math.floor(ourAttackScaled(shiv.damageBase + (player.strengthNow ?? 0), player.weak, false)),
+     })) : card.adds;
+-    addToHand(next, adds, player.handLimit);
++    const cunning = card.cardId.startsWith("POTION:CUNNING_POTION:");
++    addToHand(next, adds, cunning ? (player.handLimit ?? HAND_LIMIT) - next.locked.length : player.handLimit);
+   }
+   if (card.drawn && card.special !== "gamble" && card.special !== "chaos" && card.special !== "glowwater" && card.special !== "bottled") drawCards(next, card.drawn, player);
+   // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn (a sample: its own
+@@ -3474,6 +3477,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
+       weakApplied: sim.weakApplied,
+       strengthGained: sim.permStrength,
+       cardsDrawn: sim.cardsDrawn,
++      ...(sim.steps.some((step) => step.cardId.startsWith("POTION:CUNNING_POTION:")) ? {
++        cunningShivsLeft: [...sim.hand, ...sim.held, ...sim.locked].filter((entry) =>
++          entry.cardId === "SHIV" && /^p\d+~shiv\d+$/.test(entry.key) && !input.hand.some((original) => original.key === entry.key)),
++      } : {}),
+       ...(sim.apotheosisApplied ? { apotheosisApplied: true as const } : {}),
+       unknownCards: [
+         ...sim.unknown,
+diff --git a/agent/src/sim/double-boss-start.ts b/agent/src/sim/double-boss-start.ts
+index 07f6b935d..090aa4b14 100644
+--- a/agent/src/sim/double-boss-start.ts
++++ b/agent/src/sim/double-boss-start.ts
+@@ -25,7 +25,8 @@ export function withDoubleBossStart(state: GameState, knowledge: Knowledge, inpu
+       const secondState = parseGameState(raw);
+       const second = syntheticBossStart(secondState, knowledge, `${boss}_BOSS`, input.solver.player.hp, opts).input;
+       const targets = second.solver.enemies.map((e) => e.index);
+-      const ctx = { enemyTargets: targets, strength: 0, weak: false, observedPoison: model.poisonPotionAmount };
++      const ctx = { enemyTargets: targets, strength: 0, weak: false, observedPoison: model.poisonPotionAmount,
++        character: str(run["character_id"]), ascension: state.run?.ascension ?? -1 };
+       const sources = [];
+       const potions = second.solver.hand.slice();
+       const relics = asArray(run["relics"]).map((r) => str(asRecord(r)["relic_id"]));
+diff --git a/agent/tests/silent-cunning-evidence.json b/agent/tests/silent-cunning-evidence.json
+new file mode 100644
+index 000000000..5c4da6789
+--- /dev/null
++++ b/agent/tests/silent-cunning-evidence.json
+@@ -0,0 +1,514 @@
++[
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 9,
++    "slot": 0,
++    "before": 4,
++    "after": 7,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      13,
++      13
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:42:06.940Z",
++    "after_ts": "2026-10-07T13:42:08.085Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 9,
++    "slot": 1,
++    "before": 4,
++    "after": 7,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      13,
++      13
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:42:12.491Z",
++    "after_ts": "2026-10-07T13:42:13.640Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 9,
++    "slot": 2,
++    "before": 5,
++    "after": 8,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      13,
++      13
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:42:16.552Z",
++    "after_ts": "2026-10-07T13:42:17.916Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 0,
++    "before": 3,
++    "after": 6,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      12,
++      12
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:45:43.410Z",
++    "after_ts": "2026-10-07T13:45:44.526Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 1,
++    "before": 3,
++    "after": 6,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      12,
++      12
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:45:48.730Z",
++    "after_ts": "2026-10-07T13:45:49.905Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 2,
++    "before": 6,
++    "after": 9,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      12,
++      12
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:45:50.328Z",
++    "after_ts": "2026-10-07T13:45:51.475Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 0,
++    "before": 3,
++    "after": 6,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      3,
++      3
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:48:05.108Z",
++    "after_ts": "2026-10-07T13:48:06.290Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 1,
++    "before": 3,
++    "after": 6,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      3,
++      3
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:48:10.536Z",
++    "after_ts": "2026-10-07T13:48:11.903Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 2,
++    "before": 3,
++    "after": 6,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      3,
++      3
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:48:16.289Z",
++    "after_ts": "2026-10-07T13:48:17.439Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 0,
++    "before": 3,
++    "after": 6,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      12,
++      12
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:50:40.435Z",
++    "after_ts": "2026-10-07T13:50:41.590Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 1,
++    "before": 3,
++    "after": 6,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      12,
++      12
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:50:45.993Z",
++    "after_ts": "2026-10-07T13:50:47.172Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 2,
++    "before": 6,
++    "after": 9,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      12,
++      12
++    ],
++    "energy": [
++      0,
++      0
++    ],
++    "before_ts": "2026-10-07T13:50:47.596Z",
++    "after_ts": "2026-10-07T13:50:48.767Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 0,
++    "before": 8,
++    "after": 10,
++    "added": 2,
++    "upgraded": [
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6
++    ],
++    "hp": [
++      6,
++      6
++    ],
++    "energy": [
++      1,
++      1
++    ],
++    "before_ts": "2026-10-07T13:52:57.421Z",
++    "after_ts": "2026-10-07T13:52:58.820Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 1,
++    "before": 10,
++    "after": 10,
++    "added": 0,
++    "upgraded": [],
++    "damageBase": [],
++    "hp": [
++      6,
++      6
++    ],
++    "energy": [
++      1,
++      1
++    ],
++    "before_ts": "2026-10-07T13:52:59.254Z",
++    "after_ts": "2026-10-07T13:53:00.721Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 2,
++    "before": 10,
++    "after": 10,
++    "added": 0,
++    "upgraded": [],
++    "damageBase": [],
++    "hp": [
++      6,
++      6
++    ],
++    "energy": [
++      1,
++      1
++    ],
++    "before_ts": "2026-10-07T13:53:00.721Z",
++    "after_ts": "2026-10-07T13:53:02.086Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 0,
++    "before": 5,
++    "after": 8,
++    "added": 3,
++    "upgraded": [
++      true,
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6,
++      6
++    ],
++    "hp": [
++      9,
++      9
++    ],
++    "energy": [
++      2,
++      2
++    ],
++    "before_ts": "2026-10-07T13:55:11.339Z",
++    "after_ts": "2026-10-07T13:55:12.583Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 1,
++    "before": 8,
++    "after": 10,
++    "added": 2,
++    "upgraded": [
++      true,
++      true
++    ],
++    "damageBase": [
++      6,
++      6
++    ],
++    "hp": [
++      9,
++      9
++    ],
++    "energy": [
++      2,
++      2
++    ],
++    "before_ts": "2026-10-07T13:55:13.006Z",
++    "after_ts": "2026-10-07T13:55:14.259Z"
++  },
++  {
++    "run": "WQZVENQ7DTRP",
++    "asc": 10,
++    "floor": 33,
++    "turn": 11,
++    "slot": 2,
++    "before": 10,
++    "after": 10,
++    "added": 0,
++    "upgraded": [],
++    "damageBase": [],
++    "hp": [
++      9,
++      9
++    ],
++    "energy": [
++      2,
++      2
++    ],
++    "before_ts": "2026-10-07T13:55:14.681Z",
++    "after_ts": "2026-10-07T13:55:15.914Z"
++  }
++]
+diff --git a/agent/tests/silent-cunning-state.json b/agent/tests/silent-cunning-state.json
+new file mode 100644
+index 000000000..9dacdc8df
+--- /dev/null
++++ b/agent/tests/silent-cunning-state.json
+@@ -0,0 +1,1241 @@
++{
++  "state_version": 16,
++  "run_id": "WQZVENQ7DTRP",
++  "screen": "COMBAT",
++  "session": {
++    "mode": "singleplayer",
++    "phase": "run",
++    "control_scope": "local_player"
++  },
++  "in_combat": true,
++  "turn": 11,
++  "available_actions": [
++    "end_turn",
++    "play_card",
++    "save_and_quit",
++    "use_potion",
++    "discard_potion"
++  ],
++  "combat": {
++    "action_readiness": {
++      "can_use_combat_actions": true,
++      "reason": "ready",
++      "actions_settled": true,
++      "running_action_type": null,
++      "ready_action_type": null,
++      "modal_open": false,
++      "modal_type": null,
++      "player_actions_disabled": false,
++      "is_paused": false,
++      "local_ready_to_end_turn": false,
++      "all_players_ready_to_end_turn": true,
++      "ending_turn_phase_one": false,
++      "ending_turn_phase_two": false,
++      "end_turn_kick": "",
++      "combat_in_progress": true,
++      "combat_over_or_ending": false,
++      "combat_room_mode": "ActiveCombat",
++      "hand_in_card_play": false,
++      "hand_in_card_selection": false,
++      "hand_mode": "Play",
++      "local_turn_ready": true,
++      "snapshot_stable": true,
++      "player_action_phase": true
++    },
++    "player": {
++      "current_hp": 12,
++      "max_hp": 80,
++      "block": 9,
++      "energy": 2,
++      "stars": 0,
++      "focus": 0,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "DEXTERITY_POWER",
++          "name": "敏捷",
++          "amount": 4,
++          "is_debuff": false
++        }
++      ],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 1,
++      "attacks_played_this_turn": 0,
++      "skills_played_this_turn": 1
++    },
++    "players": [
++      {
++        "player_id": "1",
++        "slot_index": 0,
++        "is_local": true,
++        "is_connected": true,
++        "character_id": "SILENT",
++        "character_name": "静默猎手",
++        "current_hp": 12,
++        "max_hp": 80,
++        "block": 9,
++        "energy": 2,
++        "stars": 0,
++        "focus": 0,
++        "is_alive": true
++      }
++    ],
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "FRANTIC_ESCAPE",
++        "name": "狂乱逃离",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "远离。 将沙坑的计数加1。 这张牌的耗能加1。",
++        "resolved_rules_text": "远离。 将沙坑的计数加1。 这张牌的耗能加1。",
++        "dynamic_values": [],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "FRANTIC_ESCAPE",
++        "name": "狂乱逃离",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "远离。 将沙坑的计数加1。 这张牌的耗能加1。",
++        "resolved_rules_text": "远离。 将沙坑的计数加1。 这张牌的耗能加1。",
++        "dynamic_values": [],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 2,
++        "card_id": "WELL_LAID_PLANS",
++        "name": "计划妥当",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "在你的回合结束时，你不再丢弃你的手牌。",
++        "resolved_rules_text": "在你的回合结束时，你不再丢弃你的手牌。",
++        "dynamic_values": [],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 3,
++        "card_id": "FRANTIC_ESCAPE",
++        "name": "狂乱逃离",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "远离。 将沙坑的计数加1。 这张牌的耗能加1。",
++        "resolved_rules_text": "远离。 将沙坑的计数加1。 这张牌的耗能加1。",
++        "dynamic_values": [],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 4,
++        "card_id": "STRIKE_SILENT",
++        "name": "打击",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "造成6点伤害。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "enemies": [
++      {
++        "index": 0,
++        "enemy_id": "THE_INSATIABLE",
++        "name": "无厌沙虫",
++        "current_hp": 119,
++        "max_hp": 341,
++        "base_max_hp": 341,
++        "block": 0,
++        "is_alive": true,
++        "is_hittable": true,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "SANDPIT_POWER",
++            "name": "沙坑",
++            "amount": 1,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "POISON_POWER",
++            "name": "中毒",
++            "amount": 36,
++            "is_debuff": true
++          },
++          {
++            "index": 2,
++            "power_id": "STRENGTH_POWER",
++            "name": "力量",
++            "amount": 6,
++            "is_debuff": false
++          },
++          {
++            "index": 3,
++            "power_id": "WEAK_POWER",
++            "name": "虚弱",
++            "amount": 1,
++            "is_debuff": true
++          }
++        ],
++        "intent": "LUNGING_BITE_MOVE",
++        "move_id": "LUNGING_BITE_MOVE",
++        "intents": [
++          {
++            "index": 0,
++            "intent_type": "Attack",
++            "label": "27",
++            "damage": 27,
++            "hits": 1,
++            "total_damage": 27,
++            "status_card_count": null
++          }
++        ]
++      }
++    ],
++    "end_turn_will_kill_player": true,
++    "lethal_risks": [
++      {
++        "risk_id": "incoming_damage",
++        "source": "enemy_intents",
++        "will_kill_player": true,
++        "reason": "Enemy intent damage after current block is at least current HP.",
++        "incoming_damage": 27,
++        "damage_after_block": 18,
++        "player_hp": 12,
++        "player_block": 9,
++        "power_id": null,
++        "power_amount": null
++      }
++    ]
++  },
++  "run": {
++    "character_id": "SILENT",
++    "ascension": 10,
++    "ascension_effects": [
++      {
++        "id": "LEVEL_01",
++        "name": "精英蜂拥",
++        "description": "[gold]精英[/gold]敌人出现更加频繁。"
++      },
++      {
++        "id": "LEVEL_02",
++        "name": "旅途劳顿",
++        "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++      },
++      {
++        "id": "LEVEL_03",
++        "name": "贫穷",
++        "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++      },
++      {
++        "id": "LEVEL_04",
++        "name": "收紧腰带",
++        "description": "游戏开始时药水栏位减少1。"
++      },
++      {
++        "id": "LEVEL_05",
++        "name": "进阶之灾",
++        "description": "游戏开始时被[red]诅咒[/red]。"
++      },
++      {
++        "id": "LEVEL_06",
++        "name": "通货膨胀",
++        "description": "商人的卡牌移除服务价格提升。"
++      },
++      {
++        "id": "LEVEL_07",
++        "name": "稀缺",
++        "description": "稀有和已升级卡牌更少出现。"
++      },
++      {
++        "id": "LEVEL_08",
++        "name": "强韧敌人",
++        "description": "所有的敌人变得更难杀死。"
++      },
++      {
++        "id": "LEVEL_09",
++        "name": "致命敌人",
++        "description": "所有的敌人变得更加致命。"
++      },
++      {
++        "id": "LEVEL_10",
++        "name": "双重Boss",
++        "description": "在第3阶段最后与两个Boss战斗。"
++      }
++    ],
++    "floor": 33,
++    "current_hp": 12,
++    "max_hp": 80,
++    "max_energy": 3,
++    "act_id": "1",
++    "boss_id": "THE_INSATIABLE_BOSS",
++    "deck": [
++      {
++        "index": 0,
++        "card_id": "STRIKE_SILENT",
++        "name": "打击",
++        "upgraded": false,
++        "card_type": "Attack",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "造成6点伤害。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 1,
++        "card_id": "STRIKE_SILENT",
++        "name": "打击",
++        "upgraded": false,
++        "card_type": "Attack",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "造成6点伤害。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 2,
++        "card_id": "STRIKE_SILENT",
++        "name": "打击",
++        "upgraded": false,
++        "card_type": "Attack",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "造成6点伤害。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 3,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 4,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 5,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 6,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 7,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 8,
++        "card_id": "NEUTRALIZE",
++        "name": "中和+",
++        "upgraded": true,
++        "card_type": "Attack",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
++        "resolved_rules_text": "造成4点伤害。 给予2层虚弱。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 4,
++            "current_value": 4,
++            "enchanted_value": 4,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "WeakPower",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 9,
++        "card_id": "SURVIVOR",
++        "name": "生存者",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
++        "resolved_rules_text": "获得8点格挡。 丢弃1张牌。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 8,
++            "current_value": 8,
++            "enchanted_value": 8,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 10,
++        "card_id": "ASCENDERS_BANE",
++        "name": "进阶之灾",
++        "upgraded": false,
++        "card_type": "Curse",
++        "rarity": "Curse",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": -1,
++        "star_cost": 0,
++        "rules_text": "",
++        "resolved_rules_text": "不能被打出。 虚无。 永恒。",
++        "dynamic_values": []
++      },
++      {
++        "index": 11,
++        "card_id": "SNAKEBITE",
++        "name": "蛇咬",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "保留。 给予7层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 7,
++            "current_value": 7,
++            "enchanted_value": 7,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 12,
++        "card_id": "DEADLY_POISON",
++        "name": "致命毒药+",
++        "upgraded": true,
++        "card_type": "Skill",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "给予7层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 7,
++            "current_value": 7,
++            "enchanted_value": 7,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 13,
++        "card_id": "DAGGER_SPRAY",
++        "name": "匕首雨+",
++        "upgraded": true,
++        "card_type": "Attack",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "对所有敌人造成{Damage:diff()}点伤害两次。",
++        "resolved_rules_text": "对所有敌人造成6点伤害两次。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 14,
++        "card_id": "DAGGER_THROW",
++        "name": "投掷匕首",
++        "upgraded": false,
++        "card_type": "Attack",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。 抽1张牌。 丢弃1张牌。",
++        "resolved_rules_text": "造成9点伤害。 抽1张牌。 丢弃1张牌。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 9,
++            "current_value": 9,
++            "enchanted_value": 9,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 15,
++        "card_id": "BACKFLIP",
++        "name": "后空翻",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
++        "resolved_rules_text": "获得5点格挡。 抽2张牌。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "Cards",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 16,
++        "card_id": "DEADLY_POISON",
++        "name": "致命毒药",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "给予5层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 17,
++        "card_id": "BUBBLE_BUBBLE",
++        "name": "咕嘟冒泡",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Uncommon",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "如果敌方拥有中毒，则给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "如果敌方拥有中毒，则给予9层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 9,
++            "current_value": 9,
++            "enchanted_value": 9,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 18,
++        "card_id": "DEADLY_POISON",
++        "name": "致命毒药",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "给予5层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 19,
++        "card_id": "FOOTWORK",
++        "name": "灵动步法",
++        "upgraded": false,
++        "card_type": "Power",
++        "rarity": "Uncommon",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{DexterityPower:diff()}点敏捷。",
++        "resolved_rules_text": "获得2点敏捷。",
++        "dynamic_values": [
++          {
++            "name": "DexterityPower",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 20,
++        "card_id": "PIERCING_WAIL",
++        "name": "尖啸",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
++        "resolved_rules_text": "所有敌人在本回合失去6点力量。 消耗。",
++        "dynamic_values": [
++          {
++            "name": "StrengthLoss",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 21,
++        "card_id": "HAZE",
++        "name": "迷雾+",
++        "upgraded": true,
++        "card_type": "Skill",
++        "rarity": "Uncommon",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "给予所有敌人{PoisonPower:diff()}层中毒和{WeakPower:diff()}层虚弱。",
++        "resolved_rules_text": "给予所有敌人6层中毒和2层虚弱。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "WeakPower",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 22,
++        "card_id": "WELL_LAID_PLANS",
++        "name": "计划妥当",
++        "upgraded": false,
++        "card_type": "Power",
++        "rarity": "Rare",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "在你的回合结束时，你不再丢弃你的手牌。",
++        "resolved_rules_text": "在你的回合结束时，你不再丢弃你的手牌。",
++        "dynamic_values": []
++      },
++      {
++        "index": 23,
++        "card_id": "BACKSTAB",
++        "name": "背刺+",
++        "upgraded": true,
++        "card_type": "Attack",
++        "rarity": "Uncommon",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "固有。 造成15点伤害。 消耗。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 15,
++            "current_value": 15,
++            "enchanted_value": 15,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 24,
++        "card_id": "EXTERMINATE",
++        "name": "杀灭",
++        "upgraded": false,
++        "card_type": "Attack",
++        "rarity": "Event",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "对所有敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
++        "resolved_rules_text": "对所有敌人造成3点伤害4次。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 3,
++            "current_value": 3,
++            "enchanted_value": 3,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "Repeat",
++            "base_value": 4,
++            "current_value": 4,
++            "enchanted_value": 4,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 25,
++        "card_id": "FLECHETTES",
++        "name": "飞镖",
++        "upgraded": false,
++        "card_type": "Attack",
++        "rarity": "Uncommon",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
++        "resolved_rules_text": "手牌中每有一张技能牌，造成5点伤害。",
++        "dynamic_values": [
++          {
++            "name": "CalculatedHits",
++            "base_value": 0,
++            "current_value": 0,
++            "enchanted_value": 0,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "CalculationBase",
++            "base_value": 0,
++            "current_value": 0,
++            "enchanted_value": 0,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "CalculationExtra",
++            "base_value": 1,
++            "current_value": 1,
++            "enchanted_value": 1,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "Damage",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 26,
++        "card_id": "SIDESTEP",
++        "name": "侧步",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Uncommon",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "下回合，获得{Energy:energyIcons()}。",
++        "resolved_rules_text": "下回合，获得res://images/packed/sprite_fonts/silent_energy_icon.png。",
++        "dynamic_values": [
++          {
++            "name": "Energy",
++            "base_value": 1,
++            "current_value": 1,
++            "enchanted_value": 1,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 27,
++        "card_id": "FOOTWORK",
++        "name": "灵动步法",
++        "upgraded": false,
++        "card_type": "Power",
++        "rarity": "Uncommon",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{DexterityPower:diff()}点敏捷。",
++        "resolved_rules_text": "获得2点敏捷。",
++        "dynamic_values": [
++          {
++            "name": "DexterityPower",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 28,
++        "card_id": "SKEWER",
++        "name": "串刺",
++        "upgraded": false,
++        "card_type": "Attack",
++        "rarity": "Uncommon",
++        "costs_x": true,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害X次。",
++        "resolved_rules_text": "造成8点伤害X次。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 8,
++            "current_value": 8,
++            "enchanted_value": 8,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 29,
++        "card_id": "CALCULATED_GAMBLE",
++        "name": "计算下注",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Uncommon",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。",
++        "resolved_rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
++        "dynamic_values": []
++      },
++      {
++        "index": 30,
++        "card_id": "CLOAK_AND_DAGGER",
++        "name": "斗篷与匕首",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
++        "resolved_rules_text": "获得6点格挡。 将1张小刀添加到你的手牌。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "Cards",
++            "base_value": 1,
++            "current_value": 1,
++            "enchanted_value": 1,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      }
++    ],
++    "relics": [
++      {
++        "index": 0,
++        "relic_id": "RING_OF_THE_SNAKE",
++        "name": "蛇之戒指",
++        "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
++        "stack": null,
++        "is_melted": false
++      },
++      {
++        "index": 1,
++        "relic_id": "PHIAL_HOLSTER",
++        "name": "药瓶皮套",
++        "description": "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位并获得[blue]{Potions}[/blue]瓶随机[gold]药水[/gold]。",
++        "stack": null,
++        "is_melted": false
++      },
++      {
++        "index": 2,
++        "relic_id": "PEAR",
++        "name": "梨子",
++        "description": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
++        "stack": null,
++        "is_melted": false
++      },
++      {
++        "index": 3,
++        "relic_id": "CENTENNIAL_PUZZLE",
++        "name": "百年积木",
++        "description": "你在每场战斗中第一次损失生命值时，抽[blue]{Cards}[/blue]张牌。",
++        "stack": null,
++        "is_melted": false
++      },
++      {
++        "index": 4,
++        "relic_id": "PAELS_BLOOD",
++        "name": "佩尔之血",
++        "description": "在你的回合开始时，额外抽[blue]{Cards}[/blue]张牌",
++        "stack": null,
++        "is_melted": false
++      },
++      {
++        "index": 5,
++        "relic_id": "ICE_CREAM",
++        "name": "冰淇淋",
++        "description": "多余的能量可以留到下一回合。",
++        "stack": null,
++        "is_melted": false
++      },
++      {
++        "index": 6,
++        "relic_id": "MEAL_TICKET",
++        "name": "餐券",
++        "description": "每当你进入商店房间时，回复[green]{Heal}[/green]点生命。",
++        "stack": null,
++        "is_melted": false
++      }
++    ],
++    "potions": [
++      {
++        "index": 0,
++        "potion_id": "CUNNING_POTION",
++        "name": "狡诈药水",
++        "description": "将[blue]{Cards}[/blue]张[gold]小刀+[/gold]加入你的[gold]手牌[/gold]。",
++        "rarity": "Uncommon",
++        "occupied": true,
++        "usage": "CombatOnly",
++        "target_type": "AnyPlayer",
++        "is_queued": false,
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "can_use": true,
++        "can_discard": true
++      },
++      {
++        "index": 1,
++        "potion_id": "CUNNING_POTION",
++        "name": "狡诈药水",
++        "description": "将[blue]{Cards}[/blue]张[gold]小刀+[/gold]加入你的[gold]手牌[/gold]。",
++        "rarity": "Uncommon",
++        "occupied": true,
++        "usage": "CombatOnly",
++        "target_type": "AnyPlayer",
++        "is_queued": false,
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "can_use": true,
++        "can_discard": true
++      },
++      {
++        "index": 2,
++        "potion_id": "CUNNING_POTION",
++        "name": "狡诈药水",
++        "description": "将[blue]{Cards}[/blue]张[gold]小刀+[/gold]加入你的[gold]手牌[/gold]。",
++        "rarity": "Uncommon",
++        "occupied": true,
++        "usage": "CombatOnly",
++        "target_type": "AnyPlayer",
++        "is_queued": false,
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "can_use": true,
++        "can_discard": true
++      }
++    ]
++  }
++}
+diff --git a/agent/tests/silent-cunning.test.ts b/agent/tests/silent-cunning.test.ts
+new file mode 100644
+index 000000000..c0c27d19a
+--- /dev/null
++++ b/agent/tests/silent-cunning.test.ts
+@@ -0,0 +1,120 @@
++/** WQZVENQ7DTRP A10 F33 T9/T11, silent-0256/0257/0258; fixed observed transitions. */
++import { resolve } from "node:path";
++import { expect, it, vi } from "vitest";
++import evidence from "./silent-cunning-evidence.json";
++import liveState from "./silent-cunning-state.json";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { loadConfig } from "../src/core/config.js";
++import { buildRunBrief } from "../src/memory/run-brief.js";
++import { createScreenMemory } from "../src/memory/types.js";
++import { planCombatTurn } from "../src/reflex/combat-plan.js";
++import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
++import { modelPotion, type CardModel } from "../src/reflex/card-model.js";
++import { replaySteps, solveTap, solveTurn, type Step } from "../src/reflex/turn-solver.js";
++import { simulateFight } from "../src/reflex/rollout.js";
++import { board, card } from "./boss-sim-fixture.js";
++
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed Cunning test has no generated reference data"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++
++const potion = (slot: number, strength = 0, weak = false) => modelPotion("CUNNING_POTION", "狡诈药水", slot, [],
++  { character: "SILENT", ascension: 10, enemyTargets: [0], strength, weak })!;
++const step = (entry: CardModel): Step => ({ cardIndex: entry.index, cardId: entry.cardId, name: entry.name,
++  upgraded: entry.upgraded, ...(entry.target === "single" ? { target: 0 } : {}) });
++function inputAt(n: number, slots = [0]) {
++  const input = board({ bossHp: 500 }).solver;
++  input.enemies[0]!.attacks = [];
++  input.hand = [...Array.from({ length: n }, (_, i) => card(i, "FIXED_HELD", { playable: false })), ...slots.map((s) => potion(s))];
++  return input;
++}
++
++it("the actual planner supplies character evidence and builds all three deterministic potion slots", () => {
++  const state = parseGameState(liveState);
++  const knowledge = makeKnowledge({ cards: liveState.combat.hand.map((c) => ({ id: c.card_id, name: c.name,
++    type: c.card_type, cost: c.energy_cost, description: c.resolved_rules_text, description_raw: c.rules_text,
++    vars: c.dynamic_values })) }, "cache");
++  const enabled = rolloutLiveOptions.enabled;
++  const inputs: ReturnType<typeof inputAt>[] = [];
++  solveTap.onSolve = (input) => { inputs.push(input); };
++  rolloutLiveOptions.enabled = false;
++  try {
++    planCombatTurn({ state, knowledge, brief: buildRunBrief(state, knowledge), thresholds: loadConfig({}).thresholds,
++      runStart: "auto", characterPreference: null, allowFtueModals: false, strictJev: true,
++      screenMemory: createScreenMemory("COMBAT"), shopDiscardPotions: [] });
++  } finally { solveTap.onSolve = null; rolloutLiveOptions.enabled = enabled; }
++  const drinks = inputs[0]!.hand.filter((c) => c.cardId.startsWith("POTION:CUNNING_POTION:"));
++  expect(drinks).toHaveLength(3);
++  expect(drinks.map((c) => c.adds!.length)).toEqual([3, 3, 3]);
++});
++
++it("replays all eighteen logged drinks without counting potion slots as hand cards", () => {
++  for (const row of evidence) {
++    const input = inputAt(row.before, [row.slot]);
++    const drink = input.hand.at(-1)!;
++    const plan = replaySteps(input, [step(drink)])!;
++    expect(plan.outcome.cunningShivsLeft).toHaveLength(row.added);
++    expect(plan.outcome).toMatchObject({ cardsDrawn: 0, damageDealt: 0, hpLoss: 0 });
++    const shivs = drink.adds!.slice(0, row.added);
++    expect(shivs.map((c) => c.upgraded)).toEqual(row.upgraded);
++    expect(shivs.map((c) => c.damageBase)).toEqual(row.damageBase);
++    expect(replaySteps(input, [step(drink), ...shivs.map(step)])!.outcome.damageDealt).toBe(6 * row.added);
++    if (row.added < 3) expect(replaySteps(input, [step(drink), step(drink.adds![row.added]!)])).toBeNull();
++  }
++});
++
++it("matches the observed 2/0/0 and 3/2/0 sequences and offers freeing space between drinks", () => {
++  for (const [n, counts, damage] of [[8, [2, 0, 0], 12], [5, [3, 2, 0], 30]] as const) {
++    const input = inputAt(n, [0, 1, 2]);
++    const drinks = input.hand.filter((c) => c.type === "Potion");
++    const steps = drinks.map(step);
++    expect(drinks.map((_p, i) => replaySteps(input, steps.slice(0, i + 1))!.outcome.cunningShivsLeft!.length))
++      .toEqual(counts.map((_c, i) => counts.slice(0, i + 1).reduce((a, b) => a + b, 0)));
++    const shivs = drinks.flatMap((p, i) => p.adds!.slice(0, counts[i]));
++    expect(replaySteps(input, [...steps, ...shivs.map(step)])!.outcome.damageDealt).toBe(damage);
++    const interleaved: Step[] = [];
++    for (const p of drinks) interleaved.push(step(p), ...p.adds!.slice(0, Math.min(3, 10 - n)).map(step));
++    expect(replaySteps(input, interleaved)!.outcome.damageDealt).toBe(n === 8 ? 36 : 54);
++  }
++  const input = inputAt(8, [0, 1]);
++  const plans = solveTurn({ ...input, maxNodes: 6000 }).plans;
++  expect(plans.some((p) => p.steps.filter((s) => s.cardId === "SHIV").length === 4)).toBe(true);
++  for (const p of plans) expect(replaySteps(input, p.steps)?.outcome).toEqual(p.outcome);
++});
++
++it("preserves unplayed generated Shivs for later turns and exhausts played ones", () => {
++  for (const played of [false, true]) {
++    const input = board({ bossHp: 500 });
++    input.solver = inputAt(8);
++    input.piles = { draw: [], discard: [], handBase: input.solver.hand };
++    input.options = { handSize: 10 };
++    const p = input.solver.hand.at(-1)!;
++    const plan = replaySteps(input.solver, [step(p), ...(played ? p.adds!.slice(0, 2).map(step) : [])])!;
++    const later: typeof input.solver[] = [];
++    solveTap.onSolve = (value) => { later.push(value); };
++    try { simulateFight(input, plan, 2, 1, false); } finally { solveTap.onSolve = null; }
++    expect(later[0]!.hand.filter((c) => c.cardId === "SHIV")).toHaveLength(played ? 0 : 2);
++  }
++});
++
++it("keeps other characters and unobserved levels unmodelled and applies current Strength and Weak", () => {
++  for (const [character, ascension] of [["IRONCLAD", 10], ["SILENT", 8], ["SILENT", 11]] as const) {
++    expect(modelPotion("CUNNING_POTION", "狡诈", 0, [], { character, ascension, enemyTargets: [0], strength: 0, weak: false })).toBeNull();
++  }
++  expect(modelPotion("CUNNING_POTION", "狡诈", 0, [])).toBeNull();
++  expect(potion(0, 2).adds!.map((c) => c.damage)).toEqual([8, 8, 8]);
++  expect(potion(0, 0, true).adds!.map((c) => c.damage)).toEqual([4, 4, 4]);
++  const input = inputAt(10);
++  input.hand[0] = card(0, "SHIV", { cost: 0, damage: 6, exhausts: true });
++  const p = input.hand.at(-1)!;
++  expect(replaySteps(input, [step(input.hand[0]!), step(p), step(p.adds![0]!)])!.outcome.damageDealt).toBe(12);
++});

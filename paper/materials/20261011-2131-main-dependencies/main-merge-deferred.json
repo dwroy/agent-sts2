@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-11 21:43:06 CST",
+  "command": "flock -w 10 ops/live-merge.lock python3 /tmp/sts2-2131-main-merge.py",
+  "exit": 1,
+  "callback_started": false,
+  "reason": "existing live merge/check lock unavailable within bounded10s",
+  "main_unchanged": "0e76d455430782373f85d4bbbeda17cedbfc7209",
+  "candidate": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+  "live_at_receipt": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+  "did_not_stop_or_edit_owner": true,
+  "next": "after original204636 completion, merge newer record-only main into isolated candidate if needed, verify executable/knowledge bytes unchanged; otherwise assess exact new source delta, then take original lock and integrate. Do not repeat already-passed coverage or push before parent acceptance."
+}

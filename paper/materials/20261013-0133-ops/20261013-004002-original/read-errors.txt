@@ -1,0 +1,8 @@
+首次查宿主回执误用工作树相对路径，ops/codex-ops/learner不存在；本批根learn.json已核为普通proposal消费，无research_request/implementation_request。
+首次账本摘要使用浅副本，内存折叠导致临时original快照被更新对象影响；根账本从未写入。初稿保留ledger-snapshot.initial-draft.json，最终snapshot改用根CLI的apply函数且原始行deepcopy。
+两个只读搜索猜错不存在路径：combat-decision-audit.ts、enemy-rollout-*.ts；后按rg列举真实silent-*源文件，没有源码修改。
+猜错前批focused-verification.py路径；未执行旧脚本，也未当作生产检查失败。
+本批证据脚本初次误用questions.pick，原日志实际为questions.plan；初败stderr/exit保留。修为保存完整questions后12组实盘断言通过。
+首次离线消费者输入漏附原物理行号_line，程序exit0但不能连接完整观测区间。初稿输入/输出/exit保留selection.missing-line.*；修正为逐raw-manifest附真实行号后重新调用，原状态和决策字节不变。
+原日志带dirty的历史执行树不可复原；当前base/live源与历史题面分列。以上均为本批资料脚本或定位错误，不是策略失配、生产源码失败或新游戏事实。
+消费者摘要两次断言失配：首次误把全部观测区间659项当有后帧264项；第二次误用actual_action_effect计264。真实结果为659区间、264有after快照、actual_action_effect全null，113完整候选结果均null。源输出不改，修摘要后核实；不是生产调用失败。

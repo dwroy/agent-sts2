@@ -1,0 +1,34 @@
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+2946723 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-232529-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-232529-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+2946724 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-232529-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration silent-boss-calibration
+2946733 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/run.ts --engine codex --task silent-boss-calibration --character silent --cwd 
+2946747 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3172745 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261008-014011-experience-update /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261008-014011-experience-update.pid 1 - /home/dw/Projects
+3172746 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261008-014011-experience-update G33HU22H2543,P74C04AEPL1F silent experience-update /home/dw/Projects/agent-sts2/.worktrees/exp
+3172756 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/exp/learner/run.ts --engine codex --task experience-update --character silent --cwd /home/dw/Projects/agent-st
+3172806 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3213058 bash /home/dw/Projects/agent-sts2/.worktrees/live/ops/herdr-exec.sh learner-20261008-015926-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261008-015926-fix-batch.pid 1 - /home/dw/Projects
+3213059 bash /home/dw/Projects/agent-sts2/.worktrees/live/ops/codex-ops-learner.sh 20261008-015926-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-015926 boss-sim-batch 
+3213069 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-015926/learner/run.ts --engine codex --task boss-sim-batch --character silent -
+3213100 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3218257 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261008-020231-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261008-020231-strategy-proposal.pid 1 - /home/dw/Projects
+3218258 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261008-020231-strategy-proposal 5PM6JAQG6FNQ,DUZUBAJ3A8GP,CA5KE8GFJ9X2,61E2QS63Y9WU,8JRE1C4H4Z2W,YF0LXT1QSTGG silent strategy-proposal /home/dw/Project
+3218267 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/run.ts --engine codex --task strategy-proposal --character silent --cwd /home/dw/Projects/ag
+3218279 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3229504 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+3229518 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3242007 python3 /home/dw/Projects/agent-sts2/ops/report.py BTSRF7JL1W1Y
+3243918 bash -c /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh --character silent --fight-value >/dev/null 2>&1
+3243919 bash /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh --character silent
+3243920 bash /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh --character silent --fight-value
+3243931 python3 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-fight-value.py all --character silent
+3243932 python3 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-monster-db.py --quiet --move-model-out /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/move-model.json
+autoplay.pid: 1746959
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay                                   wJ:p2   yes    no    
+learner-20261007-232529-fix-batch          wJ:p6K  yes    yes   2946723:bash 2946724:bash 2946732:tail 2946733:node 2946747:node 2946757:esbuild
+learner-20261008-014011-experience-update  wJ:p6X  yes    yes   3172745:bash 3172746:bash 3172755:tail 3172756:node 3172806:node 3172890:esbuild
+learner-20261008-015926-fix-batch          wJ:p60  yes    yes   3213058:bash 3213059:bash 3213068:tail 3213069:node 3213100:node 3213135:esbuild
+learner-20261008-020231-strategy-proposal  wJ:p71  yes    yes   3218257:bash 3218258:bash 3218266:tail 3218267:node 3218279:node
+ops                                        wJ:p5   yes    yes   1753575:node 1753583:codex

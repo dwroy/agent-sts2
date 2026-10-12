@@ -1,0 +1,2958 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index a515e2f0e..895e0a4a6 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -80,6 +80,8 @@ export interface CardModel {
+   dodgeRollNextBlock?: boolean;
+   /** DUZUBAJ3A8GP A10 F30 T5, silent-0010: plain Mirage reads living poison at play time. */
+   blockFromPoison?: boolean;
++  /** K2JAGKVJAWZJ A10 F46 T1: only the observed upgraded zero-poison play is known. */
++  observedZeroPoisonMirage?: boolean;
+   /** Block before player modifiers, from the observed enchanted/base dynamic value. */
+   blockBase?: number;
+   /** Debuffs applied to the target (or every enemy for `all`). */
+@@ -880,6 +882,17 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+   const block = madExpertise || madSapping ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
+   const mirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
+     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && dyn(card, "CalculationExtra") === 1;
++  // Keep the ordinary unknown model until the solver checks poison and modifiers at play time.
++  const mirageValues = asArray(card["dynamic_values"]).map(asRecord);
++  const zeroPoisonMirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
++    bool(card["upgraded"]) && type === "Skill" && card["target_type"] === "Self" && !requiresTarget &&
++    numOrNull(card["energy_cost"]) === 1 && !bool(card["costs_x"]) && card["enchantment"] == null &&
++    str(card["rules_text"]) === "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}" &&
++    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得等量于所有敌人中毒层数总和的格挡。（获得0点格挡）" &&
++    mirageValues.length === 3 && [["CalculatedBlock", 0], ["CalculationBase", 0], ["CalculationExtra", 1]].every(([name, value]) => {
++      const entry = mirageValues.find((v) => v["name"] === name);
++      return entry !== undefined && ["base_value", "current_value", "enchanted_value"].every((field) => entry[field] === value);
++    });
+   let vulnerable = madSapping ? dyn(card, "SappingVulnerable")! : dyn(card, "VulnerablePower") ?? 0;
+   let weak = madSapping ? dyn(card, "SappingWeak")! : dyn(card, "WeakPower") ?? 0;
+   let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
+@@ -1128,6 +1141,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+       dynBase(card, "Block", true) === 6 && template.replace(/\s+/g, "") === "获得{Block:diff()}点格挡。在下个回合，获得{Block:diff()}点格挡。"
+       ? { dodgeRollNextBlock: true } : {}),
+     ...(mirage ? { blockFromPoison: true } : {}),
++    ...(zeroPoisonMirage ? { observedZeroPoisonMirage: true } : {}),
+     ...(!madExpertise && !madSapping && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
+     vulnerable,
+     weak,
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index dd19f6c94..eb59c717d 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -1736,6 +1736,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
+   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
+   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
+   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
++  // K2JAGKVJAWZJ F46 T1, silent-0010: this zero-Block play has no unmodelled lasting bonus.
++  // Recheck at play time; later poison, Dexterity and unobserved replays keep the previous model.
++  const zeroPoisonMirage = card.observedZeroPoisonMirage && card.block === 0 && cost === 1 &&
++    plays === 1 && !automatic && !player.frail && (player.dexterityNow ?? 0) === 0 && next.tempDex === 0 &&
++    !player.unmovableArmed && !player.shadowmeldActive && !next.shadowmeld && !next.noBlock &&
++    next.enemies.some((enemy) => enemy.alive) &&
++    next.enemies.every((enemy) => !enemy.alive || (enemy.poison ?? 0) === 0);
+   audit?.(cost, plays);
+   // Snapshot before this play: new establishment does not trigger itself, and Block/Artifact interactions stay unknown.
+   const strangled = next.enemies.filter((enemy) => enemy.alive && (enemy.strangle ?? 0) > 0)
+@@ -1769,7 +1776,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
+     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
+     // drew); unmet, the card's draw and energy do not happen.
+     const effects = unverifiedBladeDance ? { ...card, draw: 0, adds: undefined }
+-      : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
++      : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false }
++      : zeroPoisonMirage ? { ...card, flatValue: 0 } : card;
+     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost, plays === 1 && !automatic);
+     // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
+     // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
+@@ -1913,7 +1921,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
+   if (card.feelNoPain) next.feelNoPain += card.feelNoPain;
+   if (card.cardId === "HELLRAISER") next.hellraiser = true;
+   if (card.cardId === "DARK_EMBRACE") next.darkEmbrace += 1;
+-  if (!card.known) next.unknown = [...next.unknown, card.name];
++  if (!card.known && !zeroPoisonMirage) next.unknown = [...next.unknown, card.name];
+   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
+ 
+   if (card.strangle !== undefined && targetEnemy?.alive) {
+diff --git a/agent/tests/silent-upgraded-mirage-zero-evidence.json b/agent/tests/silent-upgraded-mirage-zero-evidence.json
+new file mode 100644
+index 000000000..27ea209b0
+--- /dev/null
++++ b/agent/tests/silent-upgraded-mirage-zero-evidence.json
+@@ -0,0 +1,2730 @@
++{
++  "source": "logs/states.jsonl",
++  "provenance": [
++    {
++      "run": "K2JAGKVJAWZJ",
++      "line": 293158,
++      "offset": 9078930779,
++      "length": 46164,
++      "sha256": "f821eceb6da4672ca9190db5f32d0e95de34fdd2ba3303bea12c591e791c2583",
++      "frame": "zeroBefore"
++    },
++    {
++      "run": "K2JAGKVJAWZJ",
++      "line": 293159,
++      "offset": 9078976943,
++      "length": 45299,
++      "sha256": "3544345a3bbf4f24f676ddf1553e22dc3c22633a8ad1af851c999da71bb2a9f1",
++      "frame": "zeroAfter"
++    },
++    {
++      "run": "K2JAGKVJAWZJ",
++      "line": 293196,
++      "offset": 9080715381,
++      "length": 45188,
++      "sha256": "671e653c282aee94edfd95d6df9edcebc4f79e111c585202448af1493edb7ea8",
++      "frame": "plainBefore"
++    },
++    {
++      "run": "K2JAGKVJAWZJ",
++      "line": 293197,
++      "offset": 9080760569,
++      "length": 44230,
++      "sha256": "8b9c4287cacef47289530a30ed88dae7335d77af7d5fe2deec5236bb8b2c92f5",
++      "frame": "plainAfter"
++    },
++    {
++      "run": "79UCJ0K6R9C1",
++      "line": 293442,
++      "offset": 9087338264,
++      "length": 32215,
++      "sha256": "5fc41a75d46c5df634edcf739bf0969ef235fe19866f55d86f7e5b8e81026440",
++      "frame": "infection6Before"
++    },
++    {
++      "run": "79UCJ0K6R9C1",
++      "line": 293443,
++      "offset": 9087370479,
++      "length": 31129,
++      "sha256": "678a39ec0aa98641e0679a6b08166abf246cc93796aaee607e63168b63185f19",
++      "frame": "infection6After"
++    },
++    {
++      "run": "79UCJ0K6R9C1",
++      "line": 293460,
++      "offset": 9087898798,
++      "length": 31593,
++      "sha256": "9b5bf1e9221707590eca40f7b56ce54177ee3ba960153ffefacbd281e2c940f1",
++      "frame": "infection10Before"
++    },
++    {
++      "run": "79UCJ0K6R9C1",
++      "line": 293461,
++      "offset": 9087930391,
++      "length": 35465,
++      "sha256": "11572f7a6a2852476b5549db6b7356124e2ace32b4e86635f56f1545e70a243c",
++      "frame": "infection10After"
++    },
++    {
++      "run": "79UCJ0K6R9C1",
++      "line": 293464,
++      "offset": 9088032195,
++      "length": 32353,
++      "sha256": "791694f5e7daa2595a003a669669a192d45fda6cc5acd3924f8c755383ea5805",
++      "frame": "infection11Before"
++    },
++    {
++      "run": "79UCJ0K6R9C1",
++      "line": 293465,
++      "offset": 9088064548,
++      "length": 28692,
++      "sha256": "f79592dff7a2ad3abbdbef1f1aac6e40464daf0f2db677f4c2e4c41c10925c61",
++      "frame": "infection11After"
++    }
++  ],
++  "frames": {
++    "zeroBefore": {
++      "run": "K2JAGKVJAWZJ",
++      "floor": 46,
++      "turn": 1,
++      "player": {
++        "current_hp": 86,
++        "max_hp": 91,
++        "block": 16,
++        "energy": 1,
++        "stars": 0,
++        "focus": 0,
++        "powers": [],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 2,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 1
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "FLAIL_KNIGHT",
++          "name": "连枷骑士",
++          "current_hp": 108,
++          "max_hp": 108,
++          "base_max_hp": 108,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "WEAK_POWER",
++              "name": "虚弱",
++              "amount": 1,
++              "is_debuff": true
++            }
++          ],
++          "intent": "RAM_MOVE",
++          "move_id": "RAM_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "12",
++              "damage": 12,
++              "hits": 1,
++              "total_damage": 12,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 1,
++          "enemy_id": "SPECTRAL_KNIGHT",
++          "name": "幽灵骑士",
++          "current_hp": 97,
++          "max_hp": 97,
++          "base_max_hp": 97,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "WEAK_POWER",
++              "name": "虚弱",
++              "amount": 1,
++              "is_debuff": true
++            }
++          ],
++          "intent": "HEX",
++          "move_id": "HEX",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Debuff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 2,
++          "enemy_id": "MAGI_KNIGHT",
++          "name": "魔法骑士",
++          "current_hp": 89,
++          "max_hp": 89,
++          "base_max_hp": 89,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "WEAK_POWER",
++              "name": "虚弱",
++              "amount": 1,
++              "is_debuff": true
++            }
++          ],
++          "intent": "POWER_SHIELD_MOVE",
++          "move_id": "POWER_SHIELD_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "5",
++              "damage": 5,
++              "hits": 1,
++              "total_damage": 5,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "Defend",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 0,
++          "card_id": "BURST",
++          "name": "爆发+",
++          "upgraded": true,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "在这个回合，你打出的下{Skills:choose(1):一|{:diff()}}张技能牌会被额外打出一次。",
++          "resolved_rules_text": "在这个回合，你打出的下2张技能牌会被额外打出一次。",
++          "dynamic_values": [
++            {
++              "name": "Skills",
++              "base_value": 2,
++              "current_value": 2,
++              "enchanted_value": 2,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 1,
++          "card_id": "SURVIVOR",
++          "name": "生存者",
++          "upgraded": false,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
++          "resolved_rules_text": "获得8点格挡。 丢弃1张牌。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 8,
++              "current_value": 8,
++              "enchanted_value": 8,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 2,
++          "card_id": "DEFLECT",
++          "name": "偏折+",
++          "upgraded": true,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。",
++          "resolved_rules_text": "获得7点格挡。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 7,
++              "current_value": 7,
++              "enchanted_value": 7,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 3,
++          "card_id": "MIRAGE",
++          "name": "蜃景+",
++          "upgraded": true,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
++          "resolved_rules_text": "获得等量于所有敌人中毒层数总和的格挡。 （获得0点格挡）",
++          "dynamic_values": [
++            {
++              "name": "CalculatedBlock",
++              "base_value": 0,
++              "current_value": 0,
++              "enchanted_value": 0,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "CalculationBase",
++              "base_value": 0,
++              "current_value": 0,
++              "enchanted_value": 0,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "CalculationExtra",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 4,
++          "card_id": "SHADOWMELD",
++          "name": "融入暗影+",
++          "upgraded": true,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "本回合你获得的格挡值翻倍。",
++          "resolved_rules_text": "本回合你获得的格挡值翻倍。",
++          "dynamic_values": [
++            {
++              "name": "Power",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 5,
++          "card_id": "DEFEND_SILENT",
++          "name": "防御",
++          "upgraded": false,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。",
++          "resolved_rules_text": "获得5点格挡。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "zeroAfter": {
++      "run": "K2JAGKVJAWZJ",
++      "floor": 46,
++      "turn": 1,
++      "player": {
++        "current_hp": 86,
++        "max_hp": 91,
++        "block": 16,
++        "energy": 0,
++        "stars": 0,
++        "focus": 0,
++        "powers": [],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 3,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 2
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "FLAIL_KNIGHT",
++          "name": "连枷骑士",
++          "current_hp": 108,
++          "max_hp": 108,
++          "base_max_hp": 108,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "WEAK_POWER",
++              "name": "虚弱",
++              "amount": 1,
++              "is_debuff": true
++            }
++          ],
++          "intent": "RAM_MOVE",
++          "move_id": "RAM_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "12",
++              "damage": 12,
++              "hits": 1,
++              "total_damage": 12,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 1,
++          "enemy_id": "SPECTRAL_KNIGHT",
++          "name": "幽灵骑士",
++          "current_hp": 97,
++          "max_hp": 97,
++          "base_max_hp": 97,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "WEAK_POWER",
++              "name": "虚弱",
++              "amount": 1,
++              "is_debuff": true
++            }
++          ],
++          "intent": "HEX",
++          "move_id": "HEX",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Debuff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 2,
++          "enemy_id": "MAGI_KNIGHT",
++          "name": "魔法骑士",
++          "current_hp": 89,
++          "max_hp": 89,
++          "base_max_hp": 89,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "WEAK_POWER",
++              "name": "虚弱",
++              "amount": 1,
++              "is_debuff": true
++            }
++          ],
++          "intent": "POWER_SHIELD_MOVE",
++          "move_id": "POWER_SHIELD_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "5",
++              "damage": 5,
++              "hits": 1,
++              "total_damage": 5,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "Defend",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 0,
++          "card_id": "BURST",
++          "name": "爆发+",
++          "upgraded": true,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "在这个回合，你打出的下{Skills:choose(1):一|{:diff()}}张技能牌会被额外打出一次。",
++          "resolved_rules_text": "在这个回合，你打出的下2张技能牌会被额外打出一次。",
++          "dynamic_values": [
++            {
++              "name": "Skills",
++              "base_value": 2,
++              "current_value": 2,
++              "enchanted_value": 2,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "not_enough_energy",
++          "unplayable_reason_raw": "EnergyCostTooHigh",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 1,
++          "card_id": "SURVIVOR",
++          "name": "生存者",
++          "upgraded": false,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
++          "resolved_rules_text": "获得8点格挡。 丢弃1张牌。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 8,
++              "current_value": 8,
++              "enchanted_value": 8,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "not_enough_energy",
++          "unplayable_reason_raw": "EnergyCostTooHigh",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 2,
++          "card_id": "DEFLECT",
++          "name": "偏折+",
++          "upgraded": true,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。",
++          "resolved_rules_text": "获得7点格挡。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 7,
++              "current_value": 7,
++              "enchanted_value": 7,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 3,
++          "card_id": "SHADOWMELD",
++          "name": "融入暗影+",
++          "upgraded": true,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "本回合你获得的格挡值翻倍。",
++          "resolved_rules_text": "本回合你获得的格挡值翻倍。",
++          "dynamic_values": [
++            {
++              "name": "Power",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 4,
++          "card_id": "DEFEND_SILENT",
++          "name": "防御",
++          "upgraded": false,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。",
++          "resolved_rules_text": "获得5点格挡。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "not_enough_energy",
++          "unplayable_reason_raw": "EnergyCostTooHigh",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "plainBefore": {
++      "run": "K2JAGKVJAWZJ",
++      "floor": 46,
++      "turn": 6,
++      "player": {
++        "current_hp": 45,
++        "max_hp": 91,
++        "block": 10,
++        "energy": 1,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "HEX_POWER",
++            "name": "恶咒",
++            "amount": 2,
++            "is_debuff": true
++          },
++          {
++            "index": 1,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 2,
++            "power_id": "DAMPEN_POWER",
++            "name": "抑制",
++            "amount": 1,
++            "is_debuff": true
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 2,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 1
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "FLAIL_KNIGHT",
++          "name": "连枷骑士",
++          "current_hp": 61,
++          "max_hp": 108,
++          "base_max_hp": 108,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 3,
++              "is_debuff": false
++            }
++          ],
++          "intent": "FLAIL_MOVE",
++          "move_id": "FLAIL_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "13[font_size=18]×2[/font_size]",
++              "damage": 13,
++              "hits": 2,
++              "total_damage": 26,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 1,
++          "enemy_id": "SPECTRAL_KNIGHT",
++          "name": "幽灵骑士",
++          "current_hp": 87,
++          "max_hp": 97,
++          "base_max_hp": 97,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "WEAK_POWER",
++              "name": "虚弱",
++              "amount": 1,
++              "is_debuff": true
++            }
++          ],
++          "intent": "SOUL_SLASH",
++          "move_id": "SOUL_SLASH",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "12",
++              "damage": 12,
++              "hits": 1,
++              "total_damage": 12,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 2,
++          "enemy_id": "MAGI_KNIGHT",
++          "name": "魔法骑士",
++          "current_hp": 44,
++          "max_hp": 89,
++          "base_max_hp": 89,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 8,
++              "is_debuff": true
++            }
++          ],
++          "intent": "RAM_MOVE",
++          "move_id": "RAM_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "11",
++              "damage": 11,
++              "hits": 1,
++              "total_damage": 11,
++              "status_card_count": null
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 0,
++          "card_id": "POISONED_STAB",
++          "name": "带毒刺击",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0,
++            1,
++            2
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
++          "resolved_rules_text": "虚无。 造成6点伤害。 给予3层中毒。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "PoisonPower",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 1,
++          "card_id": "MIRAGE",
++          "name": "蜃景",
++          "upgraded": false,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
++          "resolved_rules_text": "虚无。 获得等量于所有敌人中毒层数总和的格挡。 （获得10点格挡） 消耗。",
++          "dynamic_values": [
++            {
++              "name": "CalculatedBlock",
++              "base_value": 0,
++              "current_value": 10,
++              "enchanted_value": 0,
++              "is_modified": true,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "CalculationBase",
++              "base_value": 0,
++              "current_value": 0,
++              "enchanted_value": 0,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "CalculationExtra",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 2,
++          "card_id": "SHADOWMELD",
++          "name": "融入暗影",
++          "upgraded": false,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "本回合你获得的格挡值翻倍。",
++          "resolved_rules_text": "虚无。 本回合你获得的格挡值翻倍。",
++          "dynamic_values": [
++            {
++              "name": "Power",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "plainAfter": {
++      "run": "K2JAGKVJAWZJ",
++      "floor": 46,
++      "turn": 6,
++      "player": {
++        "current_hp": 45,
++        "max_hp": 91,
++        "block": 20,
++        "energy": 0,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "HEX_POWER",
++            "name": "恶咒",
++            "amount": 2,
++            "is_debuff": true
++          },
++          {
++            "index": 1,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 2,
++            "power_id": "DAMPEN_POWER",
++            "name": "抑制",
++            "amount": 1,
++            "is_debuff": true
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 3,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 2
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "FLAIL_KNIGHT",
++          "name": "连枷骑士",
++          "current_hp": 61,
++          "max_hp": 108,
++          "base_max_hp": 108,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 3,
++              "is_debuff": false
++            }
++          ],
++          "intent": "FLAIL_MOVE",
++          "move_id": "FLAIL_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "13[font_size=18]×2[/font_size]",
++              "damage": 13,
++              "hits": 2,
++              "total_damage": 26,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 1,
++          "enemy_id": "SPECTRAL_KNIGHT",
++          "name": "幽灵骑士",
++          "current_hp": 87,
++          "max_hp": 97,
++          "base_max_hp": 97,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "WEAK_POWER",
++              "name": "虚弱",
++              "amount": 1,
++              "is_debuff": true
++            }
++          ],
++          "intent": "SOUL_SLASH",
++          "move_id": "SOUL_SLASH",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "12",
++              "damage": 12,
++              "hits": 1,
++              "total_damage": 12,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 2,
++          "enemy_id": "MAGI_KNIGHT",
++          "name": "魔法骑士",
++          "current_hp": 44,
++          "max_hp": 89,
++          "base_max_hp": 89,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 8,
++              "is_debuff": true
++            }
++          ],
++          "intent": "RAM_MOVE",
++          "move_id": "RAM_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "11",
++              "damage": 11,
++              "hits": 1,
++              "total_damage": 11,
++              "status_card_count": null
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 0,
++          "card_id": "POISONED_STAB",
++          "name": "带毒刺击",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0,
++            1,
++            2
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
++          "resolved_rules_text": "虚无。 造成6点伤害。 给予3层中毒。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "PoisonPower",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "not_enough_energy",
++          "unplayable_reason_raw": "EnergyCostTooHigh",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 1,
++          "card_id": "SHADOWMELD",
++          "name": "融入暗影",
++          "upgraded": false,
++          "target_type": "Self",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "本回合你获得的格挡值翻倍。",
++          "resolved_rules_text": "虚无。 本回合你获得的格挡值翻倍。",
++          "dynamic_values": [
++            {
++              "name": "Power",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "not_enough_energy",
++          "unplayable_reason_raw": "EnergyCostTooHigh",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "infection6Before": {
++      "run": "79UCJ0K6R9C1",
++      "floor": 14,
++      "turn": 6,
++      "player": {
++        "current_hp": 51,
++        "max_hp": 70,
++        "block": 0,
++        "energy": 0,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "FREE_SKILL_POWER",
++            "name": "免费技能",
++            "amount": 1,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 3,
++        "attacks_played_this_turn": 2,
++        "skills_played_this_turn": 1
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "PHROG_PARASITE",
++          "name": "异蛙寄生虫",
++          "current_hp": 16,
++          "max_hp": 66,
++          "base_max_hp": 66,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "INFESTED_POWER",
++              "name": "寄生物",
++              "amount": 4,
++              "is_debuff": false
++            }
++          ],
++          "intent": "LASH_MOVE",
++          "move_id": "LASH_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "5[font_size=18]×4[/font_size]",
++              "damage": 5,
++              "hits": 4,
++              "total_damage": 20,
++              "status_card_count": null
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 0,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成6点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "not_enough_energy",
++          "unplayable_reason_raw": "EnergyCostTooHigh",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 1,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 2,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 3,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 4,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "infection6After": {
++      "run": "79UCJ0K6R9C1",
++      "floor": 14,
++      "turn": 7,
++      "player": {
++        "current_hp": 19,
++        "max_hp": 70,
++        "block": 0,
++        "energy": 3,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "FREE_SKILL_POWER",
++            "name": "免费技能",
++            "amount": 1,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 0,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 0
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "PHROG_PARASITE",
++          "name": "异蛙寄生虫",
++          "current_hp": 16,
++          "max_hp": 66,
++          "base_max_hp": 66,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "INFESTED_POWER",
++              "name": "寄生物",
++              "amount": 4,
++              "is_debuff": false
++            }
++          ],
++          "intent": "INFECT_MOVE",
++          "move_id": "INFECT_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "StatusCard",
++              "label": "3",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 3
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 0,
++          "card_id": "DEADLY_POISON",
++          "name": "致命毒药",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "给予{PoisonPower:diff()}层中毒。",
++          "resolved_rules_text": "给予5层中毒。",
++          "dynamic_values": [
++            {
++              "name": "PoisonPower",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 1,
++          "card_id": "DEADLY_POISON",
++          "name": "致命毒药",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "给予{PoisonPower:diff()}层中毒。",
++          "resolved_rules_text": "给予5层中毒。",
++          "dynamic_values": [
++            {
++              "name": "PoisonPower",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 2,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成6点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 3,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 4,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成6点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "infection10Before": {
++      "run": "79UCJ0K6R9C1",
++      "floor": 14,
++      "turn": 10,
++      "player": {
++        "current_hp": 13,
++        "max_hp": 70,
++        "block": 13,
++        "energy": 0,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "TORIC_TOUGHNESS_POWER",
++            "name": "坚韧之环",
++            "amount": 2,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 3,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 3
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 19,
++          "max_hp": 19,
++          "base_max_hp": 19,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 5,
++              "is_debuff": true
++            }
++          ],
++          "intent": "WRIGGLE_MOVE",
++          "move_id": "WRIGGLE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "StatusCard",
++              "label": "1",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 1
++            }
++          ]
++        },
++        {
++          "index": 1,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 21,
++          "max_hp": 21,
++          "base_max_hp": 21,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "NASTY_BITE_MOVE",
++          "move_id": "NASTY_BITE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "9",
++              "damage": 9,
++              "hits": 1,
++              "total_damage": 9,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 2,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 3,
++          "max_hp": 18,
++          "base_max_hp": 18,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [],
++          "intent": "WRIGGLE_MOVE",
++          "move_id": "WRIGGLE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "StatusCard",
++              "label": "1",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 1
++            }
++          ]
++        },
++        {
++          "index": 3,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 14,
++          "max_hp": 20,
++          "base_max_hp": 20,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "NASTY_BITE_MOVE",
++          "move_id": "NASTY_BITE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "9",
++              "damage": 9,
++              "hits": 1,
++              "total_damage": 9,
++              "status_card_count": null
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 0,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 1,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "infection10After": {
++      "run": "79UCJ0K6R9C1",
++      "floor": 14,
++      "turn": 11,
++      "player": {
++        "current_hp": 2,
++        "max_hp": 70,
++        "block": 7,
++        "energy": 3,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "TORIC_TOUGHNESS_POWER",
++            "name": "坚韧之环",
++            "amount": 1,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 0,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 0
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 14,
++          "max_hp": 19,
++          "base_max_hp": 19,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 4,
++              "is_debuff": true
++            },
++            {
++              "index": 1,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "NASTY_BITE_MOVE",
++          "move_id": "NASTY_BITE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "9",
++              "damage": 9,
++              "hits": 1,
++              "total_damage": 9,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 1,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 21,
++          "max_hp": 21,
++          "base_max_hp": 21,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "WRIGGLE_MOVE",
++          "move_id": "WRIGGLE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "StatusCard",
++              "label": "1",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 1
++            }
++          ]
++        },
++        {
++          "index": 2,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 3,
++          "max_hp": 18,
++          "base_max_hp": 18,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "NASTY_BITE_MOVE",
++          "move_id": "NASTY_BITE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "9",
++              "damage": 9,
++              "hits": 1,
++              "total_damage": 9,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 3,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 14,
++          "max_hp": 20,
++          "base_max_hp": 20,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "WRIGGLE_MOVE",
++          "move_id": "WRIGGLE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "StatusCard",
++              "label": "1",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 1
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 0,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0,
++            1,
++            2,
++            3
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成6点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 1,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 2,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0,
++            1,
++            2,
++            3
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成6点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 3,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 4,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "infection11Before": {
++      "run": "79UCJ0K6R9C1",
++      "floor": 14,
++      "turn": 11,
++      "player": {
++        "current_hp": 2,
++        "max_hp": 70,
++        "block": 7,
++        "energy": 1,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "TORIC_TOUGHNESS_POWER",
++            "name": "坚韧之环",
++            "amount": 1,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 2,
++        "attacks_played_this_turn": 2,
++        "skills_played_this_turn": 0
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 8,
++          "max_hp": 19,
++          "base_max_hp": 19,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 10,
++              "is_debuff": true
++            },
++            {
++              "index": 1,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "NASTY_BITE_MOVE",
++          "move_id": "NASTY_BITE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "9",
++              "damage": 9,
++              "hits": 1,
++              "total_damage": 9,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 1,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 21,
++          "max_hp": 21,
++          "base_max_hp": 21,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "WRIGGLE_MOVE",
++          "move_id": "WRIGGLE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "StatusCard",
++              "label": "1",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 1
++            }
++          ]
++        },
++        {
++          "index": 2,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 14,
++          "max_hp": 20,
++          "base_max_hp": 20,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "WRIGGLE_MOVE",
++          "move_id": "WRIGGLE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "StatusCard",
++              "label": "1",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 1
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 0,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 1,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 2,
++          "card_id": "INFECTION",
++          "name": "感染",
++          "upgraded": false,
++          "target_type": "None",
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
++          "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": false,
++          "can_play_result": false,
++          "unplayable_reason": "unplayable",
++          "unplayable_reason_raw": "HasUnplayableKeyword",
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "infection11After": {
++      "run": "79UCJ0K6R9C1",
++      "floor": 14,
++      "turn": 11,
++      "player": {
++        "current_hp": 0,
++        "max_hp": 70,
++        "block": 0,
++        "energy": 1,
++        "stars": 0,
++        "focus": 0,
++        "powers": [],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 2,
++        "attacks_played_this_turn": 2,
++        "skills_played_this_turn": 0
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 8,
++          "max_hp": 19,
++          "base_max_hp": 19,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 10,
++              "is_debuff": true
++            },
++            {
++              "index": 1,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "NASTY_BITE_MOVE",
++          "move_id": "NASTY_BITE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "9",
++              "damage": 9,
++              "hits": 1,
++              "total_damage": 9,
++              "status_card_count": null
++            }
++          ]
++        },
++        {
++          "index": 1,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 21,
++          "max_hp": 21,
++          "base_max_hp": 21,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "WRIGGLE_MOVE",
++          "move_id": "WRIGGLE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "StatusCard",
++              "label": "1",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 1
++            }
++          ]
++        },
++        {
++          "index": 2,
++          "enemy_id": "WRIGGLER",
++          "name": "扭动虫",
++          "current_hp": 14,
++          "max_hp": 20,
++          "base_max_hp": 20,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "WRIGGLE_MOVE",
++          "move_id": "WRIGGLE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "StatusCard",
++              "label": "1",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 1
++            }
++          ]
++        }
++      ],
++      "hand": []
++    }
++  }
++}
+diff --git a/agent/tests/silent-upgraded-mirage-zero.test.ts b/agent/tests/silent-upgraded-mirage-zero.test.ts
+new file mode 100644
+index 000000000..6898bfacd
+--- /dev/null
++++ b/agent/tests/silent-upgraded-mirage-zero.test.ts
+@@ -0,0 +1,140 @@
++/** K2JAGKVJAWZJ F46 T1/T6; 79UCJ0K6R9C1 F14 T6/T10/T11; silent-0010/0286. */
++import { resolve } from "node:path";
++import { expect, it, vi } from "vitest";
++import evidence from "./silent-upgraded-mirage-zero-evidence.json";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { modelHandCard } from "../src/reflex/card-model.js";
++import { enemySims } from "../src/reflex/combat-plan.js";
++import { replaySteps, type SolverInput } from "../src/reflex/turn-solver.js";
++import { card } from "./boss-sim-fixture.js";
++
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed zero-poison evidence"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++
++const knowledge = makeKnowledge({ cards: [
++  { id: "MIRAGE", type: "Skill" }, { id: "INFECTION", type: "Status" },
++] }, "cache");
++type Frame = keyof typeof evidence.frames;
++const rawMirage = evidence.frames.zeroBefore.hand.find((c) => c.card_id === "MIRAGE")!;
++
++function inputAt(key: Frame = "zeroBefore", character = "silent", ascension = 10): SolverInput {
++  const frame = evidence.frames[key];
++  const player = frame.player;
++  return {
++    hand: frame.hand.map((c) => modelHandCard(c, c.index, knowledge, character, ascension)),
++    player: { hp: player.current_hp, maxHp: player.max_hp, block: player.block, energy: player.energy,
++      weak: false, vulnerable: false, intangible: false,
++      dexterityNow: player.powers.find((p) => p.power_id === "DEXTERITY_POWER")?.amount ?? 0 },
++    enemies: enemySims({ enemies: frame.enemies }, ascension, character),
++    fightKind: "monster", turn: frame.turn,
++  };
++}
++const step = (input: SolverInput, id = "MIRAGE") => {
++  const c = input.hand.find((c) => c.cardId === id)!;
++  return { cardIndex: c.index, cardId: c.cardId, name: c.name, upgraded: c.upgraded,
++    target: c.target === "single" ? 0 : null };
++};
++function prior(input: SolverInput): SolverInput {
++  return { ...input, hand: input.hand.map(({ observedZeroPoisonMirage: _flag, ...c }) => c) };
++}
++
++it("removes the invented lasting bonus only when the observed upgraded play still has zero poison", () => {
++  const input = inputAt();
++  const before = JSON.stringify(input);
++  const chosen = [step(input)];
++  const result = replaySteps(input, chosen)!.outcome;
++  const old = replaySteps(prior(input), chosen)!.outcome;
++  expect(old.lasting).toBeGreaterThan(0);
++  expect(old.unknownCards).toContain("蜃景+");
++  expect(result.lasting).toBe(0);
++  expect(result.unknownCards).not.toContain("蜃景+");
++  expect(result.blockGained).toBe(0);
++  expect(result.damageDealt).toBe(0);
++  expect(evidence.frames.zeroAfter.player.block).toBe(evidence.frames.zeroBefore.player.block);
++  expect(evidence.frames.zeroAfter.player.energy).toBe(evidence.frames.zeroBefore.player.energy - 1);
++  expect(JSON.stringify(input)).toBe(before);
++  input.player.energy = 2;
++  expect(replaySteps(input, [...chosen, ...chosen])).toBeNull();
++});
++
++it("rechecks poison after earlier cards instead of declaring the whole upgraded template known", () => {
++  const input = inputAt();
++  input.player.energy = 2;
++  input.hand.push(card(99, "FIXED_POISON", { type: "Skill", poison: 5 }));
++  const before = [step(input), step(input, "FIXED_POISON")];
++  const after = [...before].reverse();
++  expect(replaySteps(input, before)!.outcome.lasting).toBe(0);
++  expect(replaySteps(input, after)).toEqual(replaySteps(prior(input), after));
++  expect(replaySteps(input, after)!.outcome.unknownCards).toContain("蜃景+");
++});
++
++it.each(["poison", "dexterity", "newDexterity", "frail", "unmovable", "shadowmeld", "replay", "firstReplay", "burst", "free"])(
++  "preserves the prior model for the unobserved %s combination", (kind) => {
++    const input = inputAt();
++    const mirage = input.hand.find((c) => c.cardId === "MIRAGE")!;
++    if (kind === "poison") input.enemies[0]!.poison = 8;
++    if (kind === "dexterity") input.player.dexterityNow = 2;
++    if (kind === "frail") input.player.frail = true;
++    if (kind === "unmovable") input.player.unmovableArmed = true;
++    if (kind === "shadowmeld") input.player.shadowmeldActive = true;
++    if (kind === "replay") mirage.replay = 1;
++    if (kind === "firstReplay") input.player.firstCardReplay = true;
++    if (kind === "burst") input.player.duplicateSkills = 1;
++    if (kind === "free") mirage.cost = 0;
++    const sequence = [step(input)];
++    if (kind === "newDexterity") {
++      input.player.energy = 2;
++      input.hand.push(card(99, "FIXED_DEXTERITY", { type: "Power", target: "self", dexterity: 2 }));
++      sequence.unshift(step(input, "FIXED_DEXTERITY"));
++    }
++    expect(replaySteps(input, sequence)).toEqual(replaySteps(prior(input), sequence));
++  });
++
++it("retains the ordinary Mirage's observed eight-poison plus two-Dexterity ten Block", () => {
++  const input = inputAt("plainBefore");
++  const result = replaySteps(input, [step(input)])!.outcome;
++  expect(result.blockGained).toBe(10);
++  expect(evidence.frames.plainAfter.player.block - evidence.frames.plainBefore.player.block).toBe(10);
++});
++
++it.each([["ironclad", 10], ["silent", 9], ["silent", 11], ["", 10]] as const)(
++  "keeps %s A%i unchanged", (character, ascension) => {
++    const input = inputAt("zeroBefore", character, ascension);
++    expect(input.hand.find((c) => c.cardId === "MIRAGE")!.observedZeroPoisonMirage).toBeUndefined();
++    expect(replaySteps(input, [step(input)])).toEqual(replaySteps(prior(input), [step(input)]));
++  });
++
++it("rejects altered templates and unexplained dynamic values", () => {
++  for (const patch of [
++    { upgraded: false }, { energy_cost: 0 }, { enchantment: { id: "UNOBSERVED" } },
++    { resolved_rules_text: "获得1点格挡。" },
++    { dynamic_values: rawMirage.dynamic_values.map((v) => v.name === "CalculationExtra" ? { ...v, current_value: 2 } : v) },
++  ]) {
++    expect(modelHandCard({ ...rawMirage, ...patch }, 0, knowledge, "silent", 10).observedZeroPoisonMirage).toBeUndefined();
++  }
++});
++
++it.each([["infection6Before", "infection6After", 32], ["infection10Before", "infection10After", 11]] as const)(
++  "keeps the already-correct held Infection loss in %s", (before, after, loss) => {
++    const input = inputAt(before);
++    const result = replaySteps(input, [])!.outcome;
++    expect(result.hpLoss).toBe(loss);
++    expect(evidence.frames[before].player.current_hp - evidence.frames[after].player.current_hp).toBe(loss);
++  });
++
++it("keeps lethal held Infection ahead of poison, without claiming an unplayed winning line", () => {
++  const input = inputAt("infection11Before");
++  const result = replaySteps(input, [])!.outcome;
++  expect(result).toMatchObject({ dies: true, diesOwnTurn: true, winsFight: false, hpLoss: 2, damageDealt: 0 });
++  expect(result.enemyHpAfter[0]).toMatchObject({ hp: 8, poison: 10 });
++  expect(evidence.frames.infection11After.enemies[0]!.current_hp).toBe(8);
++});

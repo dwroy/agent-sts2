@@ -1,0 +1,89 @@
+{
+  "sources": [
+    "5e80e683daa08ae2569733b3b541cb523d7fe861",
+    "e7552663cdcbfad33a1e348bdd13842fce7e3c41"
+  ],
+  "source_paths": {
+    "5e80e683daa08ae2569733b3b541cb523d7fe861": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout-live.ts",
+      "agent/tests/silent-fasten-upgrade-evidence.json",
+      "agent/tests/silent-fasten-upgrade.test.ts"
+    ],
+    "e7552663cdcbfad33a1e348bdd13842fce7e3c41": [
+      "knowledge/characters/silent/experience.json"
+    ]
+  },
+  "source_blobs": {
+    "agent/src/reflex/card-model.ts": "972fb2beef43725786ca3b8058ef1ef73e15d0ff",
+    "agent/src/reflex/combat-plan.ts": "fd794f13b20fb1d2d7a71ffa12b5e9ec8b508c1f",
+    "agent/src/reflex/rollout-live.ts": "80f63e71bd1075d03ce0f75edcdbe16f37ca54db",
+    "agent/tests/silent-fasten-upgrade-evidence.json": "5c17bf53082ff3c2d2b450310b75d32e2ea77a60",
+    "agent/tests/silent-fasten-upgrade.test.ts": "1f6561a78b26f4fc180cd17d403fdc4d85633750",
+    "knowledge/characters/silent/experience.json": "7f553c696f5aa48852da7ccd6e49d01a71d5732e"
+  },
+  "source_tests": [
+    {
+      "exit": 0,
+      "files": 241,
+      "cases": 2531,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-214302-strategy-proposal/source-sandbox.log"
+    },
+    {
+      "exit": 0,
+      "files": 239,
+      "cases": 2511,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-214301-experience-update/test-source.log"
+    }
+  ],
+  "one_nonblocking_lock_attempt": true,
+  "state": "published",
+  "timestamp": "2026-10-07 23:10",
+  "actual_code": "26586d3d7bc61444970b6efad683d023ba92a356",
+  "publication": "4f5ca8cb07fd023433d59b52a34cde0144889e61",
+  "publication_tree": "a549515fd0ac218212cba4d9c86ec3d428c8352d",
+  "versions": [
+    "S1.fasten-upgrade1",
+    "S1.exp81"
+  ],
+  "version_entries": [
+    {
+      "name": "S1.fasten-upgrade1",
+      "family": "Silent",
+      "commit": "26586d3d7bc61444970b6efad683d023ba92a356",
+      "source": "decision-log 2026-10-07 23:10（学习者源5e80e683daa08ae2569733b3b541cb523d7fe861受阻兜底，静默A10已观察FASTEN升级6点Defend专属持续格挡，传实际进阶给手牌/各堆/牌组模型；其他角色、未观察升级和普通4保持，不声称完整神化传播。源原沙箱tsc0/vitest0/241文件2531例，合后原入口tsc0/vitest0/241文件2531例/1worker；全部并行代码/刷新保留，原批完整外部独立续验。）"
+    },
+    {
+      "name": "S1.exp81",
+      "family": "Silent",
+      "commit": "26586d3d7bc61444970b6efad683d023ba92a356",
+      "source": "decision-log 2026-10-07 23:10（学习者源e7552663cdcbfad33a1e348bdd13842fce7e3c41受阻兜底，静默经验第81次：2026-10-07.26→.27，增1改10退0、155 active；只发布本角色原experience blob，三个代码提案仍独立策略链。源原沙箱tsc0/vitest0/239文件2511例，合后原入口tsc0/vitest0/241文件2531例/1worker；全部并行代码/刷新保留，原批完整外部独立续验。）"
+    }
+  ],
+  "main_code_sync": "48ece2ea7e9b7ca87f800bf2cf66e2a61c33ae56",
+  "main_record": "57b142a7c1fe0d01c7e86b3202c95c7370e97f18",
+  "live_before": "b8ca931139bf94138132aeffe423e34892b7b5fd",
+  "combined": "648ba8920dbcb7d81d2ef08f0e20fbcd390b1b02",
+  "preserved_refresh": "49002fe34cd74feff7427357c0d88b97edd1eea5",
+  "refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "926c0700ac0f96ef4f50991e9d35b6a2958cffec342a16a9f81cc41f7c3ae8b8",
+    "knowledge/characters/silent/fight-value-gates.json": "8b59a1dd775b88a29fd380c01bd98de5da26bff9b50ffa5a48383fe3aefb6e8e",
+    "knowledge/characters/silent/fight-value.json": "0b20db5254aebfa5dd79cd08601b46e3dd283b79dd4daf3e601d98184fac0fb0",
+    "knowledge/characters/silent/monster-records.json": "fedf0f8949b6ddb0da98c384fb30db7acb4ae4cc44806e1c83f3083a99fc47bd",
+    "knowledge/characters/silent/outcome-stats.json": "5893ae1fe26a8169bb2b33b24d294abca5505dd09def16420e195138af10dc84",
+    "knowledge/characters/silent/room-costs.json": "96d1e59b8f940c563a861ac6025a7021ced09fcaee747fdf675afac3a3e2da82",
+    "knowledge/common/card-upgrades.json": "282c0a88c1d100d31bddc9a4e8e1bb5bcfe9b507a58a2153d8a9c0f67bfab9ba",
+    "knowledge/common/monster-db.json": "5e699447876359c8008b22c9fd294ae5e5fc7b7ac7add4d474e81504f9d74bc3",
+    "knowledge/common/move-model.json": "a05ac5fb86e2c85acb9d79b8cea35a5c3794bce914a76181781c1db3af4576fc",
+    "notes/fight-value-backtest-silent.md": "ab03e01f27813828366de21fc10bf102be72bcb5d2eea81867c60ee2e350cda5"
+  },
+  "post_merge_sandbox": {
+    "exit": 0,
+    "files": 241,
+    "cases": 2531,
+    "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261007-2242-publication/post-merge-sandbox.log"
+  },
+  "record_line": "- 2026-10-07 23:10 运维codex22:42兜底实际发布：学习者源5e80e683daa08ae2569733b3b541cb523d7fe861及e7552663cdcbfad33a1e348bdd13842fce7e3c41成为live 26586d3d7bc61444970b6efad683d023ba92a356真实祖先，只合5个勒紧源代码/固定夹具和1个原经验blob，唯一S1.fasten-upgrade1/S1.exp81；静默A10已观察升级6点模型及经验.27/增1改10退0/155 active，其他角色/普通勒紧与并行phase代码等保持。源原沙箱241文件2531例及239文件2511例tsc/vitest0，实际组合合后原入口241文件2531例tsc/vitest0；刷新49002fe34cd74feff7427357c0d88b97edd1eea5原字节保留，不碰忙codex-dev/exp树，原out/err/失败/冲突不改。仅0252代码子项及13所属经验数据CLI随后shipped，0143父项只关联、不把神化/复合模型、预算或SL提案称完成；3个经验代码提案和8个其他waiting沿独立链。原两批learner-recheck随后完整外部续验，不冒报完整0。WQZ新0256普通队列/论文切点保持，不停对局/不运行play/env不改；回执paper/materials/silent/20261007-2242-publication。\n",
+  "full_external": "Original-batch rechecks pending"
+}

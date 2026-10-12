@@ -1,0 +1,18 @@
+# 队列核对
+
+基线：8216599b032714a88944eec2bb6a0319190a07b0。只读 live 祖先切点：3a20d222afff91ddacef24a94b24b3395bcd5451。
+开工队列 SHA256：84f59f4ed00489424c15cc22b31da7f8ec5a4f3cc36018569788e137b8de08f7，与前批完整审计原件一致。收尾时追加ops-stall-recovery-test-subprocess-timeout，最终SHA256为9d6fa7b6115f58898dc283813cac22f0a42a1cafa13666cfc303c7197c9a3830；原快照、增量和新条目回执均保存。
+
+历史159条来源记录均重新核为上述live祖先，149条也是本基线祖先；另外10条保留原源身份，main的等价集成沿原回执。全部映射见queue-commits.json，继承审计原件及SHA见prior-audit-reference.json。
+
+当前24个关联路径去重后23个与前次审计字节相同；唯一变化的ops/codex-ops-learner.sh只新增roy-20261012-concrete-core-decklists白名单，相关research注册与29项固定Python测试已在源e28eeda814df8f6443a3b6f44f0fd3ab209732e9/等价main集成中交付。源差异与当前路径指纹均保存，不将该入口当牌表研究已完成。
+
+本批直接核对：受阻零产出经验仍保留failed/retry但不误派补链；普通策略批回写仍验证角色、来源指纹、报告和实际live源码并保留租约；compute-memo父线程与真实worker使用固定知识；multi-character缺表/已有表场景使用固定隔离数据；rollout最佳线路使用固定模型/时钟且预算不变；额度恢复仍需窗口推进和两次稳定采样；升阶只采实际ascension；会话前恢复限定无输出/纯ENOENT与原租约。原诊断源码仍拒绝伪造接续资源，队列原证据缺触发样本，沿既有提案处理。
+
+本批没有发现可新增实现的纯bug，不撤销已上线修复制造红绿结果。既有策略及独立功能沿原队列，未重复登记提案或派下级agent。没有更改队列、学习账本、版本、上线记录或live，也没有源码提交；所有新文件仅在指定scratch。
+
+收尾新增条目：当前ops-stall-recovery.test.ts确有spawnSync的5000ms期限。原回执记录宿主两次status=null，同树单worker三项全过，未证明负载根因；回执next_owner明确为current batch之后的existing ordinary fix queue，队列点名当前140741活批不抢占。本批仅核源码和回执，按该明确归属交下一原槽，不放宽断言、生产轮询或篡改失败历史。它不计入本批八文件验证结果。
+
+测试用原test-sandbox.sh带七文件过滤，SANDBOX_WORKERS=1、nice、指定TMPDIR与离线npm。tsc0，threads七文件60例，forks八文件71例，去重八文件71例；后段重复是入口原行为，不是失败重跑。测试使用固定夹具，不连接LLM/网络。未运行完整套件，未改代码所以不存在提交前完整自测或撤码验证。本批首次README读取前沙箱构建遇到并行消失目录ENOENT；同一只读命令重试成功，未放宽权限。
+
+HEAD仍等于base且工作树干净。严格空批验收返回null；只读比较发现本基线/live有165处既有源码路径差异，保存在no-change-proof.json。这个事实不伪装成已合入，不修改验收门槛或调度状态。

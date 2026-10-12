@@ -46,7 +46,7 @@
 | `your_run_plan` | 大脑自己写的整局计划 | 大脑 |
 | `outcome_stats_basis` | 下面各 `*outcome_stats` 字段的口径、数据文件、生成时间、进阶、总局数、各幕基线通过率（A9 起另有 A8 的基线） | 日志库（outcome-stats.json） |
 
-`*outcome_stats` 的格式（knowledge/outcome-facts.ts），全部原样来自 outcome-stats.json，口径未改。2026-10-04 起（Dai：按进阶分开统计）outcome-stats.json 每个进阶一张表（`by_ascension`：A8、A9，以及有了局的更高进阶；每张表只数这个进阶的局，基线也是这个进阶的），本局读自己进阶的表（knowledge/outcome-tables.ts）：
+`*outcome_stats` 的格式（knowledge/outcome-facts.ts），全部原样来自 outcome-stats.json，口径未改。2026-10-04 起（Roy：按进阶分开统计）outcome-stats.json 每个进阶一张表（`by_ascension`：A8、A9，以及有了局的更高进阶；每张表只数这个进阶的局，基线也是这个进阶的），本局读自己进阶的表（knowledge/outcome-tables.ts）：
 - A8、A8 以下、不知道进阶：读 A8 的表，文字和以前逐字相同（以前的单表文件也照旧读）；
 - A9 起：读本局进阶的表；某一行不足 5 局、而 A8 的同一行够 5 局时（卡牌按「拿了 / 给了没拿」一对看，A8 在 A9 不足的那一边够 5 局），后面括号里另附 A8 的那一行：`（A9 不足5局，另附 A8：…）`，不合并成一个数；A8 也不足 5 局的不附（起始牌从不出现在卡牌奖励里，「给了没拿」各进阶都是空的）；basis 里写 A9 的基线和 A8 的基线；
 - 更高进阶同理，附最近的、够 5 局的低进阶（到 A8 为止）；

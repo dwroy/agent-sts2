@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-12 09:29:53 CST",
+  "command": "nice -n 19 python3 ops/paper_dataset.py --no-raw",
+  "invocations": 1,
+  "exit": 0,
+  "generated_at": "2026-10-12T01:21:09.799Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 1011935852,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 301492,
+    "states.jsonl": 11557301902,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 7130224,
+    "brain.jsonl": 424553601,
+    "sl-attempts.jsonl": 32266864,
+    "run-config.jsonl": 1405669
+  },
+  "runs": 725,
+  "decision_records": 357293,
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": []
+    },
+    "row_counts": {
+      "runs.csv": 725,
+      "decisions_by_label.csv": 24149,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 4971
+    }
+  },
+  "key_scan": "CLEAN",
+  "C7_rows": 1,
+  "C7_decisions": 802,
+  "C7_actual_ascension": 10,
+  "original_report_and_runs_not_reexecuted": true,
+  "history_retained_on_disk": [
+    "paper/data/history/20261012T012354664506Z",
+    "paper/data/history/20261012T012109800799Z"
+  ],
+  "history_manifest": "paper/materials/20261012-0917-ops/dataset-new-history-manifest.json"
+}

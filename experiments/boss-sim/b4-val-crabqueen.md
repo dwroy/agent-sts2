@@ -1,6 +1,6 @@
 # B4: all four bosses' fixes, validation (branch v4-sim-crabqueen; not in v4-sim)
 
-Dai, 2026-10-01: the Kaiser Crab's and the Queen's fixes wait on branch v4-sim-crabqueen; v4-sim has the Insatiable's
+Roy, 2026-10-01: the Kaiser Crab's and the Queen's fixes wait on branch v4-sim-crabqueen; v4-sim has the Insatiable's
 and the Knowledge Demon's only (b4-val.md). This is the run with all four (raw/b4-final), kept for when they come back.
 
 docs/boss-sim.md §13. Before = the B2/B3 simulator (experiments/boss-sim/raw/b4-base, the same code as B2's c0ff1db

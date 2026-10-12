@@ -11,7 +11,7 @@
   - 87LCSDR5P3DL：新增无；更新 silent-0021、silent-0005、silent-0020、silent-0006、silent-0011（确认老错重犯无，均为support）。
   - TKXQ6L4N9A6U：新增 silent-0213、silent-0214；更新 silent-0057、silent-0019、silent-0005、silent-0006、silent-0046、silent-0011、silent-0059（确认老错重犯无，均为support）。
   - `ledger.py check` 退出码：0。
-- 需要 Dai 定的事：无。
+- 需要 Roy 定的事：无。
 
 ```json
 {"task":"postmortem","appended":["87LCSDR5P3DL","TKXQ6L4N9A6U"],"skipped":[],"bugs":[{"run":"TKXQ6L4N9A6U","where":"agent/src/reflex/turn-solver.ts:2939","what":"毒杀胜利分支把持牌毒素伤害置零，误判斩杀结束回合而先被毒素杀死","new":true}],"ledger":{"added":["silent-0213","silent-0214"],"updated":["silent-0021","silent-0005","silent-0020","silent-0006","silent-0011","silent-0057","silent-0019","silent-0046","silent-0059"],"repeats":[],"check":0}}

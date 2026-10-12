@@ -1,0 +1,138 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-111301/agent
+
+ ❯ tests/silent-apotheosis-malaise.test.ts (8 tests | 5 failed) 63ms
+   × matches the observed later draw and F43 T2 X=2 cast without changing the plain deck 13ms
+   × propagates the bonus through the real same-line consumer using energy left after Apotheosis 14ms
+   × replays the actual full T2 sequence from existing Weak=1, retaining damage and HP facts 4ms
+   × upgrades an identified later draw before its X-cost dispatch 3ms
+   × carries the text-only upgrade through future rollout piles 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-apotheosis-malaise.test.ts > matches the observed later draw and F43 T2 X=2 cast without changing the plain deck
+AssertionError: expected { index: 1, key: 'c1', …(36) } to match object { known: true, upgraded: true, …(4) }
+(33 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "known": true,
+-   "malaiseBonus": 1,
++   "known": false,
+    "special": "malaise",
+-   "text": "敌人失去X+1点力量。给予X+1层虚弱。 消耗。",
+-   "upgraded": true,
++   "text": "敌人失去X点力量。给予X层虚弱。 消耗。",
++   "upgraded": false,
+    "xCost": true,
+  }
+
+ ❯ tests/silent-apotheosis-malaise.test.ts:48:20
+     46|   const upgraded = applyApotheosisUpgrade(base);
+     47|   const observed = modelHandCard(evidence.upgraded, 0, knowledge, "sil…
+     48|   expect(upgraded).toMatchObject({ known: true, upgraded: true, specia…
+       |                    ^
+     49|     malaiseBonus: observed.malaiseBonus, text: observed.text });
+     50|   expect(upgraded.malaiseBonus).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-apotheosis-malaise.test.ts > propagates the bonus through the real same-line consumer using energy left after Apotheosis
+AssertionError: expected { index: +0, name: '灵魂枢纽', …(10) } to match object { weak: 6, strengthGained: -3 }
+(10 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "strengthGained": -3,
+-   "weak": 6,
++   "strengthGained": -2,
++   "weak": 5,
+  }
+
+ ❯ tests/silent-apotheosis-malaise.test.ts:67:40
+     65|   const plan = replaySteps(input, input.hand.map(step))!;
+     66|   expect(plan.outcome).toMatchObject({ apotheosisApplied: true, energy…
+     67|   expect(plan.outcome.enemyHpAfter[0]).toMatchObject({ weak: 6, streng…
+       |                                        ^
+     68|   expect(plan.steps.at(-1)?.upgraded).toBe(true);
+     69|   expect(plan.outcome.unknownCards.some((text) => text.includes("萎靡"))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-apotheosis-malaise.test.ts > replays the actual full T2 sequence from existing Weak=1, retaining damage and HP facts
+AssertionError: expected { winsFight: false, hpLoss: 5, …(22) } to match object { energyLeft: +0, hpLoss: 9, …(1) }
+(21 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "damageDealt": 5,
+    "energyLeft": 0,
+-   "hpLoss": 9,
++   "hpLoss": 5,
+  }
+
+ ❯ tests/silent-apotheosis-malaise.test.ts:80:24
+     78|   const sequence = ["NEUTRALIZE", "NOXIOUS_FUMES", "MALAISE"].map((id)…
+     79|   const plan = replaySteps(input, sequence)!;
+     80|   expect(plan.outcome).toMatchObject({ energyLeft: 0, hpLoss: 9, damag…
+       |                        ^
+     81|   expect(plan.outcome.enemyHpAfter[0]).toMatchObject({ hp: 198, weak: …
+     82| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-apotheosis-malaise.test.ts > upgrades an identified later draw before its X-cost dispatch
+AssertionError: expected { index: +0, name: '灵魂枢纽', …(10) } to match object { weak: 6, strengthGained: -3 }
+(10 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "strengthGained": -3,
+-   "weak": 6,
++   "strengthGained": -2,
++   "weak": 5,
+  }
+
+ ❯ tests/silent-apotheosis-malaise.test.ts:90:40
+     88|   input.hand = [god(), drawing];
+     89|   const plan = replaySteps(input, [step(input.hand[0]!), step(drawing)…
+     90|   expect(plan.outcome.enemyHpAfter[0]).toMatchObject({ weak: 6, streng…
+       |                                        ^
+     91|   expect(plan.outcome.hpLoss).toBe(9);
+     92|   expect(plan.steps.at(-1)?.upgraded).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/silent-apotheosis-malaise.test.ts > carries the text-only upgrade through future rollout piles
+AssertionError: expected -3 to be -4 // Object.is equality
+
+- Expected
++ Received
+
+- -4
++ -3
+
+ ❯ tests/silent-apotheosis-malaise.test.ts:105:52
+    103|   expect(records).toHaveLength(3);
+    104|   // Synthetic X=3 checks propagation into the existing X+1 consumer, …
+    105|   expect(records[1]!.snap.E[0]![9].STRENGTH_POWER).toBe(-4);
+       |                                                    ^
+    106|   expect(records[2]!.snap.E[0]![9].STRENGTH_POWER).toBe(-4);
+    107|   expect(JSON.stringify(input)).toBe(saved);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 3 passed (8)
+   Start at  11:25:41
+   Duration  1.48s (transform 1.06s, setup 281ms, import 999ms, tests 63ms, environment 0ms)
+

@@ -1,0 +1,70 @@
+{
+  "request_id": "roy-20261009-codex-quota-one-reset",
+  "authorized_at": "2026-10-09 23:34",
+  "authorized_by": "Roy, direct user message in this ops session",
+  "user_text": "授权，如果token额度低于2%，你可以直接使用一次重置券",
+  "scope": "One reset credit for the shared Codex account quota used by this project",
+  "trigger": {
+    "remaining_percent_strictly_below": 2,
+    "requires_fresh_actual_account_sample": true
+  },
+  "maximum_redemptions": 1,
+  "redemptions_completed": 1,
+  "state": "consumed_manually_by_user",
+  "last_verified_at": "2026-10-10T07:55:32.324015+08:00",
+  "quota_sample": {
+    "schema_version": 1,
+    "captured_at": "2026-10-09T23:55:02.752Z",
+    "provider": "codex",
+    "scope": "shared_subscription",
+    "source": "account/rateLimits/read",
+    "sample_observed_at": "2026-10-09T23:55:01.980Z",
+    "freshness": "fresh",
+    "error_code": null,
+    "windows": [
+      {
+        "bucket": "codex/primary",
+        "kind": "weekly",
+        "used_percent": 0,
+        "window_minutes": 10080,
+        "resets_at": "2026-10-16T23:45:14.000Z",
+        "stale": false
+      }
+    ]
+  },
+  "quota_sample_line_sha256": "2a5e3213d3a5941eaac3621dbc69d83896ac63b8f22a52242923ef89d1fa9d71",
+  "observed_windows_with_remaining": [
+    {
+      "bucket": "codex/primary",
+      "kind": "weekly",
+      "used_percent": 0,
+      "window_minutes": 10080,
+      "resets_at": "2026-10-16T23:45:14.000Z",
+      "stale": false,
+      "remaining_percent": 100
+    }
+  ],
+  "unreported_windows": "Unknown; do not infer an unreported five-hour quota",
+  "current_action": "Roy reported using the one reset coupon manually; do not redeem again.",
+  "redemption_idempotency_key": null,
+  "future_execution": "One-coupon authorization has been consumed by Roy. No further automatic redemption under this request.",
+  "automation_hook_installed": false,
+  "credentials_read_or_copied": false,
+  "game_behavior_changed": false,
+  "record_scan_history": [
+    {
+      "rc": 1,
+      "rule": "generic-api-key",
+      "field": "redemption_idempotency_key",
+      "finding": "Unused generated UUID matched the generic detector; removed premature UUID allocation. No credentials were read or recorded."
+    }
+  ],
+  "assistant_redemptions_completed": 0,
+  "manual_use": {
+    "actor": "Roy",
+    "source": "direct user message in this ops session",
+    "user_text": "你授权没有使用，还是我使用的",
+    "observed_at": "2026-10-10T07:55:32.324015+08:00",
+    "provider_redemption_receipt": "unknown; not observed by this assistant"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "timestamp": "2026-10-09 16:47",
+  "request_id": "roy-20261009-historical-core-builds",
+  "supplement_id": "roy-20261009-historical-core-builds-paper-trace",
+  "state": "pending",
+  "actual_batch": null,
+  "canonical_pending": "notes/silent-historical-core-builds-dispatch.json",
+  "pending_sha256": "a9ed052ef0962a658dde04db7d40d365ac11a3db76e4410c82d643182c44380c",
+  "originals": [
+    {
+      "path": "notes/watcher-20261009-core-build-request.json",
+      "bytes": 5644,
+      "sha256": "0c53af5ad3f0bd3516cc2717e287313ac3d70f45f0fdfcda213d2a5427899a61",
+      "copy": "paper/materials/silent/20261009-1639-core-builds-request/originals/notes/watcher-20261009-core-build-request.json"
+    },
+    {
+      "path": "notes/watcher-20261009-core-build-paper-trace.json",
+      "bytes": 2670,
+      "sha256": "81a49455f3ac7ec051f98ce7ec7896cabe2c8e52270148d56f9d15dfad596835",
+      "copy": "paper/materials/silent/20261009-1639-core-builds-request/originals/notes/watcher-20261009-core-build-paper-trace.json"
+    },
+    {
+      "path": "paper/materials/discussions/2026-10-09-watcher-core-builds.md",
+      "bytes": 2459,
+      "sha256": "462526511e79b4dfd384c05400166fae8045b312b234c7ecf0b4aaf2d2c75fa9",
+      "copy": "paper/materials/silent/20261009-1639-core-builds-request/originals/paper/materials/discussions/2026-10-09-watcher-core-builds.md"
+    },
+    {
+      "path": "paper/materials/silent/20261009-watcher-observation/manifest.json",
+      "bytes": 2351,
+      "sha256": "56557d54bf03d8d9c0e526822144b73af6dffdd8346e08a91c63e90db3ef3109",
+      "copy": "paper/materials/silent/20261009-1639-core-builds-request/originals/paper/materials/silent/20261009-watcher-observation/manifest.json"
+    }
+  ],
+  "prior_same_request_batches": [],
+  "active_batches_preserved": {
+    "20261009-163854-experience-update": {
+      "task": "experience-update",
+      "character": "silent",
+      "runs": [
+        "64R0P0MTZWAX",
+        "C6Z8ATNBNHZ7"
+      ],
+      "key": "64R0P0MTZWAX,C6Z8ATNBNHZ7",
+      "pid": 2114894,
+      "state": "running",
+      "reason": "tick",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pAZ"
+    }
+  },
+  "codex_dev_dirty_index_status": "M  agent/src/reflex/rollout-live.ts\nM  agent/src/reflex/rollout.ts\nA  agent/tests/silent-gardener-skittish-evidence.json\nA  agent/tests/silent-gardener-skittish.test.ts\n",
+  "source_entries": [
+    {
+      "path": "ops/learner_jobs.py",
+      "sha256": "ae5ab2e79713650f7d2eba20b8874f94d852412e0139753134ff81f7d0f17756"
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "sha256": "5c61cf68e43d200d6dd4f3e173c05c7c872d5ea3db98e7afa701db6b05e8e85b"
+    },
+    {
+      "path": "learner/tasks/experience-update.md",
+      "sha256": "2a7024c41d0729a32c6ddab779648b6383495e5cffb564e1661e2a81e63dbde8"
+    },
+    {
+      "path": "ops/codex/lib.ts",
+      "sha256": "0425a74b9575a26f476aa98c8284d5b424911e9b1343418c170567232a9efe82"
+    }
+  ],
+  "safe_entry_blockers": [
+    {
+      "entry": "learner/tasks/silent-historical-core-builds.md",
+      "gap": "No independent registered task/template carrying the full historical scope, candidate/boss matrix, consumer acceptance and linked paper trace."
+    },
+    {
+      "entry": "ops/learner_jobs.py:FEATURE_REQUESTS/requested_feature",
+      "gap": "Historical core-build request is not allowlisted; ordinary increment tasks cap run IDs at 10 and do not carry this independent request."
+    },
+    {
+      "entry": "ops/codex-ops-learner.sh:learner_task allowlist",
+      "gap": "Wrapper rejects the proposed independent learner_task; no safe task-specific lease/standard completion and external-check route for this request."
+    }
+  ],
+  "paper_trace_embedded_in_parent": true,
+  "second_learning_task_dispatched": false,
+  "candidate_boss_matrix_templates": "pending learner; no candidate supplied by ops",
+  "production_or_running_learner_mutated": false,
+  "task_priority_change": "High priority independent request retained; no running task preemption or scheduler code change."
+}

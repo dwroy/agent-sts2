@@ -1,0 +1,95 @@
+{
+  "source_commit": "1e88282022d77086e7180e648d7ab64e8d916767",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/learning-continuity-20261012",
+  "files": [
+    "AGENTS.md",
+    "agent/tests/learning-requests.test.ts",
+    "docs/learning-requests.md",
+    "learner/lib/engines.ts",
+    "learner/lib/launcher.ts",
+    "learner/tasks/learning-followup.md",
+    "ops/learner_jobs.py",
+    "ops/learning_requests.py",
+    "ops/tests/test_learning_requests.py",
+    "paper/materials/decision-log.md"
+  ],
+  "source_sha256": {
+    "AGENTS.md": "49ceaa398eac24e5f9d73a2a3a5251cf65e342c1faf83833b427f67707142047",
+    "agent/tests/learning-requests.test.ts": "1030e2fa20bc0ede8d9fdae10e38090dd82447ab5ac37330d9f3dd22abe6120e",
+    "docs/learning-requests.md": "f080b07f87f2f2512b90c3893a0e179a80c465567567d5aae62fc6d1187d6068",
+    "learner/lib/engines.ts": "992a437c58cf8744d9278d979382348ce7b05ef36b32a979d2cda2af3323ac53",
+    "learner/lib/launcher.ts": "9cbacd67d90bb814d721cf0bf6a03965b92eec22389d9966408f203099d87e2f",
+    "learner/tasks/learning-followup.md": "d954b1385e77bd384eb2f09bcfd85b1d580ecc293eb60dba96754e0e0d48e0b9",
+    "ops/learner_jobs.py": "6011e4d84f580824ec60b4e0bb9a2c1f8379037961722b532b3754d8922211b1",
+    "ops/learning_requests.py": "30fdfb6ae763b343fc59433a6abe54199269456230a538c8bcd2babebc61f770",
+    "ops/tests/test_learning_requests.py": "5e59938acace5c56209deb41b50f9f73f6ee6d4c34b25c5b7b874f32c4c64046"
+  },
+  "checks": {
+    "at": "2026-10-12T20:45:45+08:00",
+    "source_base": "5fb318eefbcd39516c28a7aefe5009663038f804",
+    "sandbox_full": {
+      "exit": 0,
+      "tsc": 0,
+      "files": 342,
+      "cases": 3408,
+      "log": "learner/runs/continuity-verification-20261012/sandbox-full.log"
+    },
+    "final_learning_python": {
+      "cases": 13,
+      "exit": 0,
+      "log": "learner/runs/continuity-verification-20261012/final-python-v3.log"
+    },
+    "targeted_original": {
+      "exit": 1,
+      "reason": "no registered learning requests still added an empty state field; fixed without relaxing original test",
+      "log": "learner/runs/continuity-verification-20261012/targeted.log"
+    },
+    "targeted_after_fix": {
+      "exit": 0,
+      "log": "learner/runs/continuity-verification-20261012/targeted-after-state-fix.log"
+    },
+    "gitleaks": {
+      "exit": 0,
+      "log": "learner/runs/continuity-verification-20261012/gitleaks.log"
+    },
+    "verification_limits": [
+      "Actual same-thread model response and ops→watcher delivery require production confirmation after merge.",
+      "Initial dry-run failed on sandbox IPC; host v1 lacked STS2_WORKSPACE and correctly refused outside cwd; host v2 with production workspace passed.",
+      "After broad pass, final Python-only changes (receipt evidence validation, pending timeout alert and delivery ACK) were verified by final 13-case fixed suite."
+    ],
+    "sha256": {
+      "learner/runs/continuity-verification-20261012/gitleaks.log": "5cd68cf26a35a75217b317c19e6535e328b2e6a7aad05dee7200e2edfa0e0942",
+      "learner/runs/continuity-verification-20261012/final-python-v2.log": "f14fa4d68125be780e9740d44119802d97d828ad67e5d698da64639170ef5df2",
+      "learner/runs/continuity-verification-20261012/targeted-after-state-fix.log": "45d347d96358e4707e45b0e47567afbd22da06ce7d99d31f2b253acfab972ac0",
+      "learner/runs/continuity-verification-20261012/sandbox-full.log": "072a4e5575784d81ae993912e224fe5841bf32263df495cfe0308c501dc5ee67",
+      "learner/runs/continuity-verification-20261012/final-python-v3.log": "9936e66e782cf94c34b55abede497c9b756a3cc3b43bc06c3d8a8cbbf17b2837",
+      "learner/runs/continuity-verification-20261012/targeted.log": "9e59aece05017bbf25fe91e159f08f3b0c39a4fe0208c14fac759aa5f2adaffd",
+      "learner/runs/continuity-verification-20261012/final-python.log": "c02058f909ea9d0699c8a5cf425e42ab5882dff72be81f9606aaddab4af6cb67"
+    }
+  },
+  "registration_source": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/roy-20261012-concrete-core-decklists.json",
+  "registration_target": "notes/learning-requests/roy-20261012-concrete-core-decklists.json",
+  "registration_sha256": "170de802c5113591adf1920b62d483d5d2ada3f65175b45fbee3af09e4d10bd1",
+  "steps": [
+    "核原source/test，按原锁合main/live，保留并行记录/知识刷新；这是流程修复无玩法版本。",
+    "合后将registration_source逐字copy到registration_target，复核SHA和原140741 thread/owner/PID已退出；不要改原request/task/input/report/done。",
+    "沿现有ops/codex-ops.sh tick learn 或正常原tick接续，共用两个策略槽；本修复只对已登记notes/learning-requests启用。",
+    "新批仍strategy-proposal格式，但learning_request绑定同一ID；resume原thread与原worktree，原批仍done。",
+    "实际learner日志须出现learner_resume_ack，thread相同且input/command SHA存在；只有这才记补充已送达并开始处理。",
+    "完成只验收learning_result逐项经验与消费者；阻塞/异议由原ops学习通知事件转watcher，并按docs/learning-requests.md的分阶段JSON回执确认；无真实送达不能ACK。",
+    "若发现源码/入口阻塞请及时回watcher修，不放宽学习者权限、不更改ops prompt、不重启对局。"
+  ],
+  "final_source_commit": "bb25df38fe110eb70268c00aa5414da69aa9afe2",
+  "followup": "仅补finish重读revision的竞态，保留1e882820原交付与失败历史。源分支含两个提交一并合入。",
+  "final_checks": {
+    "python": 14,
+    "tsc": 0,
+    "vitest_files": 2,
+    "vitest_cases": 3,
+    "prior_full_files": 342,
+    "prior_full_cases": 3408,
+    "gitleaks": 0
+  },
+  "notification_relay": "ops程序直接幂等投递到现有watcher收件箱+for-roy并记录ops_forwarded真实文件回执，ops队列继续处理；watcher_received/roy_notified仍需真实后续回执。",
+  "resume_adapter": "与ops/codex/lib.ts已验证resume格式相同：所有隔离/config参数在resume子命令下重新传入，去--cd由spawn cwd提供。原生CLI完整参数--help exit0，无模型调用。"
+}

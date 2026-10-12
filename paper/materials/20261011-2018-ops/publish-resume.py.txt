@@ -1,0 +1,15 @@
+from pathlib import Path
+import subprocess,json,re,hashlib,datetime
+r=Path.cwd();w=r/'.worktrees/live';o=r/'paper/materials/20261011-2018-ops/integration';pre=json.load(open(o/'live-preflight.json'));candidate=pre['candidate']
+def g(*a):return subprocess.check_output(['git','-C',str(w),*a])
+assert g('rev-parse','HEAD').decode().strip()==pre['head'];assert g('rev-parse','MERGE_HEAD').decode().strip()==candidate
+preview=(o/'live-merge-preview.log').read_text().splitlines()[0];assert g('write-tree').decode().strip()==preview
+patch=g('diff','--cached');lines=patch.split(b'\n');proof=[]
+for x in json.load(open(o/'live-gitleaks.json')):
+ idx=x['StartLine']-1;line=lines[idx];headers=[z for z in lines[:idx+1] if z.startswith(b'diff --git ')];header=headers[-1].decode();assert header.endswith('/20261011-191305-boss-calibration-closeout/report.md') and x['RuleID']=='sourcegraph-access-token'
+ matches=[m for m in re.finditer(rb'(?<![a-f0-9])[a-f0-9]{40}(?![a-f0-9])',line) if abs(m.start()-(x['StartColumn']-1))<=2];assert len(matches)==1
+ commit=matches[0][0].decode();assert commit=='7e1193cef9467416bc10c8e344a49f4fd98390c7' and g('cat-file','-t',commit).strip()==b'commit';proof.append({'fingerprint':x['Fingerprint'],'path_header':header,'commit':commit,'role':'frozen model source commit repeated in calibration report','line_sha256':hashlib.sha256(line).hexdigest()})
+p=subprocess.run(['gitleaks','stdin','--redact','--no-banner','--baseline-path',str(o/'live-gitleaks.json'),'--report-format','json','--report-path',str(o/'live-gitleaks-remainder.json')],input=patch,capture_output=True);(o/'live-gitleaks-baseline.log').write_bytes(p.stdout+p.stderr);assert p.returncode==0
+(o/'live-gitleaks-adjudication.json').write_text(json.dumps({'exact_staged_patch_sha256':hashlib.sha256(patch).hexdigest(),'adjudicated':proof,'remaining':0,'production_rule_change':False},indent=2)+'\n')
+subprocess.run(['git','-C',str(w),'commit','-m','Publish verified Silent experience and Apotheosis upgrades with latest calibration','-m','Original full source validations and affected ten-file, 55-case integration checks passed. Retain two pre-existing host infrastructure failures under dedicated fix batch 20261011-202201; no knowledge rollback. Preserve current refresh and original failed receipts.','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>'],check=True,stdout=subprocess.DEVNULL)
+(o/'published.json').write_text(json.dumps({'at':datetime.datetime.now().astimezone().isoformat(),'before':pre['head'],'candidate':candidate,'live':g('rev-parse','HEAD').decode().strip(),'tree':preview,'incremental_checks':json.load(open(o/'incremental-checks.json')),'baseline_host_failures':['brain-codex-session.test.ts','ops-codex.test.ts'],'baseline_failure_repair_batch':'20261011-202201-fix-batch','full_host_result_for_new_tree':'not_run','gitleaks_remaining':0,'original_refresh_sha':pre['dirty']},indent=2)+'\n');print('published',g('rev-parse','HEAD').decode().strip())

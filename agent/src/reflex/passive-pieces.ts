@@ -1,5 +1,5 @@
 /**
- * Passive damage and passive block (PASSIVE_PIECES, Dai 2026-10-03; experience 2026-10-03.3 deck-passive-engine, the
+ * Passive damage and passive block (PASSIVE_PIECES, Roy 2026-10-03; experience 2026-10-03.3 deck-passive-engine, the
  * Queen section of knowledge/ironclad-guide.md): the damage and block that come from relics and powers, not from the
  * cards' own numbers. Weak and Frail on us cut our attack cards (their Strength too) and our card block by 25%; these do
  * not move. The one place their numbers and their rules live, for the rollout's later turns (rollout.ts), the whole-fight
@@ -56,7 +56,7 @@
  * the boss clock counts Thorns per boss hit, Flame Barrier, Mercury Hourglass, Letter Opener and Parrying Shield as
  * damage the Queen's Weak does not cut (with Inferno and Juggernaut), and Crimson Mantle, Plating, Orichalcum, Ornamental
  * Fan, Ripple Basin and the one-turn block relics with Sai as block a turn (at CLOCK_PASSIVE_BLOCK_SHARE). Since the
- * follow-up (2026-10-03, Dai via the dev session) the live solver's current turn has the five relic pieces too
+ * follow-up (2026-10-03, Roy via the dev session) the live solver's current turn has the five relic pieces too
  * (liveSolverFields, combat-plan), and Plating no longer stops Orichalcum (orichalcumPlating). Replayed on the logged turns'
  * first planning decisions (tools/passive-pieces-planner-replay.ts compare, v4 cd31bfe against this, the switch on both
  * times; 113 A8+ boss/elite fights holding one of the five relics, 60 hallway ones, 40 holding none): the 238 turns holding

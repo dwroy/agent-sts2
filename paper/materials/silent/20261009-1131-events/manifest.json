@@ -1,0 +1,976 @@
+{
+  "timestamp": "2026-10-09 11:38",
+  "base_head": "f3f4366038918fcb22d25dd80be15716b91f4697",
+  "batch": "20261009-104301",
+  "runs": [
+    "XZUJR08FW801"
+  ],
+  "originals": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/XZUJR08FW801-decisions.jsonl": {
+      "bytes": 1780970,
+      "sha256": "47375c21069145e3178e08d564d1ac0d32ef476a5f2ddae6fc0c4d3a157e731c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/XZUJR08FW801-deepseek-reasoning.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/XZUJR08FW801-resources.json": {
+      "bytes": 590886,
+      "sha256": "83768c7c06a7e2064bdf14db8b1957e0ff3c0a9dee305a4d9695374aa0668459"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/XZUJR08FW801-run-plans.jsonl": {
+      "bytes": 7805,
+      "sha256": "5605c1688aa4aed584e38911389a380a3a5f919e9c9fd921524f06c14c478e9f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/XZUJR08FW801-sl-attempts.jsonl": {
+      "bytes": 62619,
+      "sha256": "31e9bd973fe230bc5d55f868ada5a50b4efaa18b3943612f4e6d1200755b2db8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/XZUJR08FW801-states.jsonl": {
+      "bytes": 14838714,
+      "sha256": "27cc6eaa6d7a7db06b6ad79b2db3a928eabf371e91b20668f73b1cfe4bc095f1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/fix-queue查找.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/report.json": {
+      "bytes": 977,
+      "sha256": "6b6bbe25305d85c1a94cf5a2ca4da6436733a86d30fc07942ac3677a1da31094"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/report.md": {
+      "bytes": 2425,
+      "sha256": "6ebd6153908bd416356270062940e4f6776a5a4e5f89b24cf0e34897a83b6f44"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/window.json": {
+      "bytes": 80,
+      "sha256": "cf5156fb93382a63d98781b9440349d67dcf0dd79de5676b451b8975d7f4d52b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/主经验旧账本.json": {
+      "bytes": 287937,
+      "sha256": "1b5ffaf5f84881aea64e8c5f87f30bc231261c40719dbd5970a86c88fa34b680"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/先验-ENKY状态.jsonl": {
+      "bytes": 654376,
+      "sha256": "43aa26369272c0bcd74980e02d041042896dd0d900302131960cda377b738446"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/先验-decisions.jsonl": {
+      "bytes": 271938,
+      "sha256": "f56c9b619cda917dc63519508f6798eb482ab3649953a18cad4b41a24c29190c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/先验-runs.jsonl": {
+      "bytes": 1449,
+      "sha256": "87f12c9c55f48098d1667ff635d349bea1e9f8be9a52e23602b840f6119c30ae"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/关键帧.txt": {
+      "bytes": 37835,
+      "sha256": "715109483d99664158582ff3864b6d037731a0c1852228655b2b6da5ac063fd5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/分析.py": {
+      "bytes": 2266,
+      "sha256": "ae19f81c71dc2e636671dea361c8063e7c2f221b8132c8707a4e5ce9e21d48ff"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/原件核验.json": {
+      "bytes": 187171,
+      "sha256": "8f40c2f1ca529e4e35ee6c153bff3d029f60bdab3965128e633639a042feeb5d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/只读源码指纹.json": {
+      "bytes": 376,
+      "sha256": "d9666e4d7d4f8cab99d0e63e7429b608a22cddf02cd9240ec038c7ae55edfec0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/复盘初稿-v1.md": {
+      "bytes": 24450,
+      "sha256": "e8fb717536c34d1cd9b0252f2c1670726f5a7da69345687e985ffd4b54b00722"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/探索限制.txt": {
+      "bytes": 828,
+      "sha256": "c606287510424babd508341c2a10477856a81515ee34eb5b3c09dcf5fa08db88"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案-升级隐秘匕首-回执.json": {
+      "bytes": 33,
+      "sha256": "12678fa95ba2f84ca305e2b5357b4c11b86162c051fa27698b45c3a99123173a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案-升级隐秘匕首-错误.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案-升级隐秘匕首.json": {
+      "bytes": 595,
+      "sha256": "b6397b8f756bb0cde083db085529ac9146d4c83fb94d838c9cb50b5fc21106f3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案-升级隐秘匕首.md": {
+      "bytes": 3812,
+      "sha256": "2995d33c3031c1f5575e90a3f37087ff77627949b2d7fdb4960b29979e8b6de7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案-药水更换与孵化窗口-回执.json": {
+      "bytes": 33,
+      "sha256": "423ba8c8f9524f3d17087e8c98c2f3009118325e24892201a36b434dc7d99471"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案-药水更换与孵化窗口-错误.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案-药水更换与孵化窗口.json": {
+      "bytes": 627,
+      "sha256": "ae7f75b6cc0ffeb6cd8571fa6d0e6d9dd81ba5b25ba7032e17883011af0ce1d4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案-药水更换与孵化窗口.md": {
+      "bytes": 4948,
+      "sha256": "251980b349120e15d8472b03acab1231e0979b65b3fb64e7e4811bc6a67aceaa"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案登记核验.json": {
+      "bytes": 1817,
+      "sha256": "383107d0693e846f16d025ce45315b880cb37baaedf6ee3ea3366f6dc3055d74"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/数字核验.json": {
+      "bytes": 9639,
+      "sha256": "25280bde4e46c4b89c65c75b8dc838e5808c02ee2d551731f3e399e8f4f1ae8c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/方案.txt": {
+      "bytes": 10891,
+      "sha256": "e9fa106da6ededf520da582785a49931f509039da5a7f5c68be2aa5e3439a6c0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/核验.py": {
+      "bytes": 5062,
+      "sha256": "54109746cbd07d335568bd4a8fa678d0cf8d03c20fabe6411ef16d687ed5fd84"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/核验输出.json": {
+      "bytes": 5987,
+      "sha256": "925b263f9453846a0ed1177771c3c3220358119dfd849c740cbf2e8e73448b1e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本局号确认.txt": {
+      "bytes": 6713,
+      "sha256": "2b9223db1b9f9e20ac27b963ed60caf519ccbba9ae23b940c6f583644a69bb1d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本新增-升级隐秘.json": {
+      "bytes": 1796,
+      "sha256": "39fe4a1ae984b6698e7491a8fd722019baee6f35187002819cfc8f646171b793"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本新增-孵化虚弱.json": {
+      "bytes": 1305,
+      "sha256": "b19ea11e0cf432b9b49a7287c6837e9f84e1acd1f6129bb48df37b2341d35eff"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本新增-换药.json": {
+      "bytes": 1664,
+      "sha256": "0941b4560a32409c905820b1d7b8bbecd2de00c59ea37dc00cc3c1d3e6c85ab4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本新增.json": {
+      "bytes": 4959,
+      "sha256": "8b4143fb3a2869a9701d134d2e39bb579ffda648e6f042a36af94675e020b3f9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本新增回执.txt": {
+      "bytes": 36,
+      "sha256": "c6730ae5b7c0715d223b4a067b8022913d1039b02e5f16cfb9bb5deacf5c2e46"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本新增错误.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本更新.json": {
+      "bytes": 6893,
+      "sha256": "f8cc7b6db6510b85709dcd936b6c71c4b675bd95cd9781452cf90ba4efddbacc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本更新回执.txt": {
+      "bytes": 120,
+      "sha256": "8641eb19dba4fbb480b75467573ca461bd03d561d1a01c3b8cbb2022f71b0d37"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本更新错误.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-DARK_SHACKLES.json": {
+      "bytes": 9594,
+      "sha256": "94432a1741e4e24acd26d8b18f52bc71cd2a391910cccd9a08c5793fd76b3e73"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-HIDDEN_DAGGERS.json": {
+      "bytes": 14429,
+      "sha256": "c06379fc2560ecd1dcb82255d5e85216602740851a7bbb168d30f1c864ccd408"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-POISON_POTION.json": {
+      "bytes": 36819,
+      "sha256": "1eb1fae49bcfc0e1605b0f1b7e2bca5ca8da41936429d915bc48852ecc93c82f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-SHADOWMELD.json": {
+      "bytes": 55729,
+      "sha256": "fe93c3e100b8a27fa5b712583abcf1bd56bc3e1e25d079bbb9e99883af93eb51"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-SL探索.json": {
+      "bytes": 166161,
+      "sha256": "902029219ce98a04243814bbaca6740cc8f4dd4b9098145803cb93a14e0977a7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-TOUGH_EGG.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-升级隐秘.json": {
+      "bytes": 9258,
+      "sha256": "03be59bfccfd8c1de9b6e3953656c45301112ee0b86fce62df57f1723e350de6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-卵.json": {
+      "bytes": 2229311,
+      "sha256": "ff5482d6f656817a28126d94018bc8ebc6499618c42834a200383b34a72938d0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-孵化.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-无推演.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-毒药水.json": {
+      "bytes": 808707,
+      "sha256": "e4ef27ae29be81685f7322fe82ee1afbc6fd227376bcee35de0a48326cef75a6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-计划.json": {
+      "bytes": 2179037,
+      "sha256": "8eabbb223394318529c42826caba0a69766cb89ec18f66aa81141bbcb00ddf05"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本查找-隐秘匕首.json": {
+      "bytes": 2093533,
+      "sha256": "71e2a2dca9a0b480dc62188d3775536b6d9b6b4f66ca1728e7b3e1858530392c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本校验.txt": {
+      "bytes": 94,
+      "sha256": "da4d51332b02548c545e049ef3c2cd017d713d667ed20e47b18b7e06308cea8e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/账本校验退出码.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/追加前前缀.json": {
+      "bytes": 129,
+      "sha256": "151b43f5b1e530f4a8b5c57c703197ee18bb878074cb58d746bc0e78ef58fcc8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/追加前核验.json": {
+      "bytes": 2833,
+      "sha256": "1f1a8c1f82e0e8c15a10a422bfaac1725d5c3ac4b003363574b3261896b1acf8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/追加后关键数字.txt": {
+      "bytes": 1967,
+      "sha256": "9e935a2745f42d392f73b3b8f2929b41333df49fee2477cb726ec11accde81f5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/追加复盘.sh": {
+      "bytes": 24515,
+      "sha256": "02e07c9e3643efe65b492d661a8260860a697344f34b3c84f631c4a660c97786"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem.jsonl": {
+      "bytes": 1282211,
+      "sha256": "475540b6c9479bfaac4e65514c45e94adc7dfca0e6ae2bdf7beb9f256bfdd65c"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-104301.out": {
+      "bytes": 3143,
+      "sha256": "705fe144710e44e8a03adb04bb5a93ba86c9af5da118a8ed5d215e91884682a1"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-104301.err": {
+      "bytes": 13502,
+      "sha256": "af995ec7608df280202df7c38ce7afc151d15401f685f24759820d87a21e0db5"
+    },
+    "/home/dw/Projects/agent-sts2/notes/run-1009-1032-XZUJR08FW801.md": {
+      "bytes": 5857,
+      "sha256": "ea46af48d0651c4bc28d7a86f58f9efcede732e07516ff8858c4bef2d040b15b"
+    }
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "XZUJR08FW801"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "XZUJR08FW801",
+        "where": "agent/src/reflex/card-model.ts:921",
+        "what": "升级隐秘匕首仍将弃两张误作抽两张，未覆盖弃牌与生成小刀分支",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0334",
+        "silent-0335",
+        "silent-0336"
+      ],
+      "updated": [
+        "silent-0019",
+        "silent-0020",
+        "silent-0011",
+        "silent-0016",
+        "silent-0039",
+        "silent-0077",
+        "silent-0128",
+        "silent-0196",
+        "silent-0241",
+        "silent-0243"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-6a5c67f606bd5af7",
+      "silent-proposal-04fb18bbeb9e3f73"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/report.md"
+  },
+  "owned_cli": 16,
+  "evidence_update_rows": 10,
+  "first_observation_add_rows": 3,
+  "support_evidence": 15,
+  "repeat_evidence": 0,
+  "repeat_ids": [],
+  "proposal_link_rows": 3,
+  "correction_rows": 0,
+  "new_pure_bugs": [
+    {
+      "run": "XZUJR08FW801",
+      "where": "agent/src/reflex/card-model.ts:921",
+      "what": "升级隐秘匕首仍将弃两张误作抽两张，未覆盖弃牌与生成小刀分支",
+      "new": true
+    }
+  ],
+  "queue_append": true,
+  "blocking": false,
+  "model_bug_requires_learner_evidence": true,
+  "lesson_append_bytes": 24450,
+  "lesson_append_sha256": "e8fb717536c34d1cd9b0252f2c1670726f5a7da69345687e985ffd4b54b00722",
+  "numeric_verification_count": 25,
+  "numeric_verification_original": [
+    {
+      "项目": "Jev入出",
+      "已核值": [
+        572079,
+        7449
+      ]
+    },
+    {
+      "项目": "大脑入出缓存推理",
+      "已核值": [
+        3761214,
+        6996,
+        2108800,
+        4745
+      ]
+    },
+    {
+      "项目": "大脑累计延迟",
+      "已核值": 391906
+    },
+    {
+      "项目": "隐秘原题抽牌",
+      "已核值": 2
+    },
+    {
+      "项目": "d311121原题伤害/血损",
+      "已核值": [
+        47,
+        12
+      ]
+    },
+    {
+      "项目": "d311131原题伤害/血损",
+      "已核值": [
+        43,
+        0
+      ]
+    },
+    {
+      "项目": "d311164原题伤害/血损",
+      "已核值": [
+        65,
+        9
+      ]
+    },
+    {
+      "项目": "d311172原题伤害/血损",
+      "已核值": [
+        12,
+        11
+      ]
+    },
+    {
+      "项目": "d311199原题伤害/血损",
+      "已核值": [
+        44,
+        0
+      ]
+    },
+    {
+      "项目": "d311202原题伤害/血损",
+      "已核值": [
+        53,
+        0
+      ]
+    },
+    {
+      "项目": "F16休息估计",
+      "已核值": [
+        52,
+        0.8083,
+        36,
+        10
+      ]
+    },
+    {
+      "项目": "F17饮药估计",
+      "已核值": [
+        0.993,
+        27
+      ]
+    },
+    {
+      "项目": "s319231资源",
+      "已核值": [
+        13,
+        58
+      ]
+    },
+    {
+      "项目": "s319297资源",
+      "已核值": [
+        16,
+        52
+      ]
+    },
+    {
+      "项目": "s319349资源",
+      "已核值": [
+        18,
+        57
+      ]
+    },
+    {
+      "项目": "s319388资源",
+      "已核值": [
+        20,
+        51
+      ]
+    },
+    {
+      "项目": "s319399资源",
+      "已核值": [
+        22,
+        46
+      ]
+    },
+    {
+      "项目": "终牌组",
+      "已核值": [
+        24,
+        5
+      ]
+    },
+    {
+      "项目": "重载耗时",
+      "已核值": [
+        6853,
+        6835,
+        6903
+      ]
+    },
+    {
+      "项目": "终局reload",
+      "已核值": 3
+    },
+    {
+      "源码": "agent/src/reflex/card-model.ts",
+      "行": 921,
+      "内容": "  const hiddenDaggers = character.toLowerCase() === \"silent\" && cardId === \"HIDDEN_DAGGERS\" && !bool(card[\"upgraded\"]) &&"
+    },
+    {
+      "源码": "agent/src/reflex/card-model.ts",
+      "行": 929,
+      "内容": "  const draw = hiddenDaggers || shadowStep || metamorphosis || nextTurnOnly(template, \"Cards\") ? 0 : dyn(card, \"Cards\") ?? 0;"
+    },
+    {
+      "源码": "agent/src/reflex/card-model.ts",
+      "行": 1109,
+      "内容": "    ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),"
+    },
+    {
+      "源码": "agent/src/reflex/turn-solver.ts",
+      "行": 1312,
+      "内容": "  return card.cardId === \"HIDDEN_DAGGERS\" && !card.upgraded && card.discardCount === 2;"
+    },
+    {
+      "源码": "agent/src/reflex/combat-plan.ts",
+      "行": 3269,
+      "内容": "        : `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(\", \") || \"end turn\"}`,"
+    }
+  ],
+  "numeric_summary": {
+    "局号": "XZUJR08FW801",
+    "原件核验条数": 1037,
+    "决策数": 471,
+    "状态数": 493,
+    "计划数": 4,
+    "SL记录": 6,
+    "战斗窗口": 17,
+    "逐轮": [
+      {
+        "战斗序": 7,
+        "层": 14,
+        "逐轮": [
+          {
+            "回合": 1,
+            "首帧": 319233,
+            "结束帧": 319244,
+            "所需敌血": 132,
+            "血池净清": 40,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 2,
+            "首帧": 319244,
+            "结束帧": 319249,
+            "所需敌血": 92,
+            "血池净清": 5,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 3,
+            "首帧": 319249,
+            "结束帧": 319254,
+            "所需敌血": 87,
+            "血池净清": 16,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 2
+          },
+          {
+            "回合": 4,
+            "首帧": 319254,
+            "结束帧": 319258,
+            "所需敌血": 71,
+            "血池净清": 27,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 13
+          },
+          {
+            "回合": 5,
+            "首帧": 319258,
+            "结束帧": 319266,
+            "所需敌血": 44,
+            "血池净清": 12,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 12
+          },
+          {
+            "回合": 6,
+            "首帧": 319266,
+            "结束帧": 319271,
+            "所需敌血": 32,
+            "血池净清": 32,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          }
+        ]
+      },
+      {
+        "战斗序": 9,
+        "层": 17,
+        "逐轮": [
+          {
+            "回合": 1,
+            "首帧": 319299,
+            "结束帧": 319308,
+            "所需敌血": 183,
+            "血池净清": 3,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 2,
+            "首帧": 319308,
+            "结束帧": 319312,
+            "所需敌血": 180,
+            "血池净清": 3,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 3,
+            "首帧": 319312,
+            "结束帧": 319320,
+            "所需敌血": 177,
+            "血池净清": 8,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 15
+          },
+          {
+            "回合": 4,
+            "首帧": 319320,
+            "结束帧": 319324,
+            "所需敌血": 169,
+            "血池净清": 21,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 5,
+            "首帧": 319324,
+            "结束帧": 319329,
+            "所需敌血": 148,
+            "血池净清": 15,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 6,
+            "首帧": 319329,
+            "结束帧": 319333,
+            "所需敌血": 133,
+            "血池净清": 19,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 2
+          },
+          {
+            "回合": 7,
+            "首帧": 319333,
+            "结束帧": 319337,
+            "所需敌血": 114,
+            "血池净清": 31,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 27
+          },
+          {
+            "回合": 8,
+            "首帧": 319337,
+            "结束帧": 319339,
+            "所需敌血": 83,
+            "血池净清": 48,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 9,
+            "首帧": 319339,
+            "结束帧": 319342,
+            "所需敌血": 35,
+            "血池净清": 17,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 10,
+            "首帧": 319342,
+            "结束帧": 319343,
+            "所需敌血": 18,
+            "血池净清": 18,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          }
+        ]
+      },
+      {
+        "战斗序": 12,
+        "层": 25,
+        "逐轮": [
+          {
+            "回合": 1,
+            "首帧": 319424,
+            "结束帧": 319430,
+            "所需敌血": 180,
+            "血池净清": 53,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 12
+          },
+          {
+            "回合": 2,
+            "首帧": 319430,
+            "结束帧": 319435,
+            "所需敌血": 127,
+            "血池净清": 9,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 1
+          },
+          {
+            "回合": 3,
+            "首帧": 319435,
+            "结束帧": 319437,
+            "所需敌血": 118,
+            "血池净清": 52,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 4,
+            "首帧": 319437,
+            "结束帧": 319447,
+            "所需敌血": 66,
+            "血池净清": 22,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 7
+          },
+          {
+            "回合": 5,
+            "首帧": 319447,
+            "结束帧": 319453,
+            "所需敌血": 44,
+            "血池净清": 23,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 3
+          },
+          {
+            "回合": 6,
+            "首帧": 319453,
+            "结束帧": 319454,
+            "所需敌血": 21,
+            "血池净清": 21,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          }
+        ]
+      },
+      {
+        "战斗序": 13,
+        "层": 27,
+        "逐轮": [
+          {
+            "回合": 1,
+            "首帧": 319464,
+            "结束帧": 319470,
+            "所需敌血": 131,
+            "血池净清": -7,
+            "母体所需": 131,
+            "母体净清": 38,
+            "玩家净损": 0
+          },
+          {
+            "回合": 2,
+            "首帧": 319470,
+            "结束帧": 319479,
+            "所需敌血": 138,
+            "血池净清": 53,
+            "母体所需": 93,
+            "母体净清": 68,
+            "玩家净损": 9
+          },
+          {
+            "回合": 3,
+            "首帧": 319479,
+            "结束帧": 319484,
+            "所需敌血": 85,
+            "血池净清": 28,
+            "母体所需": 25,
+            "母体净清": 16,
+            "玩家净损": 9
+          },
+          {
+            "回合": 4,
+            "首帧": 319484,
+            "结束帧": 319486,
+            "所需敌血": 57,
+            "血池净清": 57,
+            "母体所需": 9,
+            "母体净清": 9,
+            "玩家净损": 0
+          }
+        ]
+      },
+      {
+        "战斗序": 14,
+        "层": 29,
+        "逐轮": [
+          {
+            "回合": 1,
+            "首帧": 319500,
+            "结束帧": 319507,
+            "所需敌血": 129,
+            "血池净清": 25,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 2,
+            "首帧": 319507,
+            "结束帧": null,
+            "所需敌血": 104,
+            "血池净清": null,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": null
+          }
+        ]
+      },
+      {
+        "战斗序": 15,
+        "层": 29,
+        "逐轮": [
+          {
+            "回合": 1,
+            "首帧": 319508,
+            "结束帧": 319519,
+            "所需敌血": 128,
+            "血池净清": 36,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 2,
+            "首帧": 319519,
+            "结束帧": null,
+            "所需敌血": 92,
+            "血池净清": null,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": null
+          }
+        ]
+      },
+      {
+        "战斗序": 16,
+        "层": 29,
+        "逐轮": [
+          {
+            "回合": 1,
+            "首帧": 319520,
+            "结束帧": 319530,
+            "所需敌血": 128,
+            "血池净清": 29,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 2,
+            "首帧": 319530,
+            "结束帧": null,
+            "所需敌血": 99,
+            "血池净清": null,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": null
+          }
+        ]
+      },
+      {
+        "战斗序": 17,
+        "层": 29,
+        "逐轮": [
+          {
+            "回合": 1,
+            "首帧": 319531,
+            "结束帧": 319542,
+            "所需敌血": 128,
+            "血池净清": 36,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 0
+          },
+          {
+            "回合": 2,
+            "首帧": 319542,
+            "结束帧": 319547,
+            "所需敌血": 92,
+            "血池净清": 10,
+            "母体所需": null,
+            "母体净清": null,
+            "玩家净损": 5
+          }
+        ]
+      }
+    ],
+    "首末决策秒": 1444.903,
+    "首次观察至结束秒": 1474.763,
+    "Jev最优比例": 93.91,
+    "代码rank1比例": 62.71,
+    "大脑缓存比例": 56.07
+  },
+  "source_verify_invocations": 1,
+  "ops_raw_seek_reverification": true,
+  "raw_seek_count": 1037,
+  "raw_seek_counts": {
+    "XZUJR08FW801-decisions.jsonl": 471,
+    "XZUJR08FW801-states.jsonl": 493,
+    "XZUJR08FW801-run-plans.jsonl": 4,
+    "XZUJR08FW801-sl-attempts.jsonl": 6,
+    "先验-decisions.jsonl": 40,
+    "先验-runs.jsonl": 3,
+    "先验-ENKY状态.jsonl": 20
+  },
+  "append_verification": {
+    "正式追加与草稿一致": true,
+    "旧前缀保持": true,
+    "标题数": 1
+  },
+  "report_variants_equal": true,
+  "failed_commands_preserved": [
+    {
+      "exit_code": 1,
+      "command_sha256": "284cf9be1e32c77a90ded37468f047dd06b973bc84405e5f24340270d254aecf",
+      "output_excerpt": "  File \"<stdin>\", line 14\n    sig=(a.get('turn'),a['run']['current_hp'],pl.get('block'),[(e['name'],e['enemy_id'],e['current_hp'],e.get('block'),[(w['power_id'],w['amount']) for w in e['powers']],[(i.get('total_damage'),i.get('intent_type')) for i in e['intents']])\n                                                              ^\nSyntaxError: '[' was never closed\n"
+    },
+    {
+      "exit_code": 1,
+      "command_sha256": "71b98e4d2f70b48e821c6aa7ae6abde2be2d9b77d548b4ce4833316b0fdc79c2",
+      "output_excerpt": "TION 抽牌堆 None None 选择 [center]选择[blue]2[/blue]张牌来[gold]丢弃[/gold]。[/center] 1\n手牌 [('BACKSTAB', '背刺+', True, 0, '固有。 造成15点伤害。 消耗。'), ('STRIKE_SILENT', '打击+', True, 1, '造成9点伤害。'), ('STRIKE_SILENT', '打击+', True, 1, '造成9点伤害。'), ('DEADLY_POISON', '致命毒药+', True, 1, '给予7层中毒。'), ('SUCKER_PUNCH', '突然一拳+', True, 1, '造成10点伤害。 给予2层虚弱。'), ('DEFEND_SILENT', '防御+', True, 1, '获得8点格挡。'), ('STRIKE_SILENT', '打击+', True, 1, '造成9点伤害。'), ('SHADOWMELD', '融入暗影+', True, 0, '本回合你获得的格挡值翻倍。')]\nTraceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    {
+      "exit_code": 1,
+      "command_sha256": "a8ddf387cd04f16ce44c9f616ec8cebde234d8ea8a68c99f18cff184edc31714",
+      "output_excerpt": "在你的回合开始时，给予所有敌人3层中毒。')] 1\n230429 2026-10-05T10:58:59.922Z COMBAT [('进阶之灾', 'ASCENDERS_BANE', '不能被打出。 虚无。 永恒。'), ('毒雾+', 'NOXIOUS_FUMES', '在你的回合开始时，给予所有敌人3层中毒。'), ('小刀+', 'SHIV', '造成6点伤害。 消耗。'), ('小刀+', 'SHIV', '造成6点伤害。 消耗。')] None\n230430 2026-10-05T10:59:01.393Z COMBAT [('进阶之灾', 'ASCENDERS_BANE', '不能被打出。 虚无。 永恒。'), ('小刀+', 'SHIV', '造成6点伤害。 消耗。'), ('小刀+', 'SHIV', '造成6点伤害。 消耗。')] None\n230431 2026-10-05T10:59:02.431Z COMBAT [('进阶之灾', 'ASCENDERS_BANE', '不能被打出。 虚无。 永恒。'), ('小刀+', 'SHIV', '造成6点伤害。 消耗。')] None\n230432 2026-10-05T10:59:03.449Z COMBAT [('进阶之灾', 'ASCENDERS_BANE', '不能被打出。 虚无。 永恒。')] None\n"
+    },
+    {
+      "exit_code": 1,
+      "command_sha256": "7dfedb5ad204da3870ebe1da6f0c2855b4678441f81adbfa0ee82fcfa6534544",
+      "output_excerpt": "ension ?? 0;\n   269\t  const fight = forced ? forcedFightCost(forced, actOf(state), ascension, state.run?.boss_id ?? null) : null;\n   270\t  const lethal = usable.filter((option) => !unguarded.includes(option)).map((option) => str(option[\"title\"]));\n   271\t  const deepseekOptions = options.flatMap((option) => {\n   272\t    const raw = rawOf(option);\n   273\t    const hpFacts = raw ? eventHpFacts(eventHpCost(str(raw[\"description\"])), hp, maxHp, forced, fight) : {};\n   274\t    return withDiscards({ ...option, summary: { ...(option.summary as Record<string, JsonValue>), ...hpFacts } });\n   275\t  });\n"
+    }
+  ],
+  "failed_analysis_logs_preserved": [
+    "探索限制.txt",
+    "pm-event-stream.jsonl"
+  ],
+  "draft_corrections_before_append": false,
+  "append_prefix_verified": {
+    "长度": 5890362,
+    "sha256": "b5ee4fa0eaa5d5c05d521ed80618b8f0676986f9f1d3366d6b322966ecc1f94b",
+    "追加字节": 24450
+  },
+  "current_live_observed": "6519b89093213125f9a91714dd35dafcedd643d6",
+  "model_source_fingerprints": {
+    "agent/src/reflex/card-model.ts": "077a61bf969f3e0b1985456cc775c254949fb097fa125200f3c15153d1ef03f6",
+    "agent/src/reflex/turn-solver.ts": "263501c99f1cb8a6d17a49667ce326f7358aaaf0ccd4c7f48f90faf790fa527f",
+    "agent/src/reflex/combat-plan.ts": "1de4c2effaf37b3ff8ac4495cd72638423e4c84387d738d98073a8a906f818f9"
+  },
+  "proposal_registry_not_changed_by_ops": true,
+  "no_manual_proposal_dispatch": true,
+  "no_ops_game_knowledge_added": true,
+  "physical_lessons_not_reappended": true,
+  "unowned_extra_rows_preserved": 161,
+  "ledger_problems": 0,
+  "no_checks_requested": true,
+  "no_merges": true,
+  "no_versions": true,
+  "no_process_mutations": true
+}

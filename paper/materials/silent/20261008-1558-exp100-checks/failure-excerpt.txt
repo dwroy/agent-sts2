@@ -1,0 +1,27 @@
+Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > the rollout's best line is added, last and marked, when code did not show it
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/rollout-live.test.ts:132:28
+    130|       }
+    131|     }
+    132|     expect(addedSomewhere).toBe(true);
+       |                            ^
+    133|   }, 120_000);
+    134|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 301 passed (302)
+      Tests  1 failed | 3428 passed | 2 skipped (3431)
+   Start at  15:46:39
+   Duration  652.42s (transform 12.88s, setup 16.61s, import 49.03s, tests 1199.56s, environment 33ms)
+

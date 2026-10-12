@@ -1,0 +1,174 @@
+{
+  "id": "silent-0327",
+  "ts": "2026-10-09T04:03:03+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "by": "learner:postmortem",
+  "status": "shipped",
+  "claim": "静默持有石化蟾蜍PETRIFIED_TOAD的已见新战首帧，在空药槽新建药水形状的石头POTION_SHAPED_ROCK；实际使用对目标扣15，玩家HP当步不变。新战生成、奖励、SL恢复与投石分账，未观察满槽或未用旧石的组合，不推固定饮药门槛。",
+  "first_run": "ZZMYZ5UBCG72",
+  "prior": "yes",
+  "prior_runs": [
+    "ZZMYZ5UBCG72"
+  ],
+  "prior_note": "账本尚无该机制条目；较早A2静默复盘已记录生成与投石，核s218165 F17T1槽0石、s218175→176 T3族母201→186且玩家52不变，学前已经执行正确；仅判断这个已见用法。",
+  "where": {
+    "lessons": [
+      "456MRNGCPD8E",
+      "RMNXHZKV716Y"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261009-034303-postmortem/proposal-resources.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-040746-experience-update/proposal-rock.md",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261009-124302-postmortem/proposal-double-boss.md"
+    ],
+    "experience": [
+      "silent-petrified-toad-opening-rock"
+    ],
+    "commits": [
+      "e6d12c26f0713448684489396470e6596d353117",
+      "90577a65353b6fffe151b8eeb49bd472a4c98bf9",
+      "52aa3fcca307e289db09ce926b045e734be92fda",
+      "24d4eff156ed0e95f58fd906d16a5a53e0a6599e"
+    ],
+    "changelog": [
+      "## 2026-10-09 静默猎手 第一百一十七次增量：2 局 A10（version 2026-10-09.6，分支 exp-silent，e6d12c26）"
+    ]
+  },
+  "evidence": [
+    {
+      "run": "ZZMYZ5UBCG72",
+      "floor": 17,
+      "turn": 1,
+      "note": "s218165开战持蟾蜍、槽0自动有石；T3 s218175→176石离槽且族母201→186、玩家52不变。",
+      "role": "support",
+      "added": "2026-10-09T04:03:03+08:00"
+    },
+    {
+      "run": "456MRNGCPD8E",
+      "floor": 27,
+      "turn": 1,
+      "note": "F26取得蟾蜍；s312022→023空槽1新建石，d304197投向异螨，目标35→20、HP57不变。",
+      "role": "support",
+      "added": "2026-10-09T04:03:03+08:00"
+    },
+    {
+      "run": "456MRNGCPD8E",
+      "floor": 29,
+      "turn": 2,
+      "note": "s312066→067开战槽1新石；d304242/s312080→081目标129→114、玩家64不变。",
+      "role": "support",
+      "added": "2026-10-09T04:03:03+08:00"
+    },
+    {
+      "run": "456MRNGCPD8E",
+      "floor": 30,
+      "turn": 1,
+      "note": "s312101→102开战槽1新石；d304274/s312113→114目标99→84、玩家24不变。",
+      "role": "support",
+      "added": "2026-10-09T04:03:03+08:00"
+    },
+    {
+      "run": "456MRNGCPD8E",
+      "floor": 31,
+      "turn": 1,
+      "note": "s312142→143开战槽1新石；d304315/s312155→156丝虫44→29、玩家4不变。",
+      "role": "support",
+      "added": "2026-10-09T04:03:03+08:00"
+    },
+    {
+      "run": "456MRNGCPD8E",
+      "floor": 27,
+      "turn": 1,
+      "role": "support",
+      "note": "追加转录更正：s312034→312035异螨#2实际34→19，玩家57不变，实扣15。原add证据写35→20为本轮转录错误；以本条正确绝对HP为准，生成与15伤结论不变。",
+      "added": "2026-10-09T04:05:09+08:00"
+    },
+    {
+      "run": "2PVLGRBGUX9S",
+      "role": "support",
+      "note": "旧局蟾蜍新房空槽生石重核；实投目标LEAF_SLIME_M 17→2扣15，玩家35不变；SL恢复和同ID索引重排另核，不外推满槽/留石。",
+      "floor": 11,
+      "turn": 1,
+      "added": "2026-10-09T04:22:01+08:00"
+    },
+    {
+      "run": "KUZVERN40NGK",
+      "role": "support",
+      "note": "旧局蟾蜍新房空槽生石重核；实投目标CEREMONIAL_BEAST 238→223扣15，玩家34不变；SL恢复和同ID索引重排另核，不外推满槽/留石。",
+      "floor": 17,
+      "turn": 1,
+      "added": "2026-10-09T04:22:01+08:00"
+    },
+    {
+      "run": "Z91JN3S3PQX2",
+      "role": "support",
+      "note": "旧局蟾蜍新房空槽生石重核；实投目标SPINY_TOAD 95→80扣15，玩家58不变；SL恢复和同ID索引重排另核，不外推满槽/留石。",
+      "floor": 30,
+      "turn": 1,
+      "added": "2026-10-09T04:22:01+08:00"
+    },
+    {
+      "run": "RMNXHZKV716Y",
+      "floor": 49,
+      "turn": 1,
+      "role": "support",
+      "note": "F48胜后s321564空药，s321565蟾蜍新生槽0石头；六试T1均使用，后五试为SL恢复。末试d313186/s321676→321677女王400→385、玩家13不变。奖励11瓶、新生1石和9个恢复槽分账。",
+      "added": "2026-10-09T13:03:28+08:00"
+    }
+  ],
+  "asc": 2,
+  "history": [
+    {
+      "ts": "2026-10-09T04:03:03+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-09T04:05:09+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T04:05:29+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T04:22:01+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-09T04:22:02+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-09T04:54:23+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-09T05:01:57+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-09T13:03:28+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T13:05:33+08:00",
+      "by": "learner:postmortem"
+    }
+  ],
+  "version": "S1.exp117",
+  "effect": null,
+  "notes": [
+    "已逐帧核对四次投石；F27绝对目标HP追加更正，原add及失败初稿保留。lessons正文仅记每次扣15，无需正文勘误。",
+    "代码提案 silent-proposal-2134613e313fceba → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第117批经验/提案预关联，保留旧claim/首证/prior/状态/版本；只核静默153完局，旧151局统计逐行一致。原药水/SL/尾部规则未改，提交后另记proposed。",
+    "代码提案 silent-proposal-f35501885edc7aa1 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第117批经验源已自测提交；实际合入以完成事件为准，交运维核登记数据shipped。本次未改打法源码，四提案沿独立策略链，旧claim/首证/prior/证据/版本历史保持。",
+    "第一百一十七次经验仅原数据2026-10-09.5→2026-10-09.6，源e6d12c26增1改18退0/191 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp117。按原学习者ledger-map仅20所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0324仅原提案关联不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/19冲突/out/err/失败历史保持。",
+    "代码提案 silent-proposal-5153135cd2aab723 → task=strategy-proposal；Roy-2026-10-07-learning"
+  ],
+  "shipped_at": "2026-10-09T05:01:57+08:00"
+}

@@ -1,0 +1,703 @@
+{
+  "270216": {
+    "answer": {
+      "key": "plan1",
+      "facts": {
+        "plays": "狂乱逃离, then 带毒刺击 -> 无厌沙虫, then 尖啸",
+        "result": "survives with 44/72 HP before healing",
+        "hp_lost": 3,
+        "damage_dealt": 10,
+        "enemies_after": "无厌沙虫 316 HP, 中毒 2",
+        "block_gained": 3,
+        "sandpit_after_enemy_turn": 4,
+        "hp_after": 44,
+        "hp_after_pct": 61,
+        "dmg": 10,
+        "lethal_now": "no",
+        "enemy_threat_next": 31,
+        "setup_turn": false,
+        "scaling_gained": "none",
+        "block_wasted": 0,
+        "potions_used": "none",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 47, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~10.1, dead within 5 turns in 1/8 (~turn 5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 1/8), then the fight's progress: least enemy HP left (this line ~218, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 3)",
+        "rollout_turns": "T1 exact: hp -3, dmg 10; T2: hp -13.1 [5-21], dmg 16.4 [2-35], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 20.3 [7-39], alive 8/8, won 0/8; T4: hp -5.1 [0-14], dmg 30.3 [13-51], alive 8/8, won 0/8; T5: hp -6.9 [0-20], dmg 31.4 [16-40], alive 7/8, won 0/8",
+        "history_estimate": "further HP loss 46, win 46% (this encounter n=2; estimate from boss fights n=260, typical error ±9.9; few similar states for this encounter)",
+        "rollout_best": true
+      }
+    },
+    "final": {
+      "key": "plan1",
+      "facts": {
+        "plays": "狂乱逃离, then 带毒刺击 -> 无厌沙虫, then 尖啸",
+        "result": "survives with 44/72 HP before healing",
+        "hp_lost": 3,
+        "damage_dealt": 10,
+        "enemies_after": "无厌沙虫 316 HP, 中毒 2",
+        "block_gained": 3,
+        "sandpit_after_enemy_turn": 4,
+        "hp_after": 44,
+        "hp_after_pct": 61,
+        "dmg": 10,
+        "lethal_now": "no",
+        "enemy_threat_next": 31,
+        "setup_turn": false,
+        "scaling_gained": "none",
+        "block_wasted": 0,
+        "potions_used": "none",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 47, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~10.1, dead within 5 turns in 1/8 (~turn 5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 1/8), then the fight's progress: least enemy HP left (this line ~218, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 3)",
+        "rollout_turns": "T1 exact: hp -3, dmg 10; T2: hp -13.1 [5-21], dmg 16.4 [2-35], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 20.3 [7-39], alive 8/8, won 0/8; T4: hp -5.1 [0-14], dmg 30.3 [13-51], alive 8/8, won 0/8; T5: hp -6.9 [0-20], dmg 31.4 [16-40], alive 7/8, won 0/8",
+        "history_estimate": "further HP loss 46, win 46% (this encounter n=2; estimate from boss fights n=260, typical error ±9.9; few similar states for this encounter)",
+        "rollout_best": true
+      }
+    },
+    "boundary": {
+      "kind": "end_turn_requested",
+      "decision_id": "9201bfc9-683e-4233-b18d-a2c2ab7f0bbc"
+    },
+    "actual_full_candidate_result": null
+  },
+  "270264": {
+    "answer": {
+      "key": "plan4",
+      "facts": {
+        "plays": "狂乱逃离, then 咕嘟冒泡 -> 无厌沙虫",
+        "result": "survives with 9/72 HP before healing",
+        "hp_lost": 16,
+        "damage_dealt": 43,
+        "enemies_after": "无厌沙虫 206 HP, 中毒 20",
+        "block_gained": 2,
+        "sandpit_after_enemy_turn": 3,
+        "hp_after": 9,
+        "hp_after_pct": 13,
+        "dmg": 43,
+        "lethal_now": "no",
+        "enemy_threat_next": 24,
+        "setup_turn": false,
+        "scaling_gained": "none",
+        "block_wasted": 0,
+        "potions_used": "none",
+        "rollout": "5-turn rollout (24 samples): expected further HP loss 24.9, fight over within 5 turns in 1/24, expected turns to the end (surviving samples) ~5, dead within 5 turns in 23/24 (~turn 2.6); ranked on -(further loss) - 40 x (1 - win chance): win chance ~4% (fights won in the samples, the others by the end-of-horizon estimate), value -63.2",
+        "rollout_turns": "T1 exact: hp -16, dmg 43; T2: hp -7.8 [1-16], dmg 46.2 [39-67], alive 15/24, won 0/24; T3: hp -19.6 [3-31], dmg 51.9 [35-66], alive 1/24, won 0/24; T4: hp -0 [0-0], dmg 54 [54-54], alive 1/24, won 0/24; T5: hp -0 [0-0], dmg 46 [46-46], alive 1/24, won 1/24",
+        "history_estimate": "further HP loss 25, win 4% (this encounter n=2; estimate from boss fights n=260, typical error ±9.9; few similar states for this encounter)",
+        "rollout_best": true,
+        "whole_fight_sim": "low confidence: win 0% (vs the simulation's best line −2 ± 1 pts), HP lost when won median 21, ~5 turns to win (this one included); the losing samples die most often on T7 (dead in 100%); 1200 samples"
+      }
+    },
+    "final": {
+      "key": "plan6",
+      "facts": {
+        "plays": "尖啸, then 狂乱逃离",
+        "result": "survives with 21/72 HP before healing",
+        "hp_lost": 4,
+        "damage_dealt": 25,
+        "enemies_after": "无厌沙虫 224 HP, 中毒 11",
+        "block_gained": 2,
+        "sandpit_after_enemy_turn": 3,
+        "hp_after": 21,
+        "hp_after_pct": 29,
+        "dmg": 25,
+        "lethal_now": "no",
+        "enemy_threat_next": 24,
+        "setup_turn": false,
+        "scaling_gained": "none",
+        "block_wasted": 0,
+        "potions_used": "none",
+        "rollout": "5-turn rollout (24 samples): expected further HP loss 25, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4, dead within 5 turns in 23/24 (~turn 3.1); ranked on -(further loss) - 40 x (1 - win chance): win chance ~2% (fights won in the samples, the others by the end-of-horizon estimate), value -64.4",
+        "rollout_turns": "T1 exact: hp -4, dmg 25; T2: hp -13.3 [1-16], dmg 35.3 [21-47], alive 24/24, won 0/24; T3: hp -19.3 [3-31], dmg 33.9 [17-58], alive 2/24, won 0/24; T4: hp -0 [0-0], dmg 32.5 [29-36], alive 2/24, won 0/24; T5: hp -18.5 [10-27], dmg 38 [9-67], alive 1/24, won 0/24",
+        "history_estimate": "further HP loss 25, win 2% (this encounter n=2; estimate from boss fights n=260, typical error ±9.9; few similar states for this encounter)",
+        "whole_fight_sim": "low confidence: win 0% (vs the simulation's best line −2 ± 1 pts), no winning sample; the losing samples die most often on T7 (dead in 100%); 1200 samples"
+      }
+    },
+    "boundary": {
+      "kind": "end_turn_requested",
+      "decision_id": "f72c1ea5-74a9-4045-b2e3-a324018f8e87"
+    },
+    "actual_full_candidate_result": null
+  },
+  "270282": {
+    "answer": {
+      "key": "plan1",
+      "facts": {
+        "plays": "狂乱逃离, then 带毒刺击 -> 无厌沙虫, then 尖啸",
+        "result": "survives with 44/72 HP before healing",
+        "hp_lost": 3,
+        "damage_dealt": 10,
+        "enemies_after": "无厌沙虫 316 HP, 中毒 2",
+        "block_gained": 3,
+        "sandpit_after_enemy_turn": 4,
+        "hp_after": 44,
+        "hp_after_pct": 61,
+        "dmg": 10,
+        "lethal_now": "no",
+        "enemy_threat_next": 31,
+        "setup_turn": false,
+        "scaling_gained": "none",
+        "block_wasted": 0,
+        "potions_used": "none",
+        "rollout": "5-turn rollout (24 samples): expected further HP loss 47, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~236, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 3)",
+        "rollout_turns": "T1 exact: hp -3, dmg 10; T2: hp -19.4 [19-28], dmg 24 [9-28], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 16.4 [13-20], alive 24/24, won 0/24; T4: hp -2.8 [0-15], dmg 19.8 [9-30], alive 24/24, won 0/24; T5: hp -5.9 [0-14], dmg 19.9 [11-37], alive 24/24, won 0/24",
+        "history_estimate": "further HP loss 46, win 50% (this encounter n=2; estimate from boss fights n=260, typical error ±9.9; few similar states for this encounter)",
+        "rollout_best": true,
+        "whole_fight_sim": "low confidence: win 0% (the simulation's best line), no winning sample; the losing samples die most often on T7 (dead in 100%); 1200 samples"
+      }
+    },
+    "final": {
+      "key": "plan2",
+      "facts": {
+        "plays": "狂乱逃离, then 带毒刺击 -> 无厌沙虫, then 打击 -> 无厌沙虫",
+        "result": "survives with 32/72 HP before healing",
+        "hp_lost": 15,
+        "damage_dealt": 17,
+        "enemies_after": "无厌沙虫 309 HP, 中毒 2",
+        "block_gained": 3,
+        "sandpit_after_enemy_turn": 4,
+        "hp_after": 32,
+        "hp_after_pct": 44,
+        "dmg": 17,
+        "lethal_now": "no",
+        "enemy_threat_next": 31,
+        "setup_turn": false,
+        "scaling_gained": "none",
+        "block_wasted": 0,
+        "potions_used": "none",
+        "rollout": "5-turn rollout (24 samples): expected further HP loss 47, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.2, dead within 5 turns in 5/24 (~turn 5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 5/24), then the fight's progress: least enemy HP left (this line ~229, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 15)",
+        "rollout_turns": "T1 exact: hp -15, dmg 17; T2: hp -19.4 [19-28], dmg 24 [9-28], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 16.4 [13-20], alive 24/24, won 0/24; T4: hp -2.5 [0-8], dmg 19.8 [9-30], alive 24/24, won 0/24; T5: hp -5.9 [0-14], dmg 19.9 [11-37], alive 19/24, won 0/24",
+        "history_estimate": "further HP loss 47, win 30% (this encounter n=2; estimate from boss fights n=260, typical error ±9.9; few similar states for this encounter)",
+        "whole_fight_sim": "low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 1200 samples"
+      }
+    },
+    "boundary": {
+      "kind": "end_turn_requested",
+      "decision_id": "5de2685c-53d9-486a-b76c-226aaeb55abb"
+    },
+    "actual_full_candidate_result": null
+  },
+  "known_end_turns": {
+    "270219": {
+      "status": "observed_endpoints",
+      "reason": null,
+      "facts": {
+        "scope": "between_adjacent_decision_observations",
+        "next_decision_id": "213669c9-f3cf-4992-a4ac-48d1a3bd2562",
+        "next_source_line": 270220,
+        "after": {
+          "source_line": 276212,
+          "observed_ts": "2026-10-07T08:07:06.016Z",
+          "turn": 3,
+          "screen": "COMBAT",
+          "hp": 44,
+          "block": 0,
+          "energy": 3,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "id": "STRIKE_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "id": "FRANTIC_ESCAPE",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "id": "ASCENDERS_BANE",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "id": "DEADLY_POISON",
+              "upgraded": true
+            },
+            {
+              "index": 4,
+              "id": "NEUTRALIZE",
+              "upgraded": true
+            },
+            {
+              "index": 5,
+              "id": "STRIKE_SILENT",
+              "upgraded": false
+            }
+          ],
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "id": "THE_INSATIABLE",
+              "hp": 316,
+              "max_hp": 341,
+              "alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "SANDPIT_POWER",
+                  "name": "沙坑",
+                  "amount": 4,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 2,
+                  "is_debuff": true
+                }
+              ],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "31",
+                  "damage": 31,
+                  "hits": 1,
+                  "total_damage": 31,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "player_hp_delta": -3,
+        "player_power_changes": [],
+        "enemy_comparison": "unique_type_same_roster_not_instance_identity",
+        "enemy_changes": [
+          {
+            "enemy_id": "THE_INSATIABLE",
+            "before_index": 0,
+            "after_index": 0,
+            "hp_delta": -3,
+            "power_changes": [
+              {
+                "power_id": "PIERCING_WAIL_POWER",
+                "before": 6,
+                "after": null
+              },
+              {
+                "power_id": "POISON_POWER",
+                "before": 3,
+                "after": 2
+              },
+              {
+                "power_id": "SANDPIT_POWER",
+                "before": 5,
+                "after": 4
+              },
+              {
+                "power_id": "STRENGTH_POWER",
+                "before": -6,
+                "after": null
+              }
+            ]
+          }
+        ],
+        "causal_action_result": null,
+        "full_candidate_result": null
+      }
+    },
+    "270285": {
+      "status": "observed_endpoints",
+      "reason": null,
+      "facts": {
+        "scope": "between_adjacent_decision_observations",
+        "next_decision_id": "b6f755e1-a8b3-4875-855b-08213cabb303",
+        "next_source_line": 270286,
+        "after": {
+          "source_line": 276278,
+          "observed_ts": "2026-10-07T08:10:20.578Z",
+          "turn": 3,
+          "screen": "COMBAT",
+          "hp": 32,
+          "block": 0,
+          "energy": 3,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "id": "STRIKE_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "id": "FRANTIC_ESCAPE",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "id": "ASCENDERS_BANE",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "id": "DEADLY_POISON",
+              "upgraded": true
+            },
+            {
+              "index": 4,
+              "id": "NEUTRALIZE",
+              "upgraded": true
+            },
+            {
+              "index": 5,
+              "id": "STRIKE_SILENT",
+              "upgraded": false
+            }
+          ],
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "id": "THE_INSATIABLE",
+              "hp": 309,
+              "max_hp": 341,
+              "alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "SANDPIT_POWER",
+                  "name": "沙坑",
+                  "amount": 4,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 2,
+                  "is_debuff": true
+                }
+              ],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "31",
+                  "damage": 31,
+                  "hits": 1,
+                  "total_damage": 31,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "player_hp_delta": -15,
+        "player_power_changes": [],
+        "enemy_comparison": "unique_type_same_roster_not_instance_identity",
+        "enemy_changes": [
+          {
+            "enemy_id": "THE_INSATIABLE",
+            "before_index": 0,
+            "after_index": 0,
+            "hp_delta": -3,
+            "power_changes": [
+              {
+                "power_id": "POISON_POWER",
+                "before": 3,
+                "after": 2
+              },
+              {
+                "power_id": "SANDPIT_POWER",
+                "before": 5,
+                "after": 4
+              }
+            ]
+          }
+        ],
+        "causal_action_result": null,
+        "full_candidate_result": null
+      }
+    }
+  },
+  "terminal": {
+    "status": "observed_terminal_endpoints",
+    "reason": null,
+    "facts": {
+      "scope": "adjacent_end_turn_and_run_finalization",
+      "attempt": 6,
+      "reloads": 5,
+      "next_decision_id": "1fc2d93a-5a04-4424-b98d-9bc9d98b990a",
+      "next_source_line": 270442,
+      "before": {
+        "source_line": 276433,
+        "observed_ts": "2026-10-07T08:17:06.851Z",
+        "turn": 11,
+        "screen": "COMBAT",
+        "hp": 5,
+        "block": 22,
+        "energy": 0,
+        "player_powers": [
+          {
+            "index": 0,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 1,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "AFTERIMAGE_POWER",
+            "name": "余像",
+            "amount": 1,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "hand": [
+          {
+            "index": 0,
+            "id": "LEADING_STRIKE",
+            "upgraded": false
+          },
+          {
+            "index": 1,
+            "id": "STRIKE_SILENT",
+            "upgraded": false
+          },
+          {
+            "index": 2,
+            "id": "DEADLY_POISON",
+            "upgraded": true
+          }
+        ],
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 1,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "AFTERIMAGE_POWER",
+            "name": "余像",
+            "amount": 1,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "id": "THE_INSATIABLE",
+            "hp": 154,
+            "max_hp": 341,
+            "alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "SANDPIT_POWER",
+                "name": "沙坑",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 24,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 6,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "37",
+                "damage": 37,
+                "hits": 1,
+                "total_damage": 37,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "source_line": 276434,
+        "observed_ts": "2026-10-07T08:17:09.498Z",
+        "turn": 11,
+        "screen": "GAME_OVER",
+        "hp": 0,
+        "block": 0,
+        "energy": 0,
+        "player_powers": [],
+        "hand": [],
+        "powers": [],
+        "enemies": [
+          {
+            "index": 0,
+            "id": "THE_INSATIABLE",
+            "hp": 130,
+            "max_hp": 341,
+            "alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "SANDPIT_POWER",
+                "name": "沙坑",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 23,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 6,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "37",
+                "damage": 37,
+                "hits": 1,
+                "total_damage": 37,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "player_hp_delta": -5,
+      "displayed_attack_reference": {
+        "total_attack": 37,
+        "current_block": 22,
+        "attack_minus_block": 15
+      },
+      "enemy_comparison": "unique_type_same_roster_not_instance_identity",
+      "enemy_hp_changes": [
+        {
+          "enemy_id": "THE_INSATIABLE",
+          "before_index": 0,
+          "after_index": 0,
+          "hp_before": 154,
+          "hp_after": 130,
+          "hp_delta": -24
+        }
+      ],
+      "actual_uncapped_damage": null,
+      "causal_action_result": null,
+      "full_candidate_result": null
+    }
+  },
+  "whole_candidate_attributions": 0
+}

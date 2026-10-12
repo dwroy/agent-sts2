@@ -1,0 +1,37 @@
+{
+  "complete": [
+    {
+      "tag": "exp73",
+      "batch": "20261007-132727-experience-update",
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-132727-experience-update.fallback-0549b0ebea97d4863cb40de8e785a478771dd008.checks.log",
+      "merged": "b0f41f039b136e69485027ecbf9042c23170b4ab",
+      "tree": "0549b0ebea97d4863cb40de8e785a478771dd008",
+      "commits": [
+        "fa87ca9aca5774033a997b58528e6328607cb09c"
+      ],
+      "passed_files": 283,
+      "passed_cases": 3238,
+      "skipped_cases": 2,
+      "bytes": 73666,
+      "sha256": "0f31ac21008635721096f3c98352986de310c9abe0a2c464b755a235d0b61505",
+      "original_files_unchanged": true,
+      "original_state_unchanged_except_fallback_history": true
+    }
+  ],
+  "pending": {
+    "batch": "20261007-141302-fix-batch",
+    "request": "bash ops/codex-ops-do.sh learner-recheck 20261007-141302-fix-batch",
+    "client_session": 23199,
+    "commits_verified_live": [
+      "1cf0490492bd8a430b85f95f3fdee91eba251191",
+      "9c19ce71a149300442b01adcfa50df543bc8a7f1"
+    ],
+    "original_files_unchanged_at_close": true,
+    "return_receipt": null,
+    "full_check_result": null,
+    "state": "request submitted; pending broker return",
+    "followup": "现有learner-checks完成事件续办，不自建重复事件/合并/补测；客户端只写/tmp回执，broker stop等待busy正常结束，无生产信号",
+    "completion_receipt_expected": "/tmp/sts2-20261007-1531-fix141302-recheck-result.json"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-12 09:40:45 CST",
+  "command": "nice -n 19 python3 ops/paper_dataset.py --no-raw",
+  "invocations": 1,
+  "exit": 0,
+  "generated_at": "2026-10-12T01:32:20.211Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 1014067922,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 301492,
+    "states.jsonl": 11562522566,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 7133952,
+    "brain.jsonl": 425030341,
+    "sl-attempts.jsonl": 32266864,
+    "run-config.jsonl": 1405669
+  },
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": []
+    },
+    "row_counts": {
+      "runs.csv": 725,
+      "decisions_by_label.csv": 24158,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 4974
+    }
+  },
+  "key_scan": "CLEAN",
+  "run": "F6XY4QJMS5RC",
+  "run_rows": 1,
+  "decisions": 485,
+  "actual_ascension": 10,
+  "new_history_retained": [
+    "paper/data/history/20261012T013220213220Z",
+    "paper/data/history/20261012T013457934653Z"
+  ],
+  "outputs": 13
+}

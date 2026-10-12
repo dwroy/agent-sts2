@@ -1,0 +1,32 @@
+[
+  {
+    "name": "infra-contracts",
+    "cmd": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/brain-codex-session.test.ts",
+      "tests/ops-codex.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "-t",
+      "the exit fixture selects|allows only the listed actions|every action is implemented"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "main-dispatch-preserved",
+    "cmd": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "ops/tests",
+      "-p",
+      "test_silent_calibration_dispatch.py",
+      "-v"
+    ],
+    "exit": 1
+  }
+]

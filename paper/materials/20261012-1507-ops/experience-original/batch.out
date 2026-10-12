@@ -1,0 +1,96 @@
+## 经验库更新回报
+
+- 版本：2026-10-12.5 → 2026-10-12.6；提交：`7acbcd1351`（分支 exp-silent）；合入：**未合入，锁内预检发现6处记录冲突，按要求停止**。刷新提交 `a1a0e0aa04` 已保留。
+- 条数：新增1、更新20（加证据20、只改数字0）、退役0；active 223 → 224。正文55,095字；A8适用203条／49,066字，A9适用204条／49,350字。
+- 机制推理（局数为主题支持数，典型案例均为 KF9HMZKTFC3V）：
+  - 步法 — 新敏捷不追补旧挡 — 140局 — KF9HMZKTFC3V
+  - 力量 — 临时减力到期恢复 — 237局 — KF9HMZKTFC3V
+  - 构筑兑现 — 第二王需要重新启动能力 — 237局，新增胜例1局 — KF9HMZKTFC3V
+  - 药瓶 — 升级重放实加24毒 — 28局，限定组合1局 — KF9HMZKTFC3V
+  - 触媒 — 普通重放建立2层，47毒三结138 — 84局，限定组合1局 — KF9HMZKTFC3V
+  - 尖啸 — 重放临减12力量，后轮恢复 — 115局 — KF9HMZKTFC3V
+  - 萎靡 — X1减力使双击24→22 — 26局 — KF9HMZKTFC3V
+  - 凋萎 — 持牌伤须与攻击、格挡合算 — 32局 — KF9HMZKTFC3V
+  - 沙漏 — 破制品与实际施毒分账 — 32局 — KF9HMZKTFC3V
+  - 女王 — 先清爪牙不保证获胜 — 27局 — KF9HMZKTFC3V
+  - 女王SL — 同抽前缀不构成单动作因果对照 — 18局 — KF9HMZKTFC3V
+  - 蛇咬 — 免费重放实20毒，无重放仍10毒 — 22局，限定组合1局 — KF9HMZKTFC3V
+  - 敏捷药 — 两瓶叠4敏，后续双防御实18挡 — 75局 — KF9HMZKTFC3V
+  - 机甲骑士 — 未结毒不能预支为已伤 — 4局 — KF9HMZKTFC3V
+  - 幕间回复 — 缺血80%向下取整，连王不回复 — 83局 — KF9HMZKTFC3V
+  - 亮片 — 重放按现场文本核算 — 2局 — KF9HMZKTFC3V
+  - 永恒铠甲 — 覆甲按剩余层数核算 — 5局 — KF9HMZKTFC3V
+  - 水银沙漏 — 开场已扣伤不重复计算 — 4局 — KF9HMZKTFC3V
+  - 骇人头盔 — 已核2费重放药瓶／迷雾各给8挡 — 1局 — KF9HMZKTFC3V
+- 改了的手写知识：无。
+- 测试：tsc退出0；Vitest 336文件／3,368用例／退出0。原树因历史失效链接失败，同SHA隔离副本复验通过；失败原件保留。
+- 切片大小：总体中位增加27字，最大8,770字。
+- 学习账本：新增无；改成proposed的24项完整ID见下方JSON；退役无；`ledger.py check`退出0。
+- 需要Roy定的事：无。合入冲突待运维兜底；[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-140742-experience-update/report.md)、[逐项映射](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-140742-experience-update/experience-integration.json)、[追加的变更记录](/home/dw/Projects/agent-sts2/paper/materials/experience-changelog-silent.md:84266)。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-12.6",
+  "commit": "7acbcd1351085b2ed87f8c2e2ba02f044c7d9fd6",
+  "merged": null,
+  "added": 1,
+  "updated": 20,
+  "retired": 0,
+  "active": 224,
+  "mechanisms": [
+    "灵动步法",
+    "general:plan",
+    "general:deck",
+    "弹跳药瓶",
+    "触媒",
+    "尖啸",
+    "萎靡",
+    "凋萎",
+    "boss:AEONGLASS",
+    "boss:QUEEN",
+    "boss:QUEEN",
+    "蛇咬",
+    "敏捷药水",
+    "elite:MECHA_KNIGHT",
+    "general:rest",
+    "亮片",
+    "永恒铠甲",
+    "水银沙漏",
+    "骇人头盔"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3368},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0005", "silent-0007", "silent-0012", "silent-0016",
+      "silent-0019", "silent-0020", "silent-0021", "silent-0024",
+      "silent-0025", "silent-0027", "silent-0046", "silent-0053",
+      "silent-0069", "silent-0079", "silent-0090", "silent-0116",
+      "silent-0220", "silent-0243", "silent-0276", "silent-0309",
+      "silent-0385", "silent-0395", "silent-0433", "silent-0434"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-73f0448095be8ae4",
+    "silent-proposal-f5f84ef2b801ccec",
+    "silent-proposal-e94918f3c77957f9",
+    "silent-proposal-5329ffa5661d6ad4"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-140742-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12eb9-a4f6-7212-81ab-b91ccabc9ef6
+轮数：1；工具调用：command_execution×86 file_change×5
+token：输入 282.2k、输出 83.9k（其中推理 44.7k）、cache 读 16815.0k、cache 写 0（命中 98.3%）
+成本：未提供
+耗时：3417.8 s（墙钟）
+时间：首个事件 42.9 s、模型首个输出 49.7 s、首次工具 52.3 s、末次工具结束 3275.5 s；工具内共 3388.3 s，其余（模型生成、推理、网络）-13.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×91 wait×3；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T14-08-00-01a12eb9-a4f6-7212-81ab-b91ccabc9ef6.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-140742-experience-update.jsonl

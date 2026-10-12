@@ -1,0 +1,6 @@
+{
+  "file": "agent/src/reflex/combat-plan.ts",
+  "old_conflict": "<<<<<<< ours\n  const enemies = enemySims(combat, ascension);\n  carrySilentSkittish(env.screenMemory, state, enemies);\n=======\n  const enemies = enemySims(combat, ascension, str(asRecord(state.run?.raw)[\"character_id\"]));\n>>>>>>> theirs",
+  "resolved": "  const enemies = enemySims(combat, ascension, str(asRecord(state.run?.raw)[\"character_id\"]));\n  carrySilentSkittish(env.screenMemory, state, enemies);",
+  "reason": "preserve live skittish call and incoming explicit character argument; no inferred gameplay rule"
+}

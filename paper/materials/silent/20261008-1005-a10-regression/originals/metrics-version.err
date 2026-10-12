@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/eval/metrics.py", line 856, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/eval/metrics.py", line 804, in main
+    sets = strength_sets(args.strength_sets, args.game_data)
+  File "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/eval/metrics.py", line 482, in strength_sets
+    raise RuntimeError(f"eval/strength-sources.ts failed: {done.stderr.strip()[:500]}")
+RuntimeError: eval/strength-sources.ts failed: node:net:1919
+      const error = new UVExceptionWithHostPort(rval, 'listen', address, port);
+                    ^
+
+Error: listen EPERM: operation not permitted /tmp/tsx-1000/7.pipe
+    at Server.setupListenHandle [as _listen2] (node:net:1919:21)
+    at listenInCluster (node:net:1998:12)
+    at Server.listen (node:net:2120:5)
+    at file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/cli.mjs:53:31472
+    at new Promise (<anonymous>)
+    at createIpcServer (file:///home/dw/Projects/a

@@ -1,0 +1,40 @@
+{
+  "checks": [
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "ops/tests/test_strategy_research_scheduling.py"
+      ],
+      "rc": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "ops/tests/test_strategy_research.py"
+      ],
+      "rc": 0
+    }
+  ],
+  "source_full_cases_reused": 3336,
+  "full_suite_repeated": false
+}

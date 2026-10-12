@@ -1,0 +1,216 @@
+{
+ "id": "silent-0286",
+ "ts": "2026-10-08T10:14:48+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "感染 INFECTION 留在手中时，每张在玩家回合结束造成3伤，可先消耗格挡；持有多张须先结算这笔伤害，不能直接把当前格挡全用于敌攻或把当前毒层当已结算。本次A10实盘中三感染9伤吃完7挡并扣2血先死，目标8HP/10毒仍未结算；两个感染也曾先吃6挡，令随后两次9攻实际失11而非只失5。仅限已核静默局观察，不外推未见免伤/增伤组合。",
+ "evidence": [
+  {
+   "run": "9YBKCNBFP0X5",
+   "floor": 8,
+   "turn": 6,
+   "role": "support",
+   "note": "同角色更早A4状态已含感染，文本明确持有时回合结束受3伤；最早已核观察帧states:221095@2026-10-05T02:02:44.194Z。这里只用自身日志卡文本作首证，不把旧局的未核结算当新胜负证据。",
+   "added": "2026-10-08T10:14:48+08:00"
+  },
+  {
+   "run": "79UCJ0K6R9C1",
+   "floor": 14,
+   "turn": 6,
+   "role": "support",
+   "note": "零挡、四感染12伤及本体20攻，51→19实失32，推演也已计32。states:293440—293443；decisions:286695。",
+   "added": "2026-10-08T10:14:48+08:00"
+  },
+  {
+   "run": "79UCJ0K6R9C1",
+   "floor": 14,
+   "turn": 10,
+   "role": "support",
+   "note": "13挡、二感染6伤先消费格挡，余7挡对两虫9+9，13→2实失11，与预报11相符。states:293460→293461；decisions:286712。",
+   "added": "2026-10-08T10:14:48+08:00"
+  },
+  {
+   "run": "79UCJ0K6R9C1",
+   "floor": 14,
+   "turn": 11,
+   "role": "support",
+   "note": "2HP/7挡/三感染，饮毒药水使目标毒4→10却HP仍8；end_turn后HP0/block0，目标8HP/10毒不变，支持感染先于致死敌攻/毒结算。states:293463—293465；decisions:286715—286716。",
+   "added": "2026-10-08T10:14:48+08:00"
+  },
+  {
+   "run": "UACFSW4VDDLD",
+   "role": "support",
+   "note": "经验更新重新核实本角色日志；条目silent-infection-end-turn-block，完整动作/血量/尝试见本批报告及审计。",
+   "added": "2026-10-08T11:23:32+08:00"
+  },
+  {
+   "run": "4Y94N8RDPGPM",
+   "role": "support",
+   "note": "经验更新重新核实本角色日志；条目silent-infection-end-turn-block，完整动作/血量/尝试见本批报告及审计。",
+   "added": "2026-10-08T11:23:32+08:00"
+  },
+  {
+   "run": "TCFAHJ9K19VY",
+   "role": "support",
+   "note": "经验更新重新核实本角色日志；条目silent-infection-end-turn-block，完整动作/血量/尝试见本批报告及审计。",
+   "added": "2026-10-08T11:23:32+08:00"
+  },
+  {
+   "run": "UMVLWER4CD98",
+   "role": "support",
+   "note": "经验更新重新核实本角色日志；条目silent-infection-end-turn-block，完整动作/血量/尝试见本批报告及审计。",
+   "added": "2026-10-08T11:23:32+08:00"
+  },
+  {
+   "run": "TXZ6RVMQA09D",
+   "role": "support",
+   "note": "经验更新重新核实本角色日志；条目silent-infection-end-turn-block，完整动作/血量/尝试见本批报告及审计。",
+   "added": "2026-10-08T11:23:32+08:00"
+  },
+  {
+   "run": "1913SE84AXQF",
+   "role": "support",
+   "note": "经验更新重新核实本角色日志；条目silent-infection-end-turn-block，完整动作/血量/尝试见本批报告及审计。",
+   "added": "2026-10-08T11:23:32+08:00"
+  },
+  {
+   "run": "BTSRF7JL1W1Y",
+   "role": "support",
+   "note": "经验更新重新核实本角色日志；条目silent-infection-end-turn-block，完整动作/血量/尝试见本批报告及审计。",
+   "added": "2026-10-08T11:23:32+08:00"
+  },
+  {
+   "run": "9Z9H2EXKLF3T",
+   "role": "support",
+   "note": "经验更新重新核实本角色日志；条目silent-infection-end-turn-block，完整动作/血量/尝试见本批报告及审计。",
+   "added": "2026-10-08T11:23:32+08:00"
+  },
+  {
+   "run": "NEWRFAYKTQHR",
+   "role": "support",
+   "note": "经验更新重新核实本角色日志；条目silent-infection-end-turn-block，完整动作/血量/尝试见本批报告及审计。",
+   "added": "2026-10-08T11:23:32+08:00"
+  },
+  {
+   "run": "9DAS5L8YM1CN",
+   "floor": 3,
+   "turn": 3,
+   "role": "support",
+   "note": "T3两敌9攻和一手感染3、玩家10挡合实损11，55→44；T5一11攻、一感染3且0挡实损14，44→30，states:299609→299610、299618→299619。感染持牌伤与敌攻分列，不推断未见防护组合。",
+   "added": "2026-10-08T15:57:39+08:00"
+  }
+ ],
+ "first_run": "9YBKCNBFP0X5",
+ "prior": "unknown",
+ "prior_runs": [
+  "9YBKCNBFP0X5"
+ ],
+ "prior_note": "检索静默账本及更早复盘的感染/INFECTION、异蛙/PHROG、扭动虫/WRIGGLER未见此机制条目；流式追到更早A4卡文本，但没有核实该局同条件持有感染导致毒结算前死亡的可比决策，无法判断学习前是否一直做对。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "79UCJ0K6R9C1",
+   "9DAS5L8YM1CN"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-094302-postmortem/proposal-combat-observed-payoff.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-094302-postmortem/proposal-potion-observed-scope.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-111006-experience-update/proposal-infection.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-111006-experience-update/proposal-infection-domain-correction.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-160331-experience-update/proposal-modifiers.md"
+  ],
+  "experience": [
+   "silent-infection-end-turn-block"
+  ],
+  "commits": [
+   "fbf45077466b57210ed1c5377a11896384bbeab0",
+   "74387216c08496ddeb53bb674490f79a1eb2c06e",
+   "d61bf0ec98ea1c87c6a009c33530f8756b6d6ba4",
+   "e51c4b2783ec7e33115d79657bb689a0b7216c08",
+   "7f51464c2c6610ee0a304c4c092a556b5b8ee4cb",
+   "3e5637f6583e83c7348101623ac369b63dd1174b",
+   "187c025aaf27a3d52db651849ac22ce2a83714bb",
+   "a089f044a4bfd358b291943c34a251d46c1f1856"
+  ],
+  "changelog": [
+   "## 2026-10-08 静默猎手 第九十五次增量：2 局 A10（version 2026-10-08.12，分支 exp-silent，fbf45077）",
+   "2026-10-08 静默猎手 第一百零二次增量：1 局 A10（version 2026-10-08.19，分支 exp-silent，7f51464c）"
+  ]
+ },
+ "asc": 4,
+ "history": [
+  {
+   "ts": "2026-10-08T10:14:48+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-08T10:19:34+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T10:19:34+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T11:23:32+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T11:23:33+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T11:27:47+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T11:30:41+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T11:43:25+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-08T15:57:39+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T16:15:52+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T16:16:38+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T16:31:50+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T17:02:39+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp102",
+ "effect": null,
+ "notes": [
+  "代码提案 silent-proposal-645ff7b72e0b9991 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-68ef2857229d1287 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-60e68d681e861d1c → task=strategy-proposal；Roy-2026-10-07-learning",
+  "本批经验源提交已完成；经验数据发布与独立策略源码实现分开，实际shipped由运维核验登记。",
+  "代码提案 silent-proposal-e6f9cb57c1204036 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第95次经验原数据2026-10-08.11→.12/增3改20退0/173 active，源fbf45077唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记25所属经验数据shipped。源248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及20项记录冲突历史不改。0287纯bug保持原观察/提案状态，0289首证LLYSRQQ35AVW/A8不改为本批A10。",
+  "第102批实帧补证关联；首证/prior/claim与原support/repeat和旧上线历史保留，提交后登记proposed。",
+  "代码提案 silent-proposal-a86e7753ca2a347c → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第102批经验提交完成；首证/prior/claim及原证据和旧版本历史保持，实际shipped交运维核live，数据发布不等策略源码实现。",
+  "第一百零二次经验仅原数据.18→.19，源7f51464c增0改16退0/176 active，原251文件2621例tsc/vitest0；actual live/main唯一发布S1.exp102。按原学习者ledger-map仅16所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/32冲突/out/err/失败历史保持。"
+ ],
+ "shipped_at": "2026-10-08T17:02:39+08:00"
+}

@@ -1,0 +1,30 @@
+1564623 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-130415-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-130415-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+1564624 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-130415-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/boss-sim-automation boss-sim-automation
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+1937634 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-153133-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-153133-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+1937637 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-153133-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133 boss-sim-batch /home/dw/Pro
+1937653 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/run.ts --engine codex --task boss-sim-batch --character sile
+1937722 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+1966996 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-154302-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-154302-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+1966997 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-154302-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration silent-boss-calibration
+1967006 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/run.ts --engine codex --task silent-boss-calibration --character silent --cwd 
+1967033 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2046065 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-160418-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-160418-strategy-proposal.pid 1 - /home/dw/Projects
+2046066 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-160418-strategy-proposal JMH5C51RLN4E,9TG1RP5LFAAK,VLZ6CCT8AQ0A silent strategy-proposal /home/dw/Projects/agent-sts2/.worktrees/codex-dev
+2046075 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/run.ts --engine codex --task strategy-proposal --character silent --cwd /home/dw/Projects/ag
+2046087 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2064960 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+2064978 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2102954 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+2103114 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+2103115 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+2103126 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+autoplay.pid: 1746959
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay                                   wJ:p2   yes    no    
+learner-20261007-130415-fix-batch          wJ:p55  yes    yes   1564623:bash 1564624:bash 2110644:python3 2110653:bash 2110711:npm exec vitest 2110723:sh 2110724:node 2110794:node 2111276:node
+learner-20261007-153133-fix-batch          wJ:p5J  yes    yes   1937634:bash 1937637:bash 1937651:tail 1937653:node 1937722:node 1937837:esbuild
+learner-20261007-154302-fix-batch          wJ:p5M  yes    yes   1966996:bash 1966997:bash 1967005:tail 1967006:node 1967033:node 1967063:esbuild
+learner-20261007-160418-strategy-proposal  wJ:p5P  yes    yes   2046065:bash 2046066:bash 2046074:tail 2046075:node 2046087:node 2046095:esbuild
+ops                                        wJ:p5   yes    yes   1753575:node 1753583:codex

@@ -1,0 +1,69 @@
+{
+  "id": "silent-0256",
+  "ts": "2026-10-07T22:27:46+08:00",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "狡诈药水CUNNING_POTION已实见确定生成升级小刀，但仍因POTION_EFFECTS无该药而在modelPotion返回null，仅给Jev效果未模拟、生成数未知的直接饮用项，不能共同比较剩余手位和先出刀再喝的顺序。本局满手续喝确实消耗药却不新增刀；需以本角色证据补确定生成模型及容量事实，合法按钮本身不是接口错误，不声称修模必能赢整场。",
+  "evidence": [
+    {
+      "run": "SADL3CGYTGSR",
+      "floor": 8,
+      "turn": 1,
+      "role": "support",
+      "note": "较早首证：decisions:227273狡诈选项标效果未模拟；states:231884→231885手3→6，实添3张升级刀。",
+      "added": "2026-10-07T22:27:46+08:00"
+    },
+    {
+      "run": "NB8KCF6HRGVF",
+      "floor": 31,
+      "turn": 5,
+      "role": "support",
+      "note": "decisions:248014仍效果未模拟；states:253285→253286手5→8、实添3刀。旧复盘只有饮用记录，没有该模型缺口条目。",
+      "added": "2026-10-07T22:27:46+08:00"
+    },
+    {
+      "run": "WQZVENQ7DTRP",
+      "floor": 33,
+      "turn": 11,
+      "role": "support",
+      "note": "第5次decisions:276102—276104，手8→10→10→10、添刀2/0/0；第6次276161—276163，手5→8→10→10、添刀3/2/0。当前live card-model.ts:1556—1558无效果返回null，combat-plan.ts:3159排除、:3844直接未模拟饮用；fix-queue无同项。",
+      "added": "2026-10-07T22:27:46+08:00"
+    }
+  ],
+  "first_run": "SADL3CGYTGSR",
+  "prior": "no",
+  "prior_runs": [
+    "SADL3CGYTGSR",
+    "NB8KCF6HRGVF"
+  ],
+  "prior_note": "学习前两场可核题面都没有生成数及方案模型；这里评的是模型是否已有，并非将宽裕手位下正确饮用认定错误。容量失误的首证另记本局机制。",
+  "status": "observed",
+  "by": "learner:postmortem",
+  "where": {
+    "lessons": [
+      "WQZVENQ7DTRP"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261007-221303-postmortem/cunning-model-proposal.md"
+    ]
+  },
+  "note": "来源20261007-221303-postmortem；首证沿较早静默A7，不把本局A10当第一次日志出现。只登记观察，独立strategy-proposal实现；只读live a881e27a54e458bd027244db12503e96197d6e51，对局31914e4b+dirty。",
+  "asc": 7,
+  "history": [
+    {
+      "ts": "2026-10-07T22:27:46+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-07T22:31:52+08:00",
+      "by": "learner:postmortem"
+    }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+    "来源20261007-221303-postmortem；首证沿较早静默A7，不把本局A10当第一次日志出现。只登记观察，独立strategy-proposal实现；只读live a881e27a54e458bd027244db12503e96197d6e51，对局31914e4b+dirty。",
+    "代码提案 silent-proposal-4111ed10f08739cb → task=strategy-proposal；Roy-2026-10-07-learning"
+  ]
+}

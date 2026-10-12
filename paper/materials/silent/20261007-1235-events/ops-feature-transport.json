@@ -1,0 +1,66 @@
+{
+  "source": "b367c6019f771bce0913eb81d85c43d2512210cd",
+  "main": "fce5576efc926017ba56a72802346b3b6594f4d7",
+  "paths": [
+    "ops/learner_jobs.py",
+    "ops/codex-ops-learner.sh",
+    "ops/tests/test_silent_calibration_dispatch.py",
+    "learner/tasks/silent-double-boss.md",
+    "learner/tasks/boss-sim-automation.md",
+    "notes/silent-double-boss-dispatch.json",
+    "notes/boss-sim-automation-dispatch.json"
+  ],
+  "sandbox": {
+    "exit": 0,
+    "files": 224,
+    "cases": 2374,
+    "log": "/tmp/sts2-1235-transport-sandbox.log",
+    "sha256": "0148fba33da92a3ae5e89d4dc7817df863277df44842d3f52acaed7e169f1580",
+    "workers": 2
+  },
+  "python_tests": 20,
+  "task_render": [
+    {
+      "task": "silent-double-boss",
+      "characters": [
+        "silent"
+      ],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Edit",
+        "Write"
+      ],
+      "timeoutMin": 240,
+      "merge": "live",
+      "rendered": true
+    },
+    {
+      "task": "boss-sim-automation",
+      "characters": [
+        "silent"
+      ],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Edit",
+        "Write"
+      ],
+      "timeoutMin": 240,
+      "merge": "live",
+      "rendered": true
+    }
+  ],
+  "task_render_log": "/tmp/sts2-1235-task-render.log",
+  "without_source": {
+    "rc": 1,
+    "log": "/tmp/sts2-1235-transport-without-source.log"
+  },
+  "unit_log": "/tmp/sts2-1235-transport-unit.log",
+  "a_first": true,
+  "new_features_not_complete": true
+}

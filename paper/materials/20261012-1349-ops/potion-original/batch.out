@@ -1,0 +1,107 @@
+已提交药水持有价值说明子项 `c4670f4f4`，证据为 751FN9QM9MHQ F13 T3，账本 `silent-0431`。
+
+tsc、3,348 项沙箱测试及 gitleaks 通过；撤入口 2 项失败，恢复后 12 项通过。live 预检有 9 处共享记录冲突，已停止合入；未上线、无新版本。十个父提案均保留 waiting，工作树干净。
+
+[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-131301-s2/learner/runs/20261012-131314-strategy-proposal/report.md) · [提案与证据](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-131301-s2/learner/runs/20261012-131314-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-131301-s2-strategy-proposal",
+  "base": "c425b7b7b36f4a7ca1532ca62a6b8dd7d1da2216",
+  "runs": ["751FN9QM9MHQ", "KV0JHNJCKXLS", "YQL8RZ8BWN1E", "L9SGRBB5R698", "PU80F84P6HPN", "KEN58SH9SLZ6"],
+  "fixes": [{
+    "item": "静默A10未知药水持有价及同题无药参考展示（原两提案有限子项）",
+    "commit": "c4670f4f416c7d93e192e889c5080e7e4e0e733f",
+    "test": "agent/tests/silent-potion-reference.test.ts",
+    "fails_without_fix": true,
+    "ledger": ["silent-0431", "silent-0019"]
+  }],
+  "skipped": [{
+    "item": "live合入",
+    "reason": "三方预检9个共享记录/文件位置冲突；未实际merge，live已有知识刷新及两处脏notes保留。"
+  }],
+  "merged": null,
+  "version": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3348, "files": 335},
+  "code_proposals": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "implementation_domains": ["combat", "potion"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "751 F17 T2多9伤付5血、T7多6伤付10血已逐帧复核；已有预测/派发源码为live祖先，但未决弃牌、续步及整轮候选收益仍未认证。缺同随机输入完整后继与独立局验证，不拟SL准入门槛。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "本批实现缺失持有价值及同题无药参考的展示子项；父项还缺未决弃呼唤的确定/保守损血联合拆项及无药或留药完整后继，不能据F13饮用分支确定跨战价值。 本子项源码c4670f4f416c7d93e192e889c5080e7e4e0e733f自测通过，但live三方预检有9处记录/位置冲突，尚未上线。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "与366共享的5/10血配对成立，原同源提案SHA一致；已有局部审计不覆盖完整执行归属和受控胜率，保留父项，不能整体标duplicate。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "本批实现未知持有价子项；逐张敏捷、毒/荆棘限伤、呼唤及药价的联合消费者认证仍未齐，缺同题不饮用整战结果，未更改护栏或药价。 本子项源码c4670f4f416c7d93e192e889c5080e7e4e0e733f自测通过，但live三方预检有9处记录/位置冲突，尚未上线。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "KV F33第4/5试T5同指纹，实测净扣36/29且当轮均零损；后续毒量及敌回血不能由候选分数认证完整执行。缺保毒/删毒同抽序受控后继，不设探索或路线门槛。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "YQL六试占位阶段/50、50、47、50、50、41自爆与L9/PU历史引用已核。阶段日志部分已上线，末T10毒2→8而HP26/挡13/自爆41不变；缺阶段药水展示的联合验证及改变SL排序的完整受控结果。"
+    },
+    {
+      "id": "silent-proposal-9733bb80f445aeae",
+      "state": "waiting",
+      "reason": "与e18同源但父范围仍含巨兽阶段药水和参考排序；通用未知持有价说明不证明本体/残壳药效或跨阶段收益，缺提前用/不喝/保留完整对照，不能整体关闭。"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "state": "waiting",
+      "reason": "KEN七次实际饮用与F17空栏入口已核；发光水重问、技能药选择后完整方案归属仍未认证。缺F15不饮用或保留至boss的完整后继，不能拟持有价。"
+    },
+    {
+      "id": "silent-proposal-86a7db08d1a31976",
+      "state": "waiting",
+      "reason": "KEN第4/5试T10同指纹，多2实伤付6血；第4/6试T5省2血但步法延后，追加小刀单列。缺能力窗口与完整后继联合认证，不以当轮血差重写SL/HP护栏阈值。"
+    },
+    {
+      "id": "silent-proposal-e282a9131b99129a",
+      "state": "waiting",
+      "reason": "与86共享反例与资源差已核；预测、派发、离线观测为不同证据层，尚无完整候选收益或独立局受控胜线，不把六次相关SL当六局拟合。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-131301-s2/learner/runs/20261012-131314-strategy-proposal/report.md",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-131301-s2/learner/runs/20261012-131314-strategy-proposal/proposal.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12e87-9024-7fc3-957c-502bb16d5378
+轮数：1；工具调用：command_execution×78 file_change×8
+token：输入 198.5k、输出 47.7k（其中推理 16.9k）、cache 读 8597.1k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：1929.2 s（墙钟）
+时间：首个事件 14.7 s、模型首个输出 19.7 s、首次工具 26.6 s、末次工具结束 1878.8 s；工具内共 1446.2 s，其余（模型生成、推理、网络）468.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-131301-s2）；模型的工具调用 exec×51 wait×10；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T13-13-18-01a12e87-9024-7fc3-957c-502bb16d5378.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-131301-s2/learner/runs/20261012-131314-strategy-proposal.jsonl

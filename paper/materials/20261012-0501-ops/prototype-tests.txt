@@ -1,0 +1,117 @@
+import { resolve } from "node:path";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import evidence from "./silent-crab-potion-evidence.json";
+import { loadConfig } from "../src/core/config.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { makeKnowledge } from "../src/knowledge/index.js";
+import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { observedCrabPoison } from "../src/reflex/silent-crab-potion.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { replaySteps, solveTap, type SolverInput } from "../src/reflex/turn-solver.js";
+
+vi.mock("node:fs", async (original) => {
+  const fs = await original<typeof import("node:fs")>();
+  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
+  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
+    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
+      throw Object.assign(new Error("ENOENT: fixed Silent evidence only"), { code: "ENOENT" });
+    }
+    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
+  }) as typeof fs.readFileSync;
+  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
+});
+vi.mock("../src/reflex/potion-cost.js", async (original) => ({
+  ...await original<typeof import("../src/reflex/potion-cost.js")>(), potionCosts: () => new Map(),
+}));
+
+type Raw = Record<string, any>;
+const knowledge = makeKnowledge({ cards: [] }, "cache");
+const oldRollout = rolloutLiveOptions.enabled;
+beforeEach(() => { setMonsterDbForTests({ monsters: {}, bosses: {}, encounters: {} }); rolloutLiveOptions.enabled = false; });
+afterEach(() => { solveTap.onSolve = null; setMonsterDbForTests(null); rolloutLiveOptions.enabled = oldRollout; });
+function env(raw: Raw): DecisionEnv {
+  const state = parseGameState(raw);
+  return { state, knowledge, brief: buildRunBrief(state, knowledge), thresholds: loadConfig({}).thresholds,
+    runStart: "auto", characterPreference: null, allowFtueModals: false, strictJev: true,
+    screenMemory: createScreenMemory(state.screen), shopDiscardPotions: [], buildDecider: "deepseek" };
+}
+function planned(raw: Raw) {
+  let input: SolverInput | undefined;
+  solveTap.onSolve = (value) => { input ??= value; };
+  let decision;
+  try { decision = planCombatTurn(env(raw)); } finally { solveTap.onSolve = null; }
+  if (!input) throw new Error("the fixed board was not solved");
+  return { input, decision };
+}
+
+it.each(evidence.pairs)("attempt $attempt T$turn: the real planner receives six poison and preserves every legal target", (pair) => {
+  const raw: Raw = structuredClone(pair.before);
+  const before = structuredClone(raw);
+  const { input, decision } = planned(raw);
+  const potion = input.hand.find((card) => card.cardId === "POTION:POISON_POTION:0");
+  expect(potion).toMatchObject({ poison: 6, known: true, damage: null, target: "single" });
+  expect(potion!.validTargets).toEqual(raw.run.potions[0].valid_target_indices);
+  expect(decision).not.toBeNull();
+  expect(decision?.kind).toBe("ask");
+  const a = raw.combat.enemies.find((e: Raw) => e.index === pair.target);
+  const b = pair.after.combat.enemies.find((e) => e.index === pair.target)!;
+  const poison = (e: Raw) => e.powers.find((p: Raw) => p.power_id === "POISON_POWER").amount;
+  expect(poison(b) - poison(a)).toBe(potion!.poison);
+  expect(b.current_hp).toBe(a.current_hp);
+  expect(b.block).toBe(a.block);
+  expect(pair.after.combat.player).toEqual(raw.combat.player);
+  const plan = replaySteps(input, [{ cardIndex: potion!.index, cardId: potion!.cardId,
+    name: potion!.name, upgraded: false, target: pair.target }]);
+  expect(plan).not.toBeNull();
+  expect(raw).toEqual(before);
+});
+
+it("poison killing the claw does not make the final fixed board a surviving or winning line", () => {
+  const pair = evidence.pairs[5]!;
+  const { input } = planned(structuredClone(pair.before));
+  const potion = input.hand.find((c) => c.cardId === "POTION:POISON_POTION:0")!;
+  const plan = replaySteps(input, [{ cardIndex: potion.index, cardId: potion.cardId,
+    name: potion.name, upgraded: false, target: pair.target }])!;
+  expect(plan.outcome.hpLoss).toBeGreaterThanOrEqual(input.player.hp);
+  expect(plan.outcome.dies).toBe(true);
+  expect(plan.outcome.winsFight).toBe(false);
+  expect(evidence.death.combat.player.current_hp).toBe(0);
+  expect(evidence.death.combat.enemies.map((e) => e.enemy_id)).toEqual(["ROCKET"]);
+  // The log lacks intermediate death/attack frames; do not assert an exact final damage sequence.
+});
+
+it.each([
+  ["other character", (x: Raw) => { x.run.character_id = "IRONCLAD"; }],
+  ["A9", (x: Raw) => { x.run.ascension = 9; }],
+  ["A11", (x: Raw) => { x.run.ascension = 11; }],
+  ["other floor", (x: Raw) => { x.run.floor = 32; }],
+  ["new relic", (x: Raw) => { x.run.relics.push({ relic_id: "UNOBSERVED" }); }],
+  ["missing relics", (x: Raw) => { delete x.run.relics; }],
+  ["new power", (x: Raw) => { x.combat.player.powers.push({ power_id: "UNOBSERVED", amount: 1 }); }],
+  ["missing powers", (x: Raw) => { delete x.combat.player.powers; }],
+  ["different power amount", (x: Raw) => { x.combat.player.powers[0].amount = 4; }],
+  ["duplicate power", (x: Raw) => { x.combat.player.powers[0] = x.combat.player.powers[1]; }],
+  ["artifact", (x: Raw) => { x.combat.enemies[0].powers.push({ power_id: "ARTIFACT_POWER", amount: 1 }); }],
+  ["missing enemy powers", (x: Raw) => { delete x.combat.enemies[0].powers; }],
+  ["other enemy", (x: Raw) => { x.combat.enemies[0].enemy_id = "UNOBSERVED"; }],
+  ["duplicate index", (x: Raw) => { x.combat.enemies[1].index = 0; }],
+  ["dead part", (x: Raw) => { x.combat.enemies[0].is_alive = false; }],
+  ["orb", (x: Raw) => { x.combat.player.orbs.push({ orb_id: "UNOBSERVED" }); }],
+  ["pet", (x: Raw) => { x.combat.player.pets.push({ pet_id: "UNOBSERVED" }); }],
+  ["missing pet data", (x: Raw) => { delete x.combat.player.pets; }],
+] as const)("%s keeps the previous unmodelled potion path", (_name, change) => {
+  const raw: Raw = structuredClone(evidence.pairs[5]!.before); change(raw);
+  expect(observedCrabPoison(parseGameState(raw))).toBeNull();
+  expect(planned(raw).input.hand.some((c) => c.cardId.startsWith("POTION:POISON_POTION:"))).toBe(false);
+});
+
+it("uses enemy and power identities instead of array order or a stored slot", () => {
+  const raw: Raw = structuredClone(evidence.pairs[2]!.before);
+  raw.run.relics.reverse(); raw.combat.player.powers.reverse(); raw.combat.enemies.reverse();
+  for (const e of raw.combat.enemies) e.powers.reverse();
+  expect(observedCrabPoison(parseGameState(raw))).toBe(6);
+  expect(planned(raw).input.hand.find((c) => c.cardId === "POTION:POISON_POTION:0")!.validTargets).toEqual([0, 1]);
+});

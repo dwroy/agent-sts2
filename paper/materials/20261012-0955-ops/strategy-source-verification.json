@@ -1,0 +1,103 @@
+{
+  "base": "0478a90239003f23688bf95c1988dbf922804b1c",
+  "live": "80387c563d4b42b6e14b940dda86e1d2aa420d3c",
+  "commits": [
+    {
+      "commit": "a83d9ab675560a177249aa638e99df40bcfb5553",
+      "live_ancestor": true,
+      "subject": "Record observed Silent A10 giant blast phase in SL retries"
+    },
+    {
+      "commit": "be69855995737d6f381adb10bf248964832da24b",
+      "live_ancestor": true,
+      "subject": "Audit predicted Silent combat selections before and after SL"
+    },
+    {
+      "commit": "5604982e13890e0e2bc8bf8246272e8267321c0b",
+      "live_ancestor": true,
+      "subject": "Log Silent A10 SL candidate resource comparisons"
+    },
+    {
+      "commit": "fdaf787a372880b0438e73bcac7e6d2168b038ed",
+      "live_ancestor": true,
+      "subject": "Record Silent candidate dispatch receipts separately from forecasts"
+    },
+    {
+      "commit": "ebf3d8f54a895d542de4308b5239f668ed9cd5e5",
+      "live_ancestor": true,
+      "subject": "Record final Silent Giant blast resources"
+    }
+  ],
+  "source_checks": [
+    {
+      "path": "agent/src/reflex/silent-selection-audit.ts",
+      "base_equals_live": true,
+      "base_sha256": "116bc4eab396213536f7ce836ff9e5fd5266e494aac68699cb01951c65701b02",
+      "live_sha256": "116bc4eab396213536f7ce836ff9e5fd5266e494aac68699cb01951c65701b02",
+      "latest_live_path_commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b"
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-dispatch.ts",
+      "base_equals_live": true,
+      "base_sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6",
+      "live_sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6",
+      "latest_live_path_commit": "bade647f9fe4c9103b40e2f26b26296692ad24b7"
+    },
+    {
+      "path": "agent/src/reflex/silent-hp-guard-audit.ts",
+      "base_equals_live": true,
+      "base_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+      "live_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+      "latest_live_path_commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b"
+    },
+    {
+      "path": "learner/lib/selection-execution.ts",
+      "base_equals_live": true,
+      "base_sha256": "9b93cc1aff1c9887209cb06fef87d671a4f1857aeea62d9b0bbeaf7f156c902d",
+      "live_sha256": "9b93cc1aff1c9887209cb06fef87d671a4f1857aeea62d9b0bbeaf7f156c902d",
+      "latest_live_path_commit": "6f3f783941270ac182237c46068097ff67e85907"
+    },
+    {
+      "path": "agent/src/sl/attempts.ts",
+      "base_equals_live": true,
+      "base_sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+      "live_sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+      "latest_live_path_commit": "0d092f6b928a6221eabf3516abad25c48ceaac9c"
+    },
+    {
+      "path": "agent/src/sl/explore.ts",
+      "base_equals_live": false,
+      "base_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+      "live_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+      "latest_live_path_commit": "0d092f6b928a6221eabf3516abad25c48ceaac9c"
+    },
+    {
+      "path": "agent/src/reflex/potion-cost.ts",
+      "base_equals_live": false,
+      "base_sha256": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2",
+      "live_sha256": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e",
+      "latest_live_path_commit": "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8"
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "base_equals_live": false,
+      "base_sha256": "d5c5ca78f70a9d27c4c01b741dd3bb4fc1208b3d3b468deeadf4386b9f2ac8ab",
+      "live_sha256": "0d6c7be47c9a727aba23bf8c1f50d31bbb6f0b433569769db5620b0af0e399f7",
+      "latest_live_path_commit": "7e5cd982d40054e751bb0096e403e3cf7cf50ba0"
+    },
+    {
+      "path": "agent/src/hand/loop.ts",
+      "base_equals_live": false,
+      "base_sha256": "facf16c848c8a04c477fc8759dbaf5f747be96390b213ccdd6700b549c8efbae",
+      "live_sha256": "fcbe28445e3f0a6622a64d7eb5c382cd8edafce71610631e0b2ac5c945c4e46b",
+      "latest_live_path_commit": "bade647f9fe4c9103b40e2f26b26296692ad24b7"
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+      "base_equals_live": true,
+      "base_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+      "live_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+      "latest_live_path_commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b"
+    }
+  ]
+}

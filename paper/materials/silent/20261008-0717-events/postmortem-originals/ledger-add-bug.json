@@ -1,0 +1,25 @@
+{
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "A10三骑士的抑制改变抽牌堆中牌的升级标记时，SL抽序记录用含升级标记的键整堆作差，把同牌改标写成普通牌随机插入和升级牌未入手离堆，错误截断已知前缀。现场四次均有此记录；当前live draws.ts:568、569、602、657、674对应这一身份处理，新bug且fix-queue未见；未证明影响胜负。",
+  "first_run": "GXNKW8X1XYJP",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "更早静默三骑士已见战内降级，但未核到可比较的同牌堆SL身份记录，不能由已会读普通牌推出记录器先验正确。",
+  "status": "observed",
+  "by": "learner:postmortem",
+  "where": {
+    "lessons": [
+      "GXNKW8X1XYJP"
+    ]
+  },
+  "evidence": [
+    {
+      "run": "GXNKW8X1XYJP",
+      "floor": 45,
+      "turn": 2,
+      "role": "support",
+      "note": "sl-attempts:1053—1056四次T2都将BLADE_DANCE/ACCELERANT/OUTBREAK/SUCKER_PUNCH列为inserted，旧+键未入手离堆，clean前缀19/18/19/18；states290201→290206及290214核战内改标/出口恢复，瞬间完整中间帧未记录。"
+    }
+  ]
+}

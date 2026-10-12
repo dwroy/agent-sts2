@@ -1,5 +1,5 @@
 /**
- * The act-start route questions' candidate routes (Dai 2026-10-04): a bounded set of distinct routes to the boss with
+ * The act-start route questions' candidate routes (Roy 2026-10-04): a bounded set of distinct routes to the boss with
  * the route projection (median; p75 = that stretch's rooms at their p75 from the median HP it starts with; rest sites
  * healing): the best few by boss-entry HP, the safest, the most elites, the most shops, each split at its rest sites
  * with its fights, elite entries and the HP at each rest site and the boss.

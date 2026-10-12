@@ -1,0 +1,36 @@
+{
+  "task": "strategy-proposal",
+  "status": "blocked",
+  "character": "silent",
+  "batch": "20261012-081302-strategy-proposal",
+  "base": "4d5325f0cf8fc5a2ab6cc8abf8ee88b30eafe2e4",
+  "runs": [
+    "N1ZEBMHZM4KC"
+  ],
+  "fixes": [],
+  "skipped": [
+    {
+      "task": "20261012-075824-experience-update",
+      "reason": "原 experience-update 在合并冲突后停止，新增/更新/退役均为0且 commit=null；审计据此生成补链请求，但没有实际新增经验或待补提案。需调用方按原失败批次处理续办/审计分类，不能借用复盘提案冒充补链完成。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "proposal_results": [],
+  "proposal_repair": "20261012-075824-experience-update",
+  "repair_results": [
+    {
+      "batch": "20261012-075824-experience-update",
+      "state": "blocked",
+      "reason": "原 experience-update 在合并冲突后停止，新增/更新/退役均为0且 commit=null；审计据此生成补链请求，但没有实际新增经验或待补提案。需调用方按原失败批次处理续办/审计分类，不能借用复盘提案冒充补链完成。"
+    }
+  ],
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-081302/learner/runs/20261012-081310-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-081302/learner/runs/20261012-081310-strategy-proposal/report.md"
+}

@@ -70,7 +70,7 @@ export const BUILTIN_PARAMS = ["cwd", "worktree", "project_root", "logs_dir", "s
 const FIXED_BUILTINS = new Set<string>(["cwd", "project_root", "scratch", "task", ...CHARACTER_PARAMS]);
 
 /**
- * The experience changelog of a character, relative to the project root (Dai 2026-10-04: one per character): the
+ * The experience changelog of a character, relative to the project root (Roy 2026-10-04: one per character): the
  * Ironclad's stays paper/materials/experience-changelog.md, another's is paper/materials/experience-changelog-<id>.md.
  */
 export function experienceChangelogPath(character: string): string {

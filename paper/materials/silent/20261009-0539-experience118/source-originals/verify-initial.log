@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-050455-experience-update/verify.py", line 25, in <module>
+    check('满额饮毒不占牌计数',pw(ep(313157))['POISON_POWER']==30 and pw(ep(313158))['POISON_POWER']==36 and ep(313157)['current_hp']==ep(313158)['current_hp']==213 and by[313157]['combat']['cards_played_this_turn']==by[313158]['combat']['cards_played_this_turn'])
+                                                                                                                                                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'cards_played_this_turn'

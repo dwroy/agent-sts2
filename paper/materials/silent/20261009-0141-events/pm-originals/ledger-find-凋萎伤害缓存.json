@@ -1,0 +1,56 @@
+[
+ {
+  "id": "silent-0297",
+  "ts": "2026-10-08T14:30:47+08:00",
+  "character": "silent",
+  "by": "learner:postmortem",
+  "kind": "bug-infra",
+  "claim": "静默A10沙漏增强后，手中没有凋萎时，fight-plays与witherInput只从手牌抬高新生凋萎伤害缓存，忽略可见弃牌区已显示6伤，仍用旧3伤。本局末次T4新生1张凋萎方案报损33留1，实际30攻击加6持牌伤完整需损36，34血死亡。应同步本角色可见牌堆的已显示伤害；不同于重放累计0199及整场模拟0236，不推断未知升级次数或宣称修后胜利。",
+  "evidence": [
+   {
+    "run": "H1T1F8ML9FUE",
+    "floor": 48,
+    "turn": 4,
+    "role": "support",
+    "note": "d291650预计损33、留1、新生1张；s298830弃牌凋萎+1*4文本6伤但手牌无凋萎，s298832实际新生6伤，s298834死亡0HP、敌402/535。当前live固定帧缓存函数T4仍3、入手后6，wither-cache-audit.json；源码fight-plays.ts:38/:48—51、combat-plan.ts:1518/:1529、turn-solver.ts:3031。",
+    "added": "2026-10-08T14:30:47+08:00"
+   }
+  ],
+  "first_run": "H1T1F8ML9FUE",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按凋萎/WITHER/witherDamage/witherInput及沙漏/AEONGLASS检索本角色账本和更早静默复盘，未找到手空而可见弃牌区升级伤害未刷新这一具体场景；旧0199是计数、0236是整场模拟。未声称更早未逐帧核的原始日志不存在同类情形。",
+  "status": "observed",
+  "where": {
+   "lessons": [
+    "H1T1F8ML9FUE"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-wither-visible-piles.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/proposal-windows.md"
+   ]
+  },
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-08T14:30:47+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-08T14:34:47+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T14:52:26+08:00",
+    "by": "learner:experience-update"
+   }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-179fd62ad9b2f71b → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-b259f9956e08088a → task=strategy-proposal；Roy-2026-10-07-learning"
+  ]
+ }
+]

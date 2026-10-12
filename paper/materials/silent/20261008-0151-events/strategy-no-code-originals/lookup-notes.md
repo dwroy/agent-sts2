@@ -1,0 +1,1 @@
+启动时以scratch时间查调度batch未命中；实际batch为20261008-014011，只读取该batch的proposal_ids/proposal_repair。部分初次目录查找沿用了scratch时间或错误层级，返回文件不存在；随后找到当前工作树20261008-004303和根postmortem原件。以上均为只读查找失败，无源码/测试/合入失败，不覆盖原历史。

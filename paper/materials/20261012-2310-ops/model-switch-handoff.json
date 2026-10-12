@@ -1,0 +1,73 @@
+{
+  "at": "2026-10-12 23:15:29 CST",
+  "request": "roy-20261012-all-agent-sessions-sol61",
+  "implementation_owner": "watcher in .worktrees/model-sol61-20261012",
+  "runtime_owner": "original ops",
+  "state": "inventory_prepared_waiting_tested_source",
+  "same_accounts_required": [
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain"
+  ],
+  "ops": {
+    "session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+    "pane": "wJ:p5",
+    "transition": "已测源部署后，仅空闲时沿已有Herdr args_hash机制同pane同session重建；当前轮不自杀或另开session。",
+    "acceptance": "新turn_context的model/effort与目标相符且原host权限保持。"
+  },
+  "brain": {
+    "run_id": "47731LKMZRBJ",
+    "latest_model": "gpt-6-astra",
+    "transition": "先核已测源对在途brain的实际生效方式；保留当前存档/run身份及原模型线程，当前问题可正常结束。不得把只改下局默认当所有session已切换；不直接调用强制Astra的旧llm_switch.py。",
+    "acceptance": "实际原生turn_context目标model/effort、真实下一模型回答，以及原run/account/sandbox身份对照。"
+  },
+  "learners": {
+    "active": [
+      {
+        "batch": "20261012-231301-strategy-proposal",
+        "task": "strategy-proposal",
+        "pid": 853569,
+        "pane": "wJ:pQQ",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741",
+        "learning_request": "roy-20261012-concrete-core-decklists",
+        "learning_revision": 2,
+        "learning_input": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261012-231301-strategy-proposal.learning-input.json",
+        "learning_input_sha256": "9a9696ae5f0ce3e6bc9563f2a3c16c353cb9c3442fbc88863570f305d4ee79bc"
+      }
+    ],
+    "transition": "原任务可完成当前问题；上线后逐原owner/thread接续，不重领旧批；同线程学习要求的新revision/输入/失败史保留。",
+    "acceptance": "每个在途或接续批的原生model/effort、原线程首次回答、原workspace-write+credential-deny均真实匹配。"
+  },
+  "assistants": {
+    "jobs": [
+      {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/assist/jobs/ops-infra-herdr-wake-20261011/state.json",
+        "request_id": "ops-infra-herdr-wake-20261011",
+        "status": "completed",
+        "pid": null,
+        "engine_pid": null,
+        "thread_id": null
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/assist/jobs/ops-infra-archive-20261011/state.json",
+        "request_id": "ops-infra-archive-20261011",
+        "status": "completed",
+        "pid": null,
+        "engine_pid": null,
+        "thread_id": null
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/assist/jobs/ops-main-live-sync-20261011-v2/state.json",
+        "request_id": "ops-main-live-sync-20261011-v2",
+        "status": "completed",
+        "pid": null,
+        "engine_pid": null,
+        "thread_id": null
+      }
+    ],
+    "transition": "只盘点并保护原沙箱；没有新辅助派发。已结束角色由统一启动默认覆盖，实际出现新辅助时再核native，不伪造未发生的消费。"
+  },
+  "no_new_development_task": true,
+  "no_account_switch": true,
+  "no_game_restart": true,
+  "not_claimed_complete": true
+}

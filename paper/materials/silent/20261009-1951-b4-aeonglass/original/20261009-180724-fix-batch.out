@@ -1,0 +1,40 @@
+B4 验收 rejected：T1/pre 的 Brier 和打穿偏差均变差。原沙箱 2655 项通过；候选与证据已保留，未合 live、未建版本。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328",
+  "fixes": [{
+    "item": "Roy 已授权独立功能：silent/AEONGLASS B4 校正",
+    "commit": "436f338f11601fe89d5ef6c8445692706c7d797b",
+    "test": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/sandbox-source-v2.log; /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/fixture-v2-without-candidate.log; /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/fixture-v2-restored.log; /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/acceptance.json",
+    "fails_without_fix": true
+  }],
+  "skipped": [],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2655},
+  "boss_sim": {
+    "evidence_key": "31b945d5ed7d9926026e8a6668b42ac677fd9638358c2942763ace6c8dc12646",
+    "outcome": "rejected",
+    "acceptance": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/acceptance.json",
+    "ledger_ids": ["silent-0236"]
+  },
+  "version": "",
+  "reports": [
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/paper/materials/silent/boss-sim-b4-aeonglass-20261009-180724-fix-batch.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/report.json"
+  ]
+}
+```
+
+== 学习者 codex / boss-sim-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a12021-e06a-7853-bc1b-73e2e20e1337
+轮数：1；工具调用：command_execution×210 file_change×19
+token：输入 419.3k、输出 140.6k（其中推理 77.6k）、cache 读 26918.0k、cache 写 0（命中 98.5%）
+成本：未提供
+耗时：6193.9 s（墙钟）
+时间：首个事件 3.0 s、模型首个输出 7.9 s、首次工具 12.5 s、末次工具结束 6119.8 s；工具内共 5042.2 s，其余（模型生成、推理、网络）1148.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724）；模型的工具调用 exec×180 wait×29；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T18-07-33-01a12021-e06a-7853-bc1b-73e2e20e1337.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch.jsonl

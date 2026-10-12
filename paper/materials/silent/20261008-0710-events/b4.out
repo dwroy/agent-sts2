@@ -1,0 +1,46 @@
+本批 **rejected**：未找到可证实校正，验收无指标改善。原检查通过 2,586 例，首次失败已保留；记录提交 `0af9cad0`，未合 live。[报告](/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/paper/materials/silent/boss-sim-b4-THE_INSATIABLE-20261008-044244.md)。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "a73ce7ccbcfd09a9f9679dc4bddaf3dacb56b253",
+  "fixes": [
+    {
+      "item": "Roy 已授权独立功能：silent/THE_INSATIABLE B4 校正",
+      "commit": "a73ce7ccbcfd09a9f9679dc4bddaf3dacb56b253",
+      "test": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/learner/runs/20261008-044249-boss-sim-batch/sandbox.log (rc0); /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/learner/runs/20261008-044249-boss-sim-batch/sandbox-first.log (rc1 retained); /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/learner/runs/20261008-044249-boss-sim-batch/acceptance.json (rc1 rejected)",
+      "fails_without_fix": false
+    }
+  ],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2586
+  },
+  "boss_sim": {
+    "evidence_key": "010652ecf447bc280eac0162adfbe26531eb3f7a5c9aaff70d718dee251f306f",
+    "outcome": "rejected",
+    "acceptance": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/learner/runs/20261008-044249-boss-sim-batch/acceptance.json",
+    "ledger_ids": ["silent-0275"]
+  },
+  "version": "",
+  "reports": [
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/paper/materials/silent/boss-sim-b4-THE_INSATIABLE-20261008-044244.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/learner/runs/20261008-044249-boss-sim-batch/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/learner/runs/20261008-044249-boss-sim-batch/report.json"
+  ]
+}
+```
+
+== 学习者 codex / boss-sim-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1181a-cb4e-77e1-bf30-d7e982ec1fdc
+轮数：1；工具调用：command_execution×294 file_change×21
+token：输入 1025.0k、输出 142.1k（其中推理 86.8k）、cache 读 27977.0k、cache 写 0（命中 96.5%）
+成本：未提供
+耗时：8115.0 s（墙钟）
+时间：首个事件 3.8 s、模型首个输出 11.0 s、首次工具 13.2 s、末次工具结束 8091.3 s；工具内共 6304.0 s，其余（模型生成、推理、网络）1807.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244）；模型的工具调用 exec×131 wait×68；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T04-42-51-01a1181a-cb4e-77e1-bf30-d7e982ec1fdc.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/learner/runs/20261008-044249-boss-sim-batch.jsonl

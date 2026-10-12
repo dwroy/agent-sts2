@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Potion equivalents: what each potion held is worth in the act boss fight, as HP, damage and block
-(Dai 2026-09-30: a potion drunk is HP paid later; holding one is having some extra HP, attack or block).
+(Roy 2026-09-30: a potion drunk is HP paid later; holding one is having some extra HP, attack or block).
 Writes knowledge/characters/<id>/potion-equivalents.json; docs/potion-equivalents.md explains every formula.
 One character's runs only (--character, default ironclad; the log database's character, none = the Ironclad): the
 rates are our play with that character's deck, and the pool flag (`<id>`: the potion can drop for it) is its own.
@@ -29,7 +29,7 @@ The conversion (per ascension, per act; n = boss fights):
              this-turn gain is a second check column, not adopted
 Hold value = max(0, HP): a potion is never worth less than not drinking it.
 
-Gold (meta.gold_hp; Dai 2026-10-02, THIEF_COST, docs/thief.md §7): what a gold coin is worth in HP, for the gold a Gremlin
+Gold (meta.gold_hp; Roy 2026-10-02, THIEF_COST, docs/thief.md §7): what a gold coin is worth in HP, for the gold a Gremlin
 Merc / Fat Gremlin takes away: gold ÷ the median shop potion price at A8+ (the logged shop screens' potion offers) × the
 act's median held value of those offered potions at this ascension.
 
@@ -719,7 +719,7 @@ def gold_rates(offers, visits, entry, ascensions):
         "price": {"median": price, "n": len(prices), "visits": visits, "min_asc": GOLD_PRICE_MIN_ASC, "by_rarity": {k: {"median": median(v), "n": len(v)} for k, v in sorted(by_rarity.items())}},
         "by_asc": {},
         "formula": "gold × hold_hp ÷ price: hold_hp = the median held value (血) of the shop-offered potions in this act at this ascension, price = the median shop potion price (A8+)",
-        "note": "金币的血量价值（Dai 2026-10-02，THIEF_COST，docs/thief.md §7）：金币 ÷ A8+ 商店药水价格中位 × 本幕本进阶商店药水持有价值中位。小偷（地精佣兵 / 胖地精）带走的金币按它折血。",
+        "note": "金币的血量价值（Roy 2026-10-02，THIEF_COST，docs/thief.md §7）：金币 ÷ A8+ 商店药水价格中位 × 本幕本进阶商店药水持有价值中位。小偷（地精佣兵 / 胖地精）带走的金币按它折血。",
     }
     for asc in ascensions:
         for act in ACTS:

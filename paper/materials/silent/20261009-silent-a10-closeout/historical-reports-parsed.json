@@ -1,0 +1,214 @@
+[
+  {
+    "batch": "20261007-154303-ascension-audit",
+    "engine_rc": 0,
+    "historical_state": "failed",
+    "parsed_report": {
+      "task": "ascension-audit",
+      "character": "silent",
+      "level": 10,
+      "runs": [
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "S9UZAK0JP0C0"
+      ],
+      "complete": true,
+      "coverage": [
+        "floors",
+        "combat_counts",
+        "healing",
+        "campfires",
+        "rules",
+        "assumptions"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-1/learner/runs/20261007-154306-ascension-audit/report.md",
+      "code_proposals": [
+        "silent-proposal-aab73fcff1c56b8e",
+        "silent-proposal-09d5c7776e88d756",
+        "silent-proposal-4cc200cc9747f4a8"
+      ],
+      "implementation_domains": [
+        "structure",
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "missing": [
+        "F49两局均败，胜后结构、未到楼层和未来规则未知。",
+        "部分进阶效果的频率、比例及低等级对照未验证。",
+        "TD1HVGS7H6LB重启后的第二次SL汇总缺失。",
+        "部分动作与状态时间不完全对应，资源变动原因需保留未知。",
+        "Boss首帧可能尚未完成开场效果，不能直接作为完整入口资源。",
+        "其他药水续战价、复活跨场消耗及未见回血和营火组合未知。",
+        "已有连续模拟参数未重新拟合或校准。",
+        "阶段与身份字段差异已复现，实际决策损害未验证。",
+        "来源局早于当前live实现，不能验证上线后效果或全等级覆盖。"
+      ],
+      "ledger": {
+        "added": [],
+        "updated": [
+          "silent-0163",
+          "silent-0228",
+          "silent-0020",
+          "silent-0142"
+        ],
+        "check": 0
+      }
+    },
+    "bound_report_path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-1/learner/runs/20261007-154306-ascension-audit/report.md",
+    "report_sha256": "6ced48d320d1b5cd51e201d4bbb996d84fb817976d60f62a689974bf30d7a231",
+    "proposal_errors": [],
+    "all_dispatched_runs_present": true,
+    "six_coverage_present": true,
+    "acceptance_role": "historical only"
+  },
+  {
+    "batch": "20261007-171303-ascension-audit",
+    "engine_rc": 0,
+    "historical_state": "failed",
+    "parsed_report": {
+      "task": "ascension-audit",
+      "character": "silent",
+      "level": 10,
+      "runs": [
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "S9UZAK0JP0C0"
+      ],
+      "complete": true,
+      "coverage": [
+        "floors",
+        "combat_counts",
+        "healing",
+        "campfires",
+        "rules",
+        "assumptions"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/report.md",
+      "code_proposals": [
+        "silent-proposal-aab73fcff1c56b8e",
+        "silent-proposal-09d5c7776e88d756",
+        "silent-proposal-4cc200cc9747f4a8"
+      ],
+      "implementation_domains": [
+        "structure",
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "missing": [
+        "A10 F49胜后的状态、其后层数、其他首后Boss组合、其他角色/未观察进阶未知；每局终层之后均未观察。",
+        "LEVEL_01精英密度、LEVEL_03减金25%、LEVEL_06移除价格增幅、LEVEL_07稀有/升级频率、LEVEL_08/09相对低等级改变只有文本或非受控状态，未验证触发数量/概率。",
+        "初始56/70扣血过程、药槽减1的低等级对照、全部诅咒交互未观察；有实际2槽及ASCENDERS_BANE，不以A10数字补推。",
+        "未选营火动作/多动作组合、未见最大HP与回血遗物（含本批未触发的石炉/Pantograph等）交互未知；回血与锻造没有受控整战比较。",
+        "TD1HVGS7H6LB F17读档超时失败，后续重启尝试可见而末次SL汇总缺失；不记读档成功，截断战斗不当实际死亡。",
+        "完整后战HP价值曲线、其他药水价、复活/遗物接续和二Boss分布未独立验证；当前模型另含未在本任务取证的局，连战模拟未校准。",
+        "D3非空F48战后构筑题、实盘决策损害及修后效果未知；样本早于当前live，两个实到F49证据均在前五，后五未触达。",
+        "路线代价预测精度、未分类非战斗资源变化的全部因果、未选路线/未喝药的反事实未知；本次未拟合、模拟、改源码、策略知识、ops prompt或发布版本。"
+      ],
+      "ledger": {
+        "added": [],
+        "updated": [
+          "silent-0163",
+          "silent-0228",
+          "silent-0020",
+          "silent-0142"
+        ],
+        "check": 0
+      }
+    },
+    "bound_report_path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/report.md",
+    "report_sha256": "c78597029e56ffb31cc852d82c09bfbc4b0038681059ba2e22723ab9cecfa221",
+    "proposal_errors": [],
+    "all_dispatched_runs_present": true,
+    "six_coverage_present": true,
+    "acceptance_role": "historical only"
+  },
+  {
+    "batch": "20261007-184216-ascension-audit",
+    "engine_rc": 0,
+    "historical_state": "failed",
+    "parsed_report": {
+      "task": "ascension-audit",
+      "character": "silent",
+      "level": 10,
+      "runs": [
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "S9UZAK0JP0C0"
+      ],
+      "complete": true,
+      "coverage": [
+        "floors",
+        "combat_counts",
+        "healing",
+        "campfires",
+        "rules",
+        "assumptions"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/report.md",
+      "code_proposals": [
+        "silent-proposal-aab73fcff1c56b8e",
+        "silent-proposal-09d5c7776e88d756",
+        "silent-proposal-4cc200cc9747f4a8"
+      ],
+      "implementation_domains": [
+        "structure",
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "missing": [
+        "各局终层之后、F49胜后、其他Boss组合及未来机制未观察。",
+        "部分ascension_effects仅核字段；密度、金币和价格增幅、概率及敌人相对低等级变化未验证。",
+        "初始扣血过程、更低等级药槽对照及全部诅咒交互未知。",
+        "未选营火动作、未见回血遗物及复活交互未知；没有策略因果对照。",
+        "TD1HVGS7H6LB重启后末次SL汇总缺失，不能记读档成功。",
+        "截断尝试真实退出HP与实际死亡未知。",
+        "后战HP曲线、完整药水价、Boss分布及连战模拟校准未独立验证。",
+        "D3阶段与当前Boss身份语义差异仍待实现；实际决策损害未知。",
+        "后五局无F49留出验证，当前上线效果未知。",
+        "路线预测精度、部分资源变化原因及未选行动反事实未知。"
+      ],
+      "ledger": {
+        "added": [
+          "silent-0243"
+        ],
+        "updated": [
+          "silent-0163",
+          "silent-0228",
+          "silent-0020",
+          "silent-0142"
+        ],
+        "check": 0
+      }
+    },
+    "bound_report_path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/report.md",
+    "report_sha256": "7d863e883ae045669332fe8d575ee8e9446fbb41ff392932dae0b1a62527dfb2",
+    "proposal_errors": [],
+    "all_dispatched_runs_present": true,
+    "six_coverage_present": true,
+    "acceptance_role": "source for reacceptance"
+  }
+]

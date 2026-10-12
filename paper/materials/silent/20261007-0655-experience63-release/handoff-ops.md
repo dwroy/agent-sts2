@@ -10,4 +10,4 @@
 
 账本CLI已将以下24项改proposed/check0：silent-0005,silent-0006,silent-0007,silent-0018,silent-0019,silent-0020,silent-0021,silent-0023,silent-0024,silent-0025,silent-0027,silent-0031,silent-0046,silent-0058,silent-0073,silent-0079,silent-0093,silent-0094,silent-0115,silent-0208,silent-0209,silent-0210,silent-0211,silent-0212。请运维依据experience-done、实际合入提交及版本，通过learner/ledger.py登记shipped/S1.exp63，不另设审核；0211首证更正更早T082DRCUHRRD/A0，prior=yes和原R0历史保持，其他首证/先验/claim/版本/repeat保持。没有新增或退役账本项。
 
-主目录experience-changelog-silent.md只追加本节，旧字节前缀已校验不变；账本仅CLI追加，主目录未由本任务提交，交调用方提交。原始片段、112MB旧抽数初稿、TD1专用口径修正、沙虫28项文字校正、账本空列表拒绝及修正、全部检查和合入证据留本任务目录；无生产代码新bug、无待Dai决定事项。没有新用药规则，不停对局、不运行play、不推送。
+主目录experience-changelog-silent.md只追加本节，旧字节前缀已校验不变；账本仅CLI追加，主目录未由本任务提交，交调用方提交。原始片段、112MB旧抽数初稿、TD1专用口径修正、沙虫28项文字校正、账本空列表拒绝及修正、全部检查和合入证据留本任务目录；无生产代码新bug、无待Roy决定事项。没有新用药规则，不停对局、不运行play、不推送。

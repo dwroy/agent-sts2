@@ -1,5 +1,5 @@
 /**
- * Which outcome-stats table a run reads (Dai 2026-10-04: outcome statistics by ascension, A8 and A9 apart).
+ * Which outcome-stats table a run reads (Roy 2026-10-04: outcome statistics by ascension, A8 and A9 apart).
  *
  * knowledge/builders/build-outcome-stats.py writes one table per ascension (`by_ascension`: A8, A9 and each higher ascension once it
  * has runs), each counted over that ascension's runs alone with its own baseline, by the method the whole file used

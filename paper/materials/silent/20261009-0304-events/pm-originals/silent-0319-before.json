@@ -1,0 +1,58 @@
+{
+ "id": "silent-0319",
+ "ts": "2026-10-09T02:06:40+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "status": "observed",
+ "where": {
+  "lessons": [
+   "P2M3DFJ4DEZ3"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261009-014301-postmortem/proposal-snakebite-upgrade.md"
+  ]
+ },
+ "kind": "bug-infra",
+ "claim": "升级蛇咬SNAKEBITE的10毒仍未进入同线卡牌模型，普通版7毒已修不表示升级分支覆盖。当前live card-model.ts:938限定未升级且PoisonPower=7，:942只据该布尔值输出毒；本局候选明确把蛇咬+列未建模，实盘同一施放将毒2→12。只定位升级分支，不将混合净清差或整局死亡都归此因。",
+ "first_run": "VN7RQJMJEFMX",
+ "prior": "no",
+ "prior_runs": [
+  "VN7RQJMJEFMX"
+ ],
+ "prior_note": "最早已核A6 F17T3 d220682排打击→蛇咬+仅预计9；s225086→225087实际毒6→16。该升级分支没有做对的更早可比证据，攻击另有1点偏差，不混成蛇咬10毒。旧复盘只记取得、账本0219仅定位普通版。",
+ "evidence": [
+  {
+   "run": "VN7RQJMJEFMX",
+   "floor": 17,
+   "turn": 3,
+   "role": "support",
+   "note": "升级PoisonPower10；s225085—225088毒6→16、179血即时不变、结算163；d220682原线报9，当前开局旧dirty源码未复原。",
+   "added": "2026-10-09T02:06:40+08:00"
+  },
+  {
+   "run": "P2M3DFJ4DEZ3",
+   "floor": 49,
+   "turn": 3,
+   "role": "support",
+   "note": "末试d302596候选15伤／损3、蛇咬+未建模；s310380→310381聚合体2→12毒、132血不变。后弃中和，实净清21／损12包含两种效果，不能都归漏毒。当前live card-model.ts:938／942，普通版0219已修，升级缺口两队列未列。",
+   "added": "2026-10-09T02:06:40+08:00"
+  }
+ ],
+ "asc": 6,
+ "history": [
+  {
+   "ts": "2026-10-09T02:06:40+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-09T02:09:16+08:00",
+   "by": "learner:postmortem"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "代码提案 silent-proposal-cbf5f609bb228ee5 → task=strategy-proposal；Roy-2026-10-07-learning"
+ ]
+}

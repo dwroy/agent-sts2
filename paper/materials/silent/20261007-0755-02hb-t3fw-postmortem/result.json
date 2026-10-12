@@ -1,0 +1,32 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "02HB4L0C3C67",
+    "T3FW7R2R2306"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "T3FW7R2R2306",
+      "where": "agent/src/reflex/combat-plan.ts:135",
+      "what": "已建模中毒仍被判未知，导致攻击逐击乘0.8；T3—5少报4/3/6伤害。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0216"
+    ],
+    "updated": [
+      "silent-0006",
+      "silent-0019",
+      "silent-0020",
+      "silent-0050",
+      "silent-0011",
+      "silent-0125",
+      "silent-0134"
+    ],
+    "repeats": [],
+    "check": 0
+  }
+}

@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-fasten.test.ts (7 tests | 1 failed) 34ms
+   × 0143: Frail rounds after adding Fasten, for plain and upgraded Defends 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-fasten.test.ts > 0143: Frail rounds after adding Fasten, for plain and upgraded Defends
+TypeError: Cannot read properties of null (reading 'outcome')
+ ❯ tests/silent-fasten.test.ts:66:106
+     64|     input.player.dexterityNow = 9;
+     65|     input.hand = [fasten(), { ...defend(1, shown), blockBase: base, up…
+     66|     expect(replaySteps(input, [step(0, "FASTEN"), { ...step(1, "DEFEND…
+       |                                                                                                          ^
+     67|   }
+     68| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  09:35:46
+   Duration  1.44s (transform 1.07s, setup 325ms, import 949ms, tests 34ms, environment 0ms)
+

@@ -1,0 +1,75 @@
+已保存[报告](learner/runs/20261011-221732-strategy-proposal/report.md)和[提案](learner/runs/20261011-221732-strategy-proposal/proposal.md)：复核300条原记录、106个端点，完成57项覆盖清单及抽象计算复现。
+
+生产接入涉及 watcher 保留文件，按任务“冲突路径停止并交ops协调”条款暂停。三提案均为 `waiting`；无源码修改、提交或合入，工作树干净。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261011-221722-strategy-proposal",
+  "request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+  "input_sha256": "54bd743de00cc1c5146546f06859a59016afba85a39c52aa73359860359c845f",
+  "work_spec_sha256": "3c9355afd6ee7c98ff7cfc9c2e9a45d20fdf025ae701fccd482b1b73aea6079b",
+  "base": "3f94d48f043fb49ea2780902edd7e493faf551ad",
+  "runs": [
+    "C48LLXBGKXQ9",
+    "ZZMYZ5UBCG72",
+    "LRN0HPZ0FZS1",
+    "KAY522KT5NXR",
+    "L704TLETMZBM",
+    "4Y94N8RDPGPM",
+    "KV0JHNJCKXLS",
+    "J8PHG72DGD90",
+    "49HL2N70CHMU",
+    "54G5683J0E5S"
+  ],
+  "fixes": [],
+  "skipped": [
+    "生产事实接口与watcher保留文件职责相交，按本批任务要求停止并交ops协调；四项成果尚未完成。"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-9e1bc1225fae0e30",
+    "silent-proposal-3dae3ca702a14057",
+    "silent-proposal-9e81dc5f9a4c3bd5"
+  ],
+  "implementation_domains": [
+    "combat",
+    "terminal"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-9e1bc1225fae0e30",
+      "state": "waiting",
+      "reason": "已核费用/封抽/手位反例；完整效果与支付轨迹尚未接入。quantitative-facts.ts/combat-plan.ts为watcher保留职责且接口无组合输入，依任务停止待ops协调；通用聚合字段不构成原提案整体duplicate。"
+    },
+    {
+      "id": "silent-proposal-3dae3ca702a14057",
+      "state": "waiting",
+      "reason": "54G与4Y复制延迟/实付原帧已复核；缺当前模型的复制/重放/完整组合轨迹、消费者调用验证及准确模型版本匹配的校准。生产事实入口涉及保留路径，待ops协调后继续实现。"
+    },
+    {
+      "id": "silent-proposal-9e81dc5f9a4c3bd5",
+      "state": "waiting",
+      "reason": "已核四窗口106端点及57项命题；原经验存在不等消费者完成。缺完整组合样本传递/构筑compact接入、真实预测实际提取与自然局采用收益；build-sim相关路径职责待协调，无本批live实现。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221722/learner/runs/20261011-221732-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12b53-7efc-7071-85c9-9586f2d90ddb
+轮数：1；工具调用：command_execution×65 file_change×8
+token：输入 191.0k、输出 37.2k（其中推理 7894）、cache 读 5584.6k、cache 写 0（命中 96.7%）
+成本：未提供
+耗时：1424.4 s（墙钟）
+时间：首个事件 9.5 s、模型首个输出 15.5 s、首次工具 19.5 s、末次工具结束 1395.2 s；工具内共 231.6 s，其余（模型生成、推理、网络）1183.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221722）；模型的工具调用 exec×42；/home/dw/.codex-sts2/sessions/2026/10/11/rollout-2026-10-11T22-17-34-01a12b53-7efc-7071-85c9-9586f2d90ddb.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221722/learner/runs/20261011-221732-strategy-proposal.jsonl

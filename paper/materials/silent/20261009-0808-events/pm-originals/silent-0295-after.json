@@ -1,0 +1,122 @@
+{
+  "id": "silent-0295",
+  "ts": "2026-10-08T13:26:35+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "静默已观察多敌弹跳药瓶的随机施毒把最高HP目标当保守分配，会伪造确定整场斩杀：施毒不即时扣HP，三次都给29血20毒的母体，模拟把母体毒补至29并判赢；实盘三次各落在幼虫，母体毒仍20、结算后9血，玩家阵亡。应将随机施毒的分配不确定性与确定斩杀分开，不以随机直伤的最高HP选择法保证毒收尾。",
+  "evidence": [
+    {
+      "run": "G8NHLL09DLBX",
+      "floor": 24,
+      "turn": 5,
+      "role": "support",
+      "note": "末试d290345—290348以combat/lethal执行切割、致命毒药+、弹跳药瓶；s297416—297420母体29/132及20毒未获药瓶的三份3毒，死亡时仍9；固定帧297418单步当前live核对winsFight=true，实际297419仍母体29血20毒。",
+      "added": "2026-10-08T13:26:35+08:00"
+    },
+    {
+      "run": "CNKR125PFHJ5",
+      "floor": 23,
+      "turn": 5,
+      "role": "repeat",
+      "note": "d296696以combat/lethal执行触媒+→暴露→普通药瓶；s304125→304126母体67血18毒不变，三份3毒分别使当时#2/#4/#5子体3→6、7→10、3→6；s304127母体16血、两新幼虫21/22，玩家24→2。T6 d296700毒终结后赢，不改写T5伪保证斩杀。当前turn-solver.ts:2284/:2536—2541仍把随机施毒给最高HP目标，combat-plan.ts:3301自动斩杀；未复原dirty整树。",
+      "added": "2026-10-08T20:00:01+08:00"
+    },
+    {
+      "run": "KSX97DF5H3NY",
+      "floor": 31,
+      "turn": 3,
+      "role": "repeat",
+      "note": "第2/3/4试d306019/306043/306067均选普通弹跳药瓶→蜃景→防御，题面最高血母体55→44余10毒、24/24推演赢。实盘第2/4试三份3毒落在两幼虫及母体：s314055→314056、314107→314108母体2→5、两幼虫0→3；第3试s314081→314082母体2→5、一幼虫0→6。下一轮母体实50血余4毒，三试都T5失败。总毒11相同但母体少6进度；当前turn-solver.ts:2284调用:2536最高HP+挡，旧随机施毒同根因再现；本局未走combat/lethal保证，不改写成自动斩杀重犯或单因局败。",
+      "added": "2026-10-09T05:54:09+08:00"
+    },
+    {
+      "run": "RZ6YAC7K89NM",
+      "floor": 12,
+      "turn": 1,
+      "role": "repeat",
+      "note": "d307856 plan1完整药瓶/中和潮湿/预知之滴取回响预测32总伤、钙29无毒/潮湿30余8毒；s316052→316058实药瓶6/3分毒、钙23余5毒/潮湿36余2毒，同总32而两体各差6。当前live turn-solver.ts:2284调用:2536—2541最高HP+挡，旧随机施毒分配缺口重现；本局combat/plan-choice不是伪保证斩杀，整场独立归因未知。",
+      "added": "2026-10-09T07:54:33+08:00"
+    }
+  ],
+  "first_run": "G8NHLL09DLBX",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "已用silent账本关键词与更早静默复盘核对；旧毒未建模及单敌毒结算不等于本项随机多敌保证斩杀。未找到此前同根因的确定斩杀判断及受控正反对照，不把普通施毒成功算作已经正确处理此保证边界。",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "G8NHLL09DLBX",
+      "CNKR125PFHJ5",
+      "KSX97DF5H3NY",
+      "RZ6YAC7K89NM"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-随机施毒斩杀.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-poison.md",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261008-194301-postmortem/提案-随机施毒保证边界.md",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261009-054302-postmortem/proposal-random-poison.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-061302-experience-update/proposal-random-poison.md",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/proposal-random-poison.md"
+    ]
+  },
+  "note": "新bug，notes/fix-queue.md与fix-queue-v4.md未列同根因；当前只读live turn-solver.ts:2284及:2536—2541，combat-plan.ts:3301。实际run.code=d61bf0ec+dirty，完整dirty源码未记录；本任务只复盘不改代码。",
+  "asc": 10,
+  "history": [
+    {
+      "ts": "2026-10-08T13:26:35+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-08T13:28:49+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-08T13:42:56+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T20:00:01+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-08T20:02:12+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T05:54:09+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T05:55:31+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T06:21:34+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-09T07:54:33+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T07:56:29+08:00",
+      "by": "learner:postmortem"
+    }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+    "新bug，notes/fix-queue.md与fix-queue-v4.md未列同根因；当前只读live turn-solver.ts:2284及:2536—2541，combat-plan.ts:3301。实际run.code=d61bf0ec+dirty，完整dirty源码未记录；本任务只复盘不改代码。",
+    "代码提案 silent-proposal-982c99080350f43e → task=strategy-proposal；Roy-2026-10-07-learning",
+    "代码提案 silent-proposal-eb6e17529c0f8cde → task=strategy-proposal；Roy-2026-10-07-learning",
+    "已有observed项与fix-queue-v4随机施毒条目；追加本局repeat，保留原first_run/prior/claim/status，不重复声称新发现或已修。",
+    "代码提案 silent-proposal-7bcb766a47aed4bc → task=strategy-proposal；Roy-2026-10-07-learning",
+    "本次只补本角色实盘证据；保留claim、first_run、prior、status、version及全部历史。标签版本按本局开局前的账本状态。",
+    "代码提案 silent-proposal-df4f5dbaaf0c7e51 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "代码提案 silent-proposal-5b9756af44ec0dad → task=strategy-proposal；Roy-2026-10-07-learning",
+    "本任务只追加silent对局证据，保留claim/first_run/prior/status/version和全部历史；标签按本局首决策前账本状态。0295仅逐敌随机毒分配缺口repeat，本局没有伪保证斩杀。",
+    "代码提案 silent-proposal-b6fc6d4c9f260247 → task=strategy-proposal；Roy-2026-10-07-learning"
+  ]
+}

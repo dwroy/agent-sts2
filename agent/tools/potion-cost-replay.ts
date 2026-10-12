@@ -1,5 +1,5 @@
 /**
- * Offline acceptance of the potion cost (Dai 2026-09-30; src/reflex/potion-cost.ts, docs/potion-equivalents.md §8).
+ * Offline acceptance of the potion cost (Roy 2026-09-30; src/reflex/potion-cost.ts, docs/potion-equivalents.md §8).
  * No model is called (no Jev, no DeepSeek): the recorded boards are rebuilt and planned by the current code twice, the
  * cost off (the ranking before) and on (the potion table knowledge/characters/ironclad/potion-equivalents.json), and what the rollout
  * picks is compared.

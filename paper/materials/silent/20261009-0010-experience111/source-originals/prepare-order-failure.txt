@@ -1,0 +1,1 @@
+23:48首次启动update时prepare尚未完成，rest-summary.json未生成，FileNotFoundError；经验文件未写入。随后history因changes.json未生成而失败。等待prepare退出0后重跑，update/history均0。保留工具输出说明，未把此临时抽取次序问题当游戏代码bug。

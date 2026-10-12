@@ -1,0 +1,119 @@
+PLAN 207 rankable 183 rank1 148
+Q 295091 ['plan']
+plan criteria ['plan1', 'plan2'] extra [('type', 'choice')]
+plan1 {"plays":"打击 -> 蟾蜍蝌蚪 #1, then 打击 -> 蟾蜍蝌蚪 #1, then 防御, then 中和 -> 蟾蜍蝌蚪 #2","result":"survives with 55/70 HP before healing","hp_lost":1,"damage_dealt":15,"enemies_after":"蟾蜍蝌蚪 #1 12 HP; 蟾蜍蝌蚪 #2 22 HP, Weak 1","block_gained":5,"hp_after":55,"hp_after_pct":79,"dmg":15,"lethal_now":"no","enemy_threat_next":12,"setup_turn":false,"scaling_gained":"none","block_wasted":0,"potions_used":"none","rollout":"5-turn rollout (8 samples): expected further HP loss 3.8, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~4.8; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -3.8","rollout_turns":"T1 exact: hp -1, dmg 15; T2: hp -0.3 [0-1], dmg 10.5 [6-12], alive 8/8, won 0/8; T3: hp -1.9 [0-9], dmg 6.4 [0-12], alive 8/8, won 0/8; T4: hp -0.6 [0-1], dmg 14.1 [9-16], alive 8/8, won 2/8; T5: hp -0 [0-0], dmg 3.8 [1-12], alive 8/8, won 7/8","history_estimate":"further HP loss 4, win 100% (this encounter n=96; estimate from act-1 hallway fights n=1434, typical error ±5.5; few similar states for this encounter)","rollout_best":true}
+plan2 {"plays":"打击 -> 蟾蜍蝌蚪 #1, then 打击 -> 蟾蜍蝌蚪 #1, then 中和 -> 蟾蜍蝌蚪 #2, then 打击 -> 蟾蜍蝌蚪 #1","result":"survives with 50/70 HP before healing","hp_lost":6,"damage_dealt":21,"enemies_after":"蟾蜍蝌蚪 #1 6 HP; 蟾蜍蝌蚪 #2 22 HP, Weak 1","hp_after":50,"hp_after_pct":71,"dmg":21,"lethal_now":"no","enemy_threat_next":12,"setup_turn":false,"scaling_gained":"none","block_wasted":0,"potions_used":"none","rollout":"5-turn rollout (8 samples): expected further HP loss 8.8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~4.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -8.7","rollout_turns":"T1 exact: hp -6, dmg 21; T2: hp -0 [0-0], dmg 10.5 [6-12], alive 8/8, won 0/8; T3: hp -2.8 [0-11], dmg 6.4 [0-12], alive 8/8, won 0/8; T4: hp -0 [0-0], dmg 10.3 [3-16], alive 8/8, won 7/8; T5: hp -0 [0-0], dmg 7 [7-7], alive 8/8, won 8/8","history_estimate":"further HP loss 9, win 100% (this encounter n=96; estimate from act-1 hallway fights n=1434, typical error ±5.5; few similar states for this encounter)"}
+Q 295821 ['plan']
+plan criteria ['plan1', 'plan2', 'plan3', 'plan4', 'p1->e0', 'p1->e1'] extra [('type', 'choice')]
+plan1 {"plays":"幻影之刃, then 灵动步法, then 带毒刺击 -> 火箭, then 打击 -> 碾碎爪","result":"survives with 21/70 HP before healing","hp_lost":14,"damage_dealt":47,"enemies_after":"碾碎爪 153 HP, 中毒 6; 火箭 183 HP, 中毒 5","lasting_value":"sets up a power worth about 16 score over the fight (a few HP now is often worth it in a long fight)","hp_after":21,"hp_after_pct":30,"dmg":47,"lethal_now":"no","enemy_threat_next":47,"setup_turn":false,"scaling_gained":"plays power 幻影之刃, 灵动步法; lasting value 16","block_wasted":0,"potions_used":"none","rollout":"5-turn rollout (24 samples): expected further HP loss 35, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~295, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 14)","rollout_turns":"T1 exact: hp -14, dmg 47; T2: hp -37 [37-37], dmg 41 [41-41], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)","rollout_kill_order":"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here","rollout_other_orders":"火箭 > 碾碎爪: further HP loss 35, over 0/24, dead 24/24, 火箭 dead 0/24","history_estimate":"further HP loss 35, win 0% (this encounter n=59; estimate from act-2 boss fights n=138, typical error ±9.9; few similar states for this encounter)","rollout_tied":"tied for the best whole-fight simulation numbers with plan2, plan3, plan4 (the same simulated win rate and HP lost when won); the ranking picks none of them","whole_fight_sim":"win 0% (the bes
+plan2 {"plays":"幻影之刃, then 灵动步法, then 打击 -> 碾碎爪","result":"survives with 21/70 HP before healing","hp_lost":14,"damage_dealt":33,"enemies_after":"碾碎爪 153 HP, 中毒 6; 火箭 197 HP, 中毒 2","energy_unused":1,"lasting_value":"sets up a power worth about 16 score over the fight (a few HP now is often worth it in a long fight)","hp_after":21,"hp_after_pct":30,"dmg":33,"lethal_now":"no","enemy_threat_next":47,"setup_turn":false,"scaling_gained":"plays power 幻影之刃, 灵动步法; lasting value 16","block_wasted":0,"potions_used":"none","rollout":"5-turn rollout (24 samples): expected further HP loss 35, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~315, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 14)","rollout_turns":"T1 exact: hp -14, dmg 33; T2: hp -37 [37-37], dmg 35 [35-35], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)","rollout_kill_order":"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here","rollout_other_orders":"火箭 > 碾碎爪: further HP loss 35, over 0/24, dead 24/24, 火箭 dead 0/24","history_estimate":"further HP loss 35, win 0% (this encounter n=59; estimate from act-2 boss fights n=138, typical error ±9.9; few similar states for this encounter)","rollout_tied":"tied for the best whole-fight simulation numbers with plan1, plan3, plan4 (the same simulated win rate and HP lost when won); the ranking picks none of them","whole_fight_sim":"win 0% (vs the
+plan3 {"focus":"碾碎爪","plays":"幻影之刃, then 灵动步法, then 打击 -> 碾碎爪, then 带毒刺击 -> 碾碎爪","result":"survives with 21/70 HP before healing","hp_lost":14,"damage_dealt":47,"enemies_after":"碾碎爪 139 HP, 中毒 9; 火箭 197 HP, 中毒 2","lasting_value":"sets up a power worth about 16 score over the fight (a few HP now is often worth it in a long fight)","hp_after":21,"hp_after_pct":30,"dmg":47,"lethal_now":"no","enemy_threat_next":47,"setup_turn":false,"scaling_gained":"plays power 幻影之刃, 灵动步法; lasting value 16","block_wasted":0,"potions_used":"none","rollout":"5-turn rollout (24 samples): expected further HP loss 35, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~295, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 14)","rollout_turns":"T1 exact: hp -14, dmg 47; T2: hp -37 [37-37], dmg 41 [41-41], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)","rollout_kill_order":"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here","rollout_other_orders":"火箭 > 碾碎爪: further HP loss 35, over 0/24, dead 24/24, 火箭 dead 0/24","history_estimate":"further HP loss 35, win 0% (this encounter n=59; estimate from act-2 boss fights n=138, typical error ±9.9; few similar states for this encounter)","rollout_tied":"tied for the best whole-fight simulation numbers with plan1, plan2, plan4 (the same simulated win rate and HP lost when won); the ranking picks none of them","whole_fight_sim":"
+plan4 {"focus":"火箭","plays":"幻影之刃, then 灵动步法, then 打击 -> 火箭, then 带毒刺击 -> 火箭","result":"survives with 15/70 HP before healing","hp_lost":20,"damage_dealt":47,"enemies_after":"碾碎爪 164 HP, 中毒 6; 火箭 172 HP, 中毒 5","lasting_value":"sets up a power worth about 16 score over the fight (a few HP now is often worth it in a long fight)","hp_after":15,"hp_after_pct":21,"dmg":47,"lethal_now":"no","enemy_threat_next":47,"setup_turn":false,"scaling_gained":"plays power 幻影之刃, 灵动步法; lasting value 16","block_wasted":0,"potions_used":"none","rollout":"5-turn rollout (24 samples): expected further HP loss 35, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~295, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 20)","rollout_turns":"T1 exact: hp -20, dmg 47; T2: hp -37 [37-37], dmg 41 [41-41], alive 0/24, won 0/24; T3: over (alive 0/24, won 0/24); T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)","rollout_kill_order":"碾碎爪 > 火箭: the later turns aim at 碾碎爪 first (碾碎爪 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here","rollout_other_orders":"火箭 > 碾碎爪: further HP loss 35, over 0/24, dead 24/24, 火箭 dead 0/24","history_estimate":"further HP loss 35, win 0% (this encounter n=59; estimate from act-2 boss fights n=138, typical error ±9.9; few similar states for this encounter)","rollout_tied":"tied for the best whole-fight simulation numbers with plan1, plan2, plan3 (the same simulated win rate and HP lost when won); the ranking picks none of them","whole_fight_sim":"win
+p1->e0 {"plays":"drink 毒药水 on 碾碎爪 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn","simulated":"no: this potion's effect is not simulated, so no HP or damage numbers for it","offered":"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers","note":"the cheapest card plan alone: hp -14 this turn","potion_cost":"drinking it costs 0 (the potion table did not load)","rollout":"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"}
+p1->e1 {"plays":"drink 毒药水 on 火箭 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn","simulated":"no: this potion's effect is not simulated, so no HP or damage numbers for it","offered":"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers","note":"the cheapest card plan alone: hp -14 this turn","potion_cost":"drinking it costs 0 (the potion table did not load)","rollout":"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"}
+NONCOMBAT RESOURCE
+{'from': {'hp': 47, 'max_hp': 70, 'potions': [], 'floor': 4, 'turn': 5, 'ts': '2026-10-08T09:47:54.079Z', 'line': 302534, 'screen': 'REWARD'}, 'to': {'hp': 47, 'max_hp': 70, 'potions': [[0, 'SWIFT_POTION']], 'floor': 4, 'turn': 5, 'ts': '2026-10-08T09:47:54.191Z', 'line': 302535, 'screen': 'REWARD'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 31, 'max_hp': 70, 'potions': [], 'floor': 5, 'turn': 6, 'ts': '2026-10-08T09:49:00.784Z', 'line': 302568, 'screen': 'REWARD'}, 'to': {'hp': 31, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION']], 'floor': 5, 'turn': 6, 'ts': '2026-10-08T09:49:00.900Z', 'line': 302569, 'screen': 'REWARD'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 31, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION']], 'floor': 6, 'turn': None, 'ts': '2026-10-08T09:50:05.432Z', 'line': 302579, 'screen': 'SHOP'}, 'to': {'hp': 31, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 6, 'turn': None, 'ts': '2026-10-08T09:50:05.552Z', 'line': 302580, 'screen': 'SHOP'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 31, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 7, 'turn': None, 'ts': '2026-10-08T09:50:32.350Z', 'line': 302583, 'screen': 'REST'}, 'to': {'hp': 52, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 7, 'turn': None, 'ts': '2026-10-08T09:50:32.479Z', 'line': 302584, 'screen': 'REST'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 43, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 9, 'turn': None, 'ts': '2026-10-08T09:52:26.933Z', 'line': 302618, 'screen': 'REST'}, 'to': {'hp': 64, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 9, 'turn': None, 'ts': '2026-10-08T09:52:27.070Z', 'line': 302619, 'screen': 'REST'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 58, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 11, 'turn': 9, 'ts': '2026-10-08T09:53:48.197Z', 'line': 302661, 'screen': 'REWARD'}, 'to': {'hp': 58, 'max_hp': 70, 'potions': [[0, 'ENERGY_POTION'], [1, 'POISON_POTION']], 'floor': 11, 'turn': 9, 'ts': '2026-10-08T09:53:48.313Z', 'line': 302662, 'screen': 'REWARD'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 44, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 15, 'turn': 5, 'ts': '2026-10-08T09:57:20.322Z', 'line': 302727, 'screen': 'REWARD'}, 'to': {'hp': 44, 'max_hp': 70, 'potions': [[0, 'DEXTERITY_POTION'], [1, 'POISON_POTION']], 'floor': 15, 'turn': 5, 'ts': '2026-10-08T09:57:20.436Z', 'line': 302728, 'screen': 'REWARD'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 44, 'max_hp': 70, 'potions': [[0, 'DEXTERITY_POTION'], [1, 'POISON_POTION']], 'floor': 16, 'turn': None, 'ts': '2026-10-08T09:58:16.399Z', 'line': 302732, 'screen': 'REST'}, 'to': {'hp': 65, 'max_hp': 70, 'potions': [[0, 'DEXTERITY_POTION'], [1, 'POISON_POTION']], 'floor': 16, 'turn': None, 'ts': '2026-10-08T09:58:16.538Z', 'line': 302733, 'screen': 'REST'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 26, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 17, 'turn': 12, 'ts': '2026-10-08T10:00:37.990Z', 'line': 302797, 'screen': 'REWARD'}, 'to': {'hp': 26, 'max_hp': 70, 'potions': [[0, 'WEAK_POTION'], [1, 'POISON_POTION']], 'floor': 17, 'turn': 12, 'ts': '2026-10-08T10:00:38.107Z', 'line': 302798, 'screen': 'REWARD'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 26, 'max_hp': 70, 'potions': [[0, 'WEAK_POTION'], [1, 'POISON_POTION']], 'floor': 17, 'turn': None, 'ts': '2026-10-08T10:00:55.596Z', 'line': 302801, 'screen': 'MAP'}, 'to': {'hp': 61, 'max_hp': 70, 'potions': [[0, 'WEAK_POTION'], [1, 'POISON_POTION']], 'floor': 18, 'turn': None, 'ts': '2026-10-08T10:01:29.970Z', 'line': 302802, 'screen': 'EVENT'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 53, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 19, 'turn': 5, 'ts': '2026-10-08T10:02:22.557Z', 'line': 302830, 'screen': 'REWARD'}, 'to': {'hp': 53, 'max_hp': 70, 'potions': [[0, 'ENERGY_POTION'], [1, 'POISON_POTION']], 'floor': 19, 'turn': 5, 'ts': '2026-10-08T10:02:22.674Z', 'line': 302831, 'screen': 'REWARD'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 34, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 21, 'turn': None, 'ts': '2026-10-08T10:04:39.150Z', 'line': 302867, 'screen': 'SHOP'}, 'to': {'hp': 34, 'max_hp': 70, 'potions': [[0, 'COLORLESS_POTION'], [1, 'POISON_POTION']], 'floor': 21, 'turn': None, 'ts': '2026-10-08T10:04:39.281Z', 'line': 302868, 'screen': 'SHOP'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 4, 'max_hp': 70, 'potions': [], 'floor': 24, 'turn': 4, 'ts': '2026-10-08T10:07:38.221Z', 'line': 302911, 'screen': 'COMBAT'}, 'to': {'hp': 34, 'max_hp': 70, 'potions': [[0, 'COLORLESS_POTION'], [1, 'POISON_POTION']], 'floor': 24, 'turn': 1, 'ts': '2026-10-08T10:07:48.444Z', 'line': 302912, 'screen': 'COMBAT'}, 'combat_sequence': None, 'restart_boundary': True}
+{'from': {'hp': 10, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 25, 'turn': None, 'ts': '2026-10-08T10:10:06.040Z', 'line': 302949, 'screen': 'REST'}, 'to': {'hp': 31, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 25, 'turn': None, 'ts': '2026-10-08T10:10:06.170Z', 'line': 302950, 'screen': 'REST'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 15, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 29, 'turn': None, 'ts': '2026-10-08T10:12:32.135Z', 'line': 302997, 'screen': 'REST'}, 'to': {'hp': 36, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 29, 'turn': None, 'ts': '2026-10-08T10:12:32.276Z', 'line': 302998, 'screen': 'REST'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 36, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 30, 'turn': None, 'ts': '2026-10-08T10:12:59.205Z', 'line': 303001, 'screen': 'SHOP'}, 'to': {'hp': 36, 'max_hp': 70, 'potions': [[0, 'SPEED_POTION'], [1, 'POISON_POTION']], 'floor': 30, 'turn': None, 'ts': '2026-10-08T10:12:59.338Z', 'line': 303002, 'screen': 'SHOP'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 17, 'max_hp': 70, 'potions': [[1, 'POISON_POTION']], 'floor': 31, 'turn': 7, 'ts': '2026-10-08T10:14:39.046Z', 'line': 303047, 'screen': 'REWARD'}, 'to': {'hp': 17, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 31, 'turn': 7, 'ts': '2026-10-08T10:14:39.179Z', 'line': 303048, 'screen': 'REWARD'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 17, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 32, 'turn': None, 'ts': '2026-10-08T10:15:27.835Z', 'line': 303052, 'screen': 'REST'}, 'to': {'hp': 38, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 32, 'turn': None, 'ts': '2026-10-08T10:15:27.960Z', 'line': 303053, 'screen': 'REST'}, 'combat_sequence': None, 'restart_boundary': False}
+{'from': {'hp': 16, 'max_hp': 70, 'potions': [], 'floor': 33, 'turn': 4, 'ts': '2026-10-08T10:17:31.809Z', 'line': 303083, 'screen': 'COMBAT'}, 'to': {'hp': 38, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 33, 'turn': 1, 'ts': '2026-10-08T10:18:13.739Z', 'line': 303084, 'screen': 'COMBAT'}, 'combat_sequence': None, 'restart_boundary': True}
+{'from': {'hp': 7, 'max_hp': 70, 'potions': [], 'floor': 33, 'turn': 5, 'ts': '2026-10-08T10:20:37.796Z', 'line': 303112, 'screen': 'COMBAT'}, 'to': {'hp': 38, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 33, 'turn': 1, 'ts': '2026-10-08T10:21:19.366Z', 'line': 303113, 'screen': 'COMBAT'}, 'combat_sequence': None, 'restart_boundary': True}
+{'from': {'hp': 7, 'max_hp': 70, 'potions': [], 'floor': 33, 'turn': 5, 'ts': '2026-10-08T10:23:30.212Z', 'line': 303141, 'screen': 'COMBAT'}, 'to': {'hp': 38, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 33, 'turn': 1, 'ts': '2026-10-08T10:24:12.358Z', 'line': 303142, 'screen': 'COMBAT'}, 'combat_sequence': None, 'restart_boundary': True}
+{'from': {'hp': 7, 'max_hp': 70, 'potions': [], 'floor': 33, 'turn': 5, 'ts': '2026-10-08T10:26:05.917Z', 'line': 303169, 'screen': 'COMBAT'}, 'to': {'hp': 38, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 33, 'turn': 1, 'ts': '2026-10-08T10:26:40.200Z', 'line': 303170, 'screen': 'COMBAT'}, 'combat_sequence': None, 'restart_boundary': True}
+{'from': {'hp': 1, 'max_hp': 70, 'potions': [], 'floor': 33, 'turn': 4, 'ts': '2026-10-08T10:28:41.851Z', 'line': 303196, 'screen': 'COMBAT'}, 'to': {'hp': 38, 'max_hp': 70, 'potions': [[0, 'SKILL_POTION'], [1, 'POISON_POTION']], 'floor': 33, 'turn': 1, 'ts': '2026-10-08T10:29:23.645Z', 'line': 303197, 'screen': 'COMBAT'}, 'combat_sequence': None, 'restart_boundary': True}
+COMBAT TURNS
+C 9 F 17
+T 1 需 233 进度 3 下界 3 补 0 缺 []
+T 2 需 230 进度 2 下界 2 补 0 缺 []
+T 3 需 228 进度 11 下界 11 补 0 缺 []
+T 4 需 217 进度 24 下界 24 补 0 缺 []
+T 5 需 193 进度 21 下界 21 补 0 缺 []
+T 6 需 172 进度 7 下界 7 补 0 缺 []
+T 7 需 165 进度 14 下界 14 补 0 缺 []
+T 8 需 151 进度 24 下界 24 补 0 缺 []
+T 9 需 127 进度 21 下界 21 补 0 缺 []
+T 10 需 106 进度 28 下界 28 补 0 缺 []
+T 11 需 78 进度 37 下界 37 补 0 缺 []
+T 12 需 41 进度 41 下界 9 补 0 缺 ['body_removed_without_death_frame']
+C 11 F 20
+T 1 需 84 进度 18 下界 18 补 0 缺 []
+T 2 需 66 进度 23 下界 23 补 0 缺 []
+T 3 需 43 进度 20 下界 20 补 0 缺 []
+T 4 需 23 进度 23 下界 5 补 0 缺 ['body_removed_without_death_frame']
+C 12 F 24
+T 1 需 165 进度 24 下界 24 补 0 缺 []
+T 2 需 141 进度 7 下界 7 补 0 缺 []
+T 3 需 134 进度 39 下界 39 补 0 缺 []
+T 4 需 95 进度 9 下界 9 补 0 缺 []
+C 13 F 24
+T 1 需 165 进度 15 下界 15 补 0 缺 []
+T 2 需 150 进度 27 下界 27 补 0 缺 []
+T 3 需 123 进度 12 下界 12 补 0 缺 []
+T 4 需 111 进度 27 下界 27 补 0 缺 []
+T 5 需 84 进度 58 下界 58 补 0 缺 []
+T 6 需 26 进度 26 下界 0 补 0 缺 ['body_removed_without_death_frame']
+C 14 F 27
+T 1 需 129 进度 21 下界 42 补 21 缺 []
+T 2 需 108 进度 9 下界 9 补 0 缺 []
+T 3 需 99 进度 19 下界 19 补 0 缺 []
+T 4 需 80 进度 14 下界 35 补 21 缺 []
+T 5 需 66 进度 11 下界 24 补 13 缺 ['hp_increase_without_intermediate_death_frame']
+T 6 需 55 进度 55 下界 32 补 0 缺 ['body_removed_without_death_frame']
+C 15 F 31
+T 1 需 180 进度 24 下界 24 补 0 缺 []
+T 2 需 156 进度 28 下界 28 补 0 缺 []
+T 3 需 128 进度 14 下界 7 补 0 缺 ['body_removed_without_death_frame']
+T 4 需 114 进度 15 下界 15 补 0 缺 []
+T 5 需 99 进度 22 下界 22 补 0 缺 []
+T 6 需 77 进度 26 下界 26 补 0 缺 []
+T 7 需 51 进度 51 下界 30 补 0 缺 ['body_removed_without_death_frame']
+C 16 F 33
+T 1 需 428 进度 27 下界 27 补 0 缺 []
+T 2 需 401 进度 18 下界 18 补 0 缺 []
+T 3 需 383 进度 48 下界 48 补 0 缺 []
+T 4 需 335 进度 25 下界 25 补 0 缺 []
+C 17 F 33
+T 1 需 428 进度 27 下界 27 补 0 缺 []
+T 2 需 401 进度 18 下界 18 补 0 缺 []
+T 3 需 383 进度 47 下界 47 补 0 缺 []
+T 4 需 336 进度 41 下界 41 补 0 缺 []
+T 5 需 295 进度 0 下界 0 补 0 缺 []
+C 18 F 33
+T 1 需 428 进度 27 下界 27 补 0 缺 []
+T 2 需 401 进度 18 下界 18 补 0 缺 []
+T 3 需 383 进度 47 下界 47 补 0 缺 []
+T 4 需 336 进度 41 下界 41 补 0 缺 []
+T 5 需 295 进度 0 下界 0 补 0 缺 []
+C 19 F 33
+T 1 需 428 进度 27 下界 27 补 0 缺 []
+T 2 需 401 进度 10 下界 10 补 0 缺 []
+T 3 需 391 进度 36 下界 36 补 0 缺 []
+T 4 需 355 进度 30 下界 30 补 0 缺 []
+T 5 需 325 进度 0 下界 0 补 0 缺 []
+C 20 F 33
+T 1 需 428 进度 25 下界 25 补 0 缺 []
+T 2 需 403 进度 18 下界 18 补 0 缺 []
+T 3 需 385 进度 59 下界 59 补 0 缺 []
+T 4 需 326 进度 25 下界 25 补 0 缺 []
+C 21 F 33
+T 1 需 428 进度 27 下界 27 补 0 缺 []
+T 2 需 401 进度 18 下界 18 补 0 缺 []
+T 3 需 383 进度 47 下界 47 补 0 缺 []
+T 4 需 336 进度 79 下界 79 补 0 缺 []
+COMBAT CODE Counter({'combat/lethal': 23, 'combat/plan': 18, 'combat/least-loss': 7, 'combat/end_turn': 3})
+CODE TURNS 37
+LOW COMBAT 29

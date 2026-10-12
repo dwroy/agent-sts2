@@ -1,0 +1,2043 @@
+{
+ "character": "silent",
+ "boss": "QUEEN",
+ "scope": "tune only; no validation row participates",
+ "release_selection": null,
+ "reason": "B5 validation coverage is 7, below the immutable 10-fight criterion",
+ "configurations": {
+  "0": {
+   "t1": {
+    "global_tune_n": 106,
+    "queen_n": 8,
+    "raw_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.291,
+     "brier": 0.2972,
+     "auc": 0.833,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 4,
+       "pred": 0.037,
+       "actual": 0.5
+      },
+      {
+       "bucket": "20–40%",
+       "n": 2,
+       "pred": 0.225,
+       "actual": 0.5
+      },
+      {
+       "bucket": "40–60%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 2,
+       "pred": 0.865,
+       "actual": 1.0
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 5,
+      "mean": 11.0,
+      "mae": 15.8,
+      "p10": -7,
+      "p90": 34,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.78,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.495,
+      "sim_loss": 7.78,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.48
+     }
+    },
+    "calibrated_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.709,
+     "brier": 0.1709,
+     "auc": 0.833,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 1,
+       "pred": 0.351,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 2,
+       "pred": 0.504,
+       "actual": 0.5
+      },
+      {
+       "bucket": "60–80%",
+       "n": 1,
+       "pred": 0.773,
+       "actual": 1.0
+      },
+      {
+       "bucket": "80–100%",
+       "n": 4,
+       "pred": 0.885,
+       "actual": 0.75
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 5,
+      "mean": 11.0,
+      "mae": 15.8,
+      "p10": -7,
+      "p90": 34,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.78,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.495,
+      "sim_loss": 7.78,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.48
+     }
+    },
+    "model": {
+     "a": 2.08,
+     "b": 0.4494,
+     "c": 0.0
+    },
+    "model_selection": {
+     "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+     "base_tune_residuals": {
+      "A0–4": {
+       "n": 38,
+       "gap": 0.0030000000000000027,
+       "brier": 0.134,
+       "mean_pred": 0.766,
+       "actual_win": 0.763,
+       "leak_ratio": 1.231
+      },
+      "A5–9": {
+       "n": 52,
+       "gap": -0.01100000000000001,
+       "brier": 0.0833,
+       "mean_pred": 0.797,
+       "actual_win": 0.808,
+       "leak_ratio": 1.198
+      },
+      "A10": {
+       "n": 16,
+       "gap": 0.027000000000000024,
+       "brier": 0.1219,
+       "mean_pred": 0.652,
+       "actual_win": 0.625,
+       "leak_ratio": 1.411
+      }
+     },
+     "systematic": false,
+     "selected_ascension": false
+    },
+    "oof_n": 106,
+    "queen_oof_n": 8,
+    "global_oof_brier": 0.11263481033515307,
+    "queen_oof_brier": 0.162084966070571,
+    "folds": [
+     {
+      "fold": 0,
+      "model": {
+       "a": 2.9522,
+       "b": 0.6073,
+       "c": 0.0
+      },
+      "train_runs": [
+       "1HC609GTLGN3",
+       "1LMBFGSMCWKU",
+       "25226ZFLNR1J",
+       "2L1BNN9ZJEFU",
+       "2SU6XN2AEJRD",
+       "3KME36ADUE4U",
+       "4Y94N8RDPGPM",
+       "53FLQ68CETW0",
+       "75X1BARMNZ03",
+       "8CFMW9SAGFWQ",
+       "9YBKCNBFP0X5",
+       "9YT51CK8RC39",
+       "C48LLXBGKXQ9",
+       "CSBR5CRDWQNB",
+       "ENKYQMS9W4ZD",
+       "F4QKG4J1AJJZ",
+       "G403VCZ3BH1B",
+       "HMVJKM56S4Q8",
+       "JMH5C51RLN4E",
+       "JQPT83P8KDSZ",
+       "KAY522KT5NXR",
+       "LLYSRQQ35AVW",
+       "MGA0CZDDKC0P",
+       "R0HEV5E3QT6G",
+       "T082DRCUHRRD",
+       "UACFSW4VDDLD",
+       "VN7RQJMJEFMX",
+       "XYYQYBRM2A01",
+       "Z6CFLDR3N4SB",
+       "ZE8F192FKX24"
+      ],
+      "check_runs": [
+       "10GPK5XGHCK3",
+       "1NZ8FE5F34R9",
+       "2PVLGRBGUX9S",
+       "4D4J8USKCPAV",
+       "6EV5V6PJJS9D",
+       "9TG1RP5LFAAK",
+       "ARKQLHG6RS4W",
+       "E6AVMMVCSRPC",
+       "F9PP859XZ3RJ",
+       "JLN5SK17W4FQ",
+       "K3676LU8B0UH",
+       "LRN0HPZ0FZS1",
+       "SADL3CGYTGSR",
+       "VLV17NUSFS61",
+       "Y6GM2CHWJBEY",
+       "ZZMYZ5UBCG72"
+      ]
+     },
+     {
+      "fold": 1,
+      "model": {
+       "a": 1.7642,
+       "b": 0.4197,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1LMBFGSMCWKU",
+       "1NZ8FE5F34R9",
+       "2L1BNN9ZJEFU",
+       "2PVLGRBGUX9S",
+       "3KME36ADUE4U",
+       "4D4J8USKCPAV",
+       "53FLQ68CETW0",
+       "6EV5V6PJJS9D",
+       "8CFMW9SAGFWQ",
+       "9TG1RP5LFAAK",
+       "9YT51CK8RC39",
+       "ARKQLHG6RS4W",
+       "CSBR5CRDWQNB",
+       "E6AVMMVCSRPC",
+       "F4QKG4J1AJJZ",
+       "F9PP859XZ3RJ",
+       "HMVJKM56S4Q8",
+       "JLN5SK17W4FQ",
+       "JQPT83P8KDSZ",
+       "K3676LU8B0UH",
+       "LLYSRQQ35AVW",
+       "LRN0HPZ0FZS1",
+       "R0HEV5E3QT6G",
+       "SADL3CGYTGSR",
+       "UACFSW4VDDLD",
+       "VLV17NUSFS61",
+       "XYYQYBRM2A01",
+       "Y6GM2CHWJBEY",
+       "ZE8F192FKX24",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1HC609GTLGN3",
+       "25226ZFLNR1J",
+       "2SU6XN2AEJRD",
+       "4Y94N8RDPGPM",
+       "75X1BARMNZ03",
+       "9YBKCNBFP0X5",
+       "C48LLXBGKXQ9",
+       "ENKYQMS9W4ZD",
+       "G403VCZ3BH1B",
+       "JMH5C51RLN4E",
+       "KAY522KT5NXR",
+       "MGA0CZDDKC0P",
+       "T082DRCUHRRD",
+       "VN7RQJMJEFMX",
+       "Z6CFLDR3N4SB"
+      ]
+     },
+     {
+      "fold": 2,
+      "model": {
+       "a": 1.8637,
+       "b": 0.3886,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1HC609GTLGN3",
+       "1NZ8FE5F34R9",
+       "25226ZFLNR1J",
+       "2PVLGRBGUX9S",
+       "2SU6XN2AEJRD",
+       "4D4J8USKCPAV",
+       "4Y94N8RDPGPM",
+       "6EV5V6PJJS9D",
+       "75X1BARMNZ03",
+       "9TG1RP5LFAAK",
+       "9YBKCNBFP0X5",
+       "ARKQLHG6RS4W",
+       "C48LLXBGKXQ9",
+       "E6AVMMVCSRPC",
+       "ENKYQMS9W4ZD",
+       "F9PP859XZ3RJ",
+       "G403VCZ3BH1B",
+       "JLN5SK17W4FQ",
+       "JMH5C51RLN4E",
+       "K3676LU8B0UH",
+       "KAY522KT5NXR",
+       "LRN0HPZ0FZS1",
+       "MGA0CZDDKC0P",
+       "SADL3CGYTGSR",
+       "T082DRCUHRRD",
+       "VLV17NUSFS61",
+       "VN7RQJMJEFMX",
+       "Y6GM2CHWJBEY",
+       "Z6CFLDR3N4SB",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1LMBFGSMCWKU",
+       "2L1BNN9ZJEFU",
+       "3KME36ADUE4U",
+       "53FLQ68CETW0",
+       "8CFMW9SAGFWQ",
+       "9YT51CK8RC39",
+       "CSBR5CRDWQNB",
+       "F4QKG4J1AJJZ",
+       "HMVJKM56S4Q8",
+       "JQPT83P8KDSZ",
+       "LLYSRQQ35AVW",
+       "R0HEV5E3QT6G",
+       "UACFSW4VDDLD",
+       "XYYQYBRM2A01",
+       "ZE8F192FKX24"
+      ]
+     }
+    ]
+   },
+   "pre": {
+    "global_tune_n": 106,
+    "queen_n": 8,
+    "raw_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.287,
+     "brier": 0.2636,
+     "auc": 0.867,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 4,
+       "pred": 0.045,
+       "actual": 0.25
+      },
+      {
+       "bucket": "20–40%",
+       "n": 1,
+       "pred": 0.23,
+       "actual": 1.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 1,
+       "pred": 0.41,
+       "actual": 1.0
+      },
+      {
+       "bucket": "60–80%",
+       "n": 1,
+       "pred": 0.61,
+       "actual": 1.0
+      },
+      {
+       "bucket": "80–100%",
+       "n": 1,
+       "pred": 0.87,
+       "actual": 1.0
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": -1,
+      "mean": 10.9,
+      "mae": 15.1,
+      "p10": -8,
+      "p90": 33,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.94,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.526,
+      "sim_loss": 7.94,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.511
+     }
+    },
+    "calibrated_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.734,
+     "brier": 0.1835,
+     "auc": 0.867,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 1,
+       "pred": 0.321,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 1,
+       "pred": 0.489,
+       "actual": 1.0
+      },
+      {
+       "bucket": "60–80%",
+       "n": 2,
+       "pred": 0.725,
+       "actual": 0.0
+      },
+      {
+       "bucket": "80–100%",
+       "n": 4,
+       "pred": 0.904,
+       "actual": 1.0
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": -1,
+      "mean": 10.9,
+      "mae": 15.1,
+      "p10": -8,
+      "p90": 33,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.94,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.526,
+      "sim_loss": 7.94,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.511
+     }
+    },
+    "model": {
+     "a": 2.2714,
+     "b": 0.5039,
+     "c": 0.0
+    },
+    "model_selection": {
+     "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+     "base_tune_residuals": {
+      "A0–4": {
+       "n": 38,
+       "gap": 0.0030000000000000027,
+       "brier": 0.1346,
+       "mean_pred": 0.766,
+       "actual_win": 0.763,
+       "leak_ratio": 1.289
+      },
+      "A5–9": {
+       "n": 52,
+       "gap": -0.009000000000000008,
+       "brier": 0.0855,
+       "mean_pred": 0.799,
+       "actual_win": 0.808,
+       "leak_ratio": 1.26
+      },
+      "A10": {
+       "n": 16,
+       "gap": 0.020000000000000018,
+       "brier": 0.1223,
+       "mean_pred": 0.645,
+       "actual_win": 0.625,
+       "leak_ratio": 1.422
+      }
+     },
+     "systematic": false,
+     "selected_ascension": false
+    },
+    "oof_n": 106,
+    "queen_oof_n": 8,
+    "global_oof_brier": 0.1147161420369817,
+    "queen_oof_brier": 0.18470183762907433,
+    "folds": [
+     {
+      "fold": 0,
+      "model": {
+       "a": 3.0864,
+       "b": 0.6427,
+       "c": 0.0
+      },
+      "train_runs": [
+       "1HC609GTLGN3",
+       "1LMBFGSMCWKU",
+       "25226ZFLNR1J",
+       "2L1BNN9ZJEFU",
+       "2SU6XN2AEJRD",
+       "3KME36ADUE4U",
+       "4Y94N8RDPGPM",
+       "53FLQ68CETW0",
+       "75X1BARMNZ03",
+       "8CFMW9SAGFWQ",
+       "9YBKCNBFP0X5",
+       "9YT51CK8RC39",
+       "C48LLXBGKXQ9",
+       "CSBR5CRDWQNB",
+       "ENKYQMS9W4ZD",
+       "F4QKG4J1AJJZ",
+       "G403VCZ3BH1B",
+       "HMVJKM56S4Q8",
+       "JMH5C51RLN4E",
+       "JQPT83P8KDSZ",
+       "KAY522KT5NXR",
+       "LLYSRQQ35AVW",
+       "MGA0CZDDKC0P",
+       "R0HEV5E3QT6G",
+       "T082DRCUHRRD",
+       "UACFSW4VDDLD",
+       "VN7RQJMJEFMX",
+       "XYYQYBRM2A01",
+       "Z6CFLDR3N4SB",
+       "ZE8F192FKX24"
+      ],
+      "check_runs": [
+       "10GPK5XGHCK3",
+       "1NZ8FE5F34R9",
+       "2PVLGRBGUX9S",
+       "4D4J8USKCPAV",
+       "6EV5V6PJJS9D",
+       "9TG1RP5LFAAK",
+       "ARKQLHG6RS4W",
+       "E6AVMMVCSRPC",
+       "F9PP859XZ3RJ",
+       "JLN5SK17W4FQ",
+       "K3676LU8B0UH",
+       "LRN0HPZ0FZS1",
+       "SADL3CGYTGSR",
+       "VLV17NUSFS61",
+       "Y6GM2CHWJBEY",
+       "ZZMYZ5UBCG72"
+      ]
+     },
+     {
+      "fold": 1,
+      "model": {
+       "a": 1.971,
+       "b": 0.4873,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1LMBFGSMCWKU",
+       "1NZ8FE5F34R9",
+       "2L1BNN9ZJEFU",
+       "2PVLGRBGUX9S",
+       "3KME36ADUE4U",
+       "4D4J8USKCPAV",
+       "53FLQ68CETW0",
+       "6EV5V6PJJS9D",
+       "8CFMW9SAGFWQ",
+       "9TG1RP5LFAAK",
+       "9YT51CK8RC39",
+       "ARKQLHG6RS4W",
+       "CSBR5CRDWQNB",
+       "E6AVMMVCSRPC",
+       "F4QKG4J1AJJZ",
+       "F9PP859XZ3RJ",
+       "HMVJKM56S4Q8",
+       "JLN5SK17W4FQ",
+       "JQPT83P8KDSZ",
+       "K3676LU8B0UH",
+       "LLYSRQQ35AVW",
+       "LRN0HPZ0FZS1",
+       "R0HEV5E3QT6G",
+       "SADL3CGYTGSR",
+       "UACFSW4VDDLD",
+       "VLV17NUSFS61",
+       "XYYQYBRM2A01",
+       "Y6GM2CHWJBEY",
+       "ZE8F192FKX24",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1HC609GTLGN3",
+       "25226ZFLNR1J",
+       "2SU6XN2AEJRD",
+       "4Y94N8RDPGPM",
+       "75X1BARMNZ03",
+       "9YBKCNBFP0X5",
+       "C48LLXBGKXQ9",
+       "ENKYQMS9W4ZD",
+       "G403VCZ3BH1B",
+       "JMH5C51RLN4E",
+       "KAY522KT5NXR",
+       "MGA0CZDDKC0P",
+       "T082DRCUHRRD",
+       "VN7RQJMJEFMX",
+       "Z6CFLDR3N4SB"
+      ]
+     },
+     {
+      "fold": 2,
+      "model": {
+       "a": 2.0763,
+       "b": 0.4443,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1HC609GTLGN3",
+       "1NZ8FE5F34R9",
+       "25226ZFLNR1J",
+       "2PVLGRBGUX9S",
+       "2SU6XN2AEJRD",
+       "4D4J8USKCPAV",
+       "4Y94N8RDPGPM",
+       "6EV5V6PJJS9D",
+       "75X1BARMNZ03",
+       "9TG1RP5LFAAK",
+       "9YBKCNBFP0X5",
+       "ARKQLHG6RS4W",
+       "C48LLXBGKXQ9",
+       "E6AVMMVCSRPC",
+       "ENKYQMS9W4ZD",
+       "F9PP859XZ3RJ",
+       "G403VCZ3BH1B",
+       "JLN5SK17W4FQ",
+       "JMH5C51RLN4E",
+       "K3676LU8B0UH",
+       "KAY522KT5NXR",
+       "LRN0HPZ0FZS1",
+       "MGA0CZDDKC0P",
+       "SADL3CGYTGSR",
+       "T082DRCUHRRD",
+       "VLV17NUSFS61",
+       "VN7RQJMJEFMX",
+       "Y6GM2CHWJBEY",
+       "Z6CFLDR3N4SB",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1LMBFGSMCWKU",
+       "2L1BNN9ZJEFU",
+       "3KME36ADUE4U",
+       "53FLQ68CETW0",
+       "8CFMW9SAGFWQ",
+       "9YT51CK8RC39",
+       "CSBR5CRDWQNB",
+       "F4QKG4J1AJJZ",
+       "HMVJKM56S4Q8",
+       "JQPT83P8KDSZ",
+       "LLYSRQQ35AVW",
+       "R0HEV5E3QT6G",
+       "UACFSW4VDDLD",
+       "XYYQYBRM2A01",
+       "ZE8F192FKX24"
+      ]
+     }
+    ]
+   }
+  },
+  "1": {
+   "t1": {
+    "global_tune_n": 106,
+    "queen_n": 8,
+    "raw_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.287,
+     "brier": 0.3072,
+     "auc": 0.8,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 4,
+       "pred": 0.035,
+       "actual": 0.5
+      },
+      {
+       "bucket": "20–40%",
+       "n": 2,
+       "pred": 0.21,
+       "actual": 0.5
+      },
+      {
+       "bucket": "40–60%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 2,
+       "pred": 0.87,
+       "actual": 1.0
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 4,
+      "mean": 10.1,
+      "mae": 16.3,
+      "p10": -8,
+      "p90": 33,
+      "within5": 0.2
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.69,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.477,
+      "sim_loss": 7.69,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.462
+     }
+    },
+    "calibrated_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.707,
+     "brier": 0.1728,
+     "auc": 0.8,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 1,
+       "pred": 0.352,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 2,
+       "pred": 0.504,
+       "actual": 0.5
+      },
+      {
+       "bucket": "60–80%",
+       "n": 1,
+       "pred": 0.766,
+       "actual": 1.0
+      },
+      {
+       "bucket": "80–100%",
+       "n": 4,
+       "pred": 0.882,
+       "actual": 0.75
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 4,
+      "mean": 10.1,
+      "mae": 16.3,
+      "p10": -8,
+      "p90": 33,
+      "within5": 0.2
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.69,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.477,
+      "sim_loss": 7.69,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.462
+     }
+    },
+    "model": {
+     "a": 2.0788,
+     "b": 0.4487,
+     "c": 0.0
+    },
+    "model_selection": {
+     "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+     "base_tune_residuals": {
+      "A0–4": {
+       "n": 38,
+       "gap": 0.0030000000000000027,
+       "brier": 0.1342,
+       "mean_pred": 0.766,
+       "actual_win": 0.763,
+       "leak_ratio": 1.232
+      },
+      "A5–9": {
+       "n": 52,
+       "gap": -0.01100000000000001,
+       "brier": 0.0834,
+       "mean_pred": 0.797,
+       "actual_win": 0.808,
+       "leak_ratio": 1.195
+      },
+      "A10": {
+       "n": 16,
+       "gap": 0.027000000000000024,
+       "brier": 0.122,
+       "mean_pred": 0.652,
+       "actual_win": 0.625,
+       "leak_ratio": 1.411
+      }
+     },
+     "systematic": false,
+     "selected_ascension": false
+    },
+    "oof_n": 106,
+    "queen_oof_n": 8,
+    "global_oof_brier": 0.11279325263007342,
+    "queen_oof_brier": 0.16415091481986657,
+    "folds": [
+     {
+      "fold": 0,
+      "model": {
+       "a": 2.9474,
+       "b": 0.6059,
+       "c": 0.0
+      },
+      "train_runs": [
+       "1HC609GTLGN3",
+       "1LMBFGSMCWKU",
+       "25226ZFLNR1J",
+       "2L1BNN9ZJEFU",
+       "2SU6XN2AEJRD",
+       "3KME36ADUE4U",
+       "4Y94N8RDPGPM",
+       "53FLQ68CETW0",
+       "75X1BARMNZ03",
+       "8CFMW9SAGFWQ",
+       "9YBKCNBFP0X5",
+       "9YT51CK8RC39",
+       "C48LLXBGKXQ9",
+       "CSBR5CRDWQNB",
+       "ENKYQMS9W4ZD",
+       "F4QKG4J1AJJZ",
+       "G403VCZ3BH1B",
+       "HMVJKM56S4Q8",
+       "JMH5C51RLN4E",
+       "JQPT83P8KDSZ",
+       "KAY522KT5NXR",
+       "LLYSRQQ35AVW",
+       "MGA0CZDDKC0P",
+       "R0HEV5E3QT6G",
+       "T082DRCUHRRD",
+       "UACFSW4VDDLD",
+       "VN7RQJMJEFMX",
+       "XYYQYBRM2A01",
+       "Z6CFLDR3N4SB",
+       "ZE8F192FKX24"
+      ],
+      "check_runs": [
+       "10GPK5XGHCK3",
+       "1NZ8FE5F34R9",
+       "2PVLGRBGUX9S",
+       "4D4J8USKCPAV",
+       "6EV5V6PJJS9D",
+       "9TG1RP5LFAAK",
+       "ARKQLHG6RS4W",
+       "E6AVMMVCSRPC",
+       "F9PP859XZ3RJ",
+       "JLN5SK17W4FQ",
+       "K3676LU8B0UH",
+       "LRN0HPZ0FZS1",
+       "SADL3CGYTGSR",
+       "VLV17NUSFS61",
+       "Y6GM2CHWJBEY",
+       "ZZMYZ5UBCG72"
+      ]
+     },
+     {
+      "fold": 1,
+      "model": {
+       "a": 1.7646,
+       "b": 0.4195,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1LMBFGSMCWKU",
+       "1NZ8FE5F34R9",
+       "2L1BNN9ZJEFU",
+       "2PVLGRBGUX9S",
+       "3KME36ADUE4U",
+       "4D4J8USKCPAV",
+       "53FLQ68CETW0",
+       "6EV5V6PJJS9D",
+       "8CFMW9SAGFWQ",
+       "9TG1RP5LFAAK",
+       "9YT51CK8RC39",
+       "ARKQLHG6RS4W",
+       "CSBR5CRDWQNB",
+       "E6AVMMVCSRPC",
+       "F4QKG4J1AJJZ",
+       "F9PP859XZ3RJ",
+       "HMVJKM56S4Q8",
+       "JLN5SK17W4FQ",
+       "JQPT83P8KDSZ",
+       "K3676LU8B0UH",
+       "LLYSRQQ35AVW",
+       "LRN0HPZ0FZS1",
+       "R0HEV5E3QT6G",
+       "SADL3CGYTGSR",
+       "UACFSW4VDDLD",
+       "VLV17NUSFS61",
+       "XYYQYBRM2A01",
+       "Y6GM2CHWJBEY",
+       "ZE8F192FKX24",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1HC609GTLGN3",
+       "25226ZFLNR1J",
+       "2SU6XN2AEJRD",
+       "4Y94N8RDPGPM",
+       "75X1BARMNZ03",
+       "9YBKCNBFP0X5",
+       "C48LLXBGKXQ9",
+       "ENKYQMS9W4ZD",
+       "G403VCZ3BH1B",
+       "JMH5C51RLN4E",
+       "KAY522KT5NXR",
+       "MGA0CZDDKC0P",
+       "T082DRCUHRRD",
+       "VN7RQJMJEFMX",
+       "Z6CFLDR3N4SB"
+      ]
+     },
+     {
+      "fold": 2,
+      "model": {
+       "a": 1.8623,
+       "b": 0.3877,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1HC609GTLGN3",
+       "1NZ8FE5F34R9",
+       "25226ZFLNR1J",
+       "2PVLGRBGUX9S",
+       "2SU6XN2AEJRD",
+       "4D4J8USKCPAV",
+       "4Y94N8RDPGPM",
+       "6EV5V6PJJS9D",
+       "75X1BARMNZ03",
+       "9TG1RP5LFAAK",
+       "9YBKCNBFP0X5",
+       "ARKQLHG6RS4W",
+       "C48LLXBGKXQ9",
+       "E6AVMMVCSRPC",
+       "ENKYQMS9W4ZD",
+       "F9PP859XZ3RJ",
+       "G403VCZ3BH1B",
+       "JLN5SK17W4FQ",
+       "JMH5C51RLN4E",
+       "K3676LU8B0UH",
+       "KAY522KT5NXR",
+       "LRN0HPZ0FZS1",
+       "MGA0CZDDKC0P",
+       "SADL3CGYTGSR",
+       "T082DRCUHRRD",
+       "VLV17NUSFS61",
+       "VN7RQJMJEFMX",
+       "Y6GM2CHWJBEY",
+       "Z6CFLDR3N4SB",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1LMBFGSMCWKU",
+       "2L1BNN9ZJEFU",
+       "3KME36ADUE4U",
+       "53FLQ68CETW0",
+       "8CFMW9SAGFWQ",
+       "9YT51CK8RC39",
+       "CSBR5CRDWQNB",
+       "F4QKG4J1AJJZ",
+       "HMVJKM56S4Q8",
+       "JQPT83P8KDSZ",
+       "LLYSRQQ35AVW",
+       "R0HEV5E3QT6G",
+       "UACFSW4VDDLD",
+       "XYYQYBRM2A01",
+       "ZE8F192FKX24"
+      ]
+     }
+    ]
+   },
+   "pre": {
+    "global_tune_n": 106,
+    "queen_n": 8,
+    "raw_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.275,
+     "brier": 0.2759,
+     "auc": 0.867,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 4,
+       "pred": 0.045,
+       "actual": 0.25
+      },
+      {
+       "bucket": "20–40%",
+       "n": 2,
+       "pred": 0.29,
+       "actual": 1.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 1,
+       "pred": 0.59,
+       "actual": 1.0
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 1,
+       "pred": 0.85,
+       "actual": 1.0
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": -1,
+      "mean": 11.0,
+      "mae": 15.8,
+      "p10": -9,
+      "p90": 36,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.73,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.484,
+      "sim_loss": 7.73,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.47
+     }
+    },
+    "calibrated_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.732,
+     "brier": 0.1841,
+     "auc": 0.867,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 1,
+       "pred": 0.321,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 1,
+       "pred": 0.489,
+       "actual": 1.0
+      },
+      {
+       "bucket": "60–80%",
+       "n": 2,
+       "pred": 0.725,
+       "actual": 0.0
+      },
+      {
+       "bucket": "80–100%",
+       "n": 4,
+       "pred": 0.899,
+       "actual": 1.0
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": -1,
+      "mean": 11.0,
+      "mae": 15.8,
+      "p10": -9,
+      "p90": 36,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.73,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.484,
+      "sim_loss": 7.73,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.47
+     }
+    },
+    "model": {
+     "a": 2.2743,
+     "b": 0.5042,
+     "c": 0.0
+    },
+    "model_selection": {
+     "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+     "base_tune_residuals": {
+      "A0–4": {
+       "n": 38,
+       "gap": 0.0040000000000000036,
+       "brier": 0.1347,
+       "mean_pred": 0.767,
+       "actual_win": 0.763,
+       "leak_ratio": 1.282
+      },
+      "A5–9": {
+       "n": 52,
+       "gap": -0.009000000000000008,
+       "brier": 0.0855,
+       "mean_pred": 0.799,
+       "actual_win": 0.808,
+       "leak_ratio": 1.258
+      },
+      "A10": {
+       "n": 16,
+       "gap": 0.02100000000000002,
+       "brier": 0.1223,
+       "mean_pred": 0.646,
+       "actual_win": 0.625,
+       "leak_ratio": 1.422
+      }
+     },
+     "systematic": false,
+     "selected_ascension": false
+    },
+    "oof_n": 106,
+    "queen_oof_n": 8,
+    "global_oof_brier": 0.11478624594294377,
+    "queen_oof_brier": 0.1854680222527302,
+    "folds": [
+     {
+      "fold": 0,
+      "model": {
+       "a": 3.092,
+       "b": 0.6436,
+       "c": 0.0
+      },
+      "train_runs": [
+       "1HC609GTLGN3",
+       "1LMBFGSMCWKU",
+       "25226ZFLNR1J",
+       "2L1BNN9ZJEFU",
+       "2SU6XN2AEJRD",
+       "3KME36ADUE4U",
+       "4Y94N8RDPGPM",
+       "53FLQ68CETW0",
+       "75X1BARMNZ03",
+       "8CFMW9SAGFWQ",
+       "9YBKCNBFP0X5",
+       "9YT51CK8RC39",
+       "C48LLXBGKXQ9",
+       "CSBR5CRDWQNB",
+       "ENKYQMS9W4ZD",
+       "F4QKG4J1AJJZ",
+       "G403VCZ3BH1B",
+       "HMVJKM56S4Q8",
+       "JMH5C51RLN4E",
+       "JQPT83P8KDSZ",
+       "KAY522KT5NXR",
+       "LLYSRQQ35AVW",
+       "MGA0CZDDKC0P",
+       "R0HEV5E3QT6G",
+       "T082DRCUHRRD",
+       "UACFSW4VDDLD",
+       "VN7RQJMJEFMX",
+       "XYYQYBRM2A01",
+       "Z6CFLDR3N4SB",
+       "ZE8F192FKX24"
+      ],
+      "check_runs": [
+       "10GPK5XGHCK3",
+       "1NZ8FE5F34R9",
+       "2PVLGRBGUX9S",
+       "4D4J8USKCPAV",
+       "6EV5V6PJJS9D",
+       "9TG1RP5LFAAK",
+       "ARKQLHG6RS4W",
+       "E6AVMMVCSRPC",
+       "F9PP859XZ3RJ",
+       "JLN5SK17W4FQ",
+       "K3676LU8B0UH",
+       "LRN0HPZ0FZS1",
+       "SADL3CGYTGSR",
+       "VLV17NUSFS61",
+       "Y6GM2CHWJBEY",
+       "ZZMYZ5UBCG72"
+      ]
+     },
+     {
+      "fold": 1,
+      "model": {
+       "a": 1.9725,
+       "b": 0.4874,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1LMBFGSMCWKU",
+       "1NZ8FE5F34R9",
+       "2L1BNN9ZJEFU",
+       "2PVLGRBGUX9S",
+       "3KME36ADUE4U",
+       "4D4J8USKCPAV",
+       "53FLQ68CETW0",
+       "6EV5V6PJJS9D",
+       "8CFMW9SAGFWQ",
+       "9TG1RP5LFAAK",
+       "9YT51CK8RC39",
+       "ARKQLHG6RS4W",
+       "CSBR5CRDWQNB",
+       "E6AVMMVCSRPC",
+       "F4QKG4J1AJJZ",
+       "F9PP859XZ3RJ",
+       "HMVJKM56S4Q8",
+       "JLN5SK17W4FQ",
+       "JQPT83P8KDSZ",
+       "K3676LU8B0UH",
+       "LLYSRQQ35AVW",
+       "LRN0HPZ0FZS1",
+       "R0HEV5E3QT6G",
+       "SADL3CGYTGSR",
+       "UACFSW4VDDLD",
+       "VLV17NUSFS61",
+       "XYYQYBRM2A01",
+       "Y6GM2CHWJBEY",
+       "ZE8F192FKX24",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1HC609GTLGN3",
+       "25226ZFLNR1J",
+       "2SU6XN2AEJRD",
+       "4Y94N8RDPGPM",
+       "75X1BARMNZ03",
+       "9YBKCNBFP0X5",
+       "C48LLXBGKXQ9",
+       "ENKYQMS9W4ZD",
+       "G403VCZ3BH1B",
+       "JMH5C51RLN4E",
+       "KAY522KT5NXR",
+       "MGA0CZDDKC0P",
+       "T082DRCUHRRD",
+       "VN7RQJMJEFMX",
+       "Z6CFLDR3N4SB"
+      ]
+     },
+     {
+      "fold": 2,
+      "model": {
+       "a": 2.0788,
+       "b": 0.4444,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1HC609GTLGN3",
+       "1NZ8FE5F34R9",
+       "25226ZFLNR1J",
+       "2PVLGRBGUX9S",
+       "2SU6XN2AEJRD",
+       "4D4J8USKCPAV",
+       "4Y94N8RDPGPM",
+       "6EV5V6PJJS9D",
+       "75X1BARMNZ03",
+       "9TG1RP5LFAAK",
+       "9YBKCNBFP0X5",
+       "ARKQLHG6RS4W",
+       "C48LLXBGKXQ9",
+       "E6AVMMVCSRPC",
+       "ENKYQMS9W4ZD",
+       "F9PP859XZ3RJ",
+       "G403VCZ3BH1B",
+       "JLN5SK17W4FQ",
+       "JMH5C51RLN4E",
+       "K3676LU8B0UH",
+       "KAY522KT5NXR",
+       "LRN0HPZ0FZS1",
+       "MGA0CZDDKC0P",
+       "SADL3CGYTGSR",
+       "T082DRCUHRRD",
+       "VLV17NUSFS61",
+       "VN7RQJMJEFMX",
+       "Y6GM2CHWJBEY",
+       "Z6CFLDR3N4SB",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1LMBFGSMCWKU",
+       "2L1BNN9ZJEFU",
+       "3KME36ADUE4U",
+       "53FLQ68CETW0",
+       "8CFMW9SAGFWQ",
+       "9YT51CK8RC39",
+       "CSBR5CRDWQNB",
+       "F4QKG4J1AJJZ",
+       "HMVJKM56S4Q8",
+       "JQPT83P8KDSZ",
+       "LLYSRQQ35AVW",
+       "R0HEV5E3QT6G",
+       "UACFSW4VDDLD",
+       "XYYQYBRM2A01",
+       "ZE8F192FKX24"
+      ]
+     }
+    ]
+   }
+  },
+  "2": {
+   "t1": {
+    "global_tune_n": 106,
+    "queen_n": 8,
+    "raw_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.281,
+     "brier": 0.3129,
+     "auc": 0.833,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 4,
+       "pred": 0.028,
+       "actual": 0.5
+      },
+      {
+       "bucket": "20–40%",
+       "n": 2,
+       "pred": 0.215,
+       "actual": 0.5
+      },
+      {
+       "bucket": "40–60%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 2,
+       "pred": 0.855,
+       "actual": 1.0
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 3,
+      "mean": 10.5,
+      "mae": 14.9,
+      "p10": -7,
+      "p90": 35,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.64,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.468,
+      "sim_loss": 7.64,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.454
+     }
+    },
+    "calibrated_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.704,
+     "brier": 0.1745,
+     "auc": 0.833,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 1,
+       "pred": 0.353,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 2,
+       "pred": 0.505,
+       "actual": 0.5
+      },
+      {
+       "bucket": "60–80%",
+       "n": 1,
+       "pred": 0.739,
+       "actual": 1.0
+      },
+      {
+       "bucket": "80–100%",
+       "n": 4,
+       "pred": 0.882,
+       "actual": 0.75
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 3,
+      "mean": 10.5,
+      "mae": 14.9,
+      "p10": -7,
+      "p90": 35,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.64,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.468,
+      "sim_loss": 7.64,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.454
+     }
+    },
+    "model": {
+     "a": 2.0806,
+     "b": 0.4485,
+     "c": 0.0
+    },
+    "model_selection": {
+     "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+     "base_tune_residuals": {
+      "A0–4": {
+       "n": 38,
+       "gap": 0.0030000000000000027,
+       "brier": 0.1345,
+       "mean_pred": 0.766,
+       "actual_win": 0.763,
+       "leak_ratio": 1.228
+      },
+      "A5–9": {
+       "n": 52,
+       "gap": -0.01100000000000001,
+       "brier": 0.0834,
+       "mean_pred": 0.797,
+       "actual_win": 0.808,
+       "leak_ratio": 1.196
+      },
+      "A10": {
+       "n": 16,
+       "gap": 0.028000000000000025,
+       "brier": 0.1221,
+       "mean_pred": 0.653,
+       "actual_win": 0.625,
+       "leak_ratio": 1.411
+      }
+     },
+     "systematic": false,
+     "selected_ascension": false
+    },
+    "oof_n": 106,
+    "queen_oof_n": 8,
+    "global_oof_brier": 0.11284815800172031,
+    "queen_oof_brier": 0.16506666819214266,
+    "folds": [
+     {
+      "fold": 0,
+      "model": {
+       "a": 2.9482,
+       "b": 0.6061,
+       "c": 0.0
+      },
+      "train_runs": [
+       "1HC609GTLGN3",
+       "1LMBFGSMCWKU",
+       "25226ZFLNR1J",
+       "2L1BNN9ZJEFU",
+       "2SU6XN2AEJRD",
+       "3KME36ADUE4U",
+       "4Y94N8RDPGPM",
+       "53FLQ68CETW0",
+       "75X1BARMNZ03",
+       "8CFMW9SAGFWQ",
+       "9YBKCNBFP0X5",
+       "9YT51CK8RC39",
+       "C48LLXBGKXQ9",
+       "CSBR5CRDWQNB",
+       "ENKYQMS9W4ZD",
+       "F4QKG4J1AJJZ",
+       "G403VCZ3BH1B",
+       "HMVJKM56S4Q8",
+       "JMH5C51RLN4E",
+       "JQPT83P8KDSZ",
+       "KAY522KT5NXR",
+       "LLYSRQQ35AVW",
+       "MGA0CZDDKC0P",
+       "R0HEV5E3QT6G",
+       "T082DRCUHRRD",
+       "UACFSW4VDDLD",
+       "VN7RQJMJEFMX",
+       "XYYQYBRM2A01",
+       "Z6CFLDR3N4SB",
+       "ZE8F192FKX24"
+      ],
+      "check_runs": [
+       "10GPK5XGHCK3",
+       "1NZ8FE5F34R9",
+       "2PVLGRBGUX9S",
+       "4D4J8USKCPAV",
+       "6EV5V6PJJS9D",
+       "9TG1RP5LFAAK",
+       "ARKQLHG6RS4W",
+       "E6AVMMVCSRPC",
+       "F9PP859XZ3RJ",
+       "JLN5SK17W4FQ",
+       "K3676LU8B0UH",
+       "LRN0HPZ0FZS1",
+       "SADL3CGYTGSR",
+       "VLV17NUSFS61",
+       "Y6GM2CHWJBEY",
+       "ZZMYZ5UBCG72"
+      ]
+     },
+     {
+      "fold": 1,
+      "model": {
+       "a": 1.7676,
+       "b": 0.4191,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1LMBFGSMCWKU",
+       "1NZ8FE5F34R9",
+       "2L1BNN9ZJEFU",
+       "2PVLGRBGUX9S",
+       "3KME36ADUE4U",
+       "4D4J8USKCPAV",
+       "53FLQ68CETW0",
+       "6EV5V6PJJS9D",
+       "8CFMW9SAGFWQ",
+       "9TG1RP5LFAAK",
+       "9YT51CK8RC39",
+       "ARKQLHG6RS4W",
+       "CSBR5CRDWQNB",
+       "E6AVMMVCSRPC",
+       "F4QKG4J1AJJZ",
+       "F9PP859XZ3RJ",
+       "HMVJKM56S4Q8",
+       "JLN5SK17W4FQ",
+       "JQPT83P8KDSZ",
+       "K3676LU8B0UH",
+       "LLYSRQQ35AVW",
+       "LRN0HPZ0FZS1",
+       "R0HEV5E3QT6G",
+       "SADL3CGYTGSR",
+       "UACFSW4VDDLD",
+       "VLV17NUSFS61",
+       "XYYQYBRM2A01",
+       "Y6GM2CHWJBEY",
+       "ZE8F192FKX24",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1HC609GTLGN3",
+       "25226ZFLNR1J",
+       "2SU6XN2AEJRD",
+       "4Y94N8RDPGPM",
+       "75X1BARMNZ03",
+       "9YBKCNBFP0X5",
+       "C48LLXBGKXQ9",
+       "ENKYQMS9W4ZD",
+       "G403VCZ3BH1B",
+       "JMH5C51RLN4E",
+       "KAY522KT5NXR",
+       "MGA0CZDDKC0P",
+       "T082DRCUHRRD",
+       "VN7RQJMJEFMX",
+       "Z6CFLDR3N4SB"
+      ]
+     },
+     {
+      "fold": 2,
+      "model": {
+       "a": 1.8625,
+       "b": 0.3871,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1HC609GTLGN3",
+       "1NZ8FE5F34R9",
+       "25226ZFLNR1J",
+       "2PVLGRBGUX9S",
+       "2SU6XN2AEJRD",
+       "4D4J8USKCPAV",
+       "4Y94N8RDPGPM",
+       "6EV5V6PJJS9D",
+       "75X1BARMNZ03",
+       "9TG1RP5LFAAK",
+       "9YBKCNBFP0X5",
+       "ARKQLHG6RS4W",
+       "C48LLXBGKXQ9",
+       "E6AVMMVCSRPC",
+       "ENKYQMS9W4ZD",
+       "F9PP859XZ3RJ",
+       "G403VCZ3BH1B",
+       "JLN5SK17W4FQ",
+       "JMH5C51RLN4E",
+       "K3676LU8B0UH",
+       "KAY522KT5NXR",
+       "LRN0HPZ0FZS1",
+       "MGA0CZDDKC0P",
+       "SADL3CGYTGSR",
+       "T082DRCUHRRD",
+       "VLV17NUSFS61",
+       "VN7RQJMJEFMX",
+       "Y6GM2CHWJBEY",
+       "Z6CFLDR3N4SB",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1LMBFGSMCWKU",
+       "2L1BNN9ZJEFU",
+       "3KME36ADUE4U",
+       "53FLQ68CETW0",
+       "8CFMW9SAGFWQ",
+       "9YT51CK8RC39",
+       "CSBR5CRDWQNB",
+       "F4QKG4J1AJJZ",
+       "HMVJKM56S4Q8",
+       "JQPT83P8KDSZ",
+       "LLYSRQQ35AVW",
+       "R0HEV5E3QT6G",
+       "UACFSW4VDDLD",
+       "XYYQYBRM2A01",
+       "ZE8F192FKX24"
+      ]
+     }
+    ]
+   },
+   "pre": {
+    "global_tune_n": 106,
+    "queen_n": 8,
+    "raw_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.274,
+     "brier": 0.2771,
+     "auc": 0.867,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 4,
+       "pred": 0.045,
+       "actual": 0.25
+      },
+      {
+       "bucket": "20–40%",
+       "n": 2,
+       "pred": 0.29,
+       "actual": 1.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 1,
+       "pred": 0.59,
+       "actual": 1.0
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 1,
+       "pred": 0.84,
+       "actual": 1.0
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 0,
+      "mean": 10.2,
+      "mae": 13.6,
+      "p10": -7,
+      "p90": 31.5,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.5,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.441,
+      "sim_loss": 7.5,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.427
+     }
+    },
+    "calibrated_queen": {
+     "n": 8,
+     "actual_win": 0.625,
+     "mean_pred": 0.732,
+     "brier": 0.1844,
+     "auc": 0.867,
+     "const_brier": 0.2344,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 1,
+       "pred": 0.321,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 1,
+       "pred": 0.489,
+       "actual": 1.0
+      },
+      {
+       "bucket": "60–80%",
+       "n": 2,
+       "pred": 0.725,
+       "actual": 0.0
+      },
+      {
+       "bucket": "80–100%",
+       "n": 4,
+       "pred": 0.898,
+       "actual": 1.0
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 0,
+      "mean": 10.2,
+      "mae": 13.6,
+      "p10": -7,
+      "p90": 31.5,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 39,
+      "sim_enemy": 7.5,
+      "actual_enemy": 5.21,
+      "enemy_ratio": 1.441,
+      "sim_loss": 7.5,
+      "actual_loss": 5.26,
+      "loss_ratio": 1.427
+     }
+    },
+    "model": {
+     "a": 2.2748,
+     "b": 0.5042,
+     "c": 0.0
+    },
+    "model_selection": {
+     "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+     "base_tune_residuals": {
+      "A0–4": {
+       "n": 38,
+       "gap": 0.0030000000000000027,
+       "brier": 0.1348,
+       "mean_pred": 0.766,
+       "actual_win": 0.763,
+       "leak_ratio": 1.281
+      },
+      "A5–9": {
+       "n": 52,
+       "gap": -0.009000000000000008,
+       "brier": 0.0855,
+       "mean_pred": 0.799,
+       "actual_win": 0.808,
+       "leak_ratio": 1.253
+      },
+      "A10": {
+       "n": 16,
+       "gap": 0.02100000000000002,
+       "brier": 0.1223,
+       "mean_pred": 0.646,
+       "actual_win": 0.625,
+       "leak_ratio": 1.422
+      }
+     },
+     "systematic": false,
+     "selected_ascension": false
+    },
+    "oof_n": 106,
+    "queen_oof_n": 8,
+    "global_oof_brier": 0.11477165906428544,
+    "queen_oof_brier": 0.18544729558725964,
+    "folds": [
+     {
+      "fold": 0,
+      "model": {
+       "a": 3.0911,
+       "b": 0.6435,
+       "c": 0.0
+      },
+      "train_runs": [
+       "1HC609GTLGN3",
+       "1LMBFGSMCWKU",
+       "25226ZFLNR1J",
+       "2L1BNN9ZJEFU",
+       "2SU6XN2AEJRD",
+       "3KME36ADUE4U",
+       "4Y94N8RDPGPM",
+       "53FLQ68CETW0",
+       "75X1BARMNZ03",
+       "8CFMW9SAGFWQ",
+       "9YBKCNBFP0X5",
+       "9YT51CK8RC39",
+       "C48LLXBGKXQ9",
+       "CSBR5CRDWQNB",
+       "ENKYQMS9W4ZD",
+       "F4QKG4J1AJJZ",
+       "G403VCZ3BH1B",
+       "HMVJKM56S4Q8",
+       "JMH5C51RLN4E",
+       "JQPT83P8KDSZ",
+       "KAY522KT5NXR",
+       "LLYSRQQ35AVW",
+       "MGA0CZDDKC0P",
+       "R0HEV5E3QT6G",
+       "T082DRCUHRRD",
+       "UACFSW4VDDLD",
+       "VN7RQJMJEFMX",
+       "XYYQYBRM2A01",
+       "Z6CFLDR3N4SB",
+       "ZE8F192FKX24"
+      ],
+      "check_runs": [
+       "10GPK5XGHCK3",
+       "1NZ8FE5F34R9",
+       "2PVLGRBGUX9S",
+       "4D4J8USKCPAV",
+       "6EV5V6PJJS9D",
+       "9TG1RP5LFAAK",
+       "ARKQLHG6RS4W",
+       "E6AVMMVCSRPC",
+       "F9PP859XZ3RJ",
+       "JLN5SK17W4FQ",
+       "K3676LU8B0UH",
+       "LRN0HPZ0FZS1",
+       "SADL3CGYTGSR",
+       "VLV17NUSFS61",
+       "Y6GM2CHWJBEY",
+       "ZZMYZ5UBCG72"
+      ]
+     },
+     {
+      "fold": 1,
+      "model": {
+       "a": 1.9739,
+       "b": 0.4874,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1LMBFGSMCWKU",
+       "1NZ8FE5F34R9",
+       "2L1BNN9ZJEFU",
+       "2PVLGRBGUX9S",
+       "3KME36ADUE4U",
+       "4D4J8USKCPAV",
+       "53FLQ68CETW0",
+       "6EV5V6PJJS9D",
+       "8CFMW9SAGFWQ",
+       "9TG1RP5LFAAK",
+       "9YT51CK8RC39",
+       "ARKQLHG6RS4W",
+       "CSBR5CRDWQNB",
+       "E6AVMMVCSRPC",
+       "F4QKG4J1AJJZ",
+       "F9PP859XZ3RJ",
+       "HMVJKM56S4Q8",
+       "JLN5SK17W4FQ",
+       "JQPT83P8KDSZ",
+       "K3676LU8B0UH",
+       "LLYSRQQ35AVW",
+       "LRN0HPZ0FZS1",
+       "R0HEV5E3QT6G",
+       "SADL3CGYTGSR",
+       "UACFSW4VDDLD",
+       "VLV17NUSFS61",
+       "XYYQYBRM2A01",
+       "Y6GM2CHWJBEY",
+       "ZE8F192FKX24",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1HC609GTLGN3",
+       "25226ZFLNR1J",
+       "2SU6XN2AEJRD",
+       "4Y94N8RDPGPM",
+       "75X1BARMNZ03",
+       "9YBKCNBFP0X5",
+       "C48LLXBGKXQ9",
+       "ENKYQMS9W4ZD",
+       "G403VCZ3BH1B",
+       "JMH5C51RLN4E",
+       "KAY522KT5NXR",
+       "MGA0CZDDKC0P",
+       "T082DRCUHRRD",
+       "VN7RQJMJEFMX",
+       "Z6CFLDR3N4SB"
+      ]
+     },
+     {
+      "fold": 2,
+      "model": {
+       "a": 2.0789,
+       "b": 0.4443,
+       "c": 0.0
+      },
+      "train_runs": [
+       "10GPK5XGHCK3",
+       "1HC609GTLGN3",
+       "1NZ8FE5F34R9",
+       "25226ZFLNR1J",
+       "2PVLGRBGUX9S",
+       "2SU6XN2AEJRD",
+       "4D4J8USKCPAV",
+       "4Y94N8RDPGPM",
+       "6EV5V6PJJS9D",
+       "75X1BARMNZ03",
+       "9TG1RP5LFAAK",
+       "9YBKCNBFP0X5",
+       "ARKQLHG6RS4W",
+       "C48LLXBGKXQ9",
+       "E6AVMMVCSRPC",
+       "ENKYQMS9W4ZD",
+       "F9PP859XZ3RJ",
+       "G403VCZ3BH1B",
+       "JLN5SK17W4FQ",
+       "JMH5C51RLN4E",
+       "K3676LU8B0UH",
+       "KAY522KT5NXR",
+       "LRN0HPZ0FZS1",
+       "MGA0CZDDKC0P",
+       "SADL3CGYTGSR",
+       "T082DRCUHRRD",
+       "VLV17NUSFS61",
+       "VN7RQJMJEFMX",
+       "Y6GM2CHWJBEY",
+       "Z6CFLDR3N4SB",
+       "ZZMYZ5UBCG72"
+      ],
+      "check_runs": [
+       "1LMBFGSMCWKU",
+       "2L1BNN9ZJEFU",
+       "3KME36ADUE4U",
+       "53FLQ68CETW0",
+       "8CFMW9SAGFWQ",
+       "9YT51CK8RC39",
+       "CSBR5CRDWQNB",
+       "F4QKG4J1AJJZ",
+       "HMVJKM56S4Q8",
+       "JQPT83P8KDSZ",
+       "LLYSRQQ35AVW",
+       "R0HEV5E3QT6G",
+       "UACFSW4VDDLD",
+       "XYYQYBRM2A01",
+       "ZE8F192FKX24"
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

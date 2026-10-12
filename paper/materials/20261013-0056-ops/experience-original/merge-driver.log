@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-000403-experience-update/merge-live.py", line 37, in <module>
+    assert all(e['id'] in new_by and set(e['evidence'])<=set(new_by[e['id']]['evidence']) and set(e.get('contradicting',[]))<=set(new_by[e['id']].get('contradicting',[])) for e in json.loads(current)['entries']),'有未保留live经验'
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 有未保留live经验

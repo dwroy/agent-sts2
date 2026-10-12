@@ -1,0 +1,52 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/agent
+
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 39ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 38ms
+ ❯ tests/shop-removal-preview.test.ts (7 tests | 1 failed) 59ms
+   × a genuinely absent target still falls back to the actual selection question 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/shop-removal-preview.test.ts > a genuinely absent target still falls back to the actual selection question
+AssertionError: expected '悔恨, named for this remove with the ch…' not to contain 'deck order'
+
+Expected: "deck order"
+Received: "悔恨, named for this remove with the choice before, is not on this screen (it lists only the first 25 eligible cards in deck order): pick among the cards listed here"
+
+ ❯ tests/shop-removal-preview.test.ts:86:73
+     84|   expect(pendingPickStep(e, "deck_card_select", "移除1张牌", 0, 1)).toBeNu…
+     85|   expect(e.screenMemory.pickNotOffered?.name).toBe("悔恨");
+     86|   expect(pickNotOfferedNote(e, "remove")["named_card_not_offered"]).no…
+       |                                                                         ^
+     87| });
+     88|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 252 passed (254)
+      Tests  2 failed | 2628 passed (2630)
+   Start at  22:25:47
+   Duration  353.84s (transform 8.21s, setup 13.36s, import 33.79s, tests 976.62s, environment 28ms)
+

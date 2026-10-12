@@ -1,0 +1,653 @@
+{
+ "task": "fix-batch",
+ "base": "b2901e536d3da91a556e9fcaed7a41ceaf8bf603",
+ "nature": "Roy授权新功能的周期校准刷新；复用既有实现，无新生产代码或策略阈值改动",
+ "fixes": [
+  {
+   "item": "Roy 已授权新功能：静默 boss 模拟校准",
+   "commit": "99c3f6fc11cafffceb123ffa1d2dde17f319f71b",
+   "existing_implementation_commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+   "test": "固定模型/来源/分割/准入/幂等审计；Python12+48；源全量3336、候选19；合后3368",
+   "fails_without_fix": false,
+   "fails_without_fix_reason": "周期数据刷新，不冒称基础设施bug回归",
+   "ledger": [
+    "silent-0435"
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "item": "其他队列（含silent-0213）",
+   "reason": "不在本独立任务范围"
+  },
+  {
+   "item": "低可信项晋级",
+   "reason": "原质量门槛不降低；具体失败指标和不足场数见boss_table/F49/low_ascension"
+  }
+ ],
+ "merged": "539385d83340fc23bef78f6933838a45d2f88e0a",
+ "publication": "104f08da661c9e6a797373977ee3cdb3a10b3828",
+ "publication_tree": "19a53a7223e8bc230f958ed49a06c52104997bcb",
+ "version": "S1.boss-calibration14",
+ "tests": {
+  "tsc": 0,
+  "vitest": 0,
+  "files": 334,
+  "cases": 3336,
+  "full_sandbox": {
+   "base": "b2901e536d3da91a556e9fcaed7a41ceaf8bf603",
+   "files": 334,
+   "cases": 3336,
+   "exit": 0,
+   "log": "learner/runs/20261012-134305-silent-boss-calibration/main-merge-sandbox.log"
+  },
+  "candidate_scope": {
+   "tsc": 0,
+   "unique_files": 5,
+   "unique_cases": 19,
+   "exit": 0,
+   "scope": "fixed calibration consumers, CLI, ascension board, dispatcher, paths; production code unchanged from full checked base",
+   "log": "learner/runs/20261012-134305-silent-boss-calibration/source-sandbox.log"
+  },
+  "python_calibration": {
+   "cases": 12,
+   "exit": 0
+  },
+  "python_dispatch": {
+   "cases": 48,
+   "exit": 0
+  },
+  "live": {
+   "tsc": 0,
+   "vitest": 0,
+   "files": 336,
+   "cases": 3368,
+   "commit": "539385d83340fc23bef78f6933838a45d2f88e0a",
+   "tree": "2eec4cb430b56259a0a44275d183fa0fefd3b290",
+   "method": "Complete unique coverage: original 3356 passes plus unchanged failed case and previously unrun paths",
+   "first_full_exit": 1,
+   "first_failure": "rollout-live ranking case exceeded original 120s; merge rolled back",
+   "failed_case_recheck": {
+    "passed": 1,
+    "test_seconds": 79.13,
+    "timeout_seconds": 120
+   },
+   "missing_paths": {
+    "passed": 11
+   },
+   "coverage": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261012-134305-silent-boss-calibration/live-unique-coverage.json"
+  },
+  "external_full": "pending scheduler check; not run by this learner"
+ },
+ "code_proposals": [],
+ "implementation_domains": [],
+ "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261012-134305-silent-boss-calibration/report.md",
+ "paper_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+ "artifact": "experiments/boss-sim/silent/86dd9fee208c61c4ab98bb5f2aaf7eec04a221c5e65d75c5f8465b4b66bbdb17",
+ "source_paths": [
+  "agent/tools/boss-sim/refresh-silent.py",
+  "agent/tools/boss-sim/silent_calibration.py",
+  "agent/tools/boss-sim/character_extract.py",
+  "agent/tools/boss-sim/trust.py",
+  "agent/src/sim/boss-trust.ts",
+  "ops/learner_jobs.py",
+  "knowledge/characters/silent/boss-trust.json"
+ ],
+ "extraction": {
+  "finished_runs": 242,
+  "attempts": 1089,
+  "written": 440,
+  "exclusions": {
+   "SL predicted_death: censored, no actual win/loss; no observed completed outcome": 647,
+   "SL predicted_death: censored, no actual win/loss; no observed completed outcome; no turn-1 decision with drawn hand": 1,
+   "no turn-1 decision with drawn hand": 1
+  }
+ },
+ "new_actual_outcomes": 21,
+ "split": {
+  "tune": 107,
+  "validation": 333,
+  "successful_validation": 331,
+  "cutoff_utc": "2026-10-06T02:46:11.648000",
+  "model_unchanged": true,
+  "platt_unchanged": true
+ },
+ "boss_table": [
+  {
+   "boss": "AEONGLASS",
+   "name": "永世沙漏",
+   "validation_n": 23,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 23,
+    "missing": 0,
+    "brier": 0.1728,
+    "mean_pred": 0.691,
+    "actual_win": 0.522,
+    "leak_ratio": 3.418,
+    "leak_turns": 117,
+    "failed": [
+     "brier",
+     "gap",
+     "leak"
+    ],
+    "trusted": false
+   },
+   "b3": {
+    "n": 23,
+    "missing": 0,
+    "brier": 0.1755,
+    "mean_pred": 0.695,
+    "actual_win": 0.522,
+    "leak_ratio": 3.346,
+    "leak_turns": 117,
+    "failed": [
+     "brier",
+     "gap",
+     "leak"
+    ],
+    "trusted": false
+   }
+  },
+  {
+   "boss": "CEREMONIAL_BEAST",
+   "name": "仪式兽",
+   "validation_n": 30,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 30,
+    "missing": 0,
+    "brier": 0.053,
+    "mean_pred": 0.798,
+    "actual_win": 0.8,
+    "leak_ratio": 1.142,
+    "leak_turns": 172,
+    "failed": [],
+    "trusted": true
+   },
+   "b3": {
+    "n": 30,
+    "missing": 0,
+    "brier": 0.0563,
+    "mean_pred": 0.803,
+    "actual_win": 0.8,
+    "leak_ratio": 1.186,
+    "leak_turns": 172,
+    "failed": [],
+    "trusted": true
+   }
+  },
+  {
+   "boss": "KAISER_CRAB",
+   "name": "帝王蟹",
+   "validation_n": 35,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 35,
+    "missing": 0,
+    "brier": 0.166,
+    "mean_pred": 0.674,
+    "actual_win": 0.571,
+    "leak_ratio": 1.218,
+    "leak_turns": 176,
+    "failed": [
+     "brier"
+    ],
+    "trusted": false
+   },
+   "b3": {
+    "n": 35,
+    "missing": 0,
+    "brier": 0.201,
+    "mean_pred": 0.694,
+    "actual_win": 0.571,
+    "leak_ratio": 1.23,
+    "leak_turns": 176,
+    "failed": [
+     "brier"
+    ],
+    "trusted": false
+   }
+  },
+  {
+   "boss": "KNOWLEDGE_DEMON",
+   "name": "知识恶魔",
+   "validation_n": 32,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 32,
+    "missing": 0,
+    "brier": 0.0879,
+    "mean_pred": 0.766,
+    "actual_win": 0.844,
+    "leak_ratio": 1.311,
+    "leak_turns": 186,
+    "failed": [
+     "leak"
+    ],
+    "trusted": false
+   },
+   "b3": {
+    "n": 32,
+    "missing": 0,
+    "brier": 0.0662,
+    "mean_pred": 0.773,
+    "actual_win": 0.844,
+    "leak_ratio": 1.315,
+    "leak_turns": 186,
+    "failed": [
+     "leak"
+    ],
+    "trusted": false
+   }
+  },
+  {
+   "boss": "LAGAVULIN_MATRIARCH",
+   "name": "乐加维林族母",
+   "validation_n": 30,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 30,
+    "missing": 0,
+    "brier": 0.0615,
+    "mean_pred": 0.847,
+    "actual_win": 0.833,
+    "leak_ratio": 1.006,
+    "leak_turns": 173,
+    "failed": [],
+    "trusted": true
+   },
+   "b3": {
+    "n": 30,
+    "missing": 0,
+    "brier": 0.0575,
+    "mean_pred": 0.84,
+    "actual_win": 0.833,
+    "leak_ratio": 1.068,
+    "leak_turns": 173,
+    "failed": [],
+    "trusted": true
+   }
+  },
+  {
+   "boss": "QUEEN",
+   "name": "女王",
+   "validation_n": 21,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 21,
+    "missing": 0,
+    "brier": 0.2322,
+    "mean_pred": 0.728,
+    "actual_win": 0.429,
+    "leak_ratio": 1.114,
+    "leak_turns": 86,
+    "failed": [
+     "brier",
+     "gap"
+    ],
+    "trusted": false
+   },
+   "b3": {
+    "n": 21,
+    "missing": 0,
+    "brier": 0.2128,
+    "mean_pred": 0.694,
+    "actual_win": 0.429,
+    "leak_ratio": 1.24,
+    "leak_turns": 86,
+    "failed": [
+     "brier",
+     "gap"
+    ],
+    "trusted": false
+   }
+  },
+  {
+   "boss": "SOUL_FYSH",
+   "name": "灵魂异鱼",
+   "validation_n": 23,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 23,
+    "missing": 0,
+    "brier": 0.0534,
+    "mean_pred": 0.911,
+    "actual_win": 0.87,
+    "leak_ratio": 0.921,
+    "leak_turns": 137,
+    "failed": [],
+    "trusted": true
+   },
+   "b3": {
+    "n": 23,
+    "missing": 0,
+    "brier": 0.0581,
+    "mean_pred": 0.92,
+    "actual_win": 0.87,
+    "leak_ratio": 0.922,
+    "leak_turns": 137,
+    "failed": [],
+    "trusted": true
+   }
+  },
+  {
+   "boss": "TEST_SUBJECT",
+   "name": "实验体",
+   "validation_n": 19,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 19,
+    "missing": 0,
+    "brier": 0.1546,
+    "mean_pred": 0.351,
+    "actual_win": 0.105,
+    "leak_ratio": 2.979,
+    "leak_turns": 66,
+    "failed": [
+     "brier",
+     "gap",
+     "leak"
+    ],
+    "trusted": false
+   },
+   "b3": {
+    "n": 19,
+    "missing": 0,
+    "brier": 0.1407,
+    "mean_pred": 0.321,
+    "actual_win": 0.105,
+    "leak_ratio": 2.857,
+    "leak_turns": 66,
+    "failed": [
+     "brier",
+     "gap",
+     "leak"
+    ],
+    "trusted": false
+   }
+  },
+  {
+   "boss": "THE_INSATIABLE",
+   "name": "无厌沙虫",
+   "validation_n": 30,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 30,
+    "missing": 0,
+    "brier": 0.1265,
+    "mean_pred": 0.703,
+    "actual_win": 0.7,
+    "leak_ratio": 1.287,
+    "leak_turns": 161,
+    "failed": [],
+    "trusted": true
+   },
+   "b3": {
+    "n": 30,
+    "missing": 0,
+    "brier": 0.1422,
+    "mean_pred": 0.721,
+    "actual_win": 0.7,
+    "leak_ratio": 1.325,
+    "leak_turns": 161,
+    "failed": [
+     "brier",
+     "leak"
+    ],
+    "trusted": false
+   }
+  },
+  {
+   "boss": "THE_KIN",
+   "name": "同族",
+   "validation_n": 26,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 26,
+    "missing": 0,
+    "brier": 0.0993,
+    "mean_pred": 0.815,
+    "actual_win": 0.885,
+    "leak_ratio": 1.232,
+    "leak_turns": 155,
+    "failed": [],
+    "trusted": true
+   },
+   "b3": {
+    "n": 26,
+    "missing": 0,
+    "brier": 0.0985,
+    "mean_pred": 0.83,
+    "actual_win": 0.885,
+    "leak_ratio": 1.209,
+    "leak_turns": 155,
+    "failed": [],
+    "trusted": true
+   }
+  },
+  {
+   "boss": "VANTOM",
+   "name": "墨影幻灵",
+   "validation_n": 33,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 33,
+    "missing": 0,
+    "brier": 0.0615,
+    "mean_pred": 0.925,
+    "actual_win": 0.909,
+    "leak_ratio": 0.971,
+    "leak_turns": 190,
+    "failed": [],
+    "trusted": true
+   },
+   "b3": {
+    "n": 33,
+    "missing": 0,
+    "brier": 0.0549,
+    "mean_pred": 0.928,
+    "actual_win": 0.909,
+    "leak_ratio": 0.954,
+    "leak_turns": 190,
+    "failed": [],
+    "trusted": true
+   }
+  },
+  {
+   "boss": "WATERFALL_GIANT",
+   "name": "瀑布巨兽",
+   "validation_n": 29,
+   "additional_count_needed": 0,
+   "b2": {
+    "n": 29,
+    "missing": 0,
+    "brier": 0.1107,
+    "mean_pred": 0.839,
+    "actual_win": 0.828,
+    "leak_ratio": 0.869,
+    "leak_turns": 172,
+    "failed": [],
+    "trusted": true
+   },
+   "b3": {
+    "n": 29,
+    "missing": 0,
+    "brier": 0.1073,
+    "mean_pred": 0.857,
+    "actual_win": 0.828,
+    "leak_ratio": 0.839,
+    "leak_turns": 172,
+    "failed": [],
+    "trusted": true
+   }
+  }
+ ],
+ "a10": {
+  "t1": {
+   "n": 331,
+   "gap": 0.049000000000000044,
+   "brier": 0.1109,
+   "mean_pred": 0.765,
+   "actual_win": 0.716,
+   "leak_ratio": 1.283
+  },
+  "pre": {
+   "n": 331,
+   "gap": 0.05400000000000005,
+   "brier": 0.1113,
+   "mean_pred": 0.77,
+   "actual_win": 0.716,
+   "leak_ratio": 1.291
+  }
+ },
+ "F49": {
+  "t1": {
+   "n": 20,
+   "actual_win": 0.1,
+   "mean_pred": 0.43,
+   "brier": 0.1398,
+   "auc": 1.0,
+   "const_brier": 0.09,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 0,
+     "pred": null,
+     "actual": null
+    },
+    {
+     "bucket": "20–40%",
+     "n": 15,
+     "pred": 0.351,
+     "actual": 0.0
+    },
+    {
+     "bucket": "40–60%",
+     "n": 2,
+     "pred": 0.504,
+     "actual": 0.0
+    },
+    {
+     "bucket": "60–80%",
+     "n": 1,
+     "pred": 0.627,
+     "actual": 0.0
+    },
+    {
+     "bucket": "80–100%",
+     "n": 2,
+     "pred": 0.85,
+     "actual": 1.0
+    }
+   ],
+   "worst_bucket_n20": null,
+   "won_loss_err": {
+    "n": 2,
+    "median": 39.5,
+    "mean": 39.5,
+    "mae": 39.5,
+    "p10": 9,
+    "p90": 70,
+    "within5": 0.0
+   },
+   "leak": {
+    "n": 46,
+    "sim_enemy": 10.74,
+    "actual_enemy": 3.59,
+    "enemy_ratio": 2.994,
+    "sim_loss": 10.2,
+    "actual_loss": 4.54,
+    "loss_ratio": 2.244
+   }
+  },
+  "pre": {
+   "n": 20,
+   "actual_win": 0.1,
+   "mean_pred": 0.384,
+   "brier": 0.1011,
+   "auc": 1.0,
+   "const_brier": 0.09,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 0,
+     "pred": null,
+     "actual": null
+    },
+    {
+     "bucket": "20–40%",
+     "n": 17,
+     "pred": 0.321,
+     "actual": 0.0
+    },
+    {
+     "bucket": "40–60%",
+     "n": 1,
+     "pred": 0.489,
+     "actual": 0.0
+    },
+    {
+     "bucket": "60–80%",
+     "n": 0,
+     "pred": null,
+     "actual": null
+    },
+    {
+     "bucket": "80–100%",
+     "n": 2,
+     "pred": 0.872,
+     "actual": 1.0
+    }
+   ],
+   "worst_bucket_n20": null,
+   "won_loss_err": {
+    "n": 2,
+    "median": 38.5,
+    "mean": 38.5,
+    "mae": 38.5,
+    "p10": 6,
+    "p90": 71,
+    "within5": 0.0
+   },
+   "leak": {
+    "n": 46,
+    "sim_enemy": 11.28,
+    "actual_enemy": 3.59,
+    "enemy_ratio": 3.144,
+    "sim_loss": 10.85,
+    "actual_loss": 4.54,
+    "loss_ratio": 2.389
+   }
+  }
+ },
+ "low_ascension": {
+  "A0–4": {
+   "validation_n": 0,
+   "additional_count_needed": 10
+  },
+  "A5–9": {
+   "validation_n": 0,
+   "additional_count_needed": 10
+  }
+ },
+ "refresh_entry": "agent/tools/boss-sim/refresh-silent.py with verified --dataset/--results/--provenance to preserve the fixed experiment",
+ "refresh_schedule": "ops/learner_jobs.py:calibration_job; 每小时:13/:43及learner完成事件；升阶或20个新实际boss结局",
+ "all_commits": {
+  "main_merge": "b2901e536d3da91a556e9fcaed7a41ceaf8bf603",
+  "source": "99c3f6fc11cafffceb123ffa1d2dde17f319f71b",
+  "saved_refresh": "1ee1048197d3a8edea005417e225e559f0dad3d3",
+  "rolled_back_live_merge": "e499b0950ef3bd1ac6c4d4e4347dd5178a4d55d1",
+  "live_merge": "539385d83340fc23bef78f6933838a45d2f88e0a",
+  "publication": "104f08da661c9e6a797373977ee3cdb3a10b3828"
+ },
+ "ledger_status": "proposed; shipped由运维核实际发布后登记",
+ "notifications": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261012-134305-silent-boss-calibration/notification-receipt.json",
+ "limitations": [
+  "F49质量不达标；未验证F48→F49联合通关率",
+  "低阶无独立验证",
+  "仅验证原固定7e1193cef模型；本工作树80个输入已不同于固定模型；未据此验证当前live后续变化",
+  "3场历史模拟失败保留；SL截断不当作败局，存在条件样本选择偏差",
+  "run-config保留dirty及续跑，未完整还原逐回合源码差分"
+ ]
+}

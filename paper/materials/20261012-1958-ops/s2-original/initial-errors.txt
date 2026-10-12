@@ -1,0 +1,6 @@
+1. 初次 rg 的相对 logs 路径不存在；改为授权根目录 logs。
+2. 一次只读命令在 bubblewrap 构建时遇并行工作树 .codex 消失，exit1；原命令无数据写入，后续同权限重试成功。
+3. runs 校验首版错误地要求 character == silent，原值是 SILENT；断言失败，改为规范化 lower() 后六局 A10 均通过。并非 run_id 字段不存在。
+4. 猜测 learner/selection-execution.ts 路径不存在，改为查询 learner 下实际 CLI。
+5. 定向 vitest 首次使用不支持的 --minWorkers，退出1，未执行用例；保留 fixed-tests-cli-failure.log/exit，后续只用 --maxWorkers=1。
+6. consumer 汇总首稿未处理 null 的 terminal_observation，TypeError；六份原 consumer 运行均exit0且未被修改，后续显式判空后汇总。

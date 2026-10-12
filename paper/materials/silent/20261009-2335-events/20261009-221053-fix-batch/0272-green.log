@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/agent
+
+ ❯ tests/shop-removal-preview.test.ts (6 tests | 1 failed) 24ms
+   × F37: does not reject the deck-index-33 target before observing the removal page 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/shop-removal-preview.test.ts > F37: does not reject the deck-index-33 target before observing the removal page
+AssertionError: expected { Object (invalid) } to have property "steps"
+ ❯ tests/shop-removal-preview.test.ts:50:18
+     48|   const e = shop();
+     49|   const parsed = parseShopPlan({ plan: ["remove:c33"] }, e);
+     50|   expect(parsed).toHaveProperty("steps");
+       |                  ^
+     51|   const preview = selectableCards(e.state, deckCards(e.state, e.knowle…
+     52|   const note = unlistedNote(preview.unlisted, "remove", unverifiedRemo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  22:24:41
+   Duration  2.58s (transform 1.96s, setup 452ms, import 1.93s, tests 24ms, environment 0ms)
+

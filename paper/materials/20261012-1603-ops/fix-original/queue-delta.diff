@@ -1,0 +1,5 @@
+--- 
++++ 
+@@ -1097,0 +1098,2 @@
++
++- 2026-10-12 15:32:01 CST **ops-stall-recovery-test-subprocess-timeout 已修（限定测试执行器）**：原学习者95e7f050ef2abe5c85a0367555392652ad73fbfe改为异步execFile并将测试子进程期限10秒置于原15秒用例期限内；保留真实脚本断言，新增固定启动6秒/输出OK却非零退出/挂起强制结束验证。撤回执行器1败、恢复6过，源tsc/3376通过，运维集成tsc/17通过；实际live0bd3a70e3234ed4132c772f38983695870ab4d73、main4305d56c93983e300be7d37449a8e421a1007185。只改agent/tests/ops-stall-recovery.test.ts，生产ops/stall-check.sh逐blob不变；自然负载根因仍未证，不把测试修复冒作生产卡死处理。原20记录冲突/abort、旧131301完整失败与定向补验保留，完整新树宿主检查单次请求待回执。材料paper/materials/20261012-1524-ops；其余队列不关闭。

@@ -1,5 +1,5 @@
 /**
- * One-shot build decisions (BUILD_DECIDER=deepseek, Dai 2026-09-29): DeepSeek decides a shop visit, a rest
+ * One-shot build decisions (BUILD_DECIDER=deepseek, Roy 2026-09-29): DeepSeek decides a shop visit, a rest
  * site or an event option together with the deck card(s) its follow-up screen takes, in one question;
  * code then plays the steps. This module holds what the three screens share: the deck as distinct cards
  * with keys, which deck selection an option leads to (read from its text), the card named for the

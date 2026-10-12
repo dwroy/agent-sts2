@@ -1,0 +1,145 @@
+commit acf2611db281456c63915a98b0995d3d04bcd35a
+Author:     Roy <me@dwroy.com>
+AuthorDate: Sun Oct 11 17:48:20 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Sun Oct 11 17:48:55 2026 +0800
+
+    fix(ops): restore themed Herdr wake readiness and large event delivery
+    
+    Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+---
+ agent/tests/ops-herdr.test.ts | 26 +++++++++++++++++++++++++-
+ ops/codex/herdr.ts            | 39 ++++++++++++++++++++++++++++++++-------
+ ops/codex/main.ts             |  4 ++--
+ 3 files changed, 59 insertions(+), 10 deletions(-)
+
+diff --git a/agent/tests/ops-herdr.test.ts b/agent/tests/ops-herdr.test.ts
+index e74e89a51..fcfb19cfb 100644
+--- a/agent/tests/ops-herdr.test.ts
++++ b/agent/tests/ops-herdr.test.ts
+@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
+ 
+ import { afterAll, describe, expect, it } from "vitest";
+ 
+-import { argsHash, composerState, herdrWake, openTurn, rolloutTurn } from "../../ops/codex/herdr.js";
++import { argsHash, composerState, herdrWake, openTurn, prepareHerdrPrompt, rolloutTurn } from "../../ops/codex/herdr.js";
+ import { OPS_PROFILE, hostingMode, interactiveArgs, opsRequest, readQueue, validateRequest } from "../../ops/codex/lib.js";
+ 
+ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
+@@ -86,6 +86,30 @@ describe("interactive TUI arguments", () => {
+ });
+ 
+ describe("screen and session-file readers", () => {
++  it("recognizes separately styled prompt glyphs without overwriting typed text", () => {
++    const prefix = "\u001b[0m\u001b[1m\u001b[48;2;43;57;43m›\u001b[0m\u001b[48;2;43;57;43m";
++    expect(composerState(`${prefix}       \u001b[0m`)).toBe("empty");
++    expect(composerState(`${prefix} 人尚未发出的文字\u001b[0m`)).toBe("text");
++    expect(composerState(`${prefix} \u001b[2mAsk anything\u001b[0m`)).toBe("empty");
++    expect(composerState(`${prefix} \u001b[2m\u001b[22mtyped`)).toBe("text");
++    expect(composerState("a transcript mentioning › something")).toBe("none");
++  });
++
++  it("preserves a large multilingual backlog in a file and keeps its turn marker", () => {
++    const marker = "【调度器事件】2026-10-11 18:00（CST），共 295 件：";
++    const message = `${marker}\n${"学习完成事件\n".repeat(10000)}`;
++    const file = join(tmp, "large-events.txt");
++    const prompt = prepareHerdrPrompt(message, file);
++    expect(Buffer.byteLength(message)).toBeGreaterThan(128 * 1024);
++    expect(Buffer.byteLength(prompt)).toBeLessThan(4096);
++    expect(prompt.split("\n")[0]).toBe(marker);
++    expect(prompt).toContain(file);
++    expect(readFileSync(file, "utf8")).toBe(message);
++    const unused = join(tmp, "small-events.txt");
++    expect(prepareHerdrPrompt(marker, unused)).toBe(marker);
++    expect(existsSync(unused)).toBe(false);
++  });
++
+   it("composer: the dim placeholder is empty, typed text is not (codex 0.160 screens)", () => {
+     const placeholder = "\u001b[0m\u001b[1m› \u001b[0m\u001b[2mAsk Codex to do anything\u001b[0m\r";
+     const typed = "\u001b[0m\u001b[1m› \u001b[0mhalf typed by a human\r";
+diff --git a/ops/codex/herdr.ts b/ops/codex/herdr.ts
+index 1c3a1faab..8f9a3215a 100644
+--- a/ops/codex/herdr.ts
++++ b/ops/codex/herdr.ts
+@@ -30,18 +30,43 @@ export function composerState(ansi: string): ComposerState {
+   const lines = ansi.split(/\r?\n/);
+   for (let i = lines.length - 1; i >= 0; i--) {
+     const line = lines[i]!.replace(/\r/g, "");
+-    const at = line.indexOf("› ");
++    const at = line.indexOf("›");
+     if (at < 0) continue;
+-    // What follows the glyph, without the reset sequences codex puts around it.
+-    let rest = line.slice(at + 2);
+-    while (rest.startsWith("\u001b[0m")) rest = rest.slice(4);
+-    if (rest.replace(/\u001b\[[0-9;]*m/g, "").trim() === "") return "empty";
+-    if (/^\u001b\[2m/.test(rest)) return "empty";
++    // Newer themes style the glyph and padding separately. Inspect SGR state at
++    // the first visible character, keeping typed text distinct from dim hints.
++    if (line.slice(0, at).replace(/\u001b\[[0-9;]*m/g, "").trim()) continue;
++    let rest = line.slice(at + 1);
++    let dim = false;
++    for (;;) {
++      const sgr = /^\u001b\[([0-9;]*)m/.exec(rest);
++      if (sgr) {
++        const codes = sgr[1]!.split(";").map(Number);
++        for (let j = 0; j < codes.length; j++) {
++          const code = codes[j];
++          if (code === 38 || code === 48 || code === 58) {
++            j += codes[j + 1] === 2 ? 4 : codes[j + 1] === 5 ? 2 : 0;
++            continue;
++          }
++          if (code === 0 || code === 22) dim = false;
++          else if (code === 2) dim = true;
++        }
++        rest = rest.slice(sgr[0].length);
++      } else if (/^\s/.test(rest)) rest = rest.slice(1);
++      else break;
++    }
++    if (!rest || dim) return "empty";
+     return "text";
+   }
+   return "none";
+ }
+ 
++/** Keep large backlogs off argv (Linux limits each argument to about 128 KiB). */
++export function prepareHerdrPrompt(message: string, file: string): string {
++  if (Buffer.byteLength(message, "utf8") <= 96 * 1024) return message;
++  writeFileSync(file, message, { mode: 0o600 });
++  return `${message.split("\n")[0]}\n\n完整事件消息保存在 ${JSON.stringify(file)}。请先完整读取该文件，再按其中的既有运维规则处理本轮全部事件；文件内容未截断，队列归档仍由调度器完成。`;
++}
++
+ export interface TurnTokens {
+   input: number;
+   output: number;
+@@ -294,7 +319,7 @@ export async function herdrWake(o: HerdrWakeOptions): Promise<HerdrWakeResult> {
+     const opened = await runCommand("bash", [o.hostScript, "open-pane", o.agent, "--env", `CODEX_HOME=${o.codexHome}`], 90_000, env);
+     const pane = opened.stdout.trim().split("\n").pop() ?? "";
+     if (opened.code === 4) return { code: 75, reason: `the pane labelled ${o.agent} is busy with something else: ${opened.stderr.trim().slice(-200)}` };
+-    if (opened.code !== 0 || !/^[A-Za-z0-9]+:p[0-9]+$/.test(pane)) return { code: 1, reason: `open-pane ${o.agent} failed: ${opened.stderr.trim().slice(-300)}` };
++    if (opened.code !== 0 || !/^[A-Za-z0-9]+:p[A-Za-z0-9]+$/.test(pane)) return { code: 1, reason: `open-pane ${o.agent} failed: ${opened.stderr.trim().slice(-300)}` };
+     const started = await h(["agent", "start", o.agent, "--kind", "codex", "--pane", pane, "--timeout", "60000", "--", ...o.args], 90_000);
+     if (!started.ok) {
+       // agent_not_ready = a dialog at startup (trust, update, login): a person has to look; nothing is answered here.
+diff --git a/ops/codex/main.ts b/ops/codex/main.ts
+index f19895898..de43030a6 100644
+--- a/ops/codex/main.ts
++++ b/ops/codex/main.ts
+@@ -30,7 +30,7 @@ import { codexChildEnv, codexKeyCheck, codexProfileOverrides, engineBinary, lear
+ import { collectSecrets, redactSecrets, secretFilesOf, stamp } from "../../learner/lib/launcher.js";
+ import { SummaryTracker, findRollout } from "../../learner/lib/summary.js";
+ import { archiveCodexTranscripts } from "./archive.js";
+-import { herdrWake, runCommand, tuiStateFile } from "./herdr.js";
++import { herdrWake, prepareHerdrPrompt, runCommand, tuiStateFile } from "./herdr.js";
+ import { readRolloutMetadata } from "./rollout-file.js";
+ import {
+   ACTIONS,
+@@ -390,7 +390,7 @@ async function wakeHerdr(events: QueuedEvent[], session: string, message: string
+       session,
+       args,
+       codexHome: learnerCodexHome(env),
+-      message,
++      message: prepareHerdrPrompt(message, `${logPath}.events.txt`),
+       marker: message.split("\n")[0]!,
+       stateFile: tuiStateFile(paths.dir),
+       timeoutMs: timeoutMin * 60_000,

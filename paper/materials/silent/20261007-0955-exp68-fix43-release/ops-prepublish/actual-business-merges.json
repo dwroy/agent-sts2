@@ -1,0 +1,84 @@
+{
+  "commit": "cc9595ebc0317ef6dd91709623b791af31b13290",
+  "artifact": "paper/materials/silent/20261007-0955-exp68-fix43-release.md",
+  "archive": "paper/materials/silent/20261007-0955-exp68-fix43-release",
+  "exp_source": "71ddbb8ea08c7af9aed6cd29826d2e3d4c495300",
+  "exp_initial": "9fad69d7bb23e0a2a0940048ec4a66e412dff40f",
+  "fix_source": "06bb4617e92d4ea5cf75287186223a5b185e4ae3",
+  "fix_sources": [
+    "62ee292c7a66466e996424910338aaea8aae6308",
+    "1912b5e0c2c9d87622f6915d8a299f0ef6222588",
+    "06bb4617e92d4ea5cf75287186223a5b185e4ae3"
+  ],
+  "exp_ids": [
+    "silent-0006",
+    "silent-0007",
+    "silent-0011",
+    "silent-0019",
+    "silent-0020",
+    "silent-0021",
+    "silent-0023",
+    "silent-0027",
+    "silent-0046",
+    "silent-0080",
+    "silent-0221"
+  ],
+  "fix_ids": [
+    "silent-0217",
+    "silent-0218",
+    "silent-0219"
+  ],
+  "fix_paths": [
+    "agent/src/hand/screens/oneshot.ts",
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-fasten-evidence.json",
+    "agent/tests/silent-fasten.test.ts",
+    "agent/tests/silent-snakebite-evidence.json",
+    "agent/tests/silent-snakebite.test.ts",
+    "agent/tests/silent-upgrade-preview.test.ts"
+  ],
+  "ledger_rows": 25,
+  "large_originals": 22,
+  "raw_files": 190,
+  "ledger_check": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 222 item(s), 0 problem(s)",
+  "initial": "f6722e87d36f039103d09ba51b679f6554af309b",
+  "before": "f6722e87d36f039103d09ba51b679f6554af309b",
+  "refresh": "f6722e87d36f039103d09ba51b679f6554af309b",
+  "refresh_paths": [
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ],
+  "new_refresh_paths": [],
+  "fix_merge": "36db32170f3c5962f2911ab991d65c3cbfba7c3d",
+  "exp_merge": "a0e4b5e2ed881ead45d0ed8dadb2c1520e2be727",
+  "code_commit": "a0e4b5e2ed881ead45d0ed8dadb2c1520e2be727",
+  "code_tree": "65460836642e588c4b46f8196ad0d949bc5cef60",
+  "versions": [
+    "S1.fix43",
+    "S1.exp68"
+  ],
+  "source_tests": {
+    "fix": {
+      "files": 220,
+      "cases": 2331
+    },
+    "experience": {
+      "files": 216,
+      "cases": 2308
+    }
+  },
+  "post_merge_checks": "pending sandbox + external",
+  "preserved_live_blobs": 4470,
+  "foreign_sha256": {
+    "notes/monster-db-check.md": "64431bacede612af8a6e024ec0d4081fe59f1c9acc59b706bec3452a90c90793",
+    "notes/fight-value-backtest-silent.md": "7e24123ccc8ac83ef4cd56753c6ff9050c439fb4b5d3394933525cc1044150f1"
+  },
+  "guard_recovery": "两次已测业务合并完成后，末尾保护表用字典索引读取live原本不存在的Codex-only模板导致KeyError；原树/索引未覆盖。恢复只读核实两个真实合并父、全部blob及受保护路径缺失/存在均不变，不重合、不回滚。第一次合并器逐步校验所有非业务blob及两份物理notes已通过；检查包装器因结果文件未落盘未启动测试，此后只启动一次固定合后套件。"
+}

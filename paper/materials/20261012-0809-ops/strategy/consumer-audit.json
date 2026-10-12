@@ -1,0 +1,193 @@
+{
+  "status": "passed",
+  "run": "N1ZEBMHZM4KC",
+  "floor": 21,
+  "turn": 4,
+  "scope": "固定帧的现有弃牌消费者核验；不调用模型，不等同完整生产测试或自然收益验收",
+  "reconstructed_memory": true,
+  "blocked_knowledge_reads": 1,
+  "criteria": {
+    "card0": {
+      "card": "进阶之灾",
+      "upgraded": false,
+      "type": "Curse",
+      "cost": -1,
+      "text": "不能被打出。 虚无。 永恒。",
+      "removes_planned_continuation": false,
+      "discard_snapshot": {
+        "basis": "仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。",
+        "current_resources": {
+          "hp": 22,
+          "block": 17,
+          "energy": 3
+        },
+        "discarded": {
+          "hand_index_before_discard": 0,
+          "card_id": "ASCENDERS_BANE",
+          "name": "进阶之灾",
+          "upgraded": false
+        },
+        "retained_cards": [
+          {
+            "hand_index_before_discard": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "energy_cost_now": 1,
+            "playable_before_discard": true,
+            "unplayable_reason": null,
+            "energy_sufficient_for_this_card_alone": true,
+            "energy_after_this_card_alone": 2,
+            "text_now": "获得7点格挡。"
+          },
+          {
+            "hand_index_before_discard": 2,
+            "card_id": "HAZE",
+            "name": "迷雾+",
+            "upgraded": true,
+            "energy_cost_now": 2,
+            "playable_before_discard": true,
+            "unplayable_reason": null,
+            "energy_sufficient_for_this_card_alone": true,
+            "energy_after_this_card_alone": 1,
+            "text_now": "给予所有敌人6层中毒和2层虚弱。"
+          }
+        ]
+      }
+    },
+    "card1": {
+      "card": "防御",
+      "upgraded": false,
+      "type": "Skill",
+      "cost": 1,
+      "text": "获得7点格挡。",
+      "removes_planned_continuation": false,
+      "discard_snapshot": {
+        "basis": "仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。",
+        "current_resources": {
+          "hp": 22,
+          "block": 17,
+          "energy": 3
+        },
+        "discarded": {
+          "hand_index_before_discard": 1,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false
+        },
+        "retained_cards": [
+          {
+            "hand_index_before_discard": 0,
+            "card_id": "ASCENDERS_BANE",
+            "name": "进阶之灾",
+            "upgraded": false,
+            "energy_cost_now": -1,
+            "playable_before_discard": false,
+            "unplayable_reason": "unplayable",
+            "energy_sufficient_for_this_card_alone": null,
+            "energy_after_this_card_alone": null,
+            "text_now": "不能被打出。 虚无。 永恒。"
+          },
+          {
+            "hand_index_before_discard": 2,
+            "card_id": "HAZE",
+            "name": "迷雾+",
+            "upgraded": true,
+            "energy_cost_now": 2,
+            "playable_before_discard": true,
+            "unplayable_reason": null,
+            "energy_sufficient_for_this_card_alone": true,
+            "energy_after_this_card_alone": 1,
+            "text_now": "给予所有敌人6层中毒和2层虚弱。"
+          }
+        ]
+      }
+    },
+    "card2": {
+      "card": "迷雾+",
+      "upgraded": true,
+      "type": "Skill",
+      "cost": 2,
+      "text": "给予所有敌人6层中毒和2层虚弱。",
+      "removes_planned_continuation": true,
+      "discard_snapshot": {
+        "basis": "仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。",
+        "current_resources": {
+          "hp": 22,
+          "block": 17,
+          "energy": 3
+        },
+        "discarded": {
+          "hand_index_before_discard": 2,
+          "card_id": "HAZE",
+          "name": "迷雾+",
+          "upgraded": true
+        },
+        "retained_cards": [
+          {
+            "hand_index_before_discard": 0,
+            "card_id": "ASCENDERS_BANE",
+            "name": "进阶之灾",
+            "upgraded": false,
+            "energy_cost_now": -1,
+            "playable_before_discard": false,
+            "unplayable_reason": "unplayable",
+            "energy_sufficient_for_this_card_alone": null,
+            "energy_after_this_card_alone": null,
+            "text_now": "不能被打出。 虚无。 永恒。"
+          },
+          {
+            "hand_index_before_discard": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "energy_cost_now": 1,
+            "playable_before_discard": true,
+            "unplayable_reason": null,
+            "energy_sufficient_for_this_card_alone": true,
+            "energy_after_this_card_alone": 2,
+            "text_now": "获得7点格挡。"
+          }
+        ]
+      }
+    }
+  },
+  "legal_actions": [
+    {
+      "action": "select_deck_card",
+      "option_index": 0
+    },
+    {
+      "action": "select_deck_card",
+      "option_index": 1
+    },
+    {
+      "action": "select_deck_card",
+      "option_index": 2
+    }
+  ],
+  "boundaries": [
+    {
+      "field": "character_id",
+      "value": "IRONCLAD",
+      "projection": null
+    },
+    {
+      "field": "character_id",
+      "value": "NECROBINDER",
+      "projection": null
+    },
+    {
+      "field": "ascension",
+      "value": 9,
+      "projection": null
+    },
+    {
+      "field": "ascension",
+      "value": 11,
+      "projection": null
+    }
+  ],
+  "full_continuation_prediction": "unknown",
+  "retained_haze_actual_fight_result": null
+}

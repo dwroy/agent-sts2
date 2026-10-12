@@ -1,0 +1,53 @@
+{
+  "request_id": "roy-20261012-concrete-core-decklists",
+  "revision": 2,
+  "character": "silent",
+  "experience_version": "2026-10-12.14",
+  "kind": "fixed-consumer",
+  "status": "passed",
+  "scope": "live",
+  "source_commit": "dca4d3e13e066ebcba7f5d48fde9e24f824e856f",
+  "merged": "730db1e7b0bf2b313a4cb7193d9568f402cba503",
+  "live_code_commit": "2e14889f13c1d257b5f1babc5cea97c58e994b90",
+  "release_id": "V4-R313",
+  "evidence": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/consumer-frames.json",
+      "sha256": "18809b63d6a7d0e11085aba72db4d7d02f9c0e3256142ed9b678c7ea89e0fe32"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/consumer.mjs",
+      "sha256": "ff318d4228509c3a4a4d26b5f18d833c51cd248efe38e768173a86c43ecd6a42"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/live/input.json",
+      "sha256": "b545745edf816de0176b011c110c2b11913bda1518347588c9aff263401ba6a6"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/live/output.json",
+      "sha256": "5f97fa235419abfa095e30a04e711fb5b5affdf6a9f9c861500716e3a47ebd55"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/live/verification.json",
+      "sha256": "f6aebe2476b33ee28b0deed959f684051f1df5a03c2fd3eed1bf2eb2c4dca33e"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/live-execution.json",
+      "sha256": "fc62ac6bd728e28fbf6e23d23576cfb9c441f37c747fe62a043c9bd849caf998"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261013-core-decklists-live-readback/live-content-verification.json",
+      "sha256": "fb956e0ce8291676c18f57f75004ed1cf1911a2d5a4b026a041e1162e79f4a67"
+    }
+  ],
+  "checks": {
+    "questions": 3,
+    "entry_reads": 15,
+    "all_new_additions_present": true
+  },
+  "limitations": [
+    "固定真实奖励/升级/商店状态的生产全量前缀读回；不调用LLM、不执行动作。",
+    "案例标题装饰省略，经验文件读取和生产前缀格式器保持。",
+    "此回执证明live可读取；自然采纳、实际胜率与P1/P2模型补齐仍未验收。"
+  ]
+}

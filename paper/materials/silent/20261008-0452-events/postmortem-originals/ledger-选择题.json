@@ -1,0 +1,215 @@
+[
+  {
+    "id": "silent-0140",
+    "ts": "2026-10-06T02:27:14+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "card",
+    "claim": "夜魇的当轮血价与次轮复制收益应分别验收。本局女王T10选择复制致命毒药后32→9血，七条候选都预计损23；T11三张复制毒到手，两张把聚合体13毒加到27、在其25血时攻击前杀死，第三张给女王加7毒，本轮零损。没有不用夜魇的整场实战对照，不把23损血全归为夜魇独有成本，也不把后续推演低胜率当作本局实败。",
+    "evidence": [
+      {
+        "run": "4Y94N8RDPGPM",
+        "floor": 48,
+        "turn": 10,
+        "note": "0.64信心选择夜魇+并复制致命毒药+；当轮0挡承受23，32→9；七候选均预计损23。",
+        "role": "support",
+        "added": "2026-10-06T02:27:14+08:00"
+      },
+      {
+        "run": "4Y94N8RDPGPM",
+        "floor": 48,
+        "turn": 11,
+        "note": "执迷后三张复制毒，两张对聚合体13→20→27毒杀25血，第三张使女王22→29毒；总实扣54、损0，末战T15胜且9血。",
+        "role": "support",
+        "added": "2026-10-06T02:27:14+08:00"
+      },
+      {
+        "run": "P5HT1272P5SB",
+        "floor": 25,
+        "turn": 2,
+        "role": "support",
+        "note": "构筑计划复制步法+或肾上腺素，实际T1步法先出后夜魇，选择题没有步法，Jev选富足；次轮三复制品到手但未施放。T8才施一张生成磨蚀+，不能预支次轮9敏捷或三次随机能力，未选对象没有同盘收益对照。",
+        "added": "2026-10-07T07:55:20+08:00"
+      },
+      {
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "role": "support",
+        "note": "末次decisions:280635—280639尖啸/夜魇/防御、selection:280637复制防御；states:286986为1HP/6挡/16威胁并NIGHTMARE_POWER3，286987 T4死亡，无次轮复制兑现。第2/4次换线9挡仍对16判死，无不用夜魇或延后药水的已核胜线；支持收益按存活兑现，不证明代码least-loss错误。",
+        "added": "2026-10-08T03:28:04+08:00"
+      }
+    ],
+    "first_run": "4Y94N8RDPGPM",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "按局号流式抽查本局之前已结束的35个静默局，决策fingerprint没有夜魇在手、journal没有已选夜魇；更早静默复盘与账本也没有夜魇的可比记录。",
+    "status": "proposed",
+    "where": {
+      "lessons": [
+        "4Y94N8RDPGPM",
+        "P5HT1272P5SB",
+        "XTSV1U9JD34T"
+      ],
+      "experience": [
+        "silent-nightmare-next-turn-copies"
+      ],
+      "commits": [
+        "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+        "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+        "25a520d92d46d1d644a3ca14a05406a4a1246238",
+        "735ac4411310d375cc52c237997dfefa89989034",
+        "cd5ca6dd3c4c514baf83b8492f1b6b649dba85f2",
+        "5ebc85f07444ec1c3885822392813cf613e72cc4",
+        "1a5e1217a024ffa10321660028f65b602d7d9296",
+        "8bc3f95fd0267ae6f2d06af56cfd7807b2748b3d",
+        "dbeb26835b1792befcfe28d713df4086d85d90c7"
+      ],
+      "changelog": [
+        "2026-10-06 静默猎手 第二十九次增量：1 局 A7（version 2026-10-06.4，分支 exp-silent，8f7d061a）",
+        "## 2026-10-07 静默猎手 第六十六次增量：1 局 A10（version 2026-10-07.12，分支 exp-silent，cd5ca6dd）",
+        "2026-10-08 静默猎手 第八十七次增量：2 局 A10（version 2026-10-08.4，分支 exp-silent，dbeb2683）"
+      ],
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261008-031301-postmortem/proposal-survival-and-ghost.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update/proposal-replay.md"
+      ]
+    },
+    "asc": 7,
+    "history": [
+      {
+        "ts": "2026-10-06T02:27:14+08:00",
+        "by": "learner:postmortem",
+        "status": "observed"
+      },
+      {
+        "ts": "2026-10-06T02:45:11+08:00",
+        "by": "learner:experience-update",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped"
+      },
+      {
+        "ts": "2026-10-07T07:55:20+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-07T08:24:07+08:00",
+        "by": "learner:experience-update",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-07T08:48:28+08:00",
+        "by": "ops",
+        "status": "shipped"
+      },
+      {
+        "ts": "2026-10-08T03:28:04+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-08T03:30:19+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-08T03:41:39+08:00",
+        "by": "learner:experience-update"
+      },
+      {
+        "ts": "2026-10-08T03:41:39+08:00",
+        "by": "learner:experience-update"
+      },
+      {
+        "ts": "2026-10-08T03:59:11+08:00",
+        "by": "learner:experience-update",
+        "status": "proposed"
+      }
+    ],
+    "version": "S1.exp66",
+    "effect": null,
+    "notes": [
+      "静默经验2026-10-06.4；4Y94N8RDPGPM A7补证，旧35局七组明细及数字复算一致。保留first_run/prior/repeat与原上线历史；只proposed，实际合入后交运维据完成事件登记shipped。",
+      "03:35 experience-done确认第30批.5实际合入live时携带第29批.4源码；本项来源原第29批4Y94N8RDPGPM SILENT A7及旧35本角色完局，旧proposed归档7258600c，现随3a2a2a48/25a520d9实际进入live。登记唯一S1.exp30，保留原预检冲突与忙锁历史，不虚构独立S1.exp29、不当作LLYSRQQ35AVW A8新观察；本次合后tsc0、184文件2054例首过。 仅登记学习者已合入experience文字；原first_run/prior/prior_note/evidence/repeat/claim及旧版本历史保持。完整外部checks_pending等调度器后续learner-checks，不借别批结果、不另审。0144升级萎靡模型缺口保持observed，0051旧已修状态保持，不冒记机制代码已覆盖或本次经验导致已结束胜局。",
+      "08:36 experience-done机械确认第66批：源cd5ca6dd3c4c514baf83b8492f1b6b649dba85f2→实际live5ebc85f07444ec1c3885822392813cf613e72cc4→固定发布1a5e1217a024ffa10321660028f65b602d7d9296/树34f05c8727fb4e0383626f11d2061f7197b0aa47/唯一S1.exp66；main已同步经验.12和锁内最新七项知识刷新。新增0更新12全补证退役0，136条49049字；三轮源tsc0/215文件2299例、合后tsc0/216文件2308例。原回报merged=null、记录预检冲突1、冻结相对路径128及离线更正原件保留。仅本批14项CLI/by=ops shipped，claim/首证/先验/evidence/repeat/版本历史保持；0216—0220及独立boss校准075131/081301任务不代改，不把知识补证当模型修复。源祖先已测校准派发5项源码/任务与main逐blob一致，其余live及main记录保持；完整外部另经learner-recheck，对局继续。",
+      "20261008-031301-postmortem本局补support；保留原claim、first_run、prior、状态、版本及历史，不新增shipped或已证策略repeat。",
+      "代码提案 silent-proposal-ab055ef7dfbb44e5 → task=strategy-proposal；Roy-2026-10-07-learning",
+      "第87批经验提案预关联，保持首证/prior/原claim/repeat/全部上线历史；经验与独立源码实现分开。",
+      "代码提案 silent-proposal-0129c465c6f5bd79 → task=strategy-proposal；Roy-2026-10-07-learning",
+      "第87批经验已自测并提交；新证据/反例和旧repeat完整保持。是否实际合入由本批合入回执证明，运维据完成事件登记shipped，学习者不标accepted/shipped。"
+    ],
+    "shipped_at": "2026-10-07T08:48:28+08:00"
+  },
+  {
+    "id": "silent-0197",
+    "ts": "2026-10-07T00:58:35+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "bug-infra",
+    "claim": "战内生成牌的即时评分没有检查华丽收场GRAND_FINALE的空抽牌堆条件，按牌面群伤直接给高分并让代码选择不能打的牌。应把已观察的使用条件接入生成牌评分；已上线的收场机制文本不等于这个入口已覆盖，不声称修正会赢整场。",
+    "evidence": [
+      {
+        "run": "Y6GM2CHWJBEY",
+        "floor": 17,
+        "turn": 1,
+        "role": "support",
+        "note": "第2次尝试15:00:33.366Z代码以收场180分对连续反弹12分直接选择；按字节偏移6301193619附近抽取状态，抽牌堆非空，入手后playable=false，不能兑现群伤。",
+        "added": "2026-10-07T00:58:35+08:00"
+      },
+      {
+        "run": "VPW8YH7A4QFM",
+        "floor": 39,
+        "turn": 1,
+        "role": "support",
+        "note": "16:17:39.441Z攻击药水选择题代码以收场60分胜猎杀者15分；心灵震慑显示堆33张，收场入手明确不可打，首轮无抽牌、该生成牌贡献0伤。当前live884c9f33 selection.ts:205调用thisTurnScore，card-model.ts:1492/1495没有收场条件，pick.ts:134以分差自动选择。",
+        "added": "2026-10-07T00:58:35+08:00"
+      }
+    ],
+    "first_run": "Y6GM2CHWJBEY",
+    "prior": "no",
+    "prior_runs": [
+      "Y6GM2CHWJBEY"
+    ],
+    "prior_note": "按67个更早静默局号筛选战内收场选择，最早A0 Y6GM第2次T1已在非空堆时误选；这是学习前已有的同入口错误。旧复盘及账本0110/0111只记录收场机制／构筑，未定位生成牌评分入口。",
+    "status": "shipped",
+    "where": {
+      "lessons": [
+        "VPW8YH7A4QFM"
+      ],
+      "commits": [
+        "62b0e23f0a45b2f331261947cbc9168dde36e39a",
+        "9e20ade95055b14ed77446313fd6e71e2f2ff2d5",
+        "a12bc862a77a191518c2854c3dbbd4348f02f0b4",
+        "a1a7b937d4a3b753a0fcff81a5e1ab1ca26d6ef4"
+      ]
+    },
+    "note": "新识别纯bug，first_run回溯A0；notes/fix-queue.md及fix-queue-v4.md无同项。开局3caa860b+dirty，行号引用当前只读live884c9f33。没有代码改动或替代选牌的受控胜局，不记学习后repeat。",
+    "asc": 0,
+    "history": [
+      {
+        "ts": "2026-10-07T00:58:35+08:00",
+        "by": "learner:postmortem",
+        "status": "observed"
+      },
+      {
+        "ts": "2026-10-07T01:22:59+08:00",
+        "by": "learner:fix-batch",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-07T01:41:18+08:00",
+        "by": "ops",
+        "status": "shipped"
+      }
+    ],
+    "version": "S1.fix38",
+    "effect": null,
+    "notes": [
+      "新识别纯bug，first_run回溯A0；notes/fix-queue.md及fix-queue-v4.md无同项。开局3caa860b+dirty，行号引用当前只读live884c9f33。没有代码改动或替代选牌的受控胜局，不记学习后repeat。",
+      "01:34 fix-done确认20261007-011301-fix-batch（原任务目录011302）：源62b0e23f→实际live代码9e20ade9→固定发布a12bc862/唯一S1.fix38，机械同步main。0197生成牌即时评分遗漏收场使用条件沿学习者对局证据及方案，首证Y6GM2CHWJBEY/A0/F17第二次T1、prior=no，VPW8YH7A4QFM/A10/F39 T1支持保持；仅接入战内静默已观测空/非空事实，非空即时伤害0，Jev选项保留，空堆/未知/铁甲/其他牌等价，不声称整场可转胜。源及合后首轮沙箱tsc0/vitest0各210文件2254例，无超时重跑；撤两处源码4失败5通过/exit1，恢复相关3文件189例/exit0含新9，初稿两次断言失败、首次预合并仅追加历史冲突退出1及最终日志并集原文保持。原回报/元数据/红绿/原proposed一行/126项旧修复祖先核查按原字节归档，扫描通过。git与live-merge.json确认保存点c951e875的三项自动知识刷新已提交保留、源重叠0，源/实际合入/发布四个修复blob一致，经验.2、铁甲及双方日志历史保持；handoff原文不回改，登记明确三项刷新。CLI/by=ops只登记本项shipped及关闭01:07队列，claim/全部支持证据/repeat/首证/先验/历史不重置，0198独立S1.exp56/VPW/A10/prior=unknown及其他旧项保持。0172及旧专项保留，无新Roy待定，完整外部待本批learner-checks，无重复live合入或新增游戏知识，对局继续。"
+    ],
+    "shipped_at": "2026-10-07T01:41:18+08:00"
+  }
+]

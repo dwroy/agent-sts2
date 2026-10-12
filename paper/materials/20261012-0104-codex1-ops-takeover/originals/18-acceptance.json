@@ -1,0 +1,43 @@
+{
+ "accepted": false,
+ "reasons": [
+  "t1 gap worsened"
+ ],
+ "improved": [
+  "t1:brier",
+  "t1:leak",
+  "pre:brier",
+  "pre:leak"
+ ],
+ "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+ "isolation": {
+  "passed": true,
+  "base": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+  "head": "59287af1c7d76a648172d409c8e00bdb861cb67e",
+  "output_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+  "candidate_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+  "shared_changes": [
+   "agent/src/reflex/rollout.ts",
+   "agent/tests/boss-sim-silent-demon-sequence-evidence.json",
+   "agent/tests/boss-sim-silent-demon-sequence.test.ts"
+  ],
+  "runner": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/learner/runs/20261011-220122-boss-sim-batch/acceptance/source-2b95b45a0485fd14c472a8fc5e0e8bb25c95d689/agent/tools/boss-sim/isolation.ts",
+  "outputs": [
+   "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/learner/runs/20261011-220122-boss-sim-batch/acceptance/before.isolation.json",
+   "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/learner/runs/20261011-220122-boss-sim-batch/acceptance/after.isolation.json"
+  ]
+ },
+ "character": "silent",
+ "boss": "KNOWLEDGE_DEMON",
+ "mode": "b4",
+ "inputs": {
+  "before": {
+   "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/learner/runs/20261011-220122-boss-sim-batch/before-trust.json",
+   "sha256": "2308d7bf0015d634bb912abc55c40e10a0980143ea24c7b73a4cf1db251ba202"
+  },
+  "after": {
+   "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/learner/runs/20261011-220122-boss-sim-batch/after-trust.json",
+   "sha256": "40cf95e40e07a92d6db73514dcf801e3728f5c9b2d6005949f95787bd4cf3682"
+  }
+ }
+}

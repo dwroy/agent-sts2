@@ -1,0 +1,752 @@
+{
+  "scope": "Silent A10, all observed physical calls, input includes cache; output includes reasoning",
+  "after": "2026-10-08T06:58:26.265Z",
+  "manifest": {
+    "/home/dw/Projects/agent-sts2/logs/run-config.jsonl": {
+      "complete_bytes": 907632,
+      "sha256": "25f3ea9c98ba2bbd60fa29d05acde648366ec2bcd0a93d7a85ee57c90bc479af"
+    },
+    "/home/dw/Projects/agent-sts2/logs/codex-calls.jsonl": {
+      "complete_bytes": 15743246,
+      "sha256": "e5a3a8cbde9a561b063961795750cec335e923af67a729ca0d77a2326818558f"
+    },
+    "/home/dw/Projects/agent-sts2/logs/brain.jsonl": {
+      "complete_bytes": 299281606,
+      "sha256": "2361ff3c12acffbdf2845345f4a735f38c013a5670a4635af5af9bda40b4329c"
+    }
+  },
+  "total": {
+    "physical_calls": 94,
+    "duplicate_rows": 0,
+    "questions": 94,
+    "runs": [
+      "9DAS5L8YM1CN",
+      "BJLTVSYXCSGS",
+      "Y5H4CFAQ2WTG"
+    ],
+    "outcomes": {
+      "answered": 94
+    },
+    "model_effort": {
+      "gpt-6.1-sol/high": 94
+    },
+    "cache_known_calls": 94,
+    "cache_unknown_calls": 0,
+    "input_tokens_observed": 12406298,
+    "cached_input_tokens_observed": 7351168,
+    "cache_hit_ratio_observed": 0.5925351785036922,
+    "zero_cache_calls": 33,
+    "output_tokens": 28186,
+    "reasoning_tokens": 19150,
+    "input_per_known_call": 131981.89361702127,
+    "wall_ms": 1618944,
+    "median_ms": 14953.0,
+    "p90_ms": 28973
+  },
+  "by_request_context": {
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a4e-6e22-7281-b9bf-5d7cd8168b53\", \"bdf05ace30dc238012f98d19f5315b40488bf073700875030785004c91e4e6ad\", \"0ce5863888ca5387d7001673709edf8226433b62243397c793b4062316805eb2\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 126010,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 495,
+      "reasoning_tokens": 270,
+      "input_per_known_call": 126010.0,
+      "wall_ms": 25482,
+      "median_ms": 25482,
+      "p90_ms": 25482
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a4e-6e22-7281-b9bf-5d7cd8168b53\", \"bdf05ace30dc238012f98d19f5315b40488bf073700875030785004c91e4e6ad\", \"763879f3acf09cac8cce779f4815f2ae008f8ed0a9266c60fa2df2f4525fe61a\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 126935,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 349,
+      "reasoning_tokens": 238,
+      "input_per_known_call": 126935.0,
+      "wall_ms": 16425,
+      "median_ms": 16425,
+      "p90_ms": 16425
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a4e-6e22-7281-b9bf-5d7cd8168b53\", \"bdf05ace30dc238012f98d19f5315b40488bf073700875030785004c91e4e6ad\", \"91f56d61a33e7898fd61462294209b1b0c194bc59916afb310a5f1ad7e20c04e\", null]": {
+      "physical_calls": 12,
+      "duplicate_rows": 0,
+      "questions": 12,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 12
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 12
+      },
+      "cache_known_calls": 12,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 1591531,
+      "cached_input_tokens_observed": 1207040,
+      "cache_hit_ratio_observed": 0.7584143821263928,
+      "zero_cache_calls": 2,
+      "output_tokens": 3162,
+      "reasoning_tokens": 2371,
+      "input_per_known_call": 132627.58333333334,
+      "wall_ms": 173554,
+      "median_ms": 14883.0,
+      "p90_ms": 19238
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a4e-6e22-7281-b9bf-5d7cd8168b53\", \"bdf05ace30dc238012f98d19f5315b40488bf073700875030785004c91e4e6ad\", \"00c7201fd3ba1e3ced4b0cb3336dc5844b0cfc43f6bd1d9351b4386049a07432\", null]": {
+      "physical_calls": 5,
+      "duplicate_rows": 0,
+      "questions": 5,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 5
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 5
+      },
+      "cache_known_calls": 5,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 672753,
+      "cached_input_tokens_observed": 483840,
+      "cache_hit_ratio_observed": 0.7191941173060544,
+      "zero_cache_calls": 1,
+      "output_tokens": 3213,
+      "reasoning_tokens": 1952,
+      "input_per_known_call": 134550.6,
+      "wall_ms": 151003,
+      "median_ms": 29614,
+      "p90_ms": 29620
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a4e-6e22-7281-b9bf-5d7cd8168b53\", \"bdf05ace30dc238012f98d19f5315b40488bf073700875030785004c91e4e6ad\", \"ebfdef12518da5d67fe5a34b353738d210dd3c4769a67da745ba92f7bb0a4541\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 133880,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 361,
+      "reasoning_tokens": 290,
+      "input_per_known_call": 133880.0,
+      "wall_ms": 19381,
+      "median_ms": 19381,
+      "p90_ms": 19381
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a4e-6e22-7281-b9bf-5d7cd8168b53\", \"bdf05ace30dc238012f98d19f5315b40488bf073700875030785004c91e4e6ad\", \"41f323af390b7b812b8176075f07aacf46d2f029f7287d233229838bc79c17fe\", null]": {
+      "physical_calls": 2,
+      "duplicate_rows": 0,
+      "questions": 2,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 2
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 2
+      },
+      "cache_known_calls": 2,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 263932,
+      "cached_input_tokens_observed": 120704,
+      "cache_hit_ratio_observed": 0.4573299183122926,
+      "zero_cache_calls": 1,
+      "output_tokens": 250,
+      "reasoning_tokens": 150,
+      "input_per_known_call": 131966.0,
+      "wall_ms": 20043,
+      "median_ms": 10021.5,
+      "p90_ms": 9494
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a65-5eb9-76c3-bde7-2e5bc24e7e63\", \"04d22734f34bd9d4096de1fca6c07f14f5218dc04a8a5844f86079e84e25e8c3\", \"0ce5863888ca5387d7001673709edf8226433b62243397c793b4062316805eb2\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 126045,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 401,
+      "reasoning_tokens": 181,
+      "input_per_known_call": 126045.0,
+      "wall_ms": 22505,
+      "median_ms": 22505,
+      "p90_ms": 22505
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a65-5eb9-76c3-bde7-2e5bc24e7e63\", \"04d22734f34bd9d4096de1fca6c07f14f5218dc04a8a5844f86079e84e25e8c3\", \"763879f3acf09cac8cce779f4815f2ae008f8ed0a9266c60fa2df2f4525fe61a\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 126820,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 585,
+      "reasoning_tokens": 478,
+      "input_per_known_call": 126820.0,
+      "wall_ms": 29432,
+      "median_ms": 29432,
+      "p90_ms": 29432
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a65-5eb9-76c3-bde7-2e5bc24e7e63\", \"04d22734f34bd9d4096de1fca6c07f14f5218dc04a8a5844f86079e84e25e8c3\", \"91f56d61a33e7898fd61462294209b1b0c194bc59916afb310a5f1ad7e20c04e\", null]": {
+      "physical_calls": 20,
+      "duplicate_rows": 0,
+      "questions": 20,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 20
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 20
+      },
+      "cache_known_calls": 20,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 2639436,
+      "cached_input_tokens_observed": 2172672,
+      "cache_hit_ratio_observed": 0.8231576745941178,
+      "zero_cache_calls": 2,
+      "output_tokens": 3957,
+      "reasoning_tokens": 2925,
+      "input_per_known_call": 131971.8,
+      "wall_ms": 263804,
+      "median_ms": 11399.0,
+      "p90_ms": 18422
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a65-5eb9-76c3-bde7-2e5bc24e7e63\", \"04d22734f34bd9d4096de1fca6c07f14f5218dc04a8a5844f86079e84e25e8c3\", \"00c7201fd3ba1e3ced4b0cb3336dc5844b0cfc43f6bd1d9351b4386049a07432\", null]": {
+      "physical_calls": 4,
+      "duplicate_rows": 0,
+      "questions": 4,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 4
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 4
+      },
+      "cache_known_calls": 4,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 537808,
+      "cached_input_tokens_observed": 241920,
+      "cache_hit_ratio_observed": 0.4498259601939726,
+      "zero_cache_calls": 2,
+      "output_tokens": 2548,
+      "reasoning_tokens": 1550,
+      "input_per_known_call": 134452.0,
+      "wall_ms": 120386,
+      "median_ms": 31747.0,
+      "p90_ms": 33888
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a65-5eb9-76c3-bde7-2e5bc24e7e63\", \"04d22734f34bd9d4096de1fca6c07f14f5218dc04a8a5844f86079e84e25e8c3\", \"ebfdef12518da5d67fe5a34b353738d210dd3c4769a67da745ba92f7bb0a4541\", null]": {
+      "physical_calls": 2,
+      "duplicate_rows": 0,
+      "questions": 2,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 2
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 2
+      },
+      "cache_known_calls": 2,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 264351,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 2,
+      "output_tokens": 623,
+      "reasoning_tokens": 504,
+      "input_per_known_call": 132175.5,
+      "wall_ms": 39639,
+      "median_ms": 19819.5,
+      "p90_ms": 15744
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a65-5eb9-76c3-bde7-2e5bc24e7e63\", \"04d22734f34bd9d4096de1fca6c07f14f5218dc04a8a5844f86079e84e25e8c3\", \"41f323af390b7b812b8176075f07aacf46d2f029f7287d233229838bc79c17fe\", null]": {
+      "physical_calls": 3,
+      "duplicate_rows": 0,
+      "questions": 3,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 3
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 3
+      },
+      "cache_known_calls": 3,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 387530,
+      "cached_input_tokens_observed": 241408,
+      "cache_hit_ratio_observed": 0.6229401594715248,
+      "zero_cache_calls": 1,
+      "output_tokens": 515,
+      "reasoning_tokens": 368,
+      "input_per_known_call": 129176.66666666667,
+      "wall_ms": 39517,
+      "median_ms": 14710,
+      "p90_ms": 14710
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a65-5eb9-76c3-bde7-2e5bc24e7e63\", \"04d22734f34bd9d4096de1fca6c07f14f5218dc04a8a5844f86079e84e25e8c3\", \"b376bf03bf429b10ff9a1dbe48f21ce7b56f541aedf58790ed3af42fa52e0ca3\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 126897,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 494,
+      "reasoning_tokens": 292,
+      "input_per_known_call": 126897.0,
+      "wall_ms": 25010,
+      "median_ms": 25010,
+      "p90_ms": 25010
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a79-7b9e-7731-b5ff-da3a7153a96d\", \"c31192a853dfb362a504bae8cf6f2cb619024249dad5b675cebeba01e988f35a\", \"41f323af390b7b812b8176075f07aacf46d2f029f7287d233229838bc79c17fe\", null]": {
+      "physical_calls": 3,
+      "duplicate_rows": 0,
+      "questions": 3,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 3
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 3
+      },
+      "cache_known_calls": 3,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 398855,
+      "cached_input_tokens_observed": 240384,
+      "cache_hit_ratio_observed": 0.6026851863459152,
+      "zero_cache_calls": 1,
+      "output_tokens": 417,
+      "reasoning_tokens": 274,
+      "input_per_known_call": 132951.66666666666,
+      "wall_ms": 36581,
+      "median_ms": 13674,
+      "p90_ms": 13674
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a79-7b9e-7731-b5ff-da3a7153a96d\", \"c31192a853dfb362a504bae8cf6f2cb619024249dad5b675cebeba01e988f35a\", \"b376bf03bf429b10ff9a1dbe48f21ce7b56f541aedf58790ed3af42fa52e0ca3\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 129115,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 513,
+      "reasoning_tokens": 311,
+      "input_per_known_call": 129115.0,
+      "wall_ms": 25400,
+      "median_ms": 25400,
+      "p90_ms": 25400
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a79-7b9e-7731-b5ff-da3a7153a96d\", \"c31192a853dfb362a504bae8cf6f2cb619024249dad5b675cebeba01e988f35a\", \"f82224c35585c3e8ea2bd1f33d61f53dcb9edfd03ebaf4b7a99d0b9f478d9129\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 133612,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 1250,
+      "reasoning_tokens": 958,
+      "input_per_known_call": 133612.0,
+      "wall_ms": 57225,
+      "median_ms": 57225,
+      "p90_ms": 57225
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a79-7b9e-7731-b5ff-da3a7153a96d\", \"c31192a853dfb362a504bae8cf6f2cb619024249dad5b675cebeba01e988f35a\", \"91f56d61a33e7898fd61462294209b1b0c194bc59916afb310a5f1ad7e20c04e\", null]": {
+      "physical_calls": 5,
+      "duplicate_rows": 0,
+      "questions": 5,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 5
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 5
+      },
+      "cache_known_calls": 5,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 672676,
+      "cached_input_tokens_observed": 480768,
+      "cache_hit_ratio_observed": 0.7147096075971195,
+      "zero_cache_calls": 1,
+      "output_tokens": 1408,
+      "reasoning_tokens": 1122,
+      "input_per_known_call": 134535.2,
+      "wall_ms": 87781,
+      "median_ms": 12979,
+      "p90_ms": 25258
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a79-7b9e-7731-b5ff-da3a7153a96d\", \"c31192a853dfb362a504bae8cf6f2cb619024249dad5b675cebeba01e988f35a\", \"19845e681e86dcff6a528299b8f34169609e474c4c2f283615e2bb0ddac3c4b0\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "BJLTVSYXCSGS"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 140200,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 608,
+      "reasoning_tokens": 334,
+      "input_per_known_call": 140200.0,
+      "wall_ms": 29262,
+      "median_ms": 29262,
+      "p90_ms": 29262
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a88-c951-7bc1-9b3a-0622ad4e45bd\", \"9717695763930c2ecea53ebdf4122aa8c91eceb987db7456a18b6992961778b2\", \"0ce5863888ca5387d7001673709edf8226433b62243397c793b4062316805eb2\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "Y5H4CFAQ2WTG"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 127030,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 568,
+      "reasoning_tokens": 362,
+      "input_per_known_call": 127030.0,
+      "wall_ms": 28973,
+      "median_ms": 28973,
+      "p90_ms": 28973
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a88-c951-7bc1-9b3a-0622ad4e45bd\", \"9717695763930c2ecea53ebdf4122aa8c91eceb987db7456a18b6992961778b2\", \"763879f3acf09cac8cce779f4815f2ae008f8ed0a9266c60fa2df2f4525fe61a\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "Y5H4CFAQ2WTG"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 126640,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 351,
+      "reasoning_tokens": 245,
+      "input_per_known_call": 126640.0,
+      "wall_ms": 17884,
+      "median_ms": 17884,
+      "p90_ms": 17884
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a88-c951-7bc1-9b3a-0622ad4e45bd\", \"9717695763930c2ecea53ebdf4122aa8c91eceb987db7456a18b6992961778b2\", \"91f56d61a33e7898fd61462294209b1b0c194bc59916afb310a5f1ad7e20c04e\", null]": {
+      "physical_calls": 14,
+      "duplicate_rows": 0,
+      "questions": 14,
+      "runs": [
+        "Y5H4CFAQ2WTG"
+      ],
+      "outcomes": {
+        "answered": 14
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 14
+      },
+      "cache_known_calls": 14,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 1842913,
+      "cached_input_tokens_observed": 1442304,
+      "cache_hit_ratio_observed": 0.7826218600661019,
+      "zero_cache_calls": 2,
+      "output_tokens": 2292,
+      "reasoning_tokens": 1582,
+      "input_per_known_call": 131636.64285714287,
+      "wall_ms": 167494,
+      "median_ms": 11403.5,
+      "p90_ms": 13153
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a88-c951-7bc1-9b3a-0622ad4e45bd\", \"9717695763930c2ecea53ebdf4122aa8c91eceb987db7456a18b6992961778b2\", \"00c7201fd3ba1e3ced4b0cb3336dc5844b0cfc43f6bd1d9351b4386049a07432\", null]": {
+      "physical_calls": 2,
+      "duplicate_rows": 0,
+      "questions": 2,
+      "runs": [
+        "Y5H4CFAQ2WTG"
+      ],
+      "outcomes": {
+        "answered": 2
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 2
+      },
+      "cache_known_calls": 2,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 262528,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 2,
+      "output_tokens": 1020,
+      "reasoning_tokens": 567,
+      "input_per_known_call": 131264.0,
+      "wall_ms": 50908,
+      "median_ms": 25454.0,
+      "p90_ms": 25320
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a88-c951-7bc1-9b3a-0622ad4e45bd\", \"9717695763930c2ecea53ebdf4122aa8c91eceb987db7456a18b6992961778b2\", \"41f323af390b7b812b8176075f07aacf46d2f029f7287d233229838bc79c17fe\", null]": {
+      "physical_calls": 5,
+      "duplicate_rows": 0,
+      "questions": 5,
+      "runs": [
+        "Y5H4CFAQ2WTG"
+      ],
+      "outcomes": {
+        "answered": 5
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 5
+      },
+      "cache_known_calls": 5,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 644916,
+      "cached_input_tokens_observed": 480768,
+      "cache_hit_ratio_observed": 0.7454738291498427,
+      "zero_cache_calls": 1,
+      "output_tokens": 622,
+      "reasoning_tokens": 378,
+      "input_per_known_call": 128983.2,
+      "wall_ms": 53051,
+      "median_ms": 9801,
+      "p90_ms": 10481
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a88-c951-7bc1-9b3a-0622ad4e45bd\", \"9717695763930c2ecea53ebdf4122aa8c91eceb987db7456a18b6992961778b2\", \"f82224c35585c3e8ea2bd1f33d61f53dcb9edfd03ebaf4b7a99d0b9f478d9129\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "Y5H4CFAQ2WTG"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 132086,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 565,
+      "reasoning_tokens": 275,
+      "input_per_known_call": 132086.0,
+      "wall_ms": 27027,
+      "median_ms": 27027,
+      "p90_ms": 27027
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a98-384d-7bc1-968f-fccbb4f7ae81\", \"6f5426529a4a09dcf11c73af1b1bc508c9d2624b8a5ba8b9dcef2c558d672fc9\", \"91f56d61a33e7898fd61462294209b1b0c194bc59916afb310a5f1ad7e20c04e\", null]": {
+      "physical_calls": 3,
+      "duplicate_rows": 0,
+      "questions": 3,
+      "runs": [
+        "Y5H4CFAQ2WTG"
+      ],
+      "outcomes": {
+        "answered": 3
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 3
+      },
+      "cache_known_calls": 3,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 405299,
+      "cached_input_tokens_observed": 239360,
+      "cache_hit_ratio_observed": 0.5905763399366887,
+      "zero_cache_calls": 1,
+      "output_tokens": 806,
+      "reasoning_tokens": 662,
+      "input_per_known_call": 135099.66666666666,
+      "wall_ms": 48514,
+      "median_ms": 17055,
+      "p90_ms": 17055
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a98-384d-7bc1-968f-fccbb4f7ae81\", \"6f5426529a4a09dcf11c73af1b1bc508c9d2624b8a5ba8b9dcef2c558d672fc9\", \"ebfdef12518da5d67fe5a34b353738d210dd3c4769a67da745ba92f7bb0a4541\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "Y5H4CFAQ2WTG"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 132136,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 351,
+      "reasoning_tokens": 287,
+      "input_per_known_call": 132136.0,
+      "wall_ms": 19929,
+      "median_ms": 19929,
+      "p90_ms": 19929
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a98-384d-7bc1-968f-fccbb4f7ae81\", \"6f5426529a4a09dcf11c73af1b1bc508c9d2624b8a5ba8b9dcef2c558d672fc9\", \"00c7201fd3ba1e3ced4b0cb3336dc5844b0cfc43f6bd1d9351b4386049a07432\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "Y5H4CFAQ2WTG"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 134364,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 462,
+      "reasoning_tokens": 224,
+      "input_per_known_call": 134364.0,
+      "wall_ms": 22734,
+      "median_ms": 22734,
+      "p90_ms": 22734
+    }
+  },
+  "brain_cache_mismatch_rows": 0,
+  "limits": "Missing usage is unknown. Shared subscription quota and USD are not attributable to brain alone."
+}

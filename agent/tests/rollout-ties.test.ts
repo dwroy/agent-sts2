@@ -1,5 +1,5 @@
 /**
- * Options tied in the rollout as Jev reads them (Dai 2026-09-29; consistency review #6): when two or more shown
+ * Options tied in the rollout as Jev reads them (Roy 2026-09-29; consistency review #6): when two or more shown
  * options have the same expected further HP loss (as shown, one decimal) and the same deaths as the best, none
  * is flagged rollout_best: each is tagged rollout_tied, the decision log names them, and choosing any of them
  * counts as choosing the rollout's best. Saturated boards keep their tie-break (enemy HP left, turns alive).

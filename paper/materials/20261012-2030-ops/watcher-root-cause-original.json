@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-12T20:23:51+08:00",
+  "request_id": "roy-20261012-concrete-core-decklists",
+  "ordinary_learning": {
+    "live_experience_version": "2026-10-12.9",
+    "entries": 226,
+    "stopped": false
+  },
+  "facts": [
+    {
+      "cause": "initial_report_only_scope",
+      "evidence": "notes/strategy-research-core-decklists-silent.json report_policy; task.md lines11/13",
+      "detail": "原输入只交候选报告并保留未知；报告批结束不自动产生后续量化实现/入库任务。"
+    },
+    {
+      "cause": "supplement_not_consumed",
+      "evidence": "ops/inbox-dev.md:1371,1380; learner/lib/launcher.ts:521",
+      "detail": "14:26即时转达失败；launcher一次输入后关stdin，缺受支持的当前会话增补路径；15:00完成后同owner接续仍未启动。"
+    },
+    {
+      "cause": "dedup_without_continuation",
+      "evidence": "ops/strategy_research_jobs.py:213; ops/strategy_implementation_continuation.py:7",
+      "detail": "任一既有同request批即返回None，包括done；另一个continuation实现写死不同旧请求/owner，不能承接本批。"
+    },
+    {
+      "cause": "completion_state_not_followup_execution",
+      "evidence": "ops/learner_checks.py:110; request.state/observed_batch_state/parent_complete/supplements_consumed",
+      "detail": "batch done只验收初次报告；request仍running而parent_complete=false、supplements_consumed=false，既无活动接续批，也没有自动接续状态迁移。"
+    },
+    {
+      "cause": "handoff_followthrough_gap",
+      "evidence": "ops/inbox-dev.md:1380; current sole same-request batch remains140741/done",
+      "detail": "开发收件箱已登记入口缺口，但没有落实接续入口及实际模型消费回执；这是系统编排和watcher开发跟进缺口，不需要Roy重复授权。"
+    }
+  ],
+  "read_only_probe": {
+    "function": "strategy_research_jobs.dispatch",
+    "request": "roy-20261012-concrete-core-decklists",
+    "returned": null,
+    "writer_calls": 0,
+    "live_state_modified": false
+  },
+  "current_request": {
+    "state": "running",
+    "batch": "20261012-140741-strategy-proposal",
+    "observed_batch_state": "done",
+    "report_complete": false,
+    "parent_complete": false,
+    "supplements_consumed": false
+  },
+  "source_sha256": {
+    "notes/strategy-research-core-decklists-silent.json": "3c7a5caefd4c09201602264046bda02d84bba7d0306c3834030cf4b2d5eaf320",
+    "ops/strategy_research_jobs.py": "5578038f8c79bba81bec727d2dc934faed5a7451cff99b38f2977350e54ed02c",
+    "ops/strategy_implementation_continuation.py": "af23002c2770137cda21ac074a9e4eef8542119c41c57b2c096fa7dc5a11bf9b",
+    "ops/learner_checks.py": "c51ad98f60734bfc036409920428ed4075c6f7fe4d7d229923ef0018c24232c3",
+    "learner/lib/launcher.ts": "3f3e5de5d8505db3dfbd5dce4517c3b8c96cfe25b01566d3e15f7ece06dbf663",
+    "paper/materials/silent/20261012-core-candidate-decklists/owner-addenda/20261012-1453/continuation-handoff.json": "b7af7a41d19c39625851ab3017df4558c94b52f7690f7fe68d40c55a2be061ea"
+  },
+  "changes": "仅审计记录，无派发、游戏重启或源码改动"
+}

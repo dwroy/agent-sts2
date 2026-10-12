@@ -1,0 +1,70 @@
+{
+  "state": "published",
+  "batch": "20261008-174751-experience-update",
+  "source": "ee6d95efd7fbb53115962231ee4ed08ea8e6c75b",
+  "version": "S1.exp104",
+  "source_tests": {
+    "exit": 0,
+    "files": 251,
+    "cases": 2627,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/test-source.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "16d1d7d4e829d7548e5540a2c2f536a956c51511",
+  "parent_blob": "7d8dbba37a858b8f78565006b91f4f89ea3c7a8b",
+  "actual_code": "4a73f63c4955beeacc39e14fed72cf302d307e82",
+  "publication": "c70efc8ca855a756c66ea43cd2dd44bef91a7882",
+  "publication_tree": "715f00bc1345c909829a3845c5141e75cc0b1426",
+  "version_entry": {
+    "name": "S1.exp104",
+    "family": "Silent",
+    "commit": "4a73f63c4955beeacc39e14fed72cf302d307e82",
+    "source": "decision-log 2026-10-08 18:25: 原174751经验21项记录冲突兜底；只源ee6d95ef experience.json，.20→.21/增2改16退0/178 active，SY0WMJNNVRLM证据。源251文件2627例tsc/vitest0；保留全部当前代码及固定2977ebba完整检查，数据免重复源码自测，完整新树待独立续验；五提案沿自动链，数据发布不标代码实现。"
+  },
+  "main_code_sync": "eeb85b9f65ec15708ba37660cbe5d912095ceac3",
+  "main_record": "f68f76fd96e2404a677c262667b5b6bb22cbd50f",
+  "record_line": "- 2026-10-08 18:25 运维codex18:23经验兜底：源ee6d95efd7fbb53115962231ee4ed08ea8e6c75b原21项并行记录冲突和merged-null历史保留；空闲非阻塞锁内从live2977ebba7536c274b2bd180d3a87bd1607115d82只集成已测experience.json原blob，实际4a73f63c4955beeacc39e14fed72cf302d307e82，新增刷新2977ebba7536c274b2bd180d3a87bd1607115d82保留；既有缓存probe及全部当前代码、其余代码/知识保持；源真实祖先。经验.20→.21/增2改16退0/178 active，唯一S1.exp104；源原沙箱251文件2627例tsc/vitest0，保留当前固定2977ebba完整检查302文件3435例exit0，数据免重复源码自测，不冒报新数据树完整通过。五代码提案沿原自动链，main/所属20数据shipped随后机械登记，原批完整外部独立续验；原exp100完整exit1仍保留，不以本次沙箱关闭其修复队列。回执paper/materials/silent/20261008-1823-experience104。\n",
+  "live_before": "2977ebba7536c274b2bd180d3a87bd1607115d82",
+  "preserved_refresh": "2977ebba7536c274b2bd180d3a87bd1607115d82",
+  "refresh_sha256": {},
+  "code_equivalence": {
+    "data_only": true,
+    "current_code_test_task_blobs_identical": true,
+    "current_tested_pin": "2977ebba7536c274b2bd180d3a87bd1607115d82",
+    "retained_complete_checks": {
+      "exit": 0,
+      "files": 302,
+      "cases": 3435,
+      "skipped": 2,
+      "tree": "e200614a5c9fdf03e22c71f24b64eb937b7cd83c",
+      "logs": [
+        "ops/codex-ops/learner/20261008-170939-experience-update.fallback-e200614a5c9fdf03e22c71f24b64eb937b7cd83c.checks.log"
+      ]
+    },
+    "post_data_merge_sandbox_repeated": false,
+    "new_data_tree_full_passed": false,
+    "previous_exp100_full_failure_preserved": true,
+    "source_code_differences_from_actual": [
+      "docs/codex-ops.md",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ]
+  },
+  "full_external_passed": false
+}

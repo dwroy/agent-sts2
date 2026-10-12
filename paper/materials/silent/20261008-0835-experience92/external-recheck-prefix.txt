@@ -1,0 +1,9 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/compute-memo.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 134092[2mms[22m[39m
+     [33m[2m✓[22m[39m the same question and every resolution as without it; the board planned again comes from it, rollout and B2 [33m 94916[2mms[22m[39m
+     [33m[2m✓[22m[39m on a worker pool (one worker): the run comes back too, keyed by the data the workers load, after the pool is built again [33m 7251[2mms[22m[39m
+     [33m[2m✓[22m[39m a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept [33m 19109[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout needs the budget the stored run needed: less, it runs again; enough, it comes from the memo [33m 8645[2mms[22m[39m
+     [33m[2m✓[22m[39m with exactly that budget the same run is cut nowhere and gives the same result; with less, it is cut [33m 4145[2mms[22m[39m

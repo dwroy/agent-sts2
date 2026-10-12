@@ -1,0 +1,58 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/agent
+
+ ❯ tests/boss-sim-silent-queen-buff.test.ts (4 tests | 2 failed) 36ms
+     × adds one Strength after the Amalgam acts, without buffing the Queen 21ms
+     × sets the simulation field only for Silent at the observed ascensions 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-sim-silent-queen-buff.test.ts > Silent Queen's observed whole-fight ally buff > adds one Strength after the Amalgam acts, without buffing the Queen
+AssertionError: expected [ 24, 24, 24 ] to deeply equal [ 24, 27, 30 ]
+
+- Expected
++ Received
+
+  [
+    24,
+-   27,
+-   30,
++   24,
++   24,
+  ]
+
+ ❯ tests/boss-sim-silent-queen-buff.test.ts:36:76
+     34|     const input = { ...queenBoard(), fightQueenTorchStrength: 1 };
+     35|     const records = simulateFight(input, null, 3, 1).records;
+     36|     expect(records.map((r) => r.snap.E.reduce((sum, e) => sum + e[7], …
+       |                                                                            ^
+     37|     expect(records[1]!.snap.E.find((e) => e[1] === "TORCH_HEAD_AMALGAM…
+     38|     expect(records[1]!.snap.E.find((e) => e[1] === "QUEEN")![9]["STREN…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/boss-sim-silent-queen-buff.test.ts > Silent Queen's observed whole-fight ally buff > sets the simulation field only for Silent at the observed ascensions
+AssertionError: expected undefined to be 1 // Object.is equality
+
+- Expected:
+1
+
++ Received:
+undefined
+
+ ❯ tests/boss-sim-silent-queen-buff.test.ts:54:54
+     52|     expect(slimInput(input).fightQueenTorchStrength).toBeUndefined();
+     53|     setKnowledgeCharacter("silent");
+     54|     expect(slimInput(input).fightQueenTorchStrength).toBe(1);
+       |                                                      ^
+     55|     input.meta.asc = 6;
+     56|     expect(slimInput(input).fightQueenTorchStrength).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  20:09:44
+   Duration  649ms (transform 410ms, setup 273ms, import 215ms, tests 36ms, environment 0ms)
+

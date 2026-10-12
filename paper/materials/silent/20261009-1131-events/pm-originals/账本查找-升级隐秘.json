@@ -1,0 +1,202 @@
+[
+ {
+  "id": "silent-0153",
+  "ts": "2026-10-06T05:58:20+08:00",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "未升级隐秘匕首HIDDEN_DAGGERS的Cards=2是弃牌数，当前card-model.ts:879却作draw=2，整线不表示两次弃牌和生成两小刀。本局首试T2题面11伤与实际重算19伤不同；末次T3的SL替线随后被Jev弃掉打击+和防御，实际零挡致死。模型误读、SL替换与弃牌选择分开记，不宣称修模型或保留防御即可整场获胜。",
+  "evidence": [
+   {
+    "run": "10GPK5XGHCK3",
+    "floor": 9,
+    "turn": 1,
+    "role": "support",
+    "note": "更早静默题面含隐秘匕首且cards_drawn=2；F9 T5同样题面，现场牌文弃2、加2小刀，并无抽牌。",
+    "added": "2026-10-06T05:58:20+08:00"
+   },
+   {
+    "run": "MGA0CZDDKC0P",
+    "floor": 17,
+    "turn": 2,
+    "role": "support",
+    "note": "首试题面隐秘匕首线11伤/损10，实际弃打击与蛇咬，重算打两小刀，19伤/损10。",
+    "added": "2026-10-06T05:58:20+08:00"
+   },
+   {
+    "run": "MGA0CZDDKC0P",
+    "floor": 17,
+    "turn": 3,
+    "role": "support",
+    "note": "第6次SL改为隐秘匕首、打击+、防御；Jev弃打击+与防御后零挡。实际34直伤+6毒，14血对16攻击死亡，敌剩169/262。当前live定位agent/src/reflex/card-model.ts:879，fix-queue无该项。",
+    "added": "2026-10-06T05:58:20+08:00"
+   }
+  ],
+  "first_run": "10GPK5XGHCK3",
+  "prior": "no",
+  "prior_runs": [
+   "10GPK5XGHCK3"
+  ],
+  "prior_note": "按40个更早静默局号grep决策，最早含该牌抽牌题面为10G F9 T1，T5仍cards_drawn=2；原计划生存者被实际弃掉后重算。学习前模型已误读，没有正确表示弃二生成两刀的对照；账本0033是暗影步而非本牌。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "MGA0CZDDKC0P"
+   ],
+   "commits": [
+    "b7f081fcc26da4506cb775739bb118cb6cbe4ecc",
+    "995715e80a825a1e316a6b87195a17958002f842",
+    "41bd4a44e4f5148304f072993e04e3685d534616",
+    "f41bcdcf219c03cadda35cfaf8f282c0a400e10f"
+   ]
+  },
+  "asc": 3,
+  "history": [
+   {
+    "ts": "2026-10-06T05:58:20+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T06:59:43+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T07:17:55+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix26",
+  "effect": null,
+  "notes": [
+   "07:13 fix-done机械核实学习者隐秘匕首模型修复已实际上线并同步main，唯一S1.fix26；证据10GPK5XGHCK3 SILENT A3 F9 T5、MGA0CZDDKC0P SILENT A10 F17首试T2/第6次T3，固定六帧。最终源和合后tsc0/193文件2105例；撤整组5失败1通过、撤接线1失败5通过、恢复6通过。保留初稿/预检/锁忙失败历史及first_run/prior/evidence/repeat；0154/0155分别登记，不倒算旧局生效，不另设审核。沙箱外完整检查等后续事件。"
+  ],
+  "shipped_at": "2026-10-06T07:17:55+08:00"
+ },
+ {
+  "id": "silent-0154",
+  "ts": "2026-10-06T05:58:20+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "已观察的未升级隐秘匕首HIDDEN_DAGGERS花0能量、弃两张原手牌，再生成两张0费小刀SHIV；Cards=2不代表从牌堆抽两张。MGA末次boss T3五手牌施放并弃两牌后，留下两原牌加两小刀，能量仍3，两小刀各实扣4。只确认未升级与这些可见时点，不外推升级牌或缺牌情形。",
+  "evidence": [
+   {
+    "run": "10GPK5XGHCK3",
+    "floor": 9,
+    "turn": 5,
+    "role": "support",
+    "note": "原五手牌投掷匕首、隐秘匕首、生存者、防御、连续反弹；弃连续反弹和生存者后剩投掷匕首、防御及两小刀，能量仍3；随后投掷匕首才实际抽出打击。",
+    "added": "2026-10-06T05:58:20+08:00"
+   },
+   {
+    "run": "MGA0CZDDKC0P",
+    "floor": 17,
+    "turn": 3,
+    "role": "support",
+    "note": "第6次隐秘匕首后弃打击+与防御，剩铭记死亡、投掷匕首、两小刀，能量仍3；两小刀各4实伤，没有其他玩家增益。",
+    "added": "2026-10-06T05:58:20+08:00"
+   },
+   {
+    "run": "J8PHG72DGD90",
+    "floor": 33,
+    "role": "support",
+    "note": "末试隐秘匕首零费、自动处理仅余两张原牌后生成两小刀；s313156→157能量0不变，cards_played2→3，双刀被SLOTH锁住。只支持普通版弃牌/生成机制与兑现边界，不认成抽2或实际26伤。",
+    "turn": 13,
+    "added": "2026-10-09T05:00:40+08:00"
+   }
+  ],
+  "first_run": "10GPK5XGHCK3",
+  "prior": "partly",
+  "prior_runs": [
+   "10GPK5XGHCK3"
+  ],
+  "prior_note": "独立学习前10G F9 T5原选线含生存者却把它弃掉，重算使用生成小刀；T6则保留生存者并用小刀。实际会利用小刀但弃牌与原计划有对有错，模型一直误当抽牌，不记为完整会用协同。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "MGA0CZDDKC0P",
+    "J8PHG72DGD90"
+   ],
+   "experience": [
+    "silent-hidden-daggers-discard-shivs"
+   ],
+   "commits": [
+    "c4e3c9ac7c053d567be773d011849503a8a994f3",
+    "8fd47b49e44a70b5bca4d2e803a5b1e639499fd4",
+    "ccf171d9fa9b718017e05e866fb2e1d81ea5aa09",
+    "07927927fcc4c340b849b0ac2654b5a8060cb975",
+    "832318eeb9b98a9e59773581ebbf9a67d689b441",
+    "abbb308ce3be824214f3e6a7d2397a3b83b30204",
+    "b740434894cc131fa7a4a7d030374e515bb23431",
+    "7f42091955351cb3f4bec183e2bb9c0e284b13f9"
+   ],
+   "changelog": [
+    "2026-10-06 静默猎手 第三十四次增量：1 局 A10（version 2026-10-06.9，分支 exp-silent，c4e3c9ac）",
+    "## 2026-10-09 静默猎手 第一百一十八次增量：1 局 A10（version 2026-10-09.7，分支 exp-silent，832318ee）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-044301-postmortem/proposal-cap-potion.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-050455-experience-update/proposal-sl.md"
+   ]
+  },
+  "asc": 3,
+  "history": [
+   {
+    "ts": "2026-10-06T05:58:20+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T06:12:45+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T06:33:00+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-09T05:00:40+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T05:02:43+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T05:14:40+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T05:14:43+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T05:32:31+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-09T05:44:22+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp118",
+  "effect": null,
+  "notes": [
+   "静默经验2026-10-06.9；旧40局同口径复算一致，MGA0CZDDKC0P A10补证；仪式兽另补回旧F4QKG4J1AJJZ A9漏记证据。保留first_run/prior/旧repeat与全部历史；未隔离路线/构筑/SL整战因果的写观察，无新增药水使用规则。只proposed，交运维核实际合入后CLI登记shipped。",
+   "06:24 learner-checks后按06:15/06:19原交接机械兜底经验第34批2026-10-06.9已实际合入live；来源MGA0CZDDKC0P SILENT A10及旧40本角色局、原第三十四节与学习者交接。源tsc0/190文件2094例、合后tsc0/192文件2099例，登记唯一S1.exp34，保留first_run/prior/claim/evidence/全部repeat，不倒算旧局效果，不另设审核。0154隐秘匕首及0155铭记死亡经验与0153未修模型分别记；0150/S1.fix25与0151已有状态不重置。完整外部另请求本批learner-recheck，结果等后续事件。",
+   "代码提案 silent-proposal-3edf35d9b47a7486 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第118批经验/提案预关联。J8PHG72DGD90原帧核验与旧153局逐行复算，保留旧首证/prior/status/version/support/repeat；本次不改打法源码、提交后另记proposed。",
+   "代码提案 silent-proposal-3cc456821c19d2f1 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第118批经验源自测提交；实际数据shipped交运维据完成事件核live，三源码提案沿独立strategy-proposal。本次未改源码或登记implemented。旧首证/prior/证据/版本历史保留，0328重复发现未并入保持observed。",
+   "第一百一十八次经验仅原数据2026-10-09.6→2026-10-09.7，源832318ee增0改15退0/191 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp118。按原学习者ledger-map仅19所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0328重复观察保持observed，不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/18冲突/out/err/失败历史保持。"
+  ],
+  "shipped_at": "2026-10-09T05:44:22+08:00"
+ }
+]

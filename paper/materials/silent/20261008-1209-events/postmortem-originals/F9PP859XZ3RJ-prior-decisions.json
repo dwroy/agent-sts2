@@ -1,0 +1,1355 @@
+[
+  {
+    "ts": "2026-10-05T01:46:38.406Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 4,
+    "label": "combat/plan",
+    "decision_id": "9167a91e-8014-4740-b3c4-5680d0c82216",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:288:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:SHIV:true|1:NEUTRALIZE:true|2:LEADING_STRIKE:true|3:HAZE:true|4:PREDATOR:true\",\"hp\":37,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:1|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SHIV",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 4,
+      "from": "decision"
+    },
+    "rationale": "code plan (only distinct line): 小刀 -> 知识恶魔, 中和+ -> 知识恶魔, 先制打击 -> 知识恶魔, 猎杀者 -> 知识恶魔; hp -8, dmg 23",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 395,
+      "planner": 3,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:38.403Z",
+    "journal": {
+      "choice": "code plan (only distinct line): 小刀 -> 知识恶魔, 中和+ -> 知识恶魔, 先制打击 -> 知识恶魔, 猎杀者 -> 知识恶魔; hp -8, dmg 23",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216581
+  },
+  {
+    "ts": "2026-10-05T01:46:39.521Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 4,
+    "label": "combat/plan-continue",
+    "decision_id": "fc796843-885b-4e80-b0cf-af256fae9713",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:284:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:NEUTRALIZE:true|1:LEADING_STRIKE:true|2:HAZE:true|3:PREDATOR:true\",\"hp\":37,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:1|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "NEUTRALIZE",
+        "upgraded": true
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 4,
+      "from": "line",
+      "hand": "HAZE,LEADING_STRIKE,NEUTRALIZE+,PREDATOR",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the code-chosen plan: 中和+ -> 知识恶魔",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 470,
+      "planner": 1,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:39.520Z",
+    "journal": {
+      "choice": "continuing the code-chosen plan: 中和+ -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216582
+  },
+  {
+    "ts": "2026-10-05T01:46:40.659Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 4,
+    "label": "combat/plan-continue",
+    "decision_id": "ee1f6ac6-44b5-4b1c-a5d3-1b4f857926b4",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:280:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:LEADING_STRIKE:true|1:HAZE:true|2:PREDATOR:true\",\"hp\":37,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:1|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "LEADING_STRIKE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 4,
+      "from": "line",
+      "hand": "HAZE,LEADING_STRIKE,PREDATOR",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the code-chosen plan: 先制打击 -> 知识恶魔",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 1045,
+      "planner": 1,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:40.657Z",
+    "journal": {
+      "choice": "continuing the code-chosen plan: 先制打击 -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216583
+  },
+  {
+    "ts": "2026-10-05T01:46:43.742Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 4,
+    "label": "combat/plan-choice",
+    "decision_id": "0136a3f2-5069-4ea2-ab91-b706af3524f0",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:277:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:HAZE:true|1:PREDATOR:true|2:SHIV:true|3:SHIV:true\",\"hp\":37,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:2|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"猎杀者 -> 知识恶魔, then 小刀 -> 知识恶魔, then 小刀 -> 知识恶魔\",\"result\":\"survives with 29/77 HP before healing\",\"hp_lost\":8,\"damage_dealt\":21,\"enemies_after\":\"知识恶魔 256 HP, Weak 2, 中毒 2\",\"energy_unused\":1,\"hp_after\":29,\"hp_after_pct\":38,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":1,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 34, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~14.7, dead within 5 turns in 2/8 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~44% (fights won in the samples, the others by the end-of-horizon estimate), value -56.2\",\"rollout_turns\":\"T1 exact: hp -8, dmg 21; T2: hp -0 [0-0], dmg 16.6 [11-24], alive 8/8, won 0/8; T3: hp -5.9 [0-19], dmg 15 [13-20], alive 8/8, won 0/8; T4: hp -18.6 [5-30], dmg 15.6 [12-25], alive 6/8, won 0/8; T5: hp -1.2 [0-7], dmg 22.3 [18-27], alive 6/8, won 0/8\",\"history_estimate\":\"unavailable (no fight-value model)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan2 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (the best line), no winning sample; the losing samples die most often on T11 (dead in 100%); 600 samples\"}",
+          "plan2": "{\"plays\":\"迷雾, then 小刀 -> 知识恶魔, then 小刀 -> 知识恶魔\",\"result\":\"survives with 29/77 HP before healing\",\"hp_lost\":8,\"damage_dealt\":9,\"enemies_after\":\"知识恶魔 268 HP, Weak 3, 中毒 2\",\"energy_unused\":1,\"hp_after\":29,\"hp_after_pct\":38,\"dmg\":9,\"lethal_now\":\"no\",\"enemy_threat_next\":1,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 31.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~15.1, dead within 5 turns in 1/8 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~59% (fights won in the samples, the others by the end-of-horizon estimate), value -48\",\"rollout_turns\":\"T1 exact: hp -8, dmg 9; T2: hp -0 [0-0], dmg 16.6 [11-24], alive 8/8, won 0/8; T3: hp -2.6 [0-14], dmg 15 [13-20], alive 8/8, won 0/8; T4: hp -18.6 [5-30], dmg 15.6 [12-25], alive 7/8, won 0/8; T5: hp -1.6 [0-7], dmg 23.9 [15-30], alive 7/8, won 0/8\",\"history_estimate\":\"unavailable (no fight-value model)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 600 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "plan2": 0.76,
+          "plan1": 0.24
+        },
+        "confidence": 0.52,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.52,
+          "probabilities": {
+            "plan2": 0.76,
+            "plan1": 0.24
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "HAZE",
+        "upgraded": false
+      },
+      "turn": 4,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/2 (迷雾, 小刀 -> 知识恶魔, 小刀 -> 知识恶魔) with confidence 0.52; code rank 2",
+    "confidence": 0.52,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a109bdf0717f7ab6e68f8b70ba293e"
+    ],
+    "latency_ms": {
+      "plan": 85,
+      "jev": 465,
+      "action": 742,
+      "planner": 851,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 3245,
+      "output_tokens": 34
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 111,
+      "horizon": 5,
+      "samples": 8,
+      "degraded": [],
+      "lines": 6,
+      "best": null,
+      "best_added": false,
+      "tied": [
+        "plan1",
+        "plan2"
+      ]
+    },
+    "rollout_best_chosen": true,
+    "boss_sim": {
+      "available": true,
+      "ms": 719,
+      "samples": 600,
+      "requested": 600,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "KNOWLEDGE_DEMON",
+      "low_trust": false,
+      "best": null,
+      "tied": [
+        "plan1",
+        "plan2"
+      ],
+      "ranked": [
+        "plan1",
+        "plan2"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0,
+          "cal": 0.005,
+          "d": 0,
+          "se": 0,
+          "loss": 37,
+          "won_loss": null,
+          "order": null
+        },
+        "plan2": {
+          "win": 0,
+          "cal": 0.005,
+          "d": 0,
+          "se": 0,
+          "loss": 37,
+          "won_loss": null,
+          "order": null
+        }
+      },
+      "plan": "T6 play 灵动步法; T6, T7, T10 the enemies hit hardest (incoming ~20, ~29, ~17); no plan wins in most samples: 0/600 won, the fight ends ~T10",
+      "rollout_own_best": "plan2",
+      "rollout_own_tied": []
+    },
+    "timing": {
+      "planner_ms": 848,
+      "solve_ms": 1,
+      "mc_ms": 0,
+      "rollout_ms": 111,
+      "boss_sim_ms": 719,
+      "other_ms": 17,
+      "cpu_ms": 16678,
+      "load1": 9.28,
+      "probe_ms": 2.66,
+      "boss_sim": {
+        "pairs": 2,
+        "sims_done": 1200,
+        "samples": 600,
+        "workers": 20
+      }
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:42.341Z",
+    "journal": {
+      "choice": "迷雾, then 小刀 -> 知识恶魔, then 小刀 -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216584
+  },
+  {
+    "ts": "2026-10-05T01:46:45.071Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 4,
+    "label": "combat/plan-continue",
+    "decision_id": "d9671ca7-fbe2-4081-93cb-94a9038b02dc",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:277:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:PREDATOR:false|1:SHIV:true|2:SHIV:true\",\"hp\":37,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:2|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SHIV",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 4,
+      "from": "line",
+      "hand": "PREDATOR,SHIV,SHIV",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the Jev-chosen plan: 小刀 -> 知识恶魔",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 399,
+      "planner": 1,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:45.070Z",
+    "journal": {
+      "choice": "continuing the Jev-chosen plan: 小刀 -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216585
+  },
+  {
+    "ts": "2026-10-05T01:46:46.127Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 4,
+    "label": "combat/plan-continue",
+    "decision_id": "b795c3e6-3872-4bbe-a10e-f016e0eb9af4",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:273:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:PREDATOR:false|1:SHIV:true\",\"hp\":37,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:2|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SHIV",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 4,
+      "from": "line",
+      "hand": "PREDATOR,SHIV",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the Jev-chosen plan: 小刀 -> 知识恶魔",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 396,
+      "planner": 1,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:46.125Z",
+    "journal": {
+      "choice": "continuing the Jev-chosen plan: 小刀 -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216586
+  },
+  {
+    "ts": "2026-10-05T01:46:47.147Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 4,
+    "label": "combat/plan",
+    "decision_id": "fd1c660e-68b0-4e12-b442-6e32ff01299e",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:269:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:PREDATOR:false\",\"hp\":37,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:2|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 4,
+      "from": "decision"
+    },
+    "rationale": "code plan (only line): end turn; hp -8, dmg 7",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 762,
+      "planner": 2,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:47.145Z",
+    "journal": {
+      "choice": "code plan (only line): end turn; hp -8, dmg 7",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216587
+  },
+  {
+    "ts": "2026-10-05T01:46:52.308Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "combat/plan",
+    "decision_id": "b24d4273-f74e-4746-8443-eed68e595570",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:284:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:SHIV:true|1:LEADING_STRIKE:true|2:POISONED_STAB:true|3:SHIV:true|4:FOOTWORK:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:2|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SHIV",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 5,
+      "from": "decision"
+    },
+    "rationale": "code plan (only distinct line): 小刀 -> 知识恶魔, 先制打击 -> 知识恶魔, 带毒刺击 -> 知识恶魔, 小刀 -> 知识恶魔, 灵动步法; hp -0, dmg 24",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 316,
+      "planner": 4,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:52.304Z",
+    "journal": {
+      "choice": "code plan (only distinct line): 小刀 -> 知识恶魔, 先制打击 -> 知识恶魔, 带毒刺击 -> 知识恶魔, 小刀 -> 知识恶魔, 灵动步法; hp -0, dmg 24",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216588
+  },
+  {
+    "ts": "2026-10-05T01:46:53.202Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "combat/plan-continue",
+    "decision_id": "f016fbff-bc8e-431b-978c-0fe1a62044f1",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:280:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:LEADING_STRIKE:true|1:POISONED_STAB:true|2:SHIV:true|3:FOOTWORK:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:2|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "LEADING_STRIKE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 5,
+      "from": "line",
+      "hand": "FOOTWORK,LEADING_STRIKE,POISONED_STAB,SHIV",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the code-chosen plan: 先制打击 -> 知识恶魔",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 928,
+      "planner": 1,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:53.201Z",
+    "journal": {
+      "choice": "continuing the code-chosen plan: 先制打击 -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216589
+  },
+  {
+    "ts": "2026-10-05T01:46:54.784Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "combat/plan",
+    "decision_id": "7764bfe5-4862-479a-b0a8-92eb48ac9e46",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:277:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:POISONED_STAB:true|1:SHIV:true|2:FOOTWORK:true|3:SHIV:true|4:SHIV:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:2|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "POISONED_STAB",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 5,
+      "from": "decision"
+    },
+    "rationale": "code plan (only distinct line): 带毒刺击 -> 知识恶魔, 小刀 -> 知识恶魔, 灵动步法, 小刀 -> 知识恶魔, 小刀 -> 知识恶魔; hp -0, dmg 25",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 562,
+      "planner": 2,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:54.782Z",
+    "journal": {
+      "choice": "code plan (only distinct line): 带毒刺击 -> 知识恶魔, 小刀 -> 知识恶魔, 灵动步法, 小刀 -> 知识恶魔, 小刀 -> 知识恶魔; hp -0, dmg 25",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216590
+  },
+  {
+    "ts": "2026-10-05T01:46:55.913Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "combat/plan-continue",
+    "decision_id": "42bb9699-2fdc-40bd-9a64-b0fb98592efd",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:271:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:SHIV:true|1:FOOTWORK:true|2:SHIV:true|3:SHIV:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:3|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SHIV",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 5,
+      "from": "line",
+      "hand": "FOOTWORK,SHIV,SHIV,SHIV",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the code-chosen plan: 小刀 -> 知识恶魔",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 337,
+      "planner": 2,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:55.911Z",
+    "journal": {
+      "choice": "continuing the code-chosen plan: 小刀 -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216591
+  },
+  {
+    "ts": "2026-10-05T01:46:56.945Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "combat/plan-continue",
+    "decision_id": "ca4e7467-36d8-4e8f-a93b-ab87edd7b32d",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:267:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:FOOTWORK:true|1:SHIV:true|2:SHIV:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:3|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "FOOTWORK",
+        "upgraded": false
+      },
+      "turn": 5,
+      "from": "line",
+      "hand": "FOOTWORK,SHIV,SHIV",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the code-chosen plan: 灵动步法",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 839,
+      "planner": 1,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:56.943Z",
+    "journal": {
+      "choice": "continuing the code-chosen plan: 灵动步法",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216592
+  },
+  {
+    "ts": "2026-10-05T01:46:58.452Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "combat/plan-continue",
+    "decision_id": "2d16d39e-f9e2-45b6-b3b8-891b2601e68b",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:267:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:SHIV:true|1:SHIV:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:5|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SHIV",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 5,
+      "from": "line",
+      "hand": "SHIV,SHIV",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the code-chosen plan: 小刀 -> 知识恶魔",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 1,
+      "jev": 0,
+      "action": 363,
+      "planner": 1,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:58.450Z",
+    "journal": {
+      "choice": "continuing the code-chosen plan: 小刀 -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216593
+  },
+  {
+    "ts": "2026-10-05T01:46:59.377Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "combat/plan-continue",
+    "decision_id": "789317c0-059f-479d-b09d-44c049de4d09",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:263:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:SHIV:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:5|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SHIV",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 5,
+      "from": "line",
+      "hand": "SHIV",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the code-chosen plan: 小刀 -> 知识恶魔",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 388,
+      "planner": 1,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:46:59.375Z",
+    "journal": {
+      "choice": "continuing the code-chosen plan: 小刀 -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216594
+  },
+  {
+    "ts": "2026-10-05T01:47:00.412Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "combat/end_turn",
+    "decision_id": "c874bf38-e858-4700-82f0-2de6df837c6e",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:259:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:6|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 5,
+      "from": "decision"
+    },
+    "rationale": "no playable cards; ending the turn",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 844,
+      "planner": 1,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:47:00.410Z",
+    "journal": {
+      "choice": "no playable cards; ending the turn",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216595
+  },
+  {
+    "ts": "2026-10-05T01:47:02.759Z",
+    "mode": "play",
+    "screen": "CARD_SELECTION",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "selection/curse",
+    "decision_id": "0fd4a29a-7b67-41b5-ab18-97f549b643e0",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:247:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:6|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "select_deck_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "SLOTH"
+      },
+      "from": "decision"
+    },
+    "rationale": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 52 (outlasts the HP: 7 a turn x 7.5 turns + 20 > 29 HP); SLOTH 113 (2.3 cards a turn); 33 dmg/turn, 7.5 turns left, 5.3 cards/turn (0.0 auto), 16 incoming)",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 10001,
+      "planner": 2,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:47:02.757Z",
+    "journal": {
+      "choice": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 52 (outlasts the HP: 7 a turn x 7.5 turns + 20 > 29 HP); SLOTH 113 (2.3 cards a turn); 33 dmg/turn, 7.5 turns left, 5.3 cards/turn (0.0 auto), 16 incoming)",
+      "reason": ""
+    },
+    "result": "failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:8080/action: the request timed out",
+    "line": 216596
+  },
+  {
+    "ts": "2026-10-05T01:47:16.020Z",
+    "mode": "play",
+    "screen": "CARD_SELECTION",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 5,
+    "label": "selection/curse",
+    "decision_id": "1fd94f84-313a-470d-8d66-55c02b3aa475",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:247:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:6|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "select_deck_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "SLOTH"
+      },
+      "from": "decision"
+    },
+    "rationale": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 52 (outlasts the HP: 7 a turn x 7.5 turns + 20 > 29 HP); SLOTH 113 (2.3 cards a turn); 33 dmg/turn, 7.5 turns left, 5.3 cards/turn (0.0 auto), 16 incoming)",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 1,
+      "jev": 0,
+      "action": 758,
+      "planner": 1,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:47:16.018Z",
+    "journal": {
+      "choice": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 52 (outlasts the HP: 7 a turn x 7.5 turns + 20 > 29 HP); SLOTH 113 (2.3 cards a turn); 33 dmg/turn, 7.5 turns left, 5.3 cards/turn (0.0 auto), 16 incoming)",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216597
+  },
+  {
+    "ts": "2026-10-05T01:47:30.570Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 7,
+    "label": "combat/plan-choice",
+    "decision_id": "50cb917b-2b2e-46b0-95fe-5639130b3c66",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:205:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:SHIV:true|1:METAMORPHOSIS:true|2:UP_MY_SLEEVE:true|3:DEFEND_SILENT:true|4:DAGGER_SPRAY:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:6|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"小刀 -> 知识恶魔, then 防御, then 匕首雨\",\"result\":\"survives with 10/77 HP before healing\",\"hp_lost\":19,\"damage_dealt\":25,\"enemies_after\":\"知识恶魔 180 HP, 中毒 15\",\"block_gained\":11,\"energy_unused\":2,\"hp_after\":10,\"hp_after_pct\":13,\"dmg\":25,\"lethal_now\":\"no\",\"enemy_threat_next\":13,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 29, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~8, dead within 5 turns in 7/8 (~turn 4.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 7/8), then the fight's progress: least enemy HP left (this line ~92, at T5 or at our death), then most turns alive (this line ~4.4), then least HP lost this turn (this line 19)\",\"rollout_turns\":\"T1 exact: hp -19, dmg 25; T2: hp -0.5 [0-2], dmg 28.1 [22-33], alive 8/8, won 0/8; T3: hp -2.6 [0-21], dmg 28.4 [20-33], alive 7/8, won 0/8; T4: hp -11.9 [0-27], dmg 29.7 [22-44], alive 4/8, won 0/8; T5: hp -12.3 [0-19], dmg 32.3 [27-37], alive 1/8, won 0/8\",\"history_estimate\":\"unavailable (no fight-value model)\",\"rollout_best\":true,\"whole_fight_sim\":\"win 10% (the best line), HP lost when won median 26, ~8 turns to win (this one included); the losing samples die most often on T11 (dead in 97%); 600 samples\"}",
+          "plan2": "{\"plays\":\"小刀 -> 知识恶魔, then 羽化, then 防御\",\"result\":\"survives with 10/77 HP before healing\",\"hp_lost\":19,\"damage_dealt\":19,\"enemies_after\":\"知识恶魔 186 HP, 中毒 15\",\"block_gained\":11,\"cards_drawn\":3,\"energy_unused\":1,\"hp_after\":10,\"hp_after_pct\":13,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":13,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 29, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~95, at T5 or at our death), then most turns alive (this line ~4.4), then least HP lost this turn (this line 19)\",\"rollout_turns\":\"T1 exact: hp -19, dmg 19; T2: hp -1.8 [0-8], dmg 27.5 [24-31], alive 8/8, won 0/8; T3: hp -0.4 [0-3], dmg 28.1 [20-35], alive 7/8, won 0/8; T4: hp -11.1 [4-20], dmg 33.6 [29-43], alive 4/8, won 0/8; T5: hp -11.8 [5-16], dmg 32.5 [27-42], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 29, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"win 14% (vs the best line +2 ± 1 pts, tied on win rate), HP lost when won median 27, ~8 turns to win (this one included); the losing samples die most often on T11 (dead in 95%); 600 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "plan1": 0.3,
+          "plan2": 0.7
+        },
+        "confidence": 0.41,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.41,
+          "probabilities": {
+            "plan1": 0.3,
+            "plan2": 0.7
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SHIV",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 7,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/2 (小刀 -> 知识恶魔, 羽化, 防御) with confidence 0.41; code rank 2",
+    "confidence": 0.41,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a109bea775785e85413ab9868bb44e"
+    ],
+    "latency_ms": {
+      "plan": 96,
+      "jev": 443,
+      "action": 382,
+      "planner": 470,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 3306,
+      "output_tokens": 34
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 91,
+      "horizon": 5,
+      "samples": 8,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": false,
+    "boss_sim": {
+      "available": true,
+      "ms": 365,
+      "samples": 600,
+      "requested": 600,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "KNOWLEDGE_DEMON",
+      "low_trust": false,
+      "best": "plan1",
+      "tied": [],
+      "ranked": [
+        "plan1",
+        "plan2"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.033,
+          "cal": 0.098,
+          "d": 0,
+          "se": 0,
+          "loss": 28.89,
+          "won_loss": 26,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.05,
+          "cal": 0.135,
+          "d": 0.017,
+          "se": 0.011,
+          "loss": 28.82,
+          "won_loss": 26.5,
+          "order": null
+        }
+      },
+      "plan": "the boss dies ~T14 (median of 20 winning samples)",
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "timing": {
+      "planner_ms": 467,
+      "solve_ms": 3,
+      "mc_ms": 0,
+      "rollout_ms": 91,
+      "boss_sim_ms": 365,
+      "other_ms": 8,
+      "cpu_ms": 8502,
+      "load1": 5.09,
+      "probe_ms": 2.86,
+      "boss_sim": {
+        "pairs": 2,
+        "sims_done": 1200,
+        "samples": 600,
+        "workers": 20
+      }
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:47:29.560Z",
+    "journal": {
+      "choice": "小刀 -> 知识恶魔, then 羽化, then 防御",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216603
+  },
+  {
+    "ts": "2026-10-05T01:47:31.513Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 7,
+    "label": "combat/plan-continue",
+    "decision_id": "ec1f4d05-884d-4b21-9467-f58eaa30d49e",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:201:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:METAMORPHOSIS:true|1:UP_MY_SLEEVE:true|2:DEFEND_SILENT:true|3:DAGGER_SPRAY:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:6|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "METAMORPHOSIS",
+        "upgraded": false
+      },
+      "turn": 7,
+      "from": "line",
+      "hand": "DAGGER_SPRAY,DEFEND_SILENT,METAMORPHOSIS,UP_MY_SLEEVE",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the Jev-chosen plan: 羽化",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 233,
+      "planner": 1,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:47:31.511Z",
+    "journal": {
+      "choice": "continuing the Jev-chosen plan: 羽化",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216604
+  },
+  {
+    "ts": "2026-10-05T01:47:32.359Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 7,
+    "label": "combat/plan",
+    "decision_id": "6f68b268-6f58-4e32-8d22-521ebd019d7e",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:201:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:UP_MY_SLEEVE:true|1:DEFEND_SILENT:true|2:DAGGER_SPRAY:true\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:6|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1
+    },
+    "expect": {
+      "card": {
+        "id": "DEFEND_SILENT",
+        "upgraded": false
+      },
+      "turn": 7,
+      "from": "decision"
+    },
+    "rationale": "code plan (only line): 防御; hp -19, dmg 16",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 202,
+      "planner": 2,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:47:32.356Z",
+    "journal": {
+      "choice": "code plan (only line): 防御; hp -19, dmg 16",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216605
+  },
+  {
+    "ts": "2026-10-05T01:47:33.218Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 7,
+    "label": "combat/end_turn",
+    "decision_id": "d7ac2530-cf03-4b9e-be70-a8ffd73fd850",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:201:0:true\",\"event\":\"\",\"gold\":152,\"hand\":\"0:UP_MY_SLEEVE:false|1:DAGGER_SPRAY:false\",\"hp\":29,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:11:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|INFINITE_BLADES_POWER:1|DEXTERITY_POWER:6|MIND_ROT_POWER:1|NOXIOUS_FUMES_POWER:3|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"F9PP859XZ3RJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 7,
+      "from": "decision"
+    },
+    "rationale": "no playable cards; ending the turn",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 833,
+      "planner": 1,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 0,
+    "run_id": "F9PP859XZ3RJ",
+    "observed_ts": "2026-10-05T01:47:33.216Z",
+    "journal": {
+      "choice": "no playable cards; ending the turn",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "line": 216606
+  }
+]

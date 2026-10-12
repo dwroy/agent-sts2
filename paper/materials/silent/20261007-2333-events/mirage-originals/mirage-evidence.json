@@ -1,0 +1,2165 @@
+{
+  "run": "DUZUBAJ3A8GP",
+  "character": "silent",
+  "ascension": 10,
+  "floor": 30,
+  "turn": 5,
+  "ledger": [
+    "silent-0010"
+  ],
+  "frames": [
+    {
+      "index": 528,
+      "ts": "2026-10-07T06:53:25.340Z",
+      "player": {
+        "current_hp": 3,
+        "max_hp": 84,
+        "block": 0,
+        "energy": 4,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "FASTEN_POWER",
+            "name": "勒紧",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得9点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 9,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "PIERCING_WAIL",
+          "name": "尖啸",
+          "upgraded": false,
+          "target_type": "AllEnemies",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
+          "resolved_rules_text": "所有敌人在本回合失去6点力量。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "StrengthLoss",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "MIRAGE",
+          "name": "蜃景",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
+          "resolved_rules_text": "获得等量于所有敌人中毒层数总和的格挡。 （获得8点格挡） 消耗。",
+          "dynamic_values": [
+            {
+              "name": "CalculatedBlock",
+              "base_value": 0,
+              "current_value": 8,
+              "enchanted_value": 0,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationBase",
+              "base_value": 0,
+              "current_value": 0,
+              "enchanted_value": 0,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationExtra",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "BOWLBUG_SILK",
+          "name": "盛碗虫（丝）",
+          "current_hp": 2,
+          "max_hp": 43,
+          "base_max_hp": 43,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            }
+          ],
+          "intent": "TOXIC_SPIT_MOVE",
+          "move_id": "TOXIC_SPIT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "enemy_id": "SLUMBERING_BEETLE",
+          "name": "熟睡甲虫",
+          "current_hp": 74,
+          "max_hp": 89,
+          "base_max_hp": 89,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "intent": "ROLL_OUT_MOVE",
+          "move_id": "ROLL_OUT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "20",
+              "damage": 20,
+              "hits": 1,
+              "total_damage": 20,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 532,
+      "ts": "2026-10-07T06:53:29.161Z",
+      "player": {
+        "current_hp": 3,
+        "max_hp": 84,
+        "block": 22,
+        "energy": 0,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "FASTEN_POWER",
+            "name": "勒紧",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 4,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 4
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "BOWLBUG_SILK",
+          "name": "盛碗虫（丝）",
+          "current_hp": 2,
+          "max_hp": 43,
+          "base_max_hp": 43,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": -6,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "PIERCING_WAIL_POWER",
+              "name": "尖啸",
+              "amount": 6,
+              "is_debuff": true
+            }
+          ],
+          "intent": "TOXIC_SPIT_MOVE",
+          "move_id": "TOXIC_SPIT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "enemy_id": "SLUMBERING_BEETLE",
+          "name": "熟睡甲虫",
+          "current_hp": 74,
+          "max_hp": 89,
+          "base_max_hp": 89,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 9,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": -4,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "PIERCING_WAIL_POWER",
+              "name": "尖啸",
+              "amount": 6,
+              "is_debuff": true
+            }
+          ],
+          "intent": "ROLL_OUT_MOVE",
+          "move_id": "ROLL_OUT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "14",
+              "damage": 14,
+              "hits": 1,
+              "total_damage": 14,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 556,
+      "ts": "2026-10-07T06:54:44.080Z",
+      "player": {
+        "current_hp": 8,
+        "max_hp": 84,
+        "block": 0,
+        "energy": 4,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "PIERCING_WAIL",
+          "name": "尖啸",
+          "upgraded": false,
+          "target_type": "AllEnemies",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
+          "resolved_rules_text": "所有敌人在本回合失去6点力量。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "StrengthLoss",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "MIRAGE",
+          "name": "蜃景",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
+          "resolved_rules_text": "获得等量于所有敌人中毒层数总和的格挡。 （获得1点格挡） 消耗。",
+          "dynamic_values": [
+            {
+              "name": "CalculatedBlock",
+              "base_value": 0,
+              "current_value": 1,
+              "enchanted_value": 0,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationBase",
+              "base_value": 0,
+              "current_value": 0,
+              "enchanted_value": 0,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationExtra",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "ECHOING_SLASH",
+          "name": "回响斩击",
+          "upgraded": false,
+          "target_type": "AllEnemies",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "对所有敌人造成{Damage:diff()}点伤害。 每有一名敌人被击杀，就重复此效果。",
+          "resolved_rules_text": "对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 10,
+              "current_value": 10,
+              "enchanted_value": 10,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "BURST",
+          "name": "爆发",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "在这个回合，你打出的下{Skills:choose(1):一|{:diff()}}张技能牌会被额外打出一次。",
+          "resolved_rules_text": "在这个回合，你打出的下一张技能牌会被额外打出一次。",
+          "dynamic_values": [
+            {
+              "name": "Skills",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "SLUMBERING_BEETLE",
+          "name": "熟睡甲虫",
+          "current_hp": 81,
+          "max_hp": 89,
+          "base_max_hp": 89,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "intent": "ROLL_OUT_MOVE",
+          "move_id": "ROLL_OUT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "20",
+              "damage": 20,
+              "hits": 1,
+              "total_damage": 20,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 557,
+      "ts": "2026-10-07T06:54:44.915Z",
+      "player": {
+        "current_hp": 8,
+        "max_hp": 84,
+        "block": 1,
+        "energy": 3,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 1,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 1
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "PIERCING_WAIL",
+          "name": "尖啸",
+          "upgraded": false,
+          "target_type": "AllEnemies",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
+          "resolved_rules_text": "所有敌人在本回合失去6点力量。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "StrengthLoss",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "ECHOING_SLASH",
+          "name": "回响斩击",
+          "upgraded": false,
+          "target_type": "AllEnemies",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "对所有敌人造成{Damage:diff()}点伤害。 每有一名敌人被击杀，就重复此效果。",
+          "resolved_rules_text": "对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 10,
+              "current_value": 10,
+              "enchanted_value": 10,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "BURST",
+          "name": "爆发",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "在这个回合，你打出的下{Skills:choose(1):一|{:diff()}}张技能牌会被额外打出一次。",
+          "resolved_rules_text": "在这个回合，你打出的下一张技能牌会被额外打出一次。",
+          "dynamic_values": [
+            {
+              "name": "Skills",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "SLUMBERING_BEETLE",
+          "name": "熟睡甲虫",
+          "current_hp": 81,
+          "max_hp": 89,
+          "base_max_hp": 89,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "intent": "ROLL_OUT_MOVE",
+          "move_id": "ROLL_OUT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "20",
+              "damage": 20,
+              "hits": 1,
+              "total_damage": 20,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 584,
+      "ts": "2026-10-07T06:56:00.789Z",
+      "player": {
+        "current_hp": 3,
+        "max_hp": 84,
+        "block": 0,
+        "energy": 4,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "FASTEN_POWER",
+            "name": "勒紧",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得9点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 9,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "PIERCING_WAIL",
+          "name": "尖啸",
+          "upgraded": false,
+          "target_type": "AllEnemies",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
+          "resolved_rules_text": "所有敌人在本回合失去6点力量。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "StrengthLoss",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "MIRAGE",
+          "name": "蜃景",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
+          "resolved_rules_text": "获得等量于所有敌人中毒层数总和的格挡。 （获得8点格挡） 消耗。",
+          "dynamic_values": [
+            {
+              "name": "CalculatedBlock",
+              "base_value": 0,
+              "current_value": 8,
+              "enchanted_value": 0,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationBase",
+              "base_value": 0,
+              "current_value": 0,
+              "enchanted_value": 0,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationExtra",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "BOWLBUG_SILK",
+          "name": "盛碗虫（丝）",
+          "current_hp": 2,
+          "max_hp": 43,
+          "base_max_hp": 43,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            }
+          ],
+          "intent": "TOXIC_SPIT_MOVE",
+          "move_id": "TOXIC_SPIT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "enemy_id": "SLUMBERING_BEETLE",
+          "name": "熟睡甲虫",
+          "current_hp": 74,
+          "max_hp": 89,
+          "base_max_hp": 89,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "intent": "ROLL_OUT_MOVE",
+          "move_id": "ROLL_OUT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "20",
+              "damage": 20,
+              "hits": 1,
+              "total_damage": 20,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 588,
+      "ts": "2026-10-07T06:56:04.648Z",
+      "player": {
+        "current_hp": 3,
+        "max_hp": 84,
+        "block": 22,
+        "energy": 0,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "FASTEN_POWER",
+            "name": "勒紧",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 4,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 4
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "BOWLBUG_SILK",
+          "name": "盛碗虫（丝）",
+          "current_hp": 2,
+          "max_hp": 43,
+          "base_max_hp": 43,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 9,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": -6,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "PIERCING_WAIL_POWER",
+              "name": "尖啸",
+              "amount": 6,
+              "is_debuff": true
+            }
+          ],
+          "intent": "TOXIC_SPIT_MOVE",
+          "move_id": "TOXIC_SPIT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "enemy_id": "SLUMBERING_BEETLE",
+          "name": "熟睡甲虫",
+          "current_hp": 74,
+          "max_hp": 89,
+          "base_max_hp": 89,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": -4,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "PIERCING_WAIL_POWER",
+              "name": "尖啸",
+              "amount": 6,
+              "is_debuff": true
+            }
+          ],
+          "intent": "ROLL_OUT_MOVE",
+          "move_id": "ROLL_OUT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "14",
+              "damage": 14,
+              "hits": 1,
+              "total_damage": 14,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 612,
+      "ts": "2026-10-07T06:57:07.800Z",
+      "player": {
+        "current_hp": 1,
+        "max_hp": 84,
+        "block": 0,
+        "energy": 4,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "FASTEN_POWER",
+            "name": "勒紧",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得9点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 9,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "PIERCING_WAIL",
+          "name": "尖啸",
+          "upgraded": false,
+          "target_type": "AllEnemies",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
+          "resolved_rules_text": "所有敌人在本回合失去6点力量。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "StrengthLoss",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "MIRAGE",
+          "name": "蜃景",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
+          "resolved_rules_text": "获得等量于所有敌人中毒层数总和的格挡。 （获得8点格挡） 消耗。",
+          "dynamic_values": [
+            {
+              "name": "CalculatedBlock",
+              "base_value": 0,
+              "current_value": 8,
+              "enchanted_value": 0,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationBase",
+              "base_value": 0,
+              "current_value": 0,
+              "enchanted_value": 0,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationExtra",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "BOWLBUG_SILK",
+          "name": "盛碗虫（丝）",
+          "current_hp": 2,
+          "max_hp": 43,
+          "base_max_hp": 43,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            }
+          ],
+          "intent": "TOXIC_SPIT_MOVE",
+          "move_id": "TOXIC_SPIT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "enemy_id": "SLUMBERING_BEETLE",
+          "name": "熟睡甲虫",
+          "current_hp": 71,
+          "max_hp": 89,
+          "base_max_hp": 89,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "intent": "ROLL_OUT_MOVE",
+          "move_id": "ROLL_OUT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "20",
+              "damage": 20,
+              "hits": 1,
+              "total_damage": 20,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 615,
+      "ts": "2026-10-07T06:57:10.797Z",
+      "player": {
+        "current_hp": 1,
+        "max_hp": 84,
+        "block": 9,
+        "energy": 1,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "FASTEN_POWER",
+            "name": "勒紧",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 3,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 3
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "MIRAGE",
+          "name": "蜃景",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
+          "resolved_rules_text": "获得等量于所有敌人中毒层数总和的格挡。 （获得13点格挡） 消耗。",
+          "dynamic_values": [
+            {
+              "name": "CalculatedBlock",
+              "base_value": 0,
+              "current_value": 13,
+              "enchanted_value": 0,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationBase",
+              "base_value": 0,
+              "current_value": 0,
+              "enchanted_value": 0,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationExtra",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "BOWLBUG_SILK",
+          "name": "盛碗虫（丝）",
+          "current_hp": 2,
+          "max_hp": 43,
+          "base_max_hp": 43,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": -6,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "PIERCING_WAIL_POWER",
+              "name": "尖啸",
+              "amount": 6,
+              "is_debuff": true
+            }
+          ],
+          "intent": "TOXIC_SPIT_MOVE",
+          "move_id": "TOXIC_SPIT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "enemy_id": "SLUMBERING_BEETLE",
+          "name": "熟睡甲虫",
+          "current_hp": 71,
+          "max_hp": 89,
+          "base_max_hp": 89,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 9,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": -4,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "PIERCING_WAIL_POWER",
+              "name": "尖啸",
+              "amount": 6,
+              "is_debuff": true
+            }
+          ],
+          "intent": "ROLL_OUT_MOVE",
+          "move_id": "ROLL_OUT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "14",
+              "damage": 14,
+              "hits": 1,
+              "total_damage": 14,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 616,
+      "ts": "2026-10-07T06:57:11.593Z",
+      "player": {
+        "current_hp": 1,
+        "max_hp": 84,
+        "block": 22,
+        "energy": 0,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "FASTEN_POWER",
+            "name": "勒紧",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 4,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 4
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予5层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "BOWLBUG_SILK",
+          "name": "盛碗虫（丝）",
+          "current_hp": 2,
+          "max_hp": 43,
+          "base_max_hp": 43,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 4,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": -6,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "PIERCING_WAIL_POWER",
+              "name": "尖啸",
+              "amount": 6,
+              "is_debuff": true
+            }
+          ],
+          "intent": "TOXIC_SPIT_MOVE",
+          "move_id": "TOXIC_SPIT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "enemy_id": "SLUMBERING_BEETLE",
+          "name": "熟睡甲虫",
+          "current_hp": 71,
+          "max_hp": 89,
+          "base_max_hp": 89,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 9,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": -4,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "PIERCING_WAIL_POWER",
+              "name": "尖啸",
+              "amount": 6,
+              "is_debuff": true
+            }
+          ],
+          "intent": "ROLL_OUT_MOVE",
+          "move_id": "ROLL_OUT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "14",
+              "damage": 14,
+              "hits": 1,
+              "total_damage": 14,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/agent
+
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 28ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 27ms
+ ❯ tests/shop-potions.test.ts (6 tests | 3 failed) 106ms
+     × SFCE F11 (1 of 2 slots empty): Blood Potion carries the free-slot fact, no code value or expected HP saved 31ms
+     × SFCE F15: every potion is listed the same way, modelled or not 10ms
+     × with every slot full the fact says a discard comes first 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/shop-potions.test.ts > shop potions when DeepSeek decides (V4 M2: the belt fact only, no code estimate of a potion's worth) > SFCE F11 (1 of 2 slots empty): Blood Potion carries the free-slot fact, no code value or expected HP saved
+TypeError: unverifiedRemovalPreview is not a function
+ ❯ shopPlanQuestion src/hand/screens/shop.ts:523:91
+    521|         text: 'removes one card from the deck: write "remove:<card key…
+    522|         ...inputs.removal.facts,
+    523|         ...unlistedNote(selectableCards(state, cards, REMOVAL_FOLLOW).…
+       |                                                                                           ^
+    524|       },
+    525|     });
+ ❯ shopOneshot src/hand/screens/shop.ts:495:10
+ ❯ planShop src/hand/screens/shop.ts:226:12
+ ❯ planDecision src/hand/screens/index.ts:97:18
+ ❯ shopOptions tests/shop-potions.test.ts:21:19
+ ❯ tests/shop-potions.test.ts:50:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/shop-potions.test.ts > shop potions when DeepSeek decides (V4 M2: the belt fact only, no code estimate of a potion's worth) > SFCE F15: every potion is listed the same way, modelled or not
+TypeError: unverifiedRemovalPreview is not a function
+ ❯ shopPlanQuestion src/hand/screens/shop.ts:523:91
+    521|         text: 'removes one card from the deck: write "remove:<card key…
+    522|         ...inputs.removal.facts,
+    523|         ...unlistedNote(selectableCards(state, cards, REMOVAL_FOLLOW).…
+       |                                                                                           ^
+    524|       },
+    525|     });
+ ❯ shopOneshot src/hand/screens/shop.ts:495:10
+ ❯ planShop src/hand/screens/shop.ts:226:12
+ ❯ planDecision src/hand/screens/index.ts:97:18
+ ❯ shopOptions tests/shop-potions.test.ts:21:19
+ ❯ tests/shop-potions.test.ts:58:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/shop-potions.test.ts > shop potions when DeepSeek decides (V4 M2: the belt fact only, no code estimate of a potion's worth) > with every slot full the fact says a discard comes first
+TypeError: unverifiedRemovalPreview is not a function
+ ❯ shopPlanQuestion src/hand/screens/shop.ts:523:91
+    521|         text: 'removes one card from the deck: write "remove:<card key…
+    522|         ...inputs.removal.facts,
+    523|         ...unlistedNote(selectableCards(state, cards, REMOVAL_FOLLOW).…
+       |                                                                                           ^
+    524|       },
+    525|     });
+ ❯ shopOneshot src/hand/screens/shop.ts:495:10
+ ❯ planShop src/hand/screens/shop.ts:226:12
+ ❯ planDecision src/hand/screens/index.ts:97:18
+ ❯ shopOptions tests/shop-potions.test.ts:21:19
+ ❯ tests/shop-potions.test.ts:66:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 251 passed (253)
+      Tests  4 failed | 2619 passed (2623)
+   Start at  22:14:17
+   Duration  1073.82s (transform 6.15s, setup 12.17s, import 29.96s, tests 996.02s, environment 30ms)
+

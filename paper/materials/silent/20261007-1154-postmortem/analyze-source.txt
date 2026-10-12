@@ -1,0 +1,54 @@
+import json,collections,re,datetime
+from pathlib import Path
+p=Path('learner/runs/20261007-114302-postmortem');d=[json.loads(l) for l in (p/'decisions.jsonl').open()];s=[json.loads(l) for l in (p/'states.jsonl').open()]
+def h(x):return x['state']['run']['current_hp']
+def eh(x):return sum(e['current_hp'] for e in x['state']['combat']['enemies'] if e['is_alive'])
+battles=[]; active=None
+for i,x in enumerate(s):
+ st=x['state'];floor=st['run']['floor']
+ if st.get('in_combat') and st.get('turn'):
+  if active is None or active['floor']!=floor or st['turn']<s[active['ix'][-1]]['state']['turn']:
+   active={'floor':floor,'attempt':sum(b['floor']==floor for b in battles)+1,'ix':[]};battles.append(active)
+  active['ix'].append(i)
+ elif active and floor==active['floor']:
+  active['end']=i;active=None
+ elif active and floor!=active['floor']:active=None
+for b in battles:
+ ix=b['ix'];last=ix[-1]; nxt=b.get('end',last+1);end=s[nxt] if nxt<len(s) else s[last]
+ rounds=[]
+ for t,inds in __import__('itertools').groupby(ix,key=lambda i:s[i]['state']['turn']):
+  inds=list(inds);a=s[inds[0]]; z=s[inds[-1]+1] if inds[-1]+1<len(s) else s[inds[-1]]
+  if z['state'].get('turn',0)<t or z['state']['run']['floor']!=b['floor']:z=s[inds[-1]];truncated=True
+  else:truncated=False
+  rounds.append({'turn':t,'hp':h(a),'need':eh(a),'left':eh(z),'dmg':eh(a)-eh(z),'loss':h(a)-h(z),'truncated':truncated,'first':inds[0],'last':inds[-1], 'end':inds[-1]+1})
+ b['rounds']=rounds;b['hp_in']=h(s[ix[0]]);b['hp_out']=h(end)
+ print('战斗',b['floor'],b['attempt'],b['hp_in'],'→',b['hp_out'],'轮数',len(rounds),'首末',s[ix[0]]['ts'],s[last]['ts'])
+ if b['floor'] in [17,33,39,42]:
+  print('  逐轮',[(r['turn'],r['hp'],r['need'],r['dmg'],r['loss'],r['truncated']) for r in rounds])
+  st=s[last]['state'];print('  末态',st['combat']['player'],[(e['name'],e['current_hp'],e['powers'],e['intents']) for e in st['combat']['enemies']])
+(p/'battles.json').write_text(json.dumps(battles,ensure_ascii=False,indent=2))
+low=[x for x in d if x['decider']=='jev' and x.get('confidence') is not None and x['confidence']<.35]
+rbest=[x for x in d if x['decider']=='jev' and isinstance(x.get('rollout_best_chosen'),bool)]
+code=[x for x in d if x['decider']=='code' and x['label'].startswith('combat/') and x['label']!='combat/plan-continue']
+def key(x):return x['floor'],x.get('sl_reloads'),x['turn']
+print('低信心',len(low),collections.Counter(x['floor'] for x in low),collections.Counter(x['label'].startswith('combat/') for x in low))
+print('rollout最优',sum(x['rollout_best_chosen'] for x in rbest),'/',len(rbest),collections.Counter(x['floor'] for x in rbest))
+print('code非续步',len(code),'轮',len(set(map(key,code))),'非结束轮',len(set(key(x) for x in code if x.get('chosen',{}).get('action')!='end_turn')),'result',collections.Counter(x['result'].split(':')[0] for x in code))
+print('总实体轮',sum(len(b['rounds']) for b in battles),'续步',collections.Counter(x['decider'] for x in d if x['label']=='combat/plan-continue'))
+print('使用引擎',collections.Counter(x.get('deepseek',{}).get('brain',{}).get('engine') for x in d if x.get('deepseek',{}).get('brain')))
+for who in ['jev','codex']:
+ xs=[x for x in d if x['decider']==who and x.get('usage')];print('usage',who,len(xs),{k:sum(x['usage'].get(k,0) for x in xs) for k in set(k for x in xs for k in x['usage'])})
+print('fallback',sum(bool(x.get('fallback')) for x in d))
+fc=fs=selected=0
+for x in d:
+ if x['decider']!='jev' or not x['label'].startswith('combat/'):continue
+ options={k:json.loads(v) for q in x.get('questions',{}).values() for k,v in q.get('criteria',{}).items()}
+ foc=[k for k,v in options.items() if 'focus' in v]
+ if not foc:continue
+ fs+=1;fc+=len(foc)
+ ch=next((a['choice'] for a in x.get('answers',{}).values() if 'choice'in a),None)
+ selected+=ch in foc
+print('focus',fs,fc,selected)
+for x in d:
+ if any(k in x for k in ['hp_guard','hp_guardrail','guardrail','dominance']) or 'guard' in x['rationale'].lower():print('guard',x['floor'],x['turn'],x['rationale'],x.keys())
+print('时长',(datetime.datetime.fromisoformat(d[-1]['ts'].replace('Z','+00:00'))-datetime.datetime.fromisoformat(d[0]['ts'].replace('Z','+00:00'))).total_seconds())

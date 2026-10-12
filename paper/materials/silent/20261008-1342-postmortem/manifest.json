@@ -1,0 +1,314 @@
+{
+  "recorded_at_cst": "2026-10-08 13:46",
+  "base_head": "b62c676c8450d569835159f0216a0a1f47582256",
+  "batch": "20261008-131301",
+  "runs": [
+    "G8NHLL09DLBX"
+  ],
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "G8NHLL09DLBX"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "G8NHLL09DLBX",
+        "where": "agent/src/reflex/turn-solver.ts:2284",
+        "what": "随机施毒复用最高HP目标，误把弹跳药瓶分配至母体并判为确定整场斩杀。",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0295"
+      ],
+      "updated": [
+        "silent-0019",
+        "silent-0017",
+        "silent-0005",
+        "silent-0046",
+        "silent-0253",
+        "silent-0007",
+        "silent-0021"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-982c99080350f43e",
+      "silent-proposal-aaefd918a706de14"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/report.md"
+  },
+  "originals": {
+    "paper/materials/silent/20261008-1342-postmortem/20261008-131301.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-131301.out",
+      "bytes": 2690,
+      "sha256": "b89980240fe704e68a11fe4a238259e450c1e7c79f481155c7d8f8b10c6cdb8b"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/20261008-131301.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-131301.err",
+      "bytes": 10719,
+      "sha256": "f46ee7b311ffd673d042440501be0015629996a5d5bf68e03ba94be192ab748a"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/G8NHLL09DLBX-resources.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/G8NHLL09DLBX-resources.json",
+      "bytes": 1073974,
+      "sha256": "3ce93379d17d245363e2e743ee81414a7636c354333795fe811fea294b7251b9"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/audit.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/audit.txt",
+      "bytes": 149302,
+      "sha256": "5392b7f7e3e05b98437593f4a643d7dd2e3acf3b00c3a8a35356f027b98abf24"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/code-proposal-ids.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/code-proposal-ids.json",
+      "bytes": 79,
+      "sha256": "91f14ff4f7d1cf84c39d2f27aa00c8633d4b9b58c0f1c42bc90b6222adcc971b"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/decisions-numbered.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/decisions-numbered.jsonl",
+      "bytes": 2263796,
+      "sha256": "84e7d6560a9303444f8e147c9524873226daa75c60a0a14c5748bd2f3778b3cc"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/decisions.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/decisions.json",
+      "bytes": 2675609,
+      "sha256": "96e9620a203c00aae8c91798f46e984e870fdceaca10a130b3fcb8dced9f8d71"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/earlier-silent-lessons.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/earlier-silent-lessons.json",
+      "bytes": 156170,
+      "sha256": "9d14d9ddcb0fc028b7d31e4a00800bef6ae5a7099d640ed042fdda2fafd99f79"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/plans-numbered.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/plans-numbered.jsonl",
+      "bytes": 5581,
+      "sha256": "501d28c23b32fca196bd9518179a0397c793e07caaac1dd3a6f063eeb84c8c6b"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/plans.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/plans.json",
+      "bytes": 7302,
+      "sha256": "9cb788e6d1cb6375a5145b66cce2ffb255579d862f4561723bdcb6dc46924485"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/reasoning-window.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/reasoning-window.json",
+      "bytes": 222,
+      "sha256": "7156652631d8109841fade62745883cce556428105c7a938534a11d60dffd1aa"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/report.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/report.json",
+      "bytes": 868,
+      "sha256": "b64c0784357ac4a44d193b465a684d3c02abd58a00099ae036a5b9c90a587ed4"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/report.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/report.md",
+      "bytes": 2009,
+      "sha256": "d7b1f3c207ab9a1ece8a09244800baf4738f6422a490083da6d15e56fb3ce737"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/silent-0005-update.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/silent-0005-update.json",
+      "bytes": 436,
+      "sha256": "61b6585de019ff152aee5984230544837967bc414fe2b5c1721a43f19af1f407"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/silent-0007-update.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/silent-0007-update.json",
+      "bytes": 441,
+      "sha256": "99552f33d280c7993995d912b929aecdc7b425ed5ec84a8fb1c08ffc97a37d05"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/silent-0017-update.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/silent-0017-update.json",
+      "bytes": 450,
+      "sha256": "ee301ee3f0715f1ad0cfde44c5b15b929d96fe5650cb4d85479731e16e7375e2"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/silent-0019-update.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/silent-0019-update.json",
+      "bytes": 461,
+      "sha256": "83d3ab5fcee644067fe717949926aaeaa3f5fb92c850b89bd5010e0b2a6d4e36"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/silent-0021-update.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/silent-0021-update.json",
+      "bytes": 482,
+      "sha256": "b4eef257bdd3cfe05d48b338b6f2928eec3be4a9e0555ada036439e095f8220a"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/silent-0046-update.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/silent-0046-update.json",
+      "bytes": 405,
+      "sha256": "297117d744ec26ef26cc67d982d5b9fdd50b9e1625d6b7fc8bafd372dd4fbaed"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/silent-0253-update.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/silent-0253-update.json",
+      "bytes": 435,
+      "sha256": "06c81c1f22979a68fa04316f5fb5cd92a5a02a5ee188038a5d362d8d5ceb92c3"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/sl-numbered.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/sl-numbered.jsonl",
+      "bytes": 141265,
+      "sha256": "e8e5db465ec11bec27dc9771c961ccbcc923f8b439cae3719135afb8316fe0af"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/sl.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/sl.json",
+      "bytes": 223176,
+      "sha256": "ff399e09af5e57600d9536ad62262e76345ad51590f64ff3282d0ed81ae41a04"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/states-numbered.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/states-numbered.jsonl",
+      "bytes": 20957332,
+      "sha256": "4e9adee70f3a6cd6d9bb48d7f3686ec5de66de38ceff535c40ad9c83cc6d4e7e"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/states.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/states.json",
+      "bytes": 22719376,
+      "sha256": "770ce53e19b0ac8cd5a8a494c40592b23ad8df1ca2fd406939e5619c5a8c992a"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/提案-胜战资源与自爆核对.err": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-胜战资源与自爆核对.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/提案-胜战资源与自爆核对.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-胜战资源与自爆核对.json",
+      "bytes": 719,
+      "sha256": "cae3194e7f8eb822a6045304e09eb460eae20ad8f71fc0016b1b73a03a0a331b"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/提案-胜战资源与自爆核对.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-胜战资源与自爆核对.md",
+      "bytes": 3334,
+      "sha256": "7191ac6be6d9b39c84438752c73568ab7e61dfdeece283730c3e75c924667e4e"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/提案-胜战资源与自爆核对.out": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-胜战资源与自爆核对.out",
+      "bytes": 33,
+      "sha256": "c60d3e086c781fe2fcee6e733576124b75ce454d544e16682408f50375959c8d"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/提案-随机施毒斩杀.err": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-随机施毒斩杀.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/提案-随机施毒斩杀.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-随机施毒斩杀.json",
+      "bytes": 531,
+      "sha256": "ec82444d613320f2b5a33623919f8172b6035976fef0bc4a4b9fdf8d0e7324d9"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/提案-随机施毒斩杀.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-随机施毒斩杀.md",
+      "bytes": 3457,
+      "sha256": "ce48df21145cbfa44e4e3bd38cd51646586d0ff9c0475ee5eb277d5758e49a54"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/提案-随机施毒斩杀.out": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-随机施毒斩杀.out",
+      "bytes": 33,
+      "sha256": "5f199c0ea527d330da6ed0bc940f9f4f48718552c979e07e8ae4d0934808d883"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/提案登记-首次包装失败.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案登记-首次包装失败.txt",
+      "bytes": 284,
+      "sha256": "a318b702445490d7568bdb26a2f46e2e80d0c0bb34d48080747305f511a67f17"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/收尾核验.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/收尾核验.json",
+      "bytes": 402,
+      "sha256": "15a0e44eb221da385f38b816d493c7fffa7e9b219d8210e01b4a574963873074"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/数字复核.err": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/数字复核.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/数字复核.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/数字复核.json",
+      "bytes": 5776,
+      "sha256": "fd062526a385e69f856feb650f6e2e191346679a6c09eeb64398372ce8891e2d"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/数字复核.out": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/数字复核.out",
+      "bytes": 95,
+      "sha256": "9d37df4fdf1affb9bd39e91baeb23cb2a8af6efccfb8c8e8fe2899139f901dbe"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/数字复核.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/数字复核.py",
+      "bytes": 5617,
+      "sha256": "f827abc2b28d9e0d33792cb81be363df4cc57001e5005287a6ae3b7b477bf757"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/账本-check-final.err": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/账本-check-final.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/账本-check-final.out": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/账本-check-final.out",
+      "bytes": 94,
+      "sha256": "56892c88b0c291aed8d2fd266efc476196f6b12d0c76fc5c0a9f2e9a98cc8b75"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/账本-find-final.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/账本-find-final.json",
+      "bytes": 835499,
+      "sha256": "f475f13467fe64a3c866624dd5d557d12cf7324a935cbc5cf5bbfcb24956240b"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/随机施毒核对-首次失败.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/随机施毒核对-首次失败.txt",
+      "bytes": 202,
+      "sha256": "a7f38fd049013565f3523c18fde5a78ac2b648760816f60f0a7e0577ac264e3f"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/随机施毒核对.err": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/随机施毒核对.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/随机施毒核对.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/随机施毒核对.json",
+      "bytes": 5034,
+      "sha256": "9bba36ec92268a907574f893ca5a39e36a5f112ce1db6a97ef58572975c4a5e1"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/随机施毒核对.out": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/随机施毒核对.out",
+      "bytes": 914,
+      "sha256": "d2f331e021a91062bdea8b816fa8f5d1db32f71aaebe0e60fd9eef94ea7f6baa"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-originals/随机施毒核对.ts": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/随机施毒核对.ts",
+      "bytes": 2214,
+      "sha256": "c6604fed8fa6652551eb85b31a6ffdaa167e9df36cb0ccb3a5c20518632421e6"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/postmortem-event-stream.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem.jsonl",
+      "bytes": 1668503,
+      "sha256": "802c7ce73a7b9f8da1a431a7e6b12e4dae4bf7f21f67c60a8d52bda8c8f8f7f4"
+    },
+    "paper/materials/silent/20261008-1342-postmortem/G8NHLL09DLBX-run-note.md": {
+      "path": "/home/dw/Projects/agent-sts2/notes/run-1008-1257-G8NHLL09DLBX.md",
+      "bytes": 5630,
+      "sha256": "891e205614f486256c4de80d7dce9e641c398ec660e74d381e7dc3d2582bd91d"
+    }
+  },
+  "owned_original_ledger_rows": 16,
+  "main_evidence_rows": 8,
+  "support_update_rows": 7,
+  "repeat_update_rows": 0,
+  "new_bug_rows": 1,
+  "new_mechanic_rows": 0,
+  "proposal_link_rows": 8,
+  "new_pure_bugs": [
+    {
+      "run": "G8NHLL09DLBX",
+      "where": "agent/src/reflex/turn-solver.ts:2284",
+      "what": "随机施毒复用最高HP目标，误把弹跳药瓶分配至母体并判为确定整场斩杀。",
+      "new": true
+    }
+  ],
+  "queue_entry_added": true,
+  "blocking": false,
+  "unowned_extra_rows_preserved": 132,
+  "lesson_physical_not_reappended": true,
+  "original_learner_verification_retained": true,
+  "proposal_registry_not_modified": true,
+  "manual_dispatch": false,
+  "record_only": true
+}

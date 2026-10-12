@@ -1,0 +1,89 @@
+{
+  "scope": "本批scratch分析；不是生产代码测试历史",
+  "events": [
+    {
+      "stage": "原记录角色核对",
+      "result": "failed",
+      "observed_error": "AssertionError: states.jsonl record has ts/observed_ts/fingerprint/screen/session/state, not top-level run_id",
+      "correction": "按state.run_id及state.run.character_id核角色；随后300原行SHA核验通过。"
+    },
+    {
+      "stage": "窗口基础字段",
+      "result": "passed",
+      "counts": [
+        48,
+        20,
+        20,
+        18
+      ],
+      "fields": "turn/screen/hp/energy/block/powers/hand"
+    },
+    {
+      "stage": "扩展敌人字段",
+      "result": "failed",
+      "observed_error": "KeyError: 'monster_id'",
+      "correction": "原字段为enemy_id；保留源帧不改。"
+    },
+    {
+      "stage": "扩展牌堆字段",
+      "result": "mismatch",
+      "counts": [
+        {
+          "checked": 0,
+          "total": 48
+        },
+        {
+          "checked": 0,
+          "total": 20
+        },
+        {
+          "checked": 0,
+          "total": 20
+        },
+        {
+          "checked": 0,
+          "total": 18
+        }
+      ],
+      "correction": "agent_view按相同卡分组，line有*2；数行不能当牌数，改读显式数量。"
+    },
+    {
+      "stage": "窗口完整摘要字段",
+      "result": "passed",
+      "counts": [
+        48,
+        20,
+        20,
+        18
+      ],
+      "fields": "上述字段加draw/discard/exhaust实际数、敌人ID/HP/powers"
+    },
+    {
+      "stage": "原数学复现",
+      "result": "passed",
+      "samples": 120000,
+      "json_semantic_equal": true
+    },
+    {
+      "stage": "枚举/变参",
+      "result": "passed",
+      "uniform_enumerations": 294,
+      "bound_enumerations": 6144,
+      "variant_samples": 6144
+    },
+    {
+      "stage": "既有CLI探针",
+      "result": "passed",
+      "methods": [
+        "uniform-hand",
+        "cycle-bound"
+      ],
+      "consumer_kind": "offline_cli_only"
+    },
+    {
+      "stage": "生产实现/撤源码/恢复/tsc/vitest/live",
+      "result": "not_run",
+      "reason": "因保留路径职责相交停止，没有生产改动，不捏造成功。"
+    }
+  ]
+}

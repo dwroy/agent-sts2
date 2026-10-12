@@ -1,0 +1,41 @@
+{
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "静默持有不安油灯时已观察第一次施加负面状态的数值翻倍：更早K367 A1 F30 T2升级带毒刺击牌面4毒实际从0建8毒；本局NHA A10 F17 T1普通毒药5毒实际建10、F33 T1 X1萎靡实际给−2力量和2虚弱。只确认这些现场首次施用，不推广所有负面状态或一战后续再翻倍；它与转向及后续虚弱、实际格挡分账，14挡/8挡对15攻击分别损1/7。",
+  "evidence": [
+    {
+      "run": "K3676LU8B0UH",
+      "floor": 30,
+      "turn": 2,
+      "note": "升级带毒刺击POISONED_STAB的PoisonPower4，盛碗虫蜜BOWLBUG_NECTAR从无毒变8毒，decisions212867、states217009→217010，2026-10-04T21:37:15.142Z。",
+      "role": "support"
+    },
+    {
+      "run": "NHA2KW0RB7VP",
+      "floor": 17,
+      "turn": 1,
+      "note": "states283146→283147普通致命毒药牌面5、实建10，轮末结算10；此前没有其他施负面牌。",
+      "role": "support"
+    },
+    {
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 1,
+      "note": "首战X1萎靡后states283395为力量−2/虚弱2、两意图9＋6，14挡实损1；末次283506相同减益、8挡实损7。",
+      "role": "support"
+    }
+  ],
+  "first_run": "K3676LU8B0UH",
+  "prior": "yes",
+  "prior_runs": [
+    "K3676LU8B0UH"
+  ],
+  "prior_note": "该机制首次独立入账之前，同角色A1已经出升级带毒刺击并实际兑现4→8；只据自动数值与出牌行为判此前已正确执行，不宣称模型主动理解了遗物或其胜负贡献。",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "NHA2KW0RB7VP"
+    ]
+  }
+}

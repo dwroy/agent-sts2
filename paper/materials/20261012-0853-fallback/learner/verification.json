@@ -1,0 +1,89 @@
+{
+  "fixture": {
+    "source": "agent/tests/multi-character.test.ts",
+    "withdrawal": "Only knowledgeDir: dir reverted to knowledgeDir: KNOWLEDGE_DIR; new fixed fixture, assertions and read guard retained. No production knowledge was read by the failing prefix test.",
+    "red_exit": 1,
+    "red_failed": 1,
+    "green_exit": 0,
+    "green_passed": 2,
+    "production_changed": false,
+    "commit": "5ef3c4612bd2673c19968c5a2d24bf62af519ee1"
+  },
+  "blocked": {
+    "source": "ops/proposal_dispatch.py",
+    "withdrawal": "Complete source restored from HEAD while the new 18-case regression remained.",
+    "red_exit": 1,
+    "red_failed": 3,
+    "red_passed": 15,
+    "green_exit": 0,
+    "green_passed": 18,
+    "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36"
+  },
+  "ledger_searches": {
+    "blocked-experience": 0,
+    "multi-character": 0,
+    "N1ZEBMHZM4KC": 0
+  },
+  "evidence": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261012-0809-ops/receipt.json",
+      "sha256": "6953de261336f9a6321f4c7b13bedd5e47cb47813430bfb56bd5049c06a39c98"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261012-0816-dispatch-receipt/integration-blocker.json",
+      "sha256": "d9ef21ac6fc935ab5a3b340a1661a10feb0efd1856ed85bea70be92116816141"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-075826-experience-update/blocked-result.json",
+      "sha256": "be7574c701125429d52a655aef132694d2160acf4ca9738ddf5b499c80a5beaf"
+    }
+  ],
+  "first_sandbox": {
+    "tsc": 0,
+    "vitest": 1,
+    "passed_files": 322,
+    "failed_files": 1,
+    "passed_cases": 3188,
+    "failed_cases": 1,
+    "failure": "check-imports scanned scratch multi-character.fixed.ts backup; retained identical bytes as .ts.txt; focused import check then passed. This was not a combat timeout.",
+    "paths": "not reached because the first vitest segment exited 1"
+  },
+  "learning_flow": {
+    "tests": 24,
+    "exit": 0,
+    "scope": "fixed workflow fixtures, including actual source-content proposal audit"
+  },
+  "sandbox_fixture_rerun": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 325,
+    "cases": 3218,
+    "main_segment": {
+      "files": 324,
+      "cases": 3207
+    },
+    "paths_segment": {
+      "files": 1,
+      "cases": 11
+    }
+  },
+  "source_scope": [
+    "agent/tests/multi-character.test.ts",
+    "agent/tests/blocked-experience-repair.test.ts",
+    "ops/proposal_dispatch.py"
+  ],
+  "same_source_validation": "The first passing sandbox run included both fixes; a second unchanged full sandbox run is required before the second independent commit.",
+  "sandbox_blocked": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 325,
+    "cases": 3218
+  },
+  "final_source_clean": true,
+  "live_source_ancestors": {
+    "5ef3c4612bd2673c19968c5a2d24bf62af519ee1": false,
+    "84366ad06ee4f978394c1b9489a82c83ea12bd36": false
+  },
+  "live_has_merge_head": false,
+  "live_staged_paths": []
+}

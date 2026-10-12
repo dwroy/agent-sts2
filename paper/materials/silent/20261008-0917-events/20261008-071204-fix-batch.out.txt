@@ -1,0 +1,46 @@
+批次已完成，结论为 **rejected**：目标验证仅 7 场，B5 四项准入均未达标，没有可证实的源码校正。原沙箱 2598 例通过，实盘/五回合隔离通过。台账 `silent-0281` 已登记拒绝；未合 live、未建版本。
+
+[完整报告](/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261008-071204/paper/materials/silent/boss-sim-b5-AEONGLASS-20261008-071204-fix-batch.md)
+
+```json
+{
+  "task": "fix-batch",
+  "base": "c1dd721fe682910095768eb4007cb836b6991152",
+  "fixes": [{
+    "item": "Roy 已授权独立功能：silent/AEONGLASS B5 校正验收（证据不足拒绝）",
+    "commit": "c1dd721fe682910095768eb4007cb836b6991152",
+    "test": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261008-071204/learner/runs/20261008-071208-boss-sim-batch/test-sandbox-final.log; /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261008-071204/learner/runs/20261008-071208-boss-sim-batch/acceptance.json",
+    "fails_without_fix": false
+  }],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2598
+  },
+  "boss_sim": {
+    "evidence_key": "4129cbd40c4d414f11ffb12be6c126e14e6455df45540cf8c25ae2c18e7ccc9c",
+    "outcome": "rejected",
+    "acceptance": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261008-071204/learner/runs/20261008-071208-boss-sim-batch/acceptance.json",
+    "ledger_ids": ["silent-0281"]
+  },
+  "version": "",
+  "reports": [
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261008-071204/paper/materials/silent/boss-sim-b5-AEONGLASS-20261008-071204-fix-batch.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261008-071204/learner/runs/20261008-071208-boss-sim-batch/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261008-071204/learner/runs/20261008-071208-boss-sim-batch/report.json"
+  ]
+}
+```
+
+== 学习者 codex / boss-sim-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a118a3-7b16-7b00-b052-19db5e5736a7
+轮数：1；工具调用：command_execution×223 file_change×21
+token：输入 557.9k、输出 147.5k（其中推理 77.9k）、cache 读 35356.7k、cache 写 0（命中 98.4%）
+成本：未提供
+耗时：7419.1 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 7.5 s、首次工具 11.2 s、末次工具结束 7388.2 s；工具内共 7116.7 s，其余（模型生成、推理、网络）299.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261008-071204）；模型的工具调用 exec×234 wait×63；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T07-12-09-01a118a3-7b16-7b00-b052-19db5e5736a7.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261008-071204/learner/runs/20261008-071208-boss-sim-batch.jsonl

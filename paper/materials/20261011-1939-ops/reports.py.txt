@@ -1,0 +1,38 @@
+from pathlib import Path
+import json,hashlib,re,sys,shutil
+r=Path.cwd();o=r/'paper/materials/20261011-1939-ops';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();save=lambda n,d:(o/n).write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+sys.path.insert(0,str(r/'ops'));import proposal_dispatch
+reports=json.loads((o/'event-reports.json').read_text());p=reports['20261011-184302-strategy-proposal'];proof=proposal_dispatch.no_change(p['report'],p['batch'],r);assert proof;save('no-source-proof.json',proof)
+run='NYQW6JAD30K4';p=reports['20261011-191301'];assert p['report']['bugs']==[] and p['batch']['state']=='done'
+s=(r/'notes/lessons.md').read_text();start=s.index('## '+run);end=s.find('\n## ',start+4);section=s[start:end if end>=0 else len(s)];(o/(run+'-lesson.md')).write_text(section)
+ids=p['report']['code_proposals'];rows=[]
+for line in (r/'paper/materials/learning/ledger.jsonl').read_text().splitlines(keepends=True):
+ x=json.loads(line)
+ if x.get('by')=='learner:postmortem' and (run in line or any(i in line for i in ids)):rows.append(line)
+(o/'postmortem-ledger-rows.jsonl').write_text(''.join(rows));fold={}
+for line in (r/'paper/materials/learning/code-proposals.jsonl').read_text().splitlines():
+ x=json.loads(line);ident=x.get('id');fold.setdefault(ident,{}).update(x)
+proof=[]
+for ident in ids:
+ x=fold[ident];path=Path(x.get('path') or x.get('proposal_path') or x.get('proposal',''))
+ if not path.is_absolute():path=r/path
+ if not path.is_file():print('REGISTRY_SCHEMA',json.dumps(x,ensure_ascii=False)[:2000]);raise RuntimeError('proposal path')
+ digest=sha(path);expected=x.get('sha256') or x.get('proposal_sha256');assert expected==digest,(ident,expected,digest)
+ proof.append({'id':ident,'path':str(path),'sha256':digest})
+save('postmortem-closeout.json',{'batch':'20261011-191301','run':run,'new_bugs':[],'rows':len(rows),'ledger_rows_sha256':sha(o/'postmortem-ledger-rows.jsonl'),'lesson_sha256':sha(o/(run+'-lesson.md')),'proposals':proof})
+core=reports['20261011-175450-experience-update']['report'];source=Path(core['report']).parent;target=o/'core';target.mkdir(exist_ok=True);names=['report.md','experience-integration.json','changes.json','final-data-validation.json','tests-live.json','consumer-render-verification.json','live-render-verification.json']
+manifest=[]
+for name in names:
+ src=source/name
+ if src.is_file():shutil.copyfile(src,target/name);manifest.append({'original':str(src),'copy':str((target/name).relative_to(r)),'sha256':sha(src)})
+mapping=json.loads((source/'experience-integration.json').read_text());checks=[]
+for x in mapping['source_verification']['checks']:
+ path=Path(x['path']);actual=sha(path);assert actual==x['expected'];checks.append({'path':str(path),'sha256':actual})
+req=json.loads((r/'notes/experience-integration-silent.json').read_text());assert req['request_id']==core['request_id'] and req['scope_revision']==3 and sha(r/req['work_spec'])==core['work_spec_sha256']
+save('core-report-acceptance.json',{'identity_and_scope_passed':True,'three_entries_substantively_reviewed':True,'report_manifest':manifest,'source_checks_recomputed':checks,'historical_wrapper_exits':[124,124],'historical_rollback_preserved':True,'actual_live_publication':'pending','limitations':['conditional finite-window observations; no optimal deck size or causal win improvement','historical .13 read during E6DSUVTNVBMH followed by rollback; not continuous whole-run exposure'],'proposal_ids':core['code_proposals'],'ledger_ids':core['ledger']['proposed']})
+prior=r/'paper/materials/20261011-1852-ops/assist/production-acceptance.json'
+current={}
+for ident in ['ops-infra-archive-20261011','ops-infra-herdr-wake-20261011']:
+ path=r/'ops/codex-ops/assist/jobs'/ident/'state.json';data=json.loads(path.read_text());assert data.get('status')=='completed',data;current[ident]={'state_sha256':sha(path),'state':data.get('status')}
+save('assist-deduplication.json',{'prior_acceptance':str(prior.relative_to(r)),'prior_sha256':sha(prior),'current':current,'redispatched':False})
+print('proofs complete',len(rows),'ledger rows')

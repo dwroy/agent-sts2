@@ -1,0 +1,135 @@
+{
+  "status": "completed",
+  "fixture_sha256": "6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98",
+  "max_physical_calls": 2,
+  "total_allocated_calls": 4,
+  "home": "/home/dw/.codex-brain",
+  "comparison": "repair of probe home only; session+revert production transport unchanged; baseline refused before any model call",
+  "results": [
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "answer": {
+        "choice": "o0",
+        "reason": "Heal to 53 HP for two forced hallways. The immediate buffer protects poison setup and preserves resources for consecutive bosses without intervening recovery."
+      },
+      "problems": [],
+      "attempts": 1,
+      "latencyMs": 13951,
+      "usage": {
+        "inputTokens": 146674,
+        "cacheHitTokens": 0,
+        "outputTokens": 183,
+        "reasoningTokens": 134
+      },
+      "toolCalls": [],
+      "raw": "{\"choice\":\"o0\",\"reason\":\"Heal to 53 HP for two forced hallways. The immediate buffer protects poison setup and preserves resources for consecutive bosses without intervening recovery.\"}",
+      "native": {
+        "mode": "session",
+        "thread_id": "01a11aad-2990-7620-a25a-a1013f46a32a",
+        "turn_id": "01a11aad-29bb-7713-a213-d15a9a81f4fb",
+        "retries": [],
+        "runs": 1,
+        "reverted": true,
+        "schema": "strict"
+      }
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "answer": {
+        "choice": "o0",
+        "reason": "Heal to 53 HP for the two upcoming hallways. The immediate buffer protects poison setup and preserves resources for consecutive bosses."
+      },
+      "problems": [],
+      "attempts": 1,
+      "latencyMs": 12612,
+      "usage": {
+        "inputTokens": 146674,
+        "cacheHitTokens": 146432,
+        "outputTokens": 162,
+        "reasoningTokens": 116
+      },
+      "toolCalls": [],
+      "raw": "{\"choice\":\"o0\",\"reason\":\"Heal to 53 HP for the two upcoming hallways. The immediate buffer protects poison setup and preserves resources for consecutive bosses.\"}",
+      "native": {
+        "mode": "session",
+        "thread_id": "01a11aad-2990-7620-a25a-a1013f46a32a",
+        "turn_id": "01a11aad-63d4-7651-a18d-74d56cd8f8c7",
+        "retries": [],
+        "runs": 1,
+        "reverted": true,
+        "schema": "strict"
+      }
+    }
+  ],
+  "baseline": {
+    "reservation_sha256": "7664ba062fdeff1cf1f6d664cb9c2c90604307aa727a039113cb8b4883524396",
+    "result_sha256": "6193ec4fc8f31148b7444096db0263eea69bb3cddea8c0c320a0680c2275517f",
+    "allocated_calls": 2,
+    "model_calls_observed": 0,
+    "evidence": "frozen isolation refusal before decide dispatch; no calls trace",
+    "fixture_sha256": "6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98"
+  },
+  "cli_check": {
+    "ok": true,
+    "version": "codex-cli 0.161.0"
+  },
+  "limits_before": {
+    "engine": "codex",
+    "read_at": "2026-10-08T08:41:57.041Z",
+    "read_ms": 964,
+    "plan": "promax",
+    "used_pct": 46,
+    "window": "codex/primary",
+    "window_min": 10080,
+    "resets_at": "2026-10-14T03:28:43.000Z",
+    "credits": 500,
+    "ordinary_usage_allowed": true,
+    "reached_type": null
+  },
+  "limits_after": {
+    "engine": "codex",
+    "read_at": "2026-10-08T08:42:25.925Z",
+    "read_ms": 0,
+    "plan": "promax",
+    "used_pct": 46,
+    "window": "codex/primary",
+    "window_min": 10080,
+    "resets_at": "2026-10-14T03:28:43.000Z",
+    "credits": 500,
+    "ordinary_usage_allowed": true,
+    "reached_type": null
+  },
+  "raw_usage": [
+    {
+      "totalTokens": 146857,
+      "inputTokens": 146674,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 0,
+      "outputTokens": 183,
+      "reasoningOutputTokens": 134
+    },
+    {
+      "totalTokens": 146836,
+      "inputTokens": 146674,
+      "cachedInputTokens": 146432,
+      "cacheWriteInputTokens": 0,
+      "outputTokens": 162,
+      "reasoningOutputTokens": 116
+    }
+  ],
+  "measured": {
+    "input_tokens": 293348,
+    "cached_input_tokens": 146432,
+    "cache_hit_ratio": 0.4991750412479376,
+    "wall_ms": [
+      13951,
+      12612
+    ],
+    "observation": "two repeated questions validate capability only; no production-window improvement claimed"
+  },
+  "physical_dispatch_claims": 2
+}

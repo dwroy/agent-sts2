@@ -1,0 +1,74 @@
+[
+  {
+    "stage": "targeted-core-window",
+    "result": "failed",
+    "file": "window-targeted.log",
+    "reason": "新测试误用paired字段；现有API为difference.n，修正测试字段，未改统计实现"
+  },
+  {
+    "stage": "real-frame-draw",
+    "result": "failed",
+    "file": "consumer-boundary-targeted.log",
+    "reason": "模型给4、原帧为3+2；定位显式弃牌复制视图未从手牌移除，按同key移除修复"
+  },
+  {
+    "stage": "CLI-launch",
+    "result": "environment-blocked",
+    "file": "historical-extraction.err",
+    "reason": "tsx CLI创建IPC socket被沙箱拒绝；改node --import tsx成功，未当源码失败"
+  },
+  {
+    "stage": "restored-targeted",
+    "result": "passed",
+    "file": "consumer-boundary-restored.log",
+    "cases": 33
+  },
+  {
+    "stage": "withdraw-combat",
+    "result": "expected-failure",
+    "file": "realization-withdrawn.log",
+    "exit": 1
+  },
+  {
+    "stage": "withdraw-build",
+    "result": "expected-failure",
+    "file": "build-consumer-withdrawn.log",
+    "exit": 1
+  },
+  {
+    "stage": "withdraw-discard-identity",
+    "result": "expected-failure",
+    "file": "discard-identity-withdrawn.log",
+    "exit": 1
+  },
+  {
+    "stage": "final-sandbox",
+    "result": "passed",
+    "file": "final-sandbox.log",
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3035,
+    "files": 313
+  },
+  {
+    "stage": "abstract-reproduction",
+    "result": "passed",
+    "file": "math-verification.json",
+    "sample_count": 120000,
+    "changed_parameter_samples": 6144,
+    "same_as_prior_result": true
+  },
+  {
+    "stage": "merge-preflight",
+    "result": "blocked",
+    "file": "merge-preflight.log",
+    "exit": 1,
+    "conflicts": 12,
+    "live_modified": false
+  },
+  {
+    "stage": "initial-preflight-invocation",
+    "result": "not-used",
+    "reason": "第一次命令误把live工作树路径用作revision，且早yield输出未取回；退出码未知。不作验收依据，后续改用完整live SHA的预检保存exit1与12冲突。"
+  }
+]

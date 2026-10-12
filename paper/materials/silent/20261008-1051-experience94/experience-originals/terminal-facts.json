@@ -1,0 +1,144 @@
+{
+  "ts": "2026-10-08T01:17:16.989Z",
+  "run": "K2JAGKVJAWZJ",
+  "floor": 46,
+  "turn": 9,
+  "attempt": 1,
+  "card": null,
+  "action": "end_turn",
+  "result": "completed: Action completed.",
+  "before": {
+    "hp": 13,
+    "max_hp": 91,
+    "block": 20,
+    "energy": 0,
+    "powers": {
+      "HEX_POWER": 2,
+      "DEXTERITY_POWER": 2,
+      "BURST_POWER": 1
+    },
+    "hand": [
+      {
+        "id": "LEG_SWEEP",
+        "text": "虚无。 给予3层虚弱。 获得16点格挡。",
+        "dynamic": [
+          {
+            "name": "Block",
+            "base_value": 14,
+            "current_value": 16,
+            "enchanted_value": 14,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "blocked": "not_enough_energy"
+      }
+    ],
+    "enemies": [
+      {
+        "id": "FLAIL_KNIGHT",
+        "hp": 43,
+        "alive": true,
+        "powers": {
+          "STRENGTH_POWER": 6,
+          "WEAK_POWER": 2
+        },
+        "move": "FLAIL_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "12[font_size=18]×2[/font_size]",
+            "damage": 12,
+            "hits": 2,
+            "total_damage": 24,
+            "status_card_count": null
+          }
+        ]
+      },
+      {
+        "id": "SPECTRAL_KNIGHT",
+        "hp": 84,
+        "alive": true,
+        "powers": {
+          "WEAK_POWER": 1
+        },
+        "move": "SOUL_SLASH",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "12",
+            "damage": 12,
+            "hits": 1,
+            "total_damage": 12,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "hp": 0,
+    "max_hp": 91,
+    "block": 0,
+    "energy": 0,
+    "powers": {},
+    "hand": [],
+    "enemies": [
+      {
+        "id": "FLAIL_KNIGHT",
+        "hp": 43,
+        "alive": true,
+        "powers": {
+          "STRENGTH_POWER": 6,
+          "WEAK_POWER": 2
+        },
+        "move": "FLAIL_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "12[font_size=18]×2[/font_size]",
+            "damage": 12,
+            "hits": 2,
+            "total_damage": 24,
+            "status_card_count": null
+          }
+        ]
+      },
+      {
+        "id": "SPECTRAL_KNIGHT",
+        "hp": 84,
+        "alive": true,
+        "powers": {
+          "WEAK_POWER": 1
+        },
+        "move": "SOUL_SLASH",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "12",
+            "damage": 12,
+            "hits": 1,
+            "total_damage": 12,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  "full_attack": 36,
+  "full_loss": 14,
+  "strict_extra_hp": 2,
+  "calculation": "12×2+12−20=16；钨合金棍两次穿透伤各减1，需损14；13血严格存活至少再需2血。末击截断，只实扣剩13。"
+}

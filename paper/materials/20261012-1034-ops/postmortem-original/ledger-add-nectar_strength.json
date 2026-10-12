@@ -1,0 +1,26 @@
+{
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "静默A10本局盛碗虫（蜜）在T2 BUFF_MOVE后，T3从无力量变16力量并显示THRASH2_MOVE攻击19；前3次均见，末次T2已杀蜜所以未发生该增益，仍被石虫16攻击杀死。只记录这一种敌人、进阶和时点，不外推重复成长、其他等级或固定首杀优先级。",
+  "evidence": [
+    {
+      "run": "CMS8QL9E3C5U",
+      "floor": 23,
+      "turn": 2,
+      "note": "第1-3试T2 BUFF_MOVE→T3 STRENGTH_POWER16、19攻；s367943/367962/367976。第4试s367993-367994两打击杀蜜，s367997石16攻仍在；不是先杀蜜必胜。",
+      "role": "support"
+    }
+  ],
+  "first_run": "CMS8QL9E3C5U",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "检索本角色账本及更早静默复盘，未找到同一已核窗口的先验行为对照，不从本局推定此前一直做对或做错。",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "CMS8QL9E3C5U"
+    ]
+  },
+  "note": "来源20261012-101301-postmortem；只追加证据，独立strategy-proposal实现，不登记上线。"
+}

@@ -1,0 +1,45 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "47731LKMZRBJ"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "47731LKMZRBJ",
+      "where": "agent/src/reflex/combat.ts:100",
+      "what": "单动作题面漏接沙坑截止，预计剩44血却归零；silent-0308及fix-queue-v4已有",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0308",
+      "silent-0117",
+      "silent-0232",
+      "silent-0018",
+      "silent-0016",
+      "silent-0253",
+      "silent-0278",
+      "silent-0007"
+    ],
+    "repeats": [
+      "silent-0308",
+      "silent-0117"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-ee4e3012ebfe746a",
+    "silent-proposal-b3332868a7999ff9",
+    "silent-proposal-5de4944c19bb860d"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261012-234301-postmortem/report.md"
+}

@@ -1,0 +1,16 @@
+{
+ "previous_artifact": "4050b0bf87943e954b8d3bc596e5ddad6b0b9f19a191af2ddc25073a3675c07c",
+ "previous_model_sha256": "518b96b2fd2738b867141e661aadb6a8e71b33d9e15562854082cf4258df0c8d",
+ "current_model_sha256": "9fe0002e222d97f71be934184905fe6772124f4760fc6e6294cdd34af9a5b9ca",
+ "changed_paths": [
+  "knowledge/characters/silent/experience.json"
+ ],
+ "reused_fights": 261,
+ "new_replayed_fights": 20,
+ "identical_old_inputs_and_order": true,
+ "identical_old_turns": true,
+ "checked_replays_except_ms": 4,
+ "reason": "Only experience text changed. The backtest captures the solver input before fightLessons/jevExperience; the boss simulator does not read experience text. All numerical source, model data, game-data, historical inputs and seed indices are byte-identical. Historical replays match every non-timing field. Reuse immutable prior results and replay all new fights at the original full-dataset indices.",
+ "initial_replay_exit": 130,
+ "initial_replay_preserved": "learner/runs/20261009-033011-silent-boss-calibration/c9ad3bd34190c8c6d4ca9f0d2e682d930deefb6c7d85edba4f7fdafa188f6b1c/results/results-0.jsonl"
+}

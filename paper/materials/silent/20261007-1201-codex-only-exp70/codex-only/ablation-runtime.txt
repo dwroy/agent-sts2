@@ -1,0 +1,65 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent
+
+ ❯ tests/codex-only-brain.test.ts (34 tests | 9 failed | 25 skipped) 36ms
+     × overrides all engine selectors and fallback without a DeepSeek client 11ms
+     × map/route-plan quota waits and recovers on the same question without any substitute 5ms
+     × reward/card quota waits and recovers on the same question without any substitute 1ms
+     × event/plan quota waits and recovers on the same question without any substitute 1ms
+     × shop/plan quota waits and recovers on the same question without any substitute 1ms
+     × rest/plan quota waits and recovers on the same question without any substitute 1ms
+     × run-plan quota waits and recovers on the same question without any substitute 1ms
+     × fight-plan quota waits and recovers on the same question without any substitute 1ms
+     × streaming preserves Unicode, complete records and role/SL isolation; compatibility fields cannot promote 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/codex-only-brain.test.ts > Roy's production Codex-only brain > overrides all engine selectors and fallback without a DeepSeek client
+AssertionError: expected 'claude' to be 'codex' // Object.is equality
+
+Expected: "codex"
+Received: "claude"
+
+ ❯ tests/codex-only-brain.test.ts:43:153
+     41|     const cfg = loadConfig({ BRAIN_ENGINE: "deepseek", BRAIN_ENGINE_MA…
+     42|     const r = createRouter(cfg, null);
+     43|     for (const label of ["map/route-plan", "reward/card", "event/plan"…
+       |                                                                                                                                                         ^
+     44|     expect(r.config).toMatchObject({ engine: "codex", fallback: null, …
+     45|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/codex-only-brain.test.ts > Roy's production Codex-only brain > map/route-plan quota waits and recovers on the same question without any substitute
+ FAIL  tests/codex-only-brain.test.ts > Roy's production Codex-only brain > reward/card quota waits and recovers on the same question without any substitute
+ FAIL  tests/codex-only-brain.test.ts > Roy's production Codex-only brain > event/plan quota waits and recovers on the same question without any substitute
+ FAIL  tests/codex-only-brain.test.ts > Roy's production Codex-only brain > shop/plan quota waits and recovers on the same question without any substitute
+ FAIL  tests/codex-only-brain.test.ts > Roy's production Codex-only brain > rest/plan quota waits and recovers on the same question without any substitute
+ FAIL  tests/codex-only-brain.test.ts > Roy's production Codex-only brain > run-plan quota waits and recovers on the same question without any substitute
+ FAIL  tests/codex-only-brain.test.ts > Roy's production Codex-only brain > fight-plan quota waits and recovers on the same question without any substitute
+EngineFailure: quota
+ ❯ tests/codex-only-brain.test.ts:48:24
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/codex-only-brain.test.ts > engine provenance and climb > streaming preserves Unicode, complete records and role/SL isolation; compatibility fields cannot promote
+AssertionError: expected 13 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 13
+
+ ❯ tests/codex-only-brain.test.ts:195:52
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 25 skipped (34)
+   Start at  09:45:36
+   Duration  2.30s (transform 1.74s, setup 373ms, import 1.73s, tests 36ms, environment 0ms)
+

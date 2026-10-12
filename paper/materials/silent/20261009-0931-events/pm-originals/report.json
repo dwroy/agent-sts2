@@ -1,0 +1,42 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "VAC6Z1PZ1QJG",
+    "NG1FBJTSRLHS"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "VAC6Z1PZ1QJG",
+      "where": "agent/src/sim/boss-sim.ts:311",
+      "what": "F47双boss成功首战样本的正HP资源契约失败，异常使整题无选项模拟数字；缺触发样本，具体失败分支未隔离",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0332"
+    ],
+    "updated": [
+      "silent-0125",
+      "silent-0069",
+      "silent-0020",
+      "silent-0307",
+      "silent-0240"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-c30583bcb09744c4",
+    "silent-proposal-0b28f52e415d80d1",
+    "silent-proposal-4cccba410fdc4dfb"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-091302-postmortem/report.md"
+}

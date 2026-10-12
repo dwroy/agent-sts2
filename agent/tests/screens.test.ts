@@ -1058,7 +1058,7 @@ describe("menus and overlays", () => {
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "embark" });
   });
 
-  it("holds the ascension at TARGET_ASCENSION: steps down after a win unlocked the next level, no index (Dai 2026-09-28)", () => {
+  it("holds the ascension at TARGET_ASCENSION: steps down after a win unlocked the next level, no index (Roy 2026-09-28)", () => {
     const at = (ascension: number, actions: string[]) => {
       const raw = characterSelectPayload(true);
       raw["available_actions"] = actions;
@@ -1562,7 +1562,7 @@ describe("potions at low HP outside boss fights", () => {
     return raw;
   };
 
-  it("offers an unsimulated potion at any HP loss (Dai: a potion is a 0-cost one-shot card; T1, 12% of HP, was the gate until batch K)", async () => {
+  it("offers an unsimulated potion at any HP loss (Roy: a potion is a 0-cost one-shot card; T1, 12% of HP, was the gate until batch K)", async () => {
     const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const hit = (hp: number, damage: number) => {
       const raw = pressedCombat(hp, "LIQUID_MEMORIES");
@@ -1896,7 +1896,7 @@ describe("combat plan guards (batch 3)", () => {
     // First look this turn: potions are on the table (boss fight).
     expect(usesPotion(decide(2))).toBe(true);
     // One already drunk this turn (3 at the start, 2 now): still offered, Jev's call (the boss
-    // one-potion-a-turn cap is gone, Dai 2026-09-28).
+    // one-potion-a-turn cap is gone, Roy 2026-09-28).
     expect(usesPotion(decide(3))).toBe(true);
   });
 });

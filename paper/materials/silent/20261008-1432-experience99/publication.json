@@ -1,0 +1,90 @@
+{
+  "state": "published",
+  "batch": "20261008-140852-experience-update",
+  "source": "47e9a4363d1497cbbdeb5f3df77e42f4402d7422",
+  "version": "S1.exp99",
+  "source_tests": {
+    "exit": 0,
+    "files": 248,
+    "cases": 2608,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-140852-experience-update/test-source.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "a905e28653356919d94a905ab17b11f9da37e805",
+  "parent_blob": "eff67de25e945ec7ee6c2c49b221ca6b90b2a1eb",
+  "main_code_sync": "08a7dc52504dac8280eb93d4168775448cc36979",
+  "main_record": "fd879ce8ec5cff944d695c02f0f58bbce3b36539",
+  "full_external_passed": false,
+  "actual_code": "b015111e067122f13fda492bde6ec3423170107d",
+  "live_before": "bea18dc71a6f781e837644c7b98c385d0f62d066",
+  "combined": "d51ba470fc0b440b6434289fb62abb545f03d847",
+  "preserved_refresh": "bea18dc71a6f781e837644c7b98c385d0f62d066",
+  "refresh_sha256": {},
+  "lock_attempts": 1,
+  "all_other_tracked_blobs_preserved": true,
+  "code_equivalence": {
+    "current_live_code_test_and_task_blobs_identical_to_actual": true,
+    "preserved_parallel_code_pin": "bea18dc71a6f781e837644c7b98c385d0f62d066",
+    "preserved_parallel_code_sandbox": {
+      "exit": 0,
+      "files": 251,
+      "cases": 2618,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/live-sandbox.log"
+    },
+    "parallel_sandbox_sha256": "34f433840b2724788fa6e740f1a031a0091cbd043b2defc9941fa6e9a4e9de2d",
+    "whole_tree_external_passed": false,
+    "source_code_test_task_blobs_identical_to_actual": false,
+    "source_code_differences_from_current_live": [
+      "agent/src/brain/engines/codex-cache.ts",
+      "agent/src/brain/engines/codex.ts",
+      "agent/tests/codex-cache-engine.test.ts",
+      "agent/tests/codex-cache-observation.test.ts",
+      "agent/tests/codex-cache-probe.test.ts",
+      "agent/tests/cost-accounting.test.ts",
+      "agent/tests/cost_accounting_test.py",
+      "docs/codex-ops.md",
+      "eval/codex_cache.py",
+      "eval/cost.py",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-brain-cache-probe.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-do.sh",
+      "ops/codex-ops-learner.sh",
+      "ops/codex/lib.ts",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 248,
+      "cases": 2608,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-140852-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "data_only": true,
+    "reason": "Only the learner-tested original experience data blob changes. Current Codex cache measurement code, tests, tasks, generated knowledge and parallel records are retained byte-for-byte. Parallel cache code was checked in its own original sandbox (251 files / 2618 cases, exit 0); no full external or new combined-tree pass is claimed. Original-batch full continuation is separate."
+  },
+  "publication": "7f0c04dd5114d2f8152da1fb8cb6c5f45e1c478e",
+  "publication_tree": "9584d1ecf166a0937810a01ec7a5b36873809b09",
+  "version_entry": {
+    "name": "S1.exp99",
+    "family": "Silent",
+    "commit": "b015111e067122f13fda492bde6ec3423170107d",
+    "source": "decision-log 2026-10-08 14:37: 原140852经验23项并行记录冲突兜底，仅源47e9a436原experience.json，2026-10-08.15→.16/176 active/增0改16退0；LYBHQ1X230ZB及原历史局证据，四个combat/potion/SL/terminal代码提案沿原自动链。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入bea18dc7逐blob等价（其独立原沙箱251文件2618例tsc/vitest0，完整外部尚未核实），data-only免重复沙箱，不冒报新树完整通过。"
+  },
+  "record_line": "- 2026-10-08 14:37 运维codex14:32经验兜底：原140852源47e9a4363d1497cbbdeb5f3df77e42f4402d742223项并行记录冲突保持；单次空闲非阻塞锁内从最新livebea18dc71a6f781e837644c7b98c385d0f62d066仅集成学习者已测experience.json原blob，实际合入b015111e067122f13fda492bde6ec3423170107d，原基线45801fcc56b7c0614f074ad0e84ce90650d23082及新增刷新bea18dc71a6f781e837644c7b98c385d0f62d066、所有其他代码/知识数据逐blob保持，源真实祖先。经验2026-10-08.15→.16/增0改16退0/176 active；源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入bea18dc7逐blob等价（其独立原沙箱251文件2618例tsc/vitest0，完整外部尚未核实），data-only免重复沙箱、不冒报新树通过。唯一S1.exp99，main与所属经验数据CLI随后机械登记；四个combat/potion/SL/terminal代码提案沿原自动链，完整外部原批另续验，原回报/失败历史保持。回执paper/materials/silent/20261008-1432-experience99。\n"
+}

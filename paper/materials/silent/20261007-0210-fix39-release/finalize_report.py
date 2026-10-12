@@ -67,7 +67,7 @@ summary = f"""## 修 bug 回报
 - 没修的：mod超时自愈、Codex缓存实测 — 证据不足；boss模拟性能 — 太大；策略项 — 策略类
 - 测试：源码及live各tsc退出码0；vitest {m['live_tests']['files']}文件/{m['live_tests']['cases']}用例/退出码0，首轮通过
 - 合入：{m['merged']}；发布{m['release_commit']} / {m['eval_version']}；0172待运维登记shipped
-- 需要 Dai 定的事：保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第三幕第二boss、无色牌估值、懒惰平均出牌估值
+- 需要 Roy 定的事：保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第三幕第二boss、无色牌估值、懒惰平均出牌估值
 
 ```json
 {json.dumps(report,ensure_ascii=False,indent=2)}

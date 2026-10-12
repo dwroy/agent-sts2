@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：SDY5T9XCSQN2（A10，第17层，瀑布巨兽T15以11血9挡对33攻击阵亡，毒结算后敌剩7血）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：SDY5T9XCSQN2：完整dirty源码及知识、前五次SL最终结算、部分末击及独立结算时序、实际执行最优比例、模型差异原因、护栏长期代价、路线／留药反事实、boss时钟比值、后续幕资源、缓存及实际费用。
+- 学习账本：新增无；更新silent-0019、silent-0017、silent-0250、silent-0050、silent-0125、silent-0211、silent-0079；老错为0250、0079。`ledger.py check`退出码0。
+- 代码提案：F17T16／账本0250、0017对应`silent-proposal-e972b5909856ce15`；出牌与终局证据对应`silent-proposal-466419f5023c7533`。均关联独立strategy-proposal；配对胜负证据不足，保留规则，未实现或上线。
+
+```json
+{"task":"postmortem","appended":["SDY5T9XCSQN2"],"skipped":[],"bugs":[{"run":"SDY5T9XCSQN2","where":"agent/src/sl/explore.ts:896","what":"SL残血指标仍纳入巨兽自爆占位体HP；既有silent-0250，fix-queue未列同项","new":false}],"ledger":{"added":[],"updated":["silent-0019","silent-0017","silent-0250","silent-0050","silent-0125","silent-0211","silent-0079"],"repeats":["silent-0250","silent-0079"],"check":0},"code_proposals":["silent-proposal-e972b5909856ce15","silent-proposal-466419f5023c7533"],"implementation_domains":["combat","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-081301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11e01-9638-7782-807b-145048228f05
+轮数：1；工具调用：command_execution×48
+token：输入 207.8k、输出 37.4k（其中推理 10.5k）、cache 读 4842.5k、cache 写 0（命中 95.9%）
+成本：未提供
+耗时：942.4 s（墙钟）
+时间：首个事件 3.2 s、模型首个输出 7.4 s、首次工具 11.4 s、末次工具结束 926.9 s；工具内共 67.0 s，其余（模型生成、推理、网络）872.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×36；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T08-13-02-01a11e01-9638-7782-807b-145048228f05.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-081301-postmortem.jsonl

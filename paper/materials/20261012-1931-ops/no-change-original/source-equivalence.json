@@ -1,0 +1,278 @@
+[
+  {
+    "path": "agent/src/reflex/card-model.ts",
+    "base_blob": "4b109ea781972f95ce98b5d6b651e181edabe554",
+    "live_blob": "47715f1f047e1aaa53568ca70c7ccd8182c286d2",
+    "working_sha256": "a4f848f7003b765586428382995bb71ffacb7def0cb8947da7fcb6b07b768ff8",
+    "byte_equivalent": false,
+    "comments_only_equivalent": true,
+    "differences": [
+      {
+        "line": 1469,
+        "base": " * (potion-mc.ts, Roy 2026-09-28) this turn's option never uses it: only the rollout's later turns (the",
+        "live": " * (potion-mc.ts, Dai 2026-09-28) this turn's option never uses it: only the rollout's later turns (the"
+      },
+      {
+        "line": 1823,
+        "base": " * Random potions (Roy 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as",
+        "live": " * Random potions (Dai 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/turn-solver.ts",
+    "base_blob": "5b4bf0ba41406db17b3b88423e096f43a1d90019",
+    "live_blob": "cdeacbb14a7b8fc36290979b860a535638be5a4e",
+    "working_sha256": "4c71e63a88227d1e552da682b766611b9160b1723f9c823f98732bef8d7e993c",
+    "byte_equivalent": false,
+    "comments_only_equivalent": true,
+    "differences": [
+      {
+        "line": 2876,
+        "base": " * Kept (Roy 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal",
+        "live": " * Kept (Dai 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal"
+      },
+      {
+        "line": 3340,
+        "base": "  // A potion drunk is HP paid later (potion-cost.ts, Roy 2026-09-30): its held value, at the HP weight. Until batch K a",
+        "live": "  // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/combat-plan.ts",
+    "base_blob": "2c49af40896510d0196c93c7cb396f82e5fb9c91",
+    "live_blob": "a99107076301440f90cc4eae87469c94acd2ccb9",
+    "working_sha256": "7589011d1cf2c26918a03137d3b29bc0db568d7a4d871281f87a27c6a459e833",
+    "byte_equivalent": false,
+    "comments_only_equivalent": true,
+    "differences": [
+      {
+        "line": 83,
+        "base": " * Potions are Jev's call (Roy 2026-09-28): the solver prices a potion line on its simulated outcome",
+        "live": " * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome"
+      },
+      {
+        "line": 84,
+        "base": " * less the potion's cost (Roy 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss",
+        "live": " * less the potion's cost (Dai 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss"
+      },
+      {
+        "line": 221,
+        "base": " * Every modelled potion in the belt on at least one shown line (Roy 2026-09-28: Jev always has the",
+        "live": " * Every modelled potion in the belt on at least one shown line (Dai 2026-09-28: Jev always has the"
+      },
+      {
+        "line": 351,
+        "base": " * The enemies a turn can be aimed at, one group per enemy id (Roy 2026-09-28: identical enemies are not",
+        "live": " * The enemies a turn can be aimed at, one group per enemy id (Dai 2026-09-28: identical enemies are not"
+      },
+      {
+        "line": 406,
+        "base": " * Per-target options (Roy 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,",
+        "live": " * Per-target options (Dai 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,"
+      },
+      {
+        "line": 441,
+        "base": " * Roy 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the",
+        "live": " * Dai 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the"
+      },
+      {
+        "line": 491,
+        "base": " * DeepSeek's run plan, whole and on one line (Roy 2026-09-28: Jev sees the plan's strategy and boss prep,",
+        "live": " * DeepSeek's run plan, whole and on one line (Dai 2026-09-28: Jev sees the plan's strategy and boss prep,"
+      },
+      {
+        "line": 529,
+        "base": "  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Roy 2026-09-30): a fact, no rule.",
+        "live": "  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Dai 2026-09-30): a fact, no rule."
+      },
+      {
+        "line": 538,
+        "base": " * What a drink costs on this question (potion-cost.ts, Roy 2026-09-30), for potion_context: where the options'",
+        "live": " * What a drink costs on this question (potion-cost.ts, Dai 2026-09-30), for potion_context: where the options'"
+      },
+      {
+        "line": 577,
+        "base": "// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Roy 2026-09-28: card",
+        "live": "// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Dai 2026-09-28: card"
+      },
+      {
+        "line": 580,
+        "base": "/** Distinct lines shown to Jev (Roy 2026-09-28: 10, was 4; the rollout covers every shown line). */",
+        "live": "/** Distinct lines shown to Jev (Dai 2026-09-28: 10, was 4; the rollout covers every shown line). */"
+      },
+      {
+        "line": 588,
+        "base": " * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Roy",
+        "live": " * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Dai"
+      },
+      {
+        "line": 594,
+        "base": "/** Extra HP (over the cheapest line) a fight may accept (Roy 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */",
+        "live": "/** Extra HP (over the cheapest line) a fight may accept (Dai 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */"
+      },
+      {
+        "line": 2346,
+        "base": " * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Roy 2026-10-02: certain death, never",
+        "live": " * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Dai 2026-10-02: certain death, never"
+      },
+      {
+        "line": 3090,
+        "base": "  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Roy 2026-09-28).",
+        "live": "  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28)."
+      },
+      {
+        "line": 3092,
+        "base": "  // What each potion held costs to drink here (potion-cost.ts, Roy 2026-09-30): its held value in the potion table for",
+        "live": "  // What each potion held costs to drink here (potion-cost.ts, Dai 2026-09-30): its held value in the potion table for"
+      },
+      {
+        "line": 3123,
+        "base": "  // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Roy 2026-09-30:",
+        "live": "  // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Dai 2026-09-30:"
+      },
+      {
+        "line": 3339,
+        "base": "  // potion (Roy: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight",
+        "live": "  // potion (Dai: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight"
+      },
+      {
+        "line": 3351,
+        "base": "  // is Jev's call (Roy 2026-09-28): those lines are shown, flagged as winning and naming the potion spent.",
+        "live": "  // is Jev's call (Dai 2026-09-28): those lines are shown, flagged as winning and naming the potion spent."
+      },
+      {
+        "line": 3510,
+        "base": "  // Per-target options (Roy 2026-09-28): with two or more kinds of enemy, the line putting the most damage",
+        "live": "  // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage"
+      },
+      {
+        "line": 3687,
+        "base": "  // The \"no potion this fight\" line (Roy 2026-09-30), on every question with a potion to drink outside a boss fight",
+        "live": "  // The \"no potion this fight\" line (Dai 2026-09-30), on every question with a potion to drink outside a boss fight"
+      },
+      {
+        "line": 3788,
+        "base": "  // decision log (V4.2, Roy 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.",
+        "live": "  // decision log (V4.2, Dai 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept."
+      },
+      {
+        "line": 3823,
+        "base": "  // Every option's potion cost fact (Roy 2026-09-30), when a potion can be drunk on this board.",
+        "live": "  // Every option's potion cost fact (Dai 2026-09-30), when a potion can be drunk on this board."
+      },
+      {
+        "line": 3884,
+        "base": "  // Random potions: always an option (Roy 2026-09-28), \"drink now, then re-plan\", with the Monte Carlo",
+        "live": "  // Random potions: always an option (Dai 2026-09-28), \"drink now, then re-plan\", with the Monte Carlo"
+      },
+      {
+        "line": 4363,
+        "base": "      // dry-line veto and the attack-potion veto are gone, Roy 2026-09-28).",
+        "live": "      // dry-line veto and the attack-potion veto are gone, Dai 2026-09-28)."
+      },
+      {
+        "line": 4449,
+        "base": "    // No DeepSeek escalation in combat (Roy 2026-09-28): the turn's line is Jev's call.",
+        "live": "    // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call."
+      },
+      {
+        "line": 4574,
+        "base": " * Why an unsimulated potion is on the question: always (Roy: potions are 0-cost one-shot cards, no filter, no",
+        "live": " * Why an unsimulated potion is on the question: always (Dai: potions are 0-cost one-shot cards, no filter, no"
+      },
+      {
+        "line": 4575,
+        "base": " * veto). It replaced T1 (Roy 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate.",
+        "live": " * veto). It replaced T1 (Dai 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate."
+      },
+      {
+        "line": 4887,
+        "base": " * gone, Roy 2026-09-28).",
+        "live": " * gone, Dai 2026-09-28)."
+      }
+    ]
+  },
+  {
+    "path": "agent/src/sl/explore.ts",
+    "base_blob": "72054748b603e960aaad29ce3e25537486fc6b5c",
+    "live_blob": "ddaacde8ed9f73fd035c145f82ea99a51ed48172",
+    "working_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+    "byte_equivalent": false,
+    "comments_only_equivalent": true,
+    "differences": [
+      {
+        "line": 2,
+        "base": " * SL_RETRY_EXPLORE (docs/sl.md §11, Roy 2026-10-02: \"retries must try different play\"): a retried fight's attempts 3 and",
+        "live": " * SL_RETRY_EXPLORE (docs/sl.md §11, Dai 2026-10-02: \"retries must try different play\"): a retried fight's attempts 3 and"
+      },
+      {
+        "line": 319,
+        "base": "   * SL_RETRY_EXPLORE_B2 (Roy 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate (\"not worse than the line",
+        "live": "   * SL_RETRY_EXPLORE_B2 (Dai 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate (\"not worse than the line"
+      },
+      {
+        "line": 325,
+        "base": "   * SL_RETRY_EXPLORE_BOSS_POTIONS (Roy 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an",
+        "live": "   * SL_RETRY_EXPLORE_BOSS_POTIONS (Dai 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/sl/controller.ts",
+    "base_blob": "c8b8f8bf8e0cd32d6a0413e4a30d6af389b92243",
+    "live_blob": "183c3fcb1471a01b8519a5781d4f2abb3227ace6",
+    "working_sha256": "f8827b8d4c53d1139bbec174c0b13f19c99803b4dbd404310c2835a3d05c2ffc",
+    "byte_equivalent": false,
+    "comments_only_equivalent": true,
+    "differences": [
+      {
+        "line": 61,
+        "base": " * SL_RETRY_COMPUTE (docs/sl.md §10.3, Roy 2026-10-02: \"compute more on retries\"; +20-30 s a boss turn accepted earlier): the",
+        "live": " * SL_RETRY_COMPUTE (docs/sl.md §10.3, Dai 2026-10-02: \"compute more on retries\"; +20-30 s a boss turn accepted earlier): the"
+      },
+      {
+        "line": 221,
+        "base": "/** SL_ACT2_LOW_HP's gate (Roy 2026-10-04): an act-2 fight with no boss entered below the line, as act 3's. */",
+        "live": "/** SL_ACT2_LOW_HP's gate (Dai 2026-10-04): an act-2 fight with no boss entered below the line, as act 3's. */"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/hand/screens/selection.ts",
+    "base_blob": "118f3c7acc73905bbfd6572c03d15b43a27cf9f1",
+    "live_blob": "118f3c7acc73905bbfd6572c03d15b43a27cf9f1",
+    "working_sha256": "10e93041b2fcb1892d6d7c80e57db54b1051efbe35e08d3a6ce9e6ade4989680",
+    "byte_equivalent": true,
+    "comments_only_equivalent": true,
+    "differences": []
+  },
+  {
+    "path": "agent/src/hand/screens/silent-discard-facts.ts",
+    "base_blob": "1c7d709557fb7801b58fd9413f86264624a74f48",
+    "live_blob": "1c7d709557fb7801b58fd9413f86264624a74f48",
+    "working_sha256": "97a130560b461fa2831617b9b6bfb30fbe592f6270a48dd0d350b6d6d2cddbea",
+    "byte_equivalent": true,
+    "comments_only_equivalent": true,
+    "differences": []
+  },
+  {
+    "path": "agent/tests/silent-survivor-discard.test.ts",
+    "base_blob": "38d5b3ff4fe10560b946ae8cd57eb9cca87bf750",
+    "live_blob": "38d5b3ff4fe10560b946ae8cd57eb9cca87bf750",
+    "working_sha256": "a1b14e2785c0d4cc22a65e0bb0ad916d872ad4fe770a5aeeac49314fa2284e9e",
+    "byte_equivalent": true,
+    "comments_only_equivalent": true,
+    "differences": []
+  },
+  {
+    "path": "agent/tests/silent-survivor-discard-state.json",
+    "base_blob": "9c0e1c524ed369bf328159c3e336596755408b31",
+    "live_blob": "9c0e1c524ed369bf328159c3e336596755408b31",
+    "working_sha256": "5c1d2658558435d1b08b596fa79d4c3d0fe8171c0f424b10abb35ea5b64fda85",
+    "byte_equivalent": true,
+    "comments_only_equivalent": true,
+    "differences": []
+  }
+]

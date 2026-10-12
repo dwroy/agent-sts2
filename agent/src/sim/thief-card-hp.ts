@@ -9,14 +9,14 @@ export const THIEF_CARD_SAMPLES = 1000;
 /**
  * Fewer samples for a boss whose fights run long in the simulator, so the three decks finish inside the time budget
  * rather than being cut at whatever count the clock allows (offline, 12 of the 14 card values cut by the 15 s budget
- * were the Kaiser Crab's, some at 144 samples: notes/thief-cost-report.md; Dai 2026-10-02: 500).
+ * were the Kaiser Crab's, some at 144 samples: notes/thief-cost-report.md; Roy 2026-10-02: 500).
  */
 export const THIEF_CARD_SAMPLES_BY_BOSS: Record<string, number> = { KAISER_CRAB: 500 };
 /** Seed of the samples (the same for the three decks: common random numbers). */
 export const THIEF_CARD_SEED = 11;
-/** The entry HP taken off for the win rate an HP buys (Dai: "entry HP vs entry HP − 10"). */
+/** The entry HP taken off for the win rate an HP buys (Roy: "entry HP vs entry HP − 10"). */
 export const THIEF_CARD_HP_STEP = 10;
-/** The whole computation's wall clock, the synthetic start included (Dai: +10-15 s is accepted, as for B3). */
+/** The whole computation's wall clock, the synthetic start included (Roy: +10-15 s is accepted, as for B3). */
 export const THIEF_CARD_BUDGET_MS = 15_000;
 /** A difference within this many paired standard errors is not told from noise. */
 export const THIEF_CARD_Z = 2;
@@ -29,7 +29,7 @@ export const THIEF_CARD_CAP_HP = 30;
 
 export type ThiefCardStatus = "ok" | "capped" | "not_significant" | "worse_with" | "flat" | "no_samples" | "unknown_card" | "no_boss" | "error";
 
-/** How the HP was read: the win rate (Dai's conversion), or a fallback where the win rate is pinned (§7). */
+/** How the HP was read: the win rate (Roy's conversion), or a fallback where the win rate is pinned (§7). */
 export type ThiefCardRoute = "win" | "progress" | "hp";
 
 /** A paired difference and its standard error. */
@@ -101,7 +101,7 @@ const significant = (d: Paired) => Math.abs(d.value) > THIEF_CARD_Z * d.se;
 /**
  * The HP of a card from the three decks' paired numbers (module comment, docs/thief.md §7). Pure: the tests and the
  * offline table call it on fixed numbers. The measure follows the deck's raw win rate with the card (B3's split):
- *   - win (Dai's conversion), THIEF_CARD_PINNED..1 − THIEF_CARD_PINNED: HP = Δwin(card) ÷ Δwin per HP of entry HP;
+ *   - win (Roy's conversion), THIEF_CARD_PINNED..1 − THIEF_CARD_PINNED: HP = Δwin(card) ÷ Δwin per HP of entry HP;
  *   - progress, under THIEF_CARD_PINNED (the deck now mostly loses this boss: B3's "boss HP left"): the boss HP left
  *     the card saves ÷ the boss HP left an HP of entry HP saves (more HP = more turns alive = more damage dealt);
  *   - hp, over 1 − THIEF_CARD_PINNED (mostly won): the HP the card saves in the boss fight itself (HP already).

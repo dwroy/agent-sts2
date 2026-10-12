@@ -1,0 +1,75 @@
+{
+  "task": "fix-batch",
+  "base": "6e427e001bf72d14bb097a75986834276724c7eb",
+  "fixes": [
+    {
+      "item": "codex-brain-cache",
+      "commit": "548b53ca211231ab5f1079a16fe9ad65f62b3c6c",
+      "test": "agent/tests/codex-cache-probe.test.ts; agent/tests/codex-cache-engine.test.ts; ops/tests/test_codex_cache_probe_broker.py",
+      "fails_without_fix": true,
+      "fails_without_fix_evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/red-green.json",
+      "status": "tested-source-committed; live/probe pending"
+    }
+  ],
+  "skipped": [
+    {
+      "item": "live-integration",
+      "reason": "single nonblocking ops/live-merge.lock attempt rejected EAGAIN; no live mutation; preserve publication.json/deploy.log"
+    },
+    {
+      "item": "controlled-double-question",
+      "reason": "must run fixed tested broker only after main/live source integration and next wake; zero new physical model calls"
+    },
+    {
+      "item": "after-merge-and-external-checks",
+      "reason": "no merge; checks not executed, fields null"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 251,
+    "cases": 2627,
+    "targeted_files": 3,
+    "targeted_cases": 19,
+    "python_exit": 0,
+    "python_cases": 48,
+    "withdrawn_red_exit": 1,
+    "withdrawn_red_failed_cases": 2,
+    "restored_green_exit": 0,
+    "restored_green_cases": 2,
+    "actual_merged_tree_tsc": null,
+    "actual_merged_tree_vitest": null,
+    "external_full_tsc": null,
+    "external_full_vitest": null
+  },
+  "source": "548b53ca211231ab5f1079a16fe9ad65f62b3c6c",
+  "source_commits": [
+    "548b53ca211231ab5f1079a16fe9ad65f62b3c6c"
+  ],
+  "source_tree": "b713cfe9957519b07f1b6705f9dff0d8ab7375a8",
+  "source_agent_tree": "08dd9a59bb69317f447d770fe6207474b4c82c6f",
+  "published": null,
+  "fixed_live_tree": null,
+  "version": null,
+  "status": "tested-source-committed-live-lock-blocked-probe-pending",
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/report.md",
+  "report_json": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/report.json",
+  "publication": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/publication.json",
+  "original_logs": "/home/dw/Projects/agent-sts2/logs",
+  "original_frozen_report": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/report.json",
+  "controlled_probe": {
+    "status": "pending-next-wake-after-actual-integration",
+    "baseline_model_calls_observed": 0,
+    "repair_model_calls": 0,
+    "max_additional_physical_calls": 2,
+    "original_total_allocated_limit": 4,
+    "cache_result": null
+  },
+  "confirmed_cause": "fixed probe hardcoded global Codex home instead of the previously established isolated brain home; prior cost camelCase undercount already repaired",
+  "cache_transport_cause": "unknown; historical true cache 53.2549%, not a measured performance increase",
+  "root_records": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/root-record-receipts.json"
+}

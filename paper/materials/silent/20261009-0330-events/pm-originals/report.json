@@ -1,0 +1,39 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "FU8ZUQHBHNV9"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "FU8ZUQHBHNV9",
+      "where": "agent/src/reflex/card-model.ts:929",
+      "what": "普通刀刃之舞的添三小刀被误读为抽三牌，技能药水取得的0费可打牌被代码结束跳过",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0324"
+    ],
+    "updated": [
+      "silent-0050",
+      "silent-0019",
+      "silent-0005",
+      "silent-0046",
+      "silent-0020"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-e7ed37db21fc698a",
+    "silent-proposal-2f91d21607a578e9"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-031301-postmortem/report.md"
+}

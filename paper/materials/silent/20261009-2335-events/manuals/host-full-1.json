@@ -1,0 +1,14 @@
+{
+  "actor": "agent-sts2-watcher direct developer fix",
+  "started_at": "2026-10-09T21:58:55.364236+08:00",
+  "completed_at": "2026-10-09T22:10:19.017116+08:00",
+  "rc": 0,
+  "live": "fd4c8659736828708789598b7bd1bb9049c6cf94",
+  "tree": "5a2890da17c285c15b2c1f913acf90491e133f0f",
+  "source": "27c261281",
+  "head_unchanged_during_checks": true,
+  "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261009-core-dispatch-recovery/tests/host-full-1.log",
+  "kind": "standalone outside-sandbox full tsc+vitest acceptance, not a learner run",
+  "old_failures_preserved": true
+}

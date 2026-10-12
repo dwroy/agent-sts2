@@ -1,0 +1,3506 @@
+{
+  "method": "同一真实资源起点、64配对seed、1500节点固定策略、max30；各样本先算sum(dmgByTurn)/turns再统计。末轮计入；早胜/死亡后固定窗口累计保持终值，不添加玩家回合。",
+  "source": "production 5a120bddf9e4af217a45306b2a5c30f9427f16a5; observed target metadata assembled from frozen frames",
+  "validation": {
+    "samples": 512,
+    "damage_equals_monotone_single_enemy_hp_loss": true,
+    "enemy_hp_initial": 532
+  },
+  "limits": [
+    "属于模型有效HP伤害，与实际日志口径分开；T1首个可操作帧前已结3点不加到本模型DPR。",
+    "8臂不是512独立实战局，原胜线没有被指定给A，A重新洗牌。",
+    "现有模型头盔重放少4挡、触媒跨轮只保留一次增益；增加样本不能修复。",
+    "首轮实验遗漏目标元数据，整轮作废并保留attempt1-missing-targets-*；不是负面游戏证据。",
+    "未调参、未新增自然局；没有独立验证集，不得将这些结果称校准实际胜率。"
+  ],
+  "arms": {
+    "A": {
+      "samples": 64,
+      "wins": 16,
+      "deaths": 48,
+      "capped": 0,
+      "time_up": 0,
+      "dpr_all": {
+        "n": 64,
+        "mean": 34.80096843260906,
+        "mean_se": 2.7754878342106784,
+        "p10": 6.450000000000001,
+        "p90": 64.28333333333336,
+        "min": 1.2,
+        "max": 88.66666666666667
+      },
+      "dpr_won": {
+        "n": 16,
+        "mean": 62.14500291375292,
+        "mean_se": 2.7124142623000616,
+        "p10": 50.78181818181818,
+        "p90": 71.25,
+        "min": 40.92307692307692,
+        "max": 88.66666666666667
+      },
+      "dpr_died": {
+        "n": 48,
+        "mean": 25.686290272227772,
+        "mean_se": 2.4319878953127954,
+        "p10": 5.25,
+        "p90": 49.4957142857143,
+        "min": 1.2,
+        "max": 58.857142857142854
+      },
+      "turns_all": {
+        "n": 64,
+        "mean": 7.703125,
+        "mean_se": 0.26881545668354734,
+        "p10": 5.0,
+        "p90": 10.0,
+        "min": 4,
+        "max": 13
+      },
+      "kill_turn_when_won": {
+        "n": 16,
+        "mean": 8.8125,
+        "mean_se": 0.40019526483955303,
+        "p10": 7.5,
+        "p90": 10.5,
+        "min": 6,
+        "max": 13
+      },
+      "hp_loss": {
+        "n": 64,
+        "mean": 28.671875,
+        "mean_se": 0.6315351538478559,
+        "p10": 21.200000000000003,
+        "p90": 31.0,
+        "min": 11,
+        "max": 31
+      },
+      "hp_remaining": {
+        "n": 64,
+        "mean": 2.328125,
+        "mean_se": 0.6315351538478559,
+        "p10": 0.0,
+        "p90": 9.800000000000011,
+        "min": 0,
+        "max": 20
+      },
+      "cumulative_windows": {
+        "3": {
+          "n": 64,
+          "mean": 41.03125,
+          "mean_se": 4.841842302260609,
+          "p10": 3.0,
+          "p90": 92.7,
+          "min": 3,
+          "max": 156
+        },
+        "6": {
+          "n": 64,
+          "mean": 159.15625,
+          "mean_se": 14.154743209692688,
+          "p10": 25.100000000000005,
+          "p90": 316.40000000000003,
+          "min": 6,
+          "max": 532
+        },
+        "12": {
+          "n": 64,
+          "mean": 282.296875,
+          "mean_se": 23.788780782436735,
+          "p10": 34.500000000000014,
+          "p90": 532.0,
+          "min": 6,
+          "max": 532
+        }
+      },
+      "modeled_poison_accelerant_present": {
+        "all": 64,
+        "present": 50,
+        "not_present": 14,
+        "first_when_present": {
+          "n": 50,
+          "mean": 4.02,
+          "mean_se": 0.19057378452174048,
+          "p10": 2.0,
+          "p90": 6.0,
+          "min": 2,
+          "max": 7
+        },
+        "before_dpr_when_present": {
+          "n": 50,
+          "mean": 9.258333333333333,
+          "mean_se": 1.2809932061116904,
+          "p10": 0.0,
+          "p90": 22.405,
+          "min": 0.0,
+          "max": 32.0
+        },
+        "after_dpr_when_present": {
+          "n": 50,
+          "mean": 62.186136363636365,
+          "mean_se": 4.763433025125443,
+          "p10": 26.89166666666667,
+          "p90": 98.00000000000001,
+          "min": 0.0,
+          "max": 183.0
+        }
+      },
+      "cards": {
+        "BOUNCING_FLASK": {
+          "samples": 64,
+          "played": 54,
+          "not_played": 10,
+          "first_play_when_played": {
+            "n": 54,
+            "mean": 3.240740740740741,
+            "mean_se": 0.24218777069036182,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.515625,
+            "mean_se": 0.12398834170585658,
+            "p10": 0.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 3.03125,
+            "mean_se": 0.24797668341171317,
+            "p10": 0.0,
+            "p90": 6.0,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 30,
+          "instance_reaccess": null
+        },
+        "ACCELERANT": {
+          "samples": 64,
+          "played": 53,
+          "not_played": 11,
+          "first_play_when_played": {
+            "n": 53,
+            "mean": 3.2830188679245285,
+            "mean_se": 0.3157424481037008,
+            "p10": 1.0,
+            "p90": 6.0,
+            "min": 1,
+            "max": 13
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.828125,
+            "mean_se": 0.04753177456453702,
+            "p10": 0.0,
+            "p90": 1.0,
+            "min": 0,
+            "max": 1
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.65625,
+            "mean_se": 0.09506354912907404,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 2
+          },
+          "same_name_played_again": 0,
+          "instance_reaccess": null
+        },
+        "HAZE": {
+          "samples": 64,
+          "played": 38,
+          "not_played": 26,
+          "first_play_when_played": {
+            "n": 38,
+            "mean": 4.026315789473684,
+            "mean_se": 0.3646679389491036,
+            "p10": 1.0,
+            "p90": 7.300000000000004,
+            "min": 1,
+            "max": 9
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.703125,
+            "mean_se": 0.08237450622488521,
+            "p10": 0.0,
+            "p90": 1.7000000000000028,
+            "min": 0,
+            "max": 2
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.40625,
+            "mean_se": 0.16474901244977042,
+            "p10": 0.0,
+            "p90": 3.4000000000000057,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 7,
+          "instance_reaccess": null
+        },
+        "LEG_SWEEP": {
+          "samples": 64,
+          "played": 42,
+          "not_played": 22,
+          "first_play_when_played": {
+            "n": 42,
+            "mean": 3.5714285714285716,
+            "mean_se": 0.3477868590860096,
+            "p10": 1.0,
+            "p90": 7.0,
+            "min": 1,
+            "max": 9
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.78125,
+            "mean_se": 0.08173694133844916,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 2
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.5625,
+            "mean_se": 0.16347388267689833,
+            "p10": 0.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 8,
+          "instance_reaccess": null
+        },
+        "BACKFLIP": {
+          "samples": 64,
+          "played": 45,
+          "not_played": 19,
+          "first_play_when_played": {
+            "n": 45,
+            "mean": 4.2444444444444445,
+            "mean_se": 0.3762595756096247,
+            "p10": 1.0,
+            "p90": 8.0,
+            "min": 1,
+            "max": 10
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.78125,
+            "mean_se": 0.07206130960001936,
+            "p10": 0.0,
+            "p90": 1.0,
+            "min": 0,
+            "max": 2
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 0.78125,
+            "mean_se": 0.07206130960001936,
+            "p10": 0.0,
+            "p90": 1.0,
+            "min": 0,
+            "max": 2
+          },
+          "same_name_played_again": 5,
+          "instance_reaccess": null
+        },
+        "MALAISE": {
+          "samples": 64,
+          "played": 41,
+          "not_played": 23,
+          "first_play_when_played": {
+            "n": 41,
+            "mean": 4.2439024390243905,
+            "mean_se": 0.29996033844509373,
+            "p10": 2.0,
+            "p90": 7.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.703125,
+            "mean_se": 0.07278367974826783,
+            "p10": 0.0,
+            "p90": 1.0,
+            "min": 0,
+            "max": 2
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 0.703125,
+            "mean_se": 0.07278367974826783,
+            "p10": 0.0,
+            "p90": 1.0,
+            "min": 0,
+            "max": 2
+          },
+          "same_name_played_again": 4,
+          "instance_reaccess": null
+        },
+        "PIERCING_WAIL": {
+          "samples": 64,
+          "played": 41,
+          "not_played": 23,
+          "first_play_when_played": {
+            "n": 41,
+            "mean": 4.219512195121951,
+            "mean_se": 0.34836236236794393,
+            "p10": 2.0,
+            "p90": 7.0,
+            "min": 1,
+            "max": 11
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.11993715285482075,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.59375,
+            "mean_se": 0.18861276941319294,
+            "p10": 0.0,
+            "p90": 3.700000000000003,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 18,
+          "instance_reaccess": null
+        },
+        "NEUTRALIZE": {
+          "samples": 64,
+          "played": 39,
+          "not_played": 25,
+          "first_play_when_played": {
+            "n": 39,
+            "mean": 3.5641025641025643,
+            "mean_se": 0.35955226279734076,
+            "p10": 1.0,
+            "p90": 6.200000000000003,
+            "min": 1,
+            "max": 10
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.6875,
+            "mean_se": 0.07674879141802159,
+            "p10": 0.0,
+            "p90": 1.0,
+            "min": 0,
+            "max": 2
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 0.6875,
+            "mean_se": 0.07674879141802159,
+            "p10": 0.0,
+            "p90": 1.0,
+            "min": 0,
+            "max": 2
+          },
+          "same_name_played_again": 5,
+          "instance_reaccess": null
+        }
+      },
+      "core_trace_complete": 2,
+      "persistence_mismatch_samples": 53,
+      "paired_against": "A",
+      "paired_dpr": {
+        "n": 64,
+        "mean": 0.0,
+        "mean_se": 0.0,
+        "p10": 0.0,
+        "p90": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "paired_hp_loss": {
+        "n": 64,
+        "mean": 0,
+        "mean_se": 0.0,
+        "p10": 0.0,
+        "p90": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "paired_win": {
+        "n": 64,
+        "mean": 0,
+        "mean_se": 0.0,
+        "p10": 0.0,
+        "p90": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "qualified_complete_combinations": null
+    },
+    "B": {
+      "samples": 64,
+      "wins": 64,
+      "deaths": 0,
+      "capped": 0,
+      "time_up": 0,
+      "dpr_all": {
+        "n": 64,
+        "mean": 94.00741792929293,
+        "mean_se": 1.7288887756390041,
+        "p10": 76.0,
+        "p90": 106.4,
+        "min": 48.36363636363637,
+        "max": 106.4
+      },
+      "dpr_won": {
+        "n": 64,
+        "mean": 94.00741792929293,
+        "mean_se": 1.7288887756390041,
+        "p10": 76.0,
+        "p90": 106.4,
+        "min": 48.36363636363637,
+        "max": 106.4
+      },
+      "dpr_died": {
+        "n": 0,
+        "mean": null,
+        "mean_se": null,
+        "p10": null,
+        "p90": null,
+        "min": null,
+        "max": null
+      },
+      "turns_all": {
+        "n": 64,
+        "mean": 5.8125,
+        "mean_se": 0.13706641594844587,
+        "p10": 5.0,
+        "p90": 7.0,
+        "min": 5,
+        "max": 11
+      },
+      "kill_turn_when_won": {
+        "n": 64,
+        "mean": 5.8125,
+        "mean_se": 0.13706641594844587,
+        "p10": 5.0,
+        "p90": 7.0,
+        "min": 5,
+        "max": 11
+      },
+      "hp_loss": {
+        "n": 64,
+        "mean": 12.1875,
+        "mean_se": 0.7456470903405533,
+        "p10": 6.300000000000001,
+        "p90": 20.0,
+        "min": 0,
+        "max": 26
+      },
+      "hp_remaining": {
+        "n": 64,
+        "mean": 18.8125,
+        "mean_se": 0.7456470903405533,
+        "p10": 11.0,
+        "p90": 24.700000000000003,
+        "min": 5,
+        "max": 31
+      },
+      "cumulative_windows": {
+        "3": {
+          "n": 64,
+          "mean": 196.234375,
+          "mean_se": 7.8155110764848095,
+          "p10": 134.0,
+          "p90": 262.70000000000005,
+          "min": 7,
+          "max": 318
+        },
+        "6": {
+          "n": 64,
+          "mean": 507.484375,
+          "mean_se": 9.443991964206136,
+          "p10": 465.1,
+          "p90": 532.0,
+          "min": 130,
+          "max": 532
+        },
+        "12": {
+          "n": 64,
+          "mean": 532,
+          "mean_se": 0.0,
+          "p10": 532.0,
+          "p90": 532.0,
+          "min": 532,
+          "max": 532
+        }
+      },
+      "modeled_poison_accelerant_present": {
+        "all": 64,
+        "present": 64,
+        "not_present": 0,
+        "first_when_present": {
+          "n": 64,
+          "mean": 1.625,
+          "mean_se": 0.078742598543589,
+          "p10": 1.0,
+          "p90": 2.0,
+          "min": 1,
+          "max": 4
+        },
+        "before_dpr_when_present": {
+          "n": 36,
+          "mean": 9.925925925925926,
+          "mean_se": 1.4610227573691181,
+          "p10": 0.0,
+          "p90": 19.0,
+          "min": 0.0,
+          "max": 19.0
+        },
+        "after_dpr_when_present": {
+          "n": 64,
+          "mean": 104.84526515151515,
+          "mean_se": 2.141919930767234,
+          "p10": 86.56666666666668,
+          "p90": 128.95,
+          "min": 48.36363636363637,
+          "max": 133.0
+        }
+      },
+      "cards": {
+        "BOUNCING_FLASK": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.328125,
+            "mean_se": 0.07732727648438203,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 1,
+            "max": 4
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 3.84375,
+            "mean_se": 0.06762242718751049,
+            "p10": 3.0,
+            "p90": 4.0,
+            "min": 3,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 7.6875,
+            "mean_se": 0.13524485437502098,
+            "p10": 6.0,
+            "p90": 8.0,
+            "min": 6,
+            "max": 10
+          },
+          "same_name_played_again": 64,
+          "instance_reaccess": null
+        },
+        "ACCELERANT": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.3125,
+            "mean_se": 0.058397074018894594,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 1,
+            "max": 2
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1,
+            "max": 1
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2,
+            "mean_se": 0.0,
+            "p10": 2.0,
+            "p90": 2.0,
+            "min": 2,
+            "max": 2
+          },
+          "same_name_played_again": 0,
+          "instance_reaccess": null
+        },
+        "HAZE": {
+          "samples": 64,
+          "played": 24,
+          "not_played": 40,
+          "first_play_when_played": {
+            "n": 24,
+            "mean": 2.4166666666666665,
+            "mean_se": 0.3453451679467292,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.5,
+            "mean_se": 0.09182886083655663,
+            "p10": 0.0,
+            "p90": 1.7000000000000028,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.18365772167311326,
+            "p10": 0.0,
+            "p90": 3.4000000000000057,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 7,
+          "instance_reaccess": null
+        },
+        "LEG_SWEEP": {
+          "samples": 64,
+          "played": 59,
+          "not_played": 5,
+          "first_play_when_played": {
+            "n": 59,
+            "mean": 3.5254237288135593,
+            "mean_se": 0.18148670432757733,
+            "p10": 1.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 6
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.203125,
+            "mean_se": 0.08085507654302096,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.40625,
+            "mean_se": 0.16171015308604192,
+            "p10": 2.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 8
+          },
+          "same_name_played_again": 16,
+          "instance_reaccess": null
+        },
+        "BACKFLIP": {
+          "samples": 64,
+          "played": 36,
+          "not_played": 28,
+          "first_play_when_played": {
+            "n": 36,
+            "mean": 2.9166666666666665,
+            "mean_se": 0.208452346958198,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.84375,
+            "mean_se": 0.11619537033505933,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 0.84375,
+            "mean_se": 0.11619537033505933,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 3
+          },
+          "same_name_played_again": 13,
+          "instance_reaccess": null
+        },
+        "MALAISE": {
+          "samples": 64,
+          "played": 61,
+          "not_played": 3,
+          "first_play_when_played": {
+            "n": 61,
+            "mean": 1.9508196721311475,
+            "mean_se": 0.08878730496869902,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.796875,
+            "mean_se": 0.10951663165531975,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.796875,
+            "mean_se": 0.10951663165531975,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 40,
+          "instance_reaccess": null
+        },
+        "PIERCING_WAIL": {
+          "samples": 64,
+          "played": 39,
+          "not_played": 25,
+          "first_play_when_played": {
+            "n": 39,
+            "mean": 3.641025641025641,
+            "mean_se": 0.2093856429798189,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.96875,
+            "mean_se": 0.11987251412587101,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.515625,
+            "mean_se": 0.1954240752733106,
+            "p10": 0.0,
+            "p90": 3.700000000000003,
+            "min": 0,
+            "max": 5
+          },
+          "same_name_played_again": 18,
+          "instance_reaccess": null
+        },
+        "NEUTRALIZE": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.5,
+            "mean_se": 0.11993715285482075,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 2.1875,
+            "mean_se": 0.0858980338670346,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.1875,
+            "mean_se": 0.0858980338670346,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "same_name_played_again": 55,
+          "instance_reaccess": null
+        }
+      },
+      "core_trace_complete": 49,
+      "persistence_mismatch_samples": 64,
+      "paired_against": "A",
+      "paired_dpr": {
+        "n": 64,
+        "mean": 59.206449496683874,
+        "mean_se": 2.9260546957346993,
+        "p10": 29.555555555555557,
+        "p90": 86.0652380952381,
+        "min": -7.388888888888886,
+        "max": 105.2
+      },
+      "paired_hp_loss": {
+        "n": 64,
+        "mean": -16.484375,
+        "mean_se": 0.9950253714510747,
+        "p10": -24.0,
+        "p90": -5.299999999999997,
+        "min": -30,
+        "max": 9
+      },
+      "paired_win": {
+        "n": 64,
+        "mean": 0.75,
+        "mean_se": 0.0545544725589981,
+        "p10": 0.0,
+        "p90": 1.0,
+        "min": 0,
+        "max": 1
+      },
+      "qualified_complete_combinations": null
+    },
+    "C_defense": {
+      "samples": 64,
+      "wins": 53,
+      "deaths": 11,
+      "capped": 0,
+      "time_up": 0,
+      "dpr_all": {
+        "n": 64,
+        "mean": 67.49946308032246,
+        "mean_se": 2.4524253627025856,
+        "p10": 41.3875,
+        "p90": 88.66666666666667,
+        "min": 15.142857142857142,
+        "max": 106.4
+      },
+      "dpr_won": {
+        "n": 53,
+        "mean": 73.71797217457595,
+        "mean_se": 1.908798346959164,
+        "p10": 59.111111111111114,
+        "p90": 88.66666666666667,
+        "min": 44.333333333333336,
+        "max": 106.4
+      },
+      "dpr_died": {
+        "n": 11,
+        "mean": 37.53755562619199,
+        "mean_se": 4.556840249055845,
+        "p10": 19.1,
+        "p90": 53.25,
+        "min": 15.142857142857142,
+        "max": 63.714285714285715
+      },
+      "turns_all": {
+        "n": 64,
+        "mean": 7.75,
+        "mean_se": 0.2101114594609856,
+        "p10": 6.0,
+        "p90": 10.0,
+        "min": 5,
+        "max": 13
+      },
+      "kill_turn_when_won": {
+        "n": 53,
+        "mean": 7.490566037735849,
+        "mean_se": 0.20800845953377797,
+        "p10": 6.0,
+        "p90": 9.0,
+        "min": 5,
+        "max": 12
+      },
+      "hp_loss": {
+        "n": 64,
+        "mean": 16.21875,
+        "mean_se": 1.2874294459786975,
+        "p10": 2.0,
+        "p90": 31.0,
+        "min": 0,
+        "max": 31
+      },
+      "hp_remaining": {
+        "n": 64,
+        "mean": 14.78125,
+        "mean_se": 1.2874294459786975,
+        "p10": 0.0,
+        "p90": 29.0,
+        "min": 0,
+        "max": 31
+      },
+      "cumulative_windows": {
+        "3": {
+          "n": 64,
+          "mean": 108.765625,
+          "mean_se": 7.616806754322213,
+          "p10": 21.300000000000008,
+          "p90": 194.70000000000005,
+          "min": 3,
+          "max": 261
+        },
+        "6": {
+          "n": 64,
+          "mean": 363.71875,
+          "mean_se": 18.383703380309377,
+          "p10": 145.4,
+          "p90": 532.0,
+          "min": 49,
+          "max": 532
+        },
+        "12": {
+          "n": 64,
+          "mean": 498.078125,
+          "mean_se": 11.56092180751321,
+          "p10": 374.90000000000003,
+          "p90": 532.0,
+          "min": 106,
+          "max": 532
+        }
+      },
+      "modeled_poison_accelerant_present": {
+        "all": 64,
+        "present": 64,
+        "not_present": 0,
+        "first_when_present": {
+          "n": 64,
+          "mean": 2.3125,
+          "mean_se": 0.11545931393613586,
+          "p10": 2.0,
+          "p90": 3.0,
+          "min": 1,
+          "max": 6
+        },
+        "before_dpr_when_present": {
+          "n": 59,
+          "mean": 7.8338983050847455,
+          "mean_se": 1.0814454744727977,
+          "p10": 0.0,
+          "p90": 19.0,
+          "min": 0.0,
+          "max": 28.5
+        },
+        "after_dpr_when_present": {
+          "n": 64,
+          "mean": 80.21989481872295,
+          "mean_se": 3.113538552216695,
+          "p10": 46.090909090909086,
+          "p90": 106.4,
+          "min": 23.875,
+          "max": 161.33333333333334
+        }
+      },
+      "cards": {
+        "BOUNCING_FLASK": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 2.03125,
+            "mean_se": 0.16810207771394747,
+            "p10": 1.0,
+            "p90": 4.0,
+            "min": 1,
+            "max": 7
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 3.015625,
+            "mean_se": 0.09832977066790695,
+            "p10": 2.0,
+            "p90": 4.0,
+            "min": 1,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 6.03125,
+            "mean_se": 0.1966595413358139,
+            "p10": 4.0,
+            "p90": 8.0,
+            "min": 2,
+            "max": 8
+          },
+          "same_name_played_again": 61,
+          "instance_reaccess": null
+        },
+        "ACCELERANT": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.546875,
+            "mean_se": 0.08605578980134534,
+            "p10": 1.0,
+            "p90": 2.700000000000003,
+            "min": 1,
+            "max": 3
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1,
+            "max": 1
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2,
+            "mean_se": 0.0,
+            "p10": 2.0,
+            "p90": 2.0,
+            "min": 2,
+            "max": 2
+          },
+          "same_name_played_again": 0,
+          "instance_reaccess": null
+        },
+        "HAZE": {
+          "samples": 64,
+          "played": 40,
+          "not_played": 24,
+          "first_play_when_played": {
+            "n": 40,
+            "mean": 3.625,
+            "mean_se": 0.3698362423476722,
+            "p10": 1.0,
+            "p90": 7.0,
+            "min": 1,
+            "max": 9
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.796875,
+            "mean_se": 0.09231289393635518,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.59375,
+            "mean_se": 0.18462578787271036,
+            "p10": 0.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 10,
+          "instance_reaccess": null
+        },
+        "LEG_SWEEP": {
+          "samples": 64,
+          "played": 53,
+          "not_played": 11,
+          "first_play_when_played": {
+            "n": 53,
+            "mean": 4.037735849056604,
+            "mean_se": 0.22852188658737033,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.34375,
+            "mean_se": 0.11619537033505933,
+            "p10": 0.0,
+            "p90": 2.700000000000003,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.6875,
+            "mean_se": 0.23239074067011867,
+            "p10": 0.0,
+            "p90": 5.400000000000006,
+            "min": 0,
+            "max": 8
+          },
+          "same_name_played_again": 25,
+          "instance_reaccess": null
+        },
+        "BACKFLIP": {
+          "samples": 64,
+          "played": 53,
+          "not_played": 11,
+          "first_play_when_played": {
+            "n": 53,
+            "mean": 3.0943396226415096,
+            "mean_se": 0.30627703925939487,
+            "p10": 1.0,
+            "p90": 6.800000000000004,
+            "min": 1,
+            "max": 10
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.359375,
+            "mean_se": 0.12273177680494328,
+            "p10": 0.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.359375,
+            "mean_se": 0.12273177680494328,
+            "p10": 0.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 23,
+          "instance_reaccess": null
+        },
+        "MALAISE": {
+          "samples": 64,
+          "played": 57,
+          "not_played": 7,
+          "first_play_when_played": {
+            "n": 57,
+            "mean": 2.6140350877192984,
+            "mean_se": 0.1998658478101558,
+            "p10": 1.0,
+            "p90": 4.399999999999999,
+            "min": 1,
+            "max": 9
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.734375,
+            "mean_se": 0.11835971264489008,
+            "p10": 0.3000000000000007,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.734375,
+            "mean_se": 0.11835971264489008,
+            "p10": 0.3000000000000007,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 40,
+          "instance_reaccess": null
+        },
+        "PIERCING_WAIL": {
+          "samples": 64,
+          "played": 56,
+          "not_played": 8,
+          "first_play_when_played": {
+            "n": 56,
+            "mean": 3.5,
+            "mean_se": 0.26111648393354675,
+            "p10": 1.5,
+            "p90": 7.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.6875,
+            "mean_se": 0.13339842161318435,
+            "p10": 0.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.71875,
+            "mean_se": 0.21988086375587973,
+            "p10": 0.0,
+            "p90": 5.0,
+            "min": 0,
+            "max": 8
+          },
+          "same_name_played_again": 36,
+          "instance_reaccess": null
+        },
+        "NEUTRALIZE": {
+          "samples": 64,
+          "played": 57,
+          "not_played": 7,
+          "first_play_when_played": {
+            "n": 57,
+            "mean": 2.6666666666666665,
+            "mean_se": 0.29546842014263947,
+            "p10": 1.0,
+            "p90": 7.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.625,
+            "mean_se": 0.125,
+            "p10": 0.3000000000000007,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.625,
+            "mean_se": 0.125,
+            "p10": 0.3000000000000007,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 33,
+          "instance_reaccess": null
+        }
+      },
+      "core_trace_complete": 30,
+      "persistence_mismatch_samples": 64,
+      "paired_against": "B",
+      "paired_dpr": {
+        "n": 64,
+        "mean": -26.507954848970478,
+        "mean_se": 3.149016151970839,
+        "p10": -58.800000000000004,
+        "p90": 0.0,
+        "min": -87.30000000000001,
+        "max": 30.400000000000006
+      },
+      "paired_hp_loss": {
+        "n": 64,
+        "mean": 4.03125,
+        "mean_se": 1.5144752532341788,
+        "p10": -9.399999999999999,
+        "p90": 21.10000000000001,
+        "min": -24,
+        "max": 26
+      },
+      "paired_win": {
+        "n": 64,
+        "mean": -0.171875,
+        "mean_se": 0.04753177456453702,
+        "p10": -1.0,
+        "p90": 0.0,
+        "min": -1,
+        "max": 0
+      },
+      "qualified_complete_combinations": null
+    },
+    "C_output": {
+      "samples": 64,
+      "wins": 62,
+      "deaths": 2,
+      "capped": 0,
+      "time_up": 0,
+      "dpr_all": {
+        "n": 64,
+        "mean": 84.66996527777778,
+        "mean_se": 1.683362157854873,
+        "p10": 66.5,
+        "p90": 106.4,
+        "min": 53.2,
+        "max": 133.0
+      },
+      "dpr_won": {
+        "n": 62,
+        "mean": 84.97222222222223,
+        "mean_se": 1.7160759249409805,
+        "p10": 66.5,
+        "p90": 106.4,
+        "min": 53.2,
+        "max": 133.0
+      },
+      "dpr_died": {
+        "n": 2,
+        "mean": 75.3,
+        "mean_se": 7.299999999999996,
+        "p10": 69.46,
+        "p90": 81.14,
+        "min": 68.0,
+        "max": 82.6
+      },
+      "turns_all": {
+        "n": 64,
+        "mean": 6.40625,
+        "mean_se": 0.13123110219204775,
+        "p10": 5.0,
+        "p90": 8.0,
+        "min": 4,
+        "max": 10
+      },
+      "kill_turn_when_won": {
+        "n": 62,
+        "mean": 6.419354838709677,
+        "mean_se": 0.13319565513638215,
+        "p10": 5.0,
+        "p90": 8.0,
+        "min": 4,
+        "max": 10
+      },
+      "hp_loss": {
+        "n": 64,
+        "mean": 14.921875,
+        "mean_se": 1.1435430981000678,
+        "p10": 3.0,
+        "p90": 28.700000000000003,
+        "min": 0,
+        "max": 31
+      },
+      "hp_remaining": {
+        "n": 64,
+        "mean": 16.078125,
+        "mean_se": 1.1435430981000678,
+        "p10": 2.3000000000000007,
+        "p90": 28.0,
+        "min": 0,
+        "max": 31
+      },
+      "cumulative_windows": {
+        "3": {
+          "n": 64,
+          "mean": 159.53125,
+          "mean_se": 7.832382438168995,
+          "p10": 82.0,
+          "p90": 232.60000000000005,
+          "min": 3,
+          "max": 303
+        },
+        "6": {
+          "n": 64,
+          "mean": 474.265625,
+          "mean_se": 11.513756484599487,
+          "p10": 342.3,
+          "p90": 532.0,
+          "min": 151,
+          "max": 532
+        },
+        "12": {
+          "n": 64,
+          "mean": 529.265625,
+          "mean_se": 2.0423640921905784,
+          "p10": 532.0,
+          "p90": 532.0,
+          "min": 413,
+          "max": 532
+        }
+      },
+      "modeled_poison_accelerant_present": {
+        "all": 64,
+        "present": 64,
+        "not_present": 0,
+        "first_when_present": {
+          "n": 64,
+          "mean": 1.984375,
+          "mean_se": 0.09832977066790695,
+          "p10": 1.0,
+          "p90": 3.0,
+          "min": 1,
+          "max": 5
+        },
+        "before_dpr_when_present": {
+          "n": 48,
+          "mean": 12.541666666666666,
+          "mean_se": 1.2008818912719395,
+          "p10": 0.0,
+          "p90": 19.0,
+          "min": 0.0,
+          "max": 28.0
+        },
+        "after_dpr_when_present": {
+          "n": 64,
+          "mean": 99.49276413690477,
+          "mean_se": 2.6648668903164054,
+          "p10": 76.0,
+          "p90": 128.25,
+          "min": 64.625,
+          "max": 176.0
+        }
+      },
+      "cards": {
+        "BOUNCING_FLASK": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.453125,
+            "mean_se": 0.0994271476433477,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 3.46875,
+            "mean_se": 0.08324027542230356,
+            "p10": 3.0,
+            "p90": 4.0,
+            "min": 2,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 6.9375,
+            "mean_se": 0.1664805508446071,
+            "p10": 6.0,
+            "p90": 8.0,
+            "min": 4,
+            "max": 10
+          },
+          "same_name_played_again": 64,
+          "instance_reaccess": null
+        },
+        "ACCELERANT": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.65625,
+            "mean_se": 0.086884884386875,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 3
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1,
+            "max": 1
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2,
+            "mean_se": 0.0,
+            "p10": 2.0,
+            "p90": 2.0,
+            "min": 2,
+            "max": 2
+          },
+          "same_name_played_again": 0,
+          "instance_reaccess": null
+        },
+        "HAZE": {
+          "samples": 64,
+          "played": 35,
+          "not_played": 29,
+          "first_play_when_played": {
+            "n": 35,
+            "mean": 2.914285714285714,
+            "mean_se": 0.3439059588367282,
+            "p10": 1.0,
+            "p90": 6.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.671875,
+            "mean_se": 0.08641529336053487,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 2
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.34375,
+            "mean_se": 0.17283058672106974,
+            "p10": 0.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 8,
+          "instance_reaccess": null
+        },
+        "LEG_SWEEP": {
+          "samples": 64,
+          "played": 51,
+          "not_played": 13,
+          "first_play_when_played": {
+            "n": 51,
+            "mean": 3.450980392156863,
+            "mean_se": 0.21201872926922777,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 7
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.21875,
+            "mean_se": 0.1101693096361881,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.4375,
+            "mean_se": 0.2203386192723762,
+            "p10": 0.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 21,
+          "instance_reaccess": null
+        },
+        "BACKFLIP": {
+          "samples": 64,
+          "played": 47,
+          "not_played": 17,
+          "first_play_when_played": {
+            "n": 47,
+            "mean": 3.148936170212766,
+            "mean_se": 0.2413704385909407,
+            "p10": 1.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 7
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.109375,
+            "mean_se": 0.1180974919679795,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.109375,
+            "mean_se": 0.1180974919679795,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 17,
+          "instance_reaccess": null
+        },
+        "MALAISE": {
+          "samples": 64,
+          "played": 57,
+          "not_played": 7,
+          "first_play_when_played": {
+            "n": 57,
+            "mean": 2.0526315789473686,
+            "mean_se": 0.14252698955501686,
+            "p10": 1.0,
+            "p90": 4.0,
+            "min": 1,
+            "max": 6
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.578125,
+            "mean_se": 0.11092300235026469,
+            "p10": 0.3000000000000007,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.578125,
+            "mean_se": 0.11092300235026469,
+            "p10": 0.3000000000000007,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 36,
+          "instance_reaccess": null
+        },
+        "PIERCING_WAIL": {
+          "samples": 64,
+          "played": 51,
+          "not_played": 13,
+          "first_play_when_played": {
+            "n": 51,
+            "mean": 3.450980392156863,
+            "mean_se": 0.22633261224326395,
+            "p10": 1.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 7
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.296875,
+            "mean_se": 0.11503900196979436,
+            "p10": 0.0,
+            "p90": 2.700000000000003,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.921875,
+            "mean_se": 0.17998110502128423,
+            "p10": 0.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 5
+          },
+          "same_name_played_again": 25,
+          "instance_reaccess": null
+        },
+        "NEUTRALIZE": {
+          "samples": 64,
+          "played": 59,
+          "not_played": 5,
+          "first_play_when_played": {
+            "n": 59,
+            "mean": 1.4406779661016949,
+            "mean_se": 0.11408976143773775,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.703125,
+            "mean_se": 0.11503900196979436,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.703125,
+            "mean_se": 0.11503900196979436,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 36,
+          "instance_reaccess": null
+        }
+      },
+      "core_trace_complete": 52,
+      "persistence_mismatch_samples": 64,
+      "paired_against": "B",
+      "paired_dpr": {
+        "n": 64,
+        "mean": -9.337452651515154,
+        "mean_se": 2.6949413498380235,
+        "p10": -39.900000000000006,
+        "p90": 17.48,
+        "min": -53.2,
+        "max": 44.33333333333333
+      },
+      "paired_hp_loss": {
+        "n": 64,
+        "mean": 2.734375,
+        "mean_se": 1.4880879836132694,
+        "p10": -12.7,
+        "p90": 18.0,
+        "min": -23,
+        "max": 24
+      },
+      "paired_win": {
+        "n": 64,
+        "mean": -0.03125,
+        "mean_se": 0.021921011700381302,
+        "p10": 0.0,
+        "p90": 0.0,
+        "min": -1,
+        "max": 0
+      },
+      "qualified_complete_combinations": null
+    },
+    "D_flask_upgrade": {
+      "samples": 64,
+      "wins": 63,
+      "deaths": 1,
+      "capped": 0,
+      "time_up": 0,
+      "dpr_all": {
+        "n": 64,
+        "mean": 85.45315431096681,
+        "mean_se": 2.173699458630461,
+        "p10": 59.111111111111114,
+        "p90": 106.4,
+        "min": 48.36363636363637,
+        "max": 106.4
+      },
+      "dpr_won": {
+        "n": 63,
+        "mean": 85.61454224787559,
+        "mean_se": 2.2023853977629395,
+        "p10": 59.111111111111114,
+        "p90": 106.4,
+        "min": 48.36363636363637,
+        "max": 106.4
+      },
+      "dpr_died": {
+        "n": 1,
+        "mean": 75.28571428571429,
+        "mean_se": null,
+        "p10": 75.28571428571429,
+        "p90": 75.28571428571429,
+        "min": 75.28571428571429,
+        "max": 75.28571428571429
+      },
+      "turns_all": {
+        "n": 64,
+        "mean": 6.53125,
+        "mean_se": 0.1966595413358139,
+        "p10": 5.0,
+        "p90": 9.0,
+        "min": 5,
+        "max": 11
+      },
+      "kill_turn_when_won": {
+        "n": 63,
+        "mean": 6.523809523809524,
+        "mean_se": 0.19966323780056006,
+        "p10": 5.0,
+        "p90": 9.0,
+        "min": 5,
+        "max": 11
+      },
+      "hp_loss": {
+        "n": 64,
+        "mean": 12.90625,
+        "mean_se": 1.1005316964453828,
+        "p10": 2.0,
+        "p90": 26.700000000000003,
+        "min": 0,
+        "max": 31
+      },
+      "hp_remaining": {
+        "n": 64,
+        "mean": 18.09375,
+        "mean_se": 1.1005316964453828,
+        "p10": 4.300000000000001,
+        "p90": 29.0,
+        "min": 0,
+        "max": 31
+      },
+      "cumulative_windows": {
+        "3": {
+          "n": 64,
+          "mean": 162.671875,
+          "mean_se": 7.647006841547392,
+          "p10": 82.0,
+          "p90": 239.90000000000003,
+          "min": 7,
+          "max": 275
+        },
+        "6": {
+          "n": 64,
+          "mean": 460.96875,
+          "mean_se": 14.634518486250402,
+          "p10": 266.8,
+          "p90": 532.0,
+          "min": 130,
+          "max": 532
+        },
+        "12": {
+          "n": 64,
+          "mean": 531.921875,
+          "mean_se": 0.078125,
+          "p10": 532.0,
+          "p90": 532.0,
+          "min": 527,
+          "max": 532
+        }
+      },
+      "modeled_poison_accelerant_present": {
+        "all": 64,
+        "present": 64,
+        "not_present": 0,
+        "first_when_present": {
+          "n": 64,
+          "mean": 1.625,
+          "mean_se": 0.078742598543589,
+          "p10": 1.0,
+          "p90": 2.0,
+          "min": 1,
+          "max": 4
+        },
+        "before_dpr_when_present": {
+          "n": 36,
+          "mean": 9.592592592592593,
+          "mean_se": 1.4197592209053882,
+          "p10": 0.0,
+          "p90": 19.0,
+          "min": 0.0,
+          "max": 19.0
+        },
+        "after_dpr_when_present": {
+          "n": 64,
+          "mean": 94.3628308757215,
+          "mean_se": 2.5965475688816575,
+          "p10": 66.5,
+          "p90": 121.69500000000006,
+          "min": 48.36363636363637,
+          "max": 133.0
+        }
+      },
+      "cards": {
+        "BOUNCING_FLASK": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.328125,
+            "mean_se": 0.07732727648438203,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 1,
+            "max": 4
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 4.078125,
+            "mean_se": 0.08123759825986823,
+            "p10": 3.0,
+            "p90": 5.0,
+            "min": 3,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 8.15625,
+            "mean_se": 0.16247519651973646,
+            "p10": 6.0,
+            "p90": 10.0,
+            "min": 6,
+            "max": 10
+          },
+          "same_name_played_again": 64,
+          "instance_reaccess": null
+        },
+        "ACCELERANT": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.3125,
+            "mean_se": 0.058397074018894594,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 1,
+            "max": 2
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1,
+            "max": 1
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2,
+            "mean_se": 0.0,
+            "p10": 2.0,
+            "p90": 2.0,
+            "min": 2,
+            "max": 2
+          },
+          "same_name_played_again": 0,
+          "instance_reaccess": null
+        },
+        "HAZE": {
+          "samples": 64,
+          "played": 29,
+          "not_played": 35,
+          "first_play_when_played": {
+            "n": 29,
+            "mean": 3.6206896551724137,
+            "mean_se": 0.4586706887816242,
+            "p10": 1.0,
+            "p90": 6.199999999999999,
+            "min": 1,
+            "max": 9
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.5625,
+            "mean_se": 0.08873840188021175,
+            "p10": 0.0,
+            "p90": 1.0,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.125,
+            "mean_se": 0.1774768037604235,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 6,
+          "instance_reaccess": null
+        },
+        "LEG_SWEEP": {
+          "samples": 64,
+          "played": 61,
+          "not_played": 3,
+          "first_play_when_played": {
+            "n": 61,
+            "mean": 3.5901639344262297,
+            "mean_se": 0.1846234525303405,
+            "p10": 1.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 6
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.515625,
+            "mean_se": 0.09447061014175549,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 3.03125,
+            "mean_se": 0.18894122028351099,
+            "p10": 2.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 8
+          },
+          "same_name_played_again": 31,
+          "instance_reaccess": null
+        },
+        "BACKFLIP": {
+          "samples": 64,
+          "played": 37,
+          "not_played": 27,
+          "first_play_when_played": {
+            "n": 37,
+            "mean": 3.27027027027027,
+            "mean_se": 0.2992700043580737,
+            "p10": 1.6,
+            "p90": 5.399999999999999,
+            "min": 1,
+            "max": 7
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.984375,
+            "mean_se": 0.13080221706866962,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 0.984375,
+            "mean_se": 0.13080221706866962,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 19,
+          "instance_reaccess": null
+        },
+        "MALAISE": {
+          "samples": 64,
+          "played": 63,
+          "not_played": 1,
+          "first_play_when_played": {
+            "n": 63,
+            "mean": 2.015873015873016,
+            "mean_se": 0.1024334322125874,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 2.140625,
+            "mean_se": 0.13523052683068554,
+            "p10": 1.0,
+            "p90": 3.700000000000003,
+            "min": 0,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.140625,
+            "mean_se": 0.13523052683068554,
+            "p10": 1.0,
+            "p90": 3.700000000000003,
+            "min": 0,
+            "max": 5
+          },
+          "same_name_played_again": 44,
+          "instance_reaccess": null
+        },
+        "PIERCING_WAIL": {
+          "samples": 64,
+          "played": 45,
+          "not_played": 19,
+          "first_play_when_played": {
+            "n": 45,
+            "mean": 3.8666666666666667,
+            "mean_se": 0.21225104251924193,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.1875,
+            "mean_se": 0.13524485437502098,
+            "p10": 0.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.890625,
+            "mean_se": 0.22061106008391604,
+            "p10": 0.0,
+            "p90": 4.700000000000003,
+            "min": 0,
+            "max": 8
+          },
+          "same_name_played_again": 21,
+          "instance_reaccess": null
+        },
+        "NEUTRALIZE": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.515625,
+            "mean_se": 0.12597277731716483,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 2.265625,
+            "mean_se": 0.08695176179335444,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.265625,
+            "mean_se": 0.08695176179335444,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "same_name_played_again": 56,
+          "instance_reaccess": null
+        }
+      },
+      "core_trace_complete": 45,
+      "persistence_mismatch_samples": 64,
+      "paired_against": "B",
+      "paired_dpr": {
+        "n": 64,
+        "mean": -8.55426361832612,
+        "mean_se": 1.5706990389744382,
+        "p10": -29.555555555555557,
+        "p90": 0.0,
+        "min": -39.900000000000006,
+        "max": 17.733333333333334
+      },
+      "paired_hp_loss": {
+        "n": 64,
+        "mean": 0.71875,
+        "mean_se": 1.0161075624032212,
+        "p10": -7.0,
+        "p90": 9.400000000000006,
+        "min": -25,
+        "max": 28
+      },
+      "paired_win": {
+        "n": 64,
+        "mean": -0.015625,
+        "mean_se": 0.015625,
+        "p10": 0.0,
+        "p90": 0.0,
+        "min": -1,
+        "max": 0
+      },
+      "qualified_complete_combinations": null
+    },
+    "D_flask_replay": {
+      "samples": 64,
+      "wins": 55,
+      "deaths": 9,
+      "capped": 0,
+      "time_up": 0,
+      "dpr_all": {
+        "n": 64,
+        "mean": 67.09058667027418,
+        "mean_se": 1.8773930179692067,
+        "p10": 49.154545454545456,
+        "p90": 84.8666666666667,
+        "min": 28.09090909090909,
+        "max": 106.4
+      },
+      "dpr_won": {
+        "n": 55,
+        "mean": 70.94170798898072,
+        "mean_se": 1.5785519267074375,
+        "p10": 53.2,
+        "p90": 88.66666666666667,
+        "min": 48.36363636363637,
+        "max": 106.4
+      },
+      "dpr_died": {
+        "n": 9,
+        "mean": 43.555956389289726,
+        "mean_se": 3.745107736391905,
+        "p10": 30.854545454545455,
+        "p90": 55.10793650793651,
+        "min": 28.09090909090909,
+        "max": 60.42857142857143
+      },
+      "turns_all": {
+        "n": 64,
+        "mean": 7.984375,
+        "mean_se": 0.1935110373528625,
+        "p10": 6.300000000000001,
+        "p90": 10.0,
+        "min": 5,
+        "max": 12
+      },
+      "kill_turn_when_won": {
+        "n": 55,
+        "mean": 7.709090909090909,
+        "mean_se": 0.17917267271629678,
+        "p10": 6.0,
+        "p90": 10.0,
+        "min": 5,
+        "max": 11
+      },
+      "hp_loss": {
+        "n": 64,
+        "mean": 17.9375,
+        "mean_se": 1.2463985817559224,
+        "p10": 4.300000000000001,
+        "p90": 31.0,
+        "min": 0,
+        "max": 31
+      },
+      "hp_remaining": {
+        "n": 64,
+        "mean": 13.0625,
+        "mean_se": 1.2463985817559224,
+        "p10": 0.0,
+        "p90": 26.700000000000003,
+        "min": 0,
+        "max": 31
+      },
+      "cumulative_windows": {
+        "3": {
+          "n": 64,
+          "mean": 103.4375,
+          "mean_se": 7.355009731792467,
+          "p10": 8.800000000000004,
+          "p90": 187.0,
+          "min": 3,
+          "max": 258
+        },
+        "6": {
+          "n": 64,
+          "mean": 351.765625,
+          "mean_se": 17.865829623853507,
+          "p10": 133.60000000000002,
+          "p90": 530.5,
+          "min": 36,
+          "max": 532
+        },
+        "12": {
+          "n": 64,
+          "mean": 514.515625,
+          "mean_se": 6.373501698637082,
+          "p10": 467.20000000000005,
+          "p90": 532.0,
+          "min": 304,
+          "max": 532
+        }
+      },
+      "modeled_poison_accelerant_present": {
+        "all": 64,
+        "present": 64,
+        "not_present": 0,
+        "first_when_present": {
+          "n": 64,
+          "mean": 2.28125,
+          "mean_se": 0.14851906176093763,
+          "p10": 1.0,
+          "p90": 4.0,
+          "min": 1,
+          "max": 6
+        },
+        "before_dpr_when_present": {
+          "n": 49,
+          "mean": 5.431292517006803,
+          "mean_se": 0.8745754872194343,
+          "p10": 0.0,
+          "p90": 15.800000000000011,
+          "min": 0.0,
+          "max": 19.0
+        },
+        "after_dpr_when_present": {
+          "n": 64,
+          "mean": 78.75007665945166,
+          "mean_se": 2.1130948593859444,
+          "p10": 58.2,
+          "p90": 103.16000000000001,
+          "min": 42.5,
+          "max": 129.25
+        }
+      },
+      "cards": {
+        "BOUNCING_FLASK": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.890625,
+            "mean_se": 0.15287779689585457,
+            "p10": 1.0,
+            "p90": 3.700000000000003,
+            "min": 1,
+            "max": 7
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 3.90625,
+            "mean_se": 0.10846775085798763,
+            "p10": 3.0,
+            "p90": 5.0,
+            "min": 2,
+            "max": 6
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 6.390625,
+            "mean_se": 0.13477124118444864,
+            "p10": 5.0,
+            "p90": 8.0,
+            "min": 4,
+            "max": 8
+          },
+          "same_name_played_again": 64,
+          "instance_reaccess": null
+        },
+        "ACCELERANT": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.3125,
+            "mean_se": 0.058397074018894594,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 1,
+            "max": 2
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1,
+            "max": 1
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2,
+            "mean_se": 0.0,
+            "p10": 2.0,
+            "p90": 2.0,
+            "min": 2,
+            "max": 2
+          },
+          "same_name_played_again": 0,
+          "instance_reaccess": null
+        },
+        "HAZE": {
+          "samples": 64,
+          "played": 40,
+          "not_played": 24,
+          "first_play_when_played": {
+            "n": 40,
+            "mean": 3.425,
+            "mean_se": 0.4484839133266883,
+            "p10": 1.0,
+            "p90": 7.100000000000001,
+            "min": 1,
+            "max": 10
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.921875,
+            "mean_se": 0.11203538871005313,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.84375,
+            "mean_se": 0.22407077742010625,
+            "p10": 0.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 8
+          },
+          "same_name_played_again": 16,
+          "instance_reaccess": null
+        },
+        "LEG_SWEEP": {
+          "samples": 64,
+          "played": 60,
+          "not_played": 4,
+          "first_play_when_played": {
+            "n": 60,
+            "mean": 3.5,
+            "mean_se": 0.20515943916921295,
+            "p10": 1.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 7
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.921875,
+            "mean_se": 0.11422766770552766,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 3.84375,
+            "mean_se": 0.2284553354110553,
+            "p10": 2.0,
+            "p90": 6.0,
+            "min": 0,
+            "max": 8
+          },
+          "same_name_played_again": 45,
+          "instance_reaccess": null
+        },
+        "BACKFLIP": {
+          "samples": 64,
+          "played": 53,
+          "not_played": 11,
+          "first_play_when_played": {
+            "n": 53,
+            "mean": 4.188679245283019,
+            "mean_se": 0.25705799463900453,
+            "p10": 2.0,
+            "p90": 7.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.34375,
+            "mean_se": 0.12444071307827102,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.34375,
+            "mean_se": 0.12444071307827102,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 5
+          },
+          "same_name_played_again": 24,
+          "instance_reaccess": null
+        },
+        "MALAISE": {
+          "samples": 64,
+          "played": 62,
+          "not_played": 2,
+          "first_play_when_played": {
+            "n": 62,
+            "mean": 1.967741935483871,
+            "mean_se": 0.10275872645295712,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 2.859375,
+            "mean_se": 0.1603987892017298,
+            "p10": 1.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 6
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.859375,
+            "mean_se": 0.1603987892017298,
+            "p10": 1.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 54,
+          "instance_reaccess": null
+        },
+        "PIERCING_WAIL": {
+          "samples": 64,
+          "played": 57,
+          "not_played": 7,
+          "first_play_when_played": {
+            "n": 57,
+            "mean": 3.8596491228070176,
+            "mean_se": 0.2100820291086402,
+            "p10": 1.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 7
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.796875,
+            "mean_se": 0.15776792451557567,
+            "p10": 0.3000000000000007,
+            "p90": 3.0,
+            "min": 0,
+            "max": 7
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.921875,
+            "mean_se": 0.2581073200063745,
+            "p10": 0.3000000000000007,
+            "p90": 5.0,
+            "min": 0,
+            "max": 11
+          },
+          "same_name_played_again": 37,
+          "instance_reaccess": null
+        },
+        "NEUTRALIZE": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.484375,
+            "mean_se": 0.12398834170585658,
+            "p10": 1.0,
+            "p90": 2.700000000000003,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 2.875,
+            "mean_se": 0.0983494740586804,
+            "p10": 2.0,
+            "p90": 4.0,
+            "min": 1,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.875,
+            "mean_se": 0.0983494740586804,
+            "p10": 2.0,
+            "p90": 4.0,
+            "min": 1,
+            "max": 5
+          },
+          "same_name_played_again": 61,
+          "instance_reaccess": null
+        }
+      },
+      "core_trace_complete": 31,
+      "persistence_mismatch_samples": 64,
+      "paired_against": "B",
+      "paired_dpr": {
+        "n": 64,
+        "mean": -26.916831259018764,
+        "mean_se": 1.695404035959238,
+        "p10": -45.07222222222222,
+        "p90": -12.666666666666671,
+        "min": -57.121212121212125,
+        "max": 0.0
+      },
+      "paired_hp_loss": {
+        "n": 64,
+        "mean": 5.75,
+        "mean_se": 1.2259592939719453,
+        "p10": -6.0,
+        "p90": 18.700000000000003,
+        "min": -12,
+        "max": 29
+      },
+      "paired_win": {
+        "n": 64,
+        "mean": -0.140625,
+        "mean_se": 0.043797805514170944,
+        "p10": -1.0,
+        "p90": 0.0,
+        "min": -1,
+        "max": 0
+      },
+      "qualified_complete_combinations": null
+    },
+    "D_accelerant_replay": {
+      "samples": 64,
+      "wins": 63,
+      "deaths": 1,
+      "capped": 0,
+      "time_up": 0,
+      "dpr_all": {
+        "n": 64,
+        "mean": 91.35364583333333,
+        "mean_se": 2.0825750318168943,
+        "p10": 69.35000000000001,
+        "p90": 106.4,
+        "min": 33.9,
+        "max": 106.4
+      },
+      "dpr_won": {
+        "n": 63,
+        "mean": 92.26560846560847,
+        "mean_se": 1.9022412371640542,
+        "p10": 76.0,
+        "p90": 106.4,
+        "min": 53.2,
+        "max": 106.4
+      },
+      "dpr_died": {
+        "n": 1,
+        "mean": 33.9,
+        "mean_se": null,
+        "p10": 33.9,
+        "p90": 33.9,
+        "min": 33.9,
+        "max": 33.9
+      },
+      "turns_all": {
+        "n": 64,
+        "mean": 6.015625,
+        "mean_se": 0.15981789534535565,
+        "p10": 5.0,
+        "p90": 7.700000000000003,
+        "min": 5,
+        "max": 10
+      },
+      "kill_turn_when_won": {
+        "n": 63,
+        "mean": 5.9523809523809526,
+        "mean_se": 0.14912025928739286,
+        "p10": 5.0,
+        "p90": 7.0,
+        "min": 5,
+        "max": 10
+      },
+      "hp_loss": {
+        "n": 64,
+        "mean": 12.484375,
+        "mean_se": 0.9454339379888954,
+        "p10": 2.0,
+        "p90": 24.0,
+        "min": 0,
+        "max": 31
+      },
+      "hp_remaining": {
+        "n": 64,
+        "mean": 18.515625,
+        "mean_se": 0.9454339379888954,
+        "p10": 7.0,
+        "p90": 29.0,
+        "min": 0,
+        "max": 31
+      },
+      "cumulative_windows": {
+        "3": {
+          "n": 64,
+          "mean": 175.421875,
+          "mean_se": 7.644792964365088,
+          "p10": 87.70000000000002,
+          "p90": 246.0,
+          "min": 7,
+          "max": 278
+        },
+        "6": {
+          "n": 64,
+          "mean": 488.984375,
+          "mean_se": 12.762783277865681,
+          "p10": 370.0,
+          "p90": 532.0,
+          "min": 118,
+          "max": 532
+        },
+        "12": {
+          "n": 64,
+          "mean": 528.984375,
+          "mean_se": 3.015625,
+          "p10": 532.0,
+          "p90": 532.0,
+          "min": 339,
+          "max": 532
+        }
+      },
+      "modeled_poison_accelerant_present": {
+        "all": 64,
+        "present": 64,
+        "not_present": 0,
+        "first_when_present": {
+          "n": 64,
+          "mean": 1.703125,
+          "mean_se": 0.09095963123215094,
+          "p10": 1.0,
+          "p90": 3.0,
+          "min": 1,
+          "max": 4
+        },
+        "before_dpr_when_present": {
+          "n": 36,
+          "mean": 15.703703703703704,
+          "mean_se": 1.1748411861435655,
+          "p10": 4.0,
+          "p90": 19.0,
+          "min": 0.0,
+          "max": 30.5
+        },
+        "after_dpr_when_present": {
+          "n": 64,
+          "mean": 101.7768043154762,
+          "mean_se": 2.5680121381064986,
+          "p10": 78.35000000000001,
+          "p90": 128.25,
+          "min": 38.25,
+          "max": 157.0
+        }
+      },
+      "cards": {
+        "BOUNCING_FLASK": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.140625,
+            "mean_se": 0.06246899032307251,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1,
+            "max": 4
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 3.953125,
+            "mean_se": 0.06839169799879756,
+            "p10": 3.0,
+            "p90": 5.0,
+            "min": 3,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 7.90625,
+            "mean_se": 0.13678339599759512,
+            "p10": 6.0,
+            "p90": 10.0,
+            "min": 6,
+            "max": 10
+          },
+          "same_name_played_again": 64,
+          "instance_reaccess": null
+        },
+        "ACCELERANT": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.578125,
+            "mean_se": 0.08275000449575588,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 1,
+            "max": 3
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1,
+            "max": 1
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1,
+            "max": 1
+          },
+          "same_name_played_again": 0,
+          "instance_reaccess": null
+        },
+        "HAZE": {
+          "samples": 64,
+          "played": 26,
+          "not_played": 38,
+          "first_play_when_played": {
+            "n": 26,
+            "mean": 3.5384615384615383,
+            "mean_se": 0.48431003811375983,
+            "p10": 1.0,
+            "p90": 7.0,
+            "min": 1,
+            "max": 10
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.46875,
+            "mean_se": 0.07705115158333106,
+            "p10": 0.0,
+            "p90": 1.0,
+            "min": 0,
+            "max": 2
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 0.9375,
+            "mean_se": 0.15410230316666212,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 4,
+          "instance_reaccess": null
+        },
+        "LEG_SWEEP": {
+          "samples": 64,
+          "played": 61,
+          "not_played": 3,
+          "first_play_when_played": {
+            "n": 61,
+            "mean": 3.80327868852459,
+            "mean_se": 0.15474228907428467,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 6
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.25,
+            "mean_se": 0.07042952122737638,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.5,
+            "mean_se": 0.14085904245475275,
+            "p10": 2.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 18,
+          "instance_reaccess": null
+        },
+        "BACKFLIP": {
+          "samples": 64,
+          "played": 33,
+          "not_played": 31,
+          "first_play_when_played": {
+            "n": 33,
+            "mean": 2.909090909090909,
+            "mean_se": 0.2276512000199503,
+            "p10": 1.2000000000000002,
+            "p90": 5.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.890625,
+            "mean_se": 0.13008923124270302,
+            "p10": 0.0,
+            "p90": 2.700000000000003,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 0.890625,
+            "mean_se": 0.13008923124270302,
+            "p10": 0.0,
+            "p90": 2.700000000000003,
+            "min": 0,
+            "max": 3
+          },
+          "same_name_played_again": 17,
+          "instance_reaccess": null
+        },
+        "MALAISE": {
+          "samples": 64,
+          "played": 63,
+          "not_played": 1,
+          "first_play_when_played": {
+            "n": 63,
+            "mean": 1.8095238095238095,
+            "mean_se": 0.10579023302533637,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.96875,
+            "mean_se": 0.12192395740332942,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.96875,
+            "mean_se": 0.12192395740332942,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 40,
+          "instance_reaccess": null
+        },
+        "PIERCING_WAIL": {
+          "samples": 64,
+          "played": 38,
+          "not_played": 26,
+          "first_play_when_played": {
+            "n": 38,
+            "mean": 3.6052631578947367,
+            "mean_se": 0.21181151100390197,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.015625,
+            "mean_se": 0.13454101040999678,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.65625,
+            "mean_se": 0.22627367674061047,
+            "p10": 0.0,
+            "p90": 4.0,
+            "min": 0,
+            "max": 7
+          },
+          "same_name_played_again": 19,
+          "instance_reaccess": null
+        },
+        "NEUTRALIZE": {
+          "samples": 64,
+          "played": 63,
+          "not_played": 1,
+          "first_play_when_played": {
+            "n": 63,
+            "mean": 1.6349206349206349,
+            "mean_se": 0.15230199353861323,
+            "p10": 1.0,
+            "p90": 4.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 2.109375,
+            "mean_se": 0.10708342018710579,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.109375,
+            "mean_se": 0.10708342018710579,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 49,
+          "instance_reaccess": null
+        }
+      },
+      "core_trace_complete": 47,
+      "persistence_mismatch_samples": 0,
+      "paired_against": "B",
+      "paired_dpr": {
+        "n": 64,
+        "mean": -2.6537720959595963,
+        "mean_se": 1.4471008174790072,
+        "p10": -12.413333333333322,
+        "p90": 0.0,
+        "min": -47.28888888888889,
+        "max": 17.733333333333334
+      },
+      "paired_hp_loss": {
+        "n": 64,
+        "mean": 0.296875,
+        "mean_se": 0.5933158134702705,
+        "p10": -3.0,
+        "p90": 3.8000000000000114,
+        "min": -12,
+        "max": 19
+      },
+      "paired_win": {
+        "n": 64,
+        "mean": -0.015625,
+        "mean_se": 0.015625,
+        "p10": 0.0,
+        "p90": 0.0,
+        "min": -1,
+        "max": 0
+      },
+      "qualified_complete_combinations": null
+    },
+    "D_sweep_replay": {
+      "samples": 64,
+      "wins": 63,
+      "deaths": 1,
+      "capped": 0,
+      "time_up": 0,
+      "dpr_all": {
+        "n": 64,
+        "mean": 91.75086805555556,
+        "mean_se": 2.0335057295034478,
+        "p10": 76.0,
+        "p90": 106.4,
+        "min": 21.11111111111111,
+        "max": 106.4
+      },
+      "dpr_won": {
+        "n": 63,
+        "mean": 92.87213403880071,
+        "mean_se": 1.7235846058171,
+        "p10": 76.0,
+        "p90": 106.4,
+        "min": 53.2,
+        "max": 106.4
+      },
+      "dpr_died": {
+        "n": 1,
+        "mean": 21.11111111111111,
+        "mean_se": null,
+        "p10": 21.11111111111111,
+        "p90": 21.11111111111111,
+        "min": 21.11111111111111,
+        "max": 21.11111111111111
+      },
+      "turns_all": {
+        "n": 64,
+        "mean": 5.921875,
+        "mean_se": 0.1360305453778439,
+        "p10": 5.0,
+        "p90": 7.0,
+        "min": 5,
+        "max": 10
+      },
+      "kill_turn_when_won": {
+        "n": 63,
+        "mean": 5.873015873015873,
+        "mean_se": 0.128984500138653,
+        "p10": 5.0,
+        "p90": 7.0,
+        "min": 5,
+        "max": 10
+      },
+      "hp_loss": {
+        "n": 64,
+        "mean": 13.34375,
+        "mean_se": 0.8780329380369382,
+        "p10": 5.0,
+        "p90": 22.700000000000003,
+        "min": 0,
+        "max": 31
+      },
+      "hp_remaining": {
+        "n": 64,
+        "mean": 17.65625,
+        "mean_se": 0.8780329380369382,
+        "p10": 8.3,
+        "p90": 26.0,
+        "min": 0,
+        "max": 31
+      },
+      "cumulative_windows": {
+        "3": {
+          "n": 64,
+          "mean": 194.734375,
+          "mean_se": 7.933385922554162,
+          "p10": 131.2,
+          "p90": 262.70000000000005,
+          "min": 7,
+          "max": 318
+        },
+        "6": {
+          "n": 64,
+          "mean": 502.734375,
+          "mean_se": 9.668058248242955,
+          "p10": 436.5,
+          "p90": 532.0,
+          "min": 130,
+          "max": 532
+        },
+        "12": {
+          "n": 64,
+          "mean": 526.65625,
+          "mean_se": 5.34375,
+          "p10": 532.0,
+          "p90": 532.0,
+          "min": 190,
+          "max": 532
+        }
+      },
+      "modeled_poison_accelerant_present": {
+        "all": 64,
+        "present": 64,
+        "not_present": 0,
+        "first_when_present": {
+          "n": 64,
+          "mean": 1.625,
+          "mean_se": 0.078742598543589,
+          "p10": 1.0,
+          "p90": 2.0,
+          "min": 1,
+          "max": 4
+        },
+        "before_dpr_when_present": {
+          "n": 36,
+          "mean": 9.925925925925926,
+          "mean_se": 1.4610227573691181,
+          "p10": 0.0,
+          "p90": 19.0,
+          "min": 0.0,
+          "max": 19.0
+        },
+        "after_dpr_when_present": {
+          "n": 64,
+          "mean": 102.27352430555555,
+          "mean_se": 2.460833776608863,
+          "p10": 76.0,
+          "p90": 128.25,
+          "min": 21.11111111111111,
+          "max": 133.0
+        }
+      },
+      "cards": {
+        "BOUNCING_FLASK": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.328125,
+            "mean_se": 0.07732727648438203,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 1,
+            "max": 4
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 3.703125,
+            "mean_se": 0.08237450622488521,
+            "p10": 3.0,
+            "p90": 4.0,
+            "min": 2,
+            "max": 5
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 7.40625,
+            "mean_se": 0.16474901244977042,
+            "p10": 6.0,
+            "p90": 8.0,
+            "min": 4,
+            "max": 10
+          },
+          "same_name_played_again": 64,
+          "instance_reaccess": null
+        },
+        "ACCELERANT": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.3125,
+            "mean_se": 0.058397074018894594,
+            "p10": 1.0,
+            "p90": 2.0,
+            "min": 1,
+            "max": 2
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1,
+            "mean_se": 0.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1,
+            "max": 1
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2,
+            "mean_se": 0.0,
+            "p10": 2.0,
+            "p90": 2.0,
+            "min": 2,
+            "max": 2
+          },
+          "same_name_played_again": 0,
+          "instance_reaccess": null
+        },
+        "HAZE": {
+          "samples": 64,
+          "played": 27,
+          "not_played": 37,
+          "first_play_when_played": {
+            "n": 27,
+            "mean": 2.814814814814815,
+            "mean_se": 0.3775654394594129,
+            "p10": 1.0,
+            "p90": 6.0,
+            "min": 1,
+            "max": 8
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 0.546875,
+            "mean_se": 0.0916387606332431,
+            "p10": 0.0,
+            "p90": 1.7000000000000028,
+            "min": 0,
+            "max": 3
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.09375,
+            "mean_se": 0.1832775212664862,
+            "p10": 0.0,
+            "p90": 3.4000000000000057,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 7,
+          "instance_reaccess": null
+        },
+        "LEG_SWEEP": {
+          "samples": 64,
+          "played": 56,
+          "not_played": 8,
+          "first_play_when_played": {
+            "n": 56,
+            "mean": 3.517857142857143,
+            "mean_se": 0.2006338517949684,
+            "p10": 1.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 7
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.078125,
+            "mean_se": 0.07149442029233126,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 2
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.078125,
+            "mean_se": 0.07149442029233126,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 2
+          },
+          "same_name_played_again": 13,
+          "instance_reaccess": null
+        },
+        "BACKFLIP": {
+          "samples": 64,
+          "played": 45,
+          "not_played": 19,
+          "first_play_when_played": {
+            "n": 45,
+            "mean": 3.2444444444444445,
+            "mean_se": 0.1963185299650338,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.109375,
+            "mean_se": 0.12621863805814879,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.109375,
+            "mean_se": 0.12621863805814879,
+            "p10": 0.0,
+            "p90": 2.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 18,
+          "instance_reaccess": null
+        },
+        "MALAISE": {
+          "samples": 64,
+          "played": 61,
+          "not_played": 3,
+          "first_play_when_played": {
+            "n": 61,
+            "mean": 1.9508196721311475,
+            "mean_se": 0.08878730496869902,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.96875,
+            "mean_se": 0.11349592241469253,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 1.96875,
+            "mean_se": 0.11349592241469253,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "same_name_played_again": 45,
+          "instance_reaccess": null
+        },
+        "PIERCING_WAIL": {
+          "samples": 64,
+          "played": 47,
+          "not_played": 17,
+          "first_play_when_played": {
+            "n": 47,
+            "mean": 3.6595744680851063,
+            "mean_se": 0.1700970929804734,
+            "p10": 2.0,
+            "p90": 5.0,
+            "min": 1,
+            "max": 5
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 1.359375,
+            "mean_se": 0.1379541337037509,
+            "p10": 0.0,
+            "p90": 3.0,
+            "min": 0,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.09375,
+            "mean_se": 0.2201626720916597,
+            "p10": 0.0,
+            "p90": 5.0,
+            "min": 0,
+            "max": 6
+          },
+          "same_name_played_again": 28,
+          "instance_reaccess": null
+        },
+        "NEUTRALIZE": {
+          "samples": 64,
+          "played": 64,
+          "not_played": 0,
+          "first_play_when_played": {
+            "n": 64,
+            "mean": 1.5,
+            "mean_se": 0.11993715285482075,
+            "p10": 1.0,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "manual_all": {
+            "n": 64,
+            "mean": 2.3125,
+            "mean_se": 0.08873840188021175,
+            "p10": 1.3000000000000007,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "effects_all": {
+            "n": 64,
+            "mean": 2.3125,
+            "mean_se": 0.08873840188021175,
+            "p10": 1.3000000000000007,
+            "p90": 3.0,
+            "min": 1,
+            "max": 4
+          },
+          "same_name_played_again": 57,
+          "instance_reaccess": null
+        }
+      },
+      "core_trace_complete": 39,
+      "persistence_mismatch_samples": 64,
+      "paired_against": "B",
+      "paired_dpr": {
+        "n": 64,
+        "mean": -2.256549873737374,
+        "mean_se": 0.7351189257089962,
+        "p10": -12.666666666666671,
+        "p90": 0.0,
+        "min": -27.252525252525256,
+        "max": 0.0
+      },
+      "paired_hp_loss": {
+        "n": 64,
+        "mean": 1.15625,
+        "mean_se": 0.4656977345449701,
+        "p10": -1.0,
+        "p90": 6.700000000000003,
+        "min": -11,
+        "max": 11
+      },
+      "paired_win": {
+        "n": 64,
+        "mean": -0.015625,
+        "mean_se": 0.015625,
+        "p10": 0.0,
+        "p90": 0.0,
+        "min": -1,
+        "max": 0
+      },
+      "qualified_complete_combinations": null
+    }
+  }
+}

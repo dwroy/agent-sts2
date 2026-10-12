@@ -1,5 +1,5 @@
 /**
- * RUN_PLAN_MERGE (default on; Dai 2026-10-02: "进入新的一幕 为什么不直接先进去，然后一起问ds 选项和 这一幕的所有规划呢"): a due
+ * RUN_PLAN_MERGE (default on; Roy 2026-10-02: "进入新的一幕 为什么不直接先进去，然后一起问ds 选项和 这一幕的所有规划呢"): a due
  * run plan rides on the next DeepSeek question instead of its own call at the map.
  *
  * Why: entering a new act paused twice, first at the map for the run plan (TMNFVW6DRQ20 F17 16 s; V4.3 to 10-02 11:15:

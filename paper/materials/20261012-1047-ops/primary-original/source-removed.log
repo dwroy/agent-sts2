@@ -1,0 +1,188 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-101301/agent
+
+ ❯ tests/silent-selection-observation.test.ts (16 tests | 15 failed) 85ms
+   × 8JRE F33 T1/T4 links observed power appearance to the original dispatch and later state 13ms
+   × first and third attempt end-turn observations retain distinct actual HP costs and residual poison 4ms
+   × a re-ask keeps an observed prefix while actual candidate attribution stays unknown 5ms
+   × pending remains unconfirmed despite a later endpoint; rejected dispatches get no causal credit 7ms
+   × missing observations never invent state effects 4ms
+   × duplicate observations never invent state effects 4ms
+   × powers_missing observations never invent state effects 4ms
+   × powers_duplicate observations never invent state effects 5ms
+   × gap boundaries do not turn missing execution or SL restoration into recovery 4ms
+   × attempt boundaries do not turn missing execution or SL restoration into recovery 4ms
+   × reload boundaries do not turn missing execution or SL restoration into recovery 3ms
+   × unknown_attempt boundaries do not turn missing execution or SL restoration into recovery 7ms
+   × turn boundaries do not turn missing execution or SL restoration into recovery 4ms
+   × time boundaries do not turn missing execution or SL restoration into recovery 3ms
+   × enemy index changes retain type labels; repeated types and roster changes remain unresolved 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-selection-observation.test.ts > 8JRE F33 T1/T4 links observed power appearance to the original dispatch and later state
+AssertionError: expected undefined to match object { status: 'observed_endpoints', …(1) }
+
+- Expected:
+{
+  "facts": {
+    "causal_action_result": null,
+    "full_candidate_result": null,
+    "next_source_line": 270214,
+    "player_hp_delta": 0,
+    "player_power_changes": [
+      {
+        "after": 1,
+        "before": null,
+        "power_id": "AFTERIMAGE_POWER",
+      },
+    ],
+  },
+  "status": "observed_endpoints",
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-selection-observation.test.ts:13:38
+     11|     [270225, "ACCELERANT_POWER", 1]] as const) {
+     12|     const action = at(line);
+     13|     expect(action.observed_interval).toMatchObject({ status: "observed…
+       |                                      ^
+     14|       next_source_line: line + 1, player_hp_delta: 0,
+     15|       player_power_changes: [{ power_id: id, before: null, after: amou…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  tests/silent-selection-observation.test.ts > first and third attempt end-turn observations retain distinct actual HP costs and residual poison
+TypeError: Cannot read properties of undefined (reading 'facts')
+ ❯ tests/silent-selection-observation.test.ts:22:28
+     20|
+     21| it("first and third attempt end-turn observations retain distinct actu…
+     22|   const first = at(270219).observed_interval.facts!;
+       |                            ^
+     23|   const third = at(270285).observed_interval.facts!;
+     24|   expect(first.player_hp_delta).toBe(-3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  tests/silent-selection-observation.test.ts > a re-ask keeps an observed prefix while actual candidate attribution stays unknown
+TypeError: Cannot read properties of undefined (reading 'facts')
+ ❯ tests/silent-selection-observation.test.ts:39:48
+     37|   expect(segment.boundary.kind).toBe("superseded_by_question");
+     38|   expect(segment.actions).toHaveLength(1);
+     39|   expect(segment.actions[0]!.observed_interval.facts?.next_source_line…
+       |                                                ^
+     40|   expect(at(270308).observed_interval.facts?.player_power_changes).toC…
+     41|     power_id: "AFTERIMAGE_POWER", before: null, after: 1,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  tests/silent-selection-observation.test.ts > pending remains unconfirmed despite a later endpoint; rejected dispatches get no causal credit
+AssertionError: expected { …(9) } to match object { Object (dispatch, observed_interval) }
+(23 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "dispatch": "queued_unconfirmed",
+-   "observed_interval": {
+-     "facts": {
+-       "causal_action_result": null,
+-     },
+-     "status": "observed_endpoints",
+-   },
+  }
+
+ ❯ tests/silent-selection-observation.test.ts:49:22
+     47|
+     48| it("pending remains unconfirmed despite a later endpoint; rejected dis…
+     49|   expect(at(270211)).toMatchObject({ dispatch: "queued_unconfirmed", o…
+       |                      ^
+     50|     status: "observed_endpoints", facts: { causal_action_result: null …
+     51|   } });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  tests/silent-selection-observation.test.ts > missing observations never invent state effects
+ FAIL  tests/silent-selection-observation.test.ts > duplicate observations never invent state effects
+AssertionError: expected undefined to match object { status: 'unknown', facts: null }
+
+- Expected:
+{
+  "facts": null,
+  "status": "unknown",
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-selection-observation.test.ts:65:25
+     63|   const interval = at(270213, source).observed_interval;
+     64|   if (mode.startsWith("powers")) expect(interval.facts?.player_power_c…
+     65|   else expect(interval).toMatchObject({ status: "unknown", facts: null…
+       |                         ^
+     66| });
+     67|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  tests/silent-selection-observation.test.ts > powers_missing observations never invent state effects
+ FAIL  tests/silent-selection-observation.test.ts > powers_duplicate observations never invent state effects
+TypeError: Cannot read properties of undefined (reading 'facts')
+ ❯ tests/silent-selection-observation.test.ts:64:50
+     62|   if (mode === "powers_duplicate") source.states[index].state.combat.p…
+     63|   const interval = at(270213, source).observed_interval;
+     64|   if (mode.startsWith("powers")) expect(interval.facts?.player_power_c…
+       |                                                  ^
+     65|   else expect(interval).toMatchObject({ status: "unknown", facts: null…
+     66| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  tests/silent-selection-observation.test.ts > gap boundaries do not turn missing execution or SL restoration into recovery
+ FAIL  tests/silent-selection-observation.test.ts > attempt boundaries do not turn missing execution or SL restoration into recovery
+ FAIL  tests/silent-selection-observation.test.ts > reload boundaries do not turn missing execution or SL restoration into recovery
+ FAIL  tests/silent-selection-observation.test.ts > unknown_attempt boundaries do not turn missing execution or SL restoration into recovery
+ FAIL  tests/silent-selection-observation.test.ts > turn boundaries do not turn missing execution or SL restoration into recovery
+ FAIL  tests/silent-selection-observation.test.ts > time boundaries do not turn missing execution or SL restoration into recovery
+AssertionError: expected undefined to match object { status: 'unknown', facts: null }
+
+- Expected:
+{
+  "facts": null,
+  "status": "unknown",
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-selection-observation.test.ts:80:48
+     78|     state.observed_ts = next.observed_ts = previous.observed_ts;
+     79|   }
+     80|   expect(at(270213, source).observed_interval).toMatchObject({ status:…
+       |                                                ^
+     81| });
+     82|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  tests/silent-selection-observation.test.ts > enemy index changes retain type labels; repeated types and roster changes remain unresolved
+TypeError: Cannot read properties of undefined (reading 'facts')
+ ❯ tests/silent-selection-observation.test.ts:87:29
+     85|   const state = source.states.find((s: any) => s.observed_ts === next.…
+     86|   state.state.combat.enemies[0].index = 4;
+     87|   expect(at(270219, source).observed_interval.facts?.enemy_changes).to…
+       |                             ^
+     88|   state.state.combat.enemies.push(structuredClone(state.state.combat.e…
+     89|   expect(at(270219, source).observed_interval.facts?.enemy_changes).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  15 failed | 1 passed (16)
+   Start at  10:21:57
+   Duration  682ms (transform 340ms, setup 324ms, import 105ms, tests 85ms, environment 0ms)
+

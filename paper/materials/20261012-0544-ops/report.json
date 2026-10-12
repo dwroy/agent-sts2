@@ -1,0 +1,146 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-051302-strategy-proposal",
+  "base": "e16f507d706cf7abbcd664a64609fe578684e329",
+  "runs": [
+    "MTQ0EUBJ3R6T",
+    "7X0W3U8TVA2A",
+    "KFRDELW2TH2P"
+  ],
+  "fixes": [
+    {
+      "commit": "5c3dd2ea1500aa0eb8ebc4de73669c083d0a0452",
+      "source_parent": "e16f507d706cf7abbcd664a64609fe578684e329",
+      "summary": "静默A10已观测HP恢复按边界进入原大脑历史，区分营火/开场/跨层/回合回退，不改选择阈值；源码完成，待live集成。",
+      "ledger": [
+        "silent-0421",
+        "silent-0019",
+        "silent-0020",
+        "silent-0243"
+      ],
+      "proposal_ids": [
+        "silent-proposal-3540bf4360bf80af",
+        "silent-proposal-fdc3a505fe5e1a55"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "reason": "live锁内merge-tree预检4个既有记录冲突，exit78；没有执行merge，未登记行为版本或shipped。",
+      "paths": [
+        "notes/for-roy.md",
+        "ops/inbox-dev.md",
+        "paper/materials/decision-log.md",
+        "paper/materials/learning/ledger.jsonl"
+      ]
+    },
+    {
+      "reason": "其余8个宽提案保留部分实现与具体工程/证据缺口，逐项见proposal_results。"
+    }
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3153
+  },
+  "tests_live": null,
+  "regression": {
+    "without_implementation": {
+      "exit": 1,
+      "failed": 5,
+      "passed": 1
+    },
+    "restored": {
+      "exit": 0,
+      "passed": 6
+    }
+  },
+  "gitleaks": 0,
+  "code_proposals": [
+    "silent-proposal-0802f69b28d25079",
+    "silent-proposal-f54e8de2381c1250",
+    "silent-proposal-763a4b9d9f17b815",
+    "silent-proposal-19a5cff2094e2d8f",
+    "silent-proposal-3540bf4360bf80af",
+    "silent-proposal-0ea5c0b9c030fdd6",
+    "silent-proposal-f915ec544ab94b6e",
+    "silent-proposal-8fb51933639faf90",
+    "silent-proposal-b3bc0eb09211af6c",
+    "silent-proposal-fdc3a505fe5e1a55"
+  ],
+  "implementation_domains": [
+    "structure"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-0802f69b28d25079",
+      "state": "waiting",
+      "reason": "MTQ0 F23T3损0→8、扣13→19已核；现有SL资源差及离线链已在live。原线同样失败且后继不同，缺完整同条件胜线和独立留出，不能拟合全败排序、药水持有价或HP门槛。"
+    },
+    {
+      "id": "silent-proposal-f54e8de2381c1250",
+      "state": "waiting",
+      "reason": "在线候选审计及离线实线分段已由实际live祖先a8b1f8be153fe4f3a34146117546c2178f2e446b、6f3f783941270ac182237c46068097ff67e85907覆盖；本次367段复核确认MTQ0 F11弃后继重问。在线完整执行认证/实际结果与原推演比较仍缺，完整实线最优不可由候选best替代；工程缺口不等同缺新局。"
+    },
+    {
+      "id": "silent-proposal-763a4b9d9f17b815",
+      "state": "waiting",
+      "reason": "14项机制的局部能力/药效时点已核，本次89组动作相邻帧保留；部分源码已上线，但14项组合完整实线回放、缺失毛伤事件及未知修饰隔离未完成，不能整包duplicate或补新权重。"
+    },
+    {
+      "id": "silent-proposal-19a5cff2094e2d8f",
+      "state": "waiting",
+      "reason": "暂死/清状态与SL候选差值已有live子实现，旧未合入理由已过时。7X0 F31仍有接续中间帧缺口，修正输入后的完整生命周期、实线终局反事实和留出校准未完成，不据饱和预测更改必死边界。"
+    },
+    {
+      "id": "silent-proposal-3540bf4360bf80af",
+      "state": "waiting",
+      "reason": "本批在线HP分源消费者已实现为5c3dd2ea1500aa0eb8ebc4de73669c083d0a0452，账本silent-0421，tsc/vitest3153例通过；live锁内预检4个既有记录文件冲突，未合入。此有限事实交付不缺新局，待运维处理集成；另一条路线的胜负因果仍未观察。"
+    },
+    {
+      "id": "silent-proposal-0ea5c0b9c030fdd6",
+      "state": "waiting",
+      "reason": "实际live祖先8bb53d6342b7e9a2adf96de231b53c36eaa943de已覆盖奇巧名额/能量事实及六次毒药+6，本次16原帧SHA全等。continuation_verified仍false，奇巧换目标后完整合法后继收益未验证，提前饮毒的整战对照缺失，不能把窄输入交付视为整提案完成。"
+    },
+    {
+      "id": "silent-proposal-f915ec544ab94b6e",
+      "state": "waiting",
+      "reason": "实际live祖先6f3f783941270ac182237c46068097ff67e85907已提供离线阶段链，本次重核KFR F12生成小刀后重问、F33T6损6/12与扣83/93。完整实际资源结果自动归因未完成，两SL均失败，缺改排序所需整战反事实与独立留出。"
+    },
+    {
+      "id": "silent-proposal-8fb51933639faf90",
+      "state": "waiting",
+      "reason": "毒药6层/触媒两结已有窄范围live支持，铁心建7覆甲和敏捷2不立即补牌挡已核；完整覆甲减层触发、未知修饰组合及药水时点整战对照仍缺，不能把部分模型标作六机制整包实现。"
+    },
+    {
+      "id": "silent-proposal-b3bc0eb09211af6c",
+      "state": "waiting",
+      "reason": "奇巧剩余名额事实、SL资源比较及离线追踪已有live子实现；未验证换对象/顺序后的完整可执行后继，其他诅咒、提前饮毒的整战对照也未观察。末敌74仍活，未结毒/持有爆发不能当成终结或更安全替线。"
+    },
+    {
+      "id": "silent-proposal-fdc3a505fe5e1a55",
+      "state": "waiting",
+      "reason": "本批与3540共用源码5c3dd2ea1500aa0eb8ebc4de73669c083d0a0452及silent-0421：六营火、跨层/开场恢复、回合回退通过原大脑历史分列并验SL恢复；3153例通过。live4个既有记录冲突阻塞，尚非live祖先，待运维集成；休息对锻造/替路线的因果效果仍未知。"
+    }
+  ],
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-051302/learner/runs/20261012-051312-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-051302/learner/runs/20261012-051312-strategy-proposal/report.md",
+  "live_premerge": "85e70e03a4f1aa0191296441db457511e1dd8406",
+  "live_merge_preflight": {
+    "exit": 78,
+    "merge_tree_exit": 1,
+    "conflicts": [
+      "notes/for-roy.md",
+      "ops/inbox-dev.md",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl"
+    ],
+    "knowledge_overlap": [],
+    "preserved_dirty": [
+      "notes/fight-value-backtest-silent.md"
+    ]
+  }
+}

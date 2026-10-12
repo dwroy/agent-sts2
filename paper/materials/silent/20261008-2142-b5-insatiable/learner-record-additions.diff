@@ -1,0 +1,21 @@
+diff --git a/notes/silent-climb-report.md b/notes/silent-climb-report.md
+index feb9681e..dc615ab3 100644
+--- a/notes/silent-climb-report.md
++++ b/notes/silent-climb-report.md
+@@ -1136,3 +1136,6 @@ S1.exp33已由学习者自测合入live，19项经CLI/by=ops登记shipped，0151
+ character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+ silent,9,3,1,0,1,39.67,38,HMVJKM56S4Q8,G403VCZ3BH1B,2026-10-05T18:45:41+00:00,2026-10-05T20:51:26+00:00,0,0,29,silent-0010 silent-0018 silent-0024 silent-0025 silent-0037 silent-0064 silent-0069 silent-0072 silent-0076 silent-0079 silent-0090 silent-0102 silent-0103 silent-0106 silent-0129 silent-0133 silent-0134 silent-0135 silent-0136 silent-0137 silent-0138 silent-0139 silent-0140 silent-0141 silent-0142 silent-0143 silent-0144 silent-0145 silent-0146,1,1
+ ```
++
++
++2026-10-08 21:34:56 CST：Silent/THE_INSATIABLE B5 批次20261008-174301 rejected；原日志取帧偏差需要扩到character_extract.py，本批无源码候选/合入/版本。完整冻结重放、原门槛与失败历史见 `paper/materials/silent/boss-sim-b5-the_insatiable-20261008-174301.md`；账本 silent-0303。
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index 66190cf5..818503c0 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -1612,3 +1612,5 @@
+ - 2026-10-08 16:19 运维codex16:07经验兜底：源f2ce61432a35dcfc96e9ea651f59712ca6a2021f原23项并行记录冲突和merged-null历史保留；空闲非阻塞锁内从live55cb69ff537ada4adbee3cdc92db853b77482d9c只集成已测experience.json原blob，实际bf4b1cef5e319ccb21cb35d91e848615d5eb9fa8，新增刷新55cb69ff537ada4adbee3cdc92db853b77482d9c及隔离probe六路径、其余代码/知识保持；源真实祖先。经验.17→.18/增0改17退0/176 active，唯一S1.exp101；源原沙箱251文件2621例tsc/vitest0，保留当前代码合后沙箱251文件2627例exit0，数据免重复源码自测，不冒报新数据树完整通过。三代码提案沿原自动链，main/所属18数据shipped随后机械登记，原批完整外部独立续验；原exp100完整exit1仍保留，不以本次沙箱关闭其修复队列。回执paper/materials/silent/20261008-1607-experience101。
+ - 2026-10-08 16:59:12 CST Codex学习者：Roy已授权静默boss模拟校准定期刷新；21次新实际结局触发，131局/604尝试/241可用，固定107调参keys与UTC切点2026-10-06T02:46:11.648000，新样本仅扩验证113→134；来源['9R916WW0V65N', 'G8NHLL09DLBX', 'H1T1F8ML9FUE', 'K2JAGKVJAWZJ', 'L2TSFU62Z57Z', 'LYBHQ1X230ZB', 'NEWRFAYKTQHR', 'PD9AYQVMLQW6', 'T0DGVABPV60U', 'ZTRGYYMLR8SC']，账本silent-0299仍proposed待运维实际确认。原实现cdf75af64fb5b118a5a808ecb3b05e2a05991c36，本批源0471382514799baa3db44602f56ac35020f30ba6，锁内刷新87bceeb23dd5531f89753f89b4dd1c6e188e706e，实际合入465df69b196ff828dedf250538acba9917c120b5/树e46d4c8b4f16302da04649d5b90de854f4363422；B2可信['KAISER_CRAB', 'CEREMONIAL_BEAST', 'KNOWLEDGE_DEMON', 'LAGAVULIN_MATRIARCH', 'SOUL_FYSH', 'WATERFALL_GIANT']，B3可信['KAISER_CRAB', 'CEREMONIAL_BEAST', 'KNOWLEDGE_DEMON', 'LAGAVULIN_MATRIARCH', 'SOUL_FYSH', 'WATERFALL_GIANT']，F49实际8/可用7/验证{'t1': 5, 'pre': 5}、还差{'t1': 5, 'pre': 5}且保留全部失败指标；来源与模型固定，后续live并行模型不冒称本次回放验证；源及合后原沙箱tsc/vitest0，Python固定12例0，唯一S1.boss-calibration5，原中断/冲突/错误留史，完整外部交调度器。报告paper/materials/silent/boss-sim-calibration.md；不改策略阈值、不混角色、旧指纹目录留存。
+ - 2026-10-08 17:02 运维codex16:55经验兜底：源7f51464c2c6610ee0a304c4c092a556b5b8ee4cb原32项并行记录冲突和merged-null历史保留；空闲非阻塞锁内从live183e274b0279f711307046ed956214999296f050只集成已测experience.json原blob，实际3e5637f6583e83c7348101623ac369b63dd1174b，新增刷新183e274b0279f711307046ed956214999296f050及隔离probe六路径、其余代码/知识保持；源真实祖先。经验.18→.19/增0改16退0/176 active，唯一S1.exp102；源原沙箱251文件2621例tsc/vitest0，保留当前固定650a6a84完整检查302文件3435例exit0，数据免重复源码自测，不冒报新数据树完整通过。四代码提案沿原自动链，main/所属16数据shipped随后机械登记，原批完整外部独立续验；原exp100完整exit1仍保留，不以本次沙箱关闭其修复队列。回执paper/materials/silent/20261008-1655-experience102。
++
++- 2026-10-08 21:34:57 CST Codex学习者：Roy已授权silent/THE_INSATIABLE B5批次20261008-174301，派发base=69a7b4414cdbaade679427d96af1a2cbbd04062d；原日志7组三帧证实取帧打穿量失真，修character_extract.py超范围，原tune防守权重1/2劣于base，无候选源码/合live/版本。扩充冻结254场/508起点、107 tune/147 val，两侧目标48独立重放/其他键复用，原验收rejected、实盘五回合隔离逐字节相同；原沙箱首次rc1保留，环境链接修正后rc0/2627例。真实fight账本silent-0303 rejected；报告paper/materials/silent/boss-sim-b5-the_insatiable-20261008-174301.md，档案experiments/boss-sim/silent/821f62527709a338a801fde624bf149e661fb17cc0cccbcf800a28a2dde8b369，验收/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-174301/learner/runs/20261008-174304-boss-sim-batch/acceptance.json；交原完成通道，不冒称上线。

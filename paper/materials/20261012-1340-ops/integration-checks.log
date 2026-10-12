@@ -1,0 +1,20 @@
+$ nice -n 19 node_modules/.bin/tsc -p tsconfig.json --noEmit
+$ nice -n 19 python3 -B ops/tests/test_strategy_research_scheduling.py
+......................research dispatch receipt could not be saved; actual batch remains registered
+.......
+----------------------------------------------------------------------
+Ran 29 tests in 4.443s
+
+OK
+{"dispatched": ["20261012-134339-strategy-proposal", 101]}
+{"dispatched": null}
+{"dispatched": null}
+$ nice -n 19 python3 -B ops/tests/test_strategy_research.py
+......./home/dw/Projects/agent-sts2/.worktrees/ops-decklists-entry-live-20261012-1340/ops/learner_checks.py:26: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmptqbgj0dg/state/learner/20261010-130001-strategy-proposal.out' mode='r' encoding='utf8'>
+  text = open(path, encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.
+----------------------------------------------------------------------
+Ran 8 tests in 1.453s
+
+OK

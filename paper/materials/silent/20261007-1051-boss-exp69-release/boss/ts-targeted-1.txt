@@ -1,0 +1,54 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent
+
+ ❯ tests/silent-boss-calibration.test.ts (5 tests | 2 failed) 15ms
+     × B2 first-attempt gating and B3 reasons consume their own table and A10 scope 5ms
+     × B3 paired differences, errors and calibrated floor use the same ascension map 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-boss-calibration.test.ts > Silent boss calibration > B2 first-attempt gating and B3 reasons consume their own table and A10 scope
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ state tests/silent-boss-calibration.test.ts:64:48
+ ❯ tests/silent-boss-calibration.test.ts:66:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/silent-boss-calibration.test.ts > Silent boss calibration > B3 paired differences, errors and calibrated floor use the same ascension map
+AssertionError: expected 0.32 to deeply equal 0.3200306937140861
+
+- Expected
++ Received
+
+- 0.3200306937140861
++ 0.32
+
+ ❯ tests/silent-boss-calibration.test.ts:76:19
+     74|     fixture();
+     75|     const d = calibratedDiff(0.7, 0.3, 0.05, 200, 10);
+     76|     expect(d.cal).toEqual(calibratedWinProb(0.7, 200, "pre", 10) - cal…
+       |                   ^
+     77|     expect(d.calSe).toBeCloseTo(d.cal / 0.4 * 0.05);
+     78|     expect(calibratedFloor(10)).toEqual(calibratedWinProb(0, 200, "pre…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 4 passed (6)
+   Start at  08:23:38
+   Duration  1.62s (transform 1.09s, setup 321ms, import 1.02s, tests 19ms, environment 0ms)
+

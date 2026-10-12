@@ -1,0 +1,142 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-9e77e1e88c0cecd4",
+    "ts": "2026-10-08T13:16:52+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0012",
+      "silent-0005",
+      "silent-0104",
+      "silent-0105",
+      "silent-0016",
+      "silent-0178",
+      "silent-0293"
+    ],
+    "runs": [
+      "T0DGVABPV60U"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "旧/新行为：当前只读复盘定位入口敏捷能读对，但螺线新触发/次轮清除未传播。独立核combat-plan/turn-solver按已见每刀新建1临时敏捷，供后继挡牌兑现；rollout次轮扣HELICAL_DART_POWER而保留步法永久敏捷。原已有挡/覆甲分源，钨棍逐次HP损失减1只补当前遗漏的已见组合；未知组合不变",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update/proposal-dexterity.md",
+    "experience": [
+      "silent-strength-weak-observation",
+      "silent-footwork-block",
+      "silent-helical-dart-shiv-dexterity",
+      "silent-gorget-plating",
+      "silent-tungsten-rod-hp-loss-observation"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "95d2c21f41e94501cc67e7ca27374bf699415186cb744472f92b4ba3c3cf0493",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-e406c9312e1c329a",
+    "ts": "2026-10-08T13:16:52+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0045",
+      "silent-0122",
+      "silent-0094"
+    ],
+    "runs": [
+      "T0DGVABPV60U"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "旧/新行为：先核已有铁棒计数/速行者抽牌触发和滚石轮初实现；若未覆盖，只按已见时点与来源传递新增牌/群伤，不把偏折或能力牌本身标为攻击，不预支未触发滚石/未知未来抽牌。无实体单次上限已见，多体/重放/自动触发未隔离则保留。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update/proposal-draw-growth.md",
+    "experience": [
+      "silent-speedster-draw-damage",
+      "silent-iron-club-four-card-draw",
+      "silent-rolling-boulder-start-growth"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "c1231fa4c71075903e37234f58c181f34bb2547e298d9afb71fc7a8d33536168",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-6f660733c357cfe0",
+    "ts": "2026-10-08T13:16:52+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0028",
+      "silent-0079"
+    ],
+    "runs": [
+      "T0DGVABPV60U"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl"
+    ],
+    "summary": "旧/新行为：保留真正必死才读档。对同盘饱和全败探索，独立审计原答→护栏→SL→抽牌重问→实际行动；核扫腿虚弱/挡、临时敏捷、技能激怒/阶段重置的即时血价。现只有局部差额，缺原线整战胜利，探索评分/血价权重不据此直接改，先记录候选与实际资源再等待固定完整对照。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update/proposal-phase-sl.md",
+    "experience": [
+      "silent-test-subject-phase-reset"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "c354d466aa1db11c9e8ffee7528e93d3190ef3eb3e10eec3db814cb61c7ce3c1",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-e6559caa25d704e3",
+    "ts": "2026-10-08T13:16:53+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0125",
+      "silent-0294",
+      "silent-0276",
+      "silent-0259",
+      "silent-0243",
+      "silent-0020",
+      "silent-0019",
+      "silent-0021"
+    ],
+    "runs": [
+      "T0DGVABPV60U",
+      "ZE8F192FKX24",
+      "6EV5V6PJJS9D",
+      "VLV17NUSFS61",
+      "7ZUC4VPMDS41"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "summary": "旧/新行为：炼制的实际生成、未执行机会和持药价值分账；检查护栏替换能否明确列出失去的补药窗口及未知随机产物。当前HP护栏/留药/终局价值阈值保持；先用已知候选固定数据核机制和两战联合入血/药水重置，缺后战/替代整场胜线不能调参数。九休息仍败不推锻造更好，低模拟胜率不触发必死。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update/proposal-resources.md",
+    "experience": [
+      "silent-alchemize-potion-resource-observation",
+      "silent-dexterity-potion-card-block",
+      "silent-regen-potion-decay-heal",
+      "silent-act-transition-missing-hp-heal",
+      "silent-rest-buffer-observation",
+      "silent-route-hp-observation",
+      "silent-deck-burst-observation"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "7c5e84ba38573b47949fafb4c0c134b97f29946011a961a814d4e58d4f562cdb",
+    "state": "pending"
+  }
+]

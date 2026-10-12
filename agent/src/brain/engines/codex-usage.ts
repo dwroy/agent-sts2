@@ -1,8 +1,8 @@
 /**
  * Production Codex-only recovery retries fresh reads and suspends the current question until this guard passes.
  *
- * The codex brain's usage guard (Dai 2026-10-03): the ChatGPT plan's rate-limit windows and credits read from codex
- * itself, so the brain stops before it eats Dai's weekly Codex window (shared with Dai's own Codex use) and never
+ * The codex brain's usage guard (Roy 2026-10-03): the ChatGPT plan's rate-limit windows and credits read from codex
+ * itself, so the brain stops before it eats Roy's weekly Codex window (shared with Roy's own Codex use) and never
  * spends credits. Measured on codex-cli 0.160.0 (experiments/brain-replay/codex-usage.md).
  *
  * - The read: `codex exec --json` reports no limits. A short-lived `codex app-server --listen stdio://` answers the
@@ -29,7 +29,7 @@
  *   EngineFailure "unavailable" whose rest is the wait before the next read: USAGE_RETRY_MS, 30 s, 2 min, 5 min, then
  *   every 10 min), the first question after the wait reads again, and a read that works and passes the stop rules
  *   brings codex back. Each of these changes is said once on the console and noted on its brain.jsonl row.
- * - A read refused on the login (401, an expired token: 2026-10-04 07:06Z, right after Dai's plan upgrade, "Provided
+ * - A read refused on the login (401, an expired token: 2026-10-04 07:06Z, right after Roy's plan upgrade, "Provided
  *   authentication token is expired" on /backend-api/wham/usage) first asks codex to refresh its token: account/read
  *   with refreshToken (codex's own refresh flow, as any codex call runs it; we never read or write its login file), at
  *   most once per AUTH_REFRESH_EVERY_MS, then reads again at once.

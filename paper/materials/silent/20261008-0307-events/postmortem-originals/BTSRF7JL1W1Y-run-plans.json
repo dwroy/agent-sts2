@@ -1,0 +1,381 @@
+[
+  {
+    "ts": "2026-10-07T17:31:20.251Z",
+    "run": "BTSRF7JL1W1Y",
+    "floor": 1,
+    "trigger": "start",
+    "observed_ts": "2026-10-07T17:30:41.212Z",
+    "merged_into": "event/choose",
+    "decision_id": "2945b844-1e08-4d26-be76-4ff3dc0ecf86",
+    "plan": {
+      "runId": "BTSRF7JL1W1Y",
+      "act": 1,
+      "floor": 1,
+      "hpPct": 0.8,
+      "trigger": "start",
+      "archetype": "Early AoE into poison and dexterity scaling",
+      "want": [
+        "DAGGER_SPRAY",
+        "HAZE",
+        "FOOTWORK",
+        "NOXIOUS_FUMES",
+        "PIERCING_WAIL",
+        "ACCELERANT"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Bring AoE and focused damage to eliminate followers, sustained poison for the priest, improved block, and useful potions. Establish poison before relying on Accelerant.",
+      "summary": "The starter deck cannot beat this boss. Buy immediate damage first, then build poison and reliable defense. Remove Strikes as damage improves; attempt elites only after acquiring damage and potions."
+    },
+    "raw": {
+      "archetype": "Early AoE into poison and dexterity scaling",
+      "want": [
+        "DAGGER_SPRAY",
+        "HAZE",
+        "FOOTWORK",
+        "NOXIOUS_FUMES",
+        "PIERCING_WAIL",
+        "ACCELERANT"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Bring AoE and focused damage to eliminate followers, sustained poison for the priest, improved block, and useful potions. Establish poison before relying on Accelerant.",
+      "summary": "The starter deck cannot beat this boss. Buy immediate damage first, then build poison and reliable defense. Remove Strikes as damage improves; attempt elites only after acquiring damage and potions."
+    },
+    "question": {
+      "label": "event/choose",
+      "latency_ms": 27300,
+      "input_tokens": 120786,
+      "output_tokens": 441,
+      "reasoning_tokens": 229,
+      "effort": ""
+    },
+    "memory_chars": 4752,
+    "_line": 2581,
+    "_offset": 5824953
+  },
+  {
+    "ts": "2026-10-07T17:37:54.171Z",
+    "run": "BTSRF7JL1W1Y",
+    "floor": 8,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-07T17:37:25.828Z",
+    "merged_into": "rest/plan",
+    "decision_id": "4258ca91-2586-4440-91df-eff162480bca",
+    "plan": {
+      "runId": "BTSRF7JL1W1Y",
+      "act": 1,
+      "floor": 8,
+      "hpPct": 0.32857142857142857,
+      "trigger": "hp_drop",
+      "archetype": "Shiv and AoE damage with dexterity-supported defense",
+      "want": [
+        "FOOTWORK",
+        "ACCURACY",
+        "AFTERIMAGE",
+        "BLADE_DANCE",
+        "PIERCING_WAIL",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "BUBBLE_BUBBLE"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Upgrade Echoing Slash when safe. Eliminate followers with focused attacks and AoE; bring sustained damage, stronger block, and useful potions.",
+      "summary": "Heal now and retain the minimum-elite route. Strengthen existing shivs with Accuracy, add dexterity and efficient defense, remove Strikes, and upgrade Echoing Slash when health permits."
+    },
+    "raw": {
+      "archetype": "Shiv and AoE damage with dexterity-supported defense",
+      "want": [
+        "FOOTWORK",
+        "ACCURACY",
+        "AFTERIMAGE",
+        "BLADE_DANCE",
+        "PIERCING_WAIL",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "BUBBLE_BUBBLE"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Upgrade Echoing Slash when safe. Eliminate followers with focused attacks and AoE; bring sustained damage, stronger block, and useful potions.",
+      "summary": "Heal now and retain the minimum-elite route. Strengthen existing shivs with Accuracy, add dexterity and efficient defense, remove Strikes, and upgrade Echoing Slash when health permits."
+    },
+    "question": {
+      "label": "rest/plan",
+      "latency_ms": 17064,
+      "input_tokens": 126935,
+      "output_tokens": 509,
+      "reasoning_tokens": 282,
+      "effort": ""
+    },
+    "memory_chars": 8983,
+    "_line": 2582,
+    "_offset": 5826735
+  },
+  {
+    "ts": "2026-10-07T17:42:57.961Z",
+    "run": "BTSRF7JL1W1Y",
+    "floor": 14,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-07T17:42:09.256Z",
+    "merged_into": "event/choose",
+    "decision_id": "33c913c5-069b-4d77-a1e8-f5dc41dd151b",
+    "plan": {
+      "runId": "BTSRF7JL1W1Y",
+      "act": 1,
+      "floor": 14,
+      "hpPct": 0.02857142857142857,
+      "trigger": "hp_drop",
+      "archetype": "AoE follower kills with shiv scaling and dexterity defense",
+      "want": [
+        "PIERCING_WAIL",
+        "ACCURACY",
+        "AFTERIMAGE",
+        "FOOTWORK",
+        "HAZE",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "BUBBLE_BUBBLE"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Enter healthy; upgrade Footwork or Echoing Slash, clear followers quickly, and reserve Weak and Dark Shackles for dangerous multihits.",
+      "summary": "Take full healing now and avoid another elite. Upgrade at the final campfire if healthy. Strengthen shiv damage and efficient defense without diluting the deck with speculative cards."
+    },
+    "raw": {
+      "archetype": "AoE follower kills with shiv scaling and dexterity defense",
+      "want": [
+        "PIERCING_WAIL",
+        "ACCURACY",
+        "AFTERIMAGE",
+        "FOOTWORK",
+        "HAZE",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "BUBBLE_BUBBLE"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Enter healthy; upgrade Footwork or Echoing Slash, clear followers quickly, and reserve Weak and Dark Shackles for dangerous multihits.",
+      "summary": "Take full healing now and avoid another elite. Upgrade at the final campfire if healthy. Strengthen shiv damage and efficient defense without diluting the deck with speculative cards."
+    },
+    "question": {
+      "label": "event/choose",
+      "latency_ms": 36178,
+      "input_tokens": 125153,
+      "output_tokens": 647,
+      "reasoning_tokens": 428,
+      "effort": ""
+    },
+    "memory_chars": 9187,
+    "_line": 2583,
+    "_offset": 5828507
+  },
+  {
+    "ts": "2026-10-07T18:06:39.816Z",
+    "run": "BTSRF7JL1W1Y",
+    "floor": 18,
+    "trigger": "act",
+    "observed_ts": "2026-10-07T18:05:55.858Z",
+    "merged_into": "event/act-plan",
+    "decision_id": "43fe375e-f1b8-4a14-95b0-0c8bf6ff9a03",
+    "plan": {
+      "runId": "BTSRF7JL1W1Y",
+      "act": 2,
+      "floor": 18,
+      "hpPct": 0.8571428571428571,
+      "trigger": "act",
+      "archetype": "Shiv damage and poison scaling behind dexterity defense",
+      "want": [
+        "ACCURACY",
+        "NOXIOUS_FUMES",
+        "ACCELERANT",
+        "AFTERIMAGE",
+        "PIERCING_WAIL",
+        "BACKFLIP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "METAMORPHOSIS",
+        "KNIFE_TRAP",
+        "BUBBLE_BUBBLE"
+      ],
+      "remove": [
+        "POOR_SLEEP",
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 9,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Enter healthy with sustained damage scaling and defensive potions. Deploy Footwork early; save Dark Shackles or Piercing Wail for multihits.",
+      "summary": "Use Cocoa’s opening energy to establish powers and draw. Shop for sustained damage, efficient defense, and potions. Remove Poor Sleep then Strikes; avoid elites and upgrade core scaling when healthy."
+    },
+    "raw": {
+      "archetype": "Shiv damage and poison scaling behind dexterity defense",
+      "want": [
+        "ACCURACY",
+        "NOXIOUS_FUMES",
+        "ACCELERANT",
+        "AFTERIMAGE",
+        "PIERCING_WAIL",
+        "BACKFLIP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "METAMORPHOSIS",
+        "KNIFE_TRAP",
+        "BUBBLE_BUBBLE"
+      ],
+      "remove": [
+        "POOR_SLEEP",
+        "STRIKE_SILENT"
+      ],
+      "block_target": 9,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Enter healthy with sustained damage scaling and defensive potions. Deploy Footwork early; save Dark Shackles or Piercing Wail for multihits.",
+      "summary": "Use Cocoa’s opening energy to establish powers and draw. Shop for sustained damage, efficient defense, and potions. Remove Poor Sleep then Strikes; avoid elites and upgrade core scaling when healthy."
+    },
+    "question": {
+      "label": "event/act-plan",
+      "latency_ms": 43469,
+      "input_tokens": 125189,
+      "output_tokens": 788,
+      "reasoning_tokens": 506,
+      "effort": ""
+    },
+    "memory_chars": 11628,
+    "_line": 2584,
+    "_offset": 5830265
+  },
+  {
+    "ts": "2026-10-07T18:11:47.915Z",
+    "run": "BTSRF7JL1W1Y",
+    "floor": 27,
+    "trigger": "review",
+    "observed_ts": "2026-10-07T18:11:04.848Z",
+    "merged_into": "event/choose",
+    "decision_id": "9403398a-1b6e-4fab-86af-dcd69e8d6c9b",
+    "plan": {
+      "runId": "BTSRF7JL1W1Y",
+      "act": 2,
+      "floor": 27,
+      "hpPct": 0.8571428571428571,
+      "trigger": "review",
+      "archetype": "Shiv scaling with dexterity defense and draw",
+      "want": [
+        "BLADE_DANCE",
+        "AFTERIMAGE",
+        "FOOTWORK",
+        "BACKFLIP",
+        "PIERCING_WAIL",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "BUBBLE_BUBBLE",
+        "INFINITE_BLADES",
+        "BACKSTAB"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 9,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Enter healthy with defensive potions. Establish Footwork and shiv powers early; reserve Dark Shackles for multihits. Upgrade Accuracy when health permits.",
+      "summary": "Keep the elite-free shop route. More shiv generation is the main damage priority; add efficient defense and draw. Preserve Defends for Footwork, remove Strikes, and heal before the boss if depleted."
+    },
+    "raw": {
+      "archetype": "Shiv scaling with dexterity defense and draw",
+      "want": [
+        "BLADE_DANCE",
+        "AFTERIMAGE",
+        "FOOTWORK",
+        "BACKFLIP",
+        "PIERCING_WAIL",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "BUBBLE_BUBBLE",
+        "INFINITE_BLADES",
+        "BACKSTAB"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 9,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Enter healthy with defensive potions. Establish Footwork and shiv powers early; reserve Dark Shackles for multihits. Upgrade Accuracy when health permits.",
+      "summary": "Keep the elite-free shop route. More shiv generation is the main damage priority; add efficient defense and draw. Preserve Defends for Footwork, remove Strikes, and heal before the boss if depleted."
+    },
+    "question": {
+      "label": "event/choose",
+      "latency_ms": 39026,
+      "input_tokens": 127469,
+      "output_tokens": 712,
+      "reasoning_tokens": 472,
+      "effort": ""
+    },
+    "memory_chars": 14224,
+    "_line": 2585,
+    "_offset": 5832099
+  }
+]

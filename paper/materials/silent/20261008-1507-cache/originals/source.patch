@@ -1,0 +1,807 @@
+diff --git a/agent/src/brain/engines/codex-cache.ts b/agent/src/brain/engines/codex-cache.ts
+new file mode 100644
+index 00000000..6bf24f8e
+--- /dev/null
++++ b/agent/src/brain/engines/codex-cache.ts
+@@ -0,0 +1,50 @@
++/** Safe measurements of the exact client inputs, without logging prompt text. */
++import { createHash } from "node:crypto";
++
++export function segmentDigest(text: string): { sha256: string; bytes: number; chars: number } {
++  return { sha256: createHash("sha256").update(text).digest("hex"), bytes: Buffer.byteLength(text), chars: text.length };
++}
++
++export function firstDifferentByte(before: string, after: string): number | null {
++  const a = Buffer.from(before), b = Buffer.from(after);
++  for (let i = 0; i < Math.min(a.length, b.length); i += 1) if (a[i] !== b[i]) return i;
++  return a.length === b.length ? null : Math.min(a.length, b.length);
++}
++
++type Input = { scope: string; system: string; prompt: string; schema: unknown; serviceTier: string | null };
++
++export class CodexCacheObserver {
++  private previous: Input | null = null;
++
++  capture(input: Input) {
++    const previous = this.previous?.scope === input.scope ? this.previous : null;
++    const schema = JSON.stringify(input.schema ?? null);
++    const result = {
++      instructions: segmentDigest(input.system), user: segmentDigest(input.prompt), schema: segmentDigest(schema),
++      service_tier: input.serviceTier, roles: ["instructions", "user"], tools: "disabled",
++      previous_in_scope: previous !== null,
++      first_different_byte: previous ? {
++        instructions: firstDifferentByte(previous.system, input.system),
++        user: firstDifferentByte(previous.prompt, input.prompt),
++        schema: firstDifferentByte(JSON.stringify(previous.schema ?? null), schema),
++      } : null,
++    };
++    this.previous = input;
++    return result;
++  }
++}
++
++export type CodexCacheObservation = ReturnType<CodexCacheObserver["capture"]>;
++
++/** Counts attempts, including failed ones; a reserved attempt is never refunded. */
++export class PhysicalCallBudget {
++  private used = 0;
++  constructor(private readonly limit?: number) {
++    if (limit !== undefined && (!Number.isInteger(limit) || limit < 1 || limit > 2)) throw new Error("probe limit must be 1 or 2");
++  }
++  claim(): boolean {
++    if (this.limit !== undefined && this.used >= this.limit) return false;
++    this.used += 1;
++    return true;
++  }
++}
+diff --git a/agent/src/brain/engines/codex.ts b/agent/src/brain/engines/codex.ts
+index f9d14409..fa1b1d6a 100644
+--- a/agent/src/brain/engines/codex.ts
++++ b/agent/src/brain/engines/codex.ts
+@@ -63,6 +63,8 @@ import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord
+ import { CodexSession, configProblems, RpcError, SessionError, type SessionOptions, type SessionTurn } from "./codex-session.js";
+ import { CodexUsageGuard, readCodexUsage, refreshCodexAuth, type CodexUsage, type UsageNote } from "./codex-usage.js";
+ import { AgentAbortedError, AgentStartError, agentEnv, makeWorkDir, removeDir, runAgent } from "./process.js";
++import { knowledgeCharacter } from "../../knowledge/files.js";
++import { CodexCacheObserver, PhysicalCallBudget, type CodexCacheObservation } from "./codex-cache.js";
+ 
+ type Json = Record<string, unknown>;
+ 
+@@ -87,6 +89,8 @@ export interface CodexEngineOptions {
+   refreshAuth?: () => Promise<void>;
+   readUsage?: () => Promise<CodexUsage>;
+   now?: () => number;
++  /** Physical turn/exec cap for an isolated, authorized probe; never set by production config. */
++  physicalCallLimit?: number;
+ }
+ 
+ /**
+@@ -156,6 +160,8 @@ export interface CodexTraceRow {
+   events_dropped?: number;
+   stderr_tail: string;
+   usage?: Json;
++  /** Client input hashes and byte offsets only; not the server's serialized request. */
++  cache_request?: CodexCacheObservation;
+   error?: string;
+ }
+ 
+@@ -715,6 +721,7 @@ interface CodexCall {
+   entry: Json;
+   kindSchema: JsonSchema;
+   schema: StrictSchema | null;
++  cacheRequest: CodexCacheObservation;
+ }
+ 
+ /** `codex app-server`'s arguments in session mode: stdio, and exec mode's isolation overrides and feature switches. */
+@@ -759,6 +766,7 @@ function sessionTrace(
+     label: req.label,
+     model: c.model,
+     effort: c.effort,
++    cache_request: c.cacheRequest,
+     attempt,
+     outcome: r.outcome,
+     ms: turn?.ms ?? r.ms ?? 0,
+@@ -789,11 +797,21 @@ export class CodexEngine implements BrainEngine {
+   readonly name = "codex" as const;
+   /** The model's catalog entry per model slug, read once per process (`codex debug models`). */
+   private readonly catalogs = new Map<string, Promise<Json>>();
++  private readonly cacheObserver = new CodexCacheObserver();
++  private readonly physicalBudget: PhysicalCallBudget;
++
++  private notePhysicalCall(): void {
++    if (!this.physicalBudget.claim()) {
++      throw new EngineFailure("isolated Codex probe physical-call budget exhausted", "quota");
++    }
++    this.usage.noteCall();
++  }
+ 
+   /** The plan's usage guard (engines/codex-usage.ts): read at process start (Brain.preflight) and before due calls. */
+   readonly usage: CodexUsageGuard;
+ 
+   constructor(private readonly opts: CodexEngineOptions) {
++    this.physicalBudget = new PhysicalCallBudget(opts.physicalCallLimit);
+     const { bin, home } = opts.codex;
+     const read = opts.readUsage ?? (() => readCodexUsage({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage") }));
+     const refreshAuth = opts.refreshAuth ?? (() => refreshCodexAuth({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage") }));
+@@ -857,7 +875,7 @@ export class CodexEngine implements BrainEngine {
+   private async runOnce(
+     bin: string,
+     args: string[],
+-    o: { cwd: string; env: Record<string, string>; stdin: string; signal: AbortSignal | undefined; req: BrainRequest; model: string; effort: string; attempt: number; spentMs: number },
++    o: { cwd: string; env: Record<string, string>; stdin: string; signal: AbortSignal | undefined; req: BrainRequest; model: string; effort: string; attempt: number; spentMs: number; cacheRequest: CodexCacheObservation },
+   ): Promise<
+     | { kind: "done"; run: Awaited<ReturnType<typeof runAgent>>; stream: CodexStream; ms: number }
+     | { kind: "stalled"; why: string; ms: number }
+@@ -914,6 +932,7 @@ export class CodexEngine implements BrainEngine {
+         label: o.req.label,
+         model: o.model,
+         effort: o.effort,
++        cache_request: o.cacheRequest,
+         attempt: o.attempt,
+         ms,
+         call_ms: o.spentMs + ms,
+@@ -990,7 +1009,8 @@ export class CodexEngine implements BrainEngine {
+     const entry = await this.catalog(model, effort, env);
+     const kindSchema = codexKindSchema(req.spec, { fields: this.opts.codex.schemaFields, reasonLast: this.opts.codex.reasonLast });
+     const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern });
+-    const call = { model, effort, env, entry, kindSchema, schema };
++    const cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system, prompt: promptWithReask(req), schema, serviceTier: this.opts.codex.serviceTier });
++    const call = { model, effort, env, entry, kindSchema, schema, cacheRequest };
+     // The usage guard's changes since the last row (codex back after reads failed, a refreshed token): on this question's row.
+     const usageNotes = this.usage.takeNotes();
+     try {
+@@ -1049,7 +1069,7 @@ export class CodexEngine implements BrainEngine {
+       const session = this.sessionFor(c);
+       try {
+         await session.ensureThread(req.system, () => [...configProblems(home).map((problem) => `config.toml: ${problem}`), ...instructionFiles(home)]);
+-        this.usage.noteCall();
++        this.notePhysicalCall();
+         turn = await session.ask({ prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars, maxAnswerBlanks });
+       } catch (error) {
+         if (!(error instanceof SessionError || error instanceof RpcError)) throw error;
+@@ -1146,14 +1166,14 @@ export class CodexEngine implements BrainEngine {
+       const stdin = promptWithReask(req);
+       let attempt = 1;
+       let spentMs = spentBeforeMs;
+-      this.usage.noteCall();
+-      let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs });
++      this.notePhysicalCall();
++      let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
+       spentMs += outcome.ms;
+       // A stalled run: killed and asked once more (the router's BRAIN_CODEX_TIMEOUT_MS still caps the whole call).
+       while (outcome.kind === "stalled" && attempt <= this.opts.codex.stallRetries && !signal?.aborted) {
+         attempt += 1;
+-        this.usage.noteCall();
+-        outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs });
++        this.notePhysicalCall();
++        outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
+         spentMs += outcome.ms;
+       }
+       if (outcome.kind === "stalled") throw new EngineFailure(`codex stalled [timeout]: ${outcome.why} (${attempt} run(s))`, "timeout");
+diff --git a/agent/tests/codex-cache-engine.test.ts b/agent/tests/codex-cache-engine.test.ts
+new file mode 100644
+index 00000000..1f0018c6
+--- /dev/null
++++ b/agent/tests/codex-cache-engine.test.ts
+@@ -0,0 +1,87 @@
++/** Exercise the real engine with an in-memory app-server; no CLI, network, or live knowledge. */
++import { mkdtempSync, readFileSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
++import { CodexEngine } from "../src/brain/engines/codex.js";
++import { loadConfig } from "../src/core/config.js";
++import { pickSpec } from "../src/brain/specs.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import type { BrainRequest } from "../src/brain/types.js";
++
++const state = vi.hoisted(() => ({ turns: [] as Record<string, unknown>[], systems: [] as string[], status: "completed", reverted: true, missing: false }));
++vi.mock("../src/brain/engines/process.js", async original => ({
++  ...await original<typeof import("../src/brain/engines/process.js")>(),
++  runAgent: vi.fn(async () => ({ code: 0, signal: null, stderr: "", stdout: JSON.stringify({ models: [{ slug: "gpt-6.1-sol", supported_reasoning_levels: [{ effort: "high" }] }] }) })),
++}));
++vi.mock("../src/brain/engines/codex-session.js", async original => ({
++  ...await original<typeof import("../src/brain/engines/codex-session.js")>(),
++  CodexSession: class {
++    threadId = "isolated-fixed-thread";
++    serverRequests = [];
++    async ensureThread(system: string) { state.systems.push(system); return this.threadId; }
++    async ask(q: Record<string, unknown>) {
++      state.turns.push(q);
++      return { status: q.signal instanceof AbortSignal && q.signal.aborted ? "aborted" : state.status, threadId: this.threadId,
++        turnId: `turn-${state.turns.length}`, text: '{"choice":"a","reason":"fixed"}', reasoning: [], usage: state.missing ? null : {
++          inputTokens: 100, cachedInputTokens: 80, outputTokens: 10, reasoningOutputTokens: 5 }, error: null, retries: [], errors: [],
++        firstDeltaMs: 1, deltas: 1, answerChars: 31, maxBlankRun: 0, answerText: "", maxGapMs: 1, ms: 2, events: [], reverted: state.reverted };
++    }
++    hasPath() { return true; }
++    stderrTail() { return ""; }
++    async close() {}
++  },
++}));
++
++let directory: string;
++let engines: CodexEngine[];
++beforeEach(() => {
++  directory = mkdtempSync(join(tmpdir(), "cache-engine-")); engines = [];
++  state.turns = []; state.systems = []; state.status = "completed"; state.reverted = true; state.missing = false;
++  setKnowledgeCharacter("silent");
++});
++afterEach(async () => { for (const engine of engines) await engine.close(); rmSync(directory, { recursive: true, force: true }); setKnowledgeCharacter(null); });
++
++function engine(physicalCallLimit?: number) {
++  const config = loadConfig({ BRAIN_CODEX_BIN: "/fixed/fake-codex", BRAIN_CODEX_HOME: directory, BRAIN_CODEX_MODE: "session", BRAIN_CODEX_EFFORT: "high" });
++  const instance = new CodexEngine({ settings: config.brain.engines.codex, codex: config.brain.codex, stateDir: directory, traceFile: join(directory, "trace.jsonl"), physicalCallLimit,
++    readUsage: async () => ({ readAt: new Date().toISOString(), ms: 1, plan: null, windows: [{ name: "codex/primary", usedPct: 1, windowMins: 10080, resetsAt: null }], credits: null, ordinaryUsageAllowed: true, reachedType: null, spendControlReached: false }) });
++  engines.push(instance); return instance;
++}
++function request(overrides: Partial<BrainRequest> = {}): BrainRequest {
++  return { label: "event/choose", runId: "fixed-run", question: "fixed complete question", system: "complete fixed knowledge", memory: { act: "fixed" }, payload: { hp: 10 }, options: { a: "fixed option" }, spec: pickSpec("event/choose", { a: "fixed option" }, {}), ...overrides };
++}
++function traces() { return readFileSync(join(directory, "trace.jsonl"), "utf8").trim().split('\n').map(line => JSON.parse(line)); }
++
++it("preserves full model inputs, model/effort/schema and revert while measuring repeated/dynamic requests", async () => {
++  const e = engine();
++  await e.decide(request()); await e.decide(request()); await e.decide(request({ question: "updated full question" }));
++  expect(state.systems).toEqual(Array(3).fill("complete fixed knowledge"));
++  expect(state.turns[0]).toMatchObject({ model: "gpt-6.1-sol", effort: "high" });
++  expect(state.turns[1].prompt).toBe(state.turns[0].prompt);
++  expect(state.turns[2].schema).toEqual(state.turns[0].schema);
++  expect(traces()[1].cache_request.first_different_byte).toEqual({ instructions: null, user: null, schema: null });
++  expect(traces()[2].cache_request.first_different_byte.user).toBeTypeOf("number");
++  expect(traces().map(r => r.reverted)).toEqual([true, true, true]);
++});
++
++it("records new knowledge, schema and role/run boundaries without suppressing refresh", async () => {
++  const e = engine(); await e.decide(request()); await e.decide(request({ system: "new complete knowledge" }));
++  expect(traces()[1].cache_request.instructions.sha256).not.toBe(traces()[0].cache_request.instructions.sha256);
++  await e.decide(request({ spec: { ...request().spec, schema: { type: "object", properties: { other: { type: "string" } }, required: ["other"] } } }));
++  expect(traces()[2].cache_request.schema.sha256).not.toBe(traces()[1].cache_request.schema.sha256);
++  await e.decide(request({ runId: "next-run" })); expect(traces()[3].cache_request.previous_in_scope).toBe(false);
++  setKnowledgeCharacter("ironclad"); await e.decide(request({ runId: "next-run" })); expect(traces()[4].cache_request.previous_in_scope).toBe(false);
++});
++
++it("caps real engine attempts at two and preserves failures, cancellation, revert flags and unknown usage", async () => {
++  const e = engine(2); state.missing = true; state.reverted = false;
++  await e.decide(request()); expect(traces()[0]).not.toHaveProperty("usage"); expect(traces()[0].reverted).toBe(false);
++  state.status = "failed"; await expect(e.decide(request())).rejects.toThrow(/session turn failed/);
++  await expect(e.decide(request())).rejects.toThrow(/physical-call budget exhausted/);
++  expect(state.turns).toHaveLength(2);
++  const cancelled = engine(1); const controller = new AbortController(); controller.abort();
++  await expect(cancelled.decide(request(), controller.signal)).rejects.toThrow(/aborted/);
++  await expect(cancelled.decide(request())).rejects.toThrow(/budget exhausted/);
++  expect(state.turns).toHaveLength(3);
++});
+diff --git a/agent/tests/codex-cache-observation.test.ts b/agent/tests/codex-cache-observation.test.ts
+new file mode 100644
+index 00000000..4b56af97
+--- /dev/null
++++ b/agent/tests/codex-cache-observation.test.ts
+@@ -0,0 +1,48 @@
++import { describe, expect, it } from "vitest";
++import { CodexCacheObserver, PhysicalCallBudget, firstDifferentByte } from "../src/brain/engines/codex-cache.js";
++
++const input = { scope: "silent|run-a", system: "知识\n稳定前缀", prompt: "完整题面\n本局记忆", schema: { type: "object", properties: { choice: { type: "string" } } }, serviceTier: null };
++
++describe("Codex cache client measurements (no real engine)", () => {
++  it("caps every physical attempt even after errors, and leaves production uncapped", () => {
++    const probe = new PhysicalCallBudget(2);
++    expect(probe.claim()).toBe(true);
++    expect(probe.claim()).toBe(true);
++    expect(probe.claim()).toBe(false);
++    expect(probe.claim()).toBe(false);
++    const production = new PhysicalCallBudget();
++    for (let i = 0; i < 10; i += 1) expect(production.claim()).toBe(true);
++    expect(() => new PhysicalCallBudget(4)).toThrow(/1 or 2/);
++  });
++  it("measures repeated questions and changing tails without retaining text in logs", () => {
++    const observer = new CodexCacheObserver();
++    const first = observer.capture(input);
++    const repeated = observer.capture(input);
++    expect(repeated.instructions).toEqual(first.instructions);
++    expect(repeated.first_different_byte).toEqual({ instructions: null, user: null, schema: null });
++    expect(first.instructions.bytes).toBe(Buffer.byteLength(input.system));
++    const dynamic = observer.capture({ ...input, prompt: `${input.prompt}\n新状态` });
++    expect(dynamic.instructions).toEqual(first.instructions);
++    expect(dynamic.first_different_byte?.user).toBe(Buffer.byteLength(input.prompt));
++    expect(JSON.stringify(dynamic)).not.toContain("知识");
++    expect(JSON.stringify(dynamic)).not.toContain("题面");
++  });
++
++  it("detects real knowledge refresh and schema changes, including UTF-8 offsets", () => {
++    const observer = new CodexCacheObserver();
++    observer.capture(input);
++    const changed = observer.capture({ ...input, system: `${input.system}\n新证据` });
++    expect(changed.first_different_byte?.instructions).toBe(Buffer.byteLength(input.system));
++    const schema = observer.capture({ ...input, schema: null });
++    expect(schema.first_different_byte?.schema).toBe(0);
++    expect(firstDifferentByte("中a", "中b")).toBe(3);
++  });
++
++  it("resets comparisons at character and run boundaries", () => {
++    const observer = new CodexCacheObserver();
++    observer.capture(input);
++    for (const scope of ["silent|run-b", "ironclad|run-b"]) {
++      expect(observer.capture({ ...input, scope }).first_different_byte).toBeNull();
++    }
++  });
++});
+diff --git a/agent/tests/codex-cache-probe.test.ts b/agent/tests/codex-cache-probe.test.ts
+new file mode 100644
+index 00000000..a95f327d
+--- /dev/null
++++ b/agent/tests/codex-cache-probe.test.ts
+@@ -0,0 +1,44 @@
++import { readFileSync } from "node:fs";
++import { describe, expect, it } from "vitest";
++import { doubleQuestion, approvedFixture } from "../../ops/codex-brain-cache-probe.js";
++import { validateRequest } from "../../ops/codex/lib.js";
++import { pickSpec } from "../src/brain/specs.js";
++import type { BrainAnswer, BrainRequest } from "../src/brain/types.js";
++
++const request: BrainRequest = { label: "probe", question: "fixed question", system: "fixed full knowledge", options: { a: "fixed option" }, spec: pickSpec("probe", { a: "fixed option" }, {}) };
++const answer: BrainAnswer = { engine: "codex", model: "gpt-6.1-sol", effort: "high", answer: { choice: "a", reason: "fixture" }, problems: [], attempts: 1,
++  latencyMs: 10, usage: { inputTokens: 100, cacheHitTokens: 80, outputTokens: 10 }, toolCalls: [], raw: "{}", native: { mode: "session", reverted: true } };
++
++describe("restricted Codex cache probe (offline)", () => {
++  it("only permits the fixed no-argument action and rejects mutated fixtures", () => {
++    expect(validateRequest({ action: "codex-brain-cache-probe", args: [] }).ok).toBe(true);
++    for (const args of [["--model=other"], ["/tmp/request.json"], ["https://example.com"], ["high"]]) {
++      expect(validateRequest({ action: "codex-brain-cache-probe", args }).ok).toBe(false);
++    }
++    expect(() => approvedFixture("{}")).toThrow(/frozen bytes/);
++    const source = readFileSync(new URL("../../ops/codex-brain-cache-probe.ts", import.meta.url), "utf8");
++    expect(source).toContain("physicalCallLimit: 2");
++    expect(source).toContain('flag: "wx"');
++    expect(source).toContain('BRAIN_CODEX_USAGE_REQUIRED: "on"');
++    expect(source).toContain('BRAIN_CODEX_USAGE_STOP_PCT: "80"');
++    expect(source).toContain('BRAIN_CODEX_EFFORT: "high"');
++  });
++
++  it("asks exactly the same complete question twice with separate measurement IDs", async () => {
++    const seen: BrainRequest[] = [];
++    const results = await doubleQuestion(request, { decide: async r => { seen.push(r); return answer; } }, new AbortController().signal);
++    expect(results).toHaveLength(2);
++    expect(seen.map(({ questionId, ...r }) => r)).toEqual([request, request]);
++    expect(seen.map(r => r.questionId)).toEqual(["cache-probe-baseline-1", "cache-probe-baseline-2"]);
++  });
++
++  it("stops at failure, cancellation or unexpected fallback", async () => {
++    let calls = 0;
++    await expect(doubleQuestion(request, { decide: async () => { calls += 1; throw new Error("failed"); } }, new AbortController().signal)).rejects.toThrow("failed");
++    expect(calls).toBe(1);
++    const controller = new AbortController(); controller.abort();
++    await expect(doubleQuestion(request, { decide: async () => { calls += 1; return answer; } }, controller.signal)).rejects.toThrow("cancelled");
++    expect(calls).toBe(1);
++    await expect(doubleQuestion(request, { decide: async () => ({ ...answer, native: { mode: "exec" } }) }, new AbortController().signal)).rejects.toThrow(/session transport/);
++  });
++});
+diff --git a/agent/tests/cost-accounting.test.ts b/agent/tests/cost-accounting.test.ts
+index 22299c55..9f10d306 100644
+--- a/agent/tests/cost-accounting.test.ts
++++ b/agent/tests/cost-accounting.test.ts
+@@ -17,5 +17,5 @@ it.each([true, false])("accounts fixed component data, subset tokens, resets and
+     child.on("close", (code) => resolve({ code, output }));
+   });
+   expect(result.code, result.output).toBe(0);
+-  expect(result.output).toContain("Ran 6 tests");
++  expect(result.output).toContain("Ran 9 tests");
+ }, 15_000);
+diff --git a/agent/tests/cost_accounting_test.py b/agent/tests/cost_accounting_test.py
+index 2711a4d5..1f5e4a34 100644
+--- a/agent/tests/cost_accounting_test.py
++++ b/agent/tests/cost_accounting_test.py
+@@ -10,6 +10,9 @@ REPO = Path(__file__).resolve().parents[2]
+ spec = importlib.util.spec_from_file_location("cost", REPO / "eval/cost.py")
+ cost = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(cost)
++cache_spec = importlib.util.spec_from_file_location("codex_cache", REPO / "eval/codex_cache.py")
++cache = importlib.util.module_from_spec(cache_spec)
++cache_spec.loader.exec_module(cache)
+ CONFIG = json.loads((REPO / "eval/cost-config.json").read_text())
+ NOW = "2026-10-05T12:00:00Z"
+ 
+@@ -21,6 +24,55 @@ def quota(reset="2026-10-10T12:00:00Z", percent=20):
+ 
+ 
+ class Accounting(unittest.TestCase):
++    def test_cache_snapshot_deduplicates_physical_calls_and_excludes_unknown_from_ratio(self):
++        first = {"ts": NOW, "run_id": "A", "question_id": "Q", "thread_id": "T", "attempt": 1,
++                 "ms": 50, "call_ms": 50, "usage": {"inputTokens": 100, "cachedInputTokens": 80, "outputTokens": 30}}
++        second = {**first, "attempt": 2, "ms": 60, "call_ms": 110, "usage": {"inputTokens": 100, "cachedInputTokens": 0}}
++        unknown = {**first, "question_id": "unknown", "ms": 70, "usage": {"inputTokens": 100}}
++        result = cache.summarize([first, first, second, unknown])
++        self.assertEqual(result['physical_calls'], 3)
++        self.assertEqual(result['duplicate_rows'], 1)
++        self.assertEqual(result['cache_unknown_calls'], 1)
++        self.assertEqual(result['cache_hit_ratio_observed'], .4)
++        self.assertEqual(result['zero_cache_calls'], 1)
++        self.assertEqual(result['wall_ms'], 180)
++        self.assertIsNone(cache.summarize([unknown])['cache_hit_ratio_observed'])
++
++    def test_codex_session_usage_matches_exec_and_preserves_missing_cache(self):
++        session = {"inputTokens": 151051, "cachedInputTokens": 121728, "cacheWriteInputTokens": 0,
++                   "outputTokens": 519, "reasoningOutputTokens": 282}
++        expected = cost.tokens({"input_tokens": 151051, "cached_input_tokens": 121728,
++                                "output_tokens": 519, "reasoning_output_tokens": 282})
++        self.assertEqual(cost.tokens(session), expected)
++        self.assertEqual(cost.tokens(session)["total_tokens"], 151570)
++        self.assertTrue(cost.tokens(session)["cache_usage_recorded"])
++        for missing in [{}, {"inputTokens": 100}, {"inputTokens": 100, "cachedInputTokens": None}]:
++            self.assertFalse(cost.tokens(missing)["cache_usage_recorded"])
++        self.assertTrue(cost.tokens({"inputTokens": 100, "cachedInputTokens": 0})["cache_usage_recorded"])
++
++    def test_session_retries_duplicate_rows_and_brain_fallback_do_not_double_count(self):
++        with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as tmp:
++            root = Path(tmp)
++            (root / 'logs').mkdir()
++            def write(name, rows):
++                (root / 'logs' / name).write_text(''.join(json.dumps(r) + '\n' for r in rows))
++            usage = {"inputTokens": 100, "cachedInputTokens": 80, "outputTokens": 30, "reasoningOutputTokens": 20}
++            first = {"ts": NOW, "run_id": "A", "question_id": "Q", "attempt": 1, "thread_id": "T",
++                     "mode": "session", "outcome": "stalled", "ms": 50, "call_ms": 50, "usage": usage}
++            second = {**first, "attempt": 2, "outcome": "answered", "ms": 60, "call_ms": 110}
++            unknown = {"ts": NOW, "run_id": "A", "question_id": "OLD", "attempt": 1, "ms": 70}
++            write('codex-calls.jsonl', [first, first, second, unknown])
++            write('brain.jsonl', [{"ts": NOW, "run_id": "A", "question_id": q, "engine": "codex", "latency_ms": ms,
++                                  "usage": {"inputTokens": 100, "cacheHitTokens": 80, "outputTokens": 30}}
++                                 for q, ms in [('Q', 110), ('OLD', 70)]])
++            events, runs, sources, periods = cost.collect(root, CONFIG, root / 'claude', root / 'codex')
++            events = [e for e in events if e['component'] == 'brain:codex']
++            self.assertEqual(sum(e['calls'] for e in events), 3)
++            self.assertEqual(sum(e['latency_ms'] for e in events), 180)
++            self.assertEqual(sum(e['input_tokens'] for e in events), 300)
++            self.assertEqual(sum(e['cache_hit_tokens'] for e in events), 240)
++            self.assertEqual(sum(e['reasoning_tokens'] for e in events), 40)
++
+     def test_cache_and_reasoning_are_subsets_not_extra_tokens(self):
+         self.assertEqual(cost.tokens({"input_tokens": 100, "cached_input_tokens": 80, "output_tokens": 30, "reasoning_output_tokens": 20})["total_tokens"], 130)
+         self.assertEqual(cost.tokens({"input": 20, "cacheRead": 80, "output": 30, "reasoning": 20}, exclusive=True)["total_tokens"], 130)
+diff --git a/eval/codex_cache.py b/eval/codex_cache.py
+new file mode 100644
+index 00000000..3e5ab884
+--- /dev/null
++++ b/eval/codex_cache.py
+@@ -0,0 +1,88 @@
++#!/usr/bin/env python3
++"""One bounded cache snapshot, for a completed event; does not poll or read account credentials."""
++import argparse
++import collections
++import hashlib
++import json
++import pathlib
++import statistics
++import cost
++
++
++def cut_rows(path, manifest):
++    limit = path.stat().st_size if path.is_file() else 0
++    digest = hashlib.sha256()
++    read = 0
++    with path.open('rb') if path.is_file() else open('/dev/null', 'rb') as stream:
++        while read < limit:
++            line = stream.readline(limit - read)
++            if not line.endswith(b'\n'):
++                break
++            digest.update(line)
++            read += len(line)
++            yield json.loads(line)
++    manifest[str(path)] = {'complete_bytes': read, 'sha256': digest.hexdigest()}
++
++
++def summarize(rows):
++    unique = {}
++    for r in rows:
++        identity = (r.get('ts'), r.get('run_id'), r.get('question_id'), r.get('attempt'), r.get('thread_id'))
++        unique.setdefault(identity, r)
++    calls = list(unique.values())
++    usage = [cost.tokens(r.get('usage')) for r in calls]
++    paired = [u for u in usage if u['cache_usage_recorded']]
++    inputs = sum(u['input_tokens'] for u in paired)
++    cached = sum(u['cache_hit_tokens'] for u in paired)
++    times = sorted(cost.num(r.get('ms', r.get('call_ms'))) for r in calls)
++    return {'physical_calls': len(calls), 'duplicate_rows': len(rows)-len(calls),
++            'questions': len({(r.get('run_id'),r.get('question_id')) for r in calls}),
++            'runs': sorted({r.get('run_id') for r in calls if r.get('run_id')}),
++            'outcomes': dict(collections.Counter(r.get('outcome') for r in calls)),
++            'model_effort': dict(collections.Counter(f"{r.get('model')}/{r.get('effort')}" for r in calls)),
++            'cache_known_calls': len(paired), 'cache_unknown_calls': len(calls)-len(paired),
++            'input_tokens_observed': inputs, 'cached_input_tokens_observed': cached,
++            'cache_hit_ratio_observed': cached/inputs if inputs else None,
++            'zero_cache_calls': sum(u['cache_hit_tokens']==0 for u in paired),
++            'output_tokens': sum(u['output_tokens'] for u in usage), 'reasoning_tokens': sum(u['reasoning_tokens'] for u in usage),
++            'input_per_known_call': inputs/len(paired) if paired else None,
++            'wall_ms': sum(times), 'median_ms': statistics.median(times) if times else None,
++            'p90_ms': times[int((len(times)-1)*.9)] if times else None}
++
++
++def snapshot(logs, after=None):
++    manifest = {}
++    configs = {r['run_id']: r for r in cut_rows(logs/'run-config.jsonl', manifest) if r.get('run_id')}
++    rows = [r for r in cut_rows(logs/'codex-calls.jsonl', manifest)
++            if configs.get(r.get('run_id'),{}).get('character','').lower()=='silent'
++            and configs.get(r.get('run_id'),{}).get('ascension')==10
++            and (after is None or str(r.get('ts',''))>=after)]
++    groups = collections.defaultdict(list)
++    for r in rows:
++        o = r.get('cache_request', {})
++        group = json.dumps([r.get('mode'),r.get('model'),r.get('effort'),r.get('thread_id'),
++                            o.get('instructions',{}).get('sha256'),o.get('schema',{}).get('sha256'),o.get('service_tier')])
++        groups[group].append(r)
++    brains = {(r.get('run_id'),r.get('question_id')):r for r in cut_rows(logs/'brain.jsonl', manifest)
++              if r.get('engine')=='codex' and (after is None or str(r.get('ts',''))>=after)}
++    mismatches = 0
++    for r in rows:
++        b = brains.get((r.get('run_id'),r.get('question_id')))
++        u = cost.tokens(r.get('usage'))
++        if b and u['cache_usage_recorded'] and not b.get('reasks'):
++            mismatches += cost.tokens(b.get('usage'))['cache_hit_tokens'] != u['cache_hit_tokens']
++    return {'scope':'Silent A10, all observed physical calls, input includes cache; output includes reasoning',
++            'after':after, 'manifest':manifest, 'total':summarize(rows), 'by_request_context':{k:summarize(v) for k,v in groups.items()},
++            'brain_cache_mismatch_rows':mismatches, 'limits':'Missing usage is unknown. Shared subscription quota and USD are not attributable to brain alone.'}
++
++
++if __name__=='__main__':
++    parser=argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--logs', type=pathlib.Path, default=pathlib.Path(__file__).resolve().parents[1]/'logs')
++    parser.add_argument('--after', help='Inclusive UTC ISO timestamp, as in codex-calls.jsonl')
++    parser.add_argument('--out', type=pathlib.Path, required=True)
++    args=parser.parse_args()
++    result=snapshot(args.logs,args.after)
++    args.out.parent.mkdir(parents=True,exist_ok=True)
++    args.out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
++    print(json.dumps(result['total'],ensure_ascii=False))
+diff --git a/eval/cost.py b/eval/cost.py
+index 540f4e95..a12ea763 100644
+--- a/eval/cost.py
++++ b/eval/cost.py
+@@ -16,6 +16,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+ import brain_source
+ 
+ FIELDS = ("input_tokens", "cache_hit_tokens", "cache_write_tokens", "output_tokens", "reasoning_tokens", "total_tokens")
++CACHE_INPUT_NAMES = ("input", "input_tokens", "inputTokens")
++CACHE_HIT_NAMES = ("cacheRead", "cached_input_tokens", "cachedInputTokens", "cache_hit_tokens", "cacheHitTokens", "cache_read_input_tokens")
+ 
+ 
+ def time(value):
+@@ -34,17 +36,22 @@ def tokens(raw, exclusive=False, creation_extra=False):
+     raw = raw or {}
+     def pick(*names):
+         return next((num(raw[n]) for n in names if n in raw), 0)
+-    inp = pick("input", "input_tokens", "inputTokens")
+-    cached = pick("cacheRead", "cached_input_tokens", "cache_hit_tokens", "cacheHitTokens", "cache_read_input_tokens")
+-    create = pick("cacheCreation", "cache_write_input_tokens", "cacheWriteTokens", "cache_creation_input_tokens")
++    inp = pick(*CACHE_INPUT_NAMES)
++    cached = pick(*CACHE_HIT_NAMES)
++    create = pick("cacheCreation", "cache_write_input_tokens", "cacheWriteInputTokens", "cacheWriteTokens", "cache_creation_input_tokens")
+     out = pick("output", "output_tokens", "outputTokens")
+-    reasoning = pick("reasoning", "reasoning_output_tokens", "reasoning_tokens", "reasoningTokens")
++    reasoning = pick("reasoning", "reasoning_output_tokens", "reasoningOutputTokens", "reasoning_tokens", "reasoningTokens")
+     if exclusive:
+         inp += cached
+     # Claude reports cache creation as a disjoint input bucket; Codex already includes it in input.
+     if creation_extra:
+         inp += create
+-    return dict(zip(FIELDS, (inp, min(cached, inp), create, out, min(reasoning, out), inp + out)))
++    result = dict(zip(FIELDS, (inp, min(cached, inp), create, out, min(reasoning, out), inp + out)))
++    def present(names):
++        return any(n in raw and isinstance(raw[n], (int, float)) and not isinstance(raw[n], bool)
++                   and 0 <= raw[n] < float("inf") for n in names)
++    result["cache_usage_recorded"] = present(CACHE_INPUT_NAMES) and present(CACHE_HIT_NAMES)
++    return result
+ 
+ 
+ class Sources:
+@@ -142,16 +149,20 @@ def collect(root, config, claude_dir=None, codex_home=None):
+                            "character": str(run.get("character") or character or "unattributed").lower(), "ascension": run.get("ascension"),
+                            "ts": when, "calls": calls / len(targets), "latency_ms": num(ms) / len(targets),
+                            **{k: usage.get(k, 0) / len(targets) for k in FIELDS}, "api_usd": None if cost is None else cost / len(targets),
+-                           "subscription_usd": None, "usage_recorded": known})
++                           "subscription_usd": None, "usage_recorded": known,
++                           "cache_usage_recorded": usage.get("cache_usage_recorded", known),
++                           "cache_observed_input_tokens": usage.get("input_tokens", 0) / len(targets) if usage.get("cache_usage_recorded", known) else 0,
++                           "cache_observed_hit_tokens": usage.get("cache_hit_tokens", 0) / len(targets) if usage.get("cache_usage_recorded", known) else 0})
+ 
+-    traced = set()
++    traced, traced_calls = set(), set()
+     for r in sources.rows(root / "logs/codex-calls.jsonl"):
+         qid = r.get("question_id")
++        traced_calls.add((r.get("run_id"), qid))
+         recorded = isinstance(r.get("usage"), dict)
+         if recorded:
+             traced.add((r.get("run_id"), qid))
+         # Failed attempts still consumed wall time; their absent token usage is unknown, not an absent call.
+-        add("brain:codex", "codex", r.get("ts"), tokens(r.get("usage")), rid=r.get("run_id"), ms=r.get("call_ms", r.get("ms")),
++        add("brain:codex", "codex", r.get("ts"), tokens(r.get("usage")), rid=r.get("run_id"), ms=r.get("ms", r.get("call_ms")),
+             known=recorded, identity=("codex-call", r.get("ts"), qid, r.get("attempt"), r.get("thread_id")))
+     for r in sources.rows(root / "logs/brain.jsonl"):
+         engine = str(r.get("engine", "unknown")).lower()
+@@ -163,7 +174,8 @@ def collect(root, config, claude_dir=None, codex_home=None):
+         if price and r.get("usage"):
+             cost = ((usage["input_tokens"] - usage["cache_hit_tokens"]) * price["input_miss_per_million"] +
+                     usage["cache_hit_tokens"] * price["input_hit_per_million"] + usage["output_tokens"] * price["output_per_million"]) / 1e6
+-        add("brain:" + provider, provider, r.get("ts"), usage, rid=r.get("run_id"), ms=r.get("latency_ms"), cost=cost,
++        trace_exists = engine == "codex" and (r.get("run_id"), r.get("question_id")) in traced_calls
++        add("brain:" + provider, provider, r.get("ts"), usage, rid=r.get("run_id"), ms=0 if trace_exists else r.get("latency_ms"), calls=0 if trace_exists else 1, cost=cost,
+             known=bool(r.get("usage")), identity=("brain", r.get("ts"), r.get("question_id"), engine))
+     # Request traces split paid input from free output. Run totals alone cannot determine input cost.
+     jev_recorded = collections.defaultdict(lambda: {"tokens": 0, "calls": 0})
+@@ -303,12 +315,13 @@ def write_outputs(events, runs, sources, periods, config, out):
+         key = tuple(e[k] for k in ("character", "ascension", "run", "component", "batch"))
+         if key not in groups:
+             groups[key] = dict(zip(("character", "ascension", "run", "component", "batch"), key))
+-            groups[key].update({k: 0 for k in ("calls", "latency_ms", *FIELDS)})
+-            groups[key].update(usage_recorded=True, api_usd=None, subscription_usd=None, cost_complete=True)
++            groups[key].update({k: 0 for k in ("calls", "latency_ms", *FIELDS, "cache_observed_input_tokens", "cache_observed_hit_tokens")})
++            groups[key].update(usage_recorded=True, cache_usage_recorded=True, api_usd=None, subscription_usd=None, cost_complete=True)
+         row = groups[key]
+-        for k in ("calls", "latency_ms", *FIELDS):
++        for k in ("calls", "latency_ms", *FIELDS, "cache_observed_input_tokens", "cache_observed_hit_tokens"):
+             row[k] += e[k]
+         row["usage_recorded"] &= e["usage_recorded"]
++        row["cache_usage_recorded"] &= e["cache_usage_recorded"]
+         row["cost_complete"] &= e["usage_recorded"] and (e["api_usd"] is not None or e["subscription_usd"] is not None)
+         for k in ("api_usd", "subscription_usd"):
+             if e[k] is not None:
+@@ -316,12 +329,14 @@ def write_outputs(events, runs, sources, periods, config, out):
+     for row in groups.values():
+         values = [row[k] for k in ("api_usd", "subscription_usd") if row[k] is not None]
+         row["estimated_usd"] = sum(values) if values else None
++        row["cache_hit_ratio_observed"] = row["cache_observed_hit_tokens"] / row["cache_observed_input_tokens"] if row["cache_observed_input_tokens"] else None
+     characters = sorted({e["character"] for e in events} | {str(r.get("character", "unknown")).lower() for r in runs.values()})
+     summaries = {}
+     for character in characters:
+         rows = [r for r in groups.values() if r["character"] == character]
+         header = ["character", "ascension", "run", "component", "batch", "calls", "latency_ms", *FIELDS,
+-                  "usage_recorded", "api_usd", "subscription_usd", "cost_complete", "estimated_usd"]
++                  "usage_recorded", "api_usd", "subscription_usd", "cost_complete", "estimated_usd",
++                  "cache_usage_recorded", "cache_observed_input_tokens", "cache_observed_hit_tokens", "cache_hit_ratio_observed"]
+         with (data / f"cost-{character}.csv").open("w", newline="") as handle:
+             writer = csv.DictWriter(handle, header, lineterminator="\n")
+             writer.writeheader()
+@@ -362,6 +377,7 @@ def write_outputs(events, runs, sources, periods, config, out):
+                  "学习批次服务多局时等分，不代表逐局实测；未记录服务局号的批次保持未归属。运维和观察按对局时间窗归属，窗外单列 unattributed。",
+                  "订阅为共享账户周额度估算，按月费 × 12 / 52 折周、按同一重置窗口内已记录 token 分摊；未观测到的账户外部用量无法单独扣除。",
+                  "未知价格、失败/过期/未校验窗口不补零。金额只汇总已知部分，不能当作完整账单；每胜费用在零胜时未知。",
++                 "缓存命中率只用同时记录输入和缓存字段的样本（cache_observed_*）；cache_usage_recorded=False 表示有缺字段，不能当真实零命中。Codex session 的 camelCase 与 exec 的 snake_case 用同一口径。",
+                  "Jev 优先取 jev-prompts 的逐请求输入/输出（按 request_id 去重，缓存不另加），仅输入收费；runs 未覆盖余额只有总 token，拆分与费用未知。失败请求用量未知，未结束局有请求日志也计入。大脑仅归集 brain/codex-calls 留存请求，早期调用仍缺失。", "",
+                  f"战绩口径：{brain_source.POLICY}。局数、费用、token 和每局费用覆盖全部引擎；胜数仅 Codex，raw_wins/各引擎原始成绩在 CSV 中保留；每胜费用为全部实验费用除以 Codex 胜数。", "",
+                  "| 进阶 | 原始局 | Codex 胜 | token（全部） | 已知估算 | 每原始局 | 每 Codex 胜 | 累计已知 | 覆盖 |", "|---|---:|---:|---:|---:|---:|---:|---:|---|"]
+diff --git a/ops/codex-brain-cache-probe.ts b/ops/codex-brain-cache-probe.ts
+new file mode 100644
+index 00000000..13046d8e
+--- /dev/null
++++ b/ops/codex-brain-cache-probe.ts
+@@ -0,0 +1,78 @@
++/** One authorized baseline pair. Fixed paths/settings; no game controller and no production state. */
++import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
++import { join } from "node:path";
++import { pathToFileURL } from "node:url";
++import { CodexEngine, codexKindSchema, codexSchema, redact } from "../agent/src/brain/engines/codex.js";
++import { segmentDigest } from "../agent/src/brain/engines/codex-cache.js";
++import { pickSpec } from "../agent/src/brain/specs.js";
++import { promptWithReask } from "../agent/src/brain/message.js";
++import type { BrainRequest, BrainAnswer } from "../agent/src/brain/types.js";
++import { loadConfig } from "../agent/src/core/config.js";
++import { setKnowledgeCharacter } from "../agent/src/knowledge/files.js";
++
++export const PROBE_DIRECTORY = "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache";
++export const PROBE_FIXTURE_SHA = "6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98";
++
++export function approvedFixture(text: string) {
++  if (segmentDigest(text).sha256 !== PROBE_FIXTURE_SHA) throw new Error("probe fixture differs from the approved frozen bytes");
++  return JSON.parse(text) as { request: Omit<BrainRequest, "spec">; schema: unknown; segments: { system: { sha256: string }; user: { sha256: string } } };
++}
++
++/** Stops after a failure or cancellation; a real engine separately caps all retries/fallbacks at two physical calls. */
++export async function doubleQuestion(request: BrainRequest, engine: { decide: (r: BrainRequest, s: AbortSignal) => Promise<BrainAnswer> }, signal: AbortSignal) {
++  const results: BrainAnswer[] = [];
++  for (let i = 0; i < 2; i += 1) {
++    if (signal.aborted) throw new Error("probe cancelled");
++    const result = await engine.decide({ ...request, questionId: `cache-probe-baseline-${i + 1}` }, signal);
++    results.push(result);
++    if (result.native?.["mode"] !== "session") throw new Error("probe did not use the approved session transport");
++  }
++  return results;
++}
++
++async function main(): Promise<void> {
++  if (process.argv.length !== 2) throw new Error("codex-brain-cache-probe takes no arguments");
++  setKnowledgeCharacter("silent");
++  const fixture = approvedFixture(readFileSync(join(PROBE_DIRECTORY, "probe-fixture.json"), "utf8"));
++  const config = loadConfig({ CHARACTER: "silent", BRAIN_CODEX_BIN: "/home/dw/.local/node/bin/codex", BRAIN_CODEX_HOME: "/home/dw/.codex",
++    BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_EFFORT: "high", BRAIN_CODEX_MODE: "session", BRAIN_CODEX_SCHEMA_FIELDS: "used",
++    BRAIN_CODEX_SERVICE_TIER: "default", BRAIN_CODEX_STALL_RETRIES: "0", BRAIN_CODEX_USAGE_REQUIRED: "on", BRAIN_CODEX_USAGE_STOP_PCT: "80",
++    BRAIN_CODEX_USAGE_EVERY_CALLS: "1", BRAIN_CODEX_USAGE_EVERY_MIN: "10" });
++  const spec = pickSpec(fixture.request.label, fixture.request.options!, fixture.request.payload);
++  const request = { ...fixture.request, runId: "isolated-cache-probe", spec };
++  const schema = codexSchema(codexKindSchema(spec, { fields: config.brain.codex.schemaFields, reasonLast: config.brain.codex.reasonLast }), {
++    routeReason: config.brain.codex.routeReason, maxFieldChars: config.brain.codex.maxFieldChars, routePattern: config.brain.codex.routePattern });
++  if (JSON.stringify(schema) !== JSON.stringify(fixture.schema)
++      || segmentDigest(promptWithReask(request)).sha256 !== fixture.segments.user.sha256
++      || segmentDigest(request.system).sha256 !== fixture.segments.system.sha256) throw new Error("probe request/schema reconstruction changed");
++  const state = join(PROBE_DIRECTORY, "probe-state");
++  mkdirSync(state, { recursive: true });
++  const engine = new CodexEngine({ settings: config.brain.engines.codex, codex: config.brain.codex, stateDir: state,
++    traceFile: join(PROBE_DIRECTORY, "probe-codex-calls.jsonl"), physicalCallLimit: 2 });
++  const controller = new AbortController();
++  const timeout = setTimeout(() => controller.abort(), 1_200_000);
++  const output: Record<string, unknown> = { status: "pending", fixture_sha256: PROBE_FIXTURE_SHA, max_physical_calls: 2,
++    comparison: "baseline session+revert repeated question; production transport is unchanged", results: null };
++  try {
++    const stop = await engine.usage.start();
++    output["limits_before"] = engine.limits();
++    if (stop) throw new Error(`probe quota preflight: ${stop.message}`);
++    // O_EXCL persists across wakes/crashes. A retry cannot spend the authorized pair again.
++    writeFileSync(join(PROBE_DIRECTORY, "probe-reserved.json"), JSON.stringify({ fixture_sha256: PROBE_FIXTURE_SHA, max_physical_calls: 2 }), { flag: "wx" });
++    output["results"] = await doubleQuestion(request, engine, controller.signal);
++    output["limits_after"] = engine.limits();
++    output["status"] = "completed";
++  } catch (error) {
++    output["error"] = redact(error instanceof Error ? error.message : String(error));
++    process.exitCode = 1;
++  } finally {
++    clearTimeout(timeout);
++    await engine.close();
++    writeFileSync(join(PROBE_DIRECTORY, "probe-result.json"), JSON.stringify(output, null, 2));
++    console.log(JSON.stringify({ status: output["status"], result: join(PROBE_DIRECTORY, "probe-result.json"), error: output["error"] }));
++  }
++}
++
++if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) void main().catch(error => {
++  console.error(redact(error instanceof Error ? error.message : String(error))); process.exitCode = 1;
++});
+diff --git a/ops/codex-ops-actions.sh b/ops/codex-ops-actions.sh
+index 2aa08eef..05ace0c6 100755
+--- a/ops/codex-ops-actions.sh
++++ b/ops/codex-ops-actions.sh
+@@ -54,6 +54,18 @@ hosting() {
+ }
+ 
+ case "$action" in
++  codex-brain-cache-probe)
++    [ "$#" -eq 1 ] || { echo "codex-brain-cache-probe takes no arguments"; exit 2; }
++    CACHE_WORKTREE="$ROOT/.worktrees/codex-brain-cache"
++    CACHE_RUN="$CACHE_WORKTREE/learner/runs/20261008-140043-codex-brain-cache"
++    CACHE_RUNNER="$CACHE_WORKTREE/ops/codex-brain-cache-probe.ts"
++    CACHE_AGENT_TREE="de23a1d6b83f47426d493f0a417d10cd11de722b"
++    CACHE_RUNNER_SHA="228df54acc2f6ae973aa8a2370389bdf55229010d82880e0a7090409e42df53f"
++    [ "$(sha256sum "$CACHE_RUNNER" | cut -d ' ' -f1)" = "$CACHE_RUNNER_SHA" ] || { echo "probe runner differs from tested source"; exit 2; }
++    git -C "$CACHE_WORKTREE" diff --quiet "$CACHE_AGENT_TREE" HEAD:agent || { echo "probe agent tree differs from tested source"; exit 2; }
++    git -C "$CACHE_WORKTREE" diff --quiet HEAD -- agent/src || { echo "probe source is dirty"; exit 2; }
++    git -C "$CACHE_WORKTREE" diff --cached --quiet HEAD -- agent/src || { echo "probe source index is dirty"; exit 2; }
++    exec nice -n 19 node --import "$CACHE_WORKTREE/agent/node_modules/tsx/dist/loader.mjs" "$CACHE_RUNNER" ;;
+   procs)
+     ours || true
+     [ -f "$DIR/autoplay.pid" ] && echo "autoplay.pid: $(cat "$DIR/autoplay.pid")"
+diff --git a/ops/codex-ops-do.sh b/ops/codex-ops-do.sh
+index 2385aa7e..606e2093 100755
+--- a/ops/codex-ops-do.sh
++++ b/ops/codex-ops-do.sh
+@@ -10,6 +10,7 @@
+ # learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event),
+ # strategy-proposal <ids> (dispatches a learner proposal), learner-recheck <batch-id> (full checks after a fallback merge),
+ # boss-sim-check (check B4/B5 triggers with the live scheduler),
++# codex-brain-cache-probe (one approved frozen double question; no arguments),
+ # eval-metrics <character> <ascension> (writes a new Markdown report under paper/materials/<character>/).
+ # The broker only runs while a wake runs: outside a wake this times out (exit 124).
+ set -u
+@@ -19,6 +20,7 @@ BROKER="$DIR/broker"
+ default_wait=300
+ [ "${1:-}" = eval-metrics ] && default_wait=660
+ [ "${1:-}" = learner-recheck ] && default_wait=3760
++[ "${1:-}" = codex-brain-cache-probe ] && default_wait=1320
+ WAIT="${CODEX_OPS_DO_WAIT:-$default_wait}"
+ [ $# -ge 1 ] || { echo "usage: bash ops/codex-ops-do.sh <action> [arg]" >&2; exit 2; }
+ for a in "$@"; do
+diff --git a/ops/codex/lib.ts b/ops/codex/lib.ts
+index 0c82b87b..13683fea 100644
+--- a/ops/codex/lib.ts
++++ b/ops/codex/lib.ts
+@@ -267,6 +267,7 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
+   "experience-update": { args: 1, ms: 30_000 },
+   "fix-batch": { args: 0, ms: 30_000 },
+   "boss-sim-check": { args: 0, ms: 120_000 },
++  "codex-brain-cache-probe": { args: 0, ms: 1_260_000 },
+   "strategy-proposal": { args: 1, ms: 30_000 },
+   "learner-merge": { args: 1, ms: 30_000 },
+   "learner-recheck": { args: 1, ms: 3_700_000 },

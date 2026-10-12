@@ -1,0 +1,66 @@
+{
+  "source": "a65ee5ce6da1a5d44b769d92ffd3f477c4b6e2ce",
+  "branch": "exp-silent",
+  "merged": null,
+  "refresh": null,
+  "pre": "80387c563d4b42b6e14b940dda86e1d2aa420d3c",
+  "tests": null,
+  "live_branch": "live",
+  "initial": "80387c563d4b42b6e14b940dda86e1d2aa420d3c",
+  "initial_status": " M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+  "refresh_paths": [],
+  "base": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+  "source_knowledge_paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "live_knowledge_paths": [
+    "knowledge/builders/build-monster-db.py",
+    "knowledge/builders/build-outcome-stats.py",
+    "knowledge/builders/build-potion-equivalents.py",
+    "knowledge/builders/characters.py",
+    "knowledge/builders/refresh-potion-equivalents.sh",
+    "knowledge/characters/ironclad/potion-equivalents.json",
+    "knowledge/characters/ironclad/sl-elites.json",
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/fight-value-gates.json",
+    "knowledge/characters/silent/fight-value.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/potion-equivalents.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ],
+  "knowledge_overlap": [],
+  "live_experience": {
+    "version": "2026-10-12.1",
+    "sha256": "a19d73f210ede27fb09d3fd98d1e4aac3c3bab8114f7673ee8f7d1cffc1b3cdb"
+  },
+  "result": "锁内merge-tree预检4项冲突，按任务停止；本任务未执行git merge、未硬解，无新增刷新提交。未上线，无合后测试/版本/双通知。锁释放后其他提交和后台知识刷新继续推进，逐时观测另列；本任务没有修改这些并行数据。",
+  "conflicts": [
+    "CONFLICT (content): Merge conflict in knowledge/characters/silent/experience.json",
+    "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+    "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl"
+  ],
+  "post_observed": "2026-10-12T09:50:26+08:00",
+  "post_head": "c56900bd37e5eaa6680381a3300fb7d3aafac7a5",
+  "post_status": " M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+  "post_unmerged": "",
+  "source_is_live_ancestor": false,
+  "post_experience": {
+    "version": "2026-10-12.1",
+    "sha256": "a19d73f210ede27fb09d3fd98d1e4aac3c3bab8114f7673ee8f7d1cffc1b3cdb"
+  },
+  "parallel_commits_after_lock": [
+    "c56900bd37e5eaa6680381a3300fb7d3aafac7a5 合入已测的静默弃牌题事实源 608478393",
+    "5d0c036a5c916a63d9208ccea2eb92e42110687e 记录已逐叶重放并验收的原学习者源码 608478393",
+    "5b7323f0398c1989c76a122d17641ba56b168dab ops: 集成学习者 608478393 的弃牌题事实",
+    "608478393b0491c9d77441d06b7a402994987f42 Expose Silent Sandpit escape facts during Prepared discards",
+    "64ce8ff3c9f2fe633c27d04d81ffcacce2a16671 Sync tested learner source 84366ad06 into main",
+    "c4fa44b08a0985ef6a9101861616186cf0b833d9 Sync tested learner source fdaf787a3 into main",
+    "645736084b520c9bc861122f460d3dcc9cd77772 ops: preserve zero-output experience repair evidence",
+    "5f6c2609e7ff92ed67326ecbde0a2a02b2beee56 ops: preserve dispatch audit candidate and route baseline fixture failure"
+  ]
+}

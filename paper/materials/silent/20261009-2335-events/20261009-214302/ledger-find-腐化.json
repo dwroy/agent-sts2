@@ -1,0 +1,102 @@
+[
+ {
+  "id": "silent-0306",
+  "ts": "2026-10-08T19:00:24+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局祭品OFFERING和腐化附魔全身撞击BODY_SLAM连续自损分别6与2，已有16/22格挡没有抵扣；F33末试T4先由15→9→7，格挡分别保持16/22，再接受敌攻击。只确认本局两种牌面及组合，不推广所有跨来源牌或附魔。",
+  "evidence": [
+   {
+    "run": "QHK1XQ928TTM",
+    "floor": 24,
+    "turn": 2,
+    "role": "support",
+    "note": "首试祭品实10→4，牌面HpLoss6；不是敌方攻击损失。",
+    "added": "2026-10-08T19:00:24+08:00"
+   },
+   {
+    "run": "QHK1XQ928TTM",
+    "floor": 33,
+    "turn": 4,
+    "role": "support",
+    "note": "s303218→303219及303220→303221；祭品16挡时15→9、附魔撞击22挡时9→7，撞击实扣敌26；自损合8。",
+    "added": "2026-10-08T19:00:24+08:00"
+   },
+   {
+    "run": "UMVLWER4CD98",
+    "role": "support",
+    "note": "第106批日志复核：silent-offering-direct-hp-cost；完整层/回合/原帧见本批audit、history及numbers-checked，单卡整战因果未控。",
+    "added": "2026-10-08T19:53:53+08:00"
+   }
+  ],
+  "first_run": "UMVLWER4CD98",
+  "prior": "unknown",
+  "prior_runs": [
+   "UMVLWER4CD98"
+  ],
+  "prior_note": "新局之前历史静默UMVLWER4CD98已16次总观察中的9次实付6，F35T2已有7挡仍88→82；更正最早实际观察为该局，之前没有本角色可比祭品，prior unknown保持，不能把自动扣血等同学习前已懂血价。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "QHK1XQ928TTM"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-184301-postmortem/setup-potion-proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-193934-experience-update/proposal-mechanisms.md"
+   ],
+   "experience": [
+    "silent-offering-direct-hp-cost"
+   ],
+   "commits": [
+    "1c7822047848f708deeb5d9b29fd3cf726dec241",
+    "b2921782dac1f17a52d1c8e75e39ff129d2111b4",
+    "ad489c8c43b20c83bba2cbc9379be2a2ee8ebe16",
+    "22c63f07361129a89158b3623d908a9195c09356"
+   ],
+   "changelog": [
+    "## 2026-10-08 静默猎手 第一百零六次增量：3 局 A10（version 2026-10-08.23，分支 exp-silent，1c782204）"
+   ]
+  },
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-08T19:00:24+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-08T19:02:28+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T19:53:53+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T19:53:53+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T20:09:14+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T20:18:12+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp106",
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-8560010ee25568e8 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第106批提案预关联，提交后再登记proposed；保留旧状态/claim/prior/版本和历史，不把经验发布当代码实现。",
+   "代码提案 silent-proposal-bbf4688a5bb6ed68 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第106批源提交已完成，只登记经验来源，旧首证更正及全部原历史保留；实际live数据shipped交运维据完成事件核实，代码提案仍pending。",
+   "第一百零六次经验仅原数据.22→.23，源1c782204增3改23退0/183 active，原251文件2627例tsc/vitest0。actual live/main唯一发布S1.exp106；按学习者ledger-map仅28所属经验数据shipped，保留首证/prior/claim/evidence/support/repeat及旧状态历史。三combat/potion/SL/terminal代码提案沿原自动链，不标代码实现；新数据树完整外部待原批独立续验，exp100旧失败及修复队列不关闭。刷新/并行代码、未提交backtest笔记、原17冲突/merged-null/out/err/两次原数字核验失败均保持。"
+  ],
+  "shipped_at": "2026-10-08T20:18:12+08:00"
+ }
+]

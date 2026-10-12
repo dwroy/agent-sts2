@@ -1,0 +1,90 @@
+[
+  {
+    "batch": "20261011-174302",
+    "run": "YBRA3EJ94GBR",
+    "lesson_sha256": "cb93b084a6316197aaf3759d6b4641f399a8d8b70926928a6f8ec7f23efbbd01",
+    "ledger_lines": [
+      14498,
+      14499,
+      14500,
+      14501,
+      14502,
+      14503,
+      14504,
+      14506,
+      14507,
+      14508,
+      14509,
+      14510,
+      14511,
+      14512
+    ],
+    "ledger_ids": [
+      "silent-0019",
+      "silent-0023",
+      "silent-0027",
+      "silent-0063",
+      "silent-0102",
+      "silent-0129",
+      "silent-0324"
+    ],
+    "bugs": [
+      {
+        "run": "YBRA3EJ94GBR",
+        "where": "agent/src/reflex/card-model.ts:934",
+        "what": "普通刀刃之舞的Cards=3仍误作抽牌；复现既有silent-0324，fix-queue未列",
+        "new": false
+      }
+    ],
+    "all_bugs_preexisting": true,
+    "ledger_rows_sha256": "f2fa35c0588ac09b88639e8305cfe55cbf5aa806ca89d5d8191ccd6bb0bcf12e",
+    "code_proposals": [
+      "silent-proposal-e7adad48b46c15d9",
+      "silent-proposal-1d051d6f6ab3f81e"
+    ]
+  },
+  {
+    "batch": "20261011-181301",
+    "run": "3UPY3BP2LVS7",
+    "lesson_sha256": "89dec1cb802dc33303f2afaef71e26302237dfe3d79cdc6910cf909a1e5cc599",
+    "ledger_lines": [
+      14533,
+      14534,
+      14535,
+      14536,
+      14537,
+      14538,
+      14539,
+      14548,
+      14549,
+      14550,
+      14551,
+      14552,
+      14553,
+      14554
+    ],
+    "ledger_ids": [
+      "silent-0021",
+      "silent-0049",
+      "silent-0079",
+      "silent-0133",
+      "silent-0222",
+      "silent-0289",
+      "silent-0349"
+    ],
+    "bugs": [
+      {
+        "run": "3UPY3BP2LVS7",
+        "where": "agent/src/reflex/turn-solver.ts:2684",
+        "what": "已有虚弱时镣铐血价少报：预测损0，实际损1；silent-0349已有。",
+        "new": false
+      }
+    ],
+    "all_bugs_preexisting": true,
+    "ledger_rows_sha256": "83758a7a4636a59081d63fc972508731ec8a64248f97e9de4a881244abd1b8f2",
+    "code_proposals": [
+      "silent-proposal-3c46f81c08c130e1",
+      "silent-proposal-09bb4373dbe1b3a1"
+    ]
+  }
+]

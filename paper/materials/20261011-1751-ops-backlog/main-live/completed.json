@@ -1,0 +1,53 @@
+{
+  "finished_at": "2026-10-11T18:40:28.430111+08:00",
+  "commit": "4754a86982381fea0aae8e1e32a1679306066e9e",
+  "tree": "9a565e6638e6e658544432a2445ec09ce245c9e2",
+  "source_main": "1496de4f4be0dcbc81f618de4c1dc4394afdb144",
+  "checks": [
+    {
+      "name": "tsc",
+      "exit": 0,
+      "log": "tsc.log"
+    },
+    {
+      "name": "changed-files-sandbox-eligible",
+      "exit": 0,
+      "files": [
+        "ops-herdr.test.ts",
+        "ops-redaction.test.ts"
+      ],
+      "log": "changed-files.log",
+      "excluded_files_original_exit": 1,
+      "note": "6 files on existing sandbox exclusion list, deferred to host checks; originals retained"
+    },
+    {
+      "name": "learner-launch",
+      "exit": 0,
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-m",
+        "unittest",
+        "ops.tests.test_learner_launch_failures"
+      ]
+    },
+    {
+      "name": "strategy-research",
+      "exit": 0,
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-m",
+        "unittest",
+        "ops.tests.test_strategy_research_scheduling"
+      ]
+    }
+  ],
+  "gitleaks": 0,
+  "refresh_preserved": true,
+  "experience_source": "ab88e71ab7108d022e6f1db11b19e7fec2ac3e32"
+}

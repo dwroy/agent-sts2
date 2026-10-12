@@ -1,0 +1,142 @@
+{
+  "deciders_raw": {
+    "codex": 60,
+    "code": 626,
+    "jev": 174
+  },
+  "jev_continues": 248,
+  "jev": 174,
+  "low_confidence": [
+    {
+      "line": 314770,
+      "floor": 30,
+      "turn": 2,
+      "attempt": null,
+      "label": "selection/choose",
+      "confidence": 0.33
+    },
+    {
+      "line": 314815,
+      "floor": 33,
+      "turn": 1,
+      "attempt": 1,
+      "label": "combat/plan-choice",
+      "confidence": 0.32
+    },
+    {
+      "line": 315016,
+      "floor": 46,
+      "turn": 4,
+      "attempt": 1,
+      "label": "combat/plan-choice+potion",
+      "confidence": 0.33
+    },
+    {
+      "line": 315020,
+      "floor": 46,
+      "turn": 5,
+      "attempt": 1,
+      "label": "selection/choose",
+      "confidence": 0.18
+    },
+    {
+      "line": 315084,
+      "floor": 49,
+      "turn": 2,
+      "attempt": 1,
+      "label": "selection/choose",
+      "confidence": 0.27
+    },
+    {
+      "line": 315125,
+      "floor": 49,
+      "turn": 2,
+      "attempt": 2,
+      "label": "selection/choose",
+      "confidence": 0.32
+    },
+    {
+      "line": 315145,
+      "floor": 49,
+      "turn": 6,
+      "attempt": 2,
+      "label": "selection/choose",
+      "confidence": 0.2
+    },
+    {
+      "line": 315161,
+      "floor": 49,
+      "turn": 2,
+      "attempt": 3,
+      "label": "selection/choose",
+      "confidence": 0.23
+    },
+    {
+      "line": 315180,
+      "floor": 49,
+      "turn": 2,
+      "attempt": 4,
+      "label": "selection/choose",
+      "confidence": 0.27
+    },
+    {
+      "line": 315199,
+      "floor": 49,
+      "turn": 2,
+      "attempt": 5,
+      "label": "selection/choose",
+      "confidence": 0.27
+    },
+    {
+      "line": 315218,
+      "floor": 49,
+      "turn": 2,
+      "attempt": 6,
+      "label": "selection/choose",
+      "confidence": 0.31
+    },
+    {
+      "line": 315235,
+      "floor": 49,
+      "turn": 6,
+      "attempt": 6,
+      "label": "selection/choose",
+      "confidence": 0.2
+    }
+  ],
+  "rollout_best": [
+    128,
+    135
+  ],
+  "nonend_best": [
+    106,
+    113
+  ],
+  "code_initiator_labels": {
+    "combat/plan": 90,
+    "combat/end_turn": 16,
+    "combat/lethal": 28,
+    "combat/mod-lethal": 1,
+    "combat/least-loss": 21
+  },
+  "code_initiators": 156,
+  "code_initiator_turns": 117,
+  "total_combat_turns": 138,
+  "no_jev_turns": 40,
+  "guard_lines": [
+    315045,
+    315073
+  ],
+  "fallback": 0,
+  "usage_jev": {
+    "input_tokens": 962657,
+    "output_tokens": 10185
+  },
+  "usage_brain": {
+    "input_tokens": 6406793,
+    "output_tokens": 12743,
+    "cache_hit_tokens": 3854336
+  },
+  "duration_seconds": 2636.013,
+  "end_only_questions": 22
+}

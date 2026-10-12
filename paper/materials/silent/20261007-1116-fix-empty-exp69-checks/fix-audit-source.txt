@@ -1,0 +1,99 @@
+import json
+import subprocess
+from pathlib import Path
+
+WORKTREE = Path('/home/dw/Projects/agent-sts2/.worktrees/codex-dev')
+SCRATCH = Path('/home/dw/Projects/agent-sts2/learner/runs/20261007-104302-fix-batch')
+QUEUE = Path('/home/dw/Projects/agent-sts2/notes/fix-queue-v4.md')
+PREVIOUS = WORKTREE / 'paper/materials/silent/20261007-0955-exp68-fix43-release/fix/already-fixed.json'
+
+
+def git(*args):
+    return subprocess.run(['git', '-C', str(WORKTREE), *args], text=True,
+                          capture_output=True, check=False)
+
+
+base = git('rev-parse', 'HEAD').stdout.strip()
+live = git('rev-parse', 'live').stdout.strip()
+items = [{'item': row['item'], 'commit': row['commit'], 'historical_paths': row.get('paths', [])}
+         for row in json.loads(PREVIOUS.read_text())]
+recent = [
+    ('毒杀胜利分支漏算持牌毒素伤害（silent-0213；TKXQ6L4N9A6U F22 T6）', '2e6fa2e5',
+     'agent/tests/silent-poison-held.test.ts'),
+    ('已建模中毒仍触发攻击八折（silent-0216；K3676LU8B0UH F17 T2；T3FW7R2R2306 F8 T3–T5）', 'ffa23c2f',
+     'agent/tests/silent-poison-coverage.test.ts'),
+    ('升级预览丢失消耗关键词（silent-0217；KAY522KT5NXR F44/F47；P5HT1272P5SB F24/F25 T2）', '62ee292c',
+     'agent/tests/silent-upgrade-preview.test.ts'),
+    ('勒紧未增加同方案后续防御格挡（silent-0218；HSX4HYATB4E2 F31 T2；P5HT1272P5SB F25 T9）', '1912b5e0',
+     'agent/tests/silent-fasten.test.ts'),
+    ('蛇咬施毒模型遗漏（silent-0219；KAY522KT5NXR F14 T1；KQQELQSZ382Z F17第6次T7）', '06bb4617',
+     'agent/tests/silent-snakebite.test.ts'),
+]
+for item, commit, test in recent:
+    full = git('rev-parse', commit).stdout.strip()
+    changed = git('diff-tree', '--no-commit-id', '--name-only', '-r', full).stdout.splitlines()
+    items.append({'item': item, 'commit': full, 'historical_paths': changed, 'test': test})
+
+files = subprocess.run(['rg', '--files', 'agent/src', 'agent/tests', 'agent/tools', 'ops',
+                        'learner', 'knowledge/builders'], cwd=WORKTREE, capture_output=True,
+                       text=True, check=True).stdout.splitlines()
+by_name = {}
+for path in files:
+    by_name.setdefault(Path(path).name, []).append(path)
+
+for row in items:
+    row['base_ancestor'] = git('merge-base', '--is-ancestor', row['commit'], base).returncode == 0
+    row['live_ancestor'] = git('merge-base', '--is-ancestor', row['commit'], live).returncode == 0
+    row['current_paths'] = sorted({candidate for old in row['historical_paths']
+                                   for candidate in by_name.get(Path(old).name, [])})
+    assert row['base_ancestor'] and row['live_ancestor'], row
+
+# Check the current entry points, alongside the existing fixed-data regressions in the sandbox suite.
+source_checks = [
+    ('失败大脑调用保留墙钟和已知用量', 'agent/src/brain/router.ts',
+     ['latency_ms: result?.latencyMs ?? failed?.latencyMs ?? 0',
+      'usage: result?.usage ?? failed?.usage', 'primary_ms: primary.latencyMs']),
+    ('知识前缀更新与配置身份区分', 'agent/src/eye/run-config.ts',
+     ['prefix_note: PREFIX_NOTE', 'config_sha: sha(JSON.stringify(identity))']),
+    ('大日志从尾部逐行扫描', 'agent/tools/deepseek-prompt-dump.ts', ['scanBackward(',
+     'if (error instanceof SyntaxError) return true;']),
+    ('锻造候选与实际可选牌一致', 'agent/src/hand/screens/oneshot.ts', ['selectableCards(env.state, cards, follow)']),
+    ('单样本不判所有线饱和', 'agent/src/reflex/rollout-live.ts', ['line.samples >= SATURATED_MIN_SAMPLES']),
+    ('敌方力量列入支配比较', 'agent/src/reflex/turn-solver.ts', ['-enemyStrengthGained(o)']),
+    ('herdr关闭测试等待注册表落盘', 'agent/tests/ops-herdr.test.ts',
+     ['w.state().panes[pane] === undefined && JSON.parse(readFileSync(registry, "utf8")).panes["batch-1"] === undefined']),
+    ('rollout向单回合求解器传播同一截止时钟', 'agent/src/reflex/rollout.ts',
+     ['deadline: budget.start + deadline, deadlineNow: budget.now']),
+    ('单行动题现有格挡不重复扣除', 'agent/src/reflex/combat.ts',
+     ['incoming - (heldPenaltyOf.get(card.index) ?? 0) - blockGain']),
+    ('单行动题现场虚弱预览不重复折减', 'agent/src/reflex/combat.ts',
+     ['card.damageIsPreview ? ourPowers.filter((power) => power.id !== "WEAK_POWER") : ourPowers']),
+    ('毒结算前持牌致死检查', 'agent/src/reflex/turn-solver.ts',
+     ['const wonBeforePoison = fightEnded(sim, input);', 'if (!diesBeforePoison && pendingPoison)',
+      'const winsFight = !diesBeforePoison && fightEnded(sim, input);']),
+    ('中毒已列入已建模增益', 'agent/src/reflex/combat-plan.ts', ['"POISON_POWER",']),
+    ('升级模板精确匹配后保留现场关键词', 'agent/src/hand/screens/oneshot.ts',
+     ['before.slice(0, at) + after + before.slice(at + current.length)']),
+    ('蛇咬与勒紧入口存在且按角色限定', 'agent/src/reflex/card-model.ts',
+     ['character.toLowerCase() === "silent" && cardId === "SNAKEBITE"',
+      'character.toLowerCase() === "silent" && cardId === "FASTEN"']),
+]
+checks = []
+for item, path, needles in source_checks:
+    content = (WORKTREE / path).read_text()
+    passed = all(needle in content for needle in needles)
+    checks.append({'item': item, 'path': path, 'markers_present': passed})
+    assert passed, (item, path)
+
+source_delta = git('diff', '--name-only', base, live, '--', 'agent/src', 'agent/tools', 'agent/tests',
+                   'learner/*.ts', 'learner/*.py', 'learner/tasks', 'ops/*.sh', 'ops/*.py', 'ops/codex',
+                   'eval/*.py', 'eval/*.ts', 'eval/cost-config.json', 'knowledge/builders').stdout.splitlines()
+result = {'base': base, 'live_checked': live, 'count': len(items), 'already_fixed': items,
+          'current_source_checks': checks, 'live_source_delta': source_delta,
+          'new_fixes': [], 'working_tree_clean': not git('status', '--porcelain').stdout.strip()}
+(SCRATCH / 'audit.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+(SCRATCH / 'already-fixed.json').write_text(json.dumps(items, ensure_ascii=False, indent=2) + '\n')
+(SCRATCH / 'queue-snapshot.md').write_text(QUEUE.read_text())
+print(json.dumps({'base': base, 'live_checked': live, 'known_fixes': len(items),
+                  'source_checks': len(checks), 'clean': result['working_tree_clean'],
+                  'live_source_delta_paths': len(source_delta)}, ensure_ascii=False))

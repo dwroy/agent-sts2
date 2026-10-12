@@ -1,0 +1,100 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-756ddf20db14797f",
+    "ts": "2026-10-08T16:00:04+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0256",
+      "silent-0258"
+    ],
+    "runs": [
+      "9DAS5L8YM1CN"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion"
+    ],
+    "summary": "复现狡诈药水确定添3张升级小刀仍未建模，补同角色容量／生成候选验证，未实证早喝整场胜局。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/proposal-cunning.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "ce93a7ca446647c7bbe01d1117363533b1f7e3961c5d7909f3d0f01f1ff98642",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-ec2b210f613d5e26",
+    "ts": "2026-10-08T16:00:04+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0260",
+      "silent-0261"
+    ],
+    "runs": [
+      "9DAS5L8YM1CN"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "两完整紧勒后续出牌线分别报24实28、报8实12，复现普通STRANGLE_POWER2逐牌触发漏算；交独立策略实现，不声称救回整局。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/proposal-strangle.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "642b8541cf3f1e6f5dc88a1fcef829f2ee7f569c48c0db420c15c7dd6431b126",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-f97980a3266f2665",
+    "ts": "2026-10-08T16:01:12+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0260",
+      "silent-0261"
+    ],
+    "runs": [
+      "9DAS5L8YM1CN"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "修正原silent-proposal-ec2b210f613d5e26初稿一处层数笔误：本局死亡第23层，原件保留；紧勒报24实28/报8实12漏逐牌2的两项证据与实施边界不变，实现以本修正版为准。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/proposal-strangle-corrected.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "812c9e3fbab9d9ba85642e5c5c526d9ab35c9c4ae4ffcc48bf04810709e75719",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-fc6618e0844f2007",
+    "ts": "2026-10-08T16:00:04+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0019",
+      "silent-0232",
+      "silent-0044"
+    ],
+    "runs": [
+      "9DAS5L8YM1CN"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "terminal"
+    ],
+    "summary": "二幕连胜后2血进入必经猎人杀手，核验普通战末HP／持药与下一营火资源接续；无完整替代胜线，保留现有规则等待固定回放与新局。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/proposal-resource-terminal.md",
+    "rule_changes": false,
+    "proposal_sha256": "1be9084ad8cd9df4b9140743b90102ff5c87f414d52eb1d728dcdc660e078217",
+    "state": "pending"
+  }
+]

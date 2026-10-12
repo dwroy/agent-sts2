@@ -1,0 +1,26 @@
+[
+  {
+    "name": "tsc",
+    "cmd": [
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "binding",
+    "cmd": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/strategy-implementation.test.ts",
+      "tests/strategy-research.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1"
+    ],
+    "exit": 0
+  }
+]

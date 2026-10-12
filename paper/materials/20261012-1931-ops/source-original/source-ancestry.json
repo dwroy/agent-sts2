@@ -1,0 +1,128 @@
+{
+  "base": "5131744f62198cf2469da2734e4a0da2b751c84e",
+  "live": "1d3b8508d4b58b2dc24815c8b740d95e7c54a48b",
+  "commits": [
+    {
+      "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+      "subject": "Model observed Silent Cunning Potion generation and hand capacity",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+      "subject": "Model observed ordinary Strangle losses for Silent",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "e8b4bb320ae3068db5ebb6ce8c6fa91a9689178a",
+      "subject": "Model observed Silent opening HP loss in continuous fights",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "0970bc0d112718d45c8ebf86ff7f84e0f36a7498",
+      "subject": "Clear observed poison and Strength on Silent middle reattachment",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+      "subject": "Preserve HP before observed Silent poison victories",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "fdaf787a372880b0438e73bcac7e6d2168b038ed",
+      "subject": "Record Silent candidate dispatch receipts separately from forecasts",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "3f69541b5d3259dac94d3395bfe3da47936b4de9",
+      "subject": "Audit observed enemy HP changes in Silent replays",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "66283dd9982bdd7f480da7a4d9bfefea0572a9ac",
+      "subject": "Sync repaired legacy learning and continuation adapter to main",
+      "base_ancestor": true,
+      "live_ancestor": true
+    }
+  ],
+  "sources": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "base_sha256": "a4f848f7003b765586428382995bb71ffacb7def0cb8947da7fcb6b07b768ff8",
+      "live_sha256": "d71762da6c3a57c70fd032c0ad2f2ea8936b21a284c6ef5b894934f9eb32fc0c",
+      "exact": false,
+      "equal_after_author_name_replacement": true,
+      "same_as_prior_base": true
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "base_sha256": "4c71e63a88227d1e552da682b766611b9160b1723f9c823f98732bef8d7e993c",
+      "live_sha256": "ae9f0dcdf496e1fff3bd3e5aa22d211a8f4248d9add8cc3b1cc2100b8cd5c78f",
+      "exact": false,
+      "equal_after_author_name_replacement": true,
+      "same_as_prior_base": true
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "base_sha256": "7589011d1cf2c26918a03137d3b29bc0db568d7a4d871281f87a27c6a459e833",
+      "live_sha256": "8663e9df8e903add01a965ebb3980cd23c2b1ab32f029aafaf14d887ef852696",
+      "exact": false,
+      "equal_after_author_name_replacement": true,
+      "same_as_prior_base": false
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-comparison.ts",
+      "base_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+      "live_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+      "exact": true,
+      "equal_after_author_name_replacement": true,
+      "same_as_prior_base": true
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+      "base_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+      "live_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+      "exact": true,
+      "equal_after_author_name_replacement": true,
+      "same_as_prior_base": true
+    },
+    {
+      "path": "learner/resource_chain.py",
+      "base_sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+      "live_sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+      "exact": true,
+      "equal_after_author_name_replacement": true,
+      "same_as_prior_base": true
+    },
+    {
+      "path": "agent/src/sl/explore.ts",
+      "base_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+      "live_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+      "exact": false,
+      "equal_after_author_name_replacement": true,
+      "same_as_prior_base": true
+    },
+    {
+      "path": "agent/src/sim/silent-opening.ts",
+      "base_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+      "live_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+      "exact": true,
+      "equal_after_author_name_replacement": false,
+      "same_as_prior_base": false
+    },
+    {
+      "path": "agent/src/sim/boss-start.ts",
+      "base_sha256": "1b20bb9d2c604ae5c957de3713e988f6a24efa254705a93486d165b07da32cae",
+      "live_sha256": "6a7b5ea8a90c35c1490ce742114e6cfce072637ac2c95dbe5d1b2ab947a13282",
+      "exact": false,
+      "equal_after_author_name_replacement": false,
+      "same_as_prior_base": false
+    }
+  ]
+}

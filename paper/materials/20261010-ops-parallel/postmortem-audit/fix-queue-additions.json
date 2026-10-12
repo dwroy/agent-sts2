@@ -1,0 +1,187 @@
+[
+  {
+    "id": "silent-0362",
+    "batch": "20261010-024301",
+    "runs": [
+      "08A0GEAL8KQ5"
+    ],
+    "classification": "nonblocking-pure-bug-from-learner",
+    "original_report_bug": {
+      "run": "08A0GEAL8KQ5",
+      "where": "agent/src/reflex/turn-solver.ts:2684",
+      "what": "尖啸同线减力未乘背向火箭的后方攻击倍率，多报3点来袭；修后仍死亡",
+      "new": true
+    },
+    "claim": "静默A10双蟹两部件存活时，同线尖啸减力没有乘上已经存在的后方攻击倍率。08A0GEAL8KQ5末试T4火箭无虚弱、玩家无易伤、朝向不变，力量3→−3使背向激光57→48，实际减少9；当前live turn-solver.ts:2684仅按玩家易伤放大力量变化，算57−6=51，多报3。least-loss预计余血−20对应22−(51−9)，实际静态需损39、余血应−17，仍会死亡。只定位这笔减力传播，不混入既有虚弱或转向取整缺口，也不保证修后转胜。",
+    "evidence": [
+      {
+        "run": "08A0GEAL8KQ5",
+        "floor": 33,
+        "turn": 4,
+        "note": "第6试d325594报预计剩HP−20；s334601→334602火箭力量3→−3、激光57→48，s334603为22血9挡；s334604玩家0、敌102/181。当前live agent/src/reflex/turn-solver.ts:2684—2685仅处理Vulnerable倍率。",
+        "role": "support",
+        "added": "2026-10-10T02:55:16+08:00"
+      }
+    ],
+    "first_run": "08A0GEAL8KQ5",
+    "prior": "unknown",
+    "status": "observed",
+    "already_in_fix_queue": false,
+    "proposal_proofs": [
+      {
+        "id": "silent-proposal-0031b60b7dade5cf",
+        "state": "pending",
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "ledger": [
+          "silent-0362",
+          "silent-0363"
+        ],
+        "runs": [
+          "08A0GEAL8KQ5"
+        ],
+        "path": "learner/runs/20261010-024302-postmortem/back-attack-proposal.md",
+        "registered_sha256": "bb19bdf4ee08c102e881e4aa936bf9f9dd00d715a62d65506ff019b6ba54df53",
+        "actual_sha256": "bb19bdf4ee08c102e881e4aa936bf9f9dd00d715a62d65506ff019b6ba54df53",
+        "sha_matches": true,
+        "validate_passed": true
+      }
+    ],
+    "report_path": "learner/runs/20261010-024302-postmortem/report.md",
+    "report_sha256": "0fdf044079ff2e576da33f64f4b1a7d74b6587806258e43e57f023b40bf92b15",
+    "constraints": "仅转录原learner；原局已正常结束，非卡死；不重派/不补机制/不标implemented或shipped/不造版本"
+  },
+  {
+    "id": "silent-0365",
+    "batch": "20261010-101301",
+    "runs": [
+      "X4M1GPAJGAB9"
+    ],
+    "classification": "nonblocking-pure-bug-from-learner",
+    "original_report_bug": {
+      "run": "X4M1GPAJGAB9",
+      "where": "agent/src/reflex/combat-plan.ts:3839",
+      "what": "未建模药水只列前两个合法目标，遗漏槽3直飞产卵虫；3722的容量计数同样截断。",
+      "new": true
+    },
+    "claim": "整回合题把未建模定向药水合法目标截成前两个；本局产卵虫在槽3时，毒药水可指向[0,1,2,3]却只展示槽0和1，丢失母体和第三爪牙选择。应保证合法目标可达并一致处理题目容量；这不证明早喝或改目标能赢。当前只读live combat-plan.ts:3722、3839定位。",
+    "evidence": [
+      {
+        "run": "X4M1GPAJGAB9",
+        "floor": 23,
+        "turn": 2,
+        "note": "s338673合法目标[0,1,2,3]；d329458仅p0→e0/e1，母体槽3漏掉。",
+        "role": "support",
+        "added": "2026-10-10T10:24:48+08:00"
+      },
+      {
+        "run": "X4M1GPAJGAB9",
+        "floor": 23,
+        "turn": 3,
+        "note": "s338680与d329464重复同一覆盖缺口；T4 s338684与d329468同样。",
+        "role": "support",
+        "added": "2026-10-10T10:24:48+08:00"
+      },
+      {
+        "run": "X4M1GPAJGAB9",
+        "floor": 23,
+        "turn": 5,
+        "note": "母体改槽1后单动作d329478实际饮药，毒21→27且90HP不变，不当反事实胜局。",
+        "role": "support",
+        "added": "2026-10-10T10:24:48+08:00"
+      }
+    ],
+    "first_run": "X4M1GPAJGAB9",
+    "prior": "unknown",
+    "status": "observed",
+    "already_in_fix_queue": false,
+    "proposal_proofs": [
+      {
+        "id": "silent-proposal-70c22e94eda8f8a9",
+        "state": "pending",
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "ledger": [
+          "silent-0365",
+          "silent-0278"
+        ],
+        "runs": [
+          "X4M1GPAJGAB9"
+        ],
+        "path": "learner/runs/20261010-101302-postmortem/proposal-potion-targets.md",
+        "registered_sha256": "6fa5340f70b8f3594e35a11a1f106e5046e9b8e295e790687a255fbb1dac2395",
+        "actual_sha256": "6fa5340f70b8f3594e35a11a1f106e5046e9b8e295e790687a255fbb1dac2395",
+        "sha_matches": true,
+        "validate_passed": true
+      }
+    ],
+    "report_path": "learner/runs/20261010-101302-postmortem/report.md",
+    "report_sha256": "aa653a2086af29deaae74fb1a0df140a70f7f2956082bda38d9ac7ad5478b38a",
+    "constraints": "仅转录原learner；原局已正常结束，非卡死；不重派/不补机制/不标implemented或shipped/不造版本"
+  },
+  {
+    "id": "silent-0367",
+    "batch": "20261010-111302",
+    "runs": [
+      "5BU7ZE1PWLSX"
+    ],
+    "classification": "nonblocking-pure-bug-from-learner",
+    "original_report_bug": {
+      "run": "5BU7ZE1PWLSX",
+      "where": "agent/src/brain/build-facts.ts:26",
+      "what": "已用蜥蜴尾巴状态未传入大脑事实与摘要",
+      "new": true
+    },
+    "claim": "静默A10蜥蜴尾巴在仪式兽战已实际触发并被代码记为已用，大脑后续事实与摘要却只展示持有遗物及一次性效果，未传递消耗状态，休息理由继续声称保留尾巴。应把同局核实的已用状态及来源传到构筑／路线／休息事实；不修改复活触发条件，也不能据此认定回血决定或整场死亡由错误措辞造成。",
+    "evidence": [
+      {
+        "run": "5BU7ZE1PWLSX",
+        "floor": 17,
+        "turn": 4,
+        "note": "s338941→338942血14/77→38/77；下一T5控制台:715明确记不再计入本局复活，说明现有跟踪已识别。",
+        "role": "support",
+        "added": "2026-10-10T11:25:36+08:00"
+      },
+      {
+        "run": "5BU7ZE1PWLSX",
+        "floor": 28,
+        "note": "d329862／b10913仍以保存尾巴作为回血理由；事实、run_brief与notes没有已用字段，实际选择回血到57。",
+        "role": "support",
+        "added": "2026-10-10T11:25:36+08:00"
+      },
+      {
+        "run": "5BU7ZE1PWLSX",
+        "floor": 32,
+        "note": "d329923／b10918仍说保留尾巴；当前live agent/src/brain/build-facts.ts:26只映射原始遗物文本，run-brief.ts:57同样缺消耗状态；实际回血到26后六次双蟹无复活。",
+        "role": "support",
+        "added": "2026-10-10T11:25:36+08:00"
+      }
+    ],
+    "first_run": "5BU7ZE1PWLSX",
+    "prior": "unknown",
+    "status": "observed",
+    "already_in_fix_queue": false,
+    "proposal_proofs": [
+      {
+        "id": "silent-proposal-196013f88a9d7c1c",
+        "state": "pending",
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "ledger": [
+          "silent-0367"
+        ],
+        "runs": [
+          "5BU7ZE1PWLSX"
+        ],
+        "path": "learner/runs/20261010-111303-postmortem/proposal-tail-state.md",
+        "registered_sha256": "034f2dc81622aeb1d51672d008bf76c3f115667137388e0a618b3a5e45530a06",
+        "actual_sha256": "034f2dc81622aeb1d51672d008bf76c3f115667137388e0a618b3a5e45530a06",
+        "sha_matches": true,
+        "validate_passed": true
+      }
+    ],
+    "report_path": "learner/runs/20261010-111303-postmortem/report.md",
+    "report_sha256": "a24013ab4e46759e156e491ef50a7102389b9a5a27a02f9ba441ef143b8001ba",
+    "constraints": "仅转录原learner；原局已正常结束，非卡死；不重派/不补机制/不标implemented或shipped/不造版本"
+  }
+]

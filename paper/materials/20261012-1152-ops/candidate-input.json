@@ -1,0 +1,35 @@
+{
+  "base": "1bcaee3601b7bd8c98e9da26627d5d883684e872",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-malaise-exp-20261012-1152",
+  "sources": {
+    "strategy": "b2805be4ba44b7375c7908d873889372cc3cfe6c",
+    "experience": "958b6a943800cc5c55fa77b06b97fa4cd150f93f"
+  },
+  "patches": {
+    "strategy": {
+      "sha256": "c4c254a2119e93a07abb0a186b947a9a9ce79d079dbca3559a91666f5201a755",
+      "patch_id": "424b593dbadcf5cd614fdabb06c04032a40bd4d3",
+      "paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/reflex/silent-apotheosis.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/tests/silent-apotheosis-malaise-evidence.json",
+        "agent/tests/silent-apotheosis-malaise.test.ts"
+      ]
+    },
+    "experience": {
+      "sha256": "6163b5d01a8bfdd0431535c5dd46cb7dd992b81c43ceed1c593c58de67f3d33e",
+      "patch_id": "e37b837928b6d753f13f38c549687afa5974c56e",
+      "paths": [
+        "knowledge/characters/silent/experience.json"
+      ]
+    }
+  },
+  "experience_before_sha256": "dc68349500824dc1561493c3260f376bd6af798c3d80d2419511bdee6e888b3a",
+  "experience_after_sha256": "7ba4181f62f0e77ec2f000c382b1741a530c5c437c3cb679d6f100e60e746934",
+  "baseline_source_live_main_equal": true,
+  "knowledge_refresh_preserved": "1bcaee3601b7bd8c98e9da26627d5d883684e872",
+  "check_scope": "one combined unchanged sandbox entry; shared solver delta and current refreshed knowledge require integration coverage"
+}

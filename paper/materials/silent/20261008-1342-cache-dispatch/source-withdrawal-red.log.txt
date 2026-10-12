@@ -1,0 +1,23 @@
+F.F
+======================================================================
+FAIL: test_cache_request_precedes_pending_a10_without_interrupting_it (ops.tests.test_silent_calibration_dispatch.CodexBrainCacheDispatch.test_cache_request_precedes_pending_a10_without_interrupting_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/ops/tests/test_silent_calibration_dispatch.py", line 176, in test_cache_request_precedes_pending_a10_without_interrupting_it
+    self.assertEqual(self.launch(), ("first-fix-batch", 20))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('first-fix-batch', 20)
+
+======================================================================
+FAIL: test_wrapper_accepts_only_authorized_cache_task_scope (ops.tests.test_silent_calibration_dispatch.CodexBrainCacheDispatch.test_wrapper_accepts_only_authorized_cache_task_scope) (task='codex-brain-cache', character='silent', tree='codex-brain-cache', transport='fix-batch')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/ops/tests/test_silent_calibration_dispatch.py", line 208, in test_wrapper_accepts_only_authorized_cache_task_scope
+    self.assertEqual(result.returncode, expected, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.063s
+
+FAILED (failures=2)

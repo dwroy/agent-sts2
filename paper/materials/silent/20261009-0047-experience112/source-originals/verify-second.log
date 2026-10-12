@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-001303-experience-update/verify.py", line 61, in <module>
+    if ident=='POWER_POTION':check('pending能力药槽移除并生余像',len(z['run']['potions'])==len(a['run']['potions'])-1 and any(c['card_id']=='AFTERIMAGE' for c in z['combat']['hand']))
+                             ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-001303-experience-update/verify.py", line 13, in check
+    assert ok, label
+           ^^
+AssertionError: pending能力药槽移除并生余像

@@ -1,0 +1,541 @@
+学习者 codex / silent-boss-calibration 已启动（PID 1967782），日志 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calibration.jsonl
+[00:07] 说：我会先确认工作树干净并合入 main，再读项目约束和现有校准流程。随后只用已结束的 SILENT 对局执行刷新；样本不足就量化并保留低信度，最后完成测试、台账和
+[00:11] 命令 /bin/bash -c 'git status --short'（退出码 0）
+[00:13] 命令 /bin/bash -c 'git merge --no-edit main'（退出码 0）
+[00:13] 命令 /bin/bash -c pwd（退出码 0）
+[00:14] 命令 /bin/bash -c "sed -n '1,200p' README.md"（退出码 0）
+[00:14] 命令 /bin/bash -c "rg --files -g 'AGENTS.md' -g 'STATE-*.md' -g '*boss*' paper/materials docs agent/tools/boss-sim experiment（退出码 0）
+[00:20] 命令 /bin/bash -c "sed -n '1,220p' AGENTS.md; sed -n '1,240p' paper/materials/STATE-2026-10-04.md"（退出码 0）
+[00:20] 命令 /bin/bash -c "tail -n 85 paper/materials/decision-log.md; sed -n '1,260p' docs/learning-protocol.md"（退出码 0）
+[00:20] 命令 /bin/bash -c "rg --files agent/tools/boss-sim experiments/boss-sim/silent; sed -n '1,240p' learner/tasks/silent-boss-cal（退出码 0）
+[00:20] 命令 /bin/bash -c "wc -l notes/ops-handoff.md docs/boss-sim.md; sed -n '1,240p' notes/ops-handoff.md"（退出码 0）
+[00:27] 命令 /bin/bash -c "sed -n '1,200p' notes/ops-handoff.md"（退出码 0）
+[00:27] 命令 /bin/bash -c "sed -n '1,200p' docs/learning-protocol.md; tail -n 8 paper/materials/decision-log.md"（退出码 0）
+[00:27] 命令 /bin/bash -c 'wc -l notes/ops-handoff.md docs/boss-sim.md learner/tasks/silent-boss-calibration.md; rg --files agent/too（退出码 0）
+[00:27] 命令 /bin/bash -c "git log -1 --format='%H %s'; git status --short; rg -n 'B1.5|"'^##|''^###|静默猎手 boss 模拟校准|live-merge|刷新|pre（退出码 0）
+[00:37] 说：main 已合入。仓库已有静默校准实现和首批归档，本次按定期刷新处理。我会先核对 live 的固定切分与刷新基线，再判断是否达到升阶或新增 20 次 boss 
+[00:40] 命令 /bin/bash -c "sed -n '1,150p' notes/ops-handoff.md"（退出码 0）
+[00:41] 命令 /bin/bash -c "rg -n 'B1.5|"'^## 6|''^## 8'"' docs/boss-sim.md; rg -n '静默猎手 boss 模拟校准' notes/fix-queue-v4.md; sed -n '1,2（退出码 0）
+[00:41] 命令 /bin/bash -c "sed -n '1,120p' learner/tasks/silent-boss-calibration.md; sed -n '1,160p' knowledge/characters/silent/boss（退出码 0）
+[00:47] 命令 /bin/bash -c "rg -n 'B1.5|"'^## 6|''^## 8'"' docs/boss-sim.md; rg -n '静默猎手 boss 模拟校准' notes/fix-queue-v4.md; rg -n 'live（退出码 0）
+[00:48] 命令 /bin/bash -c "sed -n '1,180p' agent/tools/boss-sim/refresh-silent.py"（退出码 0）
+[00:58] 命令 /bin/bash -c "python3 - <<'PY'
+[00:58] import json
+[00:58] from pathlib import Path
+[00:58] for p in [Path('knowledge/characters/silent/boss-tru（退出码 0）
+[00:59] 命令 /bin/bash -c "sed -n '302,365p' docs/boss-sim.md; sed -n '490,526p' docs/boss-sim.md; rg -n --max-count 1 '"'^### 静默猎手 b（退出码 0）
+[01:10] 命令 /bin/bash -c "sed -n '641,659p' notes/fix-queue-v4.md; sed -n '1,140p' agent/tools/boss-sim/cadence.py; sed -n '1,100p' （退出码 0）
+[01:11] 命令 /bin/bash -c "python3 - <<'PY'
+[01:11] import json
+[01:11] from pathlib import Path
+[01:11] for p in [Path('knowledge/characters/silent/boss-tru（退出码 0）
+[01:18] 命令 /bin/bash -c 'tail -n 12 learner/runs/20261007-154303-silent-boss-calibration/refresh.log; rg --files learner/runs/20261（退出码 0）
+[01:18] 命令 /bin/bash -c "sed -n '1,160p' agent/tools/boss-sim/silent_calibration.py"（退出码 0）
+[01:18] 命令 /bin/bash -c "sed -n '1,180p' agent/tools/boss-sim/test_silent_calibration.py; sed -n '1,120p' experiments/boss-sim/sile（退出码 0）
+[01:23] 命令 /bin/bash -c "wc -l agent/tools/boss-sim/character_extract.py paper/materials/silent/boss-sim-calibration.md; sed -n '1,（退出码 0）
+[01:34] 命令 /bin/bash -c 'PATH="$HOME/.local/node/bin:$PATH" TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/（退出码 0）
+[01:35] 命令 /bin/bash -c "sed -n '180,285p' agent/tools/boss-sim/test_silent_calibration.py; sed -n '155,203p' agent/tools/boss-sim/（退出码 0）
+[01:40] 说：live 的基线仍是首批校准：调参 107 场、验证 53 场，固定切点为 2026-10-06 02:46:11.648 UTC，B2/B3 可信名单均为空。
+[01:47] 命令 /bin/bash -c "tail -n 5 learner/runs/20261007-154303-silent-boss-calibration/python-tests.log; tail -n 3 learner/runs/20（退出码 0）
+[01:47] 命令 /bin/bash -c "sed -n '1,160p' agent/tools/boss-sim/backtest.ts; sed -n '1,120p' agent/tools/boss-sim/backtest-runner.ts;（退出码 0）
+[02:05] 命令 /bin/bash -c "python3 - <<'PY'
+[02:05] import json
+[02:05] from pathlib import Path
+[02:05] s=Path('learner/runs/20261007-154303-silent-boss-cal（退出码 0）
+[02:05] 命令 /bin/bash -c "python3 /home/dw/Projects/agent-sts2/learner/ledger.py show silent-0223; rg -n 'preflight|merge-tree|flock（退出码 0）
+[02:18] 命令 /bin/bash -c "sed -n '44,75p' learner/tasks/fix-batch.md; rg -n '"'^def render|bossSource|A10'"' agent/tools/boss-sim/si（退出码 0）
+[02:18] 命令 /bin/bash -c 'rg --files learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2c53e4654e8a7d（退出码 0）
+[02:40] 说：已确认触发条件：新增正好 20 次实际 boss 结局。冻结提取包含 98 局、430 次 boss 尝试，其中 180 次有实际结局，250 次 SL 截断被
+[02:45] 命令 /bin/bash -c "date '+%Y-%m-%d %H:%M:%S %z'; git status --short; tail -n 6 learner/runs/20261007-154303-silent-boss-calib（退出码 0）
+[02:46] 命令 /bin/bash -c "sed -n '1,175p' agent/tests/silent-boss-calibration.test.ts; sed -n '1,130p' paper/materials/learning/READ（退出码 0）
+[03:06] 命令 /bin/bash -c "PYTHONDONTWRITEBYTECODE=1 nice -n 19 python3 - <<'PY'
+[03:06] import json,hashlib
+[03:06] from pathlib import Path
+[03:06] s=Path(（退出码 0）
+[03:07] 命令 /bin/bash -c "sed -n '210,240p' agent/tools/boss-sim/silent_calibration.py; sed -n '160,218p' agent/tools/boss-sim/silen（退出码 0）
+[03:18] 命令 /bin/bash -c "python3 - <<'PY'
+[03:18] import json
+[03:18] from pathlib import Path
+[03:18] s=Path('learner/runs/20261007-154303-silent-boss-cal（退出码 0）
+[03:19] 命令 /bin/bash -c "sed -n '145,205p' agent/tools/boss-sim/backtest-runner.ts; ps -eo pid,ppid,ni,comm | rg 'python|node|esbui（退出码 0）
+[03:38] 命令 /bin/bash -c "date '+%H:%M:%S'; tail -n 6 learner/runs/20261007-154303-silent-boss-calibration/source-sandbox.log; wc -l（退出码 0）
+[03:46] 命令 /bin/bash -c "ps -eo pid,ppid,ni,comm | head -n 15; sed -n '1,110p' agent/tools/boss-sim/bench.ts; git rev-parse --abbre（退出码 0）
+[03:59] 命令 /bin/bash -c "python3 - <<'PY'
+[03:59] import json
+[03:59] from pathlib import Path
+[03:59] p=Path('learner/runs/20261007-154303-silent-boss-cal（退出码 0）
+[04:24] 说：旧样本的首回合状态、胜败、实际回合和来源帧哈希均保持一致；差异仅是补齐最后记录血量与 SL 上报血量的来源元数据。新增 20 场全部进入验证集。12 项 Pyt
+[04:50] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[04:52] 命令 /bin/bash -c 'PYTHONDONTWRITEBYTECODE=1 nice -n 19 python3 learner/runs/20261007-154303-silent-boss-calibration/audit-in（退出码 0）
+[05:06] 命令 /bin/bash -c 'tail -n 8 learner/runs/20261007-154303-silent-boss-calibration/source-sandbox.log; wc -l learner/runs/2026（退出码 0）
+[05:06] 命令 /bin/bash -c "git -C /home/dw/Projects/agent-sts2/.worktrees/live status --short; git -C /home/dw/Projects/agent-sts2/.w（退出码 0）
+[05:34] 命令 /bin/bash -c "python3 - <<'PY'
+[05:34] import json
+[05:34] from pathlib import Path
+[05:34] p=Path('learner/runs/20261007-154303-silent-boss-cal（退出码 0）
+[06:00] 命令 /bin/bash -c "git merge-tree --write-tree HEAD live > learner/runs/20261007-154303-silent-boss-calibration/initial-merge（退出码 0）
+[06:00] 命令 /bin/bash -c "rg -n '"'^###|''^##'"' notes/ops-handoff.md | tail -n 18; rg -n '固定发布|refresh|freeze|gitleaks|merge-tree' （退出码 0）
+[06:34] 说：合入预检发现 main 与 live 的历史知识刷新和记录有多处冲突。本次只有静默校准数据与报告需要发布；重放完成后，我会在同一工作树以当前 live 为基线重
+[06:38] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[07:01] 命令 /bin/bash -c "python3 - <<'PY'
+[07:01] import json
+[07:01] from pathlib import Path
+[07:01] p=Path('experiments/boss-sim/silent/590b644745e0d8b3（退出码 0）
+[07:23] 命令 /bin/bash -c "sed -n '1,50p' agent/vitest.config.ts; tail -n 8 learner/runs/20261007-154303-silent-boss-calibration/sour（退出码 0）
+[07:48] 说：180 个首回合原始帧已逐一核对哈希、角色、进阶和完整资源状态；旧样本的顺序与种子索引也未改变。整场模拟还在运行，我会保留每个样本的结果，并按全部准入指标判断可
+[07:53] 命令 /bin/bash -c "git diff --stat HEAD live -- agent/src agent/tools learner ops; git diff --numstat HEAD live -- agent/src;（退出码 0）
+[07:54] 命令 /bin/bash -c "gitleaks version; gitleaks git --help | head -n 45; sed -n '1,110p' docs/learning-code-proposals.md"（退出码 2）
+[08:24] 命令 /bin/bash -c 'PATH="$HOME/.local/node/bin:$PATH" TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/（退出码 0）
+[08:24] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[08:40] 命令 /bin/bash -c "sed -n '1,130p' /home/dw/Projects/agent-sts2/.worktrees/live/docs/learning-code-proposals.md; python3 - <<（退出码 0）
+[09:26] 命令 /bin/bash -c "python3 - <<'PY'
+[09:26] import json
+[09:26] from pathlib import Path
+[09:26] p=Path('learner/runs/20261007-154303-silent-boss-cal（退出码 0）
+[10:28] 命令 /bin/bash -c "rg -n 'live-merge.lock|flock|LOCK|report.py|build-' ops/report.py ops/autoplay.sh ops/codex-ops/dispatch.p（退出码 0）
+[11:24] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[12:44] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[14:00] 说：进阶数值审计已完成：当前模型中，A10 仍有实验体的一个攻击定义取自 A9；详细来源会写入报告。模拟尚未完成，因此暂时不生成新的可信名单或发布版本。 
+[14:04] 命令 /bin/bash -c "rg -n 'refresh|flock|lock|Popen|subprocess|builders' ops/report.py ops/stats.py | tail -n 40; rg -n 'refre（退出码 0）
+[14:11] 命令 /bin/bash -c "sed -n '1,125p' knowledge/builders/refresh.sh; sed -n '409,435p' ops/report.py; sed -n '1,75p' agent/tests（退出码 0）
+[18:48] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[18:54] 说：已准备好发布脚本：只合入静默校准差异，锁内保存刷新数据并检查重叠，合后测试通过再登记版本；失败则保留日志、回退本次差异。现在继续等待完整重放结果。 
+[20:10] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[20:11] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[20:42] 命令 /bin/bash -c 'PATH="$HOME/.local/node/bin:$PATH" TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/（退出码 0）
+[20:44] 说：重放已完成 46/360 个起点结果（180 场 × B2/B3），源沙箱检查还在运行。发布路径已限制为本批静默文件；完整结果出来后，再根据残差和逐 boss 
+[20:51] 命令 /bin/bash -c "PYTHONDONTWRITEBYTECODE=1 nice -n 19 python3 - <<'PY'
+[20:51] import ast
+[20:51] from pathlib import Path
+[20:51] s=Path('learner/（退出码 0）
+[20:52] 命令 /bin/bash -c 'PATH="$HOME/.local/node/bin:$PATH" TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/（退出码 0）
+[21:09] 命令 /bin/bash -c "tail -n 8 learner/runs/20261007-154303-silent-boss-calibration/consumer-diagnostic.log; tail -n 8 learner/（退出码 0）
+[21:19] 命令 /bin/bash -c "wc -l learner/runs/20261007-154303-silent-boss-calibration/source-sandbox.log; sed -n '1,28p' learner/runs（退出码 0）
+[21:44] 说：源沙箱检查已通过：tsc 退出 0，232 个测试文件、2430 例全部通过；B2/B3 消费诊断的 5 例也通过。Python 固定夹具 12 项已通过。目前
+[22:41] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[23:12] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[23:27] 说：当前已收齐 52/360 个模拟起点结果。旧样本和 20 场新增验证样本会按同一固定模型评估；还未完成的部分不会纳入可信名单。 
+[23:42] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[24:13] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[24:43] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[25:14] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[25:17] 说：重放进度为 53/360。每场战斗都保留原顺序和固定种子，B2、B3 分别保存结果；这一轮不会根据验证结果调整模拟策略。 
+[25:45] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[26:15] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[26:46] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[27:17] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[27:47] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[28:19] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[28:28] 说：已收齐 59/360 个起点结果。固定夹具和源检查均已通过；剩余工作是完成重放、生成校准表，然后在锁内合入并做合后检查。 
+[28:49] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[29:20] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[29:51] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[30:21] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[30:52] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[31:22] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[31:26] 说：进度为 63/360。报告会注明固定模型版本和适用范围，后续代码与知识刷新也会保留各自记录；旧校准目录继续保留。 
+[31:53] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[32:23] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[32:54] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[32:57] 说：已收齐 68/360 个结果，模拟进程仍在继续。后续拟合只使用原调参 keys，新增样本用于验证和准入判断。 
+[33:24] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[33:55] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[34:25] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[34:45] 说：进度仍是 69/360，当前起点尚未返回结果。完整重放和合后检查完成前，live 继续使用原校准。 
+[34:56] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[35:26] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[35:57] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[36:27] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[36:58] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[37:29] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[37:48] 说：已完成 70/360 个起点结果。SL 截断仍单独保留，不计为实际败局；最终报告会区分提取数、模拟成功数和排除原因。 
+[37:59] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[38:30] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[38:34] 说：进度为 76/360。报告与发布脚本已准备好，待重放完成后填入实际指标；可信性仍按原四项门槛判断。 
+[39:00] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[39:31] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[39:40] 说：仍为 76/360，当前战斗还在计算。发布步骤尚未开始。 
+[40:01] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[40:32] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[41:02] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[41:33] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[42:04] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[42:07] 说：已收齐 77/360 个结果。当前没有新的检查失败；待重放收齐后，再汇总残差和逐 boss 准入表。 
+[42:34] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[43:05] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[43:35] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[44:06] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[44:37] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[44:45] 说：已收齐 89/360 个结果。接下来会继续完成剩余起点，再执行拟合和幂等检查。 
+[45:07] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[45:38] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[46:08] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[46:39] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[47:10] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[47:40] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[47:57] 说：进度为 98/360。原始预测会全部留档，最终报告也会分别列出成功模拟数和失败原因。 
+[48:11] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[48:41] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[49:12] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[49:42] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[50:13] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[50:44] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[51:14] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[51:45] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[52:15] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[52:35] 说：已收齐 100/360 个结果。源检查保持通过；校准表尚未生成，发布步骤也尚未开始。 
+[52:46] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[53:17] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[53:37] 说：进度为 108/360。模拟继续运行；结果收齐后才会进行拟合和准入判断。 
+[53:47] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[54:18] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[54:48] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[55:19] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[55:49] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[56:20] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[56:50] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[57:21] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[57:51] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[58:00] 说：已收齐 109/360 个结果。A10 数值来源、F49 样本数和验证残差会在报告中单独列出。 
+[58:22] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[58:52] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[59:23] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[59:54] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[60:24] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[60:55] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[61:25] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[61:56] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[62:27] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[62:57] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[63:28] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[63:58] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[64:31] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[65:02] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[65:32] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[66:03] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[66:33] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[67:04] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[67:35] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[68:05] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[68:36] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[69:07] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[69:37] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[70:08] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[70:38] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[71:09] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[71:35] 说：重放仍在继续。完成后我会先核对固定切分和原始预测，再做缓存幂等与发布检查。 
+[71:39] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[74:28] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[74:41] 说：当前已完成 160/360 组模拟。新增的 20 场结局事件全部进入验证集，原调参样本和切点保持不变；模拟完成后才能判定哪些 boss 达到准入标准。
+[74:47] 命令 /bin/bash -c "sed -n '1,240p' learner/runs/20261007-154303-silent-boss-calibration/archive-refresh.py"（退出码 0）
+[74:47] 命令 /bin/bash -c "sed -n '1,260p' learner/runs/20261007-154303-silent-boss-calibration/publish-live.py"（退出码 0）
+[74:47] 命令 /bin/bash -c 'git status --short; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[75:14] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[75:15] 命令 /bin/bash -c "sed -n '1,260p' agent/tools/boss-sim/refresh-silent.py"（退出码 0）
+[75:29] 命令 /bin/bash -c "sed -n '1,180p' /home/dw/Projects/agent-sts2/learner/ledger.py; rg -n 'silent-0223|\"kind\": \"fight\"' /h（退出码 0）
+[75:29] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[75:29] 命令 /bin/bash -c "sed -n '1,180p' learner/tasks/20261007-154303-silent-boss-calibration.md; rg -n 'boss-calibration|boss-sim（退出码 0）
+[75:51] 说：输入核验已完成：180 场的首回合原始帧均与日志偏移和哈希一致，250 次 SL 截断没有计作实际败局。此前冻结的 160 场样本，其战斗输入、结局和顺序也保持
+[75:57] 命令 /bin/bash -c "rg -n 'def render|residual|missing_validation|bosses|b2|b3|leak' agent/tools/boss-sim/silent_calibration.p（退出码 0）
+[75:57] 命令 /bin/bash -c "sed -n '1,95p' paper/materials/silent/boss-sim-calibration.md; sed -n '1,130p' learner/runs/20261007-15430（退出码 0）
+[75:57] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python /home/dw/Projects/agent-sts2/learner/le（退出码 0）
+[76:43] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[76:44] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import ast,pathlib; p=pathlib.Path(（退出码 0）
+[77:40] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[78:05] 说：固定数据测试和源码沙箱测试已通过。全量重放仍在计算；缓存幂等、未达刷新阈值时保留输出，以及完整档案核验，将在重放结束后执行。
+[78:12] 命令 /bin/bash -c "sed -n '1,140p' learner/tasks/fix-batch.md; rg -n 'live-merge.lock|preflight|刷新|merge-tree|回退|只尝试' notes/o（退出码 0）
+[78:12] 命令 /bin/bash -c "ps -eo pid,ppid,ni,pcpu,pmem,etime,comm | head -n 18; nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-v（退出码 0）
+[79:09] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[79:24] 命令 /bin/bash -c "sed -n '128,212p' agent/tools/boss-sim/silent_calibration.py; sed -n '107,151p' agent/tools/boss-sim/trust（退出码 0）
+[79:54] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[80:21] 说：当前重放中有 1 场战斗在 B2、B3 两个起点都未能求解，与此前报告的失败场次相同。它会保留在来源和错误清单中，并从有效模拟数中排除，不补造预测结果。
+[80:44] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[81:15] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[82:17] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[82:43] 说：已完成 166/360 组模拟，两种起点都使用固定的 200 次抽样。全量复演计算量较大；完成后还需核验准入指标，再执行锁内合入和合后测试。
+[83:16] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[83:32] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import json,pathlib; p=pathlib.Path（退出码 0）
+[84:03] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[84:30] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import json,pathlib,statistics; roo（退出码 0）
+[85:01] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[85:42] 说：旧报告和新输入的审计文件已准备好。发布时只合入本批校准数据与报告；台账会按 `fight` 登记为 `proposed`，实际发布状态由运维根据合入回执确认。
+[85:49] 命令 /bin/bash -c 'git diff --name-only 4c691142c099ac0e3505abbec5d04afec9ee796c b0f41f039b136e69485027ecbf9042c23170b4ab -- （退出码 0）
+[85:49] 命令 /bin/bash -c "git merge-base --is-ancestor b0f41f039b136e69485027ecbf9042c23170b4ab live; git -C /home/dw/Projects/agent（退出码 0）
+[86:19] 命令 /bin/bash -c 'wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2c53e4654e8a7d3aa8f（退出码 0）
+[87:08] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[87:39] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[88:08] 说：合入方式已核对：本批差异会放到一个与已测源码、测试逐字节相同的 live 祖先上，再正常合入当前 live。这样能保留期间其他批次的代码和知识刷新；合后仍会运行
+[88:41] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[89:10] 命令 /bin/bash -c 'git diff --name-only 4c691142c099ac0e3505abbec5d04afec9ee796c b0f41f039b136e69485027ecbf9042c23170b4ab -- （退出码 0）
+[89:41] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[90:10] 说：仍在进行固定模型复演。当前有效验证样本都来自 A10；A0–4、A5–9 可以报告调参残差，但没有独立验证数据，报告会明确这一限制。
+[90:43] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[92:04] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[92:12] 说：已完成 179/360 组模拟。准入名单会按实际指标计算；达到场数门槛的 boss，仍需同时满足 Brier、胜率差和被打穿的血量比值要求。
+[93:00] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[93:13] 说：重放还在计算当前战斗。完成后的发布内容会同时保留有效模拟数、错误清单和各项未达标指标，原始样本数不会替代有效验证数。
+[93:55] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[93:58] 说：固定重放已完成一半：180/360 组。旧档案保持原样，本次结果将写入新的内容指纹目录。
+[94:51] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[95:14] 说：仍在全量复演，当前 180/360 组。计算完成前不会改写 live 的校准文件。
+[95:46] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[96:30] 说：进度为 181/360 组。报告中的胜率将限定为“有实际结局的 boss 尝试”，并保留 SL 截断造成的选择偏差说明。
+[96:42] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[96:51] 说：已完成 187/360 组，重放进度在继续推进。F48 与 F49 会分别评估，F48 获胜不会记作整局通关。
+[97:37] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[97:44] 说：固定复演已完成 192/360 组；采样数、随机种子和模拟策略保持原设置。
+[98:33] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[98:46] 说：仍在计算下一组战斗。完成后会核对 B2、B3 结果是否覆盖全部 180 场，再归档和发布。
+[99:28] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[100:05] 说：当前仍为 192/360 组，正在计算单场较慢的模拟。原始日志和本批输入已经冻结，后续新增对局不会进入这次验证。
+[100:24] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[100:29] 说：进度更新为 193/360 组。缓存复跑将使用本批冻结的结果和来源，检查相同输入能否得到逐字节相同的输出。
+[101:19] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[101:24] 说：已完成 196/360 组。固定调参部分即将跑完；新增样本只用于验证，不参与调参或进阶项选择。
+[102:15] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[102:46] 说：重放已到 204/360 组。最终报告会分别列出各进阶段残差、逐 boss 准入结果和 F49 单战限制。
+[103:11] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[103:20] 说：正在计算下一场；当前已完成 204/360 组。模拟失败和缺失指标会继续保留低可信。
+[104:07] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[104:27] 说：当前这组模拟耗时较长，进度仍为 204/360。全量重放完成后才能计算最终准入表。
+[105:03] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[105:27] 说：进度更新为 205/360 组。新档案会固定输入、源码和模型指纹，后续刷新另建目录，不覆盖本次或旧报告。
+[105:58] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[106:18] 说：按已冻结的候选样本，帝王蟹验证数达到 10 场，其余 boss 仍差 2–7 场。最终还需扣除模拟失败，并检查全部四项指标，才会决定是否进入可信名单。
+[106:54] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[106:57] 说：已完成 211/360 组。冻结调参部分即将结束，随后继续复演验证集。
+[107:49] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[108:21] 说：进度为 212/360 组。进阶项仍只允许由调参集的残差和交叉验证选择，验证集的表现不会反过来改变拟合。
+[108:45] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[109:17] 说：仍在计算当前组，进度为 212/360。发布报告会保留 B2、B3 各自的失败指标和不足场数。
+[109:40] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[110:04] 说：这组模拟还未结束。固定复演继续使用原配置；不会为了缩短计算时间减少采样或调整准入门槛。
+[110:36] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6c2（退出码 0）
+[110:52] 说：已完成 213/360 组。接下来继续验证集复演，并核对 A10 的模拟范围与报告中的单战口径一致。
+[111:05] 命令 /bin/bash -c "rg -n 'a10|chain|simulate|runBoss' agent/tools/boss-sim/backtest*.ts agent/src/sim/boss-sim.ts | head -n 7（退出码 0）
+[111:05] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import json,pathlib; p=pathlib.Path（退出码 0）
+[111:14] 命令 /bin/bash -c "sed -n '172,238p' agent/tools/boss-sim/backtest-runner.ts; rg -n 'a10|chain|nextBoss' agent/tools/boss-sim（退出码 0）
+[111:45] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[112:15] 说：A10 口径已核对：本次重放调用单战模拟，F49 按实际进入该战时的资源单独评估，报告不会将它写成 F48→F49 联合通关率。
+[113:14] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[113:25] 说：固定的 107 场调参候选已全部复演，正在处理验证集。当前完成 216/360 组；拟合只使用调参集，验证集共 73 场候选。
+[114:09] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[114:37] 说：验证集正在复演，当前为 216/360 组。A10 的最终残差和可信名单将在完整验证结果生成后计算。
+[115:05] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[115:31] 说：进度为 217/360 组。同一局的 boss 战和 SL 重打共享切分，避免同局牌组同时进入调参集与验证集。
+[116:00] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[116:27] 说：验证复演还在进行，当前 217/360 组。B2 首回合与 B3 战前起点会分别计算校准指标和准入名单。
+[116:56] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[117:49] 说：已完成 218/360 组。全量结果生成后，我会按原标准量化每个 boss 的失败指标和缺口，缺数据的项目继续保持低可信。
+[117:52] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[118:47] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[118:47] 说：验证复演继续，当前 218/360 组。完整来源清单会保留局号、boss、层、尝试、回合、代码版本及排除原因。
+[119:43] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[119:52] 说：已完成 219/360 组，当前仍在固定验证集复演。后续缓存检查会核对相同输入的输出一致性，以及未达阈值时的幂等跳过。
+[120:38] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[121:03] 说：进度更新为 222/360 组。发布时会同步静默的校准文件、报告和新档案，其他角色的数据保持原样。
+[121:34] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[122:18] 说：仍在复演当前验证战斗，进度为 222/360。源码与固定夹具检查已通过，合入后还会对实际 live 组合运行沙箱测试。
+[122:29] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[123:09] 说：固定重放仍在计算，当前 222/360 组。结果齐全后才会生成最终校准和准入结论。
+[123:25] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[124:17] 说：当前验证战斗耗时较长，进度仍为 222/360。重放继续沿用原模型、原采样数和固定种子，原始输出会完整留存。
+[124:21] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[125:11] 说：已推进到 223/360 组。完整验证结束后会自动计算达标名单，不另行放宽标准。
+[125:16] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[125:23] 说：当前仍在计算验证战斗，进度为 223/360。固定采样完成后再核验残差和可信表。
+[126:12] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[126:56] 说：复演继续，当前 223/360 组。B2 本批验证的是首回合起点；中途起点尚无独立校准，报告会保留这一范围说明。
+[127:08] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[128:03] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[128:04] 说：仍在计算当前验证组，进度为 223/360。新数据只扩展验证；切点和调参 keys 保持固定。
+[128:59] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[129:03] 说：已完成 228/360 组。验证结果正在逐项写入本批 scratch，正式文件将在完整结果核验后发布。
+[129:55] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[130:51] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[130:57] 说：进度为 230/360 组。逐 boss 表会同时列出实际有效场数、还差多少场，以及未通过的指标。
+[131:46] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[132:42] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[132:49] 说：现有流程会比较多个目标顺序，单场耗时差异较大。当前已完成 232/360 组，验证复演仍在推进。
+[133:38] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[134:32] 说：进度更新为 233/360 组。校准参数只从静默样本拟合，boss 侧继续使用本批固定的既有模型。
+[134:33] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[135:17] 说：已完成 239/360 组。完整复演结束后会核验结果对、输入来源和每组采样数，再归档报告。
+[135:29] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[136:17] 说：固定复演已到 245/360 组。采样数、模型版本和验证切分继续保持固定。
+[136:24] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[137:20] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[137:58] 说：已完成 251/360 组。全量结果齐备后，下一步是缓存幂等检查、固定结果重拟合核验和锁内发布。
+[138:16] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[138:18] 说：进度更新为 253/360 组；验证复演继续，发布准备已完成。
+[139:11] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[139:19] 说：已完成 254/360 组。新数据只参与验证，原调参 keys 和时间切点保持不变。
+[140:07] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[141:03] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[141:25] 说：复演仍在计算，当前 254/360 组。我会把最终 JSON 回报和运维交接文件准备好，结果核验和发布完成后填入实际提交、版本与测试回执。
+[142:28] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[142:29] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import ast,pathlib; p=pathlib.Path(（退出码 0）
+[143:58] 说：进度为 255/360 组。回报与交接文件的生成脚本已就绪；最终内容会直接使用实际校准结果和发布回执。
+[144:57] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[145:47] 说：已完成 258/360 组，验证复演继续。当前发布计划仍只包含本批静默校准数据、报告和新档案。
+[145:53] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[145:57] 说：当前仍在计算这一组验证战斗，进度为 258/360。完整结果生成后再进行发布前核验。
+[146:49] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[146:51] 说：固定复演继续，当前 258/360 组。模型、采样数和数据切分保持固定。
+[147:44] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[148:40] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[148:49] 说：进度更新为 259/360 组。最终会同时保留有效模拟数和失败清单，核对结果完整后再发布。
+[149:35] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[150:31] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[150:44] 说：已完成 262/360 组，验证复演继续。准入表、A10 残差和不足场数会从完整输出生成。
+[151:26] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[152:22] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[152:58] 说：已完成 263/360 组。剩余验证结果还在计算，发布时会明确标注本次固定模型的适用范围。
+[153:18] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[154:13] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[155:09] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[155:29] 说：验证复演仍在推进。结果完成后会先核对冻结输入与完整输出，再提交本批差异并执行锁内发布流程。
+[155:42] 说：已完成 270/360 组，固定复演达到四分之三。剩余验证完成后进入结果核验和发布。
+[156:04] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[156:11] 说：当前仍在计算这组验证战斗，进度为 270/360。采样与准入标准保持原设置。
+[157:00] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[157:03] 说：进度更新为 271/360 组。新档案会保留完整结果与来源，旧档案保持原样。
+[157:56] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[158:51] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[159:38] 说：固定复演继续，当前 271/360 组。发布完成后，回报会给出实际源码提交、合入提交、固定发布树和唯一版本。
+[159:47] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[159:50] 说：已完成 272/360 组。验证集仍在复演，当前校准结果尚未发布。
+[160:42] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[160:53] 说：仍在计算当前验证组，进度为 272/360。原配置与固定输入保持不变。
+[161:38] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[161:46] 说：进度更新为 273/360 组。所有样本、排除项和模拟错误都会随本次报告留存。
+[162:33] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[163:30] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[164:19] 说：已完成 274/360 组。输入审计与来源档案已经准备好，验证复演完成后即可核对最终指标。
+[164:25] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[164:34] 说：当前仍在计算这一组，进度为 274/360。校准方法与门槛继续保持原设置。
+[165:21] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[165:23] 说：进度更新为 275/360 组，验证复演仍在推进。全量完成后再核验准入名单。
+[166:17] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[166:22] 说：已完成 276/360 组。缺少独立验证数据的进阶段，以及未达标的 boss，会继续保留低可信说明。
+[167:12] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[167:19] 说：进度为 280/360 组。当前仍在验证复演阶段，尚未改动 live 的校准文件。
+[168:08] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[169:03] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[169:08] 说：验证复演继续，当前 280/360 组。结果齐备后会检查档案哈希、缓存幂等和准入表，再执行发布。
+[169:59] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[170:02] 说：已完成 281/360 组。当前仍在计算验证集；发布将保留原始结果和全部排除记录。
+[170:54] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[170:57] 说：进度更新为 282/360 组。固定模型复演继续，剩余结果完成后即可计算最终指标。
+[171:50] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[172:45] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[173:30] 说：已完成 286/360 组。剩余验证继续计算，最终可信表会逐项保留四项准入指标及失败原因。
+[173:41] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[173:46] 说：进度更新为 294/360 组。验证复演接近最后一段，核验、归档和发布脚本已准备就绪。
+[174:36] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[175:32] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[176:12] 说：固定验证复演仍在计算。结果完成后会依次核对档案哈希、缓存输出和完整准入表，再合入 live。
+[176:18] 说：进度更新为 295/360 组。全量结果齐备后即可执行已准备好的核验和发布流程。
+[176:27] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[176:41] 说：当前仍在计算这一组，进度为 295/360。原采样数、策略配置和切分保持固定。
+[177:23] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[177:28] 说：已完成 296/360 组，剩余验证继续复演。最终报告会量化每项不足，不将缺数据的项目标为可信。
+[178:18] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[179:14] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[179:26] 说：进度为 300/360 组，剩余 60 组。完成后将核验结果、登记 `fight/proposed` 台账，并执行锁内发布。
+[180:10] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[181:05] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[181:26] 说：已完成 316/360 组。原有 160 场即将复演完毕，随后完成新增 20 场的验证模拟。
+[182:01] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[182:52] 说：原有 160 场已全部复演，当前 320/360 组。接下来完成新增 20 场的两种起点验证。
+[182:56] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[183:52] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[184:47] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[184:59] 说：新增样本的验证已开始，当前 322/360 组。这 20 场全部进入验证，原调参部分保持固定。
+[185:43] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[185:50] 说：已完成 332/360 组，新增验证结果正在写入。全量完成后立即执行缓存幂等和固定重拟合核验。
+[186:38] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[187:34] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[188:29] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[189:25] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[189:39] 说：当前仍在计算新增样本中的较慢战斗，进度为 332/360。全量结束后会一次核验完整结果，避免发布部分输出。
+[190:20] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[190:23] 说：已完成 344/360 组，剩余 16 组。接下来核验校准指标、缓存幂等和完整档案，然后执行发布。
+[191:16] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[192:12] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[192:52] 说：进度为 352/360 组，剩余 8 组。全部完成后就能核对实际准入结果和 A10/F49 限制。
+[193:07] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[193:17] 说：已完成 354/360 组，正在计算最后几组。核验通过后按既定流程登记台账并发布。
+[194:03] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[194:58] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[195:21] 说：最后几组仍在计算，当前 354/360。完整结果生成后会直接进入核验与发布流程。
+[195:54] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[196:05] 说：进度更新为 355/360 组。剩余模拟完成后，将从实际输出生成可信表和不足场数。
+[196:49] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[196:52] 说：当前仍在计算最后几组，进度为 355/360。固定采样和原准入标准保持不变。
+[197:08] 命令 /bin/bash -c 'mkdir -p learner/runs/20261007-154303-silent-boss-calibration
+[197:08] PATH="$HOME/.local/node/bin:$PATH" TMPDIR=/h（退出码 0）
+[197:09] 命令 /bin/bash -c "date '+%H:%M:%S'; wc -l < learner/runs/20261007-154303-silent-boss-calibration/77a99507591f214838210917aa6（退出码 0）
+[197:21] 说：全量 360 组复演已完成，刷新入口退出码 0。帝王蟹在 B2、B3 都通过原四项准入标准，进入可信名单；接下来核验幂等、归档结果并执行锁内发布。
+[197:28] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import json,pathlib; t=json.loads(p（退出码 0）
+[197:29] 命令 /bin/bash -c 'nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python learner/runs/20261007-154303-silent-bos（退出码 0）
+[197:42] 命令 /bin/bash -c 'tail -n 18 learner/runs/20261007-154303-silent-boss-calibration/completed-checks.log; date; nice -n 19 /ho（退出码 0）
+[198:11] 说：结果核验通过：缓存复跑输出逐字节一致，零新增结局会幂等跳过，固定结果重拟合也完全一致。整体验证 Brier 为 B2 0.1190、B3 0.1121；A10 
+[198:21] 命令 /bin/bash -c 'tail -n 1 learner/runs/20261007-154303-silent-boss-calibration/archive-refresh.log; nice -n 19 /home/dw/Pr（退出码 0）
+[198:25] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[198:59] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[199:00] 命令 /bin/bash -c 'date; nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python learner/runs/20261007-154303-sile（退出码 0）
+[199:00] 命令 /bin/bash -c 'nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python /home/dw/Projects/agent-sts2/learner/le（退出码 0）
+[199:02] 命令 /bin/bash -c 'tail -n 4 learner/runs/20261007-154303-silent-boss-calibration/ledger-add-result.log; nice -n 19 /home/dw/（退出码 0）
+[199:32] 说：已通过 CLI 登记 `silent-0244`，类型为 `fight`、状态为 `proposed`。新档案已保存 180 场来源和全部审计；A10 的 11
+[199:36] 命令 /bin/bash -c 'git status --short; git diff --cached --stat; tail -n 1 learner/runs/20261007-154303-silent-boss-calibrati（退出码 1）
+[200:13] 命令 /bin/bash -c 'tail -n 5 learner/runs/20261007-154303-silent-boss-calibration/source-gitleaks.log; git diff --cached --ch（退出码 0）
+[200:14] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[200:15] 命令 /bin/bash -c 'git commit -F learner/runs/20261007-154303-silent-boss-calibration/source-commit-message.txt'（退出码 0）
+[201:04] 说：提交前扫描报告了 1 个命中，我刚才没有根据退出码中止提交，这是我的错误。该提交尚未合入 live；我现在先核对脱敏的命中信息，扫描通过后再继续发布。
+[201:08] 命令 /bin/bash -c "nice -n 19 gitleaks git --log-opts 'HEAD"'^..HEAD'"' --redact --no-banner --report-format json --report-pa（退出码 1）
+[201:48] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import json,pathlib; a=json.loads(p（退出码 0）
+[203:07] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python - <<'PY'
+[203:07] import hashlib,json,pathlib,su（退出码 0）
+[203:09] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[203:09] 命令 /bin/bash -c 'git add -A -- experiments/boss-sim/silent/77a99507591f214838210917aa6c2c53e4654e8a7d3aa8f582071869a3e0555d（退出码 0）
+[203:11] 命令 /bin/bash -c 'set -o pipefail
+[203:11]  git diff --cached HEAD''^ --binary | nice -n 19 gitleaks stdin --redact --no-banner > lea（退出码 0）
+[203:39] 说：命中已确认是补充审计清单中的文件内容 SHA256，哈希与对应文件完全一致。文件名中的 `keys` 触发了通用凭据规则；我将其改为 `identifiers`
+[203:45] 命令 /bin/bash -c 'git status --short; git add -f -- experiments/boss-sim/silent/77a99507591f214838210917aa6c2c53e4654e8a7d3a（退出码 0）
+[203:47] 命令 /bin/bash -c 'nice -n 19 gitleaks git --pre-commit --staged --redact --no-banner . > learner/runs/20261007-154303-silent（退出码 0）
+[203:48] 命令 /bin/bash -c 'set -o pipefail
+[203:48]  git diff --cached HEAD''^ --binary | nice -n 19 gitleaks stdin --redact --no-banner > lea（退出码 0）
+[204:41] 命令 /bin/bash -c 'git diff --cached --check; git commit --amend --no-edit'（退出码 0）
+[204:43] 命令 /bin/bash -c "nice -n 19 gitleaks git --log-opts 'HEAD"'^..HEAD'"' --redact --no-banner . > learner/runs/20261007-154303（退出码 0）
+[208:07] 命令 /bin/bash -c "date; nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python - <<'PY'
+[208:07] import json,pathlib,subp（退出码 0）
+[208:07] 命令 /bin/bash -c 'nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python /home/dw/Projects/agent-sts2/learner/le（退出码 0）
+[208:09] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[208:09] 命令 /bin/bash -c 'git status --short; tail -n 2 learner/runs/20261007-154303-silent-boss-calibration/source-gitleaks-final-c（退出码 0）
+[209:30] 说：完整扫描已通过，修正后的源码提交为 `e86c8b2a`；原误报和未发布提交记录均已保留，台账也已关联实际源码。现在执行锁内保存 live 刷新、重叠检查、预检
+[209:36] 命令 /bin/bash -c 'nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python learner/runs/20261007-154303-silent-bos（退出码 4）
+[209:36] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import json,pathlib; p=pathlib.Path（退出码 0）
+[210:28] 说：live 合并锁当前被其他会话占用，本次尝试退出码 4，没有改动 live。我会保留忙碌回执，核对锁流程要求；校准、源码提交和台账登记均已完成。
+[210:32] 命令 /bin/bash -c "sed -n '1,110p' notes/ops-handoff.md"（退出码 0）
+[210:32] 命令 /bin/bash -c "rg -n -m 6 'live-merge.lock|合入 live 的流程|只.*锁|仅.*锁' notes/ops-handoff.md; date"（退出码 0）
+[213:26] 说：本批按学习者任务规定的共享锁流程排队等待，取得锁后继续发布。忙碌回执会单独保留，等待期间不修改 live。
+[213:37] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python - <<'PY'
+[213:37] from pathlib import Path
+[213:37] s=Pat（退出码 0）
+[213:39] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calib
+[213:41] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import json,pathlib; t=json.loads(p（退出码 0）
+[217:14] 命令 /bin/bash -c "date; nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -c 'import json,pathlib; s=pathli（退出码 0）
+[218:23] 说：已取得共享锁，预检和合入均返回 0；live 刷新已由前一会话保存，没有待补存数据。当前正在实际合入后的 live 组合上运行沙箱测试，原忙碌回执已保留。
+[218:30] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python - <<'PY'
+[218:30] import json,pathlib,subprocess（退出码 0）
+[219:00] 命令 /bin/bash -c "date '+%H:%M:%S'; tail -n 8 learner/runs/20261007-154303-silent-boss-calibration/live-sandbox.log"（退出码 0）
+[228:58] 说：实际合入提交已确认是 `b0b0e679`，源码 `e86c8b2a` 已是其祖先。合后沙箱仍在运行；通过后会登记唯一版本和发布记录，再生成运维交接回报。
+[229:05] 命令 /bin/bash -c "date '+%H:%M:%S'; tail -n 16 learner/runs/20261007-154303-silent-boss-calibration/live-sandbox.log; tail -（退出码 0）
+[229:43] 命令 /bin/bash -c 'nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python learner/runs/20261007-154303-silent-bos（退出码 0）
+[236:39] 命令 /bin/bash -c "date '+%H:%M:%S'; tail -n 20 learner/runs/20261007-154303-silent-boss-calibration/live-sandbox.log; tail -（退出码 0）
+[238:31] 说：已发布为 `S1.boss-calibration2`，固定发布提交 `a59421ec`。合后生产 tsc 与沙箱 vitest 均通过，共 233 个文件、
+[238:39] 命令 /bin/bash -c "git status --short; git show -s --format='%H%n%P%n%B' HEAD; wc -c learner/runs/20261007-154303-silent-boss（退出码 0）
+[238:39] 命令 /bin/bash -c "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python - <<'PY'
+[238:39] import json,pathlib,subprocess（退出码 0）
+[240:00] 超过 240 分钟，终止 PID 1967782

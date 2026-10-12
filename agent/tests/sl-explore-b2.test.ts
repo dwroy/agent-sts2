@@ -1,5 +1,5 @@
 /**
- * SL_RETRY_EXPLORE in boss fights (docs/sl.md §11.3, Dai 2026-10-02), with B2 on: logged boss boards (tests/logged-states,
+ * SL_RETRY_EXPLORE in boss fights (docs/sl.md §11.3, Roy 2026-10-02), with B2 on: logged boss boards (tests/logged-states,
  * the knowledge pinned as tests/boss-lines-planner.test.ts pins it), B2's samples in this thread, few of them, the fake
  * clocks of the other planner tests (B2's too: its times are in the question and the log).
  *

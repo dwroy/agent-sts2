@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-050455-experience-update/verify.py", line 52, in <module>
+    check('三回血各22',sum(1 for f in facts if (f['expect'].get('option') or {}).get('id')=='HEAL' and f['after']['run']['current_hp']-f['before']['run']['current_hp']==22)==3)
+                       ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-050455-experience-update/verify.py", line 52, in <genexpr>
+    check('三回血各22',sum(1 for f in facts if (f['expect'].get('option') or {}).get('id')=='HEAL' and f['after']['run']['current_hp']-f['before']['run']['current_hp']==22)==3)
+                                                ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'

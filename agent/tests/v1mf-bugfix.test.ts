@@ -33,7 +33,7 @@ describe("V1MF F33 T4: a chosen line's drink is not lost when the line is cut sh
   it("the logged end-of-turn board (no playable card): the Demise is offered, not dropped by an end turn", () => {
     const fx = logged("v1mf-f33-t4-end");
     expect(fx.decision.rationale).toMatch(/no playable cards/);
-    // The drink is Jev's call (potions are Jev's, Dai 2026-09-28): asked again, with the Demise line shown.
+    // The drink is Jev's call (potions are Jev's, Roy 2026-09-28): asked again, with the Demise line shown.
     const fight = planCombatTurn(loggedEnv(fx));
     if (fight?.kind !== "ask") throw new Error(`expected an ask, got ${fight?.kind}`);
     const plan = fight.questions["plan"];

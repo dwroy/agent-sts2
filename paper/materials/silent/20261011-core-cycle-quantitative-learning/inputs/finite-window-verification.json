@@ -1,0 +1,5057 @@
+{
+  "cases": [
+    {
+      "run": "54G5683J0E5S",
+      "floor": 33,
+      "attempt": 1,
+      "window": [
+        5,
+        9
+      ],
+      "transitions": [
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 0,
+            "target_index": 0
+          },
+          "card": {
+            "id": "STRIKE_SILENT",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:04:58.347Z",
+            "turn": 5,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1
+            },
+            "hand": [
+              "STRIKE_SILENT",
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "SURVIVOR",
+              "NIGHTMARE"
+            ],
+            "piles": {
+              "draw": 7,
+              "discard": 6,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 344,
+                "powers": {
+                  "POISON_POWER": 20,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:04:59.170Z",
+            "turn": 5,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "SURVIVOR",
+              "NIGHTMARE"
+            ],
+            "piles": {
+              "draw": 7,
+              "discard": 7,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 338,
+                "powers": {
+                  "POISON_POWER": 20,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 4
+          },
+          "card": {
+            "id": "NIGHTMARE",
+            "upgraded": true
+          },
+          "result": "pending (unstable): Action queued but state is still transitioning.",
+          "before": {
+            "ts": "2026-10-09T12:04:59.170Z",
+            "turn": 5,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "SURVIVOR",
+              "NIGHTMARE"
+            ],
+            "piles": {
+              "draw": 7,
+              "discard": 7,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 338,
+                "powers": {
+                  "POISON_POWER": 20,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:00.101Z",
+            "turn": 5,
+            "screen": "CARD_SELECTION",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "SURVIVOR"
+            ],
+            "piles": {
+              "draw": 7,
+              "discard": 7,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 338,
+                "powers": {
+                  "POISON_POWER": 20,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 2
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:00.101Z",
+            "turn": 5,
+            "screen": "CARD_SELECTION",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "SURVIVOR"
+            ],
+            "piles": {
+              "draw": 7,
+              "discard": 7,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 338,
+                "powers": {
+                  "POISON_POWER": 20,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:00.938Z",
+            "turn": 5,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "SURVIVOR"
+            ],
+            "piles": {
+              "draw": 7,
+              "discard": 7,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 338,
+                "powers": {
+                  "POISON_POWER": 20,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "end_turn"
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:00.938Z",
+            "turn": 5,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "SURVIVOR"
+            ],
+            "piles": {
+              "draw": 7,
+              "discard": 7,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 338,
+                "powers": {
+                  "POISON_POWER": 20,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:03.142Z",
+            "turn": 5,
+            "screen": "CARD_SELECTION",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 7,
+              "discard": 11,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 318,
+                "powers": {
+                  "POISON_POWER": 19,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 1
+          },
+          "card": null,
+          "result": "failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:8080/action: the request timed out",
+          "before": {
+            "ts": "2026-10-09T12:05:03.142Z",
+            "turn": 5,
+            "screen": "CARD_SELECTION",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 7,
+              "discard": 11,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 318,
+                "powers": {
+                  "POISON_POWER": 19,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:16.313Z",
+            "turn": 5,
+            "screen": "CARD_SELECTION",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 7,
+              "discard": 11,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 318,
+                "powers": {
+                  "POISON_POWER": 19,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 1
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:16.313Z",
+            "turn": 5,
+            "screen": "CARD_SELECTION",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 7,
+              "discard": 11,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 318,
+                "powers": {
+                  "POISON_POWER": 19,
+                  "WEAK_POWER": 1,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:19.099Z",
+            "turn": 6,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "FOOTWORK",
+              "FOOTWORK",
+              "FOOTWORK",
+              "DASH",
+              "NEUTRALIZE",
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 2,
+              "discard": 11,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 312,
+                "powers": {
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 4,
+            "target_index": 0
+          },
+          "card": {
+            "id": "NEUTRALIZE",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:23.865Z",
+            "turn": 6,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "FOOTWORK",
+              "FOOTWORK",
+              "FOOTWORK",
+              "DASH",
+              "NEUTRALIZE",
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 2,
+              "discard": 11,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 312,
+                "powers": {
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:24.892Z",
+            "turn": 6,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "FOOTWORK",
+              "FOOTWORK",
+              "FOOTWORK",
+              "DASH",
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 2,
+              "discard": 12,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 308,
+                "powers": {
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 4,
+            "target_index": 0
+          },
+          "card": {
+            "id": "DEADLY_POISON",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:24.892Z",
+            "turn": 6,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "FOOTWORK",
+              "FOOTWORK",
+              "FOOTWORK",
+              "DASH",
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 2,
+              "discard": 12,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 308,
+                "powers": {
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:25.751Z",
+            "turn": 6,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "FOOTWORK",
+              "FOOTWORK",
+              "FOOTWORK",
+              "DASH",
+              "DEADLY_POISON",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 2,
+              "discard": 13,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 308,
+                "powers": {
+                  "POISON_POWER": 26,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 5
+          },
+          "card": {
+            "id": "HAZE",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:25.751Z",
+            "turn": 6,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "FOOTWORK",
+              "FOOTWORK",
+              "FOOTWORK",
+              "DASH",
+              "DEADLY_POISON",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 2,
+              "discard": 13,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 308,
+                "powers": {
+                  "POISON_POWER": 26,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:27.041Z",
+            "turn": 6,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "FOOTWORK",
+              "FOOTWORK",
+              "FOOTWORK",
+              "DASH",
+              "DEADLY_POISON"
+            ],
+            "piles": {
+              "draw": 2,
+              "discard": 14,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 308,
+                "powers": {
+                  "POISON_POWER": 32,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 4
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "end_turn"
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:27.041Z",
+            "turn": 6,
+            "screen": "COMBAT",
+            "hp": 52,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "FOOTWORK",
+              "FOOTWORK",
+              "FOOTWORK",
+              "DASH",
+              "DEADLY_POISON"
+            ],
+            "piles": {
+              "draw": 2,
+              "discard": 14,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 308,
+                "powers": {
+                  "POISON_POWER": 32,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 4
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:29.243Z",
+            "turn": 6,
+            "screen": "COMBAT",
+            "hp": 37,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 2,
+              "discard": 19,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 276,
+                "powers": {
+                  "POISON_POWER": 31,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 4
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 2
+          },
+          "card": {
+            "id": "FOOTWORK",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:35.193Z",
+            "turn": 7,
+            "screen": "COMBAT",
+            "hp": 37,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 17,
+              "discard": 0,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 269,
+                "powers": {
+                  "POISON_POWER": 31,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:36.476Z",
+            "turn": 7,
+            "screen": "COMBAT",
+            "hp": 37,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 17,
+              "discard": 0,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 269,
+                "powers": {
+                  "POISON_POWER": 31,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 0
+          },
+          "card": {
+            "id": "DEFEND_SILENT",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:36.476Z",
+            "turn": 7,
+            "screen": "COMBAT",
+            "hp": 37,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 17,
+              "discard": 0,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 269,
+                "powers": {
+                  "POISON_POWER": 31,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:37.276Z",
+            "turn": 7,
+            "screen": "COMBAT",
+            "hp": 37,
+            "energy": 1,
+            "block": 12,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 17,
+              "discard": 1,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 269,
+                "powers": {
+                  "POISON_POWER": 31,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 0
+          },
+          "card": {
+            "id": "DEFEND_SILENT",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:37.276Z",
+            "turn": 7,
+            "screen": "COMBAT",
+            "hp": 37,
+            "energy": 1,
+            "block": 12,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 17,
+              "discard": 1,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 269,
+                "powers": {
+                  "POISON_POWER": 31,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:38.075Z",
+            "turn": 7,
+            "screen": "COMBAT",
+            "hp": 37,
+            "energy": 0,
+            "block": 24,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 17,
+              "discard": 2,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 269,
+                "powers": {
+                  "POISON_POWER": 31,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "end_turn"
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:38.075Z",
+            "turn": 7,
+            "screen": "COMBAT",
+            "hp": 37,
+            "energy": 0,
+            "block": 24,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 17,
+              "discard": 2,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 269,
+                "powers": {
+                  "POISON_POWER": 31,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 3
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:40.760Z",
+            "turn": 7,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 17,
+              "discard": 3,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 238,
+                "powers": {
+                  "POISON_POWER": 30,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 1,
+            "target_index": 0
+          },
+          "card": {
+            "id": "STRIKE_SILENT",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:45.066Z",
+            "turn": 8,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "PIERCING_WAIL",
+              "STRIKE_SILENT",
+              "DEADLY_POISON",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 13,
+              "discard": 3,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 230,
+                "powers": {
+                  "POISON_POWER": 30,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:45.931Z",
+            "turn": 8,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "PIERCING_WAIL",
+              "DEADLY_POISON",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 13,
+              "discard": 4,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 224,
+                "powers": {
+                  "POISON_POWER": 30,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 1,
+            "target_index": 0
+          },
+          "card": {
+            "id": "DEADLY_POISON",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:45.931Z",
+            "turn": 8,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "PIERCING_WAIL",
+              "DEADLY_POISON",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 13,
+              "discard": 4,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 224,
+                "powers": {
+                  "POISON_POWER": 30,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:46.829Z",
+            "turn": 8,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "PIERCING_WAIL",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 13,
+              "discard": 5,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 224,
+                "powers": {
+                  "POISON_POWER": 37,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 1
+          },
+          "card": {
+            "id": "DEFEND_SILENT",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:46.829Z",
+            "turn": 8,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "PIERCING_WAIL",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 13,
+              "discard": 5,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 224,
+                "powers": {
+                  "POISON_POWER": 37,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:47.636Z",
+            "turn": 8,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 0,
+            "block": 12,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "PIERCING_WAIL"
+            ],
+            "piles": {
+              "draw": 13,
+              "discard": 6,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 224,
+                "powers": {
+                  "POISON_POWER": 37,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "end_turn"
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:47.636Z",
+            "turn": 8,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 0,
+            "block": 12,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "PIERCING_WAIL"
+            ],
+            "piles": {
+              "draw": 13,
+              "discard": 6,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 224,
+                "powers": {
+                  "POISON_POWER": 37,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 2
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:52.456Z",
+            "turn": 9,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DASH",
+              "FOOTWORK",
+              "STRIKE_SILENT",
+              "FOOTWORK",
+              "DEADLY_POISON",
+              "BACKFLIP",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 6,
+              "discard": 7,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 36,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 1
+          },
+          "card": {
+            "id": "FOOTWORK",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:54.245Z",
+            "turn": 9,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 7,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DASH",
+              "FOOTWORK",
+              "STRIKE_SILENT",
+              "FOOTWORK",
+              "DEADLY_POISON",
+              "BACKFLIP",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 6,
+              "discard": 7,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 36,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:55.545Z",
+            "turn": 9,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 10,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DASH",
+              "STRIKE_SILENT",
+              "FOOTWORK",
+              "DEADLY_POISON",
+              "BACKFLIP",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 6,
+              "discard": 7,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 36,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 2
+          },
+          "card": {
+            "id": "FOOTWORK",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:55.545Z",
+            "turn": 9,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 10,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DASH",
+              "STRIKE_SILENT",
+              "FOOTWORK",
+              "DEADLY_POISON",
+              "BACKFLIP",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 6,
+              "discard": 7,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 36,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:56.845Z",
+            "turn": 9,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 13,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DASH",
+              "STRIKE_SILENT",
+              "DEADLY_POISON",
+              "BACKFLIP",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 6,
+              "discard": 7,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 36,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 2,
+            "target_index": 0
+          },
+          "card": {
+            "id": "DEADLY_POISON",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:56.845Z",
+            "turn": 9,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 13,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DASH",
+              "STRIKE_SILENT",
+              "DEADLY_POISON",
+              "BACKFLIP",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 6,
+              "discard": 7,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 36,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:57.748Z",
+            "turn": 9,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 13,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DASH",
+              "STRIKE_SILENT",
+              "BACKFLIP",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 6,
+              "discard": 8,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 43,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "end_turn"
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:05:57.748Z",
+            "turn": 9,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 13,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [
+              "DASH",
+              "STRIKE_SILENT",
+              "BACKFLIP",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 6,
+              "discard": 8,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 43,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:05:59.988Z",
+            "turn": 9,
+            "screen": "CARD_SELECTION",
+            "hp": 34,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 13,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 6,
+              "discard": 12,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 165,
+                "powers": {
+                  "POISON_POWER": 42,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 1
+          },
+          "card": null,
+          "result": "failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:8080/action: the request timed out",
+          "before": {
+            "ts": "2026-10-09T12:05:59.988Z",
+            "turn": 9,
+            "screen": "CARD_SELECTION",
+            "hp": 34,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 13,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 6,
+              "discard": 12,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 165,
+                "powers": {
+                  "POISON_POWER": 42,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:06:13.180Z",
+            "turn": 9,
+            "screen": "CARD_SELECTION",
+            "hp": 34,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 13,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 6,
+              "discard": 12,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 165,
+                "powers": {
+                  "POISON_POWER": 42,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 1
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-09T12:06:13.180Z",
+            "turn": 9,
+            "screen": "CARD_SELECTION",
+            "hp": 34,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 13,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 6,
+              "discard": 12,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 165,
+                "powers": {
+                  "POISON_POWER": 42,
+                  "STRENGTH_POWER": 6,
+                  "WEAK_POWER": 1
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-09T12:06:15.487Z",
+            "turn": 10,
+            "screen": "COMBAT",
+            "hp": 34,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 13,
+              "MIND_ROT_POWER": 1,
+              "SLOTH_POWER": 3,
+              "WASTE_AWAY_POWER": 1
+            },
+            "hand": [
+              "NEUTRALIZE",
+              "DEFEND_SILENT",
+              "SURVIVOR",
+              "HAZE"
+            ],
+            "piles": {
+              "draw": 2,
+              "discard": 12,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 155,
+                "powers": {
+                  "POISON_POWER": 42,
+                  "STRENGTH_POWER": 6
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "sl_draws": {
+        "order": [
+          "NEUTRALIZE+",
+          "FOOTWORK+",
+          "PIERCING_WAIL+",
+          "DEADLY_POISON+",
+          "FOOTWORK+",
+          "DEADLY_POISON+",
+          "SURVIVOR",
+          "STRIKE_SILENT",
+          "DEFEND_SILENT",
+          "THINKING_AHEAD",
+          "NIGHTMARE+",
+          "DEFEND_SILENT",
+          "DEFEND_SILENT",
+          "ASCENDERS_BANE",
+          "DASH",
+          "HAZE",
+          "STRIKE_SILENT",
+          "HAZE+",
+          "DEFEND_SILENT",
+          "BACKFLIP",
+          "DEFEND_SILENT",
+          "STRIKE_SILENT"
+        ],
+        "names": [
+          "中和+",
+          "灵动步法+",
+          "尖啸+",
+          "致命毒药+",
+          "灵动步法+",
+          "致命毒药+",
+          "生存者",
+          "打击",
+          "防御",
+          "深谋远虑",
+          "夜魇+",
+          "防御",
+          "防御",
+          "进阶之灾",
+          "冲刺",
+          "迷雾",
+          "打击",
+          "迷雾+",
+          "防御",
+          "后空翻",
+          "防御",
+          "打击"
+        ],
+        "turns": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3,
+          3,
+          4,
+          4,
+          4
+        ],
+        "clean": 22,
+        "broke": "T4: reshuffle (the discard pile shuffled into the draw pile)",
+        "topped": [
+          {
+            "turn": 2,
+            "at": 15,
+            "cards": [
+              "DASH"
+            ]
+          }
+        ]
+      },
+      "result": "won",
+      "turns": 12,
+      "verified_counts": {
+        "manual_card_plays": 14,
+        "nightmare_plays": 1,
+        "footwork_plays": 3,
+        "nightmare_plus_footwork_energy": 5,
+        "window_hp_loss": 18,
+        "visible_card_block": 36,
+        "whole_combo_count": null,
+        "whole_combo_reason": "未预定义完整毒防/整套成功，不把三次步法叫三次完整组合",
+        "draw_count": null,
+        "draw_limitation": "原SL抽序在T4洗牌已中断；T5—T9隐藏抽序未知，不用永久N补造",
+        "cycle_closed": false
+      }
+    },
+    {
+      "run": "L704TLETMZBM",
+      "floor": 48,
+      "attempt": 3,
+      "window": [
+        3,
+        3
+      ],
+      "transitions": [
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 4
+          },
+          "card": {
+            "id": "BURST",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-06T13:33:34.278Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "ACROBATICS",
+              "CALCULATED_GAMBLE",
+              "BURST",
+              "THE_HUNT",
+              "SHAME",
+              "GREED"
+            ],
+            "piles": {
+              "draw": 16,
+              "discard": 15,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 22,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 15
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:33:35.846Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 2
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "ACROBATICS",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "SHAME",
+              "GREED"
+            ],
+            "piles": {
+              "draw": 16,
+              "discard": 16,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 22,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 18
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 2
+          },
+          "card": {
+            "id": "ACROBATICS",
+            "upgraded": false
+          },
+          "result": "pending (unstable): Action queued but state is still transitioning.",
+          "before": {
+            "ts": "2026-10-06T13:33:35.846Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 2
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "ACROBATICS",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "SHAME",
+              "GREED"
+            ],
+            "piles": {
+              "draw": 16,
+              "discard": 16,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 22,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 18
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:33:37.385Z",
+            "turn": 3,
+            "screen": "CARD_SELECTION",
+            "hp": 60,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "SHAME",
+              "GREED",
+              "LEG_SWEEP",
+              "ADRENALINE",
+              "FLECHETTES"
+            ],
+            "piles": {
+              "draw": 13,
+              "discard": 16,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 22,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 18
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 4
+          },
+          "card": null,
+          "result": "failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:8080/action: the request timed out",
+          "before": {
+            "ts": "2026-10-06T13:33:37.385Z",
+            "turn": 3,
+            "screen": "CARD_SELECTION",
+            "hp": 60,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "SHAME",
+              "GREED",
+              "LEG_SWEEP",
+              "ADRENALINE",
+              "FLECHETTES"
+            ],
+            "piles": {
+              "draw": 13,
+              "discard": 16,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 22,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 18
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:33:48.154Z",
+            "turn": 3,
+            "screen": "CARD_SELECTION",
+            "hp": 60,
+            "energy": 1,
+            "block": 3,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "GREED",
+              "LEG_SWEEP",
+              "ADRENALINE",
+              "FLECHETTES",
+              "POISONED_STAB",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 11,
+              "discard": 17,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 22,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 21
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 4
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-06T13:33:48.154Z",
+            "turn": 3,
+            "screen": "CARD_SELECTION",
+            "hp": 60,
+            "energy": 1,
+            "block": 3,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "GREED",
+              "LEG_SWEEP",
+              "ADRENALINE",
+              "FLECHETTES",
+              "POISONED_STAB",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 11,
+              "discard": 17,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 22,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 21
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:33:53.062Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 1,
+            "block": 6,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "LEG_SWEEP",
+              "ADRENALINE",
+              "FLECHETTES",
+              "POISONED_STAB",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 11,
+              "discard": 19,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 22,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 24
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 7,
+            "target_index": 0
+          },
+          "card": {
+            "id": "POISONED_STAB",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-06T13:33:53.062Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 1,
+            "block": 6,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "LEG_SWEEP",
+              "ADRENALINE",
+              "FLECHETTES",
+              "POISONED_STAB",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 11,
+              "discard": 19,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 22,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 19,
+                  "STRENGTH_POWER": 24
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:33:54.060Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 0,
+            "block": 6,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "LEG_SWEEP",
+              "ADRENALINE",
+              "FLECHETTES",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 11,
+              "discard": 20,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 24
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 5
+          },
+          "card": {
+            "id": "ADRENALINE",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-06T13:33:54.060Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 0,
+            "block": 6,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "BURST_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "LEG_SWEEP",
+              "ADRENALINE",
+              "FLECHETTES",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 11,
+              "discard": 20,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 24
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:33:57.131Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 2,
+            "block": 6,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "LEG_SWEEP",
+              "FLECHETTES",
+              "BACKFLIP",
+              "PIERCING_WAIL",
+              "ACCELERANT",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 8,
+              "discard": 20,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 30
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 8
+          },
+          "card": {
+            "id": "ACCELERANT",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-06T13:33:57.131Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 2,
+            "block": 6,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "LEG_SWEEP",
+              "FLECHETTES",
+              "BACKFLIP",
+              "PIERCING_WAIL",
+              "ACCELERANT",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 8,
+              "discard": 20,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 30
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:33:58.528Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 1,
+            "block": 6,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "ACCELERANT_POWER": 2
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "LEG_SWEEP",
+              "FLECHETTES",
+              "BACKFLIP",
+              "PIERCING_WAIL",
+              "BACKFLIP",
+              "SURVIVOR"
+            ],
+            "piles": {
+              "draw": 7,
+              "discard": 20,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 30
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 2
+          },
+          "card": {
+            "id": "CALCULATED_GAMBLE",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-06T13:33:58.528Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 1,
+            "block": 6,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "ACCELERANT_POWER": 2
+            },
+            "hand": [
+              "ECHOING_SLASH",
+              "SHADOW_STEP",
+              "CALCULATED_GAMBLE",
+              "THE_HUNT",
+              "LEG_SWEEP",
+              "FLECHETTES",
+              "BACKFLIP",
+              "PIERCING_WAIL",
+              "BACKFLIP",
+              "SURVIVOR"
+            ],
+            "piles": {
+              "draw": 7,
+              "discard": 20,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 30
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:34:03.154Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 1,
+            "block": 33,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "ACCELERANT_POWER": 2
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "DEFEND_SILENT",
+              "STRIKE_SILENT",
+              "BUBBLE_BUBBLE",
+              "ASCENDERS_BANE",
+              "STRIKE_SILENT",
+              "BOUNCING_FLASK",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 27,
+              "discard": 0,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 33
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 1
+          },
+          "card": {
+            "id": "FOOTWORK",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-06T13:34:03.154Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 1,
+            "block": 33,
+            "powers": {
+              "DEXTERITY_POWER": 1,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "ACCELERANT_POWER": 2
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "FOOTWORK",
+              "DEFEND_SILENT",
+              "STRIKE_SILENT",
+              "BUBBLE_BUBBLE",
+              "ASCENDERS_BANE",
+              "STRIKE_SILENT",
+              "BOUNCING_FLASK",
+              "BACKFLIP"
+            ],
+            "piles": {
+              "draw": 27,
+              "discard": 0,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 33
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:34:04.589Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 0,
+            "block": 33,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "ACCELERANT_POWER": 2
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "STRIKE_SILENT",
+              "BUBBLE_BUBBLE",
+              "ASCENDERS_BANE",
+              "STRIKE_SILENT",
+              "BOUNCING_FLASK",
+              "BACKFLIP",
+              "ECHOING_SLASH"
+            ],
+            "piles": {
+              "draw": 26,
+              "discard": 0,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 33
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "end_turn"
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-06T13:34:04.589Z",
+            "turn": 3,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 0,
+            "block": 33,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "VULNERABLE_POWER": 1,
+              "ACCELERANT_POWER": 2
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEFEND_SILENT",
+              "STRIKE_SILENT",
+              "BUBBLE_BUBBLE",
+              "ASCENDERS_BANE",
+              "STRIKE_SILENT",
+              "BOUNCING_FLASK",
+              "BACKFLIP",
+              "ECHOING_SLASH"
+            ],
+            "piles": {
+              "draw": 26,
+              "discard": 0,
+              "exhaust": 3
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 14,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 22,
+                  "STRENGTH_POWER": 33
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-06T13:34:21.308Z",
+            "turn": 4,
+            "screen": "COMBAT",
+            "hp": 60,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "DEXTERITY_POWER": 4,
+              "NOXIOUS_FUMES_POWER": 3,
+              "STRENGTH_POWER": 2,
+              "ACCELERANT_POWER": 2
+            },
+            "hand": [
+              "DAGGER_THROW",
+              "SURVIVOR",
+              "FLECHETTES",
+              "SHADOW_STEP",
+              "NEUTRALIZE"
+            ],
+            "piles": {
+              "draw": 21,
+              "discard": 8,
+              "exhaust": 4
+            },
+            "enemies": [
+              {
+                "id": "TEST_SUBJECT",
+                "hp": 212,
+                "powers": {
+                  "ADAPTABLE_POWER": 1,
+                  "PAINFUL_STABS_POWER": 1,
+                  "POISON_POWER": 3
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "sl_draws": {
+        "order": [
+          "DEFEND_SILENT",
+          "NEUTRALIZE+",
+          "POISONED_STAB",
+          "SHOCKWAVE",
+          "BOUNCING_FLASK+",
+          "DEFLECT",
+          "EQUILIBRIUM",
+          "MIRAGE",
+          "NOXIOUS_FUMES+",
+          "DEFEND_SILENT",
+          "CALCULATED_GAMBLE",
+          "DAGGER_THROW",
+          "SLICE",
+          "DAGGER_THROW+",
+          "BACKFLIP",
+          "STRIKE_SILENT",
+          "DEFEND_SILENT",
+          "ECHOING_SLASH",
+          "SHADOW_STEP",
+          "ACROBATICS",
+          "CALCULATED_GAMBLE",
+          "BURST+",
+          "THE_HUNT",
+          "SHAME",
+          "GREED",
+          "LEG_SWEEP+",
+          "ADRENALINE",
+          "FLECHETTES",
+          "POISONED_STAB",
+          "BACKFLIP",
+          "PIERCING_WAIL",
+          "ACCELERANT+",
+          "BACKFLIP",
+          "SURVIVOR",
+          "DEFEND_SILENT",
+          "FOOTWORK+",
+          "DEFEND_SILENT",
+          "STRIKE_SILENT",
+          "BUBBLE_BUBBLE",
+          "ASCENDERS_BANE",
+          "STRIKE_SILENT",
+          "BOUNCING_FLASK+"
+        ],
+        "names": [
+          "防御",
+          "中和+",
+          "带毒刺击",
+          "震荡波",
+          "弹跳药瓶+",
+          "偏折",
+          "均衡",
+          "蜃景",
+          "毒雾+",
+          "防御",
+          "计算下注",
+          "投掷匕首",
+          "切割",
+          "投掷匕首+",
+          "后空翻",
+          "打击",
+          "防御",
+          "回响斩击",
+          "暗影步",
+          "杂技",
+          "计算下注",
+          "爆发+",
+          "狩猎",
+          "羞耻",
+          "贪婪",
+          "扫腿+",
+          "肾上腺素",
+          "飞镖",
+          "带毒刺击",
+          "后空翻",
+          "尖啸",
+          "触媒+",
+          "后空翻",
+          "生存者",
+          "防御",
+          "灵动步法+",
+          "防御",
+          "打击",
+          "咕嘟冒泡",
+          "进阶之灾",
+          "打击",
+          "弹跳药瓶+"
+        ],
+        "turns": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "clean": 41,
+        "broke": "T3: reshuffle (the discard pile shuffled into the draw pile)"
+      },
+      "result": "died",
+      "turns": 6,
+      "verified_counts": {
+        "manual_card_plays": 7,
+        "burst_play": 1,
+        "acrobatics_effect_executions": 2,
+        "actual_acrobatics_draws": [
+          3,
+          2
+        ],
+        "actual_adrenaline_new_hand_cards": 3,
+        "ability_followup_new_hand_cards": [
+          1,
+          1
+        ],
+        "gamble_discards": 9,
+        "gamble_new_hand_cards": 9,
+        "total_new_hand_cards_after_first_frame": 19,
+        "first_hand_cards": 8,
+        "final_hand_cards": 9,
+        "bandages_block": 33,
+        "footwork_immediate_block": 0,
+        "energy_start": 3,
+        "energy_end": 0,
+        "adrenaline_net_energy": 2,
+        "known_energy_payments": 5,
+        "poisoned_stab_direct_damage": 8,
+        "first_phase_poison_effective_damage": 14,
+        "phase_end_enemy_hp": 212,
+        "combat_final_result": "died",
+        "cycle_closed": false,
+        "limits": "抽牌与附带能力取牌分列；杂技第二次只添2，肾上腺素只添3，均受当时10手位约束。下注已离手、夜魇/肾上腺素消耗、能力离开循环；没有重复同资源状态。第一弃牌命令超时但下一原帧已执行，不补重试动作。"
+      }
+    },
+    {
+      "run": "4Y94N8RDPGPM",
+      "floor": 48,
+      "attempt": 1,
+      "window": [
+        10,
+        11
+      ],
+      "transitions": [
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 1
+          },
+          "card": {
+            "id": "NIGHTMARE",
+            "upgraded": true
+          },
+          "result": "pending (unstable): Action queued but state is still transitioning.",
+          "before": {
+            "ts": "2026-10-05T17:56:28.417Z",
+            "turn": 10,
+            "screen": "COMBAT",
+            "hp": 32,
+            "energy": 5,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 92,
+              "WEAK_POWER": 92,
+              "VULNERABLE_POWER": 92,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "NIGHTMARE",
+              "ECHOING_SLASH",
+              "POISONED_STAB",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 9,
+              "discard": 11,
+              "exhaust": 7
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 45,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 7,
+                  "POISON_POWER": 14,
+                  "WEAK_POWER": 2
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 19
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:29.405Z",
+            "turn": 10,
+            "screen": "CARD_SELECTION",
+            "hp": 32,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 92,
+              "WEAK_POWER": 92,
+              "VULNERABLE_POWER": 92,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "ECHOING_SLASH",
+              "POISONED_STAB",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 9,
+              "discard": 11,
+              "exhaust": 7
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 45,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 7,
+                  "POISON_POWER": 14,
+                  "WEAK_POWER": 2
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 19
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 0
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-05T17:56:29.405Z",
+            "turn": 10,
+            "screen": "CARD_SELECTION",
+            "hp": 32,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 92,
+              "WEAK_POWER": 92,
+              "VULNERABLE_POWER": 92,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "ECHOING_SLASH",
+              "POISONED_STAB",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 9,
+              "discard": 11,
+              "exhaust": 7
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 45,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 7,
+                  "POISON_POWER": 14,
+                  "WEAK_POWER": 2
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 19
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:30.251Z",
+            "turn": 10,
+            "screen": "COMBAT",
+            "hp": 32,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 92,
+              "WEAK_POWER": 92,
+              "VULNERABLE_POWER": 92,
+              "DEXTERITY_POWER": 9,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "ECHOING_SLASH",
+              "POISONED_STAB",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 9,
+              "discard": 11,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 45,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 7,
+                  "POISON_POWER": 14,
+                  "WEAK_POWER": 2
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 19
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 2,
+            "target_index": 1
+          },
+          "card": {
+            "id": "POISONED_STAB"
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-05T17:56:30.251Z",
+            "turn": 10,
+            "screen": "COMBAT",
+            "hp": 32,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 92,
+              "WEAK_POWER": 92,
+              "VULNERABLE_POWER": 92,
+              "DEXTERITY_POWER": 9,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "ECHOING_SLASH",
+              "POISONED_STAB",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 9,
+              "discard": 11,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 45,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 7,
+                  "POISON_POWER": 14,
+                  "WEAK_POWER": 2
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 19
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:31.251Z",
+            "turn": 10,
+            "screen": "COMBAT",
+            "hp": 32,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 92,
+              "WEAK_POWER": 92,
+              "VULNERABLE_POWER": 92,
+              "DEXTERITY_POWER": 9,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "ECHOING_SLASH",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 9,
+              "discard": 12,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 45,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 7,
+                  "POISON_POWER": 14,
+                  "WEAK_POWER": 2
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 23
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 2,
+            "target_index": 0
+          },
+          "card": {
+            "id": "STRIKE_SILENT",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-05T17:56:31.251Z",
+            "turn": 10,
+            "screen": "COMBAT",
+            "hp": 32,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 92,
+              "WEAK_POWER": 92,
+              "VULNERABLE_POWER": 92,
+              "DEXTERITY_POWER": 9,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "ECHOING_SLASH",
+              "STRIKE_SILENT"
+            ],
+            "piles": {
+              "draw": 9,
+              "discard": 12,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 45,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 7,
+                  "POISON_POWER": 14,
+                  "WEAK_POWER": 2
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 23
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:32.124Z",
+            "turn": 10,
+            "screen": "COMBAT",
+            "hp": 32,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 92,
+              "WEAK_POWER": 92,
+              "VULNERABLE_POWER": 92,
+              "DEXTERITY_POWER": 9,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "ECHOING_SLASH"
+            ],
+            "piles": {
+              "draw": 9,
+              "discard": 13,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 39,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 7,
+                  "POISON_POWER": 14,
+                  "WEAK_POWER": 2
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 23
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "end_turn"
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-05T17:56:32.124Z",
+            "turn": 10,
+            "screen": "COMBAT",
+            "hp": 32,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 92,
+              "WEAK_POWER": 92,
+              "VULNERABLE_POWER": 92,
+              "DEXTERITY_POWER": 9,
+              "NIGHTMARE_POWER": 3
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "ECHOING_SLASH"
+            ],
+            "piles": {
+              "draw": 9,
+              "discard": 13,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 39,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 7,
+                  "POISON_POWER": 14,
+                  "WEAK_POWER": 2
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 208,
+                "powers": {
+                  "POISON_POWER": 23
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:39.759Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 5,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT",
+              "ENTHRALLED"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 15,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 13,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 22
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 7
+          },
+          "card": {
+            "id": "ENTHRALLED",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-05T17:56:39.759Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 5,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT",
+              "ENTHRALLED"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 15,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 13,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 22
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:40.551Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 16,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 13,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 22
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 0,
+            "target_index": 0
+          },
+          "card": {
+            "id": "DEADLY_POISON",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-05T17:56:40.551Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 3,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 16,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 13,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 22
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:41.452Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 17,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 20,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 22
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 0,
+            "target_index": 0
+          },
+          "card": {
+            "id": "DEADLY_POISON",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-05T17:56:41.452Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 2,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "DEADLY_POISON",
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 17,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 20,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 22
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:42.367Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 18,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 27,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 22
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 0,
+            "target_index": 1
+          },
+          "card": {
+            "id": "DEADLY_POISON",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-05T17:56:42.367Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 1,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "DEADLY_POISON",
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 18,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 27,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 22
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:43.252Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 19,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 27,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 29
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "end_turn"
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-05T17:56:43.252Z",
+            "turn": 11,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 0,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 91,
+              "WEAK_POWER": 91,
+              "VULNERABLE_POWER": 91,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "SUCKER_PUNCH",
+              "STRIKE_SILENT",
+              "BLUR",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 4,
+              "discard": 19,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "TORCH_HEAD_AMALGAM",
+                "hp": 25,
+                "powers": {
+                  "MINION_POWER": 1,
+                  "STRENGTH_POWER": 8,
+                  "POISON_POWER": 27,
+                  "WEAK_POWER": 1
+                }
+              },
+              {
+                "id": "QUEEN",
+                "hp": 185,
+                "powers": {
+                  "POISON_POWER": 29
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-05T17:56:49.797Z",
+            "turn": 12,
+            "screen": "COMBAT",
+            "hp": 9,
+            "energy": 5,
+            "block": 0,
+            "powers": {
+              "FASTEN_POWER": 4,
+              "CHAINS_OF_BINDING_POWER": 3,
+              "FRAIL_POWER": 90,
+              "WEAK_POWER": 90,
+              "VULNERABLE_POWER": 90,
+              "DEXTERITY_POWER": 9
+            },
+            "hand": [
+              "NEUTRALIZE",
+              "SURVIVOR",
+              "BACKFLIP",
+              "DEFEND_SILENT",
+              "DEFEND_SILENT"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 0,
+              "exhaust": 8
+            },
+            "enemies": [
+              {
+                "id": "QUEEN",
+                "hp": 156,
+                "powers": {
+                  "POISON_POWER": 28,
+                  "STRENGTH_POWER": 2
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "sl_draws": {
+        "order": [
+          "SPEEDSTER+",
+          "DRAMATIC_ENTRANCE",
+          "PIERCING_WAIL",
+          "DEFEND_SILENT",
+          "POISONED_STAB+",
+          "DEADLY_POISON+",
+          "NEUTRALIZE+",
+          "BACKFLIP+",
+          "STRIKE_SILENT",
+          "DEFEND_SILENT+",
+          "SUCKER_PUNCH+",
+          "PIERCING_WAIL+",
+          "STRIKE_SILENT+",
+          "DEFEND_SILENT",
+          "DEFEND_SILENT",
+          "ECHOING_SLASH+",
+          "SNAKEBITE+",
+          "STRIKE_SILENT+",
+          "FOOTWORK+",
+          "DEFEND_SILENT",
+          "ENTHRALLED",
+          "ACROBATICS+",
+          "NIGHTMARE+",
+          "FOOTWORK+",
+          "ADRENALINE+",
+          "BACKFLIP",
+          "FOOTWORK+",
+          "SURVIVOR",
+          "POISONED_STAB",
+          "ASCENDERS_BANE",
+          "BLUR",
+          "EXPOSE",
+          "POISONED_STAB"
+        ],
+        "names": [
+          "速行者+",
+          "闪亮登场",
+          "尖啸",
+          "防御",
+          "带毒刺击+",
+          "致命毒药+",
+          "中和+",
+          "后空翻+",
+          "打击+",
+          "防御+",
+          "突然一拳+",
+          "尖啸+",
+          "打击+",
+          "防御",
+          "防御",
+          "回响斩击+",
+          "蛇咬+",
+          "打击+",
+          "灵动步法+",
+          "防御",
+          "执迷",
+          "杂技+",
+          "夜魇+",
+          "灵动步法+",
+          "肾上腺素+",
+          "后空翻",
+          "灵动步法+",
+          "生存者",
+          "带毒刺击",
+          "进阶之灾",
+          "残影",
+          "暴露",
+          "带毒刺击"
+        ],
+        "turns": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          5,
+          5,
+          8
+        ],
+        "clean": 32,
+        "broke": "T5: reshuffle (the discard pile shuffled into the draw pile)"
+      },
+      "result": "won",
+      "turns": 15,
+      "verified_counts": {
+        "nightmare_plays": 1,
+        "poison_plays": 3,
+        "combined_energy_cost": 5,
+        "added_poison": 21,
+        "immediate_poison_application_damage": 0,
+        "turn11_total_effective_damage": 54,
+        "turn11_hp_loss": 0,
+        "turn10_hp_loss": 23,
+        "limits": "54包含原有毒，不全部归新增21毒；未隔离复制的净胜率。"
+      }
+    },
+    {
+      "run": "KV0JHNJCKXLS",
+      "floor": 33,
+      "attempt": 6,
+      "window": [
+        1,
+        1
+      ],
+      "transitions": [
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 1,
+            "target_index": 0
+          },
+          "card": {
+            "id": "DEADLY_POISON",
+            "upgraded": true
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-07T11:20:23.439Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 9,
+            "block": 0,
+            "powers": {
+              "PLATING_POWER": 4
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "DEADLY_POISON",
+              "BULLET_TIME",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE",
+              "SNAKEBITE",
+              "BACKFLIP",
+              "ADRENALINE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 0,
+              "exhaust": 0
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {}
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-07T11:20:24.343Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 8,
+            "block": 0,
+            "powers": {
+              "PLATING_POWER": 4
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "BULLET_TIME",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE",
+              "SNAKEBITE",
+              "BACKFLIP",
+              "ADRENALINE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 1,
+              "exhaust": 0
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 7
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 1
+          },
+          "card": {
+            "id": "BULLET_TIME",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-07T11:20:24.343Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 8,
+            "block": 0,
+            "powers": {
+              "PLATING_POWER": 4
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "BULLET_TIME",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE",
+              "SNAKEBITE",
+              "BACKFLIP",
+              "ADRENALINE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 1,
+              "exhaust": 0
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 7
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-07T11:20:25.246Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 5,
+            "block": 0,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE",
+              "SNAKEBITE",
+              "BACKFLIP",
+              "ADRENALINE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 2,
+              "exhaust": 0
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 7
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 3,
+            "target_index": 0
+          },
+          "card": {
+            "id": "SNAKEBITE",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-07T11:20:25.246Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 5,
+            "block": 0,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE",
+              "SNAKEBITE",
+              "BACKFLIP",
+              "ADRENALINE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 2,
+              "exhaust": 0
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 7
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-07T11:20:26.141Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 5,
+            "block": 0,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE",
+              "BACKFLIP",
+              "ADRENALINE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 3,
+              "exhaust": 0
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 14
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 3
+          },
+          "card": {
+            "id": "BACKFLIP",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-07T11:20:26.141Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 5,
+            "block": 0,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE",
+              "BACKFLIP",
+              "ADRENALINE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 3,
+              "exhaust": 0
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 14
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-07T11:20:26.942Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 5,
+            "block": 5,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE",
+              "ADRENALINE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 4,
+              "exhaust": 0
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 14
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "play_card",
+            "card_index": 3
+          },
+          "card": {
+            "id": "ADRENALINE",
+            "upgraded": false
+          },
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-07T11:20:26.942Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 5,
+            "block": 5,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE",
+              "ADRENALINE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 4,
+              "exhaust": 0
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 14
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-07T11:20:27.743Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 6,
+            "block": 5,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 4,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 14
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "use_potion",
+            "option_index": 0
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-07T11:20:27.743Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 6,
+            "block": 5,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 4,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 14
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-07T11:20:28.605Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 7,
+            "block": 5,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1,
+              "RADIANCE_POWER": 3
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 4,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 14
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "end_turn"
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-07T11:20:31.356Z",
+            "turn": 1,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 7,
+            "block": 5,
+            "powers": {
+              "PLATING_POWER": 4,
+              "NO_DRAW_POWER": 1,
+              "RADIANCE_POWER": 3
+            },
+            "hand": [
+              "DEFEND_SILENT",
+              "ULTIMATE_STRIKE",
+              "ASCENDERS_BANE"
+            ],
+            "piles": {
+              "draw": 22,
+              "discard": 4,
+              "exhaust": 1
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 399,
+                "powers": {
+                  "POISON_POWER": 14
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-07T11:20:33.974Z",
+            "turn": 1,
+            "screen": "CARD_SELECTION",
+            "hp": 46,
+            "energy": 7,
+            "block": 9,
+            "powers": {
+              "PLATING_POWER": 4,
+              "RADIANCE_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 22,
+              "discard": 6,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 385,
+                "powers": {
+                  "POISON_POWER": 13
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 1
+          },
+          "card": null,
+          "result": "failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:8080/action: the request timed out",
+          "before": {
+            "ts": "2026-10-07T11:20:33.974Z",
+            "turn": 1,
+            "screen": "CARD_SELECTION",
+            "hp": 46,
+            "energy": 7,
+            "block": 9,
+            "powers": {
+              "PLATING_POWER": 4,
+              "RADIANCE_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 22,
+              "discard": 6,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 385,
+                "powers": {
+                  "POISON_POWER": 13
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-07T11:20:47.151Z",
+            "turn": 1,
+            "screen": "CARD_SELECTION",
+            "hp": 46,
+            "energy": 7,
+            "block": 9,
+            "powers": {
+              "PLATING_POWER": 4,
+              "RADIANCE_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 22,
+              "discard": 6,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 385,
+                "powers": {
+                  "POISON_POWER": 13
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "action": "select_deck_card",
+            "option_index": 1
+          },
+          "card": null,
+          "result": "completed: Action completed.",
+          "before": {
+            "ts": "2026-10-07T11:20:47.151Z",
+            "turn": 1,
+            "screen": "CARD_SELECTION",
+            "hp": 46,
+            "energy": 7,
+            "block": 9,
+            "powers": {
+              "PLATING_POWER": 4,
+              "RADIANCE_POWER": 3
+            },
+            "hand": [],
+            "piles": {
+              "draw": 22,
+              "discard": 6,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 385,
+                "powers": {
+                  "POISON_POWER": 13
+                }
+              }
+            ]
+          },
+          "after": {
+            "ts": "2026-10-07T11:20:50.402Z",
+            "turn": 2,
+            "screen": "COMBAT",
+            "hp": 46,
+            "energy": 4,
+            "block": 0,
+            "powers": {
+              "PLATING_POWER": 3,
+              "RADIANCE_POWER": 2,
+              "MIND_ROT_POWER": 1
+            },
+            "hand": [
+              "SURVIVOR",
+              "FOOTWORK",
+              "DEFEND_SILENT",
+              "MIRAGE"
+            ],
+            "piles": {
+              "draw": 18,
+              "discard": 6,
+              "exhaust": 2
+            },
+            "enemies": [
+              {
+                "id": "KNOWLEDGE_DEMON",
+                "hp": 385,
+                "powers": {
+                  "POISON_POWER": 13
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "sl_draws": {
+        "order": [
+          "DEFEND_SILENT",
+          "DEADLY_POISON+",
+          "BULLET_TIME",
+          "ULTIMATE_STRIKE",
+          "ASCENDERS_BANE",
+          "SNAKEBITE",
+          "BACKFLIP",
+          "SURVIVOR",
+          "FOOTWORK",
+          "DEFEND_SILENT",
+          "MIRAGE",
+          "ANTICIPATE",
+          "POISONED_STAB+",
+          "STRIKE_SILENT",
+          "DEFEND_SILENT",
+          "STRIKE_SILENT",
+          "DEFEND_SILENT",
+          "DEFEND_SILENT",
+          "STRIKE_SILENT",
+          "POISONED_STAB",
+          "SCRAWL",
+          "ECHOING_SLASH",
+          "POISONED_STAB",
+          "STRIKE_SILENT",
+          "SLICE",
+          "DEFEND_SILENT",
+          "NEUTRALIZE",
+          "FOOTWORK",
+          "PREDATOR"
+        ],
+        "names": [
+          "防御",
+          "致命毒药+",
+          "子弹时间",
+          "究极打击",
+          "进阶之灾",
+          "蛇咬",
+          "后空翻",
+          "生存者",
+          "灵动步法",
+          "防御",
+          "蜃景",
+          "预判",
+          "带毒刺击+",
+          "打击",
+          "防御",
+          "打击",
+          "防御",
+          "防御",
+          "打击",
+          "带毒刺击",
+          "潦草急就",
+          "回响斩击",
+          "带毒刺击",
+          "打击",
+          "切割",
+          "防御",
+          "中和",
+          "灵动步法",
+          "猎杀者"
+        ],
+        "turns": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "clean": 29,
+        "broke": "T5: reshuffle (the discard pile shuffled into the draw pile)"
+      },
+      "result": "died",
+      "turns": 8
+    }
+  ],
+  "revision3_status": {
+    "1_拿跳删与有效池": "支持按实盘可用池/实际成本比较；能力、消耗、生成与保留改变牌池。无新增/删除整战配对，不给百分比或固定N。",
+    "2_机会与整套": "支持分账：54G三次后续步法不是三次整套；204局报告57持有P窗口仅30在T3前实毒与触媒同存，仍未检验足够防御。",
+    "3_有限数量": "已核四个有限窗口；L704七手动动作、两次杂技效果共5抽、肾上腺素添3、能力后继2、下注9，共19可见新增手牌。54G窗口14手动动作，三步法+9敏、支付5、净损18；无删牌反事实。",
+    "4_净成本与断点": "支持封抽/手位/支付/名额分核。KV0免费及产能不恢复抽牌；L704重放遇10手上限，两次牌文抽3不等6实抽。正在结算/持有牌不能凭N−G预设可回抽。",
+    "5_极限闭环": "未验证；未见核心和过牌工具回到同一合法状态且净能量/消耗/名额可持续的见证。抽象模型公式、5张阈值、12轮次数和无限构造不入库。",
+    "6_生存终局": "支持按下一战重新启动；局部数量/伤挡增加不等整局赢，54G恶魔12轮胜后整局败，L704三败，49HL同36张连战败。后续现有7S8胜仍非稳定模板。"
+  }
+}

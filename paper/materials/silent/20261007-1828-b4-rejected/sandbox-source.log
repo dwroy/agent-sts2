@@ -1,0 +1,31 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/agent
+
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 145ms
+     × all resolve 144ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+Error: ENOENT: no such file or directory, stat '/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/learner/runs/20261007-153136-boss-sim-batch/baseline/logs/logs'
+ ❯ tools/check-imports.ts:28:12
+     26|     if (name === "node_modules" || name.startsWith(".")) return [];
+     27|     const path = join(dir, name);
+     28|     return statSync(path).isDirectory() ? files(path) : CODE.test(name…
+       |            ^
+     29|   });
+     30| }
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 229 passed (230)
+      Tests  1 failed | 2416 passed (2417)
+   Start at  15:45:13
+   Duration  1142.77s (transform 6.77s, setup 11.61s, import 30.29s, tests 1067.05s, environment 26ms)
+

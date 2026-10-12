@@ -1,0 +1,3375 @@
+diff --git a/agent/src/memory/run-journal.ts b/agent/src/memory/run-journal.ts
+index f51c86446..3d0fcdc02 100644
+--- a/agent/src/memory/run-journal.ts
++++ b/agent/src/memory/run-journal.ts
+@@ -289,6 +289,8 @@ export class RunJournal {
+   private relicSnap: Counted | null = null;
+   private potionSnap: Counted | null = null;
+   private maxHpSnap: number | null = null;
++  private silentHpSnap: { hp: number; maxHp: number; floor: number; act: number; screen: string;
++    turn: number | null; combat: boolean } | null = null;
+   private discardFloors = new Set<number>();
+   private knowledge: Knowledge | null = null;
+   /** Creation counter for the journal's items (history is chronological). */
+@@ -327,6 +329,7 @@ export class RunJournal {
+       this.trackResources(state);
+       this.trackFloor(state);
+     }
++    this.trackSilentHpRecovery(state);
+     if (context.screenMemory) this.trackRoute(state, context.screenMemory.routePlan);
+     if (this.itemSignature() !== items) return "items";
+     return floor !== null && JSON.stringify(this.floors.get(floor) ?? null) !== mark ? "mark" : "none";
+@@ -519,6 +522,38 @@ export class RunJournal {
+     }
+   }
+ 
++  /** MTQ0/7X0/KFR A10, silent-0019/0020/0243: observed recovery is separate from route forecasts. */
++  private trackSilentHpRecovery(state: GameState): void {
++    if (state.run?.ascension !== 10 || str(asRecord(state.run.raw)["character_id"]).toLowerCase() !== "silent") {
++      this.silentHpSnap = null;
++      return;
++    }
++    const { current_hp: hp, max_hp: maxHp, floor } = state.run;
++    // A stale earlier floor must not create a second recovery when the current frame returns.
++    if (floor !== null && floor < this.maxFloor) return;
++    if (hp === null || maxHp === null || floor === null || !Number.isFinite(hp) || !Number.isFinite(maxHp) ||
++        hp < 0 || hp > maxHp || (state.in_combat && state.combat?.current_hp !== hp)) {
++      this.silentHpSnap = null;
++      return;
++    }
++    const before = this.silentHpSnap;
++    const now = { hp, maxHp, floor, act: actOf(state), screen: state.screen, turn: state.turn, combat: state.in_combat };
++    this.silentHpSnap = now;
++    if (!before || hp <= before.hp) return;
++    const sameFloor = before.floor === floor;
++    const rewind = sameFloor && before.combat && now.combat && before.turn !== null && now.turn !== null && now.turn < before.turn;
++    const source = rewind ? "回合回退时恢复，不计路线回血"
++      : before.act !== now.act ? "跨幕边界"
++      : !sameFloor ? "跨层边界，来源未隔离"
++      : sameFloor && (before.screen === "REST" || now.screen === "REST") ? "休息点内"
++      : sameFloor && now.combat && now.turn === 1 && (!before.combat || before.turn === 1) ? "战斗开场"
++      : sameFloor && before.combat && now.combat ? "战斗中"
++      : "来源未隔离";
++    // These labels locate consecutive observations; they do not infer a healing source or formula.
++    this.events.push({ seq: this.nextSeq(), at: this.placeFloor(state), act: now.act, floor,
++      text: `HP增加观测 ${before.hp}/${before.maxHp}→${hp}/${maxHp}（+${hp - before.hp}；${source}；F${before.floor}/${before.screen}→F${floor}/${now.screen}，仅帧间净变化）` });
++  }
++
+   private diffDeck(before: Counted, after: Counted, source: string, push: (text: string) => void): void {
+     const base = (key: string): string => key.replace(/\+$/, "");
+     const ids = new Set([...before.keys(), ...after.keys()].map(base));
+@@ -585,6 +620,7 @@ export class RunJournal {
+     this.relicSnap = null;
+     this.potionSnap = null;
+     this.maxHpSnap = null;
++    this.silentHpSnap = null;
+     this.discardFloors = new Set();
+     this.seq = 0;
+     this.maxFloor = 0;
+diff --git a/agent/tests/silent-hp-recovery-evidence.json b/agent/tests/silent-hp-recovery-evidence.json
+new file mode 100644
+index 000000000..eb79a5b84
+--- /dev/null
++++ b/agent/tests/silent-hp-recovery-evidence.json
+@@ -0,0 +1,3173 @@
++[
++  {
++    "run": "MTQ0EUBJ3R6T",
++    "ledger": [
++      "silent-0019",
++      "silent-0020",
++      "silent-0243"
++    ],
++    "frames": [
++      {
++        "source_line": 288584,
++        "source_sha256": "f4323640c8e816c266b1a6f23d4b78e3e2ba164dbaafa9b1e6e17170415a88f8",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 9,
++            "act_id": "0",
++            "current_hp": 44,
++            "max_hp": 70,
++            "gold": 20
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option"
++          ]
++        }
++      },
++      {
++        "source_line": 288585,
++        "source_sha256": "86fa8c232864cb61fd75688839620f0b370d02e6bece5323a6833f338f4d45bc",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 9,
++            "act_id": "0",
++            "current_hp": 65,
++            "max_hp": 70,
++            "gold": 20
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed"
++          ]
++        }
++      },
++      {
++        "source_line": 288678,
++        "source_sha256": "d0e2f0f00230cf58e9b60996aa90aea6687e130215237d9badce774ce012015e",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 17,
++            "act_id": "0",
++            "current_hp": 67,
++            "max_hp": 70,
++            "gold": 12
++          },
++          "combat": {
++            "player": {
++              "current_hp": 67,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "CEREMONIAL_BEAST",
++                "name": "仪式兽",
++                "current_hp": 262,
++                "max_hp": 262,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit"
++          ]
++        }
++      },
++      {
++        "source_line": 288679,
++        "source_sha256": "b6e1ac4fbcc806131ad4e3e20610f1411d5e75c414a4b7253ba445fe46073759",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 17,
++            "act_id": "0",
++            "current_hp": 69,
++            "max_hp": 70,
++            "gold": 12
++          },
++          "combat": {
++            "player": {
++              "current_hp": 69,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "CEREMONIAL_BEAST",
++                "name": "仪式兽",
++                "current_hp": 262,
++                "max_hp": 262,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit"
++          ]
++        }
++      },
++      {
++        "source_line": 288680,
++        "source_sha256": "359d2c7fffe40c09b93ba55e3917147c2cca3a35c9a16590bd2bfd9d5ec531c8",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 17,
++            "act_id": "0",
++            "current_hp": 69,
++            "max_hp": 70,
++            "gold": 12
++          },
++          "combat": {
++            "player": {
++              "current_hp": 69,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 1
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "CEREMONIAL_BEAST",
++                "name": "仪式兽",
++                "current_hp": 262,
++                "max_hp": 262,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit"
++          ]
++        }
++      },
++      {
++        "source_line": 288726,
++        "source_sha256": "f3cacdc3948415e3d09f2433c57dae0e4cc6f0b9372761e7fc088af559057e2a",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 17,
++            "act_id": "1",
++            "current_hp": 19,
++            "max_hp": 70,
++            "gold": 87
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288727,
++        "source_sha256": "eee9b5b3d41ec1ec18e48c4effd874c70231601eef7bd27bf79d9081196a8ea5",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "EVENT",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 18,
++            "act_id": "1",
++            "current_hp": 59,
++            "max_hp": 70,
++            "gold": 87
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_event_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288728,
++        "source_sha256": "f2cd1cd603bc809671b9718040ef3695c31d680c45015ee961a778116cc14eea",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "EVENT",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 18,
++            "act_id": "1",
++            "current_hp": 59,
++            "max_hp": 70,
++            "gold": 87
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_event_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288729,
++        "source_sha256": "b25f5e96ae8dd8b8aebdf04a9145fe580b9b0ba7d60262db3f0a17e462a7aede",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 18,
++            "act_id": "1",
++            "current_hp": 59,
++            "max_hp": 70,
++            "gold": 87
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288730,
++        "source_sha256": "59e23a574fe7ff9de6d5b4c9cef48b77753dfbf666155235788268766bb2a2a1",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 19,
++            "act_id": "1",
++            "current_hp": 59,
++            "max_hp": 70,
++            "gold": 87
++          },
++          "combat": {
++            "player": {
++              "current_hp": 59,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "THIEVING_HOPPER",
++                "name": "偷窃草蜢",
++                "current_hp": 84,
++                "max_hp": 84,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288731,
++        "source_sha256": "e6c3bf4717e9880caec1987b34d07422b3e08e68666efffb9da5bb74f5fe6be5",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 19,
++            "act_id": "1",
++            "current_hp": 61,
++            "max_hp": 70,
++            "gold": 87
++          },
++          "combat": {
++            "player": {
++              "current_hp": 61,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "THIEVING_HOPPER",
++                "name": "偷窃草蜢",
++                "current_hp": 84,
++                "max_hp": 84,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288732,
++        "source_sha256": "9962f6cae3cb7af4c1638c9d89137398a1dbbbdb75c91f0afdada3c525edad03",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 19,
++            "act_id": "1",
++            "current_hp": 61,
++            "max_hp": 70,
++            "gold": 87
++          },
++          "combat": {
++            "player": {
++              "current_hp": 61,
++              "max_hp": 70,
++              "block": 4,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "THIEVING_HOPPER",
++                "name": "偷窃草蜢",
++                "current_hp": 84,
++                "max_hp": 84,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288749,
++        "source_sha256": "2792ef3e9b4df846620114515f2fbab4c6e4df18e7195f85d0b8f807d24a5eef",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": 3,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 19,
++            "act_id": "1",
++            "current_hp": 46,
++            "max_hp": 70,
++            "gold": 100
++          },
++          "combat": {
++            "player": {
++              "current_hp": 46,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": []
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node"
++          ]
++        }
++      },
++      {
++        "source_line": 288750,
++        "source_sha256": "e629fbaa996d036d99f10c89ad4394665a72b19d92487161b510637557910331",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 46,
++            "max_hp": 70,
++            "gold": 100
++          },
++          "combat": {
++            "player": {
++              "current_hp": 46,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "TUNNELER",
++                "name": "地道虫",
++                "current_hp": 92,
++                "max_hp": 92,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit"
++          ]
++        }
++      },
++      {
++        "source_line": 288751,
++        "source_sha256": "2446512d6fd0609d4a558051bc78ca3f690770414931165c02a52c4e7ea5249d",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 48,
++            "max_hp": 70,
++            "gold": 100
++          },
++          "combat": {
++            "player": {
++              "current_hp": 48,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "TUNNELER",
++                "name": "地道虫",
++                "current_hp": 92,
++                "max_hp": 92,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit"
++          ]
++        }
++      },
++      {
++        "source_line": 288752,
++        "source_sha256": "62f994c6745ddaa0401117226d787cb542aa29ffbfdba3cf5619f37688e332d5",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "CARD_SELECTION",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 48,
++            "max_hp": 70,
++            "gold": 100
++          },
++          "combat": {
++            "player": {
++              "current_hp": 48,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 2
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "TUNNELER",
++                "name": "地道虫",
++                "current_hp": 83,
++                "max_hp": 92,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "select_deck_card"
++          ]
++        }
++      },
++      {
++        "source_line": 288775,
++        "source_sha256": "8e57423765090b69746e991d739bcc711fe3961e74b7047144c6c58d948f5939",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 7,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 100
++          },
++          "combat": {
++            "player": {
++              "current_hp": 8,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "TUNNELER",
++                "name": "地道虫",
++                "current_hp": 10,
++                "max_hp": 92,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit"
++          ]
++        }
++      },
++      {
++        "source_line": 288776,
++        "source_sha256": "dc08537a6672bc2daff37e0d307dd56867b95a31586015abe5c74beb831d2c9c",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "REWARD",
++          "in_combat": false,
++          "turn": 7,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 100
++          },
++          "combat": {
++            "player": {
++              "current_hp": 8,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": []
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "resolve_rewards",
++            "collect_rewards_and_proceed",
++            "claim_reward"
++          ]
++        }
++      },
++      {
++        "source_line": 288777,
++        "source_sha256": "b9019f67d7116afdc395a985dc0d8b2847efe22600912568b7901218e6506e37",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "REWARD",
++          "in_combat": false,
++          "turn": 7,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 110
++          },
++          "combat": {
++            "player": {
++              "current_hp": 8,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": []
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "resolve_rewards",
++            "collect_rewards_and_proceed",
++            "claim_reward"
++          ]
++        }
++      },
++      {
++        "source_line": 288778,
++        "source_sha256": "eb1f23ee9c3ebc3110e82a69131884cb38967814b8da371eedf04b4541ccc336",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "REWARD",
++          "in_combat": false,
++          "turn": 7,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 110
++          },
++          "combat": {
++            "player": {
++              "current_hp": 8,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": []
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "resolve_rewards",
++            "collect_rewards_and_proceed",
++            "claim_reward"
++          ]
++        }
++      },
++      {
++        "source_line": 288779,
++        "source_sha256": "027a9bdc16a8a59f056fdab6d3471763dc1dc767783a691d87e99b028ee7b6d3",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "REWARD",
++          "in_combat": false,
++          "turn": 7,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 110
++          },
++          "combat": {
++            "player": {
++              "current_hp": 8,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": []
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "resolve_rewards",
++            "collect_rewards_and_proceed",
++            "choose_reward_card",
++            "skip_reward_cards"
++          ]
++        }
++      },
++      {
++        "source_line": 288780,
++        "source_sha256": "2641461d9243d4a810d6c5a17b07816712e1fcf91a93bbb15bf9cdd3212fc9ba",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "REWARD",
++          "in_combat": false,
++          "turn": 7,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 110
++          },
++          "combat": {
++            "player": {
++              "current_hp": 8,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": []
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "resolve_rewards",
++            "collect_rewards_and_proceed"
++          ]
++        }
++      },
++      {
++        "source_line": 288781,
++        "source_sha256": "4eb5dbfa897d0081ed3e02e7b2b5b680ede39c312090b97cfd577b90f2d089d2",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": 7,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 20,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 110
++          },
++          "combat": {
++            "player": {
++              "current_hp": 8,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": []
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288782,
++        "source_sha256": "794026fd9afcce2ddab2eeafba71301123920af3cef80b59621b2a5d1c4d3394",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "EVENT",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 21,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 110
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_event_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288783,
++        "source_sha256": "97953caf2cd75702c13543a236c1ac4c99dd8fcd51cede81f60e3184f0e25ba2",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "EVENT",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 21,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 169
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_event_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288784,
++        "source_sha256": "2e14b2ce82b28e340a5827bc5e47d9dbf18ecee9db82f76d6f1ba4dd2ccb6da5",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 21,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 169
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288785,
++        "source_sha256": "c6be87ac33fdade5f9cf4614bfcb116af840c3f8756d2c0b79e5f0de7a85cdc7",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "SHOP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 22,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 169
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "open_shop_inventory",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288786,
++        "source_sha256": "6eeb6462806ad93514d62404aef9fa06ecbe6d1bfb58a643e63f95b76a88f04e",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "SHOP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 22,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 169
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "close_shop_inventory",
++            "buy_card",
++            "buy_potion",
++            "remove_card_at_shop",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288787,
++        "source_sha256": "be78b7e000abe3a581328b461beef1796d0fd1ff83c18ec0be07a874ac132f0a",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "SHOP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 22,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 120
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "close_shop_inventory",
++            "buy_card",
++            "remove_card_at_shop",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288788,
++        "source_sha256": "2ad37f5715a1e7e1860b9723a329d1bedc8d3986a47b0dece9442206b47b6a7f",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "SHOP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 22,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 31
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "close_shop_inventory",
++            "buy_card",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288789,
++        "source_sha256": "a32925076503eeb0d393e9dd5191253503526b926259c28f99711b1ac430d4b6",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "SHOP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 22,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 31
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "open_shop_inventory",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288790,
++        "source_sha256": "08d3beb2779a22d126079736015558acf5fc22ad3f927d8c9ddaa5ca4069a3af",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 22,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 31
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288791,
++        "source_sha256": "b56c1499f7939ee11c58d1cbf32c326acdcfdb47adeb0fa54a50879d907dac7d",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "act_id": "1",
++            "current_hp": 8,
++            "max_hp": 70,
++            "gold": 31
++          },
++          "combat": {
++            "player": {
++              "current_hp": 8,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 65,
++                "max_hp": 65,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 64,
++                "max_hp": 64,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288792,
++        "source_sha256": "8aa902a3321f91b546ca193448406ee63719aa79eb104cd46d6e745273f94a34",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "act_id": "1",
++            "current_hp": 10,
++            "max_hp": 70,
++            "gold": 31
++          },
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 65,
++                "max_hp": 65,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 64,
++                "max_hp": 64,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288793,
++        "source_sha256": "7aa9f39b830872348670bea8fd3ab8bf0c690139d510cc867498af9add79de3c",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "act_id": "1",
++            "current_hp": 10,
++            "max_hp": 70,
++            "gold": 31
++          },
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 2
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 65,
++                "max_hp": 65,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 58,
++                "max_hp": 64,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288822,
++        "source_sha256": "f398be58859b18dd6062b172e770ae4dc6abf43e717541903d0441691a5d231b",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 6,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "act_id": "1",
++            "current_hp": 1,
++            "max_hp": 70,
++            "gold": 31
++          },
++          "combat": {
++            "player": {
++              "current_hp": 1,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 30,
++                "max_hp": 65,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 7,
++                "max_hp": 64,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit"
++          ]
++        }
++      },
++      {
++        "source_line": 288823,
++        "source_sha256": "253c47b13c2a806c54c4e36763a6d687a81b398ac84c1393bcdcc8ad150d6774",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "act_id": "1",
++            "current_hp": 10,
++            "max_hp": 70,
++            "gold": 31
++          },
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 65,
++                "max_hp": 65,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 64,
++                "max_hp": 64,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288824,
++        "source_sha256": "f7d2f5dc6b7e5cf49723a611353cd7011b64d9c4e0c43ac7534f95a646fb083e",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "act_id": "1",
++            "current_hp": 10,
++            "max_hp": 70,
++            "gold": 31
++          },
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 2
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 65,
++                "max_hp": 65,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 58,
++                "max_hp": 64,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      }
++    ]
++  },
++  {
++    "run": "7X0W3U8TVA2A",
++    "ledger": [
++      "silent-0019",
++      "silent-0020",
++      "silent-0243"
++    ],
++    "frames": [
++      {
++        "source_line": 288094,
++        "source_sha256": "6fa59add7e7d7c8cfe5db0418c80789e8897d969994aec5722f0a291835edce5",
++        "state": {
++          "run_id": "7X0W3U8TVA2A",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 7,
++            "act_id": "0",
++            "current_hp": 42,
++            "max_hp": 70,
++            "gold": 58
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288095,
++        "source_sha256": "7ae06f33ac5e9666b32b6dba9ce41815f47cf8a35df858f2800a40ce49d99d3f",
++        "state": {
++          "run_id": "7X0W3U8TVA2A",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 7,
++            "act_id": "0",
++            "current_hp": 63,
++            "max_hp": 70,
++            "gold": 58
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288190,
++        "source_sha256": "c0c1a0d8198611f3c8ba79edcb207e02ac9845d6f75447dc8c3bb32ff6499256",
++        "state": {
++          "run_id": "7X0W3U8TVA2A",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 16,
++            "act_id": "0",
++            "current_hp": 40,
++            "max_hp": 70,
++            "gold": 59
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288191,
++        "source_sha256": "72f0cdfec0f77d1d1fd94ed8ba46431c58df7b08afb5ea75e2f996a745d64d96",
++        "state": {
++          "run_id": "7X0W3U8TVA2A",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 16,
++            "act_id": "0",
++            "current_hp": 61,
++            "max_hp": 70,
++            "gold": 59
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288236,
++        "source_sha256": "c003c0bed04edcca5b4517750a9e44a892b48cf2ca97070765b8c688cbb92d03",
++        "state": {
++          "run_id": "7X0W3U8TVA2A",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 17,
++            "act_id": "1",
++            "current_hp": 28,
++            "max_hp": 70,
++            "gold": 134
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288237,
++        "source_sha256": "7eae2fad3886a17fbec6b0aa20420c326eee1d4694bf04fa4a7b095653b49dac",
++        "state": {
++          "run_id": "7X0W3U8TVA2A",
++          "screen": "EVENT",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 18,
++            "act_id": "1",
++            "current_hp": 61,
++            "max_hp": 70,
++            "gold": 134
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_event_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288366,
++        "source_sha256": "3d89aee8e74c90d850c47a02502a7978d8e0792cb648f370c3843daf15e2d582",
++        "state": {
++          "run_id": "7X0W3U8TVA2A",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 28,
++            "act_id": "1",
++            "current_hp": 51,
++            "max_hp": 70,
++            "gold": 141
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 288367,
++        "source_sha256": "7f34b1273c21462fbc4f9e1868a27439c1e049b8a58d56b2a068fbbbe3f40217",
++        "state": {
++          "run_id": "7X0W3U8TVA2A",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 28,
++            "act_id": "1",
++            "current_hp": 70,
++            "max_hp": 70,
++            "gold": 141
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "discard_potion"
++          ]
++        }
++      }
++    ]
++  },
++  {
++    "run": "KFRDELW2TH2P",
++    "ledger": [
++      "silent-0019",
++      "silent-0020",
++      "silent-0243"
++    ],
++    "frames": [
++      {
++        "source_line": 289034,
++        "source_sha256": "5a34ba4c27df4bc7891b1a8efbb3f9a5175d9586f3abe8141fc14da3184569d6",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 8,
++            "act_id": "0",
++            "current_hp": 24,
++            "max_hp": 70,
++            "gold": 51
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289035,
++        "source_sha256": "66ca3dbf49d6721dd215be9e9fb61768809108889a7e3357826da721f26f1504",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 8,
++            "act_id": "0",
++            "current_hp": 45,
++            "max_hp": 70,
++            "gold": 51
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289045,
++        "source_sha256": "ca44b51236189beefa190c08252420fea223d11a9eff8791c478cfd11cc4279b",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 11,
++            "act_id": "0",
++            "current_hp": 42,
++            "max_hp": 70,
++            "gold": 82
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289046,
++        "source_sha256": "93001de734c0352a21007799fc61cf9e251e01015a321f594c047b6ec45a4631",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 11,
++            "act_id": "0",
++            "current_hp": 63,
++            "max_hp": 70,
++            "gold": 82
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289116,
++        "source_sha256": "1b344ff4b27a329b74fa755cad89b4218707cd97161dca5173937b588c53e5cf",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 16,
++            "act_id": "0",
++            "current_hp": 24,
++            "max_hp": 70,
++            "gold": 133
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289117,
++        "source_sha256": "e569a3f7b8fd514a4c0b8daabc6213aa6bdcae137d5588946fb6410aeabedfa8",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 16,
++            "act_id": "0",
++            "current_hp": 45,
++            "max_hp": 70,
++            "gold": 133
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289149,
++        "source_sha256": "6e6cd5c4ef7d17b4fff577fb33361ffbbf045dcb03b283b3e662dbd739c7d2f7",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 17,
++            "act_id": "1",
++            "current_hp": 22,
++            "max_hp": 70,
++            "gold": 208
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289150,
++        "source_sha256": "a5909fcde06975b2dd1d41429f4798ef825c0b2c1ae0092ef6b5a24d3966d8f2",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "EVENT",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 18,
++            "act_id": "1",
++            "current_hp": 60,
++            "max_hp": 70,
++            "gold": 208
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_event_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289151,
++        "source_sha256": "6a2d1ea9b5aabda09f79c15ac8d266c0d6d8fa8c7ff9e5446fd960c94c76f9ee",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "EVENT",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 18,
++            "act_id": "1",
++            "current_hp": 60,
++            "max_hp": 70,
++            "gold": 208
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_event_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289152,
++        "source_sha256": "e32ad9d591ed454b8121c4c909c91eda509684a0681b341f56df8716604bfc79",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 18,
++            "act_id": "1",
++            "current_hp": 60,
++            "max_hp": 70,
++            "gold": 208
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289153,
++        "source_sha256": "b5beb77e96cac0fb38269adeda634ea6d8718e4ff077e6f44bc3471642a72907",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 19,
++            "act_id": "1",
++            "current_hp": 60,
++            "max_hp": 70,
++            "gold": 208
++          },
++          "combat": {
++            "player": {
++              "current_hp": 60,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "EXOSKELETON",
++                "name": "外骨骼虫",
++                "current_hp": 28,
++                "max_hp": 28,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "EXOSKELETON",
++                "name": "外骨骼虫",
++                "current_hp": 29,
++                "max_hp": 29,
++                "is_alive": true
++              },
++              {
++                "index": 2,
++                "enemy_id": "EXOSKELETON",
++                "name": "外骨骼虫",
++                "current_hp": 30,
++                "max_hp": 30,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289154,
++        "source_sha256": "8dbb8488ea394d2cc7559307a6c4f6c1f51660687c0b85a20d1c7d598c62899d",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 19,
++            "act_id": "1",
++            "current_hp": 62,
++            "max_hp": 70,
++            "gold": 208
++          },
++          "combat": {
++            "player": {
++              "current_hp": 62,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "EXOSKELETON",
++                "name": "外骨骼虫",
++                "current_hp": 28,
++                "max_hp": 28,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "EXOSKELETON",
++                "name": "外骨骼虫",
++                "current_hp": 29,
++                "max_hp": 29,
++                "is_alive": true
++              },
++              {
++                "index": 2,
++                "enemy_id": "EXOSKELETON",
++                "name": "外骨骼虫",
++                "current_hp": 30,
++                "max_hp": 30,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289155,
++        "source_sha256": "cff5dbb506e84fd3229aace6e9289067b4304ed45be404f5e5c1e3f08348481d",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 19,
++            "act_id": "1",
++            "current_hp": 62,
++            "max_hp": 70,
++            "gold": 208
++          },
++          "combat": {
++            "player": {
++              "current_hp": 62,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "EXOSKELETON",
++                "name": "外骨骼虫",
++                "current_hp": 25,
++                "max_hp": 28,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "EXOSKELETON",
++                "name": "外骨骼虫",
++                "current_hp": 29,
++                "max_hp": 29,
++                "is_alive": true
++              },
++              {
++                "index": 2,
++                "enemy_id": "EXOSKELETON",
++                "name": "外骨骼虫",
++                "current_hp": 30,
++                "max_hp": 30,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289212,
++        "source_sha256": "add8dfbc9dac5a2892feb0ef6a1b3eda13f331bab09e048261899fb668744c0f",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 24,
++            "act_id": "1",
++            "current_hp": 25,
++            "max_hp": 70,
++            "gold": 37
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289213,
++        "source_sha256": "9434b574a38a8f29802cd0de083f184ec54803d5fc05f86e48fd633593e61c8b",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 24,
++            "act_id": "1",
++            "current_hp": 46,
++            "max_hp": 70,
++            "gold": 37
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289254,
++        "source_sha256": "22e76a4db95558c0ffa8d1ec65bd9d988515807c32bb82356f072591765bb634",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 29,
++            "act_id": "1",
++            "current_hp": 44,
++            "max_hp": 70,
++            "gold": 81
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289255,
++        "source_sha256": "16677fe7606fee042d251afb535af5bda7943cc385a3d635b8ba31d5da5d25b2",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 29,
++            "act_id": "1",
++            "current_hp": 65,
++            "max_hp": 70,
++            "gold": 81
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289256,
++        "source_sha256": "48fa754ad69615133dbc598570ba324dafb665ee00fb61c270b7906c2cde692e",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 29,
++            "act_id": "1",
++            "current_hp": 65,
++            "max_hp": 70,
++            "gold": 81
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289257,
++        "source_sha256": "cad3e49d5b7b853cff611f9cb704ee6a826b71572d2ef56390a87883082a7e26",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 30,
++            "act_id": "1",
++            "current_hp": 65,
++            "max_hp": 70,
++            "gold": 81
++          },
++          "combat": {
++            "player": {
++              "current_hp": 65,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 67,
++                "max_hp": 67,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 64,
++                "max_hp": 64,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289258,
++        "source_sha256": "ea92170b338c375134373a0883482498b7defccce0b077a5d9008cbc5a6d6c81",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 30,
++            "act_id": "1",
++            "current_hp": 67,
++            "max_hp": 70,
++            "gold": 81
++          },
++          "combat": {
++            "player": {
++              "current_hp": 67,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 67,
++                "max_hp": 67,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 64,
++                "max_hp": 64,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289259,
++        "source_sha256": "971ccac663e95b4c0aeb0638312bbbe4fb64066216b43a46d5f4bc904cdb82c0",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 30,
++            "act_id": "1",
++            "current_hp": 67,
++            "max_hp": 70,
++            "gold": 81
++          },
++          "combat": {
++            "player": {
++              "current_hp": 67,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 2
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 67,
++                "max_hp": 67,
++                "is_alive": true
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 58,
++                "max_hp": 64,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289290,
++        "source_sha256": "de96b7e14597defac2be1088a709e2c25f5c9b658f2b44d6298bef7dbe0e63a7",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 31,
++            "act_id": "1",
++            "current_hp": 27,
++            "max_hp": 70,
++            "gold": 91
++          },
++          "combat": {
++            "player": {
++              "current_hp": 27,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "LOUSE_PROGENITOR",
++                "name": "虱虫之祖",
++                "current_hp": 141,
++                "max_hp": 141,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289291,
++        "source_sha256": "57d446a9cea2225d14076f8c12c41eed538dfc1ed2acaf499f09a086798ade1d",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 31,
++            "act_id": "1",
++            "current_hp": 29,
++            "max_hp": 70,
++            "gold": 91
++          },
++          "combat": {
++            "player": {
++              "current_hp": 29,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "LOUSE_PROGENITOR",
++                "name": "虱虫之祖",
++                "current_hp": 141,
++                "max_hp": 141,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289292,
++        "source_sha256": "2614e7b71723a734ea68a505b5eab0652382cb72bd2c607013963bea72b0133d",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 31,
++            "act_id": "1",
++            "current_hp": 29,
++            "max_hp": 70,
++            "gold": 91
++          },
++          "combat": {
++            "player": {
++              "current_hp": 29,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 2
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "LOUSE_PROGENITOR",
++                "name": "虱虫之祖",
++                "current_hp": 141,
++                "max_hp": 141,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289311,
++        "source_sha256": "95e2abf52d52c1378ae18a84d0d37c130e603fd99503b0546be29acee6623248",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 32,
++            "act_id": "1",
++            "current_hp": 15,
++            "max_hp": 70,
++            "gold": 101
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_rest_option",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289312,
++        "source_sha256": "a1145489cfcd594ee06091de819c96dadedf0576de20faed2b20b02f83c0def5",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "REST",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 32,
++            "act_id": "1",
++            "current_hp": 36,
++            "max_hp": 70,
++            "gold": 101
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "proceed",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289313,
++        "source_sha256": "a88c8e458e3eb26944412f1e8b42a30d42c428293c6c7980a004a7d7f88a03bc",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "MAP",
++          "in_combat": false,
++          "turn": null,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 32,
++            "act_id": "1",
++            "current_hp": 36,
++            "max_hp": 70,
++            "gold": 101
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "choose_map_node",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289314,
++        "source_sha256": "ea399248b0e10f0e5c714963a4fd23f6342356fa6cf74c1c990c147ba8695e17",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "act_id": "1",
++            "current_hp": 36,
++            "max_hp": 70,
++            "gold": 101
++          },
++          "combat": {
++            "player": {
++              "current_hp": 36,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 399,
++                "max_hp": 399,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "save_and_quit",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289315,
++        "source_sha256": "c0723fc6da5239d44b16456782c8208c58eb260f0225b9bb4ddf5540af35c163",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "act_id": "1",
++            "current_hp": 38,
++            "max_hp": 70,
++            "gold": 101
++          },
++          "combat": {
++            "player": {
++              "current_hp": 38,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 399,
++                "max_hp": 399,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289316,
++        "source_sha256": "999ed990b6c685dac1e5879aca855dcc3e727b6355cc06cc031ad9dc2f420476",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "act_id": "1",
++            "current_hp": 38,
++            "max_hp": 70,
++            "gold": 101
++          },
++          "combat": {
++            "player": {
++              "current_hp": 38,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 1
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 384,
++                "max_hp": 399,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289351,
++        "source_sha256": "91219a771620dabb34efaba46475c291cfaf962a8640db6e07513f4dea14b65c",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 7,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "act_id": "1",
++            "current_hp": 9,
++            "max_hp": 70,
++            "gold": 101
++          },
++          "combat": {
++            "player": {
++              "current_hp": 9,
++              "max_hp": 70,
++              "block": 12,
++              "energy": 1
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 139,
++                "max_hp": 399,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "save_and_quit"
++          ]
++        }
++      },
++      {
++        "source_line": 289352,
++        "source_sha256": "82b1730866860cd23335b9c30fed42cad69d2e530e0118befb2af610908b49fa",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "act_id": "1",
++            "current_hp": 38,
++            "max_hp": 70,
++            "gold": 101
++          },
++          "combat": {
++            "player": {
++              "current_hp": 38,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 399,
++                "max_hp": 399,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      },
++      {
++        "source_line": 289353,
++        "source_sha256": "2bd6fdc3cbed1162edcca9efe2b7fac289e35f76df32188c5f5f463752a3a2bc",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "screen": "COMBAT",
++          "in_combat": true,
++          "turn": 1,
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "act_id": "1",
++            "current_hp": 38,
++            "max_hp": 70,
++            "gold": 101
++          },
++          "combat": {
++            "player": {
++              "current_hp": 38,
++              "max_hp": 70,
++              "block": 0,
++              "energy": 1
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 384,
++                "max_hp": 399,
++                "is_alive": true
++              }
++            ]
++          },
++          "state_version": 16,
++          "session": {
++            "mode": "singleplayer",
++            "phase": "run",
++            "control_scope": "local_player"
++          },
++          "available_actions": [
++            "end_turn",
++            "play_card",
++            "save_and_quit",
++            "use_potion",
++            "discard_potion"
++          ]
++        }
++      }
++    ]
++  }
++]
+diff --git a/agent/tests/silent-hp-recovery.test.ts b/agent/tests/silent-hp-recovery.test.ts
+new file mode 100644
+index 000000000..dcf7b16de
+--- /dev/null
++++ b/agent/tests/silent-hp-recovery.test.ts
+@@ -0,0 +1,122 @@
++/** Frozen Silent A10 observations; silent-0019/0020/0243. No live knowledge or model calls. */
++import { resolve } from "node:path";
++import { expect, it, vi } from "vitest";
++import evidence from "./silent-hp-recovery-evidence.json";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { RunJournal } from "../src/memory/run-journal.js";
++
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed recovery evidence"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++vi.mock("../src/knowledge/experience.js", async (original) => ({
++  ...await original<typeof import("../src/knowledge/experience.js")>(), knowledgeSlice: () => "",
++}));
++
++const knowledge = makeKnowledge({}, "cache");
++const raw = (line: number): Record<string, any> => structuredClone(evidence.flatMap((x) => x.frames)
++  .find((x) => x.source_line === line)!.state);
++const frame = (line: number) => parseGameState(raw(line));
++function observe(lines: number[]) {
++  const journal = new RunJournal();
++  for (const line of lines) journal.observe(frame(line), { knowledge });
++  return journal;
++}
++const recoveries = (journal: RunJournal) => journal.events.filter((x) => x.text.startsWith("HP增加观测"));
++const text = (journal: RunJournal, line: number, label = "rest/plan") => {
++  const memory = journal.render(frame(line), knowledge, {}, { label, factsCovered: true });
++  expect(memory.now).toBe("");
++  return memory.history + "\n" + memory.this_floor;
++};
++
++it("the existing brain history carries reached rest and boundary HP, apart from opening recovery and won-fight costs", () => {
++  const rows = evidence[0]!.frames;
++  const journal = observe(rows.filter((x) => x.source_line <= 288793).map((x) => x.source_line));
++  const output = text(journal, 288793, "map/route-plan");
++  expect(output).toContain("HP增加观测 44/70→65/70（+21；休息点内");
++  // The raw act id already changed on F17 MAP: retain the actual boundary, without inferring a formula.
++  expect(output).toContain("19/70→59/70（+40；跨层边界，来源未隔离；F17/MAP→F18/EVENT");
++  expect(output).toContain("59/70→61/70（+2；战斗开场");
++  expect(output).toContain("46/70→48/70（+2；战斗开场");
++  expect(output).toContain("8/70→10/70（+2；战斗开场");
++  expect(journal.fights.find((x) => x.floor === 19)).toMatchObject({ hpBefore: 59, hpAfter: 46 });
++  expect(journal.fights.find((x) => x.floor === 20)).toMatchObject({ hpBefore: 46, hpAfter: 8 });
++  expect(output).not.toContain("F24");
++});
++
++it("the second run keeps its capped rest gain and the observed 28 to 61 transition distinct", () => {
++  const journal = observe(evidence[1]!.frames.map((x) => x.source_line));
++  const output = text(journal, 288367);
++  expect(recoveries(journal)).toHaveLength(4);
++  expect(output).toContain("42/70→63/70（+21；休息点内");
++  expect(output).toContain("40/70→61/70（+21；休息点内");
++  expect(output).toContain("28/70→61/70（+33；跨层边界");
++  expect(output).toContain("51/70→70/70（+19；休息点内");
++});
++
++it("KFR rest and cross-floor gains are not the later same-floor rewind recovery", () => {
++  const journal = observe(evidence[2]!.frames.map((x) => x.source_line));
++  const output = text(journal, 289353);
++  expect(recoveries(journal).filter((x) => x.text.includes("休息点内"))).toHaveLength(6);
++  expect(output).toContain("22/70→60/70（+38；跨层边界");
++  expect(output).toContain("15/70→36/70（+21；休息点内");
++  expect(output).toContain("36/70→38/70（+2；战斗开场");
++  expect(output).toContain("9/70→38/70（+29；回合回退时恢复，不计路线回血");
++});
++
++it("the journal's actual SL snapshot restore removes failed-attempt recovery instead of counting it again", () => {
++  const journal = observe([288791]);
++  const saved = journal.snapshot();
++  journal.observe(frame(288792));
++  journal.observe(frame(288822));
++  journal.restore(saved);
++  journal.observe(frame(288823));
++  const recovery = recoveries(journal);
++  expect(recovery).toHaveLength(1);
++  expect(recovery[0]!.text).toContain("8/70→10/70（+2；战斗开场");
++  expect(recovery[0]!.text).not.toContain("+9");
++});
++
++it("duplicates and stale floors add nothing; missing or inconsistent HP breaks the observation pair", () => {
++  const journal = observe([288584, 288585, 288726, 288727]);
++  const before = recoveries(journal).map((x) => x.text);
++  journal.observe(frame(288727));
++  journal.observe(frame(288584));
++  journal.observe(frame(288727));
++  expect(recoveries(journal).map((x) => x.text)).toEqual(before);
++  for (const change of [
++    (x: Record<string, any>) => { delete x.run.current_hp; },
++    (x: Record<string, any>) => { x.combat.player.current_hp = 1; },
++  ]) {
++    const other = observe([288730]);
++    const missing = raw(288731); change(missing);
++    other.observe(parseGameState(missing));
++    other.observe(frame(288732));
++    expect(recoveries(other)).toEqual([]);
++  }
++});
++
++it("another character, an unobserved ascension and a new run cannot inherit these recovery facts", () => {
++  for (const change of [{ character_id: "IRONCLAD" }, { ascension: 9 }]) {
++    const journal = new RunJournal();
++    for (const line of [288584, 288585, 288726, 288727]) {
++      const next = raw(line); Object.assign(next.run, change);
++      journal.observe(parseGameState(next));
++    }
++    expect(recoveries(journal)).toEqual([]);
++  }
++  const journal = observe([288584, 288585]);
++  journal.observe(frame(288094));
++  expect(recoveries(journal)).toEqual([]);
++  journal.observe(frame(288095));
++  expect(recoveries(journal)).toHaveLength(1);
++  expect(recoveries(journal)[0]!.text).toContain("42/70→63/70");
++});

@@ -1,0 +1,757 @@
+{
+  "index_source": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-224301/learner/runs/20261012-224313-strategy-proposal/source-manifest.json",
+  "index_sha256": "735b32083082cfbeb6f1a4978f294a804d45c473c715fe732de88e5261bcb37e",
+  "verified_raw_rows": 8281,
+  "counts": {
+    "751FN9QM9MHQ": {
+      "decisions": 615,
+      "states": 624,
+      "attempts": 6
+    },
+    "KV0JHNJCKXLS": {
+      "decisions": 669,
+      "states": 686,
+      "attempts": 7
+    },
+    "YQL8RZ8BWN1E": {
+      "decisions": 571,
+      "states": 582,
+      "attempts": 6
+    },
+    "L9SGRBB5R698": {
+      "decisions": 635,
+      "states": 653,
+      "attempts": 6
+    },
+    "PU80F84P6HPN": {
+      "decisions": 1033,
+      "states": 1064,
+      "attempts": 12
+    },
+    "KEN58SH9SLZ6": {
+      "decisions": 548,
+      "states": 558,
+      "attempts": 6
+    }
+  },
+  "pairs": [
+    {
+      "run": "751FN9QM9MHQ",
+      "state_lines": [
+        278479,
+        278483
+      ],
+      "hp": [
+        63,
+        50
+      ],
+      "enemy_hp": [
+        [
+          186
+        ],
+        [
+          177
+        ]
+      ],
+      "hp_loss": 13,
+      "enemy_net_loss": 9,
+      "decision_line": 272434,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:186:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:STRIKE_SILENT:true|1:BECKON:true|2:PREDATOR:true|3:DEFEND_SILENT:true|4:STRIKE_SILENT:true|5:STRIKE_SILENT:true|6:INJURY:false\",\"hp\":63,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "sl": null,
+      "result": "completed: Action completed."
+    },
+    {
+      "run": "751FN9QM9MHQ",
+      "state_lines": [
+        278620,
+        278623
+      ],
+      "hp": [
+        63,
+        45
+      ],
+      "enemy_hp": [
+        [
+          186
+        ],
+        [
+          168
+        ]
+      ],
+      "hp_loss": 18,
+      "enemy_net_loss": 18,
+      "decision_line": 272575,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:186:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:STRIKE_SILENT:true|1:BECKON:true|2:PREDATOR:true|3:DEFEND_SILENT:true|4:STRIKE_SILENT:true|5:STRIKE_SILENT:true|6:INJURY:false\",\"hp\":63,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1
+      },
+      "sl": {
+        "point": "T2, the 14th latest question before attempt 1's death on T17",
+        "original": "打击 -> 灵魂异鱼, 呼唤, 防御",
+        "replacement": "呼唤, 猎杀者 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 2,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 62.8, win ~35%; whole-fight sim win 19.5%; this turn hp -13, dmg 6",
+          "replacement": "rollout dead 0/24, further loss 63, win ~36%; whole-fight sim win 19.3%; this turn hp -18, dmg 15"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.195,
+          "replacement": 0.193,
+          "diff": -0.0025,
+          "se": 0.0135
+        },
+        "turn": "BECKON, DEFEND_SILENT, STRIKE_SILENT>灵魂异鱼",
+        "turn_instead": "BECKON, PREDATOR>灵魂异鱼"
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "run": "751FN9QM9MHQ",
+      "state_lines": [
+        278576,
+        278581
+      ],
+      "hp": [
+        45,
+        32
+      ],
+      "enemy_hp": [
+        [
+          121
+        ],
+        [
+          109
+        ]
+      ],
+      "hp_loss": 13,
+      "enemy_net_loss": 12,
+      "decision_line": 272531,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:121:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:DAGGER_SPRAY:true|1:BECKON:true|2:SURVIVOR:true|3:DEFEND_SILENT:true|4:BECKON:true|5:DEFEND_SILENT:true|6:STRIKE_SILENT:true\",\"hp\":45,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|DEXTERITY_POWER:2|VULNERABLE_POWER:2\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "sl": null,
+      "result": "completed: Action completed."
+    },
+    {
+      "run": "751FN9QM9MHQ",
+      "state_lines": [
+        278697,
+        278702
+      ],
+      "hp": [
+        45,
+        22
+      ],
+      "enemy_hp": [
+        [
+          121
+        ],
+        [
+          103
+        ]
+      ],
+      "hp_loss": 23,
+      "enemy_net_loss": 18,
+      "decision_line": 272652,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:121:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:DAGGER_SPRAY:true|1:BECKON:true|2:SURVIVOR:true|3:DEFEND_SILENT:true|4:BECKON:true|5:DEFEND_SILENT:true|6:STRIKE_SILENT:true\",\"hp\":45,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|DEXTERITY_POWER:2|VULNERABLE_POWER:2\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "sl": {
+        "point": "T7, the 10th latest question before attempt 1's death on T17",
+        "original": "匕首雨, 生存者, 防御+",
+        "replacement": "匕首雨, 生存者, 打击 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 13,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 44.5, win ~41%; whole-fight sim win 10.3%; this turn hp -19, dmg 9",
+          "replacement": "rollout dead 2/24, further loss 44.9, win ~36%; whole-fight sim win 1.3%; this turn hp -29, dmg 15"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.103,
+          "replacement": 0.013,
+          "diff": -0.09,
+          "se": 0.0088
+        },
+        "turn": "DAGGER_SPRAY, DEFEND_SILENT+, SURVIVOR",
+        "turn_instead": "DAGGER_SPRAY, STRIKE_SILENT>灵魂异鱼, SURVIVOR"
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "run": "KV0JHNJCKXLS",
+      "state_lines": [
+        279460,
+        279465
+      ],
+      "hp": [
+        30,
+        30
+      ],
+      "enemy_hp": [
+        [
+          334
+        ],
+        [
+          298
+        ]
+      ],
+      "hp_loss": 0,
+      "enemy_net_loss": 36,
+      "decision_line": 273400,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:334:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:PREDATOR:true|1:SURVIVOR:true|2:DEADLY_POISON:true|3:BULLET_TIME:true\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "sl": {
+        "replay": {
+          "point": "T6, the 3rd latest question before attempt 1's death on T10",
+          "reference": 1,
+          "line": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+          "original": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+          "overridden": false,
+          "reason": "the answer is attempt 1's line"
+        }
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "run": "KV0JHNJCKXLS",
+      "state_lines": [
+        279511,
+        279515
+      ],
+      "hp": [
+        30,
+        30
+      ],
+      "enemy_hp": [
+        [
+          334
+        ],
+        [
+          305
+        ]
+      ],
+      "hp_loss": 0,
+      "enemy_net_loss": 29,
+      "decision_line": 273450,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:334:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:PREDATOR:true|1:SURVIVOR:true|2:DEADLY_POISON:true|3:BULLET_TIME:true\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "sl": {
+        "point": "T5, the 4th latest question before attempt 4's death on T10",
+        "original": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+        "replacement": "猎杀者 -> 知识恶魔",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1,
+          4
+        ],
+        "replayed": 8,
+        "numbers": {
+          "original": "rollout dead 10/24, further loss 30, win ~28%; whole-fight sim win 0%; this turn hp -0, dmg 36",
+          "replacement": "rollout dead 10/24, further loss 30, win ~27%; whole-fight sim win 0%; this turn hp -0, dmg 29"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0,
+          "replacement": 0,
+          "diff": 0,
+          "se": 0
+        },
+        "turn": "DEADLY_POISON+>知识恶魔, PREDATOR>知识恶魔",
+        "turn_instead": "PREDATOR>知识恶魔"
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "run": "KEN58SH9SLZ6",
+      "state_lines": [
+        280567,
+        280572
+      ],
+      "hp": [
+        66,
+        59
+      ],
+      "enemy_hp": [
+        [
+          136
+        ],
+        [
+          135
+        ]
+      ],
+      "hp_loss": 7,
+      "enemy_net_loss": 1,
+      "decision_line": 274484,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:136:0:true\",\"event\":\"\",\"gold\":150,\"hand\":\"0:BECKON:true|1:STRIKE_SILENT:true|2:STRIKE_SILENT:true|3:FOOTWORK:true|4:CLOAK_AND_DAGGER:true|5:STRIKE_SILENT:true|6:SUCKER_PUNCH:true\",\"hp\":66,\"maxHp\":86,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KEN58SH9SLZ6\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "sl": {
+        "replay": {
+          "point": "T6, the 8th latest question before attempt 3's death on T15",
+          "reference": 3,
+          "line": "呼唤, 灵动步法, 斗篷与匕首",
+          "original": "呼唤, 灵动步法, 斗篷与匕首",
+          "overridden": false,
+          "reason": "the answer is attempt 3's line"
+        }
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "run": "KEN58SH9SLZ6",
+      "state_lines": [
+        280684,
+        280689
+      ],
+      "hp": [
+        66,
+        61
+      ],
+      "enemy_hp": [
+        [
+          136
+        ],
+        [
+          134
+        ]
+      ],
+      "hp_loss": 5,
+      "enemy_net_loss": 2,
+      "decision_line": 274601,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:136:0:true\",\"event\":\"\",\"gold\":150,\"hand\":\"0:BECKON:true|1:STRIKE_SILENT:true|2:STRIKE_SILENT:true|3:FOOTWORK:true|4:CLOAK_AND_DAGGER:true|5:STRIKE_SILENT:true|6:SUCKER_PUNCH:true\",\"hp\":66,\"maxHp\":86,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KEN58SH9SLZ6\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "sl": {
+        "point": "T5, the 9th latest question before attempt 4's death on T15",
+        "original": "呼唤, 灵动步法, 斗篷与匕首",
+        "replacement": "呼唤, 斗篷与匕首, 突然一拳 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "replayed": 9,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 58, win ~60%; whole-fight sim win 4.2%; this turn hp -7, dmg 0",
+          "replacement": "rollout dead 0/24, further loss 60.7, win ~50%; whole-fight sim win 3.3%; this turn hp -5, dmg 1"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.042,
+          "replacement": 0.033,
+          "diff": -0.0083,
+          "se": 0.0068
+        },
+        "turn": "BECKON, CLOAK_AND_DAGGER, FOOTWORK",
+        "turn_instead": "BECKON, CLOAK_AND_DAGGER, SUCKER_PUNCH>灵魂异鱼"
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "run": "KEN58SH9SLZ6",
+      "state_lines": [
+        280588,
+        280592
+      ],
+      "hp": [
+        37,
+        22
+      ],
+      "enemy_hp": [
+        [
+          82
+        ],
+        [
+          80
+        ]
+      ],
+      "hp_loss": 15,
+      "enemy_net_loss": 2,
+      "decision_line": 274505,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:82:0:true\",\"event\":\"\",\"gold\":150,\"hand\":\"0:BECKON:true|1:PREDATOR:true|2:POISONED_STAB:true|3:BECKON:true|4:DAGGER_SPRAY:true\",\"hp\":37,\"maxHp\":86,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"KEN58SH9SLZ6\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":10}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "sl": null,
+      "result": "completed: Action completed."
+    },
+    {
+      "run": "KEN58SH9SLZ6",
+      "state_lines": [
+        280651,
+        280655
+      ],
+      "hp": [
+        37,
+        16
+      ],
+      "enemy_hp": [
+        [
+          82
+        ],
+        [
+          78
+        ]
+      ],
+      "hp_loss": 21,
+      "enemy_net_loss": 4,
+      "decision_line": 274568,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:82:0:true\",\"event\":\"\",\"gold\":150,\"hand\":\"0:BECKON:true|1:PREDATOR:true|2:POISONED_STAB:true|3:BECKON:true|4:DAGGER_SPRAY:true\",\"hp\":37,\"maxHp\":86,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"KEN58SH9SLZ6\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":10}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "sl": {
+        "point": "T10, the 4th latest question before attempt 4's death on T15",
+        "original": "呼唤, 带毒刺击 -> 灵魂异鱼, 呼唤",
+        "replacement": "呼唤, 带毒刺击 -> 灵魂异鱼, 匕首雨",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          4
+        ],
+        "replayed": 20,
+        "numbers": {
+          "original": "rollout dead 6/24, further loss 32.5, win ~46%; whole-fight sim win 38.5%; this turn hp -15, dmg 2",
+          "replacement": "rollout dead 12/24, further loss 35.3, win ~28%; whole-fight sim win 12.7%; this turn hp -21, dmg 4"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.385,
+          "replacement": 0.127,
+          "diff": -0.2583,
+          "se": 0.0132
+        },
+        "turn": "BECKON, BECKON, POISONED_STAB>灵魂异鱼",
+        "turn_instead": "BECKON, DAGGER_SPRAY, POISONED_STAB>灵魂异鱼"
+      },
+      "result": "completed: Action completed."
+    }
+  ],
+  "same_boards": [
+    {
+      "run": "751FN9QM9MHQ",
+      "decisions": [
+        272434,
+        272575
+      ],
+      "same_fingerprint": true
+    },
+    {
+      "run": "751FN9QM9MHQ",
+      "decisions": [
+        272531,
+        272652
+      ],
+      "same_fingerprint": true
+    },
+    {
+      "run": "KV0JHNJCKXLS",
+      "decisions": [
+        273400,
+        273450
+      ],
+      "same_fingerprint": true
+    },
+    {
+      "run": "KEN58SH9SLZ6",
+      "decisions": [
+        274484,
+        274601
+      ],
+      "same_fingerprint": true
+    },
+    {
+      "run": "KEN58SH9SLZ6",
+      "decisions": [
+        274505,
+        274568
+      ],
+      "same_fingerprint": true
+    }
+  ],
+  "potions": [
+    {
+      "decision": 274131,
+      "states": [
+        280206,
+        280207
+      ],
+      "potion": "ATTACK_POTION",
+      "slot": 0,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "result": "pending (unstable): Action queued but state is still transitioning."
+    },
+    {
+      "decision": 274156,
+      "states": [
+        280232,
+        280233
+      ],
+      "potion": "STABLE_SERUM",
+      "slot": 0,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "decision": 274185,
+      "states": [
+        280262,
+        280263
+      ],
+      "potion": "SPEED_POTION",
+      "slot": 0,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "decision": 274235,
+      "states": [
+        280313,
+        280314
+      ],
+      "potion": "WEAK_POTION",
+      "slot": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 1,
+        "target_index": 0
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "decision": 274237,
+      "states": [
+        280315,
+        280316
+      ],
+      "potion": "ATTACK_POTION",
+      "slot": 0,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "result": "pending (unstable): Action queued but state is still transitioning."
+    },
+    {
+      "decision": 274267,
+      "states": [
+        280348,
+        280349
+      ],
+      "potion": "GLOWWATER_POTION",
+      "slot": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 1
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "decision": 274272,
+      "states": [
+        280354,
+        280355
+      ],
+      "potion": "SKILL_POTION",
+      "slot": 0,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "result": "pending (unstable): Action queued but state is still transitioning."
+    }
+  ],
+  "giant_potion": [
+    {
+      "line": 280160,
+      "hp": 26,
+      "block": 13,
+      "enemy": {
+        "index": 0,
+        "enemy_id": "WATERFALL_GIANT",
+        "name": "瀑布巨兽",
+        "current_hp": 999999999,
+        "max_hp": 999999999,
+        "base_max_hp": 250,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "POISON_POWER",
+            "name": "中毒",
+            "amount": 2,
+            "is_debuff": true
+          }
+        ],
+        "intent": "EXPLODE_MOVE",
+        "move_id": "EXPLODE_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "DeathBlow",
+            "label": "41",
+            "damage": 41,
+            "hits": 1,
+            "total_damage": 41,
+            "status_card_count": null
+          }
+        ]
+      },
+      "potions": [
+        {
+          "index": 0,
+          "potion_id": "POISON_POTION",
+          "name": "毒药水",
+          "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
+          "rarity": "Common",
+          "occupied": true,
+          "usage": "CombatOnly",
+          "target_type": "AnyEnemy",
+          "is_queued": false,
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "can_use": true,
+          "can_discard": true
+        },
+        {
+          "index": 1,
+          "potion_id": null,
+          "name": null,
+          "description": null,
+          "rarity": null,
+          "occupied": false,
+          "usage": null,
+          "target_type": null,
+          "is_queued": false,
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "can_use": false,
+          "can_discard": false
+        }
+      ]
+    },
+    {
+      "line": 280161,
+      "hp": 26,
+      "block": 13,
+      "enemy": {
+        "index": 0,
+        "enemy_id": "WATERFALL_GIANT",
+        "name": "瀑布巨兽",
+        "current_hp": 999999999,
+        "max_hp": 999999999,
+        "base_max_hp": 250,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "POISON_POWER",
+            "name": "中毒",
+            "amount": 8,
+            "is_debuff": true
+          }
+        ],
+        "intent": "EXPLODE_MOVE",
+        "move_id": "EXPLODE_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "DeathBlow",
+            "label": "41",
+            "damage": 41,
+            "hits": 1,
+            "total_damage": 41,
+            "status_card_count": null
+          }
+        ]
+      },
+      "potions": [
+        {
+          "index": 0,
+          "potion_id": null,
+          "name": null,
+          "description": null,
+          "rarity": null,
+          "occupied": false,
+          "usage": null,
+          "target_type": null,
+          "is_queued": false,
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "can_use": false,
+          "can_discard": false
+        },
+        {
+          "index": 1,
+          "potion_id": null,
+          "name": null,
+          "description": null,
+          "rarity": null,
+          "occupied": false,
+          "usage": null,
+          "target_type": null,
+          "is_queued": false,
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "can_use": false,
+          "can_discard": false
+        }
+      ]
+    }
+  ]
+}

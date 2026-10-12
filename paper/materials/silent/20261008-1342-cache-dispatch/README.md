@@ -1,0 +1,3 @@
+# 2026-10-08 13:42 Codex 大脑缓存独立派发回执
+
+- 2026-10-08 14:01 运维codex13:42 Roy高优先Codex大脑缓存独立任务：已实际单独派发 20261008-140042-fix-batch，PID 107937，pane=wJ:p8D，任务和宿主进程已核实；请求roy-20261008-1342-codex-brain-cache、干净codex-brain-cache工作树，专用模板及最小派发工具源577b8bb4514d28282146e131d20a4ffff5c2f5ac只机械同步main a9e9586338be9c74842fc535bdc31c6478c9cb91，既有A10/boss/普通修复保护保持。原固定Python113例绿（专用44），撤新入口2红/3例、原字节恢复44绿；原沙箱tsc/vitest0结果及原日志见回执。沿现有fix-batch动作与完成检查通道，纯派发不合游戏代码、不造新版本或架构知识条目。要求核实前缀/thread+revert/prompt_cache_key及usage真实口径，同题固定前缀受控实验、修复及真实前后指标，保留完整题面和生产推理强度；原因、修复、上线后改善尚无结论。Roy已授权实验和修复，不另设审核；受限沙箱只经测试broker入口及实际白名单执行。无生产进程/env/调度操作；回执paper/materials/silent/20261008-1342-cache-dispatch/dispatch-receipt.json。

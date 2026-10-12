@@ -1,0 +1,27 @@
+## 复盘回报
+
+- 已追加：J8PHG72DGD90（A10，第33层，知识恶魔；末试T13以3血7挡对24攻击阵亡，敌剩177血）。
+- 新的纯 bug：
+  - 无。
+- 写成「未记录」的项：完整dirty源码、完整逐击伤害、最优方案完整执行比例、替代策略的受控整场结果、旧boss时钟伤害比、部分独立回血帧、Jev缓存及实付费用。
+- 学习账本：新增 silent-0328；更新下列JSON中的14项，均为support，老错重犯无；`ledger.py check`退出码0。
+- 代码提案：
+  - F9T3／F33T12血价对照，账本0019／0079／0125，CLI `silent-proposal-0800d092e6d7eab0`；缺整场胜线，保留阈值。
+  - F33T13小刀额度与毒药兑现，账本0274／0154／0247／0278，CLI `silent-proposal-3edf35d9b47a7486`；缺饮药时点对照，不拟新门槛。
+  - F29蜡烛1→6参考，账本0328／0185／0186，CLI `silent-proposal-167b20d3b7105257`；仅1局1次，其他正量与上限未知。
+  - 三项均关联独立 `strategy-proposal` 实现任务，未登记实现或上线。
+
+```json
+{"task":"postmortem","appended":["J8PHG72DGD90"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0328"],"updated":["silent-0019","silent-0079","silent-0274","silent-0125","silent-0005","silent-0053","silent-0046","silent-0102","silent-0173","silent-0247","silent-0278","silent-0185","silent-0186","silent-0154"],"repeats":[],"check":0},"code_proposals":["silent-proposal-0800d092e6d7eab0","silent-proposal-3edf35d9b47a7486","silent-proposal-167b20d3b7105257"],"implementation_domains":["combat","potion","sl","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-044301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11d41-5428-75e2-b640-ee10b964b3c2
+轮数：1；工具调用：command_execution×63
+token：输入 233.7k、输出 41.7k（其中推理 11.3k）、cache 读 6729.9k、cache 写 0（命中 96.6%）
+成本：未提供
+耗时：1310.6 s（墙钟）
+时间：首个事件 3.1 s、模型首个输出 8.0 s、首次工具 12.9 s、末次工具结束 1294.0 s；工具内共 102.5 s，其余（模型生成、推理、网络）1204.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×44；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T04-43-03-01a11d41-5428-75e2-b640-ee10b964b3c2.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-044301-postmortem.jsonl

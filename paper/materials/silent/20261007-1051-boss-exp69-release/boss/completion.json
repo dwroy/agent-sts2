@@ -1,0 +1,626 @@
+{
+  "task": "fix-batch",
+  "nature": "Roy-authorized new feature",
+  "base": "ff571cf0049ca3581588f453f8df630af4451b36",
+  "fixes": [
+    {
+      "item": "Roy 已授权新功能：静默 boss 模拟校准",
+      "kind": "feature",
+      "commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+      "test": "agent/tests/silent-boss-calibration*.test.ts; agent/tools/boss-sim/test_silent_calibration.py; ops/tests/test_silent_calibration_dispatch.py",
+      "fails_without_fix": true,
+      "red": {
+        "failed": 3,
+        "passed": 2,
+        "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-075131-silent-boss-calibration/ts-without-feature.log"
+      },
+      "source_checks": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 218,
+        "cases": 2306,
+        "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-075131-silent-boss-calibration/source-sandbox.log"
+      },
+      "live_checks": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 223,
+        "cases": 2338,
+        "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-075131-silent-boss-calibration/live-after-merge.log"
+      },
+      "ledger_id": "silent-0223",
+      "ledger_kind": "fight",
+      "ledger_status": "proposed"
+    }
+  ],
+  "skipped": [
+    {
+      "item": "K3676LU8B0UH F48 A1 attempt2",
+      "reason": "existing board solver no solve at both t1/pre; actual won retained, two predictions not invented; fit candidates107/success106"
+    },
+    {
+      "item": "A0–4 / A5–9 independent validation",
+      "reason": "fixed late validation consists entirely of A10; both earlier bands n=0"
+    },
+    {
+      "item": "all 12 bosses high trust",
+      "reason": "validation2–9 per boss, below10; other failed metrics retained; no threshold changes"
+    },
+    {
+      "item": "F49 high trust",
+      "reason": "tune2/val1, needs9 more validation attempts; gap and leak also fail"
+    },
+    {
+      "item": "other queue issues, including silent-0213",
+      "reason": "outside this authorized feature batch; not modified"
+    }
+  ],
+  "merged": "75ba3f6ec0ef27cdd73f10d1e9e91200437722b4",
+  "publication": {
+    "source": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+    "pre_merge": "a0e4b5e2ed881ead45d0ed8dadb2c1520e2be727",
+    "refresh_commit": null,
+    "code_merge": "75ba3f6ec0ef27cdd73f10d1e9e91200437722b4",
+    "release": "e0895f65d4307885b35f4ff3f5d9074efc844629",
+    "tree": "70e034677363c6700ab167e7300e7f9dd3063e8f",
+    "version": "S1.boss-calibration1",
+    "target": "/home/dw/Projects/agent-sts2/.worktrees/live",
+    "preserved_knowledge_blobs": 37,
+    "overlap": []
+  },
+  "all_commits": [
+    "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+    "75ba3f6ec0ef27cdd73f10d1e9e91200437722b4",
+    "e0895f65d4307885b35f4ff3f5d9074efc844629"
+  ],
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 218,
+    "cases": 2306,
+    "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-075131-silent-boss-calibration/source-sandbox.log",
+    "source": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 218,
+      "cases": 2306,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-075131-silent-boss-calibration/source-sandbox.log"
+    },
+    "live": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 223,
+      "cases": 2338,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-075131-silent-boss-calibration/live-after-merge.log"
+    },
+    "python_calibration": 12,
+    "python_dispatch": 8,
+    "gitleaks": 0,
+    "actual_artifact_idempotence": "same completed artifact; no refitting",
+    "full_external": "pending scheduler; not claimed passed",
+    "rerun_due_to_timeout": false
+  },
+  "extraction": {
+    "finished_silent_runs": 84,
+    "with_boss": 75,
+    "usable_runs": 74,
+    "attempts": 378,
+    "actual_outcomes": 160,
+    "won": 119,
+    "died": 41,
+    "SL_censored": 218,
+    "usable_simulated_fights": 159,
+    "cutoff_UTC": "2026-10-06T02:46:11.648000",
+    "tune_candidates": 107,
+    "tune_success": 106,
+    "validation": 53
+  },
+  "calibration": {
+    "t1": {
+      "platt": {
+        "a": 2.0561,
+        "b": 0.4347,
+        "c": 0.0
+      },
+      "brier": 0.1186,
+      "A10_validation": {
+        "n": 53,
+        "gap": 0.051000000000000045,
+        "brier": 0.1186,
+        "mean_pred": 0.749,
+        "actual_win": 0.698,
+        "leak_ratio": 1.275
+      },
+      "F49_validation": {
+        "n": 1,
+        "actual_win": 0.0,
+        "mean_pred": 0.366,
+        "brier": 0.1339,
+        "auc": null,
+        "const_brier": 0.0,
+        "buckets": [
+          {
+            "bucket": "0–20%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "20–40%",
+            "n": 1,
+            "pred": 0.366,
+            "actual": 0.0
+          },
+          {
+            "bucket": "40–60%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "60–80%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "80–100%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          }
+        ],
+        "worst_bucket_n20": null,
+        "won_loss_err": {
+          "n": 0
+        },
+        "leak": {
+          "n": 6,
+          "sim_enemy": 19.73,
+          "actual_enemy": 5.33,
+          "enemy_ratio": 3.7,
+          "sim_loss": 19.73,
+          "actual_loss": 5.33,
+          "loss_ratio": 3.7
+        }
+      }
+    },
+    "pre": {
+      "platt": {
+        "a": 2.2581,
+        "b": 0.4892,
+        "c": 0.0
+      },
+      "brier": 0.1137,
+      "A10_validation": {
+        "n": 53,
+        "gap": 0.051000000000000045,
+        "brier": 0.1137,
+        "mean_pred": 0.749,
+        "actual_win": 0.698,
+        "leak_ratio": 1.27
+      },
+      "F49_validation": {
+        "n": 1,
+        "actual_win": 0.0,
+        "mean_pred": 0.338,
+        "brier": 0.114,
+        "auc": null,
+        "const_brier": 0.0,
+        "buckets": [
+          {
+            "bucket": "0–20%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "20–40%",
+            "n": 1,
+            "pred": 0.338,
+            "actual": 0.0
+          },
+          {
+            "bucket": "40–60%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "60–80%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "80–100%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          }
+        ],
+        "worst_bucket_n20": null,
+        "won_loss_err": {
+          "n": 0
+        },
+        "leak": {
+          "n": 6,
+          "sim_enemy": 18.82,
+          "actual_enemy": 5.33,
+          "enemy_ratio": 3.528,
+          "sim_loss": 18.82,
+          "actual_loss": 5.33,
+          "loss_ratio": 3.528
+        }
+      }
+    }
+  },
+  "trusted_b2": [],
+  "trusted_b3": [],
+  "bosses": {
+    "KAISER_CRAB": {
+      "name": "帝王蟹",
+      "t1": {
+        "n": 9,
+        "missing": 1,
+        "brier": 0.098,
+        "mean_pred": 0.66,
+        "actual_win": 0.667,
+        "leak_ratio": 1.221,
+        "leak_turns": 50,
+        "failed": [
+          "n"
+        ]
+      },
+      "pre": {
+        "n": 9,
+        "missing": 1,
+        "brier": 0.0948,
+        "mean_pred": 0.652,
+        "actual_win": 0.667,
+        "leak_ratio": 1.216,
+        "leak_turns": 50,
+        "failed": [
+          "n"
+        ]
+      }
+    },
+    "THE_KIN": {
+      "name": "同族",
+      "t1": {
+        "n": 4,
+        "missing": 6,
+        "brier": 0.2294,
+        "mean_pred": 0.874,
+        "actual_win": 0.75,
+        "leak_ratio": 1.337,
+        "leak_turns": 23,
+        "failed": [
+          "n",
+          "brier",
+          "leak"
+        ]
+      },
+      "pre": {
+        "n": 4,
+        "missing": 6,
+        "brier": 0.22,
+        "mean_pred": 0.881,
+        "actual_win": 0.75,
+        "leak_ratio": 1.343,
+        "leak_turns": 23,
+        "failed": [
+          "n",
+          "brier",
+          "leak"
+        ]
+      }
+    },
+    "QUEEN": {
+      "name": "女王",
+      "t1": {
+        "n": 2,
+        "missing": 8,
+        "brier": 0.3838,
+        "mean_pred": 0.904,
+        "actual_win": 0.5,
+        "leak_ratio": 0.951,
+        "leak_turns": 10,
+        "failed": [
+          "n",
+          "brier",
+          "gap"
+        ]
+      },
+      "pre": {
+        "n": 2,
+        "missing": 8,
+        "brier": 0.3995,
+        "mean_pred": 0.925,
+        "actual_win": 0.5,
+        "leak_ratio": 0.85,
+        "leak_turns": 10,
+        "failed": [
+          "n",
+          "brier",
+          "gap"
+        ]
+      }
+    },
+    "AEONGLASS": {
+      "name": "永世沙漏",
+      "t1": {
+        "n": 3,
+        "missing": 7,
+        "brier": 0.5643,
+        "mean_pred": 0.71,
+        "actual_win": 0.0,
+        "leak_ratio": 2.238,
+        "leak_turns": 16,
+        "failed": [
+          "n",
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "pre": {
+        "n": 3,
+        "missing": 7,
+        "brier": 0.5673,
+        "mean_pred": 0.707,
+        "actual_win": 0.0,
+        "leak_ratio": 2.371,
+        "leak_turns": 16,
+        "failed": [
+          "n",
+          "brier",
+          "gap",
+          "leak"
+        ]
+      }
+    },
+    "CEREMONIAL_BEAST": {
+      "name": "仪式兽",
+      "t1": {
+        "n": 5,
+        "missing": 5,
+        "brier": 0.0401,
+        "mean_pred": 0.785,
+        "actual_win": 0.8,
+        "leak_ratio": 1.097,
+        "leak_turns": 29,
+        "failed": [
+          "n"
+        ]
+      },
+      "pre": {
+        "n": 5,
+        "missing": 5,
+        "brier": 0.0346,
+        "mean_pred": 0.787,
+        "actual_win": 0.8,
+        "leak_ratio": 1.165,
+        "leak_turns": 29,
+        "failed": [
+          "n"
+        ]
+      }
+    },
+    "KNOWLEDGE_DEMON": {
+      "name": "知识恶魔",
+      "t1": {
+        "n": 4,
+        "missing": 6,
+        "brier": 0.061,
+        "mean_pred": 0.777,
+        "actual_win": 1.0,
+        "leak_ratio": 1.012,
+        "leak_turns": 24,
+        "failed": [
+          "n",
+          "gap"
+        ]
+      },
+      "pre": {
+        "n": 4,
+        "missing": 6,
+        "brier": 0.0465,
+        "mean_pred": 0.8,
+        "actual_win": 1.0,
+        "leak_ratio": 0.972,
+        "leak_turns": 24,
+        "failed": [
+          "n",
+          "gap"
+        ]
+      }
+    },
+    "LAGAVULIN_MATRIARCH": {
+      "name": "乐加维林族母",
+      "t1": {
+        "n": 6,
+        "missing": 4,
+        "brier": 0.0465,
+        "mean_pred": 0.76,
+        "actual_win": 0.667,
+        "leak_ratio": 0.93,
+        "leak_turns": 36,
+        "failed": [
+          "n"
+        ]
+      },
+      "pre": {
+        "n": 6,
+        "missing": 4,
+        "brier": 0.0392,
+        "mean_pred": 0.753,
+        "actual_win": 0.667,
+        "leak_ratio": 1.143,
+        "leak_turns": 36,
+        "failed": [
+          "n"
+        ]
+      }
+    },
+    "SOUL_FYSH": {
+      "name": "灵魂异鱼",
+      "t1": {
+        "n": 2,
+        "missing": 8,
+        "brier": 0.007,
+        "mean_pred": 0.933,
+        "actual_win": 1.0,
+        "leak_ratio": 1.16,
+        "leak_turns": 12,
+        "failed": [
+          "n"
+        ]
+      },
+      "pre": {
+        "n": 2,
+        "missing": 8,
+        "brier": 0.0115,
+        "mean_pred": 0.921,
+        "actual_win": 1.0,
+        "leak_ratio": 1.071,
+        "leak_turns": 12,
+        "failed": [
+          "n"
+        ]
+      }
+    },
+    "TEST_SUBJECT": {
+      "name": "实验体",
+      "t1": {
+        "n": 3,
+        "missing": 7,
+        "brier": 0.1339,
+        "mean_pred": 0.366,
+        "actual_win": 0.0,
+        "leak_ratio": 2.834,
+        "leak_turns": 16,
+        "failed": [
+          "n",
+          "gap",
+          "leak"
+        ]
+      },
+      "pre": {
+        "n": 3,
+        "missing": 7,
+        "brier": 0.114,
+        "mean_pred": 0.338,
+        "actual_win": 0.0,
+        "leak_ratio": 2.58,
+        "leak_turns": 16,
+        "failed": [
+          "n",
+          "gap",
+          "leak"
+        ]
+      }
+    },
+    "THE_INSATIABLE": {
+      "name": "无厌沙虫",
+      "t1": {
+        "n": 4,
+        "missing": 6,
+        "brier": 0.1611,
+        "mean_pred": 0.549,
+        "actual_win": 0.75,
+        "leak_ratio": 1.533,
+        "leak_turns": 19,
+        "failed": [
+          "n",
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "pre": {
+        "n": 4,
+        "missing": 6,
+        "brier": 0.1565,
+        "mean_pred": 0.553,
+        "actual_win": 0.75,
+        "leak_ratio": 1.557,
+        "leak_turns": 19,
+        "failed": [
+          "n",
+          "brier",
+          "gap",
+          "leak"
+        ]
+      }
+    },
+    "VANTOM": {
+      "name": "墨影幻灵",
+      "t1": {
+        "n": 4,
+        "missing": 6,
+        "brier": 0.0025,
+        "mean_pred": 0.968,
+        "actual_win": 1.0,
+        "leak_ratio": 0.916,
+        "leak_turns": 24,
+        "failed": [
+          "n"
+        ]
+      },
+      "pre": {
+        "n": 4,
+        "missing": 6,
+        "brier": 0.0018,
+        "mean_pred": 0.975,
+        "actual_win": 1.0,
+        "leak_ratio": 0.87,
+        "leak_turns": 24,
+        "failed": [
+          "n"
+        ]
+      }
+    },
+    "WATERFALL_GIANT": {
+      "name": "瀑布巨兽",
+      "t1": {
+        "n": 7,
+        "missing": 3,
+        "brier": 0.0332,
+        "mean_pred": 0.813,
+        "actual_win": 0.857,
+        "leak_ratio": 0.804,
+        "leak_turns": 42,
+        "failed": [
+          "n"
+        ]
+      },
+      "pre": {
+        "n": 7,
+        "missing": 3,
+        "brier": 0.0284,
+        "mean_pred": 0.819,
+        "actual_win": 0.857,
+        "leak_ratio": 0.789,
+        "leak_turns": 42,
+        "failed": [
+          "n"
+        ]
+      }
+    }
+  },
+  "refresh": {
+    "entry": "agent/tools/boss-sim/refresh-silent.py",
+    "dispatch": "ops/learner_jobs.py:calibration_job",
+    "cadence": ":13/:43 and learner completion events; ascension increase or20 new actual-outcome boss attempts",
+    "previous": "live own-character boss-trust; old tune/cutoff/validation records retained; new data validation only"
+  },
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+  "archive": "experiments/boss-sim/silent/590b644745e0d8b341bae1b21e866a0e808a45e6999c4ab0be1fe6e3b23a84d2",
+  "model_sha256": "ed59a56ba276882dc276311b65b7887af9ce5e61bfadf1b62de4fd43396a2474",
+  "pending_ops": [
+    "verify actual publication and append shipped for silent-0223",
+    "mechanically synchronize main to activate the published scheduler code",
+    "full external tsc/vitest through existing learner-checks event"
+  ]
+}

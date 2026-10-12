@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Dai 2026-09-29: play 20 A8 runs, then stop. Counts A8 runs in runs.jsonl that ended after START.
+# Roy 2026-09-29: play 20 A8 runs, then stop. Counts A8 runs in runs.jsonl that ended after START.
 # When the 20th starts (19 finished) it creates ops/STOP, so autoplay.sh exits after that run.
 # If autoplay still starts another run after the 20th, that play process and the loop are stopped by PID.
 set -u
@@ -27,7 +27,7 @@ echo "$(date '+%F %T') watching: $TARGET A8 runs after $START" >> "$LOG"
 while true; do
   n=$(count)
   if [ "$n" -ge $((TARGET - 1)) ] && [ ! -f "$OPS/STOP" ]; then
-    echo "Dai 2026-09-29: stop after $TARGET A8 runs" > "$OPS/STOP"
+    echo "Roy 2026-09-29: stop after $TARGET A8 runs" > "$OPS/STOP"
     echo "$(date '+%F %T') $n A8 runs finished; STOP created (autoplay exits after the current run)" >> "$LOG"
   fi
   if [ "$n" -ge "$TARGET" ]; then

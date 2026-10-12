@@ -1,0 +1,48 @@
+{
+  "task": "fix-batch",
+  "base": "e2c935ba3e6770ea09d4ed60f345d6bbb840eb83",
+  "fixes": [
+    {
+      "item": "13:31 sl-any-draw语义测试真实时钟污染与deadline截断区分",
+      "commit": "3d6340e00f3ca05dd526012ccede35268b65eda8",
+      "test": "agent/tests/sl-any-draw.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "codex 大脑缓存命中偏低",
+      "reason": "证据不足：要求联网受控实测，本离线任务不调用LLM或网络。"
+    },
+    {
+      "item": "mod 战中选牌屏等约10–13秒超时自愈",
+      "reason": "证据不足：未定位可固定复现的代码根因，不读游戏二进制。"
+    },
+    {
+      "item": "可信boss整场模拟超时和CPU争用",
+      "reason": "太大：需独立性能分析批次，不据旧耗时记录改模型或提高预算。"
+    },
+    {
+      "item": "保血、留药、全死排序、巨兽延后击杀、路线/休息、小偷优先、SL范围/近似重复、boss时钟校准、A10第二boss、无色估值",
+      "reason": "策略类：本批只修纯bug，已授权策略与专项功能分别处理。"
+    },
+    {
+      "item": "B4/B5自动触发与A10针对性优化、学习流程补强",
+      "reason": "非纯bug：队列已明确为新功能/架构，由独立专用批次实施。"
+    },
+    {
+      "item": "13:52新增brain-codex-usage旧regex及陈旧测试名称",
+      "reason": "队列明确交下一可用普通批次；本批合并预检发现冲突，按任务要求停止，未修改该项。"
+    },
+    {
+      "item": "13:52新增SLIPPERY_POWER毒限伤及消费层数（silent-0226）",
+      "reason": "队列明确交下一可用普通批次；本批合并预检冲突后停止，未分析或验证该机制，不更新0226状态。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2408
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "state": "published",
+  "batch": "20261008-071204-experience-update",
+  "source": "1ac1b33b6f752ad5aa7e82429d85ebc20e2021a1",
+  "source_tests": {
+    "exit": 0,
+    "files": 246,
+    "cases": 2598,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-071205-experience-update/test-source.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "9780d26e057026170b3a3335b7c037d6bc61288e",
+  "parent_blob": "bb34c2af6b176e57e1416a3cdfa12beb77710f00",
+  "main_code_sync": "9a29582fbf9050353dceccc612aa09bdd940e49a",
+  "main_record": "95a6bacb1c804d341ca9934e24c166e004d44a53",
+  "full_external_passed": false,
+  "actual_code": "88afd5dc7fbda9e70dce2c78a572f959ca3d4d71",
+  "live_before": "903a1efcb4456e448b5e64f8c915397d1c585d98",
+  "combined": "c0c008d35e615132825cb066bdce5fa2dc71157c",
+  "preserved_refresh": "903a1efcb4456e448b5e64f8c915397d1c585d98",
+  "refresh_sha256": {},
+  "lock_attempts": 1,
+  "all_other_tracked_blobs_preserved": true,
+  "publication": "7ed2bb0a60e6631541b470d851964d6794b42db1",
+  "publication_tree": "6bebb93ebbe2196be945dcfe9a8663fda52766ec",
+  "version_entry": {
+    "name": "S1.exp91",
+    "family": "Silent",
+    "commit": "88afd5dc7fbda9e70dce2c78a572f959ca3d4d71",
+    "source": "decision-log 2026-10-08 08:11: 原071204经验六项并行记录冲突兜底，源1ac1b33b唯一experience.json原blob，2026-10-08.7→.8/167 active/增2改12退0；GXNKW8X1XYJP及ZE8F192FKX24原证据，三个combat/potion/SL/terminal/structure代码提案沿原自动链。源246文件2598例tsc/vitest0；当前源码/测试/任务与完整外部通过903a1efc逐blob等价，298文件3412过/2跳，保留神化六路径及刷新。data-only免重复沙箱，未冒报新树通过，完整外部原批另续验；数据上线不表示代码提案实现。"
+  },
+  "record_line": "- 2026-10-08 08:11 运维codex08:06经验兜底：原071204源1ac1b33b6f752ad5aa7e82429d85ebc20e2021a1六项并行记录冲突保持；单次空闲非阻塞锁内从最新live903a1efcb4456e448b5e64f8c915397d1c585d98集成唯一experience.json原blob，实际合入88afd5dc7fbda9e70dce2c78a572f959ca3d4d71，刷新903a1efcb4456e448b5e64f8c915397d1c585d98及全部并行代码/数据保持，源真实祖先。经验2026-10-08.7→.8/167 active/增2改12退0，GXNKW8X1XYJP及ZE8F192FKX24原证据；源246文件2598例tsc/vitest0，当前源码/测试/任务与完整外部通过903a1efc逐blob等价，保留神化六路径。data-only免重复沙箱，未冒报新树检查通过，唯一S1.exp91；main及14所属经验数据CLI随后同步，三个代码提案沿原自动链，完整外部原批另续验；原回报及失败原件保持。回执paper/materials/silent/20261008-0806-events。\n",
+  "code_equivalence": {
+    "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+    "checked_pin": "903a1efcb4456e448b5e64f8c915397d1c585d98",
+    "checked_pin_full_external": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 298,
+      "passed": 3412,
+      "skipped": 2
+    },
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 246,
+      "cases": 2598,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-071205-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "source_vs_actual_six_preserved_apotheosis_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/silent-apotheosis.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-apotheosis-evidence.json",
+      "agent/tests/silent-apotheosis.test.ts"
+    ],
+    "reason": "Only the original tested experience data blob changes. Current code/tests/tasks retain Apotheosis and match the fixed complete external pass. Data-only exemption applies; no whole-tree test pass is claimed. Original-batch external continuation is separate."
+  }
+}

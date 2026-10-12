@@ -1,0 +1,263 @@
+[
+ {
+  "id": "silent-0191",
+  "ts": "2026-10-06T19:30:18+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "单行动战斗题把已经含玩家虚弱的现场Damage当前值再乘0.75，低报攻击本体伤害。群蛇等逐牌附加伤害与本体偏差要分账；当前live combat.ts:128传玩家虚弱到damage.ts:82，handViews在narrow.ts:174已读现场当前值。只定位单行动题，不把整场死亡或求解器所有方案差额归此bug。",
+  "evidence": [
+   {
+    "run": "VLV17NUSFS61",
+    "floor": 37,
+    "turn": 5,
+    "role": "support",
+    "note": "A7第2次尝试15:17:50.653Z带毒刺击基础6、current_value与文本4，题面伤3，AXEBOT实际37→33、毒3→6；无群蛇增益，独立确认重复折减。",
+    "added": "2026-10-06T19:30:18+08:00"
+   },
+   {
+    "run": "5X2GHKJ89PN1",
+    "floor": 48,
+    "turn": 6,
+    "role": "support",
+    "note": "末次带毒刺击题面3、本体实4；两小刀题面各2、本体各实3，合低报3。刺击73→65含本体4加群蛇4；小刀使聚合体65→62→59且女王挡14→10→6，附加伤另计。",
+    "added": "2026-10-06T19:30:18+08:00"
+   }
+  ],
+  "first_run": "VLV17NUSFS61",
+  "prior": "no",
+  "prior_runs": [
+   "VLV17NUSFS61"
+  ],
+  "prior_note": "从已有60个静默复盘局号筛出此前52道带虚弱修饰的单行动题，最早VLV的实际刺击已证题面低报；账本及静默旧复盘未识别同项，学习前这一可比题已算错。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "5X2GHKJ89PN1"
+   ],
+   "commits": [
+    "c39102521f91e1e95b886935cf27cc8c23d0bf65",
+    "97d59449fabbd64af48c6eb911ade843298efa81",
+    "2be2e791a8aaf7d2bfe185e6cf7f31a3bf657c51",
+    "dabdcce1b534e7efb1f3be3d18c292997eee82c9"
+   ]
+  },
+  "note": "新识别纯bug，两份fix-queue无同项；不同于silent-0130重复扣格挡。本局code3599ab0a+dirty，引用当前只读live d4026dbb的agent/src/reflex/combat.ts:128、damage.ts:82、memory/narrow.ts:174。未修代码，未验证修复后的整场胜负。",
+  "asc": 7,
+  "history": [
+   {
+    "ts": "2026-10-06T19:30:18+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T19:54:08+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T19:59:11+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T20:05:40+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix34",
+  "effect": null,
+  "notes": [
+   "新识别纯bug，两份fix-queue无同项；不同于silent-0130重复扣格挡。本局code3599ab0a+dirty，引用当前只读live d4026dbb的agent/src/reflex/combat.ts:128、damage.ts:82、memory/narrow.ts:174。未修代码，未验证修复后的整场胜负。",
+   "20:00 fix-done机械确认20261006-194302-fix-batch：源c3910252→实际live97d59449→固定发布2be2e791/唯一S1.fix34，已同步main。单行动题重复折减现场虚弱伤害修复沿学习者产出，证据VLV17NUSFS61 SILENT A7 F37第2次T5、5X2GHKJ89PN1 SILENT A10 F48第6次T6；本体与附加伤分账，不声称可转胜。源与合后首轮tsc0/vitest0、206文件2221例，撤三处源码6失败2通过/恢复8通过，gitleaks0、无重跑；原回报/122项已修核查/两行proposed/红绿/自测记录按原字节保存。七份495c2fd0刷新保留，知识重叠为空，五个源码/测试及全部代码blob同固定发布；固定发布承接的664fda4f经验.24只机械同步原blob，版本/台账留其完成事件。CLI/by=ops仅登记本项shipped，first_run=VLV17NUSFS61/A7、prior=no、claim/两份证据/repeat/原history保持；永冻0172及其他条目不变。完整外部待本批learner-checks，无运维公式修改或重复live合入；后台notes/成本表与对局继续。"
+  ],
+  "shipped_at": "2026-10-06T20:05:40+08:00"
+ },
+ {
+  "id": "silent-0312",
+  "ts": "2026-10-08T22:35:55+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "by": "learner:postmortem",
+  "claim": "静默实见巨斧机器人库存两次耗用后还有三台不同血上限，不能把首次归零当整场胜利，也不能用当前上限乘三当固定需求。首证A0为77→88→98；本局A10为77→90→99，恢复当步旧毒消失，下一轮启动后15挡及4/8力量，仍有攻击威胁。这些序列尚不能确定恢复HP分布或固定倍率。",
+  "evidence": [
+   {
+    "run": "LRN0HPZ0FZS1",
+    "floor": 38,
+    "turn": 4,
+    "role": "support",
+    "note": "原states s211544 T1为77/77库存2，s211575 T4为88/88库存1，s211579 T4为98/98无库存；旧帧无run_id，按SILENT及13:前后原决策窗核对，实际时窗2026-10-04T15:55:51.383Z—15:57:28.908Z。d207612—207614在T7领取Gold/Potion/Card胜利奖励。",
+    "added": "2026-10-08T22:35:55+08:00"
+   },
+   {
+    "run": "R3AJCGQGGMR4",
+    "floor": 45,
+    "turn": 2,
+    "role": "support",
+    "note": "s306416首台归零即90/90库存1、旧毒/易伤清空；s306422 T3为78/90、15挡、4力量。",
+    "added": "2026-10-08T22:35:55+08:00"
+   },
+   {
+    "run": "R3AJCGQGGMR4",
+    "floor": 45,
+    "turn": 7,
+    "role": "support",
+    "note": "T6恢复第三台99/99且旧27毒消失；s306440为99/99、15挡、8力量、5新毒、26攻击。触媒额外2实际仅结5+4+3=12，敌87/99而玩家阵亡。",
+    "added": "2026-10-08T22:35:55+08:00"
+   },
+   {
+    "run": "T082DRCUHRRD",
+    "floor": 44,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [77], '1': [85], '0': [93]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "R0HEV5E3QT6G",
+    "floor": 45,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [70], '1': [85], '0': [91]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "ZZMYZ5UBCG72",
+    "floor": 39,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [70], '1': [82], '0': [94]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "10GPK5XGHCK3",
+    "floor": 37,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [77], '1': [82], '0': [97]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "UACFSW4VDDLD",
+    "floor": 46,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [74], '1': [80], '0': [97]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "53FLQ68CETW0",
+    "floor": 45,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [76], '1': [87], '0': [94]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 38,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [76], '1': [84], '0': [93]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "VLV17NUSFS61",
+    "floor": 37,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [78], '1': [80], '0': [97]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "UMVLWER4CD98",
+    "floor": 39,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [84], '1': [95], '0': [99]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "9R916WW0V65N",
+    "floor": 45,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [85], '1': [93], '0': [98]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   },
+   {
+    "run": "BJLTVSYXCSGS",
+    "floor": 39,
+    "role": "support",
+    "note": "完整三台实见上限{'2': [78], '1': [96], '0': [98]}，库存2→1→无仍须处理末台；历史跨轮毒回补不反推内部清毒帧，分布/固定倍率未知。",
+    "added": "2026-10-08T22:55:29+08:00"
+   }
+  ],
+  "first_run": "LRN0HPZ0FZS1",
+  "prior": "yes",
+  "prior_runs": [
+   "LRN0HPZ0FZS1"
+  ],
+  "prior_note": "本角色首次库存战已继续处理恢复体直到T7领取胜利奖励，没有在首次归零即停止；这是学习前已正确执行的胜利验收，不证明恢复HP数值的后续预测已准确。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "R3AJCGQGGMR4"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/proposal-stock.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-224303-experience-update/proposal-stock.md"
+   ],
+   "experience": [
+    "silent-axebot-stock-phase-budget"
+   ],
+   "commits": [
+    "64ed5d5c2ec47d854f41958111d5f746d8916dad",
+    "c2d5a4e7a37b1628fb8015808258da4746f90503",
+    "e849bf93ec4163d8f82b7237adf3aaed31c42b37",
+    "e03976e39cb58ea1360c5a0f8c9dc41689aaac45"
+   ],
+   "changelog": [
+    "2026-10-08 静默猎手 第一百一十次增量：1 局 A10（version 2026-10-08.27，分支 exp-silent，64ed5d5c）"
+   ]
+  },
+  "note": "此前静默复盘已描述多台，但账本无AXEBOT/STOCK_POWER机制项，本次补账按实际最早本角色证据定first_run；A0观察不外推A10固定数值。",
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-08T22:35:55+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-08T22:37:06+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T22:40:02+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T22:55:29+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T22:55:30+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T23:09:39+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T23:20:42+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp110",
+  "effect": null,
+  "notes": [
+   "此前静默复盘已描述多台，但账本无AXEBOT/STOCK_POWER机制项，本次补账按实际最早本角色证据定first_run；A0观察不外推A10固定数值。",
+   "首证证据录入文字勘误：此前note中‘13:前后’是无意义笔误，应为本局原决策时间窗核对；原帧实际UTC时间2026-10-04T15:55:51.383Z—15:57:28.908Z，首证局LRN0HPZ0FZS1、层38、77→88→98及T7胜利奖励均保持。保留原错误行，不改首证/prior/status。",
+   "代码提案 silent-proposal-d04933cbd408d85b → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第110批提案预关联；原帧/层/回合见本批numbers-checked、stock-history、audit，首证/prior/claim/support/repeat/旧状态及版本保持；源提交后登记proposed。",
+   "代码提案 silent-proposal-bc357cb8bcee3b22 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第110批经验源已提交；实际数据shipped交运维据live完成事件核实，四独立提案尚未实现，不覆盖旧claim/首证/prior/原support/repeat/旧版本。",
+   "第一百一十次经验仅原数据.26→.27，源64ed5d5c增1改17退0/186 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp110。按原学习者ledger-map仅18所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，五combat/potion/SL/structure代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/20冲突/out/err/失败历史保持。"
+  ],
+  "shipped_at": "2026-10-08T23:20:42+08:00"
+ }
+]

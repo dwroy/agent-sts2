@@ -1,0 +1,1 @@
+抽取与复核过程保留：summarize.py初次因一条纯路线记录没有chosen报KeyError，改用get后重跑；details.py初次把sl_attempt整数当字典报AttributeError，改按整数计尝试；查不存在的full-fight.ts失败，改读rollout.ts。draft-v1完整保留，追加前v2更正F33初HP428、末试逐轮HP净损、总token8719908，区分首试T3与末试T2尖啸，并逐帧更正安瓿即扣10、漏斗在首个可操作帧已有毒、方柱制品已于就绪前消失。上述初稿从未写入lessons.md，无须勘误。资源工具重复敌ID的下界不代表零伤害。当前纯bug仅定位末火接续异常，不假定缺资源和非正HP的具体分支。

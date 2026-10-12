@@ -1,0 +1,126 @@
+{
+  "scope": "Silent A10, all observed physical calls, input includes cache; output includes reasoning",
+  "after": "2026-10-08T06:58:26.265Z",
+  "manifest": {
+    "/home/dw/Projects/agent-sts2/logs/run-config.jsonl": {
+      "complete_bytes": 898534,
+      "sha256": "94bbb262cfbb3e6a0d31dfad318dec9260b239325ec5a849cd1b3ead4e2e2101"
+    },
+    "/home/dw/Projects/agent-sts2/logs/codex-calls.jsonl": {
+      "complete_bytes": 15378325,
+      "sha256": "64f04e172e0efc0a41478b334e845e37c42b8763ebc79cd80407091525b0fb98"
+    },
+    "/home/dw/Projects/agent-sts2/logs/brain.jsonl": {
+      "complete_bytes": 295977656,
+      "sha256": "ab1fd119856f6ad8e030056740101885bc537013375837aeed2b7a615fb67d48"
+    }
+  },
+  "total": {
+    "physical_calls": 4,
+    "duplicate_rows": 0,
+    "questions": 4,
+    "runs": [
+      "9DAS5L8YM1CN"
+    ],
+    "outcomes": {
+      "answered": 4
+    },
+    "model_effort": {
+      "gpt-6.1-sol/high": 4
+    },
+    "cache_known_calls": 4,
+    "cache_unknown_calls": 0,
+    "input_tokens_observed": 511947,
+    "cached_input_tokens_observed": 120704,
+    "cache_hit_ratio_observed": 0.23577440633503077,
+    "zero_cache_calls": 3,
+    "output_tokens": 1368,
+    "reasoning_tokens": 931,
+    "input_per_known_call": 127986.75,
+    "wall_ms": 71627,
+    "median_ms": 17831.5,
+    "p90_ms": 19238
+  },
+  "by_request_context": {
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a4e-6e22-7281-b9bf-5d7cd8168b53\", \"bdf05ace30dc238012f98d19f5315b40488bf073700875030785004c91e4e6ad\", \"0ce5863888ca5387d7001673709edf8226433b62243397c793b4062316805eb2\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 126010,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 495,
+      "reasoning_tokens": 270,
+      "input_per_known_call": 126010.0,
+      "wall_ms": 25482,
+      "median_ms": 25482,
+      "p90_ms": 25482
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a4e-6e22-7281-b9bf-5d7cd8168b53\", \"bdf05ace30dc238012f98d19f5315b40488bf073700875030785004c91e4e6ad\", \"763879f3acf09cac8cce779f4815f2ae008f8ed0a9266c60fa2df2f4525fe61a\", null]": {
+      "physical_calls": 1,
+      "duplicate_rows": 0,
+      "questions": 1,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 1
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 1
+      },
+      "cache_known_calls": 1,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 126935,
+      "cached_input_tokens_observed": 0,
+      "cache_hit_ratio_observed": 0.0,
+      "zero_cache_calls": 1,
+      "output_tokens": 349,
+      "reasoning_tokens": 238,
+      "input_per_known_call": 126935.0,
+      "wall_ms": 16425,
+      "median_ms": 16425,
+      "p90_ms": 16425
+    },
+    "[\"session\", \"gpt-6.1-sol\", \"high\", \"01a11a4e-6e22-7281-b9bf-5d7cd8168b53\", \"bdf05ace30dc238012f98d19f5315b40488bf073700875030785004c91e4e6ad\", \"91f56d61a33e7898fd61462294209b1b0c194bc59916afb310a5f1ad7e20c04e\", null]": {
+      "physical_calls": 2,
+      "duplicate_rows": 0,
+      "questions": 2,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 2
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 2
+      },
+      "cache_known_calls": 2,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 259002,
+      "cached_input_tokens_observed": 120704,
+      "cache_hit_ratio_observed": 0.46603501131265396,
+      "zero_cache_calls": 1,
+      "output_tokens": 524,
+      "reasoning_tokens": 423,
+      "input_per_known_call": 129501.0,
+      "wall_ms": 29720,
+      "median_ms": 14860.0,
+      "p90_ms": 10482
+    }
+  },
+  "brain_cache_mismatch_rows": 0,
+  "limits": "Missing usage is unknown. Shared subscription quota and USD are not attributable to brain alone."
+}

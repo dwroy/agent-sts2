@@ -1,0 +1,259 @@
+{
+  "id": "silent-0209",
+  "ts": "2026-10-07T06:28:36+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "fight",
+  "claim": "本局四花园幽灵鳗的当轮净扣不能代替敌方退场进度：T1两打击扣12、T3三次分打扣18，但到T5才杀第一只，增力后T7损22，末T8仍两敌19/9血。需要分别记录攻击后敌挡、剩血和实际击杀窗口；没有本局另一个目标顺序的整场对照，不规定固定分散或集火打法。",
+  "evidence": [
+    {
+      "run": "WYB0NCD6W83J",
+      "floor": 15,
+      "turn": 3,
+      "role": "support",
+      "note": "代码唯一线防御、打击、切割、打击扣18却四敌都活着，21攻击对5挡损16；T5首杀、T8次杀后仍死。",
+      "added": "2026-10-07T06:28:36+08:00"
+    },
+    {
+      "run": "CA5KE8GFJ9X2",
+      "floor": 9,
+      "turn": 4,
+      "note": "四花园幽灵鳗T1/2/3扣9/28/16，前三轮仍四敌；T3损15。T4安瓿后同一步退场初始31与27血者，T5杀29、T7杀32；12道战斗题均推演最优仍损25，本战无focus。没有另一顺序整场对照，记support。",
+      "role": "support",
+      "added": "2026-10-07T13:55:45+08:00"
+    },
+    {
+      "run": "61E2QS63Y9WU",
+      "floor": 23,
+      "turn": 4,
+      "note": "胧光怪战五道Jev题全选最优仍损39；T4 focus本体线题面及实打均47伤、损15，但幻象14→2仍能打15，本体76→41；另一focus幻象的39伤零损线未实打。T5代码先触媒、打击杀幻象、飞镖打本体，毒收尾。退场窗口观察补证，不认未经受控证明的同错repeat。",
+      "role": "support",
+      "added": "2026-10-07T14:24:06+08:00"
+    },
+    {
+      "run": "5PM6JAQG6FNQ",
+      "floor": 38,
+      "turn": 3,
+      "note": "Jev以0.53选focus组装师，非推演最优，原线报40伤/损30，实行动与毒40、荆棘另3、损30。本体余44，戳刺由开信刀先结束，电击仍攻击17；另线题面先杀两攻击爪牙、35伤/损3未实打，不能宣称多保27血必救后场。T4才群伤清爪牙、T5杀主怪，只补退场窗口观察。",
+      "role": "support",
+      "added": "2026-10-07T14:58:03+08:00"
+    }
+  ],
+  "first_run": "WYB0NCD6W83J",
+  "prior": "yes",
+  "prior_runs": [
+    "R0HEV5E3QT6G"
+  ],
+  "prior_note": "回查更早静默R0 F8相似四敌胆小6局，学习本项前已用猎杀者/翻越撑击等T2首杀、T4结束、70→67；只据这一可比现场认已做对过，不假定本局缺少的牌仍可执行。此前复盘没有本次长期四敌未退场的关键失误。",
+  "status": "proposed",
+  "where": {
+    "lessons": [
+      "WYB0NCD6W83J",
+      "CA5KE8GFJ9X2",
+      "61E2QS63Y9WU",
+      "5PM6JAQG6FNQ"
+    ],
+    "experience": [
+      "silent-gardener-skittish-shield",
+      "silent-obscura-summon-growth",
+      "silent-zapbot-high-voltage-growth"
+    ],
+    "commits": [
+      "50de6fefd40afae1f26838de7879198945acbc0b",
+      "98df162d756d3eca8d0b6383f2a2398d624ab074",
+      "1a89c2d481689bf0793c89c53318c247a1ea1997",
+      "dc8a23b705f8eb21b85d9d1d1e584e35ab8d8fe5",
+      "7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a",
+      "91d49f827f3d429955d63f0b11c5944731759264",
+      "586ff2db0de4a841555c2e838f3e7f17e8165307",
+      "79bee0fc11793a410218ae50ca43e41474eec19e",
+      "1bf53e5fe631e7a7836001f463f8561d1a875bc6"
+    ],
+    "changelog": [
+      "2026-10-07 静默猎手 第六十三次增量：2 局 A10（version 2026-10-07.9，分支 exp-silent，50de6fef）",
+      "2026-10-07 静默猎手 第七十四次增量：4 局 A10（version 2026-10-07.20，分支 exp-silent，7453c2cc）"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-obscura-summon-growth.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-gardener-skittish-shield.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-zapbot-high-voltage-growth.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-234303-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal/report.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-004303-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-004303-strategy-proposal/report.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/report.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-014012-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-020232-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-025837-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-044250-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-050618-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-061303-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-061303-strategy-proposal/report.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-064305-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-075540-strategy-proposal/proposal.md"
+    ]
+  },
+  "asc": 10,
+  "history": [
+    {
+      "ts": "2026-10-07T06:28:36+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-07T06:47:29+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T06:57:48+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-07T13:55:45+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-07T14:24:06+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-07T14:58:03+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-07T16:03:43+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T17:16:01+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T17:16:01+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T17:16:01+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T17:16:04+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-07T17:16:07+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-07T17:16:08+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-07T18:06:53+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-07T23:57:34+08:00",
+      "by": "learner:strategy-proposal"
+    },
+    {
+      "ts": "2026-10-08T00:34:44+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T00:50:28+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T01:32:46+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T01:47:25+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T02:23:37+08:00",
+      "by": "learner:strategy-proposal"
+    },
+    {
+      "ts": "2026-10-08T02:23:37+08:00",
+      "by": "learner:strategy-proposal"
+    },
+    {
+      "ts": "2026-10-08T03:12:32+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T04:57:21+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T05:18:48+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T06:23:17+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T06:56:36+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T08:04:16+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T08:04:17+08:00",
+      "by": "learner:strategy-proposal"
+    }
+  ],
+  "version": "S1.exp75",
+  "effect": null,
+  "notes": [
+    "06:55 experience-done机械确认20261007-063003-experience-update：源50de6fef→实际live 98df162d→固定发布1a89c2d4/唯一S1.exp63，main已同步经验2026-10-07.9及七项锁内知识刷新，无代码/生成器/手写知识/其他角色变动。来源HSX4HYATB4E2/WYB0NCD6W83J A10及有效勘误、本角色历史；新增2更新19全补证退役0、active135/49258字，无新用药规则。初稿源、28项文字更正后定稿源及合后三次沙箱均tsc0/vitest0、214文件2289例通过，无测试失败/超时；预检rc0知识冲突0、其他知识blob保持。仅CLI/by=ops本批24项shipped覆盖21项经验，0211首证沿学习者更正T082DRCUHRRD/A0/prior=yes、原R0先验/23份support/旧首证历史保持；其他claim/首证/先验/repeat不重置。旧attempts断言失败与TD1专用取数修正、初稿32→28项文字更正、台账空evidence拒绝零行及修正、initial-*及全部原件归档保留，不当生产故障或自测失败。0207 exp62及其他旧版本/失败历史保持，原过滤摘要不冒称完整逐例日志，完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。",
+    "仅关联本批非药水观察去向；复盘已登记的support/repeat原样保持，不把机制全部支持局当受控打法证据，不重复追加。",
+    "第74批补链：silent-obscura-summon-growth；来源experience-update/20261007-153133；实现strategy-proposal；waiting，不登记shipped。",
+    "第74批补链：silent-gardener-skittish-shield；来源experience-update/20261007-153133；实现strategy-proposal；waiting，不登记shipped。",
+    "第74批补链：silent-zapbot-high-voltage-growth；来源experience-update/20261007-153133；实现strategy-proposal；waiting，不登记shipped。",
+    "代码提案 silent-proposal-5264153a4a4b0e5c → task=strategy-proposal；Roy-2026-10-07-learning",
+    "代码提案 silent-proposal-246daedaa3021847 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "代码提案 silent-proposal-6dd8bbff876be528 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "17:48机械经验兜底：原.21源91d49f827f3d429955d63f0b11c5944731759264及未独立发布的.20源7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a已实际成为live586ff2db0de4a841555c2e838f3e7f17e8165307祖先，最终发布79bee0fc11793a410218ae50ca43e41474eec19e/唯一S1.exp75，main1bf53e5fe631e7a7836001f463f8561d1a875bc6经验原blob相等。仅对应经验数据已吸收，原第74批28提案11duplicate/17waiting及.21三pending保留、不当代码implemented；0237/0229等纯bug不在本经验shipment范围。源.21原沙箱tsc0/232文件2430例0，.20原230文件2422例0；本轮数据组合无新源码、不冒称最新整套已过，最终完整外部独立原批续验。旧源merged=null/failed/缺array/路径拒绝/冷却/测试历史保留，CLI只这些经验所属项追加shipped，claim/首证/prior/support/repeat/旧历史及并行未发布经验不改，本状态不宣称后续.22或策略源码上线。",
+    "20261007-234302派发核证：silent-proposal-5264153a4a4b0e5c；处置详见提案/report，1duplicate/9waiting，无新源码或上线；保留旧首证/先验/支持/重复及shipment历史。",
+    "本次20261008-000408逐项处置及限制见report.md；本地1项离线源码、1项实际live重复、8项证据不足。尚未新合入live，不登记shipped，保留旧首证/先验/支持/重复与既往上线历史。",
+    "20261008-004303策略核验；关联silent-proposal-5264153a4a4b0e5c均waiting。六局原始证据哈希与前次一致；具体缺数据和已有局部live源码证明见proposal.md。无新增源码/上线，不新增support/repeat，不改首证、claim、既有版本或shipped历史。",
+    "本批20261008-010309逐项处置见proposal.md/report.md；仅懒惰额度有本地已测源码，其余9项具体缺口保留waiting。此行登记proposed和链接，不冒报live实现或shipped；保留原首证、先验、证据和既往上线历史。",
+    "20261008-014012独立核验：六局3432原帧/3306决策与原证据一致；未改源码、未合入。关联silent-proposal-5264153a4a4b0e5c；逐项waiting及缺数据见proposal.md/proposal_results.json，不追加重复support/repeat、不标shipped。",
+    "20261008-020231逐项复核：silent-proposal-246daedaa3021847 waiting；F9T1/2攻击后7盾、能力仍显示7；T4后两击只消7→4→0盾。缺同敌同轮第二次非致死失血的触发/消费序列，无法据持续能力显示改一次触发规则。；仅提案处置，原机制状态/已上线版本及历史证据保持。",
+    "20261008-020231逐项复核：silent-proposal-6dd8bbff876be528 waiting；F38新电击已带高电压2、力0，随后同23上限实体力2→4可核。原在线召唤模板未冻结；现有HIGH_VOLTAGE成长接线不能证明召唤模板已正确携带该能力并在首次回合起效。缺模板输入及召唤全过程固定源码重放，不认领完整提案或规定杀序。；仅提案处置，原机制状态/已上线版本及历史证据保持。",
+    "20261008-025836-strategy-proposal复核本批10个派发ID：逐项waiting与缺数据见proposal.md/report.md；六局原状态SHA不变，未新增源码/合入/版本，不重复support/repeat；已有shipped经验不降级。chosen_order为击杀顺序label，单敌无值不当出牌方案缺失证据。",
+    "20261008-044249策略核验；silent-proposal-5264153a4a4b0e5c均waiting，具体缺数据及原帧/源码核验见提案；未增加支持计数，无新源码提交或live发布。",
+    "20261008-050618-strategy-proposal逐项复核；本角色原始日志核验、固定子机制13例通过；silent-proposal-246daedaa3021847,silent-proposal-6dd8bbff876be528仍waiting，具体缺帧/联合调用/完整结局限制见proposal.md；未改生产策略，无新增源码/版本/live合入，不标shipped。",
+    "20261008-061302策略复核：silent-proposal-5264153a4a4b0e5c waiting：原帧确认两实体航行后力量3→6、幻象T4后仍2HP；旧召唤输入固定测试通过，仍缺本次A10航行/召唤的完整冻结调用链和另一目标序的后续实打。不能用旧召唤commit证明新增成长和目标排序收益。；无新源码/合入，不增加support/repeat。",
+    "20261008-064303策略批复核，相关派发提案均waiting；完整原帧及逐项缺口见本次proposal.md/report.md。关联提案：silent-proposal-246daedaa3021847,silent-proposal-6dd8bbff876be528。没有源码实现/合入，不重复添加历史证据或修改首证/claim/prior。",
+    "本batch核CA5KE8GFJ9X2 A10 F9 T2/T3/T4，有限跨轮胆小7子提案；原宽提案待证边界保留，不改首证/claim/prior或重复计支持。",
+    "代码提案 silent-proposal-c65a44568c4d2975 → task=strategy-proposal；Roy-2026-10-07-learning"
+  ],
+  "shipped_at": "2026-10-07T18:06:53+08:00"
+}

@@ -1,0 +1,54 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-104302-strategy-proposal",
+  "base": "e4ae8046c7d776882b9b9382a408df4e851d04e7",
+  "runs": [
+    "YBRA3EJ94GBR",
+    "3UPY3BP2LVS7",
+    "NYQW6JAD30K4",
+    "E6DSUVTNVBMH",
+    "64VJC5XT2AT2",
+    "SB5N8GT2Y3VW",
+    "N1ZEBMHZM4KC",
+    "C7GNN3DDFUFY",
+    "F6XY4QJMS5RC",
+    "CMS8QL9E3C5U"
+  ],
+  "fixes": [
+    {
+      "id": "silent-0425",
+      "proposal_id": "silent-proposal-54bd844abc57bb62",
+      "commit": "5217167aa8ba0184e733a4e6c7ce3f102690f231",
+      "source_parent": "e4ae8046c7d776882b9b9382a408df4e851d04e7",
+      "summary": "修正普通蛇咬在赌徒替换中的无价值自动弃牌消费"
+    }
+  ],
+  "skipped": [
+    "其他纯施毒牌、升级与额外状态组合未在本批验证，保留原行为；整轮/整战及自然收益未证。"
+  ],
+  "merged": "f48154c11d41cb82c762a0afd671fe430ef199b8",
+  "published_commit": "5d820febbfd41397a0990c222154e54577777153",
+  "version": "S1.snakebite-discard1",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3319
+  },
+  "code_proposals": [
+    "silent-proposal-54bd844abc57bb62"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-54bd844abc57bb62",
+      "state": "implemented",
+      "commit": "5217167aa8ba0184e733a4e6c7ce3f102690f231",
+      "reason": "仅实现原提案已核静默A10普通2费7毒蛇咬范围；旧误判无价值改为Jev全选项比较，源码为实际live祖先。其他牌/升级/额外状态不外推，自然收益未知。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-104302/learner/runs/20261012-104318-strategy-proposal/report.md"
+}

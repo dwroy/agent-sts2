@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/verify.py", line 44, in <module>
+    bf,su = row(24,1,2,'BACKFLIP'),row(24,1,2,'SURVIVOR')
+                                   ~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/verify.py", line 41, in row
+    def row(f,a,t,c): return next(r for r in cards if (r['run'],r['floor'],r['attempt'],r['turn'],r['card']) == (N,f,a,t,c))
+                             ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration

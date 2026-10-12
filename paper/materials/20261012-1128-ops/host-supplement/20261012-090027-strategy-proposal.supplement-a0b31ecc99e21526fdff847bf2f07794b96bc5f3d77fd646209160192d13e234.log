@@ -1,0 +1,32 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/rollout-best-added.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 4684[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout's best line is added, last and marked, when code did not show it [33m 4319[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m   Start at [22m 11:26:08
+[2m   Duration [22m 6.35s[2m (transform 1.26s, setup 342ms, import 1.19s, tests 4.68s, environment 0ms)[22m
+
+JSON report written to /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261012-090027-strategy-proposal.supplement-a0b31ecc99e21526fdff847bf2f07794b96bc5f3d77fd646209160192d13e234.0.vitest.json
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/rollout-live.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 127403[2mms[22m[39m
+     [33m[2m✓[22m[39m every option of a logged board carries the rollout and history facts; the decision log gets the rollout [33m 2191[2mms[22m[39m
+     [33m[2m✓[22m[39m with a modelled potion held, the rollout fact says later turns may use it [33m 718[2mms[22m[39m
+     [33m[2m✓[22m[39m a drink-first potion option says it is not rolled out [33m 306[2mms[22m[39m
+     [33m[2m✓[22m[39m up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board) [33m 32815[2mms[22m[39m
+     [33m[2m✓[22m[39m the controlled clock: every logged board's rollout stays inside the budget [33m 14486[2mms[22m[39m
+     [33m[2m✓[22m[39m code's ranking, options and auto-acts are unchanged by the rollout [33m 73355[2mms[22m[39m
+     [33m[2m✓[22m[39m logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left [33m 943[2mms[22m[39m
+     [33m[2m✓[22m[39m the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it [33m 1043[2mms[22m[39m
+     [33m[2m✓[22m[39m the dead Parafright's hit next turn is in every line's enemy_threat_next [33m 1394[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m13 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 11:26:15
+[2m   Duration [22m 129.32s[2m (transform 1.44s, setup 329ms, import 1.45s, tests 127.40s, environment 0ms)[22m
+
+JSON report written to /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261012-090027-strategy-proposal.supplement-a0b31ecc99e21526fdff847bf2f07794b96bc5f3d77fd646209160192d13e234.1.vitest.json

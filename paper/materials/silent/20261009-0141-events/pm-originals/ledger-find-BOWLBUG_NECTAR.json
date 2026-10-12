@@ -1,0 +1,110 @@
+[
+ {
+  "id": "silent-0265",
+  "ts": "2026-10-07T23:58:52+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "静默持有不安油灯时已观察第一次施加负面状态的数值翻倍：更早K367 A1 F30 T2升级带毒刺击牌面4毒实际从0建8毒；本局NHA A10 F17 T1普通毒药5毒实际建10、F33 T1 X1萎靡实际给−2力量和2虚弱。只确认这些现场首次施用，不推广所有负面状态或一战后续再翻倍；它与转向及后续虚弱、实际格挡分账，14挡/8挡对15攻击分别损1/7。",
+  "evidence": [
+   {
+    "run": "K3676LU8B0UH",
+    "floor": 30,
+    "turn": 2,
+    "note": "升级带毒刺击POISONED_STAB的PoisonPower4，盛碗虫蜜BOWLBUG_NECTAR从无毒变8毒，decisions212867、states217009→217010，2026-10-04T21:37:15.142Z。",
+    "role": "support",
+    "added": "2026-10-07T23:58:52+08:00"
+   },
+   {
+    "run": "NHA2KW0RB7VP",
+    "floor": 17,
+    "turn": 1,
+    "note": "states283146→283147普通致命毒药牌面5、实建10，轮末结算10；此前没有其他施负面牌。",
+    "role": "support",
+    "added": "2026-10-07T23:58:52+08:00"
+   },
+   {
+    "run": "NHA2KW0RB7VP",
+    "floor": 33,
+    "turn": 1,
+    "note": "首战X1萎靡后states283395为力量−2/虚弱2、两意图9＋6，14挡实损1；末次283506相同减益、8挡实损7。",
+    "role": "support",
+    "added": "2026-10-07T23:58:52+08:00"
+   },
+   {
+    "run": "SADL3CGYTGSR",
+    "role": "support",
+    "note": "本批重新抽取静默复盘/状态/决策验证；子公式、层/回合和限制见本批report.md及silent-unsettling-lamp-first-debuff",
+    "added": "2026-10-08T00:57:32+08:00"
+   }
+  ],
+  "first_run": "K3676LU8B0UH",
+  "prior": "yes",
+  "prior_runs": [
+   "K3676LU8B0UH"
+  ],
+  "prior_note": "该机制首次独立入账之前，同角色A1已经出升级带毒刺击并实际兑现4→8；只据自动数值与出牌行为判此前已正确执行，不宣称模型主动理解了遗物或其胜负贡献。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "NHA2KW0RB7VP"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-234302-postmortem/proposal-back-attack-rounding.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update/proposal-mechanisms.md"
+   ],
+   "experience": [
+    "silent-unsettling-lamp-first-debuff"
+   ],
+   "commits": [
+    "4a90d3570607a56e34e1dc6924d74987c06926b5",
+    "b48108b7e6c12c4256c21b7e64f13ba8f15ac992",
+    "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+    "10c53de98c54b118660b8a478bbdedba548dd1c8"
+   ],
+   "changelog": [
+    "2026-10-08 静默猎手 第八十四次增量：1 局 A10（version 2026-10-08.1，分支 exp-silent，4a90d357）"
+   ]
+  },
+  "asc": 1,
+  "history": [
+   {
+    "ts": "2026-10-07T23:58:52+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-08T00:01:00+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T00:57:32+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T00:57:32+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T01:16:20+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T01:39:02+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp84",
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-cfecb5580938873d → task=strategy-proposal；Roy-2026-10-07-learning",
+   "经验第84批提交前证据/提案关联；首证、先验、claim、旧repeat与上线历史保持，本次尚未登记上线。",
+   "代码提案 silent-proposal-04b6b430759815ed → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第84次静默经验；本批新增/更新数据已提交，来源局NHA2KW0RB7VP及核实油灯历史三局。首证、先验、claim、旧support/repeat与上线历史保持；独立strategy-proposal实现任务已关联，学习者不标accepted/shipped。",
+   "经验第84次原数据2026-10-07.29→2026-10-08.1/增1改13退0/159 active已实际兜底发布；仅按原ledger-map登记本所属经验数据shipped。源及实际合后原沙箱均242文件2540例tsc/vitest0，集成原blob相等。原首证/先验/claim/全部support/repeat/旧上线历史保持；两个出牌/SL/terminal代码提案仍沿独立自动链，经验文字上线不等于代码实现、不宣称旧bug修复。原out/err/failed不改，完整外部原批另续验。"
+  ],
+  "shipped_at": "2026-10-08T01:39:02+08:00"
+ }
+]

@@ -1,0 +1,57 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/agent
+
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 367ms
+     × all resolve 366ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ …(23) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "learner/runs/20261009-195053-boss-sim-batch/fixture-v1.ts: ../src/knowledge/files.js",
++   "learner/runs/20261009-195053-boss-sim-batch/fixture-v1.ts: ../src/sim/boss-sim.js",
++   "learner/runs/20261009-195053-boss-sim-batch/fixture-v1.ts: ../src/reflex/rollout.js",
++   "learner/runs/20261009-195053-boss-sim-batch/fixture-v1.ts: ../src/reflex/turn-solver.js",
++   "learner/runs/20261009-195053-boss-sim-batch/fixture-v1.ts: ./boss-sim-fixture.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ./continuation-value.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ../knowledge/move-model.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ../sl/draws.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ./card-model.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ../sim/boss-clock.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ./fight-value.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ./passive-pieces.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ./potion-mc.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ./turn-solver.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/reflex/rollout.ts: ../knowledge/files.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/sim/boss-sim.ts: ../reflex/potion-cost.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/sim/boss-sim.ts: ../reflex/turn-solver.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/sim/boss-sim.ts: ../knowledge/files.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/sim/boss-sim.ts: ./boss-trust.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/src/sim/boss-sim.ts: ../reflex/turn-solver.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/tests/boss-sim-silent-queen-buff.test.ts: ../src/knowledge/files.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/tests/boss-sim-silent-queen-buff.test.ts: ../src/reflex/turn-solver.js",
++   "learner/runs/20261009-195053-boss-sim-batch/source-scan/agent/tests/boss-sim-silent-queen-buff.test.ts: ./boss-sim-fixture.js",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 250 passed (251)
+      Tests  1 failed | 2619 passed (2620)
+   Start at  20:10:02
+   Duration  914.13s (transform 6.21s, setup 12.43s, import 30.87s, tests 835.91s, environment 27ms)
+

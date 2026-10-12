@@ -1,0 +1,14 @@
+$ nice -n 19 node_modules/.bin/tsc -p tsconfig.json --noEmit
+$ nice -n 19 node_modules/.bin/vitest run tests/experience.test.ts tests/jev-experience.test.ts tests/brain-knowledge.test.ts --maxWorkers=4 --reporter=default
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-exp-20261012-1248/agent
+
+ ✓ tests/experience.test.ts (10 tests) 124ms
+ ✓ tests/jev-experience.test.ts (16 tests) 141ms
+ ✓ tests/brain-knowledge.test.ts (15 tests) 135ms
+
+ Test Files  3 passed (3)
+      Tests  41 passed (41)
+   Start at  12:51:21
+   Duration  1.99s (transform 3.62s, setup 924ms, import 3.84s, tests 400ms, environment 0ms)
+

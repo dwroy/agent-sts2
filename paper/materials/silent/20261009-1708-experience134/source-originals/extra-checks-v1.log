@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-163856-experience-update/extra-checks.py", line 10, in <module>
+    ck('T7两技能各加6污染',x['after']['enemies'][0]['powers']['TAINTED_POWER']-x['before']['enemies'][0]['powers'].get('TAINTED_POWER',0)==6 and y['before']['enemies'][0]['powers']['TAINTED_POWER']==6 and y['after']['enemies'][0]['powers']['TAINTED_POWER']==12)
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'TAINTED_POWER'

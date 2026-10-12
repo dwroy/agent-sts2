@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：9663Y88TYK73（A10，第46层，电球头末次T3以5血、3挡对8攻击阵亡，敌剩49血）
+- 新的纯 bug：
+  - 9663Y88TYK73：已有虚弱后减力低报2点失血，把致死线报成可活 — agent/src/reflex/turn-solver.ts:2684（新）
+- 写成「未记录」的项：完整dirty源码、逐击毛伤及部分归零帧／实体对应、前三次SL出口与恢复时序、最终实线最优比例、部分击杀顺序、旧boss时钟与三幕boss实到资源、整场反事实、Jev缓存命中、Codex费用。
+- 学习账本：9663Y88TYK73：新增 silent-0349；更新 silent-0019、silent-0278、silent-0057、silent-0255、silent-0253、silent-0023、silent-0027、silent-0046（均支持证据，老错重犯无）；`ledger.py check` 退出码0。
+- 代码提案：silent-proposal-bb7597d8a1fe63ff（F46第4次T3／silent-0349、0046：修复减力计算）；silent-proposal-69bf16b2dc62dbeb（F43→F46资源链／相关账本：核能力建立、毒结算与SL换线）。均关联独立strategy-proposal，状态pending；缺少提前用药或安全建立能力的整场胜局对照，保留原规则，未实现或上线。
+
+```json
+{"task":"postmortem","appended":["9663Y88TYK73"],"skipped":[],"bugs":[{"run":"9663Y88TYK73","where":"agent/src/reflex/turn-solver.ts:2684","what":"已有虚弱后临时减力直接减显示攻击，末次尖啸方案报损3，实际需损5并死亡。","new":true}],"ledger":{"added":["silent-0349"],"updated":["silent-0019","silent-0278","silent-0057","silent-0255","silent-0253","silent-0023","silent-0027","silent-0046"],"repeats":[],"check":0},"code_proposals":["silent-proposal-bb7597d8a1fe63ff","silent-proposal-69bf16b2dc62dbeb"],"implementation_domains":["combat","potion","sl"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a120cb-b3ed-7b72-aa68-6fcc521ce681
+轮数：1；工具调用：command_execution×38
+token：输入 216.9k、输出 36.2k（其中推理 9093）、cache 读 3926.7k、cache 写 0（命中 94.8%）
+成本：未提供
+耗时：1238.1 s（墙钟）
+时间：首个事件 3.4 s、模型首个输出 8.8 s、首次工具 12.1 s、末次工具结束 1222.6 s；工具内共 70.1 s，其余（模型生成、推理、网络）1164.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×28；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T21-13-03-01a120cb-b3ed-7b72-aa68-6fcc521ce681.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-211302-postmortem.jsonl

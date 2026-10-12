@@ -1,5 +1,5 @@
 /**
- * Observed mechanics (docs/mechanics-learning.md; Dai 2026-10-02): rules the game's text does not state, mined from the
+ * Observed mechanics (docs/mechanics-learning.md; Roy 2026-10-02): rules the game's text does not state, mined from the
  * logs by knowledge/builders/build-monster-db.py into monster-db.json `observed`, refreshed with the DB after every run. Nothing here
  * names an enemy or a power: a rule is whatever the counts say, and any power meeting the thresholds gets it.
  *
@@ -312,7 +312,7 @@ export interface AllyDeathObserved {
   dead?: { turns?: number; moves?: Record<string, number> };
 }
 
-/** A death rule (either part) needs at least this many logged deaths behind it: fewer is an anecdote (Dai 2026-10-03). */
+/** A death rule (either part) needs at least this many logged deaths behind it: fewer is an anecdote (Roy 2026-10-03). */
 export const DEATH_RULE_MIN_N = 3;
 /**
  * ... and this share of them showing the one move. The logged shares that pass n >= 3 are 1.0 or far below (the Queen's

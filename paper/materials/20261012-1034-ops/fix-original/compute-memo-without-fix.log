@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-095813/agent
+
+ ❯ tests/compute-memo.test.ts (11 tests | 1 failed | 10 skipped) 24ms
+     × signs the fixed knowledge contents, including file changes, without reading the live refresh tree 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/compute-memo.test.ts > the key > signs the fixed knowledge contents, including file changes, without reading the live refresh tree
+AssertionError: expected null to be '8921919c0551c8cc2110fa6d07990496' // Object.is equality
+
+- Expected:
+"8921919c0551c8cc2110fa6d07990496"
+
++ Received:
+null
+
+ ❯ tests/compute-memo.test.ts:121:35
+    119|       }
+    120|     }
+    121|     expect(workerDataSignature()).toBe(hash.digest("hex").slice(0, 32)…
+       |                                   ^
+    122|   });
+    123|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  10:06:29
+   Duration  3.77s (transform 2.94s, setup 714ms, import 2.79s, tests 24ms, environment 0ms)
+

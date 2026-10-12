@@ -1,0 +1,39 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "G33HU22H2543"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "G33HU22H2543",
+      "where": "agent/src/sl/explore.ts:357",
+      "what": "SL规范键排序整轮牌，抹掉投斧首牌顺序，将余像先打与闪亮先打的不同效果误判为同一已尝试线。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0266"
+    ],
+    "updated": [
+      "silent-0020",
+      "silent-0057",
+      "silent-0023",
+      "silent-0069",
+      "silent-0204",
+      "silent-0255",
+      "silent-0079"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-9b4049b484730143"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-004302-postmortem/report.md"
+}

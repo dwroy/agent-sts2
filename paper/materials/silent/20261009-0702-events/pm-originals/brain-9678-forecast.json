@@ -1,0 +1,137 @@
+[
+  [
+    "b9678.options.o0(json).boss_sim_hp_reference.projection_exhausted_at",
+    null
+  ],
+  [
+    "b9678.options.o1:c0(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c4(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c9(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c10(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c12(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c13(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c19(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c20(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c23(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c24(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c28(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.options.o1:c29(json).boss_sim_hp_reference.projection_exhausted_at",
+    {
+      "floor": 46,
+      "room": "Monster"
+    }
+  ],
+  [
+    "b9678.payload.route_review.plan_facts.arrival",
+    [
+      "F45 r11c6 普通战：24/81（p75 24）",
+      "F46 r12c5 普通战：8/81（p75 耗尽）",
+      "F47 r13c4 休息：0（血量耗尽）（p75 耗尽）",
+      "F48 r14c3 Boss：0（血量耗尽）（p75 耗尽）",
+      "F49 r15c3 Boss：0（血量耗尽）（p75 耗尽）"
+    ]
+  ],
+  [
+    "b9678.payload.facts.floors_to_act_boss",
+    4
+  ],
+  [
+    "b9678.payload.facts.act_boss",
+    "AEONGLASS_BOSS"
+  ],
+  [
+    "b9678.payload.facts.act_boss_sim",
+    {
+      "boss": "永世沙漏，A10：永世沙漏 535 血",
+      "entry_hp": "1/81：本幕路线计划到 boss（F48）的中位投影，和 route_review.plan_facts.boss 同一个算法（中位投影在 boss 前血量耗尽，按 1 血算）",
+      "current_deck": "两战原始通关率 0%，344配对样本；未经两战校准，不是必死或SL判据。",
+      "samples": "每个选项 344 次（目标 1000，到时间只跑完这些）；所有选项同一组随机种子，按样本配对比较；用时 11.0 秒",
+      "method": "第一战获胜的同一条样本继续第二战，没有独立胜率相乘，没有补满HP或补回喝掉的药水；差及标准误均来自两战原始配对结果。",
+      "limits": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+      "relics_at_start": "开场生效：灯笼、黄金印",
+      "relics_not_modelled": "蛇之戒指、活动星图、小血瓶、遗忘之魂、不休陀螺、百年积木",
+      "low_confidence": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+      "low_win_rate": "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。",
+      "objective": "F48→F49连续通关；第一战每条实际模拟剩余HP/药水/复活资源传入第二战，第二boss按本角色已观察分布抽样，不透露本局未来身份。",
+      "evidence": "silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B"
+    }
+  ],
+  [
+    "b9678.payload.facts.rest_site.floors_to_act_boss",
+    4
+  ],
+  [
+    "b9678.payload.facts.double_boss_preparation.projection",
+    "沿用silent-0163/S1.fix27：F48之后路线血量仍未知，不把进F48的血量当进F49血量；连战模拟才传递每条样本实际余量。"
+  ],
+  [
+    "b9678.payload.facts.route_relic_observations[0].projection_note",
+    "这是六次进房实回5的观察。当前血量保持现场值；房间代价按进房前到离房后的净血量变化统计，已包含进房回血，不在路线投影上再加5。现有房间统计没有按是否持有星图区分。"
+  ]
+]

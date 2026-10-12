@@ -1,0 +1,122 @@
+import hashlib
+import importlib.util
+import json
+import subprocess
+from pathlib import Path
+
+ROOT = Path('/home/dw/Projects/agent-sts2')
+OUT = Path(__file__).resolve().parent
+PRIOR = ROOT / '.worktrees/codex-strategy-silent-20261012-094301/learner/runs/20261012-094311-strategy-proposal'
+def save(name, value):
+    (OUT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+def digest(value):
+    return hashlib.sha256(value).hexdigest()
+def git(*args):
+    return subprocess.check_output(['git', *args], text=True).strip()
+
+dispatch = json.loads((OUT / 'dispatch.json').read_text())
+proposals = json.loads((OUT / 'assigned-proposals.json').read_text())
+requested_runs = set(dispatch['runs']) | {r for p in proposals.values() for r in p['runs']}
+requested_runs.add('Y6GM2CHWJBEY')
+identities = {}
+with (ROOT / 'logs/runs.jsonl').open('rb') as handle:
+    for n, raw in enumerate(handle, 1):
+        row = json.loads(raw)
+        run_id = row.get('run_id')
+        if run_id not in requested_runs:
+            continue
+        assert str(row.get('character')).lower() == 'silent', run_id
+        assert run_id not in identities, run_id
+        identities[run_id] = {'line': n, 'sha256': digest(raw), 'row': row}
+assert set(identities) == requested_runs, requested_runs - set(identities)
+save('run-identities.json', identities)
+
+states, decisions, manifest = {}, {}, []
+for suffix, logfile, target in [('summary', 'states.jsonl', states), ('decisions', 'decisions.jsonl', decisions)]:
+    with (ROOT / 'logs' / logfile).open('rb') as handle:
+        for path in sorted(PRIOR.glob('*-verified-' + suffix + '.json')):
+            run_id = path.name.split('-')[0]
+            assert run_id in identities
+            indexes = json.loads(path.read_text())
+            for index in indexes:
+                handle.seek(index['offset'])
+                raw = handle.readline()
+                assert digest(raw) == index['sha256'], (logfile, index['line'])
+                row = json.loads(raw)
+                actual_id = row['state']['run_id'] if suffix == 'summary' else row['run_id']
+                assert actual_id == run_id
+                if suffix == 'summary':
+                    assert row['state']['run']['character_id'].lower() == 'silent'
+                target[index['line']] = row
+                manifest.append({'file': logfile, 'run_id': run_id, 'line': index['line'],
+                                 'offset': index['offset'], 'bytes': len(raw), 'sha256': digest(raw)})
+audit = json.loads((PRIOR / 'evidence-audit.json').read_text())
+with (ROOT / 'logs/states.jsonl').open('rb') as handle:
+    for index in audit['archives'][-1]['rows']:
+        handle.seek(index['offset']); raw = handle.readline()
+        assert digest(raw) == index['sha256']
+        row = json.loads(raw)
+        assert row['state']['run_id'] == 'Y6GM2CHWJBEY'
+        assert row['state']['run']['character_id'].lower() == 'silent'
+        states[index['line']] = row
+        manifest.append({'file': 'states.jsonl', 'run_id': 'Y6GM2CHWJBEY', **index, 'bytes': len(raw)})
+save('raw-evidence-manifest.json', manifest)
+
+used, checks = set(), []
+def state(n):
+    used.add(n)
+    return states[n]['state']
+def hp(n): return state(n)['run']['current_hp']
+def ehp(n): return sum(e['current_hp'] for e in state(n)['combat']['enemies'] if e['is_alive'])
+def pair(a, b): return [hp(a) - hp(b), ehp(a) - ehp(b)]
+def check(name, actual, expected):
+    assert actual == expected, (name, actual, expected)
+    checks.append({'name': name, 'actual': actual, 'expected': expected})
+check('KEN F5胜战净损', hp(280255)-hp(280285), 37)
+check('KEN两次实际休息', [hp(n) for n in [280336,280337,280382,280383]], [26,53,46,75])
+check('KEN F15零损', [hp(280347),hp(280381)], [46,46])
+check('KEN F15药栏消耗', [sum(p['occupied'] for p in state(n)['run']['potions']) for n in [280347,280381]], [2,0])
+check('TXZ第二次T6损血和扣血', pair(281479,281484), [3,36])
+check('TXZ第三次T6损血和扣血', pair(281535,281539), [0,27])
+check('TXZ首胜至续战死亡', [hp(n) for n in [281563,281564,281565,281566]], [4,4,4,0])
+check('WQ第二次T9损血和扣血', pair(282075,282079), [13,24])
+check('WQ第三次T9损血和扣血', pair(282144,282148), [22,39])
+check('WQ T9原始指纹相同', states[282075]['fingerprint'], states[282144]['fingerprint'])
+check('Q6实际营火和后继血量', [hp(n) for n in [282869,282870,282872,282912,282913,282921]], [36,57,57,2,2,0])
+check('1913锻造休息及后继血量', [hp(n) for n in [282706,282709,282720,282721,282723,282750,282755]], [40,40,40,61,61,46,46])
+check('Q6紧勒完整状态链', [ehp(n) for n in range(282887,282893)], [103,95,85,85,83,80])
+check('Y6紧勒终态', ehp(210437), 11)
+check('NHA第一试T2损血', hp(283398)-hp(283400), 7)
+check('NHA第二试T2损血', hp(283418)-hp(283422), 6)
+rounding = []
+for pair_record in json.loads((PRIOR/'rounding-pairs.json').read_text()):
+    a, b = (state(pair_record[k]) for k in ['before_line','after_line'])
+    enemies = [next(e for e in s['combat']['enemies'] if e['enemy_id']=='CRUSHER') for s in [a,b]]
+    values = [sum(i.get('total_damage') or 0 for i in e['intents']) for e in enemies]
+    check('NHA同招转向'+str(pair_record['before_line']), values, [1,2])
+    check('NHA同招增益不变'+str(pair_record['before_line']), enemies[0]['powers'], enemies[1]['powers'])
+    rounding.append({'lines':[pair_record['before_line'],pair_record['after_line']], 'enemies':enemies})
+save('rounding-observations.json', rounding)
+
+# Reuse only the prior index; all calculations below use the original bytes just checked.
+compact = []
+for n,row in states.items():
+    s=row['state'];c=s.get('combat') or {};p=c.get('player') or {}
+    compact.append({'line':n,'run_id':s['run_id'],'floor':s['run']['floor'],'turn':s.get('turn'),
+                    'screen':s['screen'],'hp':s['run']['current_hp'],'block':p.get('block'),
+                    'player_powers':p.get('powers',[]),'hand':[x['card_id'] for x in c.get('hand',[])],
+                    'enemies':[{'id':e['enemy_id'],'hp':e['current_hp'],'alive':e['is_alive'],
+                                'move':e.get('move_id'),'powers':e.get('powers',[]),'intents':e.get('intents',[])} for e in c.get('enemies',[])]})
+save('verified-state-summary.json', compact)
+save('verified-decision-summary.json', [{'line':n, **{k:row.get(k) for k in ['ts','run_id','floor','turn','label','chosen','result','rationale','sl_explore']}} for n,row in decisions.items()])
+extra = {n for n,row in states.items() if row['state']['run_id']=='NHA2KW0RB7VP' and row['state']['run']['floor']==33}
+extra |= {n for n in range(282330,282337)}
+used |= extra
+save('critical-original-states.json', {str(n):states[n] for n in sorted(used)})
+save('critical-original-decisions.json', {str(n):decisions[n] for n in sorted(decisions) if
+     (decisions[n]['run_id']=='NHA2KW0RB7VP' and decisions[n].get('floor')==33) or n in [275383,275384,275385,275894,275960,276139]})
+save('evidence-checks.json', checks)
+save('evidence-verification.json', {'states':len(states),'decisions':len(decisions),'checks':len(checks),
+    'original_bytes_verified':sum(r['bytes'] for r in manifest), 'prior_indexes':str(PRIOR),
+    'scope':'按原偏移核原始字节、角色和重点数值；不把全部索引核对当逐轮因果分析；其他历史锚点只核runs身份。'})
+print(json.dumps({'states':len(states),'decisions':len(decisions),'checks':len(checks),'run_identities':len(identities)},ensure_ascii=False))

@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：CSLHFCBSC1UM（A10，第17层，族母末试T10以10血6挡对25攻击阵亡，毒结算后敌剩56血）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：CSLHFCBSC1UM：完整dirty源码、前五试最终结算／退出HP、逐击毛伤及部分归零帧、实际执行最优比例、受控反事实胜负、路线误差完整归因、后续幕资源、boss时钟比值、Jev缓存及双方实际费用。
+- 学习账本：CSLHFCBSC1UM：新增无；更新 silent-0019、silent-0030、silent-0079、silent-0020、silent-0021、silent-0200、silent-0235（老错 silent-0079）；`ledger.py check`退出码0。
+- 代码提案：silent-proposal-7566591d4777f7fe（F17负属性／毒终局，关联0030／0021／0200／0235）；silent-proposal-dd783758e92b9169（F17T2／T3换线血价，关联0079）。均关联独立strategy-proposal；证据不足以改规则，保留原行为，未标implemented／shipped。追加后数字复核通过，无勘误。
+
+```json
+{"task":"postmortem","appended":["CSLHFCBSC1UM"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0019","silent-0030","silent-0079","silent-0020","silent-0021","silent-0200","silent-0235"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-7566591d4777f7fe","silent-proposal-dd783758e92b9169"],"implementation_domains":["combat","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11dca-a91b-7e83-b5a8-b8eb33054c26
+轮数：1；工具调用：command_execution×43
+token：输入 207.1k、输出 42.2k（其中推理 12.1k）、cache 读 4579.2k、cache 写 0（命中 95.7%）
+成本：未提供
+耗时：1025.6 s（墙钟）
+时间：首个事件 3.0 s、模型首个输出 8.6 s、首次工具 12.0 s、末次工具结束 1006.0 s；工具内共 55.0 s，其余（模型生成、推理、网络）967.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×35；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T07-13-03-01a11dca-a91b-7e83-b5a8-b8eb33054c26.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem.jsonl

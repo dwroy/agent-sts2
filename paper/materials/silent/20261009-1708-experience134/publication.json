@@ -1,0 +1,89 @@
+{
+  "state": "published",
+  "batch": "20261009-163854-experience-update",
+  "source": "26bd83afde20a0b5a90770a1ab21e6016b96dd95",
+  "version": "S1.exp134",
+  "source_tests": {
+    "exit": 0,
+    "files": 251,
+    "cases": 2627,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-163856-experience-update/test-exp.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "0349868609be0f9373dcbfe4a239876a31fc8d54",
+  "parent_blob": "0d11839c909759ae6c4af45d32955ab9a792aeed",
+  "actual_code": "4bf6f54fc0599d29282d7f5e31d07d55f8b606f2",
+  "publication": "5957f056390032639e701fde18f74e60b21536ce",
+  "publication_tree": "0d202738b2e4a1f6e2281490a3bf8b7d69224ed0",
+  "version_entry": {
+    "name": "S1.exp134",
+    "family": "Silent",
+    "commit": "4bf6f54fc0599d29282d7f5e31d07d55f8b606f2",
+    "source": "decision-log 2026-10-09 17:16: 原163854经验18项共享记录冲突兜底；只源26bd83af experience.json，2026-10-09.22→2026-10-09.23/增0改15退0/197 active，64R0P0MTZWAX/C6Z8ATNBNHZ7证据。源251文件2627例tsc/vitest0；当前代码与固定c308b61e/树ea2b03dc完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；四提案沿自动链，数据发布不标代码实现，原历史保留。"
+  },
+  "main_code_sync": "103292d61ff7cf6ce1edd53ef5c46b6cbd31c365",
+  "main_record": "7d94ba1952b80918022369f50d6b72e2e17c7c88",
+  "record_line": "- 2026-10-09 17:16 运维codex17:08经验134兜底：源26bd83afde20a0b5a90770a1ab21e6016b96dd95原18项共享记录冲突及failed/merged-null保持；空闲非阻塞锁内从live4900801c210acc6505cf94678a2aec32841ac83f只集成已测experience原blob，actual 4bf6f54fc0599d29282d7f5e31d07d55f8b606f2，本次刷新保存f1daf33476b44fddcf2bba6fcbbf0e4a99a88830，各刷新SHA保持。当前代码与固定c308b61e/树ea2b03dc逐blob一致，原完整302文件3435例过2跳保持，不冒报新数据树完整通过；源过时工具/任务/文档路径不覆盖当前live。经验2026-10-09.22→2026-10-09.23/增0改15退0/197 active，唯一S1.exp134，源251文件2627例tsc/vitest0；四提案沿原自动链，main机械同步及18所属数据shipped随后登记，原批独立完整外部续验。原55CLI/第134节与上一轮经验133完整结案保持，无重复复盘论文刷新，A10审计结案与exp100旧失败保持；回执paper/materials/silent/20261009-1708-experience134。\n",
+  "live_before": "4900801c210acc6505cf94678a2aec32841ac83f",
+  "preserved_refresh": "f1daf33476b44fddcf2bba6fcbbf0e4a99a88830",
+  "refresh_sha256": {
+    "notes/fight-value-backtest-silent.md": "6d35276b388bc4de02b41da406a3eb8414f64880fccf5bdc908f3aa2be877cfa"
+  },
+  "code_equivalence": {
+    "data_only": true,
+    "current_code_test_task_blobs_identical": true,
+    "current_tested_pin": "c308b61e13c15ee90d62798f732d800055313f65",
+    "retained_complete_checks": {
+      "timestamp": "2026-10-09 16:47",
+      "batch": "20261009-154302-experience-update",
+      "source": "a8bd4e4841b030df8038bbed8e38a893559a2cc7",
+      "actual_data_merge": "dfb41f1826e29ed2763caf3127b7e0d4b4dea363",
+      "checked_live_commit": "c308b61e13c15ee90d62798f732d800055313f65",
+      "checked_tree": "ea2b03dcc20f2c1f9055fd355c6eb8936a1dc5a0",
+      "version": "S1.exp133",
+      "data_shipped": 24,
+      "complete_tsc_vitest_exit": 0,
+      "files_passed": 302,
+      "tests_passed": 3435,
+      "tests_skipped": 2,
+      "original_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-154302-experience-update.fallback-ea2b03dcc20f2c1f9055fd355c6eb8936a1dc5a0.checks.log",
+      "complete_log_sha256": "874a9c55e966a98bc14b0d20aca513e92e6e0bfa2925aef63fa8cf878cf18916",
+      "original_batch_state": "failed",
+      "original_rc": 0,
+      "original_merged": null,
+      "old_failed_report_conflicts_and_retry_preserved": true,
+      "prior_manifest_sha256": "a9609ac8624049b6272e68fefe214c14621f8e4b7305cc1a8fcb743acefce3a4",
+      "originals_preserved": 777,
+      "source_and_publication_are_actual_live_ancestors": true,
+      "repeat_check_requests": 0,
+      "repeat_publication_version_support_shipped": 0,
+      "previous_exp100_failure_preserved": true,
+      "completion_kind": "Independent 2026-10-09 supplement acceptance; original failed completion report remains unchanged."
+    },
+    "post_data_merge_sandbox_repeated": false,
+    "new_data_tree_full_passed": false,
+    "previous_exp100_full_failure_preserved": true,
+    "source_code_differences_from_actual": [
+      "docs/codex-ops.md",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ]
+  },
+  "full_external_passed": false
+}

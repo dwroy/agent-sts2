@@ -1,0 +1,113 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-221053/agent
+
+ ❯ tests/shop-removal-preview.test.ts (7 tests | 4 failed) 31ms
+   × F37: does not reject the deck-index-33 target before observing the removal page 8ms
+   × F37: pauses the original commitment and preserves both lists when the real page differs 5ms
+   × a genuinely absent target still falls back to the actual selection question 5ms
+   × compares duplicate copies as a multiset instead of only comparing IDs 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/shop-removal-preview.test.ts > F37: does not reject the deck-index-33 target before observing the removal page
+AssertionError: expected { Object (invalid) } to have property "steps"
+ ❯ tests/shop-removal-preview.test.ts:51:18
+     49|   const e = shop();
+     50|   const parsed = parseShopPlan({ plan: ["remove:c33"] }, e);
+     51|   expect(parsed).toHaveProperty("steps");
+       |                  ^
+     52|   const preview = selectableCards(e.state, deckCards(e.state, e.knowle…
+     53|   const note = unlistedNote(preview.unlisted, "remove", unverifiedRemo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/shop-removal-preview.test.ts > F37: pauses the original commitment and preserves both lists when the real page differs
+AssertionError: expected { kind: 'act', …(6) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "apply": [Function apply],
+  "intent": {
+    "action": "select_deck_card",
+    "option_index": 1,
+  },
+  "journal": "DeepSeek plan fixed-shop step 2: remove 牌0 (named with the shop choice)",
+  "kind": "act",
+  "label": "selection/remove",
+  "plan": {
+    "choice": "牌0",
+    "ref": "fixed-shop",
+    "step": 2,
+  },
+  "rationale": "DeepSeek plan fixed-shop step 2: remove 牌0 (named with the shop choice)",
+}
+
+ ❯ tests/shop-removal-preview.test.ts:60:65
+     58| it("F37: pauses the original commitment and preserves both lists when …
+     59|   const e = selection(true);
+     60|   expect(pendingPickStep(e, "deck_card_select", "移除1张牌", 0, 1)).toBeNu…
+       |                                                                 ^
+     61|   expect(e.screenMemory.pendingPick).toBeUndefined();
+     62|   expect(e.screenMemory.selectionPreviewMismatch).toMatchObject({ ref:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/shop-removal-preview.test.ts > a genuinely absent target still falls back to the actual selection question
+AssertionError: expected '悔恨, named for this remove with the ch…' not to contain 'deck order'
+
+Expected: "deck order"
+Received: "悔恨, named for this remove with the choice before, is not on this screen (it lists only the first 25 eligible cards in deck order): pick among the cards listed here"
+
+ ❯ tests/shop-removal-preview.test.ts:86:73
+     84|   expect(pendingPickStep(e, "deck_card_select", "移除1张牌", 0, 1)).toBeNu…
+     85|   expect(e.screenMemory.pickNotOffered?.name).toBe("悔恨");
+     86|   expect(pickNotOfferedNote(e, "remove")["named_card_not_offered"]).no…
+       |                                                                         ^
+     87| });
+     88|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/shop-removal-preview.test.ts > compares duplicate copies as a multiset instead of only comparing IDs
+AssertionError: expected { kind: 'act', …(6) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "apply": [Function apply],
+  "intent": {
+    "action": "select_deck_card",
+    "option_index": 0,
+  },
+  "journal": "DeepSeek plan fixed-shop step 2: remove 牌0 (named with the shop choice)",
+  "kind": "act",
+  "label": "selection/remove",
+  "plan": {
+    "choice": "牌0",
+    "ref": "fixed-shop",
+    "step": 2,
+  },
+  "rationale": "DeepSeek plan fixed-shop step 2: remove 牌0 (named with the shop choice)",
+}
+
+ ❯ tests/shop-removal-preview.test.ts:93:65
+     91|   const cards = (e.state.raw["selection"] as Record<string, any>)["car…
+     92|   cards.push({ ...cards[0], index: 25 });
+     93|   expect(pendingPickStep(e, "deck_card_select", "移除1张牌", 0, 1)).toBeNu…
+       |                                                                 ^
+     94|   expect(e.screenMemory.selectionPreviewMismatch).toBeDefined();
+     95| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  22:33:17
+   Duration  2.33s (transform 1.79s, setup 404ms, import 1.77s, tests 31ms, environment 0ms)
+

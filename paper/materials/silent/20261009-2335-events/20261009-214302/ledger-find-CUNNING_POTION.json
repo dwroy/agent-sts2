@@ -1,0 +1,228 @@
+[
+ {
+  "id": "silent-0256",
+  "ts": "2026-10-07T22:27:46+08:00",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "狡诈药水CUNNING_POTION已实见确定生成升级小刀，但仍因POTION_EFFECTS无该药而在modelPotion返回null，仅给Jev效果未模拟、生成数未知的直接饮用项，不能共同比较剩余手位和先出刀再喝的顺序。本局满手续喝确实消耗药却不新增刀；需以本角色证据补确定生成模型及容量事实，合法按钮本身不是接口错误，不声称修模必能赢整场。",
+  "evidence": [
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 8,
+    "turn": 1,
+    "role": "support",
+    "note": "较早首证：decisions:227273狡诈选项标效果未模拟；states:231884→231885手3→6，实添3张升级刀。",
+    "added": "2026-10-07T22:27:46+08:00"
+   },
+   {
+    "run": "NB8KCF6HRGVF",
+    "floor": 31,
+    "turn": 5,
+    "role": "support",
+    "note": "decisions:248014仍效果未模拟；states:253285→253286手5→8、实添3刀。旧复盘只有饮用记录，没有该模型缺口条目。",
+    "added": "2026-10-07T22:27:46+08:00"
+   },
+   {
+    "run": "WQZVENQ7DTRP",
+    "floor": 33,
+    "turn": 11,
+    "role": "support",
+    "note": "第5次decisions:276102—276104，手8→10→10→10、添刀2/0/0；第6次276161—276163，手5→8→10→10、添刀3/2/0。当前live card-model.ts:1556—1558无效果返回null，combat-plan.ts:3159排除、:3844直接未模拟饮用；fix-queue无同项。",
+    "added": "2026-10-07T22:27:46+08:00"
+   },
+   {
+    "run": "9DAS5L8YM1CN",
+    "floor": 22,
+    "turn": 3,
+    "role": "repeat",
+    "note": "decisions:292691—292698仍仅给效果未模拟、数量未知的狡诈饮用项；states:299905→299906实4手→7手、添3张升级SHIV，299909—299912三刀各6共18，石虫最终13血带15毒退场、玩家保持2血。当前live card-model.ts:1620返回null、combat-plan.ts:3169不纳入药水方案。旧模型缺口再现，不是新bug或早饮整场胜局证据。",
+    "added": "2026-10-08T15:57:39+08:00"
+   },
+   {
+    "run": "C6Z8ATNBNHZ7",
+    "floor": 23,
+    "turn": 6,
+    "role": "repeat",
+    "note": "四次狡诈实添三把升级6伤刀，手5→8/6→9/7→10/5→8；末试三刀18伤、最终余敌22仍阵亡。d316509/316529仍未知生成数、未模拟；当前live card-model.ts:1618/1620、combat-plan.ts:3169/3850模型缺口重复，fix-queue-v4:789已有。本局无容量浪费或提前饮用胜局，不归因修模必胜。s325100→325101、325136→325137、325172→325173、325208→325209、325209→325213。",
+    "added": "2026-10-09T16:32:33+08:00"
+   }
+  ],
+  "first_run": "SADL3CGYTGSR",
+  "prior": "no",
+  "prior_runs": [
+   "SADL3CGYTGSR",
+   "NB8KCF6HRGVF"
+  ],
+  "prior_note": "学习前两场可核题面都没有生成数及方案模型；这里评的是模型是否已有，并非将宽裕手位下正确饮用认定错误。容量失误的首证另记本局机制。",
+  "status": "observed",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "WQZVENQ7DTRP",
+    "9DAS5L8YM1CN",
+    "C6Z8ATNBNHZ7"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-221303-postmortem/cunning-model-proposal.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/proposal-cunning.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-160331-experience-update/proposal-cunning.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/proposal-potions.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-163856-experience-update/proposal-potions.md"
+   ]
+  },
+  "note": "来源20261007-221303-postmortem；首证沿较早静默A7，不把本局A10当第一次日志出现。只登记观察，独立strategy-proposal实现；只读live a881e27a54e458bd027244db12503e96197d6e51，对局31914e4b+dirty。",
+  "asc": 7,
+  "history": [
+   {
+    "ts": "2026-10-07T22:27:46+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T22:31:52+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T15:57:39+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T16:00:04+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T16:16:38+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T16:32:33+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T16:35:27+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T16:51:24+08:00",
+    "by": "learner:experience-update"
+   }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+   "来源20261007-221303-postmortem；首证沿较早静默A7，不把本局A10当第一次日志出现。只登记观察，独立strategy-proposal实现；只读live a881e27a54e458bd027244db12503e96197d6e51，对局31914e4b+dirty。",
+   "代码提案 silent-proposal-4111ed10f08739cb → task=strategy-proposal；Roy-2026-10-07-learning",
+   "只读复盘补证；原status observed与prior/first_run保持，fix-queue未列，另经code_proposals CLI补独立strategy-proposal链接。",
+   "代码提案 silent-proposal-756ddf20db14797f → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-14c20d7897195ef5 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "旧基础模型缺口repeat，来源任务20261009-161301-postmortem；不修改旧claim、最早首证或prior。独立strategy-proposal补生成/容量。",
+   "代码提案 silent-proposal-9e14d9e11b63d153 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-9d3aa16e535ba576 → task=strategy-proposal；Roy-2026-10-07-learning"
+  ]
+ },
+ {
+  "id": "silent-0257",
+  "ts": "2026-10-07T22:27:46+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局狡诈药水CUNNING_POTION在有手位时实添3张升级小刀SHIV、每刀实打6；容量不足时只添实际空位数。沙虫第5次计划妥当已建立、八手连喝三瓶只添2/0/0刀，末次五手连喝只添3/2/0刀，满手饮用仍耗瓶且HP/能量/敌血不变。只确认这两种容量及保留组合，不推出所有生成牌规则或提前/穿插用药必胜。",
+  "evidence": [
+   {
+    "run": "WQZVENQ7DTRP",
+    "floor": 33,
+    "turn": 11,
+    "role": "support",
+    "note": "第5次states:282292→282296，手8→10→10→10，刀0→2→2→2；之后两刀各6共12。计划妥当在T8的282280建立，T9—T11轮初10手。",
+    "added": "2026-10-07T22:27:46+08:00"
+   },
+   {
+    "run": "WQZVENQ7DTRP",
+    "floor": 33,
+    "turn": 11,
+    "role": "support",
+    "note": "第6次states:282352→282357，手5→8→10→10、刀0→3→5→5；后来五刀各6共30，终轮另21直伤及25毒共76净扣，仍阵亡。",
+    "added": "2026-10-07T22:27:46+08:00"
+   },
+   {
+    "run": "WQZVENQ7DTRP",
+    "floor": 33,
+    "turn": 9,
+    "role": "support",
+    "note": "首试三次饮用各添3刀、每刀6；第2—4次T11亦各兑现9刀54伤。六次同局SL不是六局独立样本。",
+    "added": "2026-10-07T22:27:46+08:00"
+   }
+  ],
+  "first_run": "WQZVENQ7DTRP",
+  "prior": "unknown",
+  "prior_runs": [
+   "SADL3CGYTGSR",
+   "NB8KCF6HRGVF"
+  ],
+  "prior_note": "较早两局狡诈分别在3/5手时新增3刀，未遇可比的狡诈满手续喝分支；旧0116/0149是别的生成牌容量，不能移植成该药已学会的先验。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "WQZVENQ7DTRP"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-221303-postmortem/cunning-model-proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/proposal-cunning-capacity.md"
+   ],
+   "experience": [
+    "silent-cunning-potion-shiv-capacity"
+   ],
+   "commits": [
+    "ab065d0a4fc067cb6a6d529da2706ab7ef508f85",
+    "9ede80593818dd8cdbc5a10e28f8cd79edc7b613",
+    "fd4c8e52341c31cad606c0a4b96a43663843e201",
+    "148a9d2a1de7c01fd052aa70bc20feba25405043"
+   ],
+   "changelog": [
+    "## 2026-10-07 静默猎手 第八十二次增量：2 局 A10（version 2026-10-07.28，分支 exp-silent，ab065d0a）"
+   ]
+  },
+  "note": "新机制的范围为本局A10已见手位、升级刀与保留组合；数字逐帧核对，单独保存容量机制，不与模型缺口首证混账。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-07T22:27:46+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T22:31:52+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T22:50:20+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T22:50:20+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T23:19:12+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T23:50:46+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp82",
+  "effect": null,
+  "notes": [
+   "新机制的范围为本局A10已见手位、升级刀与保留组合；数字逐帧核对，单独保存容量机制，不与模型缺口首证混账。",
+   "代码提案 silent-proposal-4111ed10f08739cb → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第82次静默经验提交前链接，首证/先验/旧上线记录保持，独立strategy-proposal实现；无accepted/shipped。",
+   "代码提案 silent-proposal-a099e89437e942bb → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第82次静默经验更新，首证/先验/claim/旧support/repeat/version和全部上线历史保持；仅追加实际核对来源，代码提案独立strategy-proposal实现，未accepted/shipped。旧王室+小血瓶2血与新无小血瓶4血分支、狡诈基本生成与首次满手0257分开。",
+   "经验第82次原数据实际发布.28/156 active；仅按原ledger-map登记本所属经验数据shipped，源原沙箱240文件2525例、实际组合合后242文件2540例tsc/vitest0。首证/prior/claim/support/repeat及旧上线历史保持；三个combat/potion/SL代码提案沿独立策略链，数据发布不等于代码实现；完整外部原批续验另登记。"
+  ],
+  "shipped_at": "2026-10-07T23:50:46+08:00"
+ }
+]

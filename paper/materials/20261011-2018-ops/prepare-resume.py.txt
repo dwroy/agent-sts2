@@ -1,0 +1,14 @@
+from pathlib import Path
+import subprocess,json,collections,hashlib
+r=Path.cwd();w=r/'.worktrees/ops-1852-integration';o=r/'paper/materials/20261011-2018-ops/integration';source='95d65c8bf56734735366a466bd5a29c0430231c6';conf=['paper/materials/decision-log.md']
+def g(*a):return subprocess.check_output(['git','-C',str(w),*a])
+assert not g('diff','--cached','--name-only','--','agent','learner','ops','knowledge/builders').strip()
+with (o/'calibration-gitleaks.log').open('wb') as h:
+ p=subprocess.Popen(['git','-C',str(w),'diff','--cached'],stdout=subprocess.PIPE);scan=subprocess.run(['nice','-n','19','gitleaks','stdin','--redact','--no-banner'],stdin=p.stdout,stdout=h,stderr=subprocess.STDOUT);p.stdout.close();assert p.wait()==0 and scan.returncode==0
+subprocess.run(['git','-C',str(w),'commit','-m','Integrate next verified Silent calibration preserving deployment records','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>'],check=True,stdout=subprocess.DEVNULL)
+proof=[]
+for source in ['6ff7dc1755167f87159ac7b02c7d13c9eaf3a0af','6e233ede76e5dd849f0d40760be64e7cdacf78b1']:
+ patch=subprocess.check_output(['git','show','--format=','--binary',source]);check=subprocess.run(['git','-C',str(w),'apply','--reverse','--check','-'],input=patch,capture_output=True);assert check.returncode==0,check.stderr
+ tree=g('rev-parse','HEAD^{tree}');subprocess.run(['git','-C',str(w),'merge','-s','ours','--no-ff',source,'-m','Retain exact learner source ancestry after scoped integration '+source[:9],'-m','Complete source patch reverse-apply verified; preserve concurrent live source and canonical records.','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>'],check=True,stdout=subprocess.DEVNULL);assert g('rev-parse','HEAD^{tree}')==tree
+ proof.append({'source':source,'patch_sha256':hashlib.sha256(patch).hexdigest(),'reverse_apply_check':0})
+(o/'prepared-final.json').write_text(json.dumps({'candidate':g('rev-parse','HEAD').decode().strip(),'tree':g('rev-parse','HEAD^{tree}').decode().strip(),'calibration_source':'95d65c8bf56734735366a466bd5a29c0430231c6','sources':proof,'calibration_conflicts':conf,'calibration_added_code':False},indent=2)+'\n');print(g('rev-parse','HEAD').decode().strip(),flush=True)

@@ -1,0 +1,39 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/compute-memo.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 78213[2mms[22m[39m
+     [33m[2m✓[22m[39m the same question and every resolution as without it; the board planned again comes from it, rollout and B2 [33m 13484[2mms[22m[39m
+     [33m[2m✓[22m[39m on a worker pool (one worker): the run comes back too, keyed by the data the workers load, after the pool is built again [33m 11150[2mms[22m[39m
+     [33m[2m✓[22m[39m a refresh leaves the running pool's identity intact and a rebuilt pool misses the old memo [33m 22690[2mms[22m[39m
+     [33m[2m✓[22m[39m a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept [33m 15348[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout needs the budget the stored run needed: less, it runs again; enough, it comes from the memo [33m 10607[2mms[22m[39m
+     [33m[2m✓[22m[39m with exactly that budget the same run is cut nowhere and gives the same result; with less, it is cut [33m 4917[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m11 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 10:42:36
+[2m   Duration [22m 80.15s[2m (transform 1.47s, setup 366ms, import 1.41s, tests 78.21s, environment 0ms)[22m
+
+JSON report written to /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261012-090027-strategy-proposal.supplement-ed2102978e8034f2b143d6312777e3071156866f5cd0b0f87af681ad5b683c28.0.vitest.json
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/named-card-facts.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m11 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 10:43:57
+[2m   Duration [22m 2.62s[2m (transform 1.97s, setup 947ms, import 1.40s, tests 39ms, environment 0ms)[22m
+
+JSON report written to /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261012-090027-strategy-proposal.supplement-ed2102978e8034f2b143d6312777e3071156866f5cd0b0f87af681ad5b683c28.1.vitest.json
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/silent-observed-intervals.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+[2m   Start at [22m 10:44:01
+[2m   Duration [22m 647ms[2m (transform 384ms, setup 408ms, import 59ms, tests 38ms, environment 0ms)[22m
+
+JSON report written to /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261012-090027-strategy-proposal.supplement-ed2102978e8034f2b143d6312777e3071156866f5cd0b0f87af681ad5b683c28.2.vitest.json

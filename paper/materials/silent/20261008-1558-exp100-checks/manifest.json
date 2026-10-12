@@ -1,0 +1,80 @@
+{
+  "recorded_at_cst": "2026-10-08 16:03",
+  "batch": "20261008-144109-experience-update",
+  "source": "196f1800b2c3b9bdc522c4d77632f1154662f8c9",
+  "checked_live": "2b1a5f6d491f826ea1bac28f707716d109fb3e65",
+  "checked_tree": "bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7",
+  "full_check_rc": 1,
+  "tsc": 0,
+  "tsc_evidence": "TypeScript command is run before vitest; original combined log contains no TypeScript diagnostic",
+  "vitest": 1,
+  "files_passed": 301,
+  "files_failed": 1,
+  "cases_passed": 3428,
+  "cases_failed": 1,
+  "cases_skipped": 2,
+  "failed_test": "agent/tests/rollout-live.test.ts:132:28",
+  "assertion": "addedSomewhere: expected false to be true",
+  "original_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-144109-experience-update.fallback-bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7.checks.log",
+  "original_log_bytes": 75281,
+  "original_log_sha256": "c75b7f764d641ca8ebe3c3f3291f12c6723175b0a2769fcb570008145d0c725d",
+  "previous_full_passing_live": "722518cdb9edfe808864da176f7e512bd820e170",
+  "code_and_fixture_blobs_equal_to_previous_pass": {
+    "agent/tests/rollout-live.test.ts": {
+      "before": "fe43d2d01bd101b7cda482d27d1f245717249c4f",
+      "checked": "fe43d2d01bd101b7cda482d27d1f245717249c4f"
+    },
+    "agent/tests/logged.ts": {
+      "before": "d2ea0474747b3a40147f0e6e2723578fc6d91578",
+      "checked": "d2ea0474747b3a40147f0e6e2723578fc6d91578"
+    },
+    "agent/tests/logged-states": {
+      "before": "53fdc7dc6794f3f667b0e6f8ac16dd86fd7aa153",
+      "checked": "53fdc7dc6794f3f667b0e6f8ac16dd86fd7aa153"
+    },
+    "agent/tests/rollout-clock-fixture.ts": {
+      "before": "6ddf87fb186d4389a786da02ad96f7b13c4d298f",
+      "checked": "6ddf87fb186d4389a786da02ad96f7b13c4d298f"
+    },
+    "agent/src/reflex/rollout-live.ts": {
+      "before": "80f63e71bd1075d03ce0f75edcdbe16f37ca54db",
+      "checked": "80f63e71bd1075d03ce0f75edcdbe16f37ca54db"
+    },
+    "agent/src/reflex/rollout.ts": {
+      "before": "c058cd61b5b3eb2aff9640aa4a9258cd744d5efb",
+      "checked": "c058cd61b5b3eb2aff9640aa4a9258cd744d5efb"
+    },
+    "agent/src/reflex/combat-plan.ts": {
+      "before": "bef1bd29fc55bd40696e415be7cca0b078bd14b3",
+      "checked": "bef1bd29fc55bd40696e415be7cca0b078bd14b3"
+    },
+    "agent/src/reflex/turn-solver.ts": {
+      "before": "ab6aaae4850840d4dbb342978b6927b8334febdb",
+      "checked": "ab6aaae4850840d4dbb342978b6927b8334febdb"
+    }
+  },
+  "knowledge_paths_changed": [
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/experience.json",
+    "knowledge/characters/silent/fight-value-gates.json",
+    "knowledge/characters/silent/fight-value.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ],
+  "refresh_not_assumed_equivalent": true,
+  "root_cause": "unresolved; fixed inputs and controlled clock needed to distinguish fixture/load/data dependencies from a source defect",
+  "decision": "retain S1.exp100; queue nonblocking infrastructure investigation for normal fix-batch",
+  "rollback": false,
+  "new_behavior_version": null,
+  "new_game_knowledge": false,
+  "new_ledger_rows": 0,
+  "no_repeat_full_recheck": true,
+  "no_targeted_rerun_claimed": true,
+  "normal_worktree_dirty_preserved": true,
+  "dispatch_attempt_pending": true,
+  "paper_invocations": 0
+}

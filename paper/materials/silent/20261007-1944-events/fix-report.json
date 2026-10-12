@@ -1,0 +1,82 @@
+{
+  "task": "fix-batch",
+  "base": "3cb3c7cf0a8d09c198bf89caf9b95aa3f3fef61f",
+  "fixes": [
+    {
+      "item": "升阶审计完成报告裸JSON兼容",
+      "commit": "0605d15ac09966a6d34ba96ef29be03312195ccd",
+      "test": "agent/tests/ascension-audit-report.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "升阶审计独立工作树报告目录",
+      "commit": "b522f1fbd624b260db0f565689272d16c3f3a633",
+      "test": "agent/tests/ascension-audit-path.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "恢复rollout固定时钟夹具",
+      "commit": "955941fa54e7787576baa47e0669308284f89543",
+      "test": "agent/tests/rollout-live-clock.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "恢复silent-0229铁蒺藜荆棘接线及后续轮",
+      "commit": "db6e32d2ee101af6b53f8228c27165bb41f04811",
+      "test": "agent/tests/silent-caltrops.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "silent-0234 HAZE群体施毒漏入卡牌模型",
+      "commit": "20b04517393708c73912326bb35d8448d1b3f77e",
+      "test": "agent/tests/silent-haze.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "无新增源码策略报告误限主检出目录",
+      "commit": "2b68fe48b607e58a83137d08c6c59dbd25275f98",
+      "test": "agent/tests/strategy-no-change-path.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "Codex 大脑缓存命中低及实测对比",
+      "reason": "证据不足：离线禁止真实LLM/网络；未确定固定根因，保留原行为"
+    },
+    {
+      "item": "mod 请求超时约10–13秒自愈",
+      "reason": "证据不足：缺固定可复现根因，不能改游戏/mod或据短暂超时报卡死"
+    },
+    {
+      "item": "boss 整场模拟性能及 CPU 争用",
+      "reason": "太大：独立性能分析；未降低预算、精度或排除测试"
+    },
+    {
+      "item": "出牌、药水、SL、终局、路线、休息策略项",
+      "reason": "策略类：沿现有学习者代码提案交独立 strategy-proposal；已有授权不需新增审批，缺数据保持"
+    },
+    {
+      "item": "B4/B5 自动化及 A10 双boss/四处补强",
+      "reason": "独立已授权功能：既有专项继续，普通纯bug批次不重复实现或派发"
+    },
+    {
+      "item": "silent-0237 神化状态传播",
+      "reason": "独立提案已待办：silent-proposal-89354805ee4d7e77、silent-proposal-283a164780d11e69；当前源码仍缺传播，沿共享租约不重复派发"
+    }
+  ],
+  "merged": "f9db52c1ed7af16d019e32528953e5ffcc8e08f0",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2511
+  },
+  "code_proposals": [
+    "silent-proposal-64053b2a68241a20",
+    "silent-proposal-461611b6b36e2d4c"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-173847-fix-batch/report.md"
+}

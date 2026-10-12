@@ -4,7 +4,7 @@
  * before the next rest, the next elite and the boss; at a rest site what each option leaves). The answer's `route`
  * keeps the plan (the default) or gives a new node sequence, which becomes the act's plan and is followed from the
  * next map. A missing, unreadable or illegal route keeps the plan and is logged; the card or rest choice is never
- * blocked by the route. No code values or ranks; next_rest (Dai 2026-10-03) lists, for the plan and the stretches from
+ * blocked by the route. No code values or ranks; next_rest (Roy 2026-10-03) lists, for the plan and the stretches from
  * each next node, the fights, "?" rooms, shop and HP on arriving at the next rest site (facts; tests/route-next-rest.test.ts),
  * and a change logs the same comparison for the route it took.
  *

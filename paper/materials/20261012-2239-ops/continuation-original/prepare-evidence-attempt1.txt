@@ -1,0 +1,139 @@
+import hashlib
+import json
+from pathlib import Path
+
+ROOT = Path('/home/dw/Projects/agent-sts2')
+OUT = Path(__file__).resolve().parent
+SOURCE = ROOT / 'learner/runs/20261012-134303-postmortem'
+ADDENDA = ROOT / 'paper/materials/silent/20261012-core-candidate-decklists/owner-addenda/20261012-1453'
+
+
+def save(name, obj):
+    (OUT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n')
+
+
+verification = json.loads((SOURCE / 'verification-before.json').read_text())
+for name in ['states.jsonl', 'decisions.jsonl', 'sl-attempts.jsonl', 'KF9HMZKTFC3V-resources.json']:
+    assert hashlib.sha256((SOURCE / name).read_bytes()).hexdigest() == verification['files'][name]
+states = [json.loads(line) for line in (SOURCE / 'states.jsonl').open()]
+assert all(row['state']['run_id'] == 'KF9HMZKTFC3V' for row in states)
+assert all(row['state']['run']['character_id'] == 'SILENT' for row in states if row['state'].get('run'))
+index = {row['_line']: row for row in states}
+resource = json.loads((SOURCE / 'KF9HMZKTFC3V-resources.json').read_text())
+audit = json.loads((SOURCE / 'audit.json').read_text())
+windows = []
+for encounter in resource['combats']:
+    if encounter['floor'] not in [48, 49]:
+        continue
+    lo = encounter['entry']['line']
+    hi = (encounter.get('exit') or encounter['last'])['line']
+    rows = [row for row in states if lo <= row['_line'] <= hi]
+    ready = next(row for row in rows if row['state'].get('combat') and row['state']['combat']['hand']
+                 and row['state']['combat']['action_readiness'].get('can_use_combat_actions'))
+    old = next(w for w in audit['windows'] if w['seq'] == encounter['sequence'])
+    assert ready['state']['turn'] == 1
+    windows.append(dict(sequence=encounter['sequence'], floor=encounter['floor'], entry=encounter['entry'],
+                        exit=encounter.get('exit'), last=encounter['last'], ready_line=ready['_line'],
+                        first_line=lo, last_line=hi, prior_turns=old['turns']))
+
+core_ids = {'BOUNCING_FLASK', 'ACCELERANT', 'HAZE', 'LEG_SWEEP', 'BACKFLIP', 'MALAISE', 'PIERCING_WAIL', 'NEUTRALIZE'}
+versions = {}
+for row in states:
+    for card in (row['state'].get('run') or {}).get('deck', []):
+        if card['card_id'] not in core_ids:
+            continue
+        key = (card['card_id'], card['upgraded'], json.dumps(card.get('enchantment'), sort_keys=True))
+        versions.setdefault(key, dict(card=card, source_line=row['_line'], floor=row['state']['run']['floor'], ts=row['ts']))
+selected_lines = {row['_line'] for row in states if any(w['first_line'] <= row['_line'] <= w['last_line'] for w in windows)}
+selected_lines.update(version['source_line'] for version in versions.values())
+raw_records = []
+with (ROOT / 'logs/states.jsonl').open('rb') as raw_file:
+    for line in sorted(selected_lines):
+        row = index[line]
+        raw_file.seek(row['_offset'])
+        data = raw_file.readline()
+        original = json.loads(data)
+        assert original == {k: v for k, v in row.items() if k not in ['_line', '_offset']}
+        raw_records.append(dict(source=dict(path='logs/states.jsonl', line=line, offset=row['_offset'],
+                                             bytes=len(data), sha256=hashlib.sha256(data).hexdigest()), row=original))
+save('observed-states.json', raw_records)
+save('observed-windows.json', windows)
+save('observed-card-versions.json', list(versions.values()))
+
+decisions = []
+with (ROOT / 'logs/decisions.jsonl').open('rb') as raw_file:
+    for text in (SOURCE / 'decisions.jsonl').open():
+        row = json.loads(text)
+        if row.get('floor') not in [48, 49]:
+            continue
+        raw_file.seek(row['_offset'])
+        data = raw_file.readline()
+        original = json.loads(data)
+        assert original == {k: v for k, v in row.items() if k not in ['_line', '_offset']}
+        decisions.append(dict(source=dict(path='logs/decisions.jsonl', line=row['_line'], offset=row['_offset'],
+                                          bytes=len(data), sha256=hashlib.sha256(data).hexdigest()), row=original))
+save('observed-decisions.json', decisions)
+comparison = json.loads((ADDENDA / 'comparison.json').read_text())
+sl = []
+with (ROOT / 'logs/sl-attempts.jsonl').open('rb') as raw_file:
+    for run in comparison['runs']:
+        for attempt in run['sl_and_boss_attempts']:
+            if attempt['floor'] not in [48, 49]:
+                continue
+            source = attempt['source']
+            raw_file.seek(source['off'])
+            data = raw_file.read(source['len'])
+            assert hashlib.sha256(data).hexdigest() == source['sha256']
+            row = json.loads(data)
+            assert row['run_id'] == run['run_id']
+            sl.append(dict(source=source, row=row))
+save('observed-sl.json', sl)
+
+# The single-enemy F49 window has no spawn, phase, healing or disappearance before the observed zero-HP frame.
+f49 = next(w for w in windows if w['floor'] == 49)
+actual = []
+for turn in f49['prior_turns']:
+    subset = [row for row in states if turn['start'] <= row['_line'] <= turn['end']]
+    dealt = 0
+    restored = 0
+    hp_losses = 0
+    hp_gains = 0
+    for before, after in zip(subset, subset[1:]):
+        eb = before['state']['combat']['enemies']
+        ea = after['state']['combat']['enemies']
+        assert len(eb) == len(ea) == 1
+        assert eb[0]['enemy_id'] == ea[0]['enemy_id'] == 'AEONGLASS'
+        assert eb[0]['index'] == ea[0]['index'] and eb[0]['max_hp'] == ea[0]['max_hp'] == 535
+        delta = max(0, eb[0]['current_hp']) - max(0, ea[0]['current_hp'])
+        dealt += max(0, delta)
+        restored += max(0, -delta)
+        hp_delta = before['state']['combat']['player']['current_hp'] - after['state']['combat']['player']['current_hp']
+        hp_losses += max(0, hp_delta)
+        hp_gains += max(0, -hp_delta)
+    assert restored == 0 and dealt == turn['net_enemy']
+    actual.append(dict(turn=turn['turn'], effective_hp_damage=dealt, enemy_healing=restored,
+                       player_hp_loss_visible=hp_losses, player_hp_gain_visible=hp_gains,
+                       start_line=turn['start'], end_line=turn['end']))
+assert sum(t['effective_hp_damage'] for t in actual) == 535
+assert index[f49['last_line']]['state']['combat']['enemies'][0]['current_hp'] == 0
+save('actual-dpr.json', dict(run_id='KF9HMZKTFC3V', floor=49, attempt=1, independent_runs=1,
+     turns=6, effective_hp_damage=535, dpr=535/6, per_turn=actual,
+     poison_damage_observed_T3_T5=[138, 156, 147], poison_subwindow_dpr=441/3,
+     denominator='T1开始，含T6没有手动出牌但实际结算并结束战斗；先逐场算比例，不以局间均值相除。',
+     limitations=['此实线含此前四次SL，F49首试胜不等整局首试胜。',
+                  '相邻原帧无敌回血/换体/召唤；伤害按实际敌HP减少，过量不计；玩家战后+1回血另列。',
+                  'T3-T5毒147/轮是条件输出子窗口，不替代整场89.1667/轮。']))
+save('predeclared-experiment.json', dict(request_id='roy-20261012-concrete-core-decklists', revision=1,
+     evidence_branch='毒防/P的药瓶-触媒与实付防御分支', run_id='KF9HMZKTFC3V', floor=49,
+     starting_resources='真实T1首个可操作状态；31HP、空药、原遗物/敌HP/3制品/能量/格挡保持。',
+     policy='现有solveTurn/BOSS_SIM_POLICY_NODES=1500，damageScale=0.5，hpScale=1，原lookahead参数；全部臂相同。',
+     seeds=dict(base=29, count=64, ids=list(range(64))), max_turns=30, fixed_windows=[3,6,12],
+     draw_contract='按真实首手数重新洗原牌池；同seed配对；A不是原已知抽序胜线。原胜线单独逐动作校准。',
+     arms=dict(A='原36张', B='两药瓶/触媒/迷雾/扫腿/后空翻/萎靡/两尖啸/中和，共10张功能包，非已证最小必要集',
+               C_defense='B恢复5防御+生存者', C_output='B恢复猛扑/连续反弹/咕嘟冒泡',
+               D_flask_upgrade='B仅第一药瓶还原同局F2已见普通版本，保留该实例重放',
+               D_flask_replay='B仅第一药瓶去华彩重放', D_accelerant_replay='B仅触媒去亮片重放',
+               D_sweep_replay='B仅扫腿去亮片重放'),
+     claims_not_allowed=['模型配对不证明实际免费删除26张可行','模型样本不当独立实战局','不修改生产评分/构筑引擎']))
+print('prepared', len(raw_records), 'state refs', len(decisions), 'decisions', len(sl), 'SL refs', len(versions), 'card versions')
+print('actual_dpr', [t['effective_hp_damage'] for t in actual], 535/6)

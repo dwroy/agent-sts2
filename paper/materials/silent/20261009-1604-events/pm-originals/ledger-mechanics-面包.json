@@ -1,0 +1,111 @@
+[
+ {
+  "id": "silent-0109",
+  "ts": "2026-10-05T16:28:51+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局面包BREAD持有时基础max_energy=3，F39 T1实际1能量、T2—T4实际4能量，F35/F37/F38首轮也为1。与投斧首牌重放并存时，F39用唯一1费打带毒刺击+并重放，余像未建立；后轮增加的能量没有恢复已消耗的首牌重放机会。只确认能量时序与本次执行，不规定遗物或首牌优先级，也没有另一首牌的实打胜负对照。",
+  "evidence": [
+   {
+    "run": "6EV5V6PJJS9D",
+    "floor": 27,
+    "note": "商店花201金买面包；此前静默复盘、账本及23局旧静默按局号过滤决策未见BREAD。",
+    "role": "support",
+    "added": "2026-10-05T16:28:51+08:00"
+   },
+   {
+    "run": "6EV5V6PJJS9D",
+    "floor": 39,
+    "turn": 1,
+    "note": "基础max_energy3、首轮energy1；带毒刺击+重放实扣16再结算4毒，余像未施放，首牌机会已用。",
+    "role": "support",
+    "added": "2026-10-05T16:28:51+08:00"
+   },
+   {
+    "run": "6EV5V6PJJS9D",
+    "floor": 39,
+    "turn": 2,
+    "note": "T2、T3、T4首决策energy均4；整战无玩家力量或敏捷增益，T4死亡。",
+    "role": "support",
+    "added": "2026-10-05T16:28:51+08:00"
+   },
+   {
+    "run": "W7BHM8U02RKG",
+    "floor": 14,
+    "turn": 1,
+    "role": "support",
+    "note": "F12购买面包后F14幽灵船及F15化石追踪者首个可操作回合各1能量；F17族母刚经过营火且持古茶具，首轮3、后轮4，额外开场能量与面包时序分别记，不从持有推全程恒定增能。",
+    "added": "2026-10-07T12:21:50+08:00"
+   }
+  ],
+  "first_run": "6EV5V6PJJS9D",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "更早本角色复盘与按23个旧局号抽取的决策没有面包，未找到面包和投斧并存的可比局面。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "6EV5V6PJJS9D",
+    "W7BHM8U02RKG"
+   ],
+   "experience": [
+    "silent-bread-energy-timing"
+   ],
+   "commits": [
+    "a5604585226af696fdc6e01e19f6959fe73425d0",
+    "5f17e4b397490cefd18d2970852f1ea439a7ca00",
+    "2480e1a3435d40808c972b5247e126f42fd8f6c8",
+    "908a2ddd93fbce59f9add60bd1b17c2fc2f1a53f",
+    "03d50f0b2ae81f6f1b8800c6471c145580eb4668",
+    "f56da22bda53151e052bb64d0a3339139c4dd550",
+    "2c13137088f94465c027ca815f2ed9a32b1dd832"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第十七次增量：2 局 A6（version 2026-10-05.17，分支 exp-silent，a5604585）",
+    "2026-10-07 静默猎手 第七十二次增量：1 局 A10（version 2026-10-07.18，分支 exp-silent，908a2ddd）"
+   ]
+  },
+  "asc": 6,
+  "history": [
+   {
+    "ts": "2026-10-05T16:28:51+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T16:48:42+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T17:08:51+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T12:21:50+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T13:08:28+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T13:35:40+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp72",
+  "effect": null,
+  "notes": [
+   "静默经验.17：旧二十二局日志七数组逐行复算一致，新增两局均A6；公式/逐帧数字、进阶及整战因果限制见第十七次增量。仅proposed，实际合入后由运维据完成事件登记shipped，不登记独立音叉模型bug0108已修。",
+   "17:05 experience-done核实实际live合入及S1.exp17唯一；经验.17新增2/更新17/退役0，源tsc0/173文件1988例、合后tsc0/174文件1993例首过，无新增刷新/冲突，保留fix18七项刷新。仅经验发布，0108独立S1.fix18模型上线不混记；本批独立完整外部检查待其learner-checks，不用fix-batch检查替代。",
+   "关联第72批已测静默经验、源提交与变更节；本局support在复盘时已登记，不重复添加。保留原claim、first_run、asc、prior、support/repeat及既往上线历史；仅proposed，实际合入由运维据完成事件核实后登记shipped。",
+   "13:15完成通知运维确认经验.18固定源908a2ddd93fbce59f9add60bd1b17c2fc2f1a53f→实际live03d50f0b2ae81f6f1b8800c6471c145580eb4668→发布f56da22bda53151e052bb64d0a3339139c4dd550/唯一S1.exp72，main机械同步2c13137088f94465c027ca815f2ed9a32b1dd832。原7知识刷新重叠停止未合入留史，锁内仅原已测experience blob保留Codex-only最终等待保护及全部刷新/notes；固定合后代码03d50f0b2ae81f6f1b8800c6471c145580eb4668/树74ce797d1b74e52aab3e7b5d45b738e9e23e9303原沙箱tsc0/vitest1（2000ms计时说明1失败、225文件2394例过），同树同断言单worker SL+paths 2文件22例0，分次覆盖227文件2406例，最终发布完整外部经经验72 broker请求待learner-checks，不冒称已过。仅CLI追加所属状态，首证/先验/claim/全部support/repeat及历史保持，Codex-only新架构没有游戏账本ID不伪造，live已保留ccd8bb8e历史helper日志note修复，独立修复完工后另按完成事件登记，对局继续。"
+  ],
+  "shipped_at": "2026-10-07T13:35:40+08:00"
+ }
+]

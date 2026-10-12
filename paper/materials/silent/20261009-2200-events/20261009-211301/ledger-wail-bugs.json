@@ -1,0 +1,505 @@
+[
+ {
+  "id": "silent-0051",
+  "ts": "2026-10-05T05:34:03+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "未升级萎靡的实际X减力与X虚弱没有建模；求解器会消费剩余能量，却对零X萎靡仍给3分未知技能固定价值。沙虫六次均在零能量施放，自身减益为0；开信刀第三技能的5伤须另计，不能说整步没有任何收益。需依据已观测X=0/1/3状态建模，不猜升级或其他条件。",
+  "evidence": [
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 9,
+    "turn": 3,
+    "role": "support",
+    "note": "最早回溯：未升级萎靡在0能量施放，拳击构装体人工制品1层不变；此前复盘没有登记这个零X模型缺口。",
+    "added": "2026-10-05T05:34:03+08:00"
+   },
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 12,
+    "turn": 3,
+    "role": "support",
+    "note": "1能量施放对海洋混混实际建立−1力量与1虚弱，是此前有效施放的对照。",
+    "added": "2026-10-05T05:34:03+08:00"
+   },
+   {
+    "run": "XYYQYBRM2A01",
+    "floor": 33,
+    "turn": 3,
+    "role": "support",
+    "note": "第1/2/3/4/6次T3、第五次T6均0能量打萎靡；第1次药瓶+萎靡候选常驻价值10，药瓶独用7；实际萎靡自身不改力量/虚弱，第三技能触发开信刀5伤。",
+    "added": "2026-10-05T05:34:03+08:00"
+   },
+   {
+    "run": "XYYQYBRM2A01",
+    "floor": 30,
+    "turn": 1,
+    "role": "support",
+    "note": "3能量萎靡令盛碗虫石力量−6→−9、虚弱1→4；尖啸临时减力恢复后还保留−3力量。",
+    "added": "2026-10-05T05:34:03+08:00"
+   },
+   {
+    "run": "K3676LU8B0UH",
+    "floor": 33,
+    "turn": 4,
+    "role": "repeat",
+    "note": "买来减力的未升级萎靡以0能量施放，力量和虚弱无变化，候选仍给常驻价值3；本局另六次零X也没有自身减益，只有F12 T2的X1成功减力加虚弱。",
+    "added": "2026-10-05T06:28:51+08:00"
+   }
+  ],
+  "first_run": "KAY522KT5NXR",
+  "prior": "partly",
+  "prior_runs": [
+   "KAY522KT5NXR"
+  ],
+  "prior_note": "发现前同角色KAY F9/F14/F15/F17零X没有产生减益，但F12 T3保留1能量成功产生减益；有有效与零效果施放，不能用前一代角色推断。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "XYYQYBRM2A01",
+    "K3676LU8B0UH"
+   ],
+   "commits": [
+    "PLACEHOLDER",
+    "0d7465a0962f4e0234530bb390da6ab0fcd5f8e2",
+    "b129cd20618b81ddb8233ccd0ce79179e8127532",
+    "b9c46d6686a8d7e05915323c6e5f6acdfc476e1a"
+   ]
+  },
+  "note": "新bug；当前live agent/src/reflex/card-model.ts:767/771/772/841/844及turn-solver.ts:1510；fix-queue.md及fix-queue-v4.md未登记。",
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T05:34:03+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T06:22:25+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T06:22:42+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T06:28:51+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T07:12:25+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix5",
+  "effect": null,
+  "notes": [
+   "新bug；当前live agent/src/reflex/card-model.ts:767/771/772/841/844及turn-solver.ts:1510；fix-queue.md及fix-queue-v4.md未登记。",
+   "更正上一条fix-batch登记：commits中的PLACEHOLDER为误写的占位值，并非提交号，应忽略；实际萎靡修复提交为0d7465a0962f4e0234530bb390da6ab0fcd5f8e2。按只追加协议保留原始行；尚未登记shipped。",
+   "依fix-done及交接核实实际合入；保留历史PLACEHOLDER行及学习者更正，提交归因只用实际源码提交。"
+  ],
+  "shipped_at": "2026-10-05T07:12:25+08:00"
+ },
+ {
+  "id": "silent-0150",
+  "ts": "2026-10-06T05:33:05+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "飞镖FLECHETTES的CalculatedHits被读取为固定hits，求解器未在同一方案里按技能离手后的数量更新。旧局9YBK F43 T4先出防御后实打两次各3伤，方案仍按题面三次预测；本局女王重打T11三技能先后打掉防御与尖啸，飞镖从3→2→1次，最后实扣4。当前定位card-model.ts:810、turn-solver.ts:1973；本局全线伤害与损血差还有未隔离部分，不能全部归此缺口。",
+  "evidence": [
+   {
+    "run": "9YBKCNBFP0X5",
+    "floor": 43,
+    "turn": 4,
+    "role": "support",
+    "note": "净化PURITY后新题显示飞镖3次，每次3伤；防御后显示2次，实使史莱姆狂战士135→129。方案31伤由9攻击加22毒组成，飞镖攻击部分多算3；目前最早可核实此缺口。",
+    "added": "2026-10-06T05:33:05+08:00"
+   },
+   {
+    "run": "HMVJKM56S4Q8",
+    "floor": 33,
+    "turn": 3,
+    "role": "support",
+    "note": "第6次生存者→防御→飞镖，初始3次每次6、原完整方案预测18；两技能离手后只1次，火箭195→189实扣6。此前复盘未识别初题与后续重问之间的动态计数缺口。",
+    "added": "2026-10-06T05:33:05+08:00"
+   },
+   {
+    "run": "G403VCZ3BH1B",
+    "floor": 48,
+    "turn": 11,
+    "role": "support",
+    "note": "重打防御+→尖啸→中和→飞镖，快照显示CalculatedHits3→2→1，末次女王38→34；整线预计18、实际行动8加毒7共15，预计损1、实际损3，全部差额未逐项分离。",
+    "added": "2026-10-06T05:33:05+08:00"
+   }
+  ],
+  "first_run": "9YBKCNBFP0X5",
+  "prior": "no",
+  "prior_runs": [
+   "9YBKCNBFP0X5",
+   "HMVJKM56S4Q8"
+  ],
+  "prior_note": "此前未单列学习此动态计数；两局可比整线仍按出技能前的飞镖次数算伤，未找到随技能离手正确重算的同类预测。1NZ虽已拿牌，本次检查只见不可比末轮，未作先验正确性证据。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "G403VCZ3BH1B"
+   ],
+   "commits": [
+    "72c1640b3271352e1a744d3997ede4c5fe10e2bd",
+    "851e1bafb037482de9d06f018e203343a684535d",
+    "1ee4de7d668835de92ad2b47423a19ffdb4ae4df",
+    "106d78c83e9d1f2522d845408066d8afdb3a2b38"
+   ]
+  },
+  "note": "新识别，fix-queue及fix-queue-v4尚未列；当前只读live行号，G403运行code473a62f4+dirty，9YBK运行d9a3ea37+dirty。本任务仅复盘，不改代码。",
+  "asc": 4,
+  "history": [
+   {
+    "ts": "2026-10-06T05:33:05+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T06:04:55+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T06:23:35+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix25",
+  "effect": null,
+  "notes": [
+   "新识别，fix-queue及fix-queue-v4尚未列；当前只读live行号，G403运行code473a62f4+dirty，9YBK运行d9a3ea37+dirty。本任务仅复盘，不改代码。",
+   "06:19 fix-done机械核实学习者飞镖模型修复72c1640b实际合入851e1baf、发布1ee4de7d/S1.fix25，main已机械同步；源与合后tsc0/192文件2099例，范围与固定证据沿原学习者交接，铁甲等价。保留first_run/prior/claim/evidence与全部repeat/原失败历史，不倒算旧局效果，不另设审核。0151经验、0009/0052统计历史与0153未修模型分别保留，完整外部结果等调度器后续事件。"
+  ],
+  "shipped_at": "2026-10-06T06:23:35+08:00"
+ },
+ {
+  "id": "silent-0237",
+  "ts": "2026-10-07T15:59:10+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "神化APOTHEOSIS在出牌模型中只得到未建模技能的固定价值，没有将已观察升级效果传播到同一方案的剩余手牌和后续抽牌。VLZ F43同一后续牌序原预测43伤/损14，神化实打后重问51伤/损13且兑现，独立少报8伤、多报1血损；F45首题仍标未建模并未施放。修复不等于本局整场可获胜。",
+  "evidence": [
+   {
+    "run": "VPW8YH7A4QFM",
+    "floor": 35,
+    "turn": 1,
+    "note": "2026-10-06T16:13:28.862Z，带神化候选标unmodelled_cards；F38/F39仍如此。旧复盘只记未施放，未独立登记模型缺口。",
+    "role": "support",
+    "added": "2026-10-07T15:59:10+08:00"
+   },
+   {
+    "run": "VLZ6CCT8AQ0A",
+    "floor": 43,
+    "turn": 1,
+    "note": "decisions269706/269707；states275679→275687。同一后续牌序43/14→51/13并实际兑现。",
+    "role": "support",
+    "added": "2026-10-07T15:59:10+08:00"
+   },
+   {
+    "run": "VLZ6CCT8AQ0A",
+    "floor": 45,
+    "turn": 1,
+    "note": "decisions269748，神化候选未建模；实选不打神化，喝痊愈药水后代码执行必备工具/生存者，states275731→275732仅余神化被弃掉。",
+    "role": "support",
+    "added": "2026-10-07T15:59:10+08:00"
+   }
+  ],
+  "first_run": "VPW8YH7A4QFM",
+  "prior": "no",
+  "prior_runs": [
+   "VPW8YH7A4QFM"
+  ],
+  "prior_note": "更早本角色VPW F35/F38/F39神化候选都未建模，无正确传播升级的记录；这里判断模型覆盖，不把不施放本身认定为普遍错误。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "VLZ6CCT8AQ0A"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-154302-postmortem/proposal-apotheosis.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-apotheosis.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-214302-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-234303-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-004303-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-004303-strategy-proposal/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-014012-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-025837-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-044250-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-061303-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-061303-strategy-proposal/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-071205-strategy-proposal/proposal.md"
+   ],
+   "commits": [
+    "772b839f8ada31664cb764ea9ad3bdb03da27f64",
+    "6e9acb9d00a758d2bd43e46873a1f7aa54a7a68a",
+    "903a1efcb4456e448b5e64f8c915397d1c585d98",
+    "88575299faa30a6da8abd832ed4899ef6ac153f4"
+   ]
+  },
+  "note": "新识别纯模型缺口；当前只读live agent/src/reflex/card-model.ts:922/945/948，turn-solver.ts:1974/1976；fix-queue.md与fix-queue-v4.md无APOTHEOSIS同项。当前b0f41f03行号；本局code ac321b1f+dirty，不重建dirty。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-07T15:59:10+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T16:01:26+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T16:53:46+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T21:58:13+08:00",
+    "by": "learner:strategy-proposal"
+   },
+   {
+    "ts": "2026-10-07T23:57:34+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T00:50:28+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T01:47:25+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T03:12:32+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T04:57:21+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T06:23:17+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T07:25:10+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T07:40:11+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T07:40:11+08:00",
+    "by": "learner:strategy-proposal"
+   },
+   {
+    "ts": "2026-10-08T07:53:38+08:00",
+    "by": "ops:codex",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.apotheosis1",
+  "effect": null,
+  "notes": [
+   "新识别纯模型缺口；当前只读live agent/src/reflex/card-model.ts:922/945/948，turn-solver.ts:1974/1976；fix-queue.md与fix-queue-v4.md无APOTHEOSIS同项。当前b0f41f03行号；本局code ac321b1f+dirty，不重建dirty。",
+   "代码提案 silent-proposal-89354805ee4d7e77 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-283a164780d11e69 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "本批原日志复核勘误：VLZ729/729帧均有agent_view.piles聚合文本；旧策略报告只查顶层piles得到0不能作为完全没有牌堆的理由。保留旧报告，不覆盖；实际缺逐卡完整dynamic_values/稳定实例与确定抽序。已见升级勒紧6另记silent-0252及独立提案，不能据此记完整神化已实现。",
+   "20261007-234302派发核证：silent-proposal-89354805ee4d7e77, silent-proposal-283a164780d11e69；处置详见提案/report，1duplicate/9waiting，无新源码或上线；保留旧首证/先验/支持/重复及shipment历史。 本批复核VLZ729帧，631帧含agent_view.combat.draw聚合文本，不沿用完全无牌堆的旧理由；4761条draw无逐卡dynamic_values/实例，完整未知升级/附魔及抽弃传播仍待补数据。",
+   "20261008-004303策略核验；关联silent-proposal-89354805ee4d7e77,silent-proposal-283a164780d11e69均waiting。六局原始证据哈希与前次一致；具体缺数据和已有局部live源码证明见proposal.md。无新增源码/上线，不新增support/repeat，不改首证、claim、既有版本或shipped历史。",
+   "20261008-014012独立核验：六局3432原帧/3306决策与原证据一致；未改源码、未合入。关联silent-proposal-89354805ee4d7e77,silent-proposal-283a164780d11e69；逐项waiting及缺数据见proposal.md/proposal_results.json，不追加重复support/repeat、不标shipped。",
+   "20261008-025836-strategy-proposal复核本批10个派发ID：逐项waiting与缺数据见proposal.md/report.md；六局原状态SHA不变，未新增源码/合入/版本，不重复support/repeat；已有shipped经验不降级。chosen_order为击杀顺序label，单敌无值不当出牌方案缺失证据。",
+   "20261008-044249策略核验；silent-proposal-89354805ee4d7e77,silent-proposal-283a164780d11e69均waiting，具体缺数据及原帧/源码核验见提案；未增加支持计数，无新源码提交或live发布。",
+   "20261008-061302策略复核：silent-proposal-89354805ee4d7e77 waiting：普通神化的已观察数值变化成立；缺弱/缩小/费用附魔下的升级传播配对、其余牌的可升级/不可升级真值和后续抽牌完整覆盖验证。当前通用升级实测漏传勒紧与尖啸字段，不能将加固定分或只改upgraded标记登记为整项实现。；silent-proposal-283a164780d11e69 waiting：与89354805ee4d7e77共享神化缺口，本项补经验链接不构成live源码实现。缺升级后续抽牌及未知牌/修正组合覆盖验证；升级勒紧6的局部实现不能证明神化已传播，保留同一原问题等待补证。；无新源码/合入，不增加support/repeat。",
+   "20261008-071204/071205：原日志SHA复核；普通固有神化仅已观察八配对传播，未知触媒/属性组合保留缺口；固定F43同牌序51伤/13损，源码接线撤掉5败/恢复6过；未合live、未标shipped。",
+   "普通固有神化八配对有限实现源772b839f8ada31664cb764ea9ad3bdb03da27f64；原沙箱tsc0/vitest0，247文件2604例；生产接线撤掉5败/恢复6过。live预检6记录冲突停止，刷新78b43d074147e2b74b6e563afcdbaf9f0033abe7保留；未合入/未版本/未shipped。原宽提案继续waiting，触媒升级等范围未冒称覆盖。",
+   "代码提案 silent-proposal-708792ca2038f923 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "原071204独立策略有限普通固有神化源码实际上线；VLZ6CCT8AQ0A静默A10 F35/F43八已观察配对，同方案/已知抽牌/本场牌堆传播，未知卡与属性/重放/自动组合保持未验证。源及组合原沙箱247文件2604例tsc/vitest0；撤生产接线5红/恢复6绿，六净blob与源main/live祖先核实。只补本源码版本，不重复经验支持、首证/先验/claim/旧版本保持；单局发现样本不称盲验/胜率收益，不改药水/SL/HP阈值。十项原宽提案waiting，有限708792ca补链implemented；原failed/merged=null/六冲突保留，完整外部另续验。"
+  ],
+  "shipped_at": "2026-10-08T07:53:38+08:00"
+ },
+ {
+  "id": "silent-0260",
+  "ts": "2026-10-07T23:13:00+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "普通紧勒STRANGLE附加的STRANGLE_POWER2及后续逐牌失血没有进入当前推演：Q6骇鳗T4相同紧勒→突然一拳→生存者完整方案报19而实23，少算两次2；更早Y6 F4 T1同线报27实29也少算后续中和触发2。当前live卡牌效果、敌方力量输入和逐牌收尾均缺接线；只定位预测缺口，不声称它导致本局死亡或修后能赢。",
+  "evidence": [
+   {
+    "run": "Y6GM2CHWJBEY",
+    "floor": 4,
+    "turn": 1,
+    "note": "decisions:206490报27；states:210432—210437缩小甲虫40→11，1力量下两打击7＋7、紧勒9、中和4＋紧勒触发2，实际29。",
+    "role": "support",
+    "added": "2026-10-07T23:13:00+08:00"
+   },
+   {
+    "run": "Q6M2Y34MWKRE",
+    "floor": 8,
+    "turn": 4,
+    "note": "decisions:276676报19；states:282887—282892骇鳗103→95→85→83→80，紧勒8＋突然一拳8＋两次紧勒2＋3毒=23；生存者完成弃牌后触发2，没有额外中和。",
+    "role": "support",
+    "added": "2026-10-07T23:13:00+08:00"
+   },
+   {
+    "run": "9DAS5L8YM1CN",
+    "floor": 21,
+    "turn": 1,
+    "role": "repeat",
+    "note": "decisions:292659护栏完整紧勒→生存者→尖啸报24伤/损5；states:299864—299871敌84→60→58→56、实28伤/损5，两次紧勒2未进模型。没有抽牌换线或未来毒结算。",
+    "added": "2026-10-08T15:57:39+08:00"
+   },
+   {
+    "run": "9DAS5L8YM1CN",
+    "floor": 22,
+    "turn": 4,
+    "role": "repeat",
+    "note": "decisions:292705完整紧勒→生存者→中和报8伤/零损，states:299913—299918丝虫38→32→30→26实12伤/零损，独立复现漏两次2。当前live card-model.ts:1036、combat-plan.ts:745、turn-solver.ts:1747均无普通STRANGLE_POWER接线，fix-queue未列。",
+    "added": "2026-10-08T15:57:39+08:00"
+   },
+   {
+    "run": "LY83ZMTFVKJH",
+    "floor": 21,
+    "turn": 7,
+    "role": "repeat",
+    "note": "decisions:300482紧勒→偏折预测8，states:308031—308032敌77→69→67实10，后续逐牌2仍漏。当前live card-model.ts:1036、combat-plan.ts:745、turn-solver.ts:1734无普通紧勒接线；fix-queue-v4.md:793已有。",
+    "added": "2026-10-09T00:40:36+08:00"
+   },
+   {
+    "run": "LY83ZMTFVKJH",
+    "floor": 21,
+    "turn": 10,
+    "role": "repeat",
+    "note": "decisions:300493完整紧勒→匕首雨+→偏折报20，states:308040—308044实40→32→18→16共24，少后两张各2。末敌4仍不能据缺口声称修后必胜。",
+    "added": "2026-10-09T00:40:36+08:00"
+   },
+   {
+    "run": "HEMND3SMQYB8",
+    "floor": 48,
+    "turn": 3,
+    "role": "support",
+    "note": "本局升级紧勒+→咕嘟冒泡→触媒+完整方案预报73、实净清79；后两步分别额外失血3，支持既有缺接线根因的升级边界审计。原claim普通版、首证与状态保持，不将升级效果冒称已修。",
+    "added": "2026-10-09T01:33:33+08:00"
+   }
+  ],
+  "first_run": "Y6GM2CHWJBEY",
+  "prior": "no",
+  "prior_runs": [
+   "Y6GM2CHWJBEY"
+  ],
+  "prior_note": "向前追到普通紧勒最早静默实证Y6；F4 T1在本项学习前已漏2，旧复盘只记后续混合伤害偏差，账本及fix-queue未定位此接线bug。此前没有正确建模的可比日志；不把定制MAD_SCIENCE6等同普通2。",
+  "status": "observed",
+  "where": {
+   "lessons": [
+    "Q6M2Y34MWKRE",
+    "9DAS5L8YM1CN",
+    "LY83ZMTFVKJH",
+    "HEMND3SMQYB8"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-224302-postmortem/proposal-strangle-bug.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/proposal-strangle.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/proposal-strangle-corrected.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-160331-experience-update/proposal-card-triggers.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-001302-postmortem/proposal-strangle.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-005054-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-011302-postmortem/proposal-strangle-upgrade.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-014148-experience-update/proposal-mechanisms.md"
+   ]
+  },
+  "note": "新增纯bug；当前live只读位置agent/src/reflex/card-model.ts:1043、combat-plan.ts:745、turn-solver.ts:2252；本次不改代码，独立strategy-proposal实现。",
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-07T23:13:00+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T23:16:38+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T15:57:39+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T16:00:04+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T16:01:12+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T16:16:39+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T00:40:36+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T00:43:58+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T00:43:59+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T01:02:35+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T01:33:33+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T01:38:35+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T01:53:34+08:00",
+    "by": "learner:experience-update"
+   }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+   "新增纯bug；当前live只读位置agent/src/reflex/card-model.ts:1043、combat-plan.ts:745、turn-solver.ts:2252；本次不改代码，独立strategy-proposal实现。",
+   "代码提案 silent-proposal-1b9e29122364fa68 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "原observed/prior/first_run不变，只修可核预测缺口的提案另CLI登记，不声称修后赢整局。",
+   "代码提案 silent-proposal-ec2b210f613d5e26 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-f97980a3266f2665 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-438a0eb4516e7975 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "本次仅追加实盘重复证据和复盘去处；旧claim/first_run/prior/status/version保持。运行049dff24+dirty，file:line仅参考当前只读live。",
+   "本任务刚追加T7证据中的连续三帧引用范围更正为states:308030—308032（77→69→67）；308031—308032只覆盖69→67。数值、repeat角色、旧claim/首证/prior/status及版本均不变；lessons正文没有该错误范围，不需正文勘误。",
+   "代码提案 silent-proposal-04cbbf6b3a547aea → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-04a40369c2652c83 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-b1100cb810a53d18 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-a65ae6b794cf6cd2 → task=strategy-proposal；Roy-2026-10-07-learning"
+  ]
+ }
+]

@@ -1,0 +1,120 @@
+[
+  [
+    "b9647.payload.route_review.plan_facts.arrival",
+    [
+      "F12 r11c1 精英：72/74（p75 72）",
+      "F13 r12c0 休息：48/74（p75 36）",
+      "F14 r13c0 精英：70/74（p75 58）",
+      "F15 r14c0 普通战：45/74（p75 22）",
+      "F16 r15c0 休息：42/74（p75 14）",
+      "F17 r16c3 Boss：64/74（p75 36）"
+    ]
+  ],
+  [
+    "b9647.payload.facts.floors_to_act_boss",
+    6
+  ],
+  [
+    "b9647.payload.facts.act_boss",
+    "THE_KIN_BOSS"
+  ],
+  [
+    "b9647.payload.facts.act_boss_clock",
+    {
+      "boss": "THE_KIN",
+      "boss_hp": 199,
+      "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+      "boss_hp_parts": [
+        "KIN_PRIEST"
+      ],
+      "boss_enemies": [
+        {
+          "enemy": "KIN_PRIEST",
+          "hp": 199,
+          "hp_samples": 12,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "BEAM_MOVE",
+              "per_hit": 3,
+              "hits": 3,
+              "basis": "base",
+              "samples": 27,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "ORB_OF_FRAILTY_MOVE",
+              "per_hit": 9,
+              "hits": 1,
+              "basis": "base",
+              "samples": 35,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "ORB_OF_WEAKNESS_MOVE",
+              "per_hit": 9,
+              "hits": 1,
+              "basis": "base",
+              "samples": 27,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        },
+        {
+          "enemy": "KIN_FOLLOWER",
+          "hp": 63,
+          "hp_samples": 46,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "BOOMERANG_MOVE",
+              "per_hit": 2,
+              "hits": 2,
+              "basis": "base",
+              "samples": 75,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "QUICK_SLASH_MOVE",
+              "per_hit": 5,
+              "hits": 1,
+              "basis": "base",
+              "samples": 101,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        }
+      ],
+      "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+      "deck_damage_per_turn_estimate": null,
+      "hp_loss_per_turn": null,
+      "survivable_turns": null,
+      "gap_per_turn": null,
+      "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+    }
+  ],
+  [
+    "b9647.payload.facts.act_boss_sim",
+    "boss 模拟没有结果（只跑完 72 次模拟（不足 300 次），选项之间的差噪声太大，不给数字）：act_boss_clock 仍是 boss 时钟的估计"
+  ],
+  [
+    "b9647.payload.facts.rest_site.floors_to_act_boss",
+    6
+  ],
+  [
+    "b9647.payload.facts.route_relic_observations[0].projection_note",
+    "这是六次进房实回5的观察。当前血量保持现场值；房间代价按进房前到离房后的净血量变化统计，已包含进房回血，不在路线投影上再加5。现有房间统计没有按是否持有星图区分。"
+  ]
+]

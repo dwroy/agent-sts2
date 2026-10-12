@@ -1,0 +1,63 @@
+{
+  "batch": "20261011-213504-experience-update",
+  "exit": 1,
+  "phase": "before model session",
+  "model_tokens": 0,
+  "log": ".worktrees/exp/learner/runs/20261011-213505-experience-update.jsonl",
+  "log_sha256": "bacf613645ff60f374d1ad9c8cdbd2ba95043a10991bbd92ded61891029eaf6c",
+  "diagnostics": [
+    {
+      "type": "learner_stderr",
+      "t_ms": 9761,
+      "text": "2026-10-11T13:35:16.794938Z ERROR codex_core::session: Failed to create session: failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw: rg: /home/dw/Projects/agent-hearthstone/.aws: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "t_ms": 9761,
+      "text": "rg: /home/dw/Projects/agent-hearthstone/.codex: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "t_ms": 9776,
+      "text": "Error: thread/start: thread/start failed: error creating thread: failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw: rg: /home/dw/Projects/agent-hearthstone/.aws: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "t_ms": 9776,
+      "text": "rg: /home/dw/Projects/agent-hearthstone/.codex: No such file or directory (os error 2) (code -32603)"
+    },
+    {
+      "type": "learner_summary",
+      "ts": "2026-10-11T13:35:16.867Z",
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "wall_ms": 9831,
+      "summary": {
+        "engine": "codex",
+        "toolCalls": {},
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheCreation": 0,
+          "reasoning": 0
+        },
+        "isError": false,
+        "permissionDenials": [],
+        "mcpServers": [],
+        "errors": [],
+        "retries": [],
+        "warnings": [],
+        "timing": {
+          "toolMs": 0,
+          "timeline": []
+        },
+        "model": "gpt-6-astra"
+      }
+    }
+  ],
+  "same_known_failure_family": "sandbox glob enumeration sees disappearing directories, this time another project path named by the error; no access to that project performed",
+  "failed_retry_and_original_files_preserved": true,
+  "no_proposal_repair_or_source_rollback": true
+}

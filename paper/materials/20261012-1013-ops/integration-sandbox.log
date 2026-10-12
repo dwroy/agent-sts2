@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-observed-intervals-20261012-1013/agent
+
+ ❯ tests/rollout-live.test.ts (14 tests | 1 failed) 166386ms
+     × liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line) 2821ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line)
+AssertionError: expected null not to be null
+ ❯ tests/rollout-live.test.ts:129:24
+    127|     expect(r.available).toBe(true);
+    128|     if (!r.available) return;
+    129|     expect(r.best).not.toBeNull();
+       |                        ^
+    130|     const values = r.result.lines.map((line) => line.value);
+    131|     expect(r.byPlan.get(r.best!)!.value).toBe(Math.max(...values));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 327 passed (328)
+      Tests  1 failed | 3249 passed (3250)
+   Start at  10:15:24
+   Duration  367.25s (transform 13.29s, setup 25.70s, import 66.47s, tests 1310.83s, environment 43ms)
+

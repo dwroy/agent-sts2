@@ -1,0 +1,19 @@
+{
+  "id": "silent-0166",
+  "by": "learner:postmortem",
+  "evidence": [
+    {
+      "run": "NHA2KW0RB7VP",
+      "floor": 17,
+      "turn": 1,
+      "note": "原四攻击切割/打击/精确切击/猛扑报27，实6＋6＋5＋14=31；起手七张CalculatedDamage1，两牌离手变3/5，精确切击实扣5，原计划固定1独立漏4。当前card-model.ts1035拒绝初始1、turn-solver.ts2074 recordedShown仍限3/5，旧S1.fix30局部已观察范围不覆盖此次七手起步。另加毒药10是后续重规划，不算本项漏模。decisions276921—276925、states283142—283148。",
+      "role": "repeat"
+    }
+  ],
+  "where": {
+    "lessons": [
+      "NHA2KW0RB7VP"
+    ]
+  },
+  "note": "旧bug的局部覆盖限制再次显现；保留S1.fix30与旧已修分支，不宣称所有精确切击失效或本次整局可救。新增冻结七手1→六手3→五手5的扩展提案。"
+}

@@ -1,0 +1,7 @@
+Roy 今日已明确授权：仅主 ops 改为完整宿主执行，学习者与只读辅助保持原沙箱；并要求尽快恢复 codex1 游戏运行。watcher 源 9f48c3b25 已合 main/live，沙箱 tsc + 3183 项通过、宿主受影响 68 项通过，密钥扫描通过。execution-mode 已写 host，下一空闲唤醒沿原 pane/原 codex1 session 用 danger-full-access；旧上下文的 sandbox 描述已过时，凭据仍不读取/输出，仍只改项目。
+本轮最高优先：补收旧局并恢复游戏，先不要转去长时间积压合入。
+1. 先只读核实际宿主权限/本地 mod 状态，不能把配置文件存在当作实际权限验收。
+2. 执行 `nice -n 19 python3 ops/report_run.py N1ZEBMHZM4KC`（或新 broker `report-run N1ZEBMHZM4KC`）。新入口核同局终态、无活对局、冻结原段+恢复段、历史 console 源码身份后，沿原 report 与角色刷新收尾。会流式扫描约 1 GB 决策和 11 GB 状态；等同一进程完成，不重复启动，不用新局代替补报。先读脚本/回执，失败保留原件，若已有 runs 行而 status 非 complete 则查明确失败阶段，不盲目重跑。
+3. 验 receipt complete、runs.jsonl 此局唯一、完整决策数（不是仅恢复段83条）、历史 code 65e3d10a9+dirty。再由你沿原 autoplay-start 启动自动对局，核新 run 与真实 brain 的 codex1 隔离 home、首个真实模型回答；回填 notes/codex1-runtime-consumption.json。watcher 不亲自运行 play。
+4. 恢复后继续原量化/校准/修复队列与已经授权的条件 main/push，未完成项不作完成，不再索取已有授权。
+此次修复/权限上线不修改 ops-session prompt、模型策略或游戏知识。回退为 execution-mode=sandbox，下一空闲唤醒恢复原主 ops 隔离；不能回退他人的对局或学习成果。

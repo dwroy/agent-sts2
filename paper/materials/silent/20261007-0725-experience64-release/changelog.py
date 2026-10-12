@@ -58,7 +58,7 @@ lines+=['','- 8条全补证，纯数字0；无条目合并，旧完整文字留e
 '- 学习账本只经learner/ledger.py/by=learner:experience-update改proposed；全部9个新增/更新经验的去向、提交及本节标题见ledger-result.json和收尾，不写accepted/shipped。旧first_run/prior/claim/证据/repeat/版本及0213独立状态保持，未纳入条目不动。主目录本节与账本仅追加，不提交。',
 '','### 切片大小','','- 固定种子20260929，从截至本两局56746帧静默原始状态池，按state.run.character_id=SILENT抽最高A9/A10各20状态×COMBAT/REWARD/MAP/EVENT/REST/SHOP＝240配对，真实界面分别抽样。官方knowledge-slice.ts、CHARACTER=silent/setExperienceForTests；只换experience，其他结果表/common冻结；manifest和逐片原文留盘，不冒充V4完整知识前缀。','','| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |','| --- | --- | --- | --- |']
 for x in summary['rows']:lines.append(f'| {x["sample"].removeprefix("sample-")} | {x["before_median"]}/{x["before_max"]} | {x["after_median"]}/{x["after_max"]} | {x["delta"]} |')
-lines+=[f'','- 配对增量中位'+str(summary['median_delta'])+'、最大增量'+str(summary['max_delta'])+f'；总体中位{summary["before_median"]}→{summary["after_median"]}，最大{summary["before_max"]}→{summary["after_max"]}字。active135→136、49258→49920字，高66中41低29；A8 129条46813字、A9 130条47112字、A10 131条47692字。需要Dai定：无。']
+lines+=[f'','- 配对增量中位'+str(summary['median_delta'])+'、最大增量'+str(summary['max_delta'])+f'；总体中位{summary["before_median"]}→{summary["after_median"]}，最大{summary["before_max"]}→{summary["after_max"]}字。active135→136、49258→49920字，高66中41低29；A8 129条46813字、A9 130条47112字、A10 131条47692字。需要Roy定：无。']
 text='\n'.join(lines)+'\n';(O/'changelog-section.md').write_text(text)
 target=ROOT/'paper/materials/experience-changelog-silent.md';prior=target.read_bytes();(O/'changelog-before.sha256').write_text(__import__('hashlib').sha256(prior).hexdigest()+'\n')
 assert title not in prior.decode()

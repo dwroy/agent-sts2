@@ -1,0 +1,79 @@
+## 修 bug 回报
+
+- 合并基线：main → `3de2368c1bd09bf6aedb2ac03955845fcea00a4f`
+- 修复：会话前沙箱 ENOENT 缺少安全恢复 — `bc2c40e313cc36682196277c53c50e30744b88c5` — 测试 `agent/tests/learner-startup-recovery.test.ts:retries exact pre-session ENOENT after close with identical input and one final completion` — 去掉修复时失败：是；恢复后 23 例通过。
+- 已被别人修掉的：死亡归因0254 — `3b48088de`；格挡诊断0338 — `c1d848049`；rollout夹具 — `366917d1e`；额度恢复 — `e5e2995d6`；实际进阶通知 — `8045d9fbf`。历史141项及其他提交见[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-224302/learner/runs/20261011-224313-fix-batch/report.md)。
+- 没修的：策略项保留原提案链；0332、历史通知失败、目录消失根因及调度公平性证据不足；独立架构任务不混入。宿主补验、派发夹具已有前批候选，尚未合入。
+- 测试：tsc 退出码0；vitest 288文件 / 2848用例 / 退出码0；整套未重跑；gitleaks通过。
+- 合入：未合入。锁内预检发现队列、账本、决策日志等既有冲突，停止于实际merge之前；live保持 `079dc2f156601556d48727cb14ad48fb95994afd`。仅本修复补丁预检可应用，已保存供运维兜底。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "3de2368c1bd09bf6aedb2ac03955845fcea00a4f",
+  "fixes": [
+    {
+      "item": "sandbox-glob-startup-race：会话前暂时ENOENT缺少有界安全恢复",
+      "commit": "bc2c40e313cc36682196277c53c50e30744b88c5",
+      "test": "agent/tests/learner-startup-recovery.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "silent-0250, silent-0256, silent-0260, silent-0263, silent-0266, silent-0268, silent-0271, silent-0273, silent-0279, silent-0287, silent-0290, silent-0291, silent-0293, silent-0295, silent-0296, silent-0297, silent-0300, silent-0308, silent-0311, silent-0317, silent-0319, silent-0320, silent-0322, silent-0329, silent-0334, silent-0339, silent-0344, silent-0347, silent-0349, silent-0362, silent-0365, silent-0367",
+      "reason": "策略类：原独立strategy-proposal链继续；已有局部实现不关闭宽项，本批不改出牌/药水/SL/终局或重复派发。"
+    },
+    {
+      "item": "silent-0332",
+      "reason": "证据不足：当前源码仍保留正HP资源契约；缺触发seed/首战末帧，已有silent-proposal-5aa2672bd7cd1bf4收集诊断，不填造资源。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2",
+      "reason": "证据不足：5c92f2aaf已保存新失败诊断，旧失败缺stderr和未发送证明，不能安全重发原通知。"
+    },
+    {
+      "item": "mod短暂请求超时",
+      "reason": "证据不足：缺mod内部根因，原自动恢复历史保留。"
+    },
+    {
+      "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression、B4/B5、缓存/性能实测",
+      "reason": "太大／独立功能和策略研究；普通纯bug批次不扩大职责或调用模型/网络。"
+    },
+    {
+      "item": "调度公平性核查",
+      "reason": "证据不足：插入顺序快照不能证明永久饥饿，保留现有并发/队列状态，交既有框架核查。"
+    },
+    {
+      "item": "host-targeted-check-continuation、派发夹具工作树缺失",
+      "reason": "已有前批候选24c2e3a75、2b09c47d4，当前main/live尚未包含；原批合入受记录冲突阻塞，保留其拥有权和原测试，不重复实现。"
+    },
+    {
+      "item": "sandbox-glob-startup-race上游根因",
+      "reason": "证据不足：本批只补会话前安全恢复，未确认目录消失的创建/删除者，未验证自然复发恢复。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2848,
+    "files": 288
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-224302/learner/runs/20261011-224313-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12b6b-0836-7c33-b64e-6a9d9a68c13e
+轮数：1；工具调用：command_execution×76 file_change×3
+token：输入 214.2k、输出 44.0k（其中推理 20.5k）、cache 读 12175.7k、cache 写 0（命中 98.3%）
+成本：未提供
+耗时：1594.2 s（墙钟）
+时间：首个事件 13.0 s、模型首个输出 18.0 s、首次工具 20.9 s、末次工具结束 1530.3 s；工具内共 1216.6 s，其余（模型生成、推理、网络）364.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-224302）；模型的工具调用 exec×60 wait×19；/home/dw/.codex-sts2/sessions/2026/10/11/rollout-2026-10-11T22-43-17-01a12b6b-0836-7c33-b64e-6a9d9a68c13e.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-224302/learner/runs/20261011-224313-fix-batch.jsonl

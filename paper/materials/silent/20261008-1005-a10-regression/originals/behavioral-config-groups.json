@@ -1,0 +1,1039 @@
+[
+  {
+    "fingerprint": "432f3ec7d7eb6530",
+    "configuration": {
+      "brain_config": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": "deepseek",
+        "reask": null,
+        "tools": null,
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          },
+          "deepseek": {
+            "model": "deepseek-flash",
+            "model_by_prefix": {},
+            "timeout_ms": null,
+            "effort": null,
+            "reask": null,
+            "tools": false,
+            "max_calls": 300
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      },
+      "sl_config": {
+        "enabled": true,
+        "boss_retries": 5,
+        "elite_retries": 3,
+        "act3_low_hp": true,
+        "act3_low_hp_pct": 50,
+        "act2_low_hp": true,
+        "act2_low_hp_pct": 50,
+        "retry_show_sim": true,
+        "retry_memo": true,
+        "retry_known_draws": true,
+        "retry_compute": {
+          "rollout_samples": 24,
+          "rollout_budget_ms": 20000,
+          "turn_budget_ms": 30000,
+          "mc_samples": 36,
+          "mc_budget_ms": 1200,
+          "boss_sim_samples": 1200
+        },
+        "judge_known_draws": true,
+        "judge_any_draw": true,
+        "reload_early": true,
+        "reload_on_revive": false,
+        "retry_known_inserts": true,
+        "retry_known_top": true,
+        "retry_explore": true,
+        "retry_explore_b2": true,
+        "retry_explore_boss_potions": true,
+        "retry_explore_order": true,
+        "retry_explore_replay": true,
+        "retry_explore_replay_plays": true,
+        "retry_explore_replay_deviate": true,
+        "retry_explore_key_counters": true,
+        "retry_explore_second": true,
+        "retry_explore_replay_order": true,
+        "retry_explore_replay_code": true,
+        "retry_explore_target_turn": true,
+        "retry_explore_rearm": true,
+        "retry_explore_wasted": true,
+        "retry_explore_anchor": true,
+        "retry_explore_canon": true,
+        "retry_explore_turn": true,
+        "retry_explore_whole": true,
+        "retry_explore_where": true,
+        "retry_explore_potion": true,
+        "retry_known_picks": true,
+        "retry_known_off_top": true,
+        "retry_known_hand_order": true,
+        "step_timeout_ms": 60000,
+        "elites": []
+      },
+      "loop_config": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "v1",
+        "run_plan_merge": true,
+        "escalation": [
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      },
+      "jev_model": "jev-latest",
+      "jev_context": "v1",
+      "knowledge_prefix": "full",
+      "target_ascension": 10
+    },
+    "actual_engine": "codex",
+    "n": 40,
+    "run_ids": [
+      "MGA0CZDDKC0P",
+      "25226ZFLNR1J",
+      "JLN5SK17W4FQ",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "JQPT83P8KDSZ",
+      "4D4J8USKCPAV",
+      "TD1HVGS7H6LB",
+      "PJ2LL9KU7FHD",
+      "S9UZAK0JP0C0",
+      "0NZXA12NLDMH",
+      "4ANT8D00TP72",
+      "XBD8Z9XLPCPN",
+      "PU80F84P6HPN",
+      "NB8KCF6HRGVF",
+      "5X2GHKJ89PN1",
+      "TCFAHJ9K19VY",
+      "LS8035TB32P3",
+      "L704TLETMZBM",
+      "KUZVERN40NGK",
+      "BVF22RSFVBS9",
+      "ZVYUL2YP3518",
+      "VPW8YH7A4QFM",
+      "DPYF2BAA3DKT",
+      "CRK2HNYKSCZC",
+      "HUVEPWQAHWFU",
+      "UMVLWER4CD98",
+      "TU3XB4CAEDAW",
+      "V0383V5S9BCQ",
+      "8R5CXD5C8PW8",
+      "QNTW139MGECA",
+      "HSX4HYATB4E2",
+      "WYB0NCD6W83J",
+      "87LCSDR5P3DL",
+      "TKXQ6L4N9A6U",
+      "02HB4L0C3C67",
+      "T3FW7R2R2306",
+      "P5HT1272P5SB",
+      "YLYLZWHA0GKU",
+      "7ZUC4VPMDS41"
+    ],
+    "first_process_started": "2026-10-05T20:54:55.423Z",
+    "last_process_started": "2026-10-07T00:36:08.230Z",
+    "start_versions": [
+      "S1.exp32",
+      "S1.exp33",
+      "S1.exp35",
+      "S1.exp36",
+      "S1.exp37",
+      "S1.fix27",
+      "S1.exp38",
+      "S1.exp39",
+      "S1.fix28",
+      "S1.fix30",
+      "S1.fix31",
+      "S1.exp43",
+      "S1.exp44",
+      "S1.exp45",
+      "S1.exp48",
+      "S1.exp49",
+      "S1.exp51",
+      "S1.exp52",
+      "S1.exp54",
+      "S1.exp55",
+      "S1.fix38",
+      "S1.fix39",
+      "S1.fix40",
+      "S1.exp58",
+      "S1.exp59",
+      "S1.exp60",
+      "S1.exp62",
+      "S1.exp63",
+      "S1.fix41"
+    ],
+    "reach33": {
+      "k": 21,
+      "n": 40,
+      "p": 0.525,
+      "wilson95": [
+        0.3749736210669248,
+        0.670645298873211
+      ]
+    },
+    "reach48": {
+      "k": 9,
+      "n": 40,
+      "p": 0.225,
+      "wilson95": [
+        0.12316091323540743,
+        0.37503096742310027
+      ]
+    },
+    "act2_road_death": {
+      "k": 6,
+      "n": 40,
+      "p": 0.15,
+      "wilson95": [
+        0.07061187717320358,
+        0.2907232436648971
+      ]
+    },
+    "split_double": {
+      "pre": {
+        "run_ids": [
+          "MGA0CZDDKC0P",
+          "25226ZFLNR1J",
+          "JLN5SK17W4FQ",
+          "JMH5C51RLN4E",
+          "9TG1RP5LFAAK",
+          "JQPT83P8KDSZ",
+          "4D4J8USKCPAV",
+          "TD1HVGS7H6LB",
+          "PJ2LL9KU7FHD",
+          "S9UZAK0JP0C0",
+          "0NZXA12NLDMH",
+          "4ANT8D00TP72",
+          "XBD8Z9XLPCPN",
+          "PU80F84P6HPN",
+          "NB8KCF6HRGVF",
+          "5X2GHKJ89PN1",
+          "TCFAHJ9K19VY",
+          "LS8035TB32P3",
+          "L704TLETMZBM",
+          "KUZVERN40NGK",
+          "BVF22RSFVBS9",
+          "ZVYUL2YP3518",
+          "VPW8YH7A4QFM",
+          "DPYF2BAA3DKT",
+          "CRK2HNYKSCZC",
+          "HUVEPWQAHWFU",
+          "UMVLWER4CD98",
+          "TU3XB4CAEDAW",
+          "V0383V5S9BCQ",
+          "8R5CXD5C8PW8",
+          "QNTW139MGECA",
+          "HSX4HYATB4E2",
+          "WYB0NCD6W83J",
+          "87LCSDR5P3DL",
+          "TKXQ6L4N9A6U",
+          "02HB4L0C3C67",
+          "T3FW7R2R2306",
+          "P5HT1272P5SB",
+          "YLYLZWHA0GKU",
+          "7ZUC4VPMDS41"
+        ],
+        "n": 40,
+        "reach33": {
+          "k": 21,
+          "n": 40,
+          "p": 0.525,
+          "wilson95": [
+            0.3749736210669248,
+            0.670645298873211
+          ]
+        },
+        "reach48": {
+          "k": 9,
+          "n": 40,
+          "p": 0.225,
+          "wilson95": [
+            0.12316091323540743,
+            0.37503096742310027
+          ]
+        },
+        "act2_road_death": {
+          "k": 6,
+          "n": 40,
+          "p": 0.15,
+          "wilson95": [
+            0.07061187717320358,
+            0.2907232436648971
+          ]
+        }
+      }
+    }
+  },
+  {
+    "fingerprint": "432f3ec7d7eb6530",
+    "configuration": {
+      "brain_config": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": "deepseek",
+        "reask": null,
+        "tools": null,
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          },
+          "deepseek": {
+            "model": "deepseek-flash",
+            "model_by_prefix": {},
+            "timeout_ms": null,
+            "effort": null,
+            "reask": null,
+            "tools": false,
+            "max_calls": 300
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      },
+      "sl_config": {
+        "enabled": true,
+        "boss_retries": 5,
+        "elite_retries": 3,
+        "act3_low_hp": true,
+        "act3_low_hp_pct": 50,
+        "act2_low_hp": true,
+        "act2_low_hp_pct": 50,
+        "retry_show_sim": true,
+        "retry_memo": true,
+        "retry_known_draws": true,
+        "retry_compute": {
+          "rollout_samples": 24,
+          "rollout_budget_ms": 20000,
+          "turn_budget_ms": 30000,
+          "mc_samples": 36,
+          "mc_budget_ms": 1200,
+          "boss_sim_samples": 1200
+        },
+        "judge_known_draws": true,
+        "judge_any_draw": true,
+        "reload_early": true,
+        "reload_on_revive": false,
+        "retry_known_inserts": true,
+        "retry_known_top": true,
+        "retry_explore": true,
+        "retry_explore_b2": true,
+        "retry_explore_boss_potions": true,
+        "retry_explore_order": true,
+        "retry_explore_replay": true,
+        "retry_explore_replay_plays": true,
+        "retry_explore_replay_deviate": true,
+        "retry_explore_key_counters": true,
+        "retry_explore_second": true,
+        "retry_explore_replay_order": true,
+        "retry_explore_replay_code": true,
+        "retry_explore_target_turn": true,
+        "retry_explore_rearm": true,
+        "retry_explore_wasted": true,
+        "retry_explore_anchor": true,
+        "retry_explore_canon": true,
+        "retry_explore_turn": true,
+        "retry_explore_whole": true,
+        "retry_explore_where": true,
+        "retry_explore_potion": true,
+        "retry_known_picks": true,
+        "retry_known_off_top": true,
+        "retry_known_hand_order": true,
+        "step_timeout_ms": 60000,
+        "elites": []
+      },
+      "loop_config": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "v1",
+        "run_plan_merge": true,
+        "escalation": [
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      },
+      "jev_model": "jev-latest",
+      "jev_context": "v1",
+      "knowledge_prefix": "full",
+      "target_ascension": 10
+    },
+    "actual_engine": "deepseek",
+    "n": 5,
+    "run_ids": [
+      "MCCK2602T1SR",
+      "UJ0K3G10609Y",
+      "U8K28UUGYP3U",
+      "L9SGRBB5R698",
+      "D4LJ9QMGFB8Q"
+    ],
+    "first_process_started": "2026-10-06T04:03:32.972Z",
+    "last_process_started": "2026-10-06T06:18:53.968Z",
+    "start_versions": [
+      "S1.fix30"
+    ],
+    "reach33": {
+      "k": 1,
+      "n": 5,
+      "p": 0.2,
+      "wilson95": [
+        0.03622410863243014,
+        0.6244653702374747
+      ]
+    },
+    "reach48": {
+      "k": 1,
+      "n": 5,
+      "p": 0.2,
+      "wilson95": [
+        0.03622410863243014,
+        0.6244653702374747
+      ]
+    },
+    "act2_road_death": {
+      "k": 1,
+      "n": 5,
+      "p": 0.2,
+      "wilson95": [
+        0.03622410863243014,
+        0.6244653702374747
+      ]
+    },
+    "split_double": {
+      "pre": {
+        "run_ids": [
+          "MCCK2602T1SR",
+          "UJ0K3G10609Y",
+          "U8K28UUGYP3U",
+          "L9SGRBB5R698",
+          "D4LJ9QMGFB8Q"
+        ],
+        "n": 5,
+        "reach33": {
+          "k": 1,
+          "n": 5,
+          "p": 0.2,
+          "wilson95": [
+            0.03622410863243014,
+            0.6244653702374747
+          ]
+        },
+        "reach48": {
+          "k": 1,
+          "n": 5,
+          "p": 0.2,
+          "wilson95": [
+            0.03622410863243014,
+            0.6244653702374747
+          ]
+        },
+        "act2_road_death": {
+          "k": 1,
+          "n": 5,
+          "p": 0.2,
+          "wilson95": [
+            0.03622410863243014,
+            0.6244653702374747
+          ]
+        }
+      }
+    }
+  },
+  {
+    "fingerprint": "432f3ec7d7eb6530",
+    "configuration": {
+      "brain_config": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": "deepseek",
+        "reask": null,
+        "tools": null,
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          },
+          "deepseek": {
+            "model": "deepseek-flash",
+            "model_by_prefix": {},
+            "timeout_ms": null,
+            "effort": null,
+            "reask": null,
+            "tools": false,
+            "max_calls": 300
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      },
+      "sl_config": {
+        "enabled": true,
+        "boss_retries": 5,
+        "elite_retries": 3,
+        "act3_low_hp": true,
+        "act3_low_hp_pct": 50,
+        "act2_low_hp": true,
+        "act2_low_hp_pct": 50,
+        "retry_show_sim": true,
+        "retry_memo": true,
+        "retry_known_draws": true,
+        "retry_compute": {
+          "rollout_samples": 24,
+          "rollout_budget_ms": 20000,
+          "turn_budget_ms": 30000,
+          "mc_samples": 36,
+          "mc_budget_ms": 1200,
+          "boss_sim_samples": 1200
+        },
+        "judge_known_draws": true,
+        "judge_any_draw": true,
+        "reload_early": true,
+        "reload_on_revive": false,
+        "retry_known_inserts": true,
+        "retry_known_top": true,
+        "retry_explore": true,
+        "retry_explore_b2": true,
+        "retry_explore_boss_potions": true,
+        "retry_explore_order": true,
+        "retry_explore_replay": true,
+        "retry_explore_replay_plays": true,
+        "retry_explore_replay_deviate": true,
+        "retry_explore_key_counters": true,
+        "retry_explore_second": true,
+        "retry_explore_replay_order": true,
+        "retry_explore_replay_code": true,
+        "retry_explore_target_turn": true,
+        "retry_explore_rearm": true,
+        "retry_explore_wasted": true,
+        "retry_explore_anchor": true,
+        "retry_explore_canon": true,
+        "retry_explore_turn": true,
+        "retry_explore_whole": true,
+        "retry_explore_where": true,
+        "retry_explore_potion": true,
+        "retry_known_picks": true,
+        "retry_known_off_top": true,
+        "retry_known_hand_order": true,
+        "step_timeout_ms": 60000,
+        "elites": []
+      },
+      "loop_config": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "v1",
+        "run_plan_merge": true,
+        "escalation": [
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      },
+      "jev_model": "jev-latest",
+      "jev_context": "v1",
+      "knowledge_prefix": "full",
+      "target_ascension": 10
+    },
+    "actual_engine": "mixed",
+    "n": 1,
+    "run_ids": [
+      "KQQELQSZ382Z"
+    ],
+    "first_process_started": "2026-10-06T23:27:17.237Z",
+    "last_process_started": "2026-10-06T23:27:17.237Z",
+    "start_versions": [
+      "S1.exp64"
+    ],
+    "reach33": {
+      "k": 0,
+      "n": 1,
+      "p": 0.0,
+      "wilson95": [
+        0.0,
+        0.7934506856227626
+      ]
+    },
+    "reach48": {
+      "k": 0,
+      "n": 1,
+      "p": 0.0,
+      "wilson95": [
+        0.0,
+        0.7934506856227626
+      ]
+    },
+    "act2_road_death": {
+      "k": 0,
+      "n": 1,
+      "p": 0.0,
+      "wilson95": [
+        0.0,
+        0.7934506856227626
+      ]
+    },
+    "split_double": {
+      "pre": {
+        "run_ids": [
+          "KQQELQSZ382Z"
+        ],
+        "n": 1,
+        "reach33": {
+          "k": 0,
+          "n": 1,
+          "p": 0.0,
+          "wilson95": [
+            0.0,
+            0.7934506856227626
+          ]
+        },
+        "reach48": {
+          "k": 0,
+          "n": 1,
+          "p": 0.0,
+          "wilson95": [
+            0.0,
+            0.7934506856227626
+          ]
+        },
+        "act2_road_death": {
+          "k": 0,
+          "n": 1,
+          "p": 0.0,
+          "wilson95": [
+            0.0,
+            0.7934506856227626
+          ]
+        }
+      }
+    }
+  },
+  {
+    "fingerprint": "2006e9246124b529",
+    "configuration": {
+      "brain_config": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      },
+      "sl_config": {
+        "enabled": true,
+        "boss_retries": 5,
+        "elite_retries": 3,
+        "act3_low_hp": true,
+        "act3_low_hp_pct": 50,
+        "act2_low_hp": true,
+        "act2_low_hp_pct": 50,
+        "retry_show_sim": true,
+        "retry_memo": true,
+        "retry_known_draws": true,
+        "retry_compute": {
+          "rollout_samples": 24,
+          "rollout_budget_ms": 20000,
+          "turn_budget_ms": 30000,
+          "mc_samples": 36,
+          "mc_budget_ms": 1200,
+          "boss_sim_samples": 1200
+        },
+        "judge_known_draws": true,
+        "judge_any_draw": true,
+        "reload_early": true,
+        "reload_on_revive": false,
+        "retry_known_inserts": true,
+        "retry_known_top": true,
+        "retry_explore": true,
+        "retry_explore_b2": true,
+        "retry_explore_boss_potions": true,
+        "retry_explore_order": true,
+        "retry_explore_replay": true,
+        "retry_explore_replay_plays": true,
+        "retry_explore_replay_deviate": true,
+        "retry_explore_key_counters": true,
+        "retry_explore_second": true,
+        "retry_explore_replay_order": true,
+        "retry_explore_replay_code": true,
+        "retry_explore_target_turn": true,
+        "retry_explore_rearm": true,
+        "retry_explore_wasted": true,
+        "retry_explore_anchor": true,
+        "retry_explore_canon": true,
+        "retry_explore_turn": true,
+        "retry_explore_whole": true,
+        "retry_explore_where": true,
+        "retry_explore_potion": true,
+        "retry_known_picks": true,
+        "retry_known_off_top": true,
+        "retry_known_hand_order": true,
+        "step_timeout_ms": 60000,
+        "elites": []
+      },
+      "loop_config": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "v1",
+        "run_plan_merge": true,
+        "escalation": [
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      },
+      "jev_model": "jev-latest",
+      "jev_context": "v1",
+      "knowledge_prefix": "full",
+      "target_ascension": 10
+    },
+    "actual_engine": "codex",
+    "n": 37,
+    "run_ids": [
+      "2Y27VAYZDA02",
+      "TDLBRNA0R05B",
+      "MCT1GPTL8D35",
+      "W7BHM8U02RKG",
+      "01H1533KSS5C",
+      "2K4H3JEJHRSB",
+      "ULP4TN1GNHMK",
+      "CA5KE8GFJ9X2",
+      "61E2QS63Y9WU",
+      "5PM6JAQG6FNQ",
+      "DUZUBAJ3A8GP",
+      "VLZ6CCT8AQ0A",
+      "8JRE1C4H4Z2W",
+      "YF0LXT1QSTGG",
+      "XP2SL33HT0D9",
+      "751FN9QM9MHQ",
+      "KV0JHNJCKXLS",
+      "YQL8RZ8BWN1E",
+      "KEN58SH9SLZ6",
+      "TXZ6RVMQA09D",
+      "WQZVENQ7DTRP",
+      "1913SE84AXQF",
+      "Q6M2Y34MWKRE",
+      "NHA2KW0RB7VP",
+      "G33HU22H2543",
+      "P74C04AEPL1F",
+      "RC61MFQM63Y6",
+      "BTSRF7JL1W1Y",
+      "XTSV1U9JD34T",
+      "9Z9H2EXKLF3T",
+      "7X0W3U8TVA2A",
+      "MTQ0EUBJ3R6T",
+      "KFRDELW2TH2P",
+      "GXNKW8X1XYJP",
+      "PD9AYQVMLQW6",
+      "L2TSFU62Z57Z",
+      "ZTRGYYMLR8SC"
+    ],
+    "first_process_started": "2026-10-07T01:07:33.369Z",
+    "last_process_started": "2026-10-07T23:44:19.836Z",
+    "start_versions": [
+      "S1.exp66",
+      "S1.exp67",
+      "S1.exp68",
+      "V4.codex-only1",
+      "S1.exp70",
+      "S1.exp71",
+      "S1.exp72",
+      "S1.double-boss1",
+      "S1.exp75",
+      "S1.boss-calibration2",
+      "S1.fix45",
+      "S1.exp79",
+      "S1.exp80",
+      "S1.double-boss-phase1",
+      "S1.exp81",
+      "S1.exp82",
+      "S1.exp83",
+      "S1.boss-calibration3",
+      "S1.dodge-roll1",
+      "S1.exp86",
+      "S1.exp87",
+      "S1.serpent-form1",
+      "S1.exp88",
+      "S1.exp89",
+      "S1.exp90"
+    ],
+    "reach33": {
+      "k": 18,
+      "n": 37,
+      "p": 0.4864864864864865,
+      "wilson95": [
+        0.3344640430301664,
+        0.6410510333438121
+      ]
+    },
+    "reach48": {
+      "k": 7,
+      "n": 37,
+      "p": 0.1891891891891892,
+      "wilson95": [
+        0.09479978730312018,
+        0.3420469692983842
+      ]
+    },
+    "act2_road_death": {
+      "k": 9,
+      "n": 37,
+      "p": 0.24324324324324326,
+      "wilson95": [
+        0.13361352989116398,
+        0.40117292121442655
+      ]
+    },
+    "split_double": {
+      "pre": {
+        "run_ids": [
+          "2Y27VAYZDA02",
+          "TDLBRNA0R05B",
+          "MCT1GPTL8D35",
+          "W7BHM8U02RKG",
+          "01H1533KSS5C",
+          "2K4H3JEJHRSB",
+          "ULP4TN1GNHMK",
+          "CA5KE8GFJ9X2",
+          "61E2QS63Y9WU",
+          "5PM6JAQG6FNQ"
+        ],
+        "n": 10,
+        "reach33": {
+          "k": 3,
+          "n": 10,
+          "p": 0.3,
+          "wilson95": [
+            0.10779126740630099,
+            0.6032218525388546
+          ]
+        },
+        "reach48": {
+          "k": 1,
+          "n": 10,
+          "p": 0.1,
+          "wilson95": [
+            0.017876213095072896,
+            0.4041500267952385
+          ]
+        },
+        "act2_road_death": {
+          "k": 3,
+          "n": 10,
+          "p": 0.3,
+          "wilson95": [
+            0.10779126740630099,
+            0.6032218525388546
+          ]
+        }
+      },
+      "post": {
+        "run_ids": [
+          "DUZUBAJ3A8GP",
+          "VLZ6CCT8AQ0A",
+          "8JRE1C4H4Z2W",
+          "YF0LXT1QSTGG",
+          "XP2SL33HT0D9",
+          "751FN9QM9MHQ",
+          "KV0JHNJCKXLS",
+          "YQL8RZ8BWN1E",
+          "KEN58SH9SLZ6",
+          "TXZ6RVMQA09D",
+          "WQZVENQ7DTRP",
+          "1913SE84AXQF",
+          "Q6M2Y34MWKRE",
+          "NHA2KW0RB7VP",
+          "G33HU22H2543",
+          "P74C04AEPL1F",
+          "RC61MFQM63Y6",
+          "BTSRF7JL1W1Y",
+          "XTSV1U9JD34T",
+          "9Z9H2EXKLF3T",
+          "7X0W3U8TVA2A",
+          "MTQ0EUBJ3R6T",
+          "KFRDELW2TH2P",
+          "GXNKW8X1XYJP",
+          "PD9AYQVMLQW6",
+          "L2TSFU62Z57Z",
+          "ZTRGYYMLR8SC"
+        ],
+        "n": 27,
+        "reach33": {
+          "k": 15,
+          "n": 27,
+          "p": 0.5555555555555556,
+          "wilson95": [
+            0.3731302451322448,
+            0.72414141822977
+          ]
+        },
+        "reach48": {
+          "k": 6,
+          "n": 27,
+          "p": 0.2222222222222222,
+          "wilson95": [
+            0.10607239452360037,
+            0.4075692886663257
+          ]
+        },
+        "act2_road_death": {
+          "k": 6,
+          "n": 27,
+          "p": 0.2222222222222222,
+          "wilson95": [
+            0.10607239452360037,
+            0.4075692886663257
+          ]
+        }
+      }
+    }
+  }
+]

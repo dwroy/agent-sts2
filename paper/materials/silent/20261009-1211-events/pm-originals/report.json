@@ -1,0 +1,46 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "JBX9JLH46KVN"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "JBX9JLH46KVN",
+      "where": "agent/src/reflex/turn-solver.ts:3839",
+      "what": "毒胜前立即停止扩展，遗漏连战前仍可打的保血候选；silent-0271、fix-queue-v4已有",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0271",
+      "silent-0228",
+      "silent-0028",
+      "silent-0005",
+      "silent-0027",
+      "silent-0024",
+      "silent-0025",
+      "silent-0059",
+      "silent-0243",
+      "silent-0221",
+      "silent-0294"
+    ],
+    "repeats": [
+      "silent-0271"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-6e2d8244024b8090",
+    "silent-proposal-0dfe3fba65a366b0"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/report.md"
+}

@@ -1,0 +1,25 @@
+## 复盘回报
+
+- 已追加：64R0P0MTZWAX（A10，第33层，知识恶魔T11以34血11挡承受45攻击阵亡，毒后敌剩121血）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：64R0P0MTZWAX：dirty知识完整快照、前五次SL实际结算、部分击杀顺序、全程执行最优线比例、未选方案整场对照、silent时钟估值、实际费用。
+- 学习账本：64R0P0MTZWAX：新增无；更新 silent-0167、silent-0102、silent-0278、silent-0168、silent-0005、silent-0023、silent-0109；均为支持证据，无老错重犯；`ledger.py check`退出码0。
+- 代码提案（实现任务均为strategy-proposal，尚未实现）：
+  - F25 T7／账本0167、0168／silent-proposal-dd1b193b9fa2eacc：棱柱技能血价与执行追溯；缺整场对照，保留阈值。
+  - F33 T4／T8／T9／T11／账本0102、0005、0023、0109／silent-proposal-92dbe5d961c9800b：伤害与回血分账；缺改诅咒对照，保留排序。
+  - F33饮药／账本0278／silent-proposal-1a343bea5e81a5d5：普通boss毒药水模型覆盖；缺早喝胜负证据，保留饮用规则。
+
+```json
+{"task":"postmortem","appended":["64R0P0MTZWAX"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0167","silent-0102","silent-0278","silent-0168","silent-0005","silent-0023","silent-0109"],"repeats":[],"check":0},"code_proposals":["silent-proposal-dd1b193b9fa2eacc","silent-proposal-92dbe5d961c9800b","silent-proposal-1a343bea5e81a5d5"],"implementation_domains":["combat","potion"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11f9d-9e03-7f20-985a-902439fd8281
+轮数：1；工具调用：command_execution×41
+token：输入 195.8k、输出 36.9k（其中推理 10.7k）、cache 读 3973.6k、cache 写 0（命中 95.3%）
+成本：未提供
+耗时：1268.4 s（墙钟）
+时间：首个事件 3.9 s、模型首个输出 9.0 s、首次工具 12.2 s、末次工具结束 1240.6 s；工具内共 58.7 s，其余（模型生成、推理、网络）1205.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×35；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T15-43-05-01a11f9d-9e03-7f20-985a-902439fd8281.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem.jsonl

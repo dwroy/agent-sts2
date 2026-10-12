@@ -1,0 +1,339 @@
+[
+  {
+    "commit": "be69855995737d6f381adb10bf248964832da24b",
+    "batch": "20261009-231302-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261009-231302-strategy-proposal.md",
+    "report_sha256": "0670e968ea5492f7e3cfb4320db09b12ff7a92e6dbcfd1fad5339c8a09c770da",
+    "fix": {
+      "id": "silent-0079",
+      "commit": "be69855995737d6f381adb10bf248964832da24b",
+      "proposal": "silent-proposal-be0788b2d8f42886",
+      "scope": "静默A10三阶段候选预测与首步请求日志审计，保留策略参数"
+    },
+    "commit_message": "Audit predicted Silent combat selections before and after SL\n\nRecord the answer, guarded candidate, SL candidate and requested first action\nwithout changing choices, scores, prompts or unobserved character behavior.\nKeep candidate HP, damage, growth and sample counts separate from execution.\n\nEvidence: 8JRE1C4H4Z2W F33 T2 and attempt 2 T5;\nYF0LXT1QSTGG F48 T1; XP2SL33HT0D9 F33 T1 and T3.\nLedger: silent-0079. Proposal: silent-proposal-be0788b2d8f42886.\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "7f658abe742c5b62d14ff9f8047ac11837d10489",
+    "batch": "20261009-231302-fix-batch",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261009-231302-fix-batch.md",
+    "report_sha256": "988731eb2f893c8f2b39e2810579067d5c08221748e86789af8e39fe7c665918",
+    "fix": {
+      "item": "silent-0332：资源契约错误缺少分支和样本身份（仅诊断子项）",
+      "commit": "7f658abe742c5b62d14ff9f8047ac11837d10489",
+      "test": "agent/tests/continuation-diagnostics.test.ts",
+      "fails_without_fix": true
+    },
+    "commit_message": "Preserve diagnostics for failed first-fight resource contracts\n\nEvidence: VAC6Z1PZ1QJG, Silent A10 floor 47 rest decision d309293 (turn not applicable), ledger silent-0332. Report the failing contract branch, sample seed, resources and plan identity while retaining unavailable outcomes. This diagnostic subtask does not fix the unidentified continuation root cause. Three fixed regressions fail without the source change and pass with it.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+    "batch": "20261010-162701-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-162701-strategy-proposal.md",
+    "report_sha256": "1f135d6277986900f0e2b73123dbaeddeff61a5252ac662e25a02ec73165fd61",
+    "fix": {
+      "id": "silent-0367",
+      "summary": "静默A10非战斗事实与摘要传入同局蜥蜴尾巴使用状态及来源",
+      "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+      "source_parent": "2c050664e4cbfceac9ab2a995a48e020b10e8d14",
+      "ledger": [
+        "silent-0367"
+      ],
+      "runs": [
+        "5BU7ZE1PWLSX"
+      ]
+    },
+    "commit_message": "Expose spent Silent tail state in build questions\n\nPass same-run tail observations into build facts and the run brief after replay and tracking. Keep combat, other characters, unobserved ascensions and all decision choices unchanged. Missing records remain unverified.\n\nEvidence: 5BU7ZE1PWLSX F17 T4/T5, F28 and F32; ledger silent-0367; proposal silent-proposal-196013f88a9d7c1c.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "5604982e13890e0e2bc8bf8246272e8267321c0b",
+    "batch": "20261010-182919-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-182919-strategy-proposal.md",
+    "report_sha256": "ac9d2b5b8551924413effb18cf2e76d4259394666d770baf992a0315c0e5062e",
+    "fix": {
+      "commit": "5604982e13890e0e2bc8bf8246272e8267321c0b",
+      "summary": "仅静默A10增加SL同轮预测资源对照日志；选择规则不变",
+      "code_proposal": "silent-proposal-f69950ae39f58df3",
+      "ledger": [
+        "silent-0079"
+      ],
+      "state": "committed_not_merged"
+    },
+    "commit_message": "Log Silent A10 SL candidate resource comparisons\n\nRecord guarded original and SL replacement current-turn predictions, resource\ndeltas, listed steps, random-potion uncertainty, and unverified execution in\ndeviation, replay, and later-turn avoidance logs. Keep selected actions and\nother characters or ascensions unchanged.\n\nEvidence: YF0LXT1QSTGG F48 T1 attempts 2/3; 8JRE1C4H4Z2W F33 T2\nattempts 1/3; XP2SL33HT0D9 F33 T1/T3. Ledger: silent-0079.\nProposal: silent-proposal-f69950ae39f58df3, scoped resource-audit child of\nsilent-proposal-c0767768bf6a7ab1. Parent scope remains waiting.\n\nValidation: sandbox TypeScript and 2686 Vitest checks passed; the six focused\nchecks pass, and removing production wiring fails both integration checks.\n\nCo-Authored-By: OpenAI GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "75a27fb2c230dc552761b2ad9da4be8a9a35dec3",
+    "batch": "20261010-201301-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-201301-strategy-proposal.md",
+    "report_sha256": "0eee2d735b2372c10fc5163c4ce1c093263690006374bead606b0c6e2a4ddb1f",
+    "fix": {
+      "id": "silent-proposal-a5e12fbdb1aca576",
+      "name": "静默A10七手普通精确切击1→3→5",
+      "commit": "75a27fb2c230dc552761b2ad9da4be8a9a35dec3",
+      "ledger": [
+        "silent-0166",
+        "silent-0169"
+      ],
+      "runs": [
+        "NHA2KW0RB7VP"
+      ],
+      "floor": 17,
+      "turn": 1
+    },
+    "commit_message": "Model observed seven-card Precise Cut damage for Silent A10\n\nNHA2KW0RB7VP F17 T1 (states 283142-283148), ledger silent-0166/silent-0169. Recompute the recorded 1/3/5 damage as cards leave the hand, preserving unobserved scopes. Fixed replay changes the four-attack line from 27 to the observed 31.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+    "batch": "20261010-201301-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-201301-strategy-proposal.md",
+    "report_sha256": "0eee2d735b2372c10fc5163c4ce1c093263690006374bead606b0c6e2a4ddb1f",
+    "fix": {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "name": "静默A0/A10普通紧勒后续完成出牌失血2",
+      "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+      "ledger": [
+        "silent-0260",
+        "silent-0261"
+      ],
+      "evidence": [
+        {
+          "run": "Q6M2Y34MWKRE",
+          "floor": 8,
+          "turn": 4
+        },
+        {
+          "run": "Y6GM2CHWJBEY",
+          "floor": 4,
+          "turn": 1
+        }
+      ]
+    },
+    "commit_message": "Model observed ordinary Strangle losses for Silent\n\nReplay Q6M2Y34MWKRE A10 F8 T4 and Y6GM2CHWJBEY A0 F4 T1.\nAccount for two HP lost after later completed manual cards, retain an\nobserved power during replanning, and discard it on later rollout turns.\nKeep unverified upgrades, replay, stacking, enemy interactions, missing\nascensions and other characters outside this observed branch.\n\nLedger: silent-0260, silent-0261.\nProposal: silent-proposal-1b9e29122364fa68.\nTask: strategy-proposal/20261010-201301-strategy-proposal.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "bf423c173d3be348a4ad714e1d26516df619ff41",
+    "batch": "20261010-201301-s2-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-201301-s2-strategy-proposal.md",
+    "report_sha256": "456c085bee24c29e7d32856d1641be35d91eddb29b1b89700d289d66c4490a4c",
+    "fix": {
+      "id": "silent-proposal-eecf671192557465",
+      "commit": "bf423c173d3be348a4ad714e1d26516df619ff41",
+      "source_parent": "3c9a57d5effbf9d2e62dc375bc9d6910419fa0f9",
+      "summary": "普通生存者无绷带单弃消费，仅静默A6/A10",
+      "ledger": [
+        "silent-0268",
+        "silent-0205"
+      ],
+      "runs": [
+        "RC61MFQM63Y6",
+        "53FLQ68CETW0"
+      ]
+    },
+    "commit_message": "Consume observed Silent Survivor discards without Tough Bandages\n\nEvidence: RC61MFQM63Y6 A10 F33 T4, states 285411-285415;\n53FLQ68CETW0 A6 F2 T4. Ledger silent-0268 and silent-0205.\nImplement silent-proposal-eecf671192557465 within observed plain\nSurvivor A6/A10 scope. Remove a unique discard; stop unknown choices\nbefore unreachable attacks, debuffs or facing can be credited.\n\nSource removed: fixed regression fails. Restored: 15 cases pass.\nSandbox tsc/vitest pass: 266 files, 2685 cases; gitleaks clean.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "e784dd9f043bf87c29109573f48975f9903280d3",
+    "batch": "20261010-201301-s2-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-201301-s2-strategy-proposal.md",
+    "report_sha256": "456c085bee24c29e7d32856d1641be35d91eddb29b1b89700d289d66c4490a4c",
+    "fix": {
+      "id": "silent-proposal-9b4049b484730143",
+      "commit": "e784dd9f043bf87c29109573f48975f9903280d3",
+      "source_parent": "bf423c173d3be348a4ad714e1d26516df619ff41",
+      "summary": "投斧首个实际卡牌的SL身份，仅静默A10 T1",
+      "ledger": [
+        "silent-0266"
+      ],
+      "runs": [
+        "G33HU22H2543"
+      ]
+    },
+    "commit_message": "Preserve observed Silent Throwing Axe first-card replay identity\n\nEvidence: G33HU22H2543 A10 F48 T1, decisions 277909/277954,\nSL attempts 995/996. Ledger silent-0266.\nImplement silent-proposal-9b4049b484730143 for observed Silent A10\nT1 with Throwing Axe. Carry the first actual card through candidates,\nplayed prefixes, persisted turns and loose/cards/upgrade audits.\nPotions do not take the identity; a missing consumed prefix stays\nunknown. Preserve other scopes and do not change first-card ranking\nor HP/SL thresholds.\n\nSource removed: 10 fixed regressions fail. Restored: 25 cases pass.\nSandbox tsc/vitest pass: 267 files, 2695 cases after a two-worker\nretry; retain the four-worker rollout consistency failure log.\nGitleaks staged scan clean.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "f1542578594462e9f9f4e175488795fc480a8a13",
+    "batch": "20261010-212557-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-212557-strategy-proposal.md",
+    "report_sha256": "9514b9fefee84bd02723369a2c7082c298f1a763303b4a688a258106d2166bea",
+    "fix": {
+      "summary": "静默A10 HP护栏替换预测候选结构日志；不改出牌/护栏/SL选择",
+      "commit": "f1542578594462e9f9f4e175488795fc480a8a13",
+      "source_parent": "26cafe42796797050b6ec3fc20945661d7ca5dcf",
+      "ledger": [
+        "silent-0386"
+      ],
+      "proposal": "silent-proposal-c5efc1894cc989bd",
+      "evidence": [
+        {
+          "run": "8JRE1C4H4Z2W",
+          "floor": 33,
+          "turn": 5
+        },
+        {
+          "run": "8JRE1C4H4Z2W",
+          "floor": 33,
+          "turn": 2
+        }
+      ],
+      "state": "tested_not_merged"
+    },
+    "commit_message": "Log Silent A10 HP guard candidate predictions\n\nPreserve the Jev, dominance and HP guard candidates before SL, without changing choices. Evidence: 8JRE1C4H4Z2W F33 T2/T5; ledger silent-0386; parent silent-proposal-e5b87be50f28f311.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "42fb403efc1f8f9b618c10ab71668fd5a09df377",
+    "batch": "20261010-225716-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-225716-strategy-proposal.md",
+    "report_sha256": "8dda61e67e65be11f79fb5522f003a453154c2d1f15af19085017eb80f2bcc51",
+    "fix": {
+      "item": "静默A10石虫毒死后保留已醒甲虫滚动攻击下界",
+      "commit": "42fb403efc1f8f9b618c10ab71668fd5a09df377",
+      "source_parent": "8410bcffa43722b282ebaec7a20223a7f0dff022",
+      "ledger": [
+        "silent-0326"
+      ],
+      "evidence": [
+        {
+          "run": "LWQYSREHMMJ7",
+          "floor": 30,
+          "attempt": 1,
+          "turn": 4
+        },
+        {
+          "run": "LWQYSREHMMJ7",
+          "floor": 30,
+          "attempt": 2,
+          "turn": 3
+        }
+      ]
+    },
+    "commit_message": "Preserve witnessed Silent beetle attack after rock poison death\n\nUse the A10 beetle/rock/silk evidence from LWQYSREHMMJ7 F30 attempt 1 T4 and attempt 2 T3 (ledger silent-0326). Keep unobserved powers, moves, death sources, characters and ascensions conservative. Add fixed survival, lethal and boundary regressions.\n\nCo-Authored-By: Codex gpt-6-astra <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "c915888d0fabf3c8f1b5d466fe75729161b16835",
+    "batch": "20261010-235543-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-235543-strategy-proposal.md",
+    "report_sha256": "ec51c5e94238abd83a4b8d28eeafa0c78d5bc76a92b0ed5149412a148a99d134",
+    "fix": {
+      "id": "silent-proposal-0cdd95ea44adba10",
+      "commit": "c915888d0fabf3c8f1b5d466fe75729161b16835",
+      "source_parent": "8410bcffa43722b282ebaec7a20223a7f0dff022",
+      "summary": "静默A10推演重建保留当前暂死千足虫段及已知接续阶段；缺数据明确未知",
+      "ledger": [
+        "silent-0273",
+        "silent-0064"
+      ],
+      "runs": [
+        "UV5YK5721RPB",
+        "7X0W3U8TVA2A"
+      ]
+    },
+    "commit_message": "Preserve observed Silent pending segments in rollout input\n\nEvidence: UV5YK5721RPB A10 F27 T3/T5/T6/T7, states 351774-351791;\n7X0W3U8TVA2A A10 F31 T5/T6/T7/T8, states 288426-288443.\nLedger: silent-0273 and silent-0064.\nProposal: silent-proposal-0cdd95ea44adba10.\n\nRestore already-dead segments and their observed waiting stage only for\nSilent A10. Keep current targets and attacks unchanged. Resume using\nobserved live successors; report missing stage or move data as unknown.\nFuture deaths retain the existing model; no new weights or SL rules.\n\nSource removal fails seven fixed regressions; restoration passes eight.\nSandbox tsc/vitest pass: 266 files, 2689 cases. Gitleaks is clean.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "c769739b97389fdc978b6515b83a38e3cd900f67",
+    "batch": "20261011-002829-s2-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-002829-s2-strategy-proposal.md",
+    "report_sha256": "5ddad2cf6b7a59c9e335ddac3632746f4b55f42855f94325120a11e561695e75",
+    "fix": {
+      "proposal_id": "silent-proposal-c0767768bf6a7ab1",
+      "commit": "c769739b97389fdc978b6515b83a38e3cd900f67",
+      "summary": "静默A10 SL换线和覆盖重放增加结构化候选预测审计；不改变选线，尚未合入live。",
+      "ledger": [
+        "silent-0079"
+      ],
+      "evidence": [
+        {
+          "run": "YF0LXT1QSTGG",
+          "floor": 48,
+          "turn": 1
+        },
+        {
+          "run": "8JRE1C4H4Z2W",
+          "floor": 33,
+          "turn": 2
+        },
+        {
+          "run": "XP2SL33HT0D9",
+          "floor": 33,
+          "turn": 3
+        }
+      ],
+      "merged": false
+    },
+    "commit_message": "Record candidate comparisons for Silent SL replacements\n\nAdd read-only A10 Silent candidate snapshots for SL deviations, turn avoidance, and replay. Keep forecasts separate from actual execution and preserve action selection.\n\nEvidence: YF0LXT1QSTGG F48 T1/T5, 8JRE1C4H4Z2W F33 T2, XP2SL33HT0D9 F33 T3. Ledger: silent-0079. Proposal: silent-proposal-c0767768bf6a7ab1.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "987b0d8c634b7cc886915bee660cb8e22f9b0a4e",
+    "batch": "20261011-005512-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-005512-strategy-proposal.md",
+    "report_sha256": "db24f095b42d8f98c25529ceb396068b0497fb65d94a8b77b1a50aa4dfb58e99",
+    "fix": {
+      "id": "silent-proposal-5c5be52c6eb1ff41",
+      "commit": "987b0d8c634b7cc886915bee660cb8e22f9b0a4e",
+      "source_parent": "5bac765a110a4159247f2695637c6e59e7103e89",
+      "summary": "静默A10已观察普通削弱攻击版疯狂科学排除休眠Block并接入2弱2易伤，真实牌组重建保留单敌目标",
+      "ledger": [
+        "silent-0394",
+        "silent-0396"
+      ],
+      "runs": [
+        "U1QYLX1AE1WX"
+      ]
+    },
+    "commit_message": "Model observed Silent Sapping Mad Science effects\n\nU1QYLX1AE1WX A10 F46 T4: exclude dormant Block and read the observed\nSapping debuffs, including the matching permanent-deck projection.\nEvidence: silent-0394 and silent-0396. Preserve other templates, levels,\ncharacters, upgrades and the unplayed ethereal copy.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "4b0823f519f1b724d6cff2b1cd50b74146dc4a9d",
+    "batch": "20261011-012719-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-012719-strategy-proposal.md",
+    "report_sha256": "ec0c324b18b02a1f7a0e18414bed97f06a88abb9a349ccdf7a9e958630a366e4",
+    "fix": {
+      "summary": "静默A10生存者单弃逐候选手牌和独立费用事实",
+      "commit": "4b0823f519f1b724d6cff2b1cd50b74146dc4a9d",
+      "source_parent": "5bac765a110a4159247f2695637c6e59e7103e89",
+      "ledger": [
+        "silent-0205"
+      ],
+      "runs": [
+        "A5HKP18P4Q0T",
+        "N3YHJMV1ATFR"
+      ]
+    },
+    "commit_message": "Expose Silent discard candidate hand and energy facts\n\nUse verified A5HKP18P4Q0T F14 T5 and N3YHJMV1ATFR F42 T4\nsnapshots (ledger silent-0205) to show the retained copies and\nindependent single-card energy conditions after a Survivor discard.\nKeep draws, discard triggers and complete turn outcomes unknown.\nRestrict the facts to observed Silent A10 single-discard inputs.\n\nProposal: silent-proposal-48d7b4466ecbcc94\nValidation: 21 fixed cases; withdrawing the entry fails 2 cases;\nrestoring it passes. Sandbox tsc and 2702 tests passed; gitleaks clean.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+    "batch": "20261011-124301-s2-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-124301-s2-strategy-proposal.md",
+    "report_sha256": "c09a53f44ac5a7c3d75fa6ffe2e39fe9b9a44cca6484beb15119b299a6eedda4",
+    "fix": {
+      "id": "silent-0271",
+      "proposal": "silent-proposal-d60691b060dfc40a",
+      "commit": "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+      "source_parent": "7d36941278aded5dc9f77b393edf48a3ae6a8f53",
+      "summary": "补静默A10连战首场毒胜前的无药保血候选"
+    },
+    "commit_message": "Preserve HP before observed Silent poison victories\n\nExpand dry terminal candidates for the observed Silent A10 first boss, retaining existing settlement and search limits. Evidence: XTSV1U9JD34T F48 T8 and F49 entry; ledger silent-0271, silent-0228; proposal silent-proposal-d60691b060dfc40a.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "96f17377a331e50ea5b6a3fe8d2b605932ed1bd4",
+    "batch": "20261011-124301-s2-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-124301-s2-strategy-proposal.md",
+    "report_sha256": "c09a53f44ac5a7c3d75fa6ffe2e39fe9b9a44cca6484beb15119b299a6eedda4",
+    "fix": {
+      "id": "silent-0206",
+      "proposal": "silent-proposal-ab055ef7dfbb44e5",
+      "commit": "96f17377a331e50ea5b6a3fe8d2b605932ed1bd4",
+      "source_parent": "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+      "summary": "建模幽灵已观察的一层当轮效果，保留Jev选择"
+    },
+    "commit_message": "Model observed Silent Ghost in a Jar protection\n\nOffer the observed single-turn Intangible effect for Silent A10 without existing layers, retaining Jev choice at newly modelled shortcuts and existing emergency behavior. Evidence: XTSV1U9JD34T F49 T1; ledger silent-0206 with silent-0069, silent-0005, silent-0140; proposal silent-proposal-ab055ef7dfbb44e5. Also correct JSON import attributes in the fixed poison-search test.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  },
+  {
+    "commit": "0e0ec068dc06a00e62220e69267a8e604196c589",
+    "batch": "20261011-160308-strategy-proposal",
+    "report": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-160308-strategy-proposal.md",
+    "report_sha256": "69cd953b23da23c221045281fe807f6646a6ec43f4f59f0ef448dcbf0a18498a",
+    "fix": "0e0ec068dc06a00e62220e69267a8e604196c589",
+    "commit_message": "Avoid pre-crediting random Kusarigama kills for Silent A10\n\nUse the observed multi-target trigger as unresolved damage instead of assigning it to the lowest-HP enemy. Keep candidate continuations, mark conditional outcomes, and preserve other characters and ascensions.\n\nEvidence: 8S9RNHFU5XF1 F22 T1 (states 355242-355246).\nLedger: silent-0400, silent-0401.\nProposal: silent-proposal-12b61fa8f72a681f.\nKnown independent limitation: silent-0260 Strangle damage remains unchanged.\n\nCo-Authored-By: Codex GPT-6 <noreply@openai.com>\nAgent: codex@xdwin1\n\n"
+  }
+]

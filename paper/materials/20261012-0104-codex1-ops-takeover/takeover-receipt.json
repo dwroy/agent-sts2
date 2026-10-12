@@ -1,0 +1,95 @@
+{
+  "at": "2026-10-12 01:09:11 CST",
+  "event": "llm-handoff",
+  "transaction": "codex1-20261011",
+  "takeover": "acknowledged",
+  "scope": "受控接管验证轮，仅核对与保存交接",
+  "controller_phase_observed": "verifying",
+  "controller_release_performed_by_ops": false,
+  "account_uuid_validation_owner": "切换控制器在本轮成功后核验，不以本ops回执代替",
+  "main_observed": "da3e6fb09a5600ff65de24f9bdcb193e7559bb0a",
+  "live_observed": "079dc2f156601556d48727cb14ad48fb95994afd",
+  "fixed_sources": {
+    "startup-recovery": {
+      "commit": "bc2c40e313cc36682196277c53c50e30744b88c5",
+      "exists": true,
+      "is_live_ancestor": false
+    },
+    "b4-rejected": {
+      "commit": "59287af1c7d76a648172d409c8e00bdb861cb67e",
+      "exists": true,
+      "is_live_ancestor": false
+    },
+    "strategy-213504": {
+      "commit": "3596d1a2a832c31abb9d6d8a50a68103ac052554",
+      "exists": true,
+      "is_live_ancestor": false
+    },
+    "dispatch-fixture-214301": {
+      "commit": "2b09c47d431a580e9955d157f4dfb0e576186206",
+      "exists": true,
+      "is_live_ancestor": false
+    },
+    "host-check-214301": {
+      "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+      "exists": true,
+      "is_live_ancestor": false
+    },
+    "experience-223051": {
+      "commit": "c04da0668154abda77278bf614c7e96090297248",
+      "exists": true,
+      "is_live_ancestor": false
+    }
+  },
+  "flags": {
+    "ops/codex-ops/LLM_DRAIN": {
+      "exists": true,
+      "sha256": "27a83333a1b1091a6a6660e505e0d3619cbb92b4cc46df5ec0140026e87316a0"
+    },
+    "ops/codex-ops/PAUSE": {
+      "exists": true,
+      "sha256": "27a83333a1b1091a6a6660e505e0d3619cbb92b4cc46df5ec0140026e87316a0"
+    },
+    "ops/STOP": {
+      "exists": false,
+      "sha256": null
+    }
+  },
+  "new_play_or_dispatch": false,
+  "process_actions": [],
+  "broker_actions": [],
+  "live_merge": null,
+  "new_eval_version": null,
+  "shipped_updates": [],
+  "tests_rerun": false,
+  "conditional_main_push_authorization_preserved": true,
+  "final_delivery_complete": false,
+  "history_file": {
+    "path": "notes/ops-handoff.md",
+    "bytes": 856457,
+    "lines": 1558,
+    "sha256": "6834112b55163dcf94b4f4da6ae6db76e835450f4c0abd0a420be446a6a5be8f"
+  },
+  "originals": "originals-manifest.json",
+  "pending": "pending-continuation.json",
+  "batch_states": {
+    "20261011-224302-strategy-proposal": {
+      "state": "done",
+      "rc": 0,
+      "merged": null,
+      "retry_at": null
+    },
+    "20261011-224302-fix-batch": {
+      "state": "failed",
+      "rc": 0,
+      "merged": null,
+      "retry_at": 1791734992.1575677
+    },
+    "20261011-220116-fix-batch": {
+      "state": "rejected",
+      "rc": 0,
+      "merged": null,
+      "retry_at": null
+    }
+  }
+}

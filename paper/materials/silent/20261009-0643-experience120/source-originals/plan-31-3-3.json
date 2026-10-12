@@ -1,0 +1,128 @@
+{
+  "ts": "2026-10-08T21:17:09.352Z",
+  "mode": "play",
+  "screen": "COMBAT",
+  "session": "singleplayer/run",
+  "floor": 31,
+  "turn": 3,
+  "label": "combat/plan-choice",
+  "decision_id": "d7d9cbb6-10ec-438e-8ac4-d7081246f2e8",
+  "decider": "jev",
+  "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:22:0:true|1:21:0:true|2:55:0:true\",\"event\":\"\",\"gold\":224,\"hand\":\"0:BOUNCING_FLASK:true|1:MIRAGE:true|2:DEFEND_SILENT:true|3:DEFEND_SILENT:true|4:ESCAPE_PLAN:true\",\"hp\":5,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2\",\"rewards\":\"\",\"run\":\"KSX97DF5H3NY\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+  "questions": {
+    "plan": {
+      "type": "choice",
+      "instructions": "Which plan should I play this turn?",
+      "criteria": {
+        "plan1": "{\"focus\":\"直飞产卵虫\",\"plays\":\"弹跳药瓶, then 蜃景, then 防御\",\"result\":\"survives with 5/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":11,\"enemies_after\":\"幼虫 #1 22 HP; 幼虫 #2 21 HP; 直飞产卵虫 44 HP, 中毒 10\",\"block_gained\":16,\"hp_after\":5,\"hp_after_pct\":7,\"dmg\":11,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 2.6, fight over within 5 turns in 24/24, expected turns to the end (surviving samples) ~3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -2.6\",\"rollout_turns\":\"T1 exact: hp -0, dmg 11; T2: hp -2.6 [0-3], dmg 40 [40-40], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 34 [31-47], alive 24/24, won 24/24; T4: over (alive 24/24, won 24/24); T5: over (alive 24/24, won 24/24)\",\"rollout_kill_order\":\"幼虫 x2 > 直飞产卵虫: the later turns aim at 幼虫 x2 first (幼虫 x2 dead by T5 in 24/24); best of 2 kill orders compared; the orders came out the same here; 直飞产卵虫's death ends the fight (the others are minions): HP left at T5 ~0, dead 24/24\",\"rollout_other_orders\":\"直飞产卵虫 > 幼虫 x2: further HP loss 2.6, over 24/24, dead 0/24, 直飞产卵虫 dead 24/24, 直飞产卵虫 HP left at T5 ~0 (dead 24/24)\",\"history_estimate\":\"further HP loss 3, win 100% (this encounter n=55; estimate from act-2 hallway fights n=897, typical error ±5.5; few similar states for this encounter)\",\"rollout_best\":true}",
+        "plan2": "{\"plays\":\"蜃景, then 防御, then 防御, then 逃脱计划\",\"result\":\"survives with 4/70 HP before healing\",\"hp_lost\":1,\"damage_dealt\":2,\"enemies_after\":\"幼虫 #1 22 HP; 幼虫 #2 21 HP; 直飞产卵虫 53 HP, 中毒 1\",\"block_gained\":15,\"energy_unused\":1,\"hp_after\":4,\"hp_after_pct\":6,\"dmg\":2,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 4.8, fight over within 5 turns in 2/24, expected turns to the end (surviving samples) ~3, dead within 5 turns in 22/24 (~turn 3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~8% (fights won in the samples, the others by the end-of-horizon estimate), value -41.5\",\"rollout_turns\":\"T1 exact: hp -1, dmg 2; T2: hp -2.6 [0-3], dmg 31 [31-31], alive 24/24, won 0/24; T3: hp -19.3 [0-26], dmg 22.8 [5-49], alive 2/24, won 2/24; T4: over (alive 2/24, won 2/24); T5: over (alive 2/24, won 2/24)\",\"rollout_kill_order\":\"幼虫 x2 > 直飞产卵虫: the later turns aim at 幼虫 x2 first (幼虫 x2 dead by T5 in 19/24); best of 2 kill orders compared; 直飞产卵虫's death ends the fight (the others are minions): HP left at T5 ~40, dead 2/24\",\"rollout_other_orders\":\"直飞产卵虫 > 幼虫 x2: further HP loss 4.8, over 2/24, dead 22/24, 直飞产卵虫 dead 2/24, 直飞产卵虫 HP left at T5 ~31 (dead 2/24)\",\"history_estimate\":\"further HP loss 5, win 8% (this encounter n=55; estimate from act-2 hallway fights n=897, typical error ±5.5; few similar states for this encounter)\"}"
+      }
+    }
+  },
+  "answers": {
+    "plan": {
+      "type": "choice",
+      "choice": "plan1",
+      "probabilities": {
+        "plan2": 0,
+        "plan1": 1
+      },
+      "confidence": 1,
+      "raw": {
+        "type": "choice",
+        "choice": "plan1",
+        "confidence": 1,
+        "probabilities": {
+          "plan2": 0,
+          "plan1": 1
+        }
+      }
+    }
+  },
+  "chosen": {
+    "action": "play_card",
+    "card_index": 0
+  },
+  "expect": {
+    "card": {
+      "id": "BOUNCING_FLASK",
+      "upgraded": false
+    },
+    "turn": 3,
+    "from": "decision"
+  },
+  "rationale": "Jev chose plan 1/2 (弹跳药瓶, 蜃景, 防御) with confidence 1.00; code rank 1",
+  "confidence": 1,
+  "fallback": false,
+  "reasked": false,
+  "no_jev": false,
+  "reused_answer": false,
+  "request_ids": [
+    "req_01a11d60b1e175af94de4add42bdf4a9"
+  ],
+  "latency_ms": {
+    "plan": 26,
+    "jev": 547,
+    "action": 2201,
+    "planner": 3148,
+    "pre": 0
+  },
+  "usage": {
+    "input_tokens": 5309,
+    "output_tokens": 34
+  },
+  "jev_context": "v1",
+  "jev_hints": [],
+  "rollout": {
+    "available": true,
+    "ms": 3132,
+    "horizon": 5,
+    "samples": 24,
+    "degraded": [],
+    "lines": 6,
+    "best": "plan1",
+    "best_added": false,
+    "orders": 2,
+    "orders_dropped": 0,
+    "best_order": "幼虫 x2 > 直飞产卵虫"
+  },
+  "rollout_best_chosen": true,
+  "chosen_order": "幼虫 x2 > 直飞产卵虫",
+  "focus": {
+    "plan1": "直飞产卵虫"
+  },
+  "sl_retry": {
+    "known_draws": 9,
+    "compute": {
+      "rollout_samples": 24,
+      "rollout_budget_ms": 20000,
+      "turn_spent_ms": 0,
+      "mc_samples": 36,
+      "boss_sim_samples": 1200
+    }
+  },
+  "timing": {
+    "planner_ms": 3145,
+    "solve_ms": 2,
+    "mc_ms": 0,
+    "rollout_ms": 3132,
+    "boss_sim_ms": 0,
+    "other_ms": 10,
+    "cpu_ms": 3674,
+    "load1": 4.77,
+    "probe_ms": 2.79,
+    "memo": {
+      "hits": 2,
+      "stored": 5
+    }
+  },
+  "sl_attempt": 3,
+  "sl_reloads": 2,
+  "run_id": "KSX97DF5H3NY",
+  "observed_ts": "2026-10-08T21:17:05.631Z",
+  "journal": {
+    "choice": "弹跳药瓶, then 蜃景, then 防御",
+    "reason": ""
+  },
+  "result": "completed: Action completed."
+}

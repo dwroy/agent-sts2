@@ -1,0 +1,122 @@
+已提交限定取整修复 `ec29ea34b919344b707e57ba472ea210f9c39d62`：修正静默 A10 碾碎爪已观察盘面少报 1 点损血的问题。
+
+撤源码后 9 项失败，恢复后 10 项通过；沙箱去重覆盖 3406 项，首次单项超时经同源码重跑通过。**live 预检有 29 处冲突，按任务要求停止，尚未上线。**其余 9 项保留具体缺证原因，25 条账本链接已登记。
+
+[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2/learner/runs/20261012-183811-strategy-proposal/proposal.md) · [完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2/learner/runs/20261012-183811-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-183755-s2-strategy-proposal",
+  "base": "5131744f62198cf2469da2734e4a0da2b751c84e",
+  "runs": [
+    "KEN58SH9SLZ6",
+    "TXZ6RVMQA09D",
+    "WQZVENQ7DTRP",
+    "02HB4L0C3C67",
+    "4D4J8USKCPAV",
+    "F4QKG4J1AJJZ",
+    "JLN5SK17W4FQ",
+    "LS8035TB32P3",
+    "NB8KCF6HRGVF",
+    "S9UZAK0JP0C0"
+  ],
+  "fixes": [
+    {
+      "id": "silent-crusher-facing-rounding",
+      "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+      "proposal": "silent-proposal-cfecb5580938873d",
+      "ledger": ["silent-0263", "silent-0264"],
+      "state": "committed_not_merged"
+    }
+  ],
+  "skipped": [],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3406
+  },
+  "validation_note": "首轮3394通过、1项15000ms超时；同源码原脚本单worker重跑通过，并补完paths阶段。去重覆盖341文件3406项，首次失败保留。",
+  "code_proposals": [
+    "silent-proposal-08eaa60bcc449852",
+    "silent-proposal-92920295a648b540",
+    "silent-proposal-a327449c331efbc1",
+    "silent-proposal-a099e89437e942bb",
+    "silent-proposal-47910f82a1fdd98f",
+    "silent-proposal-f1374df72d8e6a25",
+    "silent-proposal-38a49e6c97f31eea",
+    "silent-proposal-ef0e38a5dbd3bc07",
+    "silent-proposal-cfecb5580938873d",
+    "silent-proposal-7f820c02d39bfaea"
+  ],
+  "implementation_domains": ["combat"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-08eaa60bcc449852",
+      "state": "waiting",
+      "reason": "缺同入口不饮、留药到boss的完整后继；已饮药零损不能证明不饮也零损，保留持药价。"
+    },
+    {
+      "id": "silent-proposal-92920295a648b540",
+      "state": "waiting",
+      "reason": "TXZ替线少损3也少伤9，首胜4血后仍死亡；缺同抽序、后续动作受控的连续通关对照。"
+    },
+    {
+      "id": "silent-proposal-a327449c331efbc1",
+      "state": "waiting",
+      "reason": "WQ有9血换15伤及4血换沙坑余量的不同取舍；缺完整受控后继，不能拟统一交换门槛。"
+    },
+    {
+      "id": "silent-proposal-a099e89437e942bb",
+      "state": "waiting",
+      "reason": "9局42饮已核实容量子项；缺跨轮保留选择、复合触发及完整后继验证，不能关闭宽提案。"
+    },
+    {
+      "id": "silent-proposal-47910f82a1fdd98f",
+      "state": "waiting",
+      "reason": "限定王室猛毒开场扣血已有实现；缺未知回复/复活组合中间相位及留药完整后继。"
+    },
+    {
+      "id": "silent-proposal-f1374df72d8e6a25",
+      "state": "waiting",
+      "reason": "缺同入口早饮/留药、同营火条件的完整后继；Q6低血续战和1913改锻造不能直接校准价值参数。"
+    },
+    {
+      "id": "silent-proposal-38a49e6c97f31eea",
+      "state": "waiting",
+      "reason": "紧勒与重接子项已有实现；宽机制包仍缺致死轮逐击相位及复活、反伤、阈值和SL组合验证。"
+    },
+    {
+      "id": "silent-proposal-ef0e38a5dbd3bc07",
+      "state": "waiting",
+      "reason": "实际资源链已核；缺同入口换线、休息/锻造、用药的完整后继，不能拟统一路线或终局门槛。"
+    },
+    {
+      "id": "silent-proposal-cfecb5580938873d",
+      "state": "waiting",
+      "reason": "已补足底值并提交限定修复ec29ea34b919344b707e57ba472ea210f9c39d62；live预检29处冲突，尚未合入，不能登记implemented。"
+    },
+    {
+      "id": "silent-proposal-7f820c02d39bfaea",
+      "state": "waiting",
+      "reason": "NHA替线多损6、多16跨轮净伤但未击杀；缺完整受控后继及独立胜负样本，本次数值修复不证明SL选线改善。"
+    }
+  ],
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2/learner/runs/20261012-183811-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2/learner/runs/20261012-183811-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12fb1-0c3e-7423-83cf-8fd456f7603b
+轮数：1；工具调用：command_execution×85 file_change×7
+token：输入 243.9k、输出 59.4k（其中推理 22.9k）、cache 读 9752.1k、cache 写 0（命中 97.6%）
+成本：未提供
+耗时：2359.8 s（墙钟）
+时间：首个事件 21.5 s、模型首个输出 29.6 s、首次工具 37.9 s、末次工具结束 2316.9 s；工具内共 1068.9 s，其余（模型生成、推理、网络）1269.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2）；模型的工具调用 exec×65 wait×2；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T18-38-14-01a12fb1-0c3e-7423-83cf-8fd456f7603b.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755-s2/learner/runs/20261012-183811-strategy-proposal.jsonl

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-074301-s2/agent
+
+ ❯ tests/ops-autoplay-reload.test.ts (16 tests | 1 failed) 11143ms
+     × old_loop_resumes_even_if_restoring_the_pidfile_fails 5670ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > old_loop_resumes_even_if_restoring_the_pidfile_fails
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ tests/ops-autoplay-reload.test.ts:28:58
+     26|       encoding: "utf8", timeout: 5000,
+     27|     });
+     28|     expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                          ^
+     29|     expect(result.stderr).toContain("OK");
+     30|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 322 passed (323)
+      Tests  1 failed | 3188 passed (3189)
+   Start at  07:54:48
+   Duration  296.37s (transform 13.43s, setup 30.21s, import 62.79s, tests 1027.45s, environment 44ms)
+

@@ -1,0 +1,149 @@
+{
+  "at": "2026-10-11 22:55:24 CST",
+  "ready_to_drain": true,
+  "batch": "20261011-223051-experience-update",
+  "state_snapshot": {
+    "task": "experience-update",
+    "character": "silent",
+    "runs": [
+      "64VJC5XT2AT2",
+      "SB5N8GT2Y3VW"
+    ],
+    "key": "64VJC5XT2AT2,SB5N8GT2Y3VW",
+    "pid": 2555812,
+    "state": "failed",
+    "reason": "tick",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pM4",
+    "finished": "2026-10-11 22:54",
+    "rc": 0,
+    "merged": null,
+    "proposal_audit_errors": [],
+    "report": {
+      "task": "experience-update",
+      "version": "2026-10-11.16",
+      "commit": "c04da0668154abda77278bf614c7e96090297248",
+      "merged": null,
+      "added": 0,
+      "updated": 20,
+      "retired": 0,
+      "active": 219,
+      "mechanisms": [
+        "核心实际兑现",
+        "力量逐击增伤",
+        "步法后继格挡",
+        "毒雾与制品",
+        "有限覆甲",
+        "实验体激怒与换相",
+        "沙漏成长与血价",
+        "双蟹朝向与侧死增益",
+        "融入暗影新增挡翻倍",
+        "预判临时敏捷",
+        "疯狂科学定制模板",
+        "阳伞自动取得",
+        "铜质鳞片逐击反伤",
+        "加湿器回血休息",
+        "毒药水施加与结算",
+        "连续boss资源接续",
+        "尖啸临时减力",
+        "凋萎实际损血"
+      ],
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 2825
+      },
+      "ledger": {
+        "added": [],
+        "proposed": [
+          "silent-0005",
+          "silent-0011",
+          "silent-0012",
+          "silent-0016",
+          "silent-0019",
+          "silent-0020",
+          "silent-0021",
+          "silent-0024",
+          "silent-0025",
+          "silent-0028",
+          "silent-0046",
+          "silent-0062",
+          "silent-0065",
+          "silent-0077",
+          "silent-0080",
+          "silent-0120",
+          "silent-0125",
+          "silent-0129",
+          "silent-0136",
+          "silent-0161",
+          "silent-0204",
+          "silent-0228",
+          "silent-0278",
+          "silent-0385"
+        ],
+        "retired": [],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-330b05f2e6671108",
+        "silent-proposal-b4c8266f2419f463",
+        "silent-proposal-1deef8edf906c64f"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion",
+        "sl",
+        "terminal"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-223052-experience-update/report.md"
+    },
+    "retry_at": 1791734041.276632
+  },
+  "source": "c04da0668154abda77278bf614c7e96090297248",
+  "source_exists": true,
+  "source_parents": [
+    "7319b75e997b00266adfcbcd60c00c4b513969cd"
+  ],
+  "source_changed_paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "observed_live": "65e3d10a9b82a03176bafe6a6e61c6ef53f12c12",
+  "source_is_live_ancestor": false,
+  "original_files": [
+    {
+      "path": "ops/codex-ops/learner/20261011-223051-experience-update.out",
+      "bytes": 5398,
+      "sha256": "f0663c9309f76092dbbf73c8e9124155cc61fee9c46296aac452e8b62ba328b4"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261011-223051-experience-update.err",
+      "bytes": 12584,
+      "sha256": "634ba9b37aeb6d0db6a4ccab87faa169cdd61da36a289b691030bf43f8a9874c"
+    },
+    {
+      "path": ".worktrees/exp/learner/runs/20261011-223052-experience-update/report.md",
+      "bytes": 70305,
+      "sha256": "c78a0ac8b6092c91a553acbc773a28450a323ffb927d0de21f5cdb9fd1ba763d"
+    }
+  ],
+  "original_event": "ops/codex-ops/queue/1791730441276333395-experience-done.md",
+  "event_sha256": "bdf768c99d777534c7d7ad8aa90e6b9b0d25fd33c08d527a320e9efeebee2c51",
+  "report_claim": {
+    "experience_version": "2026-10-11.16",
+    "added": 0,
+    "updated": 20,
+    "retired": 0,
+    "active": 219,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2825
+    }
+  },
+  "operational_closeout_complete": false,
+  "merge_version_shipped_or_retest_performed": false,
+  "next_owner": "new codex1 ops after drain",
+  "next_action": "verify fixed candidate/test scope and15 preflight conflicts, preserve latest knowledge, integrate scoped accepted change then actual version/CLI shipped/dual notice/check; original failed/retry retained",
+  "runtime_actions": []
+}

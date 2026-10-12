@@ -1,0 +1,52 @@
+## 复盘回报
+
+- 已追加：HXCY44VD9QWU（A10，第17层，仪式兽末次T8以1血8挡对17攻击阵亡）。
+- 已追加：N8A2W8LH39N0（A10，第15层，闪光贾克斯果／飞蝇菌子T3以2血0挡对22攻击阵亡）。
+- 新的纯 bug：
+  - N8A2W8LH39N0：坚韧之环两次轮初格挡未接入持续推演 — `agent/src/reflex/card-model.ts:852`、`agent/src/reflex/rollout.ts:1948`（新，silent-0344）。
+- 写成「未记录」的项：HXCY44VD9QWU：完整dirty源码、前五次SL出口、逐源毛伤与末击拆分、完整最优线执行率、整场反事实、旧boss时钟比值、载入耗时及实付；N8A2W8LH39N0：完整dirty源码、逐源毛伤与末击拆分、完整最优线执行率、整场反事实、未访F16／F17资源、boss实战时钟、载入耗时及实付。
+- 学习账本：HXCY44VD9QWU：新增无；更新 silent-0133、silent-0222、silent-0020、silent-0015、silent-0134、silent-0307；均为support，无老错重犯。
+- 学习账本：N8A2W8LH39N0：新增 silent-0344、silent-0345；更新 silent-0020、silent-0011、silent-0289、silent-0134、silent-0307；均为support，无老错重犯；`ledger.py check`退出码0。
+- 代码提案：
+  - `silent-proposal-33968136b94432bc`：HX F17阈值、昏眩和SL执行分账；关联0133／0222／0020。
+  - `silent-proposal-8e17a61707d2ca02`：N8 F12T7—T9坚韧延迟挡；关联0344／0289／0345。
+  - `silent-proposal-2189f026997baac0`：N8 F14→F15药水与入口资源价值；关联0020／0011／0345。
+  - 实现任务均为strategy-proposal，CLI状态pending；缺受控整场对照，保留现行规则，未冒报实现或上线。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["HXCY44VD9QWU", "N8A2W8LH39N0"],
+  "skipped": [],
+  "bugs": [{
+    "run": "N8A2W8LH39N0",
+    "where": "agent/src/reflex/card-model.ts:852",
+    "what": "坚韧之环两次轮初格挡未接入持续推演，另见rollout.ts:1948、2599、1764。",
+    "new": true
+  }],
+  "ledger": {
+    "added": ["silent-0344", "silent-0345"],
+    "updated": ["silent-0011", "silent-0015", "silent-0020", "silent-0133", "silent-0134", "silent-0222", "silent-0289", "silent-0307"],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-33968136b94432bc",
+    "silent-proposal-8e17a61707d2ca02",
+    "silent-proposal-2189f026997baac0"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-194302-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a12079-4df8-70e2-a93f-d91d94c2afdd
+轮数：1；工具调用：command_execution×70
+token：输入 450.8k、输出 44.4k（其中推理 10.2k）、cache 读 4905.3k、cache 写 0（命中 91.6%）
+成本：未提供
+耗时：1591.6 s（墙钟）
+时间：首个事件 3.3 s、模型首个输出 8.6 s、首次工具 14.7 s、末次工具结束 1560.8 s；工具内共 105.5 s，其余（模型生成、推理、网络）1482.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×33；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T19-43-03-01a12079-4df8-70e2-a93f-d91d94c2afdd.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-194302-postmortem.jsonl

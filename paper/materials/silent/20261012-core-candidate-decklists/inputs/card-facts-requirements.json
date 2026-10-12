@@ -1,0 +1,112 @@
+{
+  "request_id": "roy-20261012-build-choice-card-facts",
+  "at": "2026-10-12T09:08:06+08:00",
+  "kind": "architecture_requirements_and_verified_transport_gap",
+  "user_request": "我觉得你说的3点 以及可以把位置的卡片信息都需要补齐进入知识库，你看看需要怎么做",
+  "interpretation": "位置的卡片信息按上下文理解为未知的卡片信息；三个问题为现有核心及缺口、增删牌对启动和重复次数的影响、收益是否抵偿稀释代价。",
+  "parent_request": "roy-20261011-silent-core-cycle-quantitative-learning",
+  "scope": "沿既有学习协议补信息通路和量化消费者；不从外部攻略或模型记忆添加游戏知识，不给小牌组设固定阈值。",
+  "diagnosis": {
+    "observed_run": "64VJC5XT2AT2",
+    "floor": 34,
+    "event": "VAKUU",
+    "option": "SERE_TALON",
+    "referenced_card": "WISH",
+    "raw_state_offset": 11453224823,
+    "brain_offset": 419039766,
+    "problem": "事件选项只把损9最大生命、加3许愿传给模型，没有展开卡牌费用/效果。",
+    "correction_to_prior_audit": "此前确认当前experience无条目且该题面无卡牌详情。进一步核实data/game-data.json和实时GET /data/cards均有WISH，故不是底层资料不存在，缺口是已有卡牌资料的引用解析和消费者传递。历史完整system prompt未复原，不判断模型内部理解。",
+    "existing_catalog": {
+      "path": "data/game-data.json",
+      "mod_version": "0.16.2",
+      "cached_at": "2026-09-27T03:51:37.812Z",
+      "live_game_version": "v0.111.0",
+      "live_catalog_cards": 596,
+      "live_card_matches_cache": true
+    }
+  },
+  "workstreams": [
+    {
+      "id": "card-facts",
+      "priority": "P0",
+      "owner": "ops沿普通基础设施fix链协调实现",
+      "existing_paths": [
+        "agent/src/knowledge/index.ts",
+        "agent/src/hand/screens/event.ts",
+        "agent/src/brain/build-facts.ts"
+      ],
+      "requirements": [
+        "复用既有mod资料缓存与CardInfo，避免另造互相漂移的全量牌库。保留id/名称、费用及X费等、完整规则/关键词/升级资料、数据版本和来源；缺字段为unknown，不猜数值。",
+        "建立通用的已遇到卡牌引用解析：事件/遗物/药水/卡牌提到的生成或授予卡、奖励、商店、变换/升级选择都应列coverage。先修复已确认的事件漏传，并逐入口扩展。",
+        "区分获得永久牌、临时生成、进入手牌/抽牌堆等原文条件；只传有证据的来源和数量。多层引用使用去重、环检测和预算，截断明确列出未解析项。",
+        "题面展示本题关联卡及必要的关联卡，不把596张全塞入每题；id优先、名称匹配需防短名误匹配/同名歧义。现场动态/升级文本优先，缓存版本不匹配显式降为待核。",
+        "知识状态分开：已见牌面资料、已观察效果、已实现模拟、已验证打法。静默自身证据索引写knowledge/characters/silent/；共享基础mod资料不能携带另一角色策略结论。",
+        "未知项按角色、版本、对象身份与缺失字段去重入原学习/修复链，保存首次/最近遇见局号、楼层、来源和缺口；解析失败标未知，不强制选择该选项或无限阻塞对局。"
+      ]
+    },
+    {
+      "id": "build-comparison",
+      "priority": "P1",
+      "owner": "原量化实现任务的学习者；ops绑定补充验收，不另起重复研究",
+      "existing_paths": [
+        "docs/core-realization.md",
+        "agent/src/sim/core-realization.ts",
+        "agent/src/sim/build-sim-facts.ts",
+        "agent/src/sim/quantitative-facts.ts"
+      ],
+      "requirements": [
+        "每次拿/跳/买/删/替换及增牌遗物选择，明确当前已持有且有证据支持的核心、已建立状态、缺少的组件；愿望牌不计现有收益。",
+        "在同一可活窗口和同随机样本下比较各合法选项：核心到手/首次施放、实际支付、手动/重放次数、完整组合次数、伤害/格挡、HP及金币成本；把永久牌数与能力/消耗后的有效牌池分开。",
+        "复用现有量化接口，先指出当前仅具名杂技/下注/绷带分支可计数的覆盖边界；其他组合需学习者补归属/资格后才输出，不用单卡施放数或抽牌数冒充完整组合次数。",
+        "将新增收益与核心启动变慢/重复次数变化放在同一比较中；保持skip/不购买基线以及合法移除候选，不设最佳张数、固定跳牌率或默认必须缩牌。",
+        "模型回答留下简短可审计的比较依据与未知项；避免只以“有协同”或“免费”结案。如何权衡卡值与机制条件由学习者从本角色对局证据得出。",
+        "随机样本波动、均值误差、机制缺失分开显示；采用配对样本/分母/区间，不把单次模拟或截断当确定结论。"
+      ]
+    },
+    {
+      "id": "learning-acceptance",
+      "priority": "P2",
+      "owner": "学习者入库，ops实际合入与效果登记，watcher核对系统通路",
+      "requirements": [
+        "回填已出现但漏展示的引用，不改写历史原题面或伪造旧局已知；从游戏接口/可见预览与本角色原日志取事实，禁止wiki/游戏二进制/模型记忆补机制。",
+        "许愿固定回放：原三个合法选项/实际代价/原选择不改，修后o1必须显示已有WISH基础文本；不要求模型改选原初之爪，不以反事实宣称必胜。",
+        "覆盖缺失定义、同名歧义、循环引用、升级和临时费用、版本过期、其他角色等价与日常对局不中断。代码按项目tsc/沙箱vitest和宿主续验流程验证。",
+        "分开登记：资料已保存→真实题面包含→模型回答实际引用→执行结果→后续收益。文件存在或测试通过不等采用、更不等胜率改善。",
+        "自然局验收记录加/跳/删比例及理由、核心启动与实际执行次数、存活和结局；不把终局牌数或跳牌率单独作为成功指标。"
+      ]
+    }
+  ],
+  "dispatch_boundaries": [
+    "交ops按既有队列/租约/冷却安排，watcher不启动play或代派学习者。",
+    "旧量化父请求继续，原冻结任务/manifest/候选/失败历史保持；通过独立补充输入登记绑定，不覆盖原SHA。",
+    "先给基础资料与事件消费者缺口单独可交付修复；无需等所有核心模型完成才上线。",
+    "不修改ops-session prompt；其他角色先保持等价，任何行为上线遵循版本/通知/ledger规则。"
+  ],
+  "acceptance_status": "requirements_prepared_not_implemented",
+  "evidence": [
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/recent10-decks-and-strategies.json",
+      "sha256": "20263e58479ece23cfbe9611200bb066f400d3e3c11b062f1e9b1e21a8fc8c72"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/deck-size-learning-audit.json",
+      "sha256": "d46a6c1b086333b4c08a3d90f572a4b05353c6cc4ee43b4dda5c5a84b09172c9"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/64v-parasol-brain-choice.json",
+      "sha256": "8f256f94f3480df4b87a40e10678b9b45a2d5fe96f2856c81e35b13003982f92"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/64v-parasol-action-check.json",
+      "sha256": "db3965cc06c5cb5f1449e1e9b73620a9232abcf506b703dc6a5a65289fbcbc67"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/64v-wish-understanding-audit.json",
+      "sha256": "2481c724626b2dda3582eb0bdeb7eb6d1187391e24e1170a47b2385df3769d91"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/live-wish-data-readback.json",
+      "sha256": "de90cc35d8e2ab68eb49be6189457cc69ad58ee398f52630491ef32391face03"
+    }
+  ]
+}

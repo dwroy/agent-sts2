@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-024317/agent
+
+ ❯ tests/core-window.test.ts (4 tests | 1 failed | 3 skipped) 52ms
+   × the real build comparison pairs keep/skip/remove/add on the same samples and preserves compact consumers 51ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/core-window.test.ts > the real build comparison pairs keep/skip/remove/add on the same samples and preserves compact consumers
+TypeError: Cannot read properties of undefined (reading 'samples')
+ ❯ tests/core-window.test.ts:49:24
+     47|   expect(result.options[0]!.quantitative).toEqual(result.options[1]!.q…
+     48|   const q = result.options[0]!.quantitative as any;
+     49|   expect(q.core_window.samples).toBe(3);
+       |                        ^
+     50|   expect(q.core_window.paired_energy_paid.difference.mean).toBe(0);
+     51|   expect(compactQuantitativeFight(q)).toHaveProperty("core_window");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 skipped (4)
+   Start at  03:10:37
+   Duration  872ms (transform 585ms, setup 337ms, import 354ms, tests 52ms, environment 0ms)
+

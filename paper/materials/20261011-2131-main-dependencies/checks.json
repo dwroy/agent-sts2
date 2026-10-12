@@ -1,0 +1,48 @@
+[
+  {
+    "name": "tsc",
+    "cmd": [
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "affected",
+    "cmd": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/ascension-observed.test.ts",
+      "tests/brain-codex-usage.test.ts",
+      "tests/codex-usage-recovery.test.ts",
+      "tests/ops-deferred.test.ts",
+      "tests/quantitative.test.ts",
+      "tests/silent-apotheosis-backflip.test.ts",
+      "tests/silent-apotheosis-footwork.test.ts",
+      "tests/silent-apotheosis-neutralize.test.ts",
+      "tests/silent-apotheosis-poisoned-stab.test.ts",
+      "tests/silent-apotheosis-snakebite.test.ts",
+      "tests/silent-apotheosis-survivor.test.ts",
+      "tests/silent-blade-dance.test.ts",
+      "tests/silent-build-win-ties.test.ts",
+      "tests/silent-cunning.test.ts",
+      "tests/silent-discard-plan.test.ts",
+      "tests/silent-gardener-skittish.test.ts",
+      "tests/silent-opening.test.ts",
+      "tests/silent-phase-reference.test.ts",
+      "tests/silent-reattach-reset.test.ts",
+      "tests/silent-shackling-weak.test.ts",
+      "tests/silent-skittish.test.ts",
+      "tests/sl-giant-phase.test.ts",
+      "tests/experience.test.ts",
+      "tests/gkb-render.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1"
+    ],
+    "exit": 1
+  }
+]

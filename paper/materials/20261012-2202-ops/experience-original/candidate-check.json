@@ -1,0 +1,514 @@
+{
+  "questions": [
+    {
+      "turn": 1,
+      "id": "b1c83291-2cfa-40e5-920d-081c872896ca",
+      "poison": [
+        {
+          "key": "p1->e0",
+          "value": {
+            "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+            "simulated": "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+            "offered": "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers",
+            "note": "the cheapest card plan alone: hp -0 this turn",
+            "potion_cost": "drinking it costs 0 (no conversion value in the potion table)",
+            "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+          }
+        }
+      ],
+      "plans": {
+        "plan1": {
+          "plays": "打击 -> 猎人杀手, then 中和+ -> 猎人杀手",
+          "hp_lost": 0,
+          "damage_dealt": 12,
+          "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 43, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~5.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/2), then the fight's progress: least enemy HP left (this line ~73, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2]"
+        },
+        "plan2": {
+          "plays": "中和+ -> 猎人杀手, then 生存者",
+          "hp_lost": 0,
+          "damage_dealt": 5,
+          "block_gained": 8,
+          "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 43, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/2), then the fight's progress: least enemy HP left (this line ~80, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2]"
+        },
+        "plan3": {
+          "plays": "打击 -> 猎人杀手, then 防御, then 中和+ -> 猎人杀手, then 生存者",
+          "hp_lost": 0,
+          "damage_dealt": 12,
+          "block_gained": 13,
+          "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 43, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~6.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/2), then the fight's progress: least enemy HP left (this line ~87, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2]"
+        },
+        "plan4": {
+          "plays": "生存者",
+          "hp_lost": 0,
+          "damage_dealt": 0,
+          "block_gained": 8,
+          "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 43, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~6.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/2), then the fight's progress: least enemy HP left (this line ~90, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2]"
+        },
+        "plan5": {
+          "plays": "防御, then 防御, then 中和+ -> 猎人杀手, then 生存者",
+          "hp_lost": 0,
+          "damage_dealt": 5,
+          "block_gained": 18,
+          "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 43, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~6.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/2), then the fight's progress: least enemy HP left (this line ~94, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2]"
+        },
+        "plan6": {
+          "plays": "防御, then 防御, then 生存者",
+          "hp_lost": 0,
+          "damage_dealt": 0,
+          "block_gained": 18,
+          "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 43, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~6.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/2), then the fight's progress: least enemy HP left (this line ~104, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2]"
+        },
+        "plan7": {
+          "plays": "打击 -> 猎人杀手, then 中和+ -> 猎人杀手, then potion 流动铜液",
+          "hp_lost": 0,
+          "damage_dealt": 12,
+          "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 43, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~5.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/2), then the fight's progress: least enemy HP left (this line ~70, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2]"
+        },
+        "plan8": {
+          "plays": "打击 -> 猎人杀手, then 中和+ -> 猎人杀手",
+          "hp_lost": 0,
+          "damage_dealt": 12,
+          "rollout": "3-turn rollout (2 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 43, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~6.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/2), then the fight's progress: least enemy HP left (this line ~82, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2]"
+        },
+        "p1->e0": {
+          "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+          "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+        }
+      },
+      "chosen": "plan7",
+      "best": true
+    },
+    {
+      "turn": 1,
+      "id": "7ff8099d-1180-4118-8a98-829cf936af41",
+      "poison": [
+        {
+          "key": "p1->e0",
+          "value": {
+            "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+            "simulated": "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+            "offered": "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers",
+            "note": "the cheapest card plan alone: hp -0 this turn",
+            "potion_cost": "drinking it costs 0 (no conversion value in the potion table)",
+            "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+          }
+        }
+      ],
+      "plans": {
+        "plan1": {
+          "plays": "nothing (end the turn now)",
+          "hp_lost": 0,
+          "damage_dealt": 0,
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 40.5, fight over within 5 turns in 1/8, expected turns to the end (surviving samples) ~5.1, dead within 5 turns in 5/8 (~turn 4.6); ranked on -(further loss) - 40 x (1 - win chance): win chance ~31% (fights won in the samples, the others by the end-of-horizon estimate), value -68"
+        },
+        "plan2": {
+          "plays": "防御, then 生存者",
+          "hp_lost": 0,
+          "damage_dealt": 0,
+          "block_gained": 13,
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 42, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~5.1, dead within 5 turns in 7/8 (~turn 4.7); ranked on -(further loss) - 40 x (1 - win chance): win chance ~9% (fights won in the samples, the others by the end-of-horizon estimate), value -78.2"
+        },
+        "p1->e0": {
+          "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+          "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+        }
+      },
+      "chosen": "plan1",
+      "best": true
+    },
+    {
+      "turn": 2,
+      "id": "3fafbb1e-9213-4b0c-bec0-b724c1f6d8ea",
+      "poison": [
+        {
+          "key": "p1->e0",
+          "value": {
+            "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+            "simulated": "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+            "offered": "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers",
+            "note": "the cheapest card plan alone: hp -9 this turn",
+            "potion_cost": "drinking it costs 0 (no conversion value in the potion table)",
+            "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+          }
+        }
+      ],
+      "plans": {
+        "plan1": {
+          "plays": "防御, then 震荡波, then 计算下注",
+          "hp_lost": 9,
+          "damage_dealt": 0,
+          "block_gained": 5,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~60, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 9) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan2": {
+          "plays": "防御, then 打击 -> 猎人杀手, then 震荡波, then 计算下注",
+          "hp_lost": 9,
+          "damage_dealt": 6,
+          "block_gained": 5,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~56, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 9) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan3": {
+          "plays": "打击 -> 猎人杀手, then 震荡波, then 计算下注",
+          "hp_lost": 14,
+          "damage_dealt": 7,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~53, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 14) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan4": {
+          "plays": "震荡波, then 计算下注",
+          "hp_lost": 14,
+          "damage_dealt": 0,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5.2; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~63, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 14) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan5": {
+          "plays": "先制打击 -> 猎人杀手, then 打击 -> 猎人杀手, then 防御, then 计算下注",
+          "hp_lost": 11,
+          "damage_dealt": 10,
+          "block_gained": 3,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~52, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 11) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan6": {
+          "plays": "防御, then 先制打击 -> 猎人杀手, then 打击 -> 猎人杀手, then 震荡波",
+          "hp_lost": 9,
+          "damage_dealt": 8,
+          "block_gained": 5,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5.2; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~62, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 9) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan7": {
+          "plays": "先制打击 -> 猎人杀手, then 打击 -> 猎人杀手, then 震荡波, then 防御",
+          "hp_lost": 12,
+          "damage_dealt": 10,
+          "block_gained": 2,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~60, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 12) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "p1->e0": {
+          "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+          "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+        }
+      },
+      "chosen": "plan5",
+      "best": true
+    },
+    {
+      "turn": 2,
+      "id": "79c67c76-d48f-44d7-b1ec-8a4c32937c87",
+      "poison": [
+        {
+          "key": "p1->e0",
+          "value": {
+            "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+            "simulated": "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+            "offered": "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers",
+            "note": "the cheapest card plan alone: hp -10 this turn",
+            "potion_cost": "drinking it costs 0 (no conversion value in the potion table)",
+            "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+          }
+        }
+      ],
+      "plans": {
+        "plan1": {
+          "plays": "防御, then 小刀 -> 猎人杀手, then 小刀 -> 猎人杀手, then 震荡波, then 计算下注",
+          "hp_lost": 10,
+          "damage_dealt": 5,
+          "block_gained": 4,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~53, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 10) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan2": {
+          "plays": "小刀 -> 猎人杀手, then 小刀 -> 猎人杀手, then 震荡波, then 计算下注",
+          "hp_lost": 14,
+          "damage_dealt": 7,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.7; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~49, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 14) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan3": {
+          "plays": "打击 -> 猎人杀手, then 小刀 -> 猎人杀手, then 小刀 -> 猎人杀手, then 震荡波, then 计算下注",
+          "hp_lost": 14,
+          "damage_dealt": 11,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.7; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~47, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 14) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan4": {
+          "plays": "防御, then 计算下注",
+          "hp_lost": 10,
+          "damage_dealt": 0,
+          "block_gained": 4,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5, dead within 3 turns in 1/4 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 1/4), then the fight's progress: least enemy HP left (this line ~61, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 10) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan5": {
+          "plays": "震荡波, then 小刀 -> 猎人杀手, then 计算下注",
+          "hp_lost": 14,
+          "damage_dealt": 3,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~56, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 14) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan6": {
+          "plays": "打击 -> 猎人杀手, then 防御, then 小刀 -> 猎人杀手, then 小刀 -> 猎人杀手, then 计算下注",
+          "hp_lost": 11,
+          "damage_dealt": 9,
+          "block_gained": 3,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~49, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 11) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan7": {
+          "plays": "防御, then 打击 -> 猎人杀手, then 小刀 -> 猎人杀手, then 小刀 -> 猎人杀手, then 震荡波",
+          "hp_lost": 10,
+          "damage_dealt": 8,
+          "block_gained": 4,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~58, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 10) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan8": {
+          "plays": "打击 -> 猎人杀手, then 小刀 -> 猎人杀手, then 小刀 -> 猎人杀手, then 防御, then 震荡波",
+          "hp_lost": 13,
+          "damage_dealt": 11,
+          "block_gained": 1,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~55, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 13) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan9": {
+          "plays": "防御, then 震荡波, then 打击 -> 猎人杀手",
+          "hp_lost": 10,
+          "damage_dealt": 4,
+          "block_gained": 4,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 43, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5.2; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~62, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 10) [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "p1->e0": {
+          "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+          "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+        }
+      },
+      "chosen": "plan3",
+      "best": true
+    },
+    {
+      "turn": 2,
+      "id": "9c286359-7fb8-4c2b-a945-d270154fba39",
+      "poison": [
+        {
+          "key": "p1->e0",
+          "value": {
+            "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+            "simulated": "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+            "offered": "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers",
+            "note": "the cheapest card plan alone: hp -14 this turn",
+            "potion_cost": "drinking it costs 0 (no conversion value in the potion table)",
+            "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+          }
+        }
+      ],
+      "plans": {
+        "plan1": {
+          "plays": "nothing (end the turn now)",
+          "hp_lost": 14,
+          "damage_dealt": 0,
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 39.6, fight over within 5 turns in 4/8, expected turns to the end (surviving samples) ~4.5, dead within 5 turns in 4/8 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -59.6"
+        },
+        "p1->e0": {
+          "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+          "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+        }
+      },
+      "chosen": "plan1",
+      "best": true
+    },
+    {
+      "turn": 3,
+      "id": "62ce7c28-da2e-49a6-8482-42721c720f43",
+      "poison": [
+        {
+          "key": "p1->e0",
+          "value": {
+            "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+            "simulated": "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+            "offered": "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers",
+            "note": "the cheapest card plan alone: hp -7 this turn",
+            "potion_cost": "drinking it costs 0 (no conversion value in the potion table)",
+            "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+          }
+        }
+      ],
+      "plans": {
+        "plan1": {
+          "plays": "防御, then 手上技法, then 翻越撑击, then 带毒刺击 -> 猎人杀手",
+          "hp_lost": 7,
+          "damage_dealt": 18,
+          "block_gained": 11,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 22.8, fight over within 3 turns in 3/4, expected turns to the end (surviving samples) ~3.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~85% (fights won in the samples, the others by the end-of-horizon estimate), value -28.9 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan2": {
+          "plays": "带毒刺击 -> 猎人杀手, then 防御, then 翻越撑击, then 手上技法",
+          "hp_lost": 10,
+          "damage_dealt": 22,
+          "block_gained": 8,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 24.1, fight over within 3 turns in 3/4, expected turns to the end (surviving samples) ~3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~92% (fights won in the samples, the others by the end-of-horizon estimate), value -27.5 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan3": {
+          "plays": "防御, then 手上技法, then 翻越撑击",
+          "hp_lost": 7,
+          "damage_dealt": 9,
+          "block_gained": 11,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 25.4, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~3.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~61% (fights won in the samples, the others by the end-of-horizon estimate), value -40.9 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan4": {
+          "plays": "手上技法, then 磨蚀",
+          "hp_lost": 11,
+          "damage_dealt": 0,
+          "block_gained": 7,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 29, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.4, dead within 3 turns in 2/4 (~turn 3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~12% (fights won in the samples, the others by the end-of-horizon estimate), value -64.4 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan5": {
+          "plays": "防御, then 手上技法, then 磨蚀",
+          "hp_lost": 7,
+          "damage_dealt": 0,
+          "block_gained": 11,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 29, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.5, dead within 3 turns in 2/4 (~turn 3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~13% (fights won in the samples, the others by the end-of-horizon estimate), value -63.7 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan6": {
+          "plays": "手上技法, then 带毒刺击 -> 猎人杀手, then 磨蚀",
+          "hp_lost": 11,
+          "damage_dealt": 12,
+          "block_gained": 7,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 29, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4, dead within 3 turns in 2/4 (~turn 3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~15% (fights won in the samples, the others by the end-of-horizon estimate), value -63.2 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan7": {
+          "plays": "带毒刺击 -> 猎人杀手, then 磨蚀",
+          "hp_lost": 18,
+          "damage_dealt": 13,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 29, fight over within 3 turns in 0/4, dead within 3 turns in 4/4 (~turn 2.3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -69 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan8": {
+          "plays": "翻越撑击, then 带毒刺击 -> 猎人杀手, then 磨蚀",
+          "hp_lost": 18,
+          "damage_dealt": 24,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 29, fight over within 3 turns in 0/4, dead within 3 turns in 4/4 (~turn 2.3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -69 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan9": {
+          "plays": "翻越撑击, then 防御, then 手上技法, then 带毒刺击 -> 猎人杀手",
+          "hp_lost": 9,
+          "damage_dealt": 21,
+          "block_gained": 9,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 23.1, fight over within 3 turns in 3/4, expected turns to the end (surviving samples) ~3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~92% (fights won in the samples, the others by the end-of-horizon estimate), value -26.2 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "p1->e0": {
+          "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+          "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+        }
+      },
+      "chosen": "plan9",
+      "best": true
+    },
+    {
+      "turn": 3,
+      "id": "a40a5324-99ec-4b95-ad3f-b0f89e060569",
+      "poison": [
+        {
+          "key": "p1->e0",
+          "value": {
+            "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+            "simulated": "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+            "offered": "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers",
+            "note": "the cheapest card plan alone: hp -9 this turn",
+            "potion_cost": "drinking it costs 0 (no conversion value in the potion table)",
+            "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+          }
+        }
+      ],
+      "plans": {
+        "plan1": {
+          "plays": "nothing (end the turn now)",
+          "hp_lost": 9,
+          "damage_dealt": 3,
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 25.4, fight over within 5 turns in 6/8, expected turns to the end (surviving samples) ~3.3, dead within 5 turns in 2/8 (~turn 3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~75% (fights won in the samples, the others by the end-of-horizon estimate), value -35.4"
+        },
+        "p1->e0": {
+          "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+          "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+        }
+      },
+      "chosen": "plan1",
+      "best": true
+    },
+    {
+      "turn": 4,
+      "id": "4e46ef3f-3ac1-400f-aec9-19957902f4ee",
+      "poison": [
+        {
+          "key": "p1->e0",
+          "value": {
+            "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+            "simulated": "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+            "offered": "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers",
+            "note": "the cheapest card plan alone: hp -8 this turn",
+            "potion_cost": "drinking it costs 0 (no conversion value in the potion table)",
+            "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+          }
+        }
+      ],
+      "plans": {
+        "plan1": {
+          "plays": "防御, then 打击 -> 猎人杀手, then 打击 -> 猎人杀手, then 打击 -> 猎人杀手",
+          "hp_lost": 9,
+          "damage_dealt": 24,
+          "block_gained": 5,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 18, fight over within 3 turns in 2/4, expected turns to the end (surviving samples) ~3, dead within 3 turns in 2/4 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -38 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan2": {
+          "plays": "蜃景, then 防御, then 打击 -> 猎人杀手, then 打击 -> 猎人杀手",
+          "hp_lost": 8,
+          "damage_dealt": 15,
+          "block_gained": 6,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 21.5, fight over within 3 turns in 1/4, expected turns to the end (surviving samples) ~3.1, dead within 3 turns in 2/4 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~40% (fights won in the samples, the others by the end-of-horizon estimate), value -45.4 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan3": {
+          "plays": "打击 -> 猎人杀手, then 打击 -> 猎人杀手, then 打击 -> 猎人杀手, then 防御",
+          "hp_lost": 12,
+          "damage_dealt": 28,
+          "block_gained": 2,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 22, fight over within 3 turns in 3/4, expected turns to the end (surviving samples) ~2.7, dead within 3 turns in 1/4 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~75% (fights won in the samples, the others by the end-of-horizon estimate), value -32 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "plan4": {
+          "plays": "蜃景, then 防御, then 打击 -> 猎人杀手, then 打击 -> 猎人杀手, then 打击 -> 猎人杀手",
+          "hp_lost": 8,
+          "damage_dealt": 19,
+          "block_gained": 6,
+          "rollout": "3-turn rollout (4 samples): expected further HP loss 22.5, fight over within 3 turns in 1/4, expected turns to the end (surviving samples) ~3.1, dead within 3 turns in 2/4 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~40% (fights won in the samples, the others by the end-of-horizon estimate), value -46.4 [cut to fit the time budget: horizon 3, samples 4]"
+        },
+        "p1->e0": {
+          "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+          "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+        }
+      },
+      "chosen": "plan3",
+      "best": true
+    },
+    {
+      "turn": 4,
+      "id": "2ff9acdb-e1e2-4d05-98e7-c4cc864338eb",
+      "poison": [
+        {
+          "key": "p1->e0",
+          "value": {
+            "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+            "simulated": "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+            "offered": "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers",
+            "note": "the cheapest card plan alone: hp -12 this turn",
+            "potion_cost": "drinking it costs 0 (no conversion value in the potion table)",
+            "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+          }
+        }
+      ],
+      "plans": {
+        "plan1": {
+          "plays": "nothing (end the turn now)",
+          "hp_lost": 12,
+          "damage_dealt": 2,
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 21.6, fight over within 5 turns in 6/8, expected turns to the end (surviving samples) ~2.2, dead within 5 turns in 2/8 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~75% (fights won in the samples, the others by the end-of-horizon estimate), value -31.6"
+        },
+        "p1->e0": {
+          "plays": "drink 毒药水 on 猎人杀手 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn",
+          "rollout": "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking"
+        }
+      },
+      "chosen": "plan1",
+      "best": true
+    }
+  ],
+  "count": 9,
+  "checks": [
+    "九题毒药未模拟且最优标记全真",
+    "T4已选与未选的3血4伤差，未构造反事实胜局"
+  ]
+}

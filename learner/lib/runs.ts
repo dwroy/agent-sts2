@@ -5,7 +5,7 @@
  * second item ("## <RUN_ID>（A0，静默猎手，第17层，…）"), and a heading without a character name is the Ironclad's.
  *
  * pendingRuns is ops/experience-pending.py per character: the post-mortems not yet folded into that character's
- * experience.json, counted among that character's runs only (the learner folds them in every 10, Dai 2026-10-03).
+ * experience.json, counted among that character's runs only (the learner folds them in every 10, Roy 2026-10-03).
  * For the Ironclad it gives what the Python script gives.
  */
 import { existsSync, readFileSync } from "node:fs";

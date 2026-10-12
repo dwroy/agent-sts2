@@ -1,0 +1,7 @@
+agent/src/sim/boss-sim.ts:252:      ? { fightQueenTorchStrength: 1 } : {}),
+agent/src/reflex/rollout.ts:624:  fightQueenTorchStrength?: number;
+agent/src/reflex/rollout.ts:2333:        if (fullFight && input.fightQueenTorchStrength && e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE") {
+agent/src/reflex/rollout.ts:2334:          for (const ally of enemies) if (ally.alive && ally.id === "TORCH_HEAD_AMALGAM") ally.strength += input.fightQueenTorchStrength;
+agent/src/reflex/rollout.ts:3031:function nextAttacks(enemies: SimEnemy[], input: RolloutInput, playerVulnerable: boolean): { index: number; damage: number }[] {
+agent/src/reflex/rollout.ts:3037:    const queenBuff = e.id === "TORCH_HEAD_AMALGAM" ? (input.fightQueenTorchStrength ?? 0) * enemies.filter((ally) =>
+agent/src/reflex/rollout.ts:3060:  const attacks = nextAttacks(enemies, input, player.vulnTurns > 1);

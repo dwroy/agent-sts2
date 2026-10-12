@@ -1,0 +1,131 @@
+{
+  "recorded_at_cst": "2026-10-08 10:55",
+  "source": "eebcf4297065a97086ea4d430ae698a2b05c3dea",
+  "actual_merge": "0e27b88ab6dacfc9aa42d8ca3820d2e741b1ce6d",
+  "publication": "261af56e0022cc0012b80870bd3f52bd121d45c2",
+  "unique_version": "S1.exp94",
+  "data_only": true,
+  "own_original_cli": 70,
+  "new_data_shipped_cli": 16,
+  "ledger_map": {
+    "silent-strength-weak-observation": [
+      "silent-0012"
+    ],
+    "silent-mirage-poison-card-block": [
+      "silent-0010"
+    ],
+    "silent-vambrace-opening-block": [
+      "silent-0013"
+    ],
+    "silent-piercing-wail-temporary-strength": [
+      "silent-0046"
+    ],
+    "silent-burst-next-skills-replay": [
+      "silent-0115"
+    ],
+    "silent-three-knights-output-buffer-observation": [
+      "silent-0106"
+    ],
+    "silent-deck-burst-observation": [
+      "silent-0021"
+    ],
+    "silent-rest-buffer-observation": [
+      "silent-0020"
+    ],
+    "silent-route-hp-observation": [
+      "silent-0019"
+    ],
+    "silent-kaiser-crab-facing-sl": [
+      "silent-0065"
+    ],
+    "silent-act-transition-missing-hp-heal": [
+      "silent-0243"
+    ],
+    "silent-shadowmeld-new-block-double": [
+      "silent-0077"
+    ],
+    "silent-dexterity-potion-card-block": [
+      "silent-0276"
+    ],
+    "silent-heart-of-iron-plating": [
+      "silent-0277"
+    ],
+    "silent-poison-potion-observed-application": [
+      "silent-0278"
+    ],
+    "silent-tungsten-rod-hp-loss-observation": [
+      "silent-0178"
+    ]
+  },
+  "changed_experience_entries": [
+    "silent-act-transition-missing-hp-heal",
+    "silent-burst-next-skills-replay",
+    "silent-deck-burst-observation",
+    "silent-dexterity-potion-card-block",
+    "silent-heart-of-iron-plating",
+    "silent-kaiser-crab-facing-sl",
+    "silent-mirage-poison-card-block",
+    "silent-piercing-wail-temporary-strength",
+    "silent-poison-potion-observed-application",
+    "silent-rest-buffer-observation",
+    "silent-route-hp-observation",
+    "silent-shadowmeld-new-block-double",
+    "silent-strength-weak-observation",
+    "silent-three-knights-output-buffer-observation",
+    "silent-tungsten-rod-hp-loss-observation",
+    "silent-vambrace-opening-block"
+  ],
+  "originals_preserved": 1434,
+  "prior_evidence_claim_support_repeat_history_preserved": true,
+  "no_code_proposals_marked_implemented": true,
+  "no_manual_dispatch": true,
+  "paper_refresh_not_needed_for_experience_only_event": true,
+  "code_equivalence": {
+    "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+    "checked_pin": "8ef00878e539c8abf24d63254a9fa57eaf70c675",
+    "checked_pin_full_external": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 299,
+      "passed": 3416,
+      "skipped": 2
+    },
+    "source_code_test_task_blobs_identical_to_actual": false,
+    "source_code_differences_from_current_tested_live": [
+      "agent/src/reflex/jev-experience.ts",
+      "agent/tests/silent-potion-provenance-evidence.json",
+      "agent/tests/silent-potion-provenance.test.ts",
+      "docs/codex-ops.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 247,
+      "cases": 2604,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update/test-source.log"
+    },
+    "source_final_targeted": {
+      "exit": 0,
+      "files": 1,
+      "cases": 10
+    },
+    "post_merge_sandbox_repeated": false,
+    "data_only": true,
+    "reason": "Only the learner-tested original experience data blob changes. All current executable sources, tests, tasks, generated knowledge and parallel records are retained. No whole-new-tree external pass is claimed; original-batch full continuation is separate."
+  },
+  "rollback": "Inverse the original experience data delta in an isolated current-live worktree, preserving newer evidence, generated knowledge and parallel code; record a separate rollback version. Do not reset production."
+}

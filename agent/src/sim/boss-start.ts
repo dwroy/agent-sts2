@@ -1,5 +1,5 @@
 /**
- * The act boss's opening built from outside a fight (milestone B3, Dai 2026-09-30): a deck-building question (card
+ * The act boss's opening built from outside a fight (milestone B3, Roy 2026-09-30): a deck-building question (card
  * reward, shop, rest site, deck selection, event) has no combat state, so the whole boss fight simulator's pre-fight
  * start (boss-sim redealInput fresh: the deck shuffled, the hand empty, the entry HP) is built here from the run as it
  * is now, for the boss the map names:

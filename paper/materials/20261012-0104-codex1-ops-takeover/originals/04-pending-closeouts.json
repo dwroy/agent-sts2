@@ -1,0 +1,399 @@
+{
+  "at": "2026-10-11 22:37:06 CST",
+  "drain_instruction_still_active": true,
+  "ready_to_drain": true,
+  "entries": [
+    {
+      "batch": "20261011-213504-strategy-proposal",
+      "state_snapshot": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "runs": [
+          "6D0M76419BU7",
+          "34PV33AA12QH",
+          "P33MKRP6S4Q4",
+          "177AS39M1UPW",
+          "BSXYMFKN0VJ5",
+          "YBRA3EJ94GBR",
+          "3UPY3BP2LVS7",
+          "NYQW6JAD30K4",
+          "E6DSUVTNVBMH",
+          "64VJC5XT2AT2"
+        ],
+        "key": "silent:A11:233",
+        "pid": 2438015,
+        "state": "failed",
+        "reason": "tick",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-213504",
+        "proposal_policy": "Roy-2026-10-07-learning",
+        "pane": "wJ:pKY",
+        "strategy_progress": {
+          "ascension": 11,
+          "runs": 233
+        },
+        "finished": "2026-10-11 22:16",
+        "rc": 0,
+        "merged": null,
+        "proposal_audit_errors": [],
+        "report": {
+          "task": "strategy-proposal",
+          "character": "silent",
+          "batch": "20261011-213504-strategy-proposal",
+          "base": "0e76d455430782373f85d4bbbeda17cedbfc7209",
+          "runs": [
+            "6D0M76419BU7",
+            "34PV33AA12QH",
+            "P33MKRP6S4Q4",
+            "177AS39M1UPW",
+            "BSXYMFKN0VJ5",
+            "YBRA3EJ94GBR",
+            "3UPY3BP2LVS7",
+            "NYQW6JAD30K4",
+            "E6DSUVTNVBMH",
+            "64VJC5XT2AT2"
+          ],
+          "fixes": [
+            {
+              "summary": "静默A10生存者单弃题补充条件烟雾限制提示，保留全部候选",
+              "commit": "3596d1a2a832c31abb9d6d8a50a68103ac052554",
+              "source_parent": "0e76d455430782373f85d4bbbeda17cedbfc7209",
+              "ledger": [
+                "silent-0407",
+                "silent-0205"
+              ],
+              "runs": [
+                "6D0M76419BU7"
+              ],
+              "floor": 12,
+              "turns": [
+                2,
+                3
+              ]
+            }
+          ],
+          "skipped": [
+            {
+              "item": "合入live",
+              "reason": "预检15处冲突，涉及账本、复盘、研究请求及并行记录；未执行merge，保留刷新提交65e3d10a9b82a03176bafe6a6e61c6ef53f12c12，交运维兜底。"
+            },
+            {
+              "item": "完整后继反事实及保牌权重",
+              "reason": "缺少其他弃牌分支的完整实打与整战因果证据，保留原行为。"
+            }
+          ],
+          "merged": null,
+          "version": null,
+          "tests": {
+            "tsc": 0,
+            "vitest": 0,
+            "cases": 2709
+          },
+          "live_tests": {
+            "tsc": null,
+            "vitest": null,
+            "cases": null
+          },
+          "code_proposals": [
+            "silent-proposal-07b7b0af259ece0b"
+          ],
+          "implementation_domains": [
+            "combat"
+          ],
+          "proposal_results": [],
+          "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-213504/learner/runs/20261011-213521-strategy-proposal/report.md"
+        },
+        "retry_at": 1791731775.9109097
+      },
+      "original_files": [
+        {
+          "path": "ops/codex-ops/learner/20261011-213504-strategy-proposal.out",
+          "bytes": 3171,
+          "sha256": "5bd1791ef0bafc90c7e1d4fb57786f8d7c3f0dbd6f7f22eb5acfe04db5240172"
+        },
+        {
+          "path": "ops/codex-ops/learner/20261011-213504-strategy-proposal.err",
+          "bytes": 16386,
+          "sha256": "986fc82e624afb19025a43761c70354ab32bb89fd25bd2948735fa7bea2001b3"
+        },
+        {
+          "path": ".worktrees/codex-strategy-silent-20261011-213504/learner/runs/20261011-213521-strategy-proposal/report.md",
+          "bytes": 9816,
+          "sha256": "02e1ecd1aae62b4d862635fd65d459495e14851d7ed9b4f03e34a0c4a242e202"
+        }
+      ],
+      "old_ops_disposition": "deferred_due_to_authorized_account_drain",
+      "closeout_complete": false,
+      "next_owner": "new codex1 ops via preserved original queue and this handoff"
+    },
+    {
+      "batch": "20261011-221302-strategy-proposal",
+      "state_snapshot": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "runs": [
+          "VLZ6CCT8AQ0A",
+          "8JRE1C4H4Z2W",
+          "CA5KE8GFJ9X2",
+          "5PM6JAQG6FNQ",
+          "61E2QS63Y9WU",
+          "DUZUBAJ3A8GP"
+        ],
+        "key": "code-proposals:silent-proposal-89354805ee4d7e77,silent-proposal-f2bfceddb1898dca,silent-proposal-283a164780d11e69,silent-proposal-ebbfe3b97548756d,silent-proposal-e5b87be50f28f311,silent-proposal-49632bc4878fb597,silent-proposal-66532328a585941f,silent-proposal-43a76a31ba7bdcfa,silent-proposal-5264153a4a4b0e5c,silent-proposal-bddfa690a84e03d0:236",
+        "pid": 2518487,
+        "state": "done",
+        "reason": "proposal",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221302",
+        "proposal_policy": "Roy-2026-10-07-learning",
+        "pane": "wJ:pM2",
+        "proposal_ids": [
+          "silent-proposal-89354805ee4d7e77",
+          "silent-proposal-f2bfceddb1898dca",
+          "silent-proposal-283a164780d11e69",
+          "silent-proposal-ebbfe3b97548756d",
+          "silent-proposal-e5b87be50f28f311",
+          "silent-proposal-49632bc4878fb597",
+          "silent-proposal-66532328a585941f",
+          "silent-proposal-43a76a31ba7bdcfa",
+          "silent-proposal-5264153a4a4b0e5c",
+          "silent-proposal-bddfa690a84e03d0"
+        ],
+        "finished": "2026-10-11 22:22",
+        "rc": 0,
+        "merged": null,
+        "proposal_audit_errors": [],
+        "report": {
+          "task": "strategy-proposal",
+          "character": "silent",
+          "batch": "20261011-221302-strategy-proposal",
+          "base": "3f94d48f043fb49ea2780902edd7e493faf551ad",
+          "runs": [
+            "VLZ6CCT8AQ0A",
+            "8JRE1C4H4Z2W",
+            "CA5KE8GFJ9X2",
+            "5PM6JAQG6FNQ",
+            "61E2QS63Y9WU",
+            "DUZUBAJ3A8GP"
+          ],
+          "fixes": [],
+          "skipped": [],
+          "merged": null,
+          "tests": {
+            "tsc": null,
+            "vitest": null,
+            "cases": null
+          },
+          "code_proposals": [
+            "silent-proposal-89354805ee4d7e77",
+            "silent-proposal-f2bfceddb1898dca",
+            "silent-proposal-283a164780d11e69",
+            "silent-proposal-ebbfe3b97548756d",
+            "silent-proposal-e5b87be50f28f311",
+            "silent-proposal-49632bc4878fb597",
+            "silent-proposal-66532328a585941f",
+            "silent-proposal-43a76a31ba7bdcfa",
+            "silent-proposal-5264153a4a4b0e5c",
+            "silent-proposal-bddfa690a84e03d0"
+          ],
+          "implementation_domains": [],
+          "proposal_results": [
+            {
+              "id": "silent-proposal-89354805ee4d7e77",
+              "state": "waiting",
+              "reason": "神化基础传播、触媒和六项升级源码已是live祖先；父项仍缺持有、实际施放与候选覆盖的执行审计。未知升级及属性组合缺配对证据，本批合入预检冲突，不能将子项上线当整项完成。"
+            },
+            {
+              "id": "silent-proposal-f2bfceddb1898dca",
+              "state": "waiting",
+              "reason": "缺模型覆盖一致、固定随机输入下的同盘同总预算比较、样本收益曲线和排名稳定性；707ms及单局失败不足支持改预算、留药价格或目标规则。"
+            },
+            {
+              "id": "silent-proposal-283a164780d11e69",
+              "state": "waiting",
+              "reason": "与89354805ee4d7e77同源，神化子项已上线；实际施放与覆盖审计未闭环，未知升级和属性交互仍缺配对帧，不能登记整个父项duplicate。"
+            },
+            {
+              "id": "silent-proposal-ebbfe3b97548756d",
+              "state": "waiting",
+              "reason": "十五主题的逐源贡献、状态期限、逐实体及执行资源链尚缺联合生产验收；未选focus和休息缺同盘整场对照。神化子项上线不代表整项完成。"
+            },
+            {
+              "id": "silent-proposal-e5b87be50f28f311",
+              "state": "waiting",
+              "reason": "两份旧预测审计源码仍非live祖先，且不覆盖真实派发、重规划、能力建立及实际结算。现有证据足以支持审计，剩余是工程接线和固定验收；本批因合入预检冲突停止。"
+            },
+            {
+              "id": "silent-proposal-49632bc4878fb597",
+              "state": "waiting",
+              "reason": "CA5 F13无正敏捷配对帧，未核出新的公式失配；力量、逐击、敏捷、虚弱和独立成长的联合消费者验收尚未完成。"
+            },
+            {
+              "id": "silent-proposal-66532328a585941f",
+              "state": "waiting",
+              "reason": "持有、计划和实际建立分账缺完整接线与验收；启动或构筑权重另缺相同入口、完整抽序的整场比较及收益函数，不能由一次空打拟合阈值。"
+            },
+            {
+              "id": "silent-proposal-43a76a31ba7bdcfa",
+              "state": "waiting",
+              "reason": "吸取后的负属性与毒联合消费者验收未闭环；改变SL范围或偏好缺相同入口资源、构筑和抽序的受控整场比较。"
+            },
+            {
+              "id": "silent-proposal-5264153a4a4b0e5c",
+              "state": "waiting",
+              "reason": "召唤、航行、逐实体成长和索引重排缺联合生产验收；另一focus只有未执行候选，没有后继实打，不能证明固定首杀收益。"
+            },
+            {
+              "id": "silent-proposal-bddfa690a84e03d0",
+              "state": "waiting",
+              "reason": "缺甲虫提前唤醒及眩晕接续配对帧、同抽序完整另线比较；自然醒和四次失败不足校准输出血价。"
+            }
+          ],
+          "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221302/learner/runs/20261011-221314-strategy-proposal/report.md"
+        },
+        "no_change_proposals": {
+          "base": "3f94d48f043fb49ea2780902edd7e493faf551ad",
+          "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221302/learner/runs/20261011-221314-strategy-proposal/report.md",
+          "dispositions": [
+            {
+              "id": "silent-proposal-89354805ee4d7e77",
+              "state": "waiting",
+              "reason": "神化基础传播、触媒和六项升级源码已是live祖先；父项仍缺持有、实际施放与候选覆盖的执行审计。未知升级及属性组合缺配对证据，本批合入预检冲突，不能将子项上线当整项完成。"
+            },
+            {
+              "id": "silent-proposal-f2bfceddb1898dca",
+              "state": "waiting",
+              "reason": "缺模型覆盖一致、固定随机输入下的同盘同总预算比较、样本收益曲线和排名稳定性；707ms及单局失败不足支持改预算、留药价格或目标规则。"
+            },
+            {
+              "id": "silent-proposal-283a164780d11e69",
+              "state": "waiting",
+              "reason": "与89354805ee4d7e77同源，神化子项已上线；实际施放与覆盖审计未闭环，未知升级和属性交互仍缺配对帧，不能登记整个父项duplicate。"
+            },
+            {
+              "id": "silent-proposal-ebbfe3b97548756d",
+              "state": "waiting",
+              "reason": "十五主题的逐源贡献、状态期限、逐实体及执行资源链尚缺联合生产验收；未选focus和休息缺同盘整场对照。神化子项上线不代表整项完成。"
+            },
+            {
+              "id": "silent-proposal-e5b87be50f28f311",
+              "state": "waiting",
+              "reason": "两份旧预测审计源码仍非live祖先，且不覆盖真实派发、重规划、能力建立及实际结算。现有证据足以支持审计，剩余是工程接线和固定验收；本批因合入预检冲突停止。"
+            },
+            {
+              "id": "silent-proposal-49632bc4878fb597",
+              "state": "waiting",
+              "reason": "CA5 F13无正敏捷配对帧，未核出新的公式失配；力量、逐击、敏捷、虚弱和独立成长的联合消费者验收尚未完成。"
+            },
+            {
+              "id": "silent-proposal-66532328a585941f",
+              "state": "waiting",
+              "reason": "持有、计划和实际建立分账缺完整接线与验收；启动或构筑权重另缺相同入口、完整抽序的整场比较及收益函数，不能由一次空打拟合阈值。"
+            },
+            {
+              "id": "silent-proposal-43a76a31ba7bdcfa",
+              "state": "waiting",
+              "reason": "吸取后的负属性与毒联合消费者验收未闭环；改变SL范围或偏好缺相同入口资源、构筑和抽序的受控整场比较。"
+            },
+            {
+              "id": "silent-proposal-5264153a4a4b0e5c",
+              "state": "waiting",
+              "reason": "召唤、航行、逐实体成长和索引重排缺联合生产验收；另一focus只有未执行候选，没有后继实打，不能证明固定首杀收益。"
+            },
+            {
+              "id": "silent-proposal-bddfa690a84e03d0",
+              "state": "waiting",
+              "reason": "缺甲虫提前唤醒及眩晕接续配对帧、同抽序完整另线比较；自然醒和四次失败不足校准输出血价。"
+            }
+          ]
+        }
+      },
+      "original_files": [
+        {
+          "path": "ops/codex-ops/learner/20261011-221302-strategy-proposal.out",
+          "bytes": 5435,
+          "sha256": "66c913b3fdf9b8c3b480d5d94989d4cd75e1460feeba5867fe79cfbc7ab76a80"
+        },
+        {
+          "path": "ops/codex-ops/learner/20261011-221302-strategy-proposal.err",
+          "bytes": 6209,
+          "sha256": "fe8c829ea73acc7d50946439b042d0a5aefc68c9e98eacf2a22c40661fc3fd9d"
+        },
+        {
+          "path": ".worktrees/codex-strategy-silent-20261011-221302/learner/runs/20261011-221314-strategy-proposal/report.md",
+          "bytes": 8414,
+          "sha256": "891beaa16f9c41e36576155f2e88bf9dd0967ca9403f114a0795a265cc4c10d2"
+        }
+      ],
+      "old_ops_disposition": "deferred_due_to_authorized_account_drain",
+      "closeout_complete": false,
+      "next_owner": "new codex1 ops via preserved original queue and this handoff"
+    },
+    {
+      "batch": "20261011-221301",
+      "state_snapshot": {
+        "runs": [
+          "SB5N8GT2Y3VW"
+        ],
+        "pid": 2518164,
+        "started": "2026-10-11 22:13",
+        "state": "done",
+        "reason": "tick",
+        "character": "silent",
+        "proposal_policy": "Roy-2026-10-07-learning",
+        "pane": "wJ:pM1",
+        "rc": 0,
+        "finished": "2026-10-11 22:30",
+        "done": [
+          "SB5N8GT2Y3VW"
+        ],
+        "missing": [],
+        "proposal_audit_errors": []
+      },
+      "original_files": [
+        {
+          "path": "ops/codex-ops/learner/20261011-221301.out",
+          "bytes": 2339,
+          "sha256": "f07ad121736cab91da3da89d736ea82ef36a00fe3ffdce9e082e6fe3f1454e25"
+        },
+        {
+          "path": "ops/codex-ops/learner/20261011-221301.err",
+          "bytes": 7030,
+          "sha256": "1e0b6d12e284c09cba30ffc8e681b6fee5bb94bee849edf2004bc34a1b1db2a0"
+        }
+      ],
+      "old_ops_disposition": "deferred_due_to_authorized_account_drain",
+      "closeout_complete": false,
+      "next_owner": "new codex1 ops via preserved original queue and this handoff"
+    }
+  ],
+  "events": [
+    {
+      "original": "ops/codex-ops/queue/1791728175910693928-strategy-done.md",
+      "copy": "paper/materials/20261011-codex1-drain-handoff/deferred-2235/1791728175910693928-strategy-done.md",
+      "sha256": "4adc9f765f7b77111349450ace9556a6cffa91c365befcc5b1744b2b6cb57986"
+    },
+    {
+      "original": "ops/codex-ops/queue/1791728570049453452-strategy-done.md",
+      "copy": "paper/materials/20261011-codex1-drain-handoff/deferred-2235/1791728570049453452-strategy-done.md",
+      "sha256": "a45cea1b6360b235ce2d581f3cd2a042038fa97a6a01646d9f7ad0107e9e5adb"
+    },
+    {
+      "original": "ops/codex-ops/queue/1791729051070862365-learner-done.md",
+      "copy": "paper/materials/20261011-codex1-drain-handoff/deferred-2235/1791729051070862365-learner-done.md",
+      "sha256": "f3bd44c0fa13735fa8aa54ea17c23b83701263ecb82bda0baf38bd93abba0c4e"
+    }
+  ],
+  "not_done": [
+    "213504 source/live verification and blocked merge closeout",
+    "221302 no-source substantive verification and disposition",
+    "221301 SB5 postmortem bug triage, ledger/lesson review and paper_dataset --no-raw commit"
+  ],
+  "not_performed": [
+    "dispatch",
+    "merge",
+    "source changes",
+    "version/shipped",
+    "paper rebuild",
+    "process/account/flag changes"
+  ],
+  "queue_archival_owner": "scheduler; original event copies retained so delivered does not imply closeout completed"
+}

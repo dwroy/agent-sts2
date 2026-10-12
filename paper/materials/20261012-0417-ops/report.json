@@ -1,0 +1,114 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-034302-s2-strategy-proposal",
+  "base": "8bda0c7660712eada94d9225e2cc2e52b65631e5",
+  "runs": [
+    "CA5KE8GFJ9X2",
+    "2L1BNN9ZJEFU",
+    "2PVLGRBGUX9S",
+    "2SU6XN2AEJRD",
+    "5X2GHKJ89PN1",
+    "61E2QS63Y9WU",
+    "9TG1RP5LFAAK",
+    "DPYF2BAA3DKT",
+    "G33HU22H2543",
+    "GXNKW8X1XYJP"
+  ],
+  "fixes": [
+    {
+      "id": "silent-mirage-upgraded-zero",
+      "commit": "5e0f884586521220d451b717c29b99e7876d6244",
+      "source_parent": "8bda0c7660712eada94d9225e2cc2e52b65631e5",
+      "proposal_id": "silent-proposal-645ff7b72e0b9991",
+      "ledger": [
+        "silent-0419",
+        "silent-0010",
+        "silent-0286"
+      ],
+      "summary": "仅已观察静默A10升级蜃景单次零毒施放移除未建模长期加分，未合入。"
+    }
+  ],
+  "skipped": [
+    {
+      "id": "live-merge",
+      "reason": "锁内预检发现9个冲突（含turn-solver.ts），按任务要求停止；live及原有脏记录未变。"
+    }
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3112
+  },
+  "code_proposals": [
+    "silent-proposal-c65a44568c4d2975",
+    "silent-proposal-c2888032d1337388",
+    "silent-proposal-042ee2299084b528",
+    "silent-proposal-8cd3db3bad5f34f1",
+    "silent-proposal-43fe170707574455",
+    "silent-proposal-3f5a665dca133a8c",
+    "silent-proposal-0b8ef30de463f317",
+    "silent-proposal-5367449b857450a7",
+    "silent-proposal-9b8890c2649a2734",
+    "silent-proposal-645ff7b72e0b9991"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-c65a44568c4d2975",
+      "state": "duplicate",
+      "reason": "六原帧及跨轮固定回归核实；当前live祖先已完整覆盖仅静默A10花园幽灵鳗胆小7后轮接回，不重复实现。",
+      "commit": "2409776edff7eda2dd7a21992ae56726e53d4b0d"
+    },
+    {
+      "id": "silent-proposal-c2888032d1337388",
+      "state": "waiting",
+      "reason": "已有力敏、毒、持牌伤与成长局部模型；缺15机制联合消费者核验，滚石力量修正、覆甲完整减层仍无隔离证据，不能整项duplicate。"
+    },
+    {
+      "id": "silent-proposal-042ee2299084b528",
+      "state": "waiting",
+      "reason": "连续boss资源模型已有live实现；真实路线/休息/SL来源的统一回归与校准仍缺，替路线或首战少损血无配对结果。"
+    },
+    {
+      "id": "silent-proposal-8cd3db3bad5f34f1",
+      "state": "waiting",
+      "reason": "已有原答/护栏/SL候选审计，但actual_turn仍null；缺抽牌重问到整轮实付血/输出的统一关联，0赢不能当全死。"
+    },
+    {
+      "id": "silent-proposal-43fe170707574455",
+      "state": "waiting",
+      "reason": "现有逐敌HP不等跨帧退场与计划已建能力追踪；缺稳定实体/缺帧边界的消费者回归，另一击杀顺序无受控整战结果。"
+    },
+    {
+      "id": "silent-proposal-3f5a665dca133a8c",
+      "state": "waiting",
+      "reason": "已核3条护栏及现有候选审计；最终派发、重规划与实盘整轮出口尚未关联，原线完整对照缺失，保持8/24/0。"
+    },
+    {
+      "id": "silent-proposal-0b8ef30de463f317",
+      "state": "waiting",
+      "reason": "已有牌挡/覆甲和药价加载来源区分；取得/饮用/弃药/SL恢复全链及加载快照未统一验收，完整减层和晚喝/留药对照缺失。"
+    },
+    {
+      "id": "silent-proposal-5367449b857450a7",
+      "state": "waiting",
+      "reason": "刀扇原例只有单敌；铜钹多弃、随机目标和减伤交互缺隔离证据，整组机制消费者回归不足，保留已有局部覆盖。"
+    },
+    {
+      "id": "silent-proposal-9b8890c2649a2734",
+      "state": "waiting",
+      "reason": "候选血价到路线资源、SL恢复和实际整轮的联合回归缺失；未走路线、晚喝铁心及护栏原线没有受控结果，不修改阈值。"
+    },
+    {
+      "id": "silent-proposal-645ff7b72e0b9991",
+      "state": "waiting",
+      "reason": "升级零毒子项已提交5e0f884586521220d451b717c29b99e7876d6244并通过完整沙箱；live预检9冲突阻塞合入。父项仍缺尾端贡献联合消费核验及未打替线/升级正毒交互证据，不能整项implemented。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-034302-s2/learner/runs/20261012-034312-strategy-proposal/report.md"
+}

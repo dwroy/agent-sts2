@@ -1,0 +1,62 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-044301-strategy-proposal",
+  "base": "fed10bdea7d8e88e31256e288f16aa21bfb1fd06",
+  "runs": [
+    "34PV33AA12QH",
+    "P33MKRP6S4Q4",
+    "177AS39M1UPW",
+    "BSXYMFKN0VJ5",
+    "YBRA3EJ94GBR",
+    "3UPY3BP2LVS7",
+    "NYQW6JAD30K4",
+    "E6DSUVTNVBMH",
+    "64VJC5XT2AT2",
+    "SB5N8GT2Y3VW"
+  ],
+  "evidence_runs": [
+    "SB5N8GT2Y3VW"
+  ],
+  "fixes": [
+    {
+      "commit": "154c9542711a4daf17bfa0b97eaa1ca81dc3d385",
+      "source_parent": "fed10bdea7d8e88e31256e288f16aa21bfb1fd06",
+      "description": "为双蟹已见组合的原有Jev药水选项补施毒当步事实，保留全部选择；尚未上线。",
+      "ledger": [
+        "silent-0420"
+      ]
+    }
+  ],
+  "skipped": [
+    "完整同伴死亡结算与SL规则仍缺逐击中间帧及受控后继；原81fb宽提案未关闭。"
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3147
+  },
+  "red_green": {
+    "removed_failures": 7,
+    "restored_passed": 27
+  },
+  "live_tests": null,
+  "code_proposals": [
+    "silent-proposal-e89fd68d124290c9"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-e89fd68d124290c9",
+      "state": "waiting",
+      "reason": "固定源码已提交并自测通过，但live预检出现6个既有记录路径冲突；等待运维受控集成，当前源码不是live祖先，不能登记implemented。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-044301/learner/runs/20261012-044310-strategy-proposal/report.md",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-044301/learner/runs/20261012-044310-strategy-proposal/proposal.md"
+}

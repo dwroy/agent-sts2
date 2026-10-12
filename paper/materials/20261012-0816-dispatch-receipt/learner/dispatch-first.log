@@ -1,0 +1,73 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-074301-s2/agent
+
+ ❯ tests/silent-selection-dispatch.test.ts (12 tests | 4 failed) 43ms
+   × the real loop persists its completed first-action receipt beside the unchanged prediction 18ms
+   × a shadow memory application is explicitly undispatched 5ms
+   × an action error stays uncertain even though the action may have applied 4ms
+   × the execution consumer adds nothing for another character 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-selection-dispatch.test.ts > the real loop persists its completed first-action receipt beside the unchanged prediction
+TypeError: Cannot read properties of undefined (reading 'kind')
+ ❯ Module.runLoop src/hand/loop.ts:882:18
+    880|     let runPlanRide: { trigger: RunPlanTrigger } | null = null;
+    881|     let runPlanRideLog: JsonValue | undefined;
+    882|     if (decision.kind === "ask" && decision.deepseek && !codeBaseline)…
+       |                  ^
+    883|       const spec = decision.deepseek;
+    884|       let question = decision.questions[spec.question];
+ ❯ runReceipt tests/silent-selection-dispatch.test.ts:44:3
+ ❯ tests/silent-selection-dispatch.test.ts:51:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/silent-selection-dispatch.test.ts > a shadow memory application is explicitly undispatched
+TypeError: Cannot read properties of undefined (reading 'kind')
+ ❯ Module.runLoop src/hand/loop.ts:882:18
+    880|     let runPlanRide: { trigger: RunPlanTrigger } | null = null;
+    881|     let runPlanRideLog: JsonValue | undefined;
+    882|     if (decision.kind === "ask" && decision.deepseek && !codeBaseline)…
+       |                  ^
+    883|       const spec = decision.deepseek;
+    884|       let question = decision.questions[spec.question];
+ ❯ runReceipt tests/silent-selection-dispatch.test.ts:44:3
+ ❯ tests/silent-selection-dispatch.test.ts:64:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/silent-selection-dispatch.test.ts > an action error stays uncertain even though the action may have applied
+TypeError: Cannot read properties of undefined (reading 'kind')
+ ❯ Module.runLoop src/hand/loop.ts:882:18
+    880|     let runPlanRide: { trigger: RunPlanTrigger } | null = null;
+    881|     let runPlanRideLog: JsonValue | undefined;
+    882|     if (decision.kind === "ask" && decision.deepseek && !codeBaseline)…
+       |                  ^
+    883|       const spec = decision.deepseek;
+    884|       let question = decision.questions[spec.question];
+ ❯ runReceipt tests/silent-selection-dispatch.test.ts:44:3
+ ❯ tests/silent-selection-dispatch.test.ts:71:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/silent-selection-dispatch.test.ts > the execution consumer adds nothing for another character
+TypeError: Cannot read properties of undefined (reading 'kind')
+ ❯ Module.runLoop src/hand/loop.ts:882:18
+    880|     let runPlanRide: { trigger: RunPlanTrigger } | null = null;
+    881|     let runPlanRideLog: JsonValue | undefined;
+    882|     if (decision.kind === "ask" && decision.deepseek && !codeBaseline)…
+       |                  ^
+    883|       const spec = decision.deepseek;
+    884|       let question = decision.questions[spec.question];
+ ❯ runReceipt tests/silent-selection-dispatch.test.ts:44:3
+ ❯ tests/silent-selection-dispatch.test.ts:78:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 8 passed (12)
+   Start at  07:49:26
+   Duration  1.78s (transform 1.35s, setup 270ms, import 1.35s, tests 43ms, environment 0ms)
+

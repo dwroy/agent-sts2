@@ -1,0 +1,125 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-eb6e17529c0f8cde",
+    "ts": "2026-10-08T13:42:56+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0007",
+      "silent-0295"
+    ],
+    "runs": [
+      "G8NHLL09DLBX"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "旧规则：randomVictim按最高HP选目标并将随机施毒重复落在同一目标，可能触发确定combat/lethal。新行为提案：针对已观察静默普通多敌弹跳药瓶，将未证实分配保留为不确定，只有能够证实随机落点不影响收尾时才给确定斩杀；否则回到正常选线与实际后继帧重规划。施毒不即时扣血、爪牙死不等母体死、荆棘血价与毒结算分别核。升级/重放/未知分配组合未核不外推，其他角色保持等价。独立策略任务有足够数据可按Roy授权实",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-poison.md",
+    "experience": [
+      "silent-bouncing-flask-poison",
+      "silent-deadly-poison-application",
+      "silent-poisoned-stab-components"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "3f9e614540438cdc84c3ccd839245412db177e7de437bc7e47bc3b13bdcd6ead",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-10c5c87568dcded1",
+    "ts": "2026-10-08T13:42:57+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0012",
+      "silent-0005",
+      "silent-0046",
+      "silent-0253"
+    ],
+    "runs": [
+      "G8NHLL09DLBX"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion"
+    ],
+    "summary": "旧/新行为：先核当前模型是否已正确传递步法每牌收益、速度本轮+5及次轮撤回、尖啸逐段降力/恢复、弱化自爆和荆棘自损。仅补已核机制遗漏，已有挡不倒补、临时敏不当即时HP；无当前缺口则给duplicate或具体waiting，不凭新败局改饮药/留药门槛。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-modifiers.md",
+    "experience": [
+      "silent-strength-weak-observation",
+      "silent-footwork-block",
+      "silent-piercing-wail-temporary-strength",
+      "silent-speed-potion-temporary-dexterity"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "1f20d1e73ca1a7f0cd168a72a295a74b2a5c73d9df505c73fea9ec1104f5b93e",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-72e211c844b4564e",
+    "ts": "2026-10-08T13:42:57+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0017"
+    ],
+    "runs": [
+      "G8NHLL09DLBX"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl"
+    ],
+    "summary": "旧/新行为：保留真正必死才读档。核巨兽本体毒结束后仍进入实际自爆的终局路径，残壳巨量HP不追加为本体需求，弱化与牌挡逐步核当前血价。SL对照记录原答→探索→抽牌重问→实际执行，13探索分类型；不能从单次换线或截断判死拟合胜率，也不把完成本体标为胜。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-giant-sl.md",
+    "experience": [
+      "silent-giant-explosion-window"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "e8d5e10d11e94c222e3f4b61dc1b6d1ede5b7bc4f5b6d419caf5214dd0b16767",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-1481fe327a22ddeb",
+    "ts": "2026-10-08T13:42:57+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0243",
+      "silent-0020",
+      "silent-0019",
+      "silent-0021"
+    ],
+    "runs": [
+      "G8NHLL09DLBX"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion",
+      "sl"
+    ],
+    "summary": "旧/新行为：核前战获胜的实际出口血药到下一战入口，分开营火/事件/跨幕回复与SL恢复、原瓶恢复与独立新药、已建能力和仅持有。F23两药后仍损30只支持资源链记录，缺保药或改线整场胜利，先完善可复算候选/实际资源证据，保留留药价值、路线血线及SL参数。本局未到F25或终局，不增terminal领域。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-resources.md",
+    "experience": [
+      "silent-act-transition-missing-hp-heal",
+      "silent-rest-buffer-observation",
+      "silent-route-hp-observation",
+      "silent-deck-burst-observation"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "946d698a36a36a5e629534cf3c1bf75bebfd5107485984312290646aba3f45f7",
+    "state": "pending"
+  }
+]

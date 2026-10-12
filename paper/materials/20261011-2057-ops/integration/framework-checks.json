@@ -1,0 +1,27 @@
+[
+  {
+    "name": "tsc",
+    "command": [
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "framework-affected",
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/quantitative.test.ts",
+      "tests/silent-build-win-ties.test.ts",
+      "tests/silent-phase-reference.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1"
+    ],
+    "exit": 0
+  }
+]

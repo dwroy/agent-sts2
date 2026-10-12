@@ -1,0 +1,79 @@
+{
+  "at": "2026-10-13 00:46:52 CST",
+  "run_id": "G4PQBCJQ7NP0",
+  "unique_final_lesson": true,
+  "original_prefix_and_draft_exact": true,
+  "source_counts": {
+    "decisions": 607,
+    "states": 623,
+    "plans": 6,
+    "sl": 9,
+    "brain": 36,
+    "config": 2
+  },
+  "unique_runs_record": {
+    "run_id": "G4PQBCJQ7NP0",
+    "ended": "2026-10-12T16:03:40.911Z",
+    "victory": false,
+    "floor": 33,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "current",
+    "decisions": 607,
+    "jev_calls": 129,
+    "deepseek_calls": 34,
+    "claude_calls": 0,
+    "tokens": 1228298,
+    "ds_tokens_in": 5150863,
+    "ds_tokens_out": 19969,
+    "ds_cache_hit": 2989824,
+    "deciders": {
+      "codex": 43,
+      "code": 304,
+      "jev": 129,
+      "jev-plan": 131
+    },
+    "death_fight": [
+      "无厌沙虫"
+    ],
+    "death_fight_floor": 33,
+    "death_enemy_ids": [
+      "THE_INSATIABLE"
+    ]
+  },
+  "original_cli_rows": 22,
+  "recorded_brain_model_counts": {
+    "gpt-6-astra": 27,
+    "gpt-6.1-sol": 9
+  },
+  "runtime_switch_history_preserved": true,
+  "locator_blobs_not_dirty_full_tree_identity": {
+    "agent/src/reflex/combat-plan.ts": {
+      "a62368d9cc3d3c3bd714eeccdff8dc71ebb5c9d4": "b16d3e6e0fe40a2e987040c5f8ed16f7c406658d",
+      "f2df18b3c1b27fd72b5fd19b0e5261c490a7b855": "b16d3e6e0fe40a2e987040c5f8ed16f7c406658d"
+    },
+    "agent/src/reflex/turn-solver.ts": {
+      "a62368d9cc3d3c3bd714eeccdff8dc71ebb5c9d4": "f09ca80588cfdf5d815a274e912bb7bd0e629759",
+      "f2df18b3c1b27fd72b5fd19b0e5261c490a7b855": "f09ca80588cfdf5d815a274e912bb7bd0e629759"
+    },
+    "agent/src/reflex/card-model.ts": {
+      "a62368d9cc3d3c3bd714eeccdff8dc71ebb5c9d4": "47715f1f047e1aaa53568ca70c7ccd8182c286d2",
+      "f2df18b3c1b27fd72b5fd19b0e5261c490a7b855": "47715f1f047e1aaa53568ca70c7ccd8182c286d2"
+    }
+  },
+  "new_pure_bugs": false,
+  "existing_mechanism_problem_left_to_learner": [
+    {
+      "run": "G4PQBCJQ7NP0",
+      "where": "agent/src/reflex/combat-plan.ts:4999",
+      "what": "士兵翻倍识别要求手中普通防御，无该牌时两格挡候选24实18；旧silent-0179已上线边界复发。",
+      "new": false
+    }
+  ],
+  "code_proposals": [
+    "silent-proposal-5b659be891b6fd46",
+    "silent-proposal-81b6182f132db2df",
+    "silent-proposal-a844742189c85823"
+  ],
+  "no_ops_game_knowledge_added": true
+}

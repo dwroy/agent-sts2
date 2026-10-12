@@ -1,0 +1,474 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent
+
+ ❯ tests/unassigned-proposal-resolution.test.ts (9 tests | 8 failed) 2018ms
+   × unassigned proposal: resolves_original_id_and_preserves_active_lease_watermark_and_reason 240ms
+   × unassigned proposal: completion_records_resolution_before_marking_done 224ms
+   × unassigned proposal: rejects_foreign_missing_or_changed_original_registration 218ms
+   × unassigned proposal: rejects_unbound_malformed_and_outside_report_without_any_append 229ms
+   × unassigned proposal: verifies_all_dispositions_before_appending_any 218ms
+   × unassigned proposal: failure_preserves_live_merge_fact_and_original_registry 238ms
+   × unassigned proposal: inflight_dispatched_waiting_cannot_reopen_verified_resolution 224ms
+   × unassigned proposal: preserves_output_scope_when_markdown_has_equivalent_prose 210ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unassigned-proposal-resolution.test.ts > unassigned proposal: resolves_original_id_and_preserves_active_lease_watermark_and_reason
+AssertionError: F
+======================================================================
+FAIL: test_resolves_original_id_and_preserves_active_lease_watermark_and_reason (__main__.Resolution.test_resolves_original_id_and_preserves_active_lease_watermark_and_reason)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 85, in test_resolves_original_id_and_preserves_active_lease_watermark_and_reason
+    self.assertEqual(item['state'], 'implemented')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pending' != 'implemented'
+- pending
++ implemented
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.132s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/unassigned-proposal-resolution.test.ts:18:56
+     16|   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassi…
+     17|     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
+     18|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     19|   expect(result.stderr).toContain("OK");
+     20| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/unassigned-proposal-resolution.test.ts > unassigned proposal: completion_records_resolution_before_marking_done
+AssertionError: F
+======================================================================
+FAIL: test_completion_records_resolution_before_marking_done (__main__.Resolution.test_completion_records_resolution_before_marking_done)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 106, in test_completion_records_resolution_before_marking_done
+    self.assertEqual(proposals.fold(self.queue)[IDENT]['state'], 'implemented')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pending' != 'implemented'
+- pending
++ implemented
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.130s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/unassigned-proposal-resolution.test.ts:18:56
+     16|   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassi…
+     17|     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
+     18|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     19|   expect(result.stderr).toContain("OK");
+     20| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/unassigned-proposal-resolution.test.ts > unassigned proposal: rejects_foreign_missing_or_changed_original_registration
+AssertionError: FFFFFFF
+======================================================================
+FAIL: test_rejects_foreign_missing_or_changed_original_registration (__main__.Resolution.test_rejects_foreign_missing_or_changed_original_registration) (changes={'character': 'other'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 119, in test_rejects_foreign_missing_or_changed_original_registration
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_foreign_missing_or_changed_original_registration (__main__.Resolution.test_rejects_foreign_missing_or_changed_original_registration) (changes={'source_task': 'unknown'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 119, in test_rejects_foreign_missing_or_changed_original_registration
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_foreign_missing_or_changed_original_registration (__main__.Resolution.test_rejects_foreign_missing_or_changed_original_registration) (changes={'target_task': 'fix-batch'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 119, in test_rejects_foreign_missing_or_changed_original_registration
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_foreign_missing_or_changed_original_registration (__main__.Resolution.test_rejects_foreign_missing_or_changed_original_registration) (changes={'runs': ['OTHER0000001']})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 119, in test_rejects_foreign_missing_or_changed_original_registration
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_foreign_missing_or_changed_original_registration (__main__.Resolution.test_rejects_foreign_missing_or_changed_original_registration) (changes={'ledger': []})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 119, in test_rejects_foreign_missing_or_changed_original_registration
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_foreign_missing_or_changed_original_registration (__main__.Resolution.test_rejects_foreign_missing_or_changed_original_registration) (changes={'proposal_sha256': 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 119, in test_rejects_foreign_missing_or_changed_original_registration
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_foreign_missing_or_changed_original_registration (__main__.Resolution.test_rejects_foreign_missing_or_changed_original_registration) (changes={'id': 'different-id'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 119, in test_rejects_foreign_missing_or_changed_original_registration
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.121s
+
+FAILED (failures=7)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/unassigned-proposal-resolution.test.ts:18:56
+     16|   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassi…
+     17|     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
+     18|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     19|   expect(result.stderr).toContain("OK");
+     20| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/unassigned-proposal-resolution.test.ts > unassigned proposal: rejects_unbound_malformed_and_outside_report_without_any_append
+AssertionError: FFFFFFFFFFFFFFF
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='missing_link')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='invalid_rows')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='missing_reason')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='foreign_character')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='foreign_runs')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='wrong_fix')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='wrong_fix_id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='unmerged')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='waiting')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='outside')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='changed_report')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='missing_report')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='foreign_worktree')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+======================================================================
+FAIL: test_rejects_unbound_malformed_and_outside_report_without_any_append (__main__.Resolution.test_rejects_unbound_malformed_and_outside_report_without_any_append) (scenario='invalid_merge')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 150, in test_rejects_unbound_malformed_and_outside_report_without_any_append
+    with self.assertRaises((ValueError, OSError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'OSError'>) not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.128s
+
+FAILED (failures=15)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/unassigned-proposal-resolution.test.ts:18:56
+     16|   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassi…
+     17|     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
+     18|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     19|   expect(result.stderr).toContain("OK");
+     20| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/unassigned-proposal-resolution.test.ts > unassigned proposal: verifies_all_dispositions_before_appending_any
+AssertionError: F
+======================================================================
+FAIL: test_verifies_all_dispositions_before_appending_any (__main__.Resolution.test_verifies_all_dispositions_before_appending_any)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 161, in test_verifies_all_dispositions_before_appending_any
+    with self.assertRaises(ValueError): self.resolve()
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.121s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/unassigned-proposal-resolution.test.ts:18:56
+     16|   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassi…
+     17|     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
+     18|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     19|   expect(result.stderr).toContain("OK");
+     20| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  tests/unassigned-proposal-resolution.test.ts > unassigned proposal: failure_preserves_live_merge_fact_and_original_registry
+AssertionError: F
+======================================================================
+FAIL: test_failure_preserves_live_merge_fact_and_original_registry (__main__.Resolution.test_failure_preserves_live_merge_fact_and_original_registry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 172, in test_failure_preserves_live_merge_fact_and_original_registry
+    self.assertEqual(self.batch['state'], 'failed')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'done' != 'failed'
+- done
++ failed
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.133s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/unassigned-proposal-resolution.test.ts:18:56
+     16|   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassi…
+     17|     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
+     18|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     19|   expect(result.stderr).toContain("OK");
+     20| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  tests/unassigned-proposal-resolution.test.ts > unassigned proposal: inflight_dispatched_waiting_cannot_reopen_verified_resolution
+AssertionError: F
+======================================================================
+FAIL: test_inflight_dispatched_waiting_cannot_reopen_verified_resolution (__main__.Resolution.test_inflight_dispatched_waiting_cannot_reopen_verified_resolution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 183, in test_inflight_dispatched_waiting_cannot_reopen_verified_resolution
+    self.assertEqual(self.queue.read_bytes(), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'{"o[541 chars]h"}\n{"op": "update", "id": "silent-proposal-5[177 chars]"}\n' != b'{"o[541 chars]h"}\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.131s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/unassigned-proposal-resolution.test.ts:18:56
+     16|   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassi…
+     17|     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
+     18|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     19|   expect(result.stderr).toContain("OK");
+     20| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  tests/unassigned-proposal-resolution.test.ts > unassigned proposal: preserves_output_scope_when_markdown_has_equivalent_prose
+AssertionError: E
+======================================================================
+ERROR: test_preserves_output_scope_when_markdown_has_equivalent_prose (__main__.Resolution.test_preserves_output_scope_when_markdown_has_equivalent_prose)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/agent/../ops/tests/test_unassigned_proposal_resolution.py", line 193, in test_preserves_output_scope_when_markdown_has_equivalent_prose
+    self.assertEqual(proposals.fold(self.queue)[IDENT]['reason'], self.report['proposal_results'][0]['reason'])
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+KeyError: 'reason'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.121s
+
+FAILED (errors=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/unassigned-proposal-resolution.test.ts:18:56
+     16|   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassi…
+     17|     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
+     18|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     19|   expect(result.stderr).toContain("OK");
+     20| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 1 passed (9)
+   Start at  11:49:29
+   Duration  2.43s (transform 241ms, setup 284ms, import 9ms, tests 2.02s, environment 0ms)
+

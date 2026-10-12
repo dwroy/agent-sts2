@@ -1,0 +1,132 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-gardener-skittish.test.ts (12 tests | 12 failed) 133ms
+     × replays the observed T2 nonlethal hit and seven block 60ms
+     × replays the observed T3 nonlethal hit and seven block 4ms
+     × replays the observed T4 nonlethal hit and seven block 3ms
+     × keeps the shield in T3 and T4 of the live five-turn rollout, without changing the input 16ms
+     × also carries the observed shield through whole-fight policy turns 4ms
+     × preserves the previous later-turn path for ironclad A10 2ms
+     × preserves the previous later-turn path for unknown A10 4ms
+     × preserves the previous later-turn path for silent A9 3ms
+     × preserves the previous later-turn path for silent A11 2ms
+     × keeps UNOBSERVED_ENEMY with 7 stacks outside the observed scope 14ms
+     × keeps PHANTASMAL_GARDENER with 6 stacks outside the observed scope 5ms
+     × keeps PHANTASMAL_GARDENER with 0 stacks outside the observed scope 8ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > replays the observed T2 nonlethal hit and seven block
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > replays the observed T3 nonlethal hit and seven block
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > replays the observed T4 nonlethal hit and seven block
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ probe tests/silent-gardener-skittish.test.ts:36:17
+ ❯ tests/silent-gardener-skittish.test.ts:58:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > keeps the shield in T3 and T4 of the live five-turn rollout, without changing the input
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ probe tests/silent-gardener-skittish.test.ts:36:17
+ ❯ tests/silent-gardener-skittish.test.ts:67:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > also carries the observed shield through whole-fight policy turns
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ probe tests/silent-gardener-skittish.test.ts:36:17
+ ❯ tests/silent-gardener-skittish.test.ts:75:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > preserves the previous later-turn path for ironclad A10
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > preserves the previous later-turn path for unknown A10
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > preserves the previous later-turn path for silent A9
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > preserves the previous later-turn path for silent A11
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ probe tests/silent-gardener-skittish.test.ts:36:17
+ ❯ tests/silent-gardener-skittish.test.ts:82:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > keeps UNOBSERVED_ENEMY with 7 stacks outside the observed scope
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > keeps PHANTASMAL_GARDENER with 6 stacks outside the observed scope
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > keeps PHANTASMAL_GARDENER with 0 stacks outside the observed scope
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ probe tests/silent-gardener-skittish.test.ts:36:17
+ ❯ tests/silent-gardener-skittish.test.ts:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed (12)
+   Start at  08:02:35
+   Duration  2.85s (transform 2.06s, setup 426ms, import 2.07s, tests 133ms, environment 0ms)
+

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/cunning-history.py", line 10, in <module>
+    b=sm[d['ts']];p=next((p for p in b['run'].get('potions',[]) if p['slot']==d['chosen']['potion_slot']),{})
+                    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/cunning-history.py", line 10, in <genexpr>
+    b=sm[d['ts']];p=next((p for p in b['run'].get('potions',[]) if p['slot']==d['chosen']['potion_slot']),{})
+                                                                   ~^^^^^^^^
+KeyError: 'slot'

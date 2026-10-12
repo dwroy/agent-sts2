@@ -529,7 +529,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and 
     expect(brain.codexUsage!.status().stopped).toMatch(/80% used/);
   });
 
-  it("stops codex when the credit balance falls (credits spent, by us or by Dai's own use)", async () => {
+  it("stops codex when the credit balance falls (credits spent, by us or by Roy's own use)", async () => {
     const { fake, brain, notes } = brainWith("loop-credits", { BRAIN_CODEX_USAGE_EVERY_CALLS: "1" });
     await brain.preflight();
     await ask(brain);

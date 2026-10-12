@@ -1,0 +1,39 @@
+agent/src/reflex/turn-solver.ts:13:import { continuationCost } from "./continuation-value.js";
+agent/src/reflex/turn-solver.ts:630:  continuationValue?: import("./continuation-value.js").ContinuationValue;
+agent/src/reflex/turn-solver.ts:1151:  /** Guaranteed discards with an unresolved identity; no continuation is allowed after them. */
+agent/src/reflex/turn-solver.ts:1322:  // Short hands and absent Shiv metadata have no verified continuation; still offer the card itself.
+agent/src/reflex/turn-solver.ts:2062:      // Expected draws have no identity to upgrade; they cannot become a verified continuation.
+agent/src/reflex/turn-solver.ts:3214:  if (input.continuationValue && !dies) score -= weights.hp * continuationCost(input.continuationValue, input.player.hp, revived?.hp ?? hpAfter);
+agent/src/reflex/continuation-value.ts:1:/** A learned continuation utility, in HP units. Absent outside an observed multi-fight objective. */
+agent/src/reflex/continuation-value.ts:8:export function continuationUtility(value: ContinuationValue | undefined, hp: number): number {
+agent/src/reflex/continuation-value.ts:22:export function continuationCost(value: ContinuationValue | undefined, before: number, after: number): number {
+agent/src/reflex/continuation-value.ts:23:  return continuationUtility(value, before) - continuationUtility(value, after);
+agent/src/sim/build-sim-facts.ts:180:    ...(base.continuation ? { continuation: { ...base.continuation, variants: base.continuation.variants.map((v) => ({ ...v, input: { ...v.input, piles: { ...v.input.piles, draw } } })) } } : {}) });
+agent/src/sim/build-sim-facts.ts:218:    const next = change?.continuation ?? base.continuation;
+agent/src/sim/build-sim-facts.ts:220:      ...(next ? { continuation: { ...next, variants: next.variants.map((v) => ({ ...v, input: { ...v.input, solver: { ...v.input.solver, player: { ...v.input.solver.player, maxHp: max } } } })) } } : {}) };
+agent/src/sim/build-sim-facts.ts:492:    const continuation = doubleBossPreparation(state);
+agent/src/sim/build-sim-facts.ts:494:    if (continuation) start.input = withDoubleBossStart(state, knowledge, start.input, continuation, startOpts);
+agent/src/sim/build-sim-facts.ts:500:      return continuation ? withDoubleBossStart(changed, knowledge, rebuilt, continuation, startOpts) : rebuilt;
+agent/src/sim/build-sim-facts.ts:518:    const low = continuation?.limitation ?? bossTrustReason(key, "b3", state.run?.ascension, state.run?.floor);
+agent/src/sim/build-sim-facts.ts:520:    const head = continuation ? `F48→F49连续通关（第一boss ${boss}；低可信、未经两战校准）：` : `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`;
+agent/src/sim/build-sim-facts.ts:562:      criteria[k] = continuation ? JSON.stringify(shown).replaceAll("校准后", "未校准连战") : JSON.stringify(shown);
+agent/src/sim/build-sim-facts.ts:600:    if (continuation) {
+agent/src/sim/build-sim-facts.ts:604:      simFacts["limits"] = continuation.limitation;
+agent/src/sim/build-sim-facts.ts:605:      simFacts["evidence"] = continuation.value.source;
+agent/src/sim/build-sim-facts.ts:614:        questions: { ...ask.questions, [spec.question]: { ...question, instructions: `${question.instructions} ${continuation ? "boss_sim为F48→F49连续两战原始通关率及配对差，未经两战校准；HP/药水由第一战实际样本传递，全部选项保留，由Codex选择。" : BOSS_SIM_NOTE}`, criteria } },
+agent/src/reflex/combat-plan.ts:59:import { doubleBossFor, firstDoubleBoss } from "../knowledge/double-boss.js";
+agent/src/reflex/combat-plan.ts:503:  const continuation = firstDoubleBoss(state);
+agent/src/reflex/combat-plan.ts:504:  if (continuation) out["continuation_objective"] = `F48后仍要打F49：HP/药水连续，留存资源按F49估值；${continuation.limitation}。证据：${continuation.value.source}`;
+agent/src/reflex/combat-plan.ts:528:      [...costs.values()].some((cost) => cost.continuation !== undefined)
+agent/src/reflex/combat-plan.ts:1951:    // C48LLXBGKXQ9 F33 attempt 5 T13: the second card of a lethal has a continuation label.
+agent/src/reflex/combat-plan.ts:3049:  const continuation = kind === "boss" ? firstDoubleBoss(state) : null;
+agent/src/reflex/combat-plan.ts:3050:  const observedDouble = kind === "boss" ? doubleBossFor(state) : null;
+agent/src/reflex/combat-plan.ts:3052:    continuation ? { potionHp: continuation.potionHp, source: continuation.value.source } : undefined);
+agent/src/reflex/combat-plan.ts:3191:      ...(continuation ? { continuationValue: continuation.value } : {}),
+agent/src/knowledge/double-boss.ts:5:import type { ContinuationValue } from "../reflex/continuation-value.js";
+agent/src/knowledge/double-boss.ts:46:export function doubleBossFor(state: GameState, model: DoubleBossModel | null = loadDoubleBossModel()): DoubleBossModel | null {
+agent/src/knowledge/double-boss.ts:53:export function firstDoubleBoss(state: GameState, model: DoubleBossModel | null = loadDoubleBossModel()): DoubleBossModel | null {
+agent/src/knowledge/double-boss.ts:54:  const scoped = doubleBossFor(state, model);
+agent/src/knowledge/double-boss.ts:60:  const scoped = doubleBossFor(state, model);
+agent/src/reflex/potion-cost.ts:30:  continuation?: string;
+agent/src/reflex/potion-cost.ts:61:    return { ...base, hp: next, holdHp: next, source: reserve!.source, continuation: reserve!.source, zero: next > 0 ? null : "worthless" };

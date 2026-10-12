@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-12 13:54:32 CST",
+  "checks": [
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "node_modules/.bin/vitest",
+        "run",
+        "tests/silent-selection-terminal.test.ts",
+        "tests/silent-potion-reference.test.ts",
+        "tests/silent-selection-execution.test.ts",
+        "tests/silent-observed-intervals.test.ts",
+        "tests/potion-cost.test.ts",
+        "tests/combat-jev.test.ts",
+        "--maxWorkers=4",
+        "--reporter=default"
+      ],
+      "rc": 0
+    }
+  ],
+  "original_source_full_cases": {
+    "terminal": 3356,
+    "potion": 3348
+  },
+  "full_suite_repeated": false
+}

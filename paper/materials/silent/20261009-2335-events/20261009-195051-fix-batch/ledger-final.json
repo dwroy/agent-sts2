@@ -1,0 +1,78 @@
+{
+ "id": "silent-0346",
+ "ts": "2026-10-09T20:06:45+08:00",
+ "character": "silent",
+ "kind": "fight",
+ "claim": "静默女王B4整场模拟偏乐观；本批冻结327场、女王23场实际结局（8调参15验证），原107调参及切点保持。调参原帧26组Burn Bright敌方结算中，23组聚合体力量直接+1，另3组PIERCING_WAIL_POWER消退恢复后净+1；当前整场分支漏传递这项盟友增益。候选只在silent已观察进阶fullFight补传递及下一回合前瞻，实盘和五回合须逐字节隔离，是否发布以同数据两侧验收为准。",
+ "evidence": [
+  {
+   "run": "ZZMYZ5UBCG72",
+   "floor": 48,
+   "turn": 3,
+   "role": "support",
+   "note": "T3末→T4原始偏移6576128152/6576176557，力量0→1；完整SHA在tune-buff-transitions.json。",
+   "added": "2026-10-09T20:06:45+08:00"
+  },
+  {
+   "run": "4Y94N8RDPGPM",
+   "floor": 48,
+   "turn": 3,
+   "role": "support",
+   "note": "同批调参独立局及T3-T11递增力量证据，原始偏移/哈希留档。",
+   "added": "2026-10-09T20:06:45+08:00"
+  },
+  {
+   "run": "5X2GHKJ89PN1",
+   "floor": 48,
+   "turn": 3,
+   "role": "support",
+   "note": "B4 A10原帧末T3→T4，off7781698460/7781748375，力量0→1；42组A10原帧均净+1，完整SHA/临时力量恢复见a10-mechanic-crosscheck.json。",
+   "added": "2026-10-09T21:15:58+08:00"
+  }
+ ],
+ "first_run": "ZZMYZ5UBCG72",
+ "prior": "partly",
+ "prior_note": "silent-0298保留此前B5缺验证场数拒绝；本批独立B4漏盟友力量发现，旧B5状态不改。",
+ "status": "rejected",
+ "by": "learner",
+ "where": {
+  "proposal": [
+   "paper/materials/silent/boss-sim-b4-QUEEN-20261009-195051.md"
+  ],
+  "commits": [
+   "0028f43d9559f6a0e02e717abb9e7acb9e2e8007"
+  ]
+ },
+ "note": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch；dispatch_base=eaf3ac162afe487705d5b46ab049871308022173；验收尚未执行，不记shipped。",
+ "asc": 2,
+ "history": [
+  {
+   "ts": "2026-10-09T20:06:45+08:00",
+   "by": "learner",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T21:15:58+08:00",
+   "by": "learner",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T21:25:34+08:00",
+   "by": "learner",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T22:39:24+08:00",
+   "by": "learner",
+   "status": "rejected"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch；dispatch_base=eaf3ac162afe487705d5b46ab049871308022173；验收尚未执行，不记shipped。",
+  "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch；A10机制原帧42组支持训练26组先定的+1。此前fd5adcd7范围撤除仅因误套B5策略调参限制；B4许可原日志机制核实，v3只恢复观察到的A10。策略未试调、Platt仅训练拟合，验证胜败未用于选数值；机制观察涉及历史val状态，报告不冒称独立机制外推测试。v2部分41条重放原退出130留存，最终源待原沙箱通过与提交，未上线。",
+  "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch；最终源0028f43d9559f6a0e02e717abb9e7acb9e2e8007；68组本角色原始状态支持+1，原沙箱第4轮tsc/vitest0、252文件2631例、gitleaks0，最终夹具基准2失败/恢复绿；固定327场两侧重放中，正式验收待完成；未合入未建版本。",
+  "自动20261009-195051-fix-batch / silent QUEEN B4 rejected；dispatch_base=eaf3ac162afe487705d5b46ab049871308022173，候选0028f43d9559f6a0e02e717abb9e7acb9e2e8007。冻结327场（107 tune/220 val，新6只入val），Queen验证15/两侧打穿覆盖57相同。T1 Brier .2588→.1615、gap .352→.239，但打穿1.117→1.350；pre Brier .2342→.1873、gap .308→.231，但打穿1.266→1.519。整体T1/pre Brier .1189/.1208→.1145/.1195。原验收rc1：t1 leak worsened; pre leak worsened; no bias entered/approached its fixed standard；实盘/五回合字节隔离passed。机制支持ZZMYZ5UBCG72 F48 T3→4、4Y94N8RDPGPM F48 T3→4、5X2GHKJ89PN1 F48 T3→4，共68组原始状态，偏移/SHA与SL实际结局/71截尾见/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch。验收/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch/acceptance.json；原沙箱第4轮tsc/vitest0、252文件2631例；撤源码固定夹具2失败/2通过，候选绿。所有初稿/rc130/首次vitest1保留；本批独立分支留存，不合live、不建版本、不记shipped。"
+ ]
+}

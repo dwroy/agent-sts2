@@ -1,5 +1,5 @@
 /**
- * Knowledge check 2026-09-29 (Dai: the guide, the handbook, Jev's hints, the card tiers and the boss notes are
+ * Knowledge check 2026-09-29 (Roy: the guide, the handbook, Jev's hints, the card tiers and the boss notes are
  * knowledge like the experience base; where our data says otherwise, the data's version, with its ascension and
  * n; counts filled from the data, not hand-written). See paper/materials/experience-changelog.md「知识库核对」.
  */

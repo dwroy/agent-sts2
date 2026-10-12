@@ -203,7 +203,7 @@ describe("B3 boss simulation on the questions", () => {
     expect(Object.keys(after).filter((k) => k.startsWith("o1:")).every((k) => String(after[k]!["boss_sim"]).includes("选这个"))).toBe(true);
   }, 60_000);
 
-  it("cut short by the clock under 300 samples (of 1000 asked): no numbers, as a failed simulation (Dai 2026-10-02)", async () => {
+  it("cut short by the clock under 300 samples (of 1000 asked): no numbers, as a failed simulation (Roy 2026-10-02)", async () => {
     const e = env(REWARD());
     const before = decide(e);
     let t = 0;

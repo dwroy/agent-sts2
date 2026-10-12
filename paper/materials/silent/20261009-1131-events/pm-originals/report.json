@@ -1,0 +1,47 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "XZUJR08FW801"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "XZUJR08FW801",
+      "where": "agent/src/reflex/card-model.ts:921",
+      "what": "升级隐秘匕首仍将弃两张误作抽两张，未覆盖弃牌与生成小刀分支",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0334",
+      "silent-0335",
+      "silent-0336"
+    ],
+    "updated": [
+      "silent-0019",
+      "silent-0020",
+      "silent-0011",
+      "silent-0016",
+      "silent-0039",
+      "silent-0077",
+      "silent-0128",
+      "silent-0196",
+      "silent-0241",
+      "silent-0243"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-6a5c67f606bd5af7",
+    "silent-proposal-04fb18bbeb9e3f73"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/report.md"
+}

@@ -1,0 +1,106 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-apotheosis.test.ts (6 tests | 5 failed) 44ms
+   × replays F43's same full sequence with the observed 51 damage and 13 HP loss 14ms
+   × reproduces both direct hand pairs, including Fasten, Wail, Block base and Tools cost 2ms
+   × upgrades a concrete later draw before establishing its three-point poison growth 1ms
+   × carries upgrades in the draw/discard piles without changing the input deck or snapshots 17ms
+   × does not certify replayed or modifier-dependent Apotheosis 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-apotheosis.test.ts > replays F43's same full sequence with the observed 51 damage and 13 HP loss
+AssertionError: expected 43 to be 51 // Object.is equality
+
+- Expected
++ Received
+
+- 51
++ 43
+
+ ❯ tests/silent-apotheosis.test.ts:44:36
+     42|   const sequence = input.hand.filter((entry) => entry.cardId !== "ASCE…
+     43|   const plan = replaySteps(input, sequence)!;
+     44|   expect(plan.outcome.damageDealt).toBe(51);
+       |                                    ^
+     45|   expect(plan.outcome.hpLoss).toBe(13);
+     46|   expect(plan.outcome.energyLeft).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-apotheosis.test.ts > reproduces both direct hand pairs, including Fasten, Wail, Block base and Tools cost
+AssertionError: DEFEND_SILENT: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/silent-apotheosis.test.ts:60:47
+     58|       const upgraded = applyApotheosisUpgrade(plain);
+     59|       const paired = observed.find((entry) => entry.cardId === plain.c…
+     60|       expect(upgraded.upgraded, plain.cardId).toBe(paired.upgraded);
+       |                                               ^
+     61|       for (const field of fields) expect(upgraded[field], `${plain.car…
+     62|       expect(applyApotheosisUpgrade(upgraded)).toEqual(upgraded);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-apotheosis.test.ts > upgrades a concrete later draw before establishing its three-point poison growth
+AssertionError: expected 2 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 2
+
+ ❯ tests/silent-apotheosis.test.ts:71:55
+     69|   const fumes = models("plain45").find((entry) => entry.cardId === "NO…
+     70|   const observed = models("next43").find((entry) => entry.cardId === "…
+     71|   expect(applyApotheosisUpgrade(fumes).poisonPerTurn).toBe(observed.po…
+       |                                                       ^
+     72|   const drawing = card(88, "FIXED_DRAW", { type: "Skill", target: "sel…
+     73|   input.player.energy = 3;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-apotheosis.test.ts > carries upgrades in the draw/discard piles without changing the input deck or snapshots
+AssertionError: expected 2 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 2
+
+ ❯ tests/silent-apotheosis.test.ts:93:51
+     91|   const records = simulateFight(input, plan, 2, 1, false).records;
+     92|   expect(records).toHaveLength(2);
+     93|   expect(records[1]!.snap.pw.NOXIOUS_FUMES_POWER).toBe(3);
+       |                                                   ^
+     94|   expect(records[1]!.dmg).toBeGreaterThanOrEqual(20);
+     95|   expect(JSON.stringify(input)).toBe(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/silent-apotheosis.test.ts > does not certify replayed or modifier-dependent Apotheosis
+AssertionError: expected [ '神化' ] to include '神化（重放、自动出牌或属性组合未验证）'
+ ❯ tests/silent-apotheosis.test.ts:117:37
+    115|   const plan = replaySteps(input, [step(input.hand[0]!)])!;
+    116|   expect(plan.outcome.apotheosisApplied).toBeUndefined();
+    117|   expect(plan.outcome.unknownCards).toContain("神化（重放、自动出牌或属性组合未验证）");
+       |                                     ^
+    118|   input.player.weak = false;
+    119|   input.hand[0] = { ...input.hand[0]!, replay: 1 };
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  07:23:38
+   Duration  760ms (transform 485ms, setup 317ms, import 267ms, tests 44ms, environment 0ms)
+

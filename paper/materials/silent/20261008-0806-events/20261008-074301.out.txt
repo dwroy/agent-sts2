@@ -1,0 +1,25 @@
+## 复盘回报
+
+- 已追加：L2TSFU62Z57Z（A10，第17层，仪式兽 CEREMONIAL_BEAST：末次T8以17血、0挡承受17攻击阵亡，敌剩113血）；已追加两处敌名勘误，数字复核一致。
+- 新的纯 bug：
+  - 无
+- 写成「未记录」的项：L2TSFU62Z57Z：完整dirty源码、完整毛伤及部分末击顺序、前五次SL结算出口、最终实线最优比例、未执行策略的受控胜负、boss时钟数值、Jev缓存命中。
+- 学习账本：L2TSFU62Z57Z：新增无；更新 silent-0020、silent-0125、silent-0021、silent-0133、silent-0222、silent-0049、silent-0005、silent-0044、silent-0253（均为support，老错repeat无）；`ledger.py check`退出码0。
+- 代码提案：
+  - F17T2—3／silent-0125／silent-proposal-c873d6543c414f92 → strategy-proposal：追踪护栏、SL覆盖、重问及药水执行链；缺完整反事实，保留打法参数。
+  - F17T6／8／silent-0021、0133、0222／silent-proposal-dfbf51502f30c9b1 → strategy-proposal：核验全败并列与昏眩出牌额度；缺受控胜线，不推出固定攻击优先规则。
+
+```json
+{"task":"postmortem","appended":["L2TSFU62Z57Z"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0020","silent-0125","silent-0021","silent-0133","silent-0222","silent-0049","silent-0005","silent-0044","silent-0253"],"repeats":[],"check":0},"code_proposals":["silent-proposal-c873d6543c414f92","silent-proposal-dfbf51502f30c9b1"],"implementation_domains":["combat","potion","sl","terminal","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-074302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a118bf-c467-7bf2-9341-20ed930c0603
+轮数：1；工具调用：command_execution×41
+token：输入 206.4k、输出 30.8k（其中推理 8333）、cache 读 3515.0k、cache 写 0（命中 94.5%）
+成本：未提供
+耗时：754.0 s（墙钟）
+时间：首个事件 3.2 s、模型首个输出 7.2 s、首次工具 11.4 s、末次工具结束 733.7 s；工具内共 44.7 s，其余（模型生成、推理、网络）706.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×27；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T07-43-03-01a118bf-c467-7bf2-9341-20ed930c0603.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-074302-postmortem.jsonl

@@ -1,0 +1,15 @@
+Stabilize stall recovery subprocess fixtures under startup delay
+
+Await the real stall-check subprocess with a bounded 10-second deadline
+inside the existing 15-second test limit. Preserve every recovery, stuck
+loop, gate, and silence assertion. Cover a fixed six-second startup delay,
+nonzero exit despite OK output, and termination of a hung child.
+
+Evidence: fix-queue-v4 ops-stall-recovery-test-subprocess-timeout,
+20261012-131301-strategy-proposal host check on tree
+f1e8a6cda3f1b37f20f78bdf650e0e3ce2a997b9. Run/floor/turn: N/A (test
+infrastructure). The original host scheduling cause remains unproven.
+Restoring only the old executor reproduces status=null at five seconds;
+restoring the fix passes all six fixed cases. No production rule changes.
+
+Co-Authored-By: Codex GPT-6 <noreply@openai.com>

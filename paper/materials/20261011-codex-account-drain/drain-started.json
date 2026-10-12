@@ -1,0 +1,165 @@
+{
+  "id": "codex1-20261011",
+  "source": {
+    "session": "01a10725-17b7-7702-a5ab-917d414a0c77",
+    "learner_home": "/home/dw/.codex-sts2",
+    "brain_home": "/home/dw/.codex-brain"
+  },
+  "target": {
+    "engine": "codex",
+    "account": "codex1",
+    "model": "gpt-6-astra",
+    "effort": "xhigh",
+    "service_tier": "default",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+    "handoff": "notes/codex1-drain-ops-handoff.md"
+  },
+  "target_digest": "37d37eccc21314e31b48a782fee26fa077635183e761eeabf1ae1e1214143550",
+  "preflight": {
+    "ok": true,
+    "checks": [
+      {
+        "role": "learner",
+        "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+        "check": {
+          "ok": true,
+          "version": "codex-cli 0.162.1"
+        },
+        "key_check": {
+          "ok": true,
+          "checked": 9
+        }
+      },
+      {
+        "role": "brain",
+        "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+        "check": {
+          "ok": true,
+          "version": "codex-cli 0.162.1"
+        }
+      }
+    ],
+    "at": "2026-10-11T22:57:50+08:00"
+  },
+  "created_at": "2026-10-11T22:57:50+08:00",
+  "phase": "draining",
+  "receipts": {},
+  "owned_flags": [
+    "ops/codex-ops/LLM_DRAIN",
+    "ops/codex-ops/PAUSE"
+  ],
+  "preserved_flags": [],
+  "updated_at": "2026-10-11T23:08:34+08:00",
+  "snapshot": {
+    "at": "2026-10-11T23:08:34+08:00",
+    "active_workers": [
+      {
+        "kind": "learner",
+        "id": "20261011-220116-fix-batch",
+        "pid": 2492561,
+        "start_ticks": "61924663"
+      },
+      {
+        "kind": "learner",
+        "id": "20261011-224302-fix-batch",
+        "pid": 2585303,
+        "start_ticks": "62174859"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2492902,
+        "start_ticks": "61924928"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2492912,
+        "start_ticks": "61924933"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2493943,
+        "start_ticks": "61926761"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2501351,
+        "start_ticks": "61952014"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2501431,
+        "start_ticks": "61952213"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2501432,
+        "start_ticks": "61952213"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2544446,
+        "start_ticks": "62071429"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2544494,
+        "start_ticks": "62071591"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2544495,
+        "start_ticks": "62071591"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2578849,
+        "start_ticks": "62141455"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2578916,
+        "start_ticks": "62141643"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2578917,
+        "start_ticks": "62141643"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2578918,
+        "start_ticks": "62141646"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2586262,
+        "start_ticks": "62176193"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2586272,
+        "start_ticks": "62176201"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2587389,
+        "start_ticks": "62178256"
+      }
+    ],
+    "ops_idle": true,
+    "checkpoint_ready": true,
+    "inventory_complete": true,
+    "ops_pane": "wJ:p5",
+    "ops_identity": [
+      {
+        "pid": 1910306,
+        "start_ticks": "60425620"
+      },
+      {
+        "pid": 1910299,
+        "start_ticks": "60425616"
+      }
+    ]
+  }
+}

@@ -185,7 +185,7 @@ describe("the hard elite list (src/sl/sl-elites.json)", () => {
     expect(listedElite(["DECIMILLIPEDE_SEGMENT_MIDDLE"], list)?.name).toBe("Decimillipede");
     expect(listedElite(["BOWLBUG_ROCK", "BOWLBUG_SILK", "SLUMBERING_BEETLE"], list)?.name).toBe("Slumbering Beetle + Bowlbugs");
     expect(listedElite(["BOWLBUG_NECTAR", "BOWLBUG_ROCK", "BOWLBUG_SILK"], list)).toBeNull();
-    // Every act-3 elite since 2026-10-04 (Dai): Mecha Knight and the Three Knights joined Soul Nexus.
+    // Every act-3 elite since 2026-10-04 (Roy): Mecha Knight and the Three Knights joined Soul Nexus.
     expect(listedElite(["FLAIL_KNIGHT", "MAGI_KNIGHT", "SPECTRAL_KNIGHT"], list)?.name).toBe("Three Knights");
     expect(listedElite(["MECHA_KNIGHT"], list)?.name).toBe("Mecha Knight");
     // An act-3 hallway monster, listed by its record (2026-10-04: 4AWD died at 73% entry).
@@ -475,7 +475,7 @@ describe("previousAttemptsJson", () => {
 });
 
 describe("configuration", () => {
-  it("SL is on by default (Dai 2026-10-02), with retries 5 / 3, the sim shown on retries, the log next to the decision log", () => {
+  it("SL is on by default (Roy 2026-10-02), with retries 5 / 3, the sim shown on retries, the log next to the decision log", () => {
     const config = loadConfig({ DECISION_LOG: "/tmp/x/decisions.jsonl" } as NodeJS.ProcessEnv);
     expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, act3LowHp: true, act3LowHpPct: 50, act2LowHp: true, act2LowHpPct: 50, retryShowSim: true, retryMemo: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, reloadOnRevive: false, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreReplayPlays: true, retryExploreReplayDeviate: true, retryExploreKeyCounters: true, retryExploreSecond: true, retryExploreReplayOrder: true, retryExploreReplayCode: true, retryExploreTargetTurn: true, retryExploreRearm: true, retryExploreWasted: true, retryExploreAnchor: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryExploreWhere: true, retryExplorePotion: true, retryKnownPicks: true, retryKnownOffTop: true, retryKnownHandOrder: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
     const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_ACT3_LOW_HP: "off", SL_ACT3_LOW_HP_PCT: "55", SL_RETRY_SHOW_SIM: "off", SL_RETRY_MEMO: "off", SL_RETRY_KNOWN_DRAWS: "off", SL_RETRY_COMPUTE: "off", SL_JUDGE_KNOWN_DRAWS: "off", SL_JUDGE_ANY_DRAW: "off", SL_RELOAD_EARLY: "off", SL_RELOAD_ON_REVIVE: "on", SL_RETRY_KNOWN_INSERTS: "off", SL_RETRY_KNOWN_TOP: "off", SL_RETRY_EXPLORE: "off", SL_RETRY_EXPLORE_B2: "off", SL_RETRY_EXPLORE_BOSS_POTIONS: "off", SL_RETRY_EXPLORE_ORDER: "off", SL_RETRY_EXPLORE_REPLAY: "off", SL_RETRY_EXPLORE_CANON: "off", SL_RETRY_EXPLORE_TURN: "off", SL_RETRY_EXPLORE_WHOLE: "off", SL_RETRY_EXPLORE_WHERE: "off", SL_RETRY_EXPLORE_POTION: "off", SL_RETRY_KNOWN_PICKS: "off", SL_RETRY_EXPLORE_REPLAY_PLAYS: "off", SL_RETRY_EXPLORE_REPLAY_DEVIATE: "off", SL_RETRY_EXPLORE_KEY_COUNTERS: "off", SL_RETRY_EXPLORE_SECOND: "off", SL_RETRY_EXPLORE_REPLAY_ORDER: "off", SL_RETRY_EXPLORE_REPLAY_CODE: "off", SL_RETRY_EXPLORE_TARGET_TURN: "off", SL_RETRY_EXPLORE_REARM: "off", SL_RETRY_EXPLORE_WASTED: "off", SL_RETRY_EXPLORE_ANCHOR: "off", SL_RETRY_KNOWN_OFF_TOP: "off", SL_RETRY_KNOWN_HAND_ORDER: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
@@ -487,7 +487,7 @@ describe("configuration", () => {
     expect(loadConfig({ SL_ENABLED: "off" } as NodeJS.ProcessEnv).sl.enabled).toBe(false);
   });
 
-  it("THIEF_FACTS and THIEF_COST are on by default (Dai 2026-10-02); off turns each off", () => {
+  it("THIEF_FACTS and THIEF_COST are on by default (Roy 2026-10-02); off turns each off", () => {
     const config = loadConfig({} as NodeJS.ProcessEnv);
     expect([config.thiefFacts, config.thiefCost]).toEqual([true, true]);
     const off = loadConfig({ THIEF_FACTS: "off", THIEF_COST: "off" } as NodeJS.ProcessEnv);
@@ -495,7 +495,7 @@ describe("configuration", () => {
   });
 });
 
-describe("SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line", () => {
+describe("SL_ACT3_LOW_HP (Roy 2026-10-03): act-3 fights with no boss, entered below the HP line", () => {
   // Fixed data only: testKnowledge (TEST_SUBJECT the one Boss) and this list, not the live files.
   const elites: SlEliteList = { source: "test", date: "2026-10-03", elites: [{ name: "Entomancer", zh: "蜂群术士", enemy_ids: ["ENTOMANCER"], deaths: 7, fights: 48 }] };
   const HALLWAY = ["JAW_WORM", "CULTIST"];
@@ -541,7 +541,7 @@ describe("SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered be
     expect(actNumberOf(state(hallway({ actId: "2", floor: 17 })))).toBe(3);
   });
 
-  it("SL_ACT2_LOW_HP (Dai 2026-10-04): an act-2 fight with no boss below its line is eligible with its own gate; act 1 never; off or absent as before", () => {
+  it("SL_ACT2_LOW_HP (Roy 2026-10-04): an act-2 fight with no boss below its line is eligible with its own gate; act 1 never; off or absent as before", () => {
     const act2 = (options: Parameters<typeof bossBoard>[0] = {}): Raw => bossBoard({ enemyIds: HALLWAY, actId: "1", floor: 30, ...options });
     const both = { act3LowHp: true, act3LowHpPct: 40, act2LowHp: true, act2LowHpPct: 50 };
     expect(gateOf(act2({ turn: 1, hp: 12, lethal: false }), both)).toEqual({ kind: "elite", elite: null, reason: `${ACT2_LOW_HP_GATE} 12/80` });

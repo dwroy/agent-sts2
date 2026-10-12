@@ -1,5 +1,5 @@
 /**
- * Dai 2026-10-04 (experience by ascension; the ascension audit, experience 2026-10-04.2): the data placeholders that
+ * Roy 2026-10-04 (experience by ascension; the ascension audit, experience 2026-10-04.2): the data placeholders that
  * counted fights over every logged ascension ({CRAB_KILL_ORDER}, {QUEEN_AMALGAM}, {SANDPIT_DEATHS}, their _EN forms,
  * {LAG_SLEEP}'s wake-ups) or pooled A8 with A9 ({GIANT_BLOCK_RECORD}) are read by the run's ascension band: from A8 up
  * A8's fights and A9's apart ("A8 n 场赢 k；A9 n 场赢 k"), below A8 the text as written before. Marked with the run's

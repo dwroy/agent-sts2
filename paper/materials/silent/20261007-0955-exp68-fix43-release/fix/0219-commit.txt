@@ -1,0 +1,19 @@
+Include observed Snakebite poison in Silent turn plans
+
+Wire the observed plain Snakebite with PoisonPower=7 into the existing
+poison application path. Keep its live energy cost, Artifact handling,
+poison settlement and later rollout decay; do not infer upgrade values
+or change other characters.
+
+Evidence: KAY522KT5NXR A0 floor 14 turn 1; KQQELQSZ382Z A10 floor 17
+attempt 6 turn 7 (nine existing poison becomes sixteen). Ledger:
+silent-0219. Keep the separate attack coverage bug silent-0216 distinct;
+there is no claim that the fix wins the entire fight.
+
+With production changes withdrawn: 4 failures / 1 pass.
+Restored: 5 passes. All fixtures are fixed and generated knowledge reads
+are blocked in the regression; no real LLM or network calls.
+
+Sandbox tsc/vitest pass: 220 files, 2331 cases; gitleaks clean.
+
+Co-Authored-By: Codex GPT-6 <noreply@openai.com>

@@ -1,0 +1,73 @@
+{
+  "state": "published",
+  "batch": "20261008-061302-experience-update",
+  "source": "6e94f690ea66016fe79318b7c366068b0b537e22",
+  "source_tests": {
+    "exit": 0,
+    "files": 245,
+    "cases": 2586,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-061302-experience-update/test-source.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "bb34c2af6b176e57e1416a3cdfa12beb77710f00",
+  "parent_blob": "617d12525379dfe359501147885e21a098b4fc09",
+  "main_code_sync": "16dd9bc3f8bc0aae439c3b38621e4d664c4be500",
+  "main_record": "6830b0b46db1e9575b4ff5274297770270d285ad",
+  "full_external_passed": false,
+  "actual_code": "ad42585dcdd8b7b0ca0cce5a8f7bd35ea188ecf4",
+  "live_before": "49c01a0280347a29b6ef1ae2bf79b4b964bed4a0",
+  "combined": "4e6d59b51685c846da60200dd9353180953dd843",
+  "preserved_refresh": "49c01a0280347a29b6ef1ae2bf79b4b964bed4a0",
+  "refresh_sha256": {},
+  "lock_attempts": 1,
+  "all_other_tracked_blobs_preserved": true,
+  "publication": "c1dd721fe682910095768eb4007cb836b6991152",
+  "publication_tree": "bac3f212a288579bd8efca292dffd63b4fd0ef5a",
+  "version_entry": {
+    "name": "S1.exp90",
+    "family": "Silent",
+    "commit": "ad42585dcdd8b7b0ca0cce5a8f7bd35ea188ecf4",
+    "source": "decision-log 2026-10-08 06:55: 原061302经验整分支18项记录冲突兜底，源6e94f690唯一experience.json净blob，2026-10-08.6→.7/165 active/增4改9退0；KFRDELW2TH2P A10补证，三项combat/potion/SL/terminal/structure代码提案沿原自动链。源245文件2586例tsc/vitest0；当前源码/测试/任务与已完整外部通过49c01a02逐blob等价，保留子弹时间六路径及刷新。data-only免重复沙箱，未冒报新树通过，完整外部原批另续验；数据发布不表示提案代码实现。"
+  },
+  "record_line": "- 2026-10-08 06:55 运维codex06:49经验兜底：原061302源6e94f690ea66016fe79318b7c366068b0b537e22整分支18份并行记录冲突保持；单次空闲非阻塞锁内从最新live49c01a0280347a29b6ef1ae2bf79b4b964bed4a0集成唯一experience.json原blob，实际合入ad42585dcdd8b7b0ca0cce5a8f7bd35ea188ecf4，刷新49c01a0280347a29b6ef1ae2bf79b4b964bed4a0及全部并行代码/数据逐blob保持，源真实祖先。静默经验2026-10-08.6→.7/165 active/增4改9退0，KFRDELW2TH2P A10补证；源245文件2586例tsc/vitest0，当前源码/测试/任务与已完整外部通过49c01a02逐blob等价，保留子弹时间六路径。data-only免重复沙箱，不冒报新树检查通过，唯一S1.exp90；main/15所属经验数据台账随后机械同步，三项combat/potion/SL/terminal/structure提案沿原自动链，完整外部原批另续验。原out/err/report/failed/18冲突保持，无生产操作；回执paper/materials/silent/20261008-0649-experience90。\n",
+  "code_equivalence": {
+    "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+    "checked_pin": "49c01a0280347a29b6ef1ae2bf79b4b964bed4a0",
+    "checked_pin_full_external": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 297,
+      "passed": 3406,
+      "skipped": 2
+    },
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 245,
+      "cases": 2586,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-061302-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "source_vs_actual_six_preserved_bullet_time_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-bullet-time-states.json",
+      "agent/tests/silent-bullet-time.test.ts"
+    ],
+    "reason": "The source commit changes only experience data and passed its original self-tests. Current live retains the six already published Bullet Time source/test paths and is identical in code/tests/tasks to the pinned full external pass. The data-only test exemption applies; no test success is claimed for this new tree. Full outside checks are requested separately."
+  }
+}

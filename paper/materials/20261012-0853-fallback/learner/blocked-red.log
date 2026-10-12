@@ -1,0 +1,109 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-083154/agent
+
+ ❯ tests/blocked-experience-repair.test.ts (18 tests | 3 failed) 5793ms
+     × keeps an empty blocked attempt failed without scheduling proposal repair (exit 0) 126ms
+     × keeps an empty blocked attempt failed without scheduling proposal repair (exit 1) 116ms
+     × keeps an empty blocked attempt failed without scheduling proposal repair (exit 3) 119ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/blocked-experience-repair.test.ts > blocked experience proposal repair > keeps an empty blocked attempt failed without scheduling proposal repair (exit 0)
+AssertionError: expected { task: 'experience-update', …(11) } to match object { state: 'failed', rc: +0, …(6) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,9 +1,11 @@
+  {
+    "attempts": 1,
+    "merged": null,
+-   "proposal_audit_errors": [],
++   "proposal_audit_errors": [
++     "missing source commit for proposal audit",
++   ],
+    "rc": 0,
+    "report": {
+      "added": 0,
+      "code_proposals": [],
+      "commit": null,
+
+ ❯ tests/blocked-experience-repair.test.ts:52:26
+     50|   it.each([0, 1, 3])("keeps an empty blocked attempt failed without sc…
+     51|     const result = finish(blocked, rc);
+     52|     expect(result.batch).toMatchObject({ state: "failed", rc, merged: …
+       |                          ^
+     53|       proposal_audit_errors: [], retry_at: 123, attempts: 1, runs: ["N…
+     54|     expect(result.batch.proposal_repair_needed).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/blocked-experience-repair.test.ts > blocked experience proposal repair > keeps an empty blocked attempt failed without scheduling proposal repair (exit 1)
+AssertionError: expected { task: 'experience-update', …(11) } to match object { state: 'failed', rc: 1, …(6) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,9 +1,11 @@
+  {
+    "attempts": 1,
+    "merged": null,
+-   "proposal_audit_errors": [],
++   "proposal_audit_errors": [
++     "missing source commit for proposal audit",
++   ],
+    "rc": 1,
+    "report": {
+      "added": 0,
+      "code_proposals": [],
+      "commit": null,
+
+ ❯ tests/blocked-experience-repair.test.ts:52:26
+     50|   it.each([0, 1, 3])("keeps an empty blocked attempt failed without sc…
+     51|     const result = finish(blocked, rc);
+     52|     expect(result.batch).toMatchObject({ state: "failed", rc, merged: …
+       |                          ^
+     53|       proposal_audit_errors: [], retry_at: 123, attempts: 1, runs: ["N…
+     54|     expect(result.batch.proposal_repair_needed).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/blocked-experience-repair.test.ts > blocked experience proposal repair > keeps an empty blocked attempt failed without scheduling proposal repair (exit 3)
+AssertionError: expected { task: 'experience-update', …(11) } to match object { state: 'failed', rc: 3, …(6) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,9 +1,11 @@
+  {
+    "attempts": 1,
+    "merged": null,
+-   "proposal_audit_errors": [],
++   "proposal_audit_errors": [
++     "missing source commit for proposal audit",
++   ],
+    "rc": 3,
+    "report": {
+      "added": 0,
+      "code_proposals": [],
+      "commit": null,
+
+ ❯ tests/blocked-experience-repair.test.ts:52:26
+     50|   it.each([0, 1, 3])("keeps an empty blocked attempt failed without sc…
+     51|     const result = finish(blocked, rc);
+     52|     expect(result.batch).toMatchObject({ state: "failed", rc, merged: …
+       |                          ^
+     53|       proposal_audit_errors: [], retry_at: 123, attempts: 1, runs: ["N…
+     54|     expect(result.batch.proposal_repair_needed).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 15 passed (18)
+   Start at  08:37:40
+   Duration  6.27s (transform 284ms, setup 336ms, import 15ms, tests 5.79s, environment 0ms)
+

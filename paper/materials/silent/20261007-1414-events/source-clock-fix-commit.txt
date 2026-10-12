@@ -1,0 +1,16 @@
+Fix any-draw test clock isolation and cover deadline uncertainty
+
+Freeze the semantic fixture's Date.now clock alongside the existing rollout and
+potion clocks, and restore its spy after each test. Preserve the original
+unmodelled-card assertion and the 2000 ms production deadline. Add fixed-board
+regressions for a simulated long wall-clock pause and an explicitly advancing
+clock that still returns an uncertain SL verdict after timeout.
+
+Evidence: fix-queue-v4 2026-10-07 13:31; run id
+20261007-124302-experience-update; floor N/A, turn N/A (test infrastructure).
+The fixed live release 03d50f0b2ae81f6f1b8800c6471c145580eb4668, tree
+74ce797d1b74e52aab3e7b5d45b738e9e23e9303, timed out before the unknown-card
+reason at sl-any-draw.test.ts:193. There is no game-learning ledger ID.
+No production source, budget, knowledge data, policy or network call changes.
+
+Co-Authored-By: OpenAI GPT-6 <noreply@openai.com>

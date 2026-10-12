@@ -1,5 +1,5 @@
 """Every logged potion drink Jev chose outside a boss fight since the potion cost went live (its options carry a potion_cost
-fact, Dai 2026-09-30): the path that offered it, the cost the chosen option paid, whether DeepSeek's run plan had words on
+fact, Roy 2026-09-30): the path that offered it, the cost the chosen option paid, whether DeepSeek's run plan had words on
 potions in the question (run_plan_on_potions, Jev's prompt), and whether it saved a death (the no-potion line died more
 often in the rollout). Reads logs/decisions.jsonl, logs/jev-prompts.jsonl and the log DB's fights (room, outcome). No model.
 
@@ -104,7 +104,7 @@ def main():
     print("# Potions Jev drank outside a boss fight, and what each paid (tools/potion-drink-audit.py)\n")
     print(f"Chosen options that drink, with a potion_cost fact (potion cost live): {len(rows)}; outside a boss fight {len(out)}.\n")
     print(f"- Offered by: a solver line {sum(1 for r in out if not r['random'] and not r['added'])}, the rollout's added best line {sum(1 for r in out if r['added'])}, a random potion's \"drink now\" {sum(1 for r in out if r['random'])}; flagged rollout_best {sum(1 for r in out if r['rollout_best'])}.")
-    print(f"- Paid the table's held value (cost > 0 in the chosen option's total): {len(paid)}; 0: {len(free)}, every one on a board where the line's samples all die or every line loses all our HP ({sum(1 for r in free if r['saturated'] or (r['deaths'] and r['deaths'][0] == r['deaths'][1]))} of {len(free)}): rollout.ts valueAt / pickRolloutBest, no later for the potion there (decision log 2026-09-30 15:24, open for Dai).")
+    print(f"- Paid the table's held value (cost > 0 in the chosen option's total): {len(paid)}; 0: {len(free)}, every one on a board where the line's samples all die or every line loses all our HP ({sum(1 for r in free if r['saturated'] or (r['deaths'] and r['deaths'][0] == r['deaths'][1]))} of {len(free)}): rollout.ts valueAt / pickRolloutBest, no later for the potion there (decision log 2026-09-30 15:24, open for Roy).")
     print(f"- Saturated boards (every line loses all our HP: ranked without costs): {len(sat)} choices in {len(sat_fights)} fights, {sum(1 for o in sat_fights.values() if o == 'won')} of them won.")
     print(f"- The run plan's words on potions were in the question (run_plan_on_potions): {sum(1 for r in out if r['run_plan'])}.")
     print(f"- Death-saving (the chosen line died less often than the no-potion line within the horizon): {len(saving)}.\n")

@@ -1,0 +1,16 @@
+date: 2026-10-07 18:45
+Traceback (most recent call last):
+  File "/tmp/sts2-20261007-1838-close.py", line 47, in <module>
+    git('-c','core.whitespace=cr-at-eol','diff','--cached','--check')
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "common", line 22, in git
+    assert hashlib.sha256((arc/name).read_bytes()).hexdigest()==item['archive_sha256']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "common", line 18, in run
+    for cwd in [ROOT,LIVE]:
+            ^^^^^^^^^^^^^^^
+RuntimeError: ['git', '-c', 'core.whitespace=cr-at-eol', 'diff', '--cached', '--check']: exit 2: paper/materials/silent/20261007-1838-experience76/procs-preflight-refresh-active.txt:4: trailing whitespace.
++1967006 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/run.ts --engine codex --task silent-boss-calibration --character silent --cwd 
+paper/materials/silent/20261007-1838-experience76/procs-preflight-refresh-active.txt:24: trailing whitespace.
++autoplay                                   wJ:p2   yes    no    
+

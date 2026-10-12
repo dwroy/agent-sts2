@@ -1,0 +1,45 @@
+{
+  "finished_at": "2026-10-11T18:27:31.197747+08:00",
+  "commit": "b8cd47484f99da517faf6e873984512c5055cac0",
+  "tree": "6822c60c7008e8e6aff0639bfb64fd29e55802f1",
+  "merged_source": "a83d9ab675560a177249aa638e99df40bcfb5553",
+  "primary_suite_original_exit": 1,
+  "primary_other_tests_passed": 2694,
+  "isolated_checks": [
+    {
+      "name": "rollout-live-isolated",
+      "exit": 0,
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/rollout-live.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1"
+      ]
+    },
+    {
+      "name": "paths-isolated",
+      "exit": 0,
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/paths.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ]
+    }
+  ],
+  "tsc": 0,
+  "all_required_sandbox_paths_validated": true,
+  "gitleaks": 0,
+  "configuration_policy_preserved": true,
+  "refresh_files_not_modified_by_recovery": true
+}

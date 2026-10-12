@@ -1,0 +1,42 @@
+{
+  "ts": "2026-10-11T12:23:42.697Z",
+  "run_id": "64VJC5XT2AT2",
+  "label": "event/act-plan",
+  "options": {
+    "o0": "{\"option\":\"小提琴\",\"description\":\"在每个回合开始时，额外抽[blue]2[/blue]张牌。你在回合进行中不再能抽任何牌。\",\"lethal\":false}",
+    "o1": "{\"option\":\"原初之爪\",\"description\":\"失去[blue]9[/blue]点最大生命值，将[blue]3[/blue]张[purple]许愿[/purple]加入你的[gold]牌组[/gold]。\",\"lethal\":false,\"max_hp_cost\":9,\"hp_after\":\"88/96 (92% of max)\",\"route_effect\":\"HP 88/105 -> 88/96\"}",
+    "o2": "{\"option\":\"领主阳伞\",\"description\":\"当你遇见[gold]商人[/gold]时，立刻获得他所出售的[red]所有[/red]物品。\",\"lethal\":false}"
+  },
+  "answer": {
+    "choice": "o2",
+    "reason": "阳伞免费补强，走三火一店无精英，保血备战连王。",
+    "route": "r1c4 r2c4 r3c4 r4c4 r5c3 r6c3 r7c3 r8c3 r9c2 r10c1 r11c1 r12c2 r13c1 r14c3 r15c3",
+    "run_plan": {
+      "archetype": "Accelerated poison with dexterity, doubled block, and free Strikes",
+      "want": [
+        "ACCELERANT",
+        "FOOTWORK",
+        "BACKFLIP",
+        "PIERCING_WAIL",
+        "WELL_LAID_PLANS",
+        "ADRENALINE"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "ACCURACY",
+        "DEADLY_POISON"
+      ],
+      "remove": [
+        "DEFEND_SILENT"
+      ],
+      "block_target": 11,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Strip three Artifacts, establish accelerated poison and dexterity, and prepare burst block. Upgrade Scrawl and Shadowmeld; carry health and potions through consecutive bosses.",
+      "summary": "Use Parasol on the safe shop route. Preserve free Strikes; prioritize poison acceleration and defensive consistency. Replace Defends only after gaining better block. Heal when injured; otherwise upgrade Scrawl, Shadowmeld, or newly acquired scaling."
+    }
+  },
+  "accepted": true,
+  "limits": "仅冻结本题字段，未复原历史完整系统前缀；后来的牌资料不倒算为原题已收到。"
+}

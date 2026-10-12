@@ -1,0 +1,44 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "KSX97DF5H3NY"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "KSX97DF5H3NY",
+      "where": "agent/src/reflex/turn-solver.ts:2284",
+      "what": "随机施毒仍复用最高HP目标，母体预测44血而实际50；silent-0295旧bug、fix-queue-v4已有。",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0019",
+      "silent-0125",
+      "silent-0295",
+      "silent-0013",
+      "silent-0023",
+      "silent-0010",
+      "silent-0011",
+      "silent-0128"
+    ],
+    "repeats": [
+      "silent-0295"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-df4f5dbaaf0c7e51",
+    "silent-proposal-a16dab7fba23fade",
+    "silent-proposal-8a00f9885abb91af"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-054302-postmortem/report.md"
+}

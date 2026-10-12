@@ -1,0 +1,117 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-034302/agent
+
+ ❯ tests/silent-selection-execution.test.ts (8 tests | 8 failed) 12ms
+   × MTQ0 F11 separates the 14/6 HP forecasts from the discard and the next question 4ms
+   × KFR F12 stops the guarded forecast when the generated hand causes another question 1ms
+   × KFR F33 T6 uses the SL replacement, not the stale pre-SL journal 1ms
+   × MTQ0 F23 preserves the saturated SL comparison as predictions only 1ms
+   × missing and ambiguous state matches stay unknown, even when the board fingerprint repeats 1ms
+   × missing rankings and duplicate candidate text never turn into a false comparable best 1ms
+   × a gate rejection is not dispatched; a later SL attempt cannot continue the same forecast 1ms
+   × refuses mixed runs, characters, ascensions and duplicate decision ids without mutating inputs 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-selection-execution.test.ts > MTQ0 F11 separates the 14/6 HP forecasts from the discard and the next question
+TypeError: Cannot read properties of undefined (reading 'predictions')
+ ❯ tests/silent-selection-execution.test.ts:10:16
+      8|   const result = audit(0);
+      9|   const first = result.segments[0]!;
+     10|   expect(first.predictions.answer).toMatchObject({ key: "plan6", facts…
+       |                ^
+     11|   expect(first.predictions.final_candidate).toMatchObject({ key: "plan…
+     12|   expect(first.actions.map((row) => row.source_line)).toEqual([282138,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/silent-selection-execution.test.ts > KFR F12 stops the guarded forecast when the generated hand causes another question
+TypeError: Cannot read properties of undefined (reading 'predictions')
+ ❯ tests/silent-selection-execution.test.ts:23:16
+     21| it("KFR F12 stops the guarded forecast when the generated hand causes …
+     22|   const result = audit(2), first = result.segments[0]!;
+     23|   expect(first.predictions.answer?.facts).toMatchObject({ hp_lost: 12,…
+       |                ^
+     24|   expect(first.predictions.final_candidate?.facts).toMatchObject({ hp_…
+     25|   expect(first.actions).toHaveLength(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/silent-selection-execution.test.ts > KFR F33 T6 uses the SL replacement, not the stale pre-SL journal
+TypeError: Cannot read properties of undefined (reading 'predictions')
+ ❯ tests/silent-selection-execution.test.ts:34:18
+     32| it("KFR F33 T6 uses the SL replacement, not the stale pre-SL journal",…
+     33|   const changed = audit(3).segments.find((row) => row.source_line === …
+     34|   expect(changed.predictions.answer).toMatchObject({ key: "plan1", fac…
+       |                  ^
+     35|   expect(changed.predictions.final_candidate).toMatchObject({ key: "pl…
+     36|   expect(changed.predictions.original_rollout_best_chosen).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/silent-selection-execution.test.ts > MTQ0 F23 preserves the saturated SL comparison as predictions only
+TypeError: Cannot read properties of undefined (reading 'source_line')
+ ❯ tests/silent-selection-execution.test.ts:43:16
+     41| it("MTQ0 F23 preserves the saturated SL comparison as predictions only…
+     42|   const result = audit(1), first = result.segments[0]!;
+     43|   expect(first.source_line).toBe(282434);
+       |                ^
+     44|   expect(first.attempt).toBe(4);
+     45|   expect(first.predictions.answer?.facts).toMatchObject({ hp_lost: 0, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/silent-selection-execution.test.ts > missing and ambiguous state matches stay unknown, even when the board fingerprint repeats
+TypeError: Cannot read properties of undefined (reading 'actions')
+ ❯ tests/silent-selection-execution.test.ts:54:52
+     52|   const input = structuredClone(evidence[0]!);
+     53|   input.states.push(structuredClone(input.states[0]!));
+     54|   expect(auditSelectionExecution(input).segments[0]!.actions[0]).toMat…
+       |                                                    ^
+     55|   input.states = [];
+     56|   expect(auditSelectionExecution(input).segments[0]!.actions[0]).toMat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  tests/silent-selection-execution.test.ts > missing rankings and duplicate candidate text never turn into a false comparable best
+TypeError: Cannot read properties of undefined (reading 'predictions')
+ ❯ tests/silent-selection-execution.test.ts:63:63
+     61|   const criteria = input.decisions[0].questions.plan.criteria;
+     62|   criteria.copy = criteria.plan1;
+     63|   const ambiguous = auditSelectionExecution(input).segments[0]!.predic…
+       |                                                               ^
+     64|   expect(ambiguous.final_match).toBe("ambiguous_logged_text");
+     65|   expect(ambiguous.predicted_final_rollout_best).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  tests/silent-selection-execution.test.ts > a gate rejection is not dispatched; a later SL attempt cannot continue the same forecast
+TypeError: Cannot read properties of undefined (reading 'actions')
+ ❯ tests/silent-selection-execution.test.ts:78:16
+     76|   input.decisions[1].sl_attempt = 2;
+     77|   const first = auditSelectionExecution(input).segments[0]!;
+     78|   expect(first.actions[0]!.dispatch).toBe("rejected");
+       |                ^
+     79|   expect(first.actions).toHaveLength(1);
+     80|   expect(first.boundary.kind).toBe("turn_room_or_attempt_changed");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  tests/silent-selection-execution.test.ts > refuses mixed runs, characters, ascensions and duplicate decision ids without mutating inputs
+AssertionError: expected [Function] to throw an error
+ ❯ tests/silent-selection-execution.test.ts:95:50
+     93|   ]) {
+     94|     const input = structuredClone(original); modify(input);
+     95|     expect(() => auditSelectionExecution(input)).toThrow();
+       |                                                  ^
+     96|   }
+     97| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  03:51:03
+   Duration  577ms (transform 332ms, setup 340ms, import 68ms, tests 12ms, environment 0ms)
+

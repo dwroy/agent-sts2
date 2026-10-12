@@ -1,0 +1,128 @@
+已提交子弹时间模型修复：`a6ed582e8c26e1cc7d51fd21459d1c46481bfa10`。证据为 KV0JHNJCKXLS，F33 T1—T5，账本 silent-0246/0248/0249。
+
+撤源码后 5 例失败，恢复后 12 例通过；最终沙箱 tsc、Vitest 均通过，共 2598 例。工作树干净。
+
+**未合入 live**：预检发现 17 处记录冲突，按任务要求停止。未新增版本或登记 shipped。十项派发均已处置。
+
+交运维：[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-053105-strategy-proposal/proposal.md) · [完整回报及失败日志说明](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-053105-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "base": "5f84502c913aee7e8461da8022a874855c26e6dd",
+  "runs": [
+    "YF0LXT1QSTGG",
+    "XP2SL33HT0D9",
+    "751FN9QM9MHQ",
+    "KV0JHNJCKXLS",
+    "C48LLXBGKXQ9",
+    "KAY522KT5NXR",
+    "10GPK5XGHCK3",
+    "Z6CFLDR3N4SB",
+    "G403VCZ3BH1B",
+    "JLN5SK17W4FQ"
+  ],
+  "fixes": [
+    {
+      "id": "silent-0246",
+      "commit": "a6ed582e8c26e1cc7d51fd21459d1c46481bfa10",
+      "runs": ["KV0JHNJCKXLS"],
+      "ledger": ["silent-0246", "silent-0248", "silent-0249"],
+      "description": "静默A10普通子弹时间的本轮费用与封抽传播，尚未上线"
+    }
+  ],
+  "skipped": [
+    "silent-proposal-c59f592f1427a67e",
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-c1af3217fb055ad0",
+    "silent-proposal-e50a24aadfa84fe6",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0"
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 12},
+  "code_proposals": [
+    "silent-proposal-c59f592f1427a67e",
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-c1af3217fb055ad0",
+    "silent-proposal-e50a24aadfa84fe6",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-146a96e9f1d4a770",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-905b5ce2c69bc372"
+  ],
+  "implementation_domains": ["combat"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-c59f592f1427a67e",
+      "state": "waiting",
+      "reason": "缺未决弃牌真值、完整同抽序胜线和执行截断后的后续数据，不能从全败样本拟SL血价门槛。"
+    },
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "异鱼T2/T7/T13缺逐线确定弃牌结果及完整同抽序后续，不能将保守损血上界当实际血价。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "缺F13无药整战、留药到boss的实盘对照，以及F17逐候选确定弃牌数据；holdHp=null不能记为零价值。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "缺完整同抽序后续和确定弃牌数据；与另一提案同范围不能证明已有源码实现。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "缺无药/留药整战对照与逐线弃牌真值，已有机制事实不足以实现新的药水价值规则。"
+    },
+    {
+      "id": "silent-proposal-c1af3217fb055ad0",
+      "state": "waiting",
+      "reason": "源码a6ed582e8c26e1cc7d51fd21459d1c46481bfa10已验证，但17处记录冲突阻止合入，尚非live祖先，待运维兜底。"
+    },
+    {
+      "id": "silent-proposal-e50a24aadfa84fe6",
+      "state": "waiting",
+      "reason": "子弹时间共享本次源码a6ed582e8c26e1cc7d51fd21459d1c46481bfa10，尚未合入；懒惰与明耀已有实现，不能据此将整个提案登记implemented。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "缺去毒药后的完整同抽序胜线、敌回血逐轮毛净输出配对及SL截断后的真实后续，不能把当轮零损当保血收益。"
+    },
+    {
+      "id": "silent-proposal-146a96e9f1d4a770",
+      "state": "duplicate",
+      "commit": "d3d5c8b2c46f47facbb4bda6533b5d38f08b85e7",
+      "reason": "明耀源码为实际live祖先；本批KV0固定原帧验证即时加能及后三轮期限，不新增饮用门槛。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "SL摘要缺敌身份和阶段结构字段，同轮自爆缺口30/34/31缺受控排序后续，不能安全调整占位体血量及路径排序。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-053105-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11846-f9de-74a2-93a4-b17b8d608299
+轮数：1；工具调用：command_execution×110 file_change×14
+token：输入 290.0k、输出 64.7k（其中推理 29.9k）、cache 读 10678.8k、cache 写 0（命中 97.4%）
+成本：未提供
+耗时：2223.5 s（墙钟）
+时间：首个事件 3.5 s、模型首个输出 8.8 s、首次工具 12.0 s、末次工具结束 2166.1 s；工具内共 1597.3 s，其余（模型生成、推理、网络）622.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×71；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T05-31-07-01a11846-f9de-74a2-93a4-b17b8d608299.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-053105-strategy-proposal.jsonl

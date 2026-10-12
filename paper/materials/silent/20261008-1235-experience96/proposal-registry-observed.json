@@ -1,0 +1,191 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-35919516f2457a9f",
+    "ts": "2026-10-08T12:18:46+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0292",
+      "silent-0290"
+    ],
+    "runs": [
+      "LRN0HPZ0FZS1",
+      "JMH5C51RLN4E",
+      "9R916WW0V65N"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl"
+    ],
+    "summary": "旧/新行为：当前模型只在子弹时间建立方案内禁抽，普通专注本轮新建封锁未传播。先核已实现源码，未覆盖时只按普通专注已观察模板，处理自身抽牌后建立禁抽，后继抽牌/棋子加抽不兑现，其他合法效果保留；下一轮清除。升级/重放/其他取牌未知，SL仍守真正必死边界。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-trance.md",
+    "experience": [
+      "silent-battle-trance-draw-lock"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "755b79f7a23221d28dc0a0f74b97014d4e64f5bcdbcc5c4bf839a49160764782",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-3ee015a5b3aa4ae8",
+    "ts": "2026-10-08T12:19:13+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0085",
+      "silent-0005",
+      "silent-0069",
+      "silent-0012",
+      "silent-0291"
+    ],
+    "runs": [
+      "9R916WW0V65N"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "旧/新行为：当前combat-plan攻击遗物入口及turn-solver攻击计数没有苦无新增敏捷；只核实普通第三/第六攻击触发，向后继牌挡/跨轮传敏，当前已有挡不倒补。已有敏捷算对不等本轮触发已覆盖。不得把不同方案24/26/31挡差全归于苦无。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-kunai.md",
+    "experience": [
+      "silent-kunai-attack-count-dexterity",
+      "silent-footwork-block",
+      "silent-frail-card-block",
+      "silent-strength-weak-observation"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "b022608a2cd4d15431991857cb3535ba3de3109343ef41c3c544da0c6c0c77b3",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-9e5d50fdd7bf1fbd",
+    "ts": "2026-10-08T12:19:13+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0228",
+      "silent-0020",
+      "silent-0019",
+      "silent-0021",
+      "silent-0243",
+      "silent-0259",
+      "silent-0276"
+    ],
+    "runs": [
+      "9R916WW0V65N",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "ZVYUL2YP3518",
+      "TDLBRNA0R05B",
+      "TXZ6RVMQA09D",
+      "XTSV1U9JD34T",
+      "PD9AYQVMLQW6"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "summary": "旧/新行为：保留已有连续Boss联合模型，核实际HP/药水/复活可观测状态与战斗增益清空。缺复活充能明确未知。当前留药/终局权重/路线评分保持；只先完善审计及固定两战配对验证，证据足够时独立提出参数候选，否则waiting，不因8局全败拟合阈值。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-resources.md",
+    "experience": [
+      "silent-double-boss-resource-handoff",
+      "silent-rest-buffer-observation",
+      "silent-route-hp-observation",
+      "silent-deck-burst-observation",
+      "silent-act-transition-missing-hp-heal",
+      "silent-regen-potion-decay-heal",
+      "silent-dexterity-potion-card-block"
+    ],
+    "rule_changes": false,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "b9f51c867eb26ec7a5cda61c3104ca8692673077bbfd24539a1ed634ada62057",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-20b9df170d51b280",
+    "ts": "2026-10-08T12:19:13+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0023",
+      "silent-0094",
+      "silent-0054",
+      "silent-0173",
+      "silent-0028",
+      "silent-0069",
+      "silent-0079"
+    ],
+    "runs": [
+      "9R916WW0V65N"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl"
+    ],
+    "summary": "旧/新行为：独立核余像逐牌、滚石轮初、精准小刀、冰晶一次收益、实验体技能激怒/换阶段和女王减益/魂缚。只补当前源码缺少的已观察传播，不固定杀序。实验体首两试截断、末试胜且后续手牌/出牌同变，不能声称哪项单因转胜；女王没有赢次，不归失败于运气或尚未做过的替代线。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-mechanisms.md",
+    "experience": [
+      "silent-afterimage-per-card-block",
+      "silent-rolling-boulder-start-growth",
+      "silent-accuracy-shiv-scaling",
+      "silent-permafrost-first-power-block",
+      "silent-test-subject-phase-reset",
+      "silent-queen-poison-main-target",
+      "silent-queen-poison-window-sl-observation"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "b9ee24a27c6c049c6e4ed550fddfbe09e4a13e5270c626eb1dda196b203f6c2f",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-91cc7fd647077569",
+    "ts": "2026-10-08T12:21:47+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0023",
+      "silent-0094",
+      "silent-0054",
+      "silent-0173",
+      "silent-0028",
+      "silent-0069",
+      "silent-0079"
+    ],
+    "runs": [
+      "9R916WW0V65N"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl"
+    ],
+    "summary": "更正实验体尝试数字的证据范围：13支持局55试5赢，真正重打12场54试4赢；不混用全角色该Boss其他局数字。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-mechanisms-denominator-correction.md",
+    "experience": [
+      "silent-afterimage-per-card-block",
+      "silent-rolling-boulder-start-growth",
+      "silent-accuracy-shiv-scaling",
+      "silent-permafrost-first-power-block",
+      "silent-test-subject-phase-reset",
+      "silent-queen-poison-main-target",
+      "silent-queen-poison-window-sl-observation"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "ff4643d2d2b04a8583be8e691cf439f4074b9563137e13cd955416869a430cf2",
+    "state": "pending"
+  }
+]

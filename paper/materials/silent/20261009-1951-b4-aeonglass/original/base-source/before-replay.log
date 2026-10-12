@@ -1,0 +1,18 @@
+node:fs:440
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open '../game-data.json'
+    at readFileSync (node:fs:440:20)
+    at main (/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/base-source/agent/tools/boss-sim/backtest-runner.ts:156:47)
+    at <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/base-source/agent/tools/boss-sim/backtest-runner.ts:276:7)
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/learner/runs/20261009-180732-boss-sim-batch/base-source/agent/tools/boss-sim/backtest.ts:4:1) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '../game-data.json'
+}
+
+Node.js v22.23.3

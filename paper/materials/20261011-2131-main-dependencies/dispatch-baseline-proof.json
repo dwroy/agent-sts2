@@ -1,0 +1,27 @@
+{
+  "original_main": "0e76d455430782373f85d4bbbeda17cedbfc7209",
+  "candidate_unchanged_inputs": [
+    {
+      "path": "ops/learner_jobs.py",
+      "unchanged_from_original_main": true,
+      "sha256": "bc9117d4452b10e7c3ff597401b67a99fee3f3fbe90c3293ccd2dc60a2e02367"
+    },
+    {
+      "path": "ops/tests/test_silent_calibration_dispatch.py",
+      "unchanged_from_original_main": true,
+      "sha256": "70e9f387630ea5093c47abb526f6505ee0f1c179b80421fd78b92c47d18c6876"
+    }
+  ],
+  "baseline_single_failed_test_exit": 1,
+  "candidate_result": {
+    "files": 1,
+    "tests": 44,
+    "failed": 18,
+    "passed": 26
+  },
+  "cause_evidence": "fixture patches available_worktree but does not create required feature worktree path; existing requested_feature guard requires path existence",
+  "not_introduced_by_integration": true,
+  "production_guards_not_changed": true,
+  "test_assertions_not_changed": true,
+  "followup": "existing infrastructure fix queue; do not call current parent fully accepted"
+}

@@ -1,0 +1,18 @@
+{
+  "previous_artifact": "43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951",
+  "previous_model_sha256": "14f9521c1ec36428c32e698019ade6a603e5ebf7d05c5a3e32c8a04deed5792b",
+  "current_model_sha256": "518b96b2fd2738b867141e661aadb6a8e71b33d9e15562854082cf4258df0c8d",
+  "changed_paths": [
+    "agent/src/brain/engines/codex-cache.ts",
+    "agent/src/brain/engines/codex.ts",
+    "knowledge/characters/silent/experience.json"
+  ],
+  "reused_fights": 241,
+  "new_replayed_fights": 20,
+  "identical_old_inputs_and_order": true,
+  "identical_old_turns": true,
+  "checked_replays_except_ms": 5,
+  "reason": "Only Codex engine/cache and experience text changed. Backtest board captures solver input/result before fightLessons/jevExperience; boss simulator reads neither brain engine nor experience text. All numerical code, common/role model data, game-data and historical inputs/seed indices are byte-identical. Reuse immutable original results and replay all 20 new keys with original full-dataset indices.",
+  "initial_replay_exit": 130,
+  "initial_replay_preserved": "learner/runs/20261008-204304-silent-boss-calibration/87b5027faca4d5ee634cd28a6eeedd9eab4e85ad90f0d108a9a1c5b319aea52e/results/results-0.jsonl"
+}

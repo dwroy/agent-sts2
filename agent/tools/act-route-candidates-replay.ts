@@ -1,5 +1,5 @@
 /**
- * The act-start route questions' candidate_routes (Dai 2026-10-04) on the logged questions: every event/act-plan and
+ * The act-start route questions' candidate_routes (Roy 2026-10-04) on the logged questions: every event/act-plan and
  * map/route-plan in logs/brain.jsonl (from 09-30), rebuilt from exactly what the model saw (state.act_route /
  * state.route_map: the map lines, next_nodes, Winged Boots, the room-cost line with its rest relics and boss-start
  * heal, HP), then candidate_routes computed by the live code (strategy/route-map.ts candidateRoutesFacts). No model is

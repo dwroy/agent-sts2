@@ -1,0 +1,43 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "NEWRFAYKTQHR"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "NEWRFAYKTQHR",
+      "where": "agent/src/sl/judge.ts:1333",
+      "what": "SL判官分别比较历石与毒伤，未合计已知攻击前伤害上界，F28前两次T7提前判死读档",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0287",
+      "silent-0288"
+    ],
+    "updated": [
+      "silent-0079",
+      "silent-0020",
+      "silent-0167",
+      "silent-0168",
+      "silent-0010",
+      "silent-0135",
+      "silent-0133"
+    ],
+    "repeats": [
+      "silent-0079"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-767c8776e042972a",
+    "silent-proposal-aff5ac3bb7cdb81b"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-104302-postmortem/report.md"
+}

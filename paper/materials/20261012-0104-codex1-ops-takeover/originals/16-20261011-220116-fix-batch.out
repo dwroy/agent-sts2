@@ -1,0 +1,46 @@
+验收 rejected：T1 绝对胜率差由 0.001 增至 0.002，违反不得变差的门槛。2830 项测试和隔离检查通过；候选与完整数据已留档，未合入 live、未建版本。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "2b95b45a0485fd14c472a8fc5e0e8bb25c95d689",
+  "fixes": [
+    {
+      "item": "Roy 已授权独立功能：silent/KNOWLEDGE_DEMON B4 校正",
+      "commit": "59287af1c7d76a648172d409c8e00bdb861cb67e",
+      "test": "learner/runs/20261011-220122-boss-sim-batch/sandbox-precommit-v2.log；fixture-v2-withdraw-red.log；fixture-v2-restored-green.log；acceptance.json（原验收rc=1）",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2830
+  },
+  "boss_sim": {
+    "evidence_key": "63af0e6b7580fd604ff3db0a81f7d54b20ff529b6697278dd8ef38b797e221c4",
+    "outcome": "rejected",
+    "acceptance": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/learner/runs/20261011-220122-boss-sim-batch/acceptance.json",
+    "ledger_ids": ["silent-0413"]
+  },
+  "version": "",
+  "reports": [
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/paper/materials/silent/boss-sim-b4-KNOWLEDGE_DEMON-20261011-220116.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/learner/runs/20261011-220122-boss-sim-batch/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/learner/runs/20261011-220122-boss-sim-batch/report.json"
+  ]
+}
+```
+
+== 学习者 codex / boss-sim-batch ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12b44-b04a-72b0-9d1c-5bfa5cc14d18
+轮数：1；工具调用：command_execution×260 file_change×5
+token：输入 345.0k、输出 155.4k（其中推理 107.3k）、cache 读 39231.9k、cache 写 0（命中 99.1%）
+成本：未提供
+耗时：11002.7 s（墙钟）
+时间：首个事件 9.0 s、模型首个输出 14.9 s、首次工具 18.5 s、末次工具结束 10846.1 s；工具内共 21471.0 s，其余（模型生成、推理、网络）-10477.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116）；模型的工具调用 exec×111 wait×81；/home/dw/.codex-sts2/sessions/2026/10/11/rollout-2026-10-11T22-01-24-01a12b44-b04a-72b0-9d1c-5bfa5cc14d18.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-220116/learner/runs/20261011-220122-boss-sim-batch.jsonl

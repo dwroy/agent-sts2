@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：3DSZM9BL9B0B（A10，第17层，瀑布巨兽自爆：T13以16血17挡面对50伤害阵亡）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：运行源码SHA、推理全文、部分结算及SL退出帧、完整实际最优线比例、替线／留药对照、boss时钟比值及F16有效模拟胜率、纯操作用时、Jev缓存和真实费用。
+- 学习账本：新增无；更新 silent-0017、silent-0011、silent-0277、silent-0020、silent-0071、silent-0046，均为支持证据，老错重犯无；`ledger.py check`退出码0。
+- 代码提案：`silent-proposal-0a29911cf8e02b44`关联F17终局／药水证据及账本0017／0277／0071／0046；`silent-proposal-8d3dec722d30135b`关联F17 T5毒雾后继及账本0011。均关联独立strategy-proposal；缺受控完整胜线，保留现行行为，未实现或上线。
+
+```json
+{"task":"postmortem","appended":["3DSZM9BL9B0B"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0017","silent-0011","silent-0277","silent-0020","silent-0071","silent-0046"],"repeats":[],"check":0},"code_proposals":["silent-proposal-0a29911cf8e02b44","silent-proposal-8d3dec722d30135b"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261012-212420-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a13049-2904-7d22-b29f-5022de8316ed
+轮数：1；工具调用：command_execution×39
+token：输入 198.1k、输出 31.0k（其中推理 6550）、cache 读 3865.3k、cache 写 0（命中 95.1%）
+成本：未提供
+耗时：1102.5 s（墙钟）
+时间：首个事件 16.0 s、模型首个输出 22.2 s、首次工具 25.1 s、末次工具结束 1083.4 s；工具内共 114.2 s，其余（模型生成、推理、网络）972.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×30；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T21-24-23-01a13049-2904-7d22-b29f-5022de8316ed.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261012-212420-postmortem.jsonl

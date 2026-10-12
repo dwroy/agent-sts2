@@ -38,7 +38,7 @@ function measures(win: number, over: Partial<ThiefCardMeasures> = {}): ThiefCard
 }
 
 describe("THIEF_COST: a card's HP from the paired numbers (cardHpOf)", () => {
-  it("the win rate (Dai's conversion): Δwin ÷ Δwin per HP of entry HP", () => {
+  it("the win rate (Roy's conversion): Δwin ÷ Δwin per HP of entry HP", () => {
     // 46% -> 38% without it, 10 HP less -> 39%: 0.08 / 0.007 = 11.4 HP.
     const m = measures(0.46, { win: { with: 0.46, without: 0.38, lower: 0.39 }, cardDiff: { value: 0.08, se: 0.014 }, perHp: { value: 0.007, se: 0.0012 } });
     expect(cardHpOf(m)).toEqual({ route: "win", ratio: 11.4, hp: 11.4, status: "ok", why: null });

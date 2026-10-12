@@ -1,0 +1,840 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index 0c89540f5..3d357c33f 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -830,6 +830,13 @@ export function isStrikeCard(card: Pick<CardModel, "cardId">): boolean {
+   return /STRIKE/.test(card.cardId) && !card.cardId.startsWith("GEN:");
+ }
+ 
++/** U1QYLX1AE1WX A10 F46 T4, silent-0394/0396: only the actually played custom template. */
++function observedSilentSapping(card: Record<string, unknown>, character: string, ascension: number | null): boolean {
++  return character.toLowerCase() === "silent" && ascension === 10 && str(card["card_id"]) === "MAD_SCIENCE" &&
++    !bool(card["upgraded"]) && dyn(card, "Damage") === 12 && dyn(card, "SappingWeak") === 2 && dyn(card, "SappingVulnerable") === 2 &&
++    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "造成12点伤害。给予2层虚弱。给予2层易伤。";
++}
++
+ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = "", ascension: number | null = null): CardModel {
+   const card = asRecord(entry);
+   const cardId = str(card["card_id"]);
+@@ -845,17 +852,20 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+   const madExpertise = character.toLowerCase() === "silent" && cardId === "MAD_SCIENCE" && !bool(card["upgraded"]) &&
+     dyn(card, "ExpertiseStrength") === 2 && dyn(card, "ExpertiseDexterity") === 2 &&
+     str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得2点力量。获得2点敏捷。";
+-  const type = madExpertise ? "Power" : info?.type || "";
++  // U1QYLX1AE1WX A10 F46 T4, silent-0394/0396: the observed Sapping attack used no Block.
++  // Its unplayed Music Box copy and other custom templates remain outside this evidence boundary.
++  const madSapping = observedSilentSapping(card, character, ascension) && str(card["target_type"]) === "AnyEnemy" && requiresTarget;
++  const type = madExpertise ? "Power" : madSapping ? "Attack" : info?.type || "";
+   const target = targetMode(str(card["target_type"]), template, requiresTarget);
+ 
+   let damage = madExpertise ? null : dyn(card, "CalculatedDamage") ?? dyn(card, "Damage");
+   let hits = dyn(card, "CalculatedHits") ?? dyn(card, "Repeat") ?? 1;
+   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(template)) hits = 2;
+-  const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
++  const block = madExpertise || madSapping ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
+   const mirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
+     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && dyn(card, "CalculationExtra") === 1;
+-  let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+-  let weak = dyn(card, "WeakPower") ?? 0;
++  let vulnerable = madSapping ? dyn(card, "SappingVulnerable")! : dyn(card, "VulnerablePower") ?? 0;
++  let weak = madSapping ? dyn(card, "SappingWeak")! : dyn(card, "WeakPower") ?? 0;
+   let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
+   let tempStrength = 0;
+   let strengthPerVulnerable = 0;
+@@ -1081,7 +1091,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+       dynBase(card, "Block", true) === 6 && template.replace(/\s+/g, "") === "获得{Block:diff()}点格挡。在下个回合，获得{Block:diff()}点格挡。"
+       ? { dodgeRollNextBlock: true } : {}),
+     ...(mirage ? { blockFromPoison: true } : {}),
+-    ...(!madExpertise && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
++    ...(!madExpertise && !madSapping && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
+     vulnerable,
+     weak,
+     ...(weakFirst ? { weakFirst } : {}),
+@@ -1235,7 +1245,10 @@ export function offHandCardModel(own: Record<string, unknown> | null, cardId: st
+     energy_cost: info?.cost ?? 0,
+     costs_x: info?.xCost ?? false,
+   };
+-  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character, ascension);
++  // The same observed deck entry has card_type=Attack but no target fields. Preserve its learned
++  // single-enemy template even when the id-level catalog describes a different custom card.
++  const target = own && str(own["card_type"]) === "Attack" && observedSilentSapping(own, character, ascension) ? "AnyEnemy" : info?.target ?? "";
++  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: target, requires_target: target === "AnyEnemy", playable: true, index }, index, knowledge, character, ascension);
+   const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
+   // The deck's (the game data's) cost, with a relic's change on Powers (pilePowerExtraCost); a line's own cost has it.
+   const relicCost = cost === null ? withPowerExtraCost(model, powerExtraCost) : model;
+diff --git a/agent/tests/silent-sapping-card.json b/agent/tests/silent-sapping-card.json
+new file mode 100644
+index 000000000..1dd65d2e7
+--- /dev/null
++++ b/agent/tests/silent-sapping-card.json
+@@ -0,0 +1,667 @@
++{
++  "source": {
++    "run": "U1QYLX1AE1WX",
++    "character": "SILENT",
++    "ascension": 10,
++    "floor": 46,
++    "turn": 4,
++    "ledger": [
++      "silent-0394",
++      "silent-0396"
++    ],
++    "frames": [
++      {
++        "off": 11060836545,
++        "sha256": "0b0848ec48cc51d17cca94291526ca64c19cea29f72b4fab948725b80319ed82"
++      },
++      {
++        "off": 11060888280,
++        "sha256": "fdb9f298d8d25c9301387acf10ce46097a950422aa6907698eaf9f3202ba5ef6"
++      },
++      {
++        "off": 11060939927,
++        "sha256": "e5c520ec86f9dc1cd4f630e630a47673a13eb500c6ef0f2719fef7978edc5a43"
++      },
++      {
++        "off": 11060990052,
++        "sha256": "87b6ec8a12b1aea25df45cf95e7e486dc9e6a4b47a0105f5dbc55e7362f309b3"
++      },
++      {
++        "off": 11061039270,
++        "sha256": "a8cbce7d8b2d948b4bb2e3012012de8e14518e0fe95ba4614399ae57f4f4dd1e"
++      },
++      {
++        "off": 11061089317,
++        "sha256": "bcc509c4c92a8e195849d4fbc9819d5d19ae25155996bbc42f8d65eef48c6b96"
++      }
++    ]
++  },
++  "card": {
++    "index": 6,
++    "card_id": "MAD_SCIENCE",
++    "name": "疯狂科学",
++    "upgraded": false,
++    "target_type": "AnyEnemy",
++    "requires_target": true,
++    "target_index_space": "enemies",
++    "valid_target_indices": [
++      0
++    ],
++    "costs_x": false,
++    "star_costs_x": false,
++    "energy_cost": 1,
++    "star_cost": 0,
++    "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
++    "resolved_rules_text": "造成12点伤害。 给予2层虚弱。 给予2层易伤。",
++    "dynamic_values": [
++      {
++        "name": "Block",
++        "base_value": 8,
++        "current_value": 11,
++        "enchanted_value": 8,
++        "is_modified": true,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ChokingDamage",
++        "base_value": 6,
++        "current_value": 6,
++        "enchanted_value": 6,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "CuriousReduction",
++        "base_value": 1,
++        "current_value": 1,
++        "enchanted_value": 1,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "Damage",
++        "base_value": 12,
++        "current_value": 12,
++        "enchanted_value": 12,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "EnergizedEnergy",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ExpertiseDexterity",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ExpertiseStrength",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "SappingVulnerable",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "SappingWeak",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ViolenceHits",
++        "base_value": 3,
++        "current_value": 3,
++        "enchanted_value": 3,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "WisdomCards",
++        "base_value": 3,
++        "current_value": 3,
++        "enchanted_value": 3,
++        "is_modified": false,
++        "was_just_upgraded": false
++      }
++    ],
++    "playable": true,
++    "can_play_result": true,
++    "unplayable_reason": null,
++    "unplayable_reason_raw": null,
++    "unplayable_preventer_id": null,
++    "unplayable_preventer_type": null
++  },
++  "defends": [
++    {
++      "index": 3,
++      "card_id": "DEFEND_SILENT",
++      "name": "防御",
++      "upgraded": false,
++      "target_type": "Self",
++      "requires_target": false,
++      "target_index_space": null,
++      "valid_target_indices": [],
++      "costs_x": false,
++      "star_costs_x": false,
++      "energy_cost": 1,
++      "star_cost": 0,
++      "rules_text": "获得{Block:diff()}点格挡。",
++      "resolved_rules_text": "获得8点格挡。",
++      "dynamic_values": [
++        {
++          "name": "Block",
++          "base_value": 5,
++          "current_value": 8,
++          "enchanted_value": 5,
++          "is_modified": true,
++          "was_just_upgraded": false
++        }
++      ],
++      "playable": true,
++      "can_play_result": true,
++      "unplayable_reason": null,
++      "unplayable_reason_raw": null,
++      "unplayable_preventer_id": null,
++      "unplayable_preventer_type": null
++    },
++    {
++      "index": 4,
++      "card_id": "DEFEND_SILENT",
++      "name": "防御",
++      "upgraded": false,
++      "target_type": "Self",
++      "requires_target": false,
++      "target_index_space": null,
++      "valid_target_indices": [],
++      "costs_x": false,
++      "star_costs_x": false,
++      "energy_cost": 1,
++      "star_cost": 0,
++      "rules_text": "获得{Block:diff()}点格挡。",
++      "resolved_rules_text": "获得8点格挡。",
++      "dynamic_values": [
++        {
++          "name": "Block",
++          "base_value": 5,
++          "current_value": 8,
++          "enchanted_value": 5,
++          "is_modified": true,
++          "was_just_upgraded": false
++        }
++      ],
++      "playable": true,
++      "can_play_result": true,
++      "unplayable_reason": null,
++      "unplayable_reason_raw": null,
++      "unplayable_preventer_id": null,
++      "unplayable_preventer_type": null
++    },
++    {
++      "index": 5,
++      "card_id": "DEFEND_SILENT",
++      "name": "防御",
++      "upgraded": false,
++      "target_type": "Self",
++      "requires_target": false,
++      "target_index_space": null,
++      "valid_target_indices": [],
++      "costs_x": false,
++      "star_costs_x": false,
++      "energy_cost": 1,
++      "star_cost": 0,
++      "rules_text": "获得{Block:diff()}点格挡。",
++      "resolved_rules_text": "获得8点格挡。",
++      "dynamic_values": [
++        {
++          "name": "Block",
++          "base_value": 5,
++          "current_value": 8,
++          "enchanted_value": 5,
++          "is_modified": true,
++          "was_just_upgraded": false
++        }
++      ],
++      "playable": true,
++      "can_play_result": true,
++      "unplayable_reason": null,
++      "unplayable_reason_raw": null,
++      "unplayable_preventer_id": null,
++      "unplayable_preventer_type": null
++    }
++  ],
++  "player": {
++    "current_hp": 27,
++    "max_hp": 90,
++    "block": 0,
++    "energy": 3,
++    "stars": 0,
++    "focus": 0,
++    "powers": [
++      {
++        "index": 0,
++        "power_id": "PLATING_POWER",
++        "name": "覆甲",
++        "amount": 1,
++        "is_debuff": false
++      },
++      {
++        "index": 1,
++        "power_id": "NOXIOUS_FUMES_POWER",
++        "name": "毒雾",
++        "amount": 3,
++        "is_debuff": false
++      },
++      {
++        "index": 2,
++        "power_id": "THORNS_POWER",
++        "name": "荆棘",
++        "amount": 3,
++        "is_debuff": false
++      },
++      {
++        "index": 3,
++        "power_id": "DEXTERITY_POWER",
++        "name": "敏捷",
++        "amount": 3,
++        "is_debuff": false
++      }
++    ],
++    "base_orb_slots": 0,
++    "orb_capacity": 0,
++    "empty_orb_slots": 0,
++    "orbs": [],
++    "pets": [],
++    "pet_missing": false,
++    "cards_played_this_turn": 1,
++    "attacks_played_this_turn": 0,
++    "skills_played_this_turn": 0
++  },
++  "enemy": {
++    "index": 0,
++    "enemy_id": "MECHA_KNIGHT",
++    "name": "机甲骑士",
++    "current_hp": 232,
++    "max_hp": 320,
++    "base_max_hp": 320,
++    "block": 15,
++    "is_alive": true,
++    "is_hittable": true,
++    "powers": [
++      {
++        "index": 0,
++        "power_id": "WEAK_POWER",
++        "name": "虚弱",
++        "amount": 3,
++        "is_debuff": true
++      },
++      {
++        "index": 1,
++        "power_id": "POISON_POWER",
++        "name": "中毒",
++        "amount": 7,
++        "is_debuff": true
++      },
++      {
++        "index": 2,
++        "power_id": "STRENGTH_POWER",
++        "name": "力量",
++        "amount": 5,
++        "is_debuff": false
++      }
++    ],
++    "intent": "HEAVY_CLEAVE_MOVE",
++    "move_id": "HEAVY_CLEAVE_MOVE",
++    "intents": [
++      {
++        "index": 0,
++        "intent_type": "Attack",
++        "label": "33",
++        "damage": 33,
++        "hits": 1,
++        "total_damage": 33,
++        "status_card_count": null
++      }
++    ]
++  },
++  "after": {
++    "player": {
++      "current_hp": 27,
++      "max_hp": 90,
++      "block": 16,
++      "energy": 0,
++      "stars": 0,
++      "focus": 0,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "PLATING_POWER",
++          "name": "覆甲",
++          "amount": 1,
++          "is_debuff": false
++        },
++        {
++          "index": 1,
++          "power_id": "NOXIOUS_FUMES_POWER",
++          "name": "毒雾",
++          "amount": 3,
++          "is_debuff": false
++        },
++        {
++          "index": 2,
++          "power_id": "THORNS_POWER",
++          "name": "荆棘",
++          "amount": 3,
++          "is_debuff": false
++        },
++        {
++          "index": 3,
++          "power_id": "DEXTERITY_POWER",
++          "name": "敏捷",
++          "amount": 3,
++          "is_debuff": false
++        }
++      ],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 4,
++      "attacks_played_this_turn": 1,
++      "skills_played_this_turn": 2
++    },
++    "enemy": {
++      "index": 0,
++      "enemy_id": "MECHA_KNIGHT",
++      "name": "机甲骑士",
++      "current_hp": 232,
++      "max_hp": 320,
++      "base_max_hp": 320,
++      "block": 3,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "WEAK_POWER",
++          "name": "虚弱",
++          "amount": 5,
++          "is_debuff": true
++        },
++        {
++          "index": 1,
++          "power_id": "POISON_POWER",
++          "name": "中毒",
++          "amount": 7,
++          "is_debuff": true
++        },
++        {
++          "index": 2,
++          "power_id": "STRENGTH_POWER",
++          "name": "力量",
++          "amount": 5,
++          "is_debuff": false
++        },
++        {
++          "index": 3,
++          "power_id": "VULNERABLE_POWER",
++          "name": "易伤",
++          "amount": 2,
++          "is_debuff": true
++        }
++      ],
++      "intent": "HEAVY_CLEAVE_MOVE",
++      "move_id": "HEAVY_CLEAVE_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Attack",
++          "label": "33",
++          "damage": 33,
++          "hits": 1,
++          "total_damage": 33,
++          "status_card_count": null
++        }
++      ]
++    },
++    "nextHp": 11
++  },
++  "unplayedCopy": {
++    "index": 5,
++    "card_id": "MAD_SCIENCE",
++    "name": "疯狂科学",
++    "upgraded": false,
++    "target_type": "AnyEnemy",
++    "requires_target": true,
++    "target_index_space": "enemies",
++    "valid_target_indices": [
++      0
++    ],
++    "costs_x": false,
++    "star_costs_x": false,
++    "energy_cost": 1,
++    "star_cost": 0,
++    "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
++    "resolved_rules_text": "虚无。 造成12点伤害。 给予2层虚弱。 给予2层易伤。",
++    "dynamic_values": [
++      {
++        "name": "Block",
++        "base_value": 8,
++        "current_value": 11,
++        "enchanted_value": 8,
++        "is_modified": true,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ChokingDamage",
++        "base_value": 6,
++        "current_value": 6,
++        "enchanted_value": 6,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "CuriousReduction",
++        "base_value": 1,
++        "current_value": 1,
++        "enchanted_value": 1,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "Damage",
++        "base_value": 12,
++        "current_value": 12,
++        "enchanted_value": 12,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "EnergizedEnergy",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ExpertiseDexterity",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ExpertiseStrength",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "SappingVulnerable",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "SappingWeak",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ViolenceHits",
++        "base_value": 3,
++        "current_value": 3,
++        "enchanted_value": 3,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "WisdomCards",
++        "base_value": 3,
++        "current_value": 3,
++        "enchanted_value": 3,
++        "is_modified": false,
++        "was_just_upgraded": false
++      }
++    ],
++    "playable": false,
++    "can_play_result": false,
++    "unplayable_reason": "not_enough_energy",
++    "unplayable_reason_raw": "EnergyCostTooHigh",
++    "unplayable_preventer_id": null,
++    "unplayable_preventer_type": null
++  },
++  "deckCard": {
++    "index": 29,
++    "card_id": "MAD_SCIENCE",
++    "name": "疯狂科学",
++    "upgraded": false,
++    "card_type": "Attack",
++    "rarity": "Event",
++    "costs_x": false,
++    "star_costs_x": false,
++    "energy_cost": 1,
++    "star_cost": 0,
++    "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
++    "resolved_rules_text": "造成12点伤害。 给予2层虚弱。 给予2层易伤。",
++    "dynamic_values": [
++      {
++        "name": "Block",
++        "base_value": 8,
++        "current_value": 8,
++        "enchanted_value": 8,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ChokingDamage",
++        "base_value": 6,
++        "current_value": 6,
++        "enchanted_value": 6,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "CuriousReduction",
++        "base_value": 1,
++        "current_value": 1,
++        "enchanted_value": 1,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "Damage",
++        "base_value": 12,
++        "current_value": 12,
++        "enchanted_value": 12,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "EnergizedEnergy",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ExpertiseDexterity",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ExpertiseStrength",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "SappingVulnerable",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "SappingWeak",
++        "base_value": 2,
++        "current_value": 2,
++        "enchanted_value": 2,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "ViolenceHits",
++        "base_value": 3,
++        "current_value": 3,
++        "enchanted_value": 3,
++        "is_modified": false,
++        "was_just_upgraded": false
++      },
++      {
++        "name": "WisdomCards",
++        "base_value": 3,
++        "current_value": 3,
++        "enchanted_value": 3,
++        "is_modified": false,
++        "was_just_upgraded": false
++      }
++    ]
++  }
++}
+diff --git a/agent/tests/silent-sapping.test.ts b/agent/tests/silent-sapping.test.ts
+new file mode 100644
+index 000000000..f76c4a9d6
+--- /dev/null
++++ b/agent/tests/silent-sapping.test.ts
+@@ -0,0 +1,97 @@
++/** U1QYLX1AE1WX SILENT A10 F46 T4, silent-0394/0396: fixed raw-card and turn projections. */
++import { readFileSync } from "node:fs";
++import { resolve } from "node:path";
++import { afterEach, expect, it, vi } from "vitest";
++import { loadConfig } from "../src/core/config.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { buildRunBrief } from "../src/memory/run-brief.js";
++import { createScreenMemory } from "../src/memory/types.js";
++import { modelHandCard } from "../src/reflex/card-model.js";
++import { deckDrawPool, pileEntries, planCombatTurn } from "../src/reflex/combat-plan.js";
++import { deckModels, rolloutLiveOptions } from "../src/reflex/rollout-live.js";
++import { replaySteps, solveTap, type SolverInput } from "../src/reflex/turn-solver.js";
++import { board } from "./boss-sim-fixture.js";
++import { combatPayload } from "./scenarios.js";
++
++vi.hoisted(() => vi.resetModules());
++// No generated knowledge or live data may affect this fixed regression.
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed Sapping evidence only"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++vi.mock("../src/reflex/potion-cost.js", async (original) => ({
++  ...await original<typeof import("../src/reflex/potion-cost.js")>(), potionCosts: () => new Map(),
++}));
++
++const fixture = JSON.parse(readFileSync(new URL("./silent-sapping-card.json", import.meta.url), "utf8"));
++// A generic id-level type cannot identify which custom template was created.
++const knowledge = makeKnowledge({ cards: [{ id: "MAD_SCIENCE", type: "Power" }, { id: "DEFEND_SILENT", type: "Skill" }] }, "cache");
++const science = () => modelHandCard(fixture.card, 6, knowledge, "SILENT", 10);
++const originalRollout = rolloutLiveOptions.enabled;
++afterEach(() => { solveTap.onSolve = null; rolloutLiveOptions.enabled = originalRollout; });
++
++it("reads the played attack and its two debuffs without dormant Block or other riders", () => {
++  expect(science()).toMatchObject({ type: "Attack", damage: 12, damageBase: 12, hits: 1,
++    block: 0, weak: 2, vulnerable: 2, weakFirst: true, strength: 0, draw: 0, energyGain: 0, flatValue: 0 });
++  expect(science().blockBase).toBeUndefined();
++  expect(science().dexterity).toBeUndefined();
++});
++
++it("replays the two Defends then Science: 16 Block and 16 HP lost, not the logged 27 and 5", () => {
++  const input = board().solver;
++  Object.assign(input.player, { hp: 27, maxHp: 90, energy: 3, block: 0, dexterityNow: 3, endTurnBlock: 1 });
++  input.enemies = [{ index: 0, name: fixture.enemy.name, hp: 232, maxHp: fixture.enemy.max_hp,
++    block: 15, weak: 3, vulnerable: 0, artifact: 0, intangible: false, attacks: [{ damage: 33, hits: 1 }] }];
++  input.hand = [...fixture.defends.map((raw: unknown, i: number) => modelHandCard(raw, i, knowledge, "SILENT", 10)), science()];
++  // The actual line left the third Defend unplayed with only three energy after Footwork.
++  const played = [input.hand[0]!, input.hand[1]!, input.hand.at(-1)!];
++  const plan = replaySteps(input, played.map((card) => ({ cardIndex: card.index, cardId: card.cardId,
++    name: card.name, upgraded: card.upgraded, target: card.target === "single" ? 0 : null, targetName: null })))!;
++  expect(plan).not.toBeNull();
++  expect(plan.outcome.blockGained).toBe(16);
++  expect(plan.outcome.hpLoss).toBe(16);
++  expect(plan.outcome.weakApplied).toBe(2);
++  expect(plan.outcome.vulnerableApplied).toBe(2);
++  expect(plan.outcome.damageDealt).toBe(0);
++});
++
++it("preserves other characters, ascensions, upgrades, unresolved templates and the unplayed copy", () => {
++  for (const [character, asc] of [["IRONCLAD", 10], ["REGENT", 10], ["", 10], ["SILENT", 9], ["SILENT", 11], ["SILENT", null]] as const) {
++    expect(modelHandCard(fixture.card, 6, knowledge, character, asc)).toMatchObject({ block: 11, blockBase: 8, weak: 0, vulnerable: 0, type: "Power" });
++  }
++  for (const raw of [fixture.unplayedCopy, { ...fixture.card, upgraded: true },
++    { ...fixture.card, resolved_rules_text: "" }, { ...fixture.card, resolved_rules_text: "获得8点格挡。 抽3张牌。" },
++    { ...fixture.card, target_type: "AllEnemies" },
++    { ...fixture.card, dynamic_values: fixture.card.dynamic_values.filter((v: { name: string }) => v.name !== "SappingWeak") }]) {
++    expect(modelHandCard(raw, 6, knowledge, "SILENT", 10)).toMatchObject({ block: 11, weak: 0, vulnerable: 0 });
++  }
++});
++
++it("propagates the same scoped model through the production hand, deck and visible piles", () => {
++  const raw = combatPayload();
++  Object.assign(raw["run"] as Record<string, unknown>, { character_id: "SILENT", ascension: 10, deck: [fixture.deckCard], relics: [], potions: [] });
++  (raw["combat"] as Record<string, unknown>)["hand"] = [fixture.card];
++  raw["agent_view"] = { combat: { draw: [{ card_ids: ["MAD_SCIENCE"], line: "疯狂科学 [1费]" }] } };
++  const state = parseGameState(raw);
++  let input: SolverInput | undefined;
++  rolloutLiveOptions.enabled = false;
++  solveTap.onSolve = (value) => { input ??= value; };
++  planCombatTurn({ state, knowledge, brief: buildRunBrief(state, knowledge), thresholds: loadConfig({}).thresholds,
++    runStart: "auto", characterPreference: null, allowFtueModals: false, strictJev: true,
++    screenMemory: createScreenMemory("COMBAT"), shopDiscardPotions: [] });
++  expect(input).toBeDefined();
++  const ctx = { enemyTargets: [0], strength: 0, weak: false };
++  for (const model of [input!.hand[0]!, deckModels(state, knowledge)[0]!,
++    deckDrawPool(state, knowledge, ctx, [])[0]!, pileEntries(state, knowledge, "draw", ctx)[0]!.raw]) {
++    expect(model).toMatchObject({ type: "Attack", damage: 12, block: 0, weak: 2, vulnerable: 2 });
++    expect(model.blockBase).toBeUndefined();
++  }
++});

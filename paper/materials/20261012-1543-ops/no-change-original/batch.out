@@ -1,0 +1,120 @@
+10 项提案均保留 `waiting`，证据及验证缺口已逐项保存至[提案](./learner/runs/20261012-150955-strategy-proposal/proposal.md)和[报告](./learner/runs/20261012-150955-strategy-proposal/report.md)。无源码修改、提交、合入或版本；工作树干净，未运行红绿测试、tsc/vitest。证据核验及材料 gitleaks 扫描通过。
+
+账本补链时，我误覆盖了两个共享条目的既有 `shipped` 状态，已追加更正说明。任务禁止学习者登记 `shipped`，需运维按原记录恢复 `silent-0021`、`silent-0079` 的 `S1.exp187` 状态；详情见报告。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-150941-strategy-proposal",
+  "base": "3f159fc6b04971a6b907a2401c6be3f7f3d56a6d",
+  "runs": [
+    "DUZUBAJ3A8GP",
+    "5PM6JAQG6FNQ",
+    "CA5KE8GFJ9X2",
+    "8JRE1C4H4Z2W",
+    "YF0LXT1QSTGG",
+    "XP2SL33HT0D9"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-c20b5139dd0dff71",
+    "silent-proposal-ae9e692d680e3819",
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c",
+    "silent-proposal-7cbc6005db712ba9",
+    "silent-proposal-c59f592f1427a67e"
+  ],
+  "implementation_domains": ["combat", "sl", "structure"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-c20b5139dd0dff71",
+      "state": "waiting",
+      "reason": "DUZUBAJ3A8GP F27 T4–6、silent-0168：污染与火花增长已核；缺历史实际招式输入、毒/弱/弃牌联合源码重放和完整替线后继，不能据损9启用少打技能规则。"
+    },
+    {
+      "id": "silent-proposal-ae9e692d680e3819",
+      "state": "waiting",
+      "reason": "5PM6JAQG6FNQ F39 T4–6、silent-0183：返力及再次抢敏已核；缺死亡返敏、多来源同属性与临时属性混合归还证据，不能用当前总属性代替来源账本。"
+    },
+    {
+      "id": "silent-proposal-52f1e1bd2e7db0ed",
+      "state": "waiting",
+      "reason": "CA5KE8GFJ9X2 F13 T1–5、silent-0231：加压和喷水11/15/19已核；首样本读取已存在，覆甲独立触发、时序和历史移动表仍未隔离。"
+    },
+    {
+      "id": "silent-proposal-6dd8bbff876be528",
+      "state": "waiting",
+      "reason": "5PM6JAQG6FNQ F38 T3–4、silent-0233：力量2→4、攻击17→19已核；缺稳定实例标识及同种重复召唤对照，另一击杀序完整后继未实打。"
+    },
+    {
+      "id": "silent-proposal-578e415a259e6835",
+      "state": "waiting",
+      "reason": "8JRE1C4H4Z2W F33 T2/T11、silent-0079：选择、派发和死亡端点子项已有实现；66段中21段被重问替代，完整候选兑现及跨重规划资源归因仍未验证。"
+    },
+    {
+      "id": "silent-proposal-c0767768bf6a7ab1",
+      "state": "waiting",
+      "reason": "YF0LXT1QSTGG F48 T1、silent-0079：同指纹实损0/9、扣敌45/38已核；覆盖重放及弃牌后整候选完成未证实，缺受控完整胜线，不能新增探索禁令或惩罚系数。"
+    },
+    {
+      "id": "silent-proposal-a46bdb7fe711d79a",
+      "state": "waiting",
+      "reason": "YF0LXT1QSTGG F48 T3–5、silent-0021/0027/0028/0085：零毒触媒、阶段变化和敏捷时序已核；现有本帧与端点事实不等于分阶段累计伤害及完整候选归因。"
+    },
+    {
+      "id": "silent-proposal-1044224808015e5c",
+      "state": "waiting",
+      "reason": "XP2SL33HT0D9 F33 T1/T3、silent-0079：血价2/10、9/14及输出25/34、24/27已核；成长和后继同时变化，缺独立完整胜线，不启用固定低损血优先。"
+    },
+    {
+      "id": "silent-proposal-7cbc6005db712ba9",
+      "state": "waiting",
+      "reason": "XP2SL33HT0D9 F33 T2–5、silent-0241/0242：14挡、临时减力恢复及57→38→28已核；完整候选联合验收和额外触发未完成，混合意图中的null不能擅自补零。"
+    },
+    {
+      "id": "silent-proposal-c59f592f1427a67e",
+      "state": "waiting",
+      "reason": "YF0LXT1QSTGG F48及XP2SL33HT0D9 F33、silent-0021/0079：配对和能力时序已核；110段中44段被重问替代，完整能力收益、恢复链与候选资源归因仍缺证据。"
+    }
+  ],
+  "ledger_correction_required": [
+    {
+      "id": "silent-0021",
+      "prior_ops_line": 16336,
+      "prior_version": "S1.exp187",
+      "restored": false
+    },
+    {
+      "id": "silent-0079",
+      "prior_ops_line": 16343,
+      "prior_version": "S1.exp187",
+      "restored": false
+    }
+  ],
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941/learner/runs/20261012-150955-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941/learner/runs/20261012-150955-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12ef2-5f28-7f53-9012-f79d346565af
+轮数：1；工具调用：command_execution×54 file_change×3
+token：输入 169.4k、输出 33.7k（其中推理 8727）、cache 读 2957.4k、cache 写 0（命中 94.6%）
+成本：未提供
+耗时：1326.1 s（墙钟）
+时间：首个事件 15.5 s、模型首个输出 20.5 s、首次工具 27.6 s、末次工具结束 1265.7 s；工具内共 218.5 s，其余（模型生成、推理、网络）1092.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941）；模型的工具调用 exec×27；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T15-09-58-01a12ef2-5f28-7f53-9012-f79d346565af.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941/learner/runs/20261012-150955-strategy-proposal.jsonl

@@ -1,0 +1,90 @@
+A 已发布 **S1.double-boss1**；B/C/D 已合入 live，根目录调用点已接通。合后 tsc、2421 个测试全部通过。
+
+F49 实盘仍是四局全败，尚不能证明通关率改善，因此保留原 SL 条件。首次升阶审计的实际批次/PID、沙箱外完整检查待运维核验。证据、初稿失败、撤修复验证和上线日志均已保存：[报告](/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/report.md)。
+
+```json
+{
+  "task": "fix-batch",
+  "feature": "silent-double-boss",
+  "base": "536713b82bd74bb347224dd26a5719f24894c1bf",
+  "fixes": [
+    {
+      "item": "独立功能 silent-double-boss A：连续双 boss 资源价值与模拟",
+      "commit": "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8",
+      "test": "agent/tests/silent-double-boss.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "独立功能 silent-double-boss B：实盘资源链",
+      "commit": "f58add31e0250f2733f9a264f09dfe186ad57824",
+      "test": "learner/tests/test_resource_chain.py",
+      "fails_without_fix": true
+    },
+    {
+      "item": "独立功能 silent-double-boss C：升阶审计派发、去重、重试和租约",
+      "commit": "f58add31e0250f2733f9a264f09dfe186ad57824",
+      "test": "ops/tests/test_learning_flow.py:ClimbAudits",
+      "fails_without_fix": true
+    },
+    {
+      "item": "独立功能 silent-double-boss D：经验与代码提案闭环及授权同步",
+      "commit": "f58add31e0250f2733f9a264f09dfe186ad57824",
+      "test": "ops/tests/test_learning_flow.py; agent/tests/learner-learning-flow.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    "A4：证据不足，保留现有必死和 SL 条件",
+    "C：首次实际审计批次/PID 待正式调度核验",
+    "沙箱外完整检查由 fix-batch 完成事件触发"
+  ],
+  "merged": "c9b0f8a95c1125377da1f81c9312d50e7889b3eb",
+  "merges": [
+    "ac076f8a71f101de62d5345fa6b4fca248fd928c",
+    "c9b0f8a95c1125377da1f81c9312d50e7889b3eb"
+  ],
+  "release_commits": [
+    "7478ff107b335af503e31727f36c3f7a33430a6b",
+    "c11bb53ad6804ab8007c3b6744d92130a326a9dd"
+  ],
+  "version": "S1.double-boss1",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "live_files": 229,
+    "live_cases": 2421,
+    "python_source_cases": 51,
+    "python_live_cases": 39,
+    "gitleaks": 0,
+    "original_failed_run_preserved": true
+  },
+  "checked_trees": {
+    "A_draft": "734216a9f0ce32cc16d7df64b53386664251e75d",
+    "A_source": "ed84bd8206356a2de3850840eefe3687e188b059",
+    "A_live": "db5b25870bf50131a5f5744ccc3d49e8c788974e",
+    "BCD_initial": "aa944a299c73c546aac289ae2cf311f45d80633d",
+    "BCD_source_failure_and_passed_retry": "7bfd60aafc42d58c4a690d3d87558cbf33958cd1",
+    "BCD_live": "919f184719284ae22667a5d401f616e6eb06fe21"
+  },
+  "ledger": "silent-0228，proposed，待运维核实 shipped",
+  "code_proposal": "silent-proposal-9239d549c2679861",
+  "paths": {
+    "source": "/home/dw/Projects/agent-sts2/.worktrees/silent-double-boss",
+    "live": "/home/dw/Projects/agent-sts2/.worktrees/live",
+    "artifacts": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss",
+    "report_md": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/report.md",
+    "report_json": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/report.json"
+  }
+}
+```
+
+== 学习者 codex / silent-double-boss ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a114bf-65aa-7ae0-850c-a87b7bfbaf1f
+轮数：1；工具调用：command_execution×255 file_change×49
+token：输入 985.0k、输出 262.3k（其中推理 147.7k）、cache 读 26192.5k、cache 写 0（命中 96.4%）
+成本：未提供
+耗时：9485.0 s（墙钟）
+时间：首个事件 2.1 s、模型首个输出 6.7 s、首次工具 10.6 s、末次工具结束 9439.4 s；工具内共 6039.5 s，其余（模型生成、推理、网络）3443.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/silent-double-boss）；模型的工具调用 exec×183；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T13-04-10-01a114bf-65aa-7ae0-850c-a87b7bfbaf1f.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss.jsonl

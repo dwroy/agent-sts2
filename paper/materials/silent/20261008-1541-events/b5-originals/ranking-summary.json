@@ -1,0 +1,57 @@
+{
+ "rc": 0,
+ "points": 8,
+ "complete_points": 2,
+ "incomplete_points": 6,
+ "samples_per_line": 200,
+ "paired_seed": 7,
+ "paired_rule": "original compareLines, two paired standard errors; tied wins then median HP on won samples",
+ "provenance_caveat": "Historical records omit per-sample outcomes and seed. Fresh replay uses the committed default seed=7, frozen fingerprints and all original options; it is not a byte-for-byte recreation of historical wall-clock runs.",
+ "items": [
+  {
+   "key": "VLV17NUSFS61:48:6:7152831592",
+   "turn": 1,
+   "side": "tune",
+   "labels": [
+    "plan1",
+    "plan2",
+    "plan3",
+    "plan4",
+    "plan5"
+   ],
+   "chosen": "plan5",
+   "best": "plan4",
+   "chosen_is_best_with_hp_tie_break": false,
+   "chosen_win_tied_with_2se": true,
+   "raw_best_minus_chosen": 0.005,
+   "paired_se": 0.005,
+   "only_best": 1,
+   "only_chosen": 0,
+   "actual_won": false,
+   "chosen_win_probability": 0.01,
+   "best_win_probability": 0.015
+  },
+  {
+   "key": "XTSV1U9JD34T:49:6:8864259540",
+   "turn": 2,
+   "side": "val",
+   "labels": [
+    "plan1",
+    "plan2",
+    "plan3"
+   ],
+   "chosen": "plan3",
+   "best": "plan1",
+   "chosen_is_best_with_hp_tie_break": true,
+   "chosen_win_tied_with_2se": true,
+   "raw_best_minus_chosen": 0,
+   "paired_se": 0,
+   "only_best": 0,
+   "only_chosen": 0,
+   "actual_won": false,
+   "chosen_win_probability": 0,
+   "best_win_probability": 0
+  }
+ ],
+ "release_inference": "None: only 2/8 fully reconstructable option sets; the sole validation pair is exactly tied, and the tune difference is inside two paired SE."
+}

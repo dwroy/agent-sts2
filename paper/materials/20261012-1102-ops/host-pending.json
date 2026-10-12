@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-12 11:15:46 CST",
+  "state": "requested_waiting_live_lock",
+  "request": {
+    "argument": "20261012-090027-strategy-proposal:a0b31ecc99e21526fdff847bf2f07794b96bc5f3d77fd646209160192d13e234",
+    "manifest_sha256": "a0b31ecc99e21526fdff847bf2f07794b96bc5f3d77fd646209160192d13e234",
+    "validated": true,
+    "expected_cases": 17,
+    "scope": "two changed rollout fixture files only; concurrently shipped other source left to its own event; source experience3254 + combined44 retained"
+  },
+  "pinned_live": {
+    "commit": "f48154c11d41cb82c762a0afd671fe430ef199b8",
+    "tree": "b9e1d633e2b72ee993f23a6902c4283c8ebedabf"
+  },
+  "original_deployment": "c1c3bf4cbefb313c1dc699c8ce2c3b07bd5068b2",
+  "tool_session_id": 16804,
+  "observed_lock_owner": [
+    {
+      "pid": 3737340,
+      "command": "python3",
+      "type": "FLOCK",
+      "mode": "WRITE*",
+      "path": "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+    },
+    {
+      "pid": 3735402,
+      "command": "python3",
+      "type": "FLOCK",
+      "mode": "WRITE",
+      "path": "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+    }
+  ],
+  "completed": false,
+  "rc": null,
+  "full_suite": false,
+  "expected_cases": 17,
+  "actual_cases": null,
+  "no_duplicate_launch": true,
+  "continuation": "same broker action already claimed; scheduler learner-checks will deliver result; do not reissue or poll",
+  "mutable_request_log": "paper/materials/20261012-1102-ops/host-request.log"
+}

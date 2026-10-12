@@ -1,0 +1,233 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/learner-raw-report.test.ts (15 tests | 15 failed) 75444ms
+     × accepts the complete leading object before a launcher summary 5033ms
+     × accepts a raw fix-batch object without a trailer 5029ms
+     × accepts a raw experience-update object without a trailer 5030ms
+     × accepts a raw strategy-proposal object without a trailer 5030ms
+     × keeps the last valid fenced report as the preferred format 5030ms
+     × rejects malformed, unsupported or embedded output:  5029ms
+     × rejects malformed, unsupported or embedded output: {broken 5029ms
+     × rejects malformed, unsupported or embedded output: {"task":"postmortem","merged":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"} 5029ms
+     × rejects malformed, unsupported or embedded output: [{"task":"fix-batch","base":"dddddddddddddddddddddddddddddddddddddddd","fixes":[{"commit":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],"merged":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","tests":{"tsc":0,"vitest":0,"cases":10}}] 5029ms
+     × rejects malformed, unsupported or embedded output: "{\"task\":\"fix-batch\",\"base\":\"dddddddddddddddddddddddddddddddddddddddd\",\"fixes\":[{\"commit\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"merged\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"tests\":{\"tsc\":0,\"vitest\":0,\"cases\":10}}" 5026ms
+     × rejects malformed, unsupported or embedded output: 回报示例：
+{
+  "task": "fix-batch",
+  "base": "dddddddddddddddddddddddddddddddddddddddd",
+  "fixes": [
+    {
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "merged": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 10
+  }
+}
+
+== 学习者 codex / fixed ==
+状态：success；退出码 0
+ 5029ms
+     × rejects malformed, unsupported or embedded output: == launcher ==
+{
+  "task": "fix-batch",
+  "base": "dddddddddddddddddddddddddddddddddddddddd",
+  "fixes": [
+    {
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "merged": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 10
+  }
+}
+
+== 学习者 codex / fixed ==
+状态：success；退出码 0
+ 5030ms
+     × rejects malformed, unsupported or embedded output: {"task":"fix-batch", "merged": 5029ms
+     × recognizes a raw completion only after verifying its live ancestor 5029ms
+     × rechecks raw output while preserving the original failure and requiring every source ancestor 5031ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > accepts the complete leading object before a launcher summary
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ exercise tests/learner-raw-report.test.ts:32:40
+     30|     input: JSON.stringify([output, operation, present]), encoding: "ut…
+     31|   });
+     32|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     33|   return JSON.parse(result.stdout);
+     34| }
+ ❯ tests/learner-raw-report.test.ts:44:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > accepts a raw fix-batch object without a trailer
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > accepts a raw experience-update object without a trailer
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > accepts a raw strategy-proposal object without a trailer
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ exercise tests/learner-raw-report.test.ts:32:40
+     30|     input: JSON.stringify([output, operation, present]), encoding: "ut…
+     31|   });
+     32|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     33|   return JSON.parse(result.stdout);
+     34| }
+ ❯ tests/learner-raw-report.test.ts:48:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > keeps the last valid fenced report as the preferred format
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ exercise tests/learner-raw-report.test.ts:32:40
+     30|     input: JSON.stringify([output, operation, present]), encoding: "ut…
+     31|   });
+     32|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     33|   return JSON.parse(result.stdout);
+     34| }
+ ❯ tests/learner-raw-report.test.ts:54:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rejects malformed, unsupported or embedded output: 
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rejects malformed, unsupported or embedded output: {broken
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rejects malformed, unsupported or embedded output: {"task":"postmortem","merged":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rejects malformed, unsupported or embedded output: [{"task":"fix-batch","base":"dddddddddddddddddddddddddddddddddddddddd","fixes":[{"commit":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],"merged":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","tests":{"tsc":0,"vitest":0,"cases":10}}]
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rejects malformed, unsupported or embedded output: "{\"task\":\"fix-batch\",\"base\":\"dddddddddddddddddddddddddddddddddddddddd\",\"fixes\":[{\"commit\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"merged\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"tests\":{\"tsc\":0,\"vitest\":0,\"cases\":10}}"
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rejects malformed, unsupported or embedded output: 回报示例：
+{
+  "task": "fix-batch",
+  "base": "dddddddddddddddddddddddddddddddddddddddd",
+  "fixes": [
+    {
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "merged": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 10
+  }
+}
+
+== 学习者 codex / fixed ==
+状态：success；退出码 0
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rejects malformed, unsupported or embedded output: == launcher ==
+{
+  "task": "fix-batch",
+  "base": "dddddddddddddddddddddddddddddddddddddddd",
+  "fixes": [
+    {
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "merged": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 10
+  }
+}
+
+== 学习者 codex / fixed ==
+状态：success；退出码 0
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rejects malformed, unsupported or embedded output: {"task":"fix-batch", "merged":
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ exercise tests/learner-raw-report.test.ts:32:40
+     30|     input: JSON.stringify([output, operation, present]), encoding: "ut…
+     31|   });
+     32|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     33|   return JSON.parse(result.stdout);
+     34| }
+ ❯ tests/learner-raw-report.test.ts:63:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > recognizes a raw completion only after verifying its live ancestor
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ exercise tests/learner-raw-report.test.ts:32:40
+     30|     input: JSON.stringify([output, operation, present]), encoding: "ut…
+     31|   });
+     32|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     33|   return JSON.parse(result.stdout);
+     34| }
+ ❯ tests/learner-raw-report.test.ts:67:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rechecks raw output while preserving the original failure and requiring every source ancestor
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ exercise tests/learner-raw-report.test.ts:32:40
+     30|     input: JSON.stringify([output, operation, present]), encoding: "ut…
+     31|   });
+     32|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     33|   return JSON.parse(result.stdout);
+     34| }
+ ❯ tests/learner-raw-report.test.ts:76:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  15 failed (15)
+   Start at  12:12:52
+   Duration  75.86s (transform 252ms, setup 290ms, import 10ms, tests 75.44s, environment 0ms)
+

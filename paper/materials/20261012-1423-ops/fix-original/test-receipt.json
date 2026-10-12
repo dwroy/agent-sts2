@@ -1,0 +1,21 @@
+{
+  "command": "SANDBOX_WORKERS=1 nice -n 19 bash agent/tools/test-sandbox.sh tests/compute-memo.test.ts tests/multi-character.test.ts tests/rollout-best-added.test.ts tests/blocked-experience-repair.test.ts tests/unassigned-proposal-resolution.test.ts tests/strategy-research-scheduling.test.ts tests/continuation-diagnostics.test.ts",
+  "tmpdir": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-140741/learner/runs/20261012-140819-fix-batch",
+  "exit": 0,
+  "tsc": 0,
+  "threads": {
+    "files": 7,
+    "cases": 60
+  },
+  "forks": {
+    "files": 8,
+    "cases": 71
+  },
+  "unique": {
+    "files": 8,
+    "cases": 71
+  },
+  "failure_retries": [],
+  "log_sha256": "e3ffa804c329c8f367255c175c9723165de0f36733b5e2f0374b4b066ce01b0b",
+  "note": "原沙箱入口fork阶段会重复传入的七文件过滤，另加paths；不重复计数，非失败重跑。"
+}

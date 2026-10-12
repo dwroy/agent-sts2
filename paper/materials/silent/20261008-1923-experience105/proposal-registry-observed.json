@@ -1,0 +1,130 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-387ea7c2d92d3856",
+    "ts": "2026-10-08T18:51:25+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0012",
+      "silent-0011",
+      "silent-0010",
+      "silent-0030",
+      "silent-0046",
+      "silent-0115",
+      "silent-0045",
+      "silent-0214",
+      "silent-0278"
+    ],
+    "runs": [
+      "T0DGVABPV60U",
+      "4XLZURXMD872"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion"
+    ],
+    "summary": "核本角色力敏/临时减力、技能重放、抽牌伤、毒与持牌伤模型；毒药观察覆盖新增实饮，只实现可证缺口。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/proposal-mechanisms.md",
+    "experience": [
+      "silent-strength-weak-observation",
+      "silent-noxious-fumes-growth",
+      "silent-bubble-bubble-condition",
+      "silent-lagavulin-siphon-poison-sl",
+      "silent-piercing-wail-temporary-strength",
+      "silent-burst-next-skills-replay",
+      "silent-speedster-draw-damage",
+      "silent-toxic-paid-exhaust-end-turn-loss",
+      "silent-poison-potion-observed-application"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "c5cacb2488778c9bf569957fb411fe1259b12c8b7945ddbee367477d50457524",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-2b97abc88c159cb9",
+    "ts": "2026-10-08T18:51:26+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0018",
+      "silent-0239"
+    ],
+    "runs": [
+      "4XLZURXMD872"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl"
+    ],
+    "summary": "蟾蜍同抽重试在执行换手后重问，合核真实挡与后轮血价；沙虫有限全败不代替确定判死，不拟固定换手规则。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/proposal-sl.md",
+    "experience": [
+      "silent-insatiable-dual-clock",
+      "silent-spiny-toad-draw-block-sl"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "e9ba1295085170729fd10684bf1088370cbe50851a666b5f4b1e7891eb8844b5",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-e8f4f7afefd92d5c",
+    "ts": "2026-10-08T18:51:26+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0243",
+      "silent-0304"
+    ],
+    "runs": [
+      "C48LLXBGKXQ9",
+      "T082DRCUHRRD",
+      "XYYQYBRM2A01",
+      "1LMBFGSMCWKU",
+      "2SU6XN2AEJRD",
+      "HMVJKM56S4Q8",
+      "L704TLETMZBM",
+      "BVF22RSFVBS9",
+      "DPYF2BAA3DKT",
+      "HSX4HYATB4E2",
+      "P5HT1272P5SB",
+      "2Y27VAYZDA02",
+      "TDLBRNA0R05B",
+      "2K4H3JEJHRSB",
+      "5PM6JAQG6FNQ",
+      "VLZ6CCT8AQ0A",
+      "KV0JHNJCKXLS",
+      "BTSRF7JL1W1Y",
+      "7X0W3U8TVA2A",
+      "4XLZURXMD872"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion",
+      "terminal"
+    ],
+    "summary": "把能力实际到手/启动及血药来源传递至候选终态与后战估值，不预支可可未兑现能力、未结毒或未到营火；阈值不足保留。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/proposal-resources.md",
+    "experience": [
+      "silent-route-hp-observation",
+      "silent-rest-buffer-observation",
+      "silent-deck-burst-observation",
+      "silent-act-transition-missing-hp-heal",
+      "silent-very-hot-cocoa-opening-energy"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "5dae496caa91c5fb0565d8a39c2e5f1ac6c33b3e88030bceb218fb330af25282",
+    "state": "pending"
+  }
+]

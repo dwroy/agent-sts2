@@ -1,0 +1,4665 @@
+{
+  "raw_deciders": {
+    "codex": 35,
+    "code": 223,
+    "jev": 57
+  },
+  "first_ts": "2026-10-09T13:09:59.314Z",
+  "last_ts": "2026-10-09T13:28:20.770Z",
+  "first_observed": "2026-10-09T13:09:25.160Z",
+  "seconds": 1101.456,
+  "jev_calls": 57,
+  "jev_low": [
+    {
+      "line": 321455,
+      "floor": 2,
+      "turn": 4,
+      "confidence": 0.33
+    },
+    {
+      "line": 321495,
+      "floor": 6,
+      "turn": 1,
+      "confidence": 0.32
+    },
+    {
+      "line": 321582,
+      "floor": 17,
+      "turn": 1,
+      "confidence": 0.32
+    },
+    {
+      "line": 321591,
+      "floor": 17,
+      "turn": 5,
+      "confidence": 0.31
+    },
+    {
+      "line": 321603,
+      "floor": 17,
+      "turn": 8,
+      "confidence": 0.02
+    },
+    {
+      "line": 321709,
+      "floor": 24,
+      "turn": 1,
+      "confidence": 0.04
+    },
+    {
+      "line": 321722,
+      "floor": 24,
+      "turn": 1,
+      "confidence": 0.18
+    },
+    {
+      "line": 321723,
+      "floor": 24,
+      "turn": 1,
+      "confidence": 0.3
+    },
+    {
+      "line": 321729,
+      "floor": 24,
+      "turn": 2,
+      "confidence": 0.2
+    },
+    {
+      "line": 321735,
+      "floor": 24,
+      "turn": 1,
+      "confidence": 0.1
+    },
+    {
+      "line": 321736,
+      "floor": 24,
+      "turn": 1,
+      "confidence": 0.3
+    },
+    {
+      "line": 321742,
+      "floor": 24,
+      "turn": 2,
+      "confidence": 0.22
+    }
+  ],
+  "plan_choices": [
+    {
+      "line": 321449,
+      "floor": 2,
+      "turn": 3,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 0.4, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.8; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -0.4",
+      "sl_explore": false
+    },
+    {
+      "line": 321453,
+      "floor": 2,
+      "turn": 4,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 0, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value 0",
+      "sl_explore": false
+    },
+    {
+      "line": 321466,
+      "floor": 3,
+      "turn": 1,
+      "key": "plan2",
+      "best": null,
+      "rank": "2",
+      "focus": null,
+      "rollout": "3-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 5, fight over within 3 turns in 8/8, expected turns to the end (surviving samples) ~3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -5 [cut to fit the time budget: horizon 3]",
+      "sl_explore": false
+    },
+    {
+      "line": 321471,
+      "floor": 3,
+      "turn": 2,
+      "key": "plan1",
+      "best": null,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 0, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value 0",
+      "sl_explore": false
+    },
+    {
+      "line": 321494,
+      "floor": 6,
+      "turn": 1,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 0, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3.5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value 0",
+      "sl_explore": false
+    },
+    {
+      "line": 321498,
+      "floor": 6,
+      "turn": 1,
+      "key": "plan1",
+      "best": null,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 0, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value 0",
+      "sl_explore": false
+    },
+    {
+      "line": 321534,
+      "floor": 13,
+      "turn": 1,
+      "key": "plan3",
+      "best": null,
+      "rank": "3",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~4.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -8",
+      "sl_explore": false
+    },
+    {
+      "line": 321539,
+      "floor": 13,
+      "turn": 2,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 0.1, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~4.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -0.1",
+      "sl_explore": false
+    },
+    {
+      "line": 321546,
+      "floor": 13,
+      "turn": 4,
+      "key": "plan1",
+      "best": null,
+      "rank": "1",
+      "focus": "胖地精",
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 0, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value 0",
+      "sl_explore": false
+    },
+    {
+      "line": 321562,
+      "floor": 14,
+      "turn": 2,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 1.3, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -1.2",
+      "sl_explore": false
+    },
+    {
+      "line": 321581,
+      "floor": 17,
+      "turn": 1,
+      "key": "plan2",
+      "best": true,
+      "rank": "2",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 57.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~13.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~33% (fights won in the samples, the others by the end-of-horizon estimate), value -84.1",
+      "sl_explore": false
+    },
+    {
+      "line": 321582,
+      "floor": 17,
+      "turn": 1,
+      "key": "plan2",
+      "best": true,
+      "rank": "2",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 57.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~13.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~33% (fights won in the samples, the others by the end-of-horizon estimate), value -84.1",
+      "sl_explore": false
+    },
+    {
+      "line": 321587,
+      "floor": 17,
+      "turn": 4,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 64, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~10; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~105, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 15)",
+      "sl_explore": false
+    },
+    {
+      "line": 321590,
+      "floor": 17,
+      "turn": 5,
+      "key": "plan2",
+      "best": true,
+      "rank": "2",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 49, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~9.3, dead within 5 turns in 1/8 (~turn 5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 1/8), then the fight's progress: least enemy HP left (this line ~88, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+      "sl_explore": false
+    },
+    {
+      "line": 321596,
+      "floor": 17,
+      "turn": 6,
+      "key": "plan3",
+      "best": true,
+      "rank": "3",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 39.3, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.2, dead within 5 turns in 2/8 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -59.4",
+      "sl_explore": false
+    },
+    {
+      "line": 321600,
+      "floor": 17,
+      "turn": 7,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 39.1, fight over within 5 turns in 4/8, expected turns to the end (surviving samples) ~4, dead within 5 turns in 4/8 (~turn 3.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -59.1",
+      "sl_explore": false
+    },
+    {
+      "line": 321603,
+      "floor": 17,
+      "turn": 8,
+      "key": "plan1",
+      "best": null,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 37.9, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~3.4, dead within 5 turns in 1/8 (~turn 3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~88% (fights won in the samples, the others by the end-of-horizon estimate), value -42.9",
+      "sl_explore": false
+    },
+    {
+      "line": 321607,
+      "floor": 17,
+      "turn": 9,
+      "key": "plan3",
+      "best": true,
+      "rank": "3",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 16.3, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~3, dead within 5 turns in 1/8 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~88% (fights won in the samples, the others by the end-of-horizon estimate), value -21.2",
+      "sl_explore": false
+    },
+    {
+      "line": 321611,
+      "floor": 17,
+      "turn": 10,
+      "key": "plan2",
+      "best": true,
+      "rank": "2",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 5, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -5",
+      "sl_explore": false
+    },
+    {
+      "line": 321624,
+      "floor": 19,
+      "turn": 1,
+      "key": "plan1",
+      "best": null,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 2, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -2",
+      "sl_explore": false
+    },
+    {
+      "line": 321631,
+      "floor": 19,
+      "turn": 2,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 2.3, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.1; ranked on -(further loss + loot cost 0) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -2.2",
+      "sl_explore": false
+    },
+    {
+      "line": 321646,
+      "floor": 21,
+      "turn": 1,
+      "key": "plan6",
+      "best": true,
+      "rank": "6",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 14.9, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -14.9",
+      "sl_explore": false
+    },
+    {
+      "line": 321660,
+      "floor": 22,
+      "turn": 1,
+      "key": "plan4",
+      "best": true,
+      "rank": "4",
+      "focus": null,
+      "rollout": "3-turn rollout (8 samples): expected further HP loss 19.5, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~3.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -20.3 [cut to fit the time budget: horizon 3]",
+      "sl_explore": false
+    },
+    {
+      "line": 321664,
+      "floor": 22,
+      "turn": 2,
+      "key": "plan2",
+      "best": true,
+      "rank": "2",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 8.1, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -8.1",
+      "sl_explore": false
+    },
+    {
+      "line": 321679,
+      "floor": 23,
+      "turn": 1,
+      "key": "plan4",
+      "best": true,
+      "rank": "-",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 25.4, fight over within 5 turns in 1/8, expected turns to the end (surviving samples) ~5.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~42% (fights won in the samples, the others by the end-of-horizon estimate), value -48.5",
+      "sl_explore": false
+    },
+    {
+      "line": 321682,
+      "floor": 23,
+      "turn": 1,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 25.4, fight over within 5 turns in 1/8, expected turns to the end (surviving samples) ~5.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~42% (fights won in the samples, the others by the end-of-horizon estimate), value -48.5",
+      "sl_explore": false
+    },
+    {
+      "line": 321683,
+      "floor": 23,
+      "turn": 2,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 24.1, fight over within 5 turns in 5/8, expected turns to the end (surviving samples) ~4.4, dead within 5 turns in 3/8 (~turn 3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~63% (fights won in the samples, the others by the end-of-horizon estimate), value -39.1",
+      "sl_explore": false
+    },
+    {
+      "line": 321684,
+      "floor": 23,
+      "turn": 2,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 25.4, fight over within 5 turns in 4/8, expected turns to the end (surviving samples) ~4.5, dead within 5 turns in 4/8 (~turn 3.5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -45.4",
+      "sl_explore": false
+    },
+    {
+      "line": 321685,
+      "floor": 23,
+      "turn": 3,
+      "key": "plan2",
+      "best": true,
+      "rank": "2",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 23.9, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3.8; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -23.9",
+      "sl_explore": false
+    },
+    {
+      "line": 321687,
+      "floor": 23,
+      "turn": 3,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 23.9, fight over within 5 turns in 6/8, expected turns to the end (surviving samples) ~4, dead within 5 turns in 2/8 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~75% (fights won in the samples, the others by the end-of-horizon estimate), value -33.9",
+      "sl_explore": false
+    },
+    {
+      "line": 321690,
+      "floor": 23,
+      "turn": 3,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 21.9, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -21.9",
+      "sl_explore": false
+    },
+    {
+      "line": 321691,
+      "floor": 23,
+      "turn": 4,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 13.4, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~3, dead within 5 turns in 1/8 (~turn 3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~88% (fights won in the samples, the others by the end-of-horizon estimate), value -18.4",
+      "sl_explore": false
+    },
+    {
+      "line": 321694,
+      "floor": 23,
+      "turn": 4,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 13.1, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~3, dead within 5 turns in 1/8 (~turn 3); ranked on -(further loss) - 40 x (1 - win chance): win chance ~88% (fights won in the samples, the others by the end-of-horizon estimate), value -18.1",
+      "sl_explore": false
+    },
+    {
+      "line": 321695,
+      "floor": 23,
+      "turn": 5,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 0, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value 0",
+      "sl_explore": false
+    },
+    {
+      "line": 321698,
+      "floor": 23,
+      "turn": 5,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": null,
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 0, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value 0",
+      "sl_explore": false
+    },
+    {
+      "line": 321706,
+      "floor": 24,
+      "turn": 1,
+      "key": "plan3",
+      "best": true,
+      "rank": "3",
+      "focus": "残杀千足虫 (BACK)",
+      "rollout": "3-turn rollout (2 samples): expected further HP loss 30, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~6, dead within 3 turns in 1/2 (~turn 3), spends 瓶中精灵 (back from 0 HP) in 2/2 (the loss then counts all our HP now, and after the revive only what it loses); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 1/2), then the fight's progress: least enemy HP left (this line ~103, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 22) [cut to fit the time budget: horizon 3, samples 4 per kill order, samples 2 (clock)]",
+      "sl_explore": false
+    },
+    {
+      "line": 321709,
+      "floor": 24,
+      "turn": 1,
+      "key": "plan1",
+      "best": true,
+      "rank": "1",
+      "focus": "残杀千足虫 (FRONT), 残杀千足虫 (MIDDLE)",
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 30, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 2.5), spends 瓶中精灵 (back from 0 HP) in 8/8 (the loss then counts all our HP now, and after the revive only what it loses); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~93, at T5 or at our death), then most turns alive (this line ~2.5), then least HP lost this turn (this line 22)",
+      "sl_explore": false
+    },
+    {
+      "line": 321719,
+      "floor": 24,
+      "turn": 1,
+      "key": "plan3",
+      "best": true,
+      "rank": "3",
+      "focus": "残杀千足虫 (BACK)",
+      "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3.3), spends 瓶中精灵 (back from 0 HP) in 24/24 (the loss then counts all our HP now, and after the revive only what it loses); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~93, at T5 or at our death), then most turns alive (this line ~3.3), then least HP lost this turn (this line 22)",
+      "sl_explore": false
+    },
+    {
+      "line": 321723,
+      "floor": 24,
+      "turn": 1,
+      "key": "plan2",
+      "best": null,
+      "rank": "2",
+      "focus": "残杀千足虫 (FRONT)",
+      "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2), spends 瓶中精灵 (back from 0 HP) in 24/24 (the loss then counts all our HP now, and after the revive only what it loses); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~91, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 22)",
+      "sl_explore": false
+    },
+    {
+      "line": 321732,
+      "floor": 24,
+      "turn": 1,
+      "key": "plan3",
+      "best": true,
+      "rank": "3",
+      "focus": "残杀千足虫 (BACK)",
+      "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3.3), spends 瓶中精灵 (back from 0 HP) in 24/24 (the loss then counts all our HP now, and after the revive only what it loses); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~93, at T5 or at our death), then most turns alive (this line ~3.3), then least HP lost this turn (this line 22)",
+      "sl_explore": true
+    },
+    {
+      "line": 321736,
+      "floor": 24,
+      "turn": 1,
+      "key": "plan2",
+      "best": null,
+      "rank": "2",
+      "focus": "残杀千足虫 (FRONT)",
+      "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3), spends 瓶中精灵 (back from 0 HP) in 24/24 (the loss then counts all our HP now, and after the revive only what it loses); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~69, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 16)",
+      "sl_explore": false
+    },
+    {
+      "line": 321740,
+      "floor": 24,
+      "turn": 2,
+      "key": "plan2",
+      "best": null,
+      "rank": "2",
+      "focus": "残杀千足虫 (MIDDLE)",
+      "rollout": "5-turn rollout (24 samples): expected further HP loss 14, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.1); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~70, at T5 or at our death), then most turns alive (this line ~2.1), then least HP lost this turn (this line 12)",
+      "sl_explore": false
+    }
+  ],
+  "plan_best": 32,
+  "plan_criteria_found": 32,
+  "plan_found": 42,
+  "code_independent_combat_actions": 83,
+  "code_choice_actions": 57,
+  "code_choice_turns_raw": 43,
+  "guarded": [],
+  "potion_actions": [
+    {
+      "line": 321469,
+      "floor": 3,
+      "turn": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "reason": "continuing the Jev-chosen plan: potion 爆炸安瓿"
+    },
+    {
+      "line": 321532,
+      "floor": 13,
+      "turn": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "reason": "Jev chose to drink 技能药水, then re-plan (confidence 0.90)"
+    },
+    {
+      "line": 321561,
+      "floor": 14,
+      "turn": 2,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "reason": "Jev chose to drink 迅捷药水, then re-plan (confidence 0.93)"
+    },
+    {
+      "line": 321629,
+      "floor": 19,
+      "turn": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0,
+        "target_index": 0
+      },
+      "reason": "continuing the Jev-chosen plan: potion 火焰药水 -> 偷窃草蜢"
+    },
+    {
+      "line": 321648,
+      "floor": 21,
+      "turn": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "reason": "continuing the Jev-chosen plan: potion 能量药水"
+    },
+    {
+      "line": 321713,
+      "floor": 24,
+      "turn": 2,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "reason": "Jev chose p0 (Drink 狡诈药水) with confidence 0.47"
+    },
+    {
+      "line": 321722,
+      "floor": 24,
+      "turn": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "reason": "Jev chose to drink 狡诈药水 (confidence 0.18)"
+    },
+    {
+      "line": 321735,
+      "floor": 24,
+      "turn": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "reason": "Jev chose to drink 狡诈药水 (confidence 0.10)"
+    }
+  ],
+  "jev_usage": {
+    "input_tokens": 243792,
+    "output_tokens": 2896,
+    "cache_hit_tokens": 0
+  },
+  "brain": [
+    {
+      "line": 321436,
+      "floor": 1,
+      "label": "event/plan",
+      "usage": {
+        "input_tokens": 130678,
+        "output_tokens": 439,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 228
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "o2",
+        "reason": "Pearl has stronger observed outcomes and funds early damage, defensive scaling, and prompt curse removal.",
+        "latency_ms": 27464,
+        "tokens": 131117,
+        "input_tokens": 130678,
+        "output_tokens": 439,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 228,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 5970,
+        "memory_sections": {
+          "act": 2565,
+          "history": 0,
+          "now": 0,
+          "this_floor": 0,
+          "route": 28,
+          "lookahead": 0,
+          "knowledge": 3377
+        },
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F1:event#1",
+        "plan": [
+          "o2"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 56,
+        "entry_source": "hp_now",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 5689,
+        "ms": 5771,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 12,
+          "boss_left": 200.123
+        },
+        "options": {
+          "o0:c0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 56,
+            "boss_left": 205.857,
+            "boss_left_diff": 5.734,
+            "boss_left_se": 0.2917
+          },
+          "o0:c5": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 56,
+            "boss_left": 193.591,
+            "boss_left_diff": -6.532,
+            "boss_left_se": 0.2771
+          },
+          "o0:c10": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 56,
+            "boss_left": 211.912,
+            "boss_left_diff": 11.789,
+            "boss_left_se": 0.2786
+          },
+          "o0:c11": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 56,
+            "boss_left": 196.039,
+            "boss_left_diff": -4.084,
+            "boss_left_se": 0.2819
+          }
+        },
+        "not_simulated": {
+          "o1": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+          "o2": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+        }
+      }
+    },
+    {
+      "line": 321438,
+      "floor": 1,
+      "label": "map/route-plan",
+      "usage": {
+        "input_tokens": 130163,
+        "output_tokens": 370,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 262
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "",
+        "reason": "早商店强化牌组，四火支持单精英并保血迎王。",
+        "latency_ms": 21347,
+        "tokens": 130533,
+        "input_tokens": 130163,
+        "output_tokens": 370,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 262,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 5906,
+        "memory_sections": {
+          "act": 2565,
+          "history": 0,
+          "now": 0,
+          "this_floor": 614,
+          "route": 28,
+          "lookahead": 85,
+          "knowledge": 2614
+        },
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": null
+    },
+    {
+      "line": 321463,
+      "floor": 2,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 133312,
+        "output_tokens": 123,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 73
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "card1",
+        "reason": "Sucker Punch adds efficient early damage and repeatable Weak, improving survival now and progress against Lagavulin more than the alternatives.",
+        "latency_ms": 11463,
+        "tokens": 133435,
+        "input_tokens": 133312,
+        "output_tokens": 123,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 73,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 6917,
+        "memory_sections": {
+          "act": 2565,
+          "history": 1059,
+          "now": 0,
+          "this_floor": 117,
+          "route": 85,
+          "lookahead": 85,
+          "knowledge": 3006
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 63,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 6383,
+        "ms": 6399,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 12,
+          "boss_left": 188.642
+        },
+        "options": {
+          "card0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 191.412,
+            "boss_left_diff": 2.77,
+            "boss_left_se": 0.366
+          },
+          "card1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 173.773,
+            "boss_left_diff": -14.869,
+            "boss_left_se": 0.3471
+          },
+          "card2": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 186.441,
+            "boss_left_diff": -2.201,
+            "boss_left_se": 0.3209
+          },
+          "skip": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 188.642,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321480,
+      "floor": 3,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 133160,
+        "output_tokens": 112,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 62
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "card2",
+        "reason": "Dash adds immediate damage and efficient block, strengthens early fights, and shows the clearest boss progress improvement. Other rewards lack support.",
+        "latency_ms": 12965,
+        "tokens": 133272,
+        "input_tokens": 133160,
+        "output_tokens": 112,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 62,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 6920,
+        "memory_sections": {
+          "act": 2565,
+          "history": 1355,
+          "now": 0,
+          "this_floor": 65,
+          "route": 84,
+          "lookahead": 82,
+          "knowledge": 2769
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 63,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 4097,
+        "ms": 4107,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 13,
+          "boss_left": 182.846
+        },
+        "options": {
+          "card0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 182.346,
+            "boss_left_diff": -0.5,
+            "boss_left_se": 0.3005
+          },
+          "card1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 182.545,
+            "boss_left_diff": -0.301,
+            "boss_left_se": 0.326
+          },
+          "card2": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 167.565,
+            "boss_left_diff": -15.281,
+            "boss_left_se": 0.3457
+          },
+          "skip": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 182.846,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321483,
+      "floor": 4,
+      "label": "event/choose",
+      "usage": {
+        "input_tokens": 132233,
+        "output_tokens": 121,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 78
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "o0",
+        "reason": "Take the free Treasure Map for lasting value; avoid spending 8 HP on an unknown potion.",
+        "latency_ms": 10612,
+        "tokens": 132354,
+        "input_tokens": 132233,
+        "output_tokens": 121,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 78,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 6308,
+        "memory_sections": {
+          "act": 2565,
+          "history": 1603,
+          "now": 0,
+          "this_floor": 0,
+          "route": 83,
+          "lookahead": 79,
+          "knowledge": 1978
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 63,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 1928,
+        "ms": 1935,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 13,
+          "boss_left": 167.565
+        },
+        "options": {
+          "o1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 167.565,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {
+          "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+        }
+      }
+    },
+    {
+      "line": 321487,
+      "floor": 5,
+      "label": "shop/plan",
+      "usage": {
+        "input_tokens": 135426,
+        "output_tokens": 731,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 654
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "[\"buy_relic2\",\"buy_card1\",\"buy_card3\",\"buy_potion1\",\"leave\"]",
+        "reason": "Chemical X plus Skewer provides efficient, scalable damage. Piercing Wail protects against multihits; Skill Potion adds emergency flexibility. Preserve remaining gold for upcoming shops. Greed cannot be removed.",
+        "latency_ms": 41993,
+        "tokens": 136157,
+        "input_tokens": 135426,
+        "output_tokens": 731,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 654,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 8861,
+        "memory_sections": {
+          "act": 2565,
+          "history": 1760,
+          "now": 0,
+          "this_floor": 0,
+          "route": 82,
+          "lookahead": 82,
+          "knowledge": 4372
+        },
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F5:shop#2",
+        "plan": [
+          "buy_relic2",
+          "buy_card1",
+          "buy_card3",
+          "buy_potion1",
+          "leave"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 63,
+        "entry_source": "route",
+        "samples": 728,
+        "requested": 1000,
+        "timed_out": true,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 11015,
+        "ms": 11107,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 13,
+          "boss_left": 169.5151
+        },
+        "options": {
+          "buy_relic0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 169.3077,
+            "boss_left_diff": -0.2074,
+            "boss_left_se": 0.0399
+          },
+          "buy_relic1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 169.5151,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          },
+          "buy_card0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 166.1992,
+            "boss_left_diff": -3.3159,
+            "boss_left_se": 0.4516
+          },
+          "buy_card1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 158.1676,
+            "boss_left_diff": -11.3475,
+            "boss_left_se": 0.5045
+          },
+          "buy_card2": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 171.0522,
+            "boss_left_diff": 1.5371,
+            "boss_left_se": 0.4272
+          },
+          "buy_card3": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 171.9382,
+            "boss_left_diff": 2.4231,
+            "boss_left_se": 0.4374
+          },
+          "buy_card4": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 170.4505,
+            "boss_left_diff": 0.9354,
+            "boss_left_se": 0.4258
+          },
+          "buy_card5": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 166.1332,
+            "boss_left_diff": -3.3819,
+            "boss_left_se": 0.4525
+          },
+          "buy_card6": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 176.6786,
+            "boss_left_diff": 7.1635,
+            "boss_left_se": 0.4462
+          },
+          "remove|c0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 169.8324,
+            "boss_left_diff": 0.3173,
+            "boss_left_se": 0.4012
+          },
+          "remove|c5": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 163.1607,
+            "boss_left_diff": -6.3544,
+            "boss_left_se": 0.3928
+          },
+          "remove|c10": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 175.8503,
+            "boss_left_diff": 6.3352,
+            "boss_left_se": 0.4051
+          },
+          "remove|c11": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 165.0549,
+            "boss_left_diff": -4.4602,
+            "boss_left_se": 0.4005
+          },
+          "remove|c14": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 182.0137,
+            "boss_left_diff": 12.4986,
+            "boss_left_se": 0.3986
+          },
+          "remove|c15": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 182.1511,
+            "boss_left_diff": 12.636,
+            "boss_left_se": 0.3809
+          },
+          "remove|c16": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 167.6319,
+            "boss_left_diff": -1.8832,
+            "boss_left_se": 0.4287
+          },
+          "leave": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 169.5151,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {
+          "buy_relic2": "这件遗物在 boss 战里的效果没有建模：不模拟",
+          "buy_potion0": "这瓶药不在模拟里（随机药水或效果没建模）：不模拟",
+          "buy_potion1": "这瓶药不在模拟里（随机药水或效果没建模）：不模拟",
+          "buy_potion2": "这瓶药不在模拟里（随机药水或效果没建模）：不模拟"
+        }
+      }
+    },
+    {
+      "line": 321502,
+      "floor": 6,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 133657,
+        "output_tokens": 192,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 141
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "card1",
+        "reason": "Bouncing Flask establishes scaling poison against Lagavulin’s stat drains, offers the largest simulated damage improvement, and has favorable observed outcomes.",
+        "latency_ms": 12497,
+        "tokens": 133849,
+        "input_tokens": 133657,
+        "output_tokens": 192,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 141,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 8260,
+        "memory_sections": {
+          "act": 2565,
+          "history": 2446,
+          "now": 0,
+          "this_floor": 45,
+          "route": 81,
+          "lookahead": 83,
+          "knowledge": 3040
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 63,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 4273,
+        "ms": 4313,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 13,
+          "boss_left": 161.179
+        },
+        "options": {
+          "card0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 153.295,
+            "boss_left_diff": -7.884,
+            "boss_left_se": 0.4967
+          },
+          "card1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 110.52,
+            "boss_left_diff": -50.659,
+            "boss_left_se": 1.114
+          },
+          "card2": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 162.413,
+            "boss_left_diff": 1.234,
+            "boss_left_se": 0.4947
+          },
+          "skip": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 161.179,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321505,
+      "floor": 7,
+      "label": "rest/plan",
+      "usage": {
+        "input_tokens": 139467,
+        "output_tokens": 125,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 71
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "o1:c19",
+        "reason": "Bouncing Flask offers the strongest boss improvement and poison scaling survives stat drains. No fights precede the next rest, so healing can wait.",
+        "latency_ms": 8669,
+        "tokens": 139592,
+        "input_tokens": 139467,
+        "output_tokens": 125,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 71,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 9757,
+        "memory_sections": {
+          "act": 2565,
+          "history": 2686,
+          "now": 0,
+          "this_floor": 0,
+          "route": 81,
+          "lookahead": 79,
+          "knowledge": 4346
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F7:rest#3",
+        "plan": [
+          "o1",
+          "c19"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 63,
+        "entry_source": "route",
+        "samples": 976,
+        "requested": 1000,
+        "timed_out": true,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 11057,
+        "ms": 11105,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 12,
+          "boss_left": 110.335
+        },
+        "options": {
+          "o0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 110.335,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          },
+          "o1:c0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 108.543,
+            "boss_left_diff": -1.792,
+            "boss_left_se": 0.3955
+          },
+          "o1:c5": {
+            "win": 0.001,
+            "win_cal": 0.001,
+            "diff_cal": 0.001,
+            "se_cal": 0.001,
+            "diff_raw": 0.001,
+            "se_raw": 0.001,
+            "hp_loss_won": 56,
+            "turns": 13,
+            "hp": 63,
+            "boss_left": 107.3545,
+            "boss_left_diff": -2.9805,
+            "boss_left_se": 0.2867
+          },
+          "o1:c10": {
+            "win": 0.0061,
+            "win_cal": 0.0061,
+            "diff_cal": 0.0061,
+            "se_cal": 0.0025,
+            "diff_raw": 0.0061,
+            "se_raw": 0.0025,
+            "hp_loss_won": 59,
+            "turns": 12.5,
+            "hp": 63,
+            "boss_left": 102.8115,
+            "boss_left_diff": -7.5236,
+            "boss_left_se": 0.3817
+          },
+          "o1:c11": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 107.8105,
+            "boss_left_diff": -2.5246,
+            "boss_left_se": 0.3131
+          },
+          "o1:c14": {
+            "win": 0.0041,
+            "win_cal": 0.0041,
+            "diff_cal": 0.0041,
+            "se_cal": 0.002,
+            "diff_raw": 0.0041,
+            "se_raw": 0.002,
+            "hp_loss_won": 55.5,
+            "turns": 12.5,
+            "hp": 63,
+            "boss_left": 99.1527,
+            "boss_left_diff": -11.1824,
+            "boss_left_se": 0.4901
+          },
+          "o1:c15": {
+            "win": 0.0031,
+            "win_cal": 0.0031,
+            "diff_cal": 0.0031,
+            "se_cal": 0.0018,
+            "diff_raw": 0.0031,
+            "se_raw": 0.0018,
+            "hp_loss_won": 61,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 100.3084,
+            "boss_left_diff": -10.0266,
+            "boss_left_se": 0.3968
+          },
+          "o1:c16": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 110.335,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          },
+          "o1:c17": {
+            "win": 0.0031,
+            "win_cal": 0.0031,
+            "diff_cal": 0.0031,
+            "se_cal": 0.0018,
+            "diff_raw": 0.0031,
+            "se_raw": 0.0018,
+            "hp_loss_won": 61,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 99.5143,
+            "boss_left_diff": -10.8207,
+            "boss_left_se": 0.2632
+          },
+          "o1:c18": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 109.1906,
+            "boss_left_diff": -1.1445,
+            "boss_left_se": 0.2581
+          },
+          "o1:c19": {
+            "win": 0.1322,
+            "win_cal": 0.1322,
+            "diff_cal": 0.1322,
+            "se_cal": 0.0108,
+            "diff_raw": 0.1322,
+            "se_raw": 0.0108,
+            "hp_loss_won": 55,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 73.8934,
+            "boss_left_diff": -36.4416,
+            "boss_left_se": 0.7396
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321510,
+      "floor": 8,
+      "label": "shop/plan",
+      "usage": {
+        "input_tokens": 134400,
+        "output_tokens": 300,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 234
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "[\"buy_card3\",\"buy_card1\",\"leave\"]",
+        "reason": "Deadly Poison improves Lagavulin scaling despite stat drains. Dagger Spray fills the missing AoE role for elites and Act 2, with favorable observed outcomes. Total: 97 gold.",
+        "latency_ms": 17716,
+        "tokens": 134700,
+        "input_tokens": 134400,
+        "output_tokens": 300,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 234,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 11442,
+        "memory_sections": {
+          "act": 2565,
+          "history": 3024,
+          "now": 0,
+          "this_floor": 0,
+          "route": 79,
+          "lookahead": 98,
+          "knowledge": 5676
+        },
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F8:shop#4",
+        "plan": [
+          "buy_card3",
+          "buy_card1",
+          "leave"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 63,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 10219,
+        "ms": 10358,
+        "base": {
+          "win": 0.13,
+          "win_cal": 0.13,
+          "hp_loss_won": 55,
+          "turns": 12,
+          "boss_left": 73.989
+        },
+        "options": {
+          "buy_card0": {
+            "win": 0.078,
+            "win_cal": 0.078,
+            "diff_cal": -0.052,
+            "se_cal": 0.0128,
+            "diff_raw": -0.052,
+            "se_raw": 0.0128,
+            "hp_loss_won": 52,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 79.072,
+            "boss_left_diff": 5.083,
+            "boss_left_se": 2.0485
+          },
+          "buy_card1": {
+            "win": 0.079,
+            "win_cal": 0.079,
+            "diff_cal": -0.051,
+            "se_cal": 0.0128,
+            "diff_raw": -0.051,
+            "se_raw": 0.0128,
+            "hp_loss_won": 52,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 79.164,
+            "boss_left_diff": 5.175,
+            "boss_left_se": 2.0474
+          },
+          "buy_card3": {
+            "win": 0.18,
+            "win_cal": 0.18,
+            "diff_cal": 0.05,
+            "se_cal": 0.0158,
+            "diff_raw": 0.05,
+            "se_raw": 0.0158,
+            "hp_loss_won": 51,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 65.138,
+            "boss_left_diff": -8.851,
+            "boss_left_se": 2.1553
+          },
+          "buy_card4": {
+            "win": 0.083,
+            "win_cal": 0.083,
+            "diff_cal": -0.047,
+            "se_cal": 0.0137,
+            "diff_raw": -0.047,
+            "se_raw": 0.0137,
+            "hp_loss_won": 52,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 79.925,
+            "boss_left_diff": 5.936,
+            "boss_left_se": 2.1472
+          },
+          "buy_card5": {
+            "win": 0.084,
+            "win_cal": 0.084,
+            "diff_cal": -0.046,
+            "se_cal": 0.0131,
+            "diff_raw": -0.046,
+            "se_raw": 0.0131,
+            "hp_loss_won": 51.5,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 76.755,
+            "boss_left_diff": 2.766,
+            "boss_left_se": 2.0074
+          },
+          "buy_potion0": {
+            "win": 0.166,
+            "win_cal": 0.166,
+            "diff_cal": 0.036,
+            "se_cal": 0.0075,
+            "diff_raw": 0.036,
+            "se_raw": 0.0075,
+            "hp_loss_won": 52,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 66.087,
+            "boss_left_diff": -7.902,
+            "boss_left_se": 0.5583
+          },
+          "buy_potion2": {
+            "win": 0.233,
+            "win_cal": 0.233,
+            "diff_cal": 0.103,
+            "se_cal": 0.0096,
+            "diff_raw": 0.103,
+            "se_raw": 0.0096,
+            "hp_loss_won": 47,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 49.411,
+            "boss_left_diff": -24.578,
+            "boss_left_se": 0.3437
+          },
+          "discard_potion0": {
+            "win": 0.13,
+            "win_cal": 0.13,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 55,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 73.989,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          },
+          "leave": {
+            "win": 0.13,
+            "win_cal": 0.13,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 55,
+            "turns": 12,
+            "hp": 63,
+            "boss_left": 73.989,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {
+          "buy_relic0": "现在的金币买不起：不模拟",
+          "buy_relic1": "现在的金币买不起：不模拟",
+          "buy_relic2": "现在的金币买不起：不模拟",
+          "buy_card2": "现在的金币买不起：不模拟",
+          "buy_card6": "现在的金币买不起：不模拟",
+          "buy_potion1": "这瓶药不在模拟里（随机药水或效果没建模）：不模拟",
+          "remove": "现在的金币付不起删牌：不模拟"
+        }
+      }
+    },
+    {
+      "line": 321515,
+      "floor": 9,
+      "label": "rest/plan",
+      "usage": {
+        "input_tokens": 139162,
+        "output_tokens": 223,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 170
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "o1:c20",
+        "reason": "Deadly Poison has the strongest simulated boss improvement and survives stat drains. No fights precede the next rest, so healing can wait.",
+        "latency_ms": 14882,
+        "tokens": 139385,
+        "input_tokens": 139162,
+        "output_tokens": 223,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 170,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 10478,
+        "memory_sections": {
+          "act": 2565,
+          "history": 3468,
+          "now": 0,
+          "this_floor": 0,
+          "route": 78,
+          "lookahead": 82,
+          "knowledge": 4285
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F9:rest#5",
+        "plan": [
+          "o1",
+          "c20"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 63,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 10405,
+        "ms": 10446,
+        "base": {
+          "win": 0.145,
+          "win_cal": 0.145,
+          "hp_loss_won": 51,
+          "turns": 11,
+          "boss_left": 69.762
+        },
+        "options": {
+          "o0": {
+            "win": 0.145,
+            "win_cal": 0.145,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 51,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 69.762,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          },
+          "o1:c0": {
+            "win": 0.153,
+            "win_cal": 0.153,
+            "diff_cal": 0.008,
+            "se_cal": 0.0051,
+            "diff_raw": 0.008,
+            "se_raw": 0.0051,
+            "hp_loss_won": 51,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 68.418,
+            "boss_left_diff": -1.344,
+            "boss_left_se": 0.3726
+          },
+          "o1:c5": {
+            "win": 0.178,
+            "win_cal": 0.178,
+            "diff_cal": 0.033,
+            "se_cal": 0.006,
+            "diff_raw": 0.033,
+            "se_raw": 0.006,
+            "hp_loss_won": 50,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 64.921,
+            "boss_left_diff": -4.841,
+            "boss_left_se": 0.3818
+          },
+          "o1:c10": {
+            "win": 0.218,
+            "win_cal": 0.218,
+            "diff_cal": 0.073,
+            "se_cal": 0.0086,
+            "diff_raw": 0.073,
+            "se_raw": 0.0086,
+            "hp_loss_won": 48,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 59.197,
+            "boss_left_diff": -10.565,
+            "boss_left_se": 0.562
+          },
+          "o1:c11": {
+            "win": 0.171,
+            "win_cal": 0.171,
+            "diff_cal": 0.026,
+            "se_cal": 0.0056,
+            "diff_raw": 0.026,
+            "se_raw": 0.0056,
+            "hp_loss_won": 48,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 65.548,
+            "boss_left_diff": -4.214,
+            "boss_left_se": 0.4259
+          },
+          "o1:c14": {
+            "win": 0.215,
+            "win_cal": 0.215,
+            "diff_cal": 0.07,
+            "se_cal": 0.0094,
+            "diff_raw": 0.07,
+            "se_raw": 0.0094,
+            "hp_loss_won": 48,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 58.643,
+            "boss_left_diff": -11.119,
+            "boss_left_se": 0.6421
+          },
+          "o1:c15": {
+            "win": 0.199,
+            "win_cal": 0.199,
+            "diff_cal": 0.054,
+            "se_cal": 0.0077,
+            "diff_raw": 0.054,
+            "se_raw": 0.0077,
+            "hp_loss_won": 49,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 60.396,
+            "boss_left_diff": -9.366,
+            "boss_left_se": 0.4413
+          },
+          "o1:c16": {
+            "win": 0.145,
+            "win_cal": 0.145,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 51,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 69.762,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          },
+          "o1:c17": {
+            "win": 0.164,
+            "win_cal": 0.164,
+            "diff_cal": 0.019,
+            "se_cal": 0.0079,
+            "diff_raw": 0.019,
+            "se_raw": 0.0079,
+            "hp_loss_won": 52,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 65.604,
+            "boss_left_diff": -4.158,
+            "boss_left_se": 0.5641
+          },
+          "o1:c18": {
+            "win": 0.159,
+            "win_cal": 0.159,
+            "diff_cal": 0.014,
+            "se_cal": 0.0047,
+            "diff_raw": 0.014,
+            "se_raw": 0.0047,
+            "hp_loss_won": 50,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 67.696,
+            "boss_left_diff": -2.066,
+            "boss_left_se": 0.3288
+          },
+          "o1:c20": {
+            "win": 0.312,
+            "win_cal": 0.312,
+            "diff_cal": 0.167,
+            "se_cal": 0.0119,
+            "diff_raw": 0.167,
+            "se_raw": 0.0119,
+            "hp_loss_won": 50,
+            "turns": 10,
+            "hp": 63,
+            "boss_left": 48.665,
+            "boss_left_diff": -21.097,
+            "boss_left_se": 0.6801
+          },
+          "o1:c21": {
+            "win": 0.154,
+            "win_cal": 0.154,
+            "diff_cal": 0.009,
+            "se_cal": 0.0061,
+            "diff_raw": 0.009,
+            "se_raw": 0.0061,
+            "hp_loss_won": 51,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 67.759,
+            "boss_left_diff": -2.003,
+            "boss_left_se": 0.4457
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321524,
+      "floor": 11,
+      "label": "shop/plan",
+      "usage": {
+        "input_tokens": 136026,
+        "output_tokens": 637,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 419
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "[\"leave\"]",
+        "reason": "AoE is already covered. A second Dagger Spray worsens the paired boss simulation; save gold for defensive scaling instead.",
+        "latency_ms": 32906,
+        "tokens": 136663,
+        "input_tokens": 136026,
+        "output_tokens": 637,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 419,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 11722,
+        "memory_sections": {
+          "act": 2565,
+          "history": 3868,
+          "now": 0,
+          "this_floor": 0,
+          "route": 77,
+          "lookahead": 88,
+          "knowledge": 5124
+        },
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F11:shop#6",
+        "plan": [
+          "leave"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 63,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 2698,
+        "ms": 2752,
+        "base": {
+          "win": 0.312,
+          "win_cal": 0.312,
+          "hp_loss_won": 50,
+          "turns": 10,
+          "boss_left": 48.665
+        },
+        "options": {
+          "buy_card1": {
+            "win": 0.237,
+            "win_cal": 0.237,
+            "diff_cal": -0.075,
+            "se_cal": 0.0197,
+            "diff_raw": -0.075,
+            "se_raw": 0.0197,
+            "hp_loss_won": 53,
+            "turns": 11,
+            "hp": 63,
+            "boss_left": 56.226,
+            "boss_left_diff": 7.561,
+            "boss_left_se": 2.1597
+          },
+          "discard_potion0": {
+            "win": 0.312,
+            "win_cal": 0.312,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 50,
+            "turns": 10,
+            "hp": 63,
+            "boss_left": 48.665,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          },
+          "leave": {
+            "win": 0.312,
+            "win_cal": 0.312,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 50,
+            "turns": 10,
+            "hp": 63,
+            "boss_left": 48.665,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {
+          "buy_relic0": "现在的金币买不起：不模拟",
+          "buy_relic1": "现在的金币买不起：不模拟",
+          "buy_relic2": "现在的金币买不起：不模拟",
+          "buy_card0": "现在的金币买不起：不模拟",
+          "buy_card2": "现在的金币买不起：不模拟",
+          "buy_card3": "现在的金币买不起：不模拟",
+          "buy_card4": "现在的金币买不起：不模拟",
+          "buy_card5": "现在的金币买不起：不模拟",
+          "buy_card6": "现在的金币买不起：不模拟",
+          "buy_potion0": "现在的金币买不起：不模拟",
+          "buy_potion1": "现在的金币买不起：不模拟",
+          "buy_potion2": "现在的金币买不起：不模拟",
+          "remove": "现在的金币付不起删牌：不模拟"
+        }
+      }
+    },
+    {
+      "line": 321527,
+      "floor": 12,
+      "label": "rest/plan",
+      "usage": {
+        "input_tokens": 138954,
+        "output_tokens": 392,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 322
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "o1:c10",
+        "reason": "Skip the elite to preserve boss-entry health; upgrade Neutralize for lasting Weak coverage, then heal at the final campfire.",
+        "latency_ms": 20716,
+        "tokens": 139346,
+        "input_tokens": 138954,
+        "output_tokens": 392,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 322,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 11294,
+        "memory_sections": {
+          "act": 2565,
+          "history": 4495,
+          "now": 0,
+          "this_floor": 0,
+          "route": 76,
+          "lookahead": 83,
+          "knowledge": 4075
+        },
+        "route": "r12c0 r13c1 r14c0 r15c0 r16c3",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F12:rest#7",
+        "plan": [
+          "o1",
+          "c10",
+          "r12c0 r13c1 r14c0 r15c0 r16c3"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 44,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 9049,
+        "ms": 9092,
+        "base": {
+          "win": 0.062,
+          "win_cal": 0.062,
+          "hp_loss_won": 39,
+          "turns": 10,
+          "boss_left": 88.277
+        },
+        "options": {
+          "o0": {
+            "win": 0.312,
+            "win_cal": 0.312,
+            "diff_cal": 0.25,
+            "se_cal": 0.0137,
+            "diff_raw": 0.25,
+            "se_raw": 0.0137,
+            "hp_loss_won": 50,
+            "turns": 10,
+            "hp": 63,
+            "boss_left": 48.665,
+            "boss_left_diff": -39.612,
+            "boss_left_se": 0.8264
+          },
+          "o1:c0": {
+            "win": 0.064,
+            "win_cal": 0.064,
+            "diff_cal": 0.002,
+            "se_cal": 0.0032,
+            "diff_raw": 0.002,
+            "se_raw": 0.0032,
+            "hp_loss_won": 39,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 87.575,
+            "boss_left_diff": -0.702,
+            "boss_left_se": 0.3543
+          },
+          "o1:c5": {
+            "win": 0.103,
+            "win_cal": 0.103,
+            "diff_cal": 0.041,
+            "se_cal": 0.0064,
+            "diff_raw": 0.041,
+            "se_raw": 0.0064,
+            "hp_loss_won": 38,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 80.655,
+            "boss_left_diff": -7.622,
+            "boss_left_se": 0.515
+          },
+          "o1:c10": {
+            "win": 0.147,
+            "win_cal": 0.147,
+            "diff_cal": 0.085,
+            "se_cal": 0.0088,
+            "diff_raw": 0.085,
+            "se_raw": 0.0088,
+            "hp_loss_won": 38,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 72.054,
+            "boss_left_diff": -16.223,
+            "boss_left_se": 0.6995
+          },
+          "o1:c11": {
+            "win": 0.105,
+            "win_cal": 0.105,
+            "diff_cal": 0.043,
+            "se_cal": 0.0066,
+            "diff_raw": 0.043,
+            "se_raw": 0.0066,
+            "hp_loss_won": 38,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 81.047,
+            "boss_left_diff": -7.23,
+            "boss_left_se": 0.5223
+          },
+          "o1:c14": {
+            "win": 0.145,
+            "win_cal": 0.145,
+            "diff_cal": 0.083,
+            "se_cal": 0.0092,
+            "diff_raw": 0.083,
+            "se_raw": 0.0092,
+            "hp_loss_won": 38,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 72.958,
+            "boss_left_diff": -15.319,
+            "boss_left_se": 0.7255
+          },
+          "o1:c15": {
+            "win": 0.125,
+            "win_cal": 0.125,
+            "diff_cal": 0.063,
+            "se_cal": 0.0078,
+            "diff_raw": 0.063,
+            "se_raw": 0.0078,
+            "hp_loss_won": 38,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 75.212,
+            "boss_left_diff": -13.065,
+            "boss_left_se": 0.5859
+          },
+          "o1:c16": {
+            "win": 0.062,
+            "win_cal": 0.062,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 39,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 88.277,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          },
+          "o1:c17": {
+            "win": 0.063,
+            "win_cal": 0.063,
+            "diff_cal": 0.001,
+            "se_cal": 0.0057,
+            "diff_raw": 0.001,
+            "se_raw": 0.0057,
+            "hp_loss_won": 40,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 84.908,
+            "boss_left_diff": -3.369,
+            "boss_left_se": 0.4813
+          },
+          "o1:c18": {
+            "win": 0.08,
+            "win_cal": 0.08,
+            "diff_cal": 0.018,
+            "se_cal": 0.0051,
+            "diff_raw": 0.018,
+            "se_raw": 0.0051,
+            "hp_loss_won": 39,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 84.341,
+            "boss_left_diff": -3.936,
+            "boss_left_se": 0.4295
+          },
+          "o1:c21": {
+            "win": 0.072,
+            "win_cal": 0.072,
+            "diff_cal": 0.01,
+            "se_cal": 0.0045,
+            "diff_raw": 0.01,
+            "se_raw": 0.0045,
+            "hp_loss_won": 40,
+            "turns": 10,
+            "hp": 44,
+            "boss_left": 85.72,
+            "boss_left_diff": -2.557,
+            "boss_left_se": 0.3369
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321556,
+      "floor": 13,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 133684,
+        "output_tokens": 242,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 189
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "skip",
+        "reason": "AoE is already covered. Escape Plan lacks dexterity support and offers no demonstrated boss improvement; preserve access to upgraded poison and Chemical X Skewer.",
+        "latency_ms": 17225,
+        "tokens": 133926,
+        "input_tokens": 133684,
+        "output_tokens": 242,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 189,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 10531,
+        "memory_sections": {
+          "act": 2565,
+          "history": 4970,
+          "now": 0,
+          "this_floor": 88,
+          "route": 62,
+          "lookahead": 77,
+          "knowledge": 2769
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 65,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 3832,
+        "ms": 3848,
+        "base": {
+          "win": 0.426,
+          "win_cal": 0.426,
+          "hp_loss_won": 47,
+          "turns": 11,
+          "boss_left": 37.367
+        },
+        "options": {
+          "card0": {
+            "win": 0.361,
+            "win_cal": 0.361,
+            "diff_cal": -0.065,
+            "se_cal": 0.0223,
+            "diff_raw": -0.065,
+            "se_raw": 0.0223,
+            "hp_loss_won": 51,
+            "turns": 11,
+            "hp": 65,
+            "boss_left": 43.744,
+            "boss_left_diff": 6.377,
+            "boss_left_se": 2.0139
+          },
+          "card1": {
+            "win": 0.359,
+            "win_cal": 0.359,
+            "diff_cal": -0.067,
+            "se_cal": 0.0224,
+            "diff_raw": -0.067,
+            "se_raw": 0.0224,
+            "hp_loss_won": 51,
+            "turns": 11,
+            "hp": 65,
+            "boss_left": 43.973,
+            "boss_left_diff": 6.606,
+            "boss_left_se": 2.0111
+          },
+          "card2": {
+            "win": 0.398,
+            "win_cal": 0.398,
+            "diff_cal": -0.028,
+            "se_cal": 0.0223,
+            "diff_raw": -0.028,
+            "se_raw": 0.0223,
+            "hp_loss_won": 49,
+            "turns": 11,
+            "hp": 65,
+            "boss_left": 40.132,
+            "boss_left_diff": 2.765,
+            "boss_left_se": 1.9899
+          },
+          "skip": {
+            "win": 0.426,
+            "win_cal": 0.426,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 47,
+            "turns": 11,
+            "hp": 65,
+            "boss_left": 37.367,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321572,
+      "floor": 14,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 133819,
+        "output_tokens": 101,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 56
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "skip",
+        "reason": "Existing AoE is sufficient. These rewards dilute upgraded poison and Chemical X Skewer without adding needed defensive scaling.",
+        "latency_ms": 7997,
+        "tokens": 133920,
+        "input_tokens": 133819,
+        "output_tokens": 101,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 56,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 10795,
+        "memory_sections": {
+          "act": 2565,
+          "history": 5242,
+          "now": 0,
+          "this_floor": 67,
+          "route": 61,
+          "lookahead": 91,
+          "knowledge": 2769
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 70,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 3707,
+        "ms": 3713,
+        "base": {
+          "win": 0.47,
+          "win_cal": 0.47,
+          "hp_loss_won": 48,
+          "turns": 11,
+          "boss_left": 32.698
+        },
+        "options": {
+          "card0": {
+            "win": 0.411,
+            "win_cal": 0.411,
+            "diff_cal": -0.059,
+            "se_cal": 0.0228,
+            "diff_raw": -0.059,
+            "se_raw": 0.0228,
+            "hp_loss_won": 52,
+            "turns": 11,
+            "hp": 70,
+            "boss_left": 38.074,
+            "boss_left_diff": 5.376,
+            "boss_left_se": 1.9272
+          },
+          "card1": {
+            "win": 0.453,
+            "win_cal": 0.453,
+            "diff_cal": -0.017,
+            "se_cal": 0.0227,
+            "diff_raw": -0.017,
+            "se_raw": 0.0227,
+            "hp_loss_won": 52,
+            "turns": 11,
+            "hp": 70,
+            "boss_left": 33.068,
+            "boss_left_diff": 0.37,
+            "boss_left_se": 1.8434
+          },
+          "card2": {
+            "win": 0.404,
+            "win_cal": 0.404,
+            "diff_cal": -0.066,
+            "se_cal": 0.0228,
+            "diff_raw": -0.066,
+            "se_raw": 0.0228,
+            "hp_loss_won": 53,
+            "turns": 11,
+            "hp": 70,
+            "boss_left": 38.804,
+            "boss_left_diff": 6.106,
+            "boss_left_se": 1.914
+          },
+          "skip": {
+            "win": 0.47,
+            "win_cal": 0.47,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 48,
+            "turns": 11,
+            "hp": 70,
+            "boss_left": 32.698,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321575,
+      "floor": 15,
+      "label": "event/choose",
+      "usage": {
+        "input_tokens": 131095,
+        "output_tokens": 219,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 173
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "o0",
+        "reason": "Take lasting relic value before the boss. The next campfire buffers the HP cost; Treasure Map already promises substantial future gold.",
+        "latency_ms": 15397,
+        "tokens": 131314,
+        "input_tokens": 131095,
+        "output_tokens": 219,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 173,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 10135,
+        "memory_sections": {
+          "act": 2565,
+          "history": 5458,
+          "now": 0,
+          "this_floor": 0,
+          "route": 60,
+          "lookahead": 74,
+          "knowledge": 1978
+        },
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 70,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 1763,
+        "ms": 1771,
+        "base": {
+          "win": 0.47,
+          "win_cal": 0.47,
+          "hp_loss_won": 48,
+          "turns": 11,
+          "boss_left": 32.698
+        },
+        "options": {
+          "o0": {
+            "win": 0.398,
+            "win_cal": 0.398,
+            "diff_cal": -0.072,
+            "se_cal": 0.0082,
+            "diff_raw": -0.072,
+            "se_raw": 0.0082,
+            "hp_loss_won": 46,
+            "turns": 11,
+            "hp": 62,
+            "boss_left": 39.791,
+            "boss_left_diff": 7.093,
+            "boss_left_se": 0.3985
+          }
+        },
+        "not_simulated": {
+          "o1": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+        }
+      }
+    },
+    {
+      "line": 321578,
+      "floor": 16,
+      "label": "rest/plan",
+      "usage": {
+        "input_tokens": 135701,
+        "output_tokens": 68,
+        "cache_hit_tokens": 123904,
+        "reasoning_tokens": 18
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "o0",
+        "reason": "Heal to 62 HP before the forced boss. The 40% simulated win rate clearly exceeds every upgrade; existing upgraded poison already supplies scaling.",
+        "latency_ms": 6427,
+        "tokens": 135769,
+        "input_tokens": 135701,
+        "output_tokens": 68,
+        "cache_hit_tokens": 123904,
+        "reasoning_tokens": 18,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 12447,
+        "memory_sections": {
+          "act": 2565,
+          "history": 5678,
+          "now": 0,
+          "this_floor": 0,
+          "route": 59,
+          "lookahead": 70,
+          "knowledge": 4075
+        },
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F16:rest#8",
+        "plan": [
+          "o0"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "asc": 10,
+        "entry_hp": 41,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 1,
+        "sim_ms": 8403,
+        "ms": 8411,
+        "base": {
+          "win": 0.106,
+          "win_cal": 0.106,
+          "hp_loss_won": 35,
+          "turns": 10,
+          "boss_left": 80.159
+        },
+        "options": {
+          "o0": {
+            "win": 0.398,
+            "win_cal": 0.398,
+            "diff_cal": 0.292,
+            "se_cal": 0.0145,
+            "diff_raw": 0.292,
+            "se_raw": 0.0145,
+            "hp_loss_won": 46,
+            "turns": 11,
+            "hp": 62,
+            "boss_left": 39.791,
+            "boss_left_diff": -40.368,
+            "boss_left_se": 0.9091
+          },
+          "o1:c0": {
+            "win": 0.117,
+            "win_cal": 0.117,
+            "diff_cal": 0.011,
+            "se_cal": 0.0043,
+            "diff_raw": 0.011,
+            "se_raw": 0.0043,
+            "hp_loss_won": 35,
+            "turns": 10,
+            "hp": 41,
+            "boss_left": 79.567,
+            "boss_left_diff": -0.592,
+            "boss_left_se": 0.385
+          },
+          "o1:c5": {
+            "win": 0.151,
+            "win_cal": 0.151,
+            "diff_cal": 0.045,
+            "se_cal": 0.0069,
+            "diff_raw": 0.045,
+            "se_raw": 0.0069,
+            "hp_loss_won": 34,
+            "turns": 10,
+            "hp": 41,
+            "boss_left": 72.55,
+            "boss_left_diff": -7.609,
+            "boss_left_se": 0.5464
+          },
+          "o1:c11": {
+            "win": 0.144,
+            "win_cal": 0.144,
+            "diff_cal": 0.038,
+            "se_cal": 0.0065,
+            "diff_raw": 0.038,
+            "se_raw": 0.0065,
+            "hp_loss_won": 34,
+            "turns": 10,
+            "hp": 41,
+            "boss_left": 72.508,
+            "boss_left_diff": -7.651,
+            "boss_left_se": 0.5713
+          },
+          "o1:c14": {
+            "win": 0.168,
+            "win_cal": 0.168,
+            "diff_cal": 0.062,
+            "se_cal": 0.0087,
+            "diff_raw": 0.062,
+            "se_raw": 0.0087,
+            "hp_loss_won": 35,
+            "turns": 10,
+            "hp": 41,
+            "boss_left": 68.571,
+            "boss_left_diff": -11.588,
+            "boss_left_se": 0.7034
+          },
+          "o1:c15": {
+            "win": 0.178,
+            "win_cal": 0.178,
+            "diff_cal": 0.072,
+            "se_cal": 0.0088,
+            "diff_raw": 0.072,
+            "se_raw": 0.0088,
+            "hp_loss_won": 35,
+            "turns": 10,
+            "hp": 41,
+            "boss_left": 67.749,
+            "boss_left_diff": -12.41,
+            "boss_left_se": 0.6274
+          },
+          "o1:c16": {
+            "win": 0.106,
+            "win_cal": 0.106,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": 35,
+            "turns": 10,
+            "hp": 41,
+            "boss_left": 80.159,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          },
+          "o1:c17": {
+            "win": 0.109,
+            "win_cal": 0.109,
+            "diff_cal": 0.003,
+            "se_cal": 0.0066,
+            "diff_raw": 0.003,
+            "se_raw": 0.0066,
+            "hp_loss_won": 35,
+            "turns": 10,
+            "hp": 41,
+            "boss_left": 76.991,
+            "boss_left_diff": -3.168,
+            "boss_left_se": 0.486
+          },
+          "o1:c18": {
+            "win": 0.126,
+            "win_cal": 0.126,
+            "diff_cal": 0.02,
+            "se_cal": 0.0056,
+            "diff_raw": 0.02,
+            "se_raw": 0.0056,
+            "hp_loss_won": 35,
+            "turns": 10,
+            "hp": 41,
+            "boss_left": 76.132,
+            "boss_left_diff": -4.027,
+            "boss_left_se": 0.4615
+          },
+          "o1:c21": {
+            "win": 0.114,
+            "win_cal": 0.114,
+            "diff_cal": 0.008,
+            "se_cal": 0.0047,
+            "diff_raw": 0.008,
+            "se_raw": 0.0047,
+            "hp_loss_won": 35,
+            "turns": 10,
+            "hp": 41,
+            "boss_left": 77.803,
+            "boss_left_diff": -2.356,
+            "boss_left_se": 0.3281
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321618,
+      "floor": 17,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 131217,
+        "output_tokens": 139,
+        "cache_hit_tokens": 123904,
+        "reasoning_tokens": 90
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "card1",
+        "reason": "Well-Laid Plans retains Piercing Wail, poison, and Chemical X Skewer for optimal turns. Other rewards lack necessary draw support.",
+        "latency_ms": 9517,
+        "tokens": 131356,
+        "input_tokens": 131217,
+        "output_tokens": 139,
+        "cache_hit_tokens": 123904,
+        "reasoning_tokens": 90,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 12376,
+        "memory_sections": {
+          "act": 2565,
+          "history": 5887,
+          "now": 0,
+          "this_floor": 60,
+          "route": 41,
+          "lookahead": 54,
+          "knowledge": 3769
+        },
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "skipped": "act boss defeated; the next act's boss is not known yet",
+        "boss": "LAGAVULIN_MATRIARCH",
+        "ms": 0
+      }
+    },
+    {
+      "line": 321621,
+      "floor": 18,
+      "label": "event/act-plan",
+      "usage": {
+        "input_tokens": 136098,
+        "output_tokens": 585,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 288
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "o0",
+        "reason": "零费打击配合化学X；少战双火保血。",
+        "latency_ms": 25475,
+        "tokens": 136683,
+        "input_tokens": 136098,
+        "output_tokens": 585,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 288,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 13936,
+        "memory_sections": {
+          "act": 2426,
+          "history": 6112,
+          "now": 0,
+          "this_floor": 0,
+          "route": 28,
+          "lookahead": 85,
+          "knowledge": 5285
+        },
+        "route": "r1c0 r2c0 r3c0 r4c1 r5c2 r6c3 r7c3 r8c3 r9c3 r10c3 r11c3 r12c2 r13c2 r14c3 r15c3",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F18:act#9",
+        "plan": [
+          "o0",
+          "r1c0 r2c0 r3c0 r4c1 r5c2 r6c3 r7c3 r8c3 r9c3 r10c3 r11c3 r12c2 r13c2 r14c3 r15c3"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": null
+    },
+    {
+      "line": 321639,
+      "floor": 19,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 135524,
+        "output_tokens": 169,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 118
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "card1",
+        "reason": "Bubble Bubble efficiently amplifies existing poison, works with retention, and bypasses Crab’s death-triggered block. More attacks are unnecessary.",
+        "latency_ms": 14291,
+        "tokens": 135693,
+        "input_tokens": 135524,
+        "output_tokens": 169,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 118,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 13126,
+        "memory_sections": {
+          "act": 2426,
+          "history": 7172,
+          "now": 0,
+          "this_floor": 101,
+          "route": 84,
+          "lookahead": 82,
+          "knowledge": 3261
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "KAISER_CRAB",
+        "asc": 10,
+        "entry_hp": 55,
+        "entry_source": "route",
+        "samples": 704,
+        "requested": 1000,
+        "timed_out": true,
+        "workers": 24,
+        "orders": 3,
+        "sim_ms": 11020,
+        "ms": 11045,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 4,
+          "boss_left": 340.0994
+        },
+        "options": {
+          "card0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 4,
+            "hp": 55,
+            "boss_left": 341.1321,
+            "boss_left_diff": 1.0327,
+            "boss_left_se": 0.9126
+          },
+          "card1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 4,
+            "hp": 55,
+            "boss_left": 339.0355,
+            "boss_left_diff": -1.0639,
+            "boss_left_se": 1.0195
+          },
+          "card2": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 4,
+            "hp": 55,
+            "boss_left": 337.7741,
+            "boss_left_diff": -2.3253,
+            "boss_left_se": 0.9507
+          },
+          "skip": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 4,
+            "hp": 55,
+            "boss_left": 340.0994,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321642,
+      "floor": 20,
+      "label": "event/plan",
+      "usage": {
+        "input_tokens": 138104,
+        "output_tokens": 346,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 293
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "o0:c16",
+        "reason": "Corruption amplifies Chemical X Skewer’s multi-hit damage for just 2 HP per play, accelerating kills without sacrificing defensive cards.",
+        "latency_ms": 23393,
+        "tokens": 138450,
+        "input_tokens": 138104,
+        "output_tokens": 346,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 293,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 14950,
+        "memory_sections": {
+          "act": 2426,
+          "history": 7456,
+          "now": 0,
+          "this_floor": 0,
+          "route": 83,
+          "lookahead": 82,
+          "knowledge": 4903
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        },
+        "plan_id": "0PH64C4AWAX9:F20:event#10",
+        "plan": [
+          "o0",
+          "c16"
+        ],
+        "plan_step": 1
+      },
+      "boss_sim": {
+        "error": "只跑完 182 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+        "ms": 11016
+      }
+    },
+    {
+      "line": 321657,
+      "floor": 21,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 135700,
+        "output_tokens": 166,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 114
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "card1",
+        "reason": "A second Piercing Wail supplies urgently needed mitigation against the mandatory elite, Crab, and later multihits; retention enables precise timing.",
+        "latency_ms": 12645,
+        "tokens": 135866,
+        "input_tokens": 135700,
+        "output_tokens": 166,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 114,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 13959,
+        "memory_sections": {
+          "act": 2426,
+          "history": 7766,
+          "now": 0,
+          "this_floor": 65,
+          "route": 82,
+          "lookahead": 82,
+          "knowledge": 3538
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "KAISER_CRAB",
+        "asc": 10,
+        "entry_hp": 45,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 3,
+        "sim_ms": 6441,
+        "ms": 6457,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 3,
+          "boss_left": 366.711
+        },
+        "options": {
+          "card0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 3,
+            "hp": 45,
+            "boss_left": 368.637,
+            "boss_left_diff": 1.926,
+            "boss_left_se": 0.727
+          },
+          "card1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 3,
+            "hp": 45,
+            "boss_left": 366.897,
+            "boss_left_diff": 0.186,
+            "boss_left_se": 0.7331
+          },
+          "card2": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 3,
+            "hp": 45,
+            "boss_left": 365.445,
+            "boss_left_diff": -1.266,
+            "boss_left_se": 0.7386
+          },
+          "skip": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 3,
+            "hp": 45,
+            "boss_left": 366.711,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321676,
+      "floor": 22,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 135684,
+        "output_tokens": 189,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 139
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "card0",
+        "reason": "Free temporary dexterity strengthens multiple block cards immediately; retention enables timely use. Crucial protection before the mandatory elite at low HP.",
+        "latency_ms": 15100,
+        "tokens": 135873,
+        "input_tokens": 135684,
+        "output_tokens": 189,
+        "cache_hit_tokens": 124032,
+        "reasoning_tokens": 139,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 14198,
+        "memory_sections": {
+          "act": 2426,
+          "history": 8011,
+          "now": 0,
+          "this_floor": 59,
+          "route": 81,
+          "lookahead": 82,
+          "knowledge": 3539
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "KAISER_CRAB",
+        "asc": 10,
+        "entry_hp": 1,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 3,
+        "sim_ms": 2710,
+        "ms": 2724,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "boss_left": 407.233
+        },
+        "options": {
+          "card0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 1,
+            "hp": 1,
+            "boss_left": 407.979,
+            "boss_left_diff": 0.746,
+            "boss_left_se": 0.4302
+          },
+          "card1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 1,
+            "hp": 1,
+            "boss_left": 407.865,
+            "boss_left_diff": 0.632,
+            "boss_left_se": 0.413
+          },
+          "card2": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 1,
+            "hp": 1,
+            "boss_left": 409.532,
+            "boss_left_diff": 2.299,
+            "boss_left_se": 0.4156
+          },
+          "skip": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 1,
+            "hp": 1,
+            "boss_left": 407.233,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {}
+      }
+    },
+    {
+      "line": 321703,
+      "floor": 23,
+      "label": "reward/card",
+      "usage": {
+        "input_tokens": 137157,
+        "output_tokens": 493,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 241
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "choice": "card2",
+        "reason": "Noxious Fumes adds sustained poison to both Crab parts, enables Bubble Bubble, bypasses death-triggered block, and has strong observed outcomes.",
+        "latency_ms": 28493,
+        "tokens": 137650,
+        "input_tokens": 137157,
+        "output_tokens": 493,
+        "cache_hit_tokens": 0,
+        "reasoning_tokens": 241,
+        "effort": "",
+        "guide": "",
+        "handbook": "",
+        "memory_chars": 14429,
+        "memory_sections": {
+          "act": 2426,
+          "history": 8261,
+          "now": 0,
+          "this_floor": 58,
+          "route": 80,
+          "lookahead": 80,
+          "knowledge": 3524
+        },
+        "route": "keep",
+        "brain": {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "attempts": 1,
+          "tool_calls": []
+        }
+      },
+      "boss_sim": {
+        "boss": "KAISER_CRAB",
+        "asc": 10,
+        "entry_hp": 1,
+        "entry_source": "route",
+        "samples": 1000,
+        "requested": 1000,
+        "timed_out": false,
+        "workers": 24,
+        "orders": 3,
+        "sim_ms": 6059,
+        "ms": 6077,
+        "base": {
+          "win": 0,
+          "win_cal": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "boss_left": 384.966
+        },
+        "options": {
+          "card0": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 2,
+            "hp": 1,
+            "boss_left": 382.449,
+            "boss_left_diff": -2.517,
+            "boss_left_se": 0.7185
+          },
+          "card1": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 2,
+            "hp": 1,
+            "boss_left": 383.419,
+            "boss_left_diff": -1.547,
+            "boss_left_se": 0.7124
+          },
+          "card2": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 2,
+            "hp": 1,
+            "boss_left": 385.843,
+            "boss_left_diff": 0.877,
+            "boss_left_se": 0.7163
+          },
+          "skip": {
+            "win": 0,
+            "win_cal": 0,
+            "diff_cal": 0,
+            "se_cal": 0,
+            "diff_raw": 0,
+            "se_raw": 0,
+            "hp_loss_won": null,
+            "turns": 2,
+            "hp": 1,
+            "boss_left": 384.966,
+            "boss_left_diff": 0,
+            "boss_left_se": 0
+          }
+        },
+        "not_simulated": {}
+      }
+    }
+  ],
+  "combats": [
+    {
+      "floor": 2,
+      "sequence": 1,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330317,
+          "live_enemy_hp_start": 47,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "ambiguous_enemy_identity"
+          ],
+          "end_line": 330323,
+          "live_enemy_hp_end": 35,
+          "net_live_enemy_hp_loss": 12,
+          "player_hp_start": 56,
+          "player_hp_end": 56,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 2,
+          "start_line": 330323,
+          "live_enemy_hp_start": 35,
+          "visible_enemy_hp_loss_lower_bound": 3,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "ambiguous_enemy_identity"
+          ],
+          "end_line": 330328,
+          "live_enemy_hp_end": 20,
+          "net_live_enemy_hp_loss": 15,
+          "player_hp_start": 56,
+          "player_hp_end": 56,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 3,
+          "start_line": 330328,
+          "live_enemy_hp_start": 20,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330332,
+          "live_enemy_hp_end": 20,
+          "net_live_enemy_hp_loss": 0,
+          "player_hp_start": 56,
+          "player_hp_end": 56,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 4,
+          "start_line": 330332,
+          "live_enemy_hp_start": 20,
+          "visible_enemy_hp_loss_lower_bound": 12,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330337,
+          "live_enemy_hp_end": 8,
+          "net_live_enemy_hp_loss": 12,
+          "player_hp_start": 56,
+          "player_hp_end": 56,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 5,
+          "start_line": 330337,
+          "live_enemy_hp_start": 8,
+          "visible_enemy_hp_loss_lower_bound": 3,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330339,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 8,
+          "player_hp_start": 56,
+          "player_hp_end": 56,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 3,
+      "sequence": 2,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330345,
+          "live_enemy_hp_start": 57,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "ambiguous_enemy_identity"
+          ],
+          "end_line": 330351,
+          "live_enemy_hp_end": 31,
+          "net_live_enemy_hp_loss": 26,
+          "player_hp_start": 56,
+          "player_hp_end": 51,
+          "player_net_hp_change": -5
+        },
+        {
+          "turn": 2,
+          "start_line": 330351,
+          "live_enemy_hp_start": 31,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "ambiguous_enemy_identity"
+          ],
+          "end_line": 330355,
+          "live_enemy_hp_end": 16,
+          "net_live_enemy_hp_loss": 15,
+          "player_hp_start": 51,
+          "player_hp_end": 51,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 3,
+          "start_line": 330355,
+          "live_enemy_hp_start": 16,
+          "visible_enemy_hp_loss_lower_bound": 12,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330358,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 16,
+          "player_hp_start": 51,
+          "player_hp_end": 51,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 6,
+      "sequence": 3,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330374,
+          "live_enemy_hp_start": 42,
+          "visible_enemy_hp_loss_lower_bound": 35,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330380,
+          "live_enemy_hp_end": 7,
+          "net_live_enemy_hp_loss": 35,
+          "player_hp_start": 51,
+          "player_hp_end": 51,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 2,
+          "start_line": 330380,
+          "live_enemy_hp_start": 7,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330381,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 7,
+          "player_hp_start": 51,
+          "player_hp_end": 51,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 13,
+      "sequence": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330412,
+          "live_enemy_hp_start": 52,
+          "visible_enemy_hp_loss_lower_bound": 12,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330420,
+          "live_enemy_hp_end": 40,
+          "net_live_enemy_hp_loss": 12,
+          "player_hp_start": 51,
+          "player_hp_end": 47,
+          "player_net_hp_change": -4
+        },
+        {
+          "turn": 2,
+          "start_line": 330420,
+          "live_enemy_hp_start": 40,
+          "visible_enemy_hp_loss_lower_bound": 32,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330424,
+          "live_enemy_hp_end": 8,
+          "net_live_enemy_hp_loss": 32,
+          "player_hp_start": 47,
+          "player_hp_end": 47,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 3,
+          "start_line": 330424,
+          "live_enemy_hp_start": 8,
+          "visible_enemy_hp_loss_lower_bound": 4,
+          "observed_hp_added": 31,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330428,
+          "live_enemy_hp_end": 31,
+          "net_live_enemy_hp_loss": -23,
+          "player_hp_start": 47,
+          "player_hp_end": 47,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 4,
+          "start_line": 330428,
+          "live_enemy_hp_start": 31,
+          "visible_enemy_hp_loss_lower_bound": 3,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330432,
+          "live_enemy_hp_end": 10,
+          "net_live_enemy_hp_loss": 21,
+          "player_hp_start": 47,
+          "player_hp_end": 47,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 5,
+          "start_line": 330432,
+          "live_enemy_hp_start": 10,
+          "visible_enemy_hp_loss_lower_bound": 8,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330434,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 10,
+          "player_hp_start": 47,
+          "player_hp_end": 47,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 14,
+      "sequence": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330441,
+          "live_enemy_hp_start": 60,
+          "visible_enemy_hp_loss_lower_bound": 40,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330444,
+          "live_enemy_hp_end": 20,
+          "net_live_enemy_hp_loss": 40,
+          "player_hp_start": 47,
+          "player_hp_end": 49,
+          "player_net_hp_change": 2
+        },
+        {
+          "turn": 2,
+          "start_line": 330444,
+          "live_enemy_hp_start": 20,
+          "visible_enemy_hp_loss_lower_bound": 4,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330450,
+          "live_enemy_hp_end": 16,
+          "net_live_enemy_hp_loss": 4,
+          "player_hp_start": 49,
+          "player_hp_end": 49,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 3,
+          "start_line": 330450,
+          "live_enemy_hp_start": 16,
+          "visible_enemy_hp_loss_lower_bound": 10,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330454,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 16,
+          "player_hp_start": 49,
+          "player_hp_end": 49,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 17,
+      "sequence": 6,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330465,
+          "live_enemy_hp_start": 233,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330468,
+          "live_enemy_hp_end": 233,
+          "net_live_enemy_hp_loss": 0,
+          "player_hp_start": 62,
+          "player_hp_end": 64,
+          "player_net_hp_change": 2
+        },
+        {
+          "turn": 2,
+          "start_line": 330468,
+          "live_enemy_hp_start": 233,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330469,
+          "live_enemy_hp_end": 233,
+          "net_live_enemy_hp_loss": 0,
+          "player_hp_start": 64,
+          "player_hp_end": 64,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 3,
+          "start_line": 330469,
+          "live_enemy_hp_start": 233,
+          "visible_enemy_hp_loss_lower_bound": 1,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330472,
+          "live_enemy_hp_end": 232,
+          "net_live_enemy_hp_loss": 1,
+          "player_hp_start": 64,
+          "player_hp_end": 64,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 4,
+          "start_line": 330472,
+          "live_enemy_hp_start": 232,
+          "visible_enemy_hp_loss_lower_bound": 24,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330475,
+          "live_enemy_hp_end": 208,
+          "net_live_enemy_hp_loss": 24,
+          "player_hp_start": 64,
+          "player_hp_end": 49,
+          "player_net_hp_change": -15
+        },
+        {
+          "turn": 5,
+          "start_line": 330475,
+          "live_enemy_hp_start": 208,
+          "visible_enemy_hp_loss_lower_bound": 31,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330481,
+          "live_enemy_hp_end": 177,
+          "net_live_enemy_hp_loss": 31,
+          "player_hp_start": 49,
+          "player_hp_end": 43,
+          "player_net_hp_change": -6
+        },
+        {
+          "turn": 6,
+          "start_line": 330481,
+          "live_enemy_hp_start": 177,
+          "visible_enemy_hp_loss_lower_bound": 34,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330485,
+          "live_enemy_hp_end": 143,
+          "net_live_enemy_hp_loss": 34,
+          "player_hp_start": 43,
+          "player_hp_end": 43,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 7,
+          "start_line": 330485,
+          "live_enemy_hp_start": 143,
+          "visible_enemy_hp_loss_lower_bound": 28,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330488,
+          "live_enemy_hp_end": 115,
+          "net_live_enemy_hp_loss": 28,
+          "player_hp_start": 43,
+          "player_hp_end": 43,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 8,
+          "start_line": 330488,
+          "live_enemy_hp_start": 115,
+          "visible_enemy_hp_loss_lower_bound": 35,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330492,
+          "live_enemy_hp_end": 80,
+          "net_live_enemy_hp_loss": 35,
+          "player_hp_start": 43,
+          "player_hp_end": 23,
+          "player_net_hp_change": -20
+        },
+        {
+          "turn": 9,
+          "start_line": 330492,
+          "live_enemy_hp_start": 80,
+          "visible_enemy_hp_loss_lower_bound": 32,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330496,
+          "live_enemy_hp_end": 48,
+          "net_live_enemy_hp_loss": 32,
+          "player_hp_start": 23,
+          "player_hp_end": 11,
+          "player_net_hp_change": -12
+        },
+        {
+          "turn": 10,
+          "start_line": 330496,
+          "live_enemy_hp_start": 48,
+          "visible_enemy_hp_loss_lower_bound": 33,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330499,
+          "live_enemy_hp_end": 15,
+          "net_live_enemy_hp_loss": 33,
+          "player_hp_start": 11,
+          "player_hp_end": 6,
+          "player_net_hp_change": -5
+        },
+        {
+          "turn": 11,
+          "start_line": 330499,
+          "live_enemy_hp_start": 15,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330500,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 15,
+          "player_hp_start": 6,
+          "player_hp_end": 6,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 19,
+      "sequence": 7,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330509,
+          "live_enemy_hp_start": 84,
+          "visible_enemy_hp_loss_lower_bound": 52,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330518,
+          "live_enemy_hp_end": 32,
+          "net_live_enemy_hp_loss": 52,
+          "player_hp_start": 57,
+          "player_hp_end": 59,
+          "player_net_hp_change": 2
+        },
+        {
+          "turn": 2,
+          "start_line": 330518,
+          "live_enemy_hp_start": 32,
+          "visible_enemy_hp_loss_lower_bound": 16,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330521,
+          "live_enemy_hp_end": 16,
+          "net_live_enemy_hp_loss": 16,
+          "player_hp_start": 59,
+          "player_hp_end": 59,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 3,
+          "start_line": 330521,
+          "live_enemy_hp_start": 16,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330522,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 16,
+          "player_hp_start": 59,
+          "player_hp_end": 59,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 21,
+      "sequence": 8,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330533,
+          "live_enemy_hp_start": 92,
+          "visible_enemy_hp_loss_lower_bound": 60,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330540,
+          "live_enemy_hp_end": 32,
+          "net_live_enemy_hp_loss": 60,
+          "player_hp_start": 59,
+          "player_hp_end": 49,
+          "player_net_hp_change": -10
+        },
+        {
+          "turn": 2,
+          "start_line": 330540,
+          "live_enemy_hp_start": 32,
+          "visible_enemy_hp_loss_lower_bound": 21,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330544,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 32,
+          "player_hp_start": 49,
+          "player_hp_end": 49,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 22,
+      "sequence": 9,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330549,
+          "live_enemy_hp_start": 112,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "ambiguous_enemy_identity"
+          ],
+          "end_line": 330554,
+          "live_enemy_hp_end": 53,
+          "net_live_enemy_hp_loss": 59,
+          "player_hp_start": 49,
+          "player_hp_end": 36,
+          "player_net_hp_change": -13
+        },
+        {
+          "turn": 2,
+          "start_line": 330554,
+          "live_enemy_hp_start": 53,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "ambiguous_enemy_identity"
+          ],
+          "end_line": 330558,
+          "live_enemy_hp_end": 32,
+          "net_live_enemy_hp_loss": 21,
+          "player_hp_start": 36,
+          "player_hp_end": 28,
+          "player_net_hp_change": -8
+        },
+        {
+          "turn": 3,
+          "start_line": 330558,
+          "live_enemy_hp_start": 32,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "ambiguous_enemy_identity"
+          ],
+          "end_line": 330562,
+          "live_enemy_hp_end": 1,
+          "net_live_enemy_hp_loss": 31,
+          "player_hp_start": 28,
+          "player_hp_end": 28,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 4,
+          "start_line": 330562,
+          "live_enemy_hp_start": 1,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330563,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 1,
+          "player_hp_start": 28,
+          "player_hp_end": 28,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 23,
+      "sequence": 10,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330569,
+          "live_enemy_hp_start": 139,
+          "visible_enemy_hp_loss_lower_bound": 8,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330574,
+          "live_enemy_hp_end": 131,
+          "net_live_enemy_hp_loss": 8,
+          "player_hp_start": 28,
+          "player_hp_end": 30,
+          "player_net_hp_change": 2
+        },
+        {
+          "turn": 2,
+          "start_line": 330574,
+          "live_enemy_hp_start": 131,
+          "visible_enemy_hp_loss_lower_bound": 12,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330576,
+          "live_enemy_hp_end": 119,
+          "net_live_enemy_hp_loss": 12,
+          "player_hp_start": 30,
+          "player_hp_end": 30,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 3,
+          "start_line": 330576,
+          "live_enemy_hp_start": 119,
+          "visible_enemy_hp_loss_lower_bound": 15,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330582,
+          "live_enemy_hp_end": 104,
+          "net_live_enemy_hp_loss": 15,
+          "player_hp_start": 30,
+          "player_hp_end": 19,
+          "player_net_hp_change": -11
+        },
+        {
+          "turn": 4,
+          "start_line": 330582,
+          "live_enemy_hp_start": 104,
+          "visible_enemy_hp_loss_lower_bound": 42,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330586,
+          "live_enemy_hp_end": 62,
+          "net_live_enemy_hp_loss": 42,
+          "player_hp_start": 19,
+          "player_hp_end": 7,
+          "player_net_hp_change": -12
+        },
+        {
+          "turn": 5,
+          "start_line": 330586,
+          "live_enemy_hp_start": 62,
+          "visible_enemy_hp_loss_lower_bound": 38,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330590,
+          "live_enemy_hp_end": 24,
+          "net_live_enemy_hp_loss": 38,
+          "player_hp_start": 7,
+          "player_hp_end": 7,
+          "player_net_hp_change": 0
+        },
+        {
+          "turn": 6,
+          "start_line": 330590,
+          "live_enemy_hp_start": 24,
+          "visible_enemy_hp_loss_lower_bound": 0,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [
+            "body_removed_without_death_frame"
+          ],
+          "end_line": 330591,
+          "live_enemy_hp_end": 0,
+          "net_live_enemy_hp_loss": 24,
+          "player_hp_start": 7,
+          "player_hp_end": 7,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 24,
+      "sequence": 11,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330597,
+          "live_enemy_hp_start": 148,
+          "visible_enemy_hp_loss_lower_bound": 16,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330603,
+          "live_enemy_hp_end": 132,
+          "net_live_enemy_hp_loss": 16,
+          "player_hp_start": 7,
+          "player_hp_end": 8,
+          "player_net_hp_change": 1
+        },
+        {
+          "turn": 2,
+          "start_line": 330603,
+          "live_enemy_hp_start": 132,
+          "visible_enemy_hp_loss_lower_bound": 25,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330612,
+          "live_enemy_hp_end": 107,
+          "net_live_enemy_hp_loss": 25,
+          "player_hp_start": 8,
+          "player_hp_end": 8,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 24,
+      "sequence": 12,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330613,
+          "live_enemy_hp_start": 148,
+          "visible_enemy_hp_loss_lower_bound": 34,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330623,
+          "live_enemy_hp_end": 114,
+          "net_live_enemy_hp_loss": 34,
+          "player_hp_start": 9,
+          "player_hp_end": 8,
+          "player_net_hp_change": -1
+        },
+        {
+          "turn": 2,
+          "start_line": 330623,
+          "live_enemy_hp_start": 114,
+          "visible_enemy_hp_loss_lower_bound": 13,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330627,
+          "live_enemy_hp_end": 101,
+          "net_live_enemy_hp_loss": 13,
+          "player_hp_start": 8,
+          "player_hp_end": 8,
+          "player_net_hp_change": 0
+        }
+      ]
+    },
+    {
+      "floor": 24,
+      "sequence": 13,
+      "turns": [
+        {
+          "turn": 1,
+          "start_line": 330628,
+          "live_enemy_hp_start": 148,
+          "visible_enemy_hp_loss_lower_bound": 34,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330638,
+          "live_enemy_hp_end": 114,
+          "net_live_enemy_hp_loss": 34,
+          "player_hp_start": 9,
+          "player_hp_end": 14,
+          "player_net_hp_change": 5
+        },
+        {
+          "turn": 2,
+          "start_line": 330638,
+          "live_enemy_hp_start": 114,
+          "visible_enemy_hp_loss_lower_bound": 23,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330643,
+          "live_enemy_hp_end": 91,
+          "net_live_enemy_hp_loss": 23,
+          "player_hp_start": 14,
+          "player_hp_end": 2,
+          "player_net_hp_change": -12
+        },
+        {
+          "turn": 3,
+          "start_line": 330643,
+          "live_enemy_hp_start": 91,
+          "visible_enemy_hp_loss_lower_bound": 23,
+          "observed_hp_added": 0,
+          "damage_total": null,
+          "gaps": [],
+          "end_line": 330648,
+          "live_enemy_hp_end": 68,
+          "net_live_enemy_hp_loss": 23,
+          "player_hp_start": 2,
+          "player_hp_end": 0,
+          "player_net_hp_change": -2
+        }
+      ]
+    }
+  ]
+}

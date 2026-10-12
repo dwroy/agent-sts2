@@ -1,0 +1,76 @@
+test_absent_hp_does_not_become_zero (test_enemy_hp_audit.EnemyHpAudit.test_absent_hp_does_not_become_zero) ... ERROR
+test_f31_separates_damage_summon_and_revival_from_net_hp (test_enemy_hp_audit.EnemyHpAudit.test_f31_separates_damage_summon_and_revival_from_net_hp) ... ERROR
+test_missing_enemy_frame_and_changed_max_hp_are_not_damage (test_enemy_hp_audit.EnemyHpAudit.test_missing_enemy_frame_and_changed_max_hp_are_not_damage) ... ERROR
+test_missing_poison_death_frames_and_last_hp_are_unknown (test_enemy_hp_audit.EnemyHpAudit.test_missing_poison_death_frames_and_last_hp_are_unknown) ... ERROR
+test_other_characters_retain_original_resource_output (test_enemy_hp_audit.EnemyHpAudit.test_other_characters_retain_original_resource_output) ... ok
+test_repeated_types_keep_both_bodies_and_do_not_guess_identity (test_enemy_hp_audit.EnemyHpAudit.test_repeated_types_keep_both_bodies_and_do_not_guess_identity) ... ERROR
+test_restart_and_other_floor_do_not_create_damage_transitions (test_enemy_hp_audit.EnemyHpAudit.test_restart_and_other_floor_do_not_create_damage_transitions) ... ERROR
+test_unique_type_alignment_survives_index_reordering (test_enemy_hp_audit.EnemyHpAudit.test_unique_type_alignment_survives_index_reordering) ... ERROR
+
+======================================================================
+ERROR: test_absent_hp_does_not_become_zero (test_enemy_hp_audit.EnemyHpAudit.test_absent_hp_does_not_become_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/tests/test_enemy_hp_audit.py", line 83, in test_absent_hp_does_not_become_zero
+    turn = module.enemy_hp_audit([
+           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'resources' has no attribute 'enemy_hp_audit'
+
+======================================================================
+ERROR: test_f31_separates_damage_summon_and_revival_from_net_hp (test_enemy_hp_audit.EnemyHpAudit.test_f31_separates_damage_summon_and_revival_from_net_hp)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/tests/test_enemy_hp_audit.py", line 28, in test_f31_separates_damage_summon_and_revival_from_net_hp
+    turns = fight['enemy_hp_audit']['turns']
+            ~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'enemy_hp_audit'
+
+======================================================================
+ERROR: test_missing_enemy_frame_and_changed_max_hp_are_not_damage (test_enemy_hp_audit.EnemyHpAudit.test_missing_enemy_frame_and_changed_max_hp_are_not_damage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/tests/test_enemy_hp_audit.py", line 76, in test_missing_enemy_frame_and_changed_max_hp_are_not_damage
+    turn = module.enemy_hp_audit([
+           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'resources' has no attribute 'enemy_hp_audit'
+
+======================================================================
+ERROR: test_missing_poison_death_frames_and_last_hp_are_unknown (test_enemy_hp_audit.EnemyHpAudit.test_missing_poison_death_frames_and_last_hp_are_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/tests/test_enemy_hp_audit.py", line 43, in test_missing_poison_death_frames_and_last_hp_are_unknown
+    turns = self.fight()['enemy_hp_audit']['turns']
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'enemy_hp_audit'
+
+======================================================================
+ERROR: test_repeated_types_keep_both_bodies_and_do_not_guess_identity (test_enemy_hp_audit.EnemyHpAudit.test_repeated_types_keep_both_bodies_and_do_not_guess_identity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/tests/test_enemy_hp_audit.py", line 66, in test_repeated_types_keep_both_bodies_and_do_not_guess_identity
+    turns = module.enemy_hp_audit([observation(1, before), observation(2, after)])['turns']
+            ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'resources' has no attribute 'enemy_hp_audit'
+
+======================================================================
+ERROR: test_restart_and_other_floor_do_not_create_damage_transitions (test_enemy_hp_audit.EnemyHpAudit.test_restart_and_other_floor_do_not_create_damage_transitions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/tests/test_enemy_hp_audit.py", line 98, in test_restart_and_other_floor_do_not_create_damage_transitions
+    self.assertEqual(result['combats'][0]['enemy_hp_audit']['turns'][0]['observed_hp_added'], 0)
+                     ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'enemy_hp_audit'
+
+======================================================================
+ERROR: test_unique_type_alignment_survives_index_reordering (test_enemy_hp_audit.EnemyHpAudit.test_unique_type_alignment_survives_index_reordering)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/tests/test_enemy_hp_audit.py", line 55, in test_unique_type_alignment_survives_index_reordering
+    turns = module.enemy_hp_audit([
+            ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'resources' has no attribute 'enemy_hp_audit'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.003s
+
+FAILED (errors=7)

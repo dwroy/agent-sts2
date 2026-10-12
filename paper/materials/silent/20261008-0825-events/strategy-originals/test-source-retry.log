@@ -1,0 +1,10 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > every option of a logged board carries the rollout and history facts; the decision log gets the rollout 2780ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > with a modelled potion held, the rollout fact says later turns may use it 841ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > a drink-first potion option says it is not rolled out 360ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > the rollout's best line is added, last and marked, when code did not show it 43071ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line) 163ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board) 35961ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > keeps to the time budget under a mock clock, degrading the horizon/samples, and says so 211ms

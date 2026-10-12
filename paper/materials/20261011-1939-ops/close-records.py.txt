@@ -1,0 +1,19 @@
+from pathlib import Path
+import json,subprocess,hashlib,fcntl,datetime
+r=Path.cwd();o=r/'paper/materials/20261011-1939-ops';now=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();pub=json.load(open(o/'publication-closeout.json'))
+text=f'\n- {now} [运维 codex] 19:39七事件收尾：两ops-assist-done与18:52真实验收去重，未重派；184302无源码提案经现有no_change验收保留waiting；NYQW6JAD30K4复盘14所属台账行/两提案SHA核实、无新增纯bug，论文固定切点719局/353814决策/4754提交时点、五项一致性与key scan通过。原已测b6候选保留并行9f5额度/进阶修复，补d5c8园丁并经完整源自测及合后受影响7文件143例/tsc0，记录冲突三方union保留双方全部非空行；actual live {pub["actual_live"]}，记录{pub["live_records"]}。核心revision3请求done，原175450 failed/124/124回退保留；12条CLI仅按本次实际范围shipped、三条完整经验原文已双通知。宿主完整检查已通过原learner-recheck入口提交，未取得完成回执不报通过。旧17校准数据源仅记祖先，剩40固定代码源/同补丁组仍待原续办；main/live全量源码同步与Windows SSH推送仍待安全集成，不覆盖共享动态产出。证据paper/materials/20261011-1939-ops/。\n'
+notice=f'\n- {now} [19:39事件续办] 核心.13已恢复至live {pub["actual_live"]}，三条全文及各发布旧新规则见本收件箱上一条；请求roy-20261010-silent-core-reuse-experience-integration/revision3已done，原失败批次保持。新增园丁、刀刃、校准与框架固定源实际合入，合后只补受影响7文件143例且tsc0；宿主完整检查沿原175450补检请求回传。NYQW复盘无新纯bug，两辅助完成回执已去重。剩40固定代码源、原提案消费者补关联、main安全同步/push保留同一积压续办；不再派核心研究或辅助验收，不为等事件轮询。\n'
+appends=json.load(open(o/'own-record-appends.json'))
+for path,data in [('paper/materials/decision-log.md',text),('notes/for-roy.md',notice),('ops/inbox-dev.md',notice)]:
+ with (r/path).open('a') as f:fcntl.flock(f,fcntl.LOCK_EX);f.write(data)
+ appends[path]=appends.get(path,'')+data
+(o/'own-record-appends.json').write_text(json.dumps(appends,ensure_ascii=False,indent=2)+'\n')
+(o/'continuation.json').write_text(json.dumps({'request_id':'ops-20261011-1751-backlog-continuation','revision':3,'updated_at':now,'status':'published-current-candidate-remaining-fixed-sources','actual_live':pub['actual_live'],'live_records':pub['live_records'],'covered_candidate':'cbfb624449f3d7332bf733f066784f99ac11c86a','core_request_state':'done','core_historical_batch_state':'failed preserved','host_checks':{'batch':'20261011-175450-experience-update','action':'learner-recheck','status':'submitted-awaiting-original-event','response':'paper/materials/20261011-1939-ops/host-recheck-response.log'},'remaining_sources_manifest':'paper/materials/20261011-1939-ops/remaining-fixed-sources.json','remaining_original_code_sources':40,'proposal_note':'actual implementations now exist; preserve original report and use original assigned consumer, no duplicate IDs','main_sync':'needs safe code/knowledge integration preserving main-only repairs; do not overwrite main with entire live tree','dont_repeat':['core research and experience integration','two read-only assistant acceptance tests','baseline271files2725cases or affected7files143cases without new reason'],'next':'Use original check/completion events; finish remaining fixed patches with evidence, preserve failed B4/B5 gates, reconcile main-only and live-only code in isolated checkout before authorized Windows SSH push.'},ensure_ascii=False,indent=2)+'\n')
+(o/'event-dispositions.json').write_text(json.dumps([
+{'event':'ops-assist-done','id':i,'status':'deduplicated previously accepted'} for i in ['ops-infra-archive-20261011','ops-infra-herdr-wake-20261011']]+[
+{'event':'strategy-done','batch':'20261011-184302-strategy-proposal','status':'no-source verified, waiting retained'},
+{'event':'learner-done','batch':'20261011-191301','status':'postmortem and dataset closed'},
+{'event':'strategy-done','batch':'20261011-191302-s2-strategy-proposal','status':'source d5c8 integrated live; S1.skittish1; original proposal result remains pending consumer reconciliation'},
+{'event':'manual','id':'ops-20261011-1751-backlog-continuation','status':'candidate published; remaining40fixed sources and main sync saved revision3'},
+{'event':'experience-done','batch':'20261011-175450-experience-update','status':'3-entry report accepted, source restored live; S1.exp178; canonical request done, originalfailed retained, host checks pending'}],ensure_ascii=False,indent=2)+'\n')
+print(now)

@@ -1,0 +1,3144 @@
+commit ac631877279c43842346ea921d996554e0252709
+Author:     Roy <me@dwroy.com>
+AuthorDate: Mon Oct 12 03:57:33 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Mon Oct 12 03:57:33 2026 +0800
+
+    Audit Silent candidate execution across re-plans
+    
+    Preserve original answers, unique same-question forecast rankings, dispatched
+    identities, selection interruptions, and re-plan boundaries in an offline audit.
+    Queued responses and partial lines never become realized whole-turn results.
+    
+    Evidence: MTQ0EUBJ3R6T F11T1/F23T3; KFRDELW2TH2P F12T1/F33T6.
+    Ledger: silent-0418, silent-0125, silent-0079.
+    Proposals: silent-proposal-f54e8de2381c1250 and
+    silent-proposal-f915ec544ab94b6e (audit sub-scope only).
+    Fixed regression: 8 fail without implementation, 8 pass restored.
+    Sandbox: tsc 0; 316 files, 3099 tests pass. No online gameplay changes.
+    
+    Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+
+diff --git a/agent/tests/silent-selection-execution-evidence.json b/agent/tests/silent-selection-execution-evidence.json
+new file mode 100644
+index 000000000..66fbff44c
+--- /dev/null
++++ b/agent/tests/silent-selection-execution-evidence.json
+@@ -0,0 +1,2831 @@
++[
++  {
++    "run": {
++      "run_id": "MTQ0EUBJ3R6T",
++      "ended": "2026-10-07T20:54:12.505Z",
++      "victory": false,
++      "floor": 23,
++      "character": "SILENT",
++      "ascension": 10,
++      "code": "ceb74207+dirty",
++      "decisions": 424,
++      "jev_calls": 85,
++      "deepseek_calls": 23,
++      "claude_calls": 0,
++      "tokens": 402714,
++      "ds_tokens_in": 3021859,
++      "ds_tokens_out": 6042,
++      "ds_cache_hit": 1808128,
++      "deciders": {
++        "codex": 33,
++        "code": 186,
++        "jev": 85,
++        "jev-plan": 120
++      },
++      "death_fight": [
++        "异螨"
++      ]
++    },
++    "decisions": [
++      {
++        "screen": "COMBAT",
++        "floor": 11,
++        "turn": 1,
++        "label": "combat/plan-choice",
++        "decision_id": "25c31d5e-cdb7-47ad-a36e-e922bbd8bc9a",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:90:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:HAZE:true|2:STRIKE_SILENT:true|3:SURVIVOR:true|4:RICOCHET:true|5:NEUTRALIZE:true|6:DEFEND_SILENT:true\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "answers": {
++          "plan": {
++            "type": "choice",
++            "choice": "plan6",
++            "probabilities": {
++              "plan4": 0,
++              "plan5": 0.38,
++              "plan3": 0,
++              "plan6": 0.61,
++              "plan2": 0,
++              "plan1": 0.01
++            },
++            "confidence": 0.53,
++            "raw": {
++              "type": "choice",
++              "choice": "plan6",
++              "confidence": 0.53,
++              "probabilities": {
++                "plan4": 0,
++                "plan5": 0.38,
++                "plan3": 0,
++                "plan6": 0.61,
++                "plan2": 0,
++                "plan1": 0.01
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "play_card",
++          "card_index": 3
++        },
++        "expect": {
++          "card": {
++            "id": "SURVIVOR",
++            "upgraded": false
++          },
++          "turn": 1,
++          "from": "decision"
++        },
++        "rollout_best_chosen": false,
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:40:03.544Z",
++        "journal": {
++          "choice": "生存者, then 连续反弹, then 中和+ -> 多尼斯异鸟",
++          "reason": ""
++        },
++        "result": "pending (unstable): Action queued but state is still transitioning.",
++        "_line": 282138,
++        "_source_sha256": "6cf83a03b1ea60c3adb4383410021615c48ef4d9af841d45fcf1cc84f54880ea",
++        "questions": {
++          "plan": {
++            "type": "choice",
++            "instructions": "Which plan should I play this turn?",
++            "criteria": {
++              "plan1": "{\"plays\":\"生存者, then 连续反弹, then 中和+ -> 多尼斯异鸟\",\"result\":\"survives with 61/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":16,\"enemies_after\":\"多尼斯异鸟 74 HP, Weak 2\",\"block_gained\":8,\"hp_after\":61,\"hp_after_pct\":87,\"dmg\":16,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 51.6, fight over within 5 turns in 3/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~89% (fights won in the samples, the others by the end-of-horizon estimate), value -56\",\"rollout_turns\":\"T1 exact: hp -6, dmg 16; T2: hp -4.9 [0-9], dmg 17.3 [12-24], alive 8/8, won 0/8; T3: hp -17 [12-21], dmg 18.8 [14-23], alive 8/8, won 0/8; T4: hp -17.4 [11-21], dmg 16.6 [6-23], alive 8/8, won 0/8; T5: hp -4.9 [0-15], dmg 12.8 [0-24], alive 8/8, won 3/8\",\"history_estimate\":\"further HP loss 49, win 98% (this encounter n=39; estimate from act-1 elite fights n=211, typical error ±11; few similar states for this encounter)\"}",
++              "plan2": "{\"plays\":\"打击 -> 多尼斯异鸟, then 连续反弹, then 中和+ -> 多尼斯异鸟\",\"result\":\"survives with 53/70 HP before healing\",\"hp_lost\":14,\"damage_dealt\":22,\"enemies_after\":\"多尼斯异鸟 68 HP, Weak 2\",\"hp_after\":53,\"hp_after_pct\":76,\"dmg\":22,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 57.1, fight over within 5 turns in 3/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~81% (fights won in the samples, the others by the end-of-horizon estimate), value -64.8\",\"rollout_turns\":\"T1 exact: hp -14, dmg 22; T2: hp -4.9 [0-9], dmg 17.3 [12-24], alive 8/8, won 0/8; T3: hp -17 [12-21], dmg 18.8 [14-23], alive 8/8, won 0/8; T4: hp -13.3 [6-21], dmg 12.1 [0-23], alive 8/8, won 0/8; T5: hp -5.9 [0-18], dmg 14.4 [4-24], alive 8/8, won 3/8\",\"history_estimate\":\"further HP loss 54, win 97% (this encounter n=39; estimate from act-1 elite fights n=211, typical error ±11; few similar states for this encounter)\"}",
++              "plan3": "{\"plays\":\"防御, then 打击 -> 多尼斯异鸟, then 生存者, then 中和+ -> 多尼斯异鸟\",\"result\":\"survives with 66/70 HP before healing\",\"hp_lost\":1,\"damage_dealt\":10,\"enemies_after\":\"多尼斯异鸟 80 HP, Weak 2\",\"block_gained\":13,\"hp_after\":66,\"hp_after_pct\":94,\"dmg\":10,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 51.3, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~86% (fights won in the samples, the others by the end-of-horizon estimate), value -56.7\",\"rollout_turns\":\"T1 exact: hp -1, dmg 10; T2: hp -4.9 [0-9], dmg 17.3 [12-24], alive 8/8, won 0/8; T3: hp -17 [12-21], dmg 18.8 [14-23], alive 8/8, won 0/8; T4: hp -15.9 [11-21], dmg 16.1 [6-25], alive 8/8, won 0/8; T5: hp -10.4 [0-18], dmg 14.1 [4-19], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 47, win 98% (this encounter n=39; estimate from act-1 elite fights n=211, typical error ±11; few similar states for this encounter)\"}",
++              "plan4": "{\"plays\":\"防御, then 生存者, then 中和+ -> 多尼斯异鸟, then 防御\",\"result\":\"survives with 67/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":4,\"enemies_after\":\"多尼斯异鸟 86 HP, Weak 2\",\"block_gained\":18,\"hp_after\":67,\"hp_after_pct\":96,\"dmg\":4,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":4,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 58, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~5.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~74% (fights won in the samples, the others by the end-of-horizon estimate), value -68.6\",\"rollout_turns\":\"T1 exact: hp -0, dmg 4; T2: hp -4.9 [0-9], dmg 17.3 [12-24], alive 8/8, won 0/8; T3: hp -17 [12-21], dmg 18.8 [14-23], alive 8/8, won 0/8; T4: hp -14.9 [4-21], dmg 14.9 [4-23], alive 8/8, won 0/8; T5: hp -12.5 [2-23], dmg 15.9 [4-22], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 46, win 97% (this encounter n=39; estimate from act-1 elite fights n=211, typical error ±11; few similar states for this encounter)\"}",
++              "plan5": "{\"plays\":\"迷雾, then 生存者, then 中和+ -> 多尼斯异鸟\",\"result\":\"survives with 61/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":8,\"enemies_after\":\"多尼斯异鸟 82 HP, Weak 3, 中毒 3\",\"block_gained\":8,\"hp_after\":61,\"hp_after_pct\":87,\"dmg\":8,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 48.6, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~91% (fights won in the samples, the others by the end-of-horizon estimate), value -52.4\",\"rollout_turns\":\"T1 exact: hp -6, dmg 8; T2: hp -4.9 [0-9], dmg 20.3 [15-27], alive 8/8, won 0/8; T3: hp -11 [6-15], dmg 20.8 [16-25], alive 8/8, won 0/8; T4: hp -14.4 [4-21], dmg 15.4 [7-24], alive 8/8, won 0/8; T5: hp -10.1 [0-23], dmg 16 [4-21], alive 8/8, won 2/8\",\"history_estimate\":\"further HP loss 43, win 99% (this encounter n=39; estimate from act-1 elite fights n=211, typical error ±11; few similar states for this encounter)\",\"rollout_best\":true}",
++              "plan6": "{\"plays\":\"迷雾, then 打击 -> 多尼斯异鸟, then 中和+ -> 多尼斯异鸟\",\"result\":\"survives with 53/70 HP before healing\",\"hp_lost\":14,\"damage_dealt\":14,\"enemies_after\":\"多尼斯异鸟 76 HP, Weak 3, 中毒 3\",\"hp_after\":53,\"hp_after_pct\":76,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 49.8, fight over within 5 turns in 5/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~93% (fights won in the samples, the others by the end-of-horizon estimate), value -52.7\",\"rollout_turns\":\"T1 exact: hp -14, dmg 14; T2: hp -4.9 [0-9], dmg 20.3 [15-27], alive 8/8, won 0/8; T3: hp -11 [6-15], dmg 20.8 [16-25], alive 8/8, won 0/8; T4: hp -14.8 [8-21], dmg 15.4 [7-24], alive 8/8, won 0/8; T5: hp -3.6 [0-13], dmg 14.1 [4-20], alive 8/8, won 5/8\",\"history_estimate\":\"further HP loss 47, win 99% (this encounter n=39; estimate from act-1 elite fights n=211, typical error ±11; few similar states for this encounter)\"}"
++            }
++          }
++        }
++      },
++      {
++        "screen": "CARD_SELECTION",
++        "floor": 11,
++        "turn": 1,
++        "label": "selection/choose",
++        "decision_id": "d921f5cf-4a35-432f-b5b8-5586b9f39444",
++        "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:90:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:HAZE:true|2:STRIKE_SILENT:true|3:RICOCHET:true|4:NEUTRALIZE:true|5:DEFEND_SILENT:true\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "answers": {
++          "pick": {
++            "type": "choice",
++            "choice": "card3",
++            "probabilities": {
++              "card4": 0.01,
++              "card3": 0.44,
++              "card2": 0.38,
++              "card0": 0.14,
++              "card5": 0.01,
++              "card1": 0.02
++            },
++            "confidence": 0.33,
++            "raw": {
++              "type": "choice",
++              "choice": "card3",
++              "confidence": 0.33,
++              "probabilities": {
++                "card4": 0.01,
++                "card3": 0.44,
++                "card2": 0.38,
++                "card0": 0.14,
++                "card5": 0.01,
++                "card1": 0.02
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "select_deck_card",
++          "option_index": 3
++        },
++        "expect": {
++          "option": {
++            "id": "RICOCHET"
++          },
++          "from": "decision"
++        },
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:40:05.544Z",
++        "journal": {
++          "choice": "连续反弹",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282139,
++        "_source_sha256": "7c6fcd5bcfd09a1717b6b466b143d83b73792100faf8efaf926e7d66a7f755b3"
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 11,
++        "turn": 1,
++        "label": "combat/plan-choice",
++        "decision_id": "d3209456-fea8-40fb-b1b6-bf5ac3b3fa21",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:78:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:HAZE:true|2:STRIKE_SILENT:true|3:NEUTRALIZE:true|4:DEFEND_SILENT:true\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "answers": {
++          "plan": {
++            "type": "choice",
++            "choice": "plan3",
++            "probabilities": {
++              "plan1": 0.01,
++              "plan3": 0.99,
++              "plan2": 0
++            },
++            "confidence": 0.98,
++            "raw": {
++              "type": "choice",
++              "choice": "plan3",
++              "confidence": 0.98,
++              "probabilities": {
++                "plan1": 0.01,
++                "plan3": 0.99,
++                "plan2": 0
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "play_card",
++          "card_index": 1
++        },
++        "expect": {
++          "card": {
++            "id": "HAZE",
++            "upgraded": false
++          },
++          "turn": 1,
++          "from": "decision"
++        },
++        "rollout_best_chosen": true,
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:40:07.846Z",
++        "journal": {
++          "choice": "迷雾, then 中和+ -> 多尼斯异鸟",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282140,
++        "_source_sha256": "d368eda3148ca1386a025b5ef73b354fdb2639b13281c4afc37133ae068a0fa7",
++        "questions": {
++          "plan": {
++            "type": "choice",
++            "instructions": "Which plan should I play this turn?",
++            "criteria": {
++              "plan1": "{\"plays\":\"防御, then 打击 -> 多尼斯异鸟, then 中和+ -> 多尼斯异鸟\",\"result\":\"survives with 66/70 HP before healing\",\"hp_lost\":1,\"damage_dealt\":10,\"enemies_after\":\"多尼斯异鸟 68 HP, Weak 2\",\"block_gained\":5,\"hp_after\":66,\"hp_after_pct\":94,\"dmg\":10,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 40.4, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~99% (fights won in the samples, the others by the end-of-horizon estimate), value -41\",\"rollout_turns\":\"T1 exact: hp -1, dmg 10; T2: hp -4.9 [0-9], dmg 17.3 [12-24], alive 8/8, won 0/8; T3: hp -17 [12-21], dmg 18.8 [14-23], alive 8/8, won 0/8; T4: hp -15.3 [10-21], dmg 16.9 [6-25], alive 8/8, won 0/8; T5: hp -2.3 [0-18], dmg 13.9 [7-20], alive 8/8, won 7/8\",\"history_estimate\":\"further HP loss 39, win 100% (this encounter n=39; estimate from act-1 elite fights n=211, typical error ±11; few similar states for this encounter)\"}",
++              "plan2": "{\"plays\":\"防御, then 中和+ -> 多尼斯异鸟, then 防御\",\"result\":\"survives with 67/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":4,\"enemies_after\":\"多尼斯异鸟 74 HP, Weak 2\",\"block_gained\":10,\"hp_after\":67,\"hp_after_pct\":96,\"dmg\":4,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":4,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 48.4, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~91% (fights won in the samples, the others by the end-of-horizon estimate), value -52\",\"rollout_turns\":\"T1 exact: hp -0, dmg 4; T2: hp -4.9 [0-9], dmg 17.3 [12-24], alive 8/8, won 0/8; T3: hp -17 [12-21], dmg 18.8 [14-23], alive 8/8, won 0/8; T4: hp -16 [11-21], dmg 16.4 [6-25], alive 8/8, won 0/8; T5: hp -8.3 [0-18], dmg 14.3 [4-19], alive 8/8, won 2/8\",\"history_estimate\":\"further HP loss 44, win 99% (this encounter n=39; estimate from act-1 elite fights n=211, typical error ±11; few similar states for this encounter)\"}",
++              "plan3": "{\"plays\":\"迷雾, then 中和+ -> 多尼斯异鸟\",\"result\":\"survives with 61/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":8,\"enemies_after\":\"多尼斯异鸟 70 HP, Weak 3, 中毒 3\",\"hp_after\":61,\"hp_after_pct\":87,\"dmg\":8,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 38.5, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -38.5\",\"rollout_turns\":\"T1 exact: hp -6, dmg 8; T2: hp -4.9 [0-9], dmg 20.3 [15-27], alive 8/8, won 0/8; T3: hp -11 [6-15], dmg 20.8 [16-25], alive 8/8, won 0/8; T4: hp -16.6 [11-21], dmg 18.1 [7-26], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 10.9 [1-20], alive 8/8, won 8/8\",\"history_estimate\":\"further HP loss 39, win 100% (this encounter n=39; estimate from act-1 elite fights n=211, typical error ±11; few similar states for this encounter)\",\"rollout_best\":true}"
++            }
++          }
++        }
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 11,
++        "turn": 1,
++        "label": "combat/plan-continue",
++        "decision_id": "feedfd55-7c20-41ce-8912-c248c630e368",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:78:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:false|1:STRIKE_SILENT:false|2:NEUTRALIZE:true|3:DEFEND_SILENT:false\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "chosen": {
++          "action": "play_card",
++          "card_index": 2,
++          "target_index": 0
++        },
++        "expect": {
++          "card": {
++            "id": "NEUTRALIZE",
++            "upgraded": true
++          },
++          "target": {
++            "id": "BYRDONIS"
++          },
++          "turn": 1,
++          "from": "line",
++          "hand": "DEFEND_SILENT,DEFEND_SILENT,NEUTRALIZE+,STRIKE_SILENT",
++          "enemies": "0:BYRDONIS"
++        },
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:40:09.747Z",
++        "journal": {
++          "choice": "continuing the Jev-chosen plan: 中和+ -> 多尼斯异鸟",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282141,
++        "_source_sha256": "c74b1354fab031bbd37dd3479ba8972b70c8743d112e6aff4bd70b020241f4b5"
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 11,
++        "turn": 1,
++        "label": "combat/plan",
++        "decision_id": "8070751a-e2b9-4e4f-bfaf-d58ce37128a7",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:74:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:false|1:STRIKE_SILENT:false|2:DEFEND_SILENT:false\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "chosen": {
++          "action": "end_turn"
++        },
++        "expect": {
++          "turn": 1,
++          "from": "decision"
++        },
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:40:10.746Z",
++        "journal": {
++          "choice": "code plan (only line): end turn; hp -6, dmg 4",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282142,
++        "_source_sha256": "feba377b88c7e721399891bd6fa4254039383dd47f3ee97f32cbdaefa0588c49"
++      }
++    ],
++    "states": [
++      {
++        "_line": 288592,
++        "_source_sha256": "7a31ff3ad3df0994410374784db285c2498636d740915831ef4bacd2bab93688",
++        "observed_ts": "2026-10-07T20:40:03.544Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:90:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:HAZE:true|2:STRIKE_SILENT:true|3:SURVIVOR:true|4:RICOCHET:true|5:NEUTRALIZE:true|6:DEFEND_SILENT:true\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 11,
++            "current_hp": 67
++          },
++          "turn": 1,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 67,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "BYRDONIS",
++                "name": "多尼斯异鸟",
++                "current_hp": 90,
++                "max_hp": 90,
++                "base_max_hp": 90,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "TERRITORIAL_POWER",
++                    "name": "领地意识",
++                    "amount": 1,
++                    "is_debuff": false
++                  }
++                ],
++                "intent": "SWOOP_MOVE",
++                "move_id": "SWOOP_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "19",
++                    "damage": 19,
++                    "hits": 1,
++                    "total_damage": 19,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 288593,
++        "_source_sha256": "6f39ebe583e08d930a84c40588baf0874dd210dfd21e569ac568a54b528b2f42",
++        "observed_ts": "2026-10-07T20:40:05.544Z",
++        "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:90:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:HAZE:true|2:STRIKE_SILENT:true|3:RICOCHET:true|4:NEUTRALIZE:true|5:DEFEND_SILENT:true\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 11,
++            "current_hp": 67
++          },
++          "turn": 1,
++          "screen": "CARD_SELECTION",
++          "combat": {
++            "player": {
++              "current_hp": 67,
++              "block": 8,
++              "energy": 2
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "BYRDONIS",
++                "name": "多尼斯异鸟",
++                "current_hp": 90,
++                "max_hp": 90,
++                "base_max_hp": 90,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "TERRITORIAL_POWER",
++                    "name": "领地意识",
++                    "amount": 1,
++                    "is_debuff": false
++                  }
++                ],
++                "intent": "SWOOP_MOVE",
++                "move_id": "SWOOP_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "19",
++                    "damage": 19,
++                    "hits": 1,
++                    "total_damage": 19,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 288594,
++        "_source_sha256": "df437494371cfaf0c775a381e95d1cab1b6020c2649e215ef902260c3741c162",
++        "observed_ts": "2026-10-07T20:40:07.846Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:78:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:HAZE:true|2:STRIKE_SILENT:true|3:NEUTRALIZE:true|4:DEFEND_SILENT:true\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 11,
++            "current_hp": 67
++          },
++          "turn": 1,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 67,
++              "block": 8,
++              "energy": 2
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "BYRDONIS",
++                "name": "多尼斯异鸟",
++                "current_hp": 78,
++                "max_hp": 90,
++                "base_max_hp": 90,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "TERRITORIAL_POWER",
++                    "name": "领地意识",
++                    "amount": 1,
++                    "is_debuff": false
++                  }
++                ],
++                "intent": "SWOOP_MOVE",
++                "move_id": "SWOOP_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "19",
++                    "damage": 19,
++                    "hits": 1,
++                    "total_damage": 19,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 288595,
++        "_source_sha256": "2bc5894d424a67f47dc8c118dd7ad5254b41dfe2354b158305b196f9f8be4998",
++        "observed_ts": "2026-10-07T20:40:09.747Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:78:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:false|1:STRIKE_SILENT:false|2:NEUTRALIZE:true|3:DEFEND_SILENT:false\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 11,
++            "current_hp": 67
++          },
++          "turn": 1,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 67,
++              "block": 8,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "BYRDONIS",
++                "name": "多尼斯异鸟",
++                "current_hp": 78,
++                "max_hp": 90,
++                "base_max_hp": 90,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "TERRITORIAL_POWER",
++                    "name": "领地意识",
++                    "amount": 1,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 4,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 2,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 1,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "SWOOP_MOVE",
++                "move_id": "SWOOP_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "14",
++                    "damage": 14,
++                    "hits": 1,
++                    "total_damage": 14,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 288596,
++        "_source_sha256": "7f4204b3524107a1d0eeff582c0e8fd62d04eadf5c53ad8885d4da4e7c86ab1c",
++        "observed_ts": "2026-10-07T20:40:10.746Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:74:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:false|1:STRIKE_SILENT:false|2:DEFEND_SILENT:false\",\"hp\":67,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:8:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 11,
++            "current_hp": 67
++          },
++          "turn": 1,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 67,
++              "block": 8,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "BYRDONIS",
++                "name": "多尼斯异鸟",
++                "current_hp": 74,
++                "max_hp": 90,
++                "base_max_hp": 90,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "TERRITORIAL_POWER",
++                    "name": "领地意识",
++                    "amount": 1,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 4,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 2,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 3,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "SWOOP_MOVE",
++                "move_id": "SWOOP_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "14",
++                    "damage": 14,
++                    "hits": 1,
++                    "total_damage": 14,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      }
++    ]
++  },
++  {
++    "run": {
++      "run_id": "MTQ0EUBJ3R6T",
++      "ended": "2026-10-07T20:54:12.505Z",
++      "victory": false,
++      "floor": 23,
++      "character": "SILENT",
++      "ascension": 10,
++      "code": "ceb74207+dirty",
++      "decisions": 424,
++      "jev_calls": 85,
++      "deepseek_calls": 23,
++      "claude_calls": 0,
++      "tokens": 402714,
++      "ds_tokens_in": 3021859,
++      "ds_tokens_out": 6042,
++      "ds_cache_hit": 1808128,
++      "deciders": {
++        "codex": 33,
++        "code": 186,
++        "jev": 85,
++        "jev-plan": 120
++      },
++      "death_fight": [
++        "异螨"
++      ]
++    },
++    "decisions": [
++      {
++        "screen": "COMBAT",
++        "floor": 23,
++        "turn": 3,
++        "label": "combat/plan-choice",
++        "decision_id": "ae9ba672-1c29-4fe5-bbcc-d0d4bfbc5c3c",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:41:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:true|1:TOXIC:true|2:DEFEND_SILENT:true|3:STRIKE_SILENT:true|4:FINESSE:true|5:HAZE:true|6:DEFEND_SILENT:true\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|SPEED_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "answers": {
++          "plan": {
++            "type": "choice",
++            "choice": "plan1",
++            "probabilities": {
++              "plan1": 0.84,
++              "plan4": 0.03,
++              "plan3": 0.01,
++              "plan6": 0.01,
++              "plan9": 0.03,
++              "plan8": 0.01,
++              "plan5": 0.01,
++              "plan7": 0.01,
++              "plan2": 0.05
++            },
++            "confidence": 0.82,
++            "raw": {
++              "type": "choice",
++              "choice": "plan1",
++              "confidence": 0.82,
++              "probabilities": {
++                "plan1": 0.84,
++                "plan4": 0.03,
++                "plan3": 0.01,
++                "plan6": 0.01,
++                "plan9": 0.03,
++                "plan8": 0.01,
++                "plan5": 0.01,
++                "plan7": 0.01,
++                "plan2": 0.05
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "play_card",
++          "card_index": 3,
++          "target_index": 1
++        },
++        "expect": {
++          "card": {
++            "id": "STRIKE_SILENT",
++            "upgraded": false
++          },
++          "target": {
++            "id": "MYTE"
++          },
++          "turn": 3,
++          "from": "decision"
++        },
++        "rollout_best_chosen": true,
++        "sl_explore": {
++          "point": "T3, the 5th latest question before attempt 1's death on T6",
++          "original": "迷雾+, potion 速度药水, 防御, 妙计, 防御",
++          "replacement": "打击 -> 异螨 #2, 迷雾+, potion 速度药水, 防御, 妙计",
++          "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often; of them, one whose turn cannot end as a failed attempt's after a draw",
++          "played_in": [
++            1,
++            2,
++            3
++          ],
++          "replayed": 4,
++          "numbers": {
++            "original": "rollout dead 24/24, further loss 10, win ~0%; this turn hp -0, dmg 13",
++            "replacement": "rollout dead 24/24, further loss 10, win ~0%; this turn hp -8, dmg 19"
++          },
++          "turn": "DEFEND_SILENT, DEFEND_SILENT, FINESSE, HAZE+, potion:SPEED_POTION",
++          "turn_instead": "DEFEND_SILENT, FINESSE, HAZE+, STRIKE_SILENT>异螨 #2, potion:SPEED_POTION"
++        },
++        "sl_attempt": 4,
++        "sl_reloads": 3,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:53:41.210Z",
++        "journal": {
++          "choice": "迷雾+, then potion 速度药水, then 防御, then 妙计, then 防御",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282434,
++        "_source_sha256": "1255c15da8079392e399a9fab0c9057835afff32a1f7fce5a90a9b5aa6f9c97d",
++        "questions": {
++          "plan": {
++            "type": "choice",
++            "instructions": "Which plan should I play this turn?",
++            "criteria": {
++              "plan1": "{\"plays\":\"迷雾+, then potion 速度药水, then 防御, then 妙计, then 防御\",\"result\":\"survives with 10/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":13,\"enemies_after\":\"异螨 #1 55 HP, Weak 3, 中毒 5; 异螨 #2 34 HP, Weak 2, 中毒 6\",\"block_gained\":29,\"cards_drawn\":1,\"hp_after\":10,\"hp_after_pct\":14,\"dmg\":13,\"lethal_now\":\"no\",\"enemy_threat_next\":7,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":2,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 10, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~36, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 13; T2: hp -0 [0-0], dmg 17 [17-17], alive 24/24, won 0/24; T3: hp -13 [13-13], dmg 36 [36-36], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 10, win 0% (this encounter n=50; estimate from act-2 hallway fights n=496, typical error ±5.5; few similar states for this encounter)\",\"rollout_best\":true,\"potion_cost\":\"fight HP loss 10; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 10\"}",
++              "plan2": "{\"plays\":\"potion 速度药水, then 防御, then 妙计, then 防御, then 猎杀者 -> 异螨 #2\",\"result\":\"survives with 7/70 HP before healing\",\"hp_lost\":3,\"damage_dealt\":16,\"enemies_after\":\"异螨 #1 61 HP, Weak 1; 异螨 #2 25 HP\",\"block_gained\":29,\"cards_drawn\":1,\"hp_after\":7,\"hp_after_pct\":10,\"dmg\":16,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 10, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~46, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 3)\",\"rollout_turns\":\"T1 exact: hp -3, dmg 16; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -10 [10-10], dmg 34 [34-34], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 10, win 0% (this encounter n=50; estimate from act-2 hallway fights n=496, typical error ±5.5; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 10; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 10\"}",
++              "plan3": "{\"plays\":\"毒素, then 打击 -> 异螨 #2, then potion 速度药水, then 防御, then 妙计, then 防御\",\"result\":\"survives with 10/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":7,\"enemies_after\":\"异螨 #1 61 HP, Weak 1; 异螨 #2 34 HP\",\"block_gained\":29,\"cards_drawn\":1,\"hp_after\":10,\"hp_after_pct\":14,\"dmg\":7,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":2,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 10, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~55, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 7; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -10 [10-10], dmg 34 [34-34], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 10, win 0% (this encounter n=50; estimate from act-2 hallway fights n=496, typical error ±5.5; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 10; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 10\"}",
++              "plan4": "{\"plays\":\"打击 -> 异螨 #2, then 迷雾+, then potion 速度药水, then 防御, then 妙计\",\"result\":\"survives with 2/70 HP before healing\",\"hp_lost\":8,\"damage_dealt\":19,\"enemies_after\":\"异螨 #1 55 HP, Weak 3, 中毒 5; 异螨 #2 28 HP, Weak 2, 中毒 6\",\"block_gained\":19,\"cards_drawn\":1,\"hp_after\":2,\"hp_after_pct\":3,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":7,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 10, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~38, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 8)\",\"rollout_turns\":\"T1 exact: hp -8, dmg 19; T2: hp -0 [0-0], dmg 17 [17-17], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 28 [28-28], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 10, win 0% (this encounter n=50; estimate from act-2 hallway fights n=496, typical error ±5.5; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 10; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 10\"}",
++              "plan5": "{\"plays\":\"毒素, then potion 速度药水, then 防御, then 妙计, then 防御\",\"result\":\"survives with 10/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":1,\"enemies_after\":\"异螨 #1 61 HP, Weak 1; 异螨 #2 40 HP\",\"block_gained\":29,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":10,\"hp_after_pct\":14,\"dmg\":1,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":2,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 10, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~61, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 1; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -10 [10-10], dmg 34 [34-34], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 10, win 0% (this encounter n=50; estimate from act-2 hallway fights n=496, typical error ±5.5; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 10; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 10\"}",
++              "plan6": "{\"plays\":\"打击 -> 异螨 #2, then potion 速度药水, then 防御, then 妙计, then 防御\",\"result\":\"survives with 7/70 HP before healing\",\"hp_lost\":3,\"damage_dealt\":7,\"enemies_after\":\"异螨 #1 61 HP, Weak 1; 异螨 #2 34 HP\",\"block_gained\":29,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":7,\"hp_after_pct\":10,\"dmg\":7,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 10, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~55, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 3)\",\"rollout_turns\":\"T1 exact: hp -3, dmg 7; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -10 [10-10], dmg 34 [34-34], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 10, win 0% (this encounter n=50; estimate from act-2 hallway fights n=496, typical error ±5.5; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 10; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 10\"}",
++              "plan7": "{\"plays\":\"迷雾+, then potion 速度药水, then 防御, then 妙计\",\"result\":\"survives with 2/70 HP before healing\",\"hp_lost\":8,\"damage_dealt\":13,\"enemies_after\":\"异螨 #1 55 HP, Weak 3, 中毒 5; 异螨 #2 34 HP, Weak 2, 中毒 6\",\"block_gained\":19,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":2,\"hp_after_pct\":3,\"dmg\":13,\"lethal_now\":\"no\",\"enemy_threat_next\":7,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 10, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~44, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 8)\",\"rollout_turns\":\"T1 exact: hp -8, dmg 13; T2: hp -0 [0-0], dmg 17 [17-17], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 28 [28-28], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 10, win 0% (this encounter n=50; estimate from act-2 hallway fights n=496, typical error ±5.5; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 10; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 10\"}",
++              "plan8": "{\"plays\":\"毒素, then 毒素, then 防御, then 妙计, then 防御\",\"result\":\"survives with 2/70 HP before healing\",\"hp_lost\":8,\"damage_dealt\":1,\"enemies_after\":\"异螨 #1 61 HP, Weak 1; 异螨 #2 40 HP\",\"block_gained\":14,\"cards_drawn\":1,\"hp_after\":2,\"hp_after_pct\":3,\"dmg\":1,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 10, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~67, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 8)\",\"rollout_turns\":\"T1 exact: hp -8, dmg 1; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 28 [28-28], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 10, win 0% (this encounter n=50; estimate from act-2 hallway fights n=496, typical error ±5.5; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 10; potions used 1 (later turns: SPEED_POTION in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 10\"}",
++              "plan9": "{\"plays\":\"毒素, then 毒素, then 防御, then 妙计, then 防御\",\"result\":\"survives with 2/70 HP before healing\",\"hp_lost\":8,\"damage_dealt\":1,\"enemies_after\":\"异螨 #1 61 HP, Weak 1; 异螨 #2 40 HP\",\"block_gained\":14,\"cards_drawn\":1,\"no_potion_fight\":\"the no-potion line: the same turn as plan8, and no potion for the rest of this fight (its rollout's later turns drink none; plan8's may)\",\"hp_after\":2,\"hp_after_pct\":3,\"dmg\":1,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 10, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~67, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 8)\",\"rollout_turns\":\"T1 exact: hp -8, dmg 1; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 28 [28-28], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 10, win 0% (this encounter n=50; estimate from act-2 hallway fights n=496, typical error ±5.5; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 10; potions used 0; potion cost 0 HP (potion table, this act's held value); total 10\"}"
++            }
++          }
++        }
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 23,
++        "turn": 3,
++        "label": "combat/plan-continue",
++        "decision_id": "c5c324b1-9023-40f9-aab9-777950e4a47e",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:true|1:TOXIC:true|2:DEFEND_SILENT:true|3:FINESSE:true|4:HAZE:true|5:DEFEND_SILENT:true\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|SPEED_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "chosen": {
++          "action": "play_card",
++          "card_index": 4
++        },
++        "expect": {
++          "card": {
++            "id": "HAZE",
++            "upgraded": true
++          },
++          "turn": 3,
++          "from": "line",
++          "hand": "DEFEND_SILENT,DEFEND_SILENT,FINESSE,HAZE+,TOXIC,TOXIC",
++          "enemies": "0:MYTE|1:MYTE"
++        },
++        "sl_attempt": 4,
++        "sl_reloads": 3,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:53:42.678Z",
++        "journal": {
++          "choice": "continuing the Jev-chosen plan: 迷雾+",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282435,
++        "_source_sha256": "cd0dc5d5e8cc370ed633355bf0741d419151740e50a8e0f1bddf037f3a93f43c"
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 23,
++        "turn": 3,
++        "label": "combat/plan-continue",
++        "decision_id": "6763f113-67bc-4d02-8bb2-5b4e0daeef80",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:true|1:TOXIC:true|2:DEFEND_SILENT:true|3:FINESSE:true|4:DEFEND_SILENT:true\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|SPEED_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "chosen": {
++          "action": "use_potion",
++          "option_index": 1
++        },
++        "expect": {
++          "potion": {
++            "id": "SPEED_POTION"
++          },
++          "turn": 3,
++          "from": "line",
++          "hand": "DEFEND_SILENT,DEFEND_SILENT,FINESSE,TOXIC,TOXIC",
++          "enemies": "0:MYTE|1:MYTE"
++        },
++        "sl_attempt": 4,
++        "sl_reloads": 3,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:53:44.228Z",
++        "journal": {
++          "choice": "continuing the Jev-chosen plan: potion 速度药水",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282436,
++        "_source_sha256": "bd9274f58050ce4acc96a8c976852e7fae65bf060eaa3a3df499810c11988fbe"
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 23,
++        "turn": 3,
++        "label": "combat/plan-continue",
++        "decision_id": "1fa8cd6d-d8b7-4b7c-aa40-da1e0c5c453b",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:true|1:TOXIC:true|2:DEFEND_SILENT:true|3:FINESSE:true|4:DEFEND_SILENT:true\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|SPEED_POTION_POWER:5\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "chosen": {
++          "action": "play_card",
++          "card_index": 2
++        },
++        "expect": {
++          "card": {
++            "id": "DEFEND_SILENT",
++            "upgraded": false
++          },
++          "turn": 3,
++          "from": "line",
++          "hand": "DEFEND_SILENT,DEFEND_SILENT,FINESSE,TOXIC,TOXIC",
++          "enemies": "0:MYTE|1:MYTE"
++        },
++        "sl_attempt": 4,
++        "sl_reloads": 3,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:53:45.225Z",
++        "journal": {
++          "choice": "continuing the Jev-chosen plan: 防御",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282437,
++        "_source_sha256": "dbaa0dfa13c08fbb3a4179be94a78736e17a2fab4c8a3268966eca3cac4f5a31"
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 23,
++        "turn": 3,
++        "label": "combat/plan-continue",
++        "decision_id": "75cad80f-f8a0-433b-81cd-06fde2e042f0",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:false|1:TOXIC:false|2:FINESSE:true|3:DEFEND_SILENT:false\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:10:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|SPEED_POTION_POWER:5\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "chosen": {
++          "action": "play_card",
++          "card_index": 2
++        },
++        "expect": {
++          "card": {
++            "id": "FINESSE",
++            "upgraded": false
++          },
++          "turn": 3,
++          "from": "line",
++          "hand": "DEFEND_SILENT,FINESSE,TOXIC,TOXIC",
++          "enemies": "0:MYTE|1:MYTE"
++        },
++        "sl_attempt": 4,
++        "sl_reloads": 3,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:53:46.023Z",
++        "journal": {
++          "choice": "continuing the Jev-chosen plan: 妙计",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282438,
++        "_source_sha256": "c92bf858e9f6836d6e1d7a57910e4d2f5df34929b1efadab659949dadad43aed"
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 23,
++        "turn": 3,
++        "label": "combat/plan",
++        "decision_id": "4d413c38-22d5-4d1f-a9d3-387671fe14bc",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:false|1:TOXIC:false|2:DEFEND_SILENT:false|3:PREDATOR:false\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:19:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|SPEED_POTION_POWER:5\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "chosen": {
++          "action": "end_turn"
++        },
++        "expect": {
++          "turn": 3,
++          "from": "decision"
++        },
++        "sl_attempt": 4,
++        "sl_reloads": 3,
++        "run_id": "MTQ0EUBJ3R6T",
++        "observed_ts": "2026-10-07T20:53:46.945Z",
++        "journal": {
++          "choice": "code plan (only line): end turn; hp -8, dmg 13",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282439,
++        "_source_sha256": "8d157d98392af003b1fea3ff74f147e29008a301e45aad9ae7430cae694441b9"
++      }
++    ],
++    "states": [
++      {
++        "_line": 288899,
++        "_source_sha256": "e0e5fadfb9a21bb4340da483a26f267ffc57714fa04ea3352d88fa9c41b773e7",
++        "observed_ts": "2026-10-07T20:53:41.210Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:41:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:true|1:TOXIC:true|2:DEFEND_SILENT:true|3:STRIKE_SILENT:true|4:FINESSE:true|5:HAZE:true|6:DEFEND_SILENT:true\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|SPEED_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "current_hp": 10
++          },
++          "turn": 3,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 61,
++                "max_hp": 65,
++                "base_max_hp": 65,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 1,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "SUCK_MOVE",
++                "move_id": "SUCK_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "4",
++                    "damage": 4,
++                    "hits": 1,
++                    "total_damage": 4,
++                    "status_card_count": null
++                  },
++                  {
++                    "index": 1,
++                    "intent_type": "Buff",
++                    "label": null,
++                    "damage": null,
++                    "hits": null,
++                    "total_damage": null,
++                    "status_card_count": null
++                  }
++                ]
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 41,
++                "max_hp": 64,
++                "base_max_hp": 64,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 1,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "BITE_MOVE",
++                "move_id": "BITE_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "18",
++                    "damage": 18,
++                    "hits": 1,
++                    "total_damage": 18,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 288900,
++        "_source_sha256": "4442cbee23f6600b83bfb3a7466572638a65dc07b13d78431c907e580fedcc8e",
++        "observed_ts": "2026-10-07T20:53:42.678Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:true|1:TOXIC:true|2:DEFEND_SILENT:true|3:FINESSE:true|4:HAZE:true|5:DEFEND_SILENT:true\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|SPEED_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "current_hp": 10
++          },
++          "turn": 3,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 61,
++                "max_hp": 65,
++                "base_max_hp": 65,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 1,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "SUCK_MOVE",
++                "move_id": "SUCK_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "4",
++                    "damage": 4,
++                    "hits": 1,
++                    "total_damage": 4,
++                    "status_card_count": null
++                  },
++                  {
++                    "index": 1,
++                    "intent_type": "Buff",
++                    "label": null,
++                    "damage": null,
++                    "hits": null,
++                    "total_damage": null,
++                    "status_card_count": null
++                  }
++                ]
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 35,
++                "max_hp": 64,
++                "base_max_hp": 64,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 1,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "BITE_MOVE",
++                "move_id": "BITE_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "18",
++                    "damage": 18,
++                    "hits": 1,
++                    "total_damage": 18,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 288901,
++        "_source_sha256": "ff68ecb31f28f0e2a8185bb7966864a1b208cc6f0ce1d738dce06582a8f6acf9",
++        "observed_ts": "2026-10-07T20:53:44.228Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:true|1:TOXIC:true|2:DEFEND_SILENT:true|3:FINESSE:true|4:DEFEND_SILENT:true\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|SPEED_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "current_hp": 10
++          },
++          "turn": 3,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "block": 0,
++              "energy": 1
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 61,
++                "max_hp": 65,
++                "base_max_hp": 65,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 3,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 6,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "SUCK_MOVE",
++                "move_id": "SUCK_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "4",
++                    "damage": 4,
++                    "hits": 1,
++                    "total_damage": 4,
++                    "status_card_count": null
++                  },
++                  {
++                    "index": 1,
++                    "intent_type": "Buff",
++                    "label": null,
++                    "damage": null,
++                    "hits": null,
++                    "total_damage": null,
++                    "status_card_count": null
++                  }
++                ]
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 35,
++                "max_hp": 64,
++                "base_max_hp": 64,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 7,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 2,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 2,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "BITE_MOVE",
++                "move_id": "BITE_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "13",
++                    "damage": 13,
++                    "hits": 1,
++                    "total_damage": 13,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 288902,
++        "_source_sha256": "8a297e2c458ec0f09d1ebfaddc33cc556b43fe508e2a60ed7fff1e8991a56ae3",
++        "observed_ts": "2026-10-07T20:53:45.225Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:true|1:TOXIC:true|2:DEFEND_SILENT:true|3:FINESSE:true|4:DEFEND_SILENT:true\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|SPEED_POTION_POWER:5\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "current_hp": 10
++          },
++          "turn": 3,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "block": 0,
++              "energy": 1
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 61,
++                "max_hp": 65,
++                "base_max_hp": 65,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 3,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 6,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "SUCK_MOVE",
++                "move_id": "SUCK_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "4",
++                    "damage": 4,
++                    "hits": 1,
++                    "total_damage": 4,
++                    "status_card_count": null
++                  },
++                  {
++                    "index": 1,
++                    "intent_type": "Buff",
++                    "label": null,
++                    "damage": null,
++                    "hits": null,
++                    "total_damage": null,
++                    "status_card_count": null
++                  }
++                ]
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 35,
++                "max_hp": 64,
++                "base_max_hp": 64,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 7,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 2,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 2,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "BITE_MOVE",
++                "move_id": "BITE_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "13",
++                    "damage": 13,
++                    "hits": 1,
++                    "total_damage": 13,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 288903,
++        "_source_sha256": "8579398252920fa41e05f712afea71b8c7cf86ffbae540913145282ecb414e37",
++        "observed_ts": "2026-10-07T20:53:46.023Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:false|1:TOXIC:false|2:FINESSE:true|3:DEFEND_SILENT:false\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:10:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|SPEED_POTION_POWER:5\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "current_hp": 10
++          },
++          "turn": 3,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "block": 10,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 61,
++                "max_hp": 65,
++                "base_max_hp": 65,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 3,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 6,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "SUCK_MOVE",
++                "move_id": "SUCK_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "4",
++                    "damage": 4,
++                    "hits": 1,
++                    "total_damage": 4,
++                    "status_card_count": null
++                  },
++                  {
++                    "index": 1,
++                    "intent_type": "Buff",
++                    "label": null,
++                    "damage": null,
++                    "hits": null,
++                    "total_damage": null,
++                    "status_card_count": null
++                  }
++                ]
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 35,
++                "max_hp": 64,
++                "base_max_hp": 64,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 7,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 2,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 2,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "BITE_MOVE",
++                "move_id": "BITE_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "13",
++                    "damage": 13,
++                    "hits": 1,
++                    "total_damage": 13,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 288904,
++        "_source_sha256": "abb96c8884568cf2aa9fa472013a1d1a5d99b5bcb0d1698d80e1b3d424f16fb2",
++        "observed_ts": "2026-10-07T20:53:46.945Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:61:0:true|1:35:0:true\",\"event\":\"\",\"gold\":31,\"hand\":\"0:TOXIC:false|1:TOXIC:false|2:DEFEND_SILENT:false|3:PREDATOR:false\",\"hp\":10,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:19:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|SPEED_POTION_POWER:5\",\"rewards\":\"\",\"run\":\"MTQ0EUBJ3R6T\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
++        "state": {
++          "run_id": "MTQ0EUBJ3R6T",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 23,
++            "current_hp": 10
++          },
++          "turn": 3,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 10,
++              "block": 19,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 61,
++                "max_hp": 65,
++                "base_max_hp": 65,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 3,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 6,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "SUCK_MOVE",
++                "move_id": "SUCK_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "4",
++                    "damage": 4,
++                    "hits": 1,
++                    "total_damage": 4,
++                    "status_card_count": null
++                  },
++                  {
++                    "index": 1,
++                    "intent_type": "Buff",
++                    "label": null,
++                    "damage": null,
++                    "hits": null,
++                    "total_damage": null,
++                    "status_card_count": null
++                  }
++                ]
++              },
++              {
++                "index": 1,
++                "enemy_id": "MYTE",
++                "name": "异螨",
++                "current_hp": 35,
++                "max_hp": 64,
++                "base_max_hp": 64,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 7,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 2,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 2,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "BITE_MOVE",
++                "move_id": "BITE_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "13",
++                    "damage": 13,
++                    "hits": 1,
++                    "total_damage": 13,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      }
++    ]
++  },
++  {
++    "run": {
++      "run_id": "KFRDELW2TH2P",
++      "ended": "2026-10-07T21:30:23.239Z",
++      "victory": false,
++      "floor": 33,
++      "character": "SILENT",
++      "ascension": 10,
++      "code": "a73ce7cc+dirty",
++      "decisions": 587,
++      "jev_calls": 224,
++      "deepseek_calls": 34,
++      "claude_calls": 0,
++      "tokens": 1104978,
++      "ds_tokens_in": 4505437,
++      "ds_tokens_out": 8523,
++      "ds_cache_hit": 3256064,
++      "deciders": {
++        "codex": 44,
++        "code": 172,
++        "jev": 224,
++        "jev-plan": 147
++      },
++      "death_fight": [
++        "知识恶魔"
++      ]
++    },
++    "decisions": [
++      {
++        "screen": "COMBAT",
++        "floor": 12,
++        "turn": 1,
++        "label": "combat/plan-choice+potion",
++        "decision_id": "8aaa6292-6080-431d-80eb-b194a8373707",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:80:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:CLOAK_AND_DAGGER:true|1:ASCENDERS_BANE:false|2:SNAKEBITE:true|3:NEUTRALIZE:true|4:POISONED_STAB:true|5:STRIKE_SILENT:true|6:HAND_TRICK:true\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "answers": {
++          "plan": {
++            "type": "choice",
++            "choice": "plan5",
++            "probabilities": {
++              "p1->e0": 0,
++              "plan4": 0,
++              "plan2": 0,
++              "plan1": 0,
++              "plan5": 1,
++              "p0": 0,
++              "plan3": 0
++            },
++            "confidence": 1,
++            "raw": {
++              "type": "choice",
++              "choice": "plan5",
++              "confidence": 1,
++              "probabilities": {
++                "p1->e0": 0,
++                "plan4": 0,
++                "plan2": 0,
++                "plan1": 0,
++                "plan5": 1,
++                "p0": 0,
++                "plan3": 0
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "play_card",
++          "card_index": 0
++        },
++        "expect": {
++          "card": {
++            "id": "CLOAK_AND_DAGGER",
++            "upgraded": false
++          },
++          "turn": 1,
++          "from": "decision"
++        },
++        "rollout_best_chosen": true,
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "KFRDELW2TH2P",
++        "observed_ts": "2026-10-07T21:05:48.525Z",
++        "journal": {
++          "choice": "斗篷与匕首, then 中和 -> 鬼祟珊瑚群, then 带毒刺击 -> 鬼祟珊瑚群, then 手上技法",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282578,
++        "_source_sha256": "6bef2086842505f6db9fedf31293b8deeeac7ec2bb0ac6467707feab440a20db",
++        "questions": {
++          "plan": {
++            "type": "choice",
++            "instructions": "Which plan should I play this turn?",
++            "criteria": {
++              "plan1": "{\"plays\":\"斗篷与匕首, then 中和 -> 鬼祟珊瑚群, then 带毒刺击 -> 鬼祟珊瑚群, then 手上技法\",\"result\":\"survives with 65/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":12,\"enemies_after\":\"鬼祟珊瑚群 68 HP, Weak 1, 中毒 2\",\"block_gained\":13,\"cards_drawn\":1,\"no_potion_fight\":\"the no-potion line: no potion this turn, and the rollout's later turns drink none either\",\"hp_after\":65,\"hp_after_pct\":93,\"dmg\":12,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":1,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 34.2, fight over within 5 turns in 1/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -35.2\",\"rollout_turns\":\"T1 exact: hp -0, dmg 12; T2: hp -8.1 [0-12], dmg 15.9 [10-22], alive 8/8, won 0/8; T3: hp -3.6 [0-8], dmg 13.4 [7-21], alive 8/8, won 0/8; T4: hp -11.3 [6-19], dmg 12 [8-17], alive 8/8, won 0/8; T5: hp -7.6 [0-15], dmg 15.3 [9-20], alive 8/8, won 1/8\",\"history_estimate\":\"further HP loss 31, win 99% (this encounter n=24; estimate from act-1 elite fights n=219, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 34.2; potions used 0; potion cost 0 HP (potion table, this act's held value); total 34.2\"}",
++              "plan2": "{\"plays\":\"中和 -> 鬼祟珊瑚群, then 带毒刺击 -> 鬼祟珊瑚群, then 打击 -> 鬼祟珊瑚群, then 手上技法\",\"result\":\"survives with 60/70 HP before healing\",\"hp_lost\":5,\"damage_dealt\":18,\"enemies_after\":\"鬼祟珊瑚群 62 HP, Weak 1, 中毒 2\",\"block_gained\":7,\"hp_after\":60,\"hp_after_pct\":86,\"dmg\":18,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 35.4, fight over within 5 turns in 3/8, expected turns to the end (surviving samples) ~5.2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -36.2\",\"rollout_turns\":\"T1 exact: hp -5, dmg 18; T2: hp -7.3 [1-11], dmg 14.3 [2-18], alive 8/8, won 0/8; T3: hp -3.6 [0-8], dmg 15.1 [7-21], alive 8/8, won 0/8; T4: hp -12.5 [7-19], dmg 10.3 [6-17], alive 8/8, won 0/8; T5: hp -3.6 [0-9], dmg 12 [0-19], alive 8/8, won 3/8\",\"history_estimate\":\"further HP loss 34, win 99% (this encounter n=24; estimate from act-1 elite fights n=219, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 35.4; potions used 0; potion cost 0 HP (potion table, this act's held value); total 35.4\"}",
++              "plan3": "{\"plays\":\"斗篷与匕首, then 中和 -> 鬼祟珊瑚群, then 带毒刺击 -> 鬼祟珊瑚群\",\"result\":\"survives with 59/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":12,\"enemies_after\":\"鬼祟珊瑚群 68 HP, Weak 1, 中毒 2\",\"block_gained\":6,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":59,\"hp_after_pct\":84,\"dmg\":12,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 40.8, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~95% (fights won in the samples, the others by the end-of-horizon estimate), value -42.7\",\"rollout_turns\":\"T1 exact: hp -6, dmg 12; T2: hp -8.1 [0-12], dmg 15.9 [10-22], alive 8/8, won 0/8; T3: hp -3.6 [0-8], dmg 13.4 [7-21], alive 8/8, won 0/8; T4: hp -13.6 [9-19], dmg 14.5 [9-17], alive 8/8, won 0/8; T5: hp -6.5 [0-15], dmg 14.4 [8-19], alive 8/8, won 2/8\",\"history_estimate\":\"further HP loss 38, win 98% (this encounter n=24; estimate from act-1 elite fights n=219, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 40.8; potions used 0; potion cost 0 HP (potion table, this act's held value); total 40.8\"}",
++              "plan4": "{\"plays\":\"斗篷与匕首, then 中和 -> 鬼祟珊瑚群, then 手上技法\",\"result\":\"survives with 65/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":3,\"enemies_after\":\"鬼祟珊瑚群 77 HP, Weak 1\",\"block_gained\":13,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":65,\"hp_after_pct\":93,\"dmg\":3,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":1,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 42.7, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~5.7; ranked on -(further loss) - 40 x (1 - win chance): win chance ~93% (fights won in the samples, the others by the end-of-horizon estimate), value -45.4\",\"rollout_turns\":\"T1 exact: hp -0, dmg 3; T2: hp -8.1 [0-12], dmg 13.9 [8-20], alive 8/8, won 0/8; T3: hp -3.6 [0-8], dmg 12.4 [6-20], alive 8/8, won 0/8; T4: hp -12.1 [4-19], dmg 14.1 [0-20], alive 8/8, won 0/8; T5: hp -7.6 [2-15], dmg 12.8 [2-20], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 35, win 98% (this encounter n=24; estimate from act-1 elite fights n=219, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 42.7; potions used 0; potion cost 0 HP (potion table, this act's held value); total 42.7\"}",
++              "plan5": "{\"plays\":\"蛇咬 -> 鬼祟珊瑚群, then 中和 -> 鬼祟珊瑚群, then 带毒刺击 -> 鬼祟珊瑚群\",\"result\":\"survives with 53/70 HP before healing\",\"hp_lost\":12,\"damage_dealt\":19,\"enemies_after\":\"鬼祟珊瑚群 61 HP, Weak 1, 中毒 9\",\"hp_after\":53,\"hp_after_pct\":76,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 24.1, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~4.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -24.1\",\"rollout_turns\":\"T1 exact: hp -12, dmg 19; T2: hp -7.3 [1-11], dmg 21.3 [9-25], alive 8/8, won 0/8; T3: hp -3.6 [0-8], dmg 22.1 [14-28], alive 8/8, won 0/8; T4: hp -1.3 [0-10], dmg 16.8 [13-24], alive 8/8, won 7/8; T5: hp -0 [0-0], dmg 7 [7-7], alive 8/8, won 8/8\",\"history_estimate\":\"further HP loss 24, win 100% (this encounter n=24; estimate from act-1 elite fights n=219, typical error ±11; few similar states for this encounter)\",\"rollout_best\":true,\"potion_cost\":\"fight HP loss 24.1; potions used 0; potion cost 0 HP (potion table, this act's held value); total 24.1\"}",
++              "p0": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -0 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
++              "p1->e0": "{\"plays\":\"drink 毒药水 on 鬼祟珊瑚群 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -0 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
++            }
++          }
++        }
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 12,
++        "turn": 1,
++        "label": "combat/plan-choice+potion",
++        "decision_id": "fca24865-d572-4350-bbb8-9e38182ad7bd",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:80:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:ASCENDERS_BANE:false|1:SNAKEBITE:true|2:NEUTRALIZE:true|3:POISONED_STAB:true|4:STRIKE_SILENT:true|5:HAND_TRICK:true|6:SHIV:true\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:6:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "answers": {
++          "plan": {
++            "type": "choice",
++            "choice": "plan3",
++            "probabilities": {
++              "p1->e0": 0,
++              "plan2": 0,
++              "plan3": 0.91,
++              "plan1": 0.08,
++              "p0": 0.01
++            },
++            "confidence": 0.89,
++            "raw": {
++              "type": "choice",
++              "choice": "plan3",
++              "confidence": 0.89,
++              "probabilities": {
++                "p1->e0": 0,
++                "plan2": 0,
++                "plan3": 0.91,
++                "plan1": 0.08,
++                "p0": 0.01
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "play_card",
++          "card_index": 1,
++          "target_index": 0
++        },
++        "expect": {
++          "card": {
++            "id": "SNAKEBITE",
++            "upgraded": false
++          },
++          "target": {
++            "id": "SKULKING_COLONY"
++          },
++          "turn": 1,
++          "from": "decision"
++        },
++        "rollout_best_chosen": false,
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "KFRDELW2TH2P",
++        "observed_ts": "2026-10-07T21:05:50.460Z",
++        "journal": {
++          "choice": "蛇咬 -> 鬼祟珊瑚群, then 中和 -> 鬼祟珊瑚群, then 小刀 -> 鬼祟珊瑚群",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282579,
++        "_source_sha256": "2d4811ef4c0cc840af4d708bbbfb4aae07496123b018f0393f6be2506e30093b",
++        "questions": {
++          "plan": {
++            "type": "choice",
++            "instructions": "Which plan should I play this turn?",
++            "criteria": {
++              "plan1": "{\"plays\":\"中和 -> 鬼祟珊瑚群, then 带毒刺击 -> 鬼祟珊瑚群, then 手上技法, then 小刀 -> 鬼祟珊瑚群\",\"result\":\"survives with 65/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":16,\"enemies_after\":\"鬼祟珊瑚群 64 HP, Weak 1, 中毒 2\",\"block_gained\":7,\"no_potion_fight\":\"the no-potion line: no potion this turn, and the rollout's later turns drink none either\",\"hp_after\":65,\"hp_after_pct\":93,\"dmg\":16,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":1,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 29.6, fight over within 5 turns in 5/8, expected turns to the end (surviving samples) ~5.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~99% (fights won in the samples, the others by the end-of-horizon estimate), value -29.9\",\"rollout_turns\":\"T1 exact: hp -0, dmg 16; T2: hp -7.3 [1-11], dmg 14.3 [2-18], alive 8/8, won 0/8; T3: hp -3.6 [0-8], dmg 15.1 [7-21], alive 8/8, won 0/8; T4: hp -12.6 [9-19], dmg 11.4 [6-15], alive 8/8, won 0/8; T5: hp -2.8 [0-10], dmg 16.1 [8-21], alive 8/8, won 5/8\",\"history_estimate\":\"further HP loss 27, win 100% (this encounter n=24; estimate from act-1 elite fights n=219, typical error ±11; few similar states for this encounter)\",\"rollout_best\":true,\"potion_cost\":\"fight HP loss 29.6; potions used 0; potion cost 0 HP (potion table, this act's held value); total 29.6\"}",
++              "plan2": "{\"plays\":\"中和 -> 鬼祟珊瑚群, then 带毒刺击 -> 鬼祟珊瑚群, then 打击 -> 鬼祟珊瑚群, then 小刀 -> 鬼祟珊瑚群\",\"result\":\"survives with 59/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":22,\"enemies_after\":\"鬼祟珊瑚群 58 HP, Weak 1, 中毒 2\",\"hp_after\":59,\"hp_after_pct\":84,\"dmg\":22,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 34.3, fight over within 5 turns in 5/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~99% (fights won in the samples, the others by the end-of-horizon estimate), value -34.9\",\"rollout_turns\":\"T1 exact: hp -6, dmg 22; T2: hp -7.3 [1-11], dmg 14.3 [2-18], alive 8/8, won 0/8; T3: hp -3.6 [0-8], dmg 15.1 [7-21], alive 8/8, won 0/8; T4: hp -13.8 [9-19], dmg 12.1 [8-15], alive 8/8, won 0/8; T5: hp -1.9 [0-10], dmg 12.4 [8-20], alive 8/8, won 5/8\",\"history_estimate\":\"further HP loss 34, win 99% (this encounter n=24; estimate from act-1 elite fights n=219, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 34.3; potions used 0; potion cost 0 HP (potion table, this act's held value); total 34.3\"}",
++              "plan3": "{\"plays\":\"蛇咬 -> 鬼祟珊瑚群, then 中和 -> 鬼祟珊瑚群, then 小刀 -> 鬼祟珊瑚群\",\"result\":\"survives with 59/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":14,\"enemies_after\":\"鬼祟珊瑚群 66 HP, Weak 1, 中毒 6\",\"hp_after\":59,\"hp_after_pct\":84,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 32, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -32\",\"rollout_turns\":\"T1 exact: hp -6, dmg 14; T2: hp -7.3 [1-11], dmg 18.3 [6-22], alive 8/8, won 0/8; T3: hp -3.6 [0-8], dmg 19.1 [11-25], alive 8/8, won 0/8; T4: hp -15.1 [3-19], dmg 18 [13-21], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 10.6 [8-16], alive 8/8, won 8/8\",\"history_estimate\":\"further HP loss 32, win 100% (this encounter n=24; estimate from act-1 elite fights n=219, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 32; potions used 0; potion cost 0 HP (potion table, this act's held value); total 32\"}",
++              "p0": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -0 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
++              "p1->e0": "{\"plays\":\"drink 毒药水 on 鬼祟珊瑚群 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -0 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
++            }
++          }
++        }
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 12,
++        "turn": 1,
++        "label": "combat/plan-continue",
++        "decision_id": "d412b20a-31e5-4323-aca1-807f92c7e563",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:80:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:ASCENDERS_BANE:false|1:NEUTRALIZE:true|2:POISONED_STAB:false|3:STRIKE_SILENT:false|4:HAND_TRICK:false|5:SHIV:true\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:6:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "chosen": {
++          "action": "play_card",
++          "card_index": 1,
++          "target_index": 0
++        },
++        "expect": {
++          "card": {
++            "id": "NEUTRALIZE",
++            "upgraded": false
++          },
++          "target": {
++            "id": "SKULKING_COLONY"
++          },
++          "turn": 1,
++          "from": "line",
++          "hand": "ASCENDERS_BANE,HAND_TRICK,NEUTRALIZE,POISONED_STAB,SHIV,STRIKE_SILENT",
++          "enemies": "0:SKULKING_COLONY"
++        },
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "KFRDELW2TH2P",
++        "observed_ts": "2026-10-07T21:05:51.960Z",
++        "journal": {
++          "choice": "continuing the Jev-chosen plan: 中和 -> 鬼祟珊瑚群",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282580,
++        "_source_sha256": "474c28e8577d348f29e8dbafcd617f0129b67aef6ed974122f2665a4e0faf7d5"
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 12,
++        "turn": 1,
++        "label": "combat/plan-continue",
++        "decision_id": "5868cc53-9521-4493-87c3-2068b053d1da",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:77:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:ASCENDERS_BANE:false|1:POISONED_STAB:false|2:STRIKE_SILENT:false|3:HAND_TRICK:false|4:SHIV:true\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:6:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "chosen": {
++          "action": "play_card",
++          "card_index": 4,
++          "target_index": 0
++        },
++        "expect": {
++          "card": {
++            "id": "SHIV",
++            "upgraded": false
++          },
++          "target": {
++            "id": "SKULKING_COLONY"
++          },
++          "turn": 1,
++          "from": "line",
++          "hand": "ASCENDERS_BANE,HAND_TRICK,POISONED_STAB,SHIV,STRIKE_SILENT",
++          "enemies": "0:SKULKING_COLONY"
++        },
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "KFRDELW2TH2P",
++        "observed_ts": "2026-10-07T21:05:52.963Z",
++        "journal": {
++          "choice": "continuing the Jev-chosen plan: 小刀 -> 鬼祟珊瑚群",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282581,
++        "_source_sha256": "042facd3a56a2b0fe5150cb598aaa526ded4d9fcc5d9e63d06057070ac4986c6"
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 12,
++        "turn": 1,
++        "label": "combat/plan-choice+potion",
++        "decision_id": "14bfd704-f840-4a80-8d9c-3d389df50900",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:73:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:ASCENDERS_BANE:false|1:POISONED_STAB:false|2:STRIKE_SILENT:false|3:HAND_TRICK:false\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:6:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "answers": {
++          "plan": {
++            "type": "choice",
++            "choice": "plan1",
++            "probabilities": {
++              "p0": 0.01,
++              "p1->e0": 0,
++              "plan1": 0.99
++            },
++            "confidence": 0.98,
++            "raw": {
++              "type": "choice",
++              "choice": "plan1",
++              "confidence": 0.98,
++              "probabilities": {
++                "p0": 0.01,
++                "p1->e0": 0,
++                "plan1": 0.99
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "end_turn"
++        },
++        "expect": {
++          "turn": 1,
++          "from": "decision"
++        },
++        "rollout_best_chosen": true,
++        "sl_attempt": null,
++        "sl_reloads": 0,
++        "run_id": "KFRDELW2TH2P",
++        "observed_ts": "2026-10-07T21:05:53.826Z",
++        "journal": {
++          "choice": "nothing (end the turn now)",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282582,
++        "_source_sha256": "c72bd77d1008cea58d05f7f620554a5aaea0347543e72497df32900e9db0a32a",
++        "questions": {
++          "plan": {
++            "type": "choice",
++            "instructions": "Which plan should I play this turn?",
++            "criteria": {
++              "plan1": "{\"plays\":\"nothing (end the turn now)\",\"result\":\"survives with 59/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":7,\"enemies_after\":\"鬼祟珊瑚群 66 HP, Weak 1, 中毒 6\",\"no_potion_fight\":\"the no-potion line: no potion this turn, and the rollout's later turns drink none either\",\"hp_after\":59,\"hp_after_pct\":84,\"dmg\":7,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 31.3, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -31.2\",\"rollout_turns\":\"T1 exact: hp -6, dmg 7; T2: hp -7.3 [1-11], dmg 18.3 [6-22], alive 8/8, won 0/8; T3: hp -3.6 [0-8], dmg 19.1 [11-25], alive 8/8, won 0/8; T4: hp -14.4 [9-19], dmg 16.1 [10-21], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 12.5 [8-16], alive 8/8, won 8/8\",\"history_estimate\":\"further HP loss 31, win 100% (this encounter n=24; estimate from act-1 elite fights n=219, typical error ±11; few similar states for this encounter)\",\"rollout_best\":true,\"potion_cost\":\"fight HP loss 31.3; potions used 0; potion cost 0 HP (potion table, this act's held value); total 31.3\"}",
++              "p0": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -6 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
++              "p1->e0": "{\"plays\":\"drink 毒药水 on 鬼祟珊瑚群 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -6 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
++            }
++          }
++        }
++      }
++    ],
++    "states": [
++      {
++        "_line": 289049,
++        "_source_sha256": "3013034ba970c3f453ada08d13b15d05d45e094c04173144fc3b2140c78710bb",
++        "observed_ts": "2026-10-07T21:05:48.525Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:80:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:CLOAK_AND_DAGGER:true|1:ASCENDERS_BANE:false|2:SNAKEBITE:true|3:NEUTRALIZE:true|4:POISONED_STAB:true|5:STRIKE_SILENT:true|6:HAND_TRICK:true\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 12,
++            "current_hp": 65
++          },
++          "turn": 1,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 65,
++              "block": 0,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "SKULKING_COLONY",
++                "name": "鬼祟珊瑚群",
++                "current_hp": 80,
++                "max_hp": 80,
++                "base_max_hp": 80,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "HARDENED_SHELL_POWER",
++                    "name": "硬化外壳",
++                    "amount": 20,
++                    "is_debuff": false
++                  }
++                ],
++                "intent": "ZOOM_MOVE",
++                "move_id": "ZOOM_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "16",
++                    "damage": 16,
++                    "hits": 1,
++                    "total_damage": 16,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 289050,
++        "_source_sha256": "93a41ad55635867ee98fc3dada425a942754916435947674366e263a394c7d40",
++        "observed_ts": "2026-10-07T21:05:50.460Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:80:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:ASCENDERS_BANE:false|1:SNAKEBITE:true|2:NEUTRALIZE:true|3:POISONED_STAB:true|4:STRIKE_SILENT:true|5:HAND_TRICK:true|6:SHIV:true\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:6:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 12,
++            "current_hp": 65
++          },
++          "turn": 1,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 65,
++              "block": 6,
++              "energy": 2
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "SKULKING_COLONY",
++                "name": "鬼祟珊瑚群",
++                "current_hp": 80,
++                "max_hp": 80,
++                "base_max_hp": 80,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "HARDENED_SHELL_POWER",
++                    "name": "硬化外壳",
++                    "amount": 20,
++                    "is_debuff": false
++                  }
++                ],
++                "intent": "ZOOM_MOVE",
++                "move_id": "ZOOM_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "16",
++                    "damage": 16,
++                    "hits": 1,
++                    "total_damage": 16,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 289051,
++        "_source_sha256": "5cbd21d8a88ef886e444f1de22087465ab014be203857c7010c383cc2dbff521",
++        "observed_ts": "2026-10-07T21:05:51.960Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:80:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:ASCENDERS_BANE:false|1:NEUTRALIZE:true|2:POISONED_STAB:false|3:STRIKE_SILENT:false|4:HAND_TRICK:false|5:SHIV:true\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:6:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 12,
++            "current_hp": 65
++          },
++          "turn": 1,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 65,
++              "block": 6,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "SKULKING_COLONY",
++                "name": "鬼祟珊瑚群",
++                "current_hp": 80,
++                "max_hp": 80,
++                "base_max_hp": 80,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "HARDENED_SHELL_POWER",
++                    "name": "硬化外壳",
++                    "amount": 20,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 7,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "ZOOM_MOVE",
++                "move_id": "ZOOM_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "16",
++                    "damage": 16,
++                    "hits": 1,
++                    "total_damage": 16,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 289052,
++        "_source_sha256": "70ede878d7f4c5d46f869acc1fdc3ec5a1696aa2738526a43a235e5c31e95327",
++        "observed_ts": "2026-10-07T21:05:52.963Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:77:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:ASCENDERS_BANE:false|1:POISONED_STAB:false|2:STRIKE_SILENT:false|3:HAND_TRICK:false|4:SHIV:true\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:6:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 12,
++            "current_hp": 65
++          },
++          "turn": 1,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 65,
++              "block": 6,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "SKULKING_COLONY",
++                "name": "鬼祟珊瑚群",
++                "current_hp": 77,
++                "max_hp": 80,
++                "base_max_hp": 80,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "HARDENED_SHELL_POWER",
++                    "name": "硬化外壳",
++                    "amount": 20,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 7,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 2,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 1,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "ZOOM_MOVE",
++                "move_id": "ZOOM_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "12",
++                    "damage": 12,
++                    "hits": 1,
++                    "total_damage": 12,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 289053,
++        "_source_sha256": "f02f41d3c253f6a7042f04d4636986d2a515765e1454fd03870075153afd5d9d",
++        "observed_ts": "2026-10-07T21:05:53.826Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:73:0:true\",\"event\":\"\",\"gold\":82,\"hand\":\"0:ASCENDERS_BANE:false|1:POISONED_STAB:false|2:STRIKE_SILENT:false|3:HAND_TRICK:false\",\"hp\":65,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:6:0\",\"potions\":\"CUNNING_POTION:true:true|POISON_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 12,
++            "current_hp": 65
++          },
++          "turn": 1,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 65,
++              "block": 6,
++              "energy": 0
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "SKULKING_COLONY",
++                "name": "鬼祟珊瑚群",
++                "current_hp": 73,
++                "max_hp": 80,
++                "base_max_hp": 80,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "HARDENED_SHELL_POWER",
++                    "name": "硬化外壳",
++                    "amount": 20,
++                    "is_debuff": false
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 7,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 2,
++                    "power_id": "WEAK_POWER",
++                    "name": "虚弱",
++                    "amount": 1,
++                    "is_debuff": true
++                  }
++                ],
++                "intent": "ZOOM_MOVE",
++                "move_id": "ZOOM_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "12",
++                    "damage": 12,
++                    "hits": 1,
++                    "total_damage": 12,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      }
++    ]
++  },
++  {
++    "run": {
++      "run_id": "KFRDELW2TH2P",
++      "ended": "2026-10-07T21:30:23.239Z",
++      "victory": false,
++      "floor": 33,
++      "character": "SILENT",
++      "ascension": 10,
++      "code": "a73ce7cc+dirty",
++      "decisions": 587,
++      "jev_calls": 224,
++      "deepseek_calls": 34,
++      "claude_calls": 0,
++      "tokens": 1104978,
++      "ds_tokens_in": 4505437,
++      "ds_tokens_out": 8523,
++      "ds_cache_hit": 3256064,
++      "deciders": {
++        "codex": 44,
++        "code": 172,
++        "jev": 224,
++        "jev-plan": 147
++      },
++      "death_fight": [
++        "知识恶魔"
++      ]
++    },
++    "decisions": [
++      {
++        "screen": "COMBAT",
++        "floor": 33,
++        "turn": 6,
++        "label": "combat/plan-choice+potion",
++        "decision_id": "f838624d-1262-497f-8e11-7bc84a9f3178",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:228:0:true\",\"event\":\"\",\"gold\":101,\"hand\":\"0:DEADLY_POISON:true|1:CLOAK_AND_DAGGER:true|2:CLOAK_AND_DAGGER:true|3:EXTERMINATE:true\",\"hp\":15,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|POISON_POTION:true:true\",\"powers\":\"MIND_ROT_POWER:1|PLATING_POWER:3|ACCELERANT_POWER:1|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
++        "answers": {
++          "plan": {
++            "type": "choice",
++            "choice": "plan2",
++            "probabilities": {
++              "plan2": 0.98,
++              "p1->e0": 0.01,
++              "plan1": 0.01
++            },
++            "confidence": 0.97,
++            "raw": {
++              "type": "choice",
++              "choice": "plan2",
++              "confidence": 0.97,
++              "probabilities": {
++                "plan2": 0.98,
++                "p1->e0": 0.01,
++                "plan1": 0.01
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "play_card",
++          "card_index": 1
++        },
++        "expect": {
++          "card": {
++            "id": "CLOAK_AND_DAGGER",
++            "upgraded": false
++          },
++          "turn": 6,
++          "from": "decision"
++        },
++        "rollout_best_chosen": true,
++        "sl_explore": {
++          "replay": {
++            "point": "T6, the 3rd latest question before attempt 1's death on T7",
++            "reference": 1,
++            "line": "斗篷与匕首, 斗篷与匕首, 杀灭",
++            "original": "斗篷与匕首, 斗篷与匕首, 杀灭",
++            "overridden": false,
++            "reason": "the answer is attempt 1's line"
++          }
++        },
++        "sl_attempt": 3,
++        "sl_reloads": 2,
++        "run_id": "KFRDELW2TH2P",
++        "observed_ts": "2026-10-07T21:24:59.089Z",
++        "journal": {
++          "choice": "斗篷与匕首, then 斗篷与匕首, then 杀灭",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282928,
++        "_source_sha256": "60d6e19e0e4905feb5e393ae01c100a86a8e2ec44ac0ae35aa20c5f3ec06a592",
++        "questions": {
++          "plan": {
++            "type": "choice",
++            "instructions": "Which plan should I play this turn?",
++            "criteria": {
++              "plan1": "{\"plays\":\"致命毒药 -> 知识恶魔, then 斗篷与匕首, then 杀灭\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":12,\"damage_dealt\":93,\"enemies_after\":\"知识恶魔 135 HP, 中毒 39\",\"block_gained\":6,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":3,\"hp_after_pct\":4,\"dmg\":93,\"lethal_now\":\"no\",\"enemy_threat_next\":36,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 14.4, fight over within 5 turns in 5/24, expected turns to the end (surviving samples) ~3, dead within 5 turns in 19/24 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~21% (fights won in the samples, the others by the end-of-horizon estimate), value -46\",\"rollout_turns\":\"T1 exact: hp -12, dmg 93; T2: hp -18.5 [0-34], dmg 98.3 [77-128], alive 5/24, won 0/24; T3: hp -0 [0-0], dmg 41.8 [30-55], alive 5/24, won 5/24; T4: over (alive 5/24, won 5/24); T5: over (alive 5/24, won 5/24)\",\"history_estimate\":\"further HP loss 14, win 21% (this encounter n=37; estimate from boss fights n=443, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"win 22% (vs the best line −1 ± 1 pts, tied on win rate), HP lost when won median 12, ~3 turns to win (this one included); the losing samples die most often on T7 (dead in 78%); 1200 samples\",\"potion_cost\":\"fight HP loss 14.4; potions used 0; potion cost 0 HP (potion table, this act's held value); total 14.4\"}",
++              "plan2": "{\"plays\":\"斗篷与匕首, then 斗篷与匕首, then 杀灭\",\"result\":\"survives with 9/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":83,\"enemies_after\":\"知识恶魔 145 HP, 中毒 34\",\"block_gained\":12,\"cards_drawn\":2,\"energy_unused\":1,\"hp_after\":9,\"hp_after_pct\":13,\"dmg\":83,\"lethal_now\":\"no\",\"enemy_threat_next\":36,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 12.8, fight over within 5 turns in 6/24, expected turns to the end (surviving samples) ~3, dead within 5 turns in 18/24 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~25% (fights won in the samples, the others by the end-of-horizon estimate), value -42.7\",\"rollout_turns\":\"T1 exact: hp -6, dmg 83; T2: hp -16.3 [0-34], dmg 88 [67-107], alive 6/24, won 0/24; T3: hp -0 [0-0], dmg 61.7 [50-78], alive 6/24, won 6/24; T4: over (alive 6/24, won 6/24); T5: over (alive 6/24, won 6/24)\",\"history_estimate\":\"further HP loss 13, win 25% (this encounter n=37; estimate from boss fights n=443, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"win 23% (the best line), HP lost when won median 6, ~3 turns to win (this one included); the losing samples die most often on T7 (dead in 77%); 1200 samples\",\"potion_cost\":\"fight HP loss 12.8; potions used 0; potion cost 0 HP (potion table, this act's held value); total 12.8\"}",
++              "p1->e0": "{\"plays\":\"drink 毒药水 on 知识恶魔 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -6 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
++            }
++          }
++        }
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 33,
++        "turn": 6,
++        "label": "combat/plan-choice+potion",
++        "decision_id": "04a7490c-94f9-4745-90f2-1466e944f99c",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:228:0:true\",\"event\":\"\",\"gold\":101,\"hand\":\"0:DEADLY_POISON:true|1:CLOAK_AND_DAGGER:true|2:EXTERMINATE:true|3:SHIV:true\",\"hp\":15,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:6:0\",\"potions\":\":false:false|POISON_POTION:true:true\",\"powers\":\"MIND_ROT_POWER:1|PLATING_POWER:3|ACCELERANT_POWER:1|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
++        "answers": {
++          "plan": {
++            "type": "choice",
++            "choice": "plan1",
++            "probabilities": {
++              "plan2": 0.01,
++              "plan3": 0.01,
++              "p1->e0": 0.02,
++              "plan1": 0.96
++            },
++            "confidence": 0.95,
++            "raw": {
++              "type": "choice",
++              "choice": "plan1",
++              "confidence": 0.95,
++              "probabilities": {
++                "plan2": 0.01,
++                "plan3": 0.01,
++                "p1->e0": 0.02,
++                "plan1": 0.96
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "play_card",
++          "card_index": 0,
++          "target_index": 0
++        },
++        "expect": {
++          "card": {
++            "id": "DEADLY_POISON",
++            "upgraded": false
++          },
++          "target": {
++            "id": "KNOWLEDGE_DEMON"
++          },
++          "turn": 6,
++          "from": "decision"
++        },
++        "rollout_best_chosen": true,
++        "sl_explore": {
++          "point": "T6, the 3rd latest question before attempt 1's death on T7",
++          "original": "斗篷与匕首, 杀灭",
++          "replacement": "致命毒药 -> 知识恶魔, 杀灭",
++          "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
++          "played_in": [
++            1
++          ],
++          "replayed": 11,
++          "numbers": {
++            "original": "rollout dead 19/24, further loss 13.1, win ~21%; whole-fight sim win 21.8%; this turn hp -6, dmg 83",
++            "replacement": "rollout dead 22/24, further loss 14.8, win ~8%; whole-fight sim win 22.4%; this turn hp -12, dmg 93"
++          },
++          "gate": "b2",
++          "b2": {
++            "original": 0.218,
++            "replacement": 0.224,
++            "diff": 0.0067,
++            "se": 0.0098
++          },
++          "turn": "CLOAK_AND_DAGGER, CLOAK_AND_DAGGER, EXTERMINATE",
++          "turn_instead": "CLOAK_AND_DAGGER, DEADLY_POISON>知识恶魔, EXTERMINATE"
++        },
++        "sl_attempt": 3,
++        "sl_reloads": 2,
++        "run_id": "KFRDELW2TH2P",
++        "observed_ts": "2026-10-07T21:25:01.159Z",
++        "journal": {
++          "choice": "斗篷与匕首, then 杀灭",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282929,
++        "_source_sha256": "251902c3d9304fe86b6b775af2c9372b9417f1a2108d629a4859deeabd255ae4",
++        "questions": {
++          "plan": {
++            "type": "choice",
++            "instructions": "Which plan should I play this turn?",
++            "criteria": {
++              "plan1": "{\"plays\":\"斗篷与匕首, then 杀灭\",\"result\":\"survives with 9/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":83,\"enemies_after\":\"知识恶魔 145 HP, 中毒 34\",\"block_gained\":6,\"cards_drawn\":1,\"energy_unused\":1,\"hp_after\":9,\"hp_after_pct\":13,\"dmg\":83,\"lethal_now\":\"no\",\"enemy_threat_next\":36,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 13.1, fight over within 5 turns in 5/24, expected turns to the end (surviving samples) ~3, dead within 5 turns in 19/24 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~21% (fights won in the samples, the others by the end-of-horizon estimate), value -44.8\",\"rollout_turns\":\"T1 exact: hp -6, dmg 83; T2: hp -18.8 [0-34], dmg 88.8 [67-118], alive 5/24, won 0/24; T3: hp -0 [0-0], dmg 61.8 [50-75], alive 5/24, won 5/24; T4: over (alive 5/24, won 5/24); T5: over (alive 5/24, won 5/24)\",\"history_estimate\":\"further HP loss 13, win 21% (this encounter n=37; estimate from boss fights n=443, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"win 22% (the best line), HP lost when won median 6, ~3 turns to win (this one included); the losing samples die most often on T7 (dead in 78%); 1200 samples\",\"potion_cost\":\"fight HP loss 13.1; potions used 0; potion cost 0 HP (potion table, this act's held value); total 13.1\"}",
++              "plan2": "{\"plays\":\"致命毒药 -> 知识恶魔, then 杀灭\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":12,\"damage_dealt\":93,\"enemies_after\":\"知识恶魔 135 HP, 中毒 39\",\"energy_unused\":1,\"hp_after\":3,\"hp_after_pct\":4,\"dmg\":93,\"lethal_now\":\"no\",\"enemy_threat_next\":36,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 14.8, fight over within 5 turns in 2/24, expected turns to the end (surviving samples) ~3, dead within 5 turns in 22/24 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~8% (fights won in the samples, the others by the end-of-horizon estimate), value -51.4\",\"rollout_turns\":\"T1 exact: hp -12, dmg 93; T2: hp -19.8 [0-34], dmg 95.4 [77-128], alive 2/24, won 0/24; T3: hp -0 [0-0], dmg 53.5 [52-55], alive 2/24, won 2/24; T4: over (alive 2/24, won 2/24); T5: over (alive 2/24, won 2/24)\",\"history_estimate\":\"further HP loss 15, win 8% (this encounter n=37; estimate from boss fights n=443, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"win 22% (vs the best line +1 ± 1 pts, tied on win rate), HP lost when won median 12, ~3 turns to win (this one included); the losing samples die most often on T7 (dead in 78%); 1200 samples\",\"potion_cost\":\"fight HP loss 14.8; potions used 0; potion cost 0 HP (potion table, this act's held value); total 14.8\"}",
++              "plan3": "{\"plays\":\"杀灭, then 小刀 -> 知识恶魔\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":12,\"damage_dealt\":87,\"enemies_after\":\"知识恶魔 141 HP, 中毒 34\",\"energy_unused\":2,\"hp_after\":3,\"hp_after_pct\":4,\"dmg\":87,\"lethal_now\":\"no\",\"enemy_threat_next\":36,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 14.8, fight over within 5 turns in 2/24, expected turns to the end (surviving samples) ~3, dead within 5 turns in 22/24 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~8% (fights won in the samples, the others by the end-of-horizon estimate), value -51.4\",\"rollout_turns\":\"T1 exact: hp -12, dmg 87; T2: hp -19.8 [0-34], dmg 85.4 [67-118], alive 2/24, won 0/24; T3: hp -0 [0-0], dmg 69.5 [68-71], alive 2/24, won 2/24; T4: over (alive 2/24, won 2/24); T5: over (alive 2/24, won 2/24)\",\"history_estimate\":\"further HP loss 15, win 8% (this encounter n=37; estimate from boss fights n=443, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"win 22% (vs the best line +1 ± 1 pts, tied on win rate), HP lost when won median 12, ~3 turns to win (this one included); the losing samples die most often on T7 (dead in 78%); 1200 samples\",\"potion_cost\":\"fight HP loss 14.8; potions used 0; potion cost 0 HP (potion table, this act's held value); total 14.8\"}",
++              "p1->e0": "{\"plays\":\"drink 毒药水 on 知识恶魔 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -6 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
++            }
++          }
++        }
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 33,
++        "turn": 6,
++        "label": "combat/plan-continue",
++        "decision_id": "43657ae6-6a0b-4f6f-9fe9-c38baab0e0fb",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:228:0:true\",\"event\":\"\",\"gold\":101,\"hand\":\"0:CLOAK_AND_DAGGER:true|1:EXTERMINATE:true|2:SHIV:true\",\"hp\":15,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:6:0\",\"potions\":\":false:false|POISON_POTION:true:true\",\"powers\":\"MIND_ROT_POWER:1|PLATING_POWER:3|ACCELERANT_POWER:1|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
++        "chosen": {
++          "action": "play_card",
++          "card_index": 1
++        },
++        "expect": {
++          "card": {
++            "id": "EXTERMINATE",
++            "upgraded": false
++          },
++          "turn": 6,
++          "from": "line",
++          "hand": "CLOAK_AND_DAGGER,EXTERMINATE,SHIV",
++          "enemies": "0:KNOWLEDGE_DEMON"
++        },
++        "sl_attempt": 3,
++        "sl_reloads": 2,
++        "run_id": "KFRDELW2TH2P",
++        "observed_ts": "2026-10-07T21:25:03.062Z",
++        "journal": {
++          "choice": "continuing the Jev-chosen plan: 杀灭",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282930,
++        "_source_sha256": "bd7fb2f910240b98985e550e7f729aec866c28f62cf9a0ff6333c3b091aa758b"
++      },
++      {
++        "screen": "COMBAT",
++        "floor": 33,
++        "turn": 6,
++        "label": "combat/plan-choice+potion",
++        "decision_id": "3f0f8d6c-8a8f-41d7-816e-6b0e71a800a6",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:216:0:true\",\"event\":\"\",\"gold\":101,\"hand\":\"0:CLOAK_AND_DAGGER:false|1:SHIV:false\",\"hp\":15,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:6:0\",\"potions\":\":false:false|POISON_POTION:true:true\",\"powers\":\"MIND_ROT_POWER:1|PLATING_POWER:3|ACCELERANT_POWER:1|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
++        "answers": {
++          "plan": {
++            "type": "choice",
++            "choice": "plan1",
++            "probabilities": {
++              "p1->e0": 0.14,
++              "plan1": 0.86
++            },
++            "confidence": 0.72,
++            "raw": {
++              "type": "choice",
++              "choice": "plan1",
++              "confidence": 0.72,
++              "probabilities": {
++                "p1->e0": 0.14,
++                "plan1": 0.86
++              }
++            }
++          }
++        },
++        "chosen": {
++          "action": "end_turn"
++        },
++        "expect": {
++          "turn": 6,
++          "from": "decision"
++        },
++        "rollout_best_chosen": true,
++        "sl_explore": {
++          "avoid": {
++            "point": "T6, the 3rd latest question before attempt 1's death on T7",
++            "original": "end turn",
++            "replacement": null,
++            "reason": "the pick does not end the turn as a failed attempt's did through the deviation point: played as answered",
++            "played_in": [
++              1
++            ],
++            "turn": "CLOAK_AND_DAGGER, DEADLY_POISON>知识恶魔, EXTERMINATE",
++            "gate": null
++          }
++        },
++        "sl_attempt": 3,
++        "sl_reloads": 2,
++        "run_id": "KFRDELW2TH2P",
++        "observed_ts": "2026-10-07T21:25:04.623Z",
++        "journal": {
++          "choice": "nothing (end the turn now)",
++          "reason": ""
++        },
++        "result": "completed: Action completed.",
++        "_line": 282931,
++        "_source_sha256": "0988b47a03768d1505901ec306a654c3c878ea1c8a4f8805d5ec58a8d713b1b5",
++        "questions": {
++          "plan": {
++            "type": "choice",
++            "instructions": "Which plan should I play this turn?",
++            "criteria": {
++              "plan1": "{\"plays\":\"nothing (end the turn now)\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":12,\"damage_dealt\":81,\"enemies_after\":\"知识恶魔 135 HP, 中毒 39\",\"energy_unused\":1,\"hp_after\":3,\"hp_after_pct\":4,\"dmg\":81,\"lethal_now\":\"no\",\"enemy_threat_next\":36,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 14.8, fight over within 5 turns in 2/24, expected turns to the end (surviving samples) ~3, dead within 5 turns in 22/24 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~8% (fights won in the samples, the others by the end-of-horizon estimate), value -51.4\",\"rollout_turns\":\"T1 exact: hp -12, dmg 81; T2: hp -19.8 [0-34], dmg 95.4 [77-128], alive 2/24, won 0/24; T3: hp -0 [0-0], dmg 53.5 [52-55], alive 2/24, won 2/24; T4: over (alive 2/24, won 2/24); T5: over (alive 2/24, won 2/24)\",\"history_estimate\":\"further HP loss 15, win 8% (this encounter n=37; estimate from boss fights n=443, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"win 22% (the best line), HP lost when won median 12, ~3 turns to win (this one included); the losing samples die most often on T7 (dead in 78%); 1200 samples\",\"potion_cost\":\"fight HP loss 14.8; potions used 0; potion cost 0 HP (potion table, this act's held value); total 14.8\"}",
++              "p1->e0": "{\"plays\":\"drink 毒药水 on 知识恶魔 first: 给予?(数值未知)层中毒。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -12 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
++            }
++          }
++        }
++      }
++    ],
++    "states": [
++      {
++        "_line": 289415,
++        "_source_sha256": "3c1f12ce496fb0a5b1c2fc3e63f03bd91d336a04a43353b5b4f578dd5df597eb",
++        "observed_ts": "2026-10-07T21:24:59.089Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:228:0:true\",\"event\":\"\",\"gold\":101,\"hand\":\"0:DEADLY_POISON:true|1:CLOAK_AND_DAGGER:true|2:CLOAK_AND_DAGGER:true|3:EXTERMINATE:true\",\"hp\":15,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|POISON_POTION:true:true\",\"powers\":\"MIND_ROT_POWER:1|PLATING_POWER:3|ACCELERANT_POWER:1|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "current_hp": 15
++          },
++          "turn": 6,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 15,
++              "block": 0,
++              "energy": 4
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 228,
++                "max_hp": 399,
++                "base_max_hp": 399,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 36,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  }
++                ],
++                "intent": "SLAP_MOVE",
++                "move_id": "SLAP_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "21",
++                    "damage": 21,
++                    "hits": 1,
++                    "total_damage": 21,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 289416,
++        "_source_sha256": "d78972b62f40c9ed37118d2a71b2feecca95a2b37418cdc8961c4534f829cc8e",
++        "observed_ts": "2026-10-07T21:25:01.159Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:228:0:true\",\"event\":\"\",\"gold\":101,\"hand\":\"0:DEADLY_POISON:true|1:CLOAK_AND_DAGGER:true|2:EXTERMINATE:true|3:SHIV:true\",\"hp\":15,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:6:0\",\"potions\":\":false:false|POISON_POTION:true:true\",\"powers\":\"MIND_ROT_POWER:1|PLATING_POWER:3|ACCELERANT_POWER:1|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "current_hp": 15
++          },
++          "turn": 6,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 15,
++              "block": 6,
++              "energy": 3
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 228,
++                "max_hp": 399,
++                "base_max_hp": 399,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 36,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  }
++                ],
++                "intent": "SLAP_MOVE",
++                "move_id": "SLAP_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "21",
++                    "damage": 21,
++                    "hits": 1,
++                    "total_damage": 21,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 289417,
++        "_source_sha256": "7379c86dac87f8170a5cbda066c7fef574e5c5794bfc4afa46f73bf058c24c53",
++        "observed_ts": "2026-10-07T21:25:03.062Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:228:0:true\",\"event\":\"\",\"gold\":101,\"hand\":\"0:CLOAK_AND_DAGGER:true|1:EXTERMINATE:true|2:SHIV:true\",\"hp\":15,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:6:0\",\"potions\":\":false:false|POISON_POTION:true:true\",\"powers\":\"MIND_ROT_POWER:1|PLATING_POWER:3|ACCELERANT_POWER:1|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "current_hp": 15
++          },
++          "turn": 6,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 15,
++              "block": 6,
++              "energy": 2
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 228,
++                "max_hp": 399,
++                "base_max_hp": 399,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 41,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  }
++                ],
++                "intent": "SLAP_MOVE",
++                "move_id": "SLAP_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "21",
++                    "damage": 21,
++                    "hits": 1,
++                    "total_damage": 21,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      },
++      {
++        "_line": 289418,
++        "_source_sha256": "df526da97cae582a3113cd35fb6efb8939702dc3cf7277206d308621ab904294",
++        "observed_ts": "2026-10-07T21:25:04.623Z",
++        "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:216:0:true\",\"event\":\"\",\"gold\":101,\"hand\":\"0:CLOAK_AND_DAGGER:false|1:SHIV:false\",\"hp\":15,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:6:0\",\"potions\":\":false:false|POISON_POTION:true:true\",\"powers\":\"MIND_ROT_POWER:1|PLATING_POWER:3|ACCELERANT_POWER:1|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KFRDELW2TH2P\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
++        "state": {
++          "run_id": "KFRDELW2TH2P",
++          "run": {
++            "character_id": "SILENT",
++            "ascension": 10,
++            "floor": 33,
++            "current_hp": 15
++          },
++          "turn": 6,
++          "screen": "COMBAT",
++          "combat": {
++            "player": {
++              "current_hp": 15,
++              "block": 6,
++              "energy": 1
++            },
++            "enemies": [
++              {
++                "index": 0,
++                "enemy_id": "KNOWLEDGE_DEMON",
++                "name": "知识恶魔",
++                "current_hp": 216,
++                "max_hp": 399,
++                "base_max_hp": 399,
++                "block": 0,
++                "is_alive": true,
++                "is_hittable": true,
++                "powers": [
++                  {
++                    "index": 0,
++                    "power_id": "POISON_POWER",
++                    "name": "中毒",
++                    "amount": 41,
++                    "is_debuff": true
++                  },
++                  {
++                    "index": 1,
++                    "power_id": "STRENGTH_POWER",
++                    "name": "力量",
++                    "amount": 3,
++                    "is_debuff": false
++                  }
++                ],
++                "intent": "SLAP_MOVE",
++                "move_id": "SLAP_MOVE",
++                "intents": [
++                  {
++                    "index": 0,
++                    "intent_type": "Attack",
++                    "label": "21",
++                    "damage": 21,
++                    "hits": 1,
++                    "total_damage": 21,
++                    "status_card_count": null
++                  }
++                ]
++              }
++            ]
++          }
++        }
++      }
++    ]
++  }
++]
+diff --git a/agent/tests/silent-selection-execution.test.ts b/agent/tests/silent-selection-execution.test.ts
+new file mode 100644
+index 000000000..63ed3731a
+--- /dev/null
++++ b/agent/tests/silent-selection-execution.test.ts
+@@ -0,0 +1,97 @@
++import { expect, it } from "vitest";
++import evidence from "./silent-selection-execution-evidence.json";
++import { auditSelectionExecution } from "../../learner/lib/selection-execution.js";
++
++const audit = (index: number) => auditSelectionExecution(structuredClone(evidence[index]));
++
++it("MTQ0 F11 separates the 14/6 HP forecasts from the discard and the next question", () => {
++  const result = audit(0);
++  const first = result.segments[0]!;
++  expect(first.predictions.answer).toMatchObject({ key: "plan6", facts: { hp_lost: 14, damage_dealt: 14 } });
++  expect(first.predictions.final_candidate).toMatchObject({ key: "plan1", facts: { hp_lost: 6, damage_dealt: 16 } });
++  expect(first.actions.map((row) => row.source_line)).toEqual([282138, 282139]);
++  expect(first.actions[0]).toMatchObject({ dispatch: "queued_unconfirmed", before: { hp: 67 } });
++  expect(first.actions[1]).toMatchObject({ expected_identity: { option: { id: "RICOCHET" } } });
++  expect(first.interruptions).toHaveLength(1);
++  expect(first.boundary).toMatchObject({ kind: "superseded_by_question", decision_id: result.segments[1]!.decision_id });
++  expect(first.actual_full_candidate_result).toBeNull();
++  expect(result.segments[1]!.actions[0]).toMatchObject({ expected_identity: { card: { id: "HAZE" } } });
++});
++
++it("KFR F12 stops the guarded forecast when the generated hand causes another question", () => {
++  const result = audit(2), first = result.segments[0]!;
++  expect(first.predictions.answer?.facts).toMatchObject({ hp_lost: 12, damage_dealt: 19 });
++  expect(first.predictions.final_candidate?.facts).toMatchObject({ hp_lost: 0, damage_dealt: 12 });
++  expect(first.actions).toHaveLength(1);
++  expect(first.boundary.kind).toBe("superseded_by_question");
++  expect(first.actions[0]!.expected_identity).toMatchObject({ card: { id: "CLOAK_AND_DAGGER" } });
++  expect(result.segments[1]!.actions[0]!.expected_identity).toMatchObject({ card: { id: "SNAKEBITE" } });
++  expect(first.actual_rollout_best).toBeNull();
++});
++
++it("KFR F33 T6 uses the SL replacement, not the stale pre-SL journal", () => {
++  const changed = audit(3).segments.find((row) => row.source_line === 282929)!;
++  expect(changed.predictions.answer).toMatchObject({ key: "plan1", facts: { hp_lost: 6, damage_dealt: 83 } });
++  expect(changed.predictions.final_candidate).toMatchObject({ key: "plan2", facts: { hp_lost: 12, damage_dealt: 93 } });
++  expect(changed.predictions.original_rollout_best_chosen).toBe(true);
++  expect(changed.predictions.predicted_final_rollout_best).toBe(false);
++  expect(changed.actions[0]!.expected_identity).toMatchObject({ card: { id: "DEADLY_POISON" } });
++});
++
++it("MTQ0 F23 preserves the saturated SL comparison as predictions only", () => {
++  const result = audit(1), first = result.segments[0]!;
++  expect(first.source_line).toBe(282434);
++  expect(first.attempt).toBe(4);
++  expect(first.predictions.answer?.facts).toMatchObject({ hp_lost: 0, damage_dealt: 13 });
++  expect(first.predictions.final_candidate?.facts).toMatchObject({ hp_lost: 8, damage_dealt: 19 });
++  expect(first.actions[0]!.expected_identity).toMatchObject({ card: { id: "STRIKE_SILENT" } });
++  expect(result.segments.every((row) => row.actual_full_candidate_result === null && row.actual_rollout_best === null)).toBe(true);
++});
++
++it("missing and ambiguous state matches stay unknown, even when the board fingerprint repeats", () => {
++  const input = structuredClone(evidence[0]!);
++  input.states.push(structuredClone(input.states[0]!));
++  expect(auditSelectionExecution(input).segments[0]!.actions[0]).toMatchObject({ state_match: "ambiguous", before: null });
++  input.states = [];
++  expect(auditSelectionExecution(input).segments[0]!.actions[0]).toMatchObject({ state_match: "missing", before: null });
++});
++
++it("missing rankings and duplicate candidate text never turn into a false comparable best", () => {
++  const input = JSON.parse(JSON.stringify(evidence[0]!));
++  const criteria = input.decisions[0].questions.plan.criteria;
++  criteria.copy = criteria.plan1;
++  const ambiguous = auditSelectionExecution(input).segments[0]!.predictions;
++  expect(ambiguous.final_match).toBe("ambiguous_logged_text");
++  expect(ambiguous.predicted_final_rollout_best).toBeNull();
++  delete criteria.copy;
++  for (const key of Object.keys(criteria)) {
++    const value = JSON.parse(criteria[key]); delete value.rollout_best; criteria[key] = JSON.stringify(value);
++  }
++  expect(auditSelectionExecution(input).segments[0]!.predictions.predicted_final_rollout_best).toBeNull();
++});
++
++it("a gate rejection is not dispatched; a later SL attempt cannot continue the same forecast", () => {
++  const input = JSON.parse(JSON.stringify(evidence[2]!));
++  input.decisions[0].gate_reject = { reason: "fixed identity mismatch" };
++  input.decisions[1].sl_attempt = 2;
++  const first = auditSelectionExecution(input).segments[0]!;
++  expect(first.actions[0]!.dispatch).toBe("rejected");
++  expect(first.actions).toHaveLength(1);
++  expect(first.boundary.kind).toBe("turn_room_or_attempt_changed");
++});
++
++it("refuses mixed runs, characters, ascensions and duplicate decision ids without mutating inputs", () => {
++  const original = structuredClone(evidence[0]!);
++  auditSelectionExecution(original);
++  expect(original).toEqual(evidence[0]);
++  for (const modify of [
++    (x: typeof original) => { x.run.character = "IRONCLAD"; },
++    (x: typeof original) => { x.run.ascension = 9; },
++    (x: typeof original) => { x.decisions[0]!.run_id = "FOREIGN00000"; },
++    (x: typeof original) => { x.states[0]!.state.run.character_id = "IRONCLAD"; },
++    (x: typeof original) => { x.decisions.push(x.decisions[0]!); },
++  ]) {
++    const input = structuredClone(original); modify(input);
++    expect(() => auditSelectionExecution(input)).toThrow();
++  }
++});
+diff --git a/learner/audit-selection.ts b/learner/audit-selection.ts
+new file mode 100644
+index 000000000..ce5bcaec0
+--- /dev/null
++++ b/learner/audit-selection.ts
+@@ -0,0 +1,7 @@
++/** Offline, frozen single-run JSON only; usage: tsx learner/audit-selection.ts input.json > audit.json. */
++import { readFileSync } from "node:fs";
++import { auditSelectionExecution } from "./lib/selection-execution.js";
++
++const args = process.argv.slice(2);
++if (args.length !== 1) throw new Error("用法：tsx learner/audit-selection.ts <冻结单局 JSON>");
++process.stdout.write(JSON.stringify(auditSelectionExecution(JSON.parse(readFileSync(args[0]!, "utf8"))), null, 2) + "\n");
+diff --git a/learner/lib/selection-execution.ts b/learner/lib/selection-execution.ts
+new file mode 100644
+index 000000000..486d4d6c1
+--- /dev/null
++++ b/learner/lib/selection-execution.ts
+@@ -0,0 +1,138 @@
++import { asArray, asRecord, numOrNull, str } from "../../agent/src/core/util/json.js";
++
++type Row = Record<string, unknown>;
++const lineText = (value: unknown): string => str(value).replace(/, then /g, ", ").trim();
++const context = (row: Row): string => JSON.stringify([row.run_id, row.floor, row.turn, row.sl_attempt, row.sl_reloads]);
++
++function facts(value: unknown): Row {
++  if (typeof value !== "string") return asRecord(value);
++  try { return asRecord(JSON.parse(value)); } catch { return {}; }
++}
++
++function candidate(key: string | null, options: Map<string, Row>) {
++  const value = key === null ? undefined : options.get(key);
++  return value ? { key, facts: value } : null;
++}
++
++function predictedSelection(row: Row) {
++  const options = new Map(Object.entries(asRecord(asRecord(asRecord(row.questions).plan).criteria))
++    .map(([key, value]) => [key, facts(value)]));
++  const answer = str(asRecord(asRecord(row.answers).plan).choice) || null;
++  const stages = asRecord(row.selection_audit);
++  const sl = asRecord(row.sl_explore);
++  // The old journal can still describe the pre-SL line (KFR F33 T6).
++  const selected = lineText(asRecord(stages.after_sl).line) || lineText(sl.replacement) || lineText(asRecord(row.journal).choice);
++  const matches = selected ? [...options].filter(([, value]) => lineText(value.plays) === selected) : [];
++  const finalKey = matches.length === 1 ? matches[0]![0] : null;
++  const best = [...options].filter(([, value]) => value.rollout_best === true).map(([key]) => key);
++  const comparable = finalKey !== null && best.length > 0 && !!str(options.get(finalKey)?.rollout) &&
++    best.every((key) => !!str(options.get(key)?.rollout));
++  return {
++    answer: candidate(answer, options), final_candidate: candidate(finalKey, options),
++    final_line: selected || null,
++    final_match: matches.length === 1 ? "unique_logged_text" : matches.length > 1 ? "ambiguous_logged_text" : "unavailable",
++    // These flags compare forecasts within one question, never different boards or actual play.
++    predicted_final_rollout_best: comparable ? best.includes(finalKey!) : null,
++    comparison_reason: comparable ? "same_question_unique_candidate" : "missing_unique_candidate_or_rollout_ranking",
++    original_rollout_best_chosen: typeof row.rollout_best_chosen === "boolean" ? row.rollout_best_chosen : null,
++    hp_guard: row.hp_guard ?? null, selection_stages: row.selection_audit ?? null, sl: row.sl_explore ?? null,
++  };
++}
++
++function observation(row: Row) {
++  const state = asRecord(row.state);
++  const combat = asRecord(state.combat);
++  const player = asRecord(combat.player);
++  return {
++    source_line: numOrNull(row._line), observed_ts: row.observed_ts ?? null,
++    turn: state.turn ?? null, screen: state.screen ?? null,
++    hp: numOrNull(player.current_hp) ?? numOrNull(asRecord(state.run).current_hp),
++    block: numOrNull(player.block), energy: numOrNull(player.energy),
++    enemies: asArray(combat.enemies).map((item) => {
++      const enemy = asRecord(item);
++      return { index: enemy.index ?? null, id: enemy.enemy_id ?? null, hp: enemy.current_hp ?? null,
++        alive: enemy.is_alive ?? null, powers: enemy.powers ?? null };
++    }),
++  };
++}
++
++/** MTQ0 F11 / KFR F12, silent-0125: retain dispatches and re-asks without attributing a whole turn to a forecast. */
++export function auditSelectionExecution(input: unknown) {
++  const source = asRecord(input);
++  const run = asRecord(source.run);
++  const runId = str(run.run_id);
++  if (!/^[A-Z0-9]{12}$/.test(runId) || str(run.character).toLowerCase() !== "silent" || run.ascension !== 10) {
++    throw new Error("只接受 runs.jsonl 已核角色为 silent、进阶为 A10 的单局输入");
++  }
++  if (!Array.isArray(source.decisions) || !Array.isArray(source.states)) throw new Error("缺少冻结决策或状态数组");
++  const decisions = asArray(source.decisions).map(asRecord);
++  const states = asArray(source.states).map(asRecord);
++  if (decisions.some((row) => row.run_id !== runId) || states.some((row) => {
++    const state = asRecord(row.state), info = asRecord(state.run);
++    return state.run_id !== runId || str(info.character_id).toLowerCase() !== "silent" || info.ascension !== 10;
++  })) throw new Error("输入混入其他局、角色或进阶");
++  // An observed timestamp and fingerprint must both match. Identical SL boards alone are ambiguous.
++  const stateIndex = new Map<string, Row[]>();
++  for (const row of states) {
++    const key = JSON.stringify([row.observed_ts, row.fingerprint]);
++    stateIndex.set(key, [...(stateIndex.get(key) ?? []), row]);
++  }
++  const seen = new Set<string>();
++  let previous = "";
++  for (const row of decisions) {
++    const id = str(row.decision_id), ts = str(row.observed_ts);
++    if (!id || seen.has(id) || !ts || ts < previous) throw new Error("决策必须按观测时间排序，且 decision_id 非空、不重复");
++    seen.add(id); previous = ts;
++  }
++  const action = (row: Row) => {
++    const matching = stateIndex.get(JSON.stringify([row.observed_ts, row.fingerprint])) ?? [];
++    const frame = matching.length === 1 ? matching[0]! : null;
++    const raw = asRecord(frame?.state);
++    const consistent = frame !== null && asRecord(raw.run).floor === row.floor && raw.turn === row.turn && raw.screen === row.screen;
++    const state = consistent ? frame : null;
++    const result = str(row.result);
++    return {
++      decision_id: row.decision_id, source_line: numOrNull(row._line), label: row.label ?? null,
++      chosen: row.chosen ?? null, expected_identity: row.expect ?? null,
++      result: row.result ?? null,
++      dispatch: row.gate_reject ? "rejected" : result.startsWith("completed:") ? "completed_response"
++        : result.startsWith("pending") ? "queued_unconfirmed" : "unknown",
++      state_match: state ? "unique_timestamp_and_fingerprint" : matching.length > 1 ? "ambiguous" : frame ? "inconsistent" : "missing",
++      before: state ? observation(state) : null,
++    };
++  };
++  const segments = [];
++  for (let i = 0; i < decisions.length; i++) {
++    const row = decisions[i]!;
++    if (!str(row.label).startsWith("combat/plan-choice")) continue;
++    const actions = [action(row)];
++    const interruptions: { decision_id: unknown; kind: string }[] = [];
++    let boundary: { kind: string; decision_id: unknown } = { kind: "input_exhausted", decision_id: null };
++    for (let j = i + 1; j < decisions.length; j++) {
++      const next = decisions[j]!;
++      if (context(next) !== context(row)) {
++        boundary = { kind: "turn_room_or_attempt_changed", decision_id: next.decision_id }; break;
++      }
++      if (str(next.label).startsWith("combat/plan-choice")) {
++        boundary = { kind: "superseded_by_question", decision_id: next.decision_id }; break;
++      }
++      if (next.screen === "CARD_SELECTION") interruptions.push({ decision_id: next.decision_id, kind: "card_selection" });
++      actions.push(action(next));
++      if (asRecord(next.chosen).action === "end_turn") {
++        boundary = { kind: "end_turn_requested", decision_id: next.decision_id }; break;
++      }
++    }
++    segments.push({
++      decision_id: row.decision_id, source_line: numOrNull(row._line), floor: row.floor ?? null,
++      turn: row.turn ?? null, attempt: row.sl_attempt ?? null, reloads: row.sl_reloads ?? null,
++      predictions: predictedSelection(row), actions, interruptions, boundary,
++      // A response acknowledges one action, not all steps or their effects. No imputed counterfactual.
++      actual_full_candidate_result: null, actual_rollout_best: null,
++      attribution: "仅关联已记录动作；选择、重问、排队回执或缺帧均不能证明完整候选已执行，整轮净扣不得归给该候选。",
++    });
++  }
++  return { schema: 1, character: "silent", ascension: 10, run_id: runId, segments,
++    limitations: ["同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
++      "completed 只代表动作接口回执；pending 不当成已生效。",
++      "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。"] };
++}
+diff --git a/learner/selection-execution.md b/learner/selection-execution.md
+new file mode 100644
+index 000000000..22c75d50c
+--- /dev/null
++++ b/learner/selection-execution.md
+@@ -0,0 +1,19 @@
++# 静默 A10 候选执行审计
++
++`audit-selection.ts` 是离线工具，不接游戏、不读知识库、不改在线策略。依据 MTQ0EUBJ3R6T F11T1/F23T3、KFRDELW2TH2P F12T1/F33T6，关联原回答、护栏或 SL 后的候选、动作接口回执与后续选牌/重问。账本 silent-0125、silent-0079、silent-0418；原提案 silent-proposal-f54e8de2381c1250、silent-proposal-f915ec544ab94b6e。
++
++输入是一个冻结 JSON 对象：`run` 为已从 runs.jsonl 核实的本局记录，`decisions` 为该局按 observed_ts 排列、具有唯一 decision_id 的动作记录数组，`states` 为该局的原始状态记录数组。只接受 silent A10；所有记录必须属于同一局。可以保留 `_line` 和 `_source_sha256` 追溯原日志。路线变更等没有 decision_id 的元数据行须在准备输入时单独记录排除原因；工具不会静默跳过。
++
++在项目根目录运行，输入和输出均应放任务 scratch：
++
++```sh
++export PATH="$HOME/.local/node/bin:$PATH"
++nice -n 19 node --import ./agent/node_modules/tsx/dist/loader.mjs \
++  learner/audit-selection.ts <冻结输入.json> > <审计输出.json>
++```
++
++每个战斗选线问题生成一个 segment，保持原 decision_id。后续同层、同回合、同 SL 尝试/重载次数的动作分别记录；新问题、跨回合/房间/尝试和结束回合请求都是明确边界。选牌事件另列。状态仅在 observed_ts 和 fingerprint 唯一匹配，且层、回合、屏幕一致时关联；缺失、重复或不一致均留空。
++
++`predicted_final_rollout_best` 只比较同一道题里有推演且文字唯一匹配的最终候选，保留全部并列 best；没有这些条件则为 null。SL replacement 优先于可能仍记录原线的旧 journal。原 `rollout_best_chosen` 原样保留。候选 facts 包含原题中的毒、持续增益及推演文本，不解析自然语言来补造数值。
++
++`completed_response` 是单动作接口回执，`queued_unconfirmed` 不证明动作效果。`actual_full_candidate_result` 与 `actual_rollout_best` 均为 null：这个工具提供追溯链，不认证整个候选已经完整执行，也不把整轮净扣归给某个中途被重问替换的候选。没有调整护栏、SL排序、药水持有价或终局规则；其他角色不进入此审计。

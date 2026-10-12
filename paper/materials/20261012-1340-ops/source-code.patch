@@ -1,0 +1,135 @@
+diff --git a/learner/tasks/strategy-proposal.md b/learner/tasks/strategy-proposal.md
+index d6d3bb7a7..78a5bdfd5 100644
+--- a/learner/tasks/strategy-proposal.md
++++ b/learner/tasks/strategy-proposal.md
+@@ -29,7 +29,7 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
+ 
+ ## 1.2 仅本批的手动专题研究
+ 本批存在 implementation_request 时跳过本节，按第 1.3 节与宿主附加的不可变任务执行；不能套用纯研究的禁止源码或纯报告完成口径。
+-先读取根目录 learn.json 本批的 research_request：`roy-20261010-silent-deck-size-value` 对应根目录 `notes/strategy-research-silent.json`，`roy-20261010-silent-core-reuse-value` 对应根目录 `notes/strategy-research-core-reuse-silent.json`，`roy-20261010-silent-core-output-value` 对应根目录 `notes/strategy-research-core-output-silent.json`；路径都相对 `{{project_root}}`。这三个专题各自独立绑定；不得读取另一请求来代替本批身份。普通批次仍只读 `notes/strategy-research-{{character}}.json` 并按条件匹配。learn.json 本批带 research_request 时，文件不存在或任何身份/SHA 条件失配都停止专题回报，不退回普通选题；只有不带 research_request 的普通批次在专题条件不成立时保持原提案/补链任务，不将普通队列变成专题：
++先读取根目录 learn.json 本批的 research_request：`roy-20261010-silent-deck-size-value` 对应根目录 `notes/strategy-research-silent.json`，`roy-20261010-silent-core-reuse-value` 对应根目录 `notes/strategy-research-core-reuse-silent.json`，`roy-20261010-silent-core-output-value` 对应根目录 `notes/strategy-research-core-output-silent.json`，`roy-20261012-concrete-core-decklists` 对应根目录 `notes/strategy-research-core-decklists-silent.json`；路径都相对 `{{project_root}}`。这些专题各自独立绑定；不得读取另一请求来代替本批身份。具体牌表报告复用原核心专题的冻结证据，按其 work_spec 的有界补充范围交付，不重新全量研究或关闭量化父请求。普通批次仍只读 `notes/strategy-research-{{character}}.json` 并按条件匹配。learn.json 本批带 research_request 时，文件不存在或任何身份/SHA 条件失配都停止专题回报，不退回普通选题；只有不带 research_request 的普通批次在专题条件不成立时保持原提案/补链任务，不将普通队列变成专题：
+ - learn.json 中本次 {{batch}} 的 task=strategy-proposal、character={{character}}、reason=ops；该行完全没有 proposal_ids 和 proposal_repair 字段，工作树等于 {{worktree}}。
+ - 请求 authorized_by=Roy、task=strategy-proposal、character={{character}}，state=running 且 batch={{batch}}；request_id 为非空字符串；dispatch_runs 与本批 runs 集合精确相同且均无重复。
+ - 专题宿主 wrapper 已在原 learn.lock 上等待登记落盘，模型启动前须有 learn.json 对应实际 research_request 与根请求的 running/batch/worktree 绑定，独立注册回执位于 ops/codex-ops/learner/{{batch}}.research-registration.json。pending/null 只属于派发前状态，不能在模型内将它当已承接专题。不自行写请求或 learn.json，身份未绑定或已变就停止专题回报，不退回普通提案选题。
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index 9c632ace9..3d88d0077 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -19,6 +19,7 @@ if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
+   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
+     && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
+       || [ "$7" = roy-20261010-silent-core-output-value ] \
++      || [ "$7" = roy-20261012-concrete-core-decklists ] \
+       || [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] \
+       || [ "$7" = ops-20261012-quantitative-continuation ]; } || exit 2
+   if [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] || [ "$7" = ops-20261012-quantitative-continuation ]; then
+diff --git a/ops/strategy_research_jobs.py b/ops/strategy_research_jobs.py
+index 91336cbfc..6639b978f 100644
+--- a/ops/strategy_research_jobs.py
++++ b/ops/strategy_research_jobs.py
+@@ -19,6 +19,7 @@ REQUEST_PATHS = {
+     REQUEST: REQUEST_PATH,
+     "roy-20261010-silent-core-reuse-value": "notes/strategy-research-core-reuse-silent.json",
+     "roy-20261010-silent-core-output-value": "notes/strategy-research-core-output-silent.json",
++    "roy-20261012-concrete-core-decklists": "notes/strategy-research-core-decklists-silent.json",
+ }
+ 
+ 
+diff --git a/ops/tests/test_strategy_research_scheduling.py b/ops/tests/test_strategy_research_scheduling.py
+index 39437900d..b56e1785b 100644
+--- a/ops/tests/test_strategy_research_scheduling.py
++++ b/ops/tests/test_strategy_research_scheduling.py
+@@ -17,6 +17,7 @@ from unittest.mock import patch
+ REPO = Path(__file__).resolve().parents[2]
+ IDENT = "roy-20261010-silent-deck-size-value"
+ OUTPUT_IDENT = "roy-20261010-silent-core-output-value"
++DECKLIST_IDENT = "roy-20261012-concrete-core-decklists"
+ OUTPUT_SECTIONS = ["damage_realization", "startup_and_scaling", "sustained_output",
+                    "resource_survival_tradeoffs", "construction_execution_guidance",
+                    "counterexamples", "limitations"]
+@@ -328,8 +329,7 @@ class ResearchScheduling(unittest.TestCase):
+         request_path.write_text(json.dumps(request))
+         return ident, request_path, request
+ 
+-    def output_request(self, anchors=None):
+-        ident = OUTPUT_IDENT
++    def output_request(self, anchors=None, ident=OUTPUT_IDENT):
+         anchors = anchors or ["SILENT000005", "SILENT000006"]
+         request = {**self.request, "request_id": ident, "dispatch_runs": anchors,
+                    "input_manifest": "paper/frozen/output.json",
+@@ -339,7 +339,8 @@ class ResearchScheduling(unittest.TestCase):
+         path = self.root / request["input_manifest"]
+         path.write_text(json.dumps(manifest))
+         request["input_manifest_sha256"] = self.digest(path)
+-        request_path = self.root / "notes/strategy-research-core-output-silent.json"
++        request_path = self.root / ("notes/strategy-research-core-decklists-silent.json"
++                                    if ident == DECKLIST_IDENT else "notes/strategy-research-core-output-silent.json")
+         request_path.write_text(json.dumps(request))
+         return ident, request_path, request
+ 
+@@ -577,6 +578,65 @@ class ResearchScheduling(unittest.TestCase):
+         self.output_request(RUNS)
+         self.assert_host_wrapper_registration(OUTPUT_IDENT)
+ 
++    def test_decklist_report_waits_for_a_shared_slot_and_never_repeats_old_or_new_studies(self):
++        import strategy_research_jobs as research
++        ident, path, _ = self.output_request(ident=DECKLIST_IDENT)
++        self.request.update(state="done", batch="old-completed-study")
++        self.save_request()
++        old_request = self.request_path.read_bytes()
++        pending = path.read_bytes()
++        self.state["batches"] = {name: {"task": "strategy-proposal", "state": "running", "pid": pid}
++                                 for name, pid in (("owner-one", 11), ("owner-two", 12))}
++        self.check()
++        self.assertEqual(path.read_bytes(), pending)
++        self.assertEqual(self.launched, [])
++        self.state["batches"]["owner-one"]["state"] = "done"
++        self.check("20260101-000002")
++        request = json.loads(path.read_bytes())
++        batch = self.state["batches"][request["batch"]]
++        self.assertEqual(batch["research_request"], ident)
++        self.assertEqual(self.launched[-1][-1], ident)
++        state_dir = self.root / "ops/codex-ops"
++        self.assertFalse(research.ready(str(self.root), str(state_dir), request["batch"], "silent", request["worktree"], ident))
++        (state_dir / "learn.json").write_text(json.dumps(self.state))
++        self.assertTrue(research.ready(str(self.root), str(state_dir), request["batch"], "silent", request["worktree"], ident))
++        for terminal in ("running", "done", "failed", "lost"):
++            batch["state"] = terminal
++            self.check("20260101-000003")
++            self.assertEqual(len(self.launched), 1)
++        self.assertEqual(self.request_path.read_bytes(), old_request)
++
++    def test_decklist_host_wrapper_requires_the_saved_registration_and_pinned_baseline(self):
++        self.request_path.unlink()
++        self.output_request(RUNS, ident=DECKLIST_IDENT)
++        self.assert_host_wrapper_registration(DECKLIST_IDENT)
++
++    def test_decklist_report_requires_its_own_frozen_identity_and_complete_coverage(self):
++        spec = importlib.util.spec_from_file_location("decklist_report_fixture", REPO / "ops/tests/test_strategy_research.py")
++        module = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(module)
++        fixture = module.StrategyResearch("test_bound_clean_report_is_accepted_with_frozen_proof")
++        fixture.setUp()
++        self.addCleanup(fixture.doCleanups)
++        fixture.manifest["request_id"] = DECKLIST_IDENT
++        fixture.write_json(fixture.manifest_path, fixture.manifest)
++        sections = ["concrete_decklists", "paired_comparisons", "boss_requirements", "limitations"]
++        fixture.request.update(request_id=DECKLIST_IDENT, required_sections=sections,
++                               input_manifest_sha256=fixture.digest(fixture.manifest_path))
++        path = fixture.root / "notes/strategy-research-core-decklists-silent.json"
++        fixture.write_json(path, fixture.request)
++        fixture.batch.update(research_request=DECKLIST_IDENT, research_dispatch_base=fixture.base,
++                             research_input_sha256=fixture.request["input_manifest_sha256"])
++        fixture.report.update(request_id=DECKLIST_IDENT, input_sha256=fixture.request["input_manifest_sha256"],
++                              coverage={key: True for key in sections})
++        proof = fixture.accept()
++        self.assertIsNotNone(proof)
++        self.assertEqual(proof["research"]["request"], str(path))
++        for changes in ({"request_id": OUTPUT_IDENT}, {"input_sha256": "0" * 64},
++                        {"coverage": {"limitations": True}}, {"covered_runs": []},
++                        {"merged": fixture.base}, {"tests": {"tsc": 0, "vitest": 0, "cases": 0}}):
++            self.assertIsNone(fixture.accept(report={**fixture.report, **changes}))
++
+     def test_wrapper_rejects_unknown_research_marker_and_extra_arguments(self):
+         env = {"HOME": os.environ["HOME"], "PATH": "/usr/bin:/bin", "CODEX_OPS_ROOT": str(self.root),
+                "CODEX_OPS_NO_DRAIN": "1", "LEARNER_CMD": "exit 99"}

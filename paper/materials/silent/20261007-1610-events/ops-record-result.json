@@ -1,0 +1,78 @@
+{
+  "commit": "88709e430b206e30702c0826bad3f9057b8e2c51",
+  "archive": "paper/materials/silent/20261007-1610-events",
+  "artifact": "paper/materials/silent/20261007-1610-events.md",
+  "pm_rows": 15,
+  "primary_rows": 13,
+  "feature_rows": 4,
+  "shipped_rows": 1,
+  "ledger_check": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 239 item(s), 0 problem(s)",
+  "activation": {
+    "main_before": "b1bef3e4ee251b14c1ff71a8f08c8ae82e73838b",
+    "live": "91c1db906d74457da9a93fb8e99e7e0394406b4e",
+    "actual_source_ancestors": [
+      "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8",
+      "f58add31e0250f2733f9a264f09dfe186ad57824",
+      "814fe9793c52751f15caf3a9d9928bb3f2209bea"
+    ],
+    "a_code_blobs_match_live": {
+      "agent/src/brain/build-facts.ts": true,
+      "agent/src/knowledge/double-boss.ts": true,
+      "agent/src/reflex/card-model.ts": true,
+      "agent/src/reflex/combat-plan.ts": true,
+      "agent/src/reflex/continuation-value.ts": true,
+      "agent/src/reflex/potion-cost.ts": true,
+      "agent/src/reflex/rollout.ts": true,
+      "agent/src/reflex/turn-solver.ts": true,
+      "agent/src/sim/boss-lines.ts": true,
+      "agent/src/sim/boss-sim.ts": true,
+      "agent/src/sim/build-sim-facts.ts": true,
+      "agent/src/sim/build-sim.ts": true,
+      "agent/src/sim/double-boss-start.ts": true,
+      "agent/tests/silent-double-boss.test.ts": true,
+      "agent/tools/double-boss/fit.ts": true,
+      "agent/tools/double-boss/validate.ts": true,
+      "knowledge/characters/silent/double-boss.json": true
+    },
+    "main_missing_tested_data_synchronized": [
+      "knowledge/characters/silent/double-boss.json"
+    ],
+    "bcd_helpers_match_source": {
+      "learner/code_proposals.py": true,
+      "learner/resource_chain.py": true,
+      "ops/ascension_audit.py": true,
+      "ops/proposal_dispatch.py": true
+    },
+    "version": {
+      "name": "S1.double-boss1",
+      "family": "Silent",
+      "commit": "ac076f8a71f101de62d5345fa6b4fca248fd928c",
+      "source": "2026-10-07 14:08 Codex学习者；静默A10连续两场boss：终局HP与毒药水按F49资源价值、B2/B3实际样本连续传递；4局F49实盘全败，8192固定模拟，前2调参/后2留出；未校准、不改SL、其他角色等价。 源e1a467e18a0dfa8d99046a24ff4c0e1af59278c8；证据JMH5C51RLN4E/9TG1RP5LFAAK/ZVYUL2YP3518/TDLBRNA0R05B，账本silent-0228；详情paper/materials/silent/double-boss.md与learner/runs/20261007-130409-silent-double-boss，源及合后原沙箱通过；B/C/D继续，完整外部检查交调度器。"
+    },
+    "ascension_audit": {
+      "batch": "20261007-154303-ascension-audit",
+      "pid": 1967474,
+      "run_dir": "20261007-154306-ascension-audit",
+      "completed_out_verified": true
+    },
+    "boss_sim_first_batch": {
+      "batch": "20261007-153133-fix-batch",
+      "pid": 1937634,
+      "pane": "wJ:p5J",
+      "running_in_current_procs": true,
+      "correction_shipped": false
+    },
+    "native_checks": {
+      "fixed_merge": "b0f41f039b136e69485027ecbf9042c23170b4ab",
+      "tree": "0549b0ebea97d4863cb40de8e785a478771dd008",
+      "tsc": 0,
+      "vitest": 0,
+      "files": 283,
+      "passed": 3238,
+      "skipped": 2,
+      "repeated": false
+    }
+  },
+  "gitleaks_final": 0,
+  "public_dispatch_fingerprint_archive": "immutable pointer; source unchanged"
+}

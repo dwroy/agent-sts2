@@ -1,0 +1,145 @@
+[
+ {
+  "id": "silent-0031",
+  "ts": "2026-10-05T02:33:37+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局律动残余的单回合20失血上限保住过血量，但不能免死：胧光怪战T2零挡对22意图实际41→21，T4零挡对28实际21→1，较意图分别少2与8；T6只有1血、零挡，对22+16=38意图仍归零。两次SAIL_MOVE过后敌人力量0→3→6，寄生惧魔同一SLAM_MOVE 16→19→22；T3舵盘18挡覆盖16攻击，但后段没有这个格挡。只记录这局限损、一次性挡与敌成长的组合。",
+  "evidence": [
+   {
+    "run": "1HC609GTLGN3",
+    "floor": 22,
+    "turn": 2,
+    "note": "律动残余BEATING_REMNANT文本每回合最多失20血；寄生惧魔16、胧光怪6，末0挡、41血，下一回合21血。",
+    "role": "support",
+    "added": "2026-10-05T02:33:37+08:00"
+   },
+   {
+    "run": "1HC609GTLGN3",
+    "floor": 22,
+    "turn": 4,
+    "note": "两敌各3力量，意图19+9=28；出牌后0挡、21血，下一回合1血，实损20比意图少8。",
+    "role": "support",
+    "added": "2026-10-05T02:33:37+08:00"
+   },
+   {
+    "run": "1HC609GTLGN3",
+    "floor": 22,
+    "turn": 6,
+    "note": "两敌各6力量、意图22+16；末1血0挡，死亡帧0血、寄生惧魔18血与胧光怪14血，不能把总意图38写成实际承受38。",
+    "role": "support",
+    "added": "2026-10-05T02:33:37+08:00"
+   },
+   {
+    "run": "ARKQLHG6RS4W",
+    "floor": 31,
+    "turn": 4,
+    "role": "support",
+    "note": "蜂群术士T4零挡对28攻击，55→35仅损20，限损少8；末次bossT2零挡对31攻击，27→7仅损20，少11；T4只有6血6挡对33攻击，律动残余虽限损20仍归0。支持单轮限损不免死，不据此给出安全血线。",
+    "added": "2026-10-05T15:57:25+08:00"
+   },
+   {
+    "run": "HSX4HYATB4E2",
+    "floor": 48,
+    "turn": 1,
+    "role": "support",
+    "note": "六次39血零挡对26攻击均只损20到19，律动残余上限兑现。",
+    "added": "2026-10-07T06:25:43+08:00"
+   },
+   {
+    "run": "HSX4HYATB4E2",
+    "floor": 48,
+    "turn": 7,
+    "role": "support",
+    "note": "末次2血19挡对26攻击和18凋萎需25、限至20仍归零，代码预计余血-18；不把上限当回血。",
+    "added": "2026-10-07T06:25:43+08:00"
+   }
+  ],
+  "first_run": "1HC609GTLGN3",
+  "prior": "unknown",
+  "prior_runs": [
+   "C48LLXBGKXQ9",
+   "Y6GM2CHWJBEY",
+   "LRN0HPZ0FZS1",
+   "T082DRCUHRRD"
+  ],
+  "prior_note": "此前同角色复盘未见律动残余与这组敌人同场，按角色查BEATING_REMNANT／律动残余无条目，不能以其他角色经验判断过去做对与否。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "1HC609GTLGN3",
+    "ARKQLHG6RS4W",
+    "HSX4HYATB4E2"
+   ],
+   "experience": [
+    "silent-beating-remnant-loss-cap",
+    "silent-captains-wheel-third-turn"
+   ],
+   "commits": [
+    "__COMMIT__",
+    "a5604585226af696fdc6e01e19f6959fe73425d0",
+    "5f17e4b397490cefd18d2970852f1ea439a7ca00",
+    "2480e1a3435d40808c972b5247e126f42fd8f6c8",
+    "50de6fefd40afae1f26838de7879198945acbc0b",
+    "98df162d756d3eca8d0b6383f2a2398d624ab074",
+    "1a89c2d481689bf0793c89c53318c247a1ea1997",
+    "dc8a23b705f8eb21b85d9d1d1e584e35ab8d8fe5"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第二次增量：2 局 A0（version 2026-10-05.2，分支 exp-silent，未提交（沙箱全量测试阻塞））",
+    "2026-10-05 静默猎手 第十七次增量：2 局 A6（version 2026-10-05.17，分支 exp-silent，a5604585）",
+    "2026-10-07 静默猎手 第六十三次增量：2 局 A10（version 2026-10-07.9，分支 exp-silent，50de6fef）"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T02:33:37+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T03:47:26+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T15:57:25+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T16:48:42+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T17:08:51+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T06:25:43+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T06:47:29+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T06:57:48+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp63",
+  "effect": null,
+  "notes": [
+   "静默经验.17：旧二十二局日志七数组逐行复算一致，新增两局均A6；公式/逐帧数字、进阶及整战因果限制见第十七次增量。仅proposed，实际合入后由运维据完成事件登记shipped，不登记独立音叉模型bug0108已修。",
+   "17:05 experience-done核实实际live合入及S1.exp17唯一；经验.17新增2/更新17/退役0，源tsc0/173文件1988例、合后tsc0/174文件1993例首过，无新增刷新/冲突，保留fix18七项刷新。仅经验发布，0108独立S1.fix18模型上线不混记；本批独立完整外部检查待其learner-checks，不用fix-batch检查替代。",
+   "06:55 experience-done机械确认20261007-063003-experience-update：源50de6fef→实际live 98df162d→固定发布1a89c2d4/唯一S1.exp63，main已同步经验2026-10-07.9及七项锁内知识刷新，无代码/生成器/手写知识/其他角色变动。来源HSX4HYATB4E2/WYB0NCD6W83J A10及有效勘误、本角色历史；新增2更新19全补证退役0、active135/49258字，无新用药规则。初稿源、28项文字更正后定稿源及合后三次沙箱均tsc0/vitest0、214文件2289例通过，无测试失败/超时；预检rc0知识冲突0、其他知识blob保持。仅CLI/by=ops本批24项shipped覆盖21项经验，0211首证沿学习者更正T082DRCUHRRD/A0/prior=yes、原R0先验/23份support/旧首证历史保持；其他claim/首证/先验/repeat不重置。旧attempts断言失败与TD1专用取数修正、初稿32→28项文字更正、台账空evidence拒绝零行及修正、initial-*及全部原件归档保留，不当生产故障或自测失败。0207 exp62及其他旧版本/失败历史保持，原过滤摘要不冒称完整逐例日志，完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。"
+  ],
+  "shipped_at": "2026-10-07T06:57:48+08:00"
+ }
+]

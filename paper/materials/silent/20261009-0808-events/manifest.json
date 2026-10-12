@@ -1,0 +1,2344 @@
+{
+  "timestamp": "2026-10-09 08:11",
+  "base_head": "f84e159fe5c4a3117424ee83b523acbfb4efab46",
+  "batch": "20261009-074301",
+  "runs": [
+    "RZ6YAC7K89NM"
+  ],
+  "originals": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/RZ6YAC7K89NM-resources.json": {
+      "bytes": 269335,
+      "sha256": "fcf5ab57c3b1e0e8324fa5ef51a6ae10b964d36eac169fb236ad7adf6a61bd11"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/append-lesson-initial.sh": {
+      "bytes": 18415,
+      "sha256": "00b783cb051688c4af6cb463ca048f8b40cbb65b2aba9c0542f495f359fd1487"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/append-lesson.sh": {
+      "bytes": 18590,
+      "sha256": "20c413d4a67a8b73ea79bf11617736e453d7890ae6c036a916bb8cb2a0454029"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/audit.json": {
+      "bytes": 18528,
+      "sha256": "a1d4cfb9b719a128065aaf7f04140c749da6260c3a8f9d0f30d1e64a5520f4f4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/audit.py": {
+      "bytes": 4446,
+      "sha256": "16cc86b4333d14c4b30b8b28593fc2b3e036ca015e6bab2c8f032f4f59586638"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/brain.jsonl": {
+      "bytes": 345896,
+      "sha256": "3412e14541a0dadbf956d74d6a6d27a29ad565a25901f6883dee3e830b4d2b59"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/decision-summary.txt": {
+      "bytes": 42432,
+      "sha256": "a7531e57fec7d705762f591142f848b5aa4ca6b2604202dbac56e1f9752163f6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/decisions.jsonl": {
+      "bytes": 588093,
+      "sha256": "c84c6ea6a81f095542b52aa32e73493d9f4bd9a42d10c421df9a46b470e8ad46"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/deepseek-reasoning.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/extract.py": {
+      "bytes": 1518,
+      "sha256": "ac599334bffa8c81ab98e4ee93b5ccfc38f9c0a72dfc78bb6a5f9651f884f1c7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/jev-prompts.jsonl": {
+      "bytes": 296774,
+      "sha256": "05aa0a4dcc6599906897938c3c1a765ac10dd0ece91f8b946ffeeb8055fa9b04"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/ledger-at-start.json": {
+      "bytes": 431,
+      "sha256": "2b90d69e8dc2d55b35cb3192303149314e14ccaa389da465609a130b12e4c296"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/ledger-check-exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/ledger-check.txt": {
+      "bytes": 94,
+      "sha256": "f584c78c56e761b82acea4fcf777a347a5527eba84be71a88b50dd2c028bd81d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/ledger-update-output.txt": {
+      "bytes": 72,
+      "sha256": "9387e9c2d77623e1e24d7c70475a9f38e62ecdc6457c83bc4c0ddf0b7947c592"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/ledger-updates.jsonl": {
+      "bytes": 4928,
+      "sha256": "551bdd95d37a13bed91cecb5b6de0bd3fdc39fe74d0692e2b38831738b1736ab"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/lesson-appended.md": {
+      "bytes": 18525,
+      "sha256": "d5912671a5732b659f20e4c2a14008fbcc4c6b1b2b84ac817c6271df4a5cdafd"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/lesson-draft-initial.md": {
+      "bytes": 18350,
+      "sha256": "83719fcde8b951832162cc57d5485f281a006ff1325dc3b90f76dcc1950c7104"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/lesson-draft.md": {
+      "bytes": 18525,
+      "sha256": "d5912671a5732b659f20e4c2a14008fbcc4c6b1b2b84ac817c6271df4a5cdafd"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/lessons-prefix-before.json": {
+      "bytes": 103,
+      "sha256": "873dd398ae5afa918a6674a8b9656999115a36d4e0b0bab2c3c8752e9848bb53"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/prior-excerpts.json": {
+      "bytes": 68421,
+      "sha256": "b35d8756be8b44d3d9eb284c5589f4f8d05dc0257f98fae266a605606010b1b3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/proposal-random-poison-id.txt": {
+      "bytes": 33,
+      "sha256": "ededb423491180f7fd2ef085dbeca15f9965ab0d1b642a226b6cd5ca86d9ee0b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/proposal-random-poison.json": {
+      "bytes": 559,
+      "sha256": "aa3839c704fff69c97fa90e3310554676160e73b37d251da86884756891351ad"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/proposal-random-poison.md": {
+      "bytes": 3809,
+      "sha256": "3a37a267b19303f60b9c2ac1d0e77714e73fb3685182d0dd9c2c06b51ac49714"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/proposal-registration.json": {
+      "bytes": 1823,
+      "sha256": "565d4100db23a51f06ad58d8fe8e98dfd8e5ffab43a57c250157ddc46664fccc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/proposal-resource-tradeoffs-id.txt": {
+      "bytes": 33,
+      "sha256": "3a50fd78dfd50d21d8e8321e167340d982ed77cd2157dd8e3d9a22a1778d9744"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/proposal-resource-tradeoffs.json": {
+      "bytes": 667,
+      "sha256": "ea3ae5dcb45cd522b02bd449d3cca820c271e894bf4fa585ac785c1f2157bca9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/proposal-resource-tradeoffs.md": {
+      "bytes": 4897,
+      "sha256": "253dba56bde98cf429bd45b0359b0693f2fa978346e42eefd4651206ca1fa333"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/report.json": {
+      "bytes": 920,
+      "sha256": "a68296c361d55ab379f7ceace10fd84e6a0e6ebac519d4a8d649155682ec674f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/report.md": {
+      "bytes": 1852,
+      "sha256": "e2752a03ca6226b30fb64bac7e651f9619ed23be7c4f9f0d8eedd90b50bf5c70"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/run-config.jsonl": {
+      "bytes": 4883,
+      "sha256": "9aa47f7745c35710ee8945d6dd2203c172ba86674684b79d3a8e5599e3fafb67"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/run-plans.jsonl": {
+      "bytes": 6040,
+      "sha256": "0b0cf593214f46ca748b3745e8c64782222c84b28e7f1609206bbe900afd56d9"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/runs.jsonl": {
+      "bytes": 482,
+      "sha256": "375622ed372736cfddc9244d5f917cdc7fe2129fd36802685249eed51415cc2c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0005-after.json": {
+      "bytes": 215374,
+      "sha256": "70ebeee69ba83ed0888bbe281107f32d556b115e1ee113b6bebcb0cd03a24cb4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0005-before.json": {
+      "bytes": 214318,
+      "sha256": "443e17b12dc1c7a351f4a6a598234b4d9d68f72c3e5b08c9afc5e19c1992a043"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0006-after.json": {
+      "bytes": 182570,
+      "sha256": "243661f7709a81fcf462e8b439ad532d545ee9106815483fb506dd31365ca5fd"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0006-before.json": {
+      "bytes": 181213,
+      "sha256": "bc255c2be77f90d900d40b5b253eb00016e210946b58c2f0a3078ca6010868e5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0019-after.json": {
+      "bytes": 288718,
+      "sha256": "2f390edd29ae3378a545702cfae0d2a1aac2215ea6fe7fa18d1c87d27a6a0c40"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0019-before.json": {
+      "bytes": 286850,
+      "sha256": "ed193e6cd6b76bd6c89e9e3200d09c8c07d12c3497998184d62b903592bf9b9a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0083-after.json": {
+      "bytes": 18106,
+      "sha256": "20c67bf60cd4054074b4830f3cbfd8bd366b94459b060085290eb14cbe607ca2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0083-before.json": {
+      "bytes": 17032,
+      "sha256": "de8037117065bb88ac0c01bb55b9f54ecdd42f3ed45b916b32386fe5edfbd17d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0125-after.json": {
+      "bytes": 130218,
+      "sha256": "354e7d5b07237752d6e09954dbd02fa82cc995d3f86e4e878199697c3e10e9f2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0125-before.json": {
+      "bytes": 128760,
+      "sha256": "a597d6245563dc26b762973b31953279e5e9bd0660d977b770f414edc5a23945"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0295-after.json": {
+      "bytes": 6706,
+      "sha256": "a774bbd4ac0aec61a8644d96be8030eeee44d73217514c0c3e8e58fbe61ccdd0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/silent-0295-before.json": {
+      "bytes": 5539,
+      "sha256": "50b6fb18d0df9274c5e3f62095ff903c7a1742865fbb5ee50b83dfc03f837b6c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/sl-attempts.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/state-summary.txt": {
+      "bytes": 216668,
+      "sha256": "76245f58d9dd13fcc8703e82cac866512de9c39589b3a59446e0c1efa9d0febf"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/states.jsonl": {
+      "bytes": 5761159,
+      "sha256": "ebcce0950c3e913ab44e49c07c457901abf4819ff21998ede773ac5b946ee891"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/verification-after.json": {
+      "bytes": 35616,
+      "sha256": "b6cc789eaa367bf4401b09b34c49fb5017d32f81bee446c805d6e6618a843d8a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/verification-before.json": {
+      "bytes": 35487,
+      "sha256": "0b852d41b34f6a79f1ebaac8ab54441894f7ea0fc19b0e57c27df8ce44e3e40e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/verification-failure.md": {
+      "bytes": 434,
+      "sha256": "ebe9c883740dbf7c76c88d81e48b44ee5a18acb744b62dc7f68b9f6b7f24beb6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/verify.py": {
+      "bytes": 5589,
+      "sha256": "25709273fc8f9ea5cae7993b64ad9c68d6668ea3aabca6436627222dbb4c24a0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem.jsonl": {
+      "bytes": 1163431,
+      "sha256": "2440dad0585d960118b72022e4510f8435a51a162afd6edd52497c9226e36148"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-074301.out": {
+      "bytes": 2517,
+      "sha256": "a790189f693074df01d6a6a828c4b22c7edee2410a4ec8a71e951d29fa7589c3"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-074301.err": {
+      "bytes": 9305,
+      "sha256": "2c0c596a174659c83db5dbf43f2c5a9425b84d425736a32e3dab64ba08477792"
+    },
+    "/home/dw/Projects/agent-sts2/notes/run-1009-0715-RZ6YAC7K89NM.md": {
+      "bytes": 3704,
+      "sha256": "dd75ae0fa244f2edce0568d4598df6aa39422da3d3979ee5639d51b561edfcb8"
+    }
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "RZ6YAC7K89NM"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "RZ6YAC7K89NM",
+        "where": "agent/src/reflex/turn-solver.ts:2284",
+        "what": "已有随机施毒缺口复现：F12T1总伤32吻合，但两敌剩血预测29/30、实际23/36；本局未伪标确定斩杀。",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0019",
+        "silent-0125",
+        "silent-0295",
+        "silent-0005",
+        "silent-0006",
+        "silent-0083"
+      ],
+      "repeats": [
+        "silent-0295"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-b6fc6d4c9f260247",
+      "silent-proposal-8638feced6bd16f9"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/report.md"
+  },
+  "owned_cli": 12,
+  "evidence_rows": 6,
+  "evidence_update_rows": 6,
+  "first_observation_add_rows": 0,
+  "support_evidence": 8,
+  "repeat_evidence": 1,
+  "repeat_ids": [
+    "silent-0295"
+  ],
+  "proposal_link_rows": 6,
+  "correction_rows": 0,
+  "new_pure_bugs": [],
+  "queue_append": false,
+  "lesson_append_bytes": 18525,
+  "lesson_errata_sections": 0,
+  "source_learner_verification": [
+    {
+      "item": "runs 原始字节定位 640",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307669",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307670",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307671",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307672",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307673",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307674",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307675",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307676",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307677",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307678",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307679",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307680",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307681",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307682",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307683",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307684",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307685",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307686",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307687",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307688",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307689",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307690",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307691",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307692",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307693",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307694",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307695",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307696",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307697",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307698",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307699",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307700",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307701",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307702",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307703",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307704",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307705",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307706",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307707",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307708",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307709",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307710",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307711",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307712",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307713",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307714",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307715",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307716",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307717",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307718",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307719",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307720",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307721",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307722",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307723",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307724",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307725",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307726",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307727",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307728",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307729",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307730",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307731",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307732",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307733",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307734",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307735",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307736",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307737",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307738",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307739",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307740",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307741",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307742",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307743",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307744",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307745",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307746",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307747",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307748",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307749",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307750",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307751",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307752",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307753",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307754",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307755",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307756",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307757",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307758",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307759",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307760",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307761",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307762",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307763",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307764",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307765",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307766",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307767",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307768",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307769",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307770",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307771",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307772",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307773",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307774",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307775",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307776",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307777",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307778",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307779",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307780",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307781",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307782",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307783",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307784",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307785",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307786",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307787",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307788",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307789",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307790",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307791",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307792",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307793",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307794",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307795",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307796",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307797",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307798",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307799",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307800",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307801",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307802",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307803",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307804",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307805",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307806",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307807",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307808",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307809",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307810",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307811",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307812",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307813",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307814",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307815",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307816",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307817",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307818",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307819",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307820",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307821",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307822",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307823",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307824",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307825",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307826",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307827",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307828",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307829",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307830",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307831",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307832",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307833",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307834",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307835",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307836",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307837",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307838",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307839",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307840",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307841",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307842",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307843",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307844",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307845",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307846",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307847",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307848",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307849",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307850",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307851",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307852",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307853",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307854",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307855",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307856",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307857",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307858",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307859",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307860",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307861",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307862",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307863",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307864",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307865",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307866",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307867",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307868",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307869",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307870",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307871",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307872",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307873",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307874",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307875",
+      "ok": true
+    },
+    {
+      "item": "decisions 原始字节定位 307876",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315857",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315858",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315859",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315860",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315861",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315862",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315863",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315864",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315865",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315866",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315867",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315868",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315869",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315870",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315871",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315872",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315873",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315874",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315875",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315876",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315877",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315878",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315879",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315880",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315881",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315882",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315883",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315884",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315885",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315886",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315887",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315888",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315889",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315890",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315891",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315892",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315893",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315894",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315895",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315896",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315897",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315898",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315899",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315900",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315901",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315902",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315903",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315904",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315905",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315906",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315907",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315908",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315909",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315910",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315911",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315912",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315913",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315914",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315915",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315916",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315917",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315918",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315919",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315920",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315921",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315922",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315923",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315924",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315925",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315926",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315927",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315928",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315929",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315930",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315931",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315932",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315933",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315934",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315935",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315936",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315937",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315938",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315939",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315940",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315941",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315942",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315943",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315944",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315945",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315946",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315947",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315948",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315949",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315950",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315951",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315952",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315953",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315954",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315955",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315956",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315957",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315958",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315959",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315960",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315961",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315962",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315963",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315964",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315965",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315966",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315967",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315968",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315969",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315970",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315971",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315972",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315973",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315974",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315975",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315976",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315977",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315978",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315979",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315980",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315981",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315982",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315983",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315984",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315985",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315986",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315987",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315988",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315989",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315990",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315991",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315992",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315993",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315994",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315995",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315996",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315997",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315998",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 315999",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316000",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316001",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316002",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316003",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316004",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316005",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316006",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316007",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316008",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316009",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316010",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316011",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316012",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316013",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316014",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316015",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316016",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316017",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316018",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316019",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316020",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316021",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316022",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316023",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316024",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316025",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316026",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316027",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316028",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316029",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316030",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316031",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316032",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316033",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316034",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316035",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316036",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316037",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316038",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316039",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316040",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316041",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316042",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316043",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316044",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316045",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316046",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316047",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316048",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316049",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316050",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316051",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316052",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316053",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316054",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316055",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316056",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316057",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316058",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316059",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316060",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316061",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316062",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316063",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316064",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316065",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316066",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316067",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316068",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316069",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316070",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316071",
+      "ok": true
+    },
+    {
+      "item": "states 原始字节定位 316072",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9698",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9699",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9700",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9701",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9702",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9703",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9704",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9705",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9706",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9707",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9708",
+      "ok": true
+    },
+    {
+      "item": "brain 原始字节定位 9709",
+      "ok": true
+    },
+    {
+      "item": "run-plans 原始字节定位 2839",
+      "ok": true
+    },
+    {
+      "item": "run-plans 原始字节定位 2840",
+      "ok": true
+    },
+    {
+      "item": "run-plans 原始字节定位 2841",
+      "ok": true
+    },
+    {
+      "item": "run-config 原始字节定位 275",
+      "ok": true
+    },
+    {
+      "item": "结束/角色/进阶/层号/代码版本",
+      "ok": true
+    },
+    {
+      "item": "208决策216帧12脑3计划无SL",
+      "ok": true
+    },
+    {
+      "item": "SL计数均0",
+      "ok": true
+    },
+    {
+      "item": "脑均Codex",
+      "ok": true
+    },
+    {
+      "item": "max HP70/两药槽",
+      "ok": true
+    },
+    {
+      "item": "F2进离HP",
+      "ok": true
+    },
+    {
+      "item": "F2首T1/退出结果",
+      "ok": true
+    },
+    {
+      "item": "F3进离HP",
+      "ok": true
+    },
+    {
+      "item": "F3首T1/退出结果",
+      "ok": true
+    },
+    {
+      "item": "F4进离HP",
+      "ok": true
+    },
+    {
+      "item": "F4首T1/退出结果",
+      "ok": true
+    },
+    {
+      "item": "F6进离HP",
+      "ok": true
+    },
+    {
+      "item": "F6首T1/退出结果",
+      "ok": true
+    },
+    {
+      "item": "F8进离HP",
+      "ok": true
+    },
+    {
+      "item": "F8首T1/退出结果",
+      "ok": true
+    },
+    {
+      "item": "F9进离HP",
+      "ok": true
+    },
+    {
+      "item": "F9首T1/退出结果",
+      "ok": true
+    },
+    {
+      "item": "F12进离HP",
+      "ok": true
+    },
+    {
+      "item": "F12首T1/退出结果",
+      "ok": true
+    },
+    {
+      "item": "唯一休息30→51",
+      "ok": true
+    },
+    {
+      "item": "死亡回合4，4血9挡对15",
+      "ok": true
+    },
+    {
+      "item": "死亡潮湿6/52与4毒",
+      "ok": true
+    },
+    {
+      "item": "F12药瓶6/3",
+      "ok": true
+    },
+    {
+      "item": "F12下一轮23/36血及5/2毒",
+      "ok": true
+    },
+    {
+      "item": "逐敌预测29/30与8毒",
+      "ok": true
+    },
+    {
+      "item": "护栏唯一且9血12伤差",
+      "ok": true
+    },
+    {
+      "item": "护栏9/21→0/9",
+      "ok": true
+    },
+    {
+      "item": "四次饮药/零丢弃",
+      "ok": true
+    },
+    {
+      "item": "Jev34/低4/最优22/24",
+      "ok": true
+    },
+    {
+      "item": "36战斗回合及13自主非结束",
+      "ok": true
+    },
+    {
+      "item": "token与runs对应",
+      "ok": true
+    },
+    {
+      "item": "F2逐轮need_hp",
+      "ok": true
+    },
+    {
+      "item": "F2逐轮net_enemy_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F2逐轮player_net_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F3逐轮need_hp",
+      "ok": true
+    },
+    {
+      "item": "F3逐轮net_enemy_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F3逐轮player_net_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F4逐轮need_hp",
+      "ok": true
+    },
+    {
+      "item": "F4逐轮net_enemy_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F4逐轮player_net_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F6逐轮need_hp",
+      "ok": true
+    },
+    {
+      "item": "F6逐轮net_enemy_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F6逐轮player_net_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F8逐轮need_hp",
+      "ok": true
+    },
+    {
+      "item": "F8逐轮net_enemy_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F8逐轮player_net_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F9逐轮need_hp",
+      "ok": true
+    },
+    {
+      "item": "F9逐轮net_enemy_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F9逐轮player_net_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F12逐轮need_hp",
+      "ok": true
+    },
+    {
+      "item": "F12逐轮net_enemy_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "F12逐轮player_net_hp_loss",
+      "ok": true
+    },
+    {
+      "item": "旧前缀未改",
+      "ok": true
+    },
+    {
+      "item": "追加一次/全文与草稿相同",
+      "ok": true
+    }
+  ],
+  "initial_verification_count": 493,
+  "postappend_verification_count": 495,
+  "raw_seek_count": 441,
+  "numeric_check_count": 52,
+  "report_variants_equal": false,
+  "report_variants_substantively_equal": true,
+  "report_wording_difference_preserved": true,
+  "source_report": {
+    "task": "postmortem",
+    "appended": [
+      "RZ6YAC7K89NM"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "RZ6YAC7K89NM",
+        "where": "agent/src/reflex/turn-solver.ts:2284",
+        "what": "已有随机施毒最高HP单分配缺口再次出现：F12T1总伤32吻合，但钙化／潮湿剩血预测29／30、实际23／36；本局未伪标确定斩杀。",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0019",
+        "silent-0125",
+        "silent-0295",
+        "silent-0005",
+        "silent-0006",
+        "silent-0083"
+      ],
+      "repeats": [
+        "silent-0295"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-b6fc6d4c9f260247",
+      "silent-proposal-8638feced6bd16f9"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-074301-postmortem/report.md"
+  },
+  "failed_commands_preserved": [
+    {
+      "exit_code": 1,
+      "command_sha256": "7ec87717476764c45c4ba3aa64b69886d1bea41919fb34bbdaa9d6fe2b69898e",
+      "output_excerpt": "，末次T5以1血13挡对45攻击阵亡；完整意图预算需损32、存活至少差32血，毒结算后母体26血、两幼虫15／8血）\n7107:## SV2GP9NX4HQD（A10，静默猎手，第48层，死于三幕首boss永世沙漏 AEONGLASS：首试原始进房70/81血、小血瓶后72血，后五试均72血两药恢复；前五试T9／T8／T9／T9／T11判死读档，末试T10以1血21挡对30攻击及12伤凋萎阵亡，完整需损21、存活至少差21血；32毒结算后敌仍146/535血，未到F49）\n7215:## CSLHFCBSC1UM（A10，静默猎手，第17层，死于一幕boss乐加维林族母 LAGAVULIN_MATRIARCH：六次均64/70血空药进场，前五次T10／T8／T8／T10／T10判死读档；末次T10以10血6挡对25攻击阵亡，完整需损19、存活至少差10血；16毒结算后敌仍56/233血）\n"
+    },
+    {
+      "exit_code": 1,
+      "command_sha256": "5846381cadaae194f46640b5ac0f4d7123ccdb1f49a09d2072727c6063b5afa8",
+      "output_excerpt": "Traceback (most recent call last):\n  File \"<stdin>\", line 6, in <module>\nKeyError: 'questions'\n"
+    }
+  ],
+  "append_prefix_verified": {
+    "bytes": 5770820,
+    "sha256": "6505060a482951837bc70551924cbda8357d12d13606310d59c6cc9d8c74be85"
+  },
+  "proposal_registry_not_changed": true,
+  "no_manual_proposal_dispatch": true,
+  "no_ops_game_knowledge_added": true,
+  "physical_lessons_not_reappended": true,
+  "unowned_extra_rows_preserved": 138,
+  "ledger_problems": 0,
+  "no_checks_requested": true,
+  "no_merges": true,
+  "no_versions": true,
+  "no_process_mutations": true
+}

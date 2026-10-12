@@ -1,0 +1,28 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-101301-s2/agent
+
+ ❯ tests/silent-phase-current.test.ts (18 tests | 2 failed) 133ms
+   × reaches the actual Jev question and preserves all criteria (v1=false) 81ms
+   × reaches the actual Jev question and preserves all criteria (v1=true) 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-phase-current.test.ts > reaches the actual Jev question and preserves all criteria (v1=false)
+ FAIL  tests/silent-phase-current.test.ts > reaches the actual Jev question and preserves all criteria (v1=true)
+Error: expected a plan question: {"kind":"act","label":"combat/plan","intent":{"action":"play_card","card_index":2},"rationale":"code plan (only line): 防御, 防御, 生存者; hp -11, dmg 0"}
+ ❯ tests/silent-phase-current.test.ts:89:83
+     87| it.each([false, true])("reaches the actual Jev question and preserves …
+     88|   const raw = rawAt(277519), current = planned(raw, v1);
+     89|   if (current?.kind !== "ask" || current.questions.plan?.type !== "cho…
+       |                                                                                   ^
+     90|   expect(current.state.test_subject_current).toMatchObject({ poison_no…
+     91|   if (v1) expect(current.jevView?.state.test_subject_current).toEqual(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 16 passed (18)
+   Start at  10:22:34
+   Duration  2.08s (transform 1.48s, setup 414ms, import 1.38s, tests 133ms, environment 0ms)
+

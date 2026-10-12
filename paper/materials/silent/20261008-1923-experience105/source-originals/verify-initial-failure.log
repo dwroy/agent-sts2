@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/verify.py", line 74, in <module>
+    check('16独立战房/15胜战净损312',len(F)==16 and sum(x['loss'] for x in F if not x['death'])==312,[len(F),sum(x['loss'] for x in F if not x['death'])])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/verify.py", line 11, in check
+    assert condition, (name, data)
+           ^^^^^^^^^
+AssertionError: ('16独立战房/15胜战净损312', [16, 212])

@@ -1,0 +1,418 @@
+{
+  "run_brief": {
+    "character": "静默猎手",
+    "act": "3",
+    "floor": 43,
+    "hp": "22/77 (29%)",
+    "gold": 227,
+    "ascension": 10,
+    "deck": "33 cards | 10 attacks / 18 skills / 3 powers | 7 upgraded | 2 curses/statuses | avg cost 0.94",
+    "relics": [
+      "蛇之戒指",
+      "石炉加湿器",
+      "音叉",
+      "开心小花",
+      "蜥蜴尾巴",
+      "百年积木",
+      "佩尔之肉",
+      "花粉核心",
+      "烛台",
+      "宝石面具",
+      "送货员",
+      "准备背包",
+      "药水腰带"
+    ],
+    "relic_effects": [
+      "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+      "石炉加湿器: 每当你在休息处休息时，将你的最大生命值提升?(数值未知)点。",
+      "音叉: 你每打出?(数值未知)张技能牌，获得?(数值未知)点格挡。",
+      "开心小花: 每?(数值未知)个回合，获得?(数值未知)。",
+      "蜥蜴尾巴: 当你的生命值将要降低至0或以下时，回复到最大生命值的?(数值未知)%（仅能起效一次）。",
+      "百年积木: 你在每场战斗中第一次损失生命值时，抽?(数值未知)张牌。",
+      "佩尔之肉: 从你的第3回合开始，在回合开始时额外获得1点能量。",
+      "花粉核心: 每?(数值未知)个回合，额外抽?(数值未知)张牌。",
+      "烛台: 在你的第2回合开始时，获得?(数值未知)。",
+      "宝石面具: 在每场战斗开始时，将一张随机能力牌从你的抽牌堆放入你的手牌，这张牌在本场战斗可以免费打出。"
+    ],
+    "potions": [
+      "毒药水: 给予?(数值未知)层中毒。"
+    ],
+    "notes": [
+      "took a card reward",
+      "floor 38: moved to Unknown",
+      "event choice (镜中倒影  影倒中镜)",
+      "floor 39: moved to RestSite",
+      "used a rest site",
+      "floor 40: moved to Treasure",
+      "floor 41: moved to Monster",
+      "floor 42: moved to RestSite"
+    ],
+    "run_plan": "Accelerated poison with scalable defense and discard consistency — Keep the three-campfire route and heal to grow durability. Prioritize defensive scaling and filtering over redundant damage. Remove Regret first; upgrade Malaise and key defenses through safe opportunities. | want FOOTWORK, MIRAGE, PIERCING_WAIL, ALCHEMIZE, AFTERIMAGE, BACKFLIP | avoid GRAND_FINALE, KNIFE_TRAP, METAMORPHOSIS, FLECHETTES, SNAKEBITE, BACKSTAB",
+    "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+  },
+  "situation": {
+    "screen": "REST",
+    "hp": "22/77 (29%)",
+    "hp_percent": 29,
+    "upgradable_cards": 26,
+    "next_nodes": [
+      "Unknown",
+      "Elite"
+    ]
+  },
+  "route_review": {
+    "map_legend": "节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。",
+    "map": [
+      "F34 r0c3 远古（已走） → r1c1 r1c2 r1c4 r1c5",
+      "F35 r1c1 普通战 → r2c0",
+      "F35 r1c2 普通战 → r2c2",
+      "F35 r1c4 普通战（已走） → r2c3 r2c4",
+      "F35 r1c5 普通战 → r2c5",
+      "F36 r2c0 普通战 → r3c0",
+      "F36 r2c2 问号 → r3c2",
+      "F36 r2c3 普通战 → r3c3",
+      "F36 r2c4 问号（已走） → r3c3",
+      "F36 r2c5 商店 → r3c6",
+      "F37 r3c0 普通战 → r4c0",
+      "F37 r3c2 普通战 → r4c1",
+      "F37 r3c3 普通战（已走） → r4c2 r4c3 r4c4",
+      "F37 r3c6 问号 → r4c6",
+      "F38 r4c0 普通战 → r5c0",
+      "F38 r4c1 问号 → r5c1",
+      "F38 r4c2 问号 → r5c2",
+      "F38 r4c3 普通战 → r5c3",
+      "F38 r4c4 普通战（已走） → r5c4",
+      "F38 r4c6 普通战 → r5c6",
+      "F39 r5c0 商店 → r6c0",
+      "F39 r5c1 商店 → r6c2",
+      "F39 r5c2 普通战 → r6c2",
+      "F39 r5c3 普通战 → r6c4",
+      "F39 r5c4 问号（已走） → r6c4",
+      "F39 r5c6 普通战 → r6c6",
+      "F40 r6c0 休息 → r7c1",
+      "F40 r6c2 精英 → r7c1 r7c3",
+      "F40 r6c4 休息（已走） → r7c3 r7c4",
+      "F40 r6c6 问号 → r7c6",
+      "F41 r7c1 宝箱 → r8c0 r8c1",
+      "F41 r7c3 宝箱 → r8c2",
+      "F41 r7c4 宝箱（已走） → r8c5",
+      "F41 r7c6 宝箱 → r8c5",
+      "F42 r8c0 精英 → r9c0",
+      "F42 r8c1 问号 → r9c0",
+      "F42 r8c2 精英 → r9c2 r9c3",
+      "F42 r8c5 普通战（已走） → r9c6",
+      "F43 r9c0 休息 → r10c0",
+      "F43 r9c2 休息 → r10c2",
+      "F43 r9c3 普通战 → r10c3",
+      "F43 r9c6 休息（当前） → r10c5 r10c6",
+      "F44 r10c0 普通战 → r11c0 r11c1",
+      "F44 r10c2 精英 → r11c1",
+      "F44 r10c3 问号 → r11c3",
+      "F44 r10c5 问号 → r11c5",
+      "F44 r10c6 精英 → r11c6",
+      "F45 r11c0 精英 → r12c0",
+      "F45 r11c1 问号 → r12c0",
+      "F45 r11c3 普通战 → r12c3",
+      "F45 r11c5 普通战 → r12c5",
+      "F45 r11c6 普通战 → r12c6",
+      "F46 r12c0 普通战 → r13c0",
+      "F46 r12c3 精英 → r13c3",
+      "F46 r12c5 普通战 → r13c6",
+      "F46 r12c6 精英 → r13c6",
+      "F47 r13c0 休息 → r14c3",
+      "F47 r13c3 休息 → r14c3",
+      "F47 r13c6 休息 → r14c3",
+      "F48 r14c3 Boss（第 1 个 boss） → r15c3",
+      "F49 r15c3 Boss（第 2 个 boss）"
+    ],
+    "position": "你在 r9c6（F43 休息）；下一步可走：r10c5、r10c6",
+    "next_nodes": [
+      "r10c5",
+      "r10c6"
+    ],
+    "winged_boots_left": 0,
+    "boss": "r14c3（F48 Boss） → r15c3（F49 Boss）",
+    "walked": "r0c3 → r1c4 → r2c4 → r3c3 → r4c4 → r5c4 → r6c4 → r7c4 → r8c5 → r9c6",
+    "plan": "r10c5 问号 → r11c5 普通战 → r12c5 普通战 → r13c6 休息 → r14c3 Boss → r15c3 Boss",
+    "plan_facts": {
+      "arrival": [
+        "F44 r10c5 问号：22/77（p75 22）",
+        "F45 r11c5 普通战：22/77（p75 22）",
+        "F46 r12c5 普通战：6/77（p75 耗尽）",
+        "F47 r13c6 休息：0（血量耗尽）（p75 耗尽）",
+        "F48 r14c3 Boss：0（血量耗尽）（p75 耗尽）",
+        "F49 r15c3 Boss：0（血量耗尽）（p75 耗尽）"
+      ],
+      "rest_sites": [
+        "F47 r13c6 休息：到达 0（血量耗尽）（p75 耗尽）；回血 → 耗尽/82（p75 耗尽）；锻造（不回血）→ 耗尽/77（p75 耗尽）"
+      ],
+      "fights_before_rest": "到下一个休息点 F47 r13c6 前：战斗 2 场（普通战 2、精英 0），问号 1 个，商店 0 个；本幕从上一个休息点（没有就从幕初）到当前节点已打普通战和精英 0 场（商店、问号不打断，问号不计），这一段到休息点 F47 r13c6 前共 2 场",
+      "next_elite": "路线上没有精英",
+      "boss": "F48 r14c3：到达 0（血量耗尽）（p75 耗尽）；之后还有第 2 个 boss（r15c3），中间不休息",
+      "hp_runs_out": "按中位数投影，血量在 F46 r12c5 普通战 耗尽",
+      "about": "从现在的 HP 22/77 起按实测房间掉血投影（route-projection，算法未改）：中位数 = 每个房间按中位数代价；p75 = 每个战斗和问号房都按 p75 代价连续累计（偏悲观）；之后的休息点按回血算（锻造的情况单独列出）；死亡不会被后面的休息点救回。",
+      "if_option": [
+        "o0 HEAL（HP 50/82）：boss 前 47/87（p75 耗尽）",
+        "o1 SMITH（HP 22/77）：boss 前 0（血量耗尽）（p75 耗尽）"
+      ]
+    },
+    "next_rest": {
+      "about": "从下一步到下一个休息点（之前没有就到 boss）的战斗、问号、商店和到达 HP，及 boss 前下一只精英的进场 HP（从本休息点 o0 HEAL 后的 HP 50/82 起；不回血就从现在的 22/77 起，中位数和 p75，同 plan_facts）。keep = 你的计划；switch = 从每个下一步节点到最近两层休息点各 HP 最高的一条（精英按之后沿计划，不在计划上就沿每段 HP 最高的线）；和保留路线比：两条的下一个休息点中较晚的那层的 HP（这条的精英不比保留路线这一段多时），两条都有精英时比各自的精英进场 HP，明显低（中位数低 ≥10% 最大生命、p75 低 ≥15% 或耗尽）的写明。",
+      "keep": "r10c5 问号 → r11c5 普通战 → r12c5 普通战 → F47 r13c6 休息：普通战 2、精英 0（这一段共 2 场）、问号 1，没有商店；到达 18/82（p75 耗尽）",
+      "switch": [
+        "r10c6 精英 → r11c6 普通战 → r12c6 精英 → F47 r13c6 休息：普通战 1、精英 2（这一段共 3 场）、问号 0，没有商店；到达 0（血量耗尽）（p75 耗尽）；下一只精英 F44 r10c6 进场 50/82（p75 50）"
+      ]
+    },
+    "room_costs": "第 3 幕每个房间掉血（中位数/p75，最大生命 77）：普通战 16/26.8（logged A10 act-3 Monster rooms, n=150 incl. 11 deaths）；精英 50/64（logged A10 act-3 Elite rooms, n=19 incl. 4 deaths）；问号 0/0（logged A10 act-3 Unknown rooms, n=137）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），另加 Stone Humidifier +5 max HP，锻造不回血。",
+    "vs_plan": "计划在 F34 定（当时 HP 89%），当时预计到达：下一节点 F44 问号 62/77，boss F48 Boss 62/77；现在 HP 22/77（本休息点的选项还没算进去）",
+    "run_plan_hp": "Establish poison and Accelerant, strip Artifact before Malaise, secure scalable block, and preserve HP, defensive potions, and Lizard Tail for both bosses."
+  },
+  "facts": {
+    "act": 3,
+    "floor": 43,
+    "floors_to_act_boss": 5,
+    "ascension": 10,
+    "hp": "22/77 (29%)",
+    "gold": 227,
+    "act_boss": "AEONGLASS_BOSS",
+    "deck_size": 33,
+    "deck_profile": "33 张 (攻击 10/技能 18/能力 3/诅咒或状态 2) | 升级 7 | 平均费用 0.94 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+    "deck": [
+      "STRIKE_SILENT+ 打击+ (Attack, 1 energy): 造成9点伤害。",
+      "3x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+      "4x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+      "DEFEND_SILENT+ 防御+ (Skill, 1 energy): 获得8点格挡。",
+      "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+      "SURVIVOR+ 生存者+ (Skill, 1 energy): 获得11点格挡。 丢弃1张牌。",
+      "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+      "POISONED_STAB 带毒刺击 (Attack, 1 energy): 造成6点伤害。 给予3层中毒。",
+      "BACKSTAB 背刺 (Attack, 0 energy): 固有。 造成11点伤害。 消耗。",
+      "POISONED_STAB+ 带毒刺击+ (Attack, 1 energy): 造成8点伤害。 给予4层中毒。",
+      "SNAKEBITE 蛇咬 (Skill, 2 energy): 保留。 给予7层中毒。",
+      "BACKFLIP 后空翻 (Skill, 1 energy): 获得5点格挡。 抽2张牌。",
+      "DEADLY_POISON 致命毒药 (Skill, 1 energy): 给予5层中毒。",
+      "NOXIOUS_FUMES+ 毒雾+ (Power, 1 energy): 在你的回合开始时，给予所有敌人3层中毒。",
+      "MALAISE 萎靡 (Skill, 0 energy): 敌人失去X点力量。给予X层虚弱。 消耗。",
+      "CALCULATED_GAMBLE 计算下注 (Skill, 0 energy): 丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+      "2x HAND_TRICK 手上技法 (Skill, 1 energy): 获得7点格挡。 在本回合给你手牌中的一张技能牌添加奇巧。",
+      "NOXIOUS_FUMES 毒雾 (Power, 1 energy): 在你的回合开始时，给予所有敌人2层中毒。",
+      "ACCELERANT+ 触媒+ (Power, 1 energy): 中毒会额外触发2次。",
+      "LEG_SWEEP 扫腿 (Skill, 2 energy): 给予2层虚弱。 获得11点格挡。",
+      "EXTERMINATE 杀灭 (Attack, 1 energy): 对所有敌人造成3点伤害4次。",
+      "DASH+ 冲刺+ (Attack, 2 energy): 获得13点格挡。 造成13点伤害。",
+      "OUTBREAK 毒性爆发 (Skill, 3 energy): 给予所有敌人9层中毒。 立即触发中毒。",
+      "TACTICIAN 战术大师 (Skill, 3 energy): 奇巧。 获得1点能量。",
+      "REGRET 悔恨 (Curse, -1 energy): 不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，失去相当于手牌数量的生命。",
+      "ANTICIPATE 预判 (Skill, 0 energy): 在本回合获得2点敏捷。",
+      "MIRAGE 蜃景 (Skill, 1 energy): 获得等量于所有敌人中毒层数总和的格挡。 消耗。"
+    ],
+    "relics": [
+      "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+      "石炉加湿器: 每当你在休息处休息时，将你的最大生命值提升?(数值未知)点。",
+      "音叉: 你每打出?(数值未知)张技能牌，获得?(数值未知)点格挡。",
+      "开心小花: 每?(数值未知)个回合，获得?(数值未知)。",
+      "蜥蜴尾巴: 当你的生命值将要降低至0或以下时，回复到最大生命值的?(数值未知)%（仅能起效一次）。",
+      "百年积木: 你在每场战斗中第一次损失生命值时，抽?(数值未知)张牌。",
+      "佩尔之肉: 从你的第3回合开始，在回合开始时额外获得1点能量。",
+      "花粉核心: 每?(数值未知)个回合，额外抽?(数值未知)张牌。",
+      "烛台: 在你的第2回合开始时，获得?(数值未知)。",
+      "宝石面具: 在每场战斗开始时，将一张随机能力牌从你的抽牌堆放入你的手牌，这张牌在本场战斗可以免费打出。",
+      "送货员: 商人的卡牌、遗物和药水不再会卖光，并且所有商品打折?(数值未知)%。",
+      "准备背包: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+      "药水腰带: 拾起时，获得?(数值未知)个药水栏位。"
+    ],
+    "potions": [
+      "POISON_POTION 毒药水: 给予?(数值未知)层中毒。"
+    ],
+    "potion_slots": "1/4 used",
+    "act_boss_clock": {
+      "boss": "AEONGLASS",
+      "boss_hp": 535,
+      "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+      "boss_hp_parts": [
+        "AEONGLASS"
+      ],
+      "boss_enemies": [
+        {
+          "enemy": "AEONGLASS",
+          "hp": 535,
+          "hp_samples": 16,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "EBB_MOVE",
+              "per_hit": 26,
+              "hits": 1,
+              "basis": "base",
+              "samples": 33,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "EYE_LASERS_MOVE",
+              "per_hit": 12,
+              "hits": 2,
+              "basis": "base",
+              "samples": 30,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        }
+      ],
+      "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+      "deck_damage_per_turn_estimate": null,
+      "hp_loss_per_turn": null,
+      "survivable_turns": null,
+      "gap_per_turn": null,
+      "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+    },
+    "act_boss_sim": "boss 模拟没有结果（只跑完 272 次模拟（不足 300 次），选项之间的差噪声太大，不给数字）：act_boss_clock 仍是 boss 时钟的估计",
+    "your_run_plan": {
+      "made_on_floor": 39,
+      "archetype": "Accelerated poison with scalable defense and discard consistency",
+      "want": [
+        "FOOTWORK",
+        "MIRAGE",
+        "PIERCING_WAIL",
+        "ALCHEMIZE",
+        "AFTERIMAGE",
+        "BACKFLIP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "METAMORPHOSIS",
+        "FLECHETTES",
+        "SNAKEBITE",
+        "BACKSTAB"
+      ],
+      "remove": [
+        "REGRET",
+        "STRIKE_SILENT",
+        "BACKSTAB"
+      ],
+      "block_target": 11,
+      "elites": "avoid",
+      "rest": "heal",
+      "boss_prep": "Establish poison and Accelerant, strip Artifact before Malaise, secure scalable block, and preserve HP, defensive potions, and Lizard Tail for both bosses.",
+      "summary": "Keep the three-campfire route and heal to grow durability. Prioritize defensive scaling and filtering over redundant damage. Remove Regret first; upgrade Malaise and key defenses through safe opportunities."
+    },
+    "rest_site": {
+      "heal_amount": "23 HP: 23 (30% of max HP, rounded down), and max HP +5 with HP +5 (Stone Humidifier +5 max HP)",
+      "hp_after_heal": "50/82",
+      "humidifier_rest_growth": {
+        "source": "UMVLWER4CD98 SILENT A10 F7/9/16/44/47（营火，无战斗回合）；silent-0215/0204/0020。",
+        "current_hp": 22,
+        "current_max_hp": 77,
+        "base_heal_before_cap": 23,
+        "actions": [
+          {
+            "key": "o0",
+            "kind": "HEAL",
+            "after_action_hp_reference": 50,
+            "after_action_max_hp_reference": 82,
+            "ordinary_hp_recovered_reference": 23,
+            "growth_hp_reference": 5,
+            "total_hp_gain_reference": 28
+          },
+          {
+            "key": "o1",
+            "kind": "SMITH",
+            "after_action_hp_reference": 22,
+            "after_action_max_hp_reference": 77,
+            "ordinary_hp_recovered_reference": 0,
+            "growth_hp_reference": 0,
+            "total_hp_gain_reference": 0
+          }
+        ],
+        "max_hp_tied_option_groups": [],
+        "trigger": "本局十次实际选择回血均增加5最大HP并补5当前HP；F9锻造54/75不变。进入营火本身不算增长，只有实际选择并成功执行的动作才兑现。",
+        "reference_scope": "按当前既有HEAL结果分列旧最大HP内的回复与增长带来的5血，回复可能被旧最大HP截断。SMITH保持当前HP及最大HP；其他动作未验证，参考为null。动作键展开锻造时共享此前缀，相同最大HP只在该指标并列，牌组收益与整场价值仍由DeepSeek比较。",
+        "limits": "F7的52/70→75/75总增23，不能把文本21与增长5之和26当实增；F47回到70/120后六次boss仍全败。未到达或未选择回血的未来营火不预支增长，不据此规定路线或休息优先级；全部选项保留。其他回血遗物组合未在此分账。"
+      },
+      "upgradable_cards": [
+        "打击",
+        "打击",
+        "打击",
+        "防御",
+        "防御",
+        "防御",
+        "防御",
+        "中和",
+        "带毒刺击",
+        "背刺",
+        "蛇咬",
+        "后空翻",
+        "致命毒药",
+        "萎靡",
+        "计算下注",
+        "手上技法",
+        "毒雾",
+        "扫腿",
+        "杀灭",
+        "毒性爆发",
+        "战术大师",
+        "手上技法",
+        "预判",
+        "蜃景"
+      ],
+      "floors_to_act_boss": 5,
+      "next_nodes": [
+        "Unknown",
+        "Elite"
+      ],
+      "forced_next": null,
+      "hp_band_now": "<40%",
+      "option_outcome_stats": {
+        "HEAL": "无数据",
+        "SMITH": "无数据"
+      }
+    },
+    "double_boss_preparation": {
+      "objective": "第三幕路线和休息按F48→F49连续两战备战：第一战剩余HP/药水是第二战进场资源，四局观察没有中间营火或回血。",
+      "projection": "沿用silent-0163/S1.fix27：F48之后路线血量仍未知，不把进F48的血量当进F49血量；连战模拟才传递每条样本实际余量。",
+      "evidence": [
+        {
+          "run": "JMH5C51RLN4E",
+          "floor": 49,
+          "turn": 1
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "floor": 49,
+          "turn": 1
+        },
+        {
+          "run": "ZVYUL2YP3518",
+          "floor": 49,
+          "turn": 1
+        },
+        {
+          "run": "TDLBRNA0R05B",
+          "floor": 49,
+          "turn": 1
+        }
+      ],
+      "limits": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+      "choice": "全部路线、休息和锻造选项保留，由Codex结合即时血量、牌组及连续两战原始模拟选择。"
+    },
+    "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+    "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-09T13:52:36，A10 共 129 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 129 局）：到达第1幕的局过第1幕boss 71% (n=129)，到达第2幕的局过第2幕boss 48% (n=91)，到达第3幕的局过第3幕boss 0% (n=44)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+  },
+  "run_plan_task": {
+    "trigger": "hp_drop",
+    "due_because": "a heavy HP loss since the plan",
+    "facts": "the deck, relics, potions, HP, gold, act boss and act_boss_clock are in state.facts",
+    "current_plan": {
+      "in": "state.facts.your_run_plan",
+      "made_in_act": 3,
+      "made_on_floor": 39,
+      "hp_then": "42%",
+      "made_because": "hp_drop"
+    }
+  }
+}

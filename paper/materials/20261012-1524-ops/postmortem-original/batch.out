@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：K643VJCTQT0J（A10，第38层，猫头鹰法官战第四试T6以1血9挡对36攻击阵亡）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：运行源码快照、截断尝试的实际结算、部分伤害及事件中间帧、受控整战对照、完整最优线兑现比例、boss时钟、部分模拟值、纯操作时长、Jev缓存及实际账单。
+- 学习账本：新增 silent-0436；更新 silent-0019、silent-0205、silent-0057、silent-0083、silent-0132、silent-0194、silent-0023、silent-0035、silent-0278（老错 silent-0205）；`ledger.py check` 退出码0。
+- 代码提案：均已登记，目标任务为 `strategy-proposal`，尚未实现：
+  - `silent-proposal-b6b7ed808bfdfd74`：F35—F38资源链；关联0019、0083、0194、0023。
+  - `silent-proposal-5e8c4c7ca8f13fc8`：F38T4弃牌与SL后继；关联0205、0436。
+  - `silent-proposal-b5663028277a0dc3`：F33能力建立及F38毒结算；关联0057、0132、0035、0278。
+  - 限制：缺少受控整战对照，未直接修改打法规则。
+
+```json
+{"task":"postmortem","appended":["K643VJCTQT0J"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0436"],"updated":["silent-0019","silent-0205","silent-0057","silent-0083","silent-0132","silent-0194","silent-0023","silent-0035","silent-0278"],"repeats":["silent-0205"],"check":0},"code_proposals":["silent-proposal-b6b7ed808bfdfd74","silent-proposal-5e8c4c7ca8f13fc8","silent-proposal-b5663028277a0dc3"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261012-144302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12ed9-c24a-7b20-ba91-d5702b858e76
+轮数：1；工具调用：command_execution×61
+token：输入 241.4k、输出 42.3k（其中推理 10.5k）、cache 读 6501.9k、cache 写 0（命中 96.4%）
+成本：未提供
+耗时：1594.9 s（墙钟）
+时间：首个事件 10.2 s、模型首个输出 15.6 s、首次工具 19.4 s、末次工具结束 1579.6 s；工具内共 227.8 s，其余（模型生成、推理、网络）1356.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×43；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T14-43-05-01a12ed9-c24a-7b20-ba91-d5702b858e76.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261012-144302-postmortem.jsonl

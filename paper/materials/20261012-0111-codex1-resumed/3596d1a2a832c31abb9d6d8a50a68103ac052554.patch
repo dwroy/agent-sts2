@@ -1,0 +1,782 @@
+diff --git a/agent/src/hand/screens/selection.ts b/agent/src/hand/screens/selection.ts
+index d446867dc..07555ce31 100644
+--- a/agent/src/hand/screens/selection.ts
++++ b/agent/src/hand/screens/selection.ts
+@@ -20,6 +20,7 @@ import type { GameState } from "../mod/schema.js";
+ import { exhaustPileSize, facingFightOf, fightPlaysPerTurn } from "../../reflex/combat-plan.js";
+ import { cardIdentity, planMakerOf, SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
+ import { cardOutcome } from "../../knowledge/outcome-facts.js";
++import { survivorSmoggyFacts } from "./silent-smoggy-selection.js";
+ 
+ export function planSelection(env: DecisionEnv): Decision | null {
+   const { state, knowledge } = env;
+@@ -187,6 +188,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
+   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
+   // Bash+ the plan played next).
+   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
++  const smoggySource = env.screenMemory.cardSource;
++  const smoggyFacts = survivorSmoggyFacts(state, smoggySource?.action === "play_card" && smoggySource.id === "SURVIVOR" &&
++    smoggySource.turn === state.turn && smoggySource.fight === facingFightOf(state));
+   const options: PickOption[] = candidates.map((card, fallbackIndex) => {
+     const index = numOrNull(card["index"]) ?? fallbackIndex;
+     const cardId = str(card["card_id"]);
+@@ -220,6 +224,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
+         // A free offer: this turn's cost (the printed one is not paid).
+         cost: freeSource ? thisTurnModel(card, index).cost : numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
+         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
++        ...(smoggyFacts?.has(index) ? { smoggy_after_discard: smoggyFacts.get(index)! } : {}),
+       } satisfies JsonValue,
+     };
+     // DeepSeek's view: the value's parts, and that the ranking is a reference ("120 = 80 + 40 ..."; UNRL F14 read
+@@ -284,7 +289,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
+     options,
+     // Exhaust picks happen every turn with Baking Gloves and are low-stakes: code always decides.
+     codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : verb === "exhaust" || topDanger ? 0 : 6,
+-    maxModelOptions: 4,
++    maxModelOptions: smoggyFacts ? options.length : 4,
+     state: {
+       run_brief: briefJson(env.brief),
+       situation: {
+diff --git a/agent/src/hand/screens/silent-smoggy-selection.ts b/agent/src/hand/screens/silent-smoggy-selection.ts
+new file mode 100644
+index 000000000..dcc829387
+--- /dev/null
++++ b/agent/src/hand/screens/silent-smoggy-selection.ts
+@@ -0,0 +1,58 @@
++import { asArray, asRecord, numOrNull, str, type JsonValue } from "../../core/util/json.js";
++import type { GameState } from "../mod/schema.js";
++
++/**
++ * 6D0M76419BU7 F12 T3 (silent-0407): the selection snapshot still marks
++ * Deflect and Defend playable; SMOGGY_POWER blocks them after Survivor finishes.
++ * Report that observed restriction separately from the unsettled mod flag.
++ */
++export function survivorSmoggyFacts(state: GameState, currentSurvivor: boolean): Map<number, JsonValue> | null {
++  const selection = asRecord(state.raw["selection"]);
++  if (!currentSurvivor || !state.in_combat || state.run?.ascension !== 10 ||
++      str(asRecord(state.run.raw)["character_id"]).toUpperCase() !== "SILENT" ||
++      selection["kind"] !== "combat_hand_select" || !/丢弃|弃掉|discard/i.test(str(selection["prompt"])) ||
++      selection["min_select"] !== 1 || selection["max_select"] !== 1 || selection["selected_count"] !== 0) return null;
++  const combat = asRecord(state.raw["combat"]);
++  const readiness = asRecord(combat["action_readiness"]);
++  if (!/PlayCardAction$/.test(str(readiness["running_action_type"])) || readiness["hand_in_card_selection"] !== true) return null;
++  const player = asRecord(combat["player"]);
++  const smog = asArray(player["powers"]).map(asRecord).filter((power) => power["power_id"] === "SMOGGY_POWER");
++  if (smog.length !== 1 || smog[0]!["amount"] !== 1 || player["skills_played_this_turn"] !== 1) return null;
++  const energy = numOrNull(player["energy"]);
++  if (energy === null || energy < 0) return null;
++  const cards = asArray(selection["cards"]).map(asRecord);
++  const hand = asArray(combat["hand"]).map(asRecord);
++  if (!cards.length || cards.length !== hand.length || cards.some((card) => card["selected"] !== false)) return null;
++  const slots = cards.map((card) => numOrNull(card["index"]));
++  if (slots.some((slot) => slot === null || !Number.isInteger(slot) || slot < 0) ||
++      new Set(slots).size !== cards.length || new Set(hand.map((card) => card["index"])).size !== hand.length) return null;
++  for (const card of cards) {
++    const actual = hand.find((entry) => entry["index"] === card["index"]);
++    if (!actual || !str(card["card_id"]) ||
++        ["card_id", "upgraded", "energy_cost", "costs_x", "star_cost", "star_costs_x", "resolved_rules_text"]
++          .some((key) => actual[key] !== card[key])) return null;
++  }
++  // Only these plain cards and this counter/power combination were checked here.
++  const blocked = cards.filter((card) => card["upgraded"] === false && card["card_type"] === "Skill" &&
++    (card["card_id"] === "DEFLECT" || card["card_id"] === "DEFEND_SILENT"));
++  if (!blocked.length) return null;
++  return new Map(cards.map((discarded) => [discarded["index"] as number, {
++    basis: "静默A10实盘6D0M76419BU7/F12T3：1层烟雾且已打1张技能时，生存者选牌帧仍显示偏折/防御可打，完成弃牌后才标烟雾禁止。费用足够不能当作可补挡；以下为烟雾与计数保持时已核普通偏折/防御的限制，弃牌触发、其他牌与完整后继未验证，选择后仍须重读。",
++    energy_now: energy,
++    smoggy_amount: 1,
++    skills_played_this_turn: 1,
++    retained_restricted_cards: blocked.filter((card) => card["index"] !== discarded["index"]).map((card) => {
++      const actual = hand.find((entry) => entry["index"] === card["index"])!;
++      const cost = numOrNull(card["energy_cost"]);
++      return {
++        hand_index_before_discard: card["index"] as number,
++        card_id: str(card["card_id"]), name: str(card["name"]),
++        energy_cost_now: cost,
++        energy_sufficient_for_this_card_alone: cost !== null && cost >= 0 && card["costs_x"] === false &&
++          card["star_costs_x"] === false && card["star_cost"] === 0 ? energy >= cost : null,
++        mod_playable_during_selection: typeof actual["playable"] === "boolean" ? actual["playable"] : null,
++        observed_restriction_after_survivor: "SMOGGY_POWER",
++      };
++    }),
++  } satisfies JsonValue]));
++}
+diff --git a/agent/tests/silent-smoggy-selection-evidence.json b/agent/tests/silent-smoggy-selection-evidence.json
+new file mode 100644
+index 000000000..11e6e1d1d
+--- /dev/null
++++ b/agent/tests/silent-smoggy-selection-evidence.json
+@@ -0,0 +1,523 @@
++{
++  "run": "6D0M76419BU7",
++  "floor": 12,
++  "turn": 3,
++  "ascension": 10,
++  "source_lines": {
++    "selection": 358451,
++    "after": 358452,
++    "next_turn": 358453
++  },
++  "selection": {
++    "kind": "combat_hand_select",
++    "prompt": "[center]选择[blue]1[/blue]张牌来[gold]丢弃[/gold]。[/center]",
++    "min_select": 1,
++    "max_select": 1,
++    "selected_count": 0,
++    "requires_confirmation": false,
++    "can_confirm": false,
++    "cards": [
++      {
++        "index": 0,
++        "selected": false,
++        "card_id": "SKEWER",
++        "name": "串刺",
++        "upgraded": false,
++        "card_type": "Attack",
++        "rarity": "Uncommon",
++        "costs_x": true,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害X次。",
++        "resolved_rules_text": "造成9点伤害X次。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 8,
++            "current_value": 9,
++            "enchanted_value": 8,
++            "is_modified": true,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 1,
++        "selected": false,
++        "card_id": "ETERNAL_ARMOR",
++        "name": "永恒铠甲",
++        "upgraded": false,
++        "card_type": "Power",
++        "rarity": "Rare",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 3,
++        "star_cost": 0,
++        "rules_text": "获得{PlatingPower:diff()}层覆甲。",
++        "resolved_rules_text": "获得9层覆甲。",
++        "dynamic_values": [
++          {
++            "name": "PlatingPower",
++            "base_value": 9,
++            "current_value": 9,
++            "enchanted_value": 9,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 2,
++        "selected": false,
++        "card_id": "DEFLECT",
++        "name": "偏折",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得4点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 4,
++            "current_value": 4,
++            "enchanted_value": 4,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 3,
++        "selected": false,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      }
++    ]
++  },
++  "combat": {
++    "player": {
++      "current_hp": 13,
++      "max_hp": 70,
++      "block": 8,
++      "energy": 2,
++      "stars": 0,
++      "focus": 0,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "STRENGTH_POWER",
++          "name": "力量",
++          "amount": 1,
++          "is_debuff": false
++        },
++        {
++          "index": 1,
++          "power_id": "SERPENT_FORM_POWER",
++          "name": "群蛇形态",
++          "amount": 4,
++          "is_debuff": false
++        },
++        {
++          "index": 2,
++          "power_id": "SMOGGY_POWER",
++          "name": "烟雾弥漫",
++          "amount": 1,
++          "is_debuff": true
++        }
++      ],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 1,
++      "attacks_played_this_turn": 0,
++      "skills_played_this_turn": 1
++    },
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "SKEWER",
++        "name": "串刺",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0,
++          1
++        ],
++        "costs_x": true,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害X次。",
++        "resolved_rules_text": "造成9点伤害X次。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 8,
++            "current_value": 9,
++            "enchanted_value": 8,
++            "is_modified": true,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "ETERNAL_ARMOR",
++        "name": "永恒铠甲",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 3,
++        "star_cost": 0,
++        "rules_text": "获得{PlatingPower:diff()}层覆甲。",
++        "resolved_rules_text": "获得9层覆甲。",
++        "dynamic_values": [
++          {
++            "name": "PlatingPower",
++            "base_value": 9,
++            "current_value": 9,
++            "enchanted_value": 9,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "not_enough_energy",
++        "unplayable_reason_raw": "EnergyCostTooHigh",
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 2,
++        "card_id": "DEFLECT",
++        "name": "偏折",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得4点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 4,
++            "current_value": 4,
++            "enchanted_value": 4,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 3,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "enemies": [
++      {
++        "index": 0,
++        "enemy_id": "GAS_BOMB",
++        "name": "气态炸弹",
++        "current_hp": 8,
++        "max_hp": 8,
++        "base_max_hp": 8,
++        "block": 0,
++        "is_alive": true,
++        "is_hittable": true,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "MINION_POWER",
++            "name": "爪牙",
++            "amount": 1,
++            "is_debuff": false
++          }
++        ],
++        "intent": "EXPLODE_MOVE",
++        "move_id": "EXPLODE_MOVE",
++        "intents": [
++          {
++            "index": 0,
++            "intent_type": "DeathBlow",
++            "label": "9",
++            "damage": 9,
++            "hits": 1,
++            "total_damage": 9,
++            "status_card_count": null
++          }
++        ]
++      },
++      {
++        "index": 1,
++        "enemy_id": "LIVING_FOG",
++        "name": "活雾",
++        "current_hp": 31,
++        "max_hp": 82,
++        "base_max_hp": 82,
++        "block": 0,
++        "is_alive": true,
++        "is_hittable": true,
++        "powers": [],
++        "intent": "SUPER_GAS_BLAST_MOVE",
++        "move_id": "SUPER_GAS_BLAST_MOVE",
++        "intents": [
++          {
++            "index": 0,
++            "intent_type": "Attack",
++            "label": "9",
++            "damage": 9,
++            "hits": 1,
++            "total_damage": 9,
++            "status_card_count": null
++          }
++        ]
++      }
++    ],
++    "action_readiness": {
++      "can_use_combat_actions": false,
++      "reason": "hand_in_card_selection",
++      "actions_settled": false,
++      "running_action_type": "MegaCrit.Sts2.Core.GameActions.PlayCardAction",
++      "ready_action_type": null,
++      "modal_open": false,
++      "modal_type": null,
++      "player_actions_disabled": false,
++      "is_paused": false,
++      "local_ready_to_end_turn": false,
++      "all_players_ready_to_end_turn": true,
++      "ending_turn_phase_one": false,
++      "ending_turn_phase_two": false,
++      "end_turn_kick": "",
++      "combat_in_progress": true,
++      "combat_over_or_ending": false,
++      "combat_room_mode": "ActiveCombat",
++      "hand_in_card_play": false,
++      "hand_in_card_selection": true,
++      "hand_mode": "SimpleSelect",
++      "local_turn_ready": true,
++      "snapshot_stable": false,
++      "player_action_phase": true
++    }
++  },
++  "after": {
++    "player": {
++      "current_hp": 13,
++      "max_hp": 70,
++      "block": 8,
++      "energy": 2,
++      "stars": 0,
++      "focus": 0,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "STRENGTH_POWER",
++          "name": "力量",
++          "amount": 1,
++          "is_debuff": false
++        },
++        {
++          "index": 1,
++          "power_id": "SERPENT_FORM_POWER",
++          "name": "群蛇形态",
++          "amount": 4,
++          "is_debuff": false
++        },
++        {
++          "index": 2,
++          "power_id": "SMOGGY_POWER",
++          "name": "烟雾弥漫",
++          "amount": 1,
++          "is_debuff": true
++        }
++      ],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 1,
++      "attacks_played_this_turn": 0,
++      "skills_played_this_turn": 1
++    },
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "ETERNAL_ARMOR",
++        "name": "永恒铠甲",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 3,
++        "star_cost": 0,
++        "rules_text": "获得{PlatingPower:diff()}层覆甲。",
++        "resolved_rules_text": "获得9层覆甲。",
++        "dynamic_values": [
++          {
++            "name": "PlatingPower",
++            "base_value": 9,
++            "current_value": 9,
++            "enchanted_value": 9,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "not_enough_energy",
++        "unplayable_reason_raw": "EnergyCostTooHigh",
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "DEFLECT",
++        "name": "偏折",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得4点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 4,
++            "current_value": 4,
++            "enchanted_value": 4,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "blocked_by_hook",
++        "unplayable_reason_raw": "BlockedByHook",
++        "unplayable_preventer_id": "SMOGGY_POWER",
++        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.SmoggyPower"
++      },
++      {
++        "index": 2,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "blocked_by_hook",
++        "unplayable_reason_raw": "BlockedByHook",
++        "unplayable_preventer_id": "SMOGGY_POWER",
++        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.SmoggyPower"
++      }
++    ]
++  },
++  "next_hp": 3
++}
+diff --git a/agent/tests/silent-smoggy-selection.test.ts b/agent/tests/silent-smoggy-selection.test.ts
+new file mode 100644
+index 000000000..d8a2fd0f8
+--- /dev/null
++++ b/agent/tests/silent-smoggy-selection.test.ts
+@@ -0,0 +1,144 @@
++/** Fixed 6D0M76419BU7 F12 T3 selection and its independently logged successor. */
++import { resolve } from "node:path";
++import { expect, it, vi } from "vitest";
++import evidence from "./silent-smoggy-selection-evidence.json";
++import { baseState, runPayload } from "./scenarios.js";
++import { loadConfig } from "../src/core/config.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { planSelection } from "../src/hand/screens/selection.js";
++import { survivorSmoggyFacts } from "../src/hand/screens/silent-smoggy-selection.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { buildRunBrief } from "../src/memory/run-brief.js";
++import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
++import { facingFightOf } from "../src/reflex/combat-plan.js";
++
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed Silent evidence only"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++
++type Raw = Record<string, any>;
++const knowledge = makeKnowledge({ cards: evidence.selection.cards.map((card) => ({
++  id: card.card_id, name: card.name, type: card.card_type, cost: card.energy_cost,
++  description: card.resolved_rules_text, description_raw: card.rules_text, vars: card.dynamic_values,
++})) }, "cache");
++
++function raw(): Raw {
++  return baseState("CARD_SELECTION", {
++    run_id: evidence.run, in_combat: true, turn: evidence.turn, available_actions: ["select_deck_card"],
++    run: runPayload({ floor: evidence.floor, ascension: evidence.ascension, character_id: "SILENT", deck: [], relics: [], potions: [] }),
++    combat: structuredClone(evidence.combat), selection: structuredClone(evidence.selection),
++  });
++}
++
++function env(input: Raw): DecisionEnv {
++  const state = parseGameState(input);
++  const memory = createScreenMemory("CARD_SELECTION");
++  memory.cardSource = { action: "play_card", id: "SURVIVOR", fight: facingFightOf(state), turn: state.turn };
++  return { state, knowledge, brief: buildRunBrief(state, knowledge), thresholds: loadConfig({}).thresholds,
++    runStart: "auto", characterPreference: null, allowFtueModals: false, strictJev: true,
++    screenMemory: memory, shopDiscardPotions: [], buildDecider: "deepseek" };
++}
++
++function facts(input = raw()): Map<number, Raw> {
++  const result = survivorSmoggyFacts(parseGameState(input), true);
++  expect(result).not.toBeNull();
++  return result as Map<number, Raw>;
++}
++
++it("F12 T3: the warning matches the actual post-discard blockers, despite both modal flags being true", () => {
++  const result = facts().get(0)!;
++  const actual = evidence.after.hand.filter((card) => card.unplayable_preventer_id === "SMOGGY_POWER");
++  expect(result.retained_restricted_cards.map((card: Raw) => card.card_id)).toEqual(actual.map((card) => card.card_id));
++  expect(result.retained_restricted_cards.map((card: Raw) => card.observed_restriction_after_survivor))
++    .toEqual(actual.map((card) => card.unplayable_preventer_id));
++  expect(result.retained_restricted_cards.map((card: Raw) => card.mod_playable_during_selection)).toEqual([true, true]);
++  expect(result.retained_restricted_cards.map((card: Raw) => card.energy_sufficient_for_this_card_alone)).toEqual([true, true]);
++  expect(result.energy_now).toBe(evidence.after.player.energy);
++  expect(evidence.after.player.current_hp - evidence.next_hp).toBe(10);
++  expect(result).not.toHaveProperty("hp_after");
++  expect(result).not.toHaveProperty("wins_fight");
++});
++
++it("each hypothetical discard removes only its own restricted copy; attacks and Powers are not declared blocked", () => {
++  const result = facts();
++  expect(result.get(1)!.retained_restricted_cards.map((card: Raw) => card.card_id)).toEqual(["DEFLECT", "DEFEND_SILENT"]);
++  expect(result.get(2)!.retained_restricted_cards.map((card: Raw) => card.card_id)).toEqual(["DEFEND_SILENT"]);
++  expect(result.get(3)!.retained_restricted_cards.map((card: Raw) => card.card_id)).toEqual(["DEFLECT"]);
++});
++
++it("the production selection question carries the warning and still accepts all four choices through Jev", () => {
++  const decision = planSelection(env(raw()));
++  expect(decision?.kind).toBe("ask");
++  if (decision?.kind !== "ask") throw new Error("expected Jev selection");
++  expect(decision.deepseek).toBeUndefined();
++  const question = decision.questions.pick;
++  if (question?.type !== "choice") throw new Error("expected card choice");
++  expect(Object.keys(question.criteria).sort()).toEqual(["card0", "card1", "card2", "card3"]);
++  for (let index = 0; index < 4; index++) {
++    const key = `card${index}`;
++    expect(JSON.parse(question.criteria[key]!).smoggy_after_discard).toEqual(facts().get(index));
++    expect(decision.resolve({ pick: { type: "choice", choice: key, probabilities: { [key]: 1 }, confidence: 1, raw: {} } }).intent)
++      .toEqual({ action: "select_deck_card", option_index: index });
++  }
++});
++
++it("does not mutate the snapshot or infer unknown costs, upgrades, or other skills", () => {
++  const input = raw();
++  for (const collection of [input.combat.hand, input.selection.cards]) collection[2].energy_cost = null;
++  const before = structuredClone(input);
++  expect(facts(input).get(0)!.retained_restricted_cards[0].energy_sufficient_for_this_card_alone).toBeNull();
++  expect(input).toEqual(before);
++  for (const collection of [input.combat.hand, input.selection.cards]) {
++    collection[2].upgraded = true;
++    collection[3].card_id = "UNOBSERVED_SKILL";
++  }
++  expect(survivorSmoggyFacts(parseGameState(input), true)).toBeNull();
++});
++
++it.each([
++  ["different ascension", (x: Raw) => { x.run.ascension = 11; }],
++  ["outside combat", (x: Raw) => { x.in_combat = false; }],
++  ["missing count", (x: Raw) => { delete x.combat.player.skills_played_this_turn; }],
++  ["unspent skill", (x: Raw) => { x.combat.player.skills_played_this_turn = 0; }],
++  ["other smog amount", (x: Raw) => { x.combat.player.powers.find((p: Raw) => p.power_id === "SMOGGY_POWER").amount = 2; }],
++  ["no smog", (x: Raw) => { x.combat.player.powers = []; }],
++  ["multiple discards", (x: Raw) => { x.selection.max_select = 2; }],
++  ["potion action", (x: Raw) => { x.combat.action_readiness.running_action_type = "UsePotionAction"; }],
++  ["different hand copy", (x: Raw) => { x.combat.hand[2].card_id = "OTHER"; }],
++  ["ambiguous index", (x: Raw) => { x.selection.cards[2].index = 0; }],
++] as const)("%s leaves the old question unchanged", (_name, change) => {
++  const input = raw(); change(input);
++  expect(survivorSmoggyFacts(parseGameState(input), true)).toBeNull();
++  const context = env(input);
++  const before = JSON.stringify(planSelection(context));
++  context.screenMemory.cardSource = undefined;
++  expect(JSON.stringify(planSelection(context))).toBe(before);
++});
++
++it.each(["IRONCLAD", "NECROBINDER"])("%s questions remain byte-equivalent without reading that character's knowledge", (character) => {
++  const input = raw(); input.run.character_id = character;
++  const context = env(input);
++  const before = JSON.stringify(planSelection(context));
++  context.screenMemory.cardSource = undefined;
++  expect(JSON.stringify(planSelection(context))).toBe(before);
++  expect(survivorSmoggyFacts(context.state, true)).toBeNull();
++});
++
++it.each(["missing", "old turn", "old fight", "other card"])("%s source cannot enable the learned restriction", (change) => {
++  const context = env(raw());
++  if (change === "missing") context.screenMemory.cardSource = undefined;
++  else if (change === "old turn") context.screenMemory.cardSource!.turn = 2;
++  else if (change === "old fight") context.screenMemory.cardSource!.fight = "old";
++  else context.screenMemory.cardSource!.id = "OTHER";
++  const before = JSON.stringify(planSelection(context));
++  context.screenMemory.cardSource = undefined;
++  expect(JSON.stringify(planSelection(context))).toBe(before);
++});

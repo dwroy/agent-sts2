@@ -33,7 +33,7 @@ describe("evidence-linked learner task contract", () => {
       expect(spec.body, name).toContain("code_proposals");
       expect(spec.body, name).toContain("implementation_domains");
       expect(spec.body, name).toContain("有足够理由和自己核实的数据");
-      expect(spec.body, name).toContain("notes/for-dai.md 与 ops/inbox-dev.md");
+      expect(spec.body, name).toContain("notes/for-roy.md 与 ops/inbox-dev.md");
       expect(spec.body, name).not.toContain("不许写喝药规则");
       expect(spec.body, name).not.toContain("git -c user.");
     }

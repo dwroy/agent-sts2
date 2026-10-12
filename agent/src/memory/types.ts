@@ -143,7 +143,7 @@ export interface SlKnownDraws {
   added?: { cards: string[]; names: string[] };
   /**
    * SL_RETRY_KNOWN_INSERTS: how many leading `cards` are known exactly; the rest rest on the model that cards added at random
-   * places leave the order (planning only: the certain-death judge never uses them, Dai 2026-10-02). Absent: all exact.
+   * places leave the order (planning only: the certain-death judge never uses them, Roy 2026-10-02). Absent: all exact.
    */
   exact?: number;
 }

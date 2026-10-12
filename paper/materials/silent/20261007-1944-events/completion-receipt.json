@@ -1,0 +1,78 @@
+{
+  "time": "2026-10-07 20:14",
+  "main_sync": "eead35b986fdc9d040b4255ee14b84220add6831",
+  "sandbox": {
+    "exit": 0,
+    "files": 239,
+    "cases": 2511,
+    "log": "/tmp/sts2-20261007-1944-main-sync-sandbox.log"
+  },
+  "fix45": {
+    "release": "f9db52c1ed7af16d019e32528953e5ffcc8e08f0",
+    "merge": "0d586e685f4f683ff7de4a7c3eee0717efa16a56",
+    "external": {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-173846-fix-batch.fallback-8b2c3cb3895a2ba45bedd8156baa53e21123501b.checks.log",
+      "merged": "f9db52c1ed7af16d019e32528953e5ffcc8e08f0",
+      "tree": "8b2c3cb3895a2ba45bedd8156baa53e21123501b",
+      "commits": [
+        "0605d15ac09966a6d34ba96ef29be03312195ccd",
+        "b522f1fbd624b260db0f565689272d16c3f3a633",
+        "955941fa54e7787576baa47e0669308284f89543",
+        "db6e32d2ee101af6b53f8228c27165bb41f04811",
+        "20b04517393708c73912326bb35d8448d1b3f77e",
+        "2b68fe48b607e58a83137d08c6c59dbd25275f98",
+        "f9db52c1ed7af16d019e32528953e5ffcc8e08f0"
+      ],
+      "files": 290,
+      "cases": 3319,
+      "skipped": 2,
+      "original": {
+        "source": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-173846-fix-batch.fallback-8b2c3cb3895a2ba45bedd8156baa53e21123501b.checks.log",
+        "sha256": "43f939e4ce0df5653dcb2ef08fc18dd866672907102ecef0f542095cd413db13",
+        "bytes": 69525,
+        "copy": "fix-complete-check.txt"
+      }
+    }
+  },
+  "calibration2": {
+    "source": "e86c8b2a92210e17640662a01f832c6c6980e0e5",
+    "merge": "b0b0e679dbab626af188fec8bb180af74e319e71",
+    "release": "a59421ec67d0fd044b31d8077f0074ae231b2bb7",
+    "source_sandbox_raw": {
+      "exit": 0,
+      "files": 232,
+      "cases": 2430,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calibration/source-sandbox.log"
+    },
+    "postmerge_sandbox_raw": {
+      "exit": 0,
+      "files": 233,
+      "cases": 2441,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-154303-silent-boss-calibration/live-sandbox.log"
+    },
+    "scheduler_original_exit": 124,
+    "scheduler_original_state": "failed",
+    "recheck_action_rc": 2,
+    "complete_external_checks": "not run: original .out has no task JSON",
+    "report_count_discrepancy": "Final summary labels source 233/2441; raw source log 232/2430. Postmerge raw log is 233/2441. Original summaries/logs unchanged."
+  },
+  "exp77": {
+    "state": "pending",
+    "this_wake_single_lock_probe": "busy",
+    "no_repeated_lock_attempt": true,
+    "busy_exp_worktree_untouched": true
+  },
+  "ledger_original_imported": 6,
+  "ledger_cli_shipped": 3,
+  "paper_refresh": false,
+  "originals_unchanged": true,
+  "records_scan_first_exit": 1,
+  "records_scan_first_failure": "Public scheduler evidence SHA under field key; original snapshot preserved via pointer, default scan retained.",
+  "batch_state_snapshot": {
+    "source": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-1944-batch-state-original.json",
+    "sha256": "22460bfbc2f9ad3a6835f61528abcb82819aef0be3160581a08cd1c98ad93c8a",
+    "bytes": 5665,
+    "reason": "Immutable captured scheduler state kept byte-for-byte outside tracked archive. Generic API key scan mistook public 64-character evidence hash field for a key; no scan rule disabled."
+  }
+}

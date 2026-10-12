@@ -26,7 +26,7 @@ Claude Code 2.1.283，本机登录态（订阅），模型 claude-sonnet-5，eff
 - 系统提示前面的一句身份说明（“You are a Claude agent, built on Anthropic's Claude Agent SDK.”）；
 - 环境说明（临时工作目录、不是 git 仓库、平台、shell、系统版本）；
 - 模型名和知识截止日期、token 余量、今天的日期；
-- 登录账号的邮箱（userEmail 段，来自登录态；`--bare` 可去掉但它要 API key，已按 Dai 的决定不用）。
+- 登录账号的邮箱（userEmail 段，来自登录态；`--bare` 可去掉但它要 API key，已按 Roy 的决定不用）。
 
 没有 CLAUDE.md、没有自动记忆、没有 hook 输出、没有技能或 agent 列表。内置工具（Read、Bash 等）不在工具列表里，
 读文件的请求被模型自己说明做不到。

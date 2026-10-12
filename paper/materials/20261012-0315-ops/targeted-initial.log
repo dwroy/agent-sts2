@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-024302/agent
+
+ ❯ tests/sl-giant-final-resources.test.ts (26 tests | 2 failed) 30050ms
+     × persists pre-end resources through reload/death and exposes them to retry questions (363005) 15004ms
+     × persists pre-end resources through reload/death and exposes them to retry questions (363115) 15002ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > persists pre-end resources through reload/death and exposes them to retry questions (363005)
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > persists pre-end resources through reload/death and exposes them to retry questions (363115)
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/sl-giant-final-resources.test.ts:31:86
+     29|   );
+     30|
+     31|   it.each([[363005, 363009, 1, 8], [363115, 363119, 1, 20], [363298, 3…
+       |                                                                                      ^
+     32|     "persists pre-end resources through reload/death and exposes them …
+     33|       const rows: SlAttemptRow[] = [];
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 40 passed (42)
+   Start at  02:49:43
+   Duration  31.97s (transform 1.11s, setup 350ms, import 1.25s, tests 30.08s, environment 0ms)
+

@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-12 01:33:10 CST",
+  "base": "079dc2f156601556d48727cb14ad48fb95994afd",
+  "code_commit": "265c533c787214851dd5d6b39a379d7deb9e1ed5",
+  "actual_live": "ba705e34444c307cfbe01095909c91563e40c3a5",
+  "tested_tree": "6c64da6a81cf212be932edc1885225442dc0650b",
+  "actual_live_tree": "6c64da6a81cf212be932edc1885225442dc0650b",
+  "source_identity_merges": [
+    {
+      "source": "2b09c47d431a580e9955d157f4dfb0e576186206",
+      "identity_merge": "5d1c10c766702c96b38393f20066d9f88e742848",
+      "tested_tree_unchanged": true
+    },
+    {
+      "source": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+      "identity_merge": "cc322ccf39169881407fc1ff7809194b3e8c7807",
+      "tested_tree_unchanged": true
+    },
+    {
+      "source": "bc2c40e313cc36682196277c53c50e30744b88c5",
+      "identity_merge": "7b37bf58e49e60fbcb1e8613939462c89032d994",
+      "tested_tree_unchanged": true
+    },
+    {
+      "source": "3596d1a2a832c31abb9d6d8a50a68103ac052554",
+      "identity_merge": "190f1ba009c67cf09e0ea8d3a284b10b65ee1b58",
+      "tested_tree_unchanged": true
+    },
+    {
+      "source": "c04da0668154abda77278bf614c7e96090297248",
+      "identity_merge": "ba705e34444c307cfbe01095909c91563e40c3a5",
+      "tested_tree_unchanged": true
+    }
+  ],
+  "changed_paths": [
+    "agent/src/hand/screens/selection.ts",
+    "agent/src/hand/screens/silent-smoggy-selection.ts",
+    "agent/tests/calibration-dispatch-fixtures.test.ts",
+    "agent/tests/learner-check-continuation.test.ts",
+    "agent/tests/learner-startup-recovery.test.ts",
+    "agent/tests/silent-smoggy-selection-evidence.json",
+    "agent/tests/silent-smoggy-selection.test.ts",
+    "docs/host-check-continuation.md",
+    "knowledge/characters/silent/experience.json",
+    "learner/lib/launcher.ts",
+    "learner/lib/startup-recovery.ts",
+    "ops/codex-ops-actions.sh",
+    "ops/codex-ops-do.sh",
+    "ops/codex-ops-learn.py",
+    "ops/codex-ops-learner.sh",
+    "ops/codex/lib.ts",
+    "ops/learner_check_continuation.py",
+    "ops/learner_checks.py",
+    "ops/tests/test_learner_check_continuation.py",
+    "ops/tests/test_silent_calibration_dispatch.py"
+  ],
+  "protected_dirty_files": {
+    "notes/fight-value-backtest-silent.md": "632bb1f4c14ea59fbbd7d72026b493095bea1498c3d4bd2dc8f49c86a9f0725a"
+  },
+  "test": {
+    "command": "SANDBOX_WORKERS=1 nice -n 19 bash agent/tools/test-sandbox.sh",
+    "exit_code": 0,
+    "files": 292,
+    "cases": 2873,
+    "log_sha256": "d6af2d09ff679bdad9a49608856b08e2975324610343c1192b63defc797d86aa"
+  },
+  "gitleaks_exit": 0,
+  "behavior_versions": "pending immediate registration",
+  "host_checks": "pending original learner-recheck channel; not run inside sandbox",
+  "main_sync": "pending fixed delta",
+  "tree_retest": "published exact tested tree; source identity merges have no tree changes"
+}

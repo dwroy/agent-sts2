@@ -1,0 +1,330 @@
+{
+  "task": "fix-batch",
+  "base": "9ce029b69c324ae13e98951fa5e8fa0d1696a4f0",
+  "fixes": [
+    {
+      "item": "Roy 已授权新功能：静默 boss 模拟校准",
+      "commit": "351678e8a6aa39a6e78bd7f1abc1ef259d8493c8",
+      "source_data_commit": "2910e5c4de8fcfe82182a55c19062eff3af9c754",
+      "implementation_commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+      "original_code_merge": "75ba3f6ec0ef27cdd73f10d1e9e91200437722b4",
+      "actual_merge": "1cdf75b194591c2e4e4c292f9b69c0284d31457e",
+      "publication": "2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328",
+      "publication_tree": "fb4340aeefc28f670efb93b87d8836e64b3b15d3",
+      "version": "S1.boss-calibration9",
+      "ledger": [
+        "silent-0342"
+      ],
+      "test": "源与合后sandbox tsc/vitest0；各251文件2627例；Python校准12例、调度44例通过；提交前gitleaks0",
+      "fails_without_fix": false,
+      "fails_without_fix_note": "定期校准数据刷新，复用已上线源码；未执行撤源码反证测试。"
+    }
+  ],
+  "skipped": [
+    {
+      "item": "K3676LU8B0UH A1 F48尝试2",
+      "reason": "既有t1/pre board: no solve保留，未纳入拟合；本批不修其他队列。"
+    },
+    {
+      "item": "A0–4/A5–9独立验证",
+      "reason": "固定时间切分下验证均0场；保留样本外限制。"
+    }
+  ],
+  "merged": "1cdf75b194591c2e4e4c292f9b69c0284d31457e",
+  "publication": "2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328",
+  "publication_tree": "fb4340aeefc28f670efb93b87d8836e64b3b15d3",
+  "version": "S1.boss-calibration9",
+  "tests": {
+    "source": {
+      "tsc_exit": 0,
+      "vitest_exit": 0,
+      "files": 251,
+      "passed": 2627,
+      "log": "learner/runs/20261009-171302-silent-boss-calibration/source-sandbox.log"
+    },
+    "live": {
+      "tsc_exit": 0,
+      "vitest_exit": 0,
+      "files": 251,
+      "passed": 2627,
+      "log": "learner/runs/20261009-171302-silent-boss-calibration/live-sandbox.log"
+    },
+    "python_calibration": {
+      "passed": 12,
+      "exit": 0
+    },
+    "python_dispatch": {
+      "passed": 44,
+      "exit": 0
+    },
+    "gitleaks_exit": 0,
+    "ledger_check_exit": 0,
+    "full_external": "交调度器；未执行，不冒报通过"
+  },
+  "calibration": {
+    "finished_silent_runs": 173,
+    "boss_attempts_including_sl": 810,
+    "usable_openings": 321,
+    "usable_outcomes": {
+      "won": 230,
+      "died": 91
+    },
+    "new_outcomes": {
+      "won": 15,
+      "died": 5
+    },
+    "exclusions": {
+      "SL predicted_death: censored, no actual win/loss; no observed completed outcome": 487,
+      "SL predicted_death: censored, no actual win/loss; no observed completed outcome; no turn-1 decision with drawn hand": 1,
+      "no turn-1 decision with drawn hand": 1
+    },
+    "tune_candidates": 107,
+    "tune_success": 106,
+    "validation": 214,
+    "cutoff_utc": "2026-10-06T02:46:11.648000",
+    "platt": {
+      "t1": {
+        "a": 2.0844,
+        "b": 0.4502,
+        "c": 0.0
+      },
+      "pre": {
+        "a": 2.2754,
+        "b": 0.5047,
+        "c": 0.0
+      }
+    },
+    "platt_and_selection_unchanged": true,
+    "brier": {
+      "b2": 0.1165,
+      "b3": 0.117
+    },
+    "reused_fights": 301,
+    "new_replayed_fights": 20,
+    "artifact": "e918959162ed7c88e3f8d995163e1a65d77963b8533a7a26050fbfa222261491",
+    "evidence_runs": [
+      "64R0P0MTZWAX",
+      "833ZM0MJGWHC",
+      "AF76L5UTPP8U",
+      "C6Z8ATNBNHZ7",
+      "NBJBVSBNPYQB",
+      "RMNXHZKV716Y",
+      "XW8B5CHJ814J"
+    ]
+  },
+  "boss_trust_table": [
+    {
+      "boss": "AEONGLASS",
+      "name": "永世沙漏",
+      "validation_n": 15,
+      "missing": 0,
+      "b2_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "b3_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "boss": "CEREMONIAL_BEAST",
+      "name": "仪式兽",
+      "validation_n": 20,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "KAISER_CRAB",
+      "name": "帝王蟹",
+      "validation_n": 21,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "KNOWLEDGE_DEMON",
+      "name": "知识恶魔",
+      "validation_n": 20,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": [
+        "leak"
+      ]
+    },
+    {
+      "boss": "LAGAVULIN_MATRIARCH",
+      "name": "乐加维林族母",
+      "validation_n": 20,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "QUEEN",
+      "name": "女王",
+      "validation_n": 15,
+      "missing": 0,
+      "b2_failed": [
+        "brier",
+        "gap"
+      ],
+      "b3_failed": [
+        "brier",
+        "gap"
+      ]
+    },
+    {
+      "boss": "SOUL_FYSH",
+      "name": "灵魂异鱼",
+      "validation_n": 17,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "TEST_SUBJECT",
+      "name": "实验体",
+      "validation_n": 12,
+      "missing": 0,
+      "b2_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "b3_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "boss": "THE_INSATIABLE",
+      "name": "无厌沙虫",
+      "validation_n": 22,
+      "missing": 0,
+      "b2_failed": [
+        "brier",
+        "leak"
+      ],
+      "b3_failed": [
+        "brier",
+        "leak"
+      ]
+    },
+    {
+      "boss": "THE_KIN",
+      "name": "同族",
+      "validation_n": 15,
+      "missing": 0,
+      "b2_failed": [
+        "brier",
+        "leak"
+      ],
+      "b3_failed": [
+        "brier"
+      ]
+    },
+    {
+      "boss": "VANTOM",
+      "name": "墨影幻灵",
+      "validation_n": 17,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "WATERFALL_GIANT",
+      "name": "瀑布巨兽",
+      "validation_n": 20,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    }
+  ],
+  "a10": {
+    "validation_n": 214,
+    "residual_prediction_minus_actual": {
+      "b2": 0.069,
+      "b3": 0.071
+    },
+    "leak_ratio": {
+      "b2": 1.302,
+      "b3": 1.323
+    },
+    "scope": "整体血量预测未达1.3上限；消费仍按逐boss四指标与F49限制，不宣称联合通关概率已验证。",
+    "a9_damage_fallback": "TEST_SUBJECT BIG_POUNCE",
+    "f49": {
+      "actual_outcomes": 17,
+      "usable": 16,
+      "validation": 14,
+      "missing_fights": 0,
+      "b2": {
+        "brier": 0.1612,
+        "gap": 0.393,
+        "leak_ratio": 3.629,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "b3": {
+        "brier": 0.1127,
+        "gap": 0.333,
+        "leak_ratio": 3.711,
+        "failed": [
+          "gap",
+          "leak"
+        ]
+      },
+      "trust": "低"
+    }
+  },
+  "refresh": {
+    "entry": "agent/tools/boss-sim/refresh-silent.py",
+    "scheduler": "ops/learner_jobs.py:calibration_job",
+    "when": "每小时:13/:43及学习完成事件；静默升阶或20次新增实胜/实死boss尝试触发；SL截断不计。",
+    "idempotent": true,
+    "new_samples_validation_only": true
+  },
+  "preservation": {
+    "refresh_commit": "805997918bd8d7087311d70a33c09a0139dfb18a",
+    "refresh_paths": 10,
+    "source_paths_matching_publication": 73,
+    "unrelated_blobs_preserved": true,
+    "preflight_exit": 1,
+    "preflight_task_conflicts": 0,
+    "unrelated_record_conflicts": 18,
+    "integration": "只纳入本批路径的两父提交合并；保留原预检冲突记录。"
+  },
+  "commits": {
+    "data": "2910e5c4de8fcfe82182a55c19062eff3af9c754",
+    "logs_and_complete_source": "351678e8a6aa39a6e78bd7f1abc1ef259d8493c8",
+    "saved_live_refresh": "805997918bd8d7087311d70a33c09a0139dfb18a",
+    "actual_merge": "1cdf75b194591c2e4e4c292f9b69c0284d31457e",
+    "release_registration": "2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328"
+  },
+  "ledger_status": "silent-0342 kind=fight/proposed；shipped交运维核实际发布后登记",
+  "code_proposals": [],
+  "implementation_domains": [],
+  "reports": {
+    "paper": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+    "task": "learner/runs/20261009-171302-silent-boss-calibration/report.md",
+    "archive": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/experiments/boss-sim/silent/e918959162ed7c88e3f8d995163e1a65d77963b8533a7a26050fbfa222261491",
+    "release_audit": "learner/runs/20261009-171302-silent-boss-calibration/release-audit.json"
+  },
+  "failure_history_preserved": [
+    "首次全量重放中断130及部分结果",
+    "增量TMPDIR路径错误1，修正后重放通过",
+    "记录脚本草稿引号错误1，初稿保留",
+    "归档脚本EOF空行检查2，原件保留并归一化复现脚本",
+    "首次提交默认忽略17份.log，追加记录提交全部纳入",
+    "台账来源update首次缺JSON id退出2/未写入，纠正后CLI退出0",
+    "全分支预检18项非任务记录冲突1，任务路径0冲突并逐blob保留其他live内容"
+  ],
+  "rollback": "需要回退时在live锁内从805997918bd8d7087311d70a33c09a0139dfb18a仅恢复静默boss-trust.json，保留刷新/来源/历史，测试并登记回退版本；本批未回退。"
+}

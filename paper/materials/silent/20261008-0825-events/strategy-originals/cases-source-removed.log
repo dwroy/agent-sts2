@@ -1,0 +1,62 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-gardener-skittish.test.ts (12 tests | 2 failed) 76ms
+     × keeps the shield in T3 and T4 of the live five-turn rollout, without changing the input 17ms
+     × also carries the observed shield through whole-fight policy turns 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > keeps the shield in T3 and T4 of the live five-turn rollout, without changing the input
+AssertionError: expected [ 12, 12 ] to deeply equal [ 6, 6 ]
+
+- Expected
++ Received
+
+  [
+-   6,
+-   6,
++   12,
++   12,
+  ]
+
+ ❯ tests/silent-gardener-skittish.test.ts:71:55
+     69|     const before = JSON.stringify(input);
+     70|     const line = rolloutDecision(input).lines[0]!;
+     71|     expect(line.perTurn.map((turn) => turn.dmg.mean)).toEqual([6, 6]);
+       |                                                       ^
+     72|     expect(JSON.stringify(input)).toBe(before);
+     73|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/silent-gardener-skittish.test.ts > CA5KE8GFJ9X2 A10 F9 Skittish on successive turns > also carries the observed shield through whole-fight policy turns
+AssertionError: expected [ 6, 12, 12 ] to deeply equal [ 6, 6, 6 ]
+
+- Expected
++ Received
+
+  [
+    6,
+-   6,
+-   6,
++   12,
++   12,
+  ]
+
+ ❯ tests/silent-gardener-skittish.test.ts:78:88
+     76|     const input = probe();
+     77|     const initial = replaySteps(input.solver, [{ cardIndex: 0, cardId:…
+     78|     expect(simulateFight(input, initial, 3, 1, false).records.map((tur…
+       |                                                                                        ^
+     79|   });
+     80|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 10 passed (12)
+   Start at  08:04:43
+   Duration  1.79s (transform 1.30s, setup 383ms, import 1.17s, tests 76ms, environment 0ms)
+

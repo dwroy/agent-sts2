@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent
+
+ ❯ tests/codex-only-brain.test.ts (34 tests | 1 failed) 15682ms
+     × event outage resumes the same real screen question and dispatches once 15007ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/codex-only-brain.test.ts > production loop with fixed in-memory transport > event outage resumes the same real screen question and dispatches once
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/codex-only-brain.test.ts:250:100
+    248|     finally { clock.mockRestore(); rmSync(dir, { recursive: true, forc…
+    249|   }
+    250|   it.each([["rest", restPayload], ["reward", rewardCardPayload], ["eve…
+       |                                                                                                    ^
+    251|     const h = await fixture(board());
+    252|     expect(h).not.toHaveProperty("error");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 33 passed (34)
+   Start at  09:44:22
+   Duration  19.18s (transform 2.78s, setup 394ms, import 2.94s, tests 15.68s, environment 0ms)
+

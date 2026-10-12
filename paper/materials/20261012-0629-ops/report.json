@@ -1,0 +1,69 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-061302-strategy-proposal",
+  "base": "358d6c7b11e51c07d4f63615935af78e81d83c0f",
+  "runs": [
+    "34PV33AA12QH",
+    "P33MKRP6S4Q4",
+    "177AS39M1UPW",
+    "BSXYMFKN0VJ5",
+    "YBRA3EJ94GBR",
+    "3UPY3BP2LVS7",
+    "NYQW6JAD30K4",
+    "E6DSUVTNVBMH",
+    "64VJC5XT2AT2",
+    "SB5N8GT2Y3VW"
+  ],
+  "fixes": [
+    {
+      "commit": "0fa15f5e06d60a6caa95b8f49675ee6222b4b276",
+      "source_parent": "358d6c7b11e51c07d4f63615935af78e81d83c0f",
+      "summary": "静默A10当前可见组装师/双尾鼠召唤缺口进入Jev simulation_reference；保留数值、排名、选项和动作。源码自测通过，live预检记录冲突，尚未上线。",
+      "ledger": [
+        "silent-0423"
+      ],
+      "proposal_ids": [
+        "silent-proposal-e3fc856ae3d844fa"
+      ]
+    }
+  ],
+  "skipped": [
+    "完整召唤模型与分布、弃牌后继及击杀次序规则仍未实现；仅交付当帧推演覆盖说明。",
+    "live合入预检4个既有记录文件冲突，未启动实际merge；没有live测试、版本或shipped。"
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3178
+  },
+  "code_proposals": [
+    "silent-proposal-e3fc856ae3d844fa"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "proposal_results": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-061302/learner/runs/20261012-061312-strategy-proposal/report.md",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-061302/learner/runs/20261012-061312-strategy-proposal/proposal.md",
+  "merge_conflicts": [
+    "notes/for-roy.md",
+    "ops/inbox-dev.md",
+    "paper/materials/decision-log.md",
+    "paper/materials/learning/ledger.jsonl"
+  ],
+  "evidence_runs": [
+    "P33MKRP6S4Q4",
+    "177AS39M1UPW"
+  ],
+  "red_green": {
+    "consumer_removed_exit": 1,
+    "failed": 2,
+    "consumer_restored_exit": 0,
+    "passed": 20
+  },
+  "gitleaks": 0,
+  "live_tests": null
+}

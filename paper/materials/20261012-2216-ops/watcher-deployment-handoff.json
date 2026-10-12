@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-12T22:07:35+08:00",
+  "source_commit": "cc10a335b6d34235894d8cfddbf547af7c47a870",
+  "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/release-numbering-20261012",
+  "scope": "data/documentation only; no runtime/gameplay change",
+  "new_public_release_id": "V4-R307",
+  "source_files": {
+    "AGENTS.md": "d36fdd2222802ba49df8f25778bcfb849289d2714f92288e9c71b849367d031d",
+    "docs/eval.md": "b158454e6ab6fdfc2c4c633f194bb2e0d5ed5be45c93dbe995bdb6c08d7a8526",
+    "eval/versions.json": "804b726ca2a7f050208620a4350727e907f67c743a25f3048ef27513e65aaec0",
+    "paper/materials/decision-log.md": "bbc989a98563f6a65c3cd71a1e6cd0303dd2a57f71a873bb32debd5ac22f7d57"
+  },
+  "validation": "331-row old projection unchanged; full commits resolve; V4-R000..307 contiguous, unique commit-to-release mapping; S1.exp192 is ancestor of actual live; gitleaks and diff check pass. No executable source changed, no game tests needed.",
+  "integration": [
+    "Use existing live-merge.lock; preserve all concurrent data and notes.",
+    "Integrate source AGENTS and docs/eval rules; append only own decision-log line. Never change ops-session prompt.",
+    "Version source contains same 331 existing root rows plus release_id and release_numbering metadata; S1.exp150 is a preexisting root uncommitted row preserved exactly, not a newly invented release.",
+    "Merge release_id by unchanged name and resolved commit into current ledger. Preserve new rows, old order, all old fields; allocate newer actual behavior release commits after R307 inside lock. Do not replace a newer ledger wholesale.",
+    "Sync actual main/live ledger mapping preserving refreshed knowledge. Metadata-only release does not consume R308.",
+    "Reply with integration commits and exact latest actual live release_id. Do not launch/resume duplicate learner tasks or restart games."
+  ],
+  "status": "ready_for_original_ops_integration"
+}

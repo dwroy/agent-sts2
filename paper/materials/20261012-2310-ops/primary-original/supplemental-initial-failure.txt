@@ -1,0 +1,5 @@
+首轮补充证据抽取退出1，原始输入不变：
+Traceback (most recent call last):
+  File "<stdin>", line 36, in <module>
+AttributeError: 'NoneType' object has no attribute 'get'
+定位：旧尝试行的 explore 或 target 可以是 null。修正报告抽取器按缺值处理；不改变日志、游戏源码或推断为有参考路径。

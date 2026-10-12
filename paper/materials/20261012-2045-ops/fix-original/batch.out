@@ -1,0 +1,56 @@
+## 修 bug 回报
+
+- 合并基线：main → `257c41df88157b59e520232dae1210662b08d8e6`
+- 修复：batch-c 固定回归计算量与时钟隔离 — `5dd8a20c9d2dd4ed43120b1684e5577b993ac2ff` — 测试 `agent/tests/batch-c-illusion.test.ts: the logged T3 board…with %i ms host pauses` — 去掉修复时失败：是，2例。
+- 已被别人修掉的：历史161项及逐项提交号见[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-200522/learner/runs/20261012-200540-fix-batch/report.md)。
+- 没修的：策略及独立功能继续原任务；双boss资源异常、历史通知失败、目录竞态等缺证据。原17.2秒超时的具体主机原因仍未知。
+- 测试：tsc退出码0；沙箱vitest分段覆盖342文件／3408例，续验退出码0。首轮源码备份被误扫导致1例失败，改存文本后补验通过，原失败保留。gitleaks通过。
+- 合入：未合入，锁内预检发现20处既有记录冲突；知识刷新已保存为 `7a76a0890`，待运维兜底。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "257c41df88157b59e520232dae1210662b08d8e6",
+  "fixes": [
+    {
+      "item": "batch-c-fixed-fixture-timeout：固定幻象目标回归的计算量与时钟隔离（限定测试修复）",
+      "commit": "5dd8a20c9d2dd4ed43120b1684e5577b993ac2ff",
+      "test": "agent/tests/batch-c-illusion.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {"item": "机制、出牌、药水、SL、终局、路线及休息提案", "reason": "策略类，继续既有strategy-proposal任务"},
+    {"item": "具名卡全入口、量化、全漏斗、缓存与性能专项", "reason": "独立功能，继续专用任务"},
+    {"item": "silent-0332双boss资源异常", "reason": "证据不足，缺可重放触发样本"},
+    {"item": "历史通知rc2失败恢复", "reason": "证据不足，缺原stderr"},
+    {"item": "目录竞态、调度公平性及mod短暂超时", "reason": "证据不足，根因未证"},
+    {"item": "batch-c历史17.2秒超时的具体主机时序", "reason": "本次仅修固定夹具计算量与时钟隔离，历史根因仍未知"}
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 342,
+    "cases": 3408,
+    "coverage": "segmented",
+    "initial_sandbox_exit": 1,
+    "continuation_exit": 0
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-200522/learner/runs/20261012-200540-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a13001-2adb-7683-abec-7d42528bda14
+轮数：1；工具调用：command_execution×84 file_change×5
+token：输入 186.3k、输出 41.9k（其中推理 21.0k）、cache 读 10790.4k、cache 写 0（命中 98.3%）
+成本：未提供
+耗时：2059.7 s（墙钟）
+时间：首个事件 29.8 s、模型首个输出 35.7 s、首次工具 37.9 s、末次工具结束 1990.9 s；工具内共 1460.6 s，其余（模型生成、推理、网络）569.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-200522）；模型的工具调用 exec×68 wait×12；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T20-05-45-01a13001-2adb-7683-abec-7d42528bda14.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-200522/learner/runs/20261012-200540-fix-batch.jsonl

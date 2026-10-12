@@ -1,0 +1,44 @@
+{
+  "data_only": true,
+  "current_code_test_task_blobs_identical": true,
+  "current_tested_pin": "650a6a84c82351faef30462e87b82d7fbd0dae78",
+  "retained_complete_checks": {
+    "exit": 0,
+    "files": 302,
+    "cases": 3435,
+    "skipped": 2,
+    "tree": "caecade147fd983b4606dee31e1d8415fccbf711",
+    "logs": [
+      "ops/codex-ops/learner/20261008-153528-fix-batch.fallback-caecade147fd983b4606dee31e1d8415fccbf711.checks.log",
+      "ops/codex-ops/learner/20261008-153439-experience-update.fallback-caecade147fd983b4606dee31e1d8415fccbf711.checks.log"
+    ]
+  },
+  "post_data_merge_sandbox_repeated": false,
+  "new_data_tree_full_passed": false,
+  "previous_exp100_full_failure_preserved": true,
+  "source_code_differences_from_actual": [
+    "agent/src/brain/engines/codex.ts",
+    "agent/tests/codex-cache-engine.test.ts",
+    "agent/tests/codex-cache-probe.test.ts",
+    "docs/codex-ops.md",
+    "learner/tasks/codex-brain-cache.md",
+    "learner/tasks/silent-a10-regression.md",
+    "ops/codex-brain-cache-probe.ts",
+    "ops/codex-ops-actions.sh",
+    "ops/codex-ops-learner.sh",
+    "ops/learner_jobs.py",
+    "ops/tests/test_codex_cache_probe_broker.py",
+    "ops/tests/test_silent_calibration_dispatch.py"
+  ],
+  "paths_compared": [
+    "agent",
+    "learner",
+    "knowledge/builders",
+    "eval",
+    ":(exclude)eval/versions.json",
+    "ops",
+    ":(exclude)ops/inbox-dev.md",
+    "tools",
+    "docs"
+  ]
+}

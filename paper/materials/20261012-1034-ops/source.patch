@@ -1,0 +1,192 @@
+diff --git a/agent/tests/compute-memo-files.ts b/agent/tests/compute-memo-files.ts
+new file mode 100644
+index 000000000..226083491
+--- /dev/null
++++ b/agent/tests/compute-memo-files.ts
+@@ -0,0 +1,35 @@
++import * as fs from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++
++/** Fixed historical inputs shared by the test thread and the real simulation workers. */
++export function computeMemoFiles(): string {
++  const dir = fs.mkdtempSync(join(tmpdir(), "compute-memo-"));
++  const pinned = JSON.parse(fs.readFileSync(new URL("./boss-lines-data/pinned-knowledge.json", import.meta.url), "utf8")) as Record<string, unknown>;
++  for (const [name, data] of Object.entries(pinned)) {
++    const subdir = join(dir, name === "monster-db.json" || name === "move-model.json" ? "common" : "characters/ironclad");
++    fs.mkdirSync(subdir, { recursive: true });
++    fs.writeFileSync(join(subdir, name), JSON.stringify(data));
++  }
++  return dir;
++}
++
++/** Redirect only knowledge reads; all simulation code and worker messages remain real. */
++export function fixedKnowledgeFs(original: typeof fs, root: string, fixture: string, reads?: Int32Array): typeof fs {
++  const isLive = (path: unknown): path is string => typeof path === "string" && (path === root || path.startsWith(root + "/"));
++  const redirect = (path: fs.PathLike | number) => {
++    if (!isLive(path)) return path;
++    if (reads) Atomics.add(reads, 0, 1);
++    return fixture + path.slice(root.length);
++  };
++  const checked = (path: fs.PathLike | number) => {
++    if (isLive(path)) throw new Error("compute-memo tests must not read live knowledge");
++    return path;
++  };
++  return {
++    ...original,
++    readFileSync: ((path: fs.PathLike | number, ...args: unknown[]) => Reflect.apply(original.readFileSync, original, [checked(redirect(path)), ...args])) as typeof fs.readFileSync,
++    existsSync: ((path: fs.PathLike) => original.existsSync(checked(redirect(path)) as fs.PathLike)) as typeof fs.existsSync,
++    readdirSync: ((path: fs.PathLike, ...args: unknown[]) => Reflect.apply(original.readdirSync, original, [checked(redirect(path)), ...args])) as typeof fs.readdirSync,
++  };
++}
+diff --git a/agent/tests/compute-memo-worker.ts b/agent/tests/compute-memo-worker.ts
+new file mode 100644
+index 000000000..899be8535
+--- /dev/null
++++ b/agent/tests/compute-memo-worker.ts
+@@ -0,0 +1,14 @@
++import fs from "node:fs";
++import { syncBuiltinESMExports } from "node:module";
++import { workerData } from "node:worker_threads";
++
++import { fixedKnowledgeFs } from "./compute-memo-files.js";
++
++// Install the same file view before importing the production worker and its loaders.
++const { knowledgeRoot, fixture, fixtureReads, entry } = workerData;
++const fixed = fixedKnowledgeFs({ ...fs }, knowledgeRoot, fixture, new Int32Array(fixtureReads));
++fs.readFileSync = fixed.readFileSync;
++fs.existsSync = fixed.existsSync;
++fs.readdirSync = fixed.readdirSync;
++syncBuiltinESMExports();
++await import(entry);
+diff --git a/agent/tests/compute-memo.test.ts b/agent/tests/compute-memo.test.ts
+index 579c0ff7d..597b10831 100644
+--- a/agent/tests/compute-memo.test.ts
++++ b/agent/tests/compute-memo.test.ts
+@@ -11,9 +11,45 @@
+  *   the deadline it took (B2) and the budget it needed (the rollout); a hit is charged to the turn as if it had run.
+  */
+ import { createHash } from "node:crypto";
++import { readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
+ import { serialize } from "node:v8";
+ 
+-import { afterEach, describe, expect, it } from "vitest";
++import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
++
++const files = await vi.hoisted(async () => {
++  // Setup files import some loaders early; reload them under the fixed file view.
++  vi.resetModules();
++  const { computeMemoFiles } = await import("./compute-memo-files.js");
++  return { dir: computeMemoFiles(), reads: new SharedArrayBuffer(4) };
++});
++
++vi.mock("node:fs", async (importOriginal) => {
++  const original = await importOriginal<typeof import("node:fs")>();
++  const { fixedKnowledgeFs } = await import("./compute-memo-files.js");
++  const { fileURLToPath } = await import("node:url");
++  const root = fileURLToPath(new URL("../../knowledge", import.meta.url));
++  const fixed = fixedKnowledgeFs(original, root, files.dir);
++  return { ...fixed, default: fixed };
++});
++
++vi.mock("node:worker_threads", async (importOriginal) => {
++  const original = await importOriginal<typeof import("node:worker_threads")>();
++  const { fileURLToPath } = await import("node:url");
++  return {
++    ...original,
++    Worker: class extends original.Worker {
++      constructor(entry: URL, options: import("node:worker_threads").WorkerOptions) {
++        super(new URL("./compute-memo-worker.ts", import.meta.url), {
++          ...options,
++          env: { ...process.env, CHARACTER: "ironclad" },
++          workerData: { ...options.workerData, entry: entry.href, fixture: files.dir,
++            knowledgeRoot: fileURLToPath(new URL("../../knowledge", import.meta.url)), fixtureReads: files.reads },
++        });
++      }
++    },
++  };
++});
+ 
+ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import type { AskDecision, DecisionEnv } from "../src/memory/types.js";
+@@ -28,6 +64,16 @@ import { ROLLOUT_BUDGET_MS, rolloutLiveOptions, rolloutTap } from "../src/reflex
+ import { bumpDataVersion } from "../src/core/util/data-version.js";
+ import { logged, loggedEnv } from "./logged.js";
+ 
++// Match the setup's disabled potion costs after resetting the module registry.
++import { potionCostOptions } from "../src/reflex/potion-cost.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++potionCostOptions.enabled = false;
++setKnowledgeCharacter("ironclad");
++afterAll(() => {
++  releaseBossLinesPool();
++  rmSync(files.dir, { recursive: true, force: true });
++});
++
+ describe("the key", () => {
+   it("equal values, equal text, however their strings were built; what JSON merges is told apart", () => {
+     // A string sliced out of a two-byte one is stored two bytes a character inside V8; the same text typed is one byte.
+@@ -64,6 +110,17 @@ describe("the key", () => {
+     expect(bossLinesPoolData()).toBeNull();
+   });
+ 
++  it("signs the fixed knowledge contents, including file changes, without reading the live refresh tree", () => {
++    const hash = createHash("sha256");
++    for (const subdir of ["common", "characters/ironclad"]) {
++      const dir = join(files.dir, subdir);
++      for (const name of readdirSync(dir).filter((name) => name.endsWith(".json")).sort()) {
++        hash.update(name).update("\u0000").update(readFileSync(join(dir, name))).update("\u0000");
++      }
++    }
++    expect(workerDataSignature()).toBe(hash.digest("hex").slice(0, 32));
++  });
++
+   it("the process-wide switches and a test's data swap give another key", () => {
+     const before = memoKey("t", { x: 1 });
+     passivePiecesOptions.enabled = !passivePiecesOptions.enabled;
+@@ -226,6 +283,7 @@ describe("the planner with the memo (The Kin T5, B2 in this thread)", () => {
+     const first = planCombatTurn(retryEnv());
+     expect((plannerTiming.last as { boss_sim?: { workers: number } }).boss_sim?.workers).toBe(1);
+     expect(bossLinesPoolData()).toBe(workerDataSignature());
++    expect(Atomics.load(new Int32Array(files.reads), 0)).toBeGreaterThan(0);
+     // A question with no sample releases the pool (boss-lines.ts); the next one builds it again on the same data.
+     releaseBossLinesPool();
+     expect(bossLinesPoolData()).toBeNull();
+@@ -234,6 +292,36 @@ describe("the planner with the memo (The Kin T5, B2 in this thread)", () => {
+     expect(digestOf(again)).toBe(digestOf(first));
+   }, 300_000);
+ 
++  it("a refresh leaves the running pool's identity intact and a rebuilt pool misses the old memo", () => {
++    setup(() => () => 0);
++    bossLinesOptions.serial = false;
++    bossLinesOptions.workers = 1;
++    planCombatTurn(retryEnv());
++    const started = bossLinesPoolData();
++    expect(started).toBe(workerDataSignature());
++    // Metadata-only fixture refresh changes the cache identity, not the simulation input.
++    const path = join(files.dir, "common/move-model.json");
++    const before = readFileSync(path, "utf8");
++    try {
++      writeFileSync(path, JSON.stringify({ ...JSON.parse(before), fixture_revision: 2 }));
++      const refreshed = workerDataSignature();
++      expect(refreshed).not.toBe(started);
++      expect(bossLinesPoolData()).toBe(started);
++      planCombatTurn(retryEnv());
++      expect(timingNow()?.memo?.boss_sim_ms).toBe(0);
++      releaseBossLinesPool();
++      planCombatTurn(retryEnv());
++      expect(timingNow()?.memo?.boss_sim_ms).toBeUndefined();
++      expect(bossLinesPoolData()).toBe(refreshed);
++      expect((plannerTiming.last as { boss_sim?: { workers: number } }).boss_sim?.workers).toBe(1);
++      planCombatTurn(retryEnv());
++      expect(timingNow()?.memo?.boss_sim_ms).toBe(0);
++    } finally {
++      releaseBossLinesPool();
++      writeFileSync(path, before);
++    }
++  }, 300_000);
++
+   it("a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept", () => {
+     setup(ticking);
+     const env1 = retryEnv();

@@ -1,0 +1,73 @@
+## 经验库更新回报
+
+- 版本：2026-10-12.11 → 2026-10-12.12；提交：8edf3639（分支 exp-silent）；合入：未合入，锁内预检发现20处共享记录冲突，按任务停止，待运维兜底。
+- 条数：新增0、更新12（加证据12、只改数字0）、退役0；active 227→227；正文54821→54794字。A8适用206条／48764字，A9适用207条／49048字。
+- 机制推理：  
+  力量／虚弱 — 按攻击段及现场修正核伤 — 243局 — PCDMYK2AEB2D  
+  柔嫩 — 逐牌减力敏，换序胜负未验证 — 25局 — PCDMYK2AEB2D  
+  滑溜 — 单次攻击／毒限伤1并消耗层数 — 20局 — PCDMYK2AEB2D  
+  感染 — 持牌伤与敌攻共用格挡 — 15局 — PCDMYK2AEB2D  
+  流动铜液 — 3荆棘逐击反伤 — 19局 — PCDMYK2AEB2D  
+  毒药水 — 先施毒，实际结算才兑现伤害 — 60局 — PCDMYK2AEB2D  
+  蛇咬 — 负力量不减少施毒量 — 23局 — PCDMYK2AEB2D  
+  隐秘匕首 — 无牌可弃仍产刀，该边界仅本局验证 — 4局 — PCDMYK2AEB2D  
+  跨幕回复 — A9/A10缺血80%向下取整 — 89局 — PCDMYK2AEB2D
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 343文件／3410用例／退出0。首轮因历史失效链接失败，同源码隔离重跑通过，失败原件保留。
+- 切片大小：中位增加12字至3702字；最大8475字，比之前减少10字。
+- 学习账本：新增无；改成proposed：silent-0012、0019、0020、0021、0025、0154、0220、0227、0232、0243、0278、0282、0286、0385；退役无；`ledger.py check`退出0。
+- 需要 Roy 定的事：无。变更记录已追加一节；[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-212421-experience-update/report.md)及[逐项映射](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-212421-experience-update/experience-integration.json)已保存。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-12.12",
+  "commit": "8edf3639928ea374ce48fd3ffbab1a7d0a7c3aba",
+  "merged": null,
+  "added": 0,
+  "updated": 12,
+  "retired": 0,
+  "active": 227,
+  "mechanisms": [
+    "力量与虚弱按段核伤",
+    "柔嫩逐牌减力敏",
+    "滑溜限制攻击和毒结算",
+    "感染持牌伤消耗格挡",
+    "流动铜液逐击反伤",
+    "毒药施加与兑现分开",
+    "蛇咬施毒不受负力量减少",
+    "隐秘匕首无牌可弃仍生成小刀",
+    "A9/A10跨幕缺血回复"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3410},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0012", "silent-0019", "silent-0020", "silent-0021",
+      "silent-0025", "silent-0154", "silent-0220", "silent-0227",
+      "silent-0232", "silent-0243", "silent-0278", "silent-0282",
+      "silent-0286", "silent-0385"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-3cc456250df177d5",
+    "silent-proposal-9fc274618091b5f4",
+    "silent-proposal-dbd153f0672f42c2"
+  ],
+  "implementation_domains": ["combat", "potion", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-212421-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a13049-3070-7db3-8360-5fa2fc87eb44
+轮数：1；工具调用：command_execution×90
+token：输入 223.3k、输出 47.0k（其中推理 15.9k）、cache 读 12821.0k、cache 写 0（命中 98.3%）
+成本：未提供
+耗时：1858.4 s（墙钟）
+时间：首个事件 15.7 s、模型首个输出 21.1 s、首次工具 24.6 s、末次工具结束 1802.7 s；工具内共 1806.1 s，其余（模型生成、推理、网络）36.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×76 wait×2；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T21-24-25-01a13049-3070-7db3-8360-5fa2fc87eb44.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-212421-experience-update.jsonl

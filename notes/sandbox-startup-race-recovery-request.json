@@ -1,0 +1,39 @@
+{
+  "request_id": "ops-20261011-sandbox-startup-race-recovery",
+  "at": "2026-10-11 22:10:05 CST",
+  "user_request": "你说的 旧broker 拒绝请求id，以及因沙箱目录竞态退出 是什么意思，可以修复吗",
+  "queue_item": "sandbox-glob-startup-race",
+  "state": "queued_for_next_ordinary_fix",
+  "actual_batch": null,
+  "owner": "main ops through existing ordinary fix-batch",
+  "blocked_by": "20261011-214301-fix-batch",
+  "task": "paper/materials/20261011-2144-ops/sandbox-startup-race-task.md",
+  "task_sha256": "42fde5efb682e70c7c54dbd0b5f3179c8096320edac9bfd19229fbf088ea26ef",
+  "evidence": [
+    {
+      "path": "paper/materials/20261011-2119-ops/startup-failure.json",
+      "sha256": "35391b5522e2c50dda69de03314782f154c4c000720d5cff58b0e522d8194118",
+      "bytes": 2400
+    },
+    {
+      "path": "paper/materials/20261011-2144-ops/experience-startup-failure.json",
+      "sha256": "a949da85d6dc6f04e07aa5a2be31511b199bdead2de1196c4c2ace8a0b2d5b8c",
+      "bytes": 2521
+    },
+    {
+      "path": "ops/codex-ops/learner/20261011-211302-strategy-proposal.err",
+      "sha256": "aac75d18895a7bce401a15e1c3015f78c961bbe00b2a91bf69eab778bddf81e1",
+      "bytes": 203
+    },
+    {
+      "path": "ops/codex-ops/learner/20261011-213504-experience-update.err",
+      "sha256": "597e6c5f246f919380d21a5b33760ef1e8360aba4919ea82fdcd6c7e853ac715",
+      "bytes": 169
+    }
+  ],
+  "original_failure_history_preserved": true,
+  "root_cause_confirmed": false,
+  "new_scheduler": false,
+  "permissions_change": false,
+  "active_task_modified": false
+}

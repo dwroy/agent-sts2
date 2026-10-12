@@ -1,6 +1,6 @@
 /**
  * Experience for Jev's combat plan choice beyond the lessons about the current enemies (V4 M3, notes/v4-dev-brief.md
- * item 4). Dai 2026-09-29: a potion is a 0-cost one-shot card and drinking it is Jev's call; code puts no cost on
+ * item 4). Roy 2026-09-29: a potion is a 0-cost one-shot card and drinking it is Jev's call; code puts no cost on
  * it, filters nothing and vetoes nothing; experience is evidence, never a gate. So these blocks only add evidence
  * to the question (JEV_CONTEXT=v1, the Jev view); no option, score or rollout number changes.
  *

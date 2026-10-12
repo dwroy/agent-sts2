@@ -11,7 +11,7 @@
   - DPYF2BAA3DKT：新增 silent-0199、silent-0200；更新 silent-0167、silent-0021、silent-0023、silent-0024、silent-0027、silent-0080（老错：无）。
   - CRK2HNYKSCZC：新增无；更新 silent-0020、silent-0125、silent-0013、silent-0093、silent-0094、silent-0012（老错：无）。
   - `ledger.py check` 退出码：0。
-- 需要 Dai 定的事：无。
+- 需要 Roy 定的事：无。
 
 ```json
 {"task":"postmortem","appended":["DPYF2BAA3DKT","CRK2HNYKSCZC"],"skipped":[],"bugs":[{"run":"DPYF2BAA3DKT","where":"agent/src/reflex/combat-plan.ts:1485","what":"跨回合计数漏掉附魔重放，少算新增凋萎9伤","new":true}],"ledger":{"added":["silent-0199","silent-0200"],"updated":["silent-0167","silent-0021","silent-0023","silent-0024","silent-0027","silent-0080","silent-0020","silent-0125","silent-0013","silent-0093","silent-0094","silent-0012"],"repeats":[],"check":0}}

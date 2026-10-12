@@ -1,0 +1,48 @@
+boundary 318777 318778 1 [(374, [('POISON_POWER', 4), ('WEAK_POWER', 3)])] [(374, [('POISON_POWER', 4), ('WEAK_POWER', 2)])]
+boundary 318782 318783 2 [(365, [('POISON_POWER', 4), ('WEAK_POWER', 2)])] [(361, [('POISON_POWER', 3), ('WEAK_POWER', 1)])]
+boundary 318785 318786 3 [(349, [('POISON_POWER', 3), ('WEAK_POWER', 1)])] [(346, [('POISON_POWER', 2)])]
+boundary 318789 318790 4 [(325, [('POISON_POWER', 2)])] [(353, [('POISON_POWER', 4), ('STRENGTH_POWER', 3)])]
+boundary 318795 318796 5 [(319, [('POISON_POWER', 3), ('STRENGTH_POWER', 3), ('WEAK_POWER', 2)])] [(319, [('POISON_POWER', 6), ('STRENGTH_POWER', 3), ('WEAK_POWER', 1)])]
+boundary 318801 318802 6 [(270, [('POISON_POWER', 5), ('STRENGTH_POWER', 3), ('WEAK_POWER', 1)])] [(270, [('POISON_POWER', 8), ('STRENGTH_POWER', 3)])]
+boundary 318806 318807 7 [(248, [('POISON_POWER', 8), ('STRENGTH_POWER', 3)])] [(240, [('POISON_POWER', 7), ('STRENGTH_POWER', 3)])]
+boundary 318812 318813 8 [(240, [('POISON_POWER', 13), ('STRENGTH_POWER', 1), ('WEAK_POWER', 2)])] [(257, [('POISON_POWER', 18), ('STRENGTH_POWER', 4), ('WEAK_POWER', 1)])]
+boundary 318818 318819 9 [(210, [('POISON_POWER', 17), ('STRENGTH_POWER', 4), ('WEAK_POWER', 1)])] [(210, [('POISON_POWER', 23), ('STRENGTH_POWER', 4)])]
+boundary 318824 318825 10 [(159, [('POISON_POWER', 22), ('STRENGTH_POWER', 4), ('WEAK_POWER', 2)])] [(159, [('POISON_POWER', 28), ('STRENGTH_POWER', 4), ('WEAK_POWER', 1)])]
+boundary 318836 318837 1 [(379, [('WEAK_POWER', 3)])] [(379, [('WEAK_POWER', 2)])]
+boundary 318840 318841 2 [(367, [('WEAK_POWER', 2)])] [(367, [('WEAK_POWER', 1)])]
+boundary 318843 318844 3 [(355, [('WEAK_POWER', 1)])] [(355, [])]
+boundary 318848 318849 4 [(342, [])] [(372, [('STRENGTH_POWER', 3), ('POISON_POWER', 3)])]
+boundary 318854 318855 5 [(339, [('STRENGTH_POWER', 3), ('POISON_POWER', 2), ('WEAK_POWER', 2)])] [(339, [('STRENGTH_POWER', 3), ('POISON_POWER', 5), ('WEAK_POWER', 1)])]
+boundary 318860 318861 6 [(281, [('STRENGTH_POWER', 3), ('POISON_POWER', 4), ('WEAK_POWER', 1)])] [(281, [('STRENGTH_POWER', 3), ('POISON_POWER', 7)])]
+boundary 318866 318867 7 [(274, [('STRENGTH_POWER', 1), ('POISON_POWER', 6), ('WEAK_POWER', 2)])] [(274, [('STRENGTH_POWER', 1), ('POISON_POWER', 12), ('WEAK_POWER', 1)])]
+boundary 318871 318872 8 [(252, [('STRENGTH_POWER', 1), ('POISON_POWER', 12), ('WEAK_POWER', 1)])] [(270, [('STRENGTH_POWER', 4), ('POISON_POWER', 17)])]
+boundary 318878 318879 9 [(222, [('STRENGTH_POWER', 4), ('POISON_POWER', 21)])] [(222, [('STRENGTH_POWER', 4), ('POISON_POWER', 27)])]
+boundary 318884 318885 10 [(218, [('STRENGTH_POWER', 4), ('POISON_POWER', 27), ('WEAK_POWER', 2)])] [(191, [('STRENGTH_POWER', 4), ('POISON_POWER', 32), ('WEAK_POWER', 1)])]
+boundary 318890 318891 11 [(132, [('STRENGTH_POWER', 4), ('POISON_POWER', 31)])] [(132, [('STRENGTH_POWER', 4), ('POISON_POWER', 37)])]
+boundary 318896 318897 12 [(77, [('STRENGTH_POWER', -2), ('POISON_POWER', 36), ('PIERCING_WAIL_POWER', 6)])] [(107, [('STRENGTH_POWER', 7), ('POISON_POWER', 42)])]
+boundary 318903 318904 13 [(44, [('STRENGTH_POWER', 7), ('POISON_POWER', 41)])] [(44, [('STRENGTH_POWER', 7), ('POISON_POWER', 41)])]
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261009-101302-postmortem/checkdetails.py", line 10, in <module>
+    if r['floor']==33 and prev and s['turn']!=prev['state']['turn'] and s['turn']>1:
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+Error in sys.excepthook:
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 238, in partial_apport_excepthook
+    return apport_excepthook(binary, exc_type, exc_obj, exc_tb)
+  File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 70, in apport_excepthook
+    import traceback
+  File "/usr/lib/python3.14/traceback.py", line 12, in <module>
+    import _colorize
+  File "/usr/lib/python3.14/_colorize.py", line 157, in <module>
+    @dataclass(frozen=True, kw_only=True)
+  File "/usr/lib/python3.14/dataclasses.py", line 1432, in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+  File "/usr/lib/python3.14/dataclasses.py", line 1222, in _process_class
+    text_sig = str(inspect.signature(
+AttributeError: module 'inspect' has no attribute 'signature' (consider renaming '/home/dw/Projects/agent-sts2/learner/runs/20261009-101302-postmortem/inspect.py' since it has the same name as the standard library module named 'inspect' and prevents importing that standard library module)
+
+Original exception was:
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261009-101302-postmortem/checkdetails.py", line 10, in <module>
+    if r['floor']==33 and prev and s['turn']!=prev['state']['turn'] and s['turn']>1:
+TypeError: '>' not supported between instances of 'NoneType' and 'int'

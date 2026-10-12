@@ -1,0 +1,39 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "T0DGVABPV60U"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "T0DGVABPV60U",
+      "where": "agent/src/reflex/turn-solver.ts:2433",
+      "what": "螺线飞镖的小刀新增临时敏捷未进同线求解，rollout.ts:1325也漏次轮清除",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0293"
+    ],
+    "updated": [
+      "silent-0079",
+      "silent-0125"
+    ],
+    "repeats": [
+      "silent-0079"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-9c3554ff02a3119c",
+    "silent-proposal-f35a311b35f2b12a",
+    "silent-proposal-4f7d4e424337cb58"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-124302-postmortem/report.md"
+}

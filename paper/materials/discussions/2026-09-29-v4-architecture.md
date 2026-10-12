@@ -1,9 +1,9 @@
 # V4 架构讨论（2026-09-29 晚，V4 开发会话 27a9b548）
 
 ## 起点
-V4 开发会话读完 notes/v4-dev-brief.md 和前置材料（STATE、decision-log、A9 分析、提前喝药分析、三份代码审查、dsh 实验）后，Dai 先提出整体架构，再讨论 V4 怎么做。
+V4 开发会话读完 notes/v4-dev-brief.md 和前置材料（STATE、decision-log、A9 分析、提前喝药分析、三份代码审查、dsh 实验）后，Roy 先提出整体架构，再讨论 V4 怎么做。
 
-## Dai 提出的架构
+## Roy 提出的架构
 1. action adapter：对接游戏进行操作，类似玩家的手；
 2. watcher：监控游戏画面，获取游戏反馈和结果，接收游戏日志；
 3. reflection：通过 Jev 做快速决策，游戏动作的肌肉记忆，类似小脑；
@@ -19,14 +19,14 @@ V4 开发会话读完 notes/v4-dev-brief.md 和前置材料（STATE、decision-l
 - 知识库拆四类：游戏事实（观察所得，带 n）、日志库（可查询）、统计（自动算，不手填数字）、经验（带证据局号）。
 - 缺三个模块：模拟器（算账）、工作记忆（本局承诺，只作事实不作硬过滤：09-27 意图 + 硬过滤 25.7 层 vs 老策略 30.6 层）、评估（A9 每局赢面约 1%，要代理指标）。
 
-## Dai 的决定
+## Roy 的决定
 - 22:05：对局中的大脑放开 Claude、codex，要做到方便、无缝地切换；同意把自我迭代拆出来。A/B/C 三个事实口径（路线投影算法、卡牌统计口径、Jev 的「整场不喝」事实）等新架构完成后再讨论。
 - 22:05 会话追问「只用 DeepSeek JSON 能不能做到」，V4 会话答：能（全量知识放缓存前缀 + JSON 里的查询循环；dsh 实验 93 题 JSON 模式格式失败 0%、最快最便宜），建议在线只用 DeepSeek JSON、Claude/codex 放离线。
-- 22:09 Dai：**自我迭代的大脑也要能切换不同 agent；优先用 Claude 做大脑；需要的大脑是本地 agent，能通过工具调用查知识库，甚至调用动作**。DeepSeek JSON 不满足这个要求。
+- 22:09 Roy：**自我迭代的大脑也要能切换不同 agent；优先用 Claude 做大脑；需要的大脑是本地 agent，能通过工具调用查知识库，甚至调用动作**。DeepSeek JSON 不满足这个要求。
 
 ## 落地（docs/v4-architecture.md，v4 a63e1e9）
 - 大脑：本地 agent，决策模式（M1）→ 行动模式（M2，game_state/game_act 经执行闸）；引擎 claude（优先）/codex/dsh/deepseek，只改环境变量切换；路由器统一校验、补问、回退、落盘 logs/brain.jsonl。
 - 工具：对局进程内的 MCP 服务（HTTP，127.0.0.1 + 一次性 token），离线用 stdio 版；知识渲染同一套代码出全量前缀和单条查询。
 - 学习者：任务说明文件 + 统一启动脚本，claude/codex/dsh 可切换（M4）。
 - 工作树：v4 集成（jev-sts2）；v4-brain（jev-sts2-v4brain）、v4-gkb（jev-sts2-v4gkb）。
-- 待 Dai 定：Claude 的认证方式（本机登录的订阅 vs ANTHROPIC_API_KEY）；codex 安装和登录。
+- 待 Roy 定：Claude 的认证方式（本机登录的订阅 vs ANTHROPIC_API_KEY）；codex 安装和登录。

@@ -1,0 +1,3 @@
+只读命令错误保留：logs/sl.jsonl不存在，正确文件为logs/sl-attempts.jsonl；agent/src/reflex/silent-selection-observation.ts不存在，实际为learner/lib/selection-observation.ts。均未修改源码、日志或账本。
+首次离线consumer启动exit1：tsx CLI创建本地IPC管道遭沙箱listen EPERM；原输出另存tsx-ipc-failure.*。改用同一tsx包的node --import加载入口，不创建监听，也不改变沙箱权限或源码。
+第二次consumer本体DUZ exit0；自编汇总脚本把terminal_observation=null当对象，AttributeError导致汇总exit1。源码和已完成consumer输出未改，保留summary-null-failure.*和修正前脚本txt，修正仅汇总判空。

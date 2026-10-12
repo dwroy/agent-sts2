@@ -1,0 +1,108 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-092818/agent
+
+ ❯ tests/silent-observed-intervals.test.ts (7 tests | 7 failed) 19ms
+   × YF F48 T4 separates a held Fumes from the Accelerant established after a new question 6ms
+   × YF T3 to T4 keeps phase HP 4 to 212 and the cleared poison as separate snapshots 2ms
+   × YF T5 keeps 23 existing block when Kunai adds Dexterity from 5 to 6 2ms
+   × a pending Survivor response remains unconfirmed even with the next card-selection snapshot 1ms
+   × SL restoration, missing source rows and unverified turn jumps never form an observed interval 1ms
+   × missing, ambiguous or inconsistent endpoints stay unknown; no powers field means unknown 1ms
+   × does not mutate the frozen evidence or certify a full forecast 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-observed-intervals.test.ts > YF F48 T4 separates a held Fumes from the Accelerant established after a new question
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ interval tests/silent-observed-intervals.test.ts:6:44
+      4|
+      5| const audit = () => auditSelectionExecution(structuredClone(evidence));
+      6| const interval = (line: number) => audit().observed_intervals.find((ro…
+       |                                            ^
+      7|
+      8| it("YF F48 T4 separates a held Fumes from the Accelerant established a…
+ ❯ tests/silent-observed-intervals.test.ts:9:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/silent-observed-intervals.test.ts > YF T3 to T4 keeps phase HP 4 to 212 and the cleared poison as separate snapshots
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ interval tests/silent-observed-intervals.test.ts:6:44
+      4|
+      5| const audit = () => auditSelectionExecution(structuredClone(evidence));
+      6| const interval = (line: number) => audit().observed_intervals.find((ro…
+       |                                            ^
+      7|
+      8| it("YF F48 T4 separates a held Fumes from the Accelerant established a…
+ ❯ tests/silent-observed-intervals.test.ts:27:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/silent-observed-intervals.test.ts > YF T5 keeps 23 existing block when Kunai adds Dexterity from 5 to 6
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ interval tests/silent-observed-intervals.test.ts:6:44
+      4|
+      5| const audit = () => auditSelectionExecution(structuredClone(evidence));
+      6| const interval = (line: number) => audit().observed_intervals.find((ro…
+       |                                            ^
+      7|
+      8| it("YF F48 T4 separates a held Fumes from the Accelerant established a…
+ ❯ tests/silent-observed-intervals.test.ts:41:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/silent-observed-intervals.test.ts > a pending Survivor response remains unconfirmed even with the next card-selection snapshot
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ interval tests/silent-observed-intervals.test.ts:6:44
+      4|
+      5| const audit = () => auditSelectionExecution(structuredClone(evidence));
+      6| const interval = (line: number) => audit().observed_intervals.find((ro…
+       |                                            ^
+      7|
+      8| it("YF F48 T4 separates a held Fumes from the Accelerant established a…
+ ❯ tests/silent-observed-intervals.test.ts:55:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/silent-observed-intervals.test.ts > SL restoration, missing source rows and unverified turn jumps never form an observed interval
+TypeError: Cannot read properties of undefined (reading '0')
+ ❯ tests/silent-observed-intervals.test.ts:72:43
+     70|   ] as const) {
+     71|     const input = structuredClone(evidence); mutate(input);
+     72|     expect(auditSelectionExecution(input).observed_intervals[0]).toMat…
+       |                                           ^
+     73|   }
+     74| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/silent-observed-intervals.test.ts > missing, ambiguous or inconsistent endpoints stay unknown; no powers field means unknown
+TypeError: Cannot read properties of undefined (reading '0')
+ ❯ tests/silent-observed-intervals.test.ts:83:43
+     81|   ]) {
+     82|     const input = structuredClone(evidence); mutate(input);
+     83|     expect(auditSelectionExecution(input).observed_intervals[0]).toMat…
+       |                                           ^
+     84|       reason: "state_match_unavailable", after: null,
+     85|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/silent-observed-intervals.test.ts > does not mutate the frozen evidence or certify a full forecast
+TypeError: Cannot read properties of undefined (reading 'every')
+ ❯ tests/silent-observed-intervals.test.ts:96:36
+     94|   const input = structuredClone(evidence), result = auditSelectionExec…
+     95|   expect(input).toEqual(evidence);
+     96|   expect(result.observed_intervals.every((row) => row.actual_action_ef…
+       |                                    ^
+     97|   expect(result.segments.every((row) => row.actual_full_candidate_resu…
+     98| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  09:35:53
+   Duration  580ms (transform 327ms, setup 347ms, import 51ms, tests 19ms, environment 0ms)
+

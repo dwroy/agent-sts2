@@ -1,0 +1,28 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-171039/agent
+
+ ❯ tests/silent-giant-potion.test.ts (6 tests | 2 failed) 165ms
+   × reaches the actual potion question and preserves choices, ranking and actions (v1=false) 109ms
+   × reaches the actual potion question and preserves choices, ranking and actions (v1=true) 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-giant-potion.test.ts > reaches the actual potion question and preserves choices, ranking and actions (v1=false)
+ FAIL  tests/silent-giant-potion.test.ts > reaches the actual potion question and preserves choices, ranking and actions (v1=true)
+Error: expected a plan question: {"kind":"ask","label":"combat/play","state":{"run_brief":{"character":"静默猎手","act":"1","floor":17,"hp":"26/86 (30%)","gold":245,"ascension":10,"deck":"25 cards | 9 attacks / 10 skills / 3 powers | 1 upgraded | 3 curses/statuses | avg cost 0.76","relics":["蛇之戒指","涅奥骨骰","失物盒","营养牡蛎","吃不完的糖","熔火之蛋"],"relic_effects":["蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。","涅奥骨骰: 拾起时，获得?(数值未知)件随机涅奥{Relics:plural:遗物|遗物}。将?(数值未知)张随机{Curses:plural:诅咒|诅咒}加入你的牌组。","失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。","营养牡蛎: 拾起时，将你的最大生命值提升?(数值未知)。","吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。","熔火之蛋: 每当你获得攻击牌时，将其升级。"],"potions":["毒药水: 给予?(数值未知)层中毒。"],"notes":[],"relic_effects_note":"?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"},"situation":{"screen":"COMBAT","turn":10,"hp":"26/86","block":13,"energy":1,"stars":0,"enemies_alive":1,"incoming_damage_if_turn_ends":28,"ending_turn_would_kill_me":true,"warning":"the mod reports that ending the turn now would kill the player","cards_played_this_turn":2},"player":{"hp":26,"max_hp":86,"block":13,"energy":1,"stars":0,"powers":["触媒 2","毒雾 2"],"cards_played_this_turn":2,"attacks_played_this_turn":0,"skills_played_this_turn":2},"enemies":[{"key":"e0","name":"瀑布巨兽","hp":999999999,"block":0,"alive":true,"intents":"DeathBlow 41","powers":["中毒 2 [debuff]"]}],"hand":[{"key":"c0","name":"弹跳药瓶","type":"","upgraded":false,"cost":2,"playable":false,"unplayable_reason":"not_enough_energy","text":"随机给予敌人3层中毒3次。"},{"key":"c1","name":"切割","type":"","upgraded":false,"cost":0,"playable":true,"unplayable_reason":null,"text":"造成6点伤害。"}],"potions":[{"key":"p0","name":"毒药水","text":"给予?(数值未知)层中毒。","can_use":true}],"note":"Each option below already states its computed effect. Do not recompute it."},"questions":{"play":{"type":"choice","instructions":"Which single action should I take right now?","criteria":{"c1->e0":"{\"action\":\"Play 切割 on 瀑布巨兽\",\"cost\":\"0 energy\",\"text\":\"造成6点伤害。\",\"damage\":6,\"target_hp\":\"999999999 -> 999999993\",\"damage_after_block\":6,\"kills_target\":false,\"incoming_damage_after_this\":28}","p0->e0":"{\"action\":\"Drink 毒药水 on 瀑布巨兽\",\"text\":\"给予?(数值未知)层中毒。\",\"simulated\":\"no: this potion's effect is not in any number here\",\"note\":\"emergency: the mod reports that ending the turn would be lethal\"}","end_turn":"{\"action\":\"End the turn\",\"incoming_damage\":28,\"hp_after_enemy_turn\":-2,\"block\":13,\"lethal\":true,\"note\":\"the mod reports that ending the turn now would kill the player\"}"}},"survival":{"type":"choice","instructions":"If the enemy turn starts after my action, what is the worst realistic outcome?","criteria":{"safe":"I take little or no damage","manageable":"I take damage but stay comfortably alive","dangerous":"I could drop low enough that the next turn is a problem","lethal":"I would probably die"}}}}
+ ❯ tests/silent-giant-potion.test.ts:59:83
+     57| it.each([false, true])("reaches the actual potion question and preserv…
+     58|   const raw = rawAt(280160), current = planned(raw, v1);
+     59|   if (current?.kind !== "ask" || current.questions.plan?.type !== "cho…
+       |                                                                                   ^
+     60|   expect(current.state.giant_blast_current).toEqual(factsAt(280160));
+     61|   if (v1) expect(current.jevView?.state.giant_blast_current).toEqual(c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  17:18:31
+   Duration  4.56s (transform 3.40s, setup 958ms, import 3.14s, tests 165ms, environment 0ms)
+

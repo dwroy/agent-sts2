@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-12 04:31:41 CST",
+  "host_checks": {
+    "batch": "20261012-034302-s2-strategy-proposal",
+    "merged": "621079c1f5e452f05cb4e69473e788f837aa1405",
+    "tree": "e267121fa6d37ca6941db77e0e7a4e907cb139ce",
+    "tsc": 0,
+    "vitest": 0,
+    "files": 368,
+    "passed": 3929,
+    "skipped": 2,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261012-034302-s2-strategy-proposal.fallback-e267121fa6d37ca6941db77e0e7a4e907cb139ce.checks.log",
+    "sha256": "c5b87e6eb5530a81da0a09bb19316c24312fa327b4cd9e0129f740402a99a8a8",
+    "main_scoped_paths_and_version_verified": true,
+    "source_and_integration_ancestors": true,
+    "no_rerun": true,
+    "no_new_version_or_shipped": true
+  },
+  "fix_batch": {
+    "id": "20261012-041301-fix-batch",
+    "source_base": "457e9515d9da16759fb17d8ca64f31529335a676",
+    "worktree_tracked_clean": true,
+    "no_new_commits_or_source": true,
+    "original_strict_empty_validation": null,
+    "empty_validation_note": "main/live prior differences preserved; no fake merge to force strict empty acceptance",
+    "existing_record_count": 152,
+    "all_record_commits_live_ancestors": true,
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 10,
+      "cases": 98
+    },
+    "remaining": [
+      {
+        "item": "剩余机制、出牌、药水、SL、终局、路线和休息提案",
+        "reason": "策略类：沿既有 strategy-proposal 及专用租约，不把已上线子范围当成宽提案完成。"
+      },
+      {
+        "item": "silent-0332 双 boss 接续资源异常根因",
+        "reason": "证据不足：当前已包含分支/seed/资源诊断，缺冻结触发样本；沿原提案核实，不猜填 HP 或药水。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2 历史失败恢复",
+        "reason": "证据不足：诊断修复 5c92f2aa 已在，原回执仍 failed/rc2、无 stderr 或未发送证明，不能安全重发。"
+      },
+      {
+        "item": "sandbox-glob-startup-race 上游目录竞态",
+        "reason": "证据不足：bc2c40e31 已实现会话前有界恢复，尚无目录创建/删除者及自然恢复证据。"
+      },
+      {
+        "item": "调度公平性核查、mod 短暂请求超时",
+        "reason": "证据不足：没有永久饥饿或 mod 内部根因的确证，不推断调度/游戏规则。"
+      },
+      {
+        "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression、B4/B5、缓存及性能实测",
+        "reason": "太大/独立功能及策略研究：保留原专用任务，不混入本次普通纯 bug 批次。"
+      }
+    ],
+    "disposition": "no new source requiring fallback merge",
+    "no_new_test_or_version_or_shipped": true,
+    "original_status_and_retry_history_preserved": true
+  },
+  "main_before_records": "c208d1d5f86e15d9807a3442cb78f785cc8b687d",
+  "parent_complete": false,
+  "no_dispatch_process_flag_or_push_action": true
+}

@@ -1,0 +1,118 @@
+{
+  "request_id": "roy-20261009-historical-core-builds",
+  "task": "silent-historical-core-builds",
+  "state": "pending",
+  "authorized_by": "Roy",
+  "character": "silent",
+  "accepted_at": "2026-10-09 16:47",
+  "batch": null,
+  "dispatch_status": "not_dispatched_missing_safe_entry",
+  "linked_request_ids": [
+    "roy-20261009-historical-core-builds-paper-trace"
+  ],
+  "source_request": "notes/watcher-20261009-core-build-request.json",
+  "source_request_sha256": "0c53af5ad3f0bd3516cc2717e287313ac3d70f45f0fdfcda213d2a5427899a61",
+  "source_paper_trace": "notes/watcher-20261009-core-build-paper-trace.json",
+  "source_paper_trace_sha256": "81a49455f3ac7ec051f98ce7ec7896cabe2c8e52270148d56f9d15dfad596835",
+  "objective": "从静默全部历史对局中学习整套构筑的核心运转方式、伤害与生存能力、跨boss表现，提炼可用于后续构筑的通用核心组合。具体组合、打法、阈值及选择规则全部由学习者从本角色证据得出。",
+  "evidence_scope": [
+    "全量本角色已结束局，赢局与败局都纳入；冻结可复现切点和完整局号清单，列日志/复盘/缺帧覆盖。只读本角色知识，不混铁甲等其他角色。",
+    "不同进阶、代码版本和实际成功大脑来源分开；主战绩仍用纯Codex脑口径，其他引擎历史可作本角色学习证据但必须标来源、单列，不删原始成绩。",
+    "按开局/各幕或关键战斗前实际牌组及资源分型，记录核心组合何时真实成型；不能用最终牌组倒填前期，不能只取活到boss的样本或把共现当因果。"
+  ],
+  "deliverables": [
+    {
+      "name": "候选构筑清单",
+      "requirements": "由历史证据提炼少量可解释候选，写核心打法、最小核心组件及作用关系、已见可替代件、启动条件/耗时、持续输出和生存来源、明显缺陷与反例；不预先套观察者/预训练的流派或牌表。每项关联run/层/回合与账本。"
+    },
+    {
+      "name": "真实伤害与消耗",
+      "requirements": "逐候选报告已观察的启动回合、有效伤害及持续表现、实际战斗回合、进退场HP、药水消耗、SL次数；伤害口径说明，过量伤害/回血/恢复/重复尝试不混算。模拟、改后重放和生产实绩分别列，缺反事实记未知。"
+    },
+    {
+      "name": "逐boss表现矩阵",
+      "requirements": "每候选按实际boss及进阶列到达数、独立局胜/负数、通过率、整局通关数/率和资源消耗。分母、样本和区间/不确定性清楚；同局多次SL不当独立胜负样本，首试与含SL最终分开。给每段20局全漏斗观察，不能只优化最后两boss而忽略前期。"
+    },
+    {
+      "name": "通用性和轻松程度",
+      "requirements": "以覆盖多个boss、可重复通过、较低消耗/SL依赖为目标，并用实际样本说明程度。区分候选、局部已验证、跨boss已验证和缺证范围；低阶胜利不外推A10。当前A10尚无胜局，不能承诺已有轻松通杀组合；若尚无合格组合，明确最有希望的候选、已有反例和缺少的验证。"
+    },
+    {
+      "name": "可用于构筑的模板",
+      "requirements": "把有证据的候选转成大脑可消费的构筑目标：当前牌组缺口、下一步补强、替代/过渡与何时转型或放弃。具体建议全部由学习者证据得出。优先沿现有角色知识/经验读取路径；所需知识或代码改动关联提案/账本，固定自测后按原live流程上线，再核实消费者实际读到并能用于构筑，不以报告或条目落盘代替闭环。"
+    },
+    {
+      "name": "回报及后续维护",
+      "requirements": "首轮回报候选名称、证据清单、boss矩阵、伤害/生存概要、可用构筑模板、已接入内容与缺证范围；给Roy可读摘要。后续新对局应能更新组合证据而不只追加单卡条目。未经同条件比较不宣称胜率改善。"
+    }
+  ],
+  "dispatch_constraints": [
+    "只经既有ops调度/runner安排一次独立目标的学习批次，先去重、核当前任务/租约/队列；不向ops TUI手工输入，不修改或抢占正在运行的学习任务/工作树。",
+    "与arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression关联，保持原请求/失败历史；不能因普通单卡提案积压而把此需求混成又一次单局增量。",
+    "本观察者不创建新agent/worktree或改其他任务。ops在其既有授权流程内安排；若现有安全入口不能完整承载，保存可恢复pending及唯一请求号，指出准确入口缺口，不冒称已派发、已学习或已上线。",
+    "源日志按局/偏移/时间窗读取，nice、至多4进程；不跑play、不改模型推理档位、不装调度/heartbeat、不读密钥或游戏二进制。",
+    "游戏知识由learner得出，ops只安排和核实登记；代码/知识实际上线后的测试、版本、账本、双通知按新协议执行，原失败保留、补验收另立记录。"
+  ],
+  "paper_trace_requirements": [
+    "时间/提出者/执行者/请求号与实际batch，任务范围、模板/执行方式及其每次变更、优先级/延期/重试/拒绝原因分别追加记录；人工架构要求与学习者得出的游戏知识分开标来源。",
+    "每次历史抽样冻结日志切点/字节偏移、完整局号、输入文件或原件SHA、角色/进阶/引擎/版本/首试与SL口径及缺帧范围；记录抽取/计算命令或脚本和退出码，保持能重算。原采样没记录的SHA或字段保持未知，不用当前值回填。",
+    "每个组合的候选提出、证据/反例、归并/退役、置信度与适用范围变更都留旧→新及理由；不要只保存最后胜出的组合，失败候选、证据不足和未观察boss也要保存。",
+    "代码/知识/任务/调度适配的实际修改保存diff/提交/分支/源任务和证据；测试失败、冲突、占用拒绝、自测与外部完整检查原日志原样保存。补验收及更正另立记录，不覆盖原失败或旧结论。",
+    "实际live合入SHA、唯一eval版本、开始生效局号或已知分界、知识消费者实际读取、策略采用及后续效果/重犯关联；不把请求、派发、条目生成或自测通过冒称生产生效。新增架构或任务纯工具变更照实记录，未改变对局行为不造游戏版本。",
+    "学习台账只经learner/ledger.py，代码提案只经learner/code_proposals.py；运维按最新协议核实实际上线后登记。decision-log追加决定及上线，规则上线按协议双通知。论文数据/学习曲线/会话转录走既有pipeline，刷新结果独立留痕不伪造历史。",
+    "保存Roy原话与观察者/ops/learner相关对话；归档先脱敏并扫描key，不读/复制key、.env或登录凭据。CODEX_HOME=/home/dw/.codex1的观察者转录覆盖需核实，不能以默认home的ops归档替代。"
+  ],
+  "related_requests": [
+    "arch-funnel-guard",
+    "arch-learning-priority",
+    "arch-unified-resource-value",
+    "inv-f33-regression"
+  ],
+  "blockers": [
+    {
+      "entry": "learner/tasks/silent-historical-core-builds.md",
+      "gap": "No independent registered task/template carrying the full historical scope, candidate/boss matrix, consumer acceptance and linked paper trace."
+    },
+    {
+      "entry": "ops/learner_jobs.py:FEATURE_REQUESTS/requested_feature",
+      "gap": "Historical core-build request is not allowlisted; ordinary increment tasks cap run IDs at 10 and do not carry this independent request."
+    },
+    {
+      "entry": "ops/codex-ops-learner.sh:learner_task allowlist",
+      "gap": "Wrapper rejects the proposed independent learner_task; no safe task-specific lease/standard completion and external-check route for this request."
+    }
+  ],
+  "observer_transcript_archive": {
+    "state": "pending",
+    "observer_codex_home": "/home/dw/.codex1",
+    "manifest": "paper/materials/session/codex/MANIFEST.json",
+    "manifest_sha256": "68518cccdebff2f74f31577da5206cf724a3c1458ae8a705b8eea5fa0fc56a98",
+    "manifest_entries": 1223,
+    "observer_home_entries": 0,
+    "scope_verified": "Current manifest contains no source under the observer home; complete project-related observer TUI session coverage has not been established.",
+    "missing_entry": "Existing archive selects ops-session/learner thread IDs in one configured home; no broker action selects observer project TUI sessions and applies the existing host redaction/key-scan pipeline.",
+    "source_code": [
+      {
+        "path": "ops/codex/archive.ts",
+        "sha256": "987a3621cedf4d382643d00abf8e5bb5c9ab336294bfe879e74c69240b40766a"
+      },
+      {
+        "path": "ops/codex/main.ts",
+        "sha256": "8269e9c66c807599444856200662ec306413e0d461a9fdaf596cfc845e4d1f51"
+      },
+      {
+        "path": "ops/codex/lib.ts",
+        "sha256": "0425a74b9575a26f476aa98c8284d5b424911e9b1343418c170567232a9efe82"
+      }
+    ],
+    "credential_env_or_raw_rollout_read_or_copy": false,
+    "new_archive_service": false
+  },
+  "next_step": "Adapt the authorized independent task through the existing runner, lease and event/check route, then dispatch this unique parent once; do not use old single-card increments or dispatch the paper-trace supplement separately.",
+  "input_cut": null,
+  "complete_ended_silent_run_ids": null,
+  "input_manifest_sha256": null,
+  "input_freeze_status": "pending actual learner dispatch; no historical run set or success facts invented",
+  "candidate_knowledge_or_game_version_or_shipped_created": false,
+  "receipt": "paper/materials/silent/20261009-1639-core-builds-request/request-acceptance.json"
+}

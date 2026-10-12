@@ -1,0 +1,37 @@
+{
+ "base": "eaf3ac162afe487705d5b46ab049871308022173",
+ "head": "0028f43d9559f6a0e02e717abb9e7acb9e2e8007",
+ "source_scope": [
+  "agent/src/reflex/rollout.ts",
+  "agent/src/sim/boss-sim.ts"
+ ],
+ "knowledge_unchanged_from_base": true,
+ "fixed_inputs": {
+  "dataset_sha256": "7a6929767bf275f943334fa267c388816be17ae81edfdecd32ba6c5fc1f2162b",
+  "sources_sha256": "497f2d54a0f04d907df5d390868a47e369588527b893a0df3a21002966a41146",
+  "turns_sha256": "f91b4c480b43b65545d862ef477d283eef7bbc1aeafb7d98c22bb1696b7ed8a9",
+  "split_sha256": "b9f9988303e2949d9d8f5a77c6d925f297aede611dad8bcb9f7a5f985bc80574"
+ },
+ "tune_n": 107,
+ "val_n": 220,
+ "new_validation_n": 6,
+ "same_frozen_data_both_sides": true,
+ "seed_manifest": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch/paired-seeds.jsonl",
+ "all_foreign_character_samples_excluded": true,
+ "mechanic_evidence": {
+  "tune_transitions": 26,
+  "a10_raw_transitions": 42,
+  "observed_ascensions": [
+   2,
+   4,
+   7,
+   8,
+   9,
+   10
+  ],
+  "amount_prespecified_in_tune": 1,
+  "a10_state_checks_all_match": true,
+  "validation_outcomes_not_used_to_fit_mechanic_or_strategy": true,
+  "mechanic_scope_validation_limit": "B4 used frozen validation-state evidence, so historical paired replay is not an independent extrapolation test of the learned mechanism."
+ }
+}

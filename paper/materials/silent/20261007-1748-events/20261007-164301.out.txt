@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：8JRE1C4H4Z2W（A10，第33层，死于无厌沙虫 THE_INSATIABLE；末次T11以5血、22挡对37攻击阵亡）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：8JRE1C4H4Z2W：SL截断轮完整结算、未选方案整场对照、原最优线完整执行比例、能力／药水独立收益、旧boss时钟伤害估值与实打比、Jev缓存命中。
+- 学习账本：8JRE1C4H4Z2W：新增无；更新 silent-0019、silent-0079、silent-0021、silent-0020、silent-0005、silent-0023、silent-0006、silent-0046、silent-0027、silent-0018、silent-0125（老错 silent-0079）；`ledger.py check`退出码0。
+- 代码提案：silent-proposal-e5b87be50f28f311，关联 silent-0079／0021／0125／0018；证据为F33 T2／T5／T11、F17 T6，进入独立 strategy-proposal，状态pending。补齐换线代价与实际执行审计；单局不足以修改策略阈值，保留现行为。
+
+```json
+{"task":"postmortem","appended":["8JRE1C4H4Z2W"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0019","silent-0079","silent-0021","silent-0020","silent-0005","silent-0023","silent-0006","silent-0046","silent-0027","silent-0018","silent-0125"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-e5b87be50f28f311"],"implementation_domains":["combat","sl"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11587-cad8-76c3-b6e4-d813e055d795
+轮数：1；工具调用：command_execution×52
+token：输入 204.4k、输出 36.3k（其中推理 10.8k）、cache 读 3857.5k、cache 写 0（命中 95.0%）
+成本：未提供
+耗时：1180.4 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 8.0 s、首次工具 11.2 s、末次工具结束 1157.9 s；工具内共 75.2 s，其余（模型生成、推理、网络）1102.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×30；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T16-43-03-01a11587-cad8-76c3-b6e4-d813e055d795.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem.jsonl

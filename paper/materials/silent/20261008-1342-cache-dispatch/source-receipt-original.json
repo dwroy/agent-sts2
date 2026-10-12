@@ -1,0 +1,130 @@
+{
+  "at": "2026-10-08T13:59:38+08:00",
+  "source": "577b8bb4514d28282146e131d20a4ffff5c2f5ac",
+  "source_tree": "8d21d61de3c5789f498511880664dcf690fd6c84",
+  "base": "b62c676c8450d569835159f0216a0a1f47582256",
+  "branch": "ops-codex-brain-cache-dispatch",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch",
+  "changed_paths": [
+    "docs/codex-ops.md",
+    "learner/tasks/codex-brain-cache.md",
+    "ops/codex-ops-learner.sh",
+    "ops/learner_jobs.py",
+    "ops/tests/test_silent_calibration_dispatch.py"
+  ],
+  "changed_blobs": {
+    "docs/codex-ops.md": "588cb02a3fc7cedd99ef6021c2006662e2b0af43",
+    "learner/tasks/codex-brain-cache.md": "af2b99f1a713167409d9fd38c806c07704bee8cc",
+    "ops/codex-ops-learner.sh": "60f9006657b30bb20f520af4266b0bd0653adaf5",
+    "ops/learner_jobs.py": "996d0f8fa2bc11f91325724b6b793c49bb955a91",
+    "ops/tests/test_silent_calibration_dispatch.py": "b469ec2a45d37540f7c776b852fa620dc5c2bd86"
+  },
+  "sandbox": {
+    "command": "nice -n 19 bash agent/tools/test-sandbox.sh",
+    "rc": 0,
+    "tsc": 0,
+    "vitest": 0,
+    "workers": 4,
+    "files": 248,
+    "cases": 2608,
+    "parts": {
+      "files": [
+        247,
+        1
+      ],
+      "cases": [
+        2597,
+        11
+      ]
+    },
+    "log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/sandbox.log",
+      "bytes": 546,
+      "sha256": "c4516af207dddf360ba66cc7abf869d8692cc8ef63bb0db8574738781c85c127"
+    },
+    "rc_file": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/sandbox.rc",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  },
+  "python": {
+    "dispatch_cases": 44,
+    "ops_all_cases": 113,
+    "rc": 0,
+    "dispatch_log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/python.log",
+      "bytes": 143,
+      "sha256": "5aac2e360b80c3532f3b1212b2648444ada51607173ab2a27adb429e46762e2f"
+    },
+    "all_log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/python-ops-all.log",
+      "bytes": 893,
+      "sha256": "caa86a557190e60df8ed0a4c4c96955ff83f918b002c1d7602741aacf1f91b51"
+    },
+    "withdrawal_red_cases": 3,
+    "withdrawal_red_failures": 2,
+    "withdrawal_rc": 1,
+    "withdrawal_log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/withdrawal-red.log",
+      "bytes": 1680,
+      "sha256": "a4041438848102b9e1fae7cb13d2531ba4b9affbcda505998d3d74d9813188a3"
+    },
+    "restore_cases": 44,
+    "restore_rc": 0,
+    "restore_log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/restored-green.log",
+      "bytes": 143,
+      "sha256": "75e176f676c8eb34b843df1fa031acd8b3aaca3662ac2815659d01c0cc243c71"
+    }
+  },
+  "gitleaks": {
+    "rc": 0,
+    "log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/gitleaks.log",
+      "bytes": 143,
+      "sha256": "0b80cce543d1ae42de155bc2dfb4f34bf7de6da2e2f33f65640fc85cdacd9f42"
+    }
+  },
+  "preserved_setup_failure": {
+    "rc": 1,
+    "tsc": 0,
+    "passed_files": 246,
+    "passed_cases": 2596,
+    "failed_files": 1,
+    "failed_cases": 1,
+    "reason": "Fresh worktree lacked ignored data/logdb-venv symlink; component-usage fixed fixture returned 127 ENOENT. Existing root venv linked locally; no dependency install, source/assertion/exclusion change. Original full sandbox rerun required.",
+    "log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/sandbox-setup-failed.log",
+      "bytes": 1216,
+      "sha256": "440057cd955eb1d240ac28e699f5cb763bdb4c60c452c096409f2a7462dee0bd"
+    },
+    "rc_file": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/sandbox-setup-failed.rc",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    }
+  },
+  "scope": "Pure explicit dispatch transport, independent learner template and fixed offline tests. Parent integrates main only, prepares isolated learner worktree/request and uses original broker fix-batch; no source-only gameplay version or game ledger.",
+  "unchanged": [
+    "agent source",
+    "production Codex model/effort",
+    "production prompt content",
+    "production game/config/processes",
+    "root/main/live indexes and files",
+    "request file"
+  ],
+  "protected": [
+    "exact shell task allowlist",
+    "Roy-request validation",
+    "highest pending manual cache priority without interrupting running tasks",
+    "same-request dedupe",
+    "dirty/busy tree refusal",
+    "existing retry history/backoff/three attempts",
+    "normal fix/strategy tree independence"
+  ],
+  "future_experiment": "Roy already authorized same-question fixed-prefix comparison, max4 baseline/candidate calls with original model/effort/usage guards. Learner owns tested constrained broker action if absent; next wake whitelist; pending if instrumentation/usage missing; no repeat permission gate or sandbox bypass.",
+  "actual_cache_fix": null,
+  "cache_improvement_claim": null,
+  "merged_live": null
+}

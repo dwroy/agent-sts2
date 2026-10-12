@@ -1,0 +1,2 @@
+追加前检查第一次失败：AssertionError 298559，断言所有饮药行的result都必须completed，未容纳动作pending但后帧已实际进入药水生成的选牌屏幕。append-section.sh尚未生成，lessons.md没有本任务追加。保留草稿、原工具失败记录；改用use_potion动作与后帧核对实际结果，不将沙箱检查假设失败当生产bug。
+追加前检查第二次失败：silent-0019在并行经验109登记期间短暂为proposed，使shipped断言失败；没有生成追加脚本，也没有追加lessons。随后CLI已核实其实际状态为shipped/S1.exp109。保留两次检查失败；最终按追加前CLI快照写标签，注明该数据上线晚于本局结束，不把support改为上线后重犯。

@@ -1,0 +1,22 @@
+## 复盘回报
+- 已追加：R3AJCGQGGMR4（A10，第45层，巨斧机器人 AXEBOT，T7以9血12挡承受26攻击阵亡，敌剩87血）。
+- 新的纯 bug（file:line）：
+  - R3AJCGQGGMR4：库存恢复沿用旧maxHp，低报后续本体血量 — [agent/src/reflex/rollout.ts:1690](/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/rollout.ts:1690)（新）。
+- 写成「未记录」的项：R3AJCGQGGMR4：完整dirty源码、首试SL退出及未结算动作、部分伤害来源／归零／过量／击杀顺序、恢复血量分布、实际执行最优比例、策略反事实、boss时钟比值、F46—F49资源、Jev缓存及实际费用。T1额外6伤的来源已追加勘误。
+- 学习账本：R3AJCGQGGMR4：新增 silent-0311、silent-0312；更新 silent-0005、silent-0011、silent-0018、silent-0019、silent-0020、silent-0027、silent-0046、silent-0117、silent-0142、silent-0243、silent-0312（老错 silent-0117；0312另有录入勘误）；`ledger.py check` 退出码 0。
+- 代码提案：F45T2／6／7、账本0311／0312等 → silent-proposal-d04933cbd408d85b；F33T3／5／7、账本0117／0018 → silent-proposal-e4263c03267cf4cf。均关联独立 strategy-proposal，尚未实现；恢复分布和局部反事实证据不足，保留未知范围及现有探索规则。
+
+```json
+{"task":"postmortem","appended":["R3AJCGQGGMR4"],"skipped":[],"bugs":[{"run":"R3AJCGQGGMR4","where":"agent/src/reflex/rollout.ts:1690","what":"库存恢复沿用旧maxHp，低报后续本体血量","new":true}],"ledger":{"added":["silent-0311","silent-0312"],"updated":["silent-0005","silent-0011","silent-0018","silent-0019","silent-0020","silent-0027","silent-0046","silent-0117","silent-0142","silent-0243","silent-0312"],"repeats":["silent-0117"],"check":0},"code_proposals":["silent-proposal-d04933cbd408d85b","silent-proposal-e4263c03267cf4cf"],"implementation_domains":["combat","sl"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11bdc-465f-7773-bf9a-8878530bb99c
+轮数：1；工具调用：command_execution×56
+token：输入 433.7k、输出 51.3k（其中推理 17.0k）、cache 读 8163.5k、cache 写 0（命中 95.0%）
+成本：未提供
+耗时：1998.5 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 8.2 s、首次工具 11.3 s、末次工具结束 1971.1 s；工具内共 77.1 s，其余（模型生成、推理、网络）1918.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×55；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T22-13-03-01a11bdc-465f-7773-bf9a-8878530bb99c.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-221302-postmortem.jsonl

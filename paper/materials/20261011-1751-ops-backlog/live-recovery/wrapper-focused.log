@@ -1,0 +1,29 @@
+...E..F........
+======================================================================
+ERROR: test_historical_scheduler_uses_current_root_policy_at_native_boundary (__main__.LearnerLauncher.test_historical_scheduler_uses_current_root_policy_at_native_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/live/ops/tests/test_learner_launch_failures.py", line 118, in test_historical_scheduler_uses_current_root_policy_at_native_boundary
+    shutil.copy2(REPO / "ops/tests/fixtures/legacy-codex-ops-learner.sh", self.root / "ops/codex-ops-learner.sh")
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/shutil.py", line 529, in copy2
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/shutil.py", line 313, in copyfile
+    with open(src, 'rb') as fsrc:
+         ~~~~^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/live/ops/tests/fixtures/legacy-codex-ops-learner.sh'
+
+======================================================================
+FAIL: test_legacy_routing_fails_closed_for_recursive_native (__main__.LearnerLauncher.test_legacy_routing_fails_closed_for_recursive_native)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/live/ops/tests/test_learner_launch_failures.py", line 179, in test_legacy_routing_fails_closed_for_recursive_native
+    self.assertEqual(result.returncode, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 127 != 2
+
+----------------------------------------------------------------------
+Ran 15 tests in 1.618s
+
+FAILED (failures=1, errors=1)

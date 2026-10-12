@@ -19,6 +19,6 @@
 
 live 合并锁内先等待刷新，再提交 7 个刷新文件；知识重叠 0，合前/合后/发布版本知识逐 blob 相同。双方 decision-log 只有追加历史冲突，已保留两侧原文并登记本批上线。未改生成器，无需重建。gitleaks 源、刷新、合并、上线四次均通过。live 既有 notes/monster-db-check.md 和未跟踪 notes/fight-value-backtest-silent.md 保留，源工作树干净。队列未修改。
 
-124 项既有修复逐项提交在 already-fixed.md / already-fixed.json；未重复实现。剩余五类见 skipped.json：永冻首次能力状态需专项；mod 超时根因与 Codex 缓存受控实测证据不足；boss 模拟性能需专项；策略事项交 Dai。本批未新增药水代价、过滤、否决或其他打法规则。
+124 项既有修复逐项提交在 already-fixed.md / already-fixed.json；未重复实现。剩余五类见 skipped.json：永冻首次能力状态需专项；mod 超时根因与 Codex 缓存受控实测证据不足；boss 模拟性能需专项；策略事项交 Roy。本批未新增药水代价、过滤、否决或其他打法规则。
 
 核验收据 verification.json；源码全套 source-suite-final.txt/exit；合后全套 live-suite.log/exit；撤修复 bandages-final-without-fix.txt/exit；恢复 bandages-final-restored.txt/exit；ledger-update-source.json 与 ledger-update-live.json 记录 CLI 追加内容。账本校验 195 item(s)、0 problem(s)。不推送、不运行 play、不停止对局。

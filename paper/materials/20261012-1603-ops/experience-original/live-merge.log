@@ -1,0 +1,88 @@
+git branch --show-current
+live
+git rev-parse exp-silent
+704a53fe55421667c860b1dd05292892617e8db3
+git rev-parse HEAD
+0bd3a70e3234ed4132c772f38983695870ab4d73
+git status --short
+ M notes/fight-value-backtest-silent.md
+ M notes/monster-db-check.md
+git diff --name-only --diff-filter=U
+git rev-parse -q --verify MERGE_HEAD
+git diff --cached --name-only
+bash -c while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+git rev-parse HEAD
+0bd3a70e3234ed4132c772f38983695870ab4d73
+git merge-base 0bd3a70e3234ed4132c772f38983695870ab4d73 704a53fe55421667c860b1dd05292892617e8db3
+7acbcd1351085b2ed87f8c2e2ba02f044c7d9fd6
+git diff --name-only 7acbcd1351085b2ed87f8c2e2ba02f044c7d9fd6 704a53fe55421667c860b1dd05292892617e8db3 -- knowledge
+knowledge/characters/silent/boss-trust.json
+knowledge/characters/silent/experience.json
+git diff --name-only 7acbcd1351085b2ed87f8c2e2ba02f044c7d9fd6 0bd3a70e3234ed4132c772f38983695870ab4d73 -- knowledge
+knowledge/builders/build-monster-db.py
+knowledge/builders/build-outcome-stats.py
+knowledge/builders/build-potion-equivalents.py
+knowledge/builders/characters.py
+knowledge/builders/refresh-potion-equivalents.sh
+knowledge/characters/ironclad/potion-equivalents.json
+knowledge/characters/ironclad/sl-elites.json
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/boss-trust.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/potion-equivalents.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git rev-parse 704a53fe55421667c860b1dd05292892617e8db3:knowledge/characters/silent/boss-trust.json
+0eec029ff062a1e9a123da87c931a78475947161
+git rev-parse 0bd3a70e3234ed4132c772f38983695870ab4d73:knowledge/characters/silent/boss-trust.json
+0eec029ff062a1e9a123da87c931a78475947161
+git merge-tree --write-tree 0bd3a70e3234ed4132c772f38983695870ab4d73 704a53fe55421667c860b1dd05292892617e8db3
+eaf722bd8b7d8d9e7fa9942a7cf795cc2ebfbab0
+100644 f24f4138e812c4667d697d57f64e6f363b0ad172 1	eval/versions.json
+100644 c7ee36be6530321e6ec1ef049219d000eee5ca83 2	eval/versions.json
+100644 b28408d7d161ec3bbbecc52b0ca2f0f3b0816828 3	eval/versions.json
+100644 ebee29212bee50c959bc9feb33aecf8df837ac39 1	notes/for-roy.md
+100644 b37b19fd9a0290040710f72ebe95ee5e061f91e7 2	notes/for-roy.md
+100644 e243de4aae6a857dd61661ab9f774e14d6634e2f 3	notes/for-roy.md
+100644 f5b6f7c9698c5b1352a32935fbfdac459cda715a 1	notes/strategy-research-core-decklists-silent.json
+100644 9d9ccfad44e961e08d580e28cfa029ba24874254 3	notes/strategy-research-core-decklists-silent.json
+100644 9c84bde60a620b217499a99ed0f6f6209fcb9307 1	ops/inbox-dev.md
+100644 eada1dc3d9776e357f9d6bfd8b6388c09b379e4f 2	ops/inbox-dev.md
+100644 4eb68084ac8e63bcfc85234fd7d32bec57e0081c 3	ops/inbox-dev.md
+100644 fe51488c7066f6687ef680d6bfaa4f7768ef205c 1	paper/materials/20261011-ops-deferred-alert/gitleaks-staged.json
+100644 fe51488c7066f6687ef680d6bfaa4f7768ef205c 2	paper/materials/20261011-ops-deferred-alert/gitleaks-staged.json
+100644 10fa2979ad389547de2be822f797977c8c25ab45 3	paper/materials/20261011-ops-deferred-alert/host-completion.json
+100644 573541ac9702dd3969c9bc859d2b91ec1f7e6e56 2	paper/materials/20261011-quantitative-framework/checks/gitleaks-v2.exit
+100644 573541ac9702dd3969c9bc859d2b91ec1f7e6e56 3	paper/materials/20261012-1445-ops/calibration-original/source-gitleaks.exit
+100644 a8fc22de5ace3b602c25e6280b6cbc8b8527c5c5 1	paper/materials/decision-log.md
+100644 1300540e8cdda00173c31e559403c90a67abfd2d 2	paper/materials/decision-log.md
+100644 c7a3c5e6b1523c30218d5a42affad3c1b97f73be 3	paper/materials/decision-log.md
+100644 c6c7d32798605081c9b7c80c0b2db63c9b274ad6 1	paper/materials/learning/ledger.jsonl
+100644 8dea3208a9de393af53f9236a5d20c010ad8b0f9 2	paper/materials/learning/ledger.jsonl
+100644 eb98d34b23a42bf29c615cd425b84a23ae181e08 3	paper/materials/learning/ledger.jsonl
+100644 a4031e0ff344dcd3f8dbdb4317f2566ae0e0add5 1	paper/materials/silent/20261011-191305-boss-calibration-closeout/manifest.json
+100644 5ccdb9120c7f257c865b187fcf6797cda5da832e 2	paper/materials/silent/20261011-191305-boss-calibration-closeout/manifest.json
+100644 573541ac9702dd3969c9bc859d2b91ec1f7e6e56 1	paper/materials/silent/20261011-191305-boss-calibration-closeout/source-gitleaks.exit
+
+Auto-merging eval/versions.json
+CONFLICT (content): Merge conflict in eval/versions.json
+Auto-merging notes/for-roy.md
+CONFLICT (content): Merge conflict in notes/for-roy.md
+CONFLICT (modify/delete): notes/strategy-research-core-decklists-silent.json deleted in 0bd3a70e3234ed4132c772f38983695870ab4d73 and modified in 704a53fe55421667c860b1dd05292892617e8db3.  Version 704a53fe55421667c860b1dd05292892617e8db3 of notes/strategy-research-core-decklists-silent.json left in tree.
+Auto-merging ops/inbox-dev.md
+CONFLICT (content): Merge conflict in ops/inbox-dev.md
+CONFLICT (rename/delete): paper/materials/silent/20261011-191305-boss-calibration-closeout/source-gitleaks.json renamed to paper/materials/20261011-ops-deferred-alert/gitleaks-staged.json in 0bd3a70e3234ed4132c772f38983695870ab4d73, but deleted in 704a53fe55421667c860b1dd05292892617e8db3.
+CONFLICT (file location): paper/materials/20261012-1427-ops/host-completion.json added in 704a53fe55421667c860b1dd05292892617e8db3 inside a directory that was renamed in 0bd3a70e3234ed4132c772f38983695870ab4d73, suggesting it should perhaps be moved to paper/materials/20261011-ops-deferred-alert/host-completion.json.
+Auto-merging paper/materials/20261012-1445-ops/calibration-original/report.md
+Auto-merging paper/materials/decision-log.md
+CONFLICT (content): Merge conflict in paper/materials/decision-log.md
+Auto-merging paper/materials/learning/ledger.jsonl
+CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl
+CONFLICT (modify/delete): paper/materials/silent/20261011-191305-boss-calibration-closeout/manifest.json deleted in 704a53fe55421667c860b1dd05292892617e8db3 and modified in 0bd3a70e3234ed4132c772f38983695870ab4d73.  Version 0bd3a70e3234ed4132c772f38983695870ab4d73 of paper/materials/silent/20261011-191305-boss-calibration-closeout/manifest.json left in tree.
+CONFLICT (rename/rename): paper/materials/silent/20261011-191305-boss-calibration-closeout/source-gitleaks.exit renamed to paper/materials/20261011-quantitative-framework/checks/gitleaks-v2.exit in 0bd3a70e3234ed4132c772f38983695870ab4d73 and to paper/materials/20261012-1445-ops/calibration-original/source-gitleaks.exit in 704a53fe55421667c860b1dd05292892617e8db3.

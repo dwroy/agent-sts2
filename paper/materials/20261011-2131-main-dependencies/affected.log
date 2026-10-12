@@ -1,0 +1,239 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-main-dependencies-20261011-2131/agent
+
+ ❯ tests/brain-codex-usage.test.ts (21 tests | 12 failed) 15494ms
+     × asks a short-lived app-server on stdio, with codex's home and no key, no daemon, and leaves no process behind 40ms
+     × fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program 41ms
+     × a server that stays up after its answer is killed after the grace; the answer stands 15002ms
+     × reads at start and answers through codex; each codex row carries the reading, and the run-config row the guard 36ms
+     × refuses codex at start when a window is at the stop: DeepSeek answers, codex exec never runs 31ms
+     × stops codex mid-run when the window reaches the stop: said once, the rest to DeepSeek, no call goes out past it 38ms
+     × stops codex when the credit balance falls (credits spent, by us or by Roy's own use) 33ms
+     × usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes 33ms
+     × the live case (2026-10-04 07:06Z): a 401 expired token on the read, codex's token refresh through the app-server, the read again: codex answers 32ms
+     × through the router: reads failing send codex's questions to the fallback until the wait is over, then a working read brings codex back 32ms
+     × refreshCodexAuth asks the app-server account/read with refreshToken and keeps nothing of the account 36ms
+     × an engine used without preflight reads before its first call 67ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the read > asks a short-lived app-server on stdio, with codex's home and no key, no daemon, and leaves no process behind
+Error: codex app-server ended before answering
+ ❯ ChildProcess.settle src/brain/engines/codex-usage.ts:232:62
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the read > fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program
+AssertionError: expected [Function] to throw error including 'account/rateLimits/read failed: chatg…' but got 'codex app-server ended before answeri…'
+
+Expected: "account/rateLimits/read failed: chatgpt authentication required to read rate limits"
+Received: "codex app-server ended before answering"
+
+ ❯ tests/brain-codex-usage.test.ts:219:39
+    217|     const opts = { bin: fake.bin, home: home("read-fail"), env: codexE…
+    218|     fake.setMode({ error: "chatgpt authentication required to read rat…
+    219|     await expect(readCodexUsage(opts)).rejects.toThrow("account/rateLi…
+       |                                       ^
+    220|     fake.setMode({ exitEarly: true });
+    221|     await expect(readCodexUsage(opts)).rejects.toThrow(/ended before a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the read > a server that stays up after its answer is killed after the grace; the answer stands
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/brain-codex-usage.test.ts:233:3
+    231|   });
+    232|
+    233|   it("a server that stays up after its answer is killed after the grac…
+       |   ^
+    234|     const fake = fakeCodex("read-linger");
+    235|     fake.setMode({ linger: true, result: liveResult(7) });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > reads at start and answers through codex; each codex row carries the reading, and the run-config row the guard
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "codex is unavailable for this run: `/tmp/fake-codex-usage-mT2BFY/loop-ok.mjs --version` exited 0: ; its questions go to deepseek (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)",
++ ]
+
+ ❯ tests/brain-codex-usage.test.ts:482:36
+    480|   it("reads at start and answers through codex; each codex row carries…
+    481|     const { fake, cfg, brain, rows, notes } = brainWith("loop-ok", { B…
+    482|     await expect(brain.preflight()).resolves.toEqual([]);
+       |                                    ^
+    483|     expect(fake.servers()).toHaveLength(1);
+    484|     for (let i = 0; i < 3; i += 1) await expect(ask(brain)).resolves.t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > refuses codex at start when a window is at the stop: DeepSeek answers, codex exec never runs
+AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+-   "codex is off for this run: codex usage guard: codex/primary 7-day window 85% used, resets 2026-10-10T09:06:37.000Z (BRAIN_CODEX_USAGE_STOP_PCT=80); its questions go to deepseek",
++   "codex is unavailable for this run: `/tmp/fake-codex-usage-mT2BFY/loop-start-stop.mjs --version` exited 0: ; its questions go to deepseek (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)",
+  ]
+
+ ❯ tests/brain-codex-usage.test.ts:506:22
+    504|     fake.setMode({ result: liveResult(85) });
+    505|     const problems = await brain.preflight();
+    506|     expect(problems).toEqual([`codex is off for this run: codex usage …
+       |                      ^
+    507|     expect(brain.warnings).toEqual(problems);
+    508|     await expect(ask(brain)).resolves.toMatchObject({ choice: "a", bra…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > stops codex mid-run when the window reaches the stop: said once, the rest to DeepSeek, no call goes out past it
+AssertionError: expected { choice: 'a', …(5) } to match object { choice: 'b' }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "choice": "b",
++   "choice": "a",
+  }
+
+ ❯ tests/brain-codex-usage.test.ts:520:29
+    518|     const { fake, brain, rows, notes, deepseek } = brainWith("loop-mid…
+    519|     await brain.preflight();
+    520|     await expect(ask(brain)).resolves.toMatchObject({ choice: "b" });
+       |                             ^
+    521|     fake.setMode({ result: liveResult(80) });
+    522|     await expect(ask(brain)).resolves.toMatchObject({ choice: "a", bra…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > stops codex when the credit balance falls (credits spent, by us or by Roy's own use)
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/brain-codex-usage.test.ts:538:30
+    536|     fake.setMode({ result: liveResult(3, "487.25") });
+    537|     await expect(ask(brain)).resolves.toMatchObject({ choice: "a", bra…
+    538|     expect(fake.execCalls()).toBe(1);
+       |                              ^
+    539|     expect(notes).toEqual([expect.stringContaining("codex usage guard:…
+    540|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "codex is unavailable for this run: `/tmp/fake-codex-usage-mT2BFY/loop-unreadable.mjs --version` exited 0: ; its questions go to deepseek (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)",
++ ]
+
+ ❯ tests/brain-codex-usage.test.ts:545:41
+    543|     const open = brainWith("loop-unreadable", { BRAIN_CODEX_USAGE_EVER…
+    544|     open.fake.setMode({ error: "chatgpt authentication required to rea…
+    545|     await expect(open.brain.preflight()).resolves.toEqual([]);
+       |                                         ^
+    546|     await expect(ask(open.brain)).resolves.toMatchObject({ choice: "b"…
+    547|     await expect(ask(open.brain)).resolves.toMatchObject({ choice: "b"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > the live case (2026-10-04 07:06Z): a 401 expired token on the read, codex's token refresh through the app-server, the read again: codex answers
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "codex is unavailable for this run: `/tmp/fake-codex-usage-mT2BFY/loop-expired.mjs --version` exited 0: ; its questions go to deepseek (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)",
++ ]
+
+ ❯ tests/brain-codex-usage.test.ts:566:36
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > through the router: reads failing send codex's questions to the fallback until the wait is over, then a working read brings codex back
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/brain-codex-usage.test.ts:592:28
+    590|     await expect(router.decide(req)).resolves.toMatchObject({ engine: …
+    591|     // One read so far: the second question went straight to DeepSeek …
+    592|     expect(fake.servers()).toHaveLength(1);
+       |                            ^
+    593|     fake.setMode({ result: liveResult(2) });
+    594|     clock += 16_000;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > refreshCodexAuth asks the app-server account/read with refreshToken and keeps nothing of the account
+AssertionError: promise rejected "Error: codex app-server ended before answ…" instead of resolving
+ ❯ tests/brain-codex-usage.test.ts:606:171
+    604|   it("refreshCodexAuth asks the app-server account/read with refreshTo…
+    605|     const fake = fakeCodex("refresh-direct");
+    606|     await expect(refreshCodexAuth({ bin: fake.bin, home: home("refresh…
+       |                                                                                                                                                                           ^
+    607|     expect(fake.servers()[0]!.requests.map((r) => r.method)).toEqual([…
+    608|     fake.setMode({ refreshError: "refresh token was already used" });
+
+Caused by: Error: codex app-server ended before answering
+ ❯ ChildProcess.settle src/brain/engines/codex-usage.ts:232:62
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/12]⎯
+
+ FAIL  tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > an engine used without preflight reads before its first call
+AssertionError: expected EngineFailure: codex's model catalog has … { …(2) } to match object { kind: 'quota', …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "kind": "quota",
+-   "message": StringContaining "90% used",
++ EngineFailure {
++   "kind": "unavailable",
+  }
+
+ ❯ tests/brain-codex-usage.test.ts:618:37
+    616|     const engine = new CodexEngine({ settings: cfg.brain.engines.codex…
+    617|     const req = { label: "rest/plan", system: "S", question: "Heal or …
+    618|     await expect(engine.decide(req)).rejects.toMatchObject({ kind: "qu…
+       |                                     ^
+    619|     expect(fake.execCalls()).toBe(0);
+    620|     expect(engine.limits()).toMatchObject({ used_pct: 90 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/12]⎯
+
+
+ Test Files  1 failed | 23 passed (24)
+      Tests  12 failed | 191 passed (203)
+   Start at  21:36:06
+   Duration  30.08s (transform 3.35s, setup 2.07s, import 5.19s, tests 19.12s, environment 2ms)
+

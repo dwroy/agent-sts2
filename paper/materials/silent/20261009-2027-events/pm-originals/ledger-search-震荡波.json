@@ -1,0 +1,203 @@
+[
+ {
+  "id": "silent-0002",
+  "ts": "2026-10-04T23:01:04+08:00",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "刀刃陷阱的CalculatedShivs及即时重放伤害没有进入求解器，被费用回退固定赋7分，出现空消耗堆也打、实际可杀却预测0伤。应从本局已观察的0张和6张小刀证据建模，不能将这张即时技能记为常驻增益。",
+  "evidence": [
+   {
+    "run": "C48LLXBGKXQ9",
+    "floor": 19,
+    "turn": 8,
+    "note": "后空翻后：刀刃陷阱文本打出6张小刀，推演伤害0、地道虫剩5血；实际该牌打穿19格挡并杀掉5血，后续中和未执行。",
+    "role": "support",
+    "added": "2026-10-04T23:01:04+08:00"
+   },
+   {
+    "run": "C48LLXBGKXQ9",
+    "floor": 33,
+    "turn": 1,
+    "note": "第1次：刀刃陷阱文本0张，先花2费实打0；与震荡波合并记14常驻价值。当前live card-model.ts:759、820-823。",
+    "role": "support",
+    "added": "2026-10-04T23:01:04+08:00"
+   }
+  ],
+  "first_run": "C48LLXBGKXQ9",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "无更早的静默猎手对局可检验学习前是否正确处理重放技能。",
+  "status": "proposed",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "C48LLXBGKXQ9"
+   ],
+   "proposal": [
+    "notes/fix-queue-v4.md"
+   ],
+   "commits": [
+    "066f91599bc45161acd0b741a2d3fd8e39af8bfc"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-04T23:01:04+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-04T23:12:42+08:00",
+    "by": "dev",
+    "status": "accepted"
+   },
+   {
+    "ts": "2026-10-05T02:54:34+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+   "开发会话审核：证据引到局号和回合，结论只取本局观察；按学习协议交给 codex fix-batch 实现。"
+  ]
+ },
+ {
+  "id": "silent-0015",
+  "ts": "2026-10-05T00:16:47+08:00",
+  "by": "learner:experience-update",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "震荡波的虚弱和易伤是有层数变化的减益，不能把开场受益当作整场恒定增益。机制：本局打出建立3虚弱、3易伤，后续易伤3→2→1→消失；同时有其他虚弱来源，不能把全部层数归给这张牌。搭配：多张攻击可以在易伤仍存在的窗口获得收益，虚弱影响敌方攻击。决定胜负的战斗：A0沙虫开场爆发后伤害下降，只有观察，未隔离各因素的贡献（n=1）。典型案例：C48LLXBGKXQ9 F33第6次T1建立3/3，前三回合直伤22、63、61，T5易伤已消失。",
+  "evidence": [
+   {
+    "run": "C48LLXBGKXQ9",
+    "floor": 33,
+    "role": "support",
+    "note": "本轮从本局复盘与日志重新核对；详细数值和口径见首构建变更记录。",
+    "turn": 1,
+    "added": "2026-10-05T00:16:47+08:00"
+   }
+  ],
+  "first_run": "C48LLXBGKXQ9",
+  "prior": "unknown",
+  "prior_note": "静默猎手首个已结束的局，没有更早同角色的可比局面；不借其他角色判断先验。",
+  "status": "proposed",
+  "where": {
+   "experience": [
+    "silent-shockwave-duration"
+   ],
+   "commits": [
+    "__COMMIT__"
+   ],
+   "changelog": [
+    "__TITLE__"
+   ],
+   "lessons": [
+    "C48LLXBGKXQ9"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T00:16:47+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": []
+ },
+ {
+  "id": "silent-0103",
+  "ts": "2026-10-05T14:55:39+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局定制疯狂科学MAD_SCIENCE是12点攻击，并在当回合给目标STRANGLE_POWER6，使后续每次出牌额外扣目标6血。F42 T2先扣幽灵12，后两张格挡牌各触发6，总24；T7对魔法先12、后震荡波6、流星锤BOLAS实际10，共28。只认这个定制结果，不把格挡牌造成的附加扣血当作牌本体攻击，不外推其他疯狂科学模板。",
+  "evidence": [
+   {
+    "run": "VN7RQJMJEFMX",
+    "floor": 42,
+    "turn": 2,
+    "role": "support",
+    "note": "幽灵93→81→75→69：疯狂科学12、究极防御+后6、触不可及+后6；格挡同时0→15→24。",
+    "added": "2026-10-05T14:55:39+08:00"
+   },
+   {
+    "run": "VN7RQJMJEFMX",
+    "floor": 42,
+    "turn": 7,
+    "role": "support",
+    "note": "魔法82→70→64→54：疯狂科学12、震荡波触发6、BOLAS实扣10，目标STRANGLE_POWER6。",
+    "added": "2026-10-05T14:55:39+08:00"
+   }
+  ],
+  "first_run": "VN7RQJMJEFMX",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按疯狂科学/MAD_SCIENCE/扼杀查静默账本无条目，核更早静默复盘没有相同12伤加每牌6失血的定制模板，没有可比的学习前出牌对照。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "VN7RQJMJEFMX"
+   ],
+   "experience": [
+    "silent-mad-science-custom-strangle"
+   ],
+   "commits": [
+    "a9ad012cd1c5ec56e4f1d7935dc0aca8fda088cb",
+    "d668d7885f084d8d950e6e2c067a38740783c892",
+    "7c7f22e3a80f2addba1ba199eb1a18084ef78bba",
+    "825c94d558f24991e8766dfecee71a71c216e83b",
+    "363ff3037178c20342c36fc1ab474b5aed96a441",
+    "98f88e06ac849c29af6474c76121f37c2d8019ce",
+    "ae49bbec92df38c3d73ec3570560a76a39a408e2"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第十六次增量：2 局 A6（version 2026-10-05.16，分支 exp-silent，a9ad012c）",
+    "2026-10-06 静默猎手 第二十八次增量：1 局 A7（version 2026-10-06.3，分支 exp-silent，825c94d5）"
+   ]
+  },
+  "asc": 6,
+  "history": [
+   {
+    "ts": "2026-10-05T14:55:39+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T15:23:17+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T15:41:26+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T02:15:41+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T02:34:16+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp28",
+  "effect": null,
+  "notes": [
+   "静默经验2026-10-05.16：二十二局本角色日志复算、旧二十局基线一致；机制/观察/进阶与完整数字见第十六次增量。只登记proposed，实际合入由运维按完成事件登记shipped；不登记独立模型修复。",
+   "15:26 experience-done兜底合入固定源，保留双方decision-log及七项刷新；经验2026-10-05.16实际上线S1.exp16。源首次时序失败、完整重跑一次通过历史保留，合后工具执行中断无退出结果，保留原日志后恢复同一暂存树检查tsc0、173文件1988例通过；仅经验文字，不混记幻影fix17或机制模型修复，独立完整外部检查经learner-recheck动作交调度器。",
+   "静默经验2026-10-06.3：旧34局复算一致，本局2PVLGRBGUX9S A7补证；SL六次仅一局，六次抽序共同前15张、第2至第6次前38张。压缩保留来源与原first_run/prior/repeat；各模板/升级子结论局数分开，未来收益不预支。只proposed，实际合入后交运维登记shipped。 0103仍只证明A6攻击/紧勒分支，新2力2敏捷由0136证明，四模板分辨另立账本，不把新局当紧勒实证。",
+   "02:26 experience-done机械核实静默经验2026-10-06.3实际合入live并唯一登记S1.exp28；2PVLGRBGUX9S SILENT A7及旧34静默局，源182文件2042例、合后183文件2048例/tsc0首过。仅登记已上线experience文字，first_run/prior/repeat/evidence和旧上线历史保持；科学模板各子分支/普通与升级分别计证据，0138追溯R0HEV5E3QT6G。不将经验上线冒记为推演模型覆盖或受控整场胜负；0136/0137模型覆盖缺口交学习者。完整外部经验checks_pending交后续learner-checks，不借策略3通过、不另审。 本项仅保留旧攻击紧勒分支，专长2/2与四模板分别由0136/0138登记。"
+  ],
+  "shipped_at": "2026-10-06T02:34:16+08:00"
+ }
+]

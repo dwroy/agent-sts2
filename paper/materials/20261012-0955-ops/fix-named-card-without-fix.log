@@ -1,0 +1,60 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-091302/agent
+
+ ❯ tests/named-card-facts.test.ts (11 tests | 1 failed | 10 skipped) 15ms
+     × 64VJC5XT2AT2 F34: delivers WISH facts without changing choices, costs or actions 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/named-card-facts.test.ts > named card fact transport > 64VJC5XT2AT2 F34: delivers WISH facts without changing choices, costs or actions
+AssertionError: expected { option: '原初之爪', …(4) } to match object { option: '原初之爪', …(4) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "card_references": {
+-     "cards": [
+-       {
+-         "cost": 0,
+-         "description": "将你抽牌堆中的一张牌放入你的手牌。 消耗。",
+-         "id": "WISH",
+-         "is_x_cost": false,
+-         "keywords": [
+-           "Exhaust",
+-         ],
+-         "name": "许愿",
+-         "upgrade": {
+-           "description": "将你抽牌堆中的一张牌放入你的手牌。 消耗。",
+-         },
+-       },
+-     ],
+-     "catalog": {
+-       "mod_version": "0.16.2",
+-       "source": "cache",
+-     },
+-     "unknowns": [],
+-   },
+    "description": "失去[blue]9[/blue]点最大生命值，将[blue]3[/blue]张[purple]许愿[/purple]加入你的[gold]牌组[/gold]。",
+    "hp_after": "88/96 (92% of max)",
+    "max_hp_cost": 9,
+    "option": "原初之爪",
+  }
+
+ ❯ tests/named-card-facts.test.ts:55:24
+     53|     const options = optionsOf(question);
+     54|     expect(Object.keys(options)).toEqual(["o0", "o1", "o2"]);
+     55|     expect(options.o1).toMatchObject({
+       |                        ^
+     56|       option: "原初之爪", description: fixture.state.event.options[1]!.des…
+     57|       max_hp_cost: 9, hp_after: "88/96 (92% of max)",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  09:22:14
+   Duration  1.42s (transform 1.07s, setup 289ms, import 1.00s, tests 15ms, environment 0ms)
+

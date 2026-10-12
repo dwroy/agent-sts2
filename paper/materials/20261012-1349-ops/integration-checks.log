@@ -1,0 +1,22 @@
+$ nice -n 19 node_modules/.bin/tsc -p tsconfig.json --noEmit
+$ nice -n 19 node_modules/.bin/vitest run tests/silent-selection-terminal.test.ts tests/silent-potion-reference.test.ts tests/silent-selection-execution.test.ts tests/silent-observed-intervals.test.ts tests/potion-cost.test.ts tests/combat-jev.test.ts --maxWorkers=4 --reporter=default
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-terminal-potion-20261012-1349/agent
+
+ ✓ tests/silent-observed-intervals.test.ts (7 tests) 38ms
+ ✓ tests/silent-selection-terminal.test.ts (20 tests) 17ms
+ ✓ tests/silent-selection-execution.test.ts (8 tests) 19ms
+ ✓ tests/silent-potion-reference.test.ts (12 tests) 172ms
+ ✓ tests/potion-cost.test.ts (26 tests) 1601ms
+     ✓ free, the potion-free line's later turns drink the potion; at a high cost they never do  380ms
+     ✓ hallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line  371ms
+     ✓ merged when the base line's own rollout drinks nothing later; its own option when it does (ETYC F19 T1: Blood Potion, no conversion value)  305ms
+ ✓ tests/combat-jev.test.ts (3 tests) 1844ms
+     ✓ RA3Q F14 T1: code led by 7.7 and played its line; now Jev is asked, with no DeepSeek escalation  1081ms
+     ✓ a low-confidence hallway pick below code's rank 1 stands (no fallback to code)  744ms
+
+ Test Files  6 passed (6)
+      Tests  76 passed (76)
+   Start at  13:54:36
+   Duration  3.54s (transform 4.19s, setup 1.49s, import 4.04s, tests 3.69s, environment 1ms)
+

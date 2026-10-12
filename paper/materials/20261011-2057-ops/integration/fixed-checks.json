@@ -1,0 +1,49 @@
+[
+  {
+    "name": "fixed-tsc",
+    "command": [
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "fixed-affected",
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/silent-cunning.test.ts",
+      "tests/silent-opening.test.ts",
+      "tests/silent-reattach-reset.test.ts",
+      "tests/silent-double-boss.test.ts",
+      "tests/silent-lethal-continuation.test.ts",
+      "tests/silent-skittish.test.ts",
+      "tests/silent-gardener-skittish.test.ts",
+      "tests/quantitative.test.ts",
+      "tests/silent-build-win-ties.test.ts",
+      "tests/silent-phase-reference.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "infra-contracts",
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/brain-codex-session.test.ts",
+      "tests/ops-codex.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "-t",
+      "the exit fixture selects|allows only the listed actions|every action is implemented"
+    ],
+    "exit": 0
+  }
+]

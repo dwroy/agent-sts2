@@ -1,0 +1,46 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "HXCY44VD9QWU",
+    "N8A2W8LH39N0"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "N8A2W8LH39N0",
+      "where": "agent/src/reflex/card-model.ts:852",
+      "what": "坚韧之环即时格挡已读取，但后两次轮初格挡未接入持续推演；另见rollout.ts:1948、2599、1764。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0344",
+      "silent-0345"
+    ],
+    "updated": [
+      "silent-0011",
+      "silent-0015",
+      "silent-0020",
+      "silent-0133",
+      "silent-0134",
+      "silent-0222",
+      "silent-0289",
+      "silent-0307"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-33968136b94432bc",
+    "silent-proposal-8e17a61707d2ca02",
+    "silent-proposal-2189f026997baac0"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-194302-postmortem/report.md"
+}

@@ -1,0 +1,253 @@
+commit 62c22f7c764fd3def66c7c16a7f034095ddd7bf6
+Author:     Roy <me@dwroy.com>
+AuthorDate: Sun Oct 11 17:58:01 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Sun Oct 11 17:58:01 2026 +0800
+
+    fix(ops): stream transcript redaction and report incomplete snapshots
+    
+    Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+---
+ agent/tests/ops-redaction.test.ts | 65 +++++++++++++++++++++++++++++++++++++++
+ learner/lib/launcher.ts           | 58 ++++++++++++++++++++++++++++------
+ ops/codex-ops.sh                  | 21 ++++++++-----
+ ops/codex/archive.ts              | 15 ++++++---
+ 4 files changed, 138 insertions(+), 21 deletions(-)
+
+diff --git a/agent/tests/ops-redaction.test.ts b/agent/tests/ops-redaction.test.ts
+new file mode 100644
+index 000000000..877ac6853
+--- /dev/null
++++ b/agent/tests/ops-redaction.test.ts
+@@ -0,0 +1,65 @@
++import { chmodSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
++import { spawnSync } from "node:child_process";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { afterAll, describe, expect, it } from "vitest";
++import { redactSecrets } from "../../learner/lib/launcher.js";
++import { readQueue } from "../../ops/codex/lib.js";
++
++const dir = mkdtempSync(join(tmpdir(), "ops-redaction-"));
++afterAll(() => rmSync(dir, { recursive: true, force: true }));
++
++describe("streaming transcript redaction", () => {
++  it("redacts secrets spanning byte boundaries and preserves UTF-8 bytes", () => {
++    const secret = "fixture-private-value-仅测试";
++    const file = join(dir, "cross-chunk.jsonl");
++    const before = "a".repeat(65530) + secret + "🙂记录".repeat(17000) + secret;
++    writeFileSync(file, before, { mode: 0o600 });
++    expect(redactSecrets(file, [secret, "", secret])).toBe(2);
++    expect(readFileSync(file, "utf8")).toBe(before.split(secret).join("[REDACTED]"));
++    expect(statSync(file).mode & 0o777).toBe(0o600);
++    const unchanged = statSync(file);
++    expect(redactSecrets(file, [secret])).toBe(0);
++    expect(statSync(file).ino).toBe(unchanged.ino);
++    expect(statSync(file).mtimeMs).toBe(unchanged.mtimeMs);
++  });
++
++  it("matches longer values first, handles adjacent values and removes temporary files", () => {
++    const file = join(dir, "overlap.jsonl");
++    writeFileSync(file, "fixture-long-valuefixture-longfixture-long-value");
++    expect(redactSecrets(file, ["fixture-long", "fixture-long-value"])).toBe(3);
++    expect(readFileSync(file, "utf8")).toBe("[REDACTED]".repeat(3));
++    expect(readdirSync(dir).some((name) => name.includes(".redact-"))).toBe(false);
++    expect(redactSecrets(join(dir, "missing"), ["fixture-long"])).toBe(0);
++  });
++
++  it("reports archive and scanner failures even when the dataset succeeds, retaining every retry log", () => {
++    const root = join(dir, "snapshot");
++    const runtime = join(root, "ops", "codex-ops");
++    mkdirSync(join(root, "paper", "materials", "session", "codex"), { recursive: true });
++    mkdirSync(join(root, "ops"), { recursive: true });
++    writeFileSync(join(root, "ops", "paper_dataset.py"), "print('fixture dataset complete')\n");
++    const engine = join(root, "fake-engine");
++    const scanner = join(root, "fake-scanner");
++    writeFileSync(engine, '#!/bin/sh\nexit "${FIXTURE_ARCHIVE_RC:-0}"\n');
++    writeFileSync(scanner, '#!/bin/sh\n[ "${FIXTURE_SCAN_RC:-0}" = 0 ] || exit "$FIXTURE_SCAN_RC"\nwhile [ "$#" -gt 0 ]; do if [ "$1" = --report-path ]; then shift; printf "[]\\n" > "$1"; fi; shift; done\n');
++    chmodSync(engine, 0o755); chmodSync(scanner, 0o755);
++    const tick = (archive: string, scan: string) => spawnSync("bash", ["../ops/codex-ops.sh", "tick", "snapshot"], {
++      encoding: "utf8", env: { ...process.env, CODEX_OPS_ROOT: root, CODEX_OPS_DIR: runtime,
++        CODEX_OPS_TSX: engine, CODEX_OPS_GITLEAKS: scanner, CODEX_OPS_NO_DRAIN: "1",
++        FIXTURE_ARCHIVE_RC: archive, FIXTURE_SCAN_RC: scan },
++    });
++    expect(tick("7", "0").status).toBe(0);
++    expect(readQueue(join(runtime, "queue"))[0]!.text).toContain("会话归档 exit 7");
++    const first = readdirSync(join(runtime, "snapshots"))[0]!;
++    const original = readFileSync(join(runtime, "snapshots", first));
++    expect(tick("0", "8").status).toBe(0);
++    expect(readQueue(join(runtime, "queue"))).toHaveLength(2);
++    expect(readQueue(join(runtime, "queue"))[1]!.text).toContain("gitleaks exit 8");
++    expect(tick("0", "0").status).toBe(0);
++    expect(readQueue(join(runtime, "queue"))).toHaveLength(2);
++    expect(readdirSync(join(runtime, "snapshots"))).toHaveLength(3);
++    expect(readFileSync(join(runtime, "snapshots", first))).toEqual(original);
++    expect(readFileSync(join(root, "paper", "materials", "decision-log.md"), "utf8")).toContain("会话脱敏归档 exit 7");
++  });
++});
+diff --git a/learner/lib/launcher.ts b/learner/lib/launcher.ts
+index 573995a69..f6e2a8a2a 100644
+--- a/learner/lib/launcher.ts
++++ b/learner/lib/launcher.ts
+@@ -17,7 +17,7 @@
+  * Exit codes: 0 done, 1 the agent failed, 2 usage/task error, 3 engine or tool server unavailable, 124 timeout.
+  */
+ import { spawn } from "node:child_process";
+-import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
++import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, renameSync, rmSync, statSync, writeSync } from "node:fs";
+ import { homedir, tmpdir } from "node:os";
+ import { join, relative, resolve, sep } from "node:path";
+ import { createInterface } from "node:readline";
+@@ -277,20 +277,58 @@ export function collectSecrets(files: string[], env: NodeJS.ProcessEnv, stripped
+   return [...secrets];
+ }
+ 
+-/** Replaces every secret in the file with [REDACTED]; returns how many were found. */
++/** Redacts in bounded byte chunks; long-lived rollouts exceed V8's string limit. */
+ export function redactSecrets(path: string, secrets: string[]): number {
+   if (secrets.length === 0 || !existsSync(path)) return 0;
+-  let text = readFileSync(path, "utf8");
++  const tokens = [...new Set(secrets.filter(Boolean))].map((s) => Buffer.from(s)).sort((a, b) => b.length - a.length);
++  if (tokens.length === 0) return 0;
++  const keep = tokens[0]!.length - 1;
++  const dir = mkdtempSync(`${path}.redact-`);
++  const temporary = join(dir, "redacted");
++  let input: number | undefined;
++  let output: number | undefined;
+   let found = 0;
+-  for (const secret of secrets) {
+-    const parts = text.split(secret);
+-    if (parts.length > 1) {
+-      found += parts.length - 1;
+-      text = parts.join("[REDACTED]");
++  try {
++    input = openSync(path, "r");
++    output = openSync(temporary, "wx", statSync(path).mode & 0o777);
++    const emit = (bytes: Buffer): void => {
++      for (let written = 0; written < bytes.length;) written += writeSync(output!, bytes, written, bytes.length - written);
++    };
++    const chunk = Buffer.alloc(64 * 1024);
++    const replacement = Buffer.from("[REDACTED]");
++    let carry = Buffer.alloc(0);
++    for (;;) {
++      const n = readSync(input, chunk, 0, chunk.length, null);
++      const bytes = Buffer.concat([carry, chunk.subarray(0, n)]);
++      const boundary = n === 0 ? bytes.length : Math.max(0, bytes.length - keep);
++      let start = 0;
++      while (start < boundary) {
++        let next = boundary;
++        let matched: Buffer | undefined;
++        for (const token of tokens) {
++          const at = bytes.indexOf(token, start);
++          if (at >= 0 && at < next) { next = at; matched = token; }
++        }
++        if (!matched) break;
++        emit(bytes.subarray(start, next));
++        emit(replacement);
++        start = next + matched.length;
++        found++;
++      }
++      if (start < boundary) { emit(bytes.subarray(start, boundary)); start = boundary; }
++      carry = Buffer.from(bytes.subarray(start));
++      if (n === 0) break;
+     }
++    closeSync(input); input = undefined;
++    closeSync(output); output = undefined;
++    // Leave unchanged logs (including their mtime) alone; failures preserve the original.
++    if (found > 0) renameSync(temporary, path);
++    return found;
++  } finally {
++    if (input !== undefined) closeSync(input);
++    if (output !== undefined) closeSync(output);
++    rmSync(dir, { recursive: true, force: true });
+   }
+-  if (found > 0) writeFileSync(path, text);
+-  return found;
+ }
+ 
+ /**
+diff --git a/ops/codex-ops.sh b/ops/codex-ops.sh
+index 9d763c7a6..457f34d9b 100755
+--- a/ops/codex-ops.sh
++++ b/ops/codex-ops.sh
+@@ -24,7 +24,10 @@ ROOT="${CODEX_OPS_ROOT:-$ROOT}"
+ DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
+ QUEUE="$DIR/queue"
+ LOG="$DIR/scheduler.log"
+-export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
++export PATH="$HOME/.local/node/bin:$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
++# Use the same project-isolated login home as scheduled learners. Cron does not
++# inherit a pane's CODEX_HOME; explicit caller overrides remain authoritative.
++export LEARNER_CODEX_HOME="${LEARNER_CODEX_HOME:-${CODEX_HOME:-$HOME/.codex-sts2}}"
+ export STS2_WORKSPACE="$ROOT"
+ TSX="${CODEX_OPS_TSX:-$OPS/../agent/node_modules/.bin/tsx}"
+ MAIN="$OPS/codex/main.ts"
+@@ -107,9 +110,9 @@ $out"
+ gitleaks_session() {
+   local target="$ROOT/paper/materials/session/codex" report="$DIR/gitleaks-session.json" count last
+   [ -d "$target" ] || return 0
+-  command -v "${CODEX_OPS_GITLEAKS:-gitleaks}" > /dev/null || { log "snapshot: gitleaks not installed"; return 0; }
++  command -v "${CODEX_OPS_GITLEAKS:-gitleaks}" > /dev/null || { log "snapshot: gitleaks not installed"; return 127; }
+   nice -n 10 "${CODEX_OPS_GITLEAKS:-gitleaks}" dir "$target" --no-banner --redact --log-level error \
+-    --report-format json --report-path "$report" --exit-code 0 > /dev/null 2>&1
++    --report-format json --report-path "$report" --exit-code 0 > /dev/null 2>&1 || return $?
+   count=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))))' "$report" 2>/dev/null || echo "?")
+   last=$(cat "$DIR/gitleaks-session.count" 2>/dev/null || echo 0)
+   echo "$count" > "$DIR/gitleaks-session.count"
+@@ -120,14 +123,18 @@ gitleaks_session() {
+ }
+ 
+ tick_snapshot() {
+-  local rc out
+-  out="$DIR/snapshot.log"
++  local rc archive_rc scan_rc out
++  # Preserve previous failures; each retry gets a separate log.
++  mkdir -p "$DIR/snapshots"
++  out="$DIR/snapshots/$(date '+%Y%m%d-%H%M%S')-$$.log"
+   { echo "== $(date '+%F %T') paper_dataset.py"; nice -n 10 python3 "$ROOT/ops/paper_dataset.py"; } > "$out" 2>&1
+   rc=$?
+   nice -n 10 "$TSX" "$MAIN" snapshot-session >> "$out" 2>&1
++  archive_rc=$?
+   gitleaks_session >> "$out" 2>&1
+-  echo "- $(date '+%F %H:%M') 论文数据快照（codex-ops 调度器）：ops/paper_dataset.py 完整版 exit $rc；运维会话和学习者的 codex 记录替换 key 后复制到 paper/materials/session/codex/（gitleaks：$(cat "$DIR/gitleaks-session.count" 2>/dev/null || echo 未跑) 处）" >> "$ROOT/paper/materials/decision-log.md"
+-  [ $rc -eq 0 ] || enqueue snapshot-failed "每日快照 ops/paper_dataset.py 失败（exit $rc）。输出末尾：
++  scan_rc=$?
++  echo "- $(date '+%F %H:%M') 论文数据快照（codex-ops 调度器）：数据 exit $rc；会话脱敏归档 exit $archive_rc；gitleaks exit $scan_rc（结果仅本次 exit 0 时有效）；日志 $out。" >> "$ROOT/paper/materials/decision-log.md"
++  [ $rc -eq 0 ] && [ $archive_rc -eq 0 ] && [ $scan_rc -eq 0 ] || enqueue snapshot-failed "每日快照失败：数据 exit $rc，会话归档 exit $archive_rc，gitleaks exit $scan_rc。日志 $out。输出末尾：
+ $(tail -n 15 "$out")"
+ }
+ 
+diff --git a/ops/codex/archive.ts b/ops/codex/archive.ts
+index e4ee52764..18fc729ac 100644
+--- a/ops/codex/archive.ts
++++ b/ops/codex/archive.ts
+@@ -12,7 +12,7 @@
+  * Incremental: <out>/MANIFEST.json remembers each copy's source, size and mtime; an unchanged source is not copied
+  * again. Copies are written 0600 (paper/materials/session/ is out of git and backed up to the Windows drive).
+  */
+-import { chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
++import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
+ import { basename, join } from "node:path";
+ 
+ import { redactSecrets } from "../../learner/lib/launcher.js";
+@@ -108,9 +108,16 @@ export function archiveCodexTranscripts(options: ArchiveOptions): ArchiveResult
+       return;
+     }
+     mkdirSync(join(target, ".."), { recursive: true });
+-    copyFileSync(source, target);
+-    chmodSync(target, 0o600);
+-    result.redacted += redactSecrets(target, options.secrets);
++    const temporaryDir = mkdtempSync(`${target}.archive-`);
++    const temporary = join(temporaryDir, "copy");
++    try {
++      copyFileSync(source, temporary);
++      chmodSync(temporary, 0o600);
++      result.redacted += redactSecrets(temporary, options.secrets);
++      renameSync(temporary, target);
++    } finally {
++      rmSync(temporaryDir, { recursive: true, force: true });
++    }
+     manifest[rel] = { source, size: stat.size, mtimeMs: stat.mtimeMs };
+     result.copied.push(rel);
+   };

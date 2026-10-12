@@ -1,0 +1,49 @@
+from pathlib import Path
+import json,subprocess,fcntl,os,hashlib
+r=Path('/home/dw/Projects/agent-sts2');l=r/'.worktrees/live';o=r/'paper/materials/20261011-1939-ops';pub=json.loads((o/'integration/published.json').read_text());merged=pub['live'];sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def g(*a):return subprocess.check_output(['git','-C',str(l),*a]).decode().strip()
+assert subprocess.run(['git','-C',str(l),'merge-base','--is-ancestor',merged,'HEAD']).returncode==0
+assert not g('diff','--cached','--name-only')
+now=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+changes=json.loads((o/'core/changes.json').read_text());mapping=json.loads((o/'core/experience-integration.json').read_text());entries={x['id']:x for x in json.loads((l/'knowledge/characters/silent/experience.json').read_text())['entries']}
+for c in changes:assert entries[c['id']]==c['after'],c['id']
+items=[
+ ('S1.exp178',['silent-0021','silent-0115','silent-0140','silent-0141','silent-0194','silent-0374','silent-0376','silent-0385'],'78479fe73f04b481f60d2b226805887dcc8ecfb6','核心有限窗口/拿跳删与复制重放经验.12→.13，0新增/3更新/0退役，219 active；恢复原自动超时回退后的实际上线。三专题195/201/204局重叠不相加，54G5683J0E5S F33 T5—T9与L704TLETMZBM F48末T3为新增局部证据；只发布经验文本，不将关联代码提案标已实现。'),
+ ('S1.blade-dance1',['silent-0324'],'66c22ba7d87b8748690a4183fff838acd346bd3e','静默A10已观察未升级刀刃之舞：旧将Cards3误作抽牌，新为生成三张0费SHIV并保留旧手牌、触发与出牌额度。证据YBRA3EJ94GBR F30T3/F33第六试T10；其他角色/未观察范围等价。'),
+ ('S1.skittish1',['silent-0211','silent-0209'],'d5c8f4d13a1fd6dcede221c47ca1760b82f52c87','静默A10园丁已见7层胆小：旧重新规划重复补盾、后轮统一删胆小，新记录本轮已消费盾并在已观察后轮恢复；SL/回合/敌群变化清推断。证据CA5KE8GFJ9X2 F9 T2—T4、A5HKP18P4Q0T F8T6；未知对象保持旧路径，不改集火规则。'),
+ ('S1.boss-calibration12',['silent-0415'],'32bf133bc60fa800c86bae614d17c7b1aa496ab3','原S1.boss-calibration11→最新固定数据校准：232结束局/1034含SL尝试，418可用/616排除；tune107、validation311、successful309。固定模型7e1193ce、切点2026-10-06T02:46:11.648000、Platt和准入门槛保持，6个B2可信boss名单不变；F49仍低信任，双boss联合胜率未验证。17旧数据候选仅为历史祖先，不倒填17个中间发布。')]
+versions=[{'name':name,'family':'Silent','commit':merged,'source':f'{now} 运维补办：{desc} source {source}→actual live {merged}。原完整271文件2725例+新增受影响7文件143例/tsc0，原失败/超时保留；宿主完整检查另经原learner-checks。'} for name,ids,source,desc in items]
+record='\n'+''.join('- '+v['source']+' 版本'+v['name']+'。\n' for v in versions)
+record+=f'- {now} [运维 codex] docs ce74e24e与deferred告警9a3313a已随{merged}实际纳入live；保留主ops/两只读辅助、watcher健康职责、Astra/default/512000既有授权，未修改ops prompt/对局参数，纯工具不造游戏版本。核心原175450 rc0但自动检查124/124回退及failed历史不改。E6DSUVTNVBMH回退前确读.13，不算整局持续采用；新恢复边界以{pub["at"]}为准。\n'
+notice=f'\n- {now} [Roy/实际上线] live {merged}，验收与回退原件：paper/materials/20261011-1939-ops/。\n'
+for v in versions:notice+='  - '+v['name']+'：'+v['source']+'\n'
+notice+='  核心三条实际原文（本次合入，非新增研究）：\n'
+for c in changes:notice+=f'  - {c["id"]}：旧「{c["before"]["lesson"]}」→新「{c["after"]["lesson"]}」。\n'
+notice+=f'  预期影响：有限窗口资源比较及复制/重放约束进入既有大脑经验前缀；刀刃与园丁修正预测。实际采用/通关率收益尚未验证，按原effect-followup每20独立自然局分层观察，首试与SL分开。回退仅在live-merge.lock内逆各源对应差异并验证，经验已有后续更新时仅逆changes.json三条，校准仅逆boss-trust数据；保留并行刷新、后续知识与全部失败原件。最新校准不提高B4/B5原失败准入，不重派核心研究。\n'
+scan=subprocess.run(['gitleaks','stdin','--redact','--no-banner'],input=(record+notice+json.dumps(versions,ensure_ascii=False)).encode(),capture_output=True);(o/'publication-text-gitleaks.log').write_bytes(scan.stdout+scan.stderr);assert scan.returncode==0
+appends={}
+def append(path,text):
+ with path.open('a+b') as f:
+  fcntl.flock(f,fcntl.LOCK_EX);f.seek(0);old=f.read();assert text.encode() not in old;f.write(text.encode());f.flush();os.fsync(f.fileno())
+ if path.is_relative_to(r) and not path.is_relative_to(l):appends[str(path.relative_to(r))]=text
+for root in [r,l]:
+ p=root/'eval/versions.json'
+ with p.open('r+') as f:
+  fcntl.flock(f,fcntl.LOCK_EX);data=json.load(f);assert not {v['name'] for v in versions}&{v['name'] for v in data['versions']};data['versions']+=versions;f.seek(0);json.dump(data,f,ensure_ascii=False,indent=2);f.write('\n');f.truncate();f.flush();os.fsync(f.fileno())
+ append(root/'paper/materials/decision-log.md',record)
+append(r/'notes/for-roy.md',notice);append(r/'ops/inbox-dev.md',notice)
+(o/'own-record-appends.json').write_text(json.dumps(appends,ensure_ascii=False,indent=2)+'\n');(o/'own-versions.json').write_text(json.dumps(versions,ensure_ascii=False,indent=2)+'\n')
+rows=[]
+for name,ids,source,desc in items:
+ for ident in ids:rows.append({'id':ident,'by':'ops:codex-1939','status':'shipped','version':name,'where':{'commits':[source,merged]},'note':desc+' 本轮实际发布范围见paper/materials/20261011-1939-ops/；宿主检查/消费者采用/胜率效果分别核实，不改原失败回报。'})
+data=''.join(json.dumps(x,ensure_ascii=False)+'\n' for x in rows);(o/'ledger-publication-input.jsonl').write_text(data)
+p=subprocess.run(['python3','learner/ledger.py','update'],cwd=r,input=data,text=True,capture_output=True);(o/'ledger-publication.log').write_text(p.stdout+p.stderr);assert p.returncode==0,p.stderr
+p=r/'notes/experience-integration-silent.json'
+with (r/'ops/codex-ops/learn.lock').open('a') as lock:
+ fcntl.flock(lock,fcntl.LOCK_EX);raw=p.read_bytes();req=json.loads(raw);assert req['batch']=='20261011-175450-experience-update' and req['scope_revision']==3
+ (o/'core/request-before.json').write_bytes(raw);req.update(state='done',completed_at=now,result={'report':str(o/'core/report.md'),'report_sha256':sha(o/'core/report.md'),'source':items[0][2],'actual_live':merged,'version':'S1.exp178','entries':[c['id'] for c in changes],'historical_failure_preserved':True,'host_full_checks':'pending','actual_process_read_after_restore':'pending','effect':'unverified'},blocking_condition=None)
+ tmp=p.with_suffix('.json.ops-1939.tmp');tmp.write_text(json.dumps(req,ensure_ascii=False,indent=2)+'\n');os.replace(tmp,p);(o/'core/request-after.json').write_bytes(p.read_bytes())
+subprocess.run(['git','-C',str(l),'add','eval/versions.json','paper/materials/decision-log.md'],check=True)
+p=subprocess.run(['gitleaks','stdin','--redact','--no-banner'],input=subprocess.check_output(['git','-C',str(l),'diff','--cached']),capture_output=True);(o/'live-record-gitleaks.log').write_bytes(p.stdout+p.stderr);assert p.returncode==0
+subprocess.run(['git','-C',str(l),'commit','-m','Record verified core experience recovery and evidence-backed releases','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>'],check=True,stdout=subprocess.DEVNULL)
+(o/'publication-closeout.json').write_text(json.dumps({'at':now,'actual_live':merged,'live_records':g('rev-parse','HEAD'),'versions':[v['name'] for v in versions],'ledger_rows':len(rows),'core_request':'done','historical_failed_batch_unchanged':True,'host_checks':'pending'},indent=2)+'\n');print('published records',g('rev-parse','HEAD'),flush=True)

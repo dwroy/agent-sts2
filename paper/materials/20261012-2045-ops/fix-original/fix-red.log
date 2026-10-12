@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-200522/agent
+
+ ❯ tests/batch-c-illusion.test.ts (2 tests | 2 failed) 2913ms
+     × the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses 1698ms
+     × the logged T3 board: the rollout's best is no longer the Parafright line, with 10000 ms host pauses 1214ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/batch-c-illusion.test.ts > a line aiming only at the illusion keeps that target on later turns (ZY3992X5VEVS F23 T3-T5) > the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses
+AssertionError: expected 376 to be less than or equal to 100
+ ❯ tests/batch-c-illusion.test.ts:62:37
+     60|     expect(results[0]!.elapsedMs).toBeLessThanOrEqual(ROLLOUT_BUDGET_M…
+     61|     // Bound actual solver work as well as the clock: the old 1e9-ms f…
+     62|     expect(results[0]!.policyTurns).toBeLessThanOrEqual(100);
+       |                                     ^
+     63|   });
+     64| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/batch-c-illusion.test.ts > a line aiming only at the illusion keeps that target on later turns (ZY3992X5VEVS F23 T3-T5) > the logged T3 board: the rollout's best is no longer the Parafright line, with 10000 ms host pauses
+AssertionError: expected 20270000 to be less than or equal to 1500
+ ❯ tests/batch-c-illusion.test.ts:60:35
+     58|     expect(results[0]!.samples).toBeGreaterThanOrEqual(2);
+     59|     expect(results[0]!.degraded).not.toContain("1-turn");
+     60|     expect(results[0]!.elapsedMs).toBeLessThanOrEqual(ROLLOUT_BUDGET_M…
+       |                                   ^
+     61|     // Bound actual solver work as well as the clock: the old 1e9-ms f…
+     62|     expect(results[0]!.policyTurns).toBeLessThanOrEqual(100);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  20:15:33
+   Duration  4.34s (transform 1.07s, setup 287ms, import 1.01s, tests 2.91s, environment 0ms)
+

@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-12 13:05:16 CST",
+  "rule": "generic-api-key",
+  "file": "fix-nochange-verification.json",
+  "classification": "scheduler task fingerprint field; not an authentication credential",
+  "provenance": "ops/learner_jobs.py:237 hashes queue text and accepted proposals; dispatch_fix uses that fingerprint as the task identity",
+  "action": "omit the nonessential scheduler_original.key from the newly authored receipt only",
+  "original_runtime_state_changed": false,
+  "source_reports_changed": false,
+  "scanner_rules_changed": false,
+  "initial_scan_summary_preserved": "record-gitleaks-initial.log"
+}

@@ -1,0 +1,64 @@
+{
+  "ids": [
+    "silent-0352",
+    "silent-0353",
+    "silent-0354",
+    "silent-0355"
+  ],
+  "status": "observed",
+  "by": "learner:silent-historical-core-builds",
+  "cli": "/home/dw/Projects/agent-sts2/learner/ledger.py add",
+  "ledger": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+  "evidence_runs_validation": "frozen-runs-for-ledger.jsonl (181 Silent only, no new runs)",
+  "payload_sha256": "78a1ebfd3d1b426567d92a271c71eb213f71dcfffe14bd0ca076107061ac414b",
+  "started_at": "2026-10-09T23:04:56+0800",
+  "exit_code": 0,
+  "verified_items": [
+    {
+      "id": "silent-0352",
+      "status": "observed",
+      "prior": "unknown",
+      "first_run": "T082DRCUHRRD",
+      "asc": 0,
+      "claim": "静默冻结181局中，实际当时牌组包含施毒源、触媒及步法/蜃景/余像防御签名的候选有59局、最终4胜；A10成型46局0整局胜。施毒和额外毒结算须实际启动并付生存代价，组件共现不能认定通杀。ZZMY低阶局部通过与HNX A10成型仍败同时保留。非互斥观察，不是组件因果胜率或拿牌优先级。",
+      "evidence_count": 3
+    },
+    {
+      "id": "silent-0353",
+      "status": "observed",
+      "prior": "unknown",
+      "first_run": "1HC609GTLGN3",
+      "asc": 0,
+      "claim": "静默冻结181局中，至少两张灵动步法、后续格挡与输出组件的实际阶段签名有30局、最终3胜；A10成型22局0整局胜。单步法+夜魇不作替代：4Y实际选择复制毒牌，不证明复制步法。已建敏捷从后续实际格挡兑现；K367 SL后5血胜、4Y四药后9血胜及25226失败不支持轻松通杀。旧33/25代理口径保留，非因果优先级。",
+      "evidence_count": 6
+    },
+    {
+      "id": "silent-0354",
+      "status": "observed",
+      "prior": "unknown",
+      "first_run": "KAY522KT5NXR",
+      "asc": 0,
+      "claim": "静默冻结181局中，供小刀、刀/攻击张数增益及逐牌防御组件的实际阶段签名有24局、最终3胜；A10成型13局0整局胜。精准、首刀增益、力量/敏捷触发和余像不同，未生成/未打刀不预支；KAY混合SL胜、CSBR双蟹六败及YF实验体六败并存。非互斥候选，不证明替代件等价或整战胜因。",
+      "evidence_count": 4
+    },
+    {
+      "id": "silent-0355",
+      "status": "observed",
+      "prior": "unknown",
+      "first_run": "1LMBFGSMCWKU",
+      "asc": 4,
+      "claim": "静默冻结181局中，至少两种弃牌、循环组件及铜钹/结实绷带的实际阶段签名有6局、最终1胜；A10成型5局0整局胜。遗物收益在实际弃牌后兑现，抽弃或持有遗物不等完整攻防循环；1L低阶通过与L704实验体三败并存。保留其他毒/格挡来源、弃去关键牌反例，不规定固定弃牌顺序。",
+      "evidence_count": 3
+    }
+  ],
+  "shipped": false,
+  "correction": {
+    "id": "silent-0353",
+    "cli": "learner/ledger.py update",
+    "payload_sha256": "8a55cbe03cf208a0ee48d876b580cc8bf0023bfc372d2fb30f36dcb1a794f330",
+    "exit_code": 0,
+    "old_add_preserved": true,
+    "new_signature": "two or more FOOTWORK; no NIGHTMARE proxy",
+    "verified_show": "silent-0353-show-revised.stdout"
+  }
+}

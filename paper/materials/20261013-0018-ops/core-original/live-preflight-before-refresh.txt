@@ -1,0 +1,31 @@
+import fcntl,hashlib,json,subprocess
+from pathlib import Path
+ROOT=Path('/home/dw/Projects/agent-sts2'); LIVE=ROOT/'.worktrees/live'; P=Path(__file__).resolve().parent
+source='dca4d3e13e066ebcba7f5d48fde9e24f824e856f'
+def git(*args,check=True):return subprocess.run(['git','-C',str(LIVE),*args],text=True,capture_output=True,check=check)
+with (ROOT/'ops/live-merge.lock').open('a') as lock:
+ try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+ except BlockingIOError:print('live merge lock busy');raise SystemExit(75)
+ if subprocess.run(['pgrep','-f','knowledge/builders/buil[d]-'],stdout=subprocess.DEVNULL).returncode==0:
+  print('knowledge builder running; retry after completion');raise SystemExit(75)
+ status=git('status','--porcelain=v1').stdout
+ head=git('rev-parse','HEAD').stdout.strip()
+ dirty_knowledge=git('diff','--name-only','--','knowledge','notes/fight-value-backtest.md').stdout.splitlines()
+ if dirty_knowledge:
+  (P/'live-refresh-needed.json').write_text(json.dumps(dict(head=head,files=dirty_knowledge),ensure_ascii=False,indent=2)+'\n')
+  print('knowledge refresh commit required before merge');raise SystemExit(76)
+ result=git('merge-tree','--write-tree','--name-only','--no-messages',head,source,check=False)
+ (P/'live-merge-preflight.log').write_text(result.stdout+result.stderr)
+ record=dict(source=source,live_before=head,live_status_before=status,preflight_exit=result.returncode,
+  proposed_tree=result.stdout.splitlines()[0] if result.stdout else None,conflicts=result.stdout.splitlines()[1:] if result.returncode==1 else [],
+  actual_merge_started=False,actual_live_ancestor=git('merge-base','--is-ancestor',source,'HEAD',check=False).returncode==0)
+ (P/'live-merge-preflight.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
+ print(json.dumps(record,ensure_ascii=False))
+ if result.returncode:raise SystemExit(result.returncode)
+ merged=git('merge','--no-edit',source,check=False)
+ (P/'live-merge.log').write_text(merged.stdout+merged.stderr)
+ record['actual_merge_started']=True;record['merge_exit']=merged.returncode
+ record['live_after']=git('rev-parse','HEAD').stdout.strip()
+ (P/'live-merge-result.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
+ print(json.dumps(record,ensure_ascii=False))
+ raise SystemExit(merged.returncode)

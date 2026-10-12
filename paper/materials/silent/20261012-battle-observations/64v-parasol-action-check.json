@@ -1,0 +1,106 @@
+{
+  "decision": {
+    "columns": [
+      "off",
+      "ts",
+      "label",
+      "action",
+      "option_index",
+      "chosen",
+      "decider"
+    ],
+    "types": [
+      "BIGINT",
+      "TIMESTAMP",
+      "VARCHAR",
+      "VARCHAR",
+      "INTEGER",
+      "VARCHAR",
+      "VARCHAR"
+    ],
+    "rows": [
+      [
+        992189898,
+        "2026-10-11T12:23:42.700000",
+        "event/act-plan",
+        "choose_event_option",
+        2,
+        "{\"action\":\"choose_event_option\",\"option_index\":2}",
+        "codex"
+      ],
+      [
+        992198695,
+        "2026-10-11T12:23:43.056000",
+        "event/leave",
+        "choose_event_option",
+        0,
+        "{\"action\":\"choose_event_option\",\"option_index\":0}",
+        "code"
+      ],
+      [
+        992199980,
+        "2026-10-11T12:23:43.509000",
+        "map/route-follow",
+        "choose_map_node",
+        2,
+        "{\"action\":\"choose_map_node\",\"option_index\":2}",
+        "codex"
+      ]
+    ],
+    "row_count": 3,
+    "truncated": false,
+    "ms": 9
+  },
+  "state": {
+    "columns": [
+      "off",
+      "ts",
+      "screen",
+      "floor",
+      "deck_size",
+      "hp",
+      "has_parasol"
+    ],
+    "types": [
+      "BIGINT",
+      "TIMESTAMP",
+      "VARCHAR",
+      "INTEGER",
+      "INTEGER",
+      "INTEGER",
+      "BOOLEAN"
+    ],
+    "rows": [
+      [
+        11453224823,
+        "2026-10-11T12:23:42.700000",
+        "EVENT",
+        34,
+        27,
+        88,
+        false
+      ],
+      [
+        11453250266,
+        "2026-10-11T12:23:43.056000",
+        "EVENT",
+        34,
+        27,
+        88,
+        true
+      ],
+      [
+        11453274348,
+        "2026-10-11T12:23:43.509000",
+        "MAP",
+        34,
+        27,
+        88,
+        true
+      ]
+    ],
+    "row_count": 3,
+    "truncated": false,
+    "ms": 5
+  }
+}

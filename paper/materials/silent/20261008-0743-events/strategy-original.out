@@ -1,0 +1,118 @@
+已提交神化八种观察配对的传播修复：`772b839f`。证据为 VLZ6CCT8AQ0A，F35 T1、F43 T1–T2；账本 silent-0237/0238。
+
+撤接线后 5 个测试失败，恢复后 6 个通过；沙箱 tsc/vitest 全过，共 2604 例。live 预检发现 6 处并行记录冲突，已停止合入，保留刷新提交 `78b43d07`。工作树干净。
+
+[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-071205-strategy-proposal/proposal.md) · [完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-071205-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "base": "83977b4e4b58da603363a7d7866e53220ac228ae",
+  "runs": ["VLZ6CCT8AQ0A", "8JRE1C4H4Z2W", "CA5KE8GFJ9X2", "5PM6JAQG6FNQ", "61E2QS63Y9WU", "DUZUBAJ3A8GP"],
+  "fixes": [{
+    "id": "silent-0237",
+    "commit": "772b839f8ada31664cb764ea9ad3bdb03da27f64",
+    "ledger": ["silent-0237", "silent-0238"]
+  }],
+  "skipped": [
+    "silent-proposal-89354805ee4d7e77",
+    "silent-proposal-f2bfceddb1898dca",
+    "silent-proposal-283a164780d11e69",
+    "silent-proposal-ebbfe3b97548756d",
+    "silent-proposal-e5b87be50f28f311",
+    "silent-proposal-49632bc4878fb597",
+    "silent-proposal-66532328a585941f",
+    "silent-proposal-43a76a31ba7bdcfa",
+    "silent-proposal-5264153a4a4b0e5c",
+    "silent-proposal-bddfa690a84e03d0"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 6,
+    "sandbox": 0,
+    "files": 247,
+    "passed": 2604,
+    "live": null
+  },
+  "code_proposals": [
+    "silent-proposal-89354805ee4d7e77",
+    "silent-proposal-f2bfceddb1898dca",
+    "silent-proposal-283a164780d11e69",
+    "silent-proposal-ebbfe3b97548756d",
+    "silent-proposal-e5b87be50f28f311",
+    "silent-proposal-49632bc4878fb597",
+    "silent-proposal-66532328a585941f",
+    "silent-proposal-43a76a31ba7bdcfa",
+    "silent-proposal-5264153a4a4b0e5c",
+    "silent-proposal-bddfa690a84e03d0",
+    "silent-proposal-708792ca2038f923"
+  ],
+  "implementation_domains": ["combat"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "八配对实现自测通过但因六记录冲突未合live；完整提案仍缺触媒升级复合验证、其余升级真值及统一持有/施放审计。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "缺同盘同总预算、固定种子的MC预算曲线与候选稳定性对照，以及留药和另一focus的完整实打。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "同源神化八配对已有限实现但未合live；触媒等复合覆盖和持有/施放审计仍不完整。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "缺F43/F45持续能力减层、实体贡献的完整冻结调用链，以及未选focus、营火和启动顺序的整场对照。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "缺候选完整执行、首次派发与重规划边界的统一追踪；六试均败，缺原线完整胜局和独立后续验证。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "缺力量、敏捷、虚弱和独立成长四条路径的完整冻结源码对照及统一权重的受控结果。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "缺同血量、构筑和抽序下不同启动顺序的完整胜负对照与可复现收益函数。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "缺同血量、构筑和完整已知抽序的另一可救活SL线路；首试胜利不足以调整SL阈值。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "缺A10召唤/航行的完整冻结调用链和另一目标顺序的后续实打。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "state": "waiting",
+      "reason": "缺醒来、眩晕接续和成长的完整冻结调用链，以及同抽不同排序的完整胜线；同局四败不能拟合血价权重。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-071205-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a118a3-7006-7122-9299-d61208c74b9d
+轮数：1；工具调用：command_execution×81 file_change×13
+token：输入 235.5k、输出 69.1k（其中推理 37.8k）、cache 读 9524.7k、cache 写 0（命中 97.6%）
+成本：未提供
+耗时：1896.2 s（墙钟）
+时间：首个事件 3.8 s、模型首个输出 8.5 s、首次工具 11.4 s、末次工具结束 1856.3 s；工具内共 791.4 s，其余（模型生成、推理、网络）1101.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×65；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T07-12-06-01a118a3-7006-7122-9299-d61208c74b9d.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-071205-strategy-proposal.jsonl

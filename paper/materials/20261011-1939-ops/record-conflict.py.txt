@@ -1,0 +1,23 @@
+from pathlib import Path
+import subprocess,json,hashlib,collections
+r=Path.cwd();w=r/'.worktrees/ops-1852-integration';o=r/'paper/materials/20261011-1939-ops/integration';current='935fda33e94cce92877c4c17cd8b73fff4a99fad'
+def g(*a):return subprocess.check_output(['git','-C',str(w),*a])
+assert not g('status','--porcelain').strip();before=g('rev-parse','HEAD').decode().strip()
+p=subprocess.run(['git','-C',str(w),'merge','--no-commit','--no-ff',current],capture_output=True);(o/'preserve-live-records.log').write_bytes(p.stdout+p.stderr)
+conflicts=g('diff','--name-only','--diff-filter=U').decode().splitlines();assert conflicts==['paper/materials/decision-log.md'],conflicts
+folder=o/'decision-conflict';folder.mkdir(exist_ok=True)
+for stage,name in [(1,'base'),(2,'ours'),(3,'theirs')]:
+ data=g('show',':'+str(stage)+':paper/materials/decision-log.md');(folder/(name+'.md')).write_bytes(data)
+p=subprocess.run(['git','merge-file','--union','-p',str(folder/'ours.md'),str(folder/'base.md'),str(folder/'theirs.md')],capture_output=True);assert p.returncode==0
+for name in ['ours','theirs']:
+ old=collections.Counter((folder/(name+'.md')).read_bytes().splitlines());new=collections.Counter(p.stdout.splitlines());assert all(new[k]>=v for k,v in old.items() if k.strip()),name
+(w/'paper/materials/decision-log.md').write_bytes(p.stdout);subprocess.run(['git','-C',str(w),'add','paper/materials/decision-log.md'],check=True)
+patch=g('diff','--cached');scan=subprocess.run(['gitleaks','stdin','--redact','--no-banner'],input=patch,capture_output=True);(o/'preserve-live-records-gitleaks.log').write_bytes(scan.stdout+scan.stderr);assert scan.returncode==0
+subprocess.run(['git','-C',str(w),'commit','-m','Preserve parallel deployment records before publishing verified integration','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>'],check=True,stdout=subprocess.DEVNULL)
+after=g('rev-parse','HEAD').decode().strip();paths=['agent/src','agent/tests','agent/tools','learner','ops','knowledge','eval/*.py'];delta=g('diff','--name-only',before,after,'--',*paths).decode().splitlines();assert not delta,delta
+(o/'record-conflict-resolution.json').write_text(json.dumps({'before':before,'after':after,'preserved_live':current,'resolved':conflicts,'method':'three-way union; all nonblank lines from both originals retained with multiplicity','source_knowledge_delta':delta},indent=2)+'\n')
+helper=Path('/tmp/sts2-1939-publish-live.py');s=helper.read_text().replace("candidate='"+before+"'","candidate='"+after+"'");s=s.replace("assert g('rev-parse',candidate+'^{tree}')==g('rev-parse',incremental['candidate']+'^{tree}')","assert not g('diff','--name-only',candidate,incremental['candidate'],'--','agent','learner','ops','knowledge','eval/*.py').strip()")
+helper.write_text(s);(o/'publish-live.py.txt').write_text(s)
+first=o/'attempt1';first.mkdir(exist_ok=True)
+for name in ['live-preflight.json','live-merge-preview.log','publish-attempt.log']:(o/name).rename(first/name)
+print(after)

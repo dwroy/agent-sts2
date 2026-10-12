@@ -1,0 +1,678 @@
+{
+  "751_T13": [
+    {
+      "attempt": 1,
+      "decision": 272483,
+      "states": [
+        278528,
+        278532
+      ],
+      "hp_loss": 8,
+      "enemy_net_loss": 17,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:70:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:PIERCING_WAIL:true|1:STRIKE_SILENT:true|2:BECKON:true|3:DEFEND_SILENT:true|4:DAGGER_SPRAY:true\",\"hp\":26,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|DEXTERITY_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":13}"
+    },
+    {
+      "attempt": 6,
+      "decision": 272820,
+      "states": [
+        278865,
+        278869
+      ],
+      "hp_loss": 2,
+      "enemy_net_loss": 11,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:70:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:PIERCING_WAIL:true|1:STRIKE_SILENT:true|2:BECKON:true|3:DEFEND_SILENT:true|4:DAGGER_SPRAY:true\",\"hp\":26,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|DEXTERITY_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":13}"
+    }
+  ],
+  "KEN_dex": [
+    {
+      "attempt": 4,
+      "first_observed_dex2_turn": 5,
+      "state": 280569,
+      "decision": 274486
+    },
+    {
+      "attempt": 6,
+      "first_observed_dex2_turn": 9,
+      "state": 280702,
+      "decision": 274619
+    }
+  ],
+  "KEN_entries": [
+    {
+      "attempt": 1,
+      "hp": 75,
+      "max_hp": 86,
+      "potions": []
+    },
+    {
+      "attempt": 2,
+      "hp": 75,
+      "max_hp": 86,
+      "potions": []
+    },
+    {
+      "attempt": 3,
+      "hp": 75,
+      "max_hp": 86,
+      "potions": []
+    },
+    {
+      "attempt": 4,
+      "hp": 75,
+      "max_hp": 86,
+      "potions": []
+    },
+    {
+      "attempt": 5,
+      "hp": 75,
+      "max_hp": 86,
+      "potions": []
+    },
+    {
+      "attempt": 6,
+      "hp": 75,
+      "max_hp": 86,
+      "potions": []
+    }
+  ],
+  "YQL8RZ8BWN1E_giant_attempts": [
+    {
+      "line": 958,
+      "attempt": 1,
+      "result": "predicted_death",
+      "turns": 13,
+      "end_hp": 10,
+      "incoming": 50,
+      "anchor": null,
+      "last": [
+        {
+          "turn": 13,
+          "hp": 10,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999990/999999999",
+          "plays": [
+            "防御",
+            "防御"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 959,
+      "attempt": 2,
+      "result": "predicted_death",
+      "turns": 13,
+      "end_hp": 6,
+      "incoming": 50,
+      "anchor": null,
+      "last": [
+        {
+          "turn": 13,
+          "hp": 6,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999999/999999999",
+          "plays": [
+            "打击 -> 瀑布巨兽",
+            "防御",
+            "切割 -> 瀑布巨兽",
+            "防御"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 960,
+      "attempt": 3,
+      "result": "predicted_death",
+      "turns": 12,
+      "end_hp": 10,
+      "incoming": 47,
+      "anchor": {
+        "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T13 (enemy HP 999999990), attempt 2 T13 (enemy HP 999999999))",
+        "ranked": [
+          {
+            "attempt": 1,
+            "turns": 13,
+            "enemyHp": 999999990
+          },
+          {
+            "attempt": 2,
+            "turns": 13,
+            "enemyHp": 999999999
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 12,
+          "hp": 10,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999971/999999999",
+          "plays": [
+            "斗篷与匕首"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 961,
+      "attempt": 4,
+      "result": "predicted_death",
+      "turns": 13,
+      "end_hp": 10,
+      "incoming": 50,
+      "anchor": {
+        "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T13 (enemy HP 999999990), attempt 2 T13 (enemy HP 999999999), attempt 3 T12 (enemy HP 999999971))",
+        "ranked": [
+          {
+            "attempt": 1,
+            "turns": 13,
+            "enemyHp": 999999990
+          },
+          {
+            "attempt": 2,
+            "turns": 13,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 3,
+            "turns": 12,
+            "enemyHp": 999999971
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 13,
+          "hp": 10,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999996/999999999",
+          "plays": [
+            "防御",
+            "防御",
+            "切割 -> 瀑布巨兽",
+            "触媒"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 962,
+      "attempt": 5,
+      "result": "predicted_death",
+      "turns": 13,
+      "end_hp": 10,
+      "incoming": 50,
+      "anchor": {
+        "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T13 (enemy HP 999999990), attempt 4 T13 (enemy HP 999999996), attempt 2 T13 (enemy HP 999999999), attempt 3 T12 (enemy HP 999999971))",
+        "ranked": [
+          {
+            "attempt": 1,
+            "turns": 13,
+            "enemyHp": 999999990
+          },
+          {
+            "attempt": 4,
+            "turns": 13,
+            "enemyHp": 999999996
+          },
+          {
+            "attempt": 2,
+            "turns": 13,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 3,
+            "turns": 12,
+            "enemyHp": 999999971
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 13,
+          "hp": 10,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999990/999999999",
+          "plays": [
+            "防御",
+            "防御",
+            "切割 -> 瀑布巨兽",
+            "防御"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 963,
+      "attempt": 6,
+      "result": "died",
+      "turns": 10,
+      "end_hp": 0,
+      "incoming": 41,
+      "anchor": {
+        "why": "attempt 5's path, not attempt 2's: it lived longest (attempt 5 T13 (enemy HP 999999990), attempt 1 T13 (enemy HP 999999990), attempt 4 T13 (enemy HP 999999996), attempt 2 T13 (enemy HP 999999999), attempt 3 T12 (enemy HP 999999971))",
+        "ranked": [
+          {
+            "attempt": 5,
+            "turns": 13,
+            "enemyHp": 999999990
+          },
+          {
+            "attempt": 1,
+            "turns": 13,
+            "enemyHp": 999999990
+          },
+          {
+            "attempt": 4,
+            "turns": 13,
+            "enemyHp": 999999996
+          },
+          {
+            "attempt": 2,
+            "turns": 13,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 3,
+            "turns": 12,
+            "enemyHp": 999999971
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 10,
+          "hp": 26,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999999/999999999",
+          "plays": [
+            "生存者",
+            "防御",
+            "potion 毒药水"
+          ]
+        }
+      ]
+    }
+  ],
+  "L9SGRBB5R698_giant_attempts": [
+    {
+      "line": 679,
+      "attempt": 1,
+      "result": "predicted_death",
+      "turns": 14,
+      "end_hp": 1,
+      "incoming": 39,
+      "anchor": null,
+      "last": [
+        {
+          "turn": 14,
+          "hp": 1,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999999/999999999",
+          "plays": [
+            "防御",
+            "小刀 -> 瀑布巨兽",
+            "中和 -> 瀑布巨兽",
+            "防御",
+            "防御"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 680,
+      "attempt": 2,
+      "result": "predicted_death",
+      "turns": 10,
+      "end_hp": 14,
+      "incoming": 28,
+      "anchor": null,
+      "last": [
+        {
+          "turn": 10,
+          "hp": 14,
+          "block": 0,
+          "enemies": "瀑布巨兽 58/250",
+          "plays": [
+            "防御",
+            "串刺 -> 瀑布巨兽"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 681,
+      "attempt": 3,
+      "result": "predicted_death",
+      "turns": 13,
+      "end_hp": 2,
+      "incoming": 11,
+      "anchor": {
+        "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T14 (enemy HP 999999999), attempt 2 T10 (enemy HP 58))",
+        "ranked": [
+          {
+            "attempt": 1,
+            "turns": 14,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 2,
+            "turns": 10,
+            "enemyHp": 58
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 13,
+          "hp": 2,
+          "block": 0,
+          "enemies": "瀑布巨兽 28/250",
+          "plays": [
+            "打击 -> 瀑布巨兽",
+            "致命毒药 -> 瀑布巨兽",
+            "逃脱计划",
+            "防御"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 682,
+      "attempt": 4,
+      "result": "predicted_death",
+      "turns": 14,
+      "end_hp": 1,
+      "incoming": 39,
+      "anchor": {
+        "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T14 (enemy HP 999999999), attempt 3 T13 (enemy HP 28), attempt 2 T10 (enemy HP 58))",
+        "ranked": [
+          {
+            "attempt": 1,
+            "turns": 14,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 3,
+            "turns": 13,
+            "enemyHp": 28
+          },
+          {
+            "attempt": 2,
+            "turns": 10,
+            "enemyHp": 58
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 14,
+          "hp": 1,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999999/999999999",
+          "plays": [
+            "斗篷与匕首",
+            "中和 -> 瀑布巨兽",
+            "防御"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 683,
+      "attempt": 5,
+      "result": "predicted_death",
+      "turns": 13,
+      "end_hp": 4,
+      "incoming": 37,
+      "anchor": {
+        "why": "attempt 4's path, not attempt 2's: it lived longest (attempt 4 T14 (enemy HP 999999999), attempt 1 T14 (enemy HP 999999999), attempt 3 T13 (enemy HP 28), attempt 2 T10 (enemy HP 58))",
+        "ranked": [
+          {
+            "attempt": 4,
+            "turns": 14,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 1,
+            "turns": 14,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 3,
+            "turns": 13,
+            "enemyHp": 28
+          },
+          {
+            "attempt": 2,
+            "turns": 10,
+            "enemyHp": 58
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 13,
+          "hp": 4,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999993/999999999",
+          "plays": [
+            "斗篷与匕首",
+            "致命毒药 -> 瀑布巨兽",
+            "突然一拳 -> 瀑布巨兽"
+          ]
+        }
+      ]
+    },
+    {
+      "line": 684,
+      "attempt": 6,
+      "result": "died",
+      "turns": 13,
+      "end_hp": 0,
+      "incoming": 37,
+      "anchor": {
+        "why": "attempt 4's path, not attempt 2's: it lived longest (attempt 4 T14 (enemy HP 999999999), attempt 1 T14 (enemy HP 999999999), attempt 3 T13 (enemy HP 28), attempt 5 T13 (enemy HP 999999993), attempt 2 T10 (enemy HP 58))",
+        "ranked": [
+          {
+            "attempt": 4,
+            "turns": 14,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 1,
+            "turns": 14,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 3,
+            "turns": 13,
+            "enemyHp": 28
+          },
+          {
+            "attempt": 5,
+            "turns": 13,
+            "enemyHp": 999999993
+          },
+          {
+            "attempt": 2,
+            "turns": 10,
+            "enemyHp": 58
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 13,
+          "hp": 3,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999999/999999999",
+          "plays": [
+            "打击 -> 瀑布巨兽",
+            "致命毒药 -> 瀑布巨兽",
+            "逃脱计划",
+            "防御",
+            "中和 -> 瀑布巨兽"
+          ]
+        }
+      ]
+    }
+  ],
+  "PU80F84P6HPN_giant_attempts": [
+    {
+      "line": 715,
+      "attempt": 1,
+      "result": "predicted_death",
+      "turns": 17,
+      "end_hp": 20,
+      "incoming": 62,
+      "anchor": null,
+      "last": [
+        {
+          "turn": 17,
+          "hp": 20,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999989/999999999",
+          "plays": []
+        }
+      ]
+    },
+    {
+      "line": 716,
+      "attempt": 2,
+      "result": "predicted_death",
+      "turns": 17,
+      "end_hp": 27,
+      "incoming": 62,
+      "anchor": null,
+      "last": [
+        {
+          "turn": 17,
+          "hp": 27,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999981/999999999",
+          "plays": []
+        }
+      ]
+    },
+    {
+      "line": 717,
+      "attempt": 3,
+      "result": "predicted_death",
+      "turns": 19,
+      "end_hp": 33,
+      "incoming": 68,
+      "anchor": {
+        "why": "attempt 2's path, the failed attempt that lived longest (attempt 2 T17 (enemy HP 999999981), attempt 1 T17 (enemy HP 999999989))",
+        "ranked": [
+          {
+            "attempt": 2,
+            "turns": 17,
+            "enemyHp": 999999981
+          },
+          {
+            "attempt": 1,
+            "turns": 17,
+            "enemyHp": 999999989
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 19,
+          "hp": 33,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999999/999999999",
+          "plays": []
+        }
+      ]
+    },
+    {
+      "line": 718,
+      "attempt": 4,
+      "result": "predicted_death",
+      "turns": 18,
+      "end_hp": 33,
+      "incoming": 65,
+      "anchor": {
+        "why": "attempt 3's path, not attempt 2's: it lived longest (attempt 3 T19 (enemy HP 999999999), attempt 2 T17 (enemy HP 999999981), attempt 1 T17 (enemy HP 999999989))",
+        "ranked": [
+          {
+            "attempt": 3,
+            "turns": 19,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 2,
+            "turns": 17,
+            "enemyHp": 999999981
+          },
+          {
+            "attempt": 1,
+            "turns": 17,
+            "enemyHp": 999999989
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 18,
+          "hp": 33,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999999/999999999",
+          "plays": []
+        }
+      ]
+    },
+    {
+      "line": 719,
+      "attempt": 5,
+      "result": "won",
+      "turns": 15,
+      "end_hp": 2,
+      "incoming": 42,
+      "anchor": {
+        "why": "attempt 3's path, not attempt 2's: it lived longest (attempt 3 T19 (enemy HP 999999999), attempt 4 T18 (enemy HP 999999999), attempt 2 T17 (enemy HP 999999981), attempt 1 T17 (enemy HP 999999989))",
+        "ranked": [
+          {
+            "attempt": 3,
+            "turns": 19,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 4,
+            "turns": 18,
+            "enemyHp": 999999999
+          },
+          {
+            "attempt": 2,
+            "turns": 17,
+            "enemyHp": 999999981
+          },
+          {
+            "attempt": 1,
+            "turns": 17,
+            "enemyHp": 999999989
+          }
+        ]
+      },
+      "last": [
+        {
+          "turn": 15,
+          "hp": 24,
+          "block": 0,
+          "enemies": "瀑布巨兽 999999999/999999999",
+          "plays": [
+            "小刀 -> 瀑布巨兽",
+            "打击 -> 瀑布巨兽",
+            "防御",
+            "逃脱计划",
+            "中和 -> 瀑布巨兽",
+            "防御"
+          ]
+        }
+      ]
+    }
+  ]
+}

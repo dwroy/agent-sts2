@@ -55,8 +55,8 @@
 
 既有silent-0100经learner/ledger.py/by=ops追加S1.strategy2 shipped；保留本批三条learner proposed历史，共归档4行，工作区全库102项0问题。其他尚未收到完成事件的经验批次行及历史排序保留工作区，不纳入本轮提交或登记上线。只上线学习者有证据的阶段结束事实子项，无另一条T4实战胜负对照，不新增知识结论；整体全死权重、完整构筑时钟及其他策略仍未实现。
 
-回报ops/codex-ops/learner/20261005-140217-strategy-proposal.out，原交接learner/runs/20261005-140218-strategy-proposal/handoff-ops.md。无新的Dai待定事项，不改配置或停止对局。
+回报ops/codex-ops/learner/20261005-140217-strategy-proposal.out，原交接learner/runs/20261005-140218-strategy-proposal/handoff-ops.md。无新的Roy待定事项，不改配置或停止对局。
 
 ### 完整外部检查完成（2026-10-05 14:35 CST）
 
-14:34 learner-checks正式确认本批独立完整tsc/vitest exit0：固定发布0a066c2f9dd01c0dba7a34b03570e646557bf817、树ee4f8ebb563e4df5dba985f0893bd29c9b5974c2逐字核对，main/live祖先成立；223文件2790用例通过、2跳过（总2792），开始14:20:31，耗时471.35秒，原始日志`ops/codex-ops/learner/20261005-140217-strategy-proposal.fallback-ee4f8ebb563e4df5dba985f0893bd29c9b5974c2.checks.log`。此前完整检查待办至此完成，原等待记录及学习者测试口径历史保留；不重复派发、测试、合并或登记silent-0100 shipped，无新Dai事项，对局照常。
+14:34 learner-checks正式确认本批独立完整tsc/vitest exit0：固定发布0a066c2f9dd01c0dba7a34b03570e646557bf817、树ee4f8ebb563e4df5dba985f0893bd29c9b5974c2逐字核对，main/live祖先成立；223文件2790用例通过、2跳过（总2792），开始14:20:31，耗时471.35秒，原始日志`ops/codex-ops/learner/20261005-140217-strategy-proposal.fallback-ee4f8ebb563e4df5dba985f0893bd29c9b5974c2.checks.log`。此前完整检查待办至此完成，原等待记录及学习者测试口径历史保留；不重复派发、测试、合并或登记silent-0100 shipped，无新Roy事项，对局照常。

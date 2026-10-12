@@ -1,0 +1,160 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-044301/agent
+
+ ❯ tests/silent-crab-potion.test.ts (27 tests | 7 failed) 185ms
+   × attempt 1 T9: Jev sees the verified application and keeps every legal choice 56ms
+   × attempt 2 T9: Jev sees the verified application and keeps every legal choice 11ms
+   × attempt 3 T7: Jev sees the verified application and keeps every legal choice 4ms
+   × attempt 4 T9: Jev sees the verified application and keeps every legal choice 3ms
+   × attempt 5 T6: Jev sees the verified application and keeps every legal choice 10ms
+   × attempt 6 T6: Jev sees the verified application and keeps every legal choice 4ms
+   × the ordinary plan question also carries the application fact without changing its legal options 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-crab-potion.test.ts > attempt 1 T9: Jev sees the verified application and keeps every legal choice
+ FAIL  tests/silent-crab-potion.test.ts > attempt 4 T9: Jev sees the verified application and keeps every legal choice
+AssertionError: expected undefined to match object { target_index: +0, …(8) }
+
+- Expected:
+{
+  "immediate_block_damage": 0,
+  "immediate_hp_damage": 0,
+  "poison_added": 6,
+  "poison_after_application": 15,
+  "poison_before": 9,
+  "survival_verified": false,
+  "target_id": "ROCKET",
+  "target_index": 0,
+  "whole_turn_simulated": false,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-crab-potion.test.ts:69:21
+     67|       const b = pair.after.combat.enemies.find((e) => e.index === pair…
+     68|       const poison = (e: Raw) => e.powers.find((p: Raw) => p.power_id …
+     69|       expect(facts).toMatchObject({ target_index: target, target_id: a…
+       |                     ^
+     70|         poison_before: poison(a), poison_after_application: poison(b),…
+     71|         immediate_block_damage: 0, whole_turn_simulated: false, surviv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/silent-crab-potion.test.ts > attempt 2 T9: Jev sees the verified application and keeps every legal choice
+AssertionError: expected undefined to match object { target_index: 1, …(8) }
+
+- Expected:
+{
+  "immediate_block_damage": 0,
+  "immediate_hp_damage": 0,
+  "poison_added": 6,
+  "poison_after_application": 15,
+  "poison_before": 9,
+  "survival_verified": false,
+  "target_id": "ROCKET",
+  "target_index": 1,
+  "whole_turn_simulated": false,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-crab-potion.test.ts:69:21
+     67|       const b = pair.after.combat.enemies.find((e) => e.index === pair…
+     68|       const poison = (e: Raw) => e.powers.find((p: Raw) => p.power_id …
+     69|       expect(facts).toMatchObject({ target_index: target, target_id: a…
+       |                     ^
+     70|         poison_before: poison(a), poison_after_application: poison(b),…
+     71|         immediate_block_damage: 0, whole_turn_simulated: false, surviv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/silent-crab-potion.test.ts > attempt 3 T7: Jev sees the verified application and keeps every legal choice
+AssertionError: expected undefined to match object { target_index: 1, …(8) }
+
+- Expected:
+{
+  "immediate_block_damage": 0,
+  "immediate_hp_damage": 0,
+  "poison_added": 6,
+  "poison_after_application": 11,
+  "poison_before": 5,
+  "survival_verified": false,
+  "target_id": "ROCKET",
+  "target_index": 1,
+  "whole_turn_simulated": false,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-crab-potion.test.ts:69:21
+     67|       const b = pair.after.combat.enemies.find((e) => e.index === pair…
+     68|       const poison = (e: Raw) => e.powers.find((p: Raw) => p.power_id …
+     69|       expect(facts).toMatchObject({ target_index: target, target_id: a…
+       |                     ^
+     70|         poison_before: poison(a), poison_after_application: poison(b),…
+     71|         immediate_block_damage: 0, whole_turn_simulated: false, surviv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/silent-crab-potion.test.ts > attempt 5 T6: Jev sees the verified application and keeps every legal choice
+ FAIL  tests/silent-crab-potion.test.ts > attempt 6 T6: Jev sees the verified application and keeps every legal choice
+AssertionError: expected undefined to match object { target_index: +0, …(8) }
+
+- Expected:
+{
+  "immediate_block_damage": 0,
+  "immediate_hp_damage": 0,
+  "poison_added": 6,
+  "poison_after_application": 9,
+  "poison_before": 3,
+  "survival_verified": false,
+  "target_id": "CRUSHER",
+  "target_index": 0,
+  "whole_turn_simulated": false,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-crab-potion.test.ts:69:21
+     67|       const b = pair.after.combat.enemies.find((e) => e.index === pair…
+     68|       const poison = (e: Raw) => e.powers.find((p: Raw) => p.power_id …
+     69|       expect(facts).toMatchObject({ target_index: target, target_id: a…
+       |                     ^
+     70|         poison_before: poison(a), poison_after_application: poison(b),…
+     71|         immediate_block_damage: 0, whole_turn_simulated: false, surviv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/silent-crab-potion.test.ts > the ordinary plan question also carries the application fact without changing its legal options
+AssertionError: expected undefined to match object { poison_added: 6, …(1) }
+
+- Expected:
+{
+  "poison_added": 6,
+  "whole_turn_simulated": false,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-crab-potion.test.ts:101:66
+     99|   if (decision?.kind !== "ask" || decision.questions.plan?.type !== "c…
+    100|   const criteria = decision.questions.plan.criteria;
+    101|   expect(JSON.parse(criteria["p0->e0"]!).observed_potion_effect).toMat…
+       |                                                                  ^
+    102|   expect(criteria["p0->e1"]).toBeDefined();
+    103|   expect(JSON.parse(criteria["p0->e1"]!).observed_potion_effect).toBeU…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 20 passed (27)
+   Start at  04:54:15
+   Duration  1.47s (transform 967ms, setup 260ms, import 915ms, tests 185ms, environment 0ms)
+

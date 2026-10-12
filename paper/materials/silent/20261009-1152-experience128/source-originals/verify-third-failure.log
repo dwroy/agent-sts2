@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-111625-experience-update/verify.py", line 38, in <module>
+    check('新局无玩家力敏',not any(pw(s['state']['combat']['player']).get(k) for s in S if s['state'].get('combat') for k in ['STRENGTH_POWER','DEXTERITY_POWER']))
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-111625-experience-update/verify.py", line 6, in check
+    assert b,n
+           ^
+AssertionError: 新局无玩家力敏

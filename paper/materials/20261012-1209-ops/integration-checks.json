@@ -1,0 +1,66 @@
+{
+  "at": "2026-10-12 12:11:42 CST",
+  "source_full_cases_reused": 3328,
+  "commands": [
+    [
+      "nice",
+      "-n",
+      "19",
+      "node_modules/.bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    [
+      "nice",
+      "-n",
+      "19",
+      "node_modules/.bin/vitest",
+      "run",
+      "tests/unassigned-proposal-resolution.test.ts",
+      "tests/learner-learning-flow.test.ts",
+      "tests/strategy-concurrency.test.ts",
+      "tests/strategy-implementation.test.ts",
+      "tests/strategy-implementation-continuation.test.ts",
+      "tests/strategy-research.test.ts",
+      "tests/strategy-research-scheduling.test.ts",
+      "tests/learner-check-locks.test.ts",
+      "--maxWorkers=4",
+      "--reporter=default"
+    ]
+  ],
+  "checks": [
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "node_modules/.bin/vitest",
+        "run",
+        "tests/unassigned-proposal-resolution.test.ts",
+        "tests/learner-learning-flow.test.ts",
+        "tests/strategy-concurrency.test.ts",
+        "tests/strategy-implementation.test.ts",
+        "tests/strategy-implementation-continuation.test.ts",
+        "tests/strategy-research.test.ts",
+        "tests/strategy-research-scheduling.test.ts",
+        "tests/learner-check-locks.test.ts",
+        "--maxWorkers=4",
+        "--reporter=default"
+      ],
+      "rc": 0
+    }
+  ]
+}

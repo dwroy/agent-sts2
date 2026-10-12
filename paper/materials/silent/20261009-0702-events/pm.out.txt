@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：SV2GP9NX4HQD（A10，第48层，永世沙漏 AEONGLASS；末试T10以1血21挡面对30攻击及12伤凋萎阵亡，敌余146血）。另追加两处卡牌ID补记；关键数字复核一致。
+- 新的纯 bug：
+  - 无
+- 写成「未记录」的项：SV2GP9NX4HQD：完整dirty源码、前五试离场结算、逐击毛伤与致死次序、完整最优方案执行率、护栏整战反事实代价、预测差额完整归因、受控用药／构筑／路线对照、F49资源与实战、boss时钟比值、缓存及实际费用的缺失项。
+- 学习账本：新增无；更新silent-0005、silent-0019、silent-0021、silent-0024、silent-0025、silent-0125（老错无，均为support）；`ledger.py check`退出码0。
+- 代码提案（实现任务均为独立strategy-proposal，未实现／上线）：
+  - silent-proposal-67cef9acde6d7d8b：F12／F48护栏证据，关联silent-0125；核11题7轮与执行配对，缺整战反事实，保留阈值。
+  - silent-proposal-a5acd24139ff1a06：F33／F43／F48资源证据，关联silent-0019；核药水和SL恢复，缺留药、换线胜局对照，保留规则。
+  - silent-proposal-4a79fe52aef8fde5：F48末试T2—T10，关联silent-0021／0005／0024／0025；核推演阶段与实际动作，差额根因未定位。
+
+```json
+{"task":"postmortem","appended":["SV2GP9NX4HQD"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0005","silent-0019","silent-0021","silent-0024","silent-0025","silent-0125"],"repeats":[],"check":0},"code_proposals":["silent-proposal-67cef9acde6d7d8b","silent-proposal-a5acd24139ff1a06","silent-proposal-4a79fe52aef8fde5"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-064302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11daf-3212-7eb3-b0af-72898745d9ea
+轮数：1；工具调用：command_execution×48
+token：输入 430.6k、输出 42.4k（其中推理 11.6k）、cache 读 3990.5k、cache 写 0（命中 90.3%）
+成本：未提供
+耗时：1135.1 s（墙钟）
+时间：首个事件 2.6 s、模型首个输出 7.2 s、首次工具 9.7 s、末次工具结束 1110.1 s；工具内共 75.9 s，其余（模型生成、推理、网络）1056.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×29；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T06-43-03-01a11daf-3212-7eb3-b0af-72898745d9ea.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-064302-postmortem.jsonl

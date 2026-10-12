@@ -1,0 +1,25 @@
+本批读取失败原文及更正（不作为生产代码测试失败）：
+
+1. 首次读取 docs/learning-code-proposals.md 时沙箱构建退出1：
+error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw/Projects/agent-sts2: rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-234301-s2/.codex: No such file or directory (os error 2)
+同权限只读重试成功，未扩大权限。
+
+2. 首次猜测队列路径退出2：
+rg: /home/dw/Projects/agent-sts2/knowledge/characters/silent/code-proposals.jsonl: IO error for operation on /home/dw/Projects/agent-sts2/knowledge/characters/silent/code-proposals.jsonl: No such file or directory (os error 2)
+读闭环文档后改从 paper/materials/learning/code-proposals.jsonl 只筛本批十id。
+
+3. 首次 runs 身份断言将角色与小写 silent 严格比较，退出1：
+Traceback (most recent call last):
+  File "<stdin>", line 6, in <module>
+AssertionError: {'run_id': 'CA5KE8GFJ9X2', 'ended': '2026-10-07T05:17:57.587Z', 'victory': False, 'floor': 13, 'character': 'SILENT', 'ascension': 10, 'code': '33f02a6f+dirty', 'decisions': 265, 'jev_calls': 58, 'deepseek_calls': 11, 'claude_calls': 0, 'tokens': 180447, 'ds_tokens_in': 1344954, 'ds_tokens_out': 3495, 'ds_cache_hit': 788480, 'deciders': {'codex': 12, 'code': 137, 'jev': 58, 'jev-plan': 58}, 'death_fight': ['下水道蚌']}
+改为 character.lower() 后六局唯一身份全部核实；原日志保持原字节。
+
+4. 依据最新账本报告链接定位时读了224301主/副两个同角色报告，发现是不同的提案组；只用于定位，不作为本批游戏结论或扩展领取依据。随后定位214247报告及本批六局定位清单。
+
+5. 初次批量文档读取一次启动七个只读命令，超过本任务四进程上限。均已退出；后续工具批量最多三个命令并加nice，不继续该做法。
+
+6. 机制源码定位猜测 agent/src/sim/enemy-turn.ts 不存在，rg退出2；之后未把路径缺失当机制缺失。另一次 rg --files 筛 sim 的 enemy/move/script 文件名无匹配而退出1；均未改变文件。
+
+7. 只读查找升级神化时误以当前工作树含根专用 code-proposals.jsonl，rg报告不存在（退出2），其他结果正常返回。现状显示本批普通神化模型仍限2费；PBUB升级版缺口已由其他原id专属拥有，本批不领取、不重复实现。
+
+8. 第一次经验摘要读取用了 text/claim/content 而实际字段为 lesson，输出null；后按实际schema读取19条lesson，原数据不变。不能将该摘要null视为无经验。

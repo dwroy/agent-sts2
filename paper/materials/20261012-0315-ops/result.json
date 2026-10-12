@@ -1,0 +1,46 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-024302-strategy-proposal",
+  "base": "d39eb1db3101bc480271fe31c9dcc5b7129cca54",
+  "runs": [
+    "34PV33AA12QH",
+    "P33MKRP6S4Q4",
+    "177AS39M1UPW",
+    "BSXYMFKN0VJ5",
+    "YBRA3EJ94GBR",
+    "3UPY3BP2LVS7",
+    "NYQW6JAD30K4",
+    "E6DSUVTNVBMH",
+    "64VJC5XT2AT2",
+    "SB5N8GT2Y3VW"
+  ],
+  "fixes": [
+    "ebf3d8f54a895d542de4308b5239f668ed9cd5e5"
+  ],
+  "skipped": [
+    "参考路径排序及护栏调整：只有一个独立局的多次失败/截断，无受控整战或时间外验证。",
+    "live上线：锁内合入预检11项冲突，未执行实际merge，不造版本或shipped。"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 0
+  },
+  "code_proposals": [
+    "silent-proposal-3af7ee6e727878e3"
+  ],
+  "implementation_domains": [
+    "sl",
+    "terminal"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-3af7ee6e727878e3",
+      "state": "waiting",
+      "reason": "源码 ebf3d8f54a895d542de4308b5239f668ed9cd5e5 已自测并提交；锁内合入预检与 live 的11个跨分支路径冲突，实际未合入、不是live祖先，交运维按原流程集成。已观察末态事实证据充分；更广结算/排序的反事实及独立时间外证据仍不足。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-024302/learner/runs/20261012-024310-strategy-proposal/report.md"
+}

@@ -1,0 +1,103 @@
+已复核六局的 10 个提案，均保留 `waiting`：关键触发边界、完整执行关联或整战对照仍缺证据。本次未改源码、未合入 live、未新增版本。既有固定测试 13 例通过，gitleaks 无泄漏；tsc 未运行，工作树干净。
+
+[提案与逐项限制](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-050618-strategy-proposal/proposal.md) · [完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-050618-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "base": "78ea7acc5627275a923492a7cc9ab34f5226e4de",
+  "runs": ["DUZUBAJ3A8GP", "5PM6JAQG6FNQ", "CA5KE8GFJ9X2", "8JRE1C4H4Z2W", "YF0LXT1QSTGG", "XP2SL33HT0D9"],
+  "fixes": [],
+  "skipped": [
+    "silent-proposal-c20b5139dd0dff71",
+    "silent-proposal-ae9e692d680e3819",
+    "silent-proposal-246daedaa3021847",
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c",
+    "silent-proposal-7cbc6005db712ba9"
+  ],
+  "merged": null,
+  "tests": {"tsc": null, "vitest": 0, "cases": 13},
+  "code_proposals": [
+    "silent-proposal-c20b5139dd0dff71",
+    "silent-proposal-ae9e692d680e3819",
+    "silent-proposal-246daedaa3021847",
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c",
+    "silent-proposal-7cbc6005db712ba9"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-c20b5139dd0dff71",
+      "state": "waiting",
+      "reason": "缺第二次火花增长及完整模板调用对照；少技能规则缺同资源同抽序整战结果。"
+    },
+    {
+      "id": "silent-proposal-ae9e692d680e3819",
+      "state": "waiting",
+      "reason": "缺返力后继续出牌、死亡返敏与多来源返还的连续帧；死亡清场不能验证返还。"
+    },
+    {
+      "id": "silent-proposal-246daedaa3021847",
+      "state": "waiting",
+      "reason": "缺同敌同轮两次非致死未挡失血的胆小触发与消费证据。"
+    },
+    {
+      "id": "silent-proposal-52f1e1bd2e7db0ed",
+      "state": "waiting",
+      "reason": "缺加压与覆甲联合跨轮的冻结调用输入，覆甲减层条件未隔离；首样本读取已有子项。"
+    },
+    {
+      "id": "silent-proposal-6dd8bbff876be528",
+      "state": "waiting",
+      "reason": "电击初见已力量2，缺召唤出现至首次成长之间的连续帧与实际模板输入。"
+    },
+    {
+      "id": "silent-proposal-578e415a259e6835",
+      "state": "waiting",
+      "reason": "缺原答、护栏、SL与重规划后的完整候选生命周期关联及联合夹具；规则拟合另缺完整胜线。"
+    },
+    {
+      "id": "silent-proposal-c0767768bf6a7ab1",
+      "state": "waiting",
+      "reason": "已核0/9血价与45/38扣血；缺覆盖重放、未执行续步到重规划最终动作的统一关联。"
+    },
+    {
+      "id": "silent-proposal-a46bdb7fe711d79a",
+      "state": "waiting",
+      "reason": "已有阶段清毒与敏捷顺序子机制；缺能力持有、建立、候选和最终派发的统一分阶段记录及覆盖。"
+    },
+    {
+      "id": "silent-proposal-1044224808015e5c",
+      "state": "waiting",
+      "reason": "缺重规划最终派发与成长兑现的完整对应记录；保血探索缺同抽序完整胜线及独立后续双蟹局。"
+    },
+    {
+      "id": "silent-proposal-7cbc6005db712ba9",
+      "state": "waiting",
+      "reason": "缺临时能力、朝向、毒结算到最终派发的联合事实记录与固定调用覆盖；普通T2不能推额外触发条件。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-050618-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11830-450a-79f1-b001-c9e634d1588f
+轮数：1；工具调用：command_execution×46 file_change×5
+token：输入 205.8k、输出 28.8k（其中推理 9024）、cache 读 3839.2k、cache 写 0（命中 94.9%）
+成本：未提供
+耗时：866.8 s（墙钟）
+时间：首个事件 2.5 s、模型首个输出 7.2 s、首次工具 10.5 s、末次工具结束 818.4 s；工具内共 49.3 s，其余（模型生成、推理、网络）815.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×30；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T05-06-19-01a11830-450a-79f1-b001-c9e634d1588f.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-050618-strategy-proposal.jsonl

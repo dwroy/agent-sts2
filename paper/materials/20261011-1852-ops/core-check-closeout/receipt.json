@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-11T19:17:27.432483+08:00",
+  "source": "78479fe73f04b481f60d2b226805887dcc8ecfb6",
+  "expected_merge": "3b2791a4523b3ca269db3fbb6838bb3bf1054528",
+  "observed_live": "3b2791a4523b3ca269db3fbb6838bb3bf1054528",
+  "dirty_source_paths": [],
+  "verified_coverage": {
+    "tsc": 0,
+    "vitest_unique_coverage": 0,
+    "files": 269,
+    "cases": 2714,
+    "main_files": 268,
+    "main_cases": 2703,
+    "paths_files": 1,
+    "paths_cases": 11,
+    "original_wrapper_exit": 124,
+    "note": "第一入口主Vitest段全部通过；20分钟外层限时中断尾部paths，随后按原单fork命令补验11例通过。已经自动开始的入口重跑仍在运行，尚待其正常结束和释放合入锁；此回执不提前写上线登记。",
+    "logs": [
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-175453-experience-update/test-live.log",
+        "sha256": "abea3600fb008abbc2bd7274ce93ba94aed299f8dbbe7b25ee8b5f059e37c69e"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-175453-experience-update/test-live-paths-supplement.log",
+        "sha256": "72bf5a8541702ac1cebaeb1aa3e2b80bcf8f69513fd6c932170d5b151c1df692"
+      }
+    ]
+  },
+  "redundant_retry_needed": false,
+  "cancel_risk": "merge-live.py retries on any nonzero including outer124, then git reset --merge pre on nonzero retry; interrupting only retry child may roll back merged experience",
+  "broker_limitation": "kill action accepts autoplay/stop-after/play/report.py/learner.run only, not individual check wrapper; no arbitrary host shell or operator message injection used",
+  "action": "preserved original evidence and informed owner via normal inbox; active learner/play/lock unchanged"
+}

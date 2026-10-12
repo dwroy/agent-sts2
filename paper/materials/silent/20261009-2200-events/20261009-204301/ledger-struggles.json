@@ -1,0 +1,639 @@
+[
+ {
+  "id": "silent-0094",
+  "ts": "2026-10-05T12:56:58+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "静默已观察的滚石在后续玩家回合开始造成伤害并将层数加5：未升级版本R0 F35 T2建立5，T3/T4/T5为10/15/20；A5升级版本建立10，沙漏第二次T12开头69→19实际扣50后层数变55。敌格挡会抵掉这类伤害，不能把能力层数或总毒层直接当已经扣掉的血。",
+  "evidence": [
+   {
+    "run": "R0HEV5E3QT6G",
+    "floor": 35,
+    "turn": 2,
+    "role": "support",
+    "note": "未升级建立5，后续三个回合层数10/15/20，Jev已正确使用。",
+    "added": "2026-10-05T12:56:58+08:00"
+   },
+   {
+    "run": "ZE8F192FKX24",
+    "floor": 48,
+    "turn": 12,
+    "role": "support",
+    "note": "第二次滚石从T3的10开始增长；T12先见敌69、随后19，能力50→55，与毒结算分开。",
+    "added": "2026-10-05T12:56:58+08:00"
+   },
+   {
+    "run": "G403VCZ3BH1B",
+    "floor": 48,
+    "turn": 11,
+    "role": "support",
+    "note": "普通滚石两次T1建立5，后续加5，重打T11为55；末轮行动8及毒7将女王42→27，敌方13攻击后玩家18血，T12开场结束。首试T10的50层不能提前替代敌方攻击前未完成的斩杀。",
+    "added": "2026-10-06T05:34:14+08:00"
+   },
+   {
+    "run": "9TG1RP5LFAAK",
+    "floor": 48,
+    "turn": 4,
+    "role": "support",
+    "note": "实验体重打T3滚石建立5，T4首帧敌51→46实扣5、层变10；跨阶段保留玩家能力。",
+    "added": "2026-10-06T09:26:07+08:00"
+   },
+   {
+    "run": "9TG1RP5LFAAK",
+    "floor": 48,
+    "turn": 11,
+    "role": "support",
+    "note": "第三阶段首帧无实体将40滚石压为实际1，313→312，滚石层45；敏捷5、余像1、毒雾2仍保留。下一层新女王战没有继承这些能力。只记阶段与战斗边界，不把层数当已实扣。",
+    "added": "2026-10-06T09:26:07+08:00"
+   },
+   {
+    "run": "CRK2HNYKSCZC",
+    "floor": 11,
+    "turn": 2,
+    "note": "滚石5在轮初对三敌仅扣弩手2/斧手0/追踪5共7，敌格挡分别吸收3/5/0，层数升10；T3的10伤被斧手6挡抵消部分，仅扣4，追踪扣10，层数升15。",
+    "role": "support",
+    "added": "2026-10-07T02:09:21+08:00"
+   },
+   {
+    "run": "HSX4HYATB4E2",
+    "floor": 33,
+    "turn": 8,
+    "role": "support",
+    "note": "第三次T1滚石建5，T2—8轮初实扣5/10/15/20/25/30/35、末层40，配合毒以1血过关；末战六次没有施放，不计未建立收益。",
+    "added": "2026-10-07T06:25:43+08:00"
+   },
+   {
+    "run": "PD9AYQVMLQW6",
+    "floor": 49,
+    "turn": 9,
+    "role": "support",
+    "note": "末试滚石T1已建立，T9末45层、敌308/7毒，下一轮敌256/6毒、滚石50，308−7−45=256吻合；T10死后未再触发50，不能把新层数当已结算输出。s291335→291336→291342。",
+    "added": "2026-10-08T07:25:21+08:00"
+   },
+   {
+    "run": "9R916WW0V65N",
+    "floor": 48,
+    "turn": 15,
+    "role": "support",
+    "note": "末试T1建立滚石10，T2—T5为15/20/25/30、后段75；T15帧敌24而能力75随后奖励。最后归零独立来源未记录，不把75当实际伤害；本局支持逐轮增长，未分离胜因。",
+    "added": "2026-10-08T12:03:10+08:00"
+   },
+   {
+    "run": "T0DGVABPV60U",
+    "role": "support",
+    "note": "本批本角色实帧/复盘复核支持silent-rolling-boulder-start-growth；逐回合、血档及SL数据在20261008-130540审计，观察与整战因果分开。",
+    "added": "2026-10-08T13:16:50+08:00"
+   },
+   {
+    "run": "Z91JN3S3PQX2",
+    "floor": 33,
+    "role": "support",
+    "note": "T9实际建立ROLLING_BOULDER_POWER10；T10—13轮初各扣10/15/20/25，触发后层数15/20/25/30，最后30未兑现，MR_STRUGGLES伤另列。",
+    "turn": 13,
+    "added": "2026-10-08T23:47:04+08:00"
+   }
+  ],
+  "first_run": "R0HEV5E3QT6G",
+  "prior": "yes",
+  "prior_runs": [
+   "R0HEV5E3QT6G"
+  ],
+  "prior_note": "R0 F35 T2在学习者登记此机制之前已主动打出并兑现后续增长；升级版本和更晚boss的数值不能反填到旧局。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "ZE8F192FKX24",
+    "G403VCZ3BH1B",
+    "9TG1RP5LFAAK",
+    "CRK2HNYKSCZC",
+    "HSX4HYATB4E2",
+    "PD9AYQVMLQW6",
+    "9R916WW0V65N",
+    "Z91JN3S3PQX2"
+   ],
+   "experience": [
+    "silent-rolling-boulder-start-growth"
+   ],
+   "commits": [
+    "5503d1b3ae3719224305d579d9eda0550a93a24c",
+    "b30783318755f721938cbcb3c31d3bf97bff7007",
+    "25a408ef16313502ae378c36900236075ec3b262",
+    "d8feeed3f9c3a66df935f58af92d7e500f40aff4",
+    "1b425cb743eeb3cc77c1c36ffeb9d0b1d9346495",
+    "f1d951ec442548711c671cb7f9855a4ade1dc412",
+    "70f6049276ab0c9cc7aab44212edb183985c9dfc",
+    "5f0c0515a9dc4de8696f1172af9da17000a79a65",
+    "f90ba577c3111a9cda7bf1cbfebc645c3d036a01",
+    "62b4caf85ded558e5d07ef840ae882d82bc7ae2c",
+    "ee3f13cdb7b79f9f315d596e1b4c90d77e30f344",
+    "532af94889f4f9fccf6112a16175b4fe742fb142",
+    "b98c24f042896e0a0505d3ba805346c6371882ee",
+    "30c527f8479cb91f8d735168fecfa6d388636bcc",
+    "931effaf030df3a30cb9493a08b9abee463157cb",
+    "50de6fefd40afae1f26838de7879198945acbc0b",
+    "98df162d756d3eca8d0b6383f2a2398d624ab074",
+    "1a89c2d481689bf0793c89c53318c247a1ea1997",
+    "dc8a23b705f8eb21b85d9d1d1e584e35ab8d8fe5",
+    "eaa66f7c572d208a94e80b55d984a7033a728c4e",
+    "d516cdce1da2eb4a07b003657059d754aa310578",
+    "775a51367b76aec570e1b49ec8da1436cc7bb89d",
+    "5cff29a8e005363f25ac4218b793d86e592d4a82",
+    "3958e5616ae5a13318da4e4397d2805ec1f919c9",
+    "64e82e9874e55823fd524491ecfbae2aa643e7ad",
+    "5925a43d773d5eecf4442ee4e3e60d39d98ec99d",
+    "e969eb007240e6c9d0a9bfd0f6799738b3d08b9a",
+    "3bda3841756ba293f34b197542e6e9bee4dc1ed9",
+    "cfe666e2b23f85fe37215c44846b68fb5f12f3fa",
+    "f4c35b907643239ac7169a739f4baa3934103bff",
+    "be1408453ff2ae5facade7f2d78e2efeba40e641",
+    "3ae5a3c23f9a4aa6dba8a26629dfdc72e71931a4",
+    "38dfb55e377349c23435e46aa065de3d9542251f",
+    "dd07f4aa5ff392e474c575aa95c63b68e54a883a",
+    "4b1177d5a9d49ac9880c2e0fcfb524987d0fbd69"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第十五次增量：3 局 A5/A6（version 2026-10-05.15，分支 exp-silent，5503d1b3）",
+    "2026-10-06 静默猎手 第三十三次增量：1 局 A9（version 2026-10-06.8，分支 exp-silent，d8feeed3）",
+    "2026-10-06 静默猎手 第三十八次增量：1 局 A10（version 2026-10-06.13，分支 exp-silent，5f0c0515）",
+    "2026-10-07 静默猎手 第五十七次增量：2 局 A10（version 2026-10-07.3，分支 exp-silent，532af948）",
+    "2026-10-07 静默猎手 第六十三次增量：2 局 A10（version 2026-10-07.9，分支 exp-silent，50de6fef）",
+    "## 2026-10-08 静默猎手 第九十二次增量：2 局 A10（version 2026-10-08.9，分支 exp-silent，eaa66f7c）",
+    "## 2026-10-08 静默猎手 第九十六次增量：1 局 A10（version 2026-10-08.13，分支 exp-silent，3958e561）",
+    "## 2026-10-08 静默猎手 第九十七次增量：1 局 A10（version 2026-10-08.14，分支 exp-silent，3bda3841）",
+    "2026-10-09 静默猎手 第一百一十二次增量：1 局 A10（version 2026-10-09.1，分支 exp-silent，3ae5a3c2）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-075539-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-mechanisms-denominator-correction.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update/proposal-draw-growth.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-231302-postmortem/proposal-Z-combat.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-001303-experience-update/proposal-mechanisms.md"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T12:56:58+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T14:20:57+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T14:38:03+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T05:34:14+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T05:51:03+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T06:04:45+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T09:26:07+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T09:47:05+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T09:59:32+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T02:09:21+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T02:42:50+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T03:02:17+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T06:25:43+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T06:47:29+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T06:57:48+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T07:25:21+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T08:06:22+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T08:06:22+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T08:26:01+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T08:41:50+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T12:03:10+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T12:18:44+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T12:19:13+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T12:21:47+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T12:32:01+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T12:40:26+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T13:16:50+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T13:16:52+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T13:22:36+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T13:32:09+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T23:47:04+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T23:52:15+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T00:24:16+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T00:24:18+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T00:40:58+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-09T00:50:34+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp112",
+  "effect": null,
+  "notes": [
+   "静默经验2026-10-05.15：本角色全部二十局重抽、旧十七局复算一致；固定沙箱tsc0/170文件1973例，新增证据范围与进阶见第十五次增量。只proposed，实际合入交运维按完成事件登记shipped；不登记0099模型bug已修。",
+   "14:35 experience-done确认经验2026-10-05.15实际live合入、S1.exp15唯一；源沙箱tsc0/170文件1973例，合后tsc0/172文件1982例，无重跑，七项知识刷新保留。仅经验条目上线，非机制模型修复；silent-0100的独立S1.strategy2阶段事实代码上线历史保留，0099模型提案未修。完整外部检查待调度器后续事件。",
+   "静默经验2026-10-06.8；旧39局同口径复算一致，G403VCZ3BH1B A9通关补证。first_run/prior/旧repeat保留；未隔离的路线/构筑/SL整场胜因写观察，原用药句保留，不新增使用规则。只proposed，实际合入交运维据完成事件登记shipped。",
+   "05:59 experience-done机械核实静默经验第33批2026-10-06.8已实际合入live，登记唯一S1.exp33；来源G403VCZ3BH1B SILENT A9及旧39本角色完局，源tsc0/190文件2094例、合后tsc0/191文件2095例。保留学习者first_run/prior/claim/evidence及全部repeat历史，不倒算在已结束局生效、不另设审核。0151机制文字与0150模型代码缺口分别记录，0150仍observed；A10新0153/0154/0155不纳入本经验批次。完整外部结果留后续事件。",
+   "静默第38次增量2026-10-06.13；9TG1RP5LFAAK A10与旧44静默局逐行复算一致。只登记proposed，实际合入由运维据完成事件核实后CLI登记shipped；first_run/prior/repeat及旧上线历史保持。机制分支、可比帧、阶段/换战、SL与血档分母见变更记录。药水原句保持，无新用药规则，无单项整战胜因外推。",
+   "09:55 experience-done机械核实第38批经验2026-10-06.13已实际合入live并登记唯一S1.exp38；来源9TG1RP5LFAAK SILENT A10及旧44本角色完局。源及合后tsc0/195文件2118例（源草稿通过后最终复测、合后首过），七份已提交自动刷新保持。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，连续Boss投影0163保持原shipped/S1.fix27，与0159/S1.strategy6和0153/S1.fix26独立。完整外部补测留后续事件。",
+   "静默经验2026-10-07.3：仅proposed；首证、先验、旧claim/版本/repeat保持，实际合入后由运维登记shipped。新证据仅非药水部分，无用药规则/替代整战因果。",
+   "02:55 experience-done机械确认20261007-021219-experience-update：源532af948→实际liveb98c24f0→固定发布30c527f8/唯一S1.exp57，main已同步经验2026-10-07.3。沿DPYF2BAA3DKT、CRK2HNYKSCZC SILENT A10及本角色历史，新增1更新19（15补证/1只数字/3压缩）退役0、active128/51683字，无新用药规则。前三轮旧稿各210文件2254例通过但不作定稿凭据，期间SL口径/元数据/步法全角括号n修正及冻结守卫历史保留；第四轮冻结源tsc0/vitest0、210文件2254例，合后首轮tsc0/vitest0、212文件2275例通过，差21例为live既有fix39+strategy9。refresh=[]、知识重叠/冲突0、其他知识保持，无源码/生成器/其他角色改动。临时草稿错误、修正、原第57节/22行proposed/四轮源与合后自测原件保存，非生产代码或最终自测失败。本批仅CLI/by=ops二十二项shipped，首证/先验/claim/全部证据/repeat与历史保持。新增机制映射既有0200，首证LRN0HPZ0FZS1/A0/prior=unknown保持；独立0199及并行0202不纳入或代登记，0201/strategy9、0172/fix39、0197/fix38及其他旧状态/版本保持。完整外部待本批learner-checks，无Roy待定，后台产出及对局继续。",
+   "06:55 experience-done机械确认20261007-063003-experience-update：源50de6fef→实际live 98df162d→固定发布1a89c2d4/唯一S1.exp63，main已同步经验2026-10-07.9及七项锁内知识刷新，无代码/生成器/手写知识/其他角色变动。来源HSX4HYATB4E2/WYB0NCD6W83J A10及有效勘误、本角色历史；新增2更新19全补证退役0、active135/49258字，无新用药规则。初稿源、28项文字更正后定稿源及合后三次沙箱均tsc0/vitest0、214文件2289例通过，无测试失败/超时；预检rc0知识冲突0、其他知识blob保持。仅CLI/by=ops本批24项shipped覆盖21项经验，0211首证沿学习者更正T082DRCUHRRD/A0/prior=yes、原R0先验/23份support/旧首证历史保持；其他claim/首证/先验/repeat不重置。旧attempts断言失败与TD1专用取数修正、初稿32→28项文字更正、台账空evidence拒绝零行及修正、initial-*及全部原件归档保留，不当生产故障或自测失败。0207 exp62及其他旧版本/失败历史保持，原过滤摘要不冒称完整逐例日志，完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。",
+   "第92批经验提交前提案预关联；保留首证/prior/原claim/repeat与旧上线历史，源码交独立strategy-proposal。",
+   "代码提案 silent-proposal-c2888032d1337388 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第92批源提交已完成；仅追加本批经验去处，原first_run/prior/claim/support/repeat与旧上线版本历史保持。三个代码提案独立strategy-proposal，学习者不标accepted/implemented/shipped。",
+   "第92次经验原数据2026-10-08.8→.9/增1改20退0/168 active，源eaa66f7c唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记22所属经验数据shipped。源247文件2604例tsc/vitest0，当前源码/测试/任务与固定完整通过7ed2bb0a逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，三个combat/potion/SL/terminal/structure代码提案沿原自动链，数据上线不表示代码实现；原out/err/report/failed及20项记录冲突历史不改。",
+   "提交前关联本批经验来源；保持首证/prior/claim/旧上线历史，提交后再登记proposed。",
+   "代码提案 silent-proposal-20b9df170d51b280 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-91cc7fd647077569 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "本批经验已提交；首证/prior/claim和旧上线历史保持。经验数据发布与策略代码实现分账，由运维核实实际合入再登记shipped。",
+   "第96次经验原数据2026-10-08.12→.12/增2改17退0/175 active，源3958e561唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记18所属经验数据shipped。源首轮中断130原件保留、重试248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0290/0291纯bug保持原观察/提案状态，不标代码实现；0292首证LRN0HPZ0FZS1/A0及partly先验保持。",
+   "第97批经验提交前关联；保留首证/prior/claim/支持与重犯及既往上线历史，源提交后登记proposed。",
+   "代码提案 silent-proposal-e406c9312e1c329a → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第97批源提交完成；保留首证/prior/claim/support/repeat和旧上线历史，经验发布与策略实现分账，shipped交运维据实际live版本登记。",
+   "第97次经验原数据2026-10-08.13→.14/增1改15退0/176 active，源3bda3841唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记19所属经验数据shipped。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，四个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0293纯bug保持原观察/提案状态，不标代码实现；0294首证ZE8F192FKX24/A5及unknown先验保持。",
+   "20261008-231302-postmortem：核本局实盘后补支持，保持旧claim/first_run/prior/status/version与全部历史；未执行线不当整场因果。",
+   "代码提案 silent-proposal-1de0737d94ac87f5 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第112批提案预关联；原claim/首证/prior/状态/版本及support/repeat保持，源提交后登记proposed。新局原帧/层/轮见numbers-checked和本任务audit。",
+   "代码提案 silent-proposal-ab3bf902b22662f4 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第112批经验已提交；仅登记proposed，实际数据shipped交运维据完成事件核实。代码提案未实现，旧首证/prior/claim/证据及状态/版本历史保持。",
+   "第一百一十二次经验仅原数据2026-10-08.28→2026-10-09.1，源3ae5a3c2增0改15退0/186 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp112。按原学习者ledger-map仅18所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/structure代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/16冲突/out/err/失败历史保持。"
+  ],
+  "shipped_at": "2026-10-09T00:50:34+08:00"
+ },
+ {
+  "id": "silent-0162",
+  "ts": "2026-10-06T07:31:06+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "抱抱先生的轮初自动伤与卡牌行动伤必须分账，遗物文本为轮初向全体造成当前回合数的伤害。最早静默实测KAY522KT5NXR F27 T1两异螨在卡牌出手前61/66→60/65；本局帝王蟹首轮两侧各扣1，末次T3结束前无毒火箭171血，T4首次决策前167血，独立对应4轮初伤。没有移除遗物的受控胜负，不把自动伤害推断为大脑已学会构筑或全部胜因。",
+  "evidence": [
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 27,
+    "turn": 1,
+    "note": "19:19:26.821Z两异螨61/66血，19:19:30.764Z为60/65；两帧玩家cards_played_this_turn均0，之后才喝力量药水和出攻击。",
+    "role": "support",
+    "added": "2026-10-06T07:31:06+08:00"
+   },
+   {
+    "run": "JLN5SK17W4FQ",
+    "floor": 33,
+    "turn": 1,
+    "note": "首帧两侧219/209，首次可出牌状态218/208，抱抱先生持有；按开场各1和后续净扣分账。",
+    "role": "support",
+    "added": "2026-10-06T07:31:06+08:00"
+   },
+   {
+    "run": "JLN5SK17W4FQ",
+    "floor": 33,
+    "turn": 4,
+    "note": "末次T3没有攻击或施毒火箭，结束前仍171；T4首次决策前167，符合轮初4伤，不能计作上轮铭记死亡的直伤。",
+    "role": "support",
+    "added": "2026-10-06T07:31:06+08:00"
+   },
+   {
+    "run": "F9PP859XZ3RJ",
+    "role": "support",
+    "note": "静默日志可比前后帧复核；具体数字、进阶和观察限制见第三十六次增量及silent-mr-struggles-turn-start-damage",
+    "added": "2026-10-06T07:49:54+08:00"
+   },
+   {
+    "run": "2SU6XN2AEJRD",
+    "role": "support",
+    "note": "静默日志可比前后帧复核；具体数字、进阶和观察限制见第三十六次增量及silent-mr-struggles-turn-start-damage",
+    "added": "2026-10-06T07:49:54+08:00"
+   },
+   {
+    "run": "NHA2KW0RB7VP",
+    "role": "support",
+    "note": "本批重新抽取静默复盘/状态/决策验证；子公式、层/回合和限制见本批report.md及silent-mr-struggles-turn-start-damage",
+    "added": "2026-10-08T00:57:32+08:00"
+   },
+   {
+    "run": "BJLTVSYXCSGS",
+    "floor": 42,
+    "turn": 3,
+    "role": "support",
+    "note": "抱抱先生轮初自动伤与毒分账：无旧毒的第二方柱T2末58→T3首55，实3；F35T1题面43行动伤、至次轮净进度47含两体轮初各2，T2行动39至次轮42含剩体3。s300409/300412/300417、300589→300590。",
+    "added": "2026-10-08T16:31:27+08:00"
+   },
+   {
+    "run": "Z91JN3S3PQX2",
+    "floor": 33,
+    "role": "support",
+    "note": "沙虫T10—13轮初MR_STRUGGLES各扣10/11/12/13合46，与滚石10/15/20/25合70分账；T13尚未兑现下轮滚石30，不预支下一轮遗物或能力伤。",
+    "turn": 13,
+    "added": "2026-10-08T23:47:04+08:00"
+   },
+   {
+    "run": "XZUJR08FW801",
+    "floor": 29,
+    "role": "support",
+    "note": "静默原字节与历史复核，具体窗口见本批changes.json/verification.json；抱抱先生轮初自动伤与牌、毒、荆棘分账。机制：现场文本按当前回合数群伤、按余血截断，死亡后窗口不预支；同窗缺帧不强拆。搭配：当前活敌与触发窗口合核。决定胜负的战斗：8支持/0反例，移除遗物整战未知（n=8）。典型案例：Z91JN3S3PQX2沙虫T10—13实扣10/11/12/13；XZUJR08FW801 F29四次T1结束生成21血幻象，T2轮初两敌各再扣2、幻象19；末T2中和再4至15，毒只给原怪结6，不把轮初群伤当牌伤或预支T3伤。",
+    "added": "2026-10-09T11:27:02+08:00"
+   }
+  ],
+  "first_run": "KAY522KT5NXR",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "更早本角色复盘没有持有抱抱先生后的可比状态；首见的自动触发不作为大脑事先理解其时点或伤害数值的证据。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "JLN5SK17W4FQ",
+    "BJLTVSYXCSGS",
+    "Z91JN3S3PQX2"
+   ],
+   "experience": [
+    "silent-mr-struggles-turn-start-damage"
+   ],
+   "commits": [
+    "2d5846a2a309fd8b9e7231e96cef923cb07f1778",
+    "141df6140cada59c3ad4960fd69aebf0a0749eeb",
+    "5706f2664b8cd841d5c402cdade4a83bb05d794f",
+    "4a90d3570607a56e34e1dc6924d74987c06926b5",
+    "b48108b7e6c12c4256c21b7e64f13ba8f15ac992",
+    "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+    "10c53de98c54b118660b8a478bbdedba548dd1c8",
+    "b6c4b534a27f1bb95a518a524c49ff4c62d2b11b",
+    "74c48edda9411ad30e44cedf1193acc88253b1a7",
+    "2977ebba7536c274b2bd180d3a87bd1607115d82",
+    "2a43e67c538de7f63d0bfa1d3b9fcb11fe93c380",
+    "3ae5a3c23f9a4aa6dba8a26629dfdc72e71931a4",
+    "38dfb55e377349c23435e46aa065de3d9542251f",
+    "dd07f4aa5ff392e474c575aa95c63b68e54a883a",
+    "4b1177d5a9d49ac9880c2e0fcfb524987d0fbd69",
+    "9bf2c5a961961f7ad40e94cab5a6a9d814b8655d",
+    "761272f5eccdf5fefc15e41ca02058d137c083a3",
+    "10168ac71ecdbd5cf5209cc9e865fcd387e6d71e",
+    "cc4ad4b9262e22e980223b4daec08d23201528bc"
+   ],
+   "changelog": [
+    "2026-10-06 静默猎手 第三十六次增量：1 局 A10（version 2026-10-06.11，分支 exp-silent，2d5846a2）",
+    "2026-10-08 静默猎手 第八十四次增量：1 局 A10（version 2026-10-08.1，分支 exp-silent，4a90d357）",
+    "## 2026-10-08 静默猎手 第一百零三次增量：2 局 A10（version 2026-10-08.20，分支 exp-silent，b6c4b534）",
+    "2026-10-09 静默猎手 第一百一十二次增量：1 局 A10（version 2026-10-09.1，分支 exp-silent，3ae5a3c2）",
+    "2026-10-09 静默猎手 第一百二十八次增量：1 局 A10（version 2026-10-09.17，分支 exp-silent，9bf2c5a9）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-161301-postmortem/proposal-combat-sl.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-170939-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-231302-postmortem/proposal-Z-combat.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-001303-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-111625-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-111625-experience-update/proposal-mechanisms-correction.md"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-06T07:31:06+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T07:49:54+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T08:04:36+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T00:57:32+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T00:57:32+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T01:16:20+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T01:39:02+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T16:31:27+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T16:33:17+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T17:22:52+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T17:22:54+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T17:38:38+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T17:47:25+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T23:47:04+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T23:52:15+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T00:24:16+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T00:24:18+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T00:40:58+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-09T00:50:34+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-09T11:27:02+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T11:27:05+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T11:29:22+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T11:46:16+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-09T12:00:04+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp128",
+  "effect": null,
+  "notes": [
+   "静默第三十六次经验增量2026-10-06.11：仅proposed，交运维核实际合入后经CLI登记shipped；保留first_run/prior/repeat及历史。新局JLN5SK17W4FQ A10、旧42局汇总逐行复算；巨兽自爆减力仅一具体分支，单侧蟹增益和轮初自动伤有本角色旧帧；药水使用原文不变，不作整战因果外推。",
+   "08:00 experience-done机械核实第36批经验2026-10-06.11已实际合入live并登记唯一S1.exp36；来源JLN5SK17W4FQ SILENT A10及旧42本角色完局。草稿tsc0/193文件2105例，最终源码及合后tsc0/194文件2112例，原草稿和文字校正历史保留，合后首过。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，0159/S1.strategy6与0153/S1.fix26独立。完整外部补测留后续事件。",
+   "经验第84批提交前证据/提案关联；首证、先验、claim、旧repeat与上线历史保持，本次尚未登记上线。",
+   "代码提案 silent-proposal-04b6b430759815ed → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第84次静默经验；本批新增/更新数据已提交，来源局NHA2KW0RB7VP及核实油灯历史三局。首证、先验、claim、旧support/repeat与上线历史保持；独立strategy-proposal实现任务已关联，学习者不标accepted/shipped。",
+   "经验第84次原数据2026-10-07.29→2026-10-08.1/增1改13退0/159 active已实际兜底发布；仅按原ledger-map登记本所属经验数据shipped。源及实际合后原沙箱均242文件2540例tsc/vitest0，集成原blob相等。原首证/先验/claim/全部support/repeat/旧上线历史保持；两个出牌/SL/terminal代码提案仍沿独立自动链，经验文字上线不等于代码实现、不宣称旧bug修复。原out/err/failed不改，完整外部原批另续验。",
+   "代码提案 silent-proposal-b49c2e6f5d25e8ba → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第103批提交前关联两局实帧/勘误；保留首证/prior/claim和历史状态，提交后登记proposed。",
+   "代码提案 silent-proposal-00a6a10b15a62b38 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第103批经验源提交完成；保留首证/prior/claim及历史证据/版本；实际shipped交运维核live，经验发布不当策略代码实现。",
+   "第一百零三次经验仅原数据.19→.20，源b6c4b534增0改22退0/176 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp103。按原学习者ledger-map仅21所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/21冲突/out/err/失败历史保持。",
+   "20261008-231302-postmortem：核本局实盘后补支持，保持旧claim/first_run/prior/status/version与全部历史；未执行线不当整场因果。",
+   "代码提案 silent-proposal-1de0737d94ac87f5 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第112批提案预关联；原claim/首证/prior/状态/版本及support/repeat保持，源提交后登记proposed。新局原帧/层/轮见numbers-checked和本任务audit。",
+   "代码提案 silent-proposal-ab3bf902b22662f4 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第112批经验已提交；仅登记proposed，实际数据shipped交运维据完成事件核实。代码提案未实现，旧首证/prior/claim/证据及状态/版本历史保持。",
+   "第一百一十二次经验仅原数据2026-10-08.28→2026-10-09.1，源3ae5a3c2增0改15退0/186 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp112。按原学习者ledger-map仅18所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/structure代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/16冲突/out/err/失败历史保持。",
+   "第128次经验/提案预关联；只追加，保持旧claim/首证/prior/状态/版本与所有证据。源提交后登记proposed。",
+   "代码提案 silent-proposal-cea59b906fb4dbd7 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-c768ec79a4db1e18 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第128次经验已完成源提交，登记本批经验proposed；保留首证/prior/claim/历史证据与旧版本。实际live数据shipped由运维据完成事件登记，四份源码提案（含一份更正）仍pending；F23有1力，仅F25/F27/F29无玩家力敏，不扩大为整局。",
+   "第一百二十八次经验仅原数据2026-10-09.16→2026-10-09.17，源9bf2c5a9增2改15退0/196 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp128。仅18所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；四combat/potion/sl/terminal/structure源码提案（含一份更正）沿自动链，不标源码实现。原merged-null/18项记录论文冲突及探索核验失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。"
+  ],
+  "shipped_at": "2026-10-09T12:00:04+08:00"
+ }
+]

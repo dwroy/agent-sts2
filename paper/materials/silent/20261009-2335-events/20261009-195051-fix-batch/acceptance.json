@@ -1,0 +1,40 @@
+{
+ "accepted": false,
+ "reasons": [
+  "t1 leak worsened",
+  "pre leak worsened",
+  "no bias entered/approached its fixed standard"
+ ],
+ "improved": [],
+ "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+ "isolation": {
+  "passed": true,
+  "base": "eaf3ac162afe487705d5b46ab049871308022173",
+  "head": "0028f43d9559f6a0e02e717abb9e7acb9e2e8007",
+  "output_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+  "candidate_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+  "shared_changes": [
+   "agent/src/reflex/rollout.ts",
+   "agent/src/sim/boss-sim.ts",
+   "agent/tests/boss-sim-silent-queen-buff.test.ts"
+  ],
+  "runner": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch/acceptance/source-eaf3ac162afe487705d5b46ab049871308022173/agent/tools/boss-sim/isolation.ts",
+  "outputs": [
+   "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch/acceptance/before.isolation.json",
+   "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch/acceptance/after.isolation.json"
+  ]
+ },
+ "character": "silent",
+ "boss": "QUEEN",
+ "mode": "b4",
+ "inputs": {
+  "before": {
+   "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch/before-trust.json",
+   "sha256": "918d49576957a7a33a57e5b62d77a746fda1a05a71af48ccf77b0024f0b23cd2"
+  },
+  "after": {
+   "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch/after-trust.json",
+   "sha256": "70815a1544e98c84413740ca05e10dcfa5bc629a15cbc187e64be7398b6faa30"
+  }
+ }
+}

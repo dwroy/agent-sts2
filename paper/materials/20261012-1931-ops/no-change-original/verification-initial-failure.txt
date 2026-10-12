@@ -1,0 +1,3 @@
+首次verify_raw.py退出1：前批已验证材料含本批未派发的53FLQ68CETW0，角色/局号断言在输出该局之前拒绝。v2先筛选本批七局；保留首次部分输出，不扩大派发范围。另首次识别BTS indexed文件格式时按JSONL解析，报Extra data；该文件实际为line:offset:JSON，后续改用带_offset的原JSON索引。
+首次账本折叠误传dict序列，ledger.fold要求(line,row)二元组，ValueError；仅只读内存失败，尚未调用写入CLI。按enumerate输入修正。
+可选TypeScript去注释审计因当前node_modules无typescript模块报MODULE_NOT_FOUND；未运行tsc，不能当tsc失败。改为逐行核9路径：长度一致，所有差异严格只有注释内Roy/Dai替换，其他字节一致，结果source-equivalence.json。

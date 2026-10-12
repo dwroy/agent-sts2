@@ -1,0 +1,31 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-051302-s2/agent
+
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 161ms
+     × all resolve 160ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+Error: ENOENT: no such file or directory, stat '/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-051302-s2/learner/runs/20261012-051312-strategy-proposal/tmp9j2vlnt8'
+ ❯ tools/check-imports.ts:28:12
+     26|     if (name === "node_modules" || name.startsWith(".")) return [];
+     27|     const path = join(dir, name);
+     28|     return statSync(path).isDirectory() ? files(path) : CODE.test(name…
+       |            ^
+     29|   });
+     30| }
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+ ❯ tools/check-imports.ts:28:43
+ ❯ files tools/check-imports.ts:25:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 317 passed (318)
+      Tests  1 failed | 3151 passed (3152)
+   Start at  05:21:54
+   Duration  267.56s (transform 10.05s, setup 15.64s, import 42.53s, tests 968.35s, environment 33ms)
+

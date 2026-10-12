@@ -1,0 +1,310 @@
+[
+ {
+  "id": "silent-0245",
+  "ts": "2026-10-07T19:56:42+08:00",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "知识恶魔懒惰3名额下，求解器按手动步骤数扣名额，未消费防御重放的额外一次，现场剩余额度又仅减cards_played_this_turn。末试T8计划重放防御、打击、中和报损0伤34；实际原始手动计数2时中和已被SLOTH_POWER锁住，虚弱没有建立，1血14挡对16阵亡，实际扣敌31。定位当前live turn-solver.ts:3729—3730、:1713及combat-plan.ts:4724；与已修0199的跨回合凋萎计数分账，不声称修复能赢整场。",
+  "evidence": [
+   {
+    "run": "KV0JHNJCKXLS",
+    "floor": 33,
+    "turn": 8,
+    "role": "support",
+    "note": "末试decisions:273512—273514，states:279574—279577：防御重放14挡后打击6，手动计数2，中和0费仍被SLOTH_POWER锁，1血对16/14挡阵亡；第二/三试同条件SL截断无死亡结算。",
+    "added": "2026-10-07T19:56:42+08:00"
+   }
+  ],
+  "first_run": "KV0JHNJCKXLS",
+  "prior": "unknown",
+  "prior_runs": [
+   "1LMBFGSMCWKU",
+   "5PM6JAQG6FNQ"
+  ],
+  "prior_note": "按静默账本与早局复盘查询懒惰、SLOTH、重放和手动计数；A4早局有懒惰但未找到本项重放防御占名额导致后续中和被锁的可比记录；A10早局已过恶魔后才取子弹时间。0199是另一入口，不当作本项先验已做对。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "KV0JHNJCKXLS"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-194301-postmortem/proposal-sloth-replay.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/report.md",
+    ".worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/report.md"
+   ],
+   "commits": [
+    "790b76d00dc23dedb970cb82a00cb3db6ff1cbb7",
+    "a16518c4201bfc324b185cb2b75eb34ff309676e",
+    "f631c31b7a388a663676a7d691c5df0202ca05ea",
+    "3bdb3a37b106e80790bbe177bc05a226729f674c"
+   ]
+  },
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-07T19:56:42+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T20:00:16+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T01:32:46+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T02:41:05+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.sloth-replay1",
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-a0853bed869d77fa → task=strategy-proposal；Roy-2026-10-07-learning",
+   "本批20261008-010309逐项处置见proposal.md/report.md；仅懒惰额度有本地已测源码，其余9项具体缺口保留waiting。此行登记proposed和链接，不冒报live实现或shipped；保留原首证、先验、证据和既往上线历史。",
+   "原010309策略源790b76d0记录冲突受阻兜底现已实际成为live/main祖先；仅原已观察静默A10/KV0JHNJCKXLS F33第6次T8、SLOTH_POWER3+普通Defend显式重放1的额外出牌额度，区分手动次数/重放次数并贯穿求解/重规划/整场。最后名额及未观察牌/叠加/角色边界未知，不改变SL权重、药水或终局规则、不承诺通关。源原沙箱243文件2554例0、最终撤码7红/恢复14绿及旧凋萎10绿，实际合后同243文件2554例tsc/vitest0/4workers。只关联本已实现范围，首证/先验/claim及全部support/repeat/旧状态历史保留；0247机制文字不由运维增加，完整外部原批另续验。"
+  ],
+  "shipped_at": "2026-10-08T02:41:05+08:00"
+ },
+ {
+  "id": "silent-0247",
+  "ts": "2026-10-07T19:57:57+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局懒惰SLOTH_POWER的3次名额包含防御的重放1：T8防御给7×2=14挡、再手动打击后，原始cards_played_this_turn仅2，0费中和尚1能量仍被SLOTH_POWER锁住。它限制实际打出而非仅CLI动作数；仅观察该附魔及3名额组合，不推广其他自动牌或限额。实际死亡1血14挡对16，额外一次防御也少2挡。",
+  "evidence": [
+   {
+    "run": "KV0JHNJCKXLS",
+    "floor": 33,
+    "turn": 8,
+    "role": "support",
+    "note": "states:279574—279577，第二/三次同条件在279391/279433被SL截断，末次有结算；DEFEND_SILENT重放1、STRIKE_SILENT、NEUTRALIZE封锁。",
+    "added": "2026-10-07T19:57:57+08:00"
+   },
+   {
+    "run": "KFRDELW2TH2P",
+    "floor": 33,
+    "turn": 7,
+    "note": "本局没有旧防御重放计数根因：末试手上技法/防御/刺击三个手动动作已用满SLOTH_POWER3，余1能量的奇巧爆发被其锁住；T6两斗篷所生两小刀也未能追加。限额事实支持旧机制，奇巧目标未兑现单独记0274，不重复报0245。",
+    "role": "support",
+    "added": "2026-10-08T05:54:26+08:00"
+   }
+  ],
+  "first_run": "KV0JHNJCKXLS",
+  "prior": "unknown",
+  "prior_runs": [
+   "1LMBFGSMCWKU"
+  ],
+  "prior_note": "早局有懒惰但复盘没有这一重放防御占额的可比记录；silent-0200是余像/凋萎重放计数的不同触发器，不代替本项机制观察。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "KV0JHNJCKXLS",
+    "KFRDELW2TH2P"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-194301-postmortem/proposal-sloth-replay.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-200255-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/report.md",
+    ".worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/report.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-054302-postmortem/proposal-sloth-potion.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-061302-experience-update/proposal-sl-selection.md"
+   ],
+   "experience": [
+    "silent-knowledge-demon-sloth-replay-observation"
+   ],
+   "commits": [
+    "6579082a9e6bc643a0186c5a8a092422d6937f4e",
+    "c10209e14d2a1a2f3463555fa088684ccdecf856",
+    "31914e4ba652d6e8466a4a99f04128005166ecf2",
+    "790b76d00dc23dedb970cb82a00cb3db6ff1cbb7",
+    "a16518c4201bfc324b185cb2b75eb34ff309676e",
+    "f631c31b7a388a663676a7d691c5df0202ca05ea",
+    "3bdb3a37b106e80790bbe177bc05a226729f674c",
+    "6e94f690ea66016fe79318b7c366068b0b537e22",
+    "ad42585dcdd8b7b0ca0cce5a8f7bd35ea188ecf4",
+    "c1dd721fe682910095768eb4007cb836b6991152",
+    "16dd9bc3f8bc0aae439c3b38621e4d664c4be500"
+   ],
+   "changelog": [
+    "2026-10-07 静默猎手 第七十九次增量：1 局 A10（version 2026-10-07.25，分支 exp-silent，6579082a）",
+    "## 2026-10-08 静默猎手 第九十次增量：1 局 A10（version 2026-10-08.7，分支 exp-silent，6e94f690）"
+   ]
+  },
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-07T19:57:57+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T20:00:16+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T20:12:55+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T20:12:59+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T20:26:59+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T20:51:44+08:00",
+    "by": "ops:codex",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T01:32:46+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T02:41:05+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T05:54:26+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T05:55:49+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T06:23:32+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T06:23:33+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T06:37:48+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T06:56:17+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp90",
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-a0853bed869d77fa → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第79次经验增量预先关联已核实机制与代码提案；提交/变更记录及proposed状态在源提交之后补记，未冒报实现或上线。",
+   "代码提案 silent-proposal-e50a24aadfa84fe6 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第79次静默经验增量；只关联本角色已核实证据及源提交，保留首证/先验/claim/旧support与repeat/历史版本。不同子公式分母分开，不将整战失败当机制反例；未登记implemented或shipped。",
+   "20:34兜底将经验.23/.24累计到.25原blob，真实合入后登记唯一S1.exp79；这里只登记该条经验数据的实际发布，出牌/药水/SL代码提案独立续办，未宣称实现；首证、先验、claim及所有旧历史保持。",
+   "本批20261008-010309逐项处置见proposal.md/report.md；仅懒惰额度有本地已测源码，其余9项具体缺口保留waiting。此行登记proposed和链接，不冒报live实现或shipped；保留原首证、先验、证据和既往上线历史。",
+   "原010309策略源790b76d0记录冲突受阻兜底现已实际成为live/main祖先；仅原已观察静默A10/KV0JHNJCKXLS F33第6次T8、SLOTH_POWER3+普通Defend显式重放1的额外出牌额度，区分手动次数/重放次数并贯穿求解/重规划/整场。最后名额及未观察牌/叠加/角色边界未知，不改变SL权重、药水或终局规则、不承诺通关。源原沙箱243文件2554例0、最终撤码7红/恢复14绿及旧凋萎10绿，实际合后同243文件2554例tsc/vitest0/4workers。只关联本已实现范围，首证/先验/claim及全部support/repeat/旧状态历史保留；0247机制文字不由运维增加，完整外部原批另续验。",
+   "代码提案 silent-proposal-0ea5c0b9c030fdd6 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第90批经验提案预关联；原claim、首证、prior、repeat和旧上线历史保留，提交后proposed，源码另交strategy-proposal。",
+   "代码提案 silent-proposal-b3bc0eb09211af6c → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第90批静默经验源提交已完成；保留原claim/首证/prior/repeat及旧上线历史，学习者不标accepted/shipped。三经验代码提案仅pending，实际源码实现由独立strategy-proposal核。",
+   "经验第90次原数据2026-10-08.6→.7/增4改9退0/165 active，源6e94f690唯一experience.json净blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源原沙箱245文件2586例tsc/vitest0，当前源码/测试/任务与已完整外部通过49c01a02逐blob等价，保留子弹时间六路径及刷新。data-only免重复沙箱，不冒报新树通过，完整外部原批另续验。原首证/先验/claim及support/repeat/旧状态历史保持；三个combat/potion/SL/terminal/structure提案沿原自动链，数据上线不等于代码已实现；原out/err/report/failed/18冲突不改。"
+  ],
+  "shipped_at": "2026-10-08T06:56:17+08:00"
+ },
+ {
+  "id": "silent-0274",
+  "ts": "2026-10-08T05:53:59+08:00",
+  "character": "silent",
+  "kind": "card",
+  "claim": "静默A10知识恶魔的懒惰3名额窗口内，手上技法把奇巧给爆发不等于额外技能收益。本局六次T7都选爆发，随后实际防御与带毒刺击用满三牌，爆发有能量仍被SLOTH_POWER锁住，未建立增益；应按剩余名额及可执行后续牌核对奇巧兑现。未实打另一目标／另一顺序，不证明换目标可赢，也不判手上技法本身7挡无效。",
+  "evidence": [
+   {
+    "run": "KFRDELW2TH2P",
+    "floor": 33,
+    "turn": 7,
+    "note": "六次选择decisions282864/282899/282933/282968/283001/283035均给BURST奇巧；末试states289533—289537手上技法7挡＋防御5挡、再刺击三牌满，有1能量的BURST被SLOTH_POWER锁住，末9血对36攻击及14总挡死亡。",
+    "role": "support",
+    "added": "2026-10-08T05:53:59+08:00"
+   }
+  ],
+  "first_run": "KFRDELW2TH2P",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "检索静默账本HAND_TRICK/手上技法/奇巧/BURST/懒惰及此前静默复盘，旧0247为附魔防御重放计数，0115为爆发机制；历史五段同含手上技法与爆发的记录没有可比的SLOTH下奇巧目标兑现证据，不据其共同持牌推断先验做对。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "KFRDELW2TH2P"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-054302-postmortem/proposal-sloth-potion.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-061302-experience-update/proposal-sl-selection.md"
+   ],
+   "experience": [
+    "silent-hand-trick-sly-card-limit"
+   ],
+   "commits": [
+    "6e94f690ea66016fe79318b7c366068b0b537e22",
+    "ad42585dcdd8b7b0ca0cce5a8f7bd35ea188ecf4",
+    "c1dd721fe682910095768eb4007cb836b6991152",
+    "16dd9bc3f8bc0aae439c3b38621e4d664c4be500"
+   ],
+   "changelog": [
+    "## 2026-10-08 静默猎手 第九十次增量：1 局 A10（version 2026-10-08.7，分支 exp-silent，6e94f690）"
+   ]
+  },
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-08T05:53:59+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-08T05:55:49+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T06:23:32+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T06:23:33+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T06:37:48+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T06:56:17+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp90",
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-0ea5c0b9c030fdd6 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第90批经验提案预关联；原claim、首证、prior、repeat和旧上线历史保留，提交后proposed，源码另交strategy-proposal。",
+   "代码提案 silent-proposal-b3bc0eb09211af6c → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第90批静默经验源提交已完成；保留原claim/首证/prior/repeat及旧上线历史，学习者不标accepted/shipped。三经验代码提案仅pending，实际源码实现由独立strategy-proposal核。",
+   "经验第90次原数据2026-10-08.6→.7/增4改9退0/165 active，源6e94f690唯一experience.json净blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源原沙箱245文件2586例tsc/vitest0，当前源码/测试/任务与已完整外部通过49c01a02逐blob等价，保留子弹时间六路径及刷新。data-only免重复沙箱，不冒报新树通过，完整外部原批另续验。原首证/先验/claim及support/repeat/旧状态历史保持；三个combat/potion/SL/terminal/structure提案沿原自动链，数据上线不等于代码已实现；原out/err/report/failed/18冲突不改。"
+  ],
+  "shipped_at": "2026-10-08T06:56:17+08:00"
+ }
+]

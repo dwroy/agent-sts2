@@ -1,0 +1,205 @@
+{
+  "recorded_at_cst": "2026-10-08 07:30",
+  "base_head": "5007c7865d47b308a12ec302ca6e865ce0e75ee6",
+  "batch": "20261008-071302",
+  "run": "PD9AYQVMLQW6",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "PD9AYQVMLQW6"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "PD9AYQVMLQW6",
+        "where": "agent/src/reflex/turn-solver.ts:1740",
+        "what": "旧silent-0268复现：普通生存者的强制单弃仍仅在绷带收益大于0时消费，末轮持牌伤与死亡阶段推演不准",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0228",
+        "silent-0239",
+        "silent-0268",
+        "silent-0083",
+        "silent-0005",
+        "silent-0023",
+        "silent-0024",
+        "silent-0094"
+      ],
+      "repeats": [
+        "silent-0268"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-33f42d310878caa7",
+      "silent-proposal-9e00f95f7cf1e2d4",
+      "silent-proposal-d7b8d36cf3d0303d"
+    ],
+    "implementation_domains": [
+      "combat",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/report.md"
+  },
+  "originals": {
+    "paper/materials/silent/20261008-0729-events/20261008-071302.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-071302.out",
+      "bytes": 2718,
+      "sha256": "b13a37f6f5f8697ecd615083d5d7942e54de96bcd36ccad69a73c35ff534e7c6"
+    },
+    "paper/materials/silent/20261008-0729-events/20261008-071302.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-071302.err",
+      "bytes": 8932,
+      "sha256": "f41c973418c61bc6a7bbae6fb896455d3c3817fb56493b2ad27a2a4a08de5b50"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/PD9AYQVMLQW6-brain.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/PD9AYQVMLQW6-brain.jsonl",
+      "bytes": 2321085,
+      "sha256": "728e997fddf2f83abc185505e5b8f3d4cf5496d83ebe8ed42fc5111590575b3c"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/PD9AYQVMLQW6-decisions.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/PD9AYQVMLQW6-decisions.jsonl",
+      "bytes": 3371740,
+      "sha256": "6a914d043942457532ce3a0395363bbf1bff2bfb31be0b22c2f3cbe3d7211e90"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/PD9AYQVMLQW6-deepseek-reasoning.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/PD9AYQVMLQW6-deepseek-reasoning.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/PD9AYQVMLQW6-jev-prompts.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/PD9AYQVMLQW6-jev-prompts.jsonl",
+      "bytes": 2666568,
+      "sha256": "73afcd827cf55f930733b66ae92fa773d4e9697515261c96481da44742bd7de1"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/PD9AYQVMLQW6-resources.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/PD9AYQVMLQW6-resources.json",
+      "bytes": 1163163,
+      "sha256": "076741065826a14beb774301d4314e05ca9e8dfee34ece1db2423a56cf6cd947"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/PD9AYQVMLQW6-run-config.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/PD9AYQVMLQW6-run-config.jsonl",
+      "bytes": 4950,
+      "sha256": "9f616a4a30b6b806cb04791b3b43182ea245aad859edee5b63e1ba57cb4411c3"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/PD9AYQVMLQW6-run-plans.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/PD9AYQVMLQW6-run-plans.jsonl",
+      "bytes": 16099,
+      "sha256": "a34206c6dbaa78018e199f79edbeaae46207e7e1f996d1f20499f2712c66f1fb"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/PD9AYQVMLQW6-sl-attempts.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/PD9AYQVMLQW6-sl-attempts.jsonl",
+      "bytes": 190847,
+      "sha256": "20695d66d1693461a79117575864a8bdb595fd727e0e374bfe78c77068aa8eec"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/PD9AYQVMLQW6-states.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/PD9AYQVMLQW6-states.jsonl",
+      "bytes": 51209039,
+      "sha256": "83d9cfca05574349c72e8b93e61f3f6e85238a4f5963ec85315102e0464175a2"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/audit.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/audit.py",
+      "bytes": 3163,
+      "sha256": "094bd05565a8ae62593f9f7d153251519920e24ccd0a9356c9b2d41e46f01cff"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/audit.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/audit.txt",
+      "bytes": 35386,
+      "sha256": "951dccaa6821237abc085b6092aef457505e9acb01963e4d62d8cf915c39d41a"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/extract.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/extract.py",
+      "bytes": 816,
+      "sha256": "48f94b25095a41e4a20fa65de7f9ec81adb74dda2bff8f630daae38cf33ad71d"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/final-verification.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/final-verification.json",
+      "bytes": 1666,
+      "sha256": "179e93a0e2b2d166a798ab6f9697cc163cecfed372f536c86f0630caeeb146c5"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/proposal-cli-receipts.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/proposal-cli-receipts.json",
+      "bytes": 2349,
+      "sha256": "50ddb59e0535801f0ae107a633be7f7a7c2903d3b53c45ead33d42513ae8dbd2"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/proposal-rollout-boundaries.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/proposal-rollout-boundaries.json",
+      "bytes": 524,
+      "sha256": "36f5196daa1aeca14bd55ff7ef7d44b999be77248f46e3eac4855e66c03e4f6f"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/proposal-rollout-boundaries.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/proposal-rollout-boundaries.md",
+      "bytes": 2519,
+      "sha256": "a0549793af9841200349ae4af8394d1ed2a1f924b016760e2a36c492b3371941"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/proposal-survivor-discard.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/proposal-survivor-discard.json",
+      "bytes": 522,
+      "sha256": "b83008b6f42f7b06b805de6ae84dfb17ee1562247a9f418fdfd6d362574005f0"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/proposal-survivor-discard.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/proposal-survivor-discard.md",
+      "bytes": 3592,
+      "sha256": "5a1880920741718dd2508044d240ac63c67569f881689efb85ca286b4bc27909"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/proposal-terminal-resources.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/proposal-terminal-resources.json",
+      "bytes": 536,
+      "sha256": "26ef51e0ac1ec7b100998028b213133508a9c2221f12d88701b62793d522c9c2"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/proposal-terminal-resources.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/proposal-terminal-resources.md",
+      "bytes": 2621,
+      "sha256": "2093a96a33eee8b83b25b88fbfd08c8b45a63b4854b58c38c616c7a9689ee4a9"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/report.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/report.json",
+      "bytes": 959,
+      "sha256": "926042f1951bdbc8a3fb2893d4b5c4e1b47985a4ec4d8f4d3be9869aaf6267a0"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/report.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/report.md",
+      "bytes": 2048,
+      "sha256": "1a1b393ed3e727ca413c36e3e3ab049de044c9b7bf344e1acfba036553d15b9d"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/summarize.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/summarize.py",
+      "bytes": 3582,
+      "sha256": "243a4618b685eb1168835f68c7115c0b7f494352a36a96ec006d74c52e91fd2b"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-originals/summary.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem/summary.txt",
+      "bytes": 23276,
+      "sha256": "44afb044203519709a6461e3924288ecb7fbdcb2d3798bda66ee53100cc256c9"
+    },
+    "paper/materials/silent/20261008-0729-events/postmortem-event-stream.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-071302-postmortem.jsonl",
+      "bytes": 2025278,
+      "sha256": "6f3af4b1e5c12f9a7aef144138cfb7ddc49d1839a634b53bbc8905f0e61b27c5"
+    },
+    "paper/materials/silent/20261008-0729-events/empty-run-note.md": {
+      "path": "/home/dw/Projects/agent-sts2/notes/run-1008-0711-PD9AYQVMLQW6.md",
+      "bytes": 6389,
+      "sha256": "2d1373cd57a2bb724d81682f651b41a479d59def754c804c5f0139e2616e0763"
+    }
+  },
+  "owned_original_ledger_rows": 11,
+  "new_pure_bugs": [],
+  "existing_bug_repeat": "silent-0268",
+  "queue_not_modified_or_duplicated": true,
+  "queue_sha256": "3a84201629fb369de1916a97459e283ba9eb1727e924cf378468cd33d63ee730",
+  "unowned_extra_rows_preserved": 141,
+  "lesson_physical_not_reappended": true,
+  "learner_corrections_preserved": [
+    "F19初始三只外骨骼虫",
+    "持牌致死判断行3021",
+    "F35T8毒杀、无主动出牌"
+  ],
+  "proposal_registry_not_modified": true,
+  "manual_dispatch": false,
+  "record_only": true
+}

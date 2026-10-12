@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/tmp/sts2-20261007-1748-paper-commit.py", line 37, in <module>
+    c.git('add', '--', *(str((archive / name).relative_to(root)) for name in ['paper-snapshot.json', 'paper-dataset.log', 'paper-run.txt']))
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/sts2-0907-deploy-common.py", line 22, in git
+    return run(['git', *args], cwd=cwd, check=check).stdout
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/sts2-0907-deploy-common.py", line 18, in run
+    raise RuntimeError(f'{args!r}: exit {r.returncode}: {r.stdout}')
+RuntimeError: ['git', 'add', '--', 'paper/materials/silent/20261007-1748-events/paper-snapshot.json', 'paper/materials/silent/20261007-1748-events/paper-dataset.log', 'paper/materials/silent/20261007-1748-events/paper-run.txt']: exit 1: The following paths are ignored by one of your .gitignore files:
+paper/materials/silent/20261007-1748-events/paper-dataset.log
+hint: Use -f if you really want to add them.
+hint: Disable this message with "git config set advice.addIgnoredFile false"
+

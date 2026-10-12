@@ -1,0 +1,42 @@
+## 复盘回报
+
+- 已追加：PCDMYK2AEB2D（A10，第21层，猎人杀手战T5以8血9挡承受18攻击阵亡，敌仍3血）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：精确运行源码、部分归零／逐击帧、实际最优整线执行比例、替线及提前用药整战结果、有效boss时钟及比值、二幕boss实到／战果、纯操作用时、Jev缓存和真实费用。
+- 学习账本：新增无；更新 silent-0019、silent-0232、silent-0278、silent-0282、silent-0227、silent-0286，均为支持证据，老错重犯无；`ledger.py check`退出码0。
+- 代码提案：均关联本任务与独立strategy-proposal，未实现／上线。
+
+  - `silent-proposal-ced069ebfef203d5`：F21柔嫩血价及F15／F17结算，关联0232／0227／0286；缺替线完整后继，保留护栏和终局参数。
+  - `silent-proposal-281dfcf09bacbd19`：F21毒药实加6层与荆棘分账，关联0278／0282；缺提前用药整战对照，仅提议已观察条件的模型覆盖。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["PCDMYK2AEB2D"],
+  "skipped": [],
+  "bugs": [],
+  "ledger": {
+    "added": [],
+    "updated": ["silent-0019", "silent-0232", "silent-0278", "silent-0282", "silent-0227", "silent-0286"],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-ced069ebfef203d5",
+    "silent-proposal-281dfcf09bacbd19"
+  ],
+  "implementation_domains": ["combat", "potion", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261012-204303-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a13023-73f2-7f23-9476-c65abfa95dbc
+轮数：1；工具调用：command_execution×50
+token：输入 211.0k、输出 31.3k（其中推理 6522）、cache 读 3646.3k、cache 写 0（命中 94.5%）
+成本：未提供
+耗时：1101.0 s（墙钟）
+时间：首个事件 17.8 s、模型首个输出 23.4 s、首次工具 26.4 s、末次工具结束 1081.7 s；工具内共 189.1 s，其余（模型生成、推理、网络）894.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×30；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T20-43-12-01a13023-73f2-7f23-9476-c65abfa95dbc.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261012-204303-postmortem.jsonl

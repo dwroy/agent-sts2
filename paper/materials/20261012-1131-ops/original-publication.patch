@@ -1,0 +1,27 @@
+diff --git a/eval/versions.json b/eval/versions.json
+index 04390bd04..2e9263db3 100644
+--- a/eval/versions.json
++++ b/eval/versions.json
+@@ -1860,6 +1860,12 @@
+       "family": "Silent",
+       "commit": "9952a11811a6a73f12e0f86a8b6ec49db3cae18c",
+       "source": "2026-10-12 06:34:06 CST 学习者固定源0fa15f5e06d60a6caa95b8f49675ee6222b4b276→实际代码live112e6ce0c8b8adf16868e115212e90960c69d164。仅静默A10已见活体正HP、FABRICATOR/FABRICATE_MOVE或TWO_TAILED_RAT/CALL_FOR_BACKUP_MOVE且含Summon意图：旧simulation_reference只有通用限制，新列当帧槽位/敌ID/招式及后续rollout未纳入增援的范围。证据P33MKRP6S4Q4 F39T1/T2、177AS39M1UPW F5T3/T4，P33 F8T3—T5胜战反例；不推召唤必败或首杀规则，不补数量/HP/时序常量，原数字/排名/选项/解析动作/SL保持。silent-0423与有限提案e3fc856ae3d844fa交付，完整模型及弃牌宽提案仍未完成。源321文件3178例，撤消费者2失败/恢复20通过；本轮tsc0/5文件71例及fork6文件82例/gitleaks0。初次不ready原帧测试3失败及4记录冲突原件保留；自然读取/采用/收益未知，宿主完整检查另续。"
++    },
++    {
++      "name": "S1.snakebite-discard1",
++      "family": "Silent",
++      "commit": "f48154c11d41cb82c762a0afd671fe430ef199b8",
++      "source": "2026-10-12 11:29:34 CST 学习者限定实现：CMS8QL9E3C5U A10 F19T1普通2费7毒蛇咬被负分自动弃，现仅同轮赌徒替换/可支付可打/单一合法目标且双方无powers时交Jev比较全部弃牌与确认；7毒与HP直伤0分列、长期血价未知，不修改共享分数/显式弃牌计划/其他角色进阶。来源silent-proposal-54bd844abc57bb62、silent-0425；F17T1/F19T5实打校验，原17帧逐偏移SHA一致。source 5217167aa8ba0184e733a4e6c7ce3f102690f231 → live f48154c11d41cb82c762a0afd671fe430ef199b8；撤码3失败/恢复20通过，源tsc0/3283例，合后tsc0/3319例，gitleaks0；自然收益未验证。"
+     }
+   ]
+ }
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index 68c7b69f6..54f0f5064 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -1815,3 +1815,5 @@
+ - 2026-10-11 21:36:42 CST [fix-batch] core-cycle-implementation-binding-entry：实现类冻结请求独立绑定原三提案、任务/manifest及9份输入SHA、扩授权与文件职责；沿既有write/learn.lock/wrapper/完成事件，保留旧纯研究和失败历史。source fc95760d4ff8a9cbd45577efdd79b1215bd2cb92 → live af11d9bd86745326625efab90078352b9740fc93；源码/合后沙箱通过，工具修复无游戏局号/层/回合和对应bug-infra，无eval版本。正式代码学习由ops经既有strategy-proposal动作传canonical请求id另派，本回报不代表量化学习已启动或完成。
+ 
+ - 2026-10-12 01:34:51 CST [codex1兜底实际发布] 固定五源2b09c47d4/24c2e3a75/bc2c40e31/3596d1a2a/c04da0668仅叶提交增量集成265c533c787214851dd5d6b39a379d7deb9e1ed5，live实到ba705e34444c307cfbe01095909c91563e40c3a5，源身份合并保持测试树6c64da6a81cf212be932edc1885225442dc0650b逐字节不变；并行drain/push能力与live回测记录保留。tsc0、292文件2873例及gitleaks0，登记S1.exp181与S1.smoggy-discard1；纯启动恢复/定向宿主入口/夹具修复不造游戏版本。原预检失败/退避不改，宿主补验及main固定增量同步另续，旧B4 rejected未混入。
++
++- 2026-10-12 11:29:34 CST [学习者 strategy-proposal] 2026-10-12 11:29:34 CST 学习者限定实现：CMS8QL9E3C5U A10 F19T1普通2费7毒蛇咬被负分自动弃，现仅同轮赌徒替换/可支付可打/单一合法目标且双方无powers时交Jev比较全部弃牌与确认；7毒与HP直伤0分列、长期血价未知，不修改共享分数/显式弃牌计划/其他角色进阶。来源silent-proposal-54bd844abc57bb62、silent-0425；F17T1/F19T5实打校验，原17帧逐偏移SHA一致。source 5217167aa8ba0184e733a4e6c7ce3f102690f231 → live f48154c11d41cb82c762a0afd671fe430ef199b8；撤码3失败/恢复20通过，源tsc0/3283例，合后tsc0/3319例，gitleaks0；自然收益未验证。 提案 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-104302/learner/runs/20261012-104318-strategy-proposal/proposal.md；版本 S1.snakebite-discard1；原提案及失败历史保留，账本保持proposed交运维核实shipped。

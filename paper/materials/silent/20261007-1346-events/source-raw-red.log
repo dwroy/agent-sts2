@@ -1,0 +1,158 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/learner-raw-report.test.ts (15 tests | 6 failed) 1303ms
+     × accepts the complete leading object before a launcher summary 92ms
+     × accepts a raw fix-batch object without a trailer 87ms
+     × accepts a raw experience-update object without a trailer 85ms
+     × accepts a raw strategy-proposal object without a trailer 89ms
+     × recognizes a raw completion only after verifying its live ancestor 89ms
+     × rechecks raw output while preserving the original failure and requiring every source ancestor 93ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > accepts the complete leading object before a launcher summary
+AssertionError: expected {} to deeply equal { task: 'fix-batch', …(4) }
+
+- Expected
++ Received
+
+- {
+-   "base": "dddddddddddddddddddddddddddddddddddddddd",
+-   "fixes": [
+-     {
+-       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+-     },
+-   ],
+-   "merged": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+-   "task": "fix-batch",
+-   "tests": {
+-     "cases": 10,
+-     "tsc": 0,
+-     "vitest": 0,
+-   },
+- }
++ {}
+
+ ❯ tests/learner-raw-report.test.ts:44:42
+     42| describe("leading JSON completion reports", () => {
+     43|   it("accepts the complete leading object before a launcher summary", …
+     44|     expect(exercise(" \n" + raw).report).toEqual(report);
+       |                                          ^
+     45|   });
+     46|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > accepts a raw fix-batch object without a trailer
+AssertionError: expected undefined to be 'fix-batch' // Object.is equality
+
+- Expected:
+"fix-batch"
+
++ Received:
+undefined
+
+ ❯ tests/learner-raw-report.test.ts:48:71
+     46|
+     47|   it.each(["fix-batch", "experience-update", "strategy-proposal"])("ac…
+     48|     expect(exercise(JSON.stringify({ ...report, task })).report.task).…
+       |                                                                       ^
+     49|   });
+     50|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > accepts a raw experience-update object without a trailer
+AssertionError: expected undefined to be 'experience-update' // Object.is equality
+
+- Expected:
+"experience-update"
+
++ Received:
+undefined
+
+ ❯ tests/learner-raw-report.test.ts:48:71
+     46|
+     47|   it.each(["fix-batch", "experience-update", "strategy-proposal"])("ac…
+     48|     expect(exercise(JSON.stringify({ ...report, task })).report.task).…
+       |                                                                       ^
+     49|   });
+     50|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > accepts a raw strategy-proposal object without a trailer
+AssertionError: expected undefined to be 'strategy-proposal' // Object.is equality
+
+- Expected:
+"strategy-proposal"
+
++ Received:
+undefined
+
+ ❯ tests/learner-raw-report.test.ts:48:71
+     46|
+     47|   it.each(["fix-batch", "experience-update", "strategy-proposal"])("ac…
+     48|     expect(exercise(JSON.stringify({ ...report, task })).report.task).…
+       |                                                                       ^
+     49|   });
+     50|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > recognizes a raw completion only after verifying its live ancestor
+AssertionError: expected { task: 'fix-batch', …(3) } to match object { state: 'done', …(2) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "checks_pending": true,
+-   "merged": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+-   "state": "done",
++   "merged": null,
++   "state": "failed",
+  }
+
+ ❯ tests/learner-raw-report.test.ts:68:27
+     66|   it("recognizes a raw completion only after verifying its live ancest…
+     67|     const success = exercise(raw, "finish");
+     68|     expect(success.batch).toMatchObject({ state: "done", merged: repor…
+       |                           ^
+     69|     expect(success.calls[0]).toContain("merge-base");
+     70|     const absent = exercise(raw, "finish", false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/learner-raw-report.test.ts > leading JSON completion reports > rechecks raw output while preserving the original failure and requiring every source ancestor
+AssertionError: expected { task: 'fix-batch', …(4) } to match object { state: 'failed', merged: null, …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "merged": null,
+-   "recheck_rc": 0,
++   "recheck_rc": 2,
+    "state": "failed",
+  }
+
+ ❯ tests/learner-raw-report.test.ts:77:27
+     75|   it("rechecks raw output while preserving the original failure and re…
+     76|     const success = exercise(raw, "recheck");
+     77|     expect(success.batch).toMatchObject({ state: "failed", merged: nul…
+       |                           ^
+     78|     expect(success.batch.fallback_checks[0].commits).toEqual([report.f…
+     79|     expect(success.events).toEqual(["learner-checks"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 9 passed (15)
+   Start at  12:14:33
+   Duration  1.78s (transform 285ms, setup 328ms, import 12ms, tests 1.30s, environment 0ms)
+

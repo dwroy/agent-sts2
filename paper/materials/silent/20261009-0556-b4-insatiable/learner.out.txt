@@ -1,0 +1,46 @@
+本批 **rejected**：核实的取帧偏差需要修改范围外提取器，未形成源码候选。原沙箱 2627 例及逐字节隔离通过。记录已提交 `6beaea59`，台账为 `silent-0303`；未合 live、未建版本。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "473a38a1a8d133f0a811f8a3c8ff454ae6363984",
+  "fixes": [
+    {
+      "item": "Roy 已授权独立功能：silent/THE_INSATIABLE B4 校正",
+      "commit": "473a38a1a8d133f0a811f8a3c8ff454ae6363984",
+      "test": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261009-041301/learner/runs/20261009-041305-boss-sim-batch/sandbox.log; /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261009-041301/learner/runs/20261009-041305-boss-sim-batch/acceptance.json",
+      "fails_without_fix": false
+    }
+  ],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2627
+  },
+  "boss_sim": {
+    "evidence_key": "ebc0af98fece070bb1cd4a6bb42d8712ecb6be6104230cbdecb1bf5ee5c7e329",
+    "outcome": "rejected",
+    "acceptance": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261009-041301/learner/runs/20261009-041305-boss-sim-batch/acceptance.json",
+    "ledger_ids": ["silent-0303"]
+  },
+  "version": "",
+  "reports": [
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261009-041301/paper/materials/silent/boss-sim-b4-THE_INSATIABLE-20261009-041301.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261009-041301/learner/runs/20261009-041305-boss-sim-batch/report.md"
+  ]
+}
+```
+
+== 学习者 codex / boss-sim-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11d25-ea09-7a42-9c65-db0c01a99cbb
+轮数：1；工具调用：command_execution×149 file_change×10
+token：输入 782.4k、输出 131.5k（其中推理 77.9k）、cache 读 22196.0k、cache 写 0（命中 96.6%）
+成本：未提供
+耗时：6051.6 s（墙钟）
+时间：首个事件 3.3 s、模型首个输出 8.1 s、首次工具 11.8 s、末次工具结束 6022.0 s；工具内共 10188.4 s，其余（模型生成、推理、网络）-4140.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261009-041301）；模型的工具调用 exec×152 wait×31；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T04-13-06-01a11d25-ea09-7a42-9c65-db0c01a99cbb.jsonl
+codex 重连：2 次
+日志：/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261009-041301/learner/runs/20261009-041305-boss-sim-batch.jsonl

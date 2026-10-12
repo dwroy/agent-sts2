@@ -1,0 +1,54 @@
+{
+  "paper_commit": "0bd446ee0c35e809172d26beae21246cc72fd6a3",
+  "paper_cut": "2026-10-07T10:57:21.963Z",
+  "paper_paths": [
+    "paper/data/README.md",
+    "paper/data/commits.csv",
+    "paper/data/cost-curve-silent.csv",
+    "paper/data/cost-silent.csv",
+    "paper/data/cost-sources.json",
+    "paper/data/cost-unattributed.csv",
+    "paper/data/decisions_by_label.csv",
+    "paper/data/learning-curve-silent.csv",
+    "paper/data/runs.csv",
+    "paper/data/summary.json",
+    "paper/data/verification.json",
+    "paper/materials/silent/cost.md"
+  ],
+  "paper_five_checks": true,
+  "original_sha256_verified": {
+    "20261007-181301.out.txt": "3816e02e52e01a017d744c70fad76bfcc037663a97f03ebdd43bb7353ec29784",
+    "20261007-181301.err.txt": "052e3e040d593073a9d95d71dd80d217d4f714e6f2f6a67a6f0f964984cc478e",
+    "postmortem-stream.jsonl.pointer.json": "f4e945cbef829d0b3fd7bb314f5a3037b0b5e01eee0fb71ddc0257587b751347",
+    "20261007-173846-experience-update.out.txt": "5dd665eb3dc0ea518ac1b1ac3b240610fd93dcec3beda7dbaba5410c07465bf9",
+    "20261007-173846-experience-update.err.txt": "87d49f8009f05312027fbec6ab72981784b855a271b5a7fd25498daa79ede5d3"
+  },
+  "primary_review_rows": 19,
+  "shipped_data_rows": 12,
+  "version": "S1.exp76",
+  "actual_merge": "81a39018a2077bce45e7da5e4e9685f4a1ac6388",
+  "publication": "7ad25e1477cc6db9e40a26a05f8e5b5e0b343fd8",
+  "publication_tree": "ba1817d8cea736f78c6af41190b5614f9b0a9170",
+  "source_real_ancestor": true,
+  "main_source_blob_equal": true,
+  "single_version_verified": true,
+  "only_experience_blob_changed": true,
+  "post_merge_sandbox": {
+    "exit": 0,
+    "files": 233,
+    "cases": 2441,
+    "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261007-1850-events/experience76/post-merge-sandbox.log"
+  },
+  "external_recheck": {
+    "request": "bash ops/codex-ops-do.sh learner-recheck 20261007-173846-experience-update",
+    "broker_accepted": "2026-10-07 19:09 broker learner-recheck 20261007-173846-experience-update",
+    "state": "in_flight",
+    "logs_observed": [
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-173846-experience-update.fallback-ba1817d8cea736f78c6af41190b5614f9b0a9170.checks.log"
+    ],
+    "full_external_result_not_claimed": true
+  },
+  "ledger_original_and_foreign_rows_preserved": true,
+  "proposal_implementation_not_claimed": true,
+  "next_event": "Handle the standard learner-checks result for 20261007-173846-experience-update; preserve original failed state and logs, do not repeat merge, version, shipment, paper, or XP2 support rows."
+}

@@ -224,7 +224,7 @@ export function severalOptionKeys(answer: string, criteria: Record<string, strin
 }
 
 /**
- * Dai 2026-09-29: where the hand-written strategy guide or handbook disagrees with the experience base or the
+ * Roy 2026-09-29: where the hand-written strategy guide or handbook disagrees with the experience base or the
  * measured data, the data wins. Part of the fixed system prompt (byte-identical across calls, cache-friendly).
  */
 export const DATA_OVER_GUIDES =
@@ -260,7 +260,7 @@ export function systemRules(character: string = knowledgeCharacter()): string {
 const EFFORTS = new Set(["max", "high", "low", "off"]);
 
 /**
- * Thinking output is the largest DeepSeek cost (Dai 2026-09-28): card, rest and deck picks with few
+ * Thinking output is the largest DeepSeek cost (Roy 2026-09-28): card, rest and deck picks with few
  * options think at "high"; the run plan, route plan, shop, events, transform and enchant keep the
  * default (max). Re-asks share their question's label, so they get the same tier.
  */
@@ -519,7 +519,7 @@ const EFFORT_RANK: Record<string, number> = { off: 0, low: 1, high: 2, max: 3 };
 /**
  * The thinking effort of a question: its label's, raised to the run plan's when a due run plan rides on it
  * (RUN_PLAN_MERGE: state.run_plan_task). The run plan kept the default effort (max) when the card and rest picks went
- * to "high" (Dai 2026-09-28); riding on a card reward it would otherwise be thought out at "high".
+ * to "high" (Roy 2026-09-28); riding on a card reward it would otherwise be thought out at "high".
  */
 export function questionEffort(label: string, state: Record<string, unknown>, config: Pick<DeepSeekConfig, "reasoningEffort" | "combatReasoningEffort" | "effortByLabel">): string {
   const own = effortFor(label, config);

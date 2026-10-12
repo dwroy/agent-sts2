@@ -1,0 +1,29 @@
+[
+  {
+    "command": "rg ... learner knowledge/builders ops/log* docs; rg --files /home/dw/Projects/agent-sts2/.cache ...",
+    "exit_code": 2,
+    "errors": [
+      "ops/log*: No such file or directory",
+      ".cache: No such file or directory"
+    ],
+    "followup": "读取docs/logdb.md，定位data/logdb，不同步"
+  },
+  {
+    "command": "sed -n '1,150p' agent/tools/logdb/schema.sql",
+    "exit_code": 2,
+    "errors": [
+      "schema.sql不存在"
+    ],
+    "followup": "使用只读DESCRIBE定位列"
+  },
+  {
+    "command": "bootstrap: first-line schema preview of six global logs",
+    "exit_code": 0,
+    "limitation": "最初架构探查误预览了全局首行，其中有其他角色内容；未采用其任何游戏知识或数字。后续全部以静默run_id过滤索引并seek；该边界偏差留档。"
+  },
+  {
+    "command": "bounded document tail and ledger search output",
+    "exit_code": 0,
+    "limitation": "初次工具输出被token上限截断；其后用小尾窗/结构化摘要，完整证据保存文件"
+  }
+]

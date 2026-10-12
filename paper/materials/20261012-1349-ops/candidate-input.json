@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-12 13:53:49 CST",
+  "live_before": "f743cb1c92a4f8ad1cbd0a4ac6a4af7e9d45c212",
+  "main_before": "8a66a880159d293af020e974d6995825cb360c00",
+  "sources": {
+    "terminal": "83512ddcd2c70fd9b983dc38524ff25c8970c1d3",
+    "potion": "c4670f4f416c7d93e192e889c5080e7e4e0e733f"
+  },
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-terminal-potion-20261012-1349",
+  "patches": {
+    "terminal": {
+      "paths": [
+        "agent/tests/silent-selection-terminal-evidence.json",
+        "agent/tests/silent-selection-terminal.test.ts",
+        "learner/lib/selection-execution.ts",
+        "learner/lib/selection-terminal.ts",
+        "learner/selection-execution.md"
+      ],
+      "patch_id": "cc38baac8f0a30faeaedcf71dd78d071d7769260"
+    },
+    "potion": {
+      "paths": [
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/silent-potion-reference.ts",
+        "agent/tests/silent-potion-reference-evidence.json",
+        "agent/tests/silent-potion-reference.test.ts"
+      ],
+      "patch_id": "619aa66062c71173644df7e5a9daf9bbcf91dbc6"
+    }
+  }
+}

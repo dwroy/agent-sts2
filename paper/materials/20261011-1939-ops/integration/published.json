@@ -1,0 +1,89 @@
+{
+  "at": "2026-10-11T19:51:14.527192+08:00",
+  "before": "935fda33e94cce92877c4c17cd8b73fff4a99fad",
+  "candidate": "cbfb624449f3d7332bf733f066784f99ac11c86a",
+  "live": "d1073a0b36d16e8c496b5f9149410ad6804bc8ba",
+  "tree": "f0aec569313e594adba512ac9232e3f133d05a75",
+  "verified_source_tree_identical": true,
+  "refresh_preserved": {
+    "knowledge/characters/silent/boss-damage.json": "631522672aa9d9b9d3c7334c9864f5ee07ea04afa8b16e38237ec8b03090e3d6",
+    "knowledge/characters/silent/fight-value-gates.json": "cc7f424bda24f4c5e3ab1063f9da476155d5f8aaa25efa95a229b87938e964dc",
+    "knowledge/characters/silent/fight-value.json": "33c232aae2276f7e13320bcd32895d71bc3460ff76cb45e7f8e8be9e38606569",
+    "knowledge/characters/silent/monster-records.json": "bba5289f59c8c6674cf2dddf7c441ff10595efb805ba5bc2463672f566156ffd",
+    "knowledge/characters/silent/outcome-stats.json": "d3f925ab8a194de277185bcd6b5fb8d980a80861b9e324eb8da710e02158b556",
+    "knowledge/characters/silent/room-costs.json": "e21737df02abb14a1a9bb7002372ca96c246b19f32e62e4873e75eaa8f3bd8f1",
+    "knowledge/common/card-upgrades.json": "6fe81f12a77c484cce4405d50b4c59cf6721de6ee4a2381633bacd21275da46f",
+    "knowledge/common/monster-db.json": "24c879e3d96be6c0143128652de61cfd2fae88bcd1409a0600253c0580192108",
+    "knowledge/common/move-model.json": "fec4ed2791476f4f331ae8c32bfbdf65a6bc184894ff83f0e4fe5b92e6588300",
+    "notes/fight-value-backtest-silent.md": "c007f876e91cb1e4789e346aace97932430f7fdf5469d66fa057336c27e88b4e"
+  },
+  "gitleaks": 0,
+  "baseline_coverage": {
+    "candidate": "b6a70aafb26c414af2939aee47c6a1b4424ab0a9",
+    "tree": "e4c699678d30bc150ff1524117f58e46318914e6",
+    "tsc": 0,
+    "original_sandbox_exit": 1,
+    "original_failed_file": "tests/component-usage.test.ts",
+    "failure_kind": "isolated checkout missing existing data/logdb-venv/bin/python",
+    "dependency_reused": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+    "source_or_test_change": false,
+    "isolated_followup_exit": 0,
+    "followup_files": [
+      "tests/component-usage.test.ts",
+      "tests/paths.test.ts"
+    ],
+    "followup_cases": 12,
+    "unique_files": 271,
+    "unique_cases": 2725,
+    "coverage_complete": true,
+    "full_rerun": false,
+    "logs": {
+      "sandbox.log": "c6f08f5fb2ec100d4c58f2e38895339aee02595026bdc0f8f50f7722dd05f468",
+      "isolated-followup.log": "5173ea127e0452a4e6aabc9665058a3f382a2c5abbe40b1dbbdee5aaadf179ee"
+    }
+  },
+  "incremental_checks": {
+    "candidate": "2409776edff7eda2dd7a21992ae56726e53d4b0d",
+    "baseline_coverage": "paper/materials/20261011-1852-ops/integration/coverage-complete.json",
+    "checks": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "affected",
+        "command": [
+          "npx",
+          "vitest",
+          "run",
+          "tests/ascension-observed.test.ts",
+          "tests/codex-usage-recovery.test.ts",
+          "tests/silent-gardener-skittish.test.ts",
+          "tests/silent-skittish.test.ts",
+          "tests/silent-blade-dance.test.ts",
+          "tests/rollout-live.test.ts",
+          "tests/rollout.test.ts",
+          "--pool=threads",
+          "--maxWorkers=1"
+        ],
+        "exit": 0
+      }
+    ],
+    "files": [
+      "tests/ascension-observed.test.ts",
+      "tests/codex-usage-recovery.test.ts",
+      "tests/silent-gardener-skittish.test.ts",
+      "tests/silent-skittish.test.ts",
+      "tests/silent-blade-dance.test.ts",
+      "tests/rollout-live.test.ts",
+      "tests/rollout.test.ts"
+    ]
+  }
+}

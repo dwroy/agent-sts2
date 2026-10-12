@@ -1,0 +1,22 @@
+node:fs:1746
+  const stats = binding.stat(
+                        ^
+
+Error: ENOENT: no such file or directory, stat '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-224303-experience-update/test-checkout/logs/logs'
+    at statSync (node:fs:1746:25)
+    at <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/exp/agent/tools/check-imports.ts:28:12)
+    at Array.flatMap (<anonymous>)
+    at files (/home/dw/Projects/agent-sts2/.worktrees/exp/agent/tools/check-imports.ts:25:27)
+    at <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/exp/agent/tools/check-imports.ts:28:43)
+    at Array.flatMap (<anonymous>)
+    at files (/home/dw/Projects/agent-sts2/.worktrees/exp/agent/tools/check-imports.ts:25:27)
+    at <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/exp/agent/tools/check-imports.ts:28:43)
+    at Array.flatMap (<anonymous>)
+    at files (/home/dw/Projects/agent-sts2/.worktrees/exp/agent/tools/check-imports.ts:25:27) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-224303-experience-update/test-checkout/logs/logs'
+}
+
+Node.js v22.23.3

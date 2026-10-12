@@ -6,7 +6,7 @@
  * sites never asked whether the deck could kill the boss in time, and DeepSeek's run plan only saw the
  * boss id.
  *
- * 2026-09-28 calibration (Dai: "1，2，3 直接修复"): 4 of 7 baseline deaths came from a clock that read
+ * 2026-09-28 calibration (Roy: "1，2，3 直接修复"): 4 of 7 baseline deaths came from a clock that read
  * "gap 0/1" while the deck was well short (64ZB Vantom, ERPH Waterfall Giant, 02L4 Ceremonial Beast,
  * D3X1 Test Subject phase 2; NZWR Knowledge Demon the other way round). The clock used A0/A7 HP, flat
  * script turn counts, no mechanic that wastes damage, and a flat Demon Form. Now:
@@ -320,7 +320,7 @@ export function bossMechanic(profile: BossProfile, ascension: number): string {
  * The block the Giant's kill left to find (its stacks less our HP at the kill) against the outcome, over the logged
  * A8 and A9 kills (boss-damage.json WATERFALL_GIANT.kills, knowledge/builders/build-boss-damage.py). Was hard-coded ("33 kills:
  * 13 or less 17/18 won, 20 or more 3/15") and went stale with Y36HXZ80A8LL (a T9 kill at 36 HP into 41, won).
- * Read at A8 and up (recordBand), A8's kills and A9's apart (Dai 2026-10-04); without an ascension or below A8, the
+ * Read at A8 and up (recordBand), A8's kills and A9's apart (Roy 2026-10-04); without an ascension or below A8, the
  * two pooled as before.
  */
 export function giantBlockRecord(lang: "zh" | "en", ascension?: number): string {
@@ -376,7 +376,7 @@ export function giantBlockBandText(kills: Record<string, GiantKillRow[]>, lang: 
  * The guides' facts that come from the data, filled when the DeepSeek system prompt is built (once a process, so
  * the prompt stays byte-identical across calls): {GIANT_BLOCK_RECORD} (giantBlockRecord), {GIANT_KILLS_A8} and
  * {GIANT_KILLS_A9} (giantKillRecord at A8 / A9: the kill-turn record, hard-coded as "A8 27 场…A9 10 场赢 3" until batch I).
- * 2026-09-29 knowledge check (Dai: the guides are knowledge like the experience base; where the data says
+ * 2026-09-29 knowledge check (Roy: the guides are knowledge like the experience base; where the data says
  * otherwise, the data's version): {CRAB_KILL_ORDER} (crabKillRecord; was "51 场…39 场赢 8"), {LAG_SLEEP}
  * (lagSleepRecord: the Matriarch's sleep without Strength cards), {BEAST_STUN} (the Beast's stun HP by ascension,
  * monster DB; was a flat 150, 160 at A9), {LASER_T4} (the Rocket's T4 Laser after Charge Up; was "49"),
@@ -391,11 +391,11 @@ export function giantBlockBandText(kills: Record<string, GiantKillRow[]>, lang: 
  * unknownFightsText), {BOSS_LOSS:ID:ASC} (bossLossText: the monster DB's median HP we lose a turn against the boss at
  * that ascension). The experience base's lesson texts are filled with these too (experience lessonText), so a
  * lesson and a guide no longer quote two different counts of the same fights.
- * 2026-10-04 (Dai: experience by ascension): the facts that counted fights over every logged ascension or pooled A8
+ * 2026-10-04 (Roy: experience by ascension): the facts that counted fights over every logged ascension or pooled A8
  * with A9 (BAND_FACTS) are read by the run's ascension band: {@N:NAME} (factsAtAscension marks them so for a run at
  * A8 and up) gives A8's fights and A9's apart; {NAME} unmarked keeps the text written before, for a run below A8 and
  * for the callers that do not know the run's ascension.
- * 2026-10-04 (Dai: outcome statistics by ascension): {CARD_OUTCOME:ID} is A8's rows as before at A8, below it and
+ * 2026-10-04 (Roy: outcome statistics by ascension): {CARD_OUTCOME:ID} is A8's rows as before at A8, below it and
  * unmarked; {@N:CARD_OUTCOME:ID} (factsAtAscension marks it so from A9 up) gives that ascension's rows, an act with
  * fewer than 5 runs on a side followed by A8's where A8 has 5 or more (cardOutcomeText).
  */
@@ -511,7 +511,7 @@ const RECORD_ASCENSIONS = [8, 9];
 export const RECORD_BAND_FROM = 8;
 
 /**
- * The ascensions whose records a run at `ascension` reads, each apart (Dai 2026-10-04, experience by ascension): A8
+ * The ascensions whose records a run at `ascension` reads, each apart (Roy 2026-10-04, experience by ascension): A8
  * and A9 (and the run's own, were it above them) from A8 up, so an A9 run sees "A8 46 场赢 17；A9 16 场赢 6", not one
  * count over A0-A9. null below A8 or without an ascension: the records keep the text written before.
  */

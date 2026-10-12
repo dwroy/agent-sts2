@@ -1,0 +1,19 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/agent
+
+ ✓ tests/experience.test.ts > experience slice selection > picks the act boss and the offered cards, drops retired entries, other bosses and unoffered cards 6ms
+ ✓ tests/experience.test.ts > experience slice selection > matches the screen type's general topics and ranks threats higher on route decisions 2ms
+ ✓ tests/experience.test.ts > experience slice selection > bounds the slice by relevance: general advice is cut before the offered card or the boss 3ms
+ ✓ tests/experience.test.ts > experience slice selection > reads offered ids from the screen section, not from the deck 3ms
+ ✓ tests/experience.test.ts > boss lessons on a board of boss parts > matches boss:KAISER_CRAB to CRUSHER + ROCKET in the DeepSeek slice, boss id known or not 47ms
+ ✓ tests/experience.test.ts > boss lessons on a board of boss parts > gives Jev crab-kill-order on a crab board 8ms
+ ✓ tests/experience.test.ts > knowledge section in the run context > renders lessons with confidence and n, and the outcome stats of the offered card 3ms
+ ✓ tests/experience.test.ts > knowledge section in the run context > rides in the journal's memory as `knowledge` 26ms
+ ✓ tests/experience.test.ts > experience.json > is well-formed: unique ids, known scopes, counts, confidence and status 55ms
+ ✓ tests/experience.test.ts > experience.json > the real files: an act-1 card reward before Vantom gets the Vantom lessons and the offered card's lesson and stats 12ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  07:27:57
+   Duration  2.31s (transform 1.65s, setup 490ms, import 1.47s, tests 167ms, environment 0ms)
+

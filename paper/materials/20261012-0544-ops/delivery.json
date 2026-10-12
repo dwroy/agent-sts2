@@ -1,0 +1,99 @@
+{
+  "at": "2026-10-12 05:51:09 CST",
+  "batch": "20261012-051302-strategy-proposal",
+  "live": "e5cef28d05d64f1a177427824cd1e268ddca3888",
+  "tree": "95800f95a5379cd4ee973b9246bd247d77285bed",
+  "main_code": "1ee13f024a726618668a9cf7d6c12a531aa6c57b",
+  "version": "S1.hp-recovery-history1",
+  "shipped_ledger": [
+    "silent-0421"
+  ],
+  "linked_only_ledger": [
+    "silent-0019",
+    "silent-0020",
+    "silent-0243"
+  ],
+  "full_checks": {
+    "state": "requested",
+    "action": "bash ops/codex-ops-do.sh learner-recheck 20261012-051302-strategy-proposal",
+    "followup": "learner-checks"
+  },
+  "current_proposal_disposition": [
+    {
+      "id": "silent-proposal-0802f69b28d25079",
+      "state": "waiting",
+      "reason": "MTQ0 F23T3损0→8、扣13→19已核；现有SL资源差及离线链已在live。原线同样失败且后继不同，缺完整同条件胜线和独立留出，不能拟合全败排序、药水持有价或HP门槛。"
+    },
+    {
+      "id": "silent-proposal-f54e8de2381c1250",
+      "state": "waiting",
+      "reason": "在线候选审计及离线实线分段已由实际live祖先a8b1f8be153fe4f3a34146117546c2178f2e446b、6f3f783941270ac182237c46068097ff67e85907覆盖；本次367段复核确认MTQ0 F11弃后继重问。在线完整执行认证/实际结果与原推演比较仍缺，完整实线最优不可由候选best替代；工程缺口不等同缺新局。"
+    },
+    {
+      "id": "silent-proposal-763a4b9d9f17b815",
+      "state": "waiting",
+      "reason": "14项机制的局部能力/药效时点已核，本次89组动作相邻帧保留；部分源码已上线，但14项组合完整实线回放、缺失毛伤事件及未知修饰隔离未完成，不能整包duplicate或补新权重。"
+    },
+    {
+      "id": "silent-proposal-19a5cff2094e2d8f",
+      "state": "waiting",
+      "reason": "暂死/清状态与SL候选差值已有live子实现，旧未合入理由已过时。7X0 F31仍有接续中间帧缺口，修正输入后的完整生命周期、实线终局反事实和留出校准未完成，不据饱和预测更改必死边界。"
+    },
+    {
+      "id": "silent-proposal-3540bf4360bf80af",
+      "state": "waiting",
+      "reason": "silent-0421限定HP事实消费者已实际合入；替路线胜负、休息对锻造等因果效果仍未知，宽提案保持waiting。",
+      "original_merge_blocker_resolved": true
+    },
+    {
+      "id": "silent-proposal-0ea5c0b9c030fdd6",
+      "state": "waiting",
+      "reason": "实际live祖先8bb53d6342b7e9a2adf96de231b53c36eaa943de已覆盖奇巧名额/能量事实及六次毒药+6，本次16原帧SHA全等。continuation_verified仍false，奇巧换目标后完整合法后继收益未验证，提前饮毒的整战对照缺失，不能把窄输入交付视为整提案完成。"
+    },
+    {
+      "id": "silent-proposal-f915ec544ab94b6e",
+      "state": "waiting",
+      "reason": "实际live祖先6f3f783941270ac182237c46068097ff67e85907已提供离线阶段链，本次重核KFR F12生成小刀后重问、F33T6损6/12与扣83/93。完整实际资源结果自动归因未完成，两SL均失败，缺改排序所需整战反事实与独立留出。"
+    },
+    {
+      "id": "silent-proposal-8fb51933639faf90",
+      "state": "waiting",
+      "reason": "毒药6层/触媒两结已有窄范围live支持，铁心建7覆甲和敏捷2不立即补牌挡已核；完整覆甲减层触发、未知修饰组合及药水时点整战对照仍缺，不能把部分模型标作六机制整包实现。"
+    },
+    {
+      "id": "silent-proposal-b3bc0eb09211af6c",
+      "state": "waiting",
+      "reason": "奇巧剩余名额事实、SL资源比较及离线追踪已有live子实现；未验证换对象/顺序后的完整可执行后继，其他诅咒、提前饮毒的整战对照也未观察。末敌74仍活，未结毒/持有爆发不能当成终结或更安全替线。"
+    },
+    {
+      "id": "silent-proposal-fdc3a505fe5e1a55",
+      "state": "waiting",
+      "reason": "silent-0421限定HP事实消费者已实际合入；替路线胜负、休息对锻造等因果效果仍未知，宽提案保持waiting。",
+      "original_merge_blocker_resolved": true
+    }
+  ],
+  "original_reports_registration_and_failures_preserved": true,
+  "initial_ops_check": {
+    "exit": 1,
+    "cause": "explicit journal-replay argument reintroduced a fixed sandbox exclusion into the fork command",
+    "errors": "listen EPERM 127.0.0.1; six associated timeouts",
+    "fork_failed": 6,
+    "fork_passed": 80,
+    "log": "integration-sandbox.log",
+    "source_and_exclusions_unchanged": true,
+    "all_processes_exited": true
+  },
+  "supported_sandbox_check": {
+    "exit": 0,
+    "tsc": 0,
+    "main_files": 4,
+    "main_passed": 65,
+    "fork_files": 5,
+    "fork_passed": 76,
+    "log": "integration-sandbox-supported.log"
+  },
+  "quantitative_parent_complete": false,
+  "natural_application": null,
+  "natural_outcome": null,
+  "no_dispatch_process_flag_or_push_action": true
+}

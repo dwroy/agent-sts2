@@ -1,0 +1,41 @@
+{
+  "base": "07ea18676886c0492c98dee8b1fb2e1862942dd3",
+  "branch": "strategy-silent-gardener-20261008-075540",
+  "source_commit": null,
+  "working_tree_source_files": [
+    "agent/src/reflex/rollout-live.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/tests/silent-gardener-skittish-evidence.json",
+    "agent/tests/silent-gardener-skittish.test.ts"
+  ],
+  "live_head_observed": "7ed2bb0a60e6631541b470d851964d6794b42db1",
+  "sandbox_first": {
+    "state": "running",
+    "tool_session_id": 37891,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-075540-strategy-proposal/test-source.log"
+  },
+  "sandbox_retry": {
+    "exit": 124,
+    "timeout_seconds": 180,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-075540-strategy-proposal/test-source-retry.log"
+  },
+  "mutation": {
+    "source_removed": {
+      "exit": 1,
+      "failed": 2,
+      "passed": 10
+    },
+    "source_restored": {
+      "exit": 0,
+      "passed": 12
+    }
+  },
+  "tsc": 0,
+  "focused_vitest": 0,
+  "fixed_cases": 12,
+  "gitleaks": 0,
+  "live_merge_attempted": false,
+  "merged": null,
+  "version": null,
+  "shipped": false
+}

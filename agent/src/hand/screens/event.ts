@@ -1,7 +1,7 @@
 /**
  * Event rooms (PLAN.md §6.6). Locked and lethal options are filtered in code. When DeepSeek decides
  * (BUILD_DECIDER=deepseek) only certainly-lethal options are removed: every other option goes to it with
- * its HP facts (Dai 2026-09-28: DeepSeek decides events with facts from code). The HP guard
+ * its HP facts (Roy 2026-09-28: DeepSeek decides events with facts from code). The HP guard
  * (eventHpGuard) still narrows the options for the Jev/code path.
  */
 

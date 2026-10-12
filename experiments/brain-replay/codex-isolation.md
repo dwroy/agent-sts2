@@ -1,6 +1,6 @@
 # Codex 引擎的隔离实测（2026-10-03）
 
-codex-cli 0.160.0（npm @openai/codex，~/.local/node/bin/codex），家目录 ~/.codex（Dai 的 ChatGPT 订阅登录，prolite），
+codex-cli 0.160.0（npm @openai/codex，~/.local/node/bin/codex），家目录 ~/.codex（Roy 的 ChatGPT 订阅登录，prolite），
 模型 gpt-6.1-sol，effort xhigh。引擎：src/brain/engines/codex.ts（参数见 codexArgs / codexConfig / CODEX_DISABLED_FEATURES）。
 
 ## 方法
@@ -11,7 +11,7 @@ codex-cli 0.160.0（npm @openai/codex，~/.local/node/bin/codex），家目录 ~
 2. **假 Responses 端点**（codex-isolation/fake_responses.py）：codex 用 `-c model_provider=…` 指到本机端口，端点只记请求体
    （不记请求头），回固定答案。这样能看到 codex 实际发给模型的全部内容：instructions、input 各条消息、工具清单、schema。
 3. 对照（不加隔离参数，还加 `--dangerously-bypass-hook-trust` 让钩子必跑）与隔离（引擎的参数）各跑一次；再在真实的
-   ~/.codex 上用假端点跑一次（codex-isolation/request-real-home.jsonl），最后用 Dai 的登录真跑一次。
+   ~/.codex 上用假端点跑一次（codex-isolation/request-real-home.jsonl），最后用 Roy 的登录真跑一次。
 
 ## 结果
 
@@ -41,7 +41,7 @@ user = v3 的用户消息；`text.format` 是严格 json_schema；`reasoning` = 
 
 | 调用 | 用时 | 输入 / 缓存 / 输出 / 推理 tokens | 结果 |
 |---|---|---|---|
-| Dai 的冒烟（codex 默认参数，无隔离） | 7.2 s | 14,277 / 12,288 / 5 / 0 | "ok" |
+| Roy 的冒烟（codex 默认参数，无隔离） | 7.2 s | 14,277 / 12,288 / 5 / 0 | "ok" |
 | 隔离参数，"reply with the word ok"，schema {answer} | 7.4 s | 60 / 0 / 37 / 20 | {"answer":"ok"}，有推理摘要 |
 | 引擎本身（CodexEngine.decide，pick 题，严格 schema） | 9.0 s | 267 / 0 / 90 / 52 | {"choice":"a","reason":"ok"} |
 

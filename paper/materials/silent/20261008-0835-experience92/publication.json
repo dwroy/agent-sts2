@@ -1,0 +1,73 @@
+{
+  "state": "published",
+  "batch": "20261008-075538-experience-update",
+  "source": "eaa66f7c572d208a94e80b55d984a7033a728c4e",
+  "version": "S1.exp92",
+  "source_tests": {
+    "exit": 0,
+    "files": 247,
+    "cases": 2604,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-075539-experience-update/test-source.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "721c9f73030227c59cfc595640f8e4ccac9a9141",
+  "parent_blob": "9780d26e057026170b3a3335b7c037d6bc61288e",
+  "main_code_sync": "5cff29a8e005363f25ac4218b793d86e592d4a82",
+  "main_record": "70f6f7614b656b68f0af40217929a9d3f7f4e820",
+  "full_external_passed": false,
+  "actual_code": "d516cdce1da2eb4a07b003657059d754aa310578",
+  "live_before": "6fd495ccabba4b740e7f84d57e36aba5988c5f8f",
+  "combined": "5fa09328af07c5505cfeee11879840baf89ced00",
+  "preserved_refresh": "5c3c9e8aacd1f45b3fea32bdff0af4f84833c69d",
+  "refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "ec108e589792d85242bc115bb498a9988784b608b8b719e829272b2043cc60d4",
+    "knowledge/characters/silent/fight-value-gates.json": "cea6abc1d7a69403705ba33819ccdee1d5f4af085c21da53bb3ddff2fb27deac",
+    "knowledge/characters/silent/fight-value.json": "b4ed2159a45e6378b9e2eedb247875e3e69e52427b5699ad1283eb654057215b",
+    "notes/fight-value-backtest-silent.md": "932e45f612a9626b6eb1f7a695805825aed6ac8bc531390ca5c1e15a415df422"
+  },
+  "lock_attempts": 1,
+  "all_other_tracked_blobs_preserved": true,
+  "code_equivalence": {
+    "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+    "checked_pin": "7ed2bb0a60e6631541b470d851964d6794b42db1",
+    "checked_pin_full_external": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 298,
+      "passed": 3412,
+      "skipped": 2
+    },
+    "source_code_test_task_blobs_identical_to_actual": true,
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 247,
+      "cases": 2604,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-075539-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "data_only": true,
+    "reason": "Only the learner-tested original experience data blob changes. All current executable sources, tests, tasks, generated knowledge and parallel records are retained. No whole-new-tree external pass is claimed; original-batch full continuation is separate."
+  },
+  "publication": "775a51367b76aec570e1b49ec8da1436cc7bb89d",
+  "publication_tree": "0c13da7afa3a686acd9d50e44a949c4f2fb7dccb",
+  "version_entry": {
+    "name": "S1.exp92",
+    "family": "Silent",
+    "commit": "d516cdce1da2eb4a07b003657059d754aa310578",
+    "source": "decision-log 2026-10-08 08:37: 原075538经验20项并行记录冲突兜底，仅源eaa66f7c原experience.json，2026-10-08.8→.9/168 active/增1改20退0；PD9AYQVMLQW6、L2TSFU62Z57Z原证据，三个combat/potion/SL/terminal/structure代码提案沿原自动链。源247文件2604例tsc/vitest0，当前源码/测试/任务与固定完整通过7ed2bb0a逐blob等价（298文件3412过/2跳），data-only免重复沙箱，不冒报新树完整通过。"
+  },
+  "record_line": "- 2026-10-08 08:37 运维codex08:35经验兜底：原075538源eaa66f7c572d208a94e80b55d984a7033a728c4e20项并行记录冲突保持；单次空闲非阻塞锁内从最新live6fd495ccabba4b740e7f84d57e36aba5988c5f8f仅集成学习者已测experience.json原blob，实际合入d516cdce1da2eb4a07b003657059d754aa310578，原刷新6fd495cc及新增刷新5c3c9e8aacd1f45b3fea32bdff0af4f84833c69d、所有其他代码/知识数据逐blob保持，源真实祖先。经验2026-10-08.8→.9/增1改20退0/168 active，PD9AYQVMLQW6、L2TSFU62Z57Z原证据；源247文件2604例tsc/vitest0、无重跑，当前源码/测试/任务与固定完整通过7ed2bb0a逐blob等价（298文件3412过/2跳），data-only免重复沙箱、不冒报新树通过。唯一S1.exp92，main与所属经验数据CLI随后机械登记；三个combat/potion/SL/terminal/structure代码提案沿原自动链，完整外部原批另续验，原回报/失败历史保持。回执paper/materials/silent/20261008-0835-experience92。\n"
+}

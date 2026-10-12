@@ -1,0 +1,306 @@
+{
+  "observed_at": "2026-10-11T18:41:20+08:00",
+  "scope": "Read-only observed runtime; not exhaustive proof of module correctness",
+  "main": "f59086f5578d499b0fbdb279b39811d00ef732d6",
+  "live": "4754a86982381fea0aae8e1e32a1679306066e9e",
+  "queue": {
+    "queue": {
+      "count": 302,
+      "oldest_age_hours": 43.08
+    },
+    "delivered": {
+      "count": 712,
+      "oldest_age_hours": 164.44
+    }
+  },
+  "logs": {
+    "decisions": {
+      "bytes": 987160702,
+      "mtime_age_seconds": 3.7,
+      "latest": {
+        "ts": "2026-10-11T10:41:16.922Z",
+        "mode": "play",
+        "floor": 17,
+        "run_id": "NYQW6JAD30K4"
+      }
+    },
+    "run-config": {
+      "bytes": 1369051,
+      "mtime_age_seconds": 1932.8,
+      "latest": {
+        "ts": "2026-10-11T10:09:04.237Z",
+        "run_id": "NYQW6JAD30K4",
+        "ascension": 10,
+        "character": "SILENT",
+        "floor": 1
+      },
+      "code": {
+        "commit": "56268f61928e0330d91293e585efab075839bb4a",
+        "code": "56268f6+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "README.md",
+          "agent/README.md",
+          "agent/src/brain/engines/codex.ts",
+          "agent/src/core/config.ts",
+          "agent/src/eye/run-config.ts",
+          "agent/src/sl/attempts.ts",
+          "agent/src/sl/controller.ts",
+          "agent/src/sl/explore.ts",
+          "agent/tests/codex-cache-engine.test.ts",
+          "agent/tests/codex-cache-probe.test.ts",
+          "agent/tests/codex-fast.test.ts",
+          "agent/tests/ops-codex.test.ts",
+          "agent/tests/ops-herdr.test.ts",
+          "agent/tests/sl-giant-phase-data/yql-blast.json",
+          "agent/tests/sl-giant-phase.test.ts",
+          "agent/tests/strategy-research-scheduling.test.ts",
+          "agent/tests/strategy-research.test.ts",
+          "docs/README.md",
+          "docs/boss-sim.md",
+          "docs/codex-ops.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6-astra",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "xhigh",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": "default",
+          "context_window": 512000,
+          "auto_compact_token_limit": 460800,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 10,
+        "prefix_sha": "3b0111ac6114",
+        "prefix_chars": 167231,
+        "prefix_tokens_est": {
+          "deepseek": 117062,
+          "claude": 162214
+        },
+        "system_sha": "40beea2ea467",
+        "system_chars": 169515,
+        "experience_version": "2026-10-10.8",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      }
+    },
+    "brain": {
+      "bytes": 416727547,
+      "mtime_age_seconds": 920.9,
+      "latest": {
+        "ts": "2026-10-11T10:26:00.046Z",
+        "run_id": "NYQW6JAD30K4",
+        "engine": "codex",
+        "model": "gpt-6-astra",
+        "accepted": true,
+        "latency_ms": 10883
+      },
+      "tail_sample_count": 18,
+      "outcomes": {
+        "True": 18
+      }
+    },
+    "codex-calls": {
+      "bytes": 28305695,
+      "mtime_age_seconds": 920.9,
+      "latest": {
+        "ts": "2026-10-11T10:26:00.045Z",
+        "run_id": "NYQW6JAD30K4",
+        "mode": "session",
+        "model": "gpt-6-astra",
+        "outcome": "answered"
+      },
+      "tail_sample_count": 18,
+      "outcomes": {
+        "answered": 18
+      }
+    },
+    "jev-prompts": {
+      "bytes": 678599756,
+      "mtime_age_seconds": 6.5,
+      "latest": {
+        "ts": "2026-10-11T10:41:14.022Z",
+        "run_id": "NYQW6JAD30K4",
+        "floor": 17,
+        "latency_ms": 473
+      }
+    },
+    "run-plans": {
+      "bytes": 7071758,
+      "mtime_age_seconds": 1112.9,
+      "latest": {
+        "ts": "2026-10-11T10:22:48.193Z",
+        "floor": 13
+      }
+    },
+    "sl-attempts": {
+      "bytes": 31239131,
+      "mtime_age_seconds": 202.0,
+      "latest": {
+        "ts": "2026-10-11T10:37:59.055Z",
+        "run_id": "NYQW6JAD30K4",
+        "floor": 17
+      }
+    },
+    "runs": {
+      "bytes": 297993,
+      "mtime_age_seconds": 2286.5,
+      "latest": {
+        "run_id": "3UPY3BP2LVS7",
+        "ended": "2026-10-11T10:02:02.645Z",
+        "floor": 17,
+        "character": "SILENT",
+        "ascension": 10
+      }
+    },
+    "states": {
+      "bytes": 11407776890,
+      "mtime_age_seconds": 4.0,
+      "latest": {
+        "ts": "2026-10-11T10:41:16.922Z"
+      }
+    }
+  },
+  "batches": [
+    {
+      "task": "fix-batch",
+      "learner_task": "boss-sim-batch",
+      "pid": 1862384,
+      "state": "running",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-knowledge_demon-20261011-173019",
+      "id": "20261011-173019-fix-batch",
+      "wrapper_pid_exists": true,
+      "out": {
+        "bytes": 0,
+        "age_minutes": 71.0
+      },
+      "err": {
+        "bytes": 29607,
+        "age_minutes": 0.3
+      }
+    },
+    {
+      "task": "experience-update",
+      "pid": 1919328,
+      "state": "running",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+      "id": "20261011-175450-experience-update",
+      "wrapper_pid_exists": true,
+      "out": {
+        "bytes": 0,
+        "age_minutes": 46.5
+      },
+      "err": {
+        "bytes": 25089,
+        "age_minutes": 0.0
+      }
+    },
+    {
+      "task": "strategy-proposal",
+      "pid": 1947653,
+      "state": "running",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-180211",
+      "id": "20261011-180211-strategy-proposal",
+      "wrapper_pid_exists": true,
+      "out": {
+        "bytes": 0,
+        "age_minutes": 39.0
+      },
+      "err": {
+        "bytes": 17928,
+        "age_minutes": 0.3
+      }
+    },
+    {
+      "task": "fix-batch",
+      "pid": 1982221,
+      "state": "running",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-181302",
+      "id": "20261011-181302-fix-batch",
+      "wrapper_pid_exists": true,
+      "out": {
+        "bytes": 0,
+        "age_minutes": 28.1
+      },
+      "err": {
+        "bytes": 14497,
+        "age_minutes": 0.6
+      }
+    },
+    {
+      "task": "strategy-proposal",
+      "pid": 2025166,
+      "state": "running",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-182947",
+      "id": "20261011-182947-strategy-proposal",
+      "wrapper_pid_exists": true,
+      "out": {
+        "bytes": 0,
+        "age_minutes": 11.3
+      },
+      "err": {
+        "bytes": 9069,
+        "age_minutes": 0.4
+      }
+    },
+    {
+      "task": "fix-batch",
+      "learner_task": "silent-boss-calibration",
+      "pid": 2025458,
+      "state": "running",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+      "id": "20261011-182947-fix-batch",
+      "wrapper_pid_exists": true,
+      "out": {
+        "bytes": 0,
+        "age_minutes": 11.5
+      },
+      "err": {
+        "bytes": 10907,
+        "age_minutes": 0.1
+      }
+    }
+  ],
+  "load_average": [
+    39.3408203125,
+    33.74267578125,
+    30.9609375
+  ],
+  "cpus": 32,
+  "limitations": [
+    "Historical queue remains until its active wake completes.",
+    "Process existence alone does not prove model progress; outputs and completion reports must be checked.",
+    "No gameplay rules or knowledge were changed in this health audit.",
+    "A11 request versus actual A10 is already assigned through ops fix queue."
+  ]
+}

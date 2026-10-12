@@ -1,0 +1,276 @@
+diff --git a/agent/src/eye/decision-log.ts b/agent/src/eye/decision-log.ts
+index 28dd54b4b..a3767a75a 100644
+--- a/agent/src/eye/decision-log.ts
++++ b/agent/src/eye/decision-log.ts
+@@ -86,6 +86,9 @@ export interface DecisionRecord {
+   rollout_best_chosen?: boolean | null;
+   /** Silent A10 HP-guard candidate snapshots, before SL; never recorded as actual savings. */
+   hp_guard?: JsonValue;
++  /** Silent A10 candidate predictions and the loop's separate single-action dispatch receipt. */
++  selection_audit?: JsonValue;
++  selection_dispatch?: JsonValue;
+   /**
+    * Combat plan choice (2026-10-04): the combat planner's time to the question and its parts (planner, solve, mc, rollout,
+    * boss_sim, other ms), the process's CPU over it, the machine's load, B2's fights done, the SL retry memo's hits
+diff --git a/agent/src/hand/loop.ts b/agent/src/hand/loop.ts
+index 1d1a702f2..4c6ab50a1 100644
+--- a/agent/src/hand/loop.ts
++++ b/agent/src/hand/loop.ts
+@@ -28,6 +28,7 @@ import { moveModel } from "../knowledge/move-model.js";
+ import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, plannerTiming, trackLizardTail } from "../reflex/combat-plan.js";
+ import { notePermafrostPlay, observePermafrost } from "../reflex/permafrost.js";
+ import { observeSilentSkittish } from "../reflex/silent-skittish.js";
++import { silentSelectionDispatch, type SelectionDispatchReceipt } from "../reflex/silent-selection-dispatch.js";
+ import { noteFightReplay, observeFightPlays } from "../reflex/fight-plays.js";
+ import { computeMemoOptions } from "../sim/compute-memo.js";
+ import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "../memory/fight-plan.js";
+@@ -1452,6 +1453,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+       gated = gate(state, endTurn);
+     }
+     const intent: ActionRequest = resolved.intent;
++    const selectionReceipt = (receipt: SelectionDispatchReceipt) =>
++      silentSelectionDispatch(state, resolved.log?.selection_audit, intent, receipt);
+ 
+     const recordBase = () => ({
+       ts: new Date().toISOString(),
+@@ -1540,6 +1543,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+             ...(runId ? { run_id: runId } : {}),
+             observed_ts: observedTs,
+             gate_reject: toJsonValue({ at, kind: result.kind ?? "legality", reason: result.reason, expected: result.expected ?? null, actual: result.actual ?? null }),
++            ...selectionReceipt({ status: "not_dispatched", reason: `gate_refused_${at}` }),
+             result: `not dispatched: gate refused (${at}): ${result.reason}`.slice(0, 300),
+           };
+           log.write(record);
+@@ -1638,7 +1642,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+       const routePlan = applyResolved();
+       journal.record(state, journalEntry);
+       stats.decisions += 1;
+-      const record: DecisionRecord = { ...baseRecord, ...replayFields, ...routePlan, result: "shadow (not dispatched)" };
++      const record: DecisionRecord = { ...baseRecord, ...replayFields, ...routePlan,
++        ...selectionReceipt({ status: "not_dispatched", reason: "shadow" }), result: "shadow (not dispatched)" };
+       log.write(record);
+       logRouteChange(record.ts, "shadow (not dispatched)");
+       logState(state, stateFingerprint, record.ts);
+@@ -1653,10 +1658,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+      * shop while DeepSeek's shop/buy call ran (84 s, 45 s); the board changed, the loop re-planned, and
+      * both calls (48k tokens) were only in deepseek-reasoning.jsonl.
+      */
+-    const logUndispatched = (why: string): void => {
++    const logUndispatched = (why: string, reason: "state_read_failed" | "state_changed"): void => {
+       const paid = baseRecord.usage.input_tokens + baseRecord.usage.output_tokens > 0;
+       if (!paid || fromMemo) return;
+-      const record: DecisionRecord = { ...baseRecord, ...replayFields, result: `not dispatched: ${why}` };
++      const record: DecisionRecord = { ...baseRecord, ...replayFields,
++        ...selectionReceipt({ status: "not_dispatched", reason }), result: `not dispatched: ${why}` };
+       log.write(record);
+       logState(state, stateFingerprint, record.ts);
+       onEvent({ type: "decision", record, totals: totals() });
+@@ -1674,14 +1680,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+       fresh = await client.state();
+     } catch (error) {
+       onEvent({ type: "note", message: `pre-dispatch state re-read failed: ${classifyFailure(error).detail}` });
+-      logUndispatched(`pre-dispatch state re-read failed: ${classifyFailure(error).detail}`.slice(0, 300));
++      logUndispatched(`pre-dispatch state re-read failed: ${classifyFailure(error).detail}`.slice(0, 300), "state_read_failed");
+       await sleep(pollIntervalMs);
+       continue;
+     }
+     if (fingerprint(fresh) !== stateFingerprint) {
+       const settling = settleMs > 0 ? ` (turn start still settling: ${settlePowersOf(state).join(", ")} up)` : "";
+       onEvent({ type: "note", message: `state changed while deciding${settling}; re-planning` });
+-      logUndispatched(`state changed while deciding${settling}`);
++      logUndispatched(`state changed while deciding${settling}`, "state_changed");
+       continue;
+     }
+     // The gate once more on the state the action goes to: the fingerprint leaves out much of what the indices
+@@ -1705,6 +1711,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+         const record: DecisionRecord = {
+           ...baseRecord,
+           ...replayFields,
++          ...selectionReceipt({ status: "not_dispatched", reason: "sl_reload" }),
+           result: (reload.ok
+             ? `not dispatched: SL reloaded the fight (certain death foreseen${intent.action === "end_turn" ? "" : " at the least-loss verdict, before its line"}; back on T${reload.resumedTurn ?? "?"} after ${Math.round(reload.ms / 1000)} s)`
+             : `not dispatched: SL reload failed at ${reload.step}: ${reload.reason}`).slice(0, 300),
+@@ -1751,6 +1758,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+         ...baseRecord,
+         ...replayFields,
+         latency_ms: { ...baseRecord.latency_ms, action: Date.now() - actionStarted },
++        ...selectionReceipt({ status: "error", kind: failure.kind }),
+         result: `failed (${failure.kind}): ${failure.detail}`.slice(0, 300),
+       };
+       log.write(failed);
+@@ -1818,6 +1826,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+       ...replayFields,
+       ...routePlan,
+       latency_ms: { ...baseRecord.latency_ms, action: Date.now() - actionStarted },
++      ...selectionReceipt({ status: "returned", result: actionResult }),
+       result: `${actionResult.status}${actionResult.stable ? "" : " (unstable)"}: ${actionResult.message}`,
+     };
+     log.write(record);
+diff --git a/agent/src/reflex/silent-selection-dispatch.ts b/agent/src/reflex/silent-selection-dispatch.ts
+new file mode 100644
+index 000000000..0cddf2bac
+--- /dev/null
++++ b/agent/src/reflex/silent-selection-dispatch.ts
+@@ -0,0 +1,35 @@
++import { asRecord, str, toJsonValue, type JsonValue } from "../core/util/json.js";
++import { wireIntent } from "../hand/act/identity.js";
++import type { ActionRequest } from "../hand/mod/client.js";
++import type { ActionResult, GameState } from "../hand/mod/schema.js";
++
++export type SelectionDispatchReceipt =
++  | { status: "not_dispatched"; reason: string }
++  | { status: "returned"; result: Pick<ActionResult, "status" | "stable"> }
++  | { status: "error"; kind: string };
++
++/** 8JRE/YF0L/XP2S, silent-0079: one dispatch receipt never proves the selected turn was executed. */
++export function silentSelectionDispatch(
++  state: GameState, audit: JsonValue | undefined, intent: ActionRequest, receipt: SelectionDispatchReceipt,
++): { selection_dispatch?: JsonValue } {
++  if (str(asRecord(state.run?.raw)["character_id"]).toLowerCase() !== "silent" || state.run?.ascension !== 10 ||
++    asRecord(audit)["scope"] !== "predicted_candidates") return {};
++  return {
++    selection_dispatch: {
++      schema: 1,
++      scope: "single_action_receipt",
++      requested_action: toJsonValue(asRecord(audit)["requested_action"] ?? null),
++      gated_action: toJsonValue(wireIntent(intent)),
++      expected_identity: intent.expect ? toJsonValue(intent.expect) : null,
++      dispatch_status: receipt.status,
++      not_dispatched_reason: receipt.status === "not_dispatched" ? receipt.reason : null,
++      returned_status: receipt.status === "returned" ? receipt.result.status : null,
++      returned_stable: receipt.status === "returned" ? receipt.result.stable : null,
++      error_kind: receipt.status === "error" ? receipt.kind : null,
++      // Even a completed/stable response needs later state evidence; a timeout may have applied.
++      state_effect_verified: false,
++      whole_plan_executed: null,
++      actual_turn: null,
++    },
++  };
++}
+diff --git a/agent/tests/silent-selection-dispatch.test.ts b/agent/tests/silent-selection-dispatch.test.ts
+new file mode 100644
+index 000000000..a67ae969d
+--- /dev/null
++++ b/agent/tests/silent-selection-dispatch.test.ts
+@@ -0,0 +1,121 @@
++/** 8JRE F33 T2, YF0L F48 T1 and XP2S F33 T3 / silent-0079: a receipt is not a turn outcome. */
++import { mkdtempSync, readFileSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { afterEach, expect, it, vi } from "vitest";
++import { loadConfig } from "../src/core/config.js";
++import { runLoop } from "../src/hand/loop.js";
++import { ModProtocolError, type ActionRequest, type ModClient } from "../src/hand/mod/client.js";
++import { parseGameState, type ActionResult } from "../src/hand/mod/schema.js";
++import { planDecision } from "../src/hand/screens/index.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { silentSelectionAudit } from "../src/reflex/silent-selection-audit.js";
++import { silentSelectionDispatch } from "../src/reflex/silent-selection-dispatch.js";
++
++vi.mock("../src/hand/screens/index.js", () => ({ planDecision: vi.fn() }));
++vi.mock("../src/knowledge/files.js", async (original) => ({
++  ...await original<typeof import("../src/knowledge/files.js")>(),
++  knowledgeFile: (_dir: string, name: string) => `/__silent_dispatch_fixed__/${name}`,
++}));
++vi.mock("../src/eye/run-config.js", () => ({ createRunConfigLog: () => null }));
++
++const fixture = JSON.parse(readFileSync(new URL("./silent-selection-audit-state.json", import.meta.url), "utf8"));
++const state = () => parseGameState(structuredClone(fixture.state));
++const intent: ActionRequest = { action: "play_card", card_index: 0 };
++const audit = () => silentSelectionAudit(state(), 3, { answer: null, beforeSl: null, afterSl: null }, intent)!;
++const directories: string[] = [];
++afterEach(() => { vi.clearAllMocks(); for (const dir of directories.splice(0)) rmSync(dir, { recursive: true, force: true }); });
++
++async function runReceipt(mode: "play" | "shadow", fails = false, foreign = false, refuse = false) {
++  const dir = mkdtempSync(join(tmpdir(), "silent-dispatch-")); directories.push(dir);
++  const log = join(dir, "decisions.jsonl");
++  const board = state();
++  if (foreign) board.run!.raw["character_id"] = "IRONCLAD";
++  vi.mocked(planDecision).mockReturnValue({ kind: "decision", decision: {
++    kind: "act", label: "combat/plan-choice", intent: { ...intent,
++      ...(refuse ? { expect: { card: { id: "STRIKE_SILENT" } } } : {}) },
++    rationale: "fixed observed first step", log: { selection_audit: audit() },
++  } });
++  const act = vi.fn(async (): Promise<ActionResult> => {
++    if (fails) throw new ModProtocolError("fixed uncertain action response");
++    return { action: "play_card", status: "completed", stable: true, message: "fixed receipt", state: null, raw: {} };
++  });
++  const config = loadConfig({});
++  config.sl.enabled = false;
++  config.runPlan = "off"; config.fightPlan = "off";
++  config.log = { ...config.log, decisionLog: log, jevPromptLog: join(dir, "jev.jsonl") };
++  const stop = new AbortController();
++  await runLoop({ config, mode, client: { state: async () => board, act } as unknown as ModClient,
++    knowledge: makeKnowledge({}, "cache"), jev: null, brain: null, restoreRun: false,
++    signal: stop.signal, onEvent: (event) => { if (event.type === "decision") stop.abort(); },
++    maxDecisions: 1, maxMinutes: 0.05, combatGraceMinutes: 0, pollIntervalMs: 1 });
++  return { rows: readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line)), act };
++}
++
++it("the real loop persists its completed first-action receipt beside the unchanged prediction", async () => {
++  const { rows, act } = await runReceipt("play");
++  expect(act).toHaveBeenCalledOnce();
++  expect(rows).toHaveLength(1);
++  expect(rows[0].selection_audit).toEqual(audit());
++  expect(rows[0]).toMatchObject({ chosen: intent, selection_dispatch: {
++    scope: "single_action_receipt", dispatch_status: "returned", gated_action: intent,
++    returned_status: "completed", returned_stable: true,
++    expected_identity: { card: { id: "FRANTIC_ESCAPE" } },
++    state_effect_verified: false, whole_plan_executed: null, actual_turn: null,
++  } });
++});
++
++it("a shadow memory application is explicitly undispatched", async () => {
++  const { rows, act } = await runReceipt("shadow");
++  expect(act).not.toHaveBeenCalled();
++  expect(rows[0].selection_dispatch).toMatchObject({ dispatch_status: "not_dispatched", not_dispatched_reason: "shadow",
++    returned_status: null, returned_stable: null, whole_plan_executed: null });
++});
++
++it("an action error stays uncertain even though the action may have applied", async () => {
++  const { rows, act } = await runReceipt("play", true);
++  expect(act).toHaveBeenCalledOnce();
++  expect(rows[0].selection_dispatch).toMatchObject({ dispatch_status: "error", error_kind: "fatal",
++    returned_status: null, state_effect_verified: false, actual_turn: null });
++});
++
++it("the execution consumer adds nothing for another character", async () => {
++  const { rows, act } = await runReceipt("play", false, true);
++  expect(act).toHaveBeenCalledOnce();
++  expect(rows[0].selection_dispatch).toBeUndefined();
++});
++
++it("the real identity gate refusal records no dispatch, even with a candidate request", async () => {
++  const { rows, act } = await runReceipt("play", false, false, true);
++  expect(act).not.toHaveBeenCalled();
++  expect(rows[0]).toMatchObject({ gate_reject: { at: "decision", kind: "identity" }, selection_dispatch: {
++    dispatch_status: "not_dispatched", not_dispatched_reason: "gate_refused_decision",
++    expected_identity: { card: { id: "STRIKE_SILENT" } }, returned_status: null, actual_turn: null,
++  } });
++});
++
++it.each(["gate_refused_decision", "gate_refused_dispatch", "state_changed", "state_read_failed", "sl_reload"])(
++  "keeps %s separate from a successful dispatch and preserves a changed gated action", (reason) => {
++    const prediction = audit();
++    const before = structuredClone(prediction);
++    const gated: ActionRequest = { action: "end_turn" };
++    expect(silentSelectionDispatch(state(), prediction, gated, { status: "not_dispatched", reason })).toMatchObject({
++      selection_dispatch: { requested_action: { action: "play_card", card_index: 0 }, gated_action: gated,
++        dispatch_status: "not_dispatched", not_dispatched_reason: reason, returned_status: null, actual_turn: null },
++    });
++    expect(prediction).toEqual(before);
++  },
++);
++
++it.each(["pending", "failed"] as const)("does not promote the mod's %s response to completion", (status) => {
++  expect(silentSelectionDispatch(state(), audit(), intent, { status: "returned", result: { status, stable: false } })).toMatchObject({
++    selection_dispatch: { returned_status: status, returned_stable: false, state_effect_verified: false, whole_plan_executed: null },
++  });
++});
++
++it("does not infer a receipt for missing candidate evidence or another ascension", () => {
++  const board = state();
++  expect(silentSelectionDispatch(board, undefined, intent, { status: "error", kind: "wait" })).toEqual({});
++  board.run!.ascension = 9;
++  expect(silentSelectionDispatch(board, audit(), intent, { status: "error", kind: "wait" })).toEqual({});
++});

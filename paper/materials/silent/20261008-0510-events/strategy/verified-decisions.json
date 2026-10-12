@@ -1,0 +1,710 @@
+{
+  "269706": {
+    "ts": "2026-10-07T07:35:36.294Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 43,
+    "turn": 1,
+    "label": "combat/plan-choice",
+    "decision_id": "f1233b3d-ee2c-4c00-ab16-d6aafe1dcb68",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:254:0:true\",\"event\":\"\",\"gold\":385,\"hand\":\"0:APOTHEOSIS:true|1:SUCKER_PUNCH:true|2:STRIKE_SILENT:true|3:FASTEN:true|4:STRIKE_SILENT:true|5:ASCENDERS_BANE:false|6:PIERCING_WAIL:true\",\"hp\":90,\"maxHp\":99,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"7:0:0\",\"potions\":\"FIRE_POTION:true:true|:false:false|:false:false|:false:false\",\"powers\":\"PLATING_POWER:4|STRENGTH_POWER:1\",\"rewards\":\"\",\"run\":\"VLZ6CCT8AQ0A\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 打击 -> 灵魂枢纽, then 勒紧, then 打击 -> 灵魂枢纽, then 尖啸, then potion 火焰药水 -> 灵魂枢纽\",\"result\":\"survives with 76/99 HP before healing\",\"hp_lost\":14,\"damage_dealt\":43,\"enemies_after\":\"灵魂枢纽 211 HP, Weak 1\",\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":76,\"hp_after_pct\":77,\"dmg\":43,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"火焰药水\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~171, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 43; T2: hp -6.3 [0-25], dmg 7.8 [0-27], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.8 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -18.9 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 72, win 81% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan6 (every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn); the rollout picks none of them\",\"potion_cost\":\"fight HP loss 90; potions used 1 (this turn: FIRE_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 90\"}",
+          "plan2": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 打击 -> 灵魂枢纽, then 勒紧, then 尖啸, then potion 火焰药水 -> 灵魂枢纽\",\"result\":\"survives with 76/99 HP before healing\",\"hp_lost\":14,\"damage_dealt\":36,\"enemies_after\":\"灵魂枢纽 218 HP, Weak 1\",\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":76,\"hp_after_pct\":77,\"dmg\":36,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"火焰药水\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~178, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 36; T2: hp -6.3 [0-25], dmg 7.8 [0-27], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.8 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -18.9 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 73, win 79% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 90; potions used 1 (this turn: FIRE_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 90\"}",
+          "plan3": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 打击 -> 灵魂枢纽, then 勒紧, then 打击 -> 灵魂枢纽, then potion 火焰药水 -> 灵魂枢纽\",\"result\":\"survives with 71/99 HP before healing\",\"hp_lost\":19,\"damage_dealt\":43,\"enemies_after\":\"灵魂枢纽 211 HP, Weak 1\",\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":71,\"hp_after_pct\":72,\"dmg\":43,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"火焰药水\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~171, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 19)\",\"rollout_turns\":\"T1 exact: hp -19, dmg 43; T2: hp -6.3 [0-25], dmg 7.8 [0-27], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.1 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -19.1 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 75, win 78% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 90; potions used 1 (this turn: FIRE_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 90\"}",
+          "plan4": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 勒紧, then 尖啸, then potion 火焰药水 -> 灵魂枢纽\",\"result\":\"survives with 76/99 HP before healing\",\"hp_lost\":14,\"damage_dealt\":29,\"enemies_after\":\"灵魂枢纽 225 HP, Weak 1\",\"energy_unused\":2,\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":76,\"hp_after_pct\":77,\"dmg\":29,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"火焰药水\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~13.1; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~185, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 29; T2: hp -6.3 [0-25], dmg 7.8 [0-27], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.8 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -18.9 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 73, win 77% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 90; potions used 1 (this turn: FIRE_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 90\"}",
+          "plan5": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 打击 -> 灵魂枢纽, then 勒紧, then potion 火焰药水 -> 灵魂枢纽\",\"result\":\"survives with 71/99 HP before healing\",\"hp_lost\":19,\"damage_dealt\":36,\"enemies_after\":\"灵魂枢纽 218 HP, Weak 1\",\"energy_unused\":2,\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":71,\"hp_after_pct\":72,\"dmg\":36,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"火焰药水\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~178, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 19)\",\"rollout_turns\":\"T1 exact: hp -19, dmg 36; T2: hp -6.3 [0-25], dmg 7.8 [0-27], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.1 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -19.1 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 75, win 76% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 90; potions used 1 (this turn: FIRE_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 90\"}",
+          "plan6": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 打击 -> 灵魂枢纽, then 勒紧, then 打击 -> 灵魂枢纽, then 尖啸\",\"result\":\"survives with 76/99 HP before healing\",\"hp_lost\":14,\"damage_dealt\":23,\"enemies_after\":\"灵魂枢纽 231 HP, Weak 1\",\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":76,\"hp_after_pct\":77,\"dmg\":23,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~171, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 23; T2: hp -6.3 [0-25], dmg 27.8 [20-47], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.8 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -18.9 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 72, win 81% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan1 (every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn); the rollout picks none of them\",\"potion_cost\":\"fight HP loss 90; potions used 1 (later turns: FIRE_POTION in 8/8 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 90\"}",
+          "plan7": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 勒紧, then potion 火焰药水 -> 灵魂枢纽\",\"result\":\"survives with 71/99 HP before healing\",\"hp_lost\":19,\"damage_dealt\":29,\"enemies_after\":\"灵魂枢纽 225 HP, Weak 1\",\"energy_unused\":3,\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":71,\"hp_after_pct\":72,\"dmg\":29,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"火焰药水\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~13.1; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~185, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 19)\",\"rollout_turns\":\"T1 exact: hp -19, dmg 29; T2: hp -6.3 [0-25], dmg 7.8 [0-27], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.1 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -19.1 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 75, win 74% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 90; potions used 1 (this turn: FIRE_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 90\"}",
+          "plan8": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 打击 -> 灵魂枢纽, then 勒紧, then 尖啸\",\"result\":\"survives with 76/99 HP before healing\",\"hp_lost\":14,\"damage_dealt\":16,\"enemies_after\":\"灵魂枢纽 238 HP, Weak 1\",\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":76,\"hp_after_pct\":77,\"dmg\":16,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~178, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 16; T2: hp -6.3 [0-25], dmg 27.8 [20-47], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.8 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -18.9 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 73, win 79% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 90; potions used 1 (later turns: FIRE_POTION in 8/8 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 90\"}",
+          "plan9": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 打击 -> 灵魂枢纽, then 勒紧, then 打击 -> 灵魂枢纽\",\"result\":\"survives with 71/99 HP before healing\",\"hp_lost\":19,\"damage_dealt\":23,\"enemies_after\":\"灵魂枢纽 231 HP, Weak 1\",\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":71,\"hp_after_pct\":72,\"dmg\":23,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~171, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 19)\",\"rollout_turns\":\"T1 exact: hp -19, dmg 23; T2: hp -6.3 [0-25], dmg 27.8 [20-47], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.1 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -19.1 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 75, win 78% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 90; potions used 1 (later turns: FIRE_POTION in 8/8 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 90\"}",
+          "plan10": "{\"plays\":\"神化, then 突然一拳 -> 灵魂枢纽, then 打击 -> 灵魂枢纽, then 勒紧, then 打击 -> 灵魂枢纽, then 尖啸\",\"result\":\"survives with 76/99 HP before healing\",\"hp_lost\":14,\"damage_dealt\":23,\"enemies_after\":\"灵魂枢纽 231 HP, Weak 1\",\"lasting_value\":\"sets up a power worth about 15 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"no_potion_fight\":\"the no-potion line: the same turn as plan6, and no potion for the rest of this fight (its rollout's later turns drink none; plan6's may)\",\"hp_after\":76,\"hp_after_pct\":77,\"dmg\":23,\"lethal_now\":\"no\",\"enemy_threat_next\":24,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧; lasting value 15\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~13.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~191, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 23; T2: hp -6.3 [0-25], dmg 7.8 [0-27], alive 8/8, won 0/8; T3: hp -9.5 [0-35], dmg 7.1 [0-19], alive 8/8, won 0/8; T4: hp -11.8 [0-34], dmg 8.5 [1-17], alive 8/8, won 0/8; T5: hp -18.9 [1-33], dmg 16.6 [3-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 71, win 79% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 90; potions used 0; potion cost 0 HP (potion table, this act's held value); total 90\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan1",
+        "probabilities": {
+          "plan2": 0.05,
+          "plan3": 0.04,
+          "plan8": 0.01,
+          "plan6": 0.06,
+          "plan4": 0.03,
+          "plan5": 0.01,
+          "plan9": 0.01,
+          "plan7": 0.01,
+          "plan1": 0.66,
+          "plan10": 0.12
+        },
+        "confidence": 0.62,
+        "raw": {
+          "type": "choice",
+          "choice": "plan1",
+          "confidence": 0.62,
+          "probabilities": {
+            "plan2": 0.05,
+            "plan3": 0.04,
+            "plan8": 0.01,
+            "plan6": 0.06,
+            "plan4": 0.03,
+            "plan5": 0.01,
+            "plan9": 0.01,
+            "plan7": 0.01,
+            "plan1": 0.66,
+            "plan10": 0.12
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "APOTHEOSIS",
+        "upgraded": false
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 1/10 (神化, 突然一拳 -> 灵魂枢纽, 打击 -> 灵魂枢纽, 勒紧, 打击 -> 灵魂枢纽, 尖啸, potion 火焰药水 -> 灵魂枢纽) with confidence 0.62; code rank 1",
+    "confidence": 0.62,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1154a18717d9daf6ee4dd44e6282f"
+    ],
+    "latency_ms": {
+      "plan": 34,
+      "jev": 821,
+      "action": 231,
+      "planner": 801,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 8919,
+      "output_tokens": 99
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 777,
+      "horizon": 5,
+      "samples": 8,
+      "degraded": [],
+      "lines": 12,
+      "best": null,
+      "best_added": false,
+      "tied": [
+        "plan1",
+        "plan6"
+      ],
+      "saturated": true,
+      "no_potion": {
+        "key": "plan10",
+        "merged": false
+      }
+    },
+    "rollout_best_chosen": true,
+    "timing": {
+      "planner_ms": 799,
+      "solve_ms": 11,
+      "mc_ms": 0,
+      "rollout_ms": 777,
+      "boss_sim_ms": 0,
+      "other_ms": 11,
+      "cpu_ms": 1595,
+      "load1": 14.88,
+      "probe_ms": 2.73
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "VLZ6CCT8AQ0A",
+    "observed_ts": "2026-10-07T07:35:34.638Z",
+    "journal": {
+      "choice": "神化, then 突然一拳 -> 灵魂枢纽, then 打击 -> 灵魂枢纽, then 勒紧, then 打击 -> 灵魂枢纽, then 尖啸, then potion 火焰药水 -> 灵魂枢纽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "269707": {
+    "ts": "2026-10-07T07:35:37.852Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 43,
+    "turn": 1,
+    "label": "combat/plan-choice",
+    "decision_id": "1255c12e-9a86-457f-8d27-77861f95b4d6",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:254:0:true\",\"event\":\"\",\"gold\":385,\"hand\":\"0:SUCKER_PUNCH:true|1:STRIKE_SILENT:true|2:FASTEN:true|3:STRIKE_SILENT:true|4:ASCENDERS_BANE:false|5:PIERCING_WAIL:true\",\"hp\":90,\"maxHp\":99,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"5:0:0\",\"potions\":\"FIRE_POTION:true:true|:false:false|:false:false|:false:false\",\"powers\":\"PLATING_POWER:4|STRENGTH_POWER:1\",\"rewards\":\"\",\"run\":\"VLZ6CCT8AQ0A\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"突然一拳+ -> 灵魂枢纽, then 打击+ -> 灵魂枢纽, then 勒紧+, then 打击+ -> 灵魂枢纽, then 尖啸+, then potion 火焰药水 -> 灵魂枢纽\",\"result\":\"survives with 77/99 HP before healing\",\"hp_lost\":13,\"damage_dealt\":51,\"enemies_after\":\"灵魂枢纽 203 HP, Weak 2\",\"lasting_value\":\"sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)\",\"hp_after\":77,\"hp_after_pct\":78,\"dmg\":51,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧+; lasting value 8\",\"block_wasted\":0,\"potions_used\":\"火焰药水\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~11.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~154, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 51; T2: hp -5.5 [0-17], dmg 11 [0-30], alive 8/8, won 0/8; T3: hp -12.4 [0-39], dmg 7.5 [0-22], alive 8/8, won 0/8; T4: hp -13.5 [0-45], dmg 10.9 [1-21], alive 8/8, won 0/8; T5: hp -20.3 [5-33], dmg 19.4 [7-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 73, win 76% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan2 (every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn); the rollout picks none of them\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血13；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\",\"potion_cost\":\"fight HP loss 90; potions used 1 (this turn: FIRE_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 90\"}",
+          "plan2": "{\"plays\":\"突然一拳+ -> 灵魂枢纽, then 打击+ -> 灵魂枢纽, then 勒紧+, then 打击+ -> 灵魂枢纽, then 尖啸+\",\"result\":\"survives with 77/99 HP before healing\",\"hp_lost\":13,\"damage_dealt\":31,\"enemies_after\":\"灵魂枢纽 223 HP, Weak 2\",\"lasting_value\":\"sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)\",\"hp_after\":77,\"hp_after_pct\":78,\"dmg\":31,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧+; lasting value 8\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~11.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~154, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 31; T2: hp -5.5 [0-17], dmg 31 [20-50], alive 8/8, won 0/8; T3: hp -12.4 [0-39], dmg 7.5 [0-22], alive 8/8, won 0/8; T4: hp -13.5 [0-45], dmg 10.9 [1-21], alive 8/8, won 0/8; T5: hp -20.3 [5-33], dmg 19.4 [7-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 73, win 76% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan1 (every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn); the rollout picks none of them\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血13；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\",\"potion_cost\":\"fight HP loss 90; potions used 1 (later turns: FIRE_POTION in 8/8 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 90\"}",
+          "plan3": "{\"plays\":\"突然一拳+ -> 灵魂枢纽, then 打击+ -> 灵魂枢纽, then 勒紧+, then 打击+ -> 灵魂枢纽, then 尖啸+\",\"result\":\"survives with 77/99 HP before healing\",\"hp_lost\":13,\"damage_dealt\":31,\"enemies_after\":\"灵魂枢纽 223 HP, Weak 2\",\"lasting_value\":\"sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)\",\"no_potion_fight\":\"the no-potion line: the same turn as plan2, and no potion for the rest of this fight (its rollout's later turns drink none; plan2's may)\",\"hp_after\":77,\"hp_after_pct\":78,\"dmg\":31,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧+; lasting value 8\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 90, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~174, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 31; T2: hp -5.5 [0-17], dmg 11 [0-30], alive 8/8, won 0/8; T3: hp -12.4 [0-39], dmg 7.5 [0-22], alive 8/8, won 0/8; T4: hp -13.5 [0-45], dmg 10.9 [1-21], alive 8/8, won 0/8; T5: hp -20.3 [5-33], dmg 19.4 [7-31], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 72, win 76% (this encounter n=0; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 90; potions used 0; potion cost 0 HP (potion table, this act's held value); total 90\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan1",
+        "probabilities": {
+          "plan1": 0.45,
+          "plan2": 0.1,
+          "plan3": 0.45
+        },
+        "confidence": 0.18,
+        "raw": {
+          "type": "choice",
+          "choice": "plan1",
+          "confidence": 0.18,
+          "probabilities": {
+            "plan1": 0.45,
+            "plan2": 0.1,
+            "plan3": 0.45
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SUCKER_PUNCH",
+        "upgraded": true
+      },
+      "target": {
+        "id": "SOUL_NEXUS"
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 1/3 (突然一拳+ -> 灵魂枢纽, 打击+ -> 灵魂枢纽, 勒紧+, 打击+ -> 灵魂枢纽, 尖啸+, potion 火焰药水 -> 灵魂枢纽) with confidence 0.18; code rank 1",
+    "confidence": 0.18,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1154a1f197921ae10acb4d7029054"
+    ],
+    "latency_ms": {
+      "plan": 56,
+      "jev": 358,
+      "action": 455,
+      "planner": 329,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 4577,
+      "output_tokens": 42
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 317,
+      "horizon": 5,
+      "samples": 8,
+      "degraded": [],
+      "lines": 7,
+      "best": null,
+      "best_added": false,
+      "tied": [
+        "plan1",
+        "plan2"
+      ],
+      "saturated": true,
+      "no_potion": {
+        "key": "plan3",
+        "merged": false
+      }
+    },
+    "rollout_best_chosen": true,
+    "timing": {
+      "planner_ms": 326,
+      "solve_ms": 3,
+      "mc_ms": 0,
+      "rollout_ms": 317,
+      "boss_sim_ms": 0,
+      "other_ms": 6,
+      "cpu_ms": 416,
+      "load1": 14.73,
+      "probe_ms": 2.95
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "VLZ6CCT8AQ0A",
+    "observed_ts": "2026-10-07T07:35:37.108Z",
+    "journal": {
+      "choice": "突然一拳+ -> 灵魂枢纽, then 打击+ -> 灵魂枢纽, then 勒紧+, then 打击+ -> 灵魂枢纽, then 尖啸+, then potion 火焰药水 -> 灵魂枢纽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "269748": {
+    "ts": "2026-10-07T07:37:18.925Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 45,
+    "turn": 1,
+    "label": "combat/plan-choice+potion",
+    "decision_id": "04b5c1fd-fc69-4e01-9c6b-c2417cd16d31",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:108:0:true|1:97:0:true|2:89:0:true\",\"event\":\"\",\"gold\":432,\"hand\":\"0:APOTHEOSIS:true|1:DEFEND_SILENT:true|2:FASTEN:true|3:DEADLY_POISON:true|4:DEFEND_SILENT:true|5:STRIKE_SILENT:true|6:ACCELERANT:true\",\"hp\":67,\"maxHp\":104,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"7:0:0\",\"potions\":\"CURE_ALL:true:true|:false:false|:false:false|:false:false\",\"powers\":\"PLATING_POWER:4|STRENGTH_POWER:1\",\"rewards\":\"\",\"run\":\"VLZ6CCT8AQ0A\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"神化, then 勒紧, then 防御, then 致命毒药+ -> 连枷骑士, then 防御, then 触媒\",\"result\":\"survives with 65/104 HP before healing\",\"hp_lost\":2,\"damage_dealt\":13,\"enemies_after\":\"连枷骑士 95 HP, 中毒 5; 幽灵骑士 97 HP; 魔法骑士 89 HP\",\"block_gained\":18,\"lasting_value\":\"sets up a power worth about 23 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"no_potion_fight\":\"the no-potion line: no potion this turn, and the rollout's later turns drink none either\",\"hp_after\":65,\"hp_after_pct\":63,\"dmg\":13,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧, 触媒; lasting value 23\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -2, dmg 13\",\"history_estimate\":\"further HP loss 33, win 88% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "plan2": "{\"focus\":\"连枷骑士\",\"plays\":\"神化, then 勒紧, then 防御, then 致命毒药+ -> 连枷骑士, then 打击 -> 连枷骑士, then 触媒\",\"result\":\"survives with 56/104 HP before healing\",\"hp_lost\":11,\"damage_dealt\":20,\"enemies_after\":\"连枷骑士 88 HP, 中毒 5; 幽灵骑士 97 HP; 魔法骑士 89 HP\",\"block_gained\":9,\"lasting_value\":\"sets up a power worth about 23 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":56,\"hp_after_pct\":54,\"dmg\":20,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧, 触媒; lasting value 23\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -11, dmg 20\",\"history_estimate\":\"further HP loss 36, win 87% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "plan3": "{\"plays\":\"神化, then 防御, then 勒紧, then 致命毒药+ -> 连枷骑士, then 防御, then 触媒\",\"result\":\"survives with 61/104 HP before healing\",\"hp_lost\":6,\"damage_dealt\":13,\"enemies_after\":\"连枷骑士 95 HP, 中毒 5; 幽灵骑士 97 HP; 魔法骑士 89 HP\",\"block_gained\":14,\"lasting_value\":\"sets up a power worth about 23 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":61,\"hp_after_pct\":59,\"dmg\":13,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧, 触媒; lasting value 23\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -6, dmg 13\",\"history_estimate\":\"further HP loss 33, win 87% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "plan4": "{\"plays\":\"勒紧, then 防御, then 致命毒药+ -> 连枷骑士, then 防御, then 打击 -> 连枷骑士, then 触媒\",\"result\":\"survives with 65/104 HP before healing\",\"hp_lost\":2,\"damage_dealt\":20,\"enemies_after\":\"连枷骑士 88 HP, 中毒 5; 幽灵骑士 97 HP; 魔法骑士 89 HP\",\"block_gained\":18,\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 16 score over the fight (a few HP now is often worth it in a long fight)\",\"hp_after\":65,\"hp_after_pct\":63,\"dmg\":20,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧, 触媒; lasting value 16\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -2, dmg 20\",\"history_estimate\":\"further HP loss 33, win 88% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "plan5": "{\"plays\":\"神化, then 勒紧, then 防御, then 防御, then 打击 -> 连枷骑士, then 触媒\",\"result\":\"survives with 65/104 HP before healing\",\"hp_lost\":2,\"damage_dealt\":7,\"enemies_after\":\"连枷骑士 101 HP; 幽灵骑士 97 HP; 魔法骑士 89 HP\",\"block_gained\":18,\"lasting_value\":\"sets up a power worth about 23 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":65,\"hp_after_pct\":63,\"dmg\":7,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧, 触媒; lasting value 23\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -2, dmg 7\",\"history_estimate\":\"further HP loss 32, win 88% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "plan6": "{\"plays\":\"神化, then 防御, then 勒紧, then 致命毒药+ -> 连枷骑士, then 打击 -> 连枷骑士, then 触媒\",\"result\":\"survives with 52/104 HP before healing\",\"hp_lost\":15,\"damage_dealt\":20,\"enemies_after\":\"连枷骑士 88 HP, 中毒 5; 幽灵骑士 97 HP; 魔法骑士 89 HP\",\"block_gained\":5,\"lasting_value\":\"sets up a power worth about 23 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":52,\"hp_after_pct\":50,\"dmg\":20,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧, 触媒; lasting value 23\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -15, dmg 20\",\"history_estimate\":\"further HP loss 36, win 85% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "plan7": "{\"plays\":\"神化, then 防御, then 致命毒药+ -> 连枷骑士, then 防御, then 勒紧, then 触媒\",\"result\":\"survives with 57/104 HP before healing\",\"hp_lost\":10,\"damage_dealt\":13,\"enemies_after\":\"连枷骑士 95 HP, 中毒 5; 幽灵骑士 97 HP; 魔法骑士 89 HP\",\"block_gained\":10,\"lasting_value\":\"sets up a power worth about 23 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":57,\"hp_after_pct\":55,\"dmg\":13,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧, 触媒; lasting value 23\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -10, dmg 13\",\"history_estimate\":\"further HP loss 36, win 87% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "plan8": "{\"focus\":\"幽灵骑士\",\"plays\":\"神化, then 勒紧, then 防御, then 致命毒药+ -> 幽灵骑士, then 打击 -> 幽灵骑士, then 触媒\",\"result\":\"survives with 56/104 HP before healing\",\"hp_lost\":11,\"damage_dealt\":20,\"enemies_after\":\"连枷骑士 108 HP; 幽灵骑士 77 HP, 中毒 5; 魔法骑士 89 HP\",\"block_gained\":9,\"lasting_value\":\"sets up a power worth about 23 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":56,\"hp_after_pct\":54,\"dmg\":20,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧, 触媒; lasting value 23\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -11, dmg 20\",\"history_estimate\":\"further HP loss 36, win 87% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "plan9": "{\"focus\":\"魔法骑士\",\"plays\":\"神化, then 勒紧, then 防御, then 致命毒药+ -> 魔法骑士, then 打击 -> 魔法骑士, then 触媒\",\"result\":\"survives with 56/104 HP before healing\",\"hp_lost\":11,\"damage_dealt\":20,\"enemies_after\":\"连枷骑士 108 HP; 幽灵骑士 97 HP; 魔法骑士 69 HP, 中毒 5\",\"block_gained\":9,\"lasting_value\":\"sets up a power worth about 23 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"神化\",\"hp_after\":56,\"hp_after_pct\":54,\"dmg\":20,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"plays power 勒紧, 触媒; lasting value 23\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -11, dmg 20\",\"history_estimate\":\"further HP loss 36, win 87% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "p0": "{\"plays\":\"drink 痊愈药水 now (draws 2), then re-plan the turn with the real cards; example, the median of 1 samples: potion 痊愈药水, 勒紧, 防御, 致命毒药+ -> 连枷骑士, 防御, 触媒, 猎杀者 -> 连枷骑士, 萎靡 -> 连枷骑士\",\"result\":\"result unknown until drunk; after drinking you will see the actual cards and choose the rest of the turn again\",\"potion_text\":\"获得1点能量。抽2张牌。\",\"simulated\":\"Monte Carlo, 1 sample (cut from 12 to fit the time budget): the draw pile (27 cards) in a random order, then the discard pile (0) reshuffled, the drink first\",\"hp_lost\":\"mean 0 [0-0]\",\"damage_dealt\":\"mean 29 [29-29]\",\"wins_fight_this_turn\":\"0/1 samples\",\"beats_best_potion_free_line\":\"0/1 samples (best potion-free line: hp -2, dmg 13; a sample beats it by saving 2+ HP or dealing 5+ more damage (or a mix worth as much, the lasting value it sets up counted in HP), winning the fight, or living where it dies)\",\"vs_best_potion_free_line\":\"mean HP saved +2, mean damage +16, mean lasting value -9.8 HP (Strength and powers set up, over the rest of the fight, as the plan scores rate them)\",\"rollout\":\"the median sample's line: no rollout (it ran past its time budget, 707 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~67 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 29\",\"history_estimate\":\"further HP loss 35, win 86% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss (a rough estimate: no rollout of the later turns) 67; potions used 1 (this turn: CURE_ALL 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 67\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "plan2": 0.02,
+          "plan4": 0.48,
+          "plan3": 0.06,
+          "plan9": 0.01,
+          "plan5": 0.04,
+          "p0": 0.1,
+          "plan7": 0.01,
+          "plan8": 0.01,
+          "plan1": 0.26,
+          "plan6": 0.01
+        },
+        "confidence": 0.42,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.42,
+          "probabilities": {
+            "plan2": 0.02,
+            "plan4": 0.48,
+            "plan3": 0.06,
+            "plan9": 0.01,
+            "plan5": 0.04,
+            "p0": 0.1,
+            "plan7": 0.01,
+            "plan8": 0.01,
+            "plan1": 0.26,
+            "plan6": 0.01
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 2
+    },
+    "expect": {
+      "card": {
+        "id": "FASTEN",
+        "upgraded": false
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 4/9 (勒紧, 防御, 致命毒药+ -> 连枷骑士, 防御, 打击 -> 连枷骑士, 触媒) with confidence 0.42; code rank 4",
+    "confidence": 0.42,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1154ba9f87f84857afa22e8c531e2"
+    ],
+    "latency_ms": {
+      "plan": 27,
+      "jev": 656,
+      "action": 607,
+      "planner": 1544,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 7054,
+      "output_tokens": 98
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 696,
+      "horizon": 1,
+      "samples": 1,
+      "degraded": [
+        "first wave at 3 turns",
+        "1-turn"
+      ],
+      "lines": 15,
+      "best": null,
+      "best_added": false,
+      "no_potion": {
+        "key": "plan1",
+        "merged": true
+      },
+      "orders": 6,
+      "orders_dropped": 0,
+      "best_order": null
+    },
+    "rollout_best_chosen": null,
+    "potions": {
+      "random": [
+        {
+          "potion": "CURE_ALL",
+          "kind": "draw",
+          "samples": 1,
+          "requested": 12,
+          "degraded": true,
+          "ms": 707,
+          "wins": 0,
+          "beats": 0,
+          "hp_saved_mean": 2,
+          "dmg_gained_mean": 16,
+          "lasting_gained_mean": -9.8,
+          "dies": 0,
+          "hp_mean": 0,
+          "dmg_mean": 29
+        }
+      ],
+      "unsimulated_offered": [],
+      "fight_plan_now": false
+    },
+    "focus": {
+      "plan2": "连枷骑士",
+      "plan8": "幽灵骑士",
+      "plan9": "魔法骑士"
+    },
+    "timing": {
+      "planner_ms": 1541,
+      "solve_ms": 114,
+      "mc_ms": 707,
+      "rollout_ms": 696,
+      "boss_sim_ms": 0,
+      "other_ms": 24,
+      "cpu_ms": 2430,
+      "load1": 14.88,
+      "probe_ms": 3.03
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "VLZ6CCT8AQ0A",
+    "observed_ts": "2026-10-07T07:37:16.697Z",
+    "journal": {
+      "choice": "勒紧, then 防御, then 致命毒药+ -> 连枷骑士, then 防御, then 打击 -> 连枷骑士, then 触媒",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "269754": {
+    "ts": "2026-10-07T07:37:26.907Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 45,
+    "turn": 1,
+    "label": "combat/plan-choice+potion",
+    "decision_id": "1bb372a9-4fce-4c82-b60f-70d23e4be75d",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:101:0:true|1:97:0:true|2:89:0:true\",\"event\":\"\",\"gold\":432,\"hand\":\"0:APOTHEOSIS:false\",\"hp\":67,\"maxHp\":104,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:18:0\",\"potions\":\"CURE_ALL:true:true|:false:false|:false:false|:false:false\",\"powers\":\"PLATING_POWER:4|STRENGTH_POWER:1|FASTEN_POWER:4|ACCELERANT_POWER:1\",\"rewards\":\"\",\"run\":\"VLZ6CCT8AQ0A\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"focus\":\"连枷骑士\",\"plays\":\"nothing (end the turn now)\",\"result\":\"survives with 65/104 HP before healing\",\"hp_lost\":2,\"damage_dealt\":13,\"enemies_after\":\"连枷骑士 88 HP, 中毒 5; 幽灵骑士 97 HP; 魔法骑士 89 HP\",\"energy_unused\":1,\"hp_after\":65,\"hp_after_pct\":63,\"dmg\":13,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (3 samples) (later turns may use the potions still held): expected further HP loss 67, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~165, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 2) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]\",\"rollout_turns\":\"T1 exact: hp -2, dmg 13; T2: hp -8.3 [3-14], dmg 38.3 [25-55], alive 3/3, won 0/3; T3: hp -25.3 [17-38], dmg 19.7 [19-21], alive 3/3, won 0/3; T4: hp -23 [8-36], dmg 23 [15-27], alive 3/3, won 0/3; T5: hp -50 [41-68], dmg 28.3 [25-32], alive 0/3, won 0/3\",\"rollout_kill_order\":\"连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: the later turns aim at 连枷骑士 first (连枷骑士 dead by T5 in 2/3); best of 6 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: further HP loss 67, over 0/3, dead 3/3, 幽灵骑士 dead 0/3; 魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: further HP loss 67, over 0/3, dead 3/3, 魔法骑士 dead 0/3\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"rollout_best\":true,\"potion_cost\":\"fight HP loss 67; potions used 1 (later turns: CURE_ALL in 3/3 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 67\"}",
+          "plan2": "{\"plays\":\"nothing (end the turn now)\",\"result\":\"survives with 65/104 HP before healing\",\"hp_lost\":2,\"damage_dealt\":13,\"enemies_after\":\"连枷骑士 88 HP, 中毒 5; 幽灵骑士 97 HP; 魔法骑士 89 HP\",\"energy_unused\":1,\"no_potion_fight\":\"the no-potion line: the same turn as plan1, and no potion for the rest of this fight (its rollout's later turns drink none; plan1's may)\",\"hp_after\":65,\"hp_after_pct\":63,\"dmg\":13,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (3 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 67, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~176, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 2) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]\",\"rollout_turns\":\"T1 exact: hp -2, dmg 13; T2: hp -12 [8-14], dmg 33 [25-46], alive 3/3, won 0/3; T3: hp -14.7 [3-24], dmg 18.3 [16-20], alive 3/3, won 0/3; T4: hp -24.7 [7-42], dmg 23.3 [8-38], alive 3/3, won 0/3; T5: hp -56 [33-88], dmg 23.7 [3-34], alive 0/3, won 0/3\",\"rollout_kill_order\":\"连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: the later turns aim at 连枷骑士 first (连枷骑士 dead by T5 in 2/3); best of 6 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: further HP loss 67, over 0/3, dead 3/3, 幽灵骑士 dead 0/3; 魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: further HP loss 67, over 0/3, dead 3/3, 魔法骑士 dead 0/3\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 67; potions used 0; potion cost 0 HP (potion table, this act's held value); total 67\"}",
+          "p0": "{\"plays\":\"drink 痊愈药水 now (draws 2), then re-plan the turn with the real cards; example, the median of 12 samples: potion 痊愈药水, 灵动步法, 尖啸+\",\"result\":\"result unknown until drunk; after drinking you will see the actual cards and choose the rest of the turn again\",\"potion_text\":\"获得1点能量。抽2张牌。\",\"simulated\":\"Monte Carlo, 12 samples: the draw pile (27 cards) in a random order, then the discard pile (4) reshuffled, the drink first\",\"hp_lost\":\"mean 1.3 [0-2]\",\"damage_dealt\":\"mean 27.1 [13-43]\",\"wins_fight_this_turn\":\"0/12 samples\",\"beats_best_potion_free_line\":\"12/12 samples (best potion-free line: hp -2, dmg 13; a sample beats it by saving 2+ HP or dealing 5+ more damage (or a mix worth as much, the lasting value it sets up counted in HP), winning the fight, or living where it dies)\",\"vs_best_potion_free_line\":\"mean HP saved +0.7, mean damage +14.1, mean lasting value +5.5 HP (Strength and powers set up, over the rest of the fight, as the plan scores rate them)\",\"rollout\":\"the median sample's line: 5-turn rollout (3 samples) (later turns may use the potions still held): expected further HP loss 67, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~174, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]\",\"rollout_turns\":\"T1 exact: hp -0, dmg 13; T2: hp -12.3 [9-14], dmg 31.7 [24-43], alive 3/3, won 0/3; T3: hp -21 [6-36], dmg 17.3 [12-21], alive 3/3, won 0/3; T4: hp -22.3 [6-36], dmg 23 [15-27], alive 3/3, won 0/3; T5: hp -50 [41-68], dmg 27.7 [25-32], alive 0/3, won 0/3\",\"rollout_kill_order\":\"连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: the later turns aim at 连枷骑士 first (连枷骑士 dead by T5 in 1/3); best of 6 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: further HP loss 67, over 0/3, dead 3/3, 幽灵骑士 dead 0/3; 魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: further HP loss 67, over 0/3, dead 3/3, 魔法骑士 dead 0/3\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"potion_cost\":\"fight HP loss 67; potions used 1 (this turn: CURE_ALL 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 67\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "p0",
+        "probabilities": {
+          "plan2": 0.16,
+          "plan1": 0.23,
+          "p0": 0.61
+        },
+        "confidence": 0.41,
+        "raw": {
+          "type": "choice",
+          "choice": "p0",
+          "confidence": 0.41,
+          "probabilities": {
+            "plan2": 0.16,
+            "plan1": 0.23,
+            "p0": 0.61
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "use_potion",
+      "option_index": 0
+    },
+    "expect": {
+      "potion": {
+        "id": "CURE_ALL"
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose to drink 痊愈药水, then re-plan (confidence 0.41)",
+    "confidence": 0.41,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1154bc9337c5e9bf024b25fcbe581"
+    ],
+    "latency_ms": {
+      "plan": 48,
+      "jev": 550,
+      "action": 801,
+      "planner": 1416,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 5137,
+      "output_tokens": 42
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 1393,
+      "horizon": 5,
+      "samples": 3,
+      "degraded": [
+        "samples 4 per kill order",
+        "samples 3 (clock)"
+      ],
+      "lines": 3,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true,
+      "no_potion": {
+        "key": "plan2",
+        "merged": false
+      },
+      "orders": 6,
+      "orders_dropped": 0,
+      "best_order": "连枷骑士 > 幽灵骑士 > 魔法骑士"
+    },
+    "rollout_best_chosen": false,
+    "potions": {
+      "random": [
+        {
+          "potion": "CURE_ALL",
+          "kind": "draw",
+          "samples": 12,
+          "requested": 12,
+          "degraded": false,
+          "ms": 11,
+          "wins": 0,
+          "beats": 12,
+          "hp_saved_mean": 0.7,
+          "dmg_gained_mean": 14.1,
+          "lasting_gained_mean": 5.5,
+          "dies": 0,
+          "hp_mean": 1.3,
+          "dmg_mean": 27.1
+        }
+      ],
+      "unsimulated_offered": [],
+      "fight_plan_now": false
+    },
+    "focus": {
+      "plan1": "连枷骑士"
+    },
+    "timing": {
+      "planner_ms": 1413,
+      "solve_ms": 0,
+      "mc_ms": 11,
+      "rollout_ms": 1393,
+      "boss_sim_ms": 0,
+      "other_ms": 9,
+      "cpu_ms": 1940,
+      "load1": 14.57,
+      "probe_ms": 2.82
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "VLZ6CCT8AQ0A",
+    "observed_ts": "2026-10-07T07:37:24.892Z",
+    "journal": {
+      "choice": "drink 痊愈药水 now (draws 2), then re-plan the turn with the real cards; example, the median of 12 samples: potion 痊愈药水, 灵动步法, 尖啸+",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  "269770": {
+    "ts": "2026-10-07T07:38:13.082Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 45,
+    "turn": 4,
+    "label": "combat/plan-choice",
+    "decision_id": "b058661c-0e8d-49f0-873a-057b31ed4fde",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:48:0:true|1:80:0:true|2:77:0:true\",\"event\":\"\",\"gold\":432,\"hand\":\"0:PREDATOR:true|1:ASCENDERS_BANE:false|2:STRIKE_SILENT:true|3:PIERCING_WAIL:true|4:POUNCE:true\",\"hp\":45,\"maxHp\":104,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false|:false:false|:false:false\",\"powers\":\"PLATING_POWER:1|STRENGTH_POWER:2|FASTEN_POWER:4|ACCELERANT_POWER:1|TOOLS_OF_THE_TRADE_POWER:1|HEX_POWER:2|DAMPEN_POWER:1|DEXTERITY_POWER:3\",\"rewards\":\"\",\"run\":\"VLZ6CCT8AQ0A\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"猎杀者 -> 连枷骑士, then 尖啸\",\"result\":\"survives with 32/104 HP before healing\",\"hp_lost\":13,\"damage_dealt\":24,\"enemies_after\":\"连枷骑士 24 HP, 中毒 2; 幽灵骑士 80 HP; 魔法骑士 77 HP\",\"hp_after\":32,\"hp_after_pct\":31,\"dmg\":24,\"lethal_now\":\"no\",\"enemy_threat_next\":73,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 45, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~172, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 24; T2: hp -54.5 [49-75], dmg 9 [3-11], alive 0/8, won 0/8; T3: over (alive 0/8, won 0/8); T4: over (alive 0/8, won 0/8); T5: over (alive 0/8, won 0/8)\",\"rollout_kill_order\":\"连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: the later turns aim at 连枷骑士 first (连枷骑士 dead by T5 in 0/8); best of 6 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: further HP loss 45, over 0/8, dead 8/8, 幽灵骑士 dead 0/8; 魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: further HP loss 45, over 0/8, dead 8/8, 魔法骑士 dead 0/8\",\"history_estimate\":\"further HP loss 45, win 0% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\"}",
+          "plan2": "{\"focus\":\"连枷骑士\",\"plays\":\"猎杀者 -> 连枷骑士, then 打击 -> 连枷骑士\",\"result\":\"survives with 14/104 HP before healing\",\"hp_lost\":31,\"damage_dealt\":32,\"enemies_after\":\"连枷骑士 16 HP, 中毒 2; 幽灵骑士 80 HP; 魔法骑士 77 HP\",\"hp_after\":14,\"hp_after_pct\":13,\"dmg\":32,\"lethal_now\":\"no\",\"enemy_threat_next\":73,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 45, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~164, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 31)\",\"rollout_turns\":\"T1 exact: hp -31, dmg 32; T2: hp -54.5 [49-75], dmg 9 [3-11], alive 0/8, won 0/8; T3: over (alive 0/8, won 0/8); T4: over (alive 0/8, won 0/8); T5: over (alive 0/8, won 0/8)\",\"rollout_kill_order\":\"连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: the later turns aim at 连枷骑士 first (连枷骑士 dead by T5 in 0/8); best of 6 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: further HP loss 45, over 0/8, dead 8/8, 幽灵骑士 dead 0/8; 魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: further HP loss 45, over 0/8, dead 8/8, 魔法骑士 dead 0/8\",\"history_estimate\":\"further HP loss 45, win 0% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan3, plan4 (every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn); the rollout picks none of them\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan2、plan3、plan4，单回合模型净损血31；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan3": "{\"focus\":\"幽灵骑士\",\"plays\":\"猎杀者 -> 幽灵骑士, then 打击 -> 幽灵骑士\",\"result\":\"survives with 14/104 HP before healing\",\"hp_lost\":31,\"damage_dealt\":32,\"enemies_after\":\"连枷骑士 41 HP, 中毒 2; 幽灵骑士 55 HP; 魔法骑士 77 HP\",\"hp_after\":14,\"hp_after_pct\":13,\"dmg\":32,\"lethal_now\":\"no\",\"enemy_threat_next\":73,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 45, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~164, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 31)\",\"rollout_turns\":\"T1 exact: hp -31, dmg 32; T2: hp -54.5 [49-75], dmg 9 [3-11], alive 0/8, won 0/8; T3: over (alive 0/8, won 0/8); T4: over (alive 0/8, won 0/8); T5: over (alive 0/8, won 0/8)\",\"rollout_kill_order\":\"连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: the later turns aim at 连枷骑士 first (连枷骑士 dead by T5 in 0/8); best of 6 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: further HP loss 45, over 0/8, dead 8/8, 幽灵骑士 dead 0/8; 魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: further HP loss 45, over 0/8, dead 8/8, 魔法骑士 dead 0/8\",\"history_estimate\":\"further HP loss 45, win 0% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan2, plan4 (every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn); the rollout picks none of them\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan2、plan3、plan4，单回合模型净损血31；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+          "plan4": "{\"focus\":\"魔法骑士\",\"plays\":\"猎杀者 -> 魔法骑士, then 打击 -> 魔法骑士\",\"result\":\"survives with 14/104 HP before healing\",\"hp_lost\":31,\"damage_dealt\":32,\"enemies_after\":\"连枷骑士 41 HP, 中毒 2; 幽灵骑士 80 HP; 魔法骑士 52 HP\",\"hp_after\":14,\"hp_after_pct\":13,\"dmg\":32,\"lethal_now\":\"no\",\"enemy_threat_next\":73,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 45, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~164, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 31)\",\"rollout_turns\":\"T1 exact: hp -31, dmg 32; T2: hp -54.5 [49-75], dmg 9 [3-11], alive 0/8, won 0/8; T3: over (alive 0/8, won 0/8); T4: over (alive 0/8, won 0/8); T5: over (alive 0/8, won 0/8)\",\"rollout_kill_order\":\"连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: the later turns aim at 连枷骑士 first (连枷骑士 dead by T5 in 0/8); best of 6 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: further HP loss 45, over 0/8, dead 8/8, 幽灵骑士 dead 0/8; 魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: further HP loss 45, over 0/8, dead 8/8, 魔法骑士 dead 0/8\",\"history_estimate\":\"further HP loss 45, win 0% (this encounter n=2; estimate from elite fights n=198, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan2, plan3 (every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn); the rollout picks none of them\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan2、plan3、plan4，单回合模型净损血31；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan1",
+        "probabilities": {
+          "plan4": 0.09,
+          "plan2": 0.1,
+          "plan3": 0.07,
+          "plan1": 0.74
+        },
+        "confidence": 0.65,
+        "raw": {
+          "type": "choice",
+          "choice": "plan1",
+          "confidence": 0.65,
+          "probabilities": {
+            "plan4": 0.09,
+            "plan2": 0.1,
+            "plan3": 0.07,
+            "plan1": 0.74
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "PREDATOR",
+        "upgraded": false
+      },
+      "target": {
+        "id": "FLAIL_KNIGHT"
+      },
+      "turn": 4,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 1/4 (猎杀者 -> 连枷骑士, 尖啸) with confidence 0.65; code rank 1",
+    "confidence": 0.65,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1154c7d7c73c499513a97ac89040d"
+    ],
+    "latency_ms": {
+      "plan": 30,
+      "jev": 420,
+      "action": 432,
+      "planner": 405,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 5801,
+      "output_tokens": 50
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 387,
+      "horizon": 5,
+      "samples": 8,
+      "degraded": [],
+      "lines": 9,
+      "best": null,
+      "best_added": false,
+      "tied": [
+        "plan2",
+        "plan3",
+        "plan4"
+      ],
+      "saturated": true,
+      "orders": 6,
+      "orders_dropped": 0,
+      "best_order": null
+    },
+    "rollout_best_chosen": false,
+    "chosen_order": "连枷骑士 > 幽灵骑士 > 魔法骑士",
+    "focus": {
+      "plan2": "连枷骑士",
+      "plan3": "幽灵骑士",
+      "plan4": "魔法骑士"
+    },
+    "timing": {
+      "planner_ms": 402,
+      "solve_ms": 5,
+      "mc_ms": 0,
+      "rollout_ms": 387,
+      "boss_sim_ms": 0,
+      "other_ms": 10,
+      "cpu_ms": 575,
+      "load1": 10.47,
+      "probe_ms": 2.73
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "VLZ6CCT8AQ0A",
+    "observed_ts": "2026-10-07T07:38:12.227Z",
+    "journal": {
+      "choice": "猎杀者 -> 连枷骑士, then 尖啸",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  }
+}

@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/agent
+
+ ❯ tests/silent-potion-provenance.test.ts (4 tests | 1 failed) 10ms
+     × removes legacy other-character statistics from the observed Silent hallway prompt 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-potion-provenance.test.ts > Silent potion prompt provenance, MGA0CZDDKC0P F2 T1 > removes legacy other-character statistics from the observed Silent hallway prompt
+AssertionError: expected { …(2) } to not have property "data"
+
+- Expected:
+undefined
+
++ Received:
+[
+  "[data: notes/potion-drinks-2026-09-29.md §5.2] A8, 218 boss fights (all code versions): won 9/27 (33%) entering with no potion, 115/191 (60%) with 1+; at 75%+ HP 8/21 (38%) vs 103/149 (69%); act 2 boss at 75%+ HP 0/6 vs 19/37. Observational: no-potion runs often had weaker decks too.",
+  "[data: notes/a9-analysis-2026-09-29.md §2(c)] A9, 40 runs: 7 deaths where one more potion would likely have been enough: TYZH (1 HP short), 0H1X (4), 9Q7V (6), XMK1 (6), 2ZCK (11), 7MDJ, PHMV.",
+]
+
+ ❯ tests/silent-potion-provenance.test.ts:20:31
+     18|     expect(state.run?.raw["character_id"]).toBe("SILENT");
+     19|     const result = jevExperience(input);
+     20|     expect(result.potion).not.toHaveProperty("data");
+       |                               ^
+     21|     for (const row of POTION_BOSS_DATA) expect(JSON.stringify(result))…
+     22|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  09:33:29
+   Duration  428ms (transform 258ms, setup 279ms, import 30ms, tests 10ms, environment 0ms)
+

@@ -1,0 +1,49 @@
+{
+  "id": "silent-0336",
+  "ts": "2026-10-09T11:06:29+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "XZUJR08FW801"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261009-104301-postmortem/提案-药水更换与孵化窗口.md"
+    ]
+  },
+  "kind": "mechanic",
+  "claim": "静默本局F27给孵化1的结实卵施3虚弱，紧接同槽同ID同17/19血的幼虫过渡帧已经没有孵化或虚弱；下一轮三幼虫均20/23血、无虚弱且各5攻。本次虚弱没有保留到幼虫攻击窗口，不能把卵的层数预支为后续减伤。只确认连续转换窗口，缺永久实体GUID及其他孵化/负面状态证据，不规定固定药水目标或声称换目标能赢。",
+  "first_run": "XZUJR08FW801",
+  "prior": "unknown",
+  "prior_note": "silent账本按卵/孵化/TOUGH_EGG/WEAK_POTION查找及更早静默复盘未找到同一给卵施虚弱后变体窗口的明确推理，未核实更早可比目标选择。",
+  "evidence": [
+    {
+      "run": "XZUJR08FW801",
+      "floor": 27,
+      "turn": 2,
+      "role": "support",
+      "note": "d311170槽1虚弱药水给敌槽0；s319477结实卵TOUGH_EGG 17/19、HATCH1/WEAK3→s319478同槽同ID17/19的幼虫无HATCH/WEAK；s319479 T3三个幼虫20/23、无虚弱、各5攻击。",
+      "added": "2026-10-09T11:06:29+08:00"
+    }
+  ],
+  "note": "机制观察与药水代码提案同时关联；没有母体目标实打反事实，也不推其他减益的继承规则。",
+  "asc": 10,
+  "history": [
+    {
+      "ts": "2026-10-09T11:06:29+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-09T11:11:45+08:00",
+      "by": "learner:postmortem"
+    }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+    "机制观察与药水代码提案同时关联；没有母体目标实打反事实，也不推其他减益的继承规则。",
+    "代码提案 silent-proposal-04fb18bbeb9e3f73 → task=strategy-proposal；Roy-2026-10-07-learning"
+  ]
+}

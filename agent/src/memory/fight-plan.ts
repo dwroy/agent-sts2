@@ -12,7 +12,7 @@
  * The plan reaches play through fact tags on Jev's options ("plays the planned setup card"), a setup line within
  * the HP-guard slack of code's pick turning a code-decided turn into a Jev question, and the potions it keeps
  * (combat-plan drinksKeptPotion: the HP guard's automatic lines). Potion costs in the solver by the plan's potion
- * use (a saved potion cost more) are gone: a potion is a 0-cost one-shot card (Dai).
+ * use (a saved potion cost more) are gone: a potion is a 0-cost one-shot card (Roy).
  */
 
 import { appendFileSync, closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "node:fs";

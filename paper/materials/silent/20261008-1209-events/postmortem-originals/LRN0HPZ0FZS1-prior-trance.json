@@ -1,0 +1,736 @@
+[
+  {
+    "ts": "2026-10-04T15:46:35.706Z",
+    "mode": "play",
+    "screen": "REWARD",
+    "session": "singleplayer/run",
+    "floor": 30,
+    "turn": null,
+    "label": "reward/card",
+    "decision_id": "29933200-5baf-4a2d-992c-b551c2e3a661",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":61,\"hand\":\"\",\"hp\":74,\"maxHp\":74,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"0:0:0\",\"potions\":\"FORTIFIER:true:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LRN0HPZ0FZS1\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "questions": {
+      "pick": {
+        "type": "choice",
+        "instructions": "Which of these card rewards should I take, if any? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. in_deck: copies of that card already in your deck. boss_sim on an option: this act's boss fought to the end in simulation with the deck (and HP) that option leaves, against your current deck on the same random seeds: the win rate (calibrated on logged boss fights), the difference ± its standard error, the median HP lost in the won fights and the turns. facts.act_boss_sim gives the start, the method and its limits; it replaces the act boss clock.",
+        "criteria": {
+          "card0": "{\"card\":\"撕裂\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":1,\"text\":\"每当你在你的回合失去生命值时, 获得1点力量。\",\"in_deck\":0,\"outcome_stats\":\"无数据\",\"boss_sim\":\"打本幕 boss（无厌沙虫，A0；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 5 回合；boss 平均剩血 212（当前牌组 205，+7.4 ± 1.2）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "card1": "{\"card\":\"战斗专注\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":0,\"text\":\"抽3张牌。 你在本回合内不能再抽任何牌。\",\"in_deck\":0,\"outcome_stats\":\"无数据\",\"boss_sim\":\"打本幕 boss（无厌沙虫，A0；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 5 回合；boss 平均剩血 205（当前牌组 205，−0 ± 1.3）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "card2": "{\"card\":\"残酷+\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":1,\"text\":\"有易伤状态的敌人额外受到50%的伤害。\",\"in_deck\":0,\"outcome_stats\":\"无数据\",\"boss_sim\":\"打本幕 boss（无厌沙虫，A0；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 5 回合；boss 平均剩血 212（当前牌组 205，+7.8 ± 1.2）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "skip": "{\"card\":\"skip\",\"note\":\"take no card\",\"boss_sim\":\"打本幕 boss（无厌沙虫，A0；低可信，见 facts.act_boss_sim）的模拟：不改变牌组：胜率 5%，赢局掉血中位 —，约 6 回合；boss 平均剩血 205（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}"
+        }
+      }
+    },
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "BATTLE_TRANCE"
+      },
+      "from": "decision"
+    },
+    "rationale": "Codex decided card1: Free draw finds Ricochet and discard enablers while cycling past boss statuses. Play other draw cards first to avoid the lockout. | Codex chose 战斗专注 (Skill, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 8127,
+      "jev": 0,
+      "action": 78,
+      "deepseek": 14654,
+      "planner": 5,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 41475,
+      "output_tokens": 349,
+      "cache_hit_tokens": 0,
+      "reasoning_tokens": 300
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "choice": "card1",
+      "reason": "Free draw finds Ricochet and discard enablers while cycling past boss statuses. Play other draw cards first to avoid the lockout.",
+      "latency_ms": 14654,
+      "tokens": 41824,
+      "input_tokens": 41475,
+      "output_tokens": 349,
+      "cache_hit_tokens": 0,
+      "reasoning_tokens": 300,
+      "effort": "",
+      "guide": "",
+      "handbook": "",
+      "memory_chars": 11092,
+      "memory_sections": {
+        "act": 465,
+        "history": 10067,
+        "now": 0,
+        "this_floor": 413,
+        "route": 74,
+        "lookahead": 73,
+        "knowledge": 0
+      },
+      "brain": {
+        "engine": "codex",
+        "model": "gpt-6.1-sol",
+        "attempts": 1,
+        "tool_calls": []
+      }
+    },
+    "boss_sim": {
+      "boss": "THE_INSATIABLE",
+      "asc": 0,
+      "entry_hp": 74,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 7266,
+      "ms": 7273,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 6,
+        "boss_left": 204.643
+      },
+      "options": {
+        "card0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 5,
+          "hp": 74,
+          "boss_left": 212.065,
+          "boss_left_diff": 7.422,
+          "boss_left_se": 1.2357
+        },
+        "card1": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 5,
+          "hp": 74,
+          "boss_left": 204.62,
+          "boss_left_diff": -0.023,
+          "boss_left_se": 1.2632
+        },
+        "card2": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 5,
+          "hp": 74,
+          "boss_left": 212.488,
+          "boss_left_diff": 7.845,
+          "boss_left_se": 1.2273
+        },
+        "skip": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 6,
+          "hp": 74,
+          "boss_left": 204.643,
+          "boss_left_diff": 0,
+          "boss_left_se": 0
+        }
+      },
+      "not_simulated": {}
+    },
+    "sl_attempt": null,
+    "sl_reloads": 1,
+    "run_id": "LRN0HPZ0FZS1",
+    "observed_ts": "2026-10-04T15:46:12.920Z",
+    "journal": {
+      "choice": "战斗专注",
+      "reason": "Free draw finds Ricochet and discard enablers while cycling past boss statuses. Play other draw cards first to avoid the lockout."
+    },
+    "result": "completed: Action completed.",
+    "_line": 207408
+  },
+  {
+    "ts": "2026-10-04T15:52:13.330Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 35,
+    "turn": 2,
+    "label": "combat/plan-choice",
+    "decision_id": "f60ef092-e9cc-4faa-9bbe-f2f6577337c5",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:115:0:true\",\"event\":\"\",\"gold\":206,\"hand\":\"0:DAGGER_THROW:true|1:STRIKE_SILENT:true|2:TRACKING:true|3:BATTLE_TRANCE:true|4:NEUTRALIZE:true\",\"hp\":75,\"maxHp\":75,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1|STRENGTH_POWER:4\",\"rewards\":\"\",\"run\":\"LRN0HPZ0FZS1\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"战斗专注, then 投掷匕首 -> 虔诚雕刻师, then 打击 -> 虔诚雕刻师, then 中和+ -> 虔诚雕刻师\",\"result\":\"survives with 66/75 HP before healing\",\"hp_lost\":9,\"damage_dealt\":50,\"enemies_after\":\"虔诚雕刻师 65 HP, Vulnerable 3, Weak 2\",\"cards_drawn\":3,\"energy_unused\":2,\"hp_after\":66,\"hp_after_pct\":88,\"dmg\":50,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 11.1, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.8; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -11.1\",\"rollout_turns\":\"T1 exact: hp -9, dmg 50; T2: hp -2.1 [0-10], dmg 33 [0-65], alive 8/8, won 2/8; T3: hp -0 [0-0], dmg 42.7 [11-65], alive 8/8, won 8/8; T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)\",\"history_estimate\":\"further HP loss 11, win 100% (this encounter n=0; estimate from none n=0, typical error ±5.5; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan2 (the same expected further HP loss, deaths and win chance); the rollout picks none of them\"}",
+          "plan2": "{\"plays\":\"战斗专注, then 跟踪+, then 中和+ -> 虔诚雕刻师\",\"result\":\"survives with 66/75 HP before healing\",\"hp_lost\":9,\"damage_dealt\":16,\"enemies_after\":\"虔诚雕刻师 99 HP, Vulnerable 3, Weak 2\",\"cards_drawn\":3,\"energy_unused\":2,\"lasting_value\":\"sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)\",\"hp_after\":66,\"hp_after_pct\":88,\"dmg\":16,\"lethal_now\":\"no\",\"enemy_threat_next\":9,\"setup_turn\":false,\"scaling_gained\":\"plays power 跟踪+; lasting value 8\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 11.1, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.8; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -11.1\",\"rollout_turns\":\"T1 exact: hp -9, dmg 16; T2: hp -2.1 [0-10], dmg 41.5 [0-99], alive 8/8, won 2/8; T3: hp -0 [0-0], dmg 76.7 [45-99], alive 8/8, won 8/8; T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)\",\"history_estimate\":\"further HP loss 11, win 100% (this encounter n=0; estimate from none n=0, typical error ±5.5; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan1 (the same expected further HP loss, deaths and win chance); the rollout picks none of them\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan1",
+        "probabilities": {
+          "plan1": 0.78,
+          "plan2": 0.22
+        },
+        "confidence": 0.57,
+        "raw": {
+          "type": "choice",
+          "choice": "plan1",
+          "confidence": 0.57,
+          "probabilities": {
+            "plan1": 0.78,
+            "plan2": 0.22
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 3
+    },
+    "expect": {
+      "card": {
+        "id": "BATTLE_TRANCE",
+        "upgraded": false
+      },
+      "turn": 2,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 1/2 (战斗专注, 投掷匕首 -> 虔诚雕刻师, 打击 -> 虔诚雕刻师, 中和+ -> 虔诚雕刻师) with confidence 0.57; code rank 1",
+    "confidence": 0.57,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1079da13f7150a8bae850e9d84e5e"
+    ],
+    "latency_ms": {
+      "plan": 29,
+      "jev": 441,
+      "action": 534,
+      "planner": 136,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 2580,
+      "output_tokens": 34
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 129,
+      "horizon": 5,
+      "samples": 8,
+      "degraded": [],
+      "lines": 7,
+      "best": null,
+      "best_added": false,
+      "tied": [
+        "plan1",
+        "plan2"
+      ]
+    },
+    "rollout_best_chosen": true,
+    "timing": {
+      "planner_ms": 134,
+      "solve_ms": 1,
+      "mc_ms": 0,
+      "rollout_ms": 129,
+      "boss_sim_ms": 0,
+      "other_ms": 4,
+      "cpu_ms": 197,
+      "load1": 1.81,
+      "probe_ms": 2.67
+    },
+    "sl_attempt": null,
+    "sl_reloads": 1,
+    "run_id": "LRN0HPZ0FZS1",
+    "observed_ts": "2026-10-04T15:52:12.724Z",
+    "journal": {
+      "choice": "战斗专注, then 投掷匕首 -> 虔诚雕刻师, then 打击 -> 虔诚雕刻师, then 中和+ -> 虔诚雕刻师",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "_line": 207477
+  },
+  {
+    "ts": "2026-10-04T15:53:42.825Z",
+    "mode": "play",
+    "screen": "CARD_SELECTION",
+    "session": "singleplayer/run",
+    "floor": 36,
+    "turn": 3,
+    "label": "selection/choose",
+    "decision_id": "e2518c65-c878-4b6b-8970-1aaa02eb8281",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:6:0:true\",\"event\":\"\",\"gold\":219,\"hand\":\"0:NEUTRALIZE:true|1:BATTLE_TRANCE:true|2:SUCKER_PUNCH:true|3:ACROBATICS:true|4:STRIKE_SILENT:true\",\"hp\":76,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"STRENGTH_POWER:2\",\"rewards\":\"\",\"run\":\"LRN0HPZ0FZS1\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+    "questions": {
+      "pick": {
+        "type": "choice",
+        "instructions": "Which card should I choose?",
+        "criteria": {
+          "card0": "{\"card\":\"中和+\",\"upgraded\":true,\"type\":\"Attack\",\"cost\":0,\"text\":\"造成9点伤害。 给予2层虚弱。\"}",
+          "card1": "{\"card\":\"战斗专注\",\"upgraded\":false,\"type\":\"Skill\",\"cost\":0,\"text\":\"抽3张牌。 你在本回合内不能再抽任何牌。\"}",
+          "card2": "{\"card\":\"突然一拳\",\"upgraded\":false,\"type\":\"Attack\",\"cost\":1,\"text\":\"造成10点伤害。 给予1层虚弱。\"}",
+          "card3": "{\"card\":\"杂技\",\"upgraded\":false,\"type\":\"Skill\",\"cost\":1,\"text\":\"抽3张牌。 丢弃1张牌。\"}",
+          "card4": "{\"card\":\"打击\",\"upgraded\":false,\"type\":\"Attack\",\"cost\":1,\"text\":\"造成8点伤害。\"}"
+        }
+      }
+    },
+    "answers": {
+      "pick": {
+        "type": "choice",
+        "choice": "card1",
+        "probabilities": {
+          "card4": 0.31,
+          "card2": 0.04,
+          "card1": 0.46,
+          "card3": 0.07,
+          "card0": 0.12
+        },
+        "confidence": 0.32,
+        "raw": {
+          "type": "choice",
+          "choice": "card1",
+          "confidence": 0.32,
+          "probabilities": {
+            "card4": 0.31,
+            "card2": 0.04,
+            "card1": 0.46,
+            "card3": 0.07,
+            "card0": 0.12
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "select_deck_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "BATTLE_TRANCE"
+      },
+      "from": "decision"
+    },
+    "rationale": "Jev chose 战斗专注 with confidence 0.32",
+    "confidence": 0.32,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a1079efeb97d669e26f58960ebe569"
+    ],
+    "latency_ms": {
+      "plan": 21,
+      "jev": 474,
+      "action": 323,
+      "planner": 0,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 2549,
+      "output_tokens": 58
+    },
+    "sl_attempt": null,
+    "sl_reloads": 1,
+    "run_id": "LRN0HPZ0FZS1",
+    "observed_ts": "2026-10-04T15:53:42.330Z",
+    "journal": {
+      "choice": "战斗专注",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "_line": 207524
+  },
+  {
+    "ts": "2026-10-04T15:56:47.479Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 38,
+    "turn": 4,
+    "label": "combat/plan",
+    "decision_id": "ffb07038-7bca-4e42-a804-34e09647f4c4",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:88:0:true\",\"event\":\"\",\"gold\":256,\"hand\":\"0:SLICE:true|1:DEFEND_SILENT:true|2:SUCKER_PUNCH:true|3:BATTLE_TRANCE:true|4:STRIKE_SILENT:true|5:RICOCHET:true\",\"hp\":60,\"maxHp\":78,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"5:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1|STRENGTH_POWER:2|CLARITY_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"LRN0HPZ0FZS1\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 3
+    },
+    "expect": {
+      "card": {
+        "id": "BATTLE_TRANCE",
+        "upgraded": false
+      },
+      "turn": 4,
+      "from": "decision"
+    },
+    "rationale": "code plan (only distinct line): 战斗专注, 切割 -> 巨斧机器人, 突然一拳 -> 巨斧机器人, 打击 -> 巨斧机器人, 连续反弹+; hp -0, dmg 80",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 577,
+      "planner": 7,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": null,
+    "sl_reloads": 1,
+    "run_id": "LRN0HPZ0FZS1",
+    "observed_ts": "2026-10-04T15:56:47.472Z",
+    "journal": {
+      "choice": "code plan (only distinct line): 战斗专注, 切割 -> 巨斧机器人, 突然一拳 -> 巨斧机器人, 打击 -> 巨斧机器人, 连续反弹+; hp -0, dmg 80",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "_line": 207589
+  },
+  {
+    "ts": "2026-10-04T16:04:19.375Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 46,
+    "turn": 2,
+    "label": "combat/plan",
+    "decision_id": "72eb09c4-bc2b-4673-94a4-92f858122fbd",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:85:0:true|1:106:8:true\",\"event\":\"\",\"gold\":114,\"hand\":\"0:STRIKE_SILENT:true|1:DEFEND_SILENT:true|2:STRIKE_SILENT:true|3:BATTLE_TRANCE:true|4:ACROBATICS:true\",\"hp\":80,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"6:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1|NOXIOUS_FUMES_POWER:3|STRENGTH_POWER:-2|DEXTERITY_POWER:-2\",\"rewards\":\"\",\"run\":\"LRN0HPZ0FZS1\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "STRIKE_SILENT",
+        "upgraded": false
+      },
+      "target": {
+        "id": "THE_LOST"
+      },
+      "turn": 2,
+      "from": "decision"
+    },
+    "rationale": "code plan (dominates the score-best line): 打击 -> 失落之物, 防御+, 打击 -> 失落之物, 战斗专注, 杂技+; hp -17, dmg 6",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 289,
+      "planner": 5,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": null,
+    "sl_reloads": 1,
+    "run_id": "LRN0HPZ0FZS1",
+    "observed_ts": "2026-10-04T16:04:19.369Z",
+    "journal": {
+      "choice": "code plan (dominates the score-best line): 打击 -> 失落之物, 防御+, 打击 -> 失落之物, 战斗专注, 杂技+; hp -17, dmg 6",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "_line": 207693
+  },
+  {
+    "ts": "2026-10-04T16:04:22.193Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 46,
+    "turn": 2,
+    "label": "combat/plan-continue",
+    "decision_id": "20afd6d2-58d8-46ca-84d0-5f0dee36ab76",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:77:0:true|1:106:8:true\",\"event\":\"\",\"gold\":114,\"hand\":\"0:BATTLE_TRANCE:true|1:ACROBATICS:true\",\"hp\":80,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:9:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1|NOXIOUS_FUMES_POWER:3|STRENGTH_POWER:-2|DEXTERITY_POWER:-2\",\"rewards\":\"\",\"run\":\"LRN0HPZ0FZS1\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "BATTLE_TRANCE",
+        "upgraded": false
+      },
+      "turn": 2,
+      "from": "line",
+      "hand": "ACROBATICS+,BATTLE_TRANCE",
+      "enemies": "0:THE_LOST|1:THE_FORGOTTEN"
+    },
+    "rationale": "continuing the code-chosen plan: 战斗专注",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 744,
+      "planner": 1,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": null,
+    "sl_reloads": 1,
+    "run_id": "LRN0HPZ0FZS1",
+    "observed_ts": "2026-10-04T16:04:22.191Z",
+    "journal": {
+      "choice": "continuing the code-chosen plan: 战斗专注",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "_line": 207696
+  },
+  {
+    "ts": "2026-10-04T16:07:37.585Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 48,
+    "turn": 2,
+    "label": "combat/plan",
+    "decision_id": "c9324173-830f-4ba2-a707-3bab7f8c3fb9",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:434:33:true\",\"event\":\"\",\"gold\":127,\"hand\":\"0:BATTLE_TRANCE:true|1:DEFEND_SILENT:true|2:DEFEND_SILENT:true|3:STRIKE_SILENT:true|4:STRIKE_SILENT:true\",\"hp\":69,\"maxHp\":81,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"6:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1\",\"rewards\":\"\",\"run\":\"LRN0HPZ0FZS1\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "BATTLE_TRANCE",
+        "upgraded": false
+      },
+      "turn": 2,
+      "from": "decision"
+    },
+    "rationale": "code plan (only distinct line): 战斗专注, 防御, 防御+; hp -12, dmg 0",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 1418,
+      "planner": 3,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 1,
+    "run_id": "LRN0HPZ0FZS1",
+    "observed_ts": "2026-10-04T16:07:37.582Z",
+    "journal": {
+      "choice": "code plan (only distinct line): 战斗专注, 防御, 防御+; hp -12, dmg 0",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "_line": 207740
+  },
+  {
+    "ts": "2026-10-04T16:08:19.945Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 48,
+    "turn": 4,
+    "label": "combat/plan-choice",
+    "decision_id": "799e6512-fa4e-41bd-bd5a-28e405c76587",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:347:0:true\",\"event\":\"\",\"gold\":127,\"hand\":\"0:NEUTRALIZE:true|1:SUCKER_PUNCH:true|2:EXPOSE:true|3:BATTLE_TRANCE:true|4:DOMINATE:true|5:DAGGER_THROW:true|6:FLICK_FLACK:true\",\"hp\":67,\"maxHp\":81,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"4:2:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1|NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"LRN0HPZ0FZS1\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"突然一拳 -> 永世沙漏, then 暴露 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 中和+ -> 永世沙漏, then 投掷匕首 -> 永世沙漏, then 翻越撑击+\",\"result\":\"survives with 48/81 HP before healing\",\"hp_lost\":19,\"damage_dealt\":58,\"enemies_after\":\"永世沙漏 289 HP, Vulnerable 2, Weak 2\",\"strength_gained\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":48,\"hp_after_pct\":59,\"dmg\":58,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 67, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -107\",\"rollout_turns\":\"T1 exact: hp -19, dmg 58; T2: hp -18.1 [0-29], dmg 10 [0-32], alive 8/8, won 0/8; T3: hp -0.4 [0-3], dmg 39.3 [0-94], alive 8/8, won 0/8; T4: hp -23.8 [16-34], dmg 29.4 [0-73], alive 6/8, won 0/8; T5: hp -29.2 [16-38], dmg 27 [0-55], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan2": "{\"plays\":\"突然一拳 -> 永世沙漏, then 中和+ -> 永世沙漏, then 暴露 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 投掷匕首 -> 永世沙漏, then 翻越撑击+\",\"result\":\"survives with 48/81 HP before healing\",\"hp_lost\":19,\"damage_dealt\":52,\"enemies_after\":\"永世沙漏 295 HP, Vulnerable 2, Weak 2\",\"strength_gained\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":48,\"hp_after_pct\":59,\"dmg\":52,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 67, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -107\",\"rollout_turns\":\"T1 exact: hp -19, dmg 52; T2: hp -18.1 [0-29], dmg 10 [0-32], alive 8/8, won 0/8; T3: hp -0.4 [0-3], dmg 39.3 [0-94], alive 8/8, won 0/8; T4: hp -23.8 [16-34], dmg 29.4 [0-73], alive 6/8, won 0/8; T5: hp -29.2 [16-38], dmg 27 [0-55], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan3": "{\"plays\":\"突然一拳 -> 永世沙漏, then 中和+ -> 永世沙漏, then 暴露 -> 永世沙漏, then 投掷匕首 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 翻越撑击+\",\"result\":\"survives with 48/81 HP before healing\",\"hp_lost\":19,\"damage_dealt\":45,\"enemies_after\":\"永世沙漏 302 HP, Vulnerable 2, Weak 2\",\"strength_gained\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":48,\"hp_after_pct\":59,\"dmg\":45,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 67, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -107\",\"rollout_turns\":\"T1 exact: hp -19, dmg 45; T2: hp -18.1 [0-29], dmg 10 [0-32], alive 8/8, won 0/8; T3: hp -0.4 [0-3], dmg 39.3 [0-94], alive 8/8, won 0/8; T4: hp -23.8 [16-34], dmg 29.4 [0-73], alive 6/8, won 0/8; T5: hp -29.2 [16-38], dmg 27 [0-55], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan4": "{\"plays\":\"突然一拳 -> 永世沙漏, then 暴露 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 投掷匕首 -> 永世沙漏, then 翻越撑击+\",\"result\":\"survives with 41/81 HP before healing\",\"hp_lost\":26,\"damage_dealt\":45,\"enemies_after\":\"永世沙漏 302 HP, Vulnerable 2\",\"strength_gained\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":41,\"hp_after_pct\":51,\"dmg\":45,\"lethal_now\":\"no\",\"enemy_threat_next\":28,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 67, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -107\",\"rollout_turns\":\"T1 exact: hp -26, dmg 45; T2: hp -22.5 [9-37], dmg 6.4 [0-32], alive 8/8, won 0/8; T3: hp -0.9 [0-6], dmg 29.6 [0-94], alive 8/8, won 0/8; T4: hp -20.9 [9-31], dmg 29.8 [0-73], alive 3/8, won 0/8; T5: hp -31.7 [27-37], dmg 20 [0-60], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan5": "{\"plays\":\"突然一拳 -> 永世沙漏, then 暴露 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 中和+ -> 永世沙漏, then 投掷匕首 -> 永世沙漏\",\"result\":\"survives with 48/81 HP before healing\",\"hp_lost\":19,\"damage_dealt\":37,\"enemies_after\":\"永世沙漏 310 HP, Vulnerable 2, Weak 2\",\"strength_gained\":2,\"energy_unused\":1,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":48,\"hp_after_pct\":59,\"dmg\":37,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 67, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -107\",\"rollout_turns\":\"T1 exact: hp -19, dmg 37; T2: hp -18.9 [7-29], dmg 9.1 [0-32], alive 8/8, won 0/8; T3: hp -0.9 [0-3], dmg 32.6 [0-94], alive 8/8, won 0/8; T4: hp -21.3 [16-31], dmg 33.3 [8-73], alive 6/8, won 0/8; T5: hp -30 [19-43], dmg 15.8 [0-48], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan6": "{\"plays\":\"突然一拳 -> 永世沙漏, then 暴露 -> 永世沙漏, then 翻越撑击+, then 主宰+ -> 永世沙漏, then 中和+ -> 永世沙漏\",\"result\":\"survives with 48/81 HP before healing\",\"hp_lost\":19,\"damage_dealt\":33,\"enemies_after\":\"永世沙漏 314 HP, Vulnerable 2, Weak 2\",\"strength_gained\":2,\"energy_unused\":1,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":48,\"hp_after_pct\":59,\"dmg\":33,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 67, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -107\",\"rollout_turns\":\"T1 exact: hp -19, dmg 33; T2: hp -18.9 [7-29], dmg 9.1 [0-32], alive 8/8, won 0/8; T3: hp -0.9 [0-3], dmg 32.6 [0-94], alive 8/8, won 0/8; T4: hp -21.3 [16-31], dmg 33.3 [8-73], alive 6/8, won 0/8; T5: hp -30 [19-43], dmg 15.8 [0-48], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan7": "{\"plays\":\"突然一拳 -> 永世沙漏, then 暴露 -> 永世沙漏, then 投掷匕首 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 翻越撑击+\",\"result\":\"survives with 41/81 HP before healing\",\"hp_lost\":26,\"damage_dealt\":38,\"enemies_after\":\"永世沙漏 309 HP, Vulnerable 2\",\"strength_gained\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":41,\"hp_after_pct\":51,\"dmg\":38,\"lethal_now\":\"no\",\"enemy_threat_next\":28,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 67, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -107\",\"rollout_turns\":\"T1 exact: hp -26, dmg 38; T2: hp -22.5 [9-37], dmg 6.4 [0-32], alive 8/8, won 0/8; T3: hp -0.9 [0-6], dmg 29.6 [0-94], alive 8/8, won 0/8; T4: hp -20.9 [9-31], dmg 29.8 [0-73], alive 3/8, won 0/8; T5: hp -31.7 [27-37], dmg 20 [0-60], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan8": "{\"plays\":\"突然一拳 -> 永世沙漏, then 中和+ -> 永世沙漏, then 暴露 -> 永世沙漏, then 翻越撑击+, then 主宰+ -> 永世沙漏\",\"result\":\"survives with 48/81 HP before healing\",\"hp_lost\":19,\"damage_dealt\":27,\"enemies_after\":\"永世沙漏 320 HP, Vulnerable 2, Weak 2\",\"strength_gained\":2,\"energy_unused\":1,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":48,\"hp_after_pct\":59,\"dmg\":27,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 67, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -107\",\"rollout_turns\":\"T1 exact: hp -19, dmg 27; T2: hp -18.9 [7-29], dmg 9.1 [0-32], alive 8/8, won 0/8; T3: hp -0.9 [0-3], dmg 32.6 [0-94], alive 8/8, won 0/8; T4: hp -21.3 [16-31], dmg 33.3 [8-73], alive 6/8, won 0/8; T5: hp -30 [19-43], dmg 15.8 [0-48], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan9": "{\"plays\":\"战斗专注, then 突然一拳 -> 永世沙漏, then 暴露 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 中和+ -> 永世沙漏\",\"result\":\"survives with 48/81 HP before healing\",\"hp_lost\":19,\"damage_dealt\":21,\"enemies_after\":\"永世沙漏 326 HP, Vulnerable 2, Weak 2\",\"strength_gained\":2,\"cards_drawn\":3,\"energy_unused\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":48,\"hp_after_pct\":59,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 66.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~15, dead within 5 turns in 7/8 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~8% (fights won in the samples, the others by the end-of-horizon estimate), value -103.4\",\"rollout_turns\":\"T1 exact: hp -19, dmg 21; T2: hp -15.5 [4-26], dmg 20.6 [0-92], alive 8/8, won 0/8; T3: hp -0.9 [0-6], dmg 24.4 [8-73], alive 8/8, won 0/8; T4: hp -18.8 [6-28], dmg 33.1 [0-81], alive 8/8, won 0/8; T5: hp -27 [15-40], dmg 8.8 [0-43], alive 1/8, won 0/8\",\"history_estimate\":\"unavailable (no fight-value model)\"}",
+          "plan10": "{\"plays\":\"战斗专注, then 中和+ -> 永世沙漏, then 暴露 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 翻越撑击+\",\"result\":\"survives with 41/81 HP before healing\",\"hp_lost\":26,\"damage_dealt\":28,\"enemies_after\":\"永世沙漏 319 HP, Vulnerable 2\",\"strength_gained\":2,\"cards_drawn\":3,\"energy_unused\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":41,\"hp_after_pct\":51,\"dmg\":28,\"lethal_now\":\"no\",\"enemy_threat_next\":28,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 67, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 4.5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -107\",\"rollout_turns\":\"T1 exact: hp -26, dmg 28; T2: hp -19.1 [4-34], dmg 19.1 [0-80], alive 8/8, won 0/8; T3: hp -0.9 [0-6], dmg 24.4 [8-73], alive 8/8, won 0/8; T4: hp -20.5 [13-28], dmg 33.1 [0-81], alive 4/8, won 0/8; T5: hp -29.3 [15-40], dmg 6.8 [0-27], alive 0/8, won 0/8\",\"history_estimate\":\"further HP loss 67, win 0% (this encounter n=0; estimate from none n=0, typical error ±9.9; few similar states for this encounter)\"}",
+          "plan11": "{\"plays\":\"战斗专注, then 突然一拳 -> 永世沙漏, then 暴露 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 中和+ -> 永世沙漏, then 投掷匕首 -> 永世沙漏, then 翻越撑击+\",\"result\":\"survives with 48/81 HP before healing\",\"hp_lost\":19,\"damage_dealt\":58,\"enemies_after\":\"永世沙漏 289 HP, Vulnerable 2, Weak 2\",\"strength_gained\":2,\"cards_drawn\":3,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"暴露\",\"hp_after\":48,\"hp_after_pct\":59,\"dmg\":58,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"+2 permanent Strength; lasting value 13\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 65.9, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~14, dead within 5 turns in 7/8 (~turn 4.9); ranked on -(further loss) - 40 x (1 - win chance): win chance ~9% (fights won in the samples, the others by the end-of-horizon estimate), value -102.1\",\"rollout_turns\":\"T1 exact: hp -19, dmg 58; T2: hp -16.4 [2-26], dmg 20.6 [0-92], alive 8/8, won 0/8; T3: hp -0.8 [0-3], dmg 24.4 [8-73], alive 8/8, won 0/8; T4: hp -20.4 [6-31], dmg 41.3 [0-81], alive 7/8, won 0/8; T5: hp -26.1 [16-40], dmg 3.9 [0-27], alive 1/8, won 0/8\",\"history_estimate\":\"unavailable (no fight-value model)\",\"rollout_best\":true}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan11",
+        "probabilities": {
+          "plan3": 0.01,
+          "plan9": 0.1,
+          "plan6": 0.01,
+          "plan4": 0,
+          "plan11": 0.79,
+          "plan7": 0.01,
+          "plan5": 0.01,
+          "plan10": 0,
+          "plan2": 0.01,
+          "plan1": 0.06,
+          "plan8": 0
+        },
+        "confidence": 0.76,
+        "raw": {
+          "type": "choice",
+          "choice": "plan11",
+          "confidence": 0.76,
+          "probabilities": {
+            "plan3": 0.01,
+            "plan9": 0.1,
+            "plan6": 0.01,
+            "plan4": 0,
+            "plan11": 0.79,
+            "plan7": 0.01,
+            "plan5": 0.01,
+            "plan10": 0,
+            "plan2": 0.01,
+            "plan1": 0.06,
+            "plan8": 0
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 3
+    },
+    "expect": {
+      "card": {
+        "id": "BATTLE_TRANCE",
+        "upgraded": false
+      },
+      "turn": 4,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 11/11 (战斗专注, 突然一拳 -> 永世沙漏, 暴露 -> 永世沙漏, 主宰+ -> 永世沙漏, 中和+ -> 永世沙漏, 投掷匕首 -> 永世沙漏, 翻越撑击+) with confidence 0.76; code rank - (rollout's best line, added)",
+    "confidence": 0.76,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a107ac61177920a5d5e460e358c57b"
+    ],
+    "latency_ms": {
+      "plan": 44,
+      "jev": 414,
+      "action": 1349,
+      "planner": 320,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 7630,
+      "output_tokens": 109
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 291,
+      "horizon": 5,
+      "samples": 8,
+      "degraded": [],
+      "lines": 15,
+      "best": "plan11",
+      "best_added": true
+    },
+    "rollout_best_chosen": true,
+    "boss_sim": {
+      "available": false,
+      "reason": "low-trust boss (validation fights from turn 1 (7): only 7 validation fights (at least 10 needed); calibrated Brier 0.171 over 0.150 (1.25x the overall 0.120)): simulated on SL retries only (BOSS_SIM_LOW_TRUST=retry)",
+      "ms": 0,
+      "rollout_own_best": "plan11",
+      "rollout_own_tied": []
+    },
+    "timing": {
+      "planner_ms": 317,
+      "solve_ms": 21,
+      "mc_ms": 0,
+      "rollout_ms": 291,
+      "boss_sim_ms": 0,
+      "other_ms": 5,
+      "cpu_ms": 556,
+      "load1": 0.52,
+      "probe_ms": 2.68
+    },
+    "sl_attempt": 1,
+    "sl_reloads": 1,
+    "run_id": "LRN0HPZ0FZS1",
+    "observed_ts": "2026-10-04T16:08:19.167Z",
+    "journal": {
+      "choice": "战斗专注, then 突然一拳 -> 永世沙漏, then 暴露 -> 永世沙漏, then 主宰+ -> 永世沙漏, then 中和+ -> 永世沙漏, then 投掷匕首 -> 永世沙漏, then 翻越撑击+",
+      "reason": ""
+    },
+    "result": "completed: Action completed.",
+    "_line": 207765
+  }
+]

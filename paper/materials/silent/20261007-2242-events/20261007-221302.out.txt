@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：WQZVENQ7DTRP（A10，第33层，无厌沙虫末次T11阵亡，9血9挡对27攻击且沙坑1）；已追加致死口径说明与勘误时间更正。
+- 新的纯 bug：
+  - WQZVENQ7DTRP：狡诈药水确定生成未建模，容量与出刀顺序未参与方案比较 — agent/src/reflex/card-model.ts:1558（新）
+- 写成「未记录」的项：WQZVENQ7DTRP：前五次SL完整结算净损、受控整场反事实、最优完整线完成率、boss时钟需要／估计及实打／估值比、Jev实际缓存命中、攻击与沙坑致死先后、实现批次号。
+- 学习账本：WQZVENQ7DTRP：新增 silent-0256、silent-0257；更新 silent-0005、silent-0018、silent-0019、silent-0079、silent-0168（老错 silent-0079）；`ledger.py check` 退出码 0。
+- 代码提案：silent-proposal-4111ed10f08739cb（狡诈生成／容量，关联0256／0257等，本局F33 T11及早期首证）；silent-proposal-a327449c331efbc1（SL血价／沙坑边界，关联0079／0018，本局F33 T7／T9／T11）。均交独立 `strategy-proposal`；缺完整受控胜局，不拟固定阈值，未实现或上线。
+
+```json
+{"task":"postmortem","appended":["WQZVENQ7DTRP"],"skipped":[],"bugs":[{"run":"WQZVENQ7DTRP","where":"agent/src/reflex/card-model.ts:1558","what":"狡诈药水确定生成未建模，容量与出刀顺序未参与方案比较","new":true}],"ledger":{"added":["silent-0256","silent-0257"],"updated":["silent-0005","silent-0018","silent-0019","silent-0079","silent-0168"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-4111ed10f08739cb","silent-proposal-a327449c331efbc1"],"implementation_domains":["combat","potion","sl"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261007-221303-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a116b5-f0b9-78b3-9cc0-fa33125b7b3c
+轮数：1；工具调用：command_execution×53
+token：输入 216.1k、输出 40.5k（其中推理 11.1k）、cache 读 3778.0k、cache 写 0（命中 94.6%）
+成本：未提供
+耗时：1358.4 s（墙钟）
+时间：首个事件 2.9 s、模型首个输出 8.6 s、首次工具 13.6 s、末次工具结束 1343.0 s；工具内共 73.3 s，其余（模型生成、推理、网络）1282.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×27；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T22-13-04-01a116b5-f0b9-78b3-9cc0-fa33125b7b3c.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-221303-postmortem.jsonl

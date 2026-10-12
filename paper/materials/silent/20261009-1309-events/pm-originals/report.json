@@ -1,0 +1,47 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "RMNXHZKV716Y"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "RMNXHZKV716Y",
+      "where": "agent/src/reflex/turn-solver.ts:3083",
+      "what": "奥利哈钢回合末挡已计入数值却漏列诊断来源，致死差异注记错误归因",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0338"
+    ],
+    "updated": [
+      "silent-0125",
+      "silent-0228",
+      "silent-0136",
+      "silent-0180",
+      "silent-0069",
+      "silent-0011",
+      "silent-0024",
+      "silent-0025",
+      "silent-0327",
+      "silent-0129"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-8d88108e5417f650",
+    "silent-proposal-51ea234b4f032110",
+    "silent-proposal-5153135cd2aab723"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-124302-postmortem/report.md"
+}

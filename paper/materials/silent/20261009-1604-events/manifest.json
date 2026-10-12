@@ -1,0 +1,303 @@
+{
+  "timestamp": "2026-10-09 16:07",
+  "batch": "20261009-154301",
+  "run": "64R0P0MTZWAX",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "64R0P0MTZWAX"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0167",
+        "silent-0102",
+        "silent-0278",
+        "silent-0168",
+        "silent-0005",
+        "silent-0023",
+        "silent-0109"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-dd1b193b9fa2eacc",
+      "silent-proposal-92dbe5d961c9800b",
+      "silent-proposal-1a343bea5e81a5d5"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/report.md"
+  },
+  "originals": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/64R0P0MTZWAX-resources.json": {
+      "bytes": 1035737,
+      "sha256": "26c6269b752cc1b880c7faf4e85d0c1f02d6d2938eb20cb050ad5f1f6e797525"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/analyze.py": {
+      "bytes": 3710,
+      "sha256": "c1960da557bbe31fb0e8de376c3e45fb9b20db88db999a72e75c6111ffbd5771"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/append-baseline.json": {
+      "bytes": 102,
+      "sha256": "255943333465941b65a8ea231f95af3feed2fcfb758bbe02737e467ada87d178"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/append-command.sh": {
+      "bytes": 20677,
+      "sha256": "c7d67918f66f33d01ed2ac68454e45b8267cc45cc043ef721261167957b8fd36"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/append-position.json": {
+      "bytes": 138,
+      "sha256": "5cafd9f929620bde0daf588610da30b936045bd1dd2d90f45284e21ba326cfc1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/brain.jsonl": {
+      "bytes": 1103804,
+      "sha256": "c2eccdcb04f84bac68eee3c6508a8e09ba9cad62eeae30bc8ad3eda1bac3a201"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/decisions-compact.txt": {
+      "bytes": 462491,
+      "sha256": "3c240180ca94a374cd2b1cde705ad7aa4ecbd90bd38a88308afc675107c5e6d7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/decisions.jsonl": {
+      "bytes": 3394853,
+      "sha256": "10cc05bc92ebd5795d5a870940554a28dd2f8b2af40a074c3681ea8f85c092c5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/deepseek-window.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/draft-v1.md": {
+      "bytes": 20603,
+      "sha256": "b00777e57d554e17a2e12b607cce013c742b84cfff7576be17bdcbe5459a2052"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/draft-v2.md": {
+      "bytes": 20612,
+      "sha256": "b9dc7206668cd52c0b6b74f607402b7a2284367b0c24ce8076533f77ed7b6f3f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/extract.py": {
+      "bytes": 1328,
+      "sha256": "1bd7fc74fd0b2e62cb447763235666f2449da4c70f7439828538a8f37c2a6976"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/focus.json": {
+      "bytes": 3607,
+      "sha256": "dae5be9bcd09fc0318ad182429212df709e0bb827a25a7c6ddb20398b2f827f0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/frames.txt": {
+      "bytes": 210499,
+      "sha256": "4ab9cf34df139f1ebc2b99261637535b2253e22880e0b376ee738b5d218dd558"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-check-final.json": {
+      "bytes": 148,
+      "sha256": "373411e39642bd5bc8afc184494d98c7f7ca5e30827cc4c3baad793d15fcf386"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-check.txt": {
+      "bytes": 94,
+      "sha256": "55f4ac5533f4232ef3c508d499798d89209c2415372a3e88921e827f67f74e9b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-final.json": {
+      "bytes": 409162,
+      "sha256": "8ddde10a2baf16f932584a8aa3fe69e56146e17c1c0e8914f37328b586e3bb87"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-find-心灵腐化.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-find-懒惰.json": {
+      "bytes": 2639970,
+      "sha256": "76ab47fa79ba97e6a996b5abc0b5ec16cf9ea56584b09e0b7fe57d239110cac2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-find-护栏.json": {
+      "bytes": 2989692,
+      "sha256": "1ac4af7164c09a712c56bc9905854764b1e3d99520b90a88c8ed22c93c55e4d6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-find-毒药水.json": {
+      "bytes": 1030437,
+      "sha256": "38f72ddcabd26225fc5e11de79aa45a7e28dbc003fa88e981568c04cabfd502d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-find-知识恶魔.json": {
+      "bytes": 1089040,
+      "sha256": "e487004a5da6ed42328c6e735d09cd2e1b4089f44ea32a716e4820824d949411"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-find-诅咒.json": {
+      "bytes": 396911,
+      "sha256": "140b4346e50e0e3b688b8d71b9f11b591a855644a63fcd0fb02947dd75e56814"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-mechanics-余像.json": {
+      "bytes": 1639455,
+      "sha256": "880e3471db71cd523b840712cf1ec274164b8a23baae3f71c3b8164550c6a1d8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-mechanics-佩尔的士兵.json": {
+      "bytes": 24079,
+      "sha256": "f6dc7b6e580d1c3adec03905c62f8dc1e1cc48f0d70074983ae66c0fdbddae78"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/ledger-mechanics-面包.json": {
+      "bytes": 5357,
+      "sha256": "2b6d7adc06c3530633397dc981a648cd3f3193d854a7a8ef83b0fb065f5f7a5b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/metrics.json": {
+      "bytes": 942,
+      "sha256": "3f67acb47b16260071ec35c1d5b2197cdc99aa8d1cb3f283ff4b331bac2ff94e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/proposal-demon.json": {
+      "bytes": 582,
+      "sha256": "cbf4ddd5bd0abe0220360a3f750413eb63eda9e6f2abf49a0ed33c6317f09ff3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/proposal-demon.md": {
+      "bytes": 3023,
+      "sha256": "2e592c89e6de7895a8c8be88a6873b45510c9eafe8a269785d58249ea697e394"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/proposal-poison.json": {
+      "bytes": 519,
+      "sha256": "e81a3e9b1db0047827bdf7f09ec0b0e57f2097962300f406cfe4f761a31d63cc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/proposal-poison.md": {
+      "bytes": 2919,
+      "sha256": "16f79b4109e20b250c5954f22333336b9dedcc02bce5d803a50260bfee002d44"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/proposal-prism.json": {
+      "bytes": 551,
+      "sha256": "1d2b124d71c37b299861fdfb13fc35941797fe762844e9d2fedfcc3430b28618"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/proposal-prism.md": {
+      "bytes": 2800,
+      "sha256": "07caedad59cf01e98d0b0a6e4208e5c5533f19fc8f0127f95e14db7cb776cfe3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/proposal-verification.json": {
+      "bytes": 291,
+      "sha256": "87b30e21df2b73d2bc5252bcdddb0d4a149b8e5a457a36bf3a7de660b8faab90"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/report.json": {
+      "bytes": 640,
+      "sha256": "5e7f4cfa2fbbf1fabd61d9f8479227da120696df48d2c8ef54c350491a12de02"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/report.md": {
+      "bytes": 1868,
+      "sha256": "821acddee4f415e4d595ea6218ec86f737ed3208111597c8f0b693e28ad116d8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/resource-table.md": {
+      "bytes": 3451,
+      "sha256": "baf920b089e18cb7f5ae1b6b8f4cc31a58dd6e82c94c5e20365be86073963458"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/round-tables.json": {
+      "bytes": 6434,
+      "sha256": "4605ef5b8a5c10c97cd0fdf8aaa49a234b0d042131a520e83a7a554739d4aad6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/run-config.jsonl": {
+      "bytes": 4924,
+      "sha256": "16bd61cde9f2967f28801d9472bcde67f54748ee8ffd0a865c6b06bd3aee53ec"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/run-plans.jsonl": {
+      "bytes": 9835,
+      "sha256": "cd394d2c43859578a6cdfd3c8810d1b75f6bb349e2c7d7838b646757c4f657db"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/silent-0005.json": {
+      "bytes": 217667,
+      "sha256": "5b60a4e5c0bcf3934415267eeadfc6ee464307dc5dcafe816f23939a72f0d28d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/silent-0065.json": {
+      "bytes": 30007,
+      "sha256": "b7891f50b11fb9a30b9779a4f95ce64824221ea2cbb75dcf1ee63ef880aabf83"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/silent-0085.json": {
+      "bytes": 10668,
+      "sha256": "43b367ee3ad07832ceb5ad62b67e2af91c71bc87c16a6120bb72f61796d98f6c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/silent-0097.json": {
+      "bytes": 6272,
+      "sha256": "0b0bd2bf73790b95c422357dce8687d04f78a2f87c2a901bdd5ef8e91ec4bf36"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/silent-0102.json": {
+      "bytes": 17232,
+      "sha256": "19be9e5d19624162c8d07d383aa0f59510a703be0cac19f295f06354fe881408"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/silent-0110.json": {
+      "bytes": 10425,
+      "sha256": "42f44e72f0f34db6bce91871a2af93b0025cd0317418f68e9edbbb749f78f166"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/silent-0167.json": {
+      "bytes": 17881,
+      "sha256": "95cb2553a5d8f3ad2ca390df4c46e95f6e596bb64c11c9e10881728131d6f900"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/silent-0168.json": {
+      "bytes": 22004,
+      "sha256": "bd2e4753d6a29801862a6970a5bd23ae27162a7bcf2eb985f6c236fd800d4442"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/silent-0278.json": {
+      "bytes": 45584,
+      "sha256": "90c7e9f4a1fa03133fe1899269324a9d8efc1de8f994b7878264762761f45157"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/sl-attempts.jsonl": {
+      "bytes": 201461,
+      "sha256": "39bd3d4df5cc38905795df5a917f285ed8635cc4a407a930fa40e05289e2ab87"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/states.jsonl": {
+      "bytes": 31617125,
+      "sha256": "cd87decbb1de401c4ccfc1716597dd98da86be1c02b0e8e10f4364467f1f795e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/verification.json": {
+      "bytes": 72626,
+      "sha256": "7fbc287399e79313b44e1732bd95d8a2f10fba3c5df4650f894fc2fa344b3ae2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem/verify.py": {
+      "bytes": 4696,
+      "sha256": "84d8660fc927115a1f7fa2645234833a37f02e6ad1be26a0737e78aee8eba8b6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-154302-postmortem.jsonl": {
+      "bytes": 1537207,
+      "sha256": "69f496f3af8c346a03fede7023fcedeef40e617784a5a8921a6c916c87f91d75"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-154301.out": {
+      "bytes": 2448,
+      "sha256": "1ba0a6153b7eb9cb638cef17f0fbd9af5224ced0e35c21dd459f65ab1de3e0ee"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-154301.err": {
+      "bytes": 8543,
+      "sha256": "a1c16d2f431f60dd143b27b8ffaf84d04b77f2c98c9405389ee0b6d46af32739"
+    },
+    "/home/dw/Projects/agent-sts2/notes/run-1009-1525-64R0P0MTZWAX.md": {
+      "bytes": 6439,
+      "sha256": "f9f6dbae08e67136023b45b4d4bc4917e7997e3e03f723d9ea6ef56f45428130"
+    }
+  },
+  "owned_cli": 14,
+  "evidence_update_rows": 7,
+  "first_observation_add_rows": 0,
+  "proposal_link_rows": 7,
+  "support_evidence": 7,
+  "repeat_evidence": 0,
+  "correction_rows": 0,
+  "new_pure_bugs": [],
+  "queue_append": false,
+  "blocking": false,
+  "lesson_append_bytes": 20612,
+  "old_prefix_bytes": 6050521,
+  "old_prefix_sha256": "b3c291602be70b0ca73b008bebffed14f0d60188c76b9f4c6135a0921b048663",
+  "append_verification": {
+    "formal_equals_original_draft": true,
+    "old_prefix_preserved": true,
+    "title_count": 1
+  },
+  "source_total_verification_count": 1916,
+  "ops_readonly_source_checks_reexecuted": 1916,
+  "source_failed_command_history": [
+    {
+      "exit": 1,
+      "command_sha256": "0c157c2585220af3fb3bd696fef1651af091a34220cde1678b1ab8b8e23f0e40",
+      "output_excerpt": "s': 3375, 'base': {'win': 0, 'win_cal': 0, 'hp_loss_won': None, 'turns': 11, \n315328 5 event/choose {'action': 'choose_event_option', 'option_index': 1} {'choice': '那个: 将一张笨拙加入你的牌组。获得一件随机遗物。', 'reason': 'A random relic offers lasting power; Clumsy exhausts naturally. Preserve HP, delay elites, and remove the curse at the planned shop if needed.'} boss_sim {'boss': 'VANTOM', 'asc': 10, 'entry_hp': 74, 'entry_source': 'route', 'samples': 1000, 'requested': 1000, 'timed_out': False, 'workers': 24, 'orders': 1, 'sim_ms': 2290, 'ms': 2298, 'base': {'win': 0.005, 'win_cal': 0.005, 'hp_loss_won': 72, 'turns'\n315349 6 reward/card {'action': 'choose_reward_card', 'option_index': 1} {'choice': '斗篷与匕首', 'reason': 'Cloak and Dagger improves defense while stripping Slippery with shivs; Prepared lacks synergy, and Strangle needs more cheap cards.'} boss_sim {'boss': 'VANTOM', 'asc': 10, 'entry_hp': 54, 'entry_source': 'route', 'samples': 1000, 'requested': 1000, 'timed_out': False, 'workers': 24, 'orders': 1, 'sim_ms': 3098, 'ms': 3104, 'base': {'win': 0, 'win_cal': 0, 'hp_loss_won': None, 'turns': 10, \nTraceback (most recent call last):\n  File \"<stdin>\", line 12, in <module>\nKeyError: 'chosen'\n"
+    },
+    {
+      "exit": 1,
+      "command_sha256": "3145ce3df8267991d44f7b7d84d9918f2682ec3143b5e203c699d467fd3e8870",
+      "output_excerpt": "ard, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck\\'s estimate\nINSPECT 315634 rest/plan question keys dict_keys(['pick']) jev context keys dict_keys([])\nstate keys dict_keys([])\n{'pick': {'type': 'choice', 'instructions': 'What should I do at this rest site? Heal, smith a named card (one option per card that can be upgraded, with what the upgrade changes), or another rest action; code plays the action and the card pick. You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game\\'s text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts a\nTraceback (most recent call last):\n  File \"<stdin>\", line 10, in <module>\nAttributeError: 'str' object has no attribute 'keys'\n"
+    }
+  ],
+  "source_proposals_original_automatic_chain": true,
+  "no_ops_game_knowledge_added": true,
+  "original_reports_and_streams_kept": true,
+  "pending_experience132_separate_continuation": true
+}

@@ -1,0 +1,41 @@
+{
+  "character": "silent",
+  "findings": [
+    {
+      "input": "01.txt",
+      "observation": "固定源 acf2611db281456c63915a98b0995d3d04bcd35a 的差异涉及 ops/codex/herdr.ts、ops/codex/main.ts、agent/tests/ops-herdr.test.ts，共新增59行、删除10行。修改包括ANSI输入框识别、大消息转存文件及调用接入、pane标识校验允许p后出现字母数字；差异未涉及游戏逻辑或学习知识。"
+    },
+    {
+      "input": "01.txt",
+      "observation": "ANSI识别改为定位›，排除符号前含可见文字的行，解析后续SGR状态并跳过颜色参数，区分空白、暗色占位符和输入文字。新增测试断言覆盖分别着色的提示符、空白、中文未发送文字、暗色占位符、SGR 22取消暗色及正文中的›。这是测试源码证据，未附执行通过记录，也不能独立证明真实TUI交互不会覆盖输入。"
+    },
+    {
+      "input": "01.txt",
+      "observation": "prepareHerdrPrompt对UTF-8字节数超过96 KiB的消息调用writeFileSync保存全文，指定mode 0600，返回保留首行标记及文件路径的提示；wakeHerdr使用${logPath}.events.txt并保留原消息首行作为marker。新增测试构造超过128 KiB的多语言消息，断言提示小于4096字节、首行不变、包含文件路径、文件全文一致，以及小消息原样返回且不建文件。测试中的“共295件”是合成标记，不能证明实际295件事件已交付。"
+    },
+    {
+      "input": "02.txt",
+      "observation": "冻结前提记录针对同一固定源：main头为e6b0cea2c9d1614a6a8d3d0dffb194bfa7208522，live头为3b2791a4523b3ca269db3fbb6838bb3bf1054528；两者check_rc均为0、source_is_ancestor均为true。记录支持固定源已进入这两个冻结提交的历史，不能据此确认后续未回退、运行进程已加载修改或派单已经恢复。"
+    },
+    {
+      "input": "00.txt",
+      "observation": "文档明确历史探针保留当时口径。Herdr流程要求状态就绪、输入框空且无未结束turn；不就绪延后并保留事件。文档列出的切换前提包括合入main、完整tsc与vitest、cron环境可连接Herdr，以及临时会话和正式wake回执检查。事件归档依赖叫醒成功，turn完成按首行标记对应的task_complete判断。该文件是流程说明，不是固定源的测试或上线验收回执。"
+    }
+  ],
+  "input_sha256": "9d7980ab2af86d7fe0ad228d340b766d29870778f2999728aabeb6d64a76ff2b",
+  "limitations": [
+    "本次complete仅表示只读核查完成；证据冻结切点为1791716101317436448，未核实冻结后的状态。",
+    "仅读取manifest.json及00.txt、01.txt、02.txt；未重新计算文件摘要，input_sha256按manifest原值保留。",
+    "未提供固定源或合入树的tsc、vitest执行日志；新增差异中未见96 KiB边界、字母数字pane标识及大消息端到端交付的专门测试证据。",
+    "未提供实际ANSI屏幕、Herdr状态、事件全文文件、对应rollout、wake回执、队列归档或上线登记，无法确认实际恢复及事件处理完整性。",
+    "输入没有可逐项核对的原事件ID清单；未把测试标记、检查返回码、提交存在或模型完成视为业务处理及上线完成。"
+  ],
+  "next_steps": [
+    "由主ops核对当前main/live及最终树内容；冻结记录已显示源提交为两者祖先，不应仅因缺少上线回执而重复合入。",
+    "由主ops取得绑定准确提交或检查树的完整tsc、vitest结果，重点确认ANSI输入保护、大消息交付及pane标识兼容性。",
+    "由主ops按原事件ID关联完整消息文件、首行marker、对应turn完成记录、wake结果和归档回执，并核实运行版本后判断恢复状态；本辅助核查不领取或处理游戏、学习积压。"
+  ],
+  "request_id": "ops-infra-herdr-wake-20261011",
+  "session_id": "01a12a9a-1bd1-7ba0-9d83-ef80e3a02701",
+  "status": "complete"
+}

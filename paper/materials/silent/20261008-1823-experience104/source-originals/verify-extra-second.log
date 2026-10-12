@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/verify-extra.py", line 30, in <module>
+    check('异螨前三试相同首24抽牌序',all(x['draws']['order'][:24]==ss[0]['draws']['order'][:24] for x in ss))
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/verify-extra.py", line 6, in check
+    assert ok,(name,data)
+           ^^
+AssertionError: ('异螨前三试相同首24抽牌序', None)

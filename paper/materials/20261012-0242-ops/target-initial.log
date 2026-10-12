@@ -1,0 +1,185 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-021301/agent
+
+ ❯ tests/silent-demon-input.test.ts (23 tests | 23 failed) 20ms
+   × the production question exposes the two remaining slots and still lets Jev choose either original target 7ms
+   × other character retains the old question 1ms
+   × unobserved ascension retains the old question 1ms
+   × missing counter retains the old question 1ms
+   × earlier plays retains the old question 1ms
+   × other cap retains the old question 1ms
+   × different copy retains the old question 1ms
+   × ambiguous copy retains the old question 0ms
+   × other action retains the old question 1ms
+   × old turn Hand Trick source cannot add facts 1ms
+   × old fight Hand Trick source cannot add facts 0ms
+   × missing Hand Trick source cannot add facts 0ms
+   × unknown target cost stays unknown rather than granting free energy 0ms
+   × all six fixed drinks enter the actual solver as six poison, despite the spent manual play cap 1ms
+   × the final fixed turn's two poison ticks match 159 to 74, without claiming survival 0ms
+   × other character retains the previous unknown-potion input 0ms
+   × other ascension retains the previous unknown-potion input 0ms
+   × new relic retains the previous unknown-potion input 0ms
+   × missing relic data retains the previous unknown-potion input 0ms
+   × new player modifier retains the previous unknown-potion input 0ms
+   × unobserved plating retains the previous unknown-potion input 0ms
+   × artifact retains the previous unknown-potion input 1ms
+   × other enemy retains the previous unknown-potion input 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 23 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-demon-input.test.ts > the production question exposes the two remaining slots and still lets Jev choose either original target
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ env tests/silent-demon-input.test.ts:42:17
+ ❯ tests/silent-demon-input.test.ts:61:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/23]⎯
+
+ FAIL  tests/silent-demon-input.test.ts > other character retains the old question
+ FAIL  tests/silent-demon-input.test.ts > unobserved ascension retains the old question
+ FAIL  tests/silent-demon-input.test.ts > missing counter retains the old question
+ FAIL  tests/silent-demon-input.test.ts > earlier plays retains the old question
+ FAIL  tests/silent-demon-input.test.ts > other cap retains the old question
+ FAIL  tests/silent-demon-input.test.ts > different copy retains the old question
+ FAIL  tests/silent-demon-input.test.ts > ambiguous copy retains the old question
+ FAIL  tests/silent-demon-input.test.ts > other action retains the old question
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ env tests/silent-demon-input.test.ts:42:17
+ ❯ tests/silent-demon-input.test.ts:93:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/23]⎯
+
+ FAIL  tests/silent-demon-input.test.ts > old turn Hand Trick source cannot add facts
+ FAIL  tests/silent-demon-input.test.ts > old fight Hand Trick source cannot add facts
+ FAIL  tests/silent-demon-input.test.ts > missing Hand Trick source cannot add facts
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ env tests/silent-demon-input.test.ts:42:17
+ ❯ tests/silent-demon-input.test.ts:102:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/23]⎯
+
+ FAIL  tests/silent-demon-input.test.ts > unknown target cost stays unknown rather than granting free energy
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ tests/silent-demon-input.test.ts:112:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/23]⎯
+
+ FAIL  tests/silent-demon-input.test.ts > all six fixed drinks enter the actual solver as six poison, despite the spent manual play cap
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ env tests/silent-demon-input.test.ts:42:17
+ ❯ inputFor tests/silent-demon-input.test.ts:52:24
+ ❯ tests/silent-demon-input.test.ts:121:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/23]⎯
+
+ FAIL  tests/silent-demon-input.test.ts > the final fixed turn's two poison ticks match 159 to 74, without claiming survival
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ env tests/silent-demon-input.test.ts:42:17
+ ❯ inputFor tests/silent-demon-input.test.ts:52:24
+ ❯ tests/silent-demon-input.test.ts:138:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/23]⎯
+
+ FAIL  tests/silent-demon-input.test.ts > other character retains the previous unknown-potion input
+ FAIL  tests/silent-demon-input.test.ts > other ascension retains the previous unknown-potion input
+ FAIL  tests/silent-demon-input.test.ts > new relic retains the previous unknown-potion input
+ FAIL  tests/silent-demon-input.test.ts > missing relic data retains the previous unknown-potion input
+ FAIL  tests/silent-demon-input.test.ts > new player modifier retains the previous unknown-potion input
+ FAIL  tests/silent-demon-input.test.ts > unobserved plating retains the previous unknown-potion input
+ FAIL  tests/silent-demon-input.test.ts > artifact retains the previous unknown-potion input
+ FAIL  tests/silent-demon-input.test.ts > other enemy retains the previous unknown-potion input
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ tests/silent-demon-input.test.ts:158:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/23]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  23 failed (23)
+   Start at  02:21:33
+   Duration  1.49s (transform 1.09s, setup 295ms, import 1.01s, tests 20ms, environment 0ms)
+

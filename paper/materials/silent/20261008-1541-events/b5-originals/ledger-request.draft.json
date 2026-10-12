@@ -1,0 +1,46 @@
+{
+ "by": "learner:fix-batch",
+ "character": "silent",
+ "kind": "fight",
+ "claim": "静默女王 B5 冻结覆盖 15 场实际结局，调参8场、验证7场（3胜4败），39次 SL predicted_death 只作截尾。原107调参keys和切点不变，新PD9AYQVMLQW6 F48胜与9R916WW0V65N F49败只进验证并同时重放两侧；验证仍差3场，不能准入B2，也不能由历史排序差声称实盘胜率改善。",
+ "first_run": "5X2GHKJ89PN1",
+ "prior": "unknown",
+ "prior_note": "这是本批固定数据和验收覆盖的发现；没有更早的同数据、同源配对校正证据。",
+ "status": "rejected",
+ "evidence": [
+  {
+   "run": "5X2GHKJ89PN1",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "验证侧首场实际结局；第6次实际 died，不把前5次 predicted_death 当额外败局。完整 byte offsets/SHA256 见 queen-outcome-coverage.json 与 queen-sl-byte-audit.json。"
+  },
+  {
+   "run": "G33HU22H2543",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "触发最近20局死因之一，第6次实际 died；原日志回合与模拟预测分别归档，不用单次概率证明机制因果。"
+  },
+  {
+   "run": "9R916WW0V65N",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "新增验证侧实际 died；F49独立战，沿固定切点只进val，前后来源相同。"
+  },
+  {
+   "run": "PD9AYQVMLQW6",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "新增验证侧实际 won；与新增败局同样进入两侧，不选择性补样本。"
+  }
+ ],
+ "where": {
+  "proposal": [
+   "paper/materials/silent/boss-sim-b5-QUEEN-20261008-112135.md"
+  ]
+ },
+ "note": "草稿：等待原基准脚本验收；不会在此状态写入根台账。最终 note 将补原检查、实际指标和绝对验收路径。"
+}

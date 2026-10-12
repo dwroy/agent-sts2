@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-214301-experience-update/verify.py", line 11, in <module>
+    assert all(not s['state']['potions'] or all(not p.get('potion_id') for p in s['state']['potions']) for s in S if s['state']['run']['floor']==17)
+           ^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-214301-experience-update/verify.py", line 11, in <genexpr>
+    assert all(not s['state']['potions'] or all(not p.get('potion_id') for p in s['state']['potions']) for s in S if s['state']['run']['floor']==17)
+                   ~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'potions'

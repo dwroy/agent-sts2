@@ -1,0 +1,578 @@
+{
+  "manifest": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941/learner/runs/20261012-150955-strategy-proposal/raw-evidence-manifest.json",
+  "manifest_sha256": "cc20f1ae9ed2f9ab038443d8cdc17ec3f1cd1059453ba09e70dc0f3cfe0a589a",
+  "pairs": [
+    {
+      "run": "8JRE1C4H4Z2W",
+      "same_fingerprint": true,
+      "parts": [
+        {
+          "decision_line": 270216,
+          "next_turn_decision_line": 270220,
+          "start_state_line": 276208,
+          "next_turn_state_line": 276212,
+          "start_state_offset": 8506061478,
+          "next_turn_state_offset": 8506236953,
+          "floor": 33,
+          "turn": 2,
+          "attempt": 1,
+          "hp_before": 47,
+          "hp_after": 44,
+          "hp_loss": 3,
+          "enemy_hp_before": {
+            "THE_INSATIABLE": 326
+          },
+          "enemy_hp_after": {
+            "THE_INSATIABLE": 316
+          },
+          "enemy_net_loss": 10,
+          "powers_before": [
+            {
+              "index": 0,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "powers_after": [
+            {
+              "index": 0,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "sl_explore": null
+        },
+        {
+          "decision_line": 270282,
+          "next_turn_decision_line": 270286,
+          "start_state_line": 276274,
+          "next_turn_state_line": 276278,
+          "start_state_offset": 8508960302,
+          "next_turn_state_offset": 8509135547,
+          "floor": 33,
+          "turn": 2,
+          "attempt": 3,
+          "hp_before": 47,
+          "hp_after": 32,
+          "hp_loss": 15,
+          "enemy_hp_before": {
+            "THE_INSATIABLE": 326
+          },
+          "enemy_hp_after": {
+            "THE_INSATIABLE": 309
+          },
+          "enemy_net_loss": 17,
+          "powers_before": [
+            {
+              "index": 0,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "powers_after": [
+            {
+              "index": 0,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "sl_explore": {
+            "point": "T2, after the replay of attempt 2's path stopped (T1: the board is not on attempt 2's path)",
+            "original": "狂乱逃离, 带毒刺击 -> 无厌沙虫, 尖啸",
+            "replacement": "狂乱逃离, 带毒刺击 -> 无厌沙虫, 打击 -> 无厌沙虫",
+            "reason": "the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail)",
+            "played_in": [
+              1
+            ],
+            "numbers": {
+              "original": "rollout dead 0/24, further loss 47, win ~36%; whole-fight sim win 0%; this turn hp -3, dmg 10",
+              "replacement": "rollout dead 5/24, further loss 47, win ~22%; whole-fight sim win 0%; this turn hp -15, dmg 17"
+            },
+            "gate": "rollout",
+            "turn": "FRANTIC_ESCAPE, PIERCING_WAIL, POISONED_STAB>无厌沙虫",
+            "turn_instead": "FRANTIC_ESCAPE, POISONED_STAB>无厌沙虫, STRIKE_SILENT>无厌沙虫"
+          }
+        }
+      ],
+      "hp_loss_delta": 12,
+      "enemy_net_loss_delta": 7
+    },
+    {
+      "run": "YF0LXT1QSTGG",
+      "same_fingerprint": true,
+      "parts": [
+        {
+          "decision_line": 271309,
+          "next_turn_decision_line": 271319,
+          "start_state_line": 277327,
+          "next_turn_state_line": 277337,
+          "start_state_offset": 8547528472,
+          "next_turn_state_offset": 8547999752,
+          "floor": 48,
+          "turn": 1,
+          "attempt": 2,
+          "hp_before": 27,
+          "hp_after": 27,
+          "hp_loss": 0,
+          "enemy_hp_before": {
+            "TEST_SUBJECT": 111
+          },
+          "enemy_hp_after": {
+            "TEST_SUBJECT": 66
+          },
+          "enemy_net_loss": 45,
+          "powers_before": [
+            {
+              "index": 0,
+              "power_id": "PLATING_POWER",
+              "name": "覆甲",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ],
+          "powers_after": [
+            {
+              "index": 0,
+              "power_id": "PLATING_POWER",
+              "name": "覆甲",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 4,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "RITUAL_POWER",
+              "name": "仪式",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 3,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            }
+          ],
+          "sl_explore": null
+        },
+        {
+          "decision_line": 271348,
+          "next_turn_decision_line": 271355,
+          "start_state_line": 277366,
+          "next_turn_state_line": 277373,
+          "start_state_offset": 8549362858,
+          "next_turn_state_offset": 8549698890,
+          "floor": 48,
+          "turn": 1,
+          "attempt": 3,
+          "hp_before": 27,
+          "hp_after": 18,
+          "hp_loss": 9,
+          "enemy_hp_before": {
+            "TEST_SUBJECT": 111
+          },
+          "enemy_hp_after": {
+            "TEST_SUBJECT": 73
+          },
+          "enemy_net_loss": 38,
+          "powers_before": [
+            {
+              "index": 0,
+              "power_id": "PLATING_POWER",
+              "name": "覆甲",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ],
+          "powers_after": [
+            {
+              "index": 0,
+              "power_id": "PLATING_POWER",
+              "name": "覆甲",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 4,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "RITUAL_POWER",
+              "name": "仪式",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 3,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            }
+          ],
+          "sl_explore": {
+            "point": "T1, the 4th latest question before attempt 2's death on T6",
+            "original": "灵动步法+, 刺杀 -> 实验体 #C64, 打击 -> 实验体 #C64, 打击 -> 实验体 #C64, 防御+, 斗篷与匕首, 防御, potion 马萨雷斯的赠礼, 打击+ -> 实验体 #C64",
+            "replacement": "灵动步法+, 刺杀 -> 实验体 #C64, 打击 -> 实验体 #C64, 打击 -> 实验体 #C64, 防御+, potion 马萨雷斯的赠礼",
+            "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often; of them, one whose turn cannot end as a failed attempt's after a draw",
+            "played_in": [
+              1,
+              2
+            ],
+            "replayed": 0,
+            "numbers": {
+              "original": "rollout dead 24/24, further loss 27, win ~0%; whole-fight sim win 0%; this turn hp -0, dmg 54",
+              "replacement": "rollout dead 24/24, further loss 27, win ~0%; whole-fight sim win 0%; this turn hp -10, dmg 36"
+            },
+            "gate": "rollout",
+            "turn": "ASSASSINATE>实验体 #C64, CLOAK_AND_DAGGER, DEFEND_SILENT, DEFEND_SILENT+, FOOTWORK+, STRIKE_SILENT+>实验体 #C64, STRIKE_SILENT>实验体 #C64, STRIKE_SILENT>实验体 #C64, potion:MAZALETHS_GIFT",
+            "turn_instead": "ASSASSINATE>实验体 #C64, DEFEND_SILENT+, FOOTWORK+, STRIKE_SILENT>实验体 #C64, STRIKE_SILENT>实验体 #C64, potion:MAZALETHS_GIFT"
+          }
+        }
+      ],
+      "hp_loss_delta": 9,
+      "enemy_net_loss_delta": -7
+    },
+    {
+      "run": "XP2SL33HT0D9",
+      "same_fingerprint": true,
+      "parts": [
+        {
+          "decision_line": 271992,
+          "next_turn_decision_line": 271995,
+          "start_state_line": 278028,
+          "next_turn_state_line": 278031,
+          "start_state_offset": 8572184698,
+          "next_turn_state_offset": 8572313255,
+          "floor": 33,
+          "turn": 3,
+          "attempt": 1,
+          "hp_before": 45,
+          "hp_after": 36,
+          "hp_loss": 9,
+          "enemy_hp_before": {
+            "CRUSHER": 194,
+            "ROCKET": 193
+          },
+          "enemy_hp_after": {
+            "CRUSHER": 179,
+            "ROCKET": 184
+          },
+          "enemy_net_loss": 24,
+          "powers_before": [
+            {
+              "index": 0,
+              "power_id": "SURROUNDED_POWER",
+              "name": "遭到包围",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "powers_after": [
+            {
+              "index": 0,
+              "power_id": "SURROUNDED_POWER",
+              "name": "遭到包围",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 2,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 2,
+              "is_debuff": true
+            }
+          ],
+          "sl_explore": null
+        },
+        {
+          "decision_line": 272040,
+          "next_turn_decision_line": 272043,
+          "start_state_line": 278076,
+          "next_turn_state_line": 278079,
+          "start_state_offset": 8574278020,
+          "next_turn_state_offset": 8574406390,
+          "floor": 33,
+          "turn": 3,
+          "attempt": 2,
+          "hp_before": 45,
+          "hp_after": 31,
+          "hp_loss": 14,
+          "enemy_hp_before": {
+            "CRUSHER": 194,
+            "ROCKET": 193
+          },
+          "enemy_hp_after": {
+            "CRUSHER": 179,
+            "ROCKET": 181
+          },
+          "enemy_net_loss": 27,
+          "powers_before": [
+            {
+              "index": 0,
+              "power_id": "SURROUNDED_POWER",
+              "name": "遭到包围",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "powers_after": [
+            {
+              "index": 0,
+              "power_id": "SURROUNDED_POWER",
+              "name": "遭到包围",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 2,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 2,
+              "is_debuff": true
+            }
+          ],
+          "sl_explore": {
+            "point": "T3, attempt 2 still on attempt 1's path (from T3, where attempt 1 lost the most HP)",
+            "original": "防御, 猎杀者 -> 碾碎爪",
+            "replacement": "打击 -> 碾碎爪, 弹跳药瓶+",
+            "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+            "played_in": [
+              1
+            ],
+            "numbers": {
+              "original": "rollout dead 24/24, further loss 45, win ~0%; whole-fight sim win 0%; this turn hp -9, dmg 24",
+              "replacement": "rollout dead 24/24, further loss 45, win ~0%; whole-fight sim win 0%; this turn hp -14, dmg 27"
+            },
+            "gate": "b2",
+            "b2": {
+              "original": 0,
+              "replacement": 0,
+              "diff": 0,
+              "se": 0
+            },
+            "turn": "DEFEND_SILENT, PREDATOR>碾碎爪",
+            "turn_instead": "BOUNCING_FLASK+, STRIKE_SILENT>碾碎爪"
+          }
+        }
+      ],
+      "hp_loss_delta": 5,
+      "enemy_net_loss_delta": 3
+    },
+    {
+      "run": "XP2SL33HT0D9",
+      "same_fingerprint": true,
+      "parts": [
+        {
+          "decision_line": 271982,
+          "next_turn_decision_line": 271987,
+          "start_state_line": 278018,
+          "next_turn_state_line": 278023,
+          "start_state_offset": 8571761629,
+          "next_turn_state_offset": 8571977181,
+          "floor": 33,
+          "turn": 1,
+          "attempt": 1,
+          "hp_before": 47,
+          "hp_after": 45,
+          "hp_loss": 2,
+          "enemy_hp_before": {
+            "CRUSHER": 219,
+            "ROCKET": 209
+          },
+          "enemy_hp_after": {
+            "CRUSHER": 194,
+            "ROCKET": 209
+          },
+          "enemy_net_loss": 25,
+          "powers_before": [
+            {
+              "index": 0,
+              "power_id": "SURROUNDED_POWER",
+              "name": "遭到包围",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "powers_after": [
+            {
+              "index": 0,
+              "power_id": "SURROUNDED_POWER",
+              "name": "遭到包围",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "sl_explore": null
+        },
+        {
+          "decision_line": 272195,
+          "next_turn_decision_line": 272200,
+          "start_state_line": 278231,
+          "next_turn_state_line": 278236,
+          "start_state_offset": 8581003029,
+          "next_turn_state_offset": 8581221222,
+          "floor": 33,
+          "turn": 1,
+          "attempt": 6,
+          "hp_before": 47,
+          "hp_after": 37,
+          "hp_loss": 10,
+          "enemy_hp_before": {
+            "CRUSHER": 219,
+            "ROCKET": 209
+          },
+          "enemy_hp_after": {
+            "CRUSHER": 185,
+            "ROCKET": 209
+          },
+          "enemy_net_loss": 34,
+          "powers_before": [
+            {
+              "index": 0,
+              "power_id": "SURROUNDED_POWER",
+              "name": "遭到包围",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "powers_after": [
+            {
+              "index": 0,
+              "power_id": "SURROUNDED_POWER",
+              "name": "遭到包围",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            }
+          ],
+          "sl_explore": {
+            "point": "T1, the 9th latest question before attempt 4's death on T9",
+            "original": "背刺+ -> 碾碎爪, 冲刺 -> 碾碎爪, 生存者",
+            "replacement": "背刺+ -> 碾碎爪, 冲刺 -> 碾碎爪, 投掷匕首 -> 碾碎爪",
+            "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+            "played_in": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "replayed": 0,
+            "numbers": {
+              "original": "rollout dead 24/24, further loss 47, win ~0%; whole-fight sim win 0%; this turn hp -2, dmg 25",
+              "replacement": "rollout dead 24/24, further loss 47, win ~0%; whole-fight sim win 0%; this turn hp -10, dmg 34"
+            },
+            "gate": "b2",
+            "b2": {
+              "original": 0,
+              "replacement": 0,
+              "diff": 0,
+              "se": 0
+            },
+            "turn": "BACKSTAB+>碾碎爪, DASH>碾碎爪, SURVIVOR",
+            "turn_instead": "BACKSTAB+>碾碎爪, DAGGER_THROW>碾碎爪, DASH>碾碎爪"
+          }
+        }
+      ],
+      "hp_loss_delta": 8,
+      "enemy_net_loss_delta": 9
+    }
+  ]
+}

@@ -1,0 +1,327 @@
+{
+  "batch": "20261008-064303-fix-batch",
+  "source": "9d96afd014700b629c37fea0d05be766490fb3da",
+  "merged": "96aeaf636a2b806c435db89673590f8229b22b58",
+  "published": "f89476513e37ba1bfe269f820f5147740adb5a67",
+  "published_tree": "4a24dcd1a118a0b388310f2b44a93fddb4e9ca5b",
+  "observed_live": "f89476513e37ba1bfe269f820f5147740adb5a67",
+  "main_before": "da2e71d8d386f7f6433705f0865e9af1e78976ba",
+  "version": {
+    "name": "S1.boss-calibration4",
+    "family": "S1",
+    "commit": "96aeaf636a2b806c435db89673590f8229b22b58",
+    "source": "decision-log 2026-10-08 09:18: Roy授权静默boss定期校准；20新增实际结局/20可用开场，调参keys/切点冻结；silent-0283；paper/materials/silent/boss-sim-calibration.md"
+  },
+  "source_paths": {
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/README.md": {
+      "sha256": "fd26027b814808b228e3a948e4e7f74ec8df4ce6b0c61be8ed4436b17aebc7f4",
+      "bytes": 827,
+      "source_blob": "07506639cb00683b74fbc06d3ba59bbf66c906a9"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/audit-manifest.json": {
+      "sha256": "b9af3711434cc6b6140291918601b3681447d4dfb04f58d409b8e01f23448203",
+      "bytes": 1943,
+      "source_blob": "f40038be528ff07feb0d2fe5e4df896414af5e3b"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/boss-trust.json": {
+      "sha256": "10ab4272ec2a5e0d74a926849ff08371efc6c5ae5db79e387012bf0c17bc35f5",
+      "bytes": 62061,
+      "source_blob": "c442d0f746ccad006b3ea18410d077a8ba14f312"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/censor-hp-audit.json": {
+      "sha256": "543b7efdc62171ae3f4c82a53c41fc1869758de3597eb10bf81540c6eb08bb35",
+      "bytes": 65394,
+      "source_blob": "92ee089529bfc649e49ac41bcae466395e41c541"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/completed.json": {
+      "sha256": "c1caff4a585bb2ecd06e385ee1fd91174c7218461d47ffb8adff9e40285970d5",
+      "bytes": 1240,
+      "source_blob": "dc1efead94ac0fbacd1094d8e69a6c928ba3e8a0"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/extraction.json": {
+      "sha256": "9e681f8f9bbeb7aa3f14068b41a25cb61a8172bd0c7684a645c90de8d88ee539",
+      "bytes": 5429,
+      "source_blob": "084e2448f3cc52e1b77e501cfe4dc3db97d6823e"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/fights.jsonl": {
+      "sha256": "676dbd901ed9fe76d89afd888a4a3c6ae95dc4d976be9db563fdd37c64225a80",
+      "bytes": 9451516,
+      "source_blob": "4e0ec744cc2fa078bf8c5e8a990dfe7d855beb98"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/first-hit-audit-identifiers.json": {
+      "sha256": "fe9934d0fccae2aea0c4a14440c13341026f4b1edb747cece1c7e3e893d19086",
+      "bytes": 1026,
+      "source_blob": "ee3535f4ac5a29d600e041015424ca10b05b630d"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/frozen-input-audit.json": {
+      "sha256": "d6ae2e739b036f61996735aefb6d5a6c8e7a2dfe52d9194745f71950b1a13290",
+      "bytes": 5044,
+      "source_blob": "f597b425b3383793f9c888372d218d19715beaf9"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/input-audit-summary.json": {
+      "sha256": "827896cdfac05e8f96690b21539e1afb1c9ce923789fa17be29b75efc7b913e8",
+      "bytes": 559,
+      "source_blob": "be064f1fa9ea9641a54b38c7dd5ebfe86065b701"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/model-changes.json": {
+      "sha256": "1f501a29f72b43588f8085c075540a56524260a39cfa47932a61ba46ed06f057",
+      "bytes": 418,
+      "source_blob": "452f0924bccf5c0df7ae774ca521be75cbcfb478"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/model-input-audit.json": {
+      "sha256": "05e03074b8570077d6e8f9b73a41c8eb9b7e4bd786ee403f7c70d3572385223a",
+      "bytes": 69192,
+      "source_blob": "37c6405cf073cd56312bbab8323b24d5bb2b54cd"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/new-outcome-events.json": {
+      "sha256": "ddda84767da059a38ab27c36b3e51afeea75c654d795efe5250d3d2eb4d2cf9b",
+      "bytes": 18318,
+      "source_blob": "22f4d4a2906c88d452aec57d68b6aa932b626c6f"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/opening-audit.json": {
+      "sha256": "7ddfe54efe98d5501d13fb028402a1dd75b154b61f0483afec021976f5f8404d",
+      "bytes": 80248,
+      "source_blob": "cb5e2331d98cbe1d84391a34ba289c4dc9b5ec71"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/opening-source-integrity.json": {
+      "sha256": "9b9229116adb7d038d05697ddb4696befb6c4542db39e96e152581dff2b1c46b",
+      "bytes": 44003,
+      "source_blob": "4312b8f903e61358b75157bcc4b6c7971eed2226"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/previous-trust.json": {
+      "sha256": "b9c7f167d38ee6556cf3d391c5a950099f900ec41794d0e442a724f0b4a63a26",
+      "bytes": 60523,
+      "source_blob": "b73f2c55cc2bbc72f786a1b0e46b38fc68808a37"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/provenance.json": {
+      "sha256": "f8649ae63fec0ad3b1910fe4619fae5338988328cc4a393c0fbc7dcc2955d05b",
+      "bytes": 24747,
+      "source_blob": "8ef9d3d1fac4cf68d60261c775dc8b4ccc9beb38"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/published-report.md": {
+      "sha256": "0bb53ccf22fefe40f32bd7a0700478f3c52dcf9067a8fbd2aec973b8333c7ae9",
+      "bytes": 90695,
+      "source_blob": "3b35b51db69c5e3b4c5564f6eedc76b72c8899a3"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/refresh.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/refresh.rc": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2,
+      "source_blob": "d00491fd7e5bb6fa28c517a0bb32b8b506539d4d"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/report.initial.md": {
+      "sha256": "ac80b2cd073ddce5adb8235909a88483f9f2ef5f66445672ccd19f41891bfb7b",
+      "bytes": 1502,
+      "source_blob": "2c463a5ab225d3c448d5116e98ff6ec1358372e1"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/report.md": {
+      "sha256": "71e525aeee9ebe1df26398e30064c6555aee11c300da2a7cf19eb1fe61a82769",
+      "bytes": 87893,
+      "source_blob": "9a5de04fbb8b900b2177e8230b6103de14ef0727"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/results.jsonl": {
+      "sha256": "81020687e795c565801574fe2ae4c0b8cda55eefb706d33feff68809b0a3804c",
+      "bytes": 1937819,
+      "source_blob": "a6ed7ec36b9bde32b28d522544dcd770b8da81d7"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/runs-snapshot.jsonl": {
+      "sha256": "b058c8620814e9ca324e71d2c69c927594697815290bd0593d29a6872002e8a7",
+      "bytes": 52580,
+      "source_blob": "cb8aff3ff14afb08e047bc90802af769dbf32bee"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/serial-backtest-interrupted.log": {
+      "sha256": "7644ff3349ff996a5b52db4c5c4ae2ecd7dc5e61000e2f70dbcfbfbf8a4f8db7",
+      "bytes": 958,
+      "source_blob": "cb7b5baf6220f3704bc9bb91bd2df747d20f947e"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/shard-0.log": {
+      "sha256": "248f320988141c74c3837a4b449fb780c6d6dcf25615bf52600ccf74fd40efd3",
+      "bytes": 190,
+      "source_blob": "d560588b0512d575aa8c25d14cb453727151d9b2"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/shard-1.log": {
+      "sha256": "f7752f3b7675eb7d46fde16add28300d28834b4dbed9cc501ffaa0f74a643ff0",
+      "bytes": 190,
+      "source_blob": "b1007811389f1d7d53b724c48bb58c5434c04ba2"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/shard-exits.json": {
+      "sha256": "6257d2ffc12d7dbeaae7900b6e9cde6214b107bbaf97f934192b0cb3254f395f",
+      "bytes": 54,
+      "source_blob": "8ef177ccdb47cb21b1c9b9e8f90c2750a2814c8a"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/shard-integrity.json": {
+      "sha256": "c6d7a95823ca051846a2ed41374f15d9449dd8fd26991aa0f411dba5cac3e23c",
+      "bytes": 353,
+      "source_blob": "634bcbd25baf310ba0d4439c726692dd26e1eeb8"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/shard-recovery-plan.json": {
+      "sha256": "aca70c8c6fcf53c73227d84e7e2dbaa2571eb6fd99ff19ca537b7a1c6e45157e",
+      "bytes": 512,
+      "source_blob": "6c7a23c9902da1afd5588d7dacbf0c9bebfd4fed"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/sl-snapshot.jsonl": {
+      "sha256": "e6771cc8ffcb5128088bf68b1cd61b0cdd6df80428eb648f4de72ab2df407389",
+      "bytes": 13509048,
+      "source_blob": "0722f207d3e7f935be81a1144d38e2700c122260"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/sources.jsonl": {
+      "sha256": "ffb86062d7b2dc716dcc5e39f226e7f185383d3fff89c6bb5d28a2df7b74adc7",
+      "bytes": 493485,
+      "source_blob": "64ae511a6e71b8baa1b56d35485a9b7d2d8190cb"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/split.json": {
+      "sha256": "dfa56263788f32b59e307bad99cc1606a537c0486095cd0af97e1dd266b70eb2",
+      "bytes": 7711,
+      "source_blob": "23af7e647a9c00c07e14cd9ab598cbe5ac350e18"
+    },
+    "experiments/boss-sim/silent/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/turns.jsonl": {
+      "sha256": "bfedd264a0b7440be5aa0f5ebe45812b31acfaae209e4fa51ee04d671238c801",
+      "bytes": 61683,
+      "source_blob": "a7c43ff2791099690f5cfc98690676941ff856a3"
+    },
+    "knowledge/characters/silent/boss-trust.json": {
+      "sha256": "10ab4272ec2a5e0d74a926849ff08371efc6c5ae5db79e387012bf0c17bc35f5",
+      "bytes": 62061,
+      "source_blob": "c442d0f746ccad006b3ea18410d077a8ba14f312"
+    },
+    "paper/materials/silent/boss-sim-calibration.md": {
+      "sha256": "0bb53ccf22fefe40f32bd7a0700478f3c52dcf9067a8fbd2aec973b8333c7ae9",
+      "bytes": 90695,
+      "source_blob": "3b35b51db69c5e3b4c5564f6eedc76b72c8899a3"
+    }
+  },
+  "source_and_published_are_live_ancestors": true,
+  "archive_checksums_valid": true,
+  "tests": {
+    "source-sandbox": {
+      "exit": 0,
+      "files": 246,
+      "cases": 2598,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/source-sandbox.log"
+    },
+    "live-pre-save-sandbox": {
+      "exit": 0,
+      "files": 247,
+      "cases": 2604,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/live-pre-save-sandbox.log"
+    },
+    "live-sandbox": {
+      "exit": 0,
+      "files": 247,
+      "cases": 2604,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/live-sandbox.log"
+    },
+    "python-tests": {
+      "exit": 0,
+      "cases": 12
+    },
+    "python-dispatch-tests": {
+      "exit": 0,
+      "cases": 20
+    }
+  },
+  "external_checks_pending": true,
+  "originals": {
+    "originals/report.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/report.md",
+      "sha256": "2ced5007d36a0f4c2f53c096198c414a144a689dc4be0b093af905e8fd668aba",
+      "bytes": 20777
+    },
+    "originals/final-report.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/final-report.json",
+      "sha256": "1ff2a8478477ca74322e33f9a20fa353e0ce9593ed3eba9e536c2bd9acdae77c",
+      "bytes": 20520
+    },
+    "originals/handoff-ops.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/handoff-ops.md",
+      "sha256": "6d9d7424940cff7ef6603d7206801835c38dc466f64d3b52c6494d5ac23cd5df",
+      "bytes": 1095
+    },
+    "originals/live-publication.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/live-publication.json",
+      "sha256": "26304c4938329b1125a25dbec4426ec7e9e0e4a3d9b4408083ea7b92916fd669",
+      "bytes": 8944
+    },
+    "originals/final-verification.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/final-verification.json",
+      "sha256": "f95489d475e7a035312fbf045c612c525357b5e5cdbb5c37e76497eda17474d9",
+      "bytes": 364
+    },
+    "originals/source-sandbox.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/source-sandbox.log",
+      "sha256": "3a3c919c59dd984af4f3020f149a76cba5f453ee1c5f93c9b6b763b47dfaf0d0",
+      "bytes": 5730
+    },
+    "originals/source-sandbox.rc": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/source-sandbox.rc",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/live-pre-save-sandbox.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/live-pre-save-sandbox.log",
+      "sha256": "3162e580bc95e9b5c0db7c4d9f8bc0267dc9b7cc164ab409a45f29031b9b4630",
+      "bytes": 494
+    },
+    "originals/live-sandbox.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/live-sandbox.log",
+      "sha256": "32aa8f18b5c9f027eb11d0954b4dc75e60304389e517072f8cb63a494e02a459",
+      "bytes": 492
+    },
+    "originals/python-tests.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/python-tests.log",
+      "sha256": "f0e6e08632e8568b78975d940c5ca304cf25b1b62373f4f8154c588ce885f229",
+      "bytes": 1837
+    },
+    "originals/python-tests.rc": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/python-tests.rc",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/python-dispatch-tests.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/python-dispatch-tests.log",
+      "sha256": "021787544fa129edffe47668be6f32946460ef892afda39295c3804272c9fb51",
+      "bytes": 119
+    },
+    "originals/python-dispatch-tests.rc": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/python-dispatch-tests.rc",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/source-gitleaks.rc": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/source-gitleaks.rc",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "20261008-064303-fix-batch.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-064303-fix-batch.out",
+      "sha256": "d861abb86daacf850409a4997a8bb16e151837990e0df27b8ad0c17dedc42ae2",
+      "bytes": 7431
+    },
+    "20261008-064303-fix-batch.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-064303-fix-batch.err",
+      "sha256": "796e72c1208049279687d154865ac55b712e6a2010af53e260d66c5646e0b3d3",
+      "bytes": 56807
+    }
+  },
+  "owned_original_rows": 2,
+  "new_owned_shipped_rows": 1,
+  "ledger_check": "physical/index 0 problems",
+  "data_only_integration": true,
+  "new_version_created": false,
+  "live_modified": false,
+  "paper_refreshed": false,
+  "model_scope": "54d5f6f42841b6e78ebe884d50bc9524960c257c; later model changes preserved, not revalidated by this replay",
+  "f49_validation": 3,
+  "f49_missing_validation": 7,
+  "joint_f48_f49_validated": false,
+  "gitleaks": {
+    "default_rules": true,
+    "exit": 0,
+    "findings": 0,
+    "no_allowlist": true
+  }
+}

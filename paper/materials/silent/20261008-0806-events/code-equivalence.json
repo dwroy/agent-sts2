@@ -1,0 +1,38 @@
+{
+  "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+  "checked_pin": "903a1efcb4456e448b5e64f8c915397d1c585d98",
+  "checked_pin_full_external": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 298,
+    "passed": 3412,
+    "skipped": 2
+  },
+  "paths_compared": [
+    "agent",
+    "learner",
+    "knowledge/builders",
+    "eval",
+    ":(exclude)eval/versions.json",
+    "ops",
+    ":(exclude)ops/inbox-dev.md",
+    "tools",
+    "docs"
+  ],
+  "source_sandbox": {
+    "exit": 0,
+    "files": 246,
+    "cases": 2598,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-071205-experience-update/test-source.log"
+  },
+  "post_merge_sandbox_repeated": false,
+  "source_vs_actual_six_preserved_apotheosis_paths": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/silent-apotheosis.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-apotheosis-evidence.json",
+    "agent/tests/silent-apotheosis.test.ts"
+  ],
+  "reason": "Only the original tested experience data blob changes. Current code/tests/tasks retain Apotheosis and match the fixed complete external pass. Data-only exemption applies; no whole-tree test pass is claimed. Original-batch external continuation is separate."
+}

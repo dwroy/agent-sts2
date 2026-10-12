@@ -1,0 +1,1090 @@
+[
+  {
+    "name": "三敌开场各1人工制品",
+    "data": [
+      {
+        "index": 0,
+        "enemy_id": "PUNCH_CONSTRUCT",
+        "name": "拳击构装体",
+        "current_hp": 60,
+        "max_hp": 60,
+        "base_max_hp": 60,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "ARTIFACT_POWER",
+            "name": "人工制品",
+            "amount": 1,
+            "is_debuff": false
+          }
+        ],
+        "intent": "READY_MOVE",
+        "move_id": "READY_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Defend",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "enemy_id": "CUBEX_CONSTRUCT",
+        "name": "方柱构装体",
+        "current_hp": 70,
+        "max_hp": 70,
+        "base_max_hp": 70,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "ARTIFACT_POWER",
+            "name": "人工制品",
+            "amount": 1,
+            "is_debuff": false
+          }
+        ],
+        "intent": "CHARGE_UP_MOVE",
+        "move_id": "CHARGE_UP_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "enemy_id": "CUBEX_CONSTRUCT",
+        "name": "方柱构装体",
+        "current_hp": 70,
+        "max_hp": 70,
+        "base_max_hp": 70,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "ARTIFACT_POWER",
+            "name": "人工制品",
+            "amount": 1,
+            "is_debuff": false
+          }
+        ],
+        "intent": "CHARGE_UP_MOVE",
+        "move_id": "CHARGE_UP_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ],
+    "passed": true
+  },
+  {
+    "name": "铁棒第4张额外抽蜃景试1",
+    "data": {
+      "ts": "2026-10-08T07:55:56.596Z",
+      "before": [
+        {
+          "index": 0,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得6点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 6,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "BACKFLIP",
+          "name": "后空翻+",
+          "upgraded": true,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+          "resolved_rules_text": "获得9点格挡。 抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 8,
+              "current_value": 9,
+              "enchanted_value": 8,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击+",
+          "upgraded": true,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1,
+            2
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成12点伤害。 永恒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 9,
+              "current_value": 12,
+              "enchanted_value": 12,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1,
+            2
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成9点伤害。 永恒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 9,
+              "enchanted_value": 9,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "BACKFLIP",
+          "name": "后空翻",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+          "resolved_rules_text": "获得6点格挡。 抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 6,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "after": [
+        {
+          "index": 0,
+          "card_id": "BACKFLIP",
+          "name": "后空翻+",
+          "upgraded": true,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+          "resolved_rules_text": "获得9点格挡。 抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 8,
+              "current_value": 9,
+              "enchanted_value": 8,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击+",
+          "upgraded": true,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1,
+            2
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成12点伤害。 永恒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 9,
+              "current_value": 12,
+              "enchanted_value": 12,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1,
+            2
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成9点伤害。 永恒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 9,
+              "enchanted_value": 9,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "BACKFLIP",
+          "name": "后空翻",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+          "resolved_rules_text": "获得6点格挡。 抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 6,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "MIRAGE",
+          "name": "蜃景+",
+          "upgraded": true,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
+          "resolved_rules_text": "获得等量于所有敌人中毒层数总和的格挡。 （获得7点格挡）",
+          "dynamic_values": [
+            {
+              "name": "CalculatedBlock",
+              "base_value": 0,
+              "current_value": 7,
+              "enchanted_value": 0,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationBase",
+              "base_value": 0,
+              "current_value": 0,
+              "enchanted_value": 0,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationExtra",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ]
+    },
+    "passed": true
+  },
+  {
+    "name": "铁棒第4张额外抽蜃景试3",
+    "data": {
+      "ts": "2026-10-08T07:57:27.122Z",
+      "before": [
+        {
+          "index": 0,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得6点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 6,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "BACKFLIP",
+          "name": "后空翻+",
+          "upgraded": true,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+          "resolved_rules_text": "获得9点格挡。 抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 8,
+              "current_value": 9,
+              "enchanted_value": 8,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击+",
+          "upgraded": true,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1,
+            2
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成12点伤害。 永恒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 9,
+              "current_value": 12,
+              "enchanted_value": 12,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1,
+            2
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成9点伤害。 永恒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 9,
+              "enchanted_value": 9,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "BACKFLIP",
+          "name": "后空翻",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+          "resolved_rules_text": "获得6点格挡。 抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 6,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "after": [
+        {
+          "index": 0,
+          "card_id": "BACKFLIP",
+          "name": "后空翻+",
+          "upgraded": true,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+          "resolved_rules_text": "获得9点格挡。 抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 8,
+              "current_value": 9,
+              "enchanted_value": 8,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击+",
+          "upgraded": true,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1,
+            2
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成12点伤害。 永恒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 9,
+              "current_value": 12,
+              "enchanted_value": 12,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1,
+            2
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成9点伤害。 永恒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 9,
+              "enchanted_value": 9,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "BACKFLIP",
+          "name": "后空翻",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+          "resolved_rules_text": "获得6点格挡。 抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 6,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "MIRAGE",
+          "name": "蜃景+",
+          "upgraded": true,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
+          "resolved_rules_text": "获得等量于所有敌人中毒层数总和的格挡。 （获得7点格挡）",
+          "dynamic_values": [
+            {
+              "name": "CalculatedBlock",
+              "base_value": 0,
+              "current_value": 7,
+              "enchanted_value": 0,
+              "is_modified": true,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationBase",
+              "base_value": 0,
+              "current_value": 0,
+              "enchanted_value": 0,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationExtra",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ]
+    },
+    "passed": true
+  },
+  {
+    "name": "轮初抱抱无毒方柱58到55",
+    "data": {
+      "ts": "2026-10-08T07:57:34.748Z",
+      "before": {
+        "index": 2,
+        "enemy_id": "CUBEX_CONSTRUCT",
+        "name": "方柱构装体",
+        "current_hp": 58,
+        "max_hp": 70,
+        "base_max_hp": 70,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "intent": "REPEATER_BLAST_MOVE",
+        "move_id": "REPEATER_BLAST_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "10",
+            "damage": 10,
+            "hits": 1,
+            "total_damage": 10,
+            "status_card_count": null
+          },
+          {
+            "index": 1,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      },
+      "after": {
+        "index": 2,
+        "enemy_id": "CUBEX_CONSTRUCT",
+        "name": "方柱构装体",
+        "current_hp": 55,
+        "max_hp": 70,
+        "base_max_hp": 70,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "POISON_POWER",
+            "name": "中毒",
+            "amount": 4,
+            "is_debuff": true
+          }
+        ],
+        "intent": "REPEATER_BLAST_MOVE_2",
+        "move_id": "REPEATER_BLAST_MOVE_2",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "12",
+            "damage": 12,
+            "hits": 1,
+            "total_damage": 12,
+            "status_card_count": null
+          },
+          {
+            "index": 1,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    },
+    "passed": true
+  },
+  {
+    "name": "SL首末试T2同首手/能量/血量",
+    "data": [
+      {
+        "hp": 12,
+        "energy": 3,
+        "hand": [
+          [
+            "DEFEND_SILENT",
+            false
+          ],
+          [
+            "BACKFLIP",
+            true
+          ],
+          [
+            "STRIKE_SILENT",
+            true
+          ],
+          [
+            "STRIKE_SILENT",
+            false
+          ],
+          [
+            "BACKFLIP",
+            false
+          ]
+        ],
+        "enemies": [
+          50,
+          25,
+          58
+        ]
+      },
+      {
+        "hp": 12,
+        "energy": 3,
+        "hand": [
+          [
+            "DEFEND_SILENT",
+            false
+          ],
+          [
+            "BACKFLIP",
+            true
+          ],
+          [
+            "STRIKE_SILENT",
+            true
+          ],
+          [
+            "STRIKE_SILENT",
+            false
+          ],
+          [
+            "BACKFLIP",
+            false
+          ]
+        ],
+        "enemies": [
+          50,
+          25,
+          58
+        ]
+      }
+    ],
+    "passed": true
+  },
+  {
+    "name": "铜钹确认五弃341到326",
+    "data": {
+      "ts": "2026-10-08T08:24:35.455Z",
+      "selected": 5,
+      "before": 341,
+      "after": 326
+    },
+    "passed": true
+  },
+  {
+    "name": "铜钹单弃214到211",
+    "data": {
+      "ts": "2026-10-08T08:25:04.102Z",
+      "before": 214,
+      "after": 211
+    },
+    "passed": true
+  },
+  {
+    "name": "末轮没有计算下注实出",
+    "data": {
+      "floor": 33,
+      "turn": 10
+    },
+    "passed": true
+  }
+]

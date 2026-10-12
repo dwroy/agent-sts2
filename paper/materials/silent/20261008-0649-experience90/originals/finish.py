@@ -1,0 +1,14 @@
+import hashlib,json,re,subprocess
+from pathlib import Path
+O=Path(__file__).parent.resolve();ROOT=Path('/home/dw/Projects/agent-sts2');C=json.load(open(O/'changes.json'));source=(O/'source-commit.txt').read_text().strip();merge=json.load(open(O/'live-merge.json'));ledger=json.load(open(O/'ledger-result.json'));ids=json.load(open(O/'proposal-ids.json'));test=(O/'test-source.log').read_text();rc=int((O/'test-source.rc').read_text());assert rc==0;files=sum(map(int,re.findall(r'Test Files\s+(\d+) passed',test)));cases=sum(map(int,re.findall(r'Tests\s+(\d+) passed',test)))
+subprocess.run(['python3',str(O/'make-report.py')],check=True)
+p=ROOT/'paper/materials/experience-changelog-silent.md';before=p.read_bytes();addition=b'\n'+(O/'changelog-section.md').read_bytes()
+with p.open('ab') as h:h.write(addition)
+new=p.read_bytes();assert new.startswith(before) and new[len(before):]==addition;(O/'changelog-append-proof.json').write_text(json.dumps(dict(path=str(p),before_bytes=len(before),before_sha256=hashlib.sha256(before).hexdigest(),added_bytes=len(addition),added_sha256=hashlib.sha256(addition).hexdigest(),prefix_preserved=True),indent=2)+'\n')
+mechanisms=['力量与敏捷逐项兑现','能力与额度兑现观察','触媒增加毒结算次数','知识恶魔回血与SL血价观察','佩尔之肉第三轮能量','懒惰实际出牌限额','跨幕缺失HP回复','敏捷药水后续牌挡','铁心覆甲分时点','毒药施毒与修饰条件','手上技法奇巧兑现观察']
+report=dict(task='experience-update',version=C['version_after'],commit=source,merged=merge['merged'],added=len(C['added']),updated=len(C['updated']),retired=0,active=C['active_after'],mechanisms=mechanisms,tests=dict(tsc=0,vitest=rc,cases=cases),ledger=ledger,code_proposals=ids,implementation_domains=['combat','potion','sl','terminal','structure'],report=str(O/'report.md'))
+(O/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+with (O/'report.md').open('a') as h:h.write('\n```json\n'+json.dumps(report,ensure_ascii=False,indent=2)+'\n```\n')
+checks={'source_files':files,'source_cases':cases,'source_test_exit':rc,'source_commit':source,'source_parent':subprocess.check_output(['git','rev-parse',source+'^'],text=True).strip(),'source_paths':subprocess.check_output(['git','diff-tree','--no-commit-id','--name-only','-r',source],text=True).splitlines(),'proposals':ids,'check_experience':json.load(open(O/'check-experience.log')),'ledger_check':ledger['check'],'changelog_prefix_preserved':True,'merged':merge['merged'],'merge_reason':merge['reason']}
+if merge['merged']:checks['source_ancestor_exit']=subprocess.run(['git','-C',str(ROOT/'.worktrees/live'),'merge-base','--is-ancestor',source,merge['merged']]).returncode
+assert checks['source_paths']==['knowledge/characters/silent/experience.json'];assert not checks['check_experience']['missing'];(O/'final-verification.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2)+'\n');print(json.dumps(report,ensure_ascii=False));print('源测试',files,'文件/',cases,'用例；只追加一节，旧记录前缀保持')

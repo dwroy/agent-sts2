@@ -1,0 +1,116 @@
+{
+ "id": "silent-0117",
+ "ts": "2026-10-05T20:04:15+08:00",
+ "character": "silent",
+ "kind": "fight",
+ "claim": "沙坑只剩1且本轮仍需延长时，弃牌必须核对是否删掉全部逃离。本局隐秘匕首+的两次弃牌把2费和1费狂乱逃离全部弃掉；本来3能量可支付计划中的延长，重算却无逃离可用，16血15挡虽然足以承受24攻击，仍因沙坑归零判死。保留逃离后的整场胜负未实测，不宣称必胜。",
+ "evidence": [
+  {
+   "run": "ENKYQMS9W4ZD",
+   "floor": 33,
+   "turn": 11,
+   "role": "support",
+   "note": "首战代码原线包含隐秘匕首+及狂乱逃离；Jev0.20/0.31两次弃掉全部逃离。行动扣19后敌37、8毒，16血15挡对24攻击但沙坑1，SL提前判死并读档；未结算本轮8毒或9点攻击损血。",
+   "added": "2026-10-05T20:04:15+08:00"
+  },
+  {
+   "run": "H1T1F8ML9FUE",
+   "floor": 33,
+   "turn": 6,
+   "role": "repeat",
+   "note": "首试d291285生存者强制弃牌中Jev0.55弃手中狂乱逃离，T7沙坑1、28HP/15挡可承28攻击但归零判死并SL（s298412/sl1129）；不是因攻击损血必死。第二试换多轮不同打法后T9逃离1→2赢28血，不把第二试全局胜利归单弃牌。",
+   "added": "2026-10-08T14:31:47+08:00"
+  }
+ ],
+ "first_run": "ENKYQMS9W4ZD",
+ "prior": "unknown",
+ "prior_runs": [
+  "LRN0HPZ0FZS1",
+  "XYYQYBRM2A01"
+ ],
+ "prior_note": "已grep全部27个更早静默复盘局的决策。更早实际弃逃离只有LRN F33 T6沙坑2的一张、XYY F33 T2沙坑4的一张；按状态seek核对，未遇到沙坑1且双逃离全部弃光的可比局面。旧账本0018是两条死线机制，0001是护栏截断斩杀，均不等于本项已学。",
+ "status": "shipped",
+ "by": "learner:postmortem",
+ "where": {
+  "lessons": [
+   "ENKYQMS9W4ZD",
+   "H1T1F8ML9FUE"
+  ],
+  "experience": [
+   "silent-insatiable-dual-clock"
+  ],
+  "commits": [
+   "b76428b2c1ed73f89e18fd56c49ba2f7b7120a75",
+   "959f7f22f6284ce87265b884e471c6fb6265b7fd",
+   "c3f0410c72166b5c3145fe25c12a2974569b4ff6",
+   "196f1800b2c3b9bdc522c4d77632f1154662f8c9",
+   "10f0aeb37f8df7975cf823ac0e439f851d9ad07f",
+   "2b1a5f6d491f826ea1bac28f707716d109fb3e65",
+   "3d503d53ccb752d211d045cc3048397c8fdb209a"
+  ],
+  "changelog": [
+   "2026-10-05 静默猎手 第二十一次增量：1 局 A6（version 2026-10-05.21，分支 exp-silent，b76428b2）",
+   "2026-10-08 静默猎手 第一百次增量：1 局 A10（version 2026-10-08.17，分支 exp-silent，196f1800）"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-sl-visible-cost.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/proposal-windows.md"
+  ]
+ },
+ "asc": 6,
+ "history": [
+  {
+   "ts": "2026-10-05T20:04:15+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-05T21:01:44+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-05T21:16:37+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-08T14:31:47+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T14:34:48+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T14:52:13+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T14:52:26+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-08T15:09:18+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T15:45:49+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp100",
+ "effect": null,
+ "notes": [
+  "静默经验.21，ENKYQMS9W4ZD A6及旧27局日志复算；观察/机制分开，药水仅事实；实际合入后交运维登记shipped。",
+  "21:10 experience-done核实静默经验.21实际合入live、main同步已测固定发布、S1.exp21唯一；ENKYQMS9W4ZD SILENT A6及旧27局证据，11项补证更新、无新增/退役。源tsc0/175文件2003例、合后tsc0/176文件2006例，首次通过、未重跑；14账本项覆盖11经验，0117/0118已并入，0119/0120不属本批。独立完整检查待本批learner-checks；同fix-batch额度采样已分阶段合入，成本归集/升级爆发仍在继续，不混记已修。",
+  "代码提案 silent-proposal-2ae7436286228166 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第100批提交前关联H1T1F8ML9FUE实帧及14:39勘误；保留首证/prior/claim/support/repeat及旧上线历史，提交后登记proposed。",
+  "代码提案 silent-proposal-b259f9956e08088a → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第100批经验源提交完成；首证/先验/claim/evidence/repeat及旧上线历史保持，实际shipped由运维核live，经验发布不当代码实现。",
+  "第一百次经验原数据2026-10-08.16→.17/增0改17退0/176 active，源196f1800唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记19所属经验数据shipped。源首轮251文件2618例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入722518cd逐blob等价（其固定完整外部302文件3429例通过/2跳过tsc/vitest0已核实），最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，四个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0297纯bug保持原观察/提案状态，不标代码实现。"
+ ],
+ "shipped_at": "2026-10-08T15:45:49+08:00"
+}

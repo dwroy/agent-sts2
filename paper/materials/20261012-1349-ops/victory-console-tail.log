@@ -1,0 +1,26 @@
+         lethal: 
+13:21:03 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+13:21:06 combat ended — total token usage: 864 decisions, 256 Jev calls, 2,418,775 in / 15,681 out tokens (≈ $0.1016)
+13:21:07 REWARD          reward/proceed       -> collect_rewards_and_proceed jev 0 ms | 0 in
+         no rewards left to claim; advancing with collect_rewards_and_proceed
+13:21:07 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+13:21:07 combat ended — total token usage: 865 decisions, 256 Jev calls, 2,418,775 in / 15,681 out tokens (≈ $0.1016)
+13:21:07 wait EVENT: waiting on EVENT (transition, animation, or nothing legal yet)
+13:21:15 note action came back completed; waited for the board to settle
+13:21:15 EVENT           event/only           -> choose_event_option (option_index=0) jev 0 ms | 0 in
+         only one unlocked, non-lethal option
+13:21:15 note run ended (victory): finishing the score/unlock bookkeeping, then stopping
+13:21:20 GAME_OVER       run/finalize         -> continue_game_over jev 0 ms | 0 in
+         victory: saving the result with continue_game_over before stopping
+13:21:20 stop run 1 ended (victory); stopping as requested
+
+summary
+  decisions 867 (867 dispatched, 0 fallbacks)
+  runs:
+  #1 victory — 864 decisions, 256 Jev calls, 2,418,775 in / 15,681 out tokens (≈ $0.1016), reached floor 49, 7593.66 s
+  867 decisions | 256 Jev calls | 2,418,775 in / 15,681 out tokens | ≈ $0.1016 | 7601.76 s
+  debounce: 0 answers reused, 0 calls skipped as stale
+  waits 2037 | unsupported 0 | errors 10
+  runs completed 1 | elapsed 7601.76 s
+  stopped: run 1 ended (victory); stopping as requested
+  log: /home/dw/Projects/agent-sts2/.worktrees/live/logs/decisions.jsonl

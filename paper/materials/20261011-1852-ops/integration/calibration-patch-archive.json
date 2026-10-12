@@ -1,0 +1,30 @@
+{
+  "raw_path": "paper/materials/20261011-1852-ops/integration/calibration.diff",
+  "raw_bytes": 942810840,
+  "raw_sha256": "2e4cdac9c40278daf094ac4effba47f6992b17a85abbd7705e88fb7c0f11d09c",
+  "archive_path": "paper/materials/20261011-1852-ops/integration/calibration.diff.gz",
+  "archive_bytes": 143583143,
+  "archive_sha256": "e87c23e08b7e6f512683810f2dbb4dad1e99031e4458b58d0428481331df8200",
+  "raw_retained": true,
+  "reproduce_from_git": "git diff b6a70aafb26c414af2939aee47c6a1b4424ab0a9^ b6a70aafb26c414af2939aee47c6a1b4424ab0a9",
+  "scan": "integration/calibration-gitleaks.json and .log; exact raw staged patch was scanned before candidate commit",
+  "committed_parts": [
+    {
+      "path": "paper/materials/20261011-1852-ops/integration/calibration.diff.gz.part01",
+      "bytes": 50331648,
+      "sha256": "a1a9ac074c05efaadb7f796ba37820dc2b15cda8f4173fa483e5d020214ae414"
+    },
+    {
+      "path": "paper/materials/20261011-1852-ops/integration/calibration.diff.gz.part02",
+      "bytes": 50331648,
+      "sha256": "823b63c972ce0db28748a0196efdb7c3b6b7bbf8fbc38ff2e1121d0793333d25"
+    },
+    {
+      "path": "paper/materials/20261011-1852-ops/integration/calibration.diff.gz.part03",
+      "bytes": 42919847,
+      "sha256": "b68134830980383cb4b1c913b319d395dcc948712a227be0ea0543e4af6002ad"
+    }
+  ],
+  "archive_retained_untracked": true,
+  "restore": "Concatenate committed_parts in listed order; verify archive_sha256; gzip-decompress and verify raw_sha256."
+}

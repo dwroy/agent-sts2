@@ -1,5 +1,5 @@
 /**
- * Per-target options and kill-order rollouts (Dai 2026-09-28: which enemy to kill is Jev's call). The logged
+ * Per-target options and kill-order rollouts (Roy 2026-09-28: which enemy to kill is Jev's call). The logged
  * board is EZ2L F48 T2 (Queen 394 + Torch Head Amalgam 202, a minion): every option shown then hit the Queen,
  * the Amalgam-first line never reached Jev, nor did DeepSeek's plan ("先拆聚合体").
  */

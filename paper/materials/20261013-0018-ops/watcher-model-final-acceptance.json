@@ -1,0 +1,113 @@
+{
+  "at": "2026-10-13T00:14:56+08:00",
+  "status": "accepted_effective_runtime_and_persistent_policy",
+  "request": "roy-20261012-all-agent-sessions-sol61",
+  "source_commit": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
+  "model_change_release": "V4-R312",
+  "model": "gpt-6.1-sol",
+  "effort": "xhigh",
+  "service_tier": "default",
+  "main": "c17a78b6c28f5b844d88f960a1b790e515f02fe7",
+  "live": "f2df18b3c1b27fd72b5fd19b0e5261c490a7b855",
+  "persistent_policy_verified": [
+    "core default",
+    "gameplay launcher",
+    "scheduled learner launcher",
+    "historical native wrapper policy",
+    "ops/assistant/default and same-thread launch coverage"
+  ],
+  "runtime": {
+    "brain": {
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "same_run_across_controller_transition": "G4PQBCJQ7NP0",
+      "accepted_at": "2026-10-12T15:51:01.539Z",
+      "accepted_question": "mv5fh89r-894446-1",
+      "native_event_sha256": "7d9b1f4c8a34c977fb77d32b7dc60f52a32c2f9cc971cd5a7c2ed8bf5aab17ef",
+      "native_path_lifecycle": "Original transport rollout later disappeared; frozen native event copy matches recorded SHA and actual accepted brain answer.",
+      "subsequent_accepted_answer": {
+        "ts": "2026-10-12T16:11:32.227Z",
+        "run_id": "XRCP2TKYKQBA",
+        "question_id": "mv5g6srs-913175-1",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh"
+      }
+    },
+    "ops": {
+      "session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+      "native_context_at": "2026-10-12T16:13:43.546Z",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": "danger-full-access",
+      "original_native_event_offset": 42829894,
+      "original_native_event_sha256": "b0ed955e340ec3745a6486b4a64d78916648ea566d842aadc579e1e2c36e395e",
+      "startup_argv_model": "gpt-6-astra",
+      "startup_argv_is_not_effective_model": true,
+      "idle_args_hash_refresh": "Existing automatic lifecycle still owns refreshing stale startup metadata; current actual model is already target."
+    },
+    "active_learners": [
+      {
+        "batch": "20261013-000402-experience-update",
+        "session": "01a130db-6137-7d82-9d49-d798b5e0ad2b",
+        "native_file": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T00-04-06-01a130db-6137-7d82-9d49-d798b5e0ad2b.jsonl",
+        "context_ts": "2026-10-12T16:04:20.466Z",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "approval_policy": "never",
+        "sandbox_type": "workspace-write",
+        "profile_type": "managed",
+        "real_response_or_tool_present": true,
+        "context_sha256": "36bb66408aa667e3913b3604704db7af348e29958afea7aee0e639c6010863db"
+      },
+      {
+        "batch": "20261013-000402-strategy-proposal",
+        "session": "01a130db-9f49-7282-a1fe-f417678a526f",
+        "native_file": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T00-04-21-01a130db-9f49-7282-a1fe-f417678a526f.jsonl",
+        "context_ts": "2026-10-12T16:04:41.885Z",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "approval_policy": "never",
+        "sandbox_type": "workspace-write",
+        "profile_type": "managed",
+        "real_response_or_tool_present": true,
+        "context_sha256": "f8023c31c9fc46816b6143a821015d5da78e52beb10cc7e1da918a6ca09fffe7"
+      },
+      {
+        "batch": "20261013-000402-s2-strategy-proposal",
+        "session": "01a130db-a9ee-7ff3-b1cf-60d4df2793a3",
+        "native_file": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T00-04-24-01a130db-a9ee-7ff3-b1cf-60d4df2793a3.jsonl",
+        "context_ts": "2026-10-12T16:04:43.499Z",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "approval_policy": "never",
+        "sandbox_type": "workspace-write",
+        "profile_type": "managed",
+        "real_response_or_tool_present": true,
+        "context_sha256": "abf846ef5c3e5d0d6532679789cf27abd3a4a26c78147d15631b8a611993bbff"
+      }
+    ],
+    "old_learner_batches": "234301 fix/s2/postmortem and original231301 have finished; historical outputs retained. New live consumers verified in native contexts.",
+    "non_model_helpers": "Unspecified-model processes were codex-linux-sandbox helpers or had exited; see helper-process-classification.json.",
+    "inactive_roles": "Postmortem/fix/readonly helpers use the tested unified launch defaults; no fake study created to manufacture activity."
+  },
+  "verification": {
+    "sandbox_coverage": "343 files / 3410 tests; initial missing-environment failure and targeted repair recorded",
+    "host_model_entries": "4 files / 112 tests",
+    "python": "15 launcher +16 handoff tests",
+    "model_preflight": "both selected project homes passed",
+    "source_integration": "exact zero-context patch identity and current integration checks in ops receipt"
+  },
+  "limitations": [
+    "Model configuration and real consumption are verified; no claim of better win rate.",
+    "No global account/model settings or this client’s watcher conversation were changed. Scope is the project runtime roles requested.",
+    "Original learning/knowledge-intake requirements keep their own incomplete state; changing models does not complete them."
+  ],
+  "evidence": [
+    "paper/materials/20261012-2326-ops/deployment.json",
+    "paper/materials/20261012-2326-ops/brain-runtime-acceptance.json",
+    "paper/materials/20261012-2326-ops/runtime-role-inventory.json",
+    "paper/materials/20261012-model-sol61/learner-native-verification-0008.json",
+    "paper/materials/20261012-model-sol61/runtime-final-processes.json",
+    "paper/materials/20261012-model-sol61/helper-process-classification.json"
+  ]
+}

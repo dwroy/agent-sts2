@@ -1,0 +1,55 @@
+{
+  "ts": "2026-10-08T15:43:49.603Z",
+  "mode": "play",
+  "screen": "COMBAT",
+  "session": "singleplayer/run",
+  "floor": 21,
+  "turn": 7,
+  "label": "combat/plan",
+  "decision_id": "208b3fe4-7c0a-4346-9826-677d485ff85f",
+  "decider": "code",
+  "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:77:0:true\",\"event\":\"\",\"gold\":239,\"hand\":\"0:STRANGLE:true|1:DEFLECT:true\",\"hp\":40,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:13:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LY83ZMTFVKJH\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+  "chosen": {
+    "action": "play_card",
+    "card_index": 0,
+    "target_index": 0
+  },
+  "expect": {
+    "card": {
+      "id": "STRANGLE",
+      "upgraded": false
+    },
+    "target": {
+      "id": "LOUSE_PROGENITOR"
+    },
+    "turn": 7,
+    "from": "decision"
+  },
+  "rationale": "code plan (only distinct line): 紧勒 -> 虱虫之祖, 偏折; hp -1, dmg 8",
+  "confidence": null,
+  "fallback": false,
+  "reasked": false,
+  "no_jev": false,
+  "reused_answer": false,
+  "request_ids": [],
+  "latency_ms": {
+    "plan": 0,
+    "jev": 0,
+    "action": 431,
+    "planner": 2,
+    "pre": 0
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "sl_attempt": null,
+  "sl_reloads": 2,
+  "run_id": "LY83ZMTFVKJH",
+  "observed_ts": "2026-10-08T15:43:49.601Z",
+  "journal": {
+    "choice": "code plan (only distinct line): 紧勒 -> 虱虫之祖, 偏折; hp -1, dmg 8",
+    "reason": ""
+  },
+  "result": "completed: Action completed."
+}

@@ -1,0 +1,25 @@
+## 复盘回报
+
+- 已追加：KFRDELW2TH2P（A10，第33层，知识恶魔末轮9血、14总挡对36攻击阵亡，毒结算后敌剩74血）。已追加勘误：第二条经验的35毒改为36毒。
+- 新的纯 bug：
+  - 无
+- 写成「未记录」的项：KFRDELW2TH2P：完整dirty源码、完整毛伤及部分末击、前五次SL退出结算、完整实线最优比例、替代选择的整场反事实、旧boss时钟数值、Jev缓存命中。
+- 学习账本：KFRDELW2TH2P：新增 silent-0274；更新 silent-0020、silent-0079、silent-0125、silent-0005、silent-0016、silent-0006、silent-0027、silent-0102、silent-0247（老错 silent-0079，其余为印证）；`ledger.py check` 退出码0。
+- 代码提案：
+  - silent-proposal-0ea5c0b9c030fdd6：F33T7奇巧兑现与毒药6层观察，关联0274／0247／0027／0016，交 strategy-proposal。换目标或提前喝药能否获胜，证据不足。
+  - silent-proposal-f915ec544ab94b6e：F33T6多10伤、多6损及F12T1护栏后重问，关联0079／0125，交 strategy-proposal。没有已核实的胜线；两项均未实现、未上线。
+
+```json
+{"task":"postmortem","appended":["KFRDELW2TH2P"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0274"],"updated":["silent-0020","silent-0079","silent-0125","silent-0005","silent-0016","silent-0006","silent-0027","silent-0102","silent-0247"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-0ea5c0b9c030fdd6","silent-proposal-f915ec544ab94b6e"],"implementation_domains":["combat","potion","sl","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-054302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11851-e7bd-7f93-9c9d-ad8c98fc7606
+轮数：1；工具调用：command_execution×62
+token：输入 197.9k、输出 36.8k（其中推理 10.3k）、cache 读 4808.6k、cache 写 0（命中 96.0%）
+成本：未提供
+耗时：876.9 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 7.4 s、首次工具 11.1 s、末次工具结束 852.1 s；工具内共 84.0 s，其余（模型生成、推理、网络）790.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×36；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T05-43-03-01a11851-e7bd-7f93-9c9d-ad8c98fc7606.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-054302-postmortem.jsonl

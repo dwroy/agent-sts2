@@ -1,4 +1,4 @@
-<!-- 生成：2026-10-04。V4.6 A9 窗口：START 2026-10-03T23:51:13Z，打完 8 局（AKK0 … T0ZS，T0ZS 结束于 2026-10-04T07:31:12Z），第 9 局 64ZXC1JCDX2M 于 16:09 CST 按 Dai 指示中途停止，不计入战绩、只单列。`python3 ops/brain-latency.py --since 2026-10-03T23:51:13Z`（同步日志库）之后，jev-sts2 `.cache/logdb-venv/bin/python tools/eval/metrics.py --ascension 9 --since 2026-10-03T23:51:13Z --group-by version --md --total --no-sync --per-run`。SL 来自 logs/sl-attempts.jsonl，GPT 来自 logs/codex-calls.jsonl、logs/brain.jsonl 和 brain-latency，战斗延迟 / memo 来自 logs/decisions.jsonl（observed_ts、timing），每场掉血来自日志库 fights 视图。文字解读在 notes/v4.6-a9-window-report.md；本文件是其中的数字部分。含「第一次尝试」各行。 -->
+<!-- 生成：2026-10-04。V4.6 A9 窗口：START 2026-10-03T23:51:13Z，打完 8 局（AKK0 … T0ZS，T0ZS 结束于 2026-10-04T07:31:12Z），第 9 局 64ZXC1JCDX2M 于 16:09 CST 按 Roy 指示中途停止，不计入战绩、只单列。`python3 ops/brain-latency.py --since 2026-10-03T23:51:13Z`（同步日志库）之后，jev-sts2 `.cache/logdb-venv/bin/python tools/eval/metrics.py --ascension 9 --since 2026-10-03T23:51:13Z --group-by version --md --total --no-sync --per-run`。SL 来自 logs/sl-attempts.jsonl，GPT 来自 logs/codex-calls.jsonl、logs/brain.jsonl 和 brain-latency，战斗延迟 / memo 来自 logs/decisions.jsonl（observed_ts、timing），每场掉血来自日志库 fights 视图。文字解读在 notes/v4.6-a9-window-report.md；本文件是其中的数字部分。含「第一次尝试」各行。 -->
 
 # V4.6 A9 指标（8 局，2 胜；第 9 局中途停止）
 
@@ -152,7 +152,7 @@ boss 战绩（fights，room = boss；SL 重打合并成一场）：一幕 6/8（
 | 全部 | **33.9**（p90 78.1） | 19.7 | 14.2 | 22.1 |
 
 - **大脑分钟**：8 局平均 26.2（metrics；codex 25.1）。打到 F48 的 4 局 30.9 / 41.1 / 33.5 / 34.0，平均 34.9，**约是 V4.5 high 同样打到 F48 的 ET3V（17.7）的 2 倍**，也高于 DeepSeek 基线（走到 F33 以后 19.7–26.3）。最长单题：9VHP F37 shop/plan 197.7 s、D4VF F34 act-plan 190.0 s、ABCJ F20 shop/plan 181.3 s。中位输出 590–1,420 token（推理占 90% 以上），high 批次约 213。
-- **额度**：ChatGPT prolite 7 天窗口 27%（批次开始）→ 44%（T0ZS 结束），8 局 17 个百分点；打到 F48 的局约 3 点、一幕就死的约 1 点。credits 没动，80% 保护线没触发。15:09 CST Dai 升级到 promax，窗口重置为 0%，64ZX 半局用了 1%。
+- **额度**：ChatGPT prolite 7 天窗口 27%（批次开始）→ 44%（T0ZS 结束），8 局 17 个百分点；打到 F48 的局约 3 点、一幕就死的约 1 点。credits 没动，80% 保护线没触发。15:09 CST Roy 升级到 promax，窗口重置为 0%，64ZX 半局用了 1%。
 - **路线重问**：0b12aa1 之前 7 局共 **21 次**（AKK0 2、ABCJ 1、D4VF 6、3B4K 3、4AWD 3、9VHP 6），重问耗时合计 265 s；D4VF 2 次、4AWD 1 次重问后仍是乱码，按 keep 走。原因是路线复核要求写 route_reason，而 codex 的 schema 没有这个字段，xhigh 就把理由或自言自语塞进 route。**0b12aa1 之后 T0ZS（10 道路线复核）和 64ZX 都是 0 次。**
 - **T0ZS 的 DeepSeek 回退（单列）**：07:06:38Z codex 读额度报 401，BRAIN_CODEX_USAGE_REQUIRED=on 让 codex 整局停用。之后 F14–F32 的 21 题（选牌 9、商店 2、火堆 4、事件 4、幕计划 1、run-plan 1）由 DeepSeek 回答，8.3 分钟，中位 12.8 s，0 失败；理由中文 12、英文 8。**二幕路线（候选第 1 条）、所有二幕牌和火堆都是 DeepSeek 定的**，所以 T0ZS 的二幕死亡不能算到 GPT 头上；DeepSeek 选的也是投影最好的线，问题不在选线（见第七节）。7023574 已改成读不到额度只暂停到下次读成功。
 - **快速档（service_tier=priority，只有 64ZX 半局）**：33 题全部答出，0 重问；每题中位 22.1 s，比 V4.6 标准档 33.9 s 快约 35%；F1–F33 大脑 15.1 分钟，同样打到 F33 的标准档局是 21.0–27.8 分钟（9VHP 21.0、ABCJ 22.1、3B4K 22.2、4AWD 22.6、D4VF 27.8）。只有一局、没打完，同时换了套餐，只作参考。

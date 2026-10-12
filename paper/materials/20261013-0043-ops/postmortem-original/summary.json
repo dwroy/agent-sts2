@@ -1,0 +1,482 @@
+{
+  "decisions": 607,
+  "states": 623,
+  "brain_rows": 36,
+  "brain_accepted": 36,
+  "brain_models": {
+    "gpt-6-astra": 27,
+    "gpt-6.1-sol": 9
+  },
+  "jev": 129,
+  "low": 21,
+  "low_combat": 9,
+  "plan_questions": 104,
+  "rollout_flags": {
+    "false": 7,
+    "true": 96,
+    "null": 1
+  },
+  "direct_rollout": {
+    "false": 5,
+    "true": 78
+  },
+  "code_actions": 133,
+  "code_turns": 89,
+  "total_turns": 102,
+  "only_code_turns": 28,
+  "mixed_code_turns": 61,
+  "code_labels": {
+    "combat/plan": 96,
+    "combat/lethal": 23,
+    "combat/end_turn": 2,
+    "combat/least-loss": 12
+  },
+  "jev_in": 1221110,
+  "jev_out": 7188,
+  "brain_usage": {
+    "inputTokens": 5438058,
+    "cacheHitTokens": 2989824,
+    "outputTokens": 22544,
+    "reasoningTokens": 19478
+  },
+  "first_ts": "2026-10-12T15:24:35.076Z",
+  "last_ts": "2026-10-12T16:03:40.911Z",
+  "first_observed": "2026-10-12T15:23:51.581Z",
+  "guards": [
+    {
+      "line": 366368,
+      "floor": 30,
+      "turn": 2,
+      "attempt": 1,
+      "rationale": "Jev chose plan 7/8 (打击 -> 异螨 #2, 毒雾, 突然一拳 -> 异螨 #1) with confidence 0.89; code rank 7; HP guard: plan 7 (打击 -> 异螨 #2, 毒雾, 突然一拳 -> 异螨 #1; hp -21) is more than 8 HP over the cheapest line, playing plan 6 (毒素, 打击 -> 异螨 #2, 突然一拳 -> 异螨 #1; hp -16) instead [ending now kills by what the mod's lethal flag does not count: 25 HP lost in all, 15 of it the enemy hits after block, 10 damage from cards held (毒素 ×2)]",
+      "audit": {
+        "schema": 1,
+        "scope": "predicted_candidates",
+        "run_id": "G4PQBCJQ7NP0",
+        "turn": 2,
+        "attempt": null,
+        "answer": {
+          "line": "打击 -> 异螨 #2, 毒雾, 突然一拳 -> 异螨 #1",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "card_index": 5,
+              "target_index": 1
+            },
+            {
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": false,
+              "card_index": 6,
+              "target_index": null
+            },
+            {
+              "card_id": "SUCKER_PUNCH",
+              "upgraded": false,
+              "card_index": 7,
+              "target_index": 0
+            }
+          ],
+          "turn": {
+            "hp_loss": 21,
+            "damage": 14,
+            "block_gained": 0,
+            "strength_gained": 0,
+            "lasting_value": 8,
+            "cards_drawn": 0,
+            "sandpit_after": null,
+            "unmodelled_cards": []
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 3,
+            "samples": 8,
+            "deaths": 0,
+            "further_hp_loss": 22.1686620461
+          }
+        },
+        "before_sl": {
+          "line": "毒素, 打击 -> 异螨 #2, 突然一拳 -> 异螨 #1",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "TOXIC",
+              "upgraded": false,
+              "card_index": 1,
+              "target_index": null
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "card_index": 5,
+              "target_index": 1
+            },
+            {
+              "card_id": "SUCKER_PUNCH",
+              "upgraded": false,
+              "card_index": 7,
+              "target_index": 0
+            }
+          ],
+          "turn": {
+            "hp_loss": 16,
+            "damage": 14,
+            "block_gained": 0,
+            "strength_gained": 0,
+            "lasting_value": 0,
+            "cards_drawn": 0,
+            "sandpit_after": null,
+            "unmodelled_cards": []
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 3,
+            "samples": 8,
+            "deaths": 0,
+            "further_hp_loss": 22.2678826476
+          }
+        },
+        "after_sl": {
+          "line": "毒素, 打击 -> 异螨 #2, 突然一拳 -> 异螨 #1",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "TOXIC",
+              "upgraded": false,
+              "card_index": 1,
+              "target_index": null
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "card_index": 5,
+              "target_index": 1
+            },
+            {
+              "card_id": "SUCKER_PUNCH",
+              "upgraded": false,
+              "card_index": 7,
+              "target_index": 0
+            }
+          ],
+          "turn": {
+            "hp_loss": 16,
+            "damage": 14,
+            "block_gained": 0,
+            "strength_gained": 0,
+            "lasting_value": 0,
+            "cards_drawn": 0,
+            "sandpit_after": null,
+            "unmodelled_cards": []
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 3,
+            "samples": 8,
+            "deaths": 0,
+            "further_hp_loss": 22.2678826476
+          }
+        },
+        "sl_delta": {
+          "hp_loss": 0,
+          "damage": 0,
+          "strength_gained": 0,
+          "lasting_value": 0
+        },
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": null,
+          "option_index": null
+        },
+        "execution_status": "pending_dispatch",
+        "actual_turn": null
+      }
+    },
+    {
+      "line": 366437,
+      "floor": 33,
+      "turn": 5,
+      "attempt": 1,
+      "rationale": "Jev chose plan 3/3 (灵动步法, 斗篷与匕首, 打击 -> 无厌沙虫) with confidence 0.77; code rank 3; HP guard: plan 3 (灵动步法, 斗篷与匕首, 打击 -> 无厌沙虫; hp -10) is more than 8 HP over the cheapest line, playing plan 1 (斗篷与匕首, 触不可及; hp -0) instead",
+      "audit": {
+        "schema": 1,
+        "scope": "predicted_candidates",
+        "run_id": "G4PQBCJQ7NP0",
+        "turn": 5,
+        "attempt": null,
+        "answer": {
+          "line": "灵动步法, 斗篷与匕首, 打击 -> 无厌沙虫",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": false,
+              "card_index": 2,
+              "target_index": null
+            },
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "card_index": 0,
+              "target_index": null
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "card_index": 4,
+              "target_index": 0
+            }
+          ],
+          "turn": {
+            "hp_loss": 10,
+            "damage": 13,
+            "block_gained": 14,
+            "strength_gained": 0,
+            "lasting_value": 8,
+            "cards_drawn": 1,
+            "sandpit_after": 1,
+            "unmodelled_cards": []
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 5,
+            "samples": 8,
+            "deaths": 8,
+            "further_hp_loss": 12
+          }
+        },
+        "before_sl": {
+          "line": "斗篷与匕首, 触不可及",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "card_index": 0,
+              "target_index": null
+            },
+            {
+              "card_id": "UNTOUCHABLE",
+              "upgraded": false,
+              "card_index": 3,
+              "target_index": null
+            }
+          ],
+          "turn": {
+            "hp_loss": 0,
+            "damage": 7,
+            "block_gained": 24,
+            "strength_gained": 0,
+            "lasting_value": 0,
+            "cards_drawn": 1,
+            "sandpit_after": 1,
+            "unmodelled_cards": []
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 5,
+            "samples": 8,
+            "deaths": 8,
+            "further_hp_loss": 12
+          }
+        },
+        "after_sl": {
+          "line": "斗篷与匕首, 触不可及",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "card_index": 0,
+              "target_index": null
+            },
+            {
+              "card_id": "UNTOUCHABLE",
+              "upgraded": false,
+              "card_index": 3,
+              "target_index": null
+            }
+          ],
+          "turn": {
+            "hp_loss": 0,
+            "damage": 7,
+            "block_gained": 24,
+            "strength_gained": 0,
+            "lasting_value": 0,
+            "cards_drawn": 1,
+            "sandpit_after": 1,
+            "unmodelled_cards": []
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 5,
+            "samples": 8,
+            "deaths": 8,
+            "further_hp_loss": 12
+          }
+        },
+        "sl_delta": {
+          "hp_loss": 0,
+          "damage": 0,
+          "strength_gained": 0,
+          "lasting_value": 0
+        },
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": null,
+          "option_index": null
+        },
+        "execution_status": "pending_dispatch",
+        "actual_turn": null
+      }
+    },
+    {
+      "line": 366492,
+      "floor": 33,
+      "turn": 5,
+      "attempt": 3,
+      "rationale": "Jev chose plan 3/3 (灵动步法, 斗篷与匕首, 打击 -> 无厌沙虫) with confidence 0.62; code rank 3; HP guard: plan 3 (灵动步法, 斗篷与匕首, 打击 -> 无厌沙虫; hp -10) is more than 8 HP over the cheapest line, playing plan 1 (斗篷与匕首, 触不可及; hp -0) instead; SL explore (T5, the latest question before attempt 1's death on T6): playing 灵动步法, 斗篷与匕首, 打击 -> 无厌沙虫 instead of 斗篷与匕首, 触不可及, played on this board in attempt 1 (the best untried line by the question's ranking, among those the rollout does not see dying more often)",
+      "audit": {
+        "schema": 1,
+        "scope": "predicted_candidates",
+        "run_id": "G4PQBCJQ7NP0",
+        "turn": 5,
+        "attempt": 3,
+        "answer": {
+          "line": "灵动步法, 斗篷与匕首, 打击 -> 无厌沙虫",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": false,
+              "card_index": 2,
+              "target_index": null
+            },
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "card_index": 0,
+              "target_index": null
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "card_index": 4,
+              "target_index": 0
+            }
+          ],
+          "turn": {
+            "hp_loss": 10,
+            "damage": 13,
+            "block_gained": 14,
+            "strength_gained": 0,
+            "lasting_value": 8,
+            "cards_drawn": 1,
+            "sandpit_after": 1,
+            "unmodelled_cards": []
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 5,
+            "samples": 24,
+            "deaths": 24,
+            "further_hp_loss": 12
+          }
+        },
+        "before_sl": {
+          "line": "斗篷与匕首, 触不可及",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "card_index": 0,
+              "target_index": null
+            },
+            {
+              "card_id": "UNTOUCHABLE",
+              "upgraded": false,
+              "card_index": 3,
+              "target_index": null
+            }
+          ],
+          "turn": {
+            "hp_loss": 0,
+            "damage": 7,
+            "block_gained": 24,
+            "strength_gained": 0,
+            "lasting_value": 0,
+            "cards_drawn": 1,
+            "sandpit_after": 1,
+            "unmodelled_cards": []
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 5,
+            "samples": 24,
+            "deaths": 24,
+            "further_hp_loss": 12
+          }
+        },
+        "after_sl": {
+          "line": "灵动步法, 斗篷与匕首, 打击 -> 无厌沙虫",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": false,
+              "card_index": 2,
+              "target_index": null
+            },
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "card_index": 0,
+              "target_index": null
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "card_index": 4,
+              "target_index": 0
+            }
+          ],
+          "turn": {
+            "hp_loss": 10,
+            "damage": 13,
+            "block_gained": 14,
+            "strength_gained": 0,
+            "lasting_value": 8,
+            "cards_drawn": 1,
+            "sandpit_after": 1,
+            "unmodelled_cards": []
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 5,
+            "samples": 24,
+            "deaths": 24,
+            "further_hp_loss": 12
+          }
+        },
+        "sl_delta": {
+          "hp_loss": 10,
+          "damage": 6,
+          "strength_gained": 0,
+          "lasting_value": 8
+        },
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 2,
+          "target_index": null,
+          "option_index": null
+        },
+        "execution_status": "pending_dispatch",
+        "actual_turn": null
+      }
+    }
+  ]
+}

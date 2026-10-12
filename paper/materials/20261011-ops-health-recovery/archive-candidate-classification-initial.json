@@ -1,0 +1,2419 @@
+{
+  "original_count": 264,
+  "rescan_count": 171,
+  "findings": [
+    {
+      "rule": "github-pat",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a10f23-4d96-7a52-b9e1-d693690336bc.jsonl",
+      "line": 540,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "7c904e7c6cabf89f39e29c53f94463a72272d463f2d5fa3007cbfec780a01566",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a10daa-4e77-7241-8174-43e6c4bd9897.jsonl",
+      "line": 111,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "d4116a775a6193eed1d0ba6ee3cf53470a06bced14a002f0f340ca6e5161cbb4",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a1119f-835b-7930-9ef1-66c633e9d696.jsonl",
+      "line": 383,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "548b5e0372d29d15ab54c5f7ca90834d1f51ac6d7cca5ffac0128038df441df8",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "gitlab-deploy-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a1094c-aace-76f2-a784-ec96ee36ec6d.jsonl",
+      "line": 236,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 25,
+      "candidate_sha256": "48a587920a04949a7b4819b153c925263bbdd76cae03613ef41f51a67a2cdfc7",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11546-6421-73f0-bc5a-08fadec551d9.jsonl",
+      "line": 31,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11546-6421-73f0-bc5a-08fadec551d9.jsonl",
+      "line": 31,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11546-6421-73f0-bc5a-08fadec551d9.jsonl",
+      "line": 31,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11546-6421-73f0-bc5a-08fadec551d9.jsonl",
+      "line": 32,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a114bf-822a-7ac3-8f2a-fad694a16743.jsonl",
+      "line": 73,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "37f4cb9f347d50feb091ac888ea87ea9be08e90e86a2abb1325ecb5d03599d35",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a114bf-822a-7ac3-8f2a-fad694a16743.jsonl",
+      "line": 73,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "37f4cb9f347d50feb091ac888ea87ea9be08e90e86a2abb1325ecb5d03599d35",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a114bf-822a-7ac3-8f2a-fad694a16743.jsonl",
+      "line": 73,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "37f4cb9f347d50feb091ac888ea87ea9be08e90e86a2abb1325ecb5d03599d35",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a114bf-822a-7ac3-8f2a-fad694a16743.jsonl",
+      "line": 74,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "37f4cb9f347d50feb091ac888ea87ea9be08e90e86a2abb1325ecb5d03599d35",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a114bf-65aa-7ae0-850c-a87b7bfbaf1f.jsonl",
+      "line": 613,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "d96570881b6846e173ca46f303590adf9510166aa5856aa5c8c5d8d2f6ebc73c",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a116a9-6e4b-72b1-9c70-f54315e101ba.jsonl",
+      "line": 145,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "474bcd68e06ef86d55bb817a20cf0fe1555440c8e3ad93b791d1bd9f0a68cfe7",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a116a9-6e4b-72b1-9c70-f54315e101ba.jsonl",
+      "line": 145,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "474bcd68e06ef86d55bb817a20cf0fe1555440c8e3ad93b791d1bd9f0a68cfe7",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a116a9-6e4b-72b1-9c70-f54315e101ba.jsonl",
+      "line": 145,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "474bcd68e06ef86d55bb817a20cf0fe1555440c8e3ad93b791d1bd9f0a68cfe7",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a116a9-6e4b-72b1-9c70-f54315e101ba.jsonl",
+      "line": 146,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "474bcd68e06ef86d55bb817a20cf0fe1555440c8e3ad93b791d1bd9f0a68cfe7",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "github-refresh-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11785-382d-72c0-8ac7-65d7986715a1.jsonl",
+      "line": 418,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "fb2b1c027b26537c73b5e9b9de7aa542301fb9671098ca42602326c9b672c38d",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a118a3-7b16-7b00-b052-19db5e5736a7.jsonl",
+      "line": 28,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a118a3-7b16-7b00-b052-19db5e5736a7.jsonl",
+      "line": 28,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a118a3-7b16-7b00-b052-19db5e5736a7.jsonl",
+      "line": 28,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a118a3-7b16-7b00-b052-19db5e5736a7.jsonl",
+      "line": 29,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a1190a-aa1d-75b2-bb8c-ab7f1b6ff3c9.jsonl",
+      "line": 937,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "f9b7b2d9c3d3e7f7d644464b711e551f31e68ac1336577f3b19ca8f96c786cd6",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11ae5-1cf5-7961-bef9-633f4c14cb03.jsonl",
+      "line": 400,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_expected': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11ae5-1cf5-7961-bef9-633f4c14cb03.jsonl",
+      "line": 400,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_computed': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11ae5-1cf5-7961-bef9-633f4c14cb03.jsonl",
+      "line": 400,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_expected': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11ae5-1cf5-7961-bef9-633f4c14cb03.jsonl",
+      "line": 400,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_computed': '[REDACTED]'"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11987-e667-79b1-89b5-73bf7c2a0ad0.jsonl",
+      "line": 1305,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "f608c44cfb0030788efcfc73fc60a27a2bbc0e8513f70cdb233e8bb4939313fb",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11987-e667-79b1-89b5-73bf7c2a0ad0.jsonl",
+      "line": 1746,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "b95c92329ec497b98c50c0637a3529b0f371a60e5dd7165d1db559bf7712a66d",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11ae5-1cf5-7961-bef9-633f4c14cb03.jsonl",
+      "line": 400,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_expected': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11ae5-1cf5-7961-bef9-633f4c14cb03.jsonl",
+      "line": 400,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_computed': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11ae5-1cf5-7961-bef9-633f4c14cb03.jsonl",
+      "line": 401,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_expected': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11ae5-1cf5-7961-bef9-633f4c14cb03.jsonl",
+      "line": 401,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_computed': '[REDACTED]'"
+    },
+    {
+      "rule": "github-oauth",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a11e54-022e-7e63-a5d9-8f745b2518a2.jsonl",
+      "line": 60,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "45cf4e69e7b17bb4292b5fd75f6b848c569ac6e59a47744add6fb38c2f834189",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a121c2-efb5-7e92-934b-f40ce3a3e6a7.jsonl",
+      "line": 628,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "5336e168b6c04870c3abb8bc5ae6915320c8c0863e5ee0217a86859ea2f26bae",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a12080-8093-77e1-acb5-d9a6b176b35e.jsonl",
+      "line": 969,
+      "locations": [
+        "$.payload.item.aggregated_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "aa91903860583b877f8ecb1eeba6b1fb494e110736d5e8f3e1cfcae3b60b0071",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a12080-8093-77e1-acb5-d9a6b176b35e.jsonl",
+      "line": 970,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "aa91903860583b877f8ecb1eeba6b1fb494e110736d5e8f3e1cfcae3b60b0071",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a12080-8093-77e1-acb5-d9a6b176b35e.jsonl",
+      "line": 2028,
+      "locations": [
+        "$.payload.input"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "aa91903860583b877f8ecb1eeba6b1fb494e110736d5e8f3e1cfcae3b60b0071",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a12080-8093-77e1-acb5-d9a6b176b35e.jsonl",
+      "line": 2031,
+      "locations": [
+        "$.payload.item.changes./home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261009-195051/learner/runs/20261009-195053-boss-sim-batch/write-final-records.py.content"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "aa91903860583b877f8ecb1eeba6b1fb494e110736d5e8f3e1cfcae3b60b0071",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a12021-e06a-7853-bc1b-73e2e20e1337.jsonl",
+      "line": 877,
+      "locations": [
+        "$.payload.item.aggregated_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a12021-e06a-7853-bc1b-73e2e20e1337.jsonl",
+      "line": 879,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "github-pat",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a121f9-e0b8-71a0-a71d-ba0abcfd7c7b.jsonl",
+      "line": 1507,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "088c237782a0b27a9242082b77b7dedd9e8f930fa22f6fe9680f80ea67ac4d01",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-refresh-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a125bb-4d13-7171-94eb-5e9b6350e1ee.jsonl",
+      "line": 134,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "87dec0c9e6cce34be0250675b5b50d2687903bf3dbf55d4c4737c9b098308105",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a126cd-d1b0-7081-bf85-17a1520bae79.jsonl",
+      "line": 87,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "f979fb87605171cef83fc43790c735bdeda69c8b0b986d9ed83951905ce36e0e",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-oauth",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a126cd-d1b0-7081-bf85-17a1520bae79.jsonl",
+      "line": 183,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "63306b2f86c1011f2539edd7d5b9fffe160c990bccc2b85a1410e5a89ab3b2b6",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-refresh-token",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a12704-be1d-7b00-a6e1-ec479b2a1417.jsonl",
+      "line": 270,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "0e063d150638dbf8d6b40c17e4c02846006fed36f899c556bc8d308b537ce55b",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-pat",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a1290e-cb9e-7e70-9733-d358a4ab414e.jsonl",
+      "line": 176,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "4c03744f97b887deec2e446db9c9bd1aabfbf6fd18cf5562f78571c94c3251eb",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-pat",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a12a58-33f9-73f0-975a-ea2744715e9f.jsonl",
+      "line": 144,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "94686b18e4043fb924920e27ca9633390893ee1d14d25982657483e895bdc18b",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a129ea-5e28-7aa3-8584-74693117860d.jsonl",
+      "line": 177,
+      "locations": [
+        "$.payload.item.aggregated_output"
+      ],
+      "candidate_length": 22,
+      "candidate_sha256": "10014bdf7c414c817af56880a60bef5b83849e58e42057fd9efeb82d12a47c55",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "nTYPESAFE_API_KEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/rollouts/rollout-01a129ea-5e28-7aa3-8584-74693117860d.jsonl",
+      "line": 180,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 22,
+      "candidate_sha256": "10014bdf7c414c817af56880a60bef5b83849e58e42057fd9efeb82d12a47c55",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "nTYPESAFE_API_KEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/runs/20261007-153136-boss-sim-batch.jsonl",
+      "line": 61,
+      "locations": [
+        "$.item.aggregated_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/runs/20261007-130416-boss-sim-automation.jsonl",
+      "line": 160,
+      "locations": [
+        "$.item.aggregated_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "37f4cb9f347d50feb091ac888ea87ea9be08e90e86a2abb1325ecb5d03599d35",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/runs/20261007-215924-boss-sim-batch.jsonl",
+      "line": 323,
+      "locations": [
+        "$.item.aggregated_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "474bcd68e06ef86d55bb817a20cf0fe1555440c8e3ad93b791d1bd9f0a68cfe7",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/runs/20261008-071208-boss-sim-batch.jsonl",
+      "line": 75,
+      "locations": [
+        "$.item.aggregated_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "github-oauth",
+      "file": "paper/materials/session/codex/ops/wakes/20261006-090501-wake.jsonl",
+      "line": 199,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "1ad4a03b4219ccb87eb77664598d64669a3726cc21e73a51b67345c0bcfc556a",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/runs/20261008-174304-boss-sim-batch.jsonl",
+      "line": 664,
+      "locations": [
+        "$.item.aggregated_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_expected': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/runs/20261008-174304-boss-sim-batch.jsonl",
+      "line": 664,
+      "locations": [
+        "$.item.aggregated_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "f09fbb01039f75938cdbb677f255b65a2d813d96b232486b84a0fd8a27865121",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key_computed': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/runs/20261009-195053-boss-sim-batch.jsonl",
+      "line": 1510,
+      "locations": [
+        "$.item.aggregated_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "aa91903860583b877f8ecb1eeba6b1fb494e110736d5e8f3e1cfcae3b60b0071",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/runs/20261009-180732-boss-sim-batch.jsonl",
+      "line": 1547,
+      "locations": [
+        "$.item.aggregated_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/learner/runs/20261011-154304-silent-boss-calibration.jsonl",
+      "line": 507,
+      "locations": [
+        "$.item.aggregated_output"
+      ],
+      "candidate_length": 22,
+      "candidate_sha256": "10014bdf7c414c817af56880a60bef5b83849e58e42057fd9efeb82d12a47c55",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "nTYPESAFE_API_KEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 59,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 59,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 59,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 60,
+      "locations": [
+        "$.payload.output[].text",
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 84,
+      "locations": [
+        "$.payload.input"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 86,
+      "locations": [
+        "$.payload.item.changes./tmp/sts2-20261007-1828-record.py.content"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 98,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 98,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 98,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261007-182836-wake.jsonl",
+      "line": 101,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-092242-wake.jsonl",
+      "line": 59,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-092242-wake.jsonl",
+      "line": 59,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-092242-wake.jsonl",
+      "line": 59,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-092242-wake.jsonl",
+      "line": 61,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-091714-wake.jsonl",
+      "line": 97,
+      "locations": [
+        "$.payload.input"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-091714-wake.jsonl",
+      "line": 101,
+      "locations": [
+        "$.payload.item.command[]",
+        "$.payload.item.parsed_cmd[].cmd"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-091714-wake.jsonl",
+      "line": 101,
+      "locations": [
+        "$.payload.item.command[]",
+        "$.payload.item.parsed_cmd[].cmd"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-091714-wake.jsonl",
+      "line": 117,
+      "locations": [
+        "$.payload.input"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-091714-wake.jsonl",
+      "line": 119,
+      "locations": [
+        "$.payload.item.command[]",
+        "$.payload.item.parsed_cmd[].cmd",
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261008-091714-wake.jsonl",
+      "line": 119,
+      "locations": [
+        "$.payload.item.command[]",
+        "$.payload.item.parsed_cmd[].cmd",
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-011845-wake.jsonl",
+      "line": 54,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "84ed07e40bde8e2af997741b2757bd52d5235a39e6a8e6b0e9c925454388d5d0",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-011845-wake.jsonl",
+      "line": 54,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "84ed07e40bde8e2af997741b2757bd52d5235a39e6a8e6b0e9c925454388d5d0",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-011845-wake.jsonl",
+      "line": 54,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "84ed07e40bde8e2af997741b2757bd52d5235a39e6a8e6b0e9c925454388d5d0",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-011845-wake.jsonl",
+      "line": 55,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "84ed07e40bde8e2af997741b2757bd52d5235a39e6a8e6b0e9c925454388d5d0",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 22,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 22,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 22,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 22,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 22,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 22,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 23,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 23,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 30,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 30,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 30,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 69,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 69,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 69,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-055613-wake.jsonl",
+      "line": 70,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-133700-wake.jsonl",
+      "line": 22,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "784ed6d01755c30a3c1281679598774cc5b9e4b698b1433abc30ddeca8aba1c5",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-133700-wake.jsonl",
+      "line": 22,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "784ed6d01755c30a3c1281679598774cc5b9e4b698b1433abc30ddeca8aba1c5",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-133700-wake.jsonl",
+      "line": 22,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "784ed6d01755c30a3c1281679598774cc5b9e4b698b1433abc30ddeca8aba1c5",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-133700-wake.jsonl",
+      "line": 24,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "784ed6d01755c30a3c1281679598774cc5b9e4b698b1433abc30ddeca8aba1c5",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 97,
+      "locations": [
+        "$.payload.input"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "EKEY = '[REDACTED]'"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-202703-wake.jsonl",
+      "line": 128,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "f04836af289bb131c4e53d8ef58374e429a7b238b8ba211d24dfda5db832999b",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 99,
+      "locations": [
+        "$.payload.item.changes./tmp/sts2-20261009-1951-b4-record.py.content"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nEKEY = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 126,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 126,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 126,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 126,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 126,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 126,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "github-oauth",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 18563,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "1ad4a03b4219ccb87eb77664598d64669a3726cc21e73a51b67345c0bcfc556a",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-refresh-token",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 8194,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "35e2ce1c2b3b831161ea236d69ebc800a44012059935eb5fd344da56dc2c6321",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 127,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/wakes/20261009-195151-wake.jsonl",
+      "line": 127,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40479,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40479,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40479,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40480,
+      "locations": [
+        "$.payload.output[].text",
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40504,
+      "locations": [
+        "$.payload.input"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40506,
+      "locations": [
+        "$.payload.item.changes./tmp/sts2-20261007-1828-record.py.content"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40518,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40518,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40518,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 40521,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "5ca6c51f7f8c9280f5c0d262cec1d644d04961ded39f75351d7bb4c41e68df62",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51026,
+      "locations": [
+        "$.payload.input"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51030,
+      "locations": [
+        "$.payload.item.command[]",
+        "$.payload.item.parsed_cmd[].cmd"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51030,
+      "locations": [
+        "$.payload.item.command[]",
+        "$.payload.item.parsed_cmd[].cmd"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51046,
+      "locations": [
+        "$.payload.input"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51048,
+      "locations": [
+        "$.payload.item.command[]",
+        "$.payload.item.parsed_cmd[].cmd",
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51048,
+      "locations": [
+        "$.payload.item.command[]",
+        "$.payload.item.parsed_cmd[].cmd",
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nkey='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51131,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51131,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51131,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 51133,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "ac6d480ea171ed980f641d6f0d871c1f32dba5782b6d1751c44054f22ea768f9",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nKEY='[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 60453,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "84ed07e40bde8e2af997741b2757bd52d5235a39e6a8e6b0e9c925454388d5d0",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 60453,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "84ed07e40bde8e2af997741b2757bd52d5235a39e6a8e6b0e9c925454388d5d0",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 60453,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "84ed07e40bde8e2af997741b2757bd52d5235a39e6a8e6b0e9c925454388d5d0",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 60454,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "84ed07e40bde8e2af997741b2757bd52d5235a39e6a8e6b0e9c925454388d5d0",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62862,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62862,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62862,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62862,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62862,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62862,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62863,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62863,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62870,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62870,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62870,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62909,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62909,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62909,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 62910,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "17439a1008bc669db2d47b64891007353a1c74c8eefeae4784d58242d8dfc2db",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 67331,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "784ed6d01755c30a3c1281679598774cc5b9e4b698b1433abc30ddeca8aba1c5",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 67331,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "784ed6d01755c30a3c1281679598774cc5b9e4b698b1433abc30ddeca8aba1c5",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 67331,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "784ed6d01755c30a3c1281679598774cc5b9e4b698b1433abc30ddeca8aba1c5",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 67333,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 12,
+      "candidate_sha256": "784ed6d01755c30a3c1281679598774cc5b9e4b698b1433abc30ddeca8aba1c5",
+      "classification": "unresolved",
+      "alphabet_hex": false,
+      "match_prefix": "key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70788,
+      "locations": [
+        "$.payload.input"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "EKEY = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70790,
+      "locations": [
+        "$.payload.item.changes./tmp/sts2-20261009-1951-b4-record.py.content"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "nEKEY = '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70817,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70817,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70817,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70817,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70817,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70817,
+      "locations": [
+        "$.payload.item.stdout",
+        "$.payload.item.aggregated_output",
+        "$.payload.item.formatted_output"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70818,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 70818,
+      "locations": [
+        "$.payload.output[].text"
+      ],
+      "candidate_length": 64,
+      "candidate_sha256": "879b92fe07714a3cc9c7667aa8727a9f97d167a356f9d62f4854a4884f7af10f",
+      "classification": "sha256-shaped-needs-reference-proof",
+      "alphabet_hex": true,
+      "match_prefix": "evidence_key': '[REDACTED]'"
+    },
+    {
+      "rule": "github-app-token",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 71177,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "f04836af289bb131c4e53d8ef58374e429a7b238b8ba211d24dfda5db832999b",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    },
+    {
+      "rule": "github-refresh-token",
+      "file": "paper/materials/session/codex/ops/rollout-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl",
+      "line": 75958,
+      "locations": [
+        "$.payload.encrypted_content"
+      ],
+      "candidate_length": 40,
+      "candidate_sha256": "c1c3a08bd6252a0d7b662299a5c11c8327590d2ac45aba34c750a16b8a9665bb",
+      "classification": "ciphertext-pattern-not-plaintext-credential",
+      "alphabet_hex": false,
+      "match_prefix": "[REDACTED]"
+    }
+  ]
+}

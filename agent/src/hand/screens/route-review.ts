@@ -1,12 +1,12 @@
 /**
- * The act's route riding on the questions the brain already answers (M2; Dai 2026-09-29): the card reward, the rest
+ * The act's route riding on the questions the brain already answers (M2; Roy 2026-09-29): the card reward, the rest
  * site (the one-shot rest plan or the step-by-step question) and the last question of an event. No extra call: the
  * route rides in the question's state (state.route_review) and the answer's `route`.
  *
  * What it shows (facts only, no scores or ranks): the act's whole map with where we stand, the plan's remaining
  * route, and the plan's facts projected from HP now (strategy/route-map.ts routeFacts: HP on arrival at each node,
  * median and p75; each rest site healed or smithed; the fights before the next rest site; the next elite and the
- * boss; at a rest site, what each of its options leaves), and next_rest (Dai 2026-10-03, experience
+ * boss; at a rest site, what each of its options leaves), and next_rest (Roy 2026-10-03, experience
  * route-replan-on-drop): the kept route's stretch to its next rest site and the best stretch through each next node,
  * each with its fights, "?" rooms, shop, HP on arriving there and HP on entering the route's next elite, one clearly
  * worse on the same floor saying so; a change logs the same comparison for the route it took. The answer's `route` is "keep" (the default) or a new node

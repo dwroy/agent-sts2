@@ -1,0 +1,107 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-041301/agent
+
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > closes a clean, checked batch whose existing sources are in live without scheduling a retry or full checks 203ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept an empty report when Git evidence is dirty 193ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept an empty report when Git evidence is new-output 237ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept an empty report when Git evidence is unshipped 200ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept an empty report when Git evidence is not-ancestor 183ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept an empty report when Git evidence is status-error 179ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept an empty report when Git evidence is missing-head 180ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept an empty report when Git evidence is timeout 167ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > keeps new output or missing/failed checks pending for repair: {"fixes":[{"commit":"dddddddddddddddddddddddddddddddddddddddd"}]} 167ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > keeps new output or missing/failed checks pending for repair: {"commit":"dddddddddddddddddddddddddddddddddddddddd"} 166ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > keeps new output or missing/failed checks pending for repair: {"fixes":null} 192ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > keeps new output or missing/failed checks pending for repair: {"base":"main"} 202ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > keeps new output or missing/failed checks pending for repair: {"tests":{"tsc":1,"vitest":0,"cases":2068}} 214ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > keeps new output or missing/failed checks pending for repair: {"tests":{"tsc":0,"vitest":1,"cases":2068}} 158ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > keeps new output or missing/failed checks pending for repair: {"tests":{"tsc":0,"vitest":0,"cases":0}} 176ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > keeps new output or missing/failed checks pending for repair: {"tests":null} 179ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not treat experience-update as an empty fix 168ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not treat strategy-proposal as an empty fix 180ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept a failed learner or evidence from a different worktree 355ms
+ ✓ tests/learner-empty-fix.test.ts > empty fix batch completion > still schedules and runs full checks for a real merge, preserving full-suite failure reporting 358ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > retries exact pre-session ENOENT after close with identical input and one final completion 331ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > caps persistent pre-session failures at two additional attempts 543ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 0 37ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 1 34ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 2 30ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 3 30ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 4 30ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 5 29ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 6 29ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 7 31ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 8 31ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 9 39ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 10 31ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > refuses a lost lease 37ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > refuses a replaced lease 25ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > refuses a absent lease 26ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > refuses a cancelled lease 32ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > checks lease ownership again after backoff 282ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > does not retry an unregistered standalone launch 28ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > keeps cancellation terminal even if the child reports an eligible error 28ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > keeps the original timeout across startup attempts 28ms
+ ✓ tests/learner-startup-recovery.test.ts > fails closed when error capture exceeds its fixed bound 0ms
+ ✓ tests/learner-startup-recovery.test.ts > binds lease identity to the registered live owner and rejects paths outside ops 4ms
+ ✓ tests/strategy-implementation-continuation.test.ts > resumes the frozen implementation once while preserving waiting proposals and bounded failure history 1998ms
+ ✓ tests/learner-check-continuation.test.ts > binds host supplements to original coverage and exact sources without repeating full checks 517ms
+ ✓ tests/learner-check-continuation.test.ts > accepts only a write batch plus a content digest through the existing recheck broker 1ms
+ ✓ tests/calibration-dispatch-fixtures.test.ts > dispatches fixed feature fixtures while retaining missing-tree guards 511ms
+ ✓ tests/ascension-observed.test.ts > LWQYSREHMMJ7: uses actual A10 instead of requested A11 for notifications and audits 150ms
+ ✓ tests/silent-strangle.test.ts > Q6: Strangle and Survivor preserve the observed damage while the discard choice remains unresolved 16ms
+ ✓ tests/silent-strangle.test.ts > Y6: two seven-damage Strikes, nine-damage Strangle and Neutralize deal 29 with no HP lost 2ms
+ ✓ tests/silent-strangle.test.ts > replanning from an existing two-stack power preserves the same ending HP 5ms
+ ✓ tests/silent-strangle.test.ts > establishment itself causes no extra HP loss 2ms
+ ✓ tests/silent-strangle.test.ts > later rollout turns drop an existing power rather than carrying it as a permanent damage bonus 11ms
+ ✓ tests/silent-strangle.test.ts > unobserved enemy Block, Artifact and damage-reduction interactions are explicit 9ms
+ ✓ tests/silent-strangle.test.ts > repeated establishment and replay do not invent stacking or automatic triggers 2ms
+ ✓ tests/silent-strangle.test.ts > other characters, unobserved ascensions and upgraded establishment preserve the prior result 4ms
+ ✓ tests/silent-strangle.test.ts > an upgraded or transformed copy cannot reuse the ordinary establishment marker 2ms
+ ✓ tests/silent-smoggy-selection.test.ts > F12 T3: the warning matches the actual post-discard blockers, despite both modal flags being true 5ms
+ ✓ tests/silent-smoggy-selection.test.ts > each hypothetical discard removes only its own restricted copy; attacks and Powers are not declared blocked 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > the production selection question carries the warning and still accepts all four choices through Jev 8ms
+ ✓ tests/silent-smoggy-selection.test.ts > does not mutate the snapshot or infer unknown costs, upgrades, or other skills 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > different ascension leaves the old question unchanged 2ms
+ ✓ tests/silent-smoggy-selection.test.ts > outside combat leaves the old question unchanged 16ms
+ ✓ tests/silent-smoggy-selection.test.ts > missing count leaves the old question unchanged 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > unspent skill leaves the old question unchanged 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > other smog amount leaves the old question unchanged 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > no smog leaves the old question unchanged 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > multiple discards leaves the old question unchanged 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > potion action leaves the old question unchanged 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > different hand copy leaves the old question unchanged 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > ambiguous index leaves the old question unchanged 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > IRONCLAD questions remain byte-equivalent without reading that character's knowledge 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > NECROBINDER questions remain byte-equivalent without reading that character's knowledge 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > missing source cannot enable the learned restriction 0ms
+ ✓ tests/silent-smoggy-selection.test.ts > old turn source cannot enable the learned restriction 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > old fight source cannot enable the learned restriction 1ms
+ ✓ tests/silent-smoggy-selection.test.ts > other card source cannot enable the learned restriction 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > SPC7NVA5K4RL F36: resumes after two fresh stable readings in the renewed weekly window 6ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for same reset 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for missing reset 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for invalid reset 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for changed bucket 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for changed duration 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for missing windows 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for quota still full 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for ordinary usage unknown 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for ordinary usage refused 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for limit reached 0ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for spend control 0ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for changed plan 0ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps the stop for unknown balance 0ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > keeps a falling balance blocked inside the renewed epoch, including after failed reads 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > requires every exhausted window to renew and never treats a push as a confirmation 1ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > does not rebase a credit-only stop when no included window was exhausted 0ms
+ ✓ tests/codex-usage-recovery.test.ts > credit baseline after included quota renewal > recovers a quota stop received by push only after full reads confirm renewal 2ms
+ ✓ tests/end-turn-guard-sources.test.ts > F49 T2: explains the six Orichalcum block already included in the ten-HP loss 6ms
+ ✓ tests/end-turn-guard-sources.test.ts > reports only triggered sources when existing block suppresses Orichalcum 0ms
+ ✓ tests/end-turn-guard-sources.test.ts > preserves the numbers and absence of diagnostics without either relic 1ms
+
+ Test Files  10 passed (10)
+      Tests  98 passed (98)
+   Start at  04:16:50
+   Duration  14.42s (transform 2.24s, setup 1.06s, import 2.72s, tests 9.10s, environment 1ms)
+

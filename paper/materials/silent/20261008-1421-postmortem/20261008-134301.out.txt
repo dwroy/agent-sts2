@@ -1,0 +1,24 @@
+## 复盘回报
+
+- 已追加：LYBHQ1X230ZB（A10，第30层，胧光怪／寄生惧魔战T2以4血16挡对20攻击阵亡）；已追加饮药时间勘误。
+- 新的纯 bug：
+
+  - LYBHQ1X230ZB：逃脱计划固定抽牌遗漏、条件格挡未按抽入牌类型结算 — agent/src/reflex/card-model.ts:929、852（新）。
+- 写成「未记录」的项：完整dirty源码、读档截断结算、个体杀序及部分毛伤、替代方案整场结果、F31后资源、boss时钟输出比、Jev缓存及完整最优线执行比例。
+- 学习账本：新增 silent-0296；更新 silent-0019、0039、0005、0013、0077、0196、0128、0049、0232、0115、0007、0142。0296的repeat指回溯首证后的原始复现，本次才登记；其余均support。`ledger.py check`退出码0。
+- 代码提案：silent-proposal-0337a5f076c49d02（F30T1及早局证据／0296）；silent-proposal-8e9beeee55eac364（F22→F30资源链／其余12条账本）。均已关联独立strategy-proposal任务；缺受控整场对照，保留现权重和喝药规则，未标已实现。
+
+```json
+{"task":"postmortem","appended":["LYBHQ1X230ZB"],"skipped":[],"bugs":[{"run":"LYBHQ1X230ZB","where":"agent/src/reflex/card-model.ts:929","what":"普通逃脱计划的固定抽1遗漏，条件格挡未按抽入技能结算；首证回溯LRN0HPZ0FZS1。","new":true}],"ledger":{"added":["silent-0296"],"updated":["silent-0019","silent-0039","silent-0005","silent-0013","silent-0077","silent-0196","silent-0128","silent-0049","silent-0232","silent-0115","silent-0007","silent-0142"],"repeats":["silent-0296"],"check":0},"code_proposals":["silent-proposal-0337a5f076c49d02","silent-proposal-8e9beeee55eac364"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-134301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11a09-58ee-7a61-ad51-90d2bbea0662
+轮数：1；工具调用：command_execution×60
+token：输入 251.5k、输出 47.4k（其中推理 14.5k）、cache 读 5726.3k、cache 写 0（命中 95.8%）
+成本：未提供
+耗时：1548.5 s（墙钟）
+时间：首个事件 2.4 s、模型首个输出 6.8 s、首次工具 14.5 s、末次工具结束 1533.6 s；工具内共 69.9 s，其余（模型生成、推理、网络）1476.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×37；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T13-43-02-01a11a09-58ee-7a61-ad51-90d2bbea0662.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-134301-postmortem.jsonl

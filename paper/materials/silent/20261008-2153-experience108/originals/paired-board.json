@@ -1,0 +1,476 @@
+[
+  {
+    "hp": 3,
+    "block": 0,
+    "energy": 3,
+    "powers": [
+      {
+        "index": 0,
+        "power_id": "DEXTERITY_POWER",
+        "name": "敏捷",
+        "amount": 2,
+        "is_debuff": false
+      }
+    ],
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "MASTER_PLANNER",
+        "name": "谋划专家",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 2,
+        "star_cost": 0,
+        "rules_text": "当你打出技能牌时，该牌获得奇巧。",
+        "resolved_rules_text": "当你打出技能牌时，该牌获得奇巧。",
+        "dynamic_values": [],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "DEADLY_POISON",
+        "name": "致命毒药",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "给予{PoisonPower:diff()}层中毒。",
+        "resolved_rules_text": "给予5层中毒。",
+        "dynamic_values": [
+          {
+            "name": "PoisonPower",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得7点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 7,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成6点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成6点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "MYTE",
+        "name": "异螨",
+        "current_hp": 58,
+        "max_hp": 65,
+        "base_max_hp": 65,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [],
+        "intent": "TOXIC_MOVE",
+        "move_id": "TOXIC_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "StatusCard",
+            "label": "2",
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": 2
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "enemy_id": "MYTE",
+        "name": "异螨",
+        "current_hp": 57,
+        "max_hp": 64,
+        "base_max_hp": 64,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [],
+        "intent": "SUCK_MOVE",
+        "move_id": "SUCK_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "6",
+            "damage": 6,
+            "hits": 1,
+            "total_damage": 6,
+            "status_card_count": null
+          },
+          {
+            "index": 1,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "hp": 3,
+    "block": 0,
+    "energy": 3,
+    "powers": [
+      {
+        "index": 0,
+        "power_id": "DEXTERITY_POWER",
+        "name": "敏捷",
+        "amount": 2,
+        "is_debuff": false
+      }
+    ],
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "MASTER_PLANNER",
+        "name": "谋划专家",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 2,
+        "star_cost": 0,
+        "rules_text": "当你打出技能牌时，该牌获得奇巧。",
+        "resolved_rules_text": "当你打出技能牌时，该牌获得奇巧。",
+        "dynamic_values": [],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "DEADLY_POISON",
+        "name": "致命毒药",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "给予{PoisonPower:diff()}层中毒。",
+        "resolved_rules_text": "给予5层中毒。",
+        "dynamic_values": [
+          {
+            "name": "PoisonPower",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得7点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 7,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成6点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成6点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "MYTE",
+        "name": "异螨",
+        "current_hp": 58,
+        "max_hp": 65,
+        "base_max_hp": 65,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [],
+        "intent": "TOXIC_MOVE",
+        "move_id": "TOXIC_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "StatusCard",
+            "label": "2",
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": 2
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "enemy_id": "MYTE",
+        "name": "异螨",
+        "current_hp": 57,
+        "max_hp": 64,
+        "base_max_hp": 64,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [],
+        "intent": "SUCK_MOVE",
+        "move_id": "SUCK_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "6",
+            "damage": 6,
+            "hits": 1,
+            "total_damage": 6,
+            "status_card_count": null
+          },
+          {
+            "index": 1,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  }
+]

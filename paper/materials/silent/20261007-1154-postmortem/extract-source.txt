@@ -1,0 +1,28 @@
+import json,re,os
+from pathlib import Path
+p=Path('learner/runs/20261007-114302-postmortem')
+d=[json.loads(l) for l in (p/'decisions.jsonl').open()]
+start='2026-10-07T02:48:00'; end=d[-1]['ts']; rid='MCT1GPTL8D35'
+def stamp(line):
+ m=re.search(rb'"ts"\s*:\s*"([^"]+)"',line[:200]);return m.group(1).decode() if m else ''
+def lower(f,target,size):
+ lo=0;hi=size
+ while hi-lo>65536:
+  mid=(lo+hi)//2;f.seek(mid);f.readline(); pos=f.tell(); line=f.readline();ts=stamp(line)
+  if not ts or ts>=target:hi=mid
+  else:lo=pos
+ f.seek(lo)
+ if lo:f.readline()
+ return f.tell()
+for name in ['states','deepseek-reasoning']:
+ src=Path('logs')/(name+'.jsonl');size=src.stat().st_size; count=0; scanned=0
+ with src.open('rb') as f,(p/(name+'.jsonl')).open('wb') as out:
+  off=lower(f,start,size)
+  while line:=f.readline():
+   scanned+=len(line);ts=stamp(line)
+   if ts>end:break
+   if ts<start:continue
+   x=json.loads(line)
+   if name=='states' and (x.get('session')!='singleplayer/run' or x.get('state',{}).get('run_id')!=rid):continue
+   out.write(line);count+=1
+ print(name,'起始偏移',off,'扫描字节',scanned,'抽取行数',count)

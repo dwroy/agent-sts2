@@ -1,0 +1,1367 @@
+{
+ "character": "silent",
+ "schema": 1,
+ "source": {
+  "simulator_base": "c1dd721fe682910095768eb4007cb836b6991152",
+  "model_sha256": "d34f2706985a61a92434bfd773a5fbc870762967855d1f2eac32a82736a04f94",
+  "input_files": {
+   "agent/src/brain/brain.ts": "b0b822b8571e89d043d4d143731bdd040279ad1490e478a8c645110eeacaf399",
+   "agent/src/brain/build-facts.ts": "a81b9f854ebd0e90529ca1e3945da862cc02fc74e4299992f99d6410f15c525e",
+   "agent/src/brain/engines/claude.ts": "6cac56e4b82cb68e86111708a8be93b01528b3c3b5de551a5d6036fcb8c94254",
+   "agent/src/brain/engines/codex-session.ts": "659713dff98ebc286e619371d122c15eeaf5fc5aed2e07296427725f146bb444",
+   "agent/src/brain/engines/codex-usage.ts": "944102a0a6aa943602e13dde5ae030a9b16e51ca3640cbfc25e5175488af7067",
+   "agent/src/brain/engines/codex.ts": "a672619bf54cb3bcb981d50cb52ed4e61bf7b24ae6d336f2ecf5b48a6bbdb9b7",
+   "agent/src/brain/engines/deepseek.ts": "448c6518aaa5fa1dea4f3893726883198dc0ef1751c959496ea16dd5788f37c4",
+   "agent/src/brain/engines/process.ts": "5ec8fb3437222f9f9e6ac5e39487526ed133dd611520f4aaf33f6ba167f0e226",
+   "agent/src/brain/knowledge.ts": "a2956f4e6808b06d55f0d9c5c284104fb36c46b3339573099b04e24940b11bca",
+   "agent/src/brain/labels.ts": "29c47f5e90f6ed35531e9f6ca219f14671046a85a03b669e78878c44593b4e2a",
+   "agent/src/brain/llm/consistency.ts": "812d3250cdc73fcda1c51bbcf081ea5d098a40f01bec18639d71e151a3c39d1b",
+   "agent/src/brain/llm/deepseek-message.ts": "87e4f28c13a6e6fda5b8dbf8912cf0b52ebd98724bc99c29b51e4dce75184fec",
+   "agent/src/brain/llm/deepseek.ts": "6e2b98d146033f8706f52d3d76a60ee24e8b33dc0798ea33406a2bdb30499d3c",
+   "agent/src/brain/llm/file-escalation.ts": "70bacd5862bf0fe015988d050829b4a0e78faa0efc8a0806aea4def31dff68c7",
+   "agent/src/brain/message.ts": "29cf55dfa160388092de51e20bf802ea75e11fba993df57eaab515c391f37ebc",
+   "agent/src/brain/router.ts": "3790970939a22473f554251f282bb2b4c1a71f6bc4d0c3a897fe4f34ef66a6d6",
+   "agent/src/brain/source.ts": "ac540139eb027150ec2fe25f454c78f1a66242f4bd97046d9d61451faac98926",
+   "agent/src/brain/specs.ts": "6d41a1df26e4bcb4b29967378fab199a9f9abb8423f434be2bf5beb23d78383d",
+   "agent/src/brain/tools/kb-tools.ts": "2b80d224253353c5b369acfeb4e72106e2adf4e3c360444060620532ca600af8",
+   "agent/src/brain/tools/logs-query.ts": "8d8adc3c5e1ec0d9deccd6bd816f06804c9114466b32876d7bf9a5a2909c6357",
+   "agent/src/brain/tools/mcp-launch.ts": "7a2138d7f941cc8caa114f30df0bb3eb9347e50d860d003dbad204f8bb577e09",
+   "agent/src/brain/tools/mcp-server.ts": "a2a581db5f9ce8d7a7ca7f9cb3efe84b735d72b901427118dce2edd012de47fc",
+   "agent/src/brain/tools/registry.ts": "2cc8a38dfe3177a85e7dda28059cd1f46e6be58eb5cde5693a754cc1be70b28c",
+   "agent/src/brain/tools/types.ts": "e38a1f12f82482610bff40fb008a6b05904e57c791036657312743319d7c4f75",
+   "agent/src/brain/tools/validate.ts": "0ad8ceec84a7ae1749f6f38eeb4d8e4c8a3f7871bd1f99c9638893bbd74d11c5",
+   "agent/src/brain/types.ts": "5db236d1a0a9d18d3a27641aac6a674d1df0781602714a7f73608c9e532eb942",
+   "agent/src/brain/wait.ts": "0f99b552825ff8679470d64d8613b4057c86f92e99a82eda759619ab6ea6856b",
+   "agent/src/core/cli/doctor.ts": "54d9d335f1a74976e5f39657eb23f256e315646310d543330ced198e6fe1009f",
+   "agent/src/core/cli/reporter.ts": "81d5c4b0253361c6d83106dcf141d3e314352c64bd9852fb56de043a465b196b",
+   "agent/src/core/cli/runtime.ts": "44eeaf6ea0258388c7b01f68837e124c9f148385909a6b66af33ff5c0535be07",
+   "agent/src/core/config.ts": "a75d1c47c0506782be46cd5f0ca39ef0b5adfa7da9fbe4603fc2d63c7b38d16b",
+   "agent/src/core/index.ts": "6b025f92c9c963dc467c0368b2b5f30365128be50079e57bd03fc0580845dd42",
+   "agent/src/core/paths.ts": "9f60add837acf13966ef8e5ecdf667e28dcc6ee7612ff76f141ddd0455f27b62",
+   "agent/src/core/util/data-version.ts": "8ad004938a95b2b6b43353cb73372151e03f94d02343a0416140b812ed7800f4",
+   "agent/src/core/util/format.ts": "77751bafc25435a45278b4c4dd2b301ff22a4a8bb126aa9b2fe6bf7b723e9f75",
+   "agent/src/core/util/json.ts": "da294432a452d1d300715f7942a871704de28080f5cf4c167236c47982ebf452",
+   "agent/src/core/util/lock.ts": "5d42d6cbefd3e1a8c79d91395d39418bb5579a7ff107f6ab7219cacb95bc95ed",
+   "agent/src/eye/decision-log.ts": "cb796cd86057e3409a69f08e8a60bebf1eb9952cc89bcf8bbf56d300d33ad3e1",
+   "agent/src/eye/jev-prompt-log.ts": "b9a418b2ee95b16ae624e4ad1da820f72c2fc09f09ace5e61c93b2b24c29cccd",
+   "agent/src/eye/replay/record.ts": "f8896c8602b79271bca7968faf654fe5534813abb0f26202ee9ea6c20611f76a",
+   "agent/src/eye/replay/replay.ts": "836a303b635752ad2adcbc1838c6fe883d490b1cfed1c739126e14e70846cb67",
+   "agent/src/eye/run-config.ts": "9ce2ab6bc9c4c9ffa86859bb28d4f390604ab954b68dd79cf062cef367d8b6d2",
+   "agent/src/hand/act/dispatch.ts": "968c7e64cc4c5a47a3bb6189e2bf2d7e8fd15ee4842d922d4dee7d97236817b5",
+   "agent/src/hand/act/gate.ts": "4a706cfb259f81dcc3f2f10625486cf52a9d2a6eaf9dd1bfdc995e0a366b0990",
+   "agent/src/hand/act/identity.ts": "03c74667f80bce553b7e00a9777f3c580ef5297c4af2fc6001bdaccc43bc14ab",
+   "agent/src/hand/act/turn-start.ts": "c0b307dd5542ab6d4289daf3a12ff3938c770c205cefe0371a3f8f6e4a7c96e5",
+   "agent/src/hand/loop.ts": "f38e1db6e1cf61050e3b78930a2eddbe76ef9349cb01a015beea33f9f93a5f1c",
+   "agent/src/hand/mod/client.ts": "5da266db4ce57e07f4dfb246444351ef8479bf98c8eb408f2e89a2e213b7c84c",
+   "agent/src/hand/mod/discovery.ts": "85bd58d0792e23bd4ad5679eba32c9d7b465c466f0c3cbfcc16bb7b1f1e6ba48",
+   "agent/src/hand/mod/schema.ts": "72dc4dfeefaa27ee701b49b1318b50380599980234f7623431b20ff479a0b01f",
+   "agent/src/hand/screens/act-start.ts": "5bba273ec049cd6367020defc1e3ac12915e68c4732095f2dbe0b538e78d0455",
+   "agent/src/hand/screens/card-value.ts": "c71986fefe8602293ba7e6d262043a2eef85d1c98d54e033f55567f8ab4e2bc6",
+   "agent/src/hand/screens/chest.ts": "94e5666d4c8b6881bfad3b969106c16192cccfc6e3502c19d8e5ffeffaa3b671",
+   "agent/src/hand/screens/event.ts": "ed618faf8ff34840ff5d5af600dee0e28067597b1c21e4a6a67eeeb94e9f2be0",
+   "agent/src/hand/screens/index.ts": "d3fda906096d8e9741b1e33889d05840e9e53ad552ff913461e75c042c071795",
+   "agent/src/hand/screens/map.ts": "b76007beab23fe5988cd63e4fd7d6d8e69ec748f80793fe6faf9493cdef55e64",
+   "agent/src/hand/screens/misc.ts": "6246f60aa6d9dd908a8ef2fe2628626e4a0bada03f4fbbfc8196fea5ec4d84b5",
+   "agent/src/hand/screens/oneshot.ts": "0e8848fda0386d491131ded410baf96a87d6860b0a4399e1a69dc3f51d578a01",
+   "agent/src/hand/screens/pick.ts": "f9e3b53bbe9d8c335ed8760398fd8c6209cd1d6b15b62f78b09e9677423db7ac",
+   "agent/src/hand/screens/potion-discard.ts": "5ebfa5f5207b91f296c0df0e27f40340d1b01452cab397a010504fb26ddd6e17",
+   "agent/src/hand/screens/rest.ts": "518aea18de27a60b39a1473ef0e89ba54da908b57aa085af6577e90643f1cd97",
+   "agent/src/hand/screens/reward.ts": "53498af1a41ba4b3fc28421677faeb293c638842eb8eadadd036d02e52c148f0",
+   "agent/src/hand/screens/route-plan.ts": "262ccb76eb726cc1bb0c253d0c0e62be6bd39d6ce3a1d37ac89d651e7776390b",
+   "agent/src/hand/screens/route-review.ts": "102440a44378fef6648690ad6bbe3a3873853f2cd3a1f53b542ea2308cafdc86",
+   "agent/src/hand/screens/selection.ts": "61705709dd356b3e76a60096bd56a0dd2dbc7b7508bf257baed1e1d6430972a2",
+   "agent/src/hand/screens/shop.ts": "7e1e88fbc74e4b9ab98b8c75041cdfe6c169668e87a34cd3781c30b1f90d4bc1",
+   "agent/src/hand/screens/silent-reward-addition.ts": "bc3f8d2f9de05bd0392b062821e39ffeb08af973e3d3b10bb7d4fcdfad471b50",
+   "agent/src/index.ts": "9aee86b0b3c0169d8eee0c16193d271d09aeb1f07f6bd2090b32c0624fa13a3b",
+   "agent/src/knowledge/boss-phase.ts": "4e84d7b11e1d37e04df9375c0a0ddf1285689776d8728353b61135466b32e73b",
+   "agent/src/knowledge/card-upgrades.ts": "46fe172dc7dd5f36e9b9e0460217f0a9c933b8f740746fdc9c290ace768ff64e",
+   "agent/src/knowledge/double-boss.ts": "46e497cb169d6a7266f55434b9ab90e311894174100fe4b70c9992a4aa418fed",
+   "agent/src/knowledge/enchant-text.ts": "7a034321b9ba6a8d89e841b537d1eb02a8de5aa0915828d57b5120047ab0168b",
+   "agent/src/knowledge/event-pages.ts": "e121bbd24923a4e1af6e94527264b2dabe639a4be40f13fa08e4b9db619416f1",
+   "agent/src/knowledge/experience.ts": "bebdbf7305a0ad7d8af1361951735cc8166558dac7def23aebf31d869e23f454",
+   "agent/src/knowledge/files.ts": "cb9f2b0ce6d2f04916ddeb6e884a3ac99f35cdfd827be5d1115d7154e8e9f43d",
+   "agent/src/knowledge/index.ts": "1702f3f11a2534077ff2d660b10c098aed990d87def8497e6b1f1e267a721b6a",
+   "agent/src/knowledge/jev-hints.ts": "a5287ef451cd0f91e2a2ec75ab745a7a7cb154867c6b5edeaa0e3f2d6d141d29",
+   "agent/src/knowledge/mechanics.ts": "ec9a020940d5cc9ad17651b1a69b7d11795a116828f2d63857c63f8e5127ec64",
+   "agent/src/knowledge/monster-db.ts": "e56258e59c607c7853e5a740ad0ada2facb326d162e352839b458c9505cbc1c2",
+   "agent/src/knowledge/move-model.ts": "0631ec3cd373fabcf7efb7aaa3b7a42a22b62f90dcd2859ae98935bd0d902c68",
+   "agent/src/knowledge/outcome-facts.ts": "c0a2e06d40cb97146b13cf956df27c5ea40afe680577e89b0b2af600032fcd67",
+   "agent/src/knowledge/outcome-tables.ts": "fe124039984c4b9c2918a301fa42003dada2a1482a8a957e60b404abc0e481ce",
+   "agent/src/knowledge/potion-equivalents.ts": "e187050dce4f813b4e2c530a6cd783b0bdcc3d1ef499f5ed4e2faf5e0c55436f",
+   "agent/src/knowledge/potion-values.ts": "31708aef8b4e8b731a80c072c38848753171eb3b6ab18d7ed15b301f2b218740",
+   "agent/src/knowledge/relic-values.ts": "69e0db188188301e0b99ad1dc3e7226ea70587384d4a0f02665229faeff717c9",
+   "agent/src/knowledge/render/data.ts": "ebce577792d21e68c803c6a800a8cca1459cb762c97ac2ee12aebae6af3c30c7",
+   "agent/src/knowledge/render/experience-text.ts": "dc84d63625ac52d87d001e88103ff1a0a8ff4fe56418dd2fbe31bd5a2bfcf8f3",
+   "agent/src/knowledge/render/facts.ts": "b9f62fc1ff5a244950fd7eb7d730a1ef354f7ad8e8f0180a14ae73a1b27e352f",
+   "agent/src/knowledge/render/format.ts": "e5dafb0fa0c581ff76c33e32847d590a57c16a057c9a37c18c843bdec7ffbc36",
+   "agent/src/knowledge/render/knowledge-prefix.ts": "5396541933bf76ed9c316249efa64160ef930311e94a1db49995d36743e95022",
+   "agent/src/knowledge/render/monster-text.ts": "c4231f7489bab518f496117e9982cc2d4e2cc2b75614f6800689e6d027332aac",
+   "agent/src/knowledge/render/old-knowledge.ts": "baae261eb37d2225e79a6fa981236e12d17b7c466b80580f202a0dd54f66ebc1",
+   "agent/src/knowledge/render/potion-text.ts": "99d2bad30514e76aa46a2dc920f7ebc8242792cd589d89261b2d0d5458b3e661",
+   "agent/src/knowledge/render/stats-text.ts": "91354ae54f8723be09ca95ac58a93a650affe8e4aef70dd34c4382ede24d208a",
+   "agent/src/knowledge/room-costs.ts": "531a2f02ba97906d364658b4fe21f141716dd86a9c6305f2d4ce80ec43031f81",
+   "agent/src/memory/ascension-target.ts": "524c0695fe558985ad70b26beb13b500b7fac2a627a3503cc42bf3699fc8070e",
+   "agent/src/memory/deck-profile.ts": "d6640509715174ac2c3affc2ea16423d91cda757a3f73640e685d17385a4a0e1",
+   "agent/src/memory/deck.ts": "a38484995c36609229459a0b3bac901d698f81f964def923340f0d356d53fdcf",
+   "agent/src/memory/fight-plan.ts": "a260169f393e724cc3c5737d3336649217dfb0b19cce46be90c588d6ae0c0884",
+   "agent/src/memory/journal-replay.ts": "69c6ea39a02fbb76ef7ed65fa565440dda0ef1d973f520e4d91571183e4d20fe",
+   "agent/src/memory/narrow.ts": "aef22caeb263bab54acb8c78f7620fb82c53174485c931c96edc542ce75eb5a7",
+   "agent/src/memory/run-brief.ts": "4e8257a8d13a9dd7ff2d058fa4dadbd258fb4fb8c2a0d9a0498ab08701b46644",
+   "agent/src/memory/run-journal.ts": "f5aa005f1e9ed3750dda6a6b49500e9f6551a2bf09b14fda2b015208c7f4734e",
+   "agent/src/memory/run-plan-merge.ts": "d4742a0587a26e4363176ca81a5d810fdf87926388b44c952a440715febbb712",
+   "agent/src/memory/run-plan.ts": "ddb97d5afe7d259848629ca39869b5d93d29c576b7c45356ff14ac8b7db17b5e",
+   "agent/src/memory/types.ts": "2f2c9e3ddea8ba828395e06d87c86116212e7a6688fa3fa8c6b36ec37364b060",
+   "agent/src/reflex/card-model.ts": "5ae216574a29e49f592abdae46bde7d23b00aa6b056269131da1d6003f20b0e7",
+   "agent/src/reflex/combat-plan.ts": "1de4c2effaf37b3ff8ac4495cd72638423e4c84387d738d98073a8a906f818f9",
+   "agent/src/reflex/combat.ts": "3695741c2ac880f819404d880cee721d2f339807721c17e348123404519ae509",
+   "agent/src/reflex/continuation-value.ts": "0c7be97b8d9aa62928e7aa8b85f5f7c9ed69879e2806356d978dcce776a9f6f2",
+   "agent/src/reflex/damage.ts": "7fd7092922f9e692ead821eac958e9d2b6d013f62f5a131691157d22dc361786",
+   "agent/src/reflex/fight-plays.ts": "79d9d3b4c60c62fe0a4b43d10e9877e9e227dc6c506264af5c1dfa4e01c67d84",
+   "agent/src/reflex/fight-value.ts": "e630a01778f0758e2fcec26b0219532cd7cb74a3b2d307b1f6e7395808c148ef",
+   "agent/src/reflex/jev/answers.ts": "5f73eb0e7d267bb04754ac92578b44b7e9eba4cff1d85ff49ff91c05a754b729",
+   "agent/src/reflex/jev/client.ts": "34b56ec932554bddcef67839c3a1bb21d86bf9ff4fc4412f2cfcd6cf585118ff",
+   "agent/src/reflex/jev/pricing.ts": "c538ad5027da7398fe9a1a9dc065e1fe8612e5baaac5a345b7a374282cb1fb4c",
+   "agent/src/reflex/jev/questions.ts": "50f7e648d6392c6201625abe2c17969d0453b8fdd6e156a0e0e9435df1c2d3a6",
+   "agent/src/reflex/jev-experience.ts": "6ccebc34d0f9730fd427cb91eb2af9c15c4d96888d632c8b8fb0e7eb2c52d6ea",
+   "agent/src/reflex/passive-pieces.ts": "e2199e79808fee247b5a7798e12b21ae126a1fb8ca66ad1f1293240f1f22647c",
+   "agent/src/reflex/permafrost.ts": "d6b5707427b7acea5f59edb7a51799efe7ab1d2cb64168510161d755d17760bb",
+   "agent/src/reflex/potion-cost.ts": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e",
+   "agent/src/reflex/potion-mc.ts": "f51b92866d0c82ed8b934a4301ca1f693703c65021e6b71a2caf6f58055a8d14",
+   "agent/src/reflex/potion-value.ts": "dea5f46fd58c10ed57c2d8f4788e73b0fbb7decc2c38d4e5469802ad517e8c0a",
+   "agent/src/reflex/rollout-live.ts": "f334dfb862580096f3143c4d3ca24bf9feaeb82a26d6c658d00c78e9df51daa4",
+   "agent/src/reflex/rollout.ts": "8d6cfe54c704cd91af9ecbce5ab7f3ec6ce2d466cccd0c2ea7eacc3b8389b66a",
+   "agent/src/reflex/silent-loss-reference.ts": "713d94462279914dea649b2337e1495a3cc42fd986650099f49f88409bf49c25",
+   "agent/src/reflex/silent-phase-reference.ts": "529b07f58c1934e1e36e99d4c5888183f01109f60684513d7446b49c06e769e1",
+   "agent/src/reflex/silent-simulation-reference.ts": "0e863ae4c74220c3a1220162a0cc660d20d7c349de1171fa054c041c568582f6",
+   "agent/src/reflex/start-loss.ts": "bda105bf162ea693ac35679a4dcf4fabe6a844b6b83eba9bf3ea5ac6c853bc55",
+   "agent/src/reflex/thief.ts": "363d27dc1cc3d85b407bb714f3c5b8d37e24a48e510685a6a5407124200f0329",
+   "agent/src/reflex/turn-solver.ts": "b8eb90615debbf4a12b7bcbc299154295edddb6cebd2125e0efc627efc5628a2",
+   "agent/src/sim/boss-clock.ts": "5a4ce39fe711b234448fbb465f4bb9f7ba258cc57a56904e88aba9b38cfe81e8",
+   "agent/src/sim/boss-lines-worker.ts": "d3d1a8342a4a38ef361bf420e28d796ac46964fcd6707d52d7a04c00dc3d6dc1",
+   "agent/src/sim/boss-lines.ts": "ac5af605bd41d680f9e2b19d6aa24ffb5fe582f976433bc735996c5ae4c690dc",
+   "agent/src/sim/boss-sim-worker.ts": "2a1c494fb6b5811e3708070aecb2bb0c3bb30277b989ee24e0d2cb68e6f4f49a",
+   "agent/src/sim/boss-sim.ts": "ef7f84faa402b5fd6e22fde800dcb67ab4f8d7116cea95a1a1de08567813511a",
+   "agent/src/sim/boss-start.ts": "dbda7485a17c8accbff37c095b01e518270577f594113334cfc89427623a849e",
+   "agent/src/sim/boss-trust.ts": "51343d95717c09e57451fb58975d94a1130291b9b2a3a6a1c92a15b5fef872c2",
+   "agent/src/sim/build-sim-facts.ts": "7557d781da01014c915d5ee65f1c51af81cfa16f9dbf7ef4ac737c82401c8303",
+   "agent/src/sim/build-sim-pool.ts": "8abcc8f4c05d232ed027b66eafefb15b2894001867e9529027f49cf5668b4038",
+   "agent/src/sim/build-sim-worker.ts": "b0d3ac0c7fd47fd7de3cc038bf7969a2b7afb55e848ec0524f1cf9864a691bfd",
+   "agent/src/sim/build-sim.ts": "3266c265840c2f8d906d25dcde365474af4852979f5712dc22cbb6d2e598a70d",
+   "agent/src/sim/compute-memo.ts": "36f0e72ea67c9ddcc34d4ce9234ce2b9397be16d8edab0da07da8d9abb802761",
+   "agent/src/sim/double-boss-start.ts": "971c31be9defa53b0dafb69fed11d6aed5d159d80bee15651821114ec7255fef",
+   "agent/src/sim/route-map.ts": "763b2ae1548d06871ee3c8926c464ec66a1d80ecd924df6f003b260e446b99e4",
+   "agent/src/sim/route-projection.ts": "ad0e4c94d1e4212cc6732d737a861ae08d6134877186ff97d2623f4b15fd5f8c",
+   "agent/src/sim/silent-build-win-ties.ts": "7a232f09e25f9c8fd56cdadea7495ce58b74ab4f8460a68a7ee5af15d01652e3",
+   "agent/src/sim/sim-pools.ts": "f852fee8b01efdc07bed9d92d32b95c005b1d18447c86d789f1e465f1c158e7c",
+   "agent/src/sim/thief-card-hp.ts": "3691b49c6f80644be5d128771ec94cc7bdfc03a156648023f51e1ee8ee27fc43",
+   "agent/src/sim/thief-card-value.ts": "f3b4ee6d1cbd0010b9de7a09c604cdd47a865871532284493fa498355630d9a7",
+   "agent/src/sl/attempts.ts": "98f1808c9e250538bbbaad6cb5f47680173e7f2331a4e79ece99a05ec2cc0236",
+   "agent/src/sl/controller.ts": "76ee2a509bc2f4f903cf218ca1995777da85cd7cc35b94872888d2559f8800de",
+   "agent/src/sl/draws.ts": "757b57ea5e8d130e2204280cc4c5322e7a273cda4e5abca47f03b567b63c3a79",
+   "agent/src/sl/elites.ts": "9056eed440b4b363e850a85a3b93519f4b3271b03fe751a17ec4dd452a7236e8",
+   "agent/src/sl/explore.ts": "f2618b42c4708691a4af5c1051f94e6be568686dfdf22e741c5090fe257a5563",
+   "agent/src/sl/judge.ts": "2059df2d3d9d4ae08fa38010098cdab8b201e487752fe14568a48c20a9b88097",
+   "agent/src/sl/random-target.ts": "f45267c71283eb16f408303559637534b63ac4d77d4d0a4ccf04f704b61f985d",
+   "agent/src/sl/reload.ts": "907eb148fb63b9999137396275eb83ed9774ef7ab33b1ebee345d34ead311be9",
+   "agent/tools/boss-sim/acceptance.py": "130dd7d6f3ec718ccc6d193895155c35727ecb1d23aeb591736d88419235b81a",
+   "agent/tools/boss-sim/audit-calibration-board.ts": "216cb7f6c76686f25b543658be32d64f1ca73729f493b63aeb7cb3d937dfeab9",
+   "agent/tools/boss-sim/b2-lines-report.py": "05bc923ae5d2658ad40a5e31779ee3931da4ff9eef7e9075078213752505ac6c",
+   "agent/tools/boss-sim/b2-lines.ts": "09f25805c544af6b8cc078fe4ddafc0264885353e622d58371629335b1a3b661",
+   "agent/tools/boss-sim/b4-report.py": "37dd22e4b1bc7720e5cfd1aeec101533c3a3e12bab34e6cf57c50a17a2a836ef",
+   "agent/tools/boss-sim/b5-grid.py": "fe3b866901443ba893529b1a65525190e208de977873bb90fa663c1d9e1a1bfd",
+   "agent/tools/boss-sim/b5-lines-report.py": "fc63c4efc5a9b54fa743dc2004dc6a94b886f2863153337e0cb8b5d828598f56",
+   "agent/tools/boss-sim/b5-lines.ts": "0e7f287313391826cfc6a9888d3297da8336a83ff402721c12ecf73b8a08bf89",
+   "agent/tools/boss-sim/b5-report.py": "80e67588bd06c5eafee8198773f365045f8273f932755e715da1990d470d4b56",
+   "agent/tools/boss-sim/backtest-board.ts": "0146ae6016a4b8063ecac6b762ace0f92cf4f4ec1da23e856912e19c86eff05d",
+   "agent/tools/boss-sim/backtest-runner.ts": "c66fff9545a6c5c9d0c80276aa5bab31ce9855b98990068749abf0b301ed6e47",
+   "agent/tools/boss-sim/backtest.ts": "906bcf9f0127ccea4a8782b7e65eb09072765c51e3f61bec62b4e026bccc0eea",
+   "agent/tools/boss-sim/bench.ts": "598cb335a0635dc647fd282f371d9302229b8bfbf9cc1f4764b2cfead85001d8",
+   "agent/tools/boss-sim/build-replay-report.py": "64989b0bfd11745d155d71e24cc3181d26345f305ed80b4821165c269bec7ae0",
+   "agent/tools/boss-sim/build-replay.ts": "004f991da80ec2ec210d83cf0caa4cb0c232fa89f2b70fbdd0dcb02998a61fd0",
+   "agent/tools/boss-sim/cadence.py": "b6e44fb0c03b945a3c8b7bc2675f0dc5c59014d52347d0637588f2a122afb34e",
+   "agent/tools/boss-sim/calib.py": "4a695ab1647dba061b5fa8c83bc15ef9ac14b77c807d04f7f5d2cd9badb9866f",
+   "agent/tools/boss-sim/calibration-board.ts": "d8cdcaee13a727b2bcf53b049ab95e62a340d17c818814ef38028e468af3e3e3",
+   "agent/tools/boss-sim/character_extract.py": "f41d4334d4873a82a8874c9c36da8d07f2b369c80f50e168ec8cf2803a650518",
+   "agent/tools/boss-sim/choices.py": "7cf990fa0feff892d402696d35961c9846a99b55d067716b77a2aca472685086",
+   "agent/tools/boss-sim/extract.py": "b6b7740d8adf1a3d65aaa311c549c516cc18f30952a349d491f9c2f6ca77f461",
+   "agent/tools/boss-sim/isolation.ts": "7b38ffb486ec92f292705ff024c37784fa219ce5ec233f69d1f264989c43b382",
+   "agent/tools/boss-sim/lines.ts": "12854c93dc9d6c90d9e20c084215d439ebb044f63ea55ce73a66cedf73959b35",
+   "agent/tools/boss-sim/live-check.py": "07d86f937d240f4b3c1a2feb98f4853633ac8e7f90d41752dbb03a461627a3c6",
+   "agent/tools/boss-sim/pairs.ts": "41b2a825a4f4ec9a2b61ce7c3073258a8a1d82a2ca9818b65f5683031cb874fe",
+   "agent/tools/boss-sim/per-turn.py": "17f1f46eba9bd409800178a90434e1447e437398509a4905422663ee5bc76c8c",
+   "agent/tools/boss-sim/pp-calib.py": "496b45e68cc530f1597554a8231c98a27241f1425e747b1b26f8d10f488c11fc",
+   "agent/tools/boss-sim/pre-fight.ts": "f50c1af48a5b2d5d0d158c67026000980fdf2b0511c9faf09b288be17197a467",
+   "agent/tools/boss-sim/refresh-silent.py": "06d172c6ab677f46fd977400773d8a22e05b6c85cf6ed5f3e4261eff056b0695",
+   "agent/tools/boss-sim/report.py": "8c2fd9219613fed58cb8deb111f3662f373ac93d3f5943dc47d5138e11553c4b",
+   "agent/tools/boss-sim/silent_calibration.py": "e0fa002daa3c5847b7401db80c7d86e959b95833af92d433bf6c80ffd1d5e1bd",
+   "agent/tools/boss-sim/split.py": "8cd0a3be0989930c85d2b2c29d73f06a7dc1b67fcf40ecdfa828053f541efbf0",
+   "agent/tools/boss-sim/syn-calib.py": "d87a0d2ac9a4b7d181b3a7832826a7cbc20098269f71f65189656dfd90fa747e",
+   "agent/tools/boss-sim/synthetic-check.ts": "fe4720a3a9f113b2bf96264605e8154fc58ce84dab68d6e671fe6d9c63bdbb96",
+   "agent/tools/boss-sim/trace.ts": "ceec4eadb6d34d38685af2d92d79c01b21420666875035e68c015ca9c21ed0cb",
+   "agent/tools/boss-sim/trust.py": "3a5ff3752f044d85458e580637fc0986af83a0fbb15aaf60c80d2ab93cf9a5ba",
+   "agent/tools/boss-sim/turn-replay.ts": "9a15ec44063428c2c16dd442acc7e613d6249bcf963c64953d2987a2f761522a",
+   "knowledge/common/card-upgrades.json": "55a295748cca16db72a4cdc410d07fe5662931d2478be51560b2f5b07b32a365",
+   "knowledge/common/event-pages.json": "e7370a71a8fb446b160c7d19120229237dee4775dc443b7cf92e18d6a02936d5",
+   "knowledge/common/monster-db.json": "d8a86c9a658cffdbb74d65ac42138fa48669f1f07ce85e69beee792c8066c723",
+   "knowledge/common/move-model.json": "eeef271e76ff9cee34d41e0c91705c7d35908936af2a1a1a2ebdb1f1c164ef09",
+   "knowledge/characters/silent/boss-damage.json": "7f9ae8a2ef9ded4557f3da82790004bd16fb209288981ce4237448a33dd7dd20",
+   "knowledge/characters/silent/double-boss.json": "dfea492a4b941bf72813518e59ceb6cb0cca2d1420bdeb9c2fb9cc726797e83b",
+   "knowledge/characters/silent/experience.json": "0d07c3c43688ce96c4620a3205a76e65678f8a33a87a308c54b1a8583111347a",
+   "knowledge/characters/silent/fight-value-gates.json": "622e8154403458272b81ad3ab3940507bcc1babb574ebf37e1ace5dcc42c3467",
+   "knowledge/characters/silent/fight-value.json": "e0c14fe061e8c9949feba75c4b1f2349e1617cdd7222db7d92f060622a3e5f0a",
+   "knowledge/characters/silent/monster-records.json": "a9400e04e4c171c8c91bb3a878729f8ef4b7799179636b04cd13c620b421337e",
+   "knowledge/characters/silent/outcome-stats.json": "f909d18521625394b10ed8adb87ac4270c00e7a3de1f49efd09d23f027fd4cdc",
+   "knowledge/characters/silent/room-costs.json": "1199a528cfbd6cb9bb0b8fe12f47203a0354d7c8c353302b70e9d56825a66f45",
+   "learner/runs/20261008-071208-boss-sim-batch/game-data.json": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69"
+  },
+  "samples": 200,
+  "seed": 1,
+  "seed_rule": "1 + original fights.jsonl row index * 101",
+  "dataset_sha256": "a86cd7066f162288aae0004a899a03bb1149c8ffe4c07c3fa77770945c6560e2",
+  "sources_sha256": "d04ab1f6201cac1e88efd13e44123e45029811223b18f69933b11d22678e11f5",
+  "turns_sha256": "cb50abbea29cedb8fd2495bdc6cc4f6bef1e946b1503932bc5d1362a2fd3832d",
+  "compiled_runtime_sha256": "d952e3abbf024ae0d90590445cb2a04a98f667982ccb173ede4f9ef5d09b3ea3",
+  "completed_max_asc": 10
+ },
+ "split": {
+  "tune": [
+   "C48LLXBGKXQ9:17:2:6263075551",
+   "C48LLXBGKXQ9:33:6:6290069057",
+   "Y6GM2CHWJBEY:17:6:6307610159",
+   "LRN0HPZ0FZS1:17:2:6314849254",
+   "LRN0HPZ0FZS1:33:1:6321043589",
+   "LRN0HPZ0FZS1:48:1:6334569591",
+   "T082DRCUHRRD:17:1:6341775990",
+   "T082DRCUHRRD:33:1:6349692921",
+   "T082DRCUHRRD:48:6:6373274535",
+   "1HC609GTLGN3:17:6:6388166863",
+   "R0HEV5E3QT6G:17:1:6397481187",
+   "R0HEV5E3QT6G:33:1:6408234063",
+   "R0HEV5E3QT6G:48:3:6423738574",
+   "KAY522KT5NXR:17:1:6430859488",
+   "KAY522KT5NXR:33:1:6439505402",
+   "KAY522KT5NXR:48:2:6452211365",
+   "E6AVMMVCSRPC:17:6:6470459667",
+   "XYYQYBRM2A01:17:1:6477191929",
+   "XYYQYBRM2A01:33:6:6498907170",
+   "K3676LU8B0UH:17:1:6507817530",
+   "K3676LU8B0UH:33:1:6513768685",
+   "K3676LU8B0UH:48:2:6525158984",
+   "CSBR5CRDWQNB:17:1:6533613352",
+   "CSBR5CRDWQNB:33:6:6545792336",
+   "ZZMYZ5UBCG72:17:1:6551916676",
+   "ZZMYZ5UBCG72:33:1:6563810567",
+   "ZZMYZ5UBCG72:48:1:6575079429",
+   "10GPK5XGHCK3:17:1:6583239676",
+   "10GPK5XGHCK3:33:1:6592407972",
+   "10GPK5XGHCK3:48:1:6609704779",
+   "1NZ8FE5F34R9:17:1:6620634917",
+   "F9PP859XZ3RJ:17:1:6633104385",
+   "F9PP859XZ3RJ:33:1:6642097641",
+   "9YBKCNBFP0X5:17:1:6652097629",
+   "9YBKCNBFP0X5:33:1:6662582055",
+   "9YBKCNBFP0X5:48:6:6686828976",
+   "1LMBFGSMCWKU:17:1:6694795755",
+   "1LMBFGSMCWKU:33:1:6701566816",
+   "1LMBFGSMCWKU:48:1:6708335172",
+   "ZE8F192FKX24:17:1:6716187206",
+   "ZE8F192FKX24:33:1:6721949896",
+   "ZE8F192FKX24:48:2:6734920041",
+   "UACFSW4VDDLD:17:1:6746311618",
+   "UACFSW4VDDLD:33:2:6754002948",
+   "UACFSW4VDDLD:48:6:6784723635",
+   "VN7RQJMJEFMX:17:1:6792771942",
+   "VN7RQJMJEFMX:33:1:6800609516",
+   "75X1BARMNZ03:17:1:6816716490",
+   "ARKQLHG6RS4W:17:1:6827432175",
+   "ARKQLHG6RS4W:33:6:6842648960",
+   "6EV5V6PJJS9D:17:1:6849282819",
+   "6EV5V6PJJS9D:33:1:6857178722",
+   "8CFMW9SAGFWQ:17:1:6868409627",
+   "2L1BNN9ZJEFU:17:1:6879319819",
+   "2L1BNN9ZJEFU:33:1:6891440791",
+   "2L1BNN9ZJEFU:48:6:6917804902",
+   "53FLQ68CETW0:17:1:6928043908",
+   "53FLQ68CETW0:33:1:6936742794",
+   "53FLQ68CETW0:48:6:6967007106",
+   "ENKYQMS9W4ZD:17:1:6976480396",
+   "ENKYQMS9W4ZD:33:2:6989150587",
+   "2SU6XN2AEJRD:17:1:7002690136",
+   "2SU6XN2AEJRD:33:1:7012038091",
+   "2SU6XN2AEJRD:48:1:7023049602",
+   "SADL3CGYTGSR:17:1:7033201155",
+   "SADL3CGYTGSR:33:1:7043554088",
+   "SADL3CGYTGSR:48:6:7068870503",
+   "Z6CFLDR3N4SB:17:1:7076333270",
+   "Z6CFLDR3N4SB:33:1:7082249028",
+   "Z6CFLDR3N4SB:48:2:7094379490",
+   "3KME36ADUE4U:17:1:7105260096",
+   "VLV17NUSFS61:17:1:7121374596",
+   "VLV17NUSFS61:33:1:7130718935",
+   "VLV17NUSFS61:48:6:7152831592",
+   "9YT51CK8RC39:17:6:7168562885",
+   "2PVLGRBGUX9S:17:1:7176516701",
+   "2PVLGRBGUX9S:33:1:7184216884",
+   "2PVLGRBGUX9S:48:6:7216074590",
+   "4Y94N8RDPGPM:17:1:7225413438",
+   "4Y94N8RDPGPM:33:1:7230442071",
+   "4Y94N8RDPGPM:48:1:7239665258",
+   "LLYSRQQ35AVW:17:1:7249055797",
+   "LLYSRQQ35AVW:33:1:7256971352",
+   "LLYSRQQ35AVW:48:1:7265109287",
+   "HMVJKM56S4Q8:17:1:7273322692",
+   "HMVJKM56S4Q8:33:6:7289031504",
+   "F4QKG4J1AJJZ:17:1:7295500618",
+   "F4QKG4J1AJJZ:33:2:7307462964",
+   "G403VCZ3BH1B:17:1:7319796513",
+   "G403VCZ3BH1B:33:1:7325903904",
+   "G403VCZ3BH1B:48:2:7335648370",
+   "MGA0CZDDKC0P:17:6:7351119664",
+   "25226ZFLNR1J:17:1:7356626759",
+   "25226ZFLNR1J:33:1:7364026607",
+   "25226ZFLNR1J:48:6:7383186786",
+   "JLN5SK17W4FQ:17:2:7393237878",
+   "JLN5SK17W4FQ:33:6:7410641439",
+   "JMH5C51RLN4E:17:1:7418282395",
+   "JMH5C51RLN4E:33:1:7426655065",
+   "JMH5C51RLN4E:48:5:7439906621",
+   "JMH5C51RLN4E:49:6:7443707688",
+   "9TG1RP5LFAAK:17:1:7448439700",
+   "9TG1RP5LFAAK:33:1:7456072841",
+   "9TG1RP5LFAAK:48:2:7469519196",
+   "9TG1RP5LFAAK:49:6:7477685566",
+   "JQPT83P8KDSZ:17:1:7484146537",
+   "4D4J8USKCPAV:17:6:7508047857"
+  ],
+  "val": [
+   "PJ2LL9KU7FHD:17:6:7536081671",
+   "S9UZAK0JP0C0:17:2:7544886716",
+   "S9UZAK0JP0C0:33:6:7565829072",
+   "UJ0K3G10609Y:17:1:7575665250",
+   "UJ0K3G10609Y:33:1:7584038660",
+   "UJ0K3G10609Y:48:6:7604962158",
+   "L9SGRBB5R698:17:6:7628996526",
+   "D4LJ9QMGFB8Q:17:1:7636313937",
+   "0NZXA12NLDMH:17:1:7647547918",
+   "0NZXA12NLDMH:33:6:7661117853",
+   "4ANT8D00TP72:17:1:7668239679",
+   "4ANT8D00TP72:33:3:7677948192",
+   "XBD8Z9XLPCPN:17:1:7690206718",
+   "XBD8Z9XLPCPN:33:6:7701123253",
+   "PU80F84P6HPN:17:5:7717872332",
+   "PU80F84P6HPN:33:1:7732766665",
+   "NB8KCF6HRGVF:17:1:7738199465",
+   "5X2GHKJ89PN1:17:1:7751646183",
+   "5X2GHKJ89PN1:33:1:7759085588",
+   "5X2GHKJ89PN1:48:6:7780832140",
+   "TCFAHJ9K19VY:17:6:7795572240",
+   "LS8035TB32P3:17:1:7802136888",
+   "LS8035TB32P3:33:1:7810665754",
+   "L704TLETMZBM:17:1:7831638217",
+   "L704TLETMZBM:33:1:7841807608",
+   "L704TLETMZBM:48:3:7859497262",
+   "KUZVERN40NGK:17:6:7871570497",
+   "BVF22RSFVBS9:17:1:7878255996",
+   "ZVYUL2YP3518:17:1:7889568906",
+   "ZVYUL2YP3518:33:1:7899360889",
+   "ZVYUL2YP3518:48:1:7914970153",
+   "ZVYUL2YP3518:49:6:7929427799",
+   "VPW8YH7A4QFM:17:1:7938785155",
+   "VPW8YH7A4QFM:33:1:7948558378",
+   "DPYF2BAA3DKT:17:1:7962612501",
+   "DPYF2BAA3DKT:33:1:7971160400",
+   "DPYF2BAA3DKT:48:6:7990606534",
+   "HUVEPWQAHWFU:17:1:8003033514",
+   "HUVEPWQAHWFU:33:2:8016054163",
+   "UMVLWER4CD98:17:1:8024979775",
+   "UMVLWER4CD98:33:1:8033242059",
+   "UMVLWER4CD98:48:6:8065418307",
+   "TU3XB4CAEDAW:17:1:8074426348",
+   "TU3XB4CAEDAW:33:1:8086409594",
+   "8R5CXD5C8PW8:17:2:8107759158",
+   "8R5CXD5C8PW8:33:2:8118999820",
+   "QNTW139MGECA:17:1:8130361671",
+   "HSX4HYATB4E2:17:1:8142382389",
+   "HSX4HYATB4E2:33:3:8153522974",
+   "HSX4HYATB4E2:48:6:8174743246",
+   "TKXQ6L4N9A6U:17:1:8193046353",
+   "P5HT1272P5SB:17:1:8211638892",
+   "KQQELQSZ382Z:17:6:8232767804",
+   "YLYLZWHA0GKU:17:1:8239396930",
+   "YLYLZWHA0GKU:33:1:8247591693",
+   "7ZUC4VPMDS41:17:6:8270461721",
+   "2Y27VAYZDA02:17:4:8284319532",
+   "TDLBRNA0R05B:17:1:8298211473",
+   "TDLBRNA0R05B:33:1:8303928499",
+   "TDLBRNA0R05B:48:4:8322829176",
+   "TDLBRNA0R05B:49:6:8329860845",
+   "MCT1GPTL8D35:17:1:8335412905",
+   "MCT1GPTL8D35:33:2:8343504348",
+   "W7BHM8U02RKG:17:6:8364715288",
+   "01H1533KSS5C:17:6:8379320263",
+   "2K4H3JEJHRSB:17:1:8385913153",
+   "ULP4TN1GNHMK:17:6:8402539892",
+   "61E2QS63Y9WU:17:1:8415662774",
+   "5PM6JAQG6FNQ:17:1:8430538566",
+   "5PM6JAQG6FNQ:33:1:8437487513",
+   "DUZUBAJ3A8GP:17:1:8452225082",
+   "VLZ6CCT8AQ0A:17:1:8472534992",
+   "VLZ6CCT8AQ0A:33:1:8481683753",
+   "8JRE1C4H4Z2W:17:1:8496173244",
+   "8JRE1C4H4Z2W:33:6:8513681143",
+   "YF0LXT1QSTGG:17:1:8522421830",
+   "YF0LXT1QSTGG:33:2:8535458972",
+   "YF0LXT1QSTGG:48:6:8555387592",
+   "XP2SL33HT0D9:17:1:8562943142",
+   "XP2SL33HT0D9:33:6:8581003029",
+   "751FN9QM9MHQ:17:6:8598047060",
+   "KV0JHNJCKXLS:17:1:8605348444",
+   "KV0JHNJCKXLS:33:6:8621879150",
+   "YQL8RZ8BWN1E:17:6:8639541937",
+   "KEN58SH9SLZ6:17:6:8654700902",
+   "TXZ6RVMQA09D:17:1:8662445561",
+   "TXZ6RVMQA09D:33:1:8670031763",
+   "TXZ6RVMQA09D:48:3:8682441467",
+   "WQZVENQ7DTRP:17:1:8691047247",
+   "WQZVENQ7DTRP:33:6:8710865169",
+   "1913SE84AXQF:17:1:8719404831",
+   "NHA2KW0RB7VP:17:1:8734311537",
+   "NHA2KW0RB7VP:33:6:8747677879",
+   "G33HU22H2543:17:1:8753843975",
+   "G33HU22H2543:33:1:8761698676",
+   "G33HU22H2543:48:6:8779164992",
+   "P74C04AEPL1F:17:1:8786559706",
+   "RC61MFQM63Y6:17:1:8798852401",
+   "RC61MFQM63Y6:33:6:8813669317",
+   "BTSRF7JL1W1Y:17:4:8827141743",
+   "XTSV1U9JD34T:17:1:8839954552",
+   "XTSV1U9JD34T:33:2:8849987472",
+   "XTSV1U9JD34T:48:1:8858009538",
+   "XTSV1U9JD34T:49:6:8864259540",
+   "9Z9H2EXKLF3T:17:1:8871152638",
+   "9Z9H2EXKLF3T:33:1:8881612114",
+   "9Z9H2EXKLF3T:48:3:8900455705",
+   "7X0W3U8TVA2A:17:1:8909821620",
+   "MTQ0EUBJ3R6T:17:1:8924782784",
+   "KFRDELW2TH2P:17:1:8938196611",
+   "KFRDELW2TH2P:33:6:8951273393",
+   "GXNKW8X1XYJP:17:2:8958846784",
+   "GXNKW8X1XYJP:33:1:8964839135",
+   "PD9AYQVMLQW6:17:1:8981915630",
+   "PD9AYQVMLQW6:33:1:8991358848",
+   "PD9AYQVMLQW6:48:1:9004136282",
+   "PD9AYQVMLQW6:49:6:9019941165"
+  ],
+  "cutoff_ts": "2026-10-06T02:46:11.648000",
+  "tune_n": 107,
+  "val_n": 117,
+  "rule": "first usable actual-outcome boss opening time by whole run, earliest ~2/3; all SL attempts of a run stay together"
+ },
+ "criteria": {
+  "min_fights": 10,
+  "brier_ratio": 1.25,
+  "max_gap": 0.15,
+  "leak_range": [
+   0.7,
+   1.3
+  ],
+  "starts": {
+   "b2": "t1",
+   "b3": "pre"
+  }
+ },
+ "overall": {
+  "t1": {
+   "n": 117,
+   "actual_win": 0.692,
+   "mean_pred": 0.786,
+   "brier": 0.1135,
+   "auc": 0.928,
+   "const_brier": 0.213,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 0,
+     "pred": null,
+     "actual": null
+    },
+    {
+     "bucket": "20–40%",
+     "n": 22,
+     "pred": 0.352,
+     "actual": 0.045
+    },
+    {
+     "bucket": "40–60%",
+     "n": 6,
+     "pred": 0.517,
+     "actual": 0.333
+    },
+    {
+     "bucket": "60–80%",
+     "n": 6,
+     "pred": 0.726,
+     "actual": 0.667
+    },
+    {
+     "bucket": "80–100%",
+     "n": 83,
+     "pred": 0.925,
+     "actual": 0.892
+    }
+   ],
+   "worst_bucket_n20": 0.307,
+   "won_loss_err": {
+    "n": 80,
+    "median": 6.0,
+    "mean": 5.5,
+    "mae": 12.1,
+    "p10": -8.5,
+    "p90": 23.5,
+    "within5": 0.287
+   },
+   "leak": {
+    "n": 652,
+    "sim_enemy": 6.19,
+    "actual_enemy": 5.09,
+    "enemy_ratio": 1.217,
+    "sim_loss": 6.12,
+    "actual_loss": 5.23,
+    "loss_ratio": 1.169
+   },
+   "platt": {
+    "a": 2.0812,
+    "b": 0.4492,
+    "c": 0.0
+   },
+   "tune_n": 106
+  },
+  "pre": {
+   "n": 117,
+   "actual_win": 0.692,
+   "mean_pred": 0.785,
+   "brier": 0.1128,
+   "auc": 0.925,
+   "const_brier": 0.213,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 0,
+     "pred": null,
+     "actual": null
+    },
+    {
+     "bucket": "20–40%",
+     "n": 23,
+     "pred": 0.321,
+     "actual": 0.043
+    },
+    {
+     "bucket": "40–60%",
+     "n": 5,
+     "pred": 0.524,
+     "actual": 0.4
+    },
+    {
+     "bucket": "60–80%",
+     "n": 7,
+     "pred": 0.736,
+     "actual": 0.714
+    },
+    {
+     "bucket": "80–100%",
+     "n": 82,
+     "pred": 0.935,
+     "actual": 0.89
+    }
+   ],
+   "worst_bucket_n20": 0.278,
+   "won_loss_err": {
+    "n": 80,
+    "median": 5.0,
+    "mean": 5.1,
+    "mae": 12.4,
+    "p10": -14,
+    "p90": 22,
+    "within5": 0.3
+   },
+   "leak": {
+    "n": 652,
+    "sim_enemy": 6.29,
+    "actual_enemy": 5.09,
+    "enemy_ratio": 1.237,
+    "sim_loss": 6.22,
+    "actual_loss": 5.23,
+    "loss_ratio": 1.189
+   },
+   "platt": {
+    "a": 2.2726,
+    "b": 0.5041,
+    "c": 0.0
+   },
+   "tune_n": 106
+  }
+ },
+ "bosses": {
+  "KAISER_CRAB": {
+   "name": "帝王蟹",
+   "t1": {
+    "n": 13,
+    "missing": 0,
+    "brier": 0.1146,
+    "mean_pred": 0.633,
+    "actual_win": 0.538,
+    "leak_ratio": 1.166,
+    "leak_turns": 63,
+    "failed": []
+   },
+   "pre": {
+    "n": 13,
+    "missing": 0,
+    "brier": 0.1247,
+    "mean_pred": 0.636,
+    "actual_win": 0.538,
+    "leak_ratio": 1.16,
+    "leak_turns": 63,
+    "failed": []
+   }
+  },
+  "THE_KIN": {
+   "name": "同族",
+   "t1": {
+    "n": 6,
+    "missing": 4,
+    "brier": 0.2001,
+    "mean_pred": 0.809,
+    "actual_win": 0.833,
+    "leak_ratio": 1.36,
+    "leak_turns": 35,
+    "failed": [
+     "n",
+     "brier",
+     "leak"
+    ]
+   },
+   "pre": {
+    "n": 6,
+    "missing": 4,
+    "brier": 0.1773,
+    "mean_pred": 0.845,
+    "actual_win": 0.833,
+    "leak_ratio": 1.343,
+    "leak_turns": 35,
+    "failed": [
+     "n",
+     "brier",
+     "leak"
+    ]
+   }
+  },
+  "QUEEN": {
+   "name": "女王",
+   "t1": {
+    "n": 6,
+    "missing": 4,
+    "brier": 0.2628,
+    "mean_pred": 0.814,
+    "actual_win": 0.5,
+    "leak_ratio": 0.919,
+    "leak_turns": 30,
+    "failed": [
+     "n",
+     "brier",
+     "gap"
+    ]
+   },
+   "pre": {
+    "n": 6,
+    "missing": 4,
+    "brier": 0.2919,
+    "mean_pred": 0.802,
+    "actual_win": 0.5,
+    "leak_ratio": 1.036,
+    "leak_turns": 30,
+    "failed": [
+     "n",
+     "brier",
+     "gap"
+    ]
+   }
+  },
+  "AEONGLASS": {
+   "name": "永世沙漏",
+   "t1": {
+    "n": 7,
+    "missing": 3,
+    "brier": 0.2805,
+    "mean_pred": 0.658,
+    "actual_win": 0.286,
+    "leak_ratio": 3.504,
+    "leak_turns": 40,
+    "failed": [
+     "n",
+     "brier",
+     "gap",
+     "leak"
+    ]
+   },
+   "pre": {
+    "n": 7,
+    "missing": 3,
+    "brier": 0.2724,
+    "mean_pred": 0.652,
+    "actual_win": 0.286,
+    "leak_ratio": 3.707,
+    "leak_turns": 40,
+    "failed": [
+     "n",
+     "brier",
+     "gap",
+     "leak"
+    ]
+   }
+  },
+  "CEREMONIAL_BEAST": {
+   "name": "仪式兽",
+   "t1": {
+    "n": 13,
+    "missing": 0,
+    "brier": 0.0268,
+    "mean_pred": 0.834,
+    "actual_win": 0.846,
+    "leak_ratio": 1.023,
+    "leak_turns": 76,
+    "failed": []
+   },
+   "pre": {
+    "n": 13,
+    "missing": 0,
+    "brier": 0.0255,
+    "mean_pred": 0.823,
+    "actual_win": 0.846,
+    "leak_ratio": 1.081,
+    "leak_turns": 76,
+    "failed": []
+   }
+  },
+  "KNOWLEDGE_DEMON": {
+   "name": "知识恶魔",
+   "t1": {
+    "n": 15,
+    "missing": 0,
+    "brier": 0.068,
+    "mean_pred": 0.897,
+    "actual_win": 0.867,
+    "leak_ratio": 1.122,
+    "leak_turns": 87,
+    "failed": []
+   },
+   "pre": {
+    "n": 15,
+    "missing": 0,
+    "brier": 0.0628,
+    "mean_pred": 0.891,
+    "actual_win": 0.867,
+    "leak_ratio": 1.185,
+    "leak_turns": 87,
+    "failed": []
+   }
+  },
+  "LAGAVULIN_MATRIARCH": {
+   "name": "乐加维林族母",
+   "t1": {
+    "n": 12,
+    "missing": 0,
+    "brier": 0.0441,
+    "mean_pred": 0.818,
+    "actual_win": 0.75,
+    "leak_ratio": 1.008,
+    "leak_turns": 69,
+    "failed": []
+   },
+   "pre": {
+    "n": 12,
+    "missing": 0,
+    "brier": 0.0284,
+    "mean_pred": 0.794,
+    "actual_win": 0.75,
+    "leak_ratio": 1.139,
+    "leak_turns": 69,
+    "failed": []
+   }
+  },
+  "SOUL_FYSH": {
+   "name": "灵魂异鱼",
+   "t1": {
+    "n": 12,
+    "missing": 0,
+    "brier": 0.0899,
+    "mean_pred": 0.916,
+    "actual_win": 0.833,
+    "leak_ratio": 0.807,
+    "leak_turns": 72,
+    "failed": []
+   },
+   "pre": {
+    "n": 12,
+    "missing": 0,
+    "brier": 0.1015,
+    "mean_pred": 0.929,
+    "actual_win": 0.833,
+    "leak_ratio": 0.792,
+    "leak_turns": 72,
+    "failed": []
+   }
+  },
+  "TEST_SUBJECT": {
+   "name": "实验体",
+   "t1": {
+    "n": 5,
+    "missing": 5,
+    "brier": 0.1237,
+    "mean_pred": 0.352,
+    "actual_win": 0.0,
+    "leak_ratio": 3.018,
+    "leak_turns": 19,
+    "failed": [
+     "n",
+     "gap",
+     "leak"
+    ]
+   },
+   "pre": {
+    "n": 5,
+    "missing": 5,
+    "brier": 0.1031,
+    "mean_pred": 0.321,
+    "actual_win": 0.0,
+    "leak_ratio": 2.752,
+    "leak_turns": 19,
+    "failed": [
+     "n",
+     "gap",
+     "leak"
+    ]
+   }
+  },
+  "THE_INSATIABLE": {
+   "name": "无厌沙虫",
+   "t1": {
+    "n": 8,
+    "missing": 2,
+    "brier": 0.1243,
+    "mean_pred": 0.593,
+    "actual_win": 0.625,
+    "leak_ratio": 1.446,
+    "leak_turns": 43,
+    "failed": [
+     "n",
+     "leak"
+    ]
+   },
+   "pre": {
+    "n": 8,
+    "missing": 2,
+    "brier": 0.1228,
+    "mean_pred": 0.587,
+    "actual_win": 0.625,
+    "leak_ratio": 1.463,
+    "leak_turns": 43,
+    "failed": [
+     "n",
+     "leak"
+    ]
+   }
+  },
+  "VANTOM": {
+   "name": "墨影幻灵",
+   "t1": {
+    "n": 9,
+    "missing": 1,
+    "brier": 0.1601,
+    "mean_pred": 0.941,
+    "actual_win": 0.778,
+    "leak_ratio": 1.043,
+    "leak_turns": 52,
+    "failed": [
+     "n",
+     "brier",
+     "gap"
+    ]
+   },
+   "pre": {
+    "n": 9,
+    "missing": 1,
+    "brier": 0.172,
+    "mean_pred": 0.952,
+    "actual_win": 0.778,
+    "leak_ratio": 0.991,
+    "leak_turns": 52,
+    "failed": [
+     "n",
+     "brier",
+     "gap"
+    ]
+   }
+  },
+  "WATERFALL_GIANT": {
+   "name": "瀑布巨兽",
+   "t1": {
+    "n": 11,
+    "missing": 0,
+    "brier": 0.0925,
+    "mean_pred": 0.852,
+    "actual_win": 0.818,
+    "leak_ratio": 0.94,
+    "leak_turns": 66,
+    "failed": []
+   },
+   "pre": {
+    "n": 11,
+    "missing": 0,
+    "brier": 0.0891,
+    "mean_pred": 0.864,
+    "actual_win": 0.818,
+    "leak_ratio": 0.925,
+    "leak_turns": 66,
+    "failed": []
+   }
+  }
+ },
+ "trusted_b2": [
+  "KAISER_CRAB",
+  "CEREMONIAL_BEAST",
+  "KNOWLEDGE_DEMON",
+  "LAGAVULIN_MATRIARCH",
+  "SOUL_FYSH",
+  "WATERFALL_GIANT"
+ ],
+ "trusted_b3": [
+  "KAISER_CRAB",
+  "CEREMONIAL_BEAST",
+  "KNOWLEDGE_DEMON",
+  "LAGAVULIN_MATRIARCH",
+  "SOUL_FYSH",
+  "WATERFALL_GIANT"
+ ],
+ "low_trust_b2": {
+  "THE_KIN": "验证集只有 6 场（至少要 10 场）; 校准 Brier 0.200，高于整体 0.114 的 1.25 倍 0.142; 模拟每回合被打穿的血是实际的 1.36 倍",
+  "QUEEN": "验证集只有 6 场（至少要 10 场）; 校准 Brier 0.263，高于整体 0.114 的 1.25 倍 0.142; 偏乐观：预测平均胜率 81%，实际 50%",
+  "AEONGLASS": "验证集只有 7 场（至少要 10 场）; 校准 Brier 0.281，高于整体 0.114 的 1.25 倍 0.142; 偏乐观：预测平均胜率 66%，实际 29%; 模拟每回合被打穿的血是实际的 3.50 倍",
+  "TEST_SUBJECT": "验证集只有 5 场（至少要 10 场）; 偏乐观：预测平均胜率 35%，实际 0%; 模拟每回合被打穿的血是实际的 3.02 倍",
+  "THE_INSATIABLE": "验证集只有 8 场（至少要 10 场）; 模拟每回合被打穿的血是实际的 1.45 倍",
+  "VANTOM": "验证集只有 9 场（至少要 10 场）; 校准 Brier 0.160，高于整体 0.114 的 1.25 倍 0.142; 偏乐观：预测平均胜率 94%，实际 78%"
+ },
+ "low_confidence_b3": {
+  "THE_KIN": "验证集只有 6 场（至少要 10 场）; 校准 Brier 0.177，高于整体 0.113 的 1.25 倍 0.141; 模拟每回合被打穿的血是实际的 1.34 倍",
+  "QUEEN": "验证集只有 6 场（至少要 10 场）; 校准 Brier 0.292，高于整体 0.113 的 1.25 倍 0.141; 偏乐观：预测平均胜率 80%，实际 50%",
+  "AEONGLASS": "验证集只有 7 场（至少要 10 场）; 校准 Brier 0.272，高于整体 0.113 的 1.25 倍 0.141; 偏乐观：预测平均胜率 65%，实际 29%; 模拟每回合被打穿的血是实际的 3.71 倍",
+  "TEST_SUBJECT": "验证集只有 5 场（至少要 10 场）; 偏乐观：预测平均胜率 32%，实际 0%; 模拟每回合被打穿的血是实际的 2.75 倍",
+  "THE_INSATIABLE": "验证集只有 8 场（至少要 10 场）; 模拟每回合被打穿的血是实际的 1.46 倍",
+  "VANTOM": "验证集只有 9 场（至少要 10 场）; 校准 Brier 0.172，高于整体 0.113 的 1.25 倍 0.141; 偏乐观：预测平均胜率 95%，实际 78%"
+ },
+ "ascension_low": {
+  "b2": {},
+  "b3": {}
+ },
+ "stage_low": {
+  "b2": {
+   "49": "F49独立战：验证集只有 4 场（至少要 10 场）; 偏乐观：预测平均胜率 35%，实际 0%; 模拟每回合被打穿的血是实际的 3.40 倍"
+  },
+  "b3": {
+   "49": "F49独立战：验证集只有 4 场（至少要 10 场）; 偏乐观：预测平均胜率 32%，实际 0%; 模拟每回合被打穿的血是实际的 3.46 倍"
+  }
+ },
+ "stage_metrics": {
+  "t1": {
+   "F49": {
+    "tune": {
+     "n": 2,
+     "actual_win": 0.0,
+     "mean_pred": 0.352,
+     "brier": 0.1237,
+     "auc": null,
+     "const_brier": 0.0,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 2,
+       "pred": 0.352,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 0
+     },
+     "leak": {
+      "n": 1,
+      "sim_enemy": 1.0,
+      "actual_enemy": 8.0,
+      "enemy_ratio": 0.125,
+      "sim_loss": 1.0,
+      "actual_loss": 8.0,
+      "loss_ratio": 0.125
+     }
+    },
+    "val": {
+     "n": 4,
+     "actual_win": 0.0,
+     "mean_pred": 0.352,
+     "brier": 0.1237,
+     "auc": null,
+     "const_brier": 0.0,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 4,
+       "pred": 0.352,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 0
+     },
+     "leak": {
+      "n": 14,
+      "sim_enemy": 13.12,
+      "actual_enemy": 3.86,
+      "enemy_ratio": 3.402,
+      "sim_loss": 13.12,
+      "actual_loss": 3.93,
+      "loss_ratio": 3.34
+     }
+    }
+   }
+  },
+  "pre": {
+   "F49": {
+    "tune": {
+     "n": 2,
+     "actual_win": 0.0,
+     "mean_pred": 0.321,
+     "brier": 0.1031,
+     "auc": null,
+     "const_brier": 0.0,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 2,
+       "pred": 0.321,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 0
+     },
+     "leak": {
+      "n": 1,
+      "sim_enemy": 0.4,
+      "actual_enemy": 8.0,
+      "enemy_ratio": 0.05,
+      "sim_loss": 0.4,
+      "actual_loss": 8.0,
+      "loss_ratio": 0.05
+     }
+    },
+    "val": {
+     "n": 4,
+     "actual_win": 0.0,
+     "mean_pred": 0.321,
+     "brier": 0.1031,
+     "auc": null,
+     "const_brier": 0.0,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "20–40%",
+       "n": 4,
+       "pred": 0.321,
+       "actual": 0.0
+      },
+      {
+       "bucket": "40–60%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      }
+     ],
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 0
+     },
+     "leak": {
+      "n": 14,
+      "sim_enemy": 13.35,
+      "actual_enemy": 3.86,
+      "enemy_ratio": 3.461,
+      "sim_loss": 13.35,
+      "actual_loss": 3.93,
+      "loss_ratio": 3.398
+     }
+    }
+   }
+  }
+ },
+ "residuals": {
+  "t1": {
+   "tune": {
+    "A0–4": {
+     "n": 38,
+     "gap": 0.0030000000000000027,
+     "brier": 0.134,
+     "mean_pred": 0.766,
+     "actual_win": 0.763,
+     "leak_ratio": 1.231
+    },
+    "A5–9": {
+     "n": 52,
+     "gap": -0.01100000000000001,
+     "brier": 0.0835,
+     "mean_pred": 0.797,
+     "actual_win": 0.808,
+     "leak_ratio": 1.198
+    },
+    "A10": {
+     "n": 16,
+     "gap": 0.027000000000000024,
+     "brier": 0.122,
+     "mean_pred": 0.652,
+     "actual_win": 0.625,
+     "leak_ratio": 1.411
+    }
+   },
+   "val": {
+    "A0–4": {
+     "n": 0,
+     "gap": null
+    },
+    "A5–9": {
+     "n": 0,
+     "gap": null
+    },
+    "A10": {
+     "n": 117,
+     "gap": 0.09400000000000008,
+     "brier": 0.1135,
+     "mean_pred": 0.786,
+     "actual_win": 0.692,
+     "leak_ratio": 1.217
+    }
+   }
+  },
+  "pre": {
+   "tune": {
+    "A0–4": {
+     "n": 38,
+     "gap": 0.0030000000000000027,
+     "brier": 0.1347,
+     "mean_pred": 0.766,
+     "actual_win": 0.763,
+     "leak_ratio": 1.289
+    },
+    "A5–9": {
+     "n": 52,
+     "gap": -0.009000000000000008,
+     "brier": 0.0855,
+     "mean_pred": 0.799,
+     "actual_win": 0.808,
+     "leak_ratio": 1.26
+    },
+    "A10": {
+     "n": 16,
+     "gap": 0.020000000000000018,
+     "brier": 0.1223,
+     "mean_pred": 0.645,
+     "actual_win": 0.625,
+     "leak_ratio": 1.422
+    }
+   },
+   "val": {
+    "A0–4": {
+     "n": 0,
+     "gap": null
+    },
+    "A5–9": {
+     "n": 0,
+     "gap": null
+    },
+    "A10": {
+     "n": 117,
+     "gap": 0.09300000000000008,
+     "brier": 0.1128,
+     "mean_pred": 0.785,
+     "actual_win": 0.692,
+     "leak_ratio": 1.237
+    }
+   }
+  }
+ },
+ "selection": {
+  "t1": {
+   "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+   "base_tune_residuals": {
+    "A0–4": {
+     "n": 38,
+     "gap": 0.0030000000000000027,
+     "brier": 0.134,
+     "mean_pred": 0.766,
+     "actual_win": 0.763,
+     "leak_ratio": 1.231
+    },
+    "A5–9": {
+     "n": 52,
+     "gap": -0.01100000000000001,
+     "brier": 0.0835,
+     "mean_pred": 0.797,
+     "actual_win": 0.808,
+     "leak_ratio": 1.198
+    },
+    "A10": {
+     "n": 16,
+     "gap": 0.027000000000000024,
+     "brier": 0.122,
+     "mean_pred": 0.652,
+     "actual_win": 0.625,
+     "leak_ratio": 1.411
+    }
+   },
+   "systematic": false,
+   "selected_ascension": false
+  },
+  "pre": {
+   "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+   "base_tune_residuals": {
+    "A0–4": {
+     "n": 38,
+     "gap": 0.0030000000000000027,
+     "brier": 0.1347,
+     "mean_pred": 0.766,
+     "actual_win": 0.763,
+     "leak_ratio": 1.289
+    },
+    "A5–9": {
+     "n": 52,
+     "gap": -0.009000000000000008,
+     "brier": 0.0855,
+     "mean_pred": 0.799,
+     "actual_win": 0.808,
+     "leak_ratio": 1.26
+    },
+    "A10": {
+     "n": 16,
+     "gap": 0.020000000000000018,
+     "brier": 0.1223,
+     "mean_pred": 0.645,
+     "actual_win": 0.625,
+     "leak_ratio": 1.422
+    }
+   },
+   "systematic": false,
+   "selected_ascension": false
+  }
+ },
+ "errors": [
+  {
+   "key": "K3676LU8B0UH:48:2:6525158984",
+   "start": "t1",
+   "error": "board: Error: no solve"
+  },
+  {
+   "key": "K3676LU8B0UH:48:2:6525158984",
+   "start": "pre",
+   "error": "board: Error: no solve"
+  }
+ ]
+}

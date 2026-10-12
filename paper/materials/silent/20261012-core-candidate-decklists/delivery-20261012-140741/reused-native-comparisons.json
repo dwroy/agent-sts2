@@ -1,0 +1,2091 @@
+[
+  {
+    "run_id": "C7GNN3DDFUFY",
+    "floor": 9,
+    "source": {
+      "path": "logs/brain.jsonl",
+      "offset": 421913935,
+      "bytes": 37511,
+      "sha256": "532d860d9f2924e16a40c1750a3dd0e655231dc65514e0913cdd0fb4123d1624"
+    },
+    "answer": {
+      "choice": "card1",
+      "reason": "Prepared provides free Bandages block and filters Wounds. Its upgrade strengthens both benefits; simulations omit Bandages.",
+      "route": "keep"
+    },
+    "accepted": true,
+    "facts": {
+      "act": 1,
+      "floor": 9,
+      "floors_to_act_boss": 8,
+      "ascension": 10,
+      "hp": "13/70 (19%)",
+      "gold": 184,
+      "act_boss": "VANTOM_BOSS",
+      "deck_size": 19,
+      "deck_profile": "19 张 (攻击 11/技能 6/能力 0/诅咒或状态 1) | 升级 0 | 平均费用 0.74 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+      "deck": [
+        "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+        "PREDATOR 猎杀者 (Attack, 2 energy): 造成15点伤害。 在下个回合抽2张牌。",
+        "POUNCE 猛扑 (Attack, 2 energy): 造成14点伤害。 你的下一张技能牌耗能变为0点能量。",
+        "BACKSTAB 背刺 (Attack, 0 energy): 固有。 造成11点伤害。 消耗。",
+        "SPOILS_MAP 藏宝图 (Quest, -1 energy): 不能被打出。 在下一阶段的地图上，标记一个有600额外金币的地点。",
+        "POISONED_STAB 带毒刺击 (Attack, 1 energy): 造成6点伤害。 给予3层中毒。",
+        "SLICE 切割 (Attack, 0 energy): 造成6点伤害。"
+      ],
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "药瓶皮套: 拾起时，获得?(数值未知)个药水栏位并获得?(数值未知)瓶随机药水。",
+        "结实绷带: 你每在你的回合丢弃一张牌，就获得?(数值未知)点格挡。"
+      ],
+      "potions": [],
+      "potion_slots": "0/3 used",
+      "act_boss_sim": {
+        "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+        "boss": "墨影幻灵，A10：墨影幻灵 183 血",
+        "entry_hp": "49/70：本幕路线计划到 boss（F17）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+        "current_deck": "胜率 0%（校准后；原始 0%），赢局掉血中位 —，赢局约 7 回合，输的样本中位死在第 7 回合",
+        "samples": "每个选项 1000 次；所有选项同一组随机种子，按样本配对比较；用时 3.6 秒",
+        "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+        "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+        "relics_not_modelled": "蛇之戒指、结实绷带",
+        "low_win_rate": "当前牌组在模拟里多半打不过（原始胜率 0%，校准后的数不会低于 0.0%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多"
+      },
+      "your_run_plan": {
+        "made_on_floor": 8,
+        "archetype": "Efficient multihit offense backed by scalable defense",
+        "want": [
+          "BLADE_DANCE",
+          "FOOTWORK",
+          "LEG_SWEEP",
+          "NOXIOUS_FUMES",
+          "BACKFLIP",
+          "PIERCING_WAIL"
+        ],
+        "avoid": [
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "SHADOW_STEP"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 8,
+        "elites": "avoid",
+        "rest": "auto",
+        "boss_prep": "Strip nine Slippery stacks with cheap multihits. Upgrade Neutralize when healthy; acquire sustained damage, stronger block, and defensive potions for Dismember.",
+        "summary": "Heal for the forced elite, then prioritize defensive and scaling purchases over removals. Avoid optional elites. Add efficient multihits, use potions against costly turns, and smith only when health permits."
+      },
+      "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+      "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-12T07:32:22，A10 共 197 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 197 局）：到达第1幕的局过第1幕boss 74% (n=197)，到达第2幕的局过第2幕boss 48% (n=146)，到达第3幕的局过第3幕boss 1% (n=70)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+    },
+    "permanent_deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n猎杀者 (Attack, 2E): 造成15点伤害。 在下个回合抽2张牌。\n猛扑 (Attack, 2E): 造成14点伤害。 你的下一张技能牌耗能变为0点能量。\n背刺 (Attack, 0E): 固有。 造成11点伤害。 消耗。\n藏宝图 (Quest, -1E): 不能被打出。 在下一阶段的地图上，标记一个有600额外金币的地点。\n带毒刺击 (Attack, 1E): 造成6点伤害。 给予3层中毒。\n切割 (Attack, 0E): 造成6点伤害。",
+    "options": {
+      "card0": {
+        "card": "速行者",
+        "in_deck": 0,
+        "card_text": "每当你在回合进行中抽到一张牌时，对所有敌人造成2点伤害。",
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 49,
+            "p10": 49,
+            "p90": 49,
+            "meanSe": 0
+          },
+          "turns_won_only": {
+            "n": 0,
+            "mean": null,
+            "p10": null,
+            "p90": null,
+            "meanSe": null
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 97,
+            "missing": 903,
+            "energy_paid": {
+              "n": 97,
+              "mean": 18.030927835051543,
+              "p10": 15,
+              "p90": 20,
+              "meanSe": 0.20065057859950433
+            },
+            "manual_actions": {
+              "n": 97,
+              "mean": 20.175257731958766,
+              "p10": 17,
+              "p90": 23,
+              "meanSe": 0.21539258754517335
+            },
+            "effect_resolutions": {
+              "n": 97,
+              "mean": 20.175257731958766,
+              "p10": 17,
+              "p90": 23,
+              "meanSe": 0.21539258754517335
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {},
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 49.14000000000003,
+            "p10": 35,
+            "p90": 62,
+            "meanSe": 0.4029351768668961
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": -9.36000000000001,
+            "p10": -19,
+            "p90": -2,
+            "meanSe": 0.20554963062640294
+          }
+        },
+        "boss_sim_text": "打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 0%；选这个 0%（+0 ± 0），赢局掉血中位 —，约 7 回合；boss 平均剩血 129（当前牌组 117，+12.2 ± 0.7）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card1",
+          "card2",
+          "skip"
+        ]
+      },
+      "card1": {
+        "card": "早有准备",
+        "in_deck": 0,
+        "card_text": "抽1张牌。 丢弃1张牌。",
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 49,
+            "p10": 49,
+            "p90": 49,
+            "meanSe": 0
+          },
+          "turns_won_only": {
+            "n": 0,
+            "mean": null,
+            "p10": null,
+            "p90": null,
+            "meanSe": null
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 169,
+            "missing": 831,
+            "energy_paid": {
+              "n": 169,
+              "mean": 18.112426035502956,
+              "p10": 16,
+              "p90": 20,
+              "meanSe": 0.14179741020621356
+            },
+            "manual_actions": {
+              "n": 169,
+              "mean": 22.757396449704142,
+              "p10": 20,
+              "p90": 25,
+              "meanSe": 0.17575795429136243
+            },
+            "effect_resolutions": {
+              "n": 169,
+              "mean": 22.757396449704142,
+              "p10": 20,
+              "p90": 25,
+              "meanSe": 0.17575795429136243
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {},
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 51.223000000000006,
+            "p10": 35,
+            "p90": 68.40000000000009,
+            "meanSe": 0.45435416660212224
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": -9.295999999999985,
+            "p10": -19,
+            "p90": -1,
+            "meanSe": 0.2090743793392583
+          }
+        },
+        "boss_sim_text": "打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 0%；选这个 0%（+0 ± 0），赢局掉血中位 —，约 7 回合；boss 平均剩血 117（当前牌组 117，+0.5 ± 0.7）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card0",
+          "card2",
+          "skip"
+        ]
+      },
+      "card2": {
+        "card": "逃脱计划",
+        "in_deck": 0,
+        "card_text": "抽1张牌。 如果抽到的是技能牌，则获得3点格挡。",
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 49,
+            "p10": 49,
+            "p90": 49,
+            "meanSe": 0
+          },
+          "turns_won_only": {
+            "n": 0,
+            "mean": null,
+            "p10": null,
+            "p90": null,
+            "meanSe": null
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 101,
+            "missing": 899,
+            "energy_paid": {
+              "n": 101,
+              "mean": 18.01980198019802,
+              "p10": 15,
+              "p90": 20,
+              "meanSe": 0.18720465743751527
+            },
+            "manual_actions": {
+              "n": 101,
+              "mean": 22.356435643564357,
+              "p10": 19,
+              "p90": 25,
+              "meanSe": 0.22975844328459985
+            },
+            "effect_resolutions": {
+              "n": 101,
+              "mean": 22.356435643564357,
+              "p10": 19,
+              "p90": 25,
+              "meanSe": 0.22975844328459985
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {},
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 54.81899999999999,
+            "p10": 40,
+            "p90": 74,
+            "meanSe": 0.43266087693993593
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": -8.276999999999983,
+            "p10": -17,
+            "p90": -1,
+            "meanSe": 0.19732006032384597
+          }
+        },
+        "boss_sim_text": "打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 0%；选这个 0%（+0 ± 0），赢局掉血中位 —，约 7 回合；boss 平均剩血 115（当前牌组 117，−2 ± 0.8）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card0",
+          "card1",
+          "skip"
+        ]
+      },
+      "skip": {
+        "card": "skip",
+        "in_deck": null,
+        "card_text": null,
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 49,
+            "p10": 49,
+            "p90": 49,
+            "meanSe": 0
+          },
+          "turns_won_only": {
+            "n": 0,
+            "mean": null,
+            "p10": null,
+            "p90": null,
+            "meanSe": null
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 247,
+            "missing": 753,
+            "energy_paid": {
+              "n": 247,
+              "mean": 18.09311740890688,
+              "p10": 15,
+              "p90": 20,
+              "meanSe": 0.1307561506107309
+            },
+            "manual_actions": {
+              "n": 247,
+              "mean": 21.10121457489879,
+              "p10": 18,
+              "p90": 23,
+              "meanSe": 0.14482672707984048
+            },
+            "effect_resolutions": {
+              "n": 247,
+              "mean": 21.10121457489879,
+              "p10": 18,
+              "p90": 23,
+              "meanSe": 0.14482672707984048
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {},
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 50.99700000000003,
+            "p10": 30,
+            "p90": 72,
+            "meanSe": 0.47533454948481696
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": -9.240999999999982,
+            "p10": -19,
+            "p90": -1,
+            "meanSe": 0.21985280133365187
+          }
+        },
+        "boss_sim_text": "打本幕 boss（墨影幻灵，A10）的模拟：不改变牌组：胜率 0%，赢局掉血中位 —，约 7 回合；boss 平均剩血 117（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card0",
+          "card1",
+          "card2"
+        ]
+      }
+    },
+    "new_simulation": false,
+    "limits": "相同题面说明同样本/策略；本冻结审计没有完整逐样本随机身份和全部预算输入，不能独立重建配对轨迹。保留已记录配对差，不用聚合均值自行造配对SE。"
+  },
+  {
+    "run_id": "F6XY4QJMS5RC",
+    "floor": 11,
+    "source": {
+      "path": "logs/brain.jsonl",
+      "offset": 423379747,
+      "bytes": 39936,
+      "sha256": "ce8a8b4258e2f8568fdbad774376d5c5d193e1bf94edc3adadb68c760a7ab245"
+    },
+    "answer": {
+      "choice": "card2",
+      "reason": "Despite weaker boss simulations, Gamble filters Wounds and exploits unmodeled opening draw; logged outcomes support its long-term cycling value.",
+      "route": "r11c3 r12c3 r13c4 r14c4 r15c3 r16c3",
+      "run_plan": {
+        "archetype": "Poison scaling with dexterity defense and selective cycling",
+        "want": [
+          "FOOTWORK",
+          "BACKFLIP",
+          "ACCELERANT",
+          "LEG_SWEEP",
+          "PIERCING_WAIL",
+          "NOXIOUS_FUMES"
+        ],
+        "avoid": [
+          "PHANTOM_BLADES",
+          "GRAND_FINALE",
+          "KNIFE_TRAP"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 9,
+        "elites": "normal",
+        "rest": "auto",
+        "boss_prep": "Strip Slippery with Mercury Hourglass and cheap attacks. Apply poison, maintain Weak, and prepare strong block or a defensive potion for Dismember.",
+        "summary": "Full HP supports smithing before one more Conch-assisted elite. Strengthen poison with dexterity, efficient block, and acceleration. Gamble away weak hands without sacrificing necessary defenses. Preserve boss HP and remove Strikes selectively."
+      }
+    },
+    "accepted": true,
+    "facts": {
+      "act": 1,
+      "floor": 11,
+      "floors_to_act_boss": 6,
+      "ascension": 10,
+      "hp": "70/70 (100%)",
+      "gold": 235,
+      "act_boss": "VANTOM_BOSS",
+      "deck_size": 18,
+      "deck_profile": "18 张 (攻击 8/技能 8/能力 0/诅咒或状态 1) | 升级 2 | 平均费用 0.83 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+      "deck": [
+        "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE+ 中和+ (Attack, 0 energy): 造成4点伤害。 给予2层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+        "DEADLY_POISON+ 致命毒药+ (Skill, 1 energy): 给予7层中毒。",
+        "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+        "BOUNCING_FLASK 弹跳药瓶 (Skill, 2 energy): 随机给予敌人3层中毒3次。",
+        "SPOILS_MAP 藏宝图 (Quest, -1 energy): 不能被打出。 在下一阶段的地图上，标记一个有600额外金币的地点。",
+        "ECHOING_SLASH 回响斩击 (Attack, 1 energy): 对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。"
+      ],
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。",
+        "碎石钻: 在每场战斗开始时，在本场战斗中随机升级你抽牌堆中的?(数值未知)张牌。",
+        "水银沙漏: 在你的回合开始时，对所有敌人造成?(数值未知)点伤害。",
+        "百年积木: 你在每场战斗中第一次损失生命值时，抽?(数值未知)张牌。"
+      ],
+      "potions": [
+        "SKILL_POTION 技能药水: 从3张随机技能牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。"
+      ],
+      "potion_slots": "1/2 used",
+      "act_boss_sim": {
+        "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+        "boss": "墨影幻灵，A10：墨影幻灵 183 血",
+        "entry_hp": "70/70：本幕路线计划到 boss（F17）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+        "current_deck": "胜率 59%（校准后；原始 59%），赢局掉血中位 54，赢局约 11 回合，输的样本中位死在第 11 回合",
+        "samples": "每个选项 1000 次；所有选项同一组随机种子，按样本配对比较；用时 4.4 秒",
+        "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+        "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+        "relics_not_modelled": "蛇之戒指、轰鸣海螺、碎石钻、百年积木"
+      },
+      "your_run_plan": {
+        "made_on_floor": 1,
+        "archetype": "Multi-hit tempo with flexible scaling and dexterity defense",
+        "want": [
+          "BLADE_DANCE",
+          "DAGGER_SPRAY",
+          "FOOTWORK",
+          "NOXIOUS_FUMES",
+          "BACKFLIP",
+          "PIERCING_WAIL"
+        ],
+        "avoid": [
+          "GRAND_FINALE",
+          "KNIFE_TRAP"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 8,
+        "elites": "normal",
+        "rest": "auto",
+        "boss_prep": "Strip nine Slippery stacks with shivs or multi-hits. Prepare sustained damage, upgraded Neutralize, reliable block for turn-three Dismember, and a defensive potion.",
+        "summary": "Add efficient damage first, then scaling and stronger defense. Use Conch for separated elites with recovery available; avoid elite chains. Replace damage before removing Strikes. Preserve enough HP and potions for Vantom."
+      },
+      "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+      "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-12T08:31:42，A10 共 198 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 198 局）：到达第1幕的局过第1幕boss 74% (n=198)，到达第2幕的局过第2幕boss 48% (n=147)，到达第3幕的局过第3幕boss 1% (n=70)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+    },
+    "permanent_deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和+ (Attack, 0E): 造成4点伤害。 给予2层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n致命毒药+ (Skill, 1E): 给予7层中毒。\n冲刺 (Attack, 2E): 获得10点格挡。 造成10点伤害。\n弹跳药瓶 (Skill, 2E): 随机给予敌人3层中毒3次。\n藏宝图 (Quest, -1E): 不能被打出。 在下一阶段的地图上，标记一个有600额外金币的地点。\n回响斩击 (Attack, 1E): 对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。",
+    "options": {
+      "card0": {
+        "card": "幻影之刃",
+        "in_deck": 0,
+        "card_text": "小刀获得保留。 你在每回合打出的第一张小刀额外造成9点伤害。",
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            0.42932142688110647,
+            0.49098471379773795
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 63.47399999999998,
+            "p10": 48,
+            "p90": 70,
+            "meanSe": 0.30496282777795425
+          },
+          "turns_won_only": {
+            "n": 460,
+            "mean": 10.973913043478273,
+            "p10": 9.900000000000006,
+            "p90": 13,
+            "meanSe": 0.06029854354077604
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 3.576000000000002,
+            "p10": -15.099999999999994,
+            "p90": 24,
+            "meanSe": 0.4700161051912364
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 191,
+            "missing": 809,
+            "energy_paid": {
+              "n": 191,
+              "mean": 27.230366492146597,
+              "p10": 24,
+              "p90": 31,
+              "meanSe": 0.23510249837806574
+            },
+            "manual_actions": {
+              "n": 191,
+              "mean": 26.59162303664922,
+              "p10": 22,
+              "p90": 31,
+              "meanSe": 0.2612129430596749
+            },
+            "effect_resolutions": {
+              "n": 191,
+              "mean": 26.59162303664922,
+              "p10": 22,
+              "p90": 31,
+              "meanSe": 0.2612129430596749
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {},
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 78.75400000000003,
+            "p10": 56,
+            "p90": 99,
+            "meanSe": 0.5302628241378632
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": 1.8130000000000013,
+            "p10": -15,
+            "p90": 22,
+            "meanSe": 0.44808795321210493
+          }
+        },
+        "boss_sim_text": "打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 59%；选这个 46%（−12.9 ± 2.2），赢局掉血中位 57.5，约 11 回合（1000 次模拟，校准后）",
+        "tied": []
+      },
+      "card1": {
+        "card": "翻越撑击",
+        "in_deck": 0,
+        "card_text": "奇巧。 对所有敌人造成7点伤害。",
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            0.47804015149447454,
+            0.5398909668527856
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 61.53400000000003,
+            "p10": 44,
+            "p90": 70,
+            "meanSe": 0.34864939466518563
+          },
+          "turns_won_only": {
+            "n": 509,
+            "mean": 10.62278978388998,
+            "p10": 9,
+            "p90": 12,
+            "meanSe": 0.0489504196392478
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 1.636000000000002,
+            "p10": -19,
+            "p90": 22,
+            "meanSe": 0.48774521976068586
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 231,
+            "missing": 769,
+            "energy_paid": {
+              "n": 231,
+              "mean": 27.099567099567096,
+              "p10": 23,
+              "p90": 31,
+              "meanSe": 0.21867928075590717
+            },
+            "manual_actions": {
+              "n": 231,
+              "mean": 26.532467532467532,
+              "p10": 22,
+              "p90": 31,
+              "meanSe": 0.23166865351161564
+            },
+            "effect_resolutions": {
+              "n": 231,
+              "mean": 26.532467532467532,
+              "p10": 22,
+              "p90": 31,
+              "meanSe": 0.23166865351161564
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {},
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 75.537,
+            "p10": 53,
+            "p90": 96,
+            "meanSe": 0.513652089910544
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": 3.8669999999999973,
+            "p10": -16,
+            "p90": 26,
+            "meanSe": 0.4990334110511492
+          }
+        },
+        "boss_sim_text": "打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 59%；选这个 51%（−8 ± 2.2），赢局掉血中位 54，约 11 回合（1000 次模拟，校准后）",
+        "tied": []
+      },
+      "card2": {
+        "card": "计算下注",
+        "in_deck": 0,
+        "card_text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            0.3799172576460708,
+            0.4407715588813291
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 64.58199999999998,
+            "p10": 51,
+            "p90": 70,
+            "meanSe": 0.2795199588712897
+          },
+          "turns_won_only": {
+            "n": 410,
+            "mean": 11.202439024390246,
+            "p10": 10,
+            "p90": 13,
+            "meanSe": 0.06424827177162222
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 4.683999999999999,
+            "p10": -13,
+            "p90": 25,
+            "meanSe": 0.4465709009435901
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 0,
+            "missing": 1000,
+            "energy_paid": {
+              "n": 0,
+              "mean": null,
+              "p10": null,
+              "p90": null,
+              "meanSe": null
+            },
+            "manual_actions": {
+              "n": 0,
+              "mean": null,
+              "p10": null,
+              "p90": null,
+              "meanSe": null
+            },
+            "effect_resolutions": {
+              "n": 0,
+              "mean": null,
+              "p10": null,
+              "p90": null,
+              "meanSe": null
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {},
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 81.32599999999991,
+            "p10": 60,
+            "p90": 101,
+            "meanSe": 0.5203003329197824
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": 0.2319999999999992,
+            "p10": -16,
+            "p90": 19,
+            "meanSe": 0.42541409609127073
+          }
+        },
+        "boss_sim_text": "打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 59%；选这个 41%（−17.9 ± 2.2），赢局掉血中位 58，约 11 回合（1000 次模拟，校准后）",
+        "tied": []
+      },
+      "skip": {
+        "card": "skip",
+        "in_deck": null,
+        "card_text": null,
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            0.5582210567913957,
+            0.6190977801981754
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 59.897999999999975,
+            "p10": 42,
+            "p90": 70,
+            "meanSe": 0.36373603052199793
+          },
+          "turns_won_only": {
+            "n": 589,
+            "mean": 10.736842105263152,
+            "p10": 9,
+            "p90": 13,
+            "meanSe": 0.051769853281383206
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 181,
+            "missing": 819,
+            "energy_paid": {
+              "n": 181,
+              "mean": 27.204419889502752,
+              "p10": 23,
+              "p90": 31,
+              "meanSe": 0.23979710986750907
+            },
+            "manual_actions": {
+              "n": 181,
+              "mean": 26.47513812154698,
+              "p10": 22,
+              "p90": 31,
+              "meanSe": 0.26286062203367183
+            },
+            "effect_resolutions": {
+              "n": 181,
+              "mean": 26.47513812154698,
+              "p10": 22,
+              "p90": 31,
+              "meanSe": 0.26286062203367183
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {},
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 79.79399999999998,
+            "p10": 58,
+            "p90": 99,
+            "meanSe": 0.5181293487364154
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": 6.465000000000003,
+            "p10": -14,
+            "p90": 28,
+            "meanSe": 0.4942803739661205
+          }
+        },
+        "boss_sim_text": "打本幕 boss（墨影幻灵，A10）的模拟：不改变牌组：胜率 59%，赢局掉血中位 54，约 11 回合（1000 次模拟，校准后）",
+        "tied": []
+      }
+    },
+    "new_simulation": false,
+    "limits": "相同题面说明同样本/策略；本冻结审计没有完整逐样本随机身份和全部预算输入，不能独立重建配对轨迹。保留已记录配对差，不用聚合均值自行造配对SE。"
+  },
+  {
+    "run_id": "CMS8QL9E3C5U",
+    "floor": 11,
+    "source": {
+      "path": "logs/brain.jsonl",
+      "offset": 424738717,
+      "bytes": 41790,
+      "sha256": "bdffb1ccd24f8499543a3600f0057c3ae103523f95fca5f4651944e5bdfcf9d1"
+    },
+    "answer": {
+      "choice": "card2",
+      "reason": "Tools filters surplus starters to find poison and Footwork. Matriarch’s sleep provides setup time, and logged outcomes support its long-term value.",
+      "route": "keep",
+      "run_plan": {
+        "archetype": "Poison scaling with double Footwork and draw filtering",
+        "want": [
+          "NOXIOUS_FUMES",
+          "DEADLY_POISON",
+          "ACCELERANT",
+          "BACKFLIP",
+          "POISONED_STAB",
+          "LEG_SWEEP"
+        ],
+        "avoid": [
+          "GRAND_FINALE",
+          "KNIFE_TRAP"
+        ],
+        "remove": [
+          "STRIKE_SILENT",
+          "DEFEND_SILENT"
+        ],
+        "block_target": 8,
+        "elites": "avoid",
+        "rest": "heal",
+        "boss_prep": "Establish Footworks and Tools during sleep. Add reliable poison, upgrade Snakebite or Neutralize when safe, and enter healthy with two potions.",
+        "summary": "Damage scaling is the main gap: prioritize reliable poison before more setup. Avoid elites and heal for Mailbox potions. Filter surplus starters with Tools; remove Strikes first and replace Defends selectively."
+      }
+    },
+    "accepted": true,
+    "facts": {
+      "act": 1,
+      "floor": 11,
+      "floors_to_act_boss": 6,
+      "ascension": 10,
+      "hp": "30/70 (43%)",
+      "gold": 207,
+      "act_boss": "LAGAVULIN_MATRIARCH_BOSS",
+      "deck_size": 21,
+      "deck_profile": "21 张 (攻击 10/技能 8/能力 2/诅咒或状态 1) | 升级 0 | 平均费用 1 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+      "deck": [
+        "6x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "6x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE 中和 (Attack, 0 energy): 造成5点伤害。 给予1层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+        "SNAKEBITE 蛇咬 (Skill, 2 energy): 保留。 给予7层中毒。",
+        "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+        "2x FOOTWORK 灵动步法 (Power, 1 energy): 获得2点敏捷。",
+        "PREDATOR 猎杀者 (Attack, 2 energy): 造成15点伤害。 在下个回合抽2张牌。",
+        "DAGGER_THROW 投掷匕首 (Attack, 1 energy): 造成9点伤害。 抽1张牌。 丢弃1张牌。"
+      ],
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "巨大扭蛋: 拾起时，获得?(数值未知)件随机遗物。额外将一对打击和防御，加入你的牌组。",
+        "船夹板: 在你的第二回合开始时，获得?(数值未知)点格挡。",
+        "吃不完的糖: 每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+        "小邮箱: 每当你休息时，获得2瓶随机药水。"
+      ],
+      "potions": [],
+      "potion_slots": "0/2 used",
+      "act_boss_sim": {
+        "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+        "boss": "乐加维林族母，A10：乐加维林族母 233 血",
+        "entry_hp": "69/70：本幕路线计划到 boss（F17）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+        "current_deck": "胜率 0%（校准后；原始 0%），赢局掉血中位 61，赢局约 16 回合，输的样本中位死在第 16 回合",
+        "samples": "每个选项 1000 次；所有选项同一组随机种子，按样本配对比较；用时 5.9 秒",
+        "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+        "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+        "relics_not_modelled": "蛇之戒指、小邮箱",
+        "low_win_rate": "当前牌组在模拟里多半打不过（原始胜率 0%，校准后的数不会低于 0.0%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多"
+      },
+      "your_run_plan": {
+        "made_on_floor": 1,
+        "archetype": "Efficient attacks into poison scaling and durable defense",
+        "want": [
+          "POISONED_STAB",
+          "DASH",
+          "NOXIOUS_FUMES",
+          "FOOTWORK",
+          "ACCELERANT",
+          "BACKFLIP"
+        ],
+        "avoid": [
+          "GRAND_FINALE",
+          "KNIFE_TRAP"
+        ],
+        "remove": [
+          "STRIKE_SILENT",
+          "DEFEND_SILENT"
+        ],
+        "block_target": 8,
+        "elites": "normal",
+        "rest": "auto",
+        "boss_prep": "Establish powers during sleep. Bring reliable poison, upgraded Neutralize, efficient block, and potions; finish before repeated Strength/Dexterity drains overwhelm the deck.",
+        "summary": "Take efficient damage and an AoE early, then poison and scalable block. Add Accelerant after reliable poison. Remove surplus starters after replacements. Attempt elites with adequate damage, health, and potions; adapt to the random relics."
+      },
+      "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+      "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-12T09:14:13，A10 共 199 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 199 局）：到达第1幕的局过第1幕boss 74% (n=199)，到达第2幕的局过第2幕boss 47% (n=148)，到达第3幕的局过第3幕boss 1% (n=70)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+    },
+    "permanent_deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和 (Attack, 0E) [enchanted 锋利: the card deals N more damage (per hit)]: 造成5点伤害。 给予1层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n蛇咬 (Skill, 2E): 保留。 给予7层中毒。\n冲刺 (Attack, 2E): 获得10点格挡。 造成10点伤害。\n灵动步法 (Power, 1E): 获得2点敏捷。\n猎杀者 (Attack, 2E): 造成15点伤害。 在下个回合抽2张牌。\n投掷匕首 (Attack, 1E): 造成9点伤害。 抽1张牌。 丢弃1张牌。\n灵动步法 (Power, 1E): 获得2点敏捷。",
+    "options": {
+      "card0": {
+        "card": "精密瞄准",
+        "in_deck": 0,
+        "card_text": "造成15点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1点能量。",
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 69,
+            "p10": 69,
+            "p90": 69,
+            "meanSe": 0
+          },
+          "turns_won_only": {
+            "n": 0,
+            "mean": null,
+            "p10": null,
+            "p90": null,
+            "meanSe": null
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 0.020999999999999994,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0.012677528139180756
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 75,
+            "missing": 925,
+            "energy_paid": {
+              "n": 75,
+              "mean": 34.86666666666666,
+              "p10": 29,
+              "p90": 39,
+              "meanSe": 0.47204112408011956
+            },
+            "manual_actions": {
+              "n": 75,
+              "mean": 32.49333333333333,
+              "p10": 27,
+              "p90": 38,
+              "meanSe": 0.5059549292085119
+            },
+            "effect_resolutions": {
+              "n": 75,
+              "mean": 32.49333333333333,
+              "p10": 27,
+              "p90": 38,
+              "meanSe": 0.5059549292085119
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {
+              "FOOTWORK": {
+                "n": 75,
+                "mean": 1.8799999999999992,
+                "p10": 1,
+                "p90": 3,
+                "meanSe": 0.11224169545315231
+              }
+            },
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 130.26799999999997,
+            "p10": 101,
+            "p90": 158,
+            "meanSe": 0.6863331765470977
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": -9.541000000000007,
+            "p10": -19,
+            "p90": -1,
+            "meanSe": 0.21663621638648106
+          }
+        },
+        "boss_sim_text": "打本幕 boss（乐加维林族母，A10）的模拟：当前牌组胜率 0%；选这个 0%（−0.3 ± 0.2），赢局掉血中位 —，约 15 回合；boss 平均剩血 117（当前牌组 114，+2.7 ± 1.3）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）",
+        "tied": []
+      },
+      "card1": {
+        "card": "尖啸",
+        "in_deck": 0,
+        "card_text": "所有敌人在本回合失去6点力量。 消耗。",
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            0.000548643588120728,
+            0.007262807863492177
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 68.97199999999992,
+            "p10": 69,
+            "p90": 69,
+            "meanSe": 0.02607481343933061
+          },
+          "turns_won_only": {
+            "n": 2,
+            "mean": 15.5,
+            "p10": 14.3,
+            "p90": 16.7,
+            "meanSe": 1.4999999999999998
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": -0.007000000000000008,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0.029013665621441077
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 71,
+            "missing": 929,
+            "energy_paid": {
+              "n": 71,
+              "mean": 36.77464788732396,
+              "p10": 32,
+              "p90": 42,
+              "meanSe": 0.4275225449000597
+            },
+            "manual_actions": {
+              "n": 71,
+              "mean": 34.88732394366196,
+              "p10": 30,
+              "p90": 40,
+              "meanSe": 0.4200935489256565
+            },
+            "effect_resolutions": {
+              "n": 71,
+              "mean": 34.88732394366196,
+              "p10": 30,
+              "p90": 40,
+              "meanSe": 0.4200935489256565
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {
+              "FOOTWORK": {
+                "n": 71,
+                "mean": 1.8591549295774652,
+                "p10": 1,
+                "p90": 3,
+                "meanSe": 0.11222242689294053
+              }
+            },
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 134.6239999999997,
+            "p10": 110,
+            "p90": 161,
+            "meanSe": 0.6235731452423748
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": -10.053000000000006,
+            "p10": -20,
+            "p90": -1,
+            "meanSe": 0.22869738409849263
+          }
+        },
+        "boss_sim_text": "打本幕 boss（乐加维林族母，A10）的模拟：当前牌组胜率 0%；选这个 0%（−0.1 ± 0.2），赢局掉血中位 55，约 15.5 回合；boss 平均剩血 118（当前牌组 114，+4.1 ± 1.3）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card2"
+        ]
+      },
+      "card2": {
+        "card": "必备工具",
+        "in_deck": 0,
+        "card_text": "在你的回合开始时，抽1张牌，丢弃1张牌。",
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            0.000548643588120728,
+            0.007262807863492177
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 68.97799999999995,
+            "p10": 69,
+            "p90": 69,
+            "meanSe": 0.018435179843328285
+          },
+          "turns_won_only": {
+            "n": 2,
+            "mean": 16.5,
+            "p10": 14.5,
+            "p90": 18.5,
+            "meanSe": 2.5
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": -0.0010000000000000046,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0.02239420685133771
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 81,
+            "missing": 919,
+            "energy_paid": {
+              "n": 81,
+              "mean": 36.24691358024691,
+              "p10": 31,
+              "p90": 41,
+              "meanSe": 0.4080709149962841
+            },
+            "manual_actions": {
+              "n": 81,
+              "mean": 34.716049382716044,
+              "p10": 29,
+              "p90": 40,
+              "meanSe": 0.4483283656275911
+            },
+            "effect_resolutions": {
+              "n": 81,
+              "mean": 34.716049382716044,
+              "p10": 29,
+              "p90": 40,
+              "meanSe": 0.4483283656275911
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {
+              "FOOTWORK": {
+                "n": 81,
+                "mean": 1.8395061728395068,
+                "p10": 1,
+                "p90": 3,
+                "meanSe": 0.11174374084641545
+              }
+            },
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 135.939,
+            "p10": 110,
+            "p90": 162,
+            "meanSe": 0.6647067880758505
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": -9.639,
+            "p10": -19,
+            "p90": -1,
+            "meanSe": 0.214505691513516
+          }
+        },
+        "boss_sim_text": "打本幕 boss（乐加维林族母，A10）的模拟：当前牌组胜率 0%；选这个 0%（−0.1 ± 0.2），赢局掉血中位 58，约 16.5 回合；boss 平均剩血 119（当前牌组 114，+5.3 ± 1.3）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card1"
+        ]
+      },
+      "skip": {
+        "card": "skip",
+        "in_deck": null,
+        "card_text": null,
+        "facts": {
+          "samples": 1000,
+          "raw_win_mc_interval95": [
+            0.0010207838811386186,
+            0.008783014053503173
+          ],
+          "hp_loss": {
+            "n": 1000,
+            "mean": 68.97899999999994,
+            "p10": 69,
+            "p90": 69,
+            "meanSe": 0.012677528139180778
+          },
+          "turns_won_only": {
+            "n": 3,
+            "mean": 16,
+            "p10": 15.2,
+            "p90": 16.8,
+            "meanSe": 0.5773502691896258
+          },
+          "paired_hp_loss_difference": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 1000,
+            "valid": 61,
+            "missing": 939,
+            "energy_paid": {
+              "n": 61,
+              "mean": 35.59016393442623,
+              "p10": 29,
+              "p90": 40,
+              "meanSe": 0.5291384115413327
+            },
+            "manual_actions": {
+              "n": 61,
+              "mean": 33.950819672131146,
+              "p10": 28,
+              "p90": 39,
+              "meanSe": 0.5901867026573457
+            },
+            "effect_resolutions": {
+              "n": 61,
+              "mean": 33.950819672131146,
+              "p10": 28,
+              "p90": 39,
+              "meanSe": 0.5901867026573457
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {
+              "FOOTWORK": {
+                "n": 61,
+                "mean": 2.01639344262295,
+                "p10": 1,
+                "p90": 3,
+                "meanSe": 0.12256770913127045
+              }
+            },
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 1000,
+            "mean": 138.60000000000016,
+            "p10": 113,
+            "p90": 163,
+            "meanSe": 0.6615010079989172
+          },
+          "potions_used": {
+            "n": 1000,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 1000,
+            "mean": -9.594000000000007,
+            "p10": -19,
+            "p90": -1,
+            "meanSe": 0.22180703857714318
+          }
+        },
+        "boss_sim_text": "打本幕 boss（乐加维林族母，A10）的模拟：不改变牌组：胜率 0%，赢局掉血中位 61，约 16 回合；boss 平均剩血 114（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）",
+        "tied": []
+      }
+    },
+    "new_simulation": false,
+    "limits": "相同题面说明同样本/策略；本冻结审计没有完整逐样本随机身份和全部预算输入，不能独立重建配对轨迹。保留已记录配对差，不用聚合均值自行造配对SE。"
+  },
+  {
+    "run_id": "PUY011SBWSSU",
+    "floor": 46,
+    "source": {
+      "path": "logs/brain.jsonl",
+      "offset": 427187332,
+      "bytes": 56374,
+      "sha256": "fbd2dc2c15fa16de30f626f2c177ed87c0de6fa2918656209e43dbf138565c4f"
+    },
+    "answer": {
+      "choice": "card1",
+      "reason": "Free cycling and conditional Dexterity-scaled block suit this skill-heavy deck. Tuning Fork adds value; manage first-phase Enrage and draw before Bullet Time."
+    },
+    "accepted": true,
+    "facts": {
+      "act": 3,
+      "floor": 46,
+      "floors_to_act_boss": 2,
+      "ascension": 10,
+      "hp": "34/80 (43%)",
+      "gold": 33,
+      "act_boss": "TEST_SUBJECT_BOSS",
+      "deck_size": 37,
+      "deck_profile": "37 张 (攻击 9/技能 22/能力 5/诅咒或状态 1) | 升级 10 | 平均费用 1 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+      "deck": [
+        "3x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE+ 中和+ (Attack, 0 energy): 造成4点伤害。 给予2层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+        "NOXIOUS_FUMES+ 毒雾+ (Power, 1 energy): 在你的回合开始时，给予所有敌人3层中毒。",
+        "HIDDEN_DAGGERS 隐秘匕首 (Skill, 0 energy): 丢弃2张牌。 将2张小刀加入你的手牌。",
+        "STRANGLE 紧勒 (Attack, 1 energy): 造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。",
+        "DEADLY_POISON 致命毒药 (Skill, 1 energy): 给予5层中毒。",
+        "ASSASSINATE 刺杀 (Attack, 0 energy): 固有。 造成10点伤害。 给予1层易伤。 消耗。",
+        "2x ECHOING_SLASH 回响斩击 (Attack, 1 energy): 对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。",
+        "POISONED_STAB 带毒刺击 (Attack, 1 energy): 造成6点伤害。 给予3层中毒。",
+        "ADRENALINE 肾上腺素 (Skill, 0 energy): 获得1点能量。 抽2张牌。 消耗。",
+        "BACKFLIP+ 后空翻+ (Skill, 1 energy): 获得8点格挡。 抽2张牌。",
+        "BULLET_TIME+ 子弹时间+ (Skill, 2 energy): 你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。",
+        "HAZE+ 迷雾+ (Skill, 2 energy): 给予所有敌人6层中毒和2层虚弱。",
+        "BOUNCING_FLASK 弹跳药瓶 (Skill, 2 energy): 随机给予敌人3层中毒3次。",
+        "SNAKEBITE 蛇咬 (Skill, 2 energy): 保留。 给予7层中毒。",
+        "TOOLS_OF_THE_TRADE 必备工具 (Power, 1 energy): 在你的回合开始时，抽1张牌，丢弃1张牌。",
+        "HAND_TRICK 手上技法 (Skill, 1 energy): 获得7点格挡。 在本回合给你手牌中的一张技能牌添加奇巧。",
+        "LEG_SWEEP+ 扫腿+ (Skill, 2 energy): 给予3层虚弱。 获得14点格挡。",
+        "FOOTWORK+ 灵动步法+ (Power, 1 energy): 获得3点敏捷。",
+        "BACKFLIP 后空翻 (Skill, 1 energy): 获得5点格挡。 抽2张牌。",
+        "MASTER_PLANNER 谋划专家 (Power, 2 energy): 当你打出技能牌时，该牌获得奇巧。",
+        "MIRAGE+ 蜃景+ (Skill, 1 energy): 获得等量于所有敌人中毒层数总和的格挡。",
+        "PIERCING_WAIL+ 尖啸+ (Skill, 1 energy): 所有敌人在本回合失去8点力量。 消耗。",
+        "ACROBATICS+ 杂技+ (Skill, 1 energy): 抽4张牌。 丢弃1张牌。",
+        "NOXIOUS_FUMES 毒雾 (Power, 1 energy): 在你的回合开始时，给予所有敌人2层中毒。",
+        "MAD_SCIENCE 疯狂科学 (Skill, 1 energy): 获得8点格挡。 抽3张牌",
+        "PIERCING_WAIL 尖啸 (Skill, 1 energy): 所有敌人在本回合失去6点力量。 消耗。"
+      ],
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "药瓶皮套: 拾起时，获得?(数值未知)个药水栏位并获得?(数值未知)瓶随机药水。",
+        "奥利哈钢: 如果你在回合结束时没有任何格挡，获得?(数值未知)点格挡。",
+        "烛台: 在你的第2回合开始时，获得?(数值未知)。",
+        "准备背包: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "佩尔之肉: 从你的第3回合开始，在回合开始时额外获得1点能量。",
+        "微型帐篷: 你可以在休息处选择任意数量的选项。",
+        "皇家枕头: 在休息时，额外回复?(数值未知)点生命。",
+        "宝石面具: 在每场战斗开始时，将一张随机能力牌从你的抽牌堆放入你的手牌，这张牌在本场战斗可以免费打出。",
+        "大蘑菇: 拾起时，将你的最大生命值提升?(数值未知)。在每场战斗开始时，少抽?(数值未知)张牌。",
+        "打击木偶: 名字中有“打击”的卡牌造成?(数值未知)点额外伤害。",
+        "意外光滑的石头: 在每场战斗开始时，获得?(数值未知)点敏捷。",
+        "音叉: 你每打出?(数值未知)张技能牌，获得?(数值未知)点格挡。"
+      ],
+      "potions": [],
+      "potion_slots": "0/3 used",
+      "act_boss_sim": {
+        "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+        "boss": "实验体，A10：实验体 #C24 111 血",
+        "entry_hp": "73/80：本幕路线计划到 boss（F48）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+        "current_deck": "两战原始通关率 0%，344配对样本；未经两战校准，不是必死或SL判据。",
+        "samples": "每个选项 344 次（目标 1000，到时间只跑完这些）；所有选项同一组随机种子，按样本配对比较；用时 11.1 秒",
+        "method": "第一战获胜的同一条样本继续第二战，没有独立胜率相乘，没有补满HP或补回喝掉的药水；差及标准误均来自两战原始配对结果。",
+        "limits": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "relics_at_start": "开场生效：准备背包、意外光滑的石头",
+        "relics_not_modelled": "蛇之戒指、宝石面具、大蘑菇、打击木偶",
+        "low_confidence": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "low_win_rate": "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。",
+        "objective": "F48→F49连续通关；第一战每条实际模拟剩余HP/药水/复活资源传入第二战，第二boss按本角色已观察分布抽样，不透露本局未来身份。",
+        "evidence": "silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B"
+      },
+      "your_run_plan": {
+        "made_on_floor": 40,
+        "archetype": "Accelerated poison with scalable defense and Sly discard efficiency",
+        "want": [
+          "ACCELERANT",
+          "OUTBREAK",
+          "FOOTWORK",
+          "SHADOWMELD",
+          "CALCULATED_GAMBLE",
+          "AFTERIMAGE"
+        ],
+        "avoid": [
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "INFINITE_BLADES",
+          "ACCURACY",
+          "DEADLY_POISON"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 11,
+        "elites": "avoid",
+        "rest": "auto",
+        "boss_prep": "Accelerate existing poison, strengthen sustained block, and stock three useful potions. Clear the skill-punishing opening quickly, reapply poison after resets, and preserve resources for boss two.",
+        "summary": "Heal and smith at both campfires; prioritize Acrobatics for cycling. Buy poison acceleration, defensive scaling, and emergency potions before removals. Avoid elites and redundant attacks or poison sources."
+      },
+      "double_boss_preparation": {
+        "objective": "第三幕路线和休息按F48→F49连续两战备战：第一战剩余HP/药水是第二战进场资源，四局观察没有中间营火或回血。",
+        "projection": "沿用silent-0163/S1.fix27：F48之后路线血量仍未知，不把进F48的血量当进F49血量；连战模拟才传递每条样本实际余量。",
+        "evidence": [
+          {
+            "run": "JMH5C51RLN4E",
+            "floor": 49,
+            "turn": 1
+          },
+          {
+            "run": "9TG1RP5LFAAK",
+            "floor": 49,
+            "turn": 1
+          },
+          {
+            "run": "ZVYUL2YP3518",
+            "floor": 49,
+            "turn": 1
+          },
+          {
+            "run": "TDLBRNA0R05B",
+            "floor": 49,
+            "turn": 1
+          }
+        ],
+        "limits": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "choice": "全部路线、休息和锻造选项保留，由Codex结合即时血量、牌组及连续两战原始模拟选择。"
+      },
+      "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+      "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-12T09:46:29，A10 共 200 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 200 局）：到达第1幕的局过第1幕boss 74% (n=200)，到达第2幕的局过第2幕boss 47% (n=149)，到达第3幕的局过第3幕boss 1% (n=70)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。"
+    },
+    "permanent_deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和+ (Attack, 0E): 造成4点伤害。 给予2层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n毒雾+ (Power, 1E): 在你的回合开始时，给予所有敌人3层中毒。\n隐秘匕首 (Skill, 0E): 丢弃2张牌。 将2张小刀加入你的手牌。\n紧勒 (Attack, 1E): 造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。\n致命毒药 (Skill, 1E): 给予5层中毒。\n刺杀 (Attack, 0E): 固有。 造成10点伤害。 给予1层易伤。 消耗。\n回响斩击 (Attack, 1E): 对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。\n带毒刺击 (Attack, 1E): 造成6点伤害。 给予3层中毒。\n肾上腺素 (Skill, 0E): 获得1点能量。 抽2张牌。 消耗。\n后空翻+ (Skill, 1E): 获得8点格挡。 抽2张牌。\n子弹时间+ (Skill, 2E): 你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。\n回响斩击 (Attack, 1E): 对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。\n迷雾+ (Skill, 2E): 给予所有敌人6层中毒和2层虚弱。\n弹跳药瓶 (Skill, 2E): 随机给予敌人3层中毒3次。\n蛇咬 (Skill, 2E): 保留。 给予7层中毒。\n必备工具 (Power, 1E): 在你的回合开始时，抽1张牌，丢弃1张牌。\n手上技法 (Skill, 1E): 获得7点格挡。 在本回合给你手牌中的一张技能牌添加奇巧。\n扫腿+ (Skill, 2E): 给予3层虚弱。 获得14点格挡。\n灵动步法+ (Power, 1E): 获得3点敏捷。\n后空翻 (Skill, 1E): 获得5点格挡。 抽2张牌。\n谋划专家 (Power, 2E): 当你打出技能牌时，该牌获得奇巧。\n蜃景+ (Skill, 1E): 获得等量于所有敌人中毒层数总和的格挡。\n尖啸+ (Skill, 1E): 所有敌人在本回合失去8点力量。 消耗。\n杂技+ (Skill, 1E): 抽4张牌。 丢弃1张牌。\n毒雾 (Power, 1E): 在你的回合开始时，给予所有敌人2层中毒。\n疯狂科学 (Skill, 1E): 获得8点格挡。 抽3张牌\n尖啸 (Skill, 1E): 所有敌人在本回合失去6点力量。 消耗。",
+    "options": {
+      "card0": {
+        "card": "预判",
+        "in_deck": 0,
+        "card_text": "在本回合获得2点敏捷。",
+        "facts": {
+          "samples": 344,
+          "raw_win_mc_interval95": [
+            0,
+            0.01104370604274152
+          ],
+          "hp_loss": {
+            "n": 344,
+            "mean": 73,
+            "p10": 73,
+            "p90": 73,
+            "meanSe": 0
+          },
+          "turns_won_only": {
+            "n": 0,
+            "mean": null,
+            "p10": null,
+            "p90": null,
+            "meanSe": null
+          },
+          "paired_hp_loss_difference": {
+            "n": 344,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 344,
+            "valid": 76,
+            "missing": 268,
+            "energy_paid": {
+              "n": 76,
+              "mean": 12.368421052631579,
+              "p10": 8,
+              "p90": 16.5,
+              "meanSe": 0.3703209159554594
+            },
+            "manual_actions": {
+              "n": 76,
+              "mean": 12.552631578947363,
+              "p10": 9,
+              "p90": 16,
+              "meanSe": 0.33789582991570477
+            },
+            "effect_resolutions": {
+              "n": 76,
+              "mean": 12.552631578947363,
+              "p10": 9,
+              "p90": 16,
+              "meanSe": 0.33789582991570477
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {
+              "FOOTWORK": {
+                "n": 58,
+                "mean": 3.4827586206896552,
+                "p10": 1,
+                "p90": 6,
+                "meanSe": 0.2523229996146008
+              },
+              "ACROBATICS": {
+                "n": 7,
+                "mean": 2.4285714285714284,
+                "p10": 1,
+                "p90": 4.200000000000001,
+                "meanSe": 0.6494372236659931
+              }
+            },
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 344,
+            "mean": 27.994186046511615,
+            "p10": 9,
+            "p90": 51,
+            "meanSe": 0.9501079778664673
+          },
+          "potions_used": {
+            "n": 344,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 344,
+            "mean": -16.979651162790695,
+            "p10": -33,
+            "p90": -3,
+            "meanSe": 0.615422464216932
+          }
+        },
+        "boss_sim_text": "F48→F49连续通关（第一boss 实验体，A10；低可信、未经两战校准）：当前牌组胜率 0%；选这个 0%（+0 ± 0），赢局掉血中位 —，约 7 回合；boss 平均剩血 545（当前牌组 542，+3.3 ± 1.8）（344 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card1",
+          "card2",
+          "skip"
+        ]
+      },
+      "card1": {
+        "card": "逃脱计划",
+        "in_deck": 0,
+        "card_text": "抽1张牌。 如果抽到的是技能牌，则获得3点格挡。",
+        "facts": {
+          "samples": 344,
+          "raw_win_mc_interval95": [
+            0,
+            0.01104370604274152
+          ],
+          "hp_loss": {
+            "n": 344,
+            "mean": 73,
+            "p10": 73,
+            "p90": 73,
+            "meanSe": 0
+          },
+          "turns_won_only": {
+            "n": 0,
+            "mean": null,
+            "p10": null,
+            "p90": null,
+            "meanSe": null
+          },
+          "paired_hp_loss_difference": {
+            "n": 344,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 344,
+            "valid": 76,
+            "missing": 268,
+            "energy_paid": {
+              "n": 76,
+              "mean": 12.368421052631579,
+              "p10": 8,
+              "p90": 17,
+              "meanSe": 0.3754959785628836
+            },
+            "manual_actions": {
+              "n": 76,
+              "mean": 12.605263157894738,
+              "p10": 9,
+              "p90": 16.5,
+              "meanSe": 0.3549543817333809
+            },
+            "effect_resolutions": {
+              "n": 76,
+              "mean": 12.605263157894738,
+              "p10": 9,
+              "p90": 16.5,
+              "meanSe": 0.3549543817333809
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {
+              "FOOTWORK": {
+                "n": 57,
+                "mean": 3.4912280701754397,
+                "p10": 1,
+                "p90": 6,
+                "meanSe": 0.2566445410232946
+              },
+              "ACROBATICS": {
+                "n": 7,
+                "mean": 2.4285714285714284,
+                "p10": 1,
+                "p90": 4.200000000000001,
+                "meanSe": 0.6494372236659931
+              }
+            },
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 344,
+            "mean": 28.430232558139554,
+            "p10": 9,
+            "p90": 51,
+            "meanSe": 0.9627280286497858
+          },
+          "potions_used": {
+            "n": 344,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 344,
+            "mean": -17.20058139534884,
+            "p10": -34.699999999999996,
+            "p90": -3,
+            "meanSe": 0.6198019990004506
+          }
+        },
+        "boss_sim_text": "F48→F49连续通关（第一boss 实验体，A10；低可信、未经两战校准）：当前牌组胜率 0%；选这个 0%（+0 ± 0），赢局掉血中位 —，约 7 回合；boss 平均剩血 545（当前牌组 542，+3 ± 1.8）（344 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card0",
+          "card2",
+          "skip"
+        ]
+      },
+      "card2": {
+        "card": "闪躲翻滚",
+        "in_deck": 0,
+        "card_text": "获得4点格挡。 在下个回合，获得4点格挡。",
+        "facts": {
+          "samples": 344,
+          "raw_win_mc_interval95": [
+            0,
+            0.01104370604274152
+          ],
+          "hp_loss": {
+            "n": 344,
+            "mean": 73,
+            "p10": 73,
+            "p90": 73,
+            "meanSe": 0
+          },
+          "turns_won_only": {
+            "n": 0,
+            "mean": null,
+            "p10": null,
+            "p90": null,
+            "meanSe": null
+          },
+          "paired_hp_loss_difference": {
+            "n": 344,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 344,
+            "valid": 75,
+            "missing": 269,
+            "energy_paid": {
+              "n": 75,
+              "mean": 12.546666666666667,
+              "p10": 8,
+              "p90": 17,
+              "meanSe": 0.38404829526127704
+            },
+            "manual_actions": {
+              "n": 75,
+              "mean": 12.759999999999998,
+              "p10": 9,
+              "p90": 17,
+              "meanSe": 0.36060010043319785
+            },
+            "effect_resolutions": {
+              "n": 75,
+              "mean": 12.759999999999998,
+              "p10": 9,
+              "p90": 17,
+              "meanSe": 0.36060010043319785
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {
+              "FOOTWORK": {
+                "n": 58,
+                "mean": 3.4827586206896552,
+                "p10": 1,
+                "p90": 6,
+                "meanSe": 0.2523229996146008
+              },
+              "ACROBATICS": {
+                "n": 7,
+                "mean": 2.4285714285714284,
+                "p10": 1,
+                "p90": 4.200000000000001,
+                "meanSe": 0.6494372236659931
+              }
+            },
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 344,
+            "mean": 28.65697674418605,
+            "p10": 9,
+            "p90": 51,
+            "meanSe": 0.9667567666196695
+          },
+          "potions_used": {
+            "n": 344,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 344,
+            "mean": -17.386627906976745,
+            "p10": -35,
+            "p90": -3,
+            "meanSe": 0.6196270747637024
+          }
+        },
+        "boss_sim_text": "F48→F49连续通关（第一boss 实验体，A10；低可信、未经两战校准）：当前牌组胜率 0%；选这个 0%（+0 ± 0），赢局掉血中位 —，约 7 回合；boss 平均剩血 544（当前牌组 542，+2.8 ± 1.8）（344 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card0",
+          "card1",
+          "skip"
+        ]
+      },
+      "skip": {
+        "card": "skip",
+        "in_deck": null,
+        "card_text": null,
+        "facts": {
+          "samples": 344,
+          "raw_win_mc_interval95": [
+            0,
+            0.01104370604274152
+          ],
+          "hp_loss": {
+            "n": 344,
+            "mean": 73,
+            "p10": 73,
+            "p90": 73,
+            "meanSe": 0
+          },
+          "turns_won_only": {
+            "n": 0,
+            "mean": null,
+            "p10": null,
+            "p90": null,
+            "meanSe": null
+          },
+          "paired_hp_loss_difference": {
+            "n": 344,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "capped": 0,
+          "complete_combinations": null,
+          "core_window": {
+            "samples": 344,
+            "valid": 58,
+            "missing": 286,
+            "energy_paid": {
+              "n": 58,
+              "mean": 12.310344827586206,
+              "p10": 8.7,
+              "p90": 16,
+              "meanSe": 0.37961270465624997
+            },
+            "manual_actions": {
+              "n": 58,
+              "mean": 12.672413793103447,
+              "p10": 9.7,
+              "p90": 16,
+              "meanSe": 0.3330803011500473
+            },
+            "effect_resolutions": {
+              "n": 58,
+              "mean": 12.672413793103447,
+              "p10": 9.7,
+              "p90": 16,
+              "meanSe": 0.3330803011500473
+            },
+            "combinations": {
+              "discardBandages": {},
+              "poisonDefense": null,
+              "dexterityDefense": null,
+              "shivDefense": null,
+              "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+            },
+            "first_core_play_when_played": {
+              "FOOTWORK": {
+                "n": 45,
+                "mean": 3.5333333333333337,
+                "p10": 1,
+                "p90": 5.600000000000001,
+                "meanSe": 0.26323550158162423
+              },
+              "ACROBATICS": {
+                "n": 4,
+                "mean": 3.75,
+                "p10": 3,
+                "p90": 4.7,
+                "meanSe": 0.47871355387816905
+              }
+            },
+            "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+          },
+          "block_gained": {
+            "n": 344,
+            "mean": 27.47383720930235,
+            "p10": 9,
+            "p90": 51,
+            "meanSe": 0.9533661851456745
+          },
+          "potions_used": {
+            "n": 344,
+            "mean": 0,
+            "p10": 0,
+            "p90": 0,
+            "meanSe": 0
+          },
+          "hp_remaining": {
+            "n": 344,
+            "mean": -17.023255813953487,
+            "p10": -31,
+            "p90": -4,
+            "meanSe": 0.5846667066984615
+          }
+        },
+        "boss_sim_text": "F48→F49连续通关（第一boss 实验体，A10；低可信、未经两战校准）：不改变牌组：胜率 0%，赢局掉血中位 —，约 7 回合；boss 平均剩血 542（344 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少）",
+        "tied": [
+          "card0",
+          "card1",
+          "card2"
+        ]
+      }
+    },
+    "new_simulation": false,
+    "limits": "相同题面说明同样本/策略；本冻结审计没有完整逐样本随机身份和全部预算输入，不能独立重建配对轨迹。保留已记录配对差，不用聚合均值自行造配对SE。"
+  }
+]

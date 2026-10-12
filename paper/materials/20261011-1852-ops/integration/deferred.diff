@@ -1,0 +1,493 @@
+diff --git a/agent/tests/ops-deferred.test.ts b/agent/tests/ops-deferred.test.ts
+new file mode 100644
+index 000000000..efb0fb162
+--- /dev/null
++++ b/agent/tests/ops-deferred.test.ts
+@@ -0,0 +1,82 @@
++import { spawn } from "node:child_process";
++import { chmodSync, existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { fileURLToPath } from "node:url";
++import { afterAll, expect, it } from "vitest";
++
++const tmp = mkdtempSync(join(tmpdir(), "ops-deferred-"));
++afterAll(() => rmSync(tmp, { recursive: true, force: true }));
++const scheduler = fileURLToPath(new URL("../../ops/codex-ops.sh", import.meta.url));
++
++function fixture(name: string) {
++  const root = join(tmp, name);
++  const dir = join(root, "ops/codex-ops");
++  mkdirSync(join(dir, "queue"), { recursive: true });
++  writeFileSync(join(dir, "queue/100-manual.md"), "preserve this event\n");
++  const fake = join(root, "fake-tsx.sh");
++  writeFileSync(fake, '#!/bin/bash\nif [ "$FAKE_RC" = 0 ]; then rm -f "$CODEX_OPS_DIR/queue/100-manual.md"; fi\nexit "$FAKE_RC"\n');
++  chmodSync(fake, 0o755);
++  const env = { ...process.env, CODEX_OPS_ROOT: root, CODEX_OPS_DIR: dir, CODEX_OPS_TSX: fake, CODEX_OPS_NO_DRAIN: "0" };
++  const drain = async (rc = 75) => {
++    const result = await new Promise<{ code: number | null; stderr: string }>((resolve, reject) => {
++      const child = spawn("bash", [scheduler, "drain"], { env: { ...env, FAKE_RC: String(rc) }, stdio: ["ignore", "ignore", "pipe"], timeout: 10_000 });
++      let stderr = "";
++      child.stderr!.on("data", chunk => { stderr += String(chunk); });
++      child.on("error", reject);
++      child.on("close", code => resolve({ code, stderr }));
++    });
++    expect(result.code, result.stderr).toBe(0);
++  };
++  const state = join(dir, "deferred.state");
++  const inbox = join(root, "ops/inbox-dev.md");
++  const old = () => Math.floor(Date.now() / 1000) - 1900;
++  return { root, dir, drain, state, inbox, old };
++}
++
++it("alerts once after three long-running deferrals without consuming events or increasing failures", async () => {
++  const f = fixture("long");
++  writeFileSync(f.state, `${f.old()} 2 0\n`);
++  await f.drain();
++  expect(readFileSync(f.inbox, "utf8")).toContain("持续暂缓唤醒");
++  await f.drain();
++  expect(readFileSync(f.inbox, "utf8").trim().split("\n")).toHaveLength(1);
++  expect(readFileSync(join(f.dir, "queue/100-manual.md"), "utf8")).toBe("preserve this event\n");
++  expect(existsSync(join(f.dir, "fails"))).toBe(false);
++  expect(readFileSync(f.state, "utf8").trim().split(" ").slice(1)).toEqual(["4", "1"]);
++});
++
++it("requires both age and count, and recovers malformed or future episode state", async () => {
++  const f = fixture("short");
++  await f.drain(); await f.drain(); await f.drain();
++  expect(existsSync(f.inbox)).toBe(false);
++  writeFileSync(f.state, `${f.old()} 0 0\n`);
++  await f.drain();
++  expect(existsSync(f.inbox)).toBe(false);
++  for (const value of ["broken state\n", `${Math.floor(Date.now() / 1000) + 3600} 8 0\n`]) {
++    writeFileSync(f.state, value);
++    await f.drain();
++    expect(readFileSync(f.state, "utf8").trim().split(" ").slice(1)).toEqual(["1", "0"]);
++  }
++});
++
++it("clears the episode on success, failure or an empty queue; pause preserves it without alerting", async () => {
++  const f = fixture("reset");
++  const oldState = `${f.old()} 3 0\n`;
++  writeFileSync(f.state, oldState);
++  writeFileSync(join(f.dir, "PAUSE"), "paused\n");
++  await f.drain();
++  expect(readFileSync(f.state, "utf8")).toBe(oldState);
++  expect(existsSync(f.inbox)).toBe(false);
++  rmSync(join(f.dir, "PAUSE"));
++  await f.drain(1);
++  expect(existsSync(f.state)).toBe(false);
++  expect(readFileSync(join(f.dir, "fails"), "utf8").trim()).toBe("1");
++  writeFileSync(f.state, oldState);
++  await f.drain(0);
++  expect(existsSync(f.state)).toBe(false);
++  expect(existsSync(join(f.dir, "fails"))).toBe(false);
++  writeFileSync(f.state, oldState);
++  await f.drain();
++  expect(existsSync(f.state)).toBe(false);
++});
+diff --git a/docs/codex-ops.md b/docs/codex-ops.md
+index 27fd7cf5e..ce799247e 100644
+--- a/docs/codex-ops.md
++++ b/docs/codex-ops.md
+@@ -43,6 +43,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再
+ - 事件是 `ops/codex-ops/queue/<纳秒时间>-<类型>.md`，一次叫醒把队列里的全部事件按时间编号成一条消息。成功后事件移到 `delivered/`；失败（退出码非 0、turn 失败、超时）事件留在队列，下一个 tick 重试；连续 3 次失败在收件箱写一行。
+ - 串行：`flock ops/codex-ops/wake.lock`，同一时间只有一个叫醒；叫醒期间新来的事件，这次叫醒结束后接着发（一次最多连发 5 轮）。
+ - 每次叫醒前：codex 启动检查（版本、登录、模型和强度）+ key 隔离自检（`codex sandbox -P ops` 打开每个 key 文件，打得开就不叫醒，exit 3）。
++- Herdr 暂缓（exit 75）不计为模型失败；但连续暂缓至少 3 次且持续 30 分钟时，现有调度器向 `ops/inbox-dev.md` 写一次健康提醒，供 watcher 排查。`deferred.state` 保存本次起点/次数/是否已通知，成功、非暂缓失败或队列清空后重置；暂停期间不检测。原事件保留，不新增 cron、不重启会话、不自动改派或清除人的输入。
+ - 超时 120 分钟（`CODEX_OPS_WAKE_TIMEOUT_MIN`），按进程组停。登录被拒时让 codex 刷新一次令牌，事件留到下次。
+ - 记录：每次叫醒的完整事件流在 `ops/codex-ops/wakes/<时间>-wake.jsonl`（第一行是命令和消息），一行摘要进 `wakes.jsonl`（token、上下文大小、压缩次数、最后的回答），调度器日志 `scheduler.log`。写完都做 key 扫描替换。运行时目录 `ops/codex-ops/` 不进 git。
+ 
+diff --git a/ops/codex-ops.sh b/ops/codex-ops.sh
+index 1a0f86f91..a3874f88a 100755
+--- a/ops/codex-ops.sh
++++ b/ops/codex-ops.sh
+@@ -44,6 +44,30 @@ enqueue() {
+   log "queued $1"
+ }
+ 
++# A deferred wake is not a failure, but an indefinitely deferred queue needs visibility.
++# Called only while holding wake.lock; notify once per episode and never disturb the TUI.
++note_deferred() {
++  local now first=0 count=0 notified=0
++  now=$(date +%s)
++  if [ -f "$DIR/deferred.state" ]; then
++    read -r first count notified < "$DIR/deferred.state" || true
++    if ! [[ "$first" =~ ^[1-9][0-9]{0,10}$ && "$count" =~ ^(0|[1-9][0-9]{0,8})$ && "$notified" =~ ^[01]$ ]] \
++      || [ "$first" -gt "$now" ]; then
++      first=0; count=0; notified=0
++    fi
++  fi
++  [ "$first" -gt 0 ] || first=$now
++  count=$((count + 1))
++  if [ "$count" -ge 3 ] && [ "$((now - first))" -ge 1800 ] && [ "$notified" -eq 0 ]; then
++    if printf '%s\n' "- $(date '+%F %H:%M') [codex-ops 调度器] 运维队列持续暂缓唤醒 $(( (now - first) / 60 )) 分钟、$count 次（exit 75）。请 watcher 核对 Herdr 会话、未提交输入/对话框和调度日志；这不等于模型失败。原队列保留，未重启或接管运行。见 ops/codex-ops/scheduler.log 与 deferred.state。" >> "$ROOT/ops/inbox-dev.md"; then
++      notified=1
++      log "prolonged deferred queue: $count attempts since $first; inbox notified"
++    fi
++  fi
++  printf '%s %s %s\n' "$first" "$count" "$notified" > "$DIR/deferred.state.tmp"
++  mv "$DIR/deferred.state.tmp" "$DIR/deferred.state"
++}
++
+ # drain [init]: wake while events are queued (at most 5 wakes in a row; events queued meanwhile go in the next one).
+ # "init" also wakes with an empty queue when there is no session yet (start: the first turn = the ops prompt).
+ drain() {
+@@ -55,13 +79,19 @@ drain() {
+   for i in 1 2 3 4 5; do
+     paused && break
+     if ! ls "$QUEUE"/*.md > /dev/null 2>&1; then
++      rm -f "$DIR/deferred.state"
+       [ "$mode" = init ] && [ ! -s "$DIR/session-id" ] || break
+     fi
+     mode=""
+     nice -n 5 "$TSX" "$MAIN" wake >> "$DIR/wake.out" 2>&1
+     rc=$?
+     # 75: deferred (herdr mode: the ops TUI is busy, shows a dialog or holds a person's unsent text). Not a failure.
+-    if [ $rc -eq 75 ]; then log "wake deferred (ops TUI not ready, see above); the events stay queued for the next tick"; break; fi
++    if [ $rc -eq 75 ]; then
++      note_deferred
++      log "wake deferred (ops TUI not ready, see above); the events stay queued for the next tick"
++      break
++    fi
++    rm -f "$DIR/deferred.state"
+     if [ $rc -ne 0 ]; then
+       echo "$(( $(cat "$DIR/fails" 2>/dev/null || echo 0) + 1 ))" > "$DIR/fails"
+       log "wake failed (exit $rc, $(cat "$DIR/fails") in a row); the events stay queued for the next tick"
+@@ -180,6 +210,7 @@ status() {
+   echo "hosting: $( [ -f "$DIR/hosting" ] && grep -v '^#' "$DIR/hosting" | tr '\n' ' ' || echo 'default (ops=exec learners=setsid autoplay=setsid)')${CODEX_OPS_MODE:+; CODEX_OPS_MODE=$CODEX_OPS_MODE}"
+   [ -f "$DIR/herdr.json" ] && timeout 20 bash "$OPS/herdr-host.sh" status 2>&1 | sed 's/^/  /'
+   echo "queue: $(ls "$QUEUE"/*.md 2>/dev/null | wc -l) event(s)$( [ -f "$DIR/fails" ] && echo ", $(cat "$DIR/fails") failed wake(s) in a row")"
++  [ -f "$DIR/deferred.state" ] && echo "deferred episode (first epoch / attempts / notified): $(cat "$DIR/deferred.state")"
+   [ -f "$DIR/stall.state" ] && echo "stall state: $(cat "$DIR/stall.state")"
+   python3 "$OPS/codex-ops-learn.py" status 2>&1 | tail -3
+   echo "--- $LOG"; tail -n 8 "$LOG" 2>/dev/null
+diff --git a/paper/materials/20261011-ops-deferred-alert/gitleaks-final.json b/paper/materials/20261011-ops-deferred-alert/gitleaks-final.json
+new file mode 100644
+index 000000000..fe51488c7
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/gitleaks-final.json
+@@ -0,0 +1 @@
++[]
+diff --git a/paper/materials/20261011-ops-deferred-alert/gitleaks-final.log b/paper/materials/20261011-ops-deferred-alert/gitleaks-final.log
+new file mode 100644
+index 000000000..e7cc9dbfb
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/gitleaks-final.log
+@@ -0,0 +1,3 @@
++6:54PM INF 0 commits scanned.
++6:54PM INF scanned ~14388 bytes (14.39 KB) in 1s
++6:54PM INF no leaks found
+diff --git a/paper/materials/20261011-ops-deferred-alert/gitleaks-staged.json b/paper/materials/20261011-ops-deferred-alert/gitleaks-staged.json
+new file mode 100644
+index 000000000..fe51488c7
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/gitleaks-staged.json
+@@ -0,0 +1 @@
++[]
+diff --git a/paper/materials/20261011-ops-deferred-alert/gitleaks-staged.log b/paper/materials/20261011-ops-deferred-alert/gitleaks-staged.log
+new file mode 100644
+index 000000000..9b161e9d7
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/gitleaks-staged.log
+@@ -0,0 +1,3 @@
++6:53PM INF 0 commits scanned.
++6:53PM INF scanned ~7277 bytes (7.28 KB) in 190ms
++6:53PM INF no leaks found
+diff --git a/paper/materials/20261011-ops-deferred-alert/paths-final.exit b/paper/materials/20261011-ops-deferred-alert/paths-final.exit
+new file mode 100644
+index 000000000..573541ac9
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/paths-final.exit
+@@ -0,0 +1 @@
++0
+diff --git a/paper/materials/20261011-ops-deferred-alert/paths-final.log b/paper/materials/20261011-ops-deferred-alert/paths-final.log
+new file mode 100644
+index 000000000..49bc4a5fd
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/paths-final.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/agent
++
++
++ Test Files  1 passed (1)
++      Tests  11 passed (11)
++   Start at  18:52:28
++   Duration  2.25s (transform 1.70s, setup 418ms, import 1.62s, tests 62ms, environment 0ms)
++
+diff --git a/paper/materials/20261011-ops-deferred-alert/sandbox-1.exit b/paper/materials/20261011-ops-deferred-alert/sandbox-1.exit
+new file mode 100644
+index 000000000..d00491fd7
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/sandbox-1.exit
+@@ -0,0 +1 @@
++1
+diff --git a/paper/materials/20261011-ops-deferred-alert/sandbox-1.log b/paper/materials/20261011-ops-deferred-alert/sandbox-1.log
+new file mode 100644
+index 000000000..81c0ebcc7
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/sandbox-1.log
+@@ -0,0 +1,106 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/agent
++
++ ❯ tests/ops-deferred.test.ts (3 tests | 3 failed) 248ms
++   × alerts once after three long-running deferrals without consuming events or increasing failures 106ms
++   × requires both age and count, and recovers malformed or future episode state 82ms
++   × clears the episode on success, failure or an empty queue; pause preserves it without alerting 56ms
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  tests/ops-deferred.test.ts > alerts once after three long-running deferrals without consuming events or increasing failures
++AssertionError: expected Error: spawnSync bash EPERM { …(5) } to be undefined
++
++- Expected:
++undefined
++
+++ Received:
++Error {
++  "message": "spawnSync bash EPERM",
++  "errno": -1,
++  "code": "EPERM",
++  "syscall": "spawnSync bash",
++  "path": "bash",
++  "spawnargs": [
++    "/home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/ops/codex-ops.sh",
++    "drain",
++  ],
++}
++
++ ❯ Object.drain tests/ops-deferred.test.ts:22:26
++     20|   const drain = (rc = 75) => {
++     21|     const result = spawnSync("bash", [scheduler, "drain"], { env: { ..…
++     22|     expect(result.error).toBeUndefined();
++       |                          ^
++     23|     expect(result.status, result.stderr).toBe(0);
++     24|   };
++ ❯ tests/ops-deferred.test.ts:34:5
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
++
++ FAIL  tests/ops-deferred.test.ts > requires both age and count, and recovers malformed or future episode state
++AssertionError: expected Error: spawnSync bash EPERM { …(5) } to be undefined
++
++- Expected:
++undefined
++
+++ Received:
++Error {
++  "message": "spawnSync bash EPERM",
++  "errno": -1,
++  "code": "EPERM",
++  "syscall": "spawnSync bash",
++  "path": "bash",
++  "spawnargs": [
++    "/home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/ops/codex-ops.sh",
++    "drain",
++  ],
++}
++
++ ❯ Object.drain tests/ops-deferred.test.ts:22:26
++     20|   const drain = (rc = 75) => {
++     21|     const result = spawnSync("bash", [scheduler, "drain"], { env: { ..…
++     22|     expect(result.error).toBeUndefined();
++       |                          ^
++     23|     expect(result.status, result.stderr).toBe(0);
++     24|   };
++ ❯ tests/ops-deferred.test.ts:45:5
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
++
++ FAIL  tests/ops-deferred.test.ts > clears the episode on success, failure or an empty queue; pause preserves it without alerting
++AssertionError: expected Error: spawnSync bash EPERM { …(5) } to be undefined
++
++- Expected:
++undefined
++
+++ Received:
++Error {
++  "message": "spawnSync bash EPERM",
++  "errno": -1,
++  "code": "EPERM",
++  "syscall": "spawnSync bash",
++  "path": "bash",
++  "spawnargs": [
++    "/home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/ops/codex-ops.sh",
++    "drain",
++  ],
++}
++
++ ❯ Object.drain tests/ops-deferred.test.ts:22:26
++     20|   const drain = (rc = 75) => {
++     21|     const result = spawnSync("bash", [scheduler, "drain"], { env: { ..…
++     22|     expect(result.error).toBeUndefined();
++       |                          ^
++     23|     expect(result.status, result.stderr).toBe(0);
++     24|   };
++ ❯ tests/ops-deferred.test.ts:62:5
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
++
++
++ Test Files  1 failed | 266 passed (267)
++      Tests  3 failed | 2678 passed (2681)
++   Start at  18:45:54
++   Duration  308.79s (transform 10.54s, setup 17.35s, import 42.61s, tests 1126.95s, environment 34ms)
++
+diff --git a/paper/materials/20261011-ops-deferred-alert/targeted-async-2.exit b/paper/materials/20261011-ops-deferred-alert/targeted-async-2.exit
+new file mode 100644
+index 000000000..d00491fd7
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/targeted-async-2.exit
+@@ -0,0 +1 @@
++1
+diff --git a/paper/materials/20261011-ops-deferred-alert/targeted-async-2.log b/paper/materials/20261011-ops-deferred-alert/targeted-async-2.log
+new file mode 100644
+index 000000000..6325ac53a
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/targeted-async-2.log
+@@ -0,0 +1,79 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/agent
++
++ ❯ tests/ops-deferred.test.ts (3 tests | 3 failed) 47ms
++   × alerts once after three long-running deferrals without consuming events or increasing failures 18ms
++   × requires both age and count, and recovers malformed or future episode state 12ms
++   × clears the episode on success, failure or an empty queue; pause preserves it without alerting 12ms
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  tests/ops-deferred.test.ts > alerts once after three long-running deferrals without consuming events or increasing failures
++AssertionError: bash: /home/dw/Projects/agent-sts2/.worktrees/ops/codex-ops.sh: No such file or directory
++: expected 127 to be +0 // Object.is equality
++
++- Expected
+++ Received
++
++- 0
+++ 127
++
++ ❯ Object.drain tests/ops-deferred.test.ts:28:40
++     26|       child.on("close", code => resolve({ code, stderr }));
++     27|     });
++     28|     expect(result.code, result.stderr).toBe(0);
++       |                                        ^
++     29|   };
++     30|   const state = join(dir, "deferred.state");
++ ❯ tests/ops-deferred.test.ts:39:3
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
++
++ FAIL  tests/ops-deferred.test.ts > requires both age and count, and recovers malformed or future episode state
++AssertionError: bash: /home/dw/Projects/agent-sts2/.worktrees/ops/codex-ops.sh: No such file or directory
++: expected 127 to be +0 // Object.is equality
++
++- Expected
+++ Received
++
++- 0
+++ 127
++
++ ❯ Object.drain tests/ops-deferred.test.ts:28:40
++     26|       child.on("close", code => resolve({ code, stderr }));
++     27|     });
++     28|     expect(result.code, result.stderr).toBe(0);
++       |                                        ^
++     29|   };
++     30|   const state = join(dir, "deferred.state");
++ ❯ tests/ops-deferred.test.ts:50:3
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
++
++ FAIL  tests/ops-deferred.test.ts > clears the episode on success, failure or an empty queue; pause preserves it without alerting
++AssertionError: bash: /home/dw/Projects/agent-sts2/.worktrees/ops/codex-ops.sh: No such file or directory
++: expected 127 to be +0 // Object.is equality
++
++- Expected
+++ Received
++
++- 0
+++ 127
++
++ ❯ Object.drain tests/ops-deferred.test.ts:28:40
++     26|       child.on("close", code => resolve({ code, stderr }));
++     27|     });
++     28|     expect(result.code, result.stderr).toBe(0);
++       |                                        ^
++     29|   };
++     30|   const state = join(dir, "deferred.state");
++ ❯ tests/ops-deferred.test.ts:67:3
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
++
++
++ Test Files  1 failed (1)
++      Tests  3 failed (3)
++   Start at  18:51:51
++   Duration  563ms (transform 306ms, setup 359ms, import 15ms, tests 47ms, environment 0ms)
++
+diff --git a/paper/materials/20261011-ops-deferred-alert/targeted-final.exit b/paper/materials/20261011-ops-deferred-alert/targeted-final.exit
+new file mode 100644
+index 000000000..573541ac9
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/targeted-final.exit
+@@ -0,0 +1 @@
++0
+diff --git a/paper/materials/20261011-ops-deferred-alert/targeted-final.log b/paper/materials/20261011-ops-deferred-alert/targeted-final.log
+new file mode 100644
+index 000000000..5442aa25d
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/targeted-final.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-deferred-alert-20261011/agent
++
++
++ Test Files  1 passed (1)
++      Tests  3 passed (3)
++   Start at  18:52:13
++   Duration  1.22s (transform 348ms, setup 405ms, import 15ms, tests 660ms, environment 0ms)
++
+diff --git a/paper/materials/20261011-ops-deferred-alert/verification.json b/paper/materials/20261011-ops-deferred-alert/verification.json
+new file mode 100644
+index 000000000..093a8b7e6
+--- /dev/null
++++ b/paper/materials/20261011-ops-deferred-alert/verification.json
+@@ -0,0 +1,36 @@
++{
++  "observed_at": "2026-10-11T18:52:47+08:00",
++  "problem": "229 historical exit-75 deferrals were not counted as failures and never alerted; queue stalled for more than a day",
++  "change": "A once-per-episode inbox notice after >=3 deferrals and >=1800 seconds, using the original drain/wake lock; clear on success, other failure, or empty queue; pause untouched",
++  "no_production_actions": [
++    "No new cron or watcher",
++    "No forced session restart or input clearing",
++    "No event consumption or changed gameplay"
++  ],
++  "validation": {
++    "tsc": 0,
++    "sandbox_first": {
++      "files": 267,
++      "passed_tests": 2678,
++      "failed_tests": 3,
++      "log": "sandbox-1.log",
++      "reason": "New fixed integration tests used spawnSync; sandbox returned EPERM. Tests now use async spawn."
++    },
++    "targeted_final": {
++      "files": 1,
++      "passed_tests": 3,
++      "log": "targeted-final.log"
++    },
++    "paths": {
++      "files": 1,
++      "passed_tests": 11,
++      "log": "paths-final.log"
++    },
++    "unique_coverage": {
++      "files": 268,
++      "tests": 2692
++    },
++    "additional_failure_preserved": "targeted-async-2.log: test helper depended on cwd; replaced with import.meta.url"
++  },
++  "production_acceptance": "Not yet observed on a real prolonged deferral; no failure injected into ops"
++}

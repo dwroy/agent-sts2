@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：CNKR125PFHJ5（A10，第33层，无厌沙虫沙坑归零，T6毒结算后敌剩121血）。关键数字已核对，增益名称已追加勘误。
+- 新的纯 bug：
+  - CNKR125PFHJ5：单动作题面漏接沙坑截止，预测结束后剩12血，实际归零 — `.worktrees/live/agent/src/reflex/combat.ts:98`（新）
+- 写成「未记录」的项：CNKR125PFHJ5：完整dirty源码、部分毛伤与子体身份、机制内部时点、打法及资源反事实、罐装幽灵实测与真实持有价、boss时钟及三幕资源、DeepSeek窗内推理、Jev缓存与实际费用。
+- 学习账本：CNKR125PFHJ5：新增 silent-0308、silent-0309；更新 silent-0295、silent-0021、silent-0020、silent-0005、silent-0011、silent-0027、silent-0018、silent-0047、silent-0071、silent-0023（老错 silent-0295）；`ledger.py check` 退出码0。
+- 代码提案（均关联 strategy-proposal，未实现、未上线）：
+  - F33T6／silent-0308、silent-0018／silent-proposal-0ff91bb5da98a252：修单动作沙坑事实接线；未知药水不足以支持强喝或强制SL。
+  - F23T5／silent-0295／silent-proposal-7bcb766a47aed4bc：随机施毒保证边界；完整dirty树及全部分配未重放。
+  - F29→F30→F33／silent-0021、silent-0020、silent-0309等／silent-proposal-910db627f14d4eba：输出截止、资源和药水未知分账；证据不足以拟定策略阈值，名称勘误另存。
+
+```json
+{"task":"postmortem","appended":["CNKR125PFHJ5"],"skipped":[],"bugs":[{"run":"CNKR125PFHJ5","where":"agent/src/reflex/combat.ts:98","what":"单动作结束题面漏接沙坑截止，27血9挡被预测剩12而实际归零","new":true}],"ledger":{"added":["silent-0308","silent-0309"],"updated":["silent-0295","silent-0021","silent-0020","silent-0005","silent-0011","silent-0027","silent-0018","silent-0047","silent-0071","silent-0023"],"repeats":["silent-0295"],"check":0},"code_proposals":["silent-proposal-0ff91bb5da98a252","silent-proposal-7bcb766a47aed4bc","silent-proposal-910db627f14d4eba"],"implementation_domains":["combat","potion","terminal","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-194301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11b52-f068-7f91-896a-050bf1c0d326
+轮数：1；工具调用：command_execution×55
+token：输入 230.2k、输出 45.3k（其中推理 13.7k）、cache 读 4699.4k、cache 写 0（命中 95.3%）
+成本：未提供
+耗时：1348.5 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 8.1 s、首次工具 12.6 s、末次工具结束 1312.5 s；工具内共 53.0 s，其余（模型生成、推理、网络）1292.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×32；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T19-43-02-01a11b52-f068-7f91-896a-050bf1c0d326.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-194301-postmortem.jsonl

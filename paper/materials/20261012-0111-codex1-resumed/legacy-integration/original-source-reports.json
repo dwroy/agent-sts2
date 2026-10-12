@@ -1,0 +1,695 @@
+[
+  {
+    "batch": "20261009-231302-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261009-231302/learner/runs/20261009-231309-strategy-proposal/report.md",
+    "report_sha256": "0670e968ea5492f7e3cfb4320db09b12ff7a92e6dbcfd1fad5339c8a09c770da",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261009-231302-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "id": "silent-0079",
+        "commit": "be69855995737d6f381adb10bf248964832da24b",
+        "proposal": "silent-proposal-be0788b2d8f42886",
+        "scope": "静默A10三阶段候选预测与首步请求日志审计，保留策略参数"
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 8,
+      "sandbox": 0,
+      "files": 255,
+      "passed": 2643,
+      "live": null
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      "silent-proposal-c20b5139dd0dff71",
+      "silent-proposal-ae9e692d680e3819",
+      "silent-proposal-246daedaa3021847",
+      "silent-proposal-52f1e1bd2e7db0ed",
+      "silent-proposal-6dd8bbff876be528",
+      "silent-proposal-578e415a259e6835",
+      "silent-proposal-c0767768bf6a7ab1",
+      "silent-proposal-a46bdb7fe711d79a",
+      "silent-proposal-1044224808015e5c",
+      "silent-proposal-7cbc6005db712ba9"
+    ]
+  },
+  {
+    "batch": "20261009-231302-fix-batch",
+    "report": ".worktrees/codex-fix-silent-20261009-231302/learner/runs/20261009-231309-fix-batch/report.md",
+    "report_sha256": "988731eb2f893c8f2b39e2810579067d5c08221748e86789af8e39fe7c665918",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261009-231302-fix-batch.md",
+    "selected_fixes": [
+      {
+        "item": "silent-0332：资源契约错误缺少分支和样本身份（仅诊断子项）",
+        "commit": "7f658abe742c5b62d14ff9f8047ac11837d10489",
+        "test": "agent/tests/continuation-diagnostics.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2639,
+      "files": 256
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      {
+        "item": "silent-0250：SL自爆占位残血排序",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0256：狡诈药水生成",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0260：紧勒逐牌失血",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0263：背击取整",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0266：SL首牌身份",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0268：生存者单弃",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0271：毒胜保血候选",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0273：死亡段接续",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0279：升级改标抽序",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0287：联合伤害上界",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0290：战斗专注禁抽",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0291：苦无新敏捷",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0293：螺线飞镖敏捷",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0295：随机施毒确定性",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0296：逃脱计划抽牌条件挡",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0297：凋萎可见牌堆缓存",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0300：全弃重抽入口",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0308：单行动沙坑截止",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0311：库存恢复血上限",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0317：升级计算下注",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0319：升级蛇咬",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0320：同线坚定不移",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0322：升级神化",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0324：刀刃之舞生成",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0329：饮药临时力量",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0334：升级隐秘匕首",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0339：复活误核销",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0344：坚韧之环延迟挡",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0347：组装师召唤",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0349：虚弱下临时减力取整",
+        "reason": "策略类；沿已有独立提案链。"
+      },
+      {
+        "item": "silent-0332：双boss接续资源契约异常",
+        "reason": "证据不足；原始d309293缺触发seed与末帧，本批仅补诊断，原完整提案仍待核实。"
+      },
+      {
+        "item": "校准154302有限结束报告与补验交接",
+        "reason": "太大；需要注册批次、工作树、补充报告身份及确切发布核验，保留原失败历史。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+        "reason": "独立架构与归因任务，范围过大。"
+      },
+      {
+        "item": "B4/B5、性能实测、codex-brain-cache及probe-home续办",
+        "reason": "队列指定独立功能或受控实验任务，本普通批次未混入。"
+      }
+    ]
+  },
+  {
+    "batch": "20261010-162701-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261010-162701/learner/runs/20261010-162715-strategy-proposal/report.md",
+    "report_sha256": "1f135d6277986900f0e2b73123dbaeddeff61a5252ac662e25a02ec73165fd61",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-162701-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "id": "silent-0367",
+        "summary": "静默A10非战斗事实与摘要传入同局蜥蜴尾巴使用状态及来源",
+        "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+        "source_parent": "2c050664e4cbfceac9ab2a995a48e020b10e8d14",
+        "ledger": [
+          "silent-0367"
+        ],
+        "runs": [
+          "5BU7ZE1PWLSX"
+        ]
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 0
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      {
+        "item": "live merge",
+        "reason": "锁内预检发现17个共享文档及记录内容冲突，按任务要求停止源码合入。"
+      }
+    ]
+  },
+  {
+    "batch": "20261010-182919-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261010-182919/learner/runs/20261010-182928-strategy-proposal/report.md",
+    "report_sha256": "ac9d2b5b8551924413effb18cf2e76d4259394666d770baf992a0315c0e5062e",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-182919-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "commit": "5604982e13890e0e2bc8bf8246272e8267321c0b",
+        "summary": "仅静默A10增加SL同轮预测资源对照日志；选择规则不变",
+        "code_proposal": "silent-proposal-f69950ae39f58df3",
+        "ledger": [
+          "silent-0079"
+        ],
+        "state": "committed_not_merged"
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 6
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": []
+  },
+  {
+    "batch": "20261010-201301-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261010-201301/learner/runs/20261010-201312-strategy-proposal/report.md",
+    "report_sha256": "0eee2d735b2372c10fc5163c4ce1c093263690006374bead606b0c6e2a4ddb1f",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-201301-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "id": "silent-proposal-a5e12fbdb1aca576",
+        "name": "静默A10七手普通精确切击1→3→5",
+        "commit": "75a27fb2c230dc552761b2ad9da4be8a9a35dec3",
+        "ledger": [
+          "silent-0166",
+          "silent-0169"
+        ],
+        "runs": [
+          "NHA2KW0RB7VP"
+        ],
+        "floor": 17,
+        "turn": 1
+      },
+      {
+        "id": "silent-proposal-1b9e29122364fa68",
+        "name": "静默A0/A10普通紧勒后续完成出牌失血2",
+        "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+        "ledger": [
+          "silent-0260",
+          "silent-0261"
+        ],
+        "evidence": [
+          {
+            "run": "Q6M2Y34MWKRE",
+            "floor": 8,
+            "turn": 4
+          },
+          {
+            "run": "Y6GM2CHWJBEY",
+            "floor": 4,
+            "turn": 1
+          }
+        ]
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2696
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      {
+        "id": "silent-proposal-f11a16415cfafe62",
+        "reason": "再生封顶及先回后伤已有实现，固定回放相符。"
+      },
+      {
+        "id": "silent-proposal-f1374df72d8e6a25",
+        "reason": "缺早喝完整执行、相同营火动作的后继战反事实及独立新局。"
+      },
+      {
+        "id": "silent-proposal-a579007274b41d20",
+        "reason": "现场动态挡值和显示意图已有实现，两局固定回放相符。"
+      },
+      {
+        "id": "silent-proposal-38a49e6c97f31eea",
+        "reason": "宽包其余速度分源、饮用计数、SL时序及未观察进阶尚未逐项验证。"
+      },
+      {
+        "id": "silent-proposal-ef0e38a5dbd3bc07",
+        "reason": "缺完整替代路线、实际未来营火动作及后继胜负对照。"
+      },
+      {
+        "id": "silent-proposal-cfecb5580938873d",
+        "reason": "缺未取整伤害底值及其他属性组合，不能证明通用取整公式。"
+      },
+      {
+        "id": "silent-proposal-7f820c02d39bfaea",
+        "reason": "六次均败，缺独立局及存活推进/胜负对照，不能拟SL血价。"
+      }
+    ]
+  },
+  {
+    "batch": "20261010-201301-s2-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261010-201301-s2/learner/runs/20261010-201313-strategy-proposal/report.md",
+    "report_sha256": "456c085bee24c29e7d32856d1641be35d91eddb29b1b89700d289d66c4490a4c",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-201301-s2-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "id": "silent-proposal-eecf671192557465",
+        "commit": "bf423c173d3be348a4ad714e1d26516df619ff41",
+        "source_parent": "3c9a57d5effbf9d2e62dc375bc9d6910419fa0f9",
+        "summary": "普通生存者无绷带单弃消费，仅静默A6/A10",
+        "ledger": [
+          "silent-0268",
+          "silent-0205"
+        ],
+        "runs": [
+          "RC61MFQM63Y6",
+          "53FLQ68CETW0"
+        ]
+      },
+      {
+        "id": "silent-proposal-9b4049b484730143",
+        "commit": "e784dd9f043bf87c29109573f48975f9903280d3",
+        "source_parent": "bf423c173d3be348a4ad714e1d26516df619ff41",
+        "summary": "投斧首个实际卡牌的SL身份，仅静默A10 T1",
+        "ledger": [
+          "silent-0266"
+        ],
+        "runs": [
+          "G33HU22H2543"
+        ]
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2695
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      "silent-proposal-04b6b430759815ed",
+      "silent-proposal-9952ee8e8df9a0fe",
+      "silent-proposal-47be799a87af03be",
+      "silent-proposal-3a5274da3c42672a",
+      "silent-proposal-bc4b92d590f2c4ce",
+      "silent-proposal-f52fbbab4dccc3b4",
+      "silent-proposal-10f37c0edd3d24a6",
+      "silent-proposal-3f82387e2e179703"
+    ]
+  },
+  {
+    "batch": "20261010-212557-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261010-212557/learner/runs/20261010-212606-strategy-proposal/report.md",
+    "report_sha256": "9514b9fefee84bd02723369a2c7082c298f1a763303b4a688a258106d2166bea",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-212557-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "summary": "静默A10 HP护栏替换预测候选结构日志；不改出牌/护栏/SL选择",
+        "commit": "f1542578594462e9f9f4e175488795fc480a8a13",
+        "source_parent": "26cafe42796797050b6ec3fc20945661d7ca5dcf",
+        "ledger": [
+          "silent-0386"
+        ],
+        "proposal": "silent-proposal-c5efc1894cc989bd",
+        "evidence": [
+          {
+            "run": "8JRE1C4H4Z2W",
+            "floor": 33,
+            "turn": 5
+          },
+          {
+            "run": "8JRE1C4H4Z2W",
+            "floor": 33,
+            "turn": 2
+          }
+        ],
+        "state": "tested_not_merged"
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 0
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": []
+  },
+  {
+    "batch": "20261010-225716-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261010-225716/learner/runs/20261010-225724-strategy-proposal/report.md",
+    "report_sha256": "8dda61e67e65be11f79fb5522f003a453154c2d1f15af19085017eb80f2bcc51",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-225716-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "item": "静默A10石虫毒死后保留已醒甲虫滚动攻击下界",
+        "commit": "42fb403efc1f8f9b618c10ab71668fd5a09df377",
+        "source_parent": "8410bcffa43722b282ebaec7a20223a7f0dff022",
+        "ledger": [
+          "silent-0326"
+        ],
+        "evidence": [
+          {
+            "run": "LWQYSREHMMJ7",
+            "floor": 30,
+            "attempt": 1,
+            "turn": 4
+          },
+          {
+            "run": "LWQYSREHMMJ7",
+            "floor": 30,
+            "attempt": 2,
+            "turn": 3
+          }
+        ]
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2700
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      "live合入：已有19项未解决的他人合并冲突，待运维兜底。"
+    ]
+  },
+  {
+    "batch": "20261010-235543-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261010-235543/learner/runs/20261010-235554-strategy-proposal/report.md",
+    "report_sha256": "ec51c5e94238abd83a4b8d28eeafa0c78d5bc76a92b0ed5149412a148a99d134",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261010-235543-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "id": "silent-proposal-0cdd95ea44adba10",
+        "commit": "c915888d0fabf3c8f1b5d466fe75729161b16835",
+        "source_parent": "8410bcffa43722b282ebaec7a20223a7f0dff022",
+        "summary": "静默A10推演重建保留当前暂死千足虫段及已知接续阶段；缺数据明确未知",
+        "ledger": [
+          "silent-0273",
+          "silent-0064"
+        ],
+        "runs": [
+          "UV5YK5721RPB",
+          "7X0W3U8TVA2A"
+        ]
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2689
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      "生存者0268已有其他批次源码bf423c173d3be348a4ad714e1d26516df619ff41待合入，未重复实现。",
+      "缺受控替线证据，未修改HP护栏、能力优先级、药水持有价或SL规则。"
+    ]
+  },
+  {
+    "batch": "20261011-002829-s2-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261011-002829-s2/learner/runs/20261011-002841-strategy-proposal/report.md",
+    "report_sha256": "5ddad2cf6b7a59c9e335ddac3632746f4b55f42855f94325120a11e561695e75",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-002829-s2-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "proposal_id": "silent-proposal-c0767768bf6a7ab1",
+        "commit": "c769739b97389fdc978b6515b83a38e3cd900f67",
+        "summary": "静默A10 SL换线和覆盖重放增加结构化候选预测审计；不改变选线，尚未合入live。",
+        "ledger": [
+          "silent-0079"
+        ],
+        "evidence": [
+          {
+            "run": "YF0LXT1QSTGG",
+            "floor": 48,
+            "turn": 1
+          },
+          {
+            "run": "8JRE1C4H4Z2W",
+            "floor": 33,
+            "turn": 2
+          },
+          {
+            "run": "XP2SL33HT0D9",
+            "floor": 33,
+            "turn": 3
+          }
+        ],
+        "merged": false
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 0
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      "silent-proposal-c20b5139dd0dff71",
+      "silent-proposal-ae9e692d680e3819",
+      "silent-proposal-246daedaa3021847",
+      "silent-proposal-52f1e1bd2e7db0ed",
+      "silent-proposal-6dd8bbff876be528",
+      "silent-proposal-578e415a259e6835",
+      "silent-proposal-a46bdb7fe711d79a",
+      "silent-proposal-1044224808015e5c",
+      "silent-proposal-7cbc6005db712ba9"
+    ]
+  },
+  {
+    "batch": "20261011-005512-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261011-005512/learner/runs/20261011-005520-strategy-proposal/report.md",
+    "report_sha256": "db24f095b42d8f98c25529ceb396068b0497fb65d94a8b77b1a50aa4dfb58e99",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-005512-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "id": "silent-proposal-5c5be52c6eb1ff41",
+        "commit": "987b0d8c634b7cc886915bee660cb8e22f9b0a4e",
+        "source_parent": "5bac765a110a4159247f2695637c6e59e7103e89",
+        "summary": "静默A10已观察普通削弱攻击版疯狂科学排除休眠Block并接入2弱2易伤，真实牌组重建保留单敌目标",
+        "ledger": [
+          "silent-0394",
+          "silent-0396"
+        ],
+        "runs": [
+          "U1QYLX1AE1WX"
+        ]
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2685
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      "live已有19个未解决合并冲突，未合入、未跑合后检查或生成游戏版本。",
+      "虚无复制品、其他显示伤害与升级模板缺实际施放证据，保留原行为；没有证明整战转胜。"
+    ]
+  },
+  {
+    "batch": "20261011-012719-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261011-012719/learner/runs/20261011-012726-strategy-proposal/report.md",
+    "report_sha256": "ec0c324b18b02a1f7a0e18414bed97f06a88abb9a349ccdf7a9e958630a366e4",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-012719-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "summary": "静默A10生存者单弃逐候选手牌和独立费用事实",
+        "commit": "4b0823f519f1b724d6cff2b1cd50b74146dc4a9d",
+        "source_parent": "5bac765a110a4159247f2695637c6e59e7103e89",
+        "ledger": [
+          "silent-0205"
+        ],
+        "runs": [
+          "A5HKP18P4Q0T",
+          "N3YHJMV1ATFR"
+        ]
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2702
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      {
+        "item": "live合入",
+        "reason": "已有MERGE_HEAD及19个未解冲突，锁内停止，交运维兜底。"
+      },
+      {
+        "item": "完整后继挡伤、剩血及保牌权重",
+        "reason": "缺少同盘替代选择的完整实战和受控验证。"
+      }
+    ]
+  },
+  {
+    "batch": "20261011-124301-s2-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261011-124301-s2/learner/runs/20261011-124313-strategy-proposal/report.md",
+    "report_sha256": "c09a53f44ac5a7c3d75fa6ffe2e39fe9b9a44cca6484beb15119b299a6eedda4",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-124301-s2-strategy-proposal.md",
+    "selected_fixes": [
+      {
+        "id": "silent-0271",
+        "proposal": "silent-proposal-d60691b060dfc40a",
+        "commit": "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+        "source_parent": "7d36941278aded5dc9f77b393edf48a3ae6a8f53",
+        "summary": "补静默A10连战首场毒胜前的无药保血候选"
+      },
+      {
+        "id": "silent-0206",
+        "proposal": "silent-proposal-ab055ef7dfbb44e5",
+        "commit": "96f17377a331e50ea5b6a3fe8d2b605932ed1bd4",
+        "source_parent": "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+        "summary": "建模幽灵已观察的一层当轮效果，保留Jev选择"
+      }
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2700
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      "silent-proposal-03754e1265894000",
+      "silent-proposal-d60691b060dfc40a",
+      "silent-proposal-e5ea36df117ca9b7",
+      "silent-proposal-ab055ef7dfbb44e5",
+      "silent-proposal-0129c465c6f5bd79",
+      "silent-proposal-abe9d5d0be109a9f",
+      "silent-proposal-f16527e59b5cc1e0",
+      "silent-proposal-8f62129d7da70b94",
+      "silent-proposal-7a8e9ccb7e646538"
+    ]
+  },
+  {
+    "batch": "20261011-160308-strategy-proposal",
+    "report": ".worktrees/codex-strategy-silent-20261011-160308/learner/runs/20261011-160319-strategy-proposal/report.md",
+    "report_sha256": "69cd953b23da23c221045281fe807f6646a6ec43f4f59f0ef448dcbf0a18498a",
+    "report_snapshot": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/reports/20261011-160308-strategy-proposal.md",
+    "selected_fixes": [
+      "0e0ec068dc06a00e62220e69267a8e604196c589"
+    ],
+    "original_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2689
+    },
+    "original_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "original_skipped": [
+      "完整随机落点分支和概率分布未实现；本次仅完成不预支伤害并标注未知的子项。",
+      "独立紧勒缺口silent-0260沿既有候选与提案链，本次不重复实现。",
+      "live已有MERGE_HEAD及19项冲突，锁内停止合入；没有发布版本或shipped。"
+    ]
+  }
+]

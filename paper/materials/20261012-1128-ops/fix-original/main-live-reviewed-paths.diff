@@ -1,0 +1,176 @@
+diff --git a/agent/src/brain/engines/codex-usage.ts b/agent/src/brain/engines/codex-usage.ts
+index 796f46654..3f0b240f1 100644
+--- a/agent/src/brain/engines/codex-usage.ts
++++ b/agent/src/brain/engines/codex-usage.ts
+@@ -1,8 +1,8 @@
+ /**
+  * Production Codex-only recovery retries fresh reads and suspends the current question until this guard passes.
+  *
+- * The codex brain's usage guard (Roy 2026-10-03): the ChatGPT plan's rate-limit windows and credits read from codex
+- * itself, so the brain stops before it eats Roy's weekly Codex window (shared with Roy's own Codex use) and never
++ * The codex brain's usage guard (Dai 2026-10-03): the ChatGPT plan's rate-limit windows and credits read from codex
++ * itself, so the brain stops before it eats Dai's weekly Codex window (shared with Dai's own Codex use) and never
+  * spends credits. Measured on codex-cli 0.160.0 (experiments/brain-replay/codex-usage.md).
+  *
+  * - The read: `codex exec --json` reports no limits. A short-lived `codex app-server --listen stdio://` answers the
+@@ -29,7 +29,7 @@
+  *   EngineFailure "unavailable" whose rest is the wait before the next read: USAGE_RETRY_MS, 30 s, 2 min, 5 min, then
+  *   every 10 min), the first question after the wait reads again, and a read that works and passes the stop rules
+  *   brings codex back. Each of these changes is said once on the console and noted on its brain.jsonl row.
+- * - A read refused on the login (401, an expired token: 2026-10-04 07:06Z, right after Roy's plan upgrade, "Provided
++ * - A read refused on the login (401, an expired token: 2026-10-04 07:06Z, right after Dai's plan upgrade, "Provided
+  *   authentication token is expired" on /backend-api/wham/usage) first asks codex to refresh its token: account/read
+  *   with refreshToken (codex's own refresh flow, as any codex call runs it; we never read or write its login file), at
+  *   most once per AUTH_REFRESH_EVERY_MS, then reads again at once.
+diff --git a/learner/lib/launcher.ts b/learner/lib/launcher.ts
+index 04a9c9da6..e5ad2adb0 100644
+--- a/learner/lib/launcher.ts
++++ b/learner/lib/launcher.ts
+@@ -557,7 +557,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
+       await deps.refreshCodexAuth(binary, learnerCodexHome(deps.env), env as Record<string, string>);
+       deps.err("codex 登录被拒：已请 codex 刷新登录令牌，请重新运行这个任务\n");
+     } catch (error) {
+-      deps.err(`codex 登录被拒，刷新令牌也失败（${error instanceof Error ? error.message.slice(0, 200) : String(error)}）：需要 Roy 重新 \`codex login\`\n`);
++      deps.err(`codex 登录被拒，刷新令牌也失败（${error instanceof Error ? error.message.slice(0, 200) : String(error)}）：需要 Dai 重新 \`codex login\`\n`);
+     }
+   }
+   if (timedOut) return 124;
+diff --git a/ops/codex/lib.ts b/ops/codex/lib.ts
+index 39b53d6cd..35b90854f 100644
+--- a/ops/codex/lib.ts
++++ b/ops/codex/lib.ts
+@@ -1,5 +1,5 @@
+ /**
+- * The codex ops session's runner, pure parts (Roy 2026-10-04 21:00: the ops session runs on codex, gpt-6.1-sol; Claude
++ * The codex ops session's runner, pure parts (Dai 2026-10-04 21:00: the ops session runs on codex, gpt-6.1-sol; Claude
+  * keeps only the dev session). docs/codex-ops.md has the design; ops/codex-ops.sh is the scheduler around it.
+  *
+  * - One codex session with continuity: created once from the ops prompt (initCommand: `codex exec … -`), then every wake
+@@ -44,7 +44,7 @@ export interface OpsPaths {
+   schedulerLog: string;
+   prompt: string;
+   inbox: string;
+-  forRoy: string;
++  forDai: string;
+ }
+ 
+ export function opsPaths(root: string, env: NodeJS.ProcessEnv = process.env): OpsPaths {
+@@ -61,13 +61,13 @@ export function opsPaths(root: string, env: NodeJS.ProcessEnv = process.env): Op
+     schedulerLog: join(dir, "scheduler.log"),
+     prompt: env["CODEX_OPS_PROMPT"] || join(root, "ops", "ops-session-silent-codex-prompt.md"),
+     inbox: join(root, "ops", "inbox-dev.md"),
+-    forRoy: join(root, "notes", "for-roy.md"),
++    forDai: join(root, "notes", "for-dai.md"),
+   };
+ }
+ 
+ /**
+  * The scheduler's own files, which run outside the sandbox (cron, the broker).
+- * Roy authorised ops and learners to edit them on 2026-10-05; key and git configuration rules still apply.
++ * Dai authorised ops and learners to edit them on 2026-10-05; key and git configuration rules still apply.
+  */
+ export const SCHEDULER_FILES = [
+   "ops/codex",
+@@ -88,7 +88,7 @@ export const SCHEDULER_FILES = [
+  * The ops profile's rules on top of the learner's write profile: commits in the main checkout and its worktrees
+  * (.worktrees/step, live; their git dirs are all under <main checkout>/.git) need .git writable; its hooks and config stay
+  * read-only (a hook or core.hooksPath would run in whoever commits next, outside the sandbox). The scheduler's files
+- * (SCHEDULER_FILES) were read-only too until Roy, 2026-10-05: codex may change its own broker and scheduler.
++ * (SCHEDULER_FILES) were read-only too until Dai, 2026-10-05: codex may change its own broker and scheduler.
+  */
+ export function opsExtraRules(root: string): Record<string, "read" | "write" | "none"> {
+   const git = join(mainCheckout(root), ".git");
+@@ -253,7 +253,7 @@ export function wakeMessage(events: QueuedEvent[], now: Date): string {
+   const lines = [`【调度器事件】${localStamp(now)}（CST），共 ${events.length} 件：`, ""];
+   events.forEach((event, i) => lines.push(`${i + 1}. [${event.kind}] ${event.text}`, ""));
+   lines.push(
+-    "按 prompt 处理这些事件。沙箱外的操作用 `bash ops/codex-ops-do.sh <动作> [参数]`。要汇报的写进 ops/inbox-dev.md（给 Roy 定的同时写 notes/for-roy.md），写时间前先跑 `date`。",
++    "按 prompt 处理这些事件。沙箱外的操作用 `bash ops/codex-ops-do.sh <动作> [参数]`。要汇报的写进 ops/inbox-dev.md（给 Dai 定的同时写 notes/for-dai.md），写时间前先跑 `date`。",
+     "处理完就结束这一轮，不要 sleep 或轮询等待：调度器有新事件会再叫醒你。最后用一两句话总结这一轮做了什么（这段回答记进 ops/codex-ops/wakes.jsonl，没人实时看）。",
+   );
+   return lines.join("\n");
+diff --git a/ops/tests/test_silent_calibration_dispatch.py b/ops/tests/test_silent_calibration_dispatch.py
+index fe6228ac1..5da62179a 100644
+--- a/ops/tests/test_silent_calibration_dispatch.py
++++ b/ops/tests/test_silent_calibration_dispatch.py
+@@ -1,9 +1,7 @@
+ """Fixed dispatch fixtures; no engines, Git mutations or network calls."""
+ import importlib.util
+ import json
+-import os
+ from pathlib import Path
+-import subprocess
+ import tempfile
+ import unittest
+ from unittest.mock import patch
+@@ -154,70 +152,6 @@ class CodexOnlyDispatch(CalibrationDispatch):
+             start.assert_not_called()
+ 
+ 
+-class A10RegressionDispatch(CodexOnlyDispatch):
+-    task = "silent-a10-regression"
+-    request_file = "notes/silent-a10-regression-dispatch.json"
+-
+-    def test_highest_priority_request_precedes_other_pending_features(self):
+-        task = "silent-double-boss"
+-        Path(self.root, jobs.FEATURE_REQUESTS[task]).write_text(json.dumps({
+-            **self.request, "task": task, "request_id": "older-double-boss-request"}))
+-        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
+-            self.assertEqual(self.launch(), ("first-fix-batch", 20))
+-            self.assertEqual(start.call_args.args[0][-1], self.task)
+-            self.assertIsNone(self.launch(stamp="duplicate"))
+-            start.assert_called_once()
+-
+-
+-class CodexBrainCacheDispatch(CodexOnlyDispatch):
+-    task = "codex-brain-cache"
+-    request_file = jobs.FEATURE_REQUESTS[task]
+-
+-    def test_cache_request_precedes_pending_a10_without_interrupting_it(self):
+-        older = "silent-a10-regression"
+-        Path(self.root, jobs.FEATURE_REQUESTS[older]).write_text(json.dumps({
+-            **self.request, "task": older, "request_id": "older-a10-request"}))
+-        self.state["batches"]["a10"] = {
+-            "task": "fix-batch", "learner_task": older, "state": "running", "pid": 40,
+-            "feature_request": "older-a10-request",
+-            "worktree": str(Path(self.root, ".worktrees", older))}
+-        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
+-            self.assertEqual(self.launch(), ("first-fix-batch", 20))
+-            self.assertEqual(start.call_args.args[0][-3:], [
+-                "fix-batch", str(Path(self.root, ".worktrees/codex-brain-cache")), self.task])
+-            self.assertEqual(self.state["batches"]["a10"]["pid"], 40)
+-            self.assertIsNone(self.launch(stamp="duplicate"))
+-            start.assert_called_once()
+-
+-    def test_busy_cache_tree_does_not_fall_back_to_a10_or_normal_fix(self):
+-        older = "silent-a10-regression"
+-        Path(self.root, jobs.FEATURE_REQUESTS[older]).write_text(json.dumps({
+-            **self.request, "task": older, "request_id": "older-a10-request"}))
+-        with patch.object(jobs, "available_worktree", return_value=False), patch.object(jobs, "start_learner") as start:
+-            self.assertIsNone(self.launch())
+-            start.assert_not_called()
+-        self.assertEqual(set(self.state["batches"]), {"old-fix"})
+-
+-    def test_wrapper_accepts_only_authorized_cache_task_scope(self):
+-        wrapper = Path(__file__).parents[1] / "codex-ops-learner.sh"
+-        # Execute only the real argument guards: no learner, finish, filesystem or engine actions.
+-        prefix = wrapper.read_text().split('mkdir -p "$DIR/learner"', 1)[0]
+-        env = {**os.environ, "CODEX_OPS_ROOT": self.root}
+-        for task, character, tree, transport, expected in (
+-                (self.task, "silent", self.task, "fix-batch", 0),
+-                (self.task, "ironclad", self.task, "fix-batch", 2),
+-                (self.task, "silent", "codex-dev", "fix-batch", 2),
+-                (self.task, "silent", self.task, "strategy-proposal", 2),
+-                ("codex-brain-cache-extra", "silent", "codex-brain-cache-extra", "fix-batch", 2)):
+-            with self.subTest(task=task, character=character, tree=tree, transport=transport):
+-                result = subprocess.run([
+-                    "bash", "-c", prefix + '\nprintf "guard-passed\\n"\n', str(wrapper),
+-                    "fixed-batch", "", character, transport, str(Path(self.root, ".worktrees", tree)), task],
+-                    env=env, capture_output=True, text=True, timeout=5)
+-                self.assertEqual(result.returncode, expected, result.stderr)
+-                self.assertEqual(result.stdout, "guard-passed\n" if expected == 0 else "")
+-
+-
+ class NewFeatureDispatch(unittest.TestCase):
+     def test_a_first_then_independent_b4_beside_normal_fixes(self):
+         with tempfile.TemporaryDirectory() as root:

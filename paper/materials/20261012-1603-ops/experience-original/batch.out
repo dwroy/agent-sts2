@@ -1,0 +1,40 @@
+## 经验库更新回报
+
+- 版本：2026-10-12.6 → 2026-10-12.7；提交：704a53fe5（分支 exp-silent）；合入：未合入。锁内预检发现10处共享记录冲突，按要求停止，live未改动。
+- 条数：新增1、更新15（加证据15、只改数字0）、退役0；active 224→225，正文55095→54883字；A8适用204条／48854字，A9适用205条／49138字。
+- 机制推理（局数为主题支持数，均无反例）：
+
+  - 力量／仪式 — 虚弱不停止成长 — 238／15局 — K643VJCTQT0J
+  - 敏捷 — 卡牌挡与被动挡分源 — 17局 — K643VJCTQT0J
+  - 余像 — 建立后逐牌补挡 — 44局 — K643VJCTQT0J
+  - 绷带 — 实弃每牌补3挡 — 5局 — K643VJCTQT0J
+  - 群蛇 — 实际建立才有后继输出 — 17局 — K643VJCTQT0J
+  - 暗影步 — 全弃代价与次轮翻倍分账 — 2局 — K643VJCTQT0J
+  - 灵体 — 有限保护不停止敌成长 — 2局 — K643VJCTQT0J
+  - 翱翔与双倍 — 已见三牌兑现牌面一半 — 1局 — K643VJCTQT0J
+  - 弃牌与SL — 弃牌后重核原后继 — 35局 — K643VJCTQT0J
+  - 毒药 — 施毒与实际结算分账 — 57局 — K643VJCTQT0J
+  - 双蟹 — 多项改线后的胜利不能归因单牌 — 31局 — K643VJCTQT0J
+  - 跨幕回复 — A9/A10按缺血80%向下取整 — 84局 — K643VJCTQT0J
+  - 构筑 — 持有、支付、建立、兑现分账 — 238局 — K643VJCTQT0J
+
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 337文件／3373用例／退出0。原工作树因历史失效链接首败，同源码隔离副本重跑通过；失败原件保留。
+- 切片大小：中位3774→3720字，减少54字；最大8770→8533字。
+- 学习账本：新增无；改成proposed：silent-0005、0012、0019、0020、0021、0023、0035、0046、0057、0062、0079、0083、0132、0158、0194、0205、0206、0243、0278、0385、0436；退役无；`ledger.py check`退出0。
+- 需要Roy定的事：无。合入冲突待运维兜底；变更记录已追加，[完整报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-150942-experience-update/report.md)已保存。
+
+```json
+{"task":"experience-update","version":"2026-10-12.7","commit":"704a53fe55421667c860b1dd05292892617e8db3","merged":null,"added":1,"updated":15,"retired":0,"active":225,"mechanisms":["力量与仪式成长","敏捷和格挡分源","余像逐牌补挡","绷带实弃补挡","群蛇实际建立","暗影步全弃与次轮翻倍","灵体有限无实体","翱翔与双倍限定实伤","弃牌后继与SL重算","毒药施毒与实际结算","双蟹有限胜线","跨幕按缺血回复","构筑核心实际兑现"],"tests":{"tsc":0,"vitest":0,"cases":3373},"ledger":{"added":[],"proposed":["silent-0005","silent-0012","silent-0019","silent-0020","silent-0021","silent-0023","silent-0035","silent-0046","silent-0057","silent-0062","silent-0079","silent-0083","silent-0132","silent-0158","silent-0194","silent-0205","silent-0206","silent-0243","silent-0278","silent-0385","silent-0436"],"retired":[],"check":0},"code_proposals":["silent-proposal-a770c8a2cb863eff","silent-proposal-70b301d038c1cd40","silent-proposal-a4fb4006aa2e979c"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-150942-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12ef2-2a1c-7362-8a54-5a4c56e17999
+轮数：1；工具调用：command_execution×81 file_change×4
+token：输入 207.9k、输出 48.1k（其中推理 16.4k）、cache 读 9217.3k、cache 写 0（命中 97.8%）
+成本：未提供
+耗时：2097.7 s（墙钟）
+时间：首个事件 10.5 s、模型首个输出 17.8 s、首次工具 21.8 s、末次工具结束 2048.3 s；工具内共 2679.4 s，其余（模型生成、推理、网络）-592.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×62 wait×2；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T15-09-44-01a12ef2-2a1c-7362-8a54-5a4c56e17999.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-150942-experience-update.jsonl

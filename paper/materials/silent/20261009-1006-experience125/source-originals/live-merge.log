@@ -1,0 +1,78 @@
+git rev-parse exp-silent
+9f7cceaf6ef55cf45fba994d16464dc2f692d12f
+git rev-parse HEAD
+5ff4270dbf44cbd1a36dcb3df8df5565653ee59f
+git status --short
+ M knowledge/characters/silent/fight-value-gates.json
+ M knowledge/characters/silent/fight-value.json
+ M knowledge/characters/silent/monster-records.json
+ M knowledge/characters/silent/outcome-stats.json
+ M knowledge/characters/silent/room-costs.json
+ M knowledge/common/card-upgrades.json
+ M knowledge/common/monster-db.json
+ M knowledge/common/move-model.json
+ M notes/fight-value-backtest-silent.md
+git diff --cached --name-only
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+date
+Fri Oct  9 09:56:27 CST 2026
+git add knowledge
+git add notes/fight-value-backtest.md
+git commit -m Refresh knowledge data -m Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+[live 9a7dc931] Refresh knowledge data
+ 8 files changed, 744 insertions(+), 726 deletions(-)
+git rev-parse HEAD
+9a7dc93194b93f78494028b4ed11100825848797
+git rev-parse HEAD
+9a7dc93194b93f78494028b4ed11100825848797
+git merge-base 9a7dc93194b93f78494028b4ed11100825848797 9f7cceaf6ef55cf45fba994d16464dc2f692d12f
+7339da354b6708ef3d53648e5fc44715066caf53
+git diff --name-only 7339da354b6708ef3d53648e5fc44715066caf53 9f7cceaf6ef55cf45fba994d16464dc2f692d12f -- knowledge
+knowledge/characters/silent/experience.json
+git diff --name-only 7339da354b6708ef3d53648e5fc44715066caf53 9a7dc93194b93f78494028b4ed11100825848797 -- knowledge
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git merge-tree --write-tree 9a7dc93194b93f78494028b4ed11100825848797 9f7cceaf6ef55cf45fba994d16464dc2f692d12f
+f333521dc715abc24fe01f30e98d455e544dfb8d
+100644 c9a1bd4483b25f30d65a01d9171d8de8937472c4 1	notes/ops-handoff.md
+100644 46441e63d5266b1ae851770ffe8f7f5fb597cbf7 2	notes/ops-handoff.md
+100644 a4814ecdf70a941a0a92f7d29d3e775477d5323d 3	notes/ops-handoff.md
+100644 ad5193e97a1dbe7efd5a01c489c9fb0e004159e9 1	ops/inbox-dev.md
+100644 c1d42393580703fdcf48b9389a5b5a6ac188d21c 2	ops/inbox-dev.md
+100644 67a4f1984c51d45cd431b7f38e20fd29cf53457d 3	ops/inbox-dev.md
+100644 58cb57ad513cfdb771f2b6bb6fb58385a17006d9 1	paper/materials/decision-log.md
+100644 a5c55c2463ada4a24b9ec344e6daaceddea9b502 2	paper/materials/decision-log.md
+100644 66998f49cab2de00b51f180a72c076b320a4742f 3	paper/materials/decision-log.md
+100644 0ac6249cf1f9c6a90a3fc39f5cc8bf3eb9a7bd68 1	paper/materials/experience-changelog-silent.md
+100644 d30b13170a44f2cd04d7a82b18200fa69de09579 2	paper/materials/experience-changelog-silent.md
+100644 38ff95458443f5816d1e406f4692520f1b5a9b5b 3	paper/materials/experience-changelog-silent.md
+100644 f5ddcced79e1a5e026c283b8f392e5d89d3b269c 1	paper/materials/learning/ledger.jsonl
+100644 964b609f88dc7988a61011d34b2cb6ed2c8d009b 2	paper/materials/learning/ledger.jsonl
+100644 53339a9dd09651a15c6b519ab047fe07f1b7e8b5 3	paper/materials/learning/ledger.jsonl
+
+Auto-merging eval/versions.json
+Auto-merging notes/ops-handoff.md
+CONFLICT (content): Merge conflict in notes/ops-handoff.md
+Auto-merging ops/inbox-dev.md
+CONFLICT (content): Merge conflict in ops/inbox-dev.md
+Auto-merging paper/materials/decision-log.md
+CONFLICT (content): Merge conflict in paper/materials/decision-log.md
+Auto-merging paper/materials/experience-changelog-silent.md
+CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md
+Auto-merging paper/materials/learning/ledger.jsonl
+CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl

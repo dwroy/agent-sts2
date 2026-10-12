@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-093153-experience-update/verify-new.py", line 41, in <module>
+    check('雕像末轮攻挡血', [last['end']['enemies'][0]['intents'][0]['total_damage'],last['end']['player']['block'],last['end']['hp']], [25,10,12])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-093153-experience-update/verify-new.py", line 9, in check
+    assert actual == expected, (name, actual, expected)
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: ('雕像末轮攻挡血', [25, 0, 0], [25, 10, 12])

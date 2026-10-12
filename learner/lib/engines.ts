@@ -140,7 +140,7 @@ export function engineBinary(engine: EngineName, env: NodeJS.ProcessEnv): string
 
 export function unavailableMessage(engine: EngineName): string {
   return engine === "codex"
-    ? "codex 未安装：需要 Dai 安装并登录（安装 Codex CLI，然后 `codex login` 用 ChatGPT 账号登录；学习者只用订阅登录态，不用 API key）"
+    ? "codex 未安装：需要 Roy 安装并登录（安装 Codex CLI，然后 `codex login` 用 ChatGPT 账号登录；学习者只用订阅登录态，不用 API key）"
     : "claude 未安装或不在 PATH 里：需要 Claude Code CLI，并已用订阅账号登录（`claude auth`）";
 }
 
@@ -378,7 +378,7 @@ export const GLOB_SCAN_MAX_DEPTH = 8;
 
 /**
  * The learner's codex permission profile (`permissions.learner.filesystem`, codex-cli 0.160), replacing --sandbox so that
- * key files can be made unreadable (Dai 2026-10-04: codex's read-only and workspace-write sandboxes read everything):
+ * key files can be made unreadable (Roy 2026-10-04: codex's read-only and workspace-write sandboxes read everything):
  * - everything readable (":root"), nothing writable — the read-only sandbox;
  * - write tasks also: the working directory (":project_roots"), the project root and the temp directories (":tmpdir",
  *   ":slash_tmp") writable — workspace-write plus --add-dir <project root>;

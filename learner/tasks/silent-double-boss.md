@@ -27,7 +27,7 @@ B：postmortem 模板追溯进场 HP/药水被哪场耗掉，包括赢的战斗�
 C：每次 climb 升级自动派独立学习者升阶审计；比较新一级观察到的层数、战斗场数、回血/营火/新规则与代码假设，列不一致及代码提案。调度应去重、保存失败重试/工作树租约，不阻塞对局，不让非学习者添加游戏知识。
 D：涉及出牌、药水、SL、终局价值的经验除了经验库外必须同时出代码提案，关联证据/账本与任务。Roy 授权学习者有足够理由和数据时直接修改 Roy 定的规则（例如药水持有价值、必死/SL条件），自测上线后通知 Roy；不再把人定规则一律不可动。同步 docs/learning-protocol.md、AGENTS.md、learner/tasks/*（尤其 postmortem/experience/fix/strategy），避免旧限制抵消新授权，铁甲等无关行为保持等价。
 
-规则变更上线后，先 date，在根目录 notes/for-dai.md 和 ops/inbox-dev.md 同时通知 Roy，逐项写旧规则、新规则、数据/证据局号、预期影响、回退方法，并 CLI 台账登记。该双通知是本任务明确授权的根目录记录例外，其他根目录无关/并行记录不覆盖；不改 ops prompt。
+规则变更上线后，先 date，在根目录 notes/for-roy.md 和 ops/inbox-dev.md 同时通知 Roy，逐项写旧规则、新规则、数据/证据局号、预期影响、回退方法，并 CLI 台账登记。该双通知是本任务明确授权的根目录记录例外，其他根目录无关/并行记录不覆盖；不改 ops prompt。
 
 工作树：{{worktree}}；根目录：{{project_root}}；角色：{{character}}；只读日志：{{logs_dir}}。
 开工确认自己的工作树干净并先合 {{base_branch}}；合入分支 {{merge}}，目标 {{merge_dir}}。
@@ -48,6 +48,6 @@ D：涉及出牌、药水、SL、终局价值的经验除了经验库外必须�
 ## Roy 2026-10-07 学习授权与代码提案
 先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
 
-Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-roy.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
 
 最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。

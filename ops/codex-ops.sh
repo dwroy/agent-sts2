@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The scheduler of the codex ops session (Dai 2026-10-04 21:00; docs/codex-ops.md). Cron runs the mechanical work; the
+# The scheduler of the codex ops session (Roy 2026-10-04 21:00; docs/codex-ops.md). Cron runs the mechanical work; the
 # codex session (one session, resumed per wake) is woken with event messages only when something needs judgment.
 #
 #   bash ops/codex-ops.sh start            pre-check, install the cron block, create the session (first wake, in the background)

@@ -1,0 +1,51 @@
+{
+  "initial": {
+    "files": 1,
+    "cases": 8,
+    "failed": 3,
+    "exit": 1,
+    "reason": "Initial assertions used nonexistent Outcome.incoming; corrected to incomingAfterBlock."
+  },
+  "withdrawn": {
+    "files": 1,
+    "cases": 8,
+    "failed": 6,
+    "passed": 2,
+    "exit": 1,
+    "source_paths": [
+      "agent/src/reflex/turn-solver.ts"
+    ]
+  },
+  "restored": {
+    "files": 1,
+    "cases": 8,
+    "passed": 8,
+    "exit": 0
+  },
+  "related": {
+    "files": 4,
+    "cases": 161,
+    "passed": 161,
+    "exit": 0,
+    "phase": "before final source freeze"
+  },
+  "timeout_retry": false,
+  "final_withdrawn": {
+    "cases": 9,
+    "failed": 7,
+    "passed": 2,
+    "exit": 1
+  },
+  "final_restored": {
+    "cases": 9,
+    "passed": 9,
+    "exit": 0
+  },
+  "pre_final_suite": {
+    "exit": 1,
+    "files": 215,
+    "cases": 2297,
+    "failed": 1,
+    "reason": "Healing regression was added during the run; workers loaded the preceding source. Not validation of the frozen final source."
+  }
+}

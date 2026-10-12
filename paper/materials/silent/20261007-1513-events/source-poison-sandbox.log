@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/rollout-live.test.ts (15 tests | 1 failed) 273094ms
+     × code's ranking, options and auto-acts are unchanged by the rollout 120705ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > code's ranking, options and auto-acts are unchanged by the rollout
+Error: Test timed out in 120000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/rollout-live.test.ts:253:3
+    251|   }, 120_000);
+    252|
+    253|   it("code's ranking, options and auto-acts are unchanged by the rollo…
+       |   ^
+    254|     for (const name of BOARDS) {
+    255|       for (const context of ["v1", "off"] as const) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 227 passed (228)
+      Tests  1 failed | 2404 passed (2405)
+   Start at  14:35:36
+   Duration  390.63s (transform 20.09s, setup 18.08s, import 50.76s, tests 1451.41s, environment 34ms)
+

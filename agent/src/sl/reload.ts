@@ -1,7 +1,7 @@
 /**
  * SL's reload (docs/sl.md §3): leave the fight for the main menu with `save_and_quit`, press `continue_run`, and
  * check that the game is back in the same run, on the same floor, in the same fight. The game restarts a fight
- * from the save it wrote on entering the room (the genre's rule, Dai 2026-10-02), so nothing here reads or writes
+ * from the save it wrote on entering the room (the genre's rule, Roy 2026-10-02), so nothing here reads or writes
  * a save file. Every step has a deadline; the first one that fails ends the reload with its reason.
  */
 import { dispatch } from "../hand/act/dispatch.js";

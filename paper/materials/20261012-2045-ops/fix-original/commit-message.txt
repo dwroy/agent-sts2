@@ -1,0 +1,22 @@
+Bound the fixed illusion rollout regression
+
+Migrate the ZY3992X5VEVS floor 23 turn 3-5 planner assertion to an
+isolated suite using committed model fixtures and the existing work
+clock. Restore the 1500 ms rollout budget instead of 1e9, preserve all
+ranking and target-order assertions, and require multiple samples to
+reach turns 4 and 5 within a bounded amount of solver work.
+
+Evidence: fix-queue-v4 batch-c-fixed-fixture-timeout, host check
+20261012-183755-s2-strategy-proposal (17210 ms at a 15000 ms test limit).
+The original timeout and its passing targeted supplement remain valid;
+this change does not claim to establish the historical host pause cause.
+No production mechanics, character knowledge or timeout limits change.
+
+Reverting the fixture clock/budget makes both new cases fail (376 policy
+turns or wall-clock leakage); restoring it passes both pause scenarios
+and the related fixed regressions. Sandbox coverage passes (342 files,
+3408 cases) with tsc and gitleaks. Preserve the initial import-check
+failure from source snapshots in learner/runs; archive those as text
+and continue only check-imports and the previously unrun paths suite.
+
+Co-Authored-By: Codex GPT-6 <noreply@openai.com>

@@ -1,0 +1,25 @@
+## 复盘回报
+
+- 已追加：751FN9QM9MHQ（A10，第17层，灵魂异鱼 SOUL_FYSH；末次T17以10血对呼唤6失血及27攻击阵亡）。
+- 新的纯 bug：
+  - 无
+- 写成「未记录」的项：751FN9QM9MHQ：前五次完整退出结算、护栏原线实际代价、完整执行率、敌人永久个体ID、boss时钟需伤/估伤、Jev缓存命中、受控反事实、开局dirty源码。
+- 学习账本：751FN9QM9MHQ：新增 无；更新 silent-0019、silent-0079、silent-0021、silent-0005、silent-0007、silent-0129、silent-0176（老错 silent-0079）；`ledger.py check` 退出码 0。
+- 代码提案：
+  - silent-proposal-366288801d9150d9：F17 T2/T7/T13，关联 silent-0079、silent-0176；SL血价审计，交独立 strategy-proposal。缺完整胜线，保留原门槛。
+  - silent-proposal-85929bdfc8a3fc1b：F13 T3及F17关键回合，关联其余六项账本；弃牌损血与药水价值事实，交独立 strategy-proposal。缺无药及留药对照，保留原规则。
+
+```json
+{"task":"postmortem","appended":["751FN9QM9MHQ"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0019","silent-0079","silent-0021","silent-0005","silent-0007","silent-0129","silent-0176"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-366288801d9150d9","silent-proposal-85929bdfc8a3fc1b"],"implementation_domains":["combat","potion","sl"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261007-191301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11611-1c86-76b3-901e-026e30cc8343
+轮数：1；工具调用：command_execution×43
+token：输入 205.5k、输出 35.6k（其中推理 11.9k）、cache 读 4307.6k、cache 写 0（命中 95.4%）
+成本：未提供
+耗时：1187.2 s（墙钟）
+时间：首个事件 2.2 s、模型首个输出 7.5 s、首次工具 12.4 s、末次工具结束 1159.2 s；工具内共 37.3 s，其余（模型生成、推理、网络）1147.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×33；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T19-13-02-01a11611-1c86-76b3-901e-026e30cc8343.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-191301-postmortem.jsonl

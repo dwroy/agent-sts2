@@ -1,0 +1,49 @@
+{
+  "recorded_at": "2026-10-12 14:16:46 CST",
+  "kind": "Roy_architecture_acceptance_and_same_request_addendum",
+  "source_user_message": "你说的这些没问题，补充一下 我前面提到的，是否可以基于历史对局和经验，预先组出一些理想的核心牌组出来呢，这样大脑在抉择的时候是否指导意义较大，未来对于胜率很高的 也可以直接落到jev这层直接构筑了",
+  "parent_request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+  "report_request_id": "roy-20261012-concrete-core-decklists",
+  "actual_existing_batch": "20261012-140741-strategy-proposal",
+  "existing_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741",
+  "original_task_sha256": "436e46aee5d46231bd5e3df3f823591ae63221f50839dad31fcd63afee2f3ab7",
+  "original_registration_input_sha256": "7714657b176719f5fdbf99336d9fe2c3bf28b8b9e0c69b6ad456c67a890dae60",
+  "accepted_architecture_sequence": "paper/materials/silent/20261012-core-candidate-decklists/architecture-learning-sequence-1403.json",
+  "authorization_interpretation": {
+    "prior_sequence": "Roy认可上一轮系统调整与学习顺序；沿原任务分阶段推进，ops协调实际owner及未完范围。",
+    "current_report": "补强预先构筑可选理想核心牌组，仍由学习者依据本角色历史证据给出，先交完整可读报告。",
+    "future_jev": "Roy认可经充分验证的高可靠构筑选择可下沉JEV这一架构方向；当前批报告不自动改变现役Codex构筑路由。达到下述证据与工程验收后沿已授权实现、自测、live、版本通知流程推进，不因旧Codex-only规则把该明确方向一概拒绝。",
+    "not_changed": "未改原冻结任务和输入、生产路由、引擎、调度状态、ops prompt或对局；本文件不含开发者编写的游戏机制/牌值。"
+  },
+  "learner_report_addendum": [
+    {
+      "deliverable": "预先构筑的候选模板库",
+      "requirements": "允许以历史学到且有证据的组件/交互构造历史未曾完整拿齐的候选，但必须明确标成模拟设计。每套提供具体卡名、ID、张数、升级、必要遗物/药水、总牌数，明确最低成立核心、可行过渡实例和理想完成实例。证据不足的层级留缺口，不强凑四套或预设小牌组。"
+    },
+    {
+      "deliverable": "从当前牌组到目标的可达构筑路径",
+      "requirements": "给成立条件、缺件/资源需求、有证据替代件、补强与冗余的区分、可删候选及成立条件、遇不到目标组件时保留/转向的依据。只在真实可选项内行动，不假定未来必出某卡；从已有获得记录研究组件可达性，缺分布写未知。目标方案不能按已拥有估值。"
+    },
+    {
+      "deliverable": "供大脑匹配和比较的模板信息",
+      "requirements": "每个版本带角色/已观察进阶/boss适用域、证据和反例、必要组件资格、资源及阶段限制。大脑可同时保留多个候选，比较某次真实选项对各候选的可实现程度、立即存活及启动/兑现指标的影响；相似卡数量本身不能等同收益。"
+    },
+    {
+      "deliverable": "可靠性与未来下沉建议",
+      "requirements": "分开完整牌组已成型后的条件胜率、从实际中途状态继续构筑并通关的表现和从开局采用该路线的整局表现；分母含符合适用条件后的失败、放弃/未成型，避免只抽成型赢家。列独立对局数、角色/进阶/boss、首次尝试与SL、模拟与实战、版本和不确定性。不能把同局SL或大量模拟种子当大量独立实战。提出可复核的支持/反对下沉证据，当前不足可写未达条件。"
+    }
+  ],
+  "implementation_sequence": [
+    "已有候选报告先交Roy查看；在原量化/P1任务中实现可读模板接口、当前核心状态及模拟消费，按既有owner去重。",
+    "先由Codex在自然局使用经过证据限定的模板，保存候选匹配、配对比较、选择及执行结果；再校准预测与实际。",
+    "未来为支持充分的具体模板建立有限JEV构筑入口：先离线独立验证，再只记录候选建议而不执行，比较JEV、Codex与实际结果；符合验收后按范围逐步上线。"
+  ],
+  "future_jev_acceptance": [
+    "使用未参与候选选择/参数拟合的证据验证；样本数量、误差区间与适用域足以支持限定主张。达标标准在验证前固定，不能观察结果后挑门槛。模拟胜率高、动作与Codex一致或一两局胜利均不能单独证明改善。",
+    "在符合模板条件的当前状态和真实合法选项内运行；必要组件/资源/目标条件不满足、出现未知机制、比较没有可靠区分或需切换构筑时交回Codex。模板匹配及计算由代码和模拟器提供，不让JEV自行补不存在的牌或机制。",
+    "保留合法性与状态指纹执行闸、模板/知识/模型版本、实际决策引擎和退回原因。变更可单独回退；Codex不可用不构成放宽JEV适用条件的理由。",
+    "当前统计按纯Codex大脑口径；引入JEV构筑前要同步实现实际决策来源、策略版本和新阶段的统计/自动升阶政策，保存旧口径并单列混合构筑，不能漏记JEV构筑后仍冒称纯Codex。该政策细节在实施时给出具体方案和记录。"
+  ],
+  "ops_delivery": "请原ops将本文件作为独立SHA补充绑定同一报告/原量化任务；优先向现有owner转达，可安全续接则同批完成，否则在该请求验收中列出尚缺交付并保持唯一owner。不得改写已冻结原件、抢占活动工作树、重复启动学习者或重启对局。当前报告完成与后续实现/自然局效果分开验收。",
+  "current_evidence": "标准请求与research_dispatch_receipt核20261012-140741已派发；当前工作树已有input-verification、request-snapshot和evidence-index/records。注册running与wrapper PID不单独证明此刻模型活跃；本轮不以此宣称报告完成。"
+}

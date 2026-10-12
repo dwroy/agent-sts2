@@ -1,0 +1,103 @@
+已提交 `b14880d1b`：补齐巨兽自爆阶段与毒药局部观察的题面展示，证据为 YQL8RZ8BWN1E F17 T9/T10，账本 silent-0017/0250。
+
+tsc、沙箱 3,391 项及密钥扫描通过；撤功能后 5 项失败，恢复后相关 63 项通过。**live 预检出现 20 个共享记录冲突，尚未合入或登记版本。** 十个完整父提案均保留等待。
+
+[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-171039/learner/runs/20261012-171055-strategy-proposal/report.md) · [提案与证据](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-171039/learner/runs/20261012-171055-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-171039-strategy-proposal",
+  "base": "ddaa57ca0a9f0e690eff2c037ebfa1707f20b292",
+  "runs": ["751FN9QM9MHQ", "KV0JHNJCKXLS", "YQL8RZ8BWN1E", "L9SGRBB5R698", "PU80F84P6HPN", "KEN58SH9SLZ6"],
+  "fixes": [{
+    "id": "silent-giant-potion-facts",
+    "commit": "b14880d1b1780d03e4c1c87b5afdc2a1e08fd456",
+    "ledger": ["silent-0017", "silent-0250"],
+    "state": "committed_not_merged"
+  }],
+  "skipped": ["live锁内预检发现20个共享记录路径冲突；保留现场，交运维兜底。"],
+  "merged": null,
+  "version": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3391},
+  "test_scope": "源码树沙箱检查；未运行合后检查或沙箱外完整套件。",
+  "code_proposals": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "implementation_domains": ["combat", "potion"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "缺751 F17 T7弃牌续步后的完整执行认证、同随机输入原替整战及独立局校准。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "已有持牌和未知药价展示；缺751 F13不喝或保药整战及联合收益归属。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "已有共享审计子项；缺完整弃牌结算、原替整战和更差线准入验证。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "缺敏捷、毒/荆棘、未决弃牌与药价的联合消费者验收；无药支线只有预测。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "KV净扣36/29且均零损已核；缺毒、回血和续问后的完整归属与保毒/删毒受控整战。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "阶段药水展示子项已提交但合入受阻；仍缺替代SL参考排序的完整后继和独立验证。"
+    },
+    {
+      "id": "silent-proposal-9733bb80f445aeae",
+      "state": "waiting",
+      "reason": "共享展示子项尚未合入；缺提前喝、不喝、留药受控整战及新参考序后继。"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "state": "waiting",
+      "reason": "KEN七次耗药已核；缺F15无药或保药至boss的完整分支及随机选牌后整线收益认证。"
+    },
+    {
+      "id": "silent-proposal-86a7db08d1a31976",
+      "state": "waiting",
+      "reason": "缺T5步法延迟窗口的完整归属、保持后轮相同的受控整战及新局验证。"
+    },
+    {
+      "id": "silent-proposal-e282a9131b99129a",
+      "state": "waiting",
+      "reason": "已有持牌预测子项；缺能力与续问完整认证及独立局后继，六次相关SL不能充作独立验证。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-171039/learner/runs/20261012-171055-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12f61-2676-7062-9a4a-59230c935c75
+轮数：1；工具调用：command_execution×62 file_change×10
+token：输入 193.3k、输出 47.2k（其中推理 17.9k）、cache 读 7582.1k、cache 写 0（命中 97.5%）
+成本：未提供
+耗时：2028.1 s（墙钟）
+时间：首个事件 22.2 s、模型首个输出 28.6 s、首次工具 35.5 s、末次工具结束 1957.0 s；工具内共 1339.3 s，其余（模型生成、推理、网络）666.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-171039）；模型的工具调用 exec×54 wait×8；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T17-10-58-01a12f61-2676-7062-9a4a-59230c935c75.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-171039/learner/runs/20261012-171055-strategy-proposal.jsonl

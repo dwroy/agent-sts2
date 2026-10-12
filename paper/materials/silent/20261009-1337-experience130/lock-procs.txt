@@ -1,0 +1,17 @@
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+1945738 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+1945806 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+1945807 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+1945818 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+1956565 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+1956577 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+1960544 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-134301-postmortem /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-134301-postmortem.pid 1 - /home/dw/Projects/agent-sts2/op
+1960545 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-134301 NBJBVSBNPYQB silent
+1960555 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/learner/run.ts --engine codex --task postmortem --character silent --cwd /home/dw/Projects/agent-sts2 --set runs=NBJBVSBN
+1960567 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 1746959
+herdr panes:
+label                               pane    alive  busy  foreground
+autoplay                            wJ:p2   yes    no    
+learner-20261009-134301-postmortem  wJ:pAQ  yes    yes   1960544:bash 1960545:bash 1960554:tail 1960555:node 1960567:node
+ops                                 wJ:p5   yes    yes   1753575:node 1753583:codex

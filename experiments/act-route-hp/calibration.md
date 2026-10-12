@@ -49,7 +49,7 @@ Sources:
 ## Proposal (not applied)
 
 No global correction is supported: the error changes sign with horizon and with what is done at the rest sites. Two
-narrow changes for Dai to choose from:
+narrow changes for Roy to choose from:
 
 - **Rest sites.** For each candidate route, show the boss-entry HP if every rest site is smithed instead of healed. A
   smith costs 9–25 HP against the projection. The candidate routes say "锻造就少这一次回血" (smithing loses that

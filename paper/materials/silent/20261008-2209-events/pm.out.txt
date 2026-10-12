@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：WZL2AMEY85S7（A10，第17层，仪式兽 CEREMONIAL_BEAST；末试T8以8血8挡承受17攻击，完整需损9，敌剩109血）。
+- 新的纯 bug：
+  - 无
+- 写成「未记录」的项：WZL2AMEY85S7：完整dirty源码；SL截断结算；部分末击、过量与毛伤；实际执行最优比例；整场反事实；boss时钟需要／估计及比值；Jev缓存、实际费用；未到二三幕资源。
+- 学习账本：WZL2AMEY85S7：新增无；更新 silent-0020、silent-0079、silent-0222、silent-0019、silent-0011、silent-0046、silent-0129、silent-0133、silent-0170（老错 silent-0079）；`ledger.py check` 退出码0。
+- 代码提案：silent-proposal-81e3b8bf97493a4a（F17第1／3试T4、账本0079，核验SL换线血价）；silent-proposal-c9eebe66516045f0（F17末试T5／T6／T8、账本0222／0011／0046／0129／0133，核验单牌防御与结算来源）。均经CLI登记pending，关联独立strategy-proposal任务；缺整场受控对照，保留原规则，未实现或上线。
+
+```json
+{"task":"postmortem","appended":["WZL2AMEY85S7"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0020","silent-0079","silent-0222","silent-0019","silent-0011","silent-0046","silent-0129","silent-0133","silent-0170"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-81e3b8bf97493a4a","silent-proposal-c9eebe66516045f0"],"implementation_domains":["combat","sl"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-214301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11bc0-cd1e-7061-ae2e-b9afb74d5ad7
+轮数：1；工具调用：command_execution×38
+token：输入 195.1k、输出 35.1k（其中推理 7885）、cache 读 3926.3k、cache 写 0（命中 95.3%）
+成本：未提供
+耗时：1201.7 s（墙钟）
+时间：首个事件 2.5 s、模型首个输出 7.7 s、首次工具 10.6 s、末次工具结束 1188.6 s；工具内共 45.9 s，其余（模型生成、推理、网络）1153.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×32；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T21-43-02-01a11bc0-cd1e-7061-ae2e-b9afb74d5ad7.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-214301-postmortem.jsonl

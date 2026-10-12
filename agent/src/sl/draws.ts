@@ -17,7 +17,7 @@
  * So the known order is an earlier attempt's draws up to its first such event (`clean`), and this attempt uses it only
  * while its own draws so far are exactly that order and nothing broke it here either.
  *
- * SL_RETRY_KNOWN_INSERTS (Dai 2026-10-02; DrawTracker `inserts`): new cards added to the draw pile (the Insatiable's
+ * SL_RETRY_KNOWN_INSERTS (Roy 2026-10-02; DrawTracker `inserts`): new cards added to the draw pile (the Insatiable's
  * Frantic Escape, the Entomancer's Dazed, the Soul Fysh's Beckon, Metamorphosis's attacks) go in at random places and
  * leave the rest of the pile in its order, so the known order goes on through them: the order records the pile's own
  * cards only, the added ones are skipped (and listed in `inserted`), and a retry's known draws carry the added cards still
@@ -468,7 +468,7 @@ export class DrawTracker {
 
   /**
    * Whether a card was added to the draw pile in this attempt (SL_RETRY_KNOWN_INSERTS: an `inserted` event; without it: the
-   * order broke on a card put into the pile): then its draws hold chance (Dai 2026-10-02: no early reload).
+   * order broke on a card put into the pile): then its draws hold chance (Roy 2026-10-02: no early reload).
    */
   get addedToPile(): boolean {
     return this.strayed || (this.record.inserted?.length ?? 0) > 0 || /put into the draw pile/.test(this.record.broke ?? "");
@@ -795,7 +795,7 @@ export interface KnownOrder {
   /**
    * SL_RETRY_KNOWN_INSERTS: how many leading `keys` were drawn before any card was added to the pile at a random place in
    * the attempt that saw them: those are known exactly; past them the order rests on the logs' model (added cards leave the
-   * rest in order), good for planning, never for the certain-death judge (Dai 2026-10-02). Absent: all exact.
+   * rest in order), good for planning, never for the certain-death judge (Roy 2026-10-02). Absent: all exact.
    */
   exact?: number;
   /**

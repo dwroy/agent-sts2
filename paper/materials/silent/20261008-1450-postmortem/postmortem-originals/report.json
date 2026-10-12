@@ -1,0 +1,51 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "H1T1F8ML9FUE"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "H1T1F8ML9FUE",
+      "where": "agent/src/reflex/fight-plays.ts:48",
+      "what": "手空时忽略可见弃牌区已升级凋萎伤害，缓存3而实际新生6，末试T4方案完整损血低报3。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0297"
+    ],
+    "updated": [
+      "silent-0005",
+      "silent-0006",
+      "silent-0010",
+      "silent-0018",
+      "silent-0019",
+      "silent-0023",
+      "silent-0024",
+      "silent-0025",
+      "silent-0079",
+      "silent-0117",
+      "silent-0132",
+      "silent-0221"
+    ],
+    "repeats": [
+      "silent-0079",
+      "silent-0117"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-179fd62ad9b2f71b",
+    "silent-proposal-2ae7436286228166",
+    "silent-proposal-de26499e8385f25b"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/report.md"
+}

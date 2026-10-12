@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-144302/agent
+
+ ❯ tests/ops-stall-recovery.test.ts (6 tests | 1 failed | 5 skipped) 5016ms
+     × checks the real script after shell startup exceeds the former five-second limit 5011ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-stall-recovery.test.ts > stall check mod request recovery > checks the real script after shell startup exceeds the former five-second limit
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ check tests/ops-stall-recovery.test.ts:32:40
+     30|     encoding: "utf8", timeout: 5000, env: { ...process.env, PATH: `${f…
+     31|   });
+     32|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     33|   return result.stdout;
+     34| }
+ ❯ tests/ops-stall-recovery.test.ts:65:20
+ ❯ withLauncher tests/ops-stall-recovery.test.ts:41:11
+ ❯ tests/ops-stall-recovery.test.ts:64:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  14:48:14
+   Duration  5.88s (transform 539ms, setup 639ms, import 28ms, tests 5.02s, environment 0ms)
+

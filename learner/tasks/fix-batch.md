@@ -26,7 +26,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 3. 读「要修的」指定的队列和条目（默认 {{project_root}}/notes/fix-queue-v4.md）。每条先在当前代码里确认 bug 还在（可能已被别的提交修掉）：已经修掉的不重复修，回报里写「已修，提交 …」。
    先读 README.md、最新的 paper/materials/STATE-*.md、decision-log.md 末尾和 docs/learning-protocol.md。改变打法的修复只能依据学习者已有的提案和对局证据，回报及提交写明证据局号、层、回合和对应的学习账本条目；没有证据保留原行为，报告缺数据并派策略学习者核实，不补入自己的游戏知识。
 4. **普通批次只修纯 bug**，不临时混入其他角色或独立功能。策略类出牌/药水/SL/终局/路线/休息证据保存代码提案，交独立 strategy-proposal；已有明确授权的专用功能依任务说明实施，不能因完成事件 task=fix-batch 错当普通 bug 批次。
-5. Roy 2026-10-07 已授权学习者有充分理由和数据时修改既有人定出牌、药水、SL、终局价值规则；不再一律写“需要 Dai 定”。纯 bug 修复仍维持无关角色等价，不能凭开发者知识添加游戏判断。规则更改证据与双通知按下文。
+5. Roy 2026-10-07 已授权学习者有充分理由和数据时修改既有人定出牌、药水、SL、终局价值规则；不再一律写“需要 Roy 定”。纯 bug 修复仍维持无关角色等价，不能凭开发者知识添加游戏判断。规则更改证据与双通知按下文。
 
 ## 2. 每个修复
 - **每个修复单独提交**，英文提交信息写清楚改了什么、证据（run id、floor、turn）。
@@ -56,7 +56,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 
 ## 6. 安全
 - key 不许打印、不许落盘：不许读或 grep `.env`、`~/.jev_api_keys`、`~/.deepseek_api_key`，不许跑 `env`、`printenv` 之类会打印环境变量的命令。
-- 只改 {{project_root}} 里的：{{worktree}}（本分支）、{{scratch}} 和学习账本（只经 learner/ledger.py 追加）；merge = live 时还有 {{merge_dir}} 的合入，以及第 5 节明确要求的上线记录和 eval 版本。Dai 2026-10-05 08:37 已授权修改本工作树中的 ops/ 调度器与 broker（包括 ops/codex/、codex-ops*.sh、codex-ops-learn.py、learner_jobs.py、learner_checks.py），可实现队列中已批准的动作和学习闭环；不修改 key、.env、codex 登录令牌、.git hooks/config，也不借动作执行清单外操作。notes/、paper/ 的其他文件仍只读。
+- 只改 {{project_root}} 里的：{{worktree}}（本分支）、{{scratch}} 和学习账本（只经 learner/ledger.py 追加）；merge = live 时还有 {{merge_dir}} 的合入，以及第 5 节明确要求的上线记录和 eval 版本。Roy 2026-10-05 08:37 已授权修改本工作树中的 ops/ 调度器与 broker（包括 ops/codex/、codex-ops*.sh、codex-ops-learn.py、learner_jobs.py、learner_checks.py），可实现队列中已批准的动作和学习闭环；不修改 key、.env、codex 登录令牌、.git hooks/config，也不借动作执行清单外操作。notes/、paper/ 的其他文件仍只读。
 - 不推送；不运行 play；不用 Zboubkiller DLL，不开 mod 自带的 autoplay。
 - 不读游戏二进制（sts2.dll）或 .pck 文件。
 - 杀进程用 PID，不用 `pkill -f`；不许 `npm install`（node_modules 是共用的软链接）；logs/ 只读。
@@ -72,7 +72,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 - 没修的：<条目> — 原因（策略类 / 证据不足 / 太大）
 - 测试：tsc 退出码；vitest 文件数 / 用例数 / 退出码（重跑过的写明）
 - 合入：<live 的提交号 / 未合入>
-- 需要 Dai 定的事（没有写「无」）：……
+- 需要 Roy 定的事（没有写「无」）：……
 ```
 
 最后再单独给一个 json 代码块：
@@ -85,6 +85,6 @@ default.merge_dir: {{project_root}}/.worktrees/live
 ## Roy 2026-10-07 学习授权与代码提案
 先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
 
-Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-roy.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
 
 最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。

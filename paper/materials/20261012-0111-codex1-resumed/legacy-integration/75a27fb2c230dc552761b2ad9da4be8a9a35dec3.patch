@@ -1,0 +1,1653 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index 0c89540f5..fbcfa455d 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -55,6 +55,8 @@ export interface CardModel {
+   hitsLoseHandSkills?: boolean;
+   /** Plain Silent Precise Cut: only recorded hand/Strength pairs are verified (silent-0166/0169). */
+   preciseCutHandDamage?: boolean;
++  /** NHA2KW0RB7VP A10: ordinary Precise Cut starts at one in a seven-card hand. */
++  preciseCutSevenHand?: boolean;
+   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
+   maulIncrease?: number;
+   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
+@@ -1065,8 +1067,12 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+     validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
+     damage,
+     ...(character.toLowerCase() === "silent" && cardId === "PRECISE_CUT" && !bool(card["upgraded"]) &&
+-      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 && [3, 5, 7, 11].includes(damage ?? -1) &&
++      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 &&
++      ([3, 5, 7, 11].includes(damage ?? -1) || (ascension === 10 && damage === 1)) &&
+       /你的手牌中每有一张牌，此牌的伤害就降低/.test(template) ? { preciseCutHandDamage: true } : {}),
++    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "PRECISE_CUT" && !bool(card["upgraded"]) &&
++      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 && damage === 1 &&
++      /你的手牌中每有一张牌，此牌的伤害就降低/.test(template) ? { preciseCutSevenHand: true } : {}),
+     ...(immediatePlays ? { immediatePlays } : {}),
+     hits: Math.max(0, Math.round(hits)),
+     ...(character.toLowerCase() === "silent" && cardId === "FLECHETTES" && !bool(card["upgraded"]) &&
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index b981f2469..6859403cc 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -2155,11 +2155,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
+     if (card.cardId === "PRECISE_CUT" && !card.upgraded && card.preciseCutHandDamage) {
+       const handSize = [...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").length + next.drawnInHand + 1;
+       const strengthNow = player.strengthNow ?? 0;
+-      const observed = strengthNow === 0 ? (handSize === 5 ? 5 : handSize === 6 ? 3 : null)
++      // NHA2KW0RB7VP F17 T1: seven cards show 1; Slice and Strike leaving show 3 then 5.
++      const observed = strengthNow === 0 ? (handSize === 5 ? 5 : handSize === 6 ? 3 : handSize === 7 && card.preciseCutSevenHand ? 1 : null)
+         : strengthNow === -2 ? (handSize === 5 ? 3 : handSize === 4 ? 5 : null)
+         : strengthNow === 2 ? (handSize === 5 ? 7 : handSize === 3 ? 11 : null) : null;
+       const recordedShown = strengthNow === 2 ? card.damage === 7 || card.damage === 11
+-        : (strengthNow === 0 || strengthNow === -2) && (card.damage === 3 || card.damage === 5);
++        : ((strengthNow === 0 || strengthNow === -2) && (card.damage === 3 || card.damage === 5)) ||
++          (strengthNow === 0 && card.preciseCutSevenHand === true && card.damage === 1);
+       if (observed !== null && recordedShown && !player.weak && !next.shrunk && next.strength === 0) {
+         shown = observed;
+       } else {
+diff --git a/agent/tests/silent-precise-cut-seven-evidence.json b/agent/tests/silent-precise-cut-seven-evidence.json
+new file mode 100644
+index 000000000..58dcfc038
+--- /dev/null
++++ b/agent/tests/silent-precise-cut-seven-evidence.json
+@@ -0,0 +1,1510 @@
++[
++  {
++    "line": 283142,
++    "run": "NHA2KW0RB7VP",
++    "turn": 1,
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "SLICE",
++        "name": "切割",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "造成6点伤害。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "STRIKE_SILENT",
++        "name": "打击",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "造成6点伤害。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 2,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 3,
++        "card_id": "NOXIOUS_FUMES",
++        "name": "毒雾",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "在你的回合开始时，给予所有敌人{PoisonPerTurn:diff()}层中毒。",
++        "resolved_rules_text": "在你的回合开始时，给予所有敌人2层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPerTurn",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 4,
++        "card_id": "PRECISE_CUT",
++        "name": "精确切击",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你的手牌中每有一张牌，此牌的伤害就降低{ExtraDamage:inverseDiff()}点。",
++        "resolved_rules_text": "造成1点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。",
++        "dynamic_values": [
++          {
++            "name": "CalculatedDamage",
++            "base_value": 13,
++            "current_value": 1,
++            "enchanted_value": 13,
++            "is_modified": true,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "CalculationBase",
++            "base_value": 13,
++            "current_value": 13,
++            "enchanted_value": 13,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "ExtraDamage",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 5,
++        "card_id": "POUNCE",
++        "name": "猛扑",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。 你的下一张技能牌耗能变为0{energyPrefix:energyIcons(1)}。",
++        "resolved_rules_text": "造成14点伤害。 你的下一张技能牌耗能变为0res://images/packed/sprite_fonts/silent_energy_icon.png。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 14,
++            "current_value": 14,
++            "enchanted_value": 14,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 6,
++        "card_id": "DEADLY_POISON",
++        "name": "致命毒药",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "给予5层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "player": {
++      "current_hp": 80,
++      "max_hp": 80,
++      "block": 0,
++      "energy": 3,
++      "stars": 0,
++      "focus": 0,
++      "powers": [],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 0,
++      "attacks_played_this_turn": 0,
++      "skills_played_this_turn": 0
++    },
++    "enemy": {
++      "index": 0,
++      "enemy_id": "CEREMONIAL_BEAST",
++      "name": "仪式兽",
++      "current_hp": 262,
++      "max_hp": 262,
++      "base_max_hp": 262,
++      "block": 0,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [],
++      "intent": "STAMP_MOVE",
++      "move_id": "STAMP_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Buff",
++          "label": null,
++          "damage": null,
++          "hits": null,
++          "total_damage": null,
++          "status_card_count": null
++        }
++      ]
++    }
++  },
++  {
++    "line": 283143,
++    "run": "NHA2KW0RB7VP",
++    "turn": 1,
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "STRIKE_SILENT",
++        "name": "打击",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "造成6点伤害。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 2,
++        "card_id": "NOXIOUS_FUMES",
++        "name": "毒雾",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "在你的回合开始时，给予所有敌人{PoisonPerTurn:diff()}层中毒。",
++        "resolved_rules_text": "在你的回合开始时，给予所有敌人2层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPerTurn",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 3,
++        "card_id": "PRECISE_CUT",
++        "name": "精确切击",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你的手牌中每有一张牌，此牌的伤害就降低{ExtraDamage:inverseDiff()}点。",
++        "resolved_rules_text": "造成3点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。",
++        "dynamic_values": [
++          {
++            "name": "CalculatedDamage",
++            "base_value": 13,
++            "current_value": 3,
++            "enchanted_value": 13,
++            "is_modified": true,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "CalculationBase",
++            "base_value": 13,
++            "current_value": 13,
++            "enchanted_value": 13,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "ExtraDamage",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 4,
++        "card_id": "POUNCE",
++        "name": "猛扑",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。 你的下一张技能牌耗能变为0{energyPrefix:energyIcons(1)}。",
++        "resolved_rules_text": "造成14点伤害。 你的下一张技能牌耗能变为0res://images/packed/sprite_fonts/silent_energy_icon.png。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 14,
++            "current_value": 14,
++            "enchanted_value": 14,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 5,
++        "card_id": "DEADLY_POISON",
++        "name": "致命毒药",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "给予5层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "player": {
++      "current_hp": 80,
++      "max_hp": 80,
++      "block": 0,
++      "energy": 3,
++      "stars": 0,
++      "focus": 0,
++      "powers": [],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 1,
++      "attacks_played_this_turn": 1,
++      "skills_played_this_turn": 0
++    },
++    "enemy": {
++      "index": 0,
++      "enemy_id": "CEREMONIAL_BEAST",
++      "name": "仪式兽",
++      "current_hp": 256,
++      "max_hp": 262,
++      "base_max_hp": 262,
++      "block": 0,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [],
++      "intent": "STAMP_MOVE",
++      "move_id": "STAMP_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Buff",
++          "label": null,
++          "damage": null,
++          "hits": null,
++          "total_damage": null,
++          "status_card_count": null
++        }
++      ]
++    }
++  },
++  {
++    "line": 283144,
++    "run": "NHA2KW0RB7VP",
++    "turn": 1,
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "NOXIOUS_FUMES",
++        "name": "毒雾",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "在你的回合开始时，给予所有敌人{PoisonPerTurn:diff()}层中毒。",
++        "resolved_rules_text": "在你的回合开始时，给予所有敌人2层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPerTurn",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 2,
++        "card_id": "PRECISE_CUT",
++        "name": "精确切击",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你的手牌中每有一张牌，此牌的伤害就降低{ExtraDamage:inverseDiff()}点。",
++        "resolved_rules_text": "造成5点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。",
++        "dynamic_values": [
++          {
++            "name": "CalculatedDamage",
++            "base_value": 13,
++            "current_value": 5,
++            "enchanted_value": 13,
++            "is_modified": true,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "CalculationBase",
++            "base_value": 13,
++            "current_value": 13,
++            "enchanted_value": 13,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "ExtraDamage",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 3,
++        "card_id": "POUNCE",
++        "name": "猛扑",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。 你的下一张技能牌耗能变为0{energyPrefix:energyIcons(1)}。",
++        "resolved_rules_text": "造成14点伤害。 你的下一张技能牌耗能变为0res://images/packed/sprite_fonts/silent_energy_icon.png。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 14,
++            "current_value": 14,
++            "enchanted_value": 14,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 4,
++        "card_id": "DEADLY_POISON",
++        "name": "致命毒药",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "给予5层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "player": {
++      "current_hp": 80,
++      "max_hp": 80,
++      "block": 0,
++      "energy": 2,
++      "stars": 0,
++      "focus": 0,
++      "powers": [],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 2,
++      "attacks_played_this_turn": 2,
++      "skills_played_this_turn": 0
++    },
++    "enemy": {
++      "index": 0,
++      "enemy_id": "CEREMONIAL_BEAST",
++      "name": "仪式兽",
++      "current_hp": 250,
++      "max_hp": 262,
++      "base_max_hp": 262,
++      "block": 0,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [],
++      "intent": "STAMP_MOVE",
++      "move_id": "STAMP_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Buff",
++          "label": null,
++          "damage": null,
++          "hits": null,
++          "total_damage": null,
++          "status_card_count": null
++        }
++      ]
++    }
++  },
++  {
++    "line": 283145,
++    "run": "NHA2KW0RB7VP",
++    "turn": 1,
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "NOXIOUS_FUMES",
++        "name": "毒雾",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "在你的回合开始时，给予所有敌人{PoisonPerTurn:diff()}层中毒。",
++        "resolved_rules_text": "在你的回合开始时，给予所有敌人2层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPerTurn",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 2,
++        "card_id": "POUNCE",
++        "name": "猛扑",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 2,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。 你的下一张技能牌耗能变为0{energyPrefix:energyIcons(1)}。",
++        "resolved_rules_text": "造成14点伤害。 你的下一张技能牌耗能变为0res://images/packed/sprite_fonts/silent_energy_icon.png。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 14,
++            "current_value": 14,
++            "enchanted_value": 14,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 3,
++        "card_id": "DEADLY_POISON",
++        "name": "致命毒药",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "给予5层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "player": {
++      "current_hp": 80,
++      "max_hp": 80,
++      "block": 0,
++      "energy": 2,
++      "stars": 0,
++      "focus": 0,
++      "powers": [],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 3,
++      "attacks_played_this_turn": 3,
++      "skills_played_this_turn": 0
++    },
++    "enemy": {
++      "index": 0,
++      "enemy_id": "CEREMONIAL_BEAST",
++      "name": "仪式兽",
++      "current_hp": 245,
++      "max_hp": 262,
++      "base_max_hp": 262,
++      "block": 0,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [],
++      "intent": "STAMP_MOVE",
++      "move_id": "STAMP_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Buff",
++          "label": null,
++          "damage": null,
++          "hits": null,
++          "total_damage": null,
++          "status_card_count": null
++        }
++      ]
++    }
++  },
++  {
++    "line": 283146,
++    "run": "NHA2KW0RB7VP",
++    "turn": 1,
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "NOXIOUS_FUMES",
++        "name": "毒雾",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "在你的回合开始时，给予所有敌人{PoisonPerTurn:diff()}层中毒。",
++        "resolved_rules_text": "在你的回合开始时，给予所有敌人2层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPerTurn",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "not_enough_energy",
++        "unplayable_reason_raw": "EnergyCostTooHigh",
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 2,
++        "card_id": "DEADLY_POISON",
++        "name": "致命毒药",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "给予5层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "player": {
++      "current_hp": 80,
++      "max_hp": 80,
++      "block": 0,
++      "energy": 0,
++      "stars": 0,
++      "focus": 0,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "FREE_SKILL_POWER",
++          "name": "免费技能",
++          "amount": 1,
++          "is_debuff": false
++        }
++      ],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 4,
++      "attacks_played_this_turn": 4,
++      "skills_played_this_turn": 0
++    },
++    "enemy": {
++      "index": 0,
++      "enemy_id": "CEREMONIAL_BEAST",
++      "name": "仪式兽",
++      "current_hp": 231,
++      "max_hp": 262,
++      "base_max_hp": 262,
++      "block": 0,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [],
++      "intent": "STAMP_MOVE",
++      "move_id": "STAMP_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Buff",
++          "label": null,
++          "damage": null,
++          "hits": null,
++          "total_damage": null,
++          "status_card_count": null
++        }
++      ]
++    }
++  },
++  {
++    "line": 283147,
++    "run": "NHA2KW0RB7VP",
++    "turn": 1,
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "not_enough_energy",
++        "unplayable_reason_raw": "EnergyCostTooHigh",
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "NOXIOUS_FUMES",
++        "name": "毒雾",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "在你的回合开始时，给予所有敌人{PoisonPerTurn:diff()}层中毒。",
++        "resolved_rules_text": "在你的回合开始时，给予所有敌人2层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPerTurn",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "not_enough_energy",
++        "unplayable_reason_raw": "EnergyCostTooHigh",
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "player": {
++      "current_hp": 80,
++      "max_hp": 80,
++      "block": 0,
++      "energy": 0,
++      "stars": 0,
++      "focus": 0,
++      "powers": [],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 5,
++      "attacks_played_this_turn": 4,
++      "skills_played_this_turn": 1
++    },
++    "enemy": {
++      "index": 0,
++      "enemy_id": "CEREMONIAL_BEAST",
++      "name": "仪式兽",
++      "current_hp": 231,
++      "max_hp": 262,
++      "base_max_hp": 262,
++      "block": 0,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "POISON_POWER",
++          "name": "中毒",
++          "amount": 10,
++          "is_debuff": true
++        }
++      ],
++      "intent": "STAMP_MOVE",
++      "move_id": "STAMP_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Buff",
++          "label": null,
++          "damage": null,
++          "hits": null,
++          "total_damage": null,
++          "status_card_count": null
++        }
++      ]
++    }
++  },
++  {
++    "line": 283148,
++    "run": "NHA2KW0RB7VP",
++    "turn": 2,
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "DEADLY_POISON",
++        "name": "致命毒药+",
++        "upgraded": true,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "给予{PoisonPower:diff()}层中毒。",
++        "resolved_rules_text": "给予7层中毒。",
++        "dynamic_values": [
++          {
++            "name": "PoisonPower",
++            "base_value": 7,
++            "current_value": 7,
++            "enchanted_value": 7,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "NEUTRALIZE",
++        "name": "中和",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
++        "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 3,
++            "current_value": 3,
++            "enchanted_value": 3,
++            "is_modified": false,
++            "was_just_upgraded": false
++          },
++          {
++            "name": "WeakPower",
++            "base_value": 1,
++            "current_value": 1,
++            "enchanted_value": 1,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 2,
++        "card_id": "STRIKE_SILENT",
++        "name": "打击",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "造成6点伤害。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 3,
++        "card_id": "FOOTWORK",
++        "name": "灵动步法",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{DexterityPower:diff()}点敏捷。",
++        "resolved_rules_text": "获得2点敏捷。",
++        "dynamic_values": [
++          {
++            "name": "DexterityPower",
++            "base_value": 2,
++            "current_value": 2,
++            "enchanted_value": 2,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 4,
++        "card_id": "STRIKE_SILENT",
++        "name": "打击",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0
++        ],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害。",
++        "resolved_rules_text": "造成6点伤害。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 6,
++            "current_value": 6,
++            "enchanted_value": 6,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "player": {
++      "current_hp": 80,
++      "max_hp": 80,
++      "block": 0,
++      "energy": 3,
++      "stars": 0,
++      "focus": 0,
++      "powers": [],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 0,
++      "attacks_played_this_turn": 0,
++      "skills_played_this_turn": 0
++    },
++    "enemy": {
++      "index": 0,
++      "enemy_id": "CEREMONIAL_BEAST",
++      "name": "仪式兽",
++      "current_hp": 221,
++      "max_hp": 262,
++      "base_max_hp": 262,
++      "block": 0,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "POISON_POWER",
++          "name": "中毒",
++          "amount": 9,
++          "is_debuff": true
++        },
++        {
++          "index": 1,
++          "power_id": "PLOW_POWER",
++          "name": "横冲直撞",
++          "amount": 160,
++          "is_debuff": true
++        }
++      ],
++      "intent": "PLOW_MOVE",
++      "move_id": "PLOW_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Attack",
++          "label": "20",
++          "damage": 20,
++          "hits": 1,
++          "total_damage": 20,
++          "status_card_count": null
++        },
++        {
++          "index": 1,
++          "intent_type": "Buff",
++          "label": null,
++          "damage": null,
++          "hits": null,
++          "total_damage": null,
++          "status_card_count": null
++        }
++      ]
++    }
++  }
++]
+diff --git a/agent/tests/silent-precise-cut-seven.test.ts b/agent/tests/silent-precise-cut-seven.test.ts
+new file mode 100644
+index 000000000..c3ba28dd3
+--- /dev/null
++++ b/agent/tests/silent-precise-cut-seven.test.ts
+@@ -0,0 +1,84 @@
++/** NHA2KW0RB7VP SILENT A10 F17 T1, states 283142-283148; silent-0166/0169. */
++import { resolve } from "node:path";
++import { expect, it, vi } from "vitest";
++import evidence from "./silent-precise-cut-seven-evidence.json";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { modelHandCard } from "../src/reflex/card-model.js";
++import { replaySteps, type SolverInput } from "../src/reflex/turn-solver.js";
++import { board } from "./boss-sim-fixture.js";
++
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed seven-card evidence"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++
++const knowledge = makeKnowledge({ cards: [
++  { id: "SLICE", type: "Attack" }, { id: "STRIKE_SILENT", type: "Attack" },
++  { id: "PRECISE_CUT", type: "Attack" }, { id: "POUNCE", type: "Attack" },
++  { id: "DEFEND_SILENT", type: "Skill" }, { id: "DEADLY_POISON", type: "Skill" },
++  { id: "NOXIOUS_FUMES", type: "Power" },
++] }, "cache");
++
++function inputAt(frameIndex = 0, character = "silent", ascension: number | null = 10): SolverInput {
++  const frame = evidence[frameIndex]!;
++  const input = board({ bossHp: frame.enemy.current_hp, playerHp: frame.player.current_hp }).solver;
++  input.hand = frame.hand.map((entry, i) => modelHandCard(entry, i, knowledge, character, ascension));
++  input.player.energy = frame.player.energy;
++  input.player.block = frame.player.block;
++  input.enemies[0]!.attacks = [];
++  return input;
++}
++
++function play(input: SolverInput, ids: string[]) {
++  const steps = ids.map((id) => {
++    const entry = input.hand.find((card) => card.cardId === id)!;
++    return { cardIndex: entry.index, cardId: id, name: entry.name, upgraded: entry.upgraded, target: 0 };
++  });
++  return replaySteps(input, steps)!.outcome;
++}
++
++it("the recorded seven/six/five-card states give one/three/five direct damage", () => {
++  expect([0, 1, 2].map((index) => play(inputAt(index), ["PRECISE_CUT"]).damageDealt)).toEqual([1, 3, 5]);
++});
++
++it("the same four attacks deal 31 rather than 27, with the later ten poison kept separate", () => {
++  const result = play(inputAt(), ["SLICE", "STRIKE_SILENT", "PRECISE_CUT", "POUNCE"]);
++  expect(result).toMatchObject({ damageDealt: 31, hpLoss: 0, hpAfter: 80 });
++  expect(result.enemyHpAfter[0]!.hp).toBe(evidence[4]!.enemy.current_hp);
++  expect(result.unknownCards).toEqual([]);
++  expect(evidence[4]!.enemy.current_hp - evidence[6]!.enemy.current_hp).toBe(10);
++});
++
++it("each departure updates the observed starting one to three and then five", () => {
++  expect(play(inputAt(), ["SLICE", "PRECISE_CUT"]).damageDealt).toBe(9);
++  expect(play(inputAt(), ["SLICE", "STRIKE_SILENT", "PRECISE_CUT"]).damageDealt).toBe(17);
++});
++
++it("unobserved hand counts and damage modifiers remain unknown", () => {
++  const short = inputAt();
++  short.hand = short.hand.filter((entry) => !["NOXIOUS_FUMES", "DEADLY_POISON", "DEFEND_SILENT"].includes(entry.cardId));
++  expect(play(short, ["PRECISE_CUT"]).unknownCards).toContain("精确切击（此手牌数或伤害修正未验证）");
++  for (const change of [{ weak: true }, { strengthNow: -2 }, { strengthNow: 2 }]) {
++    const input = inputAt();
++    Object.assign(input.player, change);
++    expect(play(input, ["SLICE", "STRIKE_SILENT", "PRECISE_CUT"]).unknownCards)
++      .toContain("精确切击（此手牌数或伤害修正未验证）");
++  }
++});
++
++it("other characters, unobserved ascensions and upgrades keep the starting-one calculation", () => {
++  for (const [character, ascension] of [["ironclad", 10], ["", 10], ["silent", 0], ["silent", null]] as const) {
++    expect(play(inputAt(0, character, ascension), ["SLICE", "STRIKE_SILENT", "PRECISE_CUT", "POUNCE"]).damageDealt).toBe(27);
++  }
++  const input = inputAt();
++  const cut = evidence[0]!.hand.find((entry) => entry.card_id === "PRECISE_CUT")!;
++  input.hand[4] = modelHandCard({ ...cut, upgraded: true }, 4, knowledge, "silent", 10);
++  expect(play(input, ["SLICE", "STRIKE_SILENT", "PRECISE_CUT", "POUNCE"]).damageDealt).toBe(27);
++});

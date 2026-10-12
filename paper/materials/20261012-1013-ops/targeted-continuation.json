@@ -1,0 +1,36 @@
+[
+  {
+    "name": "failed-case-single-worker",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "tests/rollout-live.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "-t",
+      "liveRollout picks its best among all code's lines, not only the shown ones"
+    ],
+    "exit": 0,
+    "log": "paper/materials/20261012-1013-ops/failed-case-single-worker.log"
+  },
+  {
+    "name": "unrun-paths",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "tests/paths.test.ts",
+      "--pool=forks",
+      "--maxWorkers=1"
+    ],
+    "exit": 0,
+    "log": "paper/materials/20261012-1013-ops/unrun-paths.log"
+  }
+]

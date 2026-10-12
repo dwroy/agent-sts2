@@ -1,0 +1,1784 @@
+diff --git a/agent/src/hand/screens/event.ts b/agent/src/hand/screens/event.ts
+index 5ff034d32..afa1e593d 100644
+--- a/agent/src/hand/screens/event.ts
++++ b/agent/src/hand/screens/event.ts
+@@ -24,6 +24,7 @@ import { continueAfterDiscard, DISCARD_ANSWER_NOTE, discardableSlots, discardVar
+ import { isLastEventPage } from "../../knowledge/event-pages.js";
+ import { routeReviewBlock, withRouteReview } from "./route-review.js";
+ import { eventOptionOutcome } from "../../knowledge/outcome-facts.js";
++import { namedCardFacts } from "../../knowledge/card-references.js";
+ 
+ /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
+ export function eventHpCost(description: string): { hp: number; maxHp: number } {
+@@ -220,6 +221,13 @@ export function planEvent(env: DecisionEnv): Decision | null {
+           option: title,
+           description: truncate(annotateEnchants(str(option["description"])), 360),
+           ...relicFacts(str(option["description"]), env.knowledge),
++          // 64VJC5XT2AT2 F34: preserve the original choice, supply its missing catalogue facts.
++          ...(str(state.run?.raw["character_id"]).toLowerCase() === "silent" ? namedCardFacts(str(option["description"]), env.knowledge, {
++            character: "silent", run: runId, floor, source: `event:${eventId}:o${index}`,
++            modVersion: str(state.raw["mod_version"]) || undefined,
++            cardIds: [str(option["card_id"])].filter(Boolean),
++            previews: [...asArray(option["card_previews"]), option["card_preview"]].map(asRecord).filter((card) => Object.keys(card).length > 0),
++          }) : {}),
+           lethal: bool(option["will_kill_player"]),
+         } satisfies JsonValue,
+       } satisfies PickOption,
+diff --git a/agent/src/knowledge/card-references.ts b/agent/src/knowledge/card-references.ts
+new file mode 100644
+index 000000000..14f88d34a
+--- /dev/null
++++ b/agent/src/knowledge/card-references.ts
+@@ -0,0 +1,127 @@
++/** Resolve only cards referenced by visible game text; catalogue facts confer no model eligibility. */
++import { asArray, asRecord, numOrNull, str, stripMarkup, toJsonValue, type JsonValue } from "../core/util/json.js";
++import type { CardInfo, Knowledge } from "./index.js";
++
++interface Reference { identity: string; by: "id" | "name"; upgraded: boolean }
++export interface CardReferenceContext {
++  character: string;
++  run: string;
++  floor: number | null;
++  source: string;
++  modVersion?: string;
++  cardIds?: string[];
++  previews?: Record<string, unknown>[];
++  maxCards?: number;
++  maxDepth?: number;
++}
++
++const escape = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
++
++function references(text: string, cards: CardInfo[]): Reference[] {
++  const plain = stripMarkup(text);
++  const marked = new Set([...text.matchAll(/\[([a-z]+)\]([^\[\]]+)\[\/\1\]/gi)].map((match) => stripMarkup(match[2]!)));
++  const matches: { start: number; end: number; ref: Reference }[] = [];
++  for (const card of cards) {
++    for (const [identity, by] of [[card.id, "id"], [card.name, "name"]] as const) {
++      if (!identity) continue;
++      // Short localized names require markup or an explicit card-count phrase.
++      const explicit = marked.has(identity) || marked.has(`${identity}+`) || new RegExp(`张\\s*${escape(identity)}`).test(plain);
++      if (by === "name" && identity.length < 3 && !explicit) continue;
++      const latin = /^[\w +'-]+$/.test(identity);
++      const pattern = new RegExp(`${latin ? "(?<![\\w])" : ""}${escape(identity)}(\\+)?${latin ? "(?![\\w])" : ""}`, "g");
++      for (const match of plain.matchAll(pattern)) matches.push({ start: match.index!, end: match.index! + match[0].length, ref: { identity, by, upgraded: !!match[1] } });
++    }
++  }
++  // A contained short name must not turn a longer named card into two cards.
++  const kept = matches.filter((match) => !matches.some((other) => other.start <= match.start && other.end >= match.end && other.end - other.start > match.end - match.start));
++  const result = kept.map((match) => match.ref);
++  // Unknown marked names are card references only when the source identifies them as cards.
++  for (const name of marked) {
++    if (!new RegExp(`张\\s*${escape(name)}`).test(plain)) continue;
++    if (!result.some((ref) => ref.identity === name || `${ref.identity}+` === name)) result.push({ identity: name.replace(/\+$/, ""), by: "name", upgraded: name.endsWith("+") });
++  }
++  return result;
++}
++
++/** Bounded recursive facts. The original clause preserves quantity, destination and temporary conditions. */
++export function namedCardFacts(text: string, knowledge: Knowledge, context: CardReferenceContext): Record<string, JsonValue> {
++  const cards = knowledge.cards();
++  const previews = context.previews ?? [];
++  const initial = [
++    ...(context.cardIds ?? []).map((id): Reference => ({ identity: id.replace(/\+$/, ""), by: "id", upgraded: id.endsWith("+") })),
++    ...previews.flatMap((preview): Reference[] => {
++      const id = str(preview["card_id"], str(preview["id"]));
++      return id ? [{ identity: id, by: "id", upgraded: preview["is_upgraded"] === true }] : [];
++    }),
++    ...references(text, cards),
++  ];
++  if (!initial.length) return {};
++  const maxCards = Math.max(1, Math.min(24, context.maxCards ?? 12));
++  const maxDepth = Math.max(0, Math.min(3, context.maxDepth ?? 2));
++  const queue = initial.map((ref) => ({ ref, depth: 0, via: context.source }));
++  const seen = new Set<string>();
++  const facts: JsonValue[] = [];
++  const gaps = new Map<string, JsonValue>();
++  const modVersion = knowledge.catalog?.modVersion ?? null;
++  const stale = !!context.modVersion && !!modVersion && context.modVersion !== modVersion;
++  const unknown = (identity: string, fields: string[], reason: string, via: string, candidates: string[] = []) => {
++    const key = JSON.stringify([context.character, modVersion, identity, [...fields].sort()]);
++    if (!gaps.has(key)) gaps.set(key, { key, identity, missing_fields: fields, reason, candidates, source: via, run_id: context.run, floor: context.floor });
++  };
++  for (let at = 0; at < queue.length; at++) {
++    const { ref, depth, via } = queue[at]!;
++    const candidates = cards.filter((card) => ref.by === "id" ? card.id === ref.identity : card.name === ref.identity);
++    // An explicit id or visible preview can disambiguate a name, but never an unrelated name.
++    const identified = candidates.filter((card) => initial.some((item) => item.by === "id" && item.identity === card.id));
++    const chosen = identified.length === 1 ? identified : candidates;
++    if (chosen.length > 1) {
++      unknown(ref.identity, ["identity"], "同名卡无法唯一对应，未猜测效果", via, chosen.map((card) => card.id));
++      continue;
++    }
++    const info = chosen[0];
++    const id = info?.id ?? ref.identity;
++    const key = `${id}${ref.upgraded ? "+" : ""}`;
++    if (seen.has(key)) continue;
++    seen.add(key);
++    const preview = previews.find((card) => str(card["card_id"], str(card["id"])) === id && (card["is_upgraded"] === true) === ref.upgraded);
++    if (!info && !preview) {
++      unknown(key, ["definition"], "已有mod资料未提供该牌定义", via);
++      continue;
++    }
++    if (facts.length >= maxCards || depth > maxDepth) {
++      unknown(key, ["reference_expansion"], "关联展开达到数量或层数上限", via);
++      continue;
++    }
++    const upgrade = asRecord(info?.upgrade);
++    // Upgrade data is a partial preview. Never substitute base cost/effect for missing upgraded values.
++    const variant = preview ?? (ref.upgraded ? upgrade : null);
++    const description = variant ? str(variant["description"]) : info?.description ?? "";
++    const cost = variant ? numOrNull(variant["cost"]) : info?.cost ?? null;
++    const xCost = variant ? typeof variant["is_x_cost"] === "boolean" ? variant["is_x_cost"] : null : info?.xCost ?? null;
++    const keywords = variant && Array.isArray(variant["keywords"]) ? asArray(variant["keywords"]).map(String) : variant ? null : info?.keywords ?? null;
++    const missing = [...(!description ? ["description"] : []), ...(cost === null && xCost !== true ? ["cost"] : [])];
++    if (missing.length) unknown(key, missing, "现场或对应版本资料缺字段，保持未知", via);
++    if (stale && !preview) unknown(key, ["version"], "缓存mod版本与现场不符，以下资料待核", via);
++    facts.push({
++      id, name: str(preview?.["name"], info?.name ?? id), upgraded: ref.upgraded,
++      cost, is_x_cost: toJsonValue(xCost), type: str(variant?.["type"], info?.type ?? "") || null,
++      rarity: info?.rarity || null, target: str(variant?.["target"], info?.target ?? "") || null,
++      description: description || null,
++      description_raw: variant ? str(variant["description_raw"]) || null : info?.descriptionRaw || null,
++      keywords, tags: toJsonValue(info?.tags),
++      vars: toJsonValue(variant ? variant["vars"] : info?.vars),
++      star_cost: variant ? numOrNull(variant["star_cost"]) : info?.starCost ?? null,
++      is_x_star_cost: toJsonValue(variant ? variant["is_x_star_cost"] : info?.xStarCost),
++      upgrade: toJsonValue(info?.upgrade), source: preview ? "本题现场预览" : `mod /data/cards (${knowledge.source})`,
++      verification: preview ? "本题现场资料" : stale ? "版本不符，待核" : modVersion ? "mod版本匹配的牌面资料" : "资料版本未知，待核",
++      referenced_by: via,
++    });
++    for (const child of references(description, cards)) queue.push({ ref: child, depth: depth + 1, via: key });
++  }
++  return { card_references: {
++    source_text: text, cards: facts, unknowns: [...gaps.values()],
++    catalog: { source: knowledge.source, mod_version: modVersion, fetched_at: knowledge.catalog?.fetchedAt ?? null, current_mod_version: context.modVersion ?? modVersion, game_version: null },
++    coverage: "本题具名牌及其规则文本中的关联牌；数量、获得位置和临时条件以source_text原文为准。未标记且无法识别的名称覆盖未知。",
++    knowledge_status: "仅传递已有牌面资料；效果实测、模拟支持和打法验证另行取证，不能据此认定已实现或推荐选牌。",
++  } };
++}
+diff --git a/agent/src/knowledge/index.ts b/agent/src/knowledge/index.ts
+index 44ab6c5ee..854300a5f 100644
+--- a/agent/src/knowledge/index.ts
++++ b/agent/src/knowledge/index.ts
+@@ -32,6 +32,10 @@ export interface CardInfo {
+   descriptionRaw: string;
+   vars: Record<string, unknown>[];
+   xCost: boolean;
++  /** Mod catalogue fields retained for reference facts, not inferred simulation rules. */
++  upgrade?: Record<string, unknown> | null;
++  starCost?: number | null;
++  xStarCost?: boolean;
+ }
+ 
+ export interface MonsterInfo {
+@@ -96,6 +100,7 @@ export interface Knowledge {
+   event(id: string | null | undefined): EventInfo | null;
+   stats: KnowledgeStats;
+   source: "live" | "cache";
++  catalog?: { modVersion: string; fetchedAt: string };
+ }
+ 
+ const COLLECTIONS = ["cards", "monsters", "relics", "potions", "powers", "events", "characters"] as const;
+@@ -127,6 +132,9 @@ function parseCard(entry: unknown): CardInfo | null {
+     descriptionRaw: str(obj["description_raw"]),
+     vars: asArray(obj["vars"]).map(asRecord),
+     xCost: obj["is_x_cost"] === true,
++    upgrade: Object.keys(asRecord(obj["upgrade"])).length ? asRecord(obj["upgrade"]) : null,
++    starCost: numOrNull(obj["star_cost"]),
++    xStarCost: obj["is_x_star_cost"] === true,
+   };
+ }
+ 
+@@ -211,7 +219,7 @@ function buildIndex<T>(entries: unknown[], parse: (entry: unknown) => T | null):
+   return map;
+ }
+ 
+-export function makeKnowledge(collections: Partial<Record<CollectionName, unknown[]>>, source: "live" | "cache"): Knowledge {
++export function makeKnowledge(collections: Partial<Record<CollectionName, unknown[]>>, source: "live" | "cache", catalog?: Knowledge["catalog"]): Knowledge {
+   const cards = buildIndex(collections.cards ?? [], parseCard);
+   const monsters = buildIndex(collections.monsters ?? [], parseMonster);
+   const relics = buildIndex(collections.relics ?? [], parseRelic);
+@@ -238,6 +246,7 @@ export function makeKnowledge(collections: Partial<Record<CollectionName, unknow
+       characters: asArray(collections.characters).length,
+     },
+     source,
++    ...(catalog ? { catalog } : {}),
+   };
+ }
+ 
+@@ -277,7 +286,7 @@ export async function loadKnowledge(client: ModClient, options: LoadKnowledgeOpt
+     try {
+       const cached = JSON.parse(await readFile(cachePath, "utf8")) as KnowledgeFile;
+       if (cached.mod_version === options.modVersion && cached.collections?.cards?.length) {
+-        return makeKnowledge(cached.collections, "cache");
++        return makeKnowledge(cached.collections, "cache", { modVersion: cached.mod_version, fetchedAt: cached.fetched_at });
+       }
+     } catch {
+       // no usable cache
+@@ -303,7 +312,7 @@ export async function loadKnowledge(client: ModClient, options: LoadKnowledgeOpt
+   } catch {
+     // A read-only filesystem is not fatal: we simply refetch next time.
+   }
+-  return makeKnowledge(collections, "live");
++  return makeKnowledge(collections, "live", { modVersion: file.mod_version, fetchedAt: file.fetched_at });
+ }
+ 
+ export function describeKnowledge(knowledge: Knowledge): string {
+diff --git a/agent/tests/named-card-facts-fixture.json b/agent/tests/named-card-facts-fixture.json
+new file mode 100644
+index 000000000..3a91c0221
+--- /dev/null
++++ b/agent/tests/named-card-facts-fixture.json
+@@ -0,0 +1,1383 @@
++{
++  "evidence": {
++    "run": "64VJC5XT2AT2",
++    "floor": 34,
++    "turn": null,
++    "state_offset": 11453224823,
++    "brain_offset": 419039766,
++    "state_ts": "2026-10-11T12:23:42.700Z",
++    "catalog_observed_at": "2026-10-12T09:03:49.834161+08:00",
++    "limitation": "原局题面未带牌定义；以下资料为既有缓存与事后mod只读回执核对，不能倒称历史模型已收到。"
++  },
++  "state": {
++    "state_version": 16,
++    "native_profile_id": 1,
++    "run_id": "64VJC5XT2AT2",
++    "screen": "EVENT",
++    "session": {
++      "mode": "singleplayer",
++      "phase": "run",
++      "control_scope": "local_player"
++    },
++    "in_combat": false,
++    "turn": null,
++    "available_actions": [
++      "save_and_quit",
++      "choose_event_option"
++    ],
++    "combat": null,
++    "run": {
++      "character_id": "SILENT",
++      "character_name": "静默猎手",
++      "ascension": 10,
++      "ascension_effects": [
++        {
++          "id": "LEVEL_01",
++          "name": "精英蜂拥",
++          "description": "[gold]精英[/gold]敌人出现更加频繁。"
++        },
++        {
++          "id": "LEVEL_02",
++          "name": "旅途劳顿",
++          "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++        },
++        {
++          "id": "LEVEL_03",
++          "name": "贫穷",
++          "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++        },
++        {
++          "id": "LEVEL_04",
++          "name": "收紧腰带",
++          "description": "游戏开始时药水栏位减少1。"
++        },
++        {
++          "id": "LEVEL_05",
++          "name": "进阶之灾",
++          "description": "游戏开始时被[red]诅咒[/red]。"
++        },
++        {
++          "id": "LEVEL_06",
++          "name": "通货膨胀",
++          "description": "商人的卡牌移除服务价格提升。"
++        },
++        {
++          "id": "LEVEL_07",
++          "name": "稀缺",
++          "description": "稀有和已升级卡牌更少出现。"
++        },
++        {
++          "id": "LEVEL_08",
++          "name": "强韧敌人",
++          "description": "所有的敌人变得更难杀死。"
++        },
++        {
++          "id": "LEVEL_09",
++          "name": "致命敌人",
++          "description": "所有的敌人变得更加致命。"
++        },
++        {
++          "id": "LEVEL_10",
++          "name": "双重Boss",
++          "description": "在第3阶段最后与两个Boss战斗。"
++        }
++      ],
++      "floor": 34,
++      "current_hp": 88,
++      "max_hp": 105,
++      "gold": 305,
++      "max_energy": 3,
++      "base_orb_slots": 0,
++      "act_id": "2",
++      "boss_id": "AEONGLASS_BOSS",
++      "deck": [
++        {
++          "index": 0,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "card_type": "Attack",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成9点伤害。 永恒。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 9,
++              "enchanted_value": 9,
++              "is_modified": true,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 1,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "card_type": "Attack",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成9点伤害。 永恒。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 9,
++              "enchanted_value": 9,
++              "is_modified": true,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 2,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "card_type": "Attack",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成9点伤害。 永恒。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 9,
++              "enchanted_value": 9,
++              "is_modified": true,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 3,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "card_type": "Attack",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成9点伤害。 永恒。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 9,
++              "enchanted_value": 9,
++              "is_modified": true,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 4,
++          "card_id": "STRIKE_SILENT",
++          "name": "打击",
++          "upgraded": false,
++          "card_type": "Attack",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "造成9点伤害。 永恒。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 9,
++              "enchanted_value": 9,
++              "is_modified": true,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 5,
++          "card_id": "DEFEND_SILENT",
++          "name": "防御",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。",
++          "resolved_rules_text": "获得5点格挡。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 6,
++          "card_id": "DEFEND_SILENT",
++          "name": "防御",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。",
++          "resolved_rules_text": "获得5点格挡。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 7,
++          "card_id": "DEFEND_SILENT",
++          "name": "防御",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。",
++          "resolved_rules_text": "获得5点格挡。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 8,
++          "card_id": "DEFEND_SILENT",
++          "name": "防御",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。",
++          "resolved_rules_text": "获得5点格挡。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 9,
++          "card_id": "DEFEND_SILENT",
++          "name": "防御",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。",
++          "resolved_rules_text": "获得5点格挡。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 10,
++          "card_id": "NEUTRALIZE",
++          "name": "中和",
++          "upgraded": false,
++          "card_type": "Attack",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
++          "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "WeakPower",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 11,
++          "card_id": "SURVIVOR",
++          "name": "生存者",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Basic",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
++          "resolved_rules_text": "获得8点格挡。 丢弃1张牌。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 8,
++              "current_value": 8,
++              "enchanted_value": 8,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 12,
++          "card_id": "ASCENDERS_BANE",
++          "name": "进阶之灾",
++          "upgraded": false,
++          "card_type": "Curse",
++          "rarity": "Curse",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": -1,
++          "star_cost": 0,
++          "rules_text": "",
++          "resolved_rules_text": "不能被打出。 虚无。 永恒。",
++          "dynamic_values": []
++        },
++        {
++          "index": 13,
++          "card_id": "DASH",
++          "name": "冲刺",
++          "upgraded": false,
++          "card_type": "Attack",
++          "rarity": "Uncommon",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 2,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。 造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "获得10点格挡。 造成10点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 10,
++              "current_value": 10,
++              "enchanted_value": 10,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "Damage",
++              "base_value": 10,
++              "current_value": 10,
++              "enchanted_value": 10,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 14,
++          "card_id": "FOOTWORK",
++          "name": "灵动步法+",
++          "upgraded": true,
++          "card_type": "Power",
++          "rarity": "Uncommon",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{DexterityPower:diff()}点敏捷。",
++          "resolved_rules_text": "获得3点敏捷。",
++          "dynamic_values": [
++            {
++              "name": "DexterityPower",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 15,
++          "card_id": "SUCKER_PUNCH",
++          "name": "突然一拳",
++          "upgraded": false,
++          "card_type": "Attack",
++          "rarity": "Common",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
++          "resolved_rules_text": "造成8点伤害。 给予1层虚弱。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 8,
++              "current_value": 8,
++              "enchanted_value": 8,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "WeakPower",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 16,
++          "card_id": "BACKFLIP",
++          "name": "后空翻",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Common",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
++          "resolved_rules_text": "获得5点格挡。 抽2张牌。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "Cards",
++              "base_value": 2,
++              "current_value": 2,
++              "enchanted_value": 2,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 17,
++          "card_id": "CALCULATED_GAMBLE",
++          "name": "计算下注",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Uncommon",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。",
++          "resolved_rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
++          "dynamic_values": []
++        },
++        {
++          "index": 18,
++          "card_id": "NOXIOUS_FUMES",
++          "name": "毒雾+",
++          "upgraded": true,
++          "card_type": "Power",
++          "rarity": "Uncommon",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "在你的回合开始时，给予所有敌人{PoisonPerTurn:diff()}层中毒。",
++          "resolved_rules_text": "在你的回合开始时，给予所有敌人3层中毒。",
++          "dynamic_values": [
++            {
++              "name": "PoisonPerTurn",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 19,
++          "card_id": "CLOAK_AND_DAGGER",
++          "name": "斗篷与匕首",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Common",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
++          "resolved_rules_text": "获得6点格挡。 将1张小刀添加到你的手牌。",
++          "dynamic_values": [
++            {
++              "name": "Block",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "Cards",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 20,
++          "card_id": "HAZE",
++          "name": "迷雾+",
++          "upgraded": true,
++          "card_type": "Skill",
++          "rarity": "Uncommon",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 2,
++          "star_cost": 0,
++          "rules_text": "给予所有敌人{PoisonPower:diff()}层中毒和{WeakPower:diff()}层虚弱。",
++          "resolved_rules_text": "给予所有敌人6层中毒和2层虚弱。",
++          "dynamic_values": [
++            {
++              "name": "PoisonPower",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "WeakPower",
++              "base_value": 2,
++              "current_value": 2,
++              "enchanted_value": 2,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 21,
++          "card_id": "SHADOWMELD",
++          "name": "融入暗影+",
++          "upgraded": true,
++          "card_type": "Skill",
++          "rarity": "Rare",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "本回合你获得的格挡值翻倍。",
++          "resolved_rules_text": "本回合你获得的格挡值翻倍。",
++          "dynamic_values": [
++            {
++              "name": "Power",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 22,
++          "card_id": "DEADLY_POISON",
++          "name": "致命毒药",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Common",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "给予{PoisonPower:diff()}层中毒。",
++          "resolved_rules_text": "给予5层中毒。",
++          "dynamic_values": [
++            {
++              "name": "PoisonPower",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 23,
++          "card_id": "SCRAWL",
++          "name": "潦草急就",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Rare",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "抽牌直到抽满手牌。",
++          "resolved_rules_text": "抽牌直到抽满手牌。 消耗。",
++          "dynamic_values": []
++        },
++        {
++          "index": 24,
++          "card_id": "DEADLY_POISON",
++          "name": "致命毒药",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Common",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "给予{PoisonPower:diff()}层中毒。",
++          "resolved_rules_text": "给予5层中毒。",
++          "dynamic_values": [
++            {
++              "name": "PoisonPower",
++              "base_value": 5,
++              "current_value": 5,
++              "enchanted_value": 5,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 25,
++          "card_id": "GRAND_FINALE",
++          "name": "华丽收场",
++          "upgraded": false,
++          "card_type": "Attack",
++          "rarity": "Rare",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 0,
++          "star_cost": 0,
++          "rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成{Damage:diff()}点伤害。",
++          "resolved_rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成60点伤害。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 60,
++              "current_value": 60,
++              "enchanted_value": 60,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        },
++        {
++          "index": 26,
++          "card_id": "SHADOWMELD",
++          "name": "融入暗影",
++          "upgraded": false,
++          "card_type": "Skill",
++          "rarity": "Rare",
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "本回合你获得的格挡值翻倍。",
++          "resolved_rules_text": "本回合你获得的格挡值翻倍。",
++          "dynamic_values": [
++            {
++              "name": "Power",
++              "base_value": 1,
++              "current_value": 1,
++              "enchanted_value": 1,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ]
++        }
++      ],
++      "relics": [
++        {
++          "index": 0,
++          "relic_id": "RING_OF_THE_SNAKE",
++          "name": "蛇之戒指",
++          "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
++          "stack": null,
++          "is_melted": false
++        },
++        {
++          "index": 1,
++          "relic_id": "STONE_HUMIDIFIER",
++          "name": "石炉加湿器",
++          "description": "每当你在[gold]休息处[/gold][gold]休息[/gold]时，将你的最大生命值提升[blue]{MaxHp}[/blue]点。",
++          "stack": null,
++          "is_melted": false
++        },
++        {
++          "index": 2,
++          "relic_id": "CHOSEN_CHEESE",
++          "name": "天选芝士",
++          "description": "在战斗结束时，获得[blue]{MaxHp}[/blue]点最大生命值。",
++          "stack": null,
++          "is_melted": false
++        },
++        {
++          "index": 3,
++          "relic_id": "TUNING_FORK",
++          "name": "音叉",
++          "description": "你每打出[blue]{Cards}[/blue]张技能牌，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
++          "stack": 0,
++          "is_melted": false
++        },
++        {
++          "index": 4,
++          "relic_id": "FESTIVE_POPPER",
++          "name": "节日拉炮",
++          "description": "在每场战斗开始时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
++          "stack": null,
++          "is_melted": false
++        },
++        {
++          "index": 5,
++          "relic_id": "PANTOGRAPH",
++          "name": "缩放仪",
++          "description": "在[gold]Boss[/gold]战开始时，回复[green]{Heal}[/green]点生命值。",
++          "stack": null,
++          "is_melted": false
++        },
++        {
++          "index": 6,
++          "relic_id": "NUTRITIOUS_SOUP",
++          "name": "营养汤",
++          "description": "拾起时，为你[gold]牌组[/gold]中的所有“[gold]打击[/gold]”[gold]附魔[/gold]：[purple]特兹卡塔拉的余烬[/purple]",
++          "stack": null,
++          "is_melted": false
++        },
++        {
++          "index": 7,
++          "relic_id": "ICE_CREAM",
++          "name": "冰淇淋",
++          "description": "多余的能量可以留到下一回合。",
++          "stack": null,
++          "is_melted": false
++        },
++        {
++          "index": 8,
++          "relic_id": "PARRYING_SHIELD",
++          "name": "招架盾",
++          "description": "如果你在回合结束时拥有至少[blue]{Block}[/blue]点[gold]格挡[/gold]，则对随机敌人造成[blue]{Damage}[/blue]点伤害。",
++          "stack": null,
++          "is_melted": false
++        }
++      ],
++      "players": [
++        {
++          "player_id": "1",
++          "slot_index": 0,
++          "is_local": true,
++          "is_connected": true,
++          "character_id": "SILENT",
++          "character_name": "静默猎手",
++          "current_hp": 88,
++          "max_hp": 105,
++          "gold": 305,
++          "is_alive": true
++        }
++      ],
++      "potions": [
++        {
++          "index": 0,
++          "potion_id": null,
++          "name": null,
++          "description": null,
++          "rarity": null,
++          "occupied": false,
++          "usage": null,
++          "target_type": null,
++          "is_queued": false,
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "can_use": false,
++          "can_discard": false
++        },
++        {
++          "index": 1,
++          "potion_id": null,
++          "name": null,
++          "description": null,
++          "rarity": null,
++          "occupied": false,
++          "usage": null,
++          "target_type": null,
++          "is_queued": false,
++          "requires_target": false,
++          "target_index_space": null,
++          "valid_target_indices": [],
++          "can_use": false,
++          "can_discard": false
++        }
++      ]
++    },
++    "multiplayer": null,
++    "multiplayer_lobby": null,
++    "map": null,
++    "selection": null,
++    "character_select": null,
++    "timeline": null,
++    "unlock": null,
++    "chest": null,
++    "event": {
++      "event_id": "VAKUU",
++      "title": "瓦库",
++      "description": "",
++      "is_finished": false,
++      "options": [
++        {
++          "index": 0,
++          "text_key": "VAKUU.pages.INITIAL.options.FIDDLE",
++          "title": "小提琴",
++          "description": "在每个回合开始时，额外抽[blue]2[/blue]张牌。你在回合进行中不再能抽任何牌。",
++          "is_locked": false,
++          "is_proceed": false,
++          "will_kill_player": false,
++          "has_relic_preview": true
++        },
++        {
++          "index": 1,
++          "text_key": "VAKUU.pages.INITIAL.options.SERE_TALON",
++          "title": "原初之爪",
++          "description": "失去[blue]9[/blue]点最大生命值，将[blue]3[/blue]张[purple]许愿[/purple]加入你的[gold]牌组[/gold]。",
++          "is_locked": false,
++          "is_proceed": false,
++          "will_kill_player": false,
++          "has_relic_preview": true
++        },
++        {
++          "index": 2,
++          "text_key": "VAKUU.pages.INITIAL.options.LORDS_PARASOL",
++          "title": "领主阳伞",
++          "description": "当你遇见[gold]商人[/gold]时，立刻获得他所出售的[red]所有[/red]物品。",
++          "is_locked": false,
++          "is_proceed": false,
++          "will_kill_player": false,
++          "has_relic_preview": true
++        }
++      ]
++    },
++    "crystal_sphere": null,
++    "shop": null,
++    "rest": null,
++    "reward": null,
++    "bundles": null,
++    "capstone": null,
++    "modal": null,
++    "game_over": null,
++    "agent_view": {
++      "version": 11,
++      "screen": "EVENT",
++      "native_profile_id": 1,
++      "run_id": "64VJC5XT2AT2",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "turn": null,
++      "available_actions": [
++        "save_and_quit",
++        "choose_event_option"
++      ],
++      "combat": null,
++      "run": {
++        "character": "静默猎手",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "floor": 34,
++        "act_id": "2",
++        "boss_id": "AEONGLASS_BOSS",
++        "hp": "88/105",
++        "gold": 305,
++        "max_energy": 3,
++        "base_orb_slots": 0,
++        "deck": [
++          {
++            "line": "中和 [0费]：造成3点伤害。 给予1层虚弱。",
++            "card_ids": [
++              "NEUTRALIZE"
++            ],
++            "keywords": [
++              "虚弱"
++            ],
++            "mods": []
++          },
++          {
++            "line": "冲刺 [2费]：获得10点格挡。 造成10点伤害。",
++            "card_ids": [
++              "DASH"
++            ],
++            "keywords": [
++              "格挡"
++            ],
++            "mods": []
++          },
++          {
++            "line": "华丽收场 [0费]：只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成60点伤害。",
++            "card_ids": [
++              "GRAND_FINALE"
++            ],
++            "keywords": [],
++            "mods": []
++          },
++          {
++            "line": "后空翻 [1费]：获得5点格挡。 抽2张牌。",
++            "card_ids": [
++              "BACKFLIP"
++            ],
++            "keywords": [
++              "格挡"
++            ],
++            "mods": []
++          },
++          {
++            "line": "打击*5 [0费]：造成9点伤害。 永恒。",
++            "card_ids": [
++              "STRIKE_SILENT"
++            ],
++            "keywords": [
++              "附魔"
++            ],
++            "mods": [
++              "Enchantment",
++              "Eternal",
++              "特兹卡塔拉的余烬"
++            ]
++          },
++          {
++            "line": "斗篷与匕首 [1费]：获得6点格挡。 将1张小刀添加到你的手牌。",
++            "card_ids": [
++              "CLOAK_AND_DAGGER"
++            ],
++            "keywords": [
++              "格挡"
++            ],
++            "mods": []
++          },
++          {
++            "line": "毒雾+ [1费]：在你的回合开始时，给予所有敌人3层中毒。",
++            "card_ids": [
++              "NOXIOUS_FUMES"
++            ],
++            "keywords": [
++              "中毒"
++            ],
++            "mods": []
++          },
++          {
++            "line": "潦草急就 [1费]：抽牌直到抽满手牌。 消耗。",
++            "card_ids": [
++              "SCRAWL"
++            ],
++            "keywords": [
++              "消耗"
++            ],
++            "mods": [
++              "Exhaust"
++            ]
++          },
++          {
++            "line": "灵动步法+ [1费]：获得3点敏捷。",
++            "card_ids": [
++              "FOOTWORK"
++            ],
++            "keywords": [
++              "敏捷"
++            ],
++            "mods": []
++          },
++          {
++            "line": "生存者 [1费]：获得8点格挡。 丢弃1张牌。",
++            "card_ids": [
++              "SURVIVOR"
++            ],
++            "keywords": [
++              "格挡"
++            ],
++            "mods": []
++          },
++          {
++            "line": "突然一拳 [1费]：造成8点伤害。 给予1层虚弱。",
++            "card_ids": [
++              "SUCKER_PUNCH"
++            ],
++            "keywords": [
++              "虚弱"
++            ],
++            "mods": []
++          },
++          {
++            "line": "致命毒药*2 [1费]：给予5层中毒。",
++            "card_ids": [
++              "DEADLY_POISON"
++            ],
++            "keywords": [
++              "中毒"
++            ],
++            "mods": []
++          },
++          {
++            "line": "融入暗影 [1费]：本回合你获得的格挡值翻倍。",
++            "card_ids": [
++              "SHADOWMELD"
++            ],
++            "keywords": [
++              "格挡"
++            ],
++            "mods": []
++          },
++          {
++            "line": "融入暗影+ [0费]：本回合你获得的格挡值翻倍。",
++            "card_ids": [
++              "SHADOWMELD"
++            ],
++            "keywords": [
++              "格挡"
++            ],
++            "mods": []
++          },
++          {
++            "line": "计算下注 [0费]：丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
++            "card_ids": [
++              "CALCULATED_GAMBLE"
++            ],
++            "keywords": [
++              "消耗"
++            ],
++            "mods": [
++              "Exhaust"
++            ]
++          },
++          {
++            "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
++            "card_ids": [
++              "ASCENDERS_BANE"
++            ],
++            "keywords": [],
++            "mods": [
++              "Eternal",
++              "Ethereal",
++              "Unplayable"
++            ]
++          },
++          {
++            "line": "迷雾+ [2费]：给予所有敌人6层中毒和2层虚弱。",
++            "card_ids": [
++              "HAZE"
++            ],
++            "keywords": [
++              "中毒",
++              "虚弱"
++            ],
++            "mods": []
++          },
++          {
++            "line": "防御*5 [1费]：获得5点格挡。",
++            "card_ids": [
++              "DEFEND_SILENT"
++            ],
++            "keywords": [
++              "格挡"
++            ],
++            "mods": []
++          }
++        ],
++        "relics": [
++          "蛇之戒指",
++          "石炉加湿器",
++          "天选芝士",
++          "音叉",
++          "节日拉炮",
++          "缩放仪",
++          "营养汤",
++          "冰淇淋",
++          "招架盾"
++        ],
++        "relic_ids": [
++          "RING_OF_THE_SNAKE",
++          "STONE_HUMIDIFIER",
++          "CHOSEN_CHEESE",
++          "TUNING_FORK",
++          "FESTIVE_POPPER",
++          "PANTOGRAPH",
++          "NUTRITIOUS_SOUP",
++          "ICE_CREAM",
++          "PARRYING_SHIELD"
++        ],
++        "relic_stacks": [
++          null,
++          null,
++          null,
++          0,
++          null,
++          null,
++          null,
++          null,
++          null
++        ],
++        "relic_descriptions": [
++          "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
++          "每当你在[gold]休息处[/gold][gold]休息[/gold]时，将你的最大生命值提升[blue]{MaxHp}[/blue]点。",
++          "在战斗结束时，获得[blue]{MaxHp}[/blue]点最大生命值。",
++          "你每打出[blue]{Cards}[/blue]张技能牌，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
++          "在每场战斗开始时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
++          "在[gold]Boss[/gold]战开始时，回复[green]{Heal}[/green]点生命值。",
++          "拾起时，为你[gold]牌组[/gold]中的所有“[gold]打击[/gold]”[gold]附魔[/gold]：[purple]特兹卡塔拉的余烬[/purple]",
++          "多余的能量可以留到下一回合。",
++          "如果你在回合结束时拥有至少[blue]{Block}[/blue]点[gold]格挡[/gold]，则对随机敌人造成[blue]{Damage}[/blue]点伤害。"
++        ],
++        "players": [
++          {
++            "player_id": "1",
++            "slot_index": 0,
++            "is_local": true,
++            "is_connected": true,
++            "character_id": "SILENT",
++            "character_name": "静默猎手",
++            "current_hp": 88,
++            "max_hp": 105,
++            "gold": 305,
++            "is_alive": true
++          }
++        ],
++        "potions": [
++          {
++            "i": 0,
++            "potion_id": null,
++            "line": "0: 空",
++            "description": null,
++            "usable": false,
++            "discard": false,
++            "target": null,
++            "targets": []
++          },
++          {
++            "i": 1,
++            "potion_id": null,
++            "line": "1: 空",
++            "description": null,
++            "usable": false,
++            "discard": false,
++            "target": null,
++            "targets": []
++          }
++        ],
++        "piles": {
++          "draw": [],
++          "discard": [],
++          "exhaust": []
++        }
++      },
++      "multiplayer": null,
++      "multiplayer_lobby": null,
++      "map": null,
++      "selection": null,
++      "character_select": null,
++      "timeline": null,
++      "chest": null,
++      "event": {
++        "id": "VAKUU",
++        "title": "瓦库",
++        "finished": false,
++        "options": [
++          {
++            "i": 0,
++            "text_key": "VAKUU.pages.INITIAL.options.FIDDLE",
++            "line": "小提琴 | 在每个回合开始时，额外抽[blue]2[/blue]张牌。你在回合进行中不再能抽任何牌。",
++            "locked": false,
++            "proceed": false,
++            "kill": false
++          },
++          {
++            "i": 1,
++            "text_key": "VAKUU.pages.INITIAL.options.SERE_TALON",
++            "line": "原初之爪 | 失去[blue]9[/blue]点最大生命值，将[blue]3[/blue]张[purple]许愿[/purple]加入你的[gold]牌组[/gold]。",
++            "locked": false,
++            "proceed": false,
++            "kill": false
++          },
++          {
++            "i": 2,
++            "text_key": "VAKUU.pages.INITIAL.options.LORDS_PARASOL",
++            "line": "领主阳伞 | 当你遇见[gold]商人[/gold]时，立刻获得他所出售的[red]所有[/red]物品。",
++            "locked": false,
++            "proceed": false,
++            "kill": false
++          }
++        ]
++      },
++      "crystal_sphere": null,
++      "shop": null,
++      "rest": null,
++      "reward": null,
++      "bundles": null,
++      "capstone": null,
++      "unlock": null,
++      "modal": null,
++      "game_over": null,
++      "glossary": {
++        "敏捷": "每层敏捷通常使获得的格挡额外增加 1。",
++        "虚弱": "虚弱单位造成的攻击伤害会降低。",
++        "格挡": "格挡会优先抵消即将受到的伤害。",
++        "消耗": "消耗牌打出后会移出本场战斗。",
++        "中毒": "中毒会在该角色回合开始时造成等量伤害（无视格挡），然后层数减少。",
++        "附魔": "附魔是卡牌附着的额外词条或效果层。"
++      }
++    }
++  },
++  "catalog": {
++    "modVersion": "0.16.2",
++    "fetchedAt": "2026-10-12T09:03:49.834161+08:00"
++  },
++  "cards": [
++    {
++      "id": "WISH",
++      "name": "许愿",
++      "description": "将你抽牌堆中的一张牌放入你的手牌。 消耗。",
++      "description_raw": "将你抽牌堆中的一张牌放入你的手牌。",
++      "type": "Skill",
++      "rarity": "Ancient",
++      "target": "Self",
++      "cost": 0,
++      "is_x_cost": false,
++      "star_cost": null,
++      "is_x_star_cost": false,
++      "color": "colorless",
++      "damage": null,
++      "block": null,
++      "keywords": [
++        "Exhaust"
++      ],
++      "tags": [],
++      "vars": [],
++      "upgrade": {
++        "description": "将你抽牌堆中的一张牌放入你的手牌。 消耗。"
++      }
++    }
++  ]
++}
+diff --git a/agent/tests/named-card-facts.test.ts b/agent/tests/named-card-facts.test.ts
+new file mode 100644
+index 000000000..68e43c83b
+--- /dev/null
++++ b/agent/tests/named-card-facts.test.ts
+@@ -0,0 +1,162 @@
++import { mkdtemp, rm, writeFile } from "node:fs/promises";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { describe, expect, it, vi } from "vitest";
++import { namedCardFacts, type CardReferenceContext } from "../src/knowledge/card-references.js";
++import { loadKnowledge, makeKnowledge, type Knowledge } from "../src/knowledge/index.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import type { ModClient } from "../src/hand/mod/client.js";
++import { planEvent } from "../src/hand/screens/event.js";
++import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
++import { asRecord } from "../src/core/util/json.js";
++import fixture from "./named-card-facts-fixture.json";
++
++// Isolate the transport regression from every refreshed strategy table and from model calls.
++vi.mock("../src/brain/build-facts.js", () => ({ buildFacts: () => ({}), deepseekDecides: () => true }));
++vi.mock("../src/knowledge/monster-db.js", () => ({ monstersNamedIn: () => [] }));
++vi.mock("../src/knowledge/outcome-facts.js", () => ({ eventOptionOutcome: () => null, outcomeStatsBasis: () => "", OUTCOME_BASIS_KEY: "basis" }));
++vi.mock("../src/knowledge/enchant-text.js", () => ({ enchantsNamed: () => [], annotateEnchants: (text: string) => text }));
++vi.mock("../src/hand/screens/route-review.js", () => ({ routeReviewBlock: () => null, withRouteReview: (_env: unknown, decision: unknown) => decision }));
++vi.mock("../src/hand/screens/rest.js", () => ({ EVENT_NODES: [], forcedNext: () => null, forcedEliteWithin: () => false }));
++vi.mock("../src/knowledge/event-pages.js", () => ({ isLastEventPage: () => false }));
++
++const context: CardReferenceContext = { character: "silent", run: "64VJC5XT2AT2", floor: 34, source: "event:VAKUU:o1", modVersion: "0.16.2" };
++const knowledge = makeKnowledge({ cards: fixture.cards }, "cache", fixture.catalog);
++const getFacts = (text: string, data = knowledge, overrides: Partial<CardReferenceContext> = {}) =>
++  asRecord(namedCardFacts(text, data, { ...context, ...overrides })["card_references"]) as { cards: Record<string, unknown>[]; unknowns: Record<string, unknown>[]; catalog: Record<string, unknown> };
++const fake = (id: string, name: string, description = "固定测试文本。", extra = {}) => ({ id, name, description, cost: 1, keywords: [], is_x_cost: false, ...extra });
++
++function eventQuestion(character = "SILENT", data: Knowledge = knowledge): AskDecision {
++  const raw = structuredClone(fixture.state);
++  raw.run.character_id = character;
++  const state = parseGameState(raw);
++  const env: DecisionEnv = {
++    state, knowledge: data, screenMemory: createScreenMemory("EVENT"),
++    brief: { character, act: "3", floor: 34, hp: "88/105", gold: raw.run.gold, ascension: 10, deck: "固定事件夹具", relics: [], relic_effects: [], potions: [], notes: [] },
++    thresholds: { act: 0.8, strong: 0.9 }, runStart: "auto", characterPreference: null,
++    allowFtueModals: false, strictJev: true, shopDiscardPotions: [], buildDecider: "deepseek", oneshot: "off",
++  };
++  const result = planEvent(env);
++  expect(result?.kind).toBe("ask");
++  return result as AskDecision;
++}
++
++function optionsOf(question: AskDecision): Record<string, Record<string, unknown>> {
++  const pick = question.questions["pick"]!;
++  if (pick.type !== "choice") throw new Error("expected a fixed choice question");
++  return Object.fromEntries(Object.entries(pick.criteria).map(([key, value]) => [key, JSON.parse(value!)]));
++}
++
++describe("named card fact transport", () => {
++  it("64VJC5XT2AT2 F34: delivers WISH facts without changing choices, costs or actions", () => {
++    const question = eventQuestion();
++    const options = optionsOf(question);
++    expect(Object.keys(options)).toEqual(["o0", "o1", "o2"]);
++    expect(options.o1).toMatchObject({
++      option: "原初之爪", description: fixture.state.event.options[1]!.description,
++      max_hp_cost: 9, hp_after: "88/96 (92% of max)",
++      card_references: {
++        cards: [{ id: "WISH", name: "许愿", cost: 0, is_x_cost: false,
++          description: "将你抽牌堆中的一张牌放入你的手牌。 消耗。", keywords: ["Exhaust"],
++          upgrade: { description: "将你抽牌堆中的一张牌放入你的手牌。 消耗。" } }],
++        catalog: { mod_version: "0.16.2", source: "cache" }, unknowns: [],
++      },
++    });
++    expect(options.o0?.card_references).toBeUndefined();
++    expect(options.o2?.card_references).toBeUndefined();
++    for (let index = 0; index < 3; index++) {
++      const choice = `o${index}`;
++      const resolved = question.resolve({ pick: { type: "choice", choice, probabilities: { [choice]: 1 }, confidence: 1, raw: {} } });
++      expect(resolved.intent).toEqual({ action: "choose_event_option", option_index: index });
++    }
++  });
++
++  it("keeps other characters' question bytes independent of the new catalogue facts", () => {
++    for (const character of ["IRONCLAD", "DEFECT"]) {
++      expect(eventQuestion(character).questions).toEqual(eventQuestion(character, makeKnowledge({}, "cache")).questions);
++      expect(JSON.stringify(eventQuestion(character).questions)).not.toContain("card_references");
++    }
++  });
++
++  it("retains unknown names once with a character/version/field identity and no fabricated values", () => {
++    const result = getFacts("将1张[purple]未知牌[/purple]和1张[purple]未知牌[/purple]加入手牌。");
++    expect(result.cards).toEqual([]);
++    expect(result.unknowns).toHaveLength(1);
++    expect(result.unknowns[0]).toMatchObject({ identity: "未知牌", missing_fields: ["definition"], run_id: "64VJC5XT2AT2", floor: 34 });
++    expect(result.unknowns[0]!.key).toContain("silent");
++  });
++
++  it("does not treat short ordinary words or contained names as separate card references", () => {
++    const data = makeKnowledge({ cards: [fake("SHORT", "愿"), fake("WISH", "许愿"), fake("LONG", "美好许愿")] }, "cache");
++    expect(namedCardFacts("希望愿望成真", data, context)).toEqual({});
++    expect(getFacts("获得1张[purple]美好许愿[/purple]。", data).cards.map((card) => card.id)).toEqual(["LONG"]);
++    expect(namedCardFacts("LONGER", data, context)).toEqual({});
++  });
++
++  it("marks same-name ambiguity and lets an explicit id resolve it", () => {
++    const data = makeKnowledge({ cards: [fake("A", "同名牌"), fake("B", "同名牌")] }, "cache");
++    const ambiguous = getFacts("获得1张[purple]同名牌[/purple]。", data);
++    expect(ambiguous.cards).toEqual([]);
++    expect(ambiguous.unknowns[0]).toMatchObject({ missing_fields: ["identity"], candidates: ["A", "B"] });
++    const resolved = getFacts("获得1张[purple]同名牌[/purple]。", data, { cardIds: ["B"] });
++    expect(resolved.cards.map((card) => card.id)).toEqual(["B"]);
++    expect(resolved.unknowns).toEqual([]);
++  });
++
++  it("preserves a visible upgraded preview and temporary zero cost instead of cached base fields", () => {
++    const result = getFacts("将1张[purple]许愿+[/purple]加入手牌。本回合耗能为0。", knowledge, {
++      previews: [{ card_id: "WISH", is_upgraded: true, cost: 0, is_x_cost: false, description: "固定现场升级文本。", keywords: ["Exhaust"] }],
++    });
++    expect(result.cards).toHaveLength(1);
++    expect(result.cards[0]).toMatchObject({ id: "WISH", upgraded: true, cost: 0, description: "固定现场升级文本。", source: "本题现场预览" });
++    expect(getFacts("获得1张[purple]许愿+[/purple]。").cards[0]).toMatchObject({ upgraded: true, cost: null });
++    expect(getFacts("获得1张[purple]许愿+[/purple]。").unknowns[0]).toMatchObject({ missing_fields: ["cost"] });
++  });
++
++  it("carries X cost and missing definitions as data without inferring card values", () => {
++    const data = makeKnowledge({ cards: [fake("X_CARD", "测试X牌", "", { cost: null, is_x_cost: true })] }, "cache");
++    const result = getFacts("X_CARD", data);
++    expect(result.cards[0]).toMatchObject({ cost: null, is_x_cost: true, description: null });
++    expect(result.unknowns[0]).toMatchObject({ missing_fields: ["description"] });
++  });
++
++  it("stops cycles and exposes unresolved references at depth and count limits", () => {
++    const data = makeKnowledge({ cards: [fake("A", "测试甲", "生成1张测试乙。"), fake("B", "测试乙", "生成1张测试甲和1张测试丙。"), fake("C", "测试丙")] }, "cache");
++    expect(getFacts("获得1张测试甲。", data).cards.map((card) => card.id)).toEqual(["A", "B", "C"]);
++    for (const limit of [{ maxDepth: 0 }, { maxCards: 1 }]) {
++      const result = getFacts("获得1张测试甲。", data, limit);
++      expect(result.cards.map((card) => card.id)).toEqual(["A"]);
++      expect(result.unknowns).toEqual([expect.objectContaining({ identity: "B", missing_fields: ["reference_expansion"] })]);
++    }
++  });
++
++  it("marks mismatched catalogue versions pending verification without blocking the choice", () => {
++    const result = getFacts("获得1张[purple]许愿[/purple]。", knowledge, { modVersion: "different" });
++    expect(result.cards[0]).toMatchObject({ verification: "版本不符，待核" });
++    expect(result.unknowns[0]).toMatchObject({ identity: "WISH", missing_fields: ["version"] });
++    expect(getFacts("WISH", makeKnowledge({ cards: fixture.cards }, "cache")).cards[0]).toMatchObject({ verification: "资料版本未知，待核" });
++  });
++
++  it("keeps full rule text instead of truncating away referenced card effects", () => {
++    const description = "完整规则。".repeat(200) + "最后的条件。";
++    const data = makeKnowledge({ cards: [fake("A", "测试牌", description)] }, "cache");
++    expect(getFacts("获得1张测试牌。", data).cards[0]!.description).toBe(description);
++  });
++
++  it("retains catalogue provenance and upgrade fields for both cache and mock live loads", async () => {
++    const dir = await mkdtemp(join(tmpdir(), "named-card-cache-"));
++    try {
++      await writeFile(join(dir, "game-data.json"), JSON.stringify({ mod_version: "0.16.2", fetched_at: fixture.catalog.fetchedAt, collections: { cards: fixture.cards } }));
++      const collection = vi.fn(async (name: string) => name === "cards" ? fixture.cards : []);
++      const client = { collection } as unknown as ModClient;
++      const cached = await loadKnowledge(client, { cacheDir: dir, modVersion: "0.16.2" });
++      expect(collection).not.toHaveBeenCalled();
++      expect(cached.catalog).toEqual(fixture.catalog);
++      expect(cached.card("WISH")!.upgrade).toEqual(fixture.cards[0]!.upgrade);
++      const fresh = await loadKnowledge(client, { cacheDir: dir, modVersion: "new-version" });
++      expect(fresh.source).toBe("live");
++      expect(fresh.catalog?.modVersion).toBe("new-version");
++      expect(fresh.card("WISH")!.upgrade).toEqual(fixture.cards[0]!.upgrade);
++    } finally { await rm(dir, { recursive: true, force: true }); }
++  });
++});

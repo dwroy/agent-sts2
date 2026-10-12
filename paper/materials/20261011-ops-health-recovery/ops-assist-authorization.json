@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-11T18:02:59+08:00",
+  "user_request": "好的，这样安排，让ops可以开启一些辅助session",
+  "approved_design": {
+    "coordinator": "one existing ops session",
+    "assistants_max": 2,
+    "assistant_role": "read-only evidence and workflow audits",
+    "mutations": "coordinator only, serialized live merge",
+    "dispatch": "explicit existing broker requests",
+    "results": "persistent artifacts and existing event queue"
+  },
+  "implementation_worktree": ".worktrees/ops-assist-sessions-20261011",
+  "status": "implementation_in_progress"
+}

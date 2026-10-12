@@ -1,0 +1,145 @@
+git rev-parse exp-silent
+9bf2c5a961961f7ad40e94cab5a6a9d814b8655d
+git rev-parse HEAD
+6519b89093213125f9a91714dd35dafcedd643d6
+git status --short
+ M knowledge/characters/silent/boss-damage.json
+ M knowledge/characters/silent/fight-value-gates.json
+ M knowledge/characters/silent/fight-value.json
+ M knowledge/characters/silent/monster-records.json
+ M knowledge/characters/silent/outcome-stats.json
+ M knowledge/characters/silent/room-costs.json
+ M knowledge/common/card-upgrades.json
+ M knowledge/common/monster-db.json
+ M knowledge/common/move-model.json
+ M notes/fight-value-backtest-silent.md
+git diff --cached --name-only
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+date
+Fri Oct  9 11:47:10 CST 2026
+git add knowledge
+git add notes/fight-value-backtest.md
+git commit -m Refresh knowledge data -m Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+[live 2fc719c3c] Refresh knowledge data
+ 9 files changed, 2737 insertions(+), 2650 deletions(-)
+git rev-parse HEAD
+2fc719c3c65667b9b0523b44f2a83287560c9434
+git rev-parse HEAD
+2fc719c3c65667b9b0523b44f2a83287560c9434
+git merge-base 2fc719c3c65667b9b0523b44f2a83287560c9434 9bf2c5a961961f7ad40e94cab5a6a9d814b8655d
+0e7a9db45f68953aaf1dd2d180e9b6ab5c3ef514
+git diff --name-only 0e7a9db45f68953aaf1dd2d180e9b6ab5c3ef514 9bf2c5a961961f7ad40e94cab5a6a9d814b8655d -- knowledge
+knowledge/characters/silent/experience.json
+git diff --name-only 0e7a9db45f68953aaf1dd2d180e9b6ab5c3ef514 2fc719c3c65667b9b0523b44f2a83287560c9434 -- knowledge
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git merge-tree --write-tree 2fc719c3c65667b9b0523b44f2a83287560c9434 9bf2c5a961961f7ad40e94cab5a6a9d814b8655d
+8b379f2831e642309720908d116c216e00a0e850
+100644 afe558b65c88261ba595ec6aa1ccdbf7dc02c02e 1	notes/lessons.md
+100644 8555a1ca7d1fd0cd78eab2221d165ae261128066 2	notes/lessons.md
+100644 1aadd02bc10ae5d3dd29479ad59f5b5250c8ed68 3	notes/lessons.md
+100644 df437b425b3f386e600ffc6c810fbd0c28a38824 1	notes/ops-handoff.md
+100644 46441e63d5266b1ae851770ffe8f7f5fb597cbf7 2	notes/ops-handoff.md
+100644 db41079a182024e0aea4c362b3a23ab58ade2826 3	notes/ops-handoff.md
+100644 d3a3c3e06c3df0bbe23c494de16a367de3605a86 1	ops/inbox-dev.md
+100644 c1d42393580703fdcf48b9389a5b5a6ac188d21c 2	ops/inbox-dev.md
+100644 e122c5b40bf1f2b53f3e9ff151193132c436d7ae 3	ops/inbox-dev.md
+100644 93299965949e30ddb22c6dd13dce9bdeb0f8a948 1	paper/data/README.md
+100644 4911c72f3aaa886962d01fd3d1a889dc032a3edb 2	paper/data/README.md
+100644 fbc5c29bbc2cd8cabcd1527fd5a9822376e030b2 3	paper/data/README.md
+100644 a706181c0906147edb4e30284810e6f93a994e5d 1	paper/data/commits.csv
+100644 b692a915b48f17082da2a39cc2d4091296794ddf 2	paper/data/commits.csv
+100644 eb84c77cc6cdd117e7a0ca1f6ce2760b3039e94a 3	paper/data/commits.csv
+100644 322f3c8464cc2da3a4d1c78b458de8158c333c80 1	paper/data/cost-curve-silent.csv
+100644 1b64a23d1e106c1e900ad31cdc011fab4ee67710 2	paper/data/cost-curve-silent.csv
+100644 3b8cdb6163fc930124718ad26084b7b43d6e9551 3	paper/data/cost-curve-silent.csv
+100644 f8ebcd1ce87d51f73e0f35bd1808290bd070432a 1	paper/data/cost-silent.csv
+100644 f0766aa7ce4c3a38350677cee74ec0b493035eb2 2	paper/data/cost-silent.csv
+100644 3b88287b3ae566a446e6f8105612a7840d28c7e6 3	paper/data/cost-silent.csv
+100644 1ad21728900246ea3c9e90be32daace8f9880655 1	paper/data/cost-sources.json
+100644 d7c21e150d1f082947f4d4ba8f9265d0dacd1736 2	paper/data/cost-sources.json
+100644 2f5bfe5ab2c2a700e0ae36f36d8a2bb6edec23f1 3	paper/data/cost-sources.json
+100644 1ee46a0690bbd591f3ca9b4ed7c5a09a6226bb18 1	paper/data/cost-unattributed.csv
+100644 453d13993e3569e47450affbd0ccc8ef8de35947 2	paper/data/cost-unattributed.csv
+100644 34afd80e22a245d40adbf9c4e9c362e0000546b8 3	paper/data/cost-unattributed.csv
+100644 c35f3bffbbe0a3f820448856de2f87def9e7b595 1	paper/data/decisions_by_label.csv
+100644 6588b584e331b1f99be59eb541933e2677122028 2	paper/data/decisions_by_label.csv
+100644 c2e4de336e32f99897362b28dd303cc4de6a0b31 3	paper/data/decisions_by_label.csv
+100644 923d119f89c89a142f931b6d5b7a1ecabc360a62 1	paper/data/learning-curve-silent.csv
+100644 b2c9f228651294f0a828bf293d017e42f10eb8c6 2	paper/data/learning-curve-silent.csv
+100644 2c018e00eaf1573145fae78bfa6cbe121f5e738c 3	paper/data/learning-curve-silent.csv
+100644 9ac0973c86d46384e2ef30c9a1d5f43980108d75 1	paper/data/runs.csv
+100644 fb96cb07fa558714a89622703a7249341b51b4c8 2	paper/data/runs.csv
+100644 e2e5c73fb238eb20212e56345130b3d4a362be6a 3	paper/data/runs.csv
+100644 fcda9ab6434cdf6d96dcaf3e7608df4b2f812cf0 1	paper/data/summary.json
+100644 5f4bc968ab5754e2d357564bae79ef66d7d68132 2	paper/data/summary.json
+100644 90dd5864ceca7c677d63be951dc21d88f98ac684 3	paper/data/summary.json
+100644 304e8830453dc52651b30fc3f643174f8a13e0e5 1	paper/data/verification.json
+100644 004a36d0f4f52b8761ff3c98763e7c608570baff 2	paper/data/verification.json
+100644 86648a464f23adc0bb3237a8bab22fddc5feff11 3	paper/data/verification.json
+100644 0c366fba4fdf9947514a8e73dd4aaf372c0e86a0 1	paper/materials/decision-log.md
+100644 3609a68e799b8522e5969616ab3d1479f218f343 2	paper/materials/decision-log.md
+100644 55b3ee917f91df8762267def171deb2e8f28d747 3	paper/materials/decision-log.md
+100644 6dea3239b64d5a35d1f39b0f2d8b6f813d700971 1	paper/materials/experience-changelog-silent.md
+100644 d30b13170a44f2cd04d7a82b18200fa69de09579 2	paper/materials/experience-changelog-silent.md
+100644 073839d8eeaf60b718f88d68d7dcc6473ac53a59 3	paper/materials/experience-changelog-silent.md
+100644 e2eeed8da611acafdd2cf7ee2402c6a7297e1211 1	paper/materials/learning/ledger.jsonl
+100644 964b609f88dc7988a61011d34b2cb6ed2c8d009b 2	paper/materials/learning/ledger.jsonl
+100644 9ae6bc11b616ed3d312a317a1fd2da80a00b4f51 3	paper/materials/learning/ledger.jsonl
+100644 7c272aaed425101ce7ab2b64c04532e88f344124 1	paper/materials/silent/cost.md
+100644 31cfa8f4115907b2de2bd08b300f9c16f5bf3bea 2	paper/materials/silent/cost.md
+100644 192b29997883c6edceb16a552532ec650cd9f1c2 3	paper/materials/silent/cost.md
+
+Auto-merging eval/versions.json
+Auto-merging notes/lessons.md
+CONFLICT (content): Merge conflict in notes/lessons.md
+Auto-merging notes/ops-handoff.md
+CONFLICT (content): Merge conflict in notes/ops-handoff.md
+Auto-merging ops/inbox-dev.md
+CONFLICT (content): Merge conflict in ops/inbox-dev.md
+Auto-merging paper/data/README.md
+CONFLICT (content): Merge conflict in paper/data/README.md
+Auto-merging paper/data/commits.csv
+CONFLICT (content): Merge conflict in paper/data/commits.csv
+Auto-merging paper/data/cost-curve-silent.csv
+CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv
+Auto-merging paper/data/cost-silent.csv
+CONFLICT (content): Merge conflict in paper/data/cost-silent.csv
+Auto-merging paper/data/cost-sources.json
+CONFLICT (content): Merge conflict in paper/data/cost-sources.json
+Auto-merging paper/data/cost-unattributed.csv
+CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv
+Auto-merging paper/data/decisions_by_label.csv
+CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv
+Auto-merging paper/data/learning-curve-silent.csv
+CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv
+Auto-merging paper/data/runs.csv
+CONFLICT (content): Merge conflict in paper/data/runs.csv
+Auto-merging paper/data/summary.json
+CONFLICT (content): Merge conflict in paper/data/summary.json
+Auto-merging paper/data/verification.json
+CONFLICT (content): Merge conflict in paper/data/verification.json
+Auto-merging paper/materials/decision-log.md
+CONFLICT (content): Merge conflict in paper/materials/decision-log.md
+Auto-merging paper/materials/experience-changelog-silent.md
+CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md
+Auto-merging paper/materials/learning/ledger.jsonl
+CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl
+Auto-merging paper/materials/silent/cost.md
+CONFLICT (content): Merge conflict in paper/materials/silent/cost.md

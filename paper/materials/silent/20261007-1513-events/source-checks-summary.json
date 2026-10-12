@@ -1,0 +1,42 @@
+{
+  "contract": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 228,
+    "cases": 2409,
+    "workers": 1,
+    "red_failed": 1,
+    "green_passed": 1
+  },
+  "poison": {
+    "red_failed": 5,
+    "red_passed": 2,
+    "green_passed": 7,
+    "related_green_files": 3,
+    "related_green_cases": 20,
+    "initial_sandbox": {
+      "tsc": 0,
+      "vitest": 1,
+      "files": 228,
+      "cases": 2405,
+      "passed": 2404,
+      "failed": 1,
+      "workers": 4,
+      "timeout_ms": 120000,
+      "failed_test": "rollout-live.test.ts: code's ranking, options and auto-acts are unchanged by the rollout"
+    },
+    "retry": {
+      "pending": false,
+      "tsc": 0,
+      "vitest": 0,
+      "files": 229,
+      "cases": 2416,
+      "workers": 1
+    }
+  },
+  "staged_files": {
+    "agent/src/reflex/turn-solver.ts": "18e7303f5a692dc996a46775e43403895f17f7f01d67461785e17bd5d567fc98",
+    "agent/tests/silent-slippery-poison.test.ts": "cbd6a74a73fe0cc6debf9859f92932816c0dd169d3664ebac50285fd6ba8c077",
+    "agent/tests/silent-slippery-poison-evidence.json": "51bcd43a5c7def63bb24c734c1e38f784cb0dc05c90a36924ca5fc5611e8b1f1"
+  }
+}

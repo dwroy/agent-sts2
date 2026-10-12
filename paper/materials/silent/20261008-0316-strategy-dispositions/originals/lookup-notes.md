@@ -1,0 +1,1 @@
+只读定位初稿：调度batch键曾误用scratch时间025837，KeyError后按唯一02583前缀核实实际025836；verify.py路径不存在后读原verify_evidence.py；004302报告路径不存在后找到004303及本批此前014012报告；core/loop.ts与eye/record.ts定位不存在后查eye/decision-log.ts。均未修改源码或历史记录。部分既有文档长行输出被截断，十份Markdown已分别完整保存和读取；正式证据仅解析按指定六局筛选后的状态和决策。

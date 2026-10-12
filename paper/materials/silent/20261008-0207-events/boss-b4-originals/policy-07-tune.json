@@ -1,0 +1,126 @@
+{
+ "t1": {
+  "brier_exact": 0.043633333333333336,
+  "summary": {
+   "n": 9,
+   "actual_win": 0.778,
+   "mean_pred": 0.653,
+   "brier": 0.0433,
+   "auc": 1.0,
+   "const_brier": 0.1728,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 2,
+     "pred": 0.0,
+     "actual": 0.0
+    },
+    {
+     "bucket": "20–40%",
+     "n": 0,
+     "pred": null,
+     "actual": null
+    },
+    {
+     "bucket": "40–60%",
+     "n": 1,
+     "pred": 0.58,
+     "actual": 1.0
+    },
+    {
+     "bucket": "60–80%",
+     "n": 2,
+     "pred": 0.68,
+     "actual": 1.0
+    },
+    {
+     "bucket": "80–100%",
+     "n": 4,
+     "pred": 0.985,
+     "actual": 1.0
+    }
+   ],
+   "worst_bucket_n20": null,
+   "won_loss_err": {
+    "n": 7,
+    "median": 1,
+    "mean": 4.7,
+    "mae": 10.7,
+    "p10": -10,
+    "p90": 15,
+    "within5": 0.286
+   },
+   "leak": {
+    "n": 49,
+    "sim_enemy": 6.4,
+    "actual_enemy": 6.2,
+    "enemy_ratio": 1.031,
+    "sim_loss": 6.45,
+    "actual_loss": 6.2,
+    "loss_ratio": 1.039
+   }
+  }
+ },
+ "pre": {
+  "brier_exact": 0.04997222222222222,
+  "summary": {
+   "n": 9,
+   "actual_win": 0.778,
+   "mean_pred": 0.621,
+   "brier": 0.0491,
+   "auc": 1.0,
+   "const_brier": 0.1728,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 2,
+     "pred": 0.0,
+     "actual": 0.0
+    },
+    {
+     "bucket": "20–40%",
+     "n": 0,
+     "pred": null,
+     "actual": null
+    },
+    {
+     "bucket": "40–60%",
+     "n": 1,
+     "pred": 0.5,
+     "actual": 1.0
+    },
+    {
+     "bucket": "60–80%",
+     "n": 3,
+     "pred": 0.763,
+     "actual": 1.0
+    },
+    {
+     "bucket": "80–100%",
+     "n": 3,
+     "pred": 0.933,
+     "actual": 1.0
+    }
+   ],
+   "worst_bucket_n20": null,
+   "won_loss_err": {
+    "n": 7,
+    "median": 7,
+    "mean": 9.3,
+    "mae": 17.9,
+    "p10": -11,
+    "p90": 28,
+    "within5": 0.143
+   },
+   "leak": {
+    "n": 49,
+    "sim_enemy": 6.74,
+    "actual_enemy": 6.2,
+    "enemy_ratio": 1.086,
+    "sim_loss": 6.78,
+    "actual_loss": 6.2,
+    "loss_ratio": 1.092
+   }
+  }
+ }
+}

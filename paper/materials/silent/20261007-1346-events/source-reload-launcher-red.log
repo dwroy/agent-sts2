@@ -1,0 +1,54 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/ops-autoplay-reload.test.ts (15 tests | 1 failed | 14 skipped) 130ms
+     × node_launchers_are_not_independent_play_owners 127ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > node_launchers_are_not_independent_play_owners
+AssertionError: E
+======================================================================
+ERROR: test_node_launchers_are_not_independent_play_owners (__main__.ReloadTests.test_node_launchers_are_not_independent_play_owners)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent/tests/autoplay_reload_test.py", line 161, in test_node_launchers_are_not_independent_play_owners
+    receipt = self.execute(runtime)
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent/tests/autoplay_reload_test.py", line 118, in execute
+    return MODULE.reload_autoplay(runtime, old, play)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/ops/autoplay-reload.py", line 193, in reload_autoplay
+    old, play = runtime.check(old_pid, play_pid)
+                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/ops/autoplay-reload.py", line 79, in check
+    raise ReloadError(f"拒绝：另有 {kind} 进程 PID {row['pid']}")
+reload.ReloadError: 拒绝：另有 play 进程 PID 40
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (errors=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/ops-autoplay-reload.test.ts:27:58
+     25|       encoding: "utf8", timeout: 5000,
+     26|     });
+     27|     expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                          ^
+     28|     expect(result.stderr).toContain("OK");
+     29|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  12:50:58
+   Duration  1.02s (transform 624ms, setup 347ms, import 406ms, tests 130ms, environment 0ms)
+

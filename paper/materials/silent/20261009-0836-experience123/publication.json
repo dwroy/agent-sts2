@@ -1,0 +1,72 @@
+{
+  "state": "published",
+  "batch": "20261009-075759-experience-update",
+  "source": "6c5a3f6122b05afffcec961e34399168e94736c4",
+  "version": "S1.exp123",
+  "source_tests": {
+    "exit": 0,
+    "files": 251,
+    "cases": 2627,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-075800-experience-update/test-source-retry.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "0409823cb5eee4340b32d21b57032d6d633cd06e",
+  "parent_blob": "a2f5c5ad9ee3d8f2b360c7f4e95a793896fbe2e6",
+  "actual_code": "d5c1fe3f0c3bf542260cd42765203e3561c96f88",
+  "publication": "5a5c1c0ebf252a42ef2123cb0d614ba2036f1322",
+  "publication_tree": "0ac1bcc7f6576c1216f43bd3d2a437cda207c175",
+  "version_entry": {
+    "name": "S1.exp123",
+    "family": "Silent",
+    "commit": "d5c1fe3f0c3bf542260cd42765203e3561c96f88",
+    "source": "decision-log 2026-10-09 08:38: 原075759经验17项记录/表冲突兜底；只源6c5a3f61 experience.json，2026-10-09.11→2026-10-09.12/增1改9退0/193 active，RZ6YAC7K89NM证据。源251文件2627例tsc/vitest0；当前代码与固定7123e525/树ffccd203完整检查逐blob一致，数据免重复源码自测，新树完整检查待原批续验；三提案沿自动链，数据发布不标代码实现，原历史保留。"
+  },
+  "main_code_sync": "88f43b0d99ffbb676158fbe0b208a1c1a97ee399",
+  "main_record": "33b7777b587d06d4e340939c598dc4649fccac7a",
+  "record_line": "- 2026-10-09 08:38 运维codex08:36经验122兜底：源6c5a3f6122b05afffcec961e34399168e94736c4原17项记录/表冲突/merged-null保留；空闲非阻塞锁内从live7123e525f49a6795883246859e3fe6ff7cb763b3只集成已测experience原blob，actual d5c1fe3f0c3bf542260cd42765203e3561c96f88，既有live知识刷新及本次保存7123e525f49a6795883246859e3fe6ff7cb763b3保持。当前代码与固定7123e525/树ffccd203逐blob一致，原完整302文件3435例过2跳保持，不冒报新数据树完整通过。经验2026-10-09.11→2026-10-09.12/增1改9退0/193 active，唯一S1.exp123，源沙箱251文件2627例tsc/vitest0；三原提案沿自动链，main及12所属数据shipped随后机械登记，原批完整外部独立续验。旧exp100失败不关闭；回执paper/materials/silent/20261009-0836-experience123。\n",
+  "live_before": "7123e525f49a6795883246859e3fe6ff7cb763b3",
+  "preserved_refresh": "7123e525f49a6795883246859e3fe6ff7cb763b3",
+  "refresh_sha256": {},
+  "code_equivalence": {
+    "data_only": true,
+    "current_code_test_task_blobs_identical": true,
+    "current_tested_pin": "7123e525f49a6795883246859e3fe6ff7cb763b3",
+    "retained_complete_checks": {
+      "exit": 0,
+      "files": 302,
+      "cases": 3435,
+      "skipped": 2,
+      "tree": "ffccd20382ebe2b3d5ef7a1c3a9ba459c7cfcab9",
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-073009-experience-update.fallback-ffccd20382ebe2b3d5ef7a1c3a9ba459c7cfcab9.checks.log",
+      "log_sha256": "3d0b7c34030c2761a82b19d394df154841a0b4aa9ea504b7aea410b77ca2e32b"
+    },
+    "post_data_merge_sandbox_repeated": false,
+    "new_data_tree_full_passed": false,
+    "previous_exp100_full_failure_preserved": true,
+    "source_code_differences_from_actual": [
+      "docs/codex-ops.md",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ]
+  },
+  "full_external_passed": false,
+  "record_correction_live": "57a7f48519f59a87fb59a015a7ba7ea130b279ee",
+  "record_correction_main": "344bf2aead83831e93acb3e223d2c0f04abd7b0c",
+  "record_correction_line": "- 2026-10-09 08:39 运维codex08:36经验123上线记录更正：上一条兜底行标题误写经验122、S1.exp123的source误写CSLHFCBSC1UM，实际本批为075759/第一百二十三次、证据RZ6YAC7K89NM；原行及发布提交5a5c1c0e保留，只校正该版本来源文本，无数据或行为变更，无新增版本。\n"
+}

@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-12 23:24:31 CST",
+  "read_only_command": [
+    "herdr",
+    "pane",
+    "process-info",
+    "--pane",
+    "wJ:pJT"
+  ],
+  "pane_id": "wJ:pJT",
+  "foreground_process_group_id": 3967102,
+  "foreground_pids": [
+    3967102,
+    3967115
+  ],
+  "shell_pid": 1846938,
+  "role": "existing unnamed project Codex pane; not automatically treated as a managed learner or stopped",
+  "remaining_identity_requirement": "Confirm existing session/thread with its owner before including it in all-session model-switch acceptance.",
+  "prior_cli_probes": [
+    {
+      "command": [
+        "herdr",
+        "agent",
+        "list",
+        "--json"
+      ],
+      "exit": 2,
+      "reason": "unsupported flag; corrected read-only list without --json"
+    },
+    {
+      "command": [
+        "herdr",
+        "pane",
+        "info",
+        "wJ:pJT",
+        "--json"
+      ],
+      "exit": 2,
+      "reason": "unsupported subcommand; corrected to pane process-info"
+    }
+  ]
+}

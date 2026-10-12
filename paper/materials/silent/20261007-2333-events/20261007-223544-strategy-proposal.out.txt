@@ -1,0 +1,117 @@
+已提交蜃景修正 `cf0f2495354d9cf5dcb96dc31a2de0f4c53f441a`，依据 `DUZUBAJ3A8GP` 第30层第5回合，账本 `silent-0010`。
+
+撤源码后5例失败；恢复后19个固定案例通过。原沙箱入口 tsc、2534个测试通过，gitleaks通过，工作树干净。
+
+两次 live 取锁受阻，第二次等待60秒，**尚未合入、没有上线版本**。10项处置：3项已有实现，6项证据不足，蜃景等待运维合入。
+
+[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-223545-strategy-proposal/proposal.md) · [完整回报及运维接续说明](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-223545-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "base": "0b4b4c89235f15713316a0b06c81a03a34c08036",
+  "runs": ["61E2QS63Y9WU", "DUZUBAJ3A8GP", "5PM6JAQG6FNQ", "CA5KE8GFJ9X2"],
+  "fixes": [
+    {
+      "id": "silent-proposal-329a2629d5f1bf1e",
+      "summary": "普通静默A10蜃景在已观察的无挡值修正范围内，按施放时存活敌人的毒总量计算格挡。",
+      "commit": "cf0f2495354d9cf5dcb96dc31a2de0f4c53f441a",
+      "runs": ["DUZUBAJ3A8GP"],
+      "floor": 30,
+      "turn": 5,
+      "ledger": ["silent-0010"]
+    }
+  ],
+  "skipped": [
+    {"id": "silent-proposal-5264153a4a4b0e5c", "reason": "缺另一击杀方案完整执行及下一轮结果，不能确定固定首杀收益。"},
+    {"id": "silent-proposal-bddfa690a84e03d0", "reason": "四次尝试均败，缺同抽同资源的完整对照，不能拟合伤害与保血权重。"},
+    {"id": "silent-proposal-60930500313a651d", "reason": "缺新建起效时点、重放、多敌随机目标及叠加的独立观察。"},
+    {"id": "silent-proposal-c20b5139dd0dff71", "reason": "缺相同资源与抽序下技能选择的完整对照，以及成长和消失的独立验证。"},
+    {"id": "silent-proposal-ae9e692d680e3819", "reason": "死亡帧清场无法区分属性返还；缺返还后继续出牌及多来源分别返还的证据。"},
+    {"id": "silent-proposal-246daedaa3021847", "reason": "缺同敌同轮连续两次非致死失血的触发序列，不能修改一次触发规则。"}
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 19},
+  "code_proposals": [
+    "silent-proposal-5264153a4a4b0e5c",
+    "silent-proposal-e0275838dbb45d18",
+    "silent-proposal-329a2629d5f1bf1e",
+    "silent-proposal-fcfc3568c08fd6da",
+    "silent-proposal-bddfa690a84e03d0",
+    "silent-proposal-60930500313a651d",
+    "silent-proposal-c20b5139dd0dff71",
+    "silent-proposal-ae9e692d680e3819",
+    "silent-proposal-246daedaa3021847",
+    "silent-proposal-f84be739ede0e40e",
+    "silent-proposal-9c628c8136bd1848"
+  ],
+  "implementation_domains": ["combat"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "61E2第23层第4回合的另一击杀方案未完整执行，缺下一轮结果及召唤、复活、成长组合对照。"
+    },
+    {
+      "id": "silent-proposal-e0275838dbb45d18",
+      "state": "duplicate",
+      "commit": "c7578f37608526591edd86041cee5a28c3894fee",
+      "reason": "已核为live祖先源码；DUZ第30层第5/6回合尖啸临时减力及次轮恢复的固定重放通过。"
+    },
+    {
+      "id": "silent-proposal-329a2629d5f1bf1e",
+      "state": "waiting",
+      "reason": "源码cf0f2495354d9cf5dcb96dc31a2de0f4c53f441a已提交并通过测试；两次live取锁受阻，尚无实际live祖先证明，待运维合入。"
+    },
+    {
+      "id": "silent-proposal-fcfc3568c08fd6da",
+      "state": "duplicate",
+      "commit": "12296292e176ac663057988c7a9ae0487af7b246",
+      "reason": "已核为live祖先源码；DUZ第30层第4/6回合逐击反伤、全挡触发及死亡轮结算的固定重放通过。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "state": "waiting",
+      "reason": "DUZ第30层四试均败；缺同抽同资源的完整对照，不能拟合多打伤害与少挡的血价。"
+    },
+    {
+      "id": "silent-proposal-60930500313a651d",
+      "state": "waiting",
+      "reason": "5PM第33层第1/2回合仅验证部分单敌触发；缺新建起效时点、重放、多敌及叠加边界。"
+    },
+    {
+      "id": "silent-proposal-c20b5139dd0dff71",
+      "state": "waiting",
+      "reason": "DUZ第27层第4/5回合支持保留已有污染模型；缺技能选择完整对照及成长、消失的独立验证。"
+    },
+    {
+      "id": "silent-proposal-ae9e692d680e3819",
+      "state": "waiting",
+      "reason": "5PM第39层末试死亡帧已清场；缺毒杀返还后继续出牌、返敏及多来源分别返还的前后帧。"
+    },
+    {
+      "id": "silent-proposal-246daedaa3021847",
+      "state": "waiting",
+      "reason": "CA5第9层第4回合后续攻击只消格挡；缺同敌同轮第二次非致死失血，不能改变触发规则。"
+    },
+    {
+      "id": "silent-proposal-f84be739ede0e40e",
+      "state": "duplicate",
+      "commit": "db6e32d2ee101af6b53f8228c27165bb41f04811",
+      "reason": "已核重新实现源码为live祖先；CA5第9/13层相关铁蒺藜行为的7个固定测试通过。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-223545-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a116ca-b801-7c71-b4e5-8dbbbacc5caf
+轮数：1；工具调用：command_execution×92 file_change×9
+token：输入 348.1k、输出 69.2k（其中推理 35.2k）、cache 读 10161.9k、cache 写 0（命中 96.7%）
+成本：未提供
+耗时：3031.2 s（墙钟）
+时间：首个事件 2.9 s、模型首个输出 7.9 s、首次工具 12.3 s、末次工具结束 2965.0 s；工具内共 1520.5 s，其余（模型生成、推理、网络）1507.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×67；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T22-35-46-01a116ca-b801-7c71-b4e5-8dbbbacc5caf.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-223545-strategy-proposal.jsonl

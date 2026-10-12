@@ -1,0 +1,38 @@
+{
+  "original_checks": [
+    {
+      "batch": "20261011-181302-fix-batch",
+      "live": "4425ef1aeda69697bf4741c8d338f3b95586668f",
+      "tree": "25b09e499152d7085c5d3e932517156ef5d0d53c",
+      "exit": 1,
+      "sha256": "b6da6c6d794e0a16d3d86eed31ab69ca9fa930d772e550c87aec168b5ddb571e",
+      "passed_files": 324,
+      "passed_cases": 3566,
+      "failed": [
+        "tests/brain-codex-session.test.ts",
+        "tests/ops-codex.test.ts"
+      ],
+      "skipped": 2
+    },
+    {
+      "batch": "20261011-175450-experience-update",
+      "live": "4425ef1aeda69697bf4741c8d338f3b95586668f",
+      "tree": "25b09e499152d7085c5d3e932517156ef5d0d53c",
+      "exit": 1,
+      "sha256": "5d75db9509fe2c52bef1cdf273583a4946fb885444852922bfcb80432a295b6e",
+      "passed_files": 324,
+      "passed_cases": 3566,
+      "failed": [
+        "tests/brain-codex-session.test.ts",
+        "tests/ops-codex.test.ts"
+      ],
+      "skipped": 2
+    }
+  ],
+  "decision": "retain game knowledge/code; dispatch ordinary infrastructure repair",
+  "repair_batch": "20261011-202201-fix-batch",
+  "no_rollback": true,
+  "repeat_full_suite_requested": false,
+  "next_validation": "only failed files on matching source, singleworker; existing host recheck exposes no file filter, framework owner must supply/perform authorized targeted verification without new policy bypass",
+  "new_source_incremental": "tsc0 and10files55cases0; not proof that2host failures are fixed"
+}

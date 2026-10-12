@@ -92,7 +92,7 @@ function planLines(decision: ReturnType<typeof planCombatTurn>): Raw[] {
   return Object.values(question.type === "choice" ? question.criteria : {}).map((text) => JSON.parse(String(text)) as Raw);
 }
 
-describe("1. Dai 2026-09-29: \"攻略或手册和经验库、实测数据冲突时，以数据为准\" in DeepSeek's system prompt and Jev's combat question", () => {
+describe("1. Roy 2026-09-29: \"攻略或手册和经验库、实测数据冲突时，以数据为准\" in DeepSeek's system prompt and Jev's combat question", () => {
   afterEach(() => {
     rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
     potionMcOptions.now = null;

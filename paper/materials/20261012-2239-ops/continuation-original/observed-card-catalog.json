@@ -1,0 +1,607 @@
+[
+  {
+    "id": "HAZE",
+    "type": "Skill",
+    "name": "迷雾",
+    "target": "AllEnemies",
+    "description": "给予所有敌人4层中毒和1层虚弱。 重放1。",
+    "description_raw": "给予所有敌人{PoisonPower:diff()}层中毒和{WeakPower:diff()}层虚弱。",
+    "cost": 0,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "PoisonPower",
+        "base_value": 4,
+        "current_value": 4,
+        "enchanted_value": 4,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "WeakPower",
+        "base_value": 1,
+        "current_value": 1,
+        "enchanted_value": 1,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "SURVIVOR",
+    "type": "Skill",
+    "name": "生存者",
+    "target": "Self",
+    "description": "获得8点格挡。 丢弃1张牌。",
+    "description_raw": "获得{Block:diff()}点格挡。 丢弃1张牌。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Block",
+        "base_value": 8,
+        "current_value": 8,
+        "enchanted_value": 8,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "BOUNCING_FLASK",
+    "type": "Skill",
+    "name": "弹跳药瓶+",
+    "target": "RandomEnemy",
+    "description": "随机给予敌人3层中毒4次。 重放1。",
+    "description_raw": "随机给予敌人{PoisonPower:diff()}层中毒{Repeat:diff()}次。",
+    "cost": 2,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "PoisonPower",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "Repeat",
+        "base_value": 4,
+        "current_value": 4,
+        "enchanted_value": 4,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "DEFEND_SILENT",
+    "type": "Skill",
+    "name": "防御",
+    "target": "Self",
+    "description": "获得5点格挡。",
+    "description_raw": "获得{Block:diff()}点格挡。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Block",
+        "base_value": 5,
+        "current_value": 5,
+        "enchanted_value": 5,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "STRIKE_SILENT",
+    "type": "Attack",
+    "name": "打击",
+    "target": "AnyEnemy",
+    "description": "造成6点伤害。",
+    "description_raw": "造成{Damage:diff()}点伤害。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Damage",
+        "base_value": 6,
+        "current_value": 6,
+        "enchanted_value": 6,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "CALCULATED_GAMBLE",
+    "type": "Skill",
+    "name": "计算下注",
+    "target": "Self",
+    "description": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+    "description_raw": "丢弃你的所有手牌, 然后抽相同数量的牌。",
+    "cost": 0,
+    "is_x_cost": false,
+    "vars": [],
+    "keywords": []
+  },
+  {
+    "id": "FOOTWORK",
+    "type": "Power",
+    "name": "灵动步法",
+    "target": "Self",
+    "description": "获得2点敏捷。 第一次打出时抽2张牌。",
+    "description_raw": "获得{DexterityPower:diff()}点敏捷。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "DexterityPower",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "ACCELERANT",
+    "type": "Power",
+    "name": "触媒",
+    "target": "Self",
+    "description": "中毒会额外触发1次。 重放1。",
+    "description_raw": "中毒会额外触发{Accelerant:diff()}次。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Accelerant",
+        "base_value": 1,
+        "current_value": 1,
+        "enchanted_value": 1,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "PIERCING_WAIL",
+    "type": "Skill",
+    "name": "尖啸",
+    "target": "AllEnemies",
+    "description": "所有敌人在本回合失去6点力量。 重放1。 消耗。",
+    "description_raw": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "StrengthLoss",
+        "base_value": 6,
+        "current_value": 6,
+        "enchanted_value": 6,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "LEG_SWEEP",
+    "type": "Skill",
+    "name": "扫腿",
+    "target": "AnyEnemy",
+    "description": "给予2层虚弱。 获得11点格挡。 重放1。",
+    "description_raw": "给予{WeakPower:diff()}层虚弱。 获得{Block:diff()}点格挡。",
+    "cost": 2,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Block",
+        "base_value": 11,
+        "current_value": 11,
+        "enchanted_value": 11,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "WeakPower",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "SHIV",
+    "type": "",
+    "name": "小刀+",
+    "target": "AnyEnemy",
+    "description": "造成6点伤害。 消耗。",
+    "description_raw": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+    "cost": 0,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Damage",
+        "base_value": 6,
+        "current_value": 6,
+        "enchanted_value": 6,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "BUBBLE_BUBBLE",
+    "type": "Skill",
+    "name": "咕嘟冒泡",
+    "target": "AnyEnemy",
+    "description": "如果敌方拥有中毒，则给予9层中毒。",
+    "description_raw": "如果敌方拥有中毒，则给予{PoisonPower:diff()}层中毒。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "PoisonPower",
+        "base_value": 9,
+        "current_value": 9,
+        "enchanted_value": 9,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "PREPARED",
+    "type": "Skill",
+    "name": "早有准备",
+    "target": "Self",
+    "description": "抽1张牌。 丢弃1张牌。 重放1。",
+    "description_raw": "抽{Cards:diff()}张牌。 丢弃{Cards:diff()}张牌。",
+    "cost": 0,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Cards",
+        "base_value": 1,
+        "current_value": 1,
+        "enchanted_value": 1,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "DAGGER_SPRAY",
+    "type": "Attack",
+    "name": "匕首雨+",
+    "target": "AllEnemies",
+    "description": "对所有敌人造成4点伤害两次。 魂缚",
+    "description_raw": "对所有敌人造成{Damage:diff()}点伤害两次。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Damage",
+        "base_value": 6,
+        "current_value": 4,
+        "enchanted_value": 6,
+        "is_modified": true,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "SKEWER",
+    "type": "Attack",
+    "name": "串刺",
+    "target": "AnyEnemy",
+    "description": "造成8点伤害X次。",
+    "description_raw": "造成{Damage:diff()}点伤害X次。",
+    "cost": 0,
+    "is_x_cost": true,
+    "vars": [
+      {
+        "name": "Damage",
+        "base_value": 8,
+        "current_value": 8,
+        "enchanted_value": 8,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "SNAKEBITE",
+    "type": "Skill",
+    "name": "蛇咬+",
+    "target": "AnyEnemy",
+    "description": "保留。 给予10层中毒。 重放1。",
+    "description_raw": "给予{PoisonPower:diff()}层中毒。",
+    "cost": 2,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "PoisonPower",
+        "base_value": 10,
+        "current_value": 10,
+        "enchanted_value": 10,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "ASCENDERS_BANE",
+    "type": "Curse",
+    "name": "进阶之灾",
+    "target": "None",
+    "description": "不能被打出。 虚无。 永恒。",
+    "description_raw": "",
+    "cost": -1,
+    "is_x_cost": false,
+    "vars": [],
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "POUNCE",
+    "type": "Attack",
+    "name": "猛扑",
+    "target": "AnyEnemy",
+    "description": "造成14点伤害。 你的下一张技能牌耗能变为0res://images/packed/sprite_fonts/silent_energy_icon.png。",
+    "description_raw": "造成{Damage:diff()}点伤害。 你的下一张技能牌耗能变为0{energyPrefix:energyIcons(1)}。",
+    "cost": 2,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Damage",
+        "base_value": 14,
+        "current_value": 14,
+        "enchanted_value": 14,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "POISONED_STAB",
+    "type": "Attack",
+    "name": "带毒刺击+",
+    "target": "AnyEnemy",
+    "description": "造成8点伤害。 给予4层中毒。",
+    "description_raw": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Damage",
+        "base_value": 8,
+        "current_value": 8,
+        "enchanted_value": 8,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "PoisonPower",
+        "base_value": 4,
+        "current_value": 4,
+        "enchanted_value": 4,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "ESCAPE_PLAN",
+    "type": "Skill",
+    "name": "逃脱计划+",
+    "target": "Self",
+    "description": "抽1张牌。 如果抽到的是技能牌，则获得5点格挡。 重放1。",
+    "description_raw": "抽1张牌。 如果抽到的是技能牌，则获得{Block:diff()}点格挡。",
+    "cost": 0,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Block",
+        "base_value": 5,
+        "current_value": 5,
+        "enchanted_value": 5,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "BACKFLIP",
+    "type": "Skill",
+    "name": "后空翻+",
+    "target": "Self",
+    "description": "获得8点格挡。 抽2张牌。",
+    "description_raw": "获得{Block:diff()}点格挡。 抽2张牌。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Block",
+        "base_value": 8,
+        "current_value": 8,
+        "enchanted_value": 8,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "Cards",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "RICOCHET",
+    "type": "Attack",
+    "name": "连续反弹",
+    "target": "RandomEnemy",
+    "description": "奇巧。 随机对敌人造成3点伤害4次。 重放1。",
+    "description_raw": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+    "cost": 2,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Damage",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "Repeat",
+        "base_value": 4,
+        "current_value": 4,
+        "enchanted_value": 4,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "TOOLS_OF_THE_TRADE",
+    "type": "Power",
+    "name": "必备工具",
+    "target": "Self",
+    "description": "在你的回合开始时，抽1张牌，丢弃1张牌。",
+    "description_raw": "在你的回合开始时，抽1张牌，丢弃1张牌。",
+    "cost": 1,
+    "is_x_cost": false,
+    "vars": [],
+    "keywords": []
+  },
+  {
+    "id": "CLUMSY",
+    "type": "Curse",
+    "name": "笨拙",
+    "target": "None",
+    "description": "不能被打出。 虚无。",
+    "description_raw": "",
+    "cost": -1,
+    "is_x_cost": false,
+    "vars": [],
+    "keywords": [
+      "Unplayable"
+    ]
+  },
+  {
+    "id": "MALAISE",
+    "type": "Skill",
+    "name": "萎靡",
+    "target": "AnyEnemy",
+    "description": "敌人失去X点力量。给予X层虚弱。 消耗。",
+    "description_raw": "敌人失去X{IfUpgraded:show:+1}点力量。给予X{IfUpgraded:show:+1}层虚弱。",
+    "cost": 0,
+    "is_x_cost": true,
+    "vars": [],
+    "keywords": []
+  },
+  {
+    "id": "ETERNAL_ARMOR",
+    "type": "Power",
+    "name": "永恒铠甲",
+    "target": "Self",
+    "description": "获得9层覆甲。",
+    "description_raw": "获得{PlatingPower:diff()}层覆甲。",
+    "cost": 3,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "PlatingPower",
+        "base_value": 9,
+        "current_value": 9,
+        "enchanted_value": 9,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "NEUTRALIZE",
+    "type": "Attack",
+    "name": "中和+",
+    "target": "AnyEnemy",
+    "description": "造成4点伤害。 给予2层虚弱。",
+    "description_raw": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+    "cost": 0,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Damage",
+        "base_value": 4,
+        "current_value": 4,
+        "enchanted_value": 4,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "WeakPower",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "keywords": []
+  },
+  {
+    "id": "WITHER",
+    "type": "",
+    "name": "凋萎+1",
+    "target": "None",
+    "description": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到6点伤害。",
+    "description_raw": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
+    "cost": -1,
+    "is_x_cost": false,
+    "vars": [
+      {
+        "name": "Damage",
+        "base_value": 6,
+        "current_value": 6,
+        "enchanted_value": 6,
+        "is_modified": false,
+        "was_just_upgraded": true
+      }
+    ],
+    "keywords": [
+      "Unplayable"
+    ]
+  }
+]

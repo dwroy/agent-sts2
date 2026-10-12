@@ -1,0 +1,36 @@
+1563687 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-130408-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-130408-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+1563688 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-130408-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/silent-double-boss silent-double-boss
+1563697 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx learner/run.ts --engine codex --task silent-double-boss --character silent --cwd /home/dw/Projects/agent-sts2/.worktrees/silent-double-boss --set merg
+1563709 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs learner/run.ts --
+1564623 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-130415-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-130415-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+1564624 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-130415-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/boss-sim-automation boss-sim-automation
+1564633 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx learner/run.ts --engine codex --task boss-sim-automation --character silent --cwd /home/dw/Projects/agent-sts2/.worktrees/boss-sim-automation --set me
+1564645 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs learner/run.ts --
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+1873565 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+1873703 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+1873704 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+1873715 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+1893460 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-151301-postmortem /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-151301-postmortem.pid 1 - /home/dw/Projects/agent-sts2/op
+1893461 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-151301 DUZUBAJ3A8GP silent
+1893471 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx learner/run.ts --engine codex --task postmortem --character silent --cwd /home/dw/Projects/agent-sts2 --set runs=DUZUBAJ3A8GP
+1893483 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs learner/run.ts --
+1893769 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-151301-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-151301-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+1893770 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-151301-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/codex-dev
+1893779 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx learner/run.ts --engine codex --task fix-batch --character silent --cwd /home/dw/Projects/agent-sts2/.worktrees/codex-dev --set merge=live
+1893791 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs learner/run.ts --
+1895004 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+1895036 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+1897894 /home/dw/.codex/tmp/arg0/codex-arg023L2bU/codex-linux-sandbox --sandbox-policy-cwd /home/dw/Projects/agent-sts2 --command-cwd /home/dw/Projects/agent-sts2 --permission-profile {"type":"managed","file_system":{"ty
+1897934 bwrap --as-pid-1 --new-session --die-with-parent --ro-bind / / --dev /dev --perms 000 --tmpfs /tmp/codex-daemon-1000 --remount-ro /tmp/codex-daemon-1000 --bind /tmp /tmp --perms 000 --tmpfs /tmp/codex-daemon-1000
+1897935 codex-linux-sandbox --sandbox-policy-cwd /home/dw/Projects/agent-sts2 --command-cwd /home/dw/Projects/agent-sts2 --permission-profile {"type":"managed","file_system":{"type":"restricted","entries":[{"path":{"type
+1897936 /bin/bash -c python3 - <<'PY' from pathlib import Path import subprocess out=Path('/tmp/sts2-20261007-1513-procs.txt') with out.open('w') as f:r=subprocess.run(['bash','ops/codex-ops-do.sh','procs'],stdout=f,stde
+autoplay.pid: 1746959
+herdr panes:
+label                               pane    alive  busy  foreground
+autoplay                            wJ:p2   yes    no    
+learner-20261007-130408-fix-batch   wJ:p54  yes    yes   1563687:bash 1563688:bash 1563696:tail 1563697:node 1563709:node
+learner-20261007-130415-fix-batch   wJ:p55  yes    yes   1564623:bash 1564624:bash 1564632:tail 1564633:node 1564645:node
+learner-20261007-151301-fix-batch   wJ:p5G  yes    yes   1893769:bash 1893770:bash 1893778:tail 1893779:node 1893791:node
+learner-20261007-151301-postmortem  wJ:p5F  yes    yes   1893460:bash 1893461:bash 1893470:tail 1893471:node 1893483:node
+ops                                 wJ:p5   yes    yes   1753575:node 1753583:codex

@@ -1,0 +1,18 @@
+{
+  "task": "fix-batch",
+  "item": "codex-brain-cache",
+  "base": "6e427e001bf72d14bb097a75986834276724c7eb",
+  "status": "investigating-probe-home",
+  "merged": null,
+  "probe": {
+    "status": "pending",
+    "repair_model_calls": 0,
+    "original_model_calls_observed": 0,
+    "max_total_allocated_calls": 4
+  },
+  "confirmed_cause": "probe hardcodes global home instead of established isolated brain home; historical cache undercount already repaired",
+  "cache_transport_cause": "unknown",
+  "code_proposals": [],
+  "implementation_domains": [],
+  "references": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/baseline.json"
+}

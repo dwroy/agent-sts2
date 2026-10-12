@@ -1,0 +1,59 @@
+{
+ "baseline": [
+  "node",
+  "--import",
+  "tsx",
+  "tools/boss-sim/backtest.ts",
+  "--character",
+  "silent",
+  "--game-data",
+  "../learner/runs/20261007-215924-boss-sim-batch/fixed-input/game-data.json",
+  "--in",
+  "../learner/runs/20261007-215924-boss-sim-batch/dataset/fights.jsonl",
+  "--out-dir",
+  "../learner/runs/20261007-215924-boss-sim-batch/before-results",
+  "--samples",
+  "200",
+  "--starts",
+  "t1,pre",
+  "--no-rollout"
+ ],
+ "target_repeat": [
+  "--enc",
+  "THE_INSATIABLE"
+ ],
+ "tune07": [
+  "--enc",
+  "THE_INSATIABLE",
+  "--keys",
+  "../learner/runs/20261007-215924-boss-sim-batch/tune-keys.json",
+  "--damage-scale",
+  "0.7"
+ ],
+ "tune10": [
+  "--enc",
+  "THE_INSATIABLE",
+  "--keys",
+  "../learner/runs/20261007-215924-boss-sim-batch/tune-keys.json",
+  "--damage-scale",
+  "1.0"
+ ],
+ "tail": [
+  "--keys",
+  "../learner/runs/20261007-215924-boss-sim-batch/tail-keys.json"
+ ],
+ "execution": {
+  "cwd": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261007-215921/agent",
+  "nice": 19,
+  "PATH_prefix": "~/.local/node/bin",
+  "TMPDIR": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261007-215921/learner/runs/20261007-215924-boss-sim-batch",
+  "all_variants_full_input": true,
+  "variant_out_dirs": {
+   "target_repeat": "target-replay-results",
+   "tune07": "tune-scale-07",
+   "tune10": "tune-scale-10",
+   "tail": "before-tail-results"
+  },
+  "variant_note": "Arguments listed for variants extend baseline and substitute only the output directory."
+ }
+}

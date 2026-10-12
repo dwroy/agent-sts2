@@ -1,0 +1,140 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-150941-s2-strategy-proposal",
+  "base": "3f159fc6b04971a6b907a2401c6be3f7f3d56a6d",
+  "runs": [
+    "751FN9QM9MHQ",
+    "KV0JHNJCKXLS",
+    "YQL8RZ8BWN1E",
+    "L9SGRBB5R698",
+    "PU80F84P6HPN",
+    "KEN58SH9SLZ6"
+  ],
+  "fixes": [
+    {
+      "id": "silent-held-loss-facts",
+      "commit": "1a00f10af95c78dfbf75de318a0083256110cf8a",
+      "summary": "A10 F17异鱼候选及选择审计单列保守持牌失血与未决弃牌；仅原派发提案的限定子项。",
+      "ledger": [
+        "silent-0176",
+        "silent-0079"
+      ],
+      "state": "committed_not_merged"
+    }
+  ],
+  "skipped": [
+    {
+      "reason": "live锁内merge-tree预检有12个共享记录路径冲突，按任务停止，不覆盖现场。",
+      "paths": [
+        "eval/versions.json",
+        "notes/for-roy.md",
+        "notes/strategy-research-core-decklists-silent.json",
+        "ops/inbox-dev.md",
+        "paper/materials/20261011-ops-deferred-alert/gitleaks-staged.json",
+        "paper/materials/20261011-ops-deferred-alert/host-completion.json",
+        "paper/materials/20261011-quantitative-framework/checks/gitleaks-v2.exit",
+        "paper/materials/20261012-1445-ops/calibration-original/source-gitleaks.exit",
+        "paper/materials/decision-log.md",
+        "paper/materials/learning/ledger.jsonl",
+        "paper/materials/silent/20261011-191305-boss-calibration-closeout/manifest.json",
+        "paper/materials/silent/20261011-191305-boss-calibration-closeout/source-gitleaks.exit"
+      ]
+    }
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3380
+  },
+  "test_scope": "源码树沙箱入口：337文件3369项 + paths 1文件11项；非沙箱外完整套件。合后检查未运行。",
+  "red_green": {
+    "feature_disabled": {
+      "exit": 1,
+      "failed": 4,
+      "passed": 1
+    },
+    "restored_related": {
+      "exit": 0,
+      "cases": 25
+    },
+    "final_targeted": {
+      "exit": 0,
+      "cases": 7
+    }
+  },
+  "code_proposals": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "补持牌预测子项；仍缺751 T7未决弃牌/续步后完整候选执行认证、同随机输入完整后继和独立局验证，不能拟SL额外损血准入。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "补保守持牌失血与未决弃牌展示；已有药水未知持有价参考。本批无751 F13不饮用或留药至后战的完整受控结果，未完成综合血价/药价验收。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "共享持牌预测子项；完整弃牌执行、原/替整战及更差线准入证据仍缺，六次SL不是六个独立验证局，不能按重复实现关闭父项。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "仅补呼唤预测来源子项；逐张敏捷、毒/荆棘、药水与未决选择的联合消费者/整战反事实仍未全部认证，原F13无药支线只有预测。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "KV F33 T5净扣36/29且零损已核；缺毒、回血、续问的完整因果归属和保毒/删毒受控整战，净扣不能代替毛伤或已得保血。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "已有巨兽阶段记录为live祖先；YQL末T10加毒未改26血13挡41自爆。仍缺阶段药水联合收益与改排序完整对照，旧占位数排序不能以字段存在宣称修完。"
+    },
+    {
+      "id": "silent-proposal-9733bb80f445aeae",
+      "state": "waiting",
+      "reason": "阶段标签与有限末态资源已有实现；缺提前喝/不喝/保留毒药及新参考序的受控后继，2→8毒不能估整战持有价。"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "state": "waiting",
+      "reason": "KEN七次耗药已核，仍缺F15不喝或保药至boss的分支；现有消费者保留重问/随机选牌并将整条候选结果置null，不能宣称七瓶整线收益已认证。"
+    },
+    {
+      "id": "silent-proposal-86a7db08d1a31976",
+      "state": "waiting",
+      "reason": "补KEN T10原/替持牌0/6预测；T5省2血但能力延后仍是反例。缺能力窗口完整执行归属、保持后轮相同的整战及新局验证，探索门槛不改。"
+    },
+    {
+      "id": "silent-proposal-e282a9131b99129a",
+      "state": "waiting",
+      "reason": "共享KEN持牌预测子项；仍缺T5能力/续问的完整认证和独立局受控后继，不能因部分审计代码或同局六次尝试将父项记implemented/duplicate。"
+    }
+  ],
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941-s2/learner/runs/20261012-150956-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941-s2/learner/runs/20261012-150956-strategy-proposal/report.md",
+  "merge_receipt": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941-s2/learner/runs/20261012-150956-strategy-proposal/live-merge-receipt.json",
+  "gitleaks": 0
+}

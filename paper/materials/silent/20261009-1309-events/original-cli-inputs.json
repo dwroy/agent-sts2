@@ -1,0 +1,248 @@
+[
+  {
+    "character": "silent",
+    "kind": "bug-infra",
+    "claim": "静默A10女王战的致死差异注记没有列出求解器已计入的奥利哈钢回合末格挡。零挡、11血对16攻击时，求解器预计损10且实际11→1，却写没有回合末防御、归因敌攻击不同；当前live endBlockParts计入遗物挡，endTurnGuards来源表漏项。仅修诊断来源，保持数值与动作等价，不把本局失败归因于此。",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 2,
+        "role": "support",
+        "note": "末试d313188/d313190注记no end-of-turn block但预计损10；s321678/s321683为11血0挡、16攻击，s321684为1血。F49共11条同类注记。"
+      },
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 4,
+        "role": "support",
+        "note": "sl1362末试判官明确19 incoming vs 1 HP + 0 block + 6 end-of-turn block；live turn-solver.ts:2975数值计入，:3083来源漏列，combat-plan.ts:2010误解释。"
+      }
+    ],
+    "first_run": "RMNXHZKV716Y",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "silent账本以endTurnGuards、calc mismatch、注记、奥利哈钢检索及更早同角色复盘未找到该诊断漏项；缺少学习前同一诊断条件的可核对处置，不用无关的反伤或伤害差推先验。",
+    "status": "observed",
+    "by": "learner:postmortem",
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0125",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 48,
+        "turn": 1,
+        "role": "support",
+        "note": "第二次d312975题面损16/伤8→损0/伤0，抽牌后重新问而实100血不变、敌535→524；第三次d313020先同护栏再SL重放首试，实100→96、敌535→513。不把候选差当实际省16。"
+      },
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 48,
+        "turn": 2,
+        "role": "support",
+        "note": "第二次d312981题面损21/伤7→损9/伤0、原计划均喝毒药水；重问后实100→80、敌524→518，药延T3，不等于当轮只损9。"
+      },
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 2,
+        "role": "support",
+        "note": "首试d313087毒雾/毒药+/科学换毒药+/扫腿+，题面损10→2、傷17不变，撤两能力；实11→9、活敌580→560。全局4次护栏，仅候选血价差16/12/16/8，没有完整原线实打反事实。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0228",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 47,
+        "role": "support",
+        "note": "d312923题面已有F48→F49未经联合校准模拟，Codex选休息；s321357→321359羽毛50→68，再休息68/95→100/100，已知连战并非忘学。"
+      },
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 48,
+        "turn": 13,
+        "role": "support",
+        "note": "第三次沙漏100血两药进场，T1毒药、T10幽灵；T13手中15伤凋萎，22→13、敌32→0，空药胜出。两截尾一实胜，未有留药或另一前场完整配对。"
+      },
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 1,
+        "role": "support",
+        "note": "s321563/321564战后13/100空药；s321565第二boss入口13/100、蟾蜍新生槽0石头，六试资源相同，五次判死SL、一实败，期间没有回血节点。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0136",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 2,
+        "role": "support",
+        "note": "末试d313192专长MAD_SCIENCE现场文本2力量/2敏捷；s321682→321683力量0→2、敏捷1→3、已有挡0不变。dynamic_values虽含其他模板项，不作为本次8挡抽3或紧勒12伤。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0180",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 3,
+        "role": "support",
+        "note": "末试s321684佩尔待触发、3敏捷及99脆弱时，扫腿+预览25、后空翻预览12；先扫腿实25挡后，后空翻当前回6、实补6，共31，不是初始预览的37。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0069",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 3,
+        "role": "support",
+        "note": "末试T3建立99虚弱/易伤/脆弱，魂缚3仍在；T4三减益仍98。T3聚合体12×3=36经扫腿3虚弱为9×3=27，31挡零损；T4步法到5敏捷无格挡、末1血0挡仍死。不由失败登记忘记减益或统一击杀顺序。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0011",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 2,
+        "role": "support",
+        "note": "末试普通毒雾建2层；T2末毒聚合体12/女王8，T3首13/9、T4首14/10，旧毒结算减1与轮初补2分开。T4末14/10结到13/9，终局两敌133/349，毒量不等于已完成击杀。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0024",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 48,
+        "turn": 11,
+        "role": "support",
+        "note": "sl1354首试T11为40攻击+三张12凋萎=76，对10HP/48挡预算损28；sl1355二试40+两张12=64，对38HP/0挡+末6预算损58。两者均SL截尾，非实际死亡伤。"
+      },
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 48,
+        "turn": 13,
+        "role": "support",
+        "note": "第三次s321561/321562为22血0挡、手中15伤凋萎、沙漏32血62毒；d313073结束，s321563实13血获胜。回合末6挡与持牌15伤对应净损9，现有毒足够杀敌也不抹掉先前持牌损血。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0025",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 48,
+        "turn": 10,
+        "role": "support",
+        "note": "第三次T10敌15力量且虚弱显示30单击，幽灵后显示1、玩家38→38；T11仍15力量20×2=40，T12增强后T13为22力量且虚弱同单段类型显示36。玩家后段5敏捷/2力量并存，手持凋萎12→15，不能把建立增益当免疫后段风险。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0327",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 1,
+        "role": "support",
+        "note": "F48胜后s321564空药，s321565蟾蜍新生槽0石头；六试T1均使用，后五试为SL恢复。末试d313186/s321676→321677女王400→385、玩家13不变。奖励11瓶、新生1石和9个恢复槽分账。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  },
+  {
+    "id": "silent-0129",
+    "by": "learner:postmortem",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 49,
+        "turn": 2,
+        "role": "support",
+        "note": "末试T2两敌12/8毒共20，聚合体一次攻击反3，总活敌575→552=23；T3聚合体三击全部被31挡覆盖仍反9，13/9毒共22，总活敌552→521=31，玩家1血不变。铜质鳞片3荆棘逐击反伤不计为毒伤。"
+      }
+    ],
+    "where": {
+      "lessons": [
+        "RMNXHZKV716Y"
+      ]
+    }
+  }
+]

@@ -1,0 +1,170 @@
+{
+  "at": "2026-10-12 23:57:48 CST",
+  "active_batches": [
+    {
+      "batch": "20261012-234301",
+      "pid": 881369,
+      "task": null,
+      "worktree": null,
+      "pane": "wJ:pQR",
+      "learning_request": null
+    },
+    {
+      "batch": "20261012-234301-strategy-proposal",
+      "pid": 881663,
+      "task": "strategy-proposal",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-234301",
+      "pane": "wJ:pQS",
+      "learning_request": null
+    },
+    {
+      "batch": "20261012-234301-s2-strategy-proposal",
+      "pid": 881773,
+      "task": "strategy-proposal",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-234301-s2",
+      "pane": "wJ:pQT",
+      "learning_request": null
+    }
+  ],
+  "native_processes": [
+    {
+      "pid": 43907,
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "settings": {},
+      "thread_ids": [],
+      "transport": "app-server"
+    },
+    {
+      "pid": 881933,
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "settings": {
+        "model": "gpt-6-astra",
+        "model_reasoning_effort": "xhigh",
+        "service_tier": "default"
+      },
+      "thread_ids": [],
+      "transport": "exec"
+    },
+    {
+      "pid": 883569,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-234301-s2",
+      "settings": {
+        "model": "gpt-6-astra",
+        "model_reasoning_effort": "xhigh",
+        "service_tier": "default"
+      },
+      "thread_ids": [],
+      "transport": "exec"
+    },
+    {
+      "pid": 885304,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-234301",
+      "settings": {
+        "model": "gpt-6.1-sol",
+        "model_reasoning_effort": "xhigh",
+        "service_tier": "default"
+      },
+      "thread_ids": [],
+      "transport": "exec"
+    },
+    {
+      "pid": 895277,
+      "cwd": "/tmp/jev-brain-codex-state/session-cwd/894446-1791820209433",
+      "settings": {
+        "model_reasoning_effort": "xhigh",
+        "service_tier": "default"
+      },
+      "thread_ids": [],
+      "transport": "app-server"
+    },
+    {
+      "pid": 2975102,
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "settings": {},
+      "thread_ids": [],
+      "transport": "app-server"
+    },
+    {
+      "pid": 3237122,
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "settings": {
+        "model": "gpt-6-astra",
+        "model_reasoning_effort": "xhigh",
+        "service_tier": "default"
+      },
+      "thread_ids": [
+        "01a12bec-c83f-7c21-b76f-eb8e5304eb8f"
+      ],
+      "transport": "resume"
+    },
+    {
+      "pid": 3967115,
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "settings": {},
+      "thread_ids": [],
+      "transport": "interactive-or-helper"
+    }
+  ],
+  "ops_session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+  "ops_native_current_target_verified": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T01-05-00-01a12bec-c83f-7c21-b76f-eb8e5304eb8f.jsonl",
+    "offset": 42829894,
+    "bytes": 1961,
+    "sha256": "b0ed955e340ec3745a6486b4a64d78916648ea566d842aadc579e1e2c36e395e",
+    "event": {
+      "timestamp": "2026-10-12T15:26:16.049Z",
+      "ordinal": 12522,
+      "type": "turn_context",
+      "payload": {
+        "turn_id": "01a130b8-bddf-7880-921b-ea79d9dde576",
+        "root_turn_id": "01a130b8-bddf-7880-921b-ea79d9dde576",
+        "disabled_plugin_ids": [],
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "approval_policy": "never",
+        "approvals_reviewer": "user",
+        "sandbox_policy": {
+          "type": "danger-full-access"
+        },
+        "permission_profile": {
+          "type": "disabled"
+        },
+        "model": "gpt-6.1-sol",
+        "comp_hash": "3000",
+        "collaboration_mode": {
+          "mode": "default",
+          "settings": {
+            "model": "gpt-6.1-sol",
+            "reasoning_effort": "xhigh",
+            "developer_instructions": "# Collaboration Mode: Default\n\nYou are now in Default mode. Any previous instructions for other modes (e.g. Plan mode) are no longer active.\n\nYour active mode changes only when new developer instructions with a different `<collaboration_mode>...</collaboration_mode>` change it; user requests or tool descriptions do not change mode by themselves. Known mode names are Default and Plan.\n\n## request_user_input availability\n\nUse the `request_user_input` tool only when it is listed in the available tools for this turn.\n\nIn Default mode, strongly prefer making reasonable assumptions and executing the user's request rather than stopping to ask questions.\n\nUse the `request_user_input` tool only for optional questions where the answer would materially improve the quality of the work.\n\nIf `request_user_input` returns no answers, continue with best judgment instead of asking again or treating the turn as blocked.\n\nNever use the `request_user_input` tool for permission requests or permission-related escalations.\n\nIf explicit user input is required for another reason before progress can safely continue, do not use the `request_user_input` tool. Ask the user directly with one concise plain-text question instead. Never write a multiple choice question as a textual assistant message.\n"
+          }
+        },
+        "multi_agent_version": "v2",
+        "realtime_active": false,
+        "effort": "xhigh",
+        "summary": "none"
+      }
+    }
+  },
+  "old_ops_startup_argv_model": "gpt-6-astra",
+  "ops_same_uuid_idle_args_hash_refresh_pending": true,
+  "old_brain_controller_terminal": true,
+  "finished_learner_231301": {
+    "state": "done",
+    "rc": 0,
+    "finished": "2026-10-12T23:26:33.731506",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741",
+    "pid": 853569
+  },
+  "learning_request_preserved": {
+    "state": "blocked",
+    "revision": 2,
+    "batch": "20261012-231301-strategy-proposal",
+    "attempts": [
+      "20261012-212420-strategy-proposal",
+      "20261012-213848-strategy-proposal",
+      "20261012-231301-strategy-proposal"
+    ]
+  },
+  "inactive_role_coverage": "source sandbox 3410 + host112 + launcher15 + handoff16; no fake study launched",
+  "all_startup_process_refresh_complete": false
+}

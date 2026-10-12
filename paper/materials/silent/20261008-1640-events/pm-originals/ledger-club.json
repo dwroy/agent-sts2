@@ -1,0 +1,182 @@
+[
+ {
+  "id": "silent-0121",
+  "ts": "2026-10-05T22:02:24+08:00",
+  "character": "silent",
+  "kind": "fight",
+  "claim": "铁棒与沙漏的出牌触发在同一步发生时，出牌前持有的凋萎不能代表最后持牌伤。第6次T7斗篷后抽牌堆18→17、凋萎1→3张，各9伤，新增18持牌伤；末11挡对21攻击及27持牌伤需损37，26血不足。未拆分两张来源，也无替代顺序胜局，不认定另一出牌必胜。",
+  "evidence": [
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 48,
+    "turn": 7,
+    "note": "13:22:01.018Z斗篷前26血0挡、抽牌18、一张9伤凋萎；13:22:02.972Z后6挡、抽牌17、三张凋萎。终线26血11挡预计剩−11，实际死亡、敌剩235。",
+    "role": "support",
+    "added": "2026-10-05T22:02:24+08:00"
+   }
+  ],
+  "first_run": "SADL3CGYTGSR",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "账本以铁棒/IRON_CLUB及凋萎/WITHER检索，更早静默复盘没有铁棒同场触发的可比局面；已有一般凋萎伤害机制0024，未将它当成已学过本组合。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "SADL3CGYTGSR"
+   ],
+   "experience": [
+    "silent-iron-club-four-card-draw"
+   ],
+   "commits": [
+    "0071cc6a86f7674b91439d13ee99e5c117dc3f34",
+    "6c4a855811c5ded1ddf94e264855f85a0bae4522",
+    "256b0eee715750c1851f85274885a0770c85977f"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第二十三次增量：1 局 A7（version 2026-10-05.23，分支 exp-silent，0071cc6a）"
+   ]
+  },
+  "asc": 7,
+  "history": [
+   {
+    "ts": "2026-10-05T22:02:24+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T22:30:45+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T23:03:33+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp23",
+  "effect": null,
+  "notes": [
+   "静默经验.23：SADL3CGYTGSR A7及旧29局重新抽取、逐行复算；机制/观察、理论需损/死亡截断、已结算毒/未结算层数分账。仅proposed，实际合入交运维按完成事件核实登记shipped；保留旧first_run/prior。",
+   "22:40 experience-done实际上线兜底：经验.23源0071cc6a两轮177文件2012例/tsc0，七项在线知识刷新f72d687f保留、decision-log双方历史保留后实际合入6c4a8558，合后固定沙箱178文件2013例/tsc0无失败或重跑，发布256b0eee及main同步0f08dd3d。按已实际合入登记、不另设审核；完整外部learner-recheck 20261005-220458-experience-update已请求待后续事件，旧成本fix检查不冒记本批通过，原冲突/失败历史保留。只登记学习者已有映射，不添证据或重置0114/0115独立链。"
+  ],
+  "shipped_at": "2026-10-05T23:03:33+08:00"
+ },
+ {
+  "id": "silent-0122",
+  "ts": "2026-10-05T22:02:24+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "铁棒IRON_CLUB在本局每累计打4张牌抽1张，计数跨回合。沙漏末次T1第4张后抽牌堆29→28，第8张早有准备完成自身抽弃后24→23；T6末累计23，T7斗篷第24张使18→17。该步凋萎1→3张，与6牌门槛相遇；没有独立拆开两张各自来源，不外推其他抽牌遗物。",
+  "evidence": [
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 34,
+    "turn": 0,
+    "note": "event/act-plan选择铁棒，原选项明确每打4张牌抽1张。",
+    "role": "support",
+    "added": "2026-10-05T22:02:24+08:00"
+   },
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 48,
+    "turn": 1,
+    "note": "第6次13:20:41.413Z累计3张、抽牌29；13:20:43.203Z累计4张、抽牌28；第8张早有准备后选牌帧抽牌24，完成后23。",
+    "role": "support",
+    "added": "2026-10-05T22:02:24+08:00"
+   },
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 48,
+    "turn": 7,
+    "note": "前6轮实打数量8/2/2/5/2/4，累计23；斗篷第24张后抽牌18→17、凋萎1→3，新增18持牌伤。",
+    "role": "support",
+    "added": "2026-10-05T22:02:24+08:00"
+   },
+   {
+    "run": "T0DGVABPV60U",
+    "role": "support",
+    "note": "本批本角色实帧/复盘复核支持silent-iron-club-four-card-draw；逐回合、血档及SL数据在20261008-130540审计，观察与整战因果分开。",
+    "added": "2026-10-08T13:16:50+08:00"
+   }
+  ],
+  "first_run": "SADL3CGYTGSR",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按铁棒、IRON_CLUB、IRON_BAR检索静默账本并查更早静默复盘，未见已观察的同遗物累计抽牌时序；本局首见可核对场景。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "SADL3CGYTGSR"
+   ],
+   "experience": [
+    "silent-iron-club-four-card-draw"
+   ],
+   "commits": [
+    "0071cc6a86f7674b91439d13ee99e5c117dc3f34",
+    "6c4a855811c5ded1ddf94e264855f85a0bae4522",
+    "256b0eee715750c1851f85274885a0770c85977f",
+    "3bda3841756ba293f34b197542e6e9bee4dc1ed9",
+    "cfe666e2b23f85fe37215c44846b68fb5f12f3fa",
+    "f4c35b907643239ac7169a739f4baa3934103bff",
+    "be1408453ff2ae5facade7f2d78e2efeba40e641"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第二十三次增量：1 局 A7（version 2026-10-05.23，分支 exp-silent，0071cc6a）",
+    "## 2026-10-08 静默猎手 第九十七次增量：1 局 A10（version 2026-10-08.14，分支 exp-silent，3bda3841）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update/proposal-draw-growth.md"
+   ]
+  },
+  "asc": 7,
+  "history": [
+   {
+    "ts": "2026-10-05T22:02:24+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T22:30:45+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T23:03:33+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T13:16:50+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T13:16:52+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T13:22:36+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T13:32:09+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp97",
+  "effect": null,
+  "notes": [
+   "静默经验.23：SADL3CGYTGSR A7及旧29局重新抽取、逐行复算；机制/观察、理论需损/死亡截断、已结算毒/未结算层数分账。仅proposed，实际合入交运维按完成事件核实登记shipped；保留旧first_run/prior。",
+   "22:40 experience-done实际上线兜底：经验.23源0071cc6a两轮177文件2012例/tsc0，七项在线知识刷新f72d687f保留、decision-log双方历史保留后实际合入6c4a8558，合后固定沙箱178文件2013例/tsc0无失败或重跑，发布256b0eee及main同步0f08dd3d。按已实际合入登记、不另设审核；完整外部learner-recheck 20261005-220458-experience-update已请求待后续事件，旧成本fix检查不冒记本批通过，原冲突/失败历史保留。只登记学习者已有映射，不添证据或重置0114/0115独立链。",
+   "第97批经验提交前关联；保留首证/prior/claim/支持与重犯及既往上线历史，源提交后登记proposed。",
+   "代码提案 silent-proposal-e406c9312e1c329a → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第97批源提交完成；保留首证/prior/claim/support/repeat和旧上线历史，经验发布与策略实现分账，shipped交运维据实际live版本登记。",
+   "第97次经验原数据2026-10-08.13→.14/增1改15退0/176 active，源3bda3841唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记19所属经验数据shipped。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，四个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0293纯bug保持原观察/提案状态，不标代码实现；0294首证ZE8F192FKX24/A5及unknown先验保持。"
+  ],
+  "shipped_at": "2026-10-08T13:32:09+08:00"
+ }
+]

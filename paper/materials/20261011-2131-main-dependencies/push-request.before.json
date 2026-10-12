@@ -1,0 +1,29 @@
+{
+  "request_id": "roy-20261011-core-cycle-main-and-push",
+  "parent_request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+  "authorized_by": "Roy",
+  "authorization": "在看看完成了吗？ 完成了把所有改动合并进入main 然后推送",
+  "created_at": "2026-10-11T21:30:47+08:00",
+  "state": "waiting_for_completion_acceptance",
+  "scope": "本次已授权升级相关全部完成且验证的改动，保留main独有修改、live刷新及并行记录；不混入未完成/失败/无关工作树",
+  "owner": "original ops workflow",
+  "completion_condition": "按原task.md完整交付判据验收；不能以通用框架上线或入口适配完成替代正式学习、核心资格/数量、覆盖表和消费校准。main自身集成作为最终交付步骤，入口依赖同步沿已授权原流程推进。",
+  "authorized_delivery": [
+    "核验已完成固定源及最终集成树，完成必要检查和gitleaks",
+    "将本次全部完成改动安全集成到main，保留双方独有代码及记录",
+    "通过Windows ssh.exe推送origin/main，并核对远端SHA；不用upstream、不force push",
+    "保存main提交、测试/扫描、实际push及远端SHA回执，再报告交付完成"
+  ],
+  "reconfirmation_required": false,
+  "observed_at": "2026-10-11T21:30:47+08:00",
+  "observed_main": "0e76d455430782373f85d4bbbeda17cedbfc7209",
+  "observed_live": "af11d9bd86745326625efab90078352b9740fc93",
+  "observed_incomplete": [
+    "入口source fc95760d4 已合live af11d9bd8，204636批合后整套检查尚在运行，最终回报未返回",
+    "main当前无量化源码，正式量化学习batch仍未建立",
+    "coverage/条件经验、完整组合次数与真实校准未完成",
+    "current-tree host补验排队；自然局仍是发布前SB5进程"
+  ],
+  "merge_or_push_performed_by_this_check": false,
+  "no_duplicate_learner_or_new_scheduler": true
+}

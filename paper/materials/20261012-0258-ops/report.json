@@ -1,0 +1,41 @@
+{
+  "task": "fix-batch",
+  "base": "d39eb1db3101bc480271fe31c9dcc5b7129cca54",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "机制、出牌、药水、SL、终局、路线及休息的剩余提案",
+      "reason": "策略类：沿原有strategy-proposal及共享租约处理；已发布子范围不等于宽提案全部完成，本批不补开发者游戏知识。"
+    },
+    {
+      "item": "silent-0332双boss接续资源异常根因",
+      "reason": "证据不足：诊断子项已在当前代码，仍缺触发seed及首战末资源，不猜填HP或药水。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2历史失败恢复",
+      "reason": "证据不足：保存stderr的修复5c92f2aa已在；历史回执仍无stderr和未发送证明，未重发。"
+    },
+    {
+      "item": "sandbox-glob-startup-race上游目录竞态",
+      "reason": "证据不足：会话前有界恢复bc2c40e31已上线，目录实际创建/删除者及自然恢复仍未证。"
+    },
+    {
+      "item": "调度公平性、mod短暂请求超时",
+      "reason": "证据不足：原队列未证永久饥饿或mod内部根因，不更改调度策略。"
+    },
+    {
+      "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression、B4/B5、缓存和性能实测",
+      "reason": "太大/独立功能及策略研究：保留原专用任务，不混入本次纯bug批次。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 10,
+    "cases": 80
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-024302/learner/runs/20261012-024310-fix-batch/report.md"
+}

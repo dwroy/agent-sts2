@@ -1,0 +1,8 @@
+from pathlib import Path
+import subprocess,json,hashlib
+r=Path.cwd();o=r/'paper/materials/20261011-2131-main-dependencies';c=json.load(open(o/'candidate.json'));candidate=c['candidate'];g=lambda *a:subprocess.check_output(['git',*a]);assert g('branch','--show-current').strip()==b'main';assert not g('diff','--cached','--name-only').strip()
+head=g('rev-parse','HEAD').decode().strip();assert head==c['base_main'],'main changed; no unsafe overwrite'
+changed=g('diff','--name-only',head,candidate).decode().splitlines();dirty=g('diff','--name-only').decode().splitlines();assert not set(changed)&set(dirty),'dirty incoming overlap';assert not g('ls-files','--others','--exclude-standard','--',*changed).strip(),'untracked incoming overlap'
+before={p:hashlib.sha256((r/p).read_bytes()).hexdigest() for p in dirty if (r/p).is_file()};p=subprocess.run(['git','merge','--ff-only',candidate],capture_output=True);(o/'main-merge.log').write_bytes(p.stdout+p.stderr);assert p.returncode==0,p.stderr
+assert all(hashlib.sha256((r/p).read_bytes()).hexdigest()==h for p,h in before.items()),'parallel dirty bytes changed'
+now=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();(o/'main-merged.json').write_text(json.dumps({'at':now,'before':head,'main':candidate,'preserved_dirty_files_sha256':before,'changed_paths':changed,'not_pushed':True,'parent_acceptance_incomplete':True},indent=2)+'\n');print('MAIN MERGED',candidate)

@@ -1,0 +1,52 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "CMS8QL9E3C5U"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "CMS8QL9E3C5U",
+      "where": "agent/src/hand/screens/selection.ts:971",
+      "what": "自动弃牌消费未计施毒效果的评分，把两张可打的蛇咬判为本回合无价值；新定位，回溯较早致命毒药同类动作。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0425",
+      "silent-0426",
+      "silent-0427"
+    ],
+    "updated": [
+      "silent-0205",
+      "silent-0019",
+      "silent-0005",
+      "silent-0030",
+      "silent-0220",
+      "silent-0248",
+      "silent-0207",
+      "silent-0262",
+      "silent-0196",
+      "silent-0242",
+      "silent-0162",
+      "silent-0243"
+    ],
+    "repeats": [
+      "silent-0205"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-54bd844abc57bb62",
+    "silent-proposal-623e76fd888c8016",
+    "silent-proposal-998b027558cf201b"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261012-101301-postmortem/report.md"
+}

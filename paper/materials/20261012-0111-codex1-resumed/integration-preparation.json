@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-12 01:15:40 CST",
+  "base": "079dc2f156601556d48727cb14ad48fb95994afd",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-resume-20261012-0111",
+  "method": "apply only immutable source commit parent-to-commit delta; no entire branch ancestry merge",
+  "sources": [
+    {
+      "source": "2b09c47d431a580e9955d157f4dfb0e576186206",
+      "patch_sha256": "134d5332331027876e402ae2d457c70a9cc25010340511bd76efff9cb47d7dac",
+      "paths": [
+        "agent/tests/calibration-dispatch-fixtures.test.ts",
+        "ops/tests/test_silent_calibration_dispatch.py"
+      ],
+      "apply_exit": 0,
+      "output": "Falling back to direct application...\nApplied patch to 'ops/tests/test_silent_calibration_dispatch.py' cleanly.\n"
+    },
+    {
+      "source": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+      "patch_sha256": "b70d8b343212227fa63c3b01b10dce784b19384fae7bdf1084e6a18e62315c76",
+      "paths": [
+        "agent/tests/learner-check-continuation.test.ts",
+        "docs/host-check-continuation.md",
+        "ops/codex-ops-actions.sh",
+        "ops/codex-ops-do.sh",
+        "ops/codex-ops-learn.py",
+        "ops/codex/lib.ts",
+        "ops/learner_check_continuation.py",
+        "ops/learner_checks.py",
+        "ops/tests/test_learner_check_continuation.py"
+      ],
+      "apply_exit": 0,
+      "output": "Falling back to direct application...\nFalling back to direct application...\nApplied patch to 'ops/codex-ops-actions.sh' cleanly.\nApplied patch to 'ops/codex-ops-do.sh' cleanly.\nApplied patch to 'ops/codex-ops-learn.py' cleanly.\nApplied patch to 'ops/codex/lib.ts' cleanly.\nFalling back to direct application...\nApplied patch to 'ops/learner_checks.py' cleanly.\nFalling back to direct application...\n"
+    },
+    {
+      "source": "bc2c40e313cc36682196277c53c50e30744b88c5",
+      "patch_sha256": "372935932a9c505c391c9a0c93de9fa541901877204419e98e56ca03195970b8",
+      "paths": [
+        "agent/tests/learner-startup-recovery.test.ts",
+        "learner/lib/launcher.ts",
+        "learner/lib/startup-recovery.ts",
+        "ops/codex-ops-learner.sh"
+      ],
+      "apply_exit": 0,
+      "output": "Falling back to direct application...\nApplied patch to 'learner/lib/launcher.ts' cleanly.\nFalling back to direct application...\nApplied patch to 'ops/codex-ops-learner.sh' cleanly.\n"
+    },
+    {
+      "source": "3596d1a2a832c31abb9d6d8a50a68103ac052554",
+      "patch_sha256": "7eb1fc2dfacf2119cde462599211c786530c34b86195a92896af9b5af51e97cc",
+      "paths": [
+        "agent/src/hand/screens/selection.ts",
+        "agent/src/hand/screens/silent-smoggy-selection.ts",
+        "agent/tests/silent-smoggy-selection-evidence.json",
+        "agent/tests/silent-smoggy-selection.test.ts"
+      ],
+      "apply_exit": 1,
+      "output": "Applied patch to 'agent/src/hand/screens/selection.ts' with conflicts.\nFalling back to direct application...\nFalling back to direct application...\nFalling back to direct application...\nU agent/src/hand/screens/selection.ts\n"
+    },
+    {
+      "source": "c04da0668154abda77278bf614c7e96090297248",
+      "patch_sha256": "af81d33e7a720d172618673aefc622918a387915890c00cb73f457ea8378cfd3",
+      "paths": [
+        "knowledge/characters/silent/experience.json"
+      ],
+      "apply_exit": 0,
+      "output": "Applied patch to 'knowledge/characters/silent/experience.json' cleanly.\n"
+    }
+  ],
+  "conflict_resolution": "selection.ts既有removes_planned_continuation与源smoggy_after_discard逐行并存，无学习者之外的规则或参数改动"
+}

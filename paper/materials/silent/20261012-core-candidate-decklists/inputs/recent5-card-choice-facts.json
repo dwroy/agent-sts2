@@ -1,0 +1,830 @@
+{
+  "at": "2026-10-12T13:11:54+08:00",
+  "frozen_window": "最近5个已结束的Silent对局，按13:07所见runs.jsonl冻结；当前KF9HMZKTFC3V未计入",
+  "scope": "只读行为审计，不添加牌值/打法结论，不派任务/改知识/运行游戏",
+  "counting": {
+    "reward": "71个accepted Codex答案全部逐顺序/楼层/选项匹配到completed动作；事件选择新牌和商店购牌另计。",
+    "draw": "按本题可见牌文包含实际抽牌/换手效果统计，含延迟抽牌和持续抽弃；不把速行者/腐蚀波的抽牌触发、子弹时间禁抽、华丽收场抽牌堆条件当抽牌效果。不是净赚牌/强度或应拿率。",
+    "removal": "付费移除需remove_card_at_shop、后续selection/remove完成及牌组减少一致；事件融合、变换和战斗/宝箱变化分开。"
+  },
+  "totals": {
+    "reward_questions": 71,
+    "reward_takes": 65,
+    "reward_skips": 6,
+    "reward_take_pct": 91.5,
+    "draw_offered_questions": 40,
+    "draw_selected_rewards": 14,
+    "shop_visits": 11,
+    "affordable_removal_visits": 9,
+    "paid_removals": 2
+  },
+  "runs": [
+    {
+      "run_id": "N1ZEBMHZM4KC",
+      "end_ts": "2026-10-11T14:32:23.350Z",
+      "floor": 21,
+      "final_deck_size": 23,
+      "reward_take": 9,
+      "reward_skip": 2,
+      "draw_offer_questions": 6,
+      "draw_selected_rewards": [
+        {
+          "floor": 5,
+          "name": "逃脱计划",
+          "reason": "Escape Plan cycles freely and offers useful block with eight skills. The alternatives consume energy without solving our damage or scaling needs.",
+          "brain_offset": 421142275
+        }
+      ],
+      "shop_visits": 1,
+      "affordable_removal_visits": 1,
+      "paid_removal_actions": 0,
+      "reward_execution_pairs": [
+        {
+          "brain_offset": 421034632,
+          "decision_offset": 996682888,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421066976,
+          "decision_offset": 996779907,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421091587,
+          "decision_offset": 996831161,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421116856,
+          "decision_offset": 996904241,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421142275,
+          "decision_offset": 996967872,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421258514,
+          "decision_offset": 997097843,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421321294,
+          "decision_offset": 997205078,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421416886,
+          "decision_offset": 997350257,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421471055,
+          "decision_offset": 997551640,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421527036,
+          "decision_offset": 997670084,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421566655,
+          "decision_offset": 997785270,
+          "choice_action_match": true
+        }
+      ]
+    },
+    {
+      "run_id": "C7GNN3DDFUFY",
+      "end_ts": "2026-10-12T00:28:03.427Z",
+      "floor": 33,
+      "final_deck_size": 33,
+      "reward_take": 13,
+      "reward_skip": 0,
+      "draw_offer_questions": 7,
+      "draw_selected_rewards": [
+        {
+          "floor": 2,
+          "name": "猎杀者",
+          "reason": "Predator adds essential early damage and next-turn draw; the defensive options leave this starter deck too slow.",
+          "brain_offset": 421638272
+        },
+        {
+          "floor": 9,
+          "name": "早有准备",
+          "reason": "Prepared provides free Bandages block and filters Wounds. Its upgrade strengthens both benefits; simulations omit Bandages.",
+          "brain_offset": 421913935
+        },
+        {
+          "floor": 17,
+          "name": "肾上腺素",
+          "reason": "Adrenaline supplies free energy and draw, supporting expensive cards while increasing Storm of Steel’s hand size and Bandages defense.",
+          "brain_offset": 422317617
+        }
+      ],
+      "shop_visits": 4,
+      "affordable_removal_visits": 3,
+      "paid_removal_actions": 0,
+      "reward_execution_pairs": [
+        {
+          "brain_offset": 421638272,
+          "decision_offset": 998179892,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421672795,
+          "decision_offset": 998289979,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421707289,
+          "decision_offset": 998426929,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421769518,
+          "decision_offset": 998902245,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421805689,
+          "decision_offset": 999072432,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 421913935,
+          "decision_offset": 999534073,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 422173977,
+          "decision_offset": 1000156034,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 422206982,
+          "decision_offset": 1000386452,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 422317617,
+          "decision_offset": 1001089612,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 422381915,
+          "decision_offset": 1001322317,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 422426395,
+          "decision_offset": 1001503712,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 422516037,
+          "decision_offset": 1002079307,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 422869258,
+          "decision_offset": 1002775492,
+          "choice_action_match": true
+        }
+      ]
+    },
+    {
+      "run_id": "F6XY4QJMS5RC",
+      "end_ts": "2026-10-12T01:09:11.356Z",
+      "floor": 33,
+      "final_deck_size": 30,
+      "reward_take": 15,
+      "reward_skip": 1,
+      "draw_offer_questions": 9,
+      "draw_selected_rewards": [
+        {
+          "floor": 11,
+          "name": "计算下注",
+          "reason": "Despite weaker boss simulations, Gamble filters Wounds and exploits unmodeled opening draw; logged outcomes support its long-term cycling value.",
+          "brain_offset": 423379747
+        },
+        {
+          "floor": 19,
+          "name": "后空翻",
+          "reason": "Backflip supplies needed reusable block and draw; Razor Tooth strengthens subsequent plays, while Echoing Slash already covers AoE.",
+          "brain_offset": 423695287
+        },
+        {
+          "floor": 21,
+          "name": "独门技术+",
+          "reason": "Upgraded draw and retention improve poison access, save defenses for dangerous turns, and support Cloak Clasp. Existing AoE makes Dagger Spray less urgent.",
+          "brain_offset": 423739311
+        }
+      ],
+      "shop_visits": 1,
+      "affordable_removal_visits": 1,
+      "paid_removal_actions": 1,
+      "reward_execution_pairs": [
+        {
+          "brain_offset": 423037636,
+          "decision_offset": 1006563774,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423071467,
+          "decision_offset": 1006747252,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423105399,
+          "decision_offset": 1006927972,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423292856,
+          "decision_offset": 1007499571,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423379747,
+          "decision_offset": 1007777191,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423477188,
+          "decision_offset": 1008059510,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423514593,
+          "decision_offset": 1008274561,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423546142,
+          "decision_offset": 1008437659,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423637952,
+          "decision_offset": 1008746201,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423695287,
+          "decision_offset": 1008828378,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423739311,
+          "decision_offset": 1008968911,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423784138,
+          "decision_offset": 1009200399,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423834149,
+          "decision_offset": 1009371232,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 423921646,
+          "decision_offset": 1009717164,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424133211,
+          "decision_offset": 1010223492,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424226675,
+          "decision_offset": 1010452265,
+          "choice_action_match": true
+        }
+      ]
+    },
+    {
+      "run_id": "CMS8QL9E3C5U",
+      "end_ts": "2026-10-12T01:42:09.661Z",
+      "floor": 23,
+      "final_deck_size": 24,
+      "reward_take": 10,
+      "reward_skip": 1,
+      "draw_offer_questions": 9,
+      "draw_selected_rewards": [
+        {
+          "floor": 6,
+          "name": "猎杀者",
+          "reason": "Predator adds immediate damage and much-needed draw to this starter-heavy deck; Horn Cleat supports its follow-up turn.",
+          "brain_offset": 424553601
+        },
+        {
+          "floor": 7,
+          "name": "投掷匕首",
+          "reason": "Dagger Throw provides affordable damage and filters surplus starters, helping find Footwork and Snakebite. The alternatives lack support.",
+          "brain_offset": 424593796
+        },
+        {
+          "floor": 11,
+          "name": "必备工具",
+          "reason": "Tools filters surplus starters to find poison and Footwork. Matriarch’s sleep provides setup time, and logged outcomes support its long-term value.",
+          "brain_offset": 424738717
+        },
+        {
+          "floor": 19,
+          "name": "投掷匕首+",
+          "reason": "Dagger Throw+ supplies efficient damage and filters surplus starters toward Footwork and poison, improving immediate consistency without adding another expensive attack.",
+          "brain_offset": 425086402
+        }
+      ],
+      "shop_visits": 0,
+      "affordable_removal_visits": 0,
+      "paid_removal_actions": 0,
+      "reward_execution_pairs": [
+        {
+          "brain_offset": 424415337,
+          "decision_offset": 1011438715,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424450615,
+          "decision_offset": 1011531854,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424517487,
+          "decision_offset": 1011731174,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424553601,
+          "decision_offset": 1011985739,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424593796,
+          "decision_offset": 1012274318,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424697611,
+          "decision_offset": 1012699149,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424738717,
+          "decision_offset": 1012917424,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424780507,
+          "decision_offset": 1013073535,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 424896489,
+          "decision_offset": 1013612934,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425030341,
+          "decision_offset": 1014257447,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425086402,
+          "decision_offset": 1014451252,
+          "choice_action_match": true
+        }
+      ]
+    },
+    {
+      "run_id": "PUY011SBWSSU",
+      "end_ts": "2026-10-12T03:08:25.775Z",
+      "floor": 48,
+      "final_deck_size": 38,
+      "reward_take": 18,
+      "reward_skip": 2,
+      "draw_offer_questions": 9,
+      "draw_selected_rewards": [
+        {
+          "floor": 14,
+          "name": "肾上腺素",
+          "reason": "Adrenaline supplies free energy and draw, improving poison setup and access to defense. Strong immediate value and lasting utility.",
+          "brain_offset": 425756038
+        },
+        {
+          "floor": 39,
+          "name": "杂技",
+          "reason": "Acrobatics improves access to poison and defense, enables Sly discards, and draws before Bullet Time.",
+          "brain_offset": 426753444
+        },
+        {
+          "floor": 46,
+          "name": "逃脱计划",
+          "reason": "Free cycling and conditional Dexterity-scaled block suit this skill-heavy deck. Tuning Fork adds value; manage first-phase Enrage and draw before Bullet Time.",
+          "brain_offset": 427187332
+        }
+      ],
+      "shop_visits": 5,
+      "affordable_removal_visits": 4,
+      "paid_removal_actions": 1,
+      "reward_execution_pairs": [
+        {
+          "brain_offset": 425313626,
+          "decision_offset": 1015320962,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425347649,
+          "decision_offset": 1015511186,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425382066,
+          "decision_offset": 1015847969,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425417441,
+          "decision_offset": 1016164635,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425590591,
+          "decision_offset": 1016690693,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425698889,
+          "decision_offset": 1017047294,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425756038,
+          "decision_offset": 1017375487,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425882215,
+          "decision_offset": 1018642658,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425943679,
+          "decision_offset": 1018787983,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 425987723,
+          "decision_offset": 1019102163,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 426031298,
+          "decision_offset": 1019372477,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 426065460,
+          "decision_offset": 1019637902,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 426335389,
+          "decision_offset": 1020035145,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 426472724,
+          "decision_offset": 1020607924,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 426549877,
+          "decision_offset": 1020854251,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 426647897,
+          "decision_offset": 1021193002,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 426695382,
+          "decision_offset": 1021713892,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 426753444,
+          "decision_offset": 1022213485,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 427135691,
+          "decision_offset": 1022783938,
+          "choice_action_match": true
+        },
+        {
+          "brain_offset": 427187332,
+          "decision_offset": 1023218813,
+          "choice_action_match": true
+        }
+      ]
+    }
+  ],
+  "other_deck_actions": [
+    {
+      "run": "CMS8QL9E3C5U",
+      "floor": 22,
+      "kind": "fusion",
+      "observed": "两张DEFEND_SILENT移除、随后加入一张ULTIMATE_DEFEND，净减1，不算两次普通删牌。",
+      "executed_remove_offsets": [
+        1014588363,
+        1014589878
+      ],
+      "non_dispatched_duplicate_offset": 1014591394
+    },
+    {
+      "run": "PUY011SBWSSU",
+      "floor": 23,
+      "kind": "transform",
+      "observed": "主动变换一张打击，实际得到必备工具，牌数不变。",
+      "decision_offsets": [
+        1019717344,
+        1019733907
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "run_id": "C7GNN3DDFUFY",
+      "floor": 31,
+      "label": "shop/plan",
+      "brain_offset": 422912847,
+      "brain_sha256": "3de3b43f98338f23b2117b4e3a8a4438d8873bea4277eda9b2c0fcb864dd1538",
+      "answer": {
+        "plan": [
+          "buy_card0",
+          "buy_card3",
+          "buy_card4",
+          "buy_card2",
+          "buy_card6",
+          "buy_potion1"
+        ],
+        "reason": "Dagger Throw and Tactician support Bandages; Footwork, Wail, and Iron Heart protect setup. Golden Axe scales with shiv-heavy turns. Total: 451 gold."
+      }
+    },
+    {
+      "run_id": "C7GNN3DDFUFY",
+      "floor": 21,
+      "label": "shop/plan",
+      "brain_offset": 422475015,
+      "brain_sha256": "7f75fce3541ab9ff6ee1edd6168d699e5a4a7b77baf0ed55a2c15c50d50f70f3",
+      "answer": {
+        "plan": [
+          "buy_potion2",
+          "buy_potion1"
+        ],
+        "reason": "At 12 HP before a mandatory fight, prioritize regeneration and a free power for immediate survival. Spend 128 gold; defer removals and scaling purchases."
+      }
+    },
+    {
+      "run_id": "F6XY4QJMS5RC",
+      "floor": 3,
+      "label": "reward/card",
+      "brain_offset": 423071467,
+      "brain_sha256": "33f7369916bc5ad6e2bb65603e7d220b2040db1a078085a6e2901e48a4f087eb",
+      "answer": {
+        "choice": "card0",
+        "reason": "Dash adds immediate damage and reliable block for early elites; this mostly-basic deck needs stronger plays before additional draw.",
+        "route": "keep"
+      }
+    },
+    {
+      "run_id": "F6XY4QJMS5RC",
+      "floor": 11,
+      "label": "reward/card",
+      "brain_offset": 423379747,
+      "brain_sha256": "ce8a8b4258e2f8568fdbad774376d5c5d193e1bf94edc3adadb68c760a7ab245",
+      "answer": {
+        "choice": "card2",
+        "reason": "Despite weaker boss simulations, Gamble filters Wounds and exploits unmodeled opening draw; logged outcomes support its long-term cycling value.",
+        "route": "r11c3 r12c3 r13c4 r14c4 r15c3 r16c3",
+        "run_plan": {
+          "archetype": "Poison scaling with dexterity defense and selective cycling",
+          "want": [
+            "FOOTWORK",
+            "BACKFLIP",
+            "ACCELERANT",
+            "LEG_SWEEP",
+            "PIERCING_WAIL",
+            "NOXIOUS_FUMES"
+          ],
+          "avoid": [
+            "PHANTOM_BLADES",
+            "GRAND_FINALE",
+            "KNIFE_TRAP"
+          ],
+          "remove": [
+            "STRIKE_SILENT"
+          ],
+          "block_target": 9,
+          "elites": "normal",
+          "rest": "auto",
+          "boss_prep": "Strip Slippery with Mercury Hourglass and cheap attacks. Apply poison, maintain Weak, and prepare strong block or a defensive potion for Dismember.",
+          "summary": "Full HP supports smithing before one more Conch-assisted elite. Strengthen poison with dexterity, efficient block, and acceleration. Gamble away weak hands without sacrificing necessary defenses. Preserve boss HP and remove Strikes selectively."
+        }
+      }
+    },
+    {
+      "run_id": "F6XY4QJMS5RC",
+      "floor": 30,
+      "label": "shop/plan",
+      "brain_offset": 424181202,
+      "brain_sha256": "62fabcffd79946a250da06ded6f4cd53e90042ad02631c5b654131893c87776f",
+      "answer": {
+        "plan": [
+          "buy_card6",
+          "buy_relic0",
+          "buy_card2",
+          "buy_card3",
+          "remove:c0",
+          "buy_potion0",
+          "buy_potion2"
+        ],
+        "reason": "Boulder supplies scaling; Basin and Cloak strengthen defense. Gamble and Strike removal improve access. Both potions prepare for crabs; preserve 412 gold."
+      }
+    },
+    {
+      "run_id": "CMS8QL9E3C5U",
+      "floor": 22,
+      "label": "event/plan",
+      "brain_offset": 425206002,
+      "brain_sha256": "a61fe72ad6399a54814ce68ff6af0be55c2a30c6b2bd1bbc058d5e00c0bf64de",
+      "answer": {
+        "choice": "o1",
+        "reason": "Fused defense improves immediate survival and energy efficiency, supports double Footwork, and helps against Knowledge Demon’s three-card limit.",
+        "route": "keep",
+        "cards": [
+          "c5",
+          "c5"
+        ]
+      }
+    },
+    {
+      "run_id": "CMS8QL9E3C5U",
+      "floor": 22,
+      "label": "event/plan",
+      "brain_offset": 425241587,
+      "brain_sha256": "206878033332f1ac0c28e22f3b0590a2cd3426b06e5675bb719e074726d3d7be",
+      "answer": {
+        "choice": "o1",
+        "reason": "Ultimate Defend improves immediate survival and energy efficiency at 10 HP, while fitting Knowledge Demon’s three-card limit.",
+        "route": "keep",
+        "cards": [
+          "c5",
+          "c5"
+        ]
+      }
+    },
+    {
+      "run_id": "PUY011SBWSSU",
+      "floor": 15,
+      "label": "selection/add",
+      "brain_offset": 425814575,
+      "brain_sha256": "119a19f095e2c3e68a88ba6e0073aa95eaff0404d21111f6f5b4932da5946d19",
+      "answer": {
+        "choice": "card3",
+        "reason": "Backflip adds needed defense and draw, improves poison consistency, and shows the strongest boss progress. Extra attacks are redundant."
+      }
+    },
+    {
+      "run_id": "PUY011SBWSSU",
+      "floor": 23,
+      "label": "event/plan",
+      "brain_offset": 426112497,
+      "brain_sha256": "9f3986e795348664bd160c417b2626059a04d0a1b8f4f9a673525025c73f8c52",
+      "answer": {
+        "choice": "o1:c0",
+        "reason": "Transform a redundant Strike for potential defense or scaling without adding recurring HP costs.",
+        "route": "keep"
+      }
+    },
+    {
+      "run_id": "PUY011SBWSSU",
+      "floor": 31,
+      "label": "shop/plan",
+      "brain_offset": 426381374,
+      "brain_sha256": "3414d31d9633844a064899cc92f4c03e3fe7dc395325168e3f7f1a9c91cee3df",
+      "answer": {
+        "plan": [
+          "buy_card4",
+          "buy_card3",
+          "buy_relic0",
+          "remove:c0",
+          "buy_potion2"
+        ],
+        "reason": "Footwork and Backflip strengthen defense; Pillow complements Tent. Remove a Strike, stock Block Potion, and preserve 214 gold for Act 3 scaling.",
+        "run_plan": {
+          "archetype": "Poison scaling with Dexterity, draw, and efficient block",
+          "want": [
+            "ACCELERANT",
+            "FOOTWORK",
+            "MIRAGE",
+            "PIERCING_WAIL",
+            "SHADOWMELD",
+            "BACKFLIP"
+          ],
+          "avoid": [
+            "GRAND_FINALE",
+            "KNIFE_TRAP",
+            "FINISHER",
+            "INFINITE_BLADES",
+            "ACCURACY"
+          ],
+          "remove": [
+            "STRIKE_SILENT"
+          ],
+          "block_target": 10,
+          "elites": "avoid",
+          "rest": "auto",
+          "boss_prep": "Upgrade Footwork and heal using Tent. Carry three potions; establish poison and Dexterity, and prioritize high-impact cards under Sloth.",
+          "summary": "Seek Accelerant to capitalize on existing poison. Improve defensive scaling and draw rather than adding ordinary attacks. Use Tent for healing and upgrades, remove Strikes, and preserve resources for Act 3."
+        }
+      }
+    },
+    {
+      "run_id": "PUY011SBWSSU",
+      "floor": 36,
+      "label": "event/choose",
+      "brain_offset": 426596107,
+      "brain_sha256": "303802e01a392ee89346165cc5a673f82d4b92755e003fe0310814921685f2ba",
+      "answer": {
+        "choice": "o0",
+        "reason": "The health buffer is essential before three forced fights; opening-draw relics soften the drawback.",
+        "route": "keep",
+        "run_plan": {
+          "archetype": "Accelerated poison with Dexterity defense and efficient discard",
+          "want": [
+            "ACCELERANT",
+            "OUTBREAK",
+            "FOOTWORK",
+            "SHADOWMELD",
+            "PIERCING_WAIL",
+            "MIRAGE"
+          ],
+          "avoid": [
+            "GRAND_FINALE",
+            "KNIFE_TRAP",
+            "FINISHER",
+            "INFINITE_BLADES",
+            "ACCURACY",
+            "DEADLY_POISON"
+          ],
+          "remove": [
+            "STRIKE_SILENT"
+          ],
+          "block_target": 11,
+          "elites": "avoid",
+          "rest": "auto",
+          "boss_prep": "Accelerated poison, scalable block, and three useful potions. Clear the skill-punishing opening phase quickly; rebuild poison after resets and preserve resources for boss two.",
+          "summary": "Keep the earliest campfire route. Use potions proactively through forced fights. Take healing and upgrades with Tent. Buy poison acceleration and defensive scaling, remove Strikes, and prepare for consecutive bosses."
+        }
+      }
+    },
+    {
+      "run_id": "PUY011SBWSSU",
+      "floor": 37,
+      "label": "reward/card",
+      "brain_offset": 426647897,
+      "brain_sha256": "c87b0a0861999e515cdbebcb77fcbd5734b92613e26926f52a7d50f48607e313",
+      "answer": {
+        "choice": "skip",
+        "reason": "Poison and Weak are already sufficient. These additions dilute access to Footwork, Mirage, and draw without solving sustained defense.",
+        "route": "keep"
+      }
+    }
+  ],
+  "assessment": [
+    "AI会用过牌找关键牌、为跳过奖励给出避免稀释的理由；实际奖励拿牌率91.5%。",
+    "商店9次付得起移除、只2次付费删打击；多次优先买组件、遗物或药水。CMS全局未遇到商店计划，不能当放弃付费删牌。",
+    "C7F31已有28张/492金/删牌100金，实际买5张牌和1药、不删；其理由重视绷带/小刀/防御协同。",
+    "PUYF36主动选大蘑菇（题面：每战开局少抽2、最大生命+20），当时31/60血、32张；理由优先后三场强制战的血量缓冲并认为开局抽牌遗物缓解代价。选项无可换算模拟，不将其作为更优或败因结论。",
+    "本窗口未做同状态完整对照；不认定高拿牌率或少删牌导致败局，不据此设牌数/过牌率/删牌配额。"
+  ],
+  "input_artifacts": {
+    "brain-choices.json": "f917ffaa9eb729fb63977bc2ce6c97755ca9516580e5cfc6ba258220218830a0",
+    "choice-states.json": "3b859525435e0db4f4888c0c161bb8d5d5ec963f1b6f20cbb54e0942864ef85e",
+    "deck-changes.json": "b2dd01ebf3c6d2c02c1de4681668c97dc1793641c0e3797642cf2f15c8bfe4df",
+    "executed-decisions.json": "02b45eb0b9e43b28ad05fa5674ed883a969debe04332463af64ef9dd62ca7530",
+    "first-last-decks.json": "8fce55270b682da0a273a4a793a9ac436b1c1c05194b49c5f39b24557b1d4d1b",
+    "manifest.json": "cd9ca70ce44d7fce7be2c6a98d7e8d57df61238d0dc683c81b93dd84a61ed1d2"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "at": "2026-10-12T13:40:47+08:00",
+  "head": "83512ddcd2c70fd9b983dc38524ff25c8970c1d3",
+  "base": "c425b7b7b36f4a7ca1532ca62a6b8dd7d1da2216",
+  "worktree_clean": true,
+  "sandbox": {
+    "rc": 0,
+    "sha256": "99cd4851469c575825bb761f6505e45c65a1c2a0e0643e38674f8ef06f38ac3a",
+    "cases": 3356,
+    "files": 335
+  },
+  "red_green": {
+    "removed_rc": 1,
+    "restored_rc": 0,
+    "restored_bytes_match": true
+  },
+  "consumer": {
+    "cli_exit_code": 0,
+    "actions": 232,
+    "segments": 58,
+    "terminal_pairs": 1,
+    "decision_line": 270441,
+    "hp_delta": -5,
+    "enemy_hp_delta": -24,
+    "displayed_attack_minus_block": 15,
+    "actual_uncapped_damage": null,
+    "run_verified": true
+  },
+  "merge": {
+    "source": "83512ddcd2c70fd9b983dc38524ff25c8970c1d3",
+    "live_initial": "eecdb847ff858a7026765eb5f15edd147cf7e7a1",
+    "status_before": " M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/fight-value.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+    "preserved_notes": {
+      "notes/fight-value-backtest-silent.md": "1d2da25bc9ffae8ad0e829a264fb5849430b4c31eb5dd137b6d2dfc9f476484b",
+      "notes/monster-db-check.md": "62e740bd2b34cf6e024fe7b78067eb136cc0088f49bc5ac17ac73b883d74125e"
+    },
+    "refreshed_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "refresh_commit": "05a9d85fb3e11d5100d658094df83c1bda649f7d",
+    "live_before_merge": "05a9d85fb3e11d5100d658094df83c1bda649f7d",
+    "source_paths": [
+      "agent/tests/silent-selection-terminal-evidence.json",
+      "agent/tests/silent-selection-terminal.test.ts",
+      "learner/lib/selection-execution.ts",
+      "learner/lib/selection-terminal.ts",
+      "learner/selection-execution.md"
+    ],
+    "refresh_overlap": [],
+    "preflight_rc": 1,
+    "status": "blocked_preflight_conflicts",
+    "conflicts": [
+      "eval/versions.json",
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "ops/inbox-dev.md",
+      "paper/materials/decision-log.md",
+      "paper/materials/experience-changelog-silent.md",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/silent/20261010-224307-boss-calibration-closeout/host-completion.json",
+      "paper/materials/silent/20261010-224307-boss-calibration-closeout/host-request.log"
+    ],
+    "merged": null,
+    "live_final": "05a9d85fb3e11d5100d658094df83c1bda649f7d",
+    "notes_unchanged": true
+  },
+  "source_sha256": {
+    "agent/tests/silent-selection-terminal-evidence.json": "18415e496c9c0d300ece0369e6b70b814388ffb1cd71fb1dc0dd50ff5ee42f08",
+    "agent/tests/silent-selection-terminal.test.ts": "fa18d072a1c72a6d1bafd15c3ca46fd97c426be0486077e4ef2cb7c69e34bc76",
+    "learner/lib/selection-execution.ts": "80d49bdaaad1fe2501f22fc25828a5925eaee134abab3091134dbe55ed653e7f",
+    "learner/lib/selection-terminal.ts": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+    "learner/selection-execution.md": "3d3fa02c7b83bea3a59b013e6dbbba253a0369069fb415e82d17c193aa521bdd"
+  }
+}

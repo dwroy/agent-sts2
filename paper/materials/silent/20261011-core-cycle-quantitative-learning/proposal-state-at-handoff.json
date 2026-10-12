@@ -1,0 +1,114 @@
+{
+  "at": "2026-10-11T20:15:18+08:00",
+  "proposals": [
+    {
+      "op": "add",
+      "id": "silent-proposal-9e1bc1225fae0e30",
+      "ts": "2026-10-10T17:01:57+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0376"
+      ],
+      "runs": [
+        "C48LLXBGKXQ9",
+        "ZZMYZ5UBCG72",
+        "LRN0HPZ0FZS1",
+        "KAY522KT5NXR",
+        "L704TLETMZBM",
+        "4Y94N8RDPGPM",
+        "KV0JHNJCKXLS",
+        "J8PHG72DGD90",
+        "49HL2N70CHMU"
+      ],
+      "source_task": "strategy-proposal",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "在既有静默方案事实中区分当轮预测攻防、现场已建能力与尚未发生后继，补到手/费用/封抽/额度/回返复制重放条件并标unknown；不按花完费用或持有组件认定收益，不改权重/固定顺序/SL/药价/终局或新架构。201局研究的局部原帧支持条件分账，A10零整胜；本批纯报告，后续消费者对照现有字段去重再固定验证。",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-164301/learner/runs/20261010-164314-strategy-proposal/proposal.md",
+      "experience": [],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "663b06fb0e50d24d8a1225e7c04e737c961000dcbbef7644471215a5f451515c",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-3dae3ca702a14057",
+      "ts": "2026-10-10T21:09:52+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0385"
+      ],
+      "runs": [
+        "54G5683J0E5S",
+        "4Y94N8RDPGPM",
+        "XTSV1U9JD34T",
+        "P5HT1272P5SB",
+        "53NU9DWSTG9H",
+        "49HL2N70CHMU",
+        "L704TLETMZBM",
+        "PU80F84P6HPN",
+        "J8PHG72DGD90",
+        "25226ZFLNR1J"
+      ],
+      "source_task": "strategy-proposal",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "有限回合核心输出事实分账：核永久/次轮副本/重放/持续触发的到手、支付、目标、额度与真实后继，不预支未到手效果；新增54G复制步法的跨轮兑现证据。与0376已有提案及当前源码去重，缺随机/反事实证据的预测留unknown，不设牌数/配比/牌序硬阈值。",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-205441/learner/runs/20261010-205451-strategy-proposal/proposal.md",
+      "experience": [],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "77a828dea1664ae9e6fc862151f380161901ebf0be47f06011ad83d6481bd79e",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-9e81dc5f9a4c3bd5",
+      "ts": "2026-10-11T18:08:38+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0021",
+        "silent-0114",
+        "silent-0140",
+        "silent-0141",
+        "silent-0194",
+        "silent-0374",
+        "silent-0376",
+        "silent-0385"
+      ],
+      "runs": [
+        "54G5683J0E5S",
+        "L704TLETMZBM",
+        "4Y94N8RDPGPM",
+        "XTSV1U9JD34T",
+        "P5HT1272P5SB",
+        "KV0JHNJCKXLS",
+        "J8PHG72DGD90",
+        "49HL2N70CHMU",
+        "PU80F84P6HPN"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "terminal"
+      ],
+      "summary": "0374/0376/0385综合入库补链：复用原两实现提案核有限窗口、复制与重放的实际兑现，revision3无限及删牌因果缺证不设规则",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-175453-experience-update/proposal-integration.md",
+      "experience": [
+        "silent-deck-burst-observation",
+        "silent-nightmare-next-turn-copies",
+        "silent-burst-next-skills-replay"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "feb0c6dce459bf2e65f38d03dc25449a5704167e30928799f67e9b36f140c118",
+      "state": "pending"
+    }
+  ]
+}

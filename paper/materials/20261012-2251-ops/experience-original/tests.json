@@ -1,0 +1,31 @@
+{
+  "tsc": 0,
+  "vitest": 0,
+  "exit": 0,
+  "files": 343,
+  "cases": 3410,
+  "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-221304-experience-update/test-source-isolated-retry.log",
+  "sha256": "a6d7a165ad36e94f34ba8120ca3803df4c419615072e7a6ab5a23b859991ca6a",
+  "rerun": true,
+  "initial_direct": {
+    "tsc": 0,
+    "vitest": 130,
+    "exit": 130,
+    "files": 0,
+    "cases": 0,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-221304-experience-update/test-source-direct.log",
+    "sha256": "5e8628836097e18d21686fd2ee69769e4a1aa57c30eb6a482943de60ae8f687b"
+  },
+  "initial_isolated": {
+    "tsc": 0,
+    "vitest": 124,
+    "exit": 124,
+    "files": 0,
+    "cases": 0,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-221304-experience-update/test-source-isolated.log",
+    "sha256": "c21ebc21c3efc445521b4567be5e5543175e9fa864104ca8baf182d9d3af3b13"
+  },
+  "experience_sha256": "304b181a7b4413f54bf66ae958e02f904acb4c277a2f8b2f6c421e2a1fce860d",
+  "entry": "1421份跟踪源码/任务文件逐SHA一致的隔离副本；原test-sandbox.sh、固定排除与60000预算未改。最终2 workers，TMPDIR限定本批，知识链接为同一最终经验。原树运行仅最终汇总输出且被主动中断130；隔离首轮1 worker达到外部600秒期限124；不把二者当代码断言失败。最终重跑日志与退出码单独保存。",
+  "host_full_suite": "实际合入后沿原experience-done/learner-checks"
+}

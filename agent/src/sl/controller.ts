@@ -58,7 +58,7 @@ export type { SlConfig };
 export type { SlEnv };
 
 /**
- * SL_RETRY_COMPUTE (docs/sl.md §10.3, Dai 2026-10-02: "compute more on retries"; +20-30 s a boss turn accepted earlier): the
+ * SL_RETRY_COMPUTE (docs/sl.md §10.3, Roy 2026-10-02: "compute more on retries"; +20-30 s a boss turn accepted earlier): the
  * rollout x3 samples with up to 20 s a question and 30 s a turn (notes/sl-retry-report.md §7, the real clock on 607 logged
  * A8+ boss and listed-fight death questions with a live game running: median 1.1 s, p90 9.9 s, 93% reach 24 samples x 5
  * turns against 70% reaching 8 x 5 on the usual 1.5 s; VNKN9952ZNA0 F25's Decimillipede 16-24 samples in 9-20 s against 1-4
@@ -218,7 +218,7 @@ export interface SlGate {
 }
 
 export const ACT3_LOW_HP_GATE = "act3-low-hp";
-/** SL_ACT2_LOW_HP's gate (Dai 2026-10-04): an act-2 fight with no boss entered below the line, as act 3's. */
+/** SL_ACT2_LOW_HP's gate (Roy 2026-10-04): an act-2 fight with no boss entered below the line, as act 3's. */
 export const ACT2_LOW_HP_GATE = "act2-low-hp";
 
 /** The act of a state, 1-based (act_id counts from 0; without a number there, by the floor: acts end on F17, F33, F48). */

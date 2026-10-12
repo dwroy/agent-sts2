@@ -110,7 +110,7 @@ B 和 A 不一致 6 题：q021、q077、q035、q065、q069、q053。C 和 A 不�
 - 已去掉的重复：系统提示里单独拼的攻略和手册（前缀旧知识块里整份都有）；memory.knowledge 里的经验条目（前缀有本进阶全部经验）。
 - 保留：memory.knowledge 里的选项结果统计行（卡牌/遗物/事件选项/休息点，前缀里只有休息点那部分，见下）；act、history、
   this_floor、route、lookahead 等其他段。
-- 列出但未删（待 Dai 定）：
+- 列出但未删（待 Roy 定）：
   1. memory.act（monster-db.ts actThreats/bossDossier）：本幕精英和危险小怪的血量、胜率、招式循环、boss 档案，
      和前缀的怪物块、遭遇战绩、精英/boss 战绩表是同一份怪物数据库的另一种写法（本幕子集）。q039 这一段 2,398 字。
   2. memory.lookahead 的 boss 要点（BOSS_NOTES）：和前缀经验库的 boss 条目、攻略里的 boss 段落内容重叠（手写摘要）。

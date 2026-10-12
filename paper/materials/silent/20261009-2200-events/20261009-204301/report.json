@@ -1,0 +1,43 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "54G5683J0E5S"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "54G5683J0E5S",
+      "where": "agent/src/reflex/rollout-live.ts:831",
+      "what": "组装师攻击召唤未接入五回合推演；活体召唤只读ILLUSION_MOVE",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0347",
+      "silent-0348"
+    ],
+    "updated": [
+      "silent-0020",
+      "silent-0125",
+      "silent-0005",
+      "silent-0013",
+      "silent-0046",
+      "silent-0233",
+      "silent-0162",
+      "silent-0312",
+      "silent-0259"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-43156dee9f23ae43",
+    "silent-proposal-4215d1a68ed970e6"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-204303-postmortem/report.md"
+}

@@ -1,0 +1,172 @@
+[
+  {
+    "name": "analyze-v1",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/analyze_history.py",
+    "exit_code": 1,
+    "source_snapshot": "revisions/analyze-v1-failed.py",
+    "source_sha256": "d2bb8ff1b1203dc17e3ca4f0b48a993def33c71506e520aa1308daf24cebd0a4",
+    "stdout": "analyze-v1.stdout",
+    "stderr": "analyze-v1.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "analyze-v2",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/analyze_history.py",
+    "exit_code": 0,
+    "source_snapshot": "revisions/analyze-v2.py",
+    "source_sha256": "deb96fa1bfe7f930ddfb31f7b8d0c95bc8139179e70860fc92504fb3878ba877",
+    "stdout": "analyze-v2.stdout",
+    "stderr": "analyze-v2.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "analyze-v3",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/analyze_history.py",
+    "exit_code": 0,
+    "source_snapshot": "revisions/analyze-v3.py",
+    "source_sha256": "aa2fe91d5d91daabfd388fe6a57a1c641182b4a6da877d9aa870c7f73fc71605",
+    "stdout": "analyze-v3.stdout",
+    "stderr": "analyze-v3.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "analyze-v4",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/analyze_history.py",
+    "exit_code": 0,
+    "source_snapshot": "revisions/pre-strict-d-analyze_history.py",
+    "source_sha256": "b641b5e1e8d4e88791f778295546e7eb9bbeb33bfc65bac4681d05f6a995469f",
+    "stdout": "analyze-v4.stdout",
+    "stderr": "analyze-v4.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "analyze-v5",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/analyze_history.py",
+    "exit_code": 0,
+    "source_snapshot": "analyze_history.py",
+    "source_sha256": "5e99a5d48c3a1c74dac93d34220fdcfc1aa145414b54760b3b2c401bc75afcb7",
+    "stdout": "analyze-v5.stdout",
+    "stderr": "analyze-v5.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "augment-v3",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/augment_endpoints.py",
+    "exit_code": 0,
+    "source_snapshot": "augment_endpoints.py",
+    "source_sha256": "200ac5093ca8a205c08e4a9444545439f64cc274ae3cb85e47f26609e923ee30",
+    "stdout": "augment-v3.stdout",
+    "stderr": "augment-v3.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "extract",
+    "command": "nice -n 10 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/extract_evidence.py",
+    "exit_code": 0,
+    "source_snapshot": "extract_evidence.py",
+    "source_sha256": "f47e9cee1d81d3a6b0ca631d8f592ab6a64bc8ec3a2160baa61cdbc1f91e44b9",
+    "stdout": "extract.stdout",
+    "stderr": "extract.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "ledger-add",
+    "command": "LEDGER_RUNS=/home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/frozen-runs-for-ledger.jsonl nice -n 10 python3 /home/dw/Projects/agent-sts2/learner/ledger.py add",
+    "exit_code": 0,
+    "source_snapshot": null,
+    "source_sha256": null,
+    "stdout": "ledger-add.stdout",
+    "stderr": "ledger-add.stderr",
+    "stdin": "ledger-add.jsonl"
+  },
+  {
+    "name": "ledger-update-d",
+    "command": "LEDGER_RUNS=/home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/frozen-runs-for-ledger.jsonl nice -n 10 python3 /home/dw/Projects/agent-sts2/learner/ledger.py update",
+    "exit_code": 0,
+    "source_snapshot": null,
+    "source_sha256": null,
+    "stdout": "ledger-update-d.stdout",
+    "stderr": "ledger-update-d.stderr",
+    "stdin": "ledger-update-d.json"
+  },
+  {
+    "name": "prepare-v2",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/prepare_tables_and_ledger.py",
+    "exit_code": 0,
+    "source_snapshot": "revisions/pre-strict-d-prepare_tables_and_ledger.py",
+    "source_sha256": "d3e44a4b7f9382792736bd9cc1225f4f7dfa23eca2e60f3d26f0304101255cfd",
+    "stdout": "prepare-v2.stdout",
+    "stderr": "prepare-v2.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "prepare-v3",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/prepare_tables_and_ledger.py",
+    "exit_code": 0,
+    "source_snapshot": "prepare_tables_and_ledger.py",
+    "source_sha256": "4eb5a55b42c7d1eb98db81ef82b2232146343ff01337a0d50a019634de84c2d8",
+    "stdout": "prepare-v3.stdout",
+    "stderr": "prepare-v3.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "prepare",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/prepare_tables_and_ledger.py",
+    "exit_code": 0,
+    "source_snapshot": "revisions/prepare-tables-and-ledger-v1.py",
+    "source_sha256": "deadd40abea7a9d9e1d80ebde9b062ee0a9e4c68bb0e5d898270a2f840d01f49",
+    "stdout": "prepare.stdout",
+    "stderr": "prepare.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "report-draft-v1",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/build_report.py",
+    "exit_code": 0,
+    "source_snapshot": "revisions/build-report-v1.py",
+    "source_sha256": "60eea3ac8fdc1475dd415fbf6b9e49b1cdf16b1e59fe0e86fce30936988d71d2",
+    "stdout": "report-draft-v1.stdout",
+    "stderr": "report-draft-v1.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "report-draft-v2",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/build_report.py",
+    "exit_code": 0,
+    "source_snapshot": "revisions/pre-strict-d-build_report.py",
+    "source_sha256": "048d7d023c46bb476aaa01672d42d61f5f73e6d4612f7fc9e8b0b7e4349ab12b",
+    "stdout": "report-draft-v2.stdout",
+    "stderr": "report-draft-v2.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "report-final-v2",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/build_report.py",
+    "exit_code": 0,
+    "source_snapshot": "build_report.py",
+    "source_sha256": "22b81d92a6476cf56729e5b13ab1f2791a74b197017f342278f91d5705823749",
+    "stdout": "report-final-v2.stdout",
+    "stderr": "report-final-v2.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "report-final",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/build_report.py",
+    "exit_code": 0,
+    "source_snapshot": "revisions/pre-strict-d-build_report.py",
+    "source_sha256": "048d7d023c46bb476aaa01672d42d61f5f73e6d4612f7fc9e8b0b7e4349ab12b",
+    "stdout": "report-final.stdout",
+    "stderr": "report-final.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  },
+  {
+    "name": "verify-v1",
+    "command": "nice -n 10 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-historical-core-builds/learner/runs/20261009-222803-silent-historical-core-builds/verify-evidence-v1.py",
+    "exit_code": 0,
+    "source_snapshot": "revisions/verify-evidence-v1.py",
+    "source_sha256": "b8a72b5282bc73021de04707e517a88a21a92c1f5a52f8557c9a6e233badf1a1",
+    "stdout": "verify-v1.stdout",
+    "stderr": "verify-v1.stderr",
+    "command_form": "canonical actual invocation; historical source preserved separately in source_snapshot"
+  }
+]

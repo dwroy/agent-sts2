@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：T0DGVABPV60U（A10，第48层，实验体 TEST_SUBJECT 第二阶段T5：16血0挡对11×4攻击阵亡，敌剩104/212血）。
+- 新的纯 bug：
+  - T0DGVABPV60U：螺线飞镖新增敏捷未进入同线推演，跨轮也漏清临时敏捷 — [turn-solver.ts:2433](/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/turn-solver.ts:2433)、[rollout.ts:1325](/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/rollout.ts:1325)（新）。
+- 写成「未记录」的项：完整dirty源码；SL截断结算；缺帧末击、个体杀序及毛伤；第三阶段与F49实盘；受控反事实、实际最优线执行比例；boss时钟需要／估计／实打比；Jev缓存。
+- 学习账本：T0DGVABPV60U：新增 silent-0293；更新 silent-0079、silent-0125（老错 silent-0079；silent-0125补support）；`ledger.py check`退出码0。
+- 代码提案：均关联独立 `strategy-proposal` 实现任务，尚未实现：
+  - F48T2/T4／silent-0293／silent-proposal-9c3554ff02a3119c：补螺线飞镖同线增敏及次轮失效。
+  - F48T2／silent-0079／silent-proposal-f35a311b35f2b12a：验证SL换掉扫腿的即时血价。
+  - F48T4／silent-0125／silent-proposal-4f7d4e424337cb58：验证护栏与炼制补药取舍。后两项缺受控胜线及随机产物数据，保留现行为。
+
+```json
+{"task":"postmortem","appended":["T0DGVABPV60U"],"skipped":[],"bugs":[{"run":"T0DGVABPV60U","where":"agent/src/reflex/turn-solver.ts:2433","what":"螺线飞镖的小刀新增临时敏捷未进同线求解，rollout.ts:1325也漏次轮清除","new":true}],"ledger":{"added":["silent-0293"],"updated":["silent-0079","silent-0125"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-9c3554ff02a3119c","silent-proposal-f35a311b35f2b12a","silent-proposal-4f7d4e424337cb58"],"implementation_domains":["combat","potion","sl"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-124302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a119d2-7139-7b12-a119-59aa2da9300e
+轮数：1；工具调用：command_execution×51
+token：输入 251.5k、输出 44.3k（其中推理 14.8k）、cache 读 5196.5k、cache 写 0（命中 95.4%）
+成本：未提供
+耗时：1354.5 s（墙钟）
+时间：首个事件 2.6 s、模型首个输出 7.9 s、首次工具 10.7 s、末次工具结束 1332.0 s；工具内共 71.6 s，其余（模型生成、推理、网络）1280.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×40；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T12-43-04-01a119d2-7139-7b12-a119-59aa2da9300e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-124302-postmortem.jsonl

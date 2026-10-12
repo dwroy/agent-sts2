@@ -1,0 +1,25 @@
+## 复盘回报
+
+- 已追加：47731LKMZRBJ（A10，第33层，无厌沙虫沙坑归零；T5以53血9挡结束仍阵亡，敌剩198血）。
+- 新的纯 bug：无。复现旧bug silent-0308 — agent/src/reflex/combat.ts:100（fix-queue-v4已有）。
+- 写成「未记录」的项：47731LKMZRBJ：运行源码SHA、推理全文、部分退出／结算帧、群攻内部死亡顺序、完整最优线执行比例、替线／用药／路线整战对照、有效boss时钟及比值、纯操作用时、Jev缓存与实际费用。
+- 学习账本：新增无；更新 silent-0308、silent-0117、silent-0232、silent-0018、silent-0016、silent-0253、silent-0278、silent-0007；老错为 silent-0308、silent-0117。`ledger.py check`退出码0。
+- 代码提案：以下均关联本局证据，交独立 `strategy-proposal`，尚未实现。
+  - `silent-proposal-ee4e3012ebfe746a`：F33T5／F23T3，账本0308／0018／0278；沙坑题面修正，药水与SL判定仍需验证。
+  - `silent-proposal-b3332868a7999ff9`：F33T3，账本0117／0018；弃牌后的逃离兑现，缺保留逃离的整战对照。
+  - `silent-proposal-5de4944c19bb860d`：F23两试T1—T3，账本0232／0253／0016／0007；柔嫩、敏捷和SL收益分账，不把局部增挡归为整场胜因。
+
+```json
+{"task":"postmortem","appended":["47731LKMZRBJ"],"skipped":[],"bugs":[{"run":"47731LKMZRBJ","where":"agent/src/reflex/combat.ts:100","what":"单动作题面漏接沙坑截止，预计剩44血却归零；silent-0308及fix-queue-v4已有","new":false}],"ledger":{"added":[],"updated":["silent-0308","silent-0117","silent-0232","silent-0018","silent-0016","silent-0253","silent-0278","silent-0007"],"repeats":["silent-0308","silent-0117"],"check":0},"code_proposals":["silent-proposal-ee4e3012ebfe746a","silent-proposal-b3332868a7999ff9","silent-proposal-5de4944c19bb860d"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261012-234301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a130c8-2267-7340-91b5-322dd25b6370
+轮数：1；工具调用：command_execution×51
+token：输入 221.7k、输出 34.8k（其中推理 7071）、cache 读 4094.0k、cache 写 0（命中 94.9%）
+成本：未提供
+耗时：1256.2 s（墙钟）
+时间：首个事件 10.9 s、模型首个输出 18.0 s、首次工具 24.4 s、末次工具结束 1234.3 s；工具内共 205.0 s，其余（模型生成、推理、网络）1040.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×30；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T23-43-04-01a130c8-2267-7340-91b5-322dd25b6370.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261012-234301-postmortem.jsonl

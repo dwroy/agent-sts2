@@ -1,0 +1,78 @@
+{
+ "id": "silent-0038",
+ "ts": "2026-10-05T03:47:25+08:00",
+ "by": "learner:experience-update",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "钗的格挡发生在回合开始，不能代替后续全部防御。机制：本局每回合起始7挡，与敏捷、卡牌格挡分别记；只验证此数值与时点。搭配：为毒雾/触媒建立期提供底挡，攻击超过总挡仍会掉血。决定胜负的战斗：A0实验体末线T6总挡30抵30，T7总挡25对40损15，T8总挡17对35损18，第三阶段仍死亡（n=1）。典型案例：T082DRCUHRRD F48/6 T7起7挡，末25挡，48→33；不能把钗7挡推成整场每回合零损。",
+ "evidence": [
+  {
+   "run": "T082DRCUHRRD",
+   "floor": 48,
+   "turn": 7,
+   "note": "钗在回合开始给7挡，末25对40，实损15。",
+   "role": "support",
+   "added": "2026-10-05T03:47:25+08:00"
+  },
+  {
+   "run": "ZVYUL2YP3518",
+   "floor": 49,
+   "turn": 8,
+   "role": "support",
+   "note": "实验体每次T1锚10+钗7起17挡，后续起7；末试T8两斗篷合20加起7得27，仍对55完整需损28，13血差15。只补钗时点和量，不把首轮锚当后续底挡。",
+   "added": "2026-10-07T00:01:48+08:00"
+  }
+ ],
+ "first_run": "T082DRCUHRRD",
+ "prior": "unknown",
+ "prior_note": "此前三局没有钗，本次首次可比机制；不能以选到遗物推断已理解。",
+ "status": "shipped",
+ "where": {
+  "experience": [
+   "silent-sai-start-block"
+  ],
+  "commits": [
+   "__COMMIT__",
+   "7c37095a2c77d579210790fe2c735e78f708a1e6",
+   "113c82ecfb44d1becbcd9a3f87529738cd287b8d",
+   "884c9f337d4300fb0bbae53d1764950a8f2c6ffc",
+   "3bca10b88a9abacf7370660e2695a0f820bd5c53"
+  ],
+  "changelog": [
+   "2026-10-05 静默猎手 第二次增量：2 局 A0（version 2026-10-05.2，分支 exp-silent，未提交（沙箱全量测试阻塞））",
+   "2026-10-07 静默猎手 第五十五次增量：1 局 A10（version 2026-10-07.1，分支 exp-silent，7c37095a）"
+  ],
+  "lessons": [
+   "ZVYUL2YP3518"
+  ]
+ },
+ "asc": 0,
+ "history": [
+  {
+   "ts": "2026-10-05T03:47:25+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T00:01:48+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T00:26:40+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T00:43:20+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp55",
+ "effect": null,
+ "notes": [
+  "静默经验2026-10-07.1：ZVYUL2YP3518 A10及本角色历史，技能激怒/能力、阶段清毒/能力保留、敏捷与被动挡、施毒/结算、路线/回复/SL观察分账；无新用药规则、无源码改动，仅proposed。首证/先验/claim/旧version/repeat保持，交运维核实际合入后CLI登记shipped。",
+  "00:40 experience-done机械确认20261007-000343-experience-update：源7c37095a→实际live113c82ec→固定发布884c9f33/唯一S1.exp55，main已同步经验2026-10-07.1及七份已测合前自动刷新。学习者依ZVYUL2YP3518 SILENT A10、敌人ID勘误及本角色历史更新21均补证，新增0退役0，active126/56138字，无新用药规则。源初轮及女王首试赢例四→五校正后定稿重跑、合后首轮均tsc0/vitest0、209文件2245例，非失败或超时重跑；预合并rc0、知识重叠/冲突0，其他知识blob保持。原临时机制抽数StopIteration、completed过滤丢pending及稳定帧修正、原第55节/22行proposed/回报/全部自测与旧压缩原文保存。仅CLI/by=ops登记本批22项shipped，首证/先验/claim/全部证据/repeat与旧上线历史保持。0196首证LRN0HPZ0FZS1/A0、prior=yes及既有shipped/exp54保持；0193 shipped/fix36、0195 shipped/fix37、0194 shipped/exp52及0172旧待修项保持。完整外部待本批learner-checks；无新纯bug或Roy待定，后台成本/收件箱/复盘与对局继续。"
+ ],
+ "shipped_at": "2026-10-07T00:43:20+08:00"
+}

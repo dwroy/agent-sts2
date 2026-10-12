@@ -1,0 +1,128 @@
+{
+  "recorded_at_cst": "2026-10-07 19:24",
+  "batch": "20261007-184216-ascension-audit",
+  "engine_exit": 0,
+  "scheduler_status": "failed",
+  "audit_request_status": "exhausted",
+  "attempts": 3,
+  "batch_snapshot": {
+    "task": "ascension-audit",
+    "learner_task": "ascension-audit",
+    "character": "silent",
+    "runs": [
+      "MGA0CZDDKC0P",
+      "25226ZFLNR1J",
+      "JLN5SK17W4FQ",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "JQPT83P8KDSZ",
+      "4D4J8USKCPAV",
+      "TD1HVGS7H6LB",
+      "PJ2LL9KU7FHD",
+      "S9UZAK0JP0C0"
+    ],
+    "state": "failed",
+    "audit_key": "silent:A10",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "attempt": 3,
+    "started": 1791369736.3946202,
+    "pid": 2405783,
+    "pane": "wJ:p50",
+    "rc": 0,
+    "report": {},
+    "errors": [
+      "missing matching completed audit report",
+      "missing preserved report inside learner/runs",
+      "missing dispatched evidence runs",
+      "missing code proposal links",
+      "incomplete observed structure coverage",
+      "missing string code_proposals array"
+    ],
+    "retry_at": 1791374743.741275
+  },
+  "request_snapshot": {
+    "key": "silent:A10",
+    "character": "silent",
+    "previous": 9,
+    "level": 10,
+    "anchor_run": "VLZ6CCT8AQ0A",
+    "requested_at": "2026-10-07T07:01:38.049Z",
+    "state": "exhausted",
+    "attempts": 3,
+    "batch": "20261007-184216-ascension-audit",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3",
+    "pid": 2405783,
+    "retry_at": 1791374743.741275,
+    "last_failure": "missing matching completed audit report; missing preserved report inside learner/runs; missing dispatched evidence runs; missing code proposal links; incomplete observed structure coverage; missing string code_proposals array"
+  },
+  "reported_metadata": {
+    "task": "ascension-audit",
+    "character": "silent",
+    "level": 10,
+    "runs": [
+      "MGA0CZDDKC0P",
+      "25226ZFLNR1J",
+      "JLN5SK17W4FQ",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "JQPT83P8KDSZ",
+      "4D4J8USKCPAV",
+      "TD1HVGS7H6LB",
+      "PJ2LL9KU7FHD",
+      "S9UZAK0JP0C0"
+    ],
+    "complete": true,
+    "coverage": [
+      "floors",
+      "combat_counts",
+      "healing",
+      "campfires",
+      "rules",
+      "assumptions"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/report.md",
+    "code_proposals": [
+      "silent-proposal-aab73fcff1c56b8e",
+      "silent-proposal-09d5c7776e88d756",
+      "silent-proposal-4cc200cc9747f4a8"
+    ],
+    "implementation_domains": [
+      "structure",
+      "combat",
+      "potion",
+      "terminal"
+    ]
+  },
+  "original_out": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-184216-ascension-audit.out",
+    "bytes": 2658,
+    "sha256": "857190e6d25008fe8e3280eea7b9599a21975a905b8394f44c8b58195baa17b2"
+  },
+  "original_err": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-184216-ascension-audit.err",
+    "bytes": 9307,
+    "sha256": "1aaf580c5782cb01bfa783b3a77e0c75beaf768b1ae371959c64981647001164"
+  },
+  "preserved_report_pointer": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/report.md",
+    "bytes": 27748,
+    "sha256": "7d863e883ae045669332fe8d575ee8e9446fbb41ff392932dae0b1a62527dfb2"
+  },
+  "report_inside_registered_worktree": true,
+  "report_inside_root_learner_runs": false,
+  "out_format": "bare JSON followed by launcher summary",
+  "current_parser_reads_fenced_json_only": true,
+  "parser_source": {
+    "path": "/home/dw/Projects/agent-sts2/ops/ascension_audit.py",
+    "bytes": 8189,
+    "sha256": "77e433cad5401a8ae16af8edcd9d85d23dbda197f09ceec05ca164e733d6c5f5"
+  },
+  "existing_queue_items": [
+    "notes/fix-queue-v4.md: 2026-10-07 16:29",
+    "notes/fix-queue-v4.md: 2026-10-07 17:59"
+  ],
+  "disposition": "Register failed/exhausted and append evidence for existing non-blocking tool repairs. No acceptance override or manual retry.",
+  "game_knowledge_or_ledger_imported": false,
+  "scheduler_state_modified": false
+}

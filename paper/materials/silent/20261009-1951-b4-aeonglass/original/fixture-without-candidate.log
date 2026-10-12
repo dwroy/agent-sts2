@@ -1,0 +1,122 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261009-180724/agent
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts (27 tests | 16 failed) 115ms
+     × 'LRN0HPZ0FZS1:48:1:6334569591' T6: logged strength 3 -> 7 9ms
+     × 'K3676LU8B0UH:48:2:6525158984' T6: logged strength 3 -> 7 3ms
+     × 'K3676LU8B0UH:48:2:6525158984' T9: logged strength 7 -> 12 3ms
+     × 'ZE8F192FKX24:48:2:6734920041' T6: logged strength 3 -> 7 4ms
+     × 'ZE8F192FKX24:48:2:6734920041' T9: logged strength 7 -> 12 2ms
+     × '53FLQ68CETW0:48:6:6967007106' T6: logged strength 3 -> 7 2ms
+     × '53FLQ68CETW0:48:6:6967007106' T9: logged strength 7 -> 12 2ms
+     × '2SU6XN2AEJRD:48:1:7023049602' T6: logged strength 3 -> 7 2ms
+     × '2SU6XN2AEJRD:48:1:7023049602' T9: logged strength 7 -> 12 2ms
+     × 'SADL3CGYTGSR:48:6:7068870503' T6: logged strength 3 -> 7 2ms
+     × 'Z6CFLDR3N4SB:48:2:7094379490' T6: logged strength 3 -> 7 4ms
+     × 'Z6CFLDR3N4SB:48:2:7094379490' T9: logged strength 7 -> 12 1ms
+     × '2PVLGRBGUX9S:48:6:7216074590' T6: logged strength 3 -> 7 2ms
+     × '2PVLGRBGUX9S:48:6:7216074590' T9: logged strength 7 -> 12 1ms
+     × '25226ZFLNR1J:48:6:7383186786' T6: logged strength 4 -> 9 1ms
+     × tracks the first, second and third use from an opening 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > 'LRN0HPZ0FZS1:48:1:6334569591' T6: logged strength 3 -> 7
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > 'K3676LU8B0UH:48:2:6525158984' T6: logged strength 3 -> 7
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > 'ZE8F192FKX24:48:2:6734920041' T6: logged strength 3 -> 7
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > '53FLQ68CETW0:48:6:6967007106' T6: logged strength 3 -> 7
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > '2SU6XN2AEJRD:48:1:7023049602' T6: logged strength 3 -> 7
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > 'SADL3CGYTGSR:48:6:7068870503' T6: logged strength 3 -> 7
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > 'Z6CFLDR3N4SB:48:2:7094379490' T6: logged strength 3 -> 7
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > '2PVLGRBGUX9S:48:6:7216074590' T6: logged strength 3 -> 7
+AssertionError: expected 28 to be 29 // Object.is equality
+
+- Expected
++ Received
+
+- 29
++ 28
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts:39:46
+     37|     const sample = simulateFight(input(row.asc, row.turn, row.before),…
+     38|     expect(sample.records).toHaveLength(2);
+     39|     expect(sample.records[1]!.snap.E[0]![7]).toBe(22 + row.after);
+       |                                              ^
+     40|   });
+     41|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > 'K3676LU8B0UH:48:2:6525158984' T9: logged strength 7 -> 12
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > 'ZE8F192FKX24:48:2:6734920041' T9: logged strength 7 -> 12
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > '53FLQ68CETW0:48:6:6967007106' T9: logged strength 7 -> 12
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > '2SU6XN2AEJRD:48:1:7023049602' T9: logged strength 7 -> 12
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > 'Z6CFLDR3N4SB:48:2:7094379490' T9: logged strength 7 -> 12
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > '2PVLGRBGUX9S:48:6:7216074590' T9: logged strength 7 -> 12
+AssertionError: expected 32 to be 34 // Object.is equality
+
+- Expected
++ Received
+
+- 34
++ 32
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts:39:46
+     37|     const sample = simulateFight(input(row.asc, row.turn, row.before),…
+     38|     expect(sample.records).toHaveLength(2);
+     39|     expect(sample.records[1]!.snap.E[0]![7]).toBe(22 + row.after);
+       |                                              ^
+     40|   });
+     41|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > '25226ZFLNR1J:48:6:7383186786' T6: logged strength 4 -> 9
+AssertionError: expected 30 to be 31 // Object.is equality
+
+- Expected
++ Received
+
+- 31
++ 30
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts:39:46
+     37|     const sample = simulateFight(input(row.asc, row.turn, row.before),…
+     38|     expect(sample.records).toHaveLength(2);
+     39|     expect(sample.records[1]!.snap.E[0]![7]).toBe(22 + row.after);
+       |                                              ^
+     40|   });
+     41|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass intensity from frozen tune frames > tracks the first, second and third use from an opening
+AssertionError: expected [ 25, 28, 31 ] to deeply equal [ 25, 29, 34 ]
+
+- Expected
++ Received
+
+  [
+    25,
+-   29,
+-   34,
++   28,
++   31,
+  ]
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts:47:95
+     45|     initial.solver.enemies[0]!.attacks = [{ damage: 22, hits: 1 }];
+     46|     const records = simulateFight(initial, null, 11, 7).records;
+     47|     expect([records[3]!.snap.E[0]![7], records[6]!.snap.E[0]![7], reco…
+       |                                                                                               ^
+     48|   });
+     49|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  16 failed | 11 passed (27)
+   Start at  18:22:54
+   Duration  1.94s (transform 1.22s, setup 1.04s, import 444ms, tests 115ms, environment 0ms)
+

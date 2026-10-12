@@ -1,0 +1,159 @@
+import hashlib
+import json
+import subprocess
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path('/home/dw/Projects/agent-sts2')
+OUT = Path(__file__).resolve().parent
+TREE = OUT.parents[2]
+PRIOR = ROOT / '.worktrees/codex-strategy-silent-20261012-224301/learner/runs/20261012-224313-strategy-proposal'
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+def save(name, value):
+    (OUT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+def git(*args):
+    return subprocess.check_output(['git', *args], cwd=TREE).decode().strip()
+
+batch = json.loads((OUT / 'dispatch.json').read_text())
+runs = batch['runs']
+identities = []
+identity_manifest = []
+with (ROOT / 'logs/runs.jsonl').open('rb') as source, (OUT / 'runs.raw.jsonl').open('wb') as target:
+    offset = 0
+    for number, raw in enumerate(source, 1):
+        if any(run.encode() in raw for run in runs):
+            row = json.loads(raw)
+            if row.get('run_id') in runs:
+                assert row['character'] == 'SILENT' and row['ascension'] == 10
+                identities.append(row)
+                identity_manifest.append(dict(source='logs/runs.jsonl', line=number, offset=offset, bytes=len(raw), sha256=sha(raw)))
+                target.write(raw)
+        offset += len(raw)
+assert Counter(x['run_id'] for x in identities) == Counter(runs)
+save('runs-selected.json', identities)
+
+# Reuse byte offsets only; all evidence is read again from the original logs.
+index_raw = (PRIOR / 'source-manifest.json').read_bytes()
+index = json.loads(index_raw)
+assert all(x['run'] in runs for x in index)
+assert len({(x['source'], x['offset']) for x in index}) == len(index)
+data = {run: {'run': next(x for x in identities if x['run_id'] == run), 'decisions': [], 'states': [], 'attempts': []} for run in runs}
+for source, kind in {'logs/decisions.jsonl': 'decisions', 'logs/states.jsonl': 'states', 'logs/sl-attempts.jsonl': 'attempts'}.items():
+    with (ROOT / source).open('rb') as handle, (OUT / (kind + '.raw.jsonl')).open('wb') as target:
+        for item in (x for x in index if x['source'] == source):
+            handle.seek(item['offset'])
+            raw = handle.read(item['bytes'])
+            assert sha(raw) == item['sha256'], item
+            row = json.loads(raw)
+            if kind == 'states':
+                run = row['state']['run_id']
+                assert row['state']['run']['character_id'] == 'SILENT'
+                assert row['state']['run']['ascension'] == 10
+            elif kind == 'decisions':
+                run = json.loads(row['fingerprint'])['run']
+            else:
+                run = row['run_id']
+            assert run == item['run']
+            row['_line'] = item['line']
+            data[run][kind].append(row)
+            target.write(raw)
+    print(source, sum(len(x[kind]) for x in data.values()), '原字节与角色通过', flush=True)
+(OUT / 'source-manifest.json').write_bytes(index_raw)
+save('identity-manifest.json', identity_manifest)
+for run, rows in data.items():
+    assert len(rows['decisions']) == rows['run']['decisions']
+
+def state(run, line):
+    return next(x['state'] for x in data[run]['states'] if x['_line'] == line)
+
+def decision(run, line):
+    return next(x for x in data[run]['decisions'] if x['_line'] == line)
+
+def endpoint(run, before, after):
+    a, b = state(run, before), state(run, after)
+    hp = [x['combat']['player']['current_hp'] for x in [a, b]]
+    enemy_hp = [[e['current_hp'] for e in x['combat']['enemies']] for x in [a, b]]
+    return dict(run=run, state_lines=[before, after], hp=hp, enemy_hp=enemy_hp,
+                hp_loss=hp[0]-hp[1], enemy_net_loss=sum(enemy_hp[0])-sum(enemy_hp[1]))
+
+pairs = []
+specs = [
+    ('751FN9QM9MHQ', 272434, 278479, 278483, 13, 9),
+    ('751FN9QM9MHQ', 272575, 278620, 278623, 18, 18),
+    ('751FN9QM9MHQ', 272531, 278576, 278581, 13, 12),
+    ('751FN9QM9MHQ', 272652, 278697, 278702, 23, 18),
+    ('KV0JHNJCKXLS', 273400, 279460, 279465, 0, 36),
+    ('KV0JHNJCKXLS', 273450, 279511, 279515, 0, 29),
+    ('KEN58SH9SLZ6', 274484, 280567, 280572, 7, 1),
+    ('KEN58SH9SLZ6', 274601, 280684, 280689, 5, 2),
+    ('KEN58SH9SLZ6', 274505, 280588, 280592, 15, 2),
+    ('KEN58SH9SLZ6', 274568, 280651, 280655, 21, 4),
+]
+for run, d, a, b, loss, damage in specs:
+    result = endpoint(run, a, b)
+    assert (result['hp_loss'], result['enemy_net_loss']) == (loss, damage)
+    row = decision(run, d)
+    result.update(decision_line=d, fingerprint=row['fingerprint'], chosen=row.get('chosen'), sl=row.get('sl_explore'), result=row.get('result'))
+    pairs.append(result)
+same = []
+for run, a, b in [('751FN9QM9MHQ',272434,272575), ('751FN9QM9MHQ',272531,272652), ('KV0JHNJCKXLS',273400,273450), ('KEN58SH9SLZ6',274484,274601), ('KEN58SH9SLZ6',274505,274568)]:
+    assert decision(run,a)['fingerprint'] == decision(run,b)['fingerprint']
+    same.append(dict(run=run, decisions=[a,b], same_fingerprint=True))
+
+potions = []
+for d, a, b, slot, potion in [(274131,280206,280207,0,'ATTACK_POTION'), (274156,280232,280233,0,'STABLE_SERUM'), (274185,280262,280263,0,'SPEED_POTION'), (274235,280313,280314,1,'WEAK_POTION'), (274237,280315,280316,0,'ATTACK_POTION'), (274267,280348,280349,1,'GLOWWATER_POTION'), (274272,280354,280355,0,'SKILL_POTION')]:
+    before, after = [state('KEN58SH9SLZ6',n) for n in [a,b]]
+    contains = lambda s: any(p.get('index') == slot and p.get('potion_id') == potion for p in s['run']['potions'])
+    assert contains(before) and not contains(after)
+    row = decision('KEN58SH9SLZ6', d)
+    potions.append(dict(decision=d, states=[a,b], potion=potion, slot=slot, chosen=row['chosen'], result=row['result']))
+
+giant = []
+for line in [280160,280161]:
+    s = state('YQL8RZ8BWN1E',line)
+    p = s['combat']['player']
+    e = next(e for e in s['combat']['enemies'] if e['is_alive'])
+    giant.append(dict(line=line,hp=p['current_hp'],block=p['block'],enemy=e,potions=s['run']['potions']))
+assert [x['hp'] for x in giant] == [26,26] and [x['block'] for x in giant] == [13,13]
+assert [next(p['amount'] for p in x['enemy']['powers'] if p['power_id']=='POISON_POWER') for x in giant] == [2,8]
+assert all(any(i.get('damage') == 41 for i in x['enemy']['intents']) for x in giant)
+
+# Historical decision provenance is retained; original snapshots are never rewritten.
+focus = {
+ '751FN9QM9MHQ': [272361,272362,272434,272575,272531,272532,272533,272652,272653,272654],
+ 'KV0JHNJCKXLS': [273400,273450,273451],
+ 'KEN58SH9SLZ6': [274267,274268,274272,274273,274484,274601,274602,274505,274568],
+ 'YQL8RZ8BWN1E': [274087],
+}
+save('focused-decisions.json', {run:[decision(run,n) for n in lines] for run,lines in focus.items()})
+save('evidence-verification.json', dict(index_source=str(PRIOR/'source-manifest.json'),index_sha256=sha(index_raw),verified_raw_rows=len(index),counts={run:{k:len(v) for k,v in rows.items() if k!='run'} for run,rows in data.items()},pairs=pairs,same_boards=same,potions=potions,giant_potion=giant))
+
+# Consumer inputs contain only this batch's six verified runs; dropped anonymous rows stay in raw files.
+for run, rows in data.items():
+    consumer = dict(rows)
+    consumer['decisions'] = [r for r in rows['decisions'] if r.get('decision_id')]
+    save(run+'-consumer-input.json', consumer)
+save('consumer-exclusions.json',{run:[r['_line'] for r in rows['decisions'] if not r.get('decision_id')] for run,rows in data.items()})
+
+old_sources=json.loads((PRIOR/'existing-source-ancestry.json').read_text())
+base, live = git('rev-parse','HEAD'), git('rev-parse','live')
+sources=[]
+for item in old_sources['sources']:
+    path, commit=item['path'],item['commit']
+    result=dict(path=path,commit=commit)
+    for name,ref in [('base',base),('live',live)]:
+        rc=subprocess.run(['git','merge-base','--is-ancestor',commit,ref],cwd=TREE).returncode
+        assert rc==0
+        result[name+'_ancestor']=True
+        result[name+'_blob']=git('rev-parse',ref+':'+path)
+    result['working_sha256']=sha((TREE/path).read_bytes())
+    result['source_blob']=git('rev-parse',commit+':'+path)
+    sources.append(result)
+save('existing-source-ancestry.json',dict(base=base,live=live,sources=sources))
+paths=[x['path'] for x in old_sources['integration_paths']]
+save('integration-comparison.json',[dict(path=p,base_blob=git('rev-parse',base+':'+p),live_blob=git('rev-parse',live+':'+p),working_sha256=sha((TREE/p).read_bytes())) for p in paths])
+print('核验通过：六局、8281原始行、10组资源端点、5组同指纹、7次耗药、10个已有源码祖先。',flush=True)

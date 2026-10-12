@@ -1,0 +1,43 @@
+{
+  "character": "silent",
+  "ledger": [
+    "silent-0228",
+    "silent-0020",
+    "silent-0019",
+    "silent-0021",
+    "silent-0243",
+    "silent-0259",
+    "silent-0276"
+  ],
+  "runs": [
+    "9R916WW0V65N",
+    "JMH5C51RLN4E",
+    "9TG1RP5LFAAK",
+    "ZVYUL2YP3518",
+    "TDLBRNA0R05B",
+    "TXZ6RVMQA09D",
+    "XTSV1U9JD34T",
+    "PD9AYQVMLQW6"
+  ],
+  "source_task": "experience-update",
+  "target_task": "strategy-proposal",
+  "domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "summary": "旧/新行为：保留已有连续Boss联合模型，核实际HP/药水/复活可观测状态与战斗增益清空。缺复活充能明确未知。当前留药/终局权重/路线评分保持；只先完善审计及固定两战配对验证，证据足够时独立提出参数候选，否则waiting，不因8局全败拟合阈值。",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-resources.md",
+  "experience": [
+    "silent-double-boss-resource-handoff",
+    "silent-rest-buffer-observation",
+    "silent-route-hp-observation",
+    "silent-deck-burst-observation",
+    "silent-act-transition-missing-hp-heal",
+    "silent-regen-potion-decay-heal",
+    "silent-dexterity-potion-card-block"
+  ],
+  "rule_changes": false,
+  "authorization": "Roy-2026-10-07-learning"
+}

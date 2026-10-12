@@ -1,0 +1,48 @@
+/home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent/tests/boss_damage_attempts_test.py:41: ResourceWarning: unclosed file <_io.BufferedReader name=3>
+  db.main()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent/tests/boss_damage_attempts_test.py:41: ResourceWarning: unclosed file <_io.BufferedReader name=3>
+  db.main()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent/tests/boss_damage_attempts_test.py:41: ResourceWarning: unclosed file <_io.BufferedReader name=3>
+  db.main()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent/tests/boss_damage_attempts_test.py:41: ResourceWarning: unclosed file <_io.BufferedReader name=3>
+  db.main()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent/tests/boss_damage_attempts_test.py:41: ResourceWarning: unclosed file <_io.BufferedReader name=3>
+  db.main()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.../home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/knowledge/builders/build-monster-db.py:1654: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/tmps4nwr3b2/game.json' mode='r' encoding='utf8'>
+  raw = json.load(open(game_path, encoding="utf8"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...............................F....................F.........................................................................
+======================================================================
+FAIL: test_cli_and_the_metrics_columns (eval_calibration_test.FixtureTest.test_cli_and_the_metrics_columns)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent/tests/eval_calibration_test.py", line 325, in test_cli_and_the_metrics_columns
+    self.assertIn("| 校准：推演本回合掉血 ±2 内（回合） | 100%（3/3 回合） | 67%（4/6 回合） |", text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '| 校准：推演本回合掉血 ±2 内（回合） | 100%（3/3 回合） | 67%（4/6 回合） |' not found in '战绩口径：codex-successful-brain-v1；仅有成功 Codex 脑题且无其他成功引擎的局。原始 2 局，纳入 0 局；旧报告保留。\n\n（没有符合条件的已结束对局）\n\n来源原始成绩（不影响费用、用量或学习证据）：\ncodex: 0 局 / 0 胜\ndeepseek: 0 局 / 0 胜\nmixed: 0 局 / 0 胜\nunknown: 2 局 / 0 胜\nother: 0 局 / 0 胜\n\n全部原始局费用/用量口径：\n| 指标 | 原始全部（含非 Codex） |\n|---|---|\n| 局数 | 2 * |\n| 终层 | 4.5（中位 4.5；CI 0.0–23.6；n=2） * |\n| 过一幕 boss | 50%（1/2；CI 9–91%） * |\n| 过二幕 boss | 0%（0/2；CI 0–66%） * |\n| 胜局 | 0%（0/2；CI 0–66%） * |\n| 非 boss 战喝药 / 10 层 | 0.00（中位 0.00；CI 0.00–0.00；n=2） * |\n| 进一幕 boss 带药（瓶） | 0.00（中位 0.00；n=1） * |\n| 进二幕 boss 带药（瓶） | — |\n| 进三幕 boss 带药（瓶） | — |\n| 死时手里的药（瓶，输的局） | 0.00（中位 0.00；CI 0.00–0.00；n=2） * |\n| 一幕 boss 有力量来源 | 0%（0/1；CI 0–79%） *；牌 0 / 遗物 0 / 开场有力量 0 |\n| 一幕精英进场血量 < 78% 次数 / 局 | 0.00（中位 0.00；CI 0.00–0.00；n=2） *；占一幕精英战 0/1 |\n| 二幕第一个休息点前死亡（占进二幕的局） | 100%（1/1；CI 21–100%） * |\n| 大脑调用 / 局 | 0.0（中位 0.0；CI 0.0–0.0；n=2） * |\n| 输入 token / 局（千） | — |\n| 缓存命中 token / 局（千） | — |\n| 输出 token / 局（千） | — |\n| 缓存命中率 | — |\n| 大脑耗时 / 局（分钟） | 0.0（中位 0.0；CI 0.0–0.0；n=2） * |\n| 每次调用平均耗时（秒） | — |\n| 校准：推演本回合掉血 ±2 内（回合） | 78%（7/9 回合） |\n| 校准：路线投影 2–3 层误差（投影 − 实际） | 中位 +6.5，中位 \\|误差\\| 10.0（n=4） * |\n| 校准：boss 时钟 实打/估值 中位 | 1.50（n=1 场） * |\n'
+
+======================================================================
+FAIL: test_cli (eval_metrics_test.FixtureTest.test_cli)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent/tests/eval_metrics_test.py", line 346, in test_cli
+    self.assertEqual([(g["name"], g["run_ids"]) for g in data["groups"]], [("V3", ["RUNC00000003"]), ("V3.oneshot", ["RUND00000004"])])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != [('V3', ['RUNC00000003']), ('V3.oneshot', ['RUND00000004'])]
+
+Second list contains 2 additional elements.
+First extra element 0:
+('V3', ['RUNC00000003'])
+
+- []
++ [('V3', ['RUNC00000003']), ('V3.oneshot', ['RUND00000004'])]
+
+----------------------------------------------------------------------
+Ran 133 tests in 22.059s
+
+FAILED (failures=2)

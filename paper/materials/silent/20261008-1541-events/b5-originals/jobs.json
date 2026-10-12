@@ -1,0 +1,95 @@
+{
+ "time": "2026-10-08T12:20:28.537831+08:00",
+ "base": "261af56e0022cc0012b80870bd3f52bd121d45c2",
+ "cwd": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/agent",
+ "nice": 19,
+ "jobs": {
+  "before": {
+   "session": 44095,
+   "args": [
+    "--character",
+    "silent",
+    "--game-data",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/game-data.frozen.json",
+    "--in",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/dataset/fights.jsonl",
+    "--out-dir",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-results",
+    "--samples",
+    "200",
+    "--seed",
+    "1",
+    "--starts",
+    "t1,pre",
+    "--no-rollout"
+   ]
+  },
+  "after_queen": {
+   "session": 84069,
+   "args": [
+    "--character",
+    "silent",
+    "--game-data",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/game-data.frozen.json",
+    "--in",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/dataset/fights.jsonl",
+    "--out-dir",
+    "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-queen-results",
+    "--samples",
+    "200",
+    "--seed",
+    "1",
+    "--starts",
+    "t1,pre",
+    "--no-rollout",
+    "--enc",
+    "QUEEN"
+   ]
+  },
+  "ranking": {
+   "session": 74776,
+   "helper": "ranking-replay.mts",
+   "samples": 200,
+   "seed": 7,
+   "scope": "original same-attempt options; complete option sets only"
+  },
+  "checks": {
+   "session": 89412,
+   "command": "nice -n 19 bash tools/test-sandbox.sh",
+   "workers": 1
+  },
+  "tail0": {
+   "session": 20972,
+   "source": "261af56e0022cc0012b80870bd3f52bd121d45c2",
+   "keys": "before-tail-0.keys.json",
+   "fights": 48,
+   "samples": 200,
+   "seed": 1,
+   "original_full_dataset_indices": true,
+   "starts": [
+    "t1",
+    "pre"
+   ],
+   "nice": 19
+  },
+  "tail1": {
+   "session": 53921,
+   "source": "261af56e0022cc0012b80870bd3f52bd121d45c2",
+   "keys": "before-tail-1.keys.json",
+   "fights": 47,
+   "samples": 200,
+   "seed": 1,
+   "original_full_dataset_indices": true,
+   "starts": [
+    "t1",
+    "pre"
+   ],
+   "nice": 19
+  },
+  "partitioned_coordinator": {
+   "session": 70495,
+   "helper": "finish-calculation.partitioned.py",
+   "source_modified": false
+  }
+ }
+}

@@ -1,0 +1,138 @@
+{
+  "recorded_at_cst": "2026-10-08 14:38",
+  "source": "47e9a4363d1497cbbdeb5f3df77e42f4402d7422",
+  "actual_merge": "b015111e067122f13fda492bde6ec3423170107d",
+  "publication": "7f0c04dd5114d2f8152da1fb8cb6c5f45e1c478e",
+  "unique_version": "S1.exp99",
+  "data_only": true,
+  "own_original_cli": 48,
+  "new_data_shipped_cli": 16,
+  "ledger_map": {
+    "silent-strength-weak-observation": [
+      "silent-0012"
+    ],
+    "silent-footwork-block": [
+      "silent-0005"
+    ],
+    "silent-vambrace-opening-block": [
+      "silent-0013"
+    ],
+    "silent-shadowmeld-new-block-double": [
+      "silent-0077"
+    ],
+    "silent-obscura-summon-growth": [
+      "silent-0039"
+    ],
+    "silent-vajra-opening-strength": [
+      "silent-0049"
+    ],
+    "silent-burst-next-skills-replay": [
+      "silent-0115"
+    ],
+    "silent-slumbering-beetle-wake-growth": [
+      "silent-0128"
+    ],
+    "silent-bowlbug-rock-full-block-stun": [
+      "silent-0196"
+    ],
+    "silent-hunter-tender-card-attributes": [
+      "silent-0232"
+    ],
+    "silent-haze-group-poison-weak": [
+      "silent-0007"
+    ],
+    "silent-eternal-feather-rest-arrival-heal": [
+      "silent-0142"
+    ],
+    "silent-act-transition-missing-hp-heal": [
+      "silent-0243"
+    ],
+    "silent-rest-buffer-observation": [
+      "silent-0020"
+    ],
+    "silent-route-hp-observation": [
+      "silent-0019"
+    ],
+    "silent-deck-burst-observation": [
+      "silent-0021"
+    ]
+  },
+  "changed_experience_entries": [
+    "silent-act-transition-missing-hp-heal",
+    "silent-bowlbug-rock-full-block-stun",
+    "silent-burst-next-skills-replay",
+    "silent-deck-burst-observation",
+    "silent-eternal-feather-rest-arrival-heal",
+    "silent-footwork-block",
+    "silent-haze-group-poison-weak",
+    "silent-hunter-tender-card-attributes",
+    "silent-obscura-summon-growth",
+    "silent-rest-buffer-observation",
+    "silent-route-hp-observation",
+    "silent-shadowmeld-new-block-double",
+    "silent-slumbering-beetle-wake-growth",
+    "silent-strength-weak-observation",
+    "silent-vajra-opening-strength",
+    "silent-vambrace-opening-block"
+  ],
+  "originals_preserved": 1266,
+  "prior_evidence_claim_support_repeat_history_preserved": true,
+  "no_code_proposals_marked_implemented": true,
+  "no_manual_dispatch": true,
+  "paper_refresh_not_needed_for_experience_only_event": true,
+  "code_equivalence": {
+    "current_live_code_test_and_task_blobs_identical_to_actual": true,
+    "preserved_parallel_code_pin": "bea18dc71a6f781e837644c7b98c385d0f62d066",
+    "preserved_parallel_code_sandbox": {
+      "exit": 0,
+      "files": 251,
+      "cases": 2618,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/live-sandbox.log"
+    },
+    "parallel_sandbox_sha256": "34f433840b2724788fa6e740f1a031a0091cbd043b2defc9941fa6e9a4e9de2d",
+    "whole_tree_external_passed": false,
+    "source_code_test_task_blobs_identical_to_actual": false,
+    "source_code_differences_from_current_live": [
+      "agent/src/brain/engines/codex-cache.ts",
+      "agent/src/brain/engines/codex.ts",
+      "agent/tests/codex-cache-engine.test.ts",
+      "agent/tests/codex-cache-observation.test.ts",
+      "agent/tests/codex-cache-probe.test.ts",
+      "agent/tests/cost-accounting.test.ts",
+      "agent/tests/cost_accounting_test.py",
+      "docs/codex-ops.md",
+      "eval/codex_cache.py",
+      "eval/cost.py",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-brain-cache-probe.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-do.sh",
+      "ops/codex-ops-learner.sh",
+      "ops/codex/lib.ts",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 248,
+      "cases": 2608,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-140852-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "data_only": true,
+    "reason": "Only the learner-tested original experience data blob changes. Current Codex cache measurement code, tests, tasks, generated knowledge and parallel records are retained byte-for-byte. Parallel cache code was checked in its own original sandbox (251 files / 2618 cases, exit 0); no full external or new combined-tree pass is claimed. Original-batch full continuation is separate."
+  },
+  "rollback": "Inverse the original experience data delta in an isolated current-live worktree, preserving newer evidence, generated knowledge and parallel code; record a separate rollback version. Do not reset production."
+}

@@ -1,0 +1,79 @@
+{
+  "at": "2026-10-12 07:40:58 CST",
+  "status": "verified_actual_consumption",
+  "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+  "run_id": "C7GNN3DDFUFY",
+  "question_id": "mv4gu40y-3252377-1",
+  "session_meta": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain/sessions/2026/10/12/rollout-2026-10-12T07-40-58-01a12d56-b03d-7311-9dfd-225f1eb0a358_01a12d57-4c2d-7761-8d95-5de480604fc6.jsonl",
+    "line_digest": "59b603c1f1346a10b169d3fa8ca371ae8d57f1d5ebfc4aa4d9d4ac7fc14fdb0d",
+    "id": "01a12d56-b03d-7311-9dfd-225f1eb0a358",
+    "timestamp": "2026-10-11T23:40:58.285Z",
+    "cwd": "/tmp/jev-brain-codex-state/session-cwd/3252377-1791762018036",
+    "model_provider": "openai"
+  },
+  "trace": {
+    "ts": "2026-10-11T23:40:58.359Z",
+    "mode": "session",
+    "label": "event/choose",
+    "model": "gpt-6-astra",
+    "effort": "xhigh",
+    "outcome": "answered",
+    "thread_id": "01a12d56-b03d-7311-9dfd-225f1eb0a358",
+    "turn_id": "01a12d56-b065-7f40-bb02-c27b1a76a54e",
+    "answer_chars": 889,
+    "deltas": 210,
+    "usage": {
+      "totalTokens": 141512,
+      "inputTokens": 140389,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 0,
+      "outputTokens": 1123,
+      "reasoningOutputTokens": 906
+    }
+  },
+  "trace_line_digest": "7972e15ecb40ee3158f611c29e11577d38026d7383cbe8c75a8c99b95670525f",
+  "brain_row_digest": "15e0a598b67058f9669395f16822da45247991a5c930d956e7b3430453a8386f",
+  "brain_accepted": true,
+  "answer_digest": "ad07bbb7d2e8cd569ce02bcce0df64d12d3f406a523fef20627892696e5f7761",
+  "run_config": {
+    "ts": "2026-10-11T23:40:13.451Z",
+    "run_id": "C7GNN3DDFUFY",
+    "character": "SILENT",
+    "ascension": 10,
+    "target_ascension": 11,
+    "target_ascension_mode": "climb",
+    "process": {
+      "pid": 3252377,
+      "started": "2026-10-11T23:40:08.067Z"
+    },
+    "code": {
+      "commit": "e5d0913aecc0af50986de75784943e82df5495d2",
+      "code": "e5d0913+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/fight-value.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "codex_check": {
+      "bin": "/home/dw/.local/node/bin/codex",
+      "ok": true,
+      "version": "codex-cli 0.162.1"
+    }
+  },
+  "run_config_line_digest": "3cbeac277c72393cca879638baedaca50fdd2c99cd526d99652764b7bd833b9c",
+  "credentials_read": false,
+  "observation": "inotify file events; real accepted answer and usage linked to target-home native thread"
+}

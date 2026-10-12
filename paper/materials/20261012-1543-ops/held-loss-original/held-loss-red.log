@@ -1,0 +1,78 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941-s2/agent
+
+ ❯ tests/silent-held-loss.test.ts (5 tests | 4 failed) 145ms
+   × keeps 751 T7's two held Beckons conservative until the real discard, then recomputes one 84ms
+   × separates KEN T10's six held HP from the 15 versus 21 total prediction, without crediting a full turn 13ms
+   × the off question and real resolution both carry the facts without deleting options 12ms
+   × the v1 question and real resolution both carry the facts without deleting options 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-held-loss.test.ts > keeps 751 T7's two held Beckons conservative until the real discard, then recomputes one
+AssertionError: expected {} to match object { held_loss_prediction: { …(3) } }
+
+- Expected
++ Received
+
+- {
+-   "held_loss_prediction": {
+-     "actual_held_hp_loss": null,
+-     "discard_choice_pending": true,
+-     "held_hp_loss": 12,
+-   },
+- }
++ {}
+
+ ❯ tests/silent-held-loss.test.ts:68:52
+     66|   expect(plan.outcome.unknownCards).toContain("弃牌选择未确定");
+     67|   const before = JSON.stringify(plan);
+     68|   expect(silentHeldLossFacts(pending.state, plan)).toMatchObject({ hel…
+       |                                                    ^
+     69|     held_hp_loss: 12, discard_choice_pending: true, actual_held_hp_los…
+     70|   } });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/silent-held-loss.test.ts > separates KEN T10's six held HP from the 15 versus 21 total prediction, without crediting a full turn
+AssertionError: expected {} to match object { held_loss_prediction: { …(1) } }
+
+- Expected
++ Received
+
+- {
+-   "held_loss_prediction": {
+-     "held_hp_loss": 0,
+-   },
+- }
++ {}
+
+ ❯ tests/silent-held-loss.test.ts:84:54
+     82|   expect(original.outcome.hpLoss).toBe(15);
+     83|   expect(replacement.outcome.hpLoss).toBe(21);
+     84|   expect(silentHeldLossFacts(frame.state, original)).toMatchObject({ h…
+       |                                                      ^
+     85|   expect(silentHeldLossFacts(frame.state, replacement)).toMatchObject(…
+     86|   const audit = silentSelectionAudit(frame.state, 5, {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/silent-held-loss.test.ts > the off question and real resolution both carry the facts without deleting options
+ FAIL  tests/silent-held-loss.test.ts > the v1 question and real resolution both carry the facts without deleting options
+AssertionError: expected { Object (plays, result, ...) } to have property "held_loss_prediction"
+ ❯ tests/silent-held-loss.test.ts:105:40
+    103|   expect(keys.length).toBeGreaterThan(1);
+    104|   for (const key of keys) {
+    105|     expect(JSON.parse(criteria[key]!)).toHaveProperty("held_loss_predi…
+       |                                        ^
+    106|     const result = ask.resolve({ plan: { type: "choice", choice: key, …
+    107|     expect(result.log?.selection_audit).toMatchObject({ answer: { turn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  15:19:43
+   Duration  1.75s (transform 1.18s, setup 344ms, import 1.09s, tests 145ms, environment 0ms)
+

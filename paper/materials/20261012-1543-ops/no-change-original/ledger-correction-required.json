@@ -1,0 +1,64 @@
+{
+  "time": "2026-10-12T15:29:23+08:00",
+  "reason": "补链前只读状态预检被沙箱ENOENT阻断，后续CLI没有停止；此前快照已过时。ops在15:15登记了两个条目的限定经验shipped，本批proposed覆盖当前状态。",
+  "affected": [
+    {
+      "id": "silent-0021",
+      "prior": {
+        "line": 16336,
+        "row": {
+          "op": "update",
+          "id": "silent-0021",
+          "ts": "2026-10-12T15:15:12+08:00",
+          "by": "ops:codex",
+          "status": "shipped",
+          "version": "S1.exp187",
+          "where": {
+            "commits": [
+              "7acbcd1351085b2ed87f8c2e2ba02f044c7d9fd6",
+              "1e5ce46f5a09b249bd049631cdba94d1a2c2bc81",
+              "91ea79597dd13b0f6801fd4fe62c25013adcf2b8"
+            ]
+          },
+          "note": "20261012-1507接续：仅原学习者2026-10-12.6经验1新增/20加证据更新入库，按experience-integration映射限定范围。原claim/prior/证据不改，不将4待代码提案、完整核心/量化/自然局效果记完成；原失效链接失败、同SHA源tsc/3368通过和6处记录冲突保留，当前集成tsc/41通过，完整宿主检查待回执。"
+        }
+      },
+      "affected_append_lines": [
+        16404,
+        16407
+      ],
+      "required_action": "运维核对原ops记录后恢复原S1.exp187限定经验shipped；十个代码提案仍waiting。",
+      "restored_by_this_task": false
+    },
+    {
+      "id": "silent-0079",
+      "prior": {
+        "line": 16343,
+        "row": {
+          "op": "update",
+          "id": "silent-0079",
+          "ts": "2026-10-12T15:15:12+08:00",
+          "by": "ops:codex",
+          "status": "shipped",
+          "version": "S1.exp187",
+          "where": {
+            "commits": [
+              "7acbcd1351085b2ed87f8c2e2ba02f044c7d9fd6",
+              "1e5ce46f5a09b249bd049631cdba94d1a2c2bc81",
+              "91ea79597dd13b0f6801fd4fe62c25013adcf2b8"
+            ]
+          },
+          "note": "20261012-1507接续：仅原学习者2026-10-12.6经验1新增/20加证据更新入库，按experience-integration映射限定范围。原claim/prior/证据不改，不将4待代码提案、完整核心/量化/自然局效果记完成；原失效链接失败、同SHA源tsc/3368通过和6处记录冲突保留，当前集成tsc/41通过，完整宿主检查待回执。"
+        }
+      },
+      "affected_append_lines": [
+        16402,
+        16403,
+        16405
+      ],
+      "required_action": "运维核对原ops记录后恢复原S1.exp187限定经验shipped；十个代码提案仍waiting。",
+      "restored_by_this_task": false
+    }
+  ],
+  "scope": "原上线版本/证据/提交未删除，本任务不新增或重登shipped。"
+}

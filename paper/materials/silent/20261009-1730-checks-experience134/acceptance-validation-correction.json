@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-10-09 17:42",
+  "original_validation": "/tmp/sts2-1009-1730-prepare.py asserted actual_data_merge and publication were both main and live ancestors. It stopped before check closure, queue append, or commit.",
+  "original_exit": 1,
+  "original_assertion_line": 94,
+  "reason": "Main was mechanically synchronized, not merged with the actual live release commit. Source commit is a main/live ancestor; release and data-merge commits are actual live ancestors. Main experience blob is identical to the source/actual published blob.",
+  "correction": "Verify source in both repositories, actual_data_merge/publication in live, and main/source/live published experience blob equality; preserve original failed local validation without claiming a code/test failure."
+}

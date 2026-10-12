@@ -3,7 +3,7 @@
 
 Folded = cited as evidence / contradicting in the run worktree's experience.json, or named in
 paper/materials/experience-changelog.md. Oldest first (the order lessons.md lists them).
-Dai 2026-10-03: the learner folds them in every 10 post-mortems (experience-update task).
+Roy 2026-10-03: the learner folds them in every 10 post-mortems (experience-update task).
 
 Per character (multi-character, 2026-10-04): each character has its own library
 (knowledge/characters/<id>/experience.json), and a post-mortem is pending for the character of its run (logs/runs.jsonl
@@ -52,7 +52,7 @@ exp = json.load(open(library, encoding="utf8")) if character == LEGACY or os.pat
 for entry in exp["entries"]:
     folded.update(entry.get("evidence") or [])
     folded.update(entry.get("contradicting") or [])
-# One changelog per character (Dai 2026-10-04): the Ironclad's as before, another's experience-changelog-<id>.md.
+# One changelog per character (Roy 2026-10-04): the Ironclad's as before, another's experience-changelog-<id>.md.
 changelog = os.path.join(ROOT, "paper/materials/experience-changelog.md" if character == LEGACY else f"paper/materials/experience-changelog-{character}.md")
 if os.path.exists(changelog):
     folded.update(re.findall(r"[0-9A-Z]{12}", open(changelog, encoding="utf8").read()))

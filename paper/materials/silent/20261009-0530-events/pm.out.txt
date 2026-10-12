@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：0DJ6GFZZ0TG9（A10，第33层，T6毒杀火箭后以2血11挡死于碾碎爪；附一处数字归属勘误）。
+- 新的纯 bug：
+  - 0DJ6GFZZ0TG9：爬行动物饰品饮药所得3临时力量未进入同线推演 — `.worktrees/live/agent/src/reflex/turn-solver.ts:2330`（新）。
+- 写成「未记录」的项：0DJ6GFZZ0TG9：完整dirty源码、终战攻击总量及存活差血、巨兽毛伤与回血拆分、F15击杀时点、完整方案执行率、boss时钟估值、替代打法整场对照、Codex实际费用。
+- 学习账本：0DJ6GFZZ0TG9：新增 silent-0329、silent-0330；更新 silent-0161、silent-0125、silent-0063、silent-0132、silent-0045（均支持证据，老错无）；`ledger.py check`退出码0。
+- 代码提案（实现任务均为 strategy-proposal，尚未实现）：
+  - F33T2／T4，账本 silent-0329／0330等，CLI `silent-proposal-90e0bc4e45916d16`：补饮药临时力量；30伤差额尚未完全隔离。
+  - F33T6，账本 silent-0161，CLI `silent-proposal-afe154edb1392350`：核单侧毒杀后的SL下界；缺攻击中间帧，保留原规则。
+  - F9T3，账本 silent-0125，CLI `silent-proposal-d779d007d2f17ffd`：护栏配对验证；原线未实打，不改阈值。
+
+```json
+{"task":"postmortem","appended":["0DJ6GFZZ0TG9"],"skipped":[],"bugs":[{"run":"0DJ6GFZZ0TG9","where":"agent/src/reflex/turn-solver.ts:2330","what":"爬行动物饰品饮药所得3临时力量未进入同线推演","new":true}],"ledger":{"added":["silent-0329","silent-0330"],"updated":["silent-0161","silent-0125","silent-0063","silent-0132","silent-0045"],"repeats":[],"check":0},"code_proposals":["silent-proposal-90e0bc4e45916d16","silent-proposal-afe154edb1392350","silent-proposal-d779d007d2f17ffd"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261009-051301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11d5c-c9e2-7d63-aab8-41b177937da9
+轮数：1；工具调用：command_execution×43
+token：输入 357.1k、输出 37.7k（其中推理 11.2k）、cache 读 4122.0k、cache 写 0（命中 92.0%）
+成本：未提供
+耗时：1025.9 s（墙钟）
+时间：首个事件 2.9 s、模型首个输出 6.7 s、首次工具 9.6 s、末次工具结束 1001.8 s；工具内共 65.7 s，其余（模型生成、推理、网络）957.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×33；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T05-13-02-01a11d5c-c9e2-7d63-aab8-41b177937da9.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-051301-postmortem.jsonl

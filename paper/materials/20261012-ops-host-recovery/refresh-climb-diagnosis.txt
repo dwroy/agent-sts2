@@ -1,0 +1,3 @@
+watcher 已用宿主原脚本 --dry-run 确认这次 refresh exit 2 的具体原因：refresh-potion-equivalents.sh 把既有 TARGET_ASCENSION=climb 当非数字拒绝。不是报告失败；349决策/历史code已唯一入账。请勿重复 report_run.py/main() 或重新登记该局。
+我负责修通用 refresh-potion-equivalents.sh 的 climb 兼容（请不要并行改这个脚本）。你现在已获宿主权限，可先检查原 builder CLI，按它原本“所有已观察进阶”的默认口径直接运行一次 `.worktrees/live/data/logdb-venv/bin/python .worktrees/live/knowledge/builders/build-potion-equivalents.py --character silent` 并指定原 silent 表输出；不要手填费用/数值，不改生产 .env 的 climb、不放宽游戏规则。请先核没有同表刷新进程，保留原 exit2/receipt.failed；仅补失败末步与尚未触发的原费用刷新/校准检查，另写阶段接续回执，不把原失败改成成功。
+补完核新表/报告唯一后优先沿原 autoplay-start 恢复游戏，记录真实 codex1 brain回答，别等 watcher 重跑整套检查。若你已在做同一步，请继续同一进程，不重复启动。

@@ -1,0 +1,1220 @@
+diff --git a/agent/src/brain/build-facts.ts b/agent/src/brain/build-facts.ts
+index 90b84201..20d959fb 100644
+--- a/agent/src/brain/build-facts.ts
++++ b/agent/src/brain/build-facts.ts
+@@ -13,6 +13,7 @@ import type { DecisionEnv } from "../memory/types.js";
+ import { asArray, asRecord, bool, str, type JsonValue } from "../core/util/json.js";
+ import { bossClockJson } from "../sim/boss-clock.js";
+ import { doubleBossPreparation } from "../knowledge/double-boss.js";
++import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
+ import { fightPlanInput } from "../memory/fight-plan.js";
+ import { actOf } from "../memory/run-plan.js";
+ 
+@@ -41,7 +42,10 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> =
+   const relics = relicFacts(env);
+   const potions = asArray(shown["potions"]).map(String);
+   const plan = env.screenMemory.runPlan && env.screenMemory.runPlan.runId === str(state.raw["run_id"]) ? env.screenMemory.runPlan : null;
+-  const nextBoss = floor === null ? null : (BOSS_FLOORS.find((bossFloor) => bossFloor >= floor) ?? null);
++  const phase = observedBossPhase(state);
++  const nextBoss = phase && (state.in_combat || phase["first_boss_defeated"] && floor === 48)
++    ? phase["first_boss_defeated"] ? 49 : 48
++    : floor === null ? null : (BOSS_FLOORS.find((bossFloor) => bossFloor >= floor) ?? null);
+   const facts: Record<string, JsonValue> = {
+     act: actOf(state),
+     floor,
+@@ -49,7 +53,8 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> =
+     ascension: state.run?.ascension ?? 0,
+     hp: env.brief.hp,
+     gold: state.run?.gold ?? null,
+-    act_boss: str(run["boss_id"]) || state.run?.boss_id || null,
++    act_boss: bossIdForFacts(state),
++    ...(phase ? { boss_phase: phase } : {}),
+     deck_size: asArray(run["deck"]).length,
+     deck_profile: deckProfileLine(state, knowledge),
+     deck: asArray(shown["deck"]).map(String),
+diff --git a/agent/src/knowledge/boss-phase.ts b/agent/src/knowledge/boss-phase.ts
+new file mode 100644
+index 00000000..9529bbc7
+--- /dev/null
++++ b/agent/src/knowledge/boss-phase.ts
+@@ -0,0 +1,49 @@
++/** JMH5C51RLN4E / 9TG1RP5LFAAK F48 reward -> map -> F49 T1, silent-0228. */
++import type { GameState } from "../hand/mod/schema.js";
++import { asArray, asRecord, bool, numOrNull, str, type JsonValue } from "../core/util/json.js";
++
++/** Only the observed Silent A10 third-act structure is covered; later levels remain unknown. */
++export function observedBossPhase(state: GameState): Record<string, JsonValue> | null {
++  const run = asRecord(state.run?.raw);
++  const floor = state.run?.floor;
++  if (str(run["character_id"]).toLowerCase() !== "silent" || state.run?.ascension !== 10
++    || Number(run["act_id"]) !== 2 || (floor !== 48 && floor !== 49)
++    || !asArray(run["ascension_effects"]).some((e) => str(asRecord(e)["id"]) === "LEVEL_10")) return null;
++  const firstDefeated = floor === 49 || !state.in_combat && (state.screen === "REWARD" || state.screen === "MAP");
++  const map = asRecord(state.raw["map"]);
++  const nodes = asArray(map["nodes"]).map(asRecord);
++  const remaining = !Array.isArray(map["nodes"]) ? null : nodes
++    .filter((node) => str(node["node_type"]) === "Boss" && !bool(node["visited"]) && !bool(node["is_current"])
++      && numOrNull(node["row"]) !== null && numOrNull(node["col"]) !== null)
++    .map((node) => ({ row: numOrNull(node["row"]), col: numOrNull(node["col"]),
++      second: bool(node["is_second_boss"]) }));
++  const rawBoss = str(run["boss_id"]) || state.run?.boss_id || null;
++  // The two observed F49 encounters have a distinct principal enemy. Never infer the hidden next boss.
++  const enemyIds = state.in_combat ? asArray(asRecord(state.combat?.raw)["enemies"]).map(asRecord)
++    .map((enemy) => str(enemy["enemy_id"])) : [];
++  const principals = ["AEONGLASS", "QUEEN"].filter((id) => enemyIds.includes(id));
++  const current = floor === 48 && state.in_combat ? rawBoss : floor === 49 && state.in_combat
++    ? principals.length === 1 ? principals[0]! : null : null;
++  return {
++    first_boss_defeated: firstDefeated,
++    observed_remaining_boss_nodes: remaining,
++    current_boss: current,
++    current_boss_basis: floor === 49 && state.in_combat ? "现场敌人" : current ? "run.boss_id" : null,
++    raw_boss_id: rawBoss,
++    raw_boss_id_stale: firstDefeated && rawBoss !== null && (current === null || rawBoss.replace(/_BOSS$/, "") !== current),
++    // No F49 victory was observed in the source runs. A post-F49 screen is not proof of act completion.
++    act_complete: floor === 48 || state.in_combat || (remaining !== null && remaining.length > 0) ? false : null,
++    note: firstDefeated && floor === 48
++      ? "F48首Boss已败，本幕仍有F49第二场；地图未显示时剩余节点记未知，下一Boss身份入场前未知。不重做刚结束的首Boss模拟。"
++      : floor === 49 ? "F49当前Boss只按现场敌人确认；run.boss_id保留原值，是否过期由raw_boss_id_stale标明。尚无本来源局F49胜利证据，不预判本幕或整局通关。"
++      : "F48是连续两场中的首Boss；本场获胜仍须保留资源进入F49。",
++    evidence: ["JMH5C51RLN4E:F48奖励/地图→F49:T1", "9TG1RP5LFAAK:F48奖励/地图→F49:T1"],
++  };
++}
++
++/** Effective identity for displayed facts; a stale first-boss id must not describe the second fight. */
++export function bossIdForFacts(state: GameState): string | null {
++  const phase = observedBossPhase(state);
++  if (phase) return typeof phase["current_boss"] === "string" ? phase["current_boss"] : null;
++  return str(asRecord(state.run?.raw)["boss_id"]) || state.run?.boss_id || null;
++}
+diff --git a/agent/src/memory/run-plan.ts b/agent/src/memory/run-plan.ts
+index c4ac9f01..bb70f6d9 100644
+--- a/agent/src/memory/run-plan.ts
++++ b/agent/src/memory/run-plan.ts
+@@ -24,6 +24,7 @@ import type { GameState } from "../hand/mod/schema.js";
+ import { deckEntries } from "./deck.js";
+ import { deckProfileLine } from "./deck-profile.js";
+ import { bossClockJson } from "../sim/boss-clock.js";
++import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
+ import { asArray, asRecord, str, type JsonValue } from "../core/util/json.js";
+ 
+ export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
+@@ -128,6 +129,7 @@ export const RUN_PLAN_TASK_KEY = "run_plan_task";
+ /** What DeepSeek is shown: the deck grouped, relics, potions, HP/gold, act boss and the trigger. */
+ export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: RunPlanTrigger, deckLines: string[], relics: string[], potions: string[]): Record<string, JsonValue> {
+   const raw = asRecord(state.run?.raw);
++  const phase = observedBossPhase(state);
+   return {
+     trigger,
+     act: actOf(state),
+@@ -135,7 +137,8 @@ export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: Ru
+     ascension: state.run?.ascension ?? 0,
+     hp: `${state.run?.current_hp ?? "?"}/${state.run?.max_hp ?? "?"}`,
+     gold: state.run?.gold ?? null,
+-    act_boss: str(raw["boss_id"]),
++    act_boss: phase ? bossIdForFacts(state) : str(raw["boss_id"]),
++    ...(phase ? { boss_phase: phase } : {}),
+     act_boss_clock: bossClockJson(state, knowledge),
+     deck_size: deckEntries(state, knowledge).length,
+     deck_profile: deckProfileLine(state, knowledge),
+diff --git a/agent/src/sim/boss-clock.ts b/agent/src/sim/boss-clock.ts
+index bed83937..a844ba69 100644
+--- a/agent/src/sim/boss-clock.ts
++++ b/agent/src/sim/boss-clock.ts
+@@ -25,6 +25,7 @@ import { readFileSync } from "node:fs";
+ import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
+ import { OUTCOME_BASE_ASC, hasAscensionTables, outcomeView, pairHelps, pairThin, referenceNote, referenceRow } from "../knowledge/outcome-tables.js";
+ import type { Knowledge } from "../knowledge/index.js";
++import { bossIdForFacts } from "../knowledge/boss-phase.js";
+ import { bossDamageByTurn, bossHitsByTurn, bossHpAt, bossHpLoss, bossPartIds, fillDbNumbers, monsterHpAt, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt, shownDamageAt } from "../knowledge/monster-db.js";
+ import { measuredRoomExact } from "../knowledge/room-costs.js";
+ import type { GameState } from "../hand/mod/schema.js";
+@@ -1797,7 +1798,7 @@ function silentBossFacts(boss: BossProfile & { id: string }, ascension: number):
+ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<string, JsonValue> | null {
+   const character = clockCharacter(state);
+   if (character !== DEFAULT_CHARACTER) {
+-    const boss = bossProfile(str(asRecord(state.run?.raw)["boss_id"]));
++    const boss = bossProfile(bossIdForFacts(state) ?? "");
+     if (!boss) return null;
+     return { boss: boss.id, ...(character === "silent" ? silentBossFacts(boss, state.run?.ascension ?? 0) : {
+       boss_hp: bossHp(boss, state.run?.ascension ?? 0), boss_hp_note: bossHpSource(boss, state.run?.ascension ?? 0),
+diff --git a/agent/src/sim/build-sim-facts.ts b/agent/src/sim/build-sim-facts.ts
+index 2303ee38..f48fcd56 100644
+--- a/agent/src/sim/build-sim-facts.ts
++++ b/agent/src/sim/build-sim-facts.ts
+@@ -18,6 +18,7 @@
+  */
+ 
+ import { cardUpgrade } from "../knowledge/card-upgrades.js";
++import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
+ import type { MonsterDb } from "../knowledge/monster-db.js";
+ import type { ActionRequest } from "../hand/mod/client.js";
+ import { parseGameState, type GameState } from "../hand/mod/schema.js";
+@@ -437,7 +438,8 @@ export function calibratedFloor(asc = 0): number {
+ const ACT_BOSS_FLOORS = [17, 33, 48];
+ 
+ /**
+- * Whether the act's boss is already dead: its floor, out of combat (the reward, the next screens), still in its act.
++ * Whether the scheduled boss is already dead: its floor, out of combat, still in its act.
++ * For observed Silent A10 F48 this is only the first boss; it still prevents re-simulating that defeated boss.
+  * run.boss_id moves on only when the next act starts (GBBBMVCPA7R1 F17: THE_KIN_BOSS on the reward, act_id 0;
+  * THE_INSATIABLE_BOSS on the act 2 map, act_id 1), and the next act's boss is not in the state before that.
+  */
+@@ -461,7 +463,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+   if (question?.type !== "choice") return { decision, record: null };
+   const facts = asRecord(ask.state["facts"]) as Record<string, JsonValue>;
+   const { state, knowledge } = env;
+-  const bossId = str(asRecord(state.run?.raw)["boss_id"]) || state.run?.boss_id || "";
++  const bossId = bossIdForFacts(state) ?? (actBossDefeated(state) ? str(asRecord(state.run?.raw)["boss_id"]) : "");
+   const fail = (why: string): BossSimOutcome => ({
+     decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
+     record: { error: why, ms: Math.round(now() - started) },
+@@ -472,10 +474,13 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+     // boss was simulated against it, 7PWU4CD3QCP3 F17 and 5DFX/VNKN/THR/GBBB F17; the brain quoted those deltas), and the
+     // next act's boss is not known before its act starts: no simulation. The clock stays (bossClockJson marks it stale).
+     if (actBossDefeated(state)) {
+-      const note = "本幕 boss 已经打完；下一幕的 boss 要到下一幕开始才知道，这道题不做 boss 模拟（act_boss_clock 也是刚打完的 boss）";
++      const phase = observedBossPhase(state);
++      const note = phase
++        ? String(phase["note"])
++        : "本幕 boss 已经打完；下一幕的 boss 要到下一幕开始才知道，这道题不做 boss 模拟（act_boss_clock 也是刚打完的 boss）";
+       return {
+         decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, note, true) } },
+-        record: { skipped: "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started) },
++        record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started) },
+       };
+     }
+     const entry = routeEntry(env);
+diff --git a/agent/tests/silent-boss-phase-states.json b/agent/tests/silent-boss-phase-states.json
+new file mode 100644
+index 00000000..c59d6b64
+--- /dev/null
++++ b/agent/tests/silent-boss-phase-states.json
+@@ -0,0 +1,909 @@
++[
++  {
++    "line": 243532,
++    "sha256": "ee6681324189faace8bdc5a496c7e319ccb1563410867c57c7cb3ca0a25ae26a",
++    "state": {
++      "state_version": 16,
++      "run_id": "JMH5C51RLN4E",
++      "screen": "REWARD",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "in_combat": false,
++      "turn": 13,
++      "available_actions": [
++        "save_and_quit",
++        "resolve_rewards",
++        "collect_rewards_and_proceed"
++      ],
++      "run": {
++        "character_id": "SILENT",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "act_id": "2",
++        "floor": 48,
++        "boss_id": "TEST_SUBJECT_BOSS",
++        "current_hp": 8,
++        "max_hp": 60,
++        "gold": 119,
++        "deck": [],
++        "potions": [],
++        "relics": []
++      },
++      "combat": {
++        "enemies": [],
++        "player": {
++          "current_hp": 8,
++          "max_hp": 60,
++          "block": 0,
++          "energy": 4,
++          "stars": 0,
++          "focus": 0,
++          "powers": [],
++          "base_orb_slots": 0,
++          "orb_capacity": 0,
++          "empty_orb_slots": 0,
++          "orbs": [],
++          "pets": [],
++          "pet_missing": false,
++          "cards_played_this_turn": 0,
++          "attacks_played_this_turn": 0,
++          "skills_played_this_turn": 0
++        },
++        "hand": []
++      },
++      "map": null
++    }
++  },
++  {
++    "line": 243533,
++    "sha256": "0541d5c46e3bb0a53391f67a8316139723b8bf9fed8383877a12545b5b3a3ddc",
++    "state": {
++      "state_version": 16,
++      "run_id": "JMH5C51RLN4E",
++      "screen": "MAP",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "in_combat": false,
++      "turn": 13,
++      "available_actions": [
++        "save_and_quit",
++        "choose_map_node"
++      ],
++      "run": {
++        "character_id": "SILENT",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "act_id": "2",
++        "floor": 48,
++        "boss_id": "TEST_SUBJECT_BOSS",
++        "current_hp": 8,
++        "max_hp": 60,
++        "gold": 119,
++        "deck": [],
++        "potions": [],
++        "relics": []
++      },
++      "combat": {
++        "enemies": [],
++        "player": {
++          "current_hp": 8,
++          "max_hp": 60,
++          "block": 0,
++          "energy": 4,
++          "stars": 0,
++          "focus": 0,
++          "powers": [],
++          "base_orb_slots": 0,
++          "orb_capacity": 0,
++          "empty_orb_slots": 0,
++          "orbs": [],
++          "pets": [],
++          "pet_missing": false,
++          "cards_played_this_turn": 0,
++          "attacks_played_this_turn": 0,
++          "skills_played_this_turn": 0
++        },
++        "hand": []
++      },
++      "map": {
++        "current_node": {
++          "row": 14,
++          "col": 3
++        },
++        "boss_node": {
++          "row": 14,
++          "col": 3
++        },
++        "second_boss_node": {
++          "row": 15,
++          "col": 3
++        },
++        "nodes": [
++          {
++            "row": 14,
++            "col": 3,
++            "node_type": "Boss",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": true,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": true,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 13,
++                "col": 2
++              },
++              {
++                "row": 13,
++                "col": 3
++              },
++              {
++                "row": 13,
++                "col": 5
++              }
++            ],
++            "children": [
++              {
++                "row": 15,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 15,
++            "col": 3,
++            "node_type": "Boss",
++            "state": "Travelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": true,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": true,
++            "parents": [
++              {
++                "row": 14,
++                "col": 3
++              }
++            ],
++            "children": []
++          }
++        ]
++      }
++    }
++  },
++  {
++    "line": 243534,
++    "sha256": "be84e7cb4742054c431918373b57e22a4775c3168b7f55849f27a5a2a59fc22a",
++    "state": {
++      "state_version": 16,
++      "run_id": "JMH5C51RLN4E",
++      "screen": "COMBAT",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "in_combat": true,
++      "turn": 1,
++      "available_actions": [
++        "save_and_quit"
++      ],
++      "run": {
++        "character_id": "SILENT",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "act_id": "2",
++        "floor": 49,
++        "boss_id": "TEST_SUBJECT_BOSS",
++        "current_hp": 8,
++        "max_hp": 60,
++        "gold": 119,
++        "deck": [],
++        "potions": [],
++        "relics": []
++      },
++      "combat": {
++        "enemies": [
++          {
++            "index": 0,
++            "enemy_id": "AEONGLASS",
++            "name": "永世沙漏",
++            "current_hp": 535,
++            "max_hp": 535,
++            "base_max_hp": 535,
++            "block": 0,
++            "is_alive": true,
++            "is_hittable": true,
++            "powers": [
++              {
++                "index": 0,
++                "power_id": "WITHERING_PRESENCE_POWER",
++                "name": "凋萎存在",
++                "amount": 6,
++                "is_debuff": false
++              },
++              {
++                "index": 1,
++                "power_id": "ARTIFACT_POWER",
++                "name": "人工制品",
++                "amount": 3,
++                "is_debuff": false
++              }
++            ],
++            "intent": "EBB_MOVE",
++            "move_id": "EBB_MOVE",
++            "intents": [
++              {
++                "index": 0,
++                "intent_type": "Attack",
++                "label": "26",
++                "damage": 26,
++                "hits": 1,
++                "total_damage": 26,
++                "status_card_count": null
++              },
++              {
++                "index": 1,
++                "intent_type": "Defend",
++                "label": null,
++                "damage": null,
++                "hits": null,
++                "total_damage": null,
++                "status_card_count": null
++              }
++            ]
++          }
++        ],
++        "player": {
++          "current_hp": 8,
++          "max_hp": 60,
++          "block": 0,
++          "energy": 0,
++          "stars": 0,
++          "focus": 0,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "THORNS_POWER",
++              "name": "荆棘",
++              "amount": 3,
++              "is_debuff": false
++            }
++          ],
++          "base_orb_slots": 0,
++          "orb_capacity": 0,
++          "empty_orb_slots": 0,
++          "orbs": [],
++          "pets": [],
++          "pet_missing": false,
++          "cards_played_this_turn": 0,
++          "attacks_played_this_turn": 0,
++          "skills_played_this_turn": 0
++        },
++        "hand": []
++      },
++      "map": null
++    }
++  },
++  {
++    "line": 244372,
++    "sha256": "e3cd20657efc71ce8eb9072f27c4d0e8bddb88aa5d927369ef0df338c5cf1b12",
++    "state": {
++      "state_version": 16,
++      "run_id": "9TG1RP5LFAAK",
++      "screen": "REWARD",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "in_combat": false,
++      "turn": 16,
++      "available_actions": [
++        "save_and_quit",
++        "resolve_rewards",
++        "collect_rewards_and_proceed"
++      ],
++      "run": {
++        "character_id": "SILENT",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "act_id": "2",
++        "floor": 48,
++        "boss_id": "TEST_SUBJECT_BOSS",
++        "current_hp": 17,
++        "max_hp": 84,
++        "gold": 177,
++        "deck": [],
++        "potions": [],
++        "relics": []
++      },
++      "combat": {
++        "enemies": [],
++        "player": {
++          "current_hp": 17,
++          "max_hp": 84,
++          "block": 0,
++          "energy": 0,
++          "stars": 0,
++          "focus": 0,
++          "powers": [],
++          "base_orb_slots": 0,
++          "orb_capacity": 0,
++          "empty_orb_slots": 0,
++          "orbs": [],
++          "pets": [],
++          "pet_missing": false,
++          "cards_played_this_turn": 2,
++          "attacks_played_this_turn": 1,
++          "skills_played_this_turn": 1
++        },
++        "hand": []
++      },
++      "map": null
++    }
++  },
++  {
++    "line": 244373,
++    "sha256": "9be227e804160517ba0ae47c83d6d33346626a9e875576def52f9df50edfed51",
++    "state": {
++      "state_version": 16,
++      "run_id": "9TG1RP5LFAAK",
++      "screen": "MAP",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "in_combat": false,
++      "turn": 16,
++      "available_actions": [
++        "save_and_quit",
++        "choose_map_node",
++        "discard_potion"
++      ],
++      "run": {
++        "character_id": "SILENT",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "act_id": "2",
++        "floor": 48,
++        "boss_id": "TEST_SUBJECT_BOSS",
++        "current_hp": 17,
++        "max_hp": 84,
++        "gold": 177,
++        "deck": [],
++        "potions": [],
++        "relics": []
++      },
++      "combat": {
++        "enemies": [],
++        "player": {
++          "current_hp": 17,
++          "max_hp": 84,
++          "block": 0,
++          "energy": 0,
++          "stars": 0,
++          "focus": 0,
++          "powers": [],
++          "base_orb_slots": 0,
++          "orb_capacity": 0,
++          "empty_orb_slots": 0,
++          "orbs": [],
++          "pets": [],
++          "pet_missing": false,
++          "cards_played_this_turn": 2,
++          "attacks_played_this_turn": 1,
++          "skills_played_this_turn": 1
++        },
++        "hand": []
++      },
++      "map": {
++        "current_node": {
++          "row": 14,
++          "col": 3
++        },
++        "boss_node": {
++          "row": 14,
++          "col": 3
++        },
++        "second_boss_node": {
++          "row": 15,
++          "col": 3
++        },
++        "nodes": [
++          {
++            "row": 14,
++            "col": 3,
++            "node_type": "Boss",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": true,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": true,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 13,
++                "col": 1
++              },
++              {
++                "row": 13,
++                "col": 4
++              },
++              {
++                "row": 13,
++                "col": 5
++              }
++            ],
++            "children": [
++              {
++                "row": 15,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 15,
++            "col": 3,
++            "node_type": "Boss",
++            "state": "Travelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": true,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": true,
++            "parents": [
++              {
++                "row": 14,
++                "col": 3
++              }
++            ],
++            "children": []
++          }
++        ]
++      }
++    }
++  },
++  {
++    "line": 244374,
++    "sha256": "0958459f8450fdbe506af731372fe974f837644ce95c9a5be25e329cf0800721",
++    "state": {
++      "state_version": 16,
++      "run_id": "9TG1RP5LFAAK",
++      "screen": "COMBAT",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "in_combat": true,
++      "turn": 1,
++      "available_actions": [
++        "save_and_quit",
++        "discard_potion"
++      ],
++      "run": {
++        "character_id": "SILENT",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "act_id": "2",
++        "floor": 49,
++        "boss_id": "TEST_SUBJECT_BOSS",
++        "current_hp": 17,
++        "max_hp": 84,
++        "gold": 177,
++        "deck": [],
++        "potions": [],
++        "relics": []
++      },
++      "combat": {
++        "enemies": [
++          {
++            "index": 0,
++            "enemy_id": "TORCH_HEAD_AMALGAM",
++            "name": "火炬头聚合体",
++            "current_hp": 211,
++            "max_hp": 211,
++            "base_max_hp": 211,
++            "block": 0,
++            "is_alive": true,
++            "is_hittable": true,
++            "powers": [
++              {
++                "index": 0,
++                "power_id": "MINION_POWER",
++                "name": "爪牙",
++                "amount": 1,
++                "is_debuff": false
++              }
++            ],
++            "intent": "STRONG_TACKLE_MOVE",
++            "move_id": "STRONG_TACKLE_MOVE",
++            "intents": [
++              {
++                "index": 0,
++                "intent_type": "Attack",
++                "label": "32",
++                "damage": 32,
++                "hits": 1,
++                "total_damage": 32,
++                "status_card_count": null
++              }
++            ]
++          },
++          {
++            "index": 1,
++            "enemy_id": "QUEEN",
++            "name": "女王",
++            "current_hp": 419,
++            "max_hp": 419,
++            "base_max_hp": 419,
++            "block": 0,
++            "is_alive": true,
++            "is_hittable": true,
++            "powers": [],
++            "intent": "PUPPET_STRINGS_MOVE",
++            "move_id": "PUPPET_STRINGS_MOVE",
++            "intents": [
++              {
++                "index": 0,
++                "intent_type": "CardDebuff",
++                "label": null,
++                "damage": null,
++                "hits": null,
++                "total_damage": null,
++                "status_card_count": null
++              }
++            ]
++          }
++        ],
++        "player": {
++          "current_hp": 17,
++          "max_hp": 84,
++          "block": 0,
++          "energy": 0,
++          "stars": 0,
++          "focus": 0,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 1,
++              "is_debuff": false
++            }
++          ],
++          "base_orb_slots": 0,
++          "orb_capacity": 0,
++          "empty_orb_slots": 0,
++          "orbs": [],
++          "pets": [],
++          "pet_missing": false,
++          "cards_played_this_turn": 0,
++          "attacks_played_this_turn": 0,
++          "skills_played_this_turn": 0
++        },
++        "hand": []
++      },
++      "map": null
++    }
++  }
++]
+diff --git a/agent/tests/silent-boss-phase.test.ts b/agent/tests/silent-boss-phase.test.ts
+new file mode 100644
+index 00000000..a07e8aef
+--- /dev/null
++++ b/agent/tests/silent-boss-phase.test.ts
+@@ -0,0 +1,112 @@
++import { readFileSync } from "node:fs";
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { asRecord } from "../src/core/util/json.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
++import { buildFacts } from "../src/brain/build-facts.js";
++import { buildRunBrief } from "../src/memory/run-brief.js";
++import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
++import { runPlanInput } from "../src/memory/run-plan.js";
++import { bossClockJson } from "../src/sim/boss-clock.js";
++import { actBossDefeated, withBossSim } from "../src/sim/build-sim-facts.js";
++
++// Only fields consumed by these facts are retained from the six cited Silent frames.
++const frames = JSON.parse(readFileSync(new URL("./silent-boss-phase-states.json", import.meta.url), "utf8")) as
++  { line: number; state: Record<string, unknown> }[];
++const knowledge = makeKnowledge({}, "cache");
++function env(line: number): DecisionEnv {
++  const state = parseGameState(structuredClone(frames.find((frame) => frame.line === line)!.state));
++  return { state, knowledge, brief: buildRunBrief(state, knowledge), screenMemory: createScreenMemory(state.screen),
++    thresholds: { act: 0.7, strong: 0.9 }, runStart: "auto", characterPreference: null,
++    allowFtueModals: false, strictJev: true, shopDiscardPotions: [] };
++}
++const hp = (value: number) => ({ min: value, median: value, max: value, n: 1 });
++beforeEach(() => {
++  setKnowledgeCharacter("silent");
++  setMonsterDbForTests({ monsters: { AEONGLASS: { hp_by_asc: { "10": hp(535) } },
++    QUEEN: { hp_by_asc: { "10": hp(419) } }, TORCH_HEAD_AMALGAM: { hp_by_asc: { "10": hp(211) } } },
++    bosses: {}, encounters: {} });
++});
++afterEach(() => { setMonsterDbForTests(null); setKnowledgeCharacter(null); });
++
++it.each([243532, 244372])("F48 reward L%i marks only the first victory, with no invented map or boss identity", async (line) => {
++  const e = env(line);
++  const facts = buildFacts(e);
++  expect(facts).toMatchObject({ act_boss: null, floors_to_act_boss: 1, act_boss_clock: null,
++    boss_phase: { first_boss_defeated: true, act_complete: false, observed_remaining_boss_nodes: null,
++      current_boss: null, raw_boss_id: "TEST_SUBJECT_BOSS", raw_boss_id_stale: true } });
++  const runPlan = runPlanInput(e.state, knowledge, "review", [], [], []);
++  expect(runPlan["act_boss"]).toBeNull();
++  expect(runPlan["boss_phase"]).toEqual(facts["boss_phase"]);
++  expect(actBossDefeated(e.state)).toBe(true);
++  const ask: AskDecision = { kind: "ask", label: "reward/card", state: { facts },
++    questions: { q: { type: "choice", instructions: "fixed", criteria: { skip: "skip" } } },
++    deepseek: { question: "q", options: () => [{ key: "skip", intent: { action: "proceed" }, summary: "skip" }],
++      baseline: { kind: "act", label: "fixed", intent: { action: "proceed" }, rationale: "fixed" } },
++    resolve: () => { throw new Error("no execution in this test"); } };
++  const run = vi.fn(() => { throw new Error("must not simulate the defeated first boss"); });
++  const result = await withBossSim(ask, e, { runner: { run } });
++  expect(result.record).toMatchObject({ skipped: "first boss defeated; the second boss is not observed yet" });
++  expect(asRecord(result.decision.kind === "ask" ? result.decision.state["facts"] : {})["act_boss_sim"]).toContain("F49第二场");
++  expect(run).not.toHaveBeenCalled();
++  expect(e.state.run?.raw["boss_id"]).toBe("TEST_SUBJECT_BOSS");
++});
++
++it.each([243533, 244373])("F48 map L%i reports the displayed second node without guessing its enemy", (line) => {
++  expect(buildFacts(env(line))).toMatchObject({ act_boss: null, floors_to_act_boss: 1,
++    boss_phase: { first_boss_defeated: true, act_complete: false,
++      observed_remaining_boss_nodes: [{ row: 15, col: 3, second: true }], current_boss: null } });
++});
++
++it.each([[243534, "AEONGLASS", 535], [244374, "QUEEN", 419]] as const)(
++  "F49 L%i uses the observed %s and its frozen current-ascension HP", (line, boss, value) => {
++    const e = env(line);
++    const facts = buildFacts(e);
++    expect(facts).toMatchObject({ act_boss: boss, floors_to_act_boss: 0,
++      boss_phase: { current_boss: boss, raw_boss_id: "TEST_SUBJECT_BOSS", raw_boss_id_stale: true,
++        current_boss_basis: "现场敌人", first_boss_defeated: true, act_complete: false },
++      act_boss_clock: { boss, boss_hp: value } });
++    expect(runPlanInput(e.state, knowledge, "review", [], [], [])["act_boss"]).toBe(boss);
++    expect(e.state.run?.current_hp).toBe(line === 243534 ? 8 : 17);
++    expect(e.state.run?.raw["boss_id"]).toBe("TEST_SUBJECT_BOSS");
++  });
++
++it("keeps an unobserved F49 encounter and post-fight completion unknown", () => {
++  const e = env(243534);
++  asRecord(e.state.combat?.raw)["enemies"] = [{ enemy_id: "UNOBSERVED" }];
++  expect(buildFacts(e)).toMatchObject({ act_boss: null, act_boss_clock: null,
++    boss_phase: { current_boss: null, act_complete: false } });
++  e.state.in_combat = false;
++  expect(asRecord(buildFacts(e)["boss_phase"])["act_complete"]).toBeNull();
++});
++
++it("does not label a refreshed second-boss id stale or guess an ambiguous principal", () => {
++  const e = env(243534);
++  asRecord(e.state.run?.raw)["boss_id"] = "AEONGLASS_BOSS";
++  expect(buildFacts(e)).toMatchObject({ act_boss: "AEONGLASS", boss_phase: { raw_boss_id_stale: false } });
++  asRecord(e.state.combat?.raw)["enemies"] = [{ enemy_id: "AEONGLASS" }, { enemy_id: "QUEEN" }];
++  expect(buildFacts(e)).toMatchObject({ act_boss: null, act_boss_clock: null });
++});
++
++it.each([
++  { character_id: "IRONCLAD" }, { ascension: 9 }, { ascension: 11 }, { act_id: "1" }, { ascension_effects: [] },
++])("preserves the old facts outside the observed scope: %j", (change) => {
++  const e = env(243532);
++  const raw = structuredClone(e.state.raw);
++  Object.assign(asRecord(raw["run"]), change);
++  e.state = parseGameState(raw);
++  expect(buildFacts(e)["boss_phase"]).toBeUndefined();
++  expect(buildFacts(e)["act_boss"]).toBe("TEST_SUBJECT_BOSS");
++  expect(runPlanInput(e.state, knowledge, "review", [], [], [])["act_boss"]).toBe("TEST_SUBJECT_BOSS");
++});
++
++it("retains the existing first-fight identity before it is defeated", () => {
++  const e = env(243532);
++  e.state.in_combat = true;
++  expect(buildFacts(e)).toMatchObject({ act_boss: "TEST_SUBJECT_BOSS", floors_to_act_boss: 0,
++    boss_phase: { first_boss_defeated: false, raw_boss_id_stale: false, act_complete: false } });
++  expect(actBossDefeated(e.state)).toBe(false);
++  expect(bossClockJson(e.state, knowledge)?.["boss"]).toBe("TEST_SUBJECT");
++});

@@ -2,7 +2,7 @@
  * Enemy move model learned from past runs (knowledge/builders/build-move-model.py -> move-model.json): which move
  * tends to follow which, and each move's average attack damage. Used to estimate next turn's hit.
  *
- * The damage a forecast puts on each move is the monster DB's at the run's ascension (DamageContext; Dai:
+ * The damage a forecast puts on each move is the monster DB's at the run's ascension (DamageContext; Roy:
  * monster damage at the current ascension): its measured base per hit there (moveDamageAt, the nearest
  * logged ascension scaled when unseen) plus the enemy's Strength, times its hits, x1.5 while our
  * Vulnerable lasts; a move with no measured base its shown hit (shownDamageAt). The move model's own

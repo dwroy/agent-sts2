@@ -2,14 +2,14 @@
  * Outcome statistics as facts on the brain's build questions (V4 M2, docs/v4-build-facts.md): the rows of
  * outcome-stats.json (knowledge/builders/build-outcome-stats.py, refreshed after every run) for what an option is, given as they
  * are, with n and the ascension they were counted at; "无数据" when the file has no row. Code does not turn them
- * into a score or a ranking: the brain weighs them (Dai 2026-09-29, v4-dev-brief §3).
+ * into a score or a ranking: the brain weighs them (Roy 2026-09-29, v4-dev-brief §3).
  *
- * By the run's ascension (Dai 2026-10-04; knowledge/outcome-tables.ts): at A8, below A8 or without an ascension the
+ * By the run's ascension (Roy 2026-10-04; knowledge/outcome-tables.ts): at A8, below A8 or without an ascension the
  * A8 table, the text as before; from A9 up the run's own ascension's rows, and where one has fewer than 5 runs and A8's
  * has 5 or more, the same choice's A8 row after it in brackets, labelled ("（A9 不足5局，另附 A8：…）"), never added into it.
  *
  * The statistics' own definitions (which runs count as "picked", what boss_pass means) are the build script's and
- * are not changed here (docs/v4-architecture.md: 口径 B waits for the discussion with Dai).
+ * are not changed here (docs/v4-architecture.md: 口径 B waits for the discussion with Roy).
  */
 
 import { loadOutcomeStats, type OutcomeStats } from "./experience.js";

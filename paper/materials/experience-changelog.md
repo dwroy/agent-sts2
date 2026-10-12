@@ -451,7 +451,7 @@
 - 这次没改、但已过时的两条：
   - potion-code-discard、potion-fysh-oil 都说「要在 run plan 点名保留」。
   - 现在的代码里，选路前丢药只按药水等级（`src/screens/map.ts:246-268`），喝药保护只认 fight plan（`src/screens/combat-plan.ts:1371-1377`），run plan 点名本身没有作用。
-  - 要不要保护 run plan 点名的药是 Dai 待定的事，定了之后一起改。
+  - 要不要保护 run plan 点名的药是 Roy 待定的事，定了之后一起改。
 - 手册里引用的 n 已过时（测试只查 id 存在）：ds-handbook.md、ironclad-guide.md 引用的 elite-threshold n=20、potion-save-for-boss n=33，现在是 26、57。
 
 ### 代码问题（不给 DS）
@@ -473,7 +473,7 @@
 - iconsToText 的「41点能量」（VSRG）。
 - rollout 里覆甲不衰减；enemy_threat_next 漏掉会复活的幻象。
 
-**交 Dai（策略，没改）**：
+**交 Roy（策略，没改）**：
 - 喝药线和同一条不喝药的线 rollout 同分时，标喝药线为 best，留药在本场不值分（TYZH F25、1VX1 F11）。
 - FIGHT_PLAN=off 时，run plan 点名留给 boss 的药在走廊没有任何保护（HEAC、7B0D、QUG1、SK1U、1VX1、VSRG）。
 - HP 护栏：
@@ -534,11 +534,11 @@
 | 营养汤（U6RU、VBHZ） | 只附魔基础打击（U6RU 5 张，不是 DeepSeek 以为的 11 张）。A7–A9 拿它的 9 局过二幕 boss 4 局（A8 3/6，A9 0/2），高于 A8 基线 19% | 更新 relic-nutritious-soup：只附魔基础打击；code 的删牌说明仍算永恒打击 |
 | 净化对呼唤（XTB4 放掉 89 金的净化） | A7–A9 异鱼战 32 场：牌组有能挑牌消耗的牌（燃烧契约、净化、恶魔之焰、添柴、坚毅+）的 13 场赢 10，没有的 19 场赢 16；VG7H、VL2D 带燃烧契约仍输。净化只在 FA82 一场带进异鱼（赢，17 回合）。输局 6 场都 ≤14.6/回合、≤2 张升级 | 有牌不等于赢，要真用在呼唤上。card-purity 改成「一幕 boss 是异鱼时见到就买」，不写「优先于药水」（没有数据支持） |
 | 烫嘴可可（7XK6；PHMV、XMK1 因「41点能量」没选） | 7XK6 沙虫 T1 打 98、实验体 T1 打穿一阶段 102。二幕先古 A7–A9 过二幕 boss：手套 8/20、营养汤 4/9、黄金印 2/6、可可 2/11 | 更新 relic-very-hot-cocoa、neow-growth（观察数据，方向和「成长件优先」一致） |
-| 留给 boss 的药（只改数字） | 这 14 局里 13 局有，约 24 瓶；两批合计 30 局 25 局、约 52 瓶。A9 31 局每局走廊/事件战喝 4.9 瓶、精英 0.8、boss 1.3，二幕 boss 进场平均 1.2 瓶（n=9）；A9 ≥75% 进场 boss 0 瓶 2/5、带药 16/27 | 按 Dai 的要求，只更新计数和已有句子里的数字，没有新增喝药规则 |
+| 留给 boss 的药（只改数字） | 这 14 局里 13 局有，约 24 瓶；两批合计 30 局 25 局、约 52 瓶。A9 31 局每局走廊/事件战喝 4.9 瓶、精英 0.8、boss 1.3，二幕 boss 进场平均 1.2 瓶（n=9）；A9 ≥75% 进场 boss 0 瓶 2/5、带药 16/27 | 按 Roy 的要求，只更新计数和已有句子里的数字，没有新增喝药规则 |
 
 ### 经验库自己带偏的地方
 - **obscura**：上次由 SK1U 一回合得出的「寄生惧魔这回合要攻击就先打死它」，和 Jev 的提示正相反。复盘说这条只进 DeepSeek，实际 `fightLessons`（`src/screens/combat-plan.ts:271-293`，挂在题面 `:1805-1809`）在胧光怪战里会把它给 Jev（本地用 HEAD 代码验证过）。ZY39 连续三回合只打寄生惧魔。已改。
-- **fysh-damage 的药水统计**：「A8 带药 13/13」是观察数据。XTB4 以它为理由选药瓶皮套、商店买能力药水不买净化；X7LU 也以「异鱼败因就是 0 瓶药」选药瓶皮套。句子没删（Dai 在定喝药的事），在 card-purity 里写明异鱼前见到净化就买。
+- **fysh-damage 的药水统计**：「A8 带药 13/13」是观察数据。XTB4 以它为理由选药瓶皮套、商店买能力药水不买净化；X7LU 也以「异鱼败因就是 0 瓶药」选药瓶皮套。句子没删（Roy 在定喝药的事），在 card-purity 里写明异鱼前见到净化就买。
 - **insatiable-clock 的「×1.8」**：这是改版前时钟的数。现行时钟下 A8 沙虫输局中位 0.95，照这个倍数读会把缺口放大近一倍。已改。
 
 ### 新增（2）
@@ -586,7 +586,7 @@
   - eruptionRace 用当前 HP、A8 喷发式（a84702a，9Q7V）。
   - 呼唤、无实体、沙虫当回合力量进 rollout（1ff3aa8）。
   - enemy_threat_next 按面板力量（1ff3aa8）。
-- **已批、待合并：** 同分喝药线标「tied」（14:00 Dai，batch B）。KY3Y、YQL8、XTB4、XMK1 都出现同分喝药线被标 best。
+- **已批、待合并：** 同分喝药线标「tied」（14:00 Roy，batch B）。KY3Y、YQL8、XTB4、XMK1 都出现同分喝药线被标 best。
 - **新发现：**
   - 饱和时按敌人总血量挑 best：算进随从（W2TB 同族），也不算分段 boss 后面的阶段（7XK6 实验体）。
   - pendingDrinks：Jev 线被抽牌打断后照样代喝回血药（XMK1）。
@@ -603,7 +603,7 @@
 - **已知、未修：**
   - 瓶中精灵、蜥蜴尾巴的复活被当成死亡（YQL8，一致性复查第 2 条）。
   - guardKeepsPick 的 focus 保护（YQL8，同 SK1U）。
-  - run plan 点名的药在 FIGHT_PLAN=off 时没有保护（Dai 待定）。
+  - run plan 点名的药在 FIGHT_PLAN=off 时没有保护（Roy 待定）。
 - **测试：** `tests/oneshot-act-start.test.ts:115` 在 v3 2e92460 上就失败（用 v3 原样的 experience.json 同样失败；把 room-costs.json 换回 2e92460^ 就通过），和这次改动无关，没有动。这次 vitest 940/941 通过，tsc 通过。
 
 ### 切片大小
@@ -636,7 +636,7 @@
 - 口径同上次：「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计；走廊只算 Monster 房（问号房的战斗不算）。A9 汇总是截至 17:39 runs.jsonl 里 40 局已结束的 A9（含还没复盘的 AD5P89DBLM22 F22 甲虫组、CJ88575SQS6H F23 猎人杀手，只进数字）；之后开跑的 KTRT1M2SVVL3 不算。
 - 先在 exp-update 上 `git merge --no-edit v3`（快进到 cf87de6），再改。
 - 结果：新增 1 条，更新 43 条，退役 0 条；active 198 → 199，总数 219 → 220。
-- 药水的处理（按 Dai 的要求）：potion:* 和 general:potion 条目只改句内数字，不加证据局（n 不变）；其他条目里原有的喝药/留药分句一字不改，新加的证据只写非药水的部分。没有新增或加强任何「什么时候喝/别喝」的说法。
+- 药水的处理（按 Roy 的要求）：potion:* 和 general:potion 条目只改句内数字，不加证据局（n 不变）；其他条目里原有的喝药/留药分句一字不改，新加的证据只写非药水的部分。没有新增或加强任何「什么时候喝/别喝」的说法。
 
 ### 对照数据检查的主题
 | 主题 | 数据 | 结论 |
@@ -817,7 +817,7 @@
   - `src/knowledge/jev-hints.json:18-28`（matriarch-asleep、matriarch-sleep-turns）和 `src/project/run-journal.ts:179`（BOSS_NOTES LAGAVULIN）只讲「沉睡时打能力/留格挡，别打醒」，没覆盖手里没有能力牌的情况。
   - A9 输的 3 场都这样空过两回合；0NZB T1 打掉 60 打醒它，赢了。
   - `ironclad-guide.md:53` 的「一次能打掉 25% 以上可以打醒」和数据一致。
-- experience 的 potion-swift「代码按 0 价值算」已过时：`src/knowledge/potion-values.ts:47` 是 SWIFT_POTION { Cards: 3 }，`src/strategy/card-model.ts:730` 是 draw 3。药水条目这次只改数字，没动，待 Dai 定。
+- experience 的 potion-swift「代码按 0 价值算」已过时：`src/knowledge/potion-values.ts:47` 是 SWIFT_POTION { Cards: 3 }，`src/strategy/card-model.ts:730` 是 draw 3。药水条目这次只改数字，没动，待 Roy 定。
 - `src/strategy/boss-clock.ts:195` giantKillRecord（batch-f 测试钉住）的「A9 T10 前击杀只赢 1/3」：Y36H（只进数字）T9 击杀赢了，现在是 2/4。属于巨兽早杀那一处，只报数字。
 - 代码：
   - `src/strategy/route-projection.ts:158` 问号按 room-costs 的 A9 二幕问号中位 0 计价（KTRT 投影 82%、实到 62%），和 act2-opening、route-no-chains 冲突。
@@ -957,7 +957,7 @@
   - 代码支持后按「代码修好就退役」处理。fix-queue 已有这一条。
 - 考虑过、没加的：
   - 液态记忆在 Jev 线中间喝下后选牌没续上（8KD7）：代码问题。
-  - HP 护栏换线（RHNE、WQ67）：代码问题，for-dai 已列。
+  - HP 护栏换线（RHNE、WQ67）：代码问题，for-roy 已列。
   - 外骨骼虫×4：只有 8KD7 一场贵，放进 act2-opening 的数。
   - 铅制镇纸：Y36H、RHNE、ARKG 三局涅奥都选了它，都死在一、二幕，但 n 和对照都说明不了什么。
 
@@ -1000,7 +1000,7 @@ ds-handbook:38 进场均值、boss-clock 的巨兽击杀回合战绩由修 bug �
 - 异鱼的清呼唤牌：`ironclad-guide.md:54` 和 `run-journal.ts:180` 把未升级的「坚毅」列为清呼唤的牌。
   - 经验 card-true-grit 写的是未升级版随机消耗。
   - ARKG 带两张未升级坚毅加燃烧契约，仍有 5 个 0 伤回合。影响小，只列出。
-- 经验库和代码（药水条目没动，待 Dai）：
+- 经验库和代码（药水条目没动，待 Roy）：
   - potion-code-discard「药栏满且前方有小信箱、白兽雕像时，代码会在选路前丢最弱的药」：0c71951 起小邮箱的药交给决策者，`src/screens/map.ts:342` 只剩白兽雕像。
   - potion-fysh-oil「代码可能把它当格挡药在满栏时丢掉」：可能也受 fa98169、0c71951 影响，没核实。
   - potion-swift「代码按 0 价值算」仍过时（`src/knowledge/potion-values.ts:47`，上一节已列）。
@@ -1014,13 +1014,13 @@ ds-handbook:38 进场均值、boss-clock 的巨兽击杀回合战绩由修 bug �
   - F25 三节同名：2de27ae 修前。
 - WQ67：
   - boss 饱和盘 best 违背「先比死亡数」7 问：b2080fb 修前。
-  - HP 护栏在 boss T9 把 34 伤害的线换成 24（for-dai 已列）。
+  - HP 护栏在 boss T9 把 34 伤害的线换成 24（for-roy 已列）。
 - 8KD7：
   - 液态记忆在 Jev 的线中间喝下后选牌没续上（`src/screens/combat-plan.ts:1537`、`src/screens/selection.ts:40-53`，fix-queue 未修）。
   - F30 饱和盘 best：b2080fb 修前。
-  - 手套消耗给能力牌固定 5 分：Dai 的估值问题。
+  - 手套消耗给能力牌固定 5 分：Roy 的估值问题。
 - RHNE：
-  - HP 护栏两次换掉 Jev 的伤害线（`combat-plan.ts:429` hpGuardReplacement）：F14 T2 换掉 rollout best，boss T2 把与我一战！+ 换成血墙。for-dai 已列。
+  - HP 护栏两次换掉 Jev 的伤害线（`combat-plan.ts:429` hpGuardReplacement）：F14 T2 换掉 rollout best，boss T2 把与我一战！+ 换成血墙。for-roy 已列。
   - boss 饱和盘可比的 6 问里 5 问违背新排序：b2080fb 修前。
 - ARKG：
   - 消亡粉末 34 问里 30 问被标 potion_no_effect（0dafcda 引入，G 批 2ca832e 已修）。
@@ -1173,14 +1173,14 @@ ds-handbook:38 进场均值、boss-clock 的巨兽击杀回合战绩由修 bug �
 
 ### 代码问题（不给 DS）
 按复盘写的状态，修复进度以 `notes/fix-queue.md` 为准（行号按复盘时的版本）：
-- 7YT0、9CDE、VTRE、V6TW、JJ65：推演的 value 只算本场（`src/strategy/rollout-live.ts:369-371`），留给 boss 的药不计价；fight plan 默认关（`src/config.ts:336-340`），run plan 的「留药」传不到出牌问题。属于 Dai 待定的药水设计，没进 fix-queue。
+- 7YT0、9CDE、VTRE、V6TW、JJ65：推演的 value 只算本场（`src/strategy/rollout-live.ts:369-371`），留给 boss 的药不计价；fight plan 默认关（`src/config.ts:336-340`），run plan 的「留药」传不到出牌问题。属于 Roy 待定的药水设计，没进 fix-queue。
 - 7YT0：覆甲卡面没有衰减说明（d7dab83、cff33ba 已修）。
-- 9CDE：boss T3 HP 护栏在 big-hit 回合把 rollout best 的燃烧+ 线换成纯格挡（`src/screens/combat-plan.ts:418-423`、`:1518`、`:1791-1797`），燃烧+ 晚 2 回合。for-dai 类问题。
+- 9CDE：boss T3 HP 护栏在 big-hit 回合把 rollout best 的燃烧+ 线换成纯格挡（`src/screens/combat-plan.ts:418-423`、`:1518`、`:1791-1797`），燃烧+ 晚 2 回合。for-roy 类问题。
 - VTRE：流动铜液不建模（1966f0a 已修）；红头骨不进求解器（246d2be 已修）；商店 one-shot 把清单写进 choice 被判无效（1fdbb97 已修）。
 - V6TW：流动铜液、自成型黏土（1966f0a、246d2be 已修）。
 - DHGT：
   - 手里剑、舵盘不进求解器/rollout，稳定血清不建模（fix-queue 未修）。
-  - 饱和盘先比死亡数、再比本回合掉血（b2080fb 的设计），T5 带燃烧+ 的 4 条线都因多掉 4–17 血排后面。Dai 的设计问题。
+  - 饱和盘先比死亡数、再比本回合掉血（b2080fb 的设计），T5 带燃烧+ 的 4 条线都因多掉 4–17 血排后面。Roy 的设计问题。
   - F9、F23 回答没有 route 字段（「the answer has no route」，fix-queue 未修）。
 - JJ65：boss 要点把未升级坚毅算成清呼唤牌（a85c413 已修）；T8、T11 的「calc mismatch」（14520e0 已修）。
 - ULQP：发光水把牌抽空后 rollout 判「no draw/discard piles」不可用（`src/strategy/rollout-live.ts:587`，fix-queue 未修）。
@@ -1219,7 +1219,7 @@ ds-handbook:38 进场均值、boss-clock 的巨兽击杀回合战绩由修 bug �
 
 ## 知识库核对（2026-09-29 夜；exp-update 3ad8b75，合入 v3 1895a6c）
 
-Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-handbook.md、Jev 提示 jev-hints.json、card-value.ts 的 TIER 表和角色分类、boss 笔记（run-journal.ts BOSS_NOTES、boss-clock.ts 的 note/mechanic）和经验库一样都是知识库，只分新旧：和复盘/日志数据冲突的改成数据版本（写明进阶和 n），数据说明无效的删掉，没有数据覆盖的先保留。
+Roy 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-handbook.md、Jev 提示 jev-hints.json、card-value.ts 的 TIER 表和角色分类、boss 笔记（run-journal.ts BOSS_NOTES、boss-clock.ts 的 note/mechanic）和经验库一样都是知识库，只分新旧：和复盘/日志数据冲突的改成数据版本（写明进阶和 n），数据说明无效的删掉，没有数据覆盖的先保留。
 
 ### 做法：计数从数据算，不再手写
 照 22109ed、7819a1a、fe82439 的做法，写占位符，由代码从数据填。攻略和手册在 DeepSeek 建系统提示时填一次（fillGuideFacts），Jev 提示在 hintText 里填，boss 笔记在 bossNote 里填。
@@ -1278,7 +1278,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 ### 手册 ds-handbook.md
 - :3 版本号改成 2026-09-29，注明做过知识库核对。
 - :5「孤注一掷与污浊药水永不使用」→「孤注一掷永不打出」。
-  - 代码事实：污浊药水 09-28 起不再禁用（combat-plan.ts 注释，Dai 2026-09-28），自伤 12 算进 hp_lost，喝不喝由 Jev 选。
+  - 代码事实：污浊药水 09-28 起不再禁用（combat-plan.ts 注释，Roy 2026-09-28），自伤 12 算进 hp_lost，喝不喝由 Jev 选。
 - :33「污浊药水…代码不会喝，只能卖钱」改成上面的代码事实，另加「默认配置下进商店前代码会把它丢掉」（config shopDiscardPotions）。建议的方向（3 瓶不如 1 瓶随机药）没变。
 - :38 一幕 boss 进场血量：旧的「A8 90%/83%（141 场），A9 90%/88%（44 场）；灵魂异鱼…」→ {ACT1_ENTRY_HP}。
   - 现在是：A8 91%/83%（144 场），A9 90%/87%（49 场）；异鱼 A8 90%/82%（21 场），A9 92%/92%（12 场）。
@@ -1385,7 +1385,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 - 手册：「进二阶段 HP 最好 ≥60」（实验体 A8/A9 只有 4 场）、进阶 2 一节（历史统计）、一幕构筑统计（41 局，和 act1-strength 同向）。
 - 胧光怪、骇鳗、蜂群术士（A7–A9 9 次致死，核对 runs.jsonl 一致）等条目：和经验库一致。
 
-### 需要 Dai 定
+### 需要 Roy 定
 1. 代码硬规则「不打醒熟睡敌人」（combat-plan.ts hardRuleLines）：只要有不打醒的线，就删掉所有打醒的线（赢下战斗的线除外）。
    - 数据：一次打掉 ≥25% 打醒的 2 场都赢（EZ2L、0NZB）。A9 没有力量牌、等它自然醒的 3 场全输。
    - 知识文字现在允许 ≥25% 的爆发打醒，但硬规则会挡住这类线。要不要给硬规则加 25% 例外？n=2。
@@ -1412,7 +1412,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 ## 2026-09-30 第九次增量：A8 窗口第 1–11 局，同步知识库核对（version 2026-09-30.1，分支 exp-update，cf73b66；合入 v3 见文末）
 
 ### 来源
-- `notes/lessons.md` 末尾 11 节 A8 复盘（Dai 09-29 21:26 起的 A8 对比窗口第 1–11 局），全输：
+- `notes/lessons.md` 末尾 11 节 A8 复盘（Roy 09-29 21:26 起的 A8 对比窗口第 1–11 局），全输：
   - RRMYC7MCSYX8（F33 帝王蟹）、5LRZ7HJ7YGSY（F48 女王）、5PHF3ML3XMJN（F17 瀑布巨兽）、UNRLW0W3XWLD（F33 无厌沙虫）、YVYZ6QHA85FN（F48 永世沙漏）、Q8XR6EXAF6QV（F48 女王）、3RMEW7ZXS8TF（F33 帝王蟹）、NH8A3VBDRDZW（F33 无厌沙虫）、2WRUNPS2ZSM4（F17 瀑布巨兽）、79YRPJ8TCCZ5（F33 知识恶魔）、86C3PHPYHX7L（F33 知识恶魔）。
   - 03:33 的勘误按勘误用（Q8XR 女王战 focus 5/8 问、YVYZ 饱和从 T2 开始、86C3 T7 第一问没跟 best、2WRU 的 guide 填数时间）；这几处都没进条目。
   - 第 12 局 MZFVC3RB3JD8（19:17Z 结束）还没复盘，不算；手写数字的截止点是 86C3（18:47:45Z），A8 161 局。
@@ -1481,7 +1481,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 - **螃蟹：知识和 rollout 两套击杀顺序。** RRMY、3RME 的 Jev 提示和 run plan 都写先打火箭，rollout 的击杀顺序比较多数选「碾碎爪 > 火箭」，结果两只平摊。只核对了知识文字的数（现在是占位符）；推演排序不在本次范围。
 - **知识恶魔：攻略写「只有已打出撕裂时才选瓦解」，代码照这句给撕裂时的瓦解成本 −1，绕过了 HP 闸。** 79YR T5 17 血选了瓦解，T6 死。M 批 556a99c 已修代码；攻略两处补了「剩余 HP 扛得住」。
 - **kd-dps「A8 ≥75% 进场 7/10，<75% 0/9」让 86C3 把血拉满、79YR 两个火堆都回血。** 86C3 91% 进场仍只有 13.6/回合（0 张力量牌），79YR 69% 进场。条目下半句「二幕构筑必须有永久力量」86C3 没做到（整局选项里没有燃烧/恶魔形态/撕裂，F17 拿壁垒不拿地狱狂徒）。
-- **删牌：代码顺序（run plan 目标 +40）让基础牌排在可删的诅咒前。** UNRL、3RME 都照顺序删了打击；86C3 推理里写了「打击木偶让打击 9 伤，也许先删防御」，仍删打击。条目和攻略补了诅咒、打击木偶；排序本身是估值问题（fix-queue 标给 Dai）。
+- **删牌：代码顺序（run plan 目标 +40）让基础牌排在可删的诅咒前。** UNRL、3RME 都照顺序删了打击；86C3 推理里写了「打击木偶让打击 9 伤，也许先删防御」，仍删打击。条目和攻略补了诅咒、打击木偶；排序本身是估值问题（fix-queue 标给 Roy）。
 - **deck-clock「时钟说已达标时按仍缺 ~30% 处理」：** 本批反例是时钟偏低的一侧（3RME/79YR/NH8A 仪式兽实打是估值的 1.5–1.7 倍，Q8XR 同族/恶魔 1.08/1.30），条目已有「低估」一段，没改。
 - **5LRZ F42 以「58 血打精英会死」改线，F44 满血又改回精英**（boss 前 3 层 98% 进机甲骑士，−66）：elite-threshold 已写「boss 前 ≤5 层的精英即使满血也可能掉 70+」，加 5LRZ。
 
@@ -1516,7 +1516,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 ### 退役（0）
 没有退役、合并。active 198，离测试上限 200 还有 2 条。
 
-### 知识库其他部分（Dai 2026-09-29 的规则；行号按 exp-update cf73b66）
+### 知识库其他部分（Roy 2026-09-29 的规则；行号按 exp-update cf73b66）
 - 攻略 `src/knowledge/ironclad-guide.md`：
   - :9 删牌：「删牌优先打击，其次防御」后补「能删的诅咒（受伤、孢子心灵）排在打击前（UNRL）；带打击木偶时打击不一定是最差的牌（86C3）」。n=2（加 3RME 孢子心灵同类）。
   - :56 沙虫：旧「沙坑 ≤2 时先打逃离再输出」（和经验 insatiable-escape n=15「沙坑 ≤2 再逃是错的」冲突）→ 先比沙坑和 HP 两条死线；沙坑先到时每张逃离立刻打、不等 ≤2；HP 先到时逃离不加回合，打格挡/伤害（{SANDPIT_DEATHS}；NH8A）。
@@ -1562,7 +1562,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
   - 手册其余构筑、商店、事件、药水、战斗取舍条目；知识恶魔诅咒顺序（代码处理）。
   - 帝王蟹击杀顺序：知识文字现在全是占位符，数字对；rollout 的排序和提示不一致（RRMY、3RME）不在本次范围。
 
-### 需要 Dai 定
+### 需要 Roy 定
 1. elite-no-double 改成了数据版本（A8 打 2–3 只的 22 局过二幕 boss 6/22，1 只 15/89）。这是观察数据：牌组强才敢多打。要不要在路线评分里反映（现在 route 事实按精英成本扣分）？
 2. 删牌估值：run plan 目标 +40 让打击/防御排在能删的诅咒前（UNRL、3RME），带打击木偶时打击仍排第一（86C3）。fix-queue 标的是估值问题。
 3. 螃蟹击杀顺序：数据（火箭先死 12 场赢 9，其余 47 场赢 9）支持先打火箭，rollout 的击杀顺序比较在饱和/降级时多给「碾碎爪 > 火箭」，两局都平摊输。推演排序是否改。
@@ -1571,7 +1571,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 6. 卡牌：飞剑回旋镖是否算螃蟹群伤；HEADBUTT（A9 一幕 0.33 vs 0.78，没拿的一边 n=9）等拿不准的牌。
 7. 药水：本批 11 局都把点名给 boss 的药在前面喝掉，K 批后进 boss 的药更少（二幕 boss 进场 0.7 瓶，n=9）。条目只改了数，方向没动。
 
-### 给 Dai 的策略证据（只列证据，不是规则）
+### 给 Roy 的策略证据（只列证据，不是规则）
 - 二幕 boss：A8 本批 9 场，≥75% 进场 7 场赢 3，输的 4 场都是输出不够（RRMY 25.9、3RME 22.1、UNRL 33.4 差 28 血、86C3 13.6）；三局走二幕 0 精英路线（RRMY、NH8A、79YR），进 boss 67–76%，全输。A8 二幕 0 精英/1 只精英过二幕 boss 11/56、10/49。
 - 永久力量：A8 一幕 boss 152 场，0 张 43/70 过、≥1 张 69/82；仪式兽有 15/15、没有 8/11；知识恶魔 ≥75% 进场有 9/12、没有 0/1。AOE 张数不分胜负（1.8/1.9）。
 - 女王：赢的 5 场都先打死聚合体；A8 两场 T1 把爆发打进女王（58、87）都输。
@@ -1584,7 +1584,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 按复盘写的状态，修复进度以 `notes/fix-queue.md` 为准：
 - M 批（v3 950cbf5）已修：知识恶魔撕裂时瓦解绕过 HP 闸（556a99c，79YR）、音乐盒建模（617e504，YVYZ）、「ending now kills」写成 Burn（91bce31，3RME/NH8A/YVYZ）、治疗写成「hp --5」（5e19d7a）、「mod 判死 solver 判活」说明（8f31fa8，86C3）、商店回答两段 JSON（f26ae1a，79YR）、run plan 空回答（fa46f6c，79YR）、删牌界面 +40 拆开（16559ba）、guide 填数按天冻结（8546fde，缓存）。
 - L 批已修：白兽雕像「先喝再走」（2f6ae4c，5LRZ）、丢药题占位符（2adcb92）、单选多键（7eb1de7，RRMY）、沙坑致死说明（353e31b，UNRL）。
-- 没修（设计问题，给 Dai）：删牌 +40 的排序（UNRL、3RME、86C3）；rollout 饱和排序（UNRL、2WRU、86C3、3RME）；HP 护栏/低信心占优换线（5LRZ、86C3、NH8A）；螃蟹击杀顺序比较在饱和时的取舍（RRMY、3RME）。
+- 没修（设计问题，给 Roy）：删牌 +40 的排序（UNRL、3RME、86C3）；rollout 饱和排序（UNRL、2WRU、86C3、3RME）；HP 护栏/低信心占优换线（5LRZ、86C3、NH8A）；螃蟹击杀顺序比较在饱和时的取舍（RRMY、3RME）。
 - fix-queue 里「experience.json:389 巨兽旧数字」本次已处理（giant-explode 改成占位符）。
 
 ### 测试
@@ -1625,7 +1625,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 ## 2026-10-03 第十次增量：28 局 A8/A9（13 局 A8 + 15 局 A9；version 2026-10-03.1，分支 v4-exp，f8d38bc）
 
 ### 来源
-- `notes/lessons.md` 3192–3664 行的 28 节复盘（Dai 10-03 学习者任务；V4.3 13 局 A8、V4.4 15 局 A9），节内的「更正」按更正用：
+- `notes/lessons.md` 3192–3664 行的 28 节复盘（Roy 10-03 学习者任务；V4.3 13 局 A8、V4.4 15 局 A9），节内的「更正」按更正用：
   - A8：GBBBMVCPA7R1（F46 灵魂枢纽）、KMB1MYF427N8（F39 猫头鹰法官）、JJ75S331VUKX（通关，沙漏）、5DFXQLAMFUB2（通关，实验体）、JW925EDF9ZTQ（通关，实验体）、VNKN9952ZNA0（F33 帝王蟹）、GWGTNXPWS7PE（F44 失落之物/遗忘之物）、XSPHCB4GUSEU（F48 女王）、7PWU4CD3QCP3（F48 女王）、R6E82S94VB0A（F43 构装体）、3DGZWZ09GKQ4（通关，沙漏）、TMNFVW6DRQ20（F48 沙漏）、LTKW24N3R9PG（F44 组装师）。
   - A9（全输）：63WBEEF2JVM5、R764HJWMJQ3V（F33 知识恶魔）、1YXMHF6FSPK4、610BBERH4SPP、UK7R9A0NMCXL（F33 帝王蟹）、R1QJUBVBSSB2（F33 沙虫）、X7BX5DYHFZ3N、SMNJTGSHFMME（F48 沙漏）、JSA5K8YZ9RXV（F48 女王）、XPDAUKKM1UT6（F39 问号法官）、EQL95K9F3LKQ（F45 史莱姆狂战士）、9V7K1P899R5N（F45 灵魂枢纽）、8RB3JKMNZZP1（F46 巨斧机器人）、B3PJGKHAQGK6（F17 仪式兽）、XC4TNGZU4KT9（F11 走廊）。
   - 用到的更正：JJ75 不跟 rollout 的题数、沙漏 T5 意图 28→10 是上勾拳 + 黑暗镣铐两张牌；R6E8「死时剩两只方柱构装体」、拳击构装体给的是脆弱；XPDA 牌组打击 ×5；UK7R 火箭 39 只出现一次、血墙实得 12 格挡；XC4T 缩小只在甲虫活着时挂着。
@@ -1760,15 +1760,15 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
   | STOMP 踩踏 | 72 | 64 | 二幕 0.30（27）vs 0.73（15），z=−2.68，终层 34.2 vs 41.7；一幕 49 vs 15 持平 |
   | HEMOKINESIS 御血术 | 64 | 72 | 一幕 0.88（32）vs 0.67（18），z=1.80，终层 34.9 vs 28.4；二幕另一边 n=6 |
   | HEADBUTT 头槌 | 62 | 54 | 一幕 0.71（83）vs 0.85（47），z=−1.80；二幕 0.23（35）vs 0.48（27），z=−2.06；A9 一幕 0.33（18）vs 0.76（17） |
-  - SPITE 怨恨也满足规则（一幕 0.95（19）vs 0.71（28），z=2.05）但**没改**：in-combat 消耗打分读这张表，60 会让烘焙手套先消耗重锤而不是怨恨（tests/screens.test.ts XWPV F48 T4 的固定数据用例失败），留给 Dai。
-  - 没改：ANGER（z=3.26）、FEEL_NO_PAIN（二幕 z=−2.49）、FIGHT_ME（z=2.99）、MOLTEN_FIST（z=−2.33）、SWORD_BOOMERANG（z=3.20）、TAUNT（z=−2.42）——最近两次核对已按同方向改过一档，差距还在；要不要再走一档给 Dai 定。有反向比较的 BLOOD_WALL、BURNING_PACT、SETUP_STRIKE、THUNDERCLAP 不动。
+  - SPITE 怨恨也满足规则（一幕 0.95（19）vs 0.71（28），z=2.05）但**没改**：in-combat 消耗打分读这张表，60 会让烘焙手套先消耗重锤而不是怨恨（tests/screens.test.ts XWPV F48 T4 的固定数据用例失败），留给 Roy。
+  - 没改：ANGER（z=3.26）、FEEL_NO_PAIN（二幕 z=−2.49）、FIGHT_ME（z=2.99）、MOLTEN_FIST（z=−2.33）、SWORD_BOOMERANG（z=3.20）、TAUNT（z=−2.42）——最近两次核对已按同方向改过一档，差距还在；要不要再走一档给 Roy 定。有反向比较的 BLOOD_WALL、BURNING_PACT、SETUP_STRIKE、THUNDERCLAP 不动。
 - 没改、和数据不冲突：
-  - Jev 提示 crab-rocket-first「Focus the Rocket first」：数据也支持先打死碾碎爪（6 场赢 5），但「先火箭」本身不和数据冲突（15 场赢 11）；{CRAB_KILLS_EN} 的「otherwise」把碾碎爪先死的赢局和平摊混在一起，见「需要 Dai 定」。
+  - Jev 提示 crab-rocket-first「Focus the Rocket first」：数据也支持先打死碾碎爪（6 场赢 5），但「先火箭」本身不和数据冲突（15 场赢 11）；{CRAB_KILLS_EN} 的「otherwise」把碾碎爪先死的赢局和平摊混在一起，见「需要 Roy 定」。
   - boss 笔记（run-journal.ts BOSS_NOTES、boss-clock.ts BOSSES）都是占位符，A9 数值随 monster-db 填；本次没有冲突。
   - 攻略「低血时绕开精英」「问号…低血时每个问号都按一场走廊算」和新数据一致。
 - 没有数据覆盖，保留：攻略 §2–§4 其余卡牌分级、§8–§9 低进阶招式记录；手册其余条目。
 - 知识数据文件（monster-db.json、boss-damage.json、outcome-stats.json）这个分支还是 09-30 的；条目和攻略里的占位符（{BOSS_RECORD}、{CRAB_KILL_ORDER}、{CARD_OUTCOME} 等）要等下次知识数据刷新才会填出本节的数。
-- **需要 Dai 定：**
+- **需要 Roy 定：**
   1. 卡牌 TIER：SPITE 满足规则但会改变烘焙手套的消耗顺序（测试用例），要不要改；ANGER、FIGHT_ME、SWORD_BOOMERANG（上调）和 FEEL_NO_PAIN、MOLTEN_FIST、TAUNT（下调）差距在新数据里仍 ≥2 个标准误，要不要再走一档。
   2. 帝王蟹 Jev 提示「Focus the Rocket first」和 {CRAB_KILLS_EN}：要不要改成「先集中打死一只（火箭优先）」，并把碾碎爪先死单列。
   3. 路线：route-hp-bands / rest-preboss-low 的数据说明二、三幕 <60% 时下一场就有 8–41% 的死亡率、<40% 进 boss 前火堆基本救不回；代码的路线复核（map.ts routePlanDecision）只在节点不可达时重规划，血量骤降不触发（XC4T 复盘的建议）。
@@ -1778,7 +1778,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 按复盘写的状态，修复进度以 fix-queue-v4 为准：
 - 已修（复盘时已在 v4-live）：赌博筹码弃牌屏让 SL 读档判失败（JW92、VNKN，14ad753）；SL 判官无惧疼痛按全部手牌算（7PWU，e7c1718）；果汁时 B3 报错（GWGT，e7c1718）；SL 判官不算手牌凋萎（TMNF，386efb5）；蜥蜴尾巴已用没识别（LTKW，8c93fa4）；已知抽牌被十字弓的牌搞乱（X7BX，3c95965）；判官没算下回合开局自伤（610B，1b4453f）；换线选点（R1QJ、SMNJ，914515c）；least-loss 打出先自杀的线（JSA5，566ae3e）；缩小重复/漏算（XC4T，v4 16ffb26/35a7915）；previous_attempts 敌人名不分节（VNKN，72a4333）。
 - 复盘时未修（不阻塞）：判官把「先自扣血再抽牌」的祭品当成可能救命（R764，SL_JUDGE_ANY_DRAW 79ef4eb 后的版本另核）；换线被抽牌后的重规划冲掉、「第 1 次不算数」（UK7R、9V7K、B3PJ）；探寻打击后已知抽牌整个丢掉（R1QJ）；势不可当单敌也按随机判（X7BX）；懒惰被估成 0 代价（63WB）；路线不随血量复核（XC4T）；滚石层数让回合开头重问（JJ75）；残血走廊 rollout 样本被砍后仍按 1/6 对 3/6 选线（XC4T）。
-- 设计问题（Dai）：战斗里的药水代价只看持有价值表，不知道大脑把哪瓶留给哪场（GBBB、JJ75、3DGZ、XSPH 等 20 局）。
+- 设计问题（Roy）：战斗里的药水代价只看持有价值表，不知道大脑把哪瓶留给哪场（GBBB、JJ75、3DGZ、XSPH 等 20 局）。
 
 ### 测试
 - v4-exp f8d38bc：`npx tsc -p tsconfig.json --noEmit` 退出 0。
@@ -1913,7 +1913,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
   - 版本行没动（还是 2026-10-03）。
 - Jev 提示 `src/knowledge/jev-hints.json`：
   - :68 kd-long-fight「The fight lasts 10-15 turns」→「A8 wins took 4-12 turns (median 9)」（A8 知识恶魔 27 场赢局）。25 个词，测试里的「gains N Strength each cycle」不变。
-  - 没有新增提示（27/30）。女王斩首这条只进了 boss 笔记（Jev 的时钟笔记会带上），见「需要 Dai 定」。
+  - 没有新增提示（27/30）。女王斩首这条只进了 boss 笔记（Jev 的时钟笔记会带上），见「需要 Roy 定」。
 - boss 笔记：
   - `src/project/run-journal.ts:190` QUEEN（DeepSeek）末尾加：聚合体一死，下一个敌方回合就是将头砍下（A8 35），打死它那回合留住 HP + 格挡（11 场输局 6 场死在第一下）。
   - `src/strategy/boss-clock.ts:79` QUEEN note（Jev 时钟笔记）同加英文一句。两处原句和测试检查的片段都没改。
@@ -1937,7 +1937,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
   - 时钟：撕裂+ 按 +1 算、狱火开局失血不算自伤（S1MU，`boss-clock.ts:828-855`）；势不可当不在时钟里（5HHL）；巨兽 HP 显示 270（含虹吸回血）而 A8 实测 250（HFNE，`boss-clock.ts:200`）。
   - 2WNT：DeepSeek 推理写「heal」、答案是锻造，空 reason 不重问；code lethal 不读 HARDENED_SHELL 上限。
   - 09-28 基线的 HP 护栏 boss 竞速换线、0 能量喝抽牌药、calc mismatch（7NMP、J300、RA3Q）——phase2 起的版本另有处理，复盘里写的是「应该能覆盖」。
-- 设计问题（Dai）：能力药水按持有价值算、rollout 使用价值近 0，三局带着它死（W80、CDR0、F4K8）——只记代码事实，不写喝药规则。
+- 设计问题（Roy）：能力药水按持有价值算、rollout 使用价值近 0，三局带着它死（W80、CDR0、F4K8）——只记代码事实，不写喝药规则。
 
 ### 测试
 - v4-exp-10030952 07b5a57：`npx tsc -p tsconfig.json --noEmit` 退出 0。
@@ -1962,7 +1962,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 - 条目数：active 199（上限 200）；置信度 高 142、中 51、低 6。
 - Jev 每场战斗看到的敌人条目仍 ≤4 条：没有新增敌人条目（新增的是遗物条目）。
 
-### 需要 Dai 定
+### 需要 Roy 定
 1. 女王斩首：boss 笔记和攻略写了「打死聚合体那回合留住 HP + 格挡 ≥ 斩首」，但 rollout 饱和时按总敌血/本回合掉血排序、不看下一回合的斩首；要不要加 Jev 提示（27/30），或在 rollout 里给「打死聚合体」的那条线扣下一回合 35 的代价。
 2. 连战门槛：手册和 route-no-chains 从「≥3 场」改成数据的「二幕 ≥4 场」；路线评分（map.ts）里的连战扣分要不要跟着改。
 3. 缩放仪：「回血实得 = min(回血量, 上限 − HP − 25)」要不要做成火堆题面的代码事实（MCK9 差 1 血）。
@@ -2100,7 +2100,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
   - 攻略 :56「狂乱逃离…越打越贵」和 W5PT 一致；:60、:126 魂缚锁链和 4JGP 一致；:70 人工制品和 GSFS 一致。
   - 手册 :68 实验体「进二阶段 HP 最好 ≥60」、Jev 提示 test-subject-phases「Enter phase 2 with 60+ HP」：1HF7 93 血进二阶段仍输，不冲突（必要不充分）。
   - 卡牌估值 card-value.ts：A8 截止点没变（232 局），outcome-stats 没刷新，没有新数据，不动。
-  - Jev 提示：没有新增（27/30）；女王被动件没有写成提示，见「需要 Dai 定」。
+  - Jev 提示：没有新增（27/30）；女王被动件没有写成提示，见「需要 Roy 定」。
 - 没有数据覆盖，保留：攻略其余卡牌分级、低进阶招式记录；手册其余条目。
 
 ### 代码问题（不给 DS）
@@ -2115,7 +2115,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
   - B3 打完 boss 仍模拟刚打死的 boss（5CWL 起多局，build-sim-facts.ts:387）；小样本差值被引用；低可信 boss 满时模拟只为写日志。
   - 钗等遗物在 rollout/整场模拟/boss 时钟里都没有（8D8D，rollout-live.ts:319-373）。
   - SL：「第 1 次不算已试」（Z4UK，explore.ts，cab3c3f 修）；单线重规划时换线失效、differs=false（PW7Y、9175，combat-plan.ts:3039-3051）。
-- 设计问题（Dai）：战斗里的药水代价看不到大脑「留给 boss」的意图（本批 21 局）——只记代码事实，不写喝药规则。
+- 设计问题（Roy）：战斗里的药水代价看不到大脑「留给 boss」的意图（本批 21 局）——只记代码事实，不写喝药规则。
 
 ### 测试
 - v4-exp-10031032 55b6164：`npx tsc -p tsconfig.json --noEmit` 退出 0。
@@ -2143,7 +2143,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 - 条目数：active 197（上限 200）；置信度 高 144、中 51、低 2。
 - Jev 每场战斗看到的敌人条目：三骑士战多 1 条（knights），其余遭遇不变，仍 ≤4 条。
 
-### 需要 Dai 定
+### 需要 Roy 定
 1. 女王被动件：deck-passive-engine 和攻略 :135 写了「被动伤害/回合开始格挡不打折」，但钗、水银沙漏等在 rollout、整场模拟、boss 时钟里都没建模（8D8D）；要不要建模，或给 Jev 加一条女王提示（27/30）。
 2. 路线复核往险处改线（9175 F37、QWXK F25）：复核答案里没有按当前血量对照 route-hp-bands 的约束；要不要在路线复核题面里给「改线后下一个火堆前的场数和投影血量」。
 3. 条目上限：active 197/200，下一次新增前还要合并（候选：n=2 的中置信卡牌/事件条目，如 card-gambit、card-armaments、event-symbiote、event-legends）。
@@ -2243,7 +2243,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 - **card-panic-button**（card:PANIC_BUTTON 应急按钮，n=2，中，asc 9–20）：机制条目，见上。证据 GPR8、QLL4。
 - **relic-fiddle**（relic:FIDDLE 小提琴，n=3，中，asc 9–20）：机制条目，见上。证据 Y8E0、FP35、GQ5H。
 - **act3-a9**（act:3，n=12，高，asc 9–20）：A9 三幕单列——26 局进三幕 7 局死在第一个火堆前，路段 42 段死 14，精英 9 场死 6（满血也死），走廊 ≥60% 进场 73 场 0 死，三幕 boss 1/10；路要在先古那一问按整条线选。证据：本批到了三幕的 12 局（11 局死 + WRXU 通关）。
-- 考虑过没加：波纹水盆、皮草大衣（各 1 局）；外骨骼虫×4（A9 20 场死 2，PEGL 是 12/80 进场，放进 route-hp-bands）；瓶中精灵/复活的读档（是 SL 设计问题，见「需要 Dai 定」）；王室猛毒单列（已有条目）。
+- 考虑过没加：波纹水盆、皮草大衣（各 1 局）；外骨骼虫×4（A9 20 场死 2，PEGL 是 12/80 进场，放进 route-hp-bands）；瓶中精灵/复活的读档（是 SL 设计问题，见「需要 Roy 定」）；王室猛毒单列（已有条目）。
 
 ### 更新（55）
 - **加证据或反例（51，括号里是本批加的局）：**
@@ -2280,7 +2280,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
   - BOSS_NOTES 的族母「牌组没有持续力量牌时沉睡回合几乎白过」、Jev 提示 matriarch-siphon：和 A9 6/6 对 4/8 一致。
   - 手册 :50「瓶中精灵、蜥蜴尾巴只救一次，不算 HP」：一致（本批复活的机制细节进了 relic-lizard-tail）。
   - 卡牌估值 card-value.ts：:293 已按小提琴给抽牌牌减分，和 relic-fiddle 一致；TIER 表按 A8（截止点 232 局没变），outcome-stats 没刷新，没有新数据，不动。
-  - Jev 提示：没有新增（27/30）；应急按钮没有写成提示，见「需要 Dai 定」。
+  - Jev 提示：没有新增（27/30）；应急按钮没有写成提示，见「需要 Roy 定」。
 - 没有数据覆盖，保留：攻略其余卡牌分级、低进阶招式记录；手册其余条目。
 
 ### 代码问题（不给 DS）
@@ -2292,7 +2292,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
   - codex 回退行不含失败耗时、断流耗时记到下一题、runaway（RNTV、J4S2、L3G5、3JHE）。
   - rollout 看不到「越晚击杀自爆越大」、不会把应急按钮留给自爆回合（QLL4，turn-solver.ts:1664）。
   - 皮草大衣的标记 mod 地图字段里没有（RNTV，数据缺口）。
-- 设计问题（Dai）：被跟踪的非 boss 战里靠烧复活（瓶中精灵）活下来时是否读档（RJZG F31、ET3V F33，SL_RELOAD_ON_REVIVE 默认关）；战斗里的药水代价看不到大脑「留给 boss」的意图（本批 14 局）——只记代码事实，不写喝药规则。
+- 设计问题（Roy）：被跟踪的非 boss 战里靠烧复活（瓶中精灵）活下来时是否读档（RJZG F31、ET3V F33，SL_RELOAD_ON_REVIVE 默认关）；战斗里的药水代价看不到大脑「留给 boss」的意图（本批 14 局）——只记代码事实，不写喝药规则。
 
 ### 测试
 - v4-exp-10040750 08efce4：`npx tsc -p tsconfig.json --noEmit` 退出 0。
@@ -2320,10 +2320,10 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 - 条目数：active 198（上限 200）；置信度 高 146、中 52、低 0。
 - Jev 每场战斗看到的敌人条目仍 ≤4 条：没有新增敌人条目（新增的是卡牌、遗物、幕条目）。
 
-### 需要 Dai 定
+### 需要 Roy 定
 1. 应急按钮：card-panic-button 写了「留给下一回合打不着的局面」，但 rollout/求解器只在本回合建模禁格挡，不会把它留给巨兽自爆回合（QLL4、GPR8）；要不要加 Jev 提示（27/30）或在 rollout 里给下一回合的禁格挡计价。
 2. A9 三幕精英：act3-a9 写了「精英能绕就绕」（9 场死 6，满血也死），路线评分（map.ts）里 A9 三幕精英的分要不要跟着改。
-3. 复活读档：RJZG F31、ET3V F33 都是「靠烧瓶中精灵活下来、SL 不读档」，最后都输在那瓶精灵；SL_RELOAD_ON_REVIVE 要不要开（复盘里已是 for-dai 第 2 条证据）。
+3. 复活读档：RJZG F31、ET3V F33 都是「靠烧瓶中精灵活下来、SL 不读档」，最后都输在那瓶精灵；SL_RELOAD_ON_REVIVE 要不要开（复盘里已是 for-roy 第 2 条证据）。
 4. 条目上限：active 198/200，低置信条目已经合并光了；下一批新增前要合并中置信条目（候选：card-gambit、card-armaments、event-symbiote、event-legends 这些 n=2 的，或把 card-dark-embrace 并进 card-feel-no-pain）。
 5. 卡牌 TIER、outcome-stats：A9 已 95 局，这两样还只按 A8 232 局；要不要用 A9 数据刷新。
 
@@ -2335,7 +2335,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 ## 2026-10-04 进阶审核（version 2026-10-04.2，分支 v4-exp-asc-10040840，c08de33）
 
 ### 方法
-- 任务：learner/tasks/experience-asc-audit.md（Dai 2026-10-04）。开工 `git merge --no-edit v4`：已是最新（25eae40），无冲突。
+- 任务：learner/tasks/experience-asc-audit.md（Roy 2026-10-04）。开工 `git merge --no-edit v4`：已是最新（25eae40），无冲突。
 - 对象：开工时 active 198 条（version 2026-10-04.1），A9 全部适用、A8 适用 194 条，lesson 总长 39806 字。
 - 先查每条证据局的进阶（runs 表），再逐条读文字，分成三类：
   - **机制类（M）**：招式、数值公式、触发时机、牌/遗物/药水怎么起作用。asc 写 [0,20]；随进阶变的数字写明进阶（「A8 35、A9 40」）。经验文字走 fillGuideFacts，只认 `{@8:DMG:…}` 这种带进阶的写法、不认裸 `{DMG:…}`，这次都直接写数字。先古回血那条只在 A2+ 成立，写 [2,20]。
@@ -2402,7 +2402,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 | fysh-beckon | M | [0,20]→[0,20] | A7–A9 有清呼唤牌 16 场赢 12、没有 24/20 → A8 有 23/20、没有 15/13；A9 7/6、11/9（boss 战第一帧牌组含燃烧契约/坚毅+/净化/恶魔之焰，q-fyshexh） | 去掉 A7 |
 | fysh-damage | S | [0,20]→[8,20] | A7–A9 输局 8 场 ≤14.7/回合、32 场赢局 ≥13 → A8 输 5 场 9.6–14.6、赢 33 场 13–36.8（中位 24.6）；A9 输 3 场 6.3–14.7、赢 15 场 17–36.8（中位 27.6）（每回合实打 =（首帧敌人血 − 末帧存活敌人血）/回合，q-fyshdmg） | 去掉 A7，A8/A9 分开 |
 | crab-entry | S | [0,20]→[8,20] | A9 16 场赢 6（≥75% 12/6）→ 补 A9 <75% 0/4 | A9 分开写 |
-| crab-kill-order | M | [0,20]→[0,20] | 「截至 10-02 碾碎爪先死的 6 场也赢 5」→ 火箭先死 A8 13/9、A9 5/4，碾碎爪先死 A8 6/5、A9 2/2，都没先死 A8 27/3、A9 9/0（fight_frames 里某只先从存活列表消失，q-crabfirst） | 占位符 {CRAB_KILL_ORDER} 按全部进阶计、A9 只有 5 场（见「需要 Dai 定」），补日志库的 A8/A9 |
+| crab-kill-order | M | [0,20]→[0,20] | 「截至 10-02 碾碎爪先死的 6 场也赢 5」→ 火箭先死 A8 13/9、A9 5/4，碾碎爪先死 A8 6/5、A9 2/2，都没先死 A8 27/3、A9 9/0（fight_frames 里某只先从存活列表消失，q-crabfirst） | 占位符 {CRAB_KILL_ORDER} 按全部进阶计、A9 只有 5 场（见「需要 Roy 定」），补日志库的 A8/A9 |
 | queen-plan | M | [2,20]→[0,20] | 「截至 10-02 聚合体死了的 14 场赢 3，没死的 9 场全输，11 场输局 6 场死在这第一下」→ 聚合体死了 A8 14/3、A9 2/0，没死 A8 8 场全输（q-queenamalg）；「11 场输局 6 场」改「多半」 | 同上，{QUEEN_AMALGAM} 只有 18 场、含低进阶 |
 | queen-prep | S | [0,20]→[8,20] | 补 A9 2 场 0 胜 | A9 分开写 |
 | aeon-clock | S | [3,20]→[8,20] | 「每回合都掉约 7.7，赢局 59、输局 34/回合」→ 约 7.5；A8 赢局中位 72、输局 33，A9 输局 38（q-aeondmg） | 去掉低进阶局 |
@@ -2479,7 +2479,7 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 
   - 同一状态改后减改前的中位：A8 战斗 −0.46k、奖励 −0.58k、地图 −0.67k、事件 −0.28k、火堆 −0.55k、商店 −0.28k；A9 −0.43k、−0.57k、−0.66k、−0.32k、−0.32k、−0.29k。单个切片最多涨 0.11k（A8 V3UP F3 商店：退役的 deck-random-ev 78 字空出的第 25 个位子由 terror-eel 补上）。
 
-### 需要 Dai 定的事
+### 需要 Roy 定的事
 1. **boss-damage.json 过时、占位符按全部进阶计数**：仓库里的 boss-damage.json 是 09-30（a5b3a1a）的，A9 帝王蟹只有 5 场。经验里的 {BOSS_RECORD:*}（8 条用到）、{CRAB_KILL_ORDER}、{QUEEN_AMALGAM}、{SANDPIT_DEATHS}、{GIANT_KILLS_A9}、{LAG_SLEEP} 都从它填，所以 A9 前缀里会出现「帝王蟹 A9 5 场赢 0」，而同一条的文字（日志库）是「A9 16 场赢 6」；{CRAB_KILL_ORDER}、{QUEEN_AMALGAM}、{SANDPIT_DEATHS} 的开头还是全部进阶的总数（「有记录的 59 场螃蟹战」，含 A0–A7）。测试要求 crab-kill-order、queen-plan 必须用占位符（09-30 的规则），所以这次没删占位符，只在旁边补了日志库的 A8/A9 数。要不要重建 boss-damage.json（tools/build-boss-damage.py），并让这几个占位符只报 A8/A9。
 2. **药水条目的 asc**：按规则只改句内数字，23 条药水条目在 A9 都仍适用。其中 potion-vulnerable 前半句是策略（「别在一幕 boss 前 ≤3 层的精英里喝」），证据只有 A4、A7；这次按机制类（后半句「对人工制品无效」）留在 [0,20]，没有动。要不要给它加上限。
 3. **只适用 ≤A7 的 2 条**：card-stomp [3,7]、relic-blessed-antler [0,7]，A8+ 没有数据。A8/A9 不再看到它们；如果以后要在 A8+ 用，需要新的对局证据。

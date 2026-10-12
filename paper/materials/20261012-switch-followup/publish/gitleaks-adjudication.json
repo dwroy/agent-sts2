@@ -1,0 +1,264 @@
+{
+  "at": "2026-10-12T08:11:41.518214+08:00",
+  "original_scan_exit": 1,
+  "finding_count": 23,
+  "reviewed_noncredential_findings": [
+    {
+      "finding_index": 0,
+      "file": "paper/materials/20261012-0104-codex1-ops-takeover/originals/16-20261011-220116-fix-batch.out",
+      "line": 23,
+      "source_revision": "817632b7893e37a8b02b21ae0ce90972688aa32b",
+      "rule": "generic-api-key",
+      "line_sha256": "44cac2a631cfbd0121518deb639c8755919e444e2562a9421ae1437bc77ae19c",
+      "classification": "deterministic boss simulation evidence SHA256",
+      "proof": {
+        "source": "paper/materials/20261011-2113-ops/event-reports.json",
+        "recomputed_from_sorted_JSON": true
+      }
+    },
+    {
+      "finding_index": 1,
+      "file": "paper/materials/20261012-0104-codex1-ops-takeover/originals/05-pending-closeouts.json",
+      "line": 11,
+      "source_revision": "817632b7893e37a8b02b21ae0ce90972688aa32b",
+      "rule": "generic-api-key",
+      "line_sha256": "6ce4a4296f6d5eafd8875e0a01650054b3c5e422b07d047f29ed122bb6885e65",
+      "classification": "fix queue deduplication digest",
+      "proof": "Recorded fix-batch identity key; ops/learner_jobs.py fix_key generates SHA256 from queue text and accepted bug ledger IDs",
+      "historical_hash_recomputed": false
+    },
+    {
+      "finding_index": 2,
+      "file": "paper/materials/20261012-0104-codex1-ops-takeover/batch-snapshots.json",
+      "line": 190,
+      "source_revision": "817632b7893e37a8b02b21ae0ce90972688aa32b",
+      "rule": "generic-api-key",
+      "line_sha256": "a77d9319935190a83457758d93b31d181f7766e442fb123cab19b1c647a3267f",
+      "classification": "fix queue deduplication digest",
+      "proof": "Recorded fix-batch identity key; ops/learner_jobs.py fix_key generates SHA256 from queue text and accepted bug ledger IDs",
+      "historical_hash_recomputed": false
+    },
+    {
+      "finding_index": 3,
+      "file": "paper/materials/20261012-0104-codex1-ops-takeover/batch-snapshots.json",
+      "line": 264,
+      "source_revision": "817632b7893e37a8b02b21ae0ce90972688aa32b",
+      "rule": "generic-api-key",
+      "line_sha256": "0fb25e186b8e690191a44fd93104b8bf7ab697efb490ee2df62f871f278adbf7",
+      "classification": "deterministic boss simulation evidence SHA256",
+      "proof": {
+        "source": "paper/materials/20261011-2113-ops/event-reports.json",
+        "recomputed_from_sorted_JSON": true
+      }
+    },
+    {
+      "finding_index": 4,
+      "file": "paper/materials/20261012-0104-codex1-ops-takeover/batch-snapshots.json",
+      "line": 1128,
+      "source_revision": "817632b7893e37a8b02b21ae0ce90972688aa32b",
+      "rule": "generic-api-key",
+      "line_sha256": "456d8525f131781ac6091a27c5876a330e335a7004ac1846af3f27382475b297",
+      "classification": "deterministic boss simulation evidence SHA256",
+      "proof": {
+        "source": "paper/materials/20261011-2113-ops/event-reports.json",
+        "recomputed_from_sorted_JSON": true
+      }
+    },
+    {
+      "finding_index": 5,
+      "file": "paper/materials/20261011-codex1-drain-handoff/deferred-2242/pending-closeouts.json",
+      "line": 11,
+      "source_revision": "ccc491ad63332eca2bb3d92fd91dcdd27890e469",
+      "rule": "generic-api-key",
+      "line_sha256": "6ce4a4296f6d5eafd8875e0a01650054b3c5e422b07d047f29ed122bb6885e65",
+      "classification": "fix queue deduplication digest",
+      "proof": "Recorded fix-batch identity key; ops/learner_jobs.py fix_key generates SHA256 from queue text and accepted bug ledger IDs",
+      "historical_hash_recomputed": false
+    },
+    {
+      "finding_index": 6,
+      "file": "paper/materials/20261011-2144-ops/integration/binding-source.patch",
+      "line": 265,
+      "source_revision": "aa6976f881e712ca6aa2e3feb55e80570b62e37b",
+      "rule": "generic-api-key",
+      "line_sha256": "f73a2785b47da48bcef82f8bdd22caf5a51cdc6251483f9ba7c593b68944fff5",
+      "classification": "authorization document SHA256",
+      "proof": "paper/materials/silent/20261011-core-cycle-quantitative-learning/authorization-upgrade-20261011.md"
+    },
+    {
+      "finding_index": 7,
+      "file": "ops/strategy_implementation_jobs.py",
+      "line": 21,
+      "source_revision": "3be7be019f714524e34907e452e160596e5bc708",
+      "rule": "generic-api-key",
+      "line_sha256": "200711c98f3d4e43b989c39c16f7938f39acb52955899cd616045f8c97fd5559",
+      "classification": "authorization document SHA256",
+      "proof": "paper/materials/silent/20261011-core-cycle-quantitative-learning/authorization-upgrade-20261011.md"
+    },
+    {
+      "finding_index": 8,
+      "file": "paper/materials/20261011-2113-ops/event-reports.json",
+      "line": 8,
+      "source_revision": "6ed3b9544b2ac029caf3beb9c8cb834e548320b1",
+      "rule": "generic-api-key",
+      "line_sha256": "456d8525f131781ac6091a27c5876a330e335a7004ac1846af3f27382475b297",
+      "classification": "deterministic boss simulation evidence SHA256",
+      "proof": {
+        "source": "paper/materials/20261011-2113-ops/event-reports.json",
+        "recomputed_from_sorted_JSON": true
+      }
+    },
+    {
+      "finding_index": 9,
+      "file": "paper/materials/20261011-2113-ops/event-reports.json",
+      "line": 872,
+      "source_revision": "6ed3b9544b2ac029caf3beb9c8cb834e548320b1",
+      "rule": "generic-api-key",
+      "line_sha256": "a0986df0139e0dad3e2a8a09f2f90d322043fdfbce0e1735b958b9c68305d23a",
+      "classification": "deterministic boss simulation evidence SHA256",
+      "proof": {
+        "source": "paper/materials/20261011-2113-ops/event-reports.json",
+        "recomputed_from_sorted_JSON": true
+      }
+    },
+    {
+      "finding_index": 10,
+      "file": "paper/materials/20261011-2113-ops/event-reports.json",
+      "line": 909,
+      "source_revision": "6ed3b9544b2ac029caf3beb9c8cb834e548320b1",
+      "rule": "generic-api-key",
+      "line_sha256": "30e38f4edb7f660231a9a13f6e5461032f230d629a8b2dbdea87e969a0cb4bf9",
+      "classification": "deterministic boss simulation evidence SHA256",
+      "proof": {
+        "source": "paper/materials/20261011-2113-ops/event-reports.json",
+        "recomputed_from_sorted_JSON": true
+      }
+    },
+    {
+      "finding_index": 11,
+      "file": "paper/materials/20261011-2018-ops/event-reports.json",
+      "line": 717,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "generic-api-key",
+      "line_sha256": "497fd4a44a5864e29ac9ec3bd66ca411f88d3a4132cf06309757e83ab2e1f1a5",
+      "classification": "fix queue deduplication digest",
+      "proof": "Recorded fix-batch identity key; ops/learner_jobs.py fix_key generates SHA256 from queue text and accepted bug ledger IDs",
+      "historical_hash_recomputed": false
+    },
+    {
+      "finding_index": 12,
+      "file": "paper/materials/20261011-2018-ops/event-reports.json",
+      "line": 1650,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "generic-api-key",
+      "line_sha256": "15027be723fae5e82eb524167d9e1480225580ea9a1e3490d5ae7d12cbbd0c9b",
+      "classification": "fix queue deduplication digest",
+      "proof": "Recorded fix-batch identity key; ops/learner_jobs.py fix_key generates SHA256 from queue text and accepted bug ledger IDs",
+      "historical_hash_recomputed": false
+    },
+    {
+      "finding_index": 13,
+      "file": "paper/materials/20261011-2018-ops/integration/live-gitleaks-adjudication.json",
+      "line": 7,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "sourcegraph-access-token",
+      "line_sha256": "527e9c1ce428c6bcbfdbc921e1003449e33e8d9d15db4e4946868cce530abebc",
+      "classification": "existing Git commit identifiers",
+      "proof": "Every 40-hex value on reported source line resolves to a Git commit object"
+    },
+    {
+      "finding_index": 14,
+      "file": "paper/materials/20261011-2018-ops/integration/calibration-gitleaks-proof.json",
+      "line": 7,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "sourcegraph-access-token",
+      "line_sha256": "78ba4a7437853c9fd092501603f871ca958c6dcfbc53907484e8f1b4f8fd4b14",
+      "classification": "existing Git commit identifiers",
+      "proof": "Every 40-hex value on reported source line resolves to a Git commit object"
+    },
+    {
+      "finding_index": 15,
+      "file": "paper/materials/20261011-2018-ops/integration/calibration-gitleaks-proof.json",
+      "line": 14,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "sourcegraph-access-token",
+      "line_sha256": "f22105ef47f759b4bf521d9bb4d2c436c94e1679bd3e1ee910a0ce3d038fa86c",
+      "classification": "existing Git commit identifiers",
+      "proof": "Every 40-hex value on reported source line resolves to a Git commit object"
+    },
+    {
+      "finding_index": 16,
+      "file": "paper/materials/20261011-2018-ops/integration/calibration-gitleaks-proof.json",
+      "line": 21,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "sourcegraph-access-token",
+      "line_sha256": "ea52eed140d8b5f8907bb7312a702f811baff71d7311b40927a0b18186c2ddc7",
+      "classification": "existing Git commit identifiers",
+      "proof": "Every 40-hex value on reported source line resolves to a Git commit object"
+    },
+    {
+      "finding_index": 17,
+      "file": "paper/materials/20261011-2018-ops/integration/calibration-gitleaks-proof.json",
+      "line": 28,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "sourcegraph-access-token",
+      "line_sha256": "2546980bb1d081555f5e818716664c2960568b2be81d49f3b30f802aab363750",
+      "classification": "existing Git commit identifiers",
+      "proof": "Every 40-hex value on reported source line resolves to a Git commit object"
+    },
+    {
+      "finding_index": 18,
+      "file": "paper/materials/20261011-2018-ops/integration/publish-live.py.txt",
+      "line": 3,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "sourcegraph-access-token",
+      "line_sha256": "9a7c90a034779b680a60885b9736257bac06949369d380e9d28aa92fa7d7cdbb",
+      "classification": "existing Git commit identifiers",
+      "proof": "Every 40-hex value on reported source line resolves to a Git commit object"
+    },
+    {
+      "finding_index": 19,
+      "file": "paper/materials/20261011-2018-ops/publish-resume.py.txt",
+      "line": 11,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "sourcegraph-access-token",
+      "line_sha256": "56e9a9d0a8426dd9b5974e4ef426ed55095a3671b8ba5d265593a64f90fb7e99",
+      "classification": "existing Git commit identifiers",
+      "proof": "Every 40-hex value on reported source line resolves to a Git commit object"
+    },
+    {
+      "finding_index": 20,
+      "file": "paper/materials/20261011-2018-ops/publish-live.py.txt",
+      "line": 3,
+      "source_revision": "d3f894c60108b7187f67702582eb2149d468e589",
+      "rule": "sourcegraph-access-token",
+      "line_sha256": "9a7c90a034779b680a60885b9736257bac06949369d380e9d28aa92fa7d7cdbb",
+      "classification": "existing Git commit identifiers",
+      "proof": "Every 40-hex value on reported source line resolves to a Git commit object"
+    },
+    {
+      "finding_index": 21,
+      "file": "paper/materials/20261011-1751-ops-backlog/assist-live/staged.diff",
+      "line": 787,
+      "source_revision": "e6b0cea2c9d1614a6a8d3d0dffb194bfa7208522",
+      "rule": "generic-api-key",
+      "line_sha256": "5980bc6b06a456724f75b4f97942d70a810e377ff9bdaa913886dc787c8bca55",
+      "classification": "sandbox probe artifact SHA256",
+      "proof": "paper/materials/20261011-ops-assist/tests/sandbox-probe-host-keys-final.json"
+    },
+    {
+      "finding_index": 22,
+      "file": "paper/materials/20261011-ops-assist/evidence-sha256.json",
+      "line": 20,
+      "source_revision": "53ac0a8aca476d0829dd659f979d118ecc6b7fd4",
+      "rule": "generic-api-key",
+      "line_sha256": "5cf2a9c52b03e067484af9beba32f4b7e8978a09866d76c5d3ed9fccfb97a7ac",
+      "classification": "sandbox probe artifact SHA256",
+      "proof": "paper/materials/20261011-ops-assist/tests/sandbox-probe-host-keys-final.json"
+    }
+  ],
+  "unresolved_findings": 0,
+  "scanner_rules_changed": false,
+  "history_rewritten": false,
+  "credentials_read": false
+}

@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261009-101302-postmortem/verify-proposals-initial.py", line 9, in <module>
+    assert x['status']=='pending'
+KeyError: 'status'
+Error in sys.excepthook:
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 238, in partial_apport_excepthook
+    return apport_excepthook(binary, exc_type, exc_obj, exc_tb)
+  File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 70, in apport_excepthook
+    import traceback
+  File "/usr/lib/python3.14/traceback.py", line 12, in <module>
+    import _colorize
+  File "/usr/lib/python3.14/_colorize.py", line 5, in <module>
+    from dataclasses import dataclass, field, Field
+  File "/usr/lib/python3.14/dataclasses.py", line 5, in <module>
+    import inspect
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261009-101302-postmortem/inspect.py", line 5, in <module>
+    mode=sys.argv[1]
+IndexError: list index out of range
+
+Original exception was:
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261009-101302-postmortem/verify-proposals-initial.py", line 9, in <module>
+    assert x['status']=='pending'
+KeyError: 'status'

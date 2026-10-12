@@ -1,0 +1,22 @@
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+2063048 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-154302-experience-update /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-154302-experience-update.pid 1 - /home/dw/Projects
+2063049 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-154302-experience-update 833ZM0MJGWHC silent experience-update /home/dw/Projects/agent-sts2/.worktrees/exp
+2063058 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/exp/learner/run.ts --engine codex --task experience-update --character silent --cwd /home/dw/Projects/agent-st
+2063091 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2069471 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+2069522 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+2069523 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+2069534 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+2074075 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+2074086 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2079606 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-161301-postmortem /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-161301-postmortem.pid 1 - /home/dw/Projects/agent-sts2/op
+2079607 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-161301 C6Z8ATNBNHZ7 silent
+2079617 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/learner/run.ts --engine codex --task postmortem --character silent --cwd /home/dw/Projects/agent-sts2 --set runs=C6Z8ATNB
+2079629 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 1746959
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay                                   wJ:p2   yes    no    
+learner-20261009-154302-experience-update  wJ:pAX  yes    yes   2063048:bash 2063049:bash 2063057:tail 2063058:node 2063091:node
+learner-20261009-161301-postmortem         wJ:pAY  yes    yes   2079606:bash 2079607:bash 2079616:tail 2079617:node 2079629:node
+ops                                        wJ:p5   yes    yes   1753575:node 1753583:codex

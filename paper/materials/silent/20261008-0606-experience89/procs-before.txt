@@ -1,0 +1,22 @@
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+3466741 bash /home/dw/Projects/agent-sts2/.worktrees/live/ops/herdr-exec.sh learner-20261008-044244-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261008-044244-fix-batch.pid 1 - /home/dw/Projects
+3466742 bash /home/dw/Projects/agent-sts2/.worktrees/live/ops/codex-ops-learner.sh 20261008-044244-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244 boss-s
+3466751 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-044244/learner/run.ts --engine codex --task boss-sim-batch --character
+3466771 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3541236 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261008-053104-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261008-053104-strategy-proposal.pid 1 - /home/dw/Projects
+3541237 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261008-053104-strategy-proposal YF0LXT1QSTGG,XP2SL33HT0D9,751FN9QM9MHQ,KV0JHNJCKXLS,C48LLXBGKXQ9,KAY522KT5NXR,10GPK5XGHCK3,Z6CFLDR3N4SB,G403VCZ3BH1B,JL
+3541247 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/run.ts --engine codex --task strategy-proposal --character silent --cwd /home/dw/Projects/ag
+3541265 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3547622 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+3547891 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+3547892 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+3547922 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+3600425 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+3600436 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 1746959
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay                                   wJ:p2   yes    no    
+learner-20261008-044244-fix-batch          wJ:p79  yes    yes   3466741:bash 3466742:bash 3466750:tail 3466751:node 3466771:node 3466797:esbuild
+learner-20261008-053104-strategy-proposal  wJ:p7G  yes    yes   3541236:bash 3541237:bash 3541246:tail 3541247:node 3541265:node
+ops                                        wJ:p5   yes    yes   1753575:node 1753583:codex

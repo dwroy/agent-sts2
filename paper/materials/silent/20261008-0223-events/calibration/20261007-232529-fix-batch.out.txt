@@ -1,0 +1,157 @@
+```json
+{
+  "task": "fix-batch",
+  "base": "270d8dd577f1380419c6dcd0b9bbf12e9a99f59b",
+  "fixes": [{
+    "item": "Roy 已授权新功能：静默 boss 模拟校准",
+    "nature": "定期校准数据刷新，沿用已有实现；未修改策略阈值",
+    "commit": "918e99d84739f9c73f713d2290b89e12062c5231",
+    "source_parent": "710dc4dca3e8e1ca6cd174a17dd425a1cf20bbda",
+    "reused_implementation": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+    "implementation_is_published_ancestor": true,
+    "source": [
+      "agent/tools/boss-sim/refresh-silent.py",
+      "agent/tools/boss-sim/trust.py",
+      "agent/tools/boss-sim/silent_calibration.py",
+      "ops/learner_jobs.py:calibration_job"
+    ],
+    "test": [
+      "agent/tools/boss-sim/test_silent_calibration.py",
+      "ops/tests/test_silent_calibration_dispatch.py",
+      "agent/tests/silent-boss-calibration.test.ts",
+      "agent/tools/test-sandbox.sh"
+    ],
+    "fails_without_fix": false,
+    "fails_without_fix_reason": "本批是统计刷新，没有伪造 bug 红绿测试",
+    "ledger": {
+      "id": "silent-0269",
+      "kind": "fight",
+      "status": "proposed",
+      "shipped": "由运维核实实际发布后登记"
+    }
+  }],
+  "merged": "e6cd55b01bf0f1c8635154f4d842a49de0c7e71c",
+  "published_commit": "03f4ffe017f886f9ee92be50911a318f5f90f4bd",
+  "published_tree": "edca1e8e2761c6cdbf406578c2ac7b51fb9f4a51",
+  "version": "S1.boss-calibration3",
+  "commits": [
+    "918e99d84739f9c73f713d2290b89e12062c5231",
+    "e6cd55b01bf0f1c8635154f4d842a49de0c7e71c",
+    "03f4ffe017f886f9ee92be50911a318f5f90f4bd"
+  ],
+  "publication_checks": {
+    "lock": "ops/live-merge.lock",
+    "pre_merge": "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+    "refresh_commit": null,
+    "refresh_note": "锁内没有待保存刷新文件；并行知识及其他角色数据保持",
+    "preflight": 0,
+    "source_blobs_match_publication": 31,
+    "old_archive_unchanged": true,
+    "rollback": null
+  },
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "source_sandbox": {"exit": 0, "files": 241, "cases": 2531},
+    "live_pre_merge": {"exit": 0, "files": 242, "cases": 2540},
+    "live_post_merge": {"exit": 0, "files": 242, "cases": 2540},
+    "python_calibration": {"exit": 0, "cases": 12},
+    "python_dispatch": {"exit": 0, "cases": 20},
+    "gitleaks": 0,
+    "fixed_refit_exact": true,
+    "cache_idempotence": true,
+    "zero_new_events_preserve_outputs": true,
+    "replay": {
+      "records": 400,
+      "successful": 398,
+      "duplicate_pairs": 0,
+      "shard_exits": [0, 0],
+      "serial_reference_matches_except_timing": 39
+    },
+    "external": "完整外部 tsc/vitest 交调度器，尚未取得结果"
+  },
+  "evidence": {
+    "finished_silent_runs": 110,
+    "boss_attempts": 499,
+    "usable_openings": 200,
+    "actual_usable_outcomes": {"won": 145, "died": 55},
+    "SL_censored_excluded": 298,
+    "actual_death_missing_T1_excluded": 1,
+    "new_completed_events": 21,
+    "new_usable_validation": 20,
+    "tune_keys": 107,
+    "validation": 93,
+    "cutoff_UTC": "2026-10-06T02:46:11.648000",
+    "old_180_inputs_and_seeds_unchanged": true,
+    "tune_keys_and_cutoff_unchanged": true,
+    "ascension_term_selected": false
+  },
+  "boss_table_scope": "以下 n、不足和失败项在 B2/B3 相同；各起点的完整 Brier、胜率差、打穿比见论文报告",
+  "boss_trust": [
+    {"boss": "AEONGLASS", "n": 4, "missing": 6, "B2": false, "B3": false, "failed": ["n", "brier", "gap", "leak"]},
+    {"boss": "CEREMONIAL_BEAST", "n": 11, "missing": 0, "B2": true, "B3": true, "failed": []},
+    {"boss": "KAISER_CRAB", "n": 12, "missing": 0, "B2": true, "B3": true, "failed": []},
+    {"boss": "KNOWLEDGE_DEMON", "n": 9, "missing": 1, "B2": false, "B3": false, "failed": ["n"]},
+    {"boss": "LAGAVULIN_MATRIARCH", "n": 9, "missing": 1, "B2": false, "B3": false, "failed": ["n"]},
+    {"boss": "QUEEN", "n": 3, "missing": 7, "B2": false, "B3": false, "failed": ["n", "brier", "gap", "leak"]},
+    {"boss": "SOUL_FYSH", "n": 9, "missing": 1, "B2": false, "B3": false, "failed": ["n"]},
+    {"boss": "TEST_SUBJECT", "n": 5, "missing": 5, "B2": false, "B3": false, "failed": ["n", "gap", "leak"]},
+    {"boss": "THE_INSATIABLE", "n": 8, "missing": 2, "B2": false, "B3": false, "failed": ["n", "leak"]},
+    {"boss": "THE_KIN", "n": 5, "missing": 5, "B2": false, "B3": false, "failed": ["n", "brier"]},
+    {"boss": "VANTOM", "n": 8, "missing": 2, "B2": false, "B3": false, "failed": ["n", "brier", "gap"]},
+    {"boss": "WATERFALL_GIANT", "n": 10, "missing": 0, "B2": true, "B3": true, "failed": []}
+  ],
+  "A10": {
+    "validation_n": 93,
+    "B2": {"predicted": 0.770, "actual": 0.677, "gap_pp": 9.3, "brier": 0.1210, "leak_ratio": 1.205},
+    "B3": {"predicted": 0.771, "actual": 0.677, "gap_pp": 9.4, "brier": 0.1196, "leak_ratio": 1.211},
+    "numeric_limit": "TEST_SUBJECT BIG_POUNCE 沿既有模型由 A9 观测估算，来源已审计",
+    "F49": {
+      "tune_n": 2,
+      "validation_n": 2,
+      "missing": 8,
+      "B2_gap_pp": 35.1,
+      "B3_gap_pp": 32.1,
+      "B2_leak_ratio": 3.903,
+      "B3_leak_ratio": 3.709,
+      "low_confidence": true,
+      "joint_F48_F49_validated": false
+    }
+  },
+  "limits": [
+    "A0–4、A5–9 独立验证均为 0 场，仅报告调参残差",
+    "仅验证冻结模型及输入；后续并行源码或知识版本未在本批重新重放",
+    "SL 截断存在选择偏差，单战校准不代表整局通关率",
+    "F49 初稿场数口径已更正，原稿和早期失败重放均保留"
+  ],
+  "refresh": {
+    "entry": "agent/tools/boss-sim/refresh-silent.py",
+    "dispatch": "ops/learner_jobs.py:calibration_job",
+    "schedule": "每小时 :13/:43 及学习批次完成事件",
+    "trigger": "静默升阶或新增 20 次实际 boss 结局；SL 截断不凑数",
+    "new_samples_validation_only": true,
+    "artifact": "experiments/boss-sim/silent/b07024e8d3061b66f691bee4d779ccea96501b7376eee370ee231e6c54f8da58"
+  },
+  "skipped": [
+    {"item": "silent-0213及其他队列 bug", "reason": "本批仅做授权校准刷新"},
+    {"item": "TXZ6RVMQA09D F49实际死亡", "reason": "缺首回合帧，保留来源并排除模拟/拟合"},
+    {"item": "K3676LU8B0UH F48尝试2", "reason": "固定模型 t1/pre 均无解，错误原件保留，不补造预测"}
+  ],
+  "code_proposals": [],
+  "implementation_domains": [],
+  "paper_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-232530-silent-boss-calibration/report.md",
+  "full_json": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-232530-silent-boss-calibration/final-report.json"
+}
+```
+
+== 学习者 codex / silent-boss-calibration ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a116f8-4240-7513-a918-8e8b07cba547
+轮数：1；工具调用：command_execution×293 file_change×15
+token：输入 1096.7k、输出 166.3k（其中推理 117.3k）、cache 读 22109.4k、cache 写 0（命中 95.3%）
+成本：未提供
+耗时：10581.3 s（墙钟）
+时间：首个事件 2.5 s、模型首个输出 8.3 s、首次工具 11.9 s、末次工具结束 10495.0 s；工具内共 15919.4 s，其余（模型生成、推理、网络）-5340.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration）；模型的工具调用 exec×103 wait×93；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T23-25-31-01a116f8-4240-7513-a918-8e8b07cba547.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261007-232530-silent-boss-calibration.jsonl

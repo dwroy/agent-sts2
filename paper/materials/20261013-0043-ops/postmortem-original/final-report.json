@@ -1,0 +1,50 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "G4PQBCJQ7NP0"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "G4PQBCJQ7NP0",
+      "where": "agent/src/reflex/combat-plan.ts:4999",
+      "what": "士兵翻倍识别要求手中普通防御，无该牌时两格挡候选24实18；旧silent-0179已上线边界复发。",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0179",
+      "silent-0079",
+      "silent-0019",
+      "silent-0020",
+      "silent-0018",
+      "silent-0180",
+      "silent-0005",
+      "silent-0316",
+      "silent-0044",
+      "silent-0309",
+      "silent-0243",
+      "silent-0214"
+    ],
+    "repeats": [
+      "silent-0179",
+      "silent-0079"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-5b659be891b6fd46",
+    "silent-proposal-81b6182f132db2df",
+    "silent-proposal-a844742189c85823"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-001302-postmortem/report.md"
+}

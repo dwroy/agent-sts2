@@ -1,0 +1,53 @@
+{
+  "request_id": "ops-20261011-1751-backlog-continuation",
+  "revision": 2,
+  "updated_at": "2026-10-11T19:34:44.344487+08:00",
+  "status": "tested-ready-live-lock-busy",
+  "candidate": "b6a70aafb26c414af2939aee47c6a1b4424ab0a9",
+  "candidate_branch": "ops-20261011-1852-integration",
+  "candidate_tree": "e4c699678d30bc150ff1524117f58e46318914e6",
+  "coverage": {
+    "candidate": "b6a70aafb26c414af2939aee47c6a1b4424ab0a9",
+    "tree": "e4c699678d30bc150ff1524117f58e46318914e6",
+    "tsc": 0,
+    "original_sandbox_exit": 1,
+    "original_failed_file": "tests/component-usage.test.ts",
+    "failure_kind": "isolated checkout missing existing data/logdb-venv/bin/python",
+    "dependency_reused": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+    "source_or_test_change": false,
+    "isolated_followup_exit": 0,
+    "followup_files": [
+      "tests/component-usage.test.ts",
+      "tests/paths.test.ts"
+    ],
+    "followup_cases": 12,
+    "unique_files": 271,
+    "unique_cases": 2725,
+    "coverage_complete": true,
+    "full_rerun": false,
+    "logs": {
+      "sandbox.log": "c6f08f5fb2ec100d4c58f2e38895339aee02595026bdc0f8f50f7722dd05f468",
+      "isolated-followup.log": "5173ea127e0452a4e6aabc9665058a3f382a2c5abbe40b1dbbdee5aaadf179ee"
+    }
+  },
+  "included_sources": [
+    "66c22ba7d87b8748690a4183fff838acd346bd3e",
+    "32bf133bc60fa800c86bae614d17c7b1aa496ab3",
+    "ce74e24e27654c21d359260096dc3678869c8657",
+    "9a3313a174b0235df34326bb864ddb7329a01eca",
+    "78479fe73f04b481f60d2b226805887dcc8ecfb6"
+  ],
+  "actual_live_at_attempt": "e597b103a98bb4f42cdc6ec4b8f22bc5f43c4a2c",
+  "publication_attempt": "flock -w30 failed to acquire lock; callback did not start; no production mutations",
+  "completed_this_wake": [
+    "two production read-only assistants accepted; original completion events remain in queue",
+    "autoplay native pane current log verified; no reload needed",
+    "two postmortems/28 original ledger rows/4 proposal SHA closed; paper dataset refreshed",
+    "three no-source proposal batches revalidated and retained waiting"
+  ],
+  "remaining_old_code_sources": 41,
+  "remaining_patch_groups": 38,
+  "text_conflict_groups": 5,
+  "helper": "paper/materials/20261011-1852-ops/integration/publish-live.py.txt",
+  "next": "After the current lock owner ends, verify live source/refresh/leases and merge pinned tested candidate under original lock. Additional concurrent code must be kept and validated; do not rerun already passed full coverage without new reason. Register Blade Dance and newest calibration only after real merge; older17 data candidates are historical ancestors, not17 intermediate releases. Core .13 rollback original preserved and final accepted report still belongs to175450. Sync reviewed code to main and use authorized Windows SSH push. Do not repeat helper smoke tests or original research."
+}

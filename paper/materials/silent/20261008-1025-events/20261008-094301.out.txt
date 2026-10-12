@@ -1,0 +1,46 @@
+## 复盘回报
+
+- 已追加：K2JAGKVJAWZJ（A10，第46层，三骑士T9以13血、20挡承受完整需损14而死）。已追加升级张数12→16的勘误。
+- 已追加：79UCJ0K6R9C1（A10，第14层，T11三张感染造成9伤，耗尽7挡及2血，先于毒结算死亡）。已追加休息证据行号及遗物中文名的勘误。
+- 新的纯 bug：无。
+- 写成「未记录」的项：K2JAGKVJAWZJ：dirty源码快照、F33首试出口及未执行终轮结算、未走路线及F48／F49资源、校准boss时钟、换牌／留药／其他杀序的整场反事实。
+- 写成「未记录」的项：79UCJ0K6R9C1：dirty源码快照、未到F15—F17及F48／F49资源、boss实战与校准时钟、早施毒／早喝药／改目标的整场反事实。
+- 学习账本：K2JAGKVJAWZJ：新增无；更新 silent-0010、silent-0020、silent-0106、silent-0278，均为支持证据，本次无已证实老错重犯。
+- 学习账本：79UCJ0K6R9C1：新增 silent-0286；更新 silent-0019、silent-0021、silent-0278，均为支持证据；`ledger.py check` 退出码0。
+- 代码提案（证据／账本／CLI id／实现任务，证据不足明确写限制）：
+  - silent-proposal-645ff7b72e0b9991：K2 F46、79 F14；账本0010／0106／0021／0286；蜃景与推演收益核对→strategy-proposal。升级蜃景正毒及换方案整场胜率证据不足。
+  - silent-proposal-68ef2857229d1287：K2 F33T10、79 F14T11；账本0278／0286；毒药水覆盖与结算顺序→strategy-proposal。只支持已观察条件下加6，不支持强制早喝。
+  - silent-proposal-9edfef7a6b2873c2：K2 F31—F46、79 F8—F14；账本0020／0019／0021；资源链及投影来源→strategy-proposal。不据两局拟合固定安全血线。三份均待实现，未上线。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["K2JAGKVJAWZJ", "79UCJ0K6R9C1"],
+  "skipped": [],
+  "bugs": [],
+  "ledger": {
+    "added": ["silent-0286"],
+    "updated": ["silent-0010", "silent-0020", "silent-0106", "silent-0019", "silent-0021", "silent-0278"],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-645ff7b72e0b9991",
+    "silent-proposal-68ef2857229d1287",
+    "silent-proposal-9edfef7a6b2873c2"
+  ],
+  "implementation_domains": ["combat", "potion", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-094302-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1192d-a0a8-70e2-bd4a-d203a334f8ac
+轮数：1；工具调用：command_execution×106
+token：输入 371.0k、输出 64.3k（其中推理 19.9k）、cache 读 8356.5k、cache 写 0（命中 95.7%）
+成本：未提供
+耗时：2517.1 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 8.7 s、首次工具 13.5 s、末次工具结束 2478.7 s；工具内共 125.8 s，其余（模型生成、推理、网络）2388.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×74 wait×1；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T09-43-03-01a1192d-a0a8-70e2-bd4a-d203a334f8ac.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-094302-postmortem.jsonl

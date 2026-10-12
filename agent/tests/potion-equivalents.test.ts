@@ -1,5 +1,5 @@
 /**
- * The potion table (Dai 2026-09-30; docs/potion-equivalents.md): the builder's formulas on a fixed sample
+ * The potion table (Roy 2026-09-30; docs/potion-equivalents.md): the builder's formulas on a fixed sample
  * (knowledge/builders/build-potion-equivalents.py --self-test), and the loader, query, renderer, kb_potion tool and Jev's combat
  * question field on the hand-written fixture tests/gkb-data/knowledge/characters/ironclad/potion-equivalents.json (not the table the
  * builder refreshes). No LLM is called.

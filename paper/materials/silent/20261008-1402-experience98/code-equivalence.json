@@ -1,0 +1,39 @@
+{
+  "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+  "checked_pin": "8ef00878e539c8abf24d63254a9fa57eaf70c675",
+  "checked_pin_full_external": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 299,
+    "passed": 3416,
+    "skipped": 2
+  },
+  "source_code_test_task_blobs_identical_to_actual": false,
+  "source_code_differences_from_current_tested_live": [
+    "docs/codex-ops.md",
+    "learner/tasks/silent-a10-regression.md",
+    "ops/codex-ops-learner.sh",
+    "ops/learner_jobs.py",
+    "ops/tests/test_silent_calibration_dispatch.py"
+  ],
+  "paths_compared": [
+    "agent",
+    "learner",
+    "knowledge/builders",
+    "eval",
+    ":(exclude)eval/versions.json",
+    "ops",
+    ":(exclude)ops/inbox-dev.md",
+    "tools",
+    "docs"
+  ],
+  "source_sandbox": {
+    "exit": 0,
+    "files": 248,
+    "cases": 2608,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/test-source.log"
+  },
+  "post_merge_sandbox_repeated": false,
+  "data_only": true,
+  "reason": "Only the learner-tested original experience data blob changes. All current executable sources, tests, tasks, generated knowledge and parallel records are retained. No whole-new-tree external pass is claimed; original-batch full continuation is separate."
+}

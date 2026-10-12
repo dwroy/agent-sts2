@@ -1,0 +1,93 @@
+{
+  "run_id": "KF9HMZKTFC3V",
+  "floor": 49,
+  "attempt": 1,
+  "independent_runs": 1,
+  "turns": 6,
+  "effective_hp_damage": null,
+  "dpr": null,
+  "visible_damage_lower_bound": 528,
+  "visible_dpr_lower_bound": 88.0,
+  "closed_boss_hp_proxy": 535,
+  "closed_boss_dpr_proxy": 89.16666666666667,
+  "per_turn": [
+    {
+      "turn": 1,
+      "effective_hp_damage": 18,
+      "visible_hp_damage_lower_bound": 18,
+      "terminal_removed_hp_unattributed": 0,
+      "enemy_healing": 0,
+      "player_hp_loss_visible": 3,
+      "player_hp_gain_visible": 0,
+      "start_line": 370163,
+      "end_line": 370169
+    },
+    {
+      "turn": 2,
+      "effective_hp_damage": 27,
+      "visible_hp_damage_lower_bound": 27,
+      "terminal_removed_hp_unattributed": 0,
+      "enemy_healing": 0,
+      "player_hp_loss_visible": 0,
+      "player_hp_gain_visible": 0,
+      "start_line": 370169,
+      "end_line": 370176
+    },
+    {
+      "turn": 3,
+      "effective_hp_damage": 148,
+      "visible_hp_damage_lower_bound": 148,
+      "terminal_removed_hp_unattributed": 0,
+      "enemy_healing": 0,
+      "player_hp_loss_visible": 0,
+      "player_hp_gain_visible": 0,
+      "start_line": 370176,
+      "end_line": 370181
+    },
+    {
+      "turn": 4,
+      "effective_hp_damage": 185,
+      "visible_hp_damage_lower_bound": 185,
+      "terminal_removed_hp_unattributed": 0,
+      "enemy_healing": 0,
+      "player_hp_loss_visible": 10,
+      "player_hp_gain_visible": 0,
+      "start_line": 370181,
+      "end_line": 370188
+    },
+    {
+      "turn": 5,
+      "effective_hp_damage": 150,
+      "visible_hp_damage_lower_bound": 150,
+      "terminal_removed_hp_unattributed": 0,
+      "enemy_healing": 0,
+      "player_hp_loss_visible": 0,
+      "player_hp_gain_visible": 0,
+      "start_line": 370188,
+      "end_line": 370193
+    },
+    {
+      "turn": 6,
+      "effective_hp_damage": null,
+      "visible_hp_damage_lower_bound": 0,
+      "terminal_removed_hp_unattributed": 7,
+      "enemy_healing": 0,
+      "player_hp_loss_visible": 0,
+      "player_hp_gain_visible": 1,
+      "start_line": 370193,
+      "end_line": 370195
+    }
+  ],
+  "poison_damage_observed_T3_T5": [
+    138,
+    156,
+    147
+  ],
+  "poison_subwindow_dpr": 147.0,
+  "denominator": "T1开始，含T6没有手动出牌但实际结算并结束战斗；先逐场算比例，不以局间均值相除。",
+  "limitations": [
+    "此实线含此前四次SL，F49首试胜不等整局首试胜。",
+    "可见相邻原帧无敌回血/换体/召唤；终局7血敌直接消失，无0血中间帧，535只是单boss通关血池代理。",
+    "玩家战后+1回血另列；T3-T5毒147/轮是条件子窗口，不替代整场可见下界88或血池代理89.1667/轮。"
+  ]
+}

@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：L6745E2ND5CT（A10，第48层，实验体 TEST_SUBJECT末试T9以1血37挡对48攻击阵亡，毒结算后敌仍47血）。
+- 新的纯 bug：
+  - L6745E2ND5CT：化学物X未计入串刺／萎靡的效果X — agent/src/reflex/turn-solver.ts:2293、2394（新；fix-queue未列）。
+- 写成「未记录」的项：完整源码快照、SL截断退出、部分末击与毛伤、死亡轮完整失血、完整方案兑现率、替线及留药反事实、数值boss时钟、部分有效模拟、纯操作时间、Jev缓存及真实账单。
+- 学习账本：新增 silent-0437、silent-0438；更新 silent-0343、silent-0019、silent-0005、silent-0028、silent-0241、silent-0178、silent-0099、silent-0120（老错 silent-0343）；`ledger.py check` 退出码0。
+- 代码提案：均关联独立 strategy-proposal，尚未实现。
+  - 化学物X：F48 T2／T6，账本0437／0438，CLI silent-proposal-96afbd9c8b3e4e95。
+  - 神气制胜：F48 T6，账本0343，CLI silent-proposal-e07892a658777a57。
+  - 药水资源链：F37—F48，账本0019／0120，CLI silent-proposal-150f32d880c94e92；缺少受控留药后继，保留现行规则。
+
+```json
+{"task":"postmortem","appended":["L6745E2ND5CT"],"skipped":[],"bugs":[{"run":"L6745E2ND5CT","where":"agent/src/reflex/turn-solver.ts:2293","what":"化学物X未进入普通串刺／萎靡的效果X，串刺3能量预测24、实际40；萎靡5能量实际7层。","new":true}],"ledger":{"added":["silent-0437","silent-0438"],"updated":["silent-0343","silent-0019","silent-0005","silent-0028","silent-0241","silent-0178","silent-0099","silent-0120"],"repeats":["silent-0343"],"check":0},"code_proposals":["silent-proposal-96afbd9c8b3e4e95","silent-proposal-e07892a658777a57","silent-proposal-150f32d880c94e92"],"implementation_domains":["combat","potion"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261012-164302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12f47-9c2b-7500-8a66-91190d5d758e
+轮数：1；工具调用：command_execution×53
+token：输入 214.2k、输出 41.1k（其中推理 9555）、cache 读 6204.7k、cache 写 0（命中 96.7%）
+成本：未提供
+耗时：1653.5 s（墙钟）
+时间：首个事件 9.8 s、模型首个输出 17.0 s、首次工具 22.6 s、末次工具结束 1632.5 s；工具内共 191.5 s，其余（模型生成、推理、网络）1452.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×45；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T16-43-04-01a12f47-9c2b-7500-8a66-91190d5d758e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261012-164302-postmortem.jsonl

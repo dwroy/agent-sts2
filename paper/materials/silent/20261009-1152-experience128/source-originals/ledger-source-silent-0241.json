@@ -1,0 +1,204 @@
+{
+  "id": "silent-0241",
+  "ts": "2026-10-07T18:31:14+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "黑暗镣铐按本角色实盘普通/升级暂减9/15力量，次轮恢复，实验体技能激怒同时加力另计。4局22次（普通14/升级8），XP2末蟹T2爪0→−9、4→0、T3恢复；UAC升级实验体激怒2时10→−3（+2−15）。未隔离单牌整战胜因或其他叠层。",
+  "evidence": [
+    {
+      "run": "UACFSW4VDDLD",
+      "floor": 38,
+      "turn": 4,
+      "role": "support",
+      "note": "decisions:219840代码实际施放镣铐；states:224219→224220目标0→−9力、33→24攻击，224226 T5力量及DARK_SHACKLES_POWER消失。",
+      "added": "2026-10-07T18:31:14+08:00"
+    },
+    {
+      "run": "XP2SL33HT0D9",
+      "floor": 33,
+      "turn": 2,
+      "note": "末试states:278236→278237碾碎爪0→−9力、4→0攻击；278242 T3力量恢复0，临时减力不能持续计入后轮。",
+      "role": "support",
+      "added": "2026-10-07T18:31:14+08:00"
+    },
+    {
+      "run": "10GPK5XGHCK3",
+      "role": "support",
+      "note": "本轮逐帧核实支持 silent-dark-shackles-temporary-strength；机制/观察成立，不表示独立整战胜因。",
+      "floor": 9,
+      "turn": 1,
+      "added": "2026-10-07T19:11:49+08:00"
+    },
+    {
+      "run": "VPW8YH7A4QFM",
+      "role": "support",
+      "note": "本轮逐帧核实支持 silent-dark-shackles-temporary-strength；机制/观察成立，不表示独立整战胜因。",
+      "floor": 33,
+      "turn": 1,
+      "added": "2026-10-07T19:11:49+08:00"
+    },
+    {
+      "run": "BTSRF7JL1W1Y",
+      "role": "support",
+      "note": "F17胜试T5三敏两防御16挡；F31T2弃唯一突然一拳，实损14而候选4，临时减力/覆甲/毒及醒虫成长分账；本条具体支持见silent-dark-shackles-temporary-strength。",
+      "floor": 31,
+      "turn": 2,
+      "added": "2026-10-08T03:41:39+08:00"
+    },
+    {
+      "run": "HEMND3SMQYB8",
+      "role": "support",
+      "note": "本角色实帧/复盘重核：silent-dark-shackles-temporary-strength；层/轮见history、gamble-history、verified与audit，不以持有自动认机制支持。",
+      "added": "2026-10-09T01:53:34+08:00"
+    },
+    {
+      "run": "XZUJR08FW801",
+      "floor": 17,
+      "role": "support",
+      "note": "普通黑暗镣铐T9将墨影幻灵力量4→−5、12攻→3，已有5挡零损；T10力量恢复4、22攻但18敌血19毒结束。F25T5力2→−7、弱后15攻→8、5挡损3，T6力恢复并成长4。",
+      "turn": 10,
+      "added": "2026-10-09T11:07:12+08:00"
+    }
+  ],
+  "first_run": "10GPK5XGHCK3",
+  "prior": "yes",
+  "prior_runs": [
+    "UACFSW4VDDLD"
+  ],
+  "prior_note": "全静默历史复算新增更早10GPK5XGHCK3 A3 F9 T1普通镣铐使花园幽灵鳗0→−9，早局已按现场动作施放；prior=yes保留。原UAC A6首证/普通版本未知边界原行不改，升级证据由本轮另核实。",
+  "status": "shipped",
+  "where": {
+    "lessons": [
+      "XP2SL33HT0D9",
+      "XZUJR08FW801"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261007-181302-postmortem/proposal-combat-realized-window.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-184216-experience-update/proposal-mechanisms-sl-resources.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal/report.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/proposal.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/report.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update/proposal-mechanisms.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-014148-experience-update/proposal-mechanisms.md"
+    ],
+    "experience": [
+      "silent-dark-shackles-temporary-strength"
+    ],
+    "commits": [
+      "ad20957345fa54777705dd00a75ab4d60d1d4b49",
+      "c10209e14d2a1a2f3463555fa088684ccdecf856",
+      "31914e4ba652d6e8466a4a99f04128005166ecf2",
+      "dbeb26835b1792befcfe28d713df4086d85d90c7",
+      "1c0c1b3ef518713db4a15ab3dafc102a1d62ca7c",
+      "ceb74207f90ed2e2f94f96570e70d00d84290081",
+      "4138806163a82d90ab9b482d01c2a442c865f912",
+      "4aca285e251f888ba5b8c75eb40047c0e0deaa6c",
+      "60c93049a61bf9fb0c0501a9f03d1b34b6206b3d",
+      "a7c2a4114c7404639da5ec190df56c6a6ef4e07f",
+      "cfb62ffa42c4e625e56ed3ad07e5a705ecf76698"
+    ],
+    "changelog": [
+      "2026-10-07 静默猎手 第七十七次增量：2 局 A10（version 2026-10-07.23，分支 exp-silent，ad209573）",
+      "2026-10-08 静默猎手 第八十七次增量：2 局 A10（version 2026-10-08.4，分支 exp-silent，dbeb2683）",
+      "2026-10-09 静默猎手 第一百一十四次增量：1 局 A10（version 2026-10-09.3，分支 exp-silent，4aca285e）"
+    ]
+  },
+  "asc": 3,
+  "history": [
+    {
+      "ts": "2026-10-07T18:31:14+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-07T18:33:59+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-07T18:57:26+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-07T19:11:49+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-07T20:51:44+08:00",
+      "by": "ops:codex",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-08T00:34:44+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T01:32:46+08:00",
+      "by": "learner:strategy-proposal",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T03:41:39+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T03:41:40+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T03:59:11+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T04:24:25+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-09T01:53:34+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-09T01:53:34+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-09T02:09:37+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-09T02:24:32+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-09T11:07:12+08:00",
+      "by": "learner:postmortem"
+    }
+  ],
+  "version": "S1.exp114",
+  "effect": null,
+  "notes": [
+    "代码提案 silent-proposal-7cbc6005db712ba9 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "代码提案 silent-proposal-c59f592f1427a67e → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第77批静默经验仅关联核实证据及源提交；保留claim、先验、旧repeat及历史版本，未登记implemented/shipped。各子公式独立分母，不把整战死亡当机制反例。",
+    "20:34兜底将经验.23/.24累计到.25原blob，真实合入后登记唯一S1.exp79；这里只登记该条经验数据的实际发布，出牌/药水/SL代码提案独立续办，未宣称实现；首证、先验、claim及所有旧历史保持。",
+    "本次20261008-000408逐项处置及限制见report.md；本地1项离线源码、1项实际live重复、8项证据不足。尚未新合入live，不登记shipped，保留旧首证/先验/支持/重复与既往上线历史。",
+    "本批20261008-010309逐项处置见proposal.md/report.md；仅懒惰额度有本地已测源码，其余9项具体缺口保留waiting。此行登记proposed和链接，不冒报live实现或shipped；保留原首证、先验、证据和既往上线历史。",
+    "第87批经验提案预关联，保持首证/prior/原claim/repeat/全部上线历史；经验与独立源码实现分开。",
+    "代码提案 silent-proposal-f16527e59b5cc1e0 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第87批经验已自测并提交；新证据/反例和旧repeat完整保持。是否实际合入由本批合入回执证明，运维据完成事件登记shipped，学习者不标accepted/shipped。",
+    "经验第87次原数据2026-10-08.3→.4/增0改21退0/159 active，源dbeb2683唯一experience.json净blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源原沙箱244文件2568例tsc/vitest0，实际合后原入口244文件2568例tsc/vitest0/nice19/4workers。原首证/先验/claim及support/repeat/旧状态历史全部保持；三个combat/potion/SL/terminal提案沿原自动链，数据上线不等于代码已实现或旧0268已修。原out/err/report/failed/18冲突不改，原批完整外部另续验。",
+    "第114批提案预关联；原claim/首证/prior/状态/版本/support/repeat历史保留。850决策/966帧与旧148局同口径复算；实际支付、抽弃、毒与血药逐层/轮见本任务scratch，提交后登记proposed。",
+    "代码提案 silent-proposal-a65ae6b794cf6cd2 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第114批经验已在本分支测试提交；支持/反例及首证/prior历史保持。实际live合入及shipped由运维完成事件核实，不把经验文字当提案源码实现。",
+    "第一百一十四次经验仅原数据2026-10-09.2→2026-10-09.3，源4aca285e增1改22退0/189 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp114。按原学习者ledger-map仅22所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0260/0297/0317仅原提案关联不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/17冲突/out/err/失败历史保持。",
+    "本次补核实观察support，不因最终死亡登记可避错误repeat；原claim/prior/first_run/status/version保持。来源postmortem，20261009-104301-postmortem。"
+  ],
+  "shipped_at": "2026-10-09T02:24:32+08:00"
+}

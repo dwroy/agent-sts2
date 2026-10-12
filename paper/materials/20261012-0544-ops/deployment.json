@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-12 05:49:43 CST",
+  "source": "5c3dd2ea1500aa0eb8ebc4de73669c083d0a0452",
+  "source_base": "e16f507d706cf7abbcd664a64609fe578684e329",
+  "base_main": "e4180c8d72921f3d0bf64b8afb0cb1633b41c3ab",
+  "base_live": "85e70e03a4f1aa0191296441db457511e1dd8406",
+  "paths": [
+    "agent/src/memory/run-journal.ts",
+    "agent/tests/silent-hp-recovery-evidence.json",
+    "agent/tests/silent-hp-recovery.test.ts"
+  ],
+  "source_net_delta_identical": true,
+  "new_tests_identical": true,
+  "apply_exit": 0,
+  "gitleaks": 0,
+  "new_behavior_version": "S1.hp-recovery-history1",
+  "main_preflight_tree": "78f6e5ab8e169c04d7c6b05087084322dec87109",
+  "main_preflight_exit": 0,
+  "main_candidate_three_paths_identical_to_source": true,
+  "integrated_code": "52d7f343f5f183670dc9d0c0d847bf6a15420aae",
+  "actual_code_live": "916ee6073958fe917aadfaffbe8bec0e9ec00085",
+  "tested_tree": "051e1a4c633d48ec75fbbc1e2f97ab1098fa931d",
+  "main_code": "1ee13f024a726618668a9cf7d6c12a531aa6c57b",
+  "live_note_digest_before_after": "632bb1f4c14ea59fbbd7d72026b493095bea1498c3d4bd2dc8f49c86a9f0725a",
+  "main_three_files_equal_learner_source": true,
+  "existing_main_live_delta_unchanged": true,
+  "sandbox": {
+    "exit": 0,
+    "tsc": 0,
+    "main_files": 4,
+    "main_passed": 65,
+    "fork_files": 5,
+    "fork_passed": 76,
+    "log": "integration-sandbox-supported.log"
+  },
+  "initial_ops_invocation": {
+    "exit": 1,
+    "cause": "explicit journal-replay argument reintroduced a fixed sandbox exclusion into the fork command",
+    "errors": "listen EPERM 127.0.0.1; six associated timeouts",
+    "fork_failed": 6,
+    "fork_passed": 80,
+    "log": "integration-sandbox.log",
+    "source_and_exclusions_unchanged": true,
+    "all_processes_exited": true
+  },
+  "version_at": "2026-10-12 05:50:18 CST",
+  "version": "S1.hp-recovery-history1",
+  "actual_live": "e5cef28d05d64f1a177427824cd1e268ddca3888",
+  "actual_tree": "95800f95a5379cd4ee973b9246bd247d77285bed",
+  "host_full_checks": "pending broker request",
+  "broad_parent_proposals_complete": false,
+  "quantitative_parent_complete": false
+}

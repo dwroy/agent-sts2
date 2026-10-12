@@ -1,0 +1,185 @@
+{
+ "id": "silent-0134",
+ "ts": "2026-10-06T01:03:47+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "多尼斯异鸟BYRDONIS在领地意识TERRITORIAL_POWER1持续存在的实况中，力量随战斗回合增加。本局T1—T6为0/1/2/3/4/5，啄击PECK_MOVE在1力量时4×3=12、3力量时6×3=18，增加2力量令三击总威胁多6；飞扑同样从17到19到21。此处只确认层数与同招威胁，力量增长的具体触发条件未隔离。",
+ "evidence": [
+  {
+   "run": "Y6GM2CHWJBEY",
+   "floor": 14,
+   "turn": 2,
+   "role": "support",
+   "note": "更早该角色异鸟战领地1，T1无力量、T2力量1/啄击12、T3力量2/飞扑19；T2突然一拳使12降9，三轮结束49→45。",
+   "added": "2026-10-06T01:03:47+08:00"
+  },
+  {
+   "run": "9YT51CK8RC39",
+   "floor": 8,
+   "turn": 4,
+   "role": "support",
+   "note": "T2力量1/啄击4×3=12，T4力量3/6×3=18；T1—T6力量0/1/2/3/4/5，领地1一直存在，初84血、六轮70→33。",
+   "added": "2026-10-06T01:03:47+08:00"
+  },
+  {
+   "run": "9YT51CK8RC39",
+   "floor": 8,
+   "turn": 6,
+   "role": "support",
+   "note": "T1/T3/T5飞扑17/19/21，T6力量5时啄击8×3=24但被12血截断的猛扑当场结束，没有执行该轮敌攻击。",
+   "added": "2026-10-06T01:03:47+08:00"
+  },
+  {
+   "run": "F9PP859XZ3RJ",
+   "role": "support",
+   "note": "本角色日志重新核验silent-byrdonis-strength-multihit-observation；具体机制/血档/支持范围见第二十七次增量及运行目录审计，不把所有支持局当成同一组合或单项胜因。",
+   "added": "2026-10-06T01:22:22+08:00"
+  },
+  {
+   "run": "75X1BARMNZ03",
+   "role": "support",
+   "note": "本角色日志重新核验silent-byrdonis-strength-multihit-observation；具体机制/血档/支持范围见第二十七次增量及运行目录审计，不把所有支持局当成同一组合或单项胜因。",
+   "added": "2026-10-06T01:22:22+08:00"
+  },
+  {
+   "run": "3KME36ADUE4U",
+   "role": "support",
+   "note": "本角色日志重新核验silent-byrdonis-strength-multihit-observation；具体机制/血档/支持范围见第二十七次增量及运行目录审计，不把所有支持局当成同一组合或单项胜因。",
+   "added": "2026-10-06T01:22:22+08:00"
+  },
+  {
+   "run": "LLYSRQQ35AVW",
+   "role": "support",
+   "note": "仅静默A8原始状态/决策与复盘支持对应经验；公式、房型/血档、实际结算和未受控范围见第三十次增量及其审计数据。",
+   "added": "2026-10-06T03:22:26+08:00"
+  },
+  {
+   "run": "4D4J8USKCPAV",
+   "floor": 11,
+   "turn": 6,
+   "role": "support",
+   "note": "异鸟领地意识1持续，T1—T6力量0/1/2/3/4/5；无虚弱啄击T2力量1为5×3=15，T6力量5为9×3=27，多4力量使三击多12。T4施虚弱令7×3→5×3，11挡损4；T5无虚弱23飞扑对10挡损13，进场58实损41。触发条件未隔离。",
+   "added": "2026-10-06T10:24:38+08:00"
+  },
+  {
+   "run": "T3FW7R2R2306",
+   "floor": 8,
+   "turn": 6,
+   "note": "异鸟领地意识1持续，T1—6力量0/1/2/3/4/5。啄击T2/T4/T6为5×3/7×3/9×3，两力量增6总威胁；T4中和21→15，10挡损5，T6虚弱消失27对10挡需17，16血死。T2只打三防御仍在次轮1→2力量，不把防御或毒成长当关闭敌成长。",
+   "role": "support",
+   "added": "2026-10-07T07:28:43+08:00"
+  }
+ ],
+ "first_run": "Y6GM2CHWJBEY",
+ "prior": "yes",
+ "prior_runs": [
+  "Y6GM2CHWJBEY"
+ ],
+ "prior_note": "更早Y6在独立建账或学习该成长机制前，已于T2/T3用突然一拳/中和持续虚弱并推进击杀，三轮只净损4，未拖入后段力量；这证明学习前已有合适动作，不证明当时已解释领地的触发条件。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "9YT51CK8RC39",
+   "4D4J8USKCPAV",
+   "T3FW7R2R2306"
+  ],
+  "experience": [
+   "silent-byrdonis-strength-multihit-observation"
+  ],
+  "commits": [
+   "bff7329f4ce6757933e76d8e7409079a88f08156",
+   "ce1864a00a18db651ef179b403b40e83db0395e4",
+   "0c5174f16fbb08539f13fbd307525144e9c80f1a",
+   "b70378edafabd9e21a34334ed13c2e5720941795",
+   "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+   "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+   "25a520d92d46d1d644a3ca14a05406a4a1246238",
+   "735ac4411310d375cc52c237997dfefa89989034",
+   "26ae625bb01700cc56b7d96084294109e0e97f0b",
+   "50014d54985a3a72ca7761476db8761cca3721a1",
+   "ce8338fb50ff1f8c6b68d872d556b9a3818a4632",
+   "9f54642309922358771dbd0d8036ff7ccc1a64d2",
+   "3dea02331a006a4723a74ee90246c94c7e12ef9e",
+   "731266e2901d93a4f0377bf85cd97680bac2157f",
+   "8664bb08ac16aee0f8402805853be8bc38b85cc6",
+   "66147f0bf31277abf459221103f9eda896e151a0"
+  ],
+  "changelog": [
+   "2026-10-06 静默猎手 第二十七次增量：1 局 A7（version 2026-10-06.2，分支 exp-silent，bff7329f）",
+   "2026-10-06 静默猎手 第三十次增量：1 局 A8（version 2026-10-06.5，分支 exp-silent，0dba4029）",
+   "## 2026-10-06 静默猎手 第四十次增量：1 局 A10（version 2026-10-06.15，分支 exp-silent，26ae625b）",
+   "## 2026-10-07 静默猎手 第六十五次增量：2 局 A10（version 2026-10-07.11，分支 exp-silent，3dea0233）"
+  ]
+ },
+ "note": "独立机制观察回溯最早静默局；未隔离触发条件，不添加领地的通用触发规则或指定统一击杀回合。",
+ "asc": 0,
+ "history": [
+  {
+   "ts": "2026-10-06T01:03:47+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-06T01:22:22+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-06T01:45:36+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-06T03:22:26+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-06T03:45:03+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-06T10:24:38+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-06T10:39:45+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-06T10:58:53+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T07:28:43+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T07:42:56+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T08:07:53+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp65",
+ "effect": null,
+ "notes": [
+  "独立机制观察回溯最早静默局；未隔离触发条件，不添加领地的通用触发规则或指定统一击杀回合。",
+  "静默经验2026-10-06.2：9YT51CK8RC39 A7及旧33局同口径重抽。支持按独立局，SL不增加n；机制与相关性观察分账，保留原first_run/prior/repeat。实际合入后由运维登记shipped。",
+  "01:35 experience-done机械核实静默经验2026-10-06.2实际合入live，源/合后tsc0、181文件2038例首过，11项仅对应已上线experience文本；0133/0134机制观察不冒作完整模拟器实现，first_run/prior/repeat、0133勘误及其他旧上线保留，不另设审核。完整外部各批checks_pending，交后续learner-checks。",
+  "静默经验2026-10-06.5；LLYSRQQ35AVW A8及旧36静默局原始日志复算，具体数字/子公式支持范围、进阶、典型例和因果限制见第三十次增量。只proposed，交运维据实际合入和experience-done登记shipped；不改变first_run/prior/repeat，升级萎靡纯bug0144保持observed，不冒记模型已修。",
+  "03:35 experience-done机械核实第30批经验2026-10-06.5已实际合入live并登记唯一S1.exp30；LLYSRQQ35AVW SILENT A8及旧36本角色完局，草稿/最终源/合后均tsc0、184文件2054例，校正文字后源复测、合后首过。 仅登记学习者已合入experience文字；原first_run/prior/prior_note/evidence/repeat/claim及旧版本历史保持。完整外部checks_pending等调度器后续learner-checks，不借别批结果、不另审。0144升级萎靡模型缺口保持observed，0051旧已修状态保持，不冒记机制代码已覆盖或本次经验导致已结束胜局。",
+  "静默第40次增量2026-10-06.15：旧46局全部基线逐行一致，4D4J8USKCPAV A10按10:24勘误核原始日志；收益已兑现/局部比较/整战因果分开，超55000先压缩，旧证据/反例/药水分句保留。仅proposed，实际合入由运维据完成事件CLI登记shipped，first_run/prior/repeat/旧上线保持。",
+  "10:50 experience-done机械兜底第40批经验2026-10-06.15：固定源26ae625b只改静默experience，原decision-log预检冲突及merged=null事实保留；保留双方日志与自动刷新后实际合入并登记唯一S1.exp40。来源4D4J8USKCPAV SILENT A10及旧本角色证据，含10:24复盘勘误，源首轮tsc0/195文件2118例、合后首轮tsc0/196文件2124例。17项据实际发布CLI/by=ops登记shipped，保留first_run/prior/claim/evidence及全部repeat/旧上线；0170最早1NZ8FE5F34R9 A4、prior=yes，0166独立S1.fix28与0009无本局repeat保持。不倒算已结束局生效、不另设审核、不补游戏知识，完整外部通过learner-recheck补测并由后续事件记录。",
+  "07:55 experience-done机械确认第65批：源3dea0233→实际live731266e2→固定发布8664bb08/树cbdb1a05/唯一S1.exp65，main已同步经验.11及锁内七项知识刷新5f8b598d。新增0更新7全补证退役0，136条49822字；源/合后首轮沙箱tsc0/vitest0、215文件2299例，原过滤摘要/原第65节含收尾/8行proposed/事实取数KeyError初稿及更正按字节归档，完整流和大件留源指纹。仅本批8项经CLI/by=ops shipped，claim/首证/先验/evidence/repeat/版本历史保持；0216中毒已建模仍攻击折扣独立observed、首证K367/A1/prior=no，0213毒杀持牌伤及075131专用boss校准原任务不代改。main保留5项已测校准调度源码及并行记录，源码/生成器/其他角色不改，无新用药规则、不重建；本批固定外部learner-checks待调度器，不重复live合并/测试，原失败/更正历史保留，对局继续。"
+ ],
+ "shipped_at": "2026-10-07T08:07:53+08:00"
+}

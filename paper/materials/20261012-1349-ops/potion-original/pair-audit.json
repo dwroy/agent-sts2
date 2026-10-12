@@ -1,0 +1,2206 @@
+[
+  {
+    "same_fingerprint": true,
+    "original": {
+      "decision": 272434,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 2,
+      "attempt": 1,
+      "decision_sha256": "8fa85cbb5a4ecc84285a695065497e02df7db9678f162f238301b8d790e750b5",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:186:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:STRIKE_SILENT:true|1:BECKON:true|2:PREDATOR:true|3:DEFEND_SILENT:true|4:STRIKE_SILENT:true|5:STRIKE_SILENT:true|6:INJURY:false\",\"hp\":63,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan3",
+          "probabilities": {
+            "plan2": 0.35,
+            "plan3": 0.62,
+            "plan1": 0.03
+          },
+          "confidence": 0.43,
+          "raw": {
+            "type": "choice",
+            "choice": "plan3",
+            "confidence": 0.43,
+            "probabilities": {
+              "plan2": 0.35,
+              "plan3": 0.62,
+              "plan1": 0.03
+            }
+          }
+        }
+      },
+      "sl_explore": null,
+      "before": {
+        "line": 278479,
+        "sha256": "898bbc6c3728b6f8f58bef6e4b2c0d6c3c04b728b20c0b99434657a7bb176636",
+        "turn": 2,
+        "hp": 63,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 186,
+            "max_hp": 221,
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "18",
+                "damage": 18,
+                "hits": 1,
+                "total_damage": 18,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 278483,
+        "sha256": "d83fae8f2ef5fba828b89bcea0d13b628221975e6e4b3a4809abcf0878de5959",
+        "turn": 3,
+        "hp": 50,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 177,
+            "max_hp": 221,
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "StatusCard",
+                "label": "1",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 1
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 13,
+      "observed_enemy_net_loss": 9,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    },
+    "replacement": {
+      "decision": 272575,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 2,
+      "attempt": 3,
+      "decision_sha256": "7a1e976a5265e7667f06ef9a08be132bbdec14ba21d4a02be3da6254c473458c",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:186:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:STRIKE_SILENT:true|1:BECKON:true|2:PREDATOR:true|3:DEFEND_SILENT:true|4:STRIKE_SILENT:true|5:STRIKE_SILENT:true|6:INJURY:false\",\"hp\":63,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan3",
+          "probabilities": {
+            "plan1": 0.02,
+            "plan3": 0.53,
+            "plan2": 0.45
+          },
+          "confidence": 0.3,
+          "raw": {
+            "type": "choice",
+            "choice": "plan3",
+            "confidence": 0.3,
+            "probabilities": {
+              "plan1": 0.02,
+              "plan3": 0.53,
+              "plan2": 0.45
+            }
+          }
+        }
+      },
+      "sl_explore": {
+        "point": "T2, the 14th latest question before attempt 1's death on T17",
+        "original": "打击 -> 灵魂异鱼, 呼唤, 防御",
+        "replacement": "呼唤, 猎杀者 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 2,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 62.8, win ~35%; whole-fight sim win 19.5%; this turn hp -13, dmg 6",
+          "replacement": "rollout dead 0/24, further loss 63, win ~36%; whole-fight sim win 19.3%; this turn hp -18, dmg 15"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.195,
+          "replacement": 0.193,
+          "diff": -0.0025,
+          "se": 0.0135
+        },
+        "turn": "BECKON, DEFEND_SILENT, STRIKE_SILENT>灵魂异鱼",
+        "turn_instead": "BECKON, PREDATOR>灵魂异鱼"
+      },
+      "before": {
+        "line": 278620,
+        "sha256": "0980dfb97bcb9af6a40dd1bc79b05a9424ed8ecfb5397edc5838c994d31bafc8",
+        "turn": 2,
+        "hp": 63,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 186,
+            "max_hp": 221,
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "18",
+                "damage": 18,
+                "hits": 1,
+                "total_damage": 18,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 278623,
+        "sha256": "407fd190f775c38103fba045dc9aba2daa265c75f276694fa8b788c8b6884729",
+        "turn": 3,
+        "hp": 45,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 168,
+            "max_hp": 221,
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "StatusCard",
+                "label": "1",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 1
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 18,
+      "observed_enemy_net_loss": 18,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    }
+  },
+  {
+    "same_fingerprint": true,
+    "original": {
+      "decision": 272531,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 7,
+      "attempt": 2,
+      "decision_sha256": "37610c4ee5f95a3932a9d6201aebc615606ff671b967ae0bcf011cebbc8d296f",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:121:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:DAGGER_SPRAY:true|1:BECKON:true|2:SURVIVOR:true|3:DEFEND_SILENT:true|4:BECKON:true|5:DEFEND_SILENT:true|6:STRIKE_SILENT:true\",\"hp\":45,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|DEXTERITY_POWER:2|VULNERABLE_POWER:2\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan2",
+          "probabilities": {
+            "plan2": 0.71,
+            "plan3": 0,
+            "plan1": 0.29
+          },
+          "confidence": 0.56,
+          "raw": {
+            "type": "choice",
+            "choice": "plan2",
+            "confidence": 0.56,
+            "probabilities": {
+              "plan2": 0.71,
+              "plan3": 0,
+              "plan1": 0.29
+            }
+          }
+        }
+      },
+      "sl_explore": null,
+      "before": {
+        "line": 278576,
+        "sha256": "9470863ef85dd5d31d37d0e04d93d3a04498b5a2868c74003eedcccd31a64575",
+        "turn": 7,
+        "hp": 45,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 2,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 121,
+            "max_hp": 221,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "27",
+                "damage": 27,
+                "hits": 1,
+                "total_damage": 27,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 278581,
+        "sha256": "3c4b637b56a65a549a5b3e954b7bf562d1d88e50d4ee67d4f8f55ecb563f68c4",
+        "turn": 8,
+        "hp": 32,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 109,
+            "max_hp": 221,
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "12",
+                "damage": 12,
+                "hits": 1,
+                "total_damage": 12,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "StatusCard",
+                "label": "1",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 1
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 13,
+      "observed_enemy_net_loss": 12,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    },
+    "replacement": {
+      "decision": 272652,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 7,
+      "attempt": 4,
+      "decision_sha256": "1aa0ab36abdcd1839dba35ff50599973a9ddf1033529b7ecf9f90c30b7b07ebd",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:121:0:true\",\"event\":\"\",\"gold\":144,\"hand\":\"0:DAGGER_SPRAY:true|1:BECKON:true|2:SURVIVOR:true|3:DEFEND_SILENT:true|4:BECKON:true|5:DEFEND_SILENT:true|6:STRIKE_SILENT:true\",\"hp\":45,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"THORNS_POWER:3|DEXTERITY_POWER:2|VULNERABLE_POWER:2\",\"rewards\":\"\",\"run\":\"751FN9QM9MHQ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":7}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan2",
+          "probabilities": {
+            "plan2": 0.75,
+            "plan1": 0.25,
+            "plan3": 0
+          },
+          "confidence": 0.62,
+          "raw": {
+            "type": "choice",
+            "choice": "plan2",
+            "confidence": 0.62,
+            "probabilities": {
+              "plan2": 0.75,
+              "plan1": 0.25,
+              "plan3": 0
+            }
+          }
+        }
+      },
+      "sl_explore": {
+        "point": "T7, the 10th latest question before attempt 1's death on T17",
+        "original": "匕首雨, 生存者, 防御+",
+        "replacement": "匕首雨, 生存者, 打击 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 13,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 44.5, win ~41%; whole-fight sim win 10.3%; this turn hp -19, dmg 9",
+          "replacement": "rollout dead 2/24, further loss 44.9, win ~36%; whole-fight sim win 1.3%; this turn hp -29, dmg 15"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.103,
+          "replacement": 0.013,
+          "diff": -0.09,
+          "se": 0.0088
+        },
+        "turn": "DAGGER_SPRAY, DEFEND_SILENT+, SURVIVOR",
+        "turn_instead": "DAGGER_SPRAY, STRIKE_SILENT>灵魂异鱼, SURVIVOR"
+      },
+      "before": {
+        "line": 278697,
+        "sha256": "629da919aa94bdf644e86bf9a7dd84613ffa7191cbed1e13caa68c93b3c959ea",
+        "turn": 7,
+        "hp": 45,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 2,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 121,
+            "max_hp": 221,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "27",
+                "damage": 27,
+                "hits": 1,
+                "total_damage": 27,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 278702,
+        "sha256": "c52f56b8fa52a688c0bb7cc905dcef9269705a93c8e9ee76f97912bcb9a51532",
+        "turn": 8,
+        "hp": 22,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 103,
+            "max_hp": 221,
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "12",
+                "damage": 12,
+                "hits": 1,
+                "total_damage": 12,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "StatusCard",
+                "label": "1",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 1
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 23,
+      "observed_enemy_net_loss": 18,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    }
+  },
+  {
+    "same_fingerprint": true,
+    "original": {
+      "decision": 273400,
+      "run": "KV0JHNJCKXLS",
+      "floor": 33,
+      "turn": 5,
+      "attempt": 4,
+      "decision_sha256": "da1c22f39f7c33d653e4df1d8b40e5be3a9373d9dd1daa63ba9b94ec095ed53e",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:334:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:PREDATOR:true|1:SURVIVOR:true|2:DEADLY_POISON:true|3:BULLET_TIME:true\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan1",
+          "probabilities": {
+            "plan3": 0.22,
+            "plan1": 0.71,
+            "plan2": 0.07
+          },
+          "confidence": 0.56,
+          "raw": {
+            "type": "choice",
+            "choice": "plan1",
+            "confidence": 0.56,
+            "probabilities": {
+              "plan3": 0.22,
+              "plan1": 0.71,
+              "plan2": 0.07
+            }
+          }
+        }
+      },
+      "sl_explore": {
+        "replay": {
+          "point": "T6, the 3rd latest question before attempt 1's death on T10",
+          "reference": 1,
+          "line": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+          "original": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+          "overridden": false,
+          "reason": "the answer is attempt 1's line"
+        }
+      },
+      "before": {
+        "line": 279460,
+        "sha256": "1965f9cfab2f8f551e2404ea5d4b6240c2c0443c15cc050d0ee6917eb57a7a7f",
+        "turn": 5,
+        "hp": 30,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "MIND_ROT_POWER",
+            "name": "心灵腐化",
+            "amount": 1,
+            "is_debuff": true
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "KNOWLEDGE_DEMON",
+            "current_hp": 334,
+            "max_hp": 399,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 14,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 279465,
+        "sha256": "e41f6fe998746365fcfb6f790478ac25117231d87aa49bb56ce1b93982f7e0d0",
+        "turn": 6,
+        "hp": 30,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "MIND_ROT_POWER",
+            "name": "心灵腐化",
+            "amount": 1,
+            "is_debuff": true
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 4,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "SLOTH_POWER",
+            "name": "懒惰",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "KNOWLEDGE_DEMON",
+            "current_hp": 298,
+            "max_hp": 399,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 20,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "21",
+                "damage": 21,
+                "hits": 1,
+                "total_damage": 21,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 0,
+      "observed_enemy_net_loss": 36,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    },
+    "replacement": {
+      "decision": 273450,
+      "run": "KV0JHNJCKXLS",
+      "floor": 33,
+      "turn": 5,
+      "attempt": 5,
+      "decision_sha256": "76059ce95b29a4979cb051342f4b7a7beb5ce44c1810acfe963f751da6ae22da",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:334:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:PREDATOR:true|1:SURVIVOR:true|2:DEADLY_POISON:true|3:BULLET_TIME:true\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan1",
+          "probabilities": {
+            "plan1": 0.71,
+            "plan2": 0.07,
+            "plan3": 0.22
+          },
+          "confidence": 0.56,
+          "raw": {
+            "type": "choice",
+            "choice": "plan1",
+            "confidence": 0.56,
+            "probabilities": {
+              "plan1": 0.71,
+              "plan2": 0.07,
+              "plan3": 0.22
+            }
+          }
+        }
+      },
+      "sl_explore": {
+        "point": "T5, the 4th latest question before attempt 4's death on T10",
+        "original": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+        "replacement": "猎杀者 -> 知识恶魔",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1,
+          4
+        ],
+        "replayed": 8,
+        "numbers": {
+          "original": "rollout dead 10/24, further loss 30, win ~28%; whole-fight sim win 0%; this turn hp -0, dmg 36",
+          "replacement": "rollout dead 10/24, further loss 30, win ~27%; whole-fight sim win 0%; this turn hp -0, dmg 29"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0,
+          "replacement": 0,
+          "diff": 0,
+          "se": 0
+        },
+        "turn": "DEADLY_POISON+>知识恶魔, PREDATOR>知识恶魔",
+        "turn_instead": "PREDATOR>知识恶魔"
+      },
+      "before": {
+        "line": 279511,
+        "sha256": "a510bb8addefdafd21e8602a5e46ba4e7f3eee0b284be8f3b1975f10dbcd9275",
+        "turn": 5,
+        "hp": 30,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "MIND_ROT_POWER",
+            "name": "心灵腐化",
+            "amount": 1,
+            "is_debuff": true
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "KNOWLEDGE_DEMON",
+            "current_hp": 334,
+            "max_hp": 399,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 14,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 279515,
+        "sha256": "94d901371ec57af4aad647512844be18c4b40946b2c63c3d27162ed1b7b28e85",
+        "turn": 6,
+        "hp": 30,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "MIND_ROT_POWER",
+            "name": "心灵腐化",
+            "amount": 1,
+            "is_debuff": true
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 4,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "SLOTH_POWER",
+            "name": "懒惰",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "KNOWLEDGE_DEMON",
+            "current_hp": 305,
+            "max_hp": 399,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 13,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "21",
+                "damage": 21,
+                "hits": 1,
+                "total_damage": 21,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 0,
+      "observed_enemy_net_loss": 29,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    }
+  },
+  {
+    "same_fingerprint": true,
+    "original": {
+      "decision": 274505,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 10,
+      "attempt": 4,
+      "decision_sha256": "720c790c72d42573d30ebd4be7f319fbccee22ef66ab87f9ee485933b6f51829",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:82:0:true\",\"event\":\"\",\"gold\":150,\"hand\":\"0:BECKON:true|1:PREDATOR:true|2:POISONED_STAB:true|3:BECKON:true|4:DAGGER_SPRAY:true\",\"hp\":37,\"maxHp\":86,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"KEN58SH9SLZ6\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":10}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan4",
+          "probabilities": {
+            "plan3": 0,
+            "plan4": 0.98,
+            "plan1": 0.01,
+            "plan2": 0.01
+          },
+          "confidence": 0.97,
+          "raw": {
+            "type": "choice",
+            "choice": "plan4",
+            "confidence": 0.97,
+            "probabilities": {
+              "plan3": 0,
+              "plan4": 0.98,
+              "plan1": 0.01,
+              "plan2": 0.01
+            }
+          }
+        }
+      },
+      "sl_explore": null,
+      "before": {
+        "line": 280588,
+        "sha256": "fae4f05537f4d3d9c2f65583270313982c935de1bf3fab5deee792f84b2a7028",
+        "turn": 10,
+        "hp": 37,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 82,
+            "max_hp": 221,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 7,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "INTANGIBLE_POWER",
+                "name": "无实体",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "15",
+                "damage": 15,
+                "hits": 1,
+                "total_damage": 15,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 280592,
+        "sha256": "ddbda86813eeb1ab995e890a48589f7ea4e665516b9c131c0fdd54ab3a439058",
+        "turn": 11,
+        "hp": 22,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 80,
+            "max_hp": 221,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 9,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 15,
+      "observed_enemy_net_loss": 2,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    },
+    "replacement": {
+      "decision": 274568,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 10,
+      "attempt": 5,
+      "decision_sha256": "7b241896bf440d1f8734c5633d43697ea28df127999a64ce59ba6c1d527fa35d",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:82:0:true\",\"event\":\"\",\"gold\":150,\"hand\":\"0:BECKON:true|1:PREDATOR:true|2:POISONED_STAB:true|3:BECKON:true|4:DAGGER_SPRAY:true\",\"hp\":37,\"maxHp\":86,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"KEN58SH9SLZ6\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":10}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan4",
+          "probabilities": {
+            "plan4": 0.98,
+            "plan2": 0.01,
+            "plan3": 0,
+            "plan1": 0.01
+          },
+          "confidence": 0.97,
+          "raw": {
+            "type": "choice",
+            "choice": "plan4",
+            "confidence": 0.97,
+            "probabilities": {
+              "plan4": 0.98,
+              "plan2": 0.01,
+              "plan3": 0,
+              "plan1": 0.01
+            }
+          }
+        }
+      },
+      "sl_explore": {
+        "point": "T10, the 4th latest question before attempt 4's death on T15",
+        "original": "呼唤, 带毒刺击 -> 灵魂异鱼, 呼唤",
+        "replacement": "呼唤, 带毒刺击 -> 灵魂异鱼, 匕首雨",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          4
+        ],
+        "replayed": 20,
+        "numbers": {
+          "original": "rollout dead 6/24, further loss 32.5, win ~46%; whole-fight sim win 38.5%; this turn hp -15, dmg 2",
+          "replacement": "rollout dead 12/24, further loss 35.3, win ~28%; whole-fight sim win 12.7%; this turn hp -21, dmg 4"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.385,
+          "replacement": 0.127,
+          "diff": -0.2583,
+          "se": 0.0132
+        },
+        "turn": "BECKON, BECKON, POISONED_STAB>灵魂异鱼",
+        "turn_instead": "BECKON, DAGGER_SPRAY, POISONED_STAB>灵魂异鱼"
+      },
+      "before": {
+        "line": 280651,
+        "sha256": "90316bcc6ddf730dd35f0ccf0e49769453f1435b71ca3bae2f9c03ed954f2c0e",
+        "turn": 10,
+        "hp": 37,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 82,
+            "max_hp": 221,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 7,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "INTANGIBLE_POWER",
+                "name": "无实体",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "15",
+                "damage": 15,
+                "hits": 1,
+                "total_damage": 15,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 280655,
+        "sha256": "4dee5569ac3bde89b9426346d44cfac9055c71c40190d6be7e9bc7aacebf8867",
+        "turn": 11,
+        "hp": 16,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 78,
+            "max_hp": 221,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 9,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 21,
+      "observed_enemy_net_loss": 4,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    }
+  },
+  {
+    "same_fingerprint": true,
+    "original": {
+      "decision": 274484,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 4,
+      "decision_sha256": "66033c39aefdbb187b68f24e56d65ca9d96c5d0aa9507d020e3dc8313e0937c2",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:136:0:true\",\"event\":\"\",\"gold\":150,\"hand\":\"0:BECKON:true|1:STRIKE_SILENT:true|2:STRIKE_SILENT:true|3:FOOTWORK:true|4:CLOAK_AND_DAGGER:true|5:STRIKE_SILENT:true|6:SUCKER_PUNCH:true\",\"hp\":66,\"maxHp\":86,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KEN58SH9SLZ6\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan5",
+          "probabilities": {
+            "plan1": 0.01,
+            "plan4": 0,
+            "plan3": 0,
+            "plan5": 0.99,
+            "plan2": 0
+          },
+          "confidence": 0.99,
+          "raw": {
+            "type": "choice",
+            "choice": "plan5",
+            "confidence": 0.99,
+            "probabilities": {
+              "plan1": 0.01,
+              "plan4": 0,
+              "plan3": 0,
+              "plan5": 0.99,
+              "plan2": 0
+            }
+          }
+        }
+      },
+      "sl_explore": {
+        "replay": {
+          "point": "T6, the 8th latest question before attempt 3's death on T15",
+          "reference": 3,
+          "line": "呼唤, 灵动步法, 斗篷与匕首",
+          "original": "呼唤, 灵动步法, 斗篷与匕首",
+          "overridden": false,
+          "reason": "the answer is attempt 3's line"
+        }
+      },
+      "before": {
+        "line": 280567,
+        "sha256": "165bd36b1ffdaee419094a61e7f1f428bcafa4fdcc1a1e6b7e5bf11d35b81684",
+        "turn": 5,
+        "hp": 66,
+        "block": 0,
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 136,
+            "max_hp": 221,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "INTANGIBLE_POWER",
+                "name": "无实体",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "15",
+                "damage": 15,
+                "hits": 1,
+                "total_damage": 15,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 280572,
+        "sha256": "fa352b59da242ae805985a78061f2997b68df8c565e6b4616d796a16cfd8671f",
+        "turn": 6,
+        "hp": 59,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 135,
+            "max_hp": 221,
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 7,
+      "observed_enemy_net_loss": 1,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    },
+    "replacement": {
+      "decision": 274601,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 6,
+      "decision_sha256": "555c4f2b00f77e2ff21544d2f5fe4efc078890940c3b899190ce09ba36eeeee6",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:136:0:true\",\"event\":\"\",\"gold\":150,\"hand\":\"0:BECKON:true|1:STRIKE_SILENT:true|2:STRIKE_SILENT:true|3:FOOTWORK:true|4:CLOAK_AND_DAGGER:true|5:STRIKE_SILENT:true|6:SUCKER_PUNCH:true\",\"hp\":66,\"maxHp\":86,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"KEN58SH9SLZ6\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "original_answer": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan5",
+          "probabilities": {
+            "plan4": 0,
+            "plan1": 0.01,
+            "plan3": 0,
+            "plan5": 0.99,
+            "plan2": 0
+          },
+          "confidence": 0.99,
+          "raw": {
+            "type": "choice",
+            "choice": "plan5",
+            "confidence": 0.99,
+            "probabilities": {
+              "plan4": 0,
+              "plan1": 0.01,
+              "plan3": 0,
+              "plan5": 0.99,
+              "plan2": 0
+            }
+          }
+        }
+      },
+      "sl_explore": {
+        "point": "T5, the 9th latest question before attempt 4's death on T15",
+        "original": "呼唤, 灵动步法, 斗篷与匕首",
+        "replacement": "呼唤, 斗篷与匕首, 突然一拳 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "replayed": 9,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 58, win ~60%; whole-fight sim win 4.2%; this turn hp -7, dmg 0",
+          "replacement": "rollout dead 0/24, further loss 60.7, win ~50%; whole-fight sim win 3.3%; this turn hp -5, dmg 1"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.042,
+          "replacement": 0.033,
+          "diff": -0.0083,
+          "se": 0.0068
+        },
+        "turn": "BECKON, CLOAK_AND_DAGGER, FOOTWORK",
+        "turn_instead": "BECKON, CLOAK_AND_DAGGER, SUCKER_PUNCH>灵魂异鱼"
+      },
+      "before": {
+        "line": 280684,
+        "sha256": "8a39c1cbfa67ae5f4294e882118ff92d23b459fe150be471eb34f1015e6cab49",
+        "turn": 5,
+        "hp": 66,
+        "block": 0,
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 136,
+            "max_hp": 221,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "INTANGIBLE_POWER",
+                "name": "无实体",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "15",
+                "damage": 15,
+                "hits": 1,
+                "total_damage": 15,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 280689,
+        "sha256": "2d601b17f2b37145dac5af63127db16432aa244895072605c059edab3a07f841",
+        "turn": 6,
+        "hp": 61,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 134,
+            "max_hp": 221,
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          }
+        ]
+      },
+      "observed_net_hp_loss": 5,
+      "observed_enemy_net_loss": 2,
+      "attribution": "仅起末观测差；包含续问和续步，不证明原候选完整执行或单动作因果"
+    }
+  }
+]

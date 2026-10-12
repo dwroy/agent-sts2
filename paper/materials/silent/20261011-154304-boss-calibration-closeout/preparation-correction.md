@@ -1,1 +1,0 @@
-extract.py --out takes a fights filename and writes to its parent. Initial extraction exited 0 but wrote six artifacts directly under scratch. Moved those unchanged files into scratch/dataset; retained the first prepare-pinned FileNotFoundError. No extraction or log mutation.

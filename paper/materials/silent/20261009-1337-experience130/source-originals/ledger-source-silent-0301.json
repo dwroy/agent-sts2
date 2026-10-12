@@ -1,0 +1,174 @@
+{
+  "id": "silent-0301",
+  "ts": "2026-10-08T17:39:20+08:00",
+  "character": "silent",
+  "by": "learner:postmortem",
+  "kind": "potion",
+  "claim": "本局六次沙虫T4非攻击回合饮罐装幽灵，建立1无实体但次轮已消失，T5都损24血；取得或喝过该瓶不等于覆盖下一轮攻击。较早同角色G403的无攻击轮也有同类空耗。仅登记实盘时点与到期事实，不制定固定喝药回合或声称延后可赢。",
+  "evidence": [
+    {
+      "run": "G403VCZ3BH1B",
+      "floor": 38,
+      "turn": 1,
+      "note": "d235409／s240302—304：敌BATTLE_FRIEND_V2为NOTHING_MOVE，无攻击，59血12挡时喝GHOST_IN_A_JAR，次轮无实体消失，HP仍59；由较早silent复盘药水清单追溯原始日志，保留首证。",
+      "role": "support",
+      "added": "2026-10-08T17:39:20+08:00"
+    },
+    {
+      "run": "SY0WMJNNVRLM",
+      "floor": 33,
+      "turn": 4,
+      "note": "六次均T4 SALIVATE_MOVE喝同瓶；d294308／340／372／403／434／468；s301594→596及301810→812等核INTANGIBLE_POWER1仅当轮，T4损0、T5各损24。延后饮药整场未实打。",
+      "role": "support",
+      "added": "2026-10-08T17:39:20+08:00"
+    },
+    {
+      "run": "9YBKCNBFP0X5",
+      "role": "support",
+      "note": "第104批独立原帧/动作复算：silent-ghost-in-a-jar-current-turn；numbers-checked及extra-numbers-checked记局层回合/数字，历史动作与支持列表分开，不认整场单因。",
+      "added": "2026-10-08T18:00:11+08:00"
+    },
+    {
+      "run": "YLYLZWHA0GKU",
+      "role": "support",
+      "note": "第104批独立原帧/动作复算：silent-ghost-in-a-jar-current-turn；numbers-checked及extra-numbers-checked记局层回合/数字，历史动作与支持列表分开，不认整场单因。",
+      "added": "2026-10-08T18:00:11+08:00"
+    },
+    {
+      "run": "XTSV1U9JD34T",
+      "role": "support",
+      "note": "第104批独立原帧/动作复算：silent-ghost-in-a-jar-current-turn；numbers-checked及extra-numbers-checked记局层回合/数字，历史动作与支持列表分开，不认整场单因。",
+      "added": "2026-10-08T18:00:11+08:00"
+    },
+    {
+      "run": "456MRNGCPD8E",
+      "floor": 31,
+      "turn": 5,
+      "note": "幽灵药饮后建1无实体、甲虫当轮20→1，0挡实失1；T6无实体消失、虚弱后16攻，不把药效当跨轮保护。",
+      "role": "support",
+      "added": "2026-10-09T04:03:03+08:00"
+    }
+  ],
+  "first_run": "G403VCZ3BH1B",
+  "prior": "partly",
+  "prior_runs": [
+    "9YBKCNBFP0X5",
+    "G403VCZ3BH1B"
+  ],
+  "prior_note": "此次登记之前的同角色持罐装幽灵选择中，9Y F48 T1面对26攻击实际将意图降1并保51血；G403 F38 T1却在无攻击、现有12挡时空耗。都重新核states／decisions，不借其他角色；判断当轮覆盖有对有错。",
+  "status": "shipped",
+  "where": {
+    "lessons": [
+      "SY0WMJNNVRLM",
+      "456MRNGCPD8E"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261008-171302-postmortem/proposal-ghost-window.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/proposal-ghost.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/proposal-evidence-correction.md",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261009-034303-postmortem/proposal-resources.md",
+      "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-040746-experience-update/proposal-sl.md"
+    ],
+    "experience": [
+      "silent-ghost-in-a-jar-current-turn"
+    ],
+    "commits": [
+      "ee6d95efd7fbb53115962231ee4ed08ea8e6c75b",
+      "4a73f63c4955beeacc39e14fed72cf302d307e82",
+      "c70efc8ca855a756c66ea43cd2dd44bef91a7882",
+      "eeb85b9f65ec15708ba37660cbe5d912095ceac3",
+      "e6d12c26f0713448684489396470e6596d353117",
+      "90577a65353b6fffe151b8eeb49bd472a4c98bf9",
+      "52aa3fcca307e289db09ce926b045e734be92fda",
+      "24d4eff156ed0e95f58fd906d16a5a53e0a6599e"
+    ],
+    "changelog": [
+      "## 2026-10-08 静默猎手 第一百零四次增量：1 局 A10（version 2026-10-08.21，分支 exp-silent，ee6d95ef）",
+      "## 2026-10-09 静默猎手 第一百一十七次增量：2 局 A10（version 2026-10-09.6，分支 exp-silent，e6d12c26）"
+    ]
+  },
+  "note": "首次单独登记非攻击轮饮药失误，first_run按本角色已核较早原局，非冒称本局首次发生；来源任务20261008-171302-postmortem，独立strategy-proposal待验证。",
+  "asc": 9,
+  "history": [
+    {
+      "ts": "2026-10-08T17:39:20+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-08T17:44:22+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-08T18:00:11+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T18:00:15+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T18:03:41+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T18:03:41+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-08T18:18:53+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-08T18:26:32+08:00",
+      "by": "ops",
+      "status": "shipped"
+    },
+    {
+      "ts": "2026-10-09T04:03:03+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T04:05:29+08:00",
+      "by": "learner:postmortem"
+    },
+    {
+      "ts": "2026-10-09T04:22:00+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-09T04:22:02+08:00",
+      "by": "learner:experience-update"
+    },
+    {
+      "ts": "2026-10-09T04:54:22+08:00",
+      "by": "learner:experience-update",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-09T05:01:57+08:00",
+      "by": "ops",
+      "status": "shipped"
+    }
+  ],
+  "version": "S1.exp117",
+  "effect": null,
+  "notes": [
+    "首次单独登记非攻击轮饮药失误，first_run按本角色已核较早原局，非冒称本局首次发生；来源任务20261008-171302-postmortem，独立strategy-proposal待验证。",
+    "代码提案 silent-proposal-85db96918f609b1e → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第104批提交前经验/证据关联；保留首证/prior/claim及历史状态，提交后登记proposed。",
+    "代码提案 silent-proposal-2ea03873248ad65f → task=strategy-proposal；Roy-2026-10-07-learning",
+    "代码提案 silent-proposal-edaea6fac5a803c1 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第104批四份初稿共同SL数字按原帧校正：首试只录22张，后两试26张同序/T4完整同盘；胜试敌20−毒5−荆棘3=12，退场索引重排。保留原提案历史，以补充提案silent-proposal-edaea6fac5a803c1及extra-numbers-checked为准，经验文字与建议不变。",
+    "第104批经验源提交完成；首证/prior/claim/旧状态/版本保持历史，实际shipped交运维核live；经验上线不等策略代码实现。",
+    "第一百零四次经验仅原数据.20→.21，源ee6d95ef增2改16退0/178 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp104。按原学习者ledger-map仅20所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，五combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/21冲突/out/err/失败历史保持。",
+    "本局补support；无受控整场替代胜线，不把死亡自动记为上线规则重犯；旧claim、先验、首证及状态保持。",
+    "代码提案 silent-proposal-2134613e313fceba → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第117批经验/提案预关联，保留旧claim/首证/prior/状态/版本；只核静默153完局，旧151局统计逐行一致。原药水/SL/尾部规则未改，提交后另记proposed。",
+    "代码提案 silent-proposal-a9c0bfa7e34da37d → task=strategy-proposal；Roy-2026-10-07-learning",
+    "第117批经验源已自测提交；实际合入以完成事件为准，交运维核登记数据shipped。本次未改打法源码，四提案沿独立策略链，旧claim/首证/prior/证据/版本历史保持。",
+    "第一百一十七次经验仅原数据2026-10-09.5→2026-10-09.6，源e6d12c26增1改18退0/191 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp117。按原学习者ledger-map仅20所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0324仅原提案关联不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/19冲突/out/err/失败历史保持。"
+  ],
+  "shipped_at": "2026-10-09T05:01:57+08:00"
+}

@@ -1,0 +1,9 @@
+原日志逐偏移SHA通过 {'runs': 1, 'decisions': 348, 'brain': 22, 'run-plans': 3, 'sl-attempts': 1, 'jev-prompts': 105, 'states': 359}
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-212421-experience-update/proof.py", line 64, in <module>
+    check('生成两刀未兑现，负4力量下伤害0',len(knives)==2 and s['combat']['player']['powers'] and all(c['dynamic_values']['Damage']==0 for c in knives))
+                                                                                                  ^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-212421-experience-update/proof.py", line 64, in <genexpr>
+    check('生成两刀未兑现，负4力量下伤害0',len(knives)==2 and s['combat']['player']['powers'] and all(c['dynamic_values']['Damage']==0 for c in knives))
+                                                                                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+TypeError: list indices must be integers or slices, not str

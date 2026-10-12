@@ -1,0 +1,189 @@
+{
+  "task": "fix-batch",
+  "item": "codex-brain-cache",
+  "base": "6e427e001bf72d14bb097a75986834276724c7eb",
+  "status": "tested-source-committed-live-lock-blocked-probe-pending",
+  "merged": null,
+  "probe": {
+    "status": "pending-after-actual-source-integration-and-next-wake",
+    "repair_model_calls": 0,
+    "original_model_calls_observed": 0,
+    "max_total_allocated_calls": 4
+  },
+  "confirmed_cause": "probe hardcodes global home instead of established isolated brain home; historical cache undercount already repaired",
+  "cache_transport_cause": "unknown",
+  "code_proposals": [],
+  "implementation_domains": [],
+  "references": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/baseline.json",
+  "comparison": {
+    "historical_frozen": {
+      "calls": 2680,
+      "questions": 2666,
+      "runs": 86,
+      "outcomes": {
+        "error": 11,
+        "answered": 2666,
+        "stalled": 2,
+        "failed": 1
+      },
+      "models": {
+        "gpt-6.1-sol/high": 2680
+      },
+      "known_cache_calls": 2666,
+      "missing_cache_calls": 14,
+      "input_tokens": 339269444,
+      "cached_input_tokens": 180677504,
+      "cache_hit_ratio": 0.5325487078052334,
+      "zero_cache_calls": 1107,
+      "output_tokens": 747216,
+      "reasoning_tokens": 520896,
+      "input_per_known_call": 127257.855963991,
+      "wall_ms": 37892505,
+      "median_ms": 11702.0,
+      "p90_ms": 24810,
+      "first": "2026-10-05T20:55:02.804Z",
+      "last": "2026-10-08T06:02:35.600Z",
+      "trace_attempts": 2680,
+      "model_invocations_observed": 2669,
+      "preflight_errors_no_model_call": 11,
+      "preflight_error_wall_ms": 2192
+    },
+    "production_previous_20": {
+      "physical_calls": 20,
+      "duplicate_rows": 0,
+      "questions": 20,
+      "runs": [
+        "9DAS5L8YM1CN"
+      ],
+      "outcomes": {
+        "answered": 20
+      },
+      "model_effort": {
+        "gpt-6.1-sol/high": 20
+      },
+      "cache_known_calls": 20,
+      "cache_unknown_calls": 0,
+      "input_tokens_observed": 2647437,
+      "cached_input_tokens_observed": 1569920,
+      "cache_hit_ratio_observed": 0.5929961695028059,
+      "zero_cache_calls": 7,
+      "output_tokens": 6946,
+      "reasoning_tokens": 4686,
+      "input_per_known_call": 132371.85,
+      "wall_ms": 362305,
+      "median_ms": 17232.0,
+      "p90_ms": 25482
+    },
+    "isolated_baseline": {
+      "status": "pending-isolation-refused",
+      "model_calls_observed": 0,
+      "home": "/home/dw/.codex",
+      "result": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/probe-result.json"
+    },
+    "isolated_repair": {
+      "status": "pending-next-wake",
+      "model_calls": 0,
+      "cache_hit_ratio": null,
+      "home": "/home/dw/.codex-brain",
+      "max_physical_calls": 2
+    },
+    "after_this_tool_release": {
+      "status": "not-applicable-no-production-transport-change",
+      "cache_improvement": null,
+      "usd_or_quota_velocity": null
+    }
+  },
+  "tests": {
+    "source_sandbox": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 251,
+      "cases": 2627,
+      "exit": 0,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/source-sandbox.log"
+    },
+    "targeted": {
+      "files": 3,
+      "cases": 19,
+      "vitest": 0
+    },
+    "python": {
+      "cases": 48,
+      "exit": 0
+    },
+    "withdrawn_red": {
+      "failed_cases": 2,
+      "exit": 1
+    },
+    "restored_green": {
+      "passed_cases": 2,
+      "exit": 0
+    },
+    "fixture_reconstruction": {
+      "exit": 0,
+      "same": [
+        "system",
+        "user",
+        "schema"
+      ]
+    },
+    "actual_merged_tree": {
+      "tsc": null,
+      "vitest": null,
+      "files": null,
+      "cases": null,
+      "reason": "no merge: nonblocking live-merge.lock acquisition returned EAGAIN"
+    },
+    "external_full": {
+      "tsc": null,
+      "vitest": null,
+      "reason": "not executed for this continuation; scheduler after actual integration"
+    }
+  },
+  "source_paths": [
+    "agent/src/brain/engines/codex.ts",
+    "agent/tests/codex-cache-engine.test.ts",
+    "agent/tests/codex-cache-probe.test.ts",
+    "ops/codex-brain-cache-probe.ts",
+    "ops/codex-ops-actions.sh",
+    "ops/tests/test_codex_cache_probe_broker.py"
+  ],
+  "production_equivalence": "Only optional bounded-probe beforePhysicalCall callback is added. Production has no callback/limit; identical request content, model, high effort, schema, usage guard, retry/revert/cancel behavior. Synthetic Ironclad isolation tests only; no Ironclad knowledge read.",
+  "publication": {
+    "source": "548b53ca211231ab5f1079a16fe9ad65f62b3c6c",
+    "merged": null,
+    "published": null,
+    "version": null,
+    "status": "blocked",
+    "error": "[Errno 11] Resource temporarily unavailable"
+  },
+  "rollback": "Revert only this six-path source commit/cherry-pick; preserve all refreshed knowledge and original baseline/repair reservations, results, claim files and report history.",
+  "source": "548b53ca211231ab5f1079a16fe9ad65f62b3c6c",
+  "source_tree": "b713cfe9957519b07f1b6705f9dff0d8ab7375a8",
+  "source_agent_tree": "08dd9a59bb69317f447d770fe6207474b4c82c6f",
+  "published": null,
+  "version": null,
+  "fallback_request": {
+    "exit": 124,
+    "event_sent": null,
+    "event_confirmed": false,
+    "reason": "broker gave no reply in 20s; existing source request-merge only supports codex-dev/exp-silent, so this dedicated branch has no confirmed fallback event",
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/fallback-request.log",
+    "continuation": "root inbox and normal fix-done event; preserve source rejection limitation without claiming it was the actual broker response"
+  },
+  "original_evidence_unchanged": true,
+  "skipped": [
+    {
+      "item": "live-integration",
+      "reason": "single nonblocking ops/live-merge.lock attempt rejected EAGAIN; no live mutation; preserve publication.json/deploy.log"
+    },
+    {
+      "item": "controlled-double-question",
+      "reason": "must run fixed tested broker only after main/live source integration and next wake; zero new physical model calls"
+    },
+    {
+      "item": "after-merge-and-external-checks",
+      "reason": "no merge; checks not executed, fields null"
+    }
+  ]
+}

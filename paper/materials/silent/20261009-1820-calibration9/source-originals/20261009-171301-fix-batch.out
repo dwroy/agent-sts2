@@ -1,0 +1,123 @@
+已上线 `S1.boss-calibration9`。[报告](/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-171302-silent-boss-calibration/report.md) · [完整回报及审计](/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-171302-silent-boss-calibration/final.json)
+
+```json
+{
+  "task": "fix-batch",
+  "base": "9ce029b69c324ae13e98951fa5e8fa0d1696a4f0",
+  "fixes": [{
+    "item": "Roy 已授权新功能：静默 boss 模拟校准",
+    "commit": "351678e8a6aa39a6e78bd7f1abc1ef259d8493c8",
+    "implementation_commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+    "original_code_merge": "75ba3f6ec0ef27cdd73f10d1e9e91200437722b4",
+    "actual_merge": "1cdf75b194591c2e4e4c292f9b69c0284d31457e",
+    "version": "S1.boss-calibration9",
+    "ledger": ["silent-0342"],
+    "test": "源与合后 tsc/sandbox vitest 均通过，各251文件2627例；Python校准12例、调度44例通过；提交前gitleaks通过",
+    "fails_without_fix": false,
+    "fails_without_fix_note": "本批为定期数据刷新，复用既有源码，未执行撤源码测试"
+  }],
+  "merged": "1cdf75b194591c2e4e4c292f9b69c0284d31457e",
+  "publication": "2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328",
+  "publication_tree": "fb4340aeefc28f670efb93b87d8836e64b3b15d3",
+  "calibration": {
+    "finished_silent_runs": 173,
+    "boss_attempts_including_sl": 810,
+    "usable_openings": 321,
+    "new_actual_outcomes": {"won": 15, "died": 5},
+    "tune_candidates": 107,
+    "tune_success": 106,
+    "validation": 214,
+    "cutoff_utc": "2026-10-06T02:46:11.648000",
+    "platt_and_selection_unchanged": true,
+    "brier": {"B2": 0.1165, "B3": 0.1170},
+    "reused_fights": 301,
+    "new_replayed_fights": 20
+  },
+  "boss_trust_columns": ["boss", "验证场数", "还差场数", "B2", "B3"],
+  "boss_trust_table": [
+    ["永世沙漏", 15, 0, "低：Brier/胜率差/打穿比", "低：Brier/胜率差/打穿比"],
+    ["仪式兽", 20, 0, "可信", "可信"],
+    ["帝王蟹", 21, 0, "可信", "可信"],
+    ["知识恶魔", 20, 0, "可信", "低：打穿比1.303超过1.3"],
+    ["乐加维林族母", 20, 0, "可信", "可信"],
+    ["女王", 15, 0, "低：Brier/胜率差", "低：Brier/胜率差"],
+    ["灵魂异鱼", 17, 0, "可信", "可信"],
+    ["实验体", 12, 0, "低：Brier/胜率差/打穿比", "低：Brier/胜率差/打穿比"],
+    ["无厌沙虫", 22, 0, "低：Brier/打穿比", "低：Brier/打穿比"],
+    ["同族", 15, 0, "低：Brier/打穿比", "低：Brier"],
+    ["墨影幻灵", 17, 0, "可信", "可信"],
+    ["瀑布巨兽", 20, 0, "可信", "可信"]
+  ],
+  "a10": {
+    "validation": 214,
+    "residual_percentage_points": {"B2": 6.9, "B3": 7.1},
+    "leak_ratio": {"B2": 1.302, "B3": 1.323},
+    "scope": "整体血量预测未达上限；消费按逐boss指标及F49限制",
+    "a9_damage_fallback": "TEST_SUBJECT BIG_POUNCE",
+    "F49": {
+      "actual_outcomes": 17,
+      "usable": 16,
+      "validation": 14,
+      "missing_fights": 0,
+      "prediction_minus_actual": {"B2": 0.393, "B3": 0.333},
+      "leak_ratio": {"B2": 3.629, "B3": 3.711},
+      "trust": "低；联合通关概率未验证"
+    }
+  },
+  "skipped": [
+    "K3676LU8B0UH F48既有t1/pre no solve保留，未纳入拟合",
+    "A0–4、A5–9独立验证均0场，保留样本外限制"
+  ],
+  "refresh": {
+    "entry": "agent/tools/boss-sim/refresh-silent.py",
+    "scheduler": "ops/learner_jobs.py:calibration_job",
+    "when": "每小时:13/:43及学习完成事件检查；升阶或20次新增实际胜败触发",
+    "idempotent": true,
+    "split_fixed": true,
+    "new_samples_validation_only": true
+  },
+  "tests": {
+    "source_sandbox": "通过：tsc0，251文件2627例",
+    "live_sandbox": "通过：tsc0，251文件2627例",
+    "python_calibration": "12例通过",
+    "python_dispatch": "44例通过",
+    "gitleaks": "全部提交前通过",
+    "ledger": "342项，0问题",
+    "full_external": "交调度器，尚未执行"
+  },
+  "preservation": {
+    "saved_refresh_paths": 10,
+    "source_paths_matching_publication": 73,
+    "preflight_exit": 1,
+    "preflight_task_conflicts": 0,
+    "unrelated_record_conflicts": 18,
+    "integration": "仅纳入本批路径的两父提交合并；其他live内容逐blob保持，原失败记录留存"
+  },
+  "commits": {
+    "data": "2910e5c4de8fcfe82182a55c19062eff3af9c754",
+    "complete_source_and_logs": "351678e8a6aa39a6e78bd7f1abc1ef259d8493c8",
+    "saved_live_refresh": "805997918bd8d7087311d70a33c09a0139dfb18a",
+    "actual_merge": "1cdf75b194591c2e4e4c292f9b69c0284d31457e",
+    "release_registration": "2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328"
+  },
+  "reports": {
+    "paper": "paper/materials/silent/boss-sim-calibration.md",
+    "task": "learner/runs/20261009-171302-silent-boss-calibration/report.md",
+    "archive": "experiments/boss-sim/silent/e918959162ed7c88e3f8d995163e1a65d77963b8533a7a26050fbfa222261491/"
+  },
+  "ledger_status": "silent-0342：fight/proposed；shipped交运维核实后登记",
+  "code_proposals": [],
+  "implementation_domains": []
+}
+```
+
+== 学习者 codex / silent-boss-calibration ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11fef-fd40-7ed1-a2a7-c3e3555ebde7
+轮数：1；工具调用：command_execution×96 file_change×2
+token：输入 267.0k、输出 77.6k（其中推理 49.6k）、cache 读 14566.8k、cache 写 0（命中 98.2%）
+成本：未提供
+耗时：3856.6 s（墙钟）
+时间：首个事件 4.0 s、模型首个输出 9.9 s、首次工具 14.2 s、末次工具结束 3739.8 s；工具内共 2526.7 s，其余（模型生成、推理、网络）1325.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration）；模型的工具调用 exec×75 wait×14；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T17-13-04-01a11fef-fd40-7ed1-a2a7-c3e3555ebde7.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-171302-silent-boss-calibration.jsonl

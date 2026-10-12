@@ -1,0 +1,15 @@
+{
+  "kind": "Read-only verification helper assumptions corrected; no source or historic record changed.",
+  "first_attempt": {
+    "exit": 1,
+    "check": "Formal append starts with draft-v2",
+    "finding": "Formal 19245-byte append starts with original append-lesson.sh/lesson-draft.md 18733 bytes, then two errata; draft-v2 was a later separate draft and was not the executed append."
+  },
+  "second_attempt": {
+    "exit": 1,
+    "check": "Python checks object equals parsed verification JSON",
+    "finding": "Source verify.py uses tuples; original JSON serializes them as arrays. Normalizing the reexecuted object through JSON produces exact 105-check equality."
+  },
+  "source_writes": 0,
+  "source_all_original_files_preserved": true
+}

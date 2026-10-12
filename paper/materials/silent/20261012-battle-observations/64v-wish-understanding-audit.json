@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-12T08:57:51.172017+08:00",
+  "run_id": "64VJC5XT2AT2",
+  "brain_offset": 419039766,
+  "state_offset": 11453224823,
+  "floor": 34,
+  "event_option": {
+    "index": 1,
+    "text_key": "VAKUU.pages.INITIAL.options.SERE_TALON",
+    "title": "原初之爪",
+    "description": "失去[blue]9[/blue]点最大生命值，将[blue]3[/blue]张[purple]许愿[/purple]加入你的[gold]牌组[/gold]。",
+    "is_locked": false,
+    "is_proceed": false,
+    "will_kill_player": false,
+    "has_relic_preview": true
+  },
+  "model_received_option": {
+    "option": "原初之爪",
+    "description": "失去[blue]9[/blue]点最大生命值，将[blue]3[/blue]张[purple]许愿[/purple]加入你的[gold]牌组[/gold]。",
+    "lethal": false,
+    "max_hp_cost": 9,
+    "hp_after": "88/96 (92% of max)",
+    "route_effect": "HP 88/105 -> 88/96"
+  },
+  "visible_answer": "阳伞免费补强，走三火一店无精英，保血备战连王。",
+  "option_provides": [
+    "maximum HP loss 9",
+    "gain 3 cards named 许愿"
+  ],
+  "missing_from_this_question": [
+    "许愿 energy cost",
+    "许愿 full card effect",
+    "card upgrade/exhaust or other relevant properties"
+  ],
+  "live_experience_version": "2026-10-12.1",
+  "matching_current_experience_entry_ids": [],
+  "historical_prefix": {
+    "mode": "full",
+    "ascension": 10,
+    "prefix_sha": "7ce0909fee94",
+    "prefix_chars": 172688
+  },
+  "limitations": [
+    "Historical full system prompt not reproduced; current library search is not proof that no historical prefix ever mentioned this card",
+    "Model internal understanding cannot be inferred from an option name or from its short answer",
+    "WISH/WISH+ observed-deck query found no SILENT rows, but card-ID spelling was not independently established, so this is not proof of zero historical encounters"
+  ],
+  "assessment": "No auditable evidence that this decision evaluated the actual effects of 许愿. The raw game event and delivered option both only contain the acquisition summary; preview flag does not supply the card text.",
+  "suggestion": "Expose legally observed event-granted card previews to the decision input, or explicitly mark card effects unknown. Learn mechanics only from in-game evidence.",
+  "changed_runtime_or_knowledge": false
+}

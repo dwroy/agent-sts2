@@ -1,5 +1,5 @@
 /**
- * BUILD_DECIDER=deepseek (Dai 2026-09-28): card rewards, shops, events, rest sites, relic choices, deck
+ * BUILD_DECIDER=deepseek (Roy 2026-09-28): card rewards, shops, events, rest sites, relic choices, deck
  * picks outside combat and the act's route are DeepSeek's decisions, with code's values as facts; Jev
  * then code when DeepSeek fails; combat stays with code and Jev. The route is planned once per act and
  * followed by code.
@@ -237,7 +237,7 @@ describe("BUILD_DECIDER=deepseek: the act's route is planned once on the whole m
     expect(pick?.criteria).toEqual({ r5c1: "F6 普通战（沿连线）", r5c3: "F6 普通战（沿连线）" });
     expect(pick?.instructions).toContain("按顺序列出每个节点的 id");
     expect(JSON.stringify(decision.kind === "ask" ? decision.state : {})).not.toMatch(/code_value|code_rank|route_value|hp_at_boss/);
-    // Candidate routes to the boss with their projected HP (Dai 2026-10-04): legal routes, at most 6.
+    // Candidate routes to the boss with their projected HP (Roy 2026-10-04): legal routes, at most 6.
     const candidates = view["candidate_routes"] as { about: string; routes: string[] };
     expect(candidates.about).toMatch(/^代码列出的到 boss 的路线（事实，不是选项）/);
     expect(candidates.routes.length).toBeGreaterThanOrEqual(1);
@@ -259,7 +259,7 @@ describe("BUILD_DECIDER=deepseek: the act's route is planned once on the whole m
     const broken = decide(env(brokenFork(), { screenMemory: memory }));
     expect(broken.label).toBe("map/route-plan");
     expect((broken.kind === "ask" ? broken.state["route_map"] : {}) as Record<string, JsonValue>).toMatchObject({ replan_because: expect.stringMatching(/not available/), previous_plan: "r5c3 普通战 → r6c3 商店 → r7c3 Boss" });
-    // HP far below what the plan projected for the next node is no re-plan (Dai 2026-09-29): the card
+    // HP far below what the plan projected for the next node is no re-plan (Roy 2026-09-29): the card
     // reward and rest site questions show the brain the plan's facts at HP now instead.
     const low = decide(env(secondFork({ current_hp: 12 }), { screenMemory: memory }));
     expect(low).toMatchObject({ kind: "act", label: "map/route-follow", intent: { action: "choose_map_node", option_index: 1 } });

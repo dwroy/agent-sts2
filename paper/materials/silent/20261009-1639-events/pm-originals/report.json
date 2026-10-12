@@ -1,0 +1,41 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "C6Z8ATNBNHZ7"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "C6Z8ATNBNHZ7",
+      "where": "agent/src/reflex/card-model.ts:1620",
+      "what": "狡诈药水确定生成未进入方案模型，旧silent-0256重复，fix-queue-v4已列。",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0019",
+      "silent-0025",
+      "silent-0256",
+      "silent-0005",
+      "silent-0080",
+      "silent-0258",
+      "silent-0278",
+      "silent-0243"
+    ],
+    "repeats": [
+      "silent-0256"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-7f6ac5f447be5acc",
+    "silent-proposal-9e14d9e11b63d153"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-161301-postmortem/report.md"
+}

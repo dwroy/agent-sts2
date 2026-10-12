@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-11T19:02:24+08:00",
+  "ops_acceptance": "paper/materials/20261011-1852-ops/assist/production-acceptance.json",
+  "ops_acceptance_sha256": "75edbb06d21e52c39b8cc39cf97aaa51e675d13d4295c1a3b0343530df9a3e89",
+  "result": "two real read-only sessions completed with overlapping execution, reports, original events, released slots and archived closed Herdr terminals",
+  "engine_overlap_seconds": 73.57843804359436,
+  "earlier_worker_registered_overlap_seconds": 75.844308479,
+  "clarification": "assist-final-acceptance.json used first running worker states, including engine startup; ops production acceptance uses the running engine overlap. Both prove concurrent execution; use 73.58 seconds for engine overlap.",
+  "deferred_source": "9a3313a174b0235df34326bb864ddb7329a01eca",
+  "docs_source": "ce74e24e27654c21d359260096dc3678869c8657",
+  "ops_prepared_branch": "ops-20261011-1852-integration",
+  "remaining": "ops is validating its prepared integration; watcher does not contend with the active learner live test lock"
+}

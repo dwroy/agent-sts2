@@ -280,7 +280,7 @@ describe("turn planner with a fight plan", () => {
     expect(dry.label).toBe("combat/lethal");
     expect(dry.steps).not.toContain("use_potion");
     expect(dry.steps).not.toContain("POTION:");
-    // Only the potion wins (25 HP): Jev's call (Dai 2026-09-28), the winning line shown and flagged.
+    // Only the potion wins (25 HP): Jev's call (Roy 2026-09-28), the winning line shown and flagged.
     const wet = planCombatTurn(env(board(25)));
     expect(wet?.kind).toBe("ask");
     expect(wet?.label).toBe("combat/plan-choice+potion-lethal");

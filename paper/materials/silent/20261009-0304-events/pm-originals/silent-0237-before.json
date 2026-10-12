@@ -1,0 +1,155 @@
+{
+ "id": "silent-0237",
+ "ts": "2026-10-07T15:59:10+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "神化APOTHEOSIS在出牌模型中只得到未建模技能的固定价值，没有将已观察升级效果传播到同一方案的剩余手牌和后续抽牌。VLZ F43同一后续牌序原预测43伤/损14，神化实打后重问51伤/损13且兑现，独立少报8伤、多报1血损；F45首题仍标未建模并未施放。修复不等于本局整场可获胜。",
+ "evidence": [
+  {
+   "run": "VPW8YH7A4QFM",
+   "floor": 35,
+   "turn": 1,
+   "note": "2026-10-06T16:13:28.862Z，带神化候选标unmodelled_cards；F38/F39仍如此。旧复盘只记未施放，未独立登记模型缺口。",
+   "role": "support",
+   "added": "2026-10-07T15:59:10+08:00"
+  },
+  {
+   "run": "VLZ6CCT8AQ0A",
+   "floor": 43,
+   "turn": 1,
+   "note": "decisions269706/269707；states275679→275687。同一后续牌序43/14→51/13并实际兑现。",
+   "role": "support",
+   "added": "2026-10-07T15:59:10+08:00"
+  },
+  {
+   "run": "VLZ6CCT8AQ0A",
+   "floor": 45,
+   "turn": 1,
+   "note": "decisions269748，神化候选未建模；实选不打神化，喝痊愈药水后代码执行必备工具/生存者，states275731→275732仅余神化被弃掉。",
+   "role": "support",
+   "added": "2026-10-07T15:59:10+08:00"
+  }
+ ],
+ "first_run": "VPW8YH7A4QFM",
+ "prior": "no",
+ "prior_runs": [
+  "VPW8YH7A4QFM"
+ ],
+ "prior_note": "更早本角色VPW F35/F38/F39神化候选都未建模，无正确传播升级的记录；这里判断模型覆盖，不把不施放本身认定为普遍错误。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "VLZ6CCT8AQ0A"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261007-154302-postmortem/proposal-apotheosis.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-apotheosis.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-214302-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-234303-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-004303-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-004303-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-014012-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-025837-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-044250-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-061303-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-061303-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-071205-strategy-proposal/proposal.md"
+  ],
+  "commits": [
+   "772b839f8ada31664cb764ea9ad3bdb03da27f64",
+   "6e9acb9d00a758d2bd43e46873a1f7aa54a7a68a",
+   "903a1efcb4456e448b5e64f8c915397d1c585d98",
+   "88575299faa30a6da8abd832ed4899ef6ac153f4"
+  ]
+ },
+ "note": "新识别纯模型缺口；当前只读live agent/src/reflex/card-model.ts:922/945/948，turn-solver.ts:1974/1976；fix-queue.md与fix-queue-v4.md无APOTHEOSIS同项。当前b0f41f03行号；本局code ac321b1f+dirty，不重建dirty。",
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-07T15:59:10+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-07T16:01:26+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T16:53:46+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-07T21:58:13+08:00",
+   "by": "learner:strategy-proposal"
+  },
+  {
+   "ts": "2026-10-07T23:57:34+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T00:50:28+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T01:47:25+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T03:12:32+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T04:57:21+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T06:23:17+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T07:25:10+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T07:40:11+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-08T07:40:11+08:00",
+   "by": "learner:strategy-proposal"
+  },
+  {
+   "ts": "2026-10-08T07:53:38+08:00",
+   "by": "ops:codex",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.apotheosis1",
+ "effect": null,
+ "notes": [
+  "新识别纯模型缺口；当前只读live agent/src/reflex/card-model.ts:922/945/948，turn-solver.ts:1974/1976；fix-queue.md与fix-queue-v4.md无APOTHEOSIS同项。当前b0f41f03行号；本局code ac321b1f+dirty，不重建dirty。",
+  "代码提案 silent-proposal-89354805ee4d7e77 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-283a164780d11e69 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "本批原日志复核勘误：VLZ729/729帧均有agent_view.piles聚合文本；旧策略报告只查顶层piles得到0不能作为完全没有牌堆的理由。保留旧报告，不覆盖；实际缺逐卡完整dynamic_values/稳定实例与确定抽序。已见升级勒紧6另记silent-0252及独立提案，不能据此记完整神化已实现。",
+  "20261007-234302派发核证：silent-proposal-89354805ee4d7e77, silent-proposal-283a164780d11e69；处置详见提案/report，1duplicate/9waiting，无新源码或上线；保留旧首证/先验/支持/重复及shipment历史。 本批复核VLZ729帧，631帧含agent_view.combat.draw聚合文本，不沿用完全无牌堆的旧理由；4761条draw无逐卡dynamic_values/实例，完整未知升级/附魔及抽弃传播仍待补数据。",
+  "20261008-004303策略核验；关联silent-proposal-89354805ee4d7e77,silent-proposal-283a164780d11e69均waiting。六局原始证据哈希与前次一致；具体缺数据和已有局部live源码证明见proposal.md。无新增源码/上线，不新增support/repeat，不改首证、claim、既有版本或shipped历史。",
+  "20261008-014012独立核验：六局3432原帧/3306决策与原证据一致；未改源码、未合入。关联silent-proposal-89354805ee4d7e77,silent-proposal-283a164780d11e69；逐项waiting及缺数据见proposal.md/proposal_results.json，不追加重复support/repeat、不标shipped。",
+  "20261008-025836-strategy-proposal复核本批10个派发ID：逐项waiting与缺数据见proposal.md/report.md；六局原状态SHA不变，未新增源码/合入/版本，不重复support/repeat；已有shipped经验不降级。chosen_order为击杀顺序label，单敌无值不当出牌方案缺失证据。",
+  "20261008-044249策略核验；silent-proposal-89354805ee4d7e77,silent-proposal-283a164780d11e69均waiting，具体缺数据及原帧/源码核验见提案；未增加支持计数，无新源码提交或live发布。",
+  "20261008-061302策略复核：silent-proposal-89354805ee4d7e77 waiting：普通神化的已观察数值变化成立；缺弱/缩小/费用附魔下的升级传播配对、其余牌的可升级/不可升级真值和后续抽牌完整覆盖验证。当前通用升级实测漏传勒紧与尖啸字段，不能将加固定分或只改upgraded标记登记为整项实现。；silent-proposal-283a164780d11e69 waiting：与89354805ee4d7e77共享神化缺口，本项补经验链接不构成live源码实现。缺升级后续抽牌及未知牌/修正组合覆盖验证；升级勒紧6的局部实现不能证明神化已传播，保留同一原问题等待补证。；无新源码/合入，不增加support/repeat。",
+  "20261008-071204/071205：原日志SHA复核；普通固有神化仅已观察八配对传播，未知触媒/属性组合保留缺口；固定F43同牌序51伤/13损，源码接线撤掉5败/恢复6过；未合live、未标shipped。",
+  "普通固有神化八配对有限实现源772b839f8ada31664cb764ea9ad3bdb03da27f64；原沙箱tsc0/vitest0，247文件2604例；生产接线撤掉5败/恢复6过。live预检6记录冲突停止，刷新78b43d074147e2b74b6e563afcdbaf9f0033abe7保留；未合入/未版本/未shipped。原宽提案继续waiting，触媒升级等范围未冒称覆盖。",
+  "代码提案 silent-proposal-708792ca2038f923 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "原071204独立策略有限普通固有神化源码实际上线；VLZ6CCT8AQ0A静默A10 F35/F43八已观察配对，同方案/已知抽牌/本场牌堆传播，未知卡与属性/重放/自动组合保持未验证。源及组合原沙箱247文件2604例tsc/vitest0；撤生产接线5红/恢复6绿，六净blob与源main/live祖先核实。只补本源码版本，不重复经验支持、首证/先验/claim/旧版本保持；单局发现样本不称盲验/胜率收益，不改药水/SL/HP阈值。十项原宽提案waiting，有限708792ca补链implemented；原failed/merged=null/六冲突保留，完整外部另续验。"
+ ],
+ "shipped_at": "2026-10-08T07:53:38+08:00"
+}

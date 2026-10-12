@@ -1,0 +1,105 @@
+10 项提案均已核验，保留 `waiting`。36 项日志核验通过；live 合入预检仍有 15 项冲突，按要求停止合入。未改生产源码、未提交或发布版本，工作树干净。
+
+已保存[提案及逐项证据](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-224302/learner/runs/20261011-224313-strategy-proposal/proposal.md)和[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-224302/learner/runs/20261011-224313-strategy-proposal/report.md)，5 个账本通过 CLI 补链。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261011-224302-strategy-proposal",
+  "base": "3de2368c1bd09bf6aedb2ac03955845fcea00a4f",
+  "runs": [
+    "751FN9QM9MHQ",
+    "KV0JHNJCKXLS",
+    "YQL8RZ8BWN1E",
+    "L9SGRBB5R698",
+    "PU80F84P6HPN",
+    "KEN58SH9SLZ6"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "三组血价已核；缺弃牌续问后的执行归属诊断和受控完整后继，无法校准准入阈值；本批合入预检冲突。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "缺确定/未决损血与未知持有价值的联合展示；F13实际无药或留药后继未记录；本批合入冲突。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "同源预测审计候选未入live，弃牌后执行核验及受控整战仍缺；不能因共享证据标duplicate；本批合入冲突。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "确定/保守损血、未知持有价及无药参考缺联合消费者验证，原F13保药分支未记录；本批合入冲突。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "KV同盘删毒未见保血收益；缺输出、毒、回血与执行联合诊断及保毒/删毒受控后继；本批合入冲突。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "阶段子项a83d9ab675560a177249aa638e99df40bcfb5553已在live；原排序仍保留，药水阶段展示及改序受控结果未齐，不能关闭父提案。"
+    },
+    {
+      "id": "silent-proposal-9733bb80f445aeae",
+      "state": "waiting",
+      "reason": "阶段记录已上线；仍缺提前喝、不喝、留药及参考改序的完整对照，末试局部施毒不能证明留药价值；本批合入冲突。"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "state": "waiting",
+      "reason": "七次实际饮药已核；随机选牌、重问和整段收益审计未闭环，缺F15不饮用或保留至boss的对照；本批合入冲突。"
+    },
+    {
+      "id": "silent-proposal-86a7db08d1a31976",
+      "state": "waiting",
+      "reason": "多2伤花6血与省2血却延迟步法的反向取舍均已核；缺能力兑现执行链和同随机序整战，不支持统一探索阈值；本批合入冲突。"
+    },
+    {
+      "id": "silent-proposal-e282a9131b99129a",
+      "state": "waiting",
+      "reason": "KEN六试全败且后继动作不同；预测与完整执行未联合验收，缺独立局受控后继以拟合血价和探索准入；本批合入冲突。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-224302/learner/runs/20261011-224313-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12b6b-03ac-73d0-9e22-d5c453adeed2
+轮数：1；工具调用：command_execution×42 file_change×4
+token：输入 131.3k、输出 27.1k（其中推理 5890）、cache 读 3070.6k、cache 写 0（命中 95.9%）
+成本：未提供
+耗时：944.7 s（墙钟）
+时间：首个事件 13.3 s、模型首个输出 20.2 s、首次工具 27.0 s、末次工具结束 902.0 s；工具内共 190.6 s，其余（模型生成、推理、网络）740.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-224302）；模型的工具调用 exec×31；/home/dw/.codex-sts2/sessions/2026/10/11/rollout-2026-10-11T22-43-16-01a12b6b-03ac-73d0-9e22-d5c453adeed2.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-224302/learner/runs/20261011-224313-strategy-proposal.jsonl

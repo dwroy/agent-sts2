@@ -1,0 +1,383 @@
+{
+  "silent-proposal-04b6b430759815ed": {
+    "op": "add",
+    "id": "silent-proposal-04b6b430759815ed",
+    "ts": "2026-10-12T17:59:32+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0005",
+      "silent-0006",
+      "silent-0021",
+      "silent-0011",
+      "silent-0065",
+      "silent-0264",
+      "silent-0079",
+      "silent-0133",
+      "silent-0169",
+      "silent-0189",
+      "silent-0013",
+      "silent-0053",
+      "silent-0162",
+      "silent-0265"
+    ],
+    "runs": [
+      "NHA2KW0RB7VP",
+      "K3676LU8B0UH",
+      "SADL3CGYTGSR"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "terminal"
+    ],
+    "summary": "按静默实帧核油灯首次放大、当前手数/脆弱/能量、蟹朝向取整及能力兑现；只修已观察子公式和估值窗口",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update/proposal-mechanisms.md",
+    "experience": [
+      "silent-footwork-block",
+      "silent-strength-weak-observation",
+      "silent-deck-burst-observation",
+      "silent-noxious-fumes-growth",
+      "silent-kaiser-crab-facing-sl",
+      "silent-ceremonial-beast-threshold-growth-sl",
+      "silent-precise-cut-hand-count-observation",
+      "silent-paels-flesh-third-turn-energy",
+      "silent-frail-card-block",
+      "silent-malaise-x-debuff",
+      "silent-mr-struggles-turn-start-damage",
+      "silent-unsettling-lamp-first-debuff"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "188d4daee0970bba6b59aa7c3498d9da76ef31aac4a42c69be2a86192cadab58",
+    "state": "waiting",
+    "reason": "七手子项已上线；油灯原帧的stack始终为null，缺跨重规划/恢复后的首次消费状态验证；蟹显示1→2缺可追溯未取整底值，组合机制包不能整项关闭。",
+    "commit": null,
+    "seen_runs": 244,
+    "batch": "code-proposals:silent-proposal-a5e12fbdb1aca576,silent-proposal-04b6b430759815ed,silent-proposal-9952ee8e8df9a0fe,silent-proposal-9b4049b484730143,silent-proposal-47be799a87af03be,silent-proposal-3a5274da3c42672a,silent-proposal-bc4b92d590f2c4ce,silent-proposal-f52fbbab4dccc3b4,silent-proposal-10f37c0edd3d24a6,silent-proposal-eecf671192557465:244"
+  },
+  "silent-proposal-9952ee8e8df9a0fe": {
+    "op": "add",
+    "id": "silent-proposal-9952ee8e8df9a0fe",
+    "ts": "2026-10-12T17:59:32+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0019",
+      "silent-0020",
+      "silent-0065",
+      "silent-0264",
+      "silent-0079"
+    ],
+    "runs": [
+      "NHA2KW0RB7VP"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl",
+      "terminal"
+    ],
+    "summary": "SL零胜率换线须显式核即时血价和击杀推进，路线/营火实际回复与存档恢复分账；证据不足保留门槛",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update/proposal-resources.md",
+    "experience": [
+      "silent-route-hp-observation",
+      "silent-rest-buffer-observation",
+      "silent-kaiser-crab-facing-sl"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "4641badee4b0dfb956e91f12e20e20a5ecbc5c31905f8e0c84da1429de4d9800",
+    "state": "waiting",
+    "reason": "已核NHA同首手14挡/损1与8挡/损7的即时差额；缺同入口换线、保药/路线的完整后继对照，无法据六次全败校准SL、营火或终局门槛。",
+    "commit": null,
+    "seen_runs": 244,
+    "batch": "code-proposals:silent-proposal-a5e12fbdb1aca576,silent-proposal-04b6b430759815ed,silent-proposal-9952ee8e8df9a0fe,silent-proposal-9b4049b484730143,silent-proposal-47be799a87af03be,silent-proposal-3a5274da3c42672a,silent-proposal-bc4b92d590f2c4ce,silent-proposal-f52fbbab4dccc3b4,silent-proposal-10f37c0edd3d24a6,silent-proposal-eecf671192557465:244"
+  },
+  "silent-proposal-47be799a87af03be": {
+    "op": "add",
+    "id": "silent-proposal-47be799a87af03be",
+    "ts": "2026-10-12T17:59:32+08:00",
+    "character": "silent",
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "静默已观察单张弃牌题核对正在执行计划、逐敌来袭和每个合法弃牌分支，保留未实打的反事实限制",
+    "ledger": [
+      "silent-0205"
+    ],
+    "runs": [
+      "P74C04AEPL1F"
+    ],
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-011301-postmortem/proposal-discard-plan.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "25870eb9a6d5482193ebe5f06d7071794e13bc8a43f293d8bcdfb7700377b6e1",
+    "state": "waiting",
+    "reason": "计划后继提示与普通单弃消费均已上线；P74末次T3四个合法弃牌分支缺联合伤害/手数/逐敌存活校准，现有保留手牌事实明确不推演结果，不能整项报duplicate。",
+    "commit": null,
+    "seen_runs": 244,
+    "batch": "code-proposals:silent-proposal-a5e12fbdb1aca576,silent-proposal-04b6b430759815ed,silent-proposal-9952ee8e8df9a0fe,silent-proposal-9b4049b484730143,silent-proposal-47be799a87af03be,silent-proposal-3a5274da3c42672a,silent-proposal-bc4b92d590f2c4ce,silent-proposal-f52fbbab4dccc3b4,silent-proposal-10f37c0edd3d24a6,silent-proposal-eecf671192557465:244"
+  },
+  "silent-proposal-3a5274da3c42672a": {
+    "op": "add",
+    "id": "silent-proposal-3a5274da3c42672a",
+    "ts": "2026-10-12T17:59:32+08:00",
+    "character": "silent",
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion"
+    ],
+    "summary": "核证多敌失衡与召唤复活、一次格挡翻倍、滑溜下火焰／毒与普通触媒兑现，保留获胜战到下一战的真实资源和缺帧限制",
+    "ledger": [
+      "silent-0039",
+      "silent-0196",
+      "silent-0013",
+      "silent-0180",
+      "silent-0224",
+      "silent-0227",
+      "silent-0027",
+      "silent-0011",
+      "silent-0006"
+    ],
+    "runs": [
+      "P74C04AEPL1F"
+    ],
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-011301-postmortem/proposal-group-resource.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "6ae654a5dabe769d49545bf1f10fb61e82539939c4cca5acfa20e518cf19cf05",
+    "state": "waiting",
+    "reason": "已核群战血价、滑溜下火焰/毒及石虫局部眩晕；缺主怪归零到召唤结束的内部帧及同入口杀序/保药完整后继，不能完成整个群战药水资源包。",
+    "commit": null,
+    "seen_runs": 244,
+    "batch": "code-proposals:silent-proposal-a5e12fbdb1aca576,silent-proposal-04b6b430759815ed,silent-proposal-9952ee8e8df9a0fe,silent-proposal-9b4049b484730143,silent-proposal-47be799a87af03be,silent-proposal-3a5274da3c42672a,silent-proposal-bc4b92d590f2c4ce,silent-proposal-f52fbbab4dccc3b4,silent-proposal-10f37c0edd3d24a6,silent-proposal-eecf671192557465:244"
+  },
+  "silent-proposal-bc4b92d590f2c4ce": {
+    "op": "add",
+    "id": "silent-proposal-bc4b92d590f2c4ce",
+    "ts": "2026-10-12T17:59:32+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0092",
+      "silent-0023",
+      "silent-0021",
+      "silent-0057",
+      "silent-0205",
+      "silent-0079",
+      "silent-0266"
+    ],
+    "runs": [
+      "G33HU22H2543",
+      "P74C04AEPL1F"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl",
+      "terminal"
+    ],
+    "summary": "保留投斧首牌顺序身份、弃牌后重核计划和能力实际兑现；候选与完整实线分账",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-014012-experience-update/proposal-replay.md",
+    "experience": [
+      "silent-throwing-axe-first-card-replay",
+      "silent-afterimage-per-card-block",
+      "silent-deck-burst-observation",
+      "silent-survivor-neutralize-discard",
+      "silent-queen-poison-window-sl-observation"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "d99922d67f03f38fdf7a3df2a604a1be63a3d0bf1b98f3f2f4d6d42e58f29725",
+    "state": "waiting",
+    "reason": "投斧身份与普通生存者单弃子项已在live，旧合入阻塞已解除；仍缺P74全部弃牌后继与G33能力替线的完整验证，组合提案继续waiting。",
+    "commit": null,
+    "seen_runs": 244,
+    "batch": "code-proposals:silent-proposal-a5e12fbdb1aca576,silent-proposal-04b6b430759815ed,silent-proposal-9952ee8e8df9a0fe,silent-proposal-9b4049b484730143,silent-proposal-47be799a87af03be,silent-proposal-3a5274da3c42672a,silent-proposal-bc4b92d590f2c4ce,silent-proposal-f52fbbab4dccc3b4,silent-proposal-10f37c0edd3d24a6,silent-proposal-eecf671192557465:244"
+  },
+  "silent-proposal-f52fbbab4dccc3b4": {
+    "op": "add",
+    "id": "silent-proposal-f52fbbab4dccc3b4",
+    "ts": "2026-10-12T17:59:32+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0019",
+      "silent-0020",
+      "silent-0090",
+      "silent-0069",
+      "silent-0039",
+      "silent-0064"
+    ],
+    "runs": [
+      "G33HU22H2543",
+      "P74C04AEPL1F"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl",
+      "terminal"
+    ],
+    "summary": "按赢战资源消耗与下一场实入口核路线/SL/終局价值，存档恢复与真实回复分账",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-014012-experience-update/proposal-resources.md",
+    "experience": [
+      "silent-route-hp-observation",
+      "silent-rest-buffer-observation",
+      "silent-queen-poison-main-target",
+      "silent-obscura-summon-growth",
+      "silent-decimillipede-reattach-poison"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "f6212ce1983f6d534fde0e56f7d3151fd4cb248a5413e4abdfdd9125421ed630",
+    "state": "waiting",
+    "reason": "跨战真实消耗和回复已能从原帧分账，但缺同入口另路线、休息或用药的完整后继及独立留出局，不能拟合通用资源/SL/终局阈值。",
+    "commit": null,
+    "seen_runs": 244,
+    "batch": "code-proposals:silent-proposal-a5e12fbdb1aca576,silent-proposal-04b6b430759815ed,silent-proposal-9952ee8e8df9a0fe,silent-proposal-9b4049b484730143,silent-proposal-47be799a87af03be,silent-proposal-3a5274da3c42672a,silent-proposal-bc4b92d590f2c4ce,silent-proposal-f52fbbab4dccc3b4,silent-proposal-10f37c0edd3d24a6,silent-proposal-eecf671192557465:244"
+  },
+  "silent-proposal-10f37c0edd3d24a6": {
+    "op": "add",
+    "id": "silent-proposal-10f37c0edd3d24a6",
+    "ts": "2026-10-12T17:59:32+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0006",
+      "silent-0011",
+      "silent-0027",
+      "silent-0046",
+      "silent-0013",
+      "silent-0180",
+      "silent-0196",
+      "silent-0255",
+      "silent-0198",
+      "silent-0204",
+      "silent-0069"
+    ],
+    "runs": [
+      "G33HU22H2543",
+      "P74C04AEPL1F"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion",
+      "terminal"
+    ],
+    "summary": "逐来源核临时减力、双重毒结算、牌挡/被动挡/翻倍、开场遗物及实际回复",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-014012-experience-update/proposal-mechanisms.md",
+    "experience": [
+      "silent-strength-weak-observation",
+      "silent-noxious-fumes-growth",
+      "silent-accelerant-triggers",
+      "silent-piercing-wail-temporary-strength",
+      "silent-vambrace-opening-block",
+      "silent-paels-legion-card-block-double",
+      "silent-bowlbug-rock-full-block-stun",
+      "silent-royal-poison-blood-vial-opening-net",
+      "silent-stone-humidifier-rest-growth",
+      "silent-frail-card-block"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "705dcdc07bf49426c7a645ce77875e8526cccca1e059eb1561472617611b8e52",
+    "state": "waiting",
+    "reason": "毒/临时减力/格挡和开场扣血已有局部模型；双遗物叠加、复活/回复内部顺序及求解—跨轮—药水—终局联合校准仍不充分，不能整包关闭。",
+    "commit": null,
+    "seen_runs": 244,
+    "batch": "code-proposals:silent-proposal-a5e12fbdb1aca576,silent-proposal-04b6b430759815ed,silent-proposal-9952ee8e8df9a0fe,silent-proposal-9b4049b484730143,silent-proposal-47be799a87af03be,silent-proposal-3a5274da3c42672a,silent-proposal-bc4b92d590f2c4ce,silent-proposal-f52fbbab4dccc3b4,silent-proposal-10f37c0edd3d24a6,silent-proposal-eecf671192557465:244"
+  },
+  "silent-proposal-3f82387e2e179703": {
+    "op": "add",
+    "id": "silent-proposal-3f82387e2e179703",
+    "ts": "2026-10-12T01:55:27+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0079",
+      "silent-0027",
+      "silent-0065",
+      "silent-0080",
+      "silent-0088"
+    ],
+    "runs": [
+      "RC61MFQM63Y6"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl"
+    ],
+    "summary": "双蟹同盘SL用触媒替打击实少7伤、多损4HP，全败推演并列不当同安全；先核弃牌后可达朝向与能力兑现，缺整战控制及独立验证时保留旧排序、等待新证据。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-014304-postmortem/proposal-sl-power-cost.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "8bdf5f3c4ef752be9a4d494397f8214fc58e524f6a8c682c1a3be41bb791eab3",
+    "state": "waiting",
+    "reason": "同盘两线实损4/8、净扣敌30/23已核；后续动作和抽序未受控，缺独立整战校准，单弃修复也未上线。",
+    "commit": null,
+    "seen_runs": 236,
+    "batch": "code-proposals:silent-proposal-eecf671192557465,silent-proposal-3f82387e2e179703,silent-proposal-7de7c94031afcf4d,silent-proposal-aee21084c991abd3,silent-proposal-df37594e9b12debf,silent-proposal-42e81c83b2e1e56b,silent-proposal-03754e1265894000,silent-proposal-d60691b060dfc40a,silent-proposal-e5ea36df117ca9b7,silent-proposal-ab055ef7dfbb44e5:236"
+  },
+  "silent-proposal-7de7c94031afcf4d": {
+    "op": "add",
+    "id": "silent-proposal-7de7c94031afcf4d",
+    "ts": "2026-10-12T01:55:27+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0268"
+    ],
+    "runs": [
+      "BTSRF7JL1W1Y"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "为既有0268普通生存者单弃根因补F31T2确定弃掉突然一拳、丝虫未杀、预测损4而实际损14的固定回归；独立任务检查已有提案避免重复修复。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-024302-postmortem/proposal-survivor-discard.md",
+    "rule_changes": false,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "8c34e95eca59b07cf77e56478caab9b780df2ca8a21e25656edeefe2d11b0452",
+    "state": "waiting",
+    "reason": "BTS唯一突然一拳被弃、预测损4而实损14已核；共用0268原候选尚未live，还需补验BTS完整后继夹具，合入受记录冲突阻塞。",
+    "commit": null,
+    "seen_runs": 236,
+    "batch": "code-proposals:silent-proposal-eecf671192557465,silent-proposal-3f82387e2e179703,silent-proposal-7de7c94031afcf4d,silent-proposal-aee21084c991abd3,silent-proposal-df37594e9b12debf,silent-proposal-42e81c83b2e1e56b,silent-proposal-03754e1265894000,silent-proposal-d60691b060dfc40a,silent-proposal-e5ea36df117ca9b7,silent-proposal-ab055ef7dfbb44e5:236"
+  },
+  "silent-proposal-aee21084c991abd3": {
+    "op": "add",
+    "id": "silent-proposal-aee21084c991abd3",
+    "ts": "2026-10-12T01:55:27+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0128"
+    ],
+    "runs": [
+      "BTSRF7JL1W1Y"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "核对醒虫力量、临时虚弱、覆甲及抽弃后实际执行线的长程推演；单局3/4样本线死亡不足校准权重或规定焦点，保留原行为并交独立任务验证。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-024302-postmortem/proposal-awake-beetle-validation.md",
+    "rule_changes": false,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "b5cb54be4191c956c90c7604bd5180350c139bb8c2bab3e035f8104277186d78",
+    "state": "waiting",
+    "reason": "实际需损16位于最终执行候选预测0至16范围内；未定位确定模型失配，单条3/4样本线死亡不足校准概率或权重。",
+    "commit": null,
+    "seen_runs": 236,
+    "batch": "code-proposals:silent-proposal-eecf671192557465,silent-proposal-3f82387e2e179703,silent-proposal-7de7c94031afcf4d,silent-proposal-aee21084c991abd3,silent-proposal-df37594e9b12debf,silent-proposal-42e81c83b2e1e56b,silent-proposal-03754e1265894000,silent-proposal-d60691b060dfc40a,silent-proposal-e5ea36df117ca9b7,silent-proposal-ab055ef7dfbb44e5:236"
+  }
+}

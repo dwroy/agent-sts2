@@ -1,0 +1,41 @@
+{
+  "recorded_at": "Wed Oct  7 13:04:34 CST 2026",
+  "state": "completed",
+  "request_receipt": {
+    "batch": "20261007-121301-experience-update",
+    "rc": 1,
+    "fallback_checks": [
+      {
+        "rc": 1,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-121301-experience-update.fallback-e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be.checks.log",
+        "merged": "33f02a6f37dc8dd820cd9d8cbc1ec207cb49624f",
+        "tree": "e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be",
+        "commits": [
+          "d73417544e071deaff6eb01f73dde3b87f29fa0e"
+        ]
+      }
+    ]
+  },
+  "check": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-121301-experience-update.fallback-e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be.checks.log",
+    "merged": "33f02a6f37dc8dd820cd9d8cbc1ec207cb49624f",
+    "tree": "e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be",
+    "commits": [
+      "d73417544e071deaff6eb01f73dde3b87f29fa0e"
+    ]
+  },
+  "tsc": 0,
+  "vitest": 1,
+  "files": "1 failed | 274 passed (275)",
+  "cases": "2 failed | 3180 passed | 2 skipped (3184)",
+  "failures": [
+    "tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > usage that cannot be read: said once, codex stays on; with BRAIN_CODEX_USAGE_REQUIRED=on codex is off for the run",
+    "tests/brain-codex-usage.test.ts > the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and the usage guard > the live case (2026-10-04 07:06Z): a 401 expired token on the read, codex's token refresh through the app-server, the read again: codex answers"
+  ],
+  "log_origin": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-121301-experience-update.fallback-e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be.checks.log",
+  "log_bytes": 74503,
+  "log_sha256": "c25f2b8e5ead003a32fe273addd98cb8d8063c7fd65826f1628c92fb7d468bce",
+  "decision": "same legacy helper missing note callback; repair queued, no rollback, preserve original history",
+  "dispatch_wait": "serialized broker ran full checks before feature startup; first 300s client timeout retained, retried 660s"
+}
