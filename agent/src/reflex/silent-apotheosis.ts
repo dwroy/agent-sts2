@@ -29,7 +29,18 @@ const PAIRS: Record<string, { cost?: [number, number]; vars: Record<string, [num
 
 /** No inferred upgrade for modified values, costs, text effects, or cards absent from the paired evidence. */
 export function observedApotheosisUpgrade(card: Record<string, unknown>): Record<string, unknown> | null {
-  if (bool(card["upgraded"]) || bool(card["costs_x"])) return null;
+  if (bool(card["upgraded"])) return null;
+  // VLZ6CCT8AQ0A F43 T1 deck / T2 draw and cast: ordinary X becomes X+1 after Apotheosis.
+  // This text-only pair has no dynamic values; no other X card or modified text is certified.
+  if (str(card["card_id"]) === "MALAISE") {
+    if (card["costs_x"] !== true || card["energy_cost"] !== 0 || card["star_costs_x"] !== false ||
+      card["star_cost"] !== 0 || card["enchantment"] != null ||
+      !Array.isArray(card["dynamic_values"]) || card["dynamic_values"].length !== 0 ||
+      card["rules_text"] !== "敌人失去X{IfUpgraded:show:+1}点力量。给予X{IfUpgraded:show:+1}层虚弱。" ||
+      str(card["resolved_rules_text"]).replace(/\s+/g, "") !== "敌人失去X点力量。给予X层虚弱。消耗。") return null;
+    return { ...card, upgraded: true, resolved_rules_text: "敌人失去X+1点力量。给予X+1层虚弱。 消耗。" };
+  }
+  if (bool(card["costs_x"])) return null;
   const pair = PAIRS[str(card["card_id"])];
   if (!pair || num(card["energy_cost"], NaN) !== (pair.cost?.[0] ?? 1) ||
     /重放|replay/i.test(str(card["resolved_rules_text"])) || card["enchantment"] != null) return null;

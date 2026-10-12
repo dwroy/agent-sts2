@@ -765,6 +765,12 @@ export function enemySims(combat: Record<string, unknown>, asc?: number, charact
         powerAmount(enemy, "WEAK_POWER") > 0 &&
         asArray(enemy["powers"]).every((entry) => ["WEAK_POWER", "STRENGTH_POWER", "PLOW_POWER", "SHACKLING_POTION_POWER"].includes(str(asRecord(entry)["power_id"])))
         ? { weakShackling: true as const } : {}),
+      // VLZ6CCT8AQ0A F43 T2: the observed Weak-only Maelstrom board before upgraded Malaise.
+      ...(character.toLowerCase() === "silent" && asc === 10 &&
+        str(enemy["enemy_id"]) === "SOUL_NEXUS" && str(enemy["move_id"]) === "MAELSTROM_MOVE" &&
+        [1, 3].includes(powerAmount(enemy, "WEAK_POWER")) &&
+        asArray(enemy["powers"]).every((entry) => str(asRecord(entry)["power_id"]) === "WEAK_POWER")
+        ? { weakMalaise: true as const } : {}),
       ...(powerAmount(enemy, "POISON_POWER") > 0 ? { poison: powerAmount(enemy, "POISON_POWER") } : {}),
       ...(observedStranglePower(enemy, character, asc) ? { strangle: powerAmount(enemy, "STRANGLE_POWER") } : {}),
       artifact: powerAmount(enemy, "ARTIFACT_POWER"),

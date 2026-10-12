@@ -71,7 +71,7 @@ export interface CardModel {
   /** VLZ6CCT8AQ0A A10: ordinary Apotheosis, with unverified upgrades kept unknown. */
   apotheosis?: boolean;
   apotheosisUpgrade?: UpgradeDelta;
-  /** The observed Snakebite preview text, alongside its certified numeric upgrade. */
+  /** Observed preview text, alongside the certified numeric upgrade. */
   apotheosisUpgradeText?: string;
   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
   corrosiveWave?: number;
@@ -741,6 +741,7 @@ export function replayOf(rendered: string): number {
 /** The numbers upgrading a card changes, as CardModel fields (the solver adds them: Blessing of the Forge). */
 export interface UpgradeDelta {
   /** Certified Silent Apotheosis fields; generic Forge deltas remain unchanged. */
+  malaiseBonus?: number;
   dexterity?: number;
   poison?: number;
   damageBase?: number;
@@ -821,6 +822,7 @@ export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
     ...(delta.poisonExtraTriggers !== undefined ? { poisonExtraTriggers: add(card.poisonExtraTriggers, delta.poisonExtraTriggers) } : {}),
     ...(delta.dexterity !== undefined ? { dexterity: add(card.dexterity, delta.dexterity) } : {}),
     ...(delta.poison !== undefined ? { poison: add(card.poison, delta.poison) } : {}),
+    ...(delta.malaiseBonus !== undefined ? { malaiseBonus: add(card.malaiseBonus, delta.malaiseBonus) } : {}),
     vulnerable: add(card.vulnerable, delta.vulnerable),
     weak: add(card.weak, delta.weak),
     strength: add(card.strength, delta.strength),
@@ -1220,8 +1222,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     const rawUpgrade = observedApotheosisUpgrade(card);
     if (rawUpgrade) {
       const upgraded = modelHandCard(rawUpgrade, fallbackIndex, knowledge, character, ascension);
-      if (cardId === "SNAKEBITE") model.apotheosisUpgradeText = upgraded.text;
-      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn", "poisonExtraTriggers", "dexterity", "poison"] as const;
+      if (cardId === "SNAKEBITE" || cardId === "MALAISE") model.apotheosisUpgradeText = upgraded.text;
+      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn", "poisonExtraTriggers", "dexterity", "poison", "malaiseBonus"] as const;
       model.apotheosisUpgrade = {};
       for (const field of fields) {
         const change = (upgraded[field] ?? 0) - (model[field] ?? 0);
