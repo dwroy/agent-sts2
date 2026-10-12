@@ -1,0 +1,274 @@
+{
+ "id": "silent-0250",
+ "ts": "2026-10-07T20:29:21+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "SL参考路径的残血指标直接累加瀑布巨兽自爆占位体的近十亿血，并把占位体被毒或攻击扣掉的血用于同存活回合的排序。这些尝试本体已经结束，数值不能代表仍需扣掉的本体血；需要分开本体残血、自爆阶段和存活指标。现行最长存活优先是另一项规则取舍，未凭本局证明改序能提高胜率。",
+ "evidence": [
+  {
+   "run": "L9SGRBB5R698",
+   "floor": 17,
+   "turn": 14,
+   "role": "support",
+   "note": "较早静默首证：sl-attempts:681的第3次anchor记录首试T14 enemyHp=999999999；本体已结束，旧复盘未单独定位该统计缺口。",
+   "added": "2026-10-07T20:29:21+08:00"
+  },
+  {
+   "run": "PU80F84P6HPN",
+   "floor": 17,
+   "turn": 17,
+   "role": "support",
+   "note": "sl-attempts:717同为T17的两条参考路径按999999981／999999989排序；两者均处于自爆占位阶段，差额不是本体击杀进度。",
+   "added": "2026-10-07T20:29:21+08:00"
+  },
+  {
+   "run": "YQL8RZ8BWN1E",
+   "floor": 17,
+   "turn": 13,
+   "role": "support",
+   "note": "sl-attempts:960—963的anchor.ranked含999999990／999999999／999999971／999999996，六次本体都已死；当前live agent/src/sl/explore.ts:896求和、:913用于排序。未核实改序后的整场胜负。",
+   "added": "2026-10-07T20:29:21+08:00"
+  },
+  {
+   "run": "SDY5T9XCSQN2",
+   "floor": 17,
+   "turn": 16,
+   "role": "repeat",
+   "note": "sl-attempts:1312—1315 target.anchor.ranked仍将已结束本体的占位摘要记999999999有限残血；当前live explore.ts:896求和/:913排序，末试四条T16同值。确认旧输入污染重现，不宣称它改变本局同值排序或修后能赢。",
+   "added": "2026-10-09T08:27:15+08:00"
+  },
+  {
+   "run": "NYQW6JAD30K4",
+   "floor": 17,
+   "turn": 12,
+   "role": "repeat",
+   "note": "首试原SL summary记录本体0/占位血/轮初自爆47，状态中中和后意图35，9血19挡仍判死；第3—6试亦本体结束仍败。阶段子项a83d9ab已核实际live祖先；不证明改序/药水胜因。",
+   "added": "2026-10-11T18:56:26+08:00"
+  }
+ ],
+ "first_run": "L9SGRBB5R698",
+ "prior": "no",
+ "prior_runs": [
+  "L9SGRBB5R698",
+  "PU80F84P6HPN"
+ ],
+ "prior_note": "学习前已核对的两局均把不可击杀占位血计入SL残血指标，未见该指标正确排除占位的可比记录；只评价统计输入，不评价哪条存活更久的路线更好。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "YQL8RZ8BWN1E",
+   "SDY5T9XCSQN2"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261007-201301-postmortem/phase-sl-proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-203654-experience-update/proposal-giant-phase.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261009-081301-postmortem/proposal-phase-sl.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-084302-experience-update/proposal-phase.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-192809-s2/learner/runs/20261010-192819-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-214303/learner/runs/20261010-214319-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-214303/learner/runs/20261010-214319-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-222658/learner/runs/20261010-222715-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-222658/learner/runs/20261010-222715-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-234302/learner/runs/20261010-234317-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-234302/learner/runs/20261010-234317-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-004302/learner/runs/20261011-004312-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-004302/learner/runs/20261011-004312-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-022827/learner/runs/20261011-022834-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-022827/learner/runs/20261011-022834-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-025828-s2/learner/runs/20261011-025839-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-025828-s2/learner/runs/20261011-025839-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-035400/learner/runs/20261011-035408-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-035400/learner/runs/20261011-035408-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-110043/learner/runs/20261011-110058-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-115831/learner/runs/20261011-115842-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-115831/learner/runs/20261011-115842-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-132959-s2/learner/runs/20261011-133010-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-165852/learner/runs/20261011-165907-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-184302/learner/runs/20261011-184312-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-184302/learner/runs/20261011-184312-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-201301/learner/runs/20261011-201312-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-201301/learner/runs/20261011-201312-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-224302/learner/runs/20261011-224313-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-224302/learner/runs/20261011-224313-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-092818-s2/learner/runs/20261012-092828-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-092818-s2/learner/runs/20261012-092828-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-171039/learner/runs/20261012-171055-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-171039/learner/runs/20261012-171055-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755/learner/runs/20261012-183810-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-183755/learner/runs/20261012-183810-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-210134/learner/runs/20261012-210154-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-210134/learner/runs/20261012-210154-strategy-proposal/report.md"
+  ],
+  "changelog": [
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-110043/learner/runs/20261011-110058-strategy-proposal/report.md"
+  ],
+  "commits": [
+   "b14880d1b1780d03e4c1c87b5afdc2a1e08fd456",
+   "1d3b8508d4b58b2dc24815c8b740d95e7c54a48b",
+   "fab902a491574f35c7a61c115950c07fe7f40d54"
+  ]
+ },
+ "note": "本次首次定位；查silent账本的enemyHpLeft、不可击杀、占位及notes/fix-queue均无此统计项。来源任务postmortem，批次20261007-201301-postmortem；通过独立strategy-proposal处理SL／终局影响，不由本次只读任务改源码。",
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-07T20:29:21+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-07T20:32:13+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T20:47:41+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T08:27:15+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T08:27:24+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T08:51:20+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-10T19:49:02+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-10T21:51:18+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-10T22:37:47+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-10T23:53:42+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T00:49:46+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T02:34:12+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T03:04:56+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T04:00:13+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T11:10:30+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T12:12:28+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T13:37:53+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T17:11:17+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T18:56:26+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T20:24:30+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-11T22:56:41+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-12T09:38:34+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-12T17:34:33+08:00",
+   "by": "learner:strategy-proposal"
+  },
+  {
+   "ts": "2026-10-12T17:41:38+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-12T17:57:19+08:00",
+   "by": "ops:codex",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-12T18:48:20+08:00",
+   "by": "learner:strategy-proposal"
+  },
+  {
+   "ts": "2026-10-12T21:13:02+08:00",
+   "by": "learner:strategy-proposal"
+  }
+ ],
+ "version": "S1.exp189",
+ "effect": null,
+ "notes": [
+  "本次首次定位；查silent账本的enemyHpLeft、不可击杀、占位及notes/fix-queue均无此统计项。来源任务postmortem，批次20261007-201301-postmortem；通过独立strategy-proposal处理SL／终局影响，不由本次只读任务改源码。",
+  "代码提案 silent-proposal-e18d3f18e6cac2a0 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-9733bb80f445aeae → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-e972b5909856ce15 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-e274be970fe1fb93 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "本批20261010-192809-s2-strategy-proposal逐项原件核验；silent-proposal-e18d3f18e6cac2a0 waiting：并行源码a83d9ab675560a177249aa638e99df40bcfb5553已包含同一自爆阶段观测，但live 56268f61928e0330d91293e585efab075839bb4a尚有未完成合并，该源不是live祖先，不能记implemented或duplicate；本批同题草稿保存避免重复合入。宽项仍缺历史角色/敌id/阶段可靠输入、药水题阶段收益与同抽序改序/去药/留药完整受控后续，保留旧排序。；silent-proposal-9733bb80f445aeae waiting：并行源码a83d9ab675560a177249aa638e99df40bcfb5553已包含同一自爆阶段观测，但live 56268f61928e0330d91293e585efab075839bb4a尚有未完成合并，该源不是live祖先，不能记implemented或duplicate；本批同题草稿保存避免重复合入。宽项仍缺历史角色/敌id/阶段可靠输入、药水题阶段收益与同抽序改序/去药/留药完整受控后续，保留旧排序。。完整材料与取舍见本批report.md；未登记整项implemented/shipped，不重复历史复盘。",
+  "本批20261010-214303-strategy-proposal只读复核，未改源码/知识，fixes=[]/merged=null/测试null；silent-proposal-e18d3f18e6cac2a0 waiting：巨兽诊断子项已有源码a83d9ab675560a177249aa638e99df40bcfb5553，当前为live MERGE_HEAD而非HEAD祖先；live存在19条未合并路径，不能登记implemented/duplicate或抢合。宽项还缺旧摘要的可靠阶段结构输入、药水即时收益展示和受控改序整战后续。；silent-proposal-9733bb80f445aeae waiting：与e18d3f18共享巨兽证据；现成阶段诊断源a83d9ab675560a177249aa638e99df40bcfb5553仍卡在live未完成合并，实际祖先校验失败，不重复造源码。宽项缺提前/去药/留药与参考路径改序的同随机序完整受控后续。。不改变首证、已上线机制、现有策略和其他来源历史。",
+  "20261010-222658-strategy-proposal只读核验本批8局/10提案；9组同指纹、7次实际饮药、6条旧锚点已重新核实。silent-proposal-e18d3f18e6cac2a0 waiting：阶段诊断源码a83d9ab675560a177249aa638e99df40bcfb5553仍是live MERGE_HEAD，非HEAD祖先且有19项合并冲突；宽项另缺旧摘要阶段结构输入、药水收益展示及受控改序后续，不能登记implemented/duplicate。；silent-proposal-9733bb80f445aeae waiting：现成巨兽诊断子项尚未实际合入live，原合并冲突保留；宽项缺提前/去药/留药及参考路径改序的完整受控后续，不能把共享证据当源码duplicate。。无源码/知识变更、提交或合入，不标implemented/shipped；原claim/prior/历史保留，具体材料见report.md。",
+  "20261010-234302-strategy-proposal逐项核验，关联silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae；原始日志与SHA已保存；本批未改源码/知识，未提交、未合入、未标shipped。具体数据缺口及live未完成合并阻塞见本批报告；原证据与既有提交链接保持。",
+  "20261011-004302-strategy-proposal复核：silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae逐项waiting；8来源局原始帧已重核。216→218新增两局只作适用性筛查；新帝王蟹首试胜线无SL配对。诊断续办受live既有19项冲突阻塞，策略仍缺完整受控后续；无源码提交/合入/版本，不标shipped。详见本批报告。",
+  "20261011-022827-strategy-proposal逐项核验；silent-proposal-e18d3f18e6cac2a0 waiting：阶段诊断a83d9ab675560a177249aa638e99df40bcfb5553仍为MERGE_HEAD，非live祖先；19项冲突未解。宽项另缺历史阶段输入、药水联合展示和改序受控后续。；silent-proposal-9733bb80f445aeae waiting：巨兽阶段子项尚未实际合入live，不重复写同一实现；缺提前喝、去药、留药及改序受控整战，不能登记implemented。。原8锚点及新增N3/G2/8S适用性已核；本批无源码/知识提交或合入，不标implemented/shipped，原claim/prior/历史保持。",
+  "20261011-025828-s2-strategy-proposal：限派发十项，原8局及新增562GNK4ESMPE已核；具体提案仍waiting。缺策略整战配对与live既有19项合并冲突分列；无源码提交/合入/版本，不标shipped。",
+  "20261011-035400-strategy-proposal逐项核对：silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae仍waiting。原8局10组同盘/20侧差额及KEN七次耗药重核；新增L38NLY1XJ7VU未补本批场景。策略完整对照不足与诊断上线受live19项冲突阻塞分列。无源码/知识提交或合入，不标implemented/shipped，旧claim/prior/首证保持。",
+  "20261011-110043-strategy-proposal逐项核本批silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae，保留waiting。原8局10组同盘/20侧与七次耗药重核；新增SPC7NVA5K4RL沙虫多付血赢战只补边界、后续混杂且整局败，不补各场景受控对照。诊断可复现证据与策略缺数据分列，既有live19项冲突未解，a83d9ab675560a177249aa638e99df40bcfb5553非祖先。不重复复盘/首证或SPC已有0079证据，不标implemented/shipped；本批无源码/知识/提交/合入/版本。",
+  "20261011-115831-strategy-proposal复核已领取提案：silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae；原始证据与部分源码覆盖已核，整项waiting；live有19项既有冲突，未改源码/合入/登记shipped。详见本批逐项报告。",
+  "20261011-132959-s2-strategy-proposal：YQL F17末T10毒2→8，HP26/挡13/自爆41保持重核；新增6D六试均未进入自爆阶段，不能补占位阶段验证。a83d9ab675560a177249aa638e99df40bcfb5553仍非live祖先且live有19冲突，e18/973整项waiting，未标实现。 无源码/知识提交，无合入、无shipped；见本批report.md。",
+  "20261011-165852-strategy-proposal：e18/973阶段候选a83d9ab非live祖先，live19冲突未动；新增BS只补轮初意图与最终意图需区分，不证明SL改序收益。 完整报告 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-165852/learner/runs/20261011-165907-strategy-proposal/report.md",
+  "20261011-184302-strategy-proposal：本批十项逐项waiting；原始证据及具体缺口见报告。无源码、合入或新版本；不改原经验shipped状态。 更正前批合入边界：a83d9ab675560a177249aa638e99df40bcfb5553已是实际live祖先；父提案e18/973整体仍waiting。",
+  "20261011-201301-strategy-proposal：逐项核10个派发ID及8锚点/新增E6，均waiting。阶段a83d9ab已实live；预测审计be698559/5604982e仍非live祖先，各自静态预检0冲突；本批基线15个记录冲突停止上线。无源码、测试、合入或版本，不重复写历史复盘/首证。实际执行工程缺口与策略完整受控后继不足分开，详见报告。",
+  "20261011-224302-strategy-proposal：silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae；本批六局4167状态/4071决策、36项日志事实断言核验，保持waiting。15项base/live集成冲突停止合入；巨兽阶段a83d9ab为live祖先但父范围未完，两预测审计源未入live。事实诊断工程缺口与策略完整受控后继不足分开。未改源码/知识、未合入/版本/生产测试；只补续办链接，不增加旧局支持或repeat计数，不撤销历史发布。",
+  "20261012-092818-s2-strategy-proposal：仅本批原id silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae，逐项waiting。六局4167状态/4071决策/43 SL原字节重核，38项事实断言；当前离线消费者861片段均不认证整线实际结果。五个原预测/阶段/派发子项现已核live祖先，纠正旧未上线判断；父完整执行/联合事实与受控后继不足分列。base/live三处记录冲突停止，无源码/生产测试/合入/版本，不重复支持次数或历史复盘、不撤销原发布历史。",
+  "20261012-171039-strategy-proposal：按原10提案复核六局；巨兽阶段药水展示为0017/0250限定子项，其余完整父项仍待证。源码、测试、实际合入结果见本批报告；不修改旧claim/version/shipped范围。",
+  "20261012-171039：原e18d3f18/9733bb80共享的巨兽阶段药水题面展示子项已提交，证据YQL8RZ8BWN1E F17 T9/T10；撤码红5/恢复绿63、tsc0/沙箱3391通过，源码gitleaks0。live预检20记录冲突未合入，无版本/shipped；完整父项仍waiting，保留原经验上线范围。",
+  "20261012-1749仅原学习者巨兽自爆阶段与一次毒药局部观察的题面展示子项上线；当前事实与历史观察分开，提前喝/保药/整战收益保持未知，不改排序或SL准入，不将e18d3f18/9733bb80等完整父项记完成。源tsc/3391、撤功能红5/恢复63及当前tsc/101通过；首版漏fallback失败与20合入记录冲突保留，同树完整宿主检查待experience批回执。",
+  "20261012-183755-strategy-proposal：silent-proposal-e18d3f18e6cac2a0 waiting：巨兽阶段和毒药题面子项b14880d1b1780d03e4c1c87b5afdc2a1e08fd456已是live祖先；旧占位HP同轮排序仍保留，缺改序后的完整后继及独立验证，不能将展示上线记为父项完成。；silent-proposal-9733bb80f445aeae waiting：共享巨兽阶段药水展示已上线；YQL T10仅证毒2→8而26血/13挡/41来袭不变，缺提前喝、不喝、留药及新参考序的受控整战，无法校准持有价值。 本批重新核六局8281原行，3文件27固定测试通过；仅追加报告链接，不重复证据，不改claim/prior/status/version，不把已上线子项记为完整父项完成。无新源码/提交/合入。",
+  "20261012-210134-strategy-proposal：仅追加本批十个原提案复核报告链接；重核六局8281原始行及861离线片段。完整父项waiting，无新源码或规则；不改原claim/status/evidence，不把已有子项shipped当父项完成。"
+ ],
+ "shipped_at": "2026-10-12T17:57:19+08:00"
+}
