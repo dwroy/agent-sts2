@@ -1,0 +1,50 @@
+1292:   // What hits the enemies after we end the turn and before they act (Stone Calendar, The Bomb, Parrying Shield, poison):
+1293:   // an attacker it may kill does not attack. Certain only if we die even without every enemy it may kill (and, when one
+1294:   // of them is not a minion, without the minions too: they may leave with it).
+1295:   const ends = endOfTurnHits(state, hand, etherealHeld, context.knowledge, { endTotal: block + endBlock, heldLossEvents });
+1296:   const sandpitText = pit ? `${pit.name}'s Sandpit at ${pit.count}: the enemy turn takes it to 0 and eats us whatever the HP` : "";
+1297:   if (ends.refuse) return verdict(false, null, `the enemies may be hit before they act: ${ends.refuse}`);
+1298:   const powersOf = (enemy: Record<string, unknown>) => asArray(enemy["powers"]).map(asRecord);
+1299:   const cruelty = powerAmount(player, "CRUELTY_POWER");
+1300:   // Poison-trigger and threshold evidence is Silent's; preserve other characters' existing verdicts.
+1301:   const silentPoison = str(run["character_id"]).toLowerCase() === "silent";
+1302:   // Each enemy's most damage before it acts (an upper bound: Vulnerable did not add to Stone Calendar's 52, K7G9M8K4DWFW
+1303:   // F17, Cruelty might; an attack's Vulnerable taken at Paper Phrog's 75%) and its poison.
+1304:   const before = living.map((enemy) => {
+1305:     const vulnerable = powersOf(enemy).some((power) => str(power["power_id"]) === "VULNERABLE_POWER" && num(power["amount"]) > 0);
+1306:     const amp = vulnerable && cruelty > 0 ? 1.5 * (1 + cruelty / 100) : 1;
+1307:     const attackAmp = vulnerable ? 1.75 * (1 + cruelty / 100) : 1;
+1308:     const hit = ends.sources.reduce((sum, source) => sum + source.damage * (source.attack ? attackAmp : amp), 0);
+1309:     const poison = Math.max(0, powerAmount(enemy, "POISON_POWER"));
+1310:     // silent-0195: KUZVERN40NGK F17 final T6 loses 9 + 8 HP before attacking.
+1311:     // As in the solver, each Accelerant trigger consumes one stack; caps ignored here keep an upper bound.
+1312:     const triggers = Math.min(poison, 1 + (silentPoison ? Math.max(0, powerAmount(player, "ACCELERANT_POWER")) : 0));
+1313:     return { hit, poison: triggers * (2 * poison - triggers + 1) / 2, hp: num(enemy["current_hp"]) };
+1314:   });
+1315:   // A hit before they act may stun an enemy without killing it: Shriek / Plow at their threshold (the Terror Eel at half HP;
+1316:   // turn-solver `shriek`), a counter the learned stun-on-strip rules see go (Flutter, Slippery, Curl Up on any hit; Artifact
+1317:   // on a debuff, which only Stampede's Attack may bring: turn-solver STRIP_COUNTERS). Its move is then lost: its hits taken
+1318:   // out as a death's, without changing the others' (an ally's death does that, below).
+1319:   const stunned = living
+1320:     .map((enemy, i) => {
+1321:       const { hit, poison, hp: hpLeft } = before[i]!;
+1322:       const threshold = Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER"));
+1323:       if (threshold > 0 && hpLeft > threshold && hpLeft - hit - (silentPoison ? poison : 0) <= threshold) return { i, why: `its stun at ${threshold} HP` };
+1324:       // Poison crossing an HP threshold is observed; stripping these counters still needs a hit.
+1325:       if (hit <= 0) return null;
+1326:       const counter = ["FLUTTER_POWER", "SLIPPERY_POWER", "CURL_UP_POWER", ...(ends.sources.some((source) => source.debuff) ? ["ARTIFACT_POWER"] : [])].find((id) => powerAmount(enemy, id) > 0);
+1327:       return counter ? { i, why: `its ${counter} going may stun it` } : null;
+1328:     })
+1329:     .filter((entry): entry is { i: number; why: string } => entry !== null);
+1330:   const mayDie = living
+1331:     .map((enemy, i) => {
+1332:       const { hit, poison, hp: hpLeft } = before[i]!;
+1333:       return { i, enemy, dies: (hit > 0 && hit >= hpLeft) || (poison > 0 && poison >= hpLeft), why: poison > 0 && poison >= hpLeft ? `its poison (${poison})` : ends.sources.map((source) => source.name).join(" + ") };
+1334:     })
+1335:     .filter((entry) => entry.dies);
+1336:   // Our loss at the next turn's start comes only if an enemy lives to see that turn's start: not if every enemy (every one
+1337:   // but the minions, which may leave with them) may die first, to what hits them at the end of our turn, their poison, our
+1338:   // retaliation on each of their hits, and the next turn's opening before the loss (startHitsBefore: Hellraiser's drawn
+1339:   // Strikes, Inferno's sweep, Mr Struggles, ...); one escaping (its intent Escape) is gone. Their HP at the lowest it may be,
+1340:   // block ignored.
+1341:   if (byStart) {

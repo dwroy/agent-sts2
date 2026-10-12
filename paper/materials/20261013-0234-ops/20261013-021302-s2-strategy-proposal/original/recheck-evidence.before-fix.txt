@@ -1,0 +1,144 @@
+import collections
+import hashlib
+import json
+import re
+from pathlib import Path
+
+SCRATCH = Path(__file__).resolve().parent
+PRIOR = Path('/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-014201-s2/learner/runs/20261013-014233-strategy-proposal')
+WANTED = set(json.loads((SCRATCH / 'dispatch.json').read_text())['runs'])
+
+
+def save(name, value):
+    (SCRATCH / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+
+def run_id(row):
+    return row.get('run_id') or row.get('state', {}).get('run_id') or row.get('run')
+
+
+manifest = []
+datasets = {}
+for entry in json.loads((PRIOR / 'raw-input-manifest.json').read_text()):
+    source = Path(entry['source'])
+    target = SCRATCH / Path(entry['frozen']).name
+    digest = hashlib.sha256()
+    counts = collections.Counter()
+    rows = {}
+    index = []
+    with source.open('rb') as src, target.open('wb') as dst:
+        for item in entry['index']:
+            src.seek(item['offset'])
+            raw = src.readline()
+            assert hashlib.sha256(raw).hexdigest() == item['sha256'], (source, item['line'])
+            row = json.loads(raw)
+            run = run_id(row)
+            assert run == item['run'] and run in WANTED, (source, item['line'], run)
+            if source.name == 'states.jsonl':
+                identity = row['state']['run']
+                assert identity['character_id'] == 'SILENT' and identity['ascension'] == 10
+            dst.write(raw)
+            digest.update(raw)
+            counts[run] += 1
+            index.append({**item, 'bytes': len(raw)})
+            rows[item['line']] = row
+    assert digest.hexdigest() == entry['sha256'] and dict(counts) == entry['counts']
+    manifest.append({**entry, 'frozen': str(target), 'index': index, 'verified_rows': len(index)})
+    datasets[source.stem] = rows
+    print(source.name, len(rows), dict(counts), '逐行原字节、身份和SHA通过')
+save('raw-input-manifest.json', manifest)
+
+decisions = datasets['decisions']
+attempts = datasets['sl-attempts']
+states = datasets['states']
+pairs = [(272434, 272575), (272531, 272652), (272482, 272750),
+         (274505, 274568), (274484, 274601), (273400, 273450)]
+# Discover the T13 first questions from the same run rather than assuming their line numbers.
+t13 = [(n, d) for n, d in decisions.items() if d['run_id'] == '751FN9QM9MHQ'
+       and d.get('floor') == 17 and d.get('turn') == 13 and d.get('label') == 'combat/plan-choice']
+assert t13
+pairs[2] = (t13[0][0], next(n for n, d in reversed(t13) if d['fingerprint'] == t13[0][1]['fingerprint']))
+fingerprints = []
+for a, b in pairs:
+    da, db = decisions[a], decisions[b]
+    assert da['fingerprint'] == db['fingerprint'], (a, b)
+    fingerprints.append({'lines': [a, b], 'run': da['run_id'], 'floor': da['floor'],
+                         'turn': da['turn'], 'same': True,
+                         'original_chosen': da['chosen'], 'replacement_chosen': db['chosen']})
+
+
+def enemy_hp(turn):
+    return sum(int(hp) for hp in re.findall(r' (\d+)/\d+(?:,|$)', turn['enemies']))
+
+
+def actual(run, floor, attempt, turn):
+    matches = [(n, row) for n, row in attempts.items() if row['run_id'] == run
+               and row['floor'] == floor and row['attempt'] == attempt]
+    assert len(matches) == 1, (run, floor, attempt)
+    line, row = matches[0]
+    turns = {t['turn']: t for t in row['summary']['turns']}
+    current, following = turns[turn], turns[turn + 1]
+    return {'sl_line': line, 'attempt': attempt, 'turn': turn, 'hp_before': current['hp'],
+            'hp_next_turn': following['hp'], 'hp_loss': current['hp'] - following['hp'],
+            'enemy_before': enemy_hp(current), 'enemy_next_turn': enemy_hp(following),
+            'enemy_net_loss': enemy_hp(current) - enemy_hp(following),
+            'plays': current['plays'], 'later_plays': following['plays']}
+
+
+cases = [('751FN9QM9MHQ', 17, 2, 1, 3, [13, 18], [9, 18]),
+         ('751FN9QM9MHQ', 17, 7, 2, 4, [13, 23], [12, 18]),
+         ('751FN9QM9MHQ', 17, 13, 1, 6, [8, 2], [17, 11]),
+         ('KEN58SH9SLZ6', 17, 10, 4, 5, [15, 21], [2, 4]),
+         ('KEN58SH9SLZ6', 17, 5, 4, 6, [7, 5], [1, 2]),
+         ('KV0JHNJCKXLS', 33, 5, 4, 5, [0, 0], [36, 29])]
+resource_pairs = []
+for run, floor, turn, a, b, hp, damage in cases:
+    observations = [actual(run, floor, a, turn), actual(run, floor, b, turn)]
+    assert [o['hp_loss'] for o in observations] == hp
+    assert [o['enemy_net_loss'] for o in observations] == damage
+    resource_pairs.append({'run': run, 'floor': floor, 'turn': turn, 'observations': observations,
+                           'scope': 'observed_net_change_between_turn_starts_not_controlled_causality'})
+
+
+def snapshot(line):
+    row = states[line]
+    s = row['state']
+    player = s.get('player') or {}
+    combat = s.get('combat') or {}
+    return {'line': line, 'run': s['run_id'], 'floor': s['run']['floor'], 'turn': s.get('turn'),
+            'hp': player.get('current_hp'), 'block': player.get('block'),
+            'powers': player.get('powers'), 'slots': player.get('potions'),
+            'selection': s.get('selection'), 'pending_card': combat.get('pending_card'),
+            'enemies': s.get('enemies') or combat.get('enemies')}
+
+
+consumption = []
+for before, after, slot, potion in [(280206, 280207, 0, 'ATTACK_POTION'),
+                                   (280232, 280233, 0, 'STABLE_SERUM'),
+                                   (280262, 280263, 0, 'SPEED_POTION'),
+                                   (280313, 280314, 1, 'WEAK_POTION'),
+                                   (280315, 280316, 0, 'ATTACK_POTION'),
+                                   (280348, 280349, 1, 'GLOWWATER_POTION'),
+                                   (280354, 280355, 0, 'SKILL_POTION')]:
+    a, b = snapshot(before), snapshot(after)
+    assert a['slots'][slot].get('potion_id') == potion
+    assert not b['slots'][slot].get('potion_id')
+    consumption.append({'before': a, 'after': b, 'slot': slot, 'potion': potion})
+
+options = {}
+for n in [272361, 272434, 272531, 272652, 273400, 273450, 274505, 274568, 274484, 274601]:
+    d = decisions[n]
+    options[str(n)] = {'run': d['run_id'], 'floor': d['floor'], 'turn': d['turn'],
+                       'chosen': d['chosen'], 'rationale': d.get('rationale'),
+                       'candidates': {key: json.loads(value) if isinstance(value, str) else value
+                                      for key, value in d['questions']['plan']['criteria'].items()}}
+save('evidence-verification.json', {'fingerprints': fingerprints, 'resource_pairs': resource_pairs,
+                                   'consumption': consumption, 'options': options,
+                                   'snapshots': [snapshot(n) for n in [278403, 278404, 278500, 278505,
+                                                                     280160, 280161, 280701, 280702]],
+                                   'giant_sl_rows': [{'line': n, 'run': r['run_id'], 'attempt': r['attempt'],
+                                                      'result': r['result'], 'end': r['summary']['turns'][-1],
+                                                      'anchor': (r.get('explore') or {}).get('anchor')}
+                                                     for n, r in attempts.items() if r['floor'] == 17
+                                                     and r['run_id'] in {'L9SGRBB5R698', 'PU80F84P6HPN', 'YQL8RZ8BWN1E'}]})
+print('六组指纹/净资源差、七次实际耗药已独立复算；不计生产测试。')

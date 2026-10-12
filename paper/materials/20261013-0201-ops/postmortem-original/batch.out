@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：XRCP2TKYKQBA（A10，第17层，末试T13以7血10挡对同族神官18攻击阵亡，敌剩52血）；含五轮／整场推演口径勘误。
+- 新的纯 bug：无。旧 silent-0287 复发 — agent/src/sl/judge.ts:1333（fix-queue-v4 已有）。
+- 写成「未记录」的项：XRCP2TKYKQBA：完整运行树、前五次SL末轮结算及退出、部分死亡帧与内部伤害顺序、完整候选兑现率、替线胜负反事实、有效boss时钟及部分路线投影、纯操作用时、Jev缓存和真实账单。
+- 学习账本：XRCP2TKYKQBA：新增 silent-0441；更新 silent-0019、0020、0125、0079、0287、0012、0046、0055、0204、0307、0422、0385（老错0079、0287）；`ledger.py check` 退出码0。
+- 代码提案：资源／紧缠（F14—F17，0019/0020/0441，`silent-proposal-8dac80786973c4e8`）；护栏／SL审计（F14T3、F17T3/T5，0079/0125/0422，`silent-proposal-577144b8043e7c51`）；盾毒判死缺口（F17首试T13，0287，`silent-proposal-4a736801d02cc9a9`）。均关联独立 strategy-proposal；缺受控整场反事实，未宣称实现或获胜。
+
+```json
+{"task":"postmortem","appended":["XRCP2TKYKQBA"],"skipped":[],"bugs":[{"run":"XRCP2TKYKQBA","where":"agent/src/sl/judge.ts:1333","what":"旧silent-0287复发：SL漏合招架盾6与毒7对12HP神官的攻击前退场上界，首试T13提前读档","new":false}],"ledger":{"added":["silent-0441"],"updated":["silent-0019","silent-0020","silent-0125","silent-0079","silent-0287","silent-0012","silent-0046","silent-0055","silent-0204","silent-0307","silent-0422","silent-0385"],"repeats":["silent-0079","silent-0287"],"check":0},"code_proposals":["silent-proposal-8dac80786973c4e8","silent-proposal-577144b8043e7c51","silent-proposal-4a736801d02cc9a9"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261013-011302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1311a-8a0d-7220-a1a1-84899690a434
+轮数：1；工具调用：command_execution×60
+token：输入 221.6k、输出 45.7k（其中推理 15.3k）、cache 读 4774.0k、cache 写 0（命中 95.6%）
+成本：未提供
+耗时：1735.2 s（墙钟）
+时间：首个事件 10.7 s、模型首个输出 17.0 s、首次工具 23.8 s、末次工具结束 1703.7 s；工具内共 224.5 s，其余（模型生成、推理、网络）1500.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×34；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T01-13-05-01a1311a-8a0d-7220-a1a1-84899690a434.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261013-011302-postmortem.jsonl

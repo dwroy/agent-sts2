@@ -1,0 +1,20 @@
+commit b01edf46b4b619f217d070a196e161df9fe716a0
+Author:     Roy <me@dwroy.com>
+AuthorDate: Mon Oct 12 03:19:28 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Mon Oct 12 03:19:28 2026 +0800
+
+    Sync observed Giant final resource facts to main
+    
+    All six paths are byte-identical to the original fully tested learner source. Preserve baseline records and previously deployed inputs.
+    
+    Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>
+    Agent: codex@xdwin1
+
+ agent/src/sl/attempts.ts                           |    55 +-
+ agent/src/sl/controller.ts                         |     8 +-
+ agent/src/sl/explore.ts                            |    11 +-
+ agent/tests/sl-giant-final-resources.test.ts       |   115 +
+ agent/tests/sl-giant-phase-data/nyqw-attempts.json |  7285 +++++++++
+ .../sl-giant-phase-data/nyqw-final-resources.json  | 15052 +++++++++++++++++++
+ 6 files changed, 22518 insertions(+), 8 deletions(-)

@@ -1,0 +1,29 @@
+  // A potion lethal: every way to win this turn (one line per set of potions it spends) is shown.
+  for (const line of potionLethal) if (!options.includes(line)) options.push(line);
+  // Some potion-free line survives the turn: then code never drinks on its own.
+  const drySurvives = surviving.some((plan) => !drinksPotion(plan));
+  // The score-best plan can be dominated on every shown axis (its extra score is a power's flat value)
+  // and so be missing from the options. YP9 T3: Crimson Mantle's line (hp -28) was committed as the
+  // "only line" while the one option shown was the same turn with Defend+ (hp -20). Play what is shown.
+  // Switch only to an option that dominates it (every outcome axis, sleep cost included: 1K5G F17 T1
+  // switched to a line that woke the Matriarch), not merely the highest-ranked one left.
+  const top = options.includes(best) ? best : options.find((plan) => dominates(plan, best)) ?? options[0] ?? best;
+  // The mod says ending now is lethal but the solver thinks it is safe: the solver is missing
+  // something (2WUM T7: Colossus halved twice, turn ended with 1 energy and 3 Defends in hand). Never
+  // end the turn on the solver's word then; play the line that keeps the most HP.
+  if (modSaysLethal && top.steps.length === 0 && allDie === null && top.outcome.revived === undefined) {
+    const anyPlayed = surviving.filter((plan) => plan.steps.length > 0);
+    const dryPlayed = anyPlayed.filter((plan) => !drinksPotion(plan));
+    const played = dryPlayed.length > 0 ? dryPlayed : anyPlayed;
+    if (played.length > 0) {
+      const safest = played.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter || (b.outcome.hpAfter === a.outcome.hpAfter && b.outcome.blockGained > a.outcome.blockGained) ? b : a));
+      commit(env, state.turn, safest, hand, "code");
+      return {
+        kind: "act",
+        label: "combat/mod-lethal",
+        intent: firstIntent(safest, hand, env),
+        rationale: `mod says ending the turn is lethal, solver disagrees; not ending it: ${safest.steps.map(stepText).join(", ")}${calcNote}`,
+      };
+    }
+  }
+  // FIGHT_PLAN=v1: the plan's setup cards in the first turns. A line that plays one, within the HP

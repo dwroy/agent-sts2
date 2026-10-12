@@ -1,0 +1,7 @@
+# 抽取中的工具失败记录
+
+首次根目录shell调用在执行前遇到bubblewrap glob预检的ENOENT：.worktrees/codex-strategy-silent-20261013-021302/.codex不存在。保持同一沙箱后在learner工作目录的只读调用成功，未申请权限或读取凭据。
+
+资源概览第一次取顶层changes得到KeyError；实际字段resource_changes，随后按原资源JSON重新读取，源日志未改。初次大脑概览遇到route-change没有chosen；analyze.py改用可选字段后成功。details.py首次遇到代码动作没有questions，失败stdout保存在details-first-failed.txt，改用get后重新生成详情。Python关键字正则的一次SyntaxWarning未改变统计；保留metrics.py原稿与输出。
+
+提案指纹核对初稿用相对scratch路径取parents[2]发生IndexError；代码排名统计70已输出。随后以绝对任务目录核队列及两个原Markdown SHA成功；不是CLI登记失败，未重复登记提案或改写提案正文。所有原草稿／工具输出及最终核验材料保留，不改日志。

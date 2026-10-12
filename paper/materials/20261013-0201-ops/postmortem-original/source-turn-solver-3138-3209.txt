@@ -1,0 +1,72 @@
+3138:       const victim = randomVictim(sim);
+3139:       if (victim) hitEnemyRaw(sim, victim, input.player.juggernaut ?? 0);
+3140:     }
+3141:   }
+3142:   // PASSIVE_PIECES: Parrying Shield at the turn's end (10+ block, Plating's end-of-turn block counted: Q8XR6EXAF6QV F11
+3143:   // T4, 8 + Plating 2 fired) hits a random enemy, through its block, before the enemies act; one it kills does not attack.
+3144:   const parry = input.player.parryingShield;
+3145:   if (parry && sim.enemies.some((enemy) => enemy.alive) && endBlockParts(sim, input, false).blockAtEnd >= parry.block) {
+3146:     sim = clone(sim);
+3147:     const victim = randomVictim(sim);
+3148:     if (victim) hitEnemyRaw(sim, victim, parry.damage);
+3149:   }
+3150:   // silent-0213: TKXQ6L4N9A6U F22 T6 dies to two held Toxic cards before poison.
+3151:   // An immediate win skips the turn's end; an enemy-turn poison win must pay it.
+3152:   const wonBeforePoison = fightEnded(sim, input);
+3153:   // Damage-type held penalties meet block; held HP-loss effects bypass it.
+3154:   const heldCards = [...sim.hand, ...sim.held];
+3155:   const heldCount = heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand;
+3156:   const heldLoss = (card: CardModel): number => (card.heldHpLoss ?? 0) + (card.heldHpLossPerCard ?? 0) * heldCount;
+3157:   const heldHpLoss = wonBeforePoison ? 0 : heldCards.reduce((sum, card) => sum + heldLoss(card), 0);
+3158:   // Withering Presence can add another held penalty while playing this line.
+3159:   const wither = input.wither;
+3160:   const withersAdded =
+3161:     wither && wither.every > 0
+3162:       ? Math.floor((wither.played + sim.played - (input.cardsPlayedThisTurn ?? 0)) / wither.every) - Math.floor(wither.played / wither.every)
+3163:       : 0;
+3164:   const heldPenalty = wonBeforePoison ? 0 :
+3165:     heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + withersAdded * (wither?.damage ?? 0);
+3166:   const { etherealBlock, platingNow, claspBlock, orichalcumBlock, blockAtEnd } = endBlockParts(sim, input, wonBeforePoison);
+3167:   const disintegration = wonBeforePoison ? 0 : input.player.endTurnHpLoss ?? 0;
+3168:   const blockLeft = Math.max(0, blockAtEnd - disintegration);
+3169:   // Reuse the existing block, Buffer, HP-cap and revive arithmetic for this prefix.
+3170:   const pendingPoison = sim.enemies.some((enemy) => enemy.alive && (enemy.poison ?? 0) > 0);
+3171:   const diesBeforePoison = pendingPoison && !wonBeforePoison && (() => {
+3172:     let room = input.player.hpLossCap ?? Infinity;
+3173:     const losses = [input.player.hp - sim.hp, heldHpLoss, Math.max(0, disintegration - blockAtEnd),
+3174:       bufferedLoss([heldPenalty], blockLeft, sim.buffer)].map((loss) => {
+3175:         const landed = loss < 0 ? loss : Math.max(0, Math.min(loss, room));
+3176:         room -= landed;
+3177:         return landed;
+3178:       });
+3179:     return reviveThrough(input.player.hp, losses, input.player.revives ?? []).hp <= 0;
+3180:   })();
+3181:   // Y6GM2CHWJBEY F17 T7 / T082DRCUHRRD F33 T9: poison resolves before the enemy attacks.
+3182:   if (!diesBeforePoison && pendingPoison) {
+3183:     sim = clone(sim);
+3184:     const triggers = 1 + sim.poisonExtraTriggers;
+3185:     // silent-0174/0175: D4LJ9QMGFB8Q F20 T4 and 4Y94N8RDPGPM F30 T2 retain
+3186:     // two/three HP after one enemy-turn poison trigger against Hard to Kill 9.
+3187:     // Other caps, immediate triggers and multi-trigger combinations are unverified.
+3188:     for (const enemy of sim.enemies) triggerPoison(sim, enemy, triggers, triggers === 1 && enemy.perHitCap === 9 ? 9 : Infinity);
+3189:   }
+3190:   const living = sim.enemies.filter((enemy) => enemy.alive);
+3191:   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
+3192:   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
+3193:   const restocked = sim.enemies.filter((enemy) => !enemy.alive && (enemy.stock ?? 0) > 0 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+3194:   // An enemy that spawns others on death (Phrog Parasite, Gremlin Merc): a kill, not a win.
+3195:   const spawning = sim.enemies.filter((enemy) => !enemy.alive && enemy.spawnsOnDeath && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+3196:   // Waterfall Giant (Steam Eruption, 「被击杀时，在你的下一回合结束时造成伤害」): killed, it stays as a husk
+3197:   // (999,999,999 HP) that explodes for its eruption stacks at the end of our NEXT turn, through that
+3198:   // turn's block (N7SAK F17: killed on T14 at eruption 51, T15 24 HP + 18 block, dead 9 short). A kill,
+3199:   // not a win: the fight goes on until the explosion is survived.
+3200:   const erupting = sim.enemies.filter((enemy) => !enemy.alive && (enemy.eruption ?? 0) > 0 && enemy.maxHp < 1_000_000 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+3201:   const explodesNext = erupting.reduce((sum, enemy) => sum + (enemy.eruption ?? 0), 0);
+3202:   const winsFight = !diesBeforePoison && fightEnded(sim, input);
+3203:   // The cards that damage: named in the notes (a Wither, Toxic x2 were all "Burn": YVYZ F48 T6, 3RME F30, NH8A F31).
+3204:   const heldDamageFrom = countedNames([
+3205:     ...heldCards.filter((card) => (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0) > 0).map((card) => card.name),
+3206:     ...(wonBeforePoison || (wither?.damage ?? 0) <= 0 ? [] : Array.from({ length: withersAdded }, () => "Wither added by this turn's cards")),
+3207:   ]);
+3208:   const heldHpLossFrom = countedNames(heldCards.filter((card) => heldLoss(card) > 0).map((card) => card.name));
+3209:   const hits = winsFight || diesBeforePoison ? [] : incomingHits(sim, input);
