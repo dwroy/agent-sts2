@@ -1,0 +1,59 @@
+[
+ {
+  "id": "silent-0099",
+  "ts": "2026-10-05T14:00:41+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "幻影之刃新建立的首刀增伤没有进入同一出牌方案：知识恶魔战包含幻影之刃、打击、中和及小刀的方案预测20伤，实际扣29，其中首小刀14而非5，差9恰为PHANTOM_BLADES_POWER。当前能力仍回退8分，持续能力表没有该牌；仅独立量化同方案的首刀增伤遗漏，不把完整保留或跨回合误差、整局失败全归于此。",
+  "evidence": [
+   {
+    "run": "UACFSW4VDDLD",
+    "floor": 33,
+    "turn": 2,
+    "role": "support",
+    "note": "首战代码方案预测20；打击358→348、中和348→343、小刀343→329，实伤29；敌方结算3荆棘另使329→326。定位当前live agent/src/reflex/card-model.ts:863及rollout.ts:1001，运行版本103fd5ff+dirty；两个fix-queue均未列。",
+    "added": "2026-10-05T14:00:41+08:00"
+   }
+  ],
+  "first_run": "UACFSW4VDDLD",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按幻影之刃、PHANTOM_BLADES和小刀检索静默账本及全部更早静默复盘，未发现这张能力及其同方案首刀增伤的可比记录；不借铁甲局判断先验。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "UACFSW4VDDLD"
+   ],
+   "commits": [
+    "d65609ff2bc98ec5ec2e06b558159aba89d93032",
+    "6aa5eb0b22eaed2a649fa9e763ea9c96b5f3fca1",
+    "3ebbdc6c01a8685c09ebb2933f6dea76e35fb8d5"
+   ]
+  },
+  "asc": 6,
+  "history": [
+   {
+    "ts": "2026-10-05T14:00:41+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T14:56:31+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T15:10:22+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix17",
+  "effect": null,
+  "notes": [
+   "15:07 fix-done核实live实际合入及S1.fix17唯一；学习者依据UACFSW4VDDLD A6 F33首战T2/第2次T5、F48首战T9修复幻影之刃同方案首刀遗漏，撤源码5失败/1通过、恢复6通过，源及合后沙箱tsc0、173文件1988例通过。七项刷新保留；不把完整保留/升级/叠加未验证部分标为已修，0101既有S1.exp15经验发布不重复登记，完整外部检查待调度器后续事件。"
+  ],
+  "shipped_at": "2026-10-05T15:10:22+08:00"
+ }
+]

@@ -1,0 +1,138 @@
+{
+ "id": "silent-0343",
+ "ts": "2026-10-09T18:31:48+08:00",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "A10本局首次完整配对定位已建立神气制胜PANACHE_POWER 10的模型消费缺口：第5张切割在本体6伤之外对三敌各触发10群伤，三敌共实掉21血并消耗9挡。当前live玩家输入/逐牌能力处理没有PANACHE接线；应先按这个固定状态验证第五张触发，不能由此推升级、叠层、重放或整场能赢。",
+ "evidence": [
+  {
+   "run": "R6WDLYS19ZTY",
+   "floor": 42,
+   "turn": 4,
+   "role": "support",
+   "note": "d318579实际施放PANACHE后建立PANACHE_POWER 10；同轮只有4张实打，尚未到五张触发。",
+   "added": "2026-10-09T18:31:48+08:00"
+  },
+  {
+   "run": "R6WDLYS19ZTY",
+   "floor": 42,
+   "turn": 5,
+   "role": "support",
+   "note": "s327335→327336出牌数4→5，切割后连枷29→13、幽灵59→49、魔法70血9挡→69血0挡；额外群伤本体21/耗挡9。当前live combat-plan.ts:2854/:2920及turn-solver.ts:1921/:2345未接PANACHE。",
+   "added": "2026-10-09T18:31:48+08:00"
+  },
+  {
+   "run": "2SU6XN2AEJRD",
+   "floor": 45,
+   "turn": 6,
+   "role": "support",
+   "note": "回溯A6第5张防御非攻击仍使枢纽37→27，能力10建立在前轮；原帧字节seek配对通过。保留原first_run为首次完整定位模型消费缺口的R6局。",
+   "added": "2026-10-09T18:57:57+08:00"
+  },
+  {
+   "run": "G403VCZ3BH1B",
+   "floor": 33,
+   "turn": 4,
+   "role": "support",
+   "note": "回溯A9全扫牌面8、两敌各实扣18，额外各10，与新局群伤配对相符；第五张前后原帧seek通过，整体胜因未控。",
+   "added": "2026-10-09T18:57:57+08:00"
+  },
+  {
+   "run": "SPC7NVA5K4RL",
+   "role": "support",
+   "note": "SPC7NVA5K4RL F42末T2共四张实出牌、喝两药，未见额外10群伤且仍死；旧R6WDLYS19ZTY第五张切割6另群伤10，G403VCZ3BH1B蟹T4全扫8另各10。",
+   "added": "2026-10-11T11:13:36+08:00"
+  }
+ ],
+ "first_run": "R6WDLYS19ZTY",
+ "prior": "unknown",
+ "prior_runs": [
+  "2SU6XN2AEJRD",
+  "G403VCZ3BH1B"
+ ],
+ "prior_note": "本角色更早复盘已有神气制胜的持有/建立，但未找到本次第五张、三目标且一目标9挡的前后配对和模型接线检查；不能据持有判断当时已正确消费此机制。本条首次指此模型缺口的完整配对，非宣称首次取得该牌。",
+ "status": "proposed",
+ "by": "learner:postmortem",
+ "where": {
+  "lessons": [
+   "R6WDLYS19ZTY"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261009-181302-postmortem/proposal-panache.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-184303-experience-update/proposal-mechanisms.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-110044-experience-update/proposal-combat.md"
+  ],
+  "experience": [
+   "silent-panache-fifth-card-group-damage"
+  ],
+  "commits": [
+   "ebcdb689216e930a8494698259e0c2ea7378ba54",
+   "6b5131921d3f5fe0a29e11b42e27543ebc79f18b",
+   "eaf3ac162afe487705d5b46ab049871308022173",
+   "a91740d81385dcbcc264df7e9c1bd65fbb990a15",
+   "46f4d7f4eb4a615ff7a8ed2226461439a036a57f"
+  ],
+  "changelog": [
+   "## 2026-10-09 静默猎手 第一百三十六次增量：1 局 A10（version 2026-10-09.25，分支 exp-silent，ebcdb689）",
+   "2026-10-11 静默猎手 第一百七十二次增量：2 局 A10（version 2026-10-11.7，分支 exp-silent，46f4d7f4）"
+  ]
+ },
+ "note": "只读复盘20261009-181302-postmortem；来源code=c308b61e1+dirty，源码定位只指当前live 2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328。游戏机制模型提案，不登记纯基础设施bug；待独立strategy-proposal实现。",
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-09T18:31:48+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-09T18:37:32+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-09T18:57:57+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T18:57:58+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-09T19:16:29+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-09T19:28:51+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-11T11:13:36+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-11T11:13:38+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-11T11:34:32+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  }
+ ],
+ "version": "S1.exp136",
+ "effect": null,
+ "notes": [
+  "只读复盘20261009-181302-postmortem；来源code=c308b61e1+dirty，源码定位只指当前live 2e037b7bfb7ed1a2bf3f8599736bd9846fb3e328。游戏机制模型提案，不登记纯基础设施bug；待独立strategy-proposal实现。",
+  "代码提案 silent-proposal-a64d0d697660b698 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第136次经验/提案预关联；保留旧claim、first_run、prior、状态及版本；R6WDLYS19ZTY两处勘误按普通第二步法/战内普通偏折使用，源提交后登记proposed。",
+  "代码提案 silent-proposal-4a6bf45add80ccd8 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第136次经验源自测提交已完成；保留旧claim/prior/首证/证据/版本与全部历史。实际数据shipped交运维核完成事件，三独立源码提案pending，不登记implemented。",
+  "第136次经验原数据2026-10-09.24→2026-10-09.25，源ebcdb689增1改17退0/198 active，源251文件2627例tsc/vitest0、另开诊断未确认退出，pending前缀保留；actual live/main唯一S1.exp136发布。仅19所属经验数据shipped，旧claim/首证/prior/证据/support/repeat及历史保持；三代码提案原自动链pending，不标源码实现。原19项共享记录冲突及failed/merged-null/out/err/原初稿/校验失败/诊断pending保留，本轮空闲锁只合已测数据保存全部当前代码与刷新。经验135固定d6a39489完整检查已通过；新数据树单次外部续验随后请求、结果待回报，exp100旧失败独立保持。",
+  "第172次普通静默经验预关联；仅本批两局支持，提交后proposed；原首证/prior/claim/repeat/历史版本保持，不承接另九锚点专题。",
+  "代码提案 silent-proposal-4a73a4ed6ff8f355 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第172次经验数据已自测提交；源码提案独立strategy-proposal，经验实际合入/发布由运维据experience-done核实后登记，未标implemented/shipped；保留原首证/prior/claim/历史发布。"
+ ],
+ "shipped_at": "2026-10-09T19:28:51+08:00"
+}

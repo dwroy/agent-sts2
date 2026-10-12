@@ -1,0 +1,45 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "L6745E2ND5CT"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "L6745E2ND5CT",
+      "where": "agent/src/reflex/turn-solver.ts:2293",
+      "what": "化学物X未进入普通串刺／萎靡的效果X，串刺3能量预测24、实际40；萎靡5能量实际7层。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0437",
+      "silent-0438"
+    ],
+    "updated": [
+      "silent-0343",
+      "silent-0019",
+      "silent-0005",
+      "silent-0028",
+      "silent-0241",
+      "silent-0178",
+      "silent-0099",
+      "silent-0120"
+    ],
+    "repeats": [
+      "silent-0343"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-96afbd9c8b3e4e95",
+    "silent-proposal-e07892a658777a57",
+    "silent-proposal-150f32d880c94e92"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261012-164302-postmortem/report.md"
+}
