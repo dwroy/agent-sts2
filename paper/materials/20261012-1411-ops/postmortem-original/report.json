@@ -1,0 +1,45 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "KF9HMZKTFC3V"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "KF9HMZKTFC3V",
+      "where": "agent/src/reflex/turn-solver.ts:1724",
+      "what": "2费药瓶+和迷雾重放1时，骇人头盔第二份4格挡未计入同线推演。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0432",
+      "silent-0433",
+      "silent-0434"
+    ],
+    "updated": [
+      "silent-0090",
+      "silent-0385",
+      "silent-0319",
+      "silent-0027",
+      "silent-0005",
+      "silent-0025",
+      "silent-0024"
+    ],
+    "repeats": [
+      "silent-0319"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-2f939cab26967b90",
+    "silent-proposal-8c8ba908af7de1cb",
+    "silent-proposal-e274353e336eb492"
+  ],
+  "implementation_domains": [
+    "combat",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261012-134303-postmortem/report.md"
+}

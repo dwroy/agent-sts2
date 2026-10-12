@@ -1,10 +1,10 @@
 {
   "cuts": {
-    "/home/dw/Projects/agent-sts2/logs/runs.jsonl": 302515,
-    "/home/dw/Projects/agent-sts2/logs/run-config.jsonl": 1414947,
-    "/home/dw/Projects/agent-sts2/logs/codex-calls.jsonl": 29475552,
-    "/home/dw/Projects/agent-sts2/logs/brain.jsonl": 427727615,
-    "/home/dw/Projects/agent-sts2/logs/jev-prompts.jsonl": 712703837,
+    "/home/dw/Projects/agent-sts2/logs/runs.jsonl": 302980,
+    "/home/dw/Projects/agent-sts2/logs/run-config.jsonl": 1428663,
+    "/home/dw/Projects/agent-sts2/logs/codex-calls.jsonl": 29829555,
+    "/home/dw/Projects/agent-sts2/logs/brain.jsonl": 431546270,
+    "/home/dw/Projects/agent-sts2/logs/jev-prompts.jsonl": 723231577,
     "/home/dw/Projects/agent-sts2/learner/runs/20261004-223128-fix-batch.jsonl": 239611,
     "/home/dw/.codex/sessions/2026/10/04/rollout-2026-10-04T22-31-28-01a10753-b441-7470-9b40-456c1c884bdc.jsonl": 675813,
     "/home/dw/Projects/agent-sts2/learner/runs/20261004-224302-postmortem.jsonl": 1205573,
@@ -771,7 +771,8 @@
     "/home/dw/Projects/agent-sts2/learner/runs/20261012-091302-postmortem.jsonl": 2174618,
     "/home/dw/Projects/agent-sts2/learner/runs/20261012-101301-postmortem.jsonl": 1166091,
     "/home/dw/Projects/agent-sts2/learner/runs/20261012-111301-postmortem.jsonl": 1369473,
-    "/home/dw/Projects/agent-sts2/ops/codex-ops/wakes.jsonl": 2085102,
+    "/home/dw/Projects/agent-sts2/learner/runs/20261012-134303-postmortem.jsonl": 1255166,
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/wakes.jsonl": 2093355,
     "/home/dw/.codex/sessions/2026/10/04/rollout-2026-10-04T21-40-33-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl": 636144617,
     "/home/dw/Projects/agent-sts2/paper/materials/session/codex/ops/rollout-01a12bec-c83f-7c21-b76f-eb8e5304eb8f.jsonl": 8278250,
     "/home/dw/.claude/projects/-home-dw-Projects-agent-sts2/3c7a9f64-cf70-5c09-85c0-aec2db40db38.jsonl": 589441,
@@ -780,7 +781,7 @@
     "/home/dw/.claude/projects/-home-dw-Projects-agent-sts2/da5d12f6-dbe9-4e86-8bb8-d88ccab7ac28.jsonl": 40193,
     "/home/dw/.claude/projects/-home-dw-Projects-agent-sts2/dc6de680-ed5e-5c35-9709-ac2f6f579e77.jsonl": 1972748,
     "/home/dw/Projects/agent-sts2/logs/subscription-usage-snapshots.jsonl": 6403,
-    "/home/dw/Projects/agent-sts2/logs/codex-usage.jsonl": 708915
+    "/home/dw/Projects/agent-sts2/logs/codex-usage.jsonl": 720338
   },
   "bad_lines": {},
   "config": {
@@ -921,7 +922,7 @@
       "provider": "codex",
       "start": "2026-10-11T07:13:17+00:00",
       "reset": "2026-10-18T07:13:17+00:00",
-      "observed": "2026-10-12T03:45:01.366000+00:00",
+      "observed": "2026-10-12T04:10:01.494000+00:00",
       "used_percent": 100,
       "usd": 115.38461538461539
     },
@@ -932,6 +933,14 @@
       "observed": "2026-10-12T01:05:01.917000+00:00",
       "used_percent": 70,
       "usd": 80.76923076923077
+    },
+    {
+      "provider": "codex",
+      "start": "2026-10-12T04:11:02+00:00",
+      "reset": "2026-10-19T04:11:02+00:00",
+      "observed": "2026-10-12T06:15:01.590000+00:00",
+      "used_percent": 25,
+      "usd": 28.846153846153847
     }
   ],
   "ascensions": {
@@ -2469,16 +2478,16 @@
       },
       {
         "ascension": 10,
-        "runs": 201,
-        "wins": 1,
-        "raw_wins": 1,
-        "performance_runs": 193,
+        "runs": 202,
+        "wins": 2,
+        "raw_wins": 2,
+        "performance_runs": 194,
         "performance_policy": "codex-successful-brain-v1",
         "cost_scope": "all_engines_all_runs",
         "raw_cohorts": {
           "codex": {
-            "runs": 193,
-            "wins": 1,
+            "runs": 194,
+            "wins": 2,
             "run_ids": [
               "MGA0CZDDKC0P",
               "25226ZFLNR1J",
@@ -2672,7 +2681,8 @@
               "C7GNN3DDFUFY",
               "F6XY4QJMS5RC",
               "CMS8QL9E3C5U",
-              "PUY011SBWSSU"
+              "PUY011SBWSSU",
+              "KF9HMZKTFC3V"
             ]
           },
           "deepseek": {
@@ -2707,22 +2717,22 @@
             "run_ids": []
           }
         },
-        "total_tokens": 3675003011.4,
-        "known_estimated_usd": 545.7066111888346,
+        "total_tokens": 3692899947.4,
+        "known_estimated_usd": 567.0668500532697,
         "cost_coverage": "partial",
-        "usd_per_run": 2.7149582646210675,
-        "usd_per_win": 545.7066111888346,
-        "cumulative_tokens": 4580030552.0,
-        "cumulative_known_usd": 587.5512476916474,
+        "usd_per_run": 2.807261633927078,
+        "usd_per_win": 283.53342502663486,
+        "cumulative_tokens": 4597927488.0,
+        "cumulative_known_usd": 608.9114865560825,
         "component_token_share": {
-          "brain:codex": 0.22220508757866647,
-          "brain:deepseek": 0.0035688057831015684,
-          "combat:jev": 0.043363662425759716,
-          "learner:experience-update": 0.08941280237885359,
-          "learner:postmortem": 0.2468639329507353,
-          "learner:strategy-proposal": 0.00820636862240586,
-          "observer:claude": 0.04800892746283424,
-          "ops:codex": 0.33837041279764324
+          "brain:codex": 0.22308573525801123,
+          "brain:deepseek": 0.003551510245825622,
+          "combat:jev": 0.04381273478960975,
+          "learner:experience-update": 0.08897948026762724,
+          "learner:postmortem": 0.24789711501513398,
+          "learner:strategy-proposal": 0.008166598020407555,
+          "observer:claude": 0.04777626134285557,
+          "ops:codex": 0.33673056506052906
         }
       }
     ],

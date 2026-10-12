@@ -1,0 +1,55 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+ ❯ tests/ops-stall-recovery.test.ts (3 tests | 2 failed) 12726ms
+     × requires repeated unreachable requests and stale decisions, and clears on recovery 7159ms
+     × keeps real stuck-loop, gate and silence alerts 5227ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-stall-recovery.test.ts > stall check mod request recovery > requires repeated unreachable requests and stale decisions, and clears on recovery
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ check tests/ops-stall-recovery.test.ts:32:40
+     30|     encoding: "utf8", timeout: 5000, env: { ...process.env, PATH: `${f…
+     31|   });
+     32|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     33|   return result.stdout;
+     34| }
+ ❯ tests/ops-stall-recovery.test.ts:44:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/ops-stall-recovery.test.ts > stall check mod request recovery > keeps real stuck-loop, gate and silence alerts
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ check tests/ops-stall-recovery.test.ts:32:40
+     30|     encoding: "utf8", timeout: 5000, env: { ...process.env, PATH: `${f…
+     31|   });
+     32|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     33|   return result.stdout;
+     34| }
+ ❯ tests/ops-stall-recovery.test.ts:47:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 386 passed (387)
+      Tests  2 failed | 4175 passed | 2 skipped (4179)
+   Start at  13:56:34
+   Duration  893.18s (transform 26.48s, setup 56.03s, import 143.57s, tests 1471.94s, environment 52ms)
+
