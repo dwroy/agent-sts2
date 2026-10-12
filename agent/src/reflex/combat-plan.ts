@@ -30,6 +30,7 @@ import { carrySilentSkittish } from "./silent-skittish.js";
 import { silentLossReference } from "./silent-loss-reference.js";
 import { silentSimulationReference } from "./silent-simulation-reference.js";
 import { silentSelectionAudit, type SelectionCandidate } from "./silent-selection-audit.js";
+import { silentApotheosisReference } from "./silent-apotheosis-reference.js";
 import { silentSlResourceComparison } from "./silent-sl-resource-comparison.js";
 import { silentHpGuardAudit } from "./silent-hp-guard-audit.js";
 import { silentSlComparison } from "./silent-sl-comparison.js";
@@ -3859,6 +3860,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   };
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
     ...quantified(plan),
+    ...silentApotheosisReference(state, plan),
     ...silentKinPlanFacts(state, plan),
     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
     ...simFact(plan),
@@ -3890,7 +3892,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       : mc.median
       ? { potion_cost: potionCostFact(mc.median, rollout?.available ? (rollout.byPlan.get(mc.median) ?? null) : null, costs) }
       : { potion_cost: `drinking it costs ${costs.get(mc.source.potionId) ? potionCostText(costs.get(mc.source.potionId)!) : "0 (no conversion value in the potion table)"}` };
-    criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts, ...mcCost, ...(mc.median ? thiefNote(mc.median) : {}) });
+    criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts,
+      ...silentApotheosisReference(state, mc.median ?? null, "potion_median"), ...mcCost, ...(mc.median ? thiefNote(mc.median) : {}) });
     byKey.set(key, { potion: { action: "use_potion", option_index: mc.source.slot }, label: `drink ${mc.source.name}, then re-plan` });
   }
   // Unsimulated potions: always an option, with no invented numbers.
@@ -3915,6 +3918,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               : "no: this potion's effect is not simulated, so no HP or damage numbers for it",
           offered: UNSIMULATED_OFFERED,
           ...crabPoisonFacts(state, potion.potion_id, target),
+          ...silentApotheosisReference(state, null, "unsimulated"),
           note: `the cheapest card plan alone: ${hpText(Math.min(...options.map((plan) => plan.outcome.hpLoss)))} this turn`,
           ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : planOffer(potion.potion_id) === true ? { fight_plan: "says now" } : {}),
           ...(costsOn ? { potion_cost: `drinking it costs ${costs.get(potion.potion_id) ? potionCostText(costs.get(potion.potion_id)!) : "0 (no conversion value in the potion table)"}` } : {}),
