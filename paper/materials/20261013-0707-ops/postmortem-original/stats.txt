@@ -1,0 +1,76 @@
+归一决策者 {'codex': 37, 'code': 204, 'jev': 93, 'jev-plan': 118}
+jev 93 plan题 80 低.35/.55 5 24 plan低 4 14
+最优标记 {'True': 71, 'False': 4, 'None': 5}
+rank1 30
+代码自主起决 83 {'combat/plan': 50, 'combat/lethal': 24, 'combat/end_turn': 4, 'combat/least-loss': 5}
+代码自主覆盖回合 62
+总回合 72 无Jev回合 18
+护栏
+370229 9 1 None Jev chose plan 7/7 (打击 -> 多尼斯异鸟, 致命毒药 -> 多尼斯异鸟, 咕嘟冒泡 -> 多尼斯异鸟) with confidence 0.66; code rank - (rollout's best line, added); HP guard: plan 7 (打击 -> 多尼斯异鸟, 致命毒药 -> 多尼斯异鸟, 咕嘟冒泡 -> 多尼斯异鸟; hp -19) is more than 8 HP over the cheapest line, playing plan 4 (尖啸, 致命毒药 -> 多尼斯异鸟, 咕嘟冒泡 -> 多尼斯异鸟; hp -13) instead
+答 {'hp_loss': 19, 'damage': 20, 'block_gained': 0, 'strength_gained': 0, 'lasting_value': 0, 'cards_drawn': 0, 'sandpit_after': None, 'unmodelled_cards': []} 执行 {'hp_loss': 13, 'damage': 14, 'block_gained': 0, 'strength_gained': 0, 'lasting_value': 0, 'cards_drawn': 0, 'sandpit_after': None, 'unmodelled_cards': []}
+370506 27 2 1 Jev chose plan 3/7 (打击 -> 残杀千足虫 (BACK), 中和 -> 残杀千足虫 (BACK), 斗篷与匕首, 致命毒药 -> 残杀千足虫 (FRONT)) with confidence 0.86; code rank 3; HP guard: plan 3 (打击 -> 残杀千足虫 (BACK), 中和 -> 残杀千足虫 (BACK), 斗篷与匕首, 致命毒药 -> 残杀千足虫 (FRONT); hp -22) is more than 8 HP over the cheapest line, playing plan 1 (打击 -> 残杀千足虫 (BACK), 中和 -> 残杀千足虫 (MIDDLE), 斗篷与匕首, 致命毒药 -> 残杀千足虫 (BACK); hp -7) instead
+答 {'hp_loss': 22, 'damage': 16, 'block_gained': 6, 'strength_gained': 0, 'lasting_value': 0, 'cards_drawn': 1, 'sandpit_after': None, 'unmodelled_cards': []} 执行 {'hp_loss': 7, 'damage': 15, 'block_gained': 6, 'strength_gained': 0, 'lasting_value': 0, 'cards_drawn': 1, 'sandpit_after': None, 'unmodelled_cards': []}
+fallback 0
+Jev usage {'input_tokens': 1006781, 'output_tokens': 5477}
+原生脑usage {'inputTokens': 4027356, 'cacheHitTokens': 2189312, 'outputTokens': 25939, 'reasoningTokens': 23472} 引擎模型 {('codex', 'gpt-6.1-sol', 'xhigh'): 27}
+用时秒 2016.838
+脑原话
+13063 event/plan reason Scroll Case offers early damage and scaling without HP or curse costs; one removal barely strengthens this starter deck. knowledge None
+13064 bundle/choose reason Predator provides early damage and draw; Snakebite adds retained poison with stronger logged outcomes. Tactician supports Survivor and future discard engines. knowledge None
+13065 map/route-plan reason 早店补强，双精英前后营火缓冲，四火备战同族。 knowledge None
+13066 reward/card reason Piercing Wail efficiently mitigates Kin’s multi-hits and early elites, buying time for poison while remaining valuable throughout the run. knowledge None
+13067 reward/card reason Poisoned Stab adds efficient early damage and sustained poison; we already have Wail and need offensive improvement. knowledge None
+13068 reward/card reason A second Piercing Wail covers another dangerous Kin volley and remains valuable against later multi-hit enemies. knowledge None
+13069 reward/card reason Affordable block plus damage, with a useful upgrade. Avoiding the second elite preserves health and creates upgrade opportunities before Kin. knowledge None
+13070 shop/plan reason Deadly Poison reliably activates Bubble Bubble. Efficient poison stacking improves boss damage and long-term scaling; existing Piercing Wails protect its damage windows. knowledge None
+13071 rest/plan reason No potions and an imminent elite make healing more valuable than incremental upgrades. Keep the route with earlier recovery. knowledge None
+13072 reward/card reason Our skill-heavy deck naturally discounts Precision Aim, adding needed damage while blocking. Prepared needs upgrading; shivs lack scaling. knowledge None
+13073 reward/card reason A third Wail buys poison damage windows against Kin and later multi-hit enemies. The other cards lack strong synergy. knowledge None
+13074 rest/plan reason Heal to secure the next fight; the safe route preserves later opportunities to upgrade poison and prepare for Kin. knowledge None
+13075 reward/card reason A second retained poison source improves consistency, enables Bubble Bubble, and strengthens sustained boss damage. Neither attack has meaningful scaling support. knowledge None
+13076 rest/plan reason Heal to 44 HP for the two upcoming fights. No single upgrade outweighs this survival buffer before Kin. knowledge None
+13077 reward/card reason Expose removes artifact and block barriers for poison, discounts Pinpoint, and helps burst down Kin followers without competing for energy. knowledge None
+13078 reward/card reason Two retained Snakebites and Predator create expensive hands; Bullet Time lets us stack poison while defending, preserving Predator’s next-turn draw. knowledge None
+13079 rest/plan reason Heal to 53 HP. Kin’s multi-enemy pressure and our weak sustained defense make the 21-HP buffer more valuable than one upgrade. knowledge None
+13080 reward/card reason Full-hand retention saves Wails for dangerous volleys and assembles powerful Bullet Time hands. Other rewards lack reliable weak or draw support. knowledge None
+13081 event/act-plan reason 额外能量支撑毒防；早店三火缓冲精英。 knowledge None
+13082 reward/card reason Backflip adds needed block and draw, finding poison and Wails. Another Predator or poison source is redundant. knowledge None
+13083 shop/plan reason Remove unsupported Tactician and buy two emergency potions. At 31 HP, immediate survival outweighs expensive relics. Total cost: 199 gold. knowledge None
+13084 event/choose reason Take guaranteed gold without risking another fight. The revised route heals sooner and separates mandatory elites. knowledge None
+13085 reward/card reason Backflip adds repeatable block and draw, finding poison, Wails, and escapes. The revised route allows healing immediately after the first elite. knowledge None
+13086 reward/card reason Hand Trick adds efficient block and lets Survivor trigger expensive poison skills for free, improving survival without adding another damage-only card. knowledge None
+13087 selection/add reason Dagger Spray fills our missing AoE, helps clear dangerous multi-enemy fights, and triggers Gremlin Horn through kills. More poison or Wails are redundant. knowledge None
+13088 selection/add reason Poisoned Stab provides efficient immediate damage while advancing poison. Three Wails already cover multihits; more expensive poison and unsupported shivs offer less. knowledge None
+13089 rest/plan reason Heal to 28 HP before the unavoidable elite. No single upgrade justifies entering that fight at 7 HP. knowledge None
+单回合HP净损
+F 9 尝试 1 T 1 起血 46 本轮末已观察 46 下轮或退出 33 差 13 行 381270
+F 9 尝试 1 T 2 起血 33 本轮末已观察 33 下轮或退出 26 差 7 行 381275
+F 9 尝试 1 T 3 起血 26 本轮末已观察 26 下轮或退出 21 差 5 行 381279
+F 9 尝试 1 T 4 起血 21 本轮末已观察 21 下轮或退出 21 差 0 行 381284
+F 17 尝试 1 T 1 起血 53 本轮末已观察 53 下轮或退出 50 差 3 行 381400
+F 17 尝试 1 T 2 起血 50 本轮末已观察 50 下轮或退出 45 差 5 行 381408
+F 17 尝试 1 T 3 起血 45 本轮末已观察 45 下轮或退出 38 差 7 行 381411
+F 17 尝试 1 T 4 起血 38 本轮末已观察 38 下轮或退出 38 差 0 行 381416
+F 17 尝试 1 T 5 起血 38 本轮末已观察 38 下轮或退出 27 差 11 行 381420
+F 17 尝试 1 T 6 起血 27 本轮末已观察 27 下轮或退出 3 差 24 行 381425
+F 17 尝试 1 T 7 起血 3 本轮末已观察 3 下轮或退出 3 差 0 行 381432
+F 19 尝试 1 T 1 起血 56 本轮末已观察 56 下轮或退出 43 差 13 行 381441
+F 19 尝试 1 T 2 起血 43 本轮末已观察 43 下轮或退出 39 差 4 行 381445
+F 19 尝试 1 T 3 起血 39 本轮末已观察 39 下轮或退出 31 差 8 行 381449
+F 19 尝试 1 T 4 起血 31 本轮末已观察 31 下轮或退出 31 差 0 行 381453
+F 22 尝试 1 T 1 起血 31 本轮末已观察 24 下轮或退出 24 差 7 行 381474
+F 22 尝试 1 T 2 起血 24 本轮末已观察 24 下轮或退出 24 差 0 行 381491
+F 23 尝试 1 T 1 起血 24 本轮末已观察 24 下轮或退出 24 差 0 行 381502
+F 23 尝试 1 T 2 起血 24 本轮末已观察 24 下轮或退出 7 差 17 行 381509
+F 23 尝试 1 T 3 起血 7 本轮末已观察 7 下轮或退出 7 差 0 行 381515
+F 23 尝试 1 T 4 起血 7 本轮末已观察 7 下轮或退出 7 差 0 行 381521
+F 23 尝试 1 T 5 起血 7 本轮末已观察 7 下轮或退出 7 差 0 行 381526
+F 27 尝试 1 T 1 起血 28 本轮末已观察 28 下轮或退出 28 差 0 行 381548
+F 27 尝试 1 T 2 起血 28 本轮末已观察 28 下轮或退出 21 差 7 行 381558
+F 27 尝试 1 T 3 起血 21 本轮末已观察 21 下轮或退出 21 差 0 行 381564
+F 27 尝试 1 T 4 起血 21 本轮末已观察 21 下轮或退出 21 差 0 行 381568
+F 27 尝试 2 T 1 起血 28 本轮末已观察 28 下轮或退出 28 差 0 行 381571
+F 27 尝试 2 T 2 起血 28 本轮末已观察 28 下轮或退出 5 差 23 行 381580
+F 27 尝试 2 T 3 起血 5 本轮末已观察 5 下轮或退出 5 差 0 行 381586
+F 27 尝试 2 T 4 起血 5 本轮末已观察 5 下轮或退出 1 差 4 行 381591
+F 27 尝试 2 T 5 起血 1 本轮末已观察 0 下轮或退出 0 差 1 行 381596

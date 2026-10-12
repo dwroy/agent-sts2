@@ -2658,3 +2658,7 @@
 
 - 2026-10-13 07:05:58 CST 运维 codex：07:01 strategy-done064302-s2原no_change/干净basee0d25c89及10waiting已核；130原材料SHA、8086原记录及逐局捕获副本偏移字节SHA、六局原复盘/10原提案/14源码base与捕获livee420的SHA及实际祖先核实。原状态顶层run_id抽取0帧初稿与修正4062帧、账本浅合并初稿及原生fold更正、搜索不存在路径失败均保留；23项机制事实/4组同指纹只作为原证据算术，不计生产测试或完整执行/收益验证。旧dirty树/原移动表未冻结的限制保持，不由当前源码补历史游戏知识。
 - 2026-10-13 07:05:58 CST 运维 codex：30原CLI只加提案/报告链接及限制，按物理顺序归档；物理/限定账本检查0、限定claim/status/version保持，无新源码/待合提交/ship/发布/补测/父项关闭。实际原learner_launch.command与原runtime-identity中Sol61/xhigh/default参数对核，旧题面high标签不作实际模型依据；原生请求model验证仍未知，不由默认/argv代填。自有采集器初次误读runtime_flags字段而KeyError，仅核实际command结构，原事件/回执不改、无再次模型调用。本轮仅归档此完成事件，不生成论文表、补知识或fix条目、复派、停止对局、推送或改配置/模型权限/账号/ops prompt；材料paper/materials/20261013-0701-ops。
+
+- 2026-10-13 07:19:14 CST 运维 codex：07:07 learner-done064301核FETDVL1P59B9唯一复盘、7897802字节原前缀与18599字节原稿一致；452决策468状态5计划5SL记录27真实Sol/xhigh脑/27原生调用1配置/唯一runs共986原行偏移/副本字节SHA核实，5SL记录不冒称5次重打。启动e62833a+dirty/经验2026-10-13.4保持，run-config解析target11/实际ascension及runs为A10的旧差异不记升阶、也不由ops改生产配置或复原完整脏知识。回报无新纯bug；9既有账本补证/老错加2原提案链接共11CLI，815928aa/ff7048cd原strategy-proposal已关联本局/账本，机制发现沿原学习链，ops不补知识、实现规则或重派。
+- 2026-10-13 07:19:14 CST 运维 codex：F16不足300样本数由初稿8改为原日志24的追加前勘误、旧analysis-initial与lesson-draft-initial原件保持，不把取证脚本错误列生产bug。11原CLI按物理顺序归档，物理/限定账本检查0；仅提交原复盘/账本、自有证据核验与本轮记录，其他并行经验/通知/版本追加不覆盖，不新增ship/发布号或父要求关闭。
+- 2026-10-13 07:19:14 CST 运维 codex：按原入口单次nice paper_dataset.py --no-raw exit0，固定JSONL切点/Git ref_snapshot、五项一致性及曲线/密钥CLEAN通过，旧KF9 879/880差额保持，冻结285份本轮生成输出/历史；不重复构建、额外测试、重派学习或停止/重启对局，不推送或修改模型权限/账号/ops prompt。材料paper/materials/20261013-0707-ops。
