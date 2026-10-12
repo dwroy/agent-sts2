@@ -24,6 +24,7 @@ import { survivorDiscardFacts } from "./silent-discard-facts.js";
 import { survivorSmoggyFacts } from "./silent-smoggy-selection.js";
 import { handTrickSlothFacts } from "./silent-hand-trick-facts.js";
 import { sandpitDiscardFacts } from "./silent-sandpit-discard.js";
+import { snakebiteDiscardChoice } from "./silent-snakebite-discard.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -62,6 +63,10 @@ export function planSelection(env: DecisionEnv): Decision | null {
     }
     const pick = discardPick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge, str(asRecord(state.run?.raw)["character_id"]));
     if (pick && selected < max) {
+      const source = env.screenMemory.cardSource;
+      const poisonChoice = snakebiteDiscardChoice(env, pick.index, source?.action === "use_potion" &&
+        source.id === "GAMBLERS_BREW" && source.turn === state.turn && source.fight === facingFightOf(state));
+      if (poisonChoice) return poisonChoice;
       return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: discard ${pick.name} (${pick.why})` };
     }
     if (canConfirm) return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}; nothing else worth discarding` };
