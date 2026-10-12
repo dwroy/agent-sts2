@@ -1,0 +1,125 @@
+import hashlib
+import json
+import re
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent
+manifest = json.loads((OUT / 'evidence-manifest.json').read_text())
+records = {}
+for entry in manifest:
+    name = Path(entry['source']).stem
+    rows = [json.loads(raw) for raw in Path(entry['file']).open()]
+    assert len(rows) == entry['count']
+    assert hashlib.sha256(Path(entry['file']).read_bytes()).hexdigest() == entry['sha256']
+    records[entry['run_id'], name] = [(p['line'], row) for p, row in zip(entry['records'], rows)]
+
+runs = list(json.loads((OUT / 'dispatch.json').read_text())['runs'])
+for run in runs:
+    rows = records[run, 'runs']
+    assert len(rows) == 1 and rows[0][1]['character'] == 'SILENT' and rows[0][1]['ascension'] == 10
+
+attempts = {}
+for run in runs:
+    for line, row in records[run, 'sl-attempts']:
+        attempts[run, row['floor'], row['attempt']] = (line, row)
+
+
+def hp(text):
+    match = re.search(r' (\d+)/(\d+)$', text)
+    return int(match[1]) if match else None
+
+
+def turn_result(run, floor, attempt, turn):
+    line, row = attempts[run, floor, attempt]
+    turns = row['summary']['turns']
+    index = next(i for i, item in enumerate(turns) if item['turn'] == turn)
+    current = turns[index]
+    after = turns[index + 1] if index + 1 < len(turns) else None
+    return {'source_sl_line': line, 'attempt': attempt, 'turn': turn,
+            'start_hp': current['hp'], 'start_enemy_hp': hp(current['enemies']),
+            'plays': current['plays'], 'end_hp_next_turn': after['hp'] if after else None,
+            'end_enemy_hp_next_turn': hp(after['enemies']) if after else None,
+            'net_hp_loss': current['hp'] - after['hp'] if after else None,
+            'net_enemy_hp_removed': hp(current['enemies']) - hp(after['enemies']) if after else None,
+            'attempt_result': row['result'], 'last_turn': row['turns'],
+            'scope': 'actual_summary_transition_not_controlled_whole_fight'}
+
+pair_specs = [
+    ('751FN9QM9MHQ', 17, 1, 3, 2, [13, 18], [9, 18]),
+    ('751FN9QM9MHQ', 17, 2, 4, 7, [13, 23], [12, 18]),
+    ('751FN9QM9MHQ', 17, 1, 6, 13, [8, 2], [17, 11]),
+    ('KV0JHNJCKXLS', 33, 4, 5, 5, [0, 0], [36, 29]),
+    ('KV0JHNJCKXLS', 33, 1, 6, 1, [0, 0], [28, 14]),
+    ('KEN58SH9SLZ6', 17, 4, 5, 10, [15, 21], [2, 4]),
+    ('KEN58SH9SLZ6', 17, 4, 6, 5, [7, 5], [1, 2]),
+]
+pairs = []
+for run, floor, a, b, turn, losses, damage in pair_specs:
+    sides = [turn_result(run, floor, attempt, turn) for attempt in [a, b]]
+    assert [x['net_hp_loss'] for x in sides] == losses, (run, turn, sides)
+    assert [x['net_enemy_hp_removed'] for x in sides] == damage, (run, turn, sides)
+    decisions = []
+    for attempt in [a, b]:
+        choices = [(line, row) for line, row in records[run, 'decisions']
+                   if row['floor'] == floor and row['turn'] == turn and row.get('sl_attempt') == attempt
+                   and row['decider'] == 'jev' and row.get('questions')]
+        assert choices, (run, attempt, turn)
+        decisions.append(choices[0])
+    equal = decisions[0][1]['fingerprint'] == decisions[1][1]['fingerprint']
+    assert equal, (run, floor, turn)
+    pairs.append({'run_id': run, 'floor': floor, 'turn': turn, 'same_fingerprint': equal,
+                  'decision_lines': [d[0] for d in decisions], 'actual': sides,
+                  'replacement_record': decisions[1][1].get('sl_explore'),
+                  'later_actions_controlled': False})
+
+state_lines = {line: row for run in runs for line, row in records[run, 'states']}
+def compact_state(line):
+    row = state_lines[line]; state = row['state']; combat = state.get('combat') or {}; player = combat.get('player') or {}
+    return {'line': line, 'run_id': state['run_id'], 'turn': state['turn'], 'screen': state['screen'],
+            'hp': player.get('current_hp'), 'block': player.get('block'),
+            'hand': [card['card_id'] for card in combat.get('hand', [])],
+            'player_powers': {power['power_id']: power['amount'] for power in player.get('powers', [])},
+            'potions': [p.get('potion_id') for p in (state.get('run') or {}).get('potions', [])],
+            'enemies': [{'id': enemy['enemy_id'], 'hp': enemy['current_hp'], 'max_hp': enemy['max_hp'],
+                         'move': enemy['move_id'], 'incoming': [i.get('total_damage') for i in enemy['intents']],
+                         'powers': {p['power_id']: p['amount'] for p in enemy['powers']}}
+                        for enemy in combat.get('enemies', [])]}
+
+poison = [compact_state(line) for line in [280160, 280161]]
+assert [(x['hp'], x['block'], x['enemies'][0]['incoming']) for x in poison] == [(26, 13, [41]), (26, 13, [41])]
+assert [x['enemies'][0]['powers']['POISON_POWER'] for x in poison] == [2, 8]
+assert [x['potions'][0] for x in poison] == ['POISON_POTION', None]
+
+potion_specs = [(280206, 0, 'ATTACK_POTION'), (280232, 0, 'STABLE_SERUM'), (280262, 0, 'SPEED_POTION'),
+                (280313, 1, 'WEAK_POTION'), (280315, 0, 'ATTACK_POTION'),
+                (280348, 1, 'GLOWWATER_POTION'), (280354, 0, 'SKILL_POTION')]
+potions = []
+for line, slot, ident in potion_specs:
+    before, after = compact_state(line), compact_state(line + 1)
+    assert before['potions'][slot] == ident and after['potions'][slot] is None
+    potions.append({'potion': ident, 'slot': slot, 'before': before, 'after': after,
+                    'whole_turn_reward_attribution': None})
+ken_decisions = records['KEN58SH9SLZ6', 'decisions']
+assert sum(row['chosen']['action'] == 'use_potion' for _, row in ken_decisions) == 7
+assert sum(row['chosen']['action'] == 'discard_potion' for _, row in ken_decisions) == 0
+
+phase_windows = []
+for run in ['L9SGRBB5R698', 'PU80F84P6HPN', 'YQL8RZ8BWN1E']:
+    for (r, floor, attempt), (line, row) in attempts.items():
+        if r != run or floor != 17:
+            continue
+        phase = next((compact_state(n) for n, state in records[run, 'states']
+                      if row['started_at'] <= state['ts'] <= row['ended_at']
+                      and any(enemy.get('max_hp') == 999999999 for enemy in (state['state'].get('combat') or {}).get('enemies', []))), None)
+        phase_windows.append({'run_id': run, 'attempt': attempt, 'result': row['result'],
+                              'source_sl_line': line, 'first_observed_husk': phase})
+
+verification = {'role': 'silent', 'ascension': 10, 'record_hashes_verified': True,
+                'counts': {run: {name: len(records[run, name]) for name in ['runs','states','decisions','sl-attempts','run-config','run-plans']} for run in runs},
+                'paired_local_outcomes': pairs, 'yql_poison_use': poison, 'ken_seven_potions': potions,
+                'giant_phase_windows': phase_windows,
+                'ken_end_turn_examples': [compact_state(n) for n in [280691,280692,280705,280708,280709,280713,280717,280718,280723]],
+                'source_tests_run': False, 'new_strategy_validated': False,
+                'limitation': '摘要跨轮差额是本次实际轨迹，未执行支线及SL截断后的结算未知；同局多试非独立样本。'}
+(OUT / 'evidence-analysis.json').write_text(json.dumps(verification, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps({'counts': verification['counts'], 'pairs': [{'run':x['run_id'],'turn':x['turn'],'hp_loss':[y['net_hp_loss'] for y in x['actual']],'net_enemy_hp_removed':[y['net_enemy_hp_removed'] for y in x['actual']]} for x in pairs], 'ken_potions':len(potions), 'phase_windows':len(phase_windows)},ensure_ascii=False,indent=2))

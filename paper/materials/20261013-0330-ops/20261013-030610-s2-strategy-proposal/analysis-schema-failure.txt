@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-030610-s2/learner/runs/20261013-030629-strategy-proposal/analyze-evidence.py", line 103, in <module>
+    assert sum(row['chosen']['action'] == 'use_potion' for _, row in ken_decisions) == 7
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-030610-s2/learner/runs/20261013-030629-strategy-proposal/analyze-evidence.py", line 103, in <genexpr>
+    assert sum(row['chosen']['action'] == 'use_potion' for _, row in ken_decisions) == 7
+               ~~~^^^^^^^^^^
+KeyError: 'chosen'

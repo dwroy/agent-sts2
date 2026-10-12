@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-030610-s2/learner/runs/20261013-030629-strategy-proposal/analyze-evidence.py", line 60, in <module>
+    assert [x['net_enemy_hp_removed'] for x in sides] == damage, (run, turn, sides)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('751FN9QM9MHQ', 7, [{'source_sl_line': 946, 'attempt': 2, 'turn': 7, 'start_hp': 45, 'start_enemy_hp': 121, 'plays': ['匕首雨', '生存者', '防御+'], 'end_hp_next_turn': 32, 'end_enemy_hp_next_turn': 109, 'net_hp_loss': 13, 'net_enemy_hp_removed': 12, 'attempt_result': 'predicted_death', 'last_turn': 15, 'scope': 'actual_summary_transition_not_controlled_whole_fight'}, {'source_sl_line': 948, 'attempt': 4, 'turn': 7, 'start_hp': 45, 'start_enemy_hp': 121, 'plays': ['匕首雨', '生存者', '打击 -> 灵魂异鱼'], 'end_hp_next_turn': 22, 'end_enemy_hp_next_turn': 103, 'net_hp_loss': 23, 'net_enemy_hp_removed': 18, 'attempt_result': 'predicted_death', 'last_turn': 15, 'scope': 'actual_summary_transition_not_controlled_whole_fight'}])

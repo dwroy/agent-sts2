@@ -1,0 +1,150 @@
+[
+ {
+  "id": "silent-0271",
+  "ts": "2026-10-08T03:27:26+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "静默A10首boss已可由回合末毒结束时，求解器visit在evaluate.winsFight处立即停止扩展，遗漏同轮仍可打的防御候选，连战HP估值无法比较未生成的方案。XTSV1U9JD34T F48T8自动空斩杀结束时，32血先被手中9伤凋萎扣至23再赢，23血无恢复进入F49。旧0213已经处理毒胜前持牌伤的存活判断，此项是存活情况下的保血候选搜索缺口；只定位当前live，不宣称修复可通关。",
+  "evidence": [
+   {
+    "run": "XTSV1U9JD34T",
+    "floor": 48,
+    "turn": 8,
+    "role": "support",
+    "note": "decisions:280547 combat/lethal为空并end_turn；states:286893为32HP/0挡/5E、54毒对132HP、9伤WITHER且防御/触不可及/手上技法可打，286894胜后23HP，286896 F49入场23HP。当前live turn-solver.ts:3764遇winsFight即return，combat-plan.ts:3293/:3296取无药胜线自动执行。",
+    "added": "2026-10-08T03:27:26+08:00"
+   },
+   {
+    "run": "JBX9JLH46KVN",
+    "floor": 48,
+    "turn": 9,
+    "role": "repeat",
+    "note": "第5次d312159空combat/lethal结束；s320565/320566为17HP/0挡/4E、敌62血26毒、触媒2、1张9伤WITHER、防御与两后空翻11挡可打，s320567勝出8、s320569原样8空药入F49。当前live turn-solver.ts:3839仍在winsFight处停止扩展，combat-plan.ts:3298/3301自动取无药胜线；已有fix-queue-v4:809，未修。没有替代实打或后场勝局。",
+    "added": "2026-10-09T12:04:06+08:00"
+   },
+   {
+    "run": "562GNK4ESMPE",
+    "floor": 17,
+    "turn": 11,
+    "role": "repeat",
+    "note": "d345828空lethal直接end_turn；s355709为18HP/3能量、异鱼5HP/23毒且无无实体，呼唤1费与带毒刺击1费6伤均可打，出口s355710实12HP。当前live turn-solver.ts:3841仍在回合末毒胜处截断，combat-plan.ts:3301/3305执行首个无药必胜线。与原0271同源，扩展到持牌直接失血/可处理状态；替代出口及整局收益待固定回放，不能把6HP直接加到跨幕后。",
+    "added": "2026-10-11T03:22:28+08:00"
+   }
+  ],
+  "first_run": "XTSV1U9JD34T",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按剪枝、必胜、斩杀后、提前结束及斩杀/凋萎关键词检索silent账本、同角色早复盘及两份fix-queue，未找到同一已定位搜索早停且后续boss需资源的可比行为。已有silent-0213为毒胜前致死持牌伤结算，silent-0228为连战资源目标，均非本次早停根因；不借其他角色或未核动作推先验。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "XTSV1U9JD34T",
+    "JBX9JLH46KVN",
+    "562GNK4ESMPE"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-031301-postmortem/proposal-poison-win-search.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update/proposal-replay.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/proposal-poison-win-search.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-120922-experience-update/proposal-resources.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261011-031301-postmortem/proposal-poison-win-search.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-124301-s2/learner/runs/20261011-124313-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-141301-s2/learner/runs/20261011-141309-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-014302-s2/learner/runs/20261012-014313-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-014302-s2/learner/runs/20261012-014313-strategy-proposal/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-014302/learner/runs/20261012-014312-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-014302/learner/runs/20261012-014312-strategy-proposal/report.md"
+   ],
+   "changelog": [
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-124301-s2/learner/runs/20261011-124313-strategy-proposal/report.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-141301-s2/learner/runs/20261011-141309-strategy-proposal/report.md",
+    "paper/materials/20261012-0226-ops/release-scopes.json"
+   ],
+   "commits": [
+    "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+    "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+    "52d6a2e86ae32cd5b53cb0d58ece6a5a0b021fed"
+   ]
+  },
+  "note": "来源任务20261008-031301-postmortem；只读复盘，代码版本03f4ffe0+dirty，定位live 6c3d8187c205c6062ecd939cc93d09bbe34bafd6。新bug，两份fix-queue无此项；替代候选保血量及后场胜负等待独立strategy-proposal固定回放验证。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-08T03:27:26+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-08T03:30:19+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T03:41:39+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T12:04:06+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T12:05:50+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T12:23:33+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-11T03:22:28+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-11T03:23:48+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-11T13:17:15+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-11T14:21:28+08:00",
+    "by": "learner:strategy-proposal"
+   },
+   {
+    "ts": "2026-10-12T01:53:51+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-12T01:54:14+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-12T02:32:50+08:00",
+    "by": "ops:codex",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.legacy17-1",
+  "effect": null,
+  "notes": [
+   "来源任务20261008-031301-postmortem；只读复盘，代码版本03f4ffe0+dirty，定位live 6c3d8187c205c6062ecd939cc93d09bbe34bafd6。新bug，两份fix-queue无此项；替代候选保血量及后场胜负等待独立strategy-proposal固定回放验证。",
+   "代码提案 silent-proposal-d60691b060dfc40a → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-0129c465c6f5bd79 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "本任务20261009-114302-postmortem核对本角色原始日志；保留旧claim、first_run、prior、status与version。",
+   "代码提案 silent-proposal-6e2d8244024b8090 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-b8804a022bdc5a1a → task=strategy-proposal；Roy-2026-10-07-learning",
+   "旧bug补证，fix-queue-v4.md:808已有；未改代码，未标上线。",
+   "代码提案 silent-proposal-62ff341087687e35 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "20261011-124301-s2-strategy-proposal逐项复核：silent-proposal-d60691b060dfc40a=waiting；silent-proposal-0129c465c6f5bd79=waiting。原局已核；不重复support/复盘。两个候选源码已自测，live原有19冲突，未合入、未造版本或shipped。各子项限制和原件SHA见报告。 本次源码仅为F48毒胜前无药保血搜索；23→32为模型回放，不是新实盘或F49胜因。",
+   "20261011-141301-s2-strategy-proposal仅复核本批十ID：silent-proposal-d60691b060dfc40a=waiting；silent-proposal-0129c465c6f5bd79=waiting。3175原始状态/3016决策与原字节核对，未新增support或重复复盘；无新源码/测试/合入/版本。原毒胜222445a9和幽灵96f17377候选仍非live祖先，19既有冲突保持；商店db20ec3c是live祖先。各缺证/子项/原提交与报告链接已保存，不改原状态或登记shipped。",
+   "20261012-014302-s2-strategy-proposal逐项复核；原提案10项waiting，无源码/合入。固定live6639e2f3对本批base静态预检4个记录冲突；详报告。只追加报告链接，不重复证据/经验或改变既有shipped子项。",
+   "20261012-014302-strategy-proposal：仅处置本批原ID silent-proposal-d60691b060dfc40a，均waiting。四派发局原字节重核、40项数据事实断言通过，非生产测试；三个已有源码候选仍非live祖先。base/live当前4处记录冲突而停止合入；无新源码/测试/版本/合入，不新增support或重复复盘。逐项工程阻塞与独立策略证据缺口见报告；既有经验发布历史不等于父代码提案实现。",
+   "2026-10-12 02:32:50 CST 015818实际兜底；仅222445a9b所列已上线子范围，原claim/证据不改，宽提案和自然效果未完成。"
+  ],
+  "shipped_at": "2026-10-12T02:32:50+08:00"
+ }
+]
