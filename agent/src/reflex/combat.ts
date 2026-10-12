@@ -17,6 +17,7 @@ import { briefJson } from "../memory/run-brief.js";
 import { afterPlayFirst, isPlayFirst, modelHandCard } from "./card-model.js";
 import { resolveDamage } from "./damage.js";
 import { crabPoisonFacts } from "./silent-crab-potion.js";
+import { silentGiantPotionFacts } from "./silent-giant-potion.js";
 import { startTurnHpLossOf } from "./start-loss.js";
 import type { Decision, DecisionEnv, ResolvedAction } from "../memory/types.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
@@ -281,6 +282,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
   for (const candidate of safeCandidates) criteria[candidate.key] = JSON.stringify(describeOption(candidate.summary));
 
   const questionState: Record<string, JsonValue> = {
+    ...silentGiantPotionFacts(state),
     run_brief: briefJson(brief),
     situation: {
       screen: "COMBAT",

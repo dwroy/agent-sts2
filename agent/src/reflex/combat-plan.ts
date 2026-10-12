@@ -25,6 +25,7 @@ import { silentPhaseReference } from "./silent-phase-reference.js";
 import { silentPhaseCurrentFacts } from "./silent-phase-current.js";
 import { silentPotionReference } from "./silent-potion-reference.js";
 import { silentHeldLossFacts } from "./silent-held-loss.js";
+import { silentGiantPotionFacts } from "./silent-giant-potion.js";
 import { silentKinBoardFacts, silentKinPlanFacts } from "./silent-kin-progress.js";
 import { observedDemonPoison } from "./silent-demon-potion.js";
 import { crabPoisonFacts } from "./silent-crab-potion.js";
@@ -3939,6 +3940,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const deepseekPlan = deepseekPlanLine(env);
   const lessons = fightLessons(state);
   const questionState: Record<string, JsonValue> = {
+    ...silentGiantPotionFacts(state),
     ...silentPhaseCurrentFacts(state),
     ...silentKinBoardFacts(state),
     run_brief: briefJson(env.brief),
