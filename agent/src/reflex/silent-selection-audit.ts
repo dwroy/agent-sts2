@@ -2,6 +2,7 @@ import { asRecord, str, type JsonValue } from "../core/util/json.js";
 import type { GameState } from "../hand/mod/schema.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { Plan } from "./turn-solver.js";
+import { silentHeldLossFacts } from "./silent-held-loss.js";
 
 export interface SelectionCandidate {
   text: string;
@@ -26,6 +27,7 @@ export function silentSelectionAudit(
       outcome_kind: candidate.sampled ? "sampled_potion_median" : plan ? "turn_model" : "unavailable",
       planned_steps: plan?.steps.map((step) => ({ card_id: step.cardId, upgraded: step.upgraded, card_index: step.cardIndex, target_index: step.target })) ?? null,
       turn: plan ? {
+        ...(!candidate.sampled ? silentHeldLossFacts(state, plan) : {}),
         hp_loss: plan.outcome.hpLoss,
         damage: plan.outcome.damageDealt,
         block_gained: plan.outcome.blockGained,
