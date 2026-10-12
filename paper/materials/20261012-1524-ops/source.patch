@@ -1,0 +1,91 @@
+diff --git a/agent/tests/ops-stall-recovery.test.ts b/agent/tests/ops-stall-recovery.test.ts
+index 32f49c68a..528fe34d8 100644
+--- a/agent/tests/ops-stall-recovery.test.ts
++++ b/agent/tests/ops-stall-recovery.test.ts
+@@ -1,7 +1,8 @@
+-import { spawnSync } from "node:child_process";
++import { execFile } from "node:child_process";
+ import { chmodSync, copyFileSync, mkdirSync, mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
++import { promisify } from "node:util";
+ import { afterAll, describe, expect, it } from "vitest";
+ 
+ const fixture = mkdtempSync(join(tmpdir(), "stall-fixed-"));
+@@ -21,31 +22,62 @@ for (const [command, body] of Object.entries({
+   chmodSync(file, 0o755);
+ }
+ 
+-function check(consoleLines: string, decisionEpoch: number, consoleEpoch = 990) {
++const execFileAsync = promisify(execFile);
++
++async function check(consoleLines: string, decisionEpoch: number, consoleEpoch = 990, timeout = 10_000) {
+   const console = join(fixture, "logs/console/fixed.log");
+   writeFileSync(console, consoleLines + "\n");
+   utimesSync(console, consoleEpoch, consoleEpoch);
+   writeFileSync(join(fixture, "logs/decisions.jsonl"), JSON.stringify({ ts: new Date(decisionEpoch * 1000).toISOString() }) + "\n");
+-  const result = spawnSync("bash", [join(fixture, "ops/stall-check.sh")], {
+-    encoding: "utf8", timeout: 5000, env: { ...process.env, PATH: `${fixture}/bin:${process.env.PATH}` },
++  // Allow shell startup to share the host with play, within the suite's 15-second test limit.
++  // Await the child so Vitest can enforce its own deadline as well; execFile rejects failures.
++  const result = await execFileAsync("bash", [join(fixture, "ops/stall-check.sh")], {
++    encoding: "utf8", timeout, env: { ...process.env, PATH: `${fixture}/bin:${process.env.PATH}` },
+   });
+-  expect(result.status, result.stderr).toBe(0);
+   return result.stdout;
+ }
+ 
++async function withLauncher(body: string, run: () => Promise<void>) {
++  const launcher = join(fixture, "bin/bash");
++  writeFileSync(launcher, `#!/bin/sh\n${body}\n`);
++  chmodSync(launcher, 0o755);
++  try {
++    await run();
++  } finally {
++    rmSync(launcher);
++  }
++}
++
+ describe("stall check mod request recovery", () => {
+   const failed = "cannot reach the STS2-Agent mod: request timed out";
+-  it("does not flag a single failed action followed by a current decision", () => {
+-    expect(check(`${failed}\nCodex deciding event`, 990)).toMatch(/^OK/);
++  it("does not flag a single failed action followed by a current decision", async () => {
++    expect(await check(`${failed}\nCodex deciding event`, 990)).toMatch(/^OK/);
++  });
++  it("requires repeated unreachable requests and stale decisions, and clears on recovery", async () => {
++    expect(await check(`${failed}\nretry\n${failed}`, 800)).toMatch(/^STALL: .*console reports unreachable/);
++    expect(await check(`${failed}\nretry\n${failed}\nCodex deciding`, 995)).toMatch(/^OK/);
++    expect(await check(`${failed}`, 800)).toMatch(/^OK/);
++  });
++  it("keeps real stuck-loop, gate and silence alerts", async () => {
++    expect(await check("stuck for 25 polls", 990)).toMatch(/^STALL/);
++    expect(await check("gate rejected 3 times", 990)).toMatch(/^STALL/);
++    expect(await check("waiting", 990, 500)).toMatch(/^STALL: .*console silent 500s/);
++  });
++  it("checks the real script after shell startup exceeds the former five-second limit", async () => {
++    // Reproduce scheduling delay without changing the fixed decision/console timestamps.
++    await withLauncher('sleep 6\nexec /bin/bash "$@"', async () => {
++      expect(await check(`${failed}\nretry\n${failed}`, 800)).toMatch(/^STALL: .*console reports unreachable/);
++    });
+   });
+-  it("requires repeated unreachable requests and stale decisions, and clears on recovery", () => {
+-    expect(check(`${failed}\nretry\n${failed}`, 800)).toMatch(/^STALL: .*console reports unreachable/);
+-    expect(check(`${failed}\nretry\n${failed}\nCodex deciding`, 995)).toMatch(/^OK/);
+-    expect(check(`${failed}`, 800)).toMatch(/^OK/);
++  it("rejects a failed subprocess even when it prints OK", async () => {
++    await withLauncher("printf 'OK\\n'\nexit 9", async () => {
++      await expect(check("waiting", 990)).rejects.toMatchObject({ code: 9, stdout: "OK\n" });
++    });
+   });
+-  it("keeps real stuck-loop, gate and silence alerts", () => {
+-    expect(check("stuck for 25 polls", 990)).toMatch(/^STALL/);
+-    expect(check("gate rejected 3 times", 990)).toMatch(/^STALL/);
+-    expect(check("waiting", 990, 500)).toMatch(/^STALL: .*console silent 500s/);
++  it("still terminates a hung subprocess at the configured deadline", async () => {
++    // exec leaves one child PID for execFile to terminate, with no orphaned sleep process.
++    await withLauncher("exec sleep 60", async () => {
++      await expect(check("waiting", 990, 990, 100)).rejects.toMatchObject({ killed: true, signal: "SIGTERM" });
++    });
+   });
+ });
