@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：MEXYTC0Z2MQQ（A10，第17层，仪式兽 CEREMONIAL_BEAST；末试T7以6血10挡对21攻击阵亡，敌剩68血）。
+- 新的纯 bug：
+  - MEXYTC0Z2MQQ：休息超时但实际完成后，已接受改线未提交，继续旧路线 — [agent/src/hand/loop.ts:1771](/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/hand/loop.ts:1771)（新）。
+- 写成「未记录」的项：MEXYTC0Z2MQQ：前五试退出及末轮结算、部分末击帧与逐击总伤、未执行路线及用药反事实、最终最优线执行率、护栏实际代价、完整dirty源码、有效boss时钟、Jev缓存、实付账单、纯操作用时、F12未入栏药水身份。
+- 学习账本：MEXYTC0Z2MQQ：新增 silent-0446、silent-0447、silent-0448；更新 silent-0079、silent-0005、silent-0133、silent-0222、silent-0134（老错 silent-0079）；`ledger.py check`退出码0。
+- 代码提案：silent-proposal-2d3aa8dfb27dbe3f（F12／0446，超时改线）；silent-proposal-de069b3ead7b8ff9（F17T1／0447、0448，生成药与X支付）；silent-proposal-7c5436b79af1a301（F17T4—7／0079，SL血价）。均关联独立strategy-proposal，状态pending；绕行、其他随机产物及整战收益证据不足，未修改代码。报告已保存至 [report.md](/home/dw/Projects/agent-sts2/learner/runs/20261013-031302-postmortem/report.md)。
+
+```json
+{"task":"postmortem","appended":["MEXYTC0Z2MQQ"],"skipped":[],"bugs":[{"run":"MEXYTC0Z2MQQ","where":"agent/src/hand/loop.ts:1771","what":"休息动作超时但实际完成后，已接受的新路线未提交，下一地图继续旧路线。","new":true}],"ledger":{"added":["silent-0446","silent-0447","silent-0448"],"updated":["silent-0079","silent-0005","silent-0133","silent-0222","silent-0134"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-2d3aa8dfb27dbe3f","silent-proposal-de069b3ead7b8ff9","silent-proposal-7c5436b79af1a301"],"implementation_domains":["structure","combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261013-031302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13188-66bb-7e12-a410-8a6a2e762b1e
+轮数：1；工具调用：command_execution×57
+token：输入 334.1k、输出 39.8k（其中推理 9424）、cache 读 6580.5k、cache 写 0（命中 95.2%）
+成本：未提供
+耗时：1359.4 s（墙钟）
+时间：首个事件 11.9 s、模型首个输出 16.6 s、首次工具 21.3 s、末次工具结束 1323.4 s；工具内共 222.2 s，其余（模型生成、推理、网络）1125.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×40；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T03-13-05-01a13188-66bb-7e12-a410-8a6a2e762b1e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261013-031302-postmortem.jsonl

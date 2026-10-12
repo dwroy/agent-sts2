@@ -1,0 +1,94 @@
+## 经验库更新回报
+
+- 版本：2026-10-13.2 → 2026-10-13.3；提交：21287d3bb（分支 exp-merge-recovery-20261013-000402）；合入：未合入，整分支预演有 16 处共享记录及论文表冲突，按要求停止。
+- 条数：新增 2、更新 25（加证据 17、只改数字 0、仅压缩 8）、退役 0；active 227 → 229；正文 55154 → 54911 字符。A8 适用 208 条／49059 字符，A9 适用 209 条／49343 字符。
+- 机制推理（均无反例）：
+  - 灵动步法 — 敏捷只加后继牌挡 — 146 局 — 7LXWF33J5SAD
+  - 力量与虚弱 — 逐攻击段计算，持牌伤另计 — 247 局 — 3WWHBRG66B7F
+  - 构筑窗口 — 持有和计划不等实际建立 — 249 局 — 7LXWF33J5SAD
+  - 致命毒药 — 施毒不是即时伤害 — 55 局 — 3WWHBRG66B7F
+  - 咕嘟冒泡 — 已有毒才兑现补毒 — 18 局 — 3WWHBRG66B7F
+  - 脆弱 — 逐张折减牌挡 — 51 局 — 3WWHBRG66B7F
+  - 同族 SL — 全败模拟仍须区分真实血价 — 19 局 — 3WWHBRG66B7F
+  - 尖啸 — 临时减力不停止成长 — 120 局 — 3WWHBRG66B7F
+  - 金刚杵 — 每段攻击兑现力量 — 21 局 — 3WWHBRG66B7F
+  - 异鸟成长 — 赢战消耗仍进入后续预算 — 13 局 — 3WWHBRG66B7F
+  - 速度药水 — 无后继挡牌时临敏收益为零 — 57 局 — 3WWHBRG66B7F
+  - 毒药水 — 母体退场后毒不继承给新虫 — 62 局 — 7LXWF33J5SAD
+  - 感染 — 持牌伤与敌攻共享格挡预算 — 16 局 — 7LXWF33J5SAD
+  - 旧日雕像 — 当轮挡与胜战损血分别核算 — 35 局 — 3WWHBRG66B7F
+  - 复制药水 — 后继牌实出才兑现重放 — 4 局 — 7LXWF33J5SAD
+  - 终点估值观察 — 外推胜率不等短程实胜 — 1 局 — 7LXWF33J5SAD
+  - 招架盾 — 已见挡量窗口触发伤害，精确最低门槛未隔离 — 1 局 — 3WWHBRG66B7F
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 343 文件／3412 用例／退出码 0。首轮错误带入角色环境导致失败，默认测试环境重跑通过，原件保留；密钥扫描及提案覆盖检查均为 0。
+- 切片大小：总体中位减少 7.5 字符，最大 8755 → 8719；候选前缀读回通过，实际采用待观察。
+- 学习账本：新增 silent-0445；32 条改为 proposed（完整 id 见下方 JSON）；退役无；`ledger.py check` 退出码 0。
+- 需要 Roy 定的事：无。合入待运维兜底；完整材料见[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-030611-experience-update/report.md)和[逐项映射](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-030611-experience-update/experience-integration.json)。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-13.3",
+  "commit": "21287d3bb189a6c0d5f61f8920e787fd171a5059",
+  "merged": null,
+  "added": 2,
+  "updated": 25,
+  "retired": 0,
+  "active": 229,
+  "mechanisms": [
+    "silent-footwork-block",
+    "silent-strength-weak-observation",
+    "silent-deck-burst-observation",
+    "silent-deadly-poison-application",
+    "silent-bubble-bubble-condition",
+    "silent-frail-card-block",
+    "silent-kin-poison-sl-observation",
+    "silent-piercing-wail-temporary-strength",
+    "silent-vajra-opening-strength",
+    "silent-byrdonis-strength-multihit-observation",
+    "silent-speed-potion-temporary-dexterity",
+    "silent-poison-potion-observed-application",
+    "silent-infection-end-turn-block",
+    "silent-bygone-effigy-wake-strength",
+    "silent-duplicator-next-card-replay",
+    "silent-rollout-endpoint-progress-observation",
+    "silent-parrying-shield-end-turn-hit"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3412},
+  "ledger": {
+    "added": ["silent-0445"],
+    "proposed": [
+      "silent-0001", "silent-0005", "silent-0007", "silent-0009",
+      "silent-0010", "silent-0012", "silent-0019", "silent-0020",
+      "silent-0021", "silent-0025", "silent-0046", "silent-0049",
+      "silent-0079", "silent-0096", "silent-0118", "silent-0125",
+      "silent-0134", "silent-0156", "silent-0157", "silent-0187",
+      "silent-0188", "silent-0253", "silent-0274", "silent-0278",
+      "silent-0286", "silent-0288", "silent-0307", "silent-0321",
+      "silent-0378", "silent-0385", "silent-0443", "silent-0445"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-59bbeee99dc6397d",
+    "silent-proposal-3258f2ff8daac28c",
+    "silent-proposal-c2c88c5486d8e171",
+    "silent-proposal-5ff8247aa369783e"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-030611-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13182-2161-7912-a8b1-3a561957f764
+轮数：1；工具调用：command_execution×81 file_change×6
+token：输入 332.1k、输出 63.7k（其中推理 26.3k）、cache 读 10253.2k、cache 写 0（命中 96.9%）
+成本：未提供
+耗时：2263.4 s（墙钟）
+时间：首个事件 12.8 s、模型首个输出 21.1 s、首次工具 23.9 s、末次工具结束 2182.4 s；工具内共 2349.5 s，其余（模型生成、推理、网络）-99.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×61；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T03-06-14-01a13182-2161-7912-a8b1-3a561957f764.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-030611-experience-update.jsonl

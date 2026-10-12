@@ -1,0 +1,112 @@
+{
+  "at": "2026-10-13 03:58:31 CST",
+  "source": "21287d3bb189a6c0d5f61f8920e787fd171a5059",
+  "original_cli_rows": 67,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "exit": 0,
+    "files": 343,
+    "cases": 3412,
+    "rerun": true,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-030611-experience-update/test-source-final.log",
+    "sha256": "9550b77489cdb81849e4cc1bb4d135e056afe7dc391dca83af5284e2a26c0065",
+    "experience_sha256": "8e2ad32fb33d10ea60faee9425197d675792cf8382e1b0eec7c0e58c3d8c93b5",
+    "entry": "原test-sandbox.sh；1423份跟踪源码/任务逐SHA一致隔离副本，knowledge链接本批同一经验；不改排除、超时、测试或预算。默认角色测试环境，真实知识渲染另固定CHARACTER=silent。",
+    "initial_direct": {
+      "tsc": 0,
+      "vitest": 1,
+      "exit": 1,
+      "files": 342,
+      "cases": 3401,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-030611-experience-update/test-source.log",
+      "reason": "首轮额外设置CHARACTER=silent，使历史固定默认角色回放读取角色不同的知识路径；已出现多个快照失败，原件保留，若仍在收尾不冒报退出码。",
+      "sha256": "713c95cd4b0c0e1baae231416ca4b50ee10efabb58487df151fdd59d566501ce"
+    },
+    "host_full_suite": "等待实际合入后的调度器完整宿主检查，不把沙箱结果当宿主全检"
+  },
+  "live_failure": {
+    "source": "21287d3bb189a6c0d5f61f8920e787fd171a5059",
+    "branch": "exp-merge-recovery-20261013-000402",
+    "merged": null,
+    "refresh": "0751319737989d6a9940d608914448e8f0f15056",
+    "pre": "0751319737989d6a9940d608914448e8f0f15056",
+    "tests": null,
+    "initial": "e813a9507f20d8d03f382774774911522612940c",
+    "initial_status": "M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/monster-db-check.md",
+    "refresh_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "base": "301ec89a8dc0cb2902e09918b5fe1ba62865c89a",
+    "source_knowledge_paths": [
+      "knowledge/characters/silent/experience.json"
+    ],
+    "live_knowledge_paths": [
+      "knowledge/builders/build-monster-db.py",
+      "knowledge/builders/build-outcome-stats.py",
+      "knowledge/builders/build-potion-equivalents.py",
+      "knowledge/builders/characters.py",
+      "knowledge/builders/refresh-potion-equivalents.sh",
+      "knowledge/characters/ironclad/potion-equivalents.json",
+      "knowledge/characters/ironclad/sl-elites.json",
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/boss-trust.json",
+      "knowledge/characters/silent/experience.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/potion-equivalents.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "knowledge_overlap": [
+      "knowledge/characters/silent/experience.json"
+    ],
+    "overlap_conflicts": [
+      "knowledge/characters/silent/experience.json"
+    ],
+    "live_experience": {
+      "version": "2026-10-13.2",
+      "sha256": "0ed954da42b3e9e9650c65da8f929f88fb67918dfb90cdc7fa99d36b01e19e09"
+    },
+    "result": "初步知识重叠预检过宽；live经验与本批改前.2逐字节相同。整分支merge-tree实际预演仍有共享记录/论文表冲突，按任务停止，未硬解或应用冲突。",
+    "final_live_head": "0751319737989d6a9940d608914448e8f0f15056",
+    "source_is_live_ancestor": false,
+    "merge_tree_preview": {
+      "exit": 1,
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-030611-experience-update/merge-tree-preview.txt",
+      "sha256": "3e93c2d88cd80cf39442a33e4cdb7c399938ea4976ec87b381bd0d802768b222",
+      "conflicts": [
+        "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+        "CONFLICT (content): Merge conflict in notes/lessons.md",
+        "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+        "CONFLICT (content): Merge conflict in paper/data/README.md",
+        "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+        "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+        "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+        "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+        "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+        "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+        "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+        "CONFLICT (content): Merge conflict in paper/data/summary.json",
+        "CONFLICT (content): Merge conflict in paper/data/verification.json",
+        "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+        "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+        "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+      ]
+    },
+    "live_experience_equals_source_before": true
+  },
+  "ignored_request": "roy-20261010-silent-core-reuse-experience-integration",
+  "original_failed_role_environment_preserved": true,
+  "no_parent_request_adopted_or_closed": true
+}

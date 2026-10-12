@@ -1,0 +1,46 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "MEXYTC0Z2MQQ"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "MEXYTC0Z2MQQ",
+      "where": "agent/src/hand/loop.ts:1771",
+      "what": "休息动作超时但实际完成后，已接受的新路线未提交，下一地图继续旧路线。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0446",
+      "silent-0447",
+      "silent-0448"
+    ],
+    "updated": [
+      "silent-0079",
+      "silent-0005",
+      "silent-0133",
+      "silent-0222",
+      "silent-0134"
+    ],
+    "repeats": [
+      "silent-0079"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-2d3aa8dfb27dbe3f",
+    "silent-proposal-de069b3ead7b8ff9",
+    "silent-proposal-7c5436b79af1a301"
+  ],
+  "implementation_domains": [
+    "structure",
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-031302-postmortem/report.md"
+}

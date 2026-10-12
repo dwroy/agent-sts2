@@ -1,0 +1,1 @@
+首次五条update命令把条目id放在命令位置参数，但标准输入JSON未带id，CLI均拒绝：exit 2，ledger: nothing written；row 1: id: None has no add row before it。未写入账本。原stdout文件ledger-update-0079.out、0005.out、0133.out、0222.out、0134.out均空，保留。接续仅补JSON的id字段，证据和原账本字段保持。
