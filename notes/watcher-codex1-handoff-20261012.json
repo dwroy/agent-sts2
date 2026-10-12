@@ -1,0 +1,198 @@
+{
+  "prepared_at": "2026-10-12T10:21:30+08:00",
+  "purpose": "给即将切换到codex1的同一watcher会话接续；这是本地项目交接，不是新一轮运行账号迁移。",
+  "read_first": [
+    "AGENTS.md",
+    "README.md",
+    "paper/materials/STATE-2026-10-12.md",
+    "paper/materials/decision-log.md末尾",
+    "docs/learning-protocol.md",
+    "notes/build-choice-card-facts-request.json",
+    "paper/materials/silent/20261012-build-choice-card-facts/event-delivery.json"
+  ],
+  "role_and_permissions": {
+    "role": "Roy与watcher观察、讨论、修架构/纯bug；日常运行、派学习者、合入兜底由原ops闭环。",
+    "persistent_authorizations": [
+      "可操作Herdr/session以修已核实系统问题；不要因会话换账号重复重启agent。",
+      "仅主ops获准host/danger-full-access；学习者和只读辅助保持沙箱与凭据屏蔽。",
+      "游戏知识由学习者依据本角色对局证据得出；watcher不手填打法或用外部攻略/模型记忆补机制。",
+      "修复/已批准改动测完合live并同步main；改变行为按项目登记版本/通知/台账。",
+      "Roy已明确知道dwroy/agent-sts2为PUBLIC，并于本轮明确选择“保持公开，授权推送到该仓库”；旧长期记忆中的PRIVATE已过时。此授权对应已完成发布，不自动发布后续未验收任务。"
+    ],
+    "operational_boundaries": [
+      "开发不运行play；不修改或读取游戏二进制；不碰第三方代码；不读取/输出凭据。",
+      "不修改ops-session prompt，除非先给Roy看稿。",
+      "主检出只集成，源码另开.worktrees，一树一写者；并行记录/知识刷新保留，不git add -A/reset/clean。",
+      "先查原任务/会话状态与回执；不要把queued/进程退出0当完成，不重复派未完或失败批。",
+      "后台nice且每任务最多4进程；固定测试，保留失败原件，已通过检查无新原因不重跑。",
+      "推送仅Windows ssh.exe，upstream不推；gitleaks扫描后处理确认误报，不输出疑似值。"
+    ]
+  },
+  "runtime_snapshot": {
+    "observed_at": "2026-10-12T10:21:30+08:00",
+    "production_already_codex1": true,
+    "ops_session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+    "herdr_agent": "ops",
+    "pane_last_verified": "wJ:p5",
+    "execution_mode": "host",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+    "gates": {
+      "LLM_DRAIN": false,
+      "PAUSE": false
+    },
+    "latest_state_observed": {
+      "at": "2026-10-12T02:18:53.116Z",
+      "run_id": "PUY011SBWSSU",
+      "character": "SILENT",
+      "ascension": 10,
+      "floor": 24,
+      "hp": "13/70",
+      "screen": "SHOP"
+    },
+    "note": "快照会过时；继续前只读核实。mod health中的play_running指mod自带运行器，不能单独判外部autoplay停局。",
+    "account_change_instruction": "用户此处在切换watcher登录账号；不要再跑codex1-20261011 drain或改现有生产账号选择器。"
+  },
+  "completed": [
+    {
+      "topic": "账号/会话切换与阻塞修复",
+      "facts": "durable drain、复用pane实际CODEX_HOME、主ops宿主执行、旧局report-run补收、climb刷新、Herdr名称释放竞态、学习者构建期纯ENOENT一次同权限重试均main/live；验收已完成。",
+      "evidence": [
+        "paper/materials/20261012-switch-followup/deployment.json",
+        "paper/materials/20261012-ops-host-recovery/final-acceptance.json"
+      ],
+      "historical_failure": "旧N1 report成功349条但refresh退出2的原failed回执保留，ops另stage-continuation完成；旧074301-strategy预检失败不改为成功。"
+    },
+    {
+      "topic": "公开main发布",
+      "commit": "fa1d418a9e34367bdd742dce097c904cfc482f2a",
+      "remote": "git@github.com:dwroy/agent-sts2.git",
+      "visibility": "PUBLIC",
+      "verified": "Windows ssh.exe push并ls-remote核实；这是最后本watcher确认发布的提交，后续ops main提交未由本watcher推送。",
+      "evidence": "ops/codex-ops/publications/20261012-switch-main-push.json"
+    },
+    {
+      "topic": "事件具名卡资料子项",
+      "source": "42c920f34d9dc1c783ce894659849ab37ed6fd1b",
+      "live": "80a39dbd550fb571f244a0c4a219cec86108a0fe",
+      "main_integration": "6d74718064fb29297491fbee7b5a00c33ee6823c",
+      "versions": [
+        "S1.named-card-facts1",
+        "S1.exp183"
+      ],
+      "experience": "2026-10-12.2",
+      "validation": "ops回执：原事件固定回放撤码1失败、修后11通过；与经验一起集成tsc/328文件3254例过。宿主原签名问题仍单独续验，非整父任务完成。",
+      "evidence": "paper/materials/silent/20261012-build-choice-card-facts/event-delivery.json"
+    }
+  ],
+  "active_priorities": [
+    {
+      "priority": 1,
+      "task": "卡牌资料补全与三项构筑评估",
+      "request_id": "roy-20261012-build-choice-card-facts",
+      "current_state": "event_subtask_shipped_remaining_scope_pending",
+      "parent_request": "roy-20261011-silent-core-cycle-quantitative-learning",
+      "next": [
+        "P0剩余：其他资料消费者入口、跨局未知缺口自动派发。事件子项已上线，不能重复做。",
+        "P1沿原量化父请求：识别实有核心和缺口；比较拿/跳/买/删/替换对到手、实际启动和重复完整组合次数的影响；比较新增收益和稀释代价。",
+        "实际核心定义/卡值由学习者据证据补齐。当前计数仅具名杂技/下注/已建绷带分支，其他完整组合仍有null/缺口；不拿单卡施放次数充整套循环。",
+        "P2需自然局：真实题面包含→模型引用→动作执行→实战效果，固定回放通过不等自然局效果。",
+        "同样本配对、区间和未知机制分开；不设小牌组上限/固定跳牌率或人为必须选许愿。"
+      ],
+      "evidence": [
+        "notes/build-choice-card-facts-request.json",
+        "paper/materials/silent/20261012-build-choice-card-facts/requirements.json",
+        "paper/materials/silent/20261012-build-choice-card-facts/ops-binding.json",
+        "paper/materials/silent/20261012-build-choice-card-facts/event-delivery.json",
+        "notes/core-cycle-quantitative-learning-request.json",
+        "notes/core-cycle-quantitative-continuation-request.json",
+        "docs/core-realization.md"
+      ]
+    },
+    {
+      "priority": 2,
+      "task": "宿主compute-memo签名检查失败闭环",
+      "queue_id": "compute-memo-worker-data-signature",
+      "original_check": "4051通过/1失败/2跳过；tests/compute-memo.test.ts:228。可变知识刷新竞态原先仅待证假设。",
+      "repair_batch": "20261012-095813-fix-batch",
+      "latest_observation": "10:16:43 scheduler报exit0并排入fix-done；尚未在此交接中核完回报或实际合入。",
+      "next": "让原ops核回报、源码/合入与必要失败项续验；不重复派发/重跑全部已通过覆盖/删除断言。",
+      "evidence": [
+        "notes/fix-queue-v4.md",
+        "paper/materials/20261012-0955-ops/host-failure-decision.json",
+        "paper/materials/20261012-0955-ops/host-original-failed.log",
+        "ops/codex-ops/scheduler.log"
+      ]
+    },
+    {
+      "priority": 3,
+      "task": "原量化宽提案与目标进阶差异",
+      "next": "原十项宽提案及部分消费者/证据缺口仍未全完成，target11与实际A10差异原任务保持；不要把账户恢复、资料事件子项或一次公开push当原量化父请求全部完成。"
+    }
+  ],
+  "important_findings": [
+    {
+      "topic": "固定最近10局观察窗口",
+      "scope": "2026-10-11 15:30至2026-10-12 08:28结束的10局，不是接手时实时最新10局。",
+      "facts": "全Silent A10、Codex可追溯；0胜10负；平均终层29。终局牌数16/34/28/21/25/30/44/28/23/33，平均28.2；8局共43次实际SL重载。",
+      "evidence": [
+        "paper/materials/silent/20261012-battle-observations/recent10-0836.json",
+        "paper/materials/silent/20261012-battle-observations/recent10-decks-and-strategies.json",
+        "paper/materials/silent/20261012-battle-observations/recent10-decks-and-strategies.csv"
+      ]
+    },
+    {
+      "topic": "大脑看到经验不等采用",
+      "facts": "C7GNN3DDFUFY确实加载full知识/经验2026-10-12.1，13次奖励选牌全部拿牌。只是一局行为观察，不证明每次拿牌错或小牌组因果优越。",
+      "evidence": "paper/materials/silent/20261012-battle-observations/deck-size-learning-audit.json"
+    },
+    {
+      "topic": "阳伞和许愿",
+      "facts": "64VJC5XT2AT2 F34瓦库三选一，小提琴/原初之爪/阳伞；27牌，Codex主动选阳伞，原话“阳伞免费补强，走三火一店无精英，保血备战连王”。F44/F46商店各自动加7牌，终局44；自动加牌仍是主动选遗物的后果，不认定为败因。",
+      "correction": "早先查明当前experience无许愿条目且原题面没展开，后来查实已有596牌catalog及实时接口中WISH基础资料完整（0费、将抽牌堆一张牌入手、消耗）。缺口是资料消费，不能沿用“系统没有许愿资料”的推断；不据牌文编写已验证打法。",
+      "evidence": [
+        "paper/materials/silent/20261012-battle-observations/64v-parasol-explanation.json",
+        "paper/materials/silent/20261012-battle-observations/live-wish-data-readback.json"
+      ]
+    },
+    {
+      "topic": "GitGuardian邮件：已按本条误报处理",
+      "facts": "SPAM中Generic Password告警，报告10-12 08:20:53 push。精确定位commit3f94d48f043fb49ea2780902edd7e493faf551ad、paper/materials/20261011-2144-ops/whitespace-check.log:220；整行26字段逐一核验为学习曲线CSV统计，195局来源分类/真实run IDs/数字/时间/账本ID，与生成数据完全一致，无真实密码或token。",
+      "user_instruction": "Roy说是假报警且无泄露就不管；已回复本条按误报处理。不继续追这条、不改密、不删数据、不改仓库可见性。",
+      "limit": "仅此告警行的本地完整核验，不是整个仓库无泄露保证；未在GitGuardian控制台关闭告警。",
+      "evidence": [
+        "ops/codex-ops/security-alerts/20261012-gitguardian-mail-review.json",
+        "ops/codex-ops/security-alerts/20261012-gitguardian-local-false-positive.json"
+      ],
+      "privacy": "安全回执在gitignored运行目录；不要把原邮件、追踪链接/签名header或疑似密码写入公开记录。"
+    }
+  ],
+  "git_and_files": {
+    "main_at_read": "21c4dd79d97c9d614390a6e5abba048dacf8dc4e",
+    "live_at_read": "80a39dbd550fb571f244a0c4a219cec86108a0fe",
+    "origin_tracking_at_read": "fa1d418a9e34367bdd742dce097c904cfc482f2a",
+    "index_at_read": "",
+    "working_tree": "共享记录和自动生成的数据仍有未提交变化；不是可丢弃脏文件。watcher没有正在开发的未提交源码。",
+    "own_observation_untracked_files": [
+      "paper/materials/silent/20261012-battle-observations/64v-parasol-explanation.json",
+      "paper/materials/silent/20261012-battle-observations/c7-brain-build-consumption.json",
+      "paper/materials/silent/20261012-battle-observations/recent10-0836.json",
+      "paper/materials/silent/20261012-battle-observations/recent10-brain-plans-raw.json",
+      "paper/materials/silent/20261012-battle-observations/recent10-deck-offsets.json",
+      "paper/materials/silent/20261012-battle-observations/recent10-decks-and-strategies.csv",
+      "paper/materials/silent/20261012-battle-observations/recent10-final-decks-raw.json"
+    ],
+    "preserve_worktrees": [
+      ".worktrees/codex-account-drain-20261011",
+      ".worktrees/report-run-recovery-20261012",
+      ".worktrees/switch-followup-20261012"
+    ],
+    "cleanup": "如未来清理，逐树重新核祖先、状态、进程与证据，不因source已合入就批量删除。"
+  },
+  "first_steps": [
+    "先读本文件和read_first，复核实时main/live、队列、正在跑的game/ops。",
+    "读原ops最新完成回报，优先验收095813修复与宿主检查闭环；只读核实，勿抢ops归档。",
+    "核对卡牌资料P0剩余/P1/P2进展，继续同一父请求，不再全量重复研究。",
+    "用户没有要求此次watcher账号切换再改生产账户；不创建新的ops会话/定时器，不重做drain。"
+  ]
+}
