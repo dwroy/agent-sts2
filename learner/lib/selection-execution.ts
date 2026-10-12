@@ -48,10 +48,15 @@ function observation(row: Row) {
     turn: state.turn ?? null, screen: state.screen ?? null,
     hp: numOrNull(player.current_hp) ?? numOrNull(asRecord(state.run).current_hp),
     block: numOrNull(player.block), energy: numOrNull(player.energy),
+    player_powers: player.powers ?? null,
+    hand: Array.isArray(combat.hand) ? combat.hand.map((item) => {
+      const card = asRecord(item);
+      return { index: card.index ?? null, id: card.card_id ?? null, upgraded: card.upgraded ?? null };
+    }) : null,
     enemies: asArray(combat.enemies).map((item) => {
       const enemy = asRecord(item);
       return { index: enemy.index ?? null, id: enemy.enemy_id ?? null, hp: enemy.current_hp ?? null,
-        alive: enemy.is_alive ?? null, powers: enemy.powers ?? null };
+        max_hp: enemy.max_hp ?? null, alive: enemy.is_alive ?? null, powers: enemy.powers ?? null };
     }),
   };
 }
@@ -84,12 +89,16 @@ export function auditSelectionExecution(input: unknown) {
     if (!id || seen.has(id) || !ts || ts < previous) throw new Error("决策必须按观测时间排序，且 decision_id 非空、不重复");
     seen.add(id); previous = ts;
   }
-  const action = (row: Row) => {
+  const matchedState = (row: Row) => {
     const matching = stateIndex.get(JSON.stringify([row.observed_ts, row.fingerprint])) ?? [];
     const frame = matching.length === 1 ? matching[0]! : null;
     const raw = asRecord(frame?.state);
     const consistent = frame !== null && asRecord(raw.run).floor === row.floor && raw.turn === row.turn && raw.screen === row.screen;
     const state = consistent ? frame : null;
+    return { state_match: state ? "unique_timestamp_and_fingerprint" : matching.length > 1 ? "ambiguous"
+      : frame ? "inconsistent" : "missing", before: state ? observation(state) : null };
+  };
+  const action = (row: Row) => {
     const result = str(row.result);
     return {
       decision_id: row.decision_id, source_line: numOrNull(row._line), label: row.label ?? null,
@@ -97,10 +106,42 @@ export function auditSelectionExecution(input: unknown) {
       result: row.result ?? null,
       dispatch: row.gate_reject ? "rejected" : result.startsWith("completed:") ? "completed_response"
         : result.startsWith("pending") ? "queued_unconfirmed" : "unknown",
-      state_match: state ? "unique_timestamp_and_fingerprint" : matching.length > 1 ? "ambiguous" : frame ? "inconsistent" : "missing",
-      before: state ? observation(state) : null,
+      ...matchedState(row),
     };
   };
+  // YF0LXT1QSTGG F48 T4/T5, silent-0021/0027/0028/0085: held cards and observed
+  // powers are separate facts. Even adjacent logged decisions cannot certify all intervening actions.
+  const observedIntervals = decisions.map((row, index) => {
+    const next = decisions[index + 1];
+    const before = matchedState(row);
+    const after = next ? matchedState(next) : null;
+    const line = numOrNull(row._line), nextLine = numOrNull(next?._line);
+    const turn = numOrNull(row.turn), nextTurn = numOrNull(next?.turn);
+    const time = Date.parse(str(row.observed_ts)), nextTime = Date.parse(str(next?.observed_ts));
+    const sameFight = next && row.floor != null && row.sl_attempt != null && row.sl_reloads != null &&
+      row.floor === next.floor && row.sl_attempt === next.sl_attempt && row.sl_reloads === next.sl_reloads;
+    const nextTurnEnd = turn !== null && nextTurn === turn + 1 && asRecord(row.chosen).action === "end_turn";
+    const reason = !next ? "input_exhausted"
+      : !sameFight ? "room_or_attempt_changed_or_unknown"
+      : line === null || nextLine === null || !Number.isInteger(line) || line <= 0 || nextLine !== line + 1
+        ? "source_decisions_not_adjacent"
+      : !Number.isFinite(time) || !Number.isFinite(nextTime) || nextTime <= time ? "observation_time_not_increasing"
+      : turn === null || (nextTurn !== turn && !nextTurnEnd) ? "turn_boundary_unverified"
+      : !before.before || !after?.before ? "state_match_unavailable"
+      : "adjacent_logged_observations";
+    const linked = reason === "adjacent_logged_observations";
+    const boundary = !linked ? null : nextTurnEnd ? "next_turn_after_end_request"
+      : str(next!.label).startsWith("combat/plan-choice") ? "next_question"
+      : next!.screen === "CARD_SELECTION" ? "card_selection" : "next_logged_action";
+    return {
+      decision_id: row.decision_id, source_line: line, dispatch: action(row).dispatch,
+      next_decision_id: next?.decision_id ?? null, next_source_line: nextLine,
+      reason, boundary, before: before.before, before_state_match: before.state_match,
+      after: linked ? after!.before : null, after_state_match: after?.state_match ?? null,
+      // No damage total across revivals, enemy index reuse, SL restoration, or unlogged re-planning.
+      actual_action_effect: null, actual_full_candidate_result: null,
+    };
+  });
   const segments = [];
   for (let i = 0; i < decisions.length; i++) {
     const row = decisions[i]!;
@@ -132,7 +173,10 @@ export function auditSelectionExecution(input: unknown) {
     });
   }
   return { schema: 1, character: "silent", ascension: 10, run_id: runId, segments,
+    observed_intervals: observedIntervals,
     limitations: ["同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
       "completed 只代表动作接口回执；pending 不当成已生效。",
-      "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。"] };
+      "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。",
+      "相邻原始决策的前后快照仅描述观测区间，不能认证中间没有未落盘动作；持有手牌不等于已建立能力。",
+      "缺原行号、跨尝试、非结束回合的跨轮或状态匹配不唯一时不连接后帧；敌人索引不作为跨帧实体身份。"] };
 }
