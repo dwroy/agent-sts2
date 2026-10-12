@@ -1,0 +1,92 @@
+{
+  "at": "2026-10-13 04:19:00 CST",
+  "run_id": "4ATPGGUBWG8L",
+  "original_lesson_prefix_and_draft_and_appended_erratum_verified": true,
+  "source_counts": {
+    "decisions": 475,
+    "states": 494,
+    "plans": 5,
+    "sl": 2,
+    "brain": 25,
+    "codex": 25,
+    "config": 1
+  },
+  "unique_run": {
+    "line": 737,
+    "offset": 309447,
+    "bytes": 488,
+    "sha256": "59e79df57db8acb3374e53db9dfaa4eb2a689efab72218758b3035fa9b55bc26",
+    "record": {
+      "run_id": "4ATPGGUBWG8L",
+      "ended": "2026-10-12T19:29:05.098Z",
+      "victory": false,
+      "floor": 28,
+      "character": "SILENT",
+      "ascension": 10,
+      "code": "current",
+      "decisions": 475,
+      "jev_calls": 103,
+      "deepseek_calls": 25,
+      "claude_calls": 0,
+      "tokens": 867715,
+      "ds_tokens_in": 3768029,
+      "ds_tokens_out": 24024,
+      "ds_cache_hit": 2194048,
+      "deciders": {
+        "codex": 30,
+        "code": 223,
+        "jev": 103,
+        "jev-plan": 119
+      },
+      "death_fight": [
+        "猎人杀手"
+      ],
+      "death_fight_floor": 28,
+      "death_enemy_ids": [
+        "HUNTER_KILLER"
+      ]
+    }
+  },
+  "source_binding": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "startup_blob_sha256": "d71762da6c3a57c70fd032c0ad2f2ea8936b21a284c6ef5b894934f9eb32fc0c",
+      "current_live_blob_sha256": "d71762da6c3a57c70fd032c0ad2f2ea8936b21a284c6ef5b894934f9eb32fc0c"
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "startup_blob_sha256": "bf13016c1b2ba9f96da321dbd2cca87a8053821c53934890549b5b274d1571e0",
+      "current_live_blob_sha256": "bf13016c1b2ba9f96da321dbd2cca87a8053821c53934890549b5b274d1571e0"
+    }
+  ],
+  "historical_dirty_config_preserved": {
+    "commit": "f791ed9ea8f462723d371eda8c88fce2393c60f0",
+    "code": "f791ed9+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "bugs_as_reported_by_learner": [
+    {
+      "run": "4ATPGGUBWG8L",
+      "where": "agent/src/reflex/card-model.ts:970",
+      "what": "升级刀刃之舞Cards=4仍误读为抽4，普通版生成修复未覆盖升级边界",
+      "new": true
+    }
+  ],
+  "ops_classification": "card effect/upgrade mechanism, learner-owned original proposal; no role-independent blocking bug",
+  "ops_did_not_change_game_knowledge": true,
+  "original_shipped_0443_append_race_preserved": true,
+  "deployment_time_not_used_as_proof_run_loaded_it": true
+}
