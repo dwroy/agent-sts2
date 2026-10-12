@@ -1,0 +1,104 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-171039/agent
+
+ ❯ tests/silent-giant-potion.test.ts (8 tests | 5 failed) 132ms
+   × reports YQL's actual poison change without turning it into body damage, block or reduced blast 8ms
+   × does not invent a zero poison amount from missing, duplicate or invalid powers 3ms
+   × a synthetic survivable variant also exposes facts in turn-plan questions (v1=false) 26ms
+   × a synthetic survivable variant also exposes facts in turn-plan questions (v1=true) 15ms
+   × does not apply the observation to another potion or an unavailable target 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-giant-potion.test.ts > reports YQL's actual poison change without turning it into body damage, block or reduced blast
+AssertionError: expected undefined to match object { phase: 'blast_pending', …(7) }
+
+- Expected:
+{
+  "block_now": 13,
+  "body_hp": 0,
+  "fight_won": false,
+  "hp_now": 26,
+  "incoming_now": 41,
+  "phase": "blast_pending",
+  "poison_now": 2,
+  "raw_husk_hp": 999999999,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-giant-potion.test.ts:48:18
+     46| it("reports YQL's actual poison change without turning it into body da…
+     47|   const before = factsAt(280160), after = factsAt(280161);
+     48|   expect(before).toMatchObject({ phase: "blast_pending", body_hp: 0, r…
+       |                  ^
+     49|     poison_now: 2, hp_now: 26, block_now: 13, incoming_now: 41, fight_…
+     50|   expect(after).toMatchObject({ poison_now: 8, hp_now: 26, block_now: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-giant-potion.test.ts > does not invent a zero poison amount from missing, duplicate or invalid powers
+AssertionError: expected {} to match object { giant_blast_current: { …(1) } }
+
+- Expected
++ Received
+
+- {
+-   "giant_blast_current": {
+-     "poison_now": null,
+-   },
+- }
++ {}
+
+ ❯ tests/silent-giant-potion.test.ts:81:63
+     79|     [{ power_id: "POISON_POWER", amount: 2 }, { power_id: "POISON_POWE…
+     80|     const raw = rawAt(280160); raw.combat.enemies[0].powers = powers;
+     81|     expect(giant.silentGiantPotionFacts(parseGameState(raw))).toMatchO…
+       |                                                               ^
+     82|   }
+     83| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-giant-potion.test.ts > a synthetic survivable variant also exposes facts in turn-plan questions (v1=false)
+ FAIL  tests/silent-giant-potion.test.ts > a synthetic survivable variant also exposes facts in turn-plan questions (v1=true)
+AssertionError: expected undefined to match object { hp_now: 80, body_hp: +0 }
+
+- Expected:
+{
+  "body_hp": 0,
+  "hp_now": 80,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-giant-potion.test.ts:92:45
+     90|   const current = planned(raw, v1);
+     91|   if (current?.kind !== "ask" || current.questions.plan?.type !== "cho…
+     92|   expect(current.state.giant_blast_current).toMatchObject({ hp_now: 80…
+       |                                             ^
+     93|   if (v1) expect(current.jevView?.state.giant_blast_current).toEqual(c…
+     94|   vi.spyOn(giant, "silentGiantPotionFacts").mockReturnValue({});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-giant-potion.test.ts > does not apply the observation to another potion or an unavailable target
+TypeError: Cannot convert undefined or null to object
+ ❯ tests/silent-giant-potion.test.ts:111:87
+    109|   ]) {
+    110|     const raw = rawAt(280160); change(raw);
+    111|     expect(giant.silentGiantPotionFacts(parseGameState(raw)).giant_bla…
+       |                                                                                       ^
+    112|   }
+    113| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 3 passed (8)
+   Start at  17:22:04
+   Duration  2.89s (transform 2.06s, setup 891ms, import 1.60s, tests 132ms, environment 0ms)
+

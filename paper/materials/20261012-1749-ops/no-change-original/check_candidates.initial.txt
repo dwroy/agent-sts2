@@ -1,0 +1,92 @@
+import hashlib
+import importlib.util
+import json
+import subprocess
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path('/home/dw/Projects/agent-sts2')
+OUT = Path(__file__).resolve().parent
+def save(name, value):
+    (OUT/name).write_text(json.dumps(value, ensure_ascii=False, indent=2)+'\n')
+manifest = json.loads((OUT/'raw-evidence-manifest.json').read_text())
+rows, by_ts = {}, {}
+with (ROOT/'logs/states.jsonl').open('rb') as handle:
+    for index in manifest:
+        if index['file'] != 'states.jsonl': continue
+        handle.seek(index['offset']); raw=handle.readline()
+        assert hashlib.sha256(raw).hexdigest() == index['sha256']
+        row=json.loads(raw); rows[index['line']]=row
+        for key in ['ts','observed_ts']:
+            if row.get(key): by_ts[row[key]]=index['line']
+checks=[]
+def check(name, actual, expected):
+    assert actual==expected,(name,actual,expected)
+    checks.append({'name':name,'actual':actual,'expected':expected})
+def state(n): return rows[n]['state']
+def hp(n): return state(n)['run']['current_hp']
+def total(n): return sum(e['current_hp'] for e in state(n)['combat']['enemies'] if e['is_alive'])
+def pair(a,b):return [hp(a)-hp(b),total(a)-total(b)]
+check('NHA第一次T1完整实损与跨轮净扣',pair(283391,283397),[1,8])
+check('NHA第五次T1完整实损与跨轮净扣',pair(283478,283483),[7,24])
+check('NHA第六次T1完整实损与跨轮净扣',pair(283502,283507),[7,24])
+check('NHA两线末挡', [state(n)['combat']['player']['block'] for n in [283396,283482,283506]], [14,8,8])
+check('WQ末试T7反例实损和伤害',pair(282330,282336),[4,24])
+def power(n,key):
+    return next((p['amount'] for e in state(n)['combat']['enemies'] for p in e.get('powers',[]) if p['power_id']==key),None)
+check('WQ末试T7沙坑末值',power(282336,'SANDPIT_POWER'),5)
+capacity=[]
+for i,fixture in enumerate(json.loads(Path('agent/tests/silent-cunning-evidence.json').read_text())):
+    a,b=[by_ts[fixture[k]] for k in ['before_ts','after_ts']]
+    left,right=[state(n)['combat'] for n in [a,b]]
+    check('狡诈容量'+str(i),[len(left['hand']),len(right['hand']),len(right['hand'])-len(left['hand'])],
+          [fixture['before'],fixture['after'],fixture['added']])
+    def identity(card):
+        return (card['card_id'],card['upgraded'],tuple((d['name'],d['base_value']) for d in card['dynamic_values']))
+    old=Counter(identity(c) for c in left['hand']);added=[]
+    for card in right['hand']:
+        k=identity(card)
+        if old[k]:old[k]-=1
+        else:added.append(card)
+    check('狡诈旧牌属性计数保留'+str(i),sum(old.values()),0)
+    check('狡诈新增牌身份'+str(i),[c['card_id'] for c in added],['SHIV']*fixture['added'])
+    check('狡诈升级状态'+str(i),[c['upgraded'] for c in added],fixture['upgraded'])
+    check('狡诈现场基础伤'+str(i),[next(v['base_value'] for v in c['dynamic_values'] if v['name']=='Damage') for c in added],fixture['damageBase'])
+    capacity.append({'run_id':state(a)['run_id'],'floor':state(a)['run']['floor'],'turn':state(a)['turn'],
+                     'lines':[a,b],'hand':[len(left['hand']),len(right['hand'])],
+                     'added':len(added),'identity_limit':'属性多重集合计数；无持久实例ID，不当跨轮逐牌身份。'})
+save('capacity-observations.json',capacity)
+opening=[]
+for i,fixture in enumerate(json.loads(Path('agent/tests/silent-opening-evidence.json').read_text())):
+    a,b=[by_ts[fixture[k]] for k in ['before_ts','after_ts']]
+    check('猛毒开场HP'+str(i),[hp(a),hp(b)],[fixture['before_hp'],fixture['after_hp']])
+    check('猛毒开场未出牌'+str(i),state(b)['combat']['player']['cards_played_this_turn'],0)
+    opening.append({'run_id':state(a)['run_id'],'floor':state(a)['run']['floor'],'lines':[a,b],'hp':[hp(a),hp(b)]})
+save('opening-observations.json',opening)
+
+spec=importlib.util.spec_from_file_location('resource_chain',Path.cwd()/'learner/resource_chain.py')
+module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+consumers=[]
+for run in ['KEN58SH9SLZ6','TXZ6RVMQA09D','WQZVENQ7DTRP','1913SE84AXQF','Q6M2Y34MWKRE','NHA2KW0RB7VP']:
+    selected=[{**row,'_line':n} for n,row in sorted(rows.items()) if row['state']['run_id']==run]
+    result=module.resource_chain(selected,run,'silent')
+    save(run+'.resource-chain.json',result)
+    consumers.append({'run':run,'combats':[{'floor':c['floor'],'entry_hp':c['entry']['hp'],
+                      'last_hp':c['last']['hp'],'exit_hp':None if c['exit'] is None else c['exit']['hp'],
+                      'end':c['end'],'net_loss':c['observed_net_hp_loss'],'outcome':c['outcome']} for c in result['combats']],
+                      'limitation':'本次只输入已核状态，未输入SL事件时间；T1重启检测不证明SL事件完整。未分类结果不能当胜负验证。'})
+save('resource-consumer-summary.json',consumers)
+save('candidate-checks.json',checks)
+
+proof=json.loads((OUT/'source-ancestry.json').read_text())
+same=[]
+for path in proof['source_sha256']:
+    base=Path(path).read_bytes()
+    live=subprocess.check_output(['git','show',proof['live']+':'+path])
+    assert base==live or base.replace(b'Roy',b'Dai')==live, path
+    same.append({'path':path,'base_sha256':hashlib.sha256(base).hexdigest(),
+                 'live_sha256':hashlib.sha256(live).hexdigest(),'exact':base==live,
+                 'equal_after_author_name_replacement':base.replace(b'Roy',b'Dai')==live})
+save('base-live-source-equivalence.json',same)
+print(json.dumps({'checks':len(checks),'capacity_transitions':len(capacity),'opening_transitions':len(opening),
+                  'resource_consumers':len(consumers),'source_paths':len(same)},ensure_ascii=False))

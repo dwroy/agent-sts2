@@ -1,0 +1,35 @@
+[
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "tests/silent-giant-potion.test.ts",
+      "tests/silent-phase-current.test.ts",
+      "tests/sl-giant-phase.test.ts",
+      "tests/silent-potion-reference.test.ts",
+      "tests/experience.test.ts",
+      "tests/jev-experience.test.ts",
+      "tests/brain-knowledge.test.ts",
+      "tests/jev-context-limit.test.ts",
+      "--maxWorkers=1"
+    ],
+    "exit": 0
+  }
+]
