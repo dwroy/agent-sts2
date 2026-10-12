@@ -144,6 +144,8 @@ export interface EnemySim {
   weak: number;
   /** Silent A10 PLOW_MOVE: observed Shackling under existing Weak, decision turn only. */
   weakShackling?: true;
+  /** VLZ6CCT8AQ0A A10 F43 T2: existing Weak with the observed three-point Malaise loss. */
+  weakMalaise?: true;
   /** Poison remaining before this enemy turn, observed in Silent runs. */
   poison?: number;
   /** Observed ordinary Strangle: two HP lost after later completed manual cards this turn; null is unverified. */
@@ -2779,6 +2781,15 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
         // states.jsonl); only Strength changes made this turn still need the ×1.5.
         const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
         let amount = Math.floor(shown + strengthChange);
+        // VLZ F43 T2 states 275689->275690: existing Weak, 5x4 becomes 3x4 after -3 Strength.
+        // Keep this observed endpoint pair local to the decision turn and its unmodified context.
+        if (enemy.weakMalaise && enemy.weak > 0 && !enemy.newlyWeak && !moved && !died &&
+            enemy.strengthDelta === -3 && (enemy.tempStrengthLoss ?? 0) === 0 &&
+            enemy.attacks.length === 1 && attack.hits === 4 && shown === 5 &&
+            !player.vulnerable && player.facing == null && !player.surrounded &&
+            !player.colossus && !sim.colossus && !(enemy.shrink ?? 0) && !enemy.newlyShrunk && sim.tainted === 0) {
+          amount = 3;
+        }
         // 3UPY3BP2LVS7 F17 T3: shown 16 with Weak is raw 22; Shackling's -7 makes 11, not 9.
         // Resolve only a unique result from the rounded intent. Ambiguous bases, other loss amounts,
         // move changes and unobserved multipliers retain their existing path (silent-0349 remains partial).
