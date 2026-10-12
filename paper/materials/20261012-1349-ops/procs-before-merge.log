@@ -1,0 +1,27 @@
+3251934 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh --tail-console
+4000195 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+4000303 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+4000304 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+4000316 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+4024036 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261012-134303-postmortem /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261012-134303-postmortem.pid 1 - /home/dw/Projects/agent-sts2/op
+4024037 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261012-134303 KF9HMZKTFC3V silent
+4024048 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/learner/run.ts --engine codex --model gpt-6-astra --effort xhigh --task postmortem --character silent --cwd /home/dw/Proj
+4024060 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+4024341 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261012-134303-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261012-134303-strategy-proposal.pid 1 - /home/dw/Projects
+4024342 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261012-134303-strategy-proposal VLZ6CCT8AQ0A,8JRE1C4H4Z2W,CA5KE8GFJ9X2,5PM6JAQG6FNQ,61E2QS63Y9WU,DUZUBAJ3A8GP silent strategy-proposal /home/dw/Project
+4024487 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261012-134303-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261012-134303-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+4024488 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261012-134303-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration silent-boss-calibration
+4024501 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/run.ts --engine codex --model gpt-6-astra --effort xhigh --task silent-boss-ca
+4024515 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+4025870 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-134303/learner/run.ts --engine codex --model gpt-6-astra --effort xhigh --task 
+4025896 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+4036421 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+4036432 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 3251934
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay-log                               wJ:pCY  yes    yes   3251934:bash 3251954:tail 4000195:npm exec tsx sr 4000303:sh 4000304:node 4000316:node
+learner-20261012-134303-fix-batch          wJ:pP2  yes    yes   4024487:bash 4024488:bash 4024499:tail 4024501:node 4024515:node
+learner-20261012-134303-postmortem         wJ:pN0  yes    yes   4024036:bash 4024037:bash 4024046:tail 4024048:node 4024060:node
+learner-20261012-134303-strategy-proposal  wJ:pP1  yes    yes   4024341:bash 4024342:bash 4025868:tail 4025870:node 4025896:node 4025907:esbuild
+ops                                        wJ:p5   yes    yes   3237114:node 3237122:codex

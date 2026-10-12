@@ -1,0 +1,111 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-131301-strategy-proposal",
+  "base": "c425b7b7b36f4a7ca1532ca62a6b8dd7d1da2216",
+  "runs": [
+    "VLZ6CCT8AQ0A",
+    "8JRE1C4H4Z2W",
+    "CA5KE8GFJ9X2",
+    "5PM6JAQG6FNQ",
+    "61E2QS63Y9WU",
+    "DUZUBAJ3A8GP"
+  ],
+  "fixes": [
+    {
+      "item": "静默A10结束回合至GAME_OVER的终局净HP审计（原e5b提案有限子项）",
+      "commit": "83512ddcd2c70fd9b983dc38524ff25c8970c1d3",
+      "test": "agent/tests/silent-selection-terminal.test.ts",
+      "fails_without_fix": true,
+      "ledger": [
+        "silent-0079",
+        "silent-0021"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "item": "live合入",
+      "reason": "锁内三方预检冲突，保留刷新提交和原记录，未实际合入。"
+    }
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3356,
+    "files": 335
+  },
+  "code_proposals": [
+    "silent-proposal-89354805ee4d7e77",
+    "silent-proposal-f2bfceddb1898dca",
+    "silent-proposal-283a164780d11e69",
+    "silent-proposal-ebbfe3b97548756d",
+    "silent-proposal-e5b87be50f28f311",
+    "silent-proposal-49632bc4878fb597",
+    "silent-proposal-66532328a585941f",
+    "silent-proposal-43a76a31ba7bdcfa",
+    "silent-proposal-5264153a4a4b0e5c",
+    "silent-proposal-bddfa690a84e03d0"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "神化升级传播与萎靡子项已有live源码；仍缺在线事实中持有、实际施放、每个候选覆盖的完整联合验收。未观察的升级/属性交互保留unknown，不规定必打。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "707ms/1-of-12是旧题的一次预算观测；缺覆盖相同、固定随机输入、同总预算下的配对曲线及排名稳定性，不能据此改预算或药水价格。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "与89354805ee4d7e77同源；升级子项已上线，但持有/施放/候选覆盖消费者仍未闭环，不将父项整体登记duplicate。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "十五主题仍需逐源贡献、期限、逐实体及整条执行资源链的联合消费者验收；单个神化或终局审计子项不覆盖全项。未选focus/休息没有同盘整场对照。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "本批实现末次T11终局观测子项；预测审计、单步回执、能力端点已有live源码。完整候选执行、各类重规划和全链审计尚未全部验收，父项仍waiting；此为工程验收范围，不要求先有获胜反事实。 有限子项源码已自测提交，但live合入预检冲突，未上线；源码留供运维沿原链兜底。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "已核加压0→4→8和喷水11→15→19；本来源无正敏捷配对，尚缺力量/逐击/敏捷/虚弱/独立成长联合固定消费者验收，不新增统一血价权重。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "持有/计划/建立仍缺完整在线消费者验收；改变启动或构筑权重另缺同入口、同抽序的完整比较及可复现收益函数。空打冒泡的一次观测不足拟合阈值。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "吸取后负敏捷及毒的联合生产调用尚未完成本批固定验收；改SL阈值或偏好缺相同入口HP/构筑/抽序下完整另一线路，首试胜利不补这个反事实。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "召唤、航行、逐实体成长及索引重排尚缺联合固定消费者验收；未选focus幻象只有候选，无后继实打，不规定固定首杀。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "state": "waiting",
+      "reason": "已核睡眠自然醒与后段成长；本来源缺提前唤醒/STUNNED接续配对帧及同抽完整另一线路，四次失败不校准输出血价或全死排序。"
+    }
+  ],
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-131301/learner/runs/20261012-131314-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-131301/learner/runs/20261012-131314-strategy-proposal/report.md",
+  "merge_status": "blocked_preflight_conflicts"
+}

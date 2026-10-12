@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-131301/agent
+
+ ❯ tests/silent-selection-terminal.test.ts (20 tests | 1 failed | 19 skipped) 7ms
+   × 8JRE F33 attempt six T11 retains the terminal net loss without calling it uncapped damage 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-selection-terminal.test.ts > 8JRE F33 attempt six T11 retains the terminal net loss without calling it uncapped damage
+TypeError: Cannot read properties of undefined (reading '0')
+ ❯ tests/silent-selection-terminal.test.ts:11:25
+      9|   const result = auditSelectionExecution(input());
+     10|   expect(result.segments).toHaveLength(0); // The final code-only end …
+     11|   const action = result.observed_actions[0]!;
+       |                         ^
+     12|   expect(action).toMatchObject({ source_line: 270441, dispatch: "compl…
+     13|   expect(action.observed_interval.status).toBe("unknown"); // The ordi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 skipped (20)
+   Start at  13:21:59
+   Duration  471ms (transform 287ms, setup 311ms, import 31ms, tests 7ms, environment 0ms)
+
