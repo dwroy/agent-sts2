@@ -1,0 +1,65 @@
+import hashlib
+import json
+from collections import defaultdict
+from pathlib import Path
+
+OUT = Path(__file__).parent
+index = json.loads((OUT / 'evidence-index.json').read_text())
+by_source = defaultdict(list)
+for entry in index:
+    by_source[entry['source']].append(entry)
+checks = {}
+for source, entries in by_source.items():
+    entries.sort(key=lambda e: e['offset'])
+    with Path(source).open('rb') as original, Path(entries[0]['copy']).open('rb') as copied:
+        for e in entries:
+            original.seek(e['offset'])
+            raw = original.read(e['bytes'])
+            copied.seek(e['copy_offset'])
+            clone = copied.read(e['bytes'])
+            assert raw == clone
+            assert hashlib.sha256(raw).hexdigest() == e['sha256']
+            row = json.loads(raw)
+            run = row.get('run_id') or row.get('state', {}).get('run_id') or row.get('run')
+            assert run == e['run_id']
+    checks[source] = len(entries)
+
+a = json.loads((OUT / 'analysis.json').read_text())
+s = {r['line']: r for r in a['snapshots']}
+
+
+def power(line, holder, key):
+    if holder == 'player':
+        return s[line]['player_powers'].get(key, 0)
+    return next(e for e in s[line]['enemies'] if e['id'] == holder)['powers'].get(key, 0)
+
+
+def hit(line, holder):
+    return next(e for e in s[line]['enemies'] if e['id'] == holder)['intents'][0]['damage']
+
+
+assert [power(n, 'player', 'TAINTED_POWER') for n in (274830, 274831, 274832, 274833, 274834)] == [0, 3, 3, 6, 0]
+assert [power(n, 'player', 'TAINTED_POWER') for n in (274835, 274836, 274837, 274838, 274839)] == [0, 6, 12, 18, 0]
+assert [power(n, 'INFESTED_PRISM', 'VITAL_SPARK_POWER') for n in (274833, 274834)] == [3, 6]
+assert [power(n, 'ZAPBOT', 'STRENGTH_POWER') for n in (274307, 274308, 274313)] == [0, 2, 4]
+assert [hit(n, 'ZAPBOT') for n in (274308, 274313)] == [17, 19]
+assert [power(n, 'player', 'STRENGTH_POWER') for n in (274351, 274357, 274358)] == [-4, -4, 0]
+assert [power(n, 'player', 'DEXTERITY_POWER') for n in (274351, 274352, 274354, 274362)] == [-4, -2, 0, -2]
+assert [power(n, 'SEWER_CLAM', 'STRENGTH_POWER') for n in (273237, 273252, 273263)] == [0, 4, 8]
+assert [hit(n, 'SEWER_CLAM') for n in (273237, 273252, 273263, 273254, 273268)] == [11, 15, 19, 11, 14]
+assert s[273268]['hp'] == 2 and s[273268]['block'] == 10 and s[273269]['hp'] == 0
+assert [s[n]['block'] for n in (278236, 278240)] == [14, 20]
+assert [power(n, 'CRUSHER', 'STRENGTH_POWER') for n in (278236, 278237, 278242)] == [0, -9, 0]
+assert [hit(n, 'ROCKET') for n in (278249, 278251, 278253)] == [57, 38, 28]
+assert power(277512, 'TEST_SUBJECT', 'POISON_POWER') == 4
+assert power(277513, 'TEST_SUBJECT', 'POISON_POWER') == 0
+assert power(277519, 'player', 'ACCELERANT_POWER') == 2 and power(277519, 'TEST_SUBJECT', 'POISON_POWER') == 0
+assert s[277523]['block'] == s[277526]['block'] == 23
+assert [power(n, 'player', 'DEXTERITY_POWER') for n in (277523, 277526)] == [5, 6]
+assert s[277527]['hp'] == 18 and s[277528]['hp'] == 0
+
+result = {'raw_byte_checks': checks, 'records': sum(checks.values()),
+          'mechanism_groups': 7, 'paired_turns': 4, 'all_assertions_passed': True,
+          'scope': '固定原始记录的出处、数值与口径核验，不是生产tsc/vitest或源码红绿'}
+(OUT / 'material-verification.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps(result, ensure_ascii=False))
