@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-13 02:12:46 CST",
+  "state": "deferred_original_owner_busy",
+  "batch": "20261013-010547-strategy-proposal",
+  "command": "bash ops/codex-ops-do.sh learner-recheck 20261013-010547-strategy-proposal:bed19fe4112006a4aacaa7181367872a0514c98cbe2668d1a4f556fd2119f8cc",
+  "action_exit": 2,
+  "action_output": "",
+  "actual_supplement_started": false,
+  "receipt_created": false,
+  "original_owner_active": [
+    {
+      "batch": "20261013-014201-experience-update",
+      "task": "experience-update",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+      "pid": 1003679,
+      "state": "running"
+    }
+  ],
+  "manifest_sha256": "bed19fe4112006a4aacaa7181367872a0514c98cbe2668d1a4f556fd2119f8cc",
+  "validation_before_dispatch_passed": true,
+  "broker_precheck": "ops/codex-ops-learn.py cmd_recheck rejects a supplement while another running batch owns the same worktree.",
+  "no_direct_test_bypass_or_second_dispatch": true,
+  "resume": "After the original owner naturally exits, use the original pinned manifest only if live commit/tree and inputs still match; otherwise freeze a new manifest on that actual tree preserving the original failed coverage. Do not repeat old full checks or change budgets/assertions."
+}

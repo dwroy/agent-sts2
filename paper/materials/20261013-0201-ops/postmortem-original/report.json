@@ -1,0 +1,51 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "XRCP2TKYKQBA"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "XRCP2TKYKQBA",
+      "where": "agent/src/sl/judge.ts:1333",
+      "what": "旧silent-0287复发：SL分开比较招架盾6与毒7，漏合计对12HP神官的攻击前退场上界，首试T13被提前读档",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0441"
+    ],
+    "updated": [
+      "silent-0019",
+      "silent-0020",
+      "silent-0125",
+      "silent-0079",
+      "silent-0287",
+      "silent-0012",
+      "silent-0046",
+      "silent-0055",
+      "silent-0204",
+      "silent-0307",
+      "silent-0422",
+      "silent-0385"
+    ],
+    "repeats": [
+      "silent-0079",
+      "silent-0287"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-8dac80786973c4e8",
+    "silent-proposal-577144b8043e7c51",
+    "silent-proposal-4a736801d02cc9a9"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-011302-postmortem/report.md"
+}

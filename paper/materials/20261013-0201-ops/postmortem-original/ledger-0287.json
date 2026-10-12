@@ -1,0 +1,62 @@
+{
+ "id": "silent-0287",
+ "ts": "2026-10-08T11:04:30+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "SL判官已分别取得历石回合末伤害hit和敌人毒伤poison，却在mayDie只检查各自是否足够，没有合计上界。NEWRFAYKTQHR F28前两试T7的57/59敌血、13/22毒，按现有代码已计入的52历石上界合65/74，本应撤销确定死亡结论，却判死读档。当前live judge.ts:1333；与0195的毒越眩晕阈值不同。只确认判死证据不足，未执行的结束不能记已获胜，也不承诺后场能赢。",
+ "evidence": [
+  {
+   "run": "NEWRFAYKTQHR",
+   "floor": 28,
+   "turn": 7,
+   "role": "support",
+   "note": "首试s293955：玩家8/70、0挡，敌57/165、0挡13毒，历石有效且T7；sl1085 rules判死40来袭，d287191结束被SL截断。第二试s293985：10/70、28挡、敌59/165及22毒，sl1086 least-loss判死；两次52与毒单项不足、合项足够。",
+   "added": "2026-10-08T11:04:30+08:00"
+  },
+  {
+   "run": "NEWRFAYKTQHR",
+   "floor": 28,
+   "turn": 7,
+   "role": "support",
+   "note": "第四试s294040→294041，玩家8血0挡、五晕眩，敌52血9毒、40意图，d287276结束后奖励且玩家仍8；这是实际敌攻前结束对照，不是首两试已打胜局。",
+   "added": "2026-10-08T11:04:30+08:00"
+  }
+ ],
+ "first_run": "NEWRFAYKTQHR",
+ "prior": "unknown",
+ "prior_runs": [],
+ "prior_note": "按历石、STONE_CALENDAR、回合末、1333查静默账本及更早静默复盘，没有已登记的联合伤害击杀漏判；相关0195仅毒越眩晕阈值，未见本项同条件的既有实打处置。",
+ "status": "observed",
+ "where": {
+  "lessons": [
+   "NEWRFAYKTQHR"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-104302-postmortem/proposal-calendar-poison-judge.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-111006-experience-update/proposal-calendar.md"
+  ]
+ },
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-08T11:04:30+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-08T11:08:19+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T11:23:33+08:00",
+   "by": "learner:experience-update"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "代码提案 silent-proposal-767c8776e042972a → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-17d832e30288d24d → task=strategy-proposal；Roy-2026-10-07-learning"
+ ]
+}

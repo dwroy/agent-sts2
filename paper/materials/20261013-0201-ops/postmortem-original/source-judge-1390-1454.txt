@@ -1,0 +1,65 @@
+1390:   // may die before its last hits (2WUMK6PK5QHD F48 T8: 30 HP + 30 block against 80 with Flame Barrier 6, flagged lethal and
+1391:   // certain, lived). Its HP taken at the lowest it may be (less what may hit it at the end of the turn, its block ignored).
+1392:   const retaliation = powerAmount(player, "THORNS_POWER") + powerAmount(player, "FLAME_BARRIER_POWER");
+1393:   const landing = (i: number): number[] => {
+1394:     if (retaliation <= 0) return hitsOf[i]!;
+1395:     const lowest = Math.max(1, before[i]!.hp - before[i]!.hit - before[i]!.poison);
+1396:     return hitsOf[i]!.slice(0, Math.ceil(lowest / retaliation));
+1397:   };
+1398:   const cut = living.map((_, i) => i).filter((i) => landing(i).length < hitsOf[i]!.length);
+1399:   const stunnedOnly = stunned.filter((entry) => !mayDie.some((dead) => dead.i === entry.i));
+1400:   if (mayDie.length > 0 || cut.length > 0 || stunnedOnly.length > 0) {
+1401:     const minion = (enemy: Record<string, unknown>) => asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER");
+1402:     const leaderMayDie = mayDie.some((entry) => !minion(entry.enemy));
+1403:     const gone = new Set([...mayDie.map((entry) => entry.i), ...stunnedOnly.map((entry) => entry.i)]);
+1404:     if (leaderMayDie) living.forEach((enemy, i) => minion(enemy) && gone.add(i));
+1405:     if (cut.some((i) => !minion(living[i]!))) living.forEach((enemy, i) => minion(enemy) && gone.add(i));
+1406:     // An ally's death may change a survivor's move before it attacks (its learned death move, MECH_DEATH_MOVE: the Queen's
+1407:     // Enrage once the Amalgam is dead; Ravenous; Surrounded's back attack gone with its partner: D4JGCNEL40VL F33 T5, the
+1408:     // Rocket killed by Howl from Beyond at the end of the turn, the Crusher's shown 21 landed as 20, Crab Rage's +6 in it,
+1409:     // and we lived at 1 where this judge said certain). So with any enemy that may die before the enemy turn ends, an
+1410:     // enemy's hits count only when no other one may: its own, up to its own death.
+1411:     const dying = new Set([...mayDie.map((entry) => entry.i), ...cut]);
+1412:     // silent-0326, LWQYSREHMMJ7 A10 F30: attempt 1 T4 and attempt 2 T3 both retain the awakened
+1413:     // beetle's Roll Out after poison kills the rock. Keep only this attack, not the silk's, and
+1414:     // leave other encounters, moves, powers and death sources under the general conservative bound.
+1415:     const beetle = living.findIndex((enemy) => str(enemy["enemy_id"]) === "SLUMBERING_BEETLE");
+1416:     const rock = living.findIndex((enemy) => str(enemy["enemy_id"]) === "BOWLBUG_ROCK");
+1417:     const witnessedPowers: Record<string, readonly string[]> = {
+1418:       BOWLBUG_ROCK: ["IMBALANCED_POWER", "POISON_POWER", "WEAK_POWER"],
+1419:       BOWLBUG_SILK: ["POISON_POWER"],
+1420:       SLUMBERING_BEETLE: ["POISON_POWER", "WEAK_POWER"],
+1421:     };
+1422:     const stableBeetle = silentPoison && numOrNull(run["ascension"]) === 10
+1423:       && living.length === 3 && new Set(living.map((enemy) => str(enemy["enemy_id"]))).size === 3
+1424:       && living.every((enemy) => Array.isArray(enemy["powers"]) && powersOf(enemy).every((power) =>
+1425:         witnessedPowers[str(enemy["enemy_id"])]?.includes(str(power["power_id"]))))
+1426:       && beetle >= 0 && rock >= 0 && living.some((enemy) => str(enemy["enemy_id"]) === "BOWLBUG_SILK")
+1427:       && str(living[beetle]!["move_id"]) === "ROLL_OUT_MOVE" && hitsOf[beetle]!.length === 1 && !gone.has(beetle)
+1428:       && mayDie.length === 1 && mayDie[0]!.i === rock
+1429:       && powerAmount(living[rock]!, "POISON_POWER") >= before[rock]!.hp
+1430:       && ends.sources.length === 0 && retaliation === 0 && cut.length === 0;
+1431:     const changed = living.map((_, i) => i).filter((i) => !gone.has(i) && hitsOf[i]!.length > 0
+1432:       && [...dying].some((j) => j !== i) && !(stableBeetle && i === beetle));
+1433:     const keptByEnemy = living.map((_, i) => i).filter((i) => !gone.has(i)).map((i) => (changed.includes(i) ? [] : landing(i)));
+1434:     const keptHits = keptByEnemy.flat();
+1435:     const kept = keptHits.reduce((sum, hit) => sum + hit, 0);
+1436:     const keptOwn = exactly ? lossWith(keptHits, true) : null;
+1437:     const keptLoss = keptOwn ? (keptOwn.unknown ? null : keptOwn.loss - regen) : Math.max(0, kept + held.damage - block - endBlock) + held.loss - regen;
+1438:     const stillDies = keptLoss !== null && (keptLoss >= hp || (byStart && hp - keptLoss <= startLoss));
+1439:     const who = [
+1440:       ...mayDie.map((entry) => `${names[entry.i]} (${entry.why}) may die first`),
+1441:       ...stunnedOnly.map((entry) => `${names[entry.i]} may be stunned first (${entry.why})`),
+1442:       ...cut.filter((i) => !gone.has(i)).map((i) => `${names[i]} may die to our retaliation (${retaliation} a hit) after ${landing(i).length} of its ${hitsOf[i]!.length} hits`),
+1443:       ...(changed.length > 0 ? [`an ally's death may change the move of ${changed.map((i) => names[i]).join(", ")} (its hits not counted)`] : []),
+1444:     ].join(", ");
+1445:     if (!stillDies) return verdict(false, null, `the enemies may be hit before they act: ${who}, and the rest's ${kept} does not kill`);
+1446:     // The revives again, on what still lands for certain.
+1447:     const keptSaved = reviveVeto(keptByEnemy, `, if ${who}`);
+1448:     if (keptSaved) return keptSaved;
+1449:     endNote = `; even if ${who}${stableBeetle ? "; 静默A10已见：石虫毒死后甲虫滚动攻击仍计入下界（silent-0326）" : ""}`;
+1450:   }
+1451:   const blastNote = blast ? ` (${blast.name}'s blast: the husk explodes for ${blast.damage} as the turn ends, after the end-of-turn block)` : "";
+1452:   const lethal = `${bySandpit ? `${sandpitText} (our count lives: ` : ""}${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${bySandpit ? ")" : ""}${endNote}${reviveNote}`;
+1453:   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
+1454:   if (context.label === LEAST_LOSS_LABEL) {

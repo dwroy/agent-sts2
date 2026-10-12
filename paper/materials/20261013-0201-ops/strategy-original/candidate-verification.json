@@ -1,0 +1,1868 @@
+{
+  "fingerprint_checks": [
+    {
+      "lines": [
+        272434,
+        272575
+      ],
+      "same": true
+    },
+    {
+      "lines": [
+        272531,
+        272652
+      ],
+      "same": true
+    },
+    {
+      "lines": [
+        272483,
+        272820
+      ],
+      "same": true
+    },
+    {
+      "lines": [
+        274484,
+        274601
+      ],
+      "same": true
+    },
+    {
+      "lines": [
+        274505,
+        274568
+      ],
+      "same": true
+    },
+    {
+      "lines": [
+        273400,
+        273450
+      ],
+      "same": true
+    }
+  ],
+  "options": [
+    {
+      "line": 272361,
+      "run": "751FN9QM9MHQ",
+      "floor": 13,
+      "turn": 3,
+      "candidates": [
+        {
+          "key": "plan1",
+          "plays": "potion 肌肉药水, then 切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌, then 打击 -> 下水道蚌",
+          "result": "survives with 43/76 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 37,
+          "enemies_after": "下水道蚌 3 HP, 中毒 2",
+          "hp_after": 43,
+          "hp_after_pct": 57,
+          "dmg": 37,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "肌肉药水",
+          "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 15, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -15",
+          "rollout_turns": "T1 exact: hp -15, dmg 37; T2: over (alive 8/8, won 8/8); T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+          "history_estimate": "further HP loss 15, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+          "potion_cost": "fight HP loss 15; potions used 1 (this turn: FLEX_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 15"
+        },
+        {
+          "key": "plan2",
+          "plays": "防御, then potion 肌肉药水, then 切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌",
+          "result": "survives with 50/76 HP before healing",
+          "hp_lost": 8,
+          "damage_dealt": 26,
+          "enemies_after": "下水道蚌 14 HP, 中毒 2",
+          "block_gained": 7,
+          "hp_after": 50,
+          "hp_after_pct": 66,
+          "dmg": 26,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "肌肉药水",
+          "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -8",
+          "rollout_turns": "T1 exact: hp -8, dmg 26; T2: hp -0 [0-0], dmg 10.5 [9-11], alive 8/8, won 6/8; T3: hp -0 [0-0], dmg 2 [2-2], alive 8/8, won 8/8; T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+          "history_estimate": "further HP loss 8, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+          "rollout_tied": "tied for the best rollout numbers with plan3, plan5 (the same expected further HP loss, deaths and win chance); the rollout picks none of them",
+          "tied_hp_loss_rank": 1,
+          "tied_hp_loss_extra": 0,
+          "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan2、plan3、plan5，单回合模型净损血8；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。",
+          "potion_cost": "fight HP loss 8; potions used 1 (this turn: FLEX_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 8"
+        },
+        {
+          "key": "plan3",
+          "plays": "防御, then 切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌",
+          "result": "survives with 50/76 HP before healing",
+          "hp_lost": 8,
+          "damage_dealt": 16,
+          "enemies_after": "下水道蚌 24 HP, 中毒 2",
+          "block_gained": 7,
+          "hp_after": 50,
+          "hp_after_pct": 66,
+          "dmg": 16,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -8",
+          "rollout_turns": "T1 exact: hp -8, dmg 16; T2: hp -0 [0-0], dmg 21 [21-21], alive 8/8, won 8/8; T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+          "history_estimate": "further HP loss 8, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+          "rollout_tied": "tied for the best rollout numbers with plan2, plan5 (the same expected further HP loss, deaths and win chance); the rollout picks none of them",
+          "tied_hp_loss_rank": 1,
+          "tied_hp_loss_extra": 0,
+          "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan2、plan3、plan5，单回合模型净损血8；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。",
+          "potion_cost": "fight HP loss 8; potions used 0.9 (later turns: FLEX_POTION in 7/8 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 8"
+        },
+        {
+          "key": "plan4",
+          "plays": "切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌, then 打击 -> 下水道蚌",
+          "result": "survives with 43/76 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 22,
+          "enemies_after": "下水道蚌 18 HP, 中毒 2",
+          "hp_after": 43,
+          "hp_after_pct": 57,
+          "dmg": 22,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 15, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -15",
+          "rollout_turns": "T1 exact: hp -15, dmg 22; T2: hp -0 [0-0], dmg 15 [15-15], alive 8/8, won 8/8; T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+          "history_estimate": "further HP loss 15, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+          "potion_cost": "fight HP loss 15; potions used 0.3 (later turns: FLEX_POTION in 2/8 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 15"
+        },
+        {
+          "key": "plan5",
+          "plays": "防御, then 切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌",
+          "result": "survives with 50/76 HP before healing",
+          "hp_lost": 8,
+          "damage_dealt": 16,
+          "enemies_after": "下水道蚌 24 HP, 中毒 2",
+          "block_gained": 7,
+          "no_potion_fight": "the no-potion line: the same turn as plan3, and no potion for the rest of this fight (its rollout's later turns drink none; plan3's may)",
+          "hp_after": 50,
+          "hp_after_pct": 66,
+          "dmg": 16,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -8",
+          "rollout_turns": "T1 exact: hp -8, dmg 16; T2: hp -0 [0-0], dmg 15 [9-21], alive 8/8, won 1/8; T3: hp -0 [0-0], dmg 6.9 [3-12], alive 8/8, won 8/8; T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+          "history_estimate": "further HP loss 8, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+          "rollout_tied": "tied for the best rollout numbers with plan2, plan3 (the same expected further HP loss, deaths and win chance); the rollout picks none of them",
+          "tied_hp_loss_rank": 1,
+          "tied_hp_loss_extra": 0,
+          "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan2、plan3、plan5，单回合模型净损血8；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。",
+          "potion_cost": "fight HP loss 8; potions used 0; potion cost 0 HP (potion table, this act's held value); total 8"
+        }
+      ],
+      "rationale": "Jev chose plan 2/5 (防御, potion 肌肉药水, 切割 -> 下水道蚌, 猎杀者 -> 下水道蚌) with confidence 0.24; code rank 2",
+      "sl_explore": null,
+      "hp_guard": null
+    },
+    {
+      "line": 272455,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 7,
+      "candidates": [
+        {
+          "key": "plan1",
+          "plays": "生存者, then 防御+, then 防御",
+          "result": "survives with 33/76 HP before healing",
+          "hp_lost": 12,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 120 HP",
+          "block_gained": 27,
+          "hp_after": 33,
+          "hp_after_pct": 43,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 44.6, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~43% (fights won in the samples, the others by the end-of-horizon estimate), value -67.5",
+          "rollout_turns": "T1 exact: hp -12, dmg 1; T2: hp -2.6 [2-3], dmg 10.8 [0-18], alive 8/8, won 0/8; T3: hp -0.8 [0-6], dmg 16 [3-27], alive 8/8, won 0/8; T4: hp -4.1 [0-15], dmg 1 [0-3], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 14.4 [3-27], alive 8/8, won 0/8",
+          "history_estimate": "further HP loss 30, win 97% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 17% (the best line), HP lost when won median 40, ~11 turns to win (this one included); the losing samples die most often on T15 (dead in 83%); 600 samples"
+        },
+        {
+          "key": "plan2",
+          "plays": "匕首雨, then 生存者, then 防御+",
+          "result": "survives with 26/76 HP before healing",
+          "hp_lost": 19,
+          "damage_dealt": 9,
+          "enemies_after": "灵魂异鱼 112 HP",
+          "block_gained": 20,
+          "hp_after": 26,
+          "hp_after_pct": 34,
+          "dmg": 9,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 45, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~40% (fights won in the samples, the others by the end-of-horizon estimate), value -68.8",
+          "rollout_turns": "T1 exact: hp -19, dmg 9; T2: hp -2.3 [0-3], dmg 8.8 [0-20], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 16 [3-27], alive 8/8, won 0/8; T4: hp -4.1 [0-15], dmg 1 [0-3], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 13.5 [1-27], alive 8/8, won 0/8",
+          "history_estimate": "further HP loss 34, win 95% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 11% (vs the best line −6 ± 2 pts), HP lost when won median 40, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 89%); 600 samples"
+        },
+        {
+          "key": "plan3",
+          "plays": "匕首雨, then 生存者, then 打击 -> 灵魂异鱼",
+          "result": "survives with 16/76 HP before healing",
+          "hp_lost": 29,
+          "damage_dealt": 15,
+          "enemies_after": "灵魂异鱼 106 HP",
+          "block_gained": 10,
+          "hp_after": 16,
+          "hp_after_pct": 21,
+          "dmg": 15,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 44.8, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.7; ranked on -(further loss) - 40 x (1 - win chance): win chance ~39% (fights won in the samples, the others by the end-of-horizon estimate), value -69.1",
+          "rollout_turns": "T1 exact: hp -29, dmg 15; T2: hp -2.3 [0-3], dmg 7.6 [0-20], alive 8/8, won 0/8; T3: hp -0.8 [0-6], dmg 17.1 [3-27], alive 8/8, won 0/8; T4: hp -3.3 [0-8], dmg 1 [0-2], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 12.4 [1-33], alive 8/8, won 0/8",
+          "history_estimate": "further HP loss 40, win 93% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 2% (vs the best line −15 ± 2 pts), HP lost when won median 41, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 98%); 600 samples"
+        },
+        {
+          "key": "plan4",
+          "plays": "匕首雨, then 生存者, then 防御",
+          "result": "survives with 23/76 HP before healing",
+          "hp_lost": 22,
+          "damage_dealt": 9,
+          "enemies_after": "灵魂异鱼 112 HP",
+          "block_gained": 17,
+          "hp_after": 23,
+          "hp_after_pct": 30,
+          "dmg": 9,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 44.1, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~42% (fights won in the samples, the others by the end-of-horizon estimate), value -67.2",
+          "rollout_turns": "T1 exact: hp -22, dmg 9; T2: hp -2.3 [0-3], dmg 7.6 [0-20], alive 8/8, won 0/8; T3: hp -0.8 [0-6], dmg 17.1 [3-27], alive 8/8, won 0/8; T4: hp -4.1 [0-15], dmg 1 [0-3], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 13.9 [1-33], alive 8/8, won 0/8",
+          "history_estimate": "further HP loss 36, win 95% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 8% (vs the best line −9 ± 2 pts), HP lost when won median 41, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 93%); 600 samples"
+        }
+      ],
+      "rationale": "Jev chose plan 4/4 (匕首雨, 生存者, 防御) with confidence 0.45; code rank - (rollout's best line, added); HP guard: plan 4 (匕首雨, 生存者, 防御; hp -22) is more than 8 HP over the cheapest line, playing plan 1 (生存者, 防御+, 防御; hp -12) instead",
+      "sl_explore": null,
+      "hp_guard": null
+    },
+    {
+      "line": 272531,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 7,
+      "candidates": [
+        {
+          "key": "plan1",
+          "plays": "生存者, then 防御+, then 防御",
+          "result": "survives with 33/76 HP before healing",
+          "hp_lost": 12,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 120 HP",
+          "block_gained": 27,
+          "hp_after": 33,
+          "hp_after_pct": 43,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.1, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.2; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~68, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 12)",
+          "rollout_turns": "T1 exact: hp -12, dmg 1; T2: hp -2.7 [2-3], dmg 11.7 [0-18], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 15.9 [0-33], alive 24/24, won 0/24; T4: hp -4.1 [0-15], dmg 1.5 [0-4], alive 24/24, won 0/24; T5: hp -0.3 [0-6], dmg 15.9 [3-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 31, win 97% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 15% (the best line), HP lost when won median 40, ~11 turns to win (this one included); the losing samples die most often on T15 (dead in 85%); 1200 samples"
+        },
+        {
+          "key": "plan2",
+          "plays": "匕首雨, then 生存者, then 防御+",
+          "result": "survives with 26/76 HP before healing",
+          "hp_lost": 19,
+          "damage_dealt": 9,
+          "enemies_after": "灵魂异鱼 112 HP",
+          "block_gained": 20,
+          "hp_after": 26,
+          "hp_after_pct": 34,
+          "dmg": 9,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.1; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~63, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 19)",
+          "rollout_turns": "T1 exact: hp -19, dmg 9; T2: hp -1.5 [0-3], dmg 8.8 [0-20], alive 24/24, won 0/24; T3: hp -0.3 [0-6], dmg 16.9 [3-33], alive 24/24, won 0/24; T4: hp -4 [0-15], dmg 1.5 [0-4], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 14.6 [1-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 34, win 95% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 10% (vs the best line −5 ± 1 pts), HP lost when won median 41, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 90%); 1200 samples"
+        },
+        {
+          "key": "plan3",
+          "plays": "匕首雨, then 生存者, then 打击 -> 灵魂异鱼",
+          "result": "survives with 16/76 HP before healing",
+          "hp_lost": 29,
+          "damage_dealt": 15,
+          "enemies_after": "灵魂异鱼 106 HP",
+          "block_gained": 10,
+          "hp_after": 16,
+          "hp_after_pct": 21,
+          "dmg": 15,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.7, dead within 5 turns in 2/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 2/24), then the fight's progress: least enemy HP left (this line ~60, at T5 or at our death), then most turns alive (this line ~4.9), then least HP lost this turn (this line 29)",
+          "rollout_turns": "T1 exact: hp -29, dmg 15; T2: hp -1.8 [0-3], dmg 7.6 [0-20], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 17.3 [0-29], alive 24/24, won 0/24; T4: hp -3.8 [0-15], dmg 1.5 [0-4], alive 22/24, won 0/24; T5: hp -0 [0-0], dmg 13.6 [1-33], alive 22/24, won 0/24",
+          "history_estimate": "further HP loss 40, win 86% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 1% (vs the best line −14 ± 1 pts), HP lost when won median 42, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 99%); 1200 samples"
+        }
+      ],
+      "rationale": "Jev chose plan 2/3 (匕首雨, 生存者, 防御+) with confidence 0.56; code rank 2",
+      "sl_explore": null,
+      "hp_guard": null
+    },
+    {
+      "line": 272652,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 7,
+      "candidates": [
+        {
+          "key": "plan1",
+          "plays": "生存者, then 防御+, then 防御",
+          "result": "survives with 33/76 HP before healing",
+          "hp_lost": 12,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 120 HP",
+          "block_gained": 27,
+          "hp_after": 33,
+          "hp_after_pct": 43,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.1, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.2; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~68, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 12)",
+          "rollout_turns": "T1 exact: hp -12, dmg 1; T2: hp -2.7 [2-3], dmg 11.7 [0-18], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 15.9 [0-33], alive 24/24, won 0/24; T4: hp -4.1 [0-15], dmg 1.5 [0-4], alive 24/24, won 0/24; T5: hp -0.3 [0-6], dmg 15.9 [3-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 31, win 97% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 15% (the best line), HP lost when won median 40, ~11 turns to win (this one included); the losing samples die most often on T15 (dead in 85%); 1200 samples"
+        },
+        {
+          "key": "plan2",
+          "plays": "匕首雨, then 生存者, then 防御+",
+          "result": "survives with 26/76 HP before healing",
+          "hp_lost": 19,
+          "damage_dealt": 9,
+          "enemies_after": "灵魂异鱼 112 HP",
+          "block_gained": 20,
+          "hp_after": 26,
+          "hp_after_pct": 34,
+          "dmg": 9,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.1; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~63, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 19)",
+          "rollout_turns": "T1 exact: hp -19, dmg 9; T2: hp -1.5 [0-3], dmg 8.8 [0-20], alive 24/24, won 0/24; T3: hp -0.3 [0-6], dmg 16.9 [3-33], alive 24/24, won 0/24; T4: hp -4 [0-15], dmg 1.5 [0-4], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 14.6 [1-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 34, win 95% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 10% (vs the best line −5 ± 1 pts), HP lost when won median 41, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 90%); 1200 samples"
+        },
+        {
+          "key": "plan3",
+          "plays": "匕首雨, then 生存者, then 打击 -> 灵魂异鱼",
+          "result": "survives with 16/76 HP before healing",
+          "hp_lost": 29,
+          "damage_dealt": 15,
+          "enemies_after": "灵魂异鱼 106 HP",
+          "block_gained": 10,
+          "hp_after": 16,
+          "hp_after_pct": 21,
+          "dmg": 15,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.7, dead within 5 turns in 2/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 2/24), then the fight's progress: least enemy HP left (this line ~60, at T5 or at our death), then most turns alive (this line ~4.9), then least HP lost this turn (this line 29)",
+          "rollout_turns": "T1 exact: hp -29, dmg 15; T2: hp -1.8 [0-3], dmg 7.6 [0-20], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 17.3 [0-29], alive 24/24, won 0/24; T4: hp -3.8 [0-15], dmg 1.5 [0-4], alive 22/24, won 0/24; T5: hp -0 [0-0], dmg 13.6 [1-33], alive 22/24, won 0/24",
+          "history_estimate": "further HP loss 40, win 86% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 1% (vs the best line −14 ± 1 pts), HP lost when won median 42, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 99%); 1200 samples"
+        }
+      ],
+      "rationale": "Jev chose plan 2/3 (匕首雨, 生存者, 防御+) with confidence 0.62; code rank 2; SL explore (T7, the 10th latest question before attempt 1's death on T17): playing 匕首雨, 生存者, 打击 -> 灵魂异鱼 instead of 匕首雨, 生存者, 防御+, played on this board in attempts 1, 2 (the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail))",
+      "sl_explore": {
+        "point": "T7, the 10th latest question before attempt 1's death on T17",
+        "original": "匕首雨, 生存者, 防御+",
+        "replacement": "匕首雨, 生存者, 打击 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 13,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 44.5, win ~41%; whole-fight sim win 10.3%; this turn hp -19, dmg 9",
+          "replacement": "rollout dead 2/24, further loss 44.9, win ~36%; whole-fight sim win 1.3%; this turn hp -29, dmg 15"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.103,
+          "replacement": 0.013,
+          "diff": -0.09,
+          "se": 0.0088
+        },
+        "turn": "DAGGER_SPRAY, DEFEND_SILENT+, SURVIVOR",
+        "turn_instead": "DAGGER_SPRAY, STRIKE_SILENT>灵魂异鱼, SURVIVOR"
+      },
+      "hp_guard": null
+    },
+    {
+      "line": 274354,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 2,
+      "candidates": [
+        {
+          "key": "plan1",
+          "plays": "突然一拳 -> 灵魂异鱼, then 匕首雨, then 中和 -> 灵魂异鱼, then 呼唤",
+          "result": "survives with 66/86 HP before healing",
+          "hp_lost": 9,
+          "damage_dealt": 19,
+          "enemies_after": "灵魂异鱼 177 HP, Weak 2",
+          "block_gained": 4,
+          "hp_after": 66,
+          "hp_after_pct": 77,
+          "dmg": 19,
+          "lethal_now": "no",
+          "enemy_threat_next": 6,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 75, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~139, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 9)",
+          "rollout_turns": "T1 exact: hp -9, dmg 19; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -0.3 [0-6], dmg 14.4 [6-23], alive 24/24, won 0/24; T4: hp -2.8 [0-8], dmg 1.3 [0-4], alive 24/24, won 0/24; T5: hp -0.3 [0-6], dmg 16 [5-26], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 46, win 82% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 1% (vs the best line −0 ± 1 pts, tied on win rate), HP lost when won median 71, ~18 turns to win (this one included); the losing samples die most often on T17 (dead in 99%); 1200 samples"
+        },
+        {
+          "key": "plan2",
+          "plays": "突然一拳 -> 灵魂异鱼, then 匕首雨, then 中和 -> 灵魂异鱼, then 打击 -> 灵魂异鱼",
+          "result": "survives with 60/86 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 25,
+          "enemies_after": "灵魂异鱼 171 HP, Weak 2",
+          "block_gained": 4,
+          "hp_after": 60,
+          "hp_after_pct": 70,
+          "dmg": 25,
+          "lethal_now": "no",
+          "enemy_threat_next": 6,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 75, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~134, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 15)",
+          "rollout_turns": "T1 exact: hp -15, dmg 25; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 13.1 [6-23], alive 24/24, won 0/24; T4: hp -2.8 [0-8], dmg 1.3 [0-4], alive 24/24, won 0/24; T5: hp -0.5 [0-6], dmg 16.5 [8-26], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 49, win 78% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 1% (vs the best line −0 ± 1 pts, tied on win rate), HP lost when won median 69, ~17 turns to win (this one included); the losing samples die most often on T17 (dead in 99%); 1200 samples"
+        },
+        {
+          "key": "plan3",
+          "plays": "突然一拳 -> 灵魂异鱼, then 防御, then 中和 -> 灵魂异鱼, then 呼唤",
+          "result": "survives with 67/86 HP before healing",
+          "hp_lost": 8,
+          "damage_dealt": 11,
+          "enemies_after": "灵魂异鱼 185 HP, Weak 2",
+          "block_gained": 5,
+          "hp_after": 67,
+          "hp_after_pct": 78,
+          "dmg": 11,
+          "lethal_now": "no",
+          "enemy_threat_next": 6,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 75, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.2; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~147, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 8)",
+          "rollout_turns": "T1 exact: hp -8, dmg 11; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 14.7 [6-23], alive 24/24, won 0/24; T4: hp -2.6 [0-8], dmg 1.4 [0-4], alive 24/24, won 0/24; T5: hp -0.3 [0-6], dmg 16.2 [6-24], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 45, win 81% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 0% (vs the best line −1 ± 1 pts), no winning sample; the losing samples die most often on T17 (dead in 100%); 1200 samples"
+        },
+        {
+          "key": "plan4",
+          "plays": "突然一拳 -> 灵魂异鱼, then 迷雾, then 中和 -> 灵魂异鱼",
+          "result": "survives with 56/86 HP before healing",
+          "hp_lost": 19,
+          "damage_dealt": 15,
+          "enemies_after": "灵魂异鱼 181 HP, Weak 3, 中毒 3",
+          "hp_after": 56,
+          "hp_after_pct": 65,
+          "dmg": 15,
+          "lethal_now": "no",
+          "enemy_threat_next": 6,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 75, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~136, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 19)",
+          "rollout_turns": "T1 exact: hp -19, dmg 15; T2: hp -0 [0-0], dmg 9 [9-9], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 16.6 [8-25], alive 24/24, won 0/24; T4: hp -2.6 [0-8], dmg 2 [1-4], alive 24/24, won 0/24; T5: hp -0.5 [0-6], dmg 17.1 [6-25], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 52, win 73% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 1% (the best line), HP lost when won median 66, ~16 turns to win (this one included); the losing samples die most often on T17 (dead in 99%); 1200 samples"
+        },
+        {
+          "key": "plan5",
+          "plays": "迷雾, then 中和 -> 灵魂异鱼, then 呼唤",
+          "result": "survives with 62/86 HP before healing",
+          "hp_lost": 13,
+          "damage_dealt": 7,
+          "enemies_after": "灵魂异鱼 189 HP, Weak 2, 中毒 3",
+          "hp_after": 62,
+          "hp_after_pct": 72,
+          "dmg": 7,
+          "lethal_now": "no",
+          "enemy_threat_next": 6,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 75, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~145, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 13)",
+          "rollout_turns": "T1 exact: hp -13, dmg 7; T2: hp -0 [0-0], dmg 9 [9-9], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 16.8 [8-28], alive 24/24, won 0/24; T4: hp -2.5 [0-11], dmg 1.9 [1-4], alive 24/24, won 0/24; T5: hp -0.5 [0-6], dmg 16.3 [6-25], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 49, win 78% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 1% (vs the best line −0 ± 1 pts, tied on win rate), HP lost when won median 68, ~16 turns to win (this one included); the losing samples die most often on T17 (dead in 100%); 1200 samples"
+        }
+      ],
+      "rationale": "Jev chose plan 4/5 (突然一拳 -> 灵魂异鱼, 迷雾, 中和 -> 灵魂异鱼) with confidence 0.40; code rank 4; HP guard: plan 4 (突然一拳 -> 灵魂异鱼, 迷雾, 中和 -> 灵魂异鱼; hp -19) is more than 8 HP over the cheapest line, playing plan 1 (突然一拳 -> 灵魂异鱼, 匕首雨, 中和 -> 灵魂异鱼, 呼唤; hp -9) instead",
+      "sl_explore": null,
+      "hp_guard": null
+    },
+    {
+      "line": 274505,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 10,
+      "candidates": [
+        {
+          "key": "plan1",
+          "plays": "呼唤, then 呼唤, then 匕首雨",
+          "result": "survives with 22/86 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 3,
+          "enemies_after": "灵魂异鱼 79 HP, 中毒 6",
+          "hp_after": 22,
+          "hp_after_pct": 26,
+          "dmg": 3,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 34.4, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~5.9, dead within 5 turns in 6/24 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~37% (fights won in the samples, the others by the end-of-horizon estimate), value -59.7",
+          "rollout_turns": "T1 exact: hp -15, dmg 3; T2: hp -0 [0-0], dmg 16.5 [6-23], alive 24/24, won 0/24; T3: hp -10.3 [2-20], dmg 12.1 [5-24], alive 24/24, won 0/24; T4: hp -5.3 [0-14], dmg 10.4 [4-27], alive 18/24, won 0/24; T5: hp -0.3 [0-6], dmg 11.7 [3-26], alive 18/24, won 0/24",
+          "history_estimate": "further HP loss 34, win 39% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 12% (vs the best line −27 ± 1 pts), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 88%); 1200 samples"
+        },
+        {
+          "key": "plan2",
+          "plays": "呼唤, then 带毒刺击 -> 灵魂异鱼, then 匕首雨",
+          "result": "survives with 16/86 HP before healing",
+          "hp_lost": 21,
+          "damage_dealt": 4,
+          "enemies_after": "灵魂异鱼 78 HP, 中毒 9",
+          "hp_after": 16,
+          "hp_after_pct": 19,
+          "dmg": 4,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 35.3, fight over within 5 turns in 1/24, expected turns to the end (surviving samples) ~5.6, dead within 5 turns in 12/24 (~turn 3.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~28% (fights won in the samples, the others by the end-of-horizon estimate), value -64.1",
+          "rollout_turns": "T1 exact: hp -21, dmg 4; T2: hp -0 [0-0], dmg 19.5 [9-26], alive 24/24, won 0/24; T3: hp -10 [2-18], dmg 14.9 [6-27], alive 21/24, won 0/24; T4: hp -4.3 [0-12], dmg 12.8 [7-20], alive 12/24, won 0/24; T5: hp -0.5 [0-6], dmg 13.8 [6-27], alive 12/24, won 1/24",
+          "history_estimate": "further HP loss 36, win 29% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 13% (vs the best line −26 ± 1 pts), HP lost when won median 34, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 87%); 1200 samples"
+        },
+        {
+          "key": "plan3",
+          "plays": "猎杀者 -> 灵魂异鱼, then 匕首雨",
+          "result": "survives with 10/86 HP before healing",
+          "hp_lost": 27,
+          "damage_dealt": 4,
+          "enemies_after": "灵魂异鱼 78 HP, 中毒 6",
+          "hp_after": 10,
+          "hp_after_pct": 12,
+          "dmg": 4,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 37, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.1, dead within 5 turns in 17/24 (~turn 3.2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~9% (fights won in the samples, the others by the end-of-horizon estimate), value -73.5",
+          "rollout_turns": "T1 exact: hp -27, dmg 4; T2: hp -0 [0-0], dmg 16.5 [6-23], alive 24/24, won 0/24; T3: hp -9.3 [2-16], dmg 12.3 [5-23], alive 10/24, won 0/24; T4: hp -3.5 [0-12], dmg 10.4 [4-15], alive 7/24, won 0/24; T5: hp -0 [0-0], dmg 7.7 [3-18], alive 7/24, won 0/24",
+          "history_estimate": "further HP loss 37, win 13% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 0% (vs the best line −38 ± 1 pts), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T12 (dead in 100%); 1200 samples"
+        },
+        {
+          "key": "plan4",
+          "plays": "呼唤, then 带毒刺击 -> 灵魂异鱼, then 呼唤",
+          "result": "survives with 22/86 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 2,
+          "enemies_after": "灵魂异鱼 80 HP, 中毒 9",
+          "hp_after": 22,
+          "hp_after_pct": 26,
+          "dmg": 2,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 32.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~5.6, dead within 5 turns in 6/24 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~46% (fights won in the samples, the others by the end-of-horizon estimate), value -54.1",
+          "rollout_turns": "T1 exact: hp -15, dmg 2; T2: hp -0 [0-0], dmg 19.5 [9-26], alive 24/24, won 0/24; T3: hp -10.2 [2-20], dmg 14.8 [8-25], alive 24/24, won 0/24; T4: hp -5.6 [0-14], dmg 13.5 [7-30], alive 18/24, won 0/24; T5: hp -0 [0-0], dmg 12.8 [6-27], alive 18/24, won 0/24",
+          "history_estimate": "further HP loss 33, win 42% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 39% (the best line), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 62%); 1200 samples"
+        }
+      ],
+      "rationale": "Jev chose plan 4/4 (呼唤, 带毒刺击 -> 灵魂异鱼, 呼唤) with confidence 0.97; code rank - (rollout's best line, added)",
+      "sl_explore": null,
+      "hp_guard": null
+    },
+    {
+      "line": 274568,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 10,
+      "candidates": [
+        {
+          "key": "plan1",
+          "plays": "呼唤, then 呼唤, then 匕首雨",
+          "result": "survives with 22/86 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 3,
+          "enemies_after": "灵魂异鱼 79 HP, 中毒 6",
+          "hp_after": 22,
+          "hp_after_pct": 26,
+          "dmg": 3,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 34.4, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~5.9, dead within 5 turns in 6/24 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~37% (fights won in the samples, the others by the end-of-horizon estimate), value -59.7",
+          "rollout_turns": "T1 exact: hp -15, dmg 3; T2: hp -0 [0-0], dmg 16.5 [6-23], alive 24/24, won 0/24; T3: hp -10.3 [2-20], dmg 12.1 [5-24], alive 24/24, won 0/24; T4: hp -5.3 [0-14], dmg 10.4 [4-27], alive 18/24, won 0/24; T5: hp -0.3 [0-6], dmg 11.7 [3-26], alive 18/24, won 0/24",
+          "history_estimate": "further HP loss 34, win 39% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 12% (vs the best line −27 ± 1 pts), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 88%); 1200 samples"
+        },
+        {
+          "key": "plan2",
+          "plays": "呼唤, then 带毒刺击 -> 灵魂异鱼, then 匕首雨",
+          "result": "survives with 16/86 HP before healing",
+          "hp_lost": 21,
+          "damage_dealt": 4,
+          "enemies_after": "灵魂异鱼 78 HP, 中毒 9",
+          "hp_after": 16,
+          "hp_after_pct": 19,
+          "dmg": 4,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 35.3, fight over within 5 turns in 1/24, expected turns to the end (surviving samples) ~5.6, dead within 5 turns in 12/24 (~turn 3.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~28% (fights won in the samples, the others by the end-of-horizon estimate), value -64.1",
+          "rollout_turns": "T1 exact: hp -21, dmg 4; T2: hp -0 [0-0], dmg 19.5 [9-26], alive 24/24, won 0/24; T3: hp -10 [2-18], dmg 14.9 [6-27], alive 21/24, won 0/24; T4: hp -4.3 [0-12], dmg 12.8 [7-20], alive 12/24, won 0/24; T5: hp -0.5 [0-6], dmg 13.8 [6-27], alive 12/24, won 1/24",
+          "history_estimate": "further HP loss 36, win 29% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 13% (vs the best line −26 ± 1 pts), HP lost when won median 34, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 87%); 1200 samples"
+        },
+        {
+          "key": "plan3",
+          "plays": "猎杀者 -> 灵魂异鱼, then 匕首雨",
+          "result": "survives with 10/86 HP before healing",
+          "hp_lost": 27,
+          "damage_dealt": 4,
+          "enemies_after": "灵魂异鱼 78 HP, 中毒 6",
+          "hp_after": 10,
+          "hp_after_pct": 12,
+          "dmg": 4,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 37, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.1, dead within 5 turns in 17/24 (~turn 3.2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~9% (fights won in the samples, the others by the end-of-horizon estimate), value -73.5",
+          "rollout_turns": "T1 exact: hp -27, dmg 4; T2: hp -0 [0-0], dmg 16.5 [6-23], alive 24/24, won 0/24; T3: hp -9.3 [2-16], dmg 12.3 [5-23], alive 10/24, won 0/24; T4: hp -3.5 [0-12], dmg 10.4 [4-15], alive 7/24, won 0/24; T5: hp -0 [0-0], dmg 7.7 [3-18], alive 7/24, won 0/24",
+          "history_estimate": "further HP loss 37, win 13% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 0% (vs the best line −38 ± 1 pts), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T12 (dead in 100%); 1200 samples"
+        },
+        {
+          "key": "plan4",
+          "plays": "呼唤, then 带毒刺击 -> 灵魂异鱼, then 呼唤",
+          "result": "survives with 22/86 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 2,
+          "enemies_after": "灵魂异鱼 80 HP, 中毒 9",
+          "hp_after": 22,
+          "hp_after_pct": 26,
+          "dmg": 2,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 32.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~5.6, dead within 5 turns in 6/24 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~46% (fights won in the samples, the others by the end-of-horizon estimate), value -54.1",
+          "rollout_turns": "T1 exact: hp -15, dmg 2; T2: hp -0 [0-0], dmg 19.5 [9-26], alive 24/24, won 0/24; T3: hp -10.2 [2-20], dmg 14.8 [8-25], alive 24/24, won 0/24; T4: hp -5.6 [0-14], dmg 13.5 [7-30], alive 18/24, won 0/24; T5: hp -0 [0-0], dmg 12.8 [6-27], alive 18/24, won 0/24",
+          "history_estimate": "further HP loss 33, win 42% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 39% (the best line), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 62%); 1200 samples"
+        }
+      ],
+      "rationale": "Jev chose plan 4/4 (呼唤, 带毒刺击 -> 灵魂异鱼, 呼唤) with confidence 0.97; code rank - (rollout's best line, added); SL explore (T10, the 4th latest question before attempt 4's death on T15): playing 呼唤, 带毒刺击 -> 灵魂异鱼, 匕首雨 instead of 呼唤, 带毒刺击 -> 灵魂异鱼, 呼唤, played on this board in attempt 4 (the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail))",
+      "sl_explore": {
+        "point": "T10, the 4th latest question before attempt 4's death on T15",
+        "original": "呼唤, 带毒刺击 -> 灵魂异鱼, 呼唤",
+        "replacement": "呼唤, 带毒刺击 -> 灵魂异鱼, 匕首雨",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          4
+        ],
+        "replayed": 20,
+        "numbers": {
+          "original": "rollout dead 6/24, further loss 32.5, win ~46%; whole-fight sim win 38.5%; this turn hp -15, dmg 2",
+          "replacement": "rollout dead 12/24, further loss 35.3, win ~28%; whole-fight sim win 12.7%; this turn hp -21, dmg 4"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.385,
+          "replacement": 0.127,
+          "diff": -0.2583,
+          "se": 0.0132
+        },
+        "turn": "BECKON, BECKON, POISONED_STAB>灵魂异鱼",
+        "turn_instead": "BECKON, DAGGER_SPRAY, POISONED_STAB>灵魂异鱼"
+      },
+      "hp_guard": null
+    },
+    {
+      "line": 274601,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 5,
+      "candidates": [
+        {
+          "key": "plan1",
+          "plays": "灵动步法, then 斗篷与匕首, then 突然一拳 -> 灵魂异鱼",
+          "result": "survives with 57/86 HP before healing",
+          "hp_lost": 9,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 135 HP, Weak 1",
+          "block_gained": 8,
+          "cards_drawn": 1,
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 57,
+          "hp_after_pct": 66,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 59.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~55% (fights won in the samples, the others by the end-of-horizon estimate), value -77.8",
+          "rollout_turns": "T1 exact: hp -9, dmg 1; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -13.1 [0-27], dmg 9.6 [0-19], alive 24/24, won 0/24; T4: hp -6.5 [0-15], dmg 13.4 [0-26], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 15.2 [0-26], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 48, win 65% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 4% (vs the best line +0 ± 1 pts, tied on win rate), HP lost when won median 61, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 96%); 1200 samples"
+        },
+        {
+          "key": "plan2",
+          "plays": "灵动步法, then 斗篷与匕首",
+          "result": "survives with 53/86 HP before healing",
+          "hp_lost": 13,
+          "damage_dealt": 0,
+          "enemies_after": "灵魂异鱼 136 HP",
+          "block_gained": 8,
+          "cards_drawn": 1,
+          "energy_unused": 1,
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 53,
+          "hp_after_pct": 62,
+          "dmg": 0,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 61.6, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~48% (fights won in the samples, the others by the end-of-horizon estimate), value -82.2",
+          "rollout_turns": "T1 exact: hp -13, dmg 0; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -13.1 [0-27], dmg 9.6 [0-19], alive 24/24, won 0/24; T4: hp -6.1 [0-14], dmg 12.7 [0-26], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 14.3 [4-28], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 51, win 61% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 3% (vs the best line −2 ± 1 pts), HP lost when won median 56, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 98%); 1200 samples"
+        },
+        {
+          "key": "plan3",
+          "plays": "呼唤, then 斗篷与匕首, then 突然一拳 -> 灵魂异鱼",
+          "result": "survives with 61/86 HP before healing",
+          "hp_lost": 5,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 135 HP, Weak 1",
+          "block_gained": 6,
+          "cards_drawn": 1,
+          "hp_after": 61,
+          "hp_after_pct": 71,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 60.7, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -80.5",
+          "rollout_turns": "T1 exact: hp -5, dmg 1; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -17.3 [2-27], dmg 11.5 [5-19], alive 24/24, won 0/24; T4: hp -7.4 [0-14], dmg 12.7 [1-25], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 13.2 [3-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 50, win 61% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 3% (vs the best line −1 ± 1 pts, tied on win rate), HP lost when won median 60, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 97%); 1200 samples"
+        },
+        {
+          "key": "plan4",
+          "plays": "打击 -> 灵魂异鱼, then 灵动步法, then 突然一拳 -> 灵魂异鱼",
+          "result": "survives with 49/86 HP before healing",
+          "hp_lost": 17,
+          "damage_dealt": 2,
+          "enemies_after": "灵魂异鱼 134 HP, Weak 1",
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 49,
+          "hp_after_pct": 57,
+          "dmg": 2,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 61.6, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.6; ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -81.7",
+          "rollout_turns": "T1 exact: hp -17, dmg 2; T2: hp -0 [0-0], dmg 13 [3-26], alive 24/24, won 0/24; T3: hp -8.8 [0-27], dmg 6.5 [0-23], alive 24/24, won 0/24; T4: hp -4 [0-21], dmg 8.3 [0-18], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 16.2 [6-29], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 49, win 63% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 2% (vs the best line −2 ± 1 pts), HP lost when won median 61, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 98%); 1200 samples"
+        },
+        {
+          "key": "plan5",
+          "plays": "呼唤, then 灵动步法, then 斗篷与匕首",
+          "result": "survives with 59/86 HP before healing",
+          "hp_lost": 7,
+          "damage_dealt": 0,
+          "enemies_after": "灵魂异鱼 136 HP",
+          "block_gained": 8,
+          "cards_drawn": 1,
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 59,
+          "hp_after_pct": 69,
+          "dmg": 0,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 58, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~60% (fights won in the samples, the others by the end-of-horizon estimate), value -73.9",
+          "rollout_turns": "T1 exact: hp -7, dmg 0; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -13.1 [0-27], dmg 9.6 [0-19], alive 24/24, won 0/24; T4: hp -5.4 [0-14], dmg 13.3 [0-26], alive 24/24, won 0/24; T5: hp -0.5 [0-6], dmg 15 [4-28], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 46, win 67% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 4% (the best line), HP lost when won median 59, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 96%); 1200 samples"
+        }
+      ],
+      "rationale": "Jev chose plan 5/5 (呼唤, 灵动步法, 斗篷与匕首) with confidence 0.99; code rank - (rollout's best line, added); SL explore (T5, the 9th latest question before attempt 4's death on T15): playing 呼唤, 斗篷与匕首, 突然一拳 -> 灵魂异鱼 instead of 呼唤, 灵动步法, 斗篷与匕首, played on this board in attempts 2, 3, 4, 5 (the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's))",
+      "sl_explore": {
+        "point": "T5, the 9th latest question before attempt 4's death on T15",
+        "original": "呼唤, 灵动步法, 斗篷与匕首",
+        "replacement": "呼唤, 斗篷与匕首, 突然一拳 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "replayed": 9,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 58, win ~60%; whole-fight sim win 4.2%; this turn hp -7, dmg 0",
+          "replacement": "rollout dead 0/24, further loss 60.7, win ~50%; whole-fight sim win 3.3%; this turn hp -5, dmg 1"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.042,
+          "replacement": 0.033,
+          "diff": -0.0083,
+          "se": 0.0068
+        },
+        "turn": "BECKON, CLOAK_AND_DAGGER, FOOTWORK",
+        "turn_instead": "BECKON, CLOAK_AND_DAGGER, SUCKER_PUNCH>灵魂异鱼"
+      },
+      "hp_guard": null
+    }
+  ],
+  "kv_t5_chain": [
+    {
+      "line": 273400,
+      "ts": "2026-10-07T11:16:39.397Z",
+      "mode": "play",
+      "screen": "COMBAT",
+      "session": "singleplayer/run",
+      "floor": 33,
+      "turn": 5,
+      "label": "combat/plan-choice",
+      "decision_id": "610bfa55-18de-410d-ac05-cf5c43772962",
+      "decider": "jev",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:334:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:PREDATOR:true|1:SURVIVOR:true|2:DEADLY_POISON:true|3:BULLET_TIME:true\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "questions": {
+        "plan": {
+          "type": "choice",
+          "instructions": "Which plan should I play this turn?",
+          "criteria": {
+            "plan1": "{\"plays\":\"猎杀者 -> 知识恶魔, then 致命毒药+ -> 知识恶魔\",\"result\":\"survives with 30/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":36,\"enemies_after\":\"知识恶魔 298 HP, 中毒 20\",\"hp_after\":30,\"hp_after_pct\":43,\"dmg\":36,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.7, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~204, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 36; T2: hp -5.1 [0-21], dmg 37.8 [26-56], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 36.1 [22-53], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 39.9 [30-50], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 45 [35-55], alive 14/24, won 0/24\",\"history_estimate\":\"further HP loss 26, win 39% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan2, plan3 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (the best line), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+            "plan2": "{\"plays\":\"猎杀者 -> 知识恶魔\",\"result\":\"survives with 30/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":29,\"enemies_after\":\"知识恶魔 305 HP, 中毒 13\",\"energy_unused\":1,\"hp_after\":30,\"hp_after_pct\":43,\"dmg\":29,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.2, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~234, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 29; T2: hp -5.1 [0-21], dmg 30.8 [19-49], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 29.1 [15-46], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 32.9 [23-43], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 38 [28-48], alive 14/24, won 0/24\",\"history_estimate\":\"further HP loss 27, win 37% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan3 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+            "plan3": "{\"plays\":\"子弹时间\",\"result\":\"survives with 30/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":14,\"enemies_after\":\"知识恶魔 320 HP, 中毒 13\",\"lasting_value\":\"sets up a power worth about 9 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"子弹时间\",\"hp_after\":30,\"hp_after_pct\":43,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"lasting value 9\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.4, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~249, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 14; T2: hp -5.1 [0-21], dmg 30.8 [19-49], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 29.1 [15-46], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 32.9 [23-43], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 38 [28-48], alive 14/24, won 0/24\",\"history_estimate\":\"further HP loss 27, win 36% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\"}"
+          }
+        }
+      },
+      "answers": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan1",
+          "probabilities": {
+            "plan3": 0.22,
+            "plan1": 0.71,
+            "plan2": 0.07
+          },
+          "confidence": 0.56,
+          "raw": {
+            "type": "choice",
+            "choice": "plan1",
+            "confidence": 0.56,
+            "probabilities": {
+              "plan3": 0.22,
+              "plan1": 0.71,
+              "plan2": 0.07
+            }
+          }
+        }
+      },
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "PREDATOR",
+          "upgraded": false
+        },
+        "target": {
+          "id": "KNOWLEDGE_DEMON"
+        },
+        "turn": 5,
+        "from": "decision"
+      },
+      "rationale": "Jev chose plan 1/3 (猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔) with confidence 0.56; code rank 1",
+      "confidence": 0.56,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [
+        "req_01a116147c2f7ba08e97a137e5cc5f8a"
+      ],
+      "latency_ms": {
+        "plan": 31,
+        "jev": 572,
+        "action": 395,
+        "planner": 1912,
+        "pre": 1
+      },
+      "usage": {
+        "input_tokens": 6222,
+        "output_tokens": 42
+      },
+      "jev_context": "v1",
+      "jev_hints": [],
+      "rollout": {
+        "available": true,
+        "ms": 425,
+        "horizon": 5,
+        "samples": 24,
+        "degraded": [],
+        "lines": 5,
+        "best": null,
+        "best_added": false,
+        "tied": [
+          "plan1",
+          "plan2",
+          "plan3"
+        ],
+        "saturated": true
+      },
+      "rollout_best_chosen": true,
+      "sl_retry": {
+        "known_draws": 0,
+        "compute": {
+          "rollout_samples": 24,
+          "rollout_budget_ms": 20000,
+          "turn_spent_ms": 0,
+          "mc_samples": 36,
+          "boss_sim_samples": 1200
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 1444,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "KNOWLEDGE_DEMON",
+        "low_trust": false,
+        "best": null,
+        "tied": [
+          "plan1",
+          "plan2",
+          "plan3"
+        ],
+        "ranked": [
+          "plan1",
+          "plan2",
+          "plan3"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0,
+            "cal": 0,
+            "d": 0,
+            "se": 0,
+            "loss": 30,
+            "won_loss": null,
+            "order": null
+          },
+          "plan2": {
+            "win": 0,
+            "cal": 0,
+            "d": 0,
+            "se": 0,
+            "loss": 30,
+            "won_loss": null,
+            "order": null
+          },
+          "plan3": {
+            "win": 0,
+            "cal": 0,
+            "d": 0,
+            "se": 0,
+            "loss": 30,
+            "won_loss": null,
+            "order": null
+          }
+        },
+        "rollout_own_best": "plan1",
+        "rollout_own_tied": []
+      },
+      "sl_explore": {
+        "replay": {
+          "point": "T6, the 3rd latest question before attempt 1's death on T10",
+          "reference": 1,
+          "line": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+          "original": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+          "overridden": false,
+          "reason": "the answer is attempt 1's line"
+        }
+      },
+      "timing": {
+        "planner_ms": 1909,
+        "solve_ms": 2,
+        "mc_ms": 0,
+        "rollout_ms": 425,
+        "boss_sim_ms": 1444,
+        "other_ms": 38,
+        "cpu_ms": 29881,
+        "load1": 8.13,
+        "probe_ms": 3.13,
+        "boss_sim": {
+          "pairs": 3,
+          "sims_done": 3600,
+          "samples": 1200,
+          "workers": 20
+        },
+        "memo": {
+          "hits": 10,
+          "stored": 28
+        }
+      },
+      "sl_attempt": 4,
+      "sl_reloads": 3,
+      "run_id": "KV0JHNJCKXLS",
+      "observed_ts": "2026-10-07T11:16:36.881Z",
+      "journal": {
+        "choice": "猎杀者 -> 知识恶魔, then 致命毒药+ -> 知识恶魔",
+        "reason": ""
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "line": 273401,
+      "ts": "2026-10-07T11:16:40.454Z",
+      "mode": "play",
+      "screen": "COMBAT",
+      "session": "singleplayer/run",
+      "floor": 33,
+      "turn": 5,
+      "label": "combat/plan-continue",
+      "decision_id": "dc8d21b3-2aa4-43e3-8419-1dba544ba388",
+      "decider": "code",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:319:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:SURVIVOR:true|1:DEADLY_POISON:true|2:BULLET_TIME:false\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4|DRAW_CARDS_NEXT_TURN_POWER:2\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "DEADLY_POISON",
+          "upgraded": true
+        },
+        "target": {
+          "id": "KNOWLEDGE_DEMON"
+        },
+        "turn": 5,
+        "from": "line",
+        "hand": "BULLET_TIME,DEADLY_POISON+,SURVIVOR",
+        "enemies": "0:KNOWLEDGE_DEMON"
+      },
+      "rationale": "continuing the Jev-chosen plan: 致命毒药+ -> 知识恶魔",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 359,
+        "planner": 2,
+        "pre": 1
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "sl_attempt": 4,
+      "sl_reloads": 3,
+      "run_id": "KV0JHNJCKXLS",
+      "observed_ts": "2026-10-07T11:16:40.451Z",
+      "journal": {
+        "choice": "continuing the Jev-chosen plan: 致命毒药+ -> 知识恶魔",
+        "reason": ""
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "line": 273402,
+      "ts": "2026-10-07T11:16:41.341Z",
+      "mode": "play",
+      "screen": "COMBAT",
+      "session": "singleplayer/run",
+      "floor": 33,
+      "turn": 5,
+      "label": "combat/plan",
+      "decision_id": "72225830-c089-4dbe-8e79-9de80f47f67e",
+      "decider": "code",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:319:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:SURVIVOR:false|1:BULLET_TIME:false\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4|DRAW_CARDS_NEXT_TURN_POWER:2\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "end_turn"
+      },
+      "expect": {
+        "turn": 5,
+        "from": "decision"
+      },
+      "rationale": "code plan (only line): end turn; hp -0, dmg 21",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 787,
+        "planner": 3,
+        "pre": 3
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "sl_attempt": 4,
+      "sl_reloads": 3,
+      "run_id": "KV0JHNJCKXLS",
+      "observed_ts": "2026-10-07T11:16:41.335Z",
+      "journal": {
+        "choice": "code plan (only line): end turn; hp -0, dmg 21",
+        "reason": ""
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "line": 273403,
+      "ts": "2026-10-07T11:16:43.567Z",
+      "mode": "play",
+      "screen": "CARD_SELECTION",
+      "session": "singleplayer/run",
+      "floor": 33,
+      "turn": 5,
+      "label": "selection/curse",
+      "decision_id": "8c5fae7c-b444-45c3-b593-5198af767df7",
+      "decider": "code",
+      "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:298:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4|DRAW_CARDS_NEXT_TURN_POWER:2\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "select_deck_card",
+        "option_index": 1
+      },
+      "expect": {
+        "option": {
+          "id": "SLOTH"
+        },
+        "from": "decision"
+      },
+      "rationale": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 83 (outlasts the HP: 7 a turn x 11.8 turns + 20 > 30 HP); SLOTH 135 (1.5 cards a turn); 25 dmg/turn, 11.8 turns left, 4.5 cards/turn (0.0 auto), 18 incoming)",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 10001,
+        "planner": 1,
+        "pre": 2
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "sl_attempt": 4,
+      "sl_reloads": 3,
+      "run_id": "KV0JHNJCKXLS",
+      "observed_ts": "2026-10-07T11:16:43.564Z",
+      "journal": {
+        "choice": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 83 (outlasts the HP: 7 a turn x 11.8 turns + 20 > 30 HP); SLOTH 135 (1.5 cards a turn); 25 dmg/turn, 11.8 turns left, 4.5 cards/turn (0.0 auto), 18 incoming)",
+        "reason": ""
+      },
+      "result": "failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:8080/action: the request timed out"
+    },
+    {
+      "line": 273404,
+      "ts": "2026-10-07T11:16:56.823Z",
+      "mode": "play",
+      "screen": "CARD_SELECTION",
+      "session": "singleplayer/run",
+      "floor": 33,
+      "turn": 5,
+      "label": "selection/curse",
+      "decision_id": "407e4996-4ab6-4876-ad2c-ada32dce8aa5",
+      "decider": "code",
+      "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:298:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4|DRAW_CARDS_NEXT_TURN_POWER:2\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "select_deck_card",
+        "option_index": 1
+      },
+      "expect": {
+        "option": {
+          "id": "SLOTH"
+        },
+        "from": "decision"
+      },
+      "rationale": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 83 (outlasts the HP: 7 a turn x 11.8 turns + 20 > 30 HP); SLOTH 135 (1.5 cards a turn); 25 dmg/turn, 11.8 turns left, 4.5 cards/turn (0.0 auto), 18 incoming)",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 583,
+        "planner": 2,
+        "pre": 1
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "sl_attempt": 4,
+      "sl_reloads": 3,
+      "run_id": "KV0JHNJCKXLS",
+      "observed_ts": "2026-10-07T11:16:56.820Z",
+      "journal": {
+        "choice": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 83 (outlasts the HP: 7 a turn x 11.8 turns + 20 > 30 HP); SLOTH 135 (1.5 cards a turn); 25 dmg/turn, 11.8 turns left, 4.5 cards/turn (0.0 auto), 18 incoming)",
+        "reason": ""
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "line": 273450,
+      "ts": "2026-10-07T11:19:00.789Z",
+      "mode": "play",
+      "screen": "COMBAT",
+      "session": "singleplayer/run",
+      "floor": 33,
+      "turn": 5,
+      "label": "combat/plan-choice",
+      "decision_id": "427b1bd7-6bb7-440e-bc15-caa96029c513",
+      "decider": "jev",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:334:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:PREDATOR:true|1:SURVIVOR:true|2:DEADLY_POISON:true|3:BULLET_TIME:true\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "questions": {
+        "plan": {
+          "type": "choice",
+          "instructions": "Which plan should I play this turn?",
+          "criteria": {
+            "plan1": "{\"plays\":\"猎杀者 -> 知识恶魔, then 致命毒药+ -> 知识恶魔\",\"result\":\"survives with 30/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":36,\"enemies_after\":\"知识恶魔 298 HP, 中毒 20\",\"hp_after\":30,\"hp_after_pct\":43,\"dmg\":36,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.7, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~204, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 36; T2: hp -5.1 [0-21], dmg 37.8 [26-56], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 36.1 [22-53], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 39.9 [30-50], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 45 [35-55], alive 14/24, won 0/24\",\"history_estimate\":\"further HP loss 26, win 39% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan2, plan3 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (the best line), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+            "plan2": "{\"plays\":\"猎杀者 -> 知识恶魔\",\"result\":\"survives with 30/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":29,\"enemies_after\":\"知识恶魔 305 HP, 中毒 13\",\"energy_unused\":1,\"hp_after\":30,\"hp_after_pct\":43,\"dmg\":29,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.2, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~234, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 29; T2: hp -5.1 [0-21], dmg 30.8 [19-49], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 29.1 [15-46], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 32.9 [23-43], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 38 [28-48], alive 14/24, won 0/24\",\"history_estimate\":\"further HP loss 27, win 37% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan3 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+            "plan3": "{\"plays\":\"子弹时间\",\"result\":\"survives with 30/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":14,\"enemies_after\":\"知识恶魔 320 HP, 中毒 13\",\"lasting_value\":\"sets up a power worth about 9 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"子弹时间\",\"hp_after\":30,\"hp_after_pct\":43,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"lasting value 9\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.4, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~249, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 14; T2: hp -5.1 [0-21], dmg 30.8 [19-49], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 29.1 [15-46], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 32.9 [23-43], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 38 [28-48], alive 14/24, won 0/24\",\"history_estimate\":\"further HP loss 27, win 36% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1, plan2 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\"}"
+          }
+        }
+      },
+      "answers": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan1",
+          "probabilities": {
+            "plan1": 0.71,
+            "plan2": 0.07,
+            "plan3": 0.22
+          },
+          "confidence": 0.56,
+          "raw": {
+            "type": "choice",
+            "choice": "plan1",
+            "confidence": 0.56,
+            "probabilities": {
+              "plan1": 0.71,
+              "plan2": 0.07,
+              "plan3": 0.22
+            }
+          }
+        }
+      },
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "PREDATOR",
+          "upgraded": false
+        },
+        "target": {
+          "id": "KNOWLEDGE_DEMON"
+        },
+        "turn": 5,
+        "from": "decision"
+      },
+      "rationale": "Jev chose plan 1/3 (猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔) with confidence 0.56; code rank 1; SL explore (T5, the 4th latest question before attempt 4's death on T10): playing 猎杀者 -> 知识恶魔 instead of 猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔, played on this board in attempts 1, 4 (the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's))",
+      "confidence": 0.56,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [
+        "req_01a11616a4a17e2f83d1b0ad16e44969"
+      ],
+      "latency_ms": {
+        "plan": 31,
+        "jev": 515,
+        "action": 445,
+        "planner": 39,
+        "pre": 0
+      },
+      "usage": {
+        "input_tokens": 6850,
+        "output_tokens": 42
+      },
+      "jev_context": "v1",
+      "jev_hints": [],
+      "rollout": {
+        "available": true,
+        "ms": 1,
+        "horizon": 5,
+        "samples": 24,
+        "degraded": [],
+        "lines": 5,
+        "best": null,
+        "best_added": false,
+        "tied": [
+          "plan1",
+          "plan2",
+          "plan3"
+        ],
+        "saturated": true
+      },
+      "rollout_best_chosen": true,
+      "sl_retry": {
+        "known_draws": 0,
+        "compute": {
+          "rollout_samples": 24,
+          "rollout_budget_ms": 20000,
+          "turn_spent_ms": 0,
+          "mc_samples": 36,
+          "boss_sim_samples": 1200
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 24,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "KNOWLEDGE_DEMON",
+        "low_trust": false,
+        "best": null,
+        "tied": [
+          "plan1",
+          "plan2",
+          "plan3"
+        ],
+        "ranked": [
+          "plan1",
+          "plan2",
+          "plan3"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0,
+            "cal": 0,
+            "d": 0,
+            "se": 0,
+            "loss": 30,
+            "won_loss": null,
+            "order": null
+          },
+          "plan2": {
+            "win": 0,
+            "cal": 0,
+            "d": 0,
+            "se": 0,
+            "loss": 30,
+            "won_loss": null,
+            "order": null
+          },
+          "plan3": {
+            "win": 0,
+            "cal": 0,
+            "d": 0,
+            "se": 0,
+            "loss": 30,
+            "won_loss": null,
+            "order": null
+          }
+        },
+        "rollout_own_best": "plan1",
+        "rollout_own_tied": []
+      },
+      "sl_explore": {
+        "point": "T5, the 4th latest question before attempt 4's death on T10",
+        "original": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+        "replacement": "猎杀者 -> 知识恶魔",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1,
+          4
+        ],
+        "replayed": 8,
+        "numbers": {
+          "original": "rollout dead 10/24, further loss 30, win ~28%; whole-fight sim win 0%; this turn hp -0, dmg 36",
+          "replacement": "rollout dead 10/24, further loss 30, win ~27%; whole-fight sim win 0%; this turn hp -0, dmg 29"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0,
+          "replacement": 0,
+          "diff": 0,
+          "se": 0
+        },
+        "turn": "DEADLY_POISON+>知识恶魔, PREDATOR>知识恶魔",
+        "turn_instead": "PREDATOR>知识恶魔"
+      },
+      "timing": {
+        "planner_ms": 35,
+        "solve_ms": 1,
+        "mc_ms": 0,
+        "rollout_ms": 1,
+        "boss_sim_ms": 24,
+        "other_ms": 9,
+        "cpu_ms": 49,
+        "load1": 6.36,
+        "probe_ms": 2.87,
+        "memo": {
+          "rollout_ms": 423,
+          "boss_sim_ms": 1444,
+          "hits": 20,
+          "stored": 34
+        }
+      },
+      "sl_attempt": 5,
+      "sl_reloads": 4,
+      "run_id": "KV0JHNJCKXLS",
+      "observed_ts": "2026-10-07T11:19:00.204Z",
+      "journal": {
+        "choice": "猎杀者 -> 知识恶魔, then 致命毒药+ -> 知识恶魔",
+        "reason": ""
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "line": 273451,
+      "ts": "2026-10-07T11:19:03.342Z",
+      "mode": "play",
+      "screen": "COMBAT",
+      "session": "singleplayer/run",
+      "floor": 33,
+      "turn": 5,
+      "label": "combat/plan-choice",
+      "decision_id": "0cd00ba9-4994-4bc1-8d15-25d241031d40",
+      "decider": "jev",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:319:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:SURVIVOR:true|1:DEADLY_POISON:true|2:BULLET_TIME:false\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4|DRAW_CARDS_NEXT_TURN_POWER:2\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "questions": {
+        "plan": {
+          "type": "choice",
+          "instructions": "Which plan should I play this turn?",
+          "criteria": {
+            "plan1": "{\"plays\":\"致命毒药+ -> 知识恶魔\",\"result\":\"survives with 30/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":21,\"enemies_after\":\"知识恶魔 298 HP, 中毒 20\",\"hp_after\":30,\"hp_after_pct\":43,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.7, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~204, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 21; T2: hp -5.1 [0-21], dmg 37.8 [26-56], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 36.1 [22-53], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 39.9 [30-50], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 45 [35-55], alive 14/24, won 0/24\",\"history_estimate\":\"further HP loss 26, win 39% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan2 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (the best line), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}",
+            "plan2": "{\"plays\":\"nothing (end the turn now)\",\"result\":\"survives with 30/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":14,\"enemies_after\":\"知识恶魔 305 HP, 中毒 13\",\"energy_unused\":1,\"hp_after\":30,\"hp_after_pct\":43,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":21,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.2, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~234, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 14; T2: hp -5.1 [0-21], dmg 30.8 [19-49], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 29.1 [15-46], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 32.9 [23-43], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 38 [28-48], alive 14/24, won 0/24\",\"history_estimate\":\"further HP loss 27, win 37% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best whole-fight simulation numbers with plan1 (the same simulated win rate and HP lost when won); the ranking picks none of them\",\"whole_fight_sim\":\"win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\",\"tied_hp_loss_rank\":1,\"tied_hp_loss_extra\":0,\"tied_hp_loss_reference\":\"长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。\"}"
+          }
+        }
+      },
+      "answers": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan1",
+          "probabilities": {
+            "plan2": 0.08,
+            "plan1": 0.92
+          },
+          "confidence": 0.84,
+          "raw": {
+            "type": "choice",
+            "choice": "plan1",
+            "confidence": 0.84,
+            "probabilities": {
+              "plan2": 0.08,
+              "plan1": 0.92
+            }
+          }
+        }
+      },
+      "chosen": {
+        "action": "end_turn"
+      },
+      "expect": {
+        "turn": 5,
+        "from": "decision"
+      },
+      "rationale": "Jev chose plan 1/2 (致命毒药+ -> 知识恶魔) with confidence 0.84; code rank 1; SL explore (the deviation's turn, T5): playing end turn instead of 致命毒药+ -> 知识恶魔, which ends the turn with the plays attempts 1, 4 had through the deviation point (the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's))",
+      "confidence": 0.84,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [
+        "req_01a11616ae7572c3bce30734780d0ddd"
+      ],
+      "latency_ms": {
+        "plan": 40,
+        "jev": 407,
+        "action": 765,
+        "planner": 1039,
+        "pre": 1
+      },
+      "usage": {
+        "input_tokens": 6093,
+        "output_tokens": 34
+      },
+      "jev_context": "v1",
+      "jev_hints": [],
+      "rollout": {
+        "available": true,
+        "ms": 185,
+        "horizon": 5,
+        "samples": 24,
+        "degraded": [],
+        "lines": 2,
+        "best": null,
+        "best_added": false,
+        "tied": [
+          "plan1",
+          "plan2"
+        ],
+        "saturated": true
+      },
+      "rollout_best_chosen": true,
+      "sl_retry": {
+        "known_draws": 0,
+        "compute": {
+          "rollout_samples": 24,
+          "rollout_budget_ms": 20000,
+          "turn_spent_ms": 425,
+          "mc_samples": 36,
+          "boss_sim_samples": 1200
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 829,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "KNOWLEDGE_DEMON",
+        "low_trust": false,
+        "best": null,
+        "tied": [
+          "plan1",
+          "plan2"
+        ],
+        "ranked": [
+          "plan1",
+          "plan2"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0,
+            "cal": 0,
+            "d": 0,
+            "se": 0,
+            "loss": 30,
+            "won_loss": null,
+            "order": null
+          },
+          "plan2": {
+            "win": 0,
+            "cal": 0,
+            "d": 0,
+            "se": 0,
+            "loss": 30,
+            "won_loss": null,
+            "order": null
+          }
+        },
+        "rollout_own_best": "plan1",
+        "rollout_own_tied": []
+      },
+      "sl_explore": {
+        "avoid": {
+          "point": "T5, the 4th latest question before attempt 4's death on T10",
+          "original": "致命毒药+ -> 知识恶魔",
+          "replacement": "end turn",
+          "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+          "played_in": [
+            1,
+            4
+          ],
+          "turn": "DEADLY_POISON+>知识恶魔, PREDATOR>知识恶魔",
+          "turn_instead": "PREDATOR>知识恶魔",
+          "numbers": {
+            "original": "rollout dead 10/24, further loss 30, win ~28%; whole-fight sim win 0%; this turn hp -0, dmg 21",
+            "replacement": "rollout dead 10/24, further loss 30, win ~27%; whole-fight sim win 0%; this turn hp -0, dmg 14"
+          },
+          "gate": "b2",
+          "b2": {
+            "original": 0,
+            "replacement": 0,
+            "diff": 0,
+            "se": 0
+          }
+        }
+      },
+      "timing": {
+        "planner_ms": 1037,
+        "solve_ms": 0,
+        "mc_ms": 0,
+        "rollout_ms": 185,
+        "boss_sim_ms": 829,
+        "other_ms": 22,
+        "cpu_ms": 17321,
+        "load1": 7.93,
+        "probe_ms": 2.78,
+        "boss_sim": {
+          "pairs": 2,
+          "sims_done": 2400,
+          "samples": 1200,
+          "workers": 20
+        },
+        "memo": {
+          "hits": 20,
+          "stored": 36
+        }
+      },
+      "sl_attempt": 5,
+      "sl_reloads": 4,
+      "run_id": "KV0JHNJCKXLS",
+      "observed_ts": "2026-10-07T11:19:01.855Z",
+      "journal": {
+        "choice": "致命毒药+ -> 知识恶魔",
+        "reason": ""
+      },
+      "result": "completed: Action completed."
+    },
+    {
+      "line": 273452,
+      "ts": "2026-10-07T11:19:05.571Z",
+      "mode": "play",
+      "screen": "CARD_SELECTION",
+      "session": "singleplayer/run",
+      "floor": 33,
+      "turn": 5,
+      "label": "selection/curse",
+      "decision_id": "062aa2a7-fdba-4348-9687-ff03aac5a96a",
+      "decider": "code",
+      "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:305:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4|DRAW_CARDS_NEXT_TURN_POWER:2\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "select_deck_card",
+        "option_index": 1
+      },
+      "expect": {
+        "option": {
+          "id": "SLOTH"
+        },
+        "from": "decision"
+      },
+      "rationale": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 91 (outlasts the HP: 7 a turn x 13.0 turns + 20 > 30 HP); SLOTH 149 (1.5 cards a turn); 24 dmg/turn, 13.0 turns left, 4.5 cards/turn (0.0 auto), 18 incoming)",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 10001,
+        "planner": 1,
+        "pre": 0
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "sl_attempt": 5,
+      "sl_reloads": 4,
+      "run_id": "KV0JHNJCKXLS",
+      "observed_ts": "2026-10-07T11:19:05.570Z",
+      "journal": {
+        "choice": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 91 (outlasts the HP: 7 a turn x 13.0 turns + 20 > 30 HP); SLOTH 149 (1.5 cards a turn); 24 dmg/turn, 13.0 turns left, 4.5 cards/turn (0.0 auto), 18 incoming)",
+        "reason": ""
+      },
+      "result": "failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:8080/action: the request timed out"
+    },
+    {
+      "line": 273453,
+      "ts": "2026-10-07T11:19:18.688Z",
+      "mode": "play",
+      "screen": "CARD_SELECTION",
+      "session": "singleplayer/run",
+      "floor": 33,
+      "turn": 5,
+      "label": "selection/curse",
+      "decision_id": "a118b0de-f960-46b9-beea-5eab8358d783",
+      "decider": "code",
+      "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:305:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"\",\"hp\":30,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:4|DRAW_CARDS_NEXT_TURN_POWER:2\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "select_deck_card",
+        "option_index": 1
+      },
+      "expect": {
+        "option": {
+          "id": "SLOTH"
+        },
+        "from": "decision"
+      },
+      "rationale": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 91 (outlasts the HP: 7 a turn x 13.0 turns + 20 > 30 HP); SLOTH 149 (1.5 cards a turn); 24 dmg/turn, 13.0 turns left, 4.5 cards/turn (0.0 auto), 18 incoming)",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 562,
+        "planner": 3,
+        "pre": 0
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "sl_attempt": 5,
+      "sl_reloads": 4,
+      "run_id": "KV0JHNJCKXLS",
+      "observed_ts": "2026-10-07T11:19:18.685Z",
+      "journal": {
+        "choice": "code: Knowledge Demon curse -> 懒惰 (HP cost for this deck: DISINTEGRATION 91 (outlasts the HP: 7 a turn x 13.0 turns + 20 > 30 HP); SLOTH 149 (1.5 cards a turn); 24 dmg/turn, 13.0 turns left, 4.5 cards/turn (0.0 auto), 18 incoming)",
+        "reason": ""
+      },
+      "result": "completed: Action completed."
+    }
+  ]
+}
