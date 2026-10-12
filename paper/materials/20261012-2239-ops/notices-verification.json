@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-12 22:46:41 CST",
+  "notices": [
+    {
+      "id": "39042c4582c2ae0b21031952",
+      "message": "[{\"claim\": \"特定防御能力或10张候选是毒防胜局的必要核心。\", \"finding\": \"KF9末王未施步法或永恒铠甲仍胜。10张功能包仅在条件模型中胜64/64，永久删除26张及连续boss资格未证。\", \"evidence\": [\"KF9HMZKTFC3V F49 T1—6\", \"candidate-templates-increment.json\", \"paired-analysis.json\"], \"recommendation\": \"保留候选定位，不按目标张数强删；将限定结论沿原owner入库。\", \"existing_entry_ids\": [\"silent-core-poison-defense-observation\", \"silent-deck-burst-observation\"]}, {\"claim\": \"现有模型已正确承接重放效果。\", \"finding\": \"触媒原帧及当步trace均建2层，整战快照却只保留1层；重放药瓶和扫腿的头盔格挡各少算4。\", \"evidence\": [\"KF9HMZKTFC3V F49 T2/T3/T5\", \"calibration-probes.json\", \"accelerant-persistence-probe.json\"], \"recommendation\": \"沿既有提案和P1/P2修正后，用原8臂同种子复算；当前结果不作真实胜率。\", \"existing_entry_ids\": [\"silent-accelerant-triggers\", \"silent-intimidating-helmet-observed-replay-block\"]}, {\"claim\": \"毒爆发窗口147伤/轮可以代表全场有效DPR。\", \"finding\": \"147仅为T3—5毒子窗口。全场六轮可见伤害528，最后7血退场缺归零帧；可证下界88伤/轮，89.17仅为通关血池代理。\", \"evidence\": [\"KF9HMZKTFC3V F49 T1—6\", \"actual-dpr.json\"], \"recommendation\": \"分列完整分母、条件窗口、代理和未知归属。\", \"existing_entry_ids\": [\"silent-deck-burst-observation\", \"silent-aeonglass-artifact-growth-sl\"]}, {\"claim\": \"同名再次施放或自动重放次数等于完整核心循环。\", \"finding\": \"现有轨迹缺稳定实例身份和完整后继归属，双永久药瓶不能据牌名认定同一实例回返。\", \"evidence\": [\"KF9HMZKTFC3V F49 T2/T3\", \"per-sample-metrics.json\"], \"recommendation\": \"保留已算的全分母施放、支付和效果统计；实例回返与完整组合继续为未知。\", \"existing_entry_ids\": [\"silent-deck-burst-observation\"]}]",
+      "stages": {
+        "ops_forwarded": {
+          "receipt": {
+            "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/39042c4582c2ae0b21031952.ops-forwarded.json",
+            "sha256": "c17aa3720079566510f5931c1cf87f901c7d819c30ec2e9dde50f929f3403ef2",
+            "at": 1791814881.4224691
+          },
+          "evidence": {
+            "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/39042c4582c2ae0b21031952.inbox.json",
+            "sha256": "3a8d7e496a3a194778205df1f62330548f75f48187a6c59f4b3c8075d1c71f7c"
+          },
+          "verified": true
+        },
+        "watcher_received": {
+          "receipt": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/learning-notices-2232/39042c4582c2ae0b21031952-watcher_received.json",
+            "sha256": "9e4767afb84bd589ff9f36bf4d57d034597b8a264e7fb31b7c67c94b6970fda9",
+            "at": 1791815702.6242714
+          },
+          "evidence": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/learning-notices-2232/39042c4582c2ae0b21031952-readback.json",
+            "sha256": "17d3f585e587e6c5576d796b44e0824f85edc3b3fd73fa4ccb25e68670593865"
+          },
+          "verified": true
+        },
+        "roy_notified": {
+          "receipt": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/learning-notices-2232/39042c4582c2ae0b21031952-roy_notified.json",
+            "sha256": "89d155de00f0bf196f8f651c84f36bed2d7d6bbd5760ed3b818765957469d325",
+            "at": 1791815702.7357185
+          },
+          "evidence": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/learning-notices-2232/roy-visible-commentary.json",
+            "sha256": "2102aed5e681bb791308b8dd04a0bfbf5c58d3c46f1edfa9d7d395dbbcd1a717"
+          },
+          "verified": true
+        }
+      }
+    },
+    {
+      "id": "4672d9828aa8f3cc5edae173",
+      "message": "已完成8臂共512个有效条件样本、六个实战窗口核算和5条去重经验草稿。同步live提交433f0fe7d733150c8ce3322d6f6d120887489571时出现16个合并冲突，按任务“冲突就停下回报”保留现场。HEAD仍为所列base；没有新增源码或经验提交、实际上线或消费者成功回执。需ops协调冲突后沿原线程完成入库和读回，并将异议转watcher→Roy；未伪造通知确认。",
+      "stages": {
+        "ops_forwarded": {
+          "receipt": {
+            "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/4672d9828aa8f3cc5edae173.ops-forwarded.json",
+            "sha256": "99948b1bcc70184618accc310ede3acfd74c90625cf7e566422fb7eb2e2c6017",
+            "at": 1791814881.4252114
+          },
+          "evidence": {
+            "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/4672d9828aa8f3cc5edae173.inbox.json",
+            "sha256": "ea1b231091c9d04ea8ab80a46eae777f3d06a927fdefe0c0290b8761c4232381"
+          },
+          "verified": true
+        },
+        "watcher_received": {
+          "receipt": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/learning-notices-2232/4672d9828aa8f3cc5edae173-watcher_received.json",
+            "sha256": "5acb2e36bcb96b8aed39fa956d4c01940de6b09b37abcaf5e77191f401548ecc",
+            "at": 1791815702.8417962
+          },
+          "evidence": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/learning-notices-2232/4672d9828aa8f3cc5edae173-readback.json",
+            "sha256": "6c8045cfa933b8184f45a4b57111b2983c6fb13c4df950b0082b41c24675e45d"
+          },
+          "verified": true
+        },
+        "roy_notified": {
+          "receipt": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/learning-notices-2232/4672d9828aa8f3cc5edae173-roy_notified.json",
+            "sha256": "9b8a0ac0933c95c3a4d802623a52930368f7bcd7e786819de5dbc3995f04b1b4",
+            "at": 1791815702.9536905
+          },
+          "evidence": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/learning-notices-2232/roy-visible-commentary.json",
+            "sha256": "2102aed5e681bb791308b8dd04a0bfbf5c58d3c46f1edfa9d7d395dbbcd1a717"
+          },
+          "verified": true
+        }
+      }
+    }
+  ],
+  "new_ack_by_ops": false,
+  "watcher_already_received": true,
+  "roy_already_notified": true,
+  "readback_does_not_complete_experience_delivery": true
+}

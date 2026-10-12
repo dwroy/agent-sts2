@@ -1,0 +1,95 @@
+import {readFileSync,writeFileSync,appendFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import assert from 'node:assert/strict';
+if(process.env.CHARACTER!=='silent') throw Error('silent required');
+const out=resolve('learner/runs/20261012-core-decklists-learning-v1');
+const mod=p=>import(pathToFileURL(resolve('agent/src',p+'.ts')).href);
+const save=(p,x)=>writeFileSync(resolve(out,p),JSON.stringify(x,null,2)+'\n');
+const {setKnowledgeCharacter}=await mod('knowledge/files');setKnowledgeCharacter('silent');
+const {loadConfig}=await mod('core/config');
+const {makeKnowledge}=await mod('knowledge/index');
+const {parseGameState}=await mod('hand/mod/schema');
+const {buildRunBrief}=await mod('memory/run-brief');
+const {createScreenMemory}=await mod('memory/types');
+const {planCombatTurn}=await mod('reflex/combat-plan');
+const {rolloutLiveOptions,boardRolloutInput,deckModels,fightMetaOf,fightRelicsOf}=await mod('reflex/rollout-live');
+const {solveTap,traceSteps}=await mod('reflex/turn-solver');
+const {simulateFight}=await mod('reflex/rollout');
+const {loadMonsterDb,loadMoveModel}=await mod('sim/boss-start');
+const {slimInput,sampleSeed}=await mod('sim/boss-sim');
+const {coreWindow}=await mod('sim/core-window');
+const observed=JSON.parse(readFileSync(resolve(out,'observed-states.json')));
+const raws=new Map(observed.map(x=>[x.source.line,x.row.state]));
+const raw=raws.get(370164);
+const types=new Map(raw.run.deck.map(c=>[c.card_id,c.card_type]));
+const knowledge=makeKnowledge({cards:[...types].map(([id,type])=>({id,type}))},'cache');
+rolloutLiveOptions.enabled=false;
+function capture(raw){
+ const state=parseGameState(raw),screenMemory=createScreenMemory('COMBAT');
+ const env={state,knowledge,brief:buildRunBrief(state,knowledge),thresholds:loadConfig({}).thresholds,screenMemory,
+  runStart:'auto',characterPreference:null,allowFtueModals:false,strictJev:true,combatPlanner:'turn',shopDiscardPotions:[],jevContext:'off',fightPlan:'off'};
+ let solver;
+ solveTap.onSolve=input=>{solver??=structuredClone(input)};
+ try{planCombatTurn(env)}finally{solveTap.onSolve=null}
+ if(!solver)throw Error('no solver');
+ return {state,solver,screenMemory};
+}
+const cap=capture(raw),db=loadMonsterDb(),mm=loadMoveModel();
+const board=boardRolloutInput(cap.state,knowledge,cap.solver,10,db.monsters,mm);
+const deck=deckModels(cap.state,knowledge);
+assert.equal(deck.length,36);assert.equal(cap.solver.player.hp,31);assert.equal(cap.solver.enemies[0].hp,532);
+const {handBase,solver,...rest}=board;
+const base=slimInput({...rest,solver:{...solver,hand:[],cardsPlayedThisTurn:0},plans:[],
+ piles:{draw:deck,discard:[],handBase:[]},meta:fightMetaOf(cap.state,knowledge,cap.screenMemory),mm,model:null,gates:null,
+ fightRelics:fightRelicsOf(raw.run,1),options:{drawFirst:raw.combat.hand.length},captureCore:true});
+const core=new Set(['BOUNCING_FLASK','ACCELERANT','HAZE','LEG_SWEEP','BACKFLIP','MALAISE','PIERCING_WAIL','NEUTRALIZE']);
+const b=deck.filter(c=>core.has(c.cardId));assert.equal(b.length,10);
+const versions=JSON.parse(readFileSync(resolve(out,'observed-card-versions.json')));
+const plain=versions.find(v=>v.card.card_id==='BOUNCING_FLASK'&&!v.card.upgraded);
+const downRaw=structuredClone(raw);downRaw.run.deck=downRaw.run.deck.map(c=>c.index===13?{...plain.card,index:c.index}:c);
+const down=deckModels(parseGameState(downRaw),knowledge).find(c=>c.cardId==='BOUNCING_FLASK'&&!c.upgraded);assert(down);
+function firstChange(cards,id,fn){let done=false;return cards.map(c=>c.cardId===id&&!done?(done=true,fn(c)):c)}
+const arms={A:deck,B:b,C_defense:deck.filter(c=>core.has(c.cardId)||['DEFEND_SILENT','SURVIVOR'].includes(c.cardId)),
+ C_output:deck.filter(c=>core.has(c.cardId)||['POUNCE','RICOCHET','BUBBLE_BUBBLE'].includes(c.cardId)),
+ D_flask_upgrade:firstChange(b,'BOUNCING_FLASK',c=>({...down,index:c.index,key:c.key})),
+ D_flask_replay:firstChange(b,'BOUNCING_FLASK',c=>({...c,replay:0})),
+ D_accelerant_replay:firstChange(b,'ACCELERANT',c=>({...c,replay:0})),
+ D_sweep_replay:firstChange(b,'LEG_SWEEP',c=>({...c,replay:0}))};
+const inputs={};
+for(const [id,cards] of Object.entries(arms)){
+ inputs[id]=structuredClone({...base,piles:{draw:cards,discard:[],handBase:[]}});
+ // Meta deck fields are retained as observed; the simulator's policy consumes the explicit piles, not hypothetical acquisitions.
+}
+save('experiment-inputs.json',{base,inputs,permanent_raw_deck:raw.run.deck,ordinary_flask_source:plain,
+ unmodelled_scope:'同实战T1资源重洗；完整遗物/敌机制未逐项校准。meta保留原局上下文，不宣称精简可自然取得。'});
+const probes=[];
+for(const [before,after,id] of [[370174,370175,'BOUNCING_FLASK'],[370177,370178,'BOUNCING_FLASK'],[370178,370179,'ACCELERANT'],[370189,370190,'LEG_SWEEP']]){
+ const c=capture(raws.get(before)),card=c.solver.hand.find(x=>x.cardId===id);assert(card);
+ const step={cardIndex:card.index,cardId:id,name:card.name,upgraded:card.upgraded,target:id==='ACCELERANT'?null:0};
+ const trace=traceSteps(c.solver,[step]);
+ probes.push({before,after,card,input:c.solver,step,trace,actual_after:raws.get(after).combat});
+}
+save('calibration-probes.json',probes);
+if(process.argv.includes('--prepare')){console.log('prepared',Object.fromEntries(Object.entries(arms).map(([k,v])=>[k,v.length])));process.exit(0)}
+writeFileSync(resolve(out,'paired-trajectories.jsonl'),'');
+writeFileSync(resolve(out,'paired-samples.jsonl'),'');
+for(let sample=0;sample<64;sample++){
+ for(const [arm,input] of Object.entries(inputs)){
+  const seed=sampleSeed(29,sample),trajectory=simulateFight(input,null,30,seed,true,null),rs=trajectory.records,last=rs.at(-1);
+  const won=last?.won===true,died=last?.died===true,timeUp=!won&&!died&&last?.timeUp===true;
+  const startHp=input.solver.player.hp,lossCap=startHp+(input.solver.player.revives??[]).reduce((s,r)=>s+r.hp,0);
+  const summary={won,died,timeUp,capped:!won&&!died&&!timeUp,turns:rs.length,
+   hpLoss:died?lossCap:Math.min(lossCap,Math.max(0,rs.reduce((s,r)=>s+r.loss,0))),
+   resources:last?.resources,revived:rs.reduce((s,r)=>s+(r.revived??0),0),drunk:rs.flatMap(r=>r.drunk??[]),
+   enemyHpLeft:won?0:last?.hpLeft?Object.values(last.hpLeft).reduce((s,n)=>s+n,0):null,
+   lossByTurn:rs.map(r=>r.loss),dmgByTurn:rs.map(r=>r.dmg),
+   incomingByTurn:rs.map(r=>r.snap.E.reduce((s,e)=>s+(e[5]?e[7]:0),0)),enemyLossByTurn:rs.map(r=>r.enemyPart),
+   enemyHpByTurn:rs.map(r=>r.hpLeft?Object.values(r.hpLeft).reduce((s,n)=>s+n,0):null),
+   blockByTurn:rs.map(r=>r.blockGained??0),powers:rs.flatMap((r,t)=>(r.powers??[]).map(id=>[t+1,id])),
+   coreWindow:coreWindow(rs.flatMap(r=>r.coreTrace?[r.coreTrace]:[])),policyTurns:trajectory.policyTurns,policyNodes:trajectory.policyNodes};
+  appendFileSync(resolve(out,'paired-trajectories.jsonl'),JSON.stringify({arm,sample,seed,trajectory})+'\n');
+  appendFileSync(resolve(out,'paired-samples.jsonl'),JSON.stringify({arm,sample,seed,result:summary})+'\n');
+ }
+ if(sample%4===3)console.log('completed paired sample',sample+1);
+}
