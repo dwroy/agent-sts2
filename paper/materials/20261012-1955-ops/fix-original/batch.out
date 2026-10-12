@@ -1,0 +1,63 @@
+## 修 bug 回报
+
+- 合并基线：main → a9beb0fd37058a1f279bb8d074baf13cc79357ae
+- 修复（每条一行）：无新增；未改源码、未提交，撤修复验证不适用。
+- 已被别人修掉的：共161项，逐项提交号见[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-194301/learner/runs/20261012-194317-fix-batch/report.md)。包括 Jev 超限恢复 — fab7c9094；缓存签名测试隔离 — 8fbb441eb；卡死检查测试超时 — 95e7f050e。
+- 没修的：策略与独立功能继续原任务；双boss资源异常、历史通知失败、目录竞态、公平性及短暂超时缺少根因证据，详见报告。
+- 测试：tsc退出码0；定向vitest 5文件／35用例／退出码0，未跑完整套件。首次命令因沙箱构建ENOENT重试，实际测试首轮通过；gitleaks通过。
+- 合入：未合入（无新增）。空批预检因main/live的165条既有路径差异返回null，明细已保存供运维核实。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "a9beb0fd37058a1f279bb8d074baf13cc79357ae",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类：沿已有strategy-proposal与专用任务；不将有限子项当整个宽提案完成。"
+    },
+    {
+      "item": "具名卡资料全入口扩展、跨局未知项自动派发及量化构筑消费者",
+      "reason": "太大/独立功能：已核事件子项42c920f34已上线；其余入口、跨局未知派发与量化消费者继续原专用任务，不将部分交付当整个父需求完成。"
+    },
+    {
+      "item": "silent-0332 双boss接续资源异常根因",
+      "reason": "证据不足：队列的VAC6Z1PZ1QJG/64VJC5XT2AT2 A10 F47证据未附可重放触发样本；当前源码已保存分支/seed/资源诊断，沿原策略提案核实，不猜填HP/药水。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史失败恢复",
+      "reason": "证据不足：5c92f2aa已补后续失败stdout/stderr回执；旧rc2无stderr，不能证明未发送，保留幂等记录，不重发。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录竞态",
+      "reason": "证据不足：bc2c40e31及4fef181d5已提供会话前有界恢复和预检复验，上游创建/删除者未证，不放宽权限或清旧树。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时",
+      "reason": "证据不足：已有观察未证明永久饥饿或mod内部根因；保留原核查入口。"
+    },
+    {
+      "item": "全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存与性能专项",
+      "reason": "太大/独立功能及策略研究：继续各自已有专用任务，本批不混入。"
+    }
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 35},
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-194301/learner/runs/20261012-194317-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12fec-ae8b-7191-8c66-9967b4303b2a
+轮数：1；工具调用：command_execution×34 file_change×2
+token：输入 141.4k、输出 11.3k（其中推理 2794）、cache 读 1836.5k、cache 写 0（命中 92.8%）
+成本：未提供
+耗时：503.1 s（墙钟）
+时间：首个事件 21.8 s、模型首个输出 28.1 s、首次工具 31.2 s、末次工具结束 472.3 s；工具内共 285.0 s，其余（模型生成、推理、网络）196.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-194301）；模型的工具调用 exec×22；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T19-43-22-01a12fec-ae8b-7191-8c66-9967b4303b2a.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-194301/learner/runs/20261012-194317-fix-batch.jsonl
