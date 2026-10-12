@@ -2494,3 +2494,5 @@
 - 2026-10-12T20:55:04+08:00 watcher codex：学习连续性补充固定竞态：新补充可在最后一次tick之后、旧学习批返回之前到达；finish现重读注册revision，旧结果不得关闭新要求。固定Python14项、tsc及受影响vitest2文件3项通过；342文件3408项既过覆盖复用，不重复全套。原失败与检查均保留，待随同一上线任务合入。
 
 - 2026-10-12T21:05:26+08:00 watcher codex：结合本轮原ops长时间宿主检查导致事件排队的实际观察，异议/阻塞通知改由ops程序先幂等转录到现有watcher收件箱及for-roy、保存逐字回执，再让ops模型处理；不把转录冒称watcher已读或Roy已知。fixed14项含首次投递/重试不重复、后续阶段ACK约束，tsc及vitest2项通过；旧342文件3408覆盖复用。纯通知流程，无游戏/模型路由/ops prompt改动。
+
+- 2026-10-12T21:18:41+08:00 watcher codex：学习者resume参数顺序与仓库已验证的ops resume适配保持一致，所有profile/config显式传到resume子命令，cwd由spawn提供；普通首次exec不变。tsc、启动/隔离/调度定向检查及最终resume2项通过，真实CLI完整参数--help解析通过（不启动模型），gitleaks通过；随原同一交付源合入，不另开学习任务。

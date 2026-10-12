@@ -8,8 +8,9 @@ it("resumes the explicit thread with the same learner isolation and never --last
   const original = codexCommand(request, "fixed input");
   const thread = "11111111-2222-3333-4444-555555555555";
   const resumed = codexCommand({ ...request, resumeThread: thread }, "fixed input");
-  expect(resumed.args.slice(0, -3)).toEqual(original.args.slice(0, -1));
-  expect(resumed.args.slice(-3)).toEqual(["resume", thread, "-"]);
+  const options = original.args.slice(1, -1);
+  options.splice(options.indexOf("--cd"), 2);
+  expect(resumed.args).toEqual(["exec", "resume", ...options, thread, "-"]);
   expect(resumed.stdin).toBe(original.stdin);
   expect(resumed.args).not.toContain("--last");
   expect(resumed.args).not.toContain("--dangerously-bypass-approvals-and-sandbox");
