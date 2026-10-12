@@ -26,6 +26,7 @@ import { silentPhaseCurrentFacts } from "./silent-phase-current.js";
 import { silentPotionReference } from "./silent-potion-reference.js";
 import { silentHeldLossFacts } from "./silent-held-loss.js";
 import { silentGiantPotionFacts } from "./silent-giant-potion.js";
+import { observedCrusherWeakFacing } from "./silent-crusher-facing.js";
 import { silentKinBoardFacts, silentKinPlanFacts } from "./silent-kin-progress.js";
 import { observedDemonPoison } from "./silent-demon-potion.js";
 import { crabPoisonFacts } from "./silent-crab-potion.js";
@@ -763,6 +764,7 @@ export function enemySims(combat: Record<string, unknown>, asc?: number, charact
       block: num(enemy["block"]),
       vulnerable: powerAmount(enemy, "VULNERABLE_POWER"),
       weak: powerAmount(enemy, "WEAK_POWER"),
+      ...observedCrusherWeakFacing(combat, enemy, asc, character),
       // 3UPY3BP2LVS7 F17 T3, silent-0349: only this observed move and power combination.
       ...(character.toLowerCase() === "silent" && asc === 10 &&
         str(enemy["enemy_id"]) === "CEREMONIAL_BEAST" && str(enemy["move_id"]) === "PLOW_MOVE" &&

@@ -146,6 +146,8 @@ export interface EnemySim {
   weakShackling?: true;
   /** VLZ6CCT8AQ0A A10 F43 T2: existing Weak with the observed three-point Malaise loss. */
   weakMalaise?: true;
+  /** Silent A10 observed Crusher move: Weak-adjusted damage before facing and final rounding, this turn only. */
+  observedWeakFacingBase?: number;
   /** Poison remaining before this enemy turn, observed in Silent runs. */
   poison?: number;
   /** Observed ordinary Strangle: two HP lost after later completed manual cards this turn; null is unverified. */
@@ -2781,6 +2783,18 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
         // states.jsonl); only Strength changes made this turn still need the ×1.5.
         const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
         let amount = Math.floor(shown + strengthChange);
+        // NHA F33 T2: the observed facing pair is 1/2, not floor(1 * 1.5). S9 F33 T7 confirms 5/7.
+        const facingBase = enemy.observedWeakFacingBase;
+        if (facingBase !== undefined && enemy.weak === 1 && !enemy.newlyWeak && !moved && !died &&
+            enemy.strengthDelta === 0 && (enemy.tempStrengthLoss ?? 0) === 0 &&
+            enemy.attacks.length === 1 && attack.hits === 1 &&
+            player.surrounded && player.facing != null && sim.facing != null &&
+            input.enemies.filter((e) => e.hp > 0).length === 2 && sim.enemies.filter((e) => e.alive).length === 2 &&
+            input.enemies.some((e) => e.index === player.facing) && input.enemies.some((e) => e.index === sim.facing) &&
+            !player.vulnerable && !player.colossus && !sim.colossus && !(enemy.shrink ?? 0) && !enemy.newlyShrunk && sim.tainted === 0 &&
+            attack.damage === Math.floor(facingBase * (player.facing === enemy.index ? 1 : 1.5))) {
+          amount = Math.floor(facingBase * (sim.facing === enemy.index ? 1 : 1.5));
+        }
         // VLZ F43 T2 states 275689->275690: existing Weak, 5x4 becomes 3x4 after -3 Strength.
         // Keep this observed endpoint pair local to the decision turn and its unmodified context.
         if (enemy.weakMalaise && enemy.weak > 0 && !enemy.newlyWeak && !moved && !died &&
