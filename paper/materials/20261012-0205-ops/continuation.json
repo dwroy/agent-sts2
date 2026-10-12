@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-12 02:12:20 CST",
+  "event": "2026-10-12 02:05 seven scheduler events",
+  "state": "handled; host full checks pending",
+  "live": "4159829813ca8a20dbf3ad4c0a1f099a20111866",
+  "main": "bfe4afe9f6f54ba46d84b33ab85528e7b0f1d71c",
+  "strategy_batches": 4,
+  "waiting_dispositions": 40,
+  "no_new_gameplay_version_or_shipped": true,
+  "pending": [
+    {
+      "id": "N1ZEBMHZM4KC-report-and-autoplay",
+      "owner": "developer supplies approved broker report-run; ops then collects once and autoplay-start",
+      "state": "missing_broker_action",
+      "task": "paper/materials/20261012-0111-codex1-resumed/report-recovery-task.md",
+      "brain_actual_consumption": false
+    },
+    {
+      "id": "ops-20261012-legacy-integration-tests",
+      "owner": "20261012-015818-fix-batch",
+      "state": "17_source_candidate_not_merged; ordinary fix batch dispatched",
+      "receipt": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/failed-integration.json"
+    },
+    {
+      "id": "roy-20261011-silent-core-cycle-quantitative-learning",
+      "state": "parent incomplete; bounded continuation adapter queued in existing fix chain",
+      "request": "notes/core-cycle-quantitative-continuation-request.json",
+      "original_ACK_registry_inputs_preserved": true
+    },
+    {
+      "id": "legacy-12-alternatives",
+      "state": "scoped equivalence not established; keep original proposals and source histories",
+      "receipt": "paper/materials/20261012-0111-codex1-resumed/legacy-supersession-map.json"
+    },
+    {
+      "id": "20261011-220116-fix-batch",
+      "state": "rejected t1 gap worsened; original bounded cooldown/retry retained"
+    },
+    {
+      "id": "roy-20261011-core-cycle-main-and-push",
+      "state": "waiting_for_parent_completion_acceptance",
+      "authorized_without_reconfirmation": true,
+      "push_performed": false
+    }
+  ],
+  "host_recheck": {
+    "command": "bash ops/codex-ops-do.sh learner-recheck 20261012-011302-fix-batch",
+    "requested_once": true,
+    "expected_tree": "06e61cfdc384fa29d6cad917e5423782987bce2c",
+    "log": "ops/codex-ops/learner/20261012-011302-fix-batch.fallback-06e61cfdc384fa29d6cad917e5423782987bce2c.checks.log",
+    "observed": "host log exists with Vitest RUN; completion event pending"
+  },
+  "original_statuses_not_rewritten": true,
+  "active_fix_batch_not_redispatched": "20261012-015818-fix-batch",
+  "brain_actual_consumption": false,
+  "stall": {
+    "run_id": "N1ZEBMHZM4KC",
+    "screen": "GAME_OVER",
+    "runs_jsonl_matches": 0,
+    "autoplay_play_report_processes": 0,
+    "report_run_action_available": false,
+    "existing_inbox_request": "2026-10-12 01:13",
+    "repeat_inbox_notice": false
+  },
+  "flags_changed": false,
+  "processes_started_or_stopped": false,
+  "push_performed": false
+}

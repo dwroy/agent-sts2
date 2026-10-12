@@ -1,0 +1,69 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-044301/agent
+
+ ❯ tests/silent-crab-potion.test.ts (27 tests | 2 failed) 190ms
+   × attempt 2 T9: Jev sees the verified application and keeps every legal choice 20ms
+   × attempt 5 T6: Jev sees the verified application and keeps every legal choice 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-crab-potion.test.ts > attempt 2 T9: Jev sees the verified application and keeps every legal choice
+AssertionError: expected [ 'c0->e0', 'c0->e1', 'c2->e0', …(6) ] to deeply equal [ 'end_turn', 'p0->e0', 'p0->e1' ]
+
+- Expected
++ Received
+
+  [
++   "c0->e0",
++   "c0->e1",
++   "c2->e0",
++   "c2->e1",
++   "c3->e0",
++   "c3->e1",
+    "end_turn",
+    "p0->e0",
+    "p0->e1",
+  ]
+
+ ❯ tests/silent-crab-potion.test.ts:60:40
+     58|   const criteria = decision.questions.play.criteria;
+     59|   const targetKeys = raw.run.potions[0].valid_target_indices.map((i: n…
+     60|   expect(Object.keys(criteria).sort()).toEqual([...targetKeys, "end_tu…
+       |                                        ^
+     61|   for (const target of raw.run.potions[0].valid_target_indices) {
+     62|     const key = `p0->e${target}`;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/silent-crab-potion.test.ts > attempt 5 T6: Jev sees the verified application and keeps every legal choice
+AssertionError: expected [ 'c0->e0', 'c0->e1', 'c1->e0', …(4) ] to deeply equal [ 'end_turn', 'p0->e0', 'p0->e1' ]
+
+- Expected
++ Received
+
+  [
++   "c0->e0",
++   "c0->e1",
++   "c1->e0",
++   "c1->e1",
+    "end_turn",
+    "p0->e0",
+    "p0->e1",
+  ]
+
+ ❯ tests/silent-crab-potion.test.ts:60:40
+     58|   const criteria = decision.questions.play.criteria;
+     59|   const targetKeys = raw.run.potions[0].valid_target_indices.map((i: n…
+     60|   expect(Object.keys(criteria).sort()).toEqual([...targetKeys, "end_tu…
+       |                                        ^
+     61|   for (const target of raw.run.potions[0].valid_target_indices) {
+     62|     const key = `p0->e${target}`;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 25 passed (27)
+   Start at  04:52:30
+   Duration  1.46s (transform 966ms, setup 255ms, import 912ms, tests 190ms, environment 0ms)
+

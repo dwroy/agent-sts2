@@ -27,6 +27,8 @@ import { deciderLabel, engineLabel } from "../brain/labels.js";
 import { moveModel } from "../knowledge/move-model.js";
 import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, plannerTiming, trackLizardTail } from "../reflex/combat-plan.js";
 import { notePermafrostPlay, observePermafrost } from "../reflex/permafrost.js";
+import { observeSilentSkittish } from "../reflex/silent-skittish.js";
+import { silentSelectionDispatch, type SelectionDispatchReceipt } from "../reflex/silent-selection-dispatch.js";
 import { noteFightReplay, observeFightPlays } from "../reflex/fight-plays.js";
 import { computeMemoOptions } from "../sim/compute-memo.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "../memory/fight-plan.js";
@@ -624,7 +626,6 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       }
     }
 
-    const brief = buildRunBrief(state, knowledge, notes);
     noteScreenChange(screenMemory, state);
     // Per-fight combat records outlive in-combat screen changes (card choices), not the fight.
     if (!state.in_combat) resetFightMemory(screenMemory);
@@ -651,6 +652,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
           if (replay.permafrost) screenMemory.permafrost = replay.permafrost;
+          if (replay.silentSkittish) screenMemory.silentSkittish = replay.silentSkittish;
           if (replay.fightCards) screenMemory.fightCards = replay.fightCards;
           // The turn's first logged frame: a card exhausted before the restart still counts this turn (Evil Eye).
           if (replay.turnStartExhaust && !screenMemory.turnStartExhaust) screenMemory.turnStartExhaust = replay.turnStartExhaust;
@@ -697,6 +699,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // marks it is logged (an enemy-turn read is not otherwise), so the journal replay after a restart reads it too.
     const tailSeen = trackLizardTail(screenMemory, state);
     if (observePermafrost(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
+    if (observeSilentSkittish(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
     if (observeFightPlays(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
     if (tailSeen) {
       observedStates.touched(state, observedFp, observedTs);
@@ -705,6 +708,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // The deck and gold at the fight's first frame: a thief's take is that less the run now (strategy/thief.ts).
     noteFightStart(screenMemory, state);
     sl?.observe(state, { journal, screenMemory });
+    // Build after journal restoration and tracking, so the first post-restart question sees the same resource state.
+    const brief = buildRunBrief(state, knowledge, notes, screenMemory);
     // What the brain's tools read for this state (only used when an engine gets tools).
     brain?.setToolContext(toolContextOf(state, state.run ? actOf(state) : undefined, dirname(config.log.decisionLog)));
     const slEnv = sl?.envFor(state);
@@ -1448,6 +1453,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       gated = gate(state, endTurn);
     }
     const intent: ActionRequest = resolved.intent;
+    const selectionReceipt = (receipt: SelectionDispatchReceipt) =>
+      silentSelectionDispatch(state, resolved.log?.selection_audit, intent, receipt);
 
     const recordBase = () => ({
       ts: new Date().toISOString(),
@@ -1536,6 +1543,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             ...(runId ? { run_id: runId } : {}),
             observed_ts: observedTs,
             gate_reject: toJsonValue({ at, kind: result.kind ?? "legality", reason: result.reason, expected: result.expected ?? null, actual: result.actual ?? null }),
+            ...selectionReceipt({ status: "not_dispatched", reason: `gate_refused_${at}` }),
             result: `not dispatched: gate refused (${at}): ${result.reason}`.slice(0, 300),
           };
           log.write(record);
@@ -1634,7 +1642,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       const routePlan = applyResolved();
       journal.record(state, journalEntry);
       stats.decisions += 1;
-      const record: DecisionRecord = { ...baseRecord, ...replayFields, ...routePlan, result: "shadow (not dispatched)" };
+      const record: DecisionRecord = { ...baseRecord, ...replayFields, ...routePlan,
+        ...selectionReceipt({ status: "not_dispatched", reason: "shadow" }), result: "shadow (not dispatched)" };
       log.write(record);
       logRouteChange(record.ts, "shadow (not dispatched)");
       logState(state, stateFingerprint, record.ts);
@@ -1649,10 +1658,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
      * shop while DeepSeek's shop/buy call ran (84 s, 45 s); the board changed, the loop re-planned, and
      * both calls (48k tokens) were only in deepseek-reasoning.jsonl.
      */
-    const logUndispatched = (why: string): void => {
+    const logUndispatched = (why: string, reason: "state_read_failed" | "state_changed"): void => {
       const paid = baseRecord.usage.input_tokens + baseRecord.usage.output_tokens > 0;
       if (!paid || fromMemo) return;
-      const record: DecisionRecord = { ...baseRecord, ...replayFields, result: `not dispatched: ${why}` };
+      const record: DecisionRecord = { ...baseRecord, ...replayFields,
+        ...selectionReceipt({ status: "not_dispatched", reason }), result: `not dispatched: ${why}` };
       log.write(record);
       logState(state, stateFingerprint, record.ts);
       onEvent({ type: "decision", record, totals: totals() });
@@ -1670,14 +1680,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       fresh = await client.state();
     } catch (error) {
       onEvent({ type: "note", message: `pre-dispatch state re-read failed: ${classifyFailure(error).detail}` });
-      logUndispatched(`pre-dispatch state re-read failed: ${classifyFailure(error).detail}`.slice(0, 300));
+      logUndispatched(`pre-dispatch state re-read failed: ${classifyFailure(error).detail}`.slice(0, 300), "state_read_failed");
       await sleep(pollIntervalMs);
       continue;
     }
     if (fingerprint(fresh) !== stateFingerprint) {
       const settling = settleMs > 0 ? ` (turn start still settling: ${settlePowersOf(state).join(", ")} up)` : "";
       onEvent({ type: "note", message: `state changed while deciding${settling}; re-planning` });
-      logUndispatched(`state changed while deciding${settling}`);
+      logUndispatched(`state changed while deciding${settling}`, "state_changed");
       continue;
     }
     // The gate once more on the state the action goes to: the fingerprint leaves out much of what the indices
@@ -1701,6 +1711,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         const record: DecisionRecord = {
           ...baseRecord,
           ...replayFields,
+          ...selectionReceipt({ status: "not_dispatched", reason: "sl_reload" }),
           result: (reload.ok
             ? `not dispatched: SL reloaded the fight (certain death foreseen${intent.action === "end_turn" ? "" : " at the least-loss verdict, before its line"}; back on T${reload.resumedTurn ?? "?"} after ${Math.round(reload.ms / 1000)} s)`
             : `not dispatched: SL reload failed at ${reload.step}: ${reload.reason}`).slice(0, 300),
@@ -1747,6 +1758,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         ...baseRecord,
         ...replayFields,
         latency_ms: { ...baseRecord.latency_ms, action: Date.now() - actionStarted },
+        ...selectionReceipt({ status: "error", kind: failure.kind }),
         result: `failed (${failure.kind}): ${failure.detail}`.slice(0, 300),
       };
       log.write(failed);
@@ -1814,6 +1826,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       ...replayFields,
       ...routePlan,
       latency_ms: { ...baseRecord.latency_ms, action: Date.now() - actionStarted },
+      ...selectionReceipt({ status: "returned", result: actionResult }),
       result: `${actionResult.status}${actionResult.stable ? "" : " (unstable)"}: ${actionResult.message}`,
     };
     log.write(record);
@@ -1839,6 +1852,7 @@ export function resetFightMemory(screenMemory: ScreenMemory): void {
   screenMemory.facingFight = undefined;
   screenMemory.fightCards = undefined;
   screenMemory.permafrost = undefined;
+  screenMemory.silentSkittish = undefined;
   screenMemory.planBeforeSelection = undefined;
   screenMemory.gambleDiscards = undefined;
   screenMemory.potionTake = undefined;

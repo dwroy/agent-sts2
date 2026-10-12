@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-103454/agent
+
+ ❯ tests/rollout-best-added.test.ts (4 tests | 1 failed | 2 skipped) 219ms
+     × liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line), with 10000 ms host pauses 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout-best-added.test.ts > fixed omitted rollout best > liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line), with 10000 ms host pauses
+AssertionError: expected [ '1-turn' ] to not include '1-turn'
+ ❯ tests/rollout-best-added.test.ts:76:35
+     74|     expect(r.available).toBe(true);
+     75|     if (!r.available) return;
+     76|     expect(r.result.degraded).not.toContain("1-turn");
+       |                                   ^
+     77|     expect(r.best).not.toBeNull();
+     78|     const values = r.result.lines.map((line) => line.value);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 2 skipped (4)
+   Start at  10:38:47
+   Duration  1.67s (transform 1.10s, setup 295ms, import 1.03s, tests 219ms, environment 0ms)
+

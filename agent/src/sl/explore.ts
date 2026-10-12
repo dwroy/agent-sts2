@@ -73,6 +73,7 @@
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
+import { giantFinalResourcesText, type SlGiantFinalResources, type SlGiantPhase } from "./attempts.js";
 import type { GameState } from "../hand/mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, stableStringify } from "../core/util/json.js";
 
@@ -117,6 +118,8 @@ export interface SlPoint {
 export interface SlTurnPlays {
   turn: number;
   plays: string[];
+  /** Silent A10 Throwing Axe: true from an observed unspent start; unknown after a missing prefix. */
+  firstCardReplay?: FirstCardReplay;
   boards: { board: string; at: number }[];
 }
 
@@ -175,7 +178,7 @@ export interface SlTarget {
    * SL_RETRY_EXPLORE_ANCHOR: why this attempt's path is the reference (the failed attempts with decision points recorded,
    * each one's last turn and the enemy HP left then, the latest first). Absent with the switch off (attempt 2's path).
    */
-  anchor?: { why: string; ranked: { attempt: number; turns: number; enemyHp: number | null }[] };
+  anchor?: { why: string; ranked: { attempt: number; turns: number; enemyHp: number | null; giantPhase?: SlGiantPhase; giantFinalResources?: SlGiantFinalResources }[] };
   /** SL_RETRY_EXPLORE_REARM: a point chosen in the attempt after its deviation at `after` (that turn's board) was wasted. */
   rearmed?: { after: string; turn: number | null; offPath?: true };
 }
@@ -263,7 +266,7 @@ export interface SlExploreEnv {
    * SL_RETRY_EXPLORE_CANON / _TURN: the plays already made this turn (playKey; `text`: as the attempt's summary writes
    * them, for rows rebuilt from it), which every line's turn (turnCanon) counts in. Present: the points record `canon`.
    */
-  played?: { canon: string[]; text: string[] };
+  played?: { canon: string[]; text: string[]; firstCardReplay?: FirstCardReplay };
   /**
    * SL_RETRY_EXPLORE_TURN (2026-10-03, UK7R9A0NMCXL F33 attempt 4): later in the deviation's turn (a re-plan after a draw,
    * code's next line), the turns failed attempts had through the point's board: a line ending the turn with one of them
@@ -349,12 +352,35 @@ export function playKey(play: { card: string; upgraded: boolean } | { potion: st
   return target ? `${what}>${target}` : what;
 }
 
-/**
- * A turn's plays as one key whatever their order (SL_RETRY_EXPLORE_CANON): sorted, joined with ", "; "nothing" for none.
- * The same over playKey (the record) and over the summary's play texts (looseCanon's rows from before the record).
- */
-export function turnCanon(plays: readonly string[]): string {
-  return plays.length === 0 ? "nothing" : [...plays].sort().join(", ");
+/** Whether the turn was recorded from its unspent first card, or its consumed prefix is missing. */
+export type FirstCardReplay = true | "unknown";
+
+/** G33HU22H2543 A10 F48 T1 / silent-0266: only this observed character/ascension carries the identity. */
+export function firstCardReplayScope(state: GameState): boolean {
+  return state.run?.ascension === 10 && str(asRecord(state.run.raw)["character_id"]).toLowerCase() === "silent" &&
+    asArray(asRecord(state.run.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "THROWING_AXE");
+}
+
+/** Sorted play multiset as before; an observed Axe first card stays outside it. Potions cannot consume the first card. */
+export function turnCanon(plays: readonly string[], firstCardReplay?: FirstCardReplay): string {
+  const key = plays.length === 0 ? "nothing" : [...plays].sort().join(", ");
+  if (!firstCardReplay) return key;
+  const first = firstCardReplay === "unknown" ? "unknown" : plays.find((play) => potionOfPlay(play) === null) ?? "unspent";
+  return withFirstCard(key, first);
+}
+
+function firstCardOf(canon: string): string | undefined {
+  const match = /^@axe:([^|]*)\|/.exec(canon);
+  if (!match) return undefined;
+  try { return decodeURIComponent(match[1]!); } catch { return "unknown"; }
+}
+
+function withFirstCard(canon: string, first: string | undefined): string {
+  return first === undefined ? canon : `@axe:${encodeURIComponent(first)}|${canon}`;
+}
+
+function knownIdentity(canon: string): boolean {
+  return firstCardOf(canon) !== "unknown";
 }
 
 /**
@@ -387,9 +413,12 @@ export function triedHas(tried: SlTried | null | undefined, line: TriedKey): boo
  */
 export function triedHow(tried: SlTried | null | undefined, line: TriedKey): "exact" | "cards" | null {
   if (!tried) return null;
-  if ((line.canon !== undefined && tried.canon.includes(line.canon)) || (line.loose !== undefined && tried.loose.includes(line.loose))) return "exact";
+  if (line.canon !== undefined && !knownIdentity(line.canon)) return null;
+  const scoped = line.canon !== undefined && firstCardOf(line.canon) !== undefined;
+  const loose = scoped && (line.loose === undefined || firstCardOf(line.loose) === undefined) ? undefined : line.loose;
+  if ((line.canon !== undefined && knownIdentity(line.canon) && tried.canon.includes(line.canon)) || (loose !== undefined && knownIdentity(loose) && tried.loose.includes(loose))) return "exact";
   const byCards = (tried.cards ?? []).some((entry) => {
-    const key = entry.loose === true ? line.loose : line.canon;
+    const key = entry.loose === true ? loose : line.canon;
     return key !== undefined && cardsRepeat(entry, key);
   });
   return byCards ? "cards" : null;
@@ -397,7 +426,8 @@ export function triedHow(tried: SlTried | null | undefined, line: TriedKey): "ex
 
 /** The plays of a turn's key (turnCanon), one by one ("nothing": none). */
 function canonPlays(canon: string): string[] {
-  return canon === "nothing" || canon === "" ? [] : canon.split(", ");
+  const key = firstCardOf(canon) === undefined ? canon : canon.slice(canon.indexOf("|") + 1);
+  return key === "nothing" || key === "" ? [] : key.split(", ");
 }
 
 /**
@@ -412,7 +442,7 @@ export function potionOfPlay(play: string): string | null {
 
 /** SL_RETRY_EXPLORE_POTION: a turn's key (turnCanon) without its potions: the cards it plays, with their targets. */
 export function cardsOf(canon: string): string {
-  return turnCanon(canonPlays(canon).filter((play) => potionOfPlay(play) === null));
+  return withFirstCard(turnCanon(canonPlays(canon).filter((play) => potionOfPlay(play) === null)), firstCardOf(canon));
 }
 
 /** SL_RETRY_EXPLORE_POTION: the potions a turn's key (turnCanon) drinks, by id (a summary's: by name), sorted. */
@@ -429,7 +459,7 @@ export function potionsOf(canon: string): string[] {
  * later, or not drunk this turn, is the same line; one that attempt never drank from there (held to its end) is not.
  */
 export function cardsRepeat(entry: SlTriedCards, key: string): boolean {
-  return cardsOf(key) === entry.cards && multisetWithin(potionsOf(key), entry.drunk);
+  return knownIdentity(key) && knownIdentity(entry.cards) && cardsOf(key) === entry.cards && multisetWithin(potionsOf(key), entry.drunk);
 }
 
 /** `part` is within `whole` as multisets (two of a thing are not one). */
@@ -446,6 +476,8 @@ function multisetWithin(part: readonly string[], whole: readonly string[]): bool
 
 /** The plays of `part` (turnCanon) are among those of `whole` (turnCanon), as multisets: `part` can grow into `whole`. */
 export function canonWithin(part: string, whole: string): boolean {
+  const first = firstCardOf(part), other = firstCardOf(whole);
+  if (!knownIdentity(part) || !knownIdentity(whole) || (first !== other && !(first === "unspent" && other !== undefined))) return false;
   return multisetWithin(canonPlays(part), canonPlays(whole));
 }
 
@@ -583,7 +615,7 @@ export interface ExploreRow {
   result: string;
   explore?: SlExploreRecord | null;
   /** The attempt's turns as its summary has them (attempts.ts SlTurn): rows without a turn record are rebuilt from it. */
-  summary?: { turns: readonly { turn: number; hp: number | null; block: number | null; enemies: string; plays: readonly string[] }[] };
+  summary?: { turns: readonly { turn: number; hp: number | null; block: number | null; enemies: string; plays: readonly string[]; giant_phase?: SlGiantPhase; giant_final_resources?: SlGiantFinalResources }[] };
 }
 
 /** What failed attempts played on each board, gathered (triedByBoard). */
@@ -689,7 +721,7 @@ function triedByBoard(rows: readonly ExploreRow[], reference: ExploreRow, legacy
     }
     if (turns) {
       for (const turn of turns) {
-        const canon = turnCanon(turn.plays);
+        const canon = turnCanon(turn.plays, turn.firstCardReplay);
         const drunk = potion ? [...potionsOf(canon), ...later(turn.turn)] : [];
         for (const { board } of turn.boards) {
           const entry = at(board);
@@ -751,9 +783,10 @@ function withoutUpgrade(play: string): string {
   return `${card.endsWith("+") ? card.slice(0, -1) : card}${play.slice(card.length)}`;
 }
 
-/** A turn's key (turnCanon) with every card's upgrade mark left out (SL_RETRY_EXPLORE_WASTED). */
+/** Upgrade audit as before, with the observed Axe first card kept exact. */
 export function canonWithoutUpgrades(canon: string): string {
-  return turnCanon(canonPlays(canon).map(withoutUpgrade));
+  // The replayed first card keeps its upgrade identity even in the later-card upgrade audit.
+  return withFirstCard(turnCanon(canonPlays(canon).map(withoutUpgrade)), firstCardOf(canon));
 }
 
 /** How a deviation's turn repeated a failed attempt's (SL_RETRY_EXPLORE_WASTED), and whose turns. */
@@ -781,16 +814,16 @@ export interface SlTurnRepeat {
  * Null: it did not (the deviation explored something). Failed rows without a turn record are not read.
  */
 export function turnRepeats(rows: readonly ExploreRow[], attempt: number, record: SlTurnPlays, tried: SlTried | null | undefined, next: string | null, loose?: string): SlTurnRepeat | null {
-  const canon = turnCanon(record.plays);
+  const canon = turnCanon(record.plays, record.firstCardReplay);
   const bare = canonWithoutUpgrades(canon);
   const failed = failedRows(rows, attempt, 1).filter((row) => row.explore?.turns);
   if (tried && triedHas(tried, { text: "", canon, ...(loose !== undefined ? { loose } : {}) })) return { how: "exact", attempts: [] };
   const start = record.boards[0]?.board;
-  const fromStart = failed.flatMap((row) => row.explore!.turns!.filter((turn) => turn.turn === record.turn && turn.boards[0]?.board === start).map((turn) => ({ attempt: row.attempt, canon: turnCanon(turn.plays) })));
-  const exactStart = fromStart.filter((turn) => turn.canon === canon).map((turn) => turn.attempt);
+  const fromStart = failed.flatMap((row) => row.explore!.turns!.filter((turn) => turn.turn === record.turn && turn.boards[0]?.board === start).map((turn) => ({ attempt: row.attempt, canon: turnCanon(turn.plays, turn.firstCardReplay) })));
+  const exactStart = fromStart.filter((turn) => knownIdentity(canon) && knownIdentity(turn.canon) && turn.canon === canon).map((turn) => turn.attempt);
   if (exactStart.length > 0) return { how: "turn start", attempts: [...new Set(exactStart)] };
-  const upgrades = fromStart.filter((turn) => canonWithoutUpgrades(turn.canon) === bare).map((turn) => turn.attempt);
-  if (upgrades.length > 0 || (tried?.canon ?? []).some((turn) => canonWithoutUpgrades(turn) === bare)) return { how: "upgrades", attempts: [...new Set(upgrades)] };
+  const upgrades = fromStart.filter((turn) => knownIdentity(canon) && knownIdentity(turn.canon) && canonWithoutUpgrades(turn.canon) === bare).map((turn) => turn.attempt);
+  if (upgrades.length > 0 || (tried?.canon ?? []).some((turn) => knownIdentity(canon) && knownIdentity(turn) && canonWithoutUpgrades(turn) === bare)) return { how: "upgrades", attempts: [...new Set(upgrades)] };
   if (next !== null) {
     const there = failed.filter((row) => row.explore!.turns!.some((turn) => turn.boards.some((entry) => entry.board === next))).map((row) => row.attempt);
     if (there.length > 0) return { how: "next board", attempts: there };
@@ -800,6 +833,7 @@ export function turnRepeats(rows: readonly ExploreRow[], attempt: number, record
 
 /** A line's turn (turnCanon) is one of `entry`'s: exactly, or (SL_RETRY_EXPLORE_POTION) by its cards (cardsRepeat). */
 function entryHas(entry: TriedEntry, canon: string): boolean {
+  if (!knownIdentity(canon)) return false;
   if (entry.canon.has(canon)) return true;
   for (const cards of entry.cards?.values() ?? []) if (cards.loose !== true && cardsRepeat(cards, canon)) return true;
   return false;
@@ -823,6 +857,8 @@ const ordinal = (n: number): string => (n === 1 ? "latest" : `${n}${n === 2 ? "n
  * A deviation counts when its board came up (`deviation.reached`). Null (with why) when there is no such point.
  */
 export interface ExploreTargetOptions {
+  /** Do not use legacy sorted T1 candidate keys as evidence of a tried first-card order. */
+  firstCardReplay?: boolean;
   /**
    * SL_RETRY_EXPLORE_ORDER (2026-10-03, R1QJUBVBSSB2 F33): points where every line of the record loses in every sample (the
    * rollout's share dead 1; B2's share won 0 where it weighed the point) come after every other point: changing one there
@@ -883,7 +919,7 @@ export interface ExploreTargetOptions {
   rearm?: { reference: number; fromTurn: number; skip: readonly string[] };
 }
 
-/** The HP the enemies had left on a row's last turn (its summary: "A 12/40, B 30/30" is 42); null when it is not readable. */
+/** Raw displayed HP on the last turn, kept as the legacy tie-break; a husk's HP is not body progress. */
 export function enemyHpLeft(row: Pick<ExploreRow, "summary">): number | null {
   const last = row.summary?.turns.at(-1);
   if (!last) return null;
@@ -1016,8 +1052,14 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     if (ranked.length > 0) {
       const first = reference;
       reference = ranked[0]!;
-      const list = ranked.map((row) => ({ attempt: row.attempt, turns: row.turns, enemyHp: enemyHpLeft(row) }));
-      const say = (entry: (typeof list)[number]) => `attempt ${entry.attempt} T${entry.turns}${entry.enemyHp !== null ? ` (enemy HP ${entry.enemyHp})` : ""}`;
+      const list = ranked.map((row) => {
+        const giantPhase = row.summary?.turns.at(-1)?.giant_phase;
+        const resources = row.summary?.turns.at(-1)?.giant_final_resources;
+        return { attempt: row.attempt, turns: row.turns, enemyHp: enemyHpLeft(row), ...(giantPhase ? { giantPhase, ...(resources ? { giantFinalResources: resources } : {}) } : {}) };
+      });
+      const say = (entry: (typeof list)[number]) => entry.giantPhase
+        ? `attempt ${entry.attempt} T${entry.turns} (占位血${entry.enemyHp ?? "?"}；本体剩血0；自爆仍待结算，轮初显示${entry.giantPhase.incoming_at_turn_start}伤害；本体结束不等于获胜；${giantFinalResourcesText(entry.giantFinalResources)})`
+        : `attempt ${entry.attempt} T${entry.turns}${entry.enemyHp !== null ? ` (enemy HP ${entry.enemyHp})` : ""}`;
       const why = reference === first ? `attempt ${reference.attempt}'s path, the failed attempt that lived longest (${list.map(say).join(", ")})` : `attempt ${reference.attempt}'s path, not attempt ${first?.attempt ?? 2}'s: it lived longest (${list.map(say).join(", ")})`;
       anchor = { why, ranked: list };
     }
@@ -1073,7 +1115,11 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     // SL_RETRY_EXPLORE_CANON: nor a line whose turn a failed attempt had through this board (another order, attempt 1's).
     const turnsThere = canonOn ? tried?.get(point.board) : undefined;
     // SL_RETRY_EXPLORE_POTION: nor one with such a turn's cards, its potions drunk by that attempt from there on.
-    const untried = point.alternatives.filter((line) => !texts.has(line) && !(turnsThere && point.canon?.[line] !== undefined && entryHas(turnsThere, point.canon[line])));
+    const untried = point.alternatives.filter((line) => {
+      const canon = point.canon?.[line];
+      const missingFirst = options.firstCardReplay === true && point.turn === 1 && canon !== undefined && firstCardOf(canon) === undefined;
+      return !texts.has(line) && !(turnsThere && canon !== undefined && !missingFirst && entryHas(turnsThere, canon));
+    });
     // Every untried line dies more often in the rollout than the one played (no numbers: not known to be worse).
     const own = point.dead?.[point.line];
     const worse = own !== undefined && untried.every((line) => (point.dead?.[line] ?? -1) > own + 1e-9);

@@ -1,0 +1,238 @@
+{
+  "status": "passed",
+  "verification_kind": "record_only",
+  "production_tests": null,
+  "checks": [
+    {
+      "name": "下水道蚌属性与虚弱",
+      "evidence": [
+        {
+          "run": "CA5KE8GFJ9X2",
+          "floor": 13,
+          "turn": 1,
+          "offset": 8409695850,
+          "sha256": "04ab07db175c70948413df53bf3b85ca2a45303e0422a2f009c7ed4e02b940f3"
+        },
+        {
+          "run": "CA5KE8GFJ9X2",
+          "floor": 13,
+          "turn": 3,
+          "offset": 8410142505,
+          "sha256": "3862929dca05b98a71055bcf1ad92e0093de0d25e50763cafa89bb2150983126"
+        },
+        {
+          "run": "CA5KE8GFJ9X2",
+          "floor": 13,
+          "turn": 5,
+          "offset": 8410465687,
+          "sha256": "403b1825c878734242f2e10a52f73c848df1608c609b00a57a72a84e44e3e126"
+        },
+        {
+          "run": "CA5KE8GFJ9X2",
+          "floor": 13,
+          "turn": 5,
+          "offset": 8410610063,
+          "sha256": "33bf3096a1ed09716ad05804825e9a9e43faf274163d96ac73dd673153882e02"
+        }
+      ],
+      "observed": "力量0/4/8；对应无弱攻击11/15/19；末轮弱后14、2血10挡，完整需损4。",
+      "limitation": "F13无正敏捷样本；不能从此核完正敏捷交互或增加输出权重。"
+    },
+    {
+      "name": "族母吸取后属性与毒结算",
+      "evidence": [
+        {
+          "run": "61E2QS63Y9WU",
+          "floor": 17,
+          "turn": 5,
+          "offset": 8416272544,
+          "sha256": "be63743841ee48ae831eaffcd6e61ceec4b60f2a908dad93e12bd8d71871b34e"
+        },
+        {
+          "run": "61E2QS63Y9WU",
+          "floor": 17,
+          "turn": 6,
+          "offset": 8416332233,
+          "sha256": "589dcbec3df0d64238badc1a9b60803c2aa73e99c672d4202731c1b22bf90c28"
+        },
+        {
+          "run": "61E2QS63Y9WU",
+          "floor": 17,
+          "turn": 7,
+          "offset": 8416447509,
+          "sha256": "db2d4507be25ea62558e11f8ca0c48bff7507e0c22351ef9397372108d49d116"
+        }
+      ],
+      "observed": "T5后玩家力2→0、敏0→−2，敌力0→2；T6两张防御各3挡，17+16毒实扣33。",
+      "limitation": "这是一条首试胜线，不能据此改变SL范围或推出另一受控胜线。"
+    },
+    {
+      "name": "胧光怪逐实体与索引重排",
+      "evidence": [
+        {
+          "run": "61E2QS63Y9WU",
+          "floor": 23,
+          "turn": 1,
+          "offset": 8418561396,
+          "sha256": "3da5ed76e3406c1f74a9d33afde1e49d513688bc3cfd2517dc4ad2520e90a008"
+        },
+        {
+          "run": "61E2QS63Y9WU",
+          "floor": 23,
+          "turn": 1,
+          "offset": 8418734214,
+          "sha256": "7b43f6d1994769af419abe79940bbd1fae38aa17bfac818950558bc249d57f96"
+        },
+        {
+          "run": "61E2QS63Y9WU",
+          "floor": 23,
+          "turn": 3,
+          "offset": 8418972566,
+          "sha256": "91b46c385ceb67424f5dbe79bc5e11464e149870b0885818e6789347d1298fe4"
+        },
+        {
+          "run": "61E2QS63Y9WU",
+          "floor": 23,
+          "turn": 4,
+          "offset": 8419114689,
+          "sha256": "3cf5b90f94b99a39f05650e8888a9e8a3c07a6a57f30812c19dcf289af4854b7"
+        },
+        {
+          "run": "61E2QS63Y9WU",
+          "floor": 23,
+          "turn": 5,
+          "offset": 8419227404,
+          "sha256": "12864df19fb9f80a803101606d4e72129b628aceccc5e245bdc3408ee1c52b7f"
+        }
+      ],
+      "observed": "本体index0→1；幻象力0→3→6；T4实际扣47、损15，T5幻象仍2血。",
+      "limitation": "另一focus候选未执行；不能将47总扣血误认为已杀幻象，也不能规定固定首杀。"
+    },
+    {
+      "name": "持有能力不等于已建立",
+      "evidence": [
+        {
+          "run": "5PM6JAQG6FNQ",
+          "floor": 39,
+          "turn": 2,
+          "offset": 8445489179,
+          "sha256": "339930f8e12551606adebfd1276a363770defb524bbb995add9792d897fccd99"
+        },
+        {
+          "run": "5PM6JAQG6FNQ",
+          "floor": 39,
+          "turn": 2,
+          "offset": 8445536391,
+          "sha256": "e90ebf658ca70e7039dff4c7c9c5a248614698afcd8cfda99939d421f52634f0"
+        }
+      ],
+      "observed": "末试F39 T2冒泡离手、能量5→4，两敌血量及能力完全未变；场上无毒雾。",
+      "limitation": "F33曾建立组件并赢是异场反例，不能用于拟合统一启动权重。"
+    },
+    {
+      "name": "甲虫睡眠与后续成长",
+      "evidence": [
+        {
+          "run": "DUZUBAJ3A8GP",
+          "floor": 30,
+          "turn": 1,
+          "offset": 8462340068,
+          "sha256": "7fda70af951997ab6e4b585cf30c27f8a878f69bf7bdd9e5f5910c49aeadc055"
+        },
+        {
+          "run": "DUZUBAJ3A8GP",
+          "floor": 30,
+          "turn": 2,
+          "offset": 8462696530,
+          "sha256": "8ccf8a4ad2cd56d93f12584e8930cf27b33cd96070a67e2319ad4cc572dde7a5"
+        },
+        {
+          "run": "DUZUBAJ3A8GP",
+          "floor": 30,
+          "turn": 3,
+          "offset": 8462910679,
+          "sha256": "cd7fb78716a27a597bdeb3f3e7dd60e8db65e695c1734cbe7de343cdc77468aa"
+        },
+        {
+          "run": "DUZUBAJ3A8GP",
+          "floor": 30,
+          "turn": 4,
+          "offset": 8463079981,
+          "sha256": "3b26db90a278676f315cc3d0ad42b9c0fa0e5be0d53c33194c7ac26fbedf654f"
+        },
+        {
+          "run": "DUZUBAJ3A8GP",
+          "floor": 30,
+          "turn": 5,
+          "offset": 8463348072,
+          "sha256": "a4f6795b9578bdfda32f9fabadf7d2f6c7a38124ad45be1701626bde1479a42a"
+        },
+        {
+          "run": "DUZUBAJ3A8GP",
+          "floor": 30,
+          "turn": 6,
+          "offset": 8463560010,
+          "sha256": "132c4cf074e10aab4cdf736519d0c344105b8da8c2aa7c8ca51b007a3df8dff5"
+        }
+      ],
+      "observed": "首试睡层3/2/1后T4醒；T4/5/6力量0/2/4、攻击18/20/22。",
+      "limitation": "本来源未观察甲虫STUNNED配对帧，不能把旁边盛碗虫的眩晕算入甲虫覆盖。"
+    },
+    {
+      "name": "SL同指纹与死亡截断",
+      "evidence": [
+        {
+          "run": "8JRE1C4H4Z2W",
+          "floor": 33,
+          "turn": 11,
+          "offset": 8515968305,
+          "sha256": "865cfac14c0d05a6a9945c750854a60c9b193eb5f764363be10ad392f2a61147"
+        },
+        {
+          "run": "8JRE1C4H4Z2W",
+          "floor": 33,
+          "turn": 11,
+          "offset": 8516011005,
+          "sha256": "eec931527e9ce750d3c06054d653ef71aa20ea5b2099a3d0caa23ee0b1b1a2a3"
+        }
+      ],
+      "observed": "首/三试T2同指纹；末试T11实扣玩家5，完整攻击缺口15；敌人154→130。",
+      "limitation": "前后状态差不能自动归因某张牌，未来毒不能记为已结算；原有候选审计仍缺执行关联。"
+    },
+    {
+      "name": "预算退化与药水/终局资源",
+      "evidence": [
+        {
+          "run": "VLZ6CCT8AQ0A",
+          "floor": 45,
+          "turn": 1,
+          "offset": 8490376867,
+          "sha256": "10f26a503bf423c8a1aa7cf26853d78af51bb06a5719a45b994f55c92f7370ca"
+        },
+        {
+          "run": "VLZ6CCT8AQ0A",
+          "floor": 45,
+          "turn": 1,
+          "offset": 8490419048,
+          "sha256": "0abef80c4fabf8ff8b9c186b2f3369912a8b713ebc3898f17e5f64240ad7803b"
+        },
+        {
+          "run": "VLZ6CCT8AQ0A",
+          "floor": 45,
+          "turn": 5,
+          "offset": 8491582495,
+          "sha256": "cfbad1a9564471f060da3b3c960340e4417866635a0450e602e04b685a67a803"
+        },
+        {
+          "run": "VLZ6CCT8AQ0A",
+          "floor": 45,
+          "turn": 5,
+          "offset": 8491629831,
+          "sha256": "e78f6120603dfd8561f9ae858a422bdea9c20e943aa292e7d5788161e9be4ac7"
+        }
+      ],
+      "observed": "F45 T1 MC707ms，rollout一轮一样本best=null；药水+1能而HP不变；T5完整需损39、差7，敌仍全部存活。",
+      "limitation": "没有模型覆盖一致的固定随机输入同预算实验；退化未知与全败并列不可合并。"
+    }
+  ]
+}

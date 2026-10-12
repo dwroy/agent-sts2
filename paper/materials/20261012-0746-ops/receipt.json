@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-12 07:47:40 CST",
+  "events": [
+    "stall",
+    "strategy-done"
+  ],
+  "stall": {
+    "event_snapshot": {
+      "screen": "MAIN_MENU",
+      "no_decision_seconds": 32858
+    },
+    "verified_at": "2026-10-12 07:46:25 CST",
+    "direct_mod": {
+      "run_id": "C7GNN3DDFUFY",
+      "screen": "COMBAT",
+      "character": "SILENT",
+      "ascension": 10,
+      "floor": 7
+    },
+    "host_processes_present": [
+      3251934,
+      3252377
+    ],
+    "last_console_decision": "2026-10-12 07:46:21 CST",
+    "recheck_command": "bash ops/codex-ops-do.sh stall-check",
+    "recheck_exit": 0,
+    "recheck_output": "OK (last decision 16s ago, console quiet 12s)",
+    "disposition": "stale alarm; live gameplay continues; no restart"
+  },
+  "strategy": {
+    "batch": "20261012-074301-strategy-proposal",
+    "exit": 3,
+    "stdout_empty": true,
+    "stage": "preflight credential-isolation sandbox construction",
+    "failure": "bubblewrap setup aborted: ripgrep unreadable glob scan encountered missing /home/dw/Projects/agent-hearthstone/.aws and .codex paths",
+    "accepted_completion_report": false,
+    "merged": null,
+    "sources": {
+      "ops/codex-ops/learner/20261012-074301-strategy-proposal.out": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "ops/codex-ops/learner/20261012-074301-strategy-proposal.err": {
+        "bytes": 376,
+        "sha256": "2ac42729e430de8974a125f0b75e28abe7aab5606130fbe87644af98414a8ad7"
+      }
+    },
+    "originals_retained": true,
+    "proposal_missing_not_inferred": true,
+    "credential_exposure_not_inferred": true,
+    "retry_dispatched": false,
+    "queue_or_lease_modified": false,
+    "sandbox_permissions_changed": false,
+    "disposition": "reported to developer inbox; scheduler original retry handling retained"
+  },
+  "credentials_read": false,
+  "parent_complete": false,
+  "final_main_push_complete": false
+}

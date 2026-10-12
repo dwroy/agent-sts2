@@ -1,0 +1,19 @@
+{
+  "notes/fix-queue-v4.md": [
+    "- **compute-memo-worker-data-signature（2026-10-12 09:58:12 CST，普通基础设施待修）**：固定live c56900bd3/tree4381d405977d5aee4f7662bc16a1f8d004e0760b的宿主完整检查rc1，4051通过/1失败/2跳过；agent/tests/compute-memo.test.ts:228比较池启动数据签名与当前workerDataSignature时，7e7eb1f…不等7f2fdb5…。测试与agent/src/sim/boss-lines.ts:227–239、274在弃牌源608478393前后blob完全相同；签名读取knowledge JSON，CMS8QL9E3C5U报告刷新于完整检查期间09:47结束，但确切竞态尚未证实。请原普通fix链先以固定知识输入复现并区分测试隔离/真实缓存协议问题，保留数据改变须换缓存身份的生产契约、worker真实加载和断言；不删断言、跳测试、冻结生产刷新或改游戏规则。仅原失败文件及相关固定回归续验，原4051通过覆盖/failed原件保留；不无差别重跑整套。证据paper/materials/20261012-0955-ops/host-failure-decision.json及host-original-failed.log。ops选择保留当前已测限定上线、交既有修复链，不以本条判定已修。",
+    "- 2026-10-12 10:10:12 CST **named-card-facts-transport 原需求接续**：事件入口子项源42c920f34已实际live80a39dbd550fb571f244a0c4a219cec86108a0fe，固定64V/F34资料回放通过；原项不整条关闭。其他入口/跨局缺口/P1/P2仍见notes/build-choice-card-facts-request.json与event-delivery.json；Roy已授权的原阶段待办继续沿原队列，不重做事件子项，不把“独立功能”当整项完成，也不重派全历史研究。"
+  ],
+  "ops/inbox-dev.md": [
+    "- 2026-10-12 09:58:12 CST [运维 codex] 弃牌事实完整补验仅compute-memo.test.ts:228工作线程数据签名不一致失败（4051通过）；相关代码/测试上线前后相同，暂保留已上线策略，交原普通fix链查固定输入隔离或真实缓存问题。原失败保留，现场无对局卡死证据；详paper/materials/20261012-0955-ops/host-failure-decision.json。",
+    "- 2026-10-12 10:10:12 CST [运维 codex] S1.named-card-facts1已实际上线（42c920f34→live80a39dbd550fb571f244a0c4a219cec86108a0fe/main6d74718064fb29297491fbee7b5a00c33ee6823c）：旧事件选项漏传已有具名卡资料，新在静默事件入口有界展开原文并标未知/歧义；64VJC5XT2AT2/F34固定回放撤接线1败、恢复11过，原选项/代价/动作不变。预期补齐模型看到的资料，自然引用/执行/收益未知；其余入口及P1/P2未完成。逐项范围及回退见paper/materials/20261012-0955-ops/rule-change-notice.md，仅撤42c920f34及本版本即可回退此子项。",
+    "- 2026-10-12 10:10:12 CST [运维 codex] S1.exp183已实际上线（a65ee5ce6，2026-10-12.1→2026-10-12.2）：N1/C7经验新增2、更新16、active219→221，23账本仅登记本经验增量shipped；逐项旧/新/证据/账本见paper/materials/20261012-0955-ops/rule-change-notice.md，保留原量化入口及203未改条目。预期后续读取新观察，三项代码提案和自然采用/收益仍待；回退仅撤a65ee5ce6经验叶子补丁与本版本，不覆盖其他成果。集成tsc+3254通过；原宿主签名失败由095813接续，未宣称完整补验通过。"
+  ],
+  "paper/materials/decision-log.md": [
+    "- 2026-10-12 09:58:12 CST [运维 codex] learner-checks 090027原固定树完整rc1：4051过/1签名比较失败/2跳过；相关两blob与合前相同，09:47新局报告与可变知识签名并发仅作为待证假设，保留c569限定弃牌事实而不回滚。已登记compute-memo-worker-data-signature并准备原普通修复链，原成功子覆盖及失败日志SHA保留；后续仅补失败/新影响项，不把重跑覆盖失败历史，收件箱已报。",
+    "- 2026-10-12 10:10:12 CST [运维 codex] 09:55两批兜底：42c920f34事件资料与a65ee5ce6经验叶子补丁身份逐项一致，原经验基线与main/live完全相同；集成02903a9b4完整tsc/328文件3254例/gitleaks0，记录原身份cdb172df0后合入live80a39dbd550fb571f244a0c4a219cec86108a0fe/tree2b991471660e890977b789605b5685040425ba23，main6d74718064fb29297491fbee7b5a00c33ee6823c，仅6路径，其他知识刷新及两脏notes保持。登记S1.named-card-facts1与S1.exp183、23条限定经验shipped，三原经验代码提案未记实现；事件P0仅子项交付、P1/P2及量化父请求不关闭。原3/4记录冲突、经验旧失效链接首败/同源隔离通过、全部failed/merged-null原件保留；原签名宿主失败已交095813，补验等待该原修复后固定树续验，不另开完整重复检查。另092818-s2无源码十项waiting及18账本原链接归档；未重启游戏/推送。详paper/materials/20261012-0955-ops/deployment.json、registration.json。"
+  ],
+  "notes/for-roy.md": [
+    "- 2026-10-12 10:10:12 CST [运维 codex] S1.named-card-facts1已实际上线（42c920f34→live80a39dbd550fb571f244a0c4a219cec86108a0fe/main6d74718064fb29297491fbee7b5a00c33ee6823c）：旧事件选项漏传已有具名卡资料，新在静默事件入口有界展开原文并标未知/歧义；64VJC5XT2AT2/F34固定回放撤接线1败、恢复11过，原选项/代价/动作不变。预期补齐模型看到的资料，自然引用/执行/收益未知；其余入口及P1/P2未完成。逐项范围及回退见paper/materials/20261012-0955-ops/rule-change-notice.md，仅撤42c920f34及本版本即可回退此子项。",
+    "- 2026-10-12 10:10:12 CST [运维 codex] S1.exp183已实际上线（a65ee5ce6，2026-10-12.1→2026-10-12.2）：N1/C7经验新增2、更新16、active219→221，23账本仅登记本经验增量shipped；逐项旧/新/证据/账本见paper/materials/20261012-0955-ops/rule-change-notice.md，保留原量化入口及203未改条目。预期后续读取新观察，三项代码提案和自然采用/收益仍待；回退仅撤a65ee5ce6经验叶子补丁与本版本，不覆盖其他成果。集成tsc+3254通过；原宿主签名失败由095813接续，未宣称完整补验通过。"
+  ]
+}

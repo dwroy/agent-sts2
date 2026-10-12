@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-11T18:58:53.907380+08:00",
+  "result": "two real read-only sessions completed with overlapping execution, reports, original events, released slots and archived closed Herdr terminals",
+  "overlap_seconds": 73.57843804359436,
+  "max_active": 2,
+  "jobs": [
+    {
+      "request_id": "ops-infra-archive-20261011",
+      "pane": "wJ:pK8",
+      "status": "completed",
+      "report_sha256": "10baaee79b9a457cd5c96b8a8d81912ae466b06b4dbdcf75e789c74c8efd7a5e",
+      "input_sha256": "c50a28750e9083c7d211ce9b435026ca332178a6cd170a76464ed80adb632220",
+      "engine_started": 1791716047.2043543,
+      "engine_finished": 1791716178.595566,
+      "event": "1791716178596449702-ops-assist-done.md",
+      "event_sha256": "c8a6768b20a7a8701343d07f1e077c2e7e14763204973d6c878a1302d5515463",
+      "slot_released": true,
+      "herdr_closed": true,
+      "engine_identity": {
+        "boot": "72bed121-aca8-4d1c-8b76-cf33745fee28",
+        "pid": 2101273,
+        "session": 2101273,
+        "start": "60801237",
+        "uid": 1000
+      },
+      "report_limits": [
+        "核查仅覆盖 manifest.json 及其列出的 00.txt、01.txt、02.txt；冻结切点为 frozen_at_ns=1791716043011181916，之后的分支、登记和运行状态未验证。complete 仅表示本次只读核查完成。",
+        "未运行测试或检查当前仓库。缺少固定源及实际集成树的定向测试、完整 tsc/vitest 执行记录；三个新增用例不能作为通过回执。",
+        "新增测试未直接验证超出 V8 字符串上限的大文件、真实归档器与 gitleaks 联动、扫描器缺失分支、I/O 异常时原文件保全或 cron 环境变更效果。",
+        "未提供该源对应的原事件 ID、完成回执、补丁等价证明、合入登记或运行版本证据，实际集成及上线状态未核实。",
+        "input_sha256 及各文件摘要沿用 manifest 声明，未独立复算。"
+      ]
+    },
+    {
+      "request_id": "ops-infra-herdr-wake-20261011",
+      "pane": "wJ:pK9",
+      "status": "completed",
+      "report_sha256": "5c180e32e918e76281dab45b84e76127acd8f77ca2733ddffe3dc71265f85719",
+      "input_sha256": "9d7980ab2af86d7fe0ad228d340b766d29870778f2999728aabeb6d64a76ff2b",
+      "engine_started": 1791716105.017128,
+      "engine_finished": 1791716183.5182452,
+      "event": "1791716183518750650-ops-assist-done.md",
+      "event_sha256": "cf70a46b990c869e69534d7df6120b94cc2f55dbe8ca3c407f8edd9bb39fe178",
+      "slot_released": true,
+      "herdr_closed": true,
+      "engine_identity": {
+        "boot": "72bed121-aca8-4d1c-8b76-cf33745fee28",
+        "pid": 2104211,
+        "session": 2104211,
+        "start": "60807018",
+        "uid": 1000
+      },
+      "report_limits": [
+        "本次complete仅表示只读核查完成；证据冻结切点为1791716101317436448，未核实冻结后的状态。",
+        "仅读取manifest.json及00.txt、01.txt、02.txt；未重新计算文件摘要，input_sha256按manifest原值保留。",
+        "未提供固定源或合入树的tsc、vitest执行日志；新增差异中未见96 KiB边界、字母数字pane标识及大消息端到端交付的专门测试证据。",
+        "未提供实际ANSI屏幕、Herdr状态、事件全文文件、对应rollout、wake回执、队列归档或上线登记，无法确认实际恢复及事件处理完整性。",
+        "输入没有可逐项核对的原事件ID清单；未把测试标记、检查返回码、提交存在或模型完成视为业务处理及上线完成。"
+      ]
+    }
+  ],
+  "original_events_left_for_scheduler": true,
+  "not_gameplay_or_source_publication": true
+}

@@ -27,7 +27,15 @@ LOG="$DIR/scheduler.log"
 export PATH="$HOME/.local/node/bin:$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
 # Use the same project-isolated login home as scheduled learners. Cron does not
 # inherit a pane's CODEX_HOME; explicit caller overrides remain authoritative.
-export LEARNER_CODEX_HOME="${LEARNER_CODEX_HOME:-${CODEX_HOME:-$HOME/.codex-sts2}}"
+selected_codex_home=""
+if [ -f "$DIR/codex-home" ]; then
+  IFS= read -r selected_codex_home < "$DIR/codex-home" || true
+  if [[ "$selected_codex_home" != /* ]] || [ ! -d "$selected_codex_home" ] || [ ! -f "$selected_codex_home/auth.json" ]; then
+    echo "invalid project Codex home selector; no scheduler action started" >&2
+    exit 3
+  fi
+fi
+export LEARNER_CODEX_HOME="${LEARNER_CODEX_HOME:-${selected_codex_home:-${CODEX_HOME:-$HOME/.codex-sts2}}}"
 export STS2_WORKSPACE="$ROOT"
 TSX="${CODEX_OPS_TSX:-$OPS/../agent/node_modules/.bin/tsx}"
 MAIN="$OPS/codex/main.ts"
@@ -35,13 +43,37 @@ MARK="agent-sts2 codex-ops"
 mkdir -p "$DIR" "$QUEUE"
 
 log() { echo "$(date '+%F %H:%M') $*" >> "$LOG"; }
-paused() { [ -f "$DIR/PAUSE" ]; }
+paused() { [ -f "$DIR/PAUSE" ] || [ -f "$DIR/LLM_DRAIN" ]; }
 
 # enqueue <kind> <text>: one event file, <epoch ns>-<kind>.md (ops/codex/lib.ts readQueue).
 enqueue() {
   local name; name="$(date +%s%N)-$1.md"
   printf '%s\n' "$2" > "$QUEUE/.$name" && mv "$QUEUE/.$name" "$QUEUE/$name"
   log "queued $1"
+}
+
+# A deferred wake is not a failure, but an indefinitely deferred queue needs visibility.
+# Called only while holding wake.lock; notify once per episode and never disturb the TUI.
+note_deferred() {
+  local now first=0 count=0 notified=0
+  now=$(date +%s)
+  if [ -f "$DIR/deferred.state" ]; then
+    read -r first count notified < "$DIR/deferred.state" || true
+    if ! [[ "$first" =~ ^[1-9][0-9]{0,10}$ && "$count" =~ ^(0|[1-9][0-9]{0,8})$ && "$notified" =~ ^[01]$ ]] \
+      || [ "$first" -gt "$now" ]; then
+      first=0; count=0; notified=0
+    fi
+  fi
+  [ "$first" -gt 0 ] || first=$now
+  count=$((count + 1))
+  if [ "$count" -ge 3 ] && [ "$((now - first))" -ge 1800 ] && [ "$notified" -eq 0 ]; then
+    if printf '%s\n' "- $(date '+%F %H:%M') [codex-ops 调度器] 运维队列持续暂缓唤醒 $(( (now - first) / 60 )) 分钟、$count 次（exit 75）。请 watcher 核对 Herdr 会话、未提交输入/对话框和调度日志；这不等于模型失败。原队列保留，未重启或接管运行。见 ops/codex-ops/scheduler.log 与 deferred.state。" >> "$ROOT/ops/inbox-dev.md"; then
+      notified=1
+      log "prolonged deferred queue: $count attempts since $first; inbox notified"
+    fi
+  fi
+  printf '%s %s %s\n' "$first" "$count" "$notified" > "$DIR/deferred.state.tmp"
+  mv "$DIR/deferred.state.tmp" "$DIR/deferred.state"
 }
 
 # drain [init]: wake while events are queued (at most 5 wakes in a row; events queued meanwhile go in the next one).
@@ -55,13 +87,19 @@ drain() {
   for i in 1 2 3 4 5; do
     paused && break
     if ! ls "$QUEUE"/*.md > /dev/null 2>&1; then
+      rm -f "$DIR/deferred.state"
       [ "$mode" = init ] && [ ! -s "$DIR/session-id" ] || break
     fi
     mode=""
     nice -n 5 "$TSX" "$MAIN" wake >> "$DIR/wake.out" 2>&1
     rc=$?
     # 75: deferred (herdr mode: the ops TUI is busy, shows a dialog or holds a person's unsent text). Not a failure.
-    if [ $rc -eq 75 ]; then log "wake deferred (ops TUI not ready, see above); the events stay queued for the next tick"; break; fi
+    if [ $rc -eq 75 ]; then
+      note_deferred
+      log "wake deferred (ops TUI not ready, see above); the events stay queued for the next tick"
+      break
+    fi
+    rm -f "$DIR/deferred.state"
     if [ $rc -ne 0 ]; then
       echo "$(( $(cat "$DIR/fails" 2>/dev/null || echo 0) + 1 ))" > "$DIR/fails"
       log "wake failed (exit $rc, $(cat "$DIR/fails") in a row); the events stay queued for the next tick"
@@ -180,6 +218,7 @@ status() {
   echo "hosting: $( [ -f "$DIR/hosting" ] && grep -v '^#' "$DIR/hosting" | tr '\n' ' ' || echo 'default (ops=exec learners=setsid autoplay=setsid)')${CODEX_OPS_MODE:+; CODEX_OPS_MODE=$CODEX_OPS_MODE}"
   [ -f "$DIR/herdr.json" ] && timeout 20 bash "$OPS/herdr-host.sh" status 2>&1 | sed 's/^/  /'
   echo "queue: $(ls "$QUEUE"/*.md 2>/dev/null | wc -l) event(s)$( [ -f "$DIR/fails" ] && echo ", $(cat "$DIR/fails") failed wake(s) in a row")"
+  [ -f "$DIR/deferred.state" ] && echo "deferred episode (first epoch / attempts / notified): $(cat "$DIR/deferred.state")"
   [ -f "$DIR/stall.state" ] && echo "stall state: $(cat "$DIR/stall.state")"
   python3 "$OPS/codex-ops-learn.py" status 2>&1 | tail -3
   echo "--- $LOG"; tail -n 8 "$LOG" 2>/dev/null

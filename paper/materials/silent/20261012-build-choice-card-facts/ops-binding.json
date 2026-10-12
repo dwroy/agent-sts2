@@ -1,0 +1,89 @@
+{
+  "at": "2026-10-12 09:23:34 CST",
+  "request_id": "roy-20261012-build-choice-card-facts",
+  "requirements": {
+    "path": "paper/materials/silent/20261012-build-choice-card-facts/requirements.json",
+    "sha256": "56b8f6c9f6f0d7e24f68343c59273ceb4041e2e84f7b41a6bc870660ebf175b5"
+  },
+  "parent_request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+  "deduplicated": true,
+  "P0": {
+    "queue_item": "named-card-facts-transport",
+    "batch": "20261012-091302-fix-batch",
+    "pid": 3440510,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-091302",
+    "observed_batch_state": "running",
+    "input_consumed": true,
+    "input_consumption_evidence": "paper/materials/20261012-0917-ops/named-card-consumption-events.json",
+    "queue_input": ".worktrees/codex-fix-silent-20261012-091302/learner/runs/20261012-091321-fix-batch/queue-input.md",
+    "queue_input_sha256": "0f173a3a6dc85726802eb5abcd833a9b1b552c65b0449c624a4e56d82e49f7db",
+    "state": "existing_owner_implementing_not_shipped"
+  },
+  "P1": {
+    "state": "queued_supplemental_acceptance_on_original_parent",
+    "parent": "notes/core-cycle-quantitative-learning-request.json",
+    "parent_sha256_before": "7cefe3fbe4d168aee1e1b081a5118415025d13c986f051b28d55fb1ccbec6d9e",
+    "original_task": {
+      "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/task.md",
+      "sha256": "3c9355afd6ee7c98ff7cfc9c2e9a45d20fdf025ae701fccd482b1b73aea6079b"
+    },
+    "original_manifest": {
+      "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/input-manifest.json",
+      "sha256": "54bd743de00cc1c5146546f06859a59016afba85a39c52aa73359860359c845f"
+    },
+    "continuation_request": "notes/core-cycle-quantitative-continuation-request.json",
+    "continuation_sha256_before": "125b98a3dd2bb177059770c4f0aa937a1dfc2ea20bd7a9ac73bbc8c7fdc5b55c",
+    "prior_continuation_batch": "20261012-024317-strategy-proposal",
+    "prior_continuation_state": "failed",
+    "supplemental_inputs": [
+      {
+        "path": "paper/materials/silent/20261012-build-choice-card-facts/requirements.json",
+        "sha256": "56b8f6c9f6f0d7e24f68343c59273ceb4041e2e84f7b41a6bc870660ebf175b5",
+        "workstream": "build-choice"
+      }
+    ],
+    "schedule": "原量化续办产物验收时逐项核三项构筑评估；缺项由同父请求后续有界实现承接。当前不重派失败批次，不改其冻结输入、租约或冷却。",
+    "actual_supplemental_dispatch": null,
+    "model_consumed_supplement": false,
+    "acceptance_complete": false
+  },
+  "P2": {
+    "saved_existing_catalog": "verified by watcher evidence hashes",
+    "fixed_prompt_replay": "pending existing P0 batch acceptance",
+    "real_prompt_contains": "pending",
+    "model_cites": "pending",
+    "execution": "pending",
+    "effect": "pending"
+  },
+  "new_dispatches": 0,
+  "source_or_knowledge_edited_by_ops": false,
+  "implementation_complete": false,
+  "parent_complete": false,
+  "frozen_originals_unchanged": true,
+  "evidence_verified": [
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/recent10-decks-and-strategies.json",
+      "sha256": "20263e58479ece23cfbe9611200bb066f400d3e3c11b062f1e9b1e21a8fc8c72"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/deck-size-learning-audit.json",
+      "sha256": "d46a6c1b086333b4c08a3d90f572a4b05353c6cc4ee43b4dda5c5a84b09172c9"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/64v-parasol-brain-choice.json",
+      "sha256": "8f256f94f3480df4b87a40e10678b9b45a2d5fe96f2856c81e35b13003982f92"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/64v-parasol-action-check.json",
+      "sha256": "db3965cc06c5cb5f1449e1e9b73620a9232abcf506b703dc6a5a65289fbcbc67"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/64v-wish-understanding-audit.json",
+      "sha256": "2481c724626b2dda3582eb0bdeb7eb6d1187391e24e1170a47b2385df3769d91"
+    },
+    {
+      "path": "paper/materials/silent/20261012-battle-observations/live-wish-data-readback.json",
+      "sha256": "de90cc35d8e2ab68eb49be6189457cc69ad58ee398f52630491ef32391face03"
+    }
+  ]
+}

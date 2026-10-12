@@ -1,0 +1,3 @@
+{
+  "paper/materials/decision-log.md": "\n- 2026-10-12 11:31:14 CST 运维 codex：处理11:28 fix-done111301，原工作树HEAD=基线5f421ef71、全工作树干净、无新增提交/源码；核8fbb441eb与bbc5b993a均已在main/live，原tsc0、去重14文件110项定向通过记录归档，不重跑。main/live既有差异使严格空批verify_empty_fix=null，保留调度failed/rc0/merged-null/冷却，不造合入、eval或shipped，也不派重复批。源报告/预检原件见paper/materials/20261012-1128-ops。\n- 2026-10-12 11:31:14 CST 运维 codex：收齐原1102待锁宿主接续a0b31ecc…：在f48154c11/treeb9e1d633e2b72ee993f23a6902c4283c8ebedabf上tsc0，rollout-best-added4与rollout-live13共17项全部通过，manifest、日志和两结果SHA逐一一致。仅所选测试，保留原090027完整rc1与原130/124/等待回执，未全量重跑、不视为并行5217167aa策略完成；测试时钟修复/经验12.3的定向补验待办已闭合，无新测试请求、无需回滚。追加完成回执paper/materials/20261012-1102-ops/host-completion.json；其余学习/量化父项不变，未重启游戏或推送。\n"
+}

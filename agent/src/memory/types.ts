@@ -271,6 +271,8 @@ export interface ScreenMemory {
   };
   /** Silent Permafrost: availability observed since this fight's opening; rebuilt from logged frames/actions. */
   permafrost?: { fight: string; turn: number; cards: number | null; status: "armed" | "spent" | "unknown" };
+  /** Observed Silent A10 Gardener shield consumption; discarded on turn, counter or roster changes. */
+  silentSkittish?: { key: string; roster: string; cards: number; enemies: Record<string, { hp: number; block: number; spent: boolean }> };
   /** "fight:turn" in which a card that costs HP was played (Demon Tongue heals the first loss a turn). */
   demonTongueTurn?: string;
   /**
@@ -410,6 +412,8 @@ export interface RememberedMap {
 
 export interface CombatPlanMemo {
   turn: number | null;
+  /** Original full-line estimates shown at an observed Silent discard screen, conditional on completing the line. */
+  selectionReference?: { hp_lost: number; damage_dealt: number; block_gained: number };
   /** The validated line wins the fight; keep its Sandpit exemption across steps. */
   lethal?: boolean;
   remaining: import("../reflex/turn-solver.js").Step[];
@@ -487,7 +491,7 @@ export interface ResolvedAction {
    * Extra decision-log fields (combat: the rollout facts' timing, whether Jev picked the rollout's best line,
    * the kill order behind the chosen line's rollout numbers, and the per-target options' focus by key).
    */
-  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string>; boss_sim?: JsonValue; thief?: JsonValue; mech?: JsonValue; sl_explore?: JsonValue };
+  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string>; boss_sim?: JsonValue; thief?: JsonValue; mech?: JsonValue; sl_explore?: JsonValue; selection_audit?: JsonValue; hp_guard?: JsonValue };
   /**
    * A DeepSeek one-shot plan this decision made (BUILD_ONESHOT): its reference and steps, logged in the
    * row's `deepseek` record (plan_id, plan, plan_step 1); the later steps are their own rows.

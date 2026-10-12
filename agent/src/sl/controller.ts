@@ -46,10 +46,10 @@ import { distinctNames, drawBoundOf, revivesOf, slAvoidFailedOf, slPointOf, type
 import { heldCardEthereal } from "../reflex/card-model.js";
 import { mantleHpCost } from "../reflex/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
-import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
+import { attemptFrom, createSlLog, giantFinalResources, giantPhaseAtTurnStart, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlElite, type SlEliteList } from "./elites.js";
-import { boardTried, exploreTarget, playKey, replayPlays, replayPoints, secondPlan, slBoardKey, triedHas, turnCanon, turnRepeats, type ExploreTargetOptions, type SlDeviation, type SlExploreEnv, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays, type SlTurnRepeat } from "./explore.js";
+import { boardTried, exploreTarget, firstCardReplayScope, playKey, replayPlays, replayPoints, secondPlan, slBoardKey, triedHas, turnCanon, turnRepeats, type ExploreTargetOptions, type SlDeviation, type SlExploreEnv, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays, type SlTurnRepeat } from "./explore.js";
 import { drawsKnownAt, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type DrawBound, type LeastLossFacts } from "./judge.js";
 import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from "./reload.js";
 
@@ -819,7 +819,7 @@ export class SlController {
       }
       const skip = [...(explore.wasted ?? []).map((entry) => entry.target.board), target.board];
       const earlier = this.fightRows(fight).filter((row) => row.attempt < fight.attempt);
-      const { target: next, why } = exploreTarget(earlier, fight.attempt, { ...this.targetOptions(), rearm: { reference: target.reference, fromTurn: state.turn, skip } });
+      const { target: next, why } = exploreTarget(earlier, fight.attempt, { ...this.targetOptions(state), rearm: { reference: target.reference, fromTurn: state.turn, skip } });
       if (!next) {
         this.options.note(`SL: the deviation at T${deviation.turn} (${target.point}) ended its turn as a failed attempt's${how}; no later point of attempt ${target.reference}'s path (${why}): played on as before`);
         return;
@@ -844,7 +844,7 @@ export class SlController {
   /** The attempt's turn `turnNo` as played (turnCanon of its turn record), undefined without one. */
   private turnRecord(explore: SlExploreRecord, turnNo: number): string | undefined {
     const record = explore.turns?.find((turn) => turn.turn === turnNo);
-    return record ? turnCanon(record.plays) : undefined;
+    return record ? turnCanon(record.plays, record.firstCardReplay) : undefined;
   }
 
   /**
@@ -855,16 +855,16 @@ export class SlController {
     const record = explore.turns?.find((turn) => turn.turn === turnNo);
     if (!record || !tried) return undefined;
     const summary = fight.turns.find((turn) => turn.turn === turnNo);
-    const loose = summary ? turnCanon(summary.plays) : undefined;
-    if (!this.wastedOn()) return { wasted: triedHas(tried, { text: "", canon: turnCanon(record.plays), ...(loose !== undefined ? { loose } : {}) }) };
+    const loose = summary ? turnCanon(summary.plays, record.firstCardReplay) : undefined;
+    if (!this.wastedOn()) return { wasted: triedHas(tried, { text: "", canon: turnCanon(record.plays, record.firstCardReplay), ...(loose !== undefined ? { loose } : {}) }) };
     const earlier = this.fightRows(fight).filter((row) => row.attempt < fight.attempt);
     const repeat = turnRepeats(earlier, fight.attempt, record, tried, next, loose);
     return repeat ? { wasted: true, repeat } : { wasted: false };
   }
 
   /** SL_RETRY_EXPLORE: exploreTarget's options by the switches. */
-  private targetOptions(): ExploreTargetOptions {
-    return { aliveFirst: this.config.retryExploreOrder === true, ...(this.canonOn() ? { canon: true } : {}), ...(this.turnOn() ? { tried: true } : {}), ...(this.wholeOn() ? { whole: true } : {}), ...(this.whereOn() ? { where: true } : {}), ...(this.potionOn() ? { potion: true } : {}), ...(this.anchorOn() ? { anchor: true } : {}) };
+  private targetOptions(state: GameState): ExploreTargetOptions {
+    return { firstCardReplay: firstCardReplayScope(state), aliveFirst: this.config.retryExploreOrder === true, ...(this.canonOn() ? { canon: true } : {}), ...(this.turnOn() ? { tried: true } : {}), ...(this.wholeOn() ? { whole: true } : {}), ...(this.whereOn() ? { where: true } : {}), ...(this.potionOn() ? { potion: true } : {}), ...(this.anchorOn() ? { anchor: true } : {}) };
   }
 
   /** SL_RETRY_EXPLORE_REPLAY: the reference attempt's points before the deviation point, by board (cached per target). */
@@ -875,12 +875,15 @@ export class SlController {
   }
 
   /** SL_RETRY_EXPLORE_CANON / _TURN: the plays already made this turn (the turn record's, and the summary's texts). */
-  private playedNow(fight: FightTrack, explore: SlExploreRecord, state: GameState): { canon: string[]; text: string[] } {
+  private playedNow(fight: FightTrack, explore: SlExploreRecord, state: GameState): NonNullable<SlExploreEnv["played"]> {
     const record = explore.turns?.at(-1);
     const summary = fight.turns.at(-1);
     return {
       canon: record && record.turn === state.turn ? [...record.plays] : [],
       text: summary && summary.turn === state.turn ? [...summary.plays] : [],
+      ...(state.turn === 1 && firstCardReplayScope(state) ? { firstCardReplay:
+        record?.turn === state.turn && record.firstCardReplay ? record.firstCardReplay :
+        numOrNull(asRecord(asRecord(state.raw["combat"])["player"])["cards_played_this_turn"]) === 0 ? true : "unknown" } : {}),
     };
   }
 
@@ -894,7 +897,11 @@ export class SlController {
     if (!turns) return;
     try {
       let record = turns.at(-1);
-      if (!record || record.turn !== turnNo) turns.push((record = { turn: turnNo, plays: [], boards: [] }));
+      if (!record || record.turn !== turnNo) {
+        const firstCardReplay = turnNo === 1 && firstCardReplayScope(state)
+          ? numOrNull(asRecord(asRecord(state.raw["combat"])["player"])["cards_played_this_turn"]) === 0 ? true : "unknown" : undefined;
+        turns.push((record = { turn: turnNo, plays: [], boards: [], ...(firstCardReplay ? { firstCardReplay } : {}) }));
+      }
       const board = this.boardKey(state);
       if (record.boards.at(-1)?.board !== board) record.boards.push({ board, at: record.plays.length });
       if (play !== null) record.plays.push(play);
@@ -979,7 +986,7 @@ export class SlController {
    * SL_RETRY_EXPLORE: a new attempt's record, with its deviation point (attempts 3+, exploreTarget over this fight's earlier
    * rows). Null with the switch off, on the first attempt, or on an error (the attempt plays as without the switch).
    */
-  private newExplore(fight: Pick<FightTrack, "floor" | "encounter">, attempt: number): SlExploreRecord | null {
+  private newExplore(fight: Pick<FightTrack, "floor" | "encounter">, attempt: number, state: GameState): SlExploreRecord | null {
     this.fallbackSpec = null;
     this.rearmChecked = null;
     // SL_RETRY_EXPLORE_CANON: attempt 1 is recorded too (its turns: what later attempts count as tried); SL_RETRY_EXPLORE_ANCHOR:
@@ -996,7 +1003,7 @@ export class SlController {
         return { points: [], target: null, ...turns, ...(second ? { second } : {}) };
       }
       const earlier = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < attempt);
-      const { target, why } = exploreTarget(earlier, attempt, this.targetOptions());
+      const { target, why } = exploreTarget(earlier, attempt, this.targetOptions(state));
       const turnsNote = target?.tried ? `; ${target.tried.canon.length + target.tried.loose.length} turn${target.tried.canon.length + target.tried.loose.length === 1 ? "" : "s"} through it not again` : "";
       this.options.note(
         target
@@ -1117,6 +1124,12 @@ export class SlController {
       ...(drawBound ? { drawBound } : {}),
     });
     fight.verdict = verdict;
+    const turn = fight.turns.at(-1);
+    if (turn?.turn === state.turn && turn.giant_phase) {
+      const resources = giantFinalResources(state, verdict);
+      if (resources) turn.giant_final_resources = resources;
+      else delete turn.giant_final_resources;
+    }
     const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
     if (!verdict.certain) {
       // Said when the mod itself calls the end of turn lethal, or our own count (held cards included) does: the deaths SL
@@ -1223,7 +1236,7 @@ export class SlController {
     fight.known = this.knownFor(fight, fight.attempt);
     fight.knownOff = null;
     fight.hpTurn = null;
-    fight.explore = this.newExplore(fight, fight.attempt);
+    fight.explore = this.newExplore(fight, fight.attempt, outcome.state);
     if (fight.journal !== undefined) context.journal.restore(fight.journal);
     context.screenMemory.lizardTail = fight.lizardTail === undefined ? undefined : structuredClone(fight.lizardTail);
     this.noteTurn(outcome.state);
@@ -1279,7 +1292,7 @@ export class SlController {
       known: this.knownFor({ floor, encounter }, done + 1),
       knownOff: null,
       hpTurn: null,
-      explore: this.newExplore({ floor, encounter }, done + 1),
+      explore: this.newExplore({ floor, encounter }, done + 1, state),
     };
     const act2 = gate.reason.startsWith(ACT2_LOW_HP_GATE);
     const what = boss
@@ -1301,11 +1314,13 @@ export class SlController {
     const player = asRecord(asRecord(state.raw["combat"])["player"]);
     const living = livingEnemies(state);
     const names = livingNames(living);
+    const giantPhase = giantPhaseAtTurnStart(state);
     const turn: SlTurn = {
       turn: turnNo,
       hp: numOrNull(player["current_hp"]),
       block: numOrNull(player["block"]),
       enemies: living.map((enemy, i) => `${names[i]} ${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`).join(", "),
+      ...(giantPhase ? { giant_phase: giantPhase } : {}),
       plays: [],
     };
     fight.turns.push(turn);
@@ -1332,13 +1347,13 @@ export class SlController {
         const record = out.turns.find((turn) => turn.turn === deviation.turn);
         const summary = fight.turns.find((turn) => turn.turn === deviation.turn);
         if (!record) continue;
-        const canon = turnCanon(record.plays);
+        const canon = turnCanon(record.plays, record.firstCardReplay);
         deviation.plays = canon;
-        deviation.differs = !triedHas(tried, { text: "", canon, ...(summary ? { loose: turnCanon(summary.plays) } : {}) });
+        deviation.differs = !triedHas(tried, { text: "", canon, ...(summary ? { loose: turnCanon(summary.plays, record.firstCardReplay) } : {}) });
         // SL_RETRY_EXPLORE_WASTED: nor a turn that repeated a failed one but for upgrades, from its turn start, or to its next board.
         if (deviation.differs && this.wastedOn()) {
           const next = out.turns.find((turn) => turn.turn > deviation.turn!)?.boards[0]?.board ?? null;
-          const repeat = turnRepeats(this.fightRows(fight).filter((row) => row.attempt < fight.attempt), fight.attempt, record, tried, next, summary ? turnCanon(summary.plays) : undefined);
+          const repeat = turnRepeats(this.fightRows(fight).filter((row) => row.attempt < fight.attempt), fight.attempt, record, tried, next, summary ? turnCanon(summary.plays, record.firstCardReplay) : undefined);
           if (repeat) {
             deviation.differs = false;
             deviation.repeats = repeat;

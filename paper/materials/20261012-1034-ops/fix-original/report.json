@@ -1,0 +1,56 @@
+{
+  "task": "fix-batch",
+  "base": "a250085c0e38effb837644743266c665d74faed9",
+  "fixes": [
+    {
+      "item": "compute-memo-worker-data-signature：计算缓存测试读取刷新中的知识",
+      "commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+      "test": "agent/tests/compute-memo.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类：沿已有strategy-proposal与专用任务；不将有限子项当整个宽提案完成。"
+    },
+    {
+      "item": "具名卡资料全入口扩展、跨局未知项自动派发及量化构筑消费者",
+      "reason": "独立功能/策略类：本批只修已核事件漏传；通用解析已支持有界关联、歧义/未知去重及本题日志证据，不宣称完整资料学习闭环或量化父请求完成。"
+    },
+    {
+      "item": "silent-0332 双boss接续资源异常根因",
+      "reason": "证据不足：现有源码已记分支、seed和资源诊断，仍缺触发样本；沿原策略提案核实，不猜填HP/药水。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史失败恢复",
+      "reason": "证据不足：5c92f2aa已补后续失败stdout/stderr回执；旧rc2无stderr，不能证明未发送，保留幂等记录，不重发。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录竞态",
+      "reason": "证据不足：bc2c40e31及4fef181d5已提供会话前有界恢复和预检复验，上游创建/删除者未证，不放宽权限或清旧树。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时",
+      "reason": "证据不足：已有观察未证明永久饥饿或mod内部根因；保留原核查入口。"
+    },
+    {
+      "item": "全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存与性能专项",
+      "reason": "太大/独立功能及策略研究：继续各自已有专用任务，本批不混入。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 327,
+    "cases": 3245,
+    "initial_vitest": 1,
+    "continuation_vitest": 0,
+    "targeted_cases": 11,
+    "note": "首轮完整入口325文件3233例通过；导入检查误收scratch .ts备份1失败。只改备份后缀保留内容，原入口定向补验check-imports和paths退出0，合计327文件3245例，无超时重跑。"
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-095813/learner/runs/20261012-095821-fix-batch/report.md"
+}

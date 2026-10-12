@@ -20,9 +20,19 @@
  */
 
 import { choiceQ } from "./jev/questions.js";
+import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
+import { silentPhaseCurrentFacts } from "./silent-phase-current.js";
+import { silentKinBoardFacts, silentKinPlanFacts } from "./silent-kin-progress.js";
+import { observedDemonPoison } from "./silent-demon-potion.js";
+import { crabPoisonFacts } from "./silent-crab-potion.js";
+import { carrySilentSkittish } from "./silent-skittish.js";
 import { silentLossReference } from "./silent-loss-reference.js";
 import { silentSimulationReference } from "./silent-simulation-reference.js";
+import { silentSelectionAudit, type SelectionCandidate } from "./silent-selection-audit.js";
+import { silentSlResourceComparison } from "./silent-sl-resource-comparison.js";
+import { silentHpGuardAudit } from "./silent-hp-guard-audit.js";
+import { silentSlComparison } from "./silent-sl-comparison.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { ActionExpect } from "../hand/act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../memory/narrow.js";
@@ -136,8 +146,13 @@ function spawnText(enemy: Record<string, unknown>, asc: number): string | undefi
 }
 
 /** The enemy's powers the solver does not model (MODELLED_ENEMY_POWERS): damage into it is counted at 80%. */
-export function unmodelledEnemyPowers(enemy: Record<string, unknown>): string[] {
-  return asArray(enemy["powers"]).map((power) => str(asRecord(power)["power_id"])).filter((id) => id !== "" && !MODELLED_ENEMY_POWERS.has(id));
+function observedStranglePower(enemy: Record<string, unknown>, character: string, asc?: number): boolean {
+  return character.toLowerCase() === "silent" && (asc === 0 || asc === 10) && powerAmount(enemy, "STRANGLE_POWER") === 2;
+}
+
+export function unmodelledEnemyPowers(enemy: Record<string, unknown>, character = "", asc?: number): string[] {
+  return asArray(enemy["powers"]).map((power) => str(asRecord(power)["power_id"])).filter((id) =>
+    id !== "" && !MODELLED_ENEMY_POWERS.has(id) && !(id === "STRANGLE_POWER" && observedStranglePower(enemy, character, asc)));
 }
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
@@ -729,7 +744,7 @@ export function distinctNames(items: { name: string; id: string }[]): string[] {
   });
 }
 
-export function enemySims(combat: Record<string, unknown>, asc?: number): EnemySim[] {
+export function enemySims(combat: Record<string, unknown>, asc?: number, character = ""): EnemySim[] {
   const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
   const living = asArray(combat["enemies"])
     .map(asRecord)
@@ -744,7 +759,20 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       block: num(enemy["block"]),
       vulnerable: powerAmount(enemy, "VULNERABLE_POWER"),
       weak: powerAmount(enemy, "WEAK_POWER"),
+      // 3UPY3BP2LVS7 F17 T3, silent-0349: only this observed move and power combination.
+      ...(character.toLowerCase() === "silent" && asc === 10 &&
+        str(enemy["enemy_id"]) === "CEREMONIAL_BEAST" && str(enemy["move_id"]) === "PLOW_MOVE" &&
+        powerAmount(enemy, "WEAK_POWER") > 0 &&
+        asArray(enemy["powers"]).every((entry) => ["WEAK_POWER", "STRENGTH_POWER", "PLOW_POWER", "SHACKLING_POTION_POWER"].includes(str(asRecord(entry)["power_id"])))
+        ? { weakShackling: true as const } : {}),
+      // VLZ6CCT8AQ0A F43 T2: the observed Weak-only Maelstrom board before upgraded Malaise.
+      ...(character.toLowerCase() === "silent" && asc === 10 &&
+        str(enemy["enemy_id"]) === "SOUL_NEXUS" && str(enemy["move_id"]) === "MAELSTROM_MOVE" &&
+        [1, 3].includes(powerAmount(enemy, "WEAK_POWER")) &&
+        asArray(enemy["powers"]).every((entry) => str(asRecord(entry)["power_id"]) === "WEAK_POWER")
+        ? { weakMalaise: true as const } : {}),
       ...(powerAmount(enemy, "POISON_POWER") > 0 ? { poison: powerAmount(enemy, "POISON_POWER") } : {}),
+      ...(observedStranglePower(enemy, character, asc) ? { strangle: powerAmount(enemy, "STRANGLE_POWER") } : {}),
       artifact: powerAmount(enemy, "ARTIFACT_POWER"),
       intangible: powerAmount(enemy, "INTANGIBLE_POWER") > 0,
       slippery: powerAmount(enemy, "SLIPPERY_POWER"),
@@ -758,6 +786,9 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       minion: powerAmount(enemy, "MINION_POWER") > 0,
       reattach: powerAmount(enemy, "REATTACH_POWER") > 0,
       reattachHp: powerAmount(enemy, "REATTACH_POWER"),
+      ...(character.toLowerCase() === "silent" && asc === 10 &&
+        str(enemy["enemy_id"]) === "DECIMILLIPEDE_SEGMENT_MIDDLE" && powerAmount(enemy, "REATTACH_POWER") === 25
+        ? { reattachClearsPoisonStrength: true } : {}),
       crabRage: powerAmount(enemy, "CRAB_RAGE_POWER") > 0,
       eruption: powerAmount(enemy, "STEAM_ERUPTION_POWER"),
       sandpit: powerAmount(enemy, "SANDPIT_POWER"),
@@ -798,7 +829,7 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
         ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), ctxOf(enemy)) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
         : {}),
-      unmodelled: unmodelledEnemyPowers(enemy).length > 0,
+      unmodelled: unmodelledEnemyPowers(enemy, character, asc).length > 0,
       ...(powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") > 0 ? { timeLimit: powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") } : {}),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
@@ -1236,6 +1267,9 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if ((o.bufferSpentBySelf ?? 0) > 0) summary["buffer_used_by_own_hp_loss"] = o.bufferSpentBySelf!;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
+  if (o.kusarigamaUnresolved) {
+    summary["result"] = `未计锁镰随机伤害的参考结果：${summary["result"]}；存活、击杀与损血均非保证`;
+  }
   return summary;
 }
 
@@ -1811,7 +1845,9 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   slCommitted = plan;
   const first = plan.steps[0];
   // Gambler's Brew draws what it draws: re-planned after it, like a draw.
-  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0);
+  // Made Shivs have synthetic search indices; read the actual hand before sending their actions.
+  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0) +
+    (first && cardFor(first, hand)?.bladeDance ? 1 : 0);
   // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
   // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
   // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
@@ -1829,6 +1865,10 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
     (plan.steps.length > 1 || (plan.steps.length === 1 && via !== "code")) && drawsOrRandom === 0
       ? {
           turn,
+          // YQL8RZ8BWN1E F17 T3, silent-0205: the discard question needs the chosen line's conditional estimates.
+          ...(str(asRecord(env.state.run?.raw)["character_id"]).toLowerCase() === "silent" && env.state.run?.ascension === 10
+            ? { selectionReference: { hp_lost: plan.outcome.hpLoss, damage_dealt: plan.outcome.damageDealt, block_gained: plan.outcome.blockGained } }
+            : {}),
           lethal: plan.outcome.winsFight,
           remaining: plan.steps.slice(1),
           expectedHand: expectedHandAfterFirst(plan, hand, musicBoxArmed(env.state)),
@@ -2148,8 +2188,8 @@ export function loggedLine(input: SolverInput, plays: readonly string[]): Plan |
 export function turnKeys(played: SlExploreEnv["played"], steps: readonly Step[], extra?: { canon: string; text: string }): { canon?: string; loose?: string } {
   if (!played) return {};
   return {
-    canon: turnCanon([...played.canon, ...steps.map(stepPlay), ...(extra ? [extra.canon] : [])]),
-    loose: turnCanon([...played.text, ...steps.map((step) => summaryPlay({ name: step.name, targetName: step.targetName, potion: step.cardId.startsWith("POTION:") })), ...(extra ? [extra.text] : [])]),
+    canon: turnCanon([...played.canon, ...steps.map(stepPlay), ...(extra ? [extra.canon] : [])], played.firstCardReplay),
+    loose: turnCanon([...played.text, ...steps.map((step) => summaryPlay({ name: step.name, targetName: step.targetName, potion: step.cardId.startsWith("POTION:") })), ...(extra ? [extra.text] : [])], played.firstCardReplay),
   };
 }
 
@@ -2179,14 +2219,14 @@ export function followsPlays(steps: readonly Step[], plays: readonly string[], h
  */
 export function turnOpen(played: SlExploreEnv["played"], steps: readonly Step[], hand: readonly CardModel[], extra?: { canon: string }): { open?: boolean; committed?: string } {
   if (!played) return {};
-  if (extra) return { open: true, committed: turnCanon([...played.canon, ...steps.map(stepPlay), extra.canon]) };
+  if (extra) return { open: true, committed: turnCanon([...played.canon, ...steps.map(stepPlay), extra.canon], played.firstCardReplay) };
   const at = steps.findIndex((step) => {
     if (step.cardId.startsWith("POTION:")) return false;
     const card = cardFor(step, hand as CardModel[]);
     return card !== undefined && drawsCards(card);
   });
   const sure = at < 0 ? steps : steps.slice(0, at + 1);
-  return { open: at >= 0, committed: turnCanon([...played.canon, ...sure.map(stepPlay)]) };
+  return { open: at >= 0, committed: turnCanon([...played.canon, ...sure.map(stepPlay)], played.firstCardReplay) };
 }
 
 /**
@@ -2816,7 +2856,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const phantomBlades = powerAmount(player, "PHANTOM_BLADES_POWER");
   const phantomBladesArmed = stripPhantomBlades(hand, phantomBlades, powerAmount(player, "STRENGTH_POWER"), powerAmount(player, "WEAK_POWER") > 0, shrunk);
   const ascension = state.run?.ascension ?? 0;
-  const enemies = enemySims(combat, ascension);
+  const character = state.run?.ascension == null ? "" : str(asRecord(state.run.raw)["character_id"]);
+  const enemies = enemySims(combat, ascension, character);
+  carrySilentSkittish(env.screenMemory, state, enemies);
   // MECH_RULES (docs/mechanics-learning.md): the learned strip-stun rules on the enemies carrying such a power (the
   // Thieving Hopper's Flutter): a line stripping the last stack cancels its move this turn in the solver and the rollout.
   const mechRules = learnedStunRules(env);
@@ -2879,7 +2921,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // -1 on us, never above 0: `> 0` never turned it on (XC4TNGZU4KT9 F9 T3 planned 16 and a kill, dealt 14).
     shrunk,
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
-    kusarigama: kusarigamaOf(state.run?.raw),
+    kusarigama: kusarigamaOf(state.run?.raw, ascension),
     ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: relicStack(state.run?.raw, "SHURIKEN") % SHURIKEN_ATTACKS } } : {}),
     // Silent evidence only: CSBR5CRDWQNB F33 attempt 6 T1/T2/T4, ledger silent-0061/0063. Ironclad stays unchanged.
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && relicIds.includes("DAUGHTER_OF_THE_WIND") ? { daughterWindBlock: 1 } : {}),
@@ -3018,7 +3060,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
       const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
-        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined
+        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined && !nextCard?.bladeDance
           ? {
               ...kept,
               remaining: memo.remaining.slice(1),
@@ -3130,8 +3172,16 @@ function planTurn(env: DecisionEnv): Decision | null {
       vulnerable: Math.max(0, ...enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.vulnerable)),
     }, powerExtraCost);
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
+  const demonPoison = observedDemonPoison(state);
   const potionContext: PotionContext = {
     ...pileContext,
+    character: str(asRecord(state.run?.raw)["character_id"]),
+    ascension: state.run?.ascension ?? -1,
+    // XTSV1U9JD34T F49 T1, silent-0206: a new layer caps the observed incoming attack.
+    // Existing layers stay unmodelled; this does not assign a duration or holding value.
+    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && ascension === 10 && !playerSim.intangible
+      ? { observedGhostInAJar: true } : {}),
+    ...(demonPoison === null ? {} : { observedPoison: demonPoison }),
     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
@@ -3188,7 +3238,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       player: playerSim,
       enemies,
       fightKind: kind,
-      ...(continuation ? { continuationValue: continuation.value } : {}),
+      ...(continuation ? { continuationValue: continuation.value, preservePoisonWinHp: true } : {}),
       turn: state.turn ?? 1,
       cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
       raceEruption,
@@ -3250,7 +3300,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       env.screenMemory.paelsEyeFight = fightId;
       return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "every line dies: ending the turn with no card played for Pael's Eye's extra turn" };
     }
-    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id) && !mcSources.has(potion.slot));
+    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use &&
+      (!isModelledPotion(potion.potion_id) || (potionContext.observedGhostInAJar && potion.potion_id === "GHOST_IN_A_JAR")) && !mcSources.has(potion.slot));
     // A random potion some sample of which lives: Jev's question, the least-loss line next to it.
     const randomLives = mcSources.size > 0 && randomPotions().some((mc) => mc.plans.some((plan) => plan !== null && !plan.outcome.dies));
     if (potionsNow.length > 0 && !randomLives) return planCombatPerCard(env);
@@ -3512,6 +3563,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     [...options, ...focusOf.keys()].every((plan) => plan === top || beatsOnTargets(top, plan)) &&
     !setupClose &&
     !(drySurvives && drinksPotion(top)) &&
+    // The observed Ghost effect adds a comparison, not a new automatic drinking rule.
+    !(potionContext.observedGhostInAJar && top.steps.some((step) => step.cardId.startsWith("POTION:GHOST_IN_A_JAR:"))) &&
     potionLethal.length === 0 &&
     stopLine === null &&
     !avoidsTop;
@@ -3798,7 +3851,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   };
   const phaseFacts = silentPhaseReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })));
   const lossFacts = silentLossReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })), rolloutTied);
+  const quantitativeCache = new Map<Plan, Record<string, JsonValue>>();
+  const quantified = (plan: Plan): Record<string, JsonValue> => {
+    let facts = quantitativeCache.get(plan);
+    if (!facts) { facts = quantitativeTurnFacts(state, plan, solvedInput); quantitativeCache.set(plan, facts); }
+    return facts;
+  };
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
+    ...quantified(plan),
+    ...silentKinPlanFacts(state, plan),
     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
     ...simFact(plan),
     ...phaseFacts.get(plan),
@@ -3853,6 +3914,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               ? "not this turn: which potions it gives is random, so no HP or damage numbers until they are in hand (the re-planned turn simulates them)"
               : "no: this potion's effect is not simulated, so no HP or damage numbers for it",
           offered: UNSIMULATED_OFFERED,
+          ...crabPoisonFacts(state, potion.potion_id, target),
           note: `the cheapest card plan alone: ${hpText(Math.min(...options.map((plan) => plan.outcome.hpLoss)))} this turn`,
           ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : planOffer(potion.potion_id) === true ? { fight_plan: "says now" } : {}),
           ...(costsOn ? { potion_cost: `drinking it costs ${costs.get(potion.potion_id) ? potionCostText(costs.get(potion.potion_id)!) : "0 (no conversion value in the potion table)"}` } : {}),
@@ -3870,6 +3932,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const deepseekPlan = deepseekPlanLine(env);
   const lessons = fightLessons(state);
   const questionState: Record<string, JsonValue> = {
+    ...silentPhaseCurrentFacts(state),
+    ...silentKinBoardFacts(state),
     run_brief: briefJson(env.brief),
     fight: kind,
     situation: {
@@ -3900,7 +3964,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         // MECH_DEATH_MOVE: what an ally's death does to its move, as the logs show it (none with the switch off).
         ...((note): Record<string, string> => (note ? { observed: note } : {}))(deathRuleNote(enemies.find((other) => other.index === (numOrNull(enemy["index"]) ?? i)))),
         // Powers the solver does not model: the options' damage into this enemy is counted at 80% (to stay safe).
-        ...(unmodelledEnemyPowers(enemy).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
+        ...(unmodelledEnemyPowers(enemy, character, ascension).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy, character, ascension).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
       })),
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     ...silentSimulationReference(state, [
@@ -3908,7 +3972,14 @@ function planTurn(env: DecisionEnv): Decision | null {
       ...mcShown.flatMap((mc) => mc.median ? [{ key: mcKey(mc), plan: mc.median }] : []),
     ], rollout, mcShown),
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
-    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
+    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined),
+      ...(modelledIds.has("CUNNING_POTION") ? { cunning_generation: {
+        hand_cards: hand.length, free_slots: Math.max(0, HAND_LIMIT - hand.length),
+        added_now: Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
+        truncated_now: 3 - Math.min(3, Math.max(0, HAND_LIMIT - hand.length)),
+        note: "狡诈生成升级小刀，受每步剩余手位限制；药栏不占手位。先出刀腾位再喝可与连续饮用比较，满手饮用仍耗瓶。未知饮药触发及整战收益未验证。",
+      } } : {}),
+    },
     // THIEF_FACTS: who carries our card or gold, how many turns are left to kill it, its HP and block (thief.ts).
     ...(thiefContext ? { thief_context: thiefContext } : {}),
     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).
@@ -4001,9 +4072,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // SL_RETRY_EXPLORE_ANCHOR: a first attempt's recording env (env.slRecord: `played` only) records the same way and changes
   // nothing (no deviate, replay or avoid in it).
   const explore = env.sl?.explore ?? env.slRecord;
+  const selectionAuditOn = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && state.run?.ascension === 10;
   const picks = new WeakMap<ResolvedAction, PickedLine>();
   const notePick = (resolved: ResolvedAction, pick: PickedLine): ResolvedAction => {
-    if (explore) picks.set(resolved, pick);
+    if (explore || selectionAuditOn) picks.set(resolved, pick);
     return resolved;
   };
   const fallback = (why: string, line: Plan = autoTop): ResolvedAction =>
@@ -4051,6 +4123,12 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...[...mcOf].map(([plan, mc]) => mcLine(plan, mc, [...new Set([mc.source.potionId, ...potionIdsOf(plan)])])),
       ];
       const estimate = (plan: Plan) => (rollout?.available ? rollout.byPlan.get(plan) : undefined);
+      const comparisonOf = (replacement: Plan | null, randomPotion: boolean) => {
+        const original = pick.plan ?? pick.rated ?? null;
+        return silentSlComparison(state,
+          { plan: original, randomPotion: pick.plan === null, rollout: original ? estimate(original) : undefined },
+          { plan: replacement, randomPotion, rollout: replacement ? estimate(replacement) : undefined });
+      };
       const deathShare = (plan: Plan): number | null => {
         const line = estimate(plan);
         return line && line.samples > 0 ? line.deaths / line.samples : null;
@@ -4075,7 +4153,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const playInstead = (line: ExploreLine<Plan>, mc: PotionMc | undefined, why: string): ResolvedAction => {
         const { guard: _guard, ...rest } = resolved;
         const rationale = `${resolved.rationale}; ${why}`;
-        return mc
+        const out: ResolvedAction = mc
           ? { ...rest, intent: { action: "use_potion", option_index: mc.source.slot }, rationale, apply: () => void (env.screenMemory.combatPlan = null) }
           : {
               ...rest,
@@ -4086,6 +4164,7 @@ function planTurn(env: DecisionEnv): Decision | null {
                 if (pick.guardExtra) recordHpGuard(env, state.turn, pick.guardExtra(line.plan));
               },
             };
+        return notePick(out, { ...asPick(line, mc), via: pick.via });
       };
       let deviate = explore.deviate;
       // SL_RETRY_EXPLORE_REPLAY_DEVIATE: why the replay could not go on here, when the deviation is made here instead.
@@ -4138,7 +4217,9 @@ function planTurn(env: DecisionEnv): Decision | null {
         }
         const loggedTag = logged ? { logged: true as const } : {};
         const loggedLog: Record<string, JsonValue> = logged ? { logged: true, plays: [...replay.plays!], ...(reordered ? { reordered: true } : {}) } : {};
-        const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog } };
+        const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog,
+          ...silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, ref?.plan ?? null, { original: pick.plan === null && pick.rated != null, replacement: ref !== null && mcAll.has(ref.plan) }),
+          ...comparisonOf(ref?.plan ?? null, ref !== null && mcAll.has(ref.plan)) } };
         // SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played here (or they die this turn and the
         // answer does not): the attempt leaves the path here, so it deviates here (the lines failed attempts played on this
         // board), not into a failed attempt's fight.
@@ -4198,6 +4279,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         return parts.join("; ");
       };
       const rep = choice.replacement;
+      const resources = silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, rep?.plan ?? null,
+        { original: pick.plan === null && pick.rated != null, replacement: rep !== null && mcOf.has(rep.plan) });
       // A boss fight with a sub-switch on: what weighed "not worse", and B2's numbers of the two lines when it did
       // (calibrated win rates, the replacement's paired difference to the pick ± its standard error). Off, or out of a boss
       // fight (where neither changes anything): the row as before them.
@@ -4212,7 +4295,10 @@ function planTurn(env: DecisionEnv): Decision | null {
                 : {}),
             }
           : {};
-      const numbersLog: Record<string, JsonValue> = rep ? { numbers: { original: numbers(Object.keys(gateLog).length > 0 ? rated : pick.plan), replacement: numbers(rep.plan) } } : {};
+      const numbersLog: Record<string, JsonValue> = rep ? {
+        numbers: { original: numbers(Object.keys(gateLog).length > 0 ? rated : pick.plan), replacement: numbers(rep.plan) },
+        ...comparisonOf(rep.plan, mcOf.has(rep.plan)),
+      } : {};
       // A random potion's line (SL_RETRY_EXPLORE_BOSS_POTIONS): its option as Jev's pick of it plays it, drink then re-plan.
       const mc = rep ? mcOf.get(rep.plan) : undefined;
       if (avoid) {
@@ -4221,7 +4307,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         const turnLog: Record<string, JsonValue> = { ...(pick.canon !== undefined ? { turn: pick.canon } : {}), ...(rep?.canon !== undefined ? { turn_instead: rep.canon } : {}) };
         // SL_RETRY_EXPLORE_WHOLE: the answer ends the turn as a failed attempt's and no shown line keeps it off: said so.
         const failed = whole && !rep && !pick.wins && triedHas(avoid.tried, pick) ? { line: pick.text, reason: choice.reason } : null;
-        const log: JsonValue = { avoid: { point: avoid.point, ...avoided, played_in: avoid.attempts, ...turnLog, ...numbersLog, ...gateLog }, ...(failed ? { avoid_failed: { point: avoid.point, played_in: avoid.attempts, ...failed, ...turnLog } } : {}) };
+        const log: JsonValue = { avoid: { point: avoid.point, ...avoided, played_in: avoid.attempts, ...turnLog, ...numbersLog, ...gateLog, ...resources }, ...(failed ? { avoid_failed: { point: avoid.point, played_in: avoid.attempts, ...failed, ...turnLog } } : {}) };
         if (!rep) return { resolved, log, info: { ...info, avoided, ...(failed ? { avoidFailed: failed } : {}) } };
         // SL_RETRY_EXPLORE_WHOLE: a pick not tried here that may still end the turn as a failed one after its draw.
         const ends = whole && choice.reason.startsWith(MAY_REPEAT) ? "which may end the turn after its draw with the plays" : "which ends the turn with the plays";
@@ -4238,6 +4324,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...(point.replayed !== undefined ? { replayed: point.replayed } : {}),
         ...numbersLog,
         ...gateLog,
+        ...resources,
         ...(point.tried && pick.canon !== undefined ? ({ turn: pick.canon, ...(rep?.canon !== undefined ? { turn_instead: rep.canon } : {}) } as Record<string, JsonValue>) : {}),
         ...fellBackLog,
       };
@@ -4322,12 +4409,14 @@ function planTurn(env: DecisionEnv): Decision | null {
       const guardNote = replacement
         ? hpGuardNote(shown.indexOf(picked) + 1, picked, slack, rank, plan)
         : "";
+      const guardAudit = replacement ? silentHpGuardAudit(state, chosen.plan!, picked, plan, slack, rollout) : null;
       return notePick({
         intent: firstIntent(plan, hand, env),
         rationale: `Jev chose ${pickNote(shown, chosen.plan!, picked)} with confidence ${answer.confidence.toFixed(2)}; code rank ${options.includes(picked) ? options.indexOf(picked) + 1 : "- (rollout's best line, added)"}${guardNote}${calcNote}`,
         confidence: answer.confidence,
         fallback: false,
         ...(replacement ? { guard: { kind: "hp" as const, choice: `plan${rank}`, plan: plan.steps.map(stepText).join(", ") || "end turn" } } : {}),
+        ...(guardAudit ? { log: { hp_guard: guardAudit } } : {}),
         apply: () => {
           commit(env, state.turn, plan, hand, escalatedBy ?? "jev");
           if (!hallway) recordHpGuard(env, state.turn, raceKept ? 0 : extra);
@@ -4351,7 +4440,23 @@ function planTurn(env: DecisionEnv): Decision | null {
     resolve(answers): ResolvedAction {
       // SL_RETRY_EXPLORE: the resolution as played (a line failed attempts played on the deviation point's board replaced),
       // its log, and the line for the attempt's record. Without env.sl.explore: resolvePlan's, untouched.
-      const { resolved, log: exploreLog, info: exploreInfo } = explored(resolvePlan(answers), questionLabel);
+      const beforeSl = resolvePlan(answers);
+      const guarded = beforeSl;
+      const { resolved, log: exploreLog, info: exploreInfo } = explored(beforeSl, questionLabel);
+      const answerValue = answers["plan"];
+      const answerLine = answerValue?.type === "choice" ? byKey.get(answerValue.choice) : undefined;
+      const candidate = (pick: PickedLine | undefined): SelectionCandidate | null => {
+        if (!pick) return null;
+        const plan = pick.plan ?? pick.rated ?? null;
+        const forecast = plan && rollout?.available ? rollout.byPlan.get(plan) : undefined;
+        return { text: pick.text, plan, sampled: pick.plan === null && pick.rated != null, ...(forecast ? { rollout: forecast } : {}) };
+      };
+      const answerPlan = answerLine?.plan ?? (answerLine?.potion ? mcShown.find((mc) => mc.source.slot === answerLine.potion!.option_index)?.median : null) ?? null;
+      const selectionAudit = selectionAuditOn ? silentSelectionAudit(state, env.sl?.attempt ?? null, {
+        answer: answerLine ? candidate({ plan: answerLine.plan ?? null, rated: answerPlan, text: answerLine.label, potions: [], wins: answerPlan?.outcome.winsFight ?? false, via: "jev" }) : null,
+        beforeSl: candidate(picks.get(beforeSl)),
+        afterSl: candidate(picks.get(resolved)),
+      }, resolved.intent) : null;
       const noted = (out: ResolvedAction): ResolvedAction => {
         if (exploreInfo) slPoints.set(out, exploreInfo);
         return out;
@@ -4363,7 +4468,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const ruled = enemies.filter((enemy) => (enemy.stunOnStrip ?? []).length > 0);
       const moveRuled = enemies.filter((enemy) => (enemy.moveOnStrip ?? []).length > 0);
       const deathRuled = enemies.filter((enemy) => (enemy.moveOnDeath ?? []).length > 0);
-      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0 && ruled.length === 0 && moveRuled.length === 0 && deathRuled.length === 0 && exploreLog === null) return noted(resolved);
+      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0 && ruled.length === 0 && moveRuled.length === 0 && deathRuled.length === 0 && exploreLog === null && selectionAudit === null) return noted(resolved);
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
       // MECH_RULES: the learned strip-stun rules on the board, the shown lines setting one off, and the chosen line's.
@@ -4428,6 +4533,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       return noted({
         ...resolved,
         log: {
+          ...(guarded.log ?? {}),
+          ...(resolved.log ?? {}),
           ...(rolloutRecord ? { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen, ...(chosenOrder ? { chosen_order: chosenOrder } : {}) } : {}),
           ...(potionsRecord ? { potions: potionsRecord } : {}),
           ...(focusOf.size > 0 ? { focus: Object.fromEntries([...byKey.entries()].filter(([, entry]) => entry.plan && focusOf.has(entry.plan)).map(([key, entry]) => [key, focusOf.get(entry.plan!)!.join(", ")])) } : {}),
@@ -4446,6 +4553,7 @@ function planTurn(env: DecisionEnv): Decision | null {
             : {}),
           // SL_RETRY_EXPLORE: the deviation point's line, replaced or not, and why (docs/sl.md §11).
           ...(exploreLog !== null ? { sl_explore: exploreLog } : {}),
+          ...(selectionAudit !== null ? { selection_audit: selectionAudit } : {}),
         },
       });
     },
@@ -5131,7 +5239,9 @@ function relicStack(run: unknown, relicId: string): number {
 }
 
 /** Kusarigama (every 3rd attack in a turn: 6 to a random enemy), with the attacks counted so far. */
-function kusarigamaOf(run: unknown): { every: number; damage: number; count: number } | undefined {
+function kusarigamaOf(run: unknown, ascension: number): PlayerSim["kusarigama"] {
   const relic = asArray(asRecord(run)["relics"]).map(asRecord).find((entry) => str(entry["relic_id"]) === "KUSARIGAMA");
-  return relic ? { every: 3, damage: 6, count: num(relic["stack"]) % 3 } : undefined;
+  return relic ? { every: 3, damage: 6, count: num(relic["stack"]) % 3,
+    ...(str(asRecord(run)["character_id"]).toLowerCase() === "silent" && ascension === 10 ? { deferRandomTarget: true as const } : {}),
+  } : undefined;
 }

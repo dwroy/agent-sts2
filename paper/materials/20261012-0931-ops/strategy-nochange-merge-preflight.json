@@ -1,0 +1,27 @@
+{
+  "base": "0478a90239003f23688bf95c1988dbf922804b1c",
+  "live": "bbdaadc8039d6684de8a0e157381fe077c3ec3e2",
+  "command": [
+    "git",
+    "merge-tree",
+    "--write-tree",
+    "--name-only",
+    "0478a90239003f23688bf95c1988dbf922804b1c",
+    "bbdaadc8039d6684de8a0e157381fe077c3ec3e2"
+  ],
+  "exit_code": 1,
+  "conflicts": [
+    "notes/fix-queue-v4.md",
+    "paper/materials/decision-log.md",
+    "paper/materials/learning/ledger.jsonl"
+  ],
+  "index_or_worktree_changed": false,
+  "knowledge_conflicts": [],
+  "action": "按照任务冲突即停止要求，未改源码、未进入live合入流程；保留当前工作树及预检产物。",
+  "note": "固定两侧40位SHA后重新预检，消除活live引用推进歧义；首次预检原件保留。",
+  "conflict_messages": [
+    "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+    "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl"
+  ]
+}

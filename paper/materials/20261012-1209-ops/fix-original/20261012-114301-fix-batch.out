@@ -1,0 +1,74 @@
+## 修 bug 回报
+
+- 合并基线：main → `759151d5fcbc3a20b1659ed8fe1d67adbf01575b`
+- 修复：普通策略批无 proposal_ids 时漏记原提案处置 — `3a98e213a826e94f9708af4b1a265e1892659f4e` — 测试 `agent/tests/unassigned-proposal-resolution.test.ts:unassigned proposal: resolves_original_id_and_preserves_active_lease_watermark_and_reason` — 去掉修复时失败：是（8 失败；恢复后 9 通过）
+- 已被别人修掉的：158 项，逐项提交见[完整回报](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/learner/runs/20261012-114312-fix-batch/report.md)。
+- 没修的：策略提案、独立功能及缺证据项继续原任务，详见回报；未新增游戏判断。
+- 测试：tsc 退出码 0；vitest 333 文件／3328 用例／退出码 0；gitleaks 通过。一次定向命令目录错误未执行测试，纠正后通过。
+- 合入：未合入；锁内预检发现 21 处历史记录冲突，已停止。live 与并行未提交记录保持不变，待运维兜底。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "759151d5fcbc3a20b1659ed8fe1d67adbf01575b",
+  "fixes": [
+    {
+      "item": "unassigned-strategy-proposal-resolution：普通策略批未派proposal_ids时漏记原提案处置",
+      "commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+      "test": "agent/tests/unassigned-proposal-resolution.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类，继续已有strategy-proposal任务。"
+    },
+    {
+      "item": "具名卡资料全入口扩展、跨局未知项自动派发及量化构筑消费者",
+      "reason": "独立功能，继续原专用任务。"
+    },
+    {
+      "item": "silent-0332 双boss接续资源异常根因",
+      "reason": "证据不足，仍缺触发样本。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史失败恢复",
+      "reason": "证据不足，旧失败缺stderr，不能证明未发送。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录竞态",
+      "reason": "已有有界恢复；上游创建和删除者证据不足。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时",
+      "reason": "证据不足，尚未证明永久饥饿或内部根因。"
+    },
+    {
+      "item": "全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存与性能专项",
+      "reason": "独立功能及策略研究，继续原专用任务。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3328
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/learner/runs/20261012-114312-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12e35-19ec-7a82-97a9-bd2e1c49b748
+轮数：1；工具调用：command_execution×52 file_change×2
+token：输入 158.8k、输出 23.6k（其中推理 6143）、cache 读 3348.1k、cache 写 0（命中 95.5%）
+成本：未提供
+耗时：811.9 s（墙钟）
+时间：首个事件 11.2 s、模型首个输出 16.5 s、首次工具 19.6 s、末次工具结束 776.7 s；工具内共 388.6 s，其余（模型生成、推理、网络）412.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301）；模型的工具调用 exec×33；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T11-43-14-01a12e35-19ec-7a82-97a9-bd2e1c49b748.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-114301/learner/runs/20261012-114312-fix-batch.jsonl

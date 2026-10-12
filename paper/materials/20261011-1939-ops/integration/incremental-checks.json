@@ -1,0 +1,44 @@
+{
+  "candidate": "2409776edff7eda2dd7a21992ae56726e53d4b0d",
+  "baseline_coverage": "paper/materials/20261011-1852-ops/integration/coverage-complete.json",
+  "checks": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "affected",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/ascension-observed.test.ts",
+        "tests/codex-usage-recovery.test.ts",
+        "tests/silent-gardener-skittish.test.ts",
+        "tests/silent-skittish.test.ts",
+        "tests/silent-blade-dance.test.ts",
+        "tests/rollout-live.test.ts",
+        "tests/rollout.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1"
+      ],
+      "exit": 0
+    }
+  ],
+  "files": [
+    "tests/ascension-observed.test.ts",
+    "tests/codex-usage-recovery.test.ts",
+    "tests/silent-gardener-skittish.test.ts",
+    "tests/silent-skittish.test.ts",
+    "tests/silent-blade-dance.test.ts",
+    "tests/rollout-live.test.ts",
+    "tests/rollout.test.ts"
+  ]
+}

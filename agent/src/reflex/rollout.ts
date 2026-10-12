@@ -43,6 +43,7 @@
  */
 
 import { readFileSync } from "node:fs";
+import type { CoreTurnTrace } from "../sim/core-window.js";
 import { continuationCost, continuationUtility, type ContinuationValue } from "./continuation-value.js";
 
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
@@ -52,7 +53,7 @@ import { bossLossPerTurn, bossProfile, eruptionAt, eruptionSchedule, laterPhaseH
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { solverFieldsOf, type SolverPieces } from "./passive-pieces.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, infernoCopiesOf, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, infernoCopiesOf, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, traceSteps, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 import { KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile } from "../knowledge/files.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
@@ -553,6 +554,8 @@ export interface RolloutEnemy {
   move: string | null;
   strength: number;
   powers: Record<string, number>;
+  /** Observed Silent A10 dead segment: enemy turns until return; null means its stage is unread. */
+  reattachIn?: number | null;
 }
 
 export interface RolloutOptions {
@@ -620,7 +623,13 @@ export interface RolloutOptions {
 }
 
 export interface RolloutInput {
+  /** Opt-in trace of selected lines only; the search and random stream are unchanged. */
+  captureCore?: boolean;
+  /** Verified fresh-fight HP cost already applied to a synthetic board; reapply to transferred entry HP only. */
+  openingHpLoss?: number;
   captureResources?: boolean;
+  /** Silent A10 CA5KE8GFJ9X2 F9 T2-T4: the observed Gardener's Skittish returns on later turns. */
+  observedGardenerSkittish?: boolean;
   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
   continuation?: {
     variants: { boss: string; count: number; input: RolloutInput }[];
@@ -1084,6 +1093,8 @@ interface SimEnemy {
   alive: boolean;
   /** A dead Decimillipede segment: enemy turns left until it reattaches (while another segment lives). */
   reattachIn?: number;
+  /** Resume the live board's pending reattachment once, using observed successor moves. */
+  resumeReattachMove?: boolean;
   /**
    * An illusion already dead on the decision's board (Parafright on REVIVE_MOVE): enemy turns left until
    * it is back at full HP, its usual move next.
@@ -1336,6 +1347,7 @@ interface Piles {
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
 export interface TurnRecord {
+  coreTrace?: CoreTurnTrace;
   /** Exact resources after the turn, used only by an observed following-fight objective. */
   resources?: { hp: number; revives: Revive[]; drunkKeys: string[] };
   /** HP lost this turn (our own + the enemy turn), as the solver outcome counts it. */
@@ -1401,6 +1413,12 @@ const STUNNED_MOVE = "STUNNED";
 class MissingStunModel extends Error {
   constructor() {
     super("眩晕后继招式或伤害数据缺失，后续预测未知");
+  }
+}
+
+class MissingReattachModel extends Error {
+  constructor() {
+    super("接续等待阶段或复起后继数据缺失，后续预测未知");
   }
 }
 
@@ -1676,6 +1694,14 @@ function clearPower(e: SimEnemy, power: string): void {
   }
 }
 
+/** 1913 F31 T3-T4: the middle's dead and reattached bodies have neither its old poison nor Strength. */
+function clearObservedReattachPowers(e: SimEnemy): void {
+  if (!e.base.reattach || !e.base.reattachClearsPoisonStrength) return;
+  e.poison = 0;
+  clearPower(e, "POISON_POWER");
+  clearPower(e, "STRENGTH_POWER");
+}
+
 /** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead (with its spawns). */
 function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimEnemy[], fullFight = false): void {
   if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
@@ -1728,6 +1754,7 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     }
   } else {
     e.alive = false;
+    clearObservedReattachPowers(e);
     // An on-death spawn (Phrog Parasite, Gremlin Merc): its spawns join the fight (the rollout called the
     // Phrog's death a win: "over within 5 turns" 0.95 vs 0.47 in the logs, 4LC3YKCZV218 F9 T3 forecast 0,
     // actual 23).
@@ -2121,6 +2148,8 @@ function applyPlan(
   // Stable Serum: the rest of the hand is kept for the next turn instead (Ethereal cards still go).
   const keep = player.retainTurns > 0 && !o.winsFight;
   for (const i of unplayed) if (!hand[i]!.ethereal) (keep ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
+  // These cards were made during the line, so they are absent from the original hand and draw pile.
+  for (const shiv of o.cunningShivsLeft ?? []) (keep ? player.retained : piles.discard).push(shiv);
   player.retainTurns = Math.max(0, player.retainTurns - 1);
   // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
   // outcome), except those an exhaust effect took after they were drawn. Under Stable Serum the ones the line
@@ -2247,7 +2276,8 @@ function applyPlan(
     piles.discard = piles.discard.map(grow);
     player.retained = player.retained.map(grow);
   }
-  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
+  const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn)
+    + (o.cunningShivsLeft?.length ?? 0);
   const blockEnd = player.block + o.blockGained;
   // Carry only the solver's observed establishment; replay/stacking stay marked unknown there.
   if (o.serpentFormAfter !== undefined) {
@@ -2459,13 +2489,29 @@ function applyPlan(
     for (const e of enemies) {
       if (e.alive || e.reattachIn === undefined) continue;
       e.reattachIn -= 1;
-      if (e.reattachIn > 0) continue;
+      if (e.reattachIn > 0) {
+        if (e.resumeReattachMove && e.reattachIn === 1) e.move = "REATTACH_MOVE";
+        continue;
+      }
       e.alive = true;
       e.reattachIn = undefined;
       e.hp = Math.min(e.maxHp, e.base.reattachHp || REATTACH_HP);
       e.block = 0;
       e.vulnerable = 0;
       e.weak = 0;
+      clearObservedReattachPowers(e);
+      if (e.resumeReattachMove) {
+        // UV5 F27: the returning middle has no old poison/Strength; T4 and T7 show different live moves.
+        // Sample only observed live successors, never leave it idle on REATTACH_MOVE after returning.
+        const table = input.tables[e.id];
+        const next = Object.fromEntries(Object.entries(table?.next["REATTACH_MOVE"] ?? {})
+          .filter(([move, n]) => n > 0 && !DEATH_MOVES[e.id]?.includes(move)));
+        if (!table || Object.keys(next).length === 0 || Object.keys(next).some((move) => !Number.isFinite(table.moves[move]?.damage))) {
+          throw new MissingReattachModel();
+        }
+        e.move = nextMove({ ...table, next: { ...table.next, REATTACH_MOVE: next } }, "REATTACH_MOVE", e.random ?? random);
+        e.resumeReattachMove = false;
+      }
     }
     player.weakTurns = Math.max(0, player.weakTurns - 1);
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
@@ -2541,7 +2587,7 @@ function drawOne(piles: Piles, random: () => number): CardModel | undefined {
 
 /** Static per-enemy flags that do not carry into simulated turns (they depend on this turn's board). */
 function laterTurnSim(base: EnemySim): EnemySim {
-  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, ...rest } = base;
+  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, weakShackling: _ws, weakMalaise: _wm, strangle: _strangle, ...rest } = base;
   return rest;
 }
 
@@ -2665,6 +2711,7 @@ function simulate(
   const byIndex = new Map(input.enemies.map((e) => [e.index, e]));
   const enemies: SimEnemy[] = s.enemies.map((e) => {
     const info = byIndex.get(e.index);
+    if (e.hp <= 0 && e.reattach && info?.reattachIn === null) throw new MissingReattachModel();
     // A Giant husk already on the board: it explodes this turn when its intent shows the blast, else next turn.
     // On the blast turn its Steam Eruption power is gone (only the DeathBlow intent shows the number): the
     // husk is known by its HP alone (YQL8D59999AX F17 T8: simulated as a live 999,999,977-HP enemy, every line
@@ -2717,6 +2764,8 @@ function simulate(
       // Killed before this decision, it revives on this enemy turn (QUG1DSDARAXU F23 T3: the rollout left
       // it out and read "4.9 loss, win 97%"; it came back at 21 HP and T4 cost 12).
       ...(e.illusion && e.hp <= 0 ? { reviveIn: 1 } : {}),
+      ...(e.reattach && e.hp <= 0 && typeof info?.reattachIn === "number"
+        ? { reattachIn: info.reattachIn, resumeReattachMove: true } : {}),
       // A whole fight: a sleeper's Asleep turns, a phase boss's phase (from its max HP) and its growing move's hits.
       ...(fullFight ? { ...fullFightState(info, e, input), random: rng((Math.imul(seed, 0x9e3779b1) ^ Math.imul(e.index + 1, 0x85ebca6b)) >>> 0) } : {}),
     };
@@ -2740,6 +2789,7 @@ function simulate(
   const cardPlays = (line: Plan) => line.steps.filter((step) => !isPotion(step)).length;
   // Turn 0: the candidate line as the solver scored it. None (a whole fight from the policy's own start turn): the policy
   // plays it from the hand given, after drawing `drawFirst` cards into it (a pre-fight start's hand is empty).
+  let firstSolver = s;
   let first = plan;
   let firstHand = s.hand;
   let firstBase = input.piles.handBase;
@@ -2763,7 +2813,7 @@ function simulate(
     const { drawPile: _d, knownTop: _k, ...rest } = s;
     // B5: the one-turn lookahead (whole fights, when set) replaces the decision's nextIncoming with the sim's own forecast.
     const ahead = fullFight ? lookaheadOf(opts, enemies, input, player, s.player.hp) : null;
-    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input), ...passiveSolverFields(input, s.player) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes });
+    const solved = solveTurn((firstSolver = { ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input), ...passiveSolverFields(input, s.player) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes }));
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     first = solved.plans[0] ?? null;
@@ -2776,6 +2826,13 @@ function simulate(
     for (const step of line.steps) if (typeof step.target === "number") facing = step.target;
   };
   records.push(applyPlan(0, first, firstHand, firstBase, player, enemies, piles, input, random, powers, fullFight, firstKnown));
+  const capture = (solver: SolverInput, line: Plan, turn: number) => {
+    if (!input.captureCore) return;
+    const traced = traceSteps(solver, line.steps);
+    records[records.length - 1]!.coreTrace = { turn, complete: traced.complete,
+      bandages: solver.player.toughBandagesBlock ?? null, events: traced.transitions };
+  };
+  capture(firstSolver, first, s.turn ?? 1);
   turnTo(first);
   timeUp(0);
   drink(first);
@@ -2825,6 +2882,8 @@ function simulate(
       .filter((e) => e.alive)
       .map((e) => ({
         ...laterTurnSim(e.base),
+        // Preserve the existing within-turn consumption; only the observed seven-stack Gardener repeats.
+        ...(input.observedGardenerSkittish && input.meta.asc === 10 && e.id === "PHANTASMAL_GARDENER" && e.powers["SKITTISH_POWER"] === 7 ? { skittish: 7 } : {}),
         intangible: e.intangibleTurns > 0,
         hp: e.hp,
         maxHp: e.maxHp,
@@ -2976,8 +3035,9 @@ function simulate(
     const drawing = fullFight ? knownDraws(hand, piles, player, targets) : null;
     const played = drawing?.hand ?? hand;
     const potionsNow = fullFight ? sampledPotions(potions, input, seed, h, played, piles, player, targets, drawing?.known) : potions;
-    const solved = solveTurn({ ...rest, ...focus, ...wither, ...scale, hand: [...played, ...potionsNow], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes,
-      ...(Number.isFinite(deadline) ? { deadline: budget.start + deadline, deadlineNow: budget.now } : {}) });
+    const turnSolver: SolverInput = { ...rest, ...focus, ...wither, ...scale, hand: [...played, ...potionsNow], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes,
+      ...(Number.isFinite(deadline) ? { deadline: budget.start + deadline, deadlineNow: budget.now } : {}) };
+    const solved = solveTurn(turnSolver);
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
@@ -2986,6 +3046,7 @@ function simulate(
     const best = solved.plans[0];
     if (!best) break;
     records.push(applyPlan(h, best, [...played, ...potionsNow], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known));
+    capture(turnSolver, best, (s.turn ?? 1) + h);
     turnTo(best);
     witherPlayed += cardPlays(best);
     timeUp(h);
@@ -3406,9 +3467,9 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   try {
     return evaluateRollout(input);
   } catch (error) {
-    if (!(error instanceof MissingStunModel)) throw error;
+    if (!(error instanceof MissingStunModel) && !(error instanceof MissingReattachModel)) throw error;
     return { unavailable: error.message, lines: [], orders: [], horizon: 0, samples: 0, elapsedMs: 0,
-      degraded: ["missing stun model"], policyTurns: 0, policyMs: 0, policyNodes: 0 };
+      degraded: [error instanceof MissingStunModel ? "missing stun model" : "missing reattach model"], policyTurns: 0, policyMs: 0, policyNodes: 0 };
   }
 }
 

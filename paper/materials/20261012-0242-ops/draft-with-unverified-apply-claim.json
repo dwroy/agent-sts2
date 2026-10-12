@@ -1,0 +1,112 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-021301-strategy-proposal",
+  "base": "af5872cddb8c205a0d14cb7f95f1d6d18be74c69",
+  "runs": [
+    "MTQ0EUBJ3R6T",
+    "7X0W3U8TVA2A",
+    "KFRDELW2TH2P"
+  ],
+  "fixes": [
+    {
+      "summary": "静默A10知识恶魔奇巧名额/独立费用事实及已观察组合毒药6输入；原宽提案仅部分实现",
+      "commit": "8043b289e8065a31799cfd1d331e0c6c933bc1d6",
+      "source_parent": "af5872cddb8c205a0d14cb7f95f1d6d18be74c69",
+      "ledger": [
+        "silent-0274",
+        "silent-0278"
+      ],
+      "runs": [
+        "KFRDELW2TH2P"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "item": "live合入",
+      "reason": "锁内merge-tree预检17路径冲突（selection.ts与16个并行记录/请求/账本），保留live4159829813ca8a20dbf3ad4c0a1f099a20111866及原脏文件；没有实际merge。六文件叶增量apply --check通过，交运维兜底。"
+    },
+    {
+      "item": "宽提案闭环与策略权重",
+      "reason": "本批10个原id均有具体waiting处置；缺完整执行后继/合法自动重放、整战反事实、机制组合或分源消费者验收，不把子项实现当整项完成。"
+    }
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2897
+  },
+  "code_proposals": [
+    "silent-proposal-0802f69b28d25079",
+    "silent-proposal-f54e8de2381c1250",
+    "silent-proposal-763a4b9d9f17b815",
+    "silent-proposal-19a5cff2094e2d8f",
+    "silent-proposal-3540bf4360bf80af",
+    "silent-proposal-0ea5c0b9c030fdd6",
+    "silent-proposal-f915ec544ab94b6e",
+    "silent-proposal-8fb51933639faf90",
+    "silent-proposal-b3bc0eb09211af6c",
+    "silent-proposal-fdc3a505fe5e1a55"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "structure"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-0802f69b28d25079",
+      "state": "waiting",
+      "reason": "原线净扣13/损0，末次19/损8；26条原帧断言已复核。两条完整后继均失败或截断，尚无同资源整场胜线和独立时间留出，不能拟合饱和SL权重或保药阈值。候选资源审计5604982e/be698559在015818集成批，未实际live，不重复实现。"
+    },
+    {
+      "id": "silent-proposal-f54e8de2381c1250",
+      "state": "waiting",
+      "reason": "护栏候选损14→6、伤14→16；实际后继损6/净扣20包含弃连续反弹后重问迷雾，不能把20归完整原plan1。f1542578/be698559候选审计在015818集成批且非live祖先；跨选牌/重问到最终执行的完整机器关联仍缺。"
+    },
+    {
+      "id": "silent-proposal-763a4b9d9f17b815",
+      "state": "waiting",
+      "reason": "原14项机制及组合跨度大。7X0暂死两段与71HP接续、MTQ0临敏/毒素血价已核，但整包尚无统一固定消费者差分；不由已有单机制源码认定整包duplicate，未观察修饰条件与长期兑现仍缺。"
+    },
+    {
+      "id": "silent-proposal-19a5cff2094e2d8f",
+      "state": "waiting",
+      "reason": "7X0暂死两段0/0仍接续到25/25/21；MTQ0两线均失败不能证明替线更安全。接续清状态0970bc0d已live，仅为局部；待复活段输入c915888d在015818集成且非live祖先。缺修正输入后完整后继与终局校准，不改必死/终局规则。"
+    },
+    {
+      "id": "silent-proposal-3540bf4360bf80af",
+      "state": "waiting",
+      "reason": "MTQ0赢战入/出59→46、46→8且F24无帧，不能预支营火。现buildFacts仍以当前HP/计划/投影为主，尚无已到节点、入房补血、SL恢复、赢战净耗全链的固定分源验收；缺完整节点历史消费者契约与改线路径对照，不拟合路线/休息阈值。"
+    },
+    {
+      "id": "silent-proposal-0ea5c0b9c030fdd6",
+      "state": "waiting",
+      "reason": "本批实现子项：奇巧选择显示余2手动名额上界/独立费用/手牌快照/爆发仍需后继技能；已核同遗物同增益组合的毒药6进入真实求解器。整项仍waiting：奇巧施放和自动重放的完整合法序列、不同对象/顺序或提前饮毒的整战对照未核。不得将子项源码合入当全部提案完成。 本批子项源码8043b289e8065a31799cfd1d331e0c6c933bc1d6已自测，锁内预检17路径冲突阻止实际live合入；既有源码和完整后继问题分别保留。"
+    },
+    {
+      "id": "silent-proposal-f915ec544ab94b6e",
+      "state": "waiting",
+      "reason": "原T6初始36毒；原/替净扣83/93、损6/12。两线都止于T7，不能拟新血价权重。F12完整护栏0损线在生成小刀后重问未完整执行；候选日志旧源在015818，跨重问实际执行归属和全程受控后继仍缺。"
+    },
+    {
+      "id": "silent-proposal-8fb51933639faf90",
+      "state": "waiting",
+      "reason": "本批毒药子项覆盖六次加6及最终85毒结算/需损22，不扩展至制品/异蛇头骨/未知遗物或增益。铁心完整减层触发仍未隔离，力量/敏捷/佩尔之肉整包尚无统一多轮消费者验证，其他药效时点或全战价值未获得本批新证据，保留waiting。 本批子项源码8043b289e8065a31799cfd1d331e0c6c933bc1d6已自测，锁内预检17路径冲突阻止实际live合入；既有源码和完整后继问题分别保留。"
+    },
+    {
+      "id": "silent-proposal-b3bc0eb09211af6c",
+      "state": "waiting",
+      "reason": "本批完成奇巧名额事实子项，但continuation_verified=false；未把爆发收益或敌43毒预支为胜利。末敌74仍存、玩家9对需损22死亡；完整合法后继、SL血价全链与换对象/提前喝药整战反事实仍缺，宽终局项waiting。 本批子项源码8043b289e8065a31799cfd1d331e0c6c933bc1d6已自测，锁内预检17路径冲突阻止实际live合入；既有源码和完整后继问题分别保留。"
+    },
+    {
+      "id": "silent-proposal-fdc3a505fe5e1a55",
+      "state": "waiting",
+      "reason": "重新提取F29营火44→65、F30赢战65→27、F31赢战27→15、F32营火15→36，入恶魔后才补2。赢战净耗50与SL恢复不是新路线收益；没有可比替路线/锻造整场结果，且完整分源事实消费者未验收，保持waiting。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-021301/learner/runs/20261012-021311-strategy-proposal/report.md"
+}

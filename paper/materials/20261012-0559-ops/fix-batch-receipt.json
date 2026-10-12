@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-12 06:01:55 CST",
+  "batch": "20261012-054301-fix-batch",
+  "base": "e4180c8d72921f3d0bf64b8afb0cb1633b41c3ab",
+  "no_new_source_or_commits": true,
+  "tracked_worktree_clean": true,
+  "existing_records_live_ancestors": 152,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 12,
+    "cases": 107,
+    "python": 3
+  },
+  "remaining": [
+    {
+      "item": "剩余机制、出牌、药水、SL、终局、路线和休息提案",
+      "reason": "策略类：沿既有 strategy-proposal 及专用任务；本批没有新增游戏判断，不把已上线子范围当作宽提案完成。"
+    },
+    {
+      "item": "silent-0332 双 boss 接续资源异常根因",
+      "reason": "证据不足：当前代码已有分支、seed 和资源诊断，尚缺可复现触发样本；沿原提案核实，不猜填 HP 或药水。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史失败恢复",
+      "reason": "证据不足：5c92f2aa 已保存后续通知诊断；历史回执仍 failed/rc2 且无 stderr。本批只读 help 确认现有参数格式合法，仍不能确定旧失败原因或证明未发送，保留去重，不重发。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录竞态",
+      "reason": "证据不足：bc2c40e31 的会话前有界恢复已实现，目录创建/删除者及自然恢复证据仍缺；不放宽权限或清理旧树。"
+    },
+    {
+      "item": "调度公平性核查、mod 短暂请求超时",
+      "reason": "证据不足：队列仍仅有位置分布和自愈观察，没有永久饥饿或 mod 内部根因的确证。"
+    },
+    {
+      "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression、B4/B5、缓存及性能实测",
+      "reason": "太大/独立功能及策略研究：保留原专用任务，不混入本次普通纯 bug 批次。"
+    }
+  ],
+  "original_state": "failed",
+  "original_rc": 0,
+  "original_history_unchanged": true
+}

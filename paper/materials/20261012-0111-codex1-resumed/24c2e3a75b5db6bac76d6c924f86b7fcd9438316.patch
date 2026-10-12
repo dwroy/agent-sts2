@@ -1,0 +1,782 @@
+diff --git a/agent/tests/learner-check-continuation.test.ts b/agent/tests/learner-check-continuation.test.ts
+new file mode 100644
+index 000000000..c4a7a64c3
+--- /dev/null
++++ b/agent/tests/learner-check-continuation.test.ts
+@@ -0,0 +1,20 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++import { validateRequest } from "../../ops/codex/lib.js";
++
++it("binds host supplements to original coverage and exact sources without repeating full checks", () => {
++  const result = spawnSync("python3", ["-B", "../ops/tests/test_learner_check_continuation.py"], {
++    encoding: "utf8", timeout: 20_000,
++  });
++  expect(result.status, result.stdout + result.stderr).toBe(0);
++  expect(result.stderr).toContain("OK");
++});
++
++it("accepts only a write batch plus a content digest through the existing recheck broker", () => {
++  const batch = "20261011-181302-fix-batch";
++  expect(validateRequest({ action: "learner-recheck", args: [batch] }).ok).toBe(true);
++  expect(validateRequest({ action: "learner-recheck", args: [batch + ":" + "a".repeat(64)] }).ok).toBe(true);
++  for (const token of [batch + ":main", batch + ":" + "a".repeat(40), batch + ":../manifest.json", batch + ":a;cmd"]) {
++    expect(validateRequest({ action: "learner-recheck", args: [token] }).ok).toBe(false);
++  }
++});
+diff --git a/docs/host-check-continuation.md b/docs/host-check-continuation.md
+new file mode 100644
+index 000000000..6f4edc4ed
+--- /dev/null
++++ b/docs/host-check-continuation.md
+@@ -0,0 +1,33 @@
++# 宿主定向补验
++
++用于已有 `learner-recheck` 的原失败、超时或新增受影响测试续验。不改变原批次完成状态、`checks`、`fallback_checks`、`checks_pending` 或 Git 历史；通过结果仅代表所选测试，不能作为完整套件通过或专题验收完成。
++
++运维先在代码实际集成后冻结清单，再经原 broker 调用：
++
++```sh
++bash ops/codex-ops-do.sh learner-recheck '<原批次>:<清单SHA256>'
++```
++
++清单是 UTF-8 JSON，放在原调度器 `learner` 目录的 `<原批次>.continuation-<清单SHA256>.json`。SHA 按原始文件字节计算。只接受已登记的写入批次及其原工作树；该批次或同树新拥有者仍运行、已有补验持锁时拒绝。broker 的新参数校验在下一次 wake 加载源码后生效。
++
++清单字段全部必填，多余字段拒绝：
++
++- `schema`：1。
++- `batch`、`task`、`worktree`：必须与原调度记录相同。
++- `original`：原登记检查的 `merged`、`tree`、`log_sha256` 和 `coverage`。`coverage` 用 `ops/learner_check_continuation.py` 的 `coverage(log_bytes)` 提取，保留文件名、失败用例全名及原文件/用例总数；不能手工声称已通过。原日志必须仍在该批次的登记检查目录，SHA 不变。
++- `live`：当前实际提交 `commit` 及 `tree`，均为完整 40 位 SHA。锁内前后核对，源码/测试输入有未提交改动也拒绝。
++- `sources`：原检查引用的全部源码提交，加本轮修复源码；每项必须是当前 live 祖先。
++- `inputs`：所选 `agent/tests/*.test.ts` 及发生变化的已映射依赖，每项为 `{"path":"agent/tests/example.test.ts","source":"完整提交SHA"}`。`source` 必须在 `sources` 内，文件必须与该提交的 blob 一致，防止用祖先关系冒称被回退的实现仍存在。
++- `selection`：最多 16 个文件，每项 `{"file":"tests/example.test.ts","tests":["describe名称 it名称"],"reason":"failed"}`。`tests` 是完整用例名，按字面值转义和首尾锚定，不是可执行正则或 shell；空数组表示整个文件。`failed` 只能选原失败用例；`unrun` 需要完整文件清单或明确超时记录，摘要缺少逐文件覆盖时拒绝；`affected` 要有测试文件或代码内明确映射的依赖变更。已通过的同树补验范围不会因换清单 SHA 再跑。
++- `receipts`：可为空；每项 `{"path":"paper/materials/.../receipt.json","sha256":"64位SHA"}`，绑定量化框架等已有源码/覆盖回执。只读固定后缀的项目材料，不执行其中命令。
++
++执行始终使用固定的本地 TypeScript/Vitest 入口、`nice`、单 fork worker；禁止自选命令、排除项、预算或环境设置。总执行期限保持现有宿主检查的 3600 秒。记录标准错误、逐段结果和 Vitest JSON，区分断言失败、超时、权限限制、未执行选择与源码漂移。原路径不自动重跑完整套件，不自动回滚。
++
++结果写成 `<原批次>.supplement-<清单SHA>.json/.log` 和独立 Vitest JSON，并经原 `learner-checks` 发完成事件。重复已完成请求返回原结果；中断的 `running` 回执保留且拒绝自动重跑，由原拥有者据已保存分段结果核查续办。完整检查入口的普通 `<批次>` 参数仍适用于其他未验证改动。
++
++本次待宿主验收的两文件四用例：
++
++- `tests/brain-codex-session.test.ts`：`the play process's end the exit fixture selects a model advertised by its fake catalog`；`the play process's end the server does not keep the process alive; at exit the process removes its thread's files`。
++- `tests/ops-codex.test.ts`：`broker requests allows only the listed actions with clean arguments`；`broker requests every action is implemented by ops/codex-ops-actions.sh and listed by ops/codex-ops-do.sh`。
++
++两文件都有本轮已集成修复/依赖变更时使用 `affected`，不追加其余已过 324 个文件。量化专题新增测试另列受影响项、源码快照和原覆盖回执；入口交付不等于这些测试已经在宿主通过。
+diff --git a/ops/codex-ops-actions.sh b/ops/codex-ops-actions.sh
+index b495c36f9..19837a20b 100755
+--- a/ops/codex-ops-actions.sh
++++ b/ops/codex-ops-actions.sh
+@@ -212,7 +212,7 @@ for row in csv.reader(sys.stdin):
+   learner-merge)
+     exec python3 "$OPS/codex-ops-learn.py" request-merge --branch "$arg" ;;
+   learner-recheck)
+-    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
++    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)(:[0-9a-f]{64})?$ ]] || exit 2
+     exec nice -n 19 python3 "$OPS/codex-ops-learn.py" recheck --batch "$arg" ;;
+   eval-metrics)
+     [ $# -eq 3 ] || { echo "eval-metrics takes character and ascension" >&2; exit 2; }
+diff --git a/ops/codex-ops-do.sh b/ops/codex-ops-do.sh
+index 18f2ef7fc..be18b2237 100755
+--- a/ops/codex-ops-do.sh
++++ b/ops/codex-ops-do.sh
+@@ -11,6 +11,7 @@
+ # learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event),
+ # learner-log-tab <batch-id> (display registered learner output in the ops workspace; never restart the learner),
+ # strategy-proposal <ids> (dispatches a learner proposal), learner-recheck <batch-id> (full checks after a fallback merge),
++# learner-recheck <batch-id>:<manifest-sha256> (registered, pinned host supplement; preserves original coverage),
+ # boss-sim-check (check B4/B5 triggers with the live scheduler),
+ # core-build-notify <batch-id> (one native notification after ops verifies the substantive report),
+ # codex-brain-cache-probe (one approved frozen double question; no arguments),
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index c929e638c..162fed24b 100755
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -455,23 +455,42 @@ def cmd_request_merge(args):
+ 
+ 
+ def cmd_recheck(args):
++    batch_id, separator, continuation = args.batch.partition(":")
++    if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
++        return 2
++    args.batch = batch_id
+     if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
+         return 2
+     # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
+     with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:
+-        fcntl.flock(checks_lock, fcntl.LOCK_EX)
++        try:
++            fcntl.flock(checks_lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if separator else 0))
++        except BlockingIOError:
++            return 2
+         with state_lock():
+             state = load_state()
+             batch = state["batches"].get(args.batch)
+             if not batch or batch.get("state") == "running":
+                 return 2
+-        result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox)
++            if separator and any(other.get("state") == "running" and other.get("worktree") == batch.get("worktree")
++                                 for other in state["batches"].values()):
++                return 2
++        result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox,
++                                    **({"continuation": continuation} if separator else {}))
+         # Reload after the expensive checks: other jobs may have updated the scheduler meanwhile.
+         with state_lock():
+             state = load_state()
+             current = state["batches"].get(args.batch)
+             if current is None:
+                 return 2
++            if separator:
++                if any(current.get(key) != batch.get(key) for key in ("task", "worktree", "state")):
++                    return 2
++                if "check_supplements" in batch:
++                    current["check_supplements"] = batch["check_supplements"]
++                save_state(state)
++                print(json.dumps({"batch": args.batch, "rc": result, "check_supplements": batch.get("check_supplements", [])}, ensure_ascii=False))
++                return result
+             if "fallback_checks" in batch:
+                 current["fallback_checks"] = batch["fallback_checks"]
+             if batch.get("checks_pending") and result != 2:
+diff --git a/ops/codex/lib.ts b/ops/codex/lib.ts
+index ebf1b5c67..c13d0e237 100644
+--- a/ops/codex/lib.ts
++++ b/ops/codex/lib.ts
+@@ -313,8 +313,8 @@ export function validateRequest(raw: unknown): BrokerRequest {
+   if (action === "strategy-proposal" && !/^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$/.test(list[0]!)) {
+     return { ok: false, error: "strategy-proposal 要 1–10 个 12 位局号" };
+   }
+-  if (action === "learner-recheck" && !/^(?:[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal)$/.test(list[0]!)) {
+-    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id" };
++  if (action === "learner-recheck" && !/^[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)(?::[0-9a-f]{64})?$/.test(list[0]!)) {
++    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id；定向补验追加冒号和清单 SHA256" };
+   }
+   if (action === "learner-log-tab" && !/^[0-9]{8}-[0-9]{6}(?:-(?:experience-update|fix-batch|strategy-proposal)|-s2-strategy-proposal)?$/.test(list[0]!)) {
+     return { ok: false, error: "learner-log-tab 要已登记的完整学习批次 id" };
+diff --git a/ops/learner_check_continuation.py b/ops/learner_check_continuation.py
+new file mode 100644
+index 000000000..e6cc6e04d
+--- /dev/null
++++ b/ops/learner_check_continuation.py
+@@ -0,0 +1,271 @@
++"""Bounded, hash-pinned host supplements for the existing learner-recheck action.
++
++The caller holds the batch check lock. This module owns the live lock and never
++rewrites a completion, a full-check result, or Git history. See the fixed tests
++for the manifest format; no manifest field is interpreted as a command.
++"""
++import fcntl
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import time
++
++BATCH = re.compile(r"[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)")
++SHA = re.compile(r"[0-9a-f]{40}")
++DIGEST = re.compile(r"[0-9a-f]{64}")
++TEST = re.compile(r"tests/[a-z0-9][a-z0-9_-]*\.test\.ts")
++ANSI = re.compile(r"\x1b\[[0-9;]*m")
++# A passed file may be revisited only when its test or a mapped dependency changed.
++DEPENDENCIES = {
++    "tests/ops-codex.test.ts": ["ops/codex/lib.ts", "ops/codex-ops-actions.sh", "ops/codex-ops-do.sh", "ops/git-push-main.py"],
++    "tests/brain-codex-session.test.ts": ["agent/src/brain/engines/codex-session.ts", "agent/src/core/config.ts"],
++    "tests/quantitative.test.ts": ["agent/src/sim/quantitative-stats.ts", "agent/src/sim/quantitative-facts.ts",
++                                   "agent/src/sim/quantitative-calibration.ts", "agent/tools/quantitative.ts"],
++    "tests/strategy-implementation.test.ts": ["ops/strategy_implementation.py", "ops/strategy_research_jobs.py"],
++}
++SOURCE_PATHS = ["agent/src", "agent/tests", "agent/tools", "agent/package*.json", "agent/tsconfig*.json",
++                "agent/vitest*", "ops/*.py", "ops/*.sh", "ops/tests", "ops/codex", "learner/*.py",
++                "learner/*.ts", "learner/lib", "learner/tasks", "eval/*.py", "eval/*.ts", "knowledge/builders"]
++
++
++def require(condition, message):
++    if not condition:
++        raise ValueError(message)
++
++
++def digest(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++def read_fixed(path, parent, limit=32 * 1024 * 1024):
++    path, parent = Path(path), Path(parent).resolve()
++    require(path.resolve().is_relative_to(parent) and not path.is_symlink(), "path escapes its registered directory")
++    require(path.is_file() and path.stat().st_size <= limit, "missing or oversized input")
++    return path.read_bytes()
++
++
++def git(live, *args):
++    result = subprocess.run(["git", "-C", str(live), *args], capture_output=True, text=True, timeout=30)
++    require(result.returncode == 0, "Git identity check failed")
++    return result.stdout.strip()
++
++
++def coverage(raw):
++    """Preserve observed coverage even when a timeout omitted the summary."""
++    text = ANSI.sub("", raw.decode("utf8", errors="replace"))
++    passed, failed, skipped = set(), set(), set()
++    for mark, name in re.findall(r"^\s*([✓✔❯×✗↓-])\s+(tests/[a-z0-9_-]+\.test\.ts)\s+\(", text, re.M):
++        (passed if mark in "✓✔" else skipped if mark in "↓-" else failed).add(name)
++    failed_tests = {}
++    for name, title in re.findall(r"^\s*FAIL\s+(tests/[a-z0-9_-]+\.test\.ts)(?:\s+>\s+([^\n]+))?", text, re.M):
++        failed.add(name)
++        if title:
++            failed_tests.setdefault(name, []).append(" ".join(title.strip().split(" > ")))
++    summary = {}
++    for label, body in re.findall(r"^\s*(Test Files|Tests)\s+([^\n]+)", text, re.M):
++        summary["files" if label == "Test Files" else "tests"] = {status: int(count) for count, status in re.findall(r"(\d+) (passed|failed|skipped)", body)}
++    return {"passed": sorted(passed - failed), "failed": sorted(failed), "skipped": sorted(skipped), "summary": summary,
++            "failed_tests": {key: sorted(set(value)) for key, value in sorted(failed_tests.items())}}
++
++
++def validate(batch_id, batch, root, out_dir, manifest_sha):
++    require(BATCH.fullmatch(batch_id) and DIGEST.fullmatch(manifest_sha), "invalid batch or manifest SHA")
++    require(batch.get("state") in ("done", "failed", "lost"), "original owner is still active")
++    root, out_dir = Path(root).resolve(), Path(out_dir).resolve()
++    raw = read_fixed(out_dir / f"{batch_id}.continuation-{manifest_sha}.json", out_dir, 1024 * 1024)
++    require(digest(raw) == manifest_sha, "manifest SHA mismatch")
++    manifest = json.loads(raw)
++    require(set(manifest) == {"schema", "batch", "task", "worktree", "original", "live", "sources", "inputs", "selection", "receipts"}, "unknown manifest fields")
++    require(manifest["schema"] == 1 and manifest["batch"] == batch_id and manifest["task"] == batch.get("task")
++            and manifest["worktree"] == batch.get("worktree"), "original caller identity mismatch")
++    owner = Path(manifest["worktree"])
++    require(owner.resolve().parent == root / ".worktrees" and owner.is_dir(), "unregistered owner directory")
++    original = manifest["original"]
++    require(set(original) == {"merged", "tree", "log_sha256", "coverage"}, "invalid original receipt")
++    require(all(isinstance(original[key], str) and SHA.fullmatch(original[key]) for key in ("merged", "tree")), "invalid original source/tree")
++    history = [batch.get("checks", {})] + batch.get("fallback_checks", [])
++    registered = [entry for entry in history if isinstance(entry, dict)
++                  and entry.get("merged") == original["merged"] and entry.get("tree") == original["tree"]]
++    require(registered and len({entry.get("log") for entry in registered}) == 1, "original full check is not registered")
++    log = Path(registered[0]["log"])
++    require(log.parent.resolve() == out_dir and log.name.startswith(batch_id + ".") and log.name.endswith(".checks.log"), "invalid original log path")
++    log_raw = read_fixed(log, out_dir)
++    require(digest(log_raw) == original["log_sha256"], "original log SHA mismatch")
++    observed = coverage(log_raw)
++    require(observed == original["coverage"] and (observed["passed"] or observed["failed"]), "original coverage mismatch or unreadable")
++    live = root / ".worktrees/live"
++    pin = manifest["live"]
++    require(set(pin) == {"commit", "tree"} and all(isinstance(v, str) and SHA.fullmatch(v) for v in pin.values()), "invalid current source/tree")
++    require(git(live, "rev-parse", "HEAD", "HEAD^{tree}").splitlines() == [pin["commit"], pin["tree"]], "stale live source/tree")
++    require(git(live, "rev-parse", original["merged"] + "^{tree}") == original["tree"], "original tree mismatch")
++    require(not git(live, "status", "--porcelain", "--untracked-files=all", "--", *SOURCE_PATHS), "live validation inputs are dirty")
++    sources = manifest["sources"]
++    require(isinstance(sources, list) and 1 <= len(sources) <= 32
++            and all(isinstance(source, str) and SHA.fullmatch(source) for source in sources), "invalid source commits")
++    required = {source for entry in registered for source in entry.get("commits", [])}
++    require(required.issubset(sources), "missing original source identity")
++    for source in sources:
++        git(live, "merge-base", "--is-ancestor", source, pin["commit"])
++    changed = set(git(live, "diff", "--name-only", original["merged"], pin["commit"], "--").splitlines())
++    selection = manifest["selection"]
++    require(isinstance(selection, list) and 1 <= len(selection) <= 16, "invalid selection count")
++    seen = set()
++    required_inputs = set()
++    for item in selection:
++        require(isinstance(item, dict) and set(item) == {"file", "tests", "reason"}, "unknown selection fields")
++        name, tests, reason = item["file"], item["tests"], item["reason"]
++        require(isinstance(name, str) and TEST.fullmatch(name) and name not in seen, "invalid or repeated test path")
++        seen.add(name)
++        require(isinstance(tests, list) and len(tests) <= 32 and all(isinstance(t, str) and 0 < len(t) <= 500
++                and not any(ord(c) < 32 for c in t) for t in tests) and len(set(tests)) == len(tests), "invalid exact test names")
++        git(live, "ls-files", "--error-unmatch", "agent/" + name)
++        read_fixed(live / "agent" / name, live / "agent/tests", 2 * 1024 * 1024)
++        affected = bool(changed.intersection(["agent/" + name, *DEPENDENCIES.get(name, [])]))
++        required_inputs.add("agent/" + name)
++        required_inputs.update(changed.intersection(DEPENDENCIES.get(name, [])))
++        if reason == "failed":
++            require(name in observed["failed"], "test did not fail in the original log")
++            # Exact names avoid rerunning successful cases in a partially failed file.
++            failures = observed["failed_tests"].get(name, [])
++            require(not failures or (tests and set(tests).issubset(failures)), "failed selection includes previously passed tests")
++        elif reason == "unrun":
++            require(name not in observed["passed"] + observed["failed"] + observed["skipped"], "test was already run or intentionally skipped")
++            listed = len(observed["passed"]) + len(observed["failed"]) + len(observed["skipped"])
++            summary = observed["summary"].get("files")
++            require((summary and sum(summary.values()) == listed)
++                    or (not summary and registered[0].get("rc") == 124), "original log cannot prove the file was unrun")
++        else:
++            require(reason == "affected" and affected, "no changed test or mapped dependency")
++    # An ancestor alone can contain a subsequently reverted fix. Require the
++    # selected inputs to match the declared source snapshots byte for byte.
++    inputs = manifest["inputs"]
++    require(isinstance(inputs, list) and len(inputs) == len(required_inputs), "missing exact source snapshots")
++    seen_inputs = set()
++    for item in inputs:
++        require(isinstance(item, dict) and set(item) == {"path", "source"} and item["path"] in required_inputs
++                and item["path"] not in seen_inputs and item["source"] in sources, "invalid source snapshot")
++        seen_inputs.add(item["path"])
++        require(git(live, "rev-parse", "--verify", item["source"] + ":" + item["path"])
++                == git(live, "rev-parse", "--verify", pin["commit"] + ":" + item["path"]), "registered source was changed or reverted")
++    receipts = manifest["receipts"]
++    require(isinstance(receipts, list) and len(receipts) <= 16, "invalid supplementary evidence")
++    for receipt in receipts:
++        require(isinstance(receipt, dict) and set(receipt) == {"path", "sha256"}, "invalid evidence receipt")
++        path = Path(receipt["path"])
++        require(not path.is_absolute() and ".." not in path.parts and str(path).startswith("paper/materials/")
++                and path.suffix in (".json", ".md", ".log", ".txt"), "invalid evidence path")
++        require(digest(read_fixed(root / path, root / "paper/materials")) == receipt["sha256"], "evidence SHA mismatch")
++    return manifest, str(log)
++
++
++def save_receipt(path, receipt):
++    temporary = path.with_name(path.name + ".partial")
++    with temporary.open("w", encoding="utf8") as handle:
++        json.dump(receipt, handle, ensure_ascii=False, indent=2)
++        handle.write("\n")
++        handle.flush()
++        os.fsync(handle.fileno())
++    os.replace(temporary, path)
++
++
++def run(batch_id, batch, root, out_dir, manifest_sha, enqueue, inbox):
++    """Run only selected fixed Vitest inputs; return a separate scoped receipt."""
++    try:
++        require(isinstance(batch_id, str) and BATCH.fullmatch(batch_id)
++                and isinstance(manifest_sha, str) and DIGEST.fullmatch(manifest_sha), "invalid continuation request")
++        with open(Path(root, "ops/live-merge.lock"), "a", encoding="utf8") as lock:
++            fcntl.flock(lock, fcntl.LOCK_EX)
++            manifest, original_log = validate(batch_id, batch, root, out_dir, manifest_sha)
++            stem = Path(out_dir, f"{batch_id}.supplement-{manifest_sha}")
++            receipt_path = stem.with_name(stem.name + ".json")
++            history = batch.setdefault("check_supplements", [])
++            if receipt_path.exists():
++                previous = json.loads(read_fixed(receipt_path, out_dir, 4 * 1024 * 1024))
++                require(previous.get("manifest_sha256") == manifest_sha and previous.get("state") == "completed", "continuation already claimed; preserve incomplete receipt")
++                if previous not in history:
++                    history.append(previous)
++                return previous["rc"]
++            for previous in history:
++                if previous.get("live") != manifest["live"]:
++                    continue
++                for old in previous.get("selection", []):
++                    if not any(result.get("name") == old["file"] and result.get("status") == "passed"
++                               for result in previous.get("results", [])):
++                        continue
++                    for item in manifest["selection"]:
++                        if item["file"] == old["file"]:
++                            require(old["tests"] and item["tests"] and not set(old["tests"]).intersection(item["tests"]),
++                                    "selection repeats a passed supplement on this tree")
++            receipt = {"manifest_sha256": manifest_sha, "batch": batch_id, "state": "running", "environment": "host",
++                       "scope": "selected tests only", "full_suite": False, "live": manifest["live"],
++                       "original": manifest["original"], "original_log": original_log, "sources": manifest["sources"], "inputs": manifest["inputs"],
++                       "selection": manifest["selection"], "evidence": manifest["receipts"], "results": []}
++            # Exclusive creation leaves an interrupted owner's claim visible; it never starts a second runner.
++            with receipt_path.open("x", encoding="utf8") as handle:
++                json.dump(receipt, handle, ensure_ascii=False, indent=2)
++            log_path = stem.with_name(stem.name + ".log")
++            live = Path(root, ".worktrees/live")
++            node = str(Path.home() / ".local/node/bin/node")
++            commands = [("tsc", ["nice", "-n", "19", node, "node_modules/typescript/bin/tsc", "-p", "tsconfig.json", "--noEmit"], None)]
++            for index, item in enumerate(manifest["selection"]):
++                result_path = stem.with_name(stem.name + f".{index}.vitest.json")
++                argv = ["nice", "-n", "19", node, "node_modules/vitest/vitest.mjs", "run", item["file"],
++                        "--pool=forks", "--maxWorkers=1", "--reporter=default", "--reporter=json", "--outputFile=" + str(result_path)]
++                if item["tests"]:
++                    argv += ["--testNamePattern", "^(?:" + "|".join(re.escape(name) for name in item["tests"]) + ")$"]
++                commands.append((item["file"], argv, result_path))
++            with log_path.open("x", encoding="utf8") as log:
++                deadline = time.monotonic() + 3600
++                for name, argv, result_path in commands:
++                    code, status = 1, "failed"
++                    process_code, report_metadata = None, {}
++                    try:
++                        result = subprocess.run(argv, cwd=live / "agent", stdout=log, stderr=subprocess.STDOUT,
++                                                timeout=max(0.001, deadline - time.monotonic()))
++                        code = result.returncode
++                        process_code = code
++                        status = "passed" if code == 0 else "failed"
++                        if result_path is not None:
++                            result_raw = read_fixed(result_path, out_dir)
++                            data = json.loads(result_raw)
++                            report_metadata = {"report_sha256": digest(result_raw), "counts": {
++                                key: data.get(key) for key in ("numTotalTests", "numPassedTests", "numFailedTests", "numPendingTests")}}
++                            item = next(item for item in manifest["selection"] if item["file"] == name)
++                            assertions = [a for entry in data.get("testResults", []) for a in entry.get("assertionResults", [])]
++                            executed = {a.get("fullName") for a in assertions if a.get("status") in ("passed", "failed")}
++                            require(data.get("numTotalTests", 0) > 0 and executed
++                                    and (not item["tests"] or executed == set(item["tests"])), "selected tests did not execute")
++                            if code and re.search(r"(?:listen|spawn)[^\n]{0,100}EPERM", json.dumps(data)):
++                                status = "environment-limited"
++                    except subprocess.TimeoutExpired:
++                        code, status = 124, "timeout"
++                        log.write("\nContinuation command timed out; original coverage retained.\n")
++                    except (OSError, ValueError, TypeError) as error:
++                        code, status = 2, "unverified"
++                        log.write(f"\n{type(error).__name__}: {error}\n")
++                    receipt["results"].append({"name": name, "rc": code, "process_rc": process_code, "status": status, **report_metadata,
++                                               **({"report": str(result_path)} if result_path else {})})
++                    # Retain completed segments even if the caller disappears before the next command.
++                    save_receipt(receipt_path, receipt)
++                    if status in ("timeout", "unverified", "environment-limited"):
++                        break
++            if (git(live, "rev-parse", "HEAD", "HEAD^{tree}").splitlines() != [manifest["live"]["commit"], manifest["live"]["tree"]]
++                    or git(live, "status", "--porcelain", "--untracked-files=all", "--", *SOURCE_PATHS)):
++                receipt["results"].append({"name": "source-verification", "rc": 2, "status": "source-drift"})
++            receipt.update(state="completed", rc=next((r["rc"] for r in receipt["results"] if r["rc"]), 0),
++                           log=str(log_path), log_sha256=digest(log_path.read_bytes()))
++            save_receipt(receipt_path, receipt)
++            history.append(receipt)
++            message = (f"批次 {batch_id} 宿主定向补验 exit {receipt['rc']}；精确树 {manifest['live']['tree']}；"
++                       f"仅覆盖所选测试，非完整套件通过；原失败/超时及覆盖保留，不自动回退。补充回执 {receipt_path}。")
++            if receipt["rc"]:
++                inbox(message)
++            enqueue("learner-checks", message)
++            return receipt["rc"]
++    except (OSError, ValueError, TypeError, KeyError, AttributeError, subprocess.SubprocessError) as error:
++        # Validation never falls back to an expensive full run.
++        print(f"定向补验拒绝：{error}")
++        return 2
+diff --git a/ops/learner_checks.py b/ops/learner_checks.py
+index 86fa2d6ed..44e5d2158 100644
+--- a/ops/learner_checks.py
++++ b/ops/learner_checks.py
+@@ -213,8 +213,13 @@ def preserved_calibration_report(batch_id, batch, root):
+     return candidates[0] if len(candidates) == 1 else ({}, None)
+ 
+ 
+-def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox):
++def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, continuation=None):
+     """Verify fallback merges and check their pinned live tree without rewriting the original completion."""
++    if continuation is not None:
++        spec = importlib.util.spec_from_file_location("learner_check_continuation", os.path.join(os.path.dirname(__file__), "learner_check_continuation.py"))
++        module = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(module)
++        return module.run(batch_id, batch, root, out_dir, continuation, enqueue, inbox)
+     report = read_report(os.path.join(out_dir, batch_id + ".out"))
+     report_proof = None
+     if not report:
+diff --git a/ops/tests/test_learner_check_continuation.py b/ops/tests/test_learner_check_continuation.py
+new file mode 100644
+index 000000000..eb3ea51af
+--- /dev/null
++++ b/ops/tests/test_learner_check_continuation.py
+@@ -0,0 +1,326 @@
++"""Fixed host-continuation protocol tests; engines and test runners are mocked."""
++import ast
++import contextlib
++import copy
++import fcntl
++import importlib.util
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++from types import SimpleNamespace
++import unittest
++from unittest.mock import patch
++
++SOURCE = Path(__file__).parents[1]
++spec = importlib.util.spec_from_file_location("continuation", SOURCE / "learner_check_continuation.py")
++m = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(m)
++
++
++class Continuation(unittest.TestCase):
++    def setUp(self):
++        temp = tempfile.TemporaryDirectory()
++        self.addCleanup(temp.cleanup)
++        self.root = Path(temp.name)
++        self.out = self.root / "ops/codex-ops/learner"
++        self.out.mkdir(parents=True)
++        self.owner = self.root / ".worktrees/codex-fix-silent-20261011-181302"
++        self.owner.mkdir(parents=True)
++        self.live = self.root / ".worktrees/live"
++        for name in ("broken", "passed", "unrun"):
++            path = self.live / f"agent/tests/{name}.test.ts"
++            path.parent.mkdir(parents=True, exist_ok=True)
++            path.write_text('it("fails", () => {});\n')
++        self.batch_id = "20261011-181302-fix-batch"
++        self.log = self.out / (self.batch_id + ".fallback-" + "b" * 40 + ".checks.log")
++        self.log.write_text(" ✓ tests/passed.test.ts (10 tests)\n ❯ tests/broken.test.ts (2 tests | 1 failed)\n"
++                            " FAIL tests/broken.test.ts > suite > fails\n Test Files 1 failed | 1 passed (2)\n Tests 1 failed | 11 passed (12)\n")
++        self.batch = {"task": "fix-batch", "state": "failed", "rc": 124, "worktree": str(self.owner), "checks_pending": True,
++                      "fallback_checks": [{"merged": "a" * 40, "tree": "b" * 40, "rc": 1,
++                                           "log": str(self.log), "commits": ["e" * 40]}]}
++        self.manifest = {"schema": 1, "batch": self.batch_id, "task": "fix-batch", "worktree": str(self.owner),
++                         "original": {"merged": "a" * 40, "tree": "b" * 40, "log_sha256": m.digest(self.log.read_bytes()),
++                                      "coverage": m.coverage(self.log.read_bytes())},
++                         "live": {"commit": "c" * 40, "tree": "d" * 40}, "sources": ["e" * 40, "f" * 40],
++                         "inputs": [{"path": "agent/tests/broken.test.ts", "source": "f" * 40}],
++                         "selection": [{"file": "tests/broken.test.ts", "tests": ["suite fails"], "reason": "failed"}],
++                         "receipts": []}
++        self.events, self.inbox, self.calls = [], [], []
++        self.changed, self.dirty, self.stale = [], False, False
++        self.code, self.timeout, self.zero_tests = 0, False, False
++        self.environment_limited = False
++        self.git_patch = patch.object(m, "git", side_effect=self.git)
++        self.git_patch.start()
++        self.addCleanup(self.git_patch.stop)
++        self.run_patch = patch.object(m.subprocess, "run", side_effect=self.execute)
++        self.run_patch.start()
++        self.addCleanup(self.run_patch.stop)
++
++    def git(self, live, *args):
++        self.assertEqual(Path(live), self.live)
++        if args == ("rev-parse", "HEAD", "HEAD^{tree}"):
++            return ("0" if self.stale else "c") * 40 + "\n" + "d" * 40
++        if args[0] == "rev-parse":
++            return "b" * 40
++        if args[0] == "status":
++            return " M agent/src/core/config.ts" if self.dirty else ""
++        if args[0] == "diff":
++            return "\n".join(self.changed)
++        if args[0] == "ls-files":
++            return args[-1]
++        self.assertEqual(args[0], "merge-base")
++        return ""
++
++    def execute(self, argv, **kwargs):
++        self.calls.append(argv)
++        self.assertEqual(argv[:3], ["nice", "-n", "19"])
++        self.assertEqual(kwargs["cwd"], self.live / "agent")
++        self.assertLessEqual(kwargs["timeout"], 3600)
++        self.assertNotIn("shell", kwargs)
++        if "node_modules/typescript/bin/tsc" in argv:
++            return subprocess.CompletedProcess(argv, 0)
++        self.assertIn("--maxWorkers=1", argv)
++        self.assertIn("--pool=forks", argv)
++        self.assertNotIn("--exclude", argv)
++        if self.timeout:
++            raise subprocess.TimeoutExpired(argv, 3600)
++        path = Path(next(a.removeprefix("--outputFile=") for a in argv if a.startswith("--outputFile=")))
++        names = next(item["tests"] for item in self.manifest["selection"] if item["file"] in argv) or ["suite fails"]
++        data = {"numTotalTests": len(names), "numPassedTests": 0 if self.zero_tests or self.code else len(names),
++                "numFailedTests": len(names) if self.code else 0,
++                "testResults": [{"assertionResults": [{"fullName": name, "status": "pending" if self.zero_tests else "failed" if self.code else "passed"}
++                                                      for name in names]}]}
++        if self.environment_limited:
++            data["testResults"][0]["message"] = "Error: spawn fixed-child EPERM"
++        path.write_text(json.dumps(data))
++        kwargs["stdout"].write("fake runner stderr retained\n")
++        return subprocess.CompletedProcess(argv, self.code)
++
++    def save(self):
++        raw = json.dumps(self.manifest).encode()
++        sha = m.digest(raw)
++        (self.out / f"{self.batch_id}.continuation-{sha}.json").write_bytes(raw)
++        return sha
++
++    def run_check(self, sha=None):
++        return m.run(self.batch_id, self.batch, str(self.root), str(self.out), sha or self.save(),
++                     lambda kind, message: self.events.append((kind, message)), self.inbox.append)
++
++    def test_scoped_recheck_preserves_original_failure_and_deduplicates_completed_claim(self):
++        original = copy.deepcopy(self.batch)
++        original_log = self.log.read_bytes()
++        sha = self.save()
++        self.assertEqual(self.run_check(sha), 0)
++        self.assertEqual(self.run_check(sha), 0)
++        self.assertEqual(len(self.calls), 2)
++        self.assertEqual(len(self.events), 1)
++        self.assertEqual(self.events[0][0], "learner-checks")
++        for key, value in original.items():
++            self.assertEqual(self.batch[key], value)
++        self.assertEqual(self.log.read_bytes(), original_log)
++        receipt = self.batch["check_supplements"][0]
++        self.assertFalse(receipt["full_suite"])
++        self.assertEqual(len(self.batch["check_supplements"]), 1)
++        self.assertIn("stderr retained", Path(receipt["log"]).read_text())
++
++    def test_existing_recheck_entry_delegates_to_the_bounded_supplement(self):
++        spec = importlib.util.spec_from_file_location("checks_entry", SOURCE / "learner_checks.py")
++        checks = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(checks)
++        isolated = SimpleNamespace(loader=SimpleNamespace(exec_module=lambda module: None))
++        with patch.object(checks.importlib.util, "spec_from_file_location", return_value=isolated), \
++                patch.object(checks.importlib.util, "module_from_spec", return_value=m):
++            result = checks.recheck_write_batch(self.batch_id, self.batch, str(self.root), str(self.out),
++                                                lambda kind, message: self.events.append((kind, message)), self.inbox.append,
++                                                continuation=self.save())
++        self.assertEqual(result, 0)
++        self.assertEqual(len(self.calls), 2)
++        self.assertFalse(self.batch["check_supplements"][0]["full_suite"])
++
++    def test_rejects_batch_owner_sha_path_command_and_coverage_drift(self):
++        edits = [lambda x: x.update(batch="20261011-175450-experience-update"),
++                 lambda x: x.update(task="experience-update"), lambda x: x.update(worktree="/elsewhere"),
++                 lambda x: x.update(command="echo unsafe"),
++                 lambda x: x["original"].update(log_sha256="0" * 64),
++                 lambda x: x["original"].update(tree="0" * 40),
++                 lambda x: x["original"]["coverage"]["passed"].append("tests/fake.test.ts"),
++                 lambda x: x.update(sources=["f" * 40]),
++                 lambda x: x.update(sources=["main"]),
++                 lambda x: x["selection"][0].update(file="../tests/broken.test.ts"),
++                 lambda x: x["selection"][0].update(file="tests/broken.test.ts;exit"),
++                 lambda x: x["selection"][0].update(command="echo unsafe"),
++                 lambda x: x["selection"][0].update(tests=["suite passed"])]
++        valid = copy.deepcopy(self.manifest)
++        for edit in edits:
++            self.manifest = copy.deepcopy(valid)
++            edit(self.manifest)
++            with self.subTest(manifest=self.manifest):
++                self.assertEqual(self.run_check(), 2)
++                self.assertFalse(self.calls)
++        self.manifest = valid
++        sha = self.save()
++        path = self.out / f"{self.batch_id}.continuation-{sha}.json"
++        path.write_text(path.read_text() + " ")
++        self.assertEqual(self.run_check(sha), 2)
++        self.assertEqual(self.run_check("../bad"), 2)
++
++    def test_stale_dirty_active_and_missing_source_refuse_without_a_full_rerun(self):
++        self.stale = True
++        self.assertEqual(self.run_check(), 2)
++        self.stale, self.dirty = False, True
++        self.assertEqual(self.run_check(), 2)
++        self.dirty = False
++        self.batch["state"] = "running"
++        self.assertEqual(self.run_check(), 2)
++        self.batch["state"] = "failed"
++        with patch.object(m, "git", side_effect=ValueError("source absent")):
++            self.assertEqual(self.run_check(), 2)
++        self.assertFalse(self.calls)
++
++    def test_symlinked_inputs_and_unregistered_original_log_are_rejected(self):
++        path = self.live / "agent/tests/broken.test.ts"
++        path.unlink()
++        path.symlink_to(self.live / "agent/tests/passed.test.ts")
++        self.assertEqual(self.run_check(), 2)
++        path.unlink()
++        path.write_text("fixed test")
++        self.batch["fallback_checks"][0]["log"] = str(self.root / "outside.checks.log")
++        self.assertEqual(self.run_check(), 2)
++        self.assertFalse(self.calls)
++
++    def test_previously_passed_file_requires_a_real_changed_dependency(self):
++        self.manifest["selection"] = [{"file": "tests/passed.test.ts", "tests": [], "reason": "unrun"}]
++        self.manifest["inputs"] = [{"path": "agent/tests/passed.test.ts", "source": "f" * 40}]
++        self.assertEqual(self.run_check(), 2)
++        self.manifest["selection"][0]["reason"] = "affected"
++        self.assertEqual(self.run_check(), 2)
++        self.changed = ["agent/tests/passed.test.ts"]
++        self.assertEqual(self.run_check(), 0)
++
++    def test_unrun_and_newly_affected_files_have_separate_supplement_receipts(self):
++        self.assertEqual(self.run_check(), 0)
++        self.manifest["selection"] = [{"file": "tests/unrun.test.ts", "tests": [], "reason": "unrun"}]
++        self.manifest["inputs"] = [{"path": "agent/tests/unrun.test.ts", "source": "f" * 40}]
++        self.assertEqual(self.run_check(), 0)
++        self.assertEqual(len(self.batch["check_supplements"]), 2)
++        self.assertNotEqual(*[entry["log"] for entry in self.batch["check_supplements"]])
++
++    def test_evidence_receipts_are_content_bound_and_cannot_choose_arbitrary_paths(self):
++        path = self.root / "paper/materials/fixed/coverage.json"
++        path.parent.mkdir(parents=True)
++        path.write_text('{"source": "fixed evidence"}')
++        receipt = {"path": str(path.relative_to(self.root)), "sha256": m.digest(path.read_bytes())}
++        self.manifest["receipts"] = [receipt]
++        receipt["sha256"] = "0" * 64
++        self.assertEqual(self.run_check(), 2)
++        receipt["sha256"] = m.digest(path.read_bytes())
++        receipt["path"] = "paper/materials/../../ops/file.json"
++        self.assertEqual(self.run_check(), 2)
++        receipt["path"] = str(path.relative_to(self.root))
++        self.assertEqual(self.run_check(), 0)
++
++    def test_timeout_preserves_completed_segment_and_does_not_reset_or_repeat(self):
++        self.timeout = True
++        sha = self.save()
++        self.assertEqual(self.run_check(sha), 124)
++        self.assertEqual(self.run_check(sha), 124)
++        receipt = self.batch["check_supplements"][0]
++        self.assertEqual([row["status"] for row in receipt["results"]], ["passed", "timeout"])
++        self.assertEqual(len(self.calls), 2)
++        self.assertEqual(self.batch["rc"], 124)
++
++    def test_failed_assertion_and_zero_matching_tests_are_not_success(self):
++        self.code = 1
++        self.assertEqual(self.run_check(), 1)
++        self.assertEqual(self.batch["check_supplements"][0]["results"][-1]["status"], "failed")
++        self.code, self.zero_tests = 0, True
++        self.manifest["selection"] = [{"file": "tests/unrun.test.ts", "tests": [], "reason": "unrun"}]
++        self.manifest["inputs"] = [{"path": "agent/tests/unrun.test.ts", "source": "f" * 40}]
++        self.assertEqual(self.run_check(), 2)
++
++    def test_ancestry_does_not_accept_a_reverted_source_snapshot(self):
++        def reverted(live, *args):
++            if args[:2] == ("rev-parse", "--verify") and args[-1].startswith("f" * 40):
++                return "0" * 40
++            return self.git(live, *args)
++        with patch.object(m, "git", side_effect=reverted):
++            self.assertEqual(self.run_check(), 2)
++        self.assertFalse(self.calls)
++
++    def test_changing_metadata_cannot_repeat_a_passed_supplement(self):
++        self.assertEqual(self.run_check(), 0)
++        self.manifest["sources"].append("9" * 40)
++        self.assertEqual(self.run_check(), 2)
++        self.assertEqual(len(self.calls), 2)
++
++    def test_permission_limit_is_distinct_from_an_assertion_failure(self):
++        self.code, self.environment_limited = 1, True
++        self.assertEqual(self.run_check(), 1)
++        self.assertEqual(self.batch["check_supplements"][0]["results"][-1]["status"], "environment-limited")
++
++    def test_source_drift_during_execution_cannot_claim_a_verified_pass(self):
++        def mutate(argv, **kwargs):
++            result = self.execute(argv, **kwargs)
++            self.dirty = True
++            return result
++        with patch.object(m.subprocess, "run", side_effect=mutate):
++            self.assertEqual(self.run_check(), 2)
++        self.assertEqual(self.batch["check_supplements"][0]["results"][-1]["status"], "source-drift")
++
++    def test_incomplete_claim_refuses_rerun(self):
++        sha = self.save()
++        path = self.out / f"{self.batch_id}.supplement-{sha}.json"
++        path.write_text(json.dumps({"manifest_sha256": sha, "state": "running"}))
++        self.assertEqual(self.run_check(sha), 2)
++        self.assertFalse(self.calls)
++
++    def test_original_timeout_log_retains_partial_coverage(self):
++        self.batch["fallback_checks"][0]["rc"] = 124
++        self.log.write_text(" ✓ tests/passed.test.ts (10 tests)\nTimeoutExpired: before remaining files\n")
++        self.manifest["original"].update(log_sha256=m.digest(self.log.read_bytes()), coverage=m.coverage(self.log.read_bytes()))
++        self.manifest["selection"][0]["reason"] = "unrun"
++        self.assertEqual(self.run_check(), 0)
++        self.assertEqual(self.batch["check_supplements"][0]["original"]["coverage"]["passed"], ["tests/passed.test.ts"])
++
++    def test_sparse_summary_cannot_misclassify_passed_files_as_unrun(self):
++        self.log.write_text(" ❯ tests/broken.test.ts (2 tests | 1 failed)\n Test Files 1 failed | 324 passed (325)\n")
++        self.manifest["original"].update(log_sha256=m.digest(self.log.read_bytes()), coverage=m.coverage(self.log.read_bytes()))
++        self.manifest["selection"] = [{"file": "tests/unrun.test.ts", "tests": [], "reason": "unrun"}]
++        self.manifest["inputs"] = [{"path": "agent/tests/unrun.test.ts", "source": "f" * 40}]
++        self.assertEqual(self.run_check(), 2)
++        self.assertFalse(self.calls)
++
++    def scheduler(self, state):
++        source = ast.parse((SOURCE / "codex-ops-learn.py").read_text())
++        function = next(node for node in source.body if isinstance(node, ast.FunctionDef) and node.name == "cmd_recheck")
++        namespace = {"re": m.re, "os": m.os, "fcntl": fcntl, "json": json, "DIR": str(self.out.parent), "ROOT": str(self.root),
++                     "state_lock": contextlib.nullcontext, "load_state": lambda: copy.deepcopy(state),
++                     "save_state": lambda saved: state.update(saved), "enqueue": lambda *args: None, "inbox": lambda *args: None}
++        calls = []
++        def recheck(*args, **kwargs):
++            calls.append((args, kwargs))
++            args[1]["check_supplements"] = [{"rc": 0, "scope": "selected tests only"}]
++            return 0
++        namespace["recheck_write_batch"] = recheck
++        exec(compile(ast.Module(body=[function], type_ignores=[]), "scheduler-fixture", "exec"), namespace)
++        return namespace["cmd_recheck"], calls
++
++    def test_scheduler_rejects_active_owner_and_keeps_original_checks_pending(self):
++        state = {"batches": {self.batch_id: self.batch, "new-owner": {"state": "running", "worktree": str(self.owner)}}}
++        call, calls = self.scheduler(state)
++        token = self.batch_id + ":" + "a" * 64
++        self.assertEqual(call(SimpleNamespace(batch=token)), 2)
++        self.assertFalse(calls)
++        state["batches"].pop("new-owner")
++        with open(self.out.parent / (self.batch_id + ".checks.lock"), "a") as lock:
++            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++            self.assertEqual(call(SimpleNamespace(batch=token)), 2)
++        self.assertEqual(call(SimpleNamespace(batch=token)), 0)
++        self.assertEqual(calls[0][1], {"continuation": "a" * 64})
++        self.assertTrue(state["batches"][self.batch_id]["checks_pending"])
++        self.assertEqual(state["batches"][self.batch_id]["fallback_checks"], self.batch["fallback_checks"])
++
++
++if __name__ == "__main__":
++    unittest.main()

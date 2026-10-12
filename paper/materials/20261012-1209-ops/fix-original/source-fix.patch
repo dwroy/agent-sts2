@@ -1,0 +1,120 @@
+diff --git a/ops/proposal_dispatch.py b/ops/proposal_dispatch.py
+index e060853c1..1e72af0ea 100644
+--- a/ops/proposal_dispatch.py
++++ b/ops/proposal_dispatch.py
+@@ -114,16 +114,89 @@ def experience_audit(report,batch,root,scripts):
+ 
+ def results(report,batch):
+     ids=batch.get('proposal_ids',[])
+-    if not ids: return []
+     rows=report.get('proposal_results')
++    if not ids:
++        if not rows: return []
++        if batch.get('task')!='strategy-proposal' or report.get('task')!='strategy-proposal':
++            raise ValueError('unassigned dispositions require a strategy report')
++        links=report.get('code_proposals')
++        if (not isinstance(rows,list) or not all(isinstance(r,dict) and isinstance(r.get('id'),str) for r in rows)
++                or not isinstance(links,list) or not all(isinstance(i,str) for i in links)
++                or any(r['id'] not in links for r in rows)):
++            raise ValueError('unassigned disposition lacks its reported proposal link')
++        ids=[r['id'] for r in rows]
+     if not isinstance(rows,list) or len(rows)!=len(ids) or not all(isinstance(r,dict) and isinstance(r.get('id'),str) for r in rows) or {r['id'] for r in rows}!=set(ids):
+         raise ValueError('every dispatched proposal needs a disposition')
++    if len(set(ids))!=len(ids): raise ValueError('duplicate proposal dispositions')
+     for row in rows:
+         if row.get('state') not in ('implemented','duplicate','waiting') or not isinstance(row.get('reason'),str) or not row['reason'].strip():
+             raise ValueError('invalid proposal disposition')
+     return rows
+ 
+ 
++def unassigned_proof(report,batch,root,items,rows,lib):
++    """Bind an ordinary strategy completion to original registrations and source commits."""
++    character=batch.get('character')
++    if report.get('character')!=character or report.get('runs')!=batch.get('runs'):
++        raise ValueError('unassigned report differs from its batch character or runs')
++    project=Path(root).resolve()
++    raw_tree=batch.get('worktree');raw_report=report.get('report')
++    if not all(isinstance(p,str) and Path(p).is_absolute() for p in (raw_tree,raw_report)):
++        raise ValueError('unassigned report needs absolute batch paths')
++    tree=Path(raw_tree).resolve();path=Path(raw_report).resolve();allowed=(tree/'learner/runs').resolve()
++    if (tree.parent!=project/'.worktrees' or tree.name=='live' or not allowed.is_relative_to(tree)
++            or not path.is_relative_to(allowed) or path.suffix!='.md'):
++        raise ValueError('unassigned report is outside its batch worktree')
++    raw=path.read_bytes();saved={}
++    for block in reversed(re.findall(r'```json\s*([\s\S]*?)```',raw.decode())):
++        try: candidate=json.loads(block)
++        except ValueError: continue
++        if isinstance(candidate,dict) and candidate.get('task')=='strategy-proposal':
++            saved=candidate;break
++    # The final output may rephrase prose, but must retain the preserved source identities.
++    keys=('task','character','base','runs','fixes','merged','code_proposals')
++    if any(saved.get(k)!=report.get(k) for k in keys) or not saved:
++        raise ValueError('unassigned source identities differ from the preserved report')
++    saved_rows=saved.get('proposal_results')
++    if (not isinstance(saved_rows,list) or not all(isinstance(r,dict) for r in saved_rows)
++            or [(r.get('id'),r.get('state'),r.get('commit')) for r in saved_rows]
++            !=[(r.get('id'),r.get('state'),r.get('commit')) for r in rows]):
++        raise ValueError('unassigned dispositions differ from the preserved report')
++    fixes=report.get('fixes')
++    runs=batch.get('runs')
++    if (not isinstance(fixes,list) or not all(isinstance(f,dict) for f in fixes)
++            or not isinstance(runs,list) or not runs or not all(isinstance(r,str) for r in runs)):
++        raise ValueError('unassigned report lacks source fixes or evidence runs')
++    def ancestor(source,target,cwd):
++        return (isinstance(source,str) and re.fullmatch('[0-9a-f]{7,40}',source)
++                and subprocess.run(['git','-C',str(cwd),'merge-base','--is-ancestor',source,target],
++                    stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0)
++    merged=report.get('merged')
++    if not ancestor(merged,'HEAD',project/'.worktrees/live'):
++        raise ValueError('unassigned report lacks an actual live merge')
++    for row in rows:
++        item=items.get(row['id'])
++        if (not item or item.get('character')!=character or item.get('target_task')!='strategy-proposal'
++                or item.get('source_task') not in lib.TASKS or not item.get('ledger')
++                or not isinstance(item.get('runs'),list) or not set(item['runs']) & set(runs)):
++            raise ValueError('unassigned disposition lacks its original character/source registration')
++        original=Path(item.get('proposal','')).resolve()
++        if not original.is_relative_to(project) or original.suffix!='.md':
++            raise ValueError('unassigned proposal source is outside the project')
++        if hashlib.sha256(original.read_bytes()).hexdigest()!=item.get('proposal_sha256'):
++            raise ValueError('unassigned proposal source fingerprint changed')
++        commit=row.get('commit')
++        if row['state'] not in ('implemented','duplicate'):
++            raise ValueError('unassigned resolution requires a published source disposition')
++        if (not any(f.get('proposal_id')==row['id'] and f.get('commit')==commit for f in fixes)
++                or not ancestor(commit,merged,project/'.worktrees/live') or not ancestor(commit,'HEAD',tree)):
++            raise ValueError('unassigned disposition is not bound to its reported live source fix')
++        if item.get('state') in ('implemented','duplicate') and item.get('commit',item.get('implemented_commit'))!=commit:
++            raise ValueError('unassigned disposition conflicts with an existing resolution')
++    return {'resolution_report':str(path),'resolution_report_sha256':hashlib.sha256(raw).hexdigest(),
++            'resolution_batch':batch.get('key')}
++
++
+ def research_proof(report,batch,root):
+     """Bind an ops-only research report to its authorized, frozen request."""
+     if batch.get('reason')!='ops' or 'proposal_ids' in batch or 'proposal_repair' in batch:
+@@ -259,6 +332,9 @@ def resolve(report,batch,root,scripts):
+     rows=results(report,batch)
+     if not rows: return
+     lib=library(scripts);count=finished_count(root,batch['character'])
++    items=lib.fold(Path(root,lib.QUEUE))
++    unassigned=not batch.get('proposal_ids')
++    proof=unassigned_proof(report,batch,root,items,rows,lib) if unassigned else {}
+     for row in rows:
+         if row['state'] in ('implemented','duplicate'):
+             commit=row.get('commit','')
+@@ -266,5 +342,12 @@ def resolve(report,batch,root,scripts):
+                 raise ValueError('implemented/duplicate proposal lacks an actual live source commit')
+     # All proofs pass before appending any resolution; no partial successful batch is fabricated.
+     for row in rows:
+-        lib.append(Path(root,lib.QUEUE),{'op':'update','id':row['id'],'ts':lib.now(),'state':row['state'],
+-            'reason':row['reason'],'commit':row.get('commit'),'seen_runs':count,'batch':batch.get('key')})
++        prior=items.get(row['id'],{})
++        # A still-running assigned batch cannot reopen a source already published by another batch.
++        if prior.get('state') in ('implemented','duplicate') and (unassigned or row['state']=='waiting'):
++            continue
++        update={'op':'update','id':row['id'],'ts':lib.now(),'state':row['state'],
++                'reason':row['reason'],'commit':row.get('commit'),**proof}
++        # Ordinary batches did not acquire the proposal's dispatch lease or waiting watermark.
++        if not unassigned: update.update(seen_runs=count,batch=batch.get('key'))
++        lib.append(Path(root,lib.QUEUE),update)

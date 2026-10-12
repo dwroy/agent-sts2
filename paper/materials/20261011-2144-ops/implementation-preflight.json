@@ -1,0 +1,116 @@
+{
+  "at": "2026-10-11 21:54:43 CST",
+  "binding": {
+    "request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+    "work_spec_sha256": "3c9355afd6ee7c98ff7cfc9c2e9a45d20fdf025ae701fccd482b1b73aea6079b",
+    "input_manifest_sha256": "54bd743de00cc1c5146546f06859a59016afba85a39c52aa73359860359c845f",
+    "authorization_sha256": "b998719e1bc75c0b2af67b1fcd862c6bffc4b7707b825e83b58ecf79cd1c1508",
+    "ack_sha256": "153787425d62ec675b6c1d209a17c4ba759d56fa97b2afcf726b31f41e4dd5d7",
+    "files": [
+      {
+        "source": "paper/materials/silent/20261011-core-cycle-quantification/report.md",
+        "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/abstract-report.md",
+        "bytes": 10427,
+        "sha256": "e40f3f897838d0873a0117d27e37b462ef4f67630f68b149ef7493457f797785"
+      },
+      {
+        "source": "paper/materials/silent/20261011-core-cycle-quantification/calculate.py",
+        "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/abstract-calculate.py",
+        "bytes": 9847,
+        "sha256": "77edbe37b4fb1914958b25d14194c5f70d59cef6ee811a372c357b958fdcfa0b"
+      },
+      {
+        "source": "paper/materials/silent/20261011-core-cycle-quantification/results.json",
+        "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/abstract-results.json",
+        "bytes": 18714,
+        "sha256": "7c191564efe3cfda44ddbdb9be91e9bd0d91e0c7d52246c699dbb37c72baf21b"
+      },
+      {
+        "source": "paper/materials/silent/20261011-core-cycle-quantification/experience-integration/task-v3.md",
+        "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/previous-task-v3.md",
+        "bytes": 5269,
+        "sha256": "030337a62c1d43cb18486f53eb760e2235b762fd567d9e8cf6232166aed96360"
+      },
+      {
+        "source": ".worktrees/exp/learner/runs/20261011-175453-experience-update/report.md",
+        "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/previous-learner-report.md",
+        "bytes": 42279,
+        "sha256": "94d3623878596d68e78ec82e0f01c3bb8bb241073991caa124d8baf3b89767ac"
+      },
+      {
+        "source": ".worktrees/exp/learner/runs/20261011-175453-experience-update/finite-window-verification.json",
+        "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/finite-window-verification.json",
+        "bytes": 131821,
+        "sha256": "1aa38f2dc2b15c6b5780506d5052bcc86398cf419243fe6aa3fdf35662a67d5a"
+      },
+      {
+        "source": ".worktrees/codex-strategy-silent-20261010-164301/learner/runs/20261010-164314-strategy-proposal/proposal.md",
+        "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/core-reuse-proposal.md",
+        "bytes": 6850,
+        "sha256": "663b06fb0e50d24d8a1225e7c04e737c961000dcbbef7644471215a5f451515c"
+      },
+      {
+        "source": "paper/materials/silent/20261010-core-output-value/result-review/proposal.md",
+        "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/core-output-proposal.md",
+        "bytes": 6645,
+        "sha256": "77a828dea1664ae9e6fc862151f380161901ebf0be47f06011ad83d6481bd79e"
+      },
+      {
+        "source": ".worktrees/exp/learner/runs/20261011-175453-experience-update/proposal-integration.md",
+        "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/integration-proposal.md",
+        "bytes": 8006,
+        "sha256": "feb0c6dce459bf2e65f38d03dc25449a5704167e30928799f67e9b36f140c118"
+      }
+    ],
+    "file_responsibilities": {
+      "watcher": [
+        "agent/src/sim/quantitative-stats.ts",
+        "agent/src/sim/quantitative-facts.ts",
+        "agent/src/sim/quantitative-calibration.ts",
+        "agent/src/sim/build-sim.ts",
+        "agent/src/sim/build-sim-facts.ts",
+        "agent/src/reflex/combat-plan.ts"
+      ],
+      "learner": [
+        "本角色原帧校准/固定夹具/反例/条件经验",
+        "原三个提案的消费者实现；先复用watcher交付接口，冲突路径停止并交ops协调",
+        "复用已上线通用框架 source199596dfcf99c18cda5ce146b8de618636f60d40 +3ee649f69260309677ad075cac726d705a66e6ef，先读正式补充输入 paper/materials/silent/20261011-core-cycle-quantitative-learning/framework-input-v2.json（SHA256 38eba701973db706c5a02be48e8fb37300eac06e0e9aa333bd368e250862bf5e）及其中API文档 paper/materials/silent/20261011-core-cycle-quantitative-learning/framework-input-v2/quantitative-play.md（SHA256 ac674443cf5d9ffca11e40ee41beda8aaaa4f7b72495e707bea3d6fdd5ac0a2a）；这5个冻结文件由ops逐字复核，文档与dispatch_base已集成API一致。完整组合资格/计数/真实预测-实际自动提取/校准及coverage仍由本批学习者依原task和证据完成，不把框架交付或抽象界当已入库游戏结论。"
+      ],
+      "ops": [
+        "派发冻结绑定、实际合入/校准/版本/账本/双通知/后续效果闭环"
+      ]
+    }
+  },
+  "proposal_identities": [
+    {
+      "id": "silent-proposal-9e1bc1225fae0e30",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-164301/learner/runs/20261010-164314-strategy-proposal/proposal.md",
+      "proposal_sha256": "663b06fb0e50d24d8a1225e7c04e737c961000dcbbef7644471215a5f451515c"
+    },
+    {
+      "id": "silent-proposal-3dae3ca702a14057",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-205441/learner/runs/20261010-205451-strategy-proposal/proposal.md",
+      "proposal_sha256": "77a828dea1664ae9e6fc862151f380161901ebf0be47f06011ad83d6481bd79e"
+    },
+    {
+      "id": "silent-proposal-9e81dc5f9a4c3bd5",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-175453-experience-update/proposal-integration.md",
+      "proposal_sha256": "feb0c6dce459bf2e65f38d03dc25449a5704167e30928799f67e9b36f140c118"
+    }
+  ],
+  "runs": [
+    "C48LLXBGKXQ9",
+    "ZZMYZ5UBCG72",
+    "LRN0HPZ0FZS1",
+    "KAY522KT5NXR",
+    "L704TLETMZBM",
+    "4Y94N8RDPGPM",
+    "KV0JHNJCKXLS",
+    "J8PHG72DGD90",
+    "49HL2N70CHMU",
+    "54G5683J0E5S"
+  ],
+  "canonical_sha256": "ffa16232b35965a1e90a445b5e5363838ed774b0efdcece26b3ca7ce1222f37d",
+  "framework_manifest_sha256": "38eba701973db706c5a02be48e8fb37300eac06e0e9aa333bd368e250862bf5e",
+  "actual_model_delivery": false
+}

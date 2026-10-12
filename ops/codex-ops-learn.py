@@ -6,7 +6,7 @@ Run by ops/codex-ops.sh at :13 and :43 (`tick`); everything here is deterministi
 
   tick       1. victories: runs.jsonl rows of the character with "victory": true not yet in ops/win-notified
                 -> a `victory` event each, and the id is appended to ops/win-notified;
-             2. a new ascension: the character's latest run-config.jsonl row targets a higher ascension than the
+             2. a new ascension: the character's latest run-config.jsonl row observes a higher ascension than the
                 last one seen -> an `ascension-up` event (the per-level summary);
              3. post-mortems: finished runs of the character (in runs.jsonl) without a "## <id>" heading in
                 notes/lessons.md, not dispatched yet -> one learner batch of up to 5 (learner/run.ts --engine codex
@@ -198,10 +198,10 @@ def check_victories(character):
 
 
 def run_ascension(row):
-    value = row.get("target_ascension")
-    if not isinstance(value, int):
-        value = row.get("ascension")
-    return value if isinstance(value, int) else None
+    # The requested target can exceed the character's unlocked maximum. Only the
+    # observed run level is evidence for notifications and structural audits.
+    value = row.get("ascension")
+    return value if type(value) is int and value >= 0 else None
 
 
 def check_ascension(state, character):
@@ -329,6 +329,11 @@ def ledger_lines(runs):
     ]
 
 
+def account_draining():
+    """A manual account handoff blocks new work, never completion records or checks."""
+    return any(os.path.isfile(os.path.join(DIR, name)) for name in ("LLM_DRAIN", "ACCOUNT_DRAIN"))
+
+
 def cmd_finish(args):
     state = load_state()
     batch = state["batches"].get(args.batch)
@@ -345,7 +350,8 @@ def cmd_finish(args):
     if batch.get("task") == "ascension-audit":
         ascension_audit.finish(state, args.batch, args.rc, ROOT, os.path.join(DIR,"learner"), enqueue, inbox,
                               proposal_check=lambda report, current: proposal_dispatch.links(report, current, ROOT, SCRIPTS))
-        check_jobs(state, ROOT, SCRIPTS, batch["character"], alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        if not account_draining():
+            check_jobs(state, ROOT, SCRIPTS, batch["character"], alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
         save_state(state)
         return 0
     if batch.get("task", "postmortem") != "postmortem":
@@ -362,7 +368,7 @@ def cmd_finish(args):
             finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
         if batch["state"] == "failed":
             batch["retry_at"] = time.time() + RETRY_AFTER_S
-        if batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch"):
+        if not account_draining() and batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch"):
             boss_sim_jobs.check(state, ROOT, SCRIPTS, args.character, alive,
                                 dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner)
         if batch.get("proposal_repair_needed"):
@@ -410,8 +416,9 @@ def cmd_finish(args):
     elif args.rc != 0:
         lines.append("如果 stderr 或回报里是额度或登录错误：decision-log 记一行，复盘往后顺延，对局照常。")
     enqueue("learner-done", "\n".join(lines))
-    check_jobs(state, ROOT, SCRIPTS, batch.get("character", args.character), alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
-    check_ascension_audits(state, batch.get("character", args.character))
+    if not account_draining():
+        check_jobs(state, ROOT, SCRIPTS, batch.get("character", args.character), alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        check_ascension_audits(state, batch.get("character", args.character))
     save_state(state)
     print("\n".join(lines))
     return 0
@@ -419,6 +426,19 @@ def cmd_finish(args):
 
 def cmd_write(args):
     state = load_state()
+    if getattr(args, "request", ""):
+        import strategy_implementation_jobs
+        if args.task != "strategy-proposal" or args.runs:
+            return 2
+        try:
+            result = strategy_implementation_jobs.dispatch(state, ROOT, SCRIPTS, args.character, alive,
+                dt.datetime.now().strftime("%Y%m%d-%H%M%S"), dispatch_write, args.request)
+        except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+            print(json.dumps({"dispatched": None, "status": "blocked", "error": str(error)}, ensure_ascii=False))
+            return 1
+        save_state(state)
+        print(json.dumps({"dispatched": result}, ensure_ascii=False))
+        return 0 if result else 1
     runs = [run for run in args.runs.split(",") if run] if args.runs else pending(ROOT, SCRIPTS, args.character)
     if args.task in ("experience-update", "strategy-proposal"):
         known = {row["run_id"] for row in finished_runs(args.character)}
@@ -455,23 +475,42 @@ def cmd_request_merge(args):
 
 
 def cmd_recheck(args):
+    batch_id, separator, continuation = args.batch.partition(":")
+    if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
+        return 2
+    args.batch = batch_id
     if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
         return 2
     # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
     with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:
-        fcntl.flock(checks_lock, fcntl.LOCK_EX)
+        try:
+            fcntl.flock(checks_lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if separator else 0))
+        except BlockingIOError:
+            return 2
         with state_lock():
             state = load_state()
             batch = state["batches"].get(args.batch)
             if not batch or batch.get("state") == "running":
                 return 2
-        result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox)
+            if separator and any(other.get("state") == "running" and other.get("worktree") == batch.get("worktree")
+                                 for other in state["batches"].values()):
+                return 2
+        result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox,
+                                    **({"continuation": continuation} if separator else {}))
         # Reload after the expensive checks: other jobs may have updated the scheduler meanwhile.
         with state_lock():
             state = load_state()
             current = state["batches"].get(args.batch)
             if current is None:
                 return 2
+            if separator:
+                if any(current.get(key) != batch.get(key) for key in ("task", "worktree", "state")):
+                    return 2
+                if "check_supplements" in batch:
+                    current["check_supplements"] = batch["check_supplements"]
+                save_state(state)
+                print(json.dumps({"batch": args.batch, "rc": result, "check_supplements": batch.get("check_supplements", [])}, ensure_ascii=False))
+                return result
             if "fallback_checks" in batch:
                 current["fallback_checks"] = batch["fallback_checks"]
             if batch.get("checks_pending") and result != 2:
@@ -523,6 +562,7 @@ def main():
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default="silent")
     parser.add_argument("--runs", default="")
+    parser.add_argument("--request", default="")
     parser.add_argument("--batch", default="")
     parser.add_argument("--rc", type=int, default=1)
     args = parser.parse_args()
@@ -535,6 +575,9 @@ def main():
     if args.command in ("request-merge", "recheck", "core-notify", "status"):
         return handler(args) or 0
     with state_lock():
+        if account_draining() and args.command in ("tick", "dispatch", "write", "boss-check"):
+            print(json.dumps({"dispatched": None, "reason": "account_drain", "command": args.command}))
+            return 75
         result = handler(args) or 0
         checks_pending = args.command == "finish" and load_state()["batches"].get(args.batch, {}).get("checks_pending")
     if checks_pending:

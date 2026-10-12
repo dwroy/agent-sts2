@@ -1,0 +1,37 @@
+diff --git a/ops/learner_check_continuation.py b/ops/learner_check_continuation.py
+index e6cc6e04d..36cb9e300 100644
+--- a/ops/learner_check_continuation.py
++++ b/ops/learner_check_continuation.py
+@@ -24,7 +24,7 @@ DEPENDENCIES = {
+     "tests/brain-codex-session.test.ts": ["agent/src/brain/engines/codex-session.ts", "agent/src/core/config.ts"],
+     "tests/quantitative.test.ts": ["agent/src/sim/quantitative-stats.ts", "agent/src/sim/quantitative-facts.ts",
+                                    "agent/src/sim/quantitative-calibration.ts", "agent/tools/quantitative.ts"],
+-    "tests/strategy-implementation.test.ts": ["ops/strategy_implementation.py", "ops/strategy_research_jobs.py"],
++    "tests/strategy-implementation.test.ts": ["ops/strategy_implementation_jobs.py", "ops/strategy_research_jobs.py"],
+ }
+ SOURCE_PATHS = ["agent/src", "agent/tests", "agent/tools", "agent/package*.json", "agent/tsconfig*.json",
+                 "agent/vitest*", "ops/*.py", "ops/*.sh", "ops/tests", "ops/codex", "learner/*.py",
+diff --git a/ops/tests/test_learner_check_continuation.py b/ops/tests/test_learner_check_continuation.py
+index eb3ea51af..7d5858c9e 100644
+--- a/ops/tests/test_learner_check_continuation.py
++++ b/ops/tests/test_learner_check_continuation.py
+@@ -198,6 +198,19 @@ class Continuation(unittest.TestCase):
+         self.changed = ["agent/tests/passed.test.ts"]
+         self.assertEqual(self.run_check(), 0)
+ 
++    def test_changed_implementation_module_is_eligible_for_affected_supplement(self):
++        name = "tests/strategy-implementation.test.ts"
++        dependency = "ops/strategy_implementation_jobs.py"
++        self.assertTrue((SOURCE / "strategy_implementation_jobs.py").is_file())
++        (self.live / "agent" / name).write_text('it("fixed binding", () => {});\n')
++        self.changed = [dependency]
++        self.manifest["selection"] = [{"file": name, "tests": [], "reason": "affected"}]
++        self.manifest["inputs"] = [{"path": path, "source": "f" * 40}
++                                   for path in ["agent/" + name, dependency]]
++        self.assertEqual(self.run_check(), 0)
++        self.assertEqual(len(self.calls), 2)
++        self.assertIn(name, self.calls[-1])
++
+     def test_unrun_and_newly_affected_files_have_separate_supplement_receipts(self):
+         self.assertEqual(self.run_check(), 0)
+         self.manifest["selection"] = [{"file": "tests/unrun.test.ts", "tests": [], "reason": "unrun"}]

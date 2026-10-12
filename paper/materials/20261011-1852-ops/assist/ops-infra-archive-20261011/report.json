@@ -1,0 +1,49 @@
+{
+  "character": "silent",
+  "findings": [
+    {
+      "input": "01.txt",
+      "observation": "固定源为 62c22f7c764fd3def66c7c16a7f034095ddd7bf6，diff 列出四个文件、138 行新增及 21 行删除：agent/tests/ops-redaction.test.ts、learner/lib/launcher.ts、ops/codex-ops.sh、ops/codex/archive.ts。范围包括脱敏实现、归档写入、快照错误回报及测试；另有 PATH 增加 $HOME/.local/bin 和 LEARNER_CODEX_HOME 默认值调整。该 diff 未涉及游戏知识或策略文件。"
+    },
+    {
+      "input": "01.txt",
+      "observation": "脱敏实现由整文件字符串读取改为 64 KiB 字节分块，保留最长秘密值长度减一的尾部以处理跨块匹配；秘密值去空、去重并按长度降序排列。结果写入临时文件，有命中才 rename 替换原文件。归档改为先临时复制、设置 0600、脱敏，再 rename 到目标并更新 manifest。这些是代码层面的核对，未验证实际运行效果。"
+    },
+    {
+      "input": "01.txt",
+      "observation": "新增两个脱敏测试用例，断言跨块秘密值替换、UTF-8 内容保持、0600 权限、无命中时 inode/mtime 不变、较长值优先、相邻值替换、临时文件清理及缺失文件返回 0。材料提供测试源码，未提供执行结果，不能认定测试已通过。"
+    },
+    {
+      "input": "01.txt",
+      "observation": "快照代码分别记录数据生成、会话归档及 gitleaks 退出码，任一非零即入队 snapshot-failed；扫描器缺失改为返回 127，扫描命令非零退出向上传递。日志改为 snapshots/ 下按时间和 PID 命名，decision-log 写入三项退出码及日志路径，并注明扫描结果仅本次扫描 exit 0 时有效。"
+    },
+    {
+      "input": "01.txt",
+      "observation": "第三个新增测试使用成功的数据生成夹具及模拟归档器、扫描器，依次断言归档 exit 7、扫描 exit 8 均产生失败队列记录；全成功后队列仍为两项；三次运行保留三份日志且首份内容不变；decision-log 含归档失败记录。该测试还断言失败场景的外层 tick 返回 0，因此外层 rc0 本身不能证明快照完整。未附该测试运行回执。"
+    },
+    {
+      "input": "00.txt",
+      "observation": "文档明确保留历史搭建和探针口径，当前状态应以实际代码、登记及完成回执为准；要求运维确认实际合入，不把 rc0 或排队当作上线，并描述学习者实际合入 live 后持锁进行完整 tsc + vitest 的流程。本文件没有该固定源的测试通过、实际合入或上线回执，历史实测不能替代本次证据。"
+    },
+    {
+      "input": "02.txt",
+      "observation": "冻结记录中，固定源 62c22f7c764fd3def66c7c16a7f034095ddd7bf6 对 live 头 3b2791a4523b3ca269db3fbb6838bb3bf1054528 和 main 头 e6b0cea2c9d1614a6a8d3d0dffb194bfa7208522 均为 source_is_ancestor=false、check_rc=1。这只能说明记录中的祖先关系检查未通过；未提供补丁等价或集成登记证据，不能据此断言未集成。"
+    }
+  ],
+  "input_sha256": "c50a28750e9083c7d211ce9b435026ca332178a6cd170a76464ed80adb632220",
+  "limitations": [
+    "核查仅覆盖 manifest.json 及其列出的 00.txt、01.txt、02.txt；冻结切点为 frozen_at_ns=1791716043011181916，之后的分支、登记和运行状态未验证。complete 仅表示本次只读核查完成。",
+    "未运行测试或检查当前仓库。缺少固定源及实际集成树的定向测试、完整 tsc/vitest 执行记录；三个新增用例不能作为通过回执。",
+    "新增测试未直接验证超出 V8 字符串上限的大文件、真实归档器与 gitleaks 联动、扫描器缺失分支、I/O 异常时原文件保全或 cron 环境变更效果。",
+    "未提供该源对应的原事件 ID、完成回执、补丁等价证明、合入登记或运行版本证据，实际集成及上线状态未核实。",
+    "input_sha256 及各文件摘要沿用 manifest 声明，未独立复算。"
+  ],
+  "next_steps": [
+    "主 ops 可补充与固定源及最终集成树明确绑定的测试执行记录，核对流式脱敏、失败入队和重试日志保留是否实际通过。",
+    "主 ops 在决定是否合入前，应结合当前 main/live 内容、补丁等价检查及登记回执核实集成状态，保留固定源 SHA，避免仅依据祖先检查重复集成。",
+    "如需确认实际生效，主 ops 可关联原事件与完成回执，核对运行版本及最近快照的三项退出码、日志和扫描结果；本报告不代替最终核实。"
+  ],
+  "request_id": "ops-infra-archive-20261011",
+  "session_id": "01a12a99-3a07-7073-8b54-5080c0ef7a5e",
+  "status": "complete"
+}

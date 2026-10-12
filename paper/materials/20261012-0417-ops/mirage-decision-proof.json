@@ -1,0 +1,132 @@
+{
+  "offset": 742627325,
+  "length": 9616,
+  "sha256": "e5edceaf62c1fefc19749fef880564251e8c5ba0c13e0ecb5cca8e0f44a1214a",
+  "decision": {
+    "ts": "2026-10-08T01:15:05.336Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 46,
+    "turn": 1,
+    "label": "combat/plan-choice",
+    "decision_id": "b3680399-895b-41c6-8da4-a3d4141a75c2",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:108:0:true|1:97:0:true|2:89:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BURST:true|1:SURVIVOR:true|2:DEFLECT:true|3:MIRAGE:true|4:SHADOWMELD:true|5:DEFEND_SILENT:true\",\"hp\":86,\"maxHp\":91,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:16:0\",\"potions\":\"LIQUID_MEMORIES:true:true|ENERGY_POTION:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"K2JAGKVJAWZJ\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"potion 液态记忆, then potion 能量药水, then 后空翻+ from 液态记忆, then 爆发+, then 蜃景+\",\"result\":\"survives with 86/91 HP before healing\",\"hp_lost\":0,\"damage_dealt\":0,\"enemies_after\":\"连枷骑士 108 HP, Weak 1; 幽灵骑士 97 HP, Weak 1; 魔法骑士 89 HP, Weak 1\",\"block_gained\":8,\"cards_drawn\":2,\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 10 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"蜃景+\",\"hp_after\":86,\"hp_after_pct\":95,\"dmg\":0,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 10\",\"block_wasted\":7,\"potions_used\":\"液态记忆, 能量药水\",\"rollout\":\"3-turn rollout (1 sample) (later turns may use the potions still held): expected further HP loss 86, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~13.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~1% (fights won in the samples, the others by the end-of-horizon estimate), value -125.7 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]\",\"rollout_turns\":\"T1 exact: hp -0, dmg 0; T2: hp -5 [5-5], dmg 38 [38-38], alive 1/1, won 0/1; T3: hp -13 [13-13], dmg 35 [35-35], alive 1/1, won 0/1\",\"rollout_kill_order\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: the later turns aim at 幽灵骑士 first (幽灵骑士 dead by T3 in 0/1); best of 6 kill orders compared\",\"rollout_other_orders\":\"连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: further HP loss 86, over 0/1, dead 0/1, 连枷骑士 dead 0/1; 魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: further HP loss 86, over 0/1, dead 0/1, 魔法骑士 dead 0/1\",\"history_estimate\":\"further HP loss 59, win 73% (this encounter n=4; estimate from elite fights n=315, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan2, plan3 (the same expected further HP loss, deaths and win chance); the rollout picks none of them\",\"potion_cost\":\"fight HP loss 86; potions used 2 (this turn: LIQUID_MEMORIES 0 (potion table did not load), ENERGY_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 86\"}",
+          "plan2": "{\"plays\":\"蜃景+\",\"result\":\"survives with 86/91 HP before healing\",\"hp_lost\":0,\"damage_dealt\":0,\"enemies_after\":\"连枷骑士 108 HP, Weak 1; 幽灵骑士 97 HP, Weak 1; 魔法骑士 89 HP, Weak 1\",\"lasting_value\":\"sets up a power worth about 5 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"蜃景+\",\"hp_after\":86,\"hp_after_pct\":95,\"dmg\":0,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 5\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"3-turn rollout (1 sample) (later turns may use the potions still held): expected further HP loss 86, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~14.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~1% (fights won in the samples, the others by the end-of-horizon estimate), value -125.8 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]\",\"rollout_turns\":\"T1 exact: hp -0, dmg 0; T2: hp -0 [0-0], dmg 35 [35-35], alive 1/1, won 0/1; T3: hp -13 [13-13], dmg 32 [32-32], alive 1/1, won 0/1\",\"rollout_kill_order\":\"连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: the later turns aim at 连枷骑士 first (连枷骑士 dead by T3 in 0/1); best of 6 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: further HP loss 86, over 0/1, dead 0/1, 幽灵骑士 dead 0/1; 魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: further HP loss 86, over 0/1, dead 0/1, 魔法骑士 dead 0/1\",\"history_estimate\":\"further HP loss 52, win 67% (this encounter n=4; estimate from elite fights n=315, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan1, plan3 (the same expected further HP loss, deaths and win chance); the rollout picks none of them\",\"potion_cost\":\"fight HP loss 86; potions used 2 (later turns: LIQUID_MEMORIES in 1/1 samples, ENERGY_POTION in 1/1 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 86\"}",
+          "plan3": "{\"plays\":\"蜃景+\",\"result\":\"survives with 86/91 HP before healing\",\"hp_lost\":0,\"damage_dealt\":0,\"enemies_after\":\"连枷骑士 108 HP, Weak 1; 幽灵骑士 97 HP, Weak 1; 魔法骑士 89 HP, Weak 1\",\"lasting_value\":\"sets up a power worth about 5 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"蜃景+\",\"no_potion_fight\":\"the no-potion line: the same turn as plan2, and no potion for the rest of this fight (its rollout's later turns drink none; plan2's may)\",\"hp_after\":86,\"hp_after_pct\":95,\"dmg\":0,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 5\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"3-turn rollout (1 sample) (the no-potion line: its later turns drink no potion): expected further HP loss 86, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~15.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~1% (fights won in the samples, the others by the end-of-horizon estimate), value -125.8 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]\",\"rollout_turns\":\"T1 exact: hp -0, dmg 0; T2: hp -8 [8-8], dmg 26 [26-26], alive 1/1, won 0/1; T3: hp -3 [3-3], dmg 11 [11-11], alive 1/1, won 0/1\",\"rollout_kill_order\":\"魔法骑士 > 连枷骑士 > 幽灵骑士 | 魔法骑士 > 幽灵骑士 > 连枷骑士: the later turns aim at 魔法骑士 first (魔法骑士 dead by T3 in 0/1); best of 6 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"幽灵骑士 > 连枷骑士 > 魔法骑士 | 幽灵骑士 > 魔法骑士 > 连枷骑士: further HP loss 86, over 0/1, dead 0/1, 幽灵骑士 dead 0/1; 连枷骑士 > 幽灵骑士 > 魔法骑士 | 连枷骑士 > 魔法骑士 > 幽灵骑士: further HP loss 86, over 0/1, dead 0/1, 连枷骑士 dead 0/1\",\"history_estimate\":\"further HP loss 60, win 61% (this encounter n=4; estimate from elite fights n=315, typical error ±11; few similar states for this encounter)\",\"rollout_tied\":\"tied for the best rollout numbers with plan1, plan2 (the same expected further HP loss, deaths and win chance); the rollout picks none of them\",\"potion_cost\":\"fight HP loss 86; potions used 0; potion cost 0 HP (potion table, this act's held value); total 86\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan3",
+        "probabilities": {
+          "plan2": 0.26,
+          "plan1": 0.33,
+          "plan3": 0.41
+        },
+        "confidence": 0.11,
+        "raw": {
+          "type": "choice",
+          "choice": "plan3",
+          "confidence": 0.11,
+          "probabilities": {
+            "plan2": 0.26,
+            "plan1": 0.33,
+            "plan3": 0.41
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 3
+    },
+    "expect": {
+      "card": {
+        "id": "MIRAGE",
+        "upgraded": true
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 3/3 (蜃景+) with confidence 0.11; code rank - (rollout's best line, added)",
+    "confidence": 0.11,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119141fde7f46a7f450eb2d756b19"
+    ],
+    "latency_ms": {
+      "plan": 40,
+      "jev": 404,
+      "action": 232,
+      "planner": 940,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 6198,
+      "output_tokens": 42
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 781,
+      "horizon": 3,
+      "samples": 1,
+      "degraded": [
+        "first wave at 3 turns",
+        "horizon 3",
+        "samples 1 per kill order"
+      ],
+      "lines": 8,
+      "best": null,
+      "best_added": false,
+      "tied": [
+        "plan1",
+        "plan2",
+        "plan3"
+      ],
+      "no_potion": {
+        "key": "plan3",
+        "merged": false
+      },
+      "orders": 6,
+      "orders_dropped": 0,
+      "best_order": null
+    },
+    "rollout_best_chosen": true,
+    "chosen_order": "魔法骑士 > 连枷骑士 > 幽灵骑士",
+    "timing": {
+      "planner_ms": 938,
+      "solve_ms": 150,
+      "mc_ms": 0,
+      "rollout_ms": 781,
+      "boss_sim_ms": 0,
+      "other_ms": 7,
+      "cpu_ms": 1369,
+      "load1": 8.6,
+      "probe_ms": 2.66
+    },
+    "sl_attempt": null,
+    "sl_reloads": 1,
+    "run_id": "K2JAGKVJAWZJ",
+    "observed_ts": "2026-10-08T01:15:03.951Z",
+    "journal": {
+      "choice": "蜃景+",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  }
+}

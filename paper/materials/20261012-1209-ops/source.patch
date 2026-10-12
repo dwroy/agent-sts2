@@ -1,0 +1,349 @@
+diff --git a/agent/tests/unassigned-proposal-resolution.test.ts b/agent/tests/unassigned-proposal-resolution.test.ts
+new file mode 100644
+index 000000000..928d6f64b
+--- /dev/null
++++ b/agent/tests/unassigned-proposal-resolution.test.ts
+@@ -0,0 +1,20 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++
++// CMS8QL9E3C5U F19 T1 identifies the original task; no gameplay data is loaded.
++it.each([
++  "resolves_original_id_and_preserves_active_lease_watermark_and_reason",
++  "completion_records_resolution_before_marking_done",
++  "rejects_foreign_missing_or_changed_original_registration",
++  "rejects_unbound_malformed_and_outside_report_without_any_append",
++  "verifies_all_dispositions_before_appending_any",
++  "failure_preserves_live_merge_fact_and_original_registry",
++  "inflight_dispatched_waiting_cannot_reopen_verified_resolution",
++  "legacy_empty_and_dispatched_strict_coverage_are_unchanged",
++  "preserves_output_scope_when_markdown_has_equivalent_prose",
++])("unassigned proposal: %s", (name) => {
++  const result = spawnSync("python3", ["-B", "../ops/tests/test_unassigned_proposal_resolution.py",
++    `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
++  expect(result.status, result.stdout + result.stderr).toBe(0);
++  expect(result.stderr).toContain("OK");
++});
+diff --git a/ops/proposal_dispatch.py b/ops/proposal_dispatch.py
+index e060853c1..1e72af0ea 100644
+--- a/ops/proposal_dispatch.py
++++ b/ops/proposal_dispatch.py
+@@ -114,16 +114,89 @@ def experience_audit(report,batch,root,scripts):
+ 
+ def results(report,batch):
+     ids=batch.get('proposal_ids',[])
+-    if not ids: return []
+     rows=report.get('proposal_results')
++    if not ids:
++        if not rows: return []
++        if batch.get('task')!='strategy-proposal' or report.get('task')!='strategy-proposal':
++            raise ValueError('unassigned dispositions require a strategy report')
++        links=report.get('code_proposals')
++        if (not isinstance(rows,list) or not all(isinstance(r,dict) and isinstance(r.get('id'),str) for r in rows)
++                or not isinstance(links,list) or not all(isinstance(i,str) for i in links)
++                or any(r['id'] not in links for r in rows)):
++            raise ValueError('unassigned disposition lacks its reported proposal link')
++        ids=[r['id'] for r in rows]
+     if not isinstance(rows,list) or len(rows)!=len(ids) or not all(isinstance(r,dict) and isinstance(r.get('id'),str) for r in rows) or {r['id'] for r in rows}!=set(ids):
+         raise ValueError('every dispatched proposal needs a disposition')
++    if len(set(ids))!=len(ids): raise ValueError('duplicate proposal dispositions')
+     for row in rows:
+         if row.get('state') not in ('implemented','duplicate','waiting') or not isinstance(row.get('reason'),str) or not row['reason'].strip():
+             raise ValueError('invalid proposal disposition')
+     return rows
+ 
+ 
++def unassigned_proof(report,batch,root,items,rows,lib):
++    """Bind an ordinary strategy completion to original registrations and source commits."""
++    character=batch.get('character')
++    if report.get('character')!=character or report.get('runs')!=batch.get('runs'):
++        raise ValueError('unassigned report differs from its batch character or runs')
++    project=Path(root).resolve()
++    raw_tree=batch.get('worktree');raw_report=report.get('report')
++    if not all(isinstance(p,str) and Path(p).is_absolute() for p in (raw_tree,raw_report)):
++        raise ValueError('unassigned report needs absolute batch paths')
++    tree=Path(raw_tree).resolve();path=Path(raw_report).resolve();allowed=(tree/'learner/runs').resolve()
++    if (tree.parent!=project/'.worktrees' or tree.name=='live' or not allowed.is_relative_to(tree)
++            or not path.is_relative_to(allowed) or path.suffix!='.md'):
++        raise ValueError('unassigned report is outside its batch worktree')
++    raw=path.read_bytes();saved={}
++    for block in reversed(re.findall(r'```json\s*([\s\S]*?)```',raw.decode())):
++        try: candidate=json.loads(block)
++        except ValueError: continue
++        if isinstance(candidate,dict) and candidate.get('task')=='strategy-proposal':
++            saved=candidate;break
++    # The final output may rephrase prose, but must retain the preserved source identities.
++    keys=('task','character','base','runs','fixes','merged','code_proposals')
++    if any(saved.get(k)!=report.get(k) for k in keys) or not saved:
++        raise ValueError('unassigned source identities differ from the preserved report')
++    saved_rows=saved.get('proposal_results')
++    if (not isinstance(saved_rows,list) or not all(isinstance(r,dict) for r in saved_rows)
++            or [(r.get('id'),r.get('state'),r.get('commit')) for r in saved_rows]
++            !=[(r.get('id'),r.get('state'),r.get('commit')) for r in rows]):
++        raise ValueError('unassigned dispositions differ from the preserved report')
++    fixes=report.get('fixes')
++    runs=batch.get('runs')
++    if (not isinstance(fixes,list) or not all(isinstance(f,dict) for f in fixes)
++            or not isinstance(runs,list) or not runs or not all(isinstance(r,str) for r in runs)):
++        raise ValueError('unassigned report lacks source fixes or evidence runs')
++    def ancestor(source,target,cwd):
++        return (isinstance(source,str) and re.fullmatch('[0-9a-f]{7,40}',source)
++                and subprocess.run(['git','-C',str(cwd),'merge-base','--is-ancestor',source,target],
++                    stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0)
++    merged=report.get('merged')
++    if not ancestor(merged,'HEAD',project/'.worktrees/live'):
++        raise ValueError('unassigned report lacks an actual live merge')
++    for row in rows:
++        item=items.get(row['id'])
++        if (not item or item.get('character')!=character or item.get('target_task')!='strategy-proposal'
++                or item.get('source_task') not in lib.TASKS or not item.get('ledger')
++                or not isinstance(item.get('runs'),list) or not set(item['runs']) & set(runs)):
++            raise ValueError('unassigned disposition lacks its original character/source registration')
++        original=Path(item.get('proposal','')).resolve()
++        if not original.is_relative_to(project) or original.suffix!='.md':
++            raise ValueError('unassigned proposal source is outside the project')
++        if hashlib.sha256(original.read_bytes()).hexdigest()!=item.get('proposal_sha256'):
++            raise ValueError('unassigned proposal source fingerprint changed')
++        commit=row.get('commit')
++        if row['state'] not in ('implemented','duplicate'):
++            raise ValueError('unassigned resolution requires a published source disposition')
++        if (not any(f.get('proposal_id')==row['id'] and f.get('commit')==commit for f in fixes)
++                or not ancestor(commit,merged,project/'.worktrees/live') or not ancestor(commit,'HEAD',tree)):
++            raise ValueError('unassigned disposition is not bound to its reported live source fix')
++        if item.get('state') in ('implemented','duplicate') and item.get('commit',item.get('implemented_commit'))!=commit:
++            raise ValueError('unassigned disposition conflicts with an existing resolution')
++    return {'resolution_report':str(path),'resolution_report_sha256':hashlib.sha256(raw).hexdigest(),
++            'resolution_batch':batch.get('key')}
++
++
+ def research_proof(report,batch,root):
+     """Bind an ops-only research report to its authorized, frozen request."""
+     if batch.get('reason')!='ops' or 'proposal_ids' in batch or 'proposal_repair' in batch:
+@@ -259,6 +332,9 @@ def resolve(report,batch,root,scripts):
+     rows=results(report,batch)
+     if not rows: return
+     lib=library(scripts);count=finished_count(root,batch['character'])
++    items=lib.fold(Path(root,lib.QUEUE))
++    unassigned=not batch.get('proposal_ids')
++    proof=unassigned_proof(report,batch,root,items,rows,lib) if unassigned else {}
+     for row in rows:
+         if row['state'] in ('implemented','duplicate'):
+             commit=row.get('commit','')
+@@ -266,5 +342,12 @@ def resolve(report,batch,root,scripts):
+                 raise ValueError('implemented/duplicate proposal lacks an actual live source commit')
+     # All proofs pass before appending any resolution; no partial successful batch is fabricated.
+     for row in rows:
+-        lib.append(Path(root,lib.QUEUE),{'op':'update','id':row['id'],'ts':lib.now(),'state':row['state'],
+-            'reason':row['reason'],'commit':row.get('commit'),'seen_runs':count,'batch':batch.get('key')})
++        prior=items.get(row['id'],{})
++        # A still-running assigned batch cannot reopen a source already published by another batch.
++        if prior.get('state') in ('implemented','duplicate') and (unassigned or row['state']=='waiting'):
++            continue
++        update={'op':'update','id':row['id'],'ts':lib.now(),'state':row['state'],
++                'reason':row['reason'],'commit':row.get('commit'),**proof}
++        # Ordinary batches did not acquire the proposal's dispatch lease or waiting watermark.
++        if not unassigned: update.update(seen_runs=count,batch=batch.get('key'))
++        lib.append(Path(root,lib.QUEUE),update)
+diff --git a/ops/tests/test_unassigned_proposal_resolution.py b/ops/tests/test_unassigned_proposal_resolution.py
+new file mode 100644
+index 000000000..91fbc6083
+--- /dev/null
++++ b/ops/tests/test_unassigned_proposal_resolution.py
+@@ -0,0 +1,197 @@
++"""Fixed completion evidence for CMS8QL9E3C5U F19 T1 / batch 20261012-104302."""
++import copy
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++import unittest
++from unittest.mock import patch
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++def load(name, relative):
++    spec = importlib.util.spec_from_file_location(name, REPO / relative)
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++dispatch = load('unassigned_dispatch', 'ops/proposal_dispatch.py')
++checks = load('unassigned_checks', 'ops/learner_checks.py')
++proposals = dispatch.library(REPO / 'ops')
++IDENT = 'silent-proposal-54bd844abc57bb62'
++RUN = 'CMS8QL9E3C5U'
++
++
++class Resolution(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix='unassigned-proposal-')
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        self.live = self.root / '.worktrees/live'
++        self.tree = self.root / '.worktrees/codex-strategy-silent-fixed'
++        self.live.mkdir(parents=True)
++        self.git(self.live, 'init', '-q')
++        (self.live / 'fixed.txt').write_text('baseline')
++        self.git(self.live, 'add', 'fixed.txt')
++        self.git(self.live, 'commit', '-qm', 'Fixed baseline')
++        self.base = self.git(self.live, 'rev-parse', 'HEAD')
++        self.git(self.live, 'worktree', 'add', '-qb', 'source', str(self.tree))
++        (self.tree / 'fixed.txt').write_text('fixed source')
++        self.git(self.tree, 'commit', '-qam', 'Fixed source')
++        self.source = self.git(self.tree, 'rev-parse', 'HEAD')
++        self.git(self.live, 'merge', '--ff-only', 'source')
++        original = self.root / 'learner/runs/postmortem/proposal.md'
++        original.parent.mkdir(parents=True)
++        original.write_text('固定来源；只验证机械接续，不增加游戏结论。')
++        self.item = {'op': 'add', 'id': IDENT, 'character': 'silent', 'runs': [RUN],
++                     'source_task': 'postmortem', 'target_task': 'strategy-proposal',
++                     'ledger': ['silent-0425'], 'proposal': str(original),
++                     'proposal_sha256': hashlib.sha256(original.read_bytes()).hexdigest(),
++                     'state': 'pending', 'seen_runs': 7, 'batch': 'active-dispatched-batch'}
++        self.queue = self.root / proposals.QUEUE
++        self.queue.parent.mkdir(parents=True)
++        self.queue.write_text(json.dumps(self.item) + '\n')
++        self.report_path = self.tree / 'learner/runs/fixed/report.md'
++        self.report_path.parent.mkdir(parents=True)
++        self.batch = {'task': 'strategy-proposal', 'character': 'silent', 'runs': [RUN],
++                      'key': 'ordinary-strategy', 'worktree': str(self.tree),
++                      'proposal_policy': proposals.POLICY, 'attempts': 1, 'retry_at': 123}
++        self.report = {'task': 'strategy-proposal', 'character': 'silent', 'runs': [RUN],
++                       'base': self.base, 'merged': self.source, 'report': str(self.report_path),
++                       'code_proposals': [IDENT], 'implementation_domains': ['combat'],
++                       'fixes': [{'proposal_id': IDENT, 'commit': self.source}],
++                       'proposal_results': [{'id': IDENT, 'state': 'implemented', 'commit': self.source,
++                                             'reason': '仅核实原限定范围，其他组合与自然收益未知。'}]}
++        self.save_report()
++
++    def git(self, path, *args):
++        return subprocess.check_output(['git', '-C', str(path), *args],
++                                       text=True, stderr=subprocess.DEVNULL).strip()
++
++    def save_report(self):
++        self.report_path.write_text('```json\n' + json.dumps(self.report) + '\n```\n')
++
++    def resolve(self):
++        dispatch.resolve(self.report, self.batch, str(self.root), str(REPO / 'ops'))
++
++    def test_resolves_original_id_and_preserves_active_lease_watermark_and_reason(self):
++        before = copy.deepcopy(self.batch)
++        self.resolve()
++        item = proposals.fold(self.queue)[IDENT]
++        self.assertEqual(item['state'], 'implemented')
++        self.assertEqual(item['commit'], self.source)
++        self.assertEqual(item['reason'], self.report['proposal_results'][0]['reason'])
++        self.assertEqual(item['seen_runs'], 7)
++        self.assertEqual(item['batch'], 'active-dispatched-batch')
++        self.assertEqual(item['proposal_sha256'], self.item['proposal_sha256'])
++        self.assertEqual(item['resolution_report_sha256'], hashlib.sha256(self.report_path.read_bytes()).hexdigest())
++        self.assertEqual(self.batch, before)
++        self.assertNotIn('proposal_ids', self.batch)
++        self.assertEqual(list(proposals.fold(self.queue)), [IDENT])
++        resolved = self.queue.read_bytes()
++        self.resolve()
++        self.assertEqual(self.queue.read_bytes(), resolved)
++
++    def test_completion_records_resolution_before_marking_done(self):
++        events, notices = [], []
++        with patch.object(checks, 'read_report', return_value=self.report), \
++                patch.object(checks, 'proposal_tools', return_value=dispatch):
++            checks.finish_write_batch('fixed', self.batch, 0, str(self.root), str(self.root),
++                                      lambda kind, msg: events.append(kind), notices.append, run_checks=False)
++        self.assertEqual(self.batch['state'], 'done')
++        self.assertEqual(proposals.fold(self.queue)[IDENT]['state'], 'implemented')
++        self.assertEqual(events, ['strategy-done'])
++        self.assertEqual(notices, [])
++        self.assertEqual(self.batch['attempts'], 1)
++        self.assertEqual(self.batch['retry_at'], 123)
++
++    def test_rejects_foreign_missing_or_changed_original_registration(self):
++        for changes in ({'character': 'other'}, {'source_task': 'unknown'}, {'target_task': 'fix-batch'},
++                        {'runs': ['OTHER0000001']}, {'ledger': []}, {'proposal_sha256': 'f' * 64},
++                        {'id': 'different-id'}):
++            with self.subTest(changes=changes):
++                self.queue.write_text(json.dumps({**self.item, **changes}) + '\n')
++                before = self.queue.read_bytes()
++                with self.assertRaises(ValueError):
++                    self.resolve()
++                self.assertEqual(self.queue.read_bytes(), before)
++
++    def test_rejects_unbound_malformed_and_outside_report_without_any_append(self):
++        good = copy.deepcopy(self.report)
++        for scenario in ('missing_link', 'duplicate', 'invalid_rows', 'missing_reason', 'foreign_character',
++                         'foreign_runs', 'wrong_fix', 'wrong_fix_id', 'unmerged', 'waiting', 'outside',
++                         'changed_report', 'missing_report', 'foreign_worktree', 'invalid_merge'):
++            with self.subTest(scenario=scenario):
++                self.report = copy.deepcopy(good)
++                self.batch['worktree'] = str(self.tree)
++                row = self.report['proposal_results'][0]
++                if scenario == 'missing_link': self.report['code_proposals'] = []
++                if scenario == 'duplicate': self.report['proposal_results'].append(copy.deepcopy(row))
++                if scenario == 'invalid_rows': self.report['proposal_results'] = {'id': IDENT}
++                if scenario == 'missing_reason': row['reason'] = ' '
++                if scenario == 'foreign_character': self.report['character'] = 'other'
++                if scenario == 'foreign_runs': self.report['runs'] = ['OTHER0000001']
++                if scenario == 'wrong_fix': self.report['fixes'][0]['commit'] = self.base
++                if scenario == 'wrong_fix_id': self.report['fixes'][0]['proposal_id'] = 'different-id'
++                if scenario == 'unmerged':
++                    row['commit'] = self.report['fixes'][0]['commit'] = 'f' * 40
++                if scenario == 'waiting': row['state'] = 'waiting'
++                if scenario == 'outside': self.report['report'] = str(self.root / 'report.md')
++                if scenario == 'foreign_worktree': self.batch['worktree'] = str(self.live)
++                if scenario == 'invalid_merge': self.report['merged'] = '--all'
++                self.save_report()
++                if scenario == 'changed_report': self.report['fixes'][0]['commit'] = self.base
++                if scenario == 'missing_report': self.report_path.unlink()
++                before = self.queue.read_bytes()
++                with self.assertRaises((ValueError, OSError)):
++                    self.resolve()
++                self.assertEqual(self.queue.read_bytes(), before)
++
++    def test_verifies_all_dispositions_before_appending_any(self):
++        other = 'silent-proposal-second'
++        self.report['code_proposals'].append(other)
++        self.report['fixes'].append({'proposal_id': other, 'commit': self.source})
++        self.report['proposal_results'].append({**self.report['proposal_results'][0], 'id': other})
++        self.save_report()
++        before = self.queue.read_bytes()
++        with self.assertRaises(ValueError): self.resolve()
++        self.assertEqual(self.queue.read_bytes(), before)
++
++    def test_failure_preserves_live_merge_fact_and_original_registry(self):
++        self.report['fixes'][0]['commit'] = self.base
++        self.save_report()
++        before = self.queue.read_bytes()
++        with patch.object(checks, 'read_report', return_value=self.report), \
++                patch.object(checks, 'proposal_tools', return_value=dispatch):
++            checks.finish_write_batch('fixed', self.batch, 0, str(self.root), str(self.root),
++                                      lambda *args: None, lambda *args: None, run_checks=False)
++        self.assertEqual(self.batch['state'], 'failed')
++        self.assertEqual(self.batch['merged'], self.source)
++        self.assertTrue(self.batch['proposal_audit_errors'])
++        self.assertEqual(self.queue.read_bytes(), before)
++
++    def test_inflight_dispatched_waiting_cannot_reopen_verified_resolution(self):
++        self.resolve()
++        before = self.queue.read_bytes()
++        assigned = {**self.batch, 'proposal_ids': [IDENT], 'key': 'active-dispatched-batch'}
++        waiting = {'proposal_results': [{'id': IDENT, 'state': 'waiting', 'reason': 'Still lacks new evidence.'}]}
++        dispatch.resolve(waiting, assigned, str(self.root), str(REPO / 'ops'))
++        self.assertEqual(self.queue.read_bytes(), before)
++
++    def test_legacy_empty_and_dispatched_strict_coverage_are_unchanged(self):
++        self.assertEqual(dispatch.results({}, self.batch), [])
++        assigned = {**self.batch, 'proposal_ids': [IDENT, 'another-proposal']}
++        with self.assertRaises(ValueError): dispatch.results(self.report, assigned)
++
++    def test_preserves_output_scope_when_markdown_has_equivalent_prose(self):
++        self.report['proposal_results'][0]['reason'] = '限定范围的另一种表述，未知项仍保留。'
++        self.resolve()
++        self.assertEqual(proposals.fold(self.queue)[IDENT]['reason'], self.report['proposal_results'][0]['reason'])
++
++
++if __name__ == '__main__':
++    unittest.main()

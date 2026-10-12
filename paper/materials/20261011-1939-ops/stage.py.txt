@@ -1,0 +1,33 @@
+from pathlib import Path
+import subprocess,json,hashlib,os
+r=Path.cwd();o=r/'paper/materials/20261011-1939-ops'
+def head(p):return subprocess.check_output(['git','show','HEAD:'+p])
+assert not subprocess.check_output(['git','diff','--cached','--name-only']).strip()
+candidates={};p='notes/lessons.md';base=head(p);section=(o/'NYQW6JAD30K4-lesson.md').read_bytes();assert b'## NYQW6JAD30K4' not in base;candidates[p]=base+b'\n'+section
+p='paper/materials/learning/ledger.jsonl';base=head(p);current=(r/p).read_bytes().splitlines(keepends=True);selected=(o/'postmortem-ledger-rows.jsonl').read_bytes().splitlines(keepends=True)+[line for line in current if json.loads(line).get('by')=='ops:codex-1939'];known={json.loads(x)['id'] for x in base.splitlines() if json.loads(x).get('op')=='add'};needed={json.loads(x)['id'] for x in selected}-known;dependencies=[line for line in current if json.loads(line).get('op')=='add' and json.loads(line)['id'] in needed];assert {json.loads(x)['id'] for x in dependencies}==needed
+seen=set(base.splitlines());new=[]
+for line in dependencies+selected:
+ if line.rstrip(b'\n') not in seen:new.append(line);seen.add(line.rstrip(b'\n'))
+candidates[p]=base+b''.join(new)
+for path,text in json.load(open(o/'own-record-appends.json')).items():
+ assert text in (r/path).read_text(),path;candidates[path]=head(path)+text.encode()
+p='eval/versions.json';v=json.loads(head(p));ours=json.load(open(o/'own-versions.json'));assert not {x['name'] for x in ours}&{x['name'] for x in v['versions']};v['versions']+=ours;candidates[p]=(json.dumps(v,ensure_ascii=False,indent=2)+'\n').encode()
+p='notes/experience-integration-silent.json';assert (r/p).read_bytes()==(o/'core/request-after.json').read_bytes();candidates[p]=(r/p).read_bytes()
+for x in json.load(open(o/'paper-dataset-receipt.json'))['files']:
+ data=(r/x['path']).read_bytes();assert hashlib.sha256(data).hexdigest()==x['sha256'],x['path'];candidates[x['path']]=data
+Path('/tmp/ops-1939-ledger-staged.jsonl').write_bytes(candidates['paper/materials/learning/ledger.jsonl']);Path('/tmp/ops-1939-versions-staged.json').write_bytes(candidates['eval/versions.json'])
+env=os.environ.copy();env.update(LEDGER_FILE='/tmp/ops-1939-ledger-staged.jsonl',LEDGER_VERSIONS='/tmp/ops-1939-versions-staged.json',LEDGER_RUNS=str(r/'logs/runs.jsonl'))
+p=subprocess.run(['python3','learner/ledger.py','check'],env=env,capture_output=True,text=True);(o/'staged-ledger-check.log').write_text(p.stdout+p.stderr);assert p.returncode==0,p.stdout+p.stderr
+record=[]
+for path,data in candidates.items():
+ blob=subprocess.check_output(['git','hash-object','-w','--stdin'],input=data).decode().strip();subprocess.run(['git','update-index','--add','--cacheinfo','100644',blob,path],check=True);record.append({'path':path,'staged_sha256':hashlib.sha256(data).hexdigest(),'working_sha256':hashlib.sha256((r/path).read_bytes()).hexdigest(),'partial':data!=(r/path).read_bytes()})
+(o/'record-index-plan.json').write_text(json.dumps(record,indent=2)+'\n');skip={'host-recheck-response.log'}
+files=[str(p.relative_to(r)) for p in o.rglob('*') if p.is_file() and str(p.relative_to(o)) not in skip]
+assert all((r/p).stat().st_size<20*1024*1024 for p in files)
+subprocess.run(['git','add','-f','--',*sorted(files)],check=True)
+with (o/'staged-gitleaks.log').open('wb') as out:
+ producer=subprocess.Popen(['git','diff','--cached'],stdout=subprocess.PIPE)
+ scan=subprocess.run(['nice','-n','19','gitleaks','stdin','--redact','--no-banner','--report-format','json','--report-path',str(o/'staged-gitleaks.json')],stdin=producer.stdout,stdout=out,stderr=subprocess.STDOUT);producer.stdout.close();rc=producer.wait()
+assert scan.returncode==0 and rc==0
+subprocess.run(['git','add','-f',str(o/'staged-gitleaks.log'),str(o/'staged-gitleaks.json')],check=True)
+print(p.stdout if hasattr(p,'stdout') else 'ledger checked');print('staged',len(files)+len(record)+2,'files')

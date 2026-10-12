@@ -5,10 +5,91 @@
  */
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
-import type { JsonValue } from "../core/util/json.js";
+import { asArray, asRecord, numOrNull, str, type JsonValue } from "../core/util/json.js";
+import type { GameState } from "../hand/mod/schema.js";
 import type { SlDraws } from "./draws.js";
 import type { SlExploreRecord } from "./explore.js";
-import type { JudgeTier } from "./judge.js";
+import type { DeathVerdict, JudgeTier } from "./judge.js";
+
+/** Observed Silent A10 blast state; the displayed HP belongs to the husk, not the defeated body. */
+export interface SlGiantPhase {
+  phase: "blast_pending";
+  enemy_id: "WATERFALL_GIANT";
+  move_id: "EXPLODE_MOVE";
+  raw_hp: number;
+  max_hp: 999999999;
+  body_hp: 0;
+  /** The displayed intent at the turn's first actionable state, not damage already dealt. */
+  incoming_at_turn_start: number;
+}
+
+/** Pre-end-turn resources, kept separately from turn-start and post-death HP. */
+export interface SlGiantFinalResources {
+  hp: number;
+  block: number;
+  incoming: number;
+  end_block: 0;
+  minimum_extra_hp: number;
+}
+
+/** NYQW6JAD30K4 F17 T12/T13: only the observed modifier set has an exact plain-hit budget. */
+export function giantFinalResources(state: GameState, verdict: DeathVerdict): SlGiantFinalResources | null {
+  const phase = giantPhaseAtTurnStart(state);
+  if (!phase || !verdict.certain || verdict.tier !== "rules" || verdict.early || verdict.endBlock !== 0 ||
+      verdict.held || verdict.startLoss || verdict.sandpit || verdict.revive) return null;
+  const run = asRecord(state.raw["run"]);
+  const combat = asRecord(state.raw["combat"]);
+  const player = asRecord(combat["player"]);
+  const enemy = asArray(combat["enemies"]).map(asRecord).find((e) => e["is_alive"] === true)!;
+  // Unknown modifiers remain unknown; this is not a general survival formula or a new death verdict.
+  const relics = ["RING_OF_THE_SNAKE", "WINGED_BOOTS", "TINGSHA", "BOOK_OF_FIVE_RINGS"];
+  if (!Array.isArray(run["relics"]) || !Array.isArray(run["potions"]) || !Array.isArray(player["powers"]) ||
+      !Array.isArray(player["orbs"]) || player["orbs"].length !== 0 ||
+      !Array.isArray(player["pets"]) || player["pets"].length !== 0 ||
+      !Array.isArray(enemy["powers"]) || asArray(enemy["powers"]).some((p) => {
+        const power = asRecord(p);
+        return !((power["power_id"] === "POISON_POWER" && power["amount"] === 3) ||
+          (power["power_id"] === "WEAK_POWER" && power["amount"] === 1));
+      }) ||
+      asArray(run["relics"]).some((r) => !relics.includes(str(asRecord(r)["relic_id"]))) ||
+      asArray(run["potions"]).some((p) => asRecord(p)["occupied"] !== false) ||
+      asArray(player["powers"]).some((p) => {
+        const power = asRecord(p);
+        return !((power["power_id"] === "AFTERIMAGE_POWER" && power["amount"] === 1) ||
+          (power["power_id"] === "NOXIOUS_FUMES_POWER" && power["amount"] === 3));
+      })) return null;
+  const hp = numOrNull(player["current_hp"]);
+  const block = numOrNull(player["block"]);
+  if (hp === null || block === null || !Number.isInteger(hp) || hp <= 0 || !Number.isInteger(block) || block < 0 ||
+      verdict.hp !== hp || verdict.block !== block || verdict.incoming !== phase.incoming_at_turn_start) return null;
+  return { hp, block, incoming: verdict.incoming, end_block: 0,
+    minimum_extra_hp: Math.max(0, verdict.incoming - block - hp + 1) };
+}
+
+export function giantFinalResourcesText(resources: SlGiantFinalResources | undefined): string {
+  return resources
+    ? `结束回合前最终来袭${resources.incoming}，${resources.hp}血＋${resources.block}挡＋回合末${resources.end_block}挡；保持该末态要存活至少还差${resources.minimum_extra_hp}血（不是替线胜率）`
+    : "结束回合前资源或结算依据不全，最终存活缺口未知";
+}
+
+/** YQL8RZ8BWN1E F17 T10 (states 280160/280161); no inference from enemy names or HP alone. */
+export function giantPhaseAtTurnStart(state: GameState): SlGiantPhase | null {
+  const run = asRecord(state.raw["run"]);
+  if (str(run["character_id"]).toUpperCase() !== "SILENT" || numOrNull(run["ascension"]) !== 10) return null;
+  const living = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] === true);
+  if (living.length !== 1) return null;
+  const enemy = living[0]!;
+  const hp = numOrNull(enemy["current_hp"]);
+  if (str(enemy["enemy_id"]) !== "WATERFALL_GIANT" || numOrNull(enemy["max_hp"]) !== 999999999 ||
+      str(enemy["move_id"]) !== "EXPLODE_MOVE" || hp === null || !Number.isInteger(hp) || hp <= 0 || hp > 999999999) return null;
+  const intents = asArray(enemy["intents"]).map(asRecord);
+  if (intents.length !== 1 || str(intents[0]!["intent_type"]) !== "DeathBlow" || numOrNull(intents[0]!["hits"]) !== 1) return null;
+  const damage = numOrNull(intents[0]!["damage"]);
+  if (damage === null || !Number.isInteger(damage) || damage <= 0 ||
+      asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "STEAM_ERUPTION_POWER")) return null;
+  return { phase: "blast_pending", enemy_id: "WATERFALL_GIANT", move_id: "EXPLODE_MOVE", raw_hp: hp,
+    max_hp: 999999999, body_hp: 0, incoming_at_turn_start: damage };
+}
 
 /** One turn of an attempt: our HP and block and the enemies' HP when the turn began, and what we played. */
 export interface SlTurn {
@@ -17,6 +98,10 @@ export interface SlTurn {
   block: number | null;
   /** "name hp/max" per living enemy. */
   enemies: string;
+  /** Present only for the directly observed Silent A10 blast shape; old rows remain uninterpreted. */
+  giant_phase?: SlGiantPhase;
+  /** Captured only at the actual end-turn check, never from an early least-loss projection. */
+  giant_final_resources?: SlGiantFinalResources;
   /** Cards ("name -> target") and potions ("potion name") in the order they went out. */
   plays: string[];
 }
@@ -146,7 +231,8 @@ const MAX_TURN_LINES = 25;
 
 function turnLine(turn: SlTurn): string {
   const hp = turn.hp === null ? "? HP" : `${turn.hp} HP${turn.block ? ` + ${turn.block} block` : ""}`;
-  return `T${turn.turn}: ${hp}; ${turn.enemies || "no enemies"}; played ${turn.plays.length > 0 ? turn.plays.join(", ") : "nothing"}`;
+  const phase = turn.giant_phase ? `；本体剩血0，自爆仍待结算（轮初显示${turn.giant_phase.incoming_at_turn_start}伤害）；近十亿血是占位血，不代表本体进度或获胜；${giantFinalResourcesText(turn.giant_final_resources)}` : "";
+  return `T${turn.turn}: ${hp}; ${turn.enemies || "no enemies"}${phase}; played ${turn.plays.length > 0 ? turn.plays.join(", ") : "nothing"}`;
 }
 
 function endLine(row: SlAttemptRow): string {

@@ -1,0 +1,83 @@
+diff --git a/agent/src/sim/boss-sim.ts b/agent/src/sim/boss-sim.ts
+index e8382e900..610e4bd22 100644
+--- a/agent/src/sim/boss-sim.ts
++++ b/agent/src/sim/boss-sim.ts
+@@ -307,8 +307,19 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
+ }
+ 
+ /** Transfer the first sample's resources; no fresh HP, spent potion, or spent revive is restored. */
+-export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput): { input: RolloutInput; potions: string[] } {
+-  if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) throw new Error("missing successful first-fight resources");
++export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput, sample?: { seed: number; plan: Plan | null }): { input: RolloutInput; potions: string[] } {
++  if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) {
++    // Keep failed samples unavailable, but distinguish missing capture from a nonpositive winning state.
++    // Put the branch and seed first: build-sim facts retain only the start of an error message.
++    const reason = !input.continuation ? "no-continuation" : !first.won ? "not-won" : !first.resources ? "no-resources" : "nonpositive-hp";
++    const details = {
++      won: first.won, died: first.died, turns: first.turns,
++      captureResources: input.captureResources ?? false, continuation: !!input.continuation,
++      resources: first.resources ?? null,
++      steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId, cardIndex: step.cardIndex, target: step.target ?? null })) ?? null,
++    };
++    throw new Error(`missing successful first-fight resources: ${reason}; seed=${sample?.seed ?? "unknown"}; ${JSON.stringify(details)}`);
++  }
+   const used = new Set(first.resources.drunkKeys);
+   let fairies = (input.solver.player.revives ?? []).filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length
+     - first.resources.revives.filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length;
+@@ -337,7 +348,7 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
+   if (total <= 0) throw new Error("empty second-boss distribution");
+   let position = sampleSeed(seed, 0) / 0x100000000 * total;
+   const variant = next.variants.find((v) => (position -= v.count) < 0) ?? next.variants.at(-1)!;
+-  const transferred = continuationInput(input, first, variant.input);
++  const transferred = continuationInput(input, first, variant.input, { seed, plan });
+   const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
+   return { ...second,
+     turns: first.turns + second.turns, hpLoss: first.hpLoss + second.hpLoss, revived: first.revived + second.revived,
+diff --git a/agent/tests/continuation-diagnostics.test.ts b/agent/tests/continuation-diagnostics.test.ts
+new file mode 100644
+index 000000000..3d640f826
+--- /dev/null
++++ b/agent/tests/continuation-diagnostics.test.ts
+@@ -0,0 +1,42 @@
++/** silent-0332: preserve unusable samples and expose the evidence needed to diagnose them. */
++import { afterEach, describe, expect, it, vi } from "vitest";
++import * as rollout from "../src/reflex/rollout.js";
++import { continuationInput, fightSample, type FightSampleResult } from "../src/sim/boss-sim.js";
++import { board } from "./boss-sim-fixture.js";
++
++afterEach(() => vi.restoreAllMocks());
++
++describe("first-fight resource contract diagnostics", () => {
++  it.each([
++    ["no-resources", undefined],
++    ["nonpositive-hp", { hp: 0, revives: [], drunkKeys: ["POTION:BLOCK_POTION:0"] }],
++  ] as const)("distinguishes %s while refusing to invent continuation resources", (reason, resources) => {
++    const input = board();
++    const second = board();
++    input.continuation = { variants: [{ boss: "TEST_SECOND", count: 1, input: second }], potions: [], source: "fixed contract fixture", limitation: "synthetic resources only" };
++    const first = { ...fightSample({ ...input, continuation: undefined }, input.plans[0]!, 17), won: true, died: false, resources } as FightSampleResult;
++    const before = JSON.stringify(input);
++    let error: Error | undefined;
++    try { continuationInput(input, first, second, { seed: 17, plan: input.plans[0]! }); }
++    catch (caught) { error = caught as Error; }
++    expect(error).toBeInstanceOf(Error);
++    expect(error!.message.slice(0, 160)).toContain(`${reason}; seed=17`);
++    const details = JSON.parse(error!.message.split("; ").slice(2).join("; "));
++    expect(details).toMatchObject({ won: true, died: false, continuation: true, captureResources: false, resources: resources ?? null });
++    expect(details.steps).toEqual(input.plans[0]!.steps.map((step) => ({ cardId: step.cardId, cardIndex: step.cardIndex, target: step.target ?? null })));
++    expect(JSON.stringify(input)).toBe(before);
++  });
++
++  it("carries the failing sample seed through the whole-fight entry point", () => {
++    const input = board();
++    const plan = input.plans[0]!;
++    const simulated = rollout.simulateFight(input, plan, 5, 19);
++    const last = simulated.records.at(-1)!;
++    vi.spyOn(rollout, "simulateFight").mockReturnValue({ ...simulated,
++      records: [{ ...last, won: true, died: false, resources: undefined }],
++    });
++    input.continuation = { variants: [{ boss: "TEST_SECOND", count: 1, input: board() }],
++      potions: [], source: "fixed contract fixture", limitation: "synthetic missing capture only" };
++    expect(() => fightSample(input, plan, 19, 5)).toThrow("no-resources; seed=19");
++  });
++});

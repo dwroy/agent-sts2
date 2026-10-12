@@ -1,0 +1,123 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-034302-strategy-proposal",
+  "base": "8bda0c7660712eada94d9225e2cc2e52b65631e5",
+  "runs": [
+    "MTQ0EUBJ3R6T",
+    "7X0W3U8TVA2A",
+    "KFRDELW2TH2P"
+  ],
+  "fixes": [
+    {
+      "commit": "ac631877279c43842346ea921d996554e0252709",
+      "source_parent": "8bda0c7660712eada94d9225e2cc2e52b65631e5",
+      "summary": "静默A10离线候选执行审计子项：原回答/护栏/SL预测、动作回执、选牌与重问断点分列；不改在线策略",
+      "ledger": [
+        "silent-0418",
+        "silent-0125",
+        "silent-0079"
+      ],
+      "proposal_ids": [
+        "silent-proposal-f54e8de2381c1250",
+        "silent-proposal-f915ec544ab94b6e"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "reason": "十个宽提案仍有具体证据或消费者缺口，逐项见proposal_results"
+    },
+    {
+      "reason": "live合入预检8个既有记录文件冲突，exit78，未执行merge"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3099
+  },
+  "tests_live": null,
+  "regression": {
+    "without_implementation": {
+      "exit": 1,
+      "failed": 8
+    },
+    "restored": {
+      "exit": 0,
+      "passed": 8
+    }
+  },
+  "code_proposals": [
+    "silent-proposal-0802f69b28d25079",
+    "silent-proposal-f54e8de2381c1250",
+    "silent-proposal-763a4b9d9f17b815",
+    "silent-proposal-19a5cff2094e2d8f",
+    "silent-proposal-3540bf4360bf80af",
+    "silent-proposal-0ea5c0b9c030fdd6",
+    "silent-proposal-f915ec544ab94b6e",
+    "silent-proposal-8fb51933639faf90",
+    "silent-proposal-b3bc0eb09211af6c",
+    "silent-proposal-fdc3a505fe5e1a55"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-0802f69b28d25079",
+      "state": "waiting",
+      "reason": "局部0→8损和13→19扣已核，已有SL资源差值事实；缺同条件完整胜线及独立留出，不能拟合全败排序或留药门槛。审计子项本次实现不关闭饱和死亡率的宽策略结论。"
+    },
+    {
+      "id": "silent-proposal-f54e8de2381c1250",
+      "state": "waiting",
+      "reason": "离线审计子项已提交ac631877279c43842346ea921d996554e0252709并通过自测，但live预检8个既有记录文件冲突，未合入。本次交付原回答/最终候选同题排名与重问断点的离线审计；在线连续执行认证、完整实线结果与原推演比较仍未实现。不能把预测最终best充作实际完整执行best。"
+    },
+    {
+      "id": "silent-proposal-763a4b9d9f17b815",
+      "state": "waiting",
+      "reason": "十四项机制中速度药/临时敏捷/迷雾等已有模型，固定实帧支持局部兑现；缺十四项组合完整回放、毛伤事件账及未知修饰的隔离验证，不能整包标duplicate或发新权重。"
+    },
+    {
+      "id": "silent-proposal-19a5cff2094e2d8f",
+      "state": "waiting",
+      "reason": "当前已非“暂死输入未合入”：暂死/清状态/候选差值均有live子实现；仍缺修正后完整生命周期与同盘执行对应的终局反事实，有限死亡样本不支持必死规则或血价排序变更。"
+    },
+    {
+      "id": "silent-proposal-3540bf4360bf80af",
+      "state": "waiting",
+      "reason": "赢战与回复分源有离线resource_chain，MTQ0 F24未抵达、SL恢复须分源；在线路线/休息消费者的完整来源链及差分验收仍缺，替路线效果也未观察。工程消费者缺口不伪称只需等新局。"
+    },
+    {
+      "id": "silent-proposal-0ea5c0b9c030fdd6",
+      "state": "waiting",
+      "reason": "8bb53d6已覆盖KFR六个毒药+6及奇巧剩余名额/能量提示；提示明确continuation_verified=false。缺目标改变后的完整合法后继及提前饮用整战对照，部分输入上线不等原提案全部实现。"
+    },
+    {
+      "id": "silent-proposal-f915ec544ab94b6e",
+      "state": "waiting",
+      "reason": "离线审计子项已提交ac631877279c43842346ea921d996554e0252709并通过自测，但live预检8个既有记录文件冲突，未合入。本次离线关联了护栏后重问和SL替线/旧journal分歧；完整实际资源结果自动归因尚未实现，两条T6线均失败，缺改权重需要的整战反事实与独立留出。"
+    },
+    {
+      "id": "silent-proposal-8fb51933639faf90",
+      "state": "waiting",
+      "reason": "毒药6/触媒1两结等窄输入已有live支持；铁心建7覆甲不能推出完整减层触发，药效/能力组合仍缺隔离验证与完整时点比较，不能把部分模型视为六项整包完成。"
+    },
+    {
+      "id": "silent-proposal-b3bc0eb09211af6c",
+      "state": "waiting",
+      "reason": "奇巧名额提示及SL预测资源差已覆盖，离线链本次补充；仍缺奇巧完整可执行后继、换目标/顺序和提前喝毒的整战结果，敌回血/末轮毒结算不能替代已赢证据。"
+    },
+    {
+      "id": "silent-proposal-fdc3a505fe5e1a55",
+      "state": "waiting",
+      "reason": "六回血及营火126/幕间38/小血瓶20/SL恢复145为不同来源，已有离线分源工具；在线路线/休息全链消费差分未验收，且缺替路线、休息对锻造完整可比结果，不改阈值。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-034302/learner/runs/20261012-034312-strategy-proposal/report.md",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-034302/learner/runs/20261012-034312-strategy-proposal/proposal.md",
+  "version": null
+}

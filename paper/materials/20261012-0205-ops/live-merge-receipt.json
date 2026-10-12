@@ -1,0 +1,37 @@
+{
+  "live": "6639e2f33f6200061d3111306abb5dfa0f908a83",
+  "source": "cfa32d49f60b849ae5d45c907dc9a7721c3c9818",
+  "preflight": 1,
+  "scope": "只读固定提交兼容性检查；未取得live锁，未改live索引/工作树/分支",
+  "conflicts": [
+    "CONFLICT (modify/delete): notes/codex1-drain-ops-handoff.md deleted in 6639e2f33f6200061d3111306abb5dfa0f908a83 and modified in cfa32d49f60b849ae5d45c907dc9a7721c3c9818.  Version cfa32d49f60b849ae5d45c907dc9a7721c3c9818 of notes/codex1-drain-ops-handoff.md left in tree.",
+    "CONFLICT (content): Merge conflict in notes/for-roy.md",
+    "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+    "CONFLICT (add/add): Merge conflict in ops/learner_check_continuation.py",
+    "CONFLICT (add/add): Merge conflict in ops/tests/test_learner_check_continuation.py",
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"
+  ],
+  "status": "not-merged-lock-timeouts-and-immutable-commit-conflicts",
+  "lock_attempts": [
+    {
+      "wait_seconds": 30,
+      "exit": 75
+    },
+    {
+      "wait_seconds": 50,
+      "exit": 75
+    },
+    {
+      "wait_seconds": 50,
+      "exit": 75
+    }
+  ],
+  "callback_started": false,
+  "knowledge_refresh_commit": null,
+  "merge": null,
+  "post_merge_tests": null,
+  "live_after": "6639e2f33f6200061d3111306abb5dfa0f908a83",
+  "dirty_live": " M notes/fight-value-backtest-silent.md\n",
+  "source_clean": true,
+  "note": "未写入live代码/索引/记录；未取得锁，未执行刷新提交或合后测试；固定提交只读预检已确认6处冲突，按任务停止。原候选已由并行运维集成，本分支新增依赖映射修正仍待合入。"
+}

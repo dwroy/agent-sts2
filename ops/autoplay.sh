@@ -49,6 +49,8 @@ export LOGS
 mkdir -p "$NOTES"
 restarts=0
 while [ ! -f "$OPS/STOP" ]; do
+  # A borrowed play must finish and report once; new play waits for the handoff.
+  [ -z "${WAIT_PID:-}" ] && [ -f "$OPS/codex-ops/LLM_DRAIN" ] && break
   if [ -n "${WAIT_PID:-}" ]; then
     while kill -0 "$WAIT_PID" 2>/dev/null; do sleep 5; done
     WAIT_PID=""
@@ -61,6 +63,7 @@ while [ ! -f "$OPS/STOP" ]; do
     fi
     "$OPS/run.sh" "$@"
     play_exit=$?
+    [ "$play_exit" -eq 76 ] && break
     if [ "$play_exit" -eq 75 ] || [ "$play_exit" -eq 78 ]; then
       echo "$(date '+%F %T') brain blocked (exit $play_exit); saved run retained; awaiting explicit recovery" >> "$OPS/autoplay.log"
       # The marker is normally present. A missing marker must not cause a restart storm either.
@@ -99,4 +102,4 @@ PY
     sleep "$delay"
   fi
 done
-echo "$(date '+%F %T') STOP file found, exiting" >> "$OPS/autoplay.log"
+echo "$(date '+%F %T') admission held (STOP or LLM_DRAIN), exiting" >> "$OPS/autoplay.log"

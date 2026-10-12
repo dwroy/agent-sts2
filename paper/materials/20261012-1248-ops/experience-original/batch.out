@@ -1,0 +1,59 @@
+## 经验库更新回报
+
+- 版本：2026-10-12.4 → 2026-10-12.5；提交：`61f0c04e5`（分支 exp-silent）；合入：未合入，锁内预检发现19处并行记录冲突，live保持不变。
+- 条数：新增0、更新16（加证据14、只改数字0、仅压缩2）、退役0；active 223→223，共54,997字。A8适用202条／48,958字；A9适用203条／49,242字。
+- 机制推理（局数为主题支持数，典型案例均为 PUY011SBWSSU）：
+
+  - 步法 — 敏捷须通过实际牌挡兑现 — 139局 — PUY011SBWSSU
+  - 力量 — 按攻击段数核算，虚弱另核 — 236局 — PUY011SBWSSU
+  - 构筑启动 — 持有组件不等于已建立效果 — 236局 — PUY011SBWSSU
+  - 实验体 — 技能激怒，换相清旧敌层 — 26局 — PUY011SBWSSU
+  - 尖啸 — 临时减力下轮恢复 — 114局 — PUY011SBWSSU
+  - 奥利哈钢 — 零挡轮末补6 — 5局 — PUY011SBWSSU
+  - 音叉 — 被动7挡与牌挡分账 — 9局 — PUY011SBWSSU
+  - 蜃景 — 升级正毒／敏捷并非本局首次出现 — 30局，清晰升级案例至少3局 — PUY011SBWSSU
+  - 子弹时间 — 可支付手牌免费并封抽 — 5局，升级仅1局 — PUY011SBWSSU
+  - 跨幕回复 — 已见缺血80%向下取整 — 82局 — PUY011SBWSSU
+  - 巨兽 — 本体结束后仍须承受自爆 — 33局 — PUY011SBWSSU
+  - 再生 — 逐轮回复，净损不等于总伤害 — 28局 — PUY011SBWSSU
+
+- 改了的手写知识：无。
+- 测试：tsc退出0；沙箱vitest 334文件／3336用例／退出0。原工作树因旧临时目录失效链接失败，已在1394份源码逐SHA一致副本中重跑通过；失败原件保留。
+- 切片大小：中位减少79字，最大8,769字；知识前缀渲染通过，真实采用待观察。
+- 学习账本：新增无；改成proposed：silent-0005、0012、0017、0019、0020、0021、0027、0028、0046、0047、0072、0079、0125、0243、0248、0259、0385、0429、0430；退役无；`ledger.py check`退出0。
+- 需要Roy定的事：无。合并冲突待运维接续；变更记录已追加一节。[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-121302-experience-update/report.md)与[逐项映射](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-121302-experience-update/experience-integration.json)已保存。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-12.5",
+  "commit": "61f0c04e58949e83377e696958a4bd816e2e5403",
+  "merged": null,
+  "added": 0,
+  "updated": 16,
+  "retired": 0,
+  "active": 223,
+  "mechanisms": ["灵动步法", "general:plan", "general:deck", "boss:TEST_SUBJECT", "尖啸", "奥利哈钢", "音叉", "蜃景", "子弹时间", "general:rest", "boss:WATERFALL_GIANT", "再生药水"],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3336},
+  "ledger": {
+    "added": [],
+    "proposed": ["silent-0005", "silent-0012", "silent-0017", "silent-0019", "silent-0020", "silent-0021", "silent-0027", "silent-0028", "silent-0046", "silent-0047", "silent-0072", "silent-0079", "silent-0125", "silent-0243", "silent-0248", "silent-0259", "silent-0385", "silent-0429", "silent-0430"],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": ["silent-proposal-df7906b27adaf5f6", "silent-proposal-8eda8055486f402b", "silent-proposal-c5ffacab9ab4365a"],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-121302-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12e50-6c0a-74b1-b1ea-c129f407ecf6
+轮数：1；工具调用：command_execution×84
+token：输入 226.1k、输出 55.4k（其中推理 18.8k）、cache 读 13997.4k、cache 写 0（命中 98.4%）
+成本：未提供
+耗时：2122.5 s（墙钟）
+时间：首个事件 9.9 s、模型首个输出 15.5 s、首次工具 17.2 s、末次工具结束 2059.7 s；工具内共 2777.2 s，其余（模型生成、推理、网络）-664.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×79 wait×7；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T12-13-04-01a12e50-6c0a-74b1-b1ea-c129f407ecf6.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-121302-experience-update.jsonl

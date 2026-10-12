@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-083154/agent
+
+ ❯ tests/multi-character.test.ts (14 tests | 1 failed | 12 skipped) 35ms
+     × renders a prefix and a system prompt that say Silent and carry no Ironclad guide 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/multi-character.test.ts > a character with no knowledge yet > renders a prefix and a system prompt that say Silent and carry no Ironclad guide
+AssertionError: prefix tests must use fixed knowledge: expected '/home/dw/Projects/agent-sts2/.worktre…' to be '/home/dw/Projects/agent-sts2/.worktre…' // Object.is equality
+
+Expected: "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-083154/learner/runs/20261012-083203-fix-batch/character-prefix-4lJjBo"
+Received: "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-083154/knowledge"
+
+ ❯ tests/multi-character.test.ts:62:59
+     60|   const load = knowledgeData.loadKnowledgeData;
+     61|   vi.spyOn(knowledgeData, "loadKnowledgeData").mockImplementation((pat…
+     62|     expect(path, "prefix tests must use fixed knowledge").toBe(dir);
+       |                                                           ^
+     63|     return load(path);
+     64|   });
+ ❯ renderKnowledgeSections src/knowledge/render/knowledge-prefix.ts:47:16
+ ❯ renderKnowledgePrefix src/knowledge/render/knowledge-prefix.ts:74:10
+ ❯ tests/multi-character.test.ts:208:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 12 skipped (14)
+   Start at  08:35:54
+   Duration  1.61s (transform 1.20s, setup 280ms, import 1.17s, tests 35ms, environment 0ms)
+

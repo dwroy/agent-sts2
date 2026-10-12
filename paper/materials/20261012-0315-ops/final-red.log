@@ -1,0 +1,178 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-024302/agent
+
+ ❯ tests/sl-giant-final-resources.test.ts (32 tests | 32 failed) 52ms
+     × uses the final actionable state 363009, including the post-Neutralize intent 8ms
+     × uses the final actionable state 363119, including the post-Neutralize intent 1ms
+     × uses the final actionable state 363302, including the post-Neutralize intent 1ms
+     × persists pre-end resources through reload/death and exposes them to retry questions (363005) 12ms
+     × persists pre-end resources through reload/death and exposes them to retry questions (363115) 3ms
+     × persists pre-end resources through reload/death and exposes them to retry questions (363298) 4ms
+     × keeps the recorded reference ranking while adding final-state facts to its explanation 2ms
+     × does not fill unobserved or incomplete budgets: body 1ms
+     × does not fill unobserved or incomplete budgets: dead 1ms
+     × does not fill unobserved or incomplete budgets: missingHp 1ms
+     × does not fill unobserved or incomplete budgets: missingBlock 1ms
+     × does not fill unobserved or incomplete budgets: missingRelics 1ms
+     × does not fill unobserved or incomplete budgets: missingPotions 1ms
+     × does not fill unobserved or incomplete budgets: missingPowers 1ms
+     × does not fill unobserved or incomplete budgets: unknownPower 1ms
+     × does not fill unobserved or incomplete budgets: unknownRelic 1ms
+     × does not fill unobserved or incomplete budgets: potion 1ms
+     × does not fill unobserved or incomplete budgets: IRONCLAD 1ms
+     × does not fill unobserved or incomplete budgets: A9 1ms
+     × does not fill unobserved or incomplete budgets: A11 1ms
+     × does not fill unobserved or incomplete budgets: enemyPower 1ms
+     × does not fill unobserved or incomplete budgets: missingEnemyPowers 1ms
+     × does not fill unobserved or incomplete budgets: orb 1ms
+     × does not fill unobserved or incomplete budgets: pet 1ms
+     × does not fill unobserved or incomplete budgets: missingOrbs 1ms
+     × does not fill unobserved or incomplete budgets: missingPets 1ms
+     × refuses an unsupported verdict: early 1ms
+     × refuses an unsupported verdict: endBlock 1ms
+     × refuses an unsupported verdict: held 1ms
+     × refuses an unsupported verdict: revive 1ms
+     × refuses an unsupported verdict: mismatched 1ms
+     × refuses an unsupported verdict: uncertain 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 32 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > uses the final actionable state 363009, including the post-Neutralize intent
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > uses the final actionable state 363119, including the post-Neutralize intent
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > uses the final actionable state 363302, including the post-Neutralize intent
+TypeError: giantFinalResources is not a function
+ ❯ facts tests/sl-giant-final-resources.test.ts:21:10
+     19| function facts(payload: Raw) {
+     20|   const state = parseGameState(payload);
+     21|   return giantFinalResources(state, judgeEndTurn(state, { label: "comb…
+       |          ^
+     22| }
+     23|
+ ❯ tests/sl-giant-final-resources.test.ts:27:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/32]⎯
+
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > persists pre-end resources through reload/death and exposes them to retry questions (363005)
+AssertionError: expected undefined to be 8 // Object.is equality
+
+- Expected:
+8
+
++ Received:
+undefined
+
+ ❯ tests/sl-giant-final-resources.test.ts:54:81
+     52|       const row = rows[0]!;
+     53|       expect(row.result).toBe(retries ? "predicted_death" : "died");
+     54|       expect(row.summary.turns.at(-1)?.giant_final_resources?.minimum_…
+       |                                                                                 ^
+     55|       expect(row.summary.turns.at(-1)?.giant_phase?.incoming_at_turn_s…
+     56|       const prompt = JSON.stringify(previousAttemptsJson(rows, 2, 6));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/32]⎯
+
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > persists pre-end resources through reload/death and exposes them to retry questions (363115)
+AssertionError: expected undefined to be 20 // Object.is equality
+
+- Expected:
+20
+
++ Received:
+undefined
+
+ ❯ tests/sl-giant-final-resources.test.ts:54:81
+     52|       const row = rows[0]!;
+     53|       expect(row.result).toBe(retries ? "predicted_death" : "died");
+     54|       expect(row.summary.turns.at(-1)?.giant_final_resources?.minimum_…
+       |                                                                                 ^
+     55|       expect(row.summary.turns.at(-1)?.giant_phase?.incoming_at_turn_s…
+     56|       const prompt = JSON.stringify(previousAttemptsJson(rows, 2, 6));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/32]⎯
+
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > persists pre-end resources through reload/death and exposes them to retry questions (363298)
+AssertionError: expected undefined to be 23 // Object.is equality
+
+- Expected:
+23
+
++ Received:
+undefined
+
+ ❯ tests/sl-giant-final-resources.test.ts:54:81
+     52|       const row = rows[0]!;
+     53|       expect(row.result).toBe(retries ? "predicted_death" : "died");
+     54|       expect(row.summary.turns.at(-1)?.giant_final_resources?.minimum_…
+       |                                                                                 ^
+     55|       expect(row.summary.turns.at(-1)?.giant_phase?.incoming_at_turn_s…
+     56|       const prompt = JSON.stringify(previousAttemptsJson(rows, 2, 6));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/32]⎯
+
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > keeps the recorded reference ranking while adding final-state facts to its explanation
+TypeError: giantFinalResources is not a function
+ ❯ facts tests/sl-giant-final-resources.test.ts:21:10
+     19| function facts(payload: Raw) {
+     20|   const state = parseGameState(payload);
+     21|   return giantFinalResources(state, judgeEndTurn(state, { label: "comb…
+       |          ^
+     22| }
+     23|
+ ❯ tests/sl-giant-final-resources.test.ts:68:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/32]⎯
+
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: body
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: dead
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: missingHp
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: missingBlock
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: missingRelics
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: missingPotions
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: missingPowers
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: unknownPower
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: unknownRelic
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: potion
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: IRONCLAD
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: A9
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: A11
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: enemyPower
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: missingEnemyPowers
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: orb
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: pet
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: missingOrbs
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > does not fill unobserved or incomplete budgets: missingPets
+TypeError: giantFinalResources is not a function
+ ❯ facts tests/sl-giant-final-resources.test.ts:21:10
+     19| function facts(payload: Raw) {
+     20|   const state = parseGameState(payload);
+     21|   return giantFinalResources(state, judgeEndTurn(state, { label: "comb…
+       |          ^
+     22| }
+     23|
+ ❯ tests/sl-giant-final-resources.test.ts:100:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/32]⎯
+
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > refuses an unsupported verdict: early
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > refuses an unsupported verdict: endBlock
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > refuses an unsupported verdict: held
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > refuses an unsupported verdict: revive
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > refuses an unsupported verdict: mismatched
+ FAIL  tests/sl-giant-final-resources.test.ts > NYQW6JAD30K4 final blast resources (silent-0379 continuation) > refuses an unsupported verdict: uncertain
+TypeError: giantFinalResources is not a function
+ ❯ tests/sl-giant-final-resources.test.ts:113:12
+    111|     if (change === "mismatched") verdict.hp = 10;
+    112|     if (change === "uncertain") verdict.certain = false;
+    113|     expect(giantFinalResources(state, verdict)).toBeNull();
+       |            ^
+    114|   });
+    115| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/32]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  32 failed (32)
+   Start at  03:07:44
+   Duration  1.43s (transform 969ms, setup 278ms, import 939ms, tests 52ms, environment 0ms)
+

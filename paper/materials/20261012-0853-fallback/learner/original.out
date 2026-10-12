@@ -1,0 +1,78 @@
+## 修 bug 回报
+
+- 合并基线：main → `6c7e632e4d5bd21aeba42acfd2b4dbeb7dc7fbee`
+- 修复：角色前缀测试依赖真实药水表 — `5ef3c4612` — 测试 `agent/tests/multi-character.test.ts:renders a prefix and a system prompt that say Silent and carry no Ironclad guide` — 去掉修复时失败：是；恢复后2例通过。
+- 修复：受阻无产出经验批次误派补链 — `84366ad06` — 测试 `agent/tests/blocked-experience-repair.test.ts:keeps an empty blocked attempt failed without scheduling proposal repair` — 去掉修复时失败：是，3例失败；恢复后18例通过。
+- 已被别人修掉的：152条，逐项提交见[核查清单](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-083154/learner/runs/20261012-083203-fix-batch/queue-review.md)。
+- 没修的：策略及独立功能沿原任务处理；资源异常、历史通知失败、目录竞态根因和调度公平性仍缺证据，详见[回报](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-083154/learner/runs/20261012-083203-fix-batch/report.md)。
+- 测试：两次提交前均 tsc 退出0；vitest 325文件／3218例／退出0。首轮导入检查误扫本批 `.ts` 备份失败，保留内容并改后缀后重跑通过。gitleaks通过。
+- 合入：**未合入**。锁内预检发现22处既有记录／账本冲突，按要求停止；知识刷新已保存为 `579511007`，未覆盖并行记录。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "6c7e632e4d5bd21aeba42acfd2b4dbeb7dc7fbee",
+  "fixes": [
+    {
+      "item": "multi-character-potion-table-fixture-isolation",
+      "commit": "5ef3c4612bd2673c19968c5a2d24bf62af519ee1",
+      "test": "agent/tests/multi-character.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "blocked-experience-proposal-repair-dispatch",
+      "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+      "test": "agent/tests/blocked-experience-repair.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "剩余机制、出牌、药水、SL、终局、路线和休息提案",
+      "reason": "策略类，沿既有 strategy-proposal 处理。"
+    },
+    {
+      "item": "silent-0332 双 boss 接续资源异常根因",
+      "reason": "证据不足，缺可复现触发样本。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史失败恢复",
+      "reason": "证据不足，旧回执无 stderr，保留去重与失败历史。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录竞态",
+      "reason": "有界恢复已修；目录创建和删除的根因仍缺证据。"
+    },
+    {
+      "item": "调度公平性核查、mod 短暂请求超时",
+      "reason": "证据不足，尚未证明永久饥饿或内部根因。"
+    },
+    {
+      "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression、B4/B5、缓存及性能实测",
+      "reason": "独立功能及策略研究，保留原专用任务。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 325,
+    "cases": 3218
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-083154/learner/runs/20261012-083203-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12d86-1920-73a1-98a5-d8c2d78d7ef8
+轮数：1；工具调用：command_execution×99 file_change×4
+token：输入 167.7k、输出 31.8k（其中推理 14.0k）、cache 读 6624.5k、cache 写 0（命中 97.5%）
+成本：未提供
+耗时：1274.7 s（墙钟）
+时间：首个事件 10.3 s、模型首个输出 16.1 s、首次工具 19.2 s、末次工具结束 1238.9 s；工具内共 1195.8 s，其余（模型生成、推理、网络）68.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-083154）；模型的工具调用 exec×54；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T08-32-05-01a12d86-1920-73a1-98a5-d8c2d78d7ef8.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-083154/learner/runs/20261012-083203-fix-batch.jsonl

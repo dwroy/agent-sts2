@@ -1,0 +1,2988 @@
+{
+  "run": {
+    "run_id": "YF0LXT1QSTGG",
+    "ended": "2026-10-07T09:15:57.174Z",
+    "victory": false,
+    "floor": 48,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "91c1db90+dirty",
+    "decisions": 1065,
+    "jev_calls": 269,
+    "deepseek_calls": 47,
+    "claude_calls": 0,
+    "tokens": 1128548,
+    "ds_tokens_in": 5935629,
+    "ds_tokens_out": 12025,
+    "ds_cache_hit": 4196352,
+    "deciders": {
+      "codex": 61,
+      "code": 447,
+      "jev": 269,
+      "jev-plan": 288
+    },
+    "death_fight": [
+      "实验体 #C64"
+    ]
+  },
+  "decisions": [
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 2,
+      "label": "combat/plan",
+      "decision_id": "a0b52e87-d620-4a9f-851f-1152c40a19d1",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:23:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:PHANTOM_BLADES:false\",\"hp\":27,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:3|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "chosen": {
+        "action": "end_turn"
+      },
+      "expect": {
+        "turn": 2,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:04.562Z",
+      "result": "completed: Action completed.",
+      "_line": 271489,
+      "_source_sha256": "5510bb14914207d70e179a51fa751d469dde592b883195bc7246c2388ef99e5e"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 3,
+      "label": "combat/plan",
+      "decision_id": "8d1b2d20-4dd9-43fa-8260-8455f383ed6b",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:23:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:POISONED_STAB:true|2:EXPERTISE:true|3:STRIKE_SILENT:true|4:OUTBREAK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "POISONED_STAB",
+          "upgraded": false
+        },
+        "target": {
+          "id": "TEST_SUBJECT"
+        },
+        "turn": 3,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:09.429Z",
+      "result": "completed: Action completed.",
+      "_line": 271490,
+      "_source_sha256": "4ee74d1b7a511c453587ad6451ee906d78708d43cce6c5867aff24be0df59175"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 3,
+      "label": "combat/plan-continue",
+      "decision_id": "f42c0163-3b35-4054-aa3d-047a5fcf078b",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:15:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:EXPERTISE:true|2:STRIKE_SILENT:true|3:OUTBREAK:false\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1
+      },
+      "expect": {
+        "card": {
+          "id": "EXPERTISE",
+          "upgraded": true
+        },
+        "turn": 3,
+        "from": "line",
+        "hand": "DEFEND_SILENT,EXPERTISE+,OUTBREAK+,STRIKE_SILENT",
+        "enemies": "0:TEST_SUBJECT"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:10.399Z",
+      "result": "completed: Action completed.",
+      "_line": 271491,
+      "_source_sha256": "e57814aebf49c8d975d0358277170938dc0fb8e732861719b8af4858635bd476"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 3,
+      "label": "combat/plan",
+      "decision_id": "b171891d-2d5b-4003-9476-81462ace37c8",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:15:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:STRIKE_SILENT:true|2:OUTBREAK:false|3:BACKFLIP:true|4:BLADE_DANCE:true|5:PIERCING_WAIL:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "STRIKE_SILENT",
+          "upgraded": false
+        },
+        "target": {
+          "id": "TEST_SUBJECT"
+        },
+        "turn": 3,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:12.098Z",
+      "result": "completed: Action completed.",
+      "_line": 271492,
+      "_source_sha256": "977b4b43e36337f4dea1def7e1725a16527feab0ba991a08ea400831ab9fc3b3"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 3,
+      "label": "combat/mod-lethal",
+      "decision_id": "c1195c22-8d28-4975-ab15-83f0912deef5",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:4:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:OUTBREAK:false|2:BACKFLIP:true|3:BLADE_DANCE:true|4:PIERCING_WAIL:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "expect": {
+        "card": {
+          "id": "BACKFLIP",
+          "upgraded": false
+        },
+        "turn": 3,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:12.968Z",
+      "result": "completed: Action completed.",
+      "_line": 271493,
+      "_source_sha256": "8627ce5d0f1c6ab90e18081b028d210fc4d26254ef834c4226190a71a58d0eb4"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 3,
+      "label": "combat/plan",
+      "decision_id": "7ee5cd21-5c56-4a20-9b77-d7c4d7129398",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:4:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:false|1:OUTBREAK:false|2:BLADE_DANCE:false|3:PIERCING_WAIL:false|4:DEFEND_SILENT:false|5:AFTERIMAGE:false\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:10:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "chosen": {
+        "action": "end_turn"
+      },
+      "expect": {
+        "turn": 3,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:14.651Z",
+      "result": "completed: Action completed.",
+      "_line": 271494,
+      "_source_sha256": "ba6576adc93b8c9321a799d28d1309cee78493faac06da9de8eea6196a26da3b"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 4,
+      "label": "combat/plan-choice",
+      "decision_id": "9918f4de-a34f-42a8-abd0-d7f2f1fa4419",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:212:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:PIERCING_WAIL:true|2:SURVIVOR:true|3:PIERCING_WAIL:true|4:STRIKE_SILENT:true|5:CALCULATED_GAMBLE:true|6:NOXIOUS_FUMES:true|7:HAND_TRICK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1
+      },
+      "expect": {
+        "card": {
+          "id": "PIERCING_WAIL",
+          "upgraded": false
+        },
+        "turn": 4,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:21.694Z",
+      "result": "completed: Action completed.",
+      "_line": 271495,
+      "_source_sha256": "33d3c730ad73362bca5e09f77381b64419212d6a4c62ffe7fc151ce77b0c1910"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 4,
+      "label": "combat/plan-continue",
+      "decision_id": "a3dc1a62-aff1-4480-b339-fd3de19fd342",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:211:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:SURVIVOR:true|2:PIERCING_WAIL:true|3:STRIKE_SILENT:true|4:CALCULATED_GAMBLE:true|5:NOXIOUS_FUMES:true|6:HAND_TRICK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "expect": {
+        "card": {
+          "id": "PIERCING_WAIL",
+          "upgraded": false
+        },
+        "turn": 4,
+        "from": "line",
+        "hand": "BLADE_DANCE+,CALCULATED_GAMBLE,HAND_TRICK,NOXIOUS_FUMES+,PIERCING_WAIL,STRIKE_SILENT,SURVIVOR",
+        "enemies": "0:TEST_SUBJECT"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:32.129Z",
+      "result": "completed: Action completed.",
+      "_line": 271496,
+      "_source_sha256": "f8038b41001271b8bbb05d961da433f24b1164d87d044f4d91530188e40454d5"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 4,
+      "label": "combat/plan-continue",
+      "decision_id": "ae228814-4ad7-4c9e-9684-3fcc54bdbd4b",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:210:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:SURVIVOR:true|2:STRIKE_SILENT:true|3:CALCULATED_GAMBLE:true|4:NOXIOUS_FUMES:true|5:HAND_TRICK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "STRIKE_SILENT",
+          "upgraded": false
+        },
+        "target": {
+          "id": "TEST_SUBJECT"
+        },
+        "turn": 4,
+        "from": "line",
+        "hand": "BLADE_DANCE+,CALCULATED_GAMBLE,HAND_TRICK,NOXIOUS_FUMES+,STRIKE_SILENT,SURVIVOR",
+        "enemies": "0:TEST_SUBJECT"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:33.333Z",
+      "result": "completed: Action completed.",
+      "_line": 271497,
+      "_source_sha256": "573c46cf46c7a73de2133c9b515e80114faff540c9720a8b3ff84cdde7e6fb2f"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 4,
+      "label": "combat/plan-continue",
+      "decision_id": "74942ff5-58d2-45df-82e9-ca7f0a338252",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:198:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:SURVIVOR:true|2:CALCULATED_GAMBLE:true|3:NOXIOUS_FUMES:true|4:HAND_TRICK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "expect": {
+        "card": {
+          "id": "CALCULATED_GAMBLE",
+          "upgraded": false
+        },
+        "turn": 4,
+        "from": "line",
+        "hand": "BLADE_DANCE+,CALCULATED_GAMBLE,HAND_TRICK,NOXIOUS_FUMES+,SURVIVOR",
+        "enemies": "0:TEST_SUBJECT"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:34.200Z",
+      "result": "completed: Action completed.",
+      "_line": 271498,
+      "_source_sha256": "64c9011abc3ea96400935fa9fb70bdfa71873ad18bddc93ea0f20c838ba08ffd"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 4,
+      "label": "combat/plan-choice",
+      "decision_id": "aa816d31-b78f-40ee-9103-e71ba7d80173",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:DEADLY_POISON:true|2:ACCELERANT:true|3:ANTICIPATE:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "expect": {
+        "card": {
+          "id": "ACCELERANT",
+          "upgraded": true
+        },
+        "turn": 4,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:35.700Z",
+      "result": "completed: Action completed.",
+      "_line": 271499,
+      "_source_sha256": "829804e36fc169c51b63b0da51e2812fe1b1960f9fa1792ad958de022384b304"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 4,
+      "label": "combat/plan",
+      "decision_id": "96c595d3-a7d8-41a5-8e73-5dc56d3afb3e",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:false|1:DEADLY_POISON:false|2:ANTICIPATE:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "chosen": {
+        "action": "end_turn"
+      },
+      "expect": {
+        "turn": 4,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:39.663Z",
+      "result": "completed: Action completed.",
+      "_line": 271500,
+      "_source_sha256": "71cb6b7f4b5ba7d8d47b16d01e6f394c1243e39406e02c85251d7a81a6227926"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 5,
+      "label": "combat/plan",
+      "decision_id": "4aea819d-980e-4543-ba21-124197b8aa42",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:SURVIVOR:true|1:BLADE_DANCE:true|2:DEFEND_SILENT:true|3:DEFEND_SILENT:true|4:NOXIOUS_FUMES:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "SURVIVOR",
+          "upgraded": false
+        },
+        "turn": 5,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:46.263Z",
+      "result": "pending (unstable): Action queued but state is still transitioning.",
+      "_line": 271501,
+      "_source_sha256": "09f54077048fd401f15afae85dbd713d07011ad619df8192067fe5ad37d3ce50"
+    },
+    {
+      "screen": "CARD_SELECTION",
+      "floor": 48,
+      "turn": 5,
+      "label": "selection/choose",
+      "decision_id": "860b25d9-4658-4a28-b465-cce80f3a1366",
+      "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:DEFEND_SILENT:true|2:DEFEND_SILENT:true|3:NOXIOUS_FUMES:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:13:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "select_deck_card",
+        "option_index": 1
+      },
+      "expect": {
+        "option": {
+          "id": "DEFEND_SILENT"
+        },
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:47.041Z",
+      "result": "completed: Action completed.",
+      "_line": 271502,
+      "_source_sha256": "78d0745e47e7b57899fc3d580fa4c24f95aaf53ae47d5855d82bc309656bdc04"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 5,
+      "label": "combat/least-loss",
+      "decision_id": "50954aba-3806-4090-ac04-31eb00dd9056",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:DEFEND_SILENT:true|2:NOXIOUS_FUMES:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:13:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "BLADE_DANCE",
+          "upgraded": true
+        },
+        "turn": 5,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:47.999Z",
+      "result": "completed: Action completed.",
+      "_line": 271503,
+      "_source_sha256": "0246c94260bd24a8d591c04e423963758589de0a06e4532a1183e0f9b93b65de"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 5,
+      "label": "combat/least-loss",
+      "decision_id": "63af1e64-e1fc-4c66-8f88-22aa2a2bfdbb",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:196:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:NOXIOUS_FUMES:true|2:SHIV:true|3:SHIV:true|4:SHIV:true|5:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:13:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "DEFEND_SILENT",
+          "upgraded": false
+        },
+        "turn": 5,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:49.466Z",
+      "result": "completed: Action completed.",
+      "_line": 271504,
+      "_source_sha256": "9c220060cf8fedc905d7de7d9876aa084d785dceff6efb5802d8cf408f5f4ceb"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 5,
+      "label": "combat/plan-continue",
+      "decision_id": "989af0f4-eff8-47cb-a498-988c87e85d6f",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:196:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false|1:SHIV:true|2:SHIV:true|3:SHIV:true|4:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "SHIV",
+          "upgraded": false
+        },
+        "target": {
+          "id": "TEST_SUBJECT"
+        },
+        "turn": 5,
+        "from": "line",
+        "hand": "NOXIOUS_FUMES+,SHIV,SHIV,SHIV,SHIV",
+        "enemies": "0:TEST_SUBJECT"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:50.314Z",
+      "result": "completed: Action completed.",
+      "_line": 271505,
+      "_source_sha256": "eee0981a705fb1a4e71be45460be580c9ff7ecc3685d7aae1cc05dbc2b9679fe"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 5,
+      "label": "combat/plan-continue",
+      "decision_id": "0eb0f067-da87-44ee-bed3-6772e27079bd",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:187:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false|1:SHIV:true|2:SHIV:true|3:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "SHIV",
+          "upgraded": false
+        },
+        "target": {
+          "id": "TEST_SUBJECT"
+        },
+        "turn": 5,
+        "from": "line",
+        "hand": "NOXIOUS_FUMES+,SHIV,SHIV,SHIV",
+        "enemies": "0:TEST_SUBJECT"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:51.333Z",
+      "result": "completed: Action completed.",
+      "_line": 271506,
+      "_source_sha256": "008b1e6d4389f9afcea267de2ac5b0b02972a7c0d6fc72e3e53519ad6a9a5478"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 5,
+      "label": "combat/plan-continue",
+      "decision_id": "79c01543-73d0-40c6-b86f-960aebcadaf8",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:178:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false|1:SHIV:true|2:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "SHIV",
+          "upgraded": false
+        },
+        "target": {
+          "id": "TEST_SUBJECT"
+        },
+        "turn": 5,
+        "from": "line",
+        "hand": "NOXIOUS_FUMES+,SHIV,SHIV",
+        "enemies": "0:TEST_SUBJECT"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:52.368Z",
+      "result": "completed: Action completed.",
+      "_line": 271507,
+      "_source_sha256": "04065e677edd3fc8082978811754fb1f7d89e0e5ccf30615ef2e43e520c2733a"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 5,
+      "label": "combat/plan-continue",
+      "decision_id": "e88644b3-2062-4cd2-bb68-e3d22511044c",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:169:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false|1:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:6|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "SHIV",
+          "upgraded": false
+        },
+        "target": {
+          "id": "TEST_SUBJECT"
+        },
+        "turn": 5,
+        "from": "line",
+        "hand": "NOXIOUS_FUMES+,SHIV",
+        "enemies": "0:TEST_SUBJECT"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:53.533Z",
+      "result": "completed: Action completed.",
+      "_line": 271508,
+      "_source_sha256": "cb14f42591682628da0811f8ce3a6ea3255389a8dff83005b2fc173a6950768a"
+    },
+    {
+      "screen": "COMBAT",
+      "floor": 48,
+      "turn": 5,
+      "label": "combat/least-loss",
+      "decision_id": "bc312f24-f13d-4912-ae04-3f38b0df9e7e",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:160:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:6|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "chosen": {
+        "action": "end_turn"
+      },
+      "expect": {
+        "turn": 5,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 6,
+      "run_id": "YF0LXT1QSTGG",
+      "observed_ts": "2026-10-07T09:15:54.563Z",
+      "result": "completed: Action completed.",
+      "_line": 271509,
+      "_source_sha256": "107d305e2253c4c82824c5c871e6650d48bb0667363ba575e630a5c390975980"
+    }
+  ],
+  "states": [
+    {
+      "observed_ts": "2026-10-07T09:15:04.562Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:23:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:PHANTOM_BLADES:false\",\"hp\":27,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:3|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 2,
+        "combat": {
+          "player": {
+            "current_hp": 27,
+            "block": 0,
+            "energy": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "PHANTOM_BLADES",
+              "upgraded": true
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 23,
+              "max_hp": 111,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "ENRAGE_POWER",
+                  "name": "激怒",
+                  "amount": 3,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 9,
+                  "is_debuff": false
+                },
+                {
+                  "index": 3,
+                  "power_id": "WEAK_POWER",
+                  "name": "虚弱",
+                  "amount": 1,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 27
+        }
+      },
+      "_line": 277507,
+      "_source_sha256": "c579aa13e544e9e39f9f2bca5d997b8e820f5706776816c3c7e78175a78f4368"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:09.429Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:23:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:POISONED_STAB:true|2:EXPERTISE:true|3:STRIKE_SILENT:true|4:OUTBREAK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 3,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 3,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 4,
+                "power_id": "VULNERABLE_POWER",
+                "name": "易伤",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "card_id": "POISONED_STAB",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "EXPERTISE",
+              "upgraded": true
+            },
+            {
+              "index": 3,
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 4,
+              "card_id": "OUTBREAK",
+              "upgraded": true
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 23,
+              "max_hp": 111,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "ENRAGE_POWER",
+                  "name": "激怒",
+                  "amount": 3,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 9,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277508,
+      "_source_sha256": "dfa4c19800542bad1d0c7c8ee015954a1e8f2122609cefe861acf3702b17c522"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:10.399Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:15:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:EXPERTISE:true|2:STRIKE_SILENT:true|3:OUTBREAK:false\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 3,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 2,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 4,
+                "power_id": "VULNERABLE_POWER",
+                "name": "易伤",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "card_id": "EXPERTISE",
+              "upgraded": true
+            },
+            {
+              "index": 2,
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "OUTBREAK",
+              "upgraded": true
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 15,
+              "max_hp": 111,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "ENRAGE_POWER",
+                  "name": "激怒",
+                  "amount": 3,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 9,
+                  "is_debuff": false
+                },
+                {
+                  "index": 3,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 4,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277509,
+      "_source_sha256": "f4309c37200d50753a0862688e951236e1670e0c58d0975110ad8a9ac9822d35"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:12.098Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:15:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:STRIKE_SILENT:true|2:OUTBREAK:false|3:BACKFLIP:true|4:BLADE_DANCE:true|5:PIERCING_WAIL:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 3,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 1,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 4,
+                "power_id": "VULNERABLE_POWER",
+                "name": "易伤",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "OUTBREAK",
+              "upgraded": true
+            },
+            {
+              "index": 3,
+              "card_id": "BACKFLIP",
+              "upgraded": false
+            },
+            {
+              "index": 4,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 5,
+              "card_id": "PIERCING_WAIL",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 15,
+              "max_hp": 111,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "ENRAGE_POWER",
+                  "name": "激怒",
+                  "amount": 3,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 12,
+                  "is_debuff": false
+                },
+                {
+                  "index": 3,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 4,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277510,
+      "_source_sha256": "dd24fd407dc236d458473453826d22efc43914a77e0abb296e2d3a72c1beef23"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:12.968Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:4:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:OUTBREAK:false|2:BACKFLIP:true|3:BLADE_DANCE:true|4:PIERCING_WAIL:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 3,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 1,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 4,
+                "power_id": "VULNERABLE_POWER",
+                "name": "易伤",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "card_id": "OUTBREAK",
+              "upgraded": true
+            },
+            {
+              "index": 2,
+              "card_id": "BACKFLIP",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 4,
+              "card_id": "PIERCING_WAIL",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 4,
+              "max_hp": 111,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "ENRAGE_POWER",
+                  "name": "激怒",
+                  "amount": 3,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 12,
+                  "is_debuff": false
+                },
+                {
+                  "index": 3,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 4,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277511,
+      "_source_sha256": "023a22db284e4808dac1e87c48b0f7f2dec135f0b7e6f6c8d2d77e619d1c23bc"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:14.651Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:4:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:false|1:OUTBREAK:false|2:BLADE_DANCE:false|3:PIERCING_WAIL:false|4:DEFEND_SILENT:false|5:AFTERIMAGE:false\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:10:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:2|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:2|VULNERABLE_POWER:1\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 3,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 10,
+            "energy": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 4,
+                "power_id": "VULNERABLE_POWER",
+                "name": "易伤",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "card_id": "OUTBREAK",
+              "upgraded": true
+            },
+            {
+              "index": 2,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 3,
+              "card_id": "PIERCING_WAIL",
+              "upgraded": false
+            },
+            {
+              "index": 4,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 5,
+              "card_id": "AFTERIMAGE",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 4,
+              "max_hp": 111,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "ENRAGE_POWER",
+                  "name": "激怒",
+                  "amount": 3,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 15,
+                  "is_debuff": false
+                },
+                {
+                  "index": 3,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 4,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277512,
+      "_source_sha256": "3d6d02f3a7bd79614db2e6e8c136bb2c75fa116362c341c8fc966641f7e8500b"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:21.694Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:212:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:PIERCING_WAIL:true|2:SURVIVOR:true|3:PIERCING_WAIL:true|4:STRIKE_SILENT:true|5:CALCULATED_GAMBLE:true|6:NOXIOUS_FUMES:true|7:HAND_TRICK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 4,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 3,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "PIERCING_WAIL",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "SURVIVOR",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "PIERCING_WAIL",
+              "upgraded": false
+            },
+            {
+              "index": 4,
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 5,
+              "card_id": "CALCULATED_GAMBLE",
+              "upgraded": false
+            },
+            {
+              "index": 6,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            },
+            {
+              "index": 7,
+              "card_id": "HAND_TRICK",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 212,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277513,
+      "_source_sha256": "2b83ae31340799e21a70851f09dde10aa4a705688cbc9db342c1551958a4bbf0"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:32.129Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:211:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:SURVIVOR:true|2:PIERCING_WAIL:true|3:STRIKE_SILENT:true|4:CALCULATED_GAMBLE:true|5:NOXIOUS_FUMES:true|6:HAND_TRICK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 4,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 2,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "SURVIVOR",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "PIERCING_WAIL",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 4,
+              "card_id": "CALCULATED_GAMBLE",
+              "upgraded": false
+            },
+            {
+              "index": 5,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            },
+            {
+              "index": 6,
+              "card_id": "HAND_TRICK",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 211,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": -6,
+                  "is_debuff": true
+                },
+                {
+                  "index": 3,
+                  "power_id": "PIERCING_WAIL_POWER",
+                  "name": "尖啸",
+                  "amount": 6,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277514,
+      "_source_sha256": "ab0a2dab73de43db174c2366fc859d315c0fcf06b42b830b582fb4e0ea271441"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:33.333Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:210:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:SURVIVOR:true|2:STRIKE_SILENT:true|3:CALCULATED_GAMBLE:true|4:NOXIOUS_FUMES:true|5:HAND_TRICK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 4,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 1,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "SURVIVOR",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "CALCULATED_GAMBLE",
+              "upgraded": false
+            },
+            {
+              "index": 4,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            },
+            {
+              "index": 5,
+              "card_id": "HAND_TRICK",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 210,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": -12,
+                  "is_debuff": true
+                },
+                {
+                  "index": 3,
+                  "power_id": "PIERCING_WAIL_POWER",
+                  "name": "尖啸",
+                  "amount": 12,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277515,
+      "_source_sha256": "efb88e6f58e8ed923d409311ab7ab370ea340463492f8d1959d1660dec168b6d"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:34.200Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:198:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:SURVIVOR:true|2:CALCULATED_GAMBLE:true|3:NOXIOUS_FUMES:true|4:HAND_TRICK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 4,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 1,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "SURVIVOR",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "CALCULATED_GAMBLE",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            },
+            {
+              "index": 4,
+              "card_id": "HAND_TRICK",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 198,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": -12,
+                  "is_debuff": true
+                },
+                {
+                  "index": 3,
+                  "power_id": "PIERCING_WAIL_POWER",
+                  "name": "尖啸",
+                  "amount": 12,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277516,
+      "_source_sha256": "60010f38c96dc3edbdc87db144baf42247ddb9028d21cc7d1339cd49e1dda76c"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:35.700Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:DEADLY_POISON:true|2:ACCELERANT:true|3:ANTICIPATE:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 4,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 1,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "card_id": "DEADLY_POISON",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "ACCELERANT",
+              "upgraded": true
+            },
+            {
+              "index": 3,
+              "card_id": "ANTICIPATE",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 197,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": -12,
+                  "is_debuff": true
+                },
+                {
+                  "index": 3,
+                  "power_id": "PIERCING_WAIL_POWER",
+                  "name": "尖啸",
+                  "amount": 12,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277517,
+      "_source_sha256": "51059d9c5f089078e7e16def1b7c0872bda6149d1c309ed18fb4c68beff18e7e"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:39.663Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:false|1:DEADLY_POISON:false|2:ANTICIPATE:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 4,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 4,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "card_id": "DEADLY_POISON",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "ANTICIPATE",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 197,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": -12,
+                  "is_debuff": true
+                },
+                {
+                  "index": 3,
+                  "power_id": "PIERCING_WAIL_POWER",
+                  "name": "尖啸",
+                  "amount": 12,
+                  "is_debuff": true
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277518,
+      "_source_sha256": "8209a12b4ac6907cec2531a01d364dcbc0b5eba95c0e99fa0ca6cc5acdf6c7d7"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:46.263Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:SURVIVOR:true|1:BLADE_DANCE:true|2:DEFEND_SILENT:true|3:DEFEND_SILENT:true|4:NOXIOUS_FUMES:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 5,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 0,
+            "energy": 3,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "SURVIVOR",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 2,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 4,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 197,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277519,
+      "_source_sha256": "4a8de1d2700cfd5a74ce2a837dab72c9ee818748902d47e28e34b483ef4bdcc9"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:47.041Z",
+      "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:DEFEND_SILENT:true|2:DEFEND_SILENT:true|3:NOXIOUS_FUMES:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:13:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "CARD_SELECTION",
+        "turn": 5,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 13,
+            "energy": 2,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 197,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277520,
+      "_source_sha256": "d8411655d98dbe721ff408801b3a4e909616044632c21725cb4ce8f6488fa7cf"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:47.999Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:197:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:DEFEND_SILENT:true|2:NOXIOUS_FUMES:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:13:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 5,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 13,
+            "energy": 2,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "BLADE_DANCE",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 197,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277521,
+      "_source_sha256": "494661d2847814ec89b3a9963e3153eb333234be479940f678530347af0df3a9"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:49.466Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:196:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:DEFEND_SILENT:true|1:NOXIOUS_FUMES:true|2:SHIV:true|3:SHIV:true|4:SHIV:true|5:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:13:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 5,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 13,
+            "energy": 1,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false
+            },
+            {
+              "index": 1,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            },
+            {
+              "index": 2,
+              "card_id": "SHIV",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "SHIV",
+              "upgraded": false
+            },
+            {
+              "index": 4,
+              "card_id": "SHIV",
+              "upgraded": false
+            },
+            {
+              "index": 5,
+              "card_id": "SHIV",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 196,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277522,
+      "_source_sha256": "0c465d41b5b34852f22a3d2f88fb544f2b54816b425fa56593eb1df7f1c62091"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:50.314Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:196:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false|1:SHIV:true|2:SHIV:true|3:SHIV:true|4:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 5,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 23,
+            "energy": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "SHIV",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "SHIV",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "SHIV",
+              "upgraded": false
+            },
+            {
+              "index": 4,
+              "card_id": "SHIV",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 196,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277523,
+      "_source_sha256": "9675a2aa0ed2b134f9c46afa3766ead9db7e7cb3b3063ae195b97158060e49f1"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:51.333Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:187:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false|1:SHIV:true|2:SHIV:true|3:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 5,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 23,
+            "energy": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "SHIV",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "SHIV",
+              "upgraded": false
+            },
+            {
+              "index": 3,
+              "card_id": "SHIV",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 187,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277524,
+      "_source_sha256": "f9a4485d396f6018f0eb066aa0f79857267464ada617f16971789eba1f03c69c"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:52.368Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:178:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false|1:SHIV:true|2:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 5,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 23,
+            "energy": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "SHIV",
+              "upgraded": false
+            },
+            {
+              "index": 2,
+              "card_id": "SHIV",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 178,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277525,
+      "_source_sha256": "8d095994701a0f0793af27aee4e36b00bebc66bf29af631df96c5bd597bda8db"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:53.533Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:169:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false|1:SHIV:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:6|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 5,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 23,
+            "energy": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 6,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            },
+            {
+              "index": 1,
+              "card_id": "SHIV",
+              "upgraded": false
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 169,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277526,
+      "_source_sha256": "e9d39fc83ad0ab9c8e0c0b1969e1ef8a0d11f17dab966c6b2abf767f4a579741"
+    },
+    {
+      "observed_ts": "2026-10-07T09:15:54.563Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:160:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:6|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "state": {
+        "run_id": "YF0LXT1QSTGG",
+        "screen": "COMBAT",
+        "turn": 5,
+        "combat": {
+          "player": {
+            "current_hp": 18,
+            "block": 23,
+            "energy": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 6,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ]
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "current_hp": 160,
+              "max_hp": 212,
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ]
+            }
+          ]
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 48,
+          "current_hp": 18
+        }
+      },
+      "_line": 277527,
+      "_source_sha256": "ff1181dba07de421aac3e14046518deeaef2c3f5ba3c506ee743f2c410b2fed6"
+    }
+  ],
+  "provenance": {
+    "source": "logs/states.jsonl and logs/decisions.jsonl",
+    "method": "Literal field projection; _line and _source_sha256 refer to original complete raw rows.",
+    "run_id": "YF0LXT1QSTGG",
+    "floor": 48,
+    "ledger": [
+      "silent-0021",
+      "silent-0027",
+      "silent-0028",
+      "silent-0085"
+    ]
+  }
+}

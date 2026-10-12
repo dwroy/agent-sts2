@@ -32,6 +32,10 @@ export interface CardInfo {
   descriptionRaw: string;
   vars: Record<string, unknown>[];
   xCost: boolean;
+  /** Mod catalogue fields retained for reference facts, not inferred simulation rules. */
+  upgrade?: Record<string, unknown> | null;
+  starCost?: number | null;
+  xStarCost?: boolean;
 }
 
 export interface MonsterInfo {
@@ -96,6 +100,7 @@ export interface Knowledge {
   event(id: string | null | undefined): EventInfo | null;
   stats: KnowledgeStats;
   source: "live" | "cache";
+  catalog?: { modVersion: string; fetchedAt: string };
 }
 
 const COLLECTIONS = ["cards", "monsters", "relics", "potions", "powers", "events", "characters"] as const;
@@ -127,6 +132,9 @@ function parseCard(entry: unknown): CardInfo | null {
     descriptionRaw: str(obj["description_raw"]),
     vars: asArray(obj["vars"]).map(asRecord),
     xCost: obj["is_x_cost"] === true,
+    upgrade: Object.keys(asRecord(obj["upgrade"])).length ? asRecord(obj["upgrade"]) : null,
+    starCost: numOrNull(obj["star_cost"]),
+    xStarCost: obj["is_x_star_cost"] === true,
   };
 }
 
@@ -211,7 +219,7 @@ function buildIndex<T>(entries: unknown[], parse: (entry: unknown) => T | null):
   return map;
 }
 
-export function makeKnowledge(collections: Partial<Record<CollectionName, unknown[]>>, source: "live" | "cache"): Knowledge {
+export function makeKnowledge(collections: Partial<Record<CollectionName, unknown[]>>, source: "live" | "cache", catalog?: Knowledge["catalog"]): Knowledge {
   const cards = buildIndex(collections.cards ?? [], parseCard);
   const monsters = buildIndex(collections.monsters ?? [], parseMonster);
   const relics = buildIndex(collections.relics ?? [], parseRelic);
@@ -238,6 +246,7 @@ export function makeKnowledge(collections: Partial<Record<CollectionName, unknow
       characters: asArray(collections.characters).length,
     },
     source,
+    ...(catalog ? { catalog } : {}),
   };
 }
 
@@ -277,7 +286,7 @@ export async function loadKnowledge(client: ModClient, options: LoadKnowledgeOpt
     try {
       const cached = JSON.parse(await readFile(cachePath, "utf8")) as KnowledgeFile;
       if (cached.mod_version === options.modVersion && cached.collections?.cards?.length) {
-        return makeKnowledge(cached.collections, "cache");
+        return makeKnowledge(cached.collections, "cache", { modVersion: cached.mod_version, fetchedAt: cached.fetched_at });
       }
     } catch {
       // no usable cache
@@ -303,7 +312,7 @@ export async function loadKnowledge(client: ModClient, options: LoadKnowledgeOpt
   } catch {
     // A read-only filesystem is not fatal: we simply refetch next time.
   }
-  return makeKnowledge(collections, "live");
+  return makeKnowledge(collections, "live", { modVersion: file.mod_version, fetchedAt: file.fetched_at });
 }
 
 export function describeKnowledge(knowledge: Knowledge): string {
