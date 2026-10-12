@@ -1,0 +1,196 @@
+[
+  {
+    "id": "silent-proposal-c20b5139dd0dff71",
+    "title": "感染棱柱技能污染",
+    "ledger": [
+      "silent-0168"
+    ],
+    "runs": [
+      "DUZUBAJ3A8GP"
+    ],
+    "evidence": "DUZUBAJ3A8GP F27 T4—6；states 274830—274843。T4污染0→3→3→6；T5火花6、三技能污染0→6→12→18，显示攻击12→17→21→26，17挡，46→37血；敌93→80，毒13→12。",
+    "counterexamples": "技能同时施毒、施弱或给挡，不能只计污染成本；勒紧建立时未再增加污染。",
+    "reason": "当前逐技能污染与火花后续增长路径已有；缺历史实际移动表输入及相同起点替线的完整后继，无法验证跨轮联合模型或少打技能的净收益。",
+    "expected_behavior_and_validation": "保留技能毒、弱、挡及逐击污染的分账；不启用少打技能规则。后续冻结当前进阶的实际移动表和含弃牌的完整执行链，先逐动作核预测与实值，再以独立局验证策略。",
+    "state": "waiting"
+  },
+  {
+    "id": "silent-proposal-ae9e692d680e3819",
+    "title": "失落与遗忘的属性来源返还",
+    "ledger": [
+      "silent-0183",
+      "silent-0005"
+    ],
+    "runs": [
+      "5PM6JAQG6FNQ"
+    ],
+    "evidence": "5PM6JAQG6FNQ F39 首试T4—6；states 274351—274366。两步法把敏捷−4→−2→0；失落从2血带3毒到下一轮消失，力量−4→0，遗忘仍活着；T6又到−2敏捷。末试T4敏捷仅−2，8血最终死亡（274391—274397）。",
+    "counterexamples": "杀失落返力不能证明遗忘死亡返敏；同帧总力量或敏捷不能区分抢夺来源、临时修正和主动增益。",
+    "reason": "缺遗忘死亡返敏、多个来源抢同一属性和临时属性混合返还的相邻帧，不能验收完整来源返还模型或固定击杀序。",
+    "expected_behavior_and_validation": "只保留已见负属性与端点变化；未来需冻结各来源的抢夺、死亡、返还、再抢序列，再验证逐实体来源账本。",
+    "state": "waiting"
+  },
+  {
+    "id": "silent-proposal-52f1e1bd2e7db0ed",
+    "title": "下水道蚌加压与覆甲",
+    "ledger": [
+      "silent-0231"
+    ],
+    "runs": [
+      "CA5KE8GFJ9X2"
+    ],
+    "evidence": "CA5KE8GFJ9X2 F13 T1—5；states 273238—273269。两次加压后力0→4→8，喷水11→15→19，后两次施弱显示11/14；轮初覆甲9/9/8/7/6；末轮2血10挡对14死亡，敌受荆棘后19→16。",
+    "counterexamples": "零血实际净损2不是全部需损4；覆甲同步下降不单独证明其所有触发条件或时序。",
+    "reason": "当前进阶首样本读取和房间成本五样本门槛已有；历史实际移动表输入、覆甲独立触发与其他来源叠加未齐，不能完成整个成长/覆甲模型验收。",
+    "expected_behavior_and_validation": "保留首样本HP/攻击读取和五样本房间代价门槛；需实际调用快照及独立触发对照，不能用本局代替固定房间成本。",
+    "state": "waiting"
+  },
+  {
+    "id": "silent-proposal-6dd8bbff876be528",
+    "title": "电击机器人的成长与实例身份",
+    "ledger": [
+      "silent-0233",
+      "silent-0209"
+    ],
+    "runs": [
+      "5PM6JAQG6FNQ"
+    ],
+    "evidence": "5PM6JAQG6FNQ F38 T3—4；states 274308/274313。同一连续存活的23上限电击机器人力2→4、攻击17→19，索引4→3；T3玩家61→31，T4结束后仅主怪。",
+    "counterexamples": "敌人退场会重排index；enemy_id标的是种类。先杀机器人的候选未整战执行，不能宣称其能保27血救后场。",
+    "reason": "高电压逐轮增长路径已有；缺同种新旧召唤并存/替换的稳定实例标识与实际移动表快照，不能验收新旧计数隔离全范围。",
+    "expected_behavior_and_validation": "保留既有成长模型，不规定固定杀序；需要同类重复召唤的连续状态及实例绑定，再检查新实体起始力和旧实体成长。",
+    "state": "waiting"
+  },
+  {
+    "id": "silent-proposal-578e415a259e6835",
+    "title": "沙虫SL、护栏与能力兑现审计",
+    "ledger": [
+      "silent-0005",
+      "silent-0006",
+      "silent-0018",
+      "silent-0079",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0125",
+      "silent-0023",
+      "silent-0027",
+      "silent-0046",
+      "silent-0016"
+    ],
+    "runs": [
+      "8JRE1C4H4Z2W"
+    ],
+    "evidence": "8JRE1C4H4Z2W F33 首/三试T2 decisions270216/270282同指纹：实损3/15、敌净扣10/17；第二试T5与末试T11也在固定输入中。末轮5血22挡对37，实际净损5，显示需损15。",
+    "counterexamples": "末试T2防御替换延至T11仍败，不能认定所有保血替换错误；六尝试只是一局。F17护栏与路线/药水完整前史本批未重新全量抽取，原提案只保留作背景。",
+    "reason": "选择、派发及终局端点子项已有；当前66段中21段被重问替代，完整候选执行、跨重规划资源归因及能力收益仍不能认证。",
+    "expected_behavior_and_validation": "沿原审计区分原答、护栏、SL、单动作回执和实际端点；需完整候选步骤身份、重规划/选择及状态转移证据，不能将整轮净变化记给首次候选。",
+    "state": "waiting"
+  },
+  {
+    "id": "silent-proposal-c0767768bf6a7ab1",
+    "title": "实验体全败SL血价与覆盖重放",
+    "ledger": [
+      "silent-0079"
+    ],
+    "runs": [
+      "YF0LXT1QSTGG"
+    ],
+    "evidence": "YF0LXT1QSTGG F48 二/三试T1 decisions271309/271348同指纹；实损0/9，敌净扣45/38。F48六次失败不能抵消原提案记录的F33第二次SL获胜反例。",
+    "counterexamples": "第四试T5候选因弃牌后重问而未完成；恢复挡续步的末试仍败。F33胜局只引用原提案范围，本批固定输入聚焦F48。",
+    "reason": "已有原/替预测差与端点记录，但覆盖重放和弃牌后完整候选执行未证实，也没有受控完整胜线支持探索禁令或血价惩罚系数。",
+    "expected_behavior_and_validation": "继续分列候选预测与实际端点，不改探索选择；补冻结覆盖路径、弃牌选择和完整续步的时间/身份链及后置独立胜线。",
+    "state": "waiting"
+  },
+  {
+    "id": "silent-proposal-a46bdb7fe711d79a",
+    "title": "实验体分阶段毒与能力收益",
+    "ledger": [
+      "silent-0021",
+      "silent-0027",
+      "silent-0028",
+      "silent-0085"
+    ],
+    "runs": [
+      "YF0LXT1QSTGG"
+    ],
+    "evidence": "YF0LXT1QSTGG F48 末试T3—5；states277512/277513由4/111血、4毒、15力到212/212、零毒零力；277520—277527已建触媒2，末帧零毒，18血23挡对44，敌197→160。",
+    "counterexamples": "先前尝试已建毒雾/余像也失败；后获得敏捷不能倒补已有挡。当前毒0不证明整个候选未来无施毒收益，不能强制能力先手。",
+    "reason": "当前阶段、本帧已建/持有和零毒事实已有；缺跨阶段各伤害来源的完整中间结算帧及候选执行链，不能认证累计已兑现收益或据此改排序。",
+    "expected_behavior_and_validation": "继续逐帧读取当前阶段，不沿用旧毒/力，不预支未建立能力；累计结算要有阶段边界、毒/攻击/消耗等来源分离及完整执行证明。",
+    "state": "waiting"
+  },
+  {
+    "id": "silent-proposal-1044224808015e5c",
+    "title": "双蟹零胜并列SL血价",
+    "ledger": [
+      "silent-0079"
+    ],
+    "runs": [
+      "XP2SL33HT0D9"
+    ],
+    "evidence": "XP2SL33HT0D9 F33 首/第二试T3 decisions271992/272040同指纹，实损9/14、净扣24/27；首/末T1 decisions271982/272195同指纹，实损2/10、净扣25/34，替线同时触发力量成长。",
+    "counterexamples": "后续抽序、力量和动作一并变化，整战回合数不是单牌因果；末试T2零损/T3损4反对一律拒绝付血探索。",
+    "reason": "两组当轮差不能隔离成长及后继；缺相同资源起点的完整替线结果和独立胜线，不足启用零胜并列时固定低损血优先。",
+    "expected_behavior_and_validation": "保留全部候选和原探索排名，分别显示当轮损血、输出、成长、样本及封顶；后续按独立局切分验证窄策略，不拟全局HP系数。",
+    "state": "waiting"
+  },
+  {
+    "id": "silent-proposal-7cbc6005db712ba9",
+    "title": "双蟹朝向、减力和轮初挡",
+    "ledger": [
+      "silent-0021",
+      "silent-0005",
+      "silent-0007",
+      "silent-0063",
+      "silent-0065",
+      "silent-0241",
+      "silent-0242"
+    ],
+    "runs": [
+      "XP2SL33HT0D9"
+    ],
+    "evidence": "XP2SL33HT0D9 F33 末试T2—5；states278236—278242普通镣铐力0→−9→0、船夹板轮初14，斗篷后20挡，37血不变；278249—278260火箭57经转向/虚弱到28，四敏脆弱下6挡，末轮11血被17−6耗尽。",
+    "counterexamples": "双蟹末帧同时含Defend/Sleep的total_damage=null，现有终局消费者没有将null填零；临时减力和船夹板不能沿用到每轮。",
+    "reason": "当前端点与末轮实际净损11已覆盖；完整联合候选收益、额外触发和混合意图的未知字段语义未齐，不能整项关闭或补零后改排序。",
+    "expected_behavior_and_validation": "保持普通已见条件参考，逐项分开朝向、弱、挡及临时恢复；额外触发、来源叠加和完整执行链需独立验证。",
+    "state": "waiting"
+  },
+  {
+    "id": "silent-proposal-c59f592f1427a67e",
+    "title": "两局能力、恢复及资源综合审计",
+    "ledger": [
+      "silent-0005",
+      "silent-0006",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0028",
+      "silent-0027",
+      "silent-0079",
+      "silent-0046",
+      "silent-0085",
+      "silent-0060",
+      "silent-0063",
+      "silent-0065",
+      "silent-0062",
+      "silent-0039",
+      "silent-0013",
+      "silent-0011",
+      "silent-0023",
+      "silent-0018",
+      "silent-0087",
+      "silent-0241",
+      "silent-0242"
+    ],
+    "runs": [
+      "YF0LXT1QSTGG",
+      "XP2SL33HT0D9"
+    ],
+    "evidence": "YF0LXT1QSTGG F48 T1/T4/T5与XP2SL33HT0D9 F33 T1—5；继承上述三组同指纹对照、阶段切换、临时减力和轮初挡。两局审计110段，44段被下一题替代。",
+    "counterexamples": "SL恢复不是回血；持有、候选、已建立及已结算四种事实不能混用。原历史101局/1499房与路线药水全链未在本批重新研究，不能以本批两房验证冒称覆盖。",
+    "reason": "现有局部审计未认证整候选收益、跨重规划归因及完整恢复/资源链；宽机制包不能由两局局部检查记为整体完成。",
+    "expected_behavior_and_validation": "按原ID继续补完整恢复链、能力施放与后继消费，并保留未观察来源和其他进阶等价；不另建重复提案或拟固定路线/用药/成长权重。",
+    "state": "waiting"
+  }
+]
