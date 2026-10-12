@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-200522/agent
+
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 121ms
+     × all resolve 120ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ …(6) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "learner/runs/20261012-200540-fix-batch/batch-c-illusion-fixture.fixed.ts: ../src/reflex/potion-mc.js",
++   "learner/runs/20261012-200540-fix-batch/batch-c-illusion-fixture.fixed.ts: ../src/reflex/rollout-live.js",
++   "learner/runs/20261012-200540-fix-batch/batch-c-illusion-fixture.fixed.ts: ./rollout-clock-fixture.js",
++   "learner/runs/20261012-200540-fix-batch/batch-c-illusion-fixture.without-fix.ts: ../src/reflex/potion-mc.js",
++   "learner/runs/20261012-200540-fix-batch/batch-c-illusion-fixture.without-fix.ts: ../src/reflex/rollout-live.js",
++   "learner/runs/20261012-200540-fix-batch/batch-c-illusion-fixture.without-fix.ts: ./rollout-clock-fixture.js",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 340 passed (341)
+      Tests  1 failed | 3396 passed (3397)
+   Start at  20:16:20
+   Duration  1076.96s (transform 10.27s, setup 18.86s, import 55.09s, tests 952.11s, environment 40ms)
+
