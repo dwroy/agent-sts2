@@ -1,0 +1,120 @@
+已提交 `1a00f10af`：补充静默异鱼候选的持牌失血来源与未决弃牌说明。依据 751、KEN 两局证据，关联账本 `silent-0176/0079`。
+
+撤功能时 4 项测试失败；恢复后 tsc、沙箱 3380 项测试及 gitleaks 通过。live 预检发现 12 处共享记录冲突，按任务停止合入；无上线版本。工作树干净，10 个父提案仍因各自缺证保持 waiting。
+
+[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941-s2/learner/runs/20261012-150956-strategy-proposal/proposal.md) · [报告与冲突清单](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941-s2/learner/runs/20261012-150956-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-150941-s2-strategy-proposal",
+  "base": "3f159fc6b04971a6b907a2401c6be3f7f3d56a6d",
+  "runs": [
+    "751FN9QM9MHQ",
+    "KV0JHNJCKXLS",
+    "YQL8RZ8BWN1E",
+    "L9SGRBB5R698",
+    "PU80F84P6HPN",
+    "KEN58SH9SLZ6"
+  ],
+  "fixes": [
+    {
+      "id": "silent-held-loss-facts",
+      "commit": "1a00f10af95c78dfbf75de318a0083256110cf8a",
+      "summary": "限定候选及选择审计展示保守持牌失血与未决弃牌",
+      "ledger": ["silent-0176", "silent-0079"],
+      "state": "committed_not_merged"
+    }
+  ],
+  "skipped": [
+    {
+      "reason": "live锁内merge-tree预检发现12个共享记录路径冲突，按任务停止，未覆盖现场。"
+    }
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3380
+  },
+  "code_proposals": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "implementation_domains": ["combat", "sl"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "持牌预测子项已提交未上线；仍缺751 T7弃牌续步的完整执行认证与同随机输入整战后继。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "损血来源子项已提交未上线；缺751 F13不饮用或留药至后战的完整受控结果。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "仍缺完整弃牌执行、原替线整战及探索准入验证；相关SL不能充作独立样本。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "仅补呼唤预测来源子项；敏捷、毒、荆棘、药水与未决选择的联合消费者及整战反事实未全部认证。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "KV T5净扣36/29且均零损已核；缺毒、回血、续问归属及保毒/删毒的受控整战。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "已有巨兽阶段记录；仍缺阶段药水联合收益及改变SL参考排序的完整对照。"
+    },
+    {
+      "id": "silent-proposal-9733bb80f445aeae",
+      "state": "waiting",
+      "reason": "缺提前喝、不喝、保留毒药及新参考序的受控后继；残壳毒2到8不能估整战持有价。"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "state": "waiting",
+      "reason": "KEN七次耗药已核；缺F15不喝或保药到boss分支，重问和随机选牌尚不能认证整线收益。"
+    },
+    {
+      "id": "silent-proposal-86a7db08d1a31976",
+      "state": "waiting",
+      "reason": "KEN T10持牌预测子项已提交未上线；缺T5能力窗口完整归属、受控整战及新局验证。"
+    },
+    {
+      "id": "silent-proposal-e282a9131b99129a",
+      "state": "waiting",
+      "reason": "仍缺能力与续问的完整执行认证及独立局受控后继，不能以部分审计实现关闭父项。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941-s2/learner/runs/20261012-150956-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12ef2-68a5-7400-bd34-d55225783ba4
+轮数：1；工具调用：command_execution×65 file_change×3
+token：输入 187.8k、输出 36.1k（其中推理 10.4k）、cache 读 5369.9k、cache 写 0（命中 96.6%）
+成本：未提供
+耗时：1399.4 s（墙钟）
+时间：首个事件 14.5 s、模型首个输出 21.1 s、首次工具 28.6 s、末次工具结束 1341.9 s；工具内共 617.6 s，其余（模型生成、推理、网络）767.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941-s2）；模型的工具调用 exec×42；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T15-10-00-01a12ef2-68a5-7400-bd34-d55225783ba4.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-150941-s2/learner/runs/20261012-150956-strategy-proposal.jsonl

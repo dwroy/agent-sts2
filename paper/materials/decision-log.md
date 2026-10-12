@@ -2424,3 +2424,7 @@
 
 - 2026-10-12 15:35:21 CST 运维 codex：144302复盘K643VJCTQT0J已核唯一标题/原前缀及草稿SHA，812决策/838状态/43brain/8计划/7SL逐原偏移对象一致；1add/9证据更新/10提案链接共20原CLI行按顺序归档，账本物理436/提交408项0问题。无新纯基础设施bug，b6b7ed80/5e8c4c7c/b5663028三机制提案沿原队列，未补游戏知识或标shipped。
 - 2026-10-12 15:35:21 CST 运维 codex：单次nice paper_dataset.py --no-raw完成exit0/密钥扫描CLEAN，07:26:28.326Z冻结切点、729局/361215记录，5一致性检查通过，K643表唯一812条/复盘已收；保留旧KF9通关879与关界面后880的已知差异，不改原runs。14新输出和两目录237历史文件冻结保存；只提交本轮原复盘/20账本行/自有记录和自动数据，保留并行物理改动，未重跑快照或等待新事件。材料paper/materials/20261012-1524-ops。
+
+- 2026-10-12 15:51:34 CST 运维 codex：15:43策略150941无源码批已核clean/base、原78材料SHA与10 waiting，不造版本/补测；归档10原CLI更新及2纠正说明。核S1.exp187源/main/live实际身份与原16336/16343行后，经ledger.py恢复silent-0021/0079已有上线范围，保留原误降级及并行记录，不把新增提案记完成。
+- 2026-10-12 15:51:34 CST 运维 codex：150941-s2源1a00f10af95c78dfbf75de318a0083256110cf8a五路径已按原自测结果在live-merge.lock内兜底；原红4、沙箱3380和12记录冲突原件保留，当前tsc/5文件43项与源码gitleaks通过，精确patch-id重放并验两分支源码祖先。live21b0e8eebddb0873aca73603b427a4cc7eda1946/treef52c445aa89ad9eeeafa9cc95a3d16c6da14b4b5、mainae5cd7b73c9fd488c79a4520d7662426f99d8ec8，脏notes/刷新/对局保持；仅记S1.held-loss-facts1与0176/0079限定shipped，原10父提案waiting，已双通知Roy；单次learner-recheck请求完整宿主检查，待后续事件。
+- 2026-10-12 15:51:34 CST 运维 codex：144302-fix-batch宿主完整回执核0bd3a70e3234ed4132c772f38983695870ab4d73/treea4c68d04e4cd89ebeaf9caba4aff39041a5cdeb4、tsc0/388文件4185通过2跳过；95e7f050e为原检查树及main/live祖先，追加1524/host-completion.json。无回滚、重复版本或新全套，本轮无复盘事件故不重跑论文快照；材料paper/materials/20261012-1543-ops。
