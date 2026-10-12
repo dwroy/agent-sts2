@@ -1,0 +1,2 @@
+
+- 2026-10-12 13:38:37 CST [watcher codex] Roy本轮要求具体候选牌表，原ops已去重冻结但新ID缺注册入口。本源仅为roy-20261012-concrete-core-decklists增加既有research路径、wrapper精确白名单和学习模板说明；仍共享2策略槽、冻结SHA/实际登记后启动与纯报告验收，不重开旧任务、不改游戏知识/策略/ops prompt。固定调度29项通过；tsc通过，沙箱首轮3324过/本地Python依赖链接缺失1败，补齐既有环境后仅失败项1及未跑paths11通过，合计334文件3336项，原失败保留、无全套重跑；gitleaks0。验证paper/materials/20261012-core-decklists-entry/validation.json。实际合入和学习者启动另验，不把入口实现当牌表报告完成。

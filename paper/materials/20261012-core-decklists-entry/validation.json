@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-12T13:38:36+08:00",
+  "request_id": "roy-20261012-concrete-core-decklists",
+  "base": "c425b7b7b36f4a7ca1532ca62a6b8dd7d1da2216",
+  "scope": "one exact authorized report request on existing research dispatcher, wrapper and learner instructions; same two slots and saved registration gate",
+  "source_paths_sha256": {
+    "ops/strategy_research_jobs.py": "5578038f8c79bba81bec727d2dc934faed5a7451cff99b38f2977350e54ed02c",
+    "ops/codex-ops-learner.sh": "3fb5fb8f6caa7bfd31eaa49a55e1dcee5a4e008b40a630a08001f9a2eb7fc593",
+    "learner/tasks/strategy-proposal.md": "e377621de23b741f2bcc33c7b7629da737f659f750d9ee4bbe5bc3b37a559ea3",
+    "ops/tests/test_strategy_research_scheduling.py": "ad74c2d94f29d49c889380023949b73b49bd44c9357a3acf73bf3f63314b22c4"
+  },
+  "targeted_scheduler_tests": {
+    "command": "nice -n 19 python3 -B ops/tests/test_strategy_research_scheduling.py",
+    "exit": 0,
+    "tests": 29,
+    "source": "captured tool output; no duplicate rerun to create a log"
+  },
+  "sandbox": {
+    "tsc": 0,
+    "initial_exit": 1,
+    "initial_files_passed": 332,
+    "initial_cases_passed": 3324,
+    "initial_failed": "tests/component-usage.test.ts: missing local data/logdb-venv/bin/python before dependency link",
+    "environment_correction": "Link existing project Python environment into isolated worktree; no dependency installation or production-source change.",
+    "failed_file_continuation_exit": 0,
+    "failed_file_continuation_cases": 1,
+    "previously_unrun_paths_exit": 0,
+    "previously_unrun_paths_cases": 11,
+    "unique_required_files": 334,
+    "unique_required_cases": 3336,
+    "whole_suite_reruns": 0,
+    "original_failure_preserved": true
+  },
+  "gitleaks_exit": 0,
+  "no_gameplay_changes": true,
+  "gameplay_version_required": false,
+  "not_launched_by_watcher": true,
+  "logs": {
+    "component-continuation.log": "8774effc26386c1ded2847d8192f6139bfb0a962b8e421adbc278b1b56745931",
+    "gitleaks.log": "4822d38e54532c5aefffdfd3d4b0d3e7809f1c9e01dedd75f0f63c609bfed5dc",
+    "paths-continuation.log": "bb650dd1903f33b5590a01a77cec1022d81bb9680bb96b88fed6e21427664506",
+    "sandbox.log": "7af25660621a9bbac67b64c61d4a1330a90bd2d36616dd12436ddef8a200b8b2"
+  }
+}
