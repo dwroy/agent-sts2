@@ -45,6 +45,8 @@ export interface EngineRequest {
   /** Explicit Codex tier; omitted selects the shared normal default. */
   serviceTier?: string;
   maxTurns?: number;
+  /** Explicit persisted thread; never select the latest session implicitly. */
+  resumeThread?: string;
   /** Our stdio MCP tool server (--with-tools). */
   mcp?: McpLaunchSpec;
   /**
@@ -432,6 +434,9 @@ export function codexKeyCheckCommand(request: EngineRequest, files: string[], bi
  * has no turn limit flag; the launcher's timeout still applies.
  */
 export function codexCommand(request: EngineRequest, prompt: string, binary = "codex"): CommandLine {
+  if (request.resumeThread && !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(request.resumeThread)) {
+    throw new Error("invalid learner resume thread");
+  }
   const writes = request.tools.some((tool) => tool === "Bash" || tool === "Edit" || tool === "Write");
   const args = ["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", request.cwd];
   args.push("-c", `default_permissions=${toml(request.profile ?? LEARNER_PROFILE)}`, ...codexProfileOverrides(request));
@@ -446,6 +451,7 @@ export function codexCommand(request: EngineRequest, prompt: string, binary = "c
     args.push("-c", `${key}.default_tools_approval_mode=${toml("approve")}`);
   }
   for (const feature of LEARNER_CODEX_DISABLED_FEATURES) args.push("--disable", feature);
+  if (request.resumeThread) args.push("resume", request.resumeThread);
   args.push("-");
   return { command: binary, args, stdin: codexPreamble(request.tools, writes) + prompt };
 }

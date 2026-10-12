@@ -119,6 +119,7 @@ export interface LauncherOptions {
   effort?: string;
   maxTurns?: number;
   timeoutMin?: number;
+  resumeThread?: string;
   dryRun: boolean;
   withTools: boolean;
   ascension?: number;
@@ -157,6 +158,12 @@ export function parseArgs(argv: string[]): LauncherOptions {
       case "--effort": options.effort = value(); break;
       case "--max-turns": options.maxTurns = wholeNumber(arg, value()); break;
       case "--timeout-min": options.timeoutMin = wholeNumber(arg, value()); break;
+      case "--resume-thread": {
+        const thread = value();
+        if (!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(thread)) throw new LearnerUsageError("--resume-thread 要明确的会话 UUID");
+        options.resumeThread = thread;
+        break;
+      }
       case "--ascension": {
         // 0 is a real ascension (a new character climbs from A0).
         const raw = value();
@@ -183,6 +190,7 @@ export function parseArgs(argv: string[]): LauncherOptions {
   if (!options.engine) throw new LearnerUsageError("缺少 --engine");
   if (!options.task) throw new LearnerUsageError("缺少 --task");
   if (!options.cwd) throw new LearnerUsageError("缺少 --cwd（agent 的工作目录，要在项目目录里）");
+  if (options.resumeThread && options.engine !== "codex") throw new LearnerUsageError("--resume-thread 仅用于 codex");
   if (!options.withTools && (options.ascension !== undefined || options.knowledgeDir !== undefined)) throw new LearnerUsageError("--ascension / --knowledge-dir 只和 --with-tools 一起用");
   return options as LauncherOptions;
 }
@@ -383,6 +391,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       ...(model ? { model } : {}),
       ...(effort ? { effort } : {}),
       ...(maxTurns !== undefined ? { maxTurns } : {}),
+      ...(options.resumeThread ? { resumeThread: options.resumeThread } : {}),
       ...(options.withTools ? { mcp: toolServerSpec(options, deps.projectRoot, deps.env) } : {}),
     }, deps.env);
     const timeoutMin = options.timeoutMin ?? spec.timeoutMin;
@@ -500,9 +509,23 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     deps.err(`学习者 ${request.engine} / ${prepared.taskName} 已启动（尝试 ${attempt}，PID ${child.pid ?? "?"}），日志 ${logPath}\n`);
     const stdoutDone = new Promise<void>((done) => {
       const lines = createInterface({ input: attemptChild.stdout! });
+      let resumedThread = false;
+      let resumeAcknowledged = false;
       lines.on("line", (line) => {
         evidence.stdout();
         appendFileSync(logPath, `${line}\n`);
+        if (request.resumeThread && !resumeAcknowledged) {
+          try {
+            const item = JSON.parse(line);
+            if (item.type === "thread.started" && item.thread_id === request.resumeThread) resumedThread = true;
+            if (resumedThread && item.type === "item.completed" && item.item?.type === "agent_message") {
+              log({ type: "learner_resume_ack", ts: deps.now().toISOString(), thread_id: request.resumeThread,
+                input_sha256: inputSha, command_sha256: commandSha, batch: lease?.batch ?? null,
+                first_message_sha256: createHash("sha256").update(String(item.item.text)).digest("hex") });
+              resumeAcknowledged = true;
+            }
+          } catch { /* Preserve the original stream; non-JSON lines cannot acknowledge a resume. */ }
+        }
         const event = tracker.feed(line, ms());
         const progress = event && progressLine(request.engine, event);
         if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
