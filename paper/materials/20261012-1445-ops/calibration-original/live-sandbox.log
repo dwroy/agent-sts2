@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+ ❯ tests/rollout-live.test.ts (13 tests | 1 failed) 220625ms
+     × code's ranking, options and auto-acts are unchanged by the rollout 130183ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > code's ranking, options and auto-acts are unchanged by the rollout
+Error: Test timed out in 120000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/rollout-live.test.ts:186:3
+    184|   }), 120_000);
+    185|
+    186|   it("code's ranking, options and auto-acts are unchanged by the rollo…
+       |   ^
+    187|     for (const name of BOARDS) {
+    188|       for (const context of ["v1", "off"] as const) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 334 passed (335)
+      Tests  1 failed | 3356 passed (3357)
+   Start at  14:15:54
+   Duration  368.98s (transform 11.77s, setup 19.76s, import 52.44s, tests 1348.76s, environment 41ms)
+

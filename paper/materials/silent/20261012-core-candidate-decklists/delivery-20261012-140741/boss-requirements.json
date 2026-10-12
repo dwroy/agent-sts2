@@ -1,0 +1,77 @@
+[
+  {
+    "boss": "QUEEN+TORCH_HEAD_AMALGAM",
+    "supported_originals": [
+      "P-LLY",
+      "R-TINGSHA"
+    ],
+    "evidence": [
+      "LLYSRQQ35AVW/A8/F48/T7",
+      "1LMBFGSMCWKU/A4/F48/T11"
+    ],
+    "required_checks": [
+      "多目标当前实血和毒",
+      "活敌当前攻击与可支付生存",
+      "终止前真实输出"
+    ],
+    "counterexample": "49HL2N70CHMU/A10/F49/T1-3低资源重启失败",
+    "target_pass": null
+  },
+  {
+    "boss": "AEONGLASS",
+    "supported_originals": [
+      "D-K367",
+      "S-2SU"
+    ],
+    "evidence": [
+      "K3676LU8B0UH/A1/F48/attempt2/T11-12",
+      "2SU6XN2AEJRD/A6/F48/T10"
+    ],
+    "required_checks": [
+      "实际后继格挡",
+      "已结输出后的敌余血",
+      "玩家资源持续性"
+    ],
+    "counterexample": "HNX4A2WBC34W/A10/F48/T7-T8实际结毒87/84仍死",
+    "target_pass": null
+  },
+  {
+    "boss": "TEST_SUBJECT",
+    "supported_originals": [],
+    "evidence": [
+      "L704TLETMZBM/A10/F48/attempt3/T3-T6",
+      "KAY522KT5NXR/A0/F48/attempt2"
+    ],
+    "required_checks": [
+      "阶段后的真实HP/毒/能力",
+      "多段攻击时的实际格挡与血",
+      "药水已用不恢复"
+    ],
+    "counterexample": "R-BANDAGES原样A10三败；YF0LXT1QSTGG实验体六败",
+    "target_pass": null
+  },
+  {
+    "boss": "observed_F48_to_F49",
+    "supported_originals": [],
+    "evidence": [
+      "49HL2N70CHMU/A10/F48/T1-7",
+      "49HL2N70CHMU/A10/F49/T1-3"
+    ],
+    "observed_sequence": {
+      "first": "AEONGLASS",
+      "hp_entry": 72,
+      "hp_exit": 24,
+      "second": "QUEEN+TORCH_HEAD_AMALGAM",
+      "second_hp_after_opening_heal": 26,
+      "potions": [],
+      "same_permanent_n": 36,
+      "outcome": "failed"
+    },
+    "required_checks": [
+      "同一条样本剩HP/药/复活资源接续",
+      "新战能力与毒重新核现场",
+      "不独立胜率相乘、不补资源"
+    ],
+    "target_pass": null
+  }
+]
