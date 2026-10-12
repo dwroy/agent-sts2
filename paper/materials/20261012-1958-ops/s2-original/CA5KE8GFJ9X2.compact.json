@@ -1,0 +1,2157 @@
+[
+  {
+    "line": 273237,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": null,
+    "chosen": null,
+    "expect": null,
+    "player": {
+      "current_hp": 3,
+      "block": 0,
+      "powers": []
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 58,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273238,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": null,
+    "chosen": null,
+    "expect": null,
+    "player": {
+      "current_hp": 3,
+      "block": 0,
+      "powers": []
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 58,
+        "max_hp": 58,
+        "block": 9,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273239,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": "combat/plan-choice",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "ASSASSINATE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "SEWER_CLAM"
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 3,
+      "block": 0,
+      "powers": []
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 58,
+        "max_hp": 58,
+        "block": 9,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273240,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": "combat/plan-continue",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "ACROBATICS",
+        "upgraded": false
+      },
+      "turn": 1,
+      "from": "line",
+      "hand": "ACROBATICS,ASCENDERS_BANE,CALTROPS,DEFEND_SILENT,FLICK_FLACK,NEUTRALIZE",
+      "enemies": "0:SEWER_CLAM"
+    },
+    "player": {
+      "current_hp": 3,
+      "block": 0,
+      "powers": []
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 57,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273241,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": "selection/choose",
+    "chosen": {
+      "action": "select_deck_card",
+      "option_index": 3
+    },
+    "expect": {
+      "option": {
+        "id": "ASCENDERS_BANE"
+      },
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 3,
+      "block": 0,
+      "powers": []
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 57,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273242,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": "combat/plan-choice",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "NEUTRALIZE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "SEWER_CLAM"
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 3,
+      "block": 0,
+      "powers": []
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 57,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273243,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": "combat/plan-continue",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "CALTROPS",
+        "upgraded": false
+      },
+      "turn": 1,
+      "from": "line",
+      "hand": "CALTROPS,DEFEND_SILENT,DEFEND_SILENT,FLICK_FLACK,STRIKE_SILENT,STRIKE_SILENT",
+      "enemies": "0:SEWER_CLAM"
+    },
+    "player": {
+      "current_hp": 3,
+      "block": 0,
+      "powers": []
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 53,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "8",
+            "damage": 8,
+            "hits": 1,
+            "total_damage": 8,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273244,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": "combat/plan-continue",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1
+    },
+    "expect": {
+      "card": {
+        "id": "FLICK_FLACK",
+        "upgraded": false
+      },
+      "turn": 1,
+      "from": "line",
+      "hand": "DEFEND_SILENT,DEFEND_SILENT,FLICK_FLACK,STRIKE_SILENT,STRIKE_SILENT",
+      "enemies": "0:SEWER_CLAM"
+    },
+    "player": {
+      "current_hp": 3,
+      "block": 7,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 53,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "8",
+            "damage": 8,
+            "hits": 1,
+            "total_damage": 8,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273245,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": "combat/plan",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 1,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 3,
+      "block": 7,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 43,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "8",
+            "damage": 8,
+            "hits": 1,
+            "total_damage": 8,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273246,
+    "floor": 13,
+    "turn": 1,
+    "attempt": null,
+    "label": null,
+    "chosen": null,
+    "expect": null,
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 40,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "8",
+            "damage": 8,
+            "hits": 1,
+            "total_damage": 8,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273247,
+    "floor": 13,
+    "turn": 2,
+    "attempt": null,
+    "label": null,
+    "chosen": null,
+    "expect": null,
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 40,
+        "max_hp": 58,
+        "block": 9,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273248,
+    "floor": 13,
+    "turn": 2,
+    "attempt": null,
+    "label": "combat/plan",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 2
+    },
+    "expect": {
+      "card": {
+        "id": "CLOAK_AND_DAGGER",
+        "upgraded": false
+      },
+      "turn": 2,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 40,
+        "max_hp": 58,
+        "block": 9,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273249,
+    "floor": 13,
+    "turn": 2,
+    "attempt": null,
+    "label": "combat/plan",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "STRIKE_SILENT",
+        "upgraded": false
+      },
+      "target": {
+        "id": "SEWER_CLAM"
+      },
+      "turn": 2,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 6,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 40,
+        "max_hp": 58,
+        "block": 9,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273250,
+    "floor": 13,
+    "turn": 2,
+    "attempt": null,
+    "label": "combat/plan-continue",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 3,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SHIV",
+        "upgraded": false
+      },
+      "target": {
+        "id": "SEWER_CLAM"
+      },
+      "turn": 2,
+      "from": "line",
+      "hand": "DEFEND_SILENT,DEFEND_SILENT,SHIV,SURVIVOR",
+      "enemies": "0:SEWER_CLAM"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 6,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 40,
+        "max_hp": 58,
+        "block": 3,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273251,
+    "floor": 13,
+    "turn": 2,
+    "attempt": null,
+    "label": "combat/plan",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 2,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 6,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 39,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 9,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273252,
+    "floor": 13,
+    "turn": 3,
+    "attempt": null,
+    "label": null,
+    "chosen": null,
+    "expect": null,
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 39,
+        "max_hp": 58,
+        "block": 8,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 8,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "15",
+            "damage": 15,
+            "hits": 1,
+            "total_damage": 15,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273253,
+    "floor": 13,
+    "turn": 3,
+    "attempt": null,
+    "label": "combat/plan",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 2,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SUCKER_PUNCH",
+        "upgraded": false
+      },
+      "target": {
+        "id": "SEWER_CLAM"
+      },
+      "turn": 3,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 39,
+        "max_hp": 58,
+        "block": 8,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 8,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "15",
+            "damage": 15,
+            "hits": 1,
+            "total_damage": 15,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273254,
+    "floor": 13,
+    "turn": 3,
+    "attempt": null,
+    "label": "combat/plan-continue",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 2
+    },
+    "expect": {
+      "card": {
+        "id": "BACKFLIP",
+        "upgraded": false
+      },
+      "turn": 3,
+      "from": "line",
+      "hand": "BACKFLIP,DEFEND_SILENT,STRIKE_SILENT,STRIKE_SILENT",
+      "enemies": "0:SEWER_CLAM"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 39,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 8,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273255,
+    "floor": 13,
+    "turn": 3,
+    "attempt": null,
+    "label": "combat/plan",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 4
+    },
+    "expect": {
+      "card": {
+        "id": "SURVIVOR",
+        "upgraded": false
+      },
+      "turn": 3,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 5,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 39,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 8,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273256,
+    "floor": 13,
+    "turn": 3,
+    "attempt": null,
+    "label": "selection/choose",
+    "chosen": {
+      "action": "select_deck_card",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "STRIKE_SILENT"
+      },
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 13,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 39,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 8,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273257,
+    "floor": 13,
+    "turn": 3,
+    "attempt": null,
+    "label": "combat/plan",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 3,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 13,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 39,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 8,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "11",
+            "damage": 11,
+            "hits": 1,
+            "total_damage": 11,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273258,
+    "floor": 13,
+    "turn": 4,
+    "attempt": null,
+    "label": null,
+    "chosen": null,
+    "expect": null,
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 36,
+        "max_hp": 58,
+        "block": 7,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 7,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273259,
+    "floor": 13,
+    "turn": 4,
+    "attempt": null,
+    "label": "combat/plan-choice",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "FLICK_FLACK",
+        "upgraded": false
+      },
+      "turn": 4,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 36,
+        "max_hp": 58,
+        "block": 7,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 7,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273260,
+    "floor": 13,
+    "turn": 4,
+    "attempt": null,
+    "label": "combat/plan-continue",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 3,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SUCKER_PUNCH",
+        "upgraded": false
+      },
+      "target": {
+        "id": "SEWER_CLAM"
+      },
+      "turn": 4,
+      "from": "line",
+      "hand": "ACROBATICS,DEFEND_SILENT,STRIKE_SILENT,SUCKER_PUNCH",
+      "enemies": "0:SEWER_CLAM"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 36,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 7,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273261,
+    "floor": 13,
+    "turn": 4,
+    "attempt": null,
+    "label": "combat/plan-choice",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 2,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "STRIKE_SILENT",
+        "upgraded": false
+      },
+      "target": {
+        "id": "SEWER_CLAM"
+      },
+      "turn": 4,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 28,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 7,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273262,
+    "floor": 13,
+    "turn": 4,
+    "attempt": null,
+    "label": "combat/plan",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 4,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 22,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 7,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273263,
+    "floor": 13,
+    "turn": 5,
+    "attempt": null,
+    "label": null,
+    "chosen": null,
+    "expect": null,
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 22,
+        "max_hp": 58,
+        "block": 6,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 6,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 8,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "19",
+            "damage": 19,
+            "hits": 1,
+            "total_damage": 19,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273264,
+    "floor": 13,
+    "turn": 5,
+    "attempt": null,
+    "label": "combat/least-loss",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "STRIKE_SILENT",
+        "upgraded": false
+      },
+      "target": {
+        "id": "SEWER_CLAM"
+      },
+      "turn": 5,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 22,
+        "max_hp": 58,
+        "block": 6,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 6,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 8,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "19",
+            "damage": 19,
+            "hits": 1,
+            "total_damage": 19,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273265,
+    "floor": 13,
+    "turn": 5,
+    "attempt": null,
+    "label": "combat/plan-continue",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "DEFEND_SILENT",
+        "upgraded": false
+      },
+      "turn": 5,
+      "from": "line",
+      "hand": "ASCENDERS_BANE,DEFEND_SILENT,DEFEND_SILENT,NEUTRALIZE",
+      "enemies": "0:SEWER_CLAM"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 22,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 6,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 8,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "19",
+            "damage": 19,
+            "hits": 1,
+            "total_damage": 19,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273266,
+    "floor": 13,
+    "turn": 5,
+    "attempt": null,
+    "label": "combat/plan-continue",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1
+    },
+    "expect": {
+      "card": {
+        "id": "DEFEND_SILENT",
+        "upgraded": false
+      },
+      "turn": 5,
+      "from": "line",
+      "hand": "ASCENDERS_BANE,DEFEND_SILENT,NEUTRALIZE",
+      "enemies": "0:SEWER_CLAM"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 5,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 22,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 6,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 8,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "19",
+            "damage": 19,
+            "hits": 1,
+            "total_damage": 19,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273267,
+    "floor": 13,
+    "turn": 5,
+    "attempt": null,
+    "label": "combat/plan-continue",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "NEUTRALIZE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "SEWER_CLAM"
+      },
+      "turn": 5,
+      "from": "line",
+      "hand": "ASCENDERS_BANE,NEUTRALIZE",
+      "enemies": "0:SEWER_CLAM"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 10,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 22,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 6,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 8,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "19",
+            "damage": 19,
+            "hits": 1,
+            "total_damage": 19,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273268,
+    "floor": 13,
+    "turn": 5,
+    "attempt": null,
+    "label": "combat/end_turn",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 5,
+      "from": "decision"
+    },
+    "player": {
+      "current_hp": 2,
+      "block": 10,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "THORNS_POWER",
+          "name": "荆棘",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ]
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 19,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 6,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 8,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "14",
+            "damage": 14,
+            "hits": 1,
+            "total_damage": 14,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "line": 273269,
+    "floor": 13,
+    "turn": 5,
+    "attempt": null,
+    "label": "run/finalize",
+    "chosen": {
+      "action": "continue_game_over"
+    },
+    "expect": null,
+    "player": {
+      "current_hp": 0,
+      "block": 0,
+      "powers": []
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 16,
+        "max_hp": 58,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 5,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 8,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "14",
+            "damage": 14,
+            "hits": 1,
+            "total_damage": 14,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  }
+]
