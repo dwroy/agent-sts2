@@ -1,0 +1,150 @@
+```json
+{
+  "task": "fix-batch",
+  "status": "published",
+  "base": "b2901e536d3da91a556e9fcaed7a41ceaf8bf603",
+  "fixes": [{
+    "item": "Roy 已授权新功能：静默 boss 模拟校准",
+    "commit": "99c3f6fc11cafffceb123ffa1d2dde17f319f71b",
+    "scope": "复用既有实现，完成周期数据刷新；不改策略阈值",
+    "existing_implementation_commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+    "test": "固定模型、来源、切分、Platt、准入、B2/B3消费、阈值和幂等检查通过",
+    "fails_without_fix": false,
+    "fails_without_fix_reason": "周期数据刷新，不冒称 bug 回归",
+    "ledger": ["silent-0435"]
+  }],
+  "merged": "539385d83340fc23bef78f6933838a45d2f88e0a",
+  "publication": "104f08da661c9e6a797373977ee3cdb3a10b3828",
+  "publication_tree": "19a53a7223e8bc230f958ed49a06c52104997bcb",
+  "version": "S1.boss-calibration14",
+  "extraction": {
+    "finished_silent_runs": 242,
+    "boss_attempts_including_sl": 1089,
+    "usable_actual_outcomes": 440,
+    "new_actual_outcomes": 21,
+    "excluded": {
+      "predicted_death_censored": 648,
+      "actual_outcome_missing_opening_hand": 1
+    }
+  },
+  "calibration": {
+    "tune": 107,
+    "validation": 333,
+    "successful_validation": 331,
+    "cutoff_utc": "2026-10-06T02:46:11.648000",
+    "model": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+    "model_split_platt_unchanged": true,
+    "b2_brier": 0.1109,
+    "b3_brier": 0.1113,
+    "trusted_b2": 7,
+    "trusted_b3": 6
+  },
+  "boss_table": [
+    {"boss":"AEONGLASS","n":23,"missing":0,"B2":"低：Brier、胜率偏差、打穿比","B3":"低：Brier、胜率偏差、打穿比"},
+    {"boss":"CEREMONIAL_BEAST","n":30,"missing":0,"B2":"可信","B3":"可信"},
+    {"boss":"KAISER_CRAB","n":35,"missing":0,"B2":"低：Brier","B3":"低：Brier"},
+    {"boss":"KNOWLEDGE_DEMON","n":32,"missing":0,"B2":"低：打穿比","B3":"低：打穿比"},
+    {"boss":"LAGAVULIN_MATRIARCH","n":30,"missing":0,"B2":"可信","B3":"可信"},
+    {"boss":"QUEEN","n":21,"missing":0,"B2":"低：Brier、胜率偏差","B3":"低：Brier、胜率偏差"},
+    {"boss":"SOUL_FYSH","n":23,"missing":0,"B2":"可信","B3":"可信"},
+    {"boss":"TEST_SUBJECT","n":19,"missing":0,"B2":"低：Brier、胜率偏差、打穿比","B3":"低：Brier、胜率偏差、打穿比"},
+    {"boss":"THE_INSATIABLE","n":30,"missing":0,"B2":"新增可信","B3":"低：Brier、打穿比"},
+    {"boss":"THE_KIN","n":26,"missing":0,"B2":"可信","B3":"可信"},
+    {"boss":"VANTOM","n":33,"missing":0,"B2":"可信","B3":"可信"},
+    {"boss":"WATERFALL_GIANT","n":29,"missing":0,"B2":"可信","B3":"可信"}
+  ],
+  "new_admission": {
+    "boss": "THE_INSATIABLE",
+    "B2": {
+      "n": 30,
+      "brier": 0.1265,
+      "brier_limit": 0.138625,
+      "predicted_win": 0.703,
+      "actual_win": 0.7,
+      "leak_ratio": 1.287
+    },
+    "B3": {
+      "brier": 0.1422,
+      "brier_limit": 0.139125,
+      "leak_ratio": 1.325,
+      "trusted": false
+    }
+  },
+  "a10": {
+    "validation_n": 331,
+    "B2_residual_percentage_points": 4.9,
+    "B3_residual_percentage_points": 5.4,
+    "B2_leak_ratio": 1.283,
+    "B3_leak_ratio": 1.291,
+    "F49": {
+      "validation_n": 20,
+      "missing_count": 0,
+      "B2_residual_percentage_points": 33.0,
+      "B3_residual_percentage_points": 28.4,
+      "B2_leak_ratio": 2.994,
+      "B3_leak_ratio": 3.144,
+      "trusted": false
+    }
+  },
+  "sample_shortage": {
+    "A0–4": {"validation_n":0,"missing":10},
+    "A5–9": {"validation_n":0,"missing":10},
+    "note": "各 boss 数量均达标；质量失败不能仅靠增加数量判可信。"
+  },
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "source_full": {"files":334,"cases":3336},
+    "candidate_targeted": {"files":5,"cases":19},
+    "python_calibration": 12,
+    "python_dispatch": 48,
+    "live_unique_coverage": {"files":336,"cases":3368},
+    "live_first_full_exit": 1,
+    "recovery": "首轮3356通过、1项120秒超时，已回退并保留刷新及原日志。同一固定树单项按原断言和上限复验79秒通过，再补paths11项；未重跑整套。再次合入树与已测树完全一致。",
+    "gitleaks_source_and_release": 0,
+    "external_full": "交调度器，尚未执行"
+  },
+  "refresh": {
+    "entry": "agent/tools/boss-sim/refresh-silent.py",
+    "fixed_inputs": "--dataset、--results、--provenance使用核验后的固定模型产物",
+    "schedule": "每小时:13/:43及learner完成事件检查；升阶或新增20次实际boss结局触发",
+    "idempotency": "相同档案复用和不足阈值跳过均通过"
+  },
+  "skipped": [
+    {"item":"其他队列（含silent-0213）","reason":"不在本批范围"},
+    {"item":"F49及其他质量不达标项晋级","reason":"保留原门槛和低可信"}
+  ],
+  "code_proposals": [],
+  "implementation_domains": [],
+  "ledger_status": "silent-0435仅proposed；shipped由运维确认",
+  "notifications": ["notes/for-roy.md","ops/inbox-dev.md"],
+  "all_commits": {
+    "main_merge": "b2901e536d3da91a556e9fcaed7a41ceaf8bf603",
+    "source": "99c3f6fc11cafffceb123ffa1d2dde17f319f71b",
+    "saved_refresh": "1ee1048197d3a8edea005417e225e559f0dad3d3",
+    "rolled_back_first_merge": "e499b0950ef3bd1ac6c4d4e4347dd5178a4d55d1",
+    "actual_merge": "539385d83340fc23bef78f6933838a45d2f88e0a",
+    "publication": "104f08da661c9e6a797373977ee3cdb3a10b3828"
+  },
+  "artifact": "experiments/boss-sim/silent/86dd9fee208c61c4ab98bb5f2aaf7eec04a221c5e65d75c5f8465b4b66bbdb17/",
+  "paper_report": "paper/materials/silent/boss-sim-calibration.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261012-134305-silent-boss-calibration/report.md",
+  "full_receipt": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261012-134305-silent-boss-calibration/result.json",
+  "limitations": [
+    "仅验证固定模型，未据此验证后续生产模型改动。",
+    "3场历史模拟失败保留；SL截断存在条件样本选择偏差。",
+    "未验证F48→F49联合通关率；dirty及局中源码变化未完整还原。"
+  ]
+}
+```
+
+== 学习者 codex / silent-boss-calibration ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12ea2-e6de-7c61-a685-20207aa49359
+轮数：1；工具调用：command_execution×106 file_change×13
+token：输入 249.5k、输出 76.2k（其中推理 37.3k）、cache 读 13596.7k、cache 写 0（命中 98.2%）
+成本：未提供
+耗时：3171.0 s（墙钟）
+时间：首个事件 20.0 s、模型首个输出 25.9 s、首次工具 29.4 s、末次工具结束 3114.6 s；工具内共 3443.4 s，其余（模型生成、推理、网络）-292.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration）；模型的工具调用 exec×79 wait×5；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T13-43-10-01a12ea2-e6de-7c61-a685-20207aa49359.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261012-134305-silent-boss-calibration.jsonl
