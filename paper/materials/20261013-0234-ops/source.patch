@@ -1,0 +1,139 @@
+diff --git a/agent/tests/apotheosis-potion-fixture.ts b/agent/tests/apotheosis-potion-fixture.ts
+new file mode 100644
+index 000000000..d3caf844d
+--- /dev/null
++++ b/agent/tests/apotheosis-potion-fixture.ts
+@@ -0,0 +1,13 @@
++import { potionMcOptions } from "../src/reflex/potion-mc.js";
++
++/** Reference transport needs a real median forecast, with work independent of host scheduling. */
++export function withApotheosisPotionFixture<T>(run: () => T): T {
++  const previous = potionMcOptions.now;
++  let work = 0;
++  potionMcOptions.now = () => (work += 100);
++  try {
++    return run();
++  } finally {
++    potionMcOptions.now = previous;
++  }
++}
+diff --git a/agent/tests/eval-data/versions.json b/agent/tests/eval-data/versions.json
+new file mode 100644
+index 000000000..7a53e42f0
+--- /dev/null
++++ b/agent/tests/eval-data/versions.json
+@@ -0,0 +1,16 @@
++{
++  "versions": [
++    {
++      "name": "V3",
++      "family": "V3",
++      "commit": "17ac095",
++      "source": "Fixed RUNC00000003 evaluator fixture"
++    },
++    {
++      "name": "V3.oneshot",
++      "family": "V3",
++      "commit": "0c93138",
++      "source": "Fixed RUND00000004 evaluator fixture"
++    }
++  ]
++}
+diff --git a/agent/tests/eval_metrics_test.py b/agent/tests/eval_metrics_test.py
+index b36d88c6f..e9dca6c1b 100644
+--- a/agent/tests/eval_metrics_test.py
++++ b/agent/tests/eval_metrics_test.py
+@@ -15,6 +15,7 @@ import subprocess
+ import sys
+ import tempfile
+ import unittest
++from unittest.mock import patch
+ from pathlib import Path
+ 
+ ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+@@ -338,7 +339,9 @@ class FixtureTest(unittest.TestCase):
+         if None in git.resolve(["17ac095", "0c93138"]).values():
+             self.skipTest("the V3 commits are not in this repository")
+         # The calibration rows are tested in tests/eval_calibration_test.py (with a fixed boss clock, no tsx).
+-        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(DATA, "strength-sets.json"), "--no-calibration", "--include-non-codex"]
++        # This fixture predates later releases; do not scan the growing live release history.
++        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(DATA, "strength-sets.json"),
++                "--versions", os.path.join(DATA, "versions.json"), "--no-calibration", "--include-non-codex"]
+         out = io.StringIO()
+         with contextlib.redirect_stdout(out):
+             self.assertEqual(metrics.main(args + ["--json"]), 0)
+@@ -370,6 +373,19 @@ class FixtureTest(unittest.TestCase):
+         self.assertEqual(done.returncode, 0, done.stderr)
+         self.assertIn("== 2026-09-21 ==", done.stdout)
+ 
++    def test_cli_does_not_read_the_live_release_table(self):
++        load = metrics.load_versions
++
++        def frozen_versions(path=metrics.VERSIONS_FILE):
++            self.assertEqual(path, os.path.join(DATA, "versions.json"),
++                             "fixed evaluator samples must not traverse unrelated live releases")
++            return load(path)
++
++        # Exercise all existing CLI output assertions with the live table unavailable.
++        with patch.object(metrics, "load_versions", side_effect=frozen_versions) as loads:
++            self.test_cli()
++        self.assertEqual(loads.call_count, 3)
++
+ 
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/agent/tests/silent-apotheosis-reference.test.ts b/agent/tests/silent-apotheosis-reference.test.ts
+index 59b78bcda..07fd498ec 100644
+--- a/agent/tests/silent-apotheosis-reference.test.ts
++++ b/agent/tests/silent-apotheosis-reference.test.ts
+@@ -14,6 +14,8 @@ import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+ import * as reference from "../src/reflex/silent-apotheosis-reference.js";
+ import { replaySteps, solveTap, type SolverInput } from "../src/reflex/turn-solver.js";
+ import { bossLinesOptions } from "../src/sim/boss-lines.js";
++import * as turnSolver from "../src/reflex/turn-solver.js";
++import { withApotheosisPotionFixture } from "./apotheosis-potion-fixture.js";
+ 
+ // Only frozen VLZ observations may enter these consumers.
+ vi.mock("node:fs", async (original) => {
+@@ -113,7 +115,7 @@ it.each(["off", "v1"] as const)("reaches the real %s Jev criteria and preserves
+ 
+ it("labels random potion forecasts and unsimulated potions separately in F45's real question", () => {
+   const spy = vi.spyOn(reference, "silentApotheosisReference");
+-  const { decision } = planned(rawAt(275722));
++  const { decision } = withApotheosisPotionFixture(() => planned(rawAt(275722)));
+   const facts = Object.values(decision.questions.plan!.criteria!).map((value) => JSON.parse(value!));
+   expect(facts.some((fact) => fact.apotheosis_reference?.forecast_basis === "potion_median")).toBe(true);
+   expect(spy.mock.calls.some((call) => call[2] === "potion_median")).toBe(true);
+@@ -124,6 +126,32 @@ it("labels random potion forecasts and unsimulated potions separately in F45's r
+   } });
+ });
+ 
++it.each([0, 10_000])("bounds F45's real potion forecast work with %i ms host pauses", (pause) => {
++  let wall = 0;
++  vi.spyOn(performance, "now").mockImplementation(() => (wall += pause));
++  const solve = turnSolver.solveTurn;
++  const caps: number[] = [];
++  vi.spyOn(turnSolver, "solveTurn").mockImplementation((input) => {
++    if (input.firstKey !== undefined) {
++      caps.push(input.maxNodes!);
++      // Fail before doing unrelated extra searches when the fixture's work clock is removed.
++      expect(caps.reduce((total, cap) => total + cap, 0)).toBeLessThanOrEqual(11_000);
++    }
++    return solve(input);
++  });
++  const oldClock = potionMcOptions.now;
++  const { decision } = withApotheosisPotionFixture(() => planned(rawAt(275722)));
++  expect(potionMcOptions.now).toBe(oldClock);
++  // Keep more than one real sample, the production budget and the existing request contract.
++  expect(caps).toHaveLength(2);
++  expect(potionMcOptions.budgetMs).toBe(400);
++  expect(potionMcOptions.samples).toBe(12);
++  const facts = Object.values(decision.questions.plan!.criteria!).map((value) => JSON.parse(value!));
++  expect(facts.some((fact) => fact.apotheosis_reference?.forecast_basis === "potion_median")).toBe(true);
++  expect(facts.some((fact) => fact.wins_fight_this_turn?.startsWith("0/2 samples") ||
++    fact.wins_fight_this_turn?.startsWith("1/2 samples") || fact.wins_fight_this_turn?.startsWith("2/2 samples"))).toBe(true);
++});
++
+ it("keeps missing lists unknown, missing ownership irrelevant, and other scopes unchanged", () => {
+   const raw = rawAt(275679); delete raw.run.deck;
+   expect(reference.silentApotheosisReference(parseGameState(raw), null)).toMatchObject({ apotheosis_reference: { deck_copies: null, hand_copies: 1 } });

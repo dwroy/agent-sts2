@@ -1,0 +1,28 @@
+commit c4670f4f416c7d93e192e889c5080e7e4e0e733f
+Author:     Roy <me@dwroy.com>
+AuthorDate: Mon Oct 12 13:40:43 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Mon Oct 12 13:40:43 2026 +0800
+
+    Expose unknown Silent potion value beside dry-plan forecasts
+    
+    Evidence: 751FN9QM9MHQ A10 F13 T3, decisions 272361/272362 and
+    states 278402-278407. Ledger: silent-0431 (source silent-0019).
+    
+    Implement the bounded display subitem of proposals 85929bdfc8a3fc1b
+    and 131042659448ae74. Keep missing held value distinct from zero
+    charge, and distinguish current-turn dry plans from the sampled
+    whole-fight dry reference without changing options or rankings.
+    The broader proposals remain waiting for their remaining evidence.
+    
+    Validation: withdrawing the consumer fails 2 of 12 focused cases;
+    restoring it passes all 12. Sandbox tsc and 3348 cases pass.
+    
+    Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+
+ agent/src/reflex/combat-plan.ts                   |    2 +
+ agent/src/reflex/silent-potion-reference.ts       |   75 +
+ agent/tests/silent-potion-reference-evidence.json | 1725 +++++++++++++++++++++
+ agent/tests/silent-potion-reference.test.ts       |  157 ++
+ 4 files changed, 1959 insertions(+)

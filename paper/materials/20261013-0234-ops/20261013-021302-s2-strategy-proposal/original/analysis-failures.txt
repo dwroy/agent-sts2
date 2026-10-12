@@ -1,0 +1,4 @@
+材料脚本首轮：run-plans.jsonl第2289行的局号在run字段，原提取只识别run_id/state.run_id，触发AssertionError。修正后五份原日志逐行SHA与身份通过。
+材料脚本第二轮：将combat.player与run.potions误读为state.player.potions，耗药断言触发TypeError；原输出保存在evidence-recheck-failed.log，修正前脚本字节保存在recheck-evidence.before-fix.txt。
+只读定位曾引用不存在的agent/src/core/loop.ts，后经rg --files核实际路径agent/src/hand/loop.ts。
+apply_patch工具一次返回Failed to write file，文件原字节未变；用任务允许的shell写入修正。以上均非生产代码故障或源码测试。

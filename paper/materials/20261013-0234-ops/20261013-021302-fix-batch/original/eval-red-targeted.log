@@ -1,0 +1,37 @@
+F
+======================================================================
+FAIL: test_cli_does_not_read_the_live_release_table (__main__.FixtureTest.test_cli_does_not_read_the_live_release_table)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-021302/agent/tests/eval_metrics_test.py", line 386, in test_cli_does_not_read_the_live_release_table
+    self.test_cli()
+    ~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-021302/agent/tests/eval_metrics_test.py", line 347, in test_cli
+    self.assertEqual(metrics.main(args + ["--json"]), 0)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-021302/eval/metrics.py", line 811, in main
+    versions = VersionMap(load_versions(args.versions), Git()) if args.group_by in ("version", "family", "config") or args.per_run or args.json else None
+                          ~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1247, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-021302/agent/tests/eval_metrics_test.py", line 380, in frozen_versions
+    self.assertEqual(path, os.path.join(DATA, "versions.json"),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "fixed evaluator samples must not traverse unrelated live releases")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '/hom[42 chars]fix-silent-20261013-021302/eval/versions.json' != '/hom[42 chars]fix-silent-20261013-021302/agent/tests/eval-data/versions.json'
+- /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-021302/eval/versions.json
++ /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-021302/agent/tests/eval-data/versions.json
+?                                                                          ++++++++++++    +++++
+ : fixed evaluator samples must not traverse unrelated live releases
+
+----------------------------------------------------------------------
+Ran 1 test in 0.439s
+
+FAILED (failures=1)

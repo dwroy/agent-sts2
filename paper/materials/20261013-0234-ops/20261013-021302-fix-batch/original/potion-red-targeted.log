@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-021302/agent
+
+ ❯ tests/silent-apotheosis-reference.test.ts (7 tests | 2 failed | 5 skipped) 2245ms
+   × bounds F45's real potion forecast work with 0 ms host pauses 1386ms
+   × bounds F45's real potion forecast work with 10000 ms host pauses 858ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-apotheosis-reference.test.ts > bounds F45's real potion forecast work with 0 ms host pauses
+ FAIL  tests/silent-apotheosis-reference.test.ts > bounds F45's real potion forecast work with 10000 ms host pauses
+AssertionError: expected 40000 to be less than or equal to 11000
+ ❯ tests/silent-apotheosis-reference.test.ts:138:59
+    136|       caps.push(input.maxNodes!);
+    137|       // Fail before doing unrelated extra searches when the fixture's…
+    138|       expect(caps.reduce((total, cap) => total + cap, 0)).toBeLessThan…
+       |                                                           ^
+    139|     }
+    140|     return solve(input);
+ ❯ runPotionMc src/reflex/potion-mc.ts:283:22
+ ❯ src/reflex/combat-plan.ts:4678:160
+ ❯ runRandomPotions src/reflex/combat-plan.ts:4676:11
+ ❯ randomPotions src/reflex/combat-plan.ts:3272:20
+ ❯ planTurn src/reflex/combat-plan.ts:3579:42
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 5 skipped (7)
+   Start at  02:23:53
+   Duration  3.81s (transform 1.16s, setup 285ms, import 1.13s, tests 2.24s, environment 0ms)
+
