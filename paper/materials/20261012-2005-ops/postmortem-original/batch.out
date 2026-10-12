@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：0C3AR6J0Z8LD（A10，第48层，永世沙漏战末试T11两张12伤凋萎使17血归零，敌剩276血）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：精确运行源码、部分末击与分体伤害、SL截断后结算、整线兑现比例、未选分支胜负、有效boss时钟、纯操作用时、Jev缓存及真实费用；F49未抵达。
+- 学习账本：新增无；更新10项，老错为silent-0385、silent-0079；`ledger.py check`退出码0。
+- 代码提案：已登记3项，分别关联核心／药水兑现、护栏／SL血价、凋萎终局证据及账本，目标均为独立`strategy-proposal`。缺少完整替线后继与受控胜负，保留原规则，未声明实现。
+
+```json
+{"task":"postmortem","appended":["0C3AR6J0Z8LD"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0385","silent-0079","silent-0019","silent-0024","silent-0025","silent-0011","silent-0027","silent-0023","silent-0005","silent-0221"],"repeats":["silent-0385","silent-0079"],"check":0},"code_proposals":["silent-proposal-985e79d9578bbe8b","silent-proposal-152d201b41fd9777","silent-proposal-3b111c276d27c509"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261012-194301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12fec-66d8-7393-b940-759e59188838
+轮数：1；工具调用：command_execution×45
+token：输入 210.4k、输出 35.9k（其中推理 7333）、cache 读 4890.8k、cache 写 0（命中 95.9%）
+成本：未提供
+耗时：1337.0 s（墙钟）
+时间：首个事件 10.6 s、模型首个输出 17.0 s、首次工具 20.2 s、末次工具结束 1312.5 s；工具内共 214.5 s，其余（模型生成、推理、网络）1111.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×36；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T19-43-04-01a12fec-66d8-7393-b940-759e59188838.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261012-194301-postmortem.jsonl
