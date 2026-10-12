@@ -1,0 +1,3 @@
+辅助核验初次把dynamic_values列表当成字典，原TypeError保留于proof-mechanisms.log，按实际结构修正后18项全过。
+一次只读命令在沙箱构建前失败：ripgrep unreadable glob scan因本批测试临时目录tmpr5v5lgys并行消失返回ENOENT。相同权限原命令重试成功，未读取凭据、改变沙箱或权限。
+候选核验初次用中文译词“未模拟”匹配实际英文effect not simulated而失败，原candidate-check.log保留；改为原文字段匹配后再核，不改日志数据或结论。

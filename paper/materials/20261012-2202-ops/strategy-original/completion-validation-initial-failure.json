@@ -1,0 +1,20 @@
+{
+  "result": "failed",
+  "error": "AssertionError at stdin line 36: current ledger status differs from earlier snapshot",
+  "status_changes": {
+    "silent-0019": {
+      "before": "shipped",
+      "after": "proposed"
+    },
+    "silent-0020": {
+      "before": "shipped",
+      "after": "proposed"
+    },
+    "silent-0021": {
+      "before": "shipped",
+      "after": "proposed"
+    }
+  },
+  "own_appends_have_no_status": true,
+  "resolution": "保留并行状态更新，仅核本批追加行没有写status；不恢复旧状态。"
+}

@@ -1,0 +1,1 @@
+初次报告修正脚本失败：SyntaxError: closing parenthesis ')' does not match opening parenthesis '{'。整个Python块未执行，后续密钥扫描仍运行。修正后用set -e阻止中途失败被尾命令成功覆盖。
