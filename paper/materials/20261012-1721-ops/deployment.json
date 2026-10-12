@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-12 17:44:29 CST",
+  "source": "fab7c90945bd4a899d411438a22952b252272aa4",
+  "live": "fab7c90945bd4a899d411438a22952b252272aa4",
+  "tree": "36932aa41bc5284ad6110ae3cf0ad3e0eaad2f87",
+  "live_before": "6e1cd2776cc87809b92fab2a719fdf00af375d9e",
+  "main_before": "4758c26f9fd48994b1f0eb7111190533f3d5d22a",
+  "main_leaf": "b8031c4c80a366dc58fbb76acc7b46e57084e7af",
+  "main": "0cef76c67cfd1c39cb30cb193eec21e6eaa93168",
+  "paths": [
+    "agent/src/reflex/jev/compact-request.ts",
+    "agent/src/eye/jev-prompt-log.ts",
+    "agent/tests/jev-context-limit.test.ts",
+    "agent/tests/jev-context-limit-request.json"
+  ],
+  "exact_patch_id": "e00e4eaac6d0443cd827a19e6c16682e5b057443",
+  "full_checks": [
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2"
+      ],
+      "exit": 0
+    }
+  ],
+  "full_checked_base": "460725771eec2081ee531fe7922b3cb82d7a45ef",
+  "refresh_integration": "refresh-integration.json",
+  "dirty_live_preserved": {
+    "notes/fight-value-backtest-silent.md": "cbedb74985b9523f5d2b4217e46ed26c9dbd43c497823e448707c35fe5f04583",
+    "notes/monster-db-check.md": "111aa96ee71afa255ddfff29322bc2a83ad3a7cf5070893d5d57e19630d0e477"
+  },
+  "source_origin": "ops character-independent blocking transport fix; unrelated empty learner batch retained"
+}

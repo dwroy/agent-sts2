@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/step/agent
+
+ ❯ tests/jev-context-limit.test.ts (5 tests | 1 failed) 33ms
+     × preserves all 11 recorded options and every nested fact while reducing the rejected body 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/jev-context-limit.test.ts > bounded Jev context-limit recovery > preserves all 11 recorded options and every nested fact while reducing the rejected body
+AssertionError: expected 76240 to be less than 68989.2
+ ❯ tests/jev-context-limit.test.ts:48:43
+     46|     const compact = compactJevRequest(fixture.state, fixture.questions…
+     47|     expect(compact).not.toBeNull();
+     48|     expect(compact.encoding.encodedBytes).toBeLessThan(compact.encodin…
+       |                                           ^
+     49|     expect(expanded(compact)).toEqual(fixture.questions);
+     50|     expect(Object.keys((compact.questions["plan"] as { criteria: objec…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 16 passed (17)
+   Start at  17:27:50
+   Duration  3.11s (transform 3.53s, setup 728ms, import 3.67s, tests 1.36s, environment 0ms)
+

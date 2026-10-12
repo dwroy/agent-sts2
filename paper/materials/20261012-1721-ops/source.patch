@@ -1,0 +1,592 @@
+diff --git a/agent/src/eye/jev-prompt-log.ts b/agent/src/eye/jev-prompt-log.ts
+index 69e92a109..2d597f00b 100644
+--- a/agent/src/eye/jev-prompt-log.ts
++++ b/agent/src/eye/jev-prompt-log.ts
+@@ -15,6 +15,7 @@ import { basename, dirname, join } from "node:path";
+ import type { AnswerSet } from "../reflex/jev/answers.js";
+ import { classifyJevError, type JevAskResult } from "../reflex/jev/client.js";
+ import type { QuestionSet } from "../reflex/jev/questions.js";
++import { compactJevRequest, isJevContextLimitError, type CompactJevRequest } from "../reflex/jev/compact-request.js";
+ 
+ export interface JevPromptMeta {
+   /** The decision this request was made for (the decision row's `decision_id`). */
+@@ -52,6 +53,8 @@ export interface JevPromptRecord {
+   output_tokens: number | null;
+   answers?: AnswerSet;
+   error?: { kind: string; status: number | null; message: string };
++  /** Present only on the bounded, lossless retry of a context-limit rejection. */
++  transport_encoding?: CompactJevRequest["encoding"];
+ }
+ 
+ export interface JevPromptLog {
+@@ -102,6 +105,21 @@ export interface JevAsker {
+  * the result or the error is passed on unchanged.
+  */
+ export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet): Promise<JevAskResult> {
++  const started = Date.now();
++  try {
++    return await askOnceLogged(jev, log, meta, state, questions);
++  } catch (error) {
++    if (!isJevContextLimitError(error)) throw error;
++    const compact = compactJevRequest(state, questions);
++    if (!compact) throw error;
++    // Keep the first rejection and the actual retry body in separate joined log rows.
++    // No recursion: another rejection is returned to the existing failure handling.
++    const result = await askOnceLogged(jev, log, meta, compact.state, compact.questions, compact.encoding);
++    return { ...result, latencyMs: Date.now() - started };
++  }
++}
++
++async function askOnceLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet, encoding?: CompactJevRequest["encoding"]): Promise<JevAskResult> {
+   const started = Date.now();
+   const base = {
+     ts: new Date(started).toISOString(),
+@@ -115,6 +133,7 @@ export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta
+     jev_context: meta.jevContext,
+     call: meta.call,
+     request: { model: jev.model, state, questions },
++    ...(encoding ? { transport_encoding: encoding } : {}),
+   };
+   try {
+     const result = await jev.ask(state, questions);
+diff --git a/agent/src/reflex/jev/compact-request.ts b/agent/src/reflex/jev/compact-request.ts
+new file mode 100644
+index 000000000..7cd5e1267
+--- /dev/null
++++ b/agent/src/reflex/jev/compact-request.ts
+@@ -0,0 +1,106 @@
++import { classifyJevError } from "./client.js";
++import type { QuestionSet } from "./questions.js";
++
++type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
++
++export interface CompactJevRequest {
++  state: Record<string, unknown>;
++  questions: QuestionSet;
++  encoding: {
++    kind: "shared-json-values-v1";
++    stateKey: string;
++    refKey: string;
++    originalBytes: number;
++    encodedBytes: number;
++    definitions: number;
++  };
++}
++
++/** Only the observed context rejection permits a differently encoded retry. */
++export function isJevContextLimitError(error: unknown): boolean {
++  const failure = classifyJevError(error);
++  if (failure.status !== 400) return false;
++  try {
++    const body = JSON.parse(failure.message.slice(failure.message.indexOf("{"))) as { detail?: { error_type?: unknown } };
++    return body.detail?.error_type === "max_tokens_exceeded";
++  } catch {
++    return false;
++  }
++}
++
++/** Factor exact repeated JSON values; never prune options, round numbers or summarize text. */
++export function compactJevRequest(state: unknown, questions: QuestionSet): CompactJevRequest | null {
++  if (state === null || typeof state !== "object" || Array.isArray(state)) return null;
++  const original = JSON.stringify({ state, questions });
++  const uniqueKey = (stem: string): string => {
++    let index = 0;
++    while (original.includes(`${stem}${index}`)) index += 1;
++    return `${stem}${index}`;
++  };
++  const stateKey = uniqueKey("__jev_shared_");
++  const refKey = uniqueKey("__jev_ref_");
++  const parsed = new Map<string, Map<string, Json>>();
++  const counts = new Map<string, number>();
++  const visit = (value: Json): void => {
++    const key = JSON.stringify(value);
++    if (key.length >= 160) counts.set(key, (counts.get(key) ?? 0) + 1);
++    if (Array.isArray(value)) value.forEach(visit);
++    else if (value !== null && typeof value === "object") Object.values(value).forEach(visit);
++  };
++  for (const [id, question] of Object.entries(questions)) {
++    if (question.type !== "choice") continue;
++    const options = new Map<string, Json>();
++    for (const [option, text] of Object.entries(question.criteria)) {
++      if (text === null) continue;
++      try {
++        const value = JSON.parse(text) as Json;
++        // Plain prose and JSON scalar criteria keep their original wire representation.
++        if (value === null || typeof value !== "object") continue;
++        options.set(option, value);
++        visit(value);
++      } catch { /* Non-JSON criteria remain byte-for-byte unchanged. */ }
++    }
++    parsed.set(id, options);
++  }
++  const names = new Map<string, string>();
++  const definitions: Record<string, Json> = Object.create(null) as Record<string, Json>;
++  const encode = (value: Json, definition = false): Json => {
++    const key = JSON.stringify(value);
++    if (!definition && (counts.get(key) ?? 0) > 1) {
++      let name = names.get(key);
++      if (name === undefined) {
++        name = `v${names.size}`;
++        names.set(key, name);
++        definitions[name] = encode(value, true);
++      }
++      return { [refKey]: name };
++    }
++    if (Array.isArray(value)) return value.map((item) => encode(item));
++    if (value !== null && typeof value === "object") {
++      return Object.fromEntries(Object.entries(value).map(([k, item]) => [k, encode(item)]));
++    }
++    return value;
++  };
++  const encodedQuestions: QuestionSet = Object.fromEntries(Object.entries(questions).map(([id, question]) => {
++    if (question.type !== "choice") return [id, question];
++    const options = parsed.get(id)!;
++    return [id, { ...question, criteria: Object.fromEntries(Object.entries(question.criteria).map(([option, text]) => [
++      option, options.has(option) ? JSON.stringify(encode(options.get(option)!)) : text,
++    ])) }];
++  }));
++  if (names.size === 0) return null;
++  const encodedState = {
++    ...state,
++    [stateKey]: {
++      instruction: `无损编码说明：选项JSON里仅含“${refKey}”的对象是本表values中同名值的引用；请先递归展开再理解。它与原值完全相同，不是缺失、预测或新事实。选项顺序、含义和全部数值不变。`,
++      values: definitions,
++    },
++  };
++  const originalBytes = Buffer.byteLength(original);
++  const encodedBytes = Buffer.byteLength(JSON.stringify({ state: encodedState, questions: encodedQuestions }));
++  // The retry must materially shrink the request; a marginal rewrite cannot address the rejection.
++  if (encodedBytes >= originalBytes * 0.9) return null;
++  return { state: encodedState, questions: encodedQuestions, encoding: {
++    kind: "shared-json-values-v1", stateKey, refKey, originalBytes, encodedBytes, definitions: names.size,
++  } };
++}
+diff --git a/agent/tests/jev-context-limit-request.json b/agent/tests/jev-context-limit-request.json
+new file mode 100644
+index 000000000..b5514f27d
+--- /dev/null
++++ b/agent/tests/jev-context-limit-request.json
+@@ -0,0 +1,302 @@
++{
++  "model": "jev-latest",
++  "state": {
++    "run_brief": {
++      "character": "静默猎手",
++      "act": "3",
++      "floor": 48,
++      "hp": "34/62 (55%)",
++      "ascension": 10,
++      "combat_relics": [
++        "水银沙漏: 在你的回合开始时，对所有敌人造成?(数值未知)点伤害。",
++        "臂甲: 每场战斗中，你第一次从卡牌中获得的格挡值翻倍。",
++        "冰淇淋: 多余的能量可以留到下一回合。"
++      ],
++      "potions": [
++        "毒药水: 给予?(数值未知)层中毒。",
++        "毒药水: 给予?(数值未知)层中毒。"
++      ],
++      "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
++    },
++    "fight": "boss",
++    "situation": {
++      "turn": 1,
++      "hp": "34/62",
++      "block": 0,
++      "energy": 3,
++      "incoming_if_i_do_nothing": 32
++    },
++    "player": {
++      "hp": 34,
++      "max_hp": 62,
++      "block": 0,
++      "energy": 3,
++      "stars": 0,
++      "powers": [],
++      "cards_played_this_turn": 0,
++      "attacks_played_this_turn": 0,
++      "skills_played_this_turn": 0
++    },
++    "enemies": [
++      {
++        "name": "火炬头聚合体",
++        "hp": "208/211",
++        "block": 0,
++        "intents": "Attack 32",
++        "powers": [
++          "MINION_POWER 1 = 爪牙: 爪牙会在他们的领导者死亡时放弃战斗。"
++        ]
++      },
++      {
++        "name": "女王",
++        "hp": "416/419",
++        "block": 0,
++        "intents": "CardDebuff ",
++        "powers": []
++      }
++    ],
++    "note": "选项数字是代码模型参考，受未建模效果、抽牌重算和推演范围限制。依据当轮代价、成长与后续证据选择整场打法；simulation_reference分列这些限制，无未知标记也不代表已经校准。",
++    "simulation_reference": {
++      "rollout": {
++        "available": true,
++        "scope": "sampled_horizon",
++        "horizon": 5,
++        "samples": 24,
++        "elapsed_ms": 3000.1310510000003,
++        "random_potion_shared_ms": 0,
++        "degraded": [],
++        "ranking": "best",
++        "best": "plan11",
++        "tied": [],
++        "tied_total": 0,
++        "note": "仅表示所列回合及样本的模型结果；全败样本不证明实盘必败，目标顺序不是实际击杀记录。排名仅指rollout，整场boss模拟另列；best/tied只列已展示的选项键，tied_total保留原并列线数。"
++      },
++      "options": [
++        {
++          "key": "plan1",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan2",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan3",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan4",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan5",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan6",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan7",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan8",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan9",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan10",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        },
++        {
++          "key": "plan11",
++          "unmodelled_cards": [
++            "许愿"
++          ],
++          "cards_drawn": 4,
++          "draw_replan": true,
++          "evaluated": true,
++          "horizon": 5,
++          "samples": 24,
++          "sampled_wins": 0,
++          "sampled_deaths": 24,
++          "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
++        }
++      ],
++      "random_potions": []
++    },
++    "potion_context": {
++      "slots": "2/2 used (belt full: a potion reward after this fight is wasted unless one is drunk)",
++      "act_boss": "this fight",
++      "continuation_objective": "F48后仍要打F49：HP/药水连续，留存资源按F49估值；仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。。证据：silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B",
++      "potion_cost": "F48是已观察双boss的第一战：药水按F49的剩余价值计价，胜F48不等于通关；保命选项和所有可喝药水仍保留。"
++    },
++    "whole_fight_sim": "F48→F49连续通关模拟：每条第一战胜利样本以实际剩余HP、药水和复活资源进入第二战，第二boss按已观察分布抽样；1200配对样本，未经两战校准。仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。；不是必死或SL判据。证据：silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B",
++    "whole_fight_sim_trust": "低可信 (low trust): the simulator is not validated on this boss (仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。). Its numbers are shown only because this fight is an SL retry, to help find another approach; no option is ranked by them.",
++    "previous_attempts": {
++      "note": "SL retry: this fight was reloaded from its start (the game's save from entering the room) because the earlier attempt(s) below reached a certain death. The deck, the draws and the enemy moves are the same as long as the plays are the same, so playing the same way loses the same way: look for a different line (when to block, which enemy to kill first, when to drink which potion, which cards to set up). Information, not an order: the options and their numbers are unchanged and you still choose. The draw pile comes in the same order whatever you play (a card drawn earlier just arrives earlier), until the discard pile is reshuffled: known_draws lists the next cards when they are known.",
++      "this_attempt": "attempt 2 of at most 6",
++      "attempts": [
++        {
++          "attempt": 1,
++          "ended": "certain death at the end of T5 with 3 HP + 2 block against 20 incoming from 火炬头聚合体 (Attack 20) (the fight was reloaded before the enemy turn)",
++          "potions_drunk": "T1 毒药水, T1 毒药水",
++          "turns": [
++            "T1: 34 HP; 火炬头聚合体 208/211, 女王 416/419; played 许愿, 灵动步法+, 后空翻, 生产制造, 偏折, 投掷匕首 -> 女王, 灵动步法, 后空翻, potion 毒药水, potion 毒药水",
++            "T2: 34 HP; 火炬头聚合体 193/211, 女王 404/419; played 防御, 突然一拳 -> 火炬头聚合体",
++            "T3: 28 HP; 火炬头聚合体 171/211, 女王 401/419; played 早有准备+, 余像, 迷雾, 许愿, 中和+ -> 火炬头聚合体",
++            "T4: 4 HP; 火炬头聚合体 151/211, 女王 397/419; played 许愿+, 蛇咬+ -> 女王, 尖啸, 防御",
++            "T5: 3 HP; 火炬头聚合体 135/211, 女王 384/419; played 蛇咬+ -> 女王, 致命毒药+ -> 女王"
++          ]
++        }
++      ]
++    },
++    "known_draws": "SL retry: the next 29 cards of the draw pile, in the order they come (the next first), are known from attempt 1: 后空翻, 防御, 灵动步法, 防御, 逃脱计划, 偏折, 致命毒药, 防御, 笨拙, 突然一拳, .... The options' numbers and the rollout draw these first; past them the draws are random.",
++    "knowledge_rule": "When a fight hint, the run plan or a guide conflicts with the experience base (experience) or measured data (the options' numbers, rollouts, outcome statistics), go with the data.",
++    "deepseek_plan": "DeepSeek's run plan (F42; advice, not orders): Tutored accelerated poison with dexterity defense — Heal now and prioritize recovery at the final camp. Keep protected events and avoid elites. Improve efficient draw, poison-based block, and mitigation rather than adding more setup powers. | boss prep: Tutor Accelerant and defensive powers while covering incoming attacks. Sustain poison through Queen’s debuffs; preserve health and potions for the second boss, rebuilding powers there.",
++    "experience": {
++      "note": "lessons from past runs about these enemies (experience base): evidence, not orders",
++      "lessons": [
++        "[boss:QUEEN | confidence high, n=27] 观察：女王两种杀序都有赢例，不设统一先杀。机制：本体/聚合体血、99三减益、魂缚与有效毒伤分账。搭配：实挡支付毒窗口，胜后血药接下王。决定胜负的战斗：27支持/0反例，单因未控（n=27）。典型案例：KF9HMZKTFC3V A10两试都先清聚合体，首T5清却只2血、T6判死；次T6清仍30血，T10女王122血/60毒后胜余31。BSXYMFKN0VJ5重试同序胜余10；更早反向先清女王也赢，早清爪牙不保证存活。",
++        "[boss:QUEEN | confidence high, n=18] 观察：同抽前缀重打仍有多处改线，不将胜利归单牌或运气。机制：启动费、即时挡/毒与后轮分账，SL恢复不是新资源。搭配：赢后剩血接下王。决定胜负的战斗：18支持/0反例，支持局重打18场97试3赢（n=18）。典型案例：KF9HMZKTFC3V A10两试前36张相同；次T1先下注再建重放触媒/扫腿，零损对首损10，T6才清聚合体、T10胜31血，首T6判死；多轮动作同时变，未验只换T1的胜因。旧BSXYMFKN0VJ5前29张相同仍有跨轮差异。"
++      ]
++    },
++    "potion_experience": {
++      "note": "This is the act boss fight, the one potions are kept for. Past runs on potions (experience base): evidence, not orders.",
++      "run_plan_on_potions": "DeepSeek's run plan (F42), its words on potions: preserve health and potions for the second boss, rebuilding powers there.",
++      "lessons": [
++        "[potion:POISON_POTION | confidence high, n=57] 毒药水先施毒，当步不扣本体。机制：常态6、头骨7，制品可阻毒；SL恢复非新获，截断不补未结伤。搭配：实毒、敌余血与可活窗口同核，不定固定药时。决定胜负的战斗：57支持/0反例，整战单因未控（n=57）。典型案例：K643VJCTQT0J A10法官同瓶四饮各6，前三判死截断；末T6毒7→13，敌131当步不动、结束118但玩家死。雕刻师保毒胜64→3，未有早喝整战对照；旧SB5N8GT2Y3VW六饮含五次SL恢复。"
++      ]
++    },
++    "mechanics_experience": {
++      "note": "lessons from past runs about the mechanics in this fight: our power cards and buffs, the enemies' own powers (experience base): evidence, not orders",
++      "lessons": [
++        "[card:FOOTWORK | confidence high, n=140] 步法普通/升级建立2/3敏，后续牌挡逐张兑现，旧挡不补。机制：基础加敏后再核脆弱/倍率，换战重建；敏捷不自动给挡。搭配：实际施放、敌成长与血价同核。决定胜负的战斗：140支持/0反例，单因未控（n=140）。典型案例：KF9HMZKTFC3V A10机甲第四试T4步法建2敏、旧挡仍0，防御实7；沙漏持有步法却未施放仍胜，不能把持有记为胜因。旧PUY011SBWSSU末T4才建4敏，前三轮已损63。",
++        "[card:ACCELERANT | confidence high, n=84] 触媒加毒结次数，不倍增毒层。机制：普通/升级建1/2层，已见普通重放1也建2；k层至多k+1结，每结减1，余血/限伤/换相另核。搭配：实补毒、挡与次战重建，不预支未施能力。决定胜负的战斗：84支持/0反例，单因未控（n=84）。典型案例：KF9HMZKTFC3V A10沙漏T3普通重放触媒花1建2，47毒结47+46+45=138，T4/5实156/147，T6胜；女王所建层未继承。旧YBRA3EJ94GBR两结43仍死亡，层数不保证生存。"
++      ]
++    }
++  },
++  "questions": {
++    "plan": {
++      "type": "choice",
++      "instructions": "Which plan should I play this turn?",
++      "criteria": {
++        "plan1": "{\"plays\":\"许愿, then 灵动步法+, then 后空翻, then 生产制造, then 投掷匕首 -> 女王, then potion 毒药水 -> 女王, then potion 毒药水 -> 女王, then 后空翻, then 灵动步法, then 偏折\",\"result\":\"survives with 29/62 HP before healing\",\"hp_lost\":5,\"damage_dealt\":21,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 395 HP, 中毒 11\",\"block_gained\":27,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":29,\"hp_after_pct\":47,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"毒药水, 毒药水\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":21,\"block_gained\":27,\"hp_after\":29,\"energy_left\":0,\"planned_actions\":10,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"a82b1145e10ce93f883d3be66f028088e8a89fb3f236c8a54d03d23a371599a2\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1,\"DEFLECT\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1,\"DEFLECT\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":27,\"damage\":9,\"blockGained\":27,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DEFEND_SILENT\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":407,\"poison\":12,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":13,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":1,\"energy_after\":3,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DAGGER_THROW\",\"target\":1,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":9,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:0\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:1\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":0,\"energy_after\":0,\"hp_after\":34,\"block_after\":27,\"damage_hp\":0,\"block_gained\":9,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~529, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 5)\",\"rollout_turns\":\"T1 exact: hp -5, dmg 21; T2: hp -14 [14-14], dmg 22 [22-22], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 52 [52-52], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 2 (this turn: 毒药水 0.4 HP, 毒药水 0.4 HP); potion cost 0 HP (potion table, this act's held value); total 34\"}",
++        "plan2": "{\"plays\":\"许愿, then 灵动步法+, then 后空翻, then 生产制造, then 偏折, then potion 毒药水 -> 女王, then potion 毒药水 -> 女王, then 后空翻, then 灵动步法, then 防御\",\"result\":\"survives with 34/62 HP before healing\",\"hp_lost\":0,\"damage_dealt\":12,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 404 HP, 中毒 11\",\"block_gained\":32,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":34,\"hp_after_pct\":55,\"dmg\":12,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"毒药水, 毒药水\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":12,\"block_gained\":32,\"hp_after\":34,\"energy_left\":0,\"planned_actions\":10,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"7140d9390e63ecfd42b305dcd4742aa170fea8a989aa45bc32d137852a54175c\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1,\"DEFEND_SILENT\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1,\"DEFEND_SILENT\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":32,\"damage\":0,\"blockGained\":32,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DAGGER_THROW\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":12,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":13,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":1,\"energy_after\":3,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":20,\"damage_hp\":0,\"block_gained\":7,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:0\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":20,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:1\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":20,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":25,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":25,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFEND_SILENT\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":32,\"damage_hp\":0,\"block_gained\":7,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~538, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 12; T2: hp -14 [14-14], dmg 22 [22-22], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 52 [52-52], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 2 (this turn: 毒药水 0.4 HP, 毒药水 0.4 HP); potion cost 0 HP (potion table, this act's held value); total 34\"}",
++        "plan3": "{\"plays\":\"许愿, then 灵动步法+, then 生产制造, then 偏折, then 后空翻, then 投掷匕首 -> 女王, then potion 毒药水 -> 女王, then potion 毒药水 -> 女王, then 后空翻, then 灵动步法\",\"result\":\"survives with 26/62 HP before healing\",\"hp_lost\":8,\"damage_dealt\":21,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 395 HP, 中毒 11\",\"block_gained\":24,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":26,\"hp_after_pct\":42,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"毒药水, 毒药水\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":21,\"block_gained\":24,\"hp_after\":26,\"energy_left\":0,\"planned_actions\":10,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"0dfe2a4c60be249df6d84e061d808e7376178c1028f2f12c7cfad0f57950bc03\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"BACKFLIP\":2,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"BACKFLIP\":2,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":24,\"damage\":9,\"blockGained\":24,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DEFEND_SILENT\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":407,\"poison\":12,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":4,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":4,\"energy_after\":4,\"hp_after\":34,\"block_after\":11,\"damage_hp\":0,\"block_gained\":11,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":4,\"energy_after\":3,\"hp_after\":34,\"block_after\":19,\"damage_hp\":0,\"block_gained\":8,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DAGGER_THROW\",\"target\":1,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":19,\"damage_hp\":9,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:0\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":19,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:1\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":19,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":24,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":24,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~543, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 8)\",\"rollout_turns\":\"T1 exact: hp -8, dmg 21; T2: hp -7 [7-7], dmg 17 [17-17], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 43 [43-43], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 2 (this turn: 毒药水 0.4 HP, 毒药水 0.4 HP); potion cost 0 HP (potion table, this act's held value); total 34\"}",
++        "plan4": "{\"plays\":\"许愿, then 灵动步法+, then 后空翻, then 生产制造, then 投掷匕首 -> 女王, then potion 毒药水 -> 女王, then 后空翻, then 灵动步法, then 偏折\",\"result\":\"survives with 29/62 HP before healing\",\"hp_lost\":5,\"damage_dealt\":15,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 401 HP, 中毒 5\",\"block_gained\":27,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":29,\"hp_after_pct\":47,\"dmg\":15,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"毒药水\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":15,\"block_gained\":27,\"hp_after\":29,\"energy_left\":0,\"planned_actions\":9,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"7b0af79a440263f5158950d487a930fe5c5cd71df581aaebdc16d2266be9931b\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"DEFLECT\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"DEFLECT\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":27,\"damage\":9,\"blockGained\":27,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DEFEND_SILENT\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":407,\"poison\":6,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":13,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":1,\"energy_after\":3,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DAGGER_THROW\",\"target\":1,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":9,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:0\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":0,\"energy_after\":0,\"hp_after\":34,\"block_after\":27,\"damage_hp\":0,\"block_gained\":9,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~535, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 5)\",\"rollout_turns\":\"T1 exact: hp -5, dmg 15; T2: hp -14 [14-14], dmg 22 [22-22], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 52 [52-52], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 2 (this turn: 毒药水 0.4 HP; later turns: 毒药水 in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 34\"}",
++        "plan5": "{\"plays\":\"许愿, then 后空翻, then 生产制造, then 投掷匕首 -> 女王, then potion 毒药水 -> 女王, then potion 毒药水 -> 女王, then 后空翻, then 灵动步法+, then 灵动步法, then 偏折\",\"result\":\"survives with 23/62 HP before healing\",\"hp_lost\":11,\"damage_dealt\":21,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 395 HP, 中毒 11\",\"block_gained\":21,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":23,\"hp_after_pct\":37,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"毒药水, 毒药水\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":21,\"block_gained\":21,\"hp_after\":23,\"energy_left\":0,\"planned_actions\":10,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"bcff336466e3688eabbebb0131b37d2606e435598347d858fc9ffbb64635bd6f\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1,\"FOOTWORK\":2,\"DEFLECT\":1},\"effect_resolutions\":{\"WISH\":1,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1,\"FOOTWORK\":2,\"DEFLECT\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":21,\"damage\":9,\"blockGained\":21,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DEFEND_SILENT\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":407,\"poison\":12,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":10,\"damage_hp\":0,\"block_gained\":10,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":4,\"hp_after\":34,\"block_after\":10,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DAGGER_THROW\",\"target\":1,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":4,\"energy_after\":3,\"hp_after\":34,\"block_after\":10,\"damage_hp\":9,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:0\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":10,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:1\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":10,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":12,\"damage_hp\":0,\"block_gained\":2,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":12,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":12,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":0,\"energy_after\":0,\"hp_after\":34,\"block_after\":21,\"damage_hp\":0,\"block_gained\":9,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~543, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 11)\",\"rollout_turns\":\"T1 exact: hp -11, dmg 21; T2: hp -7 [7-7], dmg 17 [17-17], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 43 [43-43], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 2 (this turn: 毒药水 0.4 HP, 毒药水 0.4 HP); potion cost 0 HP (potion table, this act's held value); total 34\"}",
++        "plan6": "{\"plays\":\"许愿, then 灵动步法+, then 后空翻, then 生产制造, then 偏折, then potion 毒药水 -> 女王, then 后空翻, then 灵动步法, then 防御\",\"result\":\"survives with 34/62 HP before healing\",\"hp_lost\":0,\"damage_dealt\":6,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 410 HP, 中毒 5\",\"block_gained\":32,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":34,\"hp_after_pct\":55,\"dmg\":6,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"毒药水\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":6,\"block_gained\":32,\"hp_after\":34,\"energy_left\":0,\"planned_actions\":9,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"25dd1c020630ba313e9dbf836b09b1eca130f8f87fe907a5132a6e39939ba14e\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"POTION:POISON_POTION:0\":1,\"DEFEND_SILENT\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"POTION:POISON_POTION:0\":1,\"DEFEND_SILENT\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":32,\"damage\":0,\"blockGained\":32,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DAGGER_THROW\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":6,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":13,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":1,\"energy_after\":3,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":20,\"damage_hp\":0,\"block_gained\":7,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:0\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":20,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":25,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":25,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFEND_SILENT\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":32,\"damage_hp\":0,\"block_gained\":7,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~544, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 6; T2: hp -14 [14-14], dmg 22 [22-22], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 52 [52-52], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 2 (this turn: 毒药水 0.4 HP; later turns: 毒药水 in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 34\"}",
++        "plan7": "{\"plays\":\"许愿, then 灵动步法+, then 生产制造, then 偏折, then 后空翻, then 投掷匕首 -> 女王, then potion 毒药水 -> 女王, then 后空翻, then 灵动步法\",\"result\":\"survives with 26/62 HP before healing\",\"hp_lost\":8,\"damage_dealt\":15,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 401 HP, 中毒 5\",\"block_gained\":24,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":26,\"hp_after_pct\":42,\"dmg\":15,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"毒药水\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":15,\"block_gained\":24,\"hp_after\":26,\"energy_left\":0,\"planned_actions\":9,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"028daaac80a60d551a5af4d4f1b18b17ae2b6ff6572f3e105c4cc80427794f32\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"BACKFLIP\":2,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"BACKFLIP\":2,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":24,\"damage\":9,\"blockGained\":24,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DEFEND_SILENT\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":407,\"poison\":6,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":4,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":4,\"energy_after\":4,\"hp_after\":34,\"block_after\":11,\"damage_hp\":0,\"block_gained\":11,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":4,\"energy_after\":3,\"hp_after\":34,\"block_after\":19,\"damage_hp\":0,\"block_gained\":8,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DAGGER_THROW\",\"target\":1,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":19,\"damage_hp\":9,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:0\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":19,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":24,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":24,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~535, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 8)\",\"rollout_turns\":\"T1 exact: hp -8, dmg 15; T2: hp -14 [14-14], dmg 22 [22-22], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 52 [52-52], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 2 (this turn: 毒药水 0.4 HP; later turns: 毒药水 in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 34\"}",
++        "plan8": "{\"focus\":\"女王\",\"plays\":\"许愿, then 灵动步法+, then 后空翻, then 生产制造, then 投掷匕首 -> 女王, then 后空翻, then 灵动步法, then 偏折\",\"result\":\"survives with 29/62 HP before healing\",\"hp_lost\":5,\"damage_dealt\":9,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 407 HP\",\"block_gained\":27,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":29,\"hp_after_pct\":47,\"dmg\":9,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"none\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":9,\"block_gained\":27,\"hp_after\":29,\"energy_left\":0,\"planned_actions\":8,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"1d6d7109af1c314af95cbf5f884425381968e44bd1e94f853870c1b39f1e73e5\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"DEFLECT\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"DEFLECT\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":27,\"damage\":9,\"blockGained\":27,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DEFEND_SILENT\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":407,\"poison\":0,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":13,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":1,\"energy_after\":3,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DAGGER_THROW\",\"target\":1,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":9,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":0,\"energy_after\":0,\"hp_after\":34,\"block_after\":27,\"damage_hp\":0,\"block_gained\":9,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~531, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 5)\",\"rollout_turns\":\"T1 exact: hp -5, dmg 9; T2: hp -14 [14-14], dmg 23 [23-23], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 61 [61-61], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 1 (later turns: 毒药水 in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 34\"}",
++        "plan9": "{\"plays\":\"许愿, then 灵动步法+, then 后空翻, then 生产制造, then 投掷匕首 -> 女王, then potion 毒药水 -> 女王, then potion 毒药水 -> 女王, then 后空翻, then 灵动步法\",\"result\":\"survives with 20/62 HP before healing\",\"hp_lost\":14,\"damage_dealt\":21,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 395 HP, 中毒 11\",\"block_gained\":18,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":20,\"hp_after_pct\":32,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"毒药水, 毒药水\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":21,\"block_gained\":18,\"hp_after\":20,\"energy_left\":0,\"planned_actions\":9,\"planned_card_actions\":7,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"7d9b308fc1f32473c8dc0657092e9c511caf66ffef5d22e53a92bdccf7d67869\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":18,\"damage\":9,\"blockGained\":18,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DEFLECT\",\"DEFEND_SILENT\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":407,\"poison\":12,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":13,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":1,\"energy_after\":3,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DAGGER_THROW\",\"target\":1,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":9,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:0\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:1\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~543, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 21; T2: hp -7 [7-7], dmg 17 [17-17], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 43 [43-43], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 2 (this turn: 毒药水 0.4 HP, 毒药水 0.4 HP); potion cost 0 HP (potion table, this act's held value); total 34\"}",
++        "plan10": "{\"focus\":\"火炬头聚合体\",\"plays\":\"许愿, then 灵动步法+, then 后空翻, then 生产制造, then 投掷匕首 -> 火炬头聚合体, then 后空翻, then 灵动步法, then 偏折\",\"result\":\"survives with 29/62 HP before healing\",\"hp_lost\":5,\"damage_dealt\":9,\"enemies_after\":\"火炬头聚合体 199 HP; 女王 416 HP\",\"block_gained\":27,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":29,\"hp_after_pct\":47,\"dmg\":9,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 19\",\"block_wasted\":0,\"potions_used\":\"none\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":9,\"block_gained\":27,\"hp_after\":29,\"energy_left\":0,\"planned_actions\":8,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"a638800d571cffd32a9206c1323e3cd1e3f15a223bc7aa7fdbb2b1be49cf3b98\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"DEFLECT\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":2,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DAGGER_THROW\":1,\"DEFLECT\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":27,\"damage\":9,\"blockGained\":27,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"DEFEND_SILENT\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":5,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":199,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":13,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":1,\"energy_after\":3,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DAGGER_THROW\",\"target\":0,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":13,\"damage_hp\":9,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":18,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":0,\"energy_after\":0,\"hp_after\":34,\"block_after\":27,\"damage_hp\":0,\"block_gained\":9,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~531, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 5)\",\"rollout_turns\":\"T1 exact: hp -5, dmg 9; T2: hp -14 [14-14], dmg 23 [23-23], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 61 [61-61], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 1 (later turns: 毒药水 in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 34\"}",
++        "plan11": "{\"plays\":\"许愿, then 灵动步法+, then 后空翻, then 生产制造, then 偏折, then 投掷匕首 -> 女王, then potion 毒药水 -> 女王, then potion 毒药水 -> 女王, then 后空翻, then 防御\",\"result\":\"survives with 32/62 HP before healing\",\"hp_lost\":2,\"damage_dealt\":21,\"enemies_after\":\"火炬头聚合体 208 HP; 女王 395 HP, 中毒 11\",\"block_gained\":30,\"cards_drawn\":4,\"lasting_value\":\"sets up a power worth about 11 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"许愿\",\"hp_after\":32,\"hp_after_pct\":52,\"dmg\":21,\"lethal_now\":\"no\",\"enemy_threat_next\":22,\"setup_turn\":false,\"scaling_gained\":\"plays power 灵动步法+; lasting value 11\",\"block_wasted\":0,\"potions_used\":\"毒药水, 毒药水\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":21,\"block_gained\":30,\"hp_after\":32,\"energy_left\":0,\"planned_actions\":10,\"planned_card_actions\":8,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"b3ac2b2f8e1551128fd85a29538a60499eb894db66450ed96a6982f6af7f2a21\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"WISH\":1,\"FOOTWORK\":1,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1,\"DEFEND_SILENT\":1},\"effect_resolutions\":{\"WISH\":1,\"FOOTWORK\":1,\"BACKFLIP\":2,\"PRODUCTION\":1,\"DEFLECT\":1,\"DAGGER_THROW\":1,\"POTION:POISON_POTION:0\":1,\"POTION:POISON_POTION:1\":1,\"DEFEND_SILENT\":1},\"energy_paid\":5,\"prefix_energy_paid\":5,\"established_before\":{\"energy\":3,\"hp\":34,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"WISH\",\"FOOTWORK\",\"BACKFLIP\",\"MASTER_PLANNER\",\"PRODUCTION\",\"DEFLECT\",\"DAGGER_THROW\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":0,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":416,\"poison\":0,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":34,\"block\":30,\"damage\":9,\"blockGained\":30,\"drawn\":4,\"drawBudget\":4,\"hand\":[\"MASTER_PLANNER\",\"FOOTWORK\",\"DEFEND_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":3,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":208,\"poison\":0,\"artifact\":0},{\"index\":1,\"hp\":407,\"poison\":12,\"artifact\":0}],\"unknown\":[\"许愿\"]},\"actions\":[{\"card\":\"WISH\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"FOOTWORK\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":\"power\",\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":0,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":13,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"PRODUCTION\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":1,\"energy_after\":3,\"hp_after\":34,\"block_after\":13,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":3,\"hp_after\":34,\"block_after\":20,\"damage_hp\":0,\"block_gained\":7,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DAGGER_THROW\",\"target\":1,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":34,\"block_after\":20,\"damage_hp\":9,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:0\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":20,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"POTION:POISON_POTION:1\",\"target\":1,\"cost\":0,\"effects\":1,\"leaves_pool\":\"exhaust\",\"energy_before\":2,\"energy_after\":2,\"hp_after\":34,\"block_after\":20,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":34,\"block_after\":25,\"damage_hp\":0,\"block_gained\":5,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFEND_SILENT\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":1,\"energy_after\":0,\"hp_after\":34,\"block_after\":30,\"damage_hp\":0,\"block_gained\":5,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"许愿\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"许愿\"]},\"rollout\":\"5-turn rollout (24 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~529, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 2)\",\"rollout_turns\":\"T1 exact: hp -2, dmg 21; T2: hp -14 [14-14], dmg 22 [22-22], alive 24/24, won 0/24; T3: hp -27 [27-27], dmg 52 [52-52], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"rollout_kill_order\":\"火炬头聚合体 > 女王: the later turns aim at 火炬头聚合体 first (火炬头聚合体 dead by T5 in 0/24); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"女王 > 火炬头聚合体: further HP loss 34, over 0/24, dead 24/24, 女王 dead 0/24\",\"history_estimate\":\"further HP loss 34, win 0% (this encounter n=58; estimate from act-3 boss fights n=209, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/1200，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\",\"potion_cost\":\"fight HP loss 34; potions used 2 (this turn: 毒药水 0.4 HP, 毒药水 0.4 HP); potion cost 0 HP (potion table, this act's held value); total 34\"}"
++      }
++    }
++  }
++}
+diff --git a/agent/tests/jev-context-limit.test.ts b/agent/tests/jev-context-limit.test.ts
+new file mode 100644
+index 000000000..68dfdd520
+--- /dev/null
++++ b/agent/tests/jev-context-limit.test.ts
+@@ -0,0 +1,115 @@
++import { readFileSync } from "node:fs";
++import { describe, expect, it } from "vitest";
++
++import { askJevLogged, type JevPromptMeta, type JevPromptRecord } from "../src/eye/jev-prompt-log.js";
++import { compactJevRequest, isJevContextLimitError, type CompactJevRequest } from "../src/reflex/jev/compact-request.js";
++import { JevError, type JevAskResult } from "../src/reflex/jev/client.js";
++import type { QuestionSet } from "../src/reflex/jev/questions.js";
++
++const fixture = JSON.parse(readFileSync(new URL("./jev-context-limit-request.json", import.meta.url), "utf8")) as {
++  model: string; state: Record<string, unknown>; questions: QuestionSet;
++};
++const meta: JevPromptMeta = { decisionId: "fixed-context-limit", runId: "16UDD0430SXT", floor: 48, turn: 1,
++  fingerprint: "fixed", observedTs: "2026-10-12T09:21:39.904Z", label: "combat/plan-choice", jevContext: "v1", call: "ask" };
++const failure = () => new JevError("unknown", '400 {"detail":{"error_type":"max_tokens_exceeded"}}', { status: 400 });
++const answer: JevAskResult = { model: fixture.model, answers: {
++  plan: { type: "choice", choice: "plan2", confidence: 0.75, probabilities: { plan2: 0.75 }, raw: {} },
++}, inputTokens: 4_000, outputTokens: 42, latencyMs: 9, requestId: "fixed-request" };
++
++function expanded(compact: CompactJevRequest): QuestionSet {
++  const table = compact.state[compact.encoding.stateKey] as { values: Record<string, unknown> };
++  const expand = (value: unknown): unknown => {
++    if (Array.isArray(value)) return value.map(expand);
++    if (value !== null && typeof value === "object") {
++      const object = value as Record<string, unknown>;
++      if (Object.keys(object).length === 1 && compact.encoding.refKey in object) {
++        const key = object[compact.encoding.refKey] as string;
++        expect(Object.hasOwn(table.values, key)).toBe(true);
++        return expand(table.values[key]);
++      }
++      return Object.fromEntries(Object.entries(object).map(([key, item]) => [key, expand(item)]));
++    }
++    return value;
++  };
++  return Object.fromEntries(Object.entries(compact.questions).map(([id, question]) => {
++    if (question.type !== "choice") return [id, question];
++    return [id, { ...question, criteria: Object.fromEntries(Object.entries(question.criteria).map(([option, text]) => {
++      if (text === null) return [option, text];
++      try { return [option, JSON.stringify(expand(JSON.parse(text)))]; } catch { return [option, text]; }
++    })) }];
++  }));
++}
++
++describe("bounded Jev context-limit recovery", () => {
++  it("preserves all 11 recorded options and every nested fact while reducing the rejected body", () => {
++    const before = JSON.stringify(fixture);
++    const compact = compactJevRequest(fixture.state, fixture.questions)!;
++    expect(compact).not.toBeNull();
++    expect(compact.encoding.encodedBytes).toBeLessThan(compact.encoding.originalBytes * 0.8);
++    expect(expanded(compact)).toEqual(fixture.questions);
++    expect(Object.keys((compact.questions["plan"] as { criteria: object }).criteria)).toEqual(
++      Object.keys((fixture.questions["plan"] as { criteria: object }).criteria),
++    );
++    for (const [key, value] of Object.entries(fixture.state)) expect(compact.state[key]).toEqual(value);
++    expect(JSON.stringify(fixture)).toBe(before);
++  });
++
++  it("does not collide with existing fields or lose null, false, zero, arrays or plain criteria", () => {
++    const shared = { text: "固定资料。".repeat(100), missing: null, valid: false, amount: 0, list: [0, false, null] };
++    const questions: QuestionSet = { pick: { type: "choice", instructions: "same", criteria: {
++      a: JSON.stringify({ shared, score: 1 }), b: JSON.stringify({ shared, score: 2 }), plain: "plain text", nil: null,
++    } }, confidence: { type: "noul", instructions: "unchanged" } };
++    const state = { __jev_shared_0: "keep", __jev_ref_0: "keep" };
++    const compact = compactJevRequest(state, questions)!;
++    expect(compact.encoding.stateKey).not.toBe("__jev_shared_0");
++    expect(compact.encoding.refKey).not.toBe("__jev_ref_0");
++    expect(expanded(compact)).toEqual(questions);
++    expect(compact.state).toMatchObject(state);
++    expect(compactJevRequest({}, { pick: { type: "choice", instructions: "small", criteria: { a: "one" } } })).toBeNull();
++  });
++
++  it("recovers once, returns the model answer unchanged, and logs both actual wire bodies", async () => {
++    const rows: JevPromptRecord[] = [];
++    const sent: { state: unknown; questions: QuestionSet }[] = [];
++    const client = { model: fixture.model, async ask(state: unknown, questions: QuestionSet) {
++      sent.push({ state, questions });
++      if (sent.length === 1) throw failure();
++      return answer;
++    } };
++    const result = await askJevLogged(client, { path: "unused", write: (row) => { rows.push(row); } }, meta, fixture.state, fixture.questions);
++    expect(sent).toHaveLength(2);
++    expect(result.answers).toBe(answer.answers);
++    expect(result.requestId).toBe(answer.requestId);
++    expect(result.inputTokens).toBe(answer.inputTokens);
++    expect(rows).toHaveLength(2);
++    expect(rows[0]!.error?.status).toBe(400);
++    expect(rows[0]!.transport_encoding).toBeUndefined();
++    expect(rows[1]!.transport_encoding?.kind).toBe("shared-json-values-v1");
++    for (const [index, row] of rows.entries()) {
++      expect(row.request).toEqual({ model: fixture.model, ...sent[index] });
++      expect(row.decision_id).toBe(meta.decisionId);
++    }
++  });
++
++  it("does not retry another rejection, or unrelated 400/auth/validation errors", async () => {
++    for (const error of [failure(), new JevError("unknown", "400 bad request", { status: 400 }),
++      new JevError("auth", '401 {"detail":{"error_type":"max_tokens_exceeded"}}', { status: 401 }),
++      new JevError("validation", "422 invalid", { status: 422 })]) {
++      let calls = 0;
++      const client = { model: "same", async ask(): Promise<JevAskResult> { calls += 1; throw error; } };
++      await expect(askJevLogged(client, null, meta, fixture.state, fixture.questions)).rejects.toBe(error);
++      expect(calls).toBe(isJevContextLimitError(error) ? 2 : 1);
++    }
++  });
++
++  it("sends successful requests unchanged and leaves uncompressible failures fatal", async () => {
++    const sent: unknown[] = [];
++    const client = { model: "same", async ask(state: unknown, questions: QuestionSet) { sent.push({ state, questions }); return answer; } };
++    await askJevLogged(client, null, meta, fixture.state, fixture.questions);
++    expect(sent).toEqual([{ state: fixture.state, questions: fixture.questions }]);
++    let calls = 0;
++    await expect(askJevLogged({ model: "same", async ask(): Promise<JevAskResult> { calls += 1; throw failure(); } }, null, meta,
++      {}, { pick: { type: "choice", instructions: "same", criteria: { a: "plain" } } })).rejects.toThrow("max_tokens_exceeded");
++    expect(calls).toBe(1);
++  });
++});

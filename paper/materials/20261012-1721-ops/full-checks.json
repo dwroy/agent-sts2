@@ -1,0 +1,27 @@
+[
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "--maxWorkers=2"
+    ],
+    "exit": 0
+  }
+]
