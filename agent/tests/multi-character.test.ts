@@ -4,11 +4,11 @@
  * knowledge directory reads as empty knowledge (never the Ironclad's), the climb's target, the monster-records merge,
  * and the model-visible character name. Temp files only; no model, no game.
  */
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { loadConfig } from "../src/core/config.js";
 import { parseGameState } from "../src/hand/mod/schema.js";
@@ -17,6 +17,7 @@ import { cardValue, deckProfile, hasCardValues, SKIP_BAR } from "../src/hand/scr
 import { characterKey, DEFAULT_CHARACTER, KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile, setKnowledgeCharacter } from "../src/knowledge/files.js";
 import { mergeMonsterRecords } from "../src/knowledge/monster-db.js";
 import { loadKnowledgeData, parsePostmortems } from "../src/knowledge/render/data.js";
+import * as knowledgeData from "../src/knowledge/render/data.js";
 import { renderKnowledgePrefix } from "../src/knowledge/render/knowledge-prefix.js";
 import { fullSystemPrompt, FULL_KNOWLEDGE_NOTE } from "../src/brain/knowledge.js";
 import { SYSTEM, systemRules } from "../src/brain/llm/deepseek.js";
@@ -28,11 +29,41 @@ import { bossNote } from "../src/memory/run-journal.js";
 import { baseState, mapPayload, testKnowledge } from "./scenarios.js";
 
 const config = loadConfig({} as NodeJS.ProcessEnv);
+const prefixFixtures: string[] = [];
 
 afterEach(() => {
+  vi.restoreAllMocks();
+  for (const dir of prefixFixtures.splice(0)) rmSync(dir, { recursive: true, force: true });
   setKnowledgeCharacter(null);
   delete process.env["TARGET_ASCENSION"];
 });
+
+function prefixFixture(withPotionTable = false): string {
+  const dir = mkdtempSync(join(tmpdir(), "character-prefix-"));
+  prefixFixtures.push(dir);
+  mkdirSync(join(dir, "common"));
+  copyFileSync(join(import.meta.dirname, "gkb-data/knowledge/common/monster-db.json"), join(dir, "common/monster-db.json"));
+  // A different character's fixed sentinel must never leak into the Silent prefix.
+  mkdirSync(join(dir, "characters/ironclad"), { recursive: true });
+  writeFileSync(join(dir, "characters/ironclad/ironclad-guide.md"), "另一角色夹具内容");
+  const table = {
+    meta: { generated: "fixed-fixture", min_n: 1, ascensions: [0] },
+    rates: { "0": { "1": { fights: 1, T: 1, D: 1, L: 1, r: 1, h: 1, b: 1, v_card: 1, v_energy: 1, from_asc: 0 } } },
+    potions: { FIXTURE_POTION: { name: "静默夹具药水", category: "other", silent: true, by_asc: {}, log: {} } },
+  };
+  writeFileSync(join(dir, "characters/ironclad/potion-equivalents.json"), JSON.stringify(table));
+  if (withPotionTable) {
+    mkdirSync(join(dir, "characters/silent"));
+    writeFileSync(join(dir, "characters/silent/potion-equivalents.json"), JSON.stringify(table));
+  }
+  // Fail before reading mutable knowledge if this regression returns to the production directory.
+  const load = knowledgeData.loadKnowledgeData;
+  vi.spyOn(knowledgeData, "loadKnowledgeData").mockImplementation((path) => {
+    expect(path, "prefix tests must use fixed knowledge").toBe(dir);
+    return load(path);
+  });
+  return dir;
+}
 
 function selectState(selected: string | null, clicked: boolean, ascension = 0, max = 5): Record<string, unknown> {
   const actions = ["close_main_menu_submenu", "select_character", ...(clicked ? ["embark", "increase_ascension", "decrease_ascension"] : [])];
@@ -173,13 +204,28 @@ describe("a character with no knowledge yet", () => {
 
   it("renders a prefix and a system prompt that say Silent and carry no Ironclad guide", () => {
     setKnowledgeCharacter("silent");
-    const prefix = renderKnowledgePrefix({ ascension: 0, knowledgeDir: KNOWLEDGE_DIR }, { path: "none", sections: new Map() });
+    const dir = prefixFixture();
+    const prefix = renderKnowledgePrefix({ ascension: 0, knowledgeDir: dir }, { path: "none", sections: new Map() });
     expect(prefix).toContain("静默猎手攻略");
     expect(prefix).toContain("静默猎手还没有药水换算表");
     expect(prefix).not.toContain("铁甲战士攻略");
+    expect(prefix).not.toContain("另一角色夹具内容");
+    expect(prefix).not.toContain("静默夹具药水");
     const system = fullSystemPrompt(prefix);
     expect(system).toContain("advising a bot (Silent, climbing ascension levels)");
     expect(system).not.toContain("Ironclad");
+  });
+
+  it("renders the Silent's own fixed potion table when present without another character's guide", () => {
+    setKnowledgeCharacter("silent");
+    const dir = prefixFixture(true);
+    const prefix = renderKnowledgePrefix({ ascension: 0, knowledgeDir: dir }, { path: "none", sections: new Map() });
+    expect(prefix).toContain("静默猎手攻略");
+    expect(prefix).toContain("静默夹具药水 FIXTURE_POTION");
+    expect(prefix).not.toContain("静默猎手还没有药水换算表");
+    expect(prefix).not.toContain("铁甲战士攻略");
+    expect(prefix).not.toContain("另一角色夹具内容");
+    expect(fullSystemPrompt(prefix)).toContain("advising a bot (Silent, climbing ascension levels)");
   });
 
   it("card values are neutral: no tier, no skip-bar cut", () => {

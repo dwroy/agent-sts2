@@ -88,6 +88,16 @@ def links(report,batch,root,scripts):
 
 def experience_audit(report,batch,root,scripts):
     if batch.get('task') not in ('experience-update','experience-asc-audit') or batch.get('proposal_policy')!='Roy-2026-10-07-learning': return []
+    # A blocked, explicitly empty attempt remains failed/retryable in the caller.
+    # There is no source lesson to repair; any claimed output still takes the full audit below.
+    if (batch.get('task') == report.get('task') == 'experience-update'
+            and report.get('status') == 'blocked'
+            and all(key in report and report[key] is None for key in ('commit', 'merged'))
+            and all(type(report.get(key)) is int and report[key] == 0 for key in ('added', 'updated', 'retired'))
+            and all(report.get(key) == [] for key in ('code_proposals', 'implementation_domains', 'mechanisms'))
+            and isinstance(report.get('ledger'), dict)
+            and all(report['ledger'].get(key) == [] for key in ('added', 'proposed', 'retired'))):
+        return []
     commit=report.get('commit')
     if not isinstance(commit,str) or not re.fullmatch('[0-9a-f]{7,40}',commit): return ['missing source commit for proposal audit']
     path=f"knowledge/characters/{batch['character']}/experience.json"

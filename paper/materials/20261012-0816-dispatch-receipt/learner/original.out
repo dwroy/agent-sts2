@@ -1,0 +1,128 @@
+已提交审计子项 `fdaf787a3`，工作树干净。完整重跑 tsc、3200 项测试通过；撤掉接线后 4 项失败，恢复后 13 项通过。
+
+live 预检发现 5 处文档/记录冲突，按要求停止合入；没有新增版本。十项原提案均保留 waiting。
+
+[提案及逐项证据](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-074301-s2/learner/runs/20261012-074315-strategy-proposal/proposal.md) · [完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-074301-s2/learner/runs/20261012-074315-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-074301-s2-strategy-proposal",
+  "base": "bdd91dea013d077a0e3cd4690bfeae6adca0b1ac",
+  "runs": [
+    "DUZUBAJ3A8GP",
+    "5PM6JAQG6FNQ",
+    "CA5KE8GFJ9X2",
+    "8JRE1C4H4Z2W",
+    "YF0LXT1QSTGG",
+    "XP2SL33HT0D9"
+  ],
+  "fixes": [
+    {
+      "commit": "fdaf787a372880b0438e73bcac7e6d2168b038ed",
+      "source_parent": "bdd91dea013d077a0e3cd4690bfeae6adca0b1ac",
+      "ledger": ["silent-0079"],
+      "summary": "静默A10候选与单步派发回执分账；未改选择规则，尚未合入live。",
+      "proposal_ids": [
+        "silent-proposal-578e415a259e6835",
+        "silent-proposal-c0767768bf6a7ab1",
+        "silent-proposal-1044224808015e5c",
+        "silent-proposal-c59f592f1427a67e"
+      ]
+    }
+  ],
+  "skipped": ["十项宽提案仍有证据或完整消费者验收缺口，均保留waiting。"],
+  "merged": null,
+  "version": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3200},
+  "live_tests": null,
+  "code_proposals": [
+    "silent-proposal-c20b5139dd0dff71",
+    "silent-proposal-ae9e692d680e3819",
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c",
+    "silent-proposal-7cbc6005db712ba9",
+    "silent-proposal-c59f592f1427a67e"
+  ],
+  "implementation_domains": ["combat", "sl", "structure"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-c20b5139dd0dff71",
+      "state": "waiting",
+      "reason": "缺冻结A10移动输入下毒、挡、污染的联合消费者校准和完整替线后继，不能据单次9损改少打技能规则。"
+    },
+    {
+      "id": "silent-proposal-ae9e692d680e3819",
+      "state": "waiting",
+      "reason": "缺遗忘死亡返敏、多来源同种抢夺及临时属性混合返还的隔离帧，不能补完整逐实体模型或固定击杀顺序。"
+    },
+    {
+      "id": "silent-proposal-52f1e1bd2e7db0ed",
+      "state": "waiting",
+      "reason": "加压与攻击增长已核；缺覆甲减层条件隔离、固定A10移动表联合重放，首样本读取子项不代表整项完成。"
+    },
+    {
+      "id": "silent-proposal-6dd8bbff876be528",
+      "state": "waiting",
+      "reason": "已核召唤初帧及力量0→2→4；缺同种重复召唤身份隔离、完整敌方行动时序与消费者验收，以及另一杀序整战后继。"
+    },
+    {
+      "id": "silent-proposal-578e415a259e6835",
+      "state": "waiting",
+      "reason": "旧预测审计已为live祖先；本批单步派发子项因合并预检冲突未上线。跨重规划完整动作序列、能力建立及轮末资源仍未闭环。"
+    },
+    {
+      "id": "silent-proposal-c0767768bf6a7ab1",
+      "state": "waiting",
+      "reason": "旧资源比较已为live祖先；本批回执子项未合入。覆盖重放、弃牌续步至整轮完成仍缺联合验收，改探索缺受控完整后继。"
+    },
+    {
+      "id": "silent-proposal-a46bdb7fe711d79a",
+      "state": "waiting",
+      "reason": "已有阶段参考仅覆盖子项；持有、建立、分阶段结算到实际派发的全链审计未齐，缺同资源完整后继支持改排序。"
+    },
+    {
+      "id": "silent-proposal-1044224808015e5c",
+      "state": "waiting",
+      "reason": "已核两组同指纹血价；仍缺相同抽序、成长后继及独立整战胜线，不能启用固定低损血优先。本批回执子项未合入。"
+    },
+    {
+      "id": "silent-proposal-7cbc6005db712ba9",
+      "state": "waiting",
+      "reason": "已核14初挡、临时减力恢复和57→38→28；缺额外触发隔离及抽弃重规划到实际兑现的联合验收。"
+    },
+    {
+      "id": "silent-proposal-c59f592f1427a67e",
+      "state": "waiting",
+      "reason": "旧预测审计和资源比较已上线；本批单步回执子项未合入。完整实际资源、能力兑现、恢复链及受控胜线仍缺。"
+    }
+  ],
+  "merge_blocker": {
+    "conflicts": [
+      "docs/codex-ops.md",
+      "notes/for-roy.md",
+      "ops/inbox-dev.md",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl"
+    ],
+    "preserved_refresh_commit": "574d27dea9593ec14d85b22ff0fdb59c791270d0"
+  },
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-074301-s2/learner/runs/20261012-074315-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a12d59-6e0e-7d83-951f-f8275bab5e9f
+轮数：1；工具调用：command_execution×77 file_change×9
+token：输入 217.3k、输出 47.1k（其中推理 19.0k）、cache 读 11168.0k、cache 写 0（命中 98.1%）
+成本：未提供
+耗时：1794.7 s（墙钟）
+时间：首个事件 9.7 s、模型首个输出 14.5 s、首次工具 19.0 s、末次工具结束 1754.8 s；工具内共 1155.7 s，其余（模型生成、推理、网络）629.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-074301-s2）；模型的工具调用 exec×70；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T07-43-18-01a12d59-6e0e-7d83-951f-f8275bab5e9f.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-074301-s2/learner/runs/20261012-074315-strategy-proposal.jsonl

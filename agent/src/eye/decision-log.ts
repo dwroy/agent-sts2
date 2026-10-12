@@ -86,6 +86,9 @@ export interface DecisionRecord {
   rollout_best_chosen?: boolean | null;
   /** Silent A10 HP-guard candidate snapshots, before SL; never recorded as actual savings. */
   hp_guard?: JsonValue;
+  /** Silent A10 candidate predictions and the loop's separate single-action dispatch receipt. */
+  selection_audit?: JsonValue;
+  selection_dispatch?: JsonValue;
   /**
    * Combat plan choice (2026-10-04): the combat planner's time to the question and its parts (planner, solve, mc, rollout,
    * boss_sim, other ms), the process's CPU over it, the machine's load, B2's fights done, the SL retry memo's hits
