@@ -1,0 +1,27 @@
+commit ec29ea34b919344b707e57ba472ea210f9c39d62
+Author:     Roy <me@dwroy.com>
+AuthorDate: Mon Oct 12 19:10:32 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Mon Oct 12 19:10:32 2026 +0800
+
+    Fix observed Silent Crusher facing rounding
+    
+    Preserve the observed Weak-adjusted fraction until the facing change
+    for the verified Silent A10 Enlarging Strike contexts. Drop the marker
+    from later rollout turns and preserve unknown contexts.
+    
+    Evidence: NHA2KW0RB7VP F33 T2; JLN5SK17W4FQ and S9UZAK0JP0C0 F33 T2/T7.
+    Counterexample excluded: LS8035TB32P3 F33 T2 Shrink.
+    Ledger: silent-0263, silent-0264.
+    Proposal: silent-proposal-cfecb5580938873d.
+    
+    Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+
+ agent/src/reflex/combat-plan.ts                 |     2 +
+ agent/src/reflex/rollout.ts                     |     2 +-
+ agent/src/reflex/silent-crusher-facing.ts       |    32 +
+ agent/src/reflex/turn-solver.ts                 |    14 +
+ agent/tests/silent-crusher-facing-evidence.json | 52281 ++++++++++++++++++++++
+ agent/tests/silent-crusher-facing.test.ts       |   131 +
+ 6 files changed, 52461 insertions(+), 1 deletion(-)

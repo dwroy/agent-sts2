@@ -1,0 +1,319 @@
+{
+  "checks": [
+    {
+      "name": "狡诈生成、容量和实际耗瓶",
+      "passed": true,
+      "detail": {
+        "distribution": {
+          "3": 37,
+          "2": 2,
+          "0": 3
+        },
+        "drinks": 42
+      }
+    },
+    {
+      "name": "KEN七次实际饮用",
+      "passed": true,
+      "detail": [
+        {
+          "floor": 3,
+          "turn": 2,
+          "potion": "ATTACK_POTION"
+        },
+        {
+          "floor": 4,
+          "turn": 1,
+          "potion": "STABLE_SERUM"
+        },
+        {
+          "floor": 5,
+          "turn": 2,
+          "potion": "SPEED_POTION"
+        },
+        {
+          "floor": 11,
+          "turn": 1,
+          "potion": "WEAK_POTION"
+        },
+        {
+          "floor": 11,
+          "turn": 2,
+          "potion": "ATTACK_POTION"
+        },
+        {
+          "floor": 15,
+          "turn": 1,
+          "potion": "GLOWWATER_POTION"
+        },
+        {
+          "floor": 15,
+          "turn": 1,
+          "potion": "SKILL_POTION"
+        }
+      ]
+    },
+    {
+      "name": "KEN胜战净损与零损耗药分账",
+      "passed": true,
+      "detail": {
+        "losses": [
+          0,
+          3,
+          0,
+          37,
+          6,
+          0
+        ],
+        "total": 46
+      }
+    },
+    {
+      "name": "KEN真实增上限回复",
+      "passed": true,
+      "detail": {
+        "frames": [
+          280336,
+          280337,
+          280382,
+          280383
+        ]
+      }
+    },
+    {
+      "name": "TXZ T6当轮资源差",
+      "passed": true,
+      "detail": {
+        "original": {
+          "hp_loss": 3,
+          "enemy_net_hp_loss": 36
+        },
+        "replacement": {
+          "hp_loss": 0,
+          "enemy_net_hp_loss": 27
+        },
+        "original_frames": [
+          281479,
+          281484
+        ],
+        "replacement_frames": [
+          281535,
+          281539
+        ]
+      }
+    },
+    {
+      "name": "WQ T9当轮资源差",
+      "passed": true,
+      "detail": {
+        "original": {
+          "hp_loss": 13,
+          "enemy_net_hp_loss": 24
+        },
+        "replacement": {
+          "hp_loss": 22,
+          "enemy_net_hp_loss": 39
+        },
+        "original_frames": [
+          282075,
+          282079
+        ],
+        "replacement_frames": [
+          282144,
+          282148
+        ]
+      }
+    },
+    {
+      "name": "NHA T1当轮资源差",
+      "passed": true,
+      "detail": {
+        "original": {
+          "hp_loss": 1,
+          "enemy_net_hp_loss": 8
+        },
+        "replacement": {
+          "hp_loss": 7,
+          "enemy_net_hp_loss": 24
+        },
+        "original_frames": [
+          283391,
+          283397
+        ],
+        "replacement_frames": [
+          283478,
+          283483
+        ]
+      }
+    },
+    {
+      "name": "WQ延时反例",
+      "passed": true,
+      "detail": {
+        "cost": {
+          "hp_loss": 4,
+          "enemy_net_hp_loss": 24
+        },
+        "frames": [
+          282330,
+          282331,
+          282336
+        ]
+      }
+    },
+    {
+      "name": "NHA相同替线重放",
+      "passed": true,
+      "detail": {
+        "hp_loss": 7,
+        "enemy_net_hp_loss": 24
+      }
+    },
+    {
+      "name": "TXZ五次出牌前4血成本",
+      "passed": true,
+      "detail": [
+        [
+          281312,
+          281313
+        ],
+        [
+          281338,
+          281339
+        ],
+        [
+          281367,
+          281368
+        ],
+        [
+          281399,
+          281400
+        ],
+        [
+          281565,
+          281566
+        ]
+      ]
+    },
+    {
+      "name": "TXZ后战可操作前死亡",
+      "passed": true,
+      "detail": {
+        "frames": [
+          281565,
+          281566
+        ]
+      }
+    },
+    {
+      "name": "Q6紧勒技能完成和轮末清层",
+      "passed": true,
+      "detail": {
+        "hp": [
+          103,
+          95,
+          85,
+          85,
+          83,
+          80
+        ],
+        "total": 23
+      }
+    },
+    {
+      "name": "Q6精英赢后接走廊死亡",
+      "passed": true,
+      "detail": {
+        "rooms": [
+          8,
+          9
+        ]
+      }
+    },
+    {
+      "name": "1913实际入口和锻造不回血",
+      "passed": true,
+      "detail": {
+        "frames_floor": [
+          24,
+          29,
+          31
+        ]
+      }
+    },
+    {
+      "name": "WQZVENQ7DTRP六尝试不作六独立局",
+      "passed": true,
+      "detail": [
+        {
+          "attempt": 1,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 2,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 3,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 4,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 5,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 6,
+          "result": "died"
+        }
+      ]
+    },
+    {
+      "name": "NHA2KW0RB7VP六尝试不作六独立局",
+      "passed": true,
+      "detail": [
+        {
+          "attempt": 1,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 2,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 3,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 4,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 5,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 6,
+          "result": "died"
+        }
+      ]
+    },
+    {
+      "name": "油灯可见字段不足以识别消费历史",
+      "passed": true,
+      "detail": {
+        "action_windows": 176,
+        "runs": [
+          "K3676LU8B0UH",
+          "NHA2KW0RB7VP",
+          "SADL3CGYTGSR"
+        ],
+        "limit": "空字段不证明无法实现；未覆盖首次吸收、重规划和SL恢复的完整消费轨迹"
+      }
+    }
+  ],
+  "software_tests_run": false
+}

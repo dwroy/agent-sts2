@@ -1,0 +1,24 @@
+commit 6403fdcdadc803a092beb5165a068e22bf51c412
+Author:     Roy <me@dwroy.com>
+AuthorDate: Sun Oct 11 20:23:11 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Sun Oct 11 20:23:11 2026 +0800
+
+    Model observed Silent Cunning Potion generation and hand capacity
+    
+    Reapply candidate 15ea09ad75a421d4bd65a820c187c8ee188186c8 on the current main baseline. Rechecked WQZVENQ7DTRP A10 F33 T9/T11, SADL3CGYTGSR A7 F8 T1, NB8KCF6HRGVF A10 F31 T5 and the nine linked runs. Ledger: silent-0256, silent-0257, silent-0258. Proposals: silent-proposal-4111ed10f08739cb and the generation portion of silent-proposal-a099e89437e942bb.
+    
+    Fixed tests fail without the change and pass after restoration; sandbox typecheck and tests pass. No new potion holding threshold or SL rule.
+    
+    Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+
+ agent/src/reflex/card-model.ts           |   15 +
+ agent/src/reflex/combat-plan.ts          |   11 +-
+ agent/src/reflex/rollout.ts              |    5 +-
+ agent/src/reflex/turn-solver.ts          |    9 +-
+ agent/src/sim/double-boss-start.ts       |    3 +-
+ agent/tests/silent-cunning-evidence.json |  514 +++++++++++++
+ agent/tests/silent-cunning-state.json    | 1241 ++++++++++++++++++++++++++++++
+ agent/tests/silent-cunning.test.ts       |  120 +++
+ 8 files changed, 1914 insertions(+), 4 deletions(-)

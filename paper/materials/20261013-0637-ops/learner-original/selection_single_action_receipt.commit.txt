@@ -1,0 +1,21 @@
+commit bade647f9fe4c9103b40e2f26b26296692ad24b7
+Author:     Roy <me@dwroy.com>
+AuthorDate: Mon Oct 12 08:59:05 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Mon Oct 12 08:59:05 2026 +0800
+
+    Integrate tested dispatch audit and fixed-data workflow repairs
+    
+    Replay fdaf787a3, 5ef3c4612 and 84366ad06 on live, preserving all other live code and records. Prior integration 3200 passes and paths 11 retained; repaired/new suites 53 and tsc pass.
+    
+    Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>
+    Agent: codex@xdwin1
+
+ agent/src/eye/decision-log.ts                 |   3 +
+ agent/src/hand/loop.ts                        |  19 ++--
+ agent/src/reflex/silent-selection-dispatch.ts |  35 ++++++++
+ agent/tests/blocked-experience-repair.test.ts |  84 ++++++++++++++++++
+ agent/tests/multi-character.test.ts           |  52 ++++++++++-
+ agent/tests/silent-selection-dispatch.test.ts | 121 ++++++++++++++++++++++++++
+ ops/proposal_dispatch.py                      |  10 +++
+ 7 files changed, 316 insertions(+), 8 deletions(-)
