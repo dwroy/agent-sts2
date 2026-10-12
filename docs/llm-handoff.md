@@ -19,6 +19,8 @@ Roy 2026-10-11 授权：框架把切换 LLM/账号作为标准能力，采用 dr
 
 ## 标准入口
 
+下方 `codex1-20261011` 命令与事务是历史账号迁移示例，不用于 2026-10-12 的同账号模型切换。新的账号迁移须使用新的事务 ID 和通过当前 `gpt-6.1-sol/xhigh/default` 预检的 profile；旧事务及其已冻结的 profile 保持原样。
+
 在主检出、宿主环境执行（沙箱的 PID/Herdr 可见性不足以验收排空）：
 
 ```bash
@@ -37,7 +39,7 @@ bash ops/herdr-host.sh run llm-switch-codex1 --close-on-exit -- \
 ```json
 {
   "engine": "codex", "account": "codex1",
-  "model": "gpt-6-astra", "effort": "xhigh", "service_tier": "default",
+  "model": "gpt-6.1-sol", "effort": "xhigh", "service_tier": "default",
   "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
   "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
   "handoff": "notes/codex1-drain-ops-handoff.md"
@@ -58,6 +60,6 @@ Codex preflight 文件是两项原 `checkCodex` 结果 `{role, home, check}`（r
 
 通用 `Handoff` 不选择供应商，也不启动模型。新适配器须实现 `backup(state)`、`activate(state)`、`rollback(state, backup)`、`bootstrap(state)`；提供目标能力/权限预检、全部在途进程清单与 checkpoint、新会话身份和真实配置验收。是否允许复用 session 必须由适配器明确证明，默认新建并从交接恢复业务状态。
 
-当前 CLI 只开放已实现的 Codex 账号适配，且不改变已授权 Astra/xhigh/default 策略。其他供应商或模型 profile 会显式拒绝；后续需接入对应 brain/learner/ops launcher 和测试后开放，不能只改 engine 字段就声称完成跨供应商切换。
+当前 CLI 只开放已实现的 Codex 账号适配，且不改变已授权 GPT-6.1 Sol/xhigh/default 策略。其他供应商或模型 profile 会显式拒绝；后续需接入对应 brain/learner/ops launcher 和测试后开放，不能只改 engine 字段就声称完成跨供应商切换。
 
 固定测试覆盖完成回调继续落盘、准入拦截、原队列保留、边界启动、配置选择器、并发互斥、所有权、失败回退、重放和身份验证；生产换号另外保存宿主排空/新会话及实际消费者证据。游戏规则与知识不在此变更范围。

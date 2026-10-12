@@ -21,7 +21,7 @@ it("uses explicit host access on all main ops launch paths, without conflicting 
     expect(args).toContain("danger-full-access");
     expect(args).toContain('approval_policy="never"');
     expect(args.some((arg) => /^(default_permissions|permissions\.ops\.filesystem)=/.test(arg))).toBe(false);
-    expect(args).toContain("gpt-6-astra");
+    expect(args).toContain("gpt-6.1-sol");
     expect(args).toContain('model_reasoning_effort="xhigh"');
   }
 });

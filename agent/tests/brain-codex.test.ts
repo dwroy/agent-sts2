@@ -602,9 +602,9 @@ describe("the codex start-up check", () => {
     expect(brain({ CODEX_HOME: "/c" }).codex.home).toBe("/c");
     expect(brain({ CODEX_HOME: "/c", BRAIN_CODEX_HOME: "/b" }).codex.home).toBe("/b");
     expect(brain({ BRAIN_CODEX_SERVICE_TIER: "default" }).codex.serviceTier).toBe("default");
-    // Defaults: gpt-6-astra at xhigh, 10 minutes, no call limit, no tools; BRAIN_ENGINE stays deepseek.
+    // Defaults: gpt-6.1-sol at xhigh, 10 minutes, no call limit, no tools; BRAIN_ENGINE stays deepseek.
     expect(brain({}).engine).toBe("deepseek");
-    expect(brain({}).engines.codex).toMatchObject({ model: "gpt-6-astra", effort: "xhigh", timeoutMs: 600_000, maxCalls: null });
+    expect(brain({}).engines.codex).toMatchObject({ model: "gpt-6.1-sol", effort: "xhigh", timeoutMs: 600_000, maxCalls: null });
     expect(brain({ BRAIN_CODEX_EFFORT: "high" }).engines.codex.effort).toBe("high");
     // xhigh is an effort for every engine now; the old values still parse.
     expect(brain({ BRAIN_CLAUDE_EFFORT: "xhigh" }).engines.claude.effort).toBe("xhigh");
