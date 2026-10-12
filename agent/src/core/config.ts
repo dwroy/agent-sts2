@@ -613,10 +613,10 @@ export const DEFAULT_CLAUDE_TIMEOUT_MS = 120_000;
 export const DEFAULT_CLAUDE_MAX_CALLS = 150;
 
 /**
- * Shared Codex defaults (Roy 2026-10-11): Astra / xhigh / normal, with a 512k configured context window.
+ * Shared Codex defaults (Roy 2026-10-12): GPT-6.1 Sol / xhigh / normal, with a 512k configured context window.
  * Always sent explicitly: isolated launchers ignore ~/.codex/config.toml.
  */
-export const DEFAULT_CODEX_MODEL = "gpt-6-astra";
+export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
 export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
 /** Explicit normal tier also clears priority inherited from an older session. */
 export const CODEX_SERVICE_TIER = "default";

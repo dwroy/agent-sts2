@@ -208,7 +208,7 @@ def validate_profile(profile):
         raise ValueError("account must be a local profile label")
     if profile["engine"] != "codex": raise ValueError("no validated adapter for requested engine")
     # Existing launch policy remains authoritative; this adapter does not silently change its overrides.
-    if (profile["model"], profile["effort"], profile["service_tier"]) != ("gpt-6-astra", "xhigh", "default"):
+    if (profile["model"], profile["effort"], profile["service_tier"]) != ("gpt-6.1-sol", "xhigh", "default"):
         raise ValueError("requested model policy needs its launcher adapter; no silent substitution")
     for name in ("learner_home", "brain_home"):
         path = Path(profile[name])

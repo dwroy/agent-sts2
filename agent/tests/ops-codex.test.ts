@@ -53,7 +53,7 @@ describe("command lines", () => {
     expect(cmd.args).toContain(`default_permissions="${OPS_PROFILE}"`);
     expect(cmd.args).toContain('model_reasoning_effort="xhigh"');
     expect(cmd.args).toContain('service_tier="default"');
-    expect(cmd.args).toContain("gpt-6-astra");
+    expect(cmd.args).toContain("gpt-6.1-sol");
     expect(cmd.args).toContain("model_auto_compact_token_limit=460800");
     expect(cmd.args.at(-1)).toBe("-");
     expect(cmd.stdin).toBe("PROMPT");
