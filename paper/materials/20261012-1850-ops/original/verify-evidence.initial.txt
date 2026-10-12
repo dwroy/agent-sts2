@@ -1,0 +1,71 @@
+import hashlib
+import json
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path('/home/dw/Projects/agent-sts2')
+OUT = Path(__file__).resolve().parent
+OLD = ROOT / '.worktrees/codex-strategy-silent-20261012-171039/learner/runs/20261012-171055-strategy-proposal'
+runs = json.loads((OUT / 'dispatch.json').read_text())['runs']
+identities = json.loads((OUT / 'run-identities.json').read_text())
+assert Counter(x['row']['run_id'] for x in identities) == Counter(runs)
+assert all(x['row']['character'] == 'SILENT' and x['row']['ascension'] == 10 for x in identities)
+manifest_bytes = (OLD / 'source-manifest.json').read_bytes()
+manifest = json.loads(manifest_bytes)
+data = {r: {'run': next(x['row'] for x in identities if x['row']['run_id'] == r),
+            'decisions': [], 'states': [], 'attempts': []} for r in runs}
+kind_map = {'logs/decisions.jsonl': 'decisions', 'logs/states.jsonl': 'states', 'logs/sl-attempts.jsonl': 'attempts'}
+for source, kind in kind_map.items():
+    selected = [x for x in manifest if x['source'] == source]
+    with (ROOT / source).open('rb') as handle:
+        for item in selected:
+            assert item['run'] in data
+            handle.seek(item['offset'])
+            raw = handle.read(item['bytes'])
+            assert hashlib.sha256(raw).hexdigest() == item['sha256'], (source, item['line'])
+            row = json.loads(raw)
+            if kind == 'states':
+                actual_run = row['state']['run_id']
+                assert row['state']['run']['character_id'] == 'SILENT'
+            elif kind == 'decisions':
+                actual_run = json.loads(row['fingerprint'])['run']
+            else:
+                actual_run = row['run_id']
+            assert actual_run == item['run']
+            row['_line'] = item['line']
+            data[actual_run][kind].append(row)
+    print(source, len(selected), '原字节SHA与身份一致', flush=True)
+(OUT / 'source-manifest.json').write_bytes(manifest_bytes)
+for run, rows in data.items():
+    (OUT / (run + '-input.json')).write_text(json.dumps(rows, ensure_ascii=False) + '\n')
+
+old_pairs = json.loads((OLD / 'evidence-audit.json').read_text())['pairs']
+pairs = []
+for pair in old_pairs:
+    rows = {x['_line']: x['state'] for x in data[pair['run']]['states']}
+    endpoints = [rows[x] for x in pair['state_lines']]
+    hp = [x['combat']['player']['current_hp'] for x in endpoints]
+    enemies = [[e['current_hp'] for e in x['combat']['enemies']] for x in endpoints]
+    assert hp == pair['hp'] and enemies == pair['enemy_hp'], pair
+    assert hp[0] - hp[1] == pair['hp_loss']
+    assert sum(enemies[0]) - sum(enemies[1]) == pair['enemy_net_loss']
+    pairs.append(pair)
+
+potion_rows = json.loads((OLD / 'potion-audit.json').read_text())
+states = {x['_line']: x['state'] for x in data['KEN58SH9SLZ6']['states']}
+potions = []
+for item in potion_rows:
+    before, after = [states[x] for x in item['state_lines']]
+    slots = [x['run']['potions'] for x in [before, after]]
+    def present(ps):
+        return any(p.get('slot_index') == item['slot'] and p.get('potion_id') == item['potion'] for p in ps)
+    potions.append({**item, 'slots_before': slots[0], 'slots_after': slots[1]})
+    assert present(slots[0]) and not present(slots[1]), item
+
+result = {'source_manifest': str(OLD / 'source-manifest.json'),
+          'source_manifest_sha256': hashlib.sha256(manifest_bytes).hexdigest(),
+          'verified_raw_rows': len(manifest),
+          'counts': {run: {k: len(v) for k, v in rows.items() if k != 'run'} for run, rows in data.items()},
+          'pairs': pairs, 'potions': potions}
+(OUT / 'evidence-audit.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+print('全部原始行、15组端点及7次耗药核验通过', flush=True)
