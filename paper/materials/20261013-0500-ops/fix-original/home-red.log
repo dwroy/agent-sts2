@@ -1,0 +1,86 @@
+E.FFFFEEE
+======================================================================
+ERROR: test_alternate_state_directory_uses_its_own_selector (test_boss_sim_home.BossSimHome.test_alternate_state_directory_uses_its_own_selector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_boss_sim_home.py", line 61, in test_alternate_state_directory_uses_its_own_selector
+    self.assertEqual(call.call_args.kwargs["env"]["LEARNER_CODEX_HOME"], str(self.home))
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'LEARNER_CODEX_HOME'
+
+======================================================================
+ERROR: test_no_selector_keeps_inherited_home_or_project_isolated_default (test_boss_sim_home.BossSimHome.test_no_selector_keeps_inherited_home_or_project_isolated_default) (env={'CODEX_HOME': '/fixture/inherited'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_boss_sim_home.py", line 77, in test_no_selector_keeps_inherited_home_or_project_isolated_default
+    self.assertEqual(call.call_args.kwargs["env"]["LEARNER_CODEX_HOME"], expected)
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'LEARNER_CODEX_HOME'
+
+======================================================================
+ERROR: test_no_selector_keeps_inherited_home_or_project_isolated_default (test_boss_sim_home.BossSimHome.test_no_selector_keeps_inherited_home_or_project_isolated_default) (env={'HOME': '/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmpjvytfev5'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_boss_sim_home.py", line 77, in test_no_selector_keeps_inherited_home_or_project_isolated_default
+    self.assertEqual(call.call_args.kwargs["env"]["LEARNER_CODEX_HOME"], expected)
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'LEARNER_CODEX_HOME'
+
+======================================================================
+ERROR: test_selected_project_home_overrides_inherited_global_home_and_reaches_herdr (test_boss_sim_home.BossSimHome.test_selected_project_home_overrides_inherited_global_home_and_reaches_herdr)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_boss_sim_home.py", line 39, in test_selected_project_home_overrides_inherited_global_home_and_reaches_herdr
+    self.assertEqual(env["LEARNER_CODEX_HOME"], str(self.home))
+                     ~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'LEARNER_CODEX_HOME'
+
+======================================================================
+FAIL: test_invalid_selector_never_dispatches_even_with_an_explicit_override (test_boss_sim_home.BossSimHome.test_invalid_selector_never_dispatches_even_with_an_explicit_override) (selected='relative-home')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_boss_sim_home.py", line 68, in test_invalid_selector_never_dispatches_even_with_an_explicit_override
+    call.assert_not_called()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 947, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'run' to not have been called. Called 1 times.
+Calls: [call(['nice', '-n', '19', '/usr/bin/python3', '/fixture/live/ops/codex-ops-learn.py', 'boss-check', '--character', 'silent'], env={'LEARNER_CODEX_HOME': '/fixture/explicit', 'CODEX_OPS_ROOT': '/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4_liurhw'}, stdout=<_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4_liurhw/ops/boss-sim-dispatch.log' mode='a' encoding='UTF-8'>, stderr=-2, timeout=120)].
+
+======================================================================
+FAIL: test_invalid_selector_never_dispatches_even_with_an_explicit_override (test_boss_sim_home.BossSimHome.test_invalid_selector_never_dispatches_even_with_an_explicit_override) (selected='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4_liurhw/missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_boss_sim_home.py", line 68, in test_invalid_selector_never_dispatches_even_with_an_explicit_override
+    call.assert_not_called()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 947, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'run' to not have been called. Called 1 times.
+Calls: [call(['nice', '-n', '19', '/usr/bin/python3', '/fixture/live/ops/codex-ops-learn.py', 'boss-check', '--character', 'silent'], env={'LEARNER_CODEX_HOME': '/fixture/explicit', 'CODEX_OPS_ROOT': '/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4_liurhw'}, stdout=<_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4_liurhw/ops/boss-sim-dispatch.log' mode='a' encoding='UTF-8'>, stderr=-2, timeout=120)].
+
+======================================================================
+FAIL: test_invalid_selector_never_dispatches_even_with_an_explicit_override (test_boss_sim_home.BossSimHome.test_invalid_selector_never_dispatches_even_with_an_explicit_override) (selected='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4_liurhw')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_boss_sim_home.py", line 68, in test_invalid_selector_never_dispatches_even_with_an_explicit_override
+    call.assert_not_called()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 947, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'run' to not have been called. Called 1 times.
+Calls: [call(['nice', '-n', '19', '/usr/bin/python3', '/fixture/live/ops/codex-ops-learn.py', 'boss-check', '--character', 'silent'], env={'LEARNER_CODEX_HOME': '/fixture/explicit', 'CODEX_OPS_ROOT': '/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4_liurhw'}, stdout=<_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4_liurhw/ops/boss-sim-dispatch.log' mode='a' encoding='UTF-8'>, stderr=-2, timeout=120)].
+
+======================================================================
+FAIL: test_invalid_selector_never_dispatches_even_with_an_explicit_override (test_boss_sim_home.BossSimHome.test_invalid_selector_never_dispatches_even_with_an_explicit_override)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_boss_sim_home.py", line 69, in test_invalid_selector_never_dispatches_even_with_an_explicit_override
+    self.assertIn("invalid project Codex home selector", (self.root / "ops/boss-sim-dispatch.log").read_text())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'invalid project Codex home selector' not found in ''
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.028s
+
+FAILED (failures=4, errors=4)

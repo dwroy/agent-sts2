@@ -1,0 +1,69 @@
+{
+  "task": "fix-batch",
+  "base": "39f5d913477d2d3ec1834388f66c1793c3feb48b",
+  "fixes": [
+    {
+      "item": "paper-dataset-git-consistency-race",
+      "commit": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+      "test": "agent/tests/paper-dataset-git.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "boss-sim-codex-home-preflight",
+      "commit": "5921f8cd045853182c867a6430e75c3fcde00a87",
+      "test": "agent/tests/boss-sim-home.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类：沿已有strategy-proposal与专用任务；不将有限子项当整个宽提案完成。"
+    },
+    {
+      "item": "具名卡资料全入口扩展、跨局未知项自动派发及量化构筑消费者",
+      "reason": "太大/独立功能：已核事件子项42c920f34已上线；其余入口、跨局未知派发与量化消费者继续原专用任务，不将部分交付当整个父需求完成。"
+    },
+    {
+      "item": "silent-0332 双boss接续资源异常根因",
+      "reason": "证据不足：队列的VAC6Z1PZ1QJG/64VJC5XT2AT2 A10 F47证据未附可重放触发样本；当前源码已保存分支/seed/资源诊断，沿原策略提案核实，不猜填HP/药水。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史失败恢复",
+      "reason": "证据不足：5c92f2aa已补后续失败stdout/stderr回执；旧rc2无stderr，不能证明未发送，保留幂等记录，不重发。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录竞态",
+      "reason": "证据不足：bc2c40e31及4fef181d5已提供会话前有界恢复和预检复验，上游创建/删除者未证，不放宽权限或清旧树。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时",
+      "reason": "证据不足：已有观察未证明永久饥饿或mod内部根因；保留原核查入口。"
+    },
+    {
+      "item": "全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存与性能专项",
+      "reason": "太大/独立功能及策略研究：继续各自已有专用任务，本批不混入。"
+    },
+    {
+      "item": "batch-c 原17.2秒超时的具体宿主时序",
+      "reason": "证据不足：固定测试问题已由5dd8a20c9修复；原17.2秒宿主超时缺少精确时序，不声称已证明负载根因。"
+    },
+    {
+      "item": "host-fixed-test-timeouts-010547 原宿主超时的具体时序/负载原因",
+      "reason": "证据不足：两项固定夹具已由d9881ba5/9e8c9355修复并实际合入，原021302完整宿主检查394文件4220项通过；原010547失败保留，不把修复夹具当作负载因果已证。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed（MEXYTC0Z2MQQ F12，silent-0446）",
+      "reason": "太大/独立结构提案：原silent-proposal-2d3aa8dfb27dbe3f明确要求独立strategy-proposal实现待确认事务、同局/同房动作效果核实、重启回放与一次性提交。本批不以任意dispatch失败或单纯HP变化无条件apply，不混入原结构任务。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3414
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/report.md"
+}

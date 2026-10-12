@@ -1,0 +1,45 @@
+/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/paper_dataset.py:364: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmpovooufpu/notes/lessons.md' mode='r' encoding='utf8'>
+  text = open(os.path.join(NOTES, "lessons.md"), encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/paper_dataset.py:364: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4cohhnfz/notes/lessons.md' mode='r' encoding='utf8'>
+  text = open(os.path.join(NOTES, "lessons.md"), encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/paper_dataset.py:364: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmpxdqkript/notes/lessons.md' mode='r' encoding='utf8'>
+  text = open(os.path.join(NOTES, "lessons.md"), encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/paper_dataset.py:364: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/tmp4lefltvz/notes/lessons.md' mode='r' encoding='utf8'>
+  text = open(os.path.join(NOTES, "lessons.md"), encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.
+======================================================================
+FAIL: test_actual_count_mismatch_preserves_failure_and_returns_nonzero (test_paper_dataset_git.GitSnapshot.test_actual_count_mismatch_preserves_failure_and_returns_nonzero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_paper_dataset_git.py", line 116, in test_actual_count_mismatch_preserves_failure_and_returns_nonzero
+    self.assertEqual(self.run_main(wrong_count), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_other_source_check_failure_also_returns_nonzero (test_paper_dataset_git.GitSnapshot.test_other_source_check_failure_also_returns_nonzero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_paper_dataset_git.py", line 125, in test_other_source_check_failure_also_returns_nonzero
+    self.assertEqual(self.run_main(), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_ref_movement_after_export_uses_same_cut_and_upstream_membership (test_paper_dataset_git.GitSnapshot.test_ref_movement_after_export_uses_same_cut_and_upstream_membership)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/ops/tests/test_paper_dataset_git.py", line 102, in test_ref_movement_after_export_uses_same_cut_and_upstream_membership
+    self.assertEqual({r["full_hash"] for r in rows if r["in_origin_main"] == "1"}, {self.first})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the first set but not the second:
+'4e0ec358d1bc293c8d3a6fb8829febd6635bf4ad'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.272s
+
+FAILED (failures=3)

@@ -1,0 +1,147 @@
+{
+  "at": "2026-10-13 05:04:36 CST",
+  "commits": [
+    "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+    "5921f8cd045853182c867a6430e75c3fcde00a87"
+  ],
+  "main_before": "a77d86dff0b917dc731b99ac6bd2721b60100647",
+  "live_before": "95415348188268f676ec8448cfc2448b1a597be4",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-fix-041242-20261013",
+  "paths": [
+    {
+      "path": "agent/tests/paper-dataset-git.test.ts",
+      "source": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+      "before_oid": null,
+      "source_oid": "8dada743d3be0793c90caabc94095a3aa8f469b3"
+    },
+    {
+      "path": "ops/paper_dataset.py",
+      "source": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+      "before_oid": "17eb648a6f8d5df85029c8d8b8ac3364b7bf4817",
+      "source_oid": "7bdfcc98e10fd8e9511c3df765268e0d5fad3032"
+    },
+    {
+      "path": "ops/tests/test_paper_dataset_git.py",
+      "source": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+      "before_oid": null,
+      "source_oid": "a75149e330a752c2d89aa2cc10c4bd01df64ce05"
+    },
+    {
+      "path": "agent/tests/boss-sim-home.test.ts",
+      "source": "5921f8cd045853182c867a6430e75c3fcde00a87",
+      "before_oid": null,
+      "source_oid": "3e3a72dee62e2386e4b587dfc912fd5b14e0c7a9"
+    },
+    {
+      "path": "ops/report.py",
+      "source": "5921f8cd045853182c867a6430e75c3fcde00a87",
+      "before_oid": "ca28733fbc3addaec3ee506b8ef0897fc158244f",
+      "source_oid": "af08e6ef42f9328e449de7ba4659da218a47c814"
+    },
+    {
+      "path": "ops/tests/test_boss_sim_home.py",
+      "source": "5921f8cd045853182c867a6430e75c3fcde00a87",
+      "before_oid": null,
+      "source_oid": "b8c5d427fb71c29e542e86bf3afe05dd838afe06"
+    }
+  ],
+  "patches": [
+    {
+      "commit": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+      "sha256": "8f4ba390b165dd94ce611eb752c066d914a4c67847819c66d6112f8338688d4f",
+      "path": "ops/codex-ops/record-staging/20261013-0500/16bfe0bd6.patch"
+    },
+    {
+      "commit": "5921f8cd045853182c867a6430e75c3fcde00a87",
+      "sha256": "2fa9b1fa530fa8e88aec321825818f77dae3d99b10e766cb78abac53288aade6",
+      "path": "ops/codex-ops/record-staging/20261013-0500/5921f8cd0.patch"
+    }
+  ],
+  "source_checks": [
+    {
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/paper-sandbox.log",
+      "exit": 0,
+      "tsc": 0,
+      "vitest_files": 344,
+      "vitest_cases": 3413
+    },
+    {
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/home-sandbox.log",
+      "exit": 0,
+      "tsc": 0,
+      "vitest_files": 345,
+      "vitest_cases": 3414
+    },
+    {
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/paper-final-sandbox.log",
+      "exit": 0,
+      "tsc": 0,
+      "vitest_files": 345,
+      "vitest_cases": 3414
+    },
+    {
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-041242/learner/runs/20261013-041303-fix-batch/home-final-sandbox.log",
+      "exit": 0,
+      "tsc": 0,
+      "vitest_files": 345,
+      "vitest_cases": 3414
+    }
+  ],
+  "original_branch_conflicts": {
+    "status": "blocked",
+    "merged": null,
+    "before_merge": "95415348188268f676ec8448cfc2448b1a597be4",
+    "after_preflight": "95415348188268f676ec8448cfc2448b1a597be4",
+    "refresh_commit": "95415348188268f676ec8448cfc2448b1a597be4",
+    "preflight_exit": 1,
+    "conflicts": [
+      "eval/versions.json",
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fix-queue-v4.md",
+      "notes/lessons.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/silent/cost.md"
+    ],
+    "knowledge_conflicts": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "source_commits_are_live_ancestors": {
+      "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f": false,
+      "5921f8cd045853182c867a6430e75c3fcde00a87": false
+    },
+    "live_status_after": [
+      " M knowledge/characters/silent/fight-value-gates.json",
+      " M notes/monster-db-check.md"
+    ],
+    "code_merge_started": false,
+    "live_checks_run": false,
+    "new_eval_version": null,
+    "ledger_status_shipped_written": false
+  },
+  "gameplay_behavior_or_knowledge_or_configuration_changed": false,
+  "release_id_not_incremented_for_ops_only_fixes": true
+}

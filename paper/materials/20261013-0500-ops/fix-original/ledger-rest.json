@@ -1,0 +1,49 @@
+[
+ {
+  "id": "silent-0446",
+  "ts": "2026-10-13T03:28:37+08:00",
+  "character": "silent",
+  "by": "learner:postmortem",
+  "kind": "bug-infra",
+  "claim": "已接受的休息题改线只在dispatch正常返回后apply；动作超时但游戏实际已完成回血时，失败分支丢失待提交路线，下一地图沿旧计划行走。需保留待确认改线并依据实盘动作效果提交，不能无条件把任意失败当已执行。当前live hand/loop.ts:1771绕过1778，route-review.ts:195为路线赋值位置。",
+  "evidence": [
+   {
+    "run": "MEXYTC0Z2MQQ",
+    "floor": 12,
+    "role": "support",
+    "note": "d367924已接受r12c2绕精英路线但休息failed(wait)；s378731→378732实际36→57，随后d367928仍按旧r12c0进多尼斯异鸟战，实际57→30/71并用掉两能量药水。新路线未实走，不能声称修复会转胜。",
+    "added": "2026-10-13T03:28:37+08:00"
+   }
+  ],
+  "first_run": "MEXYTC0Z2MQQ",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "检索静默超时/路线/路由账本及更早静默复盘，未找到接受改线后动作超时而游戏已完成的可比记录；旧重问丢字段非同缺口。",
+  "status": "observed",
+  "where": {
+   "lessons": [
+    "MEXYTC0Z2MQQ"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261013-031302-postmortem/proposal-route-timeout.md"
+   ]
+  },
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-13T03:28:37+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-13T03:32:36+08:00",
+    "by": "learner:postmortem"
+   }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-2d3aa8dfb27dbe3f → task=strategy-proposal；Roy-2026-10-07-learning"
+  ]
+ }
+]
