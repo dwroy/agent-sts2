@@ -1,0 +1,520 @@
+diff --git a/agent/src/eye/jev-prompt-log.ts b/agent/src/eye/jev-prompt-log.ts
+index 69e92a109..2d597f00b 100644
+--- a/agent/src/eye/jev-prompt-log.ts
++++ b/agent/src/eye/jev-prompt-log.ts
+@@ -15,6 +15,7 @@ import { basename, dirname, join } from "node:path";
+ import type { AnswerSet } from "../reflex/jev/answers.js";
+ import { classifyJevError, type JevAskResult } from "../reflex/jev/client.js";
+ import type { QuestionSet } from "../reflex/jev/questions.js";
++import { compactJevRequest, isJevContextLimitError, type CompactJevRequest } from "../reflex/jev/compact-request.js";
+ 
+ export interface JevPromptMeta {
+   /** The decision this request was made for (the decision row's `decision_id`). */
+@@ -52,6 +53,8 @@ export interface JevPromptRecord {
+   output_tokens: number | null;
+   answers?: AnswerSet;
+   error?: { kind: string; status: number | null; message: string };
++  /** Present only on the bounded, lossless retry of a context-limit rejection. */
++  transport_encoding?: CompactJevRequest["encoding"];
+ }
+ 
+ export interface JevPromptLog {
+@@ -102,6 +105,21 @@ export interface JevAsker {
+  * the result or the error is passed on unchanged.
+  */
+ export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet): Promise<JevAskResult> {
++  const started = Date.now();
++  try {
++    return await askOnceLogged(jev, log, meta, state, questions);
++  } catch (error) {
++    if (!isJevContextLimitError(error)) throw error;
++    const compact = compactJevRequest(state, questions);
++    if (!compact) throw error;
++    // Keep the first rejection and the actual retry body in separate joined log rows.
++    // No recursion: another rejection is returned to the existing failure handling.
++    const result = await askOnceLogged(jev, log, meta, compact.state, compact.questions, compact.encoding);
++    return { ...result, latencyMs: Date.now() - started };
++  }
++}
++
++async function askOnceLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet, encoding?: CompactJevRequest["encoding"]): Promise<JevAskResult> {
+   const started = Date.now();
+   const base = {
+     ts: new Date(started).toISOString(),
+@@ -115,6 +133,7 @@ export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta
+     jev_context: meta.jevContext,
+     call: meta.call,
+     request: { model: jev.model, state, questions },
++    ...(encoding ? { transport_encoding: encoding } : {}),
+   };
+   try {
+     const result = await jev.ask(state, questions);
+diff --git a/agent/src/reflex/combat-plan.ts b/agent/src/reflex/combat-plan.ts
+index cbb986d23..2c49af408 100644
+--- a/agent/src/reflex/combat-plan.ts
++++ b/agent/src/reflex/combat-plan.ts
+@@ -25,6 +25,7 @@ import { silentPhaseReference } from "./silent-phase-reference.js";
+ import { silentPhaseCurrentFacts } from "./silent-phase-current.js";
+ import { silentPotionReference } from "./silent-potion-reference.js";
+ import { silentHeldLossFacts } from "./silent-held-loss.js";
++import { silentGiantPotionFacts } from "./silent-giant-potion.js";
+ import { silentKinBoardFacts, silentKinPlanFacts } from "./silent-kin-progress.js";
+ import { observedDemonPoison } from "./silent-demon-potion.js";
+ import { crabPoisonFacts } from "./silent-crab-potion.js";
+@@ -3939,6 +3940,7 @@ function planTurn(env: DecisionEnv): Decision | null {
+   const deepseekPlan = deepseekPlanLine(env);
+   const lessons = fightLessons(state);
+   const questionState: Record<string, JsonValue> = {
++    ...silentGiantPotionFacts(state),
+     ...silentPhaseCurrentFacts(state),
+     ...silentKinBoardFacts(state),
+     run_brief: briefJson(env.brief),
+diff --git a/agent/src/reflex/combat.ts b/agent/src/reflex/combat.ts
+index 02a99f348..22a94fa7d 100644
+--- a/agent/src/reflex/combat.ts
++++ b/agent/src/reflex/combat.ts
+@@ -17,6 +17,7 @@ import { briefJson } from "../memory/run-brief.js";
+ import { afterPlayFirst, isPlayFirst, modelHandCard } from "./card-model.js";
+ import { resolveDamage } from "./damage.js";
+ import { crabPoisonFacts } from "./silent-crab-potion.js";
++import { silentGiantPotionFacts } from "./silent-giant-potion.js";
+ import { startTurnHpLossOf } from "./start-loss.js";
+ import type { Decision, DecisionEnv, ResolvedAction } from "../memory/types.js";
+ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
+@@ -281,6 +282,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
+   for (const candidate of safeCandidates) criteria[candidate.key] = JSON.stringify(describeOption(candidate.summary));
+ 
+   const questionState: Record<string, JsonValue> = {
++    ...silentGiantPotionFacts(state),
+     run_brief: briefJson(brief),
+     situation: {
+       screen: "COMBAT",
+diff --git a/agent/src/reflex/jev/compact-request.ts b/agent/src/reflex/jev/compact-request.ts
+new file mode 100644
+index 000000000..7cd5e1267
+--- /dev/null
++++ b/agent/src/reflex/jev/compact-request.ts
+@@ -0,0 +1,106 @@
++import { classifyJevError } from "./client.js";
++import type { QuestionSet } from "./questions.js";
++
++type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
++
++export interface CompactJevRequest {
++  state: Record<string, unknown>;
++  questions: QuestionSet;
++  encoding: {
++    kind: "shared-json-values-v1";
++    stateKey: string;
++    refKey: string;
++    originalBytes: number;
++    encodedBytes: number;
++    definitions: number;
++  };
++}
++
++/** Only the observed context rejection permits a differently encoded retry. */
++export function isJevContextLimitError(error: unknown): boolean {
++  const failure = classifyJevError(error);
++  if (failure.status !== 400) return false;
++  try {
++    const body = JSON.parse(failure.message.slice(failure.message.indexOf("{"))) as { detail?: { error_type?: unknown } };
++    return body.detail?.error_type === "max_tokens_exceeded";
++  } catch {
++    return false;
++  }
++}
++
++/** Factor exact repeated JSON values; never prune options, round numbers or summarize text. */
++export function compactJevRequest(state: unknown, questions: QuestionSet): CompactJevRequest | null {
++  if (state === null || typeof state !== "object" || Array.isArray(state)) return null;
++  const original = JSON.stringify({ state, questions });
++  const uniqueKey = (stem: string): string => {
++    let index = 0;
++    while (original.includes(`${stem}${index}`)) index += 1;
++    return `${stem}${index}`;
++  };
++  const stateKey = uniqueKey("__jev_shared_");
++  const refKey = uniqueKey("__jev_ref_");
++  const parsed = new Map<string, Map<string, Json>>();
++  const counts = new Map<string, number>();
++  const visit = (value: Json): void => {
++    const key = JSON.stringify(value);
++    if (key.length >= 160) counts.set(key, (counts.get(key) ?? 0) + 1);
++    if (Array.isArray(value)) value.forEach(visit);
++    else if (value !== null && typeof value === "object") Object.values(value).forEach(visit);
++  };
++  for (const [id, question] of Object.entries(questions)) {
++    if (question.type !== "choice") continue;
++    const options = new Map<string, Json>();
++    for (const [option, text] of Object.entries(question.criteria)) {
++      if (text === null) continue;
++      try {
++        const value = JSON.parse(text) as Json;
++        // Plain prose and JSON scalar criteria keep their original wire representation.
++        if (value === null || typeof value !== "object") continue;
++        options.set(option, value);
++        visit(value);
++      } catch { /* Non-JSON criteria remain byte-for-byte unchanged. */ }
++    }
++    parsed.set(id, options);
++  }
++  const names = new Map<string, string>();
++  const definitions: Record<string, Json> = Object.create(null) as Record<string, Json>;
++  const encode = (value: Json, definition = false): Json => {
++    const key = JSON.stringify(value);
++    if (!definition && (counts.get(key) ?? 0) > 1) {
++      let name = names.get(key);
++      if (name === undefined) {
++        name = `v${names.size}`;
++        names.set(key, name);
++        definitions[name] = encode(value, true);
++      }
++      return { [refKey]: name };
++    }
++    if (Array.isArray(value)) return value.map((item) => encode(item));
++    if (value !== null && typeof value === "object") {
++      return Object.fromEntries(Object.entries(value).map(([k, item]) => [k, encode(item)]));
++    }
++    return value;
++  };
++  const encodedQuestions: QuestionSet = Object.fromEntries(Object.entries(questions).map(([id, question]) => {
++    if (question.type !== "choice") return [id, question];
++    const options = parsed.get(id)!;
++    return [id, { ...question, criteria: Object.fromEntries(Object.entries(question.criteria).map(([option, text]) => [
++      option, options.has(option) ? JSON.stringify(encode(options.get(option)!)) : text,
++    ])) }];
++  }));
++  if (names.size === 0) return null;
++  const encodedState = {
++    ...state,
++    [stateKey]: {
++      instruction: `无损编码说明：选项JSON里仅含“${refKey}”的对象是本表values中同名值的引用；请先递归展开再理解。它与原值完全相同，不是缺失、预测或新事实。选项顺序、含义和全部数值不变。`,
++      values: definitions,
++    },
++  };
++  const originalBytes = Buffer.byteLength(original);
++  const encodedBytes = Buffer.byteLength(JSON.stringify({ state: encodedState, questions: encodedQuestions }));
++  // The retry must materially shrink the request; a marginal rewrite cannot address the rejection.
++  if (encodedBytes >= originalBytes * 0.9) return null;
++  return { state: encodedState, questions: encodedQuestions, encoding: {
++    kind: "shared-json-values-v1", stateKey, refKey, originalBytes, encodedBytes, definitions: names.size,
++  } };
++}
+diff --git a/agent/src/reflex/silent-giant-potion.ts b/agent/src/reflex/silent-giant-potion.ts
+new file mode 100644
+index 000000000..3a7801cac
+--- /dev/null
++++ b/agent/src/reflex/silent-giant-potion.ts
+@@ -0,0 +1,37 @@
++import { asArray, asRecord, numOrNull, str, type JsonValue } from "../core/util/json.js";
++import type { GameState } from "../hand/mod/schema.js";
++import { giantPhaseAtTurnStart } from "../sl/attempts.js";
++
++/** YQL8RZ8BWN1E A10 F17 T10, silent-0017/0250: distinguish husk poison from surviving the displayed blast. */
++export function silentGiantPotionFacts(state: GameState): Record<string, JsonValue> {
++  if (!state.in_combat || state.run?.floor !== 17) return {};
++  const phase = giantPhaseAtTurnStart(state);
++  if (!phase) return {};
++  const combat = asRecord(state.raw["combat"]), player = asRecord(combat["player"]);
++  const enemy = asArray(combat["enemies"]).map(asRecord).find((entry) => entry["is_alive"] === true)!;
++  const hp = numOrNull(player["current_hp"]), block = numOrNull(player["block"]);
++  if (hp === null || !Number.isFinite(hp) || hp <= 0 || block === null || !Number.isFinite(block) || block < 0) return {};
++  const powers = enemy["powers"];
++  const poison = asArray(powers).map(asRecord).filter((power) => power["power_id"] === "POISON_POWER");
++  const amount = poison.length === 1 ? numOrNull(poison[0]!["amount"]) : null;
++  const poisonNow = !Array.isArray(powers) || poison.length > 1 ? null
++    : poison.length === 0 ? 0 : amount !== null && Number.isInteger(amount) && amount >= 0 ? amount : null;
++  const poisonAvailable = asArray(state.run.raw["potions"]).map(asRecord).some((potion) =>
++    str(potion["potion_id"]) === "POISON_POTION" && potion["can_use"] === true &&
++    asArray(potion["valid_target_indices"]).includes(enemy["index"] as JsonValue));
++  return { giant_blast_current: {
++    scope: "observed_current_snapshot",
++    phase: phase.phase, body_hp: phase.body_hp, raw_husk_hp: phase.raw_hp,
++    poison_now: poisonNow, hp_now: hp, block_now: block,
++    incoming_now: phase.incoming_at_turn_start,
++    fight_won: false,
++    note: "本体已结束，当前仍待自爆结算；占位体血量及其扣血不代表本体进度。毒层不是已兑现毒伤，当前血挡和来袭也不是候选执行后的结算。本栏不改必死判断或参考路径排序。",
++    ...(poisonAvailable ? { poison_potion_observation: {
++      scope: "single_observed_use",
++      evidence: { run: "YQL8RZ8BWN1E", floor: 17, turn: 10, state_lines: [280160, 280161] },
++      before: { poison: 2, hp: 26, block: 13, incoming: 41 },
++      after: { poison: 8, hp: 26, block: 13, incoming: 41 },
++      note: "这次实盘在本体结束后饮用毒药水，只观察到残壳毒2→8，血26、挡13、自爆来袭41均未变；不能把新增6毒算作减伤6或本体进度。此处不是当前饮用结果的预测，提前饮用、留药和整战收益仍未知，不据此删除或强制选择药水。",
++    } } : {}),
++  } };
++}
+diff --git a/agent/tests/jev-context-limit.test.ts b/agent/tests/jev-context-limit.test.ts
+new file mode 100644
+index 000000000..68dfdd520
+--- /dev/null
++++ b/agent/tests/jev-context-limit.test.ts
+@@ -0,0 +1,115 @@
++import { readFileSync } from "node:fs";
++import { describe, expect, it } from "vitest";
++
++import { askJevLogged, type JevPromptMeta, type JevPromptRecord } from "../src/eye/jev-prompt-log.js";
++import { compactJevRequest, isJevContextLimitError, type CompactJevRequest } from "../src/reflex/jev/compact-request.js";
++import { JevError, type JevAskResult } from "../src/reflex/jev/client.js";
++import type { QuestionSet } from "../src/reflex/jev/questions.js";
++
++const fixture = JSON.parse(readFileSync(new URL("./jev-context-limit-request.json", import.meta.url), "utf8")) as {
++  model: string; state: Record<string, unknown>; questions: QuestionSet;
++};
++const meta: JevPromptMeta = { decisionId: "fixed-context-limit", runId: "16UDD0430SXT", floor: 48, turn: 1,
++  fingerprint: "fixed", observedTs: "2026-10-12T09:21:39.904Z", label: "combat/plan-choice", jevContext: "v1", call: "ask" };
++const failure = () => new JevError("unknown", '400 {"detail":{"error_type":"max_tokens_exceeded"}}', { status: 400 });
++const answer: JevAskResult = { model: fixture.model, answers: {
++  plan: { type: "choice", choice: "plan2", confidence: 0.75, probabilities: { plan2: 0.75 }, raw: {} },
++}, inputTokens: 4_000, outputTokens: 42, latencyMs: 9, requestId: "fixed-request" };
++
++function expanded(compact: CompactJevRequest): QuestionSet {
++  const table = compact.state[compact.encoding.stateKey] as { values: Record<string, unknown> };
++  const expand = (value: unknown): unknown => {
++    if (Array.isArray(value)) return value.map(expand);
++    if (value !== null && typeof value === "object") {
++      const object = value as Record<string, unknown>;
++      if (Object.keys(object).length === 1 && compact.encoding.refKey in object) {
++        const key = object[compact.encoding.refKey] as string;
++        expect(Object.hasOwn(table.values, key)).toBe(true);
++        return expand(table.values[key]);
++      }
++      return Object.fromEntries(Object.entries(object).map(([key, item]) => [key, expand(item)]));
++    }
++    return value;
++  };
++  return Object.fromEntries(Object.entries(compact.questions).map(([id, question]) => {
++    if (question.type !== "choice") return [id, question];
++    return [id, { ...question, criteria: Object.fromEntries(Object.entries(question.criteria).map(([option, text]) => {
++      if (text === null) return [option, text];
++      try { return [option, JSON.stringify(expand(JSON.parse(text)))]; } catch { return [option, text]; }
++    })) }];
++  }));
++}
++
++describe("bounded Jev context-limit recovery", () => {
++  it("preserves all 11 recorded options and every nested fact while reducing the rejected body", () => {
++    const before = JSON.stringify(fixture);
++    const compact = compactJevRequest(fixture.state, fixture.questions)!;
++    expect(compact).not.toBeNull();
++    expect(compact.encoding.encodedBytes).toBeLessThan(compact.encoding.originalBytes * 0.8);
++    expect(expanded(compact)).toEqual(fixture.questions);
++    expect(Object.keys((compact.questions["plan"] as { criteria: object }).criteria)).toEqual(
++      Object.keys((fixture.questions["plan"] as { criteria: object }).criteria),
++    );
++    for (const [key, value] of Object.entries(fixture.state)) expect(compact.state[key]).toEqual(value);
++    expect(JSON.stringify(fixture)).toBe(before);
++  });
++
++  it("does not collide with existing fields or lose null, false, zero, arrays or plain criteria", () => {
++    const shared = { text: "固定资料。".repeat(100), missing: null, valid: false, amount: 0, list: [0, false, null] };
++    const questions: QuestionSet = { pick: { type: "choice", instructions: "same", criteria: {
++      a: JSON.stringify({ shared, score: 1 }), b: JSON.stringify({ shared, score: 2 }), plain: "plain text", nil: null,
++    } }, confidence: { type: "noul", instructions: "unchanged" } };
++    const state = { __jev_shared_0: "keep", __jev_ref_0: "keep" };
++    const compact = compactJevRequest(state, questions)!;
++    expect(compact.encoding.stateKey).not.toBe("__jev_shared_0");
++    expect(compact.encoding.refKey).not.toBe("__jev_ref_0");
++    expect(expanded(compact)).toEqual(questions);
++    expect(compact.state).toMatchObject(state);
++    expect(compactJevRequest({}, { pick: { type: "choice", instructions: "small", criteria: { a: "one" } } })).toBeNull();
++  });
++
++  it("recovers once, returns the model answer unchanged, and logs both actual wire bodies", async () => {
++    const rows: JevPromptRecord[] = [];
++    const sent: { state: unknown; questions: QuestionSet }[] = [];
++    const client = { model: fixture.model, async ask(state: unknown, questions: QuestionSet) {
++      sent.push({ state, questions });
++      if (sent.length === 1) throw failure();
++      return answer;
++    } };
++    const result = await askJevLogged(client, { path: "unused", write: (row) => { rows.push(row); } }, meta, fixture.state, fixture.questions);
++    expect(sent).toHaveLength(2);
++    expect(result.answers).toBe(answer.answers);
++    expect(result.requestId).toBe(answer.requestId);
++    expect(result.inputTokens).toBe(answer.inputTokens);
++    expect(rows).toHaveLength(2);
++    expect(rows[0]!.error?.status).toBe(400);
++    expect(rows[0]!.transport_encoding).toBeUndefined();
++    expect(rows[1]!.transport_encoding?.kind).toBe("shared-json-values-v1");
++    for (const [index, row] of rows.entries()) {
++      expect(row.request).toEqual({ model: fixture.model, ...sent[index] });
++      expect(row.decision_id).toBe(meta.decisionId);
++    }
++  });
++
++  it("does not retry another rejection, or unrelated 400/auth/validation errors", async () => {
++    for (const error of [failure(), new JevError("unknown", "400 bad request", { status: 400 }),
++      new JevError("auth", '401 {"detail":{"error_type":"max_tokens_exceeded"}}', { status: 401 }),
++      new JevError("validation", "422 invalid", { status: 422 })]) {
++      let calls = 0;
++      const client = { model: "same", async ask(): Promise<JevAskResult> { calls += 1; throw error; } };
++      await expect(askJevLogged(client, null, meta, fixture.state, fixture.questions)).rejects.toBe(error);
++      expect(calls).toBe(isJevContextLimitError(error) ? 2 : 1);
++    }
++  });
++
++  it("sends successful requests unchanged and leaves uncompressible failures fatal", async () => {
++    const sent: unknown[] = [];
++    const client = { model: "same", async ask(state: unknown, questions: QuestionSet) { sent.push({ state, questions }); return answer; } };
++    await askJevLogged(client, null, meta, fixture.state, fixture.questions);
++    expect(sent).toEqual([{ state: fixture.state, questions: fixture.questions }]);
++    let calls = 0;
++    await expect(askJevLogged({ model: "same", async ask(): Promise<JevAskResult> { calls += 1; throw failure(); } }, null, meta,
++      {}, { pick: { type: "choice", instructions: "same", criteria: { a: "plain" } } })).rejects.toThrow("max_tokens_exceeded");
++    expect(calls).toBe(1);
++  });
++});
+diff --git a/agent/tests/silent-giant-potion.test.ts b/agent/tests/silent-giant-potion.test.ts
+new file mode 100644
+index 000000000..c90915bdb
+--- /dev/null
++++ b/agent/tests/silent-giant-potion.test.ts
+@@ -0,0 +1,134 @@
++import { readFileSync } from "node:fs";
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
++import { loadConfig } from "../src/core/config.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
++import { buildRunBrief } from "../src/memory/run-brief.js";
++import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
++import { planCombatTurn } from "../src/reflex/combat-plan.js";
++import * as giant from "../src/reflex/silent-giant-potion.js";
++import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
++import { bossLinesOptions } from "../src/sim/boss-lines.js";
++
++vi.mock("../src/knowledge/files.js", async (original) => ({
++  ...await original<typeof import("../src/knowledge/files.js")>(),
++  knowledgeFile: (_dir: string, name: string) => `/__fixed_silent_giant_potion__/${name}`,
++}));
++vi.mock("../src/knowledge/experience.js", async (original) => ({
++  ...await original<typeof import("../src/knowledge/experience.js")>(), selectLessons: () => [],
++}));
++vi.mock("../src/reflex/potion-cost.js", async (original) => ({
++  ...await original<typeof import("../src/reflex/potion-cost.js")>(), potionCosts: () => new Map(),
++}));
++
++const evidence = JSON.parse(readFileSync(new URL("./silent-giant-potion-evidence.json", import.meta.url), "utf8"));
++const rawAt = (line: number): any => structuredClone(evidence.frames.find((f: { line: number }) => f.line === line).state);
++const factsAt = (line: number): any => giant.silentGiantPotionFacts(parseGameState(rawAt(line))).giant_blast_current;
++const knowledge = makeKnowledge({}, "cache");
++const oldRollout = rolloutLiveOptions.enabled, oldBoss = bossLinesOptions.enabled;
++beforeEach(() => {
++  setMonsterDbForTests({ monsters: {}, bosses: {}, encounters: {} });
++  rolloutLiveOptions.enabled = false; bossLinesOptions.enabled = false;
++});
++afterEach(() => {
++  vi.restoreAllMocks(); setMonsterDbForTests(null);
++  rolloutLiveOptions.enabled = oldRollout; bossLinesOptions.enabled = oldBoss;
++});
++function planned(raw: any, v1 = false) {
++  const state = parseGameState(raw);
++  const env: DecisionEnv = { state, knowledge, brief: buildRunBrief(state, knowledge), thresholds: loadConfig({}).thresholds,
++    runStart: "auto", characterPreference: null, allowFtueModals: false, strictJev: true,
++    screenMemory: createScreenMemory(state.screen), shopDiscardPotions: [], ...(v1 ? { jevContext: "v1" } : {}) };
++  return planCombatTurn(env);
++}
++
++it("reports YQL's actual poison change without turning it into body damage, block or reduced blast", () => {
++  const before = factsAt(280160), after = factsAt(280161);
++  expect(before).toMatchObject({ phase: "blast_pending", body_hp: 0, raw_husk_hp: 999999999,
++    poison_now: 2, hp_now: 26, block_now: 13, incoming_now: 41, fight_won: false });
++  expect(after).toMatchObject({ poison_now: 8, hp_now: 26, block_now: 13, incoming_now: 41, fight_won: false });
++  expect(before.poison_potion_observation).toMatchObject({ scope: "single_observed_use",
++    before: { poison: 2, hp: 26, block: 13, incoming: 41 }, after: { poison: 8, hp: 26, block: 13, incoming: 41 } });
++  expect(after).not.toHaveProperty("poison_potion_observation");
++  expect(giant.silentGiantPotionFacts(parseGameState(rawAt(280162)))).toEqual({});
++});
++
++it.each([false, true])("reaches the actual potion question and preserves choices, ranking and actions (v1=%s)", (v1) => {
++  const raw = rawAt(280160), current = planned(raw, v1);
++  if (current?.kind !== "ask" || current.questions.play?.type !== "choice") throw new Error("expected the observed per-card fallback");
++  expect(current.state.giant_blast_current).toEqual(factsAt(280160));
++  // The per-card fallback uses its ordinary state in both context modes.
++  if (current.jevView) expect(current.jevView.state.giant_blast_current).toEqual(current.state.giant_blast_current);
++  expect(JSON.stringify(current.questions)).toContain("毒药水");
++  vi.spyOn(giant, "silentGiantPotionFacts").mockReturnValue({});
++  const previous = planned(raw, v1);
++  if (previous?.kind !== "ask") throw new Error("expected original question");
++  expect(current.questions).toEqual(previous.questions);
++  const { giant_blast_current: _facts, ...rest } = current.state;
++  expect(rest).toEqual(previous.state);
++  for (const key of Object.keys(current.questions.play.criteria ?? {})) {
++    const answer = { play: { type: "choice" as const, choice: key, confidence: 0.9, probabilities: { [key]: 1 }, raw: {} } };
++    expect(current.resolve(answer).intent).toEqual(previous.resolve(answer).intent);
++  }
++  expect(raw).toEqual(rawAt(280160));
++});
++
++it("does not invent a zero poison amount from missing, duplicate or invalid powers", () => {
++  for (const powers of [undefined, [{ power_id: "POISON_POWER", amount: -1 }],
++    [{ power_id: "POISON_POWER", amount: 2 }, { power_id: "POISON_POWER", amount: 8 }]]) {
++    const raw = rawAt(280160); raw.combat.enemies[0].powers = powers;
++    expect(giant.silentGiantPotionFacts(parseGameState(raw))).toMatchObject({ giant_blast_current: { poison_now: null } });
++  }
++});
++
++it.each([false, true])("a synthetic survivable variant also exposes facts in turn-plan questions (v1=%s)", (v1) => {
++  // This variant checks routing only; it is not another observed fight or a potion benefit sample.
++  const raw = rawAt(280157);
++  raw.run.current_hp = 80; raw.combat.player.current_hp = 80;
++  raw.combat.end_turn_will_kill_player = false; raw.combat.lethal_risks = [];
++  const current = planned(raw, v1);
++  if (current?.kind !== "ask" || current.questions.plan?.type !== "choice") throw new Error("expected a turn-plan question");
++  expect(current.state.giant_blast_current).toMatchObject({ hp_now: 80, body_hp: 0 });
++  if (v1) expect(current.jevView?.state.giant_blast_current).toEqual(current.state.giant_blast_current);
++  vi.spyOn(giant, "silentGiantPotionFacts").mockReturnValue({});
++  const previous = planned(raw, v1);
++  if (previous?.kind !== "ask") throw new Error("expected original turn-plan question");
++  expect(current.questions).toEqual(previous.questions);
++  for (const key of Object.keys(current.questions.plan.criteria ?? {})) {
++    const answer = { plan: { type: "choice" as const, choice: key, confidence: 0.9, probabilities: { [key]: 1 }, raw: {} } };
++    expect(current.resolve(answer).intent).toEqual(previous.resolve(answer).intent);
++  }
++});
++
++it("does not apply the observation to another potion or an unavailable target", () => {
++  for (const change of [
++    (r: any) => { r.run.potions[0].potion_id = "UNKNOWN_POTION"; },
++    (r: any) => { r.run.potions[0].can_use = false; },
++    (r: any) => { r.run.potions[0].valid_target_indices = [1]; },
++  ]) {
++    const raw = rawAt(280160); change(raw);
++    expect(giant.silentGiantPotionFacts(parseGameState(raw)).giant_blast_current).not.toHaveProperty("poison_potion_observation");
++  }
++});
++
++it("excludes unobserved characters, ascensions, floors, bodies and ambiguous phase states", () => {
++  for (const change of [
++    (r: any) => { r.run.character_id = "IRONCLAD"; },
++    (r: any) => { r.run.ascension = 9; },
++    (r: any) => { r.run.floor = 33; },
++    (r: any) => { r.combat.enemies[0].max_hp = 300; },
++    (r: any) => { r.combat.enemies[0].enemy_id = "UNKNOWN"; },
++    (r: any) => { r.combat.enemies[0].move_id = "ATTACK_MOVE"; },
++    (r: any) => { r.combat.enemies[0].powers.push({ power_id: "STEAM_ERUPTION_POWER", amount: 1 }); },
++    (r: any) => { r.combat.enemies.push({ ...r.combat.enemies[0], index: 1 }); },
++    (r: any) => { r.combat.player.block = -1; },
++  ]) {
++    const raw = rawAt(280160); change(raw);
++    expect(giant.silentGiantPotionFacts(parseGameState(raw))).toEqual({});
++  }
++  const raw = rawAt(280160); raw.run.character_id = "IRONCLAD";
++  const original = planned(raw);
++  vi.spyOn(giant, "silentGiantPotionFacts").mockReturnValue({});
++  expect(JSON.stringify(planned(raw))).toEqual(JSON.stringify(original));
++});
+diff --git a/ops/inbox-dev.md b/ops/inbox-dev.md
+index bd70533d7..20ec2176e 100644
+--- a/ops/inbox-dev.md
++++ b/ops/inbox-dev.md
+@@ -1274,3 +1274,8 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当
+ - 2026-10-12 15:32 [运维 codex] 卡死检查测试超时项已按原fix队列上线：95e7f050e→live0bd3a70e3，仅修测试子进程执行器，生产检查逻辑不变；撤回1败/恢复6过，源3376及集成17通过，完整宿主检查待回执。自然宿主超时根因未证，原失败和回退记录保留；未重启对局。
+ - 2026-10-12 15:51 [运维 codex] 已上线 S1.held-loss-facts1：旧题面主要列总损血；新题面在学习者限定的SILENT/A10/F17异鱼场景分列持牌失血预测与未决弃牌，实际值保留未知，总损血不重复相加。证据751FN9QM9MHQ/KEN58SH9SLZ6、silent-0176/0079；源1a00f10af→live21b0e8eeb，原3380及集成43项通过。预期减少误读保守预测，尚无自然局效果；10父提案仍待补证。回退仅撤本次五路径补丁并登记版本，保留其他上线/原记录；完整宿主检查已单次请求。
+ - 2026-10-12 16:09 [运维 codex] 已上线S1.exp188（经验2026-10-12.7）：学习者基于K643VJCTQT0J新增1条、给15条补证据，active224→225；16项旧/新文本、证据和21账本映射见paper/materials/20261012-1603-ops/release-changes.json。源704a53fe5→live460725771，原3373及集成41项通过；预期让后续题面使用已核新局观察，尚无上线后效果结论。a770c8a2/70b301d0/a4fb4006三代码提案仍按原队列；回退仅还原该单路径补丁并登记回退版本，保留其他上线和证据。完整宿主检查已单次请求。
++- 2026-10-12 17:32 [运维 codex] 16UDD0430SXT A10/F48重打首回合被Jev 400 max_tokens_exceeded阻塞，已留六次原失败并暂停原autoplay PID3251934，存档仍在COMBAT。运维正在step修角色无关的拒绝后无损去重重试；17项定向通过，完整检查进行中，暂勿另起play或重复派修复。未改配置/模型路由/打法，修完沿原broker恢复。
++- 2026-10-12 17:45 [运维 codex] 已上线V4.jev-context-dedup1：旧Jev超长400直接停局并重复重启；新逻辑仅对明确max_tokens_exceeded作一次共享值引用编码重试，所有选项/数值/原文保持、同模型同路由，其他角色正常请求也不变。依据16UDD0430SXT F48六次失败原请求（无游戏知识账本变更），98556→76240字节；源fab7c9094→livefab7c9094，tsc/4197通过2跳过，自动刷新保留且当前定向17过。预期恢复超长题面，真实对局正沿原broker恢复；回退仅撤本次四路径源码补丁并登记版本，保留其他学习/刷新和原失败。
++- 2026-10-12 17:48 [运维 codex] 卡死已恢复：16UDD0430SXT A10/F48原存档，broker于17:45:06重启autoplay PID301020/livefab7c9094；同一决策原400后无损去重98555→76239字节，真实Jev请求req_01a12f80f0d7735db62f88caf498394a成功（输入28806 tokens），随后已观测14条决策及已完成动作。实际请求逐字段展开等于原请求，无另开局/改路由/改游戏规则；验收见paper/materials/20261012-1721-ops/runtime-recovery.json。
++- 2026-10-12 17:57 [运维 codex] 已上线S1.exp189中的经验.8：L6745E2ND5CT证据新增1/更新15、active225→226，16项逐条旧/新原文、证据及20账本映射见paper/materials/20261012-1749-ops/experience-release-changes.json；源208e50e30→live1d3b8508d。原3383与当前101项通过，预期使后续题面使用新局已核观察，尚无自然局效果结论；3代码提案仍待实现。回退仅撤本次experience.json补丁并登记版本，保留其他学习/刷新；同树完整宿主检查已单次请求。
++- 2026-10-12 17:57 [运维 codex] 同版巨兽题面子项已上线：旧题面未并列自爆阶段与局部用药观察；新普通/v1/逐张题面按学习者限定场景并列当前阶段、来袭与YQL8RZ8BWN1E F17T9/T10一次历史观察，未知提前喝/留药/整战收益保留。源b14880d1b、账本0017/0250→live1d3b8508d；原3391/红5绿63、集成101通过。预期减少阶段误读，不改候选/排名/药价/动作/SL；宽父项仍waiting、未证明自然局收益。回退仅撤该五路径补丁并登记版本，原失败与证据留存。
