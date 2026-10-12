@@ -1,0 +1,16 @@
+3095116 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261012-051302-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261012-051302-strategy-proposal.pid 1 - /home/dw/Projects
+3095119 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261012-051302-strategy-proposal MTQ0EUBJ3R6T,7X0W3U8TVA2A,KFRDELW2TH2P silent strategy-proposal /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-
+3095265 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261012-051302-s2-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261012-051302-s2-strategy-proposal.pid 1 - /home/dw/Pr
+3095266 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261012-051302-s2-strategy-proposal CA5KE8GFJ9X2,2L1BNN9ZJEFU,2PVLGRBGUX9S,2SU6XN2AEJRD,5X2GHKJ89PN1,61E2QS63Y9WU,9TG1RP5LFAAK,DPYF2BAA3DKT,G33HU22H2543
+3095798 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-051302-s2/learner/run.ts --engine codex --model gpt-6-astra --effort xhigh --ta
+3095799 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-051302/learner/run.ts --engine codex --model gpt-6-astra --effort xhigh --task 
+3095822 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3095828 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+3135362 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+3135374 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+herdr panes:
+label                                         pane    alive  busy  foreground
+autoplay-log                                  wJ:pCY  yes    no    
+learner-20261012-051302-s2-strategy-proposal  wJ:pMV  yes    yes   3095265:bash 3095266:bash 3095794:tail 3095798:node 3095822:node 3095846:esbuild
+learner-20261012-051302-strategy-proposal     wJ:pMT  yes    yes   3095116:bash 3095119:bash 3095795:tail 3095799:node 3095828:node 3095845:esbuild
+ops                                           wJ:p5   yes    yes   2722970:node 2722978:codex

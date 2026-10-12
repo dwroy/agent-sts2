@@ -1,0 +1,143 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-051302/agent
+
+ ❯ tests/silent-hp-recovery.test.ts (6 tests | 6 failed) 9ms
+   × the existing brain history carries reached rest and boundary HP, apart from opening recovery and won-fight costs 5ms
+   × the second run keeps its capped rest gain and the observed 28 to 61 transition distinct 1ms
+   × KFR rest and cross-floor gains are not the later same-floor rewind recovery 1ms
+   × the journal's actual SL snapshot restore removes failed-attempt recovery instead of counting it again 1ms
+   × duplicates and stale floors add nothing; missing or inconsistent HP breaks the observation pair 0ms
+   × another character, an unobserved ascension and a new run cannot inherit these recovery facts 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > the existing brain history carries reached rest and boundary HP, apart from opening recovery and won-fight costs
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ frame tests/silent-hp-recovery.test.ts:27:33
+ ❯ observe tests/silent-hp-recovery.test.ts:30:45
+ ❯ tests/silent-hp-recovery.test.ts:42:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > the second run keeps its capped rest gain and the observed 28 to 61 transition distinct
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ frame tests/silent-hp-recovery.test.ts:27:33
+ ❯ observe tests/silent-hp-recovery.test.ts:30:45
+ ❯ tests/silent-hp-recovery.test.ts:56:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > KFR rest and cross-floor gains are not the later same-floor rewind recovery
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ frame tests/silent-hp-recovery.test.ts:27:33
+ ❯ observe tests/silent-hp-recovery.test.ts:30:45
+ ❯ tests/silent-hp-recovery.test.ts:66:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > the journal's actual SL snapshot restore removes failed-attempt recovery instead of counting it again
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ frame tests/silent-hp-recovery.test.ts:27:33
+ ❯ observe tests/silent-hp-recovery.test.ts:30:45
+ ❯ tests/silent-hp-recovery.test.ts:76:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > duplicates and stale floors add nothing; missing or inconsistent HP breaks the observation pair
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ frame tests/silent-hp-recovery.test.ts:27:33
+ ❯ observe tests/silent-hp-recovery.test.ts:30:45
+ ❯ tests/silent-hp-recovery.test.ts:89:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > another character, an unobserved ascension and a new run cannot inherit these recovery facts
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ tests/silent-hp-recovery.test.ts:112:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  05:19:05
+   Duration  497ms (transform 300ms, setup 269ms, import 96ms, tests 9ms, environment 0ms)
+

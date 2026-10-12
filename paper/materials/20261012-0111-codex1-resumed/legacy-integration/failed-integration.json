@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-12 01:58:16 CST",
+  "baseline": "6639e2f33f6200061d3111306abb5dfa0f908a83",
+  "tested_tree": "bdbbe1370524dd567f4f1cc1f3d2b07abf496f71",
+  "current_index_tree": "bdbbe1370524dd567f4f1cc1f3d2b07abf496f71",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-legacy-resume-20261012-0129",
+  "patch": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/combined-tested-candidate.patch",
+  "patch_sha256": "af37df32c2d0617638851d9d9f8f9e188bcf537b493a113eefa28cea0863c315",
+  "test": {
+    "command": "SANDBOX_WORKERS=1 nice -n 19 bash agent/tools/test-sandbox.sh",
+    "exit_code": 1,
+    "tsc": 0,
+    "main_files": 308,
+    "passed_files": 306,
+    "failed_files": 2,
+    "passed_tests": 3002,
+    "failed_tests": 5,
+    "separate_paths_stage": "not run after main-stage exit1",
+    "log": "paper/materials/20261012-0111-codex1-resumed/legacy-integration/sandbox.log",
+    "log_sha256": "4f741658b6a2e165a76d573700082ae5f8ff2fa6160ee24952a239a0eb515b6f",
+    "failures": [
+      {
+        "file": "agent/tests/silent-smoggy-selection.test.ts",
+        "line": 123,
+        "tests": [
+          "missing count leaves the old question unchanged",
+          "unspent skill leaves the old question unchanged",
+          "other smog amount leaves the old question unchanged",
+          "no smog leaves the old question unchanged"
+        ],
+        "observation": "test removes screenMemory.cardSource to disable one feature; current integrated survivorDiscardFacts also reads it, so full-question comparison differs by discard_snapshot."
+      },
+      {
+        "file": "agent/tests/silent-strangle.test.ts",
+        "line": 55,
+        "tests": [
+          "Q6: Strangle, Sucker Punch and completed Survivor deal 23 including three poison, with one HP lost"
+        ],
+        "observation": "numeric damage/HP assertions pass; unknownCards expected [] but received [弃牌选择未确定]."
+      }
+    ]
+  },
+  "gitleaks": {
+    "exit": 0,
+    "findings": 0
+  },
+  "source_count": 17,
+  "production_merge": null,
+  "new_version": null,
+  "ledger_shipped": false,
+  "note": "all original failed tests and source patches retained; ops did not alter game rules, unknown flags, assertions or thresholds to force pass"
+}

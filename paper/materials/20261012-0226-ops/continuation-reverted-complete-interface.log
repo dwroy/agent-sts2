@@ -1,0 +1,144 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent
+
+ ❯ tests/strategy-implementation-continuation.test.ts (1 test | 1 failed) 670ms
+   × resumes the frozen implementation once while preserving waiting proposals and bounded failure history 669ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/strategy-implementation-continuation.test.ts > resumes the frozen implementation once while preserving waiting proposals and bounded failure history
+AssertionError: FEEEFEE
+======================================================================
+ERROR: test_binding_write_failure_is_preserved_and_cannot_silently_restart (__main__.Continuation.test_binding_write_failure_is_preserved_and_cannot_silently_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 165, in test_binding_write_failure_is_preserved_and_cannot_silently_restart
+    self.dispatch()
+    ~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 69, in dispatch
+    return implementation.dispatch(self.f.state, str(self.f.root), str(fixtures.REPO / "ops"), "silent",
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        alive, stamp, jobs.dispatch_write, continuation.ID)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/ops/strategy_implementation_jobs.py", line 121, in dispatch
+    raise ValueError("unknown implementation request")
+ValueError: unknown implementation request
+
+======================================================================
+ERROR: test_continuation_reuses_waiting_inputs_and_returns_same_receipt (__main__.Continuation.test_continuation_reuses_waiting_inputs_and_returns_same_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 83, in test_continuation_reuses_waiting_inputs_and_returns_same_receipt
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+                     ~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 69, in dispatch
+    return implementation.dispatch(self.f.state, str(self.f.root), str(fixtures.REPO / "ops"), "silent",
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        alive, stamp, jobs.dispatch_write, continuation.ID)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/ops/strategy_implementation_jobs.py", line 121, in dispatch
+    raise ValueError("unknown implementation request")
+ValueError: unknown implementation request
+
+======================================================================
+ERROR: test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher (__main__.Continuation.test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 173, in test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher
+    self.dispatch()
+    ~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 69, in dispatch
+    return implementation.dispatch(self.f.state, str(self.f.root), str(fixtures.REPO / "ops"), "silent",
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        alive, stamp, jobs.dispatch_write, continuation.ID)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/ops/strategy_implementation_jobs.py", line 121, in dispatch
+    raise ValueError("unknown implementation request")
+ValueError: unknown implementation request
+
+======================================================================
+ERROR: test_prepared_input_and_completion_bind_the_addendum_and_original_artifacts (__main__.Continuation.test_prepared_input_and_completion_bind_the_addendum_and_original_artifacts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 138, in test_prepared_input_and_completion_bind_the_addendum_and_original_artifacts
+    self.dispatch()
+    ~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 69, in dispatch
+    return implementation.dispatch(self.f.state, str(self.f.root), str(fixtures.REPO / "ops"), "silent",
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        alive, stamp, jobs.dispatch_write, continuation.ID)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/ops/strategy_implementation_jobs.py", line 121, in dispatch
+    raise ValueError("unknown implementation request")
+ValueError: unknown implementation request
+
+======================================================================
+ERROR: test_retries_keep_failed_receipts_and_require_cooldown_with_three_attempt_limit (__main__.Continuation.test_retries_keep_failed_receipts_and_require_cooldown_with_three_attempt_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 121, in test_retries_keep_failed_receipts_and_require_cooldown_with_three_attempt_limit
+    self.dispatch()
+    ~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 69, in dispatch
+    return implementation.dispatch(self.f.state, str(self.f.root), str(fixtures.REPO / "ops"), "silent",
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        alive, stamp, jobs.dispatch_write, continuation.ID)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/ops/strategy_implementation_jobs.py", line 121, in dispatch
+    raise ValueError("unknown implementation request")
+ValueError: unknown implementation request
+
+======================================================================
+FAIL: test_active_original_owner_and_overlapping_leases_block (__main__.Continuation.test_active_original_owner_and_overlapping_leases_block)
+----------------------------------------------------------------------
+ValueError: unknown implementation request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 95, in test_active_original_owner_and_overlapping_leases_block
+    with self.assertRaisesRegex(ValueError, "owner"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "owner" does not match "unknown implementation request"
+
+======================================================================
+FAIL: test_input_drift_and_cross_request_binding_block_before_launch (__main__.Continuation.test_input_drift_and_cross_request_binding_block_before_launch)
+----------------------------------------------------------------------
+ValueError: unknown implementation request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_strategy_implementation_continuation.py", line 115, in test_input_drift_and_cross_request_binding_block_before_launch
+    with self.assertRaisesRegex(ValueError, "identity"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "identity" does not match "unknown implementation request"
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.553s
+
+FAILED (failures=2, errors=5)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/strategy-implementation-continuation.test.ts:11:56
+      9|     encoding: "utf8", timeout: 60_000,
+     10|   });
+     11|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     12|   expect(result.stderr).toMatch(/Ran [1-9]\d* tests/);
+     13| }, 65_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  02:21:04
+   Duration  1.38s (transform 486ms, setup 291ms, import 305ms, tests 670ms, environment 0ms)
+

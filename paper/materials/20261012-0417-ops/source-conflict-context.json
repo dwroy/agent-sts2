@@ -1,0 +1,9 @@
+{
+  "virtual_tree": "7c6f729a64f10645eea0fe91fca4739d0f90a1ad",
+  "conflicts": [
+    {
+      "virtual_line": 1739,
+      "text": "  // Every play of an Attack (a duplicate, a replay) is one for the attack-counting relics, each after its own play\n  // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd\n  // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).\n  const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;\n<<<<<<< f3df361b48dfc22b037ed42fc451185a52e034da\n=======\n  // K2JAGKVJAWZJ F46 T1, silent-0010: this zero-Block play has no unmodelled lasting bonus.\n  // Recheck at play time; later poison, Dexterity and unobserved replays keep the previous model.\n  const zeroPoisonMirage = card.observedZeroPoisonMirage && card.block === 0 && cost === 1 &&\n    plays === 1 && !automatic && !player.frail && (player.dexterityNow ?? 0) === 0 && next.tempDex === 0 &&\n    !player.unmovableArmed && !player.shadowmeldActive && !next.shadowmeld && !next.noBlock &&\n    next.enemies.some((enemy) => enemy.alive) &&\n    next.enemies.every((enemy) => !enemy.alive || (enemy.poison ?? 0) === 0);\n>>>>>>> codex-strategy-silent-20261012-034302-s2\n  audit?.(cost, plays);\n  // Snapshot before this play: new establishment does not trigger itself, and Block/Artifact interactions stay unknown.\n  const strangled = next.enemies.filter((enemy) => enemy.alive && (enemy.strangle ?? 0) > 0)\n    .map((enemy) => ({ index: enemy.index, amount: enemy.strangle, verified: strangleLossVerified(enemy) }));"
+    }
+  ]
+}

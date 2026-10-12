@@ -1,3 +1,4 @@
+import { coreWindow } from "./core-window.js";
 /**
  * Whole boss fight simulator (milestone B1, Roy 2026-09-30): from a fight state, every sample plays the fight to its
  * end (the boss dead or we are) instead of the rollout's 5-turn window, so what decides a boss fight (a dozen turns of
@@ -121,6 +122,7 @@ export interface BossSimOptions {
 
 /** One sample of one line, played to the fight's end. */
 export interface FightSampleResult {
+  coreWindow?: import("./core-window.js").CoreWindowResult;
   resources?: { hp: number; revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
   sequence?: { firstWon: boolean; firstHp: number | null; firstPotions: string[]; secondBoss: string | null; firstTurns: number; secondWon: boolean | null; secondDied: boolean | null };
   won: boolean;
@@ -291,6 +293,7 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
   const enemyHpLeft = won || !last ? 0 : last.hpLeft ? Object.values(last.hpLeft).reduce((sum, hp) => sum + hp, 0) : last.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
   return {
     won,
+    ...(input.captureCore ? { coreWindow: coreWindow(records.flatMap((r) => r.coreTrace ? [r.coreTrace] : [])) } : {}),
     ...(last?.resources ? { resources: { ...last.resources, drunkKeys: records.flatMap((r) => r.resources?.drunkKeys ?? []) } } : {}),
     died,
     capped: !won && !died && !timeUp,
@@ -315,8 +318,19 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
 }
 
 /** Transfer the first sample's resources; no fresh HP, spent potion, or spent revive is restored. */
-export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput): { input: RolloutInput; potions: string[]; openingHpLoss: number } {
-  if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) throw new Error("missing successful first-fight resources");
+export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput, sample?: { seed: number; plan: Plan | null }): { input: RolloutInput; potions: string[]; openingHpLoss: number } {
+  if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) {
+    // Keep failed samples unavailable, but distinguish missing capture from a nonpositive winning state.
+    // Put the branch and seed first: build-sim facts retain only the start of an error message.
+    const reason = !input.continuation ? "no-continuation" : !first.won ? "not-won" : !first.resources ? "no-resources" : "nonpositive-hp";
+    const details = {
+      won: first.won, died: first.died, turns: first.turns,
+      captureResources: input.captureResources ?? false, continuation: !!input.continuation,
+      resources: first.resources ?? null,
+      steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId, cardIndex: step.cardIndex, target: step.target ?? null })) ?? null,
+    };
+    throw new Error(`missing successful first-fight resources: ${reason}; seed=${sample?.seed ?? "unknown"}; ${JSON.stringify(details)}`);
+  }
   const used = new Set(first.resources.drunkKeys);
   let fairies = (input.solver.player.revives ?? []).filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length
     - first.resources.revives.filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length;
@@ -346,9 +360,10 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
   if (total <= 0) throw new Error("empty second-boss distribution");
   let position = sampleSeed(seed, 0) / 0x100000000 * total;
   const variant = next.variants.find((v) => (position -= v.count) < 0) ?? next.variants.at(-1)!;
-  const transferred = continuationInput(input, first, variant.input);
+  const transferred = continuationInput(input, first, variant.input, { seed, plan });
   const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
   return { ...second,
+    ...(input.captureCore ? { coreWindow: undefined } : {}),
     turns: first.turns + second.turns, hpLoss: first.hpLoss + transferred.openingHpLoss + second.hpLoss, revived: first.revived + second.revived,
     drunk: [...first.drunk, ...second.drunk], policyTurns: first.policyTurns + second.policyTurns, policyNodes: first.policyNodes + second.policyNodes,
     lossByTurn: [...first.lossByTurn, ...second.lossByTurn], dmgByTurn: [...first.dmgByTurn, ...second.dmgByTurn],

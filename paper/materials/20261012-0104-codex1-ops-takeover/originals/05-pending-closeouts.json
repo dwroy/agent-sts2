@@ -1,0 +1,474 @@
+{
+  "at": "2026-10-11 22:44:59 CST",
+  "ready_to_drain": true,
+  "batches": [
+    {
+      "batch": "20261011-214301-fix-batch",
+      "state_snapshot": {
+        "task": "fix-batch",
+        "character": "silent",
+        "runs": [],
+        "key": "1dd886789b780ba9dd52cc929b9710c3062a27c84b4f469e28b5c74f476bd79f",
+        "pid": 2447341,
+        "state": "failed",
+        "reason": "tick",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-214301",
+        "proposal_policy": "Roy-2026-10-07-learning",
+        "pane": "wJ:pKZ",
+        "finished": "2026-10-11 22:40",
+        "rc": 0,
+        "merged": null,
+        "proposal_audit_errors": [],
+        "report": {
+          "task": "fix-batch",
+          "base": "0e76d455430782373f85d4bbbeda17cedbfc7209",
+          "fixes": [
+            {
+              "item": "校准派发夹具缺少生产守卫要求的功能工作树目录",
+              "commit": "2b09c47d431a580e9955d157f4dfb0e576186206",
+              "test": "agent/tests/calibration-dispatch-fixtures.test.ts",
+              "fails_without_fix": true
+            },
+            {
+              "item": "host-targeted-check-continuation：原宿主失败缺少绑定身份和覆盖的定向补验入口",
+              "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+              "test": "agent/tests/learner-check-continuation.test.ts",
+              "fails_without_fix": true
+            }
+          ],
+          "skipped": [
+            {
+              "item": "机制/策略项 silent-0250,0256,0260,0263,0266,0268,0271,0273,0279,0287,0290,0291,0293,0295,0296,0297,0300,0308,0311,0317,0319,0320,0322,0329,0334,0339,0344,0347,0349,0362,0365,0367",
+              "reason": "策略类：沿已有独立strategy-proposal链处理，本批不重复实现或派发。"
+            },
+            {
+              "item": "silent-0332、core-build-notify-222802-rc2、mod短暂请求超时",
+              "reason": "证据不足：分别缺触发样本、历史stderr及未发送证明、mod根因。"
+            },
+            {
+              "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression、B4/B5、缓存及性能实测",
+              "reason": "太大：独立架构、归因和受控实验任务。"
+            },
+            {
+              "item": "调度公平性核查",
+              "reason": "证据不足：当前快照不能证明永久饥饿。"
+            },
+            {
+              "item": "sandbox-glob-startup-race",
+              "reason": "独立冻结任务明确交下一空闲普通批次，不修改本214301活批输入或租约。"
+            }
+          ],
+          "merged": null,
+          "tests": {
+            "tsc": 0,
+            "vitest": 0,
+            "cases": 2692,
+            "files": 269
+          },
+          "code_proposals": [],
+          "implementation_domains": [],
+          "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261011-214301/learner/runs/20261011-214313-fix-batch/report.md"
+        },
+        "retry_at": 1791733204.9772794
+      },
+      "files": [
+        {
+          "path": "ops/codex-ops/learner/20261011-214301-fix-batch.out",
+          "sha256": "97a0bc34ec4b2f305217fbf78771fc4a73e702d16e8dfb52f682c516d4af4831",
+          "bytes": 4609
+        },
+        {
+          "path": "ops/codex-ops/learner/20261011-214301-fix-batch.err",
+          "sha256": "4c3324ff18f708de8dcc6a499f4538d0548e875f6258741ef239cea24fcdbc79",
+          "bytes": 22622
+        },
+        {
+          "path": ".worktrees/codex-fix-silent-20261011-214301/learner/runs/20261011-214313-fix-batch/report.md",
+          "sha256": "2e70f4d8ef84d563bac7df5e89f81f8d2ee4a67f9e6d6b8c85796eb9adf3b80f",
+          "bytes": 8852
+        }
+      ],
+      "closeout_complete": false,
+      "drain_disposition": "preserve only; successor accepts fixed results and coordinates remaining work"
+    },
+    {
+      "batch": "20261011-221722-strategy-proposal",
+      "state_snapshot": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "runs": [
+          "C48LLXBGKXQ9",
+          "ZZMYZ5UBCG72",
+          "LRN0HPZ0FZS1",
+          "KAY522KT5NXR",
+          "L704TLETMZBM",
+          "4Y94N8RDPGPM",
+          "KV0JHNJCKXLS",
+          "J8PHG72DGD90",
+          "49HL2N70CHMU",
+          "54G5683J0E5S"
+        ],
+        "key": "strategy-implementation:roy-20261011-silent-core-cycle-quantitative-learning",
+        "pid": 2527220,
+        "state": "done",
+        "reason": "ops",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221722",
+        "proposal_policy": "Roy-2026-10-07-learning",
+        "pane": "wJ:pM3",
+        "implementation_request": "roy-20261011-silent-core-cycle-quantitative-learning",
+        "proposal_ids": [
+          "silent-proposal-9e1bc1225fae0e30",
+          "silent-proposal-3dae3ca702a14057",
+          "silent-proposal-9e81dc5f9a4c3bd5"
+        ],
+        "implementation_binding": {
+          "request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+          "work_spec_sha256": "3c9355afd6ee7c98ff7cfc9c2e9a45d20fdf025ae701fccd482b1b73aea6079b",
+          "input_manifest_sha256": "54bd743de00cc1c5146546f06859a59016afba85a39c52aa73359860359c845f",
+          "authorization_sha256": "b998719e1bc75c0b2af67b1fcd862c6bffc4b7707b825e83b58ecf79cd1c1508",
+          "ack_sha256": "2be028888ce9afdb6a5b9954fb12c8e47917b4c4d807653aef414fd3687181b7",
+          "files": [
+            {
+              "source": "paper/materials/silent/20261011-core-cycle-quantification/report.md",
+              "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/abstract-report.md",
+              "bytes": 10427,
+              "sha256": "e40f3f897838d0873a0117d27e37b462ef4f67630f68b149ef7493457f797785"
+            },
+            {
+              "source": "paper/materials/silent/20261011-core-cycle-quantification/calculate.py",
+              "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/abstract-calculate.py",
+              "bytes": 9847,
+              "sha256": "77edbe37b4fb1914958b25d14194c5f70d59cef6ee811a372c357b958fdcfa0b"
+            },
+            {
+              "source": "paper/materials/silent/20261011-core-cycle-quantification/results.json",
+              "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/abstract-results.json",
+              "bytes": 18714,
+              "sha256": "7c191564efe3cfda44ddbdb9be91e9bd0d91e0c7d52246c699dbb37c72baf21b"
+            },
+            {
+              "source": "paper/materials/silent/20261011-core-cycle-quantification/experience-integration/task-v3.md",
+              "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/previous-task-v3.md",
+              "bytes": 5269,
+              "sha256": "030337a62c1d43cb18486f53eb760e2235b762fd567d9e8cf6232166aed96360"
+            },
+            {
+              "source": ".worktrees/exp/learner/runs/20261011-175453-experience-update/report.md",
+              "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/previous-learner-report.md",
+              "bytes": 42279,
+              "sha256": "94d3623878596d68e78ec82e0f01c3bb8bb241073991caa124d8baf3b89767ac"
+            },
+            {
+              "source": ".worktrees/exp/learner/runs/20261011-175453-experience-update/finite-window-verification.json",
+              "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/finite-window-verification.json",
+              "bytes": 131821,
+              "sha256": "1aa38f2dc2b15c6b5780506d5052bcc86398cf419243fe6aa3fdf35662a67d5a"
+            },
+            {
+              "source": ".worktrees/codex-strategy-silent-20261010-164301/learner/runs/20261010-164314-strategy-proposal/proposal.md",
+              "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/core-reuse-proposal.md",
+              "bytes": 6850,
+              "sha256": "663b06fb0e50d24d8a1225e7c04e737c961000dcbbef7644471215a5f451515c"
+            },
+            {
+              "source": "paper/materials/silent/20261010-core-output-value/result-review/proposal.md",
+              "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/core-output-proposal.md",
+              "bytes": 6645,
+              "sha256": "77a828dea1664ae9e6fc862151f380161901ebf0be47f06011ad83d6481bd79e"
+            },
+            {
+              "source": ".worktrees/exp/learner/runs/20261011-175453-experience-update/proposal-integration.md",
+              "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/integration-proposal.md",
+              "bytes": 8006,
+              "sha256": "feb0c6dce459bf2e65f38d03dc25449a5704167e30928799f67e9b36f140c118"
+            }
+          ],
+          "file_responsibilities": {
+            "watcher": [
+              "agent/src/sim/quantitative-stats.ts",
+              "agent/src/sim/quantitative-facts.ts",
+              "agent/src/sim/quantitative-calibration.ts",
+              "agent/src/sim/build-sim.ts",
+              "agent/src/sim/build-sim-facts.ts",
+              "agent/src/reflex/combat-plan.ts"
+            ],
+            "learner": [
+              "本角色原帧校准/固定夹具/反例/条件经验",
+              "原三个提案的消费者实现；先复用watcher交付接口，冲突路径停止并交ops协调",
+              "复用已上线通用框架 source199596dfcf99c18cda5ce146b8de618636f60d40 +3ee649f69260309677ad075cac726d705a66e6ef，先读正式补充输入 paper/materials/silent/20261011-core-cycle-quantitative-learning/framework-input-v2.json（SHA256 38eba701973db706c5a02be48e8fb37300eac06e0e9aa333bd368e250862bf5e）及其中API文档 paper/materials/silent/20261011-core-cycle-quantitative-learning/framework-input-v2/quantitative-play.md（SHA256 ac674443cf5d9ffca11e40ee41beda8aaaa4f7b72495e707bea3d6fdd5ac0a2a）；这5个冻结文件由ops逐字复核，文档与dispatch_base已集成API一致。完整组合资格/计数/真实预测-实际自动提取/校准及coverage仍由本批学习者依原task和证据完成，不把框架交付或抽象界当已入库游戏结论。"
+            ],
+            "ops": [
+              "派发冻结绑定、实际合入/校准/版本/账本/双通知/后续效果闭环"
+            ]
+          },
+          "dispatch_base": "3f94d48f043fb49ea2780902edd7e493faf551ad",
+          "proposals": [
+            {
+              "id": "silent-proposal-9e1bc1225fae0e30",
+              "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-164301/learner/runs/20261010-164314-strategy-proposal/proposal.md",
+              "proposal_sha256": "663b06fb0e50d24d8a1225e7c04e737c961000dcbbef7644471215a5f451515c"
+            },
+            {
+              "id": "silent-proposal-3dae3ca702a14057",
+              "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-205441/learner/runs/20261010-205451-strategy-proposal/proposal.md",
+              "proposal_sha256": "77a828dea1664ae9e6fc862151f380161901ebf0be47f06011ad83d6481bd79e"
+            },
+            {
+              "id": "silent-proposal-9e81dc5f9a4c3bd5",
+              "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-175453-experience-update/proposal-integration.md",
+              "proposal_sha256": "feb0c6dce459bf2e65f38d03dc25449a5704167e30928799f67e9b36f140c118"
+            }
+          ]
+        },
+        "implementation_dispatch_receipt": {
+          "request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+          "batch": "20261011-221722-strategy-proposal",
+          "pid": 2527220,
+          "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221722",
+          "pane": "wJ:pM3",
+          "at": 1791728242.6795442,
+          "binding": {
+            "request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+            "work_spec_sha256": "3c9355afd6ee7c98ff7cfc9c2e9a45d20fdf025ae701fccd482b1b73aea6079b",
+            "input_manifest_sha256": "54bd743de00cc1c5146546f06859a59016afba85a39c52aa73359860359c845f",
+            "authorization_sha256": "b998719e1bc75c0b2af67b1fcd862c6bffc4b7707b825e83b58ecf79cd1c1508",
+            "ack_sha256": "2be028888ce9afdb6a5b9954fb12c8e47917b4c4d807653aef414fd3687181b7",
+            "files": [
+              {
+                "source": "paper/materials/silent/20261011-core-cycle-quantification/report.md",
+                "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/abstract-report.md",
+                "bytes": 10427,
+                "sha256": "e40f3f897838d0873a0117d27e37b462ef4f67630f68b149ef7493457f797785"
+              },
+              {
+                "source": "paper/materials/silent/20261011-core-cycle-quantification/calculate.py",
+                "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/abstract-calculate.py",
+                "bytes": 9847,
+                "sha256": "77edbe37b4fb1914958b25d14194c5f70d59cef6ee811a372c357b958fdcfa0b"
+              },
+              {
+                "source": "paper/materials/silent/20261011-core-cycle-quantification/results.json",
+                "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/abstract-results.json",
+                "bytes": 18714,
+                "sha256": "7c191564efe3cfda44ddbdb9be91e9bd0d91e0c7d52246c699dbb37c72baf21b"
+              },
+              {
+                "source": "paper/materials/silent/20261011-core-cycle-quantification/experience-integration/task-v3.md",
+                "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/previous-task-v3.md",
+                "bytes": 5269,
+                "sha256": "030337a62c1d43cb18486f53eb760e2235b762fd567d9e8cf6232166aed96360"
+              },
+              {
+                "source": ".worktrees/exp/learner/runs/20261011-175453-experience-update/report.md",
+                "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/previous-learner-report.md",
+                "bytes": 42279,
+                "sha256": "94d3623878596d68e78ec82e0f01c3bb8bb241073991caa124d8baf3b89767ac"
+              },
+              {
+                "source": ".worktrees/exp/learner/runs/20261011-175453-experience-update/finite-window-verification.json",
+                "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/finite-window-verification.json",
+                "bytes": 131821,
+                "sha256": "1aa38f2dc2b15c6b5780506d5052bcc86398cf419243fe6aa3fdf35662a67d5a"
+              },
+              {
+                "source": ".worktrees/codex-strategy-silent-20261010-164301/learner/runs/20261010-164314-strategy-proposal/proposal.md",
+                "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/core-reuse-proposal.md",
+                "bytes": 6850,
+                "sha256": "663b06fb0e50d24d8a1225e7c04e737c961000dcbbef7644471215a5f451515c"
+              },
+              {
+                "source": "paper/materials/silent/20261010-core-output-value/result-review/proposal.md",
+                "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/core-output-proposal.md",
+                "bytes": 6645,
+                "sha256": "77a828dea1664ae9e6fc862151f380161901ebf0be47f06011ad83d6481bd79e"
+              },
+              {
+                "source": ".worktrees/exp/learner/runs/20261011-175453-experience-update/proposal-integration.md",
+                "path": "paper/materials/silent/20261011-core-cycle-quantitative-learning/inputs/integration-proposal.md",
+                "bytes": 8006,
+                "sha256": "feb0c6dce459bf2e65f38d03dc25449a5704167e30928799f67e9b36f140c118"
+              }
+            ],
+            "file_responsibilities": {
+              "watcher": [
+                "agent/src/sim/quantitative-stats.ts",
+                "agent/src/sim/quantitative-facts.ts",
+                "agent/src/sim/quantitative-calibration.ts",
+                "agent/src/sim/build-sim.ts",
+                "agent/src/sim/build-sim-facts.ts",
+                "agent/src/reflex/combat-plan.ts"
+              ],
+              "learner": [
+                "本角色原帧校准/固定夹具/反例/条件经验",
+                "原三个提案的消费者实现；先复用watcher交付接口，冲突路径停止并交ops协调",
+                "复用已上线通用框架 source199596dfcf99c18cda5ce146b8de618636f60d40 +3ee649f69260309677ad075cac726d705a66e6ef，先读正式补充输入 paper/materials/silent/20261011-core-cycle-quantitative-learning/framework-input-v2.json（SHA256 38eba701973db706c5a02be48e8fb37300eac06e0e9aa333bd368e250862bf5e）及其中API文档 paper/materials/silent/20261011-core-cycle-quantitative-learning/framework-input-v2/quantitative-play.md（SHA256 ac674443cf5d9ffca11e40ee41beda8aaaa4f7b72495e707bea3d6fdd5ac0a2a）；这5个冻结文件由ops逐字复核，文档与dispatch_base已集成API一致。完整组合资格/计数/真实预测-实际自动提取/校准及coverage仍由本批学习者依原task和证据完成，不把框架交付或抽象界当已入库游戏结论。"
+              ],
+              "ops": [
+                "派发冻结绑定、实际合入/校准/版本/账本/双通知/后续效果闭环"
+              ]
+            },
+            "dispatch_base": "3f94d48f043fb49ea2780902edd7e493faf551ad",
+            "proposals": [
+              {
+                "id": "silent-proposal-9e1bc1225fae0e30",
+                "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-164301/learner/runs/20261010-164314-strategy-proposal/proposal.md",
+                "proposal_sha256": "663b06fb0e50d24d8a1225e7c04e737c961000dcbbef7644471215a5f451515c"
+              },
+              {
+                "id": "silent-proposal-3dae3ca702a14057",
+                "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261010-205441/learner/runs/20261010-205451-strategy-proposal/proposal.md",
+                "proposal_sha256": "77a828dea1664ae9e6fc862151f380161901ebf0be47f06011ad83d6481bd79e"
+              },
+              {
+                "id": "silent-proposal-9e81dc5f9a4c3bd5",
+                "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261011-175453-experience-update/proposal-integration.md",
+                "proposal_sha256": "feb0c6dce459bf2e65f38d03dc25449a5704167e30928799f67e9b36f140c118"
+              }
+            ]
+          },
+          "status": "running_bound"
+        },
+        "finished": "2026-10-11 22:41",
+        "rc": 0,
+        "merged": null,
+        "proposal_audit_errors": [],
+        "report": {
+          "task": "strategy-proposal",
+          "character": "silent",
+          "batch": "20261011-221722-strategy-proposal",
+          "request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+          "input_sha256": "54bd743de00cc1c5146546f06859a59016afba85a39c52aa73359860359c845f",
+          "work_spec_sha256": "3c9355afd6ee7c98ff7cfc9c2e9a45d20fdf025ae701fccd482b1b73aea6079b",
+          "base": "3f94d48f043fb49ea2780902edd7e493faf551ad",
+          "runs": [
+            "C48LLXBGKXQ9",
+            "ZZMYZ5UBCG72",
+            "LRN0HPZ0FZS1",
+            "KAY522KT5NXR",
+            "L704TLETMZBM",
+            "4Y94N8RDPGPM",
+            "KV0JHNJCKXLS",
+            "J8PHG72DGD90",
+            "49HL2N70CHMU",
+            "54G5683J0E5S"
+          ],
+          "fixes": [],
+          "skipped": [
+            "生产事实接口与watcher保留文件职责相交，按本批任务要求停止并交ops协调；四项成果尚未完成。"
+          ],
+          "merged": null,
+          "tests": {
+            "tsc": null,
+            "vitest": null,
+            "cases": null
+          },
+          "code_proposals": [
+            "silent-proposal-9e1bc1225fae0e30",
+            "silent-proposal-3dae3ca702a14057",
+            "silent-proposal-9e81dc5f9a4c3bd5"
+          ],
+          "implementation_domains": [
+            "combat",
+            "terminal"
+          ],
+          "proposal_results": [
+            {
+              "id": "silent-proposal-9e1bc1225fae0e30",
+              "state": "waiting",
+              "reason": "已核费用/封抽/手位反例；完整效果与支付轨迹尚未接入。quantitative-facts.ts/combat-plan.ts为watcher保留职责且接口无组合输入，依任务停止待ops协调；通用聚合字段不构成原提案整体duplicate。"
+            },
+            {
+              "id": "silent-proposal-3dae3ca702a14057",
+              "state": "waiting",
+              "reason": "54G与4Y复制延迟/实付原帧已复核；缺当前模型的复制/重放/完整组合轨迹、消费者调用验证及准确模型版本匹配的校准。生产事实入口涉及保留路径，待ops协调后继续实现。"
+            },
+            {
+              "id": "silent-proposal-9e81dc5f9a4c3bd5",
+              "state": "waiting",
+              "reason": "已核四窗口106端点及57项命题；原经验存在不等消费者完成。缺完整组合样本传递/构筑compact接入、真实预测实际提取与自然局采用收益；build-sim相关路径职责待协调，无本批live实现。"
+            }
+          ],
+          "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221722/learner/runs/20261011-221732-strategy-proposal/report.md"
+        },
+        "no_change_proposals": {
+          "base": "3f94d48f043fb49ea2780902edd7e493faf551ad",
+          "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261011-221722/learner/runs/20261011-221732-strategy-proposal/report.md",
+          "dispositions": [
+            {
+              "id": "silent-proposal-9e1bc1225fae0e30",
+              "state": "waiting",
+              "reason": "已核费用/封抽/手位反例；完整效果与支付轨迹尚未接入。quantitative-facts.ts/combat-plan.ts为watcher保留职责且接口无组合输入，依任务停止待ops协调；通用聚合字段不构成原提案整体duplicate。"
+            },
+            {
+              "id": "silent-proposal-3dae3ca702a14057",
+              "state": "waiting",
+              "reason": "54G与4Y复制延迟/实付原帧已复核；缺当前模型的复制/重放/完整组合轨迹、消费者调用验证及准确模型版本匹配的校准。生产事实入口涉及保留路径，待ops协调后继续实现。"
+            },
+            {
+              "id": "silent-proposal-9e81dc5f9a4c3bd5",
+              "state": "waiting",
+              "reason": "已核四窗口106端点及57项命题；原经验存在不等消费者完成。缺完整组合样本传递/构筑compact接入、真实预测实际提取与自然局采用收益；build-sim相关路径职责待协调，无本批live实现。"
+            }
+          ]
+        }
+      },
+      "files": [
+        {
+          "path": "ops/codex-ops/learner/20261011-221722-strategy-proposal.out",
+          "sha256": "4001ef200e4932275750fb091a380a15a65689fba4b63bc6cdf02b5f1fd751c0",
+          "bytes": 3708
+        },
+        {
+          "path": "ops/codex-ops/learner/20261011-221722-strategy-proposal.err",
+          "sha256": "8275688f95322e996979ab4cdd867a3647e0196b0e4143124643f0e5e6438ed3",
+          "bytes": 12746
+        },
+        {
+          "path": ".worktrees/codex-strategy-silent-20261011-221722/learner/runs/20261011-221732-strategy-proposal/report.md",
+          "sha256": "ec6ee4b6804ea9fdbe8a213fbf2ee8b4fd11de0f883f8e1cd248381e9872dbff",
+          "bytes": 9670
+        }
+      ],
+      "closeout_complete": false,
+      "drain_disposition": "preserve only; successor accepts fixed results and coordinates remaining work"
+    }
+  ],
+  "fixed_unmerged_sources": [
+    {
+      "commit": "2b09c47d431a580e9955d157f4dfb0e576186206",
+      "exists": true,
+      "live_ancestor": false,
+      "changed_paths": [
+        "agent/tests/calibration-dispatch-fixtures.test.ts",
+        "ops/tests/test_silent_calibration_dispatch.py"
+      ]
+    },
+    {
+      "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+      "exists": true,
+      "live_ancestor": false,
+      "changed_paths": [
+        "agent/tests/learner-check-continuation.test.ts",
+        "docs/host-check-continuation.md",
+        "ops/codex-ops-actions.sh",
+        "ops/codex-ops-do.sh",
+        "ops/codex-ops-learn.py",
+        "ops/codex/lib.ts",
+        "ops/learner_check_continuation.py",
+        "ops/learner_checks.py",
+        "ops/tests/test_learner_check_continuation.py"
+      ]
+    }
+  ],
+  "formal_quantitative_parent_complete": false,
+  "new_dispatch": false,
+  "merge_or_test_performed": false,
+  "ACK_or_canonical_history_modified": false,
+  "next_owner": "watcher/new codex1 ops",
+  "important_continuation": [
+    "watcher already released generic quantitative paths in prior delivery; stale reserved-path wording in frozen responsibilities caused221722 stop",
+    "preserve old binding bytes, issue explicit ownership addendum after checking current owner, resume same authorized implementation scope after drain",
+    "current entry is first-dispatch-only and original three proposals are waiting: use authorized existing recovery/adaptation, do not delete registration or forge pending state",
+    "host continuation source overlaps account-drain dispatcher files; reconcile fixed increments without overwriting watcher framework changes"
+  ]
+}

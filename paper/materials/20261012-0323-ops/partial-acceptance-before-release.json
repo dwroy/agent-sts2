@@ -1,0 +1,128 @@
+{
+  "at": "2026-10-12 03:31:18 CST",
+  "request_id": "roy-20261011-silent-core-cycle-quantitative-learning",
+  "batch": "20261012-024317-strategy-proposal",
+  "state": "reviewable_tested_partial_stage_before_actual_release",
+  "parent_complete": false,
+  "final_push_condition_met": false,
+  "scope_assessed_by": "ops mechanical artifact and publication verification; no additional gameplay review",
+  "deliverables": [
+    {
+      "name": "逐项吸收清单",
+      "state": "inventory_delivered_with_explicit_limits",
+      "artifact": "coverage.json / coverage.md",
+      "items": 57,
+      "learner_status_counts": {
+        "status": {
+          "附条件可用": 49,
+          "已验证可用": 5,
+          "被反例否定": 1,
+          "待验证": 2
+        },
+        "continuation_status": {
+          "复用已验SHA数学推导与原游戏适用边界；不新增打法阈值": 46,
+          "coreRealization分列状态/支付/手动与重放；五原帧端点验算、54G到手未建反例通过": 1,
+          "KV0封抽实际状态8固定配对，保留/跳/删/加NEUTRALIZE，四方案首轮模型伤均28，全部capped": 1,
+          "KV0后空翻/肾上腺素原帧能量/挡/HP三量相符，抽入为0": 1,
+          "trace区分draw_budget与实际手位入手；发现并修复显式弃牌卡视图未离手，L704杂技恢复3+2": 1,
+          "trace记录exhaust/power离场；固定重复耗尽动作无法重放": 1,
+          "沿现有搜索相同行动/技能额度校验回放，零费后继超额度保留前缀与null费用": 1,
+          "首次公开策略施放/有施放分母可计算，54G T6三副本仍4敏；T7真实步法后7敏": 1,
+          "状态毒层与即时HP伤分列，4Y原字节和原窗口继续作边界": 1,
+          "构筑保留死亡/胜/截断分母，完整轨迹费用/次数与后继伤分列": 1,
+          "delayed_damage和无模型nextTurnBlock保持null，不预支复制副本": 1,
+          "保留原跨战血药传递，跨两场coreWindow置未知，防止把次战当整个窗口": 1
+        },
+        "production_status": {
+          "沿原清单；数学不充当游戏结论": 46,
+          "候选源码2a62f327d自测通过；12项合入预检冲突，未上线": 11
+        }
+      },
+      "note": "计数仅为学习者覆盖条目分类，不是游戏规则已全部验证或收益。"
+    },
+    {
+      "name": "可复用计算能力",
+      "state": "tested_partial_candidate",
+      "sources": [
+        "2a62f327d508201d9982983ec2c930789065ece5"
+      ],
+      "artifact": "docs/core-realization.md",
+      "available": [
+        "现有solver的合法前缀费用/效果/状态轨迹",
+        "原公开策略有限窗口及配对样本统计",
+        "首个完成动作的预测实际提取"
+      ],
+      "limits": [
+        "其余三原核心及其他弃牌分支的完整资格与后继计数",
+        "夜魇目标、次轮副本与支付身份完整窗口",
+        "跨两boss重启组合的后继归属",
+        "整回合/整场和药水预测实际自动配对",
+        "阶段/整局收益的后置样本与混杂控制"
+      ],
+      "fixed_frame_endpoints": 5,
+      "fixed_resource_checks": 15,
+      "abstract_samples_not_game_trials": 120000
+    },
+    {
+      "name": "条件明确的经验条目",
+      "state": "one_tested_existing_entry_delta",
+      "source": "51e0c1f475f842b355172f1f2a6f320cae9fb58d",
+      "entry": "silent-deck-burst-observation",
+      "experience": {
+        "before": "2026-10-11.16",
+        "after": "2026-10-12.1",
+        "entries": 219,
+        "changes": [
+          {
+            "id": "silent-deck-burst-observation",
+            "fields": [
+              "lesson",
+              "last_seen"
+            ]
+          }
+        ],
+        "evidence_denominators_unchanged": true
+      },
+      "proposal_audit_missing": [],
+      "note": "一条条件工具指导；不增加支持分母，不把整个原四核心标完成。"
+    },
+    {
+      "name": "实际消费验收",
+      "state": "fixed_consumer_tests_only",
+      "artifact": "consumer-coverage.md / effect-followup.json",
+      "fixed_calls": [
+        "真实combat-plan题面",
+        "SerialDeckRunner→compareOptions→compact",
+        "首动作日志匹配与排除"
+      ],
+      "historical_valid": 0,
+      "historical_excluded": 74,
+      "natural_read": null,
+      "adopted": null,
+      "benefit": null,
+      "note": "历史dirty/片段正确排除，未发布bias/MAE或自然效果；固定回放不是当前版本前瞻校准。"
+    }
+  ],
+  "implementation_gaps_retained": [
+    "独立弃牌/保留/复制选择的后继候选计算",
+    "完整核心、夜魇和跨战归属链",
+    "整回合/整场/药水及重规划后缀的预测实际配对"
+  ],
+  "evidence_gaps_from_learner": [
+    "其余三原核心及其他弃牌分支的完整资格与后继计数",
+    "夜魇目标、次轮副本与支付身份完整窗口",
+    "跨两boss重启组合的后继归属",
+    "整回合/整场和药水预测实际自动配对",
+    "阶段/整局收益的后置样本与混杂控制"
+  ],
+  "next_natural_trigger": "实际上线后的下一自然Silent A10对局完成，由原ops事件链核题面读取、采用首动作、完整源码/SL/指纹/原帧范围，再调用extract-calibration；不占会话轮询、不运行play。",
+  "existing_continuation_route": {
+    "request": "ops-20261012-quantitative-continuation",
+    "original_batch_state": "failed",
+    "original_rc": 0,
+    "retry_at_epoch_preserved": 1791750193.0723882,
+    "attempts": 1,
+    "no_new_dispatch_this_wake": true,
+    "note": "本阶段先核实际发布与宿主结果；后续仍沿原三提案和有界接续，不删失败或改冻结输入，不把全部缺口统称等新局。"
+  }
+}

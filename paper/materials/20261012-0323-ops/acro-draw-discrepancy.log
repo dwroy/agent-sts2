@@ -1,0 +1,45 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-024317/agent
+
+ ❯ tests/core-realization.test.ts (10 tests | 1 failed | 9 skipped) 85ms
+   × quantifies actual payment once and the two replay effects in the fixed L704 frame 84ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/core-realization.test.ts > quantifies actual payment once and the two replay effects in the fixed L704 frame
+AssertionError: expected { quantitative_turn: { …(14) } } to match object { quantitative_turn: { …(1) } }
+(72 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -2,11 +2,11 @@
+    "quantitative_turn": {
+      "realization": {
+        "actions": [
+          {
+            "block_gained": 6,
+-           "draws": 5,
++           "draws": 4,
+            "effects": 2,
+          },
+        ],
+        "complete_combinations": null,
+        "effect_resolutions": {
+
+ ❯ tests/core-realization.test.ts:77:17
+     75|   const facts = quantitativeTurnFacts(state, trace.plan!, input);
+     76|   if (process.env.CORE_DEBUG_AUDIT) writeFileSync(process.env.CORE_DEB…
+     77|   expect(facts).toMatchObject({ quantitative_turn: { realization: {
+       |                 ^
+     78|     energy_paid: 1, manual_plays: { ACROBATICS: 1 }, effect_resolution…
+     79|     actions: [{ block_gained: 6, effects: 2, draws: 5 }], complete_com…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  03:07:56
+   Duration  1.41s (transform 1.00s, setup 286ms, import 918ms, tests 85ms, environment 0ms)
+

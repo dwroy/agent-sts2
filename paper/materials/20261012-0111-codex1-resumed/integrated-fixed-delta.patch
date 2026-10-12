@@ -1,0 +1,2553 @@
+diff --git a/agent/src/hand/screens/selection.ts b/agent/src/hand/screens/selection.ts
+index cae0480f7..4c3e96327 100644
+--- a/agent/src/hand/screens/selection.ts
++++ b/agent/src/hand/screens/selection.ts
+@@ -20,6 +20,7 @@ import type { GameState } from "../mod/schema.js";
+ import { exhaustPileSize, facingFightOf, fightPlaysPerTurn } from "../../reflex/combat-plan.js";
+ import { cardIdentity, planMakerOf, SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
+ import { cardOutcome } from "../../knowledge/outcome-facts.js";
++import { survivorSmoggyFacts } from "./silent-smoggy-selection.js";
+ 
+ export function planSelection(env: DecisionEnv): Decision | null {
+   const { state, knowledge } = env;
+@@ -191,6 +192,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
+   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
+   // Bash+ the plan played next).
+   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
++  const smoggySource = env.screenMemory.cardSource;
++  const smoggyFacts = survivorSmoggyFacts(state, smoggySource?.action === "play_card" && smoggySource.id === "SURVIVOR" &&
++    smoggySource.turn === state.turn && smoggySource.fight === facingFightOf(state));
+   const options: PickOption[] = candidates.map((card, fallbackIndex) => {
+     const index = numOrNull(card["index"]) ?? fallbackIndex;
+     const cardId = str(card["card_id"]);
+@@ -225,6 +229,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
+         cost: freeSource ? thisTurnModel(card, index).cost : numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
+         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
+         ...(discardPlan ? { removes_planned_continuation: discardPlan.removes(card) } : {}),
++        ...(smoggyFacts?.has(index) ? { smoggy_after_discard: smoggyFacts.get(index)! } : {}),
+       } satisfies JsonValue,
+     };
+     // DeepSeek's view: the value's parts, and that the ranking is a reference ("120 = 80 + 40 ..."; UNRL F14 read
+@@ -291,7 +296,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
+     options,
+     // Exhaust picks happen every turn with Baking Gloves and are low-stakes: code always decides.
+     codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : verb === "exhaust" || topDanger ? 0 : 6,
+-    maxModelOptions: 4,
++    maxModelOptions: smoggyFacts ? options.length : 4,
+     state: {
+       run_brief: briefJson(env.brief),
+       situation: {
+diff --git a/agent/src/hand/screens/silent-smoggy-selection.ts b/agent/src/hand/screens/silent-smoggy-selection.ts
+new file mode 100644
+index 000000000..dcc829387
+--- /dev/null
++++ b/agent/src/hand/screens/silent-smoggy-selection.ts
+@@ -0,0 +1,58 @@
++import { asArray, asRecord, numOrNull, str, type JsonValue } from "../../core/util/json.js";
++import type { GameState } from "../mod/schema.js";
++
++/**
++ * 6D0M76419BU7 F12 T3 (silent-0407): the selection snapshot still marks
++ * Deflect and Defend playable; SMOGGY_POWER blocks them after Survivor finishes.
++ * Report that observed restriction separately from the unsettled mod flag.
++ */
++export function survivorSmoggyFacts(state: GameState, currentSurvivor: boolean): Map<number, JsonValue> | null {
++  const selection = asRecord(state.raw["selection"]);
++  if (!currentSurvivor || !state.in_combat || state.run?.ascension !== 10 ||
++      str(asRecord(state.run.raw)["character_id"]).toUpperCase() !== "SILENT" ||
++      selection["kind"] !== "combat_hand_select" || !/丢弃|弃掉|discard/i.test(str(selection["prompt"])) ||
++      selection["min_select"] !== 1 || selection["max_select"] !== 1 || selection["selected_count"] !== 0) return null;
++  const combat = asRecord(state.raw["combat"]);
++  const readiness = asRecord(combat["action_readiness"]);
++  if (!/PlayCardAction$/.test(str(readiness["running_action_type"])) || readiness["hand_in_card_selection"] !== true) return null;
++  const player = asRecord(combat["player"]);
++  const smog = asArray(player["powers"]).map(asRecord).filter((power) => power["power_id"] === "SMOGGY_POWER");
++  if (smog.length !== 1 || smog[0]!["amount"] !== 1 || player["skills_played_this_turn"] !== 1) return null;
++  const energy = numOrNull(player["energy"]);
++  if (energy === null || energy < 0) return null;
++  const cards = asArray(selection["cards"]).map(asRecord);
++  const hand = asArray(combat["hand"]).map(asRecord);
++  if (!cards.length || cards.length !== hand.length || cards.some((card) => card["selected"] !== false)) return null;
++  const slots = cards.map((card) => numOrNull(card["index"]));
++  if (slots.some((slot) => slot === null || !Number.isInteger(slot) || slot < 0) ||
++      new Set(slots).size !== cards.length || new Set(hand.map((card) => card["index"])).size !== hand.length) return null;
++  for (const card of cards) {
++    const actual = hand.find((entry) => entry["index"] === card["index"]);
++    if (!actual || !str(card["card_id"]) ||
++        ["card_id", "upgraded", "energy_cost", "costs_x", "star_cost", "star_costs_x", "resolved_rules_text"]
++          .some((key) => actual[key] !== card[key])) return null;
++  }
++  // Only these plain cards and this counter/power combination were checked here.
++  const blocked = cards.filter((card) => card["upgraded"] === false && card["card_type"] === "Skill" &&
++    (card["card_id"] === "DEFLECT" || card["card_id"] === "DEFEND_SILENT"));
++  if (!blocked.length) return null;
++  return new Map(cards.map((discarded) => [discarded["index"] as number, {
++    basis: "静默A10实盘6D0M76419BU7/F12T3：1层烟雾且已打1张技能时，生存者选牌帧仍显示偏折/防御可打，完成弃牌后才标烟雾禁止。费用足够不能当作可补挡；以下为烟雾与计数保持时已核普通偏折/防御的限制，弃牌触发、其他牌与完整后继未验证，选择后仍须重读。",
++    energy_now: energy,
++    smoggy_amount: 1,
++    skills_played_this_turn: 1,
++    retained_restricted_cards: blocked.filter((card) => card["index"] !== discarded["index"]).map((card) => {
++      const actual = hand.find((entry) => entry["index"] === card["index"])!;
++      const cost = numOrNull(card["energy_cost"]);
++      return {
++        hand_index_before_discard: card["index"] as number,
++        card_id: str(card["card_id"]), name: str(card["name"]),
++        energy_cost_now: cost,
++        energy_sufficient_for_this_card_alone: cost !== null && cost >= 0 && card["costs_x"] === false &&
++          card["star_costs_x"] === false && card["star_cost"] === 0 ? energy >= cost : null,
++        mod_playable_during_selection: typeof actual["playable"] === "boolean" ? actual["playable"] : null,
++        observed_restriction_after_survivor: "SMOGGY_POWER",
++      };
++    }),
++  } satisfies JsonValue]));
++}
+diff --git a/agent/tests/calibration-dispatch-fixtures.test.ts b/agent/tests/calibration-dispatch-fixtures.test.ts
+new file mode 100644
+index 000000000..beafa3d80
+--- /dev/null
++++ b/agent/tests/calibration-dispatch-fixtures.test.ts
+@@ -0,0 +1,11 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++
++it("dispatches fixed feature fixtures while retaining missing-tree guards", () => {
++  const result = spawnSync("python3", ["-B", "../ops/tests/test_silent_calibration_dispatch.py"], {
++    encoding: "utf8",
++    timeout: 20_000,
++  });
++  expect(result.status, result.stdout + result.stderr).toBe(0);
++  expect(result.stderr).toContain("OK");
++});
+diff --git a/agent/tests/learner-check-continuation.test.ts b/agent/tests/learner-check-continuation.test.ts
+new file mode 100644
+index 000000000..c4a7a64c3
+--- /dev/null
++++ b/agent/tests/learner-check-continuation.test.ts
+@@ -0,0 +1,20 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++import { validateRequest } from "../../ops/codex/lib.js";
++
++it("binds host supplements to original coverage and exact sources without repeating full checks", () => {
++  const result = spawnSync("python3", ["-B", "../ops/tests/test_learner_check_continuation.py"], {
++    encoding: "utf8", timeout: 20_000,
++  });
++  expect(result.status, result.stdout + result.stderr).toBe(0);
++  expect(result.stderr).toContain("OK");
++});
++
++it("accepts only a write batch plus a content digest through the existing recheck broker", () => {
++  const batch = "20261011-181302-fix-batch";
++  expect(validateRequest({ action: "learner-recheck", args: [batch] }).ok).toBe(true);
++  expect(validateRequest({ action: "learner-recheck", args: [batch + ":" + "a".repeat(64)] }).ok).toBe(true);
++  for (const token of [batch + ":main", batch + ":" + "a".repeat(40), batch + ":../manifest.json", batch + ":a;cmd"]) {
++    expect(validateRequest({ action: "learner-recheck", args: [token] }).ok).toBe(false);
++  }
++});
+diff --git a/agent/tests/learner-startup-recovery.test.ts b/agent/tests/learner-startup-recovery.test.ts
+new file mode 100644
+index 000000000..e9a641c48
+--- /dev/null
++++ b/agent/tests/learner-startup-recovery.test.ts
+@@ -0,0 +1,199 @@
++import { spawn } from "node:child_process";
++import { EventEmitter } from "node:events";
++import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { PassThrough, Writable } from "node:stream";
++import { afterEach, describe, expect, it, vi } from "vitest";
++import { main } from "../../learner/lib/launcher.js";
++import { captureStartupLease, StartupEvidence } from "../../learner/lib/startup-recovery.js";
++
++vi.mock("node:child_process", async (original) => ({ ...await original<typeof import("node:child_process")>(), spawn: vi.fn() }));
++vi.mock("../../learner/lib/engines.js", async (original) => ({
++  ...await original<typeof import("../../learner/lib/engines.js")>(),
++  engineBinary: () => "/fixture/codex",
++  withCodexKeys: (request: object) => ({ ...request, home: "/fixture", codexHome: "/fixture/codex", keyFiles: [] }),
++  codexChildEnv: () => ({}),
++}));
++
++// Exact failure structure from 211302/213504; paths and telemetry are synthetic, never credentials.
++const detail = "failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /fixture: rg: /fixture/sibling/.aws: No such file or directory (os error 2)";
++const failure = [
++  '2026-10-11T13:13:16Z  INFO codex_otel.trace_safe: event.name="codex.conversation_starts" provider_name=OpenAI',
++  '2026-10-11T13:13:17Z  INFO codex_otel.trace_safe: event.name="codex.api_request" success=true endpoint="/models" attempt=0',
++  `2026-10-11T13:13:25Z ERROR codex_core::session: Failed to create session: ${detail}`,
++  "rg: /fixture/sibling/.codex: No such file or directory (os error 2)",
++  `Error: thread/start: thread/start failed: error creating thread: ${detail}`,
++  "rg: /fixture/sibling/.codex: No such file or directory (os error 2) (code -32603)",
++];
++const dirs: string[] = [];
++afterEach(() => {
++  vi.useRealTimers();
++  vi.restoreAllMocks();
++  vi.mocked(spawn).mockReset();
++  for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
++});
++
++function fixture() {
++  const root = mkdtempSync(join(tmpdir(), "startup-recovery-")); dirs.push(root);
++  for (const dir of ["tasks", "work", "ops/state", "runs"]) mkdirSync(join(root, dir), { recursive: true });
++  writeFileSync(join(root, "tasks/t.md"), "---\ntools: Read\n---\n固定输入 {{scratch}}。\n");
++  const batch = "20261011-224302-fix-batch";
++  const file = join(root, "ops/state/learn.json");
++  const cwd = join(root, "work");
++  const registration = { state: "running", pid: process.pid, worktree: cwd, task: "fix-batch" };
++  const save = (changes: object = {}) => writeFileSync(file, JSON.stringify({ batches: { [batch]: { ...registration, ...changes } } }));
++  save();
++  const env = { HOME: root, LEARNER_BATCH_ID: batch, LEARNER_STATE_FILE: file };
++  const output: string[] = [];
++  return { root, cwd, env, save, output,
++    run: (extra: string[] = []) => main(["--engine", "codex", "--task", "t", "--cwd", cwd, ...extra], {
++      projectRoot: root, tasksDir: join(root, "tasks"), runsDir: join(root, "runs"), env,
++      secretFiles: [], checkCodex: undefined, checkKeys: undefined, refreshCodexAuth: undefined,
++      out: (text) => output.push(text), err: () => undefined,
++    }),
++    records: () => readFileSync(join(root, "runs", readdirSync(join(root, "runs")).find((f) => f.endsWith(".jsonl"))!), "utf8")
++      .trim().split("\n").map((line) => JSON.parse(line)),
++  };
++}
++
++interface Attempt {
++  stderr?: string[];
++  stdout?: string;
++  code?: number;
++  signal?: string;
++  closeDelay?: number;
++  beforeClose?: () => void;
++}
++
++function children(attempts: Attempt[]) {
++  const inputs: string[] = [];
++  const order: string[] = [];
++  vi.mocked(spawn).mockImplementation((() => {
++    const index = inputs.length;
++    const plan = attempts[index];
++    if (!plan) throw new Error("unexpected replay");
++    inputs.push(""); order.push(`spawn${index}`);
++    const child = Object.assign(new EventEmitter(), {
++      stdout: new PassThrough(), stderr: new PassThrough(), kill: vi.fn(),
++      stdin: new Writable({ write(chunk, _encoding, done) { inputs[index] += chunk.toString(); done(); } }),
++    });
++    queueMicrotask(() => {
++      child.stdout.end(plan.stdout ?? "");
++      child.stderr.end((plan.stderr ?? []).join("\n") + "\n");
++      child.emit("exit", plan.code ?? 1, plan.signal ?? null);
++      setTimeout(() => {
++        plan.beforeClose?.();
++        order.push(`close${index}`);
++        child.emit("close", plan.code ?? 1, plan.signal ?? null);
++      }, plan.closeDelay ?? 0);
++    });
++    return child;
++  }) as typeof spawn);
++  return { inputs, order };
++}
++
++describe("bounded learner startup recovery", () => {
++  it("retries exact pre-session ENOENT after close with identical input and one final completion", async () => {
++    const f = fixture();
++    const fake = children([{ stderr: failure, closeDelay: 10 }, { code: 0 }]);
++    expect(await f.run()).toBe(0);
++    expect(fake.inputs).toHaveLength(2);
++    expect(fake.inputs[0]).toBe(fake.inputs[1]);
++    expect(fake.order).toEqual(["spawn0", "close0", "spawn1", "close1"]);
++    const rows = f.records();
++    const starts = rows.filter((r) => r.type === "learner_startup_attempt");
++    expect(starts.map((r) => r.attempt)).toEqual([1, 2]);
++    for (const field of ["batch", "lease", "input_sha256", "command_sha256"]) expect(starts[0][field]).toBe(starts[1][field]);
++    expect(starts[0].lease).toMatch(/^[a-f0-9]{64}$/);
++    expect(rows.filter((r) => r.type === "learner_startup_exit").map((r) => r.exit_code)).toEqual([1, 0]);
++    expect(rows.filter((r) => r.type === "learner_stderr" && r.attempt === 1).map((r) => r.text)).toEqual(failure);
++    expect(rows.filter((r) => r.type === "learner_summary")).toHaveLength(1);
++    expect(f.output).toHaveLength(1);
++    expect(vi.mocked(spawn).mock.calls[0]).toEqual(vi.mocked(spawn).mock.calls[1]);
++  });
++
++  it("caps persistent pre-session failures at two additional attempts", async () => {
++    const f = fixture(); children(Array.from({ length: 3 }, () => ({ stderr: failure })));
++    expect(await f.run()).toBe(1);
++    expect(spawn).toHaveBeenCalledTimes(3);
++    expect(f.records().filter((r) => r.type === "learner_startup_exit")).toHaveLength(3);
++  });
++
++  it.each([
++    { stderr: failure.map((s) => s.replaceAll("No such file or directory (os error 2)", "Permission denied (os error 13)")) },
++    { stderr: ["Error: unrelated startup failure"] },
++    { stderr: [failure[4]!] }, // Zero tokens alone, or a partial diagnostic, does not prove no session.
++    { stderr: [...failure, '2026-10-11Z INFO event.name="codex.model_request"'] },
++    { stderr: failure, stdout: '{"type":"thread.started","thread_id":"fixture"}\n' },
++    { stderr: failure, stdout: '{"type":"session.started"}\n' },
++    { stderr: failure, stdout: '{"type":"item.started","item":{"type":"command_execution"}}\n' },
++    { stderr: failure, stdout: '{"type":"turn.completed","usage":{"input_tokens":0}}\n' },
++    { stderr: failure, stdout: "unknown event\n" },
++    { stderr: failure, signal: "SIGTERM" },
++    { stderr: failure, code: 2 },
++  ])("never retries ambiguous errors or any session/model/tool activity %#", async (plan) => {
++    const f = fixture(); children([plan]);
++    expect(await f.run()).toBe(1);
++    expect(spawn).toHaveBeenCalledTimes(1);
++  });
++
++  it.each(["lost", "replaced", "absent", "cancelled"])("refuses a %s lease", async (kind) => {
++    const f = fixture();
++    children([{ stderr: failure, beforeClose: () => {
++      if (kind === "absent") rmSync(f.env.LEARNER_STATE_FILE);
++      else f.save(kind === "lost" ? { state: "lost" } : kind === "replaced" ? { pid: 99999999 } : { cancelled: true });
++    } }]);
++    expect(await f.run()).toBe(1);
++    expect(spawn).toHaveBeenCalledTimes(1);
++  });
++
++  it("checks lease ownership again after backoff", async () => {
++    const f = fixture();
++    children([{ stderr: failure, beforeClose: () => { setTimeout(() => f.save({ state: "lost" }), 30); } }]);
++    expect(await f.run()).toBe(1);
++    expect(spawn).toHaveBeenCalledTimes(1);
++  });
++
++  it("does not retry an unregistered standalone launch", async () => {
++    const f = fixture(); delete (f.env as Partial<typeof f.env>).LEARNER_BATCH_ID;
++    children([{ stderr: failure }]);
++    expect(await f.run()).toBe(1);
++    expect(spawn).toHaveBeenCalledTimes(1);
++  });
++
++  it("keeps cancellation terminal even if the child reports an eligible error", async () => {
++    const f = fixture();
++    children([{ stderr: failure, beforeClose: () => { (process.listeners("SIGTERM").at(-1)! as () => void)(); } }]);
++    expect(await f.run()).toBe(1);
++    expect(spawn).toHaveBeenCalledTimes(1);
++    expect(f.records().at(-1).cancelled).toBe(true);
++  });
++
++  it("keeps the original timeout across startup attempts", async () => {
++    vi.useFakeTimers(); const f = fixture();
++    children([{ stderr: failure, closeDelay: 59_800 }, { stderr: failure, closeDelay: 1000 }]);
++    const result = f.run(["--timeout-min", "1"]);
++    await vi.runAllTimersAsync();
++    expect(await result).toBe(124);
++    expect(spawn).toHaveBeenCalledTimes(1); // The deadline expires during backoff.
++    expect(f.records().at(-1).timed_out).toBe(true);
++  });
++});
++
++it("fails closed when error capture exceeds its fixed bound", () => {
++  const evidence = new StartupEvidence();
++  for (const line of failure) evidence.stderr(line);
++  expect(evidence.transientBeforeSession()).toBe(true);
++  evidence.stderr(" ".repeat(65_537));
++  expect(evidence.transientBeforeSession()).toBe(false);
++});
++
++it("binds lease identity to the registered live owner and rejects paths outside ops", () => {
++  const f = fixture();
++  const lease = captureStartupLease(f.env, f.root, f.cwd);
++  expect(lease?.current()).toBe(true);
++  f.save({ state: "failed" });
++  expect(lease?.current()).toBe(false);
++  expect(captureStartupLease({ ...f.env, LEARNER_STATE_FILE: "/fixture/learn.json" }, f.root, f.cwd)).toBeUndefined();
++});
+diff --git a/agent/tests/silent-smoggy-selection-evidence.json b/agent/tests/silent-smoggy-selection-evidence.json
+new file mode 100644
+index 000000000..11e6e1d1d
+--- /dev/null
++++ b/agent/tests/silent-smoggy-selection-evidence.json
+@@ -0,0 +1,523 @@
++{
++  "run": "6D0M76419BU7",
++  "floor": 12,
++  "turn": 3,
++  "ascension": 10,
++  "source_lines": {
++    "selection": 358451,
++    "after": 358452,
++    "next_turn": 358453
++  },
++  "selection": {
++    "kind": "combat_hand_select",
++    "prompt": "[center]选择[blue]1[/blue]张牌来[gold]丢弃[/gold]。[/center]",
++    "min_select": 1,
++    "max_select": 1,
++    "selected_count": 0,
++    "requires_confirmation": false,
++    "can_confirm": false,
++    "cards": [
++      {
++        "index": 0,
++        "selected": false,
++        "card_id": "SKEWER",
++        "name": "串刺",
++        "upgraded": false,
++        "card_type": "Attack",
++        "rarity": "Uncommon",
++        "costs_x": true,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害X次。",
++        "resolved_rules_text": "造成9点伤害X次。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 8,
++            "current_value": 9,
++            "enchanted_value": 8,
++            "is_modified": true,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 1,
++        "selected": false,
++        "card_id": "ETERNAL_ARMOR",
++        "name": "永恒铠甲",
++        "upgraded": false,
++        "card_type": "Power",
++        "rarity": "Rare",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 3,
++        "star_cost": 0,
++        "rules_text": "获得{PlatingPower:diff()}层覆甲。",
++        "resolved_rules_text": "获得9层覆甲。",
++        "dynamic_values": [
++          {
++            "name": "PlatingPower",
++            "base_value": 9,
++            "current_value": 9,
++            "enchanted_value": 9,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 2,
++        "selected": false,
++        "card_id": "DEFLECT",
++        "name": "偏折",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Common",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得4点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 4,
++            "current_value": 4,
++            "enchanted_value": 4,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      },
++      {
++        "index": 3,
++        "selected": false,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "card_type": "Skill",
++        "rarity": "Basic",
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ]
++      }
++    ]
++  },
++  "combat": {
++    "player": {
++      "current_hp": 13,
++      "max_hp": 70,
++      "block": 8,
++      "energy": 2,
++      "stars": 0,
++      "focus": 0,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "STRENGTH_POWER",
++          "name": "力量",
++          "amount": 1,
++          "is_debuff": false
++        },
++        {
++          "index": 1,
++          "power_id": "SERPENT_FORM_POWER",
++          "name": "群蛇形态",
++          "amount": 4,
++          "is_debuff": false
++        },
++        {
++          "index": 2,
++          "power_id": "SMOGGY_POWER",
++          "name": "烟雾弥漫",
++          "amount": 1,
++          "is_debuff": true
++        }
++      ],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 1,
++      "attacks_played_this_turn": 0,
++      "skills_played_this_turn": 1
++    },
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "SKEWER",
++        "name": "串刺",
++        "upgraded": false,
++        "target_type": "AnyEnemy",
++        "requires_target": true,
++        "target_index_space": "enemies",
++        "valid_target_indices": [
++          0,
++          1
++        ],
++        "costs_x": true,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "造成{Damage:diff()}点伤害X次。",
++        "resolved_rules_text": "造成9点伤害X次。",
++        "dynamic_values": [
++          {
++            "name": "Damage",
++            "base_value": 8,
++            "current_value": 9,
++            "enchanted_value": 8,
++            "is_modified": true,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "ETERNAL_ARMOR",
++        "name": "永恒铠甲",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 3,
++        "star_cost": 0,
++        "rules_text": "获得{PlatingPower:diff()}层覆甲。",
++        "resolved_rules_text": "获得9层覆甲。",
++        "dynamic_values": [
++          {
++            "name": "PlatingPower",
++            "base_value": 9,
++            "current_value": 9,
++            "enchanted_value": 9,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "not_enough_energy",
++        "unplayable_reason_raw": "EnergyCostTooHigh",
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 2,
++        "card_id": "DEFLECT",
++        "name": "偏折",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得4点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 4,
++            "current_value": 4,
++            "enchanted_value": 4,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 3,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": true,
++        "can_play_result": true,
++        "unplayable_reason": null,
++        "unplayable_reason_raw": null,
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      }
++    ],
++    "enemies": [
++      {
++        "index": 0,
++        "enemy_id": "GAS_BOMB",
++        "name": "气态炸弹",
++        "current_hp": 8,
++        "max_hp": 8,
++        "base_max_hp": 8,
++        "block": 0,
++        "is_alive": true,
++        "is_hittable": true,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "MINION_POWER",
++            "name": "爪牙",
++            "amount": 1,
++            "is_debuff": false
++          }
++        ],
++        "intent": "EXPLODE_MOVE",
++        "move_id": "EXPLODE_MOVE",
++        "intents": [
++          {
++            "index": 0,
++            "intent_type": "DeathBlow",
++            "label": "9",
++            "damage": 9,
++            "hits": 1,
++            "total_damage": 9,
++            "status_card_count": null
++          }
++        ]
++      },
++      {
++        "index": 1,
++        "enemy_id": "LIVING_FOG",
++        "name": "活雾",
++        "current_hp": 31,
++        "max_hp": 82,
++        "base_max_hp": 82,
++        "block": 0,
++        "is_alive": true,
++        "is_hittable": true,
++        "powers": [],
++        "intent": "SUPER_GAS_BLAST_MOVE",
++        "move_id": "SUPER_GAS_BLAST_MOVE",
++        "intents": [
++          {
++            "index": 0,
++            "intent_type": "Attack",
++            "label": "9",
++            "damage": 9,
++            "hits": 1,
++            "total_damage": 9,
++            "status_card_count": null
++          }
++        ]
++      }
++    ],
++    "action_readiness": {
++      "can_use_combat_actions": false,
++      "reason": "hand_in_card_selection",
++      "actions_settled": false,
++      "running_action_type": "MegaCrit.Sts2.Core.GameActions.PlayCardAction",
++      "ready_action_type": null,
++      "modal_open": false,
++      "modal_type": null,
++      "player_actions_disabled": false,
++      "is_paused": false,
++      "local_ready_to_end_turn": false,
++      "all_players_ready_to_end_turn": true,
++      "ending_turn_phase_one": false,
++      "ending_turn_phase_two": false,
++      "end_turn_kick": "",
++      "combat_in_progress": true,
++      "combat_over_or_ending": false,
++      "combat_room_mode": "ActiveCombat",
++      "hand_in_card_play": false,
++      "hand_in_card_selection": true,
++      "hand_mode": "SimpleSelect",
++      "local_turn_ready": true,
++      "snapshot_stable": false,
++      "player_action_phase": true
++    }
++  },
++  "after": {
++    "player": {
++      "current_hp": 13,
++      "max_hp": 70,
++      "block": 8,
++      "energy": 2,
++      "stars": 0,
++      "focus": 0,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "STRENGTH_POWER",
++          "name": "力量",
++          "amount": 1,
++          "is_debuff": false
++        },
++        {
++          "index": 1,
++          "power_id": "SERPENT_FORM_POWER",
++          "name": "群蛇形态",
++          "amount": 4,
++          "is_debuff": false
++        },
++        {
++          "index": 2,
++          "power_id": "SMOGGY_POWER",
++          "name": "烟雾弥漫",
++          "amount": 1,
++          "is_debuff": true
++        }
++      ],
++      "base_orb_slots": 0,
++      "orb_capacity": 0,
++      "empty_orb_slots": 0,
++      "orbs": [],
++      "pets": [],
++      "pet_missing": false,
++      "cards_played_this_turn": 1,
++      "attacks_played_this_turn": 0,
++      "skills_played_this_turn": 1
++    },
++    "hand": [
++      {
++        "index": 0,
++        "card_id": "ETERNAL_ARMOR",
++        "name": "永恒铠甲",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 3,
++        "star_cost": 0,
++        "rules_text": "获得{PlatingPower:diff()}层覆甲。",
++        "resolved_rules_text": "获得9层覆甲。",
++        "dynamic_values": [
++          {
++            "name": "PlatingPower",
++            "base_value": 9,
++            "current_value": 9,
++            "enchanted_value": 9,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "not_enough_energy",
++        "unplayable_reason_raw": "EnergyCostTooHigh",
++        "unplayable_preventer_id": null,
++        "unplayable_preventer_type": null
++      },
++      {
++        "index": 1,
++        "card_id": "DEFLECT",
++        "name": "偏折",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 0,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得4点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 4,
++            "current_value": 4,
++            "enchanted_value": 4,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "blocked_by_hook",
++        "unplayable_reason_raw": "BlockedByHook",
++        "unplayable_preventer_id": "SMOGGY_POWER",
++        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.SmoggyPower"
++      },
++      {
++        "index": 2,
++        "card_id": "DEFEND_SILENT",
++        "name": "防御",
++        "upgraded": false,
++        "target_type": "Self",
++        "requires_target": false,
++        "target_index_space": null,
++        "valid_target_indices": [],
++        "costs_x": false,
++        "star_costs_x": false,
++        "energy_cost": 1,
++        "star_cost": 0,
++        "rules_text": "获得{Block:diff()}点格挡。",
++        "resolved_rules_text": "获得5点格挡。",
++        "dynamic_values": [
++          {
++            "name": "Block",
++            "base_value": 5,
++            "current_value": 5,
++            "enchanted_value": 5,
++            "is_modified": false,
++            "was_just_upgraded": false
++          }
++        ],
++        "playable": false,
++        "can_play_result": false,
++        "unplayable_reason": "blocked_by_hook",
++        "unplayable_reason_raw": "BlockedByHook",
++        "unplayable_preventer_id": "SMOGGY_POWER",
++        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.SmoggyPower"
++      }
++    ]
++  },
++  "next_hp": 3
++}
+diff --git a/agent/tests/silent-smoggy-selection.test.ts b/agent/tests/silent-smoggy-selection.test.ts
+new file mode 100644
+index 000000000..d8a2fd0f8
+--- /dev/null
++++ b/agent/tests/silent-smoggy-selection.test.ts
+@@ -0,0 +1,144 @@
++/** Fixed 6D0M76419BU7 F12 T3 selection and its independently logged successor. */
++import { resolve } from "node:path";
++import { expect, it, vi } from "vitest";
++import evidence from "./silent-smoggy-selection-evidence.json";
++import { baseState, runPayload } from "./scenarios.js";
++import { loadConfig } from "../src/core/config.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { planSelection } from "../src/hand/screens/selection.js";
++import { survivorSmoggyFacts } from "../src/hand/screens/silent-smoggy-selection.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { buildRunBrief } from "../src/memory/run-brief.js";
++import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
++import { facingFightOf } from "../src/reflex/combat-plan.js";
++
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed Silent evidence only"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++
++type Raw = Record<string, any>;
++const knowledge = makeKnowledge({ cards: evidence.selection.cards.map((card) => ({
++  id: card.card_id, name: card.name, type: card.card_type, cost: card.energy_cost,
++  description: card.resolved_rules_text, description_raw: card.rules_text, vars: card.dynamic_values,
++})) }, "cache");
++
++function raw(): Raw {
++  return baseState("CARD_SELECTION", {
++    run_id: evidence.run, in_combat: true, turn: evidence.turn, available_actions: ["select_deck_card"],
++    run: runPayload({ floor: evidence.floor, ascension: evidence.ascension, character_id: "SILENT", deck: [], relics: [], potions: [] }),
++    combat: structuredClone(evidence.combat), selection: structuredClone(evidence.selection),
++  });
++}
++
++function env(input: Raw): DecisionEnv {
++  const state = parseGameState(input);
++  const memory = createScreenMemory("CARD_SELECTION");
++  memory.cardSource = { action: "play_card", id: "SURVIVOR", fight: facingFightOf(state), turn: state.turn };
++  return { state, knowledge, brief: buildRunBrief(state, knowledge), thresholds: loadConfig({}).thresholds,
++    runStart: "auto", characterPreference: null, allowFtueModals: false, strictJev: true,
++    screenMemory: memory, shopDiscardPotions: [], buildDecider: "deepseek" };
++}
++
++function facts(input = raw()): Map<number, Raw> {
++  const result = survivorSmoggyFacts(parseGameState(input), true);
++  expect(result).not.toBeNull();
++  return result as Map<number, Raw>;
++}
++
++it("F12 T3: the warning matches the actual post-discard blockers, despite both modal flags being true", () => {
++  const result = facts().get(0)!;
++  const actual = evidence.after.hand.filter((card) => card.unplayable_preventer_id === "SMOGGY_POWER");
++  expect(result.retained_restricted_cards.map((card: Raw) => card.card_id)).toEqual(actual.map((card) => card.card_id));
++  expect(result.retained_restricted_cards.map((card: Raw) => card.observed_restriction_after_survivor))
++    .toEqual(actual.map((card) => card.unplayable_preventer_id));
++  expect(result.retained_restricted_cards.map((card: Raw) => card.mod_playable_during_selection)).toEqual([true, true]);
++  expect(result.retained_restricted_cards.map((card: Raw) => card.energy_sufficient_for_this_card_alone)).toEqual([true, true]);
++  expect(result.energy_now).toBe(evidence.after.player.energy);
++  expect(evidence.after.player.current_hp - evidence.next_hp).toBe(10);
++  expect(result).not.toHaveProperty("hp_after");
++  expect(result).not.toHaveProperty("wins_fight");
++});
++
++it("each hypothetical discard removes only its own restricted copy; attacks and Powers are not declared blocked", () => {
++  const result = facts();
++  expect(result.get(1)!.retained_restricted_cards.map((card: Raw) => card.card_id)).toEqual(["DEFLECT", "DEFEND_SILENT"]);
++  expect(result.get(2)!.retained_restricted_cards.map((card: Raw) => card.card_id)).toEqual(["DEFEND_SILENT"]);
++  expect(result.get(3)!.retained_restricted_cards.map((card: Raw) => card.card_id)).toEqual(["DEFLECT"]);
++});
++
++it("the production selection question carries the warning and still accepts all four choices through Jev", () => {
++  const decision = planSelection(env(raw()));
++  expect(decision?.kind).toBe("ask");
++  if (decision?.kind !== "ask") throw new Error("expected Jev selection");
++  expect(decision.deepseek).toBeUndefined();
++  const question = decision.questions.pick;
++  if (question?.type !== "choice") throw new Error("expected card choice");
++  expect(Object.keys(question.criteria).sort()).toEqual(["card0", "card1", "card2", "card3"]);
++  for (let index = 0; index < 4; index++) {
++    const key = `card${index}`;
++    expect(JSON.parse(question.criteria[key]!).smoggy_after_discard).toEqual(facts().get(index));
++    expect(decision.resolve({ pick: { type: "choice", choice: key, probabilities: { [key]: 1 }, confidence: 1, raw: {} } }).intent)
++      .toEqual({ action: "select_deck_card", option_index: index });
++  }
++});
++
++it("does not mutate the snapshot or infer unknown costs, upgrades, or other skills", () => {
++  const input = raw();
++  for (const collection of [input.combat.hand, input.selection.cards]) collection[2].energy_cost = null;
++  const before = structuredClone(input);
++  expect(facts(input).get(0)!.retained_restricted_cards[0].energy_sufficient_for_this_card_alone).toBeNull();
++  expect(input).toEqual(before);
++  for (const collection of [input.combat.hand, input.selection.cards]) {
++    collection[2].upgraded = true;
++    collection[3].card_id = "UNOBSERVED_SKILL";
++  }
++  expect(survivorSmoggyFacts(parseGameState(input), true)).toBeNull();
++});
++
++it.each([
++  ["different ascension", (x: Raw) => { x.run.ascension = 11; }],
++  ["outside combat", (x: Raw) => { x.in_combat = false; }],
++  ["missing count", (x: Raw) => { delete x.combat.player.skills_played_this_turn; }],
++  ["unspent skill", (x: Raw) => { x.combat.player.skills_played_this_turn = 0; }],
++  ["other smog amount", (x: Raw) => { x.combat.player.powers.find((p: Raw) => p.power_id === "SMOGGY_POWER").amount = 2; }],
++  ["no smog", (x: Raw) => { x.combat.player.powers = []; }],
++  ["multiple discards", (x: Raw) => { x.selection.max_select = 2; }],
++  ["potion action", (x: Raw) => { x.combat.action_readiness.running_action_type = "UsePotionAction"; }],
++  ["different hand copy", (x: Raw) => { x.combat.hand[2].card_id = "OTHER"; }],
++  ["ambiguous index", (x: Raw) => { x.selection.cards[2].index = 0; }],
++] as const)("%s leaves the old question unchanged", (_name, change) => {
++  const input = raw(); change(input);
++  expect(survivorSmoggyFacts(parseGameState(input), true)).toBeNull();
++  const context = env(input);
++  const before = JSON.stringify(planSelection(context));
++  context.screenMemory.cardSource = undefined;
++  expect(JSON.stringify(planSelection(context))).toBe(before);
++});
++
++it.each(["IRONCLAD", "NECROBINDER"])("%s questions remain byte-equivalent without reading that character's knowledge", (character) => {
++  const input = raw(); input.run.character_id = character;
++  const context = env(input);
++  const before = JSON.stringify(planSelection(context));
++  context.screenMemory.cardSource = undefined;
++  expect(JSON.stringify(planSelection(context))).toBe(before);
++  expect(survivorSmoggyFacts(context.state, true)).toBeNull();
++});
++
++it.each(["missing", "old turn", "old fight", "other card"])("%s source cannot enable the learned restriction", (change) => {
++  const context = env(raw());
++  if (change === "missing") context.screenMemory.cardSource = undefined;
++  else if (change === "old turn") context.screenMemory.cardSource!.turn = 2;
++  else if (change === "old fight") context.screenMemory.cardSource!.fight = "old";
++  else context.screenMemory.cardSource!.id = "OTHER";
++  const before = JSON.stringify(planSelection(context));
++  context.screenMemory.cardSource = undefined;
++  expect(JSON.stringify(planSelection(context))).toBe(before);
++});
+diff --git a/docs/host-check-continuation.md b/docs/host-check-continuation.md
+new file mode 100644
+index 000000000..6f4edc4ed
+--- /dev/null
++++ b/docs/host-check-continuation.md
+@@ -0,0 +1,33 @@
++# 宿主定向补验
++
++用于已有 `learner-recheck` 的原失败、超时或新增受影响测试续验。不改变原批次完成状态、`checks`、`fallback_checks`、`checks_pending` 或 Git 历史；通过结果仅代表所选测试，不能作为完整套件通过或专题验收完成。
++
++运维先在代码实际集成后冻结清单，再经原 broker 调用：
++
++```sh
++bash ops/codex-ops-do.sh learner-recheck '<原批次>:<清单SHA256>'
++```
++
++清单是 UTF-8 JSON，放在原调度器 `learner` 目录的 `<原批次>.continuation-<清单SHA256>.json`。SHA 按原始文件字节计算。只接受已登记的写入批次及其原工作树；该批次或同树新拥有者仍运行、已有补验持锁时拒绝。broker 的新参数校验在下一次 wake 加载源码后生效。
++
++清单字段全部必填，多余字段拒绝：
++
++- `schema`：1。
++- `batch`、`task`、`worktree`：必须与原调度记录相同。
++- `original`：原登记检查的 `merged`、`tree`、`log_sha256` 和 `coverage`。`coverage` 用 `ops/learner_check_continuation.py` 的 `coverage(log_bytes)` 提取，保留文件名、失败用例全名及原文件/用例总数；不能手工声称已通过。原日志必须仍在该批次的登记检查目录，SHA 不变。
++- `live`：当前实际提交 `commit` 及 `tree`，均为完整 40 位 SHA。锁内前后核对，源码/测试输入有未提交改动也拒绝。
++- `sources`：原检查引用的全部源码提交，加本轮修复源码；每项必须是当前 live 祖先。
++- `inputs`：所选 `agent/tests/*.test.ts` 及发生变化的已映射依赖，每项为 `{"path":"agent/tests/example.test.ts","source":"完整提交SHA"}`。`source` 必须在 `sources` 内，文件必须与该提交的 blob 一致，防止用祖先关系冒称被回退的实现仍存在。
++- `selection`：最多 16 个文件，每项 `{"file":"tests/example.test.ts","tests":["describe名称 it名称"],"reason":"failed"}`。`tests` 是完整用例名，按字面值转义和首尾锚定，不是可执行正则或 shell；空数组表示整个文件。`failed` 只能选原失败用例；`unrun` 需要完整文件清单或明确超时记录，摘要缺少逐文件覆盖时拒绝；`affected` 要有测试文件或代码内明确映射的依赖变更。已通过的同树补验范围不会因换清单 SHA 再跑。
++- `receipts`：可为空；每项 `{"path":"paper/materials/.../receipt.json","sha256":"64位SHA"}`，绑定量化框架等已有源码/覆盖回执。只读固定后缀的项目材料，不执行其中命令。
++
++执行始终使用固定的本地 TypeScript/Vitest 入口、`nice`、单 fork worker；禁止自选命令、排除项、预算或环境设置。总执行期限保持现有宿主检查的 3600 秒。记录标准错误、逐段结果和 Vitest JSON，区分断言失败、超时、权限限制、未执行选择与源码漂移。原路径不自动重跑完整套件，不自动回滚。
++
++结果写成 `<原批次>.supplement-<清单SHA>.json/.log` 和独立 Vitest JSON，并经原 `learner-checks` 发完成事件。重复已完成请求返回原结果；中断的 `running` 回执保留且拒绝自动重跑，由原拥有者据已保存分段结果核查续办。完整检查入口的普通 `<批次>` 参数仍适用于其他未验证改动。
++
++本次待宿主验收的两文件四用例：
++
++- `tests/brain-codex-session.test.ts`：`the play process's end the exit fixture selects a model advertised by its fake catalog`；`the play process's end the server does not keep the process alive; at exit the process removes its thread's files`。
++- `tests/ops-codex.test.ts`：`broker requests allows only the listed actions with clean arguments`；`broker requests every action is implemented by ops/codex-ops-actions.sh and listed by ops/codex-ops-do.sh`。
++
++两文件都有本轮已集成修复/依赖变更时使用 `affected`，不追加其余已过 324 个文件。量化专题新增测试另列受影响项、源码快照和原覆盖回执；入口交付不等于这些测试已经在宿主通过。
+diff --git a/knowledge/characters/silent/experience.json b/knowledge/characters/silent/experience.json
+index 0c4f9adb5..d034e1ffe 100644
+--- a/knowledge/characters/silent/experience.json
++++ b/knowledge/characters/silent/experience.json
+@@ -1,6 +1,6 @@
+ {
+-  "version": "2026-10-11.15",
+-  "_about": "静默猎手第180次增量；E6DSUVTNVBMH为silent/A10，来源仅本角色复盘与原日志。重算旧233局基线后增至234局，截至2026-10-11T11:39:03.383Z；全引擎观察与纯Codex成绩分开。保留live .14全部219条及核心循环框架；补赢战血药成本、千足虫实际重接、双蟹同盘SL局部差异、毒与真实重放后继。不冒称整战因果、稳定打法或源码已修；只更新经验并同步独立strategy-proposal。",
++  "version": "2026-10-11.16",
++  "_about": "静默猎手第181次增量；64VJC5XT2AT2、SB5N8GT2Y3VW均silent/A10。只使用本角色复盘与原日志，重算旧234局后增至236局，截至2026-10-11T13:56:21.558Z；全引擎观察与纯Codex爬塔成绩分开。保留live .15全部219条与既有核心框架，补实建能力后继、双蟹同盘SL血价与死后新状态、双boss资源接续；未证整战因果或稳定打法。只改经验并登记独立strategy-proposal，不改打法源码。",
+   "entries": [
+     {
+       "id": "silent-knife-trap-count",
+@@ -28,7 +28,7 @@
+         0,
+         20
+       ],
+-      "lesson": "步法普通/升级实建2/3敏，后继挡牌逐张兑现，已有挡不追补。机制：基础加敏后再核脆弱/倍率，换战重建。搭配：多挡须实际打出并支付敌方成长。决定胜负的战斗：132支持/0反例，整战单因未控（n=132）。典型案例：BSXYMFKN0VJ5 A10女王重试T1先建3敏，后空翻+11与偏折7共18挡对32损14；实验体末T2两敏使四挡9+8+6+10=33，但技能激怒后34攻仍损1。旧P33MKRP6S4Q4后补步法不增加旧17挡。",
++      "lesson": "步法普通/升级实建2/3敏，后继挡牌逐张兑现，已有挡不追补。机制：基础加敏后再核脆弱/倍率，换战重建。搭配：多挡须实际打出并支付敌方成长。决定胜负的战斗：134支持/0反例，整战单因未控（n=134）。典型案例：SB5N8GT2Y3VW A10双蟹末T4敏3→6，脆弱下两防御各6→8、共多4挡，实16对38仍损22；T5/6无挡后继。64VJC5XT2AT2实验体末T1后补步法2→5敏，旧10挡不增；首王未建立，不能预支。",
+       "evidence": [
+         "C48LLXBGKXQ9",
+         "T082DRCUHRRD",
+@@ -161,9 +161,11 @@
+         "H9ERYJLBL4UC",
+         "34PV33AA12QH",
+         "P33MKRP6S4Q4",
+-        "BSXYMFKN0VJ5"
++        "BSXYMFKN0VJ5",
++        "64VJC5XT2AT2",
++        "SB5N8GT2Y3VW"
+       ],
+-      "n_support": 132,
++      "n_support": 134,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -260,7 +262,7 @@
+         0,
+         20
+       ],
+-      "lesson": "护喉甲开场覆甲不等整战固定挡。机制：按当前剩层计结束挡，完整减层条件未隔离；敏捷不加覆甲。搭配：覆甲、牌挡与余像分源，不能沿用开场4层。决定胜负的战斗：18支持/0反例，整战单因未控（n=18）。典型案例：E6DSUVTNVBMH A10双蟹末T1覆甲4配5挡盖减力后8攻，T5已耗尽；T7实5挡对27死，不能再补开场4。旧0B2567HG3T4D沙漏T1—4为4/3/2/1，末覆甲尽仍死；未核完整减层条件。",
++      "lesson": "护喉甲开场覆甲不等整战固定挡。机制：按当前剩层计结束挡，完整减层条件未隔离；敏捷不加覆甲。搭配：覆甲、牌挡与余像分源，不能沿用开场4层。决定胜负的战斗：19支持/0反例，整战单因未控（n=19）。典型案例：64VJC5XT2AT2 A10沙漏与实验体末试开场4覆甲，T5均已耗尽；实验体T6的20挡对32不能另加4。旧0B2567HG3T4D沙漏T1—4为4/3/2/1；完整减层条件未隔离。",
+       "evidence": [
+         "C48LLXBGKXQ9",
+         "Y6GM2CHWJBEY",
+@@ -279,9 +281,10 @@
+         "NTMAU4XZ2NN2",
+         "XZUJR08FW801",
+         "0B2567HG3T4D",
+-        "E6DSUVTNVBMH"
++        "E6DSUVTNVBMH",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 18,
++      "n_support": 19,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -294,7 +297,7 @@
+         0,
+         20
+       ],
+-      "lesson": "力量逐攻击段增伤，弱/易伤及取整读现场，毒伤另源。机制：临时减力到期恢复，不关闭持续成长；力量未配实际攻击不兑现。搭配：多段、挡与当前可活窗口同核。决定胜负的战斗：229支持/0反例，整战单因未控（n=229）。典型案例：E6DSUVTNVBMH A10蜂群0/1力八击24/32，F25T4零挡实损32；双蟹末T1尖啸双敌各−6，意图20→8，次轮恢复。T7转面并施弱合41→27，不能独立全归虚弱；终局未建玩家正力敏。",
++      "lesson": "力量逐攻击段增伤，弱/易伤及取整读现场，毒伤另源。机制：临时减力到期恢复，不关闭持续成长；力量未配实际攻击不兑现。搭配：多段、挡与当前可活窗口同核。决定胜负的战斗：231支持/0反例，整战单因未控（n=231）。典型案例：64VJC5XT2AT2 A10实验体末T5两力四刀各6共24，沙漏T11尖啸15→9力、弱下双击40→30，次轮恢复；SB5N8GT2Y3VW火箭长3力、转面57→38，未施弱，不能把营养汤打击9伤当9力量。",
+       "evidence": [
+         "C48LLXBGKXQ9",
+         "Y6GM2CHWJBEY",
+@@ -524,9 +527,11 @@
+         "YBRA3EJ94GBR",
+         "3UPY3BP2LVS7",
+         "NYQW6JAD30K4",
+-        "E6DSUVTNVBMH"
++        "E6DSUVTNVBMH",
++        "64VJC5XT2AT2",
++        "SB5N8GT2Y3VW"
+       ],
+-      "n_support": 229,
++      "n_support": 231,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -629,7 +634,7 @@
+         8,
+         20
+       ],
+-      "lesson": "观察：避精英不能免除赢战血价，未来火不抵眼前损耗。A10 194局二幕Monster入血<25%共28房/24局、16死（57.14%），活损中位6.0（n=234）。典型案例：E6DSUVTNVBMH蜂群71→19耗油，千足虫67→26耗两药，下一火仅回24，50/81空药入双蟹六败；既定精英不能虚构可绕。旧NYQW6JAD30K4改线两休仍55血空药入王。无实打替线对照，不据相关性定改线更好或安全血线。",
++      "lesson": "观察：避精英不能免除赢战血价，未来火不抵眼前损耗。A10 196局二幕Monster入血<25%共28房/24局、16死（57.14%），活损中位6.0（n=236）。典型案例：64VJC5XT2AT2三幕无精英仍F43赢损62，商店补满115后首王胜仅3血；SB5N8GT2Y3VW棱柱55→38、芒果回14、末火回22，71/76入王仍败。旧NYQW6JAD30K4改线两休仍55血空药入王；无实打替线对照，不定安全血线。",
+       "evidence": [
+         "C48LLXBGKXQ9",
+         "Y6GM2CHWJBEY",
+@@ -864,9 +869,11 @@
+         "YBRA3EJ94GBR",
+         "3UPY3BP2LVS7",
+         "NYQW6JAD30K4",
+-        "E6DSUVTNVBMH"
++        "E6DSUVTNVBMH",
++        "64VJC5XT2AT2",
++        "SB5N8GT2Y3VW"
+       ],
+-      "n_support": 234,
++      "n_support": 236,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -879,7 +886,7 @@
+         8,
+         20
+       ],
+-      "lesson": "观察：HEAL兑现即时缓冲，事件/幕间/SL另账。A10 194局1128独立火、794HEAL回18246，去重732后战/101死（13.80%），活损中位22（n=234）。典型案例：E6DSUVTNVBMH七火各回24共168，末26→50仍六败；已会回血，不能归因忘休息。旧3UPY3BP2LVS7 F16锻造未取15血但实有延弱收益，缺回血分支实打；全败模拟不证明选项等价。",
++      "lesson": "观察：HEAL兑现即时缓冲，事件/幕间/SL另账。A10 196局1146独立火、801HEAL回18439，去重739后战/102死（13.80%），活损中位22（n=236）。典型案例：64VJC5XT2AT2五火回153且各加5上限，六锻造不回；末火满血升级、首王胜仍仅3血。SB5N8GT2Y3VW两HEAL回18/22、五锻造，末71血仍败。缺回血/升级分支实打，不把全败模拟当选项等价。",
+       "evidence": [
+         "C48LLXBGKXQ9",
+         "Y6GM2CHWJBEY",
+@@ -1114,9 +1121,11 @@
+         "YBRA3EJ94GBR",
+         "3UPY3BP2LVS7",
+         "NYQW6JAD30K4",
+-        "E6DSUVTNVBMH"
++        "E6DSUVTNVBMH",
++        "64VJC5XT2AT2",
++        "SB5N8GT2Y3VW"
+       ],
+-      "n_support": 234,
++      "n_support": 236,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -1129,7 +1138,7 @@
+         8,
+         20
+       ],
+-      "lesson": "观察：拿、跳、删、替换都应比较同一可活窗口的实际收益，不按永久牌数或剩余能量判断核心成型。机制：分清持有→到手→合法支付→建立→真实后继；能力建立后看持续触发，回返、次轮复制、当轮重放和再次抽入分账。战内能力离开循环、消耗、生成、保留及抽弃堆改变有效牌池；洗牌一次不保证整套完成，不能由牌面抽数或N−G推出循环次数。搭配：先列当前缺到手、费用、输出还是挡；增牌核能补哪项，跳牌不预支未选收益，删牌另核金币及失去的实伤/挡。封抽只取消已阻分支，仍核挡/产能；额度、手位、敌限伤与存活共同约束，未取得组件不预支。决定胜负的战斗：原主题229支持/0反例；195/201/204局专题重叠、不相加，条件框架未证因果收益（n=229）。典型案例：54G5683J0E5S A10恶魔T5—T9夜魇与三次步法共付5费，敏捷4→13，T6副本到手未建且损15；49HL2N70CHMU两boss同36张，前战七轮胜余24，后战26血重启、三轮无毒雾而败，F22删一打击另付100金。PU80F84P6HPN增牌25→35伴两次回20血，不能只按变厚判坏。无加/跳/删同状态整战对照，不设最佳张数、配比或强制牌序；缺合法回流与净资源闭合证据，未验证无限循环或稳定通关。 新例E6DSUVTNVBMH A10终副30张，计划步法/触媒未持有；F25护栏原预测14损27伤→3损13伤，抽弃重算实8损25伤，爆发已被斗篷耗，未实打原完整线。",
++      "lesson": "观察：拿、跳、删、替换都应比较同一可活窗口的实际收益，不按永久牌数或剩余能量判断核心成型。机制：分清持有→到手→合法支付→建立→真实后继；能力建立后看持续触发，回返、次轮复制、当轮重放和再次抽入分账。战内能力离开循环、消耗、生成、保留及抽弃堆改变有效牌池；洗牌一次不保证整套完成，不能由牌面抽数或N−G推出循环次数。搭配：先列当前缺到手、费用、输出还是挡；增牌核能补哪项，跳牌不预支未选收益，删牌另核金币及失去的实伤/挡。封抽只取消已阻分支，仍核挡/产能；额度、手位、敌限伤与存活共同约束，未取得组件不预支。决定胜负的战斗：原主题231支持/0反例；195/201/204局专题重叠、不相加，条件框架未证因果收益（n=231）。典型案例：54G5683J0E5S A10恶魔T5—T9夜魇与三次步法共付5费，敏捷4→13，T6副本到手未建且损15；49HL2N70CHMU两boss同36张，前战七轮胜余24，后战26血重启、三轮无毒雾而败，F22删一打击另付100金。PU80F84P6HPN增牌25→35伴两次回20血，不能只按变厚判坏。无加/跳/删同状态整战对照，不设最佳张数、配比或强制牌序；缺合法回流与净资源闭合证据，未验证无限循环或稳定通关。 新例64VJC5XT2AT2沙漏T4抽牌后改线、13轮未建步法，赢仍115→3；SB5N8GT2Y3VW双蟹6敏但末两轮无挡，反之棱柱不打两步法、能量药配串刺削141两轮赢。未证固定早建能力或删牌必胜。",
+       "evidence": [
+         "C48LLXBGKXQ9",
+         "Y6GM2CHWJBEY",
+@@ -1359,9 +1368,11 @@
+         "YBRA3EJ94GBR",
+         "3UPY3BP2LVS7",
+         "NYQW6JAD30K4",
+-        "E6DSUVTNVBMH"
++        "E6DSUVTNVBMH",
++        "64VJC5XT2AT2",
++        "SB5N8GT2Y3VW"
+       ],
+-      "n_support": 229,
++      "n_support": 231,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -1444,7 +1455,7 @@
+         0,
+         20
+       ],
+-      "lesson": "毒雾普通/升级建2/3层，后轮初补毒；旧毒结算减1后再补。机制：建立当步不施毒或扣HP，制品/头骨及换体另核。搭配：其他施毒分源，活到后轮才兑现。决定胜负的战斗：109支持/0反例，整战单因未控（n=109）。典型案例：E6DSUVTNVBMH A10双蟹末T2建2层，T3火箭6毒经刺击/蛇咬到16，结束实扣16；T7两侧10/24毒实扣34仍余110/56血，剩9/23毒不预支。旧NYQW6JAD30K4巨兽换体后仅新3毒，不继承本体23毒。",
++      "lesson": "毒雾普通/升级建2/3层，后轮初补毒；旧毒结算减1后再补。机制：建立当步不施毒或扣HP，制品/头骨及换体另核。搭配：其他施毒分源，活到后轮才兑现。决定胜负的战斗：111支持/0反例，整战单因未控（n=111）。典型案例：64VJC5XT2AT2 A10沙漏T2建3雾，T3余1制品被耗但无毒，T4才3毒；SB5N8GT2Y3VW双蟹末T5建3，T6两敌各3毒，仍3血零挡而败。旧NYQW6JAD30K4换体后不继承本体23毒。",
+       "evidence": [
+         "Y6GM2CHWJBEY",
+         "LRN0HPZ0FZS1",
+@@ -1554,9 +1565,11 @@
+         "34PV33AA12QH",
+         "YBRA3EJ94GBR",
+         "NYQW6JAD30K4",
+-        "E6DSUVTNVBMH"
++        "E6DSUVTNVBMH",
++        "64VJC5XT2AT2",
++        "SB5N8GT2Y3VW"
+       ],
+-      "n_support": 109,
++      "n_support": 111,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -2059,7 +2072,7 @@
+         0,
+         20
+       ],
+-      "lesson": "实验体技能激怒成本与毒挡收益同核，不一律禁技能。机制：每技能加现场激怒力量；历史换相清敌力/激怒/旧毒，玩家常驻能力保留。搭配：看即时血价与各相输出，少损不等整战胜。决定胜负的战斗：24支持/0反例，单因整胜未控（n=24）。典型案例：BSXYMFKN0VJ5 A10六试0赢；末两试T2同7血33挡、敌76血3毒18力，冒泡多9毒也加3力，实损4/1、T3敌55/64；少打一技能多留3血也少9伤，两试仍败。旧H9ERYJLBL4UC换相清毒且保8敏；本局未到后相。",
++      "lesson": "实验体技能激怒成本与毒挡收益同核，不一律禁技能。机制：每技能加现场激怒力量；历史换相清敌力/激怒/旧毒，玩家常驻能力保留。搭配：看即时血价与各相输出，少损不等整战胜。决定胜负的战斗：25支持/0反例，单因整胜未控（n=25）。典型案例：64VJC5XT2AT2 A10末T2后空翻/潦草使敌力6→9→12，T3暗影再15、来袭38→41；T4转212血相清激怒/24力，玩家5敏保留。T6弱下四击32，8血20挡仍死；六试零赢，未见第三相。旧BSXYMFKN0VJ5少一技能少损3也少9毒伤仍败。",
+       "evidence": [
+         "T082DRCUHRRD",
+         "R0HEV5E3QT6G",
+@@ -2084,9 +2097,10 @@
+         "KDBWARERSGYW",
+         "TFYU1MY8NEJ1",
+         "H9ERYJLBL4UC",
+-        "BSXYMFKN0VJ5"
++        "BSXYMFKN0VJ5",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 24,
++      "n_support": 25,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -2309,7 +2323,7 @@
+         0,
+         20
+       ],
+-      "lesson": "尖啸临减6/8力量，下轮恢复，逐击重算而非永久减攻。机制：与弱/易伤/制品分算，不关闭持续成长。搭配：以实际挡和毒退场核本轮血价，不预支下轮减攻。决定胜负的战斗：109支持/0反例，整战单因未控（n=109）。典型案例：E6DSUVTNVBMH A10双蟹末T1两敌力0→−6、14+6攻→8+0，5挡加覆甲4零损；T2减力撤，火箭T3另长3力、T4正面38攻，弱后28仍损21。旧NYQW6JAD30K4巨兽蒸汽不因尖啸停止增长。",
++      "lesson": "尖啸临减6/8力量，下轮恢复，逐击重算而非永久减攻。机制：与弱/易伤/制品分算，不关闭持续成长。搭配：以实际挡和毒退场核本轮血价，不预支下轮减攻。决定胜负的战斗：110支持/0反例，整战单因未控（n=110）。典型案例：64VJC5XT2AT2 A10沙漏T11力15→9，已有弱下20×2→15×2、当前37挡不变；T12敌力回15。T10成长仍15、弱下30不等不再成长。旧NYQW6JAD30K4巨兽蒸汽不因尖啸停止。",
+       "evidence": [
+         "C48LLXBGKXQ9",
+         "LRN0HPZ0FZS1",
+@@ -2419,9 +2433,10 @@
+         "34PV33AA12QH",
+         "BSXYMFKN0VJ5",
+         "NYQW6JAD30K4",
+-        "E6DSUVTNVBMH"
++        "E6DSUVTNVBMH",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 109,
++      "n_support": 110,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -2652,7 +2667,7 @@
+         0,
+         20
+       ],
+-      "lesson": "凋萎末持牌伤与攻击及挡同核，毒进度不免当前血价。机制：按现场增强文本及末持牌数结算，实弃不计；缺内部全序不补。搭配：实弃、挡和成长共同核，不凭待结毒预支存活。决定胜负的战斗：30支持/0反例，整战单因未控（n=30）。典型案例：G2QCF2R3A57K 沙漏第2/3试T4同17血、16卡牌挡，前轮多出牌让第3试新生6伤凋萎，含斗篷/覆甲后分别损10/16到7/1；末试同损16。旧7S8HCC0M6G9W末T9三张9伤对25挡实损2；未把缓存差直接当净误差。",
++      "lesson": "凋萎末持牌伤与攻击及挡同核，毒进度不免当前血价。机制：按现场增强文本及末持牌数结算，实弃不计；缺内部全序不补。搭配：实弃、挡和成长共同核，不凭待结毒预支存活。决定胜负的战斗：31支持/0反例，整战单因未控（n=31）。典型案例：64VJC5XT2AT2 A10沙漏T10手持两凋萎+3各文本12，暗影/防御/冲刺38挡对30，实际28→12损16；缺逐段先后帧，不据总量发明结算顺序。T4/7/10敌力4/9/15也需另核，首王赢仍仅3血接连战。",
+       "evidence": [
+         "LRN0HPZ0FZS1",
+         "K3676LU8B0UH",
+@@ -2683,9 +2698,10 @@
+         "49HL2N70CHMU",
+         "53NU9DWSTG9H",
+         "7S8HCC0M6G9W",
+-        "G2QCF2R3A57K"
++        "G2QCF2R3A57K",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 30,
++      "n_support": 31,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -2720,7 +2736,7 @@
+         0,
+         20
+       ],
+-      "lesson": "观察：沙漏破制品、成长、持牌伤与实毒合核。机制：本体HP按{@10:HP:AEONGLASS}，破制品非施毒，能力/复活按尝试分账。搭配：实挡与有限重打核验，不由低胜率模拟定必死。决定胜负的战斗：30支持/0反例，整战单因未控（n=30）。典型案例：G2QCF2R3A57K 六试同26血/赠礼，0赢；第2/3试T3同17血、敌524及三制品，换序后净扣42/29、留3/0毒，下一轮损10/16。末试T5的1血/15总挡对24需损9而死、敌471。旧7S8HCC0M6G9W两试末赢；后继也变，不定固定胜序。",
++      "lesson": "观察：沙漏破制品、成长、持牌伤与实毒合核。机制：本体HP按{@10:HP:AEONGLASS}，破制品非施毒，能力/复活按尝试分账。搭配：实挡与有限重打核验，不由低胜率模拟定必死。决定胜负的战斗：31支持/0反例，整战单因未控（n=31）。典型案例：64VJC5XT2AT2 A10满115进、13轮赢至3且两药尽；T4/7/10敌力4/9/15，T10手持两凋萎各12，38挡对30仍损16，缺逐段结算帧。T4抽牌后未建步法，实损11/净削46；未执行旧19损9伤整线，不作因果胜序。",
+       "evidence": [
+         "LRN0HPZ0FZS1",
+         "K3676LU8B0UH",
+@@ -2751,9 +2767,10 @@
+         "49HL2N70CHMU",
+         "53NU9DWSTG9H",
+         "7S8HCC0M6G9W",
+-        "G2QCF2R3A57K"
++        "G2QCF2R3A57K",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 30,
++      "n_support": 31,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -2868,7 +2885,7 @@
+         0,
+         20
+       ],
+-      "lesson": "观察：双蟹换目标须核朝向、血价和终局，不定固定先杀序。机制：后方倍率/力量/弱分源，仅实死一侧才核蟹怒。搭配：毒进度、实挡与存活轮合核。决定胜负的战斗：28支持/0反例，重打18场94试4赢，单因未控（n=28）。典型案例：E6DSUVTNVBMH A10第2/3试T4同42血/敌191+161，实损均21、净削28/43；多15伤但T7判死敌余199/228，六试零胜无侧击杀。末T7中和转面并弱合41→27，11血5挡仍死，不能全归弱或朝向；旧5BU7ZE1PWLSX换线多伤3也多损5。",
++      "lesson": "观察：双蟹换目标须核朝向、血价与同伴死后新盘面，不定固定先杀序。机制：后方倍率/力量/弱分源；已见一侧死使余者加6力、赋99挡。搭配：毒进度、实挡与存活轮同核。决定胜负的战斗：29支持/0反例，重打19场100试4赢，单因未控（n=29）。典型案例：SB5N8GT2Y3VW A10第5/6试T2同指纹，转打爪令实损0→6、净削15→19；T4转面57→38，仍损22。第4试T9爪死、火箭力6→12/挡0→99；末试毒杀爪后玩家死，余火箭148血96挡，缺中间结算帧。六试零胜，保守判死不确定不等安全。",
+       "evidence": [
+         "T082DRCUHRRD",
+         "CSBR5CRDWQNB",
+@@ -2897,9 +2914,10 @@
+         "AYTX5H4H69E3",
+         "PYE4VXNSLGSS",
+         "5BU7ZE1PWLSX",
+-        "E6DSUVTNVBMH"
++        "E6DSUVTNVBMH",
++        "SB5N8GT2Y3VW"
+       ],
+-      "n_support": 28,
++      "n_support": 29,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -3132,7 +3150,7 @@
+         0,
+         20
+       ],
+-      "lesson": "融入暗影只翻本轮建立后新增挡，旧挡不追补。机制：建1层后基础加敏再核倍率/脆弱，本身不加挡、轮末撤。搭配：实打挡牌才兑现，状态伤也占挡。决定胜负的战斗：21支持/0反例，整战单卡因果未控（n=21）。典型案例：U1QYLX1AE1WX F46T6暗影本身0挡，3敏防御8翻16抵五灼伤10，3血保持；T7暗影已撤，双防御各8，16挡仍不足37攻加4灼伤。无提前施放胜线。",
++      "lesson": "融入暗影只翻本轮建立后新增挡，旧挡不追补。机制：建1层后基础加敏再核倍率/脆弱，本身不加挡、轮末撤。搭配：实打挡牌才兑现，状态伤也占挡。决定胜负的战斗：22支持/0反例，整战单卡因果未控（n=22）。典型案例：64VJC5XT2AT2 A10实验体末T6暗影自身零挡，5敏防御(5+5)×2=20，比未翻倍多10；8血对32攻仍需损12，存活差5血。旧U1QYLX1AE1WX抵灼伤后3血保住，次轮翻倍撤；局部收益不保证整胜。",
+       "evidence": [
+         "1HC609GTLGN3",
+         "10GPK5XGHCK3",
+@@ -3154,9 +3172,10 @@
+         "TFYU1MY8NEJ1",
+         "675CHRV9HVQ3",
+         "3DY1QBM0CET0",
+-        "U1QYLX1AE1WX"
++        "U1QYLX1AE1WX",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 21,
++      "n_support": 22,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -3170,7 +3189,7 @@
+         0,
+         20
+       ],
+-      "lesson": "无其他修正时，预判普通/升级仅本轮给2/4敏捷。机制：当步不补旧挡，后继牌才加敏，次轮临时层撤；抑制另核。搭配：多挡牌当轮重复受益，没有后继挡牌则新增牌挡为0。决定胜负的战斗：24支持/0反例，整战单因未控（n=24）。典型案例：F1TP5W6GF56Q 啃咬机四试T1均建2临敏、防御7+偏折6=13比基础9多4，18攻后6→1；T2两增益撤，两防御10对18实死，重复四试只计一局",
++      "lesson": "无其他修正时，预判普通/升级仅本轮给2/4敏捷。机制：当步不补旧挡，后继牌才加敏，次轮临时层撤；抑制另核。搭配：多挡牌当轮重复受益，没有后继挡牌则新增牌挡为0。决定胜负的战斗：25支持/0反例，整战单因未控（n=25）。典型案例：64VJC5XT2AT2 A10沙漏T4敏2→6、斗篷与闪躲各12共24，次轮回2；实验体末T5敏5→9，后空翻+17挡，T6回5。首轮无挡后继时不打临敏的实线损7，未实打原含预判整线，不判固定优先级。",
+       "evidence": [
+         "1NZ8FE5F34R9",
+         "VN7RQJMJEFMX",
+@@ -3195,12 +3214,13 @@
+         "C6Z8ATNBNHZ7",
+         "AYTX5H4H69E3",
+         "0B2567HG3T4D",
+-        "F1TP5W6GF56Q"
++        "F1TP5W6GF56Q",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 24,
++      "n_support": 25,
+       "n_contradict": 0,
+       "confidence": "high",
+-      "last_seen": "2026-10-10",
++      "last_seen": "2026-10-11",
+       "status": "active"
+     },
+     {
+@@ -3595,7 +3615,7 @@
+         0,
+         20
+       ],
+-      "lesson": "疯狂科学同ID按现场定制模板核算。机制：已见减能力费、8挡抽3、攻击12紧勒6、专长2力2敏及攻击12附2弱2易伤五模板；未启用动态字段不算收益。搭配：力敏由后继牌兑现，各模板不混用。决定胜负的战斗：11支持/0反例，整战单因未控（n=11）。典型案例：H9ERYJLBL4UC F38选专长版，F48末试T1实建2力2敏，与石头开场1敏合3，随后步法到5/8敏而力仍2；T5两挡多16，T12无新挡不凭敏捷生挡。旧53NU9DWSTG9H亦见2力2敏；攻击版另核。",
++      "lesson": "疯狂科学同ID按现场定制模板核算。机制：已见减能力费、8挡抽3、攻击12紧勒6、专长2力2敏及攻击12附2弱2易伤五模板；未启用动态字段不算收益。搭配：力敏由后继牌兑现，各模板不混用。决定胜负的战斗：12支持/0反例，整战单因未控（n=12）。典型案例：64VJC5XT2AT2 A10沙漏T1专长版实建2力2敏，旧挡不变；实验体重新建2/2后步法到5敏，末T5四刀各6。旧H9ERYJLBL4UC专长与石头/步法分别叠加；攻击或减费模板不能混用。",
+       "evidence": [
+         "VN7RQJMJEFMX",
+         "R0HEV5E3QT6G",
+@@ -3607,9 +3627,10 @@
+         "RMNXHZKV716Y",
+         "53NU9DWSTG9H",
+         "U1QYLX1AE1WX",
+-        "H9ERYJLBL4UC"
++        "H9ERYJLBL4UC",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 11,
++      "n_support": 12,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -3823,16 +3844,17 @@
+         0,
+         20
+       ],
+-      "lesson": "领主阳伞遇商人自动取得库存，报价与未派发购买/移除计划不计支出。机制：实到商店后库存进入牌组/遗物，附魔与移除选择另核，金币按状态差计算。搭配：新增组件须实际施放建立，未来商店不能当已取得；库存变化不隔离单遗物收益。决定胜负的战斗：3支持局，替路线或无阳伞整战对照未控（n=3）。典型案例：MCT1GPTL8D35 A10 F37七牌/三遗物使牌30→37、移除精确切击后36，金币114不变，两条100金移除计划未派发；F42四败，F45商店未到。Z6CFLDR3N4SB A7 F36牌28→35→34、金157不变，F45牌37→44→43、金121不变。旧2SU6XN2AEJRD A6原句：机制：本局两次打开商店后库存进入牌组/遗物/药栏，触发附魔与移除选择，金币不扣打印的购买/移除报价；只确认这些取得，不外推药栏溢出规则。",
++      "lesson": "领主阳伞遇商人自动取得库存，报价与未派发购买/移除计划不计支出。机制：实到商店后库存进入牌组/遗物，附魔与移除选择另核，金币按状态差计算。搭配：新增组件须实际施放建立，未来商店不能当已取得；库存变化不隔离单遗物收益。决定胜负的战斗：4支持局，替路线或无阳伞整战对照未控（n=4）。典型案例：64VJC5XT2AT2 A10 F44/46各自动加7牌，移除后分别37/44张，金币372/381各不变；打印100/250/371是未派发计划报价。F46华夫饼24/108→115/115另账，不由牌数增多判遗物好坏。旧Z6CFLDR3N4SB两店同样不扣报价。",
+       "evidence": [
+         "2SU6XN2AEJRD",
+         "Z6CFLDR3N4SB",
+-        "MCT1GPTL8D35"
++        "MCT1GPTL8D35",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 3,
++      "n_support": 4,
+       "n_contradict": 0,
+-      "confidence": "med",
+-      "last_seen": "2026-10-07",
++      "confidence": "high",
++      "last_seen": "2026-10-11",
+       "status": "active"
+     },
+     {
+@@ -3906,7 +3928,7 @@
+         0,
+         20
+       ],
+-      "lesson": "铜质鳞片实建3荆棘，实际攻击逐击反伤，全挡也触发。机制：毒/直伤另源，未发生后续击不预支，反伤不替玩家支付血价。搭配：实挡保护与敌余血一并核验。决定胜负的战斗：22支持/0反例，整战单因未控（n=22）。典型案例：YBRA3EJ94GBR A10恶魔末T10毒两结43另荆棘3，敌217→171，而1血9挡对24死亡；T8已伤30夹回血30、净零推进，不把反伤算毒或回血抵消算没造成伤害。旧SPC7NVA5K4RL双击反6，保护窗口另核。",
++      "lesson": "铜质鳞片实建3荆棘，实际攻击逐击反伤，全挡也触发。机制：毒/直伤另源，未发生后续击不预支，反伤不替玩家支付血价。搭配：实挡保护与敌余血一并核验。决定胜负的战斗：23支持/0反例，整战单因未控（n=23）。典型案例：SB5N8GT2Y3VW A10双蟹第2/3试T3两击各反3、爪117→111/143→137，净削62/54比计划攻击各多6，不当伤害模型错误；两试仍败。旧SPC7NVA5K4RL全挡双击也反6，反伤不取消玩家血价。",
+       "evidence": [
+         "1HC609GTLGN3",
+         "R0HEV5E3QT6G",
+@@ -3929,9 +3951,10 @@
+         "0B2567HG3T4D",
+         "0DTPVHFXJ319",
+         "SPC7NVA5K4RL",
+-        "YBRA3EJ94GBR"
++        "YBRA3EJ94GBR",
++        "SB5N8GT2Y3VW"
+       ],
+-      "n_support": 22,
++      "n_support": 23,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -4879,7 +4902,7 @@
+         0,
+         20
+       ],
+-      "lesson": "石炉加湿器已见回血休息增5最大HP并补当前血，单独锻造不触发。机制：基础回复与增量5合算按新上限截断；事件和其他上限另账。搭配：只按实际HEAL兑现，不把到火当回血。决定胜负的战斗：9支持/0反例，整战单因未控（n=9）。典型案例：H9ERYJLBL4UC 七休各增5上限、实回26/27/31/35/37/37/38共231，三次锻造不回；F47为13/113→51/118，F48仍六败。旧7S8HCC0M6G9W七次火HEAL同增5，事件休息组合另账，不据一胜一败定路线。",
++      "lesson": "石炉加湿器已见回血休息增5最大HP并补当前血，单独锻造不触发。机制：基础回复与增量5合算按新上限截断；事件和其他上限另账。搭配：只按实际HEAL兑现，不把到火当回血。决定胜负的战斗：10支持/0反例，整战单因未控（n=10）。典型案例：64VJC5XT2AT2 A10五HEAL实回26/28/29/34/36共153、每次增5上限；六次锻造不触发。末最大116不等进第二王有116血，实际首帧28。旧7S8HCC0M6G9W七次火同增5，胜负不证明路线因果。",
+       "evidence": [
+         "UMVLWER4CD98",
+         "ULP4TN1GNHMK",
+@@ -4889,9 +4912,10 @@
+         "RMNXHZKV716Y",
+         "833ZM0MJGWHC",
+         "7S8HCC0M6G9W",
+-        "H9ERYJLBL4UC"
++        "H9ERYJLBL4UC",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 9,
++      "n_support": 10,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+@@ -6020,7 +6044,7 @@
+         0,
+         20
+       ],
+-      "lesson": "毒药水先施毒，饮用当步不扣本体HP。机制：全历史完成饮用228次；常态6、头骨7，制品可阻毒，SL恢复非新获。搭配：核制品、实际施毒和已结算值，不定固定药时。决定胜负的战斗：55支持/0反例，整战单因未控（n=55）。典型案例：VT2F13ADA3M3 六次同瓶各加6毒且当步HP不变；前五次判死后的终轮结毒缺帧，末T9/T10/T11实扣6/5/4仍余神官125。药恢复不算新得，未有早喝或改目标整战胜局",
++      "lesson": "毒药水先施毒，饮用当步不扣本体HP。机制：全历史完成饮用241次；常态6、头骨7，制品可阻毒，SL恢复非新获。搭配：核制品、实毒和同伴死后盘面，不定固定药时。决定胜负的战斗：56支持/0反例，整战单因未控（n=56）。典型案例：SB5N8GT2Y3VW A10同瓶六试饮、恢复五次；末T6爪9血毒3→9，饮用未扣HP，结束爪退但玩家死、火箭仍148。缺死后行动中间帧，未证早喝或换目标能胜。",
+       "evidence": [
+         "10GPK5XGHCK3",
+         "ARKQLHG6RS4W",
+@@ -6076,12 +6100,13 @@
+         "5BU7ZE1PWLSX",
+         "DW8M3G2PV3N7",
+         "675CHRV9HVQ3",
+-        "VT2F13ADA3M3"
++        "VT2F13ADA3M3",
++        "SB5N8GT2Y3VW"
+       ],
+-      "n_support": 55,
++      "n_support": 56,
+       "n_contradict": 0,
+       "confidence": "high",
+-      "last_seen": "2026-10-10",
++      "last_seen": "2026-10-11",
+       "status": "active"
+     },
+     {
+@@ -6334,7 +6359,7 @@
+         10,
+         20
+       ],
+-      "lesson": "观察：A10首王胜后按实际出口血药接第二王，能力换战重建。机制：连王不触发幕间回血；新补药、残药与SL恢复分账。搭配：首王血价、药槽和后王启动同时预算，不拟留药/血量门槛。决定胜负的战斗：21支持/0反例，留血药单因未控（n=21）。典型案例：BSXYMFKN0VJ5 F48重试70→10，F49仍10；五空槽获五新药，女王的3敏/4力不保留，六试未过首相。大脑已明说HP不回，非不知结构。旧7S8HCC0M6G9W以64接后场且SL后通关，非首王满血即够。",
++      "lesson": "观察：A10首王胜后按实际出口血药接第二王，能力换战重建。机制：连王不触发幕间回血；新补药、残药与SL恢复分账。搭配：首王血价、药槽和后王启动同时预算，不拟留药/血量门槛。决定胜负的战斗：22支持/0反例，留血药单因未控（n=22）。典型案例：64VJC5XT2AT2 A10首王115血两药进、13轮胜至3空药；缩放仪回25至28、小血瓶再2至30，能力重建，后王六试均败。开场回复不是幕间回血；大脑已要求连王留资源，无留药受控胜线。旧7S8HCC0M6G9W以64接后场且SL通关，满血首王不保证两胜。",
+       "evidence": [
+         "JMH5C51RLN4E",
+         "9TG1RP5LFAAK",
+@@ -6356,9 +6381,10 @@
+         "TFYU1MY8NEJ1",
+         "49HL2N70CHMU",
+         "7S8HCC0M6G9W",
+-        "BSXYMFKN0VJ5"
++        "BSXYMFKN0VJ5",
++        "64VJC5XT2AT2"
+       ],
+-      "n_support": 21,
++      "n_support": 22,
+       "n_contradict": 0,
+       "confidence": "high",
+       "last_seen": "2026-10-11",
+diff --git a/learner/lib/launcher.ts b/learner/lib/launcher.ts
+index 3879d1f68..e5ad2adb0 100644
+--- a/learner/lib/launcher.ts
++++ b/learner/lib/launcher.ts
+@@ -16,7 +16,8 @@
+  *
+  * Exit codes: 0 done, 1 the agent failed, 2 usage/task error, 3 engine or tool server unavailable, 124 timeout.
+  */
+-import { spawn } from "node:child_process";
++import { spawn, type ChildProcess } from "node:child_process";
++import { createHash } from "node:crypto";
+ import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, renameSync, rmSync, statSync, writeSync } from "node:fs";
+ import { homedir, tmpdir } from "node:os";
+ import { join, relative, resolve, sep } from "node:path";
+@@ -32,6 +33,7 @@ import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck
+ import { SummaryTracker, findRollout, formatSummary, progressLine, rolloutStats } from "./summary.js";
+ import { highestAscension, runCharacters } from "./runs.js";
+ import { LearnerUsageError, characterBuiltins, loadTask, parseSets, renderTask } from "./task.js";
++import { captureStartupLease, StartupEvidence } from "./startup-recovery.js";
+ 
+ /** This checkout (the launcher's own repository: core/paths.ts PROJECT_ROOT). */
+ export const REPO = REPO_ROOT;
+@@ -445,11 +447,14 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
+     prompt,
+   });
+ 
+-  const tracker = new SummaryTracker(request.engine, request.model);
++  let tracker = new SummaryTracker(request.engine, request.model);
+   const env = request.engine === "codex" ? codexChildEnv(deps.env, binary) : childEnv(deps.env, request.engine);
+-  // Its own process group: a timeout or a signal stops the agent and everything it started (codex's npm launcher, its shell commands).
+-  const child = spawn(command.command, command.args, { cwd: request.cwd, env, stdio: ["pipe", "pipe", "pipe"], detached: true });
++  const lease = request.engine === "codex" ? captureStartupLease(deps.env, deps.projectRoot, request.cwd) : undefined;
++  const inputSha = createHash("sha256").update(command.stdin).digest("hex");
++  const commandSha = createHash("sha256").update(JSON.stringify([command.command, command.args, request.cwd])).digest("hex");
++  let child: ChildProcess | undefined;
+   const stop = (signal: NodeJS.Signals): void => {
++    if (!child) return;
+     try {
+       if (child.pid !== undefined) process.kill(-child.pid, signal);
+       else child.kill(signal);
+@@ -462,50 +467,78 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
+     const seconds = Math.round((deps.now().getTime() - started.getTime()) / 1000);
+     return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+   };
+-  deps.err(`学习者 ${request.engine} / ${prepared.taskName} 已启动（PID ${child.pid ?? "?"}），日志 ${logPath}\n`);
+-
+   let timedOut = false;
++  let cancelled = false;
+   let killTimer: NodeJS.Timeout | undefined;
+   const timer = prepared.timeoutMin
+     ? setTimeout(() => {
+         timedOut = true;
+-        deps.err(`[${elapsed()}] 超过 ${prepared.timeoutMin} 分钟，终止 PID ${child.pid}\n`);
++        deps.err(`[${elapsed()}] 超过 ${prepared.timeoutMin} 分钟，终止 PID ${child?.pid ?? "?"}\n`);
+         stop("SIGTERM");
+         killTimer = setTimeout(() => stop("SIGKILL"), 10_000);
+       }, prepared.timeoutMin * 60_000)
+     : undefined;
+   const onSignal = (): void => {
++    cancelled = true;
+     stop("SIGTERM");
++    killTimer ??= setTimeout(() => stop("SIGKILL"), 10_000);
+   };
+   process.once("SIGINT", onSignal);
+   process.once("SIGTERM", onSignal);
+ 
+-  const stdoutDone = new Promise<void>((done) => {
+-    const lines = createInterface({ input: child.stdout! });
+-    lines.on("line", (line) => {
+-      appendFileSync(logPath, `${line}\n`);
+-      const event = tracker.feed(line, ms());
+-      const progress = event && progressLine(request.engine, event);
+-      if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
++  let exitCode: number | null = null;
++  let signal: NodeJS.Signals | null = null;
++  for (let attempt = 1; attempt <= 3; attempt += 1) {
++    // Keep the same command, prompt, environment and outer deadline; never replay a started session.
++    const evidence = new StartupEvidence();
++    tracker = new SummaryTracker(request.engine, request.model);
++    child = spawn(command.command, command.args, { cwd: request.cwd, env, stdio: ["pipe", "pipe", "pipe"], detached: true });
++    const attemptChild = child;
++    const attemptStart = deps.now().toISOString();
++    const identity = { attempt, batch: lease?.batch ?? null, lease: lease?.identity ?? null, input_sha256: inputSha, command_sha256: commandSha };
++    log({ type: "learner_startup_attempt", ts: attemptStart, pid: child.pid ?? null, ...identity });
++    deps.err(`学习者 ${request.engine} / ${prepared.taskName} 已启动（尝试 ${attempt}，PID ${child.pid ?? "?"}），日志 ${logPath}\n`);
++    const stdoutDone = new Promise<void>((done) => {
++      const lines = createInterface({ input: attemptChild.stdout! });
++      lines.on("line", (line) => {
++        evidence.stdout();
++        appendFileSync(logPath, `${line}\n`);
++        const event = tracker.feed(line, ms());
++        const progress = event && progressLine(request.engine, event);
++        if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
++      });
++      lines.on("close", () => done());
+     });
+-    lines.on("close", () => done());
+-  });
+-  const stderrDone = new Promise<void>((done) => {
+-    const lines = createInterface({ input: child.stderr! });
+-    lines.on("line", (line) => log({ type: "learner_stderr", t_ms: ms(), text: line }));
+-    lines.on("close", () => done());
+-  });
+-  child.stdin!.on("error", () => undefined); // the agent may exit before reading everything
+-  child.stdin!.end(command.stdin);
++    const stderrDone = new Promise<void>((done) => {
++      const lines = createInterface({ input: attemptChild.stderr! });
++      lines.on("line", (line) => {
++        evidence.stderr(line);
++        log({ type: "learner_stderr", attempt, t_ms: ms(), text: line });
++      });
++      lines.on("close", () => done());
++    });
++    attemptChild.stdin!.on("error", () => undefined); // the agent may exit before reading everything
++    attemptChild.stdin!.end(command.stdin);
+ 
+-  const [exitCode, signal] = await new Promise<[number | null, NodeJS.Signals | null]>((done) => {
+-    child.on("error", (error) => {
+-      log({ type: "learner_error", message: error.message });
+-      done([null, null]);
++    [exitCode, signal] = await new Promise<[number | null, NodeJS.Signals | null]>((done) => {
++      attemptChild.on("error", (error) => {
++        log({ type: "learner_error", message: error.message });
++        evidence.stdout(); // A spawn error is not the observed session-creation failure.
++      });
++      // 'close', unlike 'exit', also waits for the old child's stdio to close.
++      attemptChild.on("close", (code, sig) => done([code, sig]));
+     });
+-    child.on("close", (code, sig) => done([code, sig]));
+-  });
+-  await Promise.all([stdoutDone, stderrDone]);
++    await Promise.all([stdoutDone, stderrDone]);
++    child = undefined;
++    const retryable = request.engine === "codex" && exitCode === 1 && signal === null && evidence.transientBeforeSession();
++    log({ type: "learner_startup_exit", ts: deps.now().toISOString(), pid: attemptChild.pid ?? null,
++      ...identity, exit_code: exitCode, signal, timed_out: timedOut, cancelled, retryable });
++    if (!retryable || attempt === 3 || timedOut || cancelled || !lease?.current()) break;
++    await new Promise<void>((done) => setTimeout(done, 250));
++    if (timedOut || cancelled || !lease.current()) break;
++    log({ type: "learner_startup_retry", ts: deps.now().toISOString(), ...identity, next_attempt: attempt + 1 });
++    deps.err(`[${elapsed()}] 会话创建前沙箱目录短暂消失；原进程已退出，批次有效，重试启动 ${attempt + 1}/3\n`);
++  }
+   if (timer) clearTimeout(timer);
+   if (killTimer) clearTimeout(killTimer);
+   process.removeListener("SIGINT", onSignal);
+@@ -515,7 +548,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
+   const summary = tracker.summary;
+   const rollout = request.engine === "codex" && summary.sessionId ? findRollout(learnerCodexHome(deps.env), summary.sessionId) : undefined;
+   if (rollout) summary.rollout = rolloutStats(rollout);
+-  log({ type: "learner_summary", ts: deps.now().toISOString(), exit_code: exitCode, signal, timed_out: timedOut, wall_ms: wallMs, summary });
++  log({ type: "learner_summary", ts: deps.now().toISOString(), exit_code: exitCode, signal, timed_out: timedOut, cancelled, wall_ms: wallMs, summary });
+   const redacted = redactSecrets(logPath, collectSecrets(deps.secretFiles, deps.env, stripped));
+   deps.out(`${summary.result ? `${summary.result}\n\n` : ""}${formatSummary(summary, { task: prepared.taskName, exitCode, signal, timedOut, wallMs, logPath, redacted })}\n`);
+   if (request.engine === "codex" && summary.isError && deps.refreshCodexAuth && AUTH_ERROR.test(summary.errors.join(" "))) {
+@@ -528,6 +561,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
+     }
+   }
+   if (timedOut) return 124;
++  if (cancelled) return 1;
+   return exitCode === 0 && !summary.isError ? 0 : 1;
+ }
+ 
+diff --git a/learner/lib/startup-recovery.ts b/learner/lib/startup-recovery.ts
+new file mode 100644
+index 000000000..7ec513e4e
+--- /dev/null
++++ b/learner/lib/startup-recovery.ts
+@@ -0,0 +1,75 @@
++import { createHash } from "node:crypto";
++import { readFileSync } from "node:fs";
++import { isAbsolute, relative, resolve } from "node:path";
++
++/** Only the observed CLI failure before thread creation is replayable. Unknown output fails closed. */
++export class StartupEvidence {
++  private lines: string[] = [];
++  private bytes = 0;
++  private output = false;
++
++  stdout(): void { this.output = true; }
++
++  stderr(line: string): void {
++    this.bytes += Buffer.byteLength(line);
++    if (this.bytes <= 65_536) this.lines.push(line);
++  }
++
++  transientBeforeSession(): boolean {
++    if (this.output || this.bytes > 65_536) return false;
++    const failure = "failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for ";
++    const missing = /^rg: \/[^\r\n]+: No such file or directory \(os error 2\)(?: \(code -32603\))?$/;
++    let sessionFailure = false;
++    let threadFailure = false;
++    for (const line of this.lines) {
++      if (!line.trim()) continue;
++      // These two startup telemetry events precede session creation in the frozen evidence.
++      if (/^\S+\s+INFO codex_otel\.trace_safe: event.name="codex.conversation_starts" /.test(line)) continue;
++      if (/^\S+\s+INFO codex_otel\.trace_safe: event.name="codex.api_request" .* endpoint="\/models" /.test(line)) continue;
++      if (missing.test(line)) continue;
++      const prefix = line.startsWith("Error: thread/start: thread/start failed: error creating thread: ")
++        ? "thread"
++        : /^\S+\s+ERROR codex_core::session: Failed to create session: /.test(line) ? "session" : null;
++      const at = line.indexOf(failure);
++      if (!prefix || at < 0) return false;
++      const detail = line.slice(at + failure.length);
++      const rg = detail.indexOf(": rg: /");
++      if (!detail.startsWith("/") || rg < 0 || !missing.test(detail.slice(rg + 2))) return false;
++      if (prefix === "thread") threadFailure = true;
++      else sessionFailure = true;
++    }
++    return sessionFailure && threadFailure;
++  }
++}
++
++export interface StartupLease {
++  batch: string;
++  identity: string;
++  current(): boolean;
++}
++
++/** Bind retries to the scheduler's existing registration and the original live owner PID. */
++export function captureStartupLease(env: NodeJS.ProcessEnv, root: string, cwd: string): StartupLease | undefined {
++  const batch = env["LEARNER_BATCH_ID"];
++  const file = env["LEARNER_STATE_FILE"];
++  if (!batch || !/^[0-9]{8}-[0-9]{6}-(?:s2-)?[a-z-]+$/.test(batch) || !file || !isAbsolute(file)) return undefined;
++  const rel = relative(resolve(root, "ops"), resolve(file));
++  if (rel.startsWith("..") || isAbsolute(rel) || !rel.endsWith("/learn.json")) return undefined;
++  const snapshot = (): string | undefined => {
++    try {
++      const state = JSON.parse(readFileSync(file, "utf8"));
++      const value = state.batches?.[batch];
++      if (!value || value.state !== "running" || resolve(value.worktree ?? root) !== resolve(cwd)
++          || !Number.isSafeInteger(value.pid) || value.pid <= 0 || value.cancelled || value.finished || value.rc !== undefined) return undefined;
++      const stat = readFileSync(`/proc/${value.pid}/stat`, "utf8");
++      const fields = stat.slice(stat.lastIndexOf(")") + 2).trim().split(/\s+/);
++      if (!fields[19] || ["Z", "X"].includes(fields[0]!)) return undefined;
++      return createHash("sha256").update(JSON.stringify([value, fields[19]])).digest("hex");
++    } catch {
++      // Missing registration, owner, or read access never authorizes a replay.
++      return undefined;
++    }
++  };
++  const identity = snapshot();
++  return identity ? { batch, identity, current: () => snapshot() === identity } : undefined;
++}
+diff --git a/ops/codex-ops-actions.sh b/ops/codex-ops-actions.sh
+index 29ca92bb5..8d30f17e0 100755
+--- a/ops/codex-ops-actions.sh
++++ b/ops/codex-ops-actions.sh
+@@ -222,7 +222,7 @@ for row in csv.reader(sys.stdin):
+   learner-merge)
+     exec python3 "$OPS/codex-ops-learn.py" request-merge --branch "$arg" ;;
+   learner-recheck)
+-    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
++    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)(:[0-9a-f]{64})?$ ]] || exit 2
+     exec nice -n 19 python3 "$OPS/codex-ops-learn.py" recheck --batch "$arg" ;;
+   eval-metrics)
+     [ $# -eq 3 ] || { echo "eval-metrics takes character and ascension" >&2; exit 2; }
+diff --git a/ops/codex-ops-do.sh b/ops/codex-ops-do.sh
+index 18f2ef7fc..be18b2237 100755
+--- a/ops/codex-ops-do.sh
++++ b/ops/codex-ops-do.sh
+@@ -11,6 +11,7 @@
+ # learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event),
+ # learner-log-tab <batch-id> (display registered learner output in the ops workspace; never restart the learner),
+ # strategy-proposal <ids> (dispatches a learner proposal), learner-recheck <batch-id> (full checks after a fallback merge),
++# learner-recheck <batch-id>:<manifest-sha256> (registered, pinned host supplement; preserves original coverage),
+ # boss-sim-check (check B4/B5 triggers with the live scheduler),
+ # core-build-notify <batch-id> (one native notification after ops verifies the substantive report),
+ # codex-brain-cache-probe (one approved frozen double question; no arguments),
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index 8e2ad5709..e48e4320f 100755
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -475,23 +475,42 @@ def cmd_request_merge(args):
+ 
+ 
+ def cmd_recheck(args):
++    batch_id, separator, continuation = args.batch.partition(":")
++    if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
++        return 2
++    args.batch = batch_id
+     if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
+         return 2
+     # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
+     with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:
+-        fcntl.flock(checks_lock, fcntl.LOCK_EX)
++        try:
++            fcntl.flock(checks_lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if separator else 0))
++        except BlockingIOError:
++            return 2
+         with state_lock():
+             state = load_state()
+             batch = state["batches"].get(args.batch)
+             if not batch or batch.get("state") == "running":
+                 return 2
+-        result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox)
++            if separator and any(other.get("state") == "running" and other.get("worktree") == batch.get("worktree")
++                                 for other in state["batches"].values()):
++                return 2
++        result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox,
++                                    **({"continuation": continuation} if separator else {}))
+         # Reload after the expensive checks: other jobs may have updated the scheduler meanwhile.
+         with state_lock():
+             state = load_state()
+             current = state["batches"].get(args.batch)
+             if current is None:
+                 return 2
++            if separator:
++                if any(current.get(key) != batch.get(key) for key in ("task", "worktree", "state")):
++                    return 2
++                if "check_supplements" in batch:
++                    current["check_supplements"] = batch["check_supplements"]
++                save_state(state)
++                print(json.dumps({"batch": args.batch, "rc": result, "check_supplements": batch.get("check_supplements", [])}, ensure_ascii=False))
++                return result
+             if "fallback_checks" in batch:
+                 current["fallback_checks"] = batch["fallback_checks"]
+             if batch.get("checks_pending") and result != 2:
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index b8b6908ea..4f713e01e 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -179,6 +179,8 @@ else
+     args+=(--set merge=live)
+     [ "$task" = fix-batch ] || args+=(--set "runs=$runs")
+   fi
++  # The launcher may retry only a proven pre-session failure under this same registration.
++  export LEARNER_BATCH_ID="$batch" LEARNER_STATE_FILE="$DIR/learn.json"
+   nice -n 10 "$ROOT/agent/node_modules/.bin/tsx" "$worktree/learner/run.ts" "${args[@]}" > "$out" 2> "$err"
+   rc=$?
+ fi
+diff --git a/ops/codex/lib.ts b/ops/codex/lib.ts
+index 9da05f790..5e90b4d1c 100644
+--- a/ops/codex/lib.ts
++++ b/ops/codex/lib.ts
+@@ -314,8 +314,8 @@ export function validateRequest(raw: unknown): BrokerRequest {
+       && !/^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$/.test(list[0]!)) {
+     return { ok: false, error: "strategy-proposal 要 1–10 个 12 位局号或已授权的量化实现请求 id" };
+   }
+-  if (action === "learner-recheck" && !/^(?:[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal)$/.test(list[0]!)) {
+-    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id" };
++  if (action === "learner-recheck" && !/^[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)(?::[0-9a-f]{64})?$/.test(list[0]!)) {
++    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id；定向补验追加冒号和清单 SHA256" };
+   }
+   if (action === "learner-log-tab" && !/^[0-9]{8}-[0-9]{6}(?:-(?:experience-update|fix-batch|strategy-proposal)|-s2-strategy-proposal)?$/.test(list[0]!)) {
+     return { ok: false, error: "learner-log-tab 要已登记的完整学习批次 id" };
+diff --git a/ops/learner_check_continuation.py b/ops/learner_check_continuation.py
+new file mode 100644
+index 000000000..e6cc6e04d
+--- /dev/null
++++ b/ops/learner_check_continuation.py
+@@ -0,0 +1,271 @@
++"""Bounded, hash-pinned host supplements for the existing learner-recheck action.
++
++The caller holds the batch check lock. This module owns the live lock and never
++rewrites a completion, a full-check result, or Git history. See the fixed tests
++for the manifest format; no manifest field is interpreted as a command.
++"""
++import fcntl
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import time
++
++BATCH = re.compile(r"[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)")
++SHA = re.compile(r"[0-9a-f]{40}")
++DIGEST = re.compile(r"[0-9a-f]{64}")
++TEST = re.compile(r"tests/[a-z0-9][a-z0-9_-]*\.test\.ts")
++ANSI = re.compile(r"\x1b\[[0-9;]*m")
++# A passed file may be revisited only when its test or a mapped dependency changed.
++DEPENDENCIES = {
++    "tests/ops-codex.test.ts": ["ops/codex/lib.ts", "ops/codex-ops-actions.sh", "ops/codex-ops-do.sh", "ops/git-push-main.py"],
++    "tests/brain-codex-session.test.ts": ["agent/src/brain/engines/codex-session.ts", "agent/src/core/config.ts"],
++    "tests/quantitative.test.ts": ["agent/src/sim/quantitative-stats.ts", "agent/src/sim/quantitative-facts.ts",
++                                   "agent/src/sim/quantitative-calibration.ts", "agent/tools/quantitative.ts"],
++    "tests/strategy-implementation.test.ts": ["ops/strategy_implementation.py", "ops/strategy_research_jobs.py"],
++}
++SOURCE_PATHS = ["agent/src", "agent/tests", "agent/tools", "agent/package*.json", "agent/tsconfig*.json",
++                "agent/vitest*", "ops/*.py", "ops/*.sh", "ops/tests", "ops/codex", "learner/*.py",
++                "learner/*.ts", "learner/lib", "learner/tasks", "eval/*.py", "eval/*.ts", "knowledge/builders"]
++
++
++def require(condition, message):
++    if not condition:
++        raise ValueError(message)
++
++
++def digest(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++def read_fixed(path, parent, limit=32 * 1024 * 1024):
++    path, parent = Path(path), Path(parent).resolve()
++    require(path.resolve().is_relative_to(parent) and not path.is_symlink(), "path escapes its registered directory")
++    require(path.is_file() and path.stat().st_size <= limit, "missing or oversized input")
++    return path.read_bytes()
++
++
++def git(live, *args):
++    result = subprocess.run(["git", "-C", str(live), *args], capture_output=True, text=True, timeout=30)
++    require(result.returncode == 0, "Git identity check failed")
++    return result.stdout.strip()
++
++
++def coverage(raw):
++    """Preserve observed coverage even when a timeout omitted the summary."""
++    text = ANSI.sub("", raw.decode("utf8", errors="replace"))
++    passed, failed, skipped = set(), set(), set()
++    for mark, name in re.findall(r"^\s*([✓✔❯×✗↓-])\s+(tests/[a-z0-9_-]+\.test\.ts)\s+\(", text, re.M):
++        (passed if mark in "✓✔" else skipped if mark in "↓-" else failed).add(name)
++    failed_tests = {}
++    for name, title in re.findall(r"^\s*FAIL\s+(tests/[a-z0-9_-]+\.test\.ts)(?:\s+>\s+([^\n]+))?", text, re.M):
++        failed.add(name)
++        if title:
++            failed_tests.setdefault(name, []).append(" ".join(title.strip().split(" > ")))
++    summary = {}
++    for label, body in re.findall(r"^\s*(Test Files|Tests)\s+([^\n]+)", text, re.M):
++        summary["files" if label == "Test Files" else "tests"] = {status: int(count) for count, status in re.findall(r"(\d+) (passed|failed|skipped)", body)}
++    return {"passed": sorted(passed - failed), "failed": sorted(failed), "skipped": sorted(skipped), "summary": summary,
++            "failed_tests": {key: sorted(set(value)) for key, value in sorted(failed_tests.items())}}
++
++
++def validate(batch_id, batch, root, out_dir, manifest_sha):
++    require(BATCH.fullmatch(batch_id) and DIGEST.fullmatch(manifest_sha), "invalid batch or manifest SHA")
++    require(batch.get("state") in ("done", "failed", "lost"), "original owner is still active")
++    root, out_dir = Path(root).resolve(), Path(out_dir).resolve()
++    raw = read_fixed(out_dir / f"{batch_id}.continuation-{manifest_sha}.json", out_dir, 1024 * 1024)
++    require(digest(raw) == manifest_sha, "manifest SHA mismatch")
++    manifest = json.loads(raw)
++    require(set(manifest) == {"schema", "batch", "task", "worktree", "original", "live", "sources", "inputs", "selection", "receipts"}, "unknown manifest fields")
++    require(manifest["schema"] == 1 and manifest["batch"] == batch_id and manifest["task"] == batch.get("task")
++            and manifest["worktree"] == batch.get("worktree"), "original caller identity mismatch")
++    owner = Path(manifest["worktree"])
++    require(owner.resolve().parent == root / ".worktrees" and owner.is_dir(), "unregistered owner directory")
++    original = manifest["original"]
++    require(set(original) == {"merged", "tree", "log_sha256", "coverage"}, "invalid original receipt")
++    require(all(isinstance(original[key], str) and SHA.fullmatch(original[key]) for key in ("merged", "tree")), "invalid original source/tree")
++    history = [batch.get("checks", {})] + batch.get("fallback_checks", [])
++    registered = [entry for entry in history if isinstance(entry, dict)
++                  and entry.get("merged") == original["merged"] and entry.get("tree") == original["tree"]]
++    require(registered and len({entry.get("log") for entry in registered}) == 1, "original full check is not registered")
++    log = Path(registered[0]["log"])
++    require(log.parent.resolve() == out_dir and log.name.startswith(batch_id + ".") and log.name.endswith(".checks.log"), "invalid original log path")
++    log_raw = read_fixed(log, out_dir)
++    require(digest(log_raw) == original["log_sha256"], "original log SHA mismatch")
++    observed = coverage(log_raw)
++    require(observed == original["coverage"] and (observed["passed"] or observed["failed"]), "original coverage mismatch or unreadable")
++    live = root / ".worktrees/live"
++    pin = manifest["live"]
++    require(set(pin) == {"commit", "tree"} and all(isinstance(v, str) and SHA.fullmatch(v) for v in pin.values()), "invalid current source/tree")
++    require(git(live, "rev-parse", "HEAD", "HEAD^{tree}").splitlines() == [pin["commit"], pin["tree"]], "stale live source/tree")
++    require(git(live, "rev-parse", original["merged"] + "^{tree}") == original["tree"], "original tree mismatch")
++    require(not git(live, "status", "--porcelain", "--untracked-files=all", "--", *SOURCE_PATHS), "live validation inputs are dirty")
++    sources = manifest["sources"]
++    require(isinstance(sources, list) and 1 <= len(sources) <= 32
++            and all(isinstance(source, str) and SHA.fullmatch(source) for source in sources), "invalid source commits")
++    required = {source for entry in registered for source in entry.get("commits", [])}
++    require(required.issubset(sources), "missing original source identity")
++    for source in sources:
++        git(live, "merge-base", "--is-ancestor", source, pin["commit"])
++    changed = set(git(live, "diff", "--name-only", original["merged"], pin["commit"], "--").splitlines())
++    selection = manifest["selection"]
++    require(isinstance(selection, list) and 1 <= len(selection) <= 16, "invalid selection count")
++    seen = set()
++    required_inputs = set()
++    for item in selection:
++        require(isinstance(item, dict) and set(item) == {"file", "tests", "reason"}, "unknown selection fields")
++        name, tests, reason = item["file"], item["tests"], item["reason"]
++        require(isinstance(name, str) and TEST.fullmatch(name) and name not in seen, "invalid or repeated test path")
++        seen.add(name)
++        require(isinstance(tests, list) and len(tests) <= 32 and all(isinstance(t, str) and 0 < len(t) <= 500
++                and not any(ord(c) < 32 for c in t) for t in tests) and len(set(tests)) == len(tests), "invalid exact test names")
++        git(live, "ls-files", "--error-unmatch", "agent/" + name)
++        read_fixed(live / "agent" / name, live / "agent/tests", 2 * 1024 * 1024)
++        affected = bool(changed.intersection(["agent/" + name, *DEPENDENCIES.get(name, [])]))
++        required_inputs.add("agent/" + name)
++        required_inputs.update(changed.intersection(DEPENDENCIES.get(name, [])))
++        if reason == "failed":
++            require(name in observed["failed"], "test did not fail in the original log")
++            # Exact names avoid rerunning successful cases in a partially failed file.
++            failures = observed["failed_tests"].get(name, [])
++            require(not failures or (tests and set(tests).issubset(failures)), "failed selection includes previously passed tests")
++        elif reason == "unrun":
++            require(name not in observed["passed"] + observed["failed"] + observed["skipped"], "test was already run or intentionally skipped")
++            listed = len(observed["passed"]) + len(observed["failed"]) + len(observed["skipped"])
++            summary = observed["summary"].get("files")
++            require((summary and sum(summary.values()) == listed)
++                    or (not summary and registered[0].get("rc") == 124), "original log cannot prove the file was unrun")
++        else:
++            require(reason == "affected" and affected, "no changed test or mapped dependency")
++    # An ancestor alone can contain a subsequently reverted fix. Require the
++    # selected inputs to match the declared source snapshots byte for byte.
++    inputs = manifest["inputs"]
++    require(isinstance(inputs, list) and len(inputs) == len(required_inputs), "missing exact source snapshots")
++    seen_inputs = set()
++    for item in inputs:
++        require(isinstance(item, dict) and set(item) == {"path", "source"} and item["path"] in required_inputs
++                and item["path"] not in seen_inputs and item["source"] in sources, "invalid source snapshot")
++        seen_inputs.add(item["path"])
++        require(git(live, "rev-parse", "--verify", item["source"] + ":" + item["path"])
++                == git(live, "rev-parse", "--verify", pin["commit"] + ":" + item["path"]), "registered source was changed or reverted")
++    receipts = manifest["receipts"]
++    require(isinstance(receipts, list) and len(receipts) <= 16, "invalid supplementary evidence")
++    for receipt in receipts:
++        require(isinstance(receipt, dict) and set(receipt) == {"path", "sha256"}, "invalid evidence receipt")
++        path = Path(receipt["path"])
++        require(not path.is_absolute() and ".." not in path.parts and str(path).startswith("paper/materials/")
++                and path.suffix in (".json", ".md", ".log", ".txt"), "invalid evidence path")
++        require(digest(read_fixed(root / path, root / "paper/materials")) == receipt["sha256"], "evidence SHA mismatch")
++    return manifest, str(log)
++
++
++def save_receipt(path, receipt):
++    temporary = path.with_name(path.name + ".partial")
++    with temporary.open("w", encoding="utf8") as handle:
++        json.dump(receipt, handle, ensure_ascii=False, indent=2)
++        handle.write("\n")
++        handle.flush()
++        os.fsync(handle.fileno())
++    os.replace(temporary, path)
++
++
++def run(batch_id, batch, root, out_dir, manifest_sha, enqueue, inbox):
++    """Run only selected fixed Vitest inputs; return a separate scoped receipt."""
++    try:
++        require(isinstance(batch_id, str) and BATCH.fullmatch(batch_id)
++                and isinstance(manifest_sha, str) and DIGEST.fullmatch(manifest_sha), "invalid continuation request")
++        with open(Path(root, "ops/live-merge.lock"), "a", encoding="utf8") as lock:
++            fcntl.flock(lock, fcntl.LOCK_EX)
++            manifest, original_log = validate(batch_id, batch, root, out_dir, manifest_sha)
++            stem = Path(out_dir, f"{batch_id}.supplement-{manifest_sha}")
++            receipt_path = stem.with_name(stem.name + ".json")
++            history = batch.setdefault("check_supplements", [])
++            if receipt_path.exists():
++                previous = json.loads(read_fixed(receipt_path, out_dir, 4 * 1024 * 1024))
++                require(previous.get("manifest_sha256") == manifest_sha and previous.get("state") == "completed", "continuation already claimed; preserve incomplete receipt")
++                if previous not in history:
++                    history.append(previous)
++                return previous["rc"]
++            for previous in history:
++                if previous.get("live") != manifest["live"]:
++                    continue
++                for old in previous.get("selection", []):
++                    if not any(result.get("name") == old["file"] and result.get("status") == "passed"
++                               for result in previous.get("results", [])):
++                        continue
++                    for item in manifest["selection"]:
++                        if item["file"] == old["file"]:
++                            require(old["tests"] and item["tests"] and not set(old["tests"]).intersection(item["tests"]),
++                                    "selection repeats a passed supplement on this tree")
++            receipt = {"manifest_sha256": manifest_sha, "batch": batch_id, "state": "running", "environment": "host",
++                       "scope": "selected tests only", "full_suite": False, "live": manifest["live"],
++                       "original": manifest["original"], "original_log": original_log, "sources": manifest["sources"], "inputs": manifest["inputs"],
++                       "selection": manifest["selection"], "evidence": manifest["receipts"], "results": []}
++            # Exclusive creation leaves an interrupted owner's claim visible; it never starts a second runner.
++            with receipt_path.open("x", encoding="utf8") as handle:
++                json.dump(receipt, handle, ensure_ascii=False, indent=2)
++            log_path = stem.with_name(stem.name + ".log")
++            live = Path(root, ".worktrees/live")
++            node = str(Path.home() / ".local/node/bin/node")
++            commands = [("tsc", ["nice", "-n", "19", node, "node_modules/typescript/bin/tsc", "-p", "tsconfig.json", "--noEmit"], None)]
++            for index, item in enumerate(manifest["selection"]):
++                result_path = stem.with_name(stem.name + f".{index}.vitest.json")
++                argv = ["nice", "-n", "19", node, "node_modules/vitest/vitest.mjs", "run", item["file"],
++                        "--pool=forks", "--maxWorkers=1", "--reporter=default", "--reporter=json", "--outputFile=" + str(result_path)]
++                if item["tests"]:
++                    argv += ["--testNamePattern", "^(?:" + "|".join(re.escape(name) for name in item["tests"]) + ")$"]
++                commands.append((item["file"], argv, result_path))
++            with log_path.open("x", encoding="utf8") as log:
++                deadline = time.monotonic() + 3600
++                for name, argv, result_path in commands:
++                    code, status = 1, "failed"
++                    process_code, report_metadata = None, {}
++                    try:
++                        result = subprocess.run(argv, cwd=live / "agent", stdout=log, stderr=subprocess.STDOUT,
++                                                timeout=max(0.001, deadline - time.monotonic()))
++                        code = result.returncode
++                        process_code = code
++                        status = "passed" if code == 0 else "failed"
++                        if result_path is not None:
++                            result_raw = read_fixed(result_path, out_dir)
++                            data = json.loads(result_raw)
++                            report_metadata = {"report_sha256": digest(result_raw), "counts": {
++                                key: data.get(key) for key in ("numTotalTests", "numPassedTests", "numFailedTests", "numPendingTests")}}
++                            item = next(item for item in manifest["selection"] if item["file"] == name)
++                            assertions = [a for entry in data.get("testResults", []) for a in entry.get("assertionResults", [])]
++                            executed = {a.get("fullName") for a in assertions if a.get("status") in ("passed", "failed")}
++                            require(data.get("numTotalTests", 0) > 0 and executed
++                                    and (not item["tests"] or executed == set(item["tests"])), "selected tests did not execute")
++                            if code and re.search(r"(?:listen|spawn)[^\n]{0,100}EPERM", json.dumps(data)):
++                                status = "environment-limited"
++                    except subprocess.TimeoutExpired:
++                        code, status = 124, "timeout"
++                        log.write("\nContinuation command timed out; original coverage retained.\n")
++                    except (OSError, ValueError, TypeError) as error:
++                        code, status = 2, "unverified"
++                        log.write(f"\n{type(error).__name__}: {error}\n")
++                    receipt["results"].append({"name": name, "rc": code, "process_rc": process_code, "status": status, **report_metadata,
++                                               **({"report": str(result_path)} if result_path else {})})
++                    # Retain completed segments even if the caller disappears before the next command.
++                    save_receipt(receipt_path, receipt)
++                    if status in ("timeout", "unverified", "environment-limited"):
++                        break
++            if (git(live, "rev-parse", "HEAD", "HEAD^{tree}").splitlines() != [manifest["live"]["commit"], manifest["live"]["tree"]]
++                    or git(live, "status", "--porcelain", "--untracked-files=all", "--", *SOURCE_PATHS)):
++                receipt["results"].append({"name": "source-verification", "rc": 2, "status": "source-drift"})
++            receipt.update(state="completed", rc=next((r["rc"] for r in receipt["results"] if r["rc"]), 0),
++                           log=str(log_path), log_sha256=digest(log_path.read_bytes()))
++            save_receipt(receipt_path, receipt)
++            history.append(receipt)
++            message = (f"批次 {batch_id} 宿主定向补验 exit {receipt['rc']}；精确树 {manifest['live']['tree']}；"
++                       f"仅覆盖所选测试，非完整套件通过；原失败/超时及覆盖保留，不自动回退。补充回执 {receipt_path}。")
++            if receipt["rc"]:
++                inbox(message)
++            enqueue("learner-checks", message)
++            return receipt["rc"]
++    except (OSError, ValueError, TypeError, KeyError, AttributeError, subprocess.SubprocessError) as error:
++        # Validation never falls back to an expensive full run.
++        print(f"定向补验拒绝：{error}")
++        return 2
+diff --git a/ops/learner_checks.py b/ops/learner_checks.py
+index 86fa2d6ed..44e5d2158 100644
+--- a/ops/learner_checks.py
++++ b/ops/learner_checks.py
+@@ -213,8 +213,13 @@ def preserved_calibration_report(batch_id, batch, root):
+     return candidates[0] if len(candidates) == 1 else ({}, None)
+ 
+ 
+-def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox):
++def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, continuation=None):
+     """Verify fallback merges and check their pinned live tree without rewriting the original completion."""
++    if continuation is not None:
++        spec = importlib.util.spec_from_file_location("learner_check_continuation", os.path.join(os.path.dirname(__file__), "learner_check_continuation.py"))
++        module = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(module)
++        return module.run(batch_id, batch, root, out_dir, continuation, enqueue, inbox)
+     report = read_report(os.path.join(out_dir, batch_id + ".out"))
+     report_proof = None
+     if not report:
+diff --git a/ops/tests/test_learner_check_continuation.py b/ops/tests/test_learner_check_continuation.py
+new file mode 100644
+index 000000000..eb3ea51af
+--- /dev/null
++++ b/ops/tests/test_learner_check_continuation.py
+@@ -0,0 +1,326 @@
++"""Fixed host-continuation protocol tests; engines and test runners are mocked."""
++import ast
++import contextlib
++import copy
++import fcntl
++import importlib.util
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++from types import SimpleNamespace
++import unittest
++from unittest.mock import patch
++
++SOURCE = Path(__file__).parents[1]
++spec = importlib.util.spec_from_file_location("continuation", SOURCE / "learner_check_continuation.py")
++m = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(m)
++
++
++class Continuation(unittest.TestCase):
++    def setUp(self):
++        temp = tempfile.TemporaryDirectory()
++        self.addCleanup(temp.cleanup)
++        self.root = Path(temp.name)
++        self.out = self.root / "ops/codex-ops/learner"
++        self.out.mkdir(parents=True)
++        self.owner = self.root / ".worktrees/codex-fix-silent-20261011-181302"
++        self.owner.mkdir(parents=True)
++        self.live = self.root / ".worktrees/live"
++        for name in ("broken", "passed", "unrun"):
++            path = self.live / f"agent/tests/{name}.test.ts"
++            path.parent.mkdir(parents=True, exist_ok=True)
++            path.write_text('it("fails", () => {});\n')
++        self.batch_id = "20261011-181302-fix-batch"
++        self.log = self.out / (self.batch_id + ".fallback-" + "b" * 40 + ".checks.log")
++        self.log.write_text(" ✓ tests/passed.test.ts (10 tests)\n ❯ tests/broken.test.ts (2 tests | 1 failed)\n"
++                            " FAIL tests/broken.test.ts > suite > fails\n Test Files 1 failed | 1 passed (2)\n Tests 1 failed | 11 passed (12)\n")
++        self.batch = {"task": "fix-batch", "state": "failed", "rc": 124, "worktree": str(self.owner), "checks_pending": True,
++                      "fallback_checks": [{"merged": "a" * 40, "tree": "b" * 40, "rc": 1,
++                                           "log": str(self.log), "commits": ["e" * 40]}]}
++        self.manifest = {"schema": 1, "batch": self.batch_id, "task": "fix-batch", "worktree": str(self.owner),
++                         "original": {"merged": "a" * 40, "tree": "b" * 40, "log_sha256": m.digest(self.log.read_bytes()),
++                                      "coverage": m.coverage(self.log.read_bytes())},
++                         "live": {"commit": "c" * 40, "tree": "d" * 40}, "sources": ["e" * 40, "f" * 40],
++                         "inputs": [{"path": "agent/tests/broken.test.ts", "source": "f" * 40}],
++                         "selection": [{"file": "tests/broken.test.ts", "tests": ["suite fails"], "reason": "failed"}],
++                         "receipts": []}
++        self.events, self.inbox, self.calls = [], [], []
++        self.changed, self.dirty, self.stale = [], False, False
++        self.code, self.timeout, self.zero_tests = 0, False, False
++        self.environment_limited = False
++        self.git_patch = patch.object(m, "git", side_effect=self.git)
++        self.git_patch.start()
++        self.addCleanup(self.git_patch.stop)
++        self.run_patch = patch.object(m.subprocess, "run", side_effect=self.execute)
++        self.run_patch.start()
++        self.addCleanup(self.run_patch.stop)
++
++    def git(self, live, *args):
++        self.assertEqual(Path(live), self.live)
++        if args == ("rev-parse", "HEAD", "HEAD^{tree}"):
++            return ("0" if self.stale else "c") * 40 + "\n" + "d" * 40
++        if args[0] == "rev-parse":
++            return "b" * 40
++        if args[0] == "status":
++            return " M agent/src/core/config.ts" if self.dirty else ""
++        if args[0] == "diff":
++            return "\n".join(self.changed)
++        if args[0] == "ls-files":
++            return args[-1]
++        self.assertEqual(args[0], "merge-base")
++        return ""
++
++    def execute(self, argv, **kwargs):
++        self.calls.append(argv)
++        self.assertEqual(argv[:3], ["nice", "-n", "19"])
++        self.assertEqual(kwargs["cwd"], self.live / "agent")
++        self.assertLessEqual(kwargs["timeout"], 3600)
++        self.assertNotIn("shell", kwargs)
++        if "node_modules/typescript/bin/tsc" in argv:
++            return subprocess.CompletedProcess(argv, 0)
++        self.assertIn("--maxWorkers=1", argv)
++        self.assertIn("--pool=forks", argv)
++        self.assertNotIn("--exclude", argv)
++        if self.timeout:
++            raise subprocess.TimeoutExpired(argv, 3600)
++        path = Path(next(a.removeprefix("--outputFile=") for a in argv if a.startswith("--outputFile=")))
++        names = next(item["tests"] for item in self.manifest["selection"] if item["file"] in argv) or ["suite fails"]
++        data = {"numTotalTests": len(names), "numPassedTests": 0 if self.zero_tests or self.code else len(names),
++                "numFailedTests": len(names) if self.code else 0,
++                "testResults": [{"assertionResults": [{"fullName": name, "status": "pending" if self.zero_tests else "failed" if self.code else "passed"}
++                                                      for name in names]}]}
++        if self.environment_limited:
++            data["testResults"][0]["message"] = "Error: spawn fixed-child EPERM"
++        path.write_text(json.dumps(data))
++        kwargs["stdout"].write("fake runner stderr retained\n")
++        return subprocess.CompletedProcess(argv, self.code)
++
++    def save(self):
++        raw = json.dumps(self.manifest).encode()
++        sha = m.digest(raw)
++        (self.out / f"{self.batch_id}.continuation-{sha}.json").write_bytes(raw)
++        return sha
++
++    def run_check(self, sha=None):
++        return m.run(self.batch_id, self.batch, str(self.root), str(self.out), sha or self.save(),
++                     lambda kind, message: self.events.append((kind, message)), self.inbox.append)
++
++    def test_scoped_recheck_preserves_original_failure_and_deduplicates_completed_claim(self):
++        original = copy.deepcopy(self.batch)
++        original_log = self.log.read_bytes()
++        sha = self.save()
++        self.assertEqual(self.run_check(sha), 0)
++        self.assertEqual(self.run_check(sha), 0)
++        self.assertEqual(len(self.calls), 2)
++        self.assertEqual(len(self.events), 1)
++        self.assertEqual(self.events[0][0], "learner-checks")
++        for key, value in original.items():
++            self.assertEqual(self.batch[key], value)
++        self.assertEqual(self.log.read_bytes(), original_log)
++        receipt = self.batch["check_supplements"][0]
++        self.assertFalse(receipt["full_suite"])
++        self.assertEqual(len(self.batch["check_supplements"]), 1)
++        self.assertIn("stderr retained", Path(receipt["log"]).read_text())
++
++    def test_existing_recheck_entry_delegates_to_the_bounded_supplement(self):
++        spec = importlib.util.spec_from_file_location("checks_entry", SOURCE / "learner_checks.py")
++        checks = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(checks)
++        isolated = SimpleNamespace(loader=SimpleNamespace(exec_module=lambda module: None))
++        with patch.object(checks.importlib.util, "spec_from_file_location", return_value=isolated), \
++                patch.object(checks.importlib.util, "module_from_spec", return_value=m):
++            result = checks.recheck_write_batch(self.batch_id, self.batch, str(self.root), str(self.out),
++                                                lambda kind, message: self.events.append((kind, message)), self.inbox.append,
++                                                continuation=self.save())
++        self.assertEqual(result, 0)
++        self.assertEqual(len(self.calls), 2)
++        self.assertFalse(self.batch["check_supplements"][0]["full_suite"])
++
++    def test_rejects_batch_owner_sha_path_command_and_coverage_drift(self):
++        edits = [lambda x: x.update(batch="20261011-175450-experience-update"),
++                 lambda x: x.update(task="experience-update"), lambda x: x.update(worktree="/elsewhere"),
++                 lambda x: x.update(command="echo unsafe"),
++                 lambda x: x["original"].update(log_sha256="0" * 64),
++                 lambda x: x["original"].update(tree="0" * 40),
++                 lambda x: x["original"]["coverage"]["passed"].append("tests/fake.test.ts"),
++                 lambda x: x.update(sources=["f" * 40]),
++                 lambda x: x.update(sources=["main"]),
++                 lambda x: x["selection"][0].update(file="../tests/broken.test.ts"),
++                 lambda x: x["selection"][0].update(file="tests/broken.test.ts;exit"),
++                 lambda x: x["selection"][0].update(command="echo unsafe"),
++                 lambda x: x["selection"][0].update(tests=["suite passed"])]
++        valid = copy.deepcopy(self.manifest)
++        for edit in edits:
++            self.manifest = copy.deepcopy(valid)
++            edit(self.manifest)
++            with self.subTest(manifest=self.manifest):
++                self.assertEqual(self.run_check(), 2)
++                self.assertFalse(self.calls)
++        self.manifest = valid
++        sha = self.save()
++        path = self.out / f"{self.batch_id}.continuation-{sha}.json"
++        path.write_text(path.read_text() + " ")
++        self.assertEqual(self.run_check(sha), 2)
++        self.assertEqual(self.run_check("../bad"), 2)
++
++    def test_stale_dirty_active_and_missing_source_refuse_without_a_full_rerun(self):
++        self.stale = True
++        self.assertEqual(self.run_check(), 2)
++        self.stale, self.dirty = False, True
++        self.assertEqual(self.run_check(), 2)
++        self.dirty = False
++        self.batch["state"] = "running"
++        self.assertEqual(self.run_check(), 2)
++        self.batch["state"] = "failed"
++        with patch.object(m, "git", side_effect=ValueError("source absent")):
++            self.assertEqual(self.run_check(), 2)
++        self.assertFalse(self.calls)
++
++    def test_symlinked_inputs_and_unregistered_original_log_are_rejected(self):
++        path = self.live / "agent/tests/broken.test.ts"
++        path.unlink()
++        path.symlink_to(self.live / "agent/tests/passed.test.ts")
++        self.assertEqual(self.run_check(), 2)
++        path.unlink()
++        path.write_text("fixed test")
++        self.batch["fallback_checks"][0]["log"] = str(self.root / "outside.checks.log")
++        self.assertEqual(self.run_check(), 2)
++        self.assertFalse(self.calls)
++
++    def test_previously_passed_file_requires_a_real_changed_dependency(self):
++        self.manifest["selection"] = [{"file": "tests/passed.test.ts", "tests": [], "reason": "unrun"}]
++        self.manifest["inputs"] = [{"path": "agent/tests/passed.test.ts", "source": "f" * 40}]
++        self.assertEqual(self.run_check(), 2)
++        self.manifest["selection"][0]["reason"] = "affected"
++        self.assertEqual(self.run_check(), 2)
++        self.changed = ["agent/tests/passed.test.ts"]
++        self.assertEqual(self.run_check(), 0)
++
++    def test_unrun_and_newly_affected_files_have_separate_supplement_receipts(self):
++        self.assertEqual(self.run_check(), 0)
++        self.manifest["selection"] = [{"file": "tests/unrun.test.ts", "tests": [], "reason": "unrun"}]
++        self.manifest["inputs"] = [{"path": "agent/tests/unrun.test.ts", "source": "f" * 40}]
++        self.assertEqual(self.run_check(), 0)
++        self.assertEqual(len(self.batch["check_supplements"]), 2)
++        self.assertNotEqual(*[entry["log"] for entry in self.batch["check_supplements"]])
++
++    def test_evidence_receipts_are_content_bound_and_cannot_choose_arbitrary_paths(self):
++        path = self.root / "paper/materials/fixed/coverage.json"
++        path.parent.mkdir(parents=True)
++        path.write_text('{"source": "fixed evidence"}')
++        receipt = {"path": str(path.relative_to(self.root)), "sha256": m.digest(path.read_bytes())}
++        self.manifest["receipts"] = [receipt]
++        receipt["sha256"] = "0" * 64
++        self.assertEqual(self.run_check(), 2)
++        receipt["sha256"] = m.digest(path.read_bytes())
++        receipt["path"] = "paper/materials/../../ops/file.json"
++        self.assertEqual(self.run_check(), 2)
++        receipt["path"] = str(path.relative_to(self.root))
++        self.assertEqual(self.run_check(), 0)
++
++    def test_timeout_preserves_completed_segment_and_does_not_reset_or_repeat(self):
++        self.timeout = True
++        sha = self.save()
++        self.assertEqual(self.run_check(sha), 124)
++        self.assertEqual(self.run_check(sha), 124)
++        receipt = self.batch["check_supplements"][0]
++        self.assertEqual([row["status"] for row in receipt["results"]], ["passed", "timeout"])
++        self.assertEqual(len(self.calls), 2)
++        self.assertEqual(self.batch["rc"], 124)
++
++    def test_failed_assertion_and_zero_matching_tests_are_not_success(self):
++        self.code = 1
++        self.assertEqual(self.run_check(), 1)
++        self.assertEqual(self.batch["check_supplements"][0]["results"][-1]["status"], "failed")
++        self.code, self.zero_tests = 0, True
++        self.manifest["selection"] = [{"file": "tests/unrun.test.ts", "tests": [], "reason": "unrun"}]
++        self.manifest["inputs"] = [{"path": "agent/tests/unrun.test.ts", "source": "f" * 40}]
++        self.assertEqual(self.run_check(), 2)
++
++    def test_ancestry_does_not_accept_a_reverted_source_snapshot(self):
++        def reverted(live, *args):
++            if args[:2] == ("rev-parse", "--verify") and args[-1].startswith("f" * 40):
++                return "0" * 40
++            return self.git(live, *args)
++        with patch.object(m, "git", side_effect=reverted):
++            self.assertEqual(self.run_check(), 2)
++        self.assertFalse(self.calls)
++
++    def test_changing_metadata_cannot_repeat_a_passed_supplement(self):
++        self.assertEqual(self.run_check(), 0)
++        self.manifest["sources"].append("9" * 40)
++        self.assertEqual(self.run_check(), 2)
++        self.assertEqual(len(self.calls), 2)
++
++    def test_permission_limit_is_distinct_from_an_assertion_failure(self):
++        self.code, self.environment_limited = 1, True
++        self.assertEqual(self.run_check(), 1)
++        self.assertEqual(self.batch["check_supplements"][0]["results"][-1]["status"], "environment-limited")
++
++    def test_source_drift_during_execution_cannot_claim_a_verified_pass(self):
++        def mutate(argv, **kwargs):
++            result = self.execute(argv, **kwargs)
++            self.dirty = True
++            return result
++        with patch.object(m.subprocess, "run", side_effect=mutate):
++            self.assertEqual(self.run_check(), 2)
++        self.assertEqual(self.batch["check_supplements"][0]["results"][-1]["status"], "source-drift")
++
++    def test_incomplete_claim_refuses_rerun(self):
++        sha = self.save()
++        path = self.out / f"{self.batch_id}.supplement-{sha}.json"
++        path.write_text(json.dumps({"manifest_sha256": sha, "state": "running"}))
++        self.assertEqual(self.run_check(sha), 2)
++        self.assertFalse(self.calls)
++
++    def test_original_timeout_log_retains_partial_coverage(self):
++        self.batch["fallback_checks"][0]["rc"] = 124
++        self.log.write_text(" ✓ tests/passed.test.ts (10 tests)\nTimeoutExpired: before remaining files\n")
++        self.manifest["original"].update(log_sha256=m.digest(self.log.read_bytes()), coverage=m.coverage(self.log.read_bytes()))
++        self.manifest["selection"][0]["reason"] = "unrun"
++        self.assertEqual(self.run_check(), 0)
++        self.assertEqual(self.batch["check_supplements"][0]["original"]["coverage"]["passed"], ["tests/passed.test.ts"])
++
++    def test_sparse_summary_cannot_misclassify_passed_files_as_unrun(self):
++        self.log.write_text(" ❯ tests/broken.test.ts (2 tests | 1 failed)\n Test Files 1 failed | 324 passed (325)\n")
++        self.manifest["original"].update(log_sha256=m.digest(self.log.read_bytes()), coverage=m.coverage(self.log.read_bytes()))
++        self.manifest["selection"] = [{"file": "tests/unrun.test.ts", "tests": [], "reason": "unrun"}]
++        self.manifest["inputs"] = [{"path": "agent/tests/unrun.test.ts", "source": "f" * 40}]
++        self.assertEqual(self.run_check(), 2)
++        self.assertFalse(self.calls)
++
++    def scheduler(self, state):
++        source = ast.parse((SOURCE / "codex-ops-learn.py").read_text())
++        function = next(node for node in source.body if isinstance(node, ast.FunctionDef) and node.name == "cmd_recheck")
++        namespace = {"re": m.re, "os": m.os, "fcntl": fcntl, "json": json, "DIR": str(self.out.parent), "ROOT": str(self.root),
++                     "state_lock": contextlib.nullcontext, "load_state": lambda: copy.deepcopy(state),
++                     "save_state": lambda saved: state.update(saved), "enqueue": lambda *args: None, "inbox": lambda *args: None}
++        calls = []
++        def recheck(*args, **kwargs):
++            calls.append((args, kwargs))
++            args[1]["check_supplements"] = [{"rc": 0, "scope": "selected tests only"}]
++            return 0
++        namespace["recheck_write_batch"] = recheck
++        exec(compile(ast.Module(body=[function], type_ignores=[]), "scheduler-fixture", "exec"), namespace)
++        return namespace["cmd_recheck"], calls
++
++    def test_scheduler_rejects_active_owner_and_keeps_original_checks_pending(self):
++        state = {"batches": {self.batch_id: self.batch, "new-owner": {"state": "running", "worktree": str(self.owner)}}}
++        call, calls = self.scheduler(state)
++        token = self.batch_id + ":" + "a" * 64
++        self.assertEqual(call(SimpleNamespace(batch=token)), 2)
++        self.assertFalse(calls)
++        state["batches"].pop("new-owner")
++        with open(self.out.parent / (self.batch_id + ".checks.lock"), "a") as lock:
++            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++            self.assertEqual(call(SimpleNamespace(batch=token)), 2)
++        self.assertEqual(call(SimpleNamespace(batch=token)), 0)
++        self.assertEqual(calls[0][1], {"continuation": "a" * 64})
++        self.assertTrue(state["batches"][self.batch_id]["checks_pending"])
++        self.assertEqual(state["batches"][self.batch_id]["fallback_checks"], self.batch["fallback_checks"])
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/ops/tests/test_silent_calibration_dispatch.py b/ops/tests/test_silent_calibration_dispatch.py
+index 8233d061f..5da62179a 100644
+--- a/ops/tests/test_silent_calibration_dispatch.py
++++ b/ops/tests/test_silent_calibration_dispatch.py
+@@ -18,6 +18,9 @@ class CalibrationDispatch(unittest.TestCase):
+         self.temp = tempfile.TemporaryDirectory()
+         self.addCleanup(self.temp.cleanup)
+         self.root = self.temp.name
++        # Production requires an existing dedicated tree before checking its availability.
++        for task in {self.task, "silent-boss-calibration"}:
++            Path(self.root, ".worktrees", task).mkdir(parents=True, exist_ok=True)
+         self.request = {"state": "pending", "task": self.task, "character": "silent",
+                         "authorized_by": "Roy", "request_id": "fixed-roy-request"}
+         path = Path(self.root, self.request_file)
+@@ -49,6 +52,12 @@ class CalibrationDispatch(unittest.TestCase):
+         self.assertFalse(jobs.busy(self.state, "fix-batch", lambda pid: True))
+         self.assertFalse(jobs.busy(self.state, "strategy-proposal", lambda pid: True))
+ 
++    def test_missing_feature_directory_refuses_even_if_availability_is_mocked(self):
++        Path(self.root, ".worktrees", self.task).rmdir()
++        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner") as start:
++            self.assertIsNone(self.launch())
++            start.assert_not_called()
++
+     def test_dirty_or_other_writer_feature_tree_refuses_without_fallback(self):
+         with patch.object(jobs, "available_worktree", return_value=False), patch.object(jobs, "start_learner") as start:
+             self.assertIsNone(self.launch())
+@@ -149,6 +158,7 @@ class NewFeatureDispatch(unittest.TestCase):
+             Path(root, "notes").mkdir()
+             state = {"batches": {"normal": {"task": "fix-batch", "state": "running", "pid": 10}}}
+             for task in ("boss-sim-automation", "silent-double-boss"):
++                Path(root, ".worktrees", task).mkdir(parents=True)
+                 Path(root, jobs.FEATURE_REQUESTS[task]).write_text(json.dumps({
+                     "state": "pending", "task": task, "character": "silent", "authorized_by": "Roy", "request_id": task}))
+             with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
+@@ -171,6 +181,7 @@ class NewFeatureDispatch(unittest.TestCase):
+             with self.subTest(task=task), tempfile.TemporaryDirectory() as root:
+                 Path(root, "notes").mkdir(); path = Path(root, jobs.FEATURE_REQUESTS[task])
+                 value = {"state": "pending", "task": task, "character": "silent", "authorized_by": "Roy", "request_id": task}
++                Path(root, ".worktrees", task).mkdir(parents=True)
+                 path.write_text(json.dumps(value)); state = {"batches": {}}
+                 with patch.object(jobs, "available_worktree", return_value=False), patch.object(jobs, "start_learner") as start:
+                     self.assertEqual(jobs.requested_feature(state, root, "/scripts", "silent", "ops", lambda pid: True, "dirty"), (True, None))

@@ -19,8 +19,9 @@ if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
     && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
       || [ "$7" = roy-20261010-silent-core-output-value ] \
-      || [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ]; } || exit 2
-  if [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ]; then
+      || [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] \
+      || [ "$7" = ops-20261012-quantitative-continuation ]; } || exit 2
+  if [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] || [ "$7" = ops-20261012-quantitative-continuation ]; then
     implementation_request="$7"
   else
     research_request="$7"
@@ -179,6 +180,8 @@ else
     args+=(--set merge=live)
     [ "$task" = fix-batch ] || args+=(--set "runs=$runs")
   fi
+  # The launcher may retry only a proven pre-session failure under this same registration.
+  export LEARNER_BATCH_ID="$batch" LEARNER_STATE_FILE="$DIR/learn.json"
   nice -n 10 "$ROOT/agent/node_modules/.bin/tsx" "$worktree/learner/run.ts" "${args[@]}" > "$out" 2> "$err"
   rc=$?
 fi

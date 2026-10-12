@@ -1,0 +1,28 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-061302/agent
+
+ ❯ tests/silent-summon-coverage.test.ts (9 tests | 2 failed) 242ms
+   × reaches the real off Jev question while preserving every option and action 23ms
+   × reaches the real v1 Jev question while preserving every option and action 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-summon-coverage.test.ts > reaches the real off Jev question while preserving every option and action
+ FAIL  tests/silent-summon-coverage.test.ts > reaches the real v1 Jev question while preserving every option and action
+AssertionError: expected { rollout: { …(13) }, …(2) } to have property "unmodelled_summons.enemies"
+ ❯ tests/silent-summon-coverage.test.ts:120:39
+    118|     const current = planned(rawAt(line), context).decision;
+    119|     const view = context === "v1" ? current.jevView!.state : current.s…
+    120|     expect(view.simulation_reference).toHaveProperty("unmodelled_summo…
+       |                                       ^
+    121|     const spy = vi.spyOn(coverage, "silentSummonCoverage").mockReturnV…
+    122|     const original = planned(rawAt(line), context).decision;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)
+   Start at  06:21:20
+   Duration  1.56s (transform 1.00s, setup 273ms, import 936ms, tests 242ms, environment 0ms)
+

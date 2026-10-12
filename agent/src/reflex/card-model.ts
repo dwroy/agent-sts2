@@ -55,6 +55,10 @@ export interface CardModel {
   hitsLoseHandSkills?: boolean;
   /** Plain Silent Precise Cut: only recorded hand/Strength pairs are verified (silent-0166/0169). */
   preciseCutHandDamage?: boolean;
+  /** NHA2KW0RB7VP A10: ordinary Precise Cut starts at one in a seven-card hand. */
+  preciseCutSevenHand?: boolean;
+  /** Q6/Y6, silent-0260/0261: ordinary Strangle establishes the observed two-stack turn power. */
+  strangle?: number;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
@@ -76,6 +80,8 @@ export interface CardModel {
   dodgeRollNextBlock?: boolean;
   /** DUZUBAJ3A8GP A10 F30 T5, silent-0010: plain Mirage reads living poison at play time. */
   blockFromPoison?: boolean;
+  /** K2JAGKVJAWZJ A10 F46 T1: only the observed upgraded zero-poison play is known. */
+  observedZeroPoisonMirage?: boolean;
   /** Block before player modifiers, from the observed enchanted/base dynamic value. */
   blockBase?: number;
   /** Debuffs applied to the target (or every enemy for `all`). */
@@ -106,6 +112,8 @@ export interface CardModel {
   discardCount?: number;
   /** L704TLETMZBM F48 T3/T4: one chosen discard after this card's draw/effects. */
   discardAfterDraw?: boolean;
+  /** silent-0268: plain Survivor consumes its discard without a relic, observed at A6/A10. */
+  survivorDiscard?: boolean;
   /** Fixed draw in the observed Dagger Throw text, used only by the discard relic model. */
   discardDraw?: number;
   doubleDamageNext?: boolean;
@@ -840,6 +848,13 @@ export function isStrikeCard(card: Pick<CardModel, "cardId">): boolean {
   return /STRIKE/.test(card.cardId) && !card.cardId.startsWith("GEN:");
 }
 
+/** U1QYLX1AE1WX A10 F46 T4, silent-0394/0396: only the actually played custom template. */
+function observedSilentSapping(card: Record<string, unknown>, character: string, ascension: number | null): boolean {
+  return character.toLowerCase() === "silent" && ascension === 10 && str(card["card_id"]) === "MAD_SCIENCE" &&
+    !bool(card["upgraded"]) && dyn(card, "Damage") === 12 && dyn(card, "SappingWeak") === 2 && dyn(card, "SappingVulnerable") === 2 &&
+    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "造成12点伤害。给予2层虚弱。给予2层易伤。";
+}
+
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = "", ascension: number | null = null): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
@@ -855,17 +870,31 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const madExpertise = character.toLowerCase() === "silent" && cardId === "MAD_SCIENCE" && !bool(card["upgraded"]) &&
     dyn(card, "ExpertiseStrength") === 2 && dyn(card, "ExpertiseDexterity") === 2 &&
     str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得2点力量。获得2点敏捷。";
-  const type = madExpertise ? "Power" : info?.type || "";
+  // U1QYLX1AE1WX A10 F46 T4, silent-0394/0396: the observed Sapping attack used no Block.
+  // Its unplayed Music Box copy and other custom templates remain outside this evidence boundary.
+  const madSapping = observedSilentSapping(card, character, ascension) && str(card["target_type"]) === "AnyEnemy" && requiresTarget;
+  const type = madExpertise ? "Power" : madSapping ? "Attack" : info?.type || "";
   const target = targetMode(str(card["target_type"]), template, requiresTarget);
 
   let damage = madExpertise ? null : dyn(card, "CalculatedDamage") ?? dyn(card, "Damage");
   let hits = dyn(card, "CalculatedHits") ?? dyn(card, "Repeat") ?? 1;
   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(template)) hits = 2;
-  const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
+  const block = madExpertise || madSapping ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
   const mirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && dyn(card, "CalculationExtra") === 1;
-  let vulnerable = dyn(card, "VulnerablePower") ?? 0;
-  let weak = dyn(card, "WeakPower") ?? 0;
+  // Keep the ordinary unknown model until the solver checks poison and modifiers at play time.
+  const mirageValues = asArray(card["dynamic_values"]).map(asRecord);
+  const zeroPoisonMirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
+    bool(card["upgraded"]) && type === "Skill" && card["target_type"] === "Self" && !requiresTarget &&
+    numOrNull(card["energy_cost"]) === 1 && !bool(card["costs_x"]) && card["enchantment"] == null &&
+    str(card["rules_text"]) === "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}" &&
+    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得等量于所有敌人中毒层数总和的格挡。（获得0点格挡）" &&
+    mirageValues.length === 3 && [["CalculatedBlock", 0], ["CalculationBase", 0], ["CalculationExtra", 1]].every(([name, value]) => {
+      const entry = mirageValues.find((v) => v["name"] === name);
+      return entry !== undefined && ["base_value", "current_value", "enchanted_value"].every((field) => entry[field] === value);
+    });
+  let vulnerable = madSapping ? dyn(card, "SappingVulnerable")! : dyn(card, "VulnerablePower") ?? 0;
+  let weak = madSapping ? dyn(card, "SappingWeak")! : dyn(card, "WeakPower") ?? 0;
   let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
   let tempStrength = 0;
   let strengthPerVulnerable = 0;
@@ -1088,8 +1117,16 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
     damage,
     ...(character.toLowerCase() === "silent" && cardId === "PRECISE_CUT" && !bool(card["upgraded"]) &&
-      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 && [3, 5, 7, 11].includes(damage ?? -1) &&
+      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 &&
+      ([3, 5, 7, 11].includes(damage ?? -1) || (ascension === 10 && damage === 1)) &&
       /你的手牌中每有一张牌，此牌的伤害就降低/.test(template) ? { preciseCutHandDamage: true } : {}),
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "PRECISE_CUT" && !bool(card["upgraded"]) &&
+      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 && damage === 1 &&
+      /你的手牌中每有一张牌，此牌的伤害就降低/.test(template) ? { preciseCutSevenHand: true } : {}),
+    ...(character.toLowerCase() === "silent" && (ascension === 0 || ascension === 10) && cardId === "STRANGLE" && !bool(card["upgraded"]) &&
+      dynBase(card, "Damage", true) === 8 && dyn(card, "StranglePower") === 2 &&
+      template.replace(/\s+/g, "") === "造成{Damage:diff()}点伤害。你在这个回合内每出一张牌，该名敌人都会失去{StranglePower:diff()}点生命。"
+      ? { strangle: dyn(card, "StranglePower")! } : {}),
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
     ...(character.toLowerCase() === "silent" && cardId === "FLECHETTES" && !bool(card["upgraded"]) &&
@@ -1104,7 +1141,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       dynBase(card, "Block", true) === 6 && template.replace(/\s+/g, "") === "获得{Block:diff()}点格挡。在下个回合，获得{Block:diff()}点格挡。"
       ? { dodgeRollNextBlock: true } : {}),
     ...(mirage ? { blockFromPoison: true } : {}),
-    ...(!madExpertise && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
+    ...(zeroPoisonMirage ? { observedZeroPoisonMirage: true } : {}),
+    ...(!madExpertise && !madSapping && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,
     weak,
     ...(weakFirst ? { weakFirst } : {}),
@@ -1138,6 +1176,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(bladeDance ? { bladeDance: true, ...(adds ? { adds } : {}) } : {}),
     ...(character.toLowerCase() === "silent" && !bool(card["upgraded"]) && ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"].includes(cardId) &&
       /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { discardAfterDraw: true, ...(daggerDraw > 0 ? { discardDraw: daggerDraw } : {}) } : {}),
+    ...(character.toLowerCase() === "silent" && (ascension === 6 || ascension === 10) && cardId === "SURVIVOR" &&
+      !bool(card["upgraded"]) && /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { survivorDiscard: true } : {}),
     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
     ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
     ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
@@ -1260,7 +1300,10 @@ export function offHandCardModel(own: Record<string, unknown> | null, cardId: st
     energy_cost: info?.cost ?? 0,
     costs_x: info?.xCost ?? false,
   };
-  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character, ascension);
+  // The same observed deck entry has card_type=Attack but no target fields. Preserve its learned
+  // single-enemy template even when the id-level catalog describes a different custom card.
+  const target = own && str(own["card_type"]) === "Attack" && observedSilentSapping(own, character, ascension) ? "AnyEnemy" : info?.target ?? "";
+  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: target, requires_target: target === "AnyEnemy", playable: true, index }, index, knowledge, character, ascension);
   const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
   // The deck's (the game data's) cost, with a relic's change on Powers (pilePowerExtraCost); a line's own cost has it.
   const relicCost = cost === null ? withPowerExtraCost(model, powerExtraCost) : model;
@@ -1442,6 +1485,8 @@ export interface PotionContext {
   ascension?: number;
   /** Character evidence supplied by the caller; no global potion mechanic is inferred. */
   observedPoison?: number;
+  /** XTSV1U9JD34T F49 T1: one new Intangible layer, with no existing layer. */
+  observedGhostInAJar?: boolean;
   enemyTargets: number[];
   strength: number;
   weak: boolean;
@@ -1661,7 +1706,9 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
     return { ...potionShell(potionId, name, slot, validTargets), adds };
   }
   const effect: (Partial<CardModel> & { target: TargetMode }) | undefined = POTION_EFFECTS[potionId] ?? (potionId === "POISON_POTION" && (ctx?.observedPoison ?? 0) > 0
-    ? { target: "single" as const, poison: ctx!.observedPoison } : undefined);
+    ? { target: "single" as const, poison: ctx!.observedPoison } : undefined)
+    ?? (potionId === "GHOST_IN_A_JAR" && ctx?.observedGhostInAJar === true
+      ? { target: "self" as const, special: "intangible" as const } : undefined);
   if (!effect) return null;
   // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew: their cards are priced by the expected draw
   // (combat-plan gives the draw pile's, else the discard pile's, else the deck's when the piles are unknown). With

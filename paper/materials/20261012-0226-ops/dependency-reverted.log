@@ -1,0 +1,78 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent
+
+ ❯ tests/learner-check-continuation.test.ts (2 tests | 1 failed) 318ms
+   × binds host supplements to original coverage and exact sources without repeating full checks 316ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-check-continuation.test.ts > binds host supplements to original coverage and exact sources without repeating full checks
+AssertionError: 定向补验拒绝：registered source was changed or reverted
+定向补验拒绝：no changed test or mapped dependency
+定向补验拒绝：selection repeats a passed supplement on this tree
+定向补验拒绝：evidence SHA mismatch
+定向补验拒绝：invalid evidence path
+定向补验拒绝：continuation already claimed; preserve incomplete receipt
+定向补验拒绝：test was already run or intentionally skipped
+定向补验拒绝：no changed test or mapped dependency
+定向补验拒绝：original caller identity mismatch
+定向补验拒绝：original caller identity mismatch
+定向补验拒绝：original caller identity mismatch
+定向补验拒绝：unknown manifest fields
+定向补验拒绝：original log SHA mismatch
+定向补验拒绝：original full check is not registered
+定向补验拒绝：original coverage mismatch or unreadable
+定向补验拒绝：missing original source identity
+定向补验拒绝：invalid source commits
+定向补验拒绝：invalid or repeated test path
+定向补验拒绝：invalid or repeated test path
+定向补验拒绝：unknown selection fields
+定向补验拒绝：failed selection includes previously passed tests
+定向补验拒绝：manifest SHA mismatch
+定向补验拒绝：invalid continuation request
+{"batch": "20261011-181302-fix-batch", "rc": 0, "check_supplements": [{"rc": 0, "scope": "selected tests only"}]}
+定向补验拒绝：original log cannot prove the file was unrun
+定向补验拒绝：stale live source/tree
+定向补验拒绝：live validation inputs are dirty
+定向补验拒绝：original owner is still active
+定向补验拒绝：source absent
+定向补验拒绝：path escapes its registered directory
+定向补验拒绝：invalid original log path
+.F.................
+======================================================================
+FAIL: test_changed_implementation_module_is_eligible_for_affected_supplement (__main__.Continuation.test_changed_implementation_module_is_eligible_for_affected_supplement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-015818/agent/../ops/tests/test_learner_check_continuation.py", line 210, in test_changed_implementation_module_is_eligible_for_affected_supplement
+    self.assertEqual(self.run_check(), 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.214s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/learner-check-continuation.test.ts:9:56
+      7|     encoding: "utf8", timeout: 20_000,
+      8|   });
+      9|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     10|   expect(result.stderr).toContain("OK");
+     11| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  02:16:16
+   Duration  1.04s (transform 495ms, setup 287ms, import 313ms, tests 318ms, environment 0ms)
+

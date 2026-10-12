@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-024317/agent
+
+ ❯ tests/core-realization.test.ts (6 tests | 1 failed | 5 skipped) 79ms
+   × the real combat consumer supplies realization to its unchanged legal choices 77ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/core-realization.test.ts > the real combat consumer supplies realization to its unchanged legal choices
+TypeError: Cannot read properties of undefined (reading 'model')
+ ❯ tests/core-realization.test.ts:84:61
+     82|   const facts = Object.values(criteria).filter((v): v is string => typ…
+     83|   expect(facts.length).toBeGreaterThan(1);
+     84|   expect(facts.every((f) => f.quantitative_turn.realization.model === …
+       |                                                             ^
+     85|   expect(facts.every((f) => f.quantitative_turn.complete_combinations …
+     86| });
+ ❯ tests/core-realization.test.ts:84:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  02:49:59
+   Duration  1.42s (transform 995ms, setup 296ms, import 916ms, tests 79ms, environment 0ms)
+

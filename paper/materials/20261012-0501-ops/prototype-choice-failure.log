@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-044301/agent
+
+ ❯ tests/silent-crab-potion.test.ts (26 tests | 6 failed) 143ms
+   × attempt 1 T9: the real planner receives six poison and preserves every legal target 59ms
+   × attempt 2 T9: the real planner receives six poison and preserves every legal target 17ms
+   × attempt 3 T7: the real planner receives six poison and preserves every legal target 4ms
+   × attempt 4 T9: the real planner receives six poison and preserves every legal target 4ms
+   × attempt 5 T6: the real planner receives six poison and preserves every legal target 6ms
+   × attempt 6 T6: the real planner receives six poison and preserves every legal target 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-crab-potion.test.ts > attempt 1 T9: the real planner receives six poison and preserves every legal target
+ FAIL  tests/silent-crab-potion.test.ts > attempt 2 T9: the real planner receives six poison and preserves every legal target
+ FAIL  tests/silent-crab-potion.test.ts > attempt 3 T7: the real planner receives six poison and preserves every legal target
+ FAIL  tests/silent-crab-potion.test.ts > attempt 4 T9: the real planner receives six poison and preserves every legal target
+ FAIL  tests/silent-crab-potion.test.ts > attempt 5 T6: the real planner receives six poison and preserves every legal target
+ FAIL  tests/silent-crab-potion.test.ts > attempt 6 T6: the real planner receives six poison and preserves every legal target
+AssertionError: expected 'act' to be 'ask' // Object.is equality
+
+Expected: "ask"
+Received: "act"
+
+ ❯ tests/silent-crab-potion.test.ts:58:26
+     56|   expect(potion!.validTargets).toEqual(raw.run.potions[0].valid_target…
+     57|   expect(decision).not.toBeNull();
+     58|   expect(decision?.kind).toBe("ask");
+       |                          ^
+     59|   const a = raw.combat.enemies.find((e: Raw) => e.index === pair.targe…
+     60|   const b = pair.after.combat.enemies.find((e) => e.index === pair.tar…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 20 passed (26)
+   Start at  04:50:34
+   Duration  1.42s (transform 970ms, setup 255ms, import 916ms, tests 143ms, environment 0ms)
+

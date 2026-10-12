@@ -1,0 +1,76 @@
+{
+  "at": "2026-10-12 02:09:05 CST",
+  "batch": "20261012-011302-fix-batch",
+  "report": {
+    "task": "fix-batch",
+    "base": "817632b7893e37a8b02b21ae0ce90972688aa32b",
+    "fixes": [
+      {
+        "item": "校准派发夹具缺少生产守卫要求的工作树目录",
+        "commit": "800409ce6edd7a85705564523df43b39d451c78a",
+        "test": "agent/tests/calibration-dispatch-fixtures.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "host-targeted-check-continuation：绑定身份和已有覆盖的宿主定向补验入口",
+        "commit": "b534ef63195899ce24900c93a9053f94ddd003ed",
+        "test": "agent/tests/learner-check-continuation.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "sandbox-glob-startup-race：会话前ENOENT有限重试",
+        "commit": "cfa32d49f60b849ae5d45c907dc9a7721c3c9818",
+        "test": "agent/tests/learner-startup-recovery.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "机制/策略项 silent-0250,0256,0260,0263,0266,0268,0271,0273,0279,0287,0290,0291,0293,0295,0296,0297,0300,0308,0311,0317,0319,0320,0322,0329,0334,0339,0344,0347,0349,0362,0365,0367",
+        "reason": "策略类：保留既有独立strategy-proposal链；局部实现不作为宽项全部关闭。"
+      },
+      {
+        "item": "silent-0332 双boss接续资源契约",
+        "reason": "证据不足：缺触发seed及首战末帧，保留已有诊断提案和正HP契约。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2历史失败恢复",
+        "reason": "证据不足：缺历史stderr及未发送证明，不能安全重发。"
+      },
+      {
+        "item": "mod短暂请求超时",
+        "reason": "证据不足：缺mod内部根因。"
+      },
+      {
+        "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression、B4/B5、缓存/性能实测",
+        "reason": "独立功能和策略研究，超出普通纯bug批次。"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足：插入顺序快照不能证明永久饥饿。"
+      },
+      {
+        "item": "sandbox-glob-startup-race上游根因",
+        "reason": "已集成有界恢复，但目录消失原因及自然复发恢复未验证。"
+      },
+      {
+        "item": "ops-20261012-quantitative-continuation",
+        "reason": "新增条目明确要求当前011302活批不追加任务，由下批领取。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 291,
+      "cases": 2853
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-011302/learner/runs/20261012-011311-fix-batch/report.md"
+  },
+  "original_state": "failed",
+  "rc": 0,
+  "patch_sha256": "09797f0d3f80032129942e3f81e0167214c654278ba32593c3dd73fd773f0bc8",
+  "additional_delta_only": true
+}

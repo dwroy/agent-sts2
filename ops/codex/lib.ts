@@ -97,8 +97,18 @@ export function opsExtraRules(root: string): Record<string, "read" | "write" | "
 }
 
 /** The codex request of the ops session: cwd = project root, the "ops" profile with the key files found on disk. */
-export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?: string; effort?: string } = {}): EngineRequest {
-  return withCodexKeys(
+export type OpsRequest = EngineRequest & { opsExecution?: "sandbox" | "host" };
+
+/** Explicit project setting; it is never consumed by learner/assistant launchers. */
+export function opsExecution(root: string, env: NodeJS.ProcessEnv): "sandbox" | "host" {
+  const file = join(opsPaths(root, env).dir, "execution-mode");
+  const mode = env["CODEX_OPS_EXECUTION"] ?? (existsSync(file) ? readFileSync(file, "utf8").trim() : "sandbox");
+  if (mode !== "sandbox" && mode !== "host") throw new Error("invalid ops execution mode");
+  return mode;
+}
+
+export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?: string; effort?: string } = {}): OpsRequest {
+  return { ...withCodexKeys(
     {
       engine: "codex",
       cwd: root,
@@ -110,17 +120,26 @@ export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?:
       effort: opts.effort ?? env["CODEX_OPS_EFFORT"] ?? DEFAULT_CODEX_EFFORT,
     },
     env,
-  );
+  ), opsExecution: opsExecution(root, env) };
 }
 
 /**
  * `codex exec … -` that starts the session: the learner's command line (codexCommand) with the ops profile and the
  * compaction limit; the stdin is the ops prompt alone (not the learner's preamble, which maps a task's tool names).
  */
-export function initCommand(request: EngineRequest, prompt: string, bin: string): CommandLine {
+export function initCommand(request: OpsRequest, prompt: string, bin: string): CommandLine {
   const base = codexCommand({ ...request, model: request.model ?? DEFAULT_CODEX_MODEL,
     effort: request.effort ?? DEFAULT_CODEX_EFFORT, serviceTier: CODEX_SERVICE_TIER }, "", bin);
   if (base.args.at(-1) !== "-") throw new Error("codexCommand no longer ends with '-'");
+  if (request.opsExecution === "host") {
+    if (request.profile !== OPS_PROFILE) throw new Error("host execution is restricted to the main ops role");
+    for (let i = base.args.length - 2; i >= 0; i--) {
+      if (base.args[i] === "-c" && /^(default_permissions|permissions\.ops\.filesystem)=/.test(base.args[i + 1] ?? "")) {
+        base.args.splice(i, 2);
+      }
+    }
+    base.args.splice(base.args.length - 1, 0, "--sandbox", "danger-full-access");
+  }
   return { command: base.command, args: base.args, stdin: prompt };
 }
 
@@ -130,7 +149,7 @@ export function initCommand(request: EngineRequest, prompt: string, bin: string)
  * are passed again on each wake: codex does not keep them with the session (verified 2026-10-04: a resumed turn ran
  * under the profile, home read-only, no 127.0.0.1).
  */
-export function resumeCommand(request: EngineRequest, sessionId: string, message: string, bin: string): CommandLine {
+export function resumeCommand(request: OpsRequest, sessionId: string, message: string, bin: string): CommandLine {
   if (!SESSION_ID.test(sessionId)) throw new Error(`not a codex session id: ${sessionId.slice(0, 60)}`);
   const init = initCommand(request, message, bin);
   const options = init.args.slice(1, -1);
@@ -148,7 +167,7 @@ export function resumeCommand(request: EngineRequest, sessionId: string, message
  * Without --ignore-user-config the TUI reads ~/.codex/config.toml; every setting that matters here is passed with -c and
  * wins over it (profile, model, effort, approval_policy=never, compaction), and the hooks feature stays disabled.
  */
-export function interactiveArgs(request: EngineRequest, sessionId?: string): string[] {
+export function interactiveArgs(request: OpsRequest, sessionId?: string): string[] {
   if (sessionId !== undefined && !SESSION_ID.test(sessionId)) throw new Error(`not a codex session id: ${sessionId.slice(0, 60)}`);
   const args = initCommand(request, "", "codex").args;
   const head = args.slice(0, 5);
@@ -259,6 +278,7 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "learner-log-tab": { args: 1, ms: 60_000 },
   "stall-check": { args: 0, ms: 60_000 },
   "mod-state": { args: 0, ms: 30_000 },
+  "report-run": { args: 1, ms: 3_700_000 },
   "autoplay-start": { args: 0, ms: 60_000 },
   "autoplay-reload": { args: 2, ms: 30_000 },
   "autoplay-stop": { args: 0, ms: 30_000 },
@@ -299,6 +319,9 @@ export function validateRequest(raw: unknown): BrokerRequest {
   if (list.length !== spec.args) return { ok: false, error: `${action} 要 ${spec.args} 个参数，给了 ${list.length} 个` };
   const bad = list.find((arg) => !ARG.test(arg));
   if (bad !== undefined) return { ok: false, error: `参数不合格：${bad.slice(0, 40)}` };
+  if (action === "report-run" && !/^[0-9A-Z]{12}$/.test(list[0]!)) {
+    return { ok: false, error: "report-run 要一个完整的12位局号" };
+  }
   if (action === "ops-assist" && !/^[a-z][a-z0-9-]{0,47}$/.test(list[0]!)) {
     return { ok: false, error: "ops-assist 要小写字母开头的任务 id（最多48位小写字母、数字、连字符）" };
   }
@@ -311,11 +334,12 @@ export function validateRequest(raw: unknown): BrokerRequest {
     if (!/^(0|[1-9][0-9]{0,2})$/.test(list[1]!)) return { ok: false, error: "eval-metrics 进阶要是 0–999 的整数（不带前导零）" };
   }
   if (action === "strategy-proposal" && list[0] !== "roy-20261011-silent-core-cycle-quantitative-learning"
+    && list[0] !== "ops-20261012-quantitative-continuation"
       && !/^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$/.test(list[0]!)) {
     return { ok: false, error: "strategy-proposal 要 1–10 个 12 位局号或已授权的量化实现请求 id" };
   }
-  if (action === "learner-recheck" && !/^(?:[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal)$/.test(list[0]!)) {
-    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id" };
+  if (action === "learner-recheck" && !/^[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)(?::[0-9a-f]{64})?$/.test(list[0]!)) {
+    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id；定向补验追加冒号和清单 SHA256" };
   }
   if (action === "learner-log-tab" && !/^[0-9]{8}-[0-9]{6}(?:-(?:experience-update|fix-batch|strategy-proposal)|-s2-strategy-proposal)?$/.test(list[0]!)) {
     return { ok: false, error: "learner-log-tab 要已登记的完整学习批次 id" };

@@ -9,6 +9,7 @@
 #   procs              our processes: autoplay, stop-after, play, report.py, learner runs, the scheduler's wake
 #   stall-check        ops/stall-check.sh
 #   mod-state          GET 127.0.0.1:8080/state (the STS2-Agent mod), complete validated JSON
+#   report-run <id>    recover one finished run's missing report; refuses active play and duplicate side effects
 #   autoplay-start     the ops prompt's start: refuses while autoplay / stop-after / play runs; rm ops/STOP; starts
 #                      ops/autoplay.sh with setsid nohup; prints its PID and live's commit (PID in ops/codex-ops/autoplay.pid)
 #   autoplay-reload <old PID> <play PID>  replace the verified old loop with WAIT_PID; preserve play and return versions
@@ -33,6 +34,13 @@ WIN=/mnt/c/Windows/System32
 STEAM_URI="steam://rungameid/2868840"
 TASK=sts2-launch-desktop
 action="${1:-}"; arg="${2:-}"
+case "$action" in
+  autoplay-start|autoplay-reload|ops-assist|codex-brain-cache-probe)
+    if [ -f "$DIR/LLM_DRAIN" ]; then
+      echo "LLM drain: new work deferred"
+      exit 75
+    fi ;;
+esac
 
 # Our processes (never this script): pid + command line.
 ours() {
@@ -54,6 +62,9 @@ hosting() {
 }
 
 case "$action" in
+  report-run)
+    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9A-Z]{12}$ ]] || exit 2
+    exec nice -n 19 python3 "$OPS/report_run.py" "$arg" ;;
   ops-assist)
     [ $# -eq 2 ] && [[ "$arg" =~ ^[a-z][a-z0-9-]{0,47}$ ]] || exit 2
     exec nice -n 19 python3 "$OPS/ops_assist.py" dispatch "$arg" ;;
@@ -95,6 +106,9 @@ case "$action" in
     printf '%s' "$out" | python3 "$OPS/mod-state.py" --json
     exit $? ;;
   autoplay-start)
+    mkdir -p "$DIR"
+    exec 7> "$DIR/report-run.lock"
+    flock -n 7 || { echo "report recovery is running; autoplay waits"; exit 75; }
     busy=$(pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh' | grep -v -E '^[0-9]+ (pgrep|grep) ')
     play=$(play_pids)
     if [ -n "$busy" ] || [ -n "$play" ]; then
@@ -111,7 +125,7 @@ case "$action" in
       else echo "invalid herdr autoplay receipt: ${out:0:200}; inspect processes before retrying"; exit 1; fi
     fi
     if [ -z "$pid" ]; then
-      setsid nohup bash "$ROOT/ops/autoplay.sh" > /dev/null 2>&1 < /dev/null &
+      setsid nohup bash "$ROOT/ops/autoplay.sh" 7>&- > /dev/null 2>&1 < /dev/null &
       pid=$!
       echo "$pid" > "$DIR/autoplay.pid"
     fi
@@ -207,7 +221,7 @@ for row in csv.reader(sys.stdin):
   boss-sim-check)
     CODEX_OPS_ROOT="$ROOT" exec nice -n 19 python3 "$ROOT/.worktrees/live/ops/codex-ops-learn.py" boss-check ;;
   strategy-proposal)
-    if [ $# -eq 2 ] && [ "$arg" = roy-20261011-silent-core-cycle-quantitative-learning ]; then
+    if [ $# -eq 2 ] && { [ "$arg" = roy-20261011-silent-core-cycle-quantitative-learning ] || [ "$arg" = ops-20261012-quantitative-continuation ]; }; then
       exec python3 "$OPS/codex-ops-learn.py" write --task strategy-proposal --request "$arg"
     fi
     [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$ ]] || exit 2
@@ -215,7 +229,7 @@ for row in csv.reader(sys.stdin):
   learner-merge)
     exec python3 "$OPS/codex-ops-learn.py" request-merge --branch "$arg" ;;
   learner-recheck)
-    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
+    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)(:[0-9a-f]{64})?$ ]] || exit 2
     exec nice -n 19 python3 "$OPS/codex-ops-learn.py" recheck --batch "$arg" ;;
   eval-metrics)
     [ $# -eq 3 ] || { echo "eval-metrics takes character and ascension" >&2; exit 2; }

@@ -1,0 +1,127 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-051302/agent
+
+ ❯ tests/silent-hp-recovery.test.ts (6 tests | 5 failed) 55ms
+   × the existing brain history carries reached rest and boundary HP, apart from opening recovery and won-fight costs 45ms
+   × the second run keeps its capped rest gain and the observed 28 to 61 transition distinct 3ms
+   × KFR rest and cross-floor gains are not the later same-floor rewind recovery 2ms
+   × the journal's actual SL snapshot restore removes failed-attempt recovery instead of counting it again 1ms
+   × another character, an unobserved ascension and a new run cannot inherit these recovery facts 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > the existing brain history carries reached rest and boundary HP, apart from opening recovery and won-fight costs
+AssertionError: expected '本局历程（已离开的楼层，按层按发生顺序，只追加）: 每层首行 = 层 房间…' to contain 'HP增加观测 44/70→65/70（+21；休息点内'
+
+- Expected
++ Received
+
+- HP增加观测 44/70→65/70（+21；休息点内
++ 本局历程（已离开的楼层，按层按发生顺序，只追加）: 每层首行 = 层 房间 层末 HP(/上限，变化时标出) ¥金币（房间 怪/精/问/休/店/宝/王/古，·=未知）；其下每行一件事: 决策「标签 [决策者]: 选择 — 未核实理由」（DS=DeepSeek；未核实理由 = DeepSeek 当时所写，不是事实）、「战斗 敌人: HP 战前→战后/上限 药:用掉的药水」、牌组/遗物/药水/上限变化（起始牌组与起始遗物不计）、路线规划。
++ 第1幕:
++ F9 · HP65/70 ¥20
++ F17 · HP19 ¥87
++  战斗 仪式兽: 67→19/70
++ 第2幕:
++ F18 · HP59 ¥87
++ F19 · HP46 ¥100
++  战斗 偷窃草蜢: 59→46/70
++ F20 · HP8 ¥110
++  战斗 地道虫: 46→8/70
++ F21 · HP8 ¥169
++ F22 · HP8 ¥31
++ 本层至今（F23，尚未结束；格式同 history）:
++  战斗 异螨: 8→进行中 10/70
+
+ ❯ tests/silent-hp-recovery.test.ts:44:18
+     42|   const journal = observe(rows.filter((x) => x.source_line <= 288793).…
+     43|   const output = text(journal, 288793, "map/route-plan");
+     44|   expect(output).toContain("HP增加观测 44/70→65/70（+21；休息点内");
+       |                  ^
+     45|   // The raw act id already changed on F17 MAP: retain the actual boun…
+     46|   expect(output).toContain("19/70→59/70（+40；跨层边界，来源未隔离；F17/MAP→F18/EVE…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > the second run keeps its capped rest gain and the observed 28 to 61 transition distinct
+AssertionError: expected [] to have a length of 4 but got +0
+
+- Expected
++ Received
+
+- 4
++ 0
+
+ ❯ tests/silent-hp-recovery.test.ts:58:31
+     56|   const journal = observe(evidence[1]!.frames.map((x) => x.source_line…
+     57|   const output = text(journal, 288367);
+     58|   expect(recoveries(journal)).toHaveLength(4);
+       |                               ^
+     59|   expect(output).toContain("42/70→63/70（+21；休息点内");
+     60|   expect(output).toContain("40/70→61/70（+21；休息点内");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > KFR rest and cross-floor gains are not the later same-floor rewind recovery
+AssertionError: expected [] to have a length of 6 but got +0
+
+- Expected
++ Received
+
+- 6
++ 0
+
+ ❯ tests/silent-hp-recovery.test.ts:68:70
+     66|   const journal = observe(evidence[2]!.frames.map((x) => x.source_line…
+     67|   const output = text(journal, 289353);
+     68|   expect(recoveries(journal).filter((x) => x.text.includes("休息点内"))).t…
+       |                                                                      ^
+     69|   expect(output).toContain("22/70→60/70（+38；跨层边界");
+     70|   expect(output).toContain("15/70→36/70（+21；休息点内");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > the journal's actual SL snapshot restore removes failed-attempt recovery instead of counting it again
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/silent-hp-recovery.test.ts:83:20
+     81|   journal.observe(frame(288823));
+     82|   const recovery = recoveries(journal);
+     83|   expect(recovery).toHaveLength(1);
+       |                    ^
+     84|   expect(recovery[0]!.text).toContain("8/70→10/70（+2；战斗开场");
+     85|   expect(recovery[0]!.text).not.toContain("+9");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/silent-hp-recovery.test.ts > another character, an unobserved ascension and a new run cannot inherit these recovery facts
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/silent-hp-recovery.test.ts:120:31
+    118|   expect(recoveries(journal)).toEqual([]);
+    119|   journal.observe(frame(288095));
+    120|   expect(recoveries(journal)).toHaveLength(1);
+       |                               ^
+    121|   expect(recoveries(journal)[0]!.text).toContain("42/70→63/70");
+    122| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  05:20:05
+   Duration  537ms (transform 296ms, setup 263ms, import 99ms, tests 55ms, environment 0ms)
+

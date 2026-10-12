@@ -1,0 +1,75 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-021301/agent
+
+ ❯ tests/silent-demon-input.test.ts (24 tests | 3 failed) 93ms
+   × the production question exposes the two remaining slots and still lets Jev choose either original target 12ms
+   × all six fixed drinks enter the actual solver as six poison, despite the spent manual play cap 46ms
+   × the final fixed turn's two poison ticks match 159 to 74, without claiming survival 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-demon-input.test.ts > the production question exposes the two remaining slots and still lets Jev choose either original target
+AssertionError: expected undefined to match object { …(4) }
+
+- Expected:
+{
+  "continuation_verified": false,
+  "energy_now": 3,
+  "energy_sufficient_for_target_alone": true,
+  "remaining_manual_plays_upper_bound": 2,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-demon-input.test.ts:68:19
+     66|     const key = `card${index}`;
+     67|     const facts = JSON.parse(decision.questions.pick.criteria[key]!).h…
+     68|     expect(facts).toMatchObject({ remaining_manual_plays_upper_bound: …
+       |                   ^
+     69|       energy_sufficient_for_target_alone: true, continuation_verified:…
+     70|     expect(facts.hand_now.map((c: Raw) => c.card_id)).toEqual(["DEFEND…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/silent-demon-input.test.ts > all six fixed drinks enter the actual solver as six poison, despite the spent manual play cap
+AssertionError: expected undefined to match object { Object (poison, known, ...) }
+
+- Expected:
+{
+  "damage": null,
+  "known": true,
+  "poison": 6,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-demon-input.test.ts:123:20
+    121|     const input = inputFor(raw);
+    122|     const potion = input.hand.find((c) => c.cardId === "POTION:POISON_…
+    123|     expect(potion).toMatchObject({ poison: 6, known: true, damage: nul…
+       |                    ^
+    124|     expect(input.player.maxPlays).toBe(0);
+    125|     const enemy = pair.before.combat.enemies[0]!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/silent-demon-input.test.ts > the final fixed turn's two poison ticks match 159 to 74, without claiming survival
+TypeError: Cannot read properties of undefined (reading 'index')
+ ❯ tests/silent-demon-input.test.ts:140:56
+    138|   const input = inputFor(structuredClone(evidence.locked));
+    139|   const potion = input.hand.find((c) => c.cardId === "POTION:POISON_PO…
+    140|   const plan = replaySteps(input, [{ cardIndex: potion.index, cardId: …
+       |                                                        ^
+    141|   expect(plan.outcome.damageDealt).toBe(evidence.locked.combat.enemies…
+    142|   expect(plan.outcome.damageDealt).toBe(85);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 21 passed (24)
+   Start at  02:23:30
+   Duration  1.32s (transform 907ms, setup 266ms, import 841ms, tests 93ms, environment 0ms)
+

@@ -2,6 +2,7 @@ import { asRecord, str, type JsonValue } from "../core/util/json.js";
 import type { GameState } from "../hand/mod/schema.js";
 import type { PotionMc } from "./potion-mc.js";
 import type { Plan } from "./turn-solver.js";
+import { silentSummonCoverage } from "./silent-summon-coverage.js";
 
 // The combat planner owns rollout-live; this formatter accepts only its factual fields.
 type ScopeRollout =
@@ -36,6 +37,7 @@ export function silentSimulationReference(
   return {
     note: "选项数字是代码模型参考，受未建模效果、抽牌重算和推演范围限制。依据当轮代价、成长与后续证据选择整场打法；simulation_reference分列这些限制，无未知标记也不代表已经校准。",
     simulation_reference: {
+      ...silentSummonCoverage(state),
       rollout: {
         available: active !== null,
         scope: forecast ? "sampled_horizon" : active ? "current_turn_and_clock" : "unavailable",

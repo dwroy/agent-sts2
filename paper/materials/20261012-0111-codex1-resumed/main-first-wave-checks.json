@@ -1,0 +1,35 @@
+[
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "tests/learner-startup-recovery.test.ts",
+      "tests/learner-check-continuation.test.ts",
+      "tests/calibration-dispatch-fixtures.test.ts",
+      "tests/silent-smoggy-selection.test.ts",
+      "tests/silent-discard-plan.test.ts",
+      "tests/llm-handoff.test.ts",
+      "tests/llm-switch.test.ts"
+    ],
+    "exit_code": 0
+  }
+]
