@@ -1,5 +1,6 @@
 import { asArray, asRecord, numOrNull, str } from "../../agent/src/core/util/json.js";
 import { selectionObservation } from "./selection-observation.js";
+import { terminalSelectionObservation } from "./selection-terminal.js";
 
 type Row = Record<string, unknown>;
 const lineText = (value: unknown): string => str(value).replace(/, then /g, ", ").trim();
@@ -58,7 +59,8 @@ function observation(row: Row) {
     enemies: asArray(combat.enemies).map((item) => {
       const enemy = asRecord(item);
       return { index: enemy.index ?? null, id: enemy.enemy_id ?? null, hp: enemy.current_hp ?? null,
-        max_hp: enemy.max_hp ?? null, alive: enemy.is_alive ?? null, powers: enemy.powers ?? null };
+        max_hp: enemy.max_hp ?? null, alive: enemy.is_alive ?? null, powers: enemy.powers ?? null,
+        intents: enemy.intents ?? null };
     }),
   };
 }
@@ -148,6 +150,8 @@ export function auditSelectionExecution(input: unknown) {
   const linkedActions = observedActions.map((item, index) => ({ ...item,
     observed_interval: selectionObservation(decisions[index]!, decisions[index + 1], item.before,
       observedActions[index + 1]?.before ?? null),
+    terminal_observation: terminalSelectionObservation(run, decisions[index]!, decisions[index + 1], item.before,
+      observedActions[index + 1]?.before ?? null),
   }));
   const segments = [];
   for (let i = 0; i < decisions.length; i++) {
@@ -180,12 +184,13 @@ export function auditSelectionExecution(input: unknown) {
     });
   }
   return { schema: 1, character: "silent", ascension: 10, run_id: runId, segments,
-    observed_intervals: observedIntervals,
+    observed_intervals: observedIntervals, observed_actions: linkedActions,
     limitations: ["同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
       "completed 只代表动作接口回执；pending 不当成已生效。",
       "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。",
       "相邻原始决策的前后快照仅描述观测区间，不能认证中间没有未落盘动作；持有手牌不等于已建立能力。",
       "缺原行号、跨尝试、非结束回合的跨轮或状态匹配不唯一时不连接后帧；敌人索引不作为跨帧实体身份。",
       "连续原决策的前后状态仅记观测差值；能力出现时点、净HP变化不证明单卡因果或完整候选收益；缺失能力列表不当零层。",
-      "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。"] };
+      "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。",
+      "结束页尝试号为空只在已核结束回合/最终结束页的连续决策与状态中单列；零血净损不等于完整入伤，显示攻击减当前挡仅为算术参考。"] };
 }

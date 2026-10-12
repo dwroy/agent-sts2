@@ -1,0 +1,391 @@
+{
+  "run": {
+    "run_id": "8JRE1C4H4Z2W",
+    "ended": "2026-10-07T08:17:09.498Z",
+    "victory": false,
+    "floor": 33,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "b0f41f03+dirty",
+    "decisions": 659,
+    "jev_calls": 139,
+    "deepseek_calls": 31,
+    "claude_calls": 0,
+    "tokens": 704756,
+    "ds_tokens_in": 3887567,
+    "ds_tokens_out": 8077,
+    "ds_cache_hit": 2608768,
+    "deciders": {
+      "codex": 45,
+      "code": 296,
+      "jev": 139,
+      "jev-plan": 179
+    },
+    "death_fight": [
+      "无厌沙虫"
+    ]
+  },
+  "decisions": [
+    {
+      "ts": "2026-10-07T08:17:06.853Z",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 11,
+      "label": "combat/least-loss",
+      "decision_id": "d0ea5e22-6919-4925-89b9-5cf3aed62396",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:154:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:LEADING_STRIKE:false|1:STRIKE_SILENT:false|2:DEADLY_POISON:false\",\"hp\":5,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:22:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":11}",
+      "chosen": {
+        "action": "end_turn"
+      },
+      "expect": {
+        "turn": 11,
+        "from": "decision"
+      },
+      "sl_attempt": 6,
+      "sl_reloads": 5,
+      "run_id": "8JRE1C4H4Z2W",
+      "observed_ts": "2026-10-07T08:17:06.851Z",
+      "result": "completed: Action completed.",
+      "_offset": 683356830,
+      "_source_sha256": "bf1817e43a4d51f1432873148b19d3897cc74cbc2435be774fd7f7513e7b2fd7",
+      "_line": 270441
+    },
+    {
+      "ts": "2026-10-07T08:17:09.498Z",
+      "screen": "GAME_OVER",
+      "floor": 33,
+      "turn": 11,
+      "label": "run/finalize",
+      "decision_id": "1fc2d93a-5a04-4424-b98d-9bc9d98b990a",
+      "fingerprint": "{\"actions\":[\"continue_game_over\"],\"combat\":false,\"enemies\":\"0:130:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"\",\"hp\":0,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"GAME_OVER\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":11}",
+      "chosen": {
+        "action": "continue_game_over"
+      },
+      "sl_attempt": null,
+      "sl_reloads": 5,
+      "run_id": "8JRE1C4H4Z2W",
+      "observed_ts": "2026-10-07T08:17:09.498Z",
+      "result": "completed: Action completed.",
+      "_offset": 683358227,
+      "_source_sha256": "7b1ecefac415f2aa83d82c01ce973afbf8b1ba13ed1e206a2b7a3674f15c6c09",
+      "_line": 270442
+    }
+  ],
+  "states": [
+    {
+      "ts": "2026-10-07T08:17:06.853Z",
+      "observed_ts": "2026-10-07T08:17:06.851Z",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:154:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:LEADING_STRIKE:false|1:STRIKE_SILENT:false|2:DEADLY_POISON:false\",\"hp\":5,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:22:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":11}",
+      "screen": "COMBAT",
+      "session": "singleplayer/run",
+      "state": {
+        "run_id": "8JRE1C4H4Z2W",
+        "screen": "COMBAT",
+        "turn": 11,
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 5
+        },
+        "combat": {
+          "player": {
+            "current_hp": 5,
+            "max_hp": 72,
+            "block": 22,
+            "energy": 0,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "AFTERIMAGE_POWER",
+                "name": "余像",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "DEXTERITY_POWER",
+                "name": "敏捷",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 4,
+            "attacks_played_this_turn": 2,
+            "skills_played_this_turn": 2
+          },
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "LEADING_STRIKE",
+              "name": "先制打击",
+              "upgraded": false,
+              "target_type": "AnyEnemy",
+              "requires_target": true,
+              "target_index_space": "enemies",
+              "valid_target_indices": [
+                0
+              ],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "造成{Damage:diff()}点伤害。 将{Shivs:diff()}张小刀加入你的手牌。",
+              "resolved_rules_text": "造成4点伤害。 将2张小刀加入你的手牌。",
+              "dynamic_values": [
+                {
+                  "name": "Damage",
+                  "base_value": 3,
+                  "current_value": 4,
+                  "enchanted_value": 3,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Shivs",
+                  "base_value": 2,
+                  "current_value": 2,
+                  "enchanted_value": 2,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": false,
+              "can_play_result": false,
+              "unplayable_reason": "not_enough_energy",
+              "unplayable_reason_raw": "EnergyCostTooHigh",
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 1,
+              "card_id": "STRIKE_SILENT",
+              "name": "打击",
+              "upgraded": false,
+              "target_type": "AnyEnemy",
+              "requires_target": true,
+              "target_index_space": "enemies",
+              "valid_target_indices": [
+                0
+              ],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "造成{Damage:diff()}点伤害。",
+              "resolved_rules_text": "造成7点伤害。",
+              "dynamic_values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 7,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": false,
+              "can_play_result": false,
+              "unplayable_reason": "not_enough_energy",
+              "unplayable_reason_raw": "EnergyCostTooHigh",
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 2,
+              "card_id": "DEADLY_POISON",
+              "name": "致命毒药+",
+              "upgraded": true,
+              "target_type": "AnyEnemy",
+              "requires_target": true,
+              "target_index_space": "enemies",
+              "valid_target_indices": [
+                0
+              ],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "给予{PoisonPower:diff()}层中毒。",
+              "resolved_rules_text": "给予7层中毒。",
+              "dynamic_values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 7,
+                  "current_value": 7,
+                  "enchanted_value": 7,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": false,
+              "can_play_result": false,
+              "unplayable_reason": "not_enough_energy",
+              "unplayable_reason_raw": "EnergyCostTooHigh",
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "THE_INSATIABLE",
+              "name": "无厌沙虫",
+              "current_hp": 154,
+              "max_hp": 341,
+              "base_max_hp": 341,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "SANDPIT_POWER",
+                  "name": "沙坑",
+                  "amount": 2,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 24,
+                  "is_debuff": true
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 6,
+                  "is_debuff": false
+                }
+              ],
+              "intent": "LUNGING_BITE_MOVE",
+              "move_id": "LUNGING_BITE_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "37",
+                  "damage": 37,
+                  "hits": 1,
+                  "total_damage": 37,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "_offset": 8515968305,
+      "_source_sha256": "865cfac14c0d05a6a9945c750854a60c9b193eb5f764363be10ad392f2a61147",
+      "_line": 276433
+    },
+    {
+      "ts": "2026-10-07T08:17:09.498Z",
+      "observed_ts": "2026-10-07T08:17:09.498Z",
+      "fingerprint": "{\"actions\":[\"continue_game_over\"],\"combat\":false,\"enemies\":\"0:130:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"\",\"hp\":0,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"GAME_OVER\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":11}",
+      "screen": "GAME_OVER",
+      "session": "singleplayer/run",
+      "state": {
+        "run_id": "8JRE1C4H4Z2W",
+        "screen": "GAME_OVER",
+        "turn": 11,
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 0
+        },
+        "combat": {
+          "player": {
+            "current_hp": 0,
+            "max_hp": 72,
+            "block": 0,
+            "energy": 0,
+            "stars": 0,
+            "focus": 0,
+            "powers": [],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 4,
+            "attacks_played_this_turn": 2,
+            "skills_played_this_turn": 2
+          },
+          "hand": [],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "THE_INSATIABLE",
+              "name": "无厌沙虫",
+              "current_hp": 130,
+              "max_hp": 341,
+              "base_max_hp": 341,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "SANDPIT_POWER",
+                  "name": "沙坑",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 23,
+                  "is_debuff": true
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 6,
+                  "is_debuff": false
+                }
+              ],
+              "intent": "LUNGING_BITE_MOVE",
+              "move_id": "LUNGING_BITE_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "37",
+                  "damage": 37,
+                  "hits": 1,
+                  "total_damage": 37,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "_offset": 8516011005,
+      "_source_sha256": "eec931527e9ce750d3c06054d653ef71aa20ea5b2099a3d0caa23ee0b1b1a2a3",
+      "_line": 276434
+    }
+  ]
+}
