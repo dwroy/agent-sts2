@@ -23,6 +23,7 @@ import { cardOutcome } from "../../knowledge/outcome-facts.js";
 import { survivorDiscardFacts } from "./silent-discard-facts.js";
 import { survivorSmoggyFacts } from "./silent-smoggy-selection.js";
 import { handTrickSlothFacts } from "./silent-hand-trick-facts.js";
+import { sandpitDiscardFacts } from "./silent-sandpit-discard.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -195,6 +196,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // Bash+ the plan played next).
   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
   const source = env.screenMemory.cardSource;
+  const sandpitFacts = sandpitDiscardFacts(state, source?.action === "play_card" && source.id === "PREPARED" &&
+    source.turn === state.turn && source.fight === facingFightOf(state));
   const discardFacts = survivorDiscardFacts(state, source?.action === "play_card" && source.id === "SURVIVOR" &&
     source.turn === state.turn && source.fight === facingFightOf(state));
   const smoggySource = env.screenMemory.cardSource;
@@ -239,6 +242,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         ...(discardFacts?.has(index) ? { discard_snapshot: discardFacts.get(index)! } : {}),
         ...(smoggyFacts?.has(index) ? { smoggy_after_discard: smoggyFacts.get(index)! } : {}),
         ...(handTrickFacts?.has(index) ? { hand_trick_resources: handTrickFacts.get(index)! } : {}),
+        ...(sandpitFacts ? { sandpit_after_this_discard: sandpitFacts.options.get(index)! } : {}),
       } satisfies JsonValue,
     };
     // DeepSeek's view: the value's parts, and that the ranking is a reference ("120 = 80 + 40 ..."; UNRL F14 read
@@ -294,7 +298,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
 
   const params = {
     label: `selection/${verb}`,
-    instructions: discardPlan
+    instructions: sandpitFacts
+      ? "选择要弃掉的牌。参考 sandpit_discard 的独立沙坑截止、当前剩费与候选弃后逃离；剩余弃牌也要完成，保留逃离不保证扛过攻击。原计划后继信息仅供核对，所有候选都可选。"
+      : discardPlan
       ? "选择要弃掉的牌。参考 discard_plan 的剩余动作和候选对后继的影响；原整条预测以完成后继为条件，所有候选都可选。"
       : forThisTurn
       ? `Which card should I ${verb}? This card is only for this turn — judge its immediate effect (block against the incoming attack, damage, lethal), not its deck-building rating.`
@@ -305,7 +311,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     options,
     // Exhaust picks happen every turn with Baking Gloves and are low-stakes: code always decides.
     codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : verb === "exhaust" || topDanger ? 0 : 6,
-    maxModelOptions: smoggyFacts || handTrickFacts ? options.length : 4,
+    maxModelOptions: smoggyFacts || handTrickFacts || sandpitFacts ? options.length : 4,
     state: {
       run_brief: briefJson(env.brief),
       situation: {
@@ -316,6 +322,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}),
         ...pickNotOfferedNote(env, selectionTask(kind, prompt)),
         ...(discardPlan ? { discard_plan: discardPlan.context } : {}),
+        ...(sandpitFacts ? { sandpit_discard: sandpitFacts.context } : {}),
         ...(forThisTurn
           ? {
               note: "this card is only for this turn — judge its immediate effect",
