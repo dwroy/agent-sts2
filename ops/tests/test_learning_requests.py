@@ -160,6 +160,8 @@ class FlowTests(unittest.TestCase):
         self.assertEqual(len(notices), 2)
         for p in notices:
             notice = json.loads(p.read_text())
+            self.assertTrue(notice['ops_forwarded'])
+            self.assertFalse(notice['watcher_received'])
             self.assertFalse(notice['roy_notified'])
             notice['last_queued_at'] = 1
             flow.atomic(p, notice)
@@ -167,6 +169,8 @@ class FlowTests(unittest.TestCase):
         self.tick()
         self.assertEqual(len(list((self.directory / 'queue').glob('*.md'))), count + 2)
         self.assertEqual(len(self.starts), 1)
+        self.assertEqual((self.root / 'ops/inbox-dev.md').read_text().count('learning-notice:'), 2)
+        self.assertEqual((self.root / 'notes/for-roy.md').read_text().count('learning-notice:'), 2)
 
     def test_supplement_arriving_before_finish_without_a_tick_stays_pending(self):
         self.tick()

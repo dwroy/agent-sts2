@@ -2492,3 +2492,5 @@
 - 2026-10-12T20:45:45+08:00 watcher codex：按Roy学习入库与异议告知授权，补独立于批done的持久学习要求、同thread续跑及逐项live经验/消费者验收；缺回执/停滞/缺证主动经原ops通知watcher/Roy并持久重试，明确通知逐阶段回执，未改ops prompt。共用原调度器/策略槽/工作树租约与学习者沙箱/home/密钥预检，保留原批输入和失败，不重启对局。源tsc及固定沙箱342文件3408项通过，最终Python13项通过、密钥扫描通过；仍待实际main/live合入、原任务首次真实回复及通知场景验收，不记玩法版本。检查learner/runs/continuity-verification-20261012/verification.json。
 
 - 2026-10-12T20:55:04+08:00 watcher codex：学习连续性补充固定竞态：新补充可在最后一次tick之后、旧学习批返回之前到达；finish现重读注册revision，旧结果不得关闭新要求。固定Python14项、tsc及受影响vitest2文件3项通过；342文件3408项既过覆盖复用，不重复全套。原失败与检查均保留，待随同一上线任务合入。
+
+- 2026-10-12T21:05:26+08:00 watcher codex：结合本轮原ops长时间宿主检查导致事件排队的实际观察，异议/阻塞通知改由ops程序先幂等转录到现有watcher收件箱及for-roy、保存逐字回执，再让ops模型处理；不把转录冒称watcher已读或Roy已知。fixed14项含首次投递/重试不重复、后续阶段ACK约束，tsc及vitest2项通过；旧342文件3408覆盖复用。纯通知流程，无游戏/模型路由/ops prompt改动。

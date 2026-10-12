@@ -22,7 +22,7 @@ schema=`learning-request-v1`；authorized_by=`Roy`；goal=`experience-live`；id
 
 学习者questions逐项写原观点、不同结论、证据、影响的经验ID、建议下一步。反证可以入库为否定或限定经验；证据不足不能硬写正确。足够证据的授权修正可继续，其通知不得省略。
 
-每项异议生成持久`ops/codex-ops/learning-notices/<id>.json`和原ops队列事件。ops先追加`ops/inbox-dev.md`、`notes/for-roy.md`，再发送给现有watcher；watcher在本会话明确告诉Roy。各阶段提供实际发送/接收/用户可见回复的项目内回执：
+每项异议生成持久`ops/codex-ops/learning-notices/<id>.json`和原ops队列事件。ops程序先将学习者原文追加到现有watcher收件箱`ops/inbox-dev.md`和`notes/for-roy.md`并记录ops_forwarded实际写入回执，不等ops模型空闲；这不代表watcher已读或Roy已知。ops模型继续处理问题，可用时提醒现有watcher；watcher读取后在本会话明确告诉Roy。各阶段提供实际发送/接收/用户可见回复的项目内回执：
 
 ```bash
 python3 ops/learning_requests.py ack --notice <id> --stage ops_forwarded --receipt <真实发送回执>

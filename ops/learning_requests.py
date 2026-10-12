@@ -84,10 +84,35 @@ def notify(root, state_dir, record, kind, message):
                         "request_sha256": record.get("request_sha256"),
                         "created_at": time.time(), "route": ["learner", "ops", "watcher", "Roy"],
                         "ops_forwarded": False, "watcher_received": False, "roy_notified": False})
+    data = json.loads(notice.read_text())
+    if not data.get("ops_forwarded"):
+        # Relay the learner's exact words without waiting for a busy ops model.
+        # The inbox is the existing watcher channel; reading and informing Roy
+        # remain separate acknowledgements. The marker makes crash recovery safe.
+        marker = f"<!-- learning-notice:{token} -->"
+        line = (f"\n- {dt.datetime.now().isoformat()} [ops学习通知/{kind}] {record['id']}："
+                f"{message} 回执{notice}；watcher须读取并告知Roy，尚未确认用户收到。{marker}\n")
+        delivered = []
+        for relative in ("ops/inbox-dev.md", "notes/for-roy.md"):
+            destination = Path(root) / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            if not destination.exists() or marker not in destination.read_text():
+                with destination.open("a") as handle:
+                    handle.write(line)
+            delivered.append(relative)
+        evidence = Path(state_dir) / "learning-notices/receipts" / (token + ".inbox.json")
+        atomic(evidence, {"notice_id": token, "sender": "ops-learning-scheduler",
+                          "channel": "existing-watcher-inbox", "destinations": delivered,
+                          "marker": marker, "text": line})
+        receipt = evidence.with_name(token + ".ops-forwarded.json")
+        atomic(receipt, {"notice_id": token, "stage": "ops_forwarded", "actor": "ops", "status": "delivered",
+                         "evidence": {"path": str(evidence), "sha256": digest(evidence.read_bytes())}})
+        data["ops_forwarded"] = {"path": str(receipt), "sha256": digest(receipt.read_bytes()), "at": time.time()}
+        atomic(notice, data)
     text = (f"学习要求 {record['id']}：{message}\n通知回执：{notice}\n"
             "处理协议及回执格式：docs/learning-requests.md。\n"
             "Roy明确要求：ops须把问题原文、证据、与旧知识的差异及下一步交给watcher，由watcher告知Roy。"
-            "先在ops/inbox-dev.md和notes/for-roy.md追加，再向现有watcher会话转达；"
+            "程序已将原文写入ops/inbox-dev.md和notes/for-roy.md作为ops转达；请处理问题并在可用时提醒现有watcher会话；"
             "无法转达必须保留pending并报告阻塞。不要仅归档事件便称用户已知。"
             "用 python3 ops/learning_requests.py ack --notice <id> --stage ops_forwarded|watcher_received|roy_notified "
             "--receipt <项目内真实发送/接收回执文件> 分角色登记；queued不是已送达。\n")
