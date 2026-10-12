@@ -1,0 +1,311 @@
+[
+ {
+  "id": "silent-0177",
+  "ts": "2026-10-06T15:38:54+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "first_run": "UJ0K3G10609Y",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按钨合金棍/TUNGSTEN_ROD查询silent账本，并按静默猎手标题筛更早复盘，未检出更早持有该遗物且可比较实际失血的场景；不借用其他角色判断先验。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "UJ0K3G10609Y"
+   ],
+   "commits": [
+    "4367250b5fbf1484ca7ea8f312d13e4ce9d327a2",
+    "25937859a683493d7d75276dfd5a2fb74cbd9491",
+    "4128aa171248b29c3fe791d4f8ccfdb5500d085a",
+    "4087fb8c4547491093a763e9b8975f891eede0b2",
+    "258c3f3666c2c7f0d9053e4b15c98579e2bb4654"
+   ]
+  },
+  "kind": "bug-infra",
+  "claim": "钨合金棍未接入求解器回合失血：完整同线29血、13当前挡加斗篷扣1，对11×4攻击，代码预计损30/余-1，实际三次穿透各减1、损27/余2。turn-solver.ts:2910、2923、2931缺这个逐次减损；SL判官已识别不代表求解器实现。只定位单局多击失血高估，不声称修复能赢整场。",
+  "evidence": [
+   {
+    "run": "UJ0K3G10609Y",
+    "floor": 48,
+    "turn": 7,
+    "note": "第6次完整余像→防御+→致命毒药+→打击线与结束题均预计余-1；29血13挡，夜魇留手给斗篷扣1，实际29→2，对11×4三次穿透，差3。",
+    "role": "support",
+    "added": "2026-10-06T15:38:54+08:00"
+   },
+   {
+    "run": "UJ0K3G10609Y",
+    "floor": 48,
+    "turn": 4,
+    "note": "第6次结束题估损15，14当前挡加斗篷扣1对30，钨棍减1后实损14，43→29；单击补证。",
+    "role": "support",
+    "added": "2026-10-06T15:38:54+08:00"
+   }
+  ],
+  "note": "新的机制模型缺口；notes/fix-queue.md及fix-queue-v4.md未列钨合金棍，当前只读live b219de68 turn-solver.ts:2910/2923/2931、combat-plan.ts:2577、sl/judge.ts:1165。没有修改代码或队列。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-06T15:38:54+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T16:25:59+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T17:01:45+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix32",
+  "effect": null,
+  "notes": [
+   "新的机制模型缺口；notes/fix-queue.md及fix-queue-v4.md未列钨合金棍，当前只读live b219de68 turn-solver.ts:2910/2923/2931、combat-plan.ts:2577、sl/judge.ts:1165。没有修改代码或队列。",
+   "16:55 fix-done机械确认20261006-160711-fix-batch实际合入live并同步main；本项唯一S1.fix32，源4367250b5fbf1484ca7ea8f312d13e4ce9d327a2→实际代码25937859a683493d7d75276dfd5a2fb74cbd9491→固定发布4128aa171248b29c3fe791d4f8ccfdb5500d085a，最终发布4087fb8c/树9eae9fcc。证据UJ0K3G10609Y SILENT A10 F48 attempt6 T4/T7/T8；源及合后固定沙箱tsc0/vitest0/202文件2188例，原红绿撤源失败/恢复通过与夹具错误/边界补测/CLI拒绝历史保持。仅经CLI/by=ops登记本项shipped、首次证据/先验/claim/evidence/repeat/旧上线历史保持，0178/0180机制、0123经验独立，0172未实现保持。运维机械同步全部1035项已测源码/测试blob一致、未改机制或策略、未重复live合入、不覆盖七项后台知识刷新；只关闭对应队列，完整外部待learner-checks。"
+  ],
+  "shipped_at": "2026-10-06T17:01:45+08:00"
+ },
+ {
+  "id": "silent-0178",
+  "ts": "2026-10-06T15:38:54+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "first_run": "UJ0K3G10609Y",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按钨合金棍/TUNGSTEN_ROD查询silent账本，并按静默猎手标题筛更早复盘，未检出更早持有该遗物且可比较实际失血的场景；不借用其他角色判断先验。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "UJ0K3G10609Y",
+    "Z91JN3S3PQX2",
+    "L6745E2ND5CT"
+   ],
+   "experience": [
+    "silent-tungsten-rod-hp-loss-observation"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update/proposal-provenance-correction.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update/proposal-dexterity.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-231302-postmortem/proposal-Z-sandpit-sl.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-001303-experience-update/proposal-sandpit.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-171040-experience-update/proposal-resources.md"
+   ],
+   "commits": [
+    "eebcf4297065a97086ea4d430ae698a2b05c3dea",
+    "0e27b88ab6dacfc9aa42d8ca3820d2e741b1ce6d",
+    "261af56e0022cc0012b80870bd3f52bd121d45c2",
+    "90f7e5a6f370622a99021ffddbc4cf03df08e350",
+    "3bda3841756ba293f34b197542e6e9bee4dc1ed9",
+    "cfe666e2b23f85fe37215c44846b68fb5f12f3fa",
+    "f4c35b907643239ac7169a739f4baa3934103bff",
+    "be1408453ff2ae5facade7f2d78e2efeba40e641",
+    "3ae5a3c23f9a4aa6dba8a26629dfdc72e71931a4",
+    "38dfb55e377349c23435e46aa065de3d9542251f",
+    "dd07f4aa5ff392e474c575aa95c63b68e54a883a",
+    "4b1177d5a9d49ac9880c2e0fcfb524987d0fbd69",
+    "208e50e30d72de8aa862a48ff7920d8d1bd7b691",
+    "1d3b8508d4b58b2dc24815c8b740d95e7c54a48b",
+    "fab902a491574f35c7a61c115950c07fe7f40d54"
+   ],
+   "changelog": [
+    "## 2026-10-08 静默猎手 第九十四次增量：1 局 A10（version 2026-10-08.11，分支 exp-silent，eebcf429）",
+    "## 2026-10-08 静默猎手 第九十七次增量：1 局 A10（version 2026-10-08.14，分支 exp-silent，3bda3841）",
+    "2026-10-09 静默猎手 第一百一十二次增量：1 局 A10（version 2026-10-09.1，分支 exp-silent，3ae5a3c2）",
+    "## 2026-10-12 静默猎手 第一百八十八次增量：1 局 A10（version 2026-10-12.8，分支 exp-silent，208e50e3）"
+   ]
+  },
+  "kind": "mechanic",
+  "claim": "本局钨合金棍对每次实际失血减1，格挡全吸收的攻击不产生待减的失血。实验体末T4单击30对14当前挡与斗篷扣1，损14；T7四次11对总14挡，后三次原损8/11/11降为7/10/10、合27，较无棍少3；T8第三击穿3降为2仍扣光剩2血。只确认本局这些单击、多击及格挡组合，不外推其他减损交互。",
+  "evidence": [
+   {
+    "run": "UJ0K3G10609Y",
+    "floor": 48,
+    "turn": 4,
+    "note": "末次：30单击、14当前挡、一手牌斗篷扣补1，43→29实损14，与30-15-1一致。",
+    "role": "support",
+    "added": "2026-10-06T15:38:54+08:00"
+   },
+   {
+    "run": "UJ0K3G10609Y",
+    "floor": 48,
+    "turn": 7,
+    "note": "末次：11×4、13挡、一夜魇斗篷扣补1，29→2实损27=(8-1)+(11-1)+(11-1)。",
+    "role": "support",
+    "added": "2026-10-06T15:38:54+08:00"
+   },
+   {
+    "run": "UJ0K3G10609Y",
+    "floor": 48,
+    "turn": 8,
+    "note": "末次：2血21挡对8×5，第三击穿3、棍减1为2，实际死亡；死亡后的48意图不倒填为致死前40。",
+    "role": "support",
+    "added": "2026-10-06T15:38:54+08:00"
+   },
+   {
+    "run": "10GPK5XGHCK3",
+    "floor": 17,
+    "role": "support",
+    "note": "第94批静默原帧复核silent-tungsten-rod-hp-loss-observation，局部机制与整战因果分开；详见changes.json/historical-mechanisms.json/historical-rod.json/terminal-facts.json。",
+    "turn": 5,
+    "added": "2026-10-08T10:25:08+08:00"
+   },
+   {
+    "run": "K2JAGKVJAWZJ",
+    "floor": 46,
+    "role": "support",
+    "note": "第94批静默原帧复核silent-tungsten-rod-hp-loss-observation，局部机制与整战因果分开；详见changes.json/historical-mechanisms.json/historical-rod.json/terminal-facts.json。",
+    "turn": 6,
+    "added": "2026-10-08T10:25:08+08:00"
+   },
+   {
+    "run": "T0DGVABPV60U",
+    "role": "support",
+    "note": "本批本角色实帧/复盘复核支持silent-tungsten-rod-hp-loss-observation；逐回合、血档及SL数据在20261008-130540审计，观察与整战因果分开。",
+    "added": "2026-10-08T13:16:50+08:00"
+   },
+   {
+    "run": "Z91JN3S3PQX2",
+    "floor": 28,
+    "role": "support",
+    "note": "F28T3三击18对14挡，钨棍逐次减损后实损3；F33T6两击18、无挡实损16。末T13攻击预算16不当实损，未记录独立攻击过程。",
+    "turn": 3,
+    "added": "2026-10-08T23:47:04+08:00"
+   },
+   {
+    "run": "L6745E2ND5CT",
+    "floor": 48,
+    "turn": 7,
+    "role": "support",
+    "note": "末试敌−9力且虚弱、四连合4，0挡而26血保持；T8五次8对11挡后实26→1损25，与每次实际穿透减1一致。末T9死亡截断只见1→0，不反推未截断毛伤。",
+    "added": "2026-10-12T17:05:59+08:00"
+   }
+  ],
+  "note": "遗物真实机制与求解器漏接分账；首证在本局，先验unknown；未规定用药、路线或出牌优先级。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-06T15:38:54+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-08T10:25:08+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T10:25:09+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T10:38:28+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T10:46:37+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T10:55:07+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T13:16:50+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T13:16:52+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T13:22:37+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T13:32:09+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T23:47:04+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T23:52:21+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T00:24:16+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T00:24:18+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T00:40:58+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-09T00:50:34+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-12T17:05:59+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-12T17:25:53+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-12T17:25:57+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-12T17:36:16+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-12T17:57:19+08:00",
+    "by": "ops:codex",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp189",
+  "effect": null,
+  "notes": [
+   "遗物真实机制与求解器漏接分账；首证在本局，先验unknown；未规定用药、路线或出牌优先级。",
+   "第94批经验提案预关联；保留原claim/first_run/prior/repeat及旧上线历史。钨合金棍0178复用原观察，新增更早支持不倒改原首证；提交后proposed，打法源码交独立strategy-proposal。",
+   "代码提案 silent-proposal-ff1d168227e369e0 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-650ea306e8627f9e → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第94批静默经验源提交已完成；全部16条数据来源/五提案原文及两勘误保留，首证/prior/claim/support/repeat和旧上线历史不改。未标accepted/shipped；打法源码交独立strategy-proposal，经验数据提交不表示implemented。",
+   "第94次经验原数据2026-10-08.10→.11/增1改15退0/170 active，源eebcf429唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记16所属经验数据shipped。源247文件2604例tsc/vitest0、最终冻结经验定向1文件10例0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/report/failed及21项记录冲突历史不改。",
+   "第97批经验提交前关联；保留首证/prior/claim/支持与重犯及既往上线历史，源提交后登记proposed。",
+   "代码提案 silent-proposal-9e77e1e88c0cecd4 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第97批源提交完成；保留首证/prior/claim/support/repeat和旧上线历史，经验发布与策略实现分账，shipped交运维据实际live版本登记。",
+   "第97次经验原数据2026-10-08.13→.14/增1改15退0/176 active，源3bda3841唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记19所属经验数据shipped。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，四个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0293纯bug保持原观察/提案状态，不标代码实现；0294首证ZE8F192FKX24/A5及unknown先验保持。",
+   "20261008-231302-postmortem：核本局实盘后补支持，保持旧claim/first_run/prior/status/version与全部历史；未执行线不当整场因果。",
+   "代码提案 silent-proposal-90a4a4981be3c760 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第112批提案预关联；原claim/首证/prior/状态/版本及support/repeat保持，源提交后登记proposed。新局原帧/层/轮见numbers-checked和本任务audit。",
+   "代码提案 silent-proposal-6330c4ade7528ec9 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第112批经验已提交；仅登记proposed，实际数据shipped交运维据完成事件核实。代码提案未实现，旧首证/prior/claim/证据及状态/版本历史保持。",
+   "第一百一十二次经验仅原数据2026-10-08.28→2026-10-09.1，源3ae5a3c2增0改15退0/186 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp112。按原学习者ledger-map仅18所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/structure代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/16冲突/out/err/失败历史保持。",
+   "第188次静默经验预关联；保留原claim/first_run/prior/版本及历史。提交后登记proposed，实际shipped由运维核完成事件。",
+   "代码提案 silent-proposal-9a58b71ab52d3504 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "本批静默经验已提交：L6745E2ND5CT A10；来源/反例/原帧与机制历史回溯见本批report.md、changes.json及experience-integration.json。只登记proposed，不代表实际live或源码提案实现，运维按完成事件核实后登记shipped。",
+   "20261012-1749仅学习者2026-10-12.8经验1新增/15证据更新按experience-integration映射上线；不改claim/prior/证据，不把3待代码提案或完整量化/构筑/自然局效果记完成。原失效链接失败/20合入记录冲突保留，源tsc/3383与集成tsc/101通过；同树完整宿主检查待experience批回执。"
+  ],
+  "shipped_at": "2026-10-12T17:57:19+08:00"
+ }
+]
