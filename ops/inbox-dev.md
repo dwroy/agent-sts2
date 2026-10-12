@@ -1236,3 +1236,17 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-12 10:45 [运维 codex] 原宿主检查签名失败已由学习者源8fbb441eb修复测试隔离并上线live b21feab62，main已同步；tsc及29项定向宿主补验通过，原失败/跳过记录保留。游戏继续运行，未改变生产签名或打法；回执paper/materials/20261012-1034-ops/closure.json。
 - 2026-10-12 11:00 [运维 codex] 规则实际上线 S1.phase-current-facts1（源aad2700ab，live bd0f24e89、main 5a3f44c42）：旧题面未独立列组件持有、能力已建和当前敌毒/格挡/敏捷；新在SILENT/A10/F48已观察实验体形态单列这些现场事实并保留已兑现伤害未知，不改变候选/排序/自动动作。证据YF0LXT1QSTGG F48末试T3–T5、账本silent-0424/0021/0027/0028/0085；预期仅补题面信息，尚未证明自然采用或胜率收益，原宽提案/量化父项未完成。回退仅反向该源4文件增量并按常规检查合入，保留同期dc0e6080c离线观测及其他成果；原红2/绿25、组合tsc+3298通过，回执paper/materials/20261012-1047-ops/deployment.json。
 - 2026-10-12 11:11 [运维 codex] 经验实际上线S1.exp184，源02f642e74，live c1c3bf4cb / main 5f421ef71：版本12.2→12.3，F6XY4QJMS5RC A10证据新增于12条，新增/退役均0，221条和进阶范围保持。逐项旧/新原文与账本：paper/materials/20261012-1102-ops/rule-change-transcription.md（silent-footwork-block（silent-0005）旧→新见转录第1项；silent-strength-weak-observation（silent-0012,silent-0046）旧→新见转录第2项；silent-route-hp-observation（silent-0019）旧→新见转录第3项；silent-rest-buffer-observation（silent-0020）旧→新见转录第4项；silent-deck-burst-observation（silent-0021,silent-0385,silent-0125）旧→新见转录第5项；silent-piercing-wail-temporary-strength（silent-0046）旧→新见转录第6项；silent-ripple-basin-no-attack-block（silent-0048）旧→新见转录第7项；silent-malaise-x-debuff（silent-0053）旧→新见转录第8项；silent-kaiser-crab-facing-sl（silent-0065,silent-0161）旧→新见转录第9项；silent-cloak-clasp-end-turn-hand-block（silent-0072）旧→新见转录第10项；silent-paels-legion-card-block-double（silent-0180）旧→新见转录第11项；silent-bottled-potential-execution-observation（silent-0356）旧→新见转录第12项）。预期只更新经验上下文及证据，未证明自然采用或整场因果收益；四提案和量化父项仍待完成。回退仅反向02f642e74经验增量并保留后续并行新增，不回退测试修复或其他学习成果；原预检/合入失败保持，源3254及集成44通过。
+
+## 2026-10-12 11:29:34 CST S1.snakebite-discard1
+
+[学习者策略上线：静默 A10 赌徒替换中的普通蛇咬]
+
+- 旧规则：无显式弃牌子集时，thisTurnScore 未计施毒；普通2费7毒蛇咬为负分，被以 no value this turn 自动弃掉。
+- 新规则：在已观察静默A10、同战同轮赌徒特酿选择、2费7毒普通蛇咬可支付且原帧可打/单一合法目标、双方无powers的范围，旧自动候选若是蛇咬，改由Jev比较全部剩余牌与确认。展示7毒及当步HP直伤0、费用、当前资源和完整敌人原帧；长期血价未知、所有选项并列，仍可弃蛇咬。效果签名核对副本，避免选择索引重排误配旧手牌。
+- 范围保持：不修改共享评分、SL、终局或药价；已有显式弃牌计划、状态/诅咒自动弃和其他角色/进阶/升级/未知阻挡组合仍走旧路。没有新增固定留牌优先级。
+- 证据与账本：CMS8QL9E3C5U A10 F19T1 d357514—357518、s367870—367875；F17T1 s367809→367810、F19T5 s367896→367897实见7毒/付2费/当步HP不变。silent-0425；原提案silent-proposal-54bd844abc57bb62（原关联silent-0220保留）。来源20261012-101301-postmortem，实现20261012-104302-strategy-proposal；提案 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-104302/learner/runs/20261012-104318-strategy-proposal/proposal.md。
+- 预期影响与限制：消除该限定范围的错误自动弃牌判定，让现有战斗选择器决定。只有一局的机制与消费者复现；保留两张的整轮/整战反事实、新局自然采用和收益未知，不能宣称追回46血或改善末战胜率。不是A11学习结论。
+- 验证：固定回归20例，撤入口3失败/17通过，恢复20通过；源码工作树tsc0、330文件3283例；合后结果与实际版本/提交见下列核验记录。gitleaks通过。
+- 回退：仅revert源码5217167aa8ba0184e733a4e6c7ce3f102690f231，另追加回退版本和decision-log（不删除既有版本记录），不覆盖知识刷新、其他并行源码、账本/提案/失败历史；不改运维prompt，不停对局。
+
+实际源码：5217167aa8ba0184e733a4e6c7ce3f102690f231；合入：f48154c11d41cb82c762a0afd671fe430ef199b8；版本记录：5d820febbfd41397a0990c222154e54577777153。合后tsc0、332文件3319例通过，未改代码重跑；调度器宿主完整检查另续。请运维核实实际祖先与版本后仅登记本限定范围shipped；不把其他纯施毒牌/未知组合或自然收益标完成。

@@ -2350,3 +2350,6 @@
 
 - 2026-10-12 11:31:14 CST 运维 codex：处理11:28 fix-done111301，原工作树HEAD=基线5f421ef71、全工作树干净、无新增提交/源码；核8fbb441eb与bbc5b993a均已在main/live，原tsc0、去重14文件110项定向通过记录归档，不重跑。main/live既有差异使严格空批verify_empty_fix=null，保留调度failed/rc0/merged-null/冷却，不造合入、eval或shipped，也不派重复批。源报告/预检原件见paper/materials/20261012-1128-ops。
 - 2026-10-12 11:31:14 CST 运维 codex：收齐原1102待锁宿主接续a0b31ecc…：在f48154c11/treeb9e1d633e2b72ee993f23a6902c4283c8ebedabf上tsc0，rollout-best-added4与rollout-live13共17项全部通过，manifest、日志和两结果SHA逐一一致。仅所选测试，保留原090027完整rc1与原130/124/等待回执，未全量重跑、不视为并行5217167aa策略完成；测试时钟修复/经验12.3的定向补验待办已闭合，无新测试请求、无需回滚。追加完成回执paper/materials/20261012-1102-ops/host-completion.json；其余学习/量化父项不变，未重启游戏或推送。
+
+- 2026-10-12 11:38:54 CST 运维 codex：处理11:31 strategy-done104302，已核原源5217167aa→live f48154c11→版本记录5d820febb均真实祖先；17原日志字节SHA/夹具SHA与源增量patch-id一致，原红3绿20、源tsc0/3283及合后tsc0/3319回执留档，不另审学习内容或重跑。主检出安全预检仅原4文件，机械同步main a9ac15d5ccb668e11510f0b37c85eb4f347e341d；从实际发布记录转录唯一S1.snakebite-discard1版本，原双通知各一份完整归档，3原CLI账本记录+1限定silent-0425 shipped。仅学习者声明的已核A10普通蛇咬消费范围，其他组合/整战与自然收益不外推；宿主完整检查已由原调度链启动，checks回执未到，本轮不派新检查。
+- 2026-10-12 11:38:54 CST 运维 codex：该普通批未派proposal_ids，实际results(report,batch)=[]，原提案54bd844abc57bb62仍pending；与报告implemented及真实live源码不同步。已登记非阻塞基础设施项unassigned-strategy-proposal-resolution，沿原普通fix链接续；不造新ID/租约、不手改队列或冒称原提案已关闭。源码/版本/限定账本上线真实有效，其他学习与量化父任务保持；回执paper/materials/20261012-1131-ops。
