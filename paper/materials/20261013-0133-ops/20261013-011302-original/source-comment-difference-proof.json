@@ -1,0 +1,212 @@
+[
+  {
+    "path": "agent/src/reflex/card-model.ts",
+    "changed_comment_lines": 2,
+    "only_Roy_Dai_comment_replacement": true,
+    "changes": [
+      {
+        "head": " * (potion-mc.ts, Roy 2026-09-28) this turn's option never uses it: only the rollout's later turns (the",
+        "live": " * (potion-mc.ts, Dai 2026-09-28) this turn's option never uses it: only the rollout's later turns (the"
+      },
+      {
+        "head": " * Random potions (Roy 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as",
+        "live": " * Random potions (Dai 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/turn-solver.ts",
+    "changed_comment_lines": 2,
+    "only_Roy_Dai_comment_replacement": true,
+    "changes": [
+      {
+        "head": " * Kept (Roy 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal",
+        "live": " * Kept (Dai 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal"
+      },
+      {
+        "head": "  // A potion drunk is HP paid later (potion-cost.ts, Roy 2026-09-30): its held value, at the HP weight. Until batch K a",
+        "live": "  // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/rollout.ts",
+    "changed_comment_lines": 2,
+    "only_Roy_Dai_comment_replacement": true,
+    "changes": [
+      {
+        "head": " *          (potion-cost.ts, Roy 2026-09-30: its held value in the potion table, taken off the solver's score):",
+        "live": " *          (potion-cost.ts, Dai 2026-09-30: its held value in the potion table, taken off the solver's score):"
+      },
+      {
+        "head": "   * The \"no potion this fight\" line (Roy 2026-09-30): a potion-free line (its own Plan object, a copy of a shown",
+        "live": "   * The \"no potion this fight\" line (Dai 2026-09-30): a potion-free line (its own Plan object, a copy of a shown"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/rollout-live.ts",
+    "changed_comment_lines": 5,
+    "only_Roy_Dai_comment_replacement": true,
+    "changes": [
+      {
+        "head": "   * The \"no potion this fight\" line (Roy 2026-09-30): `line` a copy of the potion-free `base` (a shown line), rolled",
+        "live": "   * The \"no potion this fight\" line (Dai 2026-09-30): `line` a copy of the potion-free `base` (a shown line), rolled"
+      },
+      {
+        "head": " * line stays an option (Roy: potions are never filtered); it is only told apart.",
+        "live": " * line stays an option (Dai: potions are never filtered); it is only told apart."
+      },
+      {
+        "head": " * Potion costs (potion-cost.ts, Roy 2026-09-30): the value has each line's drinks taken off at their cost; when some",
+        "live": " * Potion costs (potion-cost.ts, Dai 2026-09-30): the value has each line's drinks taken off at their cost; when some"
+      },
+      {
+        "head": "  // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Roy",
+        "live": "  // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Dai"
+      },
+      {
+        "head": " * The rollout's best among the shown options, or the shown options tied for it (Roy 2026-09-29; consistency",
+        "live": " * The rollout's best among the shown options, or the shown options tied for it (Dai 2026-09-29; consistency"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/combat-plan.ts",
+    "changed_comment_lines": 29,
+    "only_Roy_Dai_comment_replacement": true,
+    "changes": [
+      {
+        "head": " * Potions are Jev's call (Roy 2026-09-28): the solver prices a potion line on its simulated outcome",
+        "live": " * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome"
+      },
+      {
+        "head": " * less the potion's cost (Roy 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss",
+        "live": " * less the potion's cost (Dai 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss"
+      },
+      {
+        "head": " * Every modelled potion in the belt on at least one shown line (Roy 2026-09-28: Jev always has the",
+        "live": " * Every modelled potion in the belt on at least one shown line (Dai 2026-09-28: Jev always has the"
+      },
+      {
+        "head": " * The enemies a turn can be aimed at, one group per enemy id (Roy 2026-09-28: identical enemies are not",
+        "live": " * The enemies a turn can be aimed at, one group per enemy id (Dai 2026-09-28: identical enemies are not"
+      },
+      {
+        "head": " * Per-target options (Roy 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,",
+        "live": " * Per-target options (Dai 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,"
+      },
+      {
+        "head": " * Roy 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the",
+        "live": " * Dai 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the"
+      },
+      {
+        "head": " * DeepSeek's run plan, whole and on one line (Roy 2026-09-28: Jev sees the plan's strategy and boss prep,",
+        "live": " * DeepSeek's run plan, whole and on one line (Dai 2026-09-28: Jev sees the plan's strategy and boss prep,"
+      },
+      {
+        "head": "  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Roy 2026-09-30): a fact, no rule.",
+        "live": "  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Dai 2026-09-30): a fact, no rule."
+      },
+      {
+        "head": " * What a drink costs on this question (potion-cost.ts, Roy 2026-09-30), for potion_context: where the options'",
+        "live": " * What a drink costs on this question (potion-cost.ts, Dai 2026-09-30), for potion_context: where the options'"
+      },
+      {
+        "head": "// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Roy 2026-09-28: card",
+        "live": "// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Dai 2026-09-28: card"
+      },
+      {
+        "head": "/** Distinct lines shown to Jev (Roy 2026-09-28: 10, was 4; the rollout covers every shown line). */",
+        "live": "/** Distinct lines shown to Jev (Dai 2026-09-28: 10, was 4; the rollout covers every shown line). */"
+      },
+      {
+        "head": " * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Roy",
+        "live": " * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Dai"
+      },
+      {
+        "head": "/** Extra HP (over the cheapest line) a fight may accept (Roy 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */",
+        "live": "/** Extra HP (over the cheapest line) a fight may accept (Dai 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */"
+      },
+      {
+        "head": " * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Roy 2026-10-02: certain death, never",
+        "live": " * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Dai 2026-10-02: certain death, never"
+      },
+      {
+        "head": "  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Roy 2026-09-28).",
+        "live": "  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28)."
+      },
+      {
+        "head": "  // What each potion held costs to drink here (potion-cost.ts, Roy 2026-09-30): its held value in the potion table for",
+        "live": "  // What each potion held costs to drink here (potion-cost.ts, Dai 2026-09-30): its held value in the potion table for"
+      },
+      {
+        "head": "  // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Roy 2026-09-30:",
+        "live": "  // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Dai 2026-09-30:"
+      },
+      {
+        "head": "  // potion (Roy: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight",
+        "live": "  // potion (Dai: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight"
+      },
+      {
+        "head": "  // is Jev's call (Roy 2026-09-28): those lines are shown, flagged as winning and naming the potion spent.",
+        "live": "  // is Jev's call (Dai 2026-09-28): those lines are shown, flagged as winning and naming the potion spent."
+      },
+      {
+        "head": "  // Per-target options (Roy 2026-09-28): with two or more kinds of enemy, the line putting the most damage",
+        "live": "  // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage"
+      },
+      {
+        "head": "  // The \"no potion this fight\" line (Roy 2026-09-30), on every question with a potion to drink outside a boss fight",
+        "live": "  // The \"no potion this fight\" line (Dai 2026-09-30), on every question with a potion to drink outside a boss fight"
+      },
+      {
+        "head": "  // decision log (V4.2, Roy 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.",
+        "live": "  // decision log (V4.2, Dai 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept."
+      },
+      {
+        "head": "  // Every option's potion cost fact (Roy 2026-09-30), when a potion can be drunk on this board.",
+        "live": "  // Every option's potion cost fact (Dai 2026-09-30), when a potion can be drunk on this board."
+      },
+      {
+        "head": "  // Random potions: always an option (Roy 2026-09-28), \"drink now, then re-plan\", with the Monte Carlo",
+        "live": "  // Random potions: always an option (Dai 2026-09-28), \"drink now, then re-plan\", with the Monte Carlo"
+      },
+      {
+        "head": "      // dry-line veto and the attack-potion veto are gone, Roy 2026-09-28).",
+        "live": "      // dry-line veto and the attack-potion veto are gone, Dai 2026-09-28)."
+      },
+      {
+        "head": "    // No DeepSeek escalation in combat (Roy 2026-09-28): the turn's line is Jev's call.",
+        "live": "    // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call."
+      },
+      {
+        "head": " * Why an unsimulated potion is on the question: always (Roy: potions are 0-cost one-shot cards, no filter, no",
+        "live": " * Why an unsimulated potion is on the question: always (Dai: potions are 0-cost one-shot cards, no filter, no"
+      },
+      {
+        "head": " * veto). It replaced T1 (Roy 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate.",
+        "live": " * veto). It replaced T1 (Dai 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate."
+      },
+      {
+        "head": " * gone, Roy 2026-09-28).",
+        "live": " * gone, Dai 2026-09-28)."
+      }
+    ]
+  },
+  {
+    "path": "agent/src/hand/loop.ts",
+    "changed_comment_lines": 2,
+    "only_Roy_Dai_comment_replacement": true,
+    "changes": [
+      {
+        "head": "    // fight before the question that needs it (up to ~15 s, Roy 2026-10-02); kept in screen memory. Never throws: no",
+        "live": "    // fight before the question that needs it (up to ~15 s, Dai 2026-10-02); kept in screen memory. Never throws: no"
+      },
+      {
+        "head": "  // From A8 hallway fights kill runs too (棘刺蟾蜍, 地道虫, 啃咬机, 胧光怪, 青蛙骑士): Roy asked for a",
+        "live": "  // From A8 hallway fights kill runs too (棘刺蟾蜍, 地道虫, 啃咬机, 胧光怪, 青蛙骑士): Dai asked for a"
+      }
+    ]
+  }
+]

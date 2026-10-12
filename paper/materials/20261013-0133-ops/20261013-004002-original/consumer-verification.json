@@ -1,0 +1,26 @@
+{
+  "input_sha256": "4c6cb71677fcc1431d2955a85ade356d7d8480b5bd0adf03d20b5d182eac49fb",
+  "output_sha256": "9af0299a1857185f755505dfa728ff5498c588dea2c827bd5623b1364abc7ccd",
+  "exit": 0,
+  "segments": 113,
+  "observed_actions": 659,
+  "observed_intervals_total": 659,
+  "intervals_with_after_snapshot": 264,
+  "actual_action_effect_nonnull": 0,
+  "full_candidate_result_null": 113,
+  "interval_reason_counts": {
+    "room_or_attempt_changed_or_unknown": 394,
+    "adjacent_logged_observations": 264,
+    "input_exhausted": 1
+  },
+  "limitations": [
+    "同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
+    "completed 只代表动作接口回执；pending 不当成已生效。",
+    "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。",
+    "相邻原始决策的前后快照仅描述观测区间，不能认证中间没有未落盘动作；持有手牌不等于已建立能力。",
+    "缺原行号、跨尝试、非结束回合的跨轮或状态匹配不唯一时不连接后帧；敌人索引不作为跨帧实体身份。",
+    "连续原决策的前后状态仅记观测差值；能力出现时点、净HP变化不证明单卡因果或完整候选收益；缺失能力列表不当零层。",
+    "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。",
+    "结束页尝试号为空只在已核结束回合/最终结束页的连续决策与状态中单列；零血净损不等于完整入伤，显示攻击减当前挡仅为算术参考。"
+  ]
+}

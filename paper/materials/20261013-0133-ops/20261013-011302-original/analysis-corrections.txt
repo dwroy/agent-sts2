@@ -1,0 +1,32 @@
+本批临时分析的错误和修正说明（生产源码未修改）
+
+1. 首轮状态索引从包装外层取 run_id，导致3432条run_id均为null。
+   原输出文件完整保留：states-provenance.initial-null.json。
+   analyze.py改用record['state']['run_id']并核本角色/A10后成功。
+
+2. 手牌形状探测命令命中了VLZ F43 T1尚未发手牌的入口帧。
+   工具输出失败摘录：
+   Traceback (most recent call last):
+     File "<stdin>", line 12, in <module>
+   IndexError: list index out of range
+   后续analyze.py不假定入口手牌非空，并从实际动作观测帧提取。
+   本项保存的是失败摘录与修正说明，不冒称重新生成完整原stderr。
+
+3. 首轮消费者拒绝五条缺decision_id的map/route-change诊断记录。
+   完整stderr保留：consumer-probe.initial-failure.log。
+   仅在本批输入适配器排除这五条非派发诊断，排除原件独立保存，
+   原3306条决策、行号和原字节不改。六局消费者复验exit0。
+
+4. 原始证据校验首轮把Buff意图的null total_damage参与求和。
+   完整stderr保留：verify-evidence.initial-failure.log。
+   修正后明确仅核显示Attack数值，非攻击意图原件保留；23组核验通过。
+
+5. 首輪源码差异检查的注释前缀集合漏了/**。
+   工具输出失败摘录：
+   Traceback (most recent call last):
+     File "<stdin>", line 12, in <module>
+   AssertionError: ('agent/src/reflex/combat-plan.ts', '/** Distinct lines shown to Jev (Roy 2026-09-28: 10, was 4; the rollout covers every shown line). */')
+   加入/*前缀后逐行核验42行仅Roy/Dai署名替换通过。
+   本项保存的是失败摘录与修正说明，不冒称重新生成完整原stderr。
+
+这些不是撤源码红/恢复绿，不计为新源码测试或游戏失败。

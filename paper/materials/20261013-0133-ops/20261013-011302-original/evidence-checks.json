@@ -1,0 +1,257 @@
+[
+  {
+    "name": "states_original_bytes",
+    "records": 3432,
+    "passed": true
+  },
+  {
+    "name": "decisions_original_bytes",
+    "records": 3306,
+    "passed": true
+  },
+  {
+    "name": "sl_original_bytes",
+    "records": 29,
+    "passed": true
+  },
+  {
+    "name": "VLZ_F43_T1_observed_HP_net",
+    "actual": -13,
+    "expected": -13,
+    "passed": true
+  },
+  {
+    "name": "VLZ_F43_T1_observed_enemy_HP_net",
+    "actual": -51,
+    "expected": -51,
+    "passed": true
+  },
+  {
+    "name": "VLZ_F45_T4_observed_HP_net",
+    "actual": -13,
+    "expected": -13,
+    "passed": true
+  },
+  {
+    "name": "VLZ_F45_T4_observed_enemy_HP_net",
+    "actual": -24,
+    "expected": -24,
+    "passed": true
+  },
+  {
+    "name": "8JRE_F33_T2_same_fingerprint",
+    "actual": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:326:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:FRANTIC_ESCAPE:true|1:POISONED_STAB:true|2:STRIKE_SILENT:true|3:LEADING_STRIKE:true|4:PIERCING_WAIL:true|5:STRIKE_SILENT:true\",\"hp\":47,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+    "expected": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:326:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:FRANTIC_ESCAPE:true|1:POISONED_STAB:true|2:STRIKE_SILENT:true|3:LEADING_STRIKE:true|4:PIERCING_WAIL:true|5:STRIKE_SILENT:true\",\"hp\":47,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+    "passed": true
+  },
+  {
+    "name": "8JRE_F33_T2_attempt1_HP_net",
+    "actual": -3,
+    "expected": -3,
+    "passed": true
+  },
+  {
+    "name": "8JRE_F33_T2_attempt3_HP_net",
+    "actual": -15,
+    "expected": -15,
+    "passed": true
+  },
+  {
+    "name": "8JRE_F33_T2_attempt1_enemy_HP_net",
+    "actual": -10,
+    "expected": -10,
+    "passed": true
+  },
+  {
+    "name": "8JRE_F33_T2_attempt3_enemy_HP_net",
+    "actual": -17,
+    "expected": -17,
+    "passed": true
+  },
+  {
+    "name": "5PM_F39_T2_plain_Bubble_actions",
+    "actual": 1,
+    "expected": 1,
+    "passed": true
+  },
+  {
+    "name": "5PM_F39_T2_Bubble_energy_net",
+    "actual": -1,
+    "expected": -1,
+    "passed": true
+  },
+  {
+    "name": "5PM_F39_T2_Bubble_enemy_endpoint_unchanged",
+    "actual": [
+      {
+        "enemy_id": "THE_LOST",
+        "index": 0,
+        "current_hp": 35,
+        "is_alive": true,
+        "powers": {
+          "POSSESS_STRENGTH_POWER": 1,
+          "WEAK_POWER": 1,
+          "STRENGTH_POWER": 2
+        },
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "5[font_size=18]×2[/font_size]",
+            "damage": 5,
+            "hits": 2,
+            "total_damage": 10,
+            "status_card_count": null
+          }
+        ]
+      },
+      {
+        "enemy_id": "THE_FORGOTTEN",
+        "index": 1,
+        "current_hp": 72,
+        "is_alive": true,
+        "powers": {
+          "POSSESS_SPEED_POWER": 1,
+          "DEXTERITY_POWER": 2
+        },
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "17",
+            "damage": 17,
+            "hits": 1,
+            "total_damage": 17,
+            "status_card_count": null
+          }
+        ]
+      }
+    ],
+    "expected": [
+      {
+        "enemy_id": "THE_LOST",
+        "index": 0,
+        "current_hp": 35,
+        "is_alive": true,
+        "powers": {
+          "POSSESS_STRENGTH_POWER": 1,
+          "WEAK_POWER": 1,
+          "STRENGTH_POWER": 2
+        },
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "5[font_size=18]×2[/font_size]",
+            "damage": 5,
+            "hits": 2,
+            "total_damage": 10,
+            "status_card_count": null
+          }
+        ]
+      },
+      {
+        "enemy_id": "THE_FORGOTTEN",
+        "index": 1,
+        "current_hp": 72,
+        "is_alive": true,
+        "powers": {
+          "POSSESS_SPEED_POWER": 1,
+          "DEXTERITY_POWER": 2
+        },
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "17",
+            "damage": 17,
+            "hits": 1,
+            "total_damage": 17,
+            "status_card_count": null
+          }
+        ]
+      }
+    ],
+    "passed": true
+  },
+  {
+    "name": "CA5KE8GFJ9X2_terminal_HP_block",
+    "actual": [
+      2,
+      10,
+      0
+    ],
+    "expected": [
+      2,
+      10,
+      0
+    ],
+    "passed": true
+  },
+  {
+    "name": "CA5KE8GFJ9X2_terminal_displayed_attack",
+    "actual": 14,
+    "expected": 14,
+    "passed": true
+  },
+  {
+    "name": "DUZUBAJ3A8GP_terminal_HP_block",
+    "actual": [
+      1,
+      16,
+      0
+    ],
+    "expected": [
+      1,
+      16,
+      0
+    ],
+    "passed": true
+  },
+  {
+    "name": "DUZUBAJ3A8GP_terminal_displayed_attack",
+    "actual": 22,
+    "expected": 22,
+    "passed": true
+  },
+  {
+    "name": "8JRE1C4H4Z2W_terminal_HP_block",
+    "actual": [
+      5,
+      22,
+      0
+    ],
+    "expected": [
+      5,
+      22,
+      0
+    ],
+    "passed": true
+  },
+  {
+    "name": "8JRE1C4H4Z2W_terminal_displayed_attack",
+    "actual": 37,
+    "expected": 37,
+    "passed": true
+  },
+  {
+    "name": "VLZ6CCT8AQ0A_terminal_HP_block",
+    "actual": [
+      32,
+      20,
+      0
+    ],
+    "expected": [
+      32,
+      20,
+      0
+    ],
+    "passed": true
+  },
+  {
+    "name": "VLZ6CCT8AQ0A_terminal_displayed_attack",
+    "actual": 59,
+    "expected": 59,
+    "passed": true
+  }
+]

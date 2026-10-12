@@ -1,0 +1,14 @@
+{"run_id":"VLZ6CCT8AQ0A","keys":["schema","character","ascension","run_id","segments","observed_intervals","observed_actions","limitations"],"segments":99,"boundaries":{"end_turn_requested":73,"superseded_by_question":22,"turn_room_or_attempt_changed":4},"full_candidate_results":0,"actual_rollout_best":0}
+{"run_id":"8JRE1C4H4Z2W","keys":["schema","character","ascension","run_id","segments","observed_intervals","observed_actions","limitations"],"segments":113,"boundaries":{"end_turn_requested":81,"superseded_by_question":31,"turn_room_or_attempt_changed":1},"full_candidate_results":0,"actual_rollout_best":0}
+/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-011302/learner/lib/selection-execution.ts:93
+    if (!id || seen.has(id) || !ts || ts < previous) throw new Error("决策必须按观测时间排序，且 decision_id 非空、不重复");
+                                                           ^
+
+Error: 决策必须按观测时间排序，且 decision_id 非空、不重复
+    at auditSelectionExecution (/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-011302/learner/lib/selection-execution.ts:93:60)
+    at file:///home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-011302/learner/runs/20261013-011315-strategy-proposal/consumer-probe.mjs:13:18
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.3

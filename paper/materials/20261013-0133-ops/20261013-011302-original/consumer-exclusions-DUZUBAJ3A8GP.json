@@ -1,0 +1,371 @@
+[
+  {
+    "ts": "2026-10-07T06:44:32.055Z",
+    "mode": "play",
+    "screen": "EVENT",
+    "session": "singleplayer/run",
+    "floor": 20,
+    "turn": null,
+    "label": "map/route-change",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_event_option\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"AMALGAMATOR:240:false:融合打击/移除[blue]2[/blue]张[gold]打击[/gold]。并将一张[gold]究极打击[/gold]添加至你的[gold]牌组[/gold]。/false|融合防御/移除[blue]2[/blue]张[gold]防御[/gold]。并将一张[gold]究极防御[/gold]添加至你的[gold]牌组[/gold]。/false\",\"gold\":92,\"hand\":\"\",\"hp\":35,\"maxHp\":73,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"REGEN_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"DUZUBAJ3A8GP\",\"screen\":\"EVENT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "rationale": "Codex changed the act's route in event/plan (event review): r3c4 普通战 → r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c2 普通战 → r11c2 问号 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss => r3c4 普通战 → r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "reused": true,
+      "plan_ref": "DUZUBAJ3A8GP:F20:event#8",
+      "plan_step": 4,
+      "choice": "r3c4 r4c3 r5c2 r6c2 r7c2 r8c2 r9c1 r10c0 r11c0 r12c1 r13c0 r14c0 r15c3",
+      "reason": "",
+      "from": "r3c4 普通战 → r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c2 普通战 → r11c2 问号 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "to": "r3c4 普通战 → r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss"
+    },
+    "run_id": "DUZUBAJ3A8GP",
+    "observed_ts": "2026-10-07T06:43:51.799Z",
+    "journal": {
+      "choice": "route (event review): r3c4 普通战 → r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "reason": ""
+    },
+    "route_plan": {
+      "runId": "DUZUBAJ3A8GP",
+      "act": 2,
+      "floor": 20,
+      "hpPct": 0.4794520547945205,
+      "path": [
+        {
+          "row": 3,
+          "col": 4,
+          "type": "Monster",
+          "hpOnArrival": 0.4794520547945205
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "type": "Monster",
+          "hpOnArrival": 0.3424657534246575
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "type": "Shop",
+          "hpOnArrival": 0.2054794520547945
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "type": "Unknown",
+          "hpOnArrival": 0.2054794520547945
+        },
+        {
+          "row": 7,
+          "col": 2,
+          "type": "RestSite",
+          "hpOnArrival": 0.2054794520547945
+        },
+        {
+          "row": 8,
+          "col": 2,
+          "type": "Treasure",
+          "hpOnArrival": 0.4931506849315068
+        },
+        {
+          "row": 9,
+          "col": 1,
+          "type": "Elite",
+          "hpOnArrival": 0.4931506849315068
+        },
+        {
+          "row": 10,
+          "col": 0,
+          "type": "RestSite",
+          "hpOnArrival": 0.0410958904109589
+        },
+        {
+          "row": 11,
+          "col": 0,
+          "type": "Elite",
+          "hpOnArrival": 0.3287671232876712
+        },
+        {
+          "row": 12,
+          "col": 1,
+          "type": "Monster",
+          "hpOnArrival": 0
+        },
+        {
+          "row": 13,
+          "col": 0,
+          "type": "Unknown",
+          "hpOnArrival": 0
+        },
+        {
+          "row": 14,
+          "col": 0,
+          "type": "RestSite",
+          "hpOnArrival": 0
+        },
+        {
+          "row": 15,
+          "col": 3,
+          "type": "Boss",
+          "hpOnArrival": 0
+        }
+      ],
+      "summary": "r3c4 普通战 → r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "why": "event review"
+    },
+    "result": "route plan changed (no game action)",
+    "_line": 268789
+  },
+  {
+    "ts": "2026-10-07T06:45:48.918Z",
+    "mode": "play",
+    "screen": "REWARD",
+    "session": "singleplayer/run",
+    "floor": 21,
+    "turn": 4,
+    "label": "map/route-change",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":104,\"hand\":\"\",\"hp\":45,\"maxHp\":74,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"DUZUBAJ3A8GP\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "rationale": "Codex changed the act's route in reward/card (card-reward review): r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss => r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c2 普通战 → r11c2 问号 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "reused": true,
+      "plan_ref": "DUZUBAJ3A8GP:F21:reward#9",
+      "plan_step": 2,
+      "choice": "r4c3 r5c2 r6c2 r7c2 r8c2 r9c1 r10c2 r11c2 r12c1 r13c0 r14c0 r15c3",
+      "reason": "",
+      "from": "r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "to": "r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c2 普通战 → r11c2 问号 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss"
+    },
+    "run_id": "DUZUBAJ3A8GP",
+    "observed_ts": "2026-10-07T06:45:28.573Z",
+    "journal": {
+      "choice": "route (card-reward review): r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c2 普通战 → r11c2 问号 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "reason": ""
+    },
+    "route_plan": {
+      "runId": "DUZUBAJ3A8GP",
+      "act": 2,
+      "floor": 21,
+      "hpPct": 0.6081081081081081,
+      "path": [
+        {
+          "row": 4,
+          "col": 3,
+          "type": "Monster",
+          "hpOnArrival": 0.6081081081081081
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "type": "Shop",
+          "hpOnArrival": 0.47297297297297297
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "type": "Unknown",
+          "hpOnArrival": 0.47297297297297297
+        },
+        {
+          "row": 7,
+          "col": 2,
+          "type": "RestSite",
+          "hpOnArrival": 0.47297297297297297
+        },
+        {
+          "row": 8,
+          "col": 2,
+          "type": "Treasure",
+          "hpOnArrival": 0.7702702702702703
+        },
+        {
+          "row": 9,
+          "col": 1,
+          "type": "Elite",
+          "hpOnArrival": 0.7702702702702703
+        },
+        {
+          "row": 10,
+          "col": 2,
+          "type": "Monster",
+          "hpOnArrival": 0.32432432432432434
+        },
+        {
+          "row": 11,
+          "col": 2,
+          "type": "Unknown",
+          "hpOnArrival": 0.1891891891891892
+        },
+        {
+          "row": 12,
+          "col": 1,
+          "type": "Monster",
+          "hpOnArrival": 0.1891891891891892
+        },
+        {
+          "row": 13,
+          "col": 0,
+          "type": "Unknown",
+          "hpOnArrival": 0.05405405405405406
+        },
+        {
+          "row": 14,
+          "col": 0,
+          "type": "RestSite",
+          "hpOnArrival": 0.05405405405405406
+        },
+        {
+          "row": 15,
+          "col": 3,
+          "type": "Boss",
+          "hpOnArrival": 0.35135135135135137
+        }
+      ],
+      "summary": "r4c3 普通战 → r5c2 商店 → r6c2 问号 → r7c2 休息 → r8c2 宝箱 → r9c1 精英 → r10c2 普通战 → r11c2 问号 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "why": "card-reward review"
+    },
+    "result": "route plan changed (no game action)",
+    "_line": 268818
+  },
+  {
+    "ts": "2026-10-07T06:48:36.540Z",
+    "mode": "play",
+    "screen": "REST",
+    "session": "singleplayer/run",
+    "floor": 25,
+    "turn": null,
+    "label": "map/route-change",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":33,\"hand\":\"\",\"hp\":56,\"maxHp\":75,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"DUZUBAJ3A8GP\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "rationale": "Codex changed the act's route in rest/plan (rest-site review): r8c2 宝箱 → r9c1 精英 → r10c2 普通战 → r11c2 问号 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss => r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss; next rest: 到 F32 时新路线约 32/75，保留路线约 22/75（p75 5 对 耗尽）",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "reused": true,
+      "plan_ref": "DUZUBAJ3A8GP:F25:rest#11",
+      "plan_step": 2,
+      "choice": "r8c2 r9c1 r10c0 r11c0 r12c1 r13c0 r14c0 r15c3",
+      "reason": "",
+      "from": "r8c2 宝箱 → r9c1 精英 → r10c2 普通战 → r11c2 问号 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "to": "r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "next_rest": "到 F32 时新路线约 32/75，保留路线约 22/75（p75 5 对 耗尽）",
+      "next_rest_worse": false,
+      "next_rest_elite_worse": false
+    },
+    "run_id": "DUZUBAJ3A8GP",
+    "observed_ts": "2026-10-07T06:47:50.961Z",
+    "journal": {
+      "choice": "route (rest-site review): r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "reason": ""
+    },
+    "route_plan": {
+      "runId": "DUZUBAJ3A8GP",
+      "act": 2,
+      "floor": 25,
+      "hpPct": 1,
+      "path": [
+        {
+          "row": 8,
+          "col": 2,
+          "type": "Treasure",
+          "hpOnArrival": 1
+        },
+        {
+          "row": 9,
+          "col": 1,
+          "type": "Elite",
+          "hpOnArrival": 1
+        },
+        {
+          "row": 10,
+          "col": 0,
+          "type": "RestSite",
+          "hpOnArrival": 0.56
+        },
+        {
+          "row": 11,
+          "col": 0,
+          "type": "Elite",
+          "hpOnArrival": 1
+        },
+        {
+          "row": 12,
+          "col": 1,
+          "type": "Monster",
+          "hpOnArrival": 0.56
+        },
+        {
+          "row": 13,
+          "col": 0,
+          "type": "Unknown",
+          "hpOnArrival": 0.4266666666666667
+        },
+        {
+          "row": 14,
+          "col": 0,
+          "type": "RestSite",
+          "hpOnArrival": 0.4266666666666667
+        },
+        {
+          "row": 15,
+          "col": 3,
+          "type": "Boss",
+          "hpOnArrival": 0.96
+        }
+      ],
+      "summary": "r8c2 宝箱 → r9c1 精英 → r10c0 休息 → r11c0 精英 → r12c1 普通战 → r13c0 问号 → r14c0 休息 → r15c3 Boss",
+      "why": "rest-site review"
+    },
+    "result": "route plan changed (no game action)",
+    "_line": 268864
+  }
+]
