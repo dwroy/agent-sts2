@@ -1,0 +1,12 @@
+agent/src/reflex/card-model.ts                     |    8 +-
+ agent/src/reflex/combat-plan.ts                    |    6 +
+ agent/src/reflex/rollout.ts                        |    2 +-
+ agent/src/reflex/silent-apotheosis.ts              |   13 +-
+ agent/src/reflex/turn-solver.ts                    |   11 +
+ .../tests/silent-apotheosis-malaise-evidence.json  | 1177 ++++++++++++++++++++
+ agent/tests/silent-apotheosis-malaise.test.ts      |  167 +++
+ agent/tests/unassigned-proposal-resolution.test.ts |   20 +
+ ops/inbox-dev.md                                   |    2 +
+ ops/proposal_dispatch.py                           |   89 +-
+ ops/tests/test_unassigned_proposal_resolution.py   |  197 ++++
+ 11 files changed, 1684 insertions(+), 8 deletions(-)
