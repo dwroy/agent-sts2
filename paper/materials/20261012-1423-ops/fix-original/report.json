@@ -1,0 +1,50 @@
+{
+  "task": "fix-batch",
+  "base": "8216599b032714a88944eec2bb6a0319190a07b0",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类：沿已有strategy-proposal与专用任务；不将有限子项当整个宽提案完成。"
+    },
+    {
+      "item": "具名卡资料全入口扩展、跨局未知项自动派发及量化构筑消费者",
+      "reason": "太大/独立功能：已核事件子项42c920f34已上线；其余入口、跨局未知派发与量化消费者继续原专用任务，不将部分交付当整个父需求完成。"
+    },
+    {
+      "item": "silent-0332 双boss接续资源异常根因",
+      "reason": "证据不足：队列的VAC6Z1PZ1QJG/64VJC5XT2AT2 A10 F47证据未附可重放触发样本；当前源码已保存分支/seed/资源诊断，沿原策略提案核实，不猜填HP/药水。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史失败恢复",
+      "reason": "证据不足：5c92f2aa已补后续失败stdout/stderr回执；旧rc2无stderr，不能证明未发送，保留幂等记录，不重发。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录竞态",
+      "reason": "证据不足：bc2c40e31及4fef181d5已提供会话前有界恢复和预检复验，上游创建/删除者未证，不放宽权限或清旧树。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时",
+      "reason": "证据不足：已有观察未证明永久饥饿或mod内部根因；保留原核查入口。"
+    },
+    {
+      "item": "全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存与性能专项",
+      "reason": "太大/独立功能及策略研究：继续各自已有专用任务，本批不混入。"
+    },
+    {
+      "item": "ops-stall-recovery-test-subprocess-timeout（收尾时新增）",
+      "reason": "证据不足：原宿主两项status=null超时，同树定向3项通过，负载根因未证；队列及原回执明确由本活批结束后的下一原槽承接，保留失败，不重复派发。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 71,
+    "files": 8,
+    "scope": "fixed-targeted"
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-140741/learner/runs/20261012-140819-fix-batch/report.md"
+}
