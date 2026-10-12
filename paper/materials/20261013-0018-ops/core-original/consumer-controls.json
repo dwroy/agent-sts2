@@ -1,0 +1,16 @@
+{
+  "source": {
+    "exit_code": 0,
+    "questions": 3,
+    "new_entry_reads": 15
+  },
+  "negative": {
+    "exit_code": 1,
+    "questions": 3,
+    "new_entry_reads": 0
+  },
+  "kind": "fixed-consumer",
+  "scope": "source_before_deployment",
+  "natural_adoption": false,
+  "limitations": "负对照只恢复旧经验数据；不是撤源码测试。元数据git子进程首轮EPERM已保留，改由调用方传入实核commit。"
+}

@@ -1,0 +1,316 @@
+diff --git a/agent/src/brain/engines/codex.ts b/agent/src/brain/engines/codex.ts
+index 82b62c15b..cdb4eda0e 100644
+--- a/agent/src/brain/engines/codex.ts
++++ b/agent/src/brain/engines/codex.ts
+@@ -1,7 +1,7 @@
+ /**
+  * Codex as a brain engine: headless `codex exec` (codex-cli 0.160, npm @openai/codex) under this machine's ChatGPT
+  * login (`codex login` in ~/.codex: the subscription; Roy 2026-10-03), one process per call. Model and effort are
+- * always sent (default gpt-6-astra at xhigh: config.ts DEFAULT_CODEX_MODEL / DEFAULT_CODEX_EFFORT).
++ * always sent (default gpt-6.1-sol at xhigh: config.ts DEFAULT_CODEX_MODEL / DEFAULT_CODEX_EFFORT).
+  *
+  * - Isolation (measured 2026-10-03, experiments/brain-replay/codex-isolation.md): the model sees our system prompt
+  *   (as codex's base instructions: model_instructions_file) and the user message, nothing else, and has no tool.
+diff --git a/agent/src/core/config.ts b/agent/src/core/config.ts
+index 9714a5ed3..1fcce97b4 100644
+--- a/agent/src/core/config.ts
++++ b/agent/src/core/config.ts
+@@ -613,10 +613,10 @@ export const DEFAULT_CLAUDE_TIMEOUT_MS = 120_000;
+ export const DEFAULT_CLAUDE_MAX_CALLS = 150;
+ 
+ /**
+- * Shared Codex defaults (Roy 2026-10-11): Astra / xhigh / normal, with a 512k configured context window.
++ * Shared Codex defaults (Roy 2026-10-12): GPT-6.1 Sol / xhigh / normal, with a 512k configured context window.
+  * Always sent explicitly: isolated launchers ignore ~/.codex/config.toml.
+  */
+-export const DEFAULT_CODEX_MODEL = "gpt-6-astra";
++export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
+ export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
+ /** Explicit normal tier also clears priority inherited from an older session. */
+ export const CODEX_SERVICE_TIER = "default";
+diff --git a/agent/tests/brain-codex-usage.test.ts b/agent/tests/brain-codex-usage.test.ts
+index 336f13526..15dab15d0 100644
+--- a/agent/tests/brain-codex-usage.test.ts
++++ b/agent/tests/brain-codex-usage.test.ts
+@@ -67,7 +67,7 @@ function fakeCodex(name: string): { bin: string; setMode: (mode: Record<string,
+   const refreshedFile = join(dir, `${name}.refreshed`);
+   for (const file of [serverFile, execFile, refreshedFile]) rmSync(file, { force: true });
+   writeFileSync(modeFile, JSON.stringify({ result: liveResult() }));
+-  const sol = { slug: "gpt-6-astra", supported_reasoning_levels: [{ effort: "xhigh" }] };
++  const sol = { slug: "gpt-6.1-sol", supported_reasoning_levels: [{ effort: "xhigh" }] };
+   writeFileSync(bin, `#!${process.execPath}
+ import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+ import { createInterface } from "node:readline";
+diff --git a/agent/tests/brain-codex.test.ts b/agent/tests/brain-codex.test.ts
+index 9f19921c4..3ad53a569 100644
+--- a/agent/tests/brain-codex.test.ts
++++ b/agent/tests/brain-codex.test.ts
+@@ -602,9 +602,9 @@ describe("the codex start-up check", () => {
+     expect(brain({ CODEX_HOME: "/c" }).codex.home).toBe("/c");
+     expect(brain({ CODEX_HOME: "/c", BRAIN_CODEX_HOME: "/b" }).codex.home).toBe("/b");
+     expect(brain({ BRAIN_CODEX_SERVICE_TIER: "default" }).codex.serviceTier).toBe("default");
+-    // Defaults: gpt-6-astra at xhigh, 10 minutes, no call limit, no tools; BRAIN_ENGINE stays deepseek.
++    // Defaults: gpt-6.1-sol at xhigh, 10 minutes, no call limit, no tools; BRAIN_ENGINE stays deepseek.
+     expect(brain({}).engine).toBe("deepseek");
+-    expect(brain({}).engines.codex).toMatchObject({ model: "gpt-6-astra", effort: "xhigh", timeoutMs: 600_000, maxCalls: null });
++    expect(brain({}).engines.codex).toMatchObject({ model: "gpt-6.1-sol", effort: "xhigh", timeoutMs: 600_000, maxCalls: null });
+     expect(brain({ BRAIN_CODEX_EFFORT: "high" }).engines.codex.effort).toBe("high");
+     // xhigh is an effort for every engine now; the old values still parse.
+     expect(brain({ BRAIN_CLAUDE_EFFORT: "xhigh" }).engines.claude.effort).toBe("xhigh");
+diff --git a/agent/tests/codex-fast.test.ts b/agent/tests/codex-fast.test.ts
+index dd867126a..1811e0c71 100644
+--- a/agent/tests/codex-fast.test.ts
++++ b/agent/tests/codex-fast.test.ts
+@@ -9,15 +9,15 @@ const SESSION = "01a10717-c859-7592-9012-ad4251284920";
+ const request: EngineRequest = {
+   engine: "codex", cwd: "/tmp/fast-project", projectRoot: "/tmp/fast-project",
+   home: "/tmp/fast-home", codexHome: "/tmp/fast-home/.codex", keyFiles: [],
+-  model: "gpt-6-astra", effort: "xhigh", tools: ["Read", "Bash"],
++  model: "gpt-6.1-sol", effort: "xhigh", tools: ["Read", "Bash"],
+ };
+ 
+ describe("Shared Codex defaults across session entry points", () => {
+-  it.each(["IRONCLAD", "SILENT"])("uses Astra/xhigh/normal for %s", (character) => {
++  it.each(["IRONCLAD", "SILENT"])("uses GPT-6.1 Sol/xhigh/normal for %s", (character) => {
+     for (const legacyTier of [undefined, "default", "priority"]) {
+       const config = loadConfig({ CHARACTER: character, BRAIN_CODEX_SERVICE_TIER: legacyTier });
+       expect(config.brain.codex.serviceTier).toBe("default");
+-      expect(config.brain.engines.codex.model).toBe("gpt-6-astra");
++      expect(config.brain.engines.codex.model).toBe("gpt-6.1-sol");
+       expect(config.brain.engines.codex.effort).toBe("xhigh");
+     }
+   });
+@@ -33,17 +33,17 @@ describe("Shared Codex defaults across session entry points", () => {
+       expect(args).toContain("model_auto_compact_token_limit=460800");
+       expect(args).toContain('service_tier="default"');
+       expect(args).toContain('model_reasoning_effort="xhigh"');
+-      expect(args).toContain("gpt-6-astra");
++      expect(args).toContain("gpt-6.1-sol");
+     }
+   });
+ 
+-  it("shares learner Astra/xhigh/normal with gameplay and ops", () => {
+-    expect(engineDefaults("codex")).toEqual({ model: "gpt-6-astra", effort: "xhigh" });
++  it("shares learner GPT-6.1 Sol/xhigh/normal with gameplay and ops", () => {
++    expect(engineDefaults("codex")).toEqual({ model: "gpt-6.1-sol", effort: "xhigh" });
+     const opsArgs = initCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
+-    expect(opsArgs).toContain("gpt-6-astra");
++    expect(opsArgs).toContain("gpt-6.1-sol");
+     expect(opsArgs).toContain('service_tier="default"');
+     const args = codexCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
+-    expect(args).toContain("gpt-6-astra");
++    expect(args).toContain("gpt-6.1-sol");
+     expect(args).toContain('model_reasoning_effort="xhigh"');
+     expect(args).toContain("--ignore-user-config");
+     expect(args).toContain("model_context_window=512000");
+diff --git a/agent/tests/learner.test.ts b/agent/tests/learner.test.ts
+index 34e9879e1..4848319a2 100644
+--- a/agent/tests/learner.test.ts
++++ b/agent/tests/learner.test.ts
+@@ -61,7 +61,7 @@ describe("per-engine model and effort in the front matter", () => {
+       expect(code).toBe(0);
+       return out.join("");
+     };
+-    expect(await run("codex")).toContain(`--model gpt-6-astra -c 'approval_policy="never"' -c 'web_search="disabled"' -c 'model_reasoning_effort="high"'`);
++    expect(await run("codex")).toContain(`--model gpt-6.1-sol -c 'approval_policy="never"' -c 'web_search="disabled"' -c 'model_reasoning_effort="high"'`);
+     expect(await run("codex", ["--effort", "low", "--model", "gpt-x"])).toContain(`--model gpt-x -c 'approval_policy="never"' -c 'web_search="disabled"' -c 'model_reasoning_effort="low"'`);
+     const claude = await run("claude");
+     expect(claude).toContain("--model sonnet");
+@@ -269,10 +269,10 @@ describe("codex command line", () => {
+     ]);
+   });
+ 
+-  it("a read-only task gets the read-only profile; gpt-6-astra at xhigh unless asked; never --sandbox (it cannot mix with a profile)", () => {
++  it("a read-only task gets the read-only profile; gpt-6.1-sol at xhigh unless asked; never --sandbox (it cannot mix with a profile)", () => {
+     const req = request({ engine: "codex", tools: ["Read", "Grep", "Glob"], cwd: ROOT, home: "/h", keyFiles: [] });
+     const cmd = codexCommand(req, "x");
+-    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, ...profileArgs(req), "--model", "gpt-6-astra", ...codexTail("xhigh"), ...disables(), "-"]);
++    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, ...profileArgs(req), "--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+     expect(cmd.args).not.toContain("--sandbox");
+     expect(cmd.args).not.toContain("--add-dir");
+   });
+@@ -462,7 +462,7 @@ if (${JSON.stringify(name)} === "codex" && process.argv[2] === "sandbox") {
+   process.exit(0);
+ }
+ if (${JSON.stringify(name)} === "codex" && process.argv[2] === "debug") {
+-  process.stdout.write(JSON.stringify({ models: [{ slug: "gpt-6-astra", supported_reasoning_levels: [{ effort: "high" }, { effort: "xhigh" }] }] }) + "\\n");
++  process.stdout.write(JSON.stringify({ models: [{ slug: "gpt-6.1-sol", supported_reasoning_levels: [{ effort: "high" }, { effort: "xhigh" }] }] }) + "\\n");
+   process.exit(0);
+ }
+ process.stdin.on("data", (chunk) => (stdin += chunk));
+@@ -603,7 +603,7 @@ describe("whole runs against fake binaries", () => {
+     expect(seen.argv.slice(0, 7)).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", join(project, "wt"), "-c"]);
+     expect(seen.argv[7]).toBe('default_permissions="learner"');
+     expect(seen.argv[9]).toContain(`${JSON.stringify(join(tmp, "codex-home", "auth.json"))} = "none"`);
+-    expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6-astra", ...codexTail("xhigh"), ...disables(), "-"]);
++    expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+     expect(seen.argv).not.toContain("--sandbox");
+     expect(seen.env).toContain("CODEX_HOME");
+     expect(seen.stdin.startsWith("【启动器说明（codex）】")).toBe(true);
+@@ -622,7 +622,7 @@ describe("whole runs against fake binaries", () => {
+     const summary = lines[lines.length - 1]!;
+     expect(summary).toMatchObject({ type: "learner_summary", exit_code: 0, timed_out: false });
+     expect(summary["summary"]).toMatchObject({
+-      model: "gpt-6-astra", sessionId: "th-1", turns: 1, tokens: { input: 400, output: 90, cacheRead: 800, cacheCreation: 0, reasoning: 40 }, result: "三句话。RUN: X",
++      model: "gpt-6.1-sol", sessionId: "th-1", turns: 1, tokens: { input: 400, output: 90, cacheRead: 800, cacheCreation: 0, reasoning: 40 }, result: "三句话。RUN: X",
+       toolCalls: { command_execution: 1 }, isError: false, retries: ["Reconnecting... 1/5 (stream disconnected before completion)"],
+     });
+     expect((summary["summary"] as { timing: { timeline: unknown[] } }).timing.timeline).toHaveLength(2);
+diff --git a/agent/tests/ops-codex.test.ts b/agent/tests/ops-codex.test.ts
+index bf3911ab3..a1773a7c9 100644
+--- a/agent/tests/ops-codex.test.ts
++++ b/agent/tests/ops-codex.test.ts
+@@ -53,7 +53,7 @@ describe("command lines", () => {
+     expect(cmd.args).toContain(`default_permissions="${OPS_PROFILE}"`);
+     expect(cmd.args).toContain('model_reasoning_effort="xhigh"');
+     expect(cmd.args).toContain('service_tier="default"');
+-    expect(cmd.args).toContain("gpt-6-astra");
++    expect(cmd.args).toContain("gpt-6.1-sol");
+     expect(cmd.args).toContain("model_auto_compact_token_limit=460800");
+     expect(cmd.args.at(-1)).toBe("-");
+     expect(cmd.stdin).toBe("PROMPT");
+diff --git a/agent/tests/ops-host-recovery.test.ts b/agent/tests/ops-host-recovery.test.ts
+index a8491e794..92c4d96a7 100644
+--- a/agent/tests/ops-host-recovery.test.ts
++++ b/agent/tests/ops-host-recovery.test.ts
+@@ -21,7 +21,7 @@ it("uses explicit host access on all main ops launch paths, without conflicting
+     expect(args).toContain("danger-full-access");
+     expect(args).toContain('approval_policy="never"');
+     expect(args.some((arg) => /^(default_permissions|permissions\.ops\.filesystem)=/.test(arg))).toBe(false);
+-    expect(args).toContain("gpt-6-astra");
++    expect(args).toContain("gpt-6.1-sol");
+     expect(args).toContain('model_reasoning_effort="xhigh"');
+   }
+ });
+diff --git a/learner/lib/task.ts b/learner/lib/task.ts
+index dedb6bfc0..c87273074 100644
+--- a/learner/lib/task.ts
++++ b/learner/lib/task.ts
+@@ -8,7 +8,7 @@
+  *   timeout_min: 120                       (optional defaults for --timeout-min / --max-turns)
+  *   max_turns: 400
+  *   model.claude: opus                     (optional, per engine: defaults for --model / --effort; codex
+- *   model.codex: gpt-6-astra                  otherwise gets the launcher's gpt-6-astra at xhigh)
++ *   model.codex: gpt-6.1-sol                  otherwise gets the launcher's gpt-6.1-sol at xhigh)
+  *   effort.codex: xhigh
+  *   default.code_dir: {{project_root}}/jev-sts2-v3   (a parameter's default; may use the built-ins)
+  *   ---
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index 3d88d0077..d516910d5 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -143,7 +143,7 @@ if [ -n "${HERDR_HOST_LABEL:-}" ]; then
+   tail -n +1 -F "$out" "$err" 2>/dev/null &
+   tailer=$!
+ fi
+-# Scheduled learners use Astra/xhigh without Fast, including historical leased worktrees.
++# Scheduled learners use GPT-6.1 Sol/xhigh without Fast, including historical leased worktrees.
+ # LEARNER_CMD overrides the command for fixed tests only.
+ if [ "$audit_ready" != 1 ]; then
+   rc=1
+@@ -168,7 +168,7 @@ else
+   fi
+   export STS2_CODEX_LEARNER_BIN="$codex_learner_native"
+   export LEARNER_CODEX_BIN="$codex_learner_wrapper"
+-  args=(--engine codex --model gpt-6-astra --effort xhigh --task "${implementation_task_file:-$learner_task}" --character "$character" --cwd "$worktree")
++  args=(--engine codex --model gpt-6.1-sol --effort xhigh --task "${implementation_task_file:-$learner_task}" --character "$character" --cwd "$worktree")
+   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
+   if [ "$learner_task" = silent-historical-core-builds ]; then
+     args+=(--set "evidence=${7}" --set "batch=$batch")
+diff --git a/ops/codex-policy.sh b/ops/codex-policy.sh
+index eea7abd69..1605c88aa 100644
+--- a/ops/codex-policy.sh
++++ b/ops/codex-policy.sh
+@@ -1,7 +1,7 @@
+ # Sourced by the historical launcher names after resolving and checking the native binary.
+ # Only normalize Codex arguments; never inspect or rewrite a sandbox child after --.
+ args=()
+-policy=(-c 'model="gpt-6-astra"' -c 'model_reasoning_effort="xhigh"'
++policy=(-c 'model="gpt-6.1-sol"' -c 'model_reasoning_effort="xhigh"'
+         -c 'service_tier="default"' -c 'model_context_window=512000'
+         -c 'model_auto_compact_token_limit=460800')
+ while [ "$#" -gt 0 ]; do
+diff --git a/ops/llm_switch.py b/ops/llm_switch.py
+index 9ecdf6421..6305d1f57 100644
+--- a/ops/llm_switch.py
++++ b/ops/llm_switch.py
+@@ -208,7 +208,7 @@ def validate_profile(profile):
+         raise ValueError("account must be a local profile label")
+     if profile["engine"] != "codex": raise ValueError("no validated adapter for requested engine")
+     # Existing launch policy remains authoritative; this adapter does not silently change its overrides.
+-    if (profile["model"], profile["effort"], profile["service_tier"]) != ("gpt-6-astra", "xhigh", "default"):
++    if (profile["model"], profile["effort"], profile["service_tier"]) != ("gpt-6.1-sol", "xhigh", "default"):
+         raise ValueError("requested model policy needs its launcher adapter; no silent substitution")
+     for name in ("learner_home", "brain_home"):
+         path = Path(profile[name])
+diff --git a/ops/run.sh b/ops/run.sh
+index 2079073a7..61fc1c52f 100755
+--- a/ops/run.sh
++++ b/ops/run.sh
+@@ -20,8 +20,8 @@ if [ -f "$ROOT/ops/codex-ops/brain-home" ]; then
+   fi
+   export BRAIN_CODEX_HOME="$selected_brain_home"
+ fi
+-# Roy 2026-10-11: production Codex defaults apply even with a legacy scheduler environment.
+-export BRAIN_CODEX_MODEL=gpt-6-astra BRAIN_CODEX_EFFORT=xhigh
++# Roy 2026-10-12: production Codex defaults apply even with a legacy scheduler environment.
++export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT=xhigh
+ export PATH="$HOME/.local/node/bin:$PATH"
+ sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
+ ts=$(date +%Y%m%d-%H%M%S)
+diff --git a/ops/tests/test_learner_launch_failures.py b/ops/tests/test_learner_launch_failures.py
+index 004c63bb3..c057cf187 100644
+--- a/ops/tests/test_learner_launch_failures.py
++++ b/ops/tests/test_learner_launch_failures.py
+@@ -15,7 +15,7 @@ checks = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(checks)
+ 
+ 
+-POLICY = ["-c", 'model="gpt-6-astra"', "-c", 'model_reasoning_effort="xhigh"',
++POLICY = ["-c", 'model="gpt-6.1-sol"', "-c", 'model_reasoning_effort="xhigh"',
+           "-c", 'service_tier="default"', "-c", 'model_context_window=512000',
+           "-c", 'model_auto_compact_token_limit=460800']
+ 
+@@ -56,11 +56,11 @@ class LearnerLauncher(unittest.TestCase):
+         args = json.loads((err.with_suffix(".out")).read_text())
+         self.assertIn('service_tier="default"', args)
+         self.assertIn("model_context_window=512000", args)
+-        self.assertIn('model="gpt-6-astra"', args)
++        self.assertIn('model="gpt-6.1-sol"', args)
+         self.assertIn('model_reasoning_effort="xhigh"', args)
+         self.assertEqual(args[-2:], ["--", "/fixture/check"])
+         launcher = (self.root / "launcher-args").read_text().splitlines()
+-        self.assertEqual(launcher[launcher.index("--model") + 1], "gpt-6-astra")
++        self.assertEqual(launcher[launcher.index("--model") + 1], "gpt-6.1-sol")
+         self.assertEqual(launcher[launcher.index("--effort") + 1], "xhigh")
+ 
+     def test_explicit_native_override_is_kept(self):
+@@ -138,7 +138,7 @@ class LearnerLauncher(unittest.TestCase):
+             args, err = self.legacy_call(["exec", "--ignore-user-config", *profile, "--model=gpt-6.1-sol",
+                                          "-c", 'model="old-model"', "--config=model_reasoning_effort=high", "-"])
+             self.assertNotIn('service_tier="priority"', args)
+-            self.assertIn('model="gpt-6-astra"', args)
++            self.assertIn('model="gpt-6.1-sol"', args)
+             self.assertIn('model_reasoning_effort="xhigh"', args)
+             self.assertEqual(err, "")
+         child = ["--", "/fixture/check", "--model", "child-model", "-c", 'service_tier="child-tier"']
+diff --git a/ops/tests/test_llm_handoff.py b/ops/tests/test_llm_handoff.py
+index 611dd23fa..4aeb3421b 100644
+--- a/ops/tests/test_llm_handoff.py
++++ b/ops/tests/test_llm_handoff.py
+@@ -117,11 +117,12 @@ class Protocol(unittest.TestCase):
+         with self.assertRaises(ValueError): cron_home(cron + cron, "/new")
+ 
+     def test_no_implicit_provider_or_model_fallback(self):
+-        profile = dict(engine="unknown", account="fixture", model="gpt-6-astra", effort="xhigh", service_tier="default",
++        profile = dict(engine="unknown", account="fixture", model="gpt-6.1-sol", effort="xhigh", service_tier="default",
+                        learner_home="/unavailable", brain_home="/unavailable", handoff="notes/test.md")
+         with self.assertRaisesRegex(ValueError, "adapter"): validate_profile(profile)
+-        profile.update(engine="codex", model="another-model")
+-        with self.assertRaisesRegex(ValueError, "model policy"): validate_profile(profile)
++        for old_model in ("gpt-6-astra", "another-model"):
++            profile.update(engine="codex", model=old_model)
++            with self.assertRaisesRegex(ValueError, "model policy"): validate_profile(profile)
+ 
+     def test_auxiliary_dispatch_stops_before_reconcile(self):
+         self.tx.begin()

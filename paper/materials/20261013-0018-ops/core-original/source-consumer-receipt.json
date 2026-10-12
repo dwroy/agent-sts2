@@ -1,0 +1,50 @@
+{
+  "request_id": "roy-20261012-concrete-core-decklists",
+  "revision": 2,
+  "character": "silent",
+  "experience_version": "2026-10-12.14",
+  "kind": "fixed-consumer",
+  "status": "passed",
+  "scope": "source-only",
+  "source_commit": "dca4d3e13e066ebcba7f5d48fde9e24f824e856f",
+  "actual_live_ancestor": false,
+  "evidence": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v2/consumer-frames.json",
+      "sha256": "18809b63d6a7d0e11085aba72db4d7d02f9c0e3256142ed9b678c7ea89e0fe32"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v2/consumer.mjs",
+      "sha256": "5c569470a9a826fc6eb15eddaee8c1f7acb66433f46b88338119fdf9a98ff8ff"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v2/source/input.json",
+      "sha256": "81b3cdcaf87f66ce51d68c0aac01bb1772e2e1c8e3a7cf67a256b1e57f510710"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v2/source/output.json",
+      "sha256": "674204248245d3411b4bbe8cebddd1d8248e0dec9df5e9f7e172f5b6e9ed2d53"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v2/source/verification.json",
+      "sha256": "bbac03ac351cf5ce2b0e9426dd07f5d2eba12f5373c234f7c495ac93bfb30274"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v2/negative/input.json",
+      "sha256": "2c22860b4da04dcd09bf5a4801b38c7df5d667a04dcabf1147b8739f6bfb3035"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v2/negative/output.json",
+      "sha256": "e4bab67043b072911511b3e9fcaa6686c819cb52e9c1886278df5c2773fbb77e"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261012-core-decklists-learning-v2/consumer-controls.json",
+      "sha256": "0307659894b63ecffd7a64b99f8355b8d17cc066a5e3927b0b3770bafb85c3d7"
+    }
+  ],
+  "limitations": [
+    "仅源提交固定消费者读回；经验尚未进入live，此回执不证明live消费。",
+    "三个本角色真实状态经KnowledgePrompt.apply全量前缀，每题均包含五条新增限定；无模型调用/动作执行。",
+    "案例标题装饰省略，不改变经验文件读取和实际前缀格式器。固定读回不等自然采用或胜率改善。"
+  ]
+}
