@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261012-204306-experience-update/.test-checkout/agent
+
+ ❯ tests/silent-apotheosis-reference.test.ts (5 tests | 1 failed) 45987ms
+   × labels random potion forecasts and unsimulated potions separately in F45's real question 45514ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-apotheosis-reference.test.ts > labels random potion forecasts and unsimulated potions separately in F45's real question
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/silent-apotheosis-reference.test.ts:114:1
+    112| });
+    113|
+    114| it("labels random potion forecasts and unsimulated potions separately …
+       | ^
+    115|   const spy = vi.spyOn(reference, "silentApotheosisReference");
+    116|   const { decision } = planned(rawAt(275722));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 339 passed (340)
+      Tests  1 failed | 3394 passed (3395)
+   Start at  20:56:08
+   Duration  535.39s (transform 28.65s, setup 60.59s, import 107.35s, tests 1339.49s, environment 52ms)
+

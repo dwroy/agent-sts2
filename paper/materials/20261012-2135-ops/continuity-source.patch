@@ -1,0 +1,37 @@
+diff --git a/agent/tests/learning-requests.test.ts b/agent/tests/learning-requests.test.ts
+index dbbd8035d..846cf7de7 100644
+--- a/agent/tests/learning-requests.test.ts
++++ b/agent/tests/learning-requests.test.ts
+@@ -8,8 +8,9 @@ it("resumes the explicit thread with the same learner isolation and never --last
+   const original = codexCommand(request, "fixed input");
+   const thread = "11111111-2222-3333-4444-555555555555";
+   const resumed = codexCommand({ ...request, resumeThread: thread }, "fixed input");
+-  expect(resumed.args.slice(0, -3)).toEqual(original.args.slice(0, -1));
+-  expect(resumed.args.slice(-3)).toEqual(["resume", thread, "-"]);
++  const options = original.args.slice(1, -1);
++  options.splice(options.indexOf("--cd"), 2);
++  expect(resumed.args).toEqual(["exec", "resume", ...options, thread, "-"]);
+   expect(resumed.stdin).toBe(original.stdin);
+   expect(resumed.args).not.toContain("--last");
+   expect(resumed.args).not.toContain("--dangerously-bypass-approvals-and-sandbox");
+diff --git a/learner/lib/engines.ts b/learner/lib/engines.ts
+index ad9779e5f..3bcb02af0 100644
+--- a/learner/lib/engines.ts
++++ b/learner/lib/engines.ts
+@@ -451,7 +451,15 @@ export function codexCommand(request: EngineRequest, prompt: string, binary = "c
+     args.push("-c", `${key}.default_tools_approval_mode=${toml("approve")}`);
+   }
+   for (const feature of LEARNER_CODEX_DISABLED_FEATURES) args.push("--disable", feature);
+-  if (request.resumeThread) args.push("resume", request.resumeThread);
++  if (request.resumeThread) {
++    // Match the production ops resume adapter: resume takes its own options,
++    // while cwd is supplied by spawn (resume has no --cd option).
++    const options = args.slice(1);
++    const cd = options.indexOf("--cd");
++    if (cd >= 0) options.splice(cd, 2);
++    return { command: binary, args: ["exec", "resume", ...options, request.resumeThread, "-"],
++      stdin: codexPreamble(request.tools, writes) + prompt };
++  }
+   args.push("-");
+   return { command: binary, args, stdin: codexPreamble(request.tools, writes) + prompt };
+ }

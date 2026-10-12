@@ -1,0 +1,61 @@
+{
+  "source": "691dee062ecb7be8cd4a7bd1192c9441bce07a4f",
+  "branch": "exp-silent",
+  "merged": null,
+  "refresh": null,
+  "pre": "44e82b09e670af9144e6e7d6f697cb0ac19f69b3",
+  "tests": null,
+  "live_branch": "live",
+  "initial": "44e82b09e670af9144e6e7d6f697cb0ac19f69b3",
+  "initial_status": " M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+  "refresh_paths": [],
+  "base": "ff5b05f230fe6a8187559d513c7bca12ceb71472",
+  "source_knowledge_paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "live_knowledge_paths": [
+    "knowledge/builders/build-monster-db.py",
+    "knowledge/builders/build-outcome-stats.py",
+    "knowledge/builders/build-potion-equivalents.py",
+    "knowledge/builders/characters.py",
+    "knowledge/builders/refresh-potion-equivalents.sh",
+    "knowledge/characters/ironclad/potion-equivalents.json",
+    "knowledge/characters/ironclad/sl-elites.json",
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/fight-value-gates.json",
+    "knowledge/characters/silent/fight-value.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/potion-equivalents.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ],
+  "knowledge_overlap": [],
+  "live_experience": {
+    "version": "2026-10-12.10",
+    "sha256": "4cefea2bbfe6de640f79785d61068bde086e8eb011b17770b33564a7d0f84ad2"
+  },
+  "result": "锁内合并预检冲突，按任务停止；未实际合并或硬解，已保留刷新提交",
+  "conflicts": [
+    "CONFLICT (content): Merge conflict in notes/lessons.md",
+    "CONFLICT (content): Merge conflict in paper/data/README.md",
+    "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+    "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+    "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+    "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+    "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+    "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+    "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+    "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+    "CONFLICT (content): Merge conflict in paper/data/summary.json",
+    "CONFLICT (content): Merge conflict in paper/data/verification.json",
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+    "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+    "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+  ],
+  "live_head_after": "44e82b09e670af9144e6e7d6f697cb0ac19f69b3",
+  "actual_merge_attempted": false,
+  "followup": "15处共享记录预检冲突，未进入实际merge；本批无待提交刷新数据或新增刷新提交，已有live和两处脏notes保留。live已由上一批进入.10；本批.11未合入，不登记新eval/上线通知/合后测试/shipped，交原experience-done完成事件由运维兜底。"
+}

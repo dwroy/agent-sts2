@@ -1,0 +1,410 @@
+{
+  "at": "2026-10-12 21:38:14 CST",
+  "native_log": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T14-08-29-01a12eba-13a8-7550-ac47-692d3d19bed1.jsonl",
+  "original": {
+    "line": 8,
+    "timestamp": "2026-10-12T06:09:05.853Z",
+    "raw_sha256": "9ef18645dea116336350f7c008a0e4b852f8c2da7fbc58c131a181cf5c69694f",
+    "payload": {
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741",
+      "approval_policy": "never",
+      "sandbox_policy": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261012-140741"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "permission_profile": {
+        "type": "managed",
+        "file_system": {
+          "type": "restricted",
+          "entries": [
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.deepseek_api_key"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.jev_api_keys"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "glob_pattern",
+                "pattern": "/home/dw/.sts2-jev-env*"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.codex/auth.json"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.codex1/auth.json"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.deepseek_api_key"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.jev_api_keys"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.sts2-jev-env-m1"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.sts2-jev-env-v3"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.sts2-jev-env.m1-0925.bak"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/.sts2-jev-env.openrouter.bak"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "glob_pattern",
+                "pattern": "/home/dw/Projects/agent-sts2/**/*.env"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "glob_pattern",
+                "pattern": "/home/dw/Projects/agent-sts2/**/.env"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/Projects/agent-sts2"
+              },
+              "access": "write"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/Projects/agent-sts2/.git"
+              },
+              "access": "write"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/Projects/agent-sts2/.git/config"
+              },
+              "access": "read"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/Projects/agent-sts2/.git/hooks"
+              },
+              "access": "read"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261012-140741"
+              },
+              "access": "write"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/Projects/agent-sts2/.worktrees/live/agent/.env"
+              },
+              "access": "deny"
+            },
+            {
+              "path": {
+                "type": "path",
+                "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741"
+              },
+              "access": "write"
+            },
+            {
+              "path": {
+                "type": "special",
+                "value": {
+                  "kind": "root"
+                }
+              },
+              "access": "read"
+            },
+            {
+              "path": {
+                "type": "special",
+                "value": {
+                  "kind": "slash_tmp"
+                }
+              },
+              "access": "write"
+            },
+            {
+              "path": {
+                "type": "special",
+                "value": {
+                  "kind": "tmpdir"
+                }
+              },
+              "access": "write"
+            }
+          ],
+          "glob_scan_max_depth": 8
+        },
+        "network": "restricted"
+      },
+      "active_permission_profile": {
+        "id": "learner"
+      },
+      "file_system_sandbox_policy": {
+        "kind": "restricted",
+        "glob_scan_max_depth": 8,
+        "entries": [
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.deepseek_api_key"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.jev_api_keys"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "glob_pattern",
+              "pattern": "/home/dw/.sts2-jev-env*"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.codex/auth.json"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.codex1/auth.json"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.deepseek_api_key"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.jev_api_keys"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.sts2-jev-env-m1"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.sts2-jev-env-v3"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.sts2-jev-env.m1-0925.bak"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/.sts2-jev-env.openrouter.bak"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "glob_pattern",
+              "pattern": "/home/dw/Projects/agent-sts2/**/*.env"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "glob_pattern",
+              "pattern": "/home/dw/Projects/agent-sts2/**/.env"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/Projects/agent-sts2"
+            },
+            "access": "write"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/Projects/agent-sts2/.git"
+            },
+            "access": "write"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/Projects/agent-sts2/.git/config"
+            },
+            "access": "read"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/Projects/agent-sts2/.git/hooks"
+            },
+            "access": "read"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261012-140741"
+            },
+            "access": "write"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/live/agent/.env"
+            },
+            "access": "deny"
+          },
+          {
+            "path": {
+              "type": "path",
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741"
+            },
+            "access": "write"
+          },
+          {
+            "path": {
+              "type": "special",
+              "value": {
+                "kind": "root"
+              }
+            },
+            "access": "read"
+          },
+          {
+            "path": {
+              "type": "special",
+              "value": {
+                "kind": "slash_tmp"
+              }
+            },
+            "access": "write"
+          },
+          {
+            "path": {
+              "type": "special",
+              "value": {
+                "kind": "tmpdir"
+              }
+            },
+            "access": "write"
+          }
+        ]
+      }
+    }
+  },
+  "failed_resume": {
+    "line": 548,
+    "timestamp": "2026-10-12T13:24:36.929Z",
+    "raw_sha256": "ed693c1c8cbf7d78665df3f3eac336189bc9264cfe15fa2f5cdbac1323e8a74a",
+    "payload": {
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741",
+      "approval_policy": "never",
+      "sandbox_policy": {
+        "type": "read-only"
+      },
+      "permission_profile": {
+        "type": "managed",
+        "file_system": {
+          "type": "restricted",
+          "entries": [
+            {
+              "path": {
+                "type": "special",
+                "value": {
+                  "kind": "root"
+                }
+              },
+              "access": "read"
+            }
+          ]
+        },
+        "network": "restricted"
+      },
+      "active_permission_profile": {
+        "id": ":read-only"
+      }
+    }
+  }
+}
