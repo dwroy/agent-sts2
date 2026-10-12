@@ -1,0 +1,24 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-exp-fix-20261012-1102/agent
+
+ ✓ tests/rollout-live.test.ts (13 tests) 157925ms
+     ✓ every option of a logged board carries the rollout and history facts; the decision log gets the rollout  3331ms
+     ✓ with a modelled potion held, the rollout fact says later turns may use it  1332ms
+     ✓ a drink-first potion option says it is not rolled out  670ms
+     ✓ up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board)  43758ms
+     ✓ the controlled clock: every logged board's rollout stays inside the budget  21885ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout  82222ms
+     ✓ logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left  2273ms
+     ✓ the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it  1293ms
+     ✓ the dead Parafright's hit next turn is in every line's enemy_threat_next  1002ms
+ ✓ tests/rollout-best-added.test.ts (4 tests) 6312ms
+     ✓ the rollout's best line is added, last and marked, when code did not show it  5938ms
+ ✓ tests/jev-experience.test.ts (16 tests) 273ms
+ ✓ tests/experience.test.ts (10 tests) 124ms
+ ✓ tests/knowledge-check-a8w-experience.test.ts (1 test) 52ms
+
+ Test Files  5 passed (5)
+      Tests  44 passed (44)
+   Start at  11:05:06
+   Duration  167.98s (transform 1.29s, setup 560ms, import 1.96s, tests 164.68s, environment 1ms)
+
