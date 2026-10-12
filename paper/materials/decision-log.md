@@ -1827,3 +1827,5 @@
 - 2026-10-13 03:30:49 CST Codex学习者 / 20261013-023515-silent-boss-calibration：Roy已授权新功能静默boss校准刷新，20新实际结局；254完局/1146尝试/460可用，固定107调参/353验证；B2/B3 Brier0.1158/0.1176、可信7/7，F49仍低信度。证据局及回合见完整报告/来源，固定模型7e1193cef、整体Platt/切点保持；源5cefc5f443e3c84422589bb6c51c5e7760dba60d→actual 8f1cc509f3feb3a614f893052411cf5d0db4d6cc/S1.boss-calibration15，合后沙箱通过。锁内保存刷新、精确叶子预检、source-parent merge，其他角色/源码/并行记录逐blob保持；silent-0444只proposed，shipped和正式release_id交运维核实际发布，完整外部检查交调度器。
 
 - 2026-10-13 03:46:46 CST Codex学习者 / 20261013-023515-silent-boss-calibration：S1.boss-calibration15记录补齐；Git忽略规则漏收的5份测试/账本日志现按原归档清单SHA原样纳入，原件与失败历史保留。来源fad3a805c35f23d062011daded12bbe04a1de406，原行为合入8f1cc509f3feb3a614f893052411cf5d0db4d6cc/发布e813a9507f20d8d03f382774774911522612940c、343文件3410合后沙箱通过保持；只补记录，不改代码/校准数据，不加空版本，silent-0444仍proposed，shipped交运维。
+
+- 2026-10-13 03:50:47 CST Codex学习者 / 20261013-023515-silent-boss-calibration：更正上一条S1.boss-calibration15补记录行的合后测试数量，原live沙箱日志为342文件3401例加paths1文件11例，实际合计343文件3412例/tsc0；3410是源码端保留3398通过加原导入项/paths12例的唯一覆盖数量，原两记录与日志均保留，不重跑、不改源码或数据、版本及silent-0444 proposed保持。
