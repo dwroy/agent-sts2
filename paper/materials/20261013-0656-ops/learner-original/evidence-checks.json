@@ -1,0 +1,381 @@
+{
+  "scope": "原始证据字节和算术一致性；不是生产代码测试、盲测或策略收益实验",
+  "raw_records_verified": 6806,
+  "checks": [
+    {
+      "label": "神化F35实际耗能",
+      "actual": 2,
+      "expected": 2,
+      "source_lines": [
+        275564,
+        275565
+      ]
+    },
+    {
+      "label": "神化F43同后续牌序候选",
+      "actual": [
+        43,
+        14,
+        51,
+        13
+      ],
+      "expected": [
+        43,
+        14,
+        51,
+        13
+      ],
+      "source_lines": [
+        269706,
+        269707
+      ]
+    },
+    {
+      "label": "神化F43真实玩家损血",
+      "actual": 13,
+      "expected": 13,
+      "source_lines": [
+        275679,
+        275687
+      ]
+    },
+    {
+      "label": "神化F43真实敌血净扣",
+      "actual": 51,
+      "expected": 51,
+      "source_lines": [
+        275679,
+        275687
+      ]
+    },
+    {
+      "label": "神化F43勒紧建立",
+      "actual": 6,
+      "expected": 6,
+      "source_lines": [
+        275687
+      ]
+    },
+    {
+      "label": "三骑士药水样本及耗时",
+      "actual": [
+        1,
+        12,
+        707,
+        12,
+        12
+      ],
+      "expected": [
+        1,
+        12,
+        707,
+        12,
+        12
+      ],
+      "source_lines": [
+        269748,
+        269754
+      ]
+    },
+    {
+      "label": "三骑士首题推演退化",
+      "actual": [
+        1,
+        1,
+        null
+      ],
+      "expected": [
+        1,
+        1,
+        null
+      ],
+      "source_lines": [
+        269748
+      ]
+    },
+    {
+      "label": "三骑士T4候选血价",
+      "actual": [
+        13,
+        24,
+        31,
+        32
+      ],
+      "expected": [
+        13,
+        24,
+        31,
+        32
+      ],
+      "source_lines": [
+        269770
+      ]
+    },
+    {
+      "label": "沙虫首试/第三试相同决策指纹",
+      "actual": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:326:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:FRANTIC_ESCAPE:true|1:POISONED_STAB:true|2:STRIKE_SILENT:true|3:LEADING_STRIKE:true|4:PIERCING_WAIL:true|5:STRIKE_SILENT:true\",\"hp\":47,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "expected": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:326:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:FRANTIC_ESCAPE:true|1:POISONED_STAB:true|2:STRIKE_SILENT:true|3:LEADING_STRIKE:true|4:PIERCING_WAIL:true|5:STRIKE_SILENT:true\",\"hp\":47,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "source_lines": [
+        270216,
+        270282
+      ]
+    },
+    {
+      "label": "沙虫同盘真实换线血价",
+      "actual": [
+        3,
+        15
+      ],
+      "expected": [
+        3,
+        15
+      ],
+      "source_lines": [
+        276208,
+        276212,
+        276274,
+        276278
+      ]
+    },
+    {
+      "label": "沙虫同盘真实敌血净扣",
+      "actual": [
+        10,
+        17
+      ],
+      "expected": [
+        10,
+        17
+      ],
+      "source_lines": [
+        276208,
+        276212,
+        276274,
+        276278
+      ]
+    },
+    {
+      "label": "沙虫末轮完整需损与截断",
+      "actual": [
+        5,
+        22,
+        37,
+        0
+      ],
+      "expected": [
+        5,
+        22,
+        37,
+        0
+      ],
+      "source_lines": [
+        276433,
+        276434
+      ]
+    },
+    {
+      "label": "下水道蚌独立增力",
+      "actual": [
+        0,
+        4,
+        8
+      ],
+      "expected": [
+        0,
+        4,
+        8
+      ],
+      "source_lines": [
+        273237,
+        273252,
+        273263
+      ]
+    },
+    {
+      "label": "下水道蚌弱后仍致死",
+      "actual": [
+        2,
+        10,
+        14
+      ],
+      "expected": [
+        2,
+        10,
+        14
+      ],
+      "source_lines": [
+        273268
+      ]
+    },
+    {
+      "label": "族母吸取玩家力敏及敌力",
+      "actual": [
+        2,
+        0,
+        -2,
+        2
+      ],
+      "expected": [
+        2,
+        0,
+        -2,
+        2
+      ],
+      "source_lines": [
+        273502,
+        273504
+      ]
+    },
+    {
+      "label": "族母负敏捷双防御",
+      "actual": [
+        3,
+        6
+      ],
+      "expected": [
+        3,
+        6
+      ],
+      "source_lines": [
+        273505,
+        273507
+      ]
+    },
+    {
+      "label": "族母毒双触发真实净扣",
+      "actual": [
+        33,
+        17
+      ],
+      "expected": [
+        33,
+        17
+      ],
+      "source_lines": [
+        273504,
+        273508
+      ]
+    },
+    {
+      "label": "失落末试无毒冒泡仅耗能",
+      "actual": [
+        5,
+        4,
+        35,
+        35,
+        0
+      ],
+      "expected": [
+        5,
+        4,
+        35,
+        35,
+        0
+      ],
+      "source_lines": [
+        274379,
+        274380
+      ]
+    },
+    {
+      "label": "失落末试没有建立毒雾",
+      "actual": 0,
+      "expected": 0,
+      "source_lines": [
+        274391
+      ]
+    },
+    {
+      "label": "胧光怪航行共同成长",
+      "actual": [
+        3,
+        6,
+        6
+      ],
+      "expected": [
+        3,
+        6,
+        6
+      ],
+      "source_lines": [
+        273589,
+        273596
+      ]
+    },
+    {
+      "label": "胧光怪T4净扣与未退场幻象",
+      "actual": [
+        15,
+        47,
+        2
+      ],
+      "expected": [
+        15,
+        47,
+        2
+      ],
+      "source_lines": [
+        273593,
+        273596
+      ]
+    },
+    {
+      "label": "甲虫末试醒来和独立成长",
+      "actual": [
+        3,
+        2,
+        1,
+        0
+      ],
+      "expected": [
+        3,
+        2,
+        1,
+        0
+      ],
+      "source_lines": [
+        274991,
+        274998,
+        275003,
+        275007
+      ]
+    },
+    {
+      "label": "甲虫末试成长未取消",
+      "actual": [
+        0,
+        2,
+        4
+      ],
+      "expected": [
+        0,
+        2,
+        4
+      ],
+      "source_lines": [
+        275007,
+        275013,
+        275018
+      ]
+    },
+    {
+      "label": "甲虫末试完整需损与最终敌血",
+      "actual": [
+        1,
+        16,
+        22,
+        32
+      ],
+      "expected": [
+        1,
+        16,
+        22,
+        32
+      ],
+      "source_lines": [
+        275022,
+        275023
+      ]
+    }
+  ]
+}

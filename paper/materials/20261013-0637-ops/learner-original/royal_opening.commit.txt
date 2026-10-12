@@ -1,0 +1,24 @@
+commit e8b4bb320ae3068db5ebb6ce8c6fa91a9689178a
+Author:     Roy <me@dwroy.com>
+AuthorDate: Sun Oct 11 20:28:18 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Sun Oct 11 20:28:18 2026 +0800
+
+    Model observed Silent opening HP loss in continuous fights
+    
+    Reapply candidate fc7042d1df0626e9e726f4bc912d9c6f626d908f on the current baseline. TXZ6RVMQA09D A10 F43/F45/F46/F48/F49 T1 loses four HP before any play; the F49 4-to-0 transition has no actionable turn. Ledger: silent-0255 and silent-0228. Proposals: silent-proposal-33ebbb1d904f7511 and the scoped opening portion of silent-proposal-47910f82a1fdd98f.
+    
+    Apply the observed cost once to fresh or transferred entry HP, preserve zero HP and existing value curves, and leave unknown relic/revival combinations and SL eligibility unchanged. Fixed negative control fails and restoration passes; sandbox typecheck and tests pass.
+    
+    Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+
+ agent/src/reflex/continuation-value.ts   |    3 +
+ agent/src/reflex/rollout.ts              |    2 +
+ agent/src/sim/boss-sim.ts                |   17 +-
+ agent/src/sim/boss-start.ts              |   12 +-
+ agent/src/sim/double-boss-start.ts       |    6 +-
+ agent/src/sim/silent-opening.ts          |   21 +
+ agent/tests/silent-opening-evidence.json | 5743 ++++++++++++++++++++++++++++++
+ agent/tests/silent-opening.test.ts       |  116 +
+ 8 files changed, 5914 insertions(+), 6 deletions(-)

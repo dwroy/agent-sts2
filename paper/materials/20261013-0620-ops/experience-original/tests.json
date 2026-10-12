@@ -1,0 +1,50 @@
+{
+  "tsc": 0,
+  "vitest": 0,
+  "files": 343,
+  "cases": 3412,
+  "exit": 0,
+  "rerun": true,
+  "entry": "原test-sandbox.sh；1423跟踪源码逐SHA相同隔离副本、同一经验文件；默认角色固定回归环境，知识渲染固定CHARACTER=silent；不改排除/超时/预算",
+  "phases": [
+    {
+      "name": "test-source",
+      "tsc": 0,
+      "exit": 1,
+      "files_passed": 341,
+      "cases_passed": 3400,
+      "sha256": "6dfefa2dad430a2c37521e41c62fe7229a42cdaccc0416d4fdc6a2e1df4840aa",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-041243-experience-update/test-source.log"
+    },
+    {
+      "name": "test-source-default",
+      "tsc": 0,
+      "exit": 1,
+      "files_passed": 341,
+      "cases_passed": 3400,
+      "sha256": "7875f3c89143ac68e366db2441a608929153ffa593f817c3d38d9563e56a3271",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-041243-experience-update/test-source-default.log"
+    },
+    {
+      "name": "test-source-copy",
+      "tsc": 0,
+      "exit": 0,
+      "files_passed": 343,
+      "cases_passed": 3412,
+      "sha256": "4ab5df04dccb901ecc512528b7ca1907859430c5df611f98f257d1b93b47b0e0",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-041243-experience-update/test-source-copy.log"
+    }
+  ],
+  "initial_reason": "历史learner/runs符号链接ELOOP，不改历史；隔离副本消除此目录影响",
+  "default_workers_reason": "四线程只剩rollout-live的120秒超时，原件保留；单线程同套件全通过",
+  "host_full_suite": "实际合入后的调度器完整宿主检查待learner-checks，不以沙箱结果代替",
+  "live": {
+    "exit": 0,
+    "tsc": 0,
+    "vitest": 0,
+    "files": 345,
+    "cases": 3414,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-041243-experience-update/test-live.log",
+    "sha256": "19cb6dbc95de554e410e5c2374852b2a39156cf1dbca6ec6368c7bb3df0a084e"
+  }
+}

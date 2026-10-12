@@ -1,0 +1,60 @@
+## 复盘回报
+
+- 已追加：WCDTYJKUDS4T（A10，第33层，知识恶魔 KNOWLEDGE_DEMON：末次T7以1血0挡对27攻击死亡，敌仍127/399血）
+- 新的纯 bug：无。
+- 写成「未记录」的项：WCDTYJKUDS4T：完整运行脏树、部分末击及判死后结算帧、历石独立触发顺序、完整实线最优率、提前饮药／换线对照、boss时钟、三幕实盘、DeepSeek时间窗推理、Jev缓存命中。
+- 学习账本：新增无；更新 silent-0005、0011、0013、0020、0027、0102、0132、0147、0168、0173、0210、0212、0278、0288、0385；老错 silent-0210、silent-0385；`ledger.py check`退出码0。
+- 代码提案：
+  - F29T3—4／F33T5—6，账本0210等：`silent-proposal-056584c02800199e`，按钮禁挡后继；缺同盘替线整战。
+  - F33末试T7，账本0385等：`silent-proposal-5d8deecfec613fc1`，生成小刀与懒惰名额；未证明替线可赢。
+  - F29→F33，账本0020等：`silent-proposal-0a739a72197c72c7`，跨战保药资源比较；缺早饮对照。
+  - 三项均交独立 `strategy-proposal` 实现，未改代码或登记上线。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["WCDTYJKUDS4T"],
+  "skipped": [],
+  "bugs": [],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0210",
+      "silent-0385",
+      "silent-0020",
+      "silent-0005",
+      "silent-0011",
+      "silent-0013",
+      "silent-0027",
+      "silent-0102",
+      "silent-0132",
+      "silent-0147",
+      "silent-0168",
+      "silent-0173",
+      "silent-0212",
+      "silent-0278",
+      "silent-0288"
+    ],
+    "repeats": ["silent-0210", "silent-0385"],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-056584c02800199e",
+    "silent-proposal-5d8deecfec613fc1",
+    "silent-proposal-0a739a72197c72c7"
+  ],
+  "implementation_domains": ["combat", "potion", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-054302-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13211-bd4e-74b1-86a9-7eecfe7c16dc
+轮数：1；工具调用：command_execution×56
+token：输入 245.6k、输出 41.9k（其中推理 11.3k）、cache 读 5488.4k、cache 写 0（命中 95.7%）
+成本：未提供
+耗时：1275.2 s（墙钟）
+时间：首个事件 14.1 s、模型首个输出 19.0 s、首次工具 22.4 s、末次工具结束 1244.6 s；工具内共 306.9 s，其余（模型生成、推理、网络）954.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×35 wait×1；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T05-43-05-01a13211-bd4e-74b1-86a9-7eecfe7c16dc.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261013-054302-postmortem.jsonl

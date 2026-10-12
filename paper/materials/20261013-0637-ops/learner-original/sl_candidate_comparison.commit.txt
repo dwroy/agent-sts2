@@ -1,0 +1,29 @@
+commit 5604982e13890e0e2bc8bf8246272e8267321c0b
+Author:     Roy <me@dwroy.com>
+AuthorDate: Sat Oct 10 18:57:38 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Sat Oct 10 18:57:38 2026 +0800
+
+    Log Silent A10 SL candidate resource comparisons
+    
+    Record guarded original and SL replacement current-turn predictions, resource
+    deltas, listed steps, random-potion uncertainty, and unverified execution in
+    deviation, replay, and later-turn avoidance logs. Keep selected actions and
+    other characters or ascensions unchanged.
+    
+    Evidence: YF0LXT1QSTGG F48 T1 attempts 2/3; 8JRE1C4H4Z2W F33 T2
+    attempts 1/3; XP2SL33HT0D9 F33 T1/T3. Ledger: silent-0079.
+    Proposal: silent-proposal-f69950ae39f58df3, scoped resource-audit child of
+    silent-proposal-c0767768bf6a7ab1. Parent scope remains waiting.
+    
+    Validation: sandbox TypeScript and 2686 Vitest checks passed; the six focused
+    checks pass, and removing production wiring fails both integration checks.
+    
+    Co-Authored-By: OpenAI GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+
+ agent/src/reflex/combat-plan.ts                   |   10 +-
+ agent/src/reflex/silent-sl-resource-comparison.ts |   47 +
+ agent/tests/silent-sl-resource-comparison.test.ts |  132 +
+ agent/tests/silent-sl-resource-state.json         | 2836 +++++++++++++++++++++
+ 4 files changed, 3023 insertions(+), 2 deletions(-)

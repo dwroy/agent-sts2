@@ -1,0 +1,264 @@
+[
+  {
+    "_line": 270264,
+    "run_id": "8JRE1C4H4Z2W",
+    "floor": 33,
+    "turn": 5,
+    "sl_attempt": 2,
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:249:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:PIERCING_WAIL:true|1:CLUMSY:false|2:DEFEND_SILENT:true|3:FRANTIC_ESCAPE:true|4:SUCKER_PUNCH:true|5:STRIKE_SILENT:true|6:BUBBLE_BUBBLE:true\",\"hp\":25,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:6:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|ACCELERANT_POWER:1\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "plan3": 0.02,
+          "plan1": 0.01,
+          "plan5": 0.02,
+          "plan6": 0.07,
+          "plan2": 0.2,
+          "plan7": 0,
+          "plan4": 0.67
+        },
+        "confidence": 0.61,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.61,
+          "probabilities": {
+            "plan3": 0.02,
+            "plan1": 0.01,
+            "plan5": 0.02,
+            "plan6": 0.07,
+            "plan2": 0.2,
+            "plan7": 0,
+            "plan4": 0.67
+          }
+        }
+      }
+    },
+    "journal": {
+      "choice": "尖啸, then 狂乱逃离",
+      "reason": ""
+    },
+    "sl_explore": null,
+    "hp_guard": null,
+    "rollout": {
+      "available": true,
+      "ms": 349,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 7,
+      "best": "plan4",
+      "best_added": false
+    },
+    "rationale": "Jev chose plan 4/7 (狂乱逃离, 咕嘟冒泡 -> 无厌沙虫) with confidence 0.61; code rank 4; HP guard: plan 4 (狂乱逃离, 咕嘟冒泡 -> 无厌沙虫; hp -16) is more than 8 HP over the cheapest line, playing plan 6 (尖啸, 狂乱逃离; hp -4) instead"
+  },
+  {
+    "_line": 271495,
+    "run_id": "YF0LXT1QSTGG",
+    "floor": 48,
+    "turn": 4,
+    "sl_attempt": 6,
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:212:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:BLADE_DANCE:true|1:PIERCING_WAIL:true|2:SURVIVOR:true|3:PIERCING_WAIL:true|4:STRIKE_SILENT:true|5:CALCULATED_GAMBLE:true|6:NOXIOUS_FUMES:true|7:HAND_TRICK:true\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"PLATING_POWER:1|DEXTERITY_POWER:5|RITUAL_POWER:1|STRENGTH_POWER:3\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan9",
+        "probabilities": {
+          "plan6": 0.01,
+          "plan4": 0.02,
+          "plan9": 0.84,
+          "plan2": 0.03,
+          "plan5": 0.02,
+          "plan8": 0.01,
+          "plan7": 0.01,
+          "plan1": 0.04,
+          "plan3": 0.02
+        },
+        "confidence": 0.82,
+        "raw": {
+          "type": "choice",
+          "choice": "plan9",
+          "confidence": 0.82,
+          "probabilities": {
+            "plan6": 0.01,
+            "plan4": 0.02,
+            "plan9": 0.84,
+            "plan2": 0.03,
+            "plan5": 0.02,
+            "plan8": 0.01,
+            "plan7": 0.01,
+            "plan1": 0.04,
+            "plan3": 0.02
+          }
+        }
+      }
+    },
+    "journal": {
+      "choice": "尖啸, then 尖啸, then 打击 -> 实验体 #C64, then 毒雾+, then 计算下注",
+      "reason": ""
+    },
+    "sl_explore": {
+      "point": "T4, after the replay of attempt 3's path stopped (T2: off attempt 3's path after the wasted deviation at T1)",
+      "original": "尖啸, 尖啸, 打击 -> 实验体 #C64, 毒雾+, 计算下注",
+      "replacement": "尖啸, 尖啸, 打击 -> 实验体 #C64, 计算下注, 致命毒药 -> 实验体 #C64",
+      "reason": "the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail)",
+      "played_in": [
+        1,
+        2
+      ],
+      "numbers": {
+        "original": "rollout dead 23/24, further loss 18, win ~0%; whole-fight sim win 0%; this turn hp -0, dmg 12",
+        "replacement": "rollout dead 24/24, further loss 18, win ~0%; whole-fight sim win 0%; this turn hp -0, dmg 17"
+      },
+      "gate": "rollout",
+      "turn": "CALCULATED_GAMBLE, NOXIOUS_FUMES+, PIERCING_WAIL, PIERCING_WAIL, STRIKE_SILENT>实验体 #C64",
+      "turn_instead": "CALCULATED_GAMBLE, DEADLY_POISON>实验体 #C64, PIERCING_WAIL, PIERCING_WAIL, STRIKE_SILENT>实验体 #C64"
+    },
+    "hp_guard": null,
+    "rollout": {
+      "available": true,
+      "ms": 1162,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 13,
+      "best": "plan9",
+      "best_added": true,
+      "saturated": true
+    },
+    "rationale": "Jev chose plan 9/9 (尖啸, 尖啸, 打击 -> 实验体 #C64, 毒雾+, 计算下注) with confidence 0.82; code rank - (rollout's best line, added); SL explore (T4, after the replay of attempt 3's path stopped (T2: off attempt 3's path after the wasted deviation at T1)): playing 尖啸, 尖啸, 打击 -> 实验体 #C64, 计算下注, 致命毒药 -> 实验体 #C64 instead of 尖啸, 尖啸, 打击 -> 实验体 #C64, 毒雾+, 计算下注, played on this board in attempts 1, 2 (the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail))"
+  },
+  {
+    "_line": 271509,
+    "run_id": "YF0LXT1QSTGG",
+    "floor": 48,
+    "turn": 5,
+    "sl_attempt": 6,
+    "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:160:0:true\",\"event\":\"\",\"gold\":56,\"hand\":\"0:NOXIOUS_FUMES:false\",\"hp\":18,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:23:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"DEXTERITY_POWER:6|RITUAL_POWER:1|STRENGTH_POWER:4|ACCELERANT_POWER:2\",\"rewards\":\"\",\"run\":\"YF0LXT1QSTGG\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "answers": null,
+    "journal": {
+      "choice": "every simulated line dies; playing the one that keeps the most HP (-3): end turn",
+      "reason": ""
+    },
+    "sl_explore": null,
+    "hp_guard": null,
+    "rollout": null,
+    "rationale": "every simulated line dies; playing the one that keeps the most HP (-3): end turn"
+  },
+  {
+    "_line": 272076,
+    "run_id": "XP2SL33HT0D9",
+    "floor": 33,
+    "turn": 4,
+    "sl_attempt": 3,
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:179:0:true|1:184:0:true\",\"event\":\"\",\"gold\":187,\"hand\":\"0:BACKFLIP:true|1:LEG_SWEEP:true|2:CLUMSY:false|3:FOOTWORK:true|4:DEFLECT:true|5:STRIKE_SILENT:true|6:NEUTRALIZE:true|7:FOOTWORK:true\",\"hp\":36,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"SURROUNDED_POWER:1|WEAK_POWER:2|FRAIL_POWER:2\",\"rewards\":\"\",\"run\":\"XP2SL33HT0D9\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 3
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan3",
+        "probabilities": {
+          "plan5": 0.01,
+          "plan6": 0.01,
+          "plan10": 0.01,
+          "plan4": 0.02,
+          "plan3": 0.8,
+          "plan1": 0.1,
+          "plan2": 0.01,
+          "plan8": 0,
+          "plan9": 0.02,
+          "plan7": 0.01
+        },
+        "confidence": 0.78,
+        "raw": {
+          "type": "choice",
+          "choice": "plan3",
+          "confidence": 0.78,
+          "probabilities": {
+            "plan5": 0.01,
+            "plan6": 0.01,
+            "plan10": 0.01,
+            "plan4": 0.02,
+            "plan3": 0.8,
+            "plan1": 0.1,
+            "plan2": 0.01,
+            "plan8": 0,
+            "plan9": 0.02,
+            "plan7": 0.01
+          }
+        }
+      }
+    },
+    "journal": {
+      "choice": "灵动步法, then 中和+ -> 火箭, then 灵动步法, then 后空翻, then 偏折, then 肾上腺素, then 防御",
+      "reason": ""
+    },
+    "sl_explore": {
+      "point": "T4, the 11th latest question before attempt 1's death on T9",
+      "original": "灵动步法, 中和+ -> 火箭, 灵动步法, 后空翻, 偏折, 肾上腺素, 防御",
+      "replacement": "灵动步法, 中和+ -> 火箭, 灵动步法, 后空翻, 偏折, 肾上腺素, 匕首雨",
+      "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+      "played_in": [
+        1
+      ],
+      "replayed": 6,
+      "numbers": {
+        "original": "rollout dead 21/24, further loss 36, win ~0%; whole-fight sim win 0%; this turn hp -8, dmg 11",
+        "replacement": "rollout dead 23/24, further loss 36, win ~0%; whole-fight sim win 0%; this turn hp -16, dmg 23"
+      },
+      "gate": "b2",
+      "b2": {
+        "original": 0,
+        "replacement": 0,
+        "diff": 0,
+        "se": 0
+      },
+      "turn": "ADRENALINE, BACKFLIP, DEFEND_SILENT, DEFLECT, FOOTWORK, FOOTWORK, NEUTRALIZE+>火箭",
+      "turn_instead": "ADRENALINE, BACKFLIP, DAGGER_SPRAY, DEFLECT, FOOTWORK, FOOTWORK, NEUTRALIZE+>火箭"
+    },
+    "hp_guard": null,
+    "rollout": {
+      "available": true,
+      "ms": 4488,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 14,
+      "best": null,
+      "best_added": false,
+      "tied": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7",
+        "plan8",
+        "plan9",
+        "plan10"
+      ],
+      "saturated": true,
+      "orders": 2,
+      "orders_dropped": 0,
+      "best_order": "碾碎爪 > 火箭"
+    },
+    "rationale": "Jev chose plan 3/10 (灵动步法, 中和+ -> 火箭, 灵动步法, 后空翻, 偏折, 肾上腺素, 防御) with confidence 0.78; code rank 3; SL explore (T4, the 11th latest question before attempt 1's death on T9): playing 灵动步法, 中和+ -> 火箭, 灵动步法, 后空翻, 偏折, 肾上腺素, 匕首雨 instead of 灵动步法, 中和+ -> 火箭, 灵动步法, 后空翻, 偏折, 肾上腺素, 防御, played on this board in attempt 1 (the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's))"
+  }
+]

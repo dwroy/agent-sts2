@@ -1,0 +1,28 @@
+commit 5c7105ff0294466da8319f2934beda05c6040794
+Author:     Roy <me@dwroy.com>
+AuthorDate: Sat Oct 10 21:06:08 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Sat Oct 10 21:06:08 2026 +0800
+
+    Model observed ordinary Strangle losses for Silent
+    
+    Replay Q6M2Y34MWKRE A10 F8 T4 and Y6GM2CHWJBEY A0 F4 T1.
+    Account for two HP lost after later completed manual cards, retain an
+    observed power during replanning, and discard it on later rollout turns.
+    Keep unverified upgrades, replay, stacking, enemy interactions, missing
+    ascensions and other characters outside this observed branch.
+    
+    Ledger: silent-0260, silent-0261.
+    Proposal: silent-proposal-1b9e29122364fa68.
+    Task: strategy-proposal/20261010-201301-strategy-proposal.
+    
+    Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+
+ agent/src/reflex/card-model.ts            |     6 +
+ agent/src/reflex/combat-plan.ts           |    19 +-
+ agent/src/reflex/rollout.ts               |     2 +-
+ agent/src/reflex/turn-solver.ts           |    48 +-
+ agent/tests/silent-strangle-evidence.json | 16589 ++++++++++++++++++++++++++++
+ agent/tests/silent-strangle.test.ts       |   131 +
+ 6 files changed, 16787 insertions(+), 8 deletions(-)

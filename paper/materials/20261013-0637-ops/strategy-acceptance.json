@@ -1,0 +1,258 @@
+{
+  "at": "2026-10-13 06:40:16 CST",
+  "batch": "20261013-060422-s2-strategy-proposal",
+  "base": "652f39b79f7c07ae70e7988d920f134d32362243",
+  "proof": {
+    "base": "652f39b79f7c07ae70e7988d920f134d32362243",
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-060422-s2/learner/runs/20261013-060437-strategy-proposal/report.md",
+    "dispositions": [
+      {
+        "id": "silent-proposal-08eaa60bcc449852",
+        "state": "waiting",
+        "reason": "缺同入口不饮用、提前饮用或留药到boss的完整后继对照，不能校准持药价值或留药阈值。"
+      },
+      {
+        "id": "silent-proposal-92920295a648b540",
+        "state": "waiting",
+        "reason": "缺相同抽序及后续动作的连续通关对照；少损3也少扣9、首胜余4仍开场死，不能调整SL或终局权重。"
+      },
+      {
+        "id": "silent-proposal-a327449c331efbc1",
+        "state": "waiting",
+        "reason": "缺固定后继和牌序的完整受控反事实及独立后移验证，不能拟伤害、血价与沙坑交换阈值。"
+      },
+      {
+        "id": "silent-proposal-a099e89437e942bb",
+        "state": "waiting",
+        "reason": "同轮生成与穿插已有局部实现；仍缺计划妥当主动保留的跨轮回放、复合饮药触发及完整后继验证。"
+      },
+      {
+        "id": "silent-proposal-47910f82a1fdd98f",
+        "state": "waiting",
+        "reason": "限定组合开场4血已有实现；整包仍缺未知回复和复活组合中间相位、留药及SL血价的完整后继对照。"
+      },
+      {
+        "id": "silent-proposal-f1374df72d8e6a25",
+        "state": "waiting",
+        "reason": "缺同入口早饮或留药且保持相同营火、后续动作的整战对照，不能改护栏、持药价或终局权重。"
+      },
+      {
+        "id": "silent-proposal-38a49e6c97f31eea",
+        "state": "waiting",
+        "reason": "普通紧勒局部已实现；整包仍缺致死轮逐击、反伤复活中间帧、升级叠层重放及阈值与SL组合验证。"
+      },
+      {
+        "id": "silent-proposal-ef0e38a5dbd3bc07",
+        "state": "waiting",
+        "reason": "缺同入口换线、休息或锻造及用药的完整后继对照和能力兑现来源验证，不能拟统一血价或证明改线更优。"
+      },
+      {
+        "id": "silent-proposal-7f820c02d39bfaea",
+        "state": "waiting",
+        "reason": "缺同抽序受控后继、跨重规划完整执行归属及独立击杀或存活验证；多损6、多16净扣未杀一侧，不能重定SL门槛。"
+      },
+      {
+        "id": "silent-proposal-04b6b430759815ed",
+        "state": "waiting",
+        "reason": "限定蟹取整与七手精确切击已有实现；油灯仍缺首次吸收、前序负面、重规划和SL恢复消费轨迹，能力兑现组合未完整验证。"
+      }
+    ]
+  },
+  "worktree_clean": true,
+  "original_artifacts_verified": 117,
+  "original_raw_total": 19448,
+  "raw_sources": [
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "raw_records": 9815,
+      "counts_derived_from_verified_indices": {
+        "K3676LU8B0UH": 830,
+        "SADL3CGYTGSR": 1151,
+        "F4QKG4J1AJJZ": 728,
+        "JLN5SK17W4FQ": 810,
+        "4D4J8USKCPAV": 546,
+        "S9UZAK0JP0C0": 861,
+        "NB8KCF6HRGVF": 484,
+        "LS8035TB32P3": 838,
+        "02HB4L0C3C67": 221,
+        "KEN58SH9SLZ6": 558,
+        "TXZ6RVMQA09D": 840,
+        "WQZVENQ7DTRP": 798,
+        "1913SE84AXQF": 413,
+        "Q6M2Y34MWKRE": 135,
+        "NHA2KW0RB7VP": 602
+      },
+      "original_counts_field_present": true,
+      "cutoff": 12040954235
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "raw_records": 9448,
+      "counts_derived_from_verified_indices": {
+        "K3676LU8B0UH": 805,
+        "SADL3CGYTGSR": 1115,
+        "F4QKG4J1AJJZ": 703,
+        "JLN5SK17W4FQ": 790,
+        "4D4J8USKCPAV": 527,
+        "S9UZAK0JP0C0": 826,
+        "NB8KCF6HRGVF": 466,
+        "LS8035TB32P3": 816,
+        "02HB4L0C3C67": 211,
+        "KEN58SH9SLZ6": 548,
+        "TXZ6RVMQA09D": 762,
+        "WQZVENQ7DTRP": 766,
+        "1913SE84AXQF": 398,
+        "Q6M2Y34MWKRE": 131,
+        "NHA2KW0RB7VP": 584
+      },
+      "original_counts_field_present": true,
+      "cutoff": 1145231463
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+      "raw_records": 78,
+      "counts_derived_from_verified_indices": {
+        "K3676LU8B0UH": 4,
+        "SADL3CGYTGSR": 10,
+        "F4QKG4J1AJJZ": 4,
+        "JLN5SK17W4FQ": 8,
+        "4D4J8USKCPAV": 6,
+        "S9UZAK0JP0C0": 10,
+        "NB8KCF6HRGVF": 1,
+        "LS8035TB32P3": 6,
+        "KEN58SH9SLZ6": 6,
+        "TXZ6RVMQA09D": 6,
+        "WQZVENQ7DTRP": 9,
+        "1913SE84AXQF": 1,
+        "NHA2KW0RB7VP": 7
+      },
+      "original_counts_field_present": true,
+      "cutoff": 35267116
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "raw_records": 77,
+      "counts_derived_from_verified_indices": {
+        "K3676LU8B0UH": 7,
+        "SADL3CGYTGSR": 9,
+        "F4QKG4J1AJJZ": 7,
+        "JLN5SK17W4FQ": 5,
+        "4D4J8USKCPAV": 3,
+        "S9UZAK0JP0C0": 6,
+        "NB8KCF6HRGVF": 6,
+        "LS8035TB32P3": 6,
+        "02HB4L0C3C67": 2,
+        "KEN58SH9SLZ6": 3,
+        "TXZ6RVMQA09D": 9,
+        "WQZVENQ7DTRP": 4,
+        "1913SE84AXQF": 4,
+        "Q6M2Y34MWKRE": 1,
+        "NHA2KW0RB7VP": 5
+      },
+      "original_counts_field_present": true,
+      "cutoff": 7329470
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "raw_records": 15,
+      "counts_derived_from_verified_indices": {
+        "K3676LU8B0UH": 1,
+        "SADL3CGYTGSR": 1,
+        "F4QKG4J1AJJZ": 1,
+        "JLN5SK17W4FQ": 1,
+        "4D4J8USKCPAV": 1,
+        "S9UZAK0JP0C0": 1,
+        "NB8KCF6HRGVF": 1,
+        "LS8035TB32P3": 1,
+        "02HB4L0C3C67": 1,
+        "KEN58SH9SLZ6": 1,
+        "TXZ6RVMQA09D": 1,
+        "WQZVENQ7DTRP": 1,
+        "1913SE84AXQF": 1,
+        "Q6M2Y34MWKRE": 1,
+        "NHA2KW0RB7VP": 1
+      },
+      "original_counts_field_present": false,
+      "cutoff": 310980
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "raw_records": 15,
+      "counts_derived_from_verified_indices": {
+        "K3676LU8B0UH": 1,
+        "SADL3CGYTGSR": 1,
+        "F4QKG4J1AJJZ": 1,
+        "JLN5SK17W4FQ": 1,
+        "4D4J8USKCPAV": 1,
+        "S9UZAK0JP0C0": 1,
+        "NB8KCF6HRGVF": 1,
+        "LS8035TB32P3": 1,
+        "02HB4L0C3C67": 1,
+        "KEN58SH9SLZ6": 1,
+        "TXZ6RVMQA09D": 1,
+        "WQZVENQ7DTRP": 1,
+        "1913SE84AXQF": 1,
+        "Q6M2Y34MWKRE": 1,
+        "NHA2KW0RB7VP": 1
+      },
+      "original_counts_field_present": false,
+      "cutoff": 1511743
+    }
+  ],
+  "lesson_sections_verified": 15,
+  "dispatch_anchors": 10,
+  "additional_original_support_runs": 5,
+  "original_proposals_verified": 10,
+  "original_source_paths_verified": 16,
+  "original_source_ancestor_refs_verified": [
+    {
+      "label": "cunning_generation",
+      "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+      "live_ancestor": true
+    },
+    {
+      "label": "ordinary_strangle",
+      "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+      "live_ancestor": true
+    },
+    {
+      "label": "royal_opening",
+      "commit": "e8b4bb320ae3068db5ebb6ce8c6fa91a9689178a",
+      "live_ancestor": true
+    },
+    {
+      "label": "sl_candidate_comparison",
+      "commit": "5604982e13890e0e2bc8bf8246272e8267321c0b",
+      "live_ancestor": true
+    },
+    {
+      "label": "selection_forecast_audit",
+      "commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+      "live_ancestor": true
+    },
+    {
+      "label": "selection_single_action_receipt",
+      "commit": "bade647f9fe4c9103b40e2f26b26296692ad24b7",
+      "live_ancestor": true
+    },
+    {
+      "label": "precise_cut_seven_hand",
+      "commit": "75a27fb2c230dc552761b2ad9da4be8a9a35dec3",
+      "live_ancestor": true
+    },
+    {
+      "label": "crab_rounding_source",
+      "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+      "live_ancestor": true
+    },
+    {
+      "label": "crab_rounding_replay",
+      "commit": "f2c7cc1a7288893bceae0f0b20304a2b1fae5f57",
+      "live_ancestor": true
+    }
+  ],
+  "base_live_source_differences_kept": true,
+  "original_capture_and_source_difference_classification_failures_preserved": true,
+  "original_cli_rows": 31,
+  "no_new_source_or_merge_or_tests_or_shipped_or_release_or_parent_completion": true
+}

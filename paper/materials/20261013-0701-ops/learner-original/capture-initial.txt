@@ -1,0 +1,70 @@
+import collections
+import hashlib
+import json
+import pathlib
+import subprocess
+
+ROOT = pathlib.Path('/home/dw/Projects/agent-sts2')
+SCRATCH = pathlib.Path(__file__).parent
+dispatch = json.loads((SCRATCH / 'dispatch.json').read_text())
+RUNS = dispatch['runs']
+items = json.loads((SCRATCH / 'proposal-items.json').read_text())
+manifest = {'batch': '20261013-064302-s2-strategy-proposal', 'files': {}, 'counts': {}}
+for name in ['runs', 'run-config', 'run-plans', 'sl-attempts', 'decisions', 'states']:
+    source = ROOT / 'logs' / (name + '.jsonl')
+    paths = {run: SCRATCH / (run + '-' + name + '.jsonl') for run in RUNS}
+    handles = {run: path.open('wb') for run, path in paths.items()}
+    index_path = SCRATCH / (name + '-index.jsonl')
+    counts = collections.Counter()
+    args = ['rg', '-n', '-b', '-F', '--no-heading']
+    for run in RUNS:
+        args.extend(['-e', run])
+    args.append(str(source))
+    proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    with index_path.open('w') as index:
+        for line in proc.stdout:
+            number, offset, raw = line.split(b':', 2)
+            obj = json.loads(raw)
+            run = obj.get('run_id') or obj.get('run')
+            if run not in handles:
+                continue
+            handles[run].write(raw)
+            counts[run] += 1
+            index.write(json.dumps({'run': run, 'source': str(source), 'line': int(number),
+                                    'offset': int(offset), 'length': len(raw),
+                                    'sha256': hashlib.sha256(raw).hexdigest()}, ensure_ascii=False) + '\n')
+    err = proc.stderr.read().decode()
+    rc = proc.wait()
+    assert rc in (0, 1), (name, rc, err)
+    for handle in handles.values():
+        handle.close()
+    manifest['counts'][name] = dict(counts)
+    for path in [*paths.values(), index_path]:
+        raw = path.read_bytes()
+        manifest['files'][path.name] = {'sha256': hashlib.sha256(raw).hexdigest(), 'bytes': len(raw)}
+    print(name, dict(counts), flush=True)
+
+ledger_ids = {i for obj in items.values() for i in obj['ledger']}
+ledger = {}
+with (ROOT / 'paper/materials/learning/ledger.jsonl').open() as handle:
+    for line in handle:
+        obj = json.loads(line)
+        if obj.get('id') in ledger_ids:
+            ledger.setdefault(obj['id'], {}).update(obj)
+assert set(ledger) == ledger_ids
+(SCRATCH / 'ledger-before.json').write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + '\n')
+
+# Preserve only review sections for this character's assigned runs.
+section = None
+sections = collections.defaultdict(list)
+with pathlib.Path('notes/lessons.md').open() as handle:
+    for number, line in enumerate(handle, 1):
+        if line.startswith('## '):
+            section = next((run for run in RUNS if line.startswith('## ' + run)), None)
+        if section:
+            sections[section].append({'line': number, 'text': line})
+for run in RUNS:
+    assert sections[run], run
+    (SCRATCH / (run + '-review.json')).write_text(json.dumps(sections[run], ensure_ascii=False, indent=2) + '\n')
+(SCRATCH / 'capture-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
+print('capture complete', flush=True)
