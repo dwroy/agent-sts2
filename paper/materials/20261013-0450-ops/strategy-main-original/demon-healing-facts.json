@@ -1,0 +1,3382 @@
+{
+  "scope": "同局同层同敌全部观测，含选择画面和死亡帧",
+  "sum_observed_downward_hp_changes": 191,
+  "sum_observed_upward_hp_changes": 15,
+  "net_observed_hp_decrease": 176,
+  "enemy_final_hp": 223,
+  "reconstruction": {
+    "poison_tick_assumption": "依据本角色既有silent-0007/0102的一次正常毒结算15；两帧没有单独捕到敌312血中间态。",
+    "reconstructed_healing": 30,
+    "reconstructed_gross_hp_reduction": 206,
+    "intermediate_hp_directly_observed": false
+  },
+  "healing_transitions": [
+    {
+      "before": {
+        "line": 279559,
+        "ts": "2026-10-07T11:21:21.739Z",
+        "run_id": "KV0JHNJCKXLS",
+        "screen": "COMBAT",
+        "floor": 33,
+        "turn": 4,
+        "hp": 30,
+        "block": 21,
+        "player_powers": {
+          "PLATING_POWER": 1,
+          "MIND_ROT_POWER": 1,
+          "DEXTERITY_POWER": 2
+        },
+        "hand": [
+          {
+            "id": "STRIKE_SILENT",
+            "upgraded": false,
+            "index": 0
+          },
+          {
+            "id": "POISONED_STAB",
+            "upgraded": false,
+            "index": 1
+          },
+          {
+            "id": "ECHOING_SLASH",
+            "upgraded": false,
+            "index": 2
+          },
+          {
+            "id": "POISONED_STAB",
+            "upgraded": false,
+            "index": 3
+          },
+          {
+            "id": "STRIKE_SILENT",
+            "upgraded": false,
+            "index": 4
+          },
+          {
+            "id": "DEFEND_SILENT",
+            "upgraded": false,
+            "index": 5
+          },
+          {
+            "id": "FOOTWORK",
+            "upgraded": false,
+            "index": 6
+          },
+          {
+            "id": "PREDATOR",
+            "upgraded": false,
+            "index": 7
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "id": "KNOWLEDGE_DEMON",
+            "index": 0,
+            "hp": 327,
+            "max_hp": 399,
+            "alive": true,
+            "powers": {
+              "POISON_POWER": 15,
+              "WEAK_POWER": 1
+            },
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9",
+                "damage": 9,
+                "hits": 1,
+                "total_damage": 9,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Heal",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              },
+              {
+                "index": 2,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "line": 279560,
+        "ts": "2026-10-07T11:21:30.513Z",
+        "run_id": "KV0JHNJCKXLS",
+        "screen": "COMBAT",
+        "floor": 33,
+        "turn": 5,
+        "hp": 30,
+        "block": 0,
+        "player_powers": {
+          "MIND_ROT_POWER": 1,
+          "DEXTERITY_POWER": 2
+        },
+        "hand": [
+          {
+            "id": "PREDATOR",
+            "upgraded": false,
+            "index": 0
+          },
+          {
+            "id": "DEADLY_POISON",
+            "upgraded": true,
+            "index": 1
+          },
+          {
+            "id": "DEFEND_SILENT",
+            "upgraded": false,
+            "index": 2
+          },
+          {
+            "id": "DEFEND_SILENT",
+            "upgraded": false,
+            "index": 3
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "id": "KNOWLEDGE_DEMON",
+            "index": 0,
+            "hp": 342,
+            "max_hp": 399,
+            "alive": true,
+            "powers": {
+              "POISON_POWER": 14,
+              "STRENGTH_POWER": 3
+            },
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "window": [
+    {
+      "line": 279535,
+      "ts": "2026-10-07T11:20:23.439Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 4
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "index": 1
+        },
+        {
+          "id": "BULLET_TIME",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "ULTIMATE_STRIKE",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "SNAKEBITE",
+          "upgraded": false,
+          "index": 5
+        },
+        {
+          "id": "BACKFLIP",
+          "upgraded": false,
+          "index": 6
+        },
+        {
+          "id": "ADRENALINE",
+          "upgraded": false,
+          "index": 7
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": "RADIANT_TINCTURE"
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 399,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {},
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279536,
+      "ts": "2026-10-07T11:20:24.343Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 4
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "BULLET_TIME",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ULTIMATE_STRIKE",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "SNAKEBITE",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "BACKFLIP",
+          "upgraded": false,
+          "index": 5
+        },
+        {
+          "id": "ADRENALINE",
+          "upgraded": false,
+          "index": 6
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": "RADIANT_TINCTURE"
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 399,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 7
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279537,
+      "ts": "2026-10-07T11:20:25.246Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 4,
+        "NO_DRAW_POWER": 1
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "ULTIMATE_STRIKE",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "SNAKEBITE",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "BACKFLIP",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "ADRENALINE",
+          "upgraded": false,
+          "index": 5
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": "RADIANT_TINCTURE"
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 399,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 7
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279538,
+      "ts": "2026-10-07T11:20:26.141Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 4,
+        "NO_DRAW_POWER": 1
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "ULTIMATE_STRIKE",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "BACKFLIP",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "ADRENALINE",
+          "upgraded": false,
+          "index": 4
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": "RADIANT_TINCTURE"
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 399,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 14
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279539,
+      "ts": "2026-10-07T11:20:26.942Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 5,
+      "player_powers": {
+        "PLATING_POWER": 4,
+        "NO_DRAW_POWER": 1
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "ULTIMATE_STRIKE",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "ADRENALINE",
+          "upgraded": false,
+          "index": 3
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": "RADIANT_TINCTURE"
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 399,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 14
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279540,
+      "ts": "2026-10-07T11:20:27.743Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 5,
+      "player_powers": {
+        "PLATING_POWER": 4,
+        "NO_DRAW_POWER": 1
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "ULTIMATE_STRIKE",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "index": 2
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": "RADIANT_TINCTURE"
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 399,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 14
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279541,
+      "ts": "2026-10-07T11:20:28.605Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 5,
+      "player_powers": {
+        "PLATING_POWER": 4,
+        "NO_DRAW_POWER": 1,
+        "RADIANCE_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "ULTIMATE_STRIKE",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "index": 2
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 399,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 14
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279542,
+      "ts": "2026-10-07T11:20:31.356Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 5,
+      "player_powers": {
+        "PLATING_POWER": 4,
+        "NO_DRAW_POWER": 1,
+        "RADIANCE_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "ULTIMATE_STRIKE",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ASCENDERS_BANE",
+          "upgraded": false,
+          "index": 2
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 399,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 14
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279543,
+      "ts": "2026-10-07T11:20:33.974Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "CARD_SELECTION",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 9,
+      "player_powers": {
+        "PLATING_POWER": 4,
+        "RADIANCE_POWER": 3
+      },
+      "hand": [],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 385,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 13
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279544,
+      "ts": "2026-10-07T11:20:47.151Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "CARD_SELECTION",
+      "floor": 33,
+      "turn": 1,
+      "hp": 46,
+      "block": 9,
+      "player_powers": {
+        "PLATING_POWER": 4,
+        "RADIANCE_POWER": 3
+      },
+      "hand": [],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 385,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 13
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279545,
+      "ts": "2026-10-07T11:20:50.402Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 2,
+      "hp": 46,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 3,
+        "RADIANCE_POWER": 2,
+        "MIND_ROT_POWER": 1
+      },
+      "hand": [
+        {
+          "id": "SURVIVOR",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "FOOTWORK",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "MIRAGE",
+          "upgraded": false,
+          "index": 3
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 385,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 13
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "18",
+              "damage": 18,
+              "hits": 1,
+              "total_damage": 18,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279546,
+      "ts": "2026-10-07T11:20:51.701Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 2,
+      "hp": 46,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 3,
+        "RADIANCE_POWER": 2,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "SURVIVOR",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "MIRAGE",
+          "upgraded": false,
+          "index": 2
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 385,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 13
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "18",
+              "damage": 18,
+              "hits": 1,
+              "total_damage": 18,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279547,
+      "ts": "2026-10-07T11:20:52.502Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 2,
+      "hp": 46,
+      "block": 15,
+      "player_powers": {
+        "PLATING_POWER": 3,
+        "RADIANCE_POWER": 2,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "SURVIVOR",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 385,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 13
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "18",
+              "damage": 18,
+              "hits": 1,
+              "total_damage": 18,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279548,
+      "ts": "2026-10-07T11:21:00.371Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 3,
+      "hp": 46,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 2,
+        "RADIANCE_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "ANTICIPATE",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": true,
+          "index": 1
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 3
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 372,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 12
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9[font_size=18]×3[/font_size]",
+              "damage": 9,
+              "hits": 3,
+              "total_damage": 27,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279549,
+      "ts": "2026-10-07T11:21:01.358Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 3,
+      "hp": 46,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 2,
+        "RADIANCE_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 4,
+        "ANTICIPATE_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "POISONED_STAB",
+          "upgraded": true,
+          "index": 0
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 2
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 372,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 12
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9[font_size=18]×3[/font_size]",
+              "damage": 9,
+              "hits": 3,
+              "total_damage": 27,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279550,
+      "ts": "2026-10-07T11:21:02.339Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 3,
+      "hp": 46,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 2,
+        "RADIANCE_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 4,
+        "ANTICIPATE_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 364,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 16
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9[font_size=18]×3[/font_size]",
+              "damage": 9,
+              "hits": 3,
+              "total_damage": 27,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279551,
+      "ts": "2026-10-07T11:21:04.492Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 3,
+      "hp": 46,
+      "block": 9,
+      "player_powers": {
+        "PLATING_POWER": 2,
+        "RADIANCE_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 4,
+        "ANTICIPATE_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 364,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 16
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9[font_size=18]×3[/font_size]",
+              "damage": 9,
+              "hits": 3,
+              "total_damage": 27,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279552,
+      "ts": "2026-10-07T11:21:05.337Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 3,
+      "hp": 46,
+      "block": 9,
+      "player_powers": {
+        "PLATING_POWER": 2,
+        "RADIANCE_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 4,
+        "ANTICIPATE_POWER": 2
+      },
+      "hand": [],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 358,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 16
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9[font_size=18]×3[/font_size]",
+              "damage": 9,
+              "hits": 3,
+              "total_damage": 27,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279553,
+      "ts": "2026-10-07T11:21:15.260Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 4,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "SCRAWL",
+          "upgraded": false,
+          "index": 5
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "index": 6
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 342,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 15
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "13",
+              "damage": 13,
+              "hits": 1,
+              "total_damage": 13,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279554,
+      "ts": "2026-10-07T11:21:16.137Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 4,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "PLATING_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "SCRAWL",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "index": 5
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 336,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 15
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "13",
+              "damage": 13,
+              "hits": 1,
+              "total_damage": 13,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279555,
+      "ts": "2026-10-07T11:21:16.924Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 4,
+      "hp": 30,
+      "block": 7,
+      "player_powers": {
+        "PLATING_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "SCRAWL",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "index": 4
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 336,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 15
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "13",
+              "damage": 13,
+              "hits": 1,
+              "total_damage": 13,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279556,
+      "ts": "2026-10-07T11:21:18.257Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 4,
+      "hp": 30,
+      "block": 21,
+      "player_powers": {
+        "PLATING_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "SCRAWL",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "index": 3
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 336,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 15
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "13",
+              "damage": 13,
+              "hits": 1,
+              "total_damage": 13,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279557,
+      "ts": "2026-10-07T11:21:19.850Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 4,
+      "hp": 30,
+      "block": 21,
+      "player_powers": {
+        "PLATING_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "SLICE",
+          "upgraded": false,
+          "index": 5
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 6
+        },
+        {
+          "id": "NEUTRALIZE",
+          "upgraded": false,
+          "index": 7
+        },
+        {
+          "id": "FOOTWORK",
+          "upgraded": false,
+          "index": 8
+        },
+        {
+          "id": "PREDATOR",
+          "upgraded": false,
+          "index": 9
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 336,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 15
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "13",
+              "damage": 13,
+              "hits": 1,
+              "total_damage": 13,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279558,
+      "ts": "2026-10-07T11:21:20.726Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 4,
+      "hp": 30,
+      "block": 21,
+      "player_powers": {
+        "PLATING_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 5
+        },
+        {
+          "id": "NEUTRALIZE",
+          "upgraded": false,
+          "index": 6
+        },
+        {
+          "id": "FOOTWORK",
+          "upgraded": false,
+          "index": 7
+        },
+        {
+          "id": "PREDATOR",
+          "upgraded": false,
+          "index": 8
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 330,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 15
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "13",
+              "damage": 13,
+              "hits": 1,
+              "total_damage": 13,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279559,
+      "ts": "2026-10-07T11:21:21.739Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 4,
+      "hp": 30,
+      "block": 21,
+      "player_powers": {
+        "PLATING_POWER": 1,
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 5
+        },
+        {
+          "id": "FOOTWORK",
+          "upgraded": false,
+          "index": 6
+        },
+        {
+          "id": "PREDATOR",
+          "upgraded": false,
+          "index": 7
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 327,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 15,
+            "WEAK_POWER": 1
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279560,
+      "ts": "2026-10-07T11:21:30.513Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 5,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "PREDATOR",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "index": 1
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 3
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 342,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 14,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279561,
+      "ts": "2026-10-07T11:21:31.477Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 5,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "DRAW_CARDS_NEXT_TURN_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "DEADLY_POISON",
+          "upgraded": true,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 2
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 327,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 14,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279562,
+      "ts": "2026-10-07T11:21:32.396Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 5,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "DRAW_CARDS_NEXT_TURN_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 327,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 21,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279563,
+      "ts": "2026-10-07T11:21:34.619Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "CARD_SELECTION",
+      "floor": 33,
+      "turn": 5,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "DRAW_CARDS_NEXT_TURN_POWER": 2
+      },
+      "hand": [],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 306,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 20,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279564,
+      "ts": "2026-10-07T11:21:47.826Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "CARD_SELECTION",
+      "floor": 33,
+      "turn": 5,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "DRAW_CARDS_NEXT_TURN_POWER": 2
+      },
+      "hand": [],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 306,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 20,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Debuff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279565,
+      "ts": "2026-10-07T11:21:51.913Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 6,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "SLOTH_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "BACKFLIP",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "ANTICIPATE",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "SURVIVOR",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "SNAKEBITE",
+          "upgraded": false,
+          "index": 5
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 306,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 20,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279566,
+      "ts": "2026-10-07T11:21:52.924Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 6,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 4,
+        "SLOTH_POWER": 3,
+        "ANTICIPATE_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "BACKFLIP",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "SURVIVOR",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "SNAKEBITE",
+          "upgraded": false,
+          "index": 4
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 306,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 20,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279567,
+      "ts": "2026-10-07T11:21:55.005Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 6,
+      "hp": 30,
+      "block": 9,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 4,
+        "SLOTH_POWER": 3,
+        "ANTICIPATE_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "SURVIVOR",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "SNAKEBITE",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "index": 4
+        },
+        {
+          "id": "FOOTWORK",
+          "upgraded": false,
+          "index": 5
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 306,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 20,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279568,
+      "ts": "2026-10-07T11:21:56.149Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "CARD_SELECTION",
+      "floor": 33,
+      "turn": 6,
+      "hp": 30,
+      "block": 21,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 4,
+        "SLOTH_POWER": 3,
+        "ANTICIPATE_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "SNAKEBITE",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "ECHOING_SLASH",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "FOOTWORK",
+          "upgraded": false,
+          "index": 4
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 306,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 20,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279569,
+      "ts": "2026-10-07T11:21:56.659Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 6,
+      "hp": 30,
+      "block": 21,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 4,
+        "SLOTH_POWER": 3,
+        "ANTICIPATE_POWER": 2
+      },
+      "hand": [
+        {
+          "id": "POISONED_STAB",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "SNAKEBITE",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "FOOTWORK",
+          "upgraded": false,
+          "index": 3
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 306,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 20,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "21",
+              "damage": 21,
+              "hits": 1,
+              "total_damage": 21,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279570,
+      "ts": "2026-10-07T11:22:01.516Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 7,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "SLOTH_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "SNAKEBITE",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "SLICE",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 3
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 4
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 286,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 19,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "12[font_size=18]×3[/font_size]",
+              "damage": 12,
+              "hits": 3,
+              "total_damage": 36,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279571,
+      "ts": "2026-10-07T11:22:02.413Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 7,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "SLOTH_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "SLICE",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 3
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 286,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 26,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "12[font_size=18]×3[/font_size]",
+              "damage": 12,
+              "hits": 3,
+              "total_damage": 36,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279572,
+      "ts": "2026-10-07T11:22:03.250Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 7,
+      "hp": 30,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "SLOTH_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 2
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 280,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 26,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "12[font_size=18]×3[/font_size]",
+              "damage": 12,
+              "hits": 3,
+              "total_damage": 36,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279573,
+      "ts": "2026-10-07T11:22:04.047Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 7,
+      "hp": 30,
+      "block": 7,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "SLOTH_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 1
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 280,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 26,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "12[font_size=18]×3[/font_size]",
+              "damage": 12,
+              "hits": 3,
+              "total_damage": 36,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279574,
+      "ts": "2026-10-07T11:22:09.321Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 8,
+      "hp": 1,
+      "block": 0,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "SLOTH_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "DEFEND_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "BULLET_TIME",
+          "upgraded": false,
+          "index": 2
+        },
+        {
+          "id": "NEUTRALIZE",
+          "upgraded": false,
+          "index": 3
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 254,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 25,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "16",
+              "damage": 16,
+              "hits": 1,
+              "total_damage": 16,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279575,
+      "ts": "2026-10-07T11:22:10.653Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 8,
+      "hp": 1,
+      "block": 14,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "SLOTH_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "STRIKE_SILENT",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "BULLET_TIME",
+          "upgraded": false,
+          "index": 1
+        },
+        {
+          "id": "NEUTRALIZE",
+          "upgraded": false,
+          "index": 2
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 254,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 25,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "16",
+              "damage": 16,
+              "hits": 1,
+              "total_damage": 16,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279576,
+      "ts": "2026-10-07T11:22:11.519Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "COMBAT",
+      "floor": 33,
+      "turn": 8,
+      "hp": 1,
+      "block": 14,
+      "player_powers": {
+        "MIND_ROT_POWER": 1,
+        "DEXTERITY_POWER": 2,
+        "SLOTH_POWER": 3
+      },
+      "hand": [
+        {
+          "id": "BULLET_TIME",
+          "upgraded": false,
+          "index": 0
+        },
+        {
+          "id": "NEUTRALIZE",
+          "upgraded": false,
+          "index": 1
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 248,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 25,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "16",
+              "damage": 16,
+              "hits": 1,
+              "total_damage": 16,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 279577,
+      "ts": "2026-10-07T11:22:13.836Z",
+      "run_id": "KV0JHNJCKXLS",
+      "screen": "GAME_OVER",
+      "floor": 33,
+      "turn": 8,
+      "hp": 0,
+      "block": 0,
+      "player_powers": {},
+      "hand": [],
+      "potions": [
+        {
+          "index": 0,
+          "id": null
+        },
+        {
+          "index": 1,
+          "id": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "KNOWLEDGE_DEMON",
+          "index": 0,
+          "hp": 223,
+          "max_hp": 399,
+          "alive": true,
+          "powers": {
+            "POISON_POWER": 24,
+            "STRENGTH_POWER": 3
+          },
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "16",
+              "damage": 16,
+              "hits": 1,
+              "total_damage": 16,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Heal",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            },
+            {
+              "index": 2,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

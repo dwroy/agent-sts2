@@ -1,0 +1,28 @@
+逐帧分账首次校验退出码：1。
+失败位置：知识恶魔末试 HP 分账断言。
+首次筛选仅含 screen=COMBAT，漏掉选择画面和 GAME_OVER 的状态帧。
+诊断读回：起血399、所筛末血248、累计下降166、累计上升15；终局 GAME_OVER 原帧279577敌血223。
+该失败不代表生产源码或游戏公式失败；后续校验改用同局、同层、同敌的连续全部状态。
+原工具输出：
+Traceback (most recent call last):
+  File "<stdin>", line 13, in <module>
+AssertionError
+
+第二次校验退出码：1。
+已纳入同局同层同敌的全部状态，但仍错误要求逐帧正负HP差直接等于毛伤206/回血30。
+实际读回：demon_deltas 191 15 399 223。
+原因：279559→279560一次状态跳变同时包含15毒结算和回血；直接可见净升15，不能称单独捕到回血30。
+第二次原错误：
+Traceback (most recent call last):
+  File "<stdin>", line 12, in <module>
+AssertionError
+后续将直接观测191/15与依据本角色已学单次毒结算重建的206/30分列，保留未捕到中间312血帧的限制。
+
+第三次校验退出码：1。
+知识恶魔分列校验已通过并保存；巨兽首次占位帧回合断言失败。
+首次占位帧回合实为[13,12,12,12,13,10]；第2/4试先出现带STEAM_ERUPTION_POWER的Stun占位态，下一轮才出现DeathBlow。
+错误来源是把首次占位态等同首次自爆意图态；后续两种时点分列，保留原帧。
+第三次原错误：
+Traceback (most recent call last):
+  File "<stdin>", line 20, in <module>
+AssertionError
