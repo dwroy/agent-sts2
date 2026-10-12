@@ -292,6 +292,8 @@ def check_jobs(state, root, scripts, character, alive, stamp):
             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
     runs = pending(root, scripts, character)
     experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+    from learning_requests import reconcile as reconcile_learning
+    learning = reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, STRATEGY_WORKERS)
     # This approved frozen study gets the next slot before automatic proposals.
     # Its host wrapper waits for the parent's save_state under the existing lock.
     from strategy_research_jobs import dispatch as dispatch_research
@@ -310,7 +312,7 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
     return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
             "core_builds": core,
-            "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research}
+            "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
 
 
 def calibration_job(state, root, scripts, character, alive, stamp):
