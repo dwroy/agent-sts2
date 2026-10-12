@@ -168,6 +168,15 @@ class FlowTests(unittest.TestCase):
         self.assertEqual(len(list((self.directory / 'queue').glob('*.md'))), count + 2)
         self.assertEqual(len(self.starts), 1)
 
+    def test_supplement_arriving_before_finish_without_a_tick_stays_pending(self):
+        self.tick()
+        old = self.report()
+        self.req['revision'] = 2
+        self.write_request()
+        self.finish(old)
+        self.assertEqual(self.record()['state'], 'pending')
+        self.assertEqual(self.record()['revision'], 2)
+
     def test_completed_requires_actual_entries_and_consumer_receipt(self):
         report = self.report('complete')
         with self.assertRaisesRegex(ValueError, 'commit'):

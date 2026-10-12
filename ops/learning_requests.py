@@ -236,6 +236,13 @@ def finish(state, root, state_dir, batch_id, rc, report):
     req = json.loads(artifact(root, {"path": batch["learning_input"], "sha256": batch["learning_input_sha256"]}))
     batch.update(finished=dt.datetime.now().isoformat(), rc=rc, report=report)
     try:
+        # A supplement can arrive after the last scheduler tick but before this
+        # process exits. Re-read admission before allowing the older result to close it.
+        current_req, current_raw = read_request(root, rec["request_path"])
+        if digest(current_raw) != rec["request_sha256"]:
+            if current_req["revision"] <= rec["revision"]:
+                raise ValueError("changed input requires a new revision")
+            rec.update(request_sha256=digest(current_raw), revision=current_req["revision"])
         if rc:
             raise ValueError(f"学习者exit {rc}；沿原thread核查恢复，保留原失败")
         result = verify_experience(root, req, report)

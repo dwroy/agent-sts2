@@ -2490,3 +2490,5 @@
 - 2026-10-12 20:21:51 CST 运维 codex：20:19 strategy-done200522-s2已核no_change、clean HEAD=base257c41df88157b59e520232dae1210662b08d8e6，10完整提案均waiting；72材料SHA/六局2105原行（1062状态1043决策）按偏移SHA及11源码身份/工作文件SHA一致，9运行缓存未打开。原15端点/4同指纹对照/六份离线消费者完成及IPC/摘要null初败修正原件保留，未运行tsc/vitest，不冒作新实现或完整验证。30原CLI仅链接/说明按物理顺序归档，原账本前缀保持，物理/提交检查均0问题，无status/version/claim变更。无新源码、合入、版本、shipped或补测，不重复派发/快照/重启，不关闭未完父项；材料paper/materials/20261012-2019-ops，密钥扫描后仅提交本轮记录。
 
 - 2026-10-12T20:45:45+08:00 watcher codex：按Roy学习入库与异议告知授权，补独立于批done的持久学习要求、同thread续跑及逐项live经验/消费者验收；缺回执/停滞/缺证主动经原ops通知watcher/Roy并持久重试，明确通知逐阶段回执，未改ops prompt。共用原调度器/策略槽/工作树租约与学习者沙箱/home/密钥预检，保留原批输入和失败，不重启对局。源tsc及固定沙箱342文件3408项通过，最终Python13项通过、密钥扫描通过；仍待实际main/live合入、原任务首次真实回复及通知场景验收，不记玩法版本。检查learner/runs/continuity-verification-20261012/verification.json。
+
+- 2026-10-12T20:55:04+08:00 watcher codex：学习连续性补充固定竞态：新补充可在最后一次tick之后、旧学习批返回之前到达；finish现重读注册revision，旧结果不得关闭新要求。固定Python14项、tsc及受影响vitest2文件3项通过；342文件3408项既过覆盖复用，不重复全套。原失败与检查均保留，待随同一上线任务合入。
