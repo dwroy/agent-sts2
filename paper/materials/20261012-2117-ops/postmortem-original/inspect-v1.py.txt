@@ -1,0 +1,21 @@
+import json,pathlib,collections
+p=pathlib.Path(__file__).parent; idx=json.loads((p/'source-index.json').read_text())
+def rows(n):
+ for i,l in enumerate((p/(n+'.jsonl')).open()):
+  r=json.loads(l);r['_line']=idx[n][i]['line'];yield r
+D=list(rows('decisions')); S=list(rows('states'))
+with (p/'decisions-summary.txt').open('w') as f:
+ for d in D:
+  f.write(f"d{d['_line']} F{d['floor']}T{d['turn']} {d['ts']} {d['decider']} {d['label']} {d.get('confidence')} {json.dumps(d['chosen'],ensure_ascii=False)} {d.get('rationale')}\n")
+  if d.get('journal'): f.write('  '+json.dumps(d['journal'],ensure_ascii=False)+'\n')
+with (p/'states-summary.txt').open('w') as f:
+ for r in S:
+  s=r['state']; c=s.get('combat') or {};pl=c.get('player') or {};run=s.get('run') or {}
+  powers=lambda e: ','.join(f"{x['power_id']}:{x['amount']}" for x in e.get('powers',[]))
+  en='; '.join(f"{x['index']}:{x['name']}:{x['enemy_id']} {x['current_hp']}/{x['max_hp']} B{x.get('block')} {powers(x)} intent={x.get('intents')}" for x in c.get('enemies',[]))
+  hand='; '.join(f"{x['index']}:{x['name']}:{x['card_id']} E{x.get('energy_cost')} {x.get('resolved_rules_text')}" for x in c.get('hand',[]))
+  pot=[(x.get('index'),x.get('potion_id')) for x in run.get('potions',[]) if x.get('occupied')]
+  f.write(f"s{r['_line']} F{run.get('floor')}T{s.get('turn')} {r['ts']} {s['screen']} HP{run.get('current_hp')}/{run.get('max_hp')} B{pl.get('block')} E{pl.get('energy')} [{powers(pl)}] 药{pot}\n  敌:{en}\n  手牌:{hand}\n")
+print('时间窗',D[0]['ts'],D[-1]['ts'],'observed',D[0]['observed_ts']);print('journal示例',json.dumps(next(d for d in D if d['decider']=='jev')['journal'],ensure_ascii=False));print('questions示例',json.dumps(next(d for d in D if d['decider']=='jev')['questions'],ensure_ascii=False)[:7000])
+for d in D:
+ if d['decider']=='codex': print(f"d{d['_line']} F{d['floor']} {d['label']} {json.dumps(d['chosen'],ensure_ascii=False)} {d.get('rationale')} journal={json.dumps(d.get('journal'),ensure_ascii=False)}")

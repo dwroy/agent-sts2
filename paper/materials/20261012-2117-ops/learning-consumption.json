@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-12 21:30:07 CST",
+  "request_id": "roy-20261012-concrete-core-decklists",
+  "actual_batch": "20261012-212420-strategy-proposal",
+  "owner": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741",
+  "thread_id": "01a12eba-13a8-7550-ac47-692d3d19bed1",
+  "revision": 1,
+  "registration_sha256": "170de802c5113591adf1920b62d483d5d2ada3f65175b45fbee3af09e4d10bd1",
+  "requirement_input": {
+    "path": "paper/materials/silent/20261012-core-candidate-decklists/continuity-repair-20261012/learning-input-v1.md",
+    "sha256": "9ac504f6e8138e76a6ec75cc736b90bd5f29905012861495733888c24e9297d4"
+  },
+  "actual_learner_input_sha256": "08985cfc6ef80541305540c1590c067e65e6b39e192115e6dfef9df1bb35354b",
+  "actual_command_sha256": "648f55a6c4aae5c124bf3e1575dcb90e99b9fb597d9580d920069619a742ebab",
+  "ack": {
+    "type": "learner_resume_ack",
+    "ts": "2026-10-12T13:24:46.271Z",
+    "thread_id": "01a12eba-13a8-7550-ac47-692d3d19bed1",
+    "input_sha256": "08985cfc6ef80541305540c1590c067e65e6b39e192115e6dfef9df1bb35354b",
+    "command_sha256": "648f55a6c4aae5c124bf3e1575dcb90e99b9fb597d9580d920069619a742ebab",
+    "batch": "20261012-212420-strategy-proposal",
+    "first_message_sha256": "69b0c22298c51a194cb7675d374435986f8b3941bb726c0ce7cbcb9427776b02"
+  },
+  "event_log": "learner/runs/20261012-212423-20261012-212420-strategy-proposal.task.jsonl",
+  "frozen_events_sha256": "bd35c9f28e783708605721098daff13f0cd41a0131ef1e59f223f544308ba40d",
+  "event_offsets": [
+    {
+      "line": 2,
+      "sha256": "398f1535a8a9916c90f26c13faa22cd703130c3ea0f49fc11f54818089e8816d"
+    },
+    {
+      "line": 6,
+      "sha256": "7832be75157750697b3540f4c804ab61bc75331fca995d6f70e0a5ead3c01111"
+    },
+    {
+      "line": 19,
+      "sha256": "dc7c96168db3f749c701705fd6923d531ee7c02d5eafa8c21227fce4769b62b7"
+    },
+    {
+      "line": 20,
+      "sha256": "d25f2ea7b383afd835c4d2436ccf2d31f951dfcbe8b9a834051efbf48a4e9feb"
+    }
+  ],
+  "consumed": true,
+  "consumed_meaning": "Only the first genuine same-thread model reply acknowledges the supplied continuation input; not task completion or experience delivery.",
+  "original_batch_state": "done",
+  "parent_complete": false,
+  "experience_delivery_complete": false,
+  "scheduler_observed_request": {
+    "id": "roy-20261012-concrete-core-decklists",
+    "state": "blocked",
+    "attempts": [
+      "20261012-212420-strategy-proposal"
+    ],
+    "pending_since": 1791811461.0447133,
+    "request_sha256": "170de802c5113591adf1920b62d483d5d2ada3f65175b45fbee3af09e4d10bd1",
+    "revision": 1,
+    "request_path": "/home/dw/Projects/agent-sts2/notes/learning-requests/roy-20261012-concrete-core-decklists.json",
+    "batch": "20261012-212420-strategy-proposal",
+    "started_at": 1791811461.3121157,
+    "reason": "learning result did not acknowledge exact request revision/input",
+    "notices": [
+      "de8f6118dadf07282e6fe092"
+    ]
+  },
+  "scheduler_observed_batch_state": "failed",
+  "scheduler_batch_consumed_field": true,
+  "scheduler_state_not_mutated_by_ops": true,
+  "watcher_received_or_roy_notified_ack_not_fabricated": true
+}

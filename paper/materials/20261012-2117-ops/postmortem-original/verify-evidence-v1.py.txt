@@ -1,0 +1,34 @@
+import pathlib,json,hashlib,collections,re
+p=pathlib.Path(__file__).parent;root=p.parents[2];checks=[]
+def ok(label,value):
+ assert value,label
+ checks.append(label)
+indices=json.loads((p/'source-index.json').read_text());indices['brain-all']=json.loads((p/'brain-all-index.json').read_text())
+for name,items in indices.items():
+ source=root/'logs'/('brain.jsonl' if name=='brain-all' else name+'.jsonl')
+ with source.open('rb') as f,(p/(name+'.jsonl')).open('rb') as g:
+  for loc,raw in zip(items,g):
+   f.seek(loc['offset']);orig=f.read(loc['bytes'])
+   ok(f'{name}:{loc["line"]}',orig==raw and hashlib.sha256(orig).hexdigest()==loc['sha256'])
+S={i['line']:json.loads(r)['state'] for i,r in zip(indices['states'],(p/'states.jsonl').open())};D={i['line']:json.loads(r) for i,r in zip(indices['decisions'],(p/'decisions.jsonl').open())}
+power=lambda e,k:next((x['amount'] for x in e.get('powers',[]) if x['power_id']==k),0)
+ok('终轮8HP9挡18攻',S[375348]['run']['current_hp']==8 and S[375348]['combat']['player']['block']==9 and S[375348]['combat']['enemies'][0]['intents'][0]['total_damage']==18)
+ok('终态敌3玩家0',S[375349]['run']['current_hp']==0 and S[375349]['combat']['enemies'][0]['current_hp']==3)
+ok('药水+6且不即时扣HP',power(S[375347]['combat']['enemies'][0],'POISON_POWER')==11 and power(S[375348]['combat']['enemies'][0],'POISON_POWER')==17 and S[375347]['combat']['enemies'][0]['current_hp']==S[375348]['combat']['enemies'][0]['current_hp']==29)
+ok('T4先攻实付12',S[375337]['run']['current_hp']-S[375342]['run']['current_hp']==12)
+ok('F15损53',S[375155]['run']['current_hp']-S[375195]['run']['current_hp']==53)
+ok('F17入口28出口3',S[375208]['run']['current_hp']==28 and S[375248]['run']['current_hp']==3)
+ok('同题先防护栏差3',json.loads(D[364607]['questions']['plan']['criteria']['plan1'])['hp_lost']==9 and json.loads(D[364607]['questions']['plan']['criteria']['plan3'])['hp_lost']==12)
+ok('药水8进7喝1交付',sum(1 for d in D.values() if d.get('chosen',{}).get('action')=='use_potion')==7 and D[364350]['chosen']['action']=='choose_event_option')
+B=[x for x in D.values() if type(x.get('rollout_best_chosen')) is bool];ok('82/83最佳',len(B)==83 and sum(x['rollout_best_chosen'] for x in B)==82)
+ok('无护栏替换',all('guard' not in x.get('rationale','').lower() for x in D.values()))
+ok('无SL重载',all(x.get('sl_reloads')==0 for x in D.values()))
+# Check all turn arrays, preserving the spawned-body increase and terminal enemy HP.
+metrics=json.loads((p/'turn-metrics.json').read_text());draft=(p/'lesson-draft.md').read_text()
+for floor,ms in metrics.items():
+ for key in ['need','net_enemy_hp_removed','player_net_loss']:
+  values=[x[key] for x in ms];needle=str(values).replace(' ','');ok(f'表F{floor}/{key}',needle in draft.replace('−','-'))
+ok('只有三条经验',len(re.findall(r'^- \[(?!记录)',draft,re.M))==3)
+ok('局号还未追加',not re.search(r'^## PCDMYK2AEB2D', (root/'notes/lessons.md').read_text(),re.M))
+result={'检查项数':len(checks),'全部通过':True,'关键检查':checks[-45:]}
+(p/'verification-before-append.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n');print(json.dumps(result,ensure_ascii=False))

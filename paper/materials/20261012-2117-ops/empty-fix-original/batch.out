@@ -1,0 +1,54 @@
+## 修 bug 回报
+
+- 合并基线：main → e859c259ff4514fc4d84a00e7a55ebe8a5f2f357
+- 修复（每条一行）：无新增；未发现仍需修复且证据充分的纯 bug。
+- 已被别人修掉的：batch-c 固定测试超时 — 5dd8a20c9d2dd4ed43120b1684e5577b993ac2ff；其余161条历史来源及提交号见[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-210134/learner/runs/20261012-210155-fix-batch/report.md)，均已核为基线和 live 祖先。
+- 没修的：机制与策略提案、具名卡扩展及架构专项 — 沿独立任务；接续资源异常、历史通知失败、目录竞态、公平性和宿主超时根因 — 证据不足，保留原行为。
+- 测试：tsc 退出码0；定向 vitest 1文件 / 2用例 / 退出码0，无重跑；gitleaks 0。无代码变更，未运行完整沙箱套件。
+- 合入：未合入，无新提交。严格空批次检查因165条既有 main/live 路径差异返回 null，已保存明细供调用方核收。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "e859c259ff4514fc4d84a00e7a55ebe8a5f2f357",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类，继续已有 strategy-proposal。"
+    },
+    {
+      "item": "具名卡扩展、量化构筑、全漏斗、学习优先级、统一资源价值、缓存与性能专项",
+      "reason": "独立功能或策略研究，继续专用任务。"
+    },
+    {
+      "item": "silent-0332、历史通知rc2、目录竞态、调度公平性、mod超时及batch-c历史宿主超时根因",
+      "reason": "证据不足；已实现的限定修复保留，未将其认作完整根因闭环。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 1,
+    "cases": 2,
+    "scope": "定向固定回归；未运行完整沙箱套件",
+    "gitleaks": 0
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-210134/learner/runs/20261012-210155-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a13034-c119-7781-a1b4-07744e3d6f01
+轮数：1；工具调用：command_execution×29
+token：输入 115.7k、输出 8830（其中推理 2037）、cache 读 1362.0k、cache 写 0（命中 92.2%）
+成本：未提供
+耗时：402.6 s（墙钟）
+时间：首个事件 30.3 s、模型首个输出 36.7 s、首次工具 39.9 s、末次工具结束 373.2 s；工具内共 149.8 s，其余（模型生成、推理、网络）222.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-210134）；模型的工具调用 exec×18；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T21-02-06-01a13034-c119-7781-a1b4-07744e3d6f01.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261012-210134/learner/runs/20261012-210155-fix-batch.jsonl

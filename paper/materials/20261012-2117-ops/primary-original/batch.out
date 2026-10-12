@@ -1,0 +1,109 @@
+十项提案均等待补证，未改源码、提交或合入。已核对六局 8,281 条原始记录，并追加 16 条账本链接；工作树干净，密钥扫描通过。未运行 tsc/vitest。
+
+证据、反例和逐项缺口见[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-210134/learner/runs/20261012-210154-strategy-proposal/proposal.md)及[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-210134/learner/runs/20261012-210154-strategy-proposal/report.md)。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261012-210134-strategy-proposal",
+  "base": "e859c259ff4514fc4d84a00e7a55ebe8a5f2f357",
+  "runs": [
+    "751FN9QM9MHQ",
+    "KV0JHNJCKXLS",
+    "YQL8RZ8BWN1E",
+    "L9SGRBB5R698",
+    "PU80F84P6HPN",
+    "KEN58SH9SLZ6"
+  ],
+  "fixes": [],
+  "skipped": [
+    {
+      "reason": "已有诊断子项已在live；完整父提案仍缺受控后继、完整收益或独立验证。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "751 F17 T7弃牌仍有pending回执；缺完整候选收益归属、同随机输入原替整战及独立局验证。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "751 F13 T3未实际执行无药或留药整战；缺弃牌、毒/荆棘及药价的联合收益验证。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "共享预测及派发子项已有；缺弃牌后的完整执行归属和更差线探索的受控后继。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "持牌拆项和未知药价提示已有；无药整战只有模型抽样，缺多机制联合执行验证。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "KV F33 T5实扣36/29且均零损，但删毒后重问、后轮动作改变；缺跨续问归属及受控整战。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "巨兽阶段及药水展示已在live；同轮占位HP排序仍保留，缺新排序完整后继与独立验证。"
+    },
+    {
+      "id": "silent-proposal-9733bb80f445aeae",
+      "state": "waiting",
+      "reason": "YQL T10仅见毒2→8，血挡和41自爆不变；缺提前喝、不喝、留药及改序的受控整战。"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "state": "waiting",
+      "reason": "KEN七次耗药已核；发光水后重问、技能药pending并选牌，缺完整收益及留药对照。"
+    },
+    {
+      "id": "silent-proposal-86a7db08d1a31976",
+      "state": "waiting",
+      "reason": "KEN T10多2伤付6血，T5省2血却延后步法；缺能力窗口完整归属和同后轮受控验证。"
+    },
+    {
+      "id": "silent-proposal-e282a9131b99129a",
+      "state": "waiting",
+      "reason": "持牌预测与观测区间已有；能力延迟及换线的整战因果未知，六次相关SL不足拟统一门槛。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-210134/learner/runs/20261012-210154-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6-astra；会话：01a13034-c119-76f3-ad29-3fde06cbfe58
+轮数：1；工具调用：command_execution×38 file_change×2
+token：输入 131.9k、输出 23.0k（其中推理 3798）、cache 读 2212.0k、cache 写 0（命中 94.4%）
+成本：未提供
+耗时：833.3 s（墙钟）
+时间：首个事件 29.7 s、模型首个输出 35.9 s、首次工具 42.6 s、末次工具结束 801.9 s；工具内共 205.7 s，其余（模型生成、推理、网络）598.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-210134）；模型的工具调用 exec×23；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/12/rollout-2026-10-12T21-02-06-01a13034-c119-76f3-ad29-3fde06cbfe58.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-210134/learner/runs/20261012-210154-strategy-proposal.jsonl

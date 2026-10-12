@@ -1,0 +1,7 @@
+1. 全工作树rg文件定位无及时输出，已中止只读命令，改精确已知路径。
+2. 一次shell启动被bubblewrap瞬态glob ENOENT阻断（其他工作树临时路径消失），同权限原读取重试成功。
+3. 初次查询rollout误用agent/src/sim/rollout.ts，实际为agent/src/reflex/rollout.ts，已修正只读查询。
+4. 早期账本自制摘要保留；最终依据ledger-selected-official-fold.json官方fold，未用早期摘要改变账本状态。
+5. 定向vitest初次使用本版本不支持的--minWorkers，退出1且未运行测试；移除该参数后原10项通过，两个日志分别保存。
+6. 源码差异初验直接将base全部Roy替换为Dai，不能处理两边已有混合署名，断言失败且未产生结论；后续逐行检查两侧同样规范化，仅对照注释，原patch保留。
+第6项更正：失败实际因子串Roy也命中了Royal标识符，并非两侧混合署名；改用完整单词规范化并逐行确认所有差异均为注释，13路径核验通过，未改任何源码。

@@ -1,0 +1,8 @@
+--- prior
++++ current
+@@ -1103,3 +1103,5 @@
+ - 2026-10-12 19:54:33 CST **batch-c-fixed-fixture-timeout（普通测试待核，非对局阻塞）**：agent/tests/batch-c.test.ts:240 固定ZY3992X5VEVS F23 T3（IRONCLAD）单项在183755-s2完整宿主检查中触发原15000ms限时，记录17210ms；全套tsc0/4214过1超时2跳过，新增silent-crusher-facing10项通过。失败树122426d2a64a2416e5e679db68e56da407c3cc09/livea9127cd90；同fixture、logged.ts、test及vitest配置与前一通过树1672801d0逐blob相同，前次该项1434ms、batch-c全28过。超时本身不证明游戏回归或主机负载根因；请原普通fix链有界定位固定测试时钟/计算预算/调度稳定性，先复用本次同树单worker精确单项补验，不重跑已过全套、不删断言/跳过/抬高限时来掩盖，机制变化仍由学习者凭角色证据。保留当前上线及全部失败历史，原活批/租约不抢占、不重复派；排队未修复。原报告/覆盖/绑定见paper/materials/20261012-1949-ops/host-failure-decision.json及continuation-manifest.json。
+ 
+ - 2026-10-12 19:57:18 CST **batch-c-fixed-fixture-timeout 补验通过，根因待核**：原a9127cd90/tree122426d2精确失败用例在同源码、原15000ms限时、单worker下1731.689115ms通过，tsc0；仅执行1项，其余27为筛选未运行。原完整4214过/1超时/2跳过及rc1保留，不能写整套通过或负载根因已证。194301空修复批冻结队列不含本新增项，不据该空批关闭；继续原项有界定位，不重复补验/整套、不重派旧批。回执paper/materials/20261012-1949-ops/supplement-completion.json。
++
++- 2026-10-12 20:53:13 CST **batch-c-fixed-fixture-timeout 已修且实际合入（限定固定测试）**：原学习者源5dd8a20c9d2dd4ed43120b1684e5577b993ac2ff进入live44e82b09e670af9144e6e7d6f697cb0ac19f69b3、mainea5a67d8a8a28650fb155d189bab3436975253df。三测试文件把ZY3992X5VEVS F23 T3–T5回归隔离到既有固定模型/工作时钟并限定实际计算量，保留原目标顺序/排名断言及15000ms测试限时，增加0/10000ms主机暂停、多样本覆盖T4/T5和工作量断言；生产规则/知识/预算未改。撤修复2例失败、恢复4项通过；源沙箱分段去重342文件3408项、当前组合tsc/5文件70项通过。原备份.ts被导入检查误扫的1失败及改存原字节文本后的续验保留；原17.2秒宿主超时具体原因仍未知，原全套rc1与同树补验通过均不覆盖。只关闭固定夹具项，完整宿主检查已请求待回执，不关闭其他待办。详见paper/materials/20261012-2045-ops/fix-source-verification.json及deployment.json。

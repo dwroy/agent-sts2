@@ -1,0 +1,26 @@
+[
+  {
+    "command": [
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/learning-requests.test.ts",
+      "tests/learner-jobs.test.ts",
+      "tests/learner.test.ts",
+      "tests/codex-fast.test.ts",
+      "--pool=forks",
+      "--maxWorkers=1"
+    ],
+    "exit": 0
+  }
+]
