@@ -451,7 +451,15 @@ export function codexCommand(request: EngineRequest, prompt: string, binary = "c
     args.push("-c", `${key}.default_tools_approval_mode=${toml("approve")}`);
   }
   for (const feature of LEARNER_CODEX_DISABLED_FEATURES) args.push("--disable", feature);
-  if (request.resumeThread) args.push("resume", request.resumeThread);
+  if (request.resumeThread) {
+    // Match the production ops resume adapter: resume takes its own options,
+    // while cwd is supplied by spawn (resume has no --cd option).
+    const options = args.slice(1);
+    const cd = options.indexOf("--cd");
+    if (cd >= 0) options.splice(cd, 2);
+    return { command: binary, args: ["exec", "resume", ...options, request.resumeThread, "-"],
+      stdin: codexPreamble(request.tools, writes) + prompt };
+  }
   args.push("-");
   return { command: binary, args, stdin: codexPreamble(request.tools, writes) + prompt };
 }
