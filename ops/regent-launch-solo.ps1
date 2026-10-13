@@ -29,10 +29,15 @@ try {
   $reusePreparedSettings = $false
   if (Test-Path -LiteralPath $clientRoot) {
     $entries = @(Get-ChildItem -LiteralPath $clientRoot -Force)
-    if ($entries.Count -ne 1 -or $entries[0].Name -ne 'settings.save' -or
-        -not $m.prepared_settings_sha256 -or (Get-FileHash -LiteralPath $entries[0].FullName -Algorithm SHA256).Hash.ToLower() -ne $m.prepared_settings_sha256) {
+    $settingsFile = Join-Path $clientRoot 'settings.save'
+    $repairFile = Join-Path (Split-Path -Parent $Manifest) 'native-settings-repair.json'
+    $repaired = $m.repaired_native_settings -and (Test-Path -LiteralPath $repairFile) -and
+        (Get-Content -LiteralPath $repairFile -Raw | ConvertFrom-Json).status -eq 'patched_owned_startup'
+    if ((-not $repaired -and ($entries.Count -ne 1 -or $entries[0].Name -ne 'settings.save')) -or
+        -not $m.prepared_settings_sha256 -or (Get-FileHash -LiteralPath $settingsFile -Algorithm SHA256).Hash.ToLower() -ne $m.prepared_settings_sha256) {
       throw 'Client root differs from the exact failed attempt; do not overwrite.'
     }
+    if (@(Get-ChildItem -LiteralPath $clientRoot -Recurse -File -Filter '*run*').Count -gt 0) { throw 'An existing run must never be replaced.' }
     $reusePreparedSettings = $true
   }
   # Native NTFS links avoid CreateProcess failing on WSL-server symlink targets. No binary is read or changed.
@@ -72,7 +77,7 @@ try {
   $settings = @{
     schema_version=8; mod_settings=@{mods_enabled=$true;mod_list=@(@{id='STS2AIAgent';is_enabled=$true;source='mods_directory'})}
     seen_ea_disclaimer=$true;skip_intro_logo=$true;fullscreen=$false;limit_fps_in_background=$true
-    vsync='disabled';window_size=@{X=1280;Y=720};window_position=@{X=-1;Y=-1};language='en'
+    vsync='adaptive';window_size=@{X=1280;Y=720};window_position=@{X=-1;Y=-1};language='en'
     aspect_ratio='sixteen_by_nine';fps_limit=30;msaa=2;resize_windows=$true;target_display=0
     volume_ambience=0.0;volume_bgm=0.0;volume_master=0.0;volume_sfx=0.0
     controller_mapping_type='default';controller_mapping=@{};keyboard_mapping=@{};keyboard_only_mapping=@{}

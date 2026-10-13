@@ -302,6 +302,8 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "git-push-main": { args: 1, ms: 500_000 },
   "regent-launch-inspect": { args: 0, ms: 30_000 },
   "regent-launch-solo": { args: 1, ms: 120_000 },
+  "regent-startup-check": { args: 0, ms: 45_000 },
+  "regent-native-repair": { args: 0, ms: 30_000 },
 };
 
 /** An argument: a PID or a comma-separated list of run ids (no spaces, no shell characters, no leading dash). */
